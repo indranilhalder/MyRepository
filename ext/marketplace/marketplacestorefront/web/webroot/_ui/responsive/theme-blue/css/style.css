@@ -42903,10 +42903,9 @@ body .account .right-account .order-history .product-block li.item h2{
     letter-spacing: normal;
 }
 body .account .right-account .order-history .product-block li.item h2:first-child{
-	margin-bottom: 0;
-    font-size: inherit;
-    font-weight: inherit;
-    letter-spacing: inherit;
+	font-size: 12px;
+    font-weight: normal;
+    height: 12px;
 }
 body .right-account .order-history .cancellation-request-block h1{
 	background: #f0f4f5;
@@ -43240,6 +43239,9 @@ body.pageLabel-Footwear .feature-collections ul.collections li.chef .feature-col
 	}
 	.brand-microsite.electronics-brand .brands h2{
 	padding: 40px 0 55px;
+	}
+	body .account .right-account .order-history .product-block li.item h2.product-name:first-child{
+	line-height: normal;
 	}
 }
 @media(max-width: 790px){

@@ -197,10 +197,10 @@
 														</a>
 													</div>
 													<div class="details">
-														<h4 class="product-name">${entry.brandName}</h4>
-														<h3 class="product-name">
+														<h2 class="product-name">${entry.brandName}</h2>
+														<h2 class="product-name">
 															<a href="${productUrl}">${entry.product.name}</a>
-														</h3>
+														</h2>
 														<div class="attributes">
 
 															<p>
