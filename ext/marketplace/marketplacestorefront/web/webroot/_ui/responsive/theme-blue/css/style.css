@@ -49736,4 +49736,96 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
 }
   
  /* } */
+
+ 
+ /*confidence callout start*/
+ .callouts {
+    background: #f9f9f9;
+    margin: 50px 0 0;
+}
+ .callouts .Padd {
+    padding: 30px 50px;
+    display: inline-block;
+    width: 100%;
+}
+.callouts .Padd ul li:first-child {
+    text-align: left;
+}
+.callouts .Padd ul li {
+    float: left;
+    border-right: 1px solid #cdcdcd;
+    width: 25%;
+    text-align: center;
+}
+.callouts .Padd ul li p {
+    font-size: 18px;
+    line-height: 47px;
+    position: relative;
+    text-transform: uppercase;
+    padding: 0 0 0 57px;
+}
+.callouts .Padd ul li p:before {
+    background: url("../images/sprite.svg") no-repeat scroll -7px -175px;
+    content: "";
+    display: inline-block;
+    height: 47px;
+    line-height: 47px;
+    margin: 0 0 0 -57px;
+    position: absolute;
+    top: 0;
+    width: 47px;
+}
+.callouts .Padd ul li.omni p:before {
+	background: url("../images/sprite.svg") no-repeat scroll -73px -175px;
+}
+.callouts .Padd ul li.genuine p:before {
+	background: url("../images/sprite.svg") no-repeat scroll -139px -175px;
+}
+.callouts .Padd ul li.returns p:before {
+	background: url("../images/sprite.svg") no-repeat scroll -205px -175px;
+}
+.callouts .Padd ul li:last-child{
+	border:none;
+}
+@media only screen and (max-width: 1450px){
+	.callouts {
+    margin: 25px 0 0;
+}
+.callouts .Padd {
+    padding: 20px 50px;
+}
+.callouts .Padd ul li p {
+    font-size: 15px;
+}
+}
+@media(max-width:1280px){
+	/*Confidence callouts*/
+	.callouts .Padd ul li p {    font-size: 15px;  }
+}	
+@media(max-width:960px){
+	/*Confidence callouts*/
+	.callouts .Padd ul li p {    font-size: 15px;  padding: 0 0 0 40px; }
+	.callouts .Padd ul li p:before{transform: scale(0.7);margin: 0 0 0 -50px;}
+}
+@media (max-width: 767px){
+	.callouts .Padd {
+    padding: 20px 50px;
+    display: inline-block;
+    width: 100%;
+}
+.callouts .Padd ul li p:before{
+	    transform: scale(0.6);
+}
+.callouts .Padd ul li:first-child,.callouts .Padd ul li.omni,.callouts .Padd ul li.genuine,.callouts .Padd ul li.returns{
+	width:100%;
+	text-align: left;
+	font-size: 15px;
+	border-right:none;
+}
+.callouts .Padd ul li:last-child{
+	border:none;
+}
+}
+  /*confidence callout end*/
+ 
  /* change here for modified checkout page ends */
