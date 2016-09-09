@@ -113,7 +113,7 @@ ${welcome_message}
 				<p id="cartPinCodeAvailable"><spring:theme code="product.pincode" /></p>
 				<!-- TPR_1055 EQA -->
 				<p id="AvailableMessage" style="display:none"></p>
-				<p id="unserviceablepincode"><spring:theme code="cart.unserviceable.pincode" /></p>
+				<p id="unserviceablepincode" style="display:none"><spring:theme code="cart.unserviceable.pincode" /></p>
 				<p id="error-Id" style="display:none" ><spring:theme code="product.invalid.pincode" /></p>
 				<p id="emptyId" style="display:none"><spring:theme code="product.empty.pincode" /></p>
 				<c:choose>
