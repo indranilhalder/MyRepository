@@ -26,6 +26,7 @@ tr.d0 td {
 }
 </style>
  <script type="text/javascript">
+
       (function() {
        var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
        po.src = 'https://apis.google.com/js/client:plusone.js';
@@ -56,13 +57,10 @@ tr.d0 td {
 		}
 		});
 	});
+var wishListList = [];
 
-	var wishListList = [];
-
-	// load wishlist of a particular user on opening popup
-
- 
- var imagePageLimit = ${imgCount};
+// load wishlist of a particular user on opening popup
+var imagePageLimit = ${imgCount};
 
  function nextImage()
  {
@@ -112,7 +110,6 @@ tr.d0 td {
 
  
  $( document ).ready(function() {
-	 
 	//AKAMAI Fix
 	 setSizeforAkamai();
 	//AJAX BuyBox call
@@ -121,22 +118,7 @@ tr.d0 td {
 	 
 	 getRating_Qview('${gigyaAPIKey}','${product.code}','${product.rootCategory}');
 	 
-	$(document).on("click","#variantForm div ul li a,.color-swatch-container .color-swatch li a",function(){
-		setTimeout(function(){
-		$(".zoomContainer").remove();
-		$('.picZoomer-pic').removeData('zoom-image');
-		$("img.picZoomer-pic").attr('data-zoom-image',$(".quickview .product-image-container .productImageGallery .active img").attr("data-zoomimagesrc")); 
-		$('.quickview .picZoomer-pic').elevateZoom({
-		    zoomType: "window",
-		    cursor: "crosshair",
-		    zoomWindowFadeIn: 500,
-		    zoomWindowFadeOut: 750
-	    });
-		var mainImageHeight = $(".main-image").find("img.picZoomer-pic").height();
-		var thumbnailImageHeight = (mainImageHeight / 5);
-		$(".imageList ul li img").css("height", thumbnailImageHeight);		
-		}, 1000); 
-	}); 
+
 	 
 	
 	$(document).on('show.bs.modal', "#modalProd", function() {
@@ -206,18 +188,18 @@ tr.d0 td {
  	$(".tempAddToCartQuickView").css("display","block");
  } 
  
- $('a.wishlist#wishlist_quick').popover({ 
+/*  $('a.wishlist#wishlist_quick').popover({ 
 	    html : true,
 	    content: function() {
 	      return $(this).parents().find('.add-to-wishlist-container_quick').html();
 	    }
-	  });
+	  });*/
  $('input.wishlist#add_to_wishlist_quick').popover({ 
 		html : true,
 		content: function() {
 			return $(this).parents().find('.add-to-wishlist-container_quick').html();
 		}
-	});
+	}); 
  
  function getRating_Qview(key,productCode,category)
  {
@@ -320,7 +302,11 @@ display:none;
 <div class="quick-view-popup product-info wrapper">
 
 <div class="product-image-container">
+<<<<<<< HEAD
 	<a class="wishlist-icon" onclick="openPop_quick()"></a>
+=======
+	<a class="wishlist-icon" onclick="openPop_quick()"></a>	
+>>>>>>> refs/heads/SCRUM1
    <c:set var="increment" value="0"/>
 <c:set var="thumbNailImageLength" value="${fn:length(galleryImages)}" />
 
@@ -358,9 +344,14 @@ display:none;
 </div>
 
     <div class="main-image">
+	<a onClick="openPop_quick();" class="wishlist-icon-qv normal"></a>
+	<a onClick="openPop_quick();" class="wishlist-icon-qv zoom-qv" style="display: none;"></a>
     <a href="${productUrl}"> <product:productPrimaryImage
 				product="${product}" format="product" />
 		</a>
+<!-- 		<div class="zoom" style="z-index:10000;">
+		<a onClick="openPop_quick();" id="wishlist_quick" class="wishlist" data-toggle="popover" data-placement='bottom'></a>
+		</div> -->
 		 <%-- <c:if test="${isCodEligible=='Y'}">
           <div class="cod" id="codId">
 		  <span ><spring:theme code="product.cod"/></span> 
@@ -440,9 +431,13 @@ display:none;
     <div class="product-detail">
     
     <h2 class="company">
+<<<<<<< HEAD
 
               <span class="logo"></span>${product.brand.brandname}<%-- &nbsp;<spring:theme code="product.by"/>&nbsp;<span id="sellerNameIdQuick"></span>${sellerName} --%></h2><!-- Convert into AJAX call -->
 
+=======
+              <span class="logo"></span>${product.brand.brandname}<%-- &nbsp;<spring:theme code="product.by"/>&nbsp;<span id="sellerNameIdQuick"></span>${sellerName} --%></h2><!-- Convert into AJAX call -->
+>>>>>>> refs/heads/SCRUM1
               
     <h3 class="product-name"><a href="${productUrl}">${product.productTitle}</a></h3>
     <div class="price">
@@ -494,6 +489,7 @@ display:none;
 	  <span></span>
 	</p>
     
+<<<<<<< HEAD
   </div>   
   
   
@@ -506,6 +502,16 @@ display:none;
 	<product:emiDetail product="${product}" />
 	
 	
+=======
+  </div>  
+	<%-- <div id="emiStickerId" class="Emi Emi_wrapper" style="display:none;">		
+				<spring:theme code="marketplace.emiavailable" />&nbsp;		
+							<a type="button" name="yes" id="prodEMI"		
+		data-target="#modalProd" onclick="openPopForBankEMI_quick()"		
+		data-toggle="modal"><spring:theme code="marketplace.emiinfo"></spring:theme></a> <input id="prodPrice" type="hidden" />		
+	</div>	 --%>	
+<%-- <product:emiDetail product="${product}" />  --%>
+>>>>>>> refs/heads/SCRUM1
 <a href="#" class="gig--readReviewsLink"></a>
 	<span id="gig-rating-readReviewsLink_quick" ></span>	
   <input type="hidden" id="rating_review" value="${product.code}">
@@ -722,10 +728,10 @@ display:none;
 			</ul>    
 <!-- adding to wishlist -->
 				<ul class="wish-share">
-					<%-- <li><!-- <span id="addedMessage" style="display:none"></span> -->
+					  <%--   <li><!-- <span id="addedMessage" style="display:none"></span> -->
 						<a onClick="openPop_quick('${buyboxUssid}');scrollbottom();" id="wishlist_quick" class="wishlist" data-toggle="popover" data-placement='bottom'>....<spring:theme code="text.add.to.wishlist"/></a></li>
-						<a onClick="openPop_quick();" id="wishlist_quick" class="wishlist" data-toggle="popover" data-placement='bottom'><spring:theme code="text.add.to.wishlist"/></a></li> --%>
-				<%-- <a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement='bottom'><spring:theme code="text.add.to.wishlist"/></a></li> --%>
+						<a onClick="openPop_quick();" id="wishlist_quick" class="wishlist" data-toggle="popover" data-placement='bottom'><spring:theme code="text.add.to.wishlist"/></a></li>
+				<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement='bottom'><spring:theme code="text.add.to.wishlist"/></a></li>  --%>
 					<li>
 						<div class="share">
 							<%-- <span><spring:theme code="product.socialmedia.share"/></span> --%>
@@ -874,7 +880,7 @@ display:none;
  	
 <%-- <div class="quick-view-prod-details-container">
 <a href="${productUrl}" class="quick-view-prod-details-link"><spring:theme code="quickview.productdetails"/></a>
-</div> --%>
+</div>  --%>
 <span id="addtobag" style="display:none"><spring:theme code="product.addtocart.success"/></span>
 <span id="addtobagerror" style="display:none"><spring:theme code="product.error"/></span>
 <span id="bagtofull" style="display:none"><spring:theme code="product.addtocart.aboutfull"/></span>
@@ -1023,5 +1029,45 @@ $(document).on("keypress","#defaultWishName_quick",function(e) {
 	validateSpcharWlName(e,wishlistname,mainDiv,errorDiv);
 }); 
 
+/*add to wishlist st*/
+var wishQv;
+wishQv = setInterval(function(){
+	if($(".zoomContainer .wishlist-icon-qv.zoom-qv").length == 0) {
+		$(".zoomContainer").append($(".wishlist-icon-qv.zoom-qv").clone());
+		$(".zoomContainer .wishlist-icon-qv.zoom-qv").css({
+			"left":$(".quickview .main-image").width() - 50,
+			"display":"block"
+			});
+	} else {
+		clearInterval(wishQv);
+	}
+	
+},50);
+$(document).on("mouseover",".zoomContainer",function(e) {
+	if($(".zoomContainer .wishlist-icon-qv.zoom-qv").length == 0) {
+		$(".zoomContainer").append($(".wishlist-icon-qv.zoom-qv").clone());
+		$(".zoomContainer .wishlist-icon-qv.zoom-qv").css({
+			"left":$(".quickview .main-image").width() - 50,
+			"display":"block"
+			});
+	}
+	$(".wishlist-icon-qv.normal").hide();
+	$(".zoomContainer .wishlist-icon-qv.zoom-qv").show();
+	$(".zoomContainer .wishlist-icon-qv.zoom-qv").css({
+		"left":$(".quickview .main-image").width() - 50
+		});
+});
+$(document).on("mouseleave",".zoomContainer",function(e) {
+	$(".zoomContainer .wishlist-icon-qv.zoom-qv").remove();
+	$(".wishlist-icon-qv.normal").show();
+	$(".zoomContainer .wishlist-icon-qv.zoom-qv").hide();
+});
+$(window).resize(function(){
+	if($(window).width() < 1024) {
+		$(".wishlist-icon-qv.normal").show();
+	}
+	
+});
+/*add to wishlist st*/
 
 </script>
