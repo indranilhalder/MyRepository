@@ -3896,7 +3896,7 @@ color:inherit;}
 	padding: 0;
 }
 
-.feature-categories h1,.feature-categories h3 {
+.feature-categories h1,.feature-categories h2,.feature-categories h3 {
 	text-align: center;
 	font-size: 28px;
 	padding: 30px 0;
@@ -3988,9 +3988,9 @@ color:inherit;}
 }
 
 @media (min-width: 791px) {		
-    .feature-categories h1 {		
+    .feature-categories h1,.feature-categories h2 {		
         padding: 40px 0;		
-        font-weight: 500		
+        font-weight: 500;		
     }	
     	
     .feature-categories ul.categories {		
@@ -7626,7 +7626,7 @@ body.wishlist header + .wrapper {
   div.wishlist-nav {
     width: 25%;
     float: left; } }
-div.wishlist-nav h3 {
+div.wishlist-nav h3,div.wishlist-nav h1 {
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 40px;
@@ -15048,10 +15048,10 @@ body .account .right-account ul.saved-cards .details p {
 body .account .right-account ul.saved-cards>li .paymentItem h3 {
 	padding-left:80px;
 }
-body .account .right-account ul.saved-cards>li h3{
+body .account .right-account ul.saved-cards>li h3,body .account .right-account ul.saved-cards>li h2{
 	  font-size: 14px;
     line-height: 1.5;}
-body .account .right-account ul.saved-cards>li h3 {
+body .account .right-account ul.saved-cards>li h3,body .account .right-account ul.saved-cards>li h2 {
     font-weight: bold;
 }
 @media (max-width: 650px) {
@@ -25429,7 +25429,7 @@ padding-left: 0px;}
     .bottom-pagination .pagination .prev,.bottom-pagination .pagination .next a{
     padding-left:0px;
     padding-right:0px;}
-    div.wishlist-nav h3{
+    div.wishlist-nav h3,div.wishlist-nav h1{
     margin:30px 0;}
     .listing.wrapper .right-block .listing-menu .pagination li.prev,.listing.wrapper .right-block .listing-menu .pagination li.next{
     height:34px;}
@@ -42883,10 +42883,9 @@ body .account .right-account .order-history .product-block li.item h2{
     letter-spacing: normal;
 }
 body .account .right-account .order-history .product-block li.item h2:first-child{
-	margin-bottom: 0;
-    font-size: inherit;
-    font-weight: inherit;
-    letter-spacing: inherit;
+	font-size: 12px;
+    font-weight: normal;
+    height: 12px;
 }
 body .right-account .order-history .cancellation-request-block h1{
 	background: #f0f4f5;
@@ -43221,6 +43220,9 @@ body.pageLabel-Footwear .feature-collections ul.collections li.chef .feature-col
 	.brand-microsite.electronics-brand .brands h2{
 	padding: 40px 0 55px;
 	}
+	body .account .right-account .order-history .product-block li.item h2.product-name:first-child{
+	line-height: normal;
+	}
 }
 @media(max-width: 790px){
 	.page-aboutus .virtues .feature-virtues h2{
@@ -43345,6 +43347,17 @@ body.pageLabel-Footwear .feature-collections ul.collections li.chef .feature-col
 	}
 }
 
+.electronics-brand .brands h2{
+	font-size: 28px;
+    font-weight: 500;
+    text-align: center;
+    padding: 30px 0;
+}
+@media (min-width:791px){
+	.electronics-brand .brands h2{
+		 padding: 40px 0 55px;
+	}
+}
 
 /* TPR-245 SEO Ends */
 
@@ -47036,9 +47049,10 @@ body:not(.page-checkout-login) .checkout-header.login{
 	 .progress-barcheck .step-3 span {    right: 9%;}
 
 }
+@media(min-width:981px){
 body:not(.page-checkout-login) .step-body .checkout-shipping{
 	    padding-top: 120px;
-}
+}}
 @media (max-width: 980px) and (min-width: 791px){
 .wrapper .container-address {
    margin-top: -28px;
@@ -47810,9 +47824,9 @@ body.no-scroll {
         width: 100%;
     }
 
-    .smk_accordion {
+   /*  .smk_accordion {
         padding: 120px 0 0;
-    }
+    } */
 
     .smk_accordion .accordion_in {
         background: #fff url("../images/down-arrow.png") no-repeat scroll 96% 23px;
@@ -49716,9 +49730,13 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
 	margin-bottom:0px;
 }
 }
-
+@media(max-width:650px){
+	.checkout.wrapper .formaddress .product-block.addresses.new-form li.item .half{
+	float:left;}
+}
   
  /* } */
+
  
  /*confidence callout start*/
  .callouts {

@@ -2010,6 +2010,18 @@ $(document).ready(function(){
 		var txth = $(this).text();
 		$(this).replaceWith("<h2>"+txth+"</h2>");
 	});
+	$(".electronics-brand .brands h1").each(function(){
+		var txth1 = $(this).text();
+		$(this).replaceWith("<h2>"+txth1+"</h2>");
+	});
+	$(".feature-categories h1").each(function(){
+		var txth1 = $(this).text();
+		$(this).replaceWith("<h2>"+txth1+"</h2>");
+	});
+	$(".trending h1").each(function(){
+		var txth1 = $(this).text();
+		$(this).replaceWith("<h2><span style='color: black !important;'>"+txth1+"</span></h2>");
+	});
 	
 });
 
@@ -2086,6 +2098,19 @@ $("#address-form").click(function() {
 	  //$(this).parents().find(".formaddress").slideUp();
   });
 $(".checkTab .address-list").last().addClass("last");
+if($(".choose-address .acc_content").children(".address-list").length == 0){
+	$(".add-address").css({
+	  margin : "0px auto",
+	  float: "none"
+});
+	$(".checkTab .formaddress").css({
+		margin : "0px auto",
+		float: "none",
+		width: "80%",
+		overflow: "hidden"
+	});
+$(".choose-address .acc_head").css("text-align","center");
+}
 /*	$(document).on("click",".edit",function(e){	
 		 e.stopPropagation();
 	alert("hi");
