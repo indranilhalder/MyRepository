@@ -1771,6 +1771,16 @@ $(document).ready(function(){
 					});
 				}
 			});
+			if($(".listing.wrapper").length > 0){
+				if($(".searchSpellingSuggestionPrompt").length>0){
+					$(".toggle-filterSerp").css("margin-top",$(".searchSpellingSuggestionPrompt").height() + 40 + "px");
+					$(".listing.wrapper .right-block").css("padding-top",$(".searchSpellingSuggestionPrompt").height() + 50 + "px");
+				}
+				if($(".toggle-filterSerp").length>0){
+					var sort_top= $(".toggle-filterSerp").offset().top - $(".listing.wrapper").offset().top - 20;
+					$(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("top",sort_top+"px")
+				}
+			}
 		});
 		$(window).on("load resize", function() {
 		if($(".listing.wrapper").length > 0){
