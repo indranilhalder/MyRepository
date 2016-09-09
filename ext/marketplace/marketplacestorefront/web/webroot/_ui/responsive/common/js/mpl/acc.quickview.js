@@ -516,6 +516,10 @@ function selectWishlist_quick(i) {
 
 
 function openPop_quick(ussidfromSeller) {
+/*	$(".wishAddSucessQV").addClass("active");
+	setTimeout(function(){
+		$(".wishAddSucessQV").removeClass("active")
+	},3000);*/
 	$('#addedMessage_quick').hide();
 	if (ussidfromSeller == null || ussidfromSeller == "") {
 		ussidValue = $("#ussid_quick").val();
@@ -641,3 +645,46 @@ function getSelectedEMIBankForPDP() {
 
 	}
 }
+/**/
+$(document).on("click","#variantForm div ul li a,.color-swatch-container .color-swatch li a",function(){
+	setTimeout(function(){
+	$(".zoomContainer").remove();
+	$('.picZoomer-pic').removeData('zoom-image');
+	$("img.picZoomer-pic").attr('data-zoom-image',$(".quickview .product-image-container .productImageGallery .active img").attr("data-zoomimagesrc")); 
+	$('.quickview .picZoomer-pic').elevateZoom({
+	    zoomType: "window",
+	    cursor: "crosshair",
+	    zoomWindowFadeIn: 500,
+	    zoomWindowFadeOut: 750
+    });
+	var mainImageHeight = $(".main-image").find("img.picZoomer-pic").height();
+	var thumbnailImageHeight = (mainImageHeight / 5);
+	$(".imageList ul li img").css("height", thumbnailImageHeight);		
+	}, 1000); 
+});
+
+$(document).on("click",".quickview #emiStickerId p",function(e){
+	e.stopPropagation();
+	$(this).addClass("active mobile")
+	openPopForBankEMI_quick();
+		
+	});
+$(document).on("click",".quickview .Emi .modal-content .Close",function(e){
+	$(".quickview .Emi > p").removeClass("active mobile");
+	e.stopPropagation();
+	
+});
+$(document).on("click", function(e){
+	//console.log($(e.currentTarget).attr('class'))
+	if(!$(e.currentTarget).parents(".Emi").hasClass("Emi_wrapper")) {
+		$(".quickview .Emi > p").removeClass("active")
+	} else {
+		$(".quickview .Emi > p").addClass("active")
+	}
+});
+$(document).on("click",".quickview .Emi > #EMImodal-content",function(e){
+	e.stopPropagation();
+		$(".quickview .Emi > p").addClass("active")
+});
+
+/**/

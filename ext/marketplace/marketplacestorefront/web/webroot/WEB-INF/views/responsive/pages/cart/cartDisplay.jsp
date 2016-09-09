@@ -111,7 +111,9 @@ ${welcome_message}
 			<div id="changePinDiv">
 				<%-- <p><spring:theme code="product.pincode.input" /></p> --%>
 				<p id="cartPinCodeAvailable"><spring:theme code="product.pincode" /></p>
-				<p id="unserviceablepincode" style="display:none"></p>
+				<!-- TPR_1055 EQA -->
+				<p id="AvailableMessage"></p>
+				<p id="unserviceablepincode"><spring:theme code="cart.unserviceable.pincode" /></p>
 				<p id="error-Id" style="display:none" ><spring:theme code="product.invalid.pincode" /></p>
 				<p id="emptyId" style="display:none"><spring:theme code="product.empty.pincode" /></p>
 				<c:choose>
@@ -122,7 +124,7 @@ ${welcome_message}
 		    	<input type="text" id= "defaultPinCodeIds" name = "defaultPinCodeIds" style="" value="" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
 		   		</c:otherwise>
 				 </c:choose>
-				<button id= "pinCodeButtonIds" name="pinCodeButtonId" style="" type="" onclick="return checkPincodeServiceability('typeSubmit');"><spring:theme code="text.submit"/></button>
+				<button id= "pinCodeButtonIds" name="pinCodeButtonId" style="" type="" onclick="return checkPincodeServiceability('typeSubmit',this);"><spring:theme code="text.submit"/></button>
 			</div>
 		
 		

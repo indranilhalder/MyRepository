@@ -392,7 +392,10 @@ tr.d0 td {
 						<c:otherwise>
 							<li id ="${entry.selectedSellerInformation.ussid}_li" class="delivery">
 							<p class="mobile-delivery"><spring:theme code="basket.delivery.options"/></p>
-								<ul id="${entry.selectedSellerInformation.ussid}">
+							<!-- TPR-1341 -->
+							<span class='pincodeServiceError'></span>
+							<p class="cartItemBlankPincode"><spring:theme code="cart.pincode.blank"/></p>	
+							<ul id="${entry.selectedSellerInformation.ussid}">
 						</c:otherwise>
 					</c:choose>	
 	             	 
@@ -401,7 +404,8 @@ tr.d0 td {
 								</c:when>
 								
 								<c:when test="${empty selectedPincode ||  fn:length(selectedPincode) == 0  }"> 
-									<spring:theme code="cart.pincode.blank"/>
+									<!-- TPR-1341 -->
+									<%-- <p id="cartItemBlankPincode"><spring:theme code="cart.pincode.blank"/></p> --%>
 								</c:when>
 								
 		            			<%-- Commented as part of performance fix TISPT-104
