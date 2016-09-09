@@ -488,7 +488,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			//TISST-7473
 			if (deliveryAddress == null || deliveryAddress.isEmpty())
 			{
-				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.NEWADDRESSLINK;
+				//return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLDELIVERYSELECTURL;
 			}
 			LOG.debug("Before final model attribute level set ");
 
