@@ -147,7 +147,7 @@
 		class="com.tisl.mpl.shorturl.service.ShortUrlServiceGoogleImpl"/>
 		
 		<bean id="shortUrlReportDaoImpl"
-		class="com.tisl.mpl.shorturl.report.dao.ShortUrlReportDaoImpl"/>
+		class="com.tisl.mpl.shorturl.report.dao.OrderShortUrlDaoImpl"/>
 		
 </beans>
 

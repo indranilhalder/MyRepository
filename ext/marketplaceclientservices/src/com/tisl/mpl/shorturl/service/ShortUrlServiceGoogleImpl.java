@@ -4,6 +4,7 @@
 package com.tisl.mpl.shorturl.service;
 
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.Date;
@@ -19,8 +20,8 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.tisl.mpl.constants.MarketplaceclientservicesConstants;
-import com.tisl.mpl.core.model.TULShortUrlReportModel;
-import com.tisl.mpl.shorturl.report.dao.ShortUrlReportDao;
+import com.tisl.mpl.core.model.OrderShortUrlInfoModel;
+import com.tisl.mpl.shorturl.report.dao.OrderShortUrlDao;
 
 
 /**
@@ -39,15 +40,15 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 	@Resource(name = "modelService")
 	private ModelService modelService;
 	@Resource(name = "shortUrlReportDaoImpl")
-	private ShortUrlReportDao shortUrlReportDaoImpl;
-
+	private OrderShortUrlDao orderShortUrlDaoImpl;
+	
 	/**
 	 * @Description Generates short URL for a given order code
 	 * @param orderCode
 	 * @return shortUrl
 	 */
 	@Override
-	public String genearateShorterURL(final String orderCode)
+	public String genearateShortURL(final String orderCode)
 	{
 		try
 		{
@@ -59,19 +60,23 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 					MarketplaceclientservicesConstants.GOOGLE_SHORT_URL_API_KEY);
 			final String googleShortUrlConnectUrl = (String) getConfigurationService().getConfiguration().getProperty(
 					MarketplaceclientservicesConstants.GOOGLE_API_SHORT_URL);
-			LOG.debug("API Key " + googleShortUrlApiKey + "Connect URL " + googleShortUrlConnectUrl);
-
+		
 			final StringBuilder sb = new StringBuilder(googleShortUrlConnectUrl);
 			sb.append("?key");
 			sb.append("=" + googleShortUrlApiKey);
 
 			final String url = new String(sb);
-			LOG.debug("Before Connecting to Google URL -- " + sb);
-
+			
 			final Client client = Client.create();
 			//prepare input and send in body
 			final String input = "{\"longUrl\": \"" + longUrl + "\"}";
-			LOG.debug("long url--" + longUrl);
+		
+			if(LOG.isDebugEnabled()){
+				LOG.debug("API Key== " + googleShortUrlApiKey + "Connect URL=== " + googleShortUrlConnectUrl);
+				LOG.debug("Before Connecting to Google URL === " + sb);
+				LOG.debug("long url===" + longUrl);
+			}
+
 			final WebResource webResource = client.resource(url);
 
 			final ClientResponse response = webResource.accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON)
@@ -86,22 +91,25 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 			}
 
 			final String output = response.getEntity(String.class);
-			LOG.debug("Output from google Server .... \n" + output);
+			if(LOG.isDebugEnabled()){
+				LOG.debug("Output from google Server .... \n" + output);
+			}
 			final JSONObject obj = new JSONObject(output);
 			final String shortUrl = (String) obj.get("id");
 			//create TULShortUrlReport model to generate report ,later use and update this model when user clicks on short url
 			try
 			{
-				final TULShortUrlReportModel shortUrlModel = getModelService().create(TULShortUrlReportModel.class);
+				final OrderShortUrlInfoModel shortUrlModel = getModelService().create(OrderShortUrlInfoModel.class);
 				shortUrlModel.setOrderId(orderCode);
 				shortUrlModel.setShortURL(shortUrl);
 				shortUrlModel.setLongURL(longUrl);
 				getModelService().save(shortUrlModel);
 			}
-			catch (final Exception e)
-			{
+			catch(final ModelSavingException mse){				
+				LOG.error("ModelSavingException while saving TULShortUrlReportModel " + orderCode);
+			}
+			catch (final Exception e){
 				LOG.error("Error while saving TULShortUrlReportModel " + orderCode);
-				e.printStackTrace();
 			}
 			return shortUrl;
 		}
@@ -119,13 +127,13 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 	 * @return TULShortUrlReportModel
 	 */
 	@Override
-	public TULShortUrlReportModel getShortUrlReportModelByOrderId(final String orderCode)
+	public OrderShortUrlInfoModel getShortUrlReportModelByOrderId(final String orderCode)
 	{
-		return getShortUrlReportDaoImpl().getShortUrlReportModelByOrderId(orderCode);
+		return getOrderShortUrlDaoImpl().getShortUrlReportModelByOrderId(orderCode);
 	}
 
 	/**
-	 * @Description This method will form the long URL from local.properties and ordercode
+	 * @Description This method will form the long URL for an order
 	 * @param orderCode
 	 * @return longUrl
 	 */
@@ -143,9 +151,9 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 	 * @return List<TULShortUrlReportModel>
 	 */
 	@Override
-	public List<TULShortUrlReportModel> getShortUrlReportModels(Date fromDate,Date toDate)
+	public List<OrderShortUrlInfoModel> getShortUrlReportModels(Date fromDate,Date toDate)
 	{
-		return  getShortUrlReportDaoImpl().getShortUrlReportModels(fromDate, toDate);
+		return  getOrderShortUrlDaoImpl().getShortUrlReportModels(fromDate, toDate);
 	}
 
 	/**
@@ -183,19 +191,20 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 	}
 
 	/**
-	 * @return the shortUrlReportDaoImpl
+	 * @return the orderShortUrlDaoImpl
 	 */
-	public ShortUrlReportDao getShortUrlReportDaoImpl()
+	public OrderShortUrlDao getOrderShortUrlDaoImpl()
 	{
-		return shortUrlReportDaoImpl;
+		return orderShortUrlDaoImpl;
 	}
 
 	/**
-	 * @param shortUrlReportDaoImpl
-	 *           the shortUrlReportDaoImpl to set
+	 * @param orderShortUrlDaoImpl the orderShortUrlDaoImpl to set
 	 */
-	public void setShortUrlReportDaoImpl(final ShortUrlReportDao shortUrlReportDaoImpl)
+	public void setOrderShortUrlDaoImpl(OrderShortUrlDao orderShortUrlDaoImpl)
 	{
-		this.shortUrlReportDaoImpl = shortUrlReportDaoImpl;
+		this.orderShortUrlDaoImpl = orderShortUrlDaoImpl;
 	}
+
+	
 }

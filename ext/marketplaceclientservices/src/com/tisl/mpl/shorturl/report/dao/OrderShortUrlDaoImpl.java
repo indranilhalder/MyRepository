@@ -12,7 +12,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.tisl.mpl.core.model.TULShortUrlReportModel;
+import com.tisl.mpl.core.model.OrderShortUrlInfoModel;
 
 
 /**
@@ -20,14 +20,15 @@ import com.tisl.mpl.core.model.TULShortUrlReportModel;
  *
  *         Class for managing the Short Url report model
  */
-public class ShortUrlReportDaoImpl implements ShortUrlReportDao
-{
-	private static final Logger LOG = Logger.getLogger(ShortUrlReportDaoImpl.class);
-	private static final String SHORT_URL_REPORT_QUERY_BY_ORDERID = "SELECT {srm:" + TULShortUrlReportModel.PK + "}" + " FROM {"
-			+ TULShortUrlReportModel._TYPECODE + " AS srm} " + "WHERE " + "{srm:" + TULShortUrlReportModel.ORDERID + "}=?code ";
+public class OrderShortUrlDaoImpl  implements OrderShortUrlDao
 
-	private static final String SHORT_URL_REPORT_QUERY_BETWEEN_TWO_DATES= "SELECT {srm:" + TULShortUrlReportModel.PK + "}" + " FROM {"
-			+ TULShortUrlReportModel._TYPECODE + " AS srm} " + "WHERE " + "{srm:" + TULShortUrlReportModel.CREATIONTIME + "} between ?fromDate and ?toDate ";
+{
+	private static final Logger LOG = Logger.getLogger(OrderShortUrlDaoImpl.class);
+	private static final String SHORT_URL_REPORT_QUERY_BY_ORDERID = "SELECT {srm:" + OrderShortUrlInfoModel.PK + "}" + " FROM {"
+			+ OrderShortUrlInfoModel._TYPECODE + " AS srm} " + "WHERE " + "{srm:" + OrderShortUrlInfoModel.ORDERID + "}=?code ";
+
+	private static final String SHORT_URL_REPORT_QUERY_BETWEEN_TWO_DATES= "SELECT {srm:" + OrderShortUrlInfoModel.PK + "}" + " FROM {"
+			+ OrderShortUrlInfoModel._TYPECODE + " AS srm} " + "WHERE " + "{srm:" + OrderShortUrlInfoModel.CREATIONTIME + "} between ?fromDate and ?toDate ";
 
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
@@ -39,14 +40,17 @@ public class ShortUrlReportDaoImpl implements ShortUrlReportDao
 	 * @return TULShortUrlReportModel
 	 */
 	@Override
-	public TULShortUrlReportModel getShortUrlReportModelByOrderId(final String orderCode)
+	public OrderShortUrlInfoModel getShortUrlReportModelByOrderId(final String orderCode)
 	{
 		try
 		{
+			if(LOG.isDebugEnabled()){
+				LOG.debug("In getShortUrlReportModelByOrderId - orderCode ***"+orderCode);
+			}
 			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(SHORT_URL_REPORT_QUERY_BY_ORDERID);
 			fQuery.addQueryParameter("code", orderCode);
 
-			final List<TULShortUrlReportModel> listOfData = flexibleSearchService.<TULShortUrlReportModel> search(fQuery).getResult();
+			final List<OrderShortUrlInfoModel> listOfData = flexibleSearchService.<OrderShortUrlInfoModel> search(fQuery).getResult();
 			return !listOfData.isEmpty() ? listOfData.get(0) : null;
 		}
 		catch (final Exception e)
@@ -64,15 +68,17 @@ public class ShortUrlReportDaoImpl implements ShortUrlReportDao
 	 * @return TULShortUrlReportModel
 	 */
 	@Override
-	public List<TULShortUrlReportModel> getShortUrlReportModels(Date fromDate,Date toDate)
+	public List<OrderShortUrlInfoModel> getShortUrlReportModels(Date fromDate,Date toDate)
 	{
 		try
 		{
-			
+			if(LOG.isDebugEnabled()){
+				LOG.debug("In getShortUrlReportModels - fromDate: ="+fromDate +"todate :="+toDate);
+			}
 			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(SHORT_URL_REPORT_QUERY_BETWEEN_TWO_DATES);
 			fQuery.addQueryParameter("fromDate", fromDate);
 			fQuery.addQueryParameter("toDate", toDate);
-			return  flexibleSearchService.<TULShortUrlReportModel> search(fQuery).getResult();
+			return  flexibleSearchService.<OrderShortUrlInfoModel> search(fQuery).getResult();
 		}
 		catch (final Exception e)
 		{

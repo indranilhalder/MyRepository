@@ -154,11 +154,15 @@ public final class RequestMappingUrlConstants
 
 	public static final String SHOP_BY_BRAND_AJAX = "/shopbybrand";
 
-	//order tracking page
-	public static final String NON_LOGIN_TRACK_ORDER_URL = "/trackOrder";
-	public static final String BEFORE_NON_LOGIN_TRACK_URL = "/beforeTrack/{orderId}";
+	//order tracking page start
+	public static final String ANONYMOUS_ORDER_TRACKING_URL = "/trackOrder";
+	public static final String BEFORE_ANONYMOUS_USER_TRACK_URL = "/beforeTrack/{orderId}";
 	public static final String TRACK_ORDER_DETAILS_PAGE_URL = "/shortDetails";
-	public static final String NON_LOGIN_TRACK_VALIDATE_URL = "/nonlogintrack";
+	public static final String ANONYMOUS_TRACK_ORDER_VALIDATE_URL = "/anonymousTrack";
+	public static final String ANONYMOUS_TRACKING_PAGE_URL = "/trackOrder/shortDetails/?orderCode=";
+	public static final String LOGIN_TRACKING_PAGE_URL = "/my-account/order/?orderCode=";
+	//order tracking page end
+	
 	public static final String RETURN_TO_STORE_AJAX = "/returnToStore";
 	public static final String LINK_INITIATE_RETURN="/initiateReturn";
 	public static final String LINK_MY_ACCOUNT_RETRUNS = "/my-account/returns";

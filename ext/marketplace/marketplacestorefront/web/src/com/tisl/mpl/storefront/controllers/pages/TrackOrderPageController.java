@@ -46,7 +46,7 @@ import org.springframework.web.servlet.LocaleResolver;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.BrandModel;
-import com.tisl.mpl.core.model.TULShortUrlReportModel;
+import com.tisl.mpl.core.model.OrderShortUrlInfoModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
@@ -74,15 +74,13 @@ import com.tisl.mpl.util.ExceptionUtil;
  */
 @Controller
 @Scope(RequestMappingUrlConstants.TENANT)
-@RequestMapping(value = RequestMappingUrlConstants.NON_LOGIN_TRACK_ORDER_URL)
+@RequestMapping(value = RequestMappingUrlConstants.ANONYMOUS_ORDER_TRACKING_URL)
 public class TrackOrderPageController extends AbstractPageController
 {
 	private static final Logger LOG = Logger.getLogger(TrackOrderPageController.class);
 	private static final String ORDER_DETAIL_CMS_PAGE = "order";
 	public static final String PAGE_ROOT = "pages/";
-	public static final String NON_LOGIN_TRACKING_PAGE_URL = "/trackOrder/shortDetails/?orderCode=";
-	public static final String LOGIN_TRACKING_PAGE_URL = "/my-account/order/?orderCode=";
-	public static final String ORDERID_EMAILID_MISMATCH_MESSAGE_KEY = "trackorder.orderid.email.mismatch.message";
+	
 
 	@Autowired
 	private UserFacade userFacade;
@@ -117,25 +115,28 @@ public class TrackOrderPageController extends AbstractPageController
 	 * @param request
 	 * @return shortUrl
 	 */
-	@RequestMapping(value = RequestMappingUrlConstants.BEFORE_NON_LOGIN_TRACK_URL, method = RequestMethod.GET)
+	@RequestMapping(value = RequestMappingUrlConstants.BEFORE_ANONYMOUS_USER_TRACK_URL, method = RequestMethod.GET)
 	public String beforeShortOrderTrack(@PathVariable("orderId") final String orderCode, final HttpServletRequest request)
 			throws CMSItemNotFoundException
 	{
-
-		LOG.debug("In Before showing the track order:"+orderCode);
+		if(LOG.isDebugEnabled()){
+			LOG.debug("In Before showing the track order :"+orderCode);
+		}
 		if (null == orderCode)
 		{
 			return REDIRECT_PREFIX + RequestMappingUrlConstants.LINK_404;
 		}
 		//Retrieve the short URL report model
-		final TULShortUrlReportModel shortUrlReport = googleShortUrlService.getShortUrlReportModelByOrderId(orderCode);
+		final OrderShortUrlInfoModel shortUrlReport = googleShortUrlService.getShortUrlReportModelByOrderId(orderCode);
 		final boolean isAnonymous = userFacade.isAnonymousUser();
 		if (null != shortUrlReport)
 		{
 			LOG.debug("Short url report model is not NUll .So update it");
 			int clicks = shortUrlReport.getClicks().intValue();
 			clicks += 1;
-			LOG.debug("No of clicks===" + clicks);
+			if(LOG.isDebugEnabled()){
+				LOG.debug("No of clicks ===" + clicks);
+			}
 			shortUrlReport.setClicks(clicks);
 
 			//if the user is logged in redirect the user to existing order detail page
@@ -147,15 +148,15 @@ public class TrackOrderPageController extends AbstractPageController
 				LOG.debug("No of login clicks===" + noOfLoginClicks);
 				shortUrlReport.setLogin(noOfLoginClicks);
 				modelService.save(shortUrlReport);
-				return REDIRECT_PREFIX + LOGIN_TRACKING_PAGE_URL + orderCode;
+				return REDIRECT_PREFIX + RequestMappingUrlConstants.LOGIN_TRACKING_PAGE_URL + orderCode;
 			}
 			modelService.save(shortUrlReport);
 		}
 		if (!isAnonymous)
 		{
-			return REDIRECT_PREFIX + LOGIN_TRACKING_PAGE_URL + orderCode;
+			return REDIRECT_PREFIX + RequestMappingUrlConstants.LOGIN_TRACKING_PAGE_URL + orderCode;
 		}
-		return REDIRECT_PREFIX + NON_LOGIN_TRACKING_PAGE_URL + orderCode;
+		return REDIRECT_PREFIX + RequestMappingUrlConstants.ANONYMOUS_TRACKING_PAGE_URL + orderCode;
 	}
 
 	/**
@@ -170,13 +171,15 @@ public class TrackOrderPageController extends AbstractPageController
 	{
 		try
 		{
-			LOG.debug("In track order -orderCode ***"+orderCode);
+			if(LOG.isDebugEnabled()){
+				LOG.debug("In track order - orderCode ***"+orderCode);
+			}
 			//if the user is logged in redirect to exsiting account order detail page
 			if (!userFacade.isAnonymousUser())
 			{
-				return REDIRECT_PREFIX + LOGIN_TRACKING_PAGE_URL + orderCode;
+				return REDIRECT_PREFIX + RequestMappingUrlConstants.LOGIN_TRACKING_PAGE_URL + orderCode;
 			}
-			final OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForCodeWithoutUser(orderCode);
+			final OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForAnonymousUser(orderCode);
 
 			final Map<String, Map<String, List<AWBResponseData>>> trackStatusMap = new HashMap<>();
 			final Map<String, String> currentStatusMap = new HashMap<>();
@@ -284,37 +287,40 @@ public class TrackOrderPageController extends AbstractPageController
 		}
 		catch (final IllegalArgumentException e)
 		{
-
+			LOG.error(" IllegalArgumentException "+e.getMessage() +"In Tracking the Order =="+orderCode);
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 		catch (final NoSuchMessageException e)
 		{
-
+			LOG.error(" NoSuchMessageException "+e.getMessage() +"In Tracking the Order =="+orderCode);
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 		catch (final UnknownIdentifierException e)
 		{
-
+			LOG.error(" UnknownIdentifierException "+e.getMessage() +"In Tracking the Order =="+orderCode);
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 		catch (final EtailBusinessExceptions e)
 		{
+			LOG.error(" EtailBusinessExceptions "+e.getMessage() +"In Tracking the Order=="+orderCode);
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			return frontEndErrorHelper.callBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_BUSINESS);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
+			LOG.error(" EtailNonBusinessExceptions "+e.getMessage() +"In Tracking the Order =="+orderCode);
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 		catch (final Exception e)
 		{
+			LOG.error(" Exception "+e.getMessage() +"In Tracking the Order =="+orderCode);
 			ExceptionUtil.getCustomizedExceptionTrace(e);
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
@@ -335,7 +341,7 @@ public class TrackOrderPageController extends AbstractPageController
 	 * @return result
 	 */
 
-	@RequestMapping(value = RequestMappingUrlConstants.NON_LOGIN_TRACK_VALIDATE_URL, method = RequestMethod.GET)
+	@RequestMapping(value = RequestMappingUrlConstants.ANONYMOUS_TRACK_ORDER_VALIDATE_URL, method = RequestMethod.GET)
 	@ResponseBody
 	public String trackOrderWihoutLogin(@RequestParam("orderCode") final String orderCode,
 			@RequestParam("emailId") final String emailId, @RequestParam("captchaCode") final String captchaCode,
@@ -359,7 +365,7 @@ public class TrackOrderPageController extends AbstractPageController
 				return message;
 			}
 			//if the result is success ,check for order id and email combination
-			final OrderModel orderModel = mplOrderFacade.getOrderWithoutUser(orderCode);
+			final OrderModel orderModel = mplOrderFacade.getOrderForAnonymousUser(orderCode);
 			final UserModel userModel = orderModel.getUser();
 			final CustomerModel custModel = (CustomerModel) userModel;
 			if (null != custModel && null != custModel.getOriginalUid() && custModel.getOriginalUid().equals(emailId))
@@ -369,14 +375,12 @@ public class TrackOrderPageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			LOG.debug("Exception in Track order :" + orderCode);
 			LOG.error("Error while tracking order for " + orderCode + " and " + emailId + " " + e.getMessage());
-			
-			return messageSource.getMessage(new DefaultMessageSourceResolvable(
-					ORDERID_EMAILID_MISMATCH_MESSAGE_KEY), localeResolver.resolveLocale(request));
+		   return messageSource.getMessage(new DefaultMessageSourceResolvable(
+					MessageConstants.ORDERID_EMAILID_MISMATCH_MESSAGE_KEY), localeResolver.resolveLocale(request));
 		}
-	return messageSource.getMessage(new DefaultMessageSourceResolvable(
-			ORDERID_EMAILID_MISMATCH_MESSAGE_KEY), localeResolver.resolveLocale(request));
+		return messageSource.getMessage(new DefaultMessageSourceResolvable(
+			MessageConstants.ORDERID_EMAILID_MISMATCH_MESSAGE_KEY), localeResolver.resolveLocale(request));
 	}
 
 	/**

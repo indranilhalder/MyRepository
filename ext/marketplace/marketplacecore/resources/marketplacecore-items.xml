@@ -8447,9 +8447,11 @@
 	 </typegroup>
 	<!-- END  -->
 	
-	<typegroup>
-		<itemtype code="TULShortUrlReport" autocreate="true"  generate="true">
-				<deployment table="TULShortUrlReport" typecode="15011" />
+	<typegroup name="OrderShortUrlInfo">
+		<itemtype code="OrderShortUrlInfo" autocreate="true"  generate="true">
+				<description>Used to Generate Short url clicks report</description>
+				<deployment table="OrderShortUrlInfo" typecode="15011" />
+				
 				<attributes>
 					<attribute qualifier="orderId" type="java.lang.String"  autocreate="true" generate="true">
 						<persistence type="property"/>
@@ -8476,7 +8478,8 @@
 				</attributes>
 			</itemtype>
 		 </typegroup>
-		 	<typegroup name="BankDetailsInfoToFICO">
+		 
+		 <typegroup name="BankDetailsInfoToFICO">
 			<itemtype code="BankDetailsInfoToFICOHistory" autocreate="true"
 				generate="true" jaloclass="com.tisl.mpl.core.jalo.BankDetailsInfoToFICOHistory">
 				<description>Comm to FICO COD</description>

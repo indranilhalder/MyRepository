@@ -3435,7 +3435,7 @@
 	<explorertree>
 		<group name="mpl"  description="group.mplConfig.description">
 			<typeref type="MplConfig"  description="mpl.config.table.description"/>
-			<typeref type="TULShortUrlReport"  description="mpl.shorturl.report.description"/>
+			<typeref type="OrderShortUrlInfo"  description="mpl.shorturl.report.description"/>
 		</group>
 	</explorertree>
 
@@ -3481,7 +3481,7 @@
 	</organizer>
 </type>
  
- <type name="TULShortUrlReport" mode="append">
+ <type name="OrderShortUrlInfo" mode="append">
 	<organizer>
 		<search mode="replace">
 			<condition attribute="orderId" />

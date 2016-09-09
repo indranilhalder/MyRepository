@@ -9,23 +9,23 @@ import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 import org.springframework.util.Assert;
 
 import com.techouts.backoffice.ShortUrlReportData;
-import com.tisl.mpl.core.model.TULShortUrlReportModel;
+import com.tisl.mpl.core.model.OrderShortUrlInfoModel;
 
 
 /**
  * @author prabhakar
  *
  */
-public class ShortUrlModelToDataPopulator implements Populator<TULShortUrlReportModel, ShortUrlReportData>
+public class ShortUrlModelToDataPopulator implements Populator<OrderShortUrlInfoModel, ShortUrlReportData>
 {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.hybris.platform.converters.Populator#populate(java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public void populate(final TULShortUrlReportModel source, final ShortUrlReportData target) throws ConversionException
+	public void populate(final OrderShortUrlInfoModel source, final ShortUrlReportData target) throws ConversionException
 	{
 		Assert.notNull(source, "Parameter source cannot be null.");
 		Assert.notNull(target, "Parameter target cannot be null.");
