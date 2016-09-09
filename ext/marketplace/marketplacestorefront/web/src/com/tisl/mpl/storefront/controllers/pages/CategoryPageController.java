@@ -423,27 +423,27 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 				final String categoryName = category.getName();
 
-
-				//(TPR-243) SEO Meta Tags and Titles for Landing Page *: starts
-
-				final List<SeoContentModel> seoContent = new ArrayList<SeoContentModel>(category.getSeoContents());
 				String metaKeywords = null;
 				String metaDescription = null;
 				String metaTitle = null;
 
-				if (CollectionUtils.isEmpty(seoContent))
+				//(TPR-243) SEO Meta Tags and Titles for Landing Page *: starts
+				if (CollectionUtils.isEmpty(category.getSeoContents()))
 				{
 					setUpMetaDataForContentPage(model, categoryLandingPage);
-
 				}
 				/*
 				 * (TPR-243) SEO Meta Tags and Titles for Landing Page *: ends else
 				 */
 				else
 				{
-					metaKeywords = seoContent.get(seoContent.size() - 1).getSeoMetaKeyword();
-					metaDescription = seoContent.get(seoContent.size() - 1).getSeoMetaDescription();
-					metaTitle = seoContent.get(seoContent.size() - 1).getSeoMetaTitle();
+					final List<SeoContentModel> seoContent = new ArrayList<SeoContentModel>(category.getSeoContents());
+					if (seoContent.size() >= 1)
+					{
+						metaKeywords = seoContent.get(seoContent.size() - 1).getSeoMetaKeyword();
+						metaDescription = seoContent.get(seoContent.size() - 1).getSeoMetaDescription();
+						metaTitle = seoContent.get(seoContent.size() - 1).getSeoMetaTitle();
+					}
 					setUpMetaDataForSeo(model, metaKeywords, metaDescription, metaTitle);
 					updatePageTitle(model, metaTitle);
 				}
@@ -477,6 +477,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 			}
 			catch (final Exception exp)
 			{
+				LOG.error("************** category method exception " + exp);
 				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 						MarketplacecommerceservicesConstants.E0000));
 				try
@@ -493,6 +494,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 		catch (final Exception exception)
 		{
+
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception,
 					MarketplacecommerceservicesConstants.E0000));
 			try
@@ -533,7 +535,19 @@ public class CategoryPageController extends AbstractCategoryPageController
 		}
 
 		model.addAttribute("page_name", "Product Grid:" + breadcrumbName);
-
+		//TPR-430
+		if (null != breadcrumbs.get(1).getName())
+		{
+			model.addAttribute("product_category", breadcrumbs.get(0).getName().replaceAll(" ", "_").toLowerCase());
+		}
+		if (null != breadcrumbs.get(1).getName())
+		{
+			model.addAttribute("page_subcategory_name", breadcrumbs.get(1).getName().replaceAll(" ", "_").toLowerCase());
+		}
+		if (null != breadcrumbs.get(2).getName())
+		{
+			model.addAttribute("page_subcategory_name_L3", breadcrumbs.get(2).getName().replaceAll(" ", "_").toLowerCase());
+		}
 
 	}
 
@@ -865,7 +879,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 		String metaKeywords = null;
 		String metaDescription = null;
 		String metaTitle = null;
-		if (CollectionUtils.isEmpty(seoContent))
+		if (CollectionUtils.isNotEmpty(seoContent))
 		{
 
 			metaKeywords = seoContent.get(seoContent.size() - 1).getSeoMetaKeyword();
@@ -874,9 +888,6 @@ public class CategoryPageController extends AbstractCategoryPageController
 			setUpMetaDataForSeo(model, metaKeywords, metaDescription, metaTitle);
 			updatePageTitle(model, metaTitle);
 		}
-
-
-
 		else
 		{
 
@@ -915,6 +926,32 @@ public class CategoryPageController extends AbstractCategoryPageController
 	//	{
 	//		model.addAttribute("metaPageTitle", metaTitle);
 	//	}
+
+
+	/* changes for metaData content - (TPR-243) SEO Meta Tags and Titles */
+	/**
+	 * @param model
+	 * @param metaKeywords
+	 * @param metaDescription
+	 * @param metaTitle
+	 */
+	//private void setUpMetaDataForSeo(final Model model, final String metaKeywords, final String metaDescription,
+		//	final String metaTitle)
+//	{
+	//	final List<MetaElementData> metadata = new LinkedList<>();
+	//	metadata.add(createMetaElement("keywords", metaKeywords));
+	//	metadata.add(createMetaElement("description", metaDescription));
+		//metadata.add(createMetaElement("title", metaTitle));
+	//	model.addAttribute("metatags", metadata);
+
+//	}
+
+	/* PageTitle in header - (TPR-243) SEO Meta Tags and Titles */
+//	private void updatePageTitle(final Model model, final String metaTitle)
+//	{
+//		model.addAttribute("metaPageTitle", metaTitle);
+//	}
+
 
 
 	/* changes for metaData content - (TPR-243) SEO Meta Tags and Titles */
