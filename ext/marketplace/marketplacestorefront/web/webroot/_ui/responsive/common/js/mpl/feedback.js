@@ -2103,7 +2103,13 @@ if($(".choose-address .acc_content").children(".address-list").length == 0){
 	  margin : "0px auto",
 	  float: "none"
 });
-$(".checkTab .formaddress").css("width","100%");
+	$(".checkTab .formaddress").css({
+		margin : "0px auto",
+		float: "none",
+		width: "80%",
+		overflow: "hidden"
+	});
+$(".choose-address .acc_head").css("text-align","center");
 }
 /*	$(document).on("click",".edit",function(e){	
 		 e.stopPropagation();
