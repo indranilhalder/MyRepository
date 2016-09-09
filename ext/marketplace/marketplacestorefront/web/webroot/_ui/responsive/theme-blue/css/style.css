@@ -3896,7 +3896,7 @@ color:inherit;}
 	padding: 0;
 }
 
-.feature-categories h1,.feature-categories h3 {
+.feature-categories h1,.feature-categories h2,.feature-categories h3 {
 	text-align: center;
 	font-size: 28px;
 	padding: 30px 0;
@@ -3988,9 +3988,9 @@ color:inherit;}
 }
 
 @media (min-width: 791px) {		
-    .feature-categories h1 {		
+    .feature-categories h1,.feature-categories h2 {		
         padding: 40px 0;		
-        font-weight: 500		
+        font-weight: 500;		
     }	
     	
     .feature-categories ul.categories {		
@@ -15048,10 +15048,10 @@ body .account .right-account ul.saved-cards .details p {
 body .account .right-account ul.saved-cards>li .paymentItem h3 {
 	padding-left:80px;
 }
-body .account .right-account ul.saved-cards>li h3{
+body .account .right-account ul.saved-cards>li h3,body .account .right-account ul.saved-cards>li h2{
 	  font-size: 14px;
     line-height: 1.5;}
-body .account .right-account ul.saved-cards>li h3 {
+body .account .right-account ul.saved-cards>li h3,body .account .right-account ul.saved-cards>li h2 {
     font-weight: bold;
 }
 @media (max-width: 650px) {
@@ -42883,10 +42883,9 @@ body .account .right-account .order-history .product-block li.item h2{
     letter-spacing: normal;
 }
 body .account .right-account .order-history .product-block li.item h2:first-child{
-	margin-bottom: 0;
-    font-size: inherit;
-    font-weight: inherit;
-    letter-spacing: inherit;
+	font-size: 12px;
+    font-weight: normal;
+    height: 12px;
 }
 body .right-account .order-history .cancellation-request-block h1{
 	background: #f0f4f5;
@@ -43221,6 +43220,9 @@ body.pageLabel-Footwear .feature-collections ul.collections li.chef .feature-col
 	.brand-microsite.electronics-brand .brands h2{
 	padding: 40px 0 55px;
 	}
+	body .account .right-account .order-history .product-block li.item h2.product-name:first-child{
+	line-height: normal;
+	}
 }
 @media(max-width: 790px){
 	.page-aboutus .virtues .feature-virtues h2{
@@ -43345,6 +43347,17 @@ body.pageLabel-Footwear .feature-collections ul.collections li.chef .feature-col
 	}
 }
 
+.electronics-brand .brands h2{
+	font-size: 28px;
+    font-weight: 500;
+    text-align: center;
+    padding: 30px 0;
+}
+@media (min-width:791px){
+	.electronics-brand .brands h2{
+		 padding: 40px 0 55px;
+	}
+}
 
 /* TPR-245 SEO Ends */
 
