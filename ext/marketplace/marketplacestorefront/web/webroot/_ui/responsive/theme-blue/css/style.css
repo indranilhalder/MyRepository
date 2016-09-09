@@ -3896,7 +3896,7 @@ color:inherit;}
 	padding: 0;
 }
 
-.feature-categories h1,.feature-categories h3 {
+.feature-categories h1,.feature-categories h2,.feature-categories h3 {
 	text-align: center;
 	font-size: 28px;
 	padding: 30px 0;
@@ -3988,9 +3988,9 @@ color:inherit;}
 }
 
 @media (min-width: 791px) {		
-    .feature-categories h1 {		
+    .feature-categories h1,.feature-categories h2 {		
         padding: 40px 0;		
-        font-weight: 500		
+        font-weight: 500;		
     }	
     	
     .feature-categories ul.categories {		
@@ -43362,6 +43362,18 @@ body.pageLabel-Footwear .feature-collections ul.collections li.chef .feature-col
 	font-size: 24px;
     letter-spacing: 5px;
     margin-bottom: 40px;
+	}
+}
+
+.electronics-brand .brands h2{
+	font-size: 28px;
+    font-weight: 500;
+    text-align: center;
+    padding: 30px 0;
+}
+@media (min-width:791px){
+	.electronics-brand .brands h2{
+		 padding: 40px 0 55px;
 	}
 }
 

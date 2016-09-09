@@ -1994,6 +1994,18 @@ $(document).ready(function(){
 		var txth = $(this).text();
 		$(this).replaceWith("<h2>"+txth+"</h2>");
 	});
+	$(".electronics-brand .brands h1").each(function(){
+		var txth1 = $(this).text();
+		$(this).replaceWith("<h2>"+txth1+"</h2>");
+	});
+	$(".feature-categories h1").each(function(){
+		var txth1 = $(this).text();
+		$(this).replaceWith("<h2>"+txth1+"</h2>");
+	});
+	$(".trending h1").each(function(){
+		var txth1 = $(this).text();
+		$(this).replaceWith("<h2><span style='color: black !important;'>"+txth1+"</span></h2>");
+	});
 	
 });
 
