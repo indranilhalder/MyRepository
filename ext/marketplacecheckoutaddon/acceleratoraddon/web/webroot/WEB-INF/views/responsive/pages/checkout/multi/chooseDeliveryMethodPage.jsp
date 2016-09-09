@@ -1414,6 +1414,20 @@
 				showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" />
 		</div>
 	</div>
+	
+	
+	<ul class="totals outstanding-totalss">
+          <li id="totals" class="outstanding-amounts"><spring:theme code="basket.page.totals.outstanding.amount"/><span class="amt"><ycommerce:testId code="cart_totalPrice_label">
+                <c:choose>
+                    <c:when test="${showTax}">
+                        <format:price priceData="${cartData.totalPriceWithTax}"/>
+                    </c:when>
+                    <c:otherwise>
+                        <format:price priceData="${cartData.totalPrice}"/>
+                    </c:otherwise>
+                </c:choose>
+            </ycommerce:testId></span></li>
+          </ul>	
 	<%-- <div class="col-sm-12 col-lg-9">
 			<cms:pageSlot position="SideContent" var="feature" element="div" class="checkout-help">
 				<cms:component component="${feature}"/>
