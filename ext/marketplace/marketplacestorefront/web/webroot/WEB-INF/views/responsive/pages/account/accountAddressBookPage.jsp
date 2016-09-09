@@ -102,16 +102,16 @@
 														<ul>
 															<li>
 																<c:if test="${address.addressType eq 'Home' || address.addressType eq 'HOME'}">
-																	<h3>
+																	<h2>
 																		<spring:theme code="text.addressBook.residential" text="Residential" />
 																		<c:if test="${address.defaultAddress}">&nbsp;-&nbsp;Default Address</c:if>
-																	</h3>
+																	</h2>
 																</c:if>
 																<c:if test="${address.addressType eq 'Work' || address.addressType eq 'WORK'}">
-																	<h3>
+																	<h2>
 																		<spring:theme code="text.addressBook.commercial" text="Commercial" />
 																		<c:if test="${address.defaultAddress}">&nbsp;-&nbsp;Default Address</c:if>
-																	</h3>
+																	</h2>
 																</c:if>	
 																<c:set var="myline2" value="${fn:trim(address.line2)}"/>
 																<c:set var="myline3" value="${fn:trim(address.line3)}"/>

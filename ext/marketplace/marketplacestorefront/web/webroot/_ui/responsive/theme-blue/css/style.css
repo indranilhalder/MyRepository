@@ -15048,10 +15048,10 @@ body .account .right-account ul.saved-cards .details p {
 body .account .right-account ul.saved-cards>li .paymentItem h3 {
 	padding-left:80px;
 }
-body .account .right-account ul.saved-cards>li h3{
+body .account .right-account ul.saved-cards>li h3,body .account .right-account ul.saved-cards>li h2{
 	  font-size: 14px;
     line-height: 1.5;}
-body .account .right-account ul.saved-cards>li h3 {
+body .account .right-account ul.saved-cards>li h3,body .account .right-account ul.saved-cards>li h2 {
     font-weight: bold;
 }
 @media (max-width: 650px) {
@@ -43376,7 +43376,6 @@ body.pageLabel-Footwear .feature-collections ul.collections li.chef .feature-col
 		 padding: 40px 0 55px;
 	}
 }
-
 
 /* TPR-245 SEO Ends */
 
