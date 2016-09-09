@@ -844,6 +844,18 @@ public class ProductsController extends BaseController
 		return productSearchPage;
 	}
 
+	/**
+	 * @desc SERP search with key word redirects
+	 * @param searchText
+	 * @param typeID
+	 * @param page
+	 * @param pageSize
+	 * @param sortCode
+	 * @param isTextSearch
+	 * @param isFilter
+	 * @param fields
+	 * @return
+	 */
 	@RequestMapping(value = "/serpsearch", method =
 	{ RequestMethod.POST, RequestMethod.GET }, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
 	@ResponseBody
