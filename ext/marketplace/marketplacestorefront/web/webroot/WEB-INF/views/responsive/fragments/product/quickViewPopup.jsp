@@ -305,7 +305,14 @@ display:none;
 <div class="quickview active">
 <div class="content">
 <div class="quick-view-popup product-info wrapper">
-
+<!-- TPR-924 -->
+<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
+			<input type="hidden" id="loggedIn" value="false"/> 
+		</sec:authorize>
+		<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
+			<input type="hidden" id="loggedIn" value="true"/> 
+		</sec:authorize>
+		<!-- TPR-924 -->
 <div class="product-image-container">
 	<a class="wishlist-icon" onclick="openPop_quick()"></a>	
    <c:set var="increment" value="0"/>
