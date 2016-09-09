@@ -3,8 +3,6 @@
  */
 package com.techouts.backoffice.widget.controller;
 
-import de.hybris.platform.servicelayer.user.UserService;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,6 +19,9 @@ import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zul.Messagebox;
 
+import com.hybris.cockpitng.core.user.AuthorityGroupService;
+import com.hybris.cockpitng.core.user.CockpitUserService;
+import com.hybris.cockpitng.core.user.impl.AuthorityGroup;
 import com.hybris.oms.api.logistics.LogisticsFacade;
 import com.hybris.oms.api.orderlogistics.OrderLogisticsFacade;
 import com.hybris.oms.domain.logistics.dto.Logistics;
@@ -56,11 +57,14 @@ public class AwbEditWidgetController
 	private List<String> ordersStatus;// orders statuses
 	@WireVariable("orderLogisticsRestClient")
 	private OrderLogisticsFacade orderLogisticsUpdateFacade;
-
 	@WireVariable("logisticsRestClient")
 	private LogisticsFacade logisticsFacade;
+
 	@WireVariable
-	private UserService userService;
+	private transient CockpitUserService cockpitUserService;
+	@WireVariable
+	private transient AuthorityGroupService authorityGroupService;
+	private transient AuthorityGroup activeUserRole;
 
 	@Init
 	@NotifyChange(
@@ -259,8 +263,18 @@ public class AwbEditWidgetController
 		final LPOverrideAWBEdit lpOverrideEdit = new LPOverrideAWBEdit();
 		lpOverrideEdit.setOrderLineInfo(listOfOrderLineInfo);
 		lpOverrideEdit.setIsReturn(isReturn);
-		lpOverrideEdit.setUserId(userService.getCurrentUser().getUid());
-		lpOverrideEdit.setRoleId(userService.getCurrentUser().getUid());
+		final String userId = cockpitUserService.getCurrentUser();
+		lpOverrideEdit.setUserId(userId);
+		activeUserRole = authorityGroupService.getActiveAuthorityGroupForUser(userId);
+		if (activeUserRole != null)
+		{
+			lpOverrideEdit.setRoleId(activeUserRole.getCode());
+		}
+		else
+		{
+			lpOverrideEdit.setRoleId("none");
+		}
+
 		lpOverrideEdit.setTransactionType(transactionType);
 		final LPOverrideAWBEditResponse lpOverrideAwbEditResponse = orderLogisticsUpdateFacade
 				.updateOrderLogisticOrAwbNumber(lpOverrideEdit);

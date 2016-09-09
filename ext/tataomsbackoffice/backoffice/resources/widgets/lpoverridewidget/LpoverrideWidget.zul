@@ -90,8 +90,7 @@
 					</vlayout>
 				</panelchildren>
 			</panel>
-		<panel
-				style="max-height:70%;height:60%;border-bottom:3px solid #27394f;border:none">
+		<panel>
 				<panelchildren>
              		<listbox model="@bind(vm.listOfTransactions)"
 						id="listBoxData" mold="paging" pageSize="8" pagingPosition="top"
