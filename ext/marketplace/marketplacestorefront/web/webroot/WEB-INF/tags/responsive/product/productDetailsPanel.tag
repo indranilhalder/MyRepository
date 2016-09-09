@@ -134,7 +134,7 @@ tr.d0 td {
 		<div class="product-detail">
 			<ycommerce:testId
 				code="productDetails_productNamePrice_label_${product.code}">
-				<h2 class="company">${product.brand.brandname}</h2>
+				<h3 class="company">${product.brand.brandname}</h3>
 				<h1 class="product-name">${product.productTitle}</h1>
 			</ycommerce:testId>
 
