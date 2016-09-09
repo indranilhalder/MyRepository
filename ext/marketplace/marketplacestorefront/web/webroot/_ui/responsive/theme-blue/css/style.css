@@ -7626,7 +7626,7 @@ body.wishlist header + .wrapper {
   div.wishlist-nav {
     width: 25%;
     float: left; } }
-div.wishlist-nav h3 {
+div.wishlist-nav h3,div.wishlist-nav h1 {
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 40px;
@@ -25429,7 +25429,7 @@ padding-left: 0px;}
     .bottom-pagination .pagination .prev,.bottom-pagination .pagination .next a{
     padding-left:0px;
     padding-right:0px;}
-    div.wishlist-nav h3{
+    div.wishlist-nav h3,div.wishlist-nav h1{
     margin:30px 0;}
     .listing.wrapper .right-block .listing-menu .pagination li.prev,.listing.wrapper .right-block .listing-menu .pagination li.next{
     height:34px;}
