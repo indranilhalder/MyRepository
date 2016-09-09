@@ -42,20 +42,16 @@ tr.d0 td {
 		window.open(ACC.config.encodedContextPath + "/login", "_self");
 	}
 	
-	$(document).ready(function() {		
-//		 $("#buyNowQv").click(function(){		
-//			 testMethod();	       		
-//		  });		
-		$('#buyNowQv .js-add-to-cart-qv').click(function(event){		
-					
-			 if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'){		
-				$("#addToCartFormQuick").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");		
-				$("#addToCartFormQuick").show();		
-		 	    return false;		
-		 }else{			 		
-			ACC.product.sendToCartPageQuick("addToCartFormQuick",true);		
-		}		
-		});		
+	$('#buyNowQv .js-add-to-cart-qv').click(function(event){
+		
+		 if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'){
+			 $("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+			 				$("#addToCartFormQuickTitle").show();
+			  				$("#addToCartFormQuickTitle").fadeOut(5000);
+	 	    return false;
+	 }else{			 
+		ACC.product.sendToCartPageQuick("addToCartFormQuick",true);
+	}
 	});
 	
 	
