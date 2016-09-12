@@ -378,7 +378,7 @@ public class SearchPageController extends AbstractSearchPageController
 					final NeedHelpComponentModel need = cmsComponentService.getSimpleCMSComponent("NeedHelp");
 					model.addAttribute("contactNumber", need.getContactNumber());
 					final List<Breadcrumb> breadcrumbs = searchBreadcrumbBuilder.getEmptySearchResultBreadcrumbs(searchText);
-					populateTealiumData(breadcrumbs, model);
+					populateTealiumData(breadcrumbs, model, searchPageData);
 
 					model.addAttribute(WebConstants.BREADCRUMBS_KEY, breadcrumbs);
 					model.addAttribute("currentQuery", searchPageData.getCurrentQuery().getQuery().getValue());
@@ -388,7 +388,7 @@ public class SearchPageController extends AbstractSearchPageController
 					final List<Breadcrumb> breadcrumbs = searchBreadcrumbBuilder.getBreadcrumbs(null, searchText,
 							CollectionUtils.isEmpty(searchPageData.getBreadcrumbs()));
 					model.addAttribute(WebConstants.BREADCRUMBS_KEY, breadcrumbs);
-					populateTealiumData(breadcrumbs, model);
+					populateTealiumData(breadcrumbs, model, searchPageData);
 				}
 			}
 
@@ -629,7 +629,7 @@ public class SearchPageController extends AbstractSearchPageController
 		}
 		final List<Breadcrumb> breadcrumbs = searchBreadcrumbBuilder.getBreadcrumbs(null, searchPageData);
 		model.addAttribute(WebConstants.BREADCRUMBS_KEY, breadcrumbs);
-		populateTealiumData(breadcrumbs, model);
+		populateTealiumData(breadcrumbs, model, searchPageData);
 
 		model.addAttribute(ModelAttributetConstants.PAGE_TYPE, PageType.PRODUCTSEARCH.name());
 
@@ -658,7 +658,8 @@ public class SearchPageController extends AbstractSearchPageController
 	 * @param breadcrumbs
 	 * @param model
 	 */
-	private void populateTealiumData(final List<Breadcrumb> breadcrumbs, final Model model)
+	private void populateTealiumData(final List<Breadcrumb> breadcrumbs, final Model model,
+			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData)
 	{
 		String breadcrumbName = "";
 		int count = 1;
@@ -681,17 +682,48 @@ public class SearchPageController extends AbstractSearchPageController
 
 		model.addAttribute("page_name", "Search Results Page:" + breadcrumbName);
 		//TPR-430
-		if (null != breadcrumbs && breadcrumbs.size() > 0)
+		if (null != searchPageData.getDepartmentHierarchyData()
+				&& searchPageData.getDepartmentHierarchyData().getHierarchyList().size() > 0)
 		{
-			model.addAttribute("product_category", breadcrumbs.get(0).getName().replaceAll(" ", "_").toLowerCase());
-		}
-		if (null != breadcrumbs && breadcrumbs.size() > 1)
-		{
-			model.addAttribute("page_subcategory_name", breadcrumbs.get(1).getName().replaceAll(" ", "_").toLowerCase());
-		}
-		if (null != breadcrumbs && breadcrumbs.size() > 2)
-		{
-			model.addAttribute("page_subcategory_name_L3", breadcrumbs.get(2).getName().replaceAll(" ", "_").toLowerCase());
+			String product_category = null;
+			String page_subcategory_name = null;
+			String page_subcategory_name_l3 = null;
+			final String[] productCatArray = searchPageData.getDepartmentHierarchyData().getHierarchyList().get(0).split("\\|");
+
+			for (final String category : productCatArray)
+			{
+				if (StringUtils.isNotEmpty(category))
+				{
+					final String[] categoryLevelArray = category.split(":");
+
+					if (categoryLevelArray.length > 2)
+					{
+						final String categoryLevel = categoryLevelArray[2];
+
+						if (categoryLevel.contains(MarketplacecommerceservicesConstants.DEPT_L1))
+						{
+							product_category = categoryLevelArray[1];
+						}
+						else if (categoryLevel.contains(MarketplacecommerceservicesConstants.DEPT_L2))
+						{
+							page_subcategory_name = categoryLevelArray[1];
+						}
+						else if (categoryLevel.contains(MarketplacecommerceservicesConstants.DEPT_L3))
+						{
+							page_subcategory_name_l3 = categoryLevelArray[1];
+						}
+					}
+
+				}
+
+			}
+
+			model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY,
+					product_category.replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
+			model.addAttribute(ModelAttributetConstants.PAGE_SUBCATEGORY_NAME, page_subcategory_name.replaceAll("[^\\w\\s]", "")
+					.replaceAll(" ", "_").toLowerCase());
+			model.addAttribute(ModelAttributetConstants.PAGE_SUBCATEGORY_NAME_L3,
+					page_subcategory_name_l3.replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
 		}
 
 	}
@@ -1272,9 +1304,9 @@ public class SearchPageController extends AbstractSearchPageController
 	/*
 	 * protected <E> List<E> subList(final List<E> list, final int maxElements) { if (CollectionUtils.isEmpty(list)) {
 	 * return Collections.emptyList(); }
-	 *
+	 * 
 	 * if (list.size() > maxElements) { return list.subList(0, maxElements); }
-	 *
+	 * 
 	 * return list; }
 	 */
 

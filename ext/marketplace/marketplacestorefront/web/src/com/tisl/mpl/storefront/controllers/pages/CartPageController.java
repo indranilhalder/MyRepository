@@ -20,7 +20,6 @@ import de.hybris.platform.acceleratorservices.controllers.page.PageType;
 import de.hybris.platform.acceleratorservices.enums.CheckoutFlowEnum;
 import de.hybris.platform.acceleratorservices.enums.CheckoutPciOptionEnum;
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
-import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.Breadcrumb;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.ResourceBreadcrumbBuilder;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.impl.ProductBreadcrumbBuilder;
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
@@ -44,7 +43,6 @@ import de.hybris.platform.commerceservices.order.CommerceCartModificationExcepti
 import de.hybris.platform.core.Constants.USER;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
-import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.exceptions.CalculationException;
@@ -969,37 +967,8 @@ public class CartPageController extends AbstractPageController
 		}
 		//TISPT-174
 		//populateTealiumData(model, cartData);
-		GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
-		//TPR-430
-		final List<String> productCategoryList = new ArrayList<String>();
-		final List<String> pageSubCategories = new ArrayList<String>();
-		final List<String> pageSubcategoryNameL3List = new ArrayList<String>();
-		if (cartData.getEntries() != null && !cartData.getEntries().isEmpty())
-		{
-			for (final OrderEntryData entry : cartData.getEntries())
-			{
-				final ProductModel productModel = productService.getProductForCode(entry.getProduct().getCode());
-				final List<Breadcrumb> breadcrumbs = productBreadcrumbBuilder.getBreadcrumbs(productModel);
-				if (null != entry.getProduct().getCategories())
-				{
-					productCategoryList.add(GenericUtilityMethods.appendQuote(breadcrumbs.get(0).getName().replaceAll("[^\\w\\s]", "")
-							.replaceAll(" ", "_").toLowerCase()));
-				}
-				if (breadcrumbs.size() > 1)
-				{
-					pageSubCategories.add(GenericUtilityMethods.appendQuote(breadcrumbs.get(1).getName().replaceAll("[^\\w\\s]", "")
-							.replaceAll(" ", "_").toLowerCase()));
-				}
-				if (breadcrumbs.size() > 2)
-				{
-					pageSubcategoryNameL3List.add(GenericUtilityMethods.appendQuote(breadcrumbs.get(2).getName()
-							.replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase()));
-				}
-			}
-			model.addAttribute("product_category", productCategoryList);
-			model.addAttribute("page_subcategory_name", pageSubCategories);
-			model.addAttribute("page_subcategory_name_L3", pageSubcategoryNameL3List);
-		}
+		final CartModel cartModel = getCartService().getSessionCart();
+		GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartModel);
 	}
 
 

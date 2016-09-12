@@ -422,7 +422,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 
 				setUpMetaDataForContentPage(model, categoryLandingPage);
-
+				model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY,
+						categoryName.replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
 				model.addAttribute(WebConstants.BREADCRUMBS_KEY,
 						getSearchBreadcrumbBuilder().getBreadcrumbs(categoryCode, categoryName, false));
 				populateModel(model, searchPageData, ShowMode.Page);
@@ -511,15 +512,18 @@ public class CategoryPageController extends AbstractCategoryPageController
 		//TPR-430
 		if (breadcrumbs.size() > 0)
 		{
-			model.addAttribute("product_category", breadcrumbs.get(0).getName());
+			model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY, breadcrumbs.get(0).getName().replaceAll("[^\\w\\s]", "")
+					.replaceAll(" ", "_").toLowerCase());
 		}
 		if (breadcrumbs.size() > 1)
 		{
-			model.addAttribute("page_subcategory_name", breadcrumbs.get(1).getName());
+			model.addAttribute(ModelAttributetConstants.PAGE_SUBCATEGORY_NAME,
+					breadcrumbs.get(1).getName().replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
 		}
 		if (breadcrumbs.size() > 2)
 		{
-			model.addAttribute("page_subcategory_name_L3", breadcrumbs.get(2).getName());
+			model.addAttribute(ModelAttributetConstants.PAGE_SUBCATEGORY_NAME_L3,
+					breadcrumbs.get(2).getName().replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
 		}
 	}
 

@@ -5,12 +5,12 @@ package com.tisl.mpl.util;
 
 import de.hybris.platform.category.jalo.Category;
 import de.hybris.platform.category.model.CategoryModel;
-import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
-import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.core.Registry;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.product.Product;
@@ -38,6 +38,7 @@ import org.apache.log4j.Logger;
 import org.springframework.ui.Model;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
@@ -1005,7 +1006,7 @@ public class GenericUtilityMethods
 
 	}
 
-	public static void populateTealiumDataForCartCheckout(final Model model, final CartData cartData)
+	public static void populateTealiumDataForCartCheckout(final Model model, final CartModel cartModel)
 	{
 		String sku = null;
 		String adobeSku = null;
@@ -1013,37 +1014,37 @@ public class GenericUtilityMethods
 		String quantity = null;
 		String basePrice = null;//base price for a cart entry
 		String totalEntryPrice = null;
-		//		String category = null;
+		String category = null;
 		String brand = null;
 		String adobeProductSku = null;
-		//		String page_subCategory_name = null;
+		String page_subCategory_name = null;
 		String cartTotal = null;
-		//		String page_subcategory_name_L3 = null;
+		String page_subcategory_name_L3 = null;
 		final List<String> productBrandList = new ArrayList<String>();
-		//		final List<String> productCategoryList = new ArrayList<String>();
+		final List<String> productCategoryList = new ArrayList<String>();
 		final List<String> productIdList = new ArrayList<String>();
 		final List<String> productListPriceList = new ArrayList<String>();
 		final List<String> productNameList = new ArrayList<String>();
 		final List<String> productQuantityList = new ArrayList<String>();
 		final List<String> productSkuList = new ArrayList<String>();
 		final List<String> productUnitPriceList = new ArrayList<String>();
-		//		final List<String> pageSubCategories = new ArrayList<String>();
-		//		final List<String> pageSubcategoryNameL3List = new ArrayList<String>();
+		final List<String> pageSubCategories = new ArrayList<String>();
+		final List<String> pageSubcategoryNameL3List = new ArrayList<String>();
 		final List<String> adobeProductSkuList = new ArrayList<String>();
 
 
 		try
 		{
-			if (null != cartData)
+			if (null != cartModel)
 			{
-				if (null != cartData.getTotalPrice() && null != cartData.getTotalPrice().getValue())
+				if (null != cartModel.getTotalPrice())
 				{
-					cartTotal = cartData.getTotalPrice().getValue().toPlainString();
+					cartTotal = cartModel.getTotalPrice().toString();
 				}
 
-				if (CollectionUtils.isNotEmpty(cartData.getEntries()))
+				if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
 				{
-					for (final OrderEntryData entry : cartData.getEntries())
+					for (final AbstractOrderEntryModel entry : cartModel.getEntries())
 					{
 						if (null != entry)
 						{
@@ -1062,56 +1063,56 @@ public class GenericUtilityMethods
 								quantity = appendQuote(String.valueOf(entry.getQuantity()));
 							}
 
-							if (null != entry.getBasePrice() && null != entry.getBasePrice().getValue())
+							if (null != entry.getBasePrice())
 							{
-								basePrice = appendQuote(entry.getBasePrice().getValue().toPlainString());//base price for a cart entry
+								basePrice = appendQuote(entry.getBasePrice().toString());//base price for a cart entry
 							}
 
-							if (null != entry.getTotalPrice() && null != entry.getTotalPrice().getValue())
+							if (null != entry.getTotalPrice())
 							{
-								totalEntryPrice = appendQuote(entry.getTotalPrice().getValue().toPlainString());//total price for a cart entry
+								totalEntryPrice = appendQuote(entry.getTotalPrice().toString());//total price for a cart entry
 							}
 						}
 
-						//						final List<String> categoryList = new ArrayList<String>();
-						//START [05-Feb-2016] R2.1 - Adding only a Null Check to fix Card payment issue.
-						//Check that if (entry.getProduct().getCategories() != null) then only execute the loop. Else just log an
-						//error message and continue.
-						//						if (entry.getProduct() != null && entry.getProduct().getCategories() != null)
-						//						{
-						//							for (final CategoryData categoryData : entry.getProduct().getCategories())
-						//							{
-						//								categoryList.add(categoryData.getName());
-						//							}
-						//						}
-
-						//End [05-Feb-2016] R2.1 - Adding Null Check to fix Card payment issue.
-						//						final Object[] categoryStrings = categoryList.toArray();
-
-						//						if (categoryStrings.length > 0)
-						//						{
-						//							category = appendQuote((String) categoryStrings[0]).replaceAll(" ", "_").toLowerCase();
-						//						}
-
-						if (entry.getProduct() != null && entry.getProduct().getBrand() != null)
+						if (entry.getProduct() != null && CollectionUtils.isNotEmpty(entry.getProduct().getBrands()))
 						{
-							brand = appendQuote(entry.getProduct().getBrand().getBrandname());
+							final List<BrandModel> brandList = new ArrayList<BrandModel>(entry.getProduct().getBrands());
+							brand = appendQuote(brandList.get(0).getName());
 						}
-						//TPR-430
-						//						if (categoryStrings.length >= 1)
-						//						{
-						//							page_subCategory_name = appendQuote((String) categoryStrings[1]).replaceAll(" ", "_").toLowerCase();
-						//							pageSubCategories.add(page_subCategory_name);
-						//						}
-						//						if (categoryStrings.length >= 2)
-						//						{
-						//							page_subcategory_name_L3 = appendQuote((String) categoryStrings[2]).replaceAll(" ", "_").toLowerCase();
-						//							pageSubcategoryNameL3List.add(page_subcategory_name_L3);
-						//
-						//						}
+
+
+						//TPR-430 starts
+						final StringBuffer categoryName = new StringBuffer();
+						for (final CategoryModel categoryModel : entry.getProduct().getSupercategories())
+						{
+							if (categoryModel.getCode().contains(MarketplacecommerceservicesConstants.SELLER_NAME_PREFIX))
+							{
+								categoryName.append(categoryModel.getName()).append(":");
+								getCategoryLevel(categoryModel, 1, categoryName);
+							}
+
+						}
+
+						if (StringUtils.isNotEmpty(categoryName.toString()))
+						{
+							final String[] categoryNames = categoryName.toString().split(":");
+							category = appendQuote(categoryNames[2].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
+							productCategoryList.add(category);
+
+							page_subCategory_name = appendQuote(categoryNames[1].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
+									.toLowerCase());
+							pageSubCategories.add(page_subCategory_name);
+
+							page_subcategory_name_L3 = appendQuote(categoryNames[0].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
+									.toLowerCase());
+							pageSubcategoryNameL3List.add(page_subcategory_name_L3);
+
+
+						}
+
+						//TPR-430 ends
 
 						productBrandList.add(brand);
-						//						productCategoryList.add(category);
 						productIdList.add(sku);
 						productListPriceList.add(totalEntryPrice);
 						productNameList.add(name);
@@ -1154,9 +1155,9 @@ public class GenericUtilityMethods
 				model.addAttribute("adobe_product", adobeProductSku);
 				model.addAttribute("cart_total", cartTotal);
 				//TPR-430
-				//				model.addAttribute("pageSubCategories", pageSubCategories);
-				//				model.addAttribute("productCategoryList", productCategoryList);
-				//				model.addAttribute("page_subcategory_name_L3", pageSubcategoryNameL3List);
+				model.addAttribute("pageSubCategories", pageSubCategories);
+				model.addAttribute("productCategoryList", productCategoryList);
+				model.addAttribute("page_subcategory_name_L3", pageSubcategoryNameL3List);
 			}
 		}
 		catch (final Exception te)
@@ -1170,6 +1171,35 @@ public class GenericUtilityMethods
 		final StringBuilder str = new StringBuilder(100);
 		str.append('\"').append(param).append('\"');
 		return str.toString();
+	}
+
+	public static void getCategoryLevel(final CategoryModel categoryId, int count, final StringBuffer categoryName)
+	{
+		final int finalCount = 3;
+		try
+		{
+			if (!categoryId.getSupercategories().isEmpty())
+			{
+				for (final CategoryModel superCategory : categoryId.getSupercategories())
+				{
+					categoryName.append(superCategory.getName()).append(":");
+					count++;
+					if (count == finalCount)
+					{
+						break;
+					}
+					else
+					{
+						getCategoryLevel(superCategory, count, categoryName);
+					}
+				}
+			}
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		//return finalCount;
 	}
 
 }

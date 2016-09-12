@@ -23,7 +23,7 @@
 <input type="hidden" id="search_type" value="${searchType}"><!-- For TPR-666 -->
 <input type="hidden" id="product_category" value="${product_category}"> <!-- For TPR-430 -->
 <input type="hidden" id="page_subcategory_name" value="${page_subcategory_name}">
-<input type="hidden" id="page_subcategory_name_L3" value="${page_subcategory_name_L3}">
+<input type="hidden" id="page_subcategory_name_l3" value="${page_subcategory_name_l3}">
 	<!-- For TPR-666 -->
 <!-- End -->
 <template:page pageTitle="${pageTitle}">
