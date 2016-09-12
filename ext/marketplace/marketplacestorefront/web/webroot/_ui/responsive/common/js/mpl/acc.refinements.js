@@ -484,8 +484,7 @@ $(document).on("click"," .filter-clear ",function(e){
 	return false;
 })
 
-$(".js-facet-colourbutton").on("click",function(){
-	alert("color");
+$(document).off('click', '.js-facet-colourbutton').on('click', '.js-facet-colourbutton', function() { 
 	$(this).parents(".filter-colour").toggleClass("selected-colour");
 	var spanCount=$(".facet_mobile .filter-colour.selected-colour").length;
 	if(spanCount>0)
@@ -494,8 +493,7 @@ $(".js-facet-colourbutton").on("click",function(){
 		}	
 });
 
-$(".js-facet-sizebutton").on("click",function(){
-	alert("size");
+$(document).off('click', '.js-facet-sizebutton').on('click', '.js-facet-sizebutton', function() { 
 	$(this).parents(".filter-size").toggleClass("selected-size");
 	var spanCount=$(".facet_mobile .filter-size.selected-size").length;
 	if(spanCount>0)
@@ -504,7 +502,7 @@ $(".js-facet-sizebutton").on("click",function(){
 	}
 });
 
-$(".facet_mobile .facet.js-facet").on("change",function(){
+$(document).off('change', '.facet_mobile .facet.js-facet').on('change', '.facet_mobile .facet.js-facet', function() { 
 	$(".facet_mobile .facet.js-facet").each(function(){
 		var spanCount=$(this).find(".facet-list.js-facet-list li").find("input[type=checkbox]:checked").length;
 		if(spanCount>0)
