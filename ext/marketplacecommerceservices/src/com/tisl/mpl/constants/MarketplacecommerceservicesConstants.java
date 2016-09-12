@@ -1634,6 +1634,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String COLOUR_COLON = ":colour:".intern();
 	public static final String OFFER_COLON = ":allPromotions:".intern();
 
+	//CR Changes : TPR-715
+	public static final String CART_SELLER_PRODUCTS = "cartSellerValidProducts".intern();
+	public static final String VALIDATE_SELLER = "validateSeller".intern();
+
 	private MarketplacecommerceservicesConstants()
 	{
 		//empty to avoid instantiating this constant class
