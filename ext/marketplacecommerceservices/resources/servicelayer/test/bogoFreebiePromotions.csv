@@ -1,0 +1,27 @@
+#Take out the pks of Channel 
+#Product code should be available
+#Discount Type enum value must be available
+
+$productCatalog=mplProductCatalog
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
+$secondproducts=secondProducts(code, $catalogVersion)
+$products = products(code, $catalogVersion)
+$giftProducts=giftProducts(code, $catalogVersion)
+
+#For BOGOF Promotion
+INSERT_UPDATE CustomProductBOGOFPromotion;code[unique=true];title;description;priority;enabled;channel;$products;qualifyingCount;freeCount
+;BOGOFPromotion;Buy One Get One Free;Buy One Get One Free;1000;false;8796093055067,8796120449115;987654321;2;1
+
+#For Buy A and B Get C
+INSERT_UPDATE BuyAandBgetC;code[unique=true];title;description;priority;enabled;channel;$products;$secondproducts;$giftProducts
+;BuyAandBGetC;Buy A and B Get C;Buy A and B Get C;1003;false;8796093055067,8796120449115;987654341;987654342;987654321
+
+#For Buy X Items of A Get B Free
+INSERT_UPDATE BuyXItemsofproductAgetproductBforfree;code[unique=true];title;description;priority;enabled;channel;$products;$giftProducts;qualifyingCount
+;BuyAGetBFree;Buy A Get B Free;Buy A Get B Free;1004;false;8796120449115;987654341;987654342;1
+
+#For BuyABFreePrecentageDiscount
+INSERT_UPDATE BuyABFreePrecentageDiscount;code[unique=true];title;description;priority;enabled;channel;$products;$giftProducts;quantity;percentageDiscount;percentageOrAmount
+;BuyABFeePlusDiscount;Buy A Get B Free Plus Discount;Buy A Get B Free Plus Discount;1005;false;8796120449115;987654341;987654342;1;10;true
+
+
