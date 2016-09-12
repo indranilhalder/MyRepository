@@ -484,30 +484,32 @@ $(document).on("click"," .filter-clear ",function(e){
 	return false;
 })
 
-$(".js-facet-colourbutton").click(function(){
-	$(this).toggleClass("selected");
-	var spanCount=$(".facet_mobile .filter-colour").find(".js-facet-colourbutton.selected").length;
+$(".js-facet-colourbutton").on("click",function(){
+	alert("color");
+	$(this).parents(".filter-colour").toggleClass("selected-colour");
+	var spanCount=$(".facet_mobile .filter-colour.selected-colour").length;
 	if(spanCount>0)
 		{
 			$(this).parents(".facet.js-facet").find(".category-icons span").text(spanCount);
 		}	
-})
+});
 
-$(".js-facet-sizebutton").click(function(){
-	$(this).toggleClass("selected");
-	var spanCount=$(".facet_mobile .filter-size").find(".js-facet-sizebutton.selected").length;
+$(".js-facet-sizebutton").on("click",function(){
+	alert("size");
+	$(this).parents(".filter-size").toggleClass("selected-size");
+	var spanCount=$(".facet_mobile .filter-size.selected-size").length;
 	if(spanCount>0)
 	{
 		$(this).parents(".facet.js-facet").find(".category-icons span").text(spanCount);
 	}
-})
+});
 
-$(".facet_mobile .facet.js-facet").change(function(){
+$(".facet_mobile .facet.js-facet").on("change",function(){
 	$(".facet_mobile .facet.js-facet").each(function(){
 		var spanCount=$(this).find(".facet-list.js-facet-list li").find("input[type=checkbox]:checked").length;
 		if(spanCount>0)
 			{
 				$(this).find(".category-icons span").text(spanCount);
-			}	
-		})
+			}
+		});
 });
