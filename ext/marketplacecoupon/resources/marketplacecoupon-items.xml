@@ -20,6 +20,11 @@
 			xsi:noNamespaceSchemaLocation="items.xsd">
 
 	<!-- Restriction : Commented as functionality out of scope of R2.1   Uncomment when in scope -->
+	 <collectiontypes>
+	   
+		<collectiontype code="SellerDataCollection" elementtype="SellerMaster" 
+			autocreate="true" generate="false" />
+	</collectiontypes>	
 	<!-- <collectiontypes>
 	    <collectiontype code="DeliveryModeDataCollection" elementtype="DeliveryMode"
 			autocreate="true" generate="false" type="list" /> 
