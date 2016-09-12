@@ -235,6 +235,7 @@ ACC.refinements = {
 		//TPR-845
 		$(document).on("click",".js-product-facet .facet_mobile .js-facet-colourbutton , .js-product-facet .facet_mobile .js-facet-sizebutton",function(){
 			var filterMobileQuery = $(this).parents("form").find('input[name="q"]').val();
+			dummyForm = $(this).parents("form");
 			if(updatedsearchQuery==''){
 				updatedsearchQuery=filterMobileQuery;
 				
@@ -482,4 +483,31 @@ $(document).on("click"," .filter-clear ",function(e){
 	window.location.href =pageURL;
 	return false;
 })
-;
+
+$(".js-facet-colourbutton").click(function(){
+	$(this).toggleClass("selected");
+	var spanCount=$(".facet_mobile .filter-colour").find(".js-facet-colourbutton.selected").length;
+	if(spanCount>0)
+		{
+			$(this).parents(".facet.js-facet").find(".category-icons span").text(spanCount);
+		}	
+})
+
+$(".js-facet-sizebutton").click(function(){
+	$(this).toggleClass("selected");
+	var spanCount=$(".facet_mobile .filter-size").find(".js-facet-sizebutton.selected").length;
+	if(spanCount>0)
+	{
+		$(this).parents(".facet.js-facet").find(".category-icons span").text(spanCount);
+	}
+})
+
+$(".facet_mobile .facet.js-facet").change(function(){
+	$(".facet_mobile .facet.js-facet").each(function(){
+		var spanCount=$(this).find(".facet-list.js-facet-list li").find("input[type=checkbox]:checked").length;
+		if(spanCount>0)
+			{
+				$(this).find(".category-icons span").text(spanCount);
+			}	
+		})
+});
