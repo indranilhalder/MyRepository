@@ -65,21 +65,17 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	/**
 	 *
 	 */
-	private static final String N = "N";
-	private static final String Y = "Y";
-	@Autowired
+	@Resource
 	private RegisterCustomerFacade registerCustomerFacade;
-	@Autowired
+	@Resource
 	private ModelService modelService;
-
-
-	@Autowired
+	@Resource
 	private MplPreferenceService mplPreferenceService;
-
-	@Autowired
+	@Resource
 	private UserService userService;
+	@Resource
 	private UserDetailsService userDetailsService;
-	@Resource(name = "configurationService")
+	@Resource
 	private ConfigurationService configurationService;
 
 	/**
@@ -109,7 +105,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	private String gigyaUID;
 
 	/**
-	 * Register new user
+	 * Register new user TPR-1372
 	 *
 	 * @param login
 	 * @param password
@@ -119,7 +115,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 */
 	@SuppressWarnings("javadoc")
 	@Override
-	public MplUserResultWsDto registerNewMplUser(final String login, final String password)
+	public MplUserResultWsDto registerNewMplUser(final String login, final String password, final boolean tataTreatsEnable)
 			throws EtailBusinessExceptions, EtailNonBusinessExceptions
 	{
 		MplUserResultWsDto result = new MplUserResultWsDto();
@@ -132,7 +128,11 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 			final ExtRegisterData registration = new ExtRegisterData();
 			registration.setLogin(login);
 			registration.setPassword(password);
-
+			//TPR-1372
+			if (tataTreatsEnable)
+			{
+				registration.setCheckTataRewards(true);
+			}
 			//Register the user, call facade
 			if (registerCustomerFacade.checkUniquenessOfEmail(registration))
 			{
@@ -193,8 +193,8 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 * @return MplUserResultWsDto
 	 */
 	@Override
-	public MplUserResultWsDto loginUser(final String login, final String password)
-			throws EtailNonBusinessExceptions, EtailBusinessExceptions
+	public MplUserResultWsDto loginUser(final String login, final String password) throws EtailNonBusinessExceptions,
+			EtailBusinessExceptions
 	{
 		final MplUserResultWsDto output = new MplUserResultWsDto();
 		String result = null;
@@ -257,8 +257,8 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 				if (!StringUtils.isEmpty(login) && !StringUtils.isEmpty(isTemporaryPassword(login)))
 				{
 					output.setIsTemporaryPassword(isTemporaryPassword(login));
-					LOG.debug(
-							"*********** Mobile web service isTemporaryPassword for" + login + " is >>> " + isTemporaryPassword(login));
+					LOG.debug("*********** Mobile web service isTemporaryPassword for" + login + " is >>> "
+							+ isTemporaryPassword(login));
 				}
 			}
 		}
@@ -294,8 +294,8 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 * @throws AuthenticationServiceException
 	 * @throws AuthenticationException
 	 */
-	public UserDetails retrieveUserforMarketplace(final String username)
-			throws DataAccessException, EtailBusinessExceptions, AuthenticationException
+	public UserDetails retrieveUserforMarketplace(final String username) throws DataAccessException, EtailBusinessExceptions,
+			AuthenticationException
 	{
 		//Try to load user with username
 		UserDetails loadedUser;
@@ -309,7 +309,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 
 
 	/**
-	 * Registering social user
+	 * Registering social user TPR-1372
 	 *
 	 * @param login
 	 * @param socialMediaType
@@ -317,8 +317,8 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 * @throws EtailNonBusinessExceptions
 	 * @throws EtailNonBusinessExceptions
 	 */
-	private MplUserResultWsDto registerNewUserSocial(final String login, final String socialMediaType)
-			throws EtailNonBusinessExceptions, EtailNonBusinessExceptions
+	private MplUserResultWsDto registerNewUserSocial(final String login, final String socialMediaType,
+			final boolean tataTreatsEnable) throws EtailNonBusinessExceptions, EtailNonBusinessExceptions
 	{
 		final MplUserResultWsDto result = new MplUserResultWsDto();
 		boolean successFlag = false;
@@ -330,6 +330,11 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		LOG.debug("*************** Mobile web service social media registration ***********" + login + socialMediaType);
 		try
 		{
+			//TPR-1372
+			if (tataTreatsEnable)
+			{
+				registration.setCheckTataRewards(true);
+			}
 
 			if (null != extUserService.getUserForUid(StringUtils.lowerCase(login)))
 			{
@@ -403,12 +408,12 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 */
 	private String isTemporaryPassword(final String emailId)
 	{
-		String isTempPasswordChanged = N;
+		String isTempPasswordChanged = MarketplacecommerceservicesConstants.N;
 		CustomerModel custModel = null;
 		custModel = getCustomerDetails(emailId);
 		if (null != custModel.getIsTemporaryPasswordChanged() && custModel.getIsTemporaryPasswordChanged().booleanValue())
 		{
-			isTempPasswordChanged = Y;
+			isTempPasswordChanged = MarketplacecommerceservicesConstants.Y;
 		}
 		return isTempPasswordChanged;
 	}
@@ -503,17 +508,17 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 						{
 							if (Boolean.TRUE.equals(mplPreferenceModel.getUserReview()))
 							{
-								feedbackAreaSelected.setSelected("Y");
+								feedbackAreaSelected.setSelected(MarketplacecommerceservicesConstants.Y);
 							}
 							else
 							{
-								feedbackAreaSelected.setSelected(N);
+								feedbackAreaSelected.setSelected(MarketplacecommerceservicesConstants.N);
 							}
 
 						}
 						else
 						{
-							feedbackAreaSelected.setSelected("Y");
+							feedbackAreaSelected.setSelected(MarketplacecommerceservicesConstants.Y);
 						}
 					}
 					else if (code.equalsIgnoreCase(MarketplacecommerceservicesConstants.CUSTOMERSURVEYS))
@@ -527,7 +532,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 							}
 							else
 							{
-								feedbackAreaSelected.setSelected(N);
+								feedbackAreaSelected.setSelected(MarketplacecommerceservicesConstants.N);
 							}
 						}
 						else
@@ -556,7 +561,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 						}
 						else
 						{
-							frequencySelected.setSelected(N);
+							frequencySelected.setSelected(MarketplacecommerceservicesConstants.N);
 						}
 						frequencyList.add(frequencySelected);
 					}
@@ -574,7 +579,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 						}
 						else
 						{
-							frequencySelected.setSelected(N);
+							frequencySelected.setSelected(MarketplacecommerceservicesConstants.N);
 						}
 						frequencyList.add(frequencySelected);
 					}
@@ -591,19 +596,19 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 			{
 				if (Boolean.TRUE.equals(mplPreferenceModel.getIsInterestedInEmail()))
 				{
-					interest1.setSelected("Y");
-					interest2.setSelected(N);
+					interest1.setSelected(MarketplacecommerceservicesConstants.Y);
+					interest2.setSelected(MarketplacecommerceservicesConstants.N);
 				}
 				else
 				{
-					interest1.setSelected(N);
-					interest2.setSelected("Y");
+					interest1.setSelected(MarketplacecommerceservicesConstants.N);
+					interest2.setSelected(MarketplacecommerceservicesConstants.Y);
 				}
 			}
 			else
 			{
-				interest1.setSelected("Y");
-				interest2.setSelected(N);
+				interest1.setSelected(MarketplacecommerceservicesConstants.Y);
+				interest2.setSelected(MarketplacecommerceservicesConstants.N);
 			}
 			interestList.add(interest1);
 			interestList.add(interest2);
@@ -632,16 +637,16 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 					{
 						if (!preferrredBrand.isEmpty() && preferrredBrand.contains(brand))
 						{
-							interestedBrand.setSelected("Y");
+							interestedBrand.setSelected(MarketplacecommerceservicesConstants.Y);
 						}
 						else
 						{
-							interestedBrand.setSelected(N);
+							interestedBrand.setSelected(MarketplacecommerceservicesConstants.N);
 						}
 					}
 					else
 					{
-						interestedBrand.setSelected("Y");
+						interestedBrand.setSelected(MarketplacecommerceservicesConstants.Y);
 					}
 					interestedBrands.add(interestedBrand);
 				}
@@ -672,16 +677,16 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 
 						if (!preferrredCategories.isEmpty() && preferrredCategories.contains(category))
 						{
-							interestedCategory.setSelected("Y");
+							interestedCategory.setSelected(MarketplacecommerceservicesConstants.Y);
 						}
 						else
 						{
-							interestedCategory.setSelected(N);
+							interestedCategory.setSelected(MarketplacecommerceservicesConstants.N);
 						}
 					}
 					else
 					{
-						interestedCategory.setSelected("Y");
+						interestedCategory.setSelected(MarketplacecommerceservicesConstants.Y);
 					}
 					interestedCategories.add(interestedCategory);
 				}
@@ -826,22 +831,22 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 
 		{
 			if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR))
+					&& e.toString().contains(
+							Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR))
 					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
 			}
 			else if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR))
+					&& e.toString().contains(
+							Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR))
 					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
 			}
 			else if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR))
+					&& e.toString().contains(
+							Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR))
 					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
@@ -880,7 +885,8 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 * @see com.tisl.mpl.service.MplMobileUserService#socialMediaRegistration(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public MplUserResultWsDto socialMediaRegistration(final String emailId, final String socialMedia)
+	public MplUserResultWsDto socialMediaRegistration(final String emailId, final String socialMedia,
+			final boolean tataTreatsEnable)
 	{
 		boolean successflag = false;
 		MplUserResultWsDto socialRegister = new MplUserResultWsDto();
@@ -892,7 +898,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		}
 		try
 		{
-			socialRegister = registerNewUserSocial(emailId, socialMedia);
+			socialRegister = registerNewUserSocial(emailId, socialMedia, tataTreatsEnable);
 			if (!StringUtils.isEmpty(socialRegister.getStatus())
 					&& socialRegister.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS_FLAG))
 			{
@@ -909,22 +915,22 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 			//Set success flag as false
 			successflag = false;
 			if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR))
+					&& e.toString().contains(
+							Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR))
 					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
 			}
 			else if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR))
+					&& e.toString().contains(
+							Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR))
 					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
 			}
 			else if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR))
+					&& e.toString().contains(
+							Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR))
 					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
