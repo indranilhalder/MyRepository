@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.zkoss.bind.annotation.BindingParam;
@@ -67,7 +68,7 @@ public class LpoverrideWidgetController
 
 	@Init
 	@NotifyChange(
-	{ "ordersStatus", "lpList", "listOfTransactions" })
+	{ "ordersStatus", "lpList" })
 	public void init()
 	{
 		LOG.info("inside init");
@@ -262,6 +263,11 @@ public class LpoverrideWidgetController
 		}
 		LOG.info("list of orders" + listOfOrderLineInfo.toString());
 		final LPOverrideAWBEdit lpOverrideEdit = new LPOverrideAWBEdit();
+		if (CollectionUtils.isEmpty(listOfOrderLineInfo))
+		{
+			Messagebox.show("No Changes Found ");
+			return;
+		}
 		lpOverrideEdit.setOrderLineInfo(listOfOrderLineInfo);
 		lpOverrideEdit.setIsReturn(isReturn);
 		final String userId = cockpitUserService.getCurrentUser();
