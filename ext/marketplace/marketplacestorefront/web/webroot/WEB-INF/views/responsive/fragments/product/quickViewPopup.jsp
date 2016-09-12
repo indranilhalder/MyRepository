@@ -42,20 +42,16 @@ tr.d0 td {
 		window.open(ACC.config.encodedContextPath + "/login", "_self");
 	}
 	
-	$(document).ready(function() {		
-//		 $("#buyNowQv").click(function(){		
-//			 testMethod();	       		
-//		  });		
-		$('#buyNowQv .js-add-to-cart-qv').click(function(event){		
-					
-			 if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'){		
-				$("#addToCartFormQuick").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");		
-				$("#addToCartFormQuick").show();		
-		 	    return false;		
-		 }else{			 		
-			ACC.product.sendToCartPageQuick("addToCartFormQuick",true);		
-		}		
-		});		
+	$('#buyNowQv .js-add-to-cart-qv').click(function(event){
+		
+		 if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'){
+			 $("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+			 				$("#addToCartFormQuickTitle").show();
+			  				$("#addToCartFormQuickTitle").fadeOut(5000);
+	 	    return false;
+	 }else{			 
+		ACC.product.sendToCartPageQuick("addToCartFormQuick",true);
+	}
 	});
 	
 	
@@ -305,7 +301,14 @@ display:none;
 <div class="quickview active">
 <div class="content">
 <div class="quick-view-popup product-info wrapper">
-
+<!-- TPR-924 -->
+<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
+			<input type="hidden" id="loggedIn" value="false"/> 
+		</sec:authorize>
+		<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
+			<input type="hidden" id="loggedIn" value="true"/> 
+		</sec:authorize>
+		<!-- TPR-924 -->
 <div class="product-image-container">
 	<a class="wishlist-icon" onclick="openPop_quick()"></a>	
    <c:set var="increment" value="0"/>

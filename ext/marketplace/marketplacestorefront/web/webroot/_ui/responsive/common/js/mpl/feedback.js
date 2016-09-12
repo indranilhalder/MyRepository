@@ -283,7 +283,7 @@ $(document).ready(function(){
 				if(typeof(Storage) !== "undefined") {
 						if($(this).parents().hasClass("facet_mobile")){
 							$(".facet-name.js-facet-name h4").removeClass("active-mob");
-							$(this).parents(".facet.js-facet").siblings().find(".facet-values.js-facet-values.js-facet-form").hide();
+							$(this).parents(".facet_mobile").siblings().find(".facet-values.js-facet-values.js-facet-form").hide();
 							if($(this).parent().siblings('#searchPageDeptHierTreeForm').length == 0){
 								$('#searchPageDeptHierTreeForm').find("#searchPageDeptHierTree").hide();
 							}

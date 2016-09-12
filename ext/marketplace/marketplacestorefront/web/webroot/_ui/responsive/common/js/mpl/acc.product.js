@@ -694,6 +694,7 @@ sendAddToBagQuick:function(formId){
 		        $('#ajax-loader').show();
 		    },
 			success : function(data) {
+				
 				var isSuccess=true;
 				if(data.indexOf("cnt:") >= 0){
 				//$("#"+formId+"TitleSuccess").html("");

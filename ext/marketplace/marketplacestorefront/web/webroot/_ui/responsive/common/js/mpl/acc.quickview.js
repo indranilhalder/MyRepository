@@ -515,11 +515,12 @@ function selectWishlist_quick(i) {
 }
 
 
-function openPop_quick(ussidfromSeller) {
-/*	$(".wishAddSucessQV").addClass("active");
+/*function openPop_quick(ussidfromSeller) {
+	alert("HEllo");
+	$(".wishAddSucessQV").addClass("active");
 	setTimeout(function(){
 		$(".wishAddSucessQV").removeClass("active")
-	},3000);*/
+	},3000);
 	$('#addedMessage_quick').hide();
 	if (ussidfromSeller == null || ussidfromSeller == "") {
 		ussidValue = $("#ussid_quick").val();
@@ -532,6 +533,8 @@ function openPop_quick(ussidfromSeller) {
 			+ "-viewWishlistsInPDP";
 
 	var dataString = 'productCode=' + productCode + '&ussid=' + ussidValue;// modified
+	console.log(dataString);
+	console.log(requiredUrl);
 	// for
 	// ussid
 
@@ -542,23 +545,162 @@ function openPop_quick(ussidfromSeller) {
 		dataType : "json",
 		success : function(data) {
 			if (data == null) {
+				alert("Login");
 				$("#wishListNonLoggedInId_quick").show();
 				$("#wishListDetailsId_quick").hide();
 			}
 
 			else if (data == "" || data == []) {
-
+				alert("Login 2");
 				loadDefaultWishListName_quick();
 
-			} else {
+			} else {alert("Login 3");
 				LoadWishLists_quick(ussidValue, data, productCode);
 			}
 		},
-		error : function(xhr, status, error) {
+		error : function(xhr, status, error) {alert(xhr.status+"---"+error);
 			$("#wishListNonLoggedInId_quick").show();
 			$("#wishListDetailsId_quick").hide();
 		}
 	});
+}*/
+function openPop_quick(ussidfromSeller){
+
+	
+	var loggedIn=$("#loggedIn").val();
+
+	var productCodePost = $("#productCodePost").val();
+
+	var wishName = "";
+	
+	var ussidValue=$("#ussid_quick").val();
+  
+	/*if (wishListList == "") {
+		wishName = $("#defaultWishName").val();
+	} else {
+		wishName = wishListList[$("#hidWishlist").val()];
+	}
+	if(wishName==""){
+		var msg=$('#wishlistnotblank').text();
+		$('#addedMessage').show();
+		$('#addedMessage').html(msg);
+		return false;
+	}
+    if(wishName==undefined||wishName==null){
+    	if(alreadyAddedWlName_pdp!=undefined || alreadyAddedWlName_pdp!=""){
+    		if(alreadyAddedWlName_pdp=="[]"){
+    			$("#wishlistErrorId_pdp").html("Please select a wishlist");
+    		}
+    		else{
+    			alreadyAddedWlName_pdp=alreadyAddedWlName_pdp.replace("[","");
+    			alreadyAddedWlName_pdp=alreadyAddedWlName_pdp.replace("]","");
+    			$("#wishlistErrorId_pdp").html("Product already added in your wishlist "+alreadyAddedWlName_pdp);
+    		}
+    		$("#wishlistErrorId_pdp").css("display","block");
+    	}
+    	return false;
+    }*/
+	var requiredUrl = ACC.config.encodedContextPath + "/p"
+			+ "-addToWishListInPDP";
+    var sizeSelected=true;
+    if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'){
+    	sizeSelected=false;
+    }
+	var dataString = 'wish=' + wishName + '&product=' + productCodePost
+			+ '&ussid=' + ussidValue+'&sizeSelected=' + sizeSelected;
+
+	if(loggedIn == 'false') {
+		$(".wishAddLoginQv").addClass("active");
+		setTimeout(function(){
+			$(".wishAddLoginQv").removeClass("active")
+		},3000)
+	}
+	else {
+		console.log(ussidValue);
+	
+		$.ajax({
+			contentType : "application/json; charset=utf-8",
+			url : requiredUrl,
+			data : dataString,
+			dataType : "json",
+			success : function(data) {
+				
+				if (data == true) {
+					//$("#radio_" + $("#hidWishlist").val()).prop("disabled", true);
+					//var msg=$('#wishlistSuccess').text();
+					//$('#addedMessage').show();
+					//$('#addedMessage').html(msg);
+					$(".wishAddSucessQv").addClass("active");
+					setTimeout(function(){
+						$(".wishAddSucessQv").removeClass("active")
+					},3000)
+					$("#add_to_wishlist_quick").attr("disabled",true);
+					$('.add_to_cart_form .out_of_stock #add_to_wishlist_quick').addClass("wishDisabled");
+					$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').addClass("added");
+					/*setTimeout(function() {
+						  $("#addedMessage").fadeOut().empty();
+						}, 1500);*/
+					//$('#addedMessage').delay(3000).fadeOut('slow'); // TISTI-225
+					populateMyWishlistFlyOut(wishName);
+					
+					//For MSD
+					var isMSDEnabled =  $("input[name=isMSDEnabled]").val();								
+					if(isMSDEnabled === 'true')
+					{
+					
+					var isApparelExist  = $("input[name=isApparelExist]").val();
+							
+					var salesHierarchyCategoryMSD =  $("input[name=salesHierarchyCategoryMSD]").val();
+					
+					var rootCategoryMSD  = $("input[name=rootCategoryMSD]").val();
+						
+					var productCodeMSD =  $("input[name=productCodeMSD]").val();
+							
+					var priceformad =  $("input[id=price-for-mad]").val();
+								
+					
+					if(typeof isMSDEnabled === 'undefined')
+					{
+						isMSDEnabled = false;						
+					}
+					
+					if(typeof isApparelExist === 'undefined')
+					{
+						isApparelExist = false;						
+					}	
+					
+					if(Boolean(isMSDEnabled) && Boolean(isApparelExist) && (rootCategoryMSD === 'Clothing'))
+						{					
+						ACC.track.trackAddToWishListForMAD(productCodeMSD, salesHierarchyCategoryMSD, priceformad,"INR");
+						}	
+					}
+					//End MSD
+					
+					
+					
+					//openPop(ussidValue);
+				//	$('#myModal').modal('hide');
+				//	
+				}
+				else{
+					$(".wishAlreadyAddedQv").addClass("active");
+					setTimeout(function(){
+						$(".wishAlreadyAddedQv").removeClass("active")
+					},3000)
+				}
+			},
+		});
+	
+	//$('a.wishlist#wishlist').popover('hide');
+	//$('input.wishlist#add_to_wishlist').popover('hide');
+	
+		/*setTimeout(function() {
+			$('a.wishlist#wishlist').popover('hide');
+			$('input.wishlist#add_to_wishlist').popover('hide');
+
+			}, 0);*/
+	}
+
 }
 
 function loadDefaultWishListName_quick() {
@@ -662,7 +804,7 @@ $(document).on("click","#variantForm div ul li a,.color-swatch-container .color-
 	$(".imageList ul li img").css("height", thumbnailImageHeight);		
 	}, 1000); 
 });
-
+/* Start of Quickview EMI  */
 $(document).on("click",".quickview #emiStickerId p",function(e){
 	e.stopPropagation();
 	$(this).addClass("active mobile")
@@ -686,5 +828,5 @@ $(document).on("click",".quickview .Emi > #EMImodal-content",function(e){
 	e.stopPropagation();
 		$(".quickview .Emi > p").addClass("active")
 });
-
+/*  End of Quickview EMI  */
 /**/
