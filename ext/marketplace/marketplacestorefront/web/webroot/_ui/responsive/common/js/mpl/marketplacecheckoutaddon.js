@@ -3222,6 +3222,7 @@ function checkPincodeServiceability(buttonType,el)
 	$("body").append("<div id='no-click' style='opacity:0.6; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 	var selectedPincode=$('#defaultPinCodeIds').val();
 	var regPostcode = /^([1-9])([0-9]){5}$/;
+	$(".deliveryUlClass").remove();//TPR-1341
 	
 	if(selectedPincode === ""){	
 		$( "#error-Id").hide();
@@ -3230,10 +3231,14 @@ function checkPincodeServiceability(buttonType,el)
 			"display":"block",
 			});
 		 $("#cartPinCodeAvailable").hide();// TPR-1055
+		 
 		// setTimeout(function(){
 		 $("#unserviceablepincode").hide();// tpr-1341
+		 $(".cartItemBlankPincode").show();
+		// $("#pinCodeButtonIds").text("Change Pincode");
 		 $("#AvailableMessage").hide();
 		 $(".pincodeServiceError").hide();
+		 $(".delivery ul.success_msg").hide();
 		$("#pinCodeDispalyDiv .spinner").remove();
 		$("#no-click").remove();
 		// },500);
@@ -3249,6 +3254,8 @@ function checkPincodeServiceability(buttonType,el)
         $("#AvailableMessage").hide();
         //TPR-1341
         $(".pincodeServiceError").hide();
+        $(".delivery ul.success_msg").hide();
+        $("#pinCodeButtonIds").text("Change Pincode");
         $(".cartItemBlankPincode").show();
 		$("#emptyId").hide();
 		$("#error-Id").css({
@@ -3373,9 +3380,10 @@ function checkPincodeServiceability(buttonType,el)
    }
 }
 
-// TPR-1055
+//TPR-1055
 $("#defaultPinCodeIds").click(function(){
 	$("#unserviceablepincode").hide();
+	$(".deliveryUlClass").remove();//TPR-1341
 	$("#cartPinCodeAvailable").show();
 	 $( "#error-Id").hide();
 	 $("#emptyId").hide();
@@ -3390,7 +3398,6 @@ $("#defaultPinCodeIds").click(function(){
 	
 });
 // TPR-1055 ends
-	
 
 
 function reloadpage(selectedPincode,buttonType) {
@@ -3441,6 +3448,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 		//TPR-1341
 		$(".cartItemBlankPincode").hide();
 		$(".pincodeServiceError").show();
+		$(".deliveryUlClass").remove();
 	}else{
 		//TPR-1341
 		$('#unsevisablePin').hide();
@@ -3471,11 +3479,14 @@ function populatePincodeDeliveryMode(response,buttonType){
 		$("#"+ussId).remove();
 		var newUi = document.createElement("ul");
 		newUi.setAttribute("id", ussId);
+		newUi.setAttribute("class", "deliveryUlClass");//TPR-1341
 		var newSpan = document.createElement("span");
 		var text = document.createTextNode("This item is not serviceable for pincode "+selectedPincode+"!");
 		newSpan.appendChild(text);
 		newUi.appendChild(newSpan);
 		$("#"+ussId+"_li").append(newUi);
+		$(".cartItemBlankPincode").hide();//TPR-1341
+		 $(".pincodeServiceError").hide();
 		console.log("Not servicable");
 	}
 	else{
@@ -3511,7 +3522,6 @@ function populatePincodeDeliveryMode(response,buttonType){
 			$("#"+ussId+"_qty").append(newUl);
 			isStockAvailable="N";
 		}
-
 			
 			for ( var count in jsonObj) {
 				var inventory=0;
@@ -3559,6 +3569,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 			$("#"+ussId+"_li").append(newUi);
 			//TPR-1341
 			$(".cartItemBlankPincode").hide();
+			 $(".pincodeServiceError").hide();
 			
 		}
 	}
@@ -3671,6 +3682,7 @@ function checkIsServicable()
  				 $(".pincodeServiceError").show();
 	 			}
 	 			else{
+	 				$(".deliveryUlClass").remove();//TPR-1341
 	 				 $(".pincodeServiceError").hide();
 	 				$("#unserviceablepincode").hide();
 	 				$("#cartPinCodeAvailable").hide();
