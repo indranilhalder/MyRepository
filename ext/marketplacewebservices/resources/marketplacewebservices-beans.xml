@@ -971,6 +971,8 @@
 		<property name="isProductNew" type="java.lang.String"></property>
 		<property name="sellerAssociationstatus" type="String" />
 		<property name="discountPercent" type="String" />
+		<!-- TPR-797 -->
+		<property name="allOOStock" type="Boolean" />
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.KnowMoreDTO">

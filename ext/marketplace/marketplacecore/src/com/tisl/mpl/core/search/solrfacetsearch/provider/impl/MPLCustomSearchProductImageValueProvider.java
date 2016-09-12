@@ -8,7 +8,6 @@ import de.hybris.platform.core.model.media.MediaModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.media.MediaContainerService;
 import de.hybris.platform.servicelayer.media.MediaService;
-import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.solrfacetsearch.config.IndexConfig;
 import de.hybris.platform.solrfacetsearch.config.IndexedProperty;
 import de.hybris.platform.solrfacetsearch.config.exceptions.FieldValueProviderException;
@@ -32,25 +31,19 @@ import com.tisl.mpl.core.util.MediaHelper;
 
 
 /**
- * @author TCS
+ * @author TCS --TPR-796
  *
  */
-@SuppressWarnings(
-{ "PMD" })
-public class NewCustomSearchImageValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider,
+public class MPLCustomSearchProductImageValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider,
 		Serializable
 {
 
-	private static final Logger LOG = Logger.getLogger(NewCustomSearchImageValueProvider.class);
-
+	private static final Logger LOG = Logger.getLogger(MPLCustomSearchProductImageValueProvider.class);
 
 	private String mediaFormat;
 	private MediaService mediaService;
 	private MediaContainerService mediaContainerService;
 	private FieldNameProvider fieldNameProvider;
-
-	@Resource
-	private FlexibleSearchService flexibleSearchService;
 	@Resource
 	private MediaHelper mediaHelper;
 
@@ -98,8 +91,8 @@ public class NewCustomSearchImageValueProvider extends AbstractPropertyFieldValu
 		this.fieldNameProvider = fieldNameProvider;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
+	@SuppressWarnings("deprecation")
 	public Collection<FieldValue> getFieldValues(final IndexConfig indexConfig, final IndexedProperty indexedProperty,
 			final Object model) throws FieldValueProviderException
 	{
@@ -124,6 +117,8 @@ public class NewCustomSearchImageValueProvider extends AbstractPropertyFieldValu
 		return Collections.emptyList();
 	}
 
+
+
 	/*
 	 * protected Collection<FieldValue> createFieldValues(final IndexedProperty indexedProperty, final List<MediaModel>
 	 * media) { return createFieldValues(indexedProperty, media.getURL()); }
@@ -139,4 +134,5 @@ public class NewCustomSearchImageValueProvider extends AbstractPropertyFieldValu
 		}
 		return fieldValues;
 	}
+
 }
