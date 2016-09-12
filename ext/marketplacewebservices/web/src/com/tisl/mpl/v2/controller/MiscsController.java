@@ -642,9 +642,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * restriction set up interface to save the data comming from seller portal
-	 *
+	 * 
 	 * @param restrictionXML
-	 *
+	 * 
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/restrictionServer", method = RequestMethod.POST)
@@ -954,7 +954,7 @@ public class MiscsController extends BaseController
 
 
 	/**
-	 * @Description : For Search and Suggest
+	 * @Description : For PDP widgets, search on offer ,color size etc
 	 * @param type
 	 * @param typeValue
 	 * @param page
@@ -966,7 +966,7 @@ public class MiscsController extends BaseController
 	@ResponseBody
 	public ProductSearchPageWsDto searchProductDto(@RequestParam(required = true) final String type,
 			@RequestParam(required = true) final String typeValue, @RequestParam(required = true) final int page,
-			@RequestParam(required = false) final String categoryCode, @RequestParam(required = true) final int pageSize,
+			@RequestParam(required = true) final int pageSize, @RequestParam(required = false) final String categoryCode,
 			@RequestParam(required = false) final String sortCode,
 			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
@@ -981,37 +981,40 @@ public class MiscsController extends BaseController
 
 			if (StringUtils.isNotEmpty(typeValue) && StringUtils.isNotEmpty(type))
 			{
-				if (type.equalsIgnoreCase("offer"))
+				if (type.equalsIgnoreCase(MarketplacecommerceservicesConstants.OFFER))
 				{
 					if (StringUtils.isNotEmpty(categoryCode))
 					{
-						searchText = ":relevance:category:" + categoryCode + ":allPromotions:" + typeValue;
+						searchText = MarketplacecommerceservicesConstants.RELEVANCE_CATEGORY + categoryCode
+								+ MarketplacecommerceservicesConstants.OFFER_COLON + typeValue;
 					}
 					else
 					{
-						searchText = ":relevance:allPromotions:" + typeValue;
+						searchText = MarketplacecommerceservicesConstants.RELEVANCE_OFFER + typeValue;
 					}
 				}
-				else if (type.equalsIgnoreCase("color"))
+				else if (type.equalsIgnoreCase(MarketplacecommerceservicesConstants.COLOUR))
 				{
 					if (StringUtils.isNotEmpty(categoryCode))
 					{
-						searchText = ":relevance:category:" + categoryCode + ":colour:" + typeValue;
+						searchText = MarketplacecommerceservicesConstants.RELEVANCE_CATEGORY + categoryCode
+								+ MarketplacecommerceservicesConstants.COLOUR_COLON + typeValue;
 					}
 					else
 					{
-						searchText = ":relevance:colour:" + typeValue;
+						searchText = MarketplacecommerceservicesConstants.RELEVANCE_COLOR + typeValue;
 					}
 				}
 				else
 				{
 					if (StringUtils.isNotEmpty(categoryCode))
 					{
-						searchText = ":relevance:category:" + categoryCode + ":size:" + typeValue;
+						searchText = MarketplacecommerceservicesConstants.RELEVANCE_CATEGORY + categoryCode
+								+ MarketplacecommerceservicesConstants.SIZE_COLON + typeValue.toUpperCase();
 					}
 					else
 					{
-						searchText = ":relevance:size:" + typeValue;
+						searchText = MarketplacecommerceservicesConstants.RELEVANCE_SIZE + typeValue.toUpperCase();
 					}
 				}
 
@@ -1203,32 +1206,7 @@ public class MiscsController extends BaseController
 				final ListPinCodeServiceData dataList = new ListPinCodeServiceData();
 				if (null != productCodeStr && StringUtils.isNotEmpty(productCodeStr))
 				{
-					/*
-					 * productModel = productService.getProductForCode(productCodeStr); ProductData productData = null; if
-					 * (null != productModel) { productData = productFacade.getProductForOptions(productModel,
-					 * Arrays.asList(ProductOption.BASIC, ProductOption.PRICE)); } else { throw new
-					 * EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9037); } PincodeServiceData data = null;
-					 * MarketplaceDeliveryModeData deliveryModeData = null; List<PinCodeResponseData> response = null;
-					 *
-					 * if (null != productData && null != productData.getSeller()) { for (final SellerInformationData seller
-					 * : productData.getSeller()) { final List<MarketplaceDeliveryModeData> deliveryModeList = new
-					 * ArrayList<MarketplaceDeliveryModeData>(); data = new PincodeServiceData(); if
-					 * (!(seller.getDeliveryModes().isEmpty())) { for (final MarketplaceDeliveryModeData deliveryMode :
-					 * seller.getDeliveryModes()) { if (null != deliveryMode && null != deliveryMode.getCode() && null !=
-					 * seller.getUssid()) { deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(),
-					 * seller.getUssid()); } deliveryModeList.add(deliveryModeData); }
-					 * data.setDeliveryModes(deliveryModeList); }
-					 *
-					 * if (StringUtils.isNotEmpty(seller.getFullfillment())) {
-					 * data.setFullFillmentType(seller.getFullfillment()); } if
-					 * (StringUtils.isNotEmpty(seller.getShippingMode())) { data.setTransportMode(seller.getShippingMode());
-					 * } if (null != seller.getMopPrice() && null != seller.getMopPrice().getValue()) { data.setPrice(new
-					 * Double(seller.getMopPrice().getValue().doubleValue())); } if
-					 * (StringUtils.isNotEmpty(seller.getIsCod())) { data.setIsCOD(seller.getIsCod()); } if
-					 * (StringUtils.isNotEmpty(seller.getSellerID())) { data.setSellerId(seller.getSellerID()); } if
-					 * (StringUtils.isNotEmpty(seller.getUssid())) { data.setUssid(seller.getUssid()); }
-					 * data.setIsDeliveryDateRequired(MarketplacewebservicesConstants.NA); requestData.add(data); } }
-					 */
+					//removed unused codes
 					List<PinCodeResponseData> response = null;
 					final PincodeModel pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(pin);
 					if (null != pinCodeModelObj)
@@ -1346,6 +1324,10 @@ public class MiscsController extends BaseController
 	}
 
 	// check brand or category TPR-816
+	/**
+	 * @param code
+	 * @return
+	 */
 	@RequestMapping(value = "/{baseSiteId}/checkBrandOrCategory", method = RequestMethod.GET)
 	@ResponseBody
 	public CategoryBrandDTO checkBrandOrCategory(@RequestParam final String code)
@@ -1357,7 +1339,8 @@ public class MiscsController extends BaseController
 			if (StringUtils.isNotEmpty(code))
 			{
 				selectedCategory = categoryService.getCategoryForCode(code);
-				if (selectedCategory != null)
+				//EQA comments
+				if (selectedCategory != null && StringUtils.isNotEmpty(selectedCategory.getCode()))
 				{
 					result.setCode(code);
 					result.setName(selectedCategory.getName());
@@ -1417,32 +1400,7 @@ public class MiscsController extends BaseController
 		return result;
 	}
 
-	/**
-	 * @param deliveryMode
-	 * @param ussid
-	 * @return MarketplaceDeliveryModeData
-	 */
-	/*
-	 * private MarketplaceDeliveryModeData fetchDeliveryModeDataForUSSID(final String deliveryMode, final String ussid) {
-	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
-	 * MplZoneDeliveryModeValueModel MplZoneDeliveryModeValueModel = mplCheckoutFacade
-	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 *
-	 * if (null != MplZoneDeliveryModeValueModel) { if (null != MplZoneDeliveryModeValueModel.getValue()) { final
-	 * PriceData priceData = formPriceData(MplZoneDeliveryModeValueModel.getValue()); if (null != priceData) {
-	 * deliveryModeData.setDeliveryCost(priceData); } } if (null != MplZoneDeliveryModeValueModel.getDeliveryMode() &&
-	 * null != MplZoneDeliveryModeValueModel.getDeliveryMode().getCode()) {
-	 * deliveryModeData.setCode(MplZoneDeliveryModeValueModel.getDeliveryMode().getCode()); } if (null !=
-	 * MplZoneDeliveryModeValueModel.getDeliveryMode() && null !=
-	 * MplZoneDeliveryModeValueModel.getDeliveryMode().getDescription()) {
-	 * deliveryModeData.setDescription(MplZoneDeliveryModeValueModel.getDeliveryMode().getDescription()); } if (null !=
-	 * MplZoneDeliveryModeValueModel.getDeliveryMode() && null !=
-	 * MplZoneDeliveryModeValueModel.getDeliveryMode().getName()) {
-	 * deliveryModeData.setName(MplZoneDeliveryModeValueModel.getDeliveryMode().getName()); } if (null != ussid) {
-	 * deliveryModeData.setSellerArticleSKU(ussid); }
-	 *
-	 * } return deliveryModeData; }
-	 */
+
 	/**
 	 * Converting datatype of price
 	 *

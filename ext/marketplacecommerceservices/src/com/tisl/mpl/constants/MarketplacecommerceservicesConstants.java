@@ -1624,6 +1624,15 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String EMIBANK = "emi_bank".intern();
 	public static final String EMITENURE = "emi_tenure".intern();
 	public static final String B9421 = "B9421".intern();
+	public static final String RELEVANCE_CATEGORY = ":relevance:category:".intern();
+	public static final String RELEVANCE_OFFER = ":relevance:allPromotions:".intern();
+	public static final String RELEVANCE_COLOR = ":relevance:colour:".intern();
+	public static final String RELEVANCE_SIZE = ":relevance:size:".intern();
+	public static final String OFFER = "offer".intern();
+	public static final String COLOUR = "colour".intern();
+	public static final String SIZE_COLON = ":size:".intern();
+	public static final String COLOUR_COLON = ":colour:".intern();
+	public static final String OFFER_COLON = ":allPromotions:".intern();
 
 	private MarketplacecommerceservicesConstants()
 	{
