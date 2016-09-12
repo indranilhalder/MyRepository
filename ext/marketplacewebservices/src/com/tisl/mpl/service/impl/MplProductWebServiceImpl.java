@@ -489,6 +489,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 						productDetailMobile.setAllOOStock(Boolean.TRUE);
 					}
 				}
+				//TISSTRT-1411
 				variantDataList = getVariantDetailsForProduct(productData, stockAvailibilty);
 
 				if (null != variantDataList && !variantDataList.isEmpty())
@@ -1630,6 +1631,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 								variantSizePCode = url[url.length - 1];
 								LOG.debug("variant_Size" + variantSizePCode);
 							}
+							//TISSTRT-1411
 							//by default its available
 							sizeLinkData.setIsAvailable(true);
 							//check teh stock availability
