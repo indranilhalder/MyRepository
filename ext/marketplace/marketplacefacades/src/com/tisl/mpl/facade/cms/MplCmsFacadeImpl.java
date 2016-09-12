@@ -17,6 +17,8 @@ import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercesearch.model.SolrHeroProductDefinitionModel;
 import de.hybris.platform.commercesearch.searchandizing.heroproduct.HeroProductDefinitionService;
+import de.hybris.platform.commerceservices.search.pagedata.PageableData;
+import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.converters.Converters;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.ProductService;
@@ -52,6 +54,7 @@ import com.tisl.mpl.facades.cms.data.ComponentData;
 import com.tisl.mpl.facades.cms.data.HeroComponentData;
 import com.tisl.mpl.facades.cms.data.HeroProductData;
 import com.tisl.mpl.facades.cms.data.HomePageComponentData;
+import com.tisl.mpl.facades.cms.data.ImageListComponentData;
 import com.tisl.mpl.facades.cms.data.LinkedCollectionsData;
 import com.tisl.mpl.facades.cms.data.MplPageData;
 import com.tisl.mpl.facades.cms.data.PageData;
@@ -74,7 +77,7 @@ import com.tisl.mpl.model.cms.components.MobileCollectionLinkComponentModel;
 import com.tisl.mpl.model.cms.components.PromotionalProductsComponentModel;
 import com.tisl.mpl.model.cms.components.SmallBrandMobileAppComponentModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
-import com.tisl.mpl.facades.cms.data.ImageListComponentData;
+
 
 /**
  * @author 584443
@@ -419,9 +422,12 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 
 	@Override
-	public List<MplPageData> getPageInformationForPageId(final String pageUid)
+	public List<MplPageData> getPageInformationForPageId(final String pageUid, final PageableData pageableData)
 	{
-		final ContentPageModel contentPage = getMplCMSPageService().getPageForAppById(pageUid);
+		//Modified for TPR-798
+		//final ContentPageModel contentPage = getMplCMSPageService().getPageForAppById(pageUid);
+		final SearchPageData<ContentSlotForPageModel> contentPage = getMplCMSPageService().getContentSlotsForAppById(pageUid,
+				pageableData);
 
 		final List<MplPageData> componentDatas = new ArrayList<MplPageData>();
 		final List<Date> lastModifiedTimes = new ArrayList<Date>();
@@ -429,7 +435,9 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 		if (contentPage != null)
 		{
-			for (final ContentSlotForPageModel contentSlotForPage : contentPage.getContentSlots())
+			//Modified for TPR-798
+			//for (final ContentSlotForPageModel contentSlotForPage : contentPage.getContentSlots())
+			for (final ContentSlotForPageModel contentSlotForPage : contentPage.getResults())
 			{
 				final MplPageData homePageData = new MplPageData();
 				final List<TextComponentData> texts = new ArrayList<TextComponentData>();
@@ -562,7 +570,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 							try
 							{
 								productModel = productService.getProductForCode(productCode);
-								if (null !=productModel && null != productModel.getPicture())
+								if (null != productModel && null != productModel.getPicture())
 								{
 									productComp.setImage(productModel.getPicture().getUrl2());
 								}
@@ -620,7 +628,9 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				}
 				else
 				{
-					homePageData.setLastModifiedTime(contentPage.getModifiedtime());
+					//Modified for TPR-798
+					//homePageData.setLastModifiedTime(contentPage.getModifiedtime());
+					homePageData.setLastModifiedTime(contentSlotForPage.getModifiedtime());
 				}
 				homePageData.setTextComponents(texts);
 				homePageData.setProductComponents(productForShowCase);
@@ -632,8 +642,6 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 		return componentDatas;
 	}
-
-
 
 	/*
 	 * (non-Javadoc)

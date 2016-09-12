@@ -779,4 +779,8 @@ public final class ModelAttributetConstants
 	//TPR-429
 	public static final String CART_LEVEL_SELLER_IDS = "cartLevelSellerIDs";
 	public static final String PDP_SELLER_IDS = "pdpSellerIDs";
+	//TPR-430
+	public static final String PRODUCT_CATEGORY = "product_category";
+	public static final String PAGE_SUBCATEGORY_NAME = "page_subcategory_name";
+	public static final String PAGE_SUBCATEGORY_NAME_L3 = "page_subcategory_name_l3";
 }

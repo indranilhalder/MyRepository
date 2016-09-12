@@ -3070,6 +3070,7 @@ function submitNBForm(){
 
 function calculateDeliveryCost(radioId,deliveryCode)
 {
+	
 	if(radioId=="" || radioId==undefined || deliveryCode=="" || deliveryCode==undefined )
 	{
 		var radioSelected=$('#deliveryradioul input:radio');	
@@ -3155,7 +3156,36 @@ function selectDefaultDeliveryMethod() {
 
 
 $('#selectDeliveryMethodForm #deliveryradioul .delivery_options .delivery ul li input:radio').click(function(){
-	changeCTAButtonName("DefaultName");
+	/*TPR-685 starts*/
+		 var length = $(this).find("li").length; 
+		
+			var radioSplit = $(this).attr("id").split("_");
+			
+			 var radioId = radioSplit[0]+"_"+radioSplit[1];
+		
+			  var mode=radioSplit[2]
+			  
+			 
+				if(mode=="home-delivery"){
+					utag.link(
+							{link_text: 'deliver_mode_home' , event_type : 'delivery_mode_select'}
+							);
+				}
+					
+				else if(mode=="express-delivery"){
+					utag.link(
+							{link_text: 'deliver_mode_express' , event_type : 'delivery_mode_select'}
+							);
+				}
+					
+				else{
+					utag.link(
+							{link_text: 'deliver_mode_clickcollect' , event_type : 'delivery_mode_select'}
+							);
+				}
+					
+	/*TPR-685 ends*/		  
+    changeCTAButtonName("DefaultName");
 	$('#deliveryradioul .delivery ul').each(function(){
 		var length = $(this).find("li").length; 
 		if(length >= "1") {
@@ -4137,6 +4167,7 @@ $("#state").focus(function(){
 
 
 function updateCart(formId){
+	window.sessionStorage.setItem("qtyUpdate","true");
 	var entryNumber = formId.split("_");
 	var form = $('#updateCartForm' + entryNumber[1]);
 	form.submit();
@@ -4341,7 +4372,7 @@ $("#couponSubmitButton").click(function(){
 
 //TPR-658 START
 function onSubmitAnalytics(msg){
-	var couponCode = $('#couponFieldId').val().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/'/g,"");
+	var couponCode = $('#couponFieldId').val().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
 	utag.link({
 		link_obj: this,
 		link_text: 'apply_coupon_'+msg ,

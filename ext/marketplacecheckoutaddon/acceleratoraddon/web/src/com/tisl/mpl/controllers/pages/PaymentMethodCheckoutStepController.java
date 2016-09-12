@@ -408,7 +408,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		//return values
 		model.addAttribute("checkoutPageName", checkoutPageName);
-		GenericUtilityMethods.populateTealiumDataForCartCheckout(model, getMplCustomAddressFacade().getCheckoutCart());
+		//GenericUtilityMethods.populateTealiumDataForCartCheckout(model, getMplCustomAddressFacade().getCheckoutCart());
+		GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartModel);
 		return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.AddPaymentMethodPage;
 	}
 

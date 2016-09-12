@@ -5,13 +5,12 @@ package com.tisl.mpl.util;
 
 import de.hybris.platform.category.jalo.Category;
 import de.hybris.platform.category.model.CategoryModel;
-import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
-import de.hybris.platform.commercefacades.order.data.OrderEntryData;
-import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.core.Registry;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.product.Product;
@@ -39,6 +38,7 @@ import org.apache.log4j.Logger;
 import org.springframework.ui.Model;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
@@ -89,8 +89,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: Sends the year from Date
-	 * @param :
-	 *           date
+	 * @param : date
 	 * @return year
 	 */
 	public static String redirectYear(final Date date)
@@ -115,8 +114,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: Modifies Date with the required Year
-	 * @param :
-	 *           date,yeartoModify
+	 * @param : date,yeartoModify
 	 * @return modifedDate
 	 */
 	public static Date modifiedBDate(final Date date, final String yeartoModify)
@@ -209,8 +207,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: Compares with System Date
-	 * @param :
-	 *           date
+	 * @param : date
 	 * @return flag
 	 */
 	public static boolean compareDateWithSysDate(final Date date)
@@ -249,8 +246,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: @Promtion: Checks Excluded Manufacturer Restriction
-	 * @param :
-	 *           List<AbstractPromotionRestriction> restrictionLists
+	 * @param : List<AbstractPromotionRestriction> restrictionLists
 	 * @param restrictionList
 	 * @return manufactureList
 	 */
@@ -636,8 +632,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description : Populate the Excluded Product and Manufacture Data in separate Lists
-	 * @param :
-	 *           SessionContext arg0,PromotionEvaluationContext arg1
+	 * @param : SessionContext arg0,PromotionEvaluationContext arg1
 	 */
 	public static void populateExcludedProductManufacturerList(final SessionContext arg0, final PromotionEvaluationContext arg1,
 			final List<Product> excludedProductList, final List<String> excludeManufactureList,
@@ -648,8 +643,8 @@ public class GenericUtilityMethods
 			if (productPromotion.getProperty(arg0, MarketplacecommerceservicesConstants.EXCLUDEDPRODUCTS) != null
 					&& excludedProductList != null)
 			{
-				excludedProductList.addAll(
-						(List<Product>) productPromotion.getProperty(arg0, MarketplacecommerceservicesConstants.EXCLUDEDPRODUCTS));
+				excludedProductList.addAll((List<Product>) productPromotion.getProperty(arg0,
+						MarketplacecommerceservicesConstants.EXCLUDEDPRODUCTS));
 			}
 			if (excludeManufactureList != null)
 			{
@@ -684,8 +679,8 @@ public class GenericUtilityMethods
 			final SessionContext ctx, final PromotionEvaluationContext promoEvalCtx, final ProductPromotion productPromotion,
 			final List<AbstractPromotionRestriction> restrictionList)
 	{
-		return (getDefaultPromotionsManager().checkMinimumCategoryValue(validProductUssidMap, ctx, productPromotion)
-				&& getDefaultPromotionsManager().checkMinimumBrandAmount(ctx, promoEvalCtx, validProductUssidMap, restrictionList));
+		return (getDefaultPromotionsManager().checkMinimumCategoryValue(validProductUssidMap, ctx, productPromotion) && getDefaultPromotionsManager()
+				.checkMinimumBrandAmount(ctx, promoEvalCtx, validProductUssidMap, restrictionList));
 
 	}
 
@@ -995,8 +990,8 @@ public class GenericUtilityMethods
 	public static String getMissingImageUrl()
 
 	{
-		final ConfigurationService configService = (ConfigurationService) Registry.getApplicationContext()
-				.getBean("configurationService");
+		final ConfigurationService configService = (ConfigurationService) Registry.getApplicationContext().getBean(
+				"configurationService");
 		String missingImageUrl = MISSING_IMAGE_URL;
 		String staticHost = null;
 		if (null != configService)
@@ -1011,7 +1006,7 @@ public class GenericUtilityMethods
 
 	}
 
-	public static void populateTealiumDataForCartCheckout(final Model model, final CartData cartData)
+	public static void populateTealiumDataForCartCheckout(final Model model, final CartModel cartModel)
 	{
 		String sku = null;
 		String adobeSku = null;
@@ -1040,16 +1035,16 @@ public class GenericUtilityMethods
 
 		try
 		{
-			if (null != cartData)
+			if (null != cartModel)
 			{
-				if (null != cartData.getTotalPrice() && null != cartData.getTotalPrice().getValue())
+				if (null != cartModel.getTotalPrice())
 				{
-					cartTotal = cartData.getTotalPrice().getValue().toPlainString();
+					cartTotal = cartModel.getTotalPrice().toString();
 				}
 
-				if (CollectionUtils.isNotEmpty(cartData.getEntries()))
+				if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
 				{
-					for (final OrderEntryData entry : cartData.getEntries())
+					for (final AbstractOrderEntryModel entry : cartModel.getEntries())
 					{
 						if (null != entry)
 						{
@@ -1068,56 +1063,56 @@ public class GenericUtilityMethods
 								quantity = appendQuote(String.valueOf(entry.getQuantity()));
 							}
 
-							if (null != entry.getBasePrice() && null != entry.getBasePrice().getValue())
+							if (null != entry.getBasePrice())
 							{
-								basePrice = appendQuote(entry.getBasePrice().getValue().toPlainString());//base price for a cart entry
+								basePrice = appendQuote(entry.getBasePrice().toString());//base price for a cart entry
 							}
 
-							if (null != entry.getTotalPrice() && null != entry.getTotalPrice().getValue())
+							if (null != entry.getTotalPrice())
 							{
-								totalEntryPrice = appendQuote(entry.getTotalPrice().getValue().toPlainString());//total price for a cart entry
-							}
-						}
-
-						final List<String> categoryList = new ArrayList<String>();
-						//START [05-Feb-2016] R2.1 - Adding only a Null Check to fix Card payment issue.
-						//Check that if (entry.getProduct().getCategories() != null) then only execute the loop. Else just log an
-						//error message and continue.
-						if (entry.getProduct() != null && entry.getProduct().getCategories() != null)
-						{
-							for (final CategoryData categoryData : entry.getProduct().getCategories())
-							{
-								categoryList.add(categoryData.getName());
+								totalEntryPrice = appendQuote(entry.getTotalPrice().toString());//total price for a cart entry
 							}
 						}
 
-						//End [05-Feb-2016] R2.1 - Adding Null Check to fix Card payment issue.
-						final Object[] categoryStrings = categoryList.toArray();
-
-						if (categoryStrings.length > 0)
+						if (entry.getProduct() != null && CollectionUtils.isNotEmpty(entry.getProduct().getBrands()))
 						{
-							category = appendQuote((String) categoryStrings[0]).replaceAll(" ", "_").toLowerCase();
+							final List<BrandModel> brandList = new ArrayList<BrandModel>(entry.getProduct().getBrands());
+							brand = appendQuote(brandList.get(0).getName());
 						}
 
-						if (entry.getProduct() != null && entry.getProduct().getBrand() != null)
+
+						//TPR-430 starts
+						final StringBuffer categoryName = new StringBuffer();
+						for (final CategoryModel categoryModel : entry.getProduct().getSupercategories())
 						{
-							brand = appendQuote(entry.getProduct().getBrand().getBrandname());
+							if (categoryModel.getCode().contains(MarketplacecommerceservicesConstants.SELLER_NAME_PREFIX))
+							{
+								categoryName.append(categoryModel.getName()).append(":");
+								getCategoryLevel(categoryModel, 1, categoryName);
+							}
+
 						}
-						//TPR-430
-						if (categoryStrings.length >= 1)
+
+						if (StringUtils.isNotEmpty(categoryName.toString()))
 						{
-							page_subCategory_name = appendQuote((String) categoryStrings[1]).replaceAll(" ", "_").toLowerCase();
+							final String[] categoryNames = categoryName.toString().split(":");
+							category = appendQuote(categoryNames[2].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
+							productCategoryList.add(category);
+
+							page_subCategory_name = appendQuote(categoryNames[1].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
+									.toLowerCase());
 							pageSubCategories.add(page_subCategory_name);
-						}
-						if (categoryStrings.length >= 2)
-						{
-							page_subcategory_name_L3 = appendQuote((String) categoryStrings[2]).replaceAll(" ", "_").toLowerCase();
+
+							page_subcategory_name_L3 = appendQuote(categoryNames[0].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
+									.toLowerCase());
 							pageSubcategoryNameL3List.add(page_subcategory_name_L3);
 
+
 						}
 
+						//TPR-430 ends
+
 						productBrandList.add(brand);
-						productCategoryList.add(category);
 						productIdList.add(sku);
 						productListPriceList.add(totalEntryPrice);
 						productNameList.add(name);
@@ -1176,6 +1171,35 @@ public class GenericUtilityMethods
 		final StringBuilder str = new StringBuilder(100);
 		str.append('\"').append(param).append('\"');
 		return str.toString();
+	}
+
+	public static void getCategoryLevel(final CategoryModel categoryId, int count, final StringBuffer categoryName)
+	{
+		final int finalCount = 3;
+		try
+		{
+			if (!categoryId.getSupercategories().isEmpty())
+			{
+				for (final CategoryModel superCategory : categoryId.getSupercategories())
+				{
+					categoryName.append(superCategory.getName()).append(":");
+					count++;
+					if (count == finalCount)
+					{
+						break;
+					}
+					else
+					{
+						getCategoryLevel(superCategory, count, categoryName);
+					}
+				}
+			}
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		//return finalCount;
 	}
 
 }

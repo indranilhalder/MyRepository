@@ -8,6 +8,7 @@ import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.search.data.SearchStateData;
 import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData;
+import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControl;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControlDirective;
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
@@ -63,7 +64,7 @@ import com.tisl.mpl.wsdto.ProductSearchPageWsDto;
 public class CMSController extends BaseController
 {
 	private final String MOBILE_DISCOVER_UID = "MobileHomepageDiscover";
-	
+
 	private final String MOBILE_SHOWCASE_UID = "MobileHomepageShowCase";
 	//private final String MOBILE_HOMEPAGE_UID = "MobileHomepage";	//SONAR Fix
 	//private static final String MOBILE_BRANDPAGE_UID = "MobileBrandPage";	//SONAR Fix
@@ -199,11 +200,14 @@ public class CMSController extends BaseController
 	@RequestMapping(value = "/homepage/discover", method = RequestMethod.GET)
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
 	@ResponseBody
-	public MplPageComponentsWsDTO getHomepageDiscover(@RequestParam(defaultValue = DEFAULT) final String fields)
+	public MplPageComponentsWsDTO getHomepageDiscover(@RequestParam(defaultValue = DEFAULT) final String fields,
+			@RequestParam(required = false, defaultValue = DEFAULT_CURRENT_PAGE) final int currentPage,
+			@RequestParam(required = false, defaultValue = DEFAULT_PAGE_SIZE) final int pageSize)
 	{
 		final List<MplPageWsDTO> dtos = new ArrayList<MplPageWsDTO>();
 		final MplPageComponentsWsDTO components = new MplPageComponentsWsDTO();
-		final List<MplPageData> homePageDatas = mplCmsFacade.getPageInformationForPageId(MOBILE_DISCOVER_UID);
+		final PageableData pageableData = createPageableData(currentPage, pageSize);
+		final List<MplPageData> homePageDatas = mplCmsFacade.getPageInformationForPageId(MOBILE_DISCOVER_UID, pageableData);
 		final List<Date> pageLastModifiedTime = new ArrayList<Date>();
 		final FieldSetBuilderContext context = new FieldSetBuilderContext();
 		for (final MplPageData homePageData : homePageDatas)
@@ -223,7 +227,7 @@ public class CMSController extends BaseController
 		return components;
 
 	}
-	
+
 	// this method is used for getting the string format of date.
 	public String getFormatedLastModifiedDateTime(final Date date)
 	{
@@ -235,11 +239,14 @@ public class CMSController extends BaseController
 	@RequestMapping(value = "/homepage/showcase", method = RequestMethod.GET)
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
 	@ResponseBody
-	public MplPageComponentsWsDTO getHomepageShowcase(@RequestParam(defaultValue = DEFAULT) final String fields)
+	public MplPageComponentsWsDTO getHomepageShowcase(@RequestParam(defaultValue = DEFAULT) final String fields,
+			@RequestParam(required = false, defaultValue = DEFAULT_CURRENT_PAGE) final int currentPage,
+			@RequestParam(required = false, defaultValue = DEFAULT_PAGE_SIZE) final int pageSize)
 	{
 		final List<MplPageWsDTO> dtos = new ArrayList<MplPageWsDTO>();
 		final MplPageComponentsWsDTO components = new MplPageComponentsWsDTO();
-		final List<MplPageData> homePageDatas = mplCmsFacade.getPageInformationForPageId(MOBILE_SHOWCASE_UID);
+		final PageableData pageableData = createPageableData(currentPage, pageSize);
+		final List<MplPageData> homePageDatas = mplCmsFacade.getPageInformationForPageId(MOBILE_SHOWCASE_UID, pageableData);
 		final List<Date> pageLastModifiedTime = new ArrayList<Date>();
 		final FieldSetBuilderContext context = new FieldSetBuilderContext();
 		for (final MplPageData homePageData : homePageDatas)
@@ -263,11 +270,14 @@ public class CMSController extends BaseController
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
 	@ResponseBody
 	public MplPageComponentsWsDTO getBrandPage(@PathVariable("brandID") final String brandID,
-			@RequestParam(defaultValue = DEFAULT) final String fields)
+			@RequestParam(defaultValue = DEFAULT) final String fields,
+			@RequestParam(required = false, defaultValue = DEFAULT_CURRENT_PAGE) final int currentPage,
+			@RequestParam(required = false, defaultValue = DEFAULT_PAGE_SIZE) final int pageSize)
 	{
 		final List<MplPageWsDTO> dtos = new ArrayList<MplPageWsDTO>();
 		final MplPageComponentsWsDTO components = new MplPageComponentsWsDTO();
-		final List<MplPageData> mplPageDatas = mplCmsFacade.getPageInformationForPageId(brandID);
+		final PageableData pageableData = createPageableData(currentPage, pageSize);
+		final List<MplPageData> mplPageDatas = mplCmsFacade.getPageInformationForPageId(brandID, pageableData);
 		final List<Date> pageLastModifiedTime = new ArrayList<Date>();
 		final FieldSetBuilderContext context = new FieldSetBuilderContext();
 		for (final MplPageData mplPageData : mplPageDatas)
@@ -291,11 +301,14 @@ public class CMSController extends BaseController
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
 	@ResponseBody
 	public MplPageComponentsWsDTO getPageById(@PathVariable("pageId") final String pageId,
-			@RequestParam(defaultValue = DEFAULT) final String fields)
+			@RequestParam(defaultValue = DEFAULT) final String fields,
+			@RequestParam(required = false, defaultValue = DEFAULT_CURRENT_PAGE) final int currentPage,
+			@RequestParam(required = false, defaultValue = DEFAULT_PAGE_SIZE) final int pageSize)
 	{
 		final List<MplPageWsDTO> dtos = new ArrayList<MplPageWsDTO>();
 		final MplPageComponentsWsDTO components = new MplPageComponentsWsDTO();
-		final List<MplPageData> mplPageDatas = mplCmsFacade.getPageInformationForPageId(pageId);
+		final PageableData pageableData = createPageableData(currentPage, pageSize);
+		final List<MplPageData> mplPageDatas = mplCmsFacade.getPageInformationForPageId(pageId, pageableData);
 		final List<Date> pageLastModifiedTime = new ArrayList<Date>();
 		final FieldSetBuilderContext context = new FieldSetBuilderContext();
 		for (final MplPageData mplPageData : mplPageDatas)
@@ -314,16 +327,19 @@ public class CMSController extends BaseController
 		components.setMplPageComponent(dtos);
 		return components;
 	}
-	
+
 	@RequestMapping(value = "/mplcategory/{categoryID:.*}", method = RequestMethod.GET)
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
 	@ResponseBody
 	public MplPageComponentsWsDTO getCategoryPage(@PathVariable("categoryID") final String categoryID,
-			@RequestParam(defaultValue = DEFAULT) final String fields)
+			@RequestParam(defaultValue = DEFAULT) final String fields,
+			@RequestParam(required = false, defaultValue = DEFAULT_CURRENT_PAGE) final int currentPage,
+			@RequestParam(required = false, defaultValue = DEFAULT_PAGE_SIZE) final int pageSize)
 	{
 		final List<MplPageWsDTO> dtos = new ArrayList<MplPageWsDTO>();
 		final MplPageComponentsWsDTO components = new MplPageComponentsWsDTO();
-		final List<MplPageData> mplPageDatas = mplCmsFacade.getPageInformationForPageId(categoryID);
+		final PageableData pageableData = createPageableData(currentPage, pageSize);
+		final List<MplPageData> mplPageDatas = mplCmsFacade.getPageInformationForPageId(categoryID, pageableData);
 		final List<Date> pageLastModifiedTime = new ArrayList<Date>();
 		final FieldSetBuilderContext context = new FieldSetBuilderContext();
 		for (final MplPageData mplPageData : mplPageDatas)
@@ -346,11 +362,14 @@ public class CMSController extends BaseController
 	@RequestMapping(value = "/deals/banners", method = RequestMethod.GET)
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
 	@ResponseBody
-	public MplPageComponentsWsDTO getDeasBannerPage(@RequestParam(defaultValue = DEFAULT) final String fields)
+	public MplPageComponentsWsDTO getDeasBannerPage(@RequestParam(defaultValue = DEFAULT) final String fields,
+			@RequestParam(required = false, defaultValue = DEFAULT_CURRENT_PAGE) final int currentPage,
+			@RequestParam(required = false, defaultValue = DEFAULT_PAGE_SIZE) final int pageSize)
 	{
 		final List<MplPageWsDTO> dtos = new ArrayList<MplPageWsDTO>();
 		final MplPageComponentsWsDTO components = new MplPageComponentsWsDTO();
-		final List<MplPageData> mplPageDatas = mplCmsFacade.getPageInformationForPageId(MOBILE_DEALSBANNERPAGE_UID);
+		final PageableData pageableData = createPageableData(currentPage, pageSize);
+		final List<MplPageData> mplPageDatas = mplCmsFacade.getPageInformationForPageId(MOBILE_DEALSBANNERPAGE_UID, pageableData);
 		final List<Date> pageLastModifiedTime = new ArrayList<Date>();
 		final FieldSetBuilderContext context = new FieldSetBuilderContext();
 		for (final MplPageData mplPageData : mplPageDatas)
@@ -370,17 +389,20 @@ public class CMSController extends BaseController
 		components.setMplPageComponent(dtos);
 		return components;
 	}
-	
-	
+
+
 
 	@RequestMapping(value = "/deals/products", method = RequestMethod.GET)
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
 	@ResponseBody
-	public MplPageComponentsWsDTO getDealsProductPage(@RequestParam(defaultValue = DEFAULT) final String fields)
+	public MplPageComponentsWsDTO getDealsProductPage(@RequestParam(defaultValue = DEFAULT) final String fields,
+			@RequestParam(required = false, defaultValue = DEFAULT_CURRENT_PAGE) final int currentPage,
+			@RequestParam(required = false, defaultValue = DEFAULT_PAGE_SIZE) final int pageSize)
 	{
 		final List<MplPageWsDTO> dtos = new ArrayList<MplPageWsDTO>();
 		final MplPageComponentsWsDTO components = new MplPageComponentsWsDTO();
-		final List<MplPageData> mplPageDatas = mplCmsFacade.getPageInformationForPageId(MOBILE_DEALSPRODUCTPAGE_UID);
+		final PageableData pageableData = createPageableData(currentPage, pageSize);
+		final List<MplPageData> mplPageDatas = mplCmsFacade.getPageInformationForPageId(MOBILE_DEALSPRODUCTPAGE_UID, pageableData);
 		final List<Date> pageLastModifiedTime = new ArrayList<Date>();
 		final FieldSetBuilderContext context = new FieldSetBuilderContext();
 		for (final MplPageData mplPageData : mplPageDatas)
@@ -587,5 +609,20 @@ public class CMSController extends BaseController
 		dto.setListing(productSearchPage);
 		return dto;
 
+	}
+
+	/**
+	 * Method added for TPR-798
+	 *
+	 * @param currentPage
+	 * @param pageSize
+	 * @return SearchPageData<ContentSlotForPageModel>
+	 */
+	protected PageableData createPageableData(final int currentPage, final int pageSize)
+	{
+		final PageableData pageable = new PageableData();
+		pageable.setCurrentPage(currentPage);
+		pageable.setPageSize(pageSize);
+		return pageable;
 	}
 }

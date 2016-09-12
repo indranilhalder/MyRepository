@@ -1256,7 +1256,15 @@ $(document).ready(function(){
 getFooterOnLoad();
 
 $(document).on("click", ".showcaseItem", function() {
-$('.selectmenu').text($(this).children().text());
+	$('.selectmenu').text($(this).children().text());
+	/*TPR-650 Start*/
+	var value = $(this).find('a').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	utag.link({
+		link_obj: this,
+		link_text: 'inspireme_'+value,
+		event_type : 'inspireme_click'
+	});
+	/*TPR-650 End*/
 });
 
 $(window).on("load resize", function() {

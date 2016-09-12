@@ -21,6 +21,7 @@ import de.hybris.platform.acceleratorservices.enums.CheckoutFlowEnum;
 import de.hybris.platform.acceleratorservices.enums.CheckoutPciOptionEnum;
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.ResourceBreadcrumbBuilder;
+import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.impl.ProductBreadcrumbBuilder;
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
@@ -45,6 +46,7 @@ import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.exceptions.CalculationException;
+import de.hybris.platform.product.ProductService;
 import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -167,6 +169,12 @@ public class CartPageController extends AbstractPageController
 
 	@Autowired
 	private MplCouponFacade mplCouponFacade;
+
+	@Autowired
+	private ProductBreadcrumbBuilder productBreadcrumbBuilder;
+
+	@Autowired
+	private ProductService productService;
 
 	/*
 	 * Display the cart page
@@ -959,8 +967,8 @@ public class CartPageController extends AbstractPageController
 		}
 		//TISPT-174
 		//populateTealiumData(model, cartData);
-		GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
-
+		final CartModel cartModel = getCartService().getSessionCart();
+		GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartModel);
 	}
 
 
