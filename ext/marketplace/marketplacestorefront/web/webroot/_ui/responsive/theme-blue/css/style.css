@@ -31539,10 +31539,10 @@ body .account .right-account ul.saved-cards>li a.make-default{
 top: 5px;
 }
 
-.checkout.wrapper .left-block .button {
+/* .checkout.wrapper .left-block .button {
     width: 100%;
     max-width: 250px;
-} 
+}  */
 .product-tile .image .online-exclusive, .product-tile .image .on-sale,
 .product-tile .image .new,.newExclusiveElement .new{
 	right:0px;
@@ -47908,7 +47908,7 @@ body.no-scroll {
     }
 
     .smk_accordion {
-        padding: 60px 0 0;
+        padding: 50px 0 0;
     }
 
     .smk_accordion .accordion_in .acc_head {
@@ -49630,7 +49630,7 @@ body.no-scroll {
       /* padding-left: 17px; */
   width: 35.46%;
     float: right;
-    background: #a7183e;
+    background: #a7183e !important;
     font-size: 12px;
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -49861,7 +49861,14 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
    /*  margin-right: -163px; */
 	
 }
+.checkTab .smk_accordion .accordion_in .acc_content{
+	margin-bottom:100px;
+	    overflow: hidden;
+}
   }
+  @media (min-width:791px) and (max-width:980px){
+  .smk_accordion{
+  padding: 90px 0 0;}}
   /*outstanding amount end*/
   
  
