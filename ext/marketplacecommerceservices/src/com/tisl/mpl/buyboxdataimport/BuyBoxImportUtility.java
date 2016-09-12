@@ -250,12 +250,17 @@ public class BuyBoxImportUtility
 		isFolderExist(newTempFolder);
 		
 		//Changes for file Renaming
-		//D:\\hot-folder\\master\\marketplace-buybox\\temp/buybox
+		try
+		{
 		tempexportFileName = newTempFolder.getCanonicalPath()+MarketplacecommerceservicesConstants.FRONTSLASH +configurationService.getConfiguration().getString(
 								MarketplacecommerceservicesConstants.BUYBOX+MarketplacecommerceservicesConstants.BUYBOX_FILE_NAME)+MarketplacecommerceservicesConstants.HYPHEN
 				+ ft.format(date) + MarketplacecommerceservicesConstants.DOT
 				+ MarketplacecommerceservicesConstants.BUYBOX_FILE_EXTENSION;
-		//Changes for file Renaming
+		}
+		catch (final IOException e)
+		{
+			LOG.error("error occurred while creating the export file" + e.getMessage());
+		}
 
 
 		if (StringUtils.isNotEmpty(tempexportFileName))
