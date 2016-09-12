@@ -1928,7 +1928,7 @@ $(document).on('click','.left-block .toggle-filterSerp',function(){
 		var spanCount_size=$(".facet_mobile .filter-size.selected-size").length;
 		if(spanCount_size>0)
 		{
-			$(".facet_mobile .filter-size.selected-size").parents(".facet.js-facet").find(".category-icons span").text(spanCount_size);
+			$(".facet_mobile .filter-size.selected-size").parents(".facet.js-facet").find(".category-icons").removeClass("blank");
 		}
 
 		$(".facet_mobile .facet.js-facet").each(function(){
@@ -1938,7 +1938,22 @@ $(document).on('click','.left-block .toggle-filterSerp',function(){
 					$(this).find(".category-icons span").text(spanCount);
 				}
 			});
-		
+		$(".category-icons").each(function(){
+if($(this).find("span").text() == ""){
+$(this).addClass("blank");
+}
+else{
+$(this).removeClass("blank");
+}
+});
+});
+$(".category-icons").each(function(){
+if($(this).find("span").text() == ""){
+$(this).addClass("blank");
+}
+else{
+$(this).removeClass("blank");
+}
 });
 
 $(document).on('click','.left-block .filter-close',function(){

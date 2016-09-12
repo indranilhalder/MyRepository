@@ -489,6 +489,7 @@ $(document).off('click', '.js-facet-colourbutton').on('click', '.js-facet-colour
 	var spanCount=$(".facet_mobile .filter-colour.selected-colour").length;
 	if(spanCount>0)
 		{
+			$(this).parents(".facet.js-facet").find(".category-icons").removeClass("blank");
 			$(this).parents(".facet.js-facet").find(".category-icons span").text(spanCount);
 		}	
 });
@@ -498,6 +499,7 @@ $(document).off('click', '.js-facet-sizebutton').on('click', '.js-facet-sizebutt
 	var spanCount=$(".facet_mobile .filter-size.selected-size").length;
 	if(spanCount>0)
 	{
+		$(this).parents(".facet.js-facet").find(".category-icons").removeClass("blank");
 		$(this).parents(".facet.js-facet").find(".category-icons span").text(spanCount);
 	}
 });
@@ -507,6 +509,7 @@ $(document).off('change', '.facet_mobile .facet.js-facet').on('change', '.facet_
 		var spanCount=$(this).find(".facet-list.js-facet-list li").find("input[type=checkbox]:checked").length;
 		if(spanCount>0)
 			{
+				$(this).find(".category-icons").removeClass("blank");
 				$(this).find(".category-icons span").text(spanCount);
 			}
 		});

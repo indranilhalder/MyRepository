@@ -34843,6 +34843,9 @@ left:0;
     right: -4px;
 }
 }
+.category-icons.blank span{
+	display:none;
+}
 @media(min-width:791px){
 	.left-block ul.product-facet.js-product-facet.listing-leftmenu{
 	display:block !important;
