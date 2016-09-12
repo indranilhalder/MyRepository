@@ -4368,6 +4368,16 @@ $(document).ready(function(){
 		var selection = $("#voucherDisplaySelection").val();
 		$("#couponFieldId").val(selection);
 	}
+	if ($("#checkoutPageName").val() == "Select Address"){
+		$(" body.page-multiStepCheckoutSummaryPage .right-block.shipping .subtotals.top.block").css("display","none");
+	}
+	/*var pathname = window.location.pathname;
+	if(pathname =='/checkout/multi/delivery-method/select'){
+		$('.outstanding-amt').show();
+		$('.outstanding-amt').style("display","none");
+		
+		
+	}*/
 });
 $("#voucherDisplaySelection").change(function(){
 	if($('#couponFieldId').prop('readonly') == false)

@@ -25567,9 +25567,9 @@ width:auto;
 	text-align:center;
 	margin-top:10px;
 }
-.right-block.shipping .checkout-order-summary{
+/* .right-block.shipping .checkout-order-summary{
 	display:none;
-}
+} */
 .checkout.wrapper .product-block.addresses.new-form li.item input[type="checkbox"] + label:before,
  .checkout.wrapper .product-block.addresses.new-form li.item input[type="radio"] + label:before{
  width:10px;
@@ -47080,9 +47080,9 @@ body.no-scroll {
 
 
 /*checkout full address block start*/
- body.page-multiStepCheckoutSummaryPage .right-block.shipping{
+/*  body.page-multiStepCheckoutSummaryPage .right-block.shipping .subtotals.top.block{
 	display:none;
-} 
+}  */
 .checkout.wrapper .left-block .button{
 	display:none;
 }
@@ -49827,5 +49827,42 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
 }
 }
   /*confidence callout end*/
+  /*outstanding amount start*/
+ /* .totals.outstanding-totalss .outstanding-amt{
+  display:none;
+  } */
+  .cart.wrapper .right-block.shipping{
+  display:block;}
+  .totals.outstanding-totalss{
+  display:none;}
+  @media (max-width: 767px){
+.totals.outstanding-totalss{
+	position:fixed;
+    font-size: 12px;
+    border-bottom: 1px solid #eaeaeb;
+    padding: 15px 25px;
+    width: 100%;
+    display: inline-block;
+    background: #fff none repeat scroll 0 0;
+    border-top: 1px solid #eaeaeb;
+    bottom: 40px;
+    left: 0;
+    position: fixed;
+    z-index: 99;
+}
+.totals.outstanding-totalss li{
+	display: inline-block;
+    width: 98%;
+}
+.totals.outstanding-totalss li span{
+    display: inline-block;
+    text-align: right;
+    color: #a7183e;
+   /*  margin-right: -163px; */
+	
+}
+  }
+  /*outstanding amount end*/
+  
  
  /* change here for modified checkout page ends */
