@@ -7,7 +7,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product" %>
 
-${welcome_message}
+<%-- ${welcome_message} --%>
 <c:if test="${not empty cartData.entries}">
     <c:url value="/cart/checkout" var="checkoutUrl" scope="session"/>
     <c:url value="${continueUrl}" var="continueShoppingUrl" scope="session"/>
@@ -17,7 +17,7 @@ ${welcome_message}
     <div class="MyBag-top-section">
     <div class="MyBag-buttons">
 	<h1 class="MyBagHeadingDesktop" ><spring:theme code="mpl.myBag" /><span id="mybagcnt"></span></h1>
-	
+	<p class="desk-view">${welcome_message}</p>
 	
 	<%-- <c:choose>
 	<c:when test="${isLoggedIn eq true}">
@@ -34,7 +34,7 @@ ${welcome_message}
 			<!-- TISBOX-879 -->
 			<li id="checkout-id" class="checkout-button">
 				<!-- TISEE-6257 -->
-				<a  id="checkout-enabled" class="checkoutButton checkout button red"  onclick="return checkPincodeServiceability('typeCheckout');"><spring:theme code="checkout.checkout" /></a>
+				<a  id="checkout-enabled" class="checkoutButton checkout button red"  onclick="return checkPincodeServiceability('typeCheckout',this);"><spring:theme code="checkout.checkout" /></a>
 				<input type="hidden" id="checkoutLinkURlId" value="${checkoutUrl}"> 
 			</li>
 
