@@ -1899,6 +1899,29 @@ $(document).on('click','.left-block .toggle-filterSerp',function(){
 		/*mobile filter*/
 		$(".mob-filter-wrapper").fadeIn();
 		$(this).toggleClass("active");
+		
+		//TPR-845
+		var spanCount_colour=$(".facet_mobile .filter-colour.selected-colour").length;
+		if(spanCount_colour>0)
+			{
+				$(".facet_mobile .filter-colour.selected-colour").parents(".facet.js-facet").find(".category-icons span").text(spanCount_colour);
+			}
+		
+
+		var spanCount_size=$(".facet_mobile .filter-size").find(".js-facet-sizebutton.selected").length;
+		if(spanCount_size>0)
+		{
+			$(".js-facet-sizebutton.selected").parents(".facet.js-facet").find(".category-icons span").text(spanCount_size);
+		}
+
+		$(".facet_mobile .facet.js-facet").each(function(){
+			var spanCount=$(this).find(".facet-list.js-facet-list li").find("input[type=checkbox]:checked").length;
+			if(spanCount>0)
+				{
+					$(this).find(".category-icons span").text(spanCount);
+				}	
+			});
+		
 });
 $(document).on('click','.left-block .filter-close',function(){
 	/*mobile filter*/
