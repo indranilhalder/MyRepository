@@ -25,7 +25,6 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
@@ -74,32 +73,14 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	@Resource
 	private UserService userService;
 	@Resource
-	private UserDetailsService userDetailsService;
-	@Resource
 	private ConfigurationService configurationService;
-
-	/**
-	 * @return the userDetailsService
-	 */
-	public UserDetailsService getUserDetailsService()
-	{
-		return userDetailsService;
-	}
-
-
-	/**
-	 * @param userDetailsService
-	 *           the userDetailsService to set
-	 */
-	public void setUserDetailsService(final UserDetailsService userDetailsService)
-	{
-		this.userDetailsService = userDetailsService;
-	}
-
 	@Resource(name = "extendedUserService")
 	private ExtendedUserService extUserService;
-	@Autowired
-	MplUserHelper mplUserHelper;
+	@Resource
+	private MplUserHelper mplUserHelper;
+
+	private UserDetailsService userDetailsService;
+
 	private static final Logger LOG = Logger.getLogger(MplMobileUserServiceImpl.class);
 
 	private String gigyaUID;
@@ -780,7 +761,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplMobileUserService#loginSocialUser(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -881,7 +862,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplMobileUserService#socialMediaRegistration(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -956,6 +937,23 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		}
 
 		return socialRegister;
+	}
+
+	/**
+	 * @return the userDetailsService
+	 */
+	public UserDetailsService getUserDetailsService()
+	{
+		return userDetailsService;
+	}
+
+	/**
+	 * @param userDetailsService
+	 *           the userDetailsService to set
+	 */
+	public void setUserDetailsService(final UserDetailsService userDetailsService)
+	{
+		this.userDetailsService = userDetailsService;
 	}
 
 
