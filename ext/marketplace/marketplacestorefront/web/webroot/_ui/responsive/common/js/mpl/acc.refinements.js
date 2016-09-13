@@ -402,67 +402,80 @@ function createSearchQuery(filterMobileQuery){
 
 //AJAX for removal of filters
 $(document).on("click",".filter-apply",function(e){
-	$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-	$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
-	// generating postAjaxURL
-	var browserURL = window.location.href.split('?');
-	var dataString = null;
-	var nonEmptyDataString= null;
-	
-	// generating datastring and postAjaxURL
-	dummyForm.find('input[type="hidden"]').each(function(){
-		if(dataString == null){
-			dataString = $(this).attr('name')+"="+$(this).val();
-		}
-		else{
-			if($(this).attr('name') == 'q'){
-				dataString = dataString + ("&"+$(this).attr('name')+"="+updatedsearchQuery);
-			}else{
-				dataString = dataString + ("&"+$(this).attr('name')+"="+$(this).val());
-			}
-			
-		}
-		console.log("dataString : "+dataString);
-		
-		if($(this).val().length >0){
-			if(nonEmptyDataString == null){
-				nonEmptyDataString = $(this).attr('name')+"="+$(this).val();
-			}
-			else{
-				nonEmptyDataString = nonEmptyDataString + ("&"+$(this).attr('name')+"="+$(this).val());
-			}
-		}
+	//TPR-1507
+	var filterCount=0;
+	$(".facet_mobile .facet.js-facet").each(function(){
+		filterCount+=$(this).find(".facet-list.js-facet-list li").find("input[type=checkbox]:checked").length;
+		filterCount+=$(".facet_mobile .filter-colour.selected-colour").length;
+		filterCount+=$(".facet_mobile .filter-size.selected-size").length;
 	})
-	
-	// generating postAjaxURL
-	var pageURL = browserURL[0]+'?'+nonEmptyDataString.replace(/:/g,"%3A");
-	var requiredUrl="";
-	var action = dummyForm.attr('action');
-	
-	// generating request mapping URL
-	if($("#isCategoryPage").val() == 'true'){
-		action = action.split('/c-');
-		action = action[1].split('/');
-		requiredUrl = "/c-"+action[0];
-		requiredUrl += "/getFacetData";
-	} else {
-		if(action.indexOf("/getFacetData") == -1){
-			if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1){
-				requiredUrl = action.concat("/getFacetData");
+	if(filterCount<=0){
+		return false;
+	}
+	//TPR-1507 Ends
+	else{
+		$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+		$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
+		// generating postAjaxURL
+		var browserURL = window.location.href.split('?');
+		var dataString = null;
+		var nonEmptyDataString= null;
+		
+		// generating datastring and postAjaxURL
+		dummyForm.find('input[type="hidden"]').each(function(){
+			if(dataString == null){
+				dataString = $(this).attr('name')+"="+$(this).val();
 			}
 			else{
-				requiredUrl = action.concat("getFacetData");
+				if($(this).attr('name') == 'q'){
+					dataString = dataString + ("&"+$(this).attr('name')+"="+updatedsearchQuery);
+				}else{
+					dataString = dataString + ("&"+$(this).attr('name')+"="+$(this).val());
+				}
+				
+			}
+			console.log("dataString : "+dataString);
+			
+			if($(this).val().length >0){
+				if(nonEmptyDataString == null){
+					nonEmptyDataString = $(this).attr('name')+"="+$(this).val();
+				}
+				else{
+					nonEmptyDataString = nonEmptyDataString + ("&"+$(this).attr('name')+"="+$(this).val());
+				}
+			}
+		})
+		
+		// generating postAjaxURL
+		var pageURL = browserURL[0]+'?'+nonEmptyDataString.replace(/:/g,"%3A");
+		var requiredUrl="";
+		var action = dummyForm.attr('action');
+		
+		// generating request mapping URL
+		if($("#isCategoryPage").val() == 'true'){
+			action = action.split('/c-');
+			action = action[1].split('/');
+			requiredUrl = "/c-"+action[0];
+			requiredUrl += "/getFacetData";
+		} else {
+			if(action.indexOf("/getFacetData") == -1){
+				if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1){
+					requiredUrl = action.concat("/getFacetData");
+				}
+				else{
+					requiredUrl = action.concat("getFacetData");
+				}
+			}
+			else{
+				requiredUrl = action;
 			}
 		}
-		else{
-			requiredUrl = action;
-		}
-	}
-	// AJAX call
-	console.log("Controle Came");
+		// AJAX call
+		console.log("Controle Came");
 
-	filterDataAjax(requiredUrl,dataString,pageURL);
-	return false;
+		filterDataAjax(requiredUrl,dataString,pageURL);
+		return false;
+	}	
 })
 
 //TPR-845
