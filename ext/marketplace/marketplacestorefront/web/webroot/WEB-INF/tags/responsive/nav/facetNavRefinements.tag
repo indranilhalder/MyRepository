@@ -99,7 +99,7 @@
 	</div>
 <div class="facet_mobile">
 <li class="facet js-facet AvailabilitySize" style="display: none">
-		<h4 class="true"><span class="category-icons"><span></span></span><span class="filter-nav">Availability</span></h4>
+		<h4 class="true"><span class="filter-nav">Availability</span><span class="category-icons"><span></span></span></h4>
         
 		<div class="facet-values js-facet-values js-facet-form ">
 		<p class="filter-name facet_mobile">Availability</p>

@@ -262,9 +262,9 @@ $(document).ready(function(){
 	/*-----------Start of SERP codes-----------------*/ 
 			$(window).on("load resize", function() {
 				if($(".toggle-filterSerp").css("display") == "block"){
-				$(".facet-name.js-facet-name h4").first().addClass("active-mob");
+				/*$(".facet-name.js-facet-name h4").first().addClass("active-mob");
 				$(".facet-name.js-facet-name h4").parent().siblings().hide();
-				$(".facet-name.js-facet-name h4.active-mob").parent().siblings().show();
+				$(".facet-name.js-facet-name h4.active-mob").parent().siblings().show();*/
 				}
 				else{
 				$(".facet-name.js-facet-name h4").removeClass("active-mob");
@@ -1928,7 +1928,7 @@ $(document).on('click','.left-block .toggle-filterSerp',function(){
 		var spanCount_size=$(".facet_mobile .filter-size.selected-size").length;
 		if(spanCount_size>0)
 		{
-			$(".facet_mobile .filter-size.selected-size").parents(".facet.js-facet").find(".category-icons").removeClass("blank");
+			$(".facet_mobile .filter-size.selected-size").parents(".facet.js-facet").find(".category-icons span").text(spanCount_size);
 		}
 
 		$(".facet_mobile .facet.js-facet").each(function(){
@@ -1939,22 +1939,28 @@ $(document).on('click','.left-block .toggle-filterSerp',function(){
 				}
 			});
 		$(".category-icons").each(function(){
-if($(this).find("span").text() == ""){
-$(this).addClass("blank");
-}
-else{
-$(this).removeClass("blank");
-}
-});
-});
-$(".category-icons").each(function(){
-if($(this).find("span").text() == ""){
-$(this).addClass("blank");
-}
-else{
-$(this).removeClass("blank");
-}
-});
+			if($(this).find("span").text() == ""){
+				$(this).addClass("blank");
+			}
+			else{
+				$(this).removeClass("blank");
+			}
+		});
+		$(".facet-name.js-facet-name h4").removeClass("active-mob");
+		$(".facet-name.js-facet-name h4").first().addClass("active-mob");
+		$(".facet-name.js-facet-name h4").parent().siblings().hide();
+		$(".facet-name.js-facet-name h4.active-mob").parent().siblings().show();
+		$(".facet-name.js-facet-name h4.active-mob").parent().siblings().find("#searchPageDeptHierTree").show();
+		$(".facet-name.js-facet-name h4.active-mob").parent().siblings().find("#categoryPageDeptHierTree").show();
+	});
+	$(".category-icons").each(function(){
+	if($(this).find("span").text() == ""){
+	$(this).addClass("blank");
+	}
+	else{
+	$(this).removeClass("blank");
+	}
+	});
 
 $(document).on('click','.left-block .filter-close',function(){
 	/*mobile filter*/

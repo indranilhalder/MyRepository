@@ -1463,7 +1463,7 @@ function loadPriceRange(){
 		var prices = splitPrice(priceRange);		
 		$('#customMinPrice').val(prices[0]);
 		$('#customMaxPrice').val(prices[1]);		
-		$('li.price').find('div.facet-name').hide();
+		/*$('li.price').find('div.facet-name').hide();*/
 		$('li.price').find('div.facet-values .facet-list.js-facet-list').hide();
 		$('.priceBucketExpand').show();
 	}
