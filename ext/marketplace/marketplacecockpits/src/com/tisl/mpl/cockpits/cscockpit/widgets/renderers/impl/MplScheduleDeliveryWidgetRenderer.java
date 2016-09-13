@@ -24,6 +24,7 @@ import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listhead;
 import org.zkoss.zul.Listheader;
 import org.zkoss.zul.Listitem;
+import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Radio;
 import org.zkoss.zul.Radiogroup;
 import org.zkoss.zul.Row;
@@ -33,6 +34,7 @@ import bsh.ParseException;
 import com.hybris.oms.tata.model.MplTimeSlotsModel;
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceCheckoutController;
+import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceabilityCheckHelper;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.facade.config.MplConfigFacade;
@@ -61,6 +63,9 @@ public class MplScheduleDeliveryWidgetRenderer extends AbstractCsWidgetRenderer<
 
 	@Autowired
 	private MplConfigFacade mplConfigFacade;
+	
+	@Autowired
+	private MarketplaceServiceabilityCheckHelper marketplaceServiceabilityCheckHelper;
 	/**
 	 * Creates the content internal.
 	 *
@@ -71,21 +76,43 @@ public class MplScheduleDeliveryWidgetRenderer extends AbstractCsWidgetRenderer<
 	protected HtmlBasedComponent createContentInternal(
 			final DefaultListboxWidget<DefaultListWidgetModel, CheckoutController> widget,
 			HtmlBasedComponent rootContainer) {
-		Div content = new Div();
+		final Div content = new Div();
+		final Button showSdDatesButton = new Button("Show Schedule Delivery Dates");
+		showSdDatesButton.setParent(content);
+		showSdDatesButton.setStyle("Align:Center");
+		showSdDatesButton.addEventListener(Events.ON_CLICK, new EventListener() {
+			@Override
+			public void onEvent(final Event event) throws InterruptedException,
+			ParseException, InvalidKeyException,
+			NoSuchAlgorithmException {
+				showSdDatesButtonClickEventListener(widget,showSdDatesButton,content);
+			}
+		});
+		
+		return content;
+	}
+
+	protected void showSdDatesButtonClickEventListener(
+			DefaultListboxWidget<DefaultListWidgetModel, CheckoutController> widget,
+			Button showSdDatesButton, Div content) throws InterruptedException {
+		
 		CartModel  cart = (CartModel)widget.getWidgetController().getBasketController().getCart().getObject();
-		if(null!=cart.getDeliveryAddress()) {
+		for (AbstractOrderEntryModel entry : cart.getEntries()) {
+			if(null == entry.getMplDeliveryMode()) {
+				Messagebox.show("please select a delivery mode for product "+entry.getProduct().getArticleDescription()+" ");
+				return;
+			}
+		}
+		if(null==cart.getDeliveryAddress() && null!=cart.getCartReservationDate()) {
+			Messagebox.show("no delivey address selected, please select delivery Address and confirm it");
+			return;
+		}
 			try {
 				createScheduledDeliveryArea(widget,content);
+				showSdDatesButton.setVisible(false);
 			}catch(Exception e) {
 				LOG.error("Exception while Displaying Delivery slots"+e.getMessage());
 			}
-		}else {
-			String label = LabelUtils.getLabel(
-					widget, "noEntries", new Object[0]);
-			Label noEntriesLable = new Label(label);
-			content.appendChild(noEntriesLable);
-		}
-		return content;
 	}
 
 	private void createScheduledDeliveryArea(
@@ -146,7 +173,7 @@ public class MplScheduleDeliveryWidgetRenderer extends AbstractCsWidgetRenderer<
 
 		Listheader colEntryTimeNoHeader = new Listheader(LabelUtils.getLabel(
 				widget, "time", new Object[0]));
-		colEntryTimeNoHeader.setWidth("260px");
+		colEntryTimeNoHeader.setWidth("280px");
 		colEntryTimeNoHeader.setParent(parent);
 		Listheader resetTimeSlotsHeader = new Listheader(LabelUtils.getLabel(
 				widget, "reset", new Object[0]));
@@ -306,8 +333,11 @@ public class MplScheduleDeliveryWidgetRenderer extends AbstractCsWidgetRenderer<
 				dateGroup.getSelectedItem().setChecked(false);
 				if(null != orderEntry.getEdScheduledDate()) {
 					try {
-						modelService.remove(orderEntry.getEdScheduledDate());
+						orderEntry.setEdScheduledDate(null);
+						modelService.save(orderEntry);
 					}catch(ModelRemovalException e) {
+						LOG.error("Exception while removing EdScheduledDate"+e.getMessage());
+					}catch (Exception e) {
 						LOG.error("Exception while removing EdScheduledDate"+e.getMessage());
 					}
 				}
@@ -317,13 +347,16 @@ public class MplScheduleDeliveryWidgetRenderer extends AbstractCsWidgetRenderer<
 				if(null != orderEntry.getTimeSlotFrom() && null != orderEntry.getTimeSlotTo()) {
 					try {
 						if(null !=orderEntry.getTimeSlotFrom()) {
-							modelService.remove(orderEntry.getTimeSlotFrom());
+							orderEntry.setTimeSlotFrom(null);
+							modelService.save(orderEntry);
 						} 
 						if(null != orderEntry.getTimeSlotTo()) {
 							modelService.remove(orderEntry.getTimeSlotTo());
 						}
 					}catch(ModelRemovalException e) {
 						LOG.error("Exception while removing the date and tme"+e.getMessage());
+					}catch (Exception e) {
+						LOG.error("Exception while removing EdScheduledDate"+e.getMessage());
 					}
 				}
 			}

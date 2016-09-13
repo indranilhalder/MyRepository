@@ -23,9 +23,9 @@ import com.tisl.mpl.cockpits.cscockpit.services.MarketplaceCsCheckoutService;
 import com.tisl.mpl.cockpits.cscockpit.strategies.MplFindDeliveryFulfillModeStrategy;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceBasketController;
 import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceabilityCheckHelper;
-import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
+import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -61,7 +61,6 @@ import de.hybris.platform.cscockpit.exceptions.PaymentException;
 import de.hybris.platform.cscockpit.exceptions.ResourceMessage;
 import de.hybris.platform.cscockpit.exceptions.ValidationException;
 import de.hybris.platform.cscockpit.utils.TypeUtils;
-import de.hybris.platform.cscockpit.widgets.controllers.OrderController;
 import de.hybris.platform.cscockpit.widgets.controllers.impl.DefaultBasketController;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.JaloSession;
@@ -406,6 +405,11 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 								}
 							}
 						}
+						
+						Collection<RichAttributeModel> rich=cartEntry.getProduct().getRichAttribute();
+						rich.iterator().next().getShippingModes().toString();
+						
+						cartSoftReservationRequestData.setTransportMode(rich.iterator().next().getShippingModes().getCode());
 						cartdatalist.add(cartSoftReservationRequestData);
 					}
 					

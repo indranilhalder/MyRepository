@@ -63,7 +63,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 				OrderStatus.ORDER_ALLOCATED.getCode(), OrderStatus.PICK_LIST_GENERATED.getCode(),
 				OrderStatus.ORDER_REALLOCATED.getCode(), OrderStatus.PICK_CONFIRMED.getCode(), OrderStatus.ORDER_REJECTED.getCode(),
 				OrderStatus.PENDING_SELLER_ASSIGNMENT.getCode());
-		boolean changable = true;
+		boolean isAddressChangable = false;
 
 		try
 		{
@@ -103,9 +103,9 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 						{
 							if (isCdAllowed.equalsIgnoreCase(MarketplacecommerceservicesConstants.N))
 							{
-								changable = false;
-								LOG.debug("Delivery Address changable : " + changable);
-								return changable;
+								isAddressChangable = false;
+								LOG.debug("Delivery Address changable : " + isAddressChangable);
+								return isAddressChangable;
 							}
 
 							if (CollectionUtils.isNotEmpty(entry.getConsignmentEntries()))
@@ -122,13 +122,13 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 							}
 							if (!ChangableOrdeStatus.contains(entryStatus))
 							{
-								changable = false;
-								LOG.debug("Delivery Address changable : " + changable);
-								return changable;
+								isAddressChangable = false;
+								LOG.debug("Delivery Address changable : " + isAddressChangable);
+								return isAddressChangable;
 							}
 							else
 							{
-								changable = true;
+								isAddressChangable = true;
 							}
 						}
 					}
@@ -140,8 +140,8 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 			LOG.error("Exception occurred while checking whether address is changable or not for order id " + orderId + " "
 					+ e.getCause());
 		}
-		LOG.debug("Delivery Address changable : " + changable);
-		return changable;
+		LOG.debug("Delivery Address changable : " + isAddressChangable);
+		return isAddressChangable;
 	}
 
 	@Override
@@ -184,7 +184,6 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 				final TemproryAddressModel temproryAddressModel = mplDeliveryAddressDao.getTemporaryAddressModel(orderCode);
 				if (temproryAddressModel != null)
 				{
-
 					final OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
 					if (orderModel != null)
 					{
@@ -192,7 +191,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 						final List<AddressModel> deliveryAddressesList = new ArrayList<AddressModel>();
 						final Collection<AddressModel> customerAddressesList = new ArrayList<AddressModel>();
 						final Collection<AddressModel> deliveryAddresses = orderModel.getDeliveryAddresses();
-						if (null != deliveryAddresses)
+						if (null != deliveryAddresses && !deliveryAddresses.isEmpty())
 						{
 							deliveryAddressesList.addAll(deliveryAddresses);
 						}
@@ -204,11 +203,17 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 						deliveryAddressesList.add(temproryAddressModel);
 						customerAddressesList.add(temproryAddressModel);
 						orderModel.setDeliveryAddress(temproryAddressModel);
+						for (final OrderModel childOrder : orderModel.getChildOrders())
+						{
+							childOrder.setDeliveryAddress(temproryAddressModel);
+							childOrder.setDeliveryAddresses(deliveryAddressesList);
+							modelService.save(childOrder);
+						}
 						user.setAddresses(customerAddressesList);
 						orderModel.setDeliveryAddresses(deliveryAddressesList);
-						modelService.saveAll(temproryAddressModel);
-						modelService.saveAll(orderModel);
-						modelService.saveAll(user);
+						modelService.save(temproryAddressModel);
+						modelService.save(orderModel);
+						modelService.save(user);
 						isDeliveryAddressChanged = true;
 					}
 				}

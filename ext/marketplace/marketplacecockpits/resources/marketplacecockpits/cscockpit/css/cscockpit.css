@@ -2330,7 +2330,7 @@ table.z-button.btn {
 	margin-left: 63px;
 }
 .landMarkDropDownField {
-	margin-left: 60px;
+	margin-left: 65px;
 	width: 180px;
 	
 }
@@ -3689,7 +3689,7 @@ th.csPropReturnEntryreceivedQuantity.z-list-header{
 }
 .validateOTP{
 	margin-top: 5px;
-	margin-left: 250px;
+	margin-left: 260px;
 	margin-bottom: 10px;
 	
 }
@@ -3699,5 +3699,8 @@ th.csPropReturnEntryreceivedQuantity.z-list-header{
 	margin-bottom: 20px;
 }
 .sdDeliveryButton {
-	margin-left: 400px;
+	margin-top: 5px;
+	margin-left: 300px;
+	margin-bottom: 10px;
+	width:120px;
 }

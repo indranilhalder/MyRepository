@@ -147,40 +147,35 @@ public class MplChangeDeliveryOTPWidgetRenderer
 	
 		if(isScheduleDeliveryPossible) {
 			try {
-			createScheduledDeliveryArea(widget,content);
+				createScheduledDeliveryArea(widget,content,tempAddress.getPostalcode());
 			}catch(Exception e) {
 				LOG.error("Exception while creating delivery timings "+e.getMessage());
 			}
-				
-			} else {
-				createOtpArea(widget,content,null);
-			}
+
+		} else {
+			createOtpArea(widget,content,null);
+		}
 		return content;
 	}
 
 	private void createScheduledDeliveryArea(
 			final Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,
-			final Div content) {
+			final Div content,String pinCode) {
 		LOG.info("Inside createScheduledDeliveryArea method ");
 		final Div SDAreaDiv = new Div();
 		SDAreaDiv.setParent(content);
 		final OrderModel  orderModel = (OrderModel) getOrder().getObject();
-		List<TransactionEddDto> transactionEddDto = null;
+		List<TransactionEddDto> transactionEddDto = new ArrayList<TransactionEddDto>();
 		try {
 			LOG.debug("Getting Schedule Delivery Dates ");
 			transactionEddDto = mplDeliveryAddressFacade
 					.getScheduledDeliveryDate(orderModel.getParentReference(),
-							"500040");
+							pinCode);
 		} catch (Exception e) {
 			LOG.error("Exception occurred while getting the delivery Dates from oms " + e.getMessage());
 		}
-		if(transactionEddDto.isEmpty()) {
-			for (AbstractOrderEntryModel entry : orderModel.getEntries()) {
-				TransactionEddDto dto = new TransactionEddDto();
-				dto.setEDD("12-08-2016 10:54 AM");
-				dto.setTransactionID(entry.getTransactionID());
-				transactionEddDto.add(dto);
-			}
+		if(transactionEddDto== null || transactionEddDto.isEmpty() ) {
+			LOG.debug("EDD responce is empty");
 		}
 
 	final 	List<TransactionSDDto>  ScheduleDeliverydDtoList = new ArrayList<TransactionSDDto>();
@@ -202,11 +197,14 @@ public class MplChangeDeliveryOTPWidgetRenderer
 			}catch(Exception e) {
 				LOG.error("Exception occurred  while displaying delivery slots"+e.getMessage());
 			}
-			 Button Sdbutton = new Button(LabelUtils.getLabel(widget,
+			 Button SdConfirmbutton = new Button(LabelUtils.getLabel(widget,
 		   				"sdDeliveryButton"));
-			 SDAreaDiv.appendChild(Sdbutton);
-		           Sdbutton.setClass("sdDeliveryButton");
-		           Sdbutton.addEventListener(Events.ON_CLICK, new EventListener() {
+			 Div sdButtonDiv = new Div();
+			 sdButtonDiv.setClass("sdDeliveryButton");
+			 
+			 sdButtonDiv.appendChild(SdConfirmbutton);
+			 SDAreaDiv.appendChild(sdButtonDiv);
+			 SdConfirmbutton.addEventListener(Events.ON_CLICK, new EventListener() {
 		   			@Override
 		   			public void onEvent(Event arg0) throws Exception {
 		   				handleSdbuttonButtonClickEvent(widget,content,SDAreaDiv,ScheduleDeliverydDtoList);
@@ -249,7 +247,6 @@ public class MplChangeDeliveryOTPWidgetRenderer
 		validateOtpButtonDiv.setClass("validateOTP");
 		Button validateOTP = new Button(LabelUtils.getLabel(widget,
 				"validateButton"));
-		validateOTP.setClass("validateOTP");
 		validateOtpButtonDiv.appendChild(validateOTP);
 		validateOtpButtonDiv.setParent(otpAreaDiv);
 		
@@ -331,11 +328,6 @@ public class MplChangeDeliveryOTPWidgetRenderer
 
 		// Date Cell 
 		try {
-			DateUtilHelper DateUtil = new DateUtilHelper();
-			SimpleDateFormat formate = new SimpleDateFormat("dd-MM-yyyy");
-			String dateFormate = DateUtil.getDateFromat(transactionEddDto.getEDD(), formate);
-			String timeFormate = DateUtil.getTimeFromat(transactionEddDto.getEDD());
-			List<String>  datelist = DateUtil.getDeteList(transactionEddDto.getEDD(), formate);
 			Listcell Datecell = new Listcell();
 			Datecell.setParent(parent);
 			final Radiogroup dateGroup = new Radiogroup();
@@ -552,6 +544,7 @@ public class MplChangeDeliveryOTPWidgetRenderer
 		
 		Listheader colEntryTimeNoHeader = new Listheader(LabelUtils.getLabel(
 				widget, "Time", new Object[0]));
+		colEntryTimeNoHeader.setWidth("270px");
 		colEntryTimeNoHeader.setParent(parent);
 		
 	}

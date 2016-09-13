@@ -5,6 +5,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -60,7 +61,7 @@ import de.hybris.platform.servicelayer.i18n.impl.DefaultCommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 public class MarketplaceDeliveryAddressWidgetRenderer extends
-		AddressCreateWidgetRenderer {
+				AddressCreateWidgetRenderer {
 	private static final Logger LOG = Logger
 			.getLogger(MarketplaceDeliveryAddressWidgetRenderer.class);
 	protected static final String CSS_CREATE_ADDRESS_ACTIONS = "csCreateAddressActions";
@@ -111,16 +112,13 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 			final InputWidget<DefaultMasterDetailListWidgetModel<TypedObject>, CustomerController> widget,
 			final HtmlBasedComponent rootContainer) {
 
-		
 		final Div content = new Div();
 		final Div customerAddressContent = new Div();
 		content.appendChild(customerAddressContent);
-		TypedObject order = getOrder();
-		OrderModel ordermodel = (OrderModel) getOrder().getObject();
-	
 		if (isChangeDeliveryAddress) {
 			try {
-			
+				TypedObject order = getOrder();
+				OrderModel ordermodel = null;
 				if (null != order && null != order.getObject()) {
 					ordermodel = (OrderModel) order.getObject();
 				}
@@ -245,7 +243,6 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 		landMarklabel.setParent(landMarkDiv);
 		final Listbox landMarkListbox = new Listbox();
 		try {
-			//landMarkListbox.setWidth("0px");
 			landMarkListbox.setClass("landMarkDropDownField");
 			landMarkListbox.setMultiple(false);
 			landMarkListbox.setMold("select");
@@ -253,18 +250,15 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 		} catch (Exception e) {
 			System.out.println("setParent " + e.getCause());
 		}
-		
+
 		final Textbox landMarkField = createTextbox(landMarkDiv);
-		landMarkField.setName("Enter landMark1");
-		landMarkField.setRawValue("Enter landMark");
 		landMarkField.setSclass("landMarkAddressField");
 		landMarkField.setMaxlength(30);
-		
 		landMarkListbox.addEventListener(Events.ON_SELECT, new EventListener() {
 			@Override
 			public void onEvent(final Event event) throws InterruptedException,
-					ParseException, InvalidKeyException,
-					NoSuchAlgorithmException {
+			ParseException, InvalidKeyException,
+			NoSuchAlgorithmException {
 				createLandMarkChangeEventListener(widget, landMarkListbox,
 						landMarkField);
 			}
@@ -368,15 +362,13 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 		mobileNumberField.setSclass("addressForMobileNumberField");
 		mobileNumberPrefixField.setSclass("addressForMobileNumberPrefixField");
 
-		if (true) {
+		if (isChangeDeliveryAddress) {
 			try {
 				TypedObject orderModel = getOrder();
 				OrderModel order1 = (OrderModel) orderModel.getObject();
 				AddressModel deliveryAddress = order1.getDeliveryAddress();
-				
+
 				if (null != deliveryAddress) {
-					//PincodeModel pincodeData = new PincodeModel();
-					//pincodeData.setPincode(deliveryAddress.getPostalcode());
 					PincodeData pincodeData = mplDeliveryAddressController
 							.getPincodeData(deliveryAddress.getPostalcode());
 					firstNameField.setValue(deliveryAddress.getFirstname());
@@ -385,17 +377,22 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 					address1Field.setValue(deliveryAddress.getLine1());
 					address2Field.setValue(deliveryAddress.getLine2());
 					address3Field.setValue(deliveryAddress.getAddressLine3());
-					if (null == deliveryAddress.getLandmark() && pincodeData != null && null !=pincodeData.getLandMarks()) {
-						landMarkField.setVisible(false);
-						createlandMarkDropDown(widget, pincodeData.getLandMarks(),
-								landMarkListbox);
-					} else {
+					if (null != deliveryAddress.getLandmark()) {
 						landMarkField.setValue(deliveryAddress.getLandmark());
-						landMarkField.setVisible(true);
-						Listitem listItem = new Listitem(MarketplaceCockpitsConstants.NO_LANDMARKS_FOUND);
+					} else {
+						landMarkField.setVisible(false);
+					}
+					if (pincodeData != null
+							&& null != pincodeData.getLandMarks()) {
+						createlandMarkDropDown(widget,
+								pincodeData.getLandMarks(), landMarkListbox);
+					} else {
+						Listitem listItem = new Listitem(
+								MarketplaceCockpitsConstants.NO_LANDMARKS_FOUND);
 						listItem.setValue(MarketplaceCockpitsConstants.NO_LANDMARKS_FOUND);
 						listItem.setParent(landMarkListbox);
 						landMarkListbox.addItemToSelection(listItem);
+						landMarkField.setVisible(true);
 					}
 					if (null != deliveryAddress.getCity()) {
 						cityField.setValue(deliveryAddress.getCity());
@@ -403,9 +400,6 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 						cityField.setValue(deliveryAddress.getTown());
 					}
 					mobileNumberField.setValue(deliveryAddress.getPhone1());
-					
-					List<Listbox> stateList = stateFieldListBox.getItems();
-
 					List<Listitem> items = stateFieldListBox.getItems();
 					for (Listitem item : items) {
 						String stateName = (String) item.getLabel();
@@ -416,8 +410,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 						}
 					}
 				}
-				}
-			 catch (Exception e) {
+			}catch (Exception e) {
 				LOG.error("Exception while getting the pincode data "
 						+ e.getMessage());
 			}
@@ -455,12 +448,11 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 			}
 			if (null != selectedLandmark
 					&& selectedLandmark
-							.equalsIgnoreCase(MarketplaceCockpitsConstants.OTHERS)) {
+					.equalsIgnoreCase(MarketplaceCockpitsConstants.OTHERS)) {
 				landMarkField.setDisabled(false);
 				landMarkField.setVisible(true);
 			} else {
 				landMarkField.setDisabled(true);
-				landMarkField.setVisible(false);
 			}
 		} catch (Exception e) {
 			LOG.error("Exception Occurred while getting landmark value"
@@ -474,9 +466,9 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 		if (null != landMarkListbox && null != landMarkListbox.getItems()) {
 			landMarkListbox.getItems().clear();
 		}
-		Listitem listItem ;
+		Listitem listItem;
 		if(null != landMarks) {
-			 listItem = new Listitem(
+			listItem = new Listitem(
 					MarketplaceCockpitsConstants.SELECT_LANDMARK);
 			listItem.setValue(MarketplaceCockpitsConstants.SELECT_LANDMARK);
 			listItem.setParent(landMarkListbox);
@@ -492,12 +484,13 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 			listItem.setParent(landMarkListbox);
 			landMarkListbox.addItemToSelection(listItem);
 		} else {
-			listItem = new Listitem(MarketplaceCockpitsConstants.NO_LANDMARKS_FOUND);
+			listItem = new Listitem(
+					MarketplaceCockpitsConstants.NO_LANDMARKS_FOUND);
 			listItem.setValue(MarketplaceCockpitsConstants.NO_LANDMARKS_FOUND);
 			listItem.setParent(landMarkListbox);
 			landMarkListbox.addItemToSelection(listItem);
 		}
-		
+
 		landMarkListbox.setSelectedIndex(0);
 	}
 
@@ -559,16 +552,13 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 							cityField.setValue(pincodeData.getCityName());
 						} else {
 							cityField
-									.setValue(MarketplacecommerceservicesConstants.EMPTY);
+							.setValue(MarketplacecommerceservicesConstants.EMPTY);
 						}
 						StateData stateData = pincodeData.getState();
 						if (null != stateData && null != stateData.getName()) {
-
 							List<Listbox> stateList = stateFieldListBox
 									.getItems();
 							try {
-								final List<StateData> stateDataList = accountAddressFacade
-										.getStates();
 								List<Listitem> items = stateFieldListBox
 										.getItems();
 								for (Listitem item : items) {
@@ -585,21 +575,24 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 							}
 						}
 						if (null != pincodeData.getLandMarks()) {
-							landMarkListbox.setDisabled(false);
 							createlandMarkDropDown(widget,
 									pincodeData.getLandMarks(), landMarkListbox);
 						} else {
 							landMarkListbox.getItems().clear();
-							landMarkListbox.setDisabled(true);
 							landMarkField.setDisabled(false);
 						}
 					} else {
+						landMarkListbox.getItems().clear();
+						Listitem listItem;
+						listItem = new Listitem(
+								MarketplaceCockpitsConstants.NO_LANDMARKS_FOUND);
+						listItem.setValue(MarketplaceCockpitsConstants.NO_LANDMARKS_FOUND);
+						listItem.setParent(landMarkListbox);
+						landMarkListbox.addItemToSelection(listItem);
 						stateFieldListBox.setSelectedIndex(0);
-						landMarkField.setDisabled(false);
-						stateFieldListBox.setDisabled(false);
+						landMarkField.setVisible(true);
 					}
 				} else {
-					// postalCodeField.setValue(StringUtils.EMPTY);
 					postalCodeField.setFocus(true);
 					stateFieldListBox.setDisabled(false);
 					stateFieldListBox.setSelectedIndex(0);
@@ -713,7 +706,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 	}
 
 	protected class MarketplaceCreateClickEventListener implements
-			EventListener {
+	EventListener {
 
 		private final InputWidget<DefaultMasterDetailListWidgetModel<TypedObject>, CustomerController> widget;
 		private static final String PIN_REGEX = "^([0-9]{6})$";
@@ -780,7 +773,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 				final Textbox mobileNumberPrefixField,
 				final Textbox mobileNumberField,
 				final Listbox addressTypeListbox, final Listbox countryListbox)
-				throws InterruptedException {
+						throws InterruptedException {
 
 			List<Listitem> items = landMarkListbox.getItems();
 			String LandMark = StringUtils.EMPTY;
@@ -872,98 +865,98 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 			 * FAILED_VALIDATION), Messagebox.OK, Messagebox.ERROR); // valid =
 			 * Boolean.FALSE; return; }
 			 */else if (LandMark.length() > 20) {
-				Messagebox.show(
-						LabelUtils.getLabel(widget, "invalidLandmarkLength"),
-						LabelUtils.getLabel(widget, FAILED_VALIDATION),
-						Messagebox.OK, Messagebox.ERROR);
-				return;
-			} else if (StringUtils.isBlank(cityField.getValue())
-					|| StringUtils.isBlank(cityField.getValue().trim())) {
-				Messagebox.show(LabelUtils.getLabel(widget, "cityValueField"),
-						LabelUtils.getLabel(widget, FAILED_VALIDATION),
-						Messagebox.OK, Messagebox.ERROR);
-				// valid = Boolean.FALSE;
-				return;
-			} else if (cityField.getValue().length() > 20) {
-				Messagebox.show(
-						LabelUtils.getLabel(widget, "invalidCityLength"),
-						LabelUtils.getLabel(widget, FAILED_VALIDATION),
-						Messagebox.OK, Messagebox.ERROR);
-				return;
-			} else if (stateFieldListBox.getSelectedItem() == null
-					|| stateFieldListBox.getSelectedItem().getLabel()
-							.equalsIgnoreCase("Select")) {
-				Messagebox.show(
-						LabelUtils.getLabel(widget, "stateTypeValueField"),
-						LabelUtils.getLabel(widget, FAILED_VALIDATION),
-						Messagebox.OK, Messagebox.ERROR);
-				// valid = Boolean.FALSE;
-				return;
-			} else if (StringUtils.isBlank(postalCodeField.getValue())
-					|| StringUtils.isBlank(postalCodeField.getValue().trim())) {
-				Messagebox.show(
-						LabelUtils.getLabel(widget, "postalCodeValueField"),
-						LabelUtils.getLabel(widget, FAILED_VALIDATION),
-						Messagebox.OK, Messagebox.ERROR);
-				// valid = Boolean.FALSE;
-				return;
-			} else if (postalCodeField.getValue().length() > 6) {
-				Messagebox.show(
-						LabelUtils.getLabel(widget, "invalidPinCodeLength"),
-						LabelUtils.getLabel(widget, FAILED_VALIDATION),
-						Messagebox.OK, Messagebox.ERROR);
-				return;
-			} else if (!(postalCodeField.getValue().matches(PIN_REGEX))) {
-				// valid = true;
-				Messagebox
-						.show(LabelUtils.getLabel(widget,
-								"postalCodeValueIncorrect"), LabelUtils
-								.getLabel(widget, FAILED_VALIDATION),
-								Messagebox.OK, Messagebox.ERROR);
-				return;
-			} else if (StringUtils.isBlank(mobileNumberField.getValue())
-					|| StringUtils.isBlank(mobileNumberField.getValue().trim())) {
-				Messagebox.show(
-						LabelUtils.getLabel(widget, "mobileNoValueField"),
-						LabelUtils.getLabel(widget, FAILED_VALIDATION),
-						Messagebox.OK, Messagebox.ERROR);
-				// valid = Boolean.FALSE;
-				return;
-			} else if (mobileNumberField.getValue().length() > 10) {
-				Messagebox.show(
-						LabelUtils.getLabel(widget, "invalidMobileLength"),
-						LabelUtils.getLabel(widget, FAILED_VALIDATION),
-						Messagebox.OK, Messagebox.ERROR);
-				return;
-			} else if (!(mobileNumberField.getValue()
-					.matches(MOBILENUMBER_REGEX))) {
-				// valid = true;
-				Messagebox.show(LabelUtils.getLabel(widget,
-						"mobileNumberValueIncorrect"), LabelUtils.getLabel(
-						widget, FAILED_VALIDATION), Messagebox.OK,
-						Messagebox.ERROR);
-				return;
-			} else if (addressTypeListbox.getSelectedItem() == null
-					|| addressTypeListbox.getSelectedItem().getLabel()
-							.equalsIgnoreCase("Select")) {
-				Messagebox.show(
-						LabelUtils.getLabel(widget, "addressTypeValueField"),
-						LabelUtils.getLabel(widget, FAILED_VALIDATION),
-						Messagebox.OK, Messagebox.ERROR);
-				// valid = Boolean.FALSE;
-				return;
-			} else if (countryListbox.getSelectedItem() == null
-					|| countryListbox.getSelectedItem().getLabel()
-							.equalsIgnoreCase("Select")) {
-				Messagebox.show(
-						LabelUtils.getLabel(widget, "countryValueField"),
-						LabelUtils.getLabel(widget, FAILED_VALIDATION),
-						Messagebox.OK, Messagebox.ERROR);
-				// valid = Boolean.FALSE;
-				return;
-			} else {
-				valid = true;
-			}
+				 Messagebox.show(
+						 LabelUtils.getLabel(widget, "invalidLandmarkLength"),
+						 LabelUtils.getLabel(widget, FAILED_VALIDATION),
+						 Messagebox.OK, Messagebox.ERROR);
+				 return;
+			 } else if (StringUtils.isBlank(cityField.getValue())
+					 || StringUtils.isBlank(cityField.getValue().trim())) {
+				 Messagebox.show(LabelUtils.getLabel(widget, "cityValueField"),
+						 LabelUtils.getLabel(widget, FAILED_VALIDATION),
+						 Messagebox.OK, Messagebox.ERROR);
+				 // valid = Boolean.FALSE;
+				 return;
+			 } else if (cityField.getValue().length() > 20) {
+				 Messagebox.show(
+						 LabelUtils.getLabel(widget, "invalidCityLength"),
+						 LabelUtils.getLabel(widget, FAILED_VALIDATION),
+						 Messagebox.OK, Messagebox.ERROR);
+				 return;
+			 } else if (stateFieldListBox.getSelectedItem() == null
+					 || stateFieldListBox.getSelectedItem().getLabel()
+					 .equalsIgnoreCase("Select")) {
+				 Messagebox.show(
+						 LabelUtils.getLabel(widget, "stateTypeValueField"),
+						 LabelUtils.getLabel(widget, FAILED_VALIDATION),
+						 Messagebox.OK, Messagebox.ERROR);
+				 // valid = Boolean.FALSE;
+				 return;
+			 } else if (StringUtils.isBlank(postalCodeField.getValue())
+					 || StringUtils.isBlank(postalCodeField.getValue().trim())) {
+				 Messagebox.show(
+						 LabelUtils.getLabel(widget, "postalCodeValueField"),
+						 LabelUtils.getLabel(widget, FAILED_VALIDATION),
+						 Messagebox.OK, Messagebox.ERROR);
+				 // valid = Boolean.FALSE;
+				 return;
+			 } else if (postalCodeField.getValue().length() > 6) {
+				 Messagebox.show(
+						 LabelUtils.getLabel(widget, "invalidPinCodeLength"),
+						 LabelUtils.getLabel(widget, FAILED_VALIDATION),
+						 Messagebox.OK, Messagebox.ERROR);
+				 return;
+			 } else if (!(postalCodeField.getValue().matches(PIN_REGEX))) {
+				 // valid = true;
+				 Messagebox
+				 .show(LabelUtils.getLabel(widget,
+						 "postalCodeValueIncorrect"), LabelUtils
+						 .getLabel(widget, FAILED_VALIDATION),
+						 Messagebox.OK, Messagebox.ERROR);
+				 return;
+			 } else if (StringUtils.isBlank(mobileNumberField.getValue())
+					 || StringUtils.isBlank(mobileNumberField.getValue().trim())) {
+				 Messagebox.show(
+						 LabelUtils.getLabel(widget, "mobileNoValueField"),
+						 LabelUtils.getLabel(widget, FAILED_VALIDATION),
+						 Messagebox.OK, Messagebox.ERROR);
+				 // valid = Boolean.FALSE;
+				 return;
+			 } else if (mobileNumberField.getValue().length() > 10) {
+				 Messagebox.show(
+						 LabelUtils.getLabel(widget, "invalidMobileLength"),
+						 LabelUtils.getLabel(widget, FAILED_VALIDATION),
+						 Messagebox.OK, Messagebox.ERROR);
+				 return;
+			 } else if (!(mobileNumberField.getValue()
+					 .matches(MOBILENUMBER_REGEX))) {
+				 // valid = true;
+				 Messagebox.show(LabelUtils.getLabel(widget,
+						 "mobileNumberValueIncorrect"), LabelUtils.getLabel(
+								 widget, FAILED_VALIDATION), Messagebox.OK,
+								 Messagebox.ERROR);
+				 return;
+			 } else if (addressTypeListbox.getSelectedItem() == null
+					 || addressTypeListbox.getSelectedItem().getLabel()
+					 .equalsIgnoreCase("Select")) {
+				 Messagebox.show(
+						 LabelUtils.getLabel(widget, "addressTypeValueField"),
+						 LabelUtils.getLabel(widget, FAILED_VALIDATION),
+						 Messagebox.OK, Messagebox.ERROR);
+				 // valid = Boolean.FALSE;
+				 return;
+			 } else if (countryListbox.getSelectedItem() == null
+					 || countryListbox.getSelectedItem().getLabel()
+					 .equalsIgnoreCase("Select")) {
+				 Messagebox.show(
+						 LabelUtils.getLabel(widget, "countryValueField"),
+						 LabelUtils.getLabel(widget, FAILED_VALIDATION),
+						 Messagebox.OK, Messagebox.ERROR);
+				 // valid = Boolean.FALSE;
+				 return;
+			 } else {
+				 valid = true;
+			 }
 			if (valid) {
 				// Saving the address
 				saveShippingAddress(widget, firstNameField.getValue(),
@@ -971,9 +964,9 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 						address2Field.getValue(), address3Field.getValue(),
 						LandMark, cityField.getValue(),
 						postalCodeField.getValue(), stateFieldListBox
-								.getSelectedItem().getLabel().toString(),
+						.getSelectedItem().getLabel().toString(),
 						mobileNumberField.getValue(), addressTypeListbox
-								.getSelectedItem().getLabel().toString(),
+						.getSelectedItem().getLabel().toString(),
 						countryListbox.getSelectedItem().getLabel().toString());
 				// kill the popup
 				if (!isChangeDeliveryAddress) {
@@ -1013,11 +1006,15 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 			final CustomerModel customerModel = (CustomerModel) widget
 					.getWidgetController().getCurrentCustomer().getObject();
 			// set the address to the model
-			final TemproryAddressModel deliveryAddress = new TemproryAddressModel();
+
+			final TemproryAddressModel deliveryAddress = modelService
+					.create(TemproryAddressModel.class);
 			TypedObject order = getOrder();
-			OrderModel orderModel = (OrderModel) order.getObject();
-			deliveryAddress.setOrderId(orderModel.getParentReference()
-					.getCode());
+			if (null != order) {
+				OrderModel orderModel = (OrderModel) order.getObject();
+				deliveryAddress.setOrderId(orderModel.getParentReference()
+						.getCode());
+			}
 			deliveryAddress.setOwner(customerModel);
 			deliveryAddress.setFirstname(firstName);
 			deliveryAddress.setLastname(lastName);
@@ -1035,15 +1032,16 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 			deliveryAddress.setShippingAddress(Boolean.TRUE);
 			deliveryAddress.setBillingAddress(Boolean.TRUE);
 			deliveryAddress.setVisibleInAddressBook(Boolean.TRUE);
+
 			if (addressTypeListbox.getSelectedItem() != null) {
 				if (MarketplacecommerceservicesConstants.LIST_VAL_RESIDENTIAL
 						.equalsIgnoreCase(addressType)) {
 					deliveryAddress
-							.setAddressType(MarketplacecommerceservicesConstants.ADDRESS_TYPE_HOME);
+					.setAddressType(MarketplacecommerceservicesConstants.ADDRESS_TYPE_HOME);
 				} else if (MarketplacecommerceservicesConstants.LIST_VAL_COMMERCIAL
 						.equalsIgnoreCase(addressType)) {
 					deliveryAddress
-							.setAddressType(MarketplacecommerceservicesConstants.ADDRESS_TYPE_WORK);
+					.setAddressType(MarketplacecommerceservicesConstants.ADDRESS_TYPE_WORK);
 				}
 			}
 			if (countryListbox.getSelectedItem() != null) {
@@ -1062,7 +1060,8 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 				} else {
 					AddressModel address = modelService
 							.create(AddressModel.class);
-					address = (AddressModel) deliveryAddress;
+					address = getNewDeliveryAddress(deliveryAddress);
+					address.setOwner(deliveryAddress.getOwner());
 					modelService.save(address);
 				}
 			} catch (ModelSavingException e) {
@@ -1073,6 +1072,50 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 						+ e.getMessage());
 			}
 		}
+	}
+
+	private AddressModel getNewDeliveryAddress(
+			TemproryAddressModel newDeliveryAddress) {
+		AddressModel deliveryAddress = new AddressModel();
+		deliveryAddress.setCreationtime(new Date());
+		if (null != newDeliveryAddress.getFirstname()) {
+			deliveryAddress.setFirstname(newDeliveryAddress.getFirstname());
+		}
+		if (null != newDeliveryAddress.getLastname()) {
+			deliveryAddress.setLastname(newDeliveryAddress.getLastname());
+		}
+		if (null != newDeliveryAddress.getLine1()) {
+			deliveryAddress.setLine1(newDeliveryAddress.getLine1());
+		}
+		if (null != newDeliveryAddress.getLine2()) {
+			deliveryAddress.setLine2(newDeliveryAddress.getLine2());
+		}
+		if (null != newDeliveryAddress.getAddressLine3()) {
+			deliveryAddress.setAddressLine3(newDeliveryAddress
+					.getAddressLine3());
+		}
+		if (null != newDeliveryAddress.getEmail()) {
+			deliveryAddress.setEmail(newDeliveryAddress.getEmail());
+		}
+		if (null != newDeliveryAddress.getPostalcode()) {
+			deliveryAddress.setPostalcode(newDeliveryAddress.getPostalcode());
+		}
+		if (null != newDeliveryAddress.getCountry()) {
+			deliveryAddress.setCountry(newDeliveryAddress.getCountry());
+		}
+		if (null != newDeliveryAddress.getCity()) {
+			deliveryAddress.setCity(newDeliveryAddress.getCity());
+		}
+		if (null != newDeliveryAddress.getState()) {
+			deliveryAddress.setState(newDeliveryAddress.getState());
+		}
+		if (null != newDeliveryAddress.getLandmark()) {
+			deliveryAddress.setLandmark(newDeliveryAddress.getLandmark());
+		}
+		if (null != newDeliveryAddress.getPhone1()) {
+			deliveryAddress.setPhone1(newDeliveryAddress.getPhone1());
+		}
+		return deliveryAddress;
 	}
 
 	private void proceedToChangeAddress(
