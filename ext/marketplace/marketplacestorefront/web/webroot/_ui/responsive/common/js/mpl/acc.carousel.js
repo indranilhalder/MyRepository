@@ -369,7 +369,7 @@ ACC.carousel = {
 	},
 	
 	advancedCategoryCarousel: function(){
-		setTimeout(function() {
+		//setTimeout(function() {
 			console.log("inside timeout");
 		$("#mplAdvancedCategoryCarousel").owlCarousel({
 					items:4,
@@ -407,7 +407,7 @@ ACC.carousel = {
 			rewindNav: false,
 			lazyLoad:true*/
 		});
-		},7000);
+		//},7000);
 		console.log("outside timeout");
 	},
 	
