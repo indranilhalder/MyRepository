@@ -22,8 +22,8 @@
 			<cms:component component="${feature}"/>
 		</cms:pageSlot>
 	</div>
-
-	<div class="span-24 section2">
+<div class="shopContent">
+	<section>
 		<cms:pageSlot position="Section3A" var="feature" element="div">
 			<cms:component component="${feature}"/>
 		</cms:pageSlot>
@@ -33,8 +33,8 @@
 		<cms:pageSlot position="Section3C" var="feature" element="div">
 			<cms:component component="${feature}"/>
 		</cms:pageSlot>
-	</div>
-	<div class="span-24 section2">
+	</section>
+	<section class="span-24 section2">
 		<cms:pageSlot position="Section4A" var="feature" element="div">
 			<cms:component component="${feature}"/>
 		</cms:pageSlot>
@@ -44,8 +44,8 @@
 		<cms:pageSlot position="Section4C" var="feature" element="div">
 			<cms:component component="${feature}"/>
 		</cms:pageSlot>
-	</div>
-	<div class="span-24 section2">
+	</section>
+	<section class="span-24 section2">
 		<cms:pageSlot position="Section5A" var="feature" element="div">
 			<cms:component component="${feature}"/>
 		</cms:pageSlot>
@@ -55,8 +55,8 @@
 		<cms:pageSlot position="Section5C" var="feature" element="div">
 			<cms:component component="${feature}"/>
 		</cms:pageSlot>
-	</div>
-	<div class="span-24 section2">
+	</section>
+	<section class="span-24 section2">
 		<cms:pageSlot position="Section6A" var="feature" element="div">
 			<cms:component component="${feature}"/>
 		</cms:pageSlot>
@@ -66,6 +66,7 @@
 		<cms:pageSlot position="Section6C" var="feature" element="div">
 			<cms:component component="${feature}"/>
 		</cms:pageSlot>
+	</section>
 	</div>
 
 	<%-- 	<div class="no-space">
