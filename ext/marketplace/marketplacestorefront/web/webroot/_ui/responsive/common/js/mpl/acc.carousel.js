@@ -374,7 +374,7 @@ ACC.carousel = {
 		$("#mplAdvancedCategoryCarousel").owlCarousel({
 					items:4,
             		loop: true,
-            		nav:true,
+            		nav:false,
             		dots:false,
             		navText:[],
             		responsive : {
