@@ -734,7 +734,7 @@ public final class ModelAttributetConstants
 
 	//TISPRM-56
 	public static final String PRODUCT_SIZE = "productSize";
-	public static final String KEYWORDS = "keyword";
+	public static final String KEYWORDS = "keywords";
 
 	//TISPRM-136
 	public static final String META_VARIABLE_ZERO = "{0}";
