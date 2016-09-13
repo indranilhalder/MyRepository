@@ -202,7 +202,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 						}
 						buyBoxData = (BuyBoxData) buydata.get("pdp_buy_box");
 					}
-					//Commented for TPR-796
+					//Commented for TPR-797
 					//buyBoxData = buyBoxFacade.buyboxPrice(productCode);
 					if (null == buyBoxData)
 					{
@@ -1627,8 +1627,10 @@ public class MplProductWebServiceImpl implements MplProductWebService
 							if (StringUtils.isNotEmpty(sizeEntry.getKey()))
 							{
 								sizeLinkData.setUrl(sizeEntry.getKey());
+								//setting Variant codes TISSTRT-1411
 								final String[] url = sizeEntry.getKey().split("-");
 								variantSizePCode = url[url.length - 1];
+								variantSizePCode = variantSizePCode.toUpperCase();
 								LOG.debug("variant_Size" + variantSizePCode);
 							}
 							//TISSTRT-1411

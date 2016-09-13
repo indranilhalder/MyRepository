@@ -176,7 +176,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 * 
+	 *
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -1310,6 +1310,8 @@ public class SearchSuggestUtilityMethods
 	{
 		final List<FacetDataWsDTO> searchfacetDTOList = new ArrayList<>();
 		DepartmentHierarchyWs categoryHierarchy = new DepartmentHierarchyWs();
+		List<FacetValueDataWsDTO> facetValueWsDTOList = null;
+
 		if (null != searchPageData.getFacets())
 		{
 			for (final FacetData<SearchStateData> facate : searchPageData.getFacets())
@@ -1321,6 +1323,8 @@ public class SearchSuggestUtilityMethods
 
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
+					facetValueWsDTOList = new ArrayList<>();
+
 
 					//	facetWsDTO.setCategory(facate.getCode());
 					facetWsDTO.setMultiSelect(Boolean.valueOf((facate.isCategory())));
@@ -1335,7 +1339,6 @@ public class SearchSuggestUtilityMethods
 					//Generic filter condition
 					if (searchPageData.getDeptType().equalsIgnoreCase(MarketplacewebservicesConstants.GENERIC))
 					{
-
 						if (facate.isGenericFilter())
 						{
 							facetWsDTO.setVisible(Boolean.TRUE);
@@ -1350,16 +1353,14 @@ public class SearchSuggestUtilityMethods
 						facetWsDTO.setVisible(Boolean.valueOf((facate.isVisible())));
 					}
 
-					final List<FacetValueDataWsDTO> facetValueWsDTOList = new ArrayList<>();
-
-					if (null != facate.getValues())
+					if (CollectionUtils.isNotEmpty(facate.getValues()))
 					{
 						String currentFacet = "";
 						for (final FacetValueData<SearchStateData> values : facate.getValues())
 						{
 							final FacetValueDataWsDTO facetValueWsDTO = new FacetValueDataWsDTO();
 							//facetValueWsDTO.setCount(new Long(values.getCount()));
-							if (null != values.getName())
+							if (StringUtils.isNotEmpty(values.getName()))
 							{
 								facetValueWsDTO.setName(values.getName());
 							}
@@ -1596,9 +1597,6 @@ public class SearchSuggestUtilityMethods
 							}
 
 						}
-
-
-
 					}
 					//Setting L2
 					//FOr select if facet is selected
