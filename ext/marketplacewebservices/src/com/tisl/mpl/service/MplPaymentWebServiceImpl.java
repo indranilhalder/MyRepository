@@ -179,12 +179,14 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 								else
 								{
 									//TPR-627, TPR-622
+									//true && false changes
 									final String isSshipCodEligble = (richAttributeModel.get(0).getIsSshipCodEligible() != null ? richAttributeModel
 											.get(0).getIsSshipCodEligible().getCode()
-											: MarketplacewebservicesConstants.NO_SSHIP);
+											: MarketplacewebservicesConstants.FALSE);
 									// isSshipCodEligble to enable disable COD Eligible for SSHIP Products
+									//true && false changes
 									if (StringUtils.isNotEmpty(isSshipCodEligble)
-											&& isSshipCodEligble.equalsIgnoreCase(MarketplacewebservicesConstants.YES))
+											&& isSshipCodEligble.equalsIgnoreCase(MarketplacewebservicesConstants.TRUE))
 									{
 										//TPR-627,TPR-622 Separate method the check COD Eligibility to avoid redundant code
 										final Tuple2<PaymentServiceWsData, Boolean> returnFlag = paymentModecheckForCOD(richAttributeModel,
