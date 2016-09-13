@@ -145,7 +145,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 	}
 
 	@Override
-	public boolean saveTemporaryAddress(final OrderModel orderModel, final TemproryAddressModel temproryAddressModel)
+	public boolean saveTemporaryAddress(OrderModel orderModel,TemproryAddressModel temproryAddressModel)
 	{
 		boolean isTempAddressSave = false;
 		try
@@ -173,7 +173,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 
 
 	@Override
-	public boolean saveDeliveryAddress(final String orderCode)
+	public boolean saveDeliveryAddress(String orderCode)
 	{
 		LOG.info("Inside saveDeliveryAddress Method");
 		boolean isDeliveryAddressChanged = false;
@@ -181,16 +181,16 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 		{
 			if (StringUtils.isNotEmpty(orderCode))
 			{
-				final TemproryAddressModel temproryAddressModel = mplDeliveryAddressDao.getTemporaryAddressModel(orderCode);
+				 TemproryAddressModel temproryAddressModel = mplDeliveryAddressDao.getTemporaryAddressModel(orderCode);
 				if (temproryAddressModel != null)
 				{
-					final OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
+					 OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
 					if (orderModel != null)
 					{
-						final UserModel user = orderModel.getUser();
-						final List<AddressModel> deliveryAddressesList = new ArrayList<AddressModel>();
-						final Collection<AddressModel> customerAddressesList = new ArrayList<AddressModel>();
-						final Collection<AddressModel> deliveryAddresses = orderModel.getDeliveryAddresses();
+						 UserModel user = orderModel.getUser();
+						 List<AddressModel> deliveryAddressesList = new ArrayList<AddressModel>();
+						 Collection<AddressModel> customerAddressesList = new ArrayList<AddressModel>();
+						 Collection<AddressModel> deliveryAddresses = orderModel.getDeliveryAddresses();
 						if (null != deliveryAddresses && !deliveryAddresses.isEmpty())
 						{
 							deliveryAddressesList.addAll(deliveryAddresses);
@@ -203,7 +203,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 						deliveryAddressesList.add(temproryAddressModel);
 						customerAddressesList.add(temproryAddressModel);
 						orderModel.setDeliveryAddress(temproryAddressModel);
-						for (final OrderModel childOrder : orderModel.getChildOrders())
+						for (OrderModel childOrder : orderModel.getChildOrders())
 						{
 							childOrder.setDeliveryAddress(temproryAddressModel);
 							childOrder.setDeliveryAddresses(deliveryAddressesList);
@@ -247,7 +247,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 		{
 			if (StringUtils.isNotEmpty(orderCode))
 			{
-				final TemproryAddressModel temproryAddressModel = mplDeliveryAddressDao.getTemporaryAddressModel(orderCode);
+				 TemproryAddressModel temproryAddressModel = mplDeliveryAddressDao.getTemporaryAddressModel(orderCode);
 				if (temproryAddressModel != null && StringUtils.isNotEmpty(temproryAddressModel.getPostalcode()))
 				{
 					modelService.remove(temproryAddressModel);
@@ -264,9 +264,9 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 
 
 	@Override
-	public void setStatusForTemporaryAddress(final String orderId, final boolean isProcessed)
+	public void setStatusForTemporaryAddress(String orderId,boolean isProcessed)
 	{
-		final TemproryAddressModel temproryAddressModel = mplDeliveryAddressDao.getTemporaryAddressModel(orderId);
+		 TemproryAddressModel temproryAddressModel = mplDeliveryAddressDao.getTemporaryAddressModel(orderId);
 		try
 		{
 			if (temproryAddressModel != null)
@@ -282,7 +282,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 	}
 
 	@Override
-	public boolean updateContactDetails(final TemproryAddressModel temproryAddressModel, final OrderModel orderModel)
+	public boolean updateContactDetails(TemproryAddressModel temproryAddressModel,  OrderModel orderModel)
 	{
 		boolean isUpdatedDetails = false;
 		try
@@ -304,7 +304,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 	}
 
 	@Override
-	public List<TemproryAddressModel> getTemporaryAddressModelList(final String dateFrom, final String toDate)
+	public List<TemproryAddressModel> getTemporaryAddressModelList(String dateFrom,String toDate)
 	{
 		try
 		{
