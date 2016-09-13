@@ -141,8 +141,8 @@
 					<br />
 					<c:forEach var="returnDate" items="${returnDates}" varStatus="i">
 					<div class="selectRadio date col-md-4 col-sm-4 col-xs-4">
-						<input class="radioButton selectRadioDate${i.index}" type="radio" value="pickDate"
-							name="selectDate" /> <br />
+						<form:radiobutton class="radioButton selectRadioDate${i.index}" value="${returnDate}"
+							name="selectDate" path="scheduleReturnDate" /> <br />
 						<p style="clear: both"></p>
 						<div>${returnDate}</div>
 					</div>
@@ -206,23 +206,22 @@
 	</div>
 
 <div id="hiddenFields">
-<form:hidden path="firstName" value="FirstName" id="firstName"/>
-<form:hidden path="addressType" value="addressType" />
-<form:hidden path="lastName" value="lastName"  id="lastName"/>
-<form:hidden path="addrLine1" value="addrLine1" id="addressLine1"/>
-<form:hidden path="addrLine2" value="addrLine2" id="addressLine2"/>
-<form:hidden path="addrLine3" value="addrLine3" />
-<form:hidden path="landMark" value="LandMark"/> 
-<form:hidden path="state" value="stateListBox" id="stateListBox"/> 
-<form:hidden path="pincode" value="500040" id="pincode"/>
-<form:hidden path="phoneNumber" value="97000529379" id="phoneNumber"/>
-<form:hidden path="city" value="city" id="city"/>
-<form:hidden path="country" value="country"  id="country"/>
-<form:hidden path="isDefault" value="isDefault" />
+<form:hidden path="firstName"  id="firstName"/>
+<form:hidden path="addressType"  />
+<form:hidden path="lastName"  id="lastName"/>
+<form:hidden path="addrLine1"  id="addressLine1"/>
+<form:hidden path="addrLine2"  id="addressLine2"/>
+<form:hidden path="addrLine3" />
+<form:hidden path="landMark" /> 
+<form:hidden path="state" id="stateListBox"/> 
+<form:hidden path="pincode"  id="pincode"/>
+<form:hidden path="phoneNumber"  id="phoneNumber"/>
+<form:hidden path="city"  id="city"/>
+<form:hidden path="country"   id="country"/>
+<form:hidden path="isDefault" />
 <form:hidden path="orderCode" value="${orderCode}"/>
 <form:hidden path="ussid"  value="${subOrderEntry.selectedUssid}" />
 <form:hidden path="transactionId" value="${subOrderEntry.transactionId}" />
-<form:hidden path="refundType"  value="R" />
 	<c:choose>
 		<c:when test="${subOrder.mplPaymentInfo.paymentOption eq 'COD'}">
 			<form:hidden path="isCODorder" value="Y" />

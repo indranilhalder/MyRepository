@@ -28,11 +28,8 @@
 					placeholder="Enter Logistics Name" />
 				<label id="lName"></label>
 			</row>
-			<row>
-				<label sclass="prop_label" value="Is Scheduled"></label>
-				<textbox id="isScheduled"
-					placeholder="Enter Is Scheduled Y or N " />
-				<label id="lIsScheduled"></label>
+			<row>		
+				<checkbox id="isScheduled" label="Is Scheduled"  />
 			</row>
 
 			<row>
@@ -105,8 +102,8 @@
 
 			</row>
 			<row>
-				<label sclass="prop_label" value="is Scheduled"></label>
-				<textbox id="isScheduledEdit"/>
+				
+				<checkbox id="isScheduledEdit" label="Is Scheduled"  />
 				
 			</row>
 
@@ -160,5 +157,4 @@
 	</grid>
 
 </widget>
-
 

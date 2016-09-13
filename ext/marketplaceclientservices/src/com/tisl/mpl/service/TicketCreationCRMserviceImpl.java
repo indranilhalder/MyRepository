@@ -16,9 +16,11 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+
 
 
 import com.sun.jersey.api.client.Client;
@@ -117,8 +119,26 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 				LOG.debug("ticket create:Ticket ReturnCategory>>>>> " + sendTicketRequestData.getReturnCategory());
 
 			}
+			if (StringUtils.isNotBlank(sendTicketRequestData.getEcomRequestId()))
+			{
+				ticket.setEcomRequestId(sendTicketRequestData.getEcomRequestId());
+			}
+			
 			if (null != sendTicketRequestData.getAddressInfo())
 			{
+				if(StringUtils.isNotBlank(sendTicketRequestData.getReturnPickupDate()))
+				{
+					addressInfo.setReturnPickupDate(sendTicketRequestData.getReturnPickupDate());
+				}
+				if(StringUtils.isNotBlank(sendTicketRequestData.getTimeSlotFrom()))
+				{
+					addressInfo.setTimeSlotFrom(sendTicketRequestData.getTimeSlotFrom());
+				}
+				if(StringUtils.isNotBlank(sendTicketRequestData.getTimeSlotTo()))
+				{
+					addressInfo.setTimeSlotTo(sendTicketRequestData.getTimeSlotTo());
+				}
+				
 				addressInfo.setShippingFirstName(sendTicketRequestData.getAddressInfo().getShippingFirstName());
 				addressInfo.setShippingLastName(sendTicketRequestData.getAddressInfo().getShippingLastName());
 				addressInfo.setPhoneNo(sendTicketRequestData.getAddressInfo().getPhoneNo());

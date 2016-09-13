@@ -1,7 +1,6 @@
 
 
 function openTrackOrder() {
-	console.log("Open Track Order");
 	$("#TrackEmailId").val(''); 
 	$("#TrackOrderdId").val('');
 	var height = $(window).height();
@@ -17,7 +16,6 @@ function openTrackOrder() {
 		cache: false,
 		success: function (html)
 		{
-			console.log("success Open Track Order");
 			if ($(html) != [])
 			{
 					$("#recaptchaWidgetForTracking").append(html);
@@ -25,7 +23,6 @@ function openTrackOrder() {
 			}
 		},
 		error : function(result) {
-			console.log("error Open Track Order");
 			alert("Error while connecting to server .Please try after some time "+result);
 		}
 		});
@@ -56,7 +53,7 @@ function viewOrderStatus(event) {
 	if (!$("#TrackEmailId").val() || !validateTrackOrderFormEmail()) {
 		$(".emailError").fadeIn(100).text("Please enter correct email id");
 		return false;
-	} else if (!$("#TrackOrderdId").val() || $("#TrackOrderdId").val().length < "9") {
+	} else if (!$("#TrackOrderdId").val()) {
 		$(".orderError").fadeIn(100).text("Please enter correct order id.");
 		return false;
 	} else if(!$("#g-recaptcha-response").val()){
@@ -70,7 +67,7 @@ function viewOrderStatus(event) {
 		var captchaCode= $("#g-recaptcha-response").val();
 		$.ajax({
 			url : ACC.config.encodedContextPath
-					+ "/trackOrder/nonlogintrack",
+					+ "/trackOrder/anonymousTrack",
 			type : 'GET',
 			data : {
 				orderCode : orderId,

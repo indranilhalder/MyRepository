@@ -3,8 +3,6 @@
  */
 package com.techouts.backoffice.widget.controller;
 
-import de.hybris.platform.servicelayer.user.UserService;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.zkoss.bind.annotation.BindingParam;
@@ -21,6 +20,9 @@ import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zul.Messagebox;
 
+import com.hybris.cockpitng.core.user.AuthorityGroupService;
+import com.hybris.cockpitng.core.user.CockpitUserService;
+import com.hybris.cockpitng.core.user.impl.AuthorityGroup;
 import com.hybris.oms.api.logistics.LogisticsFacade;
 import com.hybris.oms.api.orderlogistics.OrderLogisticsFacade;
 import com.hybris.oms.domain.logistics.dto.Logistics;
@@ -34,7 +36,7 @@ import com.techouts.backoffice.exception.InvalidLpOverrideSearchParams;
 
 
 /**
- * this controller class for Lp override
+ * this controller class for awb edit
  *
  * @author prabhakar
  */
@@ -48,21 +50,22 @@ public class AwbEditWidgetController
 	private String selectionOrderStatus;
 	private String selectionLpName;
 	private Boolean isReturn = Boolean.FALSE;
-	private String responseMeassage = "";
 	private final String transactionType = "AWB";
 	private List<TransactionInfo> listOfTransactions; //incoming transactions
 	private Set<String> lpList; //active logistcs Partners
-	private Boolean showMessage = Boolean.TRUE;
-	private List<OrderLineInfo> listOfOrderLineInfo = new ArrayList<OrderLineInfo>(); //outgoing transactions
-	private final Map<String, TransactionInfo> map = new HashMap<String, TransactionInfo>();//modifed transaction
+	private List<OrderLineInfo> listOfOrderLineInfo;
+	private Map<String, TransactionInfo> map;
 	private List<String> ordersStatus;// orders statuses
 	@WireVariable("orderLogisticsRestClient")
 	private OrderLogisticsFacade orderLogisticsUpdateFacade;
-
 	@WireVariable("logisticsRestClient")
 	private LogisticsFacade logisticsFacade;
+
 	@WireVariable
-	private UserService userService;
+	private transient CockpitUserService cockpitUserService;
+	@WireVariable
+	private transient AuthorityGroupService authorityGroupService;
+	private transient AuthorityGroup activeUserRole;
 
 	@Init
 	@NotifyChange(
@@ -72,6 +75,14 @@ public class AwbEditWidgetController
 		LOG.info("inside init");
 		ordersStatus = getOrderStatuses();
 		lpList = getLpSet();
+		if (map == null)
+		{
+			map = new HashMap<String, TransactionInfo>();
+		}
+		if (listOfTransactions == null)
+		{
+			listOfTransactions = new ArrayList<TransactionInfo>();
+		}
 	}
 
 	private Set<String> getLpSet()
@@ -157,14 +168,13 @@ public class AwbEditWidgetController
 	/*
 	 * this method is used for search the list of orders based on the parameters
 	 */
-	@Command("lpAwbSearch")
+	@Command("awbSearch")
 	@NotifyChange(
-	{ "listOfTransactions", "showMessage" })
+	{ "listOfTransactions" })
 	public void lpAwbSearch()
 	{
 		LOG.info("inside lpawb search");
 		final LPAWBSearch lpAwbSearch = new LPAWBSearch();
-		showMessage = Boolean.FALSE;
 		try
 		{
 			if (StringUtils.isNotEmpty(selectionOrderStatus))
@@ -232,17 +242,15 @@ public class AwbEditWidgetController
 	 */
 	@Command("saveAllTransactions")
 	@NotifyChange(
-	{ "listOfTransactions", "responseMeassage", "showMessage" })
+	{ "listOfTransactions" })
 	public void saveAllTransactions()
 	{
 		LOG.info("inside save all transaction");
-		listOfTransactions = new ArrayList<TransactionInfo>(map.values());
-
 		if (listOfOrderLineInfo == null)
 		{
 			listOfOrderLineInfo = new ArrayList<OrderLineInfo>();
 		}
-		for (final TransactionInfo transaction : listOfTransactions)
+		for (final TransactionInfo transaction : map.values())
 		{
 			final OrderLineInfo orderLineInfo = new OrderLineInfo();
 			orderLineInfo.setOrderId(transaction.getOrderId());
@@ -254,10 +262,25 @@ public class AwbEditWidgetController
 			listOfOrderLineInfo.add(orderLineInfo);
 		}
 		final LPOverrideAWBEdit lpOverrideEdit = new LPOverrideAWBEdit();
+		if (CollectionUtils.isEmpty(listOfOrderLineInfo))
+		{
+			Messagebox.show("No Changes Found ");
+			return;
+		}
 		lpOverrideEdit.setOrderLineInfo(listOfOrderLineInfo);
 		lpOverrideEdit.setIsReturn(isReturn);
-		lpOverrideEdit.setUserId(userService.getCurrentUser().getUid());
-		lpOverrideEdit.setRoleId(userService.getCurrentUser().getUid());
+		final String userId = cockpitUserService.getCurrentUser();
+		lpOverrideEdit.setUserId(userId);
+		activeUserRole = authorityGroupService.getActiveAuthorityGroupForUser(userId);
+		if (activeUserRole != null)
+		{
+			lpOverrideEdit.setRoleId(activeUserRole.getCode());
+		}
+		else
+		{
+			lpOverrideEdit.setRoleId("none");
+		}
+
 		lpOverrideEdit.setTransactionType(transactionType);
 		final LPOverrideAWBEditResponse lpOverrideAwbEditResponse = orderLogisticsUpdateFacade
 				.updateOrderLogisticOrAwbNumber(lpOverrideEdit);
@@ -265,11 +288,12 @@ public class AwbEditWidgetController
 		final StringBuilder message = new StringBuilder();
 		for (final OrderLineResponse orderResponse : orderLineResponse)
 		{
-			message.append(orderResponse.getTransactionId() + "  " + orderResponse.getStatus());
+			message.append(orderResponse.getTransactionId() + "\t " + orderResponse.getStatus());
 		}
-		listOfTransactions.clear();
-		responseMeassage = message.toString();
-		showMessage = Boolean.TRUE;
+		Messagebox.show(message.toString());
+		map.clear();
+		listOfOrderLineInfo.clear();
+		message.setLength(0);
 	}
 
 	/* all setter and getter methods */
@@ -456,39 +480,5 @@ public class AwbEditWidgetController
 	public String getTransactionType()
 	{
 		return transactionType;
-	}
-
-	/**
-	 * @return the showMessage
-	 */
-	public Boolean getShowMessage()
-	{
-		return showMessage;
-	}
-
-	/**
-	 * @param showMessage
-	 *           the showMessage to set
-	 */
-	public void setShowMessage(final Boolean showMessage)
-	{
-		this.showMessage = showMessage;
-	}
-
-	/**
-	 * @return the responseMeassage
-	 */
-	public String getResponseMeassage()
-	{
-		return responseMeassage;
-	}
-
-	/**
-	 * @param responseMeassage
-	 *           the responseMeassage to set
-	 */
-	public void setResponseMeassage(final String responseMeassage)
-	{
-		this.responseMeassage = responseMeassage;
 	}
 }

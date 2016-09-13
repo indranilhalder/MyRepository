@@ -68,6 +68,7 @@ import com.tisl.mpl.core.enums.TypeofReturn;
 import com.tisl.mpl.core.keygenerator.MplPrefixablePersistentKeyGenerator;
 import com.tisl.mpl.core.model.BankDetailsInfoToFICOHistoryModel;
 import com.tisl.mpl.core.model.CancellationReasonModel;
+import com.tisl.mpl.core.model.MplCustomerBankAccountDetailsModel;
 import com.tisl.mpl.core.model.RefundTransactionMappingModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.data.CODSelfShipData;
@@ -81,6 +82,7 @@ import com.tisl.mpl.data.ReturnInfoData;
 import com.tisl.mpl.data.ReturnLogisticsResponseData;
 import com.tisl.mpl.data.SendTicketLineItemData;
 import com.tisl.mpl.data.SendTicketRequestData;
+import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
@@ -89,6 +91,7 @@ import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
 import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.marketplacecommerceservices.service.MPLRefundService;
+import com.tisl.mpl.marketplacecommerceservices.service.MPLReturnService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
@@ -164,7 +167,17 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	private Converter<AbstractOrderEntryModel, OrderEntryData> orderEntryConverter;
 	
 	@Resource(name="codReturnPaymentInfoReverseConverter")
-	Converter<CODSelfShipData,BankDetailsInfoToFICOHistoryModel> codReturnPaymentInfoReverseConverter;
+	private Converter<CODSelfShipData,BankDetailsInfoToFICOHistoryModel> codReturnPaymentInfoReverseConverter;
+	
+	@Resource(name="mplCustomerBankDetailsReverseConverter")
+	private Converter<CODSelfShipData,MplCustomerBankAccountDetailsModel> mplCustomerBankDetailsReverseConverter;
+	
+	@Resource(name="mplCustomerBankDetailsConverter")
+	private Converter<MplCustomerBankAccountDetailsModel,CODSelfShipData> mplCustomerBankDetailsConverter;
+	
+	@Autowired
+	private MPLReturnService mplReturnService;
+	
 	@Autowired
 	private MPLRefundService mplRefundService;
 	
@@ -172,7 +185,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	private MplSellerInformationService mplSellerInformationService;
 	
 	@Autowired
-	private MplPrefixablePersistentKeyGenerator persistentKeyGenerator;
+	private MplPrefixablePersistentKeyGenerator prefixableKeyGenerator;
 	
 	protected static final Logger LOG = Logger.getLogger(CancelReturnFacadeImpl.class);
 
@@ -399,9 +412,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			LOG.debug("Step 2: ***********************************Ticket Type code : " + ticketTypeCode);
 			if ((ticketTypeCode.equalsIgnoreCase("C") || (ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie))) //TISEE-933
 			{
-
-				orderLineRequest = populateOrderLineData(subOrderEntry, ticketTypeCode, subOrderModel, returninfoData.getReasonCode(), returninfoData.getUssid(), pincode);
-
+				
+				orderLineRequest = populateOrderLineData(subOrderEntry, ticketTypeCode, subOrderModel, returninfoData.getReasonCode(), returninfoData.getUssid(), pincode,returninfoData.getReturnFulfillmentMode());
+			
 				if (CollectionUtils.isNotEmpty(orderLineRequest.getOrderLine()))
 				{
 					cancelOrRetrnanable = cancelOrderInOMS(orderLineRequest, cancelOrRetrnanable, isReturn);
@@ -1130,19 +1143,27 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						returnLogisticsCheck = false;
 					}
 					LOG.info(">>createTicketInCRM >> Setting Type of Return :" + returnLogisticsCheck);
-					if (returnLogisticsCheck)
+					
+					if(returnInfoData.getReturnMethod() != null)
+					{
+					if( returnInfoData.getReturnMethod().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_METHOD_SELFSHIP))
+					{
+						sendTicketRequestData.setTicketSubType(MarketplacecommerceservicesConstants.RETURN_TYPE_RSS);
+					}
+					else if(returnInfoData.getReturnMethod().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_METHOD_QUICKDROP))
+					{
+						sendTicketRequestData.setTicketSubType(MarketplacecommerceservicesConstants.RETURN_TYPE_RTS);
+					}
+					else if(returnInfoData.getReturnMethod().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_SCHEDULE))
+					{
+				   if (returnLogisticsCheck)
 					{
 						//LOG.info("Setting Type of Return::::::" + returnLogisticsCheck);
-						sendTicketRequestData.setTicketSubType("RSP");
+						sendTicketRequestData.setTicketSubType(MarketplacecommerceservicesConstants.RETURN_TYPE_RSP);
 					}
-					else
-					{
-						//LOG.info("Setting Type of Return::::::" +returnLogisticsCheck);
-						sendTicketRequestData.setTicketSubType("RSS");
+					
 					}
-
-					//lineItemDataList.add(sendTicketLineItemData);
-					//End
+					}
 				}
 
 				lineItemDataList.add(sendTicketLineItemData);
@@ -1163,8 +1184,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			}
 			
 			//set ECOM request prefix as E to for COMM triggered Ticket
-			persistentKeyGenerator.setPrefix(MarketplacecommerceservicesConstants.TICKETID_PREFIX_E);
-			sendTicketRequestData.setEcomRequestId(persistentKeyGenerator.generate().toString());
+			prefixableKeyGenerator.setPrefix(MarketplacecommerceservicesConstants.TICKETID_PREFIX_E);
+			sendTicketRequestData.setEcomRequestId(prefixableKeyGenerator.generate().toString());
 			sendTicketRequestData.setReturnPickupDate(returnInfoData.getReturnPickupDate());
 			sendTicketRequestData.setTimeSlotFrom(returnInfoData.getTimeSlotFrom());
 			sendTicketRequestData.setTimeSlotTo(returnInfoData.getTimeSlotTo());
@@ -1463,7 +1484,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 	// Return Item Pincode Property
 	private MplCancelOrderRequest populateOrderLineData(final OrderEntryData subOrderEntry, final String ticketTypeCode,
-			final OrderModel subOrderModel, final String reasonCode, final String ussid, final String pincode) throws Exception
+			final OrderModel subOrderModel, final String reasonCode, final String ussid, final String pincode,final String returnFulfillmentMode) throws Exception
 	{
 
 		final MplCancelOrderRequest orderLineRequest = new MplCancelOrderRequest();
@@ -1487,6 +1508,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			{
 				orderLineData.setReturnCancelRemarks(getReasonDesc(reasonCode));
 				orderLineData.setPinCode(pincode);
+				orderLineData.setReturnFulfillmentMode(returnFulfillmentMode);
 			}
 			if (StringUtils.isNotEmpty(subEntry.getOrderLineId()))
 			{
@@ -1998,6 +2020,10 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						{
 							returnLogRespData.setTransactionId(orderLine.getTransactionId());
 						}
+						if (null != orderLine.getReturnFulfillmentType())
+						{
+							returnLogRespData.setReturnFulfillmentType(orderLine.getReturnFulfillmentType());
+						}
 						if (null != orderLine.getIsReturnLogisticsAvailable())
 						{
 
@@ -2391,12 +2417,77 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	@Override
 	public void saveCODReturnsBankDetails(CODSelfShipData codSelfShipData)
 	{
-		BankDetailsInfoToFICOHistoryModel codReturnPaymentModel=null;
+		try
+		{
+		BankDetailsInfoToFICOHistoryModel codReturnPaymentModel=modelService.create(BankDetailsInfoToFICOHistoryModel.class);
 		codReturnPaymentModel = codReturnPaymentInfoReverseConverter.convert(codSelfShipData);
 		if(codReturnPaymentModel != null)
 		{
 		modelService.save(codReturnPaymentModel);
 		}
+		}catch(Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e,"Exception Occured during saving COD bank details ");
+		}
+	}
+	
+	/**
+	 * @author TECHOUTS
+	 * @param codSelfShipData
+	 */
+	@Override
+	public void insertUpdateCustomerBankDetails(CODSelfShipData codSelfShipData)
+	{
+		try
+		{
+			MplCustomerBankAccountDetailsModel customerBankDetailsModel= null;
+			
+			customerBankDetailsModel = mplReturnService.getCustomerBakDetailsById(codSelfShipData.getCustomerNumber());
+						
+			if(customerBankDetailsModel !=null)
+			{
+				//update existing customer account details 
+				mplCustomerBankDetailsReverseConverter.convert(codSelfShipData, customerBankDetailsModel);
+			}
+			else
+			{
+				// insert new account details 
+				customerBankDetailsModel=modelService.create(MplCustomerBankAccountDetailsModel.class);
+		   	customerBankDetailsModel=mplCustomerBankDetailsReverseConverter.convert(codSelfShipData);
+			}
+			
+			if(customerBankDetailsModel != null)
+			{
+			modelService.save(customerBankDetailsModel);
+			}
+			
+		}
+		catch (Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e);
+		}
+		
+	}
+	
+	
+	@Override
+	public CODSelfShipData getCustomerBankDetailsByCustomerId(String  customerId)
+	{
+		CODSelfShipData codSelfShipData=null;
+		try
+		{
+		
+      MplCustomerBankAccountDetailsModel customerBankDetailsModel=mplReturnService.getCustomerBakDetailsById(customerId);
+   		
+		codSelfShipData=mplCustomerBankDetailsConverter.convert(customerBankDetailsModel);
+		}
+		catch(Exception e)
+		{
+			throw new EtailBusinessExceptions("Exception occured while retriving  customer bank details with customer Id "+customerId);
+		}
+		
+		return codSelfShipData;
+		
 	}
 
 
@@ -2658,6 +2749,10 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	{
 		this.mplSellerInformationService = mplSellerInformationService;
 	}
+
+	
+
+	
 
 
 

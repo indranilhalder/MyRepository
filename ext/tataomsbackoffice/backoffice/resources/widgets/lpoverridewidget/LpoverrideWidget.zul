@@ -84,21 +84,19 @@
 							<vlayout
 								style="width:100px;margin-left:10px">
 								<button style="float:right"
-									label="Search" onClick="@command('lpAwbSearch')" />
+									label="Search" onClick="@command('lpSearch')" />
 							</vlayout>
 						</hlayout>
 					</vlayout>
 				</panelchildren>
 			</panel>
-		<panel
-				style="max-height:70%;height:60%;overflow-x:hidden;overflow-y:auto;border-bottom:3px solid #27394f;border:none">
+		<panel>
 				<panelchildren>
-                   <label value="@bind(vm.responseMeassage)" visible="@bind(vm.showMessage)"></label>
-					<listbox model="@bind(vm.listOfTransactions)"
+             		<listbox model="@bind(vm.listOfTransactions)"
 						id="listBoxData" mold="paging" pageSize="8" pagingPosition="top"
 						emptyMessage="No result found in the result">
 
-						<listhead sizable="true">
+						<listhead >
 							<listheader style="text-align:left"
 								label="Order Id">
 							</listheader>
@@ -117,7 +115,7 @@
 							<listheader width="100px"
 								style="text-align:left" label="LP Name">
 							</listheader>
-							<listheader width="100px"
+							<listheader width="150px"
 								style="text-align:left" label="next Lp Name">
 							</listheader>
 							<listheader style="text-align:left"

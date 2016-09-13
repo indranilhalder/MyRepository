@@ -3440,7 +3440,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 						if(cartEntryModel.getSelectedUSSID().equalsIgnoreCase(dataObj.getUSSID())){
 							cartEntryModel.setFulfillmentMode(dataObj.getFulfillmentType());
 							cartEntryModel.setFulfillmentType(dataObj.getFulfillmentType());
-						//	cartEntryModel.setFulfillmentTypeP1(dataObj.getFulfillmentType());
+							cartEntryModel.setFulfillmentTypeP1(dataObj.getFulfillmentType());
 						//	cartEntryModel.setFulfillmentTypeP2(dataObj.getFulfillmentType());
 						}
 					}

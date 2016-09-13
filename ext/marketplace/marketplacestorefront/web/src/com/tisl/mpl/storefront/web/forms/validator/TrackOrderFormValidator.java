@@ -34,18 +34,19 @@ public class TrackOrderFormValidator
 
 		final String orderCode = trackOrderForm.getOrderCode();
 		final String emailId = trackOrderForm.getEmailId();
+		final String captchaCode = trackOrderForm.getCaptcha();
 
-		if (StringUtils.isEmpty(orderCode))
+		if (StringUtils.isEmpty(emailId) || StringUtils.length(emailId) > 255 || !validateEmailAddress(emailId))
+		{
+			return "trackorder.email.invalid";
+		}
+		else if (StringUtils.isEmpty(orderCode))
 		{
 			return "trackorder.ordercode.invalid";
 		}
-		else if (StringUtils.length(emailId) > 255 || !validateEmailAddress(emailId))
+		else if (StringUtils.isEmpty(captchaCode))
 		{
-			return "trackorder.email.invalid";
-		}
-		else if (!validDomain(emailId))
-		{
-			return "trackorder.email.invalid";
+			return "trackorder.captcha.invalid";
 		}
 		return "success";
 	}
@@ -56,14 +57,4 @@ public class TrackOrderFormValidator
 		final Matcher matcher = pattern.matcher(email);
 		return matcher.matches();
 	}
-
-	public boolean validDomain(final String email)
-	{
-		final DomainValidator domainvalidator = DomainValidator.getInstance();
-		final int index = email.indexOf('@');
-		final String substringEmail = email.substring(index + 1);
-		final boolean valid = domainvalidator.isValid(substringEmail);
-		return valid;
-	}
-
 }

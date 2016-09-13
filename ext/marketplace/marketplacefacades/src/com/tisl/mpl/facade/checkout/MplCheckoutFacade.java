@@ -166,7 +166,7 @@ public interface MplCheckoutFacade extends CheckoutFacade
 	 */
 	Map<String, List<MarketplaceDeliveryModeData>> repopulateTshipDeliveryCost(
 			final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap, final CartData cartData)
-					throws EtailNonBusinessExceptions;
+			throws EtailNonBusinessExceptions;
 
 	/**
 	 * @description: It is used for fetching order details for code
@@ -233,9 +233,9 @@ public interface MplCheckoutFacade extends CheckoutFacade
 	OrderData getOrderDetailsForCode(OrderModel orderModel);
 
 	/**
-	 * @description: It is used for fetching ordermdel by order code
+	 * @description: It is used for fetching order data by order code for non-logged in users
 	 * @param orderCode
 	 * @return OrderData
 	 */
-	OrderData getOrderDetailsForCodeWithoutUser(String orderCode);
+	OrderData getOrderDetailsForAnonymousUser(String orderCode);
 }

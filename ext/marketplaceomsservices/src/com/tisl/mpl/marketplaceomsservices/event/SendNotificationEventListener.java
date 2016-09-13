@@ -635,7 +635,7 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 
 			//call google short url service to generate short url for an order code
 			final String shortTrackingUrl = googleShortUrlService
-					.genearateShorterURL(orderModel.getParentReference() == null ? orderModel.getCode() : orderModel
+					.genearateShortURL(orderModel.getParentReference() == null ? orderModel.getCode() : orderModel
 							.getParentReference().getCode());
 
 			//print parent order number in the url
@@ -803,8 +803,9 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 	private void sendNotificationForHotc(final OrderModel orderModel, final String orderNumber, final String mobileNumber,
 			final String trackingUrl, final String logisticPartner)
 	{
-
-		LOG.debug(UPDATE_CONSIGNMENT + MarketplacecommerceservicesConstants.ORDER_STATUS_HOTC);
+		if(LOG.isDebugEnabled()){
+			LOG.debug(UPDATE_CONSIGNMENT + MarketplacecommerceservicesConstants.ORDER_STATUS_HOTC);
+		}
 		String awbNumber = "";
 		try
 		{

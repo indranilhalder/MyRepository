@@ -8447,9 +8447,11 @@
 	 </typegroup>
 	<!-- END  -->
 	
-	<typegroup>
-		<itemtype code="TULShortUrlReport" autocreate="true"  generate="true">
-				<deployment table="TULShortUrlReport" typecode="15011" />
+	<typegroup name="OrderShortUrlInfo">
+		<itemtype code="OrderShortUrlInfo" autocreate="true"  generate="true">
+				<description>Used to Generate Short url clicks report</description>
+				<deployment table="OrderShortUrlInfo" typecode="15011" />
+				
 				<attributes>
 					<attribute qualifier="orderId" type="java.lang.String"  autocreate="true" generate="true">
 						<persistence type="property"/>
@@ -8476,7 +8478,8 @@
 				</attributes>
 			</itemtype>
 		 </typegroup>
-		 	<typegroup name="BankDetailsInfoToFICO">
+		 
+		 <typegroup name="BankDetailsInfoToFICO">
 			<itemtype code="BankDetailsInfoToFICOHistory" autocreate="true"
 				generate="true" jaloclass="com.tisl.mpl.core.jalo.BankDetailsInfoToFICOHistory">
 				<description>Comm to FICO COD</description>
@@ -8573,6 +8576,68 @@
 				<attribute type="java.lang.String" qualifier="paymentMode">
 						<modifiers read="true" write="true" optional="true" search="true" />
 						<persistence type="property" />
+				</attribute>
+				</attributes>
+			</itemtype>
+			<itemtype code="MplCustomerBankAccountDetails" autocreate="true"
+				generate="true" jaloclass="com.tisl.mpl.core.jalo.MplCustomerBankAccountDetails">
+				<description>Captured bank details for COD returns Payment </description>
+				<attributes>
+				<attribute type="java.lang.String" qualifier="customerId"  >
+			    <description>Customer Id</description>	
+			    <persistence type="property" />
+			    <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
+			    </attribute>
+			    <attribute type="java.lang.String" qualifier="customerName"  >
+			    <persistence type="property" />
+			    <description>Customer Name</description>	
+			    <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
+			    </attribute>
+			    <attribute type="java.lang.String" qualifier="title"  >
+			    <persistence type="property" />
+			    <description>Title</description>	
+			    <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
+			    </attribute>
+			    <attribute type="java.lang.String" qualifier="accountNumber"  >
+			    <persistence type="property" />
+			    <description>Account Number</description>	
+			    <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
+			    </attribute>
+			    <attribute type="java.lang.String" qualifier="accountHolderName"  >
+			    <persistence type="property" />
+			    <description>Account holder name </description>	
+			    <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
+			    </attribute>
+			    <attribute type="java.lang.String" qualifier="ifscCode"  >
+			    <persistence type="property" />
+			    <description>IFSC code </description>	
+			    <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
+			    </attribute>
+				  <attribute type="java.lang.String" qualifier="bankName"  >
+				  <persistence type="property" />
+			    <description>Bank name</description>	
+			    <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
+			    </attribute>
+			    <attribute type="java.lang.String" qualifier="paymentMode"  >
+			    <persistence type="property" />
+			    <description>Refund payment Mode </description>	
+			    <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
+			    </attribute>
+				</attributes>
+			</itemtype>
+			<itemtype code="MplLPHolidays" autocreate="true"
+				generate="true" jaloclass="com.tisl.mpl.core.jalo.MplLPHolidays">
+				<description>Logistics holidays</description>
+				<attributes>
+				<attribute type="java.lang.String" qualifier="lpname">
+				 <persistence type="property" />
+				<description>Logistic partner name </description>
+				 <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
+				</attribute>
+				<attribute type="java.lang.String" qualifier="workingDays">
+				<persistence type="property" />
+				<description>Working days</description>
+				 <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
 				</attribute>
 				</attributes>
 			</itemtype>

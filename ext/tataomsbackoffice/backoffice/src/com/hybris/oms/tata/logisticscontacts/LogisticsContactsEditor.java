@@ -56,8 +56,8 @@ public class LogisticsContactsEditor extends DefaultWidgetController
 	private Textbox email;
 	private Label lEmail;
 	private Checkbox isActive;
-	private Textbox isScheduled;
-	private Label lIsScheduled;
+	private Checkbox isScheduled;
+
 	private Textbox logisticsIdEdit;
 	private Textbox logisticsNameEdit;
 	private Textbox addressEdit;
@@ -65,12 +65,12 @@ public class LogisticsContactsEditor extends DefaultWidgetController
 	private Textbox phoneNoEdit;
 	private Label lPNumEdit;
 	private Textbox faxNoEdit;
-	private Label lFaxEdit;
 	private Textbox emailEdit;
-	private Label lemailEdit;
 	private Checkbox isActiveEdit;
 	@Wire
-	private Textbox isScheduledEdit;
+	private Checkbox isScheduledEdit;
+	private Label lFaxEdit;
+	private Label lemailEdit;
 
 	/**
 	 * method to activate create and deactivate the update in editor area while selecting add symbol
@@ -98,7 +98,6 @@ public class LogisticsContactsEditor extends DefaultWidgetController
 		lPNumEdit.setValue("");
 		lFax.setValue("");
 		lFaxEdit.setValue("");
-		lIsScheduled.setValue("");
 		doFormEmpty(logisticsId, logisticsName, address, contactName, phoneNo, faxNo, email, isActive, isScheduled);
 	}
 
@@ -120,7 +119,7 @@ public class LogisticsContactsEditor extends DefaultWidgetController
 		doFormEmpty(logisticsIdEdit, logisticsNameEdit, addressEdit, contactNameEdit, phoneNoEdit, faxNoEdit, emailEdit,
 				isActiveEdit, isScheduledEdit);
 		logisticsIdEdit.setValue(logistics.getLogisticsid());
-		isScheduledEdit.setValue(logistics.getIsScheduled());
+
 		logisticsNameEdit.setValue(logistics.getLogisticname());
 		addressEdit.setValue(logistics.getAddress());
 		contactNameEdit.setValue(logistics.getCName());
@@ -128,6 +127,10 @@ public class LogisticsContactsEditor extends DefaultWidgetController
 		if (logistics.getActive())
 		{
 			isActiveEdit.setChecked(true);
+		}
+		if (logistics.getIsScheduled().equalsIgnoreCase("Y"))
+		{
+			isScheduledEdit.setChecked(true);
 		}
 		faxNoEdit.setValue(logistics.getCFax());
 		emailEdit.setValue(logistics.getCEmail());
@@ -319,7 +322,7 @@ public class LogisticsContactsEditor extends DefaultWidgetController
 	 */
 	public Logistics getLogisticsContactsFormData(final Textbox logisticsContactId, final Textbox logisticsName,
 			final Textbox logisticsContactAddress, final Textbox logisticsContactName, final Textbox logisticsPhoneNo,
-			final Textbox contactFaxNo, final Textbox logisticsContactEmail, final Checkbox isActive, final Textbox isShceduled)
+			final Textbox contactFaxNo, final Textbox logisticsContactEmail, final Checkbox isActive, final Checkbox isShceduled)
 			throws InterruptedException
 
 	{
@@ -330,8 +333,7 @@ public class LogisticsContactsEditor extends DefaultWidgetController
 				|| logisticsContactAddress.getValue().trim().equals("") || logisticsContactName.getValue().trim().equals("")
 				|| logisticsPhoneNo.getValue().trim().equals("") || contactFaxNo.getValue().trim().equals("")
 				|| logisticsContactEmail.getValue().trim().equals("") || logisticsContactEmail.getValue().trim().equals("")
-				|| logisticsPhoneNo.getValue().trim().equals("") || contactFaxNo.getValue().trim().equals("")
-				|| isShceduled.getValue().trim().equals(""))
+				|| logisticsPhoneNo.getValue().trim().equals("") || contactFaxNo.getValue().trim().equals(""))
 		{
 
 			Messagebox.show("Please Fill All Fields");
@@ -361,15 +363,14 @@ public class LogisticsContactsEditor extends DefaultWidgetController
 		{
 			logistics.setActive(false);
 		}
-		if (isShceduled.getValue().equalsIgnoreCase("yes") || isShceduled.getValue().equalsIgnoreCase("y")
-				|| isShceduled.getValue().equalsIgnoreCase("no") || isShceduled.getValue().equalsIgnoreCase("n"))
+
+		if (isShceduled.isChecked())
 		{
-			logistics.setIsScheduled(isShceduled.getValue());
+			logistics.setIsScheduled("Y");
 		}
 		else
 		{
-			Messagebox.show("is scheduled valid data yes or y  or No or N");
-			return null;
+			logistics.setIsScheduled("N");
 		}
 		return logistics;
 
@@ -378,7 +379,7 @@ public class LogisticsContactsEditor extends DefaultWidgetController
 
 	public void doFormEmpty(final Textbox logisticsContactId, final Textbox logisticsName, final Textbox logisticsContactAddress,
 			final Textbox logisticsContactName, final Textbox logisticsPhoneNo, final Textbox contactFaxNo,
-			final Textbox logisticsContactEmail, final Checkbox isActive, final Textbox isScheduled)
+			final Textbox logisticsContactEmail, final Checkbox isActive, final Checkbox isScheduled)
 	{
 		LOG.info("***************************************initialized method");
 		logisticsContactId.setValue("");
@@ -389,8 +390,7 @@ public class LogisticsContactsEditor extends DefaultWidgetController
 		contactFaxNo.setValue("");
 		logisticsContactEmail.setValue("");
 		isActive.setChecked(false);
-		isScheduled.setValue("");
-
+		isScheduled.setChecked(false);
 	}
 
 }

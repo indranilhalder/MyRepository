@@ -202,7 +202,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				LOG.debug("CustomOmsOrderLinePopulator : FulfillmentMode  is null ");
 			}
 			// Added the fields for OMS Order create
-			if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null
+			/*if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null
 					&& richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
 
 			{
@@ -228,6 +228,21 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			else
 			{
 				LOG.debug("CustomOmsOrderLinePopulator : FulfillmentTypeP2  is null ");
+			}*/
+			
+			if (source.getFulfillmentMode() != null)
+			{
+				target.setFulfillmentMode(String.valueOf(source.getFulfillmentMode()));
+			}
+			
+			
+			if (source.getFulfillmentTypeP1() != null)
+			{
+				target.setFulfillmentTypeP1(String.valueOf(source.getFulfillmentTypeP1()));
+			}
+			if (source.getFulfillmentTypeP2() != null)
+			{
+				target.setFulfillmentTypeP2(String.valueOf(source.getFulfillmentTypeP2()));
 			}
 			
 			if (richAttributeModel.get(0).getIsPrecious() != null

@@ -502,6 +502,7 @@
 		<property name ="isReturnLogisticsAvailable" type="String" />
 		<property name ="responseMessage" type="String" />
 		<property name ="responseDescription" type="String" />
+		<property name ="returnFulfillmentType" type="String" />
 	</bean>
     <!-- DTO for reverse Logistics Response Ends --> 
     <!-- Order Refund Report Headers Data-->
@@ -728,15 +729,17 @@
 
 				
 	<bean class="com.tisl.mpl.data.ReturnInfoData">
-	<property name="isReturn" type="String"/>
-	<property name="ecomRequestId" type="String"/>
-	<property name="reasonCode" type="String"/>
-	<property name="refundType" type="String"/>
-	<property name="returnPickupDate" type="String"/>
-	<property name="ticketTypeCode" type="String"/>
-	<property name="TimeSlotFrom" type="String"/>
-	<property name="timeSlotTo" type="String"/>
-	<property name="ussid" type="String"/>
+		<property name="isReturn" type="String"/>
+		<property name="ecomRequestId" type="String"/>
+		<property name="reasonCode" type="String"/>
+		<property name="refundType" type="String"/>
+		<property name="returnPickupDate" type="String"/>
+		<property name="ticketTypeCode" type="String"/>
+		<property name="TimeSlotFrom" type="String"/>
+		<property name="timeSlotTo" type="String"/>
+		<property name="ussid" type="String"/>
+		<property name="returnMethod" type="String"/>
+		<property name="returnFulfillmentMode" type="String"/>
 	</bean>
 	
 	

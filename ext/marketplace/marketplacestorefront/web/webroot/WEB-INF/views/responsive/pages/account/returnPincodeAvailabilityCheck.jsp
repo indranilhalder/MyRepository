@@ -23,7 +23,7 @@
 <spring:url value="/my-account/orders" var="ordersUrl" />
 <spring:url value="/my-account/default/wishList" var="wishlistUrl" />
 <spring:url value="/my-account/friendsInvite" var="friendsInviteUrl" />
-
+<spring:url value="/my-account/returns/initiateReturn" var="returnUrl" />
 
 <script
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYOJ5Pa-kx8HoOt_GzZpzTfpTD_q9PlQo"></script>
@@ -37,12 +37,13 @@
 			<div class="returnItemForm">
 				<div class="return-container">
 					<form:form
-						action="${request.contextPath}/my-account/returns/initiateReturn"
+						action="${returnUrl}"
 						method="post" name="returnForm" commandName="returnForm">
 						<return:selectReason />
 						<return:selectReturntype />
 						<return:selectReturnMethod />
 					</form:form>
+					
 				</div>
 		 <return:pickupAddressPopup />
 

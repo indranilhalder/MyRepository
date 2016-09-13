@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -17,6 +18,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import com.hybris.oms.tata.model.MplTimeSlotsModel;
+import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData;
 
 
 /**
@@ -159,4 +161,47 @@ public class DateUtilHelper
 				}
 				return dd;
 	     }
+	
+	
+	public  List<InvReserForDeliverySlotsItemEDDInfoData> getUniqueEddDatesList(List<InvReserForDeliverySlotsItemEDDInfoData> tempList) {
+		List<InvReserForDeliverySlotsItemEDDInfoData> uniqueEddDatesList = new ArrayList<InvReserForDeliverySlotsItemEDDInfoData>();
+		Iterator it = tempList.iterator();
+		while (it.hasNext()) {
+			boolean isExist = false;
+			InvReserForDeliverySlotsItemEDDInfoData eddObj = (InvReserForDeliverySlotsItemEDDInfoData) it.next();
+			if (uniqueEddDatesList.size() == 0) {
+				uniqueEddDatesList.add(eddObj);
+			} else {
+				Iterator it1 = uniqueEddDatesList.iterator();
+				while (it1.hasNext()) {
+					InvReserForDeliverySlotsItemEDDInfoData exisEddObj = (InvReserForDeliverySlotsItemEDDInfoData) it1.next();
+					
+					if (eddObj.getUssId().equals(exisEddObj.getUssId()) ) {
+						SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+			        	Date date1 = null;
+			        	Date date2 = null;
+						try {
+							date1 = sdf.parse(eddObj.getEDD());
+							date2 = sdf.parse(exisEddObj.getEDD());
+						} catch (ParseException e) {
+							LOG.error("Time Formater ********:"+e.getMessage());
+						}
+			        	if(date1.compareTo(date2)>0){
+			        		exisEddObj.setEDD(eddObj.getEDD());
+			        	}else{
+			        		eddObj.setEDD(exisEddObj.getEDD());	
+			        	}
+						isExist = true;
+						break;
+					}
+				}
+				if (!isExist) {
+					uniqueEddDatesList.add(eddObj);
+				}
+			}
+
+		}
+		return uniqueEddDatesList;
+
+	}
 }
