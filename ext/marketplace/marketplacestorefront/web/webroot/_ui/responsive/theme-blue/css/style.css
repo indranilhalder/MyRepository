@@ -49875,5 +49875,7 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
   padding: 90px 0 0;}}
   /*outstanding amount end*/
   
- 
+ .addnewAddresPage + .right-block.shipping{
+ display:none;
+ }
  /* change here for modified checkout page ends */
