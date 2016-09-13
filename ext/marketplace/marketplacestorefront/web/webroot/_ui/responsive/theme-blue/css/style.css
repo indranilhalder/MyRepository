@@ -42566,7 +42566,7 @@ float: right;
 }
 
 .product-info .product-detail .price {
-	margin: 0 0 5px;
+	margin: 0 0 15px;
 }
 
 .product-info .product-detail .price .sale {
@@ -44096,9 +44096,9 @@ body.page-productDetails .breadcrumbs.wrapper {
 }
 
 .product-detail .Emi p.active {
-	-webkit-box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
-	-moz-box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
-	box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
+	-webkit-box-shadow: 0px 0px 10px 0px rgba(138,134,138,0.5);
+	-moz-box-shadow: 0px 0px 10px 0px rgba(138,134,138,0.5);
+	box-shadow: 0px 0px 10px 0px rgba(138,134,138,0.5);
 }
 
 .product-detail .Emi p:after {
@@ -44120,9 +44120,9 @@ body.page-productDetails .breadcrumbs.wrapper {
 	background: #fff;
 	z-index: 10;
 	text-align: center;
-	-webkit-box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
-	-moz-box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
-	box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
+	-webkit-box-shadow:0px 0px 10px 0px rgba(138,134,138,0.5);
+	-moz-box-shadow: 0px 0px 10px 0px rgba(138,134,138,0.5);
+	box-shadow:0px 0px 10px 0px rgba(138,134,138,0.5);
 }
 
 .product-detail .Emi p.active+.modal-content {
@@ -45625,4 +45625,7 @@ margin-top:0px;
 }
 body.no-scroll {
 	overflow-y: hidden; 
+}
+#zoomId img {
+	padding-bottom: 40px;
 }
