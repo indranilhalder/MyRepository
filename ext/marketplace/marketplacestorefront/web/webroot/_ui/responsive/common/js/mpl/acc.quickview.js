@@ -616,8 +616,7 @@ function openPop_quick(ussidfromSeller){
 		},3000)
 	}
 	else {
-		console.log(ussidValue);
-	
+			
 		$.ajax({
 			contentType : "application/json; charset=utf-8",
 			url : requiredUrl,
@@ -828,5 +827,78 @@ $(document).on("click",".quickview .Emi > #EMImodal-content",function(e){
 	e.stopPropagation();
 		$(".quickview .Emi > p").addClass("active")
 });
-/*  End of Quickview EMI  */
-/**/
+/*End of quickview Emi*/
+/*TPR-924*/
+/*Wishlist icon activation*/
+function isItemInWishList(ussidfromSeller) {
+	
+	var loggedIn=$("loggedIn").val();
+	$('#addedMessage').hide();
+	if ($.isEmptyObject(ussidfromSeller)) {
+		ussidValue = $("#ussid_quick").val();
+	} else {
+		ussidValue = ussidfromSeller;
+	}
+	var productCode = $("#productCodePost").val();
+
+	var requiredUrl = ACC.config.encodedContextPath + "/p"
+			+ "-viewWishlistsInPDP";
+
+	var dataString = 'productCode=' + productCode + '&ussid=' + ussidValue;// modified
+	// for
+	// ussid
+
+	$.ajax({
+		contentType : "application/json; charset=utf-8",
+		url : requiredUrl,
+		data : dataString,
+		dataType : "json",
+		success : function(data) {
+		if (!$.isEmptyObject(data)) {			
+				LoadWishLists(ussidValue, data, productCode);
+			}
+		},
+		error : function(xhr, status, error) {
+			
+		}
+	});
+}
+
+function LoadWishLists(ussid, data, productCode) {
+	    
+	// modified for ussid
+	var addedWlList_pdp = [];
+	var wishListContent = "";
+	var wishName = "";
+	$this = this;
+	
+
+	for ( var i in data) {
+		
+		var index = -1;
+		var checkExistingUssidInWishList = false;
+		var wishList = data[i];
+		wishName = wishList['particularWishlistName'];
+		wishListList[i] = wishName;
+		var entries = wishList['ussidEntries'];
+		for ( var j in entries) {
+			var entry = entries[j];
+
+			if (entry == ussid) {
+
+				checkExistingUssidInWishList = true;
+				break;
+
+			}
+		}
+		if (checkExistingUssidInWishList) {
+			
+			$('.wishlist-icon-qv').addClass("added");
+			           
+		} 
+		index++;
+	}
+
+	
+
+}

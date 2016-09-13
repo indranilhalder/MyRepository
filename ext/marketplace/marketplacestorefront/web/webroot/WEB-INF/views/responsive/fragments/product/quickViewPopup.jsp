@@ -117,9 +117,15 @@ tr.d0 td {
 	 setBuyBoxDetails();
 	 
 	 
+	 
 	 getRating_Qview('${gigyaAPIKey}','${product.code}','${product.rootCategory}');
 	 
-
+	 var timer = setInterval(function(){
+			if($(document).find("#ussid_quick").length>0){
+			isItemInWishList($('#ussid_quick').val());
+			clearInterval(timer);
+			}
+		},2000);
 	 
 	
 	$(document).on('show.bs.modal', "#modalProd", function() {
@@ -133,6 +139,7 @@ tr.d0 td {
 			zoomWindowFadeIn : 500,
 			zoomWindowFadeOut : 750
 		});
+		
 	});
 	
 	 	$("#previousImage").css("opacity","0.5");
@@ -157,6 +164,7 @@ tr.d0 td {
 	    zoomWindowFadeIn: 500,
 	    zoomWindowFadeOut: 750
 	       });
+		
 	 });
 	 $("#cboxClose").click(function(){
 		$(".zoomContainer").remove();
@@ -259,6 +267,7 @@ tr.d0 td {
  	  
  	// var avgrating = '${product.averageRating}';
  		//alert(":-:"+avgrating);
+ 	 
  		
  }	  
  </script>
@@ -990,9 +999,11 @@ $(document).on("mouseleave",".zoomContainer",function(e) {
 $(window).resize(function(){
 	if($(window).width() < 1024) {
 		$(".wishlist-icon-qv.normal").show();
+		
 	}
 	
 });
+
 /*add to wishlist st*/
 
 </script>
