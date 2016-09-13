@@ -171,7 +171,7 @@
 					<span>CHECKOUT</span>
 					
 					
-					<button id="deliveryAddressSubmitUp" type="submit" class="button checkout-next" style="display:none;">Proceed to Pay</button>
+					<button id="deliveryAddressSubmitUp" type="submit" class="button checkout-next" style="display:none;">Proceed to Payment</button>
 						</c:if>
 					</div>
 				</c:otherwise>
