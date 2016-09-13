@@ -366,6 +366,8 @@ $(document).ready(function(){
 				});
 			
 			});	
+			var search_count_text= $(".searchString i").text().trim();
+			$(".searchString i").text(search_count_text);
 	$(".facet-list.filter-opt li").each(function(){
 		if($(this).find("input.colour").length > 0){
 			var selected_colour = $(this).find("input.applied-color").val();

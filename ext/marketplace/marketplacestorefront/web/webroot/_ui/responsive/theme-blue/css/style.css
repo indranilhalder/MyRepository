@@ -45851,7 +45851,8 @@ padding:0 40px;	}
 	float: left;
 	text-align: center;
 	min-width: 33px;
-	border-right:none;
+	/* border-right:none; */
+	margin-left: -1px;
 }
 
 .modal.size-guide .sizes .details .size ul#variant li span {
