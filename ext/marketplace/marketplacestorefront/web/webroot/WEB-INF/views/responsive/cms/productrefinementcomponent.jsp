@@ -33,7 +33,7 @@ $(document).ready(function(){
 
 		<div class="facet-name js-facet-name facet_mobile">
 				<c:if test="${empty hideDepartments}">
-				<h4 class="true tree-dept"><span class="category-icons"><span></span></span><span class="filter-nav"><spring:theme code="search.nav.facetTitle" arguments="Department"/></span></h4>
+				<h4 class="true tree-dept"><span class="filter-nav"><spring:theme code="search.nav.facetTitle" arguments="Department"/></span><span class="category-icons"><span></span></span></h4>
 				</c:if>
 		</div>
 		<div class="facet-name js-facet-name facet_desktop">
