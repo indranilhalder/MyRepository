@@ -923,7 +923,7 @@ public class ProductsController extends BaseController
 				searchQueryData.setValue(searchText);
 				searchState.setQuery(searchQueryData);
 
-				if (typeID != null)
+				if (StringUtils.isNotEmpty(typeID))
 				{
 					if (typeID.equalsIgnoreCase("all"))
 					{
@@ -960,7 +960,6 @@ public class ProductsController extends BaseController
 				}
 				else
 				{
-
 					productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 					productSearchPage.setError(MarketplacecommerceservicesConstants.INVALIDSEARCHKEY);
 				}
@@ -991,7 +990,8 @@ public class ProductsController extends BaseController
 				productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 				productSearchPage.setError(MarketplacecommerceservicesConstants.INVALIDSEARCHKEY);
 			}
-			if (null != typeID)
+
+			if (StringUtils.isNotEmpty(typeID))
 			{
 				productSearchPage.setCategoryCode(typeID);
 			}

@@ -120,7 +120,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -137,6 +137,13 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		ProductModel productModel = null;
 		List<SellerInformationMobileData> framedOtherSellerDataList = null;
 		List<SellerInformationData> otherSellerDataList = null;
+		List<KnowMoreDTO> knowMoreList = null;
+		PromotionMobileData potenitalPromo = null;
+		List<VariantOptionMobileData> variantDataList = new ArrayList<VariantOptionMobileData>();
+		final StringBuilder allVariants = new StringBuilder();
+		String variantCodes = "";
+		String variantsString = "";
+		final Map<String, Integer> stockAvailibilty = new TreeMap<String, Integer>();
 		try
 		{
 
@@ -166,12 +173,41 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			{
 				try
 				{
-					buyBoxData = buyBoxFacade.buyboxPrice(productCode);
+					//TPR-797---TISSTRT-1403 TISPRM-56
+					if (CollectionUtils.isNotEmpty(productData.getAllVariantsId()))
+					{
+						//get left over variants
+						if (productData.getAllVariantsId().size() > 1)
+						{
+							productData.getAllVariantsId().remove(productData.getCode());
+							for (final String variants : productData.getAllVariantsId())
+							{
+								allVariants.append(variants).append(',');
+							}
+							final int length = allVariants.length();
+							variantCodes = allVariants.substring(0, length - 1);
+						}
+					}
+					if (StringUtils.isNotEmpty(productData.getCode()))
+					{
+						variantsString = productData.getCode() + "," + variantCodes;
+					}
+					final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(variantsString);
+					if (MapUtils.isNotEmpty(buydata))
+					{
+						final List<String> noStockPCodes = (List<String>) buydata.get("no_stock_p_codes");
+						for (final String pCode : noStockPCodes)
+						{
+							stockAvailibilty.put(pCode, Integer.valueOf(0));
+						}
+						buyBoxData = (BuyBoxData) buydata.get("pdp_buy_box");
+					}
+					//Commented for TPR-797
+					//buyBoxData = buyBoxFacade.buyboxPrice(productCode);
 					if (null == buyBoxData)
 					{
 						productDetailMobile.setSellerAssociationstatus(MarketplacecommerceservicesConstants.N);
 					}
-
 					// TPR-522
 					if (null != buyBoxData.getMrp())
 					{
@@ -261,9 +297,6 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				if (null != productData.getRootCategory())
 				{
 					productDetailMobile.setRootCategory(productData.getRootCategory());
-
-					LOG.debug("*************** Mobile web service product root category ****************"
-							+ productData.getRootCategory());
 				}
 				if (CollectionUtils.isNotEmpty(productData.getImages()))
 				{
@@ -325,17 +358,12 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				{
 					productDetailMobile.setFulfillmentType(buyboxdataCheck.getFullfillment());
 				}
-				//	Promotion Dto changed
-
-				PromotionMobileData potenitalPromo = null;
-
+				//	Promotion DTO changed
 				potenitalPromo = getPromotionsForProduct(productData, buyBoxData, framedOtherSellerDataList);
-
 				if (null != potenitalPromo)
 				{
 					productDetailMobile.setPotentialPromotions(potenitalPromo);
 				}
-
 				//TISPT-396 Rating reviews are part of Gigya
 				/*
 				 * if (null != productData.getRatingCount()) {
@@ -401,7 +429,6 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				}
 				/* Specifications of a product */
 				if (null != productData.getClassifications())
-
 				{
 					List<ClassificationMobileWsData> specificationsList = null;
 					specificationsList = getSpecificationsOfProductByGroup(productData);
@@ -418,7 +445,6 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					{
 						productDetailMobile.setWarranty(getWarrantyOfProduct(mapConfigurableAttribute, productData));
 					}
-
 				}
 
 				if (null != productData.getArticleDescription())
@@ -437,8 +463,6 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					productDetailMobile.setKnowMoreEmail(configurationService.getConfiguration().getString("cliq.care.mail"));
 				}
 
-
-				List<KnowMoreDTO> knowMoreList = null;
 				if (null != buyBoxData)
 				{
 					knowMoreList = getknowMoreDetails(productModel, buyBoxData);
@@ -448,14 +472,25 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					productDetailMobile.setKnowMore(knowMoreList);
 				}
 
-
 				if (null != productData.getBrand() && null != productData.getBrand().getBrandname())
 				{
 					productDetailMobile.setBrandName(productData.getBrand().getBrandname());
 				}
-				List<VariantOptionMobileData> variantDataList = new ArrayList<VariantOptionMobileData>();
 
-				variantDataList = getVariantDetailsForProduct(productData);
+				// changed for TPR-796
+				//first set false to make all available
+				productDetailMobile.setAllOOStock(Boolean.FALSE);
+				//check if all products are Out of Stock
+				if (buyBoxData != null && StringUtils.isNotEmpty(buyBoxData.getAllOOStock()))
+				{
+					//buyboxdata.getAllOOStock() is Y/N
+					if (buyBoxData.getAllOOStock().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
+					{
+						productDetailMobile.setAllOOStock(Boolean.TRUE);
+					}
+				}
+				//TISSTRT-1411
+				variantDataList = getVariantDetailsForProduct(productData, stockAvailibilty);
 
 				if (null != variantDataList && !variantDataList.isEmpty())
 				{
@@ -472,7 +507,6 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				final List<String> deliveryInfoList = new ArrayList<String>();
 				deliveryInfoList.add(MarketplacewebservicesConstants.EXPRESS_DELIVERY);
 				deliveryInfoList.add(MarketplacewebservicesConstants.HOME_DELIVERY);
-
 
 				//deliveryModesForProduct = getDeliveryModesAtPPrep(productData);
 				deliveryModesATPForProduct = productDetailsHelper.getDeliveryModeATMap(deliveryInfoList);
@@ -1544,14 +1578,18 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	 * @param productData
 	 * @return List<VariantOptionMobileData>
 	 */
-	private List<VariantOptionMobileData> getVariantDetailsForProduct(final ProductData productData)
+	private List<VariantOptionMobileData> getVariantDetailsForProduct(final ProductData productData,
+			final Map<String, Integer> stockAvailibilty)
 	{
 		final List<VariantOptionMobileData> variantDataList = new ArrayList<VariantOptionMobileData>();
 		SizeLinkData sizeLinkData = null;
 		CapacityLinkData capacityLinkData = null;
 		ColorLinkData colorLinkData = null;
+		String variantSizePCode = "";
+
 		try
 		{
+
 			if (CollectionUtils.isNotEmpty(productData.getVariantOptions()))
 			{
 				for (final VariantOptionData variantData : productData.getVariantOptions())
@@ -1581,6 +1619,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					{
 						for (final Map.Entry<String, String> sizeEntry : variantData.getSizeLink().entrySet())
 						{
+							variantSizePCode = "";
 							if (StringUtils.isNotEmpty(sizeEntry.getValue()))
 							{
 								sizeLinkData.setSize(sizeEntry.getValue());
@@ -1588,22 +1627,27 @@ public class MplProductWebServiceImpl implements MplProductWebService
 							if (StringUtils.isNotEmpty(sizeEntry.getKey()))
 							{
 								sizeLinkData.setUrl(sizeEntry.getKey());
+								//setting Variant codes TISSTRT-1411
+								final String[] url = sizeEntry.getKey().split("-");
+								variantSizePCode = url[url.length - 1];
+								variantSizePCode = variantSizePCode.toUpperCase();
+								LOG.debug("variant_Size" + variantSizePCode);
 							}
-						}
-					}
-					//TPR-797---TISSTRT-1403
-
-					if (CollectionUtils.isNotEmpty(productData.getAllVariantsId()) && productData.getAllVariantsId().size() > 1)
-					{
-						productData.getAllVariantsId().remove(productData.getCode());
-						for (final String variants : productData.getAllVariantsId())
-						{
-							if (variants.equalsIgnoreCase(variantData.getCode()))
+							//TISSTRT-1411
+							//by default its available
+							sizeLinkData.setIsAvailable(true);
+							//check teh stock availability
+							if (MapUtils.isNotEmpty(stockAvailibilty) && stockAvailibilty.containsKey(variantSizePCode))
 							{
-								sizeLinkData.setIsAvailable(true);
+								if (stockAvailibilty.get(variantSizePCode).intValue() == 0)
+								{
+									sizeLinkData.setIsAvailable(false);
+								}
 							}
+
 						}
 					}
+
 					if (StringUtils.isNotEmpty(sizeLinkData.getUrl()))
 					{
 						variantMobileData.setSizelink(sizeLinkData);
@@ -1613,17 +1657,15 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					if (StringUtils.isNotEmpty(variantData.getCapacity()))
 					{
 						capacityLinkData.setCapacity(variantData.getCapacity());
-						if (StringUtils.isNotEmpty(variantData.getUrl()))
-						{
-							capacityLinkData.setUrl(variantData.getUrl());
-						}
 					}
-
-					if (StringUtils.isNotEmpty(capacityLinkData.getUrl()))
+					if (StringUtils.isNotEmpty(variantData.getUrl()))
+					{
+						capacityLinkData.setUrl(variantData.getUrl());
+					}
+					if (StringUtils.isNotEmpty(capacityLinkData.getCapacity()))
 					{
 						variantMobileData.setCapacityLink(capacityLinkData);
 					}
-
 					variantDataList.add(variantMobileData);
 				}
 			}
