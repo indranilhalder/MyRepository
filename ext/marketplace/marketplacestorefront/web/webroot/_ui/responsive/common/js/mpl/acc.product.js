@@ -554,7 +554,7 @@ sendAddToBag : function(formId, isBuyNow) {
 },
 
 sendAddToBagQuick:function(formId){
-	alert(formId);
+	
 	 var input_name="qty";
 	  var stock_id="stock";
 	 var dataString=$('#'+formId).serialize();	
@@ -579,7 +579,7 @@ sendAddToBagQuick:function(formId){
 	        $('#ajax-loader').show();
 	    },
 		success : function(data) {
-			alert(data);
+			
 			if(data.indexOf("cnt:") >= 0){
 			//$("#"+formId+"TitleSuccess").html("");
 			//$("#"+formId+"TitleSuccess").html("<font color='#00CBE9'>"+$('#addtobag').text()+"</font>");
@@ -615,7 +615,7 @@ sendAddToBagQuick:function(formId){
 		   		 return false;
 			}
 			else{
-				alert('In else');
+				
 				$("#"+formId+"Title").html("");
 				$("#"+formId+"Title").html("<br/><font color='#ff1c47'>"+$('#addtobagerror').text()+"</font>");
 				$("#"+formId+"Title").show().fadeOut(5000);
@@ -660,7 +660,7 @@ sendAddToBagQuick:function(formId){
 	        $('#ajax-loader').hide();
 	    },
 		error : function(resp) {
-			alert("Add to Bag unsuccessful");
+			
 		}
 	});
 	  
@@ -1209,7 +1209,7 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 				
 			},
 			error : function() {
-				console.log("Error while getting transient cart");
+				
 				
 			}
 		});
