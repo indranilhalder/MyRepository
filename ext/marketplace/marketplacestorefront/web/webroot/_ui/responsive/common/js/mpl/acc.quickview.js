@@ -634,6 +634,7 @@ function openPop_quick(ussidfromSeller){
 			success : function(data) {
 				
 				if (data == true) {
+					
 					//$("#radio_" + $("#hidWishlist").val()).prop("disabled", true);
 					//var msg=$('#wishlistSuccess').text();
 					//$('#addedMessage').show();
@@ -816,7 +817,7 @@ $(document).on("click","#variantForm div ul li a,.color-swatch-container .color-
 /* Start of Quickview EMI  */
 $(document).on("click",".quickview #emiStickerId p",function(e){
 	e.stopPropagation();
-	$(this).addClass("active mobile")
+	$(this).addClass("active")
 	openPopForBankEMI_quick();
 		
 	});
@@ -836,6 +837,18 @@ $(document).on("click", function(e){
 $(document).on("click",".quickview .Emi > #EMImodal-content",function(e){
 	e.stopPropagation();
 		$(".quickview .Emi > p").addClass("active")
+});
+
+$(document).on('click','#buyNowQv .js-add-to-cart-qv',function(event){
+	
+	 if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#categoryType").val()!='Electronics'){
+		 $("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+		 				$("#addToCartFormQuickTitle").show();
+		  				$("#addToCartFormQuickTitle").fadeOut(5000);
+ 	    return false;
+ }else{			 
+	ACC.product.sendToCartPageQuick("addToCartFormQuick",true);
+}
 });
 /*End of quickview Emi*/
 /*TPR-924*/
@@ -901,6 +914,7 @@ function LoadWishLists(ussid, data, productCode) {
 
 			}
 		}
+		
 		if (checkExistingUssidInWishList) {
 			
 			$('.wishlist-icon-qv').addClass("added");
