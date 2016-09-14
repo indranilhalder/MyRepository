@@ -157,7 +157,7 @@ ACC.refinements = {
 		})
 		
 		//TPR-845
-		$(document).on("change",".js-product-facet .facet_mobile .js-facet-checkbox, .js-product-facet .facet_mobile .js-facet-checkbox-price",function(){
+		$(document).on("change",".js-product-facet .facet_mobile .js-facet-checkbox",function(){
 			var filterMobileQuery = $(this).parents("form").find('input[name="q"]').val();
 			dummyForm = $(this).parents("form");
 			if(updatedsearchQuery==''){
@@ -520,7 +520,6 @@ $(document).off('click', '.js-facet-sizebutton').on('click', '.js-facet-sizebutt
 $(document).off('change', '.facet_mobile .facet.js-facet').on('change', '.facet_mobile .facet.js-facet', function() { 
 	$(".facet_mobile .facet.js-facet").each(function(){
 		var spanCount=$(this).find(".facet-list li").find("input[type=checkbox]:checked").length;
-		console.log("spanCount"+spanCount);
 		if(spanCount>0)
 			{
 				$(this).find(".category-icons").removeClass("blank");
