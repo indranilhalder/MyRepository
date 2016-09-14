@@ -194,33 +194,31 @@ var loadMAD = function(productID, categoryID,msdRESTURL) {
                         
                         
                         $(".visuallySimilarItems").owlCarousel({
-                        	items:5,
-            		loop: true,
+                    items:4,
+                    loop: true,
             		nav:true,
             		dots:false,
             		navText:[],
-            		slideBy:'page',
-            		responsive : {
-            			// breakpoint from 0 up
-            			0 : {
-            				items:1,
-            				stagePadding: 50,
-            			},	
-            			480 : {
-            				items:2,
-            				stagePadding: 50,
-            			},
-            			768 : {
-            				items:3,
-            			},
-            			980 : {
-            				items:4,
-            			},		
-            			// breakpoint from 650 up
-            			1200 : {
-            				items:5,
-            			}			
-            		}	
+            		responsive: {
+                        // breakpoint from 0 up
+                        0: {
+                            items: 1,
+                            stagePadding: 50,
+                        },
+                        // breakpoint from 480 up
+                        480: {
+                            items: 2,
+                            stagePadding: 50,
+                        },
+                        // breakpoint from 768 up
+                        768: {
+                            items: 3,
+                        },
+                        // breakpoint from 768 up
+                        1280: {
+                            items: 5,
+                        }
+                    }
                             /*items : 5,
                             scrollPerPage: true,
                             itemsDesktop : [1199,4],

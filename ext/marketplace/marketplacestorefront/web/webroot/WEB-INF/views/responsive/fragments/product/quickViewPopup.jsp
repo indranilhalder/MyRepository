@@ -125,7 +125,7 @@ tr.d0 td {
 			isItemInWishList($('#ussid_quick').val());
 			clearInterval(timer);
 			}
-		},2000);
+		},1000);
 	 
 	
 	$(document).on('show.bs.modal', "#modalProd", function() {

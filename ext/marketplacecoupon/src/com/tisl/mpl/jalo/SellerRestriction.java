@@ -112,13 +112,22 @@ public class SellerRestriction extends GeneratedSellerRestriction
 	protected boolean checkSellerIncl(final Collection<SellerMaster> sellerList, final List<AbstractOrderEntry> entryList)
 	{
 		boolean checkFlag = false;
-		if (CollectionUtils.isNotEmpty(entryList) && CollectionUtils.isNotEmpty(sellerList))
+		final List<String> sellerIdList = new ArrayList<String>();
+		if (CollectionUtils.isNotEmpty(sellerList))
+		{
+			for (final SellerMaster seller : sellerList)
+			{
+				sellerIdList.add(seller.getId());
+			}
+		}
+
+		if (CollectionUtils.isNotEmpty(entryList) && CollectionUtils.isNotEmpty(sellerIdList))
 		{
 			for (final AbstractOrderEntry entry : entryList)
 			{
 				final Object ussid = entry.getProperty(SELECTED_USSID);
 				final String sellerId = ussid.toString().substring(0, 6);
-				if (sellerList.contains(sellerId))
+				if (sellerIdList.contains(sellerId))
 				{
 					checkFlag = true;
 					break;
