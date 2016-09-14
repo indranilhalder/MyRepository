@@ -1394,8 +1394,7 @@ function isNumber(evt) {
 	return true;
 }
 
-$(document).on("change",'.filter-price',function(){
-
+$(document).on("change",'.facet_desktop .filter-price',function(){
 			var prices = splitPrice($(this).find('form').find(
 					'input[name=facetValue]').val());			
 			$('#customMinPrice').val(prices[0]);
