@@ -157,7 +157,7 @@ ACC.refinements = {
 		})
 		
 		//TPR-845
-		$(document).on("change",".js-product-facet .facet_mobile .js-facet-checkbox",function(){
+		$(document).on("change",".js-product-facet .facet_mobile .js-facet-checkbox, .js-product-facet .facet_mobile .js-facet-checkbox-price",function(){
 			var filterMobileQuery = $(this).parents("form").find('input[name="q"]').val();
 			dummyForm = $(this).parents("form");
 			if(updatedsearchQuery==''){
@@ -501,10 +501,14 @@ $(document).off('click', '.js-facet-colourbutton').on('click', '.js-facet-colour
 	$(this).parents(".filter-colour").toggleClass("selected-colour");
 	var spanCount=$(".facet_mobile .filter-colour.selected-colour").length;
 	if(spanCount>0)
-		{
-			$(this).parents(".facet.js-facet").find(".category-icons").removeClass("blank");
-			$(this).parents(".facet.js-facet").find(".category-icons span").text(spanCount);
-		}	
+	{
+		$(this).parents(".facet.js-facet").find(".category-icons").removeClass("blank");
+		$(this).parents(".facet.js-facet").find(".category-icons span").text(spanCount);
+	}	
+	else
+	{
+		$(this).parents(".facet.js-facet").find(".category-icons").addClass("blank");
+	}
 });
 
 $(document).off('click', '.js-facet-sizebutton').on('click', '.js-facet-sizebutton', function() { 
@@ -515,15 +519,23 @@ $(document).off('click', '.js-facet-sizebutton').on('click', '.js-facet-sizebutt
 		$(this).parents(".facet.js-facet").find(".category-icons").removeClass("blank");
 		$(this).parents(".facet.js-facet").find(".category-icons span").text(spanCount);
 	}
+	else
+	{
+		$(this).parents(".facet.js-facet").find(".category-icons").addClass("blank");
+	}
 });
 
 $(document).off('change', '.facet_mobile .facet.js-facet').on('change', '.facet_mobile .facet.js-facet', function() { 
 	$(".facet_mobile .facet.js-facet").each(function(){
 		var spanCount=$(this).find(".facet-list li").find("input[type=checkbox]:checked").length;
 		if(spanCount>0)
-			{
-				$(this).find(".category-icons").removeClass("blank");
-				$(this).find(".category-icons span").text(spanCount);
-			}
-		});
+		{
+			$(this).find(".category-icons").removeClass("blank");
+			$(this).find(".category-icons span").text(spanCount);
+		}
+		else
+		{
+			$(this).find(".category-icons").addClass("blank");
+		}
+	});
 });
