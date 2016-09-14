@@ -22310,7 +22310,7 @@ body .account .right-account .cancellation-request-block form.return-form  .prod
 } 
 .product-tile .image .quickview a{
 	position:relative;
-	top:3px;
+	top:0px;
 	display: inline-block;
     width: 48%;
 	vertical-align:top;
@@ -22470,7 +22470,7 @@ span.sizesAvailable {
 }
 .iaAddToCartButton span {
 	color:#a9143c !important;
-	margin: 14px 0;
+	margin: 16px 0;
     display: inline-block;
     position: relative;
         width: 100%;
@@ -33540,6 +33540,9 @@ body.page-cartPage .cart.wrapper .product-block.wishlist {
     margin-top: 0;
     margin-bottom: 10px;
 }
+body.page-cartPage .cart.wrapper .wishlist-banner{
+    margin-top: 10px;
+}
 @media (max-width: 767px){
 	.cart.wrapper .product-block li.item > ul > li:first-child div.product .product-name{
 	font-weight: normal !important;
@@ -34153,7 +34156,7 @@ body.template-pages-category-productGridPage .trending h1,body.template-pages-se
     font-weight: normal;
 }
 .product-tile .image .quickview {
-    height: 80px !important;
+    height: auto !important;
 }
 .product-tile .image .quickview .js-reference-item {
     margin: 14px 0;
@@ -34189,6 +34192,7 @@ div.productInfo ul li span.rating-list {
     width: 100%;
     border-bottom: none;
     padding-top: 10px;
+    padding-bottom: 14px;
     border-top: 1px solid #c6c6c6;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -34222,7 +34226,7 @@ div.productInfo span:before{
 }
 .product-tile .image .quickview .serp-addtobag {
     padding-top: 0px;
-    margin: 16px 0;
+    margin: 14px 0;
     height: auto;
     width: 100%;
     border-left: 1px solid #857d7b;
@@ -34935,6 +34939,10 @@ padding-top: 0px !important;
 body.template-pages-category-productGridPage header,body.template-pages-search-searchGridPage header {
 	margin-bottom:-10px;
 	}
+	.facet-list.filter-opt {
+	text-align:left;
+    padding-left: calc(19.83% - -20px);
+}
 /*mobile filter*/
 .filter-title{
 display:none;
@@ -34958,6 +34966,10 @@ padding-top:15px !important;
 }
 }
 .IAQuickView,.iaAddToCartButton,div.MSDQuickView{
+	height: auto !important;
+	font-weight: 600;
+}
+.IAQuickView.size_on_hover,.MSDQuickView.size_on_hover{
 	height: 80px !important;
 	font-weight: 600;
 }

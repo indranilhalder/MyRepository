@@ -1033,19 +1033,6 @@ tr.d0 td {
  
  
  
- <div class="wishlist-banner" id="wishlistBanner" style="display:none">
-		<h2>
-			<spring:theme code="Treat Yourself" />
-			<span><spring:theme code="mpl.gift.Yourself" /></span>
-		</h2>
-	</div>
-	<ul class="product-block wishlist" id="giftYourselfProducts">
-		
-	</ul>
- 
- 
- 
- 
 <div class="cart-bottom-block">
 <%-- <div class="coupon block" style="width: 40%;display: inline-block;">
 <h2>Have a promo code?</h2>
@@ -1119,5 +1106,17 @@ tr.d0 td {
                 </c:choose>
             </ycommerce:testId></span></li>
           </ul>
+      <!--    As part of improvement TPR-1468 -->
+         <div class="wishlist-banner" id="wishlistBanner" style="display:none">
+		<h2>
+			<spring:theme code="Treat Yourself" />
+			<span><spring:theme code="mpl.gift.Yourself" /></span>
+		</h2>
+	</div>
+	<ul class="product-block wishlist" id="giftYourselfProducts">
+		
+	</ul>
+         
+         
 <storepickup:pickupStorePopup />
 

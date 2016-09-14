@@ -513,6 +513,9 @@ if (searchCategory_id){
 			// Added as part of TPR-859 (size on hover)
 				var size_bottom = $(productElement).find(".short-info").height() + 31;
 				$(productElement).find(".sizesAvailable").css("bottom",size_bottom + "px");
+				if($(productElement).find(".sizesAvailable").length > 0){
+					$(productElement).find(".IAQuickView").addClass("size_on_hover");
+				}
 			}
 			/*Make quickview and Add to cart visible and on top*/
 			function showBoth(productElement) {

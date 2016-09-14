@@ -3384,6 +3384,7 @@ function checkPincodeServiceability(buttonType,el)
 
 //TPR-1055
 $("#defaultPinCodeIds").click(function(){
+	$(this).css("color","black"); //TPR-1470
 	$("#unserviceablepincode").hide();
 	$(".deliveryUlClass").remove();//TPR-1341
 	$("#cartPinCodeAvailable").show();
