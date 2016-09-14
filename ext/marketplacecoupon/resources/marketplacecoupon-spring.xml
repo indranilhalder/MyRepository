@@ -73,7 +73,6 @@
 	</bean>
 	<!-- CHANGES FOR TPR-715 -->
 	<bean id="couponSellerIdSaveInterceptor" class="com.tisl.mpl.interceptor.CouponSellerRestSaveInterceptor" />
-
 	<bean id="couponSellerSaveInterceptorMapping"
 		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
 		<property name="interceptor" ref="couponSellerIdSaveInterceptor" />
