@@ -103,7 +103,7 @@ public class ReturnLogisticsServiceImpl implements ReturnLogisticsService
 							
 							if(StringUtils.isNotBlank(returnLogisticsObj.getReturnFulfillmentByP1()) && returnLogisticsObj.getReturnFulfillmentByP1().equalsIgnoreCase(MarketplaceclientservicesConstants.TSHIP_CODE))
 							{
-							returnFulfilmentTypes.add(returnLogisticsObj.getReturnFulfillmentByP1());
+							returnFulfilmentTypes.add(StringUtils.upperCase(returnLogisticsObj.getReturnFulfillmentByP1()));
 							
 							//if P1 fulfillment type is TSHIP set second fulfillment type as SSHIP
 							returnFulfilmentTypes.add(StringUtils.upperCase(MarketplaceclientservicesConstants.SSHIP_CODE));
@@ -123,12 +123,13 @@ public class ReturnLogisticsServiceImpl implements ReturnLogisticsService
 						}
 						
 						reqObj.setReturnFulfilmentType(returnFulfilmentTypes);
+					}
 					if (StringUtils.isNotBlank(reqObj.getOrderId()) && StringUtils.isNotBlank(reqObj.getPinCode())
 							&& StringUtils.isNotBlank(reqObj.getTransactionId()))
 					{
 						reqlist.add(reqObj);
 					}
-				}
+				
 				reqdata.setOrderlines(reqlist);
 				response = reverseLogistics(reqdata);
 			}
