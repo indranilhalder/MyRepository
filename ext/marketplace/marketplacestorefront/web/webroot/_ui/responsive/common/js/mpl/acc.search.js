@@ -143,6 +143,115 @@ function constructDepartmentHierarchy(inputArray) {
 		
 	}
 
+
+  //TPR-158 and TPR-413 starts here
+
+//For department Hierarchy Expansion
+function showAll()
+{
+	$(".jqtree-tree >li").each(function(e){		
+	$(this).show();//show all		
+	$(this).find("ul>li").each(function(e){
+	$(this).show();//show all
+	});		
+	});
+}
+
+function donotShowAll()
+{	
+	//below attributes can be made configurable through local.properties. The number of categories to be displayed are configurable for L1,L2 and L3 separately
+	var l1ClassCount = -1;
+	var l2ClassCount = -1;
+	var l3ClassCount = -1;
+	var l1displayLimit = $("#deptCountL1").val();
+	var l2displayLimit = $("#deptCountL2").val();
+	var l3displayLimit = $("#deptCountL3").val();
+	var displayHideShowAll = false;
+	
+	//***************below first iteration for L1 categories
+	$(".jqtree-tree >li").each(function(e){
+		
+//	if((!$(this).is(':visible')) )
+//	{
+//		displayHideShowAll = true;
+//	}		
+
+	l1ClassCount= l1ClassCount+1;
+	
+	if(l1ClassCount>l1displayLimit)
+	{
+	$(this).hide();//hide L1 level
+	displayHideShowAll = true;
+	}	
+	
+	l2ClassCount = -1;	
+	//**********below iteration for L2 and L3 categories
+	$(this).find("ul>li").each(function(e){	
+//	if((!$(this).is(':visible')) )
+//	{
+//		displayHideShowAll = true;
+//	}
+	
+	//if li has both class jqtree_common and jqtree-folder then it will be L2 category
+	if($(this).hasClass('jqtree_common') && $(this).hasClass('jqtree-folder'))
+	{
+	l2ClassCount= l2ClassCount+1;	
+	l3ClassCount = -1;
+	if(l2ClassCount>l2displayLimit){
+	$(this).hide();//hide L2 level
+	displayHideShowAll = true;
+	}
+	}
+	//if li has only class jqtree_common then it will be L3 category
+	else if($(this).hasClass('jqtree_common'))
+	{
+	l3ClassCount= l3ClassCount+1;	
+	if(l3ClassCount>l3displayLimit){
+	$(this).hide();//hide L3 level
+	displayHideShowAll = true;
+	}
+	}	
+	else
+	{
+	//do nothing
+	}
+	
+	});		//end ul>li iteration
+		
+	});		//end .jqtree-tree >li iteration	
+	
+	
+	if(!displayHideShowAll)
+	{	
+	$("#displayAll").hide();
+	}
+}
+
+
+$("#displayAll").click(function(e){		
+	showAll();		
+	$("#displayAll").hide();
+	$("#clickToMore").show();
+	});
+
+	//***********clicking on the clickToMore div will display limited department categories.
+	$("#clickToMore").click(function(e){		
+	donotShowAll();		
+	$("#displayAll").show();
+	$("#clickToMore").hide();
+	});	
+		
+//CR Changes End
+
+
+
+
+
+
+//TPR-158 and TPR-413 ends here
+
+
+
 	//change serp product details based on filters
 	function modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,stockLevel,productPromotion){
 		if(mrpPriceValue!="" && productPrice!=""){
