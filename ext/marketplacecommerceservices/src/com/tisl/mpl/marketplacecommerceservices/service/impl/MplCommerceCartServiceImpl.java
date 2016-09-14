@@ -3816,18 +3816,20 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 							{
 								for (final DeliveryDetailsData detailsData : responseData.getValidDeliveryModes())
 								{
-									if (null != detailsData.getServiceableSlaves() && detailsData.getServiceableSlaves().size() > 0)
-									{
-										cartSoftReservationData.setServiceableSlaves(detailsData.getServiceableSlaves());
-									}
-									if (null != detailsData.getCNCServiceableSlavesData()
-											&& detailsData.getCNCServiceableSlavesData().size() > 0)
-									{
-										cartSoftReservationData.setCncServiceableSlaves(detailsData.getCNCServiceableSlavesData());
-									}
-									if (null != detailsData.getFulfilmentType())
-									{
-										cartSoftReservationData.setFulfillmentType(detailsData.getFulfilmentType());
+									if(deliveryModeGlobalCode.equalsIgnoreCase(detailsData.getType())){
+         									if (null != detailsData.getServiceableSlaves() && detailsData.getServiceableSlaves().size() > 0)
+         									{
+         										cartSoftReservationData.setServiceableSlaves(detailsData.getServiceableSlaves());
+         									}
+         									if (null != detailsData.getCNCServiceableSlavesData()
+         											&& detailsData.getCNCServiceableSlavesData().size() > 0)
+         									{
+         										cartSoftReservationData.setCncServiceableSlaves(detailsData.getCNCServiceableSlavesData());
+         									}
+         									if (null != detailsData.getFulfilmentType())
+         									{
+         										cartSoftReservationData.setFulfillmentType(detailsData.getFulfilmentType());
+         									}
 									}
 								}
 							}
