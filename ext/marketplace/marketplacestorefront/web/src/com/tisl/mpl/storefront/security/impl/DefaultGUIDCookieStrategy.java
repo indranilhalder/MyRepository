@@ -14,6 +14,8 @@
 package com.tisl.mpl.storefront.security.impl;
 
 import de.hybris.platform.acceleratorstorefrontcommons.security.GUIDCookieStrategy;
+import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.servicelayer.user.UserService;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -23,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.util.Assert;
@@ -30,6 +33,8 @@ import org.springframework.web.util.CookieGenerator;
 
 import com.tisl.mpl.storefront.interceptors.beforecontroller.RequireHardLoginBeforeControllerHandler;
 import com.tisl.mpl.storefront.security.cookie.KeepAliveCookieGenerator;
+import com.tisl.mpl.storefront.security.cookie.LuxuryEmailCookieGenerator;
+import com.tisl.mpl.storefront.security.cookie.LuxuryUserCookieGenerator;
 
 
 /**
@@ -45,6 +50,63 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 	private CookieGenerator cookieGenerator;
 
 	private KeepAliveCookieGenerator keepAliveCookieGenerator;
+
+	private LuxuryEmailCookieGenerator luxuryEmailCookieGenerator;
+
+	private UserService userService;
+
+	/**
+	 * @return the userService
+	 */
+	public UserService getUserService()
+	{
+		return userService;
+	}
+
+	/**
+	 * @param userService
+	 *           the userService to set
+	 */
+	public void setUserService(final UserService userService)
+	{
+		this.userService = userService;
+	}
+
+	/**
+	 * @return the luxuryEmailCookieGenerator
+	 */
+	public LuxuryEmailCookieGenerator getLuxuryEmailCookieGenerator()
+	{
+		return luxuryEmailCookieGenerator;
+	}
+
+	/**
+	 * @param luxuryEmailCookieGenerator
+	 *           the luxuryEmailCookieGenerator to set
+	 */
+	public void setLuxuryEmailCookieGenerator(final LuxuryEmailCookieGenerator luxuryEmailCookieGenerator)
+	{
+		this.luxuryEmailCookieGenerator = luxuryEmailCookieGenerator;
+	}
+
+	/**
+	 * @return the luxuryUserCookieGenerator
+	 */
+	public LuxuryUserCookieGenerator getLuxuryUserCookieGenerator()
+	{
+		return luxuryUserCookieGenerator;
+	}
+
+	/**
+	 * @param luxuryUserCookieGenerator
+	 *           the luxuryUserCookieGenerator to set
+	 */
+	public void setLuxuryUserCookieGenerator(final LuxuryUserCookieGenerator luxuryUserCookieGenerator)
+	{
+		this.luxuryUserCookieGenerator = luxuryUserCookieGenerator;
+	}
+
+	private LuxuryUserCookieGenerator luxuryUserCookieGenerator;
 
 	/**
 	 * @return the keepAliveCookieGenerator
@@ -85,6 +147,19 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 		getCookieGenerator().addCookie(response, guid);
 		//POC Add the Keep Alive Cookie on login
 		getKeepAliveCookieGenerator().addCookie(response, createGUID());
+
+		//Set the luxury site cookies
+		if (userService.getCurrentUser() != null)
+		{
+			final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
+			if (StringUtils.isNotEmpty(customer.getOriginalUid()))
+			{
+				LOG.info("Adding cookie for luxury cookie");
+				getLuxuryEmailCookieGenerator().addCookie(response, customer.getOriginalUid());
+			}
+		}
+		//To be added
+		getLuxuryUserCookieGenerator().addCookie(response, null);
 		request.getSession().setAttribute(RequireHardLoginBeforeControllerHandler.SECURE_GUID_SESSION_KEY, guid);
 
 		if (LOG.isInfoEnabled())
@@ -105,6 +180,8 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 		getCookieGenerator().removeCookie(response);
 		//Delete the Keep alive cookie
 		getKeepAliveCookieGenerator().removeCookie(response);
+		getLuxuryUserCookieGenerator().removeCookie(response);
+		getLuxuryEmailCookieGenerator().removeCookie(response);
 		//}
 	}
 
