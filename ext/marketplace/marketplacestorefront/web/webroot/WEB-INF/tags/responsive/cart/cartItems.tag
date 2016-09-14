@@ -392,8 +392,9 @@ tr.d0 td {
 						<c:otherwise>
 							<li id ="${entry.selectedSellerInformation.ussid}_li" class="delivery">
 							<p class="mobile-delivery"><spring:theme code="basket.delivery.options"/></p>
-							<!-- TPR-1341 -->
-							<span class='pincodeServiceError'></span>
+							<!-- TPR-1458-->
+							<!-- <span class='pincodeServiceError'></span> -->
+							<!-- 1341 -->
 							<p class="cartItemBlankPincode"><spring:theme code="cart.pincode.blank"/></p>	
 							<ul id="${entry.selectedSellerInformation.ussid}">
 						</c:otherwise>
