@@ -22,15 +22,15 @@
 			<cms:component component="${feature}"/>
 		</cms:pageSlot>
 	</div>
-<div class="shopContent">
+<!-- <div class="shopContent"> -->
 	<section>
-		<cms:pageSlot position="Section3A" var="feature" element="div">
+		<cms:pageSlot position="Section3A" var="feature" element="div" class="shopstyle">
 			<cms:component component="${feature}"/>
 		</cms:pageSlot>
-		<cms:pageSlot position="Section3B" var="feature" element="div">
+		<cms:pageSlot position="Section3B" var="feature" element="div"  class="shopstyle1">
 			<cms:component component="${feature}"/>
 		</cms:pageSlot>
-		<cms:pageSlot position="Section3C" var="feature" element="div">
+		<cms:pageSlot position="Section3C" var="feature" element="div" class="shopstyle2">
 			<cms:component component="${feature}"/>
 		</cms:pageSlot>
 	</section>
@@ -67,7 +67,7 @@
 			<cms:component component="${feature}"/>
 		</cms:pageSlot>
 	</section>
-	</div>
+	<!-- </div> -->
 
 	<%-- 	<div class="no-space">
 		

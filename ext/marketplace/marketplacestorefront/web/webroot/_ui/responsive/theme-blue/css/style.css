@@ -46192,7 +46192,7 @@ margin-top:0px;
 .shop-borderTop {
     border-top: 1px solid #f0f3f5;
 }
-.shopContent h1{
+.shopstyle{
 	text-align: center;
     text-transform: uppercase;
     padding: 40px 0px 20px 0px;
@@ -46202,7 +46202,7 @@ margin-top:0px;
     text-shadow: 1px 1px 1px #BBB8B8;
     color: #222222;
 }
-.shopContent p{
+.shopstyle1{
     text-align: center;
     margin: auto;
     line-height: 30px;

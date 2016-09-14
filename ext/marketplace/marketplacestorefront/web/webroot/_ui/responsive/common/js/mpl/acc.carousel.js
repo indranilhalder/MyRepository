@@ -11,6 +11,7 @@ ACC.carousel = {
 	     "myReviewCarousel",
 	     "advancedCategoryCarousel",
 	     "pdpProductCarousel",
+	     "shopTheStyleCarousel",
 		["bindCarousel", $(".js-owl-carousel").length >0]
 	],
 
@@ -200,6 +201,24 @@ ACC.carousel = {
 	},*/
 	
 	shopByLookCarousel: function(){
+		$(".shopByLookCarousel").owlCarousel({
+			items:2,
+    		loop: true,
+    		nav:true,
+    		dots:false,
+    		navText:[]
+			/*navigation:true,
+			rewindNav: false,
+			navigationText :[],
+			pagination:false,
+			items:2,
+			itemsDesktop : false, 
+			itemsDesktopSmall : false, 
+			itemsTablet: false, 
+			itemsMobile : false*/
+		});
+	},
+	shopTheStyleCarousel: function(){
 		$(".shopByLookCarousel").owlCarousel({
 			items:2,
     		loop: true,
