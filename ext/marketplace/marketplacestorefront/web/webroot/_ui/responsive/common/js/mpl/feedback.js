@@ -1934,7 +1934,7 @@ $(document).on('click','.left-block .toggle-filterSerp',function(){
 		}
 
 		$(".facet_mobile .facet.js-facet").each(function(){
-			var spanCount=$(this).find(".facet-list.js-facet-list li").find("input[type=checkbox]:checked").length;
+			var spanCount=$(this).find(".facet-list li").find("input[type=checkbox]:checked").length;
 			if(spanCount>0)
 				{
 					$(this).find(".category-icons span").text(spanCount);
