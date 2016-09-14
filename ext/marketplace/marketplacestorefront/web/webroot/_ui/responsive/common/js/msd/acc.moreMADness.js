@@ -259,6 +259,9 @@ function showBothMSD(productElementMSD) {
 	// Added as part of TPR-859 (size on hover)
 	var size_bottom = $(productElementMSD).find(".short-info").height() + 31;
 	$(productElementMSD).find(".sizesAvailableMSD").css("bottom",size_bottom + "px");
+	if($(productElementMSD).find(".sizesAvailableMSD").length > 0){
+		$(productElementMSD).find(".MSDQuickView").addClass("size_on_hover");
+	}
 	}
 
 
