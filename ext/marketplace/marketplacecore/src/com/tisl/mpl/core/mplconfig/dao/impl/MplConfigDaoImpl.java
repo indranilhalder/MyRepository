@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
 import com.hybris.oms.tata.model.MplTimeSlotsModel;
 import com.tisl.mpl.core.model.MplConfigModel;
+import com.tisl.mpl.core.model.MplLPHolidaysModel;
 import com.tisl.mpl.core.mplconfig.dao.MplConfigDao;
 
 
@@ -38,6 +39,8 @@ public class MplConfigDaoImpl implements MplConfigDao
 	
 	public static final String DELIVERYCHARG_CONFIG_QUERY = "select {pk} from {MplBUCConfigurations} ";
 	public static final String TIMESLOT_CONFIG_KEY = "configKey";
+	
+	public static final String MPL_LPHOLIDAYS_CONFIG_QUERY = "select {pk} from {MplLPHolidays} where {lpname}=?configKey ";
 
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
@@ -122,6 +125,34 @@ public class MplConfigDaoImpl implements MplConfigDao
 		if (null != mplConfigModel)
 		{
 			return mplConfigModel;
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see com.tisl.mpl.core.mplconfig.dao.MplConfigDao#getMplLPHolidays(java.lang.String)
+	 */
+	@Override
+	public MplLPHolidaysModel getMplLPHolidays(String configKey)
+	{
+		final String query = MPL_LPHOLIDAYS_CONFIG_QUERY;
+		final Map queryParams = new HashMap();
+		queryParams.put(TIMESLOT_CONFIG_KEY, configKey);
+		final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(query);
+		fQuery.addQueryParameters(queryParams);
+		if (LOGGER.isDebugEnabled())
+		{
+			LOGGER.debug("getMplLPHolidays() - MplLPHolidays Query " + fQuery);
+		}
+
+		final MplLPHolidaysModel mplLpHolidays = flexibleSearchService.<MplLPHolidaysModel> search(fQuery).getResult().get(0);
+
+		if (null != mplLpHolidays)
+		{
+			return mplLpHolidays;
 		}
 		else
 		{

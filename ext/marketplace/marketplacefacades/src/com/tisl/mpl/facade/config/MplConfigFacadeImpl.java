@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
 import com.hybris.oms.tata.model.MplTimeSlotsModel;
+import com.tisl.mpl.core.model.MplLPHolidaysModel;
 import com.tisl.mpl.core.mplconfig.service.MplConfigService;
 
 /**
@@ -68,5 +69,16 @@ public class MplConfigFacadeImpl implements MplConfigFacade
 		return mplConfigService.getDeliveryTimeSlots(configKey);
 	}
 
+
+	/* (non-Javadoc)
+	 * @see com.tisl.mpl.facade.config.MplConfigFacade#getMplLPHolidays(java.lang.String)
+	 */
+	@Override
+	public MplLPHolidaysModel getMplLPHolidays(String configKey)
+	{
+		// YTODO Auto-generated method stub
+		return mplConfigService.getMplLPHolidays(configKey);
+	}
+   
 
 }

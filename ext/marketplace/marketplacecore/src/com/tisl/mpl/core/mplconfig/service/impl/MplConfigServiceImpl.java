@@ -17,6 +17,7 @@ import com.hybris.oms.tata.data.MplTimeSlotsData;
 import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
 import com.hybris.oms.tata.model.MplTimeSlotsModel;
 import com.tisl.mpl.core.model.MplConfigModel;
+import com.tisl.mpl.core.model.MplLPHolidaysModel;
 import com.tisl.mpl.core.mplconfig.dao.MplConfigDao;
 import com.tisl.mpl.core.mplconfig.service.MplConfigService;
 import com.tisl.mpl.util.MplTimeconverUtility;
@@ -204,4 +205,30 @@ public class MplConfigServiceImpl implements MplConfigService
 		}
 		return deliverySlots;
 	}
+
+		/* (non-Javadoc)
+		 * @see com.tisl.mpl.core.mplconfig.service.MplConfigService#getMplLPHolidays(java.lang.String)
+		 */
+		@Override
+		public MplLPHolidaysModel getMplLPHolidays(String configKey)
+		{
+			MplLPHolidaysModel configValue = null;
+			
+			try
+			{
+			
+				configValue = mplConfigDao.getMplLPHolidays(configKey);
+ 
+			}
+			catch(Exception e)
+			{
+				LOGGER.error("Congiguration Not foud for the class MplBUCConfigurationsModel :");
+			}
+
+			if (LOGGER.isDebugEnabled())
+			{
+				LOGGER.debug("getLpname() - config value for  is :" + configValue.getLpname());
+			}
+			return configValue;
+		}
 }

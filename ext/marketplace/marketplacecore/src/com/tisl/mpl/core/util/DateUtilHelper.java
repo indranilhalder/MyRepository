@@ -84,7 +84,7 @@ public class DateUtilHelper
 	 /* Take input has Date Format   but it returns 3 next Dates 
 		 * 
 		 */
-	public  List<String> getDeteList(String estDate,SimpleDateFormat format){
+	public  List<String> getDeteList(String estDate,SimpleDateFormat format,int numOfDays){
    	 Date myDate = null;
    	 List<String> dateList=null;
 			try {
@@ -93,7 +93,7 @@ public class DateUtilHelper
 		    	    DateTimeFormatter formatter = DateTimeFormat.forPattern( "dd-MM-yyyy" );
 		    	    dateList=new ArrayList<String>(); 
 		    	
-		    	    for(int i=0; i<3; i++){
+		    	    for(int i=0; i<numOfDays; i++){
 			    		String dd=formatter.print( today.plusDays( i ) );
 			    		
 			    	    dateList.add(dd);
@@ -203,5 +203,24 @@ public class DateUtilHelper
 		}
 		return uniqueEddDatesList;
 
+	}
+	
+	
+	public  List<String> calculatedLpHolidays(String date , int numOfDays){
+		boolean ischeck=false;
+        List<String> finalDateSet=new ArrayList<String>();
+        for(int i=0; i<numOfDays; i++){
+        	DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
+            DateTime dt = formatter.parseDateTime(date);
+        	if(dt.plusDays( i ).dayOfWeek().getAsText().equalsIgnoreCase("Sunday") ){
+        		ischeck=true;
+        	}else if(ischeck==false){
+        		finalDateSet.add(formatter.print( dt.plusDays( i)));
+        	}
+        	if(ischeck){
+        		finalDateSet.add(formatter.print( dt.plusDays( i+1)));
+        	}
+        }
+		return finalDateSet;
 	}
 }

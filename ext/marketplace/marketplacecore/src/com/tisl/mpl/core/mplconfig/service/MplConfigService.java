@@ -8,6 +8,7 @@ import java.util.List;
 import com.hybris.oms.tata.data.MplTimeSlotsData;
 import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
 import com.hybris.oms.tata.model.MplTimeSlotsModel;
+import com.tisl.mpl.core.model.MplLPHolidaysModel;
 
 
 
@@ -66,5 +67,11 @@ public interface MplConfigService
 	 * @param value
 	 */
 	List<String> getDeliveryTimeSlots(String configKey);
+
+	/**
+	 * @param configKey
+	 * @return
+	 */
+	public MplLPHolidaysModel getMplLPHolidays(String configKey);
 
 }

@@ -9,6 +9,7 @@ import com.hybris.oms.tata.data.MplTimeSlotsData;
 import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
 import com.hybris.oms.tata.model.MplTimeSlotsModel;
 import com.tisl.mpl.core.model.MplConfigModel;
+import com.tisl.mpl.core.model.MplLPHolidaysModel;
 
 
 /**
@@ -41,5 +42,11 @@ public interface MplConfigDao
 	 * @return
 	 */
 	public MplBUCConfigurationsModel getDeliveryCharges();
+
+	/**
+	 * @param configKey
+	 * @return
+	 */
+	public MplLPHolidaysModel getMplLPHolidays(String configKey);
 
 }
