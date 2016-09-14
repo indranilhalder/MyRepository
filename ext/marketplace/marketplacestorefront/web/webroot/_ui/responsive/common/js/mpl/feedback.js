@@ -2118,3 +2118,10 @@ $(".choose-address .acc_head").css("text-align","center");
 });*/
 
 /*checkout address modified ends*/
+
+
+/* TPR-1217 starts Click And Collect Starts */
+$(document).ready(function(){
+	$(".checkout-shipping-items.left-block.left-block-width").parents(".checkout-content.cart.checkout.wrapper").addClass("shipCartWrapper");
+});
+/* TPR-1217 starts Click And Collect Ends */

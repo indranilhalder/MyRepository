@@ -46947,7 +46947,7 @@ body:not(.page-checkout-login) .checkout-header.login{
 .progress-barcheck .step-1.active span{ left:7.2%; }
 .progress-barcheck .step-3.active span{ right:8%; left:auto; }
 .progress-barcheck .step-1.active a,.progress-barcheck .step-1.step-done a{ padding-left:15%; text-align:left;}
-.progress-barcheck .step-2.active a,.progress-barcheck .step-3.active a{ text-align:center;padding-left:8px;}
+.progress-barcheck .step-2.active a,.progress-barcheck .step-3.active a{ text-align:center;padding-left:4px;}
 .progress-barcheck .step-3.active a,.progress-barcheck .step-3.finalstep a{padding-right:16%;text-align:right;}
 
 .progress-barcheck .step-1.step-done span,.progress-barcheck .step-2.step-done span,.progress-barcheck .step-3.step-done span{ border: 1px solid #a7183e; position:absolute; display:inline-block; background:#ffffff; left:7.2%; }
@@ -46964,17 +46964,17 @@ body:not(.page-checkout-login) .checkout-header.login{
 .progress-barcheck .step-3 span {
     border: 1px solid #efefef;
     right: 8.5%;
-    width: 25px;
-    height: 25px;
-    /* top: -6px; */
+    width: 25px !important;
+    height: 25px !important;
+  top: -6px !important;
     top: 24px;
 }
 .progress-barcheck .step-3 a{
-	padding-right: 25%;
+	padding-right: 17%;
     text-align: right;
 }
 .progress-barcheck .step-1.step-done a{
-	    padding-left: 19%;
+	    padding-left: 15%;
 }
  @media only screen and (max-width:1450px){
 	.progress-barcheck div a{  font-size: 13px;}
@@ -46982,7 +46982,9 @@ body:not(.page-checkout-login) .checkout-header.login{
 @media only screen and (max-width:1024px){
 /* .progress-barcheck {  padding:20px 0 0;} */
 .progress-barcheck .step-1 span, .progress-barcheck .step-2 span, .progress-barcheck .step-3 span{top:11px;}
-.progress-barcheck .step-1.finalstep span, .progress-barcheck .step-2.finalstep span, .progress-barcheck .step-3.finalstep span{top:14px;}
+.progress-barcheck .step-1.finalstep span, .progress-barcheck .step-2.finalstep span, .progress-barcheck .step-3.finalstep span{top:14px;
+width:25px; height:25px;
+}
 }
 @media only screen and (max-width: 1250px){
 .wrapper .container-address {
@@ -47041,7 +47043,7 @@ body:not(.page-checkout-login) .checkout-header.login{
 	    right: 6%;
 }
 .progress-barcheck .step-3 a {
-	padding-right:0;
+	padding-right:3px;
 }
 }
 @media(max-width:479px){
@@ -48727,7 +48729,7 @@ body.no-scroll {
     }
 
     .progress-barcheck div a {
-        font-size: 12px;
+        font-size: 11px;
         font-weight: bold;
         line-height: 30px;
         padding-left: 20px;
@@ -48738,8 +48740,8 @@ body.no-scroll {
     }
 
     .progress-barcheck .step-1.finalstep span, .progress-barcheck .step-2.finalstep span, .progress-barcheck .step-3.finalstep span, .progress-barcheck .step-1 span, .progress-barcheck .step-2 span, .progress-barcheck .step-3 span {
-        width: 18px;
-        height: 18px;
+        width: 18px !important;
+        height: 18px !important;
     }
 
     .progress-barcheck .step-1.finish span:after, .progress-barcheck .step-2.finish span:after, .progress-barcheck .step-3.finish span:after {
@@ -49525,6 +49527,8 @@ body.no-scroll {
     margin-top: 10px;
     font-size: 10px;
     padding: 0;
+    letter-spacing: 0.5px;
+    line-height: normal;
    }
    
  
@@ -49678,11 +49682,11 @@ body.no-scroll {
   @media (max-width: 1024px){
  #deliveryAddressSubmitUp{
  margin-top: 9px;
-    margin-right: 30px;}
+    /* margin-right: 30px; */}
   }
  @media (max-width: 980px){
 #deliveryAddressSubmitUp {
-    margin-top: -57px;
+    margin-top: -56px;
     margin-right: 0px;
 }
 body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
@@ -49885,5 +49889,110 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
   
     /* defect fix end*/
   
- 
+ .addnewAddresPage + .right-block.shipping{
+ display:none;
+ }
  /* change here for modified checkout page ends */
+
+ 
+ /* TPR-1217 starts Click And Collect Starts */
+ 
+ .secure.secureTransaction{
+ 	display: none;
+ }
+  .secure.secureTransaction + .content .top{
+  	display: none;
+  }
+ 
+ ul.delivered.scrollThis{
+ 	overflow: auto;
+ }
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width + .right-block.shipping.right-block-width .checkout-order-summary{
+ 	display: none;
+ }
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width + .right-block.shipping.right-block-width{
+ 	margin-top: 74px;
+ 	position: absolute;
+    right: 0;
+ }
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width + .right-block.shipping.right-block-width #selectDeliveryMethodForm1{
+ 	margin-top: -260px;
+    position: absolute;
+    right: 20px;
+ }
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width + .right-block.shipping.right-block-width #selectDeliveryMethodForm1>#deliveryMethodSubmit1{
+ 	
+ }
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width{
+ 	width: 100% !important;
+ }
+ @media (min-width: 651px){
+ 	.cart.wrapper.shipCartWrapper{
+ 		padding: 0 0 40px;
+ 	}
+ }
+.cart.wrapper .checkout-shipping-items.left-block.left-block-width .delivery.deliveryWidth{
+ 	width: 34% !important;
+ }
+.cart.wrapper .checkout-shipping-items.left-block.left-block-width ul.headline .header2.headerWidth{
+ 	width: 39% !important;
+ }
+.cart.wrapper .checkout-shipping-items.left-block.left-block-width ul.headline .store.header5{
+ 	width: 34.5%;
+ }
+.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel-default{
+ 	height: auto !important;
+    width: 100%!important;
+    padding: 38px 0;
+    border: none !important;
+    border-top: 1px solid #e4e4e4 !important;
+    margin-bottom: 0;
+ }
+ h2.panel-defaultHeading{
+ 	font-size: 20px;
+    letter-spacing: 0;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding-bottom: 10px;
+ }
+ .retail-bag{
+ 	font-size: 12px;
+    letter-spacing: 0;
+    padding-bottom: 28px;
+ }
+ .retail-detail{
+ 	font-size: 12px;
+    letter-spacing: 0;
+    padding-bottom: 10px;
+ }
+.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]{
+ 	height: 44px;
+ }
+.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div{
+ 	float: left;
+ 	margin-right: 1%;
+ }
+.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div>input{
+ 	width: 100%;
+ }
+.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.nameFullSubPanel{
+ 	width: 32%;
+ }
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.nameBlankSubPanel{
+ 	width: 3%;
+ }
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.mobileSubPanel{
+ 	width: 20%;
+ }
+.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.submitSubPanel{
+ 	width: 18%;
+    float: right;
+    margin-right: 20%;
+    height: 44px;
+ }
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.submitSubPanel>button#savePickupPersondDetails{
+ 	height: 100% !important;
+ }
+ 
+ /* TPR-1217 starts Click And Collect Ends */
+  
