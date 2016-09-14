@@ -34701,6 +34701,7 @@ content:"";
     right: 0;
     bottom: 0;
     border-top: 1px #969696 solid;
+    z-index: 10;
 }
 .apply-clear .filter-apply, .apply-clear .filter-clear {
     float: left;
