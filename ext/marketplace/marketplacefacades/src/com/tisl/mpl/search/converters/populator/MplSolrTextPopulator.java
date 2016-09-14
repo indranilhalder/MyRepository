@@ -23,7 +23,7 @@ import org.springframework.beans.factory.annotation.Required;
 
 
 /**
- * @author 1210148
+ * @author TCS
  *
  */
 public class MplSolrTextPopulator<FACET_SEARCH_CONFIG_TYPE, INDEXED_TYPE_TYPE, INDEXED_PROPERTY_TYPE, INDEXED_TYPE_SORT_TYPE>
@@ -154,8 +154,8 @@ public class MplSolrTextPopulator<FACET_SEARCH_CONFIG_TYPE, INDEXED_TYPE_TYPE, I
 		searchQuery.addSolrParams("pf", pf);
 		// phrase slop for getting better relevance
 		searchQuery.addSolrParams("ps", "5");
-		// minimum match
-		searchQuery.addSolrParams("mm", "2");
+		// minimum match changes for TPR-1198
+		searchQuery.addSolrParams("mm", "50%");
 	}
 
 

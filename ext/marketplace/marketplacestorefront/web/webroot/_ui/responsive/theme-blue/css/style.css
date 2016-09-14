@@ -45629,3 +45629,14 @@ body.no-scroll {
 #zoomId img {
 	padding-bottom: 40px;
 }
+
+#For TPR-413
+#displayAll, #clickToMore{
+	color: #4a4a4a;
+    font-size: 11px;
+    margin: 5px 0;
+    font-weight: 400;
+    letter-spacing: -1px;
+        padding: 10px;
+        cursor:pointer;
+  }
