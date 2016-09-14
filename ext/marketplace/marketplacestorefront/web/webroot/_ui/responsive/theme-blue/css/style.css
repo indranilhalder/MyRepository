@@ -34602,6 +34602,7 @@ float:right;
     text-align: left;
     text-transform: uppercase;
     padding: 0 20px 0 35px;
+    height: 85px;
     line-height: 85px;
     background: #f5f5f5;
     margin: 0;
@@ -34752,6 +34753,16 @@ ul.jqtree-tree .jqtree-toggler:after {
 .listing-leftmenu .search button{
 display:none;
 }
+.listing.wrapper .facet-name.js-facet-name h4:not(.tree-dept){
+	line-height: 20px;
+    vertical-align: middle;
+    display: table-cell;
+    padding-right:5px;
+}
+.facet_mobile .facet-name.js-facet-name {
+    display: table;
+    width: 100%;
+}
 /*mobile filter*/
 }
 @media (max-width: 767px){
@@ -34899,6 +34910,16 @@ body.template-pages-category-productGridPage .trending h1,body.template-pages-se
 }
 .priceBucketExpand, .listing-leftmenu h4.customPriceRange, #customPriceFilter {
     padding-left: 20px;
+}
+.listing.wrapper .facet-name.js-facet-name h4:not(.tree-dept){
+	line-height: 20px;
+    vertical-align: middle;
+    display: table-cell;
+    padding-right:5px;
+}
+.facet_mobile .facet-name.js-facet-name {
+    display: table;
+    width: 100%;
 }
 }
 .category-icons.blank span{

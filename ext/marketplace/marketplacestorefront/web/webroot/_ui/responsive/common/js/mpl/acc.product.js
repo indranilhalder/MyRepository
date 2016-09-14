@@ -536,12 +536,10 @@ sendAddToBag : function(formId, isBuyNow) {
 						}
 						// End MSD
 						if (isSuccess == true) {
-							alert('Redirection is going to start--'+isSuccess);
+							
 							var cartUrl = ACC.config.encodedContextPath
 									+ "/cart";
 							location.href = cartUrl;
-						}else{
-							alert('Redirection failed--'+isSuccess);
 						}
 					},
 					complete : function() {
