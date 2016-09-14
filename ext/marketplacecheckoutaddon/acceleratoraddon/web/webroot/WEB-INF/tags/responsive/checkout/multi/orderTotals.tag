@@ -28,7 +28,7 @@
 </c:if>
 </li> --%>
 	<li class="subtotal">
-		<spring:theme code="basket.page.totals.subtotal"/> 
+		<span class="subTotalSpan"><spring:theme code="basket.page.totals.subtotal"/> </span>
 		<span class="amt">
 			<ycommerce:testId code="Order_Totals_Subtotal">
 				<format:price priceData="${cartData.subTotal}"/>
@@ -37,7 +37,7 @@
 	</li>
 	<c:if test="${not empty cartData.deliveryCost}">
 		<li class="shipping">
-			<spring:theme code="basket.page.totals.delivery"/>
+			<span class="shippingSpan"><spring:theme code="basket.page.totals.delivery"/></span>
 			<span id="deliveryCostSpanId">
 				<ycommerce:testId code="Order_Totals_Delivery">
 					<format:price priceData="${cartData.deliveryCost}" displayFreeForZero="TRUE"/>
@@ -55,7 +55,7 @@
 	<!-- Tag used for Delivery Mode and Delivery Address Page promotion display TISBOX-1618-->
 	<c:if test="${cartData.totalDiscounts.value > 0}">
 	<li id="cartPromotionApplied">
-		<spring:theme code="basket.page.totals.savings"/>
+		<span class="cartpromotionSpan"><spring:theme code="basket.page.totals.savings"/></span>
 		<span id="cartPromotion" style="float: right"> - <format:price priceData="${cartData.totalDiscounts}"/> 	</span>
 
 	</li> 
@@ -77,7 +77,7 @@
     
 	<li class="total" id="total">
 		<div id="totalPriceConvChargeId">
-			<spring:theme code="basket.page.totals.total"/> 
+			<span class="totalsSpan"><spring:theme code="basket.page.totals.total"/> </span>
 			<span id="totalWithConvField" style="float: right"><format:price priceData="${cartData.totalPrice}"/></span>
 		</div>
 	</li>
