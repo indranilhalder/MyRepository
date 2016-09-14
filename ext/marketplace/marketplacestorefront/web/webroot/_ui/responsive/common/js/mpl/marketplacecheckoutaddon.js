@@ -3231,11 +3231,11 @@ function checkPincodeServiceability(buttonType,el)
 			"display":"block",
 			});
 		 $("#cartPinCodeAvailable").hide();// TPR-1055
-		 
+		 $("#pinCodeButtonIds").text("Change Pincode");
 		// setTimeout(function(){
 		 $("#unserviceablepincode").hide();// tpr-1341
 		 $(".cartItemBlankPincode").show();
-		// $("#pinCodeButtonIds").text("Change Pincode");
+		$("#pinCodeButtonIds").text("Check Availability");
 		 $("#AvailableMessage").hide();
 		 $(".pincodeServiceError").hide();
 		 $(".delivery ul.success_msg").hide();
@@ -3282,6 +3282,8 @@ function checkPincodeServiceability(buttonType,el)
 		$("#pinCodeButtonIds").text("Check Availability");
 		 $('#defaultPinCodeIds').focus();
 		$("#pinCodeDispalyDiv .spinner").remove();
+		$("#emptyId").hide();
+		$("#error-Id").hide();
 		$("#no-click").remove();
 		$(".delivery ul.success_msg").hide();//TPR-1341
 		return false; 
@@ -3680,6 +3682,7 @@ function checkIsServicable()
 				// proceed or try an other pincode?");
  				$("#unserviceablepincode").show();// TPR-1329
  				 $(".pincodeServiceError").show();
+ 				$("#pinCodeButtonIds").text("Change Pincode");
 	 			}
 	 			else{
 	 				$(".deliveryUlClass").remove();//TPR-1341
