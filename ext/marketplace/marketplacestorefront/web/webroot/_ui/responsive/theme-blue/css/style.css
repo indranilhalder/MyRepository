@@ -49870,6 +49870,20 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
   .smk_accordion{
   padding: 90px 0 0;}}
   /*outstanding amount end*/
+  /* defect fix start*/
+  .address-list .address .default-selected + span.default{
+  display:none;}
+.checkout.wrapper .formaddress .product-block.addresses.new-form li.item input{
+    color: #000 !important;
+  }
+  .checkout.wrapper .formaddress select[name="state"] {
+    text-transform: uppercase;
+}
+.checkout.wrapper .editnewAddresPage .formaddress select[name="state"] {
+   color:#000 !important;
+}
+  
+    /* defect fix end*/
   
  
  /* change here for modified checkout page ends */

@@ -183,10 +183,21 @@
         <input type="hidden" name="myselect" value="myselectedvalue" /> 
 	 	<form:input type="text" idKey="address.mobile" id="mobileNonewForm"
 			 path="MobileNo" inputCSS="form-control"
-			mandatory="true" maxLength="10" placeholder="Mobile Number*"/> 
+			mandatory="true" maxLength="10" placeholder="Phone Number*"/> 
 			<div class="help-block has-error" id="mobileError" style="display: none;">		
 			</div>	 
 		</div>	
+		
+		<div class='full'>
+		<formElement:formInputBox idKey="address.postcode"
+			path="postcode"
+			mandatory="true" maxLength="6" placeholder="Post code*" />
+		<div class="help-block has-error" id="addressPincodeServicableDiv"
+			style="display: none;"></div>
+			<div class="help-block has-error" id="pincodeError" style="display: none;">
+			</div>
+			</div>
+		
 		</div>
 			<div class='full'>
 			<!-- TISUAT-4696  /TPR-215-->
@@ -251,15 +262,15 @@
 				
 		<%-- <formElement:formInputBox idKey="address.states" labelKey="address.states" path="state" inputCSS="form-control" mandatory="true"/> --%>
 		<!-- <div class='half'> -->
-		<div class='full'>
+		<%-- <div class='full'>
 		<formElement:formInputBox idKey="address.postcode"
 			path="postcode"
-			mandatory="true" maxLength="6" placeholder="Pincode*" />
+			mandatory="true" maxLength="6" placeholder="Post code*" />
 		<div class="help-block has-error" id="addressPincodeServicableDiv"
 			style="display: none;"></div>
 			<div class="help-block has-error" id="pincodeError" style="display: none;">
 			</div>
-			</div>
+			</div> --%>
 				
          <%-- <!-- <div class='half'> -->
          <div class='full'>

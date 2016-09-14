@@ -2673,6 +2673,7 @@ function applyPromotion(bankName)
 				$("#promotionMessage").empty();
 				var total=response.totalPrice.formattedValue;
 				document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
+				document.getElementById("totalWithConvFieldPayment").innerHTML=response.totalPrice.formattedValue;
 				$("#cartPromotionApplied").css("display","none");
 				$("#codAmount").text(response.totalPrice.formattedValue);
 
@@ -4346,6 +4347,8 @@ $(".regular-radio").click(function(){
  			if(response == 'true'){
  				//console.log(radio);
  				$(".address-list input[type='radio']+label").removeClass("radio-checked");
+ 				$(".address-list .address .default-selected input").removeAttr("checked","checked");
+ 				
  				radio.attr('checked', 'checked');
  				console.log(radio_label);
  				radio_label.addClass('radio-checked');
@@ -4371,6 +4374,7 @@ $(document).ready(function(){
 	if ($("#checkoutPageName").val() == "Select Address"){
 		$(" body.page-multiStepCheckoutSummaryPage .right-block.shipping .subtotals.top.block").css("display","none");
 	}
+	$(".address-list .address .default-selected input").attr("checked","checked");
 	/*var pathname = window.location.pathname;
 	if(pathname =='/checkout/multi/delivery-method/select'){
 		$('.outstanding-amt').show();
