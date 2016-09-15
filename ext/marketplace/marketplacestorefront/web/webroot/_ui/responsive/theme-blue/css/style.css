@@ -34576,9 +34576,9 @@ display: none;
     right: 0;
     top: 44px;
     background: #fff;
-    width: calc(100% - 240px);
-    height: calc(100% - 44px);
-    max-height: calc(100% - 44px);
+    width: calc(100% - 237px);
+    height: calc(100% - 86px);
+    max-height: calc(100% - 86px);
     padding: 10px 0;
     overflow: auto;
 }
@@ -34891,7 +34891,8 @@ body.template-pages-category-productGridPage .trending h1,body.template-pages-se
 	color: #a91f3d;
 }
 .listing.wrapper .left-block .product-facet.js-product-facet.listing-leftmenu{
-	height:90%;
+	height:calc(100% - 86px);
+	height: -webkit-calc(100% - 86px);
 }
 .category-icons span{
 	width: 15px;
