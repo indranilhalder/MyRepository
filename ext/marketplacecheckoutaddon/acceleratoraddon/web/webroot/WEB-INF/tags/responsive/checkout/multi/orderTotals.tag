@@ -35,6 +35,15 @@
 			</ycommerce:testId>
 		</span>
 	</li>
+	
+	<c:if test="${cartData.totalDiscounts.value > 0}">
+	<li id="cartPromotionApplied">
+		<span class="cartpromotionSpan"><spring:theme code="basket.page.totals.savings"/></span>
+		<span id="cartPromotion" style="float: right">  <format:price priceData="${cartData.totalDiscounts}"/> 	</span>
+
+	</li> 
+    </c:if>
+	
 	<c:if test="${not empty cartData.deliveryCost}">
 		<li class="shipping">
 			<span class="shippingSpan"><spring:theme code="basket.page.totals.delivery"/></span>
@@ -53,13 +62,13 @@
 	</li>
     <%-- Commented due to making confusion in the Payment page calculation --%>
 	<!-- Tag used for Delivery Mode and Delivery Address Page promotion display TISBOX-1618-->
-	<c:if test="${cartData.totalDiscounts.value > 0}">
+	<%-- <c:if test="${cartData.totalDiscounts.value > 0}">
 	<li id="cartPromotionApplied">
 		<span class="cartpromotionSpan"><spring:theme code="basket.page.totals.savings"/></span>
 		<span id="cartPromotion" style="float: right"> - <format:price priceData="${cartData.totalDiscounts}"/> 	</span>
 
 	</li> 
-    </c:if> 
+    </c:if> --%> 
 	<!-- Tag used for Payment Page promotion display-->
 	<li id="promotionApplied" >
 		<spring:theme code="basket.page.totals.savings"/>
