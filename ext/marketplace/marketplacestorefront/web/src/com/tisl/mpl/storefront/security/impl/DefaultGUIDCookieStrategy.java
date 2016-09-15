@@ -17,13 +17,19 @@ import de.hybris.platform.acceleratorstorefrontcommons.security.GUIDCookieStrate
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.user.UserService;
 
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Arrays;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -145,7 +151,7 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 		final String guid = createGUID();
 
 		getCookieGenerator().addCookie(response, guid);
-		//POC Add the Keep Alive Cookie on login
+		//Add the Keep Alive Cookie on login
 		getKeepAliveCookieGenerator().addCookie(response, createGUID());
 
 		//Set the luxury site cookies
@@ -155,7 +161,8 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 			if (StringUtils.isNotEmpty(customer.getOriginalUid()))
 			{
 				LOG.info("Adding cookie for luxury cookie");
-				getLuxuryEmailCookieGenerator().addCookie(response, customer.getOriginalUid());
+				//Encrypt the customer email id and store it in luxury cookie
+				getLuxuryEmailCookieGenerator().addCookie(response, encrypt(customer.getOriginalUid()));
 			}
 		}
 		//To be added
@@ -166,6 +173,80 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 		{
 			LOG.info("Setting guid cookie and session attribute: " + guid);
 		}
+	}
+
+	/**
+	 * @param originalUid
+	 * @return
+	 */
+	private String encrypt(final String originalUid)
+	{
+		final String encryptionKey = "encryptor key";
+		final String encryptedText = encryptAES(originalUid.trim(), encryptionKey);
+
+		LOG.debug("String to Encrypt: " + originalUid);
+		LOG.debug("Encrypted: " + encryptedText);
+		return encryptedText;
+	}
+
+	/**
+	 * @param trim
+	 */
+	private String encryptAES(final String encryptionText, final String key)
+	{
+		String encryptedText = null;
+		try
+		{
+
+			final Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+
+			cipher.init(Cipher.ENCRYPT_MODE, getSecretKey(key));
+
+
+			encryptedText = Base64.encodeBase64String(cipher.doFinal(encryptionText.getBytes("UTF-8")));
+
+		}
+		catch (final Exception e)
+		{
+
+			LOG.error("Error while encrypting: " + e.toString());
+		}
+		return encryptedText;
+
+
+	}
+
+	/**
+	 * @param key
+	 * @return
+	 */
+	private SecretKeySpec getSecretKey(final String encryptionKey)
+	{
+		MessageDigest sha = null;
+		byte[] key = null;
+		try
+		{
+			key = encryptionKey.getBytes("UTF-8");
+			sha = MessageDigest.getInstance("SHA-1");
+			key = sha.digest(key);
+			key = Arrays.copyOf(key, 16); // use only first 128 bit
+			LOG.debug("Key Length" + key.length);
+			LOG.debug(new String(key, "UTF-8"));
+
+
+
+		}
+		catch (final NoSuchAlgorithmException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (final UnsupportedEncodingException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new SecretKeySpec(key, "AES");
 	}
 
 	@Override
@@ -180,9 +261,33 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 		getCookieGenerator().removeCookie(response);
 		//Delete the Keep alive cookie
 		getKeepAliveCookieGenerator().removeCookie(response);
-		getLuxuryUserCookieGenerator().removeCookie(response);
-		getLuxuryEmailCookieGenerator().removeCookie(response);
+		//Update the luxury cookies to anonymous
+		updateLuxuryCookies(request, response, getLuxuryUserCookieGenerator().getCookieName());
+		updateLuxuryCookies(request, response, getLuxuryEmailCookieGenerator().getCookieName());
 		//}
+	}
+
+	/**
+	 * @param request
+	 * @param response
+	 */
+	private void updateLuxuryCookies(final HttpServletRequest request, final HttpServletResponse response, final String cookieName)
+	{
+		final Cookie[] cookies = request.getCookies();
+
+		if (cookies != null)
+		{
+			for (final Cookie cookie : cookies)
+			{
+				if (cookie.getName().equals(cookieName))
+				{
+					cookie.setValue("anonymous");
+					response.addCookie(cookie);
+					break;
+				}
+			}
+		}
+
 	}
 
 	protected String createGUID()
