@@ -749,6 +749,8 @@
 			dynamic="true">
 			<value code="yes" />
 			<value code="no" />
+			<value code="true" />
+			<value code="false" />
 		</enumtype>
 
 
