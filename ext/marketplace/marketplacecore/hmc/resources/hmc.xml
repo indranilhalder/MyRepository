@@ -2181,6 +2181,7 @@
 						position="0">
 						<listlayout>
 							<attribute name="sellerMasterList"></attribute>
+							<attribute name="exSellerBulkList"></attribute>
 						</listlayout>
 					</section>
 				</tab>
