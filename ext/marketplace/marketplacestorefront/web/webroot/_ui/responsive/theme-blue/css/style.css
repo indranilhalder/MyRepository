@@ -49856,7 +49856,7 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
     margin-top: 14px;
     width: 175px;
     text-transform: Uppercase;
-    padding: 16px 24px;
+    padding: 16px 23px;
     font-weight: bold;
     letter-spacing: 0.5px;
         line-height: inherit;
@@ -50118,6 +50118,12 @@ ul.delivery-checkout input[type=radio]:checked ~ label, input[type=radio]:checke
     /* border-bottom: 1px solid #eaeaeb; */
     padding: 25px 30px;
 }
+.checkout.wrapper .product-block li.header > ul li.delivery li label:after, .checkout.wrapper .product-block li.item > ul li.delivery li label:after{
+	content: "";
+    background: url("../images/sprite.svg") no-repeat -294px -150px;
+    width: 22px;
+    height: 22px;
+    zoom: 0.8;
 }
 
 @media only screen and (max-width:1450px){
@@ -50601,7 +50607,7 @@ input[type="radio"] + label:before, input[type="checkbox"] + label:before{
     margin-top: 14px;
     width: 175px;
     text-transform: Uppercase;
-    padding: 16px 24px;
+    padding: 16px 23px;
     font-weight: bold;
     letter-spacing: 0.5px;
         line-height: inherit;
