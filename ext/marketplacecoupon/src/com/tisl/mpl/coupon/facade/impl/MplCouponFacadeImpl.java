@@ -53,6 +53,7 @@ import com.tisl.mpl.data.VoucherDisplayData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
+import com.tisl.mpl.model.UnregisteredUserRestrictionModel;
 
 
 /**
@@ -499,7 +500,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				error = MarketplacecommerceservicesConstants.DATE;
 				break;
 			}
-			else if (restriction instanceof UserRestrictionModel)
+			//Unregisterd Users Restriction [TPR-1076]
+			else if (restriction instanceof UserRestrictionModel || restriction instanceof UnregisteredUserRestrictionModel)
 			{
 				LOG.error(MarketplacecommerceservicesConstants.USERRESTVIOLATION);
 				error = MarketplacecommerceservicesConstants.USER;
