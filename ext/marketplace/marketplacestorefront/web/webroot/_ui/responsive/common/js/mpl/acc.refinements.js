@@ -526,7 +526,7 @@ $(document).off('click', '.js-facet-sizebutton').on('click', '.js-facet-sizebutt
 });
 
 $(document).off('change', '.facet_mobile .facet.js-facet').on('change', '.facet_mobile .facet.js-facet', function() { 
-	$(".facet_mobile .facet.js-facet").each(function(){
+	$(".facet_mobile .facet.js-facet").not(".Colour,.Size").each(function(){
 		var spanCount=$(this).find(".facet-list li").find("input[type=checkbox]:checked").length;
 		if(spanCount>0)
 		{
