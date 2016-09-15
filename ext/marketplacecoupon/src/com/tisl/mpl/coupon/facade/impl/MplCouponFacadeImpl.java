@@ -27,6 +27,7 @@ import de.hybris.platform.util.DiscountValue;
 import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.VoucherService;
 import de.hybris.platform.voucher.model.DateRestrictionModel;
+import de.hybris.platform.voucher.model.NewCustomerRestrictionModel;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.voucher.model.RestrictionModel;
 import de.hybris.platform.voucher.model.UserRestrictionModel;
@@ -328,6 +329,12 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 					{
 						throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINVALIDUSER + voucherCode);
 					}
+					/* TPR-1075 Changes Start */
+					else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.NEWCUSTOMER))
+					{
+						throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINVALIDNEWCUST + voucherCode);
+					}
+					/* TPR-1075 Changes End */
 					else
 					{
 						throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINAPPLICABLE + voucherCode);
@@ -507,6 +514,14 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				error = MarketplacecommerceservicesConstants.USER;
 				break;
 			}
+			/* TPR-1075 Changes Start */
+			else if (restriction instanceof NewCustomerRestrictionModel)
+			{
+				LOG.error(MarketplacecommerceservicesConstants.NEWUSERRESTVIOLATION);
+				error = MarketplacecommerceservicesConstants.NEWCUSTOMER;
+				break;
+			}
+			/* TPR-1075 Changes End */
 			else
 			{
 				continue;
