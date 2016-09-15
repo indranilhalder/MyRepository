@@ -45,6 +45,12 @@
 					//}
 					$(document).ready(function() {
 						selectDefaultDeliveryMethod();
+						
+						/* $('#deliveryMethodSubmit').click(function(e) {
+							alert(5);
+							e.preventDefault();
+							//$('#selectDeliveryMethodForm').submit();
+						}); */
 					});
 					var timeoutID;
 					function setup() {
@@ -1428,7 +1434,6 @@
 				showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" />
 		</div>
 	</div>
-	
 <%-- <div class="outstanding-amt" style="display:none;">	
 <ul class="totals outstanding-totalss">
           <li id="totals" class="outstanding-amounts"><spring:theme code="basket.page.totals.outstanding.amount"/><span class="amt"><ycommerce:testId code="cart_totalPrice_label">

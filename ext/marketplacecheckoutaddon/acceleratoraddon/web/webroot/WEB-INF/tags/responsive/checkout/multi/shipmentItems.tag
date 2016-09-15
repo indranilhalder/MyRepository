@@ -39,7 +39,7 @@
 				<li class="header">
 					<ul class="headline mybag-item-head">
 					
-						<li id="header2" class="Product"><spring:theme code="text.product.delivery.information"/></li>
+						<li id="header2" class="Product"><spring:theme code="text.product.delivery.product"/></li>
 						<li id="header2" class="Price"><spring:theme code="text.product.delivery.price"/></li>
 						<li id="header2" class="qty"><spring:theme code="text.product.delivery.quantity"/></li>
 						<li class="delivery dev" id="header4"><spring:theme code="text.product.delivery.deliveryoption"/></li>
@@ -249,7 +249,7 @@
 								    <li class="quantity">
 								      <div>
 								     <ycommerce:testId code="cart_product_colour">
-												<div class="colour"><spring:theme code="text.qty"/>${entry.quantity}</div>
+												<div class="colour"><%-- <spring:theme code="text.qty"/> --%>${entry.quantity}</div>
 									</ycommerce:testId>
 								     </div>
 								     
