@@ -1486,6 +1486,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String USER = "User".intern();
 	public static final String DATE = "Date".intern();
+	//TPR-1075
+	public static final String NEWCUSTOMER = "NewCustomer".intern();
+	public static final String NEWUSERRESTVIOLATION = "Voucher for New Customer is violated".intern();
+	public static final String VOUCHERINVALIDNEWCUST = "Voucher for New Customer : ".intern();
 	public static final String VOUCHERNOTFOUND = "Voucher not found: ".intern();
 	public static final String VOUCHERNOTREDEEMABLE = "Voucher cannot be redeemed: ".intern();
 	public static final String VOUCHERINVALIDUSER = "User not valid for : ".intern();

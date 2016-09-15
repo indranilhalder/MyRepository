@@ -61,7 +61,8 @@ public final class MarketplacecouponConstants extends GeneratedMarketplacecoupon
 	public static final String USERINVALID = "User_Invalid".intern();
 	public static final String FREEBIE = "Freebie".intern();
 	public static final String RELEASEISSUE = "Release Issue".intern();
-
+	//TPR-1075
+	public static final String FIRSTPURUSERINVALID = "First_Purchase_User_Invalid".intern();
 	//Coupon Exception Message
 	public static final String EXCPRICEEXCEEDED = "total price exceeded".intern();
 	public static final String EXCINVALID = "Voucher not found".intern();
@@ -75,7 +76,8 @@ public final class MarketplacecouponConstants extends GeneratedMarketplacecoupon
 	public static final String COUPONRELISSUE = "Issue with voucher release ".intern();
 	public static final String CUSTOMERPK = "customerPk";
 	public static final String BYDATE = "byDate";
-
+	//TPR-1075
+	public static final String EXCFIRSTPURUSERINVALID = "Voucher for New Customer".intern();
 	//Delimiter used in CSV file
 	public static final String COMMA_DELIMITER = ",";
 	public static final String COLON_DELIMITER = ":";
