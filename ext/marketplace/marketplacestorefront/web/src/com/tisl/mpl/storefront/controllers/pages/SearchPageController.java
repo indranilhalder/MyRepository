@@ -682,7 +682,8 @@ public class SearchPageController extends AbstractSearchPageController
 
 		model.addAttribute("page_name", "Search Results Page:" + breadcrumbName);
 		//TPR-430
-		if (null != searchPageData.getDepartmentHierarchyData()
+		if (null != searchPageData && null != searchPageData.getDepartmentHierarchyData()
+				&& null != searchPageData.getDepartmentHierarchyData().getHierarchyList()
 				&& searchPageData.getDepartmentHierarchyData().getHierarchyList().size() > 0)
 		{
 			String product_category = null;
