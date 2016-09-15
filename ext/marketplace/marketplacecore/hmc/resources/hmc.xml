@@ -3294,6 +3294,44 @@
 	   </organizer>
 	</type>
 	
+	<!-- changes start for unregistered users  restriction  [ TPR-1076]-->
+	
+	<type name="UnregisteredUserRestriction" mode="append">
+	   <organizer>
+		   <result>
+	         <listview>
+	            <itemlayout>
+	               <attribute name="emailList" width="200"/>
+	            </itemlayout>
+	         </listview>
+	         <editview>
+	            <itemlayout>
+	               <attribute name="emailList" width="200"/>
+	            </itemlayout>
+	         </editview>
+	         <treeview>
+	            <itemlayout>
+	               <attribute name="emailList" width="200"/>
+	            </itemlayout>
+	         </treeview>
+	      </result>
+		  <editor>
+	 	  	<tab name="properties">
+	  			<section name="section.restrictions" mode="replace" position="0">
+	               <listlayout>
+	               	<attribute name="emailList"  width="500">
+	               </attribute>
+	                <attribute name="positive" width="500">
+	                     <advancedbooleaneditor truename="unreguserrestriction.positive.true"
+	                                            falsename="unreguserrestriction.positive.false"/>
+	                  </attribute>
+	               </listlayout>
+	               </section>
+	               </tab>
+	 </editor>
+	</organizer>
+	</type>
+	<!--  changes end for  unregistered user restriction  [ TPR-1076]-->
 	
 	<type name="ProductCategoryRestriction" mode="append">
 	   <organizer>
