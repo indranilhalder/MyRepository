@@ -1382,7 +1382,8 @@
 						</columnlayout>
 					</section>
 				</tab>
-				<tab name="tab.promotion.messages" mode="append">
+				<!-- Unwanted code commented TPR-969 -->
+				<!-- <tab name="tab.promotion.messages" mode="append">
 					<section name="section.promotion.messages" mode="append">
 						<columnlayout leftwidth="500">
 							<row>
@@ -1411,7 +1412,7 @@
 							</row>
 						</columnlayout>
 					</section>
-				</tab>
+				</tab> -->
 			</editor>
 		</organizer>
 	</type>
@@ -1626,12 +1627,13 @@
 									<textareaeditor expanded="true" rows="5" />
 								</attribute>
 								<text
-									name="text.orderthresholddiscountpromotion.messagecouldhavefiredargs" />
+									name="text.orderthresholddiscountpromotion.messagecouldhavefiredargsspecific" />	<!-- TPR-969 -->
 							</row>
 						</columnlayout>
 					</section>
 				</tab>
-				<tab name="tab.promotion.messages" mode="append">
+				<!-- Unwanted code commented TPR-969 -->
+				<!-- <tab name="tab.promotion.messages" mode="append">
 					<section name="section.promotion.messages" mode="append">
 						<columnlayout leftwidth="500">
 							<row>
@@ -1660,7 +1662,7 @@
 							</row>
 						</columnlayout>
 					</section>
-				</tab>
+				</tab> -->
 			</editor>
 		</organizer>
 	</type>
@@ -1752,7 +1754,8 @@
 						</columnlayout>
 					</section>
 				</tab>
-				<tab name="tab.promotion.messages" mode="append">
+				<!-- Unwanted code commented TPR-969 -->
+				<!-- <tab name="tab.promotion.messages" mode="append">
 					<section name="section.promotion.messages" mode="append">
 						<columnlayout leftwidth="500">
 							<row>
@@ -1781,7 +1784,7 @@
 							</row>
 						</columnlayout>
 					</section>
-				</tab>
+				</tab> -->
 			</editor>
 		</organizer>
 	</type>
@@ -3375,6 +3378,40 @@
 	   </organizer>
 	</type>
  <!-- Voucher HMC Modification ends -->
+ 
+ <!-- TPR-969 Entry Count Promotion Restriction -->
+ 	<type name="EntryCountPromotionRestriction" mode="append">
+	   <organizer>
+	      <result>
+	         <listview>
+	            <itemlayout>
+	               <attribute name="entryQualifyingCount" width="200"/>
+	            </itemlayout>
+	         </listview>
+	         <editview>
+	            <itemlayout>
+	               <attribute name="entryQualifyingCount" width="200"/>
+	            </itemlayout>
+	         </editview>
+	         <treeview>
+	            <itemlayout>
+	               <attribute name="entryQualifyingCount" width="200"/>
+	            </itemlayout>
+	         </treeview>
+	      </result>
+	      <editor>
+	         <tab name="tab.restriction.properties" mode="append">
+	            <section name="section.restrictions.countvalue" mode="append" position="0">
+	               <listlayout>
+	                  <attribute name="entryQualifyingCount"/>
+	                  <text name="text.entryqualifyingcount.desc" />
+	               </listlayout>
+	            </section>
+	         </tab>
+	      </editor>
+	   </organizer>
+	</type>
+ <!-- TPR-969 Ends -->
  
  
   <!-- For OMS Fallback Mechanism -->

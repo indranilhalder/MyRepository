@@ -2404,6 +2404,22 @@
 					</attribute>					
 				</attributes>
 			</itemtype>	
+			
+		<!-- TPR-969 -->
+		<itemtype code="EntryCountPromotionRestriction"
+			extends="AbstractPromotionRestriction" jaloclass="com.tisl.mpl.jalo.EntryCountPromotionRestriction"
+			autocreate="true" generate="true">
+			<attributes>
+				<attribute qualifier="entryQualifyingCount" autocreate="true"
+					type="java.lang.Double">
+					<description>The count of entries needed to apply the promotion.</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						initial="false" optional="true" partof="true" />
+				</attribute>
+			</attributes>
+		</itemtype>
+		<!-- TPR-629 ends -->
 	</itemtypes>
 	
 </items>
