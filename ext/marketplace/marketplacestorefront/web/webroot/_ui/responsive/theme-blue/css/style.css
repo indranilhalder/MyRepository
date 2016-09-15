@@ -34634,6 +34634,10 @@ content:"";
     top: 11px;
     width: 17px;
 }
+.listing.wrapper .facet-name.js-facet-name h4 .category-icons.blank {
+    height: 0;
+    width: 0;
+}
 /* .listing.wrapper .facet-name.js-facet-name h4 .category-icons:after{
     content: "";
     position: absolute;
@@ -34726,6 +34730,7 @@ content:"";
 }
 .product-facet .facet .facet-list div.facet-text{
 	margin-left:0;
+	padding-right: 25px;
 }
 .priceBucketExpand, .listing-leftmenu h4.customPriceRange, #customPriceFilter{
 padding-left:38px;
