@@ -42,19 +42,6 @@ tr.d0 td {
 		window.open(ACC.config.encodedContextPath + "/login", "_self");
 	}
 	
-	$('#buyNowQv .js-add-to-cart-qv').click(function(event){
-		
-		 if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'){
-			 $("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
-			 				$("#addToCartFormQuickTitle").show();
-			  				$("#addToCartFormQuickTitle").fadeOut(5000);
-	 	    return false;
-	 }else{			 
-		ACC.product.sendToCartPageQuick("addToCartFormQuick",true);
-	}
-	});
-	
-	
 
 	var wishListList = [];
 
