@@ -50580,9 +50580,16 @@ padding:0px;}
  .checkout-content.cart.checkout.wrapper.shipCartWrapper{
  		padding: 0 0 34px;
  	}
+ 	.checkout-content.cart.checkout.wrapper.shipCartWrapper .scrollThis{
+ 	height:auto;
+ 	}
+ 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .delivery.deliveryWidth .delivered li{
+ 	width:50%;
+ 	float:left;
+ 	    margin-top: 0px;}
  	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .delivery.deliveryWidth{
  		width: 100% !important;
-    	height: 160px;
+    	height: 130px;
     	overflow: auto;
     	padding: 15px 3.5% 0 !important;
  	}
@@ -50728,7 +50735,7 @@ padding:0px;}
     	/* padding:0 24px; */
  	}
  	.cart.wrapper .checkout-shipping-items.left-block.left-block-width{
- 		margin-top: 32px;
+ 		margin-top: 40px;
  		padding: 0 24px;
  	}
  	h2.panel-defaultHeading{
@@ -50777,6 +50784,13 @@ padding:0px;}
  		padding-bottom: 0;
  	}
  }
-
+@media (max-width:400px){
+	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .delivery.deliveryWidth .delivered li{
+ 	width:100%;}
+}
+@media (max-width: 1280px) and (min-width:768px){
+.cart.wrapper .checkout-shipping-items.left-block.left-block-width {
+    padding: 0px 24px 0;
+}}
  /* TPR-1217 starts Click And Collect Ends */
   
