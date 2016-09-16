@@ -4329,6 +4329,84 @@ function calculateDeliveryCost(radioId,deliveryCode)
 	 	});	 
 }
 
+//TPR-1214
+$(".pincode-button").click(function(){
+	
+	$.ajax({
+ 		url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/new-address",
+ 		type: "GET",
+ 		cache: false,
+ 		dataType: "html",
+ 		success : function(response) {
+ 			$(".addnewAddresPage").html(response);
+ 		},
+ 		error : function(resp) {
+ 		}
+ 		
+ 		});
+});
+//TPR-1213
+$(document).ready(function(){
+	
+
+$(".edit_address").click(function(){
+	//var address_id = $(this).parents().find(".edit").next(".editnewAddresPage").attr("id");
+	var address_id = $(this).attr('id');
+	console.log(address_id);
+	var address_id_new = address_id.split('_');
+	console.log(address_id_new[1]);
+	//$(this).parents().find(".address, label").toggle();
+	$.ajax({
+ 		url: ACC.config.encodedContextPath + $(this).attr("href"),
+ 		type: "GET",
+ 		cache: false,
+ 		dataType: "html",
+ 		success : function(response) {
+ 		//	$(this).parents().find(".edit").next(".editnewAddresPage#"+address_id).html(response);
+ 			$("#"+address_id_new[1]).html(response);
+ 		//	$(this).parents().find(".edit").next(".editnewAddresPage").show();
+ 			//$(".editnewAddresPage .checkout-shipping.formaddress").prepend("<input type='button' value='cancel' class='cancelBtnEdit'>");
+ 			$("#"+address_id_new[1] + " .checkout-shipping.formaddress").prepend("<div class='heading-form'><h3>Edit Address</h3><input type='button' value='cancel' class='cancelBtnEdit' id='cancel-"+address_id_new[1]+"'></div>");
+ 			$("#"+address_id_new[1]).slideDown();
+ 		},
+ 		error : function(resp) {
+ 		}
+ 		
+ 		});
+	return false;
+});
+});
+//TPR-1215
+$(".regular-radio").click(function(){
+	var radio = $(this);
+	var radio_label = $(this).parent().find('label');
+	$.ajax({
+ 		url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/set-default-address/"+ $(this).attr("data-address-id"),
+ 		type: "GET",
+ 		cache: false,
+ 		dataType: "text",
+ 		success : function(response) {
+ 			if(response == 'true'){
+ 				//console.log(radio);
+ 				$(".address-list input[type='radio']+label").removeClass("radio-checked");
+ 				
+ 				radio.attr('checked', 'checked');
+ 				console.log(radio_label);
+ 				radio_label.addClass('radio-checked');
+ 				//radio_label.css('background-color',' #999999');
+ 			}else{
+ 				alert("Unable to set default address");
+ 			}
+ 		},
+ 		error : function(response) {
+ 			alert('Inside eror'+response);
+ 		}
+ 		
+ 		});
+	return false;
+});
+
+
 function selectDefaultDeliveryMethod() {
 	 $('#deliveryradioul .delivery ul').each(function(){
 		 var length = $(this).find("li").length; 
