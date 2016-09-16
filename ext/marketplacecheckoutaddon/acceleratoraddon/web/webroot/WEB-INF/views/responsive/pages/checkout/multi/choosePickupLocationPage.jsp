@@ -1132,7 +1132,7 @@
 		</div>
 		</div>
 		
-		<div class="right-block shipping right-block-width" style="margin-top: 74px;">
+		<div class="right-block shipping right-block-width">
 				<c:choose>
 					<c:when test="${expCheckout gt 0}">
 						<a class="continue_btn" href="${request.contextPath}/checkout/multi/delivery-method/invReservation" type="button">	
