@@ -48843,21 +48843,7 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
         font-size:10px !important;
   }
   @media (max-width: 767px){
-.totals.outstanding-totalss{
-	position:fixed;
-    font-size: 12px;
-    border-bottom: 1px solid #eaeaeb;
-    padding: 15px 25px;
-    width: 100%;
-    display: inline-block;
-    background: #fff none repeat scroll 0 0;
-    border-top: 1px solid #eaeaeb;
-    bottom: 40px;
-    left: 0;
-    position: fixed;
-    z-index: 99;
-        text-transform: none;
-}
+
 .cart.wrapper .button#deliveryMethodSubmit{
   display:none;
   }
@@ -50799,4 +50785,20 @@ padding:0px;}
  .checkout.wrapper .formaddress select[name="state"] option {
     color: #a5a5a5;
 } 
-  
+ @media (max-width: 767px){
+ .totals.outstanding-totalss{
+	position:fixed;
+    font-size: 12px;
+    border-bottom: 1px solid #eaeaeb;
+    padding: 15px 25px !important;
+    width: 100% !important;
+    display: inline-block;
+    background: #fff none repeat scroll 0 0;
+    border-top: 1px solid #eaeaeb;
+    bottom: 40px;
+    left: 0;
+    position: fixed;
+    z-index: 99;
+        text-transform: none;
+}
+ } 
