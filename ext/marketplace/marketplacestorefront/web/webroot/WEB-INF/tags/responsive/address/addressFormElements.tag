@@ -191,7 +191,7 @@
 		<div class='full'>
 		<formElement:formInputBox idKey="address.postcode"
 			path="postcode"
-			mandatory="true" maxLength="6" placeholder="Post code*" />
+			mandatory="true" maxLength="6" placeholder="Pincode*" />
 		<div class="help-block has-error" id="addressPincodeServicableDiv"
 			style="display: none;"></div>
 			<div class="help-block has-error" id="pincodeError" style="display: none;">
@@ -234,7 +234,7 @@
 			</div>
 			<!-- <div class="half address-select"> -->
 			<div class="full address-select">
-		<formElement:formSelectBox idKey="address.states"
+		<formElement:formSelectBox idKey="address.states" 
 			 path="state" mandatory="true"
 			skipBlank="false" skipBlankMessageKey="address.state.pleaseSelectState"
 			items="${stateDataList}" selectedValue="${addressForm.state}"

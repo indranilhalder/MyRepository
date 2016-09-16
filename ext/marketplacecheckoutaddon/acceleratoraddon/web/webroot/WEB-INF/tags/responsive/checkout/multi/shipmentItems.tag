@@ -249,7 +249,7 @@
 								    <li class="quantity">
 								      <div>
 								     <ycommerce:testId code="cart_product_colour">
-												<div class="colour"><%-- <spring:theme code="text.qty"/> --%>${entry.quantity}</div>
+												<div class="colour"> <spring:theme code="text.qty"/>${entry.quantity}</div>
 									</ycommerce:testId>
 								     </div>
 								     

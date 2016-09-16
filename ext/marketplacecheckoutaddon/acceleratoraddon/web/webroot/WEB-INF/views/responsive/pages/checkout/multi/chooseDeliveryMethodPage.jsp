@@ -428,7 +428,7 @@
           </c:when>
           <c:otherwise>
            <span class="name residential"
-																			for="radio_${deliveryAddress.id}">
+																			for="radio_${deliveryAddress.id}" ${countHome}>
            <spring:theme
 																				code="checkout.multi.deliveryAddress.residentialAddress"
 																				text="Residential Addresses" />
@@ -439,6 +439,7 @@
 																					text="Default Addresses" /> <br />
            </c:if>
            </span>
+           <c:set var='countHome'  value='${countHome+1}' />
           </c:otherwise>
           
           </c:choose>
@@ -922,6 +923,7 @@
 																					text="Default Addresses" /> <br />
            </c:if>
            </span>
+           <c:set var='countHome'  value='${countHome+1}' />
           </c:otherwise>
           
           </c:choose>
