@@ -22,7 +22,8 @@
      <!--  <div class="step-1 finish"><a href="checkout-delivery.html">Sign In <i class="fa fa-caret-right fa-caret"></i></a><span></span></div>
       <div class="step-2 inprogress active"><a href="checkout-combination.html">Delivery&nbsp;<i class="fa fa-caret-right fa-caret"></i></a><span></span></div>
       <div class="step-3 finalstep "><a href="checkout-payment.html">Payment&nbsp;<i class="fa fa-caret-right fa-caret"></i></a><span></span></div> -->
-
+               <c:set var="progressBarClass" value="${progressBarClass}" />
+               <c:set var="paymentPage" value="${paymentPage}" />
 		
 				<div class="progress-barg">
 				<c:forEach items="${checkoutSteps}" var="checkoutStep"
