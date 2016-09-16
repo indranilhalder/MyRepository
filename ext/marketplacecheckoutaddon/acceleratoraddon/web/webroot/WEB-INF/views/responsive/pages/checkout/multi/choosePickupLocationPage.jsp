@@ -450,7 +450,7 @@
 									</span>	
 								</c:if>
 								</li>
-								<li class="delivery header4 deliveryWidth"><button style="font-size: 14px !important;" class="changeDeliveryMethod"><spring:theme code="checkout.multi.cnc.store.change.delivery.mode"/></button></li>
+								<li class="delivery header4 deliveryWidth"><button class="changeDeliveryMethod"><spring:theme code="checkout.multi.cnc.store.change.delivery.mode"/></button></li>
 								
 								<%-- <li class="delivery header4"><a class="cd-popup-trigger${status1.index}"
 														style="color: #00cbe9 !important;" data-toggle="modal" data-target="#myModal">Change Delivery Mode</a></li>
@@ -1132,7 +1132,7 @@
 		</div>
 		</div>
 		
-		<div class="right-block shipping right-block-width" style="margin-top: 74px;">
+		<div class="right-block shipping right-block-width">
 				<c:choose>
 					<c:when test="${expCheckout gt 0}">
 						<a class="continue_btn" href="${request.contextPath}/checkout/multi/delivery-method/invReservation" type="button">	

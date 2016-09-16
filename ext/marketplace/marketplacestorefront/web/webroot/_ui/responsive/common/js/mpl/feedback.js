@@ -2126,5 +2126,6 @@ if ($("#couponMessage").children().length == 0){
 /* TPR-1217 starts Click And Collect Starts */
 $(document).ready(function(){
 	$(".checkout-shipping-items.left-block.left-block-width").parents(".checkout-content.cart.checkout.wrapper").addClass("shipCartWrapper");
+	$(".shipCartWrapper").parents(".mainContent-wrapper").find("footer").addClass("shipCartFooter");
 });
 /* TPR-1217 starts Click And Collect Ends */
