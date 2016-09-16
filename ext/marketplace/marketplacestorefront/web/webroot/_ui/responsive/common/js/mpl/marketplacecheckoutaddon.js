@@ -3934,6 +3934,8 @@ function applyPromotion(bankName)
 				$("#promotionMessage").empty();
 				var total=response.totalPrice.formattedValue;
 				document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
+				document.getElementById("outstanding-amount").innerHTML=response.totalPrice.formattedValue;
+				document.getElementById("outstanding-amount-mobile").innerHTML=response.totalPrice.formattedValue;
 				$("#cartPromotionApplied").css("display","none");
 				$("#codAmount").text(response.totalPrice.formattedValue);
 
