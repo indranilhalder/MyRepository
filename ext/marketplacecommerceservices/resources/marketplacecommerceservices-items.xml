@@ -174,7 +174,158 @@
 					<persistence type="property" />
 				</attribute>
 			</attributes>
-		</itemtype>		
+		</itemtype>	
+		
+		
+		
+		
+			
+		
+			<!-- Tata Etail For Buy A and get percentage or Amount off on BTPR-961-->
+		<itemtype code="BuyAGetPercentageDiscountOnB" extends="ProductPromotion"
+			jaloclass="com.tisl.mpl.jalo.BuyAGetPercentageDiscountOnB" autocreate="true"
+			generate="true">
+			<attributes>
+			<attribute qualifier="thresholdTotals" autocreate="true"
+					type="PromotionPriceRowCollectionType">
+					<description>The value beyond which if added to cart Promotion applies</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						initial="false" optional="true" partof="true" />
+			</attribute>
+				<attribute qualifier="secondProducts" autocreate="true"
+					generate="true" type="ProductCollection">
+					<description>The B products that the promotion should not be applied to</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+				</attribute>
+				<attribute qualifier="secondProductCodeList" autocreate="true"
+					generate="true" type="java.lang.String">
+					<description>Promotion to be applied for list of second product codes separated by comma </description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="secondCategories"
+					type="CategoryCollection">
+					<description>the categories the given voucher is valid for.</description>
+					<persistence type="property" />
+					<modifiers search="false" />
+				</attribute>
+				<attribute qualifier="percentageDiscount" autocreate="true"
+					type="java.lang.Double">
+					<defaultvalue>Double.valueOf(0D)</defaultvalue>
+					<description>Percentage discount.</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="messageFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion has fired.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="messageCouldHaveFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion could have potentially fire.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="discountPrices" autocreate="true"
+					type="PromotionPriceRowCollectionType">
+					<description>Fixed price for discount in specific currencies.</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						initial="false" optional="true" partof="true" />
+				</attribute>
+				<attribute qualifier="percentageOrAmount" autocreate="true"
+					type="java.lang.Boolean">
+					<description>Flag to indicate that the promotion is having amount or percentage discount.</description>
+					<defaultvalue>Boolean.TRUE</defaultvalue>
+					<persistence type="property" />
+					<modifiers read="true" write="true" optional="false" />
+				</attribute>
+				<attribute qualifier="maxDiscount" autocreate="true"
+					type="java.lang.Double">
+					<description>maxDiscount discount in specific currencies.</description>
+					<defaultvalue>Double.valueOf(0)</defaultvalue>
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+		
+			<!-- CustomBuyAgetPercentageDiscountOnBAdjustAction class for apportioned value 
+			for Product level promotions -->
+		<itemtype code="CustomBuyAgetPercentageDiscountOnBAdjustAction"
+			extends="AbstractPromotionAction" jaloclass="com.tisl.mpl.jalo.CustomBuyAgetPercentageDiscountOnBAdjustAction"
+			autocreate="true" generate="true">
+			<attributes>
+				<attribute qualifier="amount" autocreate="true"
+					type="java.lang.Double">
+					<defaultvalue>Double.valueOf(0.0D)</defaultvalue>
+					<description>The amount to adjust the order entry by.</description>
+					<modifiers read="true" write="true" />
+					<persistence type="property" />
+				</attribute>
+
+				<attribute qualifier="orderEntryProduct" autocreate="true"
+					type="Product">
+					<description>The product of the order entry to adjust</description>
+					<modifiers read="true" write="true" />
+					<persistence type="property" />
+				</attribute>
+
+				<attribute qualifier="orderEntryQuantity" autocreate="true"
+					type="java.lang.Long">
+					<description>The quantity of the order entry to adjust</description>
+					<modifiers read="true" write="true" />
+					<persistence type="property" />
+				</attribute>
+
+				<!-- since 4.4, see PRO-75 -->
+				<attribute qualifier="orderEntryNumber" autocreate="true"
+					type="java.lang.Integer">
+					<description>The entry number in the order</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property" />
+				</attribute>
+
+			</attributes>
+		</itemtype>
+		
+		
 
 		<!-- Custom PromotionOrderEntryAdjustAction class for apportioned value 
 			for Product level promotions -->
