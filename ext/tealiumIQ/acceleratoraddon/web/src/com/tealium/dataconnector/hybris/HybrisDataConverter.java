@@ -59,6 +59,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.apache.log4j.Logger;
 
+import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.user.UserService;
 
@@ -808,6 +809,7 @@ public final class HybrisDataConverter
 			final List<String> productCategoryList = new ArrayList<String>();
 			final List<String> pageSubCategories = new ArrayList<String>();
 			final List<String> pageSubcategoryNameL3List = new ArrayList<String>();
+			final List<String> transactionIdList = new ArrayList<String>();
 
 			String category = null;
 			String page_subCategory_name = null;
@@ -822,6 +824,7 @@ public final class HybrisDataConverter
 			String totalEntryPrice = null;
 			CurrencyModel currency = orderModel.getCurrency();
 			String currencySymbol = currency.getSymbol();
+			String transactionIds = null;
 			
 			if(null != orderModel)
 			{
@@ -911,6 +914,26 @@ public final class HybrisDataConverter
 
 					}
 				}
+				/*TPR-687*/
+				if (CollectionUtils.isNotEmpty(orderModel.getChildOrders()))
+				{
+					for (OrderModel childOrder : orderModel.getChildOrders())
+					{
+						for (final AbstractOrderEntryModel childOrderEntry : childOrder.getEntries())
+						{
+							if (StringUtils.isNotEmpty(childOrderEntry.getTransactionID()))
+							{
+								transactionIdList.add(childOrderEntry.getTransactionID());
+							}
+						}
+					}
+
+				}
+				if (CollectionUtils.isNotEmpty(transactionIdList)){
+					transactionIds = StringUtils.join(transactionIdList,',');
+				}
+				/*TPR-687*/
+				
 			}
 //			if (orderData != null)
 //			{
@@ -992,7 +1015,7 @@ public final class HybrisDataConverter
 					.addArrayValues("order_shipping_modes", deliveryModes).addArrayValues("page_subcategory_name", pageSubCategories)
 					.addArrayValues("page_subcategory_name_l3", pageSubcategoryNameL3List)
 					.addArrayValues("order_shipping_charges", orderShippingCharges);
-
+			udo.setValue("transaction_id",transactionIds);	
 
 			scriptString = tealiumHelper.outputFullHtml(udo);
 		}
