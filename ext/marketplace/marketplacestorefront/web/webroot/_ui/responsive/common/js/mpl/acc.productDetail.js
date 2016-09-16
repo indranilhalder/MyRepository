@@ -358,10 +358,9 @@
 			sizeSpan.text(": " + currentSize);
 		}
 
-	}
-
+	},
 };
-
+	
 /**
  * displaying thumb nails details
  */
@@ -1530,7 +1529,10 @@ $( document ).ready(function() {
 						fetchAllSellers();
 						$("#minPrice").html(data['minPrice'].formattedValue);
 					}
-				}
+					//Added for displaying offer messages other than promotion, TPR-589	
+				//	ACC.productDetail.
+					populateOfferMsgWrapper(productCode, sellerID, null);
+				}	
 
 			} 
 				else {
@@ -2738,7 +2740,7 @@ function loadDefaultWishListName_SizeGuide() {
 			}
 		})
 		
-		$(document).on("click",".product-detail .promo-block .pdp-promo-title",function(e){
+		$(document).on("click",".product-detail .promo-block .pdp-promo-title, .pdp-promo-title-link",function(e){
 			e.preventDefault();
 			offerPopup($("#promotionDetailsId").html());
 		});
