@@ -2,6 +2,7 @@ ACC.carousel = {
 
 	_autoload: [
 	     "myFun",
+	     "shopTheStyleCarousel",
 	     "shopByLookCarousel",
 	     "offersCarousel",
 	     "categoryCarousel",
@@ -11,7 +12,7 @@ ACC.carousel = {
 	     "myReviewCarousel",
 	     "advancedCategoryCarousel",
 	     "pdpProductCarousel",
-	     "shopTheStyleCarousel",
+	       
 		["bindCarousel", $(".js-owl-carousel").length >0]
 	],
 
@@ -219,8 +220,8 @@ ACC.carousel = {
 		});
 	},
 	shopTheStyleCarousel: function(){
-		$(".shopByLookCarousel").owlCarousel({
-			items:2,
+		$("body.page-shopTheStyle .shopByLookCarousel").owlCarousel({
+			items:3,
     		loop: true,
     		nav:true,
     		dots:false,
@@ -489,7 +490,18 @@ ACC.carousel = {
     		}	
 		});
 		$(".product-image-container.device .owl-stage-outer").prepend($(".product-image-container.device .wishlist-icon"))
-	}
+	},
+	
+	/*shopBannerCarousel: function(){
+	  $("#shopstyleCarousel").owlCarousel({
+	 
+	      autoPlay: 3000, //Set AutoPlay to 3 seconds
+	 
+	      items : 1,
+	      loop: false
+	 
+	  });
+	}*/
 	
 	/*New Homepage change*/
 	/*timeoutCarousel: function(){
