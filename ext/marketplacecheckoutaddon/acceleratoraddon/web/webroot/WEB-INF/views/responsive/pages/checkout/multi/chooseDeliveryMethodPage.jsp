@@ -361,7 +361,7 @@
 						<!-- change here for modified checkout page starts -->
 									
 									<div class="address-accordion smk_accordion acc_with_icon">
-  <div class="choose-address accordion_in">
+  <div class="choose-address accordion_in acc_active">
     
       <div class="acc_head">
 												<div class="acc_icon_expand"></div>
@@ -373,7 +373,7 @@
 												</p>
 											</div>
       
-	  	<div class="acc_content">
+	  	<div class="acc_content" style="display:block">
 		
       <form>
         <!-- <div class="address-list ">
