@@ -34,18 +34,8 @@ import com.tisl.mpl.util.ExceptionUtil;
  */
 public class CouponSellerRestSaveInterceptor implements PrepareInterceptor
 {
-	/**
-	 *
-	 */
-	private static final String ERROR_MSG = "oops something went wrong";
 
-	/**
-	 *
-	 */
 	private static final String BLANK = "";
-
-
-
 	@Resource(name = "mplSellerMaster")
 	private MplSellerMasterService mplSellerMasterService;
 	private static final Logger LOG = Logger.getLogger(CouponSellerRestSaveInterceptor.class);
@@ -96,8 +86,10 @@ public class CouponSellerRestSaveInterceptor implements PrepareInterceptor
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			throw new InterceptorException(ERROR_MSG);
-
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
 		}
 	}
 }
