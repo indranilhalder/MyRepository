@@ -6,17 +6,24 @@ import de.hybris.platform.core.model.security.PrincipalGroupModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserGroupModel;
 import de.hybris.platform.core.model.user.UserModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.AmbiguousIdentifierException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.user.exceptions.CannotDecodePasswordException;
 import de.hybris.platform.servicelayer.user.exceptions.PasswordEncoderNotFoundException;
 import de.hybris.platform.servicelayer.user.impl.DefaultUserService;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -37,6 +44,10 @@ public class ExtendedUserServiceImpl extends DefaultUserService implements Exten
 {
 	@Autowired
 	private ExtendedUserDaoImpl userDao;
+
+	@Autowired
+	private ConfigurationService configService;
+
 	public static final String ALLOWED_TO_PURCHASE_GROUP = "allowedtopurchasegroup";
 	public static final String REGISTERED_CUSTOMER_GROUP = "registeredcustomergroup";
 	public static final String CUSTOMER_GROUP = "customergroup";
@@ -383,6 +394,48 @@ public class ExtendedUserServiceImpl extends DefaultUserService implements Exten
 	{
 		validateParameterNotNull(userId, MplConstants.M4_ASSERT_UID_NULL);
 		return this.userDao.getUserByUid(userId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService#getAccessTokenForUser(java.lang.String)
+	 */
+	@Override
+	public String getAccessTokenForUser(final String emailId)
+	{
+		final StringBuilder output = new StringBuilder(1000);
+		String accessToken = null;
+		final String userAccessTokenUrl = configService.getConfiguration().getString("user.accessToken.url");
+		final String urlString = userAccessTokenUrl + emailId + "&isSocialMedia=Y";
+		try
+		{
+			final URL url = new URL(urlString);
+			final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Accept", "application/json");
+
+			if (conn.getResponseCode() != 200)
+			{
+				throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
+			}
+
+			final BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+			String line = null;
+			while ((line = br.readLine()) != null)
+			{
+				output.append(line).append('\n');
+			}
+			final JSONObject jsonResponse = (JSONObject) JSONValue.parse(output.toString());
+			accessToken = (String) jsonResponse.get("access_token");
+
+
+		}
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+		return accessToken;
 	}
 
 }

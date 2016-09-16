@@ -145,7 +145,7 @@
 		<property name="keepAliveCookieGenerator" ref="keepAliveCookieGenerator" />
 		<property name="luxuryUserCookieGenerator" ref="luxuryUserCookieGenerator" />
 		<property name="luxuryEmailCookieGenerator" ref="luxuryEmailCookieGenerator" />
-		<property name="userService" ref="userService" />
+		<property name="userService" ref="extendedUserService" />
 	</bean>
 	
 	<alias name="defaultGuestCheckoutCartCleanStrategy" alias="guestCheckoutCartCleanStrategy"/>

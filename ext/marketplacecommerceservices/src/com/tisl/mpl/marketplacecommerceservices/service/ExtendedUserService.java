@@ -137,4 +137,6 @@ public interface ExtendedUserService extends UserService
 
 	UserModel getUserByUid(final String userId);
 
+	String getAccessTokenForUser(String emailId);
+
 }
