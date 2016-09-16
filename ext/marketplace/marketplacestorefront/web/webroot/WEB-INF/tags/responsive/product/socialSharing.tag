@@ -18,6 +18,7 @@
 
 <script>
 
+
 			$(".g-interactivepost").attr("data-contenturl",window.location.host+$('#productUrl').text());
 			$(".g-interactivepost").attr("data-calltoactionurl",window.location.host+$('#productUrl').text());
 			//$(".wish-share .share a.tw").attr("href","https://twitter.com/intent/tweet?text=Wow! I found this amazing product - check it out here"+window.location+". Like or comment to tell me what you guys think. Hit share to spread the love. ");
