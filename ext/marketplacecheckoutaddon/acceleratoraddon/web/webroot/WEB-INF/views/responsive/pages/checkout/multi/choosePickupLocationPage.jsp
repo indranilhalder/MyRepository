@@ -743,7 +743,7 @@
 							</ul>
 								</li>
 							
-							<li style="width:auto;padding-left: 24px;">
+							<li class="mapConatinerParent">
 													<ul class="mapWidth" id="map${status1.index}" style="width: 324px; height: 200px; position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);"></ul>
 													<ul id="maphide${status1.index}" style="display: none; width: 300px; height: 200px; position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);padding: 10px; font-weight: 600">Unable to find Stores</ul>
 													<div class="change_pincode_block block${status1.index}">
@@ -1119,7 +1119,7 @@
 								<div class="error_txt pickupPersonMobileError"></div>
 	        			    </div>
 				             <div class="submitSubPanel">
-				             <button type="button"  class="savenewid" id="savePickupPersondDetails" style="height: 40px !important"><spring:theme code="checkout.multi.cnc.pickup.details.submit"/></button>
+				             <button type="button"  class="savenewid" id="savePickupPersondDetails"><spring:theme code="checkout.multi.cnc.pickup.details.submit"/></button>
 				          <div id="pickupPersonSubmit"></div>
 				          <div class="error_txt pickupPersonSubmitError"></div>
 				            </div>

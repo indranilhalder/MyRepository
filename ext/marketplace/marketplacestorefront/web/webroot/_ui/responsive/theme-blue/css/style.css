@@ -50379,3 +50379,344 @@ padding:0px;}
   }
   
       /* defect fix end*/
+      
+ /* TPR-1217 starts Click And Collect Starts */
+ 
+ .secure.secureTransaction{
+ 	display: none;
+ }
+  .secure.secureTransaction + .content .top{
+  	display: none;
+  }
+ 
+ ul.delivered.scrollThis{
+ 	overflow: auto;
+ }
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width + .right-block.shipping.right-block-width .checkout-order-summary{
+ 	display: none;
+ }
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width + .right-block.shipping.right-block-width{
+ 	margin-top: -68px;
+    width: 324px;
+    z-index: 99;
+    position: fixed;
+    /* float: right; */
+    background-color: #a9143c;
+    color: #fff;
+    height: 40px;
+    width: 175px;
+    /* margin-top: 10px; */
+    font-size: 10px;
+    padding: 0;
+    letter-spacing: .5px;
+    line-height: normal;
+    text-transform: uppercase;
+    width: 175px !important;
+    right: 74px;
+ }
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width + .right-block.shipping.right-block-width #selectDeliveryMethodForm1{
+ 	margin-top: -260px;
+    position: absolute;
+    right: 20px;
+ }
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width{
+ 	width: 100% !important;
+ 	    margin-top: 84px;
+ }
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width h1{
+ 	   font-size: 18px;
+    	text-transform: uppercase;
+    	font-weight: bold;
+ }
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width .productCount{
+ 		font-weight: normal;
+ }
+ @media (min-width: 651px){
+ 	.cart.wrapper.shipCartWrapper{
+ 		padding: 0 0 34px;
+ 	}
+ }
+.cart.wrapper .checkout-shipping-items.left-block.left-block-width .delivery.deliveryWidth{
+ 	width: 34% !important;
+ }
+.cart.wrapper .checkout-shipping-items.left-block.left-block-width ul.headline .header2.headerWidth{
+ 	width: 39% !important;
+ }
+.cart.wrapper .checkout-shipping-items.left-block.left-block-width ul.headline .store.header5{
+ 	width: 34.5%;
+ }
+.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel-default{
+ 	height: auto !important;
+    width: 100%!important;
+    padding: 38px 0;
+    border: none !important;
+    border-top: 1px solid #e4e4e4 !important;
+    margin-bottom: 0;
+ }
+ h2.panel-defaultHeading{
+ 	font-size: 20px;
+    letter-spacing: 0;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding-bottom: 10px;
+ }
+ .retail-bag{
+ 	font-size: 12px;
+    letter-spacing: 0;
+    padding-bottom: 28px;
+ }
+ .retail-detail{
+ 	font-size: 12px;
+    letter-spacing: 0;
+    padding-bottom: 10px;
+ }
+.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]{
+ 	height: 44px;
+ }
+.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div{
+ 	float: left;
+ 	margin-right: 1%;
+ }
+.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div>input{
+ 	width: 100%;
+ }
+.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.nameFullSubPanel{
+ 	width: 32%;
+ 	height: 44px;
+ }
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.nameFullSubPanel>input[type="text"],
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.mobileSubPanel>input[type="text"]{
+ 	color: #a5a5a5;
+    letter-spacing: 1px;
+    font-size: 14px;
+    height: 44px;
+    font-weight: normal;
+    text-transform: uppercase;
+ }
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.nameBlankSubPanel{
+ 	width: 3%;
+ 	visibility: hidden;
+ }
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.mobileSubPanel{
+ 	width: 20%;
+ 	height: 44px;
+ }
+.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.submitSubPanel{
+ 	width: 18%;
+    float: right;
+    margin-right: 20%;
+    height: 44px;
+ }
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.submitSubPanel>button#savePickupPersondDetails{
+ 	height: 40px !important;
+ }
+ .right-block.shipping.right-block-width + div + .continue_holder .continue_btn{
+ 	display:none;
+ }
+ .panel.panel-default.pickuppersonWidth .panel.panel-body{
+ 	margin: 0;
+    padding: 0;
+    height: auto;
+ }
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width .radio_btn {
+ 	border: 2px solid #fff !important;
+ 	clip: inherit !important;
+ 	box-shadow: 0 0 0 2px #b9b9b9;
+ 	outline: none;
+ }
+ .cart.wrapper .product-block li.item > ul > li.mapConatinerParent {
+ 	padding-left: 24px;
+    width: auto;
+ }
+ .cart.wrapper .product-block li.item > ul > li.mapConatinerParent .mapWidth{
+ 	width: 269px;
+    height: 200px;
+    position: relative;
+    overflow: hidden;
+    transform: translateZ(0px);
+    background-color: rgb(229, 227, 223);
+ }
+ .checkout-content.cart.checkout.wrapper.shipCartWrapper .fa.fa-caret-right.fa-caret{
+ 	display: none;
+ } 
+ @media (max-width:767px){
+ .checkout-content.cart.checkout.wrapper.shipCartWrapper{
+ 		padding: 0 0 34px;
+ 	}
+ 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .delivery.deliveryWidth{
+ 		width: 100% !important;
+    	height: 265px;
+    	overflow: auto;
+    	padding: 15px 3.5% 0 !important;
+ 	}
+ 	 .cart.wrapper .product-block li.item > ul > li.mapConatinerParent {
+    	width: 100%;
+    	padding: 0 3.5% !important;
+    	margin-top: 15px;
+ 	}
+ 	 .cart.wrapper .product-block li.item > ul > li.mapConatinerParent .mapWidth{
+ 		width: 100%;
+ 	}
+ 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel-default{
+ 		padding: 25px 3.5% 38px;
+ 	}
+ 	h2.panel-defaultHeading{
+ 		font-size: 12px;
+    	padding-bottom: 5px;
+ 	}
+ 	.retail-bag{
+ 		font-size: 10px;
+    	padding-bottom: 8px;
+ 	}
+ 	.retail-detail{
+ 		width: 100%;
+    	font-size: 12px;
+    	line-height: 14px;
+    	border: 1px solid #f3f3f3;
+    	border-bottom: 0 none;
+    	padding: 20px 15px 15px;
+ 	}
+ 	.panel.panel-default.pickuppersonWidth .panel.panel-body{
+ 		border: 1px solid #f3f3f3;
+    	border-top: 0 none;
+    	padding: 0 15px 15px;
+ 	}
+ 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.nameFullSubPanel,
+ 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.nameBlankSubPanel,
+ 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.mobileSubPanel,
+ 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.submitSubPanel{
+ 		width: 100%;
+    	margin-bottom: 12px;
+    	height: 40px;
+ 	}
+ 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.nameBlankSubPanel{
+ 		display: none;
+ 	}
+ 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.submitSubPanel{
+ 		margin-bottom: 5px;
+ 		margin-right: 0;
+ 	}
+ 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.submitSubPanel>button#savePickupPersondDetails{
+ 		width: 100% !important;
+ 		margin-left: 0;
+ 	}
+ 	.right-block.shipping.right-block-width{
+ 		width: 100% !important;
+    	left: 0;
+    	bottom: 0;
+ 	}
+ 	.right-block.shipping.right-block-width .continue_btn_anchor{
+ 		display: block;
+ 	}
+ 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width + .right-block.shipping.right-block-width{
+ 		width: 100% !important;
+    	left: 0;
+    	bottom: 0;
+ 	}
+ 	.checkout-content.cart.checkout.wrapper.shipCartWrapper > h1{
+ 		font-size: 12px;
+    	padding: 0 3.5% 0;
+    	text-align: left;
+    	margin: 0;
+ 	}
+ 	.checkout-content.cart.checkout.wrapper.shipCartWrapper .productCount{
+ 		padding: 0 3.5%;
+    	font-size: 10px;
+    	color: #999999;
+    	padding-bottom: 5px;
+    	margin-top: 5px;
+ 	}
+ 	.checkout-content.cart.checkout.wrapper.shipCartWrapper .product-block li.header{
+ 		display: none;
+ 	}
+ 	.checkout-content.cart.checkout.wrapper.shipCartWrapper .product-block li.item > ul li.headerWidth{
+ 		width: 100%;
+ 		padding-bottom: 0;
+ 	}
+ 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width h1{
+ 		font-size: 12px;
+    	padding: 0 3.5% 0;
+    	text-align: left;
+    	margin: 0;
+ 	}
+ 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.nameFullSubPanel>input[type="text"]{
+ 		height: 100%;
+ 		font-size: 11px;
+ 	}
+ 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.mobileSubPanel>input[type="text"]{
+ 		height: 100%;
+ 		font-size: 11px;
+ 	}
+ }
+ @media (min-width:768px) and (max-width:1024px){
+ 	.checkout-content.cart.checkout.wrapper.shipCartWrapper .product-block li.item > ul li.headerWidth{
+ 		width: 100%;
+ 		padding-bottom: 0;
+ 		/* padding-left: 24px; */
+ 	}
+ 	.checkout-content.cart.checkout.wrapper.shipCartWrapper .product-block li.header{
+ 		display: none;
+ 	}
+ 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .delivery.deliveryWidth{
+ 		width: 45% !important;
+ 		/* padding-left: 24px; */
+ 	}
+ 	.cart.wrapper .product-block li.item > ul > li.mapConatinerParent{
+ 		width: 48%;
+ 	}
+ 	.cart.wrapper .product-block li.item > ul > li.mapConatinerParent .mapWidth{
+ 		width: 100%;
+ 	}
+ 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel-default{
+ 		padding: 38px 0 0; 
+ 	}
+ 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width h1{
+ 		font-size: 16px;
+    	font-weight: bold;
+    	letter-spacing: 0;
+    	/* padding: 0 24px; */
+ 	}
+ 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .productCount{
+ 		font-size: 12px;
+    	/* padding:0 24px; */
+ 	}
+ 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width{
+ 		margin-top: 32px;
+ 		padding: 0 24px;
+ 	}
+ 	h2.panel-defaultHeading{
+ 		font-size: 16px;
+    	font-weight: bold;
+ 	}
+ 	.retail-bag{
+ 		color: #999999;
+ 		font-size: 12px;
+    	letter-spacing: 0;
+ 	}
+ 	.retail-detail{
+ 		letter-spacing: 1px;
+    	width: 85%;
+    	line-height: 24px;
+    	padding-bottom: 16px;
+ 	}
+ 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.nameFullSubPanel{
+ 		width: 48%;
+ 		margin-bottom: 20px;
+ 	}
+ 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.mobileSubPanel{
+ 		width: 96%;
+ 		margin-bottom: 20px;
+ 	}
+ 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.submitSubPanel{
+ 		float: left;
+    	margin-bottom: 43px;
+    	width: 204px;
+ 	}
+ 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.submitSubPanel>button#savePickupPersondDetails{
+ 		margin-left: 0;
+ 		width: 100% !important;
+ 		height: 44px !important;
+ 	}
+ }
+ /* TPR-1217 starts Click And Collect Ends */
+  
