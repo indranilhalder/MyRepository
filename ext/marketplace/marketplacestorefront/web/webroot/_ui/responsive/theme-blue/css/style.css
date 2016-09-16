@@ -50438,6 +50438,10 @@ padding:0px;}
  }
 .cart.wrapper .checkout-shipping-items.left-block.left-block-width .delivery.deliveryWidth{
  	width: 34% !important;
+ 	float: none;
+ }
+.cart.wrapper .checkout-shipping-items.left-block.left-block-width .delivery.header4.deliveryWidth{
+ 	width: 25% !important;
  }
 .cart.wrapper .checkout-shipping-items.left-block.left-block-width ul.headline .header2.headerWidth{
  	width: 39% !important;
@@ -50508,7 +50512,11 @@ padding:0px;}
     height: 44px;
  }
  .cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.submitSubPanel>button#savePickupPersondDetails{
- 	height: 40px !important;
+ 	/* height: 40px !important; */
+ 	height: 100% !important;
+ 	font-size: 12px;
+    width: 180px !important;
+    line-height: normal;
  }
  .right-block.shipping.right-block-width + div + .continue_holder .continue_btn{
  	display:none;
@@ -50539,18 +50547,47 @@ padding:0px;}
  .checkout-content.cart.checkout.wrapper.shipCartWrapper .fa.fa-caret-right.fa-caret{
  	display: none;
  } 
+ .checkout-content.cart.checkout.wrapper.shipCartWrapper .continue_btn_anchor{
+ 	line-height: 41px !important;
+ }
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width .delivery.deliveryWidth ul li span{
+ padding-left:20px;}
+ 
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width .delivery.deliveryWidth ul li span.text_in{
+ padding-left:0px;}
+ 
+ .cart.wrapper .product-block li.item > ul > li.mapConatinerParent{
+     width: 27% !important;
+    float: none;}
+ .cart.wrapper .product-block li.item > ul > li.mapConatinerParent .mapWidth{
+     width: auto !important;
+   }
+   .checkout-content.cart.checkout.wrapper.shipCartWrapper .changeDeliveryMethod {
+    padding: 0;
+    border: 0 !important;
+    height: 11px;
+    line-height: 11px;
+    font-size: 11px !important;
+    color: #777 !important;
+    text-transform: uppercase !important;
+    display: inline-block;
+    font-weight: normal !important;
+				}
+ .checkout-content.cart.checkout.wrapper.shipCartWrapper .product-block li.item > ul > li:first-child div.product{
+ float:left;}
+ 
  @media (max-width:767px){
  .checkout-content.cart.checkout.wrapper.shipCartWrapper{
  		padding: 0 0 34px;
  	}
  	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .delivery.deliveryWidth{
  		width: 100% !important;
-    	height: 265px;
+    	height: 160px;
     	overflow: auto;
     	padding: 15px 3.5% 0 !important;
  	}
  	 .cart.wrapper .product-block li.item > ul > li.mapConatinerParent {
-    	width: 100%;
+    	width: 100% !important;
     	padding: 0 3.5% !important;
     	margin-top: 15px;
  	}
@@ -50593,12 +50630,14 @@ padding:0px;}
  		display: none;
  	}
  	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.submitSubPanel{
- 		margin-bottom: 5px;
+ 		margin-bottom: 64px;
  		margin-right: 0;
  	}
  	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.submitSubPanel>button#savePickupPersondDetails{
  		width: 100% !important;
  		margin-left: 0;
+ 		font-size: 12px;
+ 		line-height: normal !important;
  	}
  	.right-block.shipping.right-block-width{
  		width: 100% !important;
@@ -50607,6 +50646,7 @@ padding:0px;}
  	}
  	.right-block.shipping.right-block-width .continue_btn_anchor{
  		display: block;
+ 		line-height: 42px !important;
  	}
  	.cart.wrapper .checkout-shipping-items.left-block.left-block-width + .right-block.shipping.right-block-width{
  		width: 100% !important;
@@ -50633,20 +50673,27 @@ padding:0px;}
  		width: 100%;
  		padding-bottom: 0;
  	}
- 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width h1{
+ 	.checkout-content.cart.checkout.wrapper.shipCartWrapper .checkout-shipping-items.left-block.left-block-width h1{
  		font-size: 12px;
     	padding: 0 3.5% 0;
     	text-align: left;
     	margin: 0;
  	}
- 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.nameFullSubPanel>input[type="text"]{
+ 	.checkout-content.cart.checkout.wrapper.shipCartWrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.nameFullSubPanel>input[type="text"]{
  		height: 100%;
  		font-size: 11px;
  	}
- 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.mobileSubPanel>input[type="text"]{
+ 	.checkout-content.cart.checkout.wrapper.shipCartWrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.mobileSubPanel>input[type="text"]{
  		height: 100%;
  		font-size: 11px;
  	}
+ 	.shipCartFooter{
+ 		display: none;
+ 	}
+ 	.checkout-content.cart.checkout.wrapper.shipCartWrapper .right-block.shipping{
+ 		margin-bottom: 0;
+ 	}
+ 	
  }
  @media (min-width:768px) and (max-width:1024px){
  	.checkout-content.cart.checkout.wrapper.shipCartWrapper .product-block li.item > ul li.headerWidth{
@@ -50662,7 +50709,7 @@ padding:0px;}
  		/* padding-left: 24px; */
  	}
  	.cart.wrapper .product-block li.item > ul > li.mapConatinerParent{
- 		width: 48%;
+ 		width: 48% !important;
  	}
  	.cart.wrapper .product-block li.item > ul > li.mapConatinerParent .mapWidth{
  		width: 100%;
@@ -50709,14 +50756,27 @@ padding:0px;}
  	}
  	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.submitSubPanel{
  		float: left;
-    	margin-bottom: 43px;
+    	margin-bottom: 82px;
     	width: 204px;
  	}
  	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.submitSubPanel>button#savePickupPersondDetails{
  		margin-left: 0;
  		width: 100% !important;
  		height: 44px !important;
+ 		font-size: 12px;
+ 		line-height: normal;
+ 	}
+ 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width + .right-block.shipping.right-block-width{
+ 		margin-top: -74px;
+ 		right: 24px;
+ 	}
+ 	.checkout-content.cart.checkout.wrapper.shipCartWrapper .continue_btn_anchor{
+ 		line-height: 41px !important;
+ 	}
+ 	.cart.wrapper.shipCartWrapper{
+ 		padding-bottom: 0;
  	}
  }
+
  /* TPR-1217 starts Click And Collect Ends */
   
