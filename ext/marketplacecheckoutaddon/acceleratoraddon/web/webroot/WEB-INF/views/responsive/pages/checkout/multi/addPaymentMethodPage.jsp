@@ -68,6 +68,7 @@
         						displayCreditCardForm();
         						$("#viewPaymentCredit").parent("li").addClass("active");
         						$(".checkout-paymentmethod").css("display","block");
+        						$('#viewPaymentCredit').click();
         					}
         					else if($("#DebitCard").val()=="true")
         					{
@@ -1033,7 +1034,7 @@
 													
 									</li>
 									</ul>	
-									<div class="terms"><p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><br/><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p></div>	
+									<div class="terms cod"><p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><br/><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p></div>	
 								</div>
 								</div>						
 				<!-- End of COD -->					
