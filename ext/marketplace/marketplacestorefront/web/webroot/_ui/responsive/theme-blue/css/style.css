@@ -47334,6 +47334,8 @@ body.no-scroll {
 .address-list .address span {
     display: block;
     padding-bottom: 9px;
+    line-height: 19px;
+    word-break: break-word;
 }
 
 .address-list .address .name {
