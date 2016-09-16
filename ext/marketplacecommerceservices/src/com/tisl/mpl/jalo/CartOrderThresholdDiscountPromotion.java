@@ -43,10 +43,10 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 
 	/**
 	 * @Description : This method is for creating item type
-	 * @param : ctx
-	 * @param : type
-	 * @param : allAttributes
-	 * @return : item
+	 * @param ctx
+	 * @param type
+	 * @param allAttributes
+	 * @return item
 	 */
 	@Override
 	protected Item createItem(final SessionContext ctx, final ComposedType type, final ItemAttributeMap allAttributes)
@@ -62,7 +62,8 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 
 	/**
 	 * @Description : Order Threshold Percentage or Amount Discount Cashback
-	 * @param : SessionContext paramSessionContext ,PromotionEvaluationContext paramPromotionEvaluationContext
+	 * @param ctx
+	 *           paramSessionContext ,PromotionEvaluationContext paramPromotionEvaluationContext
 	 * @return : List<PromotionResult> promotionResults
 	 */
 	@Override
@@ -71,7 +72,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 		//boolean flagForDeliveryModeRestrEval = false;		//Commented as defined later TPR-969
 		//boolean flagForPaymentModeRestrEval = false;		//Commented as defined later TPR-969
 
-		List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
+		final List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
 		//boolean checkChannelFlag = false;						//Commented as defined later TPR-969
 
 		try
@@ -193,29 +194,11 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 						//						}
 
 						//TPR-969 - To check for qualifying count
-						if (orderSubtotalAfterDiscounts >= threshold.doubleValue())//TODO: introduce a private method
+						if (orderSubtotalAfterDiscounts >= threshold.doubleValue())
 						{
-							if (null != entryQualifyingCount)
-							{
-								if (Double.valueOf(orderEntryCount).intValue() >= entryQualifyingCount.intValue())
-								{
-									promotionResults = evaluatePromotion(ctx, evalCtx, order, isPercentageDisc, percentageDiscount,
-											maxDiscount, promotionResults, orderSubtotalAfterDiscounts);
-								}
-								else
-								{
-									final float certainty = (float) (orderEntryCount / entryQualifyingCount.doubleValue());
-									final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(ctx, this,
-											evalCtx.getOrder(), certainty);
-									promotionResults.add(result);
-								}
-							}
-							else
-							{
-								promotionResults = evaluatePromotion(ctx, evalCtx, order, isPercentageDisc, percentageDiscount,
-										maxDiscount, promotionResults, orderSubtotalAfterDiscounts);
-							}
-
+							LOG.debug("Ordersubtotal greater than threshold");
+							applyPromoForQualCount(entryQualifyingCount, orderEntryCount, ctx, evalCtx, order, isPercentageDisc,
+									percentageDiscount, maxDiscount, promotionResults, orderSubtotalAfterDiscounts);
 						}
 						else if (orderSubtotalAfterDiscounts > 0.0D)
 						{
@@ -228,27 +211,8 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 					//TPR-969 - When no threshold is mentioned
 					else
 					{
-						if (null != entryQualifyingCount)//TODO:intoduce a private method
-						{
-							if (Double.valueOf(orderEntryCount).intValue() >= entryQualifyingCount.intValue())
-							{
-								promotionResults = evaluatePromotion(ctx, evalCtx, order, isPercentageDisc, percentageDiscount,
-										maxDiscount, promotionResults, orderSubtotalAfterDiscounts);
-							}
-							else
-							{
-								final float certainty = (float) (orderEntryCount / entryQualifyingCount.doubleValue());
-								final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(ctx, this,
-										evalCtx.getOrder(), certainty);
-								promotionResults.add(result);
-							}
-						}
-						else
-						{
-							promotionResults = evaluatePromotion(ctx, evalCtx, order, isPercentageDisc, percentageDiscount, maxDiscount,
-									promotionResults, orderSubtotalAfterDiscounts);
-						}
-
+						applyPromoForQualCount(entryQualifyingCount, orderEntryCount, ctx, evalCtx, order, isPercentageDisc,
+								percentageDiscount, maxDiscount, promotionResults, orderSubtotalAfterDiscounts);
 					}
 				}
 			}
@@ -278,8 +242,8 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 	/**
 	 * This method evaluates promotion. Moved to single private method for TPR-969
 	 *
-	 * @param arg0
-	 * @param arg1
+	 * @param ctx
+	 * @param evalCtx
 	 * @param order
 	 * @param isPercentageDisc
 	 * @param percentageDiscount
@@ -287,7 +251,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 	 * @param promotionResults
 	 * @return List<PromotionResult>
 	 */
-	private List<PromotionResult> evaluatePromotion(final SessionContext arg0, final PromotionEvaluationContext arg1,
+	private List<PromotionResult> evaluatePromotion(final SessionContext ctx, final PromotionEvaluationContext evalCtx,
 			final AbstractOrder order, boolean isPercentageDisc, double percentageDiscount, final double maxDiscount,
 			final List<PromotionResult> promotionResults, final double orderSubtotalAfterDiscounts)
 	{
@@ -307,7 +271,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 		else
 		{
 			LOG.debug(Localization.getLocalizedString("promotion.amountDiscount.msg"));
-			final Double discountPrice = getPriceForOrder(arg0, getDiscountPrices(arg0), order,
+			final Double discountPrice = getPriceForOrder(ctx, getDiscountPrices(ctx), order,
 					MarketplacecommerceservicesConstants.DISCOUNT_PRICES);
 			final double discountPriceValue = (discountPrice == null) ? 0.0D : discountPrice.doubleValue();
 			percentageDiscount = (discountPriceValue * 100) / orderSubtotalAfterDiscounts;
@@ -315,17 +279,18 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 
 		if (percentageDiscount < 100)
 		{
-			arg0.setAttribute(MarketplacecommerceservicesConstants.PERCENTAGEDISCOUNT, Double.valueOf(percentageDiscount));
-			arg0.setAttribute(MarketplacecommerceservicesConstants.TOTALVALIDPRODUCTSPRICEVALUE,
+			ctx.setAttribute(MarketplacecommerceservicesConstants.PERCENTAGEDISCOUNT, Double.valueOf(percentageDiscount));
+			ctx.setAttribute(MarketplacecommerceservicesConstants.TOTALVALIDPRODUCTSPRICEVALUE,
 					Double.valueOf(orderSubtotalAfterDiscounts));
-			arg0.setAttribute(MarketplacecommerceservicesConstants.PROMOCODE, String.valueOf(this.getCode()));
-			arg0.setAttribute(MarketplacecommerceservicesConstants.ISPERCENTAGEDISC, Boolean.valueOf(isPercentageDisc));
+			ctx.setAttribute(MarketplacecommerceservicesConstants.PROMOCODE, String.valueOf(this.getCode()));
+			ctx.setAttribute(MarketplacecommerceservicesConstants.ISPERCENTAGEDISC, Boolean.valueOf(isPercentageDisc));
 
 			//adjustedDiscounts = (percentageDiscount * orderSubtotalAfterDiscounts) / 100;
 			setAdjustedDiscounts((percentageDiscount * orderSubtotalAfterDiscounts) / 100);
-			final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(arg0, this, arg1.getOrder(), 1.0F);
-			result.addAction(arg0,
-					getDefaultPromotionsManager().createCustomPromotionOrderAdjustTotalAction(arg0, -getAdjustedDiscounts()));
+			final PromotionResult result = PromotionsManager.getInstance()
+					.createPromotionResult(ctx, this, evalCtx.getOrder(), 1.0F);
+			result.addAction(ctx,
+					getDefaultPromotionsManager().createCustomPromotionOrderAdjustTotalAction(ctx, -getAdjustedDiscounts()));
 			promotionResults.add(result);
 		}
 
@@ -335,6 +300,53 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 
 
 
+
+
+	/**
+	 * This method creates promotionResult based on entry qualifying count
+	 *
+	 * @param entryQualifyingCount
+	 * @param orderEntryCount
+	 * @param ctx
+	 * @param evalCtx
+	 * @param order
+	 * @param isPercentageDisc
+	 * @param percentageDiscount
+	 * @param maxDiscount
+	 * @param promotionResults
+	 * @param orderSubtotalAfterDiscounts
+	 * @return List<PromotionResult>
+	 */
+	private List<PromotionResult> applyPromoForQualCount(final Double entryQualifyingCount, final double orderEntryCount,
+			final SessionContext ctx, final PromotionEvaluationContext evalCtx, final AbstractOrder order,
+			final boolean isPercentageDisc, final double percentageDiscount, final double maxDiscount,
+			List<PromotionResult> promotionResults, final double orderSubtotalAfterDiscounts)
+	{
+		if (null != entryQualifyingCount)
+		{
+			LOG.debug("Inside entry qualifying count not null");
+			if (Double.valueOf(orderEntryCount).intValue() >= entryQualifyingCount.intValue())
+			{
+				promotionResults = evaluatePromotion(ctx, evalCtx, order, isPercentageDisc, percentageDiscount, maxDiscount,
+						promotionResults, orderSubtotalAfterDiscounts);
+			}
+			else
+			{
+				final float certainty = (float) (orderEntryCount / entryQualifyingCount.doubleValue());
+				final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(ctx, this, evalCtx.getOrder(),
+						certainty);
+				promotionResults.add(result);
+			}
+		}
+		else
+		{
+			LOG.debug("Inside entry qualifying count null");
+			promotionResults = evaluatePromotion(ctx, evalCtx, order, isPercentageDisc, percentageDiscount, maxDiscount,
+					promotionResults, orderSubtotalAfterDiscounts);
+		}
+
+		return promotionResults;
+	}
 
 
 
@@ -405,16 +417,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 					//TPR-969 - When no entry count restriction is added
 					if (null == entryQualifyingCount)
 					{
-						final double orderSubtotalAfterDiscounts = getMplPromotionHelper().getTotalPrice(order);
-						final double amountRequired = threshold.doubleValue() - orderSubtotalAfterDiscounts;
-
-						final Object[] args =
-						{ threshold, Helper.formatCurrencyAmount(ctx, locale, orderCurrency, threshold.doubleValue()),
-								discountPriceValue,
-								Helper.formatCurrencyAmount(ctx, locale, orderCurrency, discountPriceValue.doubleValue()),
-								Double.valueOf(amountRequired), Helper.formatCurrencyAmount(ctx, locale, orderCurrency, amountRequired),
-								null };
-						return formatMessage(getMessageCouldHaveFired(ctx), args, locale);
+						return formatMsg(entryQualifyingCount, 0, threshold, order, ctx, locale, orderCurrency, discountPriceValue);
 					}
 					//TPR-969 When entry count restriction is present in promotion
 					else
@@ -426,21 +429,8 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 						{
 							orderEntryCount += entry.getQuantity().intValue();
 						}
-						int quantityNeeded = entryQualifyingCount.intValue() - orderEntryCount;
-						if (quantityNeeded < 0)
-						{
-							quantityNeeded = 0;
-						}
-						final String qtyNeededMsg = quantityNeeded + " more item(s)";
-
-						final double orderSubtotalAfterDiscounts = getMplPromotionHelper().getTotalPrice(order);
-						final double amountRequired = threshold.doubleValue() - orderSubtotalAfterDiscounts;
-
-						final Object[] args =
-						{ threshold, Helper.formatCurrencyAmount(ctx, locale, orderCurrency, threshold.doubleValue()), null, null,
-								Double.valueOf(amountRequired), Helper.formatCurrencyAmount(ctx, locale, orderCurrency, amountRequired),
-								qtyNeededMsg };
-						return formatMessage(getMessageCouldHaveFired(ctx), args, locale);
+						return formatMsg(entryQualifyingCount, orderEntryCount, threshold, order, ctx, locale, orderCurrency,
+								discountPriceValue);
 					}
 				}
 			}
@@ -461,7 +451,8 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 				final String qtyNeededMsg = quantityNeeded + " more item(s)";
 
 				final Object[] args =
-				{ null, null, null, null, null, null, qtyNeededMsg };
+				{ Double.valueOf(0.0), Helper.formatCurrencyAmount(ctx, locale, orderCurrency, 0.0), null, null, Double.valueOf(0.0),
+						Helper.formatCurrencyAmount(ctx, locale, orderCurrency, 0.0), qtyNeededMsg };
 				return formatMessage(getMessageCouldHaveFired(ctx), args, locale);
 
 			}
@@ -470,6 +461,56 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 		return MarketplacecommerceservicesConstants.EMPTYSTRING;
 
 	}
+
+
+
+
+
+	/**
+	 * This method formats message for the promotion when threshold is present
+	 *
+	 * @param entryQualifyingCount
+	 * @param orderEntryCount
+	 * @param threshold
+	 * @param order
+	 * @param ctx
+	 * @param locale
+	 * @param orderCurrency
+	 * @param discountPriceValue
+	 * @return String
+	 */
+	private String formatMsg(final Double entryQualifyingCount, final int orderEntryCount, final Double threshold,
+			final AbstractOrder order, final SessionContext ctx, final Locale locale, final Currency orderCurrency,
+			final Double discountPriceValue)
+	{
+		int quantityNeeded = 0;
+
+		if (null != entryQualifyingCount)
+		{
+			quantityNeeded = entryQualifyingCount.intValue() - orderEntryCount;
+			if (quantityNeeded < 0)
+			{
+				quantityNeeded = 0;
+			}
+		}
+
+		final String qtyNeededMsg = quantityNeeded + " more item(s)";
+		final double orderSubtotalAfterDiscounts = getMplPromotionHelper().getTotalPrice(order);
+		double amountRequired = threshold.doubleValue() - orderSubtotalAfterDiscounts;
+		if (amountRequired < 0)
+		{
+			amountRequired = 0;
+		}
+
+		final Object[] args =
+		{ threshold, Helper.formatCurrencyAmount(ctx, locale, orderCurrency, threshold.doubleValue()), discountPriceValue,
+				Helper.formatCurrencyAmount(ctx, locale, orderCurrency, discountPriceValue.doubleValue()),
+				Double.valueOf(amountRequired), Helper.formatCurrencyAmount(ctx, locale, orderCurrency, amountRequired), qtyNeededMsg };
+		return formatMessage(getMessageCouldHaveFired(ctx), args, locale);
+	}
+
+
+
 
 	/****
 	 *
