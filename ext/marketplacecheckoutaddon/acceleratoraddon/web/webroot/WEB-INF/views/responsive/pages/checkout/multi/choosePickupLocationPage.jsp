@@ -1119,7 +1119,7 @@
 								<div class="error_txt pickupPersonMobileError"></div>
 	        			    </div>
 				             <div class="submitSubPanel">
-				             <button type="button"  class="savenewid" id="savePickupPersondDetails" style="height: 40px !important"><spring:theme code="checkout.multi.cnc.pickup.details.submit"/></button>
+				             <button type="button"  class="savenewid" id="savePickupPersondDetails"><spring:theme code="checkout.multi.cnc.pickup.details.submit"/></button>
 				          <div id="pickupPersonSubmit"></div>
 				          <div class="error_txt pickupPersonSubmitError"></div>
 				            </div>
