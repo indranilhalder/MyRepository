@@ -321,13 +321,13 @@ function displayCODForm()
 			var codEligible=$("#codEligible").val();
 
 			$("#COD, #paymentDetails, #otpNUM, #sendOTPNumber, #sendOTPButton").css("display","block");
-			$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, .make_payment, #paymentFormButton, #otpSentMessage").css("display","none");/*modified for pprd testing -- changing back*/
+			$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, #paymentFormButton, #otpSentMessage").css("display","none");/*modified for pprd testing -- changing back*/
 			if(codEligible=="BLACKLISTED")
 			{
 				$("#customerBlackListMessage").css("display","block");
 				$("#otpNUM").css("display","none");
 				$("#otpSentMessage").css("display","none");
-				//$("#no-click").remove();
+				$(".terms.cod").remove();
 				applyPromotion(null);
 			}
 			else if(codEligible=="NOT_TSHIP")
@@ -335,7 +335,7 @@ function displayCODForm()
 				$("#fulfillmentMessage").css("display","block");
 				$("#otpNUM").css("display","none");
 				$("#otpSentMessage").css("display","none");
-				//$("#no-click").remove();
+				$(".terms.cod").remove();
 				applyPromotion(null);
 			}
 			else if(codEligible=="ITEMS_NOT_ELIGIBLE")
@@ -343,7 +343,7 @@ function displayCODForm()
 				$("#codItemEligibilityMessage").css("display","block");
 				$("#otpNUM").css("display","none");
 				$("#otpSentMessage").css("display","none");
-				//$("#no-click").remove();
+				$(".terms.cod").remove();
 				applyPromotion(null);
 			}
 			else if(codEligible=="NOT_PINCODE_SERVICEABLE")
@@ -351,7 +351,7 @@ function displayCODForm()
 				$("#codMessage").css("display","block");
 				$("#otpNUM").css("display","none");
 				$("#otpSentMessage").css("display","none");
-				//$("#no-click").remove();
+				$(".terms.cod").remove();
 				applyPromotion(null);
 			}
 			else{
@@ -1027,9 +1027,10 @@ function displayFormForCC(){
 	
 	//if(document.getElementsByName("creditCards")[0]==undefined){
 		//$("#savedCard, #savedCreditCard, #savedDebitCard, .newCard, .savedCard, .saved-card-button").css("display","none");
-		$(".make_payment_top_savedCard").css("display","none");
+		//$(".make_payment_top_savedCard").css("display","none");
 		$("#newCard, .newCardPayment").css("display","block");
-		$(".make_payment_top_newCard").css("display","block");
+		//$(".make_payment_top_newCard").css("display","block");
+		$('#make_cc_payment_up').show();
 		$(".accepted-cards .maestro").parent().css("display","none");
 		$(".accepted-cards .visa").parent().css("display","inline-block");
 		$(".accepted-cards .master").parent().css("display","inline-block");
@@ -4046,7 +4047,7 @@ function applyPromotion(bankName)
 									}
 								}
 								else{								
-									$("#bankNameForEMI, #listOfEMiBank").css("display","none");
+									$("#bankNameForEMI, #listOfEMiBank , .bank-label").css("display","none");
 									$("#emiRangeError").css("display","block");
 								}
 								
