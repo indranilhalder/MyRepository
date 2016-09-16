@@ -7,8 +7,8 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags" %>
 	
-<div class="subtotals top block ${subtotalsCssClasses}">
-	<h2><spring:theme code="order.order.totals"/></h2>
+<div class="subtotals top block ${subtotalsCssClasses} summary-info">
+	<%-- <h2><spring:theme code="order.order.totals"/></h2> --%>
 <ul class="totals">
 <%-- Commented for defect TISBOX-1636 --%>
 <%-- <li id="promotionMessage" >
@@ -126,7 +126,7 @@
 </div>
 
 <ul class="totals outstanding-totalss">
-          <li id="totals" class="outstanding-amounts"><spring:theme code="basket.page.totals.outstanding.amount"/><span class="amt"><ycommerce:testId code="cart_totalPrice_label">
+          <li id="totals" class="outstanding-amounts"><spring:theme code="basket.page.totals.outstanding.amount"/><span class="amt" id="outstanding-amount-mobile"><ycommerce:testId code="cart_totalPrice_label">
                 <c:choose>
                     <c:when test="${showTax}">
                         <format:price priceData="${cartData.totalPriceWithTax}"/>

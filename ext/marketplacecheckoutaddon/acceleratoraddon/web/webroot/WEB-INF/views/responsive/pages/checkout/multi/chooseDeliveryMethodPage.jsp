@@ -97,7 +97,7 @@
 								value="${isExpressCheckoutSelected}" />
 					<c:choose>
 						<c:when test="${isExpressCheckoutSelected}">
-								<button class="button" id="deliveryMethodSubmitUp" type="submit"
+								<button class="button proceed-button" id="deliveryMethodSubmitUp" type="submit"
 										class="checkout-next">
 										<spring:theme
 											code="checkout.multi.deliveryMethod.expresscheckout.continue"
@@ -105,7 +105,7 @@
 									</button>
 						</c:when>
 						<c:otherwise>
-									<button class="button" id="deliveryMethodSubmitUp"
+									<button class="button proceed-button" id="deliveryMethodSubmitUp"
 										type="submit" class="checkout-next">
 										<spring:theme code="checkout.multi.deliveryMethod.continue"
 											text="Next" />

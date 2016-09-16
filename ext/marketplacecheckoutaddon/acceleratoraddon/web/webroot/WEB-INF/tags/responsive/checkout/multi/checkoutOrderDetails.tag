@@ -15,18 +15,20 @@
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags" %>
 <%@ taglib prefix="multi-checkout" tagdir="/WEB-INF/tags/addons/marketplacecheckoutaddon/responsive/checkout/multi" %>
 
-<div class="right-block billing">
+<div class="right-block billing  checkout-list-right">
 	<div class="checkout-order-summary">
+	<h3>Summary</h3>
 		<%-- <div class="headline"><spring:theme code="checkout.multi.order.summary" text="Order Summary" /></div> --%>
 		<multi-checkout:orderTotals cartData="${cartData}" showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" />
 		<multi-checkout:coupons cartData="${cartData}" />
-		<div class="bottom order-details block">
+		<div class="bottom order-details block delivery-info">
 			<!-- <ul class="checkout-order-summary-list"> -->
+			
 				<multi-checkout:deliveryCartItems cartData="${cartData}" showDeliveryAddress="${showDeliveryAddress}" />
 				<c:forEach items="${cartData.pickupOrderGroups}" var="groupData" varStatus="status">
 						<multi-checkout:pickupCartItems cartData="${cartData}" groupData="${groupData}" index="${status.index}" showHead="true" />
 				</c:forEach>
-
+			
 				<multi-checkout:paymentInfo cartData="${cartData}" paymentInfo="${cartData.paymentInfo}" showPaymentInfo="${showPaymentInfo}" />
 			<!-- </ul> -->
 		</div>

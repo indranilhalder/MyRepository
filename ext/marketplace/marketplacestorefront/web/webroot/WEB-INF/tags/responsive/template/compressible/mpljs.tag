@@ -39,7 +39,6 @@
 	src="${commonResourcePath}/js/plugins/tree.jquery.js"></script>
 <script type="text/javascript"
 	src="${commonResourcePath}/js/plugins/smk-accordion.js"></script>
-
 <script type="text/javascript"
 	src="${commonResourcePath}/js/plugins/jquery.elevatezoom.js"></script>
 <%-- Custom ACC JS --%>
