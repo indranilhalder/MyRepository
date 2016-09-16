@@ -3935,6 +3935,8 @@ function applyPromotion(bankName)
 				$("#promotionMessage").empty();
 				var total=response.totalPrice.formattedValue;
 				document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
+				document.getElementById("outstanding-amount").innerHTML=response.totalPrice.formattedValue;
+				document.getElementById("outstanding-amount-mobile").innerHTML=response.totalPrice.formattedValue;
 				$("#cartPromotionApplied").css("display","none");
 				$("#codAmount").text(response.totalPrice.formattedValue);
 
@@ -4331,7 +4333,7 @@ function calculateDeliveryCost(radioId,deliveryCode)
 }
 
 //TPR-1214
-$(".pincode-button").click(function(){
+/*$(".pincode-button").click(function(){
 	
 	$.ajax({
  		url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/new-address",
@@ -4339,13 +4341,14 @@ $(".pincode-button").click(function(){
  		cache: false,
  		dataType: "html",
  		success : function(response) {
+ 			//alert('here');
  			$(".addnewAddresPage").html(response);
  		},
  		error : function(resp) {
  		}
  		
  		});
-});
+});*/
 //TPR-1213
 $(document).ready(function(){
 	
@@ -4364,9 +4367,13 @@ $(".edit_address").click(function(){
  		dataType: "html",
  		success : function(response) {
  		//	$(this).parents().find(".edit").next(".editnewAddresPage#"+address_id).html(response);
+ 			$('.editnewAddresPage, .formaddress').slideUp();
+ 			$(".add-address").slideDown();
  			$("#"+address_id_new[1]).html(response);
  		//	$(this).parents().find(".edit").next(".editnewAddresPage").show();
  			//$(".editnewAddresPage .checkout-shipping.formaddress").prepend("<input type='button' value='cancel' class='cancelBtnEdit'>");
+ 			//alert('hi');
+ 			
  			$("#"+address_id_new[1] + " .checkout-shipping.formaddress").prepend("<div class='heading-form'><h3>Edit Address</h3><input type='button' value='cancel' class='cancelBtnEdit' id='cancel-"+address_id_new[1]+"'></div>");
  			$("#"+address_id_new[1]).slideDown();
  		},
