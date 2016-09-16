@@ -50796,4 +50796,7 @@ padding:0px;}
     padding: 0px 24px 0;
 }}
  /* TPR-1217 starts Click And Collect Ends */
+ .checkout.wrapper .formaddress select[name="state"] option {
+    color: #a5a5a5;
+} 
   
