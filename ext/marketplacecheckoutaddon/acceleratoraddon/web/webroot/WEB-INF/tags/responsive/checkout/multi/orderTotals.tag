@@ -7,8 +7,8 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags" %>
 	
-<div class="subtotals top block ${subtotalsCssClasses}">
-	<h2><spring:theme code="order.order.totals"/></h2>
+<div class="subtotals top block ${subtotalsCssClasses} summary-info">
+	<%-- <h2><spring:theme code="order.order.totals"/></h2> --%>
 <ul class="totals">
 <%-- Commented for defect TISBOX-1636 --%>
 <%-- <li id="promotionMessage" >
@@ -28,16 +28,25 @@
 </c:if>
 </li> --%>
 	<li class="subtotal">
-		<spring:theme code="basket.page.totals.subtotal"/> 
+		<span class="subTotalSpan"><spring:theme code="basket.page.totals.subtotal"/> </span>
 		<span class="amt">
 			<ycommerce:testId code="Order_Totals_Subtotal">
 				<format:price priceData="${cartData.subTotal}"/>
 			</ycommerce:testId>
 		</span>
 	</li>
+	
+	<c:if test="${cartData.totalDiscounts.value > 0}">
+	<li id="cartPromotionApplied">
+		<span class="cartpromotionSpan"><spring:theme code="basket.page.totals.savings"/></span>
+		<span id="cartPromotion" style="float: right">  <format:price priceData="${cartData.totalDiscounts}"/> 	</span>
+
+	</li> 
+    </c:if>
+	
 	<c:if test="${not empty cartData.deliveryCost}">
 		<li class="shipping">
-			<spring:theme code="basket.page.totals.delivery"/>
+			<span class="shippingSpan"><spring:theme code="basket.page.totals.delivery"/></span>
 			<span id="deliveryCostSpanId">
 				<ycommerce:testId code="Order_Totals_Delivery">
 					<format:price priceData="${cartData.deliveryCost}" displayFreeForZero="TRUE"/>
@@ -53,13 +62,13 @@
 	</li>
     <%-- Commented due to making confusion in the Payment page calculation --%>
 	<!-- Tag used for Delivery Mode and Delivery Address Page promotion display TISBOX-1618-->
-	<c:if test="${cartData.totalDiscounts.value > 0}">
+	<%-- <c:if test="${cartData.totalDiscounts.value > 0}">
 	<li id="cartPromotionApplied">
-		<spring:theme code="basket.page.totals.savings"/>
+		<span class="cartpromotionSpan"><spring:theme code="basket.page.totals.savings"/></span>
 		<span id="cartPromotion" style="float: right"> - <format:price priceData="${cartData.totalDiscounts}"/> 	</span>
 
 	</li> 
-    </c:if> 
+    </c:if> --%> 
 	<!-- Tag used for Payment Page promotion display-->
 	<li id="promotionApplied" >
 		<spring:theme code="basket.page.totals.savings"/>
@@ -77,7 +86,7 @@
     
 	<li class="total" id="total">
 		<div id="totalPriceConvChargeId">
-			<spring:theme code="basket.page.totals.total"/> 
+			<span class="totalsSpan"><spring:theme code="basket.page.totals.total"/> </span>
 			<span id="totalWithConvField" style="float: right"><format:price priceData="${cartData.totalPrice}"/></span>
 		</div>
 	</li>
@@ -117,7 +126,7 @@
 </div>
 
 <ul class="totals outstanding-totalss">
-          <li id="totals" class="outstanding-amounts"><spring:theme code="basket.page.totals.outstanding.amount"/><span class="amt"><ycommerce:testId code="cart_totalPrice_label">
+          <li id="totals" class="outstanding-amounts"><spring:theme code="basket.page.totals.outstanding.amount"/><span class="amt" id="outstanding-amount-mobile"><ycommerce:testId code="cart_totalPrice_label">
                 <c:choose>
                     <c:when test="${showTax}">
                         <format:price priceData="${cartData.totalPriceWithTax}"/>

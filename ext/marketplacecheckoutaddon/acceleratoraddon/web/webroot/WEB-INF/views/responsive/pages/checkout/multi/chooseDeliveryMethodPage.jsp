@@ -30,7 +30,7 @@
 	<%-- <div class="checkout-headline">
 		<spring:theme code="checkout.multi.secure.checkout" text="Secure Checkout"></spring:theme>
 	</div> --%>
-	<div class="checkout-content cart checkout wrapper">
+	<div class="checkout-content cart checkout wrapper delivery">
 		<!-- store url fix -->
 		<script type="text/javascript"
 			src="/_ui/responsive/common/js/jquery-2.1.1.min.js"></script>
@@ -45,6 +45,12 @@
 					//}
 					$(document).ready(function() {
 						selectDefaultDeliveryMethod();
+						
+						/* $('#deliveryMethodSubmit').click(function(e) {
+							alert(5);
+							e.preventDefault();
+							//$('#selectDeliveryMethodForm').submit();
+						}); */
 					});
 					var timeoutID;
 					function setup() {
@@ -91,7 +97,7 @@
 								value="${isExpressCheckoutSelected}" />
 					<c:choose>
 						<c:when test="${isExpressCheckoutSelected}">
-								<button class="button" id="deliveryMethodSubmitUp" type="submit"
+								<button class="button proceed-button" id="deliveryMethodSubmitUp" type="submit"
 										class="checkout-next">
 										<spring:theme
 											code="checkout.multi.deliveryMethod.expresscheckout.continue"
@@ -99,7 +105,7 @@
 									</button>
 						</c:when>
 						<c:otherwise>
-									<button class="button" id="deliveryMethodSubmitUp"
+									<button class="button proceed-button" id="deliveryMethodSubmitUp"
 										type="submit" class="checkout-next">
 										<spring:theme code="checkout.multi.deliveryMethod.continue"
 											text="Next" />
@@ -504,6 +510,19 @@
 		  
 		
          <!--  <span>37 Noalimba Avenue, LONG PLAIN, NSW 2360</span> <span>Phone: 02 9736 2453</span> -->
+        
+ 	<c:choose>
+ 	<c:when test="${deliveryAddress.defaultAddress}">
+ 		<span class="default default-selected">
+ 	  <input type="radio" value="Make this default address"
+ 																class="regular-radio" name="default"
+ 																id="radio-default2_${deliveryAddress.id}"
+ 																data-address-id="${deliveryAddress.id}">				      
+ 	  <label class="radio-checked" for="radio-default2_${deliveryAddress.id}">Make this default address</label>
+ 	  </span>
+ 	</c:when>
+ 		</c:choose>
+
 		  <span class="default">
 		  <input type="radio" value="Make this default address"
 																	class="regular-radio" name="default"
@@ -1415,7 +1434,6 @@
 				showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" />
 		</div>
 	</div>
-	
 <%-- <div class="outstanding-amt" style="display:none;">	
 <ul class="totals outstanding-totalss">
           <li id="totals" class="outstanding-amounts"><spring:theme code="basket.page.totals.outstanding.amount"/><span class="amt"><ycommerce:testId code="cart_totalPrice_label">

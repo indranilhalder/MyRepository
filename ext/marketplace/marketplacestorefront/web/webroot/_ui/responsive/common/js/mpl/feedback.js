@@ -477,7 +477,7 @@ $(document).ready(function(){
 			 var paymentModes =  $("#viewPaymentCredit, #viewPaymentDebit, #viewPaymentNetbanking, #viewPaymentCOD, #viewPaymentEMI");
 			 $(window).on('load resize',function(){	
 			 paymentModes.on("click",function(e) {
-				 $('.cart.wrapper .left-block .payments.tab-view ul.tabs').show(200);
+				// $('.cart.wrapper .left-block .payments.tab-view ul.tabs').show(200);
 				/*if($(window).width()<651){
 				 $('.cart.wrapper .left-block .payments.tab-view ul.tabs').show(200);
 				 $(this).parents('ul.nav').addClass('hide-menu');
@@ -486,7 +486,7 @@ $(document).ready(function(){
 				 if(paymentModes.parent().hasClass("active")){
 					 paymentModes.parent().removeClass("active");
 				 }
-				 $(this).parent().addClass("active"); 
+				// $(this).parent().addClass("active"); 
 				 $('ul.accepted-cards li').removeClass('active-card');
 			 });
 			
@@ -2110,6 +2110,9 @@ if($(".choose-address .acc_content").children(".address-list").length == 0){
 		overflow: "hidden"
 	});
 $(".choose-address .acc_head").css("text-align","center");
+}
+if ($("#couponMessage").children().length == 0){
+	$("#couponMessage").css("padding","0px");
 }
 /*	$(document).on("click",".edit",function(e){	
 		 e.stopPropagation();
