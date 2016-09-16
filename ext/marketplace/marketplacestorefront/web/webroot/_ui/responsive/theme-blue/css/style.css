@@ -47334,6 +47334,8 @@ body.no-scroll {
 .address-list .address span {
     display: block;
     padding-bottom: 9px;
+    line-height: 19px;
+    word-break: break-word;
 }
 
 .address-list .address .name {
@@ -50026,6 +50028,7 @@ left: -5px;
 .checkout-table.product-block.mybag-items.checkout-items .quantity{
 	text-align:center;
 	margin-top: 21px;
+	margin-left: 5px;
    /*  margin-left: 71px; */
 }
 .checkout-table.product-block.mybag-items.checkout-items .delivery.dev{
@@ -50109,7 +50112,7 @@ input[type="radio"] + label:before, input[type="checkbox"] + label:before{
 	}
 	.checkout-table.product-block.mybag-items.checkout-items .quantity {
     margin-top: -26px;
-    margin-left: 83px;
+    margin-left: 98px;
 	}
 	#selectDeliveryMethodForm .button#deliveryMethodSubmitUp{
     bottom: 0;
@@ -50188,7 +50191,7 @@ input[type="radio"] + label:before, input[type="checkbox"] + label:before{
 	}
 	.checkout-table.product-block.mybag-items.checkout-items .quantity {
     margin-top: -26px;
-    margin-left: 145px;
+    margin-left: 143px;
     text-align: left;
 }
 }
@@ -50234,7 +50237,7 @@ input[type="radio"] + label:before, input[type="checkbox"] + label:before{
 	.checkout-shipping.left-block .colour{
 	padding-top:9px;
 	    text-align: left;
-    padding-left: 10px;
+    padding-left: 8px;
 	}
 	.right-block.shipping .checkout-order-summary{
 	border-bottom: none;
