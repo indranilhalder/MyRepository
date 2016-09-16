@@ -15,7 +15,6 @@ package com.tisl.mpl.storefront.security.impl;
 
 import de.hybris.platform.acceleratorstorefrontcommons.security.GUIDCookieStrategy;
 import de.hybris.platform.core.model.user.CustomerModel;
-import de.hybris.platform.servicelayer.user.UserService;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -37,6 +36,7 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.util.Assert;
 import org.springframework.web.util.CookieGenerator;
 
+import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.storefront.interceptors.beforecontroller.RequireHardLoginBeforeControllerHandler;
 import com.tisl.mpl.storefront.security.cookie.KeepAliveCookieGenerator;
 import com.tisl.mpl.storefront.security.cookie.LuxuryEmailCookieGenerator;
@@ -59,12 +59,12 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 
 	private LuxuryEmailCookieGenerator luxuryEmailCookieGenerator;
 
-	private UserService userService;
+	private ExtendedUserService userService;
 
 	/**
 	 * @return the userService
 	 */
-	public UserService getUserService()
+	public ExtendedUserService getUserService()
 	{
 		return userService;
 	}
@@ -73,7 +73,7 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 	 * @param userService
 	 *           the userService to set
 	 */
-	public void setUserService(final UserService userService)
+	public void setUserService(final ExtendedUserService userService)
 	{
 		this.userService = userService;
 	}
@@ -163,10 +163,12 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 				LOG.info("Adding cookie for luxury cookie");
 				//Encrypt the customer email id and store it in luxury cookie
 				getLuxuryEmailCookieGenerator().addCookie(response, encrypt(customer.getOriginalUid()));
+
+				getLuxuryUserCookieGenerator().addCookie(response, userService.getAccessTokenForUser(customer.getOriginalUid()));
+
 			}
 		}
-		//To be added
-		getLuxuryUserCookieGenerator().addCookie(response, null);
+
 		request.getSession().setAttribute(RequireHardLoginBeforeControllerHandler.SECURE_GUID_SESSION_KEY, guid);
 
 		if (LOG.isInfoEnabled())
@@ -215,6 +217,27 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 
 
 	}
+
+
+	//			public String decrypt(final String strToDecrypt, final String encryptionKey)
+	//			{
+	//				String decryptedText = null;
+	//				try
+	//				{
+	//					final Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
+	//
+	//					cipher.init(Cipher.DECRYPT_MODE, getSecretKey(encryptionKey));
+	//					decryptedText = new String(cipher.doFinal(Base64.decodeBase64(strToDecrypt)));
+	//
+	//				}
+	//				catch (final Exception e)
+	//				{
+	//
+	//					System.out.println("Error while decrypting: " + e.toString());
+	//				}
+	//				return decryptedText;
+	//			}
+
 
 	/**
 	 * @param key
@@ -282,6 +305,11 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 				if (cookie.getName().equals(cookieName))
 				{
 					cookie.setValue("anonymous");
+					if (StringUtils.isNotEmpty(getLuxuryUserCookieGenerator().getCustomDomain()))
+					{
+						cookie.setDomain(getLuxuryUserCookieGenerator().getCustomDomain());
+						cookie.setPath("/");
+					}
 					response.addCookie(cookie);
 					break;
 				}

@@ -18,7 +18,6 @@
 
 <script>
 
-
 			$(".g-interactivepost").attr("data-contenturl",window.location.host+$('#productUrl').text());
 			$(".g-interactivepost").attr("data-calltoactionurl",window.location.host+$('#productUrl').text());
 			//$(".wish-share .share a.tw").attr("href","https://twitter.com/intent/tweet?text=Wow! I found this amazing product - check it out here"+window.location+". Like or comment to tell me what you guys think. Hit share to spread the love. ");
@@ -27,7 +26,8 @@
 			var popUpHeight=450;
 				 var PopUpLeftPosition = screen.width/2 - popUpWidth/2;
 				    var PopUpTopPosition= screen.height/2 - popUpHeight/2;
-			function openPopup(url) {
+			function openPopup(url,buttonType) {
+				alert(buttonType);
 				    window.open(url, 'popup_id','scrollbars,resizable,height='+popUpHeight+',width='+ popUpWidth +',left='+ PopUpLeftPosition +',top='+ PopUpTopPosition);
 			      return false;
 			    }
@@ -38,7 +38,7 @@
 <span><spring:theme code="text.share.friends"/></span>
 	<ul>
 		<li>
-			<a class="tw" onclick="return openPopup('https://twitter.com/intent/tweet?text='+ $('#sharepretext').text() + ' ' +window.location.host+ $('#productUrl').text() + ' ' + $('#shareposttext').text())"></a>
+			<a class="tw" onclick="return openPopup('https://twitter.com/intent/tweet?text='+ $('#sharepretext').text() + ' ' +window.location.host+ $('#productUrl').text() + ' ' + $('#shareposttext').text(),'share_twitter')"></a>
 		</li>
 		<li>
 			<a class="fb" onclick="return openPopup('https://www.facebook.com/dialog/feed?link=' + window.location.host+ $('#productUrl').text() + '&amp;app_id=' + $('#facebookAppid').text() + '&amp;description='+$('#sharepretext').text()+' '+$('#shareposttext').text()+' &amp;redirect_uri=http://www.facebook.com/')"></a> 

@@ -242,14 +242,14 @@
 		<property name="cookieMaxAge" value="360000000"/>
 		<property name="useDefaultPath" value="false"/>
 		<property name="useDefaultDomain" value="false"/>
-		<property name="customDomain" value="#{configurationService.configuration.getProperty('shared.cookies.domain')}"/>
+		<property name="customDomain" value="#{configurationService.configuration.getProperty('shared.cookies.domain')}"/> 
 	</bean>
 	<bean id="luxuryUserCookieGenerator" class="com.tisl.mpl.storefront.security.cookie.LuxuryUserCookieGenerator" >
 		<property name="cookieSecure" value="false"/>
 		<property name="cookieMaxAge" value="360000000"/>
 		<property name="useDefaultPath" value="false"/>
 		<property name="useDefaultDomain" value="false"/>
-		<property name="customDomain" value="#{configurationService.configuration.getProperty('shared.cookies.domain')}"/>
+		<property name="customDomain" value="#{configurationService.configuration.getProperty('shared.cookies.domain')}"/> 
 	</bean>
 	<!-- End -->
 	<!-- BTG filters -->
