@@ -174,14 +174,7 @@
 					<h1 class="payment-options"><spring:theme code="text.payment.options"/></h1>
 						<p class="cart-items">You have an outstanding amount of &nbsp;&nbsp;<span class="prices"  id="outstanding-amount">
 					<ycommerce:testId code="cart_totalPrice_label">
-                <c:choose>
-                    <c:when test="${showTax}">
-                        <format:price priceData="${cartData.totalPriceWithTax}"/>
-                    </c:when>
-                    <c:otherwise>
-                        <format:price priceData="${cartData.totalPrice}"/>
-                    </c:otherwise>
-                </c:choose>
+                <format:price priceData="${cartData.totalPrice}"/>
             </ycommerce:testId>
 					</span></p>
 						<div class="checkout-indent payments tab-view smk_accordion acc_with_icon">
