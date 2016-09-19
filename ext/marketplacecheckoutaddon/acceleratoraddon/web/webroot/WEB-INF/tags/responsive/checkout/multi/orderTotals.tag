@@ -43,6 +43,11 @@
 
 	</li> 
     </c:if>
+    	<li id="promotionApplied" >
+		<span><spring:theme code="basket.page.totals.savings"/></span>
+		<span id="promotion" style="float: right"><format:price priceData="${cartData.totalDiscounts}"/> 	</span>
+
+	</li> 
 	
 	<c:if test="${not empty cartData.deliveryCost}">
 		<li class="shipping">
@@ -70,11 +75,7 @@
 	</li> 
     </c:if> --%> 
 	<!-- Tag used for Payment Page promotion display-->
-	<li id="promotionApplied" >
-		<span><spring:theme code="basket.page.totals.savings"/></span>
-		<span id="promotion" style="float: right"><format:price priceData="${cartData.totalDiscounts}"/> 	</span>
 
-	</li> 
      
     <li id="couponApplied" >
 	<button class="remove-coupon-button"></button>
