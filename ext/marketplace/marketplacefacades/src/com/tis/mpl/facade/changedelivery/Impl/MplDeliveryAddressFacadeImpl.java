@@ -433,6 +433,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 						else
 						{
 							mplDeliveryAddressService.setStatusForTemporaryAddress(orderCode, false);
+							scheduledDeliveryData.setIsActive(Boolean.TRUE);
 							scheduledDeliveryData.setIsPincodeServiceable(Boolean.FALSE);
 						}
 
@@ -823,8 +824,8 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		{
 			for (AbstractOrderEntryModel abstractOrderEntry : subOrder.getEntries())
 			{
-				if (abstractOrderEntry.getDeliveryMode().getCode()
-						.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
+				if (!abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getCode()
+						.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
 				{
 					if (abstractOrderEntry.getEdScheduledDate() != null)
 					{
