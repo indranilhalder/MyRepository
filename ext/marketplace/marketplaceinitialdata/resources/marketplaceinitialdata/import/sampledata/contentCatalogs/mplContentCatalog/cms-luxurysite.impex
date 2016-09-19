@@ -61,7 +61,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;NavigationBar;;;navigation
 
 ;Section1;;RotatingImagesComponent;
-;Section2;;MplShowcaseComponent; 
+;Section2;;SignColComponent; 
 # MplLuxuryShowcaseComponent to be made extending MplShowcaseItemComponent
 ;Section3;;MplAdvancedCategoryCarouselComponent;
 ;Section4;;VideoComponent;                          
@@ -105,6 +105,84 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 ;;Section1-luxuryHomepage;Section1;;Section1-heroBannerComponent;;; 
 
 ############################### SECTION 1 END ####################################
+
+############################### SECTION 2 START ####################################
+
+INSERT_UPDATE SignColItemComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;showByDefault;;
+;;CoachSignatureCollectionItem;Coach Brand Signature Collection;CoachSignatureCollectionItem;false
+;;BurberrySignatureCollectionItem;Burberry Brand Signature Collection;BurberrySignatureCollectionItem;false
+;;MichaelKorsSignatureCollectionItem;MichaelKors Brand Signature Collection;MichaelKorsSignatureCollectionItem;true
+;;PaulSmithSignatureCollectionItem;PaulSmith Brand Signature Collection;PaulSmithSignatureCollectionItem;false
+;;GiorgioArmaniSignatureCollectionItem;GiorgioArmani Brand Signature Collection;GiorgioArmaniSignatureCollectionItem;false
+;;CromaSignatureCollectionItem;Croma Brand Signature Collection;CromaSignatureCollectionItem;false
+
+
+INSERT_UPDATE SignColComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;showcaseItems(&componentRef)
+;;SignatureCollectionComponent;Signature Collection Component;SignatureCollectionComponent;CoachSignatureCollectionItem,BurberrySignatureCollectionItem,MichaelKorsSignatureCollectionItem,PaulSmithSignatureCollectionItem,GiorgioArmaniSignatureCollectionItem,CromaSignatureCollectionItem
+
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+;;Section2-signatureCollection;true;luxury Homepage signature collection Slot;SignatureCollectionComponent
+
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxuryhomepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section2-luxuryHomepage;Section1;;Section2-signatureCollection;;; 
+
+
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
+;;Coachlogo.png;$siteResource/images/logo/ascot.png;ascot.png;"Coach Logo"
+;;cromalogo.png;$siteResource/images/logo/croma.png;croma.png;"Croma Logo";
+;;Burberrylogo.png;$siteResource/images/logo/nuon.png;nuon.png;"Burberry Logo";
+;;MichaelKorslogo.png;$siteResource/images/logo/landmark.png;landmark.png;"MichaelKors Logo"
+;;PaulSmithlogo.png;$siteResource/images/logo/zara.png;zara.png;"PaulSmith Logo";
+;;GiorgioArmanilogo.png;$siteResource/images/logo/nuon.png;nuon.png;"GiorgioArmani Logo";
+
+#Banners
+;;brandbanner1.png;$siteResource/images/banners/homepage/responsive/brandbanner1.png;brandbanner1.png;;
+;;brandbanner2.png;$siteResource/images/banners/homepage/responsive/brandbanner2.png;brandbanner2.png;;
+;;brandbanner3.png;$siteResource/images/banners/homepage/responsive/brandbanner3.png;brandbanner3.png;;
+;;brandbanner4.png;$siteResource/images/banners/homepage/responsive/brandbanner4.png;brandbanner4.png;;
+;;brandbanner5.png;$siteResource/images/banners/homepage/responsive/brandbanner5.png;brandbanner5.png;;
+;;brandbanner6.png;$siteResource/images/banners/homepage/responsive/brandbanner6.png;brandbanner6.png;;
+
+
+
+UPDATE SignColItemComponent;$contentCV[unique=true];uid[unique=true];logo(code, $contentCV);bannerImage(code, $contentCV)
+;;CoachSignatureCollectionItem;Coachlogo.png;brandbanner1.png
+;;BurberrySignatureCollectionItem;Burberrylogo.png;brandbanner2.png
+;;MichaelKorsSignatureCollectionItem;MichaelKorslogo.png;brandbanner3.png
+;;PaulSmithSignatureCollectionItem;PaulSmithlogo.png;brandbanner6.png
+;;GiorgioArmaniSignatureCollectionItem;GiorgioArmanilogo.png;brandbanner5.png
+;;CromaSignatureCollectionItem;cromalogo.png;brandbanner4.png
+
+
+UPDATE SignColItemComponent;$contentCV[unique=true];uid[unique=true];text;bannerText
+;;CoachSignatureCollectionItem;"<p class='home-brands-you-love-main-image-heading'>Coach Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>Coach Collections SS16</p>:
+<a class='visit-store' href='/store/mpl/en/c/MBH11A00048'>shop now</a>"
+;;BurberrySignatureCollectionItem;"<p class='home-brands-you-love-main-image-heading'>Burberry Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>Burberry Collections SS16</p>:
+<a class='visit-store' href='/store/mpl/en/c/MBH11A00048'>shop now</a>"
+;;MichaelKorsSignatureCollectionItem;"<p class='home-brands-you-love-main-image-heading'>MichaelKors Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>MichaelKors Collections SS16</p>:
+<a class='visit-store' href='/store/mpl/en/c/MBH11A00048'>shop now</a>"
+;;PaulSmithSignatureCollectionItem;"<p class='home-brands-you-love-main-image-heading'>PaulSmith Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>PaulSmith Collections SS16</p>:
+<a class='visit-store' href='/store/mpl/en/c/MBH11A00048'>shop now</a>"
+;;GiorgioArmaniSignatureCollectionItem;"<p class='home-brands-you-love-main-image-heading'>GiorgioArmani Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>GiorgioArmani Collections SS16</p>:
+<a class='visit-store' href='/store/mpl/en/c/MBH11A00048'>shop now</a>"
+;;CromaSignatureCollectionItem;"<p class='home-brands-you-love-main-image-heading'>Croma Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>Croma Collections SS16</p>:
+<a class='visit-store' href='/store/mpl/en/c/MBH11A00048'>shop now</a>"
+
+
+UPDATE SignColItemComponent;$contentCV[unique=true];uid[unique=true];product1(code,$productCV);product2(code,$productCV);product3(code,$productCV);product4(code,$productCV)
+;;CoachSignatureCollectionItem;987654321;987654321;987654321;987654321
+;;BurberrySignatureCollectionItem;987654321;987654321;987654321;987654321
+;;MichaelKorsSignatureCollectionItem;987654321;987654321;987654321;987654321
+;;PaulSmithSignatureCollectionItem;987654321;987654321;987654321;987654321
+;;GiorgioArmaniSignatureCollectionItem;987654321;987654321;987654321;987654321
+;;CromaSignatureCollectionItem;987654321;987654321;987654321;987654321
+
+############################### SECTION 2 END ####################################
+
+
 
 ############################### SECTION 3 START ####################################
 #shop your favourite

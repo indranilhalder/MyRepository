@@ -107,6 +107,12 @@
 
 		<collectiontype elementtype="java.lang.String" code="mplImageUrl"
 			autocreate="true" generate="true" type="list" />
+		
+		<!-- Luxury SignatureCollection-->	
+		<collectiontype code="signColItemsCollection"
+			elementtype="SignColItemComponent" autocreate="true" generate="true"
+			type="list" />
+		<!-- Luxury SignatureCollection -->
 
 	</collectiontypes>
 
@@ -4247,7 +4253,69 @@
 				</attributes>
 			</itemtype>
 			<!-- End -->
+			
+			
+<!-- Component created for Luxury Signature Collection Starts -->
+			<itemtype code="SignColComponent" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.core.jalo.SignColComponent">
+				<description>This component is created for signature collection section</description>
+				<attributes>
 
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<description>This attribute is for showing the title of the component</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+
+
+
+					<attribute type="signColItemsCollection" qualifier="showcaseItems"
+						autocreate="true" generate="true">
+						<description>This attribute is a collection of signature collection items</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+					
+					<!--
+						<attribute type="signatureCollectionLayout" qualifier="layout"
+							autocreate="true" generate="true">
+							<description>This attribute is for determining the layout structure of the component</description>
+							<defaultvalue>em().getEnumerationValue("showCaseLayout","BrandShowCase")</defaultvalue>
+							<modifiers read="true" write="true" search="true" />
+							<persistence type='property' />
+						</attribute>
+					-->
+				</attributes>
+			</itemtype>
+
+
+			<itemtype code="SignColItemComponent" autocreate="true"
+				generate="true" extends="MplShowcaseItemComponent"
+				jaloclass="com.tisl.mpl.core.jalo.SignColItemComponent">
+				<description>This component is created for configuring each item of the signature collection</description>
+				<deployment table="SignColItemComponent" typecode="15987" />
+
+				<attributes>
+					<attribute type="Product" qualifier="product3"
+						autocreate="true" generate="true">
+						<description>This attribute is for storing 3rd product</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+					
+					<attribute type="Product" qualifier="product4"
+						autocreate="true" generate="true">
+						<description>This attribute is for storing 4th product</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+
+				</attributes>
+			</itemtype>
+			<!-- Component created for Luxury Signature Collection Ends -->
+			
 			<!-- for offer Image carousel component -->
 			<itemtype code="MplOfferImageCarouselComponent" extends="ImageCarouselComponent"
 				generate="true" autocreate="true"
