@@ -231,6 +231,8 @@ public final class ModelAttributetConstants
 	public static final String CLIQCAREMAIL = "cliqCareMail";
 	public static final String GOOGLECLIENTID = "googleClientid";
 	public static final String FACEBOOKAPPID = "facebookAppid";
+	//TPR-743
+	public static final String CANONICAL_URL = "canonicalUrl";
 
 
 	//	public static final String CLOTHING = "Clothing";

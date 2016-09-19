@@ -43,6 +43,7 @@ import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.PromotionData;
 import de.hybris.platform.commercefacades.product.data.ReviewData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
+import de.hybris.platform.commercefacades.product.data.VariantOptionData;
 import de.hybris.platform.commerceservices.url.UrlResolver;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -1487,6 +1488,10 @@ public class ProductPageController extends AbstractPageController
 					model.addAttribute(MarketplacecommerceservicesConstants.ALLVARIANTSSTRING, allVariantsString);
 				}
 			}
+
+			// TPR-743
+			findCanonicalProduct(productData, model);
+
 		}
 		//populateVariantSizes(productData);
 		catch (final EtailBusinessExceptions e)
@@ -1504,7 +1509,16 @@ public class ProductPageController extends AbstractPageController
 
 
 
-	//TODO
+	/**
+	 * @param productData
+	 * @param model
+	 */
+	private void findCanonicalProduct(final ProductData productData, final Model model)
+	{
+		final List<VariantOptionData> variants = productData.getVariantOptions();
+		final String canonicalUrl = variants.get(0).getUrl();
+		model.addAttribute(ModelAttributetConstants.CANONICAL_URL, canonicalUrl);
+	}
 
 	protected void setUpMetaData(final Model model, final String metaDescription, final String metaTitle,
 			final String productCode, final String metaKeywords)
