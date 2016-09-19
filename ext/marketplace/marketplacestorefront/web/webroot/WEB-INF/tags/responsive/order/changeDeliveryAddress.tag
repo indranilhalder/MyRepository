@@ -163,7 +163,7 @@
 							<div class="col-md-8 form-group">
 								<label for="phonenumber">Phone Number*</label>
 								<form:input path="mobileNo"
-									class="form-control textInputChangeAddress" id="mobileNo"
+									class="form-control textInputChangeAddress" id="mobileNo" maxlength="10"
 									value="${orderDetails.deliveryAddress.phone}" placeholder="Mobile Number" />
 								<div class="error_text mobileNumberError"></div>
 							</div>
