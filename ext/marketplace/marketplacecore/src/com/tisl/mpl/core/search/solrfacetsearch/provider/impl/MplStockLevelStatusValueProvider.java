@@ -3,7 +3,6 @@
  */
 package com.tisl.mpl.core.search.solrfacetsearch.provider.impl;
 
-import de.hybris.platform.basecommerce.enums.StockLevelStatus;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.solrfacetsearch.config.IndexConfig;
 import de.hybris.platform.solrfacetsearch.config.IndexedProperty;
@@ -27,8 +26,8 @@ import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
  * @author tcs
  *
  */
-public class MplStockLevelStatusValueProvider extends AbstractPropertyFieldValueProvider
-		implements FieldValueProvider, Serializable
+public class MplStockLevelStatusValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider,
+		Serializable
 {
 
 	private FieldNameProvider fieldNameProvider;
@@ -37,7 +36,7 @@ public class MplStockLevelStatusValueProvider extends AbstractPropertyFieldValue
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.solrfacetsearch.provider.FieldValueProvider#getFieldValues(de.hybris.platform.solrfacetsearch.
 	 * config.IndexConfig, de.hybris.platform.solrfacetsearch.config.IndexedProperty, java.lang.Object)
@@ -67,27 +66,28 @@ public class MplStockLevelStatusValueProvider extends AbstractPropertyFieldValue
 
 	public Collection getFieldValues(final String productCode, final String productType, final IndexedProperty indexedProperty)
 	{
+		boolean stockStatus = false;
 		final Collection fieldValues = new ArrayList();
 
 		final Integer availableStock = buyBoxService.getBuyboxInventoryForSearch(productCode, productType);
 
-		StockLevelStatus stockLevelStatus = StockLevelStatus.OUTOFSTOCK;
+		//StockLevelStatus stockLevelStatus = StockLevelStatus.OUTOFSTOCK;
 
 		if (availableStock != null && availableStock.intValue() > 0)
 		{
-			stockLevelStatus = StockLevelStatus.INSTOCK;
+			stockStatus = true;
 		}
 
-		fieldValues.addAll(createFieldValue(stockLevelStatus, indexedProperty));
+		fieldValues.addAll(createFieldValue(stockStatus, indexedProperty));
 
 		return fieldValues;
 	}
 
-	protected List<FieldValue> createFieldValue(final StockLevelStatus stockLevelStatus, final IndexedProperty indexedProperty)
+	protected List<FieldValue> createFieldValue(final boolean stockLevelStatus, final IndexedProperty indexedProperty)
 	{
 		final List fieldValues = new ArrayList();
 
-		addFieldValues(fieldValues, indexedProperty, stockLevelStatus);
+		addFieldValues(fieldValues, indexedProperty, Boolean.valueOf(stockLevelStatus));
 
 		return fieldValues;
 	}
