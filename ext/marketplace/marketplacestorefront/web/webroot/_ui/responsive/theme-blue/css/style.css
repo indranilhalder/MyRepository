@@ -49366,9 +49366,15 @@ padding-bottom: 30px;
 .cart.wrapper .right-block.billing .block.bottom.order-details > ul li.item .product h3.product-name{font-size:12px !important;font-weight:normal;margin:0px;}
 }
 @media only screen and (max-width:1250px){
-.choose-payment{ padding: 90px 24px 0;}	
-.cart.wrapper .right-block.billing.checkout-list-right{ padding: 0px 24px 0;    margin-bottom: 40px;}
+.choose-payment{ padding: 90px 0 0 24px;}	
+.cart.wrapper .right-block.billing.checkout-list-right{ padding: 0px 24px 0 0;    margin-bottom: 40px;}
 #wrapper .container-address{ padding:0 24px;}
+.cart.wrapper .left-block {
+    width: 66.2%;
+}
+.cart.wrapper .right-block.billing.checkout-list-right {
+    width: 31.8%;
+}
 }
 @media(max-width:1200px){
 	    .cart.wrapper .button.proceed-button {
