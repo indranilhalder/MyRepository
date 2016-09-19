@@ -37834,8 +37834,8 @@ a.cart-list .product-item .details .promo:hover {
 .cart.wrapper .right-block.shipping .checkout-order-summary .totals {
 	margin-left:0px;
 	font-size:12px;
-	    background: #fbfbfb;
-	 padding:   28px 25px 25px 40px;
+	background: #fbfbfb;
+	padding:   25px 30px;
 
 }
 
@@ -48825,15 +48825,13 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
   display:none;}
   .cart.wrapper .button#deliveryMethodSubmit{
   display:block;
-  position: absolute;
-    bottom: -270px;
-    right: 30px;
+    margin-right: 35px;
     float: right;
     background-color: #a9143c;
     border: 0 none;
     color: #fff;
     height: 40px;
-    margin-top: 14px;
+    margin-top: -40px;
     width: 175px;
     text-transform: Uppercase;
     padding: 16px 23px;
@@ -49872,7 +49870,7 @@ ul.delivery-checkout input[type=radio]:checked ~ label, input[type=radio]:checke
 	.cart.wrapper .button#deliveryMethodSubmit{
 	    height: 40px;
     width: 175px;
-    margin-top: 10px;
+    margin-top: -44px;
     font-size: 10px;
     padding: 0;
 	}
@@ -49922,11 +49920,14 @@ left: -5px;
 .delivery .checkout-headers .desk-view{ font-size:12px; margin:0 0 15px;}
 .mybag-items.checkout-items .mybag-item .dev{padding: 0 30px;}
 .checkout-items.mybag-items .mybag-item .Product-detail {    padding-bottom: 0;    padding-top: 20px;}
-.checkout-totals.mybag-totals {    padding: 25px 30px 15px;}
+.cart.wrapper .right-block.shipping .checkout-order-summary .totals {
+	padding:   25px 30px 15px;
+
 }
-@media(max-width:790px) {
+}
+/* @media(max-width:790px) {
 .chkoutheader + #wrapper .mainContent-wrapper {    padding: 55px 24px 0;}	
-}
+} */
 @media(max-width:767px) {
 #wrapper .container-address{padding: 10px 0 0;}	
 .chkoutheader + #wrapper .mainContent-wrapper {    padding: 50px 0 0;}
@@ -49941,7 +49942,8 @@ left: -5px;
 .mybag-items.checkout-items .mybag-item .dev li{ margin:0;}
 .delivery .checkout__text-header{ font-size:12px;}
 .delivery .checkout__text-desc{ font-size:10px;}
-.checkout-totals.mybag-totals {    padding: 5px 15px 15px;margin: 0 0 83px;}
+.cart.wrapper .right-block.shipping .checkout-order-summary .totals{    padding: 5px 15px 15px;}
+.cart.wrapper .button#deliveryMethodSubmit{display:none;}
 }
 .cart.wrapper .right-block .checkout-order-summary .subtotals.top.block h2,.cart.wrapper .right-block .block.top h2{
 	display:none;
@@ -49998,6 +50000,7 @@ left: -5px;
 }
 .cart.wrapper .right-block.shipping{
 	margin-top:0px;
+	    margin-bottom: 60px;
 }
 .cart.wrapper .right-block .block{
 	border:none;
@@ -50273,7 +50276,6 @@ input[type="radio"] + label:before, input[type="checkbox"] + label:before{
     padding-right: 70px;
     margin: 0 20px;
     padding-left: 30px;
-    width: 100%;
     }
    .right-block.shipping .checkout-order-summary .subtotals.top.block .totals{
     width:100%;
@@ -50302,6 +50304,9 @@ input[type="radio"] + label:before, input[type="checkbox"] + label:before{
 	margin-top:0px;
     right: 26px;
 	}
+	.cart.wrapper .right-block.shipping {
+    margin-bottom: 92px;
+}
 	}  
 @media  (min-width: 791px) and (max-width: 980px){
 	.checkout-shipping.left-block .checkout-indent .checkout-shipping-items{
@@ -50335,22 +50340,20 @@ input[type="radio"] + label:before, input[type="checkbox"] + label:before{
     padding: 0;
 }
 .cart.wrapper .button#deliveryMethodSubmit{
-	display: block;
-    position: absolute;
-    bottom: -253px;
-    right: 50px;
+    margin-right: 30px;
     float: right;
     background-color: #a9143c;
     border: 0 none;
     color: #fff;
     height: 40px;
-    margin-top: 14px;
+    margin-top: -25px;
     width: 175px;
     text-transform: Uppercase;
     padding: 16px 23px;
     font-weight: bold;
     letter-spacing: 0.5px;
-        line-height: inherit;
+    line-height: inherit;
+    font-size: 10px !important;
 }
 }
 @media  (min-width: 981px) and (max-width: 1450px){
@@ -50393,8 +50396,10 @@ input[type="radio"] + label:before, input[type="checkbox"] + label:before{
 	} */
 }
 .cart.wrapper .right-block.shipping .checkout-order-summary{
-background:none;
 padding:0px;}
+.cart.wrapper .right-block.shipping{
+background:#f8f8f8;
+}
  /*Delivery page end*/
  /* change here for modified checkout page ends */
  /* defect fix start*/
