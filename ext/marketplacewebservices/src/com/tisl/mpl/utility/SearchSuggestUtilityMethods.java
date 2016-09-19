@@ -170,7 +170,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 * 
+	 *
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -628,17 +628,17 @@ public class SearchSuggestUtilityMethods
 				/*
 				 * final ProductModel productModel = productService.getProductForCode(defaultPromotionManager.catalogData(),
 				 * productData.getCode());
-				 * 
+				 *
 				 * ProductData productData1 = null; if (null != productModel) { productData1 =
 				 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.GALLERY)); } else { throw
 				 * new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9037); }
-				 * 
-				 * 
+				 *
+				 *
 				 * if (null != productData1) { final List<GalleryImageData> gallaryImages =
 				 * mplProductWebService.getGalleryImages(productData1);
-				 * 
+				 *
 				 * if (!gallaryImages.isEmpty()) { sellingItemDetail.setGalleryImagesList(gallaryImages); }
-				 * 
+				 *
 				 * }
 				 */
 				productDataImage = productFacade.getProductForCodeAndOptions(productData.getCode(),
@@ -1315,11 +1315,12 @@ public class SearchSuggestUtilityMethods
 	{
 		final List<FacetDataWsDTO> searchfacetDTOList = new ArrayList<>();
 		DepartmentHierarchyWs categoryHierarchy = new DepartmentHierarchyWs();
-		if (null != searchPageData.getFacets())
+		if (CollectionUtils.isNotEmpty(searchPageData.getFacets()))
 		{
 			for (final FacetData<SearchStateData> facate : searchPageData.getFacets())
 			{
-				if (facate.isVisible() && !facate.getCode().equalsIgnoreCase("snsCategory")
+				if (facate.isVisible() && StringUtils.isNotEmpty(facate.getCode())
+						&& !facate.getCode().equalsIgnoreCase("snsCategory")
 						&& !facate.getCode().equalsIgnoreCase(MarketplacewebservicesConstants.CATEGORY)
 						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
 						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory"))
@@ -1328,7 +1329,7 @@ public class SearchSuggestUtilityMethods
 
 					//	facetWsDTO.setCategory(facate.getCode());
 					facetWsDTO.setMultiSelect(Boolean.valueOf((facate.isCategory())));
-					if (null != facate.getName())
+					if (StringUtils.isNotEmpty(facate.getName()))
 					{
 						facetWsDTO.setName(facate.getName());
 					}
@@ -1363,7 +1364,7 @@ public class SearchSuggestUtilityMethods
 						{
 							final FacetValueDataWsDTO facetValueWsDTO = new FacetValueDataWsDTO();
 							//facetValueWsDTO.setCount(new Long(values.getCount()));
-							if (null != values.getName())
+							if (StringUtils.isNotEmpty(values.getName()))
 							{
 								facetValueWsDTO.setName(values.getName());
 							}
@@ -1375,15 +1376,18 @@ public class SearchSuggestUtilityMethods
 								currentFacet = values.getQuery().getQuery().getValue().toString();
 								facetValueWsDTO.setQuery(currentFacet);
 								//facetValueWsDTO.setValue(currentFacet.substring((currentFacet.lastIndexOf(":") + 1)));
-
-								facetValueWsDTO.setValue(values.getCode());
+								if (StringUtils.isNotEmpty(values.getCode()))
+								{
+									facetValueWsDTO.setValue(values.getCode());
+								}
 							}
-							if (null != values.getQuery().getUrl())
+							if (StringUtils.isNotEmpty(values.getQuery().getUrl()))
 							{
 								facetValueWsDTO.setUrl(values.getQuery().getUrl().toString());
 							}
 							//If facet name is "Include out of stock"  value will be false
-							if (!(null != values.getCode() && values.getCode().equalsIgnoreCase("false")))
+							if (!(null != values.getCode() && StringUtils.isNotEmpty(values.getCode()) && values.getCode()
+									.equalsIgnoreCase("false")))
 							{
 								facetValueWsDTOList.add(facetValueWsDTO);
 							}
@@ -1398,7 +1402,8 @@ public class SearchSuggestUtilityMethods
 					}
 					//searchfacetDTOList.add(facetWsDTO);
 				}
-				else if (facate.isVisible() && facate.getCode().equalsIgnoreCase(MarketplacewebservicesConstants.CATEGORY))
+				else if (facate.isVisible() && StringUtils.isNotEmpty(facate.getCode())
+						&& facate.getCode().equalsIgnoreCase(MarketplacewebservicesConstants.CATEGORY))
 				{
 					if (null != searchPageData.getDepartmentHierarchyData()
 							&& CollectionUtils.isNotEmpty(searchPageData.getDepartmentHierarchyData().getHierarchyList()))
@@ -1407,7 +1412,7 @@ public class SearchSuggestUtilityMethods
 								facate.getValues());
 					}
 					categoryHierarchy.setMultiSelect(Boolean.valueOf((facate.isCategory())));
-					if (null != facate.getName())
+					if (StringUtils.isNotEmpty(facate.getName()))
 					{
 						categoryHierarchy.setName(facate.getName());
 					}
@@ -1416,7 +1421,8 @@ public class SearchSuggestUtilityMethods
 					categoryHierarchy.setKey(facate.getCode());
 
 					//Generic filter condition
-					if (searchPageData.getDeptType().equalsIgnoreCase(MarketplacewebservicesConstants.GENERIC))
+					if (StringUtils.isNotEmpty(searchPageData.getDeptType())
+							&& searchPageData.getDeptType().equalsIgnoreCase(MarketplacewebservicesConstants.GENERIC))
 					{
 
 						if (facate.isGenericFilter())
