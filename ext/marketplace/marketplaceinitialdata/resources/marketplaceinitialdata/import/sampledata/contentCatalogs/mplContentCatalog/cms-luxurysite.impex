@@ -250,5 +250,37 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 ############################### SECTION 7 END ####################################
 
 
+############################### SEARCHBOX START ####################################
+INSERT_UPDATE MplEnhancedSearchBoxComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;maxProducts;maxSuggestions;minCharactersBeforeRequest;searchBoxCategories(code, $productCV)
+;;luxurySearchBox;Luxury Enhanced  Search Box Component;luxurySearchBox;2;3;3;
 
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;cmsComponents(&componentRef)
+;;searchBoxSlot;Luxury Search Slot;luxurySearchBox
+
+# ContentSlotForPage 
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxuryhomepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;searchBox-luxuryHomepage;SearchBox;;searchBoxSlot;;; 
+
+
+############################### SEARCHBOX END ####################################
+
+############################### SITE LOGO COMPONENT  START####################################
+
+# Site Logo Component
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink
+;;luxurySiteLogoComponent;Luxury Site Logo Component;luxurySiteLogoComponent;"/"
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;cmsComponents(&componentRef)
+;;siteLogoSlot;Luxury Site Logo Slot;luxurySiteLogoComponent
+
+# ContentSlotForPage 
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxuryhomepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;siteLogo-luxuryHomepage;SiteLogo;;siteLogoSlot;;; 
+
+############### update media for site logo ##########################
+# Site Logo Component
+UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;luxurySiteLogoComponent;sitelogo.png
+
+############################### SITE LOGO COMPONENT  END####################################
 
