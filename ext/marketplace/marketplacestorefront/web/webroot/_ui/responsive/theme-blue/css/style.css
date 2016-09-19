@@ -49099,7 +49099,7 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
     margin-top:26px;
  }
  .checkout-paymentmethod span#codAmount{	display:inline-block;}
- .cod-container label { text-transform: capitalize;margin:0px;line-height:inherit;}
+ .cod-container label { text-transform: none;margin:0px;line-height:inherit;}
  #resendOTPMessage {margin-bottom: 0px;  font-weight: 500;text-transform:none;}
  .error-message.payment-notification {color: #60A119;font-size: 13px; text-transform: capitalize; font-weight: normal; padding-top: 0px;}
 .cart.wrapper .left-block.choose-payment .button:hover, .confirmation .left-block .button:hover { background: #fff !important;}
@@ -49342,7 +49342,7 @@ padding-bottom: 30px;
 .smk_accordion .accordion_in .acc_head span{ padding: 20px 0 20px 20px;}
 .smk_accordion .accordion_in{ background: #fff url("../images/down-arrow.png") no-repeat scroll 96% 25px;}
 .smk_accordion .accordion_in.acc_active{ background: rgba(0, 0, 0, 0) url("../images/up-arrow.png") no-repeat scroll 96% 25px;}
-.smk_accordion .accordion_in .acc_content .blocks{padding: 20px 30px 30px;}
+.smk_accordion .accordion_in .acc_content .blocks{padding: 20px 28px 30px 30px;}
 .smk_accordion .accordion_in .acc_content .blocks.netbankingPanel{padding-bottom: 0px;}
 
 .prd-info .product,
