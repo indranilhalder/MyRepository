@@ -2133,3 +2133,26 @@ $(document).ready(function(){
 /* TPR-1217 starts Click And Collect Ends */
 
 $('.checkout.wrapper .formaddress select[name="state"]').on("change",function(){$(this).css("color","#000");});
+
+/* TPR-1601 checkout progress bar start */
+$(document).ready(function(){
+	if($(".progress-barcheck").hasClass("choosePage")){
+		$(".step-1").addClass("active");
+		$(".progress-barg span.step").addClass("step1");
+		$(this).children().find(".step-2").addClass("in-active");
+		$(this).children().find(".step-3").addClass("in-active");
+		
+	}
+	else if ($(".progress-barcheck").hasClass("selectPage")){
+		$(".step-2").addClass("active");
+		$(".step-1").addClass("step-done");
+		$(".progress-barg span.step").addClass("step2");
+		$(this).children().find(".step-3").addClass("in-active");
+	}
+	else if  ($(".progress-barcheck").hasClass("paymentPage")){
+		$(".step-3").addClass("active");
+		$(".step-1,.step-2").addClass("step-done");
+		$(".progress-barg span.step").addClass("step3");
+	}
+});
+/* TPR-1601 checkout progress bar end  */

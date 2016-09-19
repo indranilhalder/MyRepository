@@ -17,13 +17,14 @@
   		</div>
 		</nav>
 		<div class="container-address nav">
-			<div class="progress-barcheck">
+		  	   <c:set var="progressBarClass" value="${progressBarClass}" />
+               <c:set var="paymentPage" value="${paymentPage}" />
+			<div class="progress-barcheck  ${progressBarClass}  ${paymentPage}">
       <%-- <div class="progress-barg"><span class="step${checkoutStep.stepNumber}"></span></div> --%>
      <!--  <div class="step-1 finish"><a href="checkout-delivery.html">Sign In <i class="fa fa-caret-right fa-caret"></i></a><span></span></div>
       <div class="step-2 inprogress active"><a href="checkout-combination.html">Delivery&nbsp;<i class="fa fa-caret-right fa-caret"></i></a><span></span></div>
       <div class="step-3 finalstep "><a href="checkout-payment.html">Payment&nbsp;<i class="fa fa-caret-right fa-caret"></i></a><span></span></div> -->
-               <c:set var="progressBarClass" value="${progressBarClass}" />
-               <c:set var="paymentPage" value="${paymentPage}" />
+            
 		
 				<div class="progress-barg">
 				<c:forEach items="${checkoutSteps}" var="checkoutStep"
@@ -32,7 +33,7 @@
 					<c:set scope="page" var="activeCheckoutBarStepNumber" value="${checkoutStep.stepNumber}" />
 					</c:if>
 					</c:forEach>
-					<span class="step${activeCheckoutBarStepNumber}"></span>
+					<span class="step"></span>
 				</div> 
 			
 				<c:forEach items="${checkoutSteps}" var="checkoutStep"
@@ -49,7 +50,7 @@
 									code="checkout.multi.${checkoutStep.progressBarId}" /> <!-- 	</a> -->
 
 							</li> --%>
-							 <div class="step-${checkoutStep.stepNumber} active" ><a href="${stepUrl}" class="step-head js-checkout-step "><spring:theme
+							 <div class="step-${checkoutStep.stepNumber}" ><a href="${stepUrl}" class="step-head js-checkout-step "><spring:theme
 									code="checkout.multi.${checkoutStep.progressBarId}" /><i class="fa fa-caret-right fa-caret"></i></a><span></span></div>
 						</c:when>
 						<c:when
@@ -82,7 +83,7 @@
 									</c:otherwise>
 
 								</c:choose></li> --%>
-								<div class="step-${checkoutStep.stepNumber} step-done"><a href="${stepUrl}" class="step-head js-checkout-step"><spring:theme
+								<div class="step-${checkoutStep.stepNumber}"><a href="${stepUrl}" class="step-head js-checkout-step"><spring:theme
 									code="checkout.multi.${checkoutStep.progressBarId}" /><i class="fa fa-caret-right fa-caret"></i></a><span></span></div>
 									
 									
