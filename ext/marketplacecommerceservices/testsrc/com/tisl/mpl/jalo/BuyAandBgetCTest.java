@@ -3,138 +3,246 @@
  */
 package com.tisl.mpl.jalo;
 
-import static org.junit.Assert.assertEquals;
-
 import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
+import de.hybris.platform.commerceservices.order.CommerceCartService;
+import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
-import de.hybris.platform.jalo.product.Product;
-import de.hybris.platform.order.CalculationService;
+import de.hybris.platform.jalo.JaloSession;
 import de.hybris.platform.order.CartService;
-import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.product.ProductService;
-import de.hybris.platform.promotions.AbstractPromotionTest;
-import de.hybris.platform.promotions.PromotionsService;
-import de.hybris.platform.promotions.jalo.PromotionsManager.AutoApplyMode;
-import de.hybris.platform.promotions.model.PromotionGroupModel;
+import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.util.Config;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
+import java.util.UUID;
 
-import javax.annotation.Resource;
-
+import org.apache.log4j.Logger;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.tisl.mpl.enums.DiscTypesEnum;
+import com.tisl.mpl.servicelayer.MplServicelayerTest;
 
 
-
-public class BuyAandBgetCTest extends AbstractPromotionTest
+@SuppressWarnings("deprecation")
+public class BuyAandBgetCTest extends MplServicelayerTest
 {
 
+
+	private static final Logger LOG = Logger.getLogger(BuyAandBgetCTest.class);
+
 	private ProductModel product1, product2;
+	private UserModel user;
+	private CurrencyModel currency;
+	private CartModel cart;
+	private CatalogVersionModel version;
+	DiscTypesEnum enumvalue;
 
-	@Resource
-	private CatalogVersionService catalogVersionService;
-	@Resource
-	private ProductService productService;
-	@Resource
-	private UserService userService;
-	@Resource
-	private CartService cartService;
-	@Resource
-	private CalculationService calculationService;
-	@Resource
-	private CommonI18NService commonI18NService;
-	@Resource
-	private ModelService modelService;
-	@Resource
-	private PromotionsService promotionsService;
+	@Autowired
+	private CommerceCartService commerceCartService;
 
-	@Override
+
+	/**
+	 * Add dependency in class path for following platform/bootstrap
+	 * platform/ext/platformservices/classes/de/hybris/platform/order/exceptions
+	 * commercefacades/classes/de/hybris/platform/commercefacades/product/converters/populator
+	 * platform/ext/platformservices/classes/de/hybris/platform/catalog/synchronization
+	 * platform/bootstrap/modelclasses/de/hybris/platform/core/model/order
+	 *
+	 *
+	 * Run bogoFreebiePromotions.csv post required changes
+	 *
+	 * @Description : Executes before Test
+	 * @throws Exception
+	 */
 	@Before
 	public void setUp() throws Exception
 	{
+		createDefaultUsers();
+		LOG.info("Setting Up Data");
 		MockitoAnnotations.initMocks(this);
-		final BuyAandBgetC buyAandBgetC = new BuyAandBgetC();
-		ProductModel product3;
-
-		final CatalogVersionModel version = catalogVersionService.getCatalogVersion("", "");//TODO : Please enter catalogue name,Please enter version
-		catalogVersionService.addSessionCatalogVersion(version);
-
-
-		//TISSEC-50
-		product1 = productService.getProductForCode(version, "");//TODO : Please enter product1
-		product2 = productService.getProductForCode(version, "");//TODO : Please enter product2
-		product3 = productService.getProductForCode(version, "");//TODO : Please enter product3
-
-		final Product p = new Product();
-		p.setCode(product3.getCode());
-		p.setName(product3.getName());
-
-		final List<Product> giftProduct = new ArrayList<Product>();
-		giftProduct.add(p);
-		buyAandBgetC.setGiftProducts(giftProduct);
-		buyAandBgetC.setPriority(1000);
-
-		final Product p1 = new Product();
-		p1.setCode(product1.getCode());
-		p1.setName(product1.getName());
-
-		final List<Product> product = new ArrayList<Product>();
-		product.add(p1);
-		buyAandBgetC.setProducts(product);
-
-		final Product p2 = new Product();
-		p2.setCode(product2.getCode());
-		p2.setName(product2.getName());
-
-		final List<Product> secondProduct = new ArrayList<Product>();
-		secondProduct.add(p2);
-		buyAandBgetC.setSecondProducts(secondProduct);
+		this.user = Mockito.mock(UserModel.class);
+		this.currency = Mockito.mock(CurrencyModel.class);
+		this.version = Mockito.mock(CatalogVersionModel.class);
+		this.product1 = Mockito.mock(ProductModel.class);
+		this.product2 = Mockito.mock(ProductModel.class);
+		this.cart = Mockito.mock(CartModel.class);
 
 
-		final UserModel user = userService.getUserForUID("demo");
-		userService.setCurrentUser(user);
+		getCatalogData();
+		product1 = getProductData("987654341");
+		product2 = getProductData("987654342");
+		setUser("2000000011");
+		setCurrency("INR");
 
-		final CurrencyModel currency = commonI18NService.getCurrency("");//TODO : Please enter currency
-		commonI18NService.setCurrentCurrency(currency);
+		//Run bogoFreebiePromotions.csv post required changes
+		enablePromotion();
 	}
 
 	/**
-	 * HW1210-3411: 253 Euro, HW1100-0023: 523.99 Euro, HW2310-1001: 29.90 Euro, and HW2320-1009: 99.80 Euro. Adds all
-	 * these products to cart, and check the price of the cart before and after the updatePromoitions(). Since the
-	 * ProductBOGOFPromotion is enabled, the HW2310-1001(29.90 Euro) with the lowest price is sold for free.
+	 * Method to enable the Promotion
+	 *
+	 * Note: Replace The Promotion Code with the one in Impex
 	 */
-	@Test
-	public void testBuyAandBgetCPromotion() throws CalculationException
+	private void enablePromotion()
 	{
-		final CartModel cart = cartService.getSessionCart();
-		cartService.addNewEntry(cart, product1, 1, product1.getUnit());
-		cartService.addNewEntry(cart, product2, 1, product2.getUnit());
+		final FlexibleSearchService flexibleSearchService = (FlexibleSearchService) Registry.getApplicationContext().getBean(
+				"flexibleSearchService");
+		final ModelService modelService = (ModelService) Registry.getApplicationContext().getBean("modelService");
+		junit.framework.Assert.assertNotNull(modelService);
 
+		final AbstractPromotionModel promotion = (AbstractPromotionModel) flexibleSearchService
+				.search("SELECT {PK} FROM {AbstractPromotion} WHERE {code}='BuyAandBGetC'").getResult().get(0);
+		junit.framework.Assert.assertNotNull(promotion);
 
-		modelService.save(cart);
-		calculationService.calculate(cart);
-		assertEquals("cart total before updatePromotions", 906.69, cart.getTotalPrice().doubleValue(), 0.01);
-
-
-		final PromotionGroupModel promotionGroup = promotionsService.getPromotionGroup("");//TODO : Please enter promotion grp
-		final Collection<PromotionGroupModel> promotionGroups = new ArrayList<PromotionGroupModel>();
-		promotionGroups.add(promotionGroup);
-		promotionsService.updatePromotions(promotionGroups, cart, false, AutoApplyMode.APPLY_ALL, AutoApplyMode.APPLY_ALL,
-				new Date());
-		modelService.refresh(cart);
-		assertEquals("cart total after updatePromotions", 876.79, cart.getTotalPrice().doubleValue(), 0.01);
+		System.out.println("Promotion Code" + promotion.getCode());
+		promotion.setEnabled(Boolean.TRUE);
+		modelService.save(promotion);
 	}
 
+	/**
+	 * @param currencyData
+	 */
+
+	private void setCurrency(final String currencyData)
+	{
+		final CommonI18NService currencysvc = (CommonI18NService) Registry.getApplicationContext().getBean("commonI18NService");
+		junit.framework.Assert.assertNotNull(currencysvc);
+		currency = currencysvc.getCurrency(currencyData);
+		junit.framework.Assert.assertNotNull(currency);
+		currencysvc.setCurrentCurrency(currency);
+	}
+
+	/**
+	 * @param userUID
+	 */
+	private void setUser(final String userUID)
+	{
+		final UserService usersvc = (UserService) Registry.getApplicationContext().getBean("userService");
+		junit.framework.Assert.assertNotNull(usersvc);
+		user = usersvc.getUserForUID(userUID);
+		junit.framework.Assert.assertNotNull(user);
+		usersvc.setCurrentUser(user);
+	}
+
+	/**
+	 * @param producCode
+	 * @return ProductModel
+	 */
+	private ProductModel getProductData(final String producCode)
+	{
+		final ProductService product = (ProductService) Registry.getApplicationContext().getBean("productService");
+		junit.framework.Assert.assertNotNull(product);
+
+		return product.getProductForCode(producCode);
+	}
+
+
+	private void getCatalogData()
+	{
+		final CatalogVersionService catalog = (CatalogVersionService) Registry.getApplicationContext().getBean(
+				"catalogVersionService");
+		junit.framework.Assert.assertNotNull(catalog);
+		version = catalog.getCatalogVersion("mplProductCatalog", "Online");
+		junit.framework.Assert.assertNotNull(version);
+		catalog.addSessionCatalogVersion(version);
+
+	}
+
+
+	@Test
+	public void test() throws Exception
+	{
+		LOG.info("Running Test Data ");
+		cart = getCart();
+		calculateCart();
+	}
+
+	/**
+	 * @return CartModel
+	 */
+	private CartModel getCart()
+	{
+		final CartService cartSvc = (CartService) Registry.getApplicationContext().getBean("cartService");
+		junit.framework.Assert.assertNotNull(cartSvc);
+
+		cart = createCart();
+
+		cartSvc.addNewEntry(cart, product1, 1, product1.getUnit());
+		cartSvc.addNewEntry(cart, product2, 1, product1.getUnit());
+
+		final ModelService modelService = (ModelService) Registry.getApplicationContext().getBean("modelService");
+		junit.framework.Assert.assertNotNull(modelService);
+		modelService.save(cart);
+
+		return cart;
+	}
+
+	/**
+	 * @return CartModel
+	 */
+	private CartModel createCart()
+	{
+		final String cartModelTypeCode = Config.getString(JaloSession.CART_TYPE, "Cart");
+		final ModelService modelService = (ModelService) Registry.getApplicationContext().getBean("modelService");
+		final CartModel cartModel = modelService.create(cartModelTypeCode);
+		cartModel.setUser(user);
+		cartModel.setCurrency(currency);
+		cartModel.setCode(UUID.randomUUID().toString());
+		cartModel.setDate(new Date());
+		cartModel.setNet(Boolean.TRUE);
+
+		modelService.save(cartModel);
+
+		return cartModel;
+	}
+
+	private void calculateCart()
+	{
+		//TODO : Presently Block as Price Factory needs to be overwritten by Cart Team
+		//		final CommerceCartService comCartSvc = (CommerceCartService) Registry.getApplicationContext()
+		//				.getBean("commerceCartService");
+		final ModelService modelService = (ModelService) Registry.getApplicationContext().getBean("modelService");
+		//		junit.framework.Assert.assertNotNull(comCartSvc);
+		//		comCartSvc.recalculateCart(cart);
+		modelService.refresh(cart);
+		modelService.save(cart);
+		//System.out.println("Cart Total Price:" + cart.getTotalPrice());
+	}
+
+	/**
+	 * Method executed after Test
+	 *
+	 * Note: Replace The Promotion Code with the one in Impex
+	 */
+	@After
+	public void tearDown()
+	{
+		LOG.info("Tear Down Method");
+		final FlexibleSearchService flexibleSearchService = (FlexibleSearchService) Registry.getApplicationContext().getBean(
+				"flexibleSearchService");
+		final ModelService modelService = (ModelService) Registry.getApplicationContext().getBean("modelService");
+		junit.framework.Assert.assertNotNull(modelService);
+
+		final AbstractPromotionModel promotion = (AbstractPromotionModel) flexibleSearchService
+				.search("SELECT {PK} FROM {AbstractPromotion} WHERE {code}='BuyAandBGetC'").getResult().get(0);
+		junit.framework.Assert.assertNotNull(promotion);
+
+		System.out.println("Promotion Code" + promotion.getCode());
+		promotion.setEnabled(Boolean.FALSE);
+		modelService.save(promotion);
+	}
 
 }
