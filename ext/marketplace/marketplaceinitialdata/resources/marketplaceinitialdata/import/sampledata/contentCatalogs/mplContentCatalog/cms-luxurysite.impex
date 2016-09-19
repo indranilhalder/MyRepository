@@ -123,11 +123,11 @@ INSERT_UPDATE SignColComponent;$contentCV[unique=true];uid[unique=true];name;&co
 
 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
-;;Section2-signatureCollection;true;luxury Homepage signature collection Slot;SignatureCollectionComponent
+;;Section2-signatureCollection;true;luxury Homepage Signature collection Slot;SignatureCollectionComponent
 
 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxuryhomepage'];contentSlot(uid,$contentCV)[unique=true];;;
-;;Section2-luxuryHomepage;Section1;;Section2-signatureCollection;;; 
+;;Section2-luxuryHomepage;Section2;;Section2-signatureCollection;;; 
 
 
 INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
