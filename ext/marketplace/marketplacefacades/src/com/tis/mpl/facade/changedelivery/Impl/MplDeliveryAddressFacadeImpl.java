@@ -433,6 +433,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 						else
 						{
 							mplDeliveryAddressService.setStatusForTemporaryAddress(orderCode, false);
+							scheduledDeliveryData.setIsActive(Boolean.TRUE);
 							scheduledDeliveryData.setIsPincodeServiceable(Boolean.FALSE);
 						}
 
