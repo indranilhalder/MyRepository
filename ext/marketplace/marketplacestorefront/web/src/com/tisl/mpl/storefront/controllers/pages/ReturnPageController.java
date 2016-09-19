@@ -199,9 +199,9 @@ public class ReturnPageController extends AbstractMplSearchPageController
 					mplCheckoutFacadeImpl.rePopulateDeliveryAddress(getAccountAddressFacade().getAddressBook()));
 			List<PointOfServiceData> returnableStores = new ArrayList<PointOfServiceData>();
 			
-			final String sellerId=subOrderEntry.getSelectedSellerInformation().getSellerID();
+			final String sellerId=subOrderEntry.getSelectedUssid().substring(0, 6);
 			String  pincode;
-			if (subOrderEntry.getDeliveryPointOfService() != null)
+			if (subOrderEntry.getDeliveryPointOfService() != null && subOrderEntry.getDeliveryPointOfService().getAddress() != null)
 			{
 				pincode=subOrderEntry.getDeliveryPointOfService().getAddress().getPostalCode();
 				returnableStores = pincodeServiceFacade.getAllReturnableStores(subOrderEntry.getDeliveryPointOfService().getAddress()
