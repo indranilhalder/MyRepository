@@ -2571,6 +2571,72 @@
 			</attributes>
 		</itemtype>
 		<!-- TPR-629 ends -->
+			
+			<!-- Item Declaration for  Bundle Promotions -->
+			<!-- TPR-1294 : Item Declaration Bundle Promotion-->
+			
+			<itemtype code="MplProductSteppedMultiBuyPromotion"
+			extends="ProductPromotion"
+			jaloclass="com.tisl.mpl.jalo.MplProductSteppedMultiBuyPromotion"
+			autocreate="true"
+			generate="true">
+
+			<attributes>
+				<attribute
+					qualifier="qualifyingCountsAndBundlePrices"
+					autocreate="true"
+					type="PromotionQuantityAndPricesRowCollectionType">
+					<description>The qualifying count and prices for each step.</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false" initial="false" optional="true" partof="true"/>
+				</attribute>
+				<attribute qualifier="messageFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion has fired.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="messageCouldHaveFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion could have potentially fire.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+			</attributes>
+		</itemtype>
+			
+			<!-- TPR-1294 : Item Declaration ends -->
+			
 	</itemtypes>
 	
 </items>
