@@ -49330,6 +49330,9 @@ padding-bottom: 30px;
  .cart.wrapper .right-block.billing .block .totals li#promotionApplied span{
  float:none;
  }
+ .cart.wrapper .right-block #promotionApplied > span:first-child,.cart.wrapper .right-block #cartPromotionApplied > span:first-child{
+	color:#000;
+}
 @media only screen and (max-width:1450px){	
 #wrapper .container-address{ padding:0;}
 .smk_accordion .accordion_in .acc_head,
@@ -49539,7 +49542,9 @@ input.year { height:40px; }
 .cart.wrapper .product-block li.item.cardForm > ul > li:nth-child(even){float:right;}
 .smk_accordion .accordion_in .acc_content .blocks.net-bank.netbankingPanel label{margin:0px;}
 #bankCodeSelection{width:100%;}
-.cart.wrapper .left-block .payments.tab-view .pay.nbButton .button, .cart.wrapper .left-block .payments.tab-view .pay .button.confirm{display:none !important;}
+.cart.wrapper .left-block .payments.tab-view .pay.nbButton .button, .cart.wrapper .left-block .payments.tab-view .pay .button.confirm,
+.cart.wrapper .left-block .payments.tab-view .pay .button
+{display:none !important;}
 .cart.wrapper .left-block .payments.tab-view .pay .terms a {font-size:11px;    line-height: 11px;}
 .cart.wrapper .left-block .payments.tab-view .pay.nbButton .terms p{line-height:11px;    font-size: 11px;}
 .cart.wrapper .right-block.billing .block.bottom.order-details.delivery-info>address span b{

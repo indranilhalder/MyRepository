@@ -72,7 +72,7 @@
 	<!-- Tag used for Payment Page promotion display-->
 	<li id="promotionApplied" >
 		<span><spring:theme code="basket.page.totals.savings"/></span>
-		<span id="promotion" style="float: right"> - <format:price priceData="${cartData.totalDiscounts}"/> 	</span>
+		<span id="promotion" style="float: right"><format:price priceData="${cartData.totalDiscounts}"/> 	</span>
 
 	</li> 
      
