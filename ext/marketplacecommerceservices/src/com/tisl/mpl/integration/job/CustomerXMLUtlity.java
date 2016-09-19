@@ -451,11 +451,18 @@ public class CustomerXMLUtlity
 				{
 					try
 					{
-						customerAddress.setPincode(Long.valueOf(addressModel.getPostalcode()));
+						if (addressModel.getPostalcode().length() == MarketplacecommerceservicesConstants.PIN_CODE_LENGTH)
+						{
+							customerAddress.setPincode(Long.valueOf(addressModel.getPostalcode()));
+						}
+						else
+						{
+							LOG.debug("*****address pincode error skip pincode********");
+						}
 					}
 					catch (final Exception e)
 					{
-						LOG.debug("*****address state error skip pincode********");
+						LOG.debug("*****address pincode error skip pincode********");
 						//continue;
 					}
 
