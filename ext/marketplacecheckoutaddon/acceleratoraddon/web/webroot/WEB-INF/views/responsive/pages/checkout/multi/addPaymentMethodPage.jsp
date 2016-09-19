@@ -68,6 +68,7 @@
         						displayCreditCardForm();
         						$("#viewPaymentCredit").parent("li").addClass("active");
         						$(".checkout-paymentmethod").css("display","block");
+        						setTimeout(function(){$('#viewPaymentCredit').click();},1000);
         					}
         					else if($("#DebitCard").val()=="true")
         					{
@@ -174,7 +175,14 @@
 					<h1 class="payment-options"><spring:theme code="text.payment.options"/></h1>
 						<p class="cart-items">You have an outstanding amount of &nbsp;&nbsp;<span class="prices"  id="outstanding-amount">
 					<ycommerce:testId code="cart_totalPrice_label">
-                <format:price priceData="${cartData.totalPrice}"/>
+                <c:choose>
+                    <c:when test="${showTax}">
+                        <format:price priceData="${cartData.totalPriceWithTax}"/>
+                    </c:when>
+                    <c:otherwise>
+                        <format:price priceData="${cartData.totalPrice}"/>
+                    </c:otherwise>
+                </c:choose>
             </ycommerce:testId>
 					</span></p>
 						<div class="checkout-indent payments tab-view smk_accordion acc_with_icon">
@@ -1033,7 +1041,7 @@
 													
 									</li>
 									</ul>	
-									<div class="terms"><p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><br/><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p></div>	
+									<div class="terms cod"><p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><br/><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p></div>	
 								</div>
 								</div>						
 				<!-- End of COD -->					

@@ -321,13 +321,13 @@ function displayCODForm()
 			var codEligible=$("#codEligible").val();
 
 			$("#COD, #paymentDetails, #otpNUM, #sendOTPNumber, #sendOTPButton").css("display","block");
-			$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, .make_payment, #paymentFormButton, #otpSentMessage").css("display","none");/*modified for pprd testing -- changing back*/
+			$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, #paymentFormButton, #otpSentMessage").css("display","none");/*modified for pprd testing -- changing back*/
 			if(codEligible=="BLACKLISTED")
 			{
 				$("#customerBlackListMessage").css("display","block");
 				$("#otpNUM").css("display","none");
 				$("#otpSentMessage").css("display","none");
-				//$("#no-click").remove();
+				$(".terms.cod").remove();
 				applyPromotion(null);
 			}
 			else if(codEligible=="NOT_TSHIP")
@@ -335,7 +335,7 @@ function displayCODForm()
 				$("#fulfillmentMessage").css("display","block");
 				$("#otpNUM").css("display","none");
 				$("#otpSentMessage").css("display","none");
-				//$("#no-click").remove();
+				$(".terms.cod").remove();
 				applyPromotion(null);
 			}
 			else if(codEligible=="ITEMS_NOT_ELIGIBLE")
@@ -343,7 +343,7 @@ function displayCODForm()
 				$("#codItemEligibilityMessage").css("display","block");
 				$("#otpNUM").css("display","none");
 				$("#otpSentMessage").css("display","none");
-				//$("#no-click").remove();
+				$(".terms.cod").remove();
 				applyPromotion(null);
 			}
 			else if(codEligible=="NOT_PINCODE_SERVICEABLE")
@@ -351,7 +351,7 @@ function displayCODForm()
 				$("#codMessage").css("display","block");
 				$("#otpNUM").css("display","none");
 				$("#otpSentMessage").css("display","none");
-				//$("#no-click").remove();
+				$(".terms.cod").remove();
 				applyPromotion(null);
 			}
 			else{
@@ -1027,9 +1027,10 @@ function displayFormForCC(){
 	
 	//if(document.getElementsByName("creditCards")[0]==undefined){
 		//$("#savedCard, #savedCreditCard, #savedDebitCard, .newCard, .savedCard, .saved-card-button").css("display","none");
-		$(".make_payment_top_savedCard").css("display","none");
+		//$(".make_payment_top_savedCard").css("display","none");
 		$("#newCard, .newCardPayment").css("display","block");
-		$(".make_payment_top_newCard").css("display","block");
+		//$(".make_payment_top_newCard").css("display","block");
+		$('#make_cc_payment_up').show();
 		$(".accepted-cards .maestro").parent().css("display","none");
 		$(".accepted-cards .visa").parent().css("display","inline-block");
 		$(".accepted-cards .master").parent().css("display","inline-block");
@@ -4048,7 +4049,7 @@ function applyPromotion(bankName)
 									}
 								}
 								else{								
-									$("#bankNameForEMI, #listOfEMiBank").css("display","none");
+									$("#bankNameForEMI, #listOfEMiBank , .bank-label").css("display","none");
 									$("#emiRangeError").css("display","block");
 								}
 								
@@ -4332,7 +4333,7 @@ function calculateDeliveryCost(radioId,deliveryCode)
 }
 
 //TPR-1214
-$(".pincode-button").click(function(){
+/*$(".pincode-button").click(function(){
 	
 	$.ajax({
  		url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/new-address",
@@ -4340,13 +4341,14 @@ $(".pincode-button").click(function(){
  		cache: false,
  		dataType: "html",
  		success : function(response) {
+ 			//alert('here');
  			$(".addnewAddresPage").html(response);
  		},
  		error : function(resp) {
  		}
  		
  		});
-});
+});*/
 //TPR-1213
 $(document).ready(function(){
 	
@@ -4365,9 +4367,13 @@ $(".edit_address").click(function(){
  		dataType: "html",
  		success : function(response) {
  		//	$(this).parents().find(".edit").next(".editnewAddresPage#"+address_id).html(response);
+ 			$('.editnewAddresPage, .formaddress').slideUp();
+ 			$(".add-address").slideDown();
  			$("#"+address_id_new[1]).html(response);
  		//	$(this).parents().find(".edit").next(".editnewAddresPage").show();
  			//$(".editnewAddresPage .checkout-shipping.formaddress").prepend("<input type='button' value='cancel' class='cancelBtnEdit'>");
+ 			//alert('hi');
+ 			
  			$("#"+address_id_new[1] + " .checkout-shipping.formaddress").prepend("<div class='heading-form'><h3>Edit Address</h3><input type='button' value='cancel' class='cancelBtnEdit' id='cancel-"+address_id_new[1]+"'></div>");
  			$("#"+address_id_new[1]).slideDown();
  		},

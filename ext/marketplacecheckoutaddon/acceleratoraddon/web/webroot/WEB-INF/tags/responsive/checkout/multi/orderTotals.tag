@@ -56,7 +56,7 @@
 	</c:if>
 	
 	<li id="convChargeFieldId">
-		<spring:theme code="basket.page.totals.convenience"/>
+		<span><spring:theme code="basket.page.totals.convenience"/></span>
 		<span id="convChargeField" style="float: right">
 		</span>
 	</li>
@@ -71,7 +71,7 @@
     </c:if> --%> 
 	<!-- Tag used for Payment Page promotion display-->
 	<li id="promotionApplied" >
-		<spring:theme code="basket.page.totals.savings"/>
+		<span><spring:theme code="basket.page.totals.savings"/></span>
 		<span id="promotion" style="float: right"> - <format:price priceData="${cartData.totalDiscounts}"/> 	</span>
 
 	</li> 
@@ -93,7 +93,7 @@
 	
 	<c:if test="${cartData.net && cartData.totalTax.value > 0 && showTax}">
 		<li class="tax">
-			<spring:theme code="basket.page.totals.netTax"/>
+			<span><spring:theme code="basket.page.totals.netTax"/></span>
 			<span>
 				<format:price priceData="${cartData.totalTax}"/>
 			</span>

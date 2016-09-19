@@ -2085,7 +2085,9 @@ $("#address-form").click(function() {
 
 });
   $(".cancelBtn").click(function() {
-        $(".formaddress").slideUp();
+	  //alert('here');
+	  	
+        $(".editnewAddresPage, .formaddress").slideUp();
         $(".add-address").slideDown();
     });
 	  $(document).on("click",".cancelBtnEdit",function(){	
@@ -2129,3 +2131,5 @@ $(document).ready(function(){
 	$(".shipCartWrapper").parents(".mainContent-wrapper").find("footer").addClass("shipCartFooter");
 });
 /* TPR-1217 starts Click And Collect Ends */
+
+$('.checkout.wrapper .formaddress select[name="state"]').on("change",function(){$(this).css("color","#000");});

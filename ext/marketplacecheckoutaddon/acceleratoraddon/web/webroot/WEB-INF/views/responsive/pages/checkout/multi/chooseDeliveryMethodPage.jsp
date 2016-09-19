@@ -124,7 +124,7 @@
 								<button class="button" id="deliveryMethodSubmit" type="submit" class="checkout-next"><spring:theme code="checkout.multi.deliveryMethod.continue" text="Next"/></button>
 							--%>
 								<!-- TISPRO-625 starts -->
-									<c:choose>
+									<%-- <c:choose>
 										<c:when test="${isExpressCheckoutSelected}">
 												<button class="button" id="deliveryMethodSubmit"
 												type="submit" class="checkout-next">
@@ -140,7 +140,7 @@
 													text="Next" />
 											</button>
 										</c:otherwise>
-									</c:choose>
+									</c:choose> --%>
 							 <!-- TISPRO-625 ends -->
 						
 							
@@ -1434,8 +1434,30 @@
 		<div class="checkout-order-summary">
 			<multi-checkout:orderTotals cartData="${cartData}"
 				showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" />
+				<c:if test="${showDeliveryMethod eq true}">
+		<c:choose>
+			<c:when test="${isExpressCheckoutSelected}">
+					<button class="button" id="deliveryMethodSubmit"
+					type="submit" class="checkout-next">
+					<spring:theme
+						code="checkout.multi.deliveryMethod.expresscheckout.continue"
+						text="Next" />
+				</button>
+			</c:when>
+			<c:otherwise>
+						<button class="button" id="deliveryMethodSubmit"
+					type="submit" class="checkout-next">
+					<spring:theme code="checkout.multi.deliveryMethod.continue"
+						text="Next" />
+				</button>
+			</c:otherwise>
+		</c:choose>
+		</c:if>
 		</div>
+		
 	</div>
+	
+									
 <%-- <div class="outstanding-amt" style="display:none;">	
 <ul class="totals outstanding-totalss">
           <li id="totals" class="outstanding-amounts"><spring:theme code="basket.page.totals.outstanding.amount"/><span class="amt"><ycommerce:testId code="cart_totalPrice_label">
