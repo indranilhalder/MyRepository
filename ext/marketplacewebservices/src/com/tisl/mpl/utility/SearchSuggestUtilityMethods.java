@@ -1530,7 +1530,8 @@ public class SearchSuggestUtilityMethods
 							//FOr select if facet is selected
 							for (final FacetValueData<SearchStateData> value : facetValues)
 							{
-								if (value != null && value.getCode().equalsIgnoreCase(l4Depart.getCategoryCode()))
+								if (value != null && StringUtils.isNotEmpty(value.getCode())
+										&& value.getCode().equalsIgnoreCase(l4Depart.getCategoryCode()))
 								{
 									l4Depart.setSelected(Boolean.valueOf(value.isSelected()));
 									if (value.isSelected())
@@ -1561,7 +1562,8 @@ public class SearchSuggestUtilityMethods
 						//FOr select if facet is selected
 						for (final FacetValueData<SearchStateData> value : facetValues)
 						{
-							if (value != null && value.getCode().equalsIgnoreCase(l3Depart.getCategoryCode()))
+							if (value != null && StringUtils.isNotEmpty(value.getCode())
+									&& value.getCode().equalsIgnoreCase(l3Depart.getCategoryCode()))
 							{
 								l3Depart.setSelected(Boolean.valueOf(value.isSelected()));
 								if (value.isSelected())
@@ -1571,7 +1573,8 @@ public class SearchSuggestUtilityMethods
 								break;
 							}
 						}
-						if (l3Depart.getCategoryCode().contains(l2Depart.getCategoryCode()))
+						if (StringUtils.isNotEmpty(l3Depart.getCategoryCode())
+								&& l3Depart.getCategoryCode().contains(l2Depart.getCategoryCode()))
 						{
 							if (CollectionUtils.isNotEmpty(l2Depart.getChildFilters()))
 							{
@@ -1595,7 +1598,8 @@ public class SearchSuggestUtilityMethods
 					//FOr select if facet is selected
 					for (final FacetValueData<SearchStateData> value : facetValues)
 					{
-						if (value != null && value.getCode().equalsIgnoreCase(l2Depart.getCategoryCode()))
+						if (value != null && StringUtils.isNotEmpty(value.getCode())
+								&& value.getCode().equalsIgnoreCase(l2Depart.getCategoryCode()))
 						{
 							l2Depart.setSelected(Boolean.valueOf(value.isSelected()));
 							if (value.isSelected())
@@ -1605,7 +1609,8 @@ public class SearchSuggestUtilityMethods
 							break;
 						}
 					}
-					if (l2Depart.getCategoryCode().contains(l1Depart.getCategoryCode()))
+					if (StringUtils.isNotEmpty(l2Depart.getCategoryCode())
+							&& l2Depart.getCategoryCode().contains(l1Depart.getCategoryCode()))
 					{
 						if (CollectionUtils.isNotEmpty(l1Depart.getChildFilters()))
 						{
@@ -1624,7 +1629,8 @@ public class SearchSuggestUtilityMethods
 				//FOr select if facet is selected
 				for (final FacetValueData<SearchStateData> value : facetValues)
 				{
-					if (value != null && value.getCode().equalsIgnoreCase(l1Depart.getCategoryCode()))
+					if (value != null && StringUtils.isNotEmpty(value.getCode())
+							&& value.getCode().equalsIgnoreCase(l1Depart.getCategoryCode()))
 					{
 						l1Depart.setSelected(Boolean.valueOf(value.isSelected()));
 						if (value.isSelected())
@@ -1662,40 +1668,50 @@ public class SearchSuggestUtilityMethods
 
 
 		l1Map = new TreeMap<String, DepartmentFilterWsDto>();
-		for (final DepartmentFilterWsDto l1 : departmentHierarchy.getFilters())
+		if (CollectionUtils.isNotEmpty(departmentHierarchy.getFilters()))
 		{
-			l2Map = new TreeMap<String, DepartmentFilterWsDto>();
-			for (final DepartmentFilterWsDto l2 : l1.getChildFilters())
+			for (final DepartmentFilterWsDto l1 : departmentHierarchy.getFilters())
 			{
-				l3Map = new TreeMap<String, DepartmentFilterWsDto>();
-				for (final DepartmentFilterWsDto l3 : l2.getChildFilters())
+				l2Map = new TreeMap<String, DepartmentFilterWsDto>();
+				if (CollectionUtils.isNotEmpty(l1.getChildFilters()))
 				{
-					if (CollectionUtils.isNotEmpty(l3.getChildFilters()))
+					for (final DepartmentFilterWsDto l2 : l1.getChildFilters())
 					{
-						l4Map = new TreeMap<String, DepartmentFilterWsDto>();
-						for (final DepartmentFilterWsDto l4 : l3.getChildFilters())
+						l3Map = new TreeMap<String, DepartmentFilterWsDto>();
+						if (CollectionUtils.isNotEmpty(l2.getChildFilters()))
 						{
-							l4Map.put(l4.getCategoryCode(), l4);
-						}
-						lSortedFinalList = new ArrayList<DepartmentFilterWsDto>(l4Map.values());
-						l3.setChildFilters(lSortedFinalList);
-					}
-					l3Map.put(l3.getCategoryCode(), l3);
+							for (final DepartmentFilterWsDto l3 : l2.getChildFilters())
+							{
+								if (CollectionUtils.isNotEmpty(l3.getChildFilters()))
+								{
+									l4Map = new TreeMap<String, DepartmentFilterWsDto>();
 
+									for (final DepartmentFilterWsDto l4 : l3.getChildFilters())
+									{
+										l4Map.put(l4.getCategoryCode(), l4);
+									}
+									lSortedFinalList = new ArrayList<DepartmentFilterWsDto>(l4Map.values());
+									l3.setChildFilters(lSortedFinalList);
+								}
+								l3Map.put(l3.getCategoryCode(), l3);
+
+							}
+						}
+						if (MapUtils.isNotEmpty(l3Map))
+						{
+							lSortedFinalList = new ArrayList<DepartmentFilterWsDto>(l3Map.values());
+							l2.setChildFilters(lSortedFinalList);
+						}
+						l2Map.put(l2.getCategoryCode(), l2);
+					}
 				}
-				if (MapUtils.isNotEmpty(l3Map))
+				if (MapUtils.isNotEmpty(l2Map))
 				{
-					lSortedFinalList = new ArrayList<DepartmentFilterWsDto>(l3Map.values());
-					l2.setChildFilters(lSortedFinalList);
+					lSortedFinalList = new ArrayList<DepartmentFilterWsDto>(l2Map.values());
+					l1.setChildFilters(lSortedFinalList);
 				}
-				l2Map.put(l2.getCategoryCode(), l2);
+				l1Map.put(l1.getCategoryCode(), l1);
 			}
-			if (MapUtils.isNotEmpty(l2Map))
-			{
-				lSortedFinalList = new ArrayList<DepartmentFilterWsDto>(l2Map.values());
-				l1.setChildFilters(lSortedFinalList);
-			}
-			l1Map.put(l1.getCategoryCode(), l1);
 		}
 		if (MapUtils.isNotEmpty(l1Map))
 		{
