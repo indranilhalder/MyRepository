@@ -48958,7 +48958,7 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
 .smk_accordion .accordion_in .acc_content .blocks .cash p { color:#a7183e; line-height:26px; }
 .smk_accordion .accordion_in .acc_content .blocks .cash h4  { padding:8px 0 30px 0; text-transform:none; font-weight:normal; }
 .smk_accordion .accordion_in .acc_content .blocks .cash .cont-del p { padding:0; }
-.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del input { height:45px; margin:7px 0 10px 0; width:90%; }
+.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del input { height:45px; margin:7px 0 10px 0; width:86%; }
 .smk_accordion .accordion_in .acc_content .blocks .cash #otpNUM p.process, .smk_accordion .accordion_in .acc_content .blocks .cash .cont-del .cod-link { font-size:13px; font-weight:normal; text-transform:capitalize;    color: #000;line-height: 15px; }
 .smk_accordion .accordion_in .acc_content .blocks .cash .cont-del button { color:#a7183e;line-height:20px; font-weight:normal; margin:15px 0 36px 0; background:none; border:1px solid #a7183e; height:47px !important;font-size: 13px !important;    letter-spacing: 1px;    padding: 13px 18px; width:204px; }
 .smk_accordion .accordion_in .acc_content .blocks .cash .cont-del .otp	{ color:#60a119; display:block; text-transform:capitalize; font-size:13px; font-weight:normal; }
@@ -49099,7 +49099,7 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
     margin-top:26px;
  }
  .checkout-paymentmethod span#codAmount{	display:inline-block;}
- .cod-container label { text-transform: capitalize;margin:0px;line-height:inherit;}
+ .cod-container label { text-transform: none;margin:0px;line-height:inherit;}
  #resendOTPMessage {margin-bottom: 0px;  font-weight: 500;text-transform:none;}
  .error-message.payment-notification {color: #60A119;font-size: 13px; text-transform: capitalize; font-weight: normal; padding-top: 0px;}
 .cart.wrapper .left-block.choose-payment .button:hover, .confirmation .left-block .button:hover { background: #fff !important;}
@@ -49330,6 +49330,9 @@ padding-bottom: 30px;
  .cart.wrapper .right-block.billing .block .totals li#promotionApplied span{
  float:none;
  }
+ .cart.wrapper .right-block #promotionApplied > span:first-child,.cart.wrapper .right-block #cartPromotionApplied > span:first-child{
+	color:#000;
+}
 @media only screen and (max-width:1450px){	
 #wrapper .container-address{ padding:0;}
 .smk_accordion .accordion_in .acc_head,
@@ -49340,6 +49343,7 @@ padding-bottom: 30px;
 .smk_accordion .accordion_in{ background: #fff url("../images/down-arrow.png") no-repeat scroll 96% 25px;}
 .smk_accordion .accordion_in.acc_active{ background: rgba(0, 0, 0, 0) url("../images/up-arrow.png") no-repeat scroll 96% 25px;}
 .smk_accordion .accordion_in .acc_content .blocks{padding: 20px 30px 30px;}
+.smk_accordion .accordion_in .acc_content#COD .blocks{padding: 20px 28px 0px 30px;}
 .smk_accordion .accordion_in .acc_content .blocks.netbankingPanel{padding-bottom: 0px;}
 
 .prd-info .product,
@@ -49363,9 +49367,15 @@ padding-bottom: 30px;
 .cart.wrapper .right-block.billing .block.bottom.order-details > ul li.item .product h3.product-name{font-size:12px !important;font-weight:normal;margin:0px;}
 }
 @media only screen and (max-width:1250px){
-.choose-payment{ padding: 90px 24px 0;}	
-.cart.wrapper .right-block.billing.checkout-list-right{ padding: 0px 24px 0;    margin-bottom: 40px;}
+.choose-payment{ padding: 90px 0 0 24px;}	
+.cart.wrapper .right-block.billing.checkout-list-right{ padding: 0px 24px 0 0;    margin-bottom: 40px;}
 #wrapper .container-address{ padding:0 24px;}
+.cart.wrapper .left-block {
+    width: 66.2%;
+}
+.cart.wrapper .right-block.billing.checkout-list-right {
+    width: 31.8%;
+}
 }
 @media(max-width:1200px){
 	    .cart.wrapper .button.proceed-button {
@@ -49539,7 +49549,9 @@ input.year { height:40px; }
 .cart.wrapper .product-block li.item.cardForm > ul > li:nth-child(even){float:right;}
 .smk_accordion .accordion_in .acc_content .blocks.net-bank.netbankingPanel label{margin:0px;}
 #bankCodeSelection{width:100%;}
-.cart.wrapper .left-block .payments.tab-view .pay.nbButton .button, .cart.wrapper .left-block .payments.tab-view .pay .button.confirm{display:none !important;}
+.cart.wrapper .left-block .payments.tab-view .pay.nbButton .button, .cart.wrapper .left-block .payments.tab-view .pay .button.confirm,
+.cart.wrapper .left-block .payments.tab-view .pay .button
+{display:none !important;}
 .cart.wrapper .left-block .payments.tab-view .pay .terms a {font-size:11px;    line-height: 11px;}
 .cart.wrapper .left-block .payments.tab-view .pay.nbButton .terms p{line-height:11px;    font-size: 11px;}
 .cart.wrapper .right-block.billing .block.bottom.order-details.delivery-info>address span b{
@@ -49596,6 +49608,9 @@ div#savedCreditCard, div#savedDebitCard {
     width: 45.6%;
 }
 
+}
+#OTPGenerationErrorMessage{
+text-align:center;	
 }
 /* checkout payment end */
  .addnewAddresPage + .right-block.shipping{
