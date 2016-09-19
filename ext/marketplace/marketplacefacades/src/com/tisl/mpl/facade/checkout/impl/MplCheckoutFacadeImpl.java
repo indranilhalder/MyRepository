@@ -1674,7 +1674,47 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 
 
+	/**
+	 * @param String
+	 * @param CustomerModel
+	 */
+	@Override
+	public OrderData getOrderDetailsForCockpitUser(String code, CustomerModel customerModel)
+	{
+		try
+		{
+			OrderData orderData = null;
+			if (code != null)
+			{
+				final BaseStoreModel baseStoreModel = getBaseStoreService().getCurrentBaseStore();
+				final OrderModel orderModel = getCheckoutCustomerStrategy().isAnonymousCheckout() ? getCustomerAccountService()
+						.getOrderDetailsForGUID(code, baseStoreModel) : getCustomerAccountService().getOrderForCode(
+								customerModel, code, baseStoreModel);
 
+				LOG.info("Step--1 ----- Order Codes For User " + orderModel.getCode());
 
+				orderData = prepareOrderAndSubOrderData(orderModel);
+			}
+			return orderData;
+		}
+		catch (final IllegalArgumentException ex)
+		{
+
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+		catch (final NullPointerException ex)
+
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+		catch (final UnknownIdentifierException ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
 
 }

@@ -7,13 +7,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.zkoss.zk.ui.Session;
 import net.sourceforge.pmd.util.StringUtil;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.Session;
 import org.zkoss.zk.ui.api.HtmlBasedComponent;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -29,9 +31,9 @@ import org.zkoss.zul.Listheader;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Textbox;
+import org.zkoss.zul.Window;
 import org.zkoss.zul.impl.api.InputElement;
 
-import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceCancellationController;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceReturnsController;
 import com.tisl.mpl.wsdto.ReturnLogistics;
 import com.tisl.mpl.xml.pojo.OrderLineDataResponse;
@@ -46,6 +48,10 @@ import de.hybris.platform.cockpit.services.config.impl.PropertyColumnConfigurati
 import de.hybris.platform.cockpit.services.values.ObjectValueContainer;
 import de.hybris.platform.cockpit.session.UISessionUtils;
 import de.hybris.platform.cockpit.widgets.InputWidget;
+import de.hybris.platform.cockpit.widgets.Widget;
+import de.hybris.platform.cockpit.widgets.WidgetContainer;
+import de.hybris.platform.cockpit.widgets.impl.DefaultWidgetContainer;
+import de.hybris.platform.cockpit.widgets.impl.DefaultWidgetFactory;
 import de.hybris.platform.cockpit.widgets.models.ListWidgetModel;
 import de.hybris.platform.cockpit.widgets.models.impl.DefaultListWidgetModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
@@ -595,9 +601,13 @@ public class MarketplaceReturnRequestCreateWidgetRenderer extends
 		try {
 			
 			String pinCode = pinCodeFieldTextBox.getValue();
-			
+			OrderModel order = (OrderModel) ((ReturnsController) widget
+					.getWidgetController()).getCurrentOrder()
+					.getObject();
+			List<AbstractOrderEntryModel> model = order.getEntries();model.get(0).getProduct();
 			  Session session = Executions.getCurrent().getDesktop().getSession();
 			  session.setAttribute("pinCode", pinCode);
+			  session.setAttribute("returnEntrys",returnObjectValueContainers );
 			 
 			if ("RefundEntry".equalsIgnoreCase(getListConfigurationType())) {
 
@@ -813,7 +823,7 @@ public class MarketplaceReturnRequestCreateWidgetRenderer extends
 							public void onEvent(Event e)
 									throws InterruptedException {
 								if (e.getName().equals("onOK")) {
-									refundOK(widget,
+									refundTypeSelection(widget,
 											returnObjectValueContainers);
 									return;
 								} else {
@@ -956,6 +966,18 @@ public class MarketplaceReturnRequestCreateWidgetRenderer extends
 				.getCurrentPopup().getParent());
 		return;
 	}
+	
+	
+	private void refundTypeSelection(final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
+			final List<ObjectValueContainer> returnObjectValueContainers) {
+		
+		TypedObject refundOrder = ((MarketPlaceReturnsController) widget
+				.getWidgetController())
+				.createRefundOrderPreview(returnObjectValueContainers);
+		if (refundOrder == null)
+			return;
+		createReturnCreditDetailsPopupWindow(widget,getPopupWidgetHelper().getCurrentPopup().getParent());
+	}
 
 	protected ObjectValueContainer.ObjectValueHolder getPropertyValue(
 			ObjectValueContainer ovc, String propertyQualifier) {
@@ -977,6 +999,31 @@ public class MarketplaceReturnRequestCreateWidgetRenderer extends
 			}
 		}
 		return null;
+	}
+
+	
+	private Window createReturnCreditDetailsPopupWindow(InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> parentWidget,
+			Component parentWindow) {
+		@SuppressWarnings("rawtypes")
+		WidgetContainer widgetContainer = new DefaultWidgetContainer(
+				new DefaultWidgetFactory());
+		@SuppressWarnings("unchecked")
+		Widget<DefaultListWidgetModel<TypedObject>, ReturnsController> popupWidget = createPopupWidget(widgetContainer,
+				"csReturnRequestCreditWidgetConfig",
+				"csReturnRequestCreditWidgetConfig-Popup");
+
+		Window popup = new Window();
+		popup.setSclass("csRefundConfirmationWidget");
+		popup.appendChild(popupWidget);
+		
+		popup.setTitle(LabelUtils.getLabel(popupWidget,
+				"popup.returnCreditTitle", new Object[0]));
+		popup.setParent(parentWindow);
+		popup.doHighlighted();
+		popup.setClosable(true);
+		popup.setWidth("1300px");
+
+		return popup;
 	}
 
 }

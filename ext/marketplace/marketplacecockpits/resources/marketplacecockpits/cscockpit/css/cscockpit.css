@@ -3704,3 +3704,65 @@ th.csPropReturnEntryreceivedQuantity.z-list-header{
 	margin-bottom: 10px;
 	width:120px;
 }
+.returntext {
+	margin-top: 15px;
+	margin-left: 35px;
+}
+.secondLabel {
+margin-left: 35px;
+margin-top: 15px;
+}
+
+.boldText {
+	font-weight: bold;
+}
+
+.detailsClasss {
+	margin-top: 40px;
+	margin-left: 72px;
+	margin-right: 600px;
+	margin-bottom: 30px;
+	font-weight: bold;
+}
+.cardDetailsClass {
+	margin-top: -80px;
+    float: right;
+    margin-right: 135px;
+}
+.creditButton {
+	float: right;
+    margin-right: 45px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+.listClass {
+	margin-top: 10px;
+}
+.modeSelection {
+   margin-top: 0px;
+   margin-left: 72px;
+   margin-right: 600px;
+   margin-bottom: 30px;
+   font-weight: bold;
+}
+
+/* new CHANGHES */
+
+.returnModels {
+	margin-top: 20px;
+}
+.selectedMode {
+	margin-top:15px;
+}
+.dateSelection {
+	margin-top: 35px;
+}
+.modeDetails {
+	margin-top: 50px;
+    margin-left: 72px;
+}
+.displayArea {
+	margin-left: 72px;
+    margin-top: 20px;
+    margin-right: 72px;
+}

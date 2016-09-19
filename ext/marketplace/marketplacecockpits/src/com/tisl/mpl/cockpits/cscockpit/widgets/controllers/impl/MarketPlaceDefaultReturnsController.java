@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -14,12 +15,23 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Session;
+import org.zkoss.zul.Checkbox;
 
 import com.tisl.mpl.cockpits.cscockpit.utilities.CodeMasterUtility;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceReturnsController;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.TypeofReturn;
+import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.data.CODSelfShipData;
+import com.tisl.mpl.data.CODSelfShipResponseData;
+import com.tisl.mpl.data.RTSAndRSSReturnInfoRequestData;
+import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
+import com.tisl.mpl.facade.config.MplConfigFacade;
+import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
+import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.MPLReturnService;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.service.MplOrderCancelClientService;
 import com.tisl.mpl.service.ReturnLogisticsService;
 import com.tisl.mpl.wsdto.ReturnLogistics;
@@ -35,11 +47,16 @@ import de.hybris.platform.cockpit.model.meta.TypedObject;
 import de.hybris.platform.cockpit.services.values.ObjectValueContainer;
 import de.hybris.platform.cockpit.widgets.InputWidget;
 import de.hybris.platform.cockpit.widgets.models.impl.DefaultListWidgetModel;
+import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.commercefacades.order.data.OrderEntryData;
+import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.cscockpit.utils.SafeUnbox;
 import de.hybris.platform.cscockpit.widgets.controllers.ReturnsController;
 import de.hybris.platform.cscockpit.widgets.controllers.impl.DefaultReturnsController;
@@ -72,6 +89,21 @@ public class MarketPlaceDefaultReturnsController extends
 	@Autowired
 	private MplOrderCancelClientService mplOrderCancelClientService;
 
+	@Autowired
+	private MplConfigFacade mplConfigFacade;
+
+	@Autowired
+	private MplCheckoutFacade mplCheckoutFacade;
+
+	@Autowired
+	private CancelReturnFacade cancelReturnFacade;
+
+	@Autowired
+	private PincodeServiceFacade pincodeServiceFacade;
+
+	@Autowired
+	private MplOrderFacade mplOrderFacade;
+
 	private static final String OMS_BYPASS_KEY = "cscockpit.oms.serviceability.check.bypass";
 
 	private static final Logger LOG = Logger
@@ -79,8 +111,61 @@ public class MarketPlaceDefaultReturnsController extends
 
 	public Map<Boolean, List<OrderLineDataResponse>> validateReverseLogistics(
 			List<ReturnLogistics> returnLogisticsList) {
+		String returnFulfillmentType = null;
+		String returnFulfillmentByP1 = null;
+		List<ReturnLogistics> returnItems = new ArrayList<ReturnLogistics>();
+		final OrderModel orderModel = getOrderModel();
+		for (AbstractOrderEntryModel entry : orderModel.getEntries()) {
+			for (ReturnLogistics seletedItems : returnLogisticsList) {
+				ReturnLogistics returnLogistics = new ReturnLogistics();
+				if (seletedItems.getTransactionId().equals(
+						entry.getTransactionID())) {
+					returnLogistics.setOrderId(seletedItems.getOrderId());
+					returnLogistics.setTransactionId(seletedItems.getTransactionId());
+					returnLogistics.setPinCode(seletedItems.getPinCode());
+					final ProductModel productModel = mplOrderFacade
+							.getProductForCode(entry.getProduct().getCode());
+					for (final SellerInformationModel sellerInfo : productModel
+							.getSellerInformationRelator()) {
+						if (entry.getSelectedUSSID().equalsIgnoreCase(
+								sellerInfo.getUSSID())) {
+							if (CollectionUtils.isNotEmpty(sellerInfo
+									.getRichAttribute())) {
+								for (RichAttributeModel richAttribute : sellerInfo
+										.getRichAttribute()) {
+									if (null != richAttribute
+											.getReturnFulfillMode()) {
+										LOG.info(richAttribute
+												.getReturnFulfillMode());
+										returnFulfillmentType = richAttribute
+												.getReturnFulfillMode()
+												.getCode();
+									}
 
-		final Map<Boolean, List<OrderLineDataResponse>> responseMap = new HashMap();
+									if (null != richAttribute
+											.getReturnFulfillModeByP1()) {
+										LOG.info(richAttribute
+												.getReturnFulfillModeByP1());
+										returnFulfillmentByP1 = richAttribute
+												.getReturnFulfillModeByP1()
+												.getCode();
+									}
+								}
+							}
+							if(StringUtils.isNotEmpty(returnFulfillmentType)) {
+								returnLogistics.setReturnFulfillmentType(returnFulfillmentType);
+							}
+							if(StringUtils.isNotEmpty(returnFulfillmentByP1)) {
+								returnLogistics.setReturnFulfillmentByP1(returnFulfillmentByP1);
+							}
+							returnItems.add(returnLogistics);
+						}
+					}
+				}
+			}
+		}
+
+		final Map<Boolean, List<OrderLineDataResponse>> responseMap = new HashMap<Boolean, List<OrderLineDataResponse>>();
 		ReturnLogisticsResponse returnLogisticsResponse = returnLogisticsService
 				.returnLogisticsCheck(returnLogisticsList);
 
@@ -127,10 +212,10 @@ public class MarketPlaceDefaultReturnsController extends
 	@Override
 	public TypedObject createReplacementRequest(
 			List<ObjectValueContainer> replacementEntriesValueContainers) {
-		List<ReturnLogistics> returnLogisticsList = new ArrayList();
+		List<ReturnLogistics> returnLogisticsList = new ArrayList<ReturnLogistics>();
 		ReturnRequestModel request = null;
 		ReplacementOrderModel replacementOrder = null;
-		List<ReplacementEntryModel> returnEntries = new ArrayList();
+		List<ReplacementEntryModel> returnEntries = new ArrayList<ReplacementEntryModel>();
 
 		ModelService modelService = getModelService();
 		Map returnableOrderEntries;
@@ -215,7 +300,7 @@ public class MarketPlaceDefaultReturnsController extends
 	public TypedObject createRefundRequest() {
 		try {
 
-			List<ReturnLogistics> returnLogisticsList = new ArrayList();
+			List<ReturnLogistics> returnLogisticsList = new ArrayList<ReturnLogistics>();
 			ModelService modelService = getModelService();
 			OrderModel orderModel = getOrderModel();
 			ReturnRequestModel refundRequest = getReturnService()
@@ -294,9 +379,9 @@ public class MarketPlaceDefaultReturnsController extends
 			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
 			final List<ObjectValueContainer> returnObjectValueContainers,
 			String pinCode) {
-		Map returnableOrderEntries = ((ReturnsController) widget
-				.getWidgetController()).getReturnableOrderEntries();
-		List<ReturnLogistics> returnLogisticsList = new ArrayList();
+		Map returnableOrderEntries = widget.getWidgetController()
+				.getReturnableOrderEntries();
+		List<ReturnLogistics> returnLogisticsList = new ArrayList<ReturnLogistics>();
 		for (ObjectValueContainer ovc : returnObjectValueContainers) {
 			TypedObject orderEntry = (TypedObject) ovc.getObject();
 			AbstractOrderEntryModel entry = (OrderEntryModel) orderEntry
@@ -332,9 +417,9 @@ public class MarketPlaceDefaultReturnsController extends
 	public List<ReturnLogistics> getReturnLogisticsList(
 			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
 			final List<ObjectValueContainer> returnObjectValueContainers) {
-		Map returnableOrderEntries = ((ReturnsController) widget
-				.getWidgetController()).getReturnableOrderEntries();
-		List<ReturnLogistics> returnLogisticsList = new ArrayList();
+		Map returnableOrderEntries = widget.getWidgetController()
+				.getReturnableOrderEntries();
+		List<ReturnLogistics> returnLogisticsList = new ArrayList<ReturnLogistics>();
 		for (ObjectValueContainer ovc : returnObjectValueContainers) {
 			TypedObject orderEntry = (TypedObject) ovc.getObject();
 			AbstractOrderEntryModel entry = (OrderEntryModel) orderEntry
@@ -391,6 +476,7 @@ public class MarketPlaceDefaultReturnsController extends
 					if (CollectionUtils.isNotEmpty(returnEntries)) {
 						for (ReturnEntryModel returnEntry : returnEntries) {
 							orderLine = new OrderLine();
+							String returnFulfillmentType = null;
 							orderModel = ((OrderModel) (returnEntry
 									.getOrderEntry().getOrder()))
 									.getParentReference();
@@ -399,6 +485,33 @@ public class MarketPlaceDefaultReturnsController extends
 									.getOrderEntry().getTransactionID());
 							orderLine.setReturnCancelFlag("R");
 							orderLine.setRequestID(returnRequest.getCode());
+							// For FullFillment Type
+							for (AbstractOrderEntryModel entry : orderModel.getEntries()) {
+								final ProductModel productModel = mplOrderFacade
+										.getProductForCode(entry.getProduct().getCode());
+								for (final SellerInformationModel sellerInfo : productModel
+										.getSellerInformationRelator()) {
+									if (returnEntry.getOrderEntry().getSelectedUSSID().equalsIgnoreCase(sellerInfo.getUSSID())) {
+										if (CollectionUtils.isNotEmpty(sellerInfo
+												.getRichAttribute())) {
+											for (RichAttributeModel richAttribute : sellerInfo
+													.getRichAttribute()) {
+												if (null != richAttribute
+														.getReturnFulfillMode()) {
+													LOG.info(richAttribute
+															.getReturnFulfillMode());
+													returnFulfillmentType = richAttribute
+															.getReturnFulfillMode()
+															.getCode();
+												}
+											}
+										}
+									}
+								}
+							}
+							if(returnFulfillmentType != null) {
+								orderLine.setReturnFulfillmentMode(returnFulfillmentType);
+							}
 							reason = CodeMasterUtility
 									.getglobalCode(((ReplacementEntryModel) returnEntry)
 											.getReason().getCode());
@@ -437,7 +550,34 @@ public class MarketPlaceDefaultReturnsController extends
 							if (null != pinCode || !pinCode.isEmpty()) {
 								orderLine.setPinCode(pinCode);
 							}
-
+							
+							for (AbstractOrderEntryModel entry : orderModel.getEntries()) {
+								String returnFulfillmentType = null;
+								final ProductModel productModel = mplOrderFacade
+										.getProductForCode(entry.getProduct().getCode());
+								for (final SellerInformationModel sellerInfo : productModel
+										.getSellerInformationRelator()) {
+									if (orderEntryModel.getSelectedUSSID().equalsIgnoreCase(sellerInfo.getUSSID())) {
+										if (CollectionUtils.isNotEmpty(sellerInfo
+												.getRichAttribute())) {
+											for (RichAttributeModel richAttribute : sellerInfo
+													.getRichAttribute()) {
+												if (null != richAttribute
+														.getReturnFulfillMode()) {
+													LOG.info(richAttribute
+															.getReturnFulfillMode());
+													returnFulfillmentType = richAttribute
+															.getReturnFulfillMode()
+															.getCode();
+												}
+											}
+										}
+										if(returnFulfillmentType != null) {
+											orderLine.setReturnFulfillmentMode(returnFulfillmentType);
+										}
+									}
+								}
+							}
 						}
 					}
 
@@ -497,4 +637,87 @@ public class MarketPlaceDefaultReturnsController extends
 		}
 		return (freebie.size() != count && count >0) ;
 	}
+
+	@Override
+	public List<String> getReturnTimeSlotsByKey(String configKey) {
+		List<String> timeSlots = mplConfigFacade
+				.getDeliveryTimeSlots(configKey);
+		if (timeSlots.size() > 0) {
+			return timeSlots;
+		}
+		return null;
+	}
+
+	@Override
+	public List<PointOfServiceData> getAllReturnableStores(String pincode,
+			String sellerId) {
+		List<PointOfServiceData> returnStores = null;
+		if (null != pincode && null != sellerId) {
+			returnStores = pincodeServiceFacade.getAllReturnableStores(pincode,
+					sellerId);
+		}
+		if (null != returnStores && returnStores.size() > 0) {
+			return returnStores;
+		}
+		return null;
+	}
+
+	@Override
+	public List<String> getReturnScheduleDates(AbstractOrderEntryModel entry) {
+		List<String> returnableDates = new ArrayList<String>();
+		final String orderCode = entry.getOrder().getCode();
+		OrderData orderData = mplCheckoutFacade.getOrderDetailsForCockpitUser(orderCode, (CustomerModel) entry.getOrder().getUser());
+		final List<OrderEntryData> subOrderEntries = orderData.getEntries();
+		for (OrderEntryData entrys : subOrderEntries) {
+			if (entry.getTransactionID().equals(entrys.getTransactionId())) {
+				returnableDates = cancelReturnFacade.getReturnableDates(entrys);
+			}
+		}
+		return returnableDates;
+	}
+
+	@Override
+	public CODSelfShipResponseData getCodPaymentInfoToFICO(
+			CODSelfShipData codSelfShipData,
+			List<AbstractOrderEntryModel> returnEntry) {
+
+		OrderModel subOrder = (OrderModel) returnEntry.get(0).getOrder();
+		String orderCode = subOrder.getParentReference().getCode();
+		for (AbstractOrderEntryModel entry : returnEntry) {
+			codSelfShipData.setOrderNo(orderCode);
+			codSelfShipData.setTransactionID(entry.getTransactionID());
+			cancelReturnFacade.codPaymentInfoToFICO(codSelfShipData);
+		}
+
+		return null;
+	}
+
+	@Override
+	public void retrunInfoCallToOMSFromCsCockpit(
+			InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
+			AbstractOrderEntryModel entry, List<Checkbox> storeChecks) {
+		OrderModel orderModel = (OrderModel) entry.getOrder();
+		RTSAndRSSReturnInfoRequestData infoRequestData = new RTSAndRSSReturnInfoRequestData();
+		List<String> stores = new ArrayList<String>();
+		Map<String, PointOfServiceData> stor = new HashMap<String, PointOfServiceData>();
+		for (Checkbox selctedStores : storeChecks) {
+			selctedStores.getAttributes();
+			if (selctedStores.isChecked()) {
+				stor = selctedStores.getAttributes();
+				for (Entry<String, PointOfServiceData> entrySet : stor
+						.entrySet()) {
+					PointOfServiceData store = entrySet.getValue();
+					stores.add(store.getSlaveId());
+				}
+			}
+		}
+		infoRequestData.setOrderId(orderModel.getParentReference().getCode());
+		infoRequestData.setRTSStore(stores);
+		infoRequestData.setTransactionId(entry.getTransactionID());
+		infoRequestData
+				.setReturnType(MarketplacecommerceservicesConstants.RETURN_TYPE_RTS);
+		cancelReturnFacade.retrunInfoCallToOMS(infoRequestData);
+
+	}
+
 }

@@ -3,6 +3,11 @@ package com.tisl.mpl.cockpits.cscockpit.widgets.controllers;
 import java.util.List;
 import java.util.Map;
 
+import org.zkoss.zul.Checkbox;
+
+import com.tisl.mpl.data.CODSelfShipData;
+import com.tisl.mpl.data.CODSelfShipResponseData;
+import com.tisl.mpl.data.RTSAndRSSReturnInfoResponseData;
 import com.tisl.mpl.wsdto.ReturnLogistics;
 import com.tisl.mpl.xml.pojo.OrderLineDataResponse;
 
@@ -10,6 +15,8 @@ import de.hybris.platform.cockpit.model.meta.TypedObject;
 import de.hybris.platform.cockpit.services.values.ObjectValueContainer;
 import de.hybris.platform.cockpit.widgets.InputWidget;
 import de.hybris.platform.cockpit.widgets.models.impl.DefaultListWidgetModel;
+import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.cscockpit.widgets.controllers.ReturnsController;
 
 public interface MarketPlaceReturnsController extends ReturnsController {
@@ -28,6 +35,22 @@ public interface MarketPlaceReturnsController extends ReturnsController {
 	
 	public List<ReturnLogistics> getReturnLogisticsList(
 			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
-			final List<ObjectValueContainer> returnObjectValueContainers,String pinCode);
-	
+			final List<ObjectValueContainer> returnObjectValueContainers,
+			String pinCode);
+
+	public List<String> getReturnTimeSlotsByKey(String configKey);
+
+	public List<PointOfServiceData> getAllReturnableStores(String pincode,
+			String sellerId);
+
+	public List<String> getReturnScheduleDates(AbstractOrderEntryModel entry);
+
+	public CODSelfShipResponseData getCodPaymentInfoToFICO(
+			final CODSelfShipData codSelfShipData,
+			List<AbstractOrderEntryModel> entry);
+
+	public void retrunInfoCallToOMSFromCsCockpit(
+			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
+			final AbstractOrderEntryModel entry, List<Checkbox> storeChecks);
+
 }
