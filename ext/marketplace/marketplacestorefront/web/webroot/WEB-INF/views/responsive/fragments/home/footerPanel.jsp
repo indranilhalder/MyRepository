@@ -84,6 +84,11 @@
 <!-- The script is used for validating email in news letter sign up Section -->
 <script>
 	function emailvalidate() {
+		<!-- TPR - 667--->
+		utag.link({
+		"link_obj": this, "link_text": "newsletter_subscription" , "event_type" : "newsletter_subscription" 
+	}); 
+		<!-- TPR - 667 ends --->
 		var mail = $("#mailtext").val();
 
 		if (mail == "") {
@@ -121,9 +126,9 @@
 						$("#error_message").css({"display":"block"});
 			            document.getElementById("error_message").innerHTML = "<font color='#60a119'>Yay! We can't wait to be pen-pals with you.</font>";
 			          //TPR-667 START
-			            utag.link({
+			            /* utag.link({
 							"link_obj": this, "link_text": "newsletter_subscription" , "event_type" : "newsletter_subscription" 
-						});
+						}); */
 			          	//TPR-667 END
 						return true;
 					}
