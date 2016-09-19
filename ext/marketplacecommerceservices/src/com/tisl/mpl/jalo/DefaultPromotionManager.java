@@ -490,7 +490,8 @@ public class DefaultPromotionManager extends PromotionsManager
 	{
 		boolean flag = true; //TODO: When Web Journey is ready flag must be by default false
 		boolean dataFlag = false;
-		if (null != channel && null != listOfChannel && !listOfChannel.isEmpty())
+		//if (null != channel && null != listOfChannel && !listOfChannel.isEmpty())	//TPR-969
+		if (null != channel && CollectionUtils.isNotEmpty(listOfChannel))
 		{
 			for (final EnumerationValue enumVal : listOfChannel)
 			{
@@ -510,7 +511,6 @@ public class DefaultPromotionManager extends PromotionsManager
 			}
 
 		}
-		// YTODO Auto-generated method stub
 		return flag;
 	}
 
@@ -1557,7 +1557,7 @@ public class DefaultPromotionManager extends PromotionsManager
 		{
 			for (final AbstractPromotionRestriction restriction : restrictionList)
 			{
-				flag = false;
+				//flag = false;	//Unwanted - TPR-969
 				if (restriction instanceof DeliveryModePromotionRestriction)
 				{
 					final List<ProductModel> prodSatisfiesDelModeList = new ArrayList<ProductModel>();
@@ -1939,7 +1939,7 @@ public class DefaultPromotionManager extends PromotionsManager
 		{
 			for (final AbstractPromotionRestriction restriction : restrictionList)
 			{
-				flag = false;
+				//flag = false;	//Unwanted - TPR-969
 				if (restriction instanceof PaymentModeSpecificPromotionRestriction)
 				{
 					String paymentMode = null;
