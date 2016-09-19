@@ -163,8 +163,8 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 				LOG.info("Adding cookie for luxury cookie");
 				//Encrypt the customer email id and store it in luxury cookie
 				getLuxuryEmailCookieGenerator().addCookie(response, encrypt(customer.getOriginalUid()));
-
-				getLuxuryUserCookieGenerator().addCookie(response, userService.getAccessTokenForUser(customer.getOriginalUid()));
+				//Commenting this as this is not required
+				//getLuxuryUserCookieGenerator().addCookie(response, userService.getAccessTokenForUser(customer.getOriginalUid()));
 
 			}
 		}
@@ -285,7 +285,7 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 		//Delete the Keep alive cookie
 		getKeepAliveCookieGenerator().removeCookie(response);
 		//Update the luxury cookies to anonymous
-		updateLuxuryCookies(request, response, getLuxuryUserCookieGenerator().getCookieName());
+		//updateLuxuryCookies(request, response, getLuxuryUserCookieGenerator().getCookieName());
 		updateLuxuryCookies(request, response, getLuxuryEmailCookieGenerator().getCookieName());
 		//}
 	}
@@ -305,9 +305,9 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 				if (cookie.getName().equals(cookieName))
 				{
 					cookie.setValue("anonymous");
-					if (StringUtils.isNotEmpty(getLuxuryUserCookieGenerator().getCustomDomain()))
+					if (StringUtils.isNotEmpty(getLuxuryEmailCookieGenerator().getCustomDomain()))
 					{
-						cookie.setDomain(getLuxuryUserCookieGenerator().getCustomDomain());
+						cookie.setDomain(getLuxuryEmailCookieGenerator().getCustomDomain());
 						cookie.setPath("/");
 					}
 					response.addCookie(cookie);
