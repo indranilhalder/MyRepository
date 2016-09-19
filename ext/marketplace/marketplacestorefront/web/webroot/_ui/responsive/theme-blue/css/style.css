@@ -46969,9 +46969,9 @@ body:not(.page-checkout-login) .checkout-header.login{
 .progress-barcheck .step-3 span {
     border: 1px solid #efefef;
     right: 8.5%;
-    width: 25px !important;
-    height: 25px !important;
-  top: -6px !important;
+ /*    width: 25px !important;
+    height: 25px !important; */
+  top: -9px !important;
     top: 24px;
 }
 .progress-barcheck .step-3 a{
@@ -47206,6 +47206,12 @@ body.no-scroll {
     background: #ffffff;
     border-radius: 25px;
     z-index: 5;
+}
+.progress-barcheck .step-1.in-active span, .progress-barcheck .step-2.in-active span, .progress-barcheck .step-3.in-active span {
+    border: 1px solid #efefef;
+    width: 25px;
+    height: 25px;
+    top:-6px !important;
 }
 
 /*In progress */
