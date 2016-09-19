@@ -48958,7 +48958,7 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
 .smk_accordion .accordion_in .acc_content .blocks .cash p { color:#a7183e; line-height:26px; }
 .smk_accordion .accordion_in .acc_content .blocks .cash h4  { padding:8px 0 30px 0; text-transform:none; font-weight:normal; }
 .smk_accordion .accordion_in .acc_content .blocks .cash .cont-del p { padding:0; }
-.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del input { height:45px; margin:7px 0 10px 0; width:90%; }
+.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del input { height:45px; margin:7px 0 10px 0; width:86%; }
 .smk_accordion .accordion_in .acc_content .blocks .cash #otpNUM p.process, .smk_accordion .accordion_in .acc_content .blocks .cash .cont-del .cod-link { font-size:13px; font-weight:normal; text-transform:capitalize;    color: #000;line-height: 15px; }
 .smk_accordion .accordion_in .acc_content .blocks .cash .cont-del button { color:#a7183e;line-height:20px; font-weight:normal; margin:15px 0 36px 0; background:none; border:1px solid #a7183e; height:47px !important;font-size: 13px !important;    letter-spacing: 1px;    padding: 13px 18px; width:204px; }
 .smk_accordion .accordion_in .acc_content .blocks .cash .cont-del .otp	{ color:#60a119; display:block; text-transform:capitalize; font-size:13px; font-weight:normal; }
@@ -49342,7 +49342,8 @@ padding-bottom: 30px;
 .smk_accordion .accordion_in .acc_head span{ padding: 20px 0 20px 20px;}
 .smk_accordion .accordion_in{ background: #fff url("../images/down-arrow.png") no-repeat scroll 96% 25px;}
 .smk_accordion .accordion_in.acc_active{ background: rgba(0, 0, 0, 0) url("../images/up-arrow.png") no-repeat scroll 96% 25px;}
-.smk_accordion .accordion_in .acc_content .blocks{padding: 20px 28px 30px 30px;}
+.smk_accordion .accordion_in .acc_content .blocks{padding: 20px 30px 30px;}
+.smk_accordion .accordion_in .acc_content#COD .blocks{padding: 20px 28px 0px 30px;}
 .smk_accordion .accordion_in .acc_content .blocks.netbankingPanel{padding-bottom: 0px;}
 
 .prd-info .product,
@@ -49607,6 +49608,9 @@ div#savedCreditCard, div#savedDebitCard {
     width: 45.6%;
 }
 
+}
+#OTPGenerationErrorMessage{
+text-align:center;	
 }
 /* checkout payment end */
  .addnewAddresPage + .right-block.shipping{
