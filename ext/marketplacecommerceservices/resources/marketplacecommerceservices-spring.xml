@@ -1792,5 +1792,9 @@
 		<property name="flexibleSearchService" ref="flexibleSearchService" />
 		<property name="modelService" ref="modelService" />		
 	</bean>
+	
+	<!-- Bundle Promotion Helper Class -->
+	<bean id="mplBundlePromotionHelper" class="com.tisl.mpl.promotion.helper.MplBundlePromotionHelper" />
+	
 </beans>
 
