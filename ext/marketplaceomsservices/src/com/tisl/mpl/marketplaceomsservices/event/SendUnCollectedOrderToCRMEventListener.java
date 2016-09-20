@@ -37,10 +37,15 @@ public class SendUnCollectedOrderToCRMEventListener extends AbstractEventListene
       		{
 					if(sendUnColletedToCRMEvent.getShipment().getShipmentId().equals(orderEntryModel.getTransactionID()) && sendUnColletedToCRMEvent.getConsignmentModel().getCode().equals(orderEntryModel.getTransactionID())){
 						LOG.debug("Consignment Status : " + sendUnColletedToCRMEvent.getConsignmentModel().getStatus() + " :Transaction Id : "+orderEntryModel.getTransactionID()+ " : OrderLine Id :"+orderEntryModel.getOrderLineId());
-						
+						LOG.debug("******* sendUnColletedToCRMEvent.getShipment().getIsEDtoHD() : "+sendUnColletedToCRMEvent.getShipment().getIsEDtoHD());
+						boolean isSsb=false;
+						if(null!=sendUnColletedToCRMEvent.getShipment().getSsb() && sendUnColletedToCRMEvent.getShipment().getSsb().booleanValue()){
+						 isSsb=sendUnColletedToCRMEvent.getShipment().getSsb().booleanValue();
+						}
 						customOmsCancelAdapter.createTicketInCRM(orderEntryModel.getTransactionID(),
 				MarketplaceomsordersConstants.TICKET_TYPE_CODE, MarketplaceomsordersConstants.EMPTY,
-				MarketplaceomsordersConstants.REFUND_TYPE_CODE, sendUnColletedToCRMEvent.getOrderModel());
+				MarketplaceomsordersConstants.REFUND_TYPE_CODE, sendUnColletedToCRMEvent.getOrderModel(),isSsb);
+						
 					}
 				}
 	      }

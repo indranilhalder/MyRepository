@@ -139,15 +139,10 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 					if (existingConsignmentModel == null)
 
 					{
-
-
 						if (shipmentMustBeCreated(shipment))
 
 						{
-
-
 							consignmentFinal = createNewConsignment(shipmentWrapper, orderModel);
-
 						}
 
 					}
@@ -158,18 +153,6 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				}
 
 			}
-
-
-
-
-
-
-
-
-
-
-
-
 		}
 		try
 		{
@@ -491,17 +474,17 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 								final UnCollectedOrderToInitiateRefundEvent unCollectedOrderToInitiateRefundEvent= new UnCollectedOrderToInitiateRefundEvent(shipment,consignmentModel,orderModel,shipmentNewStatus,eventService,configurationService);
 								try
 								{
-									LOG.debug("Create CRM Ticket for Un-Collected Orders");
+									LOG.debug("Create CRM Ticket for Cancel Initiated Orders");
 									eventService.publishEvent(sendUnCollectedOrderToCRMEvent);
 								}
 								catch(final Exception e)
 								{
-									LOG.error("Exception during CRM Ticket for Un-Collected Order Id >> " + orderModel.getCode()+" ::" + e.getMessage());	
+									LOG.error("Exception during CRM Ticket for Cancel Initiated Order Id >> " + orderModel.getCode()+" ::" + e.getMessage());	
 								}
 								try
 								{
 									checkConsignmentStatus=true;
-									LOG.debug("Refund Initiation  for Un-Collected Orders");
+									LOG.debug("Refund Initiation  for Cancel Initiated Orders");
 									eventService.publishEvent(unCollectedOrderToInitiateRefundEvent);
 								}
 								catch(final Exception e)

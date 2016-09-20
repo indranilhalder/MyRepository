@@ -5665,7 +5665,53 @@
 						<description>for eddTo</description>
 						<persistence type="property" />
 					</attribute>
-					<!-- End Added new Attributes  -->
+					<!-- End Added new Attributes  for Order Create -->
+					
+					<!--Start  Added new Attributes for Order Update  -->
+					
+					<attribute qualifier="returnInscan" type="java.lang.Boolean">
+							<modifiers optional="true" read="true" write="true" />
+							<description>for returnInscan</description>
+							<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="returnPickUp" type="java.lang.Boolean">
+							<modifiers optional="true" read="true" write="true" />
+							<description>for returnPickUp</description>
+							<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="awbSecondaryStatus" type="java.lang.String">
+							<modifiers optional="true" read="true" write="true" />
+							<description>for awbSecondaryStatus</description>
+							<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="returnAwbSecondaryStatus" type="java.lang.String">
+							<modifiers optional="true" read="true" write="true" />
+							<description>for returnAwbSecondaryStatus</description>
+							<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="isEDtoHD" type="java.lang.Boolean">
+							<modifiers optional="true" read="true" write="true" />
+							<description>for isEDtoHD</description>
+							<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="ssb" type="java.lang.Boolean">
+							<modifiers optional="true" read="true" write="true" />
+							<description>for ssb</description>
+							<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="sdb" type="java.lang.Boolean">
+							<modifiers optional="true" read="true" write="true" />
+							<description>for sdb</description>
+							<persistence type="property" />
+					</attribute>
+					
+					<!-- End Added new Attributes  for Order Update -->
 				</attributes>
 			</itemtype>
 
@@ -6008,6 +6054,54 @@
 							optional="true" />
 						<persistence type="property" />
 					</attribute>
+					
+					<!--Start  Added new Attributes for Order Update  -->
+					
+					<attribute qualifier="returnInscan" type="java.lang.Boolean">
+							<modifiers optional="true" read="true" write="true" />
+							<description>for returnInscan</description>
+							<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="returnPickUp" type="java.lang.Boolean">
+							<modifiers optional="true" read="true" write="true" />
+							<description>for returnPickUp</description>
+							<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="awbSecondaryStatus" type="java.lang.String">
+							<modifiers optional="true" read="true" write="true" />
+							<description>for awbSecondaryStatus</description>
+							<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="returnAwbSecondaryStatus" type="java.lang.String">
+							<modifiers optional="true" read="true" write="true" />
+							<description>for returnAwbSecondaryStatus</description>
+							<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="isEDtoHD" type="java.lang.Boolean">
+							<modifiers optional="true" read="true" write="true" />
+							<description>for isEDtoHD</description>
+							<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="ssb" type="java.lang.Boolean">
+							<modifiers optional="true" read="true" write="true" />
+							<description>for ssb</description>
+							<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="sdb" type="java.lang.Boolean">
+							<modifiers optional="true" read="true" write="true" />
+							<description>for sdb</description>
+							<persistence type="property" />
+					</attribute>
+					
+					
+					<!--End  Added new Attributes for Order Update  -->
+
 				</attributes>
 			</itemtype>
 			<itemtype code="OrderHistoryEntry" autocreate="false"
