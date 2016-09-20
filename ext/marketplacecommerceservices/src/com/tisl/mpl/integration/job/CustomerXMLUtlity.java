@@ -449,6 +449,7 @@ public class CustomerXMLUtlity
 				}
 				if (StringUtils.isNotEmpty(addressModel.getPostalcode()))
 				{
+					//fix for TISPRD-6438
 					try
 					{
 						if (addressModel.getPostalcode().length() == MarketplacecommerceservicesConstants.PIN_CODE_LENGTH)
@@ -489,6 +490,7 @@ public class CustomerXMLUtlity
 					customerAddress.setCity(addressModel.getTown());
 				}
 
+				//fix for TISPRD-4752
 				if (null != addressModel.getCountry() && StringUtils.isNotEmpty(addressModel.getCountry().getIsocode()))
 				{
 					customerAddress.setCountry(addressModel.getCountry().getIsocode());
