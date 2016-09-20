@@ -159,7 +159,7 @@ public class SellerRestriction extends GeneratedSellerRestriction
 			}
 		}
 
-		if (CollectionUtils.isNotEmpty(entryList) && CollectionUtils.isNotEmpty(entryList))
+		if (CollectionUtils.isNotEmpty(entryList) && CollectionUtils.isNotEmpty(sellerIdList))
 		{
 			for (final AbstractOrderEntry entry : entryList)
 			{
