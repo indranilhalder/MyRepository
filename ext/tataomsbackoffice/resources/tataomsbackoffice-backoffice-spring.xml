@@ -138,4 +138,20 @@
 	<alias name="defaultShortUrlFacade" alias="shortUrlFacade" />
 	<bean id="defaultShortUrlFacade" class="com.hybris.oms.tata.facade.impl.DefaultShortUrlFacade"></bean>
 	<bean id="bucFileComparitor" class="com.techouts.dataonboarding.util.BUCFileComparitor"></bean>
+	<!-- bulk upload -->
+	<bean id="excelToCsvConverter" class="com.hybris.oms.tata.exceltocsv.main.ExcelToCsvConverter">
+	</bean>
+	<bean id="csvService" class="com.hybris.oms.tata.service.CsvService">
+	</bean>
+	<bean id="logisticPartnerValidator"
+		class="com.hybris.oms.tata.exceltocsv.validator.LogisticPartnerValidator"></bean>
+	<bean id="priorityMasterValidator"
+		class="com.hybris.oms.tata.exceltocsv.validator.PriorityMasterValidator"></bean>
+
+<bean id="priorityMaster" class="com.hybris.oms.tata.pincodesupload.pojo.PriorityMaster">
+ <property name="airPriorityMaster" ref="airPriorityMaster"></property>
+ <property name="surfacePriorityMaster" ref="surfacePriorityMaster"></property>
+</bean>
+<bean id="airPriorityMaster" class="com.hybris.oms.tata.pincodesupload.pojo.AirPriorityMaster"></bean>
+<bean id="surfacePriorityMaster" class="com.hybris.oms.tata.pincodesupload.pojo.SurfacePriorityMaster"></bean>
 </beans>
