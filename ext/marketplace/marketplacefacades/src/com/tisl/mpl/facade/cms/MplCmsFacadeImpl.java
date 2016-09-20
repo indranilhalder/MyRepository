@@ -43,7 +43,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.enums.CMSChannel;
-import com.tisl.mpl.core.model.MplProductCollectionComponentModel;
 import com.tisl.mpl.core.model.MplShopByLookModel;
 import com.tisl.mpl.facades.cms.data.BannerComponentData;
 import com.tisl.mpl.facades.cms.data.CollectionComponentData;
@@ -564,74 +563,10 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					}
 					else if (abstractCMSComponentModel instanceof ProductCarouselComponentModel)
 					{
-						final ProductCarouselComponentModel productCarousel = (ProductCarouselComponentModel) abstractCMSComponentModel;
-						for (final String productCode : productCarousel.getProductCodes())
-						{
-							final ProductListComponentData productComp = new ProductListComponentData();
-							ProductModel productModel = null;
-							ProductData product = null;
-							BuyBoxData buyboxdata = null;
-							//IQA
-							try
-							{
-								product = productFacade.getProductForCodeAndOptions(productCode,
-										Arrays.asList(ProductOption.BASIC, ProductOption.PRICE, ProductOption.CATEGORIES));
-								buyboxdata = buyBoxFacade.buyboxPrice(productCode);
-
-								productModel = productService.getProductForCode(productCode);
-								if (null != productModel && null != productModel.getPicture())
-								{
-									productComp.setImage(productModel.getPicture().getUrl2());
-								}
-							}
-							catch (final Exception e)
-							{
-								LOG.warn("Encountered error while seting product image. ", e);
-								//IQA
-								ExceptionUtil.getCustomizedExceptionTrace(e);
-							}
-							if (product.getName() != null)
-							{
-								productComp.setName(product.getName());
-							}
-							if (buyboxdata.getPrice() != null)
-							{
-								productComp.setPrice(buyboxdata.getMrp().getFormattedValue());
-							}
-							if (buyboxdata.getMrp() != null)
-							{
-								productComp.setSlashedPrice(buyboxdata.getPrice().getFormattedValue());
-							}
-
-							if (productModel != null)
-							{
-								if (productModel.getDeeplinkType() != null)
-								{
-									productComp.setType(productModel.getDeeplinkType());
-								}
-								if (productModel.getDeeplinkTypeId() != null)
-								{
-									productComp.setTypeId(productModel.getDeeplinkTypeId());
-								}
-								if (productModel.getDeeplinkTypeVal() != null)
-								{
-									productComp.setTypeVal(productModel.getDeeplinkTypeVal());
-								}
-								if (productModel.getCode() != null)
-								{
-									productComp.setProductID(productModel.getCode());
-								}
-							}
-							productForShowCase.add(productComp);
-
-						}
-						//homePageData.setBannerComponents(bannerComponents);
-					} ///TPR-1316
-					else if (abstractCMSComponentModel instanceof MplProductCollectionComponentModel)
-					{
+						///start TPR-1316
 						final ProductComponentData prodCompData = new ProductComponentData();
 						final List<ProductListComponentData> productCompList = new ArrayList<ProductListComponentData>();
-						final MplProductCollectionComponentModel productCarousel = (MplProductCollectionComponentModel) abstractCMSComponentModel;
+						final ProductCarouselComponentModel productCarousel = (ProductCarouselComponentModel) abstractCMSComponentModel;
 						if (productCarousel.getComponentType() != null)
 						{
 							prodCompData.setComponentType(productCarousel.getComponentType().getCode());
@@ -696,8 +631,8 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 							}
 						}
 						prodCompData.setProductList(productCompList);
-
 						productCollection.add(prodCompData);
+						///End TPR-1316
 					}
 				}
 				if (lastModifiedTimes.size() >= 1)
@@ -720,8 +655,6 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 		return componentDatas;
 	}
-
-
 
 	/*
 	 * (non-Javadoc)
