@@ -66,7 +66,7 @@ public class UnregisteredUserRestriction extends GeneratedUnregisteredUserRestri
 		//include  these unregistered email list  for the voucher applicability
 		final ArrayList<String> emailIdList = new ArrayList<String>();
 		final StringTokenizer emailIdListToken = new StringTokenizer(super.getEmailList(),
-				MarketplacecommerceservicesConstants.CAMPAIGN_FILE_DELIMITTER);//TO DO add null check for emailIdListToken
+				MarketplacecommerceservicesConstants.CAMPAIGN_FILE_DELIMITTER);
 		while (emailIdListToken.hasMoreTokens())
 		{
 			emailIdList.add(emailIdListToken.nextToken().trim());
@@ -95,11 +95,10 @@ public class UnregisteredUserRestriction extends GeneratedUnregisteredUserRestri
 							+ emailIdList.size());
 				}
 			}
-		}
+		} 
 		return result;
 
 	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
