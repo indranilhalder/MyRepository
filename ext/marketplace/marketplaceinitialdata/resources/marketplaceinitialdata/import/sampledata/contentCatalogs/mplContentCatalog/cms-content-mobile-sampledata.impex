@@ -62,9 +62,9 @@ INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];con
 ;;SampleParagraph;"Section message";category;MSH11;Ethnic Wear
 ;;SampleMarketingParagraph;"Marketing message";category;MSH11;Ethnic Wear
 
-INSERT_UPDATE MplProductCollectionComponent;$contentCV[unique=true];uid[unique=true];name;productcodes(code,$productCV);componentType(code)
-;;MplProductCollectionComponent1;Product Carousel Component;987654321,987654322;ProductSliderType
-;;MplProductCollectionComponent2;Product Carousel Component;987654321,987654323;ProductListType
+INSERT_UPDATE MplProductCollectionComponent;$contentCV[unique=true];uid[unique=true];name;productCodes(code,$productCV);componentType(code)
+;;MplProductCollectionComponent1;Product Carousel Component;MP100000000005744,MP100000000005599;ProductSliderType
+;;MplProductCollectionComponent2;Product Carousel Component;MP100000000005744,MP100000000005599;ProductListType
 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
 ;;HeroBannersSlot-MobileNewHomepageDiscover;HeroBanners Slot for MobileNewHomepageDiscover;true;SampleParagraph,ImageCarouselComponent1
@@ -84,5 +84,5 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 ;;TopDeals-MobileNewHomepageDiscover;Section4;MobileNewHomepageDiscover;TopDealsSlot-MobileNewHomepageDiscover
 ;;WhatToBuyNow-MobileNewHomepageDiscover;Section5;MobileNewHomepageDiscover;WhatToBuyNowSlot-MobileNewHomepageDiscover
 ;;TrendingNow-MobileNewHomepageDiscover;Section6;MobileNewHomepageDiscover;TrendingNowSlot-MobileNewHomepageDiscover
-;;ProductSliderBannersSlot-MobileNewHomepageDiscover;Section7;MobileNewHomepageDiscover;ProductSliderBannersSlot-MobileNewHomepageDiscover
-;;ProductListBannersSlot-MobileNewHomepageDiscover;Section8;MobileNewHomepageDiscover;ProductListBannersSlot-MobileNewHomepageDiscover
+;;ProductSliderBannersSlot-MobileNewHomepageDiscover;Section8;MobileNewHomepageDiscover;ProductSliderBannersSlot-MobileNewHomepageDiscover
+;;ProductListBannersSlot-MobileNewHomepageDiscover;Section9;MobileNewHomepageDiscover;ProductListBannersSlot-MobileNewHomepageDiscover
