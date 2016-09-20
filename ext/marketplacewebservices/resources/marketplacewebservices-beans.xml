@@ -970,8 +970,8 @@
 			type="java.util.List&lt;com.tisl.mpl.wsdto.FreebieDTO>"></property>
 		<property name="isProductNew" type="java.lang.String"></property>
 		<property name="sellerAssociationstatus" type="String" />
-		<property name="discountPercent" type="String" />
-		<!-- TPR-797 -->
+		<!-- TPR-797 changed as per mail-->
+		<property name="discount" type="String" />
 		<property name="allOOStock" type="Boolean" />
 	</bean>
 

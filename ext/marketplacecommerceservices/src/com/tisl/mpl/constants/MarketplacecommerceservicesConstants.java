@@ -1602,6 +1602,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public final static String IMAGEURLMSG = "Image url is:::";
 	public final static String IMAGEDIMENSION = "257Wx257H";
+	public final static String IMAGE_MEDIA_TYPE = "Image";
 
 	public final static String DEFAULT_RISK = "-1.0";
 

@@ -120,7 +120,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -218,7 +218,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 							final double savingPriceCalPer = (savingPriceCal / buyBoxData.getMrp().getDoubleValue().doubleValue()) * 100;
 							final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
 							final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
-							productDetailMobile.setDiscountPercent(roundedOffValue.toString());
+							//changed as per Ashish mail
+							productDetailMobile.setDiscount(roundedOffValue.toString());
 
 						}
 						else if (buyBoxData.getPrice() != null && buyBoxData.getPrice().getValue().doubleValue() > 0)
@@ -228,7 +229,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 							final double savingPriceCalPer = (savingPriceCal / buyBoxData.getMrp().getDoubleValue().doubleValue()) * 100;
 							final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
 							final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
-							productDetailMobile.setDiscountPercent(roundedOffValue.toString());
+							//changed as per Ashish mail
+							productDetailMobile.setDiscount(roundedOffValue.toString());
 						}
 					}
 				}
