@@ -19971,6 +19971,7 @@ body.page-shoe .feature-collections ul.collections li.chef.sub h3 span a{
       padding-top: 0px;
     padding-bottom: 0px;
   padding-left:15px;
+  margin-top: 2px;
 }
 .listing.wrapper .right-block {
   width: 80%;
@@ -34032,7 +34033,7 @@ body.template-pages-category-productGridPage .trending h1,body.template-pages-se
     line-height: 33px;
 }
 .listing.wrapper .right-block .listing-menu .wrapped-form.view label {
-    line-height: 31px;
+    line-height: 32px;
 }
 #pageSizeOptions1 {
     padding: 0 30px 0 15px;
