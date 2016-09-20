@@ -95,33 +95,6 @@
         						$(".checkout-paymentmethod").css("display","block");
         					}	
     					}
-      						$("*[data-id=newCCard]").click(function(){
-      							$(".proceed-button").each(function(){
-      								$(this).hide();
-      							});
-      							$("#make_cc_payment_up").show();
-      						});
-      						
-      						$("input[name=creditCards]").change(function(){
-      							$(".proceed-button").each(function(){
-      								$(this).hide();
-      							});
-      							$("#make_saved_cc_payment_up").show();
-      						});
-      						
-      						$("*[data-id=newDCard]").click(function(){
-      							$(".proceed-button").each(function(){
-      								$(this).hide();
-      							});
-      							$("#make_dc_payment_up").show();
-      						});
-      						
-      						$("input[name=debitCards]").change(function(){
-      							$(".proceed-button").each(function(){
-      								$(this).hide();
-      							});
-      							$("#make_saved_dc_payment_up").show();
-      						});
     					});
 				</script>
 				
@@ -252,8 +225,8 @@
 			            								<div class="card card-num">
 										        			<div class="radio">
 										        			<span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
-										                 		<input type="radio" name="creditCards" class="card_token creditCardsRadio" id="cc${status.index}"  value="${map.value.cardToken}" />
-									                 	 		<label for="cc${status.index}" class="numbers">
+										                 		<input type="radio" data-id="savedCCard" name="creditCards" class="card_token creditCardsRadio" id="cc${status.index}"  value="${map.value.cardToken}" />
+									                 	 		<label for="cc${status.index}" data-id="savedCCard" class="numbers">
 									                 	 			${map.value.cardBrand} ending in ${map.value.cardEndingDigits}</label>
 									                 	 			<!-- <span class="saved">Saved card</span> -->
 									                  				<p>${map.value.nameOnCard}</p>
@@ -529,8 +502,8 @@
 			            									<div class="card card-num">
 										        				<div class="radio">
 										        				<span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
-										                    		<input type="radio" name="debitCards" class="card_token  debitCardsRadio" id="dc${status.index}"  value="${map.value.cardToken}"/>
-										                    		<label for="dc${status.index}" class="numbers">${map.value.cardBrand} ending in ${map.value.cardEndingDigits}</label>
+										                    		<input type="radio" data-id="savedDCard" name="debitCards" class="card_token  debitCardsRadio" id="dc${status.index}"  value="${map.value.cardToken}"/>
+										                    		<label for="dc${status.index}" data-id="savedDCard" class="numbers">${map.value.cardBrand} ending in ${map.value.cardEndingDigits}</label>
 										                  				<p>${map.value.nameOnCard}</p>
 										                  				<p><spring:theme code="text.expires.on"/> ${map.value.expiryMonth}/${map.value.expiryYear}</p>
 										                   			<input type="hidden" name="debitCardsBank" class="card_bank" value="${map.value.cardIssuer}" />
@@ -599,7 +572,7 @@
 				                  		<input type="hidden" id="ebsDownCheck" value="${ebsDownCheck}"/>
 				                  		<div class="radio creditDebitLabelRadio">
 										 <input type="radio" name="debitCards" data-id="newDCard" id="debitLabel"/>
-										 <label for="debitLabel" class="numbers debitLabel" data-id="newDCard"><span>New Card</span></label>
+										 <label for="debitLabel" data-id="newDCard" class="numbers debitLabel" data-id="newDCard"><span>New Card</span></label>
 								   		</div>
 				                  		<!-- <p>NEW CARD</p> -->
 										<div class="card-group">

@@ -50908,4 +50908,8 @@ div.radio.creditDebitLabelRadio{
 .cart.wrapper .left-block #savedDebitCard .debit-card-group input[type="radio"] + label>span,.cart.wrapper .left-block li#savedCard div.card input[type="radio"] + label>span{
     font-size: 16px;
 }
+.cart.wrapper .left-block #savedDebitCard .debit-card-group input[type="radio"] + label:before, .cart.wrapper .left-block li#savedCard div.card input[type="radio"] + label:before{
+	left: -25px;
+    margin-top: -4px;
+}
 }

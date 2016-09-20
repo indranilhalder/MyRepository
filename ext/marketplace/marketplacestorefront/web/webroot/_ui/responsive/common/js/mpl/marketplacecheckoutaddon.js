@@ -17,6 +17,18 @@ $("#viewPaymentCredit").click(function(){
 	else{
 		redirectToCheckoutLogin();	
 	}
+	
+	if($("*[data-id=savedCCard]").is(":checked")){
+		$(".proceed-button").each(function(){
+			$(this).hide();
+		});
+		$("#make_saved_cc_payment_up").show();
+	}else{
+		$(".proceed-button").each(function(){
+			$(this).hide();
+		});
+		$("#make_cc_payment_up").show();
+	}
 });
 
 $("#viewPaymentDebit").click(function(){
@@ -27,6 +39,18 @@ $("#viewPaymentDebit").click(function(){
 	}
 	else{
 		redirectToCheckoutLogin();	
+	}
+	
+	if($("*[data-id=savedDCard]").is(":checked")){
+		$(".proceed-button").each(function(){
+			$(this).hide();
+		});
+		$("#make_saved_dc_payment_up").show();
+	}else{
+		$(".proceed-button").each(function(){
+			$(this).hide();
+		});
+		$("#make_dc_payment_up").show();
 	}
 });
 
@@ -5759,6 +5783,7 @@ $(".remove-coupon-button").click(function(){
 
 
 $(document).ready(function(){
+	console.log($("*[data-id=savedCCard]").is(":checked"));
 	if($('#couponFieldId').prop('readonly') == false)
 	{
 		var selection = $("#voucherDisplaySelection").val();
@@ -5778,28 +5803,6 @@ $(document).ready(function(){
 		});
 		$(".alert-danger").css("z-index","101");
 	}
-/*	$(document).on("click",".choose-payment .smk_accordion .accordion_in .acc_head",function(){
-		var redirect = $(this).parent().find("#card .redirect");
-		var tnc = $(this).parent().find("#card div.terms");
-		if (!$("#savedCard").is(":visible")){
-			alert("inside");
-			redirect.css("display","none");
-			tnc.css("display","none");
-		}
-		else{
-			redirect.css("display","block");
-			tnc.css("display","block");
-		}
-
-	});*/
-
-	/*var pathname = window.location.pathname;
-	if(pathname =='/checkout/multi/delivery-method/select'){
-		$('.outstanding-amt').show();
-		$('.outstanding-amt').style("display","none");
-		
-		
-	}*/
 });
 $("#voucherDisplaySelection").change(function(){
 	if($('#couponFieldId').prop('readonly') == false)
@@ -6218,3 +6221,30 @@ $(document).on("click",".radio input[type='radio']",function(){
 	
 });
 
+	$("*[data-id=newCCard]").click(function(){
+		$(".proceed-button").each(function(){
+			$(this).hide();
+		});
+		$("#make_cc_payment_up").show();
+	});
+	
+	$("*[data-id=savedCCard]").change(function(){
+		$(".proceed-button").each(function(){
+			$(this).hide();
+		});
+		$("#make_saved_cc_payment_up").show();
+	});
+	
+	$("*[data-id=newDCard]").click(function(){
+		$(".proceed-button").each(function(){
+			$(this).hide();
+		});
+		$("#make_dc_payment_up").show();
+	});
+	
+	$("*[data-id=savedDCard]").change(function(){
+		$(".proceed-button").each(function(){
+			$(this).hide();
+		});
+		$("#make_saved_dc_payment_up").show();
+	});
