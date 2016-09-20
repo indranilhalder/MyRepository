@@ -66,7 +66,7 @@ public class UnregisteredUserRestriction extends GeneratedUnregisteredUserRestri
 		//include  these unregistered email list  for the voucher applicability
 		final ArrayList<String> emailIdList = new ArrayList<String>();
 		final StringTokenizer emailIdListToken = new StringTokenizer(super.getEmailList(),
-				MarketplacecommerceservicesConstants.CAMPAIGN_FILE_DELIMITTER);//TO DO add null check for emailIdListToken
+				MarketplacecommerceservicesConstants.CAMPAIGN_FILE_DELIMITTER);
 		while (emailIdListToken.hasMoreTokens())
 		{
 			emailIdList.add(emailIdListToken.nextToken().trim());
@@ -79,13 +79,7 @@ public class UnregisteredUserRestriction extends GeneratedUnregisteredUserRestri
 			final String originalUid = originalUidObj.toString();
 			if (positive.booleanValue())
 			{
-				if (CollectionUtils.isEmpty(emailIdList))
-				{
-					result = false;
-					LOG.debug("selected  'Valid' field in hmc is ::::" + positive.booleanValue() + "emailid list  size is"
-							+ emailIdList.size());
-				}
-				else if (emailIdList.contains(originalUid))
+				if (CollectionUtils.isNotEmpty(emailIdList) && emailIdList.contains(originalUid))
 				{
 					result = true;
 					LOG.debug("selected  'Valid' field in hmc is ::::" + positive.booleanValue() + "emailid list  size is"
@@ -94,24 +88,17 @@ public class UnregisteredUserRestriction extends GeneratedUnregisteredUserRestri
 			}
 			else
 			{
-				if ((!emailIdList.contains(originalUid)) && (CollectionUtils.isEmpty(emailIdList)))
-				{
-					result = false;
-					LOG.debug("selected  'Valid' field in hmc is ::::" + positive.booleanValue() + "emailid list  size is"
-							+ emailIdList.size());
-				}
-				else if (!emailIdList.contains(originalUid))
+				if (!emailIdList.contains(originalUid) || CollectionUtils.isEmpty(emailIdList))
 				{
 					result = true;
 					LOG.debug("selected  'Valid' field in hmc is ::::" + positive.booleanValue() + "emailid list  size is"
 							+ emailIdList.size());
 				}
 			}
-		}
+		} 
 		return result;
 
 	}
-
 	/*
 	 * (non-Javadoc)
 	 * 

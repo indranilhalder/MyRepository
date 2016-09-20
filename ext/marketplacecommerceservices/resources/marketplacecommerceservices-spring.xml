@@ -1782,5 +1782,19 @@
 		<property name="typeCode" value="Sizesystem" />
 	</bean>
 	<!-- Bean for POC Search ends-->
+	
+	<!-- Added for displaying offer messages other than promotion, TPR-589-->
+	<bean id="prodOfferDetService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.ProductOfferDetailServiceImpl">		
+	</bean>
+	<bean id="prodOfferDetDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.ProductOfferDetailDaoImpl">
+		<property name="flexibleSearchService" ref="flexibleSearchService" />
+		<property name="modelService" ref="modelService" />		
+	</bean>
+	
+	<!-- Bundle Promotion Helper Class -->
+	<bean id="mplBundlePromotionHelper" class="com.tisl.mpl.promotion.helper.MplBundlePromotionHelper" />
+	
 </beans>
 

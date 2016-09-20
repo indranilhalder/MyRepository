@@ -516,6 +516,141 @@ function focusOnElement() {
 	 }
 	
 	 
+	 
+	//Added for displaying Non HMC configurable offer messages , TPR-589
+		
+	    function populateOfferMessageTime(hour){
+		var hours = hour.split(":")[0];
+	    var am = true;
+	    if (hours > 12) {
+	       am = false;
+	       hours =hours-12;
+	    } else if(hours == 12) {
+	       am = false;
+	    } else if (hours == 0) {
+	       hours = 12;
+	    }
+	    var offSatrtamorPm= am ? " AM" : " PM";   
+	    return offSatrtamorPm;
+		} 
+	 
+	//Added for displaying Non HMC configurable offer messages , TPR-589
+		
+	    function  populateOfferMsgWrapper(productCode, sellerId, divId ){
+			var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
+			                  + "/getOfferMessage";		
+			var dataString = 'productCode=' + productCode;	
+			$.ajax({
+				contentType : "application/json; charset=utf-8",
+				url : requiredUrl,
+				async: false,
+				data : dataString,
+				dataType : "json",
+				success : function(data) {		
+						var pagelevelOffer = "<div class='pdp-offer-title pdp-title'><b>OFFER: </b><span id='offerDetailId'></span></div>" ;	
+						var modallevelOffer = "<div class='pdp-offerDesc pdp-promo right'><h3 class='product-name highlight desk-offer'><span id='message'></span></h3><h3 class='offer-price'></h3><div class='show-offerdate'><p><span id='messageDet'></span></p><div class='offer-date'><div class='from-date'><span class='from'>From:</span><span class='date-time' id='offerstartyearTime'></span><span class='date-time' id='offerstarthourTime'></span></div><div class='to-date'><span class='to'>To:</span><span class='date-time' id='offerendyearTime'></span><span class='date-time' id='offerendhourTime'></span></div></div></div></div>";
+					   	if (data != null) {			
+						    var offerMessageMap = data['offerMessageMap'];	
+							var x=$('<div/>');	
+							var message = null;
+							var messageDet = null;
+							var messageStartDate = null;
+							var messageEndDate = null;		
+							$(".pdp-promo-title-link").css("display","none");			
+							if($("#promolist").val()!=""||!$.isEmptyObject(offerMessageMap)){
+								$("#promolist").val(offerMessageMap);
+								$(".pdp-promo-title-link").css("display", "block");		
+							} 
+							if(!$.isEmptyObject(offerMessageMap)){			
+								if($(".pdp-promo-title").length > 0){
+									$(pagelevelOffer).insertAfter(".pdp-promo-title");
+									$(modallevelOffer).insertAfter(".show-date");
+								}else{				
+									$(".pdp-promo-block").append(pagelevelOffer);
+									$(".offer-block").append(modallevelOffer);					
+								}			
+							}			
+												
+							$.each( offerMessageMap, function(key,value){		
+								
+								$.each(value, function(keyInternal,valueInternal){
+									 if(keyInternal == 'message'){
+										 message = valueInternal;
+									 }else if(keyInternal == 'messageDet'){
+										 messageDet = valueInternal;
+									 }
+									 if(keyInternal == 'startDate'){
+										 messageStartDate = valueInternal;
+									 }
+									 if(keyInternal == 'endDate'){
+										 messageEndDate = valueInternal;
+									 }					 
+								 });
+								 
+								 if(sellerId == key)
+								 {						
+									if(divId != null)
+									{
+										var offerMessageDiv="<div class='offerMessage-block' id='offerMessageId'>"+message+"</div>";
+										var divSpecificId ='#'+divId;
+										$(divSpecificId).html(offerMessageDiv);
+									}
+									else
+									{
+										$(".pdp-offer").html(message);						
+									}
+									$("#message").html(message);	
+									$("#offerDetailId").html(messageDet);
+									
+									$("#messageDet").html(messageDet);
+									var dateSplit = messageStartDate.split(" ");
+				                   var firstpart = dateSplit[0];
+				                   var secondpart = dateSplit[1];
+				                   var thirdpart = secondpart.split(".")[0];                   
+				                   var resfirstpart = firstpart.split("-").reverse().join("/");                  
+				                   var offStartTime =  populateOfferMessageTime(thirdpart);                
+				                   var offStart = thirdpart.concat(offStartTime);
+				                $(".offerstartyear-time, #offerstartyearTime").html(resfirstpart);
+				                $(".offerstarthour-time, #offerstarthourTime").html(offStart);                
+								var enddateSplit = messageEndDate.split(" ");
+				                var enddtfstpart = enddateSplit[0];
+				                var enddtsecondpart = enddateSplit[1];
+				                var edthirdpart = enddtsecondpart.split(".")[0];                  
+				                var resEdfirstpart = enddtfstpart.split("-").reverse().join("/");                 
+				                var offEndTime =  populateOfferMessageTime(edthirdpart);              
+				                var offEnd = edthirdpart.concat(offEndTime);               
+				              $(".offerendyear-time,#offerendyearTime").html(resEdfirstpart);
+				              $(".offerendhour-time,#offerendhourTime").html(offEnd);            
+								 }
+								 else
+								 {
+									 x.append("<p>"+message+"</p>");								 
+								 }				
+								})	
+								//Other Seller offer message details
+								/* if($("#otherSellerInfoId").is(':visible'))
+								 {					 
+									 $('#otherSellerInfoId').append(x);						
+								 }*/
+							
+							  	 /*var msg = $(".pdp-offer").text();
+							     if(msg != "")
+							     {
+							    	 alert("*****");
+							    	 $(".pdp-offer").css("display","inline-block");
+							    	 $(".showOfferDetail").css("display","inline-block");
+							     }*/
+								}						
+				}
+			});	
+		}		
+		// End of TPR-589
+		
+	 
+	 
+	 
+	 
+	 
 	 function sortPriceDesc(sellerPageCount){
 		 var buyboxSeller = $("#ussid").val();
 		 var aFinalPrice="";

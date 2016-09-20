@@ -39,7 +39,7 @@ INSERT_UPDATE SolrIndexConfig;name[unique=true];batchSize;numberOfThreads;indexM
 
 # Create the faceted search configuration
 INSERT_UPDATE SolrSearchConfig;description[unique=true];pageSize
-;$searchConfigName;24
+;$searchConfigName;72
 
 #
 # Setup the indexed types, their properties, and the update queries

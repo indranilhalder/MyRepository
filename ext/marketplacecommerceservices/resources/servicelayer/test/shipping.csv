@@ -1,0 +1,20 @@
+#Take out the pks of Channel 
+#Product code should be available
+#Discount Type enum value must be available
+#Take out the pks of Delivery Modes 
+
+$productCatalog=mplProductCatalog
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
+$secondproducts=secondProducts(code, $catalogVersion)
+$products = products(code, $catalogVersion)
+
+INSERT_UPDATE BuyAGetPromotionOnShippingCharges;code[unique=true];title;description;sship;priority;enabled;discTypesOnShippingCharges(code);channel;quantity;percentageDiscount;$products
+;ShippingTest;Test Promotion;Test Promotion;false;1000;true;Percentage;8796093055067,8796120449115;2;10;987654341
+
+
+INSERT_UPDATE BuyAandBGetPromotionOnShippingCharges;code[unique=true];title;description;sship;priority;enabled;discTypesOnShippingCharges(code);channel;percentageDiscount;$products;$secondproducts
+;ShippingAandBPromo;Test Promotion;Test Promotion;false;1002;false;Percentage;8796093055067,8796120449115;10;987654341;987654342
+
+INSERT_UPDATE BuyAboveXGetPromotionOnShippingCharges;code[unique=true];title;description;sship;priority;enabled;deliveryModeDetailsList;discTypesOnShippingCharges(code);channel;percentageDiscount
+;ShippingCartPromotion; Test; Test;true;501;false;8796093218856,8796093251624;Percentage;8796093055067,8796120449115;10
+
