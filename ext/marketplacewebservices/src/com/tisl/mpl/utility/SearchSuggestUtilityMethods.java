@@ -176,7 +176,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 *
+	 * 
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -455,7 +455,7 @@ public class SearchSuggestUtilityMethods
 					facetWsDTO.setMultiSelect(Boolean.valueOf((facate.isCategory())));
 					if (null != facate.getName())
 					{
-						facetWsDTO.setName(facate.getName());
+						facetWsDTO.setName(StringUtils.capitalize(facate.getName()));
 					}
 					facetWsDTO.setCategory(Boolean.valueOf((facate.isCategory())));
 					facetWsDTO.setPriority(Integer.valueOf((facate.getPriority())));
@@ -500,13 +500,14 @@ public class SearchSuggestUtilityMethods
 								currentFacet = values.getQuery().getQuery().getValue().toString();
 								facetValueWsDTO.setQuery(currentFacet);
 								//facetValueWsDTO.setValue(currentFacet.substring((currentFacet.lastIndexOf(":") + 1)));
-
 								facetValueWsDTO.setValue(values.getCode());
 							}
 							if (null != values.getQuery().getUrl())
 							{
 								facetValueWsDTO.setUrl(values.getQuery().getUrl().toString());
 							}
+							// added count
+							facetValueWsDTO.setCount(Long.valueOf(values.getCount()));
 							// To skip Include out of stock
 							if (!(null != values.getCode() && values.getCode().equalsIgnoreCase("false")))
 							{
@@ -534,7 +535,7 @@ public class SearchSuggestUtilityMethods
 					categoryHierarchy.setMultiSelect(Boolean.valueOf((facate.isCategory())));
 					if (null != facate.getName())
 					{
-						categoryHierarchy.setName(facate.getName());
+						categoryHierarchy.setName(StringUtils.capitalize(facate.getName()));
 					}
 					categoryHierarchy.setCategory(Boolean.valueOf((facate.isCategory())));
 					categoryHierarchy.setPriority(Integer.valueOf((facate.getPriority())));
@@ -1379,6 +1380,9 @@ public class SearchSuggestUtilityMethods
 							{
 								facetValueWsDTO.setUrl(values.getQuery().getUrl().toString());
 							}
+							// added count
+							facetValueWsDTO.setCount(Long.valueOf(values.getCount()));
+
 							//If facet name is "Include out of stock"  value will be false
 							if (!(null != values.getCode() && values.getCode().equalsIgnoreCase("false")))
 							{

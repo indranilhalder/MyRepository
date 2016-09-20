@@ -389,6 +389,9 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				setUidForRegister(registerData, newCustomer);
 				newCustomer.setSessionLanguage(getCommonI18NService().getCurrentLanguage());
 				newCustomer.setSessionCurrency(getCommonI18NService().getCurrentCurrency());
+				//TPR-1372
+				newCustomer.setIscheckedMyRewards(Boolean.valueOf(registerData.isCheckTataRewards()));
+
 				//Register customer social
 				newCustomer.setCustomerRegisteredBySocialMedia(Boolean.TRUE);
 				data = extDefaultCustomerService.registerUserForSocialSignup(newCustomer);
