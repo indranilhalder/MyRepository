@@ -66,4 +66,6 @@ public class EtailSellerSpecificRestriction extends GeneratedEtailSellerSpecific
 		return Registry.getApplicationContext().getBean("sellerBasedPromotionService", SellerBasedPromotionService.class);
 	}
 
+
+
 }

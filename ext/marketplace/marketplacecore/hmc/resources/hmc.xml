@@ -2970,6 +2970,55 @@
 			</result>
 		</organizer>
 	</type>
+	<!-- TPR-970 changes starts-->
+	<type name="State" mode="append">
+		<organizer>
+			<search mode="replace">
+				<condition attribute="countrykey" />
+				<condition attribute="description" />
+				<condition attribute="region" />
+			</search>
+			<result>
+				<listview mode="replace">
+					<itemlayout>
+						<attribute name="countrykey" />
+						<attribute name="description" />
+						<attribute name="region" />
+					</itemlayout>
+				</listview>
+			</result>
+		</organizer>
+		<defaultreference searchattribute="countrykey" mode="replace">
+			<itemlayout>
+				 <attribute name="countrykey" />
+			</itemlayout>
+		</defaultreference>
+	</type>
+	<type name="City" mode="append">
+		<organizer>
+			<search mode="replace">
+				<condition attribute="cityName" />
+				<condition attribute="description" />
+			</search>
+			<result>
+				<listview mode="replace">
+					<itemlayout>
+						<attribute name="cityName"/>
+						<attribute name="description" />
+					</itemlayout>
+				</listview>
+			</result>
+		</organizer>
+		<defaultreference searchattribute="cityName" mode="replace">
+			<itemlayout>
+				 <attribute name="cityName" />
+			</itemlayout>
+		</defaultreference>
+	</type>
+	<!-- TPR-970 changes ends-->
+	
+	
+	
 	  <!-- seller priority starts -->
   <explorertree>
 		<group name="sellerpriority" description="group.MplSellerPriority.description">

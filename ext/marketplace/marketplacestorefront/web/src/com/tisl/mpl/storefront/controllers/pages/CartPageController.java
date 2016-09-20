@@ -203,7 +203,13 @@ public class CartPageController extends AbstractPageController
 				//TISEE-3676 & TISEE-4013
 				//final boolean deListedStatus = getMplCartFacade().isCartEntryDelisted(serviceCart); Moved to facade layer //TISPT-104
 				//LOG.debug("Cart Delisted Status " + deListedStatus);
-
+				if (null != getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE))
+				{
+					//TPR-970 changes
+					mplCartFacade.populatePinCodeData(getCartService().getSessionCart(),
+							getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE).toString());
+					//	getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
+				}
 				getMplCouponFacade().releaseVoucherInCheckout(getCartService().getSessionCart()); //TISPT-104
 				getMplCartFacade().getCalculatedCart(); /// Cart recalculation method invoked inside this method
 				//final CartModel cart = mplCartFacade.removeDeliveryMode(serviceCart); // Contains recalculate cart TISPT-104
@@ -274,7 +280,6 @@ public class CartPageController extends AbstractPageController
 
 		return returnPage;
 	}
-
 
 	/**
 	 * @param serviceCart
