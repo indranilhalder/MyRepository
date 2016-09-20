@@ -83,5 +83,13 @@ public interface MplCustomAddressFacade
 	 */
 	boolean setDeliveryAddress(final AddressData addressData);
 
+	/**
+	 * @param deliveryCode
+	 * @param sellerArticleSKU
+	 * @param cartModel
+	 * @return Double
+	 */
+	Double populateDeliveryMethodData(String deliveryCode, String sellerArticleSKU, CartModel cartModel);
+
 
 }

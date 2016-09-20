@@ -1,9 +1,11 @@
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.catalog.model.CatalogVersionModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -38,6 +40,10 @@ public class MplDelistingServiceImpl implements MplDelistingService
 
 	private final static String SELLERID = "Seller ID:";
 	private final static String USSID = "USSID :";
+
+
+	@Autowired
+	private ConfigurationService configurationService;
 
 	/**
 	 * @return the mplDelistingDao
@@ -83,7 +89,7 @@ public class MplDelistingServiceImpl implements MplDelistingService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService#getAllUSSIDforSeller(java.util.List)
 	 */
 	@Override
@@ -107,18 +113,18 @@ public class MplDelistingServiceImpl implements MplDelistingService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService#delistSeller(java.util.List,
 	 * java.lang.String, java.lang.String)
-	 *
+	 * 
 	 * @Javadoc
-	 *
+	 * 
 	 * @ Description : Delist Based on Seller Id
-	 *
+	 * 
 	 * @param : sellerModelList(List<SellerInformationModel>)
-	 *
+	 * 
 	 * @param : delisting(String)
-	 *
+	 * 
 	 * @param : blockOMS(String)
 	 */
 	@Override
@@ -146,7 +152,8 @@ public class MplDelistingServiceImpl implements MplDelistingService
 					sellerModel.setSellerAssociationStatus(SellerAssociationStatusEnum.valueOf("yes"));
 				}
 				sellerModel.setBlockOMS(blockOMS);
-				sellerModel.setDelistDate(new Date());
+				//Delisting Changes TISPRD-5345
+				sellerModel.setDelistDate(defferedDate());
 				sellerModelSavingList.add(sellerModel);
 				LOG.info(SELLERID + sellerModel.getSellerID() + USSID + sellerModel.getSellerArticleSKU() + "has been delisted");
 			}
@@ -164,16 +171,16 @@ public class MplDelistingServiceImpl implements MplDelistingService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService#delistUSSID(java.util.List,
 	 * java.lang.String, java.lang.String)
-	 *
+	 * 
 	 * @Javadoc
-	 *
+	 * 
 	 * @ Description : Delist Based on USSID
-	 *
+	 * 
 	 * @param : sellerModelList(List<SellerInformationModel>)
-	 *
+	 * 
 	 * @param : delisting(String)
 	 */
 
@@ -203,7 +210,8 @@ public class MplDelistingServiceImpl implements MplDelistingService
 				{
 					sellerModel.setSellerAssociationStatus(SellerAssociationStatusEnum.valueOf("yes"));
 				}
-				sellerModel.setDelistDate(new Date());
+				//Delisting Changes TISPRD-5345
+				sellerModel.setDelistDate(defferedDate());
 
 				sellerModelSavingList.add(sellerModel);
 
@@ -230,7 +238,7 @@ public class MplDelistingServiceImpl implements MplDelistingService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService#getModelforUSSID(java.lang.String)
 	 */
 	@Override
@@ -276,7 +284,7 @@ public class MplDelistingServiceImpl implements MplDelistingService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService#FindUnprocessedRecord()
 	 */
 	@Override
@@ -297,7 +305,23 @@ public class MplDelistingServiceImpl implements MplDelistingService
 
 	}
 
+	//Delisting Fix TISPRD-5345
+	/*
+	 * @Javadoc This method would return a date deffered by minutes defined in the local.properties by variable
+	 * etail.delist.date.deffered or else by default it would deffer by 15minutes if the variable is not defined
+	 * 
+	 * @return defferedTime
+	 */
+	private Date defferedDate()
+	{
+		final int defferedTime = configurationService.getConfiguration().getInt("etail.delist.date.deffered", 15);
 
+		final Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.MINUTE, defferedTime);
+
+		return cal.getTime();
+
+	}
 
 
 
