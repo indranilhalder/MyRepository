@@ -5,7 +5,9 @@
 	xmlns:zk="http://www.zkoss.org/2005/zk"
 	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
 	height="100%">
-	<columnlayout width="100%" height="100%" apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('com.techouts.backoffice.widget.controller.AwbEditWidgetController')">
+	<columnlayout width="100%" height="100%"
+		apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('com.techouts.backoffice.widget.controller.AwbEditWidgetController')">
 		<columnchildren width="100%">
 			<panel
 				style="height:20%;font-size:14px;border-bottom:3px solid #27394f;border:none">
@@ -13,7 +15,7 @@
 					<vlayout style="width:100%;height:100px">
 						<hlayout>
 							<vlayout width="100px">
-								<label value="orderId" hflex="1" />
+								<label value="OrderId" hflex="1" />
 							</vlayout>
 							<vlayout width="200px">
 								<textbox hflex="1"
@@ -22,12 +24,12 @@
 							</vlayout>
 
 							<vlayout width="100px">
-								<label value="transactionId" hflex="1" />
+								<label value="TransactionId" hflex="1" />
 							</vlayout>
 							<vlayout width="200px">
 								<textbox hflex="1"
 									value="@bind(vm.txtTransactionId)"
-									style="width:200px;height:10px" >
+									style="width:200px;height:10px">
 								</textbox>
 							</vlayout>
 
@@ -56,43 +58,47 @@
 								<label value="Order Status" hflex="1" />
 							</vlayout>
 							<vlayout width="200px">
-								<listbox model="@bind(vm.ordersStatus)" itemRenderer="com.techouts.backoffice.render.OrderStatusListRenderer"
-									mold="select" selectedItem="@bind(vm.selectionOrderStatus)" style="width:200px;">
+								<listbox model="@bind(vm.ordersStatus)"
+									itemRenderer="com.techouts.backoffice.render.OrderStatusListRenderer"
+									mold="select" selectedItem="@bind(vm.selectionOrderStatus)"
+									style="width:200px;">
 								</listbox>
 							</vlayout>
 							<vlayout width="100px">
 								<label value="LP Name" hflex="1" />
 							</vlayout>
 							<vlayout width="200px">
-								<listbox   model="@bind(vm.lpList)" mold="select"  itemRenderer="com.techouts.backoffice.render.LogistcsPartenerListRenderer"  selectedItem="@save(vm.selectionLpName)"
-									style="width:200px">
+								<listbox model="@bind(vm.lpList)"
+									mold="select"
+									itemRenderer="com.techouts.backoffice.render.LogistcsPartenerListRenderer"
+									selectedItem="@save(vm.selectionLpName)" style="width:200px">
 								</listbox>
 							</vlayout>
 							<vlayout width="100px">
 								<label value="Is Return" hflex="1" />
-							</vlayout>
-							<vlayout>
 								<checkbox checked="@bind(vm.isReturn)"
 									onCheck="@command('isReturnCheck')">
 								</checkbox>
 							</vlayout>
+							<vlayout>
+							</vlayout>
 							<vlayout
 								style="width:100px;margin-left:10px">
-								<button style="float:right"
-									label="Search" onClick="@command('awbSearch')" />
+								<button style="float:center"
+									label="SEARCH" onClick="@command('awbSearch')" />
 							</vlayout>
 						</hlayout>
-						
+
 					</vlayout>
 				</panelchildren>
 			</panel>
-						
+
 			<panel>
 				<panelchildren>
 					<listbox model="@bind(vm.listOfTransactions)"
 						id="listBoxData" mold="paging" pageSize="10" pagingPosition="top"
-						emptyMessage="No result found in the result">		
-						<listhead sizable="true">		
+						emptyMessage="No result found in the result">
+						<listhead sizable="true">
 							<listheader style="text-align:left"
 								label="Order Id ">
 							</listheader>
@@ -112,14 +118,16 @@
 							<listheader style="text-align:left"
 								label="Awb Number">
 							</listheader>
-						</listhead>		
+						</listhead>
 						<template name="model" var="item">
 							<listitem>
-								<listcell label="@bind(item.orderId)" />	
-								<listcell label="@bind(item.transactionId)" />
+								<listcell label="@bind(item.orderId)" />
+								<listcell
+									label="@bind(item.transactionId)" />
 								<listcell label="@bind(item.slaveId)" />
 								<listcell label="@bind(item.sellerId)" />
-								<listcell label="@bind(item.orderStatus)" />
+								<listcell
+									label="@bind(item.orderStatus)" />
 								<listcell>
 									<textbox inplace="true"
 										onChange="@command('onChangeTransactionInfo',transaction=item)"
@@ -127,9 +135,9 @@
 									</textbox>
 								</listcell>
 							</listitem>
-						</template>		
+						</template>
 					</listbox>
-					
+
 				</panelchildren>
 			</panel>
 			<panel id="olpanel" style="height:47%;padding:0px">
@@ -141,7 +149,7 @@
 								<button style="float:right"
 									onClick="@command('saveAllTransactions')" label="Save" />
 							</vlayout>
-						</hlayout>				
+						</hlayout>
 					</vlayout>
 				</panelchildren>
 			</panel>
