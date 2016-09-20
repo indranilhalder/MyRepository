@@ -64,6 +64,11 @@ $(document).ready(function(){
 				data:$("#validateOTP").serialize(),
 				success:function(data){
 					if (data.valid_otp == "true" && data.click_to_call_response!= null) {
+						/*TPR-691*/
+						utag.link(
+								{link_obj: this,link_text: 'support_call_product_information_otp_success', event_type : 'support_call_click'}
+								);
+						/*TPR-691*/
 						$("#validateOTP").hide();
 						$("#generateOTP").hide();
 						
@@ -77,9 +82,19 @@ $(document).ready(function(){
 						}
 					}else if(data.invalid_otp != null){
 						$("label[for=errorOTP]").text(data.invalid_otp);
+						/*TPR-691*/
+						utag.link(
+								{link_obj: this,link_text: 'support_call_refund_enquiry_invalid_otp', event_type : 'support_call_click'}
+								);
+						/*TPR-691*/
 					}else if(data.error_otp!= null){
 						$("label[for=errorOTP]").text(data.error_otp);
-					}
+						/*TPR-691*/
+						utag.link(
+								{link_obj: this,link_text: 'support_call_refund_enquiry_empty_otp', event_type : 'support_call_click'}
+								);
+					}/*TPR-691*/
+					
 					if(data.hasOwnProperty("click_to_call_response") && data.click_to_call_response.length == 0){
 						$(".mandetoryFieldMissing p").empty();
 						$(".mandetoryFieldMissing").show();

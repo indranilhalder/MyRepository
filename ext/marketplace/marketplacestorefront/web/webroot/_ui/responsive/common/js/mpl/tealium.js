@@ -538,3 +538,211 @@ $(document).on('mousedown','.owl-prev,.owl-next',function(e){
 	}
 })
 /*TPR-650 End*/
+
+/*TPR-691 Starts(Few Functionality)*/
+			/*live chat*/
+			$(document).on("click","#chatMe",function(){
+				utag.link(
+						{link_obj: this,link_text: 'support_chat_click_on_chat', event_type : 'support_chat_click'}
+						);
+			});
+			/*call*/
+			$(document).on("click", "#callMe", function(e) {
+				utag.link(
+						{link_obj: this,link_text: 'support_call_click_on_call', event_type : 'support_call_click'}
+						);
+			});
+			/*connect chat*/
+			$(document).on("click", "#submitC2C", function(e) {
+				//alert("hi");
+				  var selectedOption = $('select[name="reason"] option:selected').val();
+				  //alert("You have selected the country - " + selectedOption);
+				  
+				  if(selectedOption=="Order enquiry/ Place or cancel order")
+					  {
+					  utag.link(
+							  {link_obj: this,link_text: 'support_chat_Order_enquiry_Place_or_cancel_order_connect', event_type : 'support_chat_click'}
+							  );
+					  }
+				  else if(selectedOption=="Return  Product")
+					  {
+					  utag.link(
+							  {link_obj: this,link_text: 'support_chat_Return_Product_connect', event_type : 'support_chat_click'}
+							  );
+					  }
+				  else if(selectedOption=="Refund Enquiry")
+					  {
+					  utag.link(
+							  {link_obj: this,link_text: 'support_chat_Refund_Enquiry_connect', event_type : 'support_chat_click'}
+							  );
+					  }
+				  else if(selectedOption=="Product Information")
+					  {
+					  utag.link(
+							  {link_obj: this,link_text: 'support_chat_Product_Information_connect', event_type : 'support_chat_click'}
+							  );
+					  }
+				  else
+					  {
+					  utag.link(
+							  {link_obj: this,link_text: 'support_chat_Other_Assistance_connect', event_type : 'support_chat_click'}
+							  );
+					  }
+				});
+			/*cancel chat*/
+			$(document).on("mousedown", ".bcancel", function(e) {
+				
+				var selectedOption = $('select[name="reason"] option:selected').val();
+				//alert("You have selected the country - " + selectedOption);
+				//alert("hi");
+				
+				if(selectedOption=="Order enquiry/ Place or cancel order")
+				  {
+				  utag.link(
+						  {link_obj: this,link_text: 'support_chat_Order_enquiry_Place_or_cancel_order_cancel', event_type : 'support_chat_click'}
+						  );
+				  }
+			  else if(selectedOption=="Return  Product")
+				  {
+				  utag.link(
+						  {link_obj: this,link_text: 'support_chat_Return_Product_cancel', event_type : 'support_chat_click'}
+						  );
+				  }
+			  else if(selectedOption=="Refund Enquiry")
+				  {
+				  utag.link(
+						  {link_obj: this,link_text: 'support_chat_Refund_Enquiry_cancel', event_type : 'support_chat_click'}
+						  );
+				  }
+			  else if(selectedOption=="Product Information")
+				  {
+				  utag.link(
+						  {link_obj: this,link_text: 'support_chat_Product_Information_cancel', event_type : 'support_chat_click'}
+						  );
+				  }
+			  else
+				  {
+				  utag.link(
+						  {link_obj: this,link_text: 'support_chat_Other_Assistance_cancel', event_type : 'support_chat_click'}
+						  );
+				  }
+				  
+				});
+			
+			/*cancel call*/
+			$(document).on("mousedown", ".bcancel", function(e) {
+				
+				var selectedOption = $('select[name="reason"] option:selected').val();
+				//alert("You have selected the country - " + selectedOption);
+				//alert("hi");
+				
+				if(selectedOption=="Order enquiry/ Place or cancel order")
+				  {
+				  utag.link(
+						  {link_obj: this,link_text: 'support_call_Order_enquiry_Place_or_cancel_order_cancel', event_type : 'support_call_click'}
+						  );
+				  }
+			  else if(selectedOption=="Return  Product")
+				  {
+				  utag.link(
+						  {link_obj: this,link_text: 'support_call_Return_Product_cancel', event_type : 'support_call_click'}
+						  );
+				  }
+			  else if(selectedOption=="Refund Enquiry")
+				  {
+				  utag.link(
+						  {link_obj: this,link_text: 'support_call_Refund_Enquiry_cancel', event_type : 'support_call_click'}
+						  );
+				  }
+			  else if(selectedOption=="Product Information")
+				  {
+				  utag.link(
+						  {link_obj: this,link_text: 'support_call_Product_Information_cancel', event_type : 'support_call_click'}
+						  );
+				  }
+			  else
+				  {
+				  utag.link(
+						  {link_obj: this,link_text: 'support_call_Other_Assistance_cancel', event_type : 'support_call_click'}
+						  );
+				  }
+				  
+				});
+			
+			/*call generate OTP*/
+			$(document).on("click","#generateOTPBtn",function(){
+				//alert("hi");
+				  var selectedOption = $('select[name="reason"] option:selected').val();
+				  //alert("You have selected the country - " + selectedOption);
+				  
+				  if(selectedOption=="Order enquiry/ Place or cancel order")
+				  {
+					  utag.link(
+						  {link_obj: this,link_text: 'support_call_Order_enquiry_Place_or_cancel_order_generate_otp', event_type : 'support_call_click'}
+						  );
+				  }
+			     else if(selectedOption=="Return  Product")
+				  {
+			    	 utag.link(
+						  {link_obj: this,link_text: 'support_call_Return_Product_generate_otp', event_type : 'support_call_click'}
+						  );
+				  }
+			     else if(selectedOption=="Refund Enquiry")
+				  {
+			    	 utag.link(
+						  {link_obj: this,link_text: 'support_call_Refund_Enquiry_generate_otp', event_type : 'support_call_click'}
+						  );
+				  }
+			     else if(selectedOption=="Product Information")
+				  {
+			    	 utag.link(
+						  {link_obj: this,link_text: 'support_call_Product_Information_generate_otp', event_type : 'support_call_click'}
+						  );
+				  }
+			     else
+				  {
+			    	 utag.link(
+						  {link_obj: this,link_text: 'support_call_Other_Assistance_generate_otp', event_type : 'support_call_click'}
+						  );
+				  }
+				  
+			});
+			/*call validate OTP*/
+			$(document).on("click","#validateOTPBtn",function(){
+				//alert("hi");
+				  var selectedOption = $('select[name="reason"] option:selected').val();
+				  //alert("You have selected the country - " + selectedOption);
+				  
+				  if(selectedOption=="Order enquiry/ Place or cancel order")
+				  {
+					  utag.link(
+						  {link_obj: this,link_text: 'support_call_Order_enquiry_Place_or_cancel_order_validate_otp', event_type : 'support_call_click'}
+						  );
+				  }
+			     else if(selectedOption=="Return  Product")
+				  {
+			    	 utag.link(
+						  {link_obj: this,link_text: 'support_call_Return_Product_validate_otp', event_type : 'support_call_click'}
+						  );
+				  }
+			     else if(selectedOption=="Refund Enquiry")
+				  {
+			    	 utag.link(
+						  {link_obj: this,link_text: 'support_call_Refund_Enquiry_validate_otp', event_type : 'support_call_click'}
+						  );
+				  }
+			     else if(selectedOption=="Product Information")
+				  {
+			    	 utag.link(
+						  {link_obj: this,link_text: 'support_call_Product_Information_validate_otp', event_type : 'support_call_click'}
+						  );
+				  }
+			     else
+				  {
+			    	 utag.link(
+						  {link_obj: this,link_text: 'support_call_Other_Assistance_validate_otp', event_type : 'support_call_click'}
+						  );
+				  }
+			});
+			
+			/*TPR-691 Ends(Few Functionality)*/
