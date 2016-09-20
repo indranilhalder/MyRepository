@@ -43,12 +43,9 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 
 	/**
 	 * @Description : This method is for creating item type
-	 * @param :
-	 *           ctx
-	 * @param :
-	 *           type
-	 * @param :
-	 *           allAttributes
+	 * @param : ctx
+	 * @param : type
+	 * @param : allAttributes
 	 * @return : item
 	 */
 	@Override
@@ -65,8 +62,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 
 	/**
 	 * @Description : Order Threshold Percentage or Amount Discount Cashback
-	 * @param :
-	 *           SessionContext paramSessionContext ,PromotionEvaluationContext paramPromotionEvaluationContext
+	 * @param : SessionContext paramSessionContext ,PromotionEvaluationContext paramPromotionEvaluationContext
 	 * @return : List<PromotionResult> promotionResults
 	 */
 	@Override
@@ -74,6 +70,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 	{
 		boolean flagForDeliveryModeRestrEval = false;
 		boolean flagForPaymentModeRestrEval = false;
+		boolean flagForPincodeRestriction = false;
 
 		final List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
 		boolean checkChannelFlag = false;
@@ -100,7 +97,13 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 				//for payment mode restriction check
 				flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList, arg0);
 
-				if (checkRestrictions(arg0, arg1) && checkChannelFlag && flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval)
+				/* TPR-970 changes start */
+				flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList);
+
+				System.out.println("##################" + flagForPincodeRestriction);
+				/* TPR-970 changes end */
+				if (checkRestrictions(arg0, arg1) && checkChannelFlag && flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval
+						&& flagForPincodeRestriction)
 				{
 					boolean isPercentageDisc = false;
 					double percentageDiscount = getPercentageDiscount() == null ? 0.0D : getPercentageDiscount().doubleValue();
@@ -148,8 +151,10 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 								setAdjustedDiscounts((percentageDiscount * orderSubtotalAfterDiscounts) / 100);
 								final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(arg0, this,
 										arg1.getOrder(), 1.0F);
-								result.addAction(arg0, getDefaultPromotionsManager().createCustomPromotionOrderAdjustTotalAction(arg0,
-										-getAdjustedDiscounts()));
+								result.addAction(
+										arg0,
+										getDefaultPromotionsManager().createCustomPromotionOrderAdjustTotalAction(arg0,
+												-getAdjustedDiscounts()));
 								promotionResults.add(result);
 							}
 						}
@@ -157,15 +162,12 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 						{
 							if (LOG.isDebugEnabled())
 							{
-								LOG.debug(
-										"(" + getPK() + ")"
-												+ Localization
-														.getLocalizedString("promotion.orderLevelPromotion.cartAmtLessThanThreshold.msg1")
-												+ orderSubtotalAfterDiscounts
-												+ Localization.getLocalizedString(
-														"promotion.orderLevelPromotion.cartAmtLessThanThreshold.msg2")
-												+ threshold + Localization
-														.getLocalizedString("promotion.orderLevelPromotion.cartAmtLessThanThreshold.msg3"));
+								LOG.debug("(" + getPK() + ")"
+										+ Localization.getLocalizedString("promotion.orderLevelPromotion.cartAmtLessThanThreshold.msg1")
+										+ orderSubtotalAfterDiscounts
+										+ Localization.getLocalizedString("promotion.orderLevelPromotion.cartAmtLessThanThreshold.msg2")
+										+ threshold
+										+ Localization.getLocalizedString("promotion.orderLevelPromotion.cartAmtLessThanThreshold.msg3"));
 							}
 							final float certainty = (float) (orderSubtotalAfterDiscounts / threshold.doubleValue());
 							final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(arg0, this,
@@ -184,14 +186,14 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 		catch (final EtailNonBusinessExceptions e) //Added for TISPT-195
 		{
 			LOG.error(e.getMessage());
-			ExceptionUtil
-					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
 		}
 		catch (final Exception e)
 		{
 			LOG.error(e.getMessage());
-			ExceptionUtil
-					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
 		}
 		return promotionResults;
 	}
@@ -199,12 +201,9 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 	/**
 	 * This method is used for Localization Purpose
 	 *
-	 * @param :
-	 *           ctx
-	 * @param :
-	 *           result
-	 * @param :
-	 *           locale
+	 * @param : ctx
+	 * @param : result
+	 * @param : locale
 	 */
 	@Override
 	public String getResultDescription(final SessionContext ctx, final PromotionResult result, final Locale locale)
@@ -356,8 +355,8 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 						totalPrice = totalPrice + entry.getTotalPrice().doubleValue();
 					}
 					else if ((null != entry.getAttribute(arg0, "isBOGOapplied")
-							&& BooleanUtils.toBoolean(entry.getAttribute(arg0, "isBOGOapplied").toString())
-							&& null != entry.getAttribute(arg0, "bogoFreeItmCount")))
+							&& BooleanUtils.toBoolean(entry.getAttribute(arg0, "isBOGOapplied").toString()) && null != entry
+								.getAttribute(arg0, "bogoFreeItmCount")))
 					{
 						final double freecount = Double.parseDouble(entry.getAttribute(arg0, "bogoFreeItmCount").toString());
 						totalPrice = totalPrice + (freecount * 0.01);

@@ -34,6 +34,27 @@
 		<!-- Store Icon Image URL -->
 		<collectiontype elementtype="java.lang.String" code="mplStoreImageUrl"
 				autocreate="true" generate="true" type="list"/>
+				
+		<!-- TPR-970	starts -->
+		 <collectiontype code="EtailPincodeStatesCollection"
+			elementtype="State" autocreate="true" generate="false"
+			type="list" />
+		 <collectiontype code="EtailPincodeCitiesCollection"
+			elementtype="City" autocreate="true" generate="false"
+			type="list" />
+		 <collectiontype code="EtailPincodeCollection"
+			elementtype="Pincode" autocreate="true" generate="false"
+			type="list" />	
+		<!-- <collectiontype code="EtailPincodeStateCollection"
+			elementtype="Pincode" autocreate="true" generate="false"
+			type="list" />
+		<collectiontype code="EtailPincodeCityCollection"
+			elementtype="Pincode" autocreate="true" generate="false"
+			type="list" />
+		<collectiontype code="EtailPincodeCollection"
+			elementtype="Pincode" autocreate="true" generate="false"
+			type="list" /> -->
+		<!-- TPR-970	ends -->
 	</collectiontypes>
 
 	<enumtypes>
@@ -122,6 +143,48 @@
 			</attribute> </attributes> </itemtype> -->
 
 		<!-- Free Gift Action for promotions -->
+		<!-- TPR-970 starts -->
+		<itemtype code="State" autocreate="true"
+					 generate="true">
+			<attributes>
+					<attribute autocreate="true" qualifier="countrykey"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="region"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="description"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>					
+			</attributes>
+	</itemtype>
+	<itemtype code="City" autocreate="true"
+					 generate="true">
+			<attributes>
+					<attribute autocreate="true" qualifier="cityName"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="description"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>					
+			</attributes>
+	</itemtype>
+	<!-- TPR-970 ends -->
 		<itemtype code="CustomPromotionOrderAddFreeGiftAction"
 			extends="AbstractPromotionAction" jaloclass="com.tisl.mpl.jalo.CustomPromotionOrderAddFreeGiftAction"
 			autocreate="true" generate="true">
@@ -1384,6 +1447,50 @@
 				</attribute>
 			</attributes>
 		</itemtype>
+        	<!-- TPR-970 changes starts -->
+		
+		<itemtype code="EtailPincodeRestriction"
+			extends="AbstractPromotionRestriction" jaloclass="com.tisl.mpl.jalo.MplPincodeSpecificRestriction"
+			autocreate="true" generate="true">
+			<attributes>
+			   <attribute autocreate="true" qualifier="states"
+					type="EtailPincodeStatesCollection">
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+			
+			<attribute autocreate="true" qualifier="cities"
+					type="EtailPincodeCitiesCollection">
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+					<persistence type="property" />
+			</attribute>
+				<!-- <attribute autocreate="true" qualifier="state"
+					type="EtailPincodeStateCollection">
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute autocreate="true" qualifier="city"
+					type="EtailPincodeCityCollection">
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute autocreate="true" qualifier="pincodes"
+					type="EtailPincodeCollection">
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+					<persistence type="property" />
+				</attribute> -->
+			</attributes>
+		</itemtype>
+		
+		
+		<!-- TPR-970 changes ends -->	
+
+
 
 		<itemtype code="AbstractOrderEntry" autocreate="false"
 			generate="false">
@@ -2404,6 +2511,90 @@
 					</attribute>					
 				</attributes>
 			</itemtype>	
+			
+		<!-- TPR-970 changes	 -->
+			<!-- pincode ,latitude and longitude Model -->
+		<typegroup name="Pincode">
+			<itemtype code="Pincode" extends="GenericItem"
+				jaloclass="de.hybris.platform.jalo.product.Pincode" autocreate="true"
+				generate="true">
+				<deployment table="Pincodes" typecode="11299" />
+				<attributes>
+					<attribute autocreate="true" qualifier="pincode" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" unique="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="latitude" type="java.lang.Double">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="longitude" type="java.lang.Double">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<!-- TPR-970 changes start -->
+					<attribute autocreate="true" qualifier="State" type="State">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="City" type="City">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					
+						<!-- TPR-970 changes end -->
+				</attributes>
+			</itemtype>
+
+		</typegroup>
+
+		<!-- Store localtor start here -->
+		<typegroup name="storeLocatorCmsGrp">
+			<itemtype code="HomeStoreLocatorComponent" extends="SimpleCMSComponent"
+				autocreate="true" generate="true"
+				jaloclass="de.hybris.platform.acceleratorcms.jalo.components.HomeStoreLocatorComponent">
+				<description>It represents product references component, that is the component that displays configured references to the specified product.</description>
+				<attributes>
+					<attribute qualifier="latitude" type="java.lang.Double">
+						<persistence type="property" />
+						<description>latitude value.</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+
+					<attribute qualifier="longitude" type="java.lang.Double">
+						<persistence type="property" />
+						<description>longitude value</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+
+					<attribute qualifier="initialZoom" type="java.lang.Integer">
+						<persistence type="property" />
+						<description>Initial Zoom</description>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+
+					<attribute qualifier="markerZoom" type="java.lang.Integer">
+						<persistence type="property" />
+						<description>Zoom label on marker click</description>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+
+				</attributes>
+			</itemtype>
+		</typegroup>
+		<!-- Store Localotor end here -->
+			
+		
 	</itemtypes>
 	
 </items>

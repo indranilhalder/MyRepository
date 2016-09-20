@@ -3264,4 +3264,88 @@ public class DefaultPromotionManager extends PromotionsManager
 		return isExcludeBrand;
 
 	}
+
+	/**
+	 * @Description: This is for validating pincode specific restriction against order level
+	 * @param restrictionList
+	 * @param order
+	 * @return true
+	 */
+
+	public boolean checkPincodeSpecificRestriction(final List<AbstractPromotionRestriction> restrictionList)
+	{
+		boolean flag = false;
+		boolean isPinCodeRestrictionPresent = false;
+		if (null == restrictionList || restrictionList.isEmpty())
+		{
+			flag = true;
+		}
+		else
+		{
+			for (final AbstractPromotionRestriction restriction : restrictionList)
+			{
+				flag = false;
+				if (restriction instanceof MplPincodeSpecificRestriction)
+				{
+					isPinCodeRestrictionPresent = true;
+					final List<State> includedStates = ((EtailPincodeSpecificRestriction) restriction).getState();
+					final List<City> excudedCity = ((EtailPincodeSpecificRestriction) restriction).getCity();
+					final CartModel cartModel = cartService.getSessionCart();
+					if (includedStates.isEmpty() && excudedCity.isEmpty())
+					{
+						flag = true;
+					}
+					else if (excudedCity.isEmpty())
+					{
+						isAppliedPinCodeStatesIncludes(includedStates, cartModel.getStateForPincode());
+					}
+					else
+					{
+						boolean isCityExcluded = false;
+						for (final City city : excudedCity)
+						{
+							if (city.getCityName().equalsIgnoreCase(cartModel.getCityForPincode()))
+							{
+								isCityExcluded = true;
+								break;
+							}
+
+						}
+						if (!isCityExcluded)
+						{
+							isAppliedPinCodeStatesIncludes(includedStates, cartModel.getStateForPincode());
+						}
+					}
+
+				}
+			}
+			if (!isPinCodeRestrictionPresent)
+			{
+				flag = true;
+			}
+		}
+
+
+		return flag;
+	}
+
+	/**
+	 * @param includedStates
+	 * @param string
+	 */
+	private boolean isAppliedPinCodeStatesIncludes(final List<State> includedStates, final String pinCode)
+	{
+		boolean flag = false;
+		for (final State state : includedStates)
+		{
+			if (state.getCountrykey().equalsIgnoreCase(pinCode))
+			{
+				flag = true;
+				break;
+			}
+
+		}
+		return flag;
+
+	}
 }

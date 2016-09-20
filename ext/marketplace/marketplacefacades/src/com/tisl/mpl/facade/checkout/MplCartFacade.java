@@ -426,5 +426,6 @@ public interface MplCartFacade extends CartFacade
 	public CartData getSessionCartWithEntryOrderingMobile(final CartModel cart, final boolean recentlyAddedFirst)
 			throws EtailNonBusinessExceptions;
 
-
+	/* tpr-970 */
+	public void populatePinCodeData(final CartModel cartmodel, final String pincode);
 }
