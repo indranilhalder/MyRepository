@@ -29,6 +29,8 @@
 			<value code="SingleBanner"/>
 			<value code="Banners3TypeReverse"/>	
 			<value code="Banner3Type"/>
+			<value code="ProductSliderType"/>
+			<value code="ProductListType"/>
 		</enumtype>
 	</enumtypes>
 	
