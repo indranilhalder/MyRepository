@@ -79,13 +79,7 @@ public class UnregisteredUserRestriction extends GeneratedUnregisteredUserRestri
 			final String originalUid = originalUidObj.toString();
 			if (positive.booleanValue())
 			{
-				if (CollectionUtils.isEmpty(emailIdList))
-				{
-					result = false;
-					LOG.debug("selected  'Valid' field in hmc is ::::" + positive.booleanValue() + "emailid list  size is"
-							+ emailIdList.size());
-				}
-				else if (emailIdList.contains(originalUid))
+				if (CollectionUtils.isNotEmpty(emailIdList) && emailIdList.contains(originalUid))
 				{
 					result = true;
 					LOG.debug("selected  'Valid' field in hmc is ::::" + positive.booleanValue() + "emailid list  size is"
@@ -94,13 +88,7 @@ public class UnregisteredUserRestriction extends GeneratedUnregisteredUserRestri
 			}
 			else
 			{
-				if ((!emailIdList.contains(originalUid)) && (CollectionUtils.isEmpty(emailIdList)))
-				{
-					result = false;
-					LOG.debug("selected  'Valid' field in hmc is ::::" + positive.booleanValue() + "emailid list  size is"
-							+ emailIdList.size());
-				}
-				else if (!emailIdList.contains(originalUid))
+				if (!emailIdList.contains(originalUid) || CollectionUtils.isEmpty(emailIdList))
 				{
 					result = true;
 					LOG.debug("selected  'Valid' field in hmc is ::::" + positive.booleanValue() + "emailid list  size is"
