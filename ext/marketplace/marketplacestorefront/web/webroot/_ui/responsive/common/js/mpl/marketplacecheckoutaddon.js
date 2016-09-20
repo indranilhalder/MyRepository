@@ -1846,7 +1846,7 @@ $("#otpMobileNUMField").focus(function(){
 			}
   });
  
- $("#make_dc_payment").click(function(){
+ $("#make_dc_payment,#make_dc_payment_up").click(function(){
 	  if(isSessionActive()==false){
 			 redirectToCheckoutLogin();
 			}
@@ -6211,3 +6211,10 @@ function pinCodeDiv(){
 $('#popUpExpAddress').on('hidden.bs.modal', function () {
 	 checkExpressCheckoutPincodeService('typeExpressCheckoutDD');
 });
+
+$(document).on("click",".radio input[type='radio']",function(){
+	$(".radio input[type='radio']").removeAttr("checked");
+	$(this).prop("checked","true");
+	
+});
+

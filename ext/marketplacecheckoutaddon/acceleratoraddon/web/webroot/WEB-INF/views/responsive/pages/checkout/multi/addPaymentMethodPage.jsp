@@ -95,8 +95,34 @@
         						$(".checkout-paymentmethod").css("display","block");
         					}	
     					}
+      						$("*[data-id=newCCard]").click(function(){
+      							$(".proceed-button").each(function(){
+      								$(this).hide();
+      							});
+      							$("#make_cc_payment_up").show();
+      						});
       						
-    				});
+      						$("input[name=creditCards]").change(function(){
+      							$(".proceed-button").each(function(){
+      								$(this).hide();
+      							});
+      							$("#make_saved_cc_payment_up").show();
+      						});
+      						
+      						$("*[data-id=newDCard]").click(function(){
+      							$(".proceed-button").each(function(){
+      								$(this).hide();
+      							});
+      							$("#make_dc_payment_up").show();
+      						});
+      						
+      						$("input[name=debitCards]").change(function(){
+      							$(".proceed-button").each(function(){
+      								$(this).hide();
+      							});
+      							$("#make_saved_dc_payment_up").show();
+      						});
+    					});
 				</script>
 				
 				<!-- Script for JusPay -->
@@ -296,7 +322,14 @@
 				                  		<input type="hidden" class="emi_tenure" id="emi_tenure" />
 				                  		<input type="hidden" class="emi_bank" id="emi_bank"> -->
 				                  		<input type="hidden" id="ebsDownCheck" value="${ebsDownCheck}"/>
-				                  		<p>NEW CARD</p>
+				                  		<div class="radio creditDebitLabelRadio">
+										 <input type="radio" name="creditCards" data-id="newCCard" id="creditLabel"/>
+										 <label for="creditLabel" class="numbers creditLabel" data-id="newCCard"><span>New Card</span></label>
+								   		</div>
+								   		<!-- <input type="radio" name="creditCards" data-id="newCCard">
+								   		<label for="dc" class="numbers" data-id="newCCard">New Card</label>
+				                  		<p>NEW CARD</p> -->
+				                  		
 										<div class="card-group">
 											<div class="form-group">
 						                    	<fieldset>
@@ -473,8 +506,10 @@
 												</div>
 							<div id="cardDebit">
 							<ul class="product-block blocks">
+							<h3>Pay by a debit card</h3>
 								<c:if test="${not empty debitCards}">
 									<li id="savedCardDebit" class="item">
+									<span class="mycards">My cards</span>
 										<form class="form-inline" id="card_form_saved_debit" autocomplete="off" >
 											<%-- <h4><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.enterSavedCardDetails"/></h4> --%>
 											<%-- <multiCheckout:paymentError /> --%>
@@ -542,6 +577,7 @@
 								</c:if> 
 								<!-- DEBIT NEW CARD -->
 								<li id="debitCard" class="item new-form active">
+								
 									<form class="juspay_inline_form new-card" id="debit_payment_form" autocomplete="off" >
 										<%-- Payment new UI<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.enterCardDetails"/></h2> --%>
 									<%-- 	<p><spring:theme code="text.we.accept"/></p>
@@ -561,7 +597,11 @@
 				                  		<input type="hidden" class="emi_tenure" id="emi_tenure" />
 				                  		<input type="hidden" class="emi_bank" id="emi_bank"> -->
 				                  		<input type="hidden" id="ebsDownCheck" value="${ebsDownCheck}"/>
-				                  		<p>NEW CARD</p>
+				                  		<div class="radio creditDebitLabelRadio">
+										 <input type="radio" name="debitCards" data-id="newDCard" id="debitLabel"/>
+										 <label for="debitLabel" class="numbers debitLabel" data-id="newDCard"><span>New Card</span></label>
+								   		</div>
+				                  		<!-- <p>NEW CARD</p> -->
 										<div class="card-group">
 											<div class="form-group">
 						                    	<fieldset>
