@@ -300,10 +300,7 @@ public class CustomProductBasicPopulator<SOURCE extends ProductModel, TARGET ext
 					seoMetaTitle.append((String) getProductAttribute(productModel, ProductModel.TITLE));
 				}
 			}
-			//			seoMetaTitle.append(MarketplaceFacadesConstants.SPACE);
-			//			seoMetaTitle.append((String) getProductAttribute(productModel, ProductModel.CODE));
 			// Sonar Major This is an inefficient use of StringBuffer.toString; call StringBuffer.length instead.
-			//if (seoMetaTitle.toString().length() > seoTitleLimit)
 			if (seoMetaTitle.length() > seoTitleLimit)
 			{
 				productData.setSeoMetaTitle(seoMetaTitle.toString().substring(0, seoTitleLimit - 1));
