@@ -1587,7 +1587,6 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param isPercentageFlag
 	 * @param adjustedDeliveryCharge
 	 * @param fetchProductRichAttribute
-	 * @param validProductList
 	 * @return Map<Product, Double>
 	 */
 	public Map<String, Map<String, Double>> updateDeliveryCharges(final boolean isDeliveryFreeFlag,
@@ -1602,7 +1601,7 @@ public class DefaultPromotionManager extends PromotionsManager
 		for (final AbstractOrderEntryModel entry : cartModel.getEntries())
 		{
 			final String selectedUSSID = entry.getSelectedUSSID();
-			if (qCount.containsKey(selectedUSSID) && null != entry.getMplDeliveryMode())
+			if (qCount.containsKey(selectedUSSID) && null != entry.getMplDeliveryMode() && !entry.getGiveAway().booleanValue())
 			{
 				final String selectedDeliveryModeCode = entry.getMplDeliveryMode().getDeliveryMode().getCode();
 				final String currencyIsoCode = MarketplacecommerceservicesConstants.INR;
@@ -1645,8 +1644,14 @@ public class DefaultPromotionManager extends PromotionsManager
 			}
 			else
 			{
-				final double deliveryChargeForEntry = prodMplZoneDeliveryModeValueModel.getValue().doubleValue()
-						* entry.getQuantity().intValue();
+				//Blocked for TISSTRT-1418
+				//				final double deliveryChargeForEntry = prodMplZoneDeliveryModeValueModel.getValue().doubleValue()
+				//						* entry.getQuantity().intValue();
+
+				final double deliveryChargeForEntry = getMplPromotionHelper().getDeliveryEntryCharge(
+						prodMplZoneDeliveryModeValueModel.getValue().doubleValue(), entry);
+				//Modification for TISSTRT-1418 ends
+
 				double amtTobeDeduced = 0.00D;
 				double deliveryChargeAfterPromotion = 0.00D;
 
