@@ -234,7 +234,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		// TPR-429 START
 		final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
-		final String checkoutSellerID = populateCheckoutSellers(cartData);
+		final String checkoutSellerID = GenericUtilityMethods.populateCheckoutSellers(cartData);
 
 		model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, checkoutSellerID);
 		// TPR-429 END
@@ -413,32 +413,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.AddPaymentMethodPage;
 	}
 
-	/**
-	 * For TPR-429
-	 *
-	 * @doc populates the seller IDs of the product during checkout
-	 * @param cartData
-	 * @return checkoutSellerID
-	 */
-	private String populateCheckoutSellers(final CartData cartData)
-	{
-		String checkoutSellerID = null;
-		final List<OrderEntryData> sellerList = cartData.getEntries();
-		for (final OrderEntryData seller : sellerList)
-		{
-			final String sellerID = seller.getSelectedSellerInformation().getSellerID();
-			if (checkoutSellerID != null)
-			{
-				checkoutSellerID += "_" + sellerID;
-			}
-			else
-			{
-				checkoutSellerID = sellerID;
-			}
-		}
-		return checkoutSellerID;
-	}
-
+	
 	/**
 	 * This method sets timeout
 	 *
