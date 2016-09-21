@@ -167,7 +167,11 @@
 						</cms:pageSlot>
 					</div>
 					</div>
+					
 					<span>CHECKOUT</span>
+					
+					
+					<button id="deliveryAddressSubmitUp" type="submit" class="button checkout-next" style="display:none;">Proceed to Payment</button>
 						</c:if>
 					</div>
 				</c:otherwise>
@@ -252,6 +256,12 @@
 }
 </style>
 <script>
+var pathname = window.location.pathname;
+if(pathname =='/checkout/multi/delivery-method/select'){
+	$('#deliveryAddressSubmitUp').show();
+	
+	
+}
 </script>
 <!--  Commented for TISPRD-1440  -->
 <!-- <script>
