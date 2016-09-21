@@ -68,7 +68,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Section5;;MplBigPromoBannerComponent;
 ;Section6;;ProductCarouselComponent;
 ;Section7;;CMSMediaParagraphComponent;
-;Section8;;SimpleResponsiveBannerComponent;
+;Section8;;CMSParagraphComponent;
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;BreadcrumbComponent
@@ -327,6 +327,21 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 
 ############################### SECTION 7 END ####################################
 
+############################### SECTION 8 START ####################################
+
+INSERT_UPDATE  CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;content[lang=$lang];&componentRef;;;;
+;;LuxuryParagraphComponent;Luxury social feed Paragraph Component;"#TataCliQ Luxury Homepage";LuxuryParagraphComponent;;;;
+
+
+#### create content slot
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+;;Section8-socialFeedSection;true;luxury social feed Paragraph Slot;LuxuryParagraphComponent
+
+# ContentSlotForPage 
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxuryhomepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;section8-luxuryHomepage;Section8;;Section8-socialFeedSection;;; 
+
+############################### SECTION 8 END ####################################
 
 ############################### SEARCHBOX START ####################################
 INSERT_UPDATE MplEnhancedSearchBoxComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;maxProducts;maxSuggestions;minCharactersBeforeRequest;searchBoxCategories(code, $productCV)
