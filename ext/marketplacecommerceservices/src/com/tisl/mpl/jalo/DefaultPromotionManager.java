@@ -3275,7 +3275,6 @@ public class DefaultPromotionManager extends PromotionsManager
 	public boolean checkPincodeSpecificRestriction(final List<AbstractPromotionRestriction> restrictionList)
 	{
 		boolean flag = false;
-		boolean isCityIncluded = true;
 		boolean isPinCodeRestrictionPresent = false;
 		final CartModel cartModel = cartService.getSessionCart();
 		if (null != cartModel.getPincodeNumber())
@@ -3305,23 +3304,18 @@ public class DefaultPromotionManager extends PromotionsManager
 						}
 						else
 						{
-							for (final City city : excudedCity)
+							if (((MplPincodeSpecificRestriction) restriction).isIncludeCities().booleanValue())
 							{
-								if (city.getCityName().equalsIgnoreCase(cartModel.getCityForPincode()))
-								{
-									isCityIncluded = false;
-									break;
-								}
-								if (!isCityIncluded && !isAppliedPinCodeStatesIncludes(includedStates, cartModel.getStateForPincode()))
-								{
-									flag = false;
-								}
-								if (!isCityIncluded && isAppliedPinCodeStatesIncludes(includedStates, cartModel.getStateForPincode()))
-								{
-									flag = true;
-								}
-
+								flag = checkForExcludedCityRestriction(excudedCity, includedStates, cartModel.getCityForPincode(),
+										cartModel.getStateForPincode());
 							}
+							else
+							{
+								flag = checkForIncludedCityRestriction(excudedCity, includedStates, cartModel.getCityForPincode(),
+										cartModel.getStateForPincode());
+							}
+
+
 						}
 
 					}
@@ -3338,6 +3332,71 @@ public class DefaultPromotionManager extends PromotionsManager
 			flag = true;
 		}
 		return flag;
+	}
+
+	/**
+	 * @param string2
+	 * @param string
+	 * @param includedStates
+	 * @param excudedCity
+	 *
+	 */
+	private boolean checkForIncludedCityRestriction(final List<City> excudedCity, final List<State> includedStates,
+			final String state, final String cityName)
+	{
+		boolean isCityIncluded = true;
+		boolean flag = false;
+		for (final City city : excudedCity)
+		{
+			if (city.getCityName().equalsIgnoreCase(cityName))
+			{
+				isCityIncluded = true;
+				break;
+			}
+			flag = isCityIncluded;
+			if (!isCityIncluded && !isAppliedPinCodeStatesIncludes(includedStates, state))
+			{
+				flag = false;
+			}
+			if (!isCityIncluded && isAppliedPinCodeStatesIncludes(includedStates, state))
+			{
+				flag = true;
+			}
+
+		}
+		return flag;
+
+	}
+
+	/**
+	 * @param excudedCity
+	 *
+	 */
+	private boolean checkForExcludedCityRestriction(final List<City> excudedCity, final List<State> includedStates,
+			final String state, final String cityName)
+	{
+		boolean isCityIncluded = true;
+		boolean flag = false;
+		for (final City city : excudedCity)
+		{
+			if (city.getCityName().equalsIgnoreCase(cityName))
+			{
+				isCityIncluded = false;
+				break;
+			}
+			flag = isCityIncluded;
+			if (!isCityIncluded && !isAppliedPinCodeStatesIncludes(includedStates, state))
+			{
+				flag = false;
+			}
+			if (!isCityIncluded && isAppliedPinCodeStatesIncludes(includedStates, state))
+			{
+				flag = true;
+			}
+
+		}
+		return flag;
+
 	}
 
 	/**

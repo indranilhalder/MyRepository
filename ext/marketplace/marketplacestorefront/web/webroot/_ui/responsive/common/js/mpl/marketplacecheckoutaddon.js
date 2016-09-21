@@ -3268,18 +3268,37 @@ function checkPincodeServiceability(buttonType)
  			for(var cart in cartData){
  				var entryNumber=parseInt(cartData[cart]['entryNumber']);
  				console.log("datavalue"+entryNumber+cartData[cart]['amountAfterAllDisc']+cartData[cart]['cartLevelDisc']);
- 				$("#offerBag_"+entryNumber).hide();
  				$("#off-cartLevelDiscAmt_"+entryNumber).html("");
- 				if(cartData[cart]['amountAfterAllDisc']!=null)
- 				{
- 			    $("#offerDisplay_"+entryNumber).show();	
- 				$("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
- 				}
  				$("#off-bag-cartLevelDisc_"+entryNumber).html("");
- 					if(cartData[cart]['cartLevelDisc']!=null){
- 	 			    $("#offerDisplay_"+entryNumber).show();	
- 	 				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("Off Bag");
- 	 				}
+ 				$("#off-bag-ItemLevelDisc_"+entryNumber).html("");
+ 				$("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(""); 
+ 				$("#itemCentOfferDisplay_"+entryNumber).hide();
+ 				$("#itemAmtOfferDisplay_"+entryNumber).hide();
+ 				$("#cartCentOfferDisplay_"+entryNumber).hide();
+ 				$("#cartAmtOfferDisplay_"+entryNumber).hide();
+// 			    $("#cent_display_"+entryNumber).hide();
+// 			    $("#amt_display_"+entryNumber).hide();
+ 				if(cartData[cart]['productLevelDisc']!=null){
+ 					$("#ItemAmtofferDisplay__"+entryNumber).show();
+ 					$("#off-bag-ItemLevelDisc_"+entryNumber).html(cartData[cart]['productLevelDisc'].formattedValue).addClass("priceFormat").append("Off Bag");
+ 				    $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
+ 				}
+ 				if(cartData[cart]['cartLevelDisc']!=null){
+ 					$("#CartofferDisplay_"+entryNumber).show();
+ 					$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("Off Bag");
+ 				    $("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
+ 				}
+ 				
+// 				if(cartData[cart]['amountAfterAllDisc']!=null)
+// 				{
+// 			    $("#CartofferDisplay_"+entryNumber).show();	
+// 				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
+// 				}
+// 				$("#off-bag-cartLevelDisc_"+entryNumber).html("");
+// 					if(cartData[cart]['cartLevelDisc']!=null){
+// 	 			    $("#CartofferDisplay_"+entryNumber).show();	
+// 	 				$("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("Off Bag");
+// 	 				}
  			
  			}
  			if(response=="N")
@@ -4389,6 +4408,7 @@ $(".remove-coupon-button").click(function(){
 
 
 $(document).ready(function(){
+	$("#off-bag").show();
 	if($('#couponFieldId').prop('readonly') == false)
 	{
 		var selection = $("#voucherDisplaySelection").val();

@@ -1466,6 +1466,15 @@
 						optional="true" />
 					<persistence type="property" />
 			</attribute>
+			
+			<attribute qualifier="includeCities" type="java.lang.Boolean">
+					<defaultvalue>Boolean.TRUE</defaultvalue>
+					<description>
+						Specifies if this restriction is included for cities or not 
+					</description>
+					<persistence type="property"/>
+					<modifiers search="false" optional="false"/>
+				</attribute>
 				<!-- <attribute autocreate="true" qualifier="state"
 					type="EtailPincodeStateCollection">
 					<modifiers read="true" write="true" search="false"
