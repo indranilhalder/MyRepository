@@ -746,5 +746,28 @@ public class MplPromotionHelper
 		this.cartService = cartService;
 	}
 
+	/**
+	 * Calculates Delivery Charge at Entry Level
+	 *
+	 * @param deliveryVal
+	 * @param entry
+	 * @return deliveryChargeForEntry
+	 */
+	public double getDeliveryEntryCharge(final double deliveryVal, final AbstractOrderEntryModel entry)
+	{
+		double deliveryChargeForEntry = 0;
+
+		if (null != entry && (entry.getQuantity().longValue() > 0 && StringUtils.isNotEmpty(entry.getBogoFreeItmCount())))
+		{
+			deliveryChargeForEntry = deliveryVal
+					* (entry.getQuantity().longValue() - Long.valueOf(entry.getBogoFreeItmCount()).longValue());
+		}
+		else
+		{
+			deliveryChargeForEntry = deliveryVal * (entry.getQuantity().longValue());
+		}
+
+		return deliveryChargeForEntry;
+	}
 
 }
