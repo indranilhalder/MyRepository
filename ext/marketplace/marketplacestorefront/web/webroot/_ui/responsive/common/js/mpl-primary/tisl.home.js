@@ -1258,11 +1258,12 @@ getFooterOnLoad();
 $(document).on("click", ".showcaseItem", function() {
 	$('.selectmenu').text($(this).children().text());
 	/*TPR-650 Start*/
+	var name=$(this).parents('#showcase').children('h1').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
 	var value = $(this).find('a').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
 	utag.link({
 		link_obj: this,
-		link_text: 'inspireme_'+value,
-		event_type : 'inspireme_click'
+		link_text: name+'_'+value,
+		event_type : name+'_click'
 	});
 	/*TPR-650 End*/
 });
