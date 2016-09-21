@@ -81,11 +81,11 @@
 				$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged] 
 				$picture=media(code, $contentCV);
 				
-				INSERT_UPDATE MplProductCollectionComponent;uid[unique=true];name;productcodes(code,$productCV);componentType(code)
+				INSERT_UPDATE MplProductCollectionComponent;$contentCV[unique=true];uid[unique=true];name;productcodes(code,$productCV);componentType(code)
 			</value>
         </property>
 		<property name="impexRow">
-		<value>;{0};{1};{+2};{3}</value>
+		<value>;{0};{+1};{+2};{+3};{4}</value>
 		</property>
         </bean>
     
