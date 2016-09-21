@@ -1796,5 +1796,17 @@
 	<!-- Bundle Promotion Helper Class -->
 	<bean id="mplBundlePromotionHelper" class="com.tisl.mpl.promotion.helper.MplBundlePromotionHelper" />
 	
+	
+	<!-- Added for TPR-1035-->
+ 	
+ 	<bean id="mplBinErrorService"
+ 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplBinErrorService">
+ 		<property name="modelService" ref="modelService" />
+ 		<property name="mplBinErrorDao" ref="mplBinErrorDao" />
+ 	</bean>
+ 	
+ 	<bean id="mplBinErrorDao" class="com.tisl.mpl.promotion.dao.impl.MplBinErrorDaoImpl" />
+ 	
+ 	<bean id="mplBinErrorData" class="com.tisl.mpl.pojo.MplBinErrorData" />
 </beans>
 
