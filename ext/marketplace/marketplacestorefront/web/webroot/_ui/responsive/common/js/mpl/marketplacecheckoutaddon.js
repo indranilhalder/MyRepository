@@ -2851,6 +2851,13 @@ function applyPromotion(bankName)
 									    fragment.appendChild(opt);
 									    bankList.appendChild(fragment);
 									}
+									
+									/*TPR-641*/
+									utag.link({
+										link_obj: this,
+										link_text: 'emi_more_information' ,
+										event_type : 'emi_more_information'
+									});
 								}
 								else{								
 									$("#bankNameForEMI, #listOfEMiBank").css("display","none");
@@ -2903,6 +2910,15 @@ function applyPromotion(bankName)
 										
 									}
 									$("#emi-notice").show();
+									
+									/*TPR-641 starts*/
+									emiBankSelectedTealium = "emi_option_" + selectedBank.replace(/ /g, "").toLowerCase();
+									utag.link({
+										link_obj: this, 
+										link_text: emiBankSelectedTealium , 
+										event_type : 'emi_option_selected'
+									});
+									/*TPR-641 ends*/
 								}
 								else{
 									$("#radioForEMI").css("display","none");

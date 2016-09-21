@@ -474,15 +474,31 @@ function differentiateSeller(){
 /*TPR-663 START*/
 $('#deliveryMethodSubmit').click(function(){
 	utag.link({
-		"link_text": "delivery_choose_address_top_id1", "event_type" : "delivery_choose_address"
-	});
-	utag.link({
 		"link_text": "delivery_choose_address_bottom_id2", "event_type" : "delivery_choose_address"
 	});
 });
 
+$('#deliveryMethodSubmitUp').click(function(){
+	utag.link({
+		"link_text": "delivery_choose_address_top_id1", "event_type" : "delivery_choose_address"
+	});
+});
 
-$('#newAddressButtonUp').click(function(){
+$('#deliveryAddressSubmitUp').click(function(){
+	utag.link({
+		"link_text": "proceed_pay_top_id1", "event_type" : "proceed_pay"
+	});
+});
+
+$('#deliveryAddressSubmit').click(function(){
+	utag.link({
+		"link_text": "proceed_pay_bottom_id2", "event_type" : "proceed_pay"
+	});
+});
+
+
+
+/*$('#newAddressButtonUp').click(function(){
 	utag.link({
 		"link_text": "proceed_pay_top_id1", "event_type" : "proceed_pay"
 	});
@@ -491,7 +507,7 @@ $('#newAddressButtonUp').click(function(){
 		"link_text": "proceed_pay_bottom_id2", "event_type" : "proceed_pay"
 	});
 	
-});
+});*/
 
 /*TPR-663 END*/
 
