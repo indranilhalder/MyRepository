@@ -1613,6 +1613,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public final static String HOTFOLDERLOCATION = "hotFolderLocation";
 	public static final String BUYBOX_FILE_NAME = "filename";
 	public static final String BUYBOX_FILE_EXTENSION = "csv";
+	public static final String BUYBOX_FILE_NAME_TEMP = "filename.temp";
 
 
 	public static final String CURRENT = "current".intern();

@@ -55,7 +55,7 @@ function constructDepartmentHierarchy(inputArray) {
 	//TISPT-304 starts
 	
 	$( ".serpProduct" ).each(function( index ) {
-		  var product=$(this).closest('span').find('#productCode').val();
+		var product=$(this).closest('span').find('#productCode').val();
 		 // console.log("prod"+product);
 		  var categoryTypeValue=$(this).closest('span').find('#categoryType').val()
 		 //  console.log("categoryTypeValue"+categoryTypeValue);
@@ -71,7 +71,7 @@ function constructDepartmentHierarchy(inputArray) {
 		 // console.log("sizeStockLevel"+sizeStockLevel);
 		  var productPromotion=$(this).closest('span').find('#productPromotion').val();
 		 // console.log("productPromotion"+productPromotion);
-		 
+		  populateFacet();
 		  if(typeof(serpSizeList)!= "undefined"){
 			modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,sizeStockLevel,productPromotion);
 		 } 
@@ -146,8 +146,6 @@ function constructDepartmentHierarchy(inputArray) {
 	//change serp product details based on filters
 	function modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,stockLevel,productPromotion){
 		if(mrpPriceValue!="" && productPrice!=""){
-	/*	console.log("in search js...for product"+product+"mrpPriceJSon"+mrpPriceValue+"price json"+productPrice);	
-		console.log("original prices for "+product+$("#price_"+product).text()+$("#priceEqual_"+product).text());*/
 		}
 
 		if(categoryTypeValue=='Apparel'||categoryTypeValue=='Footwear'){
@@ -523,7 +521,6 @@ function constructDepartmentHierarchy(inputArray) {
 	});
 	
 	 $(".facet-name.js-facet-name h4").each(function(){
-		 
 		 var facetStockSize=$("#facetStockSize").val();
 		 if($("#stockStatusId").val()!= "true" && facetStockSize==1){
 			 $(".Availability").hide();

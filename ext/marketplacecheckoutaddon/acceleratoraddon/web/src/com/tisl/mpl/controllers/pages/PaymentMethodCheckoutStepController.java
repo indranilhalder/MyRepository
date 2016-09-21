@@ -1488,52 +1488,40 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								final String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
 								if (DeliveryFulfillModesEnum.TSHIP.toString().equalsIgnoreCase(fulfillmentType))
 								{
-									//Start TISPT-204 Point No 1
-									if (richAttributeModel.get(0).getPaymentModes() != null)
+									//TPR-627, TPR-622 Separate method the check COD Eligibility to avoid redundant code
+									final boolean returnFlag = paymentModecheckForCOD(richAttributeModel, cart, model);
+									if (!returnFlag)
 									{
-										final PaymentModesEnum paymentMode = richAttributeModel.get(0).getPaymentModes();
-										if (null != paymentMode)
-										{
-											if (PaymentModesEnum.COD.equals(paymentMode) || PaymentModesEnum.BOTH.equals(paymentMode))
-											{
-												if (null != cart.getIsCODEligible() && cart.getIsCODEligible().equals(Boolean.FALSE))
-												{
-													//Adding to model true if the pincode is serviceable
-													model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE,
-															CodCheckMessage.NOT_PINCODE_SERVICEABLE.toString());
-													break;
-												}
-											}
-											else
-											{
-												//Adding to model true if the flag value is true
-												model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE,
-														CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
-												break;
-											}
-										}
-										//End TISPT-204 Point No 1
-										else
-										{
-											//Adding to model true if the flag value is true
-											model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE,
-													CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
-											break;
-										}
-									}
-									else
-									{
-										//Adding to model true if the flag value is true
-										model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE,
-												CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
 										break;
 									}
 								}
 								else
 								{
-									//error message for Fulfillment will go here
-									model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.NOT_TSHIP.toString());
-									break;
+									//TPR-627, TPR-622
+									//Changes to TRUE & FALSE
+									final String isSshipCodEligble = (richAttributeModel.get(0).getIsSshipCodEligible() != null ? richAttributeModel
+											.get(0).getIsSshipCodEligible().getCode()
+											: MarketplacecheckoutaddonConstants.FALSE);
+									// isSshipCodEligble to enable disable COD Eligible for SSHIP Products
+									//Changes to TRUE & FALSE
+									if (StringUtils.isNotEmpty(isSshipCodEligble)
+											&& isSshipCodEligble.equalsIgnoreCase(MarketplacecheckoutaddonConstants.TRUE))
+									{
+										//TPR-627,TPR-622 Separate method the check COD Eligibility to avoid redundant code
+										final boolean returnFlag = paymentModecheckForCOD(richAttributeModel, cart, model);
+										if (!returnFlag)
+										{
+											break;
+										}
+									}
+									else
+									{
+										//error message for Fulfillment will go here
+										model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE,
+												CodCheckMessage.NOT_TSHIP.toString());
+										break;
+									}
+
 								}
 							}
 						}
@@ -1693,6 +1681,58 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.CODPanel;
 	}
 
+
+	/**
+	 * TPR-627, TPR-622 Separate method the check COD Eligibility to avoid redundant code
+	 *
+	 * @param richAttributeModel
+	 * @param cart
+	 * @param model
+	 * @return boolean
+	 */
+	private boolean paymentModecheckForCOD(final List<RichAttributeModel> richAttributeModel, final CartModel cart,
+			final Model model)
+	{
+		boolean breakFlag = true;
+		//Start TISPT-204 Point No 1
+		if (richAttributeModel.get(0).getPaymentModes() != null)
+		{
+			final PaymentModesEnum paymentMode = richAttributeModel.get(0).getPaymentModes();
+			if (null != paymentMode)
+			{
+				if (PaymentModesEnum.COD.equals(paymentMode) || PaymentModesEnum.BOTH.equals(paymentMode))
+				{
+					if (null != cart.getIsCODEligible() && cart.getIsCODEligible().equals(Boolean.FALSE))
+					{
+						//Adding to model true if the pincode is serviceable
+						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE,
+								CodCheckMessage.NOT_PINCODE_SERVICEABLE.toString());
+						breakFlag = false;
+					}
+				}
+				else
+				{
+					//Adding to model true if the flag value is true
+					model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
+					breakFlag = false;
+				}
+			}
+			//End TISPT-204 Point No 1
+			else
+			{
+				//Adding to model true if the flag value is true
+				model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
+				breakFlag = false;
+			}
+		}
+		else
+		{
+			//Adding to model true if the flag value is true
+			model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
+			breakFlag = false;
+		}
+		return breakFlag;
+	}
 
 	/**
 	 * This method is used to set up the details for Card Payment

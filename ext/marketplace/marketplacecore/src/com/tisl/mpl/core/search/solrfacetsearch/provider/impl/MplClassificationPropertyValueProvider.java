@@ -5,6 +5,7 @@ package com.tisl.mpl.core.search.solrfacetsearch.provider.impl;
 
 import de.hybris.platform.catalog.jalo.classification.ClassAttributeAssignment;
 import de.hybris.platform.catalog.jalo.classification.ClassificationAttribute;
+
 import de.hybris.platform.catalog.jalo.classification.ClassificationAttributeValue;
 import de.hybris.platform.catalog.jalo.classification.util.Feature;
 import de.hybris.platform.catalog.jalo.classification.util.FeatureContainer;
@@ -31,12 +32,19 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
+import com.tisl.mpl.standardizationfactory.StandardizationService;
+
+
+
 public class MplClassificationPropertyValueProvider extends ClassificationPropertyValueProvider
 {
 	@Autowired
 	private ConfigurationService configurationService;
 
 	//private static final Logger LOG = Logger.getLogger(MplClassificationPropertyValueProvider.class);
+
+	@Autowired
+	private StandardizationService sizeStandard;
 
 	@Override
 	public Collection<FieldValue> getFieldValues(final IndexConfig indexConfig, final IndexedProperty indexedProperty,
@@ -207,7 +215,59 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 		{
 			featureValues = feature.getValues();
 		}
-		if (indexedProperty.isLocalized())
+		//Search POC
+		if (indexedProperty.isLocalized() && indexedProperty.getIsRangeFaceted().equals(Boolean.TRUE))
+		{
+			for (final LanguageModel language : indexConfig.getLanguages())
+			{
+				final Locale locale = this.i18nService.getCurrentLocale();
+				try
+				{
+					this.i18nService.setCurrentLocale(this.localeService.getLocaleByString(language.getIsocode()));
+					final List<FeatureValue> listFeatureValue = featureValues;
+
+					for (final FeatureValue singleFeatureValue : listFeatureValue)
+					{
+						Object value = singleFeatureValue.getValue();
+						if (value instanceof ClassificationAttributeValue)
+						{
+							value = ((ClassificationAttributeValue) value).getName();
+							//standardizing value
+							final Object temp;
+							if (indexedProperty.getIsNumeric().equals(Boolean.TRUE))
+							{
+								temp = sizeStandard.getStandardValue(value.toString(), indexedProperty.getUnitType());
+							}
+							else
+							{
+								temp = sizeStandard.getStandardValueNonNumeric(value.toString(), indexedProperty.getName(),
+										indexedProperty.getUnitType());
+							}
+							if (temp != null)
+							{
+								value = temp;
+							}
+
+							singleFeatureValue.setValue(value);
+							//clearing the existing value
+							listFeatureValue.clear();
+							//adding the standard value
+							listFeatureValue.add(singleFeatureValue);
+						}
+					}
+					result.addAll(extractFieldValues(indexedProperty, language, listFeatureValue));
+
+					//sizeStandard.getStandardValue(value)
+
+				}
+				finally
+				{
+					this.i18nService.setCurrentLocale(locale);
+				}
+			}
+		}
+
+		else if (indexedProperty.isLocalized())
 		{
 			for (final LanguageModel language : indexConfig.getLanguages())
 			{

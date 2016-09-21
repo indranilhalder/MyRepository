@@ -994,6 +994,8 @@ public final class HybrisDataConverter
 			final List<String> productCategoryListInWl = new ArrayList<String>();
 			final List<String> productSubCategoryListInWl = new ArrayList<String>();
 			final List<String> productQuantityListInWl = new ArrayList<String>();
+			/*TPR-646*/
+			int totalCountInWishlist = 0;
 
 			if (null != allWishlists)
 			{
@@ -1001,6 +1003,7 @@ public final class HybrisDataConverter
 				{
 					for (final Wishlist2EntryModel itemEntry : wishlistEntry.getEntries())
 					{
+						totalCountInWishlist++;
 						productIdListInWl.add(itemEntry.getProduct().getCode());
 						productNameListInWl.add(itemEntry.getProduct().getName());
 						productQuantityListInWl.add(String.valueOf(1));
@@ -1064,6 +1067,7 @@ public final class HybrisDataConverter
 					.addArrayValues("page_subcategory_name", productSubCategoryListInWl)
 					.addArrayValues("product_sku", productSkuListInWl).addArrayValues("product_list_price", productListPriceListInWl)
 					.addArrayValues("product_unit_price", productUnitPriceListInWl);
+			udo.setValue("wishlist_items_count", String.valueOf(totalCountInWishlist));
 
 			scriptString = tealiumHelper.outputFullHtml(udo);
 		}
