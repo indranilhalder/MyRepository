@@ -3322,7 +3322,15 @@
 					</attribute>
 				</attributes>
 			</itemtype>
+			<!-- PRoduct Carousel Component TPR-1316-->
 
+			<itemtype code="MplProductCollectionComponent" autocreate="true"
+				generate="true" extends="ProductCarouselComponent"
+				jaloclass="com.tisl.mpl.core.jalo.MplProductCollectionComponent">
+				<description>This component is made to show the Products in a carousel</description>
+				
+			</itemtype>
+			
 			<!-- Now Trending Carousel Component -->
 			<itemtype code="MplNowTrendingProductCarouselComponent"
 				autocreate="true" generate="true" extends="ProductCarouselComponent"
