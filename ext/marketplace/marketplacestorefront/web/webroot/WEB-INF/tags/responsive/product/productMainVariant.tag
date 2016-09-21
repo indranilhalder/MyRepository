@@ -246,6 +246,7 @@ share mobile -->
 <!-- currentcolor refers to the variable where the current color of the selected variant is stored -->
 <!-- currentcolor is populated on selecting color swatch -->
 <c:if test="${noVariant!=true&&notApparel!=true}">
+<c:if test="${showSizeGuideForFA eq true}">
 <div class="size" style="font-size: 12px;">
 
 
@@ -333,15 +334,15 @@ share mobile -->
 		
 		</ul>
 		<!-- Size guide Pop-up -->
-		<c:if test="${showSizeGuideForFA eq true}">
+		
 			<a class="size-guide" href="${sizeGuideUrl}" role="button"
 			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}"> <spring:theme
 				code="product.variants.size.guide" />
 			</a>
-		</c:if> 
+		
 		<!-- <span id="selectSizeId" style="display: none;color: red">Please select a size!</span> -->
 		<!-- End Size guide Pop-up -->
-	</div>
+	</div></c:if> 
 	</c:if>
 
 <div id="allVariantOutOfStock" style="display: none;">

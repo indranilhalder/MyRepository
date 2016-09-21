@@ -350,7 +350,7 @@ function navigateToPage(queryString,textString)
 						<c:if test="${facetData.multiSelect}">											
 							<ycommerce:testId code="facetNav_selectForm"> 
 							<!-- Added for TISPRO-490 Start here -->							
-							<c:if test="${facetData.code eq 'dialColour'}">
+							<c:if test="${facetData.code eq 'dialColour' || facetData.code  eq 'strapcolor' || facetData.code  eq 'dialColourWatches'}">
 							<form action="#" method="get"> 
 								<input type="hidden" name="offer" value="${offer}"/>
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
@@ -450,7 +450,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 								<input type="hidden" name="isFacet" value="true"/>
 								<input type="hidden" name="facetValue" value="${facetValue.code}"/>
-								<c:if test="${facetData.code ne 'dialColour'}"> <!-- Added for TISPRO-490  -->		
+								<c:if test="${facetData.code ne 'dialColour' && facetData.code ne 'strapcolor' && facetData.code  ne 'dialColourWatches'}"> <!-- Added for TISPRO-490  -->		
 								<label>
 									<input type="checkbox" ${facetValue.selected ? 'checked="checked"' : ''}  class="facet-checkbox js-facet-checkbox sr-only" />																		
 									<c:if test="${facetData.code == 'inStockFlag'}">

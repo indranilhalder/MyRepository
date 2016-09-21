@@ -26,7 +26,7 @@ UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=
  ;$solrIndexedType		   ;price							   ;"Price"
  ;$solrIndexedType		   ;deliveryMode					   ;"Delivery"
  ;$solrIndexedType		   ;discountFlag					   ;"Discount"
- ;$solrIndexedType		   ;discountAll							;"All Discount"
+ ;$solrIndexedType		   ;discountAll						   ;"All Discount"
  ;$solrIndexedType		   ;colour							   ;"Colour"
  ;$solrIndexedType		   ;size							   ;"Size"
  ;$solrIndexedType		   ;rating							   ;"Rating"
@@ -150,6 +150,10 @@ UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=
  ;$solrIndexedType		   ;dailshape						   ;"Dial Shape"
  ;$solrIndexedType		   ;strapcolor						   ;"Strap Colour"
  ;$solrIndexedType		   ;beltSize						   ;"Belt Size"
+ ;$solrIndexedType         ;patternWatches	         	       ;"Pattern"
+ ;$solrIndexedType         ;dialColourWatches	         	   ;"Dial Colour"
+ ;$solrIndexedType         ;typeWatches	         	   		   ;"Type"
+ 
  
 # Define the available sorts
 #release2 changes for serp header
