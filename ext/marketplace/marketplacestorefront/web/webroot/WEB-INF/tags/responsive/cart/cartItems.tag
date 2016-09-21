@@ -1073,7 +1073,7 @@ tr.d0 td {
 <div class="cart-total-block">
 <c:set var="totalDiscount" value="${cartData.totalDiscounts.value}"/>
 <c:set var="subtotal" value="${cartData.subTotal.value}"/>
-   <c:out value="${cartData.entries[0].netSellingPrice}"></c:out> 
+   <%-- <c:out value="${cartData.entries[0].netSellingPrice}"></c:out>  --%>
     <%--  <h2><spring:theme code="mpl.orderDetails" /></h2> --%>
     <c:set var="discountPercentage" value="${100*(totalDiscount / subtotal)}"/>
 	<ul class="totals">
