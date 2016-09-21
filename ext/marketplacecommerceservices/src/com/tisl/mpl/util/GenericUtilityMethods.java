@@ -5,7 +5,9 @@ package com.tisl.mpl.util;
 
 import de.hybris.platform.category.jalo.Category;
 import de.hybris.platform.category.model.CategoryModel;
+import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.core.Registry;
@@ -1200,6 +1202,32 @@ public class GenericUtilityMethods
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 		//return finalCount;
+	}
+
+	/**
+	 * For TPR-429
+	 *
+	 * @doc populates the seller IDs of the product during checkout
+	 * @param cartData
+	 * @return checkoutSellerID
+	 */
+	public static String populateCheckoutSellers(final CartData cartData)
+	{
+		String checkoutSellerID = null;
+		final List<OrderEntryData> sellerList = cartData.getEntries();
+		for (final OrderEntryData seller : sellerList)
+		{
+			final String sellerID = seller.getSelectedSellerInformation().getSellerID();
+			if (checkoutSellerID != null)
+			{
+				checkoutSellerID += MarketplacecommerceservicesConstants.UNDER_SCORE + sellerID;
+			}
+			else
+			{
+				checkoutSellerID = sellerID;
+			}
+		}
+		return checkoutSellerID;
 	}
 
 }

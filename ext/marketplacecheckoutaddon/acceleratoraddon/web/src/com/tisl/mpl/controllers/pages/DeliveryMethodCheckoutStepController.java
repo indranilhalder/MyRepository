@@ -256,7 +256,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			{
 				responseData = getMplCartFacade().getOMSPincodeResponseData(defaultPinCodeId, cartData);
 				// TPR-429 START
-				final String cartLevelSellerID = populateCheckoutSellers(cartData);
+				final String cartLevelSellerID = GenericUtilityMethods.populateCheckoutSellers(cartData);
 
 				model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, cartLevelSellerID);
 				// TPR-429 END
@@ -469,7 +469,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			LOG.debug(">>>>>>>>>>  Step 5:  Cod status setting done  ");
 
 			// TPR-429 START
-			final String checkoutSellerID = populateCheckoutSellers(cartUssidData);
+			final String checkoutSellerID = GenericUtilityMethods.populateCheckoutSellers(cartUssidData);
 
 			model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, checkoutSellerID);
 			// TPR-429 END
@@ -566,33 +566,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		return returnPage;
 	}
 
-	/**
-	 * For TPR-429
-	 *
-	 * @doc populates the seller IDs of the product during checkout
-	 * @param cartData
-	 * @return checkoutSellerID
-	 */
-	private String populateCheckoutSellers(final CartData cartData)
-	{
-		String checkoutSellerID = null;
-		final List<OrderEntryData> sellerList = cartData.getEntries();
-		for (final OrderEntryData seller : sellerList)
-		{
-			final String sellerID = seller.getSelectedSellerInformation().getSellerID();
-			if (checkoutSellerID != null)
-			{
-				checkoutSellerID += "_" + sellerID;
-			}
-			else
-			{
-				checkoutSellerID = sellerID;
-			}
-		}
-		return checkoutSellerID;
-	}
-
-	/**
+		/**
 	 * @author TECH This method first checks the delivery modes if it has only home or express then it forwards to
 	 *         doSelectDeliveryMode method and if it contains all the modes then first process cnc mode and then at jsp
 	 *         level using continue link forward to doSelectDeliveryMode method.
