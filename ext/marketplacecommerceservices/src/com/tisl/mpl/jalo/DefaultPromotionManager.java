@@ -3275,57 +3275,68 @@ public class DefaultPromotionManager extends PromotionsManager
 	public boolean checkPincodeSpecificRestriction(final List<AbstractPromotionRestriction> restrictionList)
 	{
 		boolean flag = false;
+		boolean isCityIncluded = true;
 		boolean isPinCodeRestrictionPresent = false;
-		if (null == restrictionList || restrictionList.isEmpty())
+		final CartModel cartModel = cartService.getSessionCart();
+		if (null != cartModel.getPincodeNumber())
 		{
-			flag = true;
-		}
-		else
-		{
-			for (final AbstractPromotionRestriction restriction : restrictionList)
-			{
-				flag = false;
-				if (restriction instanceof MplPincodeSpecificRestriction)
-				{
-					isPinCodeRestrictionPresent = true;
-					final List<State> includedStates = ((MplPincodeSpecificRestriction) restriction).getStates();
-					final List<City> excudedCity = ((MplPincodeSpecificRestriction) restriction).getCities();
-					final CartModel cartModel = cartService.getSessionCart();
-					if (includedStates.isEmpty() && excudedCity.isEmpty())
-					{
-						flag = true;
-					}
-					else if (excudedCity.isEmpty())
-					{
-						flag = isAppliedPinCodeStatesIncludes(includedStates, cartModel.getStateForPincode());
-					}
-					else
-					{
-						boolean isCityExcluded = false;
-						for (final City city : excudedCity)
-						{
-							if (city.getCityName().equalsIgnoreCase(cartModel.getCityForPincode()))
-							{
-								isCityExcluded = true;
-								break;
-							}
-
-						}
-						if (!isCityExcluded)
-						{
-							flag = isAppliedPinCodeStatesIncludes(includedStates, cartModel.getStateForPincode());
-						}
-					}
-
-				}
-			}
-			if (!isPinCodeRestrictionPresent)
+			if (null == restrictionList || restrictionList.isEmpty())
 			{
 				flag = true;
 			}
+			else
+			{
+				for (final AbstractPromotionRestriction restriction : restrictionList)
+				{
+					flag = false;
+					if (restriction instanceof MplPincodeSpecificRestriction)
+					{
+						isPinCodeRestrictionPresent = true;
+						final List<State> includedStates = ((MplPincodeSpecificRestriction) restriction).getStates();
+						final List<City> excudedCity = ((MplPincodeSpecificRestriction) restriction).getCities();
+						//	final CartModel cartModel = cartService.getSessionCart();
+						if (includedStates.isEmpty() && excudedCity.isEmpty())
+						{
+							flag = true;
+						}
+						else if (excudedCity.isEmpty())
+						{
+							flag = isAppliedPinCodeStatesIncludes(includedStates, cartModel.getStateForPincode());
+						}
+						else
+						{
+							for (final City city : excudedCity)
+							{
+								if (city.getCityName().equalsIgnoreCase(cartModel.getCityForPincode()))
+								{
+									isCityIncluded = false;
+									break;
+								}
+								if (!isCityIncluded && !isAppliedPinCodeStatesIncludes(includedStates, cartModel.getStateForPincode()))
+								{
+									flag = false;
+								}
+								if (!isCityIncluded && isAppliedPinCodeStatesIncludes(includedStates, cartModel.getStateForPincode()))
+								{
+									flag = true;
+								}
+
+							}
+						}
+
+					}
+				}
+				if (!isPinCodeRestrictionPresent)
+				{
+					flag = true;
+				}
+			}
+
 		}
-
-
+		else
+		{
+			flag = true;
+		}
 		return flag;
 	}
 
@@ -3336,6 +3347,10 @@ public class DefaultPromotionManager extends PromotionsManager
 	private boolean isAppliedPinCodeStatesIncludes(final List<State> includedStates, final String pinCode)
 	{
 		boolean flag = false;
+		if (CollectionUtils.isEmpty(includedStates))
+		{
+			flag = true;
+		}
 		for (final State state : includedStates)
 		{
 			if (state.getCountrykey().equalsIgnoreCase(pinCode))
