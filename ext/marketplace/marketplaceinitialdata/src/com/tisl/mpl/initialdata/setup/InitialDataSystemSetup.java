@@ -52,7 +52,7 @@ public class InitialDataSystemSetup extends AbstractSystemSetup
 	private static final String ACTIVATE_SOLR_CRON_JOBS = "activateSolrCronJobs";
 	private static final String MARKETPLACE = "mpl";
 
-
+	private static final String EXTENSIONNAME = "marketplaceinitialdata";
 	private CoreDataImportService coreDataImportService;
 	private SampleDataImportService sampleDataImportService;
 
@@ -110,26 +110,26 @@ public class InitialDataSystemSetup extends AbstractSystemSetup
 
 		importImpexFile(context,
 				String.format("/%s/import/sampledata/productCatalogs/%sProductCatalog/categories_fa.impex", new Object[]
-				{ "marketplaceinitialdata", MARKETPLACE }), false);
+				{ EXTENSIONNAME, MARKETPLACE }), false);
 		importImpexFile(context,
 				String.format("/%s/import/sampledata/productCatalogs/%sProductCatalog/categories_watches.impex", new Object[]
-				{ "marketplaceinitialdata", MARKETPLACE }), false);
+				{ EXTENSIONNAME, MARKETPLACE }), false);
 
 		importImpexFile(context, String.format(
 				"/%s/import/sampledata/productCatalogs/%sProductCatalog/classifications-hierarchy_watches_fa.impex", new Object[]
-				{ "marketplaceinitialdata", MARKETPLACE }), false);
+				{ EXTENSIONNAME, MARKETPLACE }), false);
 
 		importImpexFile(context, String.format(
 				"/%s/import/sampledata/productCatalogs/%sProductCatalog/classifications-units_watches_fa.impex", new Object[]
-				{ "marketplaceinitialdata", MARKETPLACE }), false);
+				{ EXTENSIONNAME, MARKETPLACE }), false);
 
 		importImpexFile(context,
 				String.format("/%s/import/sampledata/productCatalogs/%sProductCatalog/classifications-system_fa.impex", new Object[]
-				{ "marketplaceinitialdata", MARKETPLACE }), false);
+				{ EXTENSIONNAME, MARKETPLACE }), false);
 
 		importImpexFile(context, String.format(
 				"/%s/import/sampledata/productCatalogs/%sProductCatalog/classifications-system_watches.impex", new Object[]
-				{ "marketplaceinitialdata", MARKETPLACE }), false);
+				{ EXTENSIONNAME, MARKETPLACE }), false);
 		getSampleDataImportService().execute(this, context, importData);
 		getEventService().publishEvent(new SampleDataImportedEvent(context, importData));
 

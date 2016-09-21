@@ -45,6 +45,8 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 
 	@Autowired
 	private StandardizationService sizeStandard;
+	
+	private static final String DYNAMICATTRIBUTE="classification.attirbutes.dynamic.";
 
 	@Override
 	public Collection<FieldValue> getFieldValues(final IndexConfig indexConfig, final IndexedProperty indexedProperty,
@@ -116,7 +118,7 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 								final List<FieldValue> temp = getFeaturesValues(indexConfig, feature, indexedProperty);
 								//Added for Tata-24 Start :::
 								final String dynCategory = configurationService.getConfiguration().getString(
-										"classification.attirbutes.dynamic." + productModel.getProductCategoryType());
+										DYNAMICATTRIBUTE + productModel.getProductCategoryType());
 								if (StringUtils.isNotEmpty(dynCategory))
 								{
 									final String[] dynProperties = dynCategory.split(",");
@@ -299,7 +301,7 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 	public void dynGroupFeaturesValues(final String property, final List<FieldValue> list)
 	{
 
-		final String dynGroup = configurationService.getConfiguration().getString("classification.attirbutes.dynamic." + property);
+		final String dynGroup = configurationService.getConfiguration().getString(DYNAMICATTRIBUTE + property);
 		if (StringUtils.isNotEmpty(dynGroup))
 		{
 			boolean flag = false;
@@ -312,7 +314,7 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 					final String name = groupName.replaceAll(" ", "").replaceAll("-", "").toLowerCase();
 					//classification.attirbutes.dynamic.materialtype.metal=Metal,Alloys,Titanium,Aluminium,Stainless Steel
 					final String dynAttribute = configurationService.getConfiguration().getString(
-							"classification.attirbutes.dynamic." + property + "." + name);
+							DYNAMICATTRIBUTE + property + "." + name);
 					if (StringUtils.isNotEmpty(dynAttribute))
 					{
 						//dynAttributes=[Metal,Alloys,Titanium,Aluminium,Stainless Steel]
@@ -362,7 +364,7 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 		final List<FeatureValue> newFeatures = new ArrayList<FeatureValue>();
 
 		//classification.attirbutes.dynamic.materialtype=Canvas,Cotton,Leather,Others,PU,Suede,Fabric,Metal,Plastic
-		final String dynGroup = configurationService.getConfiguration().getString("classification.attirbutes.dynamic." + property);
+		final String dynGroup = configurationService.getConfiguration().getString(DYNAMICATTRIBUTE + property);
 		if (StringUtils.isNotEmpty(dynGroup))
 		{
 			boolean flag = false;
@@ -375,7 +377,7 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 					final String name = groupName.replaceAll(" ", "").replaceAll("-", "").toLowerCase();
 					//classification.attirbutes.dynamic.materialtype.metal=Metal,Alloys,Titanium,Aluminium,Stainless Steel
 					final String dynAttribute = configurationService.getConfiguration().getString(
-							"classification.attirbutes.dynamic." + property + "." + name);
+							DYNAMICATTRIBUTE + property + "." + name);
 					if (StringUtils.isNotEmpty(dynAttribute))
 					{
 						//dynAttributes=[Metal,Alloys,Titanium,Aluminium,Stainless Steel]
