@@ -30,7 +30,7 @@
 		<property name="prefixPriority">
 			<map>
 				<!-- default priority is 0 -->
-				<entry key="product_collection" value="0"/>
+				<entry key="product_collection" value="2"/>
 			</map>
 		</property>
 	</bean>
@@ -67,7 +67,7 @@
  	<!-- Transformer for ProductCarousel Import -->
     <bean id="batchCarouselConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-    p:mapping="category"
+    p:mapping="product_collection"
     p:converter-ref="batchCarouselConverter"/>
     
     <!-- Converter for seller Import -->
@@ -81,11 +81,11 @@
 				$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged] 
 				$picture=media(code, $contentCV);
 				
-				INSERT_UPDATE MplProductCollectionComponent;$contentCV[unique=true];uid[unique=true];name;productcodes(code,$productCV);componentType(code)
+				INSERT_UPDATE MplProductCollectionComponent;uid[unique=true];name;productcodes(code,$productCV);componentType(code)
 			</value>
         </property>
 		<property name="impexRow">
-		<value>;{0};{1};{+2};{3};{4}</value>
+		<value>;{0};{1};{+2};{3}</value>
 		</property>
         </bean>
     
