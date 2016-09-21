@@ -184,11 +184,11 @@ tr.d0 td {
    
     <li class="price">
 					<ul>
+					<!-- TPR-774 -->
 						<c:set var="quantity" value="${entry.quantity}"/>
 						<c:set var="subPrice" value="${entry.basePrice.value}" />
 						<fmt:parseNumber var="price" type="number" value="${subPrice}" />
 					  	<c:set var="tot_price" value="${quantity * price}" />
-					  	
 						<ycommerce:testId code="cart_totalProductPrice_label">
 								<c:choose>
 									<c:when test="${entry.giveAway}"> <!-- For Freebie item price will be shown as free -->
@@ -212,37 +212,71 @@ tr.d0 td {
 										   	<span><format:price priceData="${entry.productLevelDisc}" displayFreeForZero="true"/></span><span class="discount-off">Off</span> 
 											--%>
 										</c:when>
+										
 										<c:when test="${entry.basePrice.formattedValue == entry.totalPrice.formattedValue}">
 													<%-- TISPRO-215--%>
 												<c:choose>
-    											<c:when test="${not empty entry.cartLevelDisc || not empty entry.productLevelDisc}">
+    											<c:when test="${not empty entry.cartLevelDisc || not empty entry.productLevelDisc || not empty entry.productPerDiscDisplay}">
         												<del>
-															<format:price priceData="${entry.totalPrice}" displayFreeForZero="false" />
+															<format:price priceData="${entry.totalMrp}" displayFreeForZero="false" />
 		 												</del>
     											</c:when>    
     											<c:otherwise>
-       													<span><format:price priceData="${entry.totalPrice}"/></span>
+    											<%-- <c:choose> --%>
+    												<%-- <c:when test="${entry.totalPrice.formattedValue == entry.totalMrp.formattedValue}">
+    													<span><format:price priceData="${entry.totalMrp}"/></span>
+    												</c:when>
+    												<c:otherwise>
+    													<del> --%>
+       														<span><format:price priceData="${entry.totalMrp}"/></span>
+       													<!-- </del> -->
+       													<%-- <span><format:price priceData="${entry.basePrice}"/></span> --%>
+    										<%-- 		</c:otherwise>
+    											</c:choose> --%>
+    												
    												 </c:otherwise>
 												</c:choose>
 												<%-- TISPRO-215 ends --%>
-											</c:when>
+										</c:when>
 											<c:otherwise>
 												<c:choose>
 													<c:when test="${entry.basePrice.formattedValue == entry.totalPrice.formattedValue}">
-												<span><format:price priceData="${entry.totalPrice}"/></span>
-											</c:when>
+													<c:choose>
+    													<c:when test="${not empty entry.cartLevelDisc || not empty entry.productLevelDisc || not empty entry.productPerDiscDisplay}">
+        													<del>
+																<format:price priceData="${entry.totalMrp}" displayFreeForZero="false" />
+		 													</del>
+    													</c:when>    
+    												<c:otherwise>
+       													<span><format:price priceData="${entry.totalMrp}"/></span>
+   												 	</c:otherwise>
+													</c:choose>
+													</c:when>
 													<c:otherwise>
 														<c:if test="${entry.basePrice.formattedValue != entry.totalPrice.formattedValue}">
-															<c:forEach items="${basePriceMap}" var="baseprice">
+															<c:forEach items="${mrpPriceMap}" var="mrpPrice">
 																<c:choose>	
-																	<c:when	test="${baseprice.key == entry.entryNumber}">
-																		<c:if test="${baseprice.value.formattedValue != entry.totalPrice.formattedValue||not empty entry.cartLevelDisc}">
-																		 	<li><del> <format:price priceData="${baseprice.value}" displayFreeForZero="true" /></del></li>
-																		</c:if>
+																	<c:when	test="${mrpPrice.key == entry.entryNumber}">
+																	<c:choose>
+																		<c:when test="${mrpPrice.value.formattedValue != entry.totalMrp.formattedValue||not empty entry.cartLevelDisc}">
+																		 	<li><del> <format:price priceData="${mrpPrice.value}" displayFreeForZero="true" /></del></li>
+																		</c:when>
+																		<c:otherwise>
+																			<c:if test="${mrpPrice.value.formattedValue != entry.totalMrp }">
+																			<li><del> <format:price priceData="${mrpPrice.value}" displayFreeForZero="true" /></del></li>
+																			</c:if>
+																		</c:otherwise>
+																	</c:choose>
 																	</c:when>
 																</c:choose>
 															</c:forEach>
-															<c:if test="${empty entry.cartLevelDisc && empty entry.productLevelDisc}">
+															<c:choose>
+															<c:when test="${not empty entry.cartLevelDisc && empty entry.productPerDiscDisplay}">
+																<span><format:price priceData="${entry.totalMrp}"/></span>
+															</c:when>
+															</c:choose>
+															
+															<c:if test="${empty entry.cartLevelDisc && empty entry.productPerDiscDisplay}">
 															 <span><format:price priceData="${entry.totalPrice}"/></span>
 															 </c:if>
 														</c:if>
@@ -269,44 +303,64 @@ tr.d0 td {
 								${entry.totalSalePrice.value}
 								--
 								${entry.amountAfterAllDisc.value} --%>
+								<!-- prodLevelPercentage replace with productPerDiscDisplay -->
 								<c:choose>
-								<c:when test="${not empty entry.cartLevelDisc}">
-								<c:choose>
-								<c:when test="${not empty entry.productLevelDisc && not empty entry.prodLevelPercentage}">
-								<span class="off-bag">${entry.prodLevelPercentage}<spring:theme code="off.item.percentage"/><del><format:price priceData="${entry.netSellingPrice}"/></del></span>
-								</c:when>
-								<c:otherwise>
-								<c:if test="${not empty entry.productLevelDisc}">
-								<span class="off-bag"><format:price priceData="${entry.productLevelDisc}"/><spring:theme code="off.item"/><del><format:price priceData="${entry.netSellingPrice}"/></del></span>
-								</c:if>
-								</c:otherwise>
-								</c:choose>
-								</c:when>
-								<c:otherwise>
-								<c:choose>
-								<c:when test="${not empty entry.productLevelDisc && not empty entry.prodLevelPercentage}">
-								<span class="off-bag">${entry.prodLevelPercentage}<spring:theme code="off.item.percentage"/><format:price priceData="${entry.netSellingPrice}"/></span>
-								</c:when>
-								<c:otherwise>
-								<c:if test="${not empty entry.productLevelDisc}">
-								<span class="off-bag"><format:price priceData="${entry.productLevelDisc}"/><spring:theme code="off.item"/><format:price priceData="${entry.netSellingPrice}"/></span>
-								</c:if>
-								</c:otherwise>
-								</c:choose>
-								</c:otherwise>
+									<c:when test="${not empty entry.cartLevelDisc}">
+									<c:choose>
+										<%-- ${not empty entry.productLevelDisc && not empty entry.prodLevelPercentage} --%>
+										<c:when test="${not empty entry.productPerDiscDisplay}">
+											<c:choose>
+												<c:when test="${not empty entry.productLevelDisc}">
+													<span class="off-bag">${entry.productPerDiscDisplay.value}<spring:theme code="off.item.percentage"/><del><format:price priceData="${entry.netSellingPrice}"/></del></span>
+												</c:when>
+												<c:otherwise>
+													<span class="off-bag">${entry.productPerDiscDisplay.value}<spring:theme code="off.item.percentage"/><del><format:price priceData="${entry.totalPrice}"/></del></span>
+												</c:otherwise>
+											</c:choose>
+										</c:when>
+										<c:otherwise>
+											<%-- <c:if test="${not empty entry.productLevelDisc}">
+											<span class="off-bag"><format:price priceData="${entry.productLevelDisc}"/><spring:theme code="off.item"/><del><format:price priceData="${entry.netSellingPrice}"/></del></span>
+											</c:if> --%>
+										</c:otherwise>
+									</c:choose>
+									</c:when>
+									<c:otherwise>
+									<c:choose>
+										<c:when test="${not empty entry.productPerDiscDisplay}">
+										<c:choose>
+												<c:when test="${not empty entry.productLevelDisc}">
+													<span class="off-bag">${entry.productPerDiscDisplay.value}<spring:theme code="off.item.percentage"/><format:price priceData="${entry.netSellingPrice}"/></span>
+												</c:when>
+												<c:otherwise>
+													<span class="off-bag">${entry.productPerDiscDisplay.value}<spring:theme code="off.item.percentage"/><format:price priceData="${entry.totalPrice}"/></span>
+												</c:otherwise>
+											</c:choose>
+										</c:when>
+										<c:otherwise>
+										<%-- <c:if test="${not empty entry.productLevelDisc}">
+										<span class="off-bag"><format:price priceData="${entry.productLevelDisc}"/><spring:theme code="off.item"/><format:price priceData="${entry.netSellingPrice}"/></span>
+										</c:if> --%>
+											<%-- <c:if test="${entry.basePrice.formattedValue < entry.totalMrp.formattedValue}">
+												<span><format:price priceData="${entry.basePrice}"/></span>
+											</c:if> --%>
+											
+										</c:otherwise>
+									</c:choose>
+									</c:otherwise>
 								</c:choose>
 								<c:if test="${not empty entry.cartLevelDisc}">
-							<c:choose>
-								<c:when test="${not empty entry.cartLevelDisc && not empty entry.cartLevelPercentage}">
-								<c:if test="${entry.amountAfterAllDisc.value gt 0.1}">
-								<span class="off-bag">${entry.cartLevelPercentage}<spring:theme code="off.bag.percentage"/><format:price priceData="${entry.amountAfterAllDisc}"/></span>
-								</c:if>
-								</c:when>
-								<c:otherwise>
-								<c:if test="${entry.amountAfterAllDisc.value gt 0.1}">
-								<span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/><spring:theme code="off.bag"/><format:price priceData="${entry.amountAfterAllDisc}"/></span>
-								</c:if>
-								</c:otherwise>
+									<c:choose>
+										<c:when test="${not empty entry.cartLevelDisc && not empty entry.cartLevelPercentage}">
+											<c:if test="${entry.amountAfterAllDisc.value gt 0.1}">
+												<span class="off-bag">${entry.cartLevelPercentage}<spring:theme code="off.bag.percentage"/><format:price priceData="${entry.amountAfterAllDisc}"/></span>
+											</c:if>
+										</c:when>
+										<c:otherwise>
+											<c:if test="${entry.amountAfterAllDisc.value gt 0.1}">
+												<span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/><spring:theme code="off.bag"/><format:price priceData="${entry.amountAfterAllDisc}"/></span>
+											</c:if>
+									</c:otherwise>
 							</c:choose></c:if>
 								<%--  <c:if test="${not empty entry.cartLevelDisc}">
 									<span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/><spring:theme code="off.bag"/><format:price priceData="${entry.amountAfterAllDisc}"/></span>
@@ -317,8 +371,9 @@ tr.d0 td {
 		  							<spring:theme code="product.yousave"/> ${savingsOnProduct} 
 								</p>
 							</c:if> --%>
+							<!-- TPR-774 -->
 					</ul>
-				  </li> 
+				  </li>  
    
    
    <!-- TISUTO-124 -->
@@ -1115,4 +1170,3 @@ tr.d0 td {
             </ycommerce:testId></span></li>
           </ul>
 <storepickup:pickupStorePopup />
-
