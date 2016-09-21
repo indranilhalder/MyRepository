@@ -91,6 +91,7 @@ $("#viewPaymentEMI").click(function(){
 	else{
 		redirectToCheckoutLogin();
 	}
+	
 }); 
 //Mode button click function ends
 
@@ -881,8 +882,12 @@ function displayEMICards(){
 				$("#billingAddressEmi, .make_payment").css("display","block");
 				$(".newCard, .savedCard, .saved-card-button").css("display","none");
 				$("#newCard, .newCardPayment, .accepted-cards").css("display","block");
-				$(".make_payment_top_savedCard").css("display","none");
-				$(".make_payment_top_newCard").css("display","block");
+				//$(".make_payment_top_savedCard").css("display","none");
+				//$(".make_payment_top_newCard").css("display","block");
+				$(".proceed-button").each(function(){
+	    			$(this).hide();
+	    		});
+	    		$("#make_emi_payment_up").show();
 				$(".accepted-cards .maestro").parent().css("display","none");
 				$(".accepted-cards .visa").parent().css("display","inline-block");
 				$(".accepted-cards .master").parent().css("display","inline-block");
@@ -894,9 +899,12 @@ function displayEMICards(){
 				$(".newCard").css("display","table-cell");
 				//$("#savedCreditCard, #savedDebitCard").css("display","none");
 				$("#newCard, .newCardPayment").css("display","none");
-				$(".make_payment_top_savedCard").css("display","block");
-				$(".make_payment_top_newCard").css("display","none");
-				
+				//$(".make_payment_top_savedCard").css("display","block");
+				//$(".make_payment_top_newCard").css("display","none");
+				$(".proceed-button").each(function(){
+	    			$(this).hide();
+	    		});
+	    		$("#make_emi_payment_up").show();
 				var index=-1;
 				var index1=0;
 				$.each(myMap, function(i, val) {
@@ -1880,7 +1888,7 @@ $("#otpMobileNUMField").focus(function(){
 			}
  }); 
  
- $("#make_emi_payment").click(function(){
+ $("#make_emi_payment,#make_emi_payment_up").click(function(){
 	  if(isSessionActive()==false){
 			 redirectToCheckoutLogin();
 			}

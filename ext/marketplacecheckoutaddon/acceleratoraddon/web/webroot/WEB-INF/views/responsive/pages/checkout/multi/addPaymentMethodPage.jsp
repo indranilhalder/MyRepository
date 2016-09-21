@@ -296,13 +296,9 @@
 				                  		<input type="hidden" class="emi_bank" id="emi_bank"> -->
 				                  		<input type="hidden" id="ebsDownCheck" value="${ebsDownCheck}"/>
 				                  		<div class="radio creditDebitLabelRadio">
-										 <input type="radio" name="creditCards" data-id="newCCard" id="creditLabel"/>
+										 <input type="radio" data-id="newCCard" id="creditLabel"/>
 										 <label for="creditLabel" class="numbers creditLabel" data-id="newCCard"><span>New Card</span></label>
 								   		</div>
-								   		<!-- <input type="radio" name="creditCards" data-id="newCCard">
-								   		<label for="dc" class="numbers" data-id="newCCard">New Card</label>
-				                  		<p>NEW CARD</p> -->
-				                  		
 										<div class="card-group">
 											<div class="form-group">
 						                    	<fieldset>
@@ -571,7 +567,7 @@
 				                  		<input type="hidden" class="emi_bank" id="emi_bank"> -->
 				                  		<input type="hidden" id="ebsDownCheck" value="${ebsDownCheck}"/>
 				                  		<div class="radio creditDebitLabelRadio">
-										 <input type="radio" name="debitCards" data-id="newDCard" id="debitLabel"/>
+										 <input type="radio" data-id="newDCard" id="debitLabel"/>
 										 <label for="debitLabel" data-id="newDCard" class="numbers debitLabel" data-id="newDCard"><span>New Card</span></label>
 								   		</div>
 				                  		<!-- <p>NEW CARD</p> -->
