@@ -3,16 +3,27 @@
  */
 package com.tisl.mpl.order.impl;
 
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
+import de.hybris.platform.jalo.order.AbstractOrderEntry;
+import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
+import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.order.impl.DefaultCalculationService;
 import de.hybris.platform.order.strategies.calculation.FindPaymentCostStrategy;
+import de.hybris.platform.promotions.util.Tuple2;
+import de.hybris.platform.util.DiscountValue;
 import de.hybris.platform.util.PriceValue;
 import de.hybris.platform.util.TaxValue;
 
 import java.util.Collection;
+import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.tisl.mpl.core.model.BuyBoxModel;
+import com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao;
 
 
 /**
@@ -26,6 +37,8 @@ public class MplDefaultCalculationService extends DefaultCalculationService
 
 	@Autowired
 	private FindPaymentCostStrategy findPaymentCostStrategy;
+	@Autowired
+	private BuyBoxDao buyBoxDao;
 
 	@Override
 	protected void resetAdditionalCosts(final AbstractOrderModel order, final Collection<TaxValue> relativeTaxValues)
@@ -63,5 +76,104 @@ public class MplDefaultCalculationService extends DefaultCalculationService
 	public void setFindPaymentCostStrategy(final FindPaymentCostStrategy findPaymentCostStrategy)
 	{
 		this.findPaymentCostStrategy = findPaymentCostStrategy;
+	}
+
+	/**
+	 * TPR-774
+	 *
+	 * @desc Override resetAllValues to pass mrp from addtocart to cart
+	 * @throws CalculationException
+	 */
+	@Override
+	protected void resetAllValues(final AbstractOrderEntryModel entry) throws CalculationException
+	{
+		// taxes
+		final Collection<TaxValue> entryTaxes = findTaxValues(entry);
+		entry.setTaxValues(entryTaxes);
+		final Tuple2<PriceValue, PriceValue> pv = findBasePriceForAddtoCart(entry);
+		final AbstractOrderModel order = entry.getOrder();
+		final PriceValue basePrice = convertPriceIfNecessary(pv.getFirst(), order.getNet().booleanValue(), order.getCurrency(),
+				entryTaxes);
+		final PriceValue mrpPrice = convertPriceIfNecessary(pv.getSecond(), order.getNet().booleanValue(), order.getCurrency(),
+				entryTaxes);
+		entry.setBasePrice(Double.valueOf(basePrice.getValue()));
+		final List<DiscountValue> entryDiscounts = findDiscountValues(entry);
+		entry.setDiscountValues(entryDiscounts);
+		entry.setMrp(Double.valueOf(mrpPrice.getValue()));
+	}
+
+
+	/**
+	 * TPR-774 getBasePriceForAddtoCart to pass mrp from addtocart to cart
+	 *
+	 * @param entry
+	 * @return
+	 * @throws CalculationException
+	 */
+	private Tuple2<PriceValue, PriceValue> findBasePriceForAddtoCart(final AbstractOrderEntryModel entry)
+			throws CalculationException
+	{
+		final AbstractOrderEntry entryItem = getModelService().getSource(entry);
+		try
+
+		{
+			final Tuple2<PriceValue, PriceValue> priceDataTuple = getBasePriceForAddtoCart(entryItem);
+			return priceDataTuple;
+
+		}
+		catch (final JaloPriceFactoryException e)
+		{
+			throw new CalculationException(e);
+		}
+	}
+
+	/**
+	 * TPR-774 getBasePriceForAddtoCart to pass mrp from addtocart to cart
+	 *
+	 * @param entry
+	 * @return
+	 * @throws JaloPriceFactoryException
+	 */
+	private Tuple2<PriceValue, PriceValue> getBasePriceForAddtoCart(final AbstractOrderEntry entry)
+			throws JaloPriceFactoryException
+	{
+
+		String ussid = "";
+		final Object ussidObj = entry.getProperty("selectedUSSID");
+		//final Map<String, PriceValue> priceData = new HashMap<String, PriceValue>();
+		Double finalPrice = Double.valueOf(0.0);
+		Double finalMrpPrice = Double.valueOf(0.0);
+		if (null != ussidObj)
+		{
+			ussid = ussidObj.toString();
+
+			final List<BuyBoxModel> buyBoxModelList = buyBoxDao.getBuyBoxPriceForUssId(ussid);
+
+
+
+			if (CollectionUtils.isNotEmpty(buyBoxModelList))
+			{
+				//final Double specialPrice = buyBoxModelList.get(0).getSpecialPrice();
+				final Double mopPrice = buyBoxModelList.get(0).getPrice();
+				final Double mrpPrice = buyBoxModelList.get(0).getMrp();
+				if (mopPrice != null && mopPrice.doubleValue() > 0.0)
+				{
+					finalPrice = mopPrice;
+				}
+				else if (mrpPrice != null && mrpPrice.doubleValue() > 0.0)
+				{
+					finalPrice = mrpPrice;
+				}
+				if (mrpPrice != null && mrpPrice.doubleValue() > 0.0)
+				{
+					finalMrpPrice = mrpPrice;
+				}
+				//priceData.put("mop", new PriceValue("INR", finalPrice.doubleValue(), false));
+				//priceData.put("mrp", new PriceValue("INR", finalMrpPrice.doubleValue(), false));
+			}
+
+		}
+		return new Tuple2(new PriceValue("INR", finalPrice.doubleValue(), false), new PriceValue("INR",
+				finalMrpPrice.doubleValue(), false));
 	}
 }

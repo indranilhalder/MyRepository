@@ -126,8 +126,8 @@ public class ProductPromotionInterceptor implements PrepareInterceptor
 	/**
 	 * Add Multiple Products Details Before Promotion Model Save
 	 *
-	 * 
-	 * 
+	 *
+	 *
 	 * @param arg1
 	 * @param object
 	 * @throws InterceptorException
@@ -179,7 +179,7 @@ public class ProductPromotionInterceptor implements PrepareInterceptor
 						while (newProductCodeTokens.hasMoreTokens())
 						{
 							newProductModelList.add(productService.getProductForCode(catalogVersionModel, newProductCodeTokens
-									.nextToken().trim()));
+									.nextToken().trim().toUpperCase()));
 						}
 						final Collection<ProductModel> existingProductList = promotion.getProducts();
 

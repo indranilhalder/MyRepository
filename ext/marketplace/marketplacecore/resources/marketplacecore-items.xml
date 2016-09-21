@@ -5673,6 +5673,29 @@
 							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
 					</attribute>
+					<!-- TPR-774 -->		
+					<attribute qualifier="mrp" autocreate="true"		
+						type="java.lang.Double">		
+						<description>Product Mrp</description>		
+						<modifiers read="true" write="true" removable="true"		
+							optional="true" initial="true" unique="true" />		
+						<persistence type="property" />		
+					</attribute>		
+					<attribute qualifier="totalMrp" autocreate="true"		
+						type="java.lang.Double">		
+						<description>Total Mrp</description>		
+						<modifiers read="true" write="true" removable="true"		
+							optional="true" initial="true" unique="true" />		
+						<persistence type="property" />		
+					</attribute>		
+					<attribute qualifier="productPerDiscDisplay" autocreate="true"		
+						type="java.lang.Double">		
+						<description>Product Percentage Discount Display</description>		
+						<modifiers read="true" write="true" removable="true"		
+							optional="true" initial="true" unique="true" />		
+						<persistence type="property" />		
+					</attribute>
+					<!-- TPR-774 -->
 				</attributes>
 			</itemtype>
 
