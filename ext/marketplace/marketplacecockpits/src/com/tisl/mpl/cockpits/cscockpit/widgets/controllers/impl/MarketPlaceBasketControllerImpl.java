@@ -31,6 +31,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
+import com.tisl.mpl.model.UnregisteredUserRestrictionModel;
 import com.tisl.mpl.mplcommerceservices.service.data.CartSoftReservationData;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.InventoryReservationService;
@@ -1019,7 +1020,8 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 				error = "Date";
 				break;
 			}
-			else if (restriction instanceof UserRestrictionModel)
+			//TPR-1076
+			else if (restriction instanceof UserRestrictionModel || restriction instanceof UnregisteredUserRestrictionModel)
 			{
 				LOG.error("user restriction is violated");
 				error = "User";
