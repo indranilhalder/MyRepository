@@ -45634,28 +45634,51 @@ body.no-scroll {
 /*--------------Added for luxury site starts-----------*/
 #flip-tabs{  
     width:300px;  
-    margin:20px auto; position:relative;  
+    position:relative;  
 }  
 #flip-navigation{  
     margin:0 0 10px; padding:0;   
     list-style:none;  
 }  
 #flip-navigation li{   
-    display:inline;   
+    display: inline-block;
+    width: 150px;
+    margin: 0;
+    vertical-align: top;
 }  
 #flip-navigation li a{  
-    text-decoration:none; padding:10px;   
-    margin-right:0px;  
-    background:#f9f9f9;  
-    color:#333; outline:none;  
-    font-family:Arial; font-size:12px; text-transform:uppercase;  
+    text-decoration: none;
+    padding: 10px;
+    margin-right: 0;
+    background: #000;
+    width: 130px;
+    color: #fff;
+    font-weight: bold;
+    font-family: montserrat;
+    letter-spacing: 1.5px;
+    outline: 0;
+    font-size: 12px;
+    text-transform: uppercase;
+    width: 100%;
+    display: block;
+    height: 35px;
+    line-height: 15px;
+    text-align: center;
 }  
 #flip-navigation li a:hover{  
     background:#999;   
     color:#f0f0f0;  
 }  
 #flip-navigation li.selected a{  
-    background:#999;  
-    color:#f0f0f0;  
+    background: #a9143c;
+    color: #fff;
+    font-weight: bold;
+    font-family: montserrat;
+    letter-spacing: 1.5px;
+    width: 100%;
+    display: block;
+    height: 35px;
+    line-height: 15px;
+    text-align: center;
 }  
 /*--------------Added for luxury site ends-----------*/
