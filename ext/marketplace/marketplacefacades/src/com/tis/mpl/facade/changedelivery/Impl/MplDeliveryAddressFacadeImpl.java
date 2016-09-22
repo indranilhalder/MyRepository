@@ -13,6 +13,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.session.SessionService;
+import de.hybris.platform.servicelayer.util.ServicesUtil;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -425,7 +426,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 						if (CollectionUtils.isNotEmpty(transactionEddDtoList))
 						{
 							Map<String, Object> scheduledDeliveryDate = null;
-							scheduledDeliveryDate = getDeliveryDate(transactionEddDtoList);
+							scheduledDeliveryDate = getDeliveryDate(transactionEddDtoList,orderModel);
 							scheduledDeliveryData.setEntries(scheduledDeliveryDate);
 							scheduledDeliveryData.setIsActive(Boolean.TRUE);
 							scheduledDeliveryData.setIsPincodeServiceable(Boolean.TRUE);
@@ -450,11 +451,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 								{
 									generateOTP(customerId, orderModel.getDeliveryAddress().getPhone1());
 								}
-								else
-								{
-									generateOTP(customerId, addressData.getPhone());
-								}
-								scheduledDeliveryData.setIsActive(Boolean.FALSE);
+							   scheduledDeliveryData.setIsActive(Boolean.FALSE);
 							}else{
 								  mplDeliveryAddressService.setStatusForTemporaryAddress(orderCode, false);
 								  scheduledDeliveryData.setIsActive(Boolean.TRUE);
@@ -468,10 +465,6 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 					if (StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getPhone1()))
 					{
 						generateOTP(customerId, orderModel.getDeliveryAddress().getPhone1());
-					}
-					else
-					{
-						generateOTP(customerId, addressData.getPhone());
 					}
 					scheduledDeliveryData.setIsActive(Boolean.FALSE);
 				}
@@ -843,19 +836,53 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 
 
 
+	/***
+	 * 
+	 *Setting  TransactionId to list of time Slots 
+	 */
 	@Override
-	public Map<String, Object> getDeliveryDate(List<TransactionEddDto> transactionEddDtoList)
+	public Map<String, Object> getDeliveryDate(List<TransactionEddDto> transactionEddDtoList, OrderModel orderModel)
 	{
-		 Map<String, Object> scheduledDeliveryDate = new HashMap<String, Object>();
+		Map<String, Object> scheduledDeliveryDate = new HashMap<String, Object>();
 		try
 		{
+			String timeSlotType = null;
 			Map<String, List<String>> scheduledDeliveryTime = null;
 			for (TransactionEddDto transactionEddDto : transactionEddDtoList)
 			{
-				scheduledDeliveryTime = getDateAndTimeMap(transactionEddDto.getEDD());
+				 String deliveryMode = null;
+				//get DeliveryMode for transactionId 
+				for (OrderModel subOrder : orderModel.getChildOrders())
+				{
+					for (AbstractOrderEntryModel abstractOrderEntryModel : subOrder.getEntries())
+					{
+						if (transactionEddDto.getTransactionID().equalsIgnoreCase(abstractOrderEntryModel.getTransactionID()))
+						{
+							deliveryMode = abstractOrderEntryModel.getMplDeliveryMode().getDeliveryMode().getCode();
+							break;
+						}
+					}
+					if (StringUtils.isNotEmpty(deliveryMode))
+					{
+						break;
+					}
+				}
+				
+				if (deliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
+				{
+					timeSlotType = MarketplacecommerceservicesConstants.INTERFACE_TYPE_SD;
+				}
+				else
+				{
+					timeSlotType = MarketplacecommerceservicesConstants.ED;
+				}
+				
+				ServicesUtil.validateParameterNotNull(timeSlotType, "timeSlotType must not be null");
+				LOG.info("send timeSlotType and date  get List of Date and Time Slot for transactionId::::::::");
+				scheduledDeliveryTime = getDateAndTimeMap(transactionEddDto.getEDD(), timeSlotType);	
 				if (scheduledDeliveryTime != null && StringUtils.isNotEmpty(transactionEddDto.getEDD()))
 				{
-					scheduledDeliveryDate.put(transactionEddDto.getEDD(), scheduledDeliveryTime);
+					scheduledDeliveryDate.put(transactionEddDto.getTransactionID(), scheduledDeliveryTime);
 				}
 			}
 		}
@@ -911,26 +938,33 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 * @return
 	 * @throws java.text.ParseException
 	 */
-	private Map<String, List<String>> getDateAndTimeMap(String edd) throws java.text.ParseException
+	private Map<String, List<String>> getDateAndTimeMap(String timeSlotType, String edd) throws java.text.ParseException
 	{
 
-		 DateUtilHelper dateUtilHelper = new DateUtilHelper();
-		 String estDeliveryDateAndTime = edd;
-		 SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-		 String deteWithOutTIme = dateUtilHelper.getDateFromat(estDeliveryDateAndTime, format);
-		 String timeWithOutDate = dateUtilHelper.getTimeFromat(estDeliveryDateAndTime);
-		List<String> calculatedDateList = dateUtilHelper.getDeteList(deteWithOutTIme, format,3);
+		DateUtilHelper dateUtilHelper = new DateUtilHelper();
+		String estDeliveryDateAndTime = edd;
+		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+		String deteWithOutTIme = dateUtilHelper.getDateFromat(estDeliveryDateAndTime, format);
+		String timeWithOutDate = dateUtilHelper.getTimeFromat(estDeliveryDateAndTime);
+		List<String> calculatedDateList = null;
+		if (timeSlotType.equalsIgnoreCase(MarketplacecommerceservicesConstants.INTERFACE_TYPE_SD))
+		{
+			calculatedDateList = dateUtilHelper.getDeteList(deteWithOutTIme, format, 3);
+		}
+		else
+		{
+			calculatedDateList = dateUtilHelper.getDeteList(deteWithOutTIme, format, 2);
+		}
 		List<MplTimeSlotsModel> modelList = null;
-		modelList = mplConfigFacade.getDeliveryTimeSlotByKey(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD);
-		LOG.debug("********* Delivery Mode :" + MarketplacecommerceservicesConstants.DELIVERY_MODE_SD);
-
+		modelList = mplConfigFacade.getDeliveryTimeSlotByKey(timeSlotType);
+		LOG.debug("********* Delivery Mode :" + timeSlotType);
 		if (null != modelList)
 		{
 			Date startTime = null;
 			Date endTIme = null;
 			Date searchTime = null;
-			 SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-			 List<MplTimeSlotsModel> timeList = new ArrayList<MplTimeSlotsModel>();
+			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+			List<MplTimeSlotsModel> timeList = new ArrayList<MplTimeSlotsModel>();
 			for (MplTimeSlotsModel mplTimeSlotsModel : modelList)
 			{
 				for (String selectedDate : calculatedDateList)
@@ -943,9 +977,10 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 							endTIme = sdf.parse(mplTimeSlotsModel.getFromTime());
 							searchTime = sdf.parse(timeWithOutDate);
 						}
-						catch (final Exception parseException)
+						catch (java.text.ParseException e)
 						{
-							LOG.info("parseException raing converrting time" + parseException.getMessage());
+							// TODO Auto-generated catch block
+							e.printStackTrace();
 						}
 						if (startTime.compareTo(searchTime) > 0 && endTIme.compareTo(searchTime) > 0
 								&& startTime.compareTo(searchTime) != 0 && endTIme.compareTo(searchTime) != 0)
@@ -961,11 +996,11 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 			if (timeList.size() == 0)
 			{
 				String nextDate = dateUtilHelper.getNextDete(deteWithOutTIme, format);
-				calculatedDateList = dateUtilHelper.getDeteList(nextDate, format,3);
+				calculatedDateList = dateUtilHelper.getDeteList(nextDate, format, 3);
 				timeList.addAll(modelList);
 			}
 			List<String> finalTimeSlotList = null;
-			 Map<String, List<String>> dateTimeslotMapList = new LinkedHashMap<String, List<String>>();
+			Map<String, List<String>> dateTimeslotMapList = new LinkedHashMap<String, List<String>>();
 			for (String selectedDate : calculatedDateList)
 			{
 
@@ -981,7 +1016,6 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 			}
 			return dateTimeslotMapList;
 		}
-
 		return null;
 	}
 }
