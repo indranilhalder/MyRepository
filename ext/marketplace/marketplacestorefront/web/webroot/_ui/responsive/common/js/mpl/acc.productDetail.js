@@ -2876,3 +2876,13 @@ function loadDefaultWishListName_SizeGuide() {
 		}
 		$("#offerPopup").modal('show');
 	} 
+	
+	$(".productImageGallery img").click(function(e) {
+		/*TPR-643 starts*/
+			utag.link({
+				link_obj: this, 
+				link_text: 'pdp_image_click' , 
+				event_type : 'pdp_image_click' 
+			});
+			/*TPR-643 ends*/
+	});
