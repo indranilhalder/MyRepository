@@ -42,7 +42,7 @@ ${stringMessage}
 						varStatus="status">
 						<c:forEach items="${sellerOrder.entries}" var="entry"
 							varStatus="entryStatus">
-							<c:if test="${entry.mplDeliveryMode.code eq 'home-delivery'}">
+							<c:if test="${entry.mplDeliveryMode.code ne 'click-and-collect'}">
 								<div class="row scheduleDates">
 									<div class="col-md-6 col-sm-6 leftBlockSchedule">
 										<spring:theme code="text.orderHistory.transactionID" />
