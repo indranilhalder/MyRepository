@@ -450,6 +450,7 @@ public class UsersController extends BaseCommerceController
 		final boolean isNewusers = true;
 		try
 		{
+			/* TPR-1140 Case-sensitive nature resulting in duplicate customer e-mails IDs */
 			final String emailIdLwCase = emailId.toLowerCase();
 			userResult = mobileUserService.registerNewMplUser(emailIdLwCase, password);
 			final CustomerModel customerModel = mplPaymentWebFacade.getCustomer(emailIdLwCase);
@@ -579,6 +580,7 @@ public class UsersController extends BaseCommerceController
 		MplUserResultWsDto result = new MplUserResultWsDto();
 		try
 		{
+			/* TPR-1140 Case-sensitive nature resulting in duplicate customer e-mails IDs */
 			final String emailIdLwCase = emailId.toLowerCase();
 			LOG.debug("****************** Social Media User Registration mobile web service ***********" + emailId);
 			if (!(StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK)
@@ -979,6 +981,7 @@ public class UsersController extends BaseCommerceController
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9204);
 			}
+
 			final AddressDataList addressDataList = new AddressDataList();
 			addressDataList.setAddresses(addressList);
 			successFlag = true;
