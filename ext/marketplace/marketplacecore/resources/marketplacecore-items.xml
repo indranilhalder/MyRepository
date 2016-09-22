@@ -8586,17 +8586,17 @@
 					<attribute autocreate="true" qualifier="customerId" type="java.lang.String"
 						generate="true">
 						<persistence type="property" />
-						<modifiers unique="true" optional="true" />
+						<modifiers unique="false" optional="true" />
 					</attribute>
 					<attribute autocreate="true" qualifier="Bin" type="java.lang.String"
 						generate="true">
 						<persistence type="property" />
-						<modifiers unique="false" optional="true" />
+						<modifiers unique="false" optional="false" />
 					</attribute>					
 					<attribute autocreate="true" qualifier="paymentMode"
 						type="java.lang.String" generate="true">
 						<persistence type="property" />
-						<modifiers unique="true" optional="true" />
+						<modifiers unique="false" optional="true" />
 					</attribute>
 					<attribute type="TypeOfError" qualifier="typeOfError">
 						<modifiers read="true" write="true" optional="false" />
