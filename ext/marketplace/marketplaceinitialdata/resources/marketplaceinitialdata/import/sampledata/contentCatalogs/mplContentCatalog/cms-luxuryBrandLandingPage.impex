@@ -76,3 +76,38 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
 ;;luxurybrandlandingpage;Luxury BLP;luxuryBLPTemplate;luxurybrandlandingpage
 
+######################################## Sample Data #############################################
+
+################################### Section 2 Him Her Section ############################################
+## For banner section
+INSERT_UPDATE BannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;$picture
+;;luxBLPForHimBannerComponent;Luxury For Him Banner;luxBLPForHimBannerComponent;#;
+;;luxBLPForHerBannerComponent;Luxury For Her Banner;luxBLPForHerBannerComponent;#;
+
+INSERT_UPDATE RotatingImagesComponent;$contentCV[unique=true];uid[unique=true];name;banners(&componentRef);&componentRef;
+;;luxuryBLPForHimHerBannerComponent;Luxury BLP Him Her Banner Component;luxBLPForHimBannerComponent,luxBLPForHerBannerComponent;luxuryBLPForHimHerBannerComponent;
+
+
+##### For category Section
+
+
+INSERT_UPDATE MplImageCategoryComponent;$contentCV[unique=true];uid[unique=true];name;category(code,$productCV);&componentRef;isImageFromPCM[default='true']
+;;categoryComponent1;First Thumbnail Category;MSH1111100;categoryComponent1
+;;categoryComponent2;Second Thumbnail Category;MSH1011100;categoryComponent2
+;;categoryComponent3;Third Thumbnail Category;MSH1012100;categoryComponent3
+;;categoryComponent4;Fourth Thumbnail Category;MSH1210100;categoryComponent4
+;;categoryComponent5;Fifth Thumbnail Category;MSH1010100;categoryComponent5
+
+INSERT_UPDATE MplAdvancedCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];name;categories(&componentRef);&componentRef;imageSize(code)
+;;categoriesAdvancedComponent;Categories Carousel Component;categoryComponent1,categoryComponent2,categoryComponent3,categoryComponent4,categoryComponent5;categoriesAdvancedComponent;thumbnail
+
+
+### Content Slot
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+;;Section2-luxurybrandlandingpage;true;Him Her Slot;luxuryBLPForHimHerBannerComponent,categoriesAdvancedComponent
+
+## Content Slot for page
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxurybrandlandingpage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section2-luxurybrandlandingpage;Section2;;Section2-luxurybrandlandingpage;;;
+
+################################### Section 2 End ############################################
