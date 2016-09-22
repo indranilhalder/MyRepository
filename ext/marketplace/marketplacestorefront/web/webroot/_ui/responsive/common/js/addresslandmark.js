@@ -212,7 +212,7 @@ function checkPopupDataOrderHistory() {
 			  			$(".pincodeNoError").text("Enter only Numbers");
 			  			validate = false;
 				  	}
-				  	if(mobile.length < 9 && mobile.length > 11){
+				  	if(mobile.length < 9 || mobile.length > 11){
 				    	  $(".mobileNumberError").show();
 				          $(".mobileNumberError").text("Enter correct mobile number");
 				          validate = false;
