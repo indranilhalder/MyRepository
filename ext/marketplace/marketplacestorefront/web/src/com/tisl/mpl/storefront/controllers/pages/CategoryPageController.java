@@ -509,7 +509,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 		model.addAttribute("page_name", "Product Grid:" + breadcrumbName);
 		//TPR-430
-		//Additional Checking Added for TISUATMS-300
+		//Additional Checking Added for breadcrumbs for TISUATMS-300
 		if (CollectionUtils.isNotEmpty(breadcrumbs) && breadcrumbs.size() > 0 && null != breadcrumbs.get(1).getName())
 		{
 			model.addAttribute("product_category", breadcrumbs.get(0).getName().replaceAll(" ", "_").toLowerCase());
