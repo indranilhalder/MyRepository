@@ -1922,7 +1922,7 @@ function viewByFilterResult(top){
 }
 /*Filter scroll changes start*/
 $(window).on("scroll",function(){
-	if($(window).width() > 650 && $('.listing.wrapper .right-block').height() > $('.listing.wrapper .left-block').height()) {
+	if($(window).width() > 790 && $('.listing.wrapper .right-block').height() > $('.listing.wrapper .left-block').height()) {
 		
 		if ($('.listing.wrapper .right-block').offset().top >= $('.listing.wrapper .left-block').offset().top - parseInt($('.listing.wrapper .left-block').css("margin-top"))){
 			$('.listing.wrapper .left-block').removeClass("fix bottom");

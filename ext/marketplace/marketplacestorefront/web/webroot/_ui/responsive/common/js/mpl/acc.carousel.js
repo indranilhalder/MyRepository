@@ -368,45 +368,46 @@ ACC.carousel = {
 	},
 	
 	advancedCategoryCarousel: function(){
-		setTimeout(function(){
-			$("#mplAdvancedCategoryCarousel").owlCarousel({
-				items:4,
-        		loop: true,
-        		nav:true,
-        		dots:false,
-        		navText:[],
-        		responsive : {
-        			// breakpoint from 0 up
-        			0 : {
-        				items:1,
-        				stagePadding: 50,
-        			},
-        			// breakpoint from 480 up
-        			480 : {
-        				items:2,
-        				stagePadding: 50,
-        			},
-        			// breakpoint from 768 up
-        			768 : {
-        				items:3,
-        			},
-        			// breakpoint from 768 up
-        			1280 : {
-        				items:4,
-        			}			
-        		}	
-
-			/*navigation:true,
-				navigationText : [],
-				pagination:false,
-				itemsDesktop : [5000,4], 
-				itemsDesktopSmall : [1400,4], 
-				itemsTablet: [650,2], 
-				itemsMobile : [480,2], 
-				rewindNav: false,
-				lazyLoad:true*/
-			});
-		},4000);
+		setTimeout(function() {
+			console.log("inside timeout");
+		$("#mplAdvancedCategoryCarousel").owlCarousel({
+					items:4,
+            		loop: true,
+            		nav:true,
+            		dots:false,
+            		navText:[],
+            		responsive : {
+            			// breakpoint from 0 up
+            			0 : {
+            				items:1,
+            				stagePadding: 50,
+            			},
+            			// breakpoint from 480 up
+            			480 : {
+            				items:2,
+            				stagePadding: 50,
+            			},
+            			// breakpoint from 768 up
+            			768 : {
+            				items:3,
+            			},
+            			// breakpoint from 768 up
+            			1280 : {
+            				items:4,
+            			}			
+            		}	
+		/*navigation:true,
+			navigationText : [],
+			pagination:false,
+			itemsDesktop : [5000,4], 
+			itemsDesktopSmall : [1400,4], 
+			itemsTablet: [650,2], 
+			itemsMobile : [480,2], 
+			rewindNav: false,
+			lazyLoad:true*/
+		});
+		},7000);
+		console.log("outside timeout");
 	},
 	
 	myReviewCarousel: function(){
@@ -454,7 +455,8 @@ ACC.carousel = {
 	pdpProductCarousel: function(){
 		$("#pdpProductCarousel").owlCarousel({
 			items:1,
-    		loop: ($("#pdpProductCarousel img").length == 1)?false:true,
+
+    		loop: $("#pdpProductCarousel img").length == 1 ? false : true,
     		navText:[],
     		responsive : {
     			// breakpoint from 0 up
