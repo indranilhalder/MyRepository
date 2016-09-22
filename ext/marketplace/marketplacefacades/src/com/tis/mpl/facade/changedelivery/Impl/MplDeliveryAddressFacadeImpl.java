@@ -812,7 +812,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	List<TransactionSDDto> setTransactionSDDto(OrderModel orderModel)
 	{
 		 List<TransactionSDDto> transactionSDDtoList = new ArrayList<TransactionSDDto>();
-		 TransactionSDDto transactionSDDto = new TransactionSDDto();
+		 TransactionSDDto transactionSDDto;
 		for (OrderModel subOrder : orderModel.getChildOrders())
 		{
 			for (AbstractOrderEntryModel abstractOrderEntry : subOrder.getEntries())
@@ -824,6 +824,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 					{
 						if (StringUtils.isNotEmpty(abstractOrderEntry.getTransactionID()))
 						{
+							transactionSDDto = new TransactionSDDto();
 							transactionSDDto.setTransactionID(abstractOrderEntry.getTransactionID());
 							transactionSDDtoList.add(transactionSDDto);
 						}
