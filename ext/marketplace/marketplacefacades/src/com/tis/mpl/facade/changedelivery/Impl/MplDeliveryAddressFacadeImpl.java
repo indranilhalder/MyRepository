@@ -880,7 +880,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 				
 				ServicesUtil.validateParameterNotNull(timeSlotType, "timeSlotType must not be null");
 				LOG.info("send timeSlotType and date  get List of Date and Time Slot for transactionId::::::::");
-				scheduledDeliveryTime = getDateAndTimeMap(transactionEddDto.getEDD(), timeSlotType);	
+				scheduledDeliveryTime = getDateAndTimeMap(timeSlotType,transactionEddDto.getEDD());	
 				if (scheduledDeliveryTime != null && StringUtils.isNotEmpty(transactionEddDto.getEDD()))
 				{
 					scheduledDeliveryDate.put(transactionEddDto.getTransactionID(), scheduledDeliveryTime);
