@@ -58,7 +58,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;SearchBox;;;searchbox
 ;MiniCart;;CMSLinkComponent,TrackOrderHeaderComponent,MyWishListInHeaderComponent,SignInFlyOutComponent;
 ;NavigationBar;;;navigation
-;BottomHeaderSlot;;;logo
+;BottomHeaderSlot;;SimpleBannerComponent;
 ;Section1;;RotatingImagesComponent;
 ;Section2;;RotatingImagesComponent,MplAdvancedCategoryCarouselComponent;
 ;Section3;;CMSParagraphComponent,RotatingImagesComponent;
@@ -78,6 +78,23 @@ INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTe
 ;;luxurybrandlandingpage;Luxury BLP;luxuryBLPTemplate;luxurybrandlandingpage
 
 ######################################## Sample Data #############################################
+
+################################### BottomHeader BLP Logo Section ############################################
+
+# BLP Logo Component
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];$picture;&componentRef
+;;luxuryBLPLogoComponent;/images/microsite/westside-logo.png;luxuryBLPLogoComponent
+
+### Content Slot
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+;;BottomHeaderSlot-luxurybrandlandingpage;true;Luxury BLP Logo Slot;luxuryBLPLogoComponent
+
+## Content Slot for page
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxurybrandlandingpage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;BottomHeaderSlot-luxurybrandlandingpage;BottomHeaderSlot;;BottomHeaderSlot-luxurybrandlandingpage;;;
+
+################################### Section 6 End ############################################
+
 
 ############################### SECTION 1 START ####################################
 #Added the luxury BLP banner >> creating components
