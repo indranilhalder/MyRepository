@@ -48893,7 +48893,8 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
  /* change here for modified checkout page ends */
  /* checkout payment start */
 
-
+.cart.wrapper .left-block .payments.tab-view{
+      margin-top: 0px; }
 /*Checkout-steps*/
 .choose-payment {    padding: 128px 0 0;}
 .checkout-payment h2 { font-size: 24px; font-weight: bold; color: #202020; text-transform:uppercase; }
