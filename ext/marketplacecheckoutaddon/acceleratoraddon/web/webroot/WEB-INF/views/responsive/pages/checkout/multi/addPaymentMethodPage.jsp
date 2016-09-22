@@ -11,6 +11,13 @@
 <%@ taglib prefix="address" tagdir="/WEB-INF/tags/responsive/address" %>
 <%@ taglib prefix="cart" tagdir="/WEB-INF/tags/responsive/cart" %>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format" %>
+<style>
+ .checkout-paymentmethod {
+	display: none;
+} 
+
+</style>
+
 <script>
 	//Refresh the page if compare page is already visted
 	if (sessionStorage.getItem("confirmationPageVisited") != null) {
@@ -80,7 +87,7 @@
         					{
         						displayEMIForm();
         						$("#viewPaymentEMI").parent("li").addClass("active");
-        						$(".checkout-paymentmethod").css("display","block");
+        					$(".checkout-paymentmethod").css("display","block");
         					}
         					else if($("#Netbanking").val()=="true")
         					{
@@ -1594,12 +1601,7 @@
 	
 	
 </template:page>
-<style>
-/* .checkout-paymentmethod {
-	display: none;
-} */
 
-</style>
 	  <script type="text/javascript">
 		jQuery(document).ready(function($){
 
