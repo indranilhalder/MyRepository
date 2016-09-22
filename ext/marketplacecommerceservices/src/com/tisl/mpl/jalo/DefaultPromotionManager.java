@@ -3287,7 +3287,6 @@ public class DefaultPromotionManager extends PromotionsManager
 			{
 				for (final AbstractPromotionRestriction restriction : restrictionList)
 				{
-					flag = false;
 					if (restriction instanceof MplPincodeSpecificRestriction)
 					{
 						isPinCodeRestrictionPresent = true;

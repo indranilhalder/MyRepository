@@ -11,6 +11,7 @@ import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.jalo.type.ComposedType;
 import de.hybris.platform.order.CartService;
+import de.hybris.platform.promotions.jalo.AbstractPromotionRestriction;
 import de.hybris.platform.promotions.jalo.PromotionResult;
 import de.hybris.platform.promotions.jalo.PromotionsManager;
 import de.hybris.platform.promotions.result.PromotionEvaluationContext;
@@ -69,8 +70,11 @@ public class BuyAboveXGetPromotionOnShippingCharges extends GeneratedBuyAboveXGe
 			final AbstractOrder cart = arg1.getOrder();
 			checkChannelFlag = getDefaultPromotionsManager().checkChannelData(listOfChannel, cart);
 			final AbstractOrder order = arg1.getOrder();
+			boolean flagForPincodeRestriction = false;
+			final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());
 			//final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());//Adding restrictions to List
-			if (checkRestrictions(arg0, arg1) && checkChannelFlag)
+			flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList);
+			if (checkRestrictions(arg0, arg1) && checkChannelFlag && flagForPincodeRestriction)
 			{
 				final Double threshold = getPriceForOrder(arg0, getThresholdTotals(arg0), arg1.getOrder(),
 						MarketplacecommerceservicesConstants.THRESHOLD_TOTALS);

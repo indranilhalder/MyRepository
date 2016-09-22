@@ -77,8 +77,7 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 
 	/**
 	 * @Description : Buy One Get One Free
-	 * @param :
-	 *           SessionContext ctx ,PromotionEvaluationContext promoContext
+	 * @param : SessionContext ctx ,PromotionEvaluationContext promoContext
 	 * @return : List<PromotionResult> promotionResults
 	 */
 	@Override
@@ -110,10 +109,11 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 			final AbstractOrder cart = promoContext.getOrder();
 
 			checkChannelFlag = getDefaultPromotionsManager().checkChannelData(listOfChannel, cart);
-
+			final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList);
 			//changes end for omni cart fix @atmaram
 
-			if ((restrictResult.isAllowedToContinue()) && (!(restrictResult.getAllowedProducts().isEmpty())) && checkChannelFlag)
+			if ((restrictResult.isAllowedToContinue()) && (!(restrictResult.getAllowedProducts().isEmpty())) && checkChannelFlag
+					&& flagForPincodeRestriction)
 			{
 				// Get the valid Products for Promotions
 				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager().getValidProdListForBOGO(
@@ -135,14 +135,14 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 		catch (final EtailNonBusinessExceptions e) //Added for TISPT-195
 		{
 			LOG.error(e.getMessage());
-			ExceptionUtil
-					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
 		}
 		catch (final Exception e)
 		{
 			LOG.error(e.getMessage());
-			ExceptionUtil
-					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
 		}
 
 		return promotionResults;
@@ -261,8 +261,7 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 
 	/**
 	 * @Description : Assign Promotion Fired and Potential-Promotion Message
-	 * @param :
-	 *           SessionContext ctx ,PromotionResult promotionResult ,Locale locale
+	 * @param : SessionContext ctx ,PromotionResult promotionResult ,Locale locale
 	 * @return : String
 	 */
 	@Override
@@ -311,8 +310,8 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 					args[0] = Integer.valueOf(finalNumberOfProducts);
 					args[1] = qualifyingCount;
 					args[2] = freeCount;
-					args[3] = minimumCategoryValue < 0.00D ? MarketplacecommerceservicesConstants.EMPTYSPACE
-							: Double.valueOf(minimumCategoryValue);
+					args[3] = minimumCategoryValue < 0.00D ? MarketplacecommerceservicesConstants.EMPTYSPACE : Double
+							.valueOf(minimumCategoryValue);
 					args[4] = populateMessageData(deliveryModes, paymentModes);
 					return formatMessage(this.getMessageCouldHaveFired(ctx), args, locale);
 				}
@@ -542,8 +541,8 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 
 						}
 
-						final List<PromotionOrderEntryConsumed> consumedItemsFromTail = consumeFromTail(paramSessionContext, comparator,
-								validNonFreeCount, orderView.getAllEntries(paramSessionContext), qCMapForCatLevelBOGO,
+						final List<PromotionOrderEntryConsumed> consumedItemsFromTail = consumeFromTail(paramSessionContext,
+								comparator, validNonFreeCount, orderView.getAllEntries(paramSessionContext), qCMapForCatLevelBOGO,
 								tcMapForValidEntries);//validNonFreeCount was totalFactorCount which was wrong
 
 						final List actions = new ArrayList();
@@ -558,15 +557,15 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 						}
 						else
 						{
-							productAssociatedItemsMap = getDefaultPromotionsManager()
-									.getAssociatedItemsForAorBOGOorFreebiePromotions(validProductUssidMap, null);
+							productAssociatedItemsMap = getDefaultPromotionsManager().getAssociatedItemsForAorBOGOorFreebiePromotions(
+									validProductUssidMap, null);
 						}
 
 						paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
 						paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS,
 								productAssociatedItemsMap);
-						paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.PROMOCODE,
-								String.valueOf(this.getCode()));
+						paramSessionContext
+								.setAttribute(MarketplacecommerceservicesConstants.PROMOCODE, String.valueOf(this.getCode()));
 
 						//For setting qualifying count
 						int qalifyingCount = 0;

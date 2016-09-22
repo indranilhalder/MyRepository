@@ -1227,7 +1227,9 @@ public class CartPageController extends AbstractPageController
 							{
 								getMplCartFacade().getCalculatedCart();
 								cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
-								jsonObject.put("cartData", cartData.getEntries());
+								jsonObject.put("cartData", cartData);
+								jsonObject.put("cartEntries", cartData.getEntries());
+
 								//								getMplCartFacade().getCalculatedCart().getEntries()
 								//								final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 								//								cartData.get

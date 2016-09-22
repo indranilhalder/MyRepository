@@ -3262,8 +3262,14 @@ function checkPincodeServiceability(buttonType)
  		type: "GET",
  		cache: false,
  		success : function(responseData) {
+ 			var orderData = responseData.cartData.entries;
+ 			$(orderData).each(function(){
+ 				console.log($(this).selectedUssid);
+ 			});
+ 			console.log(responseData.cartData.entries);
  			var response = responseData['pincodeData'];
- 			var cartData=responseData['cartData'];
+ 			var cartValue=responseData['cartData'];
+ 			var cartData=responseData['cartEntries'];
  			console.log("cartdata"+cartData);
  			for(var cart in cartData){
  				var entryNumber=parseInt(cartData[cart]['entryNumber']);
@@ -3285,16 +3291,6 @@ function checkPincodeServiceability(buttonType)
  	 					$(this).parent("ul").children("del").css({"text-decoration":"inherit","color":"#000"});
  	 				}
  				});*/
- 				
- 				
- 	 			
- 					
- 					
- 				
- 				
- 			
- 				
- 				
  				if(cartData[cart]['productLevelDisc']!=null&&cartData[cart]['prodLevelPercentage']!=null&&cartData[cart]['cartLevelDisc']!=null&&cartData[cart]['cartLevelPercentage']){
  					var totalPrice=$("#basePrice_"+entryNumber).val();
  					$("#totalPrice_"+entry.entryNumber).hide();
@@ -3320,7 +3316,15 @@ function checkPincodeServiceability(buttonType)
  				}
  			
  			}
- 			
+ 			$("#subtotal_Value").show();
+ 			$("#subtotal").hide();
+ 			$("#subtotalValue").html(cartValue['subTotal'].formattedValue);
+ 			$("#discount").hide();
+ 			$("#discount_Value").show();
+ 			$("#discountValue").html(cartValue['totalDiscounts'].formattedValue);
+ 			$("#total").hide();
+ 			$("#total_Value").show();
+ 			$("#totalValue").html(cartValue['totalPrice'].formattedValue);
  			
  			$("li.price").each(function(){
 					var len = $(this).find(".ItemAmtofferDisplayPrFm").length;
@@ -4442,6 +4446,8 @@ $(".remove-coupon-button").click(function(){
 
 
 $(document).ready(function(){
+	
+	
 	$("#off-bag").show();
 	if($('#couponFieldId').prop('readonly') == false)
 	{

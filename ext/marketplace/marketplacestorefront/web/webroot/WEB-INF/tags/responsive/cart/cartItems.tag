@@ -217,10 +217,10 @@ tr.d0 td {
 												<c:choose>
     											<c:when test="${not empty entry.cartLevelDisc || not empty entry.productLevelDisc}">
     											        <c:set var="totalPrice"  value="${entry.totalPrice.formattedValue}"/>
-        												<%-- <span id="totalPrice_${entry.entryNumber}"> --%><del>
+        												<span id="totalPrice_${entry.entryNumber}"><del>
 															<format:price priceData="${entry.totalPrice}" displayFreeForZero="false" />
 		 												</del>
-		 												<!-- </span> -->
+		 												</span>
     											</c:when>    
     											<c:otherwise>
     											         <c:set var="totalPrice"  value="${entry.totalPrice.formattedValue}"/>
@@ -242,7 +242,7 @@ tr.d0 td {
 																	<c:when	test="${baseprice.key == entry.entryNumber}">
 																		<c:if test="${baseprice.value.formattedValue != entry.totalPrice.formattedValue||not empty entry.cartLevelDisc}">
 																		 	<c:set var="totalPrice"  value="${baseprice.value.formattedValue}"/>
-																		 	<li <%-- id="totalPrice_${entry.entryNumber} --%>"><del><format:price priceData="${baseprice.value}" displayFreeForZero="true" /></del></li>
+																		 	<li id="totalPrice_${entry.entryNumber}"><del><format:price priceData="${baseprice.value}" displayFreeForZero="true" /></del></li>
 																		</c:if>
 																	</c:when>
 																</c:choose>
@@ -298,7 +298,7 @@ tr.d0 td {
 								</c:if>
 								</c:otherwise>
 							</c:choose></c:if>
-							<%-- <input type="text" value="${totalPrice}" id="basePrice_${entry.entryNumber}"/> --%>
+							
 							<span id="totalPriceDisplay_${entry.entryNumber}"></span>
                             <span id="ItemAmtofferDisplay_${entry.entryNumber}" style="display: none" class="ItemAmtofferDisplayPrFm"><span class="priceFormat priceFormatOnUpdate"><span id="off-bag-ItemLevelDisc_${entry.entryNumber}"></span></span><br/><span class="priceFormat"><span id="off-bag-ItemLevelDiscAmt_${entry.entryNumber}"></span></span></span>
 							<span id="CartofferDisplay_${entry.entryNumber}" style="display: none" class="ItemAmtofferDisplayPrFm"><span class="priceFormat priceFormatOnUpdate"><span id="off-bag-cartLevelDisc_${entry.entryNumber}"></span></span><br/><span class="priceFormat"><span id="off-cartLevelDiscAmt_${entry.entryNumber}"></span></span></span>
@@ -1069,11 +1069,13 @@ tr.d0 td {
     <%--  <h2><spring:theme code="mpl.orderDetails" /></h2> --%>
 	<ul class="totals">
             <li id="subtotal"><spring:theme code="basket.page.totals.subtotal"/> <span class="amt"><ycommerce:testId code="Order_Totals_Subtotal"><format:price priceData="${cartData.subTotal}"/></ycommerce:testId></span></li>
-            
-            
+            <li id="subtotal_Value" style="display:none"><spring:theme code="basket.page.totals.subtotal"/><span class="amt"><span id="subtotalValue"></span></span></li>
+            <li id="discount_Value" style="display:none"><spring:theme code="basket.page.totals.savings"/> <span class="amt"><span id="discountValue"></span></span></li>
+            <li id="total_Value" style="display:none"><spring:theme code="basket.page.totals.total"/><span class="amt"><span class="amt"><span id="totalValue"></span></span></li>
          <c:if test="${cartData.totalDiscounts.value > 0}">
-        <li id="discount"><spring:theme code="basket.page.totals.savings"/> <span class="amt">
-        
+         <li id="discount"><spring:theme code="basket.page.totals.savings"/> <span class="amt">
+         
+         
        
         
         
