@@ -193,13 +193,13 @@ function displayNetbankingForm(){
 			$('input:password').val("");
 			$(".name_on_card").val("");	
 			applyPromotion(null);
-			$("#paymentDetails, #netbanking, #make_nb_payment").css("display","block");
+			$("#paymentDetails, #make_nb_payment").css("display","block");
 			$(".make_payment_top_nb").css("display","block");
 			$("#submitButtons, #paymentFormButton, #submitPaymentFormButton, #submitPaymentFormCODButton").css("display","none");
 		},
 		error : function(resp) {
 			$(".nbButton").css("display","none");
-			$("#netbanking,.nbAjaxError").css("display","block");
+			$(".nbAjaxError").css("display","block");
 			$("#no-click").remove();
 			$(".make_payment").removeAttr('disabled');
 		}
@@ -345,7 +345,7 @@ function displayCODForm()
 			$("#otpNUM").html(response);
 			var codEligible=$("#codEligible").val();
 
-			$("#COD, #paymentDetails, #otpNUM, #sendOTPNumber, #sendOTPButton").css("display","block");
+			$("#paymentDetails, #otpNUM, #sendOTPNumber, #sendOTPButton").css("display","block");
 			$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, #paymentFormButton, #otpSentMessage").css("display","none");/*modified for pprd testing -- changing back*/
 			if(codEligible=="BLACKLISTED")
 			{
@@ -420,7 +420,7 @@ function displayCODForm()
 						},
 						error : function(resp) {
 							//alert("COD is not available at this time. Please select another payment mode and proceed");
-							$("#COD, #paymentDetails").css("display","block");
+							$("#paymentDetails").css("display","block");
 							$("#otpSentMessage").css("display","none");
 							$("#codErrorMessage").css("display","block");
 							$("#no-click").remove();
@@ -435,7 +435,7 @@ function displayCODForm()
 		},
 		error : function(resp) {
 			//alert("COD is not available at this time. Please select another payment mode and proceed");	
-			$("#COD, #paymentDetails").css("display","block");
+			$("#paymentDetails").css("display","block");
 			$("#otpSentMessage").css("display","none");
 			$("#codErrorMessage").css("display","block");
 			$("#no-click").remove();
