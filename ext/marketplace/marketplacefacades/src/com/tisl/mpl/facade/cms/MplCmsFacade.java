@@ -14,10 +14,11 @@ import com.tisl.mpl.facades.cms.data.CollectionPageData;
 import com.tisl.mpl.facades.cms.data.HeroProductData;
 import com.tisl.mpl.facades.cms.data.MplPageData;
 import com.tisl.mpl.facades.cms.data.PageData;
+import com.tisl.mpl.wsdto.LuxHomePageCompWsDTO;
 
 
 /**
- * @author 584443
+ * @author TCS
  *
  */
 public interface MplCmsFacade
@@ -33,6 +34,7 @@ public interface MplCmsFacade
 
 	MplPageData getHomePageForMobile();
 
+	LuxHomePageCompWsDTO getHomePageForLuxury() throws CMSItemNotFoundException;
 
 	PageData populateCategoryLandingPageForMobile(ContentPageModel contentPage, String categoryCode);
 
