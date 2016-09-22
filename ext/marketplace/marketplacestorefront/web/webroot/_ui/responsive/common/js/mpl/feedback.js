@@ -123,7 +123,14 @@
 	
 	
 $(document).ready(function(){
+	/*alert("fhgfhfgh");
+	$(".shopstyle-indicator li").on("click", function(){
 
+
+	    $("#rotatingImageTimeout").trigger("to.owl.carousel", [toIndex, $(this).index , true]);
+
+
+	});*/
 
 	//TISEEII-640 issue fix -- Start
 	$(".facet.js-facet .js-facet-name").each(function(){
@@ -2010,3 +2017,23 @@ $(document).ajaxComplete(function(){
 		$("body").find(".content-block-slider.electronic-brand-slider").removeClass("timeout-slider");
 	}
 });
+
+/*TPR-179(Shop The Style start)*/
+$(document).ready(function(){
+	  $(".test").on('click', function(event) {
+		  if (this.hash !== "") {
+	       event.preventDefault();
+	       var hash = this.hash;
+	       $('html, body').animate({
+	        scrollTop: $(hash).offset().top -100
+	      }, 800, function(){
+	   
+	        window.location.hash = hash;
+	      });
+	    } 
+	  });
+	});
+
+
+
+/*END TPR-179(Shop The Style start)*/

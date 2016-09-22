@@ -1,8 +1,9 @@
 ACC.carousel = {
 
 	_autoload: [
-	     "myFun",
 	     "shopTheStyleCarousel",
+	     "shopTheStyleHomeCarousel",
+	     "myFun",
 	     "shopByLookCarousel",
 	     "offersCarousel",
 	     "categoryCarousel",
@@ -128,10 +129,10 @@ ACC.carousel = {
 				autoHeight : true
 			});
 		}*/
+	 
 		
 		if(typeof homePageBannerTimeout!== "undefined"){
 			var timeout = parseInt(homePageBannerTimeout) * 1000 ;
-			//alert(timeout);
 			$(".home-rotatingImage").owlCarousel({
 				items:1,
 				nav:false,
@@ -141,6 +142,8 @@ ACC.carousel = {
 		        autoHeight : true,
 		        autoplayTimeout: timeout
 		    });
+		    
+
 			/*TPR-268*/
 			/*$("#rotatingImageTimeoutMobile").owlCarousel({
 				items:1,
@@ -219,13 +222,14 @@ ACC.carousel = {
 			itemsMobile : false*/
 		});
 	},
+	/*----------TPR-179(Shop The Style Start)------------*/
 	shopTheStyleCarousel: function(){
 		$("body.page-shopTheStyle .shopByLookCarousel").owlCarousel({
 			items:3,
     		loop: true,
     		nav:true,
     		dots:false,
-    		navText:[]
+    		navText:[],
 			/*navigation:true,
 			rewindNav: false,
 			navigationText :[],
@@ -235,8 +239,57 @@ ACC.carousel = {
 			itemsDesktopSmall : false, 
 			itemsTablet: false, 
 			itemsMobile : false*/
+			responsive : {
+						// breakpoint from 0 up
+            			0 : {
+            				items:2,
+            			},
+            			// breakpoint from 785 up
+            			785 : {
+            				items:3,
+            			}		
+            		}
+			
 		});
 	},
+	shopTheStyleHomeCarousel: function(){	
+	var timeout = parseInt(homePageBannerTimeout) * 1000 ;
+	var owl1 = $("body.page-shopTheStyle .home-rotatingImage#rotatingImageTimeout"); 
+	owl1.owlCarousel({
+			items:1,
+			nav:false,
+			dots:true,
+			loop: true,
+	        autoplay: true,
+	        autoHeight : true,
+	        autoplayTimeout: timeout
+	    });
+	    $('.owl-dot1 a').click(function(e){			
+			e.preventDefault();	
+			$('.owl-controls li').removeClass('active');		
+			owl1.trigger('to.owl.carousel',  0);
+			$(this).parent().parent().addClass('active');
+		}); 
+		 $('.owl-dot2 a').click(function(e){			
+			e.preventDefault();	
+			$('.owl-controls li').removeClass('active');		
+			owl1.trigger('to.owl.carousel',  1);
+			$(this).parent().parent().addClass('active');
+		}); 
+		 $('.owl-dot3 a').click(function(e){			
+			e.preventDefault();
+			$('.owl-controls li').removeClass('active');				
+			owl1.trigger('to.owl.carousel',  2);
+			$(this).parent().parent().addClass('active');
+		}); 
+		 $('.owl-dot4 a').click(function(e){			
+			e.preventDefault();	
+			$('.owl-controls li').removeClass('active');		
+			owl1.trigger('to.owl.carousel',  3);
+			$(this).parent().parent().addClass('active');
+		}); 
+    },
+	 /*----------End TPR-179(Shop The Style)------------*/  
 	offersCarousel: function(){
 		$(".offersCarousel").owlCarousel({
 					items:4,

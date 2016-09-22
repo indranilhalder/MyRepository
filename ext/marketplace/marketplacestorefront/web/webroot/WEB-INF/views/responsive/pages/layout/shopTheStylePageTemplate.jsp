@@ -7,7 +7,7 @@
 
 
 
-<%-- 
+	<%-- 
 <div id="shopstyleCarousel" class="shop-carousel">
           
   <cms:pageSlot position="Section1" var="feature">
@@ -15,93 +15,85 @@
 	</cms:pageSlot>
  
 </div> --%>
-
-
-
-
-
-
-
-
-
-
-	<div class=shopstyle-carousel>
-	<cms:pageSlot position="Section1" var="feature">
-		<cms:component component="${feature}" element="div"/>
-	</cms:pageSlot>
-	<div class="owl-controls">
-		<ul class="span-24 section2 shopstyle-indicator shopstyle-indicator-number owl-dots">
-			<li class="owl-dot"><cms:pageSlot position="Section2A" var="feature" element="div">
-				<cms:component component="${feature}"/>
-			</cms:pageSlot></li>
-			<li class="owl-dot"><cms:pageSlot position="Section2B" var="feature" element="div">
-				<cms:component component="${feature}"/>
-			</cms:pageSlot></li>
-			<li class="owl-dot"><cms:pageSlot position="Section2C" var="feature" element="div">
-				<cms:component component="${feature}"/>
-			</cms:pageSlot></li>
-			<li class="owl-dot"><cms:pageSlot position="Section2D" var="feature" element="div">
-				<cms:component component="${feature}"/>
-			</cms:pageSlot></li>
-		</ul>
-	</div>
-	</div>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-	<section class="span-24 section3">
-		<cms:pageSlot position="Section3A" var="feature" element="div" class="shopstyle shopstyle-borderTop">
-			<cms:component component="${feature}"/>
+<!-- <div><a class="test" href="#shop-date">banner</a></div> -->
+	<div class="shopstyle-carousel">
+		<cms:pageSlot position="Section1" var="feature">
+			<cms:component component="${feature}" element="div" />
 		</cms:pageSlot>
-		<cms:pageSlot position="Section3B" var="feature" element="div" class="shopstyle1">
-			<cms:component component="${feature}"/>
+		<div class="owl-controls">
+			<ul class="span-24 section2 shopstyle-indicator shopstyle-indicator-number owl-dots">
+				<li class="owl-dot1">
+				<cms:pageSlot position="Section2A" var="feature" element="div">
+					<cms:component component="${feature}" />
+				</cms:pageSlot>
+				</li>
+				<li class="owl-dot2">
+				<cms:pageSlot position="Section2B" var="feature" element="div">
+					<cms:component component="${feature}" />
+				</cms:pageSlot>
+				</li>
+				<li class="owl-dot3">
+				<cms:pageSlot position="Section2C" var="feature" element="div">
+					<cms:component component="${feature}" />
+				</cms:pageSlot>
+				</li>
+				<li class="owl-dot4">
+				<cms:pageSlot position="Section2D" var="feature" element="div">
+					<cms:component component="${feature}" />
+				</cms:pageSlot>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<section class="span-24 section3" id="shop-wisely">
+		<cms:pageSlot position="Section3A" var="feature" element="div"
+			class="shopstyle shopstyle-borderTop">
+			<cms:component component="${feature}" />
 		</cms:pageSlot>
-		<cms:pageSlot position="Section3C" var="feature" element="div" class="shopstyle2">
-			<cms:component component="${feature}"/>
+		<cms:pageSlot position="Section3B" var="feature" element="div"
+			class="shopstyle1">
+			<cms:component component="${feature}" />
+		</cms:pageSlot>
+		<cms:pageSlot position="Section3C" var="feature" element="div"
+			class="shopstyle2">
+			<cms:component component="${feature}" />
 		</cms:pageSlot>
 	</section>
-	<section class="span-24 section4">
+	<section class="span-24 section4" id="shop-throw">
 		<cms:pageSlot position="Section4A" var="feature" element="div" class="shopstyle shopstyle-borderTop">
-			<cms:component component="${feature}"/>
+			<cms:component component="${feature}" />
 		</cms:pageSlot>
-		<cms:pageSlot position="Section4B" var="feature" element="div" class="shopstyle1">
-			<cms:component component="${feature}"/>
-		</cms:pageSlot>
+
 		<cms:pageSlot position="Section4C" var="feature" element="div" class="shopstyle2">
-			<cms:component component="${feature}"/>
+			<cms:component component="${feature}" />
+		</cms:pageSlot>
+				<cms:pageSlot position="Section4B" var="feature" element="div" class="shopstyle1">
+			<cms:component component="${feature}" />
 		</cms:pageSlot>
 	</section>
-	<section class="span-24 section5">
+	<section class="span-24 section5" id="shop-date">
 		<cms:pageSlot position="Section5A" var="feature" element="div" class="shopstyle shopstyle-borderTop">
-			<cms:component component="${feature}"/>
+			<cms:component component="${feature}" />
 		</cms:pageSlot>
 		<cms:pageSlot position="Section5B" var="feature" element="div" class="shopstyle1">
-			<cms:component component="${feature}"/>
+			<cms:component component="${feature}" />
 		</cms:pageSlot>
-		<cms:pageSlot position="Section5C" var="feature" element="div" class="shopstyle2" >
-			<cms:component component="${feature}"/>
+		<cms:pageSlot position="Section5C" var="feature" element="div" class="shopstyle2">
+			<cms:component component="${feature}" />
 		</cms:pageSlot>
 	</section>
 	<section class="span-24 section6">
 		<cms:pageSlot position="Section6A" var="feature" element="div" class="shopstyle shopstyle-borderTop">
-			<cms:component component="${feature}"/>
+			<cms:component component="${feature}" />
+		</cms:pageSlot>
+		<cms:pageSlot position="Section6C" var="feature" element="div" class="shopstyle2">
+			<cms:component component="${feature}" />
 		</cms:pageSlot>
 		<cms:pageSlot position="Section6B" var="feature" element="div" class="shopstyle1">
-			<cms:component component="${feature}"/>
-		</cms:pageSlot>
-		<cms:pageSlot position="Section6C" var="feature" element="div">
-			<cms:component component="${feature}"/>
+			<cms:component component="${feature}" />
 		</cms:pageSlot>
 	</section>
-	
+
 
 	<%-- 	<div class="no-space">
 		
@@ -115,5 +107,5 @@
 				<cms:component component="${feature}" />
 			</cms:pageSlot>
 		</div> --%>
-		
+
 </template:page>
