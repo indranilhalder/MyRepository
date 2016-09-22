@@ -137,9 +137,10 @@ public class DateUtilHelper
 	           SimpleDateFormat twentyFourHoursSDF = new SimpleDateFormat("HH:mm");
 	           SimpleDateFormat twelveHoursSDF = new SimpleDateFormat("hh:mm a");
 	           LOG.debug(mm.getFromTime() +" "+ mm.getToTime() );
-	           timeFormat =twelveHoursSDF.format(twentyFourHoursSDF.parse(mm.getFromTime())) +" - "+ twelveHoursSDF.format(twentyFourHoursSDF.parse(mm.getToTime()));
+	           timeFormat =removeLeadingZeros(twelveHoursSDF.format(twentyFourHoursSDF.parse(mm.getFromTime()))) +" TO "+removeLeadingZeros(twelveHoursSDF.format(twentyFourHoursSDF.parse(mm.getToTime())));
 	           LOG.debug("^^^^^^TimeSlots Is :********:"+timeFormat);
-	           timeSlotsList.add(timeFormat);
+	           LOG.debug("^^^^^^TimeSlots Is :********:"+timeFormat.replaceAll(":00", ""));
+	           timeSlotsList.add(timeFormat.replaceAll(":00", ""));
 			} catch (Exception e) {
 				LOG.error("Time Formater ********:"+e.getMessage());
 	      }
@@ -223,4 +224,10 @@ public class DateUtilHelper
         }
 		return finalDateSet;
 	}
+	
+	public String removeLeadingZeros(String str) {
+		  while (str.indexOf("0")==0)
+		    str = str.substring(1);
+		  return str;
+		}
 }

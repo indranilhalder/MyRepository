@@ -2089,6 +2089,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			serviceableSlavesData.setLogisticsID(dto.getLogisticsID());
 			serviceableSlavesData.setPriority(dto.getPriority());
 			serviceableSlavesData.setCodEligible(dto.getCODEligible());
+			serviceableSlavesData.setTransactionType(dto.getTransactionType());
 			serviceableSlavesDataList.add(serviceableSlavesData);
 		}
 		return serviceableSlavesDataList;
@@ -3793,7 +3794,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 										&& richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
 								{
 									final String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
-									cartSoftReservationData.setFulfillmentType(fulfillmentType.toUpperCase());
+									//LOG.debug("*****************Seller Level.....*****fulfillmentType.toUpperCase() :"+fulfillmentType.toUpperCase());
+								//	cartSoftReservationData.setFulfillmentType(fulfillmentType.toUpperCase());
 								}
 								else
 								{
@@ -3825,6 +3827,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
          											&& detailsData.getCNCServiceableSlavesData().size() > 0)
          									{
          										cartSoftReservationData.setCncServiceableSlaves(detailsData.getCNCServiceableSlavesData());
+         										cartSoftReservationData.setFulfillmentType(detailsData.getCNCServiceableSlavesData().get(0).getFulfillmentType());
+         										
          									}
          									if (null != detailsData.getFulfilmentType())
          									{

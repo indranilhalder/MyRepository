@@ -1608,6 +1608,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String RETURN_TYPE = "R";
 	public static final String ORDERTAG_TYPE_PREPAID = "PREPAIDRRF";
 	public static final String ORDERTAG_TYPE_POSTPAID = "POSTPAIDRRF";
+	
+	public static final String TO = "TO".intern();
 
 	private MarketplacecommerceservicesConstants()
 	{

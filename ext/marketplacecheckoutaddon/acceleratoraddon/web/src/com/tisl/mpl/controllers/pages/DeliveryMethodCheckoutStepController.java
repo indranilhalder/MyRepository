@@ -1586,7 +1586,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				}
 			}
 
-
+			boolean isScheduleServiceble=false;
 			if (deliveryModelList.size() > 0)
 			{
 
@@ -1637,6 +1637,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 										if (cartEntryData.getSelectedUssid().equalsIgnoreCase(deliverySlotsResponse.getUssId()) && deliverySlotsResponse.getIsScheduled().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y) )
 										{
+											isScheduleServiceble=true;
 											String estDeliveryDateAndTime =null;
 											if(deliverySlotsResponse.getEDD() != null && StringUtils.isNotEmpty(deliverySlotsResponse.getEDD())){
 												estDeliveryDateAndTime=deliverySlotsResponse.getEDD();
@@ -1767,11 +1768,16 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 					}
 				}
-
+				if(!isScheduleServiceble){
+					return getCheckoutStep().nextStep();
+				}
 				String deliverySlotCharge = MarketplacecommerceservicesConstants.EMPTY;
 				final DecimalFormat df = new DecimalFormat("#.00");
 				if (configModel.getEdCharge() > 0)
 				{
+					final CartModel cartModel = getCartService().getSessionCart();
+					LOG.debug("*******configModel.getEdCharge()*******" + mplCheckoutFacade.createPrice(cartModel, Double.valueOf(configModel.getEdCharge())).getDoubleValue());
+					cartDataSupport.setDeliverySlotCharge(mplCheckoutFacade.createPrice(cartModel, Double.valueOf(configModel.getEdCharge())));
 					deliverySlotCharge = df.format(configModel.getEdCharge());
 				}
 				fullfillmentDataMap = getMplCartFacade().getFullfillmentMode(cartDataSupport);
@@ -1834,7 +1840,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					cartEntryModel.setEdScheduledDate(deliverySlotDate);
 					if (null != deliverySlotTime)
 					{
-						final String[] timeSlots = deliverySlotTime.split("-");
+						final String[] timeSlots = deliverySlotTime.split(MarketplacecommerceservicesConstants.TO);
 						cartEntryModel.setTimeSlotFrom(timeSlots[0].trim());
 						cartEntryModel.setTimeSlotTo(timeSlots[1].trim());
 						if (null != deliverySlotCost && !deliverySlotCost.isEmpty() && !deliverySlotCost.matches("0"))
