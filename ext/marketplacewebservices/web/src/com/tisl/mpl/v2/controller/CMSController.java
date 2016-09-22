@@ -75,7 +75,7 @@ public class CMSController extends BaseController
 
 	/*
 	 * private static final Set<CatalogOption> OPTIONS;
-	 *
+	 * 
 	 * static { OPTIONS = getOptions(); }
 	 */
 
@@ -185,7 +185,7 @@ public class CMSController extends BaseController
 	@RequestMapping(value = "/homepage", method = RequestMethod.GET)
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
 	@ResponseBody
-	public MplPageWsDTO getLuxuryHomepage(@RequestParam(defaultValue = DEFAULT) final String fields)
+	public MplPageWsDTO getHomepage(@RequestParam(defaultValue = DEFAULT) final String fields)
 	{
 		MplPageWsDTO dto;
 		final MplPageData homePageData = mplCmsFacade.getHomePageForMobile();
@@ -203,7 +203,7 @@ public class CMSController extends BaseController
 	@RequestMapping(value = "/luxuryhomepage", method = RequestMethod.GET)
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
 	@ResponseBody
-	public LuxHomePageCompWsDTO getHomepage(@RequestParam(defaultValue = DEFAULT) final String fields)
+	public LuxHomePageCompWsDTO getLuxuryHomepage(@RequestParam(defaultValue = DEFAULT) final String fields)
 	{
 
 		try

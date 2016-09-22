@@ -47,6 +47,7 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.enums.CMSChannel;
 import com.tisl.mpl.core.model.MplAdvancedCategoryCarouselComponentModel;
+import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplImageCategoryComponentModel;
 import com.tisl.mpl.core.model.MplShopByLookModel;
 import com.tisl.mpl.core.model.VideoComponentModel;
@@ -86,6 +87,7 @@ import com.tisl.mpl.model.cms.components.SmallBrandMobileAppComponentModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.LuxComponentsListWsDTO;
+import com.tisl.mpl.wsdto.LuxEngagementcomponentWsDTO;
 import com.tisl.mpl.wsdto.LuxHeroBannerWsDTO;
 import com.tisl.mpl.wsdto.LuxHomePageCompWsDTO;
 import com.tisl.mpl.wsdto.LuxShopYourFavListWsDTO;
@@ -437,24 +439,11 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 		return null;
 	}
 
-	/*
-	 * LuxHomePageCompWsDTO getHomePageForLuxury();
-	 * 
-	 * (non-Javadoc)
-	 * 
-	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getPageInformationForPageId(java.lang.String)
-	 */
 
-	public LuxComponentsListWsDTO getComponentDtoForSlot(final ContentSlotModel contentSlot) throws CMSItemNotFoundException
+	public List<LuxComponentsListWsDTO> getComponentDtoForSlot(final ContentSlotModel contentSlot) throws CMSItemNotFoundException
 	{
-		//final ContentPageModel contentPage = getMplCMSPageService().getPageByLabelOrId("luxuryhomepage");
-		//if (contentPage != null)
-		//{
-		//	final ContentSlotModel herobannerslot = getMplCMSPageService().getContentSlotByUidForPage("luxuryhomepage",
-		//		"Section1-luxuryHomepage", "online");
 
-		//final ContentSlotModel herobannerslot = getMplCMSPageService().getContentSlotByUidForPage("luxuryhomepage", contentUid,
-		//	catalogVersion);
+		final List<LuxComponentsListWsDTO> componentListForASlot = new ArrayList<LuxComponentsListWsDTO>();
 		LuxComponentsListWsDTO luxuryComponent = new LuxComponentsListWsDTO();
 		if (null != contentSlot)
 		{
@@ -469,9 +458,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				}
 				else if (typecode.equalsIgnoreCase("SignColComponent"))
 				{
-					//*To do for section 2*//
-					final RotatingImagesComponentModel luxuryBannerComponent = (RotatingImagesComponentModel) abstractCMSComponentModel;
-					luxuryComponent = getLuxHeroBannerWsDTO(luxuryBannerComponent);
+					//To be added
 				}
 				else if (typecode.equalsIgnoreCase("MplAdvancedCategoryCarouselComponent"))
 				{
@@ -486,7 +473,9 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				else if (typecode.equalsIgnoreCase("MplBigPromoBannerComponent"))
 				{
 					// To do for this
-					//luxuryComponent =	getLuxEngagementcomponentWsDTO(abstractCMSComponentModel);
+					final MplBigPromoBannerComponentModel engagementComponent = (MplBigPromoBannerComponentModel) abstractCMSComponentModel;
+
+					luxuryComponent = getLuxEngagementcomponentWsDTO(engagementComponent);
 				}
 				else if (typecode.equalsIgnoreCase("ProductCarouselComponent"))
 				{
@@ -498,12 +487,14 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					//final ImageCarouselComponentModel luxuryShopByComponent = (ImageCarouselComponentModel) abstractCMSComponentModel;
 					//luxuryComponent = getLuxShopByListWsDTO(luxuryShopByComponent);
 				}
-
+				LOG.debug("Adding component" + abstractCMSComponentModel.getUid() + "for section" + contentSlot.getUid());
+				luxuryComponent.setSectionid(contentSlot.getUid());
+				componentListForASlot.add(luxuryComponent);
 
 			}
 		}
 		//}
-		return luxuryComponent;
+		return componentListForASlot;
 	}
 
 	@Override
@@ -511,7 +502,6 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	{
 
 		final ContentPageModel contentPage = getMplCMSPageService().getPageByLabelOrId("luxuryhomepage");
-		//	final String catalogVersion = "Online";
 		final LuxHomePageCompWsDTO finalLuxuryComponent = new LuxHomePageCompWsDTO();
 
 		if (contentPage != null)
@@ -520,18 +510,9 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 			final ArrayList<LuxComponentsListWsDTO> listComp = new ArrayList<LuxComponentsListWsDTO>();
 			for (final ContentSlotForPageModel contentSlotForPage : contentPage.getContentSlots())
 			{
-
-				final String contentUid = contentSlotForPage.getUid();
-
 				final ContentSlotModel contentSlot = contentSlotForPage.getContentSlot();
-				final LuxComponentsListWsDTO luxuryComponent = getComponentDtoForSlot(contentSlot);
-				luxuryComponent.setSectionid(contentUid);
-				listComp.add(luxuryComponent);
-
-				//finalLuxuryComponent.setComponents(listComp);
-
-
-				//		homepageComponentWsDTO.add(finalLuxuryComponent);
+				final List<LuxComponentsListWsDTO> luxuryComponentsForASlot = getComponentDtoForSlot(contentSlot);
+				listComp.addAll(luxuryComponentsForASlot);
 			}
 
 			finalLuxuryComponent.setComponents(listComp);
@@ -560,21 +541,41 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	}
 
-	/**
-	 * @param abstractCMSComponentModel
-	 */
-	private void getLuxEngagementcomponentWsDTO(final AbstractCMSComponentModel abstractCMSComponentModel)
-	{
-		// YTODO Auto-generated method stub
 
+	/**
+	 * @param bigPromoBannerModel
+	 * @return
+	 */
+	private LuxComponentsListWsDTO getLuxEngagementcomponentWsDTO(final MplBigPromoBannerComponentModel bigPromoBannerModel)
+	{
+		final ArrayList<LuxEngagementcomponentWsDTO> engagementDtoList = new ArrayList<LuxEngagementcomponentWsDTO>();
+		final LuxEngagementcomponentWsDTO engagementDto = new LuxEngagementcomponentWsDTO();
+		final LuxComponentsListWsDTO luxcomponentObj = new LuxComponentsListWsDTO();
+		if (null != bigPromoBannerModel)
+		{
+
+			if (null != bigPromoBannerModel.getBannerImage() && null != bigPromoBannerModel.getBannerImage().getURL())
+			{
+				engagementDto.setBannerMedia(bigPromoBannerModel.getBannerImage().getURL());
+				//bigPromoBannerModel.getMedia().getAltText();
+			}
+			if (null != bigPromoBannerModel.getUrlLink())
+			{
+				engagementDto.setBannerUrl(bigPromoBannerModel.getUrlLink());
+			}
+			engagementDtoList.add(engagementDto);
+			luxcomponentObj.setEngagementcomponent(engagementDtoList);
+		}
+		return luxcomponentObj;
 	}
 
+
 	/**
-	 * @param abstractCMSComponentModel
+	 * @param luxuryVideoComponent
+	 * @return
 	 */
 	private LuxComponentsListWsDTO getLuxVideocomponentWsDTO(final VideoComponentModel luxuryVideoComponent)
 	{
-		// YTODO Auto-generated method stub
 		final ArrayList<LuxVideocomponentWsDTO> videoComponentDtoList = new ArrayList<LuxVideocomponentWsDTO>();
 		final LuxVideocomponentWsDTO video = new LuxVideocomponentWsDTO();
 		final LuxComponentsListWsDTO luxComponent = new LuxComponentsListWsDTO();
@@ -596,8 +597,10 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	}
 
+
 	/**
-	 * @param abstractCMSComponentModel
+	 * @param luxuryCategoryComponent
+	 * @return
 	 */
 	private LuxComponentsListWsDTO getLuxShopYourFavListWsDTO(
 			final MplAdvancedCategoryCarouselComponentModel luxuryCategoryComponent)
@@ -632,7 +635,6 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 			if (null != catCompObj.getCategory())
 			{
 				luxshopYourFav.setCategoryUrl(defaultCategoryModelUrlResolver.resolve(catCompObj.getCategory()));
-				LOG.debug("****url***** " + defaultCategoryModelUrlResolver.resolve(catCompObj.getCategory()));
 			}
 			shopYourFavList.add(luxshopYourFav);
 		}
@@ -645,7 +647,6 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	private String getCategoryMediaUrl(final CategoryModel category)
 	{
 
-		//String mediaUrl = MISSING_IMAGE_URL;
 		String mediaUrl = GenericUtilityMethods.getMissingImageUrl();
 		if (null != category.getMedias())
 		{
