@@ -45640,3 +45640,18 @@ body.no-scroll {
         padding: 10px;
         cursor:pointer;
   }
+  /* TPR-970 changes starts */
+  span.priceFormat.priceFormatOnUpdate{
+  	font-size: 12px;
+    color: #ff2c43;
+    margin-bottom: 6px;
+    display: inline-block;
+  }
+  span.priceFormat.priceFormatOnUpdate>span>span{
+  	margin-left: 5px;
+  }
+  .ItemAmtofferDisplayPrFm{
+  	margin-top: -2px;
+    display: inline-block;
+  }
+    /* TPR-970 changes ends */

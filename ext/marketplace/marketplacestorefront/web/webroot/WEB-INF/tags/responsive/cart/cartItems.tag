@@ -253,31 +253,15 @@ tr.d0 td {
 										</c:choose>	
 									</c:otherwise>
 								</c:choose>
-								<%-- <c:if	test="${empty itemLevelDiscount}">
-									<c:forEach items="${priceModified}" var="priceModified">
-											<c:if	test="${priceModified.key == entry.entryNumber}"><br/>
-												<spring:theme code="order.price.change"/><li><del>${priceModified.value}</del></li>
-											</c:if>
-									</c:forEach>
-								</c:if> --%>
-								<%-- <c:if test="${not empty entry.cartLevelDisc && not empty entry.productLevelDisc}">
-								<format:price priceData="${entry.totalSalePrice}"/>
-								</c:if> --%>
-								<%-- ---
-								${entry.totalPrice.value}
-								sds
-								${entry.totalSalePrice.value}
-								--
-								${entry.amountAfterAllDisc.value} --%>
 								<c:choose>
 								<c:when test="${not empty entry.cartLevelDisc}">
 								<c:choose>
 								<c:when test="${not empty entry.productLevelDisc && not empty entry.prodLevelPercentage}">
-								<span class="off-bag"><span id="offerDisplay_${entry.entryNumber}"><spring:theme code="off.item.percentage"/><del><format:price priceData="${entry.netSellingPrice}"/></del></span></span>
+								<span id="itemCartCentDisplay_${entry.entryNumber}"><span class="off-bag"><spring:theme code="off.item.percentage"/><del><format:price priceData="${entry.netSellingPrice}"/></del></span></span>
 								</c:when>
 								<c:otherwise>
 								<c:if test="${not empty entry.productLevelDisc}">
-								<span class="off-bag"><span id="offerDisplay_${entry.entryNumber}"><format:price priceData="${entry.productLevelDisc}"/><spring:theme code="off.item"/><del><format:price priceData="${entry.netSellingPrice}"/></del></span></span>
+								<span id="itemCartAmtDisplay_${entry.entryNumber}"><span class="off-bag"><format:price priceData="${entry.productLevelDisc}"/><spring:theme code="off.item"/><del><format:price priceData="${entry.netSellingPrice}"/></del></span></span>
 								</c:if>
 								</c:otherwise>
 								</c:choose>
@@ -309,10 +293,8 @@ tr.d0 td {
 								</c:otherwise>
 							</c:choose></c:if>
 							
-                            <span id="ItemAmtofferDisplay_${entry.entryNumber}" style="display: none"><span class="priceFormat"><span id="off-bag-ItemLevelDisc_${entry.entryNumber}"></span></span><br/><span class="priceFormat"><span id="off-bag-ItemLevelDiscAmt_${entry.entryNumber}"></span></span></span>
-							 <span id="CartofferDisplay_${entry.entryNumber}" style="display: none"><span 
-
-                              class="priceFormat"><span id="off-bag-cartLevelDisc_${entry.entryNumber}"></span></span><br/><span class="priceFormat"><span id="off-cartLevelDiscAmt_${entry.entryNumber}"></span></span></span>
+                            <span id="ItemAmtofferDisplay_${entry.entryNumber}" style="display: none" class="ItemAmtofferDisplayPrFm"><span class="priceFormat priceFormatOnUpdate"><span id="off-bag-ItemLevelDisc_${entry.entryNumber}"></span></span><br/><span class="priceFormat"><span id="off-bag-ItemLevelDiscAmt_${entry.entryNumber}"></span></span></span>
+							<span id="CartofferDisplay_${entry.entryNumber}" style="display: none" class="ItemAmtofferDisplayPrFm"><span class="priceFormat priceFormatOnUpdate"><span id="off-bag-cartLevelDisc_${entry.entryNumber}"></span></span><br/><span class="priceFormat"><span id="off-cartLevelDiscAmt_${entry.entryNumber}"></span></span></span>
 							<%--  <span id="offerDisplay_${entry.entryNumber}" style="display: none"><!-- <span class="off-bag"> --><span class="priceFormat"><span id="off-bag-cartLevelDisc_${entry.entryNumber}"></span></span><br/><span id="offerBag_${entry.entryNumber}"><spring:theme code="off.bag"/></span><span class="priceFormat"><span id="off-cartLevelDiscAmt_${entry.entryNumber}"></span></span></span><!--  </span> --> --%>
 								<%--  <c:if test="${not empty entry.cartLevelDisc}">
 									<span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/><spring:theme code="off.bag"/><format:price priceData="${entry.amountAfterAllDisc}"/></span>

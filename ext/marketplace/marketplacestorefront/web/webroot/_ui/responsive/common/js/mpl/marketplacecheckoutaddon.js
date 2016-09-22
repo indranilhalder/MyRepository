@@ -3276,29 +3276,19 @@ function checkPincodeServiceability(buttonType)
  				$("#itemAmtOfferDisplay_"+entryNumber).hide();
  				$("#cartCentOfferDisplay_"+entryNumber).hide();
  				$("#cartAmtOfferDisplay_"+entryNumber).hide();
-// 			    $("#cent_display_"+entryNumber).hide();
-// 			    $("#amt_display_"+entryNumber).hide();
+ 				$("#itemCartCentDisplay_"+entryNumber).hide();
+ 				$("#itemCartAmtDisplay_"+entryNumber).hide();
  				if(cartData[cart]['productLevelDisc']!=null){
- 					$("#ItemAmtofferDisplay__"+entryNumber).show();
- 					$("#off-bag-ItemLevelDisc_"+entryNumber).html(cartData[cart]['productLevelDisc'].formattedValue).addClass("priceFormat").append("Off Bag");
+ 					$("#ItemAmtofferDisplay_"+entryNumber).show();
+ 					console.log("productLevl"+cartData[cart]['productLevelDisc'].formattedValue);
+ 					$("#off-bag-ItemLevelDisc_"+entryNumber).html(cartData[cart]['productLevelDisc'].formattedValue).append("<span>Off Item</span>");
  				    $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
  				}
  				if(cartData[cart]['cartLevelDisc']!=null){
  					$("#CartofferDisplay_"+entryNumber).show();
- 					$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("Off Bag");
+ 					$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("<span>Off Bag</span>");
  				    $("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
  				}
- 				
-// 				if(cartData[cart]['amountAfterAllDisc']!=null)
-// 				{
-// 			    $("#CartofferDisplay_"+entryNumber).show();	
-// 				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
-// 				}
-// 				$("#off-bag-cartLevelDisc_"+entryNumber).html("");
-// 					if(cartData[cart]['cartLevelDisc']!=null){
-// 	 			    $("#CartofferDisplay_"+entryNumber).show();	
-// 	 				$("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("Off Bag");
-// 	 				}
  			
  			}
  			if(response=="N")
