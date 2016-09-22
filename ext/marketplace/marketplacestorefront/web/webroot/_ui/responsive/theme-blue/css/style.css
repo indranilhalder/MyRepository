@@ -39104,9 +39104,9 @@ button#expressCheckoutButtonId.express-checkout-disabled:hover {
 	display: none;
 }
 
-#convChargeFieldId span {
+/* #convChargeFieldId span {
 	float: right;
-}
+} */
 
 #totalPriceConvChargeId span {
 	float: right;
@@ -39982,7 +39982,7 @@ a#cvvHelp {
 }
 }
 @media (max-width:790px) and (min-width:651px){
-.cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.exp {
+/* .cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.exp {
     width: 70%;
     padding-right: 5px;
 }
@@ -39997,7 +39997,7 @@ a#cvvHelp {
 }
 .cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.exp select, .confirmation .left-block .payments.tab-view .new-card fieldset .full.exp select {
     max-width: 124px;
-}
+} */
 
 }
 /* .cart.wrapper .left-block .payments.tab-view .new-card #save-card + label{
@@ -47707,13 +47707,13 @@ body.no-scroll {
     }
 
     .progress-barcheck .step-1 span, .progress-barcheck .step-2 span, .progress-barcheck .step-3 span {
-        top: -5px;
+        top: -5px !important;
         height: 17px;
         width: 18px;
     }
 
     .progress-barcheck div a {
-        font-size: 11px;
+        font-size: 12px;
         font-weight: bold;
         line-height: 30px;
         padding-left: 20px;
@@ -48515,6 +48515,8 @@ body.no-scroll {
     padding: 0;
     letter-spacing: 0.5px;
     line-height: normal;
+    position:relative;
+    z-index:999;
    }
    
  
@@ -48628,6 +48630,7 @@ body.no-scroll {
     margin-bottom: 0;
     height: 48px !important;
     margin:0;
+        line-height: normal;
 }
 .full.country-select .country #country{
 	text-transform: uppercase;
@@ -48940,7 +48943,7 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
 .smk_accordion .accordion_in .acc_content .blocks .new-card .remember input[type="checkbox"] + label{ color:#999999; font-size:14px; font-weight:normal; padding:0; line-height:26px; width:96%; letter-spacing:0.5px;    text-transform: uppercase; }
 .smk_accordion .accordion_in .acc_content .blocks .new-card .remember input[type="checkbox"] + label:before{ transition: none 0s ease 0s ;background: url("../images/payment-checbox.png") no-repeat scroll left top;    border: 0 none;    box-shadow: none;    height: 18px;    outline: medium none;    width: 18px;}
 .smk_accordion .accordion_in .acc_content .blocks .new-card .remember input[type="checkbox"]:checked + label:before{background: url("../images/payment-checbox.png") no-repeat scroll left bottom;}
-.smk_accordion .accordion_in .acc_content .blocks .new-card  .redirect,
+.smk_accordion .accordion_in .acc_content .blocks .new-card  + .redirect,.smk_accordion .accordion_in .acc_content .blocks #savedCard .redirect,
 .smk_accordion .accordion_in .acc_content .blocks.net-bank +  .redirect { padding:16px 0 30px 30px;   text-transform: none; width:100%; font-weight:normal; font-size:14px; color:#333; }
 .smk_accordion .accordion_in .acc_content .blocks .new-card button,
 .smk_accordion .accordion_in .acc_content .blocks.net-bank button { background:#a7183e; color:#fff; font-size:14px; font-weight:normal; height:47px; text-align:center; width:204px; padding:0; }
@@ -49235,7 +49238,7 @@ a#cvvHelp{display:none;}
 	margin:0px;
 }
 #billingAddress {
-    margin-top: 23px;
+    margin-top: 4px;
 }
 .cart.wrapper .left-block .payments.tab-view .new-card .form-group{
 	margin-bottom:0px;
@@ -49420,7 +49423,7 @@ padding-bottom: 30px;
 .smk_accordion{  padding: 120px 0 0;}
 .smk_accordion .accordion_in{background: #fff url("../images/down-arrow.png") no-repeat scroll 96% 23px;}
 .smk_accordion .accordion_in.acc_active{background: url("../images/up-arrow.png") no-repeat scroll 96% 23px;}
-.smk_accordion .accordion_in .acc_content .blocks .new-card .cardExpiration .csc { width:37%; }
+.cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.cvv{ width:37%; }
 .smk_accordion .accordion_in .acc_content .blocks.net-bank label { margin-right:15px; }
 .smk_accordion .accordion_in .acc_head { font-size:16px; }
 .smk_accordion .accordion_in .acc_content .blocks .new-card .cardExpiration input.month, input.year { width:26.5%; }
@@ -49447,6 +49450,13 @@ padding-bottom: 30px;
 }
 .cart.wrapper .right-block.billing .block.bottom.order-details > ul li.item .product-img{
 	width:auto;
+}
+.cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.exp{
+	width:63%;
+}
+.smk_accordion .accordion_in .acc_content .blocks .new-card .card_exp_month, .smk_accordion .accordion_in .acc_content .blocks .new-card .card_exp_year {
+    margin-right: 7.15%;
+    width: 42%;
 }
 }
 
@@ -49493,7 +49503,7 @@ padding-bottom: 30px;
 .smk_accordion .accordion_in .acc_content .blocks.net-bank  + .redirect,
 .smk_accordion .accordion_in .acc_content .blocks.net-bank .trigger,
 .smk_accordion .accordion_in .acc_content .blocks .cash { font-size:12px; }
-.cart.wrapper .left-block .payments.tab-view .nav li span.mycards { padding:0px;padding-bottom:5px; line-height:12px !important;    height: auto;}
+.cart.wrapper .left-block .payments.tab-view .nav li span.mycards { padding:0px;padding-bottom:10px; line-height:12px !important;    height: auto;}
 .cart.wrapper .left-block .payments.tab-view .nav li span.saved { line-height:9px !important;    height: auto;}
 .smk_accordion .accordion_in .acc_content .blocks .new-card .cardNumber input, 
 .smk_accordion .accordion_in .acc_content .blocks.net-bank .cardNumber input { margin-right:4%; }
@@ -49574,7 +49584,7 @@ input.year { height:40px; }
 }
 .cart.wrapper .left-block li#savedCard div.card input[type="radio"] + label:before, .cart.wrapper .left-block li#savedCardEmi div.card input[type="radio"]+label:before{left:-21px;}
 div#savedCreditCard, div#savedDebitCard {
-    width: 97%;
+    width: 95%;
     right: 0;
     float: right;
     margin-bottom:10px;
@@ -49619,6 +49629,9 @@ div#savedCreditCard, div#savedDebitCard {
 }
 #OTPGenerationErrorMessage{
 text-align:center;	
+}
+#convChargeFieldId span {
+	float: none;
 }
 /* checkout payment end */
  .addnewAddresPage + .right-block.shipping{
@@ -50018,6 +50031,9 @@ left: -5px;
 .checkout.wrapper .product-block li.item{
 	border: none;
 	border-top: 1px solid #eaeaeb;
+}
+.checkout.wrapper .product-block.addresses li.item{
+	border: none;
 }
 .cart.wrapper .right-block.shipping .checkout-order-summary .totals{
 	float:right;
@@ -50971,15 +50987,16 @@ div.radio.creditDebitLabelRadio{
 		/* left:-34px; */
 	}
 	.cart.wrapper .left-block input[type="radio"] ~ label.numbers.creditLabel>span,.cart.wrapper .left-block input[type="radio"] ~ label.numbers.debitLabel>span,
-.cart.wrapper .left-block #savedDebitCard .debit-card-group input[type="radio"] + label>span,.cart.wrapper .left-block li#savedCard div.card input[type="radio"] + label>span{
+	.cart.wrapper .left-block #savedDebitCard .debit-card-group input[type="radio"] + label>span,.cart.wrapper .left-block li#savedCard div.card input[type="radio"] + label>span{
     	font-size: 16px;
 	}
 	.cart.wrapper .left-block #savedDebitCard .debit-card-group input[type="radio"] + label:before, .cart.wrapper .left-block li#savedCard div.card input[type="radio"] + label:before{
 		left: -25px;
     	margin-top: -4px;
 	}
-	.cart.wrapper .left-block input[type="radio"] ~ label.numbers.creditLabel>span{
+	.cart.wrapper .left-block input[type="radio"] ~ label.numbers.creditLabel>span, .cart.wrapper .left-block input[type="radio"] ~ label.numbers.debitLabel>span{
 		font-size: 12px;
+		padding-left: 25px;
 	}
 	.smk_accordion .checkout-paymentmethod.nav .accordion_in{
 		border: none;
@@ -50997,4 +51014,8 @@ div.radio.creditDebitLabelRadio{
 	.progress-barcheck .step-3 span{
 		top:-5px !important;
 	}
+.cart.wrapper .left-block input[type="radio"] ~ label.numbers.creditLabel:before,.cart.wrapper .left-block input[type="radio"] ~ label.numbers.debitLabel:before
+{
+    left: 2px;
+}
 }
