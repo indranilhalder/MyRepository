@@ -22,6 +22,25 @@
 					//TISST-13010
 					$(document).ready(function() {
 						showPromotionTag();
+						if($(".choose-address .acc_content").children(".address-list").length == 0){
+							$(".add-address").css({
+							  margin : "0px auto",
+							  float: "none"
+						});
+							$(".checkout-shipping.addNewAddress .formaddress").css({
+								margin : "0px auto",
+								float: "none",
+								width: "80%",
+								overflow: "hidden"
+							});
+						$(".choose-address .acc_head").css("text-align","center");
+						}
+						  $(".cancelBtn").click(function() {
+							  //alert('here');
+							  	
+						        $(".editnewAddresPage, .formaddress").slideUp();
+						        $(".add-address").slideDown();
+						    });
 					});
 					var timeoutID;
 					function setup() {
@@ -189,6 +208,7 @@
 						}
 						else
 						{
+							
 							if(address1.value.indexOf('#')!=-1)
 					    	{
 							address1.value=encodeURIComponent(address1.value);
@@ -228,7 +248,7 @@
 					});
 					</script>
 					<ycommerce:testId code="checkoutStepTwo">
-						<div class="checkout-shipping">
+						<div class="checkout-shipping addNewAddress">
 					<c:choose>
 					<c:when test="${edit eq true}">
 						<ycommerce:testId code="multicheckout_saveAddress_button">
@@ -256,30 +276,28 @@
 						</c:choose>						
 					</c:otherwise>
 				</c:choose> 
-							<%--  <div class="checkout-indent left-block address-form">
-								<h1>
-									<spring:theme code="checkout.summary.shippingAddress" text="Shipping Address"></spring:theme>
-								</h1>
-								<div class="checkout-shipping-items-header"><spring:theme code="checkout.multi.shipment.items" arguments="${cartData.deliveryItemsQuantity}" text="Shipment - ${cartData.deliveryItemsQuantity} Item(s)"></spring:theme></div>
+						 <div class="formaddress" style="display: block;">
+		<div class="heading-form">
+														<h3>Add New Address</h3>
+														<input type="button" value="cancel" class="cancelBtn">
+													</div>
+	  
+	  
+	   <div class="checkout-indent left-block address-form">
+								
 									<ul class="product-block addresses new-form account-section">
-									  	<li class="header">
-									  		<ul class="account-section-header">
-									        <li><spring:theme	code="checkout.multi.deliveryAddress.newAddress" text="New Address"> </spring:theme> </li>																  			 			 							        
-									        <li class="pincode-button"><a href="${request.contextPath}/checkout/multi/delivery-method/selectaddress">
-									        
-									         <c:if test="${addressFlag eq 'T'}"> 
-											<spring:theme code="checkout.multi.deliveryAddress.useSavedAddress" text="Use a Saved Address"></spring:theme>
-											 </c:if>
-										</a></li>
-										
-									      </ul>
-									  	</li>
-									  	<li class="item account-section-content	 account-section-content-small ">
-									  	<address:addressFormSelector supportedCountries="${countries}"
-																				regions="${regions}" cancelUrl="${currentStepUrl}" />
+									  	
+									  	<li
+																class="item account-section-content	 account-section-content-small ">
+									  	<address:addressFormSelector
+																	supportedCountries="${countries}" regions="${regions}"
+																	cancelUrl="${currentStepUrl}" />
 									  	</li>
 									  	</ul>
-									</div>  --%>
+									  	
+									</div>
+	  
+	  </div> 
 							</div>
 						
 					</ycommerce:testId>

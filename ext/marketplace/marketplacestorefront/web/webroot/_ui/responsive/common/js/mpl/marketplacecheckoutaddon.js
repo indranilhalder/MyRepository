@@ -4365,7 +4365,7 @@ function calculateDeliveryCost(radioId,deliveryCode)
 }
 
 //TPR-1214
-/*$(".pincode-button").click(function(){
+$(".pincode-button").click(function(){
 	
 	$.ajax({
  		url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/new-address",
@@ -4380,7 +4380,7 @@ function calculateDeliveryCost(radioId,deliveryCode)
  		}
  		
  		});
-});*/
+});
 //TPR-1213
 $(document).ready(function(){
 	
@@ -5798,7 +5798,7 @@ $(document).ready(function(){
 		$("#couponFieldId").val(selection);
 	}
 	if ($("#checkoutPageName").val() == "Select Address"){
-		$(" body.page-multiStepCheckoutSummaryPage .right-block.shipping .subtotals.top.block").css("display","none");
+		$(" body.page-multiStepCheckoutSummaryPage .right-block.shipping").css("display","none");
 	}
 	if ($("#checkoutPageName").val() == "Payment Options"){
 		$(" body.page-multiStepCheckoutSummaryPage .progress-barcheck .step-done span").addClass("paymentStepDone");
