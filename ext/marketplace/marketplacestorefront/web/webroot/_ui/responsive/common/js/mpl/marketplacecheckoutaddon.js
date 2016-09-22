@@ -2176,10 +2176,18 @@ function validateCardNo() {
 	}
 	//BIN Validation
 	var bin=value.slice(0,6);
-	
+	// Added for TPR-1035 
+	var dataString= $("#paymentMode").val();
+	if( dataString == "Debit Card"){		
+		cardType = "DEBIT";			
+	}else if(dataString == "Credit Card")		
+	{
+		cardType = "CREDIT";
+	}
 	//calling BIN Check AJAX
 	$.ajax({
 		url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/binCheck/"+bin,
+		data: "cardType="+cardType,
 		type: "POST",
 		cache: false,
 		success : function(response) {	

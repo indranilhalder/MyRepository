@@ -958,7 +958,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 						BinModel binModel = getModelService().create(BinModel.class);
 						try
 						{
-							binModel = getBinService().checkBin(bin);
+							//Added For TPR-1035
+							binModel = getBinService().checkBin(bin, null, customer.getUid(), false);
 						}
 						catch (final NullPointerException e)
 						{
@@ -1030,7 +1031,6 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 		return savedCardDataMap;
 	}
-
 
 	/**
 	 * This method sets the saved credit cards in a data
@@ -1104,7 +1104,6 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	public Map<Date, SavedCardData> listStoredDebitCards(final CustomerModel customer)
 	{
 		final PaymentService juspayService = new PaymentService();
-
 		juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
 				MarketplacecommerceservicesConstants.JUSPAYBASEURL));
 		juspayService.withKey(
@@ -1134,7 +1133,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 						BinModel binModel = getModelService().create(BinModel.class);
 						try
 						{
-							binModel = getBinService().checkBin(bin);
+							//Added For TPR-1035
+							binModel = getBinService().checkBin(bin, null, customer.getUid(), false);
 						}
 						catch (final NullPointerException e)
 						{
@@ -1429,7 +1429,6 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	public Map<Date, SavedCardData> listStoredEMICards(final CustomerModel customer, final String bankName)
 	{
 		final PaymentService juspayService = new PaymentService();
-
 		juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
 				MarketplacecommerceservicesConstants.JUSPAYBASEURL));
 		juspayService.withKey(
@@ -1463,7 +1462,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				for (final StoredCard juspayCard : listCardsResponse.getCards())
 				{
 					final String bin = juspayCard.getCardIsin();
-					final BinModel binModel = getBinService().checkBin(bin);
+					//Added For TPR-1035
+					final BinModel binModel = getBinService().checkBin(bin, null, customer.getUid(), false);
 					if (null != binModel && StringUtils.isNotEmpty(binModel.getBankName())
 							&& binModel.getBankName().equalsIgnoreCase(bankName))
 					{
@@ -1741,7 +1741,6 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	{
 		final Map<Date, SavedCardData> savedCreditCardDataMap = new TreeMap<Date, SavedCardData>(Collections.reverseOrder());
 		final Map<Date, SavedCardData> savedDebitCardDataMap = new TreeMap<Date, SavedCardData>(Collections.reverseOrder());
-
 		try
 		{
 			//getting ListCardsResponse by calling List Cards service of Juspay
@@ -1758,7 +1757,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					BinModel binModel = getModelService().create(BinModel.class);
 					try
 					{
-						binModel = getBinService().checkBin(bin);
+						//Added For TPR-1035
+						binModel = getBinService().checkBin(bin, null, customer.getUid(), false);
 					}
 					catch (final NullPointerException e)
 					{

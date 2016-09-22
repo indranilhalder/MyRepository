@@ -17,6 +17,7 @@
 			<typeref type="Bin" description="payment.Bin.description" />
 			<typeref type="MplPaymentAudit" description="payment.PaymentAudit.description" />
 			<typeref type="JuspayWebhook" description="payment.PaymentWebhook.description" />
+			<typeref type="BinError" description="payment.BinError.description" />
 		</group>
 		<group name="user" expand="false" description="group.user.description">
 			<typeref type="OTP" description="typeref.otp.description" />
@@ -3788,5 +3789,33 @@
 	</type>
  
  <!-- TPR-1294 : Item HMC structure Declaration Bundle Promotion-->
+ 
+ <!-- TPR-1035 : Item Creation for Bin Error  -->
+ <type name="BinError" mode="append">
+		<organizer>
+			<search mode="replace">
+				<condition attribute="customerId" />
+				<condition attribute="Bin" />
+				<condition attribute="paymentMode" />
+			</search>
+			<result>
+				<listview mode="replace">
+					<itemlayout>
+						<attribute name="customerId" />
+						<attribute name="Bin" />
+						<attribute name="paymentMode" />
+					</itemlayout>
+				</listview>
+			</result>
+		</organizer>
+		<defaultreference searchattribute="id" mode="replace">
+			<itemlayout>
+				<attribute name="customerId" />
+				<attribute name="Bin" />
+				<attribute name="paymentMode" />
+			</itemlayout>
+		</defaultreference>
+	</type>
+	<!-- TPR-1035 : Item Creation for Bin Error  -->
  
 </configuration>

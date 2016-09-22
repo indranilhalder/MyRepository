@@ -2557,7 +2557,7 @@
 			</itemtype>	
 			
 		<!-- TPR-969 -->
-		<itemtype code="EntryCountPromotionRestriction"
+		 <itemtype code="EntryCountPromotionRestriction"
 			extends="AbstractPromotionRestriction" jaloclass="com.tisl.mpl.jalo.EntryCountPromotionRestriction"
 			autocreate="true" generate="true">
 			<attributes>
@@ -2569,7 +2569,7 @@
 						initial="false" optional="true" partof="true" />
 				</attribute>
 			</attributes>
-		</itemtype>
+		</itemtype>  
 		<!-- TPR-629 ends -->
 			
 			<!-- Item Declaration for  Bundle Promotions -->

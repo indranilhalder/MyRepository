@@ -278,7 +278,10 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 		try
 		{
 			// Validate Correct Input
-			promoPriceData = getMplPaymentWebService().validateBinNumber(binNo, paymentMode, bankName);
+			//promoPriceData = getMplPaymentWebService().validateBinNumber(binNo, paymentMode, bankName);
+
+			//Added for TPR-1035
+			promoPriceData = getMplPaymentWebService().validateBinNumber(binNo, paymentMode, bankName, userId);
 			if (promoPriceData.getBinCheck().booleanValue())
 			{
 				data = new MplPromoPriceData();
@@ -481,7 +484,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.MplPaymentWebFacade#potentialPromotionOnPaymentMode(java.lang.String, java.lang.String)
 	 */
 	@Override

@@ -50,9 +50,11 @@ public class BinFacadeImpl implements BinFacade
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public BinModel performBinCheck(final String bin) throws EtailNonBusinessExceptions
+	public BinModel performBinCheck(final String bin, final String cardType, final String mplCustomerID, final boolean flag)
+			throws EtailNonBusinessExceptions
 	{
-		return getBinService().checkBin(bin);
+		// Added for TPR-1035
+		return getBinService().checkBin(bin, cardType, mplCustomerID, flag);
 	}
 
 
@@ -65,7 +67,8 @@ public class BinFacadeImpl implements BinFacade
 	 *
 	 */
 	@Override
-	public BinData binCheck(final String binNumber) throws EtailNonBusinessExceptions
+	public BinData binCheck(final String binNumber, final String cardType, final String mplCustomerID, final boolean flag)
+			throws EtailNonBusinessExceptions
 	{
 
 		BinModel bin = new BinModel();
@@ -74,7 +77,7 @@ public class BinFacadeImpl implements BinFacade
 				MarketplacecommerceservicesConstants.EBS_DOWNTIME);
 		try
 		{
-			bin = performBinCheck(binNumber);
+			bin = performBinCheck(binNumber, cardType, mplCustomerID, flag);
 			if (StringUtils.isNotEmpty(ebsDowntime) && ebsDowntime.equalsIgnoreCase("Y"))
 			{
 				if (null != bin && StringUtils.isNotEmpty(bin.getBankName()) && StringUtils.isNotEmpty(bin.getCardType()))

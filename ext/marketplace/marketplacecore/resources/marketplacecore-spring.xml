@@ -1647,6 +1647,10 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 	
 	<!-- TISPRD-4666 -->
 	<bean id="facetDisplayNameComparator" class="com.tisl.mpl.core.comparator.DisplayFacetNameComparator" />	
+	
+	 <!-- Added for TPR-1035-->
+   	<bean id="mplBinErrorJob" class="com.tisl.mpl.core.payment.cronjob.MplBinErrorJob"
+   		autowire="byName" />
 		
 	
 </beans>
