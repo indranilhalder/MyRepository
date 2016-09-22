@@ -67,8 +67,8 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Section4;;VideoComponent;                          
 ;Section5;;MplBigPromoBannerComponent;
 ;Section6;;ProductCarouselComponent;
-;Section7;;CMSMediaParagraphComponent;
-;Section8;;SimpleResponsiveBannerComponent;
+;Section7;;ImageCarouselComponent;
+;Section8;;CMSParagraphComponent;
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;BreadcrumbComponent
@@ -281,33 +281,33 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 ############################### SECTION 7 START ####################################
 
 INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/png'];$contentCV[unique=true];folder(qualifier)[default=images];
-;;whirpool.jpg;$siteResource/images/banners/homepage/responsive/whirpool.jpg;whirpool.jpg;"Whirlpool";
-;;soda.png;$siteResource/images/banners/homepage/responsive/soda.png;soda.png;"Sassy soda";
-;;sony.jpg;$siteResource/images/banners/homepage/responsive/sony.jpg;sony.jpg;"Sony";
-;;hp.jpg;$siteResource/images/banners/homepage/responsive/hp.jpg;hp.jpg;"HP";
-;;ShoeBanner.jpeg;$siteResource/images/banners/homepage/responsive/ShoeBanner.jpeg;ShoeBanner.jpeg;"ShoeBanner";
-;;Lov.jpg;$siteResource/images/banners/homepage/responsive/Lov.jpg;Lov.jpg;"Lov";
-;;apple.png;$siteResource/images/banners/homepage/responsive/apple.png;apple.png;"apple";
-;;bombay.png;$siteResource/images/banners/homepage/responsive/bombay.png;bombay.png;"bombay";
-;;gia.png;$siteResource/images/banners/homepage/responsive/gia.png;gia.png;"gia";
-;;lookbook.png;$siteResource/images/banners/homepage/responsive/lookbook.png;lookbook.png;"lookbook";
-;;MixnMatch.jpg;$siteResource/images/banners/homepage/responsive/MixnMatch.jpg;MixnMatch.jpg;"MixnMatch";
-;;nikkon.png;$siteResource/images/banners/homepage/responsive/nikkon.png;nikkon.png;"nikkon";
+;;ascot.png;$siteResource/images/logo/ascot.png;ascot.png;"ascot";
+;;Burberrylogo.png;$siteResource/images/logo/Burberrylogo.png;Burberrylogo.png;"Burberrylogo";
+;;Coachlogo.png;$siteResource/images/logo/Coachlogo.png;Coachlogo.png;"Coachlogo";
+;;croma.png;$siteResource/images/logo/croma.png;croma.png;"croma";
+;;GiorgioArmanilogo.png;$siteResource/images/logo/GiorgioArmanilogo.png;GiorgioArmanilogo.png;"GiorgioArmanilogo";
+;;L.O.V.png;$siteResource/images/logo/L.O.V.png;L.O.V.png;"L.O.V";
+;;landmark.png;$siteResource/images/logo/landmark.png;landmark.png;"landmark";
+;;MichaelKorslogo.png;$siteResource/images/logo/MichaelKorslogo.png;MichaelKorslogo.png;"MichaelKorslogo";
+;;nuon.png;$siteResource/images/logo/nuon.png;nuon.png;"nuon";
+;;PaulSmithlogo.png;$siteResource/images/logo/PaulSmithlogo.png;PaulSmithlogo.png;"PaulSmithlogo";
+;;titan.png;$siteResource/images/logo/titan.png;titan.png;"titan";
+;;zara.png;$siteResource/images/logo/zara.png;zara.png;"zara";
 
 
 INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;content;$picture;url
-;;Brand1Component;Brand1 Component;Brand1Component;"<span>Whirlpool</span>";whirpool.jpg;"#";
-;;Brand2Component;Brand2 Component;Brand2Component;"<span>Sassy Soda</span>";soda.png;"#";
-;;Brand3Component;Brand3 Component;Brand3Component;"<span>Sony</span>";sony.jpg;"#";
-;;Brand4Component;Brand4 Component;Brand4Component;"<span>HP</span>";hp.jpg;"#";
-;;Brand5Component;Brand5 Component;Brand5Component;"<span>ShoeBanner</span>";ShoeBanner.jpeg;"#";
-;;Brand6Component;Brand6 Component;Brand6Component;"<span>Lov</span>";Lov.jpg;"#";
-;;Brand7Component;Brand7 Component;Brand7Component;"<span>apple</span>";apple.png;"#";
-;;Brand8Component;Brand8 Component;Brand8Component;"<span>bombay</span>";bombay.png;"#";
-;;Brand9Component;Brand9 Component;Brand9Component;"<span>gia</span>";gia.png;"#";
-;;Brand10Component;Brand10 Component;Brand10Component;"<span>lookbook</span>";lookbook.png;"#";
-;;Brand11Component;Brand11 Component;Brand11Component;"<span>MixnMatch</span>";MixnMatch.jpg;"#";
-;;Brand12Component;Brand12 Component;Brand12Component;"<span>nikkon</span>";nikkon.png;"#";
+;;Brand1Component;Brand1 Component;Brand1Component;;ascot.png;"#";
+;;Brand2Component;Brand2 Component;Brand2Component;;Burberrylogo.png;"#";
+;;Brand3Component;Brand3 Component;Brand3Component;;Coachlogo.png;"#";
+;;Brand4Component;Brand4 Component;Brand4Component;;croma.png;"#";
+;;Brand5Component;Brand5 Component;Brand5Component;;GiorgioArmanilogo.png;"#";
+;;Brand6Component;Brand6 Component;Brand6Component;;L.O.V.png;"#";
+;;Brand7Component;Brand7 Component;Brand7Component;;landmark.png;"#";
+;;Brand8Component;Brand8 Component;Brand8Component;;MichaelKorslogo.png;"#";
+;;Brand9Component;Brand9 Component;Brand9Component;;nuon.png;"#";
+;;Brand10Component;Brand10 Component;Brand10Component;;PaulSmithlogo.png;"#";
+;;Brand11Component;Brand11 Component;Brand11Component;;titan.png;"#";
+;;Brand12Component;Brand12 Component;Brand12Component;;zara.png;"#";
 
 #BestPicksCarouselComponent
 INSERT_UPDATE ImageCarouselComponent;$contentCV[unique=true];uid[unique=true];name;title;&componentRef;collectionItems(&componentRef)
@@ -327,6 +327,21 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 
 ############################### SECTION 7 END ####################################
 
+############################### SECTION 8 START ####################################
+
+INSERT_UPDATE  CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;content[lang=$lang];&componentRef;;;;
+;;LuxuryParagraphComponent;Luxury social feed Paragraph Component;"#TataCliQ Luxury Homepage";LuxuryParagraphComponent;;;;
+
+
+#### create content slot
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+;;Section8-socialFeedSection;true;luxury social feed Paragraph Slot;LuxuryParagraphComponent
+
+# ContentSlotForPage 
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxuryhomepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;section8-luxuryHomepage;Section8;;Section8-socialFeedSection;;; 
+
+############################### SECTION 8 END ####################################
 
 ############################### SEARCHBOX START ####################################
 INSERT_UPDATE MplEnhancedSearchBoxComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;maxProducts;maxSuggestions;minCharactersBeforeRequest;searchBoxCategories(code, $productCV)

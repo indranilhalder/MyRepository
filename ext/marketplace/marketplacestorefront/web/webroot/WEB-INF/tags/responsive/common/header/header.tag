@@ -21,6 +21,7 @@
 	<c:set var="hideLogo" value="true"></c:set>
 </c:if>
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticHost"/>
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.resource.host')" var="luxuryHost"/>
 <header>	
 	<!-- For Infinite Analytics Start -->
 	<input type="hidden" id="ia_site_id" value="${cmsSite.uid}"> 
@@ -76,12 +77,21 @@
 			<div class="container">
 				<c:if test="${empty showOnlySiteLogo }">
 					<div class="left">
+						<!-- Luxury tab	 starts-->
+						<div id="flip-tabs" >				
+							<ul id="flip-navigation" >  
+					            <li class="selected"><a href="/" id="tab-1" >MARKETPLACE</a></li>
+					            <li><a href="${luxuryHost}" id="tab-2" >LUXURY</a></li>  
+					        </ul> 
+					    </div>
+				        <!-- Luxury tab	 ends-->
 						<ul>
-							<%-- <li><a href="<c:url value="/helpservices"/>"><spring:theme
-										code="header.help&Services" /></a></li> --%>
-
+							<li><a href="<c:url value="/helpservices"/>"><spring:theme
+										code="header.help&Services" /></a></li>
 						</ul>
-					</div>
+						
+				   </div>      
+					
 				</c:if>
 
 				<div class="marketplace compact">
@@ -238,6 +248,42 @@
 #feedBackFormModal.modal .content > .close {
 	right: 20px !important;
 }
+
+/*--------------Added for luxury site starts-----------*/
+/* #flip-tabs{  
+    width:300px;  
+    margin:20px auto; position:relative;  
+}  
+#flip-navigation{  
+    margin:0 0 10px; padding:0;   
+    list-style:none;  
+}  
+#flip-navigation li{   
+    display:inline;   
+}  
+#flip-navigation li a{  
+    text-decoration:none; padding:10px;   
+    margin-right:0px;  
+    background:#f9f9f9;  
+    color:#333; outline:none;  
+    font-family:Arial; font-size:12px; text-transform:uppercase;  
+}  
+#flip-navigation li a:hover{  
+    background:#999;   
+    color:#f0f0f0;  
+}  
+#flip-navigation li.selected a{  
+    background:#999;  
+    color:#f0f0f0;  
+}  
+/* #flip-container{    
+    width:300px;  
+    font-family:Arial; font-size:13px;  
+}  
+#flip-container div{   
+    background:#fff;  
+}  */  */
+/*--------------Added for luxury site ends-----------*/
 </style>
 <script>
 </script>

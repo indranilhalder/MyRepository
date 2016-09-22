@@ -48,6 +48,7 @@ import com.tisl.mpl.wsdto.CollectionPageWsDTO;
 import com.tisl.mpl.wsdto.HelpmeShopCategoryWsDTO;
 import com.tisl.mpl.wsdto.HelpmeShopWsDTO;
 import com.tisl.mpl.wsdto.HeroProductWsDTO;
+import com.tisl.mpl.wsdto.LuxHomePageCompWsDTO;
 import com.tisl.mpl.wsdto.MplPageComponentsWsDTO;
 import com.tisl.mpl.wsdto.MplPageWsDTO;
 import com.tisl.mpl.wsdto.PageWsDTO;
@@ -63,7 +64,7 @@ import com.tisl.mpl.wsdto.ProductSearchPageWsDto;
 public class CMSController extends BaseController
 {
 	private final String MOBILE_DISCOVER_UID = "MobileHomepageDiscover";
-	
+
 	private final String MOBILE_SHOWCASE_UID = "MobileHomepageShowCase";
 	//private final String MOBILE_HOMEPAGE_UID = "MobileHomepage";	//SONAR Fix
 	//private static final String MOBILE_BRANDPAGE_UID = "MobileBrandPage";	//SONAR Fix
@@ -184,7 +185,7 @@ public class CMSController extends BaseController
 	@RequestMapping(value = "/homepage", method = RequestMethod.GET)
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
 	@ResponseBody
-	public MplPageWsDTO getHomepage(@RequestParam(defaultValue = DEFAULT) final String fields)
+	public MplPageWsDTO getLuxuryHomepage(@RequestParam(defaultValue = DEFAULT) final String fields)
 	{
 		MplPageWsDTO dto;
 		final MplPageData homePageData = mplCmsFacade.getHomePageForMobile();
@@ -195,6 +196,33 @@ public class CMSController extends BaseController
 		return dto;
 
 	}
+
+	/*
+	 * luxury homepage controller
+	 */
+	@RequestMapping(value = "/luxuryhomepage", method = RequestMethod.GET)
+	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
+	@ResponseBody
+	public LuxHomePageCompWsDTO getHomepage(@RequestParam(defaultValue = DEFAULT) final String fields)
+	{
+
+		try
+		{
+			final LuxHomePageCompWsDTO homePageData = mplCmsFacade.getHomePageForLuxury();
+			return homePageData;
+		}
+		catch (final CMSItemNotFoundException e)
+		{
+			// YTODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//	final FieldSetBuilderContext context = new FieldSetBuilderContext();
+		//	final Set<String> fieldSet = fieldSetBuilder.createFieldSet(MplPageData.class, DataMapper.FIELD_PREFIX, fields, context);
+		//	dto = dataMapper.map(homePageData, MplPageWsDTO.class, fieldSet);
+
+		return null;
+	}
+
 
 	@RequestMapping(value = "/homepage/discover", method = RequestMethod.GET)
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
@@ -223,7 +251,7 @@ public class CMSController extends BaseController
 		return components;
 
 	}
-	
+
 	// this method is used for getting the string format of date.
 	public String getFormatedLastModifiedDateTime(final Date date)
 	{
@@ -314,7 +342,7 @@ public class CMSController extends BaseController
 		components.setMplPageComponent(dtos);
 		return components;
 	}
-	
+
 	@RequestMapping(value = "/mplcategory/{categoryID:.*}", method = RequestMethod.GET)
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
 	@ResponseBody
@@ -370,8 +398,8 @@ public class CMSController extends BaseController
 		components.setMplPageComponent(dtos);
 		return components;
 	}
-	
-	
+
+
 
 	@RequestMapping(value = "/deals/products", method = RequestMethod.GET)
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
