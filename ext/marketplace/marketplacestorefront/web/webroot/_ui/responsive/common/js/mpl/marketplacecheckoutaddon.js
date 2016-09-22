@@ -3278,10 +3278,39 @@ function checkPincodeServiceability(buttonType)
  				$("#cartAmtOfferDisplay_"+entryNumber).hide();
  				$("#itemCartCentDisplay_"+entryNumber).hide();
  				$("#itemCartAmtDisplay_"+entryNumber).hide();
+ 				
+ 				
+ 			/*	$(".ItemAmtofferDisplayPrFm").each(function(){
+ 					if($(".ItemAmtofferDisplayPrFm").css("display") === "none"){
+ 	 					$(this).parent("ul").children("del").css({"text-decoration":"inherit","color":"#000"});
+ 	 				}
+ 				});*/
+ 				
+ 				
+ 	 			
+ 					
+ 					
+ 				
+ 				
+ 			
+ 				
+ 				
+ 				if(cartData[cart]['productLevelDisc']!=null&&cartData[cart]['prodLevelPercentage']!=null&&cartData[cart]['cartLevelDisc']!=null&&cartData[cart]['cartLevelPercentage']){
+ 					var totalPrice=$("#basePrice_"+entryNumber).val();
+ 					$("#totalPrice_"+entry.entryNumber).hide();
+ 					$("#totalPriceDisplay_"+entryNumber).val(totalPrice);
+ 				}
+ 				
  				if(cartData[cart]['productLevelDisc']!=null){
  					$("#ItemAmtofferDisplay_"+entryNumber).show();
  					console.log("productLevl"+cartData[cart]['productLevelDisc'].formattedValue);
  					$("#off-bag-ItemLevelDisc_"+entryNumber).html(cartData[cart]['productLevelDisc'].formattedValue).append("<span>Off Item</span>");
+ 				    $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
+ 				}
+ 				if(cartData[cart]['prodLevelPercentage']!=null){
+ 					$("#ItemAmtofferDisplay_"+entryNumber).show();
+ 					console.log("productLevl"+cartData[cart]['prodLevelPercentage']);
+ 					$("#off-bag-ItemLevelDisc_"+entryNumber).html(cartData[cart]['prodLevelPercentage']+"%").append("<span>Off Item</span>");
  				    $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
  				}
  				if(cartData[cart]['cartLevelDisc']!=null){
@@ -3291,6 +3320,21 @@ function checkPincodeServiceability(buttonType)
  				}
  			
  			}
+ 			
+ 			
+ 			$("li.price").each(function(){
+					var len = $(this).find(".ItemAmtofferDisplayPrFm").length;
+					var count=0;
+					$(this).find(".ItemAmtofferDisplayPrFm").each(function(){
+					if($(this).css("display") === "none"){
+					count++;
+					}
+					if(count === len){
+					$(this).parent("ul").find("del").css({"text-decoration":"inherit","color":"#000"});
+					}
+					});
+					});
+ 			
  			if(response=="N")
  				{
  				// TISTI-255

@@ -216,11 +216,14 @@ tr.d0 td {
 													<%-- TISPRO-215--%>
 												<c:choose>
     											<c:when test="${not empty entry.cartLevelDisc || not empty entry.productLevelDisc}">
-        												<del>
+    											        <c:set var="totalPrice"  value="${entry.totalPrice.formattedValue}"/>
+        												<%-- <span id="totalPrice_${entry.entryNumber}"> --%><del>
 															<format:price priceData="${entry.totalPrice}" displayFreeForZero="false" />
 		 												</del>
+		 												<!-- </span> -->
     											</c:when>    
     											<c:otherwise>
+    											         <c:set var="totalPrice"  value="${entry.totalPrice.formattedValue}"/>
        													<span><format:price priceData="${entry.totalPrice}"/></span>
    												 </c:otherwise>
 												</c:choose>
@@ -229,6 +232,7 @@ tr.d0 td {
 											<c:otherwise>
 												<c:choose>
 													<c:when test="${entry.basePrice.formattedValue == entry.totalPrice.formattedValue}">
+													<c:set var="totalPrice"  value="${entry.totalPrice}"/>
 												<span><format:price priceData="${entry.totalPrice}"/></span>
 											</c:when>
 													<c:otherwise>
@@ -237,12 +241,14 @@ tr.d0 td {
 																<c:choose>	
 																	<c:when	test="${baseprice.key == entry.entryNumber}">
 																		<c:if test="${baseprice.value.formattedValue != entry.totalPrice.formattedValue||not empty entry.cartLevelDisc}">
-																		 	<li><del> <format:price priceData="${baseprice.value}" displayFreeForZero="true" /></del></li>
+																		 	<c:set var="totalPrice"  value="${baseprice.value.formattedValue}"/>
+																		 	<li <%-- id="totalPrice_${entry.entryNumber} --%>"><del><format:price priceData="${baseprice.value}" displayFreeForZero="true" /></del></li>
 																		</c:if>
 																	</c:when>
 																</c:choose>
 															</c:forEach>
 															<c:if test="${empty entry.cartLevelDisc && empty entry.productLevelDisc}">
+															<c:set var="totalPrice"  value="${entry.totalPrice.formattedValue}"/>
 															 <span><format:price priceData="${entry.totalPrice}"/></span>
 															 </c:if>
 														</c:if>
@@ -257,7 +263,7 @@ tr.d0 td {
 								<c:when test="${not empty entry.cartLevelDisc}">
 								<c:choose>
 								<c:when test="${not empty entry.productLevelDisc && not empty entry.prodLevelPercentage}">
-								<span id="itemCartCentDisplay_${entry.entryNumber}"><span class="off-bag"><spring:theme code="off.item.percentage"/><del><format:price priceData="${entry.netSellingPrice}"/></del></span></span>
+								<span id="itemCartCentDisplay_${entry.entryNumber}"><span class="off-bag">${entry.prodLevelPercentage}<spring:theme code="off.item.percentage"/><del><format:price priceData="${entry.netSellingPrice}"/></del></span></span>
 								</c:when>
 								<c:otherwise>
 								<c:if test="${not empty entry.productLevelDisc}">
@@ -292,7 +298,8 @@ tr.d0 td {
 								</c:if>
 								</c:otherwise>
 							</c:choose></c:if>
-							
+							<%-- <input type="text" value="${totalPrice}" id="basePrice_${entry.entryNumber}"/> --%>
+							<span id="totalPriceDisplay_${entry.entryNumber}"></span>
                             <span id="ItemAmtofferDisplay_${entry.entryNumber}" style="display: none" class="ItemAmtofferDisplayPrFm"><span class="priceFormat priceFormatOnUpdate"><span id="off-bag-ItemLevelDisc_${entry.entryNumber}"></span></span><br/><span class="priceFormat"><span id="off-bag-ItemLevelDiscAmt_${entry.entryNumber}"></span></span></span>
 							<span id="CartofferDisplay_${entry.entryNumber}" style="display: none" class="ItemAmtofferDisplayPrFm"><span class="priceFormat priceFormatOnUpdate"><span id="off-bag-cartLevelDisc_${entry.entryNumber}"></span></span><br/><span class="priceFormat"><span id="off-cartLevelDiscAmt_${entry.entryNumber}"></span></span></span>
 							<%--  <span id="offerDisplay_${entry.entryNumber}" style="display: none"><!-- <span class="off-bag"> --><span class="priceFormat"><span id="off-bag-cartLevelDisc_${entry.entryNumber}"></span></span><br/><span id="offerBag_${entry.entryNumber}"><spring:theme code="off.bag"/></span><span class="priceFormat"><span id="off-cartLevelDiscAmt_${entry.entryNumber}"></span></span></span><!--  </span> --> --%>
