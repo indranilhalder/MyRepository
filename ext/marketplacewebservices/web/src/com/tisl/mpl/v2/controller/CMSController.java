@@ -197,32 +197,6 @@ public class CMSController extends BaseController
 
 	}
 
-	/*
-	 * luxury homepage controller
-	 */
-	@RequestMapping(value = "/luxuryhomepage", method = RequestMethod.GET)
-	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
-	@ResponseBody
-	public LuxHomePageCompWsDTO getLuxuryHomepage(@RequestParam(defaultValue = DEFAULT) final String fields)
-	{
-
-		try
-		{
-			final LuxHomePageCompWsDTO homePageData = mplCmsFacade.getHomePageForLuxury();
-			return homePageData;
-		}
-		catch (final CMSItemNotFoundException e)
-		{
-			// YTODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		//	final FieldSetBuilderContext context = new FieldSetBuilderContext();
-		//	final Set<String> fieldSet = fieldSetBuilder.createFieldSet(MplPageData.class, DataMapper.FIELD_PREFIX, fields, context);
-		//	dto = dataMapper.map(homePageData, MplPageWsDTO.class, fieldSet);
-
-		return null;
-	}
-
 
 	@RequestMapping(value = "/homepage/discover", method = RequestMethod.GET)
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
@@ -615,5 +589,59 @@ public class CMSController extends BaseController
 		dto.setListing(productSearchPage);
 		return dto;
 
+	}
+
+
+	//Luxury Relates Services
+	/*
+	 * luxury homepage controller
+	 */
+	@RequestMapping(value = "/luxuryhomepage", method = RequestMethod.GET)
+	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
+	@ResponseBody
+	public LuxHomePageCompWsDTO getLuxuryHomepage(@RequestParam(defaultValue = DEFAULT) final String fields)
+	{
+
+		try
+		{
+			final LuxHomePageCompWsDTO homePageData = mplCmsFacade.getHomePageForLuxury();
+			return homePageData;
+		}
+		catch (final CMSItemNotFoundException e)
+		{
+			// YTODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//	final FieldSetBuilderContext context = new FieldSetBuilderContext();
+		//	final Set<String> fieldSet = fieldSetBuilder.createFieldSet(MplPageData.class, DataMapper.FIELD_PREFIX, fields, context);
+		//	dto = dataMapper.map(homePageData, MplPageWsDTO.class, fieldSet);
+
+		return null;
+	}
+
+	/*
+	 * luxury homepage controller
+	 */
+	@RequestMapping(value = "/luxuryhomepage", method = RequestMethod.GET)
+	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
+	@ResponseBody
+	public LuxHomePageCompWsDTO getLuxuryBLP(@RequestParam(defaultValue = DEFAULT) final String fields)
+	{
+
+		try
+		{
+			final LuxHomePageCompWsDTO homePageData = mplCmsFacade.getHomePageForBLP();
+			return homePageData;
+		}
+		catch (final CMSItemNotFoundException e)
+		{
+			// YTODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//	final FieldSetBuilderContext context = new FieldSetBuilderContext();
+		//	final Set<String> fieldSet = fieldSetBuilder.createFieldSet(MplPageData.class, DataMapper.FIELD_PREFIX, fields, context);
+		//	dto = dataMapper.map(homePageData, MplPageWsDTO.class, fieldSet);
+
+		return null;
 	}
 }

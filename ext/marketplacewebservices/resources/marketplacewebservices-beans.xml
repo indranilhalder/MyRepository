@@ -2449,6 +2449,13 @@
     	<property name="socialfeedcomponent" type="com.tisl.mpl.wsdto.TextComponentWsDTO"/>
     </bean>
     
+    <bean class="com.tisl.mpl.wsdto.LuxBlpCompWsDTO">
+    	<property name="pageTitle" type="String" />
+    	<property name="metaKeywords" type="String" />
+    	<property name="metaDescription" type="String" />
+    	<property name="Components" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxBlpCompListWsDTO>"/>
+    </bean>
+    
     <bean class="com.tisl.mpl.wsdto.LuxBlpCompListWsDTO">
     	<property name="title" type="String" />
     	<property name="sectionid" type="String" />
