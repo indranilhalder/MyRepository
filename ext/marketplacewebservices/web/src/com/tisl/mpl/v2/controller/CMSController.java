@@ -48,6 +48,7 @@ import com.tisl.mpl.wsdto.CollectionPageWsDTO;
 import com.tisl.mpl.wsdto.HelpmeShopCategoryWsDTO;
 import com.tisl.mpl.wsdto.HelpmeShopWsDTO;
 import com.tisl.mpl.wsdto.HeroProductWsDTO;
+import com.tisl.mpl.wsdto.LuxBlpCompWsDTO;
 import com.tisl.mpl.wsdto.LuxHomePageCompWsDTO;
 import com.tisl.mpl.wsdto.MplPageComponentsWsDTO;
 import com.tisl.mpl.wsdto.MplPageWsDTO;
@@ -75,7 +76,7 @@ public class CMSController extends BaseController
 
 	/*
 	 * private static final Set<CatalogOption> OPTIONS;
-	 * 
+	 *
 	 * static { OPTIONS = getOptions(); }
 	 */
 
@@ -625,19 +626,19 @@ public class CMSController extends BaseController
 	@RequestMapping(value = "/luxuryBLP", method = RequestMethod.GET)
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
 	@ResponseBody
-	public LuxHomePageCompWsDTO getLuxuryBLP(@RequestParam(defaultValue = DEFAULT) final String fields)
+	public LuxBlpCompWsDTO getLuxuryBLP(@RequestParam(defaultValue = DEFAULT) final String fields)
 	{
 
-		//		try
-		//		{
-		//			final LuxHomePageCompWsDTO homePageData = mplCmsFacade.getHomePageForBLP();
-		//			return homePageData;
-		//		}
-		//		catch (final CMSItemNotFoundException e)
-		//		{
-		//			// YTODO Auto-generated catch block
-		//			e.printStackTrace();
-		//		}
+		try
+		{
+			final LuxBlpCompWsDTO blpcomponentdto = mplCmsFacade.getlandingForBrand();
+			return blpcomponentdto;
+		}
+		catch (final CMSItemNotFoundException e)
+		{
+			// YTODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		return null;
 	}

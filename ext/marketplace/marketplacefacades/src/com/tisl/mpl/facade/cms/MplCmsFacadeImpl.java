@@ -91,6 +91,8 @@ import com.tisl.mpl.model.cms.components.PromotionalProductsComponentModel;
 import com.tisl.mpl.model.cms.components.SmallBrandMobileAppComponentModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.util.GenericUtilityMethods;
+import com.tisl.mpl.wsdto.LuxBlpCompListWsDTO;
+import com.tisl.mpl.wsdto.LuxBlpCompWsDTO;
 import com.tisl.mpl.wsdto.LuxBrandProductsListWsDTO;
 import com.tisl.mpl.wsdto.LuxComponentsListWsDTO;
 import com.tisl.mpl.wsdto.LuxEngagementcomponentWsDTO;
@@ -1785,6 +1787,49 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 		return contentPageData;
 	}
 
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getlandingForBrand()
+	 */
+	@Override
+	public LuxBlpCompWsDTO getlandingForBrand() throws CMSItemNotFoundException
+	{
+		// YTODO Auto-generated method stub
+		final ContentPageModel contentPage = getMplCMSPageService().getPageByLabelOrId("luxurybrandlandingpage");
+		final LuxBlpCompWsDTO luxBlpPageDto = new LuxBlpCompWsDTO();
+
+		if (contentPage != null)
+		{
+
+			final ArrayList<LuxBlpCompListWsDTO> listComp = new ArrayList<LuxBlpCompListWsDTO>();
+			for (final ContentSlotForPageModel contentSlotForPage : contentPage.getContentSlots())
+			{
+				final ContentSlotModel contentSlot = contentSlotForPage.getContentSlot();
+				final List<LuxBlpCompListWsDTO> luxuryComponentsForASlot = getComponentDtoforASlot(contentSlot);
+				//		listComp.addAll(luxuryComponentsForASlot);
+			}
+
+			luxBlpPageDto.setComponents(listComp);
+			luxBlpPageDto.setPageTitle(contentPage.getTitle());
+			luxBlpPageDto.setMetaDescription(contentPage.getDescription());
+			luxBlpPageDto.setMetaKeywords(contentPage.getKeywords());
+		}
+		return luxBlpPageDto;
+
+	}
+
+	/**
+	 * @param contentSlot
+	 * @return
+	 */
+	private List<LuxBlpCompListWsDTO> getComponentDtoforASlot(final ContentSlotModel contentSlot) throws CMSItemNotFoundException
+	{
+		// YTODO Auto-generated method stub
+
+		return null;
+	}
 
 
 }
