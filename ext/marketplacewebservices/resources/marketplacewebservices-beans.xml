@@ -2459,10 +2459,20 @@
     	<property name="gender_component" type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/>
     	<!-- For MplAdvancedCategoryCarouselComponent -->
     	<property name="category_component" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxShopYourFavListWsDTO>"/>
-    	<!-- For RotatingImagesComponent -->
-    	<property name="carousal_images" type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/>
+    	<!-- For spring_component -->
+    	<property name="spring_component" type="com.tisl.mpl.wsdto.LuxTextMediaComponentWsDTO"/>
+    	<!-- For Featured Products -->
+    	<property name="featured_component" type="com.tisl.mpl.wsdto.LuxTextMediaComponentWsDTO"/>
     	<!-- For VideoComponent -->
     	<property name="videocomponent" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxVideocomponentWsDTO>"/>    	    	
+    </bean>
+    
+    <bean class="com.tisl.mpl.wsdto.LuxTextMediaComponentWsDTO">
+         <!-- For RotatingImagesComponent -->
+        <property name="textContent" type="java.util.List&lt;com.tisl.mpl.wsdto.TextComponentWsDTO"/>
+         <!-- For RotatingImagesComponent -->
+    	<property name="carousal_images" type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/>
+    	
     </bean>
     
 </beans>
