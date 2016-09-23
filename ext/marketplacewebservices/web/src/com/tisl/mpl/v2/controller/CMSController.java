@@ -4,10 +4,7 @@
 package com.tisl.mpl.v2.controller;
 
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
-import de.hybris.platform.commercefacades.product.data.CategoryData;
-import de.hybris.platform.commercefacades.product.data.ProductData;
-import de.hybris.platform.commercefacades.search.data.SearchStateData;
-import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData;
+import de.hybris.platform.commercesearchbackoffice.data.CategoryData;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControl;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControlDirective;
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
@@ -75,7 +72,7 @@ public class CMSController extends BaseController
 
 	/*
 	 * private static final Set<CatalogOption> OPTIONS;
-	 * 
+	 *
 	 * static { OPTIONS = getOptions(); }
 	 */
 
@@ -628,19 +625,16 @@ public class CMSController extends BaseController
 	public LuxHomePageCompWsDTO getLuxuryBLP(@RequestParam(defaultValue = DEFAULT) final String fields)
 	{
 
-		try
-		{
-			final LuxHomePageCompWsDTO homePageData = mplCmsFacade.getHomePageForBLP();
-			return homePageData;
-		}
-		catch (final CMSItemNotFoundException e)
-		{
-			// YTODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		//	final FieldSetBuilderContext context = new FieldSetBuilderContext();
-		//	final Set<String> fieldSet = fieldSetBuilder.createFieldSet(MplPageData.class, DataMapper.FIELD_PREFIX, fields, context);
-		//	dto = dataMapper.map(homePageData, MplPageWsDTO.class, fieldSet);
+		//		try
+		//		{
+		//			final LuxHomePageCompWsDTO homePageData = mplCmsFacade.getHomePageForBLP();
+		//			return homePageData;
+		//		}
+		//		catch (final CMSItemNotFoundException e)
+		//		{
+		//			// YTODO Auto-generated catch block
+		//			e.printStackTrace();
+		//		}
 
 		return null;
 	}
