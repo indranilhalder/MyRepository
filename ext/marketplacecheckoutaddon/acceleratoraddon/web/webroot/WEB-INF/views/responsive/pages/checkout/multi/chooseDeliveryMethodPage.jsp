@@ -21,7 +21,13 @@
 <%@ taglib prefix="cart" tagdir="/WEB-INF/tags/responsive/cart"%>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format" %>
 
+<style>
 
+.checkTab .address-list.hideItem {
+display: none;
+}
+
+</style>
 
 
 <template:page pageTitle="${pageTitle}" hideHeaderLinks="true"
@@ -202,7 +208,22 @@
       <form>
                 <c:forEach items="${deliveryAddresses}" var="deliveryAddress"
 														varStatus="status">
-        <div class="address-list">
+														
+		<c:if test="${status.last}">
+				<c:set var="deliveryAddressCount" value="${status.index}"></c:set>
+		</c:if>	
+				
+		<c:choose>
+			<c:when test="${status.index eq 0 ||  status.index eq 1 ||  status.index eq 2 ||  status.index eq 3}"> 
+					 <c:set var="showItem" value="showItem"></c:set>
+					</c:when>
+			<c:otherwise>
+													
+			 <c:set var="showItem" value="hideItem"></c:set>
+			</c:otherwise>
+		</c:choose>	
+																
+        <div class="address-list ${showItem}">
         	<c:choose>
 			<c:when test="${deliveryAddress.defaultAddress}">
           <input type="radio" class="radio1" name="selectedAddressCode"
@@ -367,8 +388,24 @@
 									</div>
 	  
 	  </div> --%>
+	 
 	  <div class="addnewAddresPage"></div>
-     <div class="add-address" style="display: block;">
+	  
+	     <c:if test="${deliveryAddressCount gt 3}">
+	    <!--  <li style="float:left;width:500px;"><a href="#" class="viewMore">View More</a></li> -->	
+	    <div class="add-address_viewMore viewMoreContainer" style="display: inline-block !important;margin-right: 0;margin-bottom: 104px;">
+        <p>
+														<span class="addsign viewMoreSign">
+        
+        </span>
+        <a class="viewMore"> 
+		View More</a>
+        </p>
+		
+      </div>
+	  </c:if>
+	  
+     <div class="add-address" style="display: block;margin-left:56px;">
         <p id="address-form">
 														<span class="addsign pincode-button">
         
@@ -380,6 +417,8 @@
         </p>
 		
       </div>
+      
+    
 	  
 	  </div> 
    
