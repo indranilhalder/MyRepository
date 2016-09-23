@@ -3944,14 +3944,25 @@
 						<persistence type="property" />
 					</attribute>
 
+
 					<attribute type="java.lang.String" qualifier="videoDescription">
 						<modifiers read="true" write="true" search="true"
 							unique="true" optional="true" />
 						<description>Video Description</description>
 						<persistence type="property" />
+					</attribute>					               
+					              <!--Attributed added for luxuary page--> 
+					
+					<attribute type="java.lang.String" qualifier="previewUrl">
+						<modifiers read="true" write="true" search="true"
+							unique="true" optional="true" />
+						<description>Preview URL of the video</description>
+						<persistence type="property" />
 					</attribute>
+					
 				</attributes>
 			</itemtype>
+			
 
 			<!-- New attributes added to SimpleBanner Component -->
 
