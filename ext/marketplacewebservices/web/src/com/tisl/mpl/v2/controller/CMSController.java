@@ -76,7 +76,7 @@ public class CMSController extends BaseController
 
 	/*
 	 * private static final Set<CatalogOption> OPTIONS;
-	 *
+	 * 
 	 * static { OPTIONS = getOptions(); }
 	 */
 
@@ -632,6 +632,7 @@ public class CMSController extends BaseController
 		try
 		{
 			final LuxBlpCompWsDTO blpcomponentdto = mplCmsFacade.getlandingForBrand();
+
 			return blpcomponentdto;
 		}
 		catch (final CMSItemNotFoundException e)

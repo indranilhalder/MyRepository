@@ -1827,9 +1827,38 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	private List<LuxBlpCompListWsDTO> getComponentDtoforASlot(final ContentSlotModel contentSlot) throws CMSItemNotFoundException
 	{
 		// YTODO Auto-generated method stub
+		final List<LuxBlpCompListWsDTO> componentListForASlot = new ArrayList<LuxBlpCompListWsDTO>();
+		LuxBlpCompListWsDTO blpComponent = new LuxBlpCompListWsDTO();
+		if (null != contentSlot)
+		{
 
-		return null;
+			for (final AbstractCMSComponentModel abstractCMSComponentModel : contentSlot.getCmsComponents())
+			{
+				final String typecode = abstractCMSComponentModel.getTypeCode();
+				if (typecode.equalsIgnoreCase("RotatingImagesComponent"))
+				{
+					final RotatingImagesComponentModel luxuryBannerComponent = (RotatingImagesComponentModel) abstractCMSComponentModel;
+					blpComponent = getForHimHerBannerWsDTO(luxuryBannerComponent);
+				}
+				LOG.debug("Adding component" + abstractCMSComponentModel.getUid() + "for section" + contentSlot.getUid());
+				blpComponent.setSectionid(contentSlot.getUid());
+
+			}
+			componentListForASlot.add(blpComponent);
+
+
+		}
+		return componentListForASlot;
+
 	}
 
-
+	/**
+	 * @param luxuryBannerComponent
+	 * @return
+	 */
+	private LuxBlpCompListWsDTO getForHimHerBannerWsDTO(final RotatingImagesComponentModel luxuryBannerComponent)
+	{
+		// YTODO Auto-generated method stub
+		return null;
+	}
 }
