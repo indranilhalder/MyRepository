@@ -5,6 +5,11 @@
 
 <template:page pageTitle="${pageTitle}">
 
+	<div class="brandLogoWrapper">
+	<cms:pageSlot position="BrandLogoSection" var="feature">
+		<cms:component component="${feature}" element="div" class="" />
+	</cms:pageSlot>
+	</div>
 	<cms:pageSlot position="Section1" var="feature">
 		<cms:component component="${feature}" element="div" class="" />
 	</cms:pageSlot>
@@ -25,6 +30,10 @@
 			</cms:pageSlot>
 		
 		<cms:pageSlot position="Section3A" var="feature">
+				<cms:component component="${feature}"/>
+			</cms:pageSlot>
+	
+	<cms:pageSlot position="Section3B" var="feature">
 				<cms:component component="${feature}"/>
 			</cms:pageSlot>
 	

@@ -30,6 +30,11 @@
 			</tr>
 			<tr>
 				<td colspan="5" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="BrandLogoSection" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="5" style="vertical-align:top;" class="structureViewSection">
 					<cockpit code="Section1" />
 				</td>
 			</tr>
@@ -54,6 +59,12 @@
 					<cockpit code="Section3A" />
 				</td>
 			</tr>
+				<tr>
+				<td colspan="5" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Section3B" />
+				</td>
+			</tr>
+			
 			<tr>
 				<td colspan="5" style="vertical-align:top;" class="structureViewSection">
 					<cockpit code="Section4A" />
