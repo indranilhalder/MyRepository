@@ -6,6 +6,9 @@
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
 <%@ taglib prefix="component" tagdir="/WEB-INF/tags/shared/component"%>
 
+<c:if test="${not empty component.title}">
+		<h1>${component.title}</h1>
+</c:if>
 <c:choose>
 	<c:when test="${not empty Productdata}">
 		<div class="carousel-component">

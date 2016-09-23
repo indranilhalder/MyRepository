@@ -12,7 +12,7 @@
 <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/fonts.min.css?v=${buildNumber}"/>
 <c:choose>
 	<c:when test="${isMinificationEnabled}">
-		<compressible:mplmincss/>
+		<compressible:mplcss/>
 	</c:when>
 	<c:otherwise>
 		<compressible:mplcss/>

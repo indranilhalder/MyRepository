@@ -24996,7 +24996,7 @@ padding:0;
     display:block;
 }
 
-#addToCartButton,#addToCartButtonQuick {
+#addToCartButton, #addToCartButtonQuick{
     font-size: 12px;
     letter-spacing: 1px;
     height: 42px;
@@ -44270,13 +44270,13 @@ body.page-productDetails .breadcrumbs.wrapper {
 	    padding: 0;
     margin: 0;
 }
-
+/*
 .OtherSellers .Padd .InfoWrap .Content > div.Buying form {
-	display: inline-block;
+	 display: inline-block;
 	width: 49%;
-	float: left;
+	float: left; 
 	vertical-align: top;
-}
+}*/
 .OtherSellers .Padd .InfoWrap .Content > div.Buying form#wish {
 	    float: left;
 }
@@ -44301,7 +44301,7 @@ body.page-productDetails .breadcrumbs.wrapper {
     padding: 14px 0;
     text-transform: uppercase;
 }
-.OtherSellers .Padd .InfoWrap .Content > div.Buying form button.add-to-bag {
+.OtherSellers .Padd .InfoWrap .Content > div.Buying form .add-to-bag {
  	line-height: 12px;
     min-height: 45px;
     font-size: 12px;
@@ -44314,6 +44314,19 @@ body.page-productDetails .breadcrumbs.wrapper {
     width: 100%;
     padding: 14px 0;
     height: auto;
+ }
+ .OtherSellers .Padd .InfoWrap .Content > div.Buying form .add-to-bag-seller{
+    background-color: #fff;
+    color: #a9143c;
+    border: 1px solid #a9143c;
+ }
+ .OtherSellers .Padd .InfoWrap .Content > div.Buying form .buy-now{
+ 	width: 50%; 
+ }
+ 
+ .OtherSellers .Padd .InfoWrap .Content > div.Buying form .btn-buy-now-holder{
+ 	float: left;
+    width: 50%;
  }
 
 /*Offer Popup*/
@@ -46421,3 +46434,10 @@ padding: 0;
 	}
 	}
 /* CLP css ends */
+.InfoWrap .Buying .button add-to-bag{
+	
+    background-color: #fff;
+    color: #a9143c;
+    border: 1px solid #a9143c;
+	
+}
