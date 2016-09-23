@@ -94,8 +94,10 @@ import com.tisl.mpl.wsdto.LuxComponentsListWsDTO;
 import com.tisl.mpl.wsdto.LuxEngagementcomponentWsDTO;
 import com.tisl.mpl.wsdto.LuxHeroBannerWsDTO;
 import com.tisl.mpl.wsdto.LuxHomePageCompWsDTO;
+import com.tisl.mpl.wsdto.LuxShopByListWsDTO;
 import com.tisl.mpl.wsdto.LuxShopYourFavListWsDTO;
 import com.tisl.mpl.wsdto.LuxVideocomponentWsDTO;
+import com.tisl.mpl.wsdto.TextComponentWsDTO;
 
 
 /**
@@ -491,8 +493,14 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				}
 				else if (typecode.equalsIgnoreCase("ImageCarouselComponent"))
 				{
-					//final ImageCarouselComponentModel luxuryShopByComponent = (ImageCarouselComponentModel) abstractCMSComponentModel;
-					//luxuryComponent = getLuxShopByListWsDTO(luxuryShopByComponent);
+					final ImageCarouselComponentModel luxuryShopByComponent = (ImageCarouselComponentModel) abstractCMSComponentModel;
+					luxuryComponent = getLuxShopByListWsDTO(luxuryShopByComponent);
+				}
+				// Social Feed Component added
+				else if (typecode.equalsIgnoreCase("CMSParagraphComponent"))
+				{
+					final CMSParagraphComponentModel socialFeedComponent = (CMSParagraphComponentModel) abstractCMSComponentModel;
+					luxuryComponent = getLuxSocialFeedcomponentWsDTO(socialFeedComponent);
 				}
 				LOG.debug("Adding component" + abstractCMSComponentModel.getUid() + "for section" + contentSlot.getUid());
 				luxuryComponent.setSectionid(contentSlot.getUid());
@@ -535,13 +543,41 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	/**
 	 * @param abstractCMSComponentModel
 	 */
-	private void getLuxShopByListWsDTO(final ImageCarouselComponentModel luxuryShopByComponent)
+
+	private final LuxComponentsListWsDTO getLuxShopByListWsDTO(final ImageCarouselComponentModel luxuryShopByComponent)
 	{
 		// YTODO Auto-generated method stub
 		//	final String brandUrl = luxuryShopByComponent.getUrl();
 		//	final String brandLogoUrl = luxuryShopByComponent.getMedia().getURL();
 		//final String title = luxuryShopByComponent.getT
+		final ArrayList<LuxShopByListWsDTO> shopByListComponentDtoList = new ArrayList<LuxShopByListWsDTO>();
+
+		final LuxComponentsListWsDTO luxComponent = new LuxComponentsListWsDTO();
+
+		final List<CMSMediaParagraphComponentModel> mediaParaList = luxuryShopByComponent.getCollectionItems();
+
+		for (final CMSMediaParagraphComponentModel cmsMediaPara : mediaParaList)
+		{
+			final LuxShopByListWsDTO shopByList = new LuxShopByListWsDTO();
+			if (null != cmsMediaPara.getMedia())
+			{
+				if (cmsMediaPara.getMedia().getUrl() != null)
+				{
+					shopByList.setBrandLogoUrl(cmsMediaPara.getMedia().getUrl());
+				}
+				if (null != cmsMediaPara.getUrl())
+				{
+					shopByList.setBrandUrl(cmsMediaPara.getUrl());
+				}
+				shopByListComponentDtoList.add(shopByList);
+			}
+			//shopByListComponentDtoList.add(shopByList);
+		}
+		luxComponent.setTitle("Shop by");
+		luxComponent.setShopbycomponents(shopByListComponentDtoList);
+		return luxComponent;
 	}
+
 
 	/**
 	 * @param abstractCMSComponentModel
@@ -645,6 +681,23 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 		return luxcomponentObj;
 	}
 
+	/**
+	 * @param socialFeedComponent
+	 */
+	private LuxComponentsListWsDTO getLuxSocialFeedcomponentWsDTO(final CMSParagraphComponentModel socialFeedComponent)
+	{
+		final TextComponentWsDTO text = new TextComponentWsDTO();
+		final LuxComponentsListWsDTO luxComponent = new LuxComponentsListWsDTO();
+		if (null != socialFeedComponent)
+		{
+			if (null != socialFeedComponent.getContent())
+			{
+				text.setText(socialFeedComponent.getContent());
+			}
+		}
+		luxComponent.setSocialfeedcomponent(text);
+		return luxComponent;
+	}
 
 	/**
 	 * @param luxuryVideoComponent

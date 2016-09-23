@@ -190,7 +190,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 
 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxurybrandlandingpage'];contentSlot(uid,$contentCV)[unique=true];;;
-;;Section3-luxurybrandlandingpage;Section3;;Section3-SpringCollectionOfimages;;; 
+;;Section3Slot-luxurybrandlandingpage;Section3;;Section3-SpringCollectionOfimages;;; 
 
 ##############################Section 3  End ##########################################
 
@@ -225,6 +225,29 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 
 ############################### SECTION 4 END ###################################
 
+
+################################ SECTION 5 STARTS #################################
+
+
+ ####  VideoComponent section
+ 
+INSERT_UPDATE VideoComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;videoUrl;videoTitle;videoDescription;previewUrl
+;;LuxuryBLPVideoComponent;Luxury BLP Video Component;LuxuryBLPVideoComponent;https://www.youtube.com/embed/vOPL2uqcOHE;;"Lorem ipsum dolor sit amet, consectetur adipiscing
+elit. Scelerisque erat elit, vel tempus odio elementum non. Cras iaculis ante eu elit tincidunt pretium sit.<a class='shop_link' href='/'>Shop the Collection</a>";https://www.youtube.com/embed/vOPL2uqcOHE
+
+#### create content slot
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+;;Section5-videoComponent;true;luxury BLP Video Component;LuxuryBLPVideoComponent
+
+# ContentSlotForPage 
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxurybrandlandingpage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section5-luxuryBLP;Section5;;Section5-videoComponent;;; 
+
+
+############################### SECTION 5 END ###################################
+
 ################################### Section 6 Shop The Look Section ############################################
 
 INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images']
@@ -254,3 +277,49 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 ;;Section6-luxurybrandlandingpage;Section6;;Section6-luxurybrandlandingpage;;;
 
 ################################### Section 6 End ############################################
+
+#why our product
+############################### SECTION 7 Start ####################################
+
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
+#showcasebanner
+;;showcase1.png;$siteResource/images/banners/homepage/responsive/showcase1.png;showcase1.png;;
+;;showcase2.png;$siteResource/images/banners/homepage/responsive/showcase2.png;showcase2.png;;
+;;showcase3.png;$siteResource/images/banners/homepage/responsive/showcase3.png;showcase3.png;;
+
+UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];logo(code, $contentCV);bannerImage(code, $contentCV)
+#CollectionShowcase
+;;Leatherwhyourproductsitem;;showcase1.png
+;;Stichwhyourproductsitem;;showcase2.png
+;;Comfortwhyourproductsitem;;showcase3.png
+
+UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];text;bannerText
+#CollectionShowcase
+;;Leatherwhyourproductsitem;"<h1>Leather...</h1><p class='showcase-para'>Find excusive collections of leather only at Tata Cliq</p>"
+;;Stichwhyourproductsitem;"<h1>Stich...</h1><p class='showcase-para'>Find excusive collections of stich only at Tata Cliq</p>"
+;;Comfortwhyourproductsitem;"<h1>Comfort...</h1><p class='showcase-para'>Find excusive collections of comfort only at Tata Cliq</p>"
+
+UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];headerText
+;;Leatherwhyourproductsitem;"Leather"
+;;Stichwhyourproductsitem;"Stich"
+;;Comfortwhyourproductsitem;"Comfort"
+ 
+UPDATE MplShowcaseComponent;$contentCV[unique=true];uid[unique=true];title
+;;ShowcaseComponent;"Why Our Products"
+
+
+INSERT_UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;showByDefault;;
+;;Leatherwhyourproductsitem;Leather Why Our Products;Leatherwhyourproductsitem;false
+;;Stichwhyourproductsitem;Stich Why Our Products;Stichwhyourproductsitem;true
+;;Comfortwhyourproductsitem;Comfort Why Our Products;Comfortwhyourproductsitem;false
+
+INSERT_UPDATE MplShowcaseComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;showcaseItems(&componentRef);layout(code)
+;;WhyourproductComponent;Why Our Products Component;WhyourproductComponent;Leatherwhyourproductsitem,Stichwhyourproductsitem,Comfortwhyourproductsitem;CollectionShowCase
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(&componentRef)
+;;Section7-whyourproducts;WhyourproductComponent
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxurybrandlandingpage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section7Slot-luxuryBLP;Section7;;Section7-whyourproducts;;;
+
+############################### SECTION 7 End ####################################
