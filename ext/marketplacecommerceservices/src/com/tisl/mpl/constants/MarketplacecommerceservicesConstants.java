@@ -95,12 +95,14 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String LINK_PASSWORD_CHANGE = "/login/pw/change";
 
 	//For Promotion Intercepter
+
 	public static final String PROMOCODE = "Promotion Identifier :".intern();
 	public static final String PROMOPRODUCT = "Promotion Product :".intern();
 	public static final String PROMOCATEGORY = "Promotion Category :".intern();
 	public static final String PROMOPRIORITY = "Promotion Priority :".intern();
 	public static final String PRODUCT_PRICE_COLUMN = "price".intern();
 	public static final String PRESENT_CATEGORY = "Present Category :".intern();
+	public static final String PROMO_ERROR_MESSAGE = "Cannot exceed 25 characters.".intern();
 
 	//For SuperCategoryDecorator
 	public static final String CONFIGURATION_SER = "configurationService";

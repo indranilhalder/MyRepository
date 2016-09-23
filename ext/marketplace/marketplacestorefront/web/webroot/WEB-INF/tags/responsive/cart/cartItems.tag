@@ -1071,21 +1071,29 @@ tr.d0 td {
 		
 </div> --%>
 <div class="cart-total-block">
+<c:set var="totalDiscount" value="${cartData.totalDiscounts.value}"/>
+<c:set var="subtotal" value="${cartData.subTotal.value}"/>
+   <%-- <c:out value="${cartData.entries[0].netSellingPrice}"></c:out>  --%>
     <%--  <h2><spring:theme code="mpl.orderDetails" /></h2> --%>
+    <c:set var="discountPercentage" value="${100*(totalDiscount / subtotal)}"/>
 	<ul class="totals">
             <li id="subtotal"><spring:theme code="basket.page.totals.subtotal"/> <span class="amt"><ycommerce:testId code="Order_Totals_Subtotal"><format:price priceData="${cartData.subTotal}"/></ycommerce:testId></span></li>
+           <%-- <c:choose>
+           <c:when test="${cartData.deliveryCost.value eq '0.0'}">
+            <li id="delivery-amt"><spring:theme code="basket.page.totals.delivery"/><span class="amt">FREE</span></li>
+            </c:when>
+            <c:otherwise>
+             <li id="delivery-amt"><spring:theme code="basket.page.totals.delivery"/> <span class="amt"><c:out value="${cartData.deliveryCost.formattedValue}"></c:out></span></li>
+            </c:otherwise>
             
-            
+            </c:choose> --%>
+            <li id="delivery-amt"><spring:theme code="basket.page.totals.shipping"/><span class="amt"><c:out value="${cartData.deliveryCost.formattedValue}"></c:out></span></li>
          <c:if test="${cartData.totalDiscounts.value > 0}">
-        <li id="discount"><spring:theme code="basket.page.totals.savings"/> <span class="amt">
-        
-       
-        
-        
-        
+        <li id="discount"><spring:theme code="basket.page.totals.savings"/><span class="amt">
         -<ycommerce:testId code="Order_Totals_Savings"><format:price priceData="${cartData.totalDiscounts}"/></ycommerce:testId>
+        (<c:out value="${discountPercentage}"></c:out>%)
+        </c:if> 
         
-         </c:if> 
         </span></li>
             
             <li id="total"><spring:theme code="basket.page.totals.total"/><span class="amt"><ycommerce:testId code="cart_totalPrice_label">
