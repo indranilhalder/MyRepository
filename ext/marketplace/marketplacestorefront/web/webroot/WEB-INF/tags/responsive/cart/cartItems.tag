@@ -183,6 +183,7 @@ tr.d0 td {
    </li>
    
     <li class="price">
+   <%--  <c:out value="${entry.basePrice.value}"></c:out> --%>
 					<ul>
 						<c:set var="quantity" value="${entry.quantity}"/>
 						<c:set var="subPrice" value="${entry.basePrice.value}" />
@@ -212,11 +213,12 @@ tr.d0 td {
 										   	<span><format:price priceData="${entry.productLevelDisc}" displayFreeForZero="true"/></span><span class="discount-off">Off</span> 
 											--%>
 										</c:when>
-										<c:when test="${entry.basePrice.formattedValue == entry.totalPrice.formattedValue}">
+										<c:when test="${entry.basePrice.formattedValue == entry.totalPrice.formattedValue}  ">
 													<%-- TISPRO-215--%>
 												<c:choose>
     											<c:when test="${ not empty entry.productLevelDisc}">
         												<del>
+        												
 															<format:price priceData="${entry.totalPrice}" displayFreeForZero="false" />
 		 												</del>
     											</c:when>    
@@ -228,7 +230,7 @@ tr.d0 td {
 											</c:when>
 											<c:otherwise>
 												<c:choose>
-													<c:when test="${entry.basePrice.formattedValue == entry.totalPrice.formattedValue}">
+													<c:when test="${entry.basePrice.formattedValue == entry.totalPrice.formattedValue or entry.totalPrice.value / entry.quantity == entry.basePrice.value}">
 												<span><format:price priceData="${entry.totalPrice}"/></span>
 											</c:when>
 													<c:otherwise>
@@ -1077,8 +1079,6 @@ tr.d0 td {
 		
 </div>  --%>
 <div class="cart-total-block">
-<c:set var="totalDiscount" value="${cartData.totalDiscounts.value}"/>
-<c:set var="subtotal" value="${cartData.subTotal.value}"/>
    <%-- <c:out value="${cartData.entries[0].netSellingPrice}"></c:out> --%>
     <%--  <h2><spring:theme code="mpl.orderDetails" /></h2> --%>
 	<ul class="totals">
