@@ -3263,6 +3263,8 @@ function checkPincodeServiceability(buttonType)
  		cache: false,
  		success : function(responseData) {
  			var response = responseData['pincodeData'];
+ 			//TPR-970 changes
+ 			if(null!=responseData['cartData']||""!=responseData['cartData']){
  			var cartValue=responseData['cartData'];
  			var cartData=responseData['cartEntries'];
  			for(var cart in cartData){
@@ -3317,6 +3319,7 @@ function checkPincodeServiceability(buttonType)
  					$("#totalPrice_"+entryNumber).removeClass("delAction");
  				}
  			}
+ 			if(cartValue!=null){
  			$("#subtotal_Value").show();
  			$("#subtotal").hide();
  			$("#subtotalValue").html(cartValue['subTotal'].formattedValue);
@@ -3326,6 +3329,9 @@ function checkPincodeServiceability(buttonType)
  			$("#total").hide();
  			$("#total_Value").show();
  			$("#totalValue").html(cartValue['totalPrice'].formattedValue);
+ 			}
+ 			}
+ 			//TPR-970 changes
  			if(response=="N")
  				{
  				// TISTI-255
