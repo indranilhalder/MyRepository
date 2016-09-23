@@ -75,7 +75,9 @@ $( document ).ready(function() {
 		}); 
 	});	
 			
-		
+	$(".product-block.wishlist .mobile-delivery").click(function(){
+		 		$(this).parents("li.delivery").toggleClass("collapsed");
+		 	});		
 });
 </script>
 
@@ -201,7 +203,7 @@ $( document ).ready(function() {
 							</select>
 							</div>
 						</ycommerce:testId></li>
-					<li class="delivery">
+					<li class="delivery collapsed">
 					<p class="mobile-delivery"><spring:theme code="basket.delivery.options"/></p>
 						<ul>
 						

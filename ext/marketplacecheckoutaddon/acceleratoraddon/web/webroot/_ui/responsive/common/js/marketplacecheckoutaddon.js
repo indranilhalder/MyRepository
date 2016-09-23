@@ -4492,4 +4492,3 @@ function isSessionActive(){
 function redirectToCheckoutLogin(){
 	window.location=ACC.config.encodedContextPath + "/checkout/multi/checkoutlogin/login";
 }
-

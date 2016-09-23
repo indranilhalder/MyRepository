@@ -27,6 +27,7 @@ function navigateToPage(queryString,textString)
 	window.open(urlString,"_self");
 }
 </script>
+<div class="facet_desktop">
 <c:if test="${not empty facetData.values}">
 <c:if test="${facetData.code ne 'category'}">
 <c:if test="${facetData.code ne 'snsCategory' && facetData.code ne 'micrositeSnsCategory'}">
@@ -115,7 +116,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
 								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>							
 								<input type="hidden" name="isFacet" value="true"/>
-								
+								<input type="hidden" name="facetValue" value="${facetValue.code}"/>								
 								<input type="button" class="js-facet-colourbutton" style="background-color:${colorHexCode}; border:1px solid rgb(204, 211, 217); height: 36px;    padding: 13px 17px;"  />
 								<%-- <input type="submit" value="" style="background-color:${colorHexCode}; border:1px solid rgb(204, 211, 217); height: 36px;    padding: 13px 17px;"  /> --%>
 								<span><span>${facetValue.name}</span></span>
@@ -452,7 +453,7 @@ function navigateToPage(queryString,textString)
 				</div>
 				</div>
 			</c:if>
-		</div>
+		
 		
 		
 		
@@ -480,7 +481,7 @@ function navigateToPage(queryString,textString)
 								<input type="button" name ="submitPriceFilter" id ="applyCustomPriceFilter"	value="GO"/>
 						</form>							
 		</c:if>
-		
+		</div>
 		
 		
 		
@@ -496,6 +497,7 @@ function navigateToPage(queryString,textString)
 			</c:if>
 </c:if>
 </c:if>
+</div>
 <script>
 	
 

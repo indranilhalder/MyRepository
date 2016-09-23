@@ -52,6 +52,7 @@ import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
 import de.hybris.platform.converters.Populator;
 import de.hybris.platform.servicelayer.i18n.I18NService;
+import de.hybris.platform.util.localization.Localization;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -324,14 +325,21 @@ public class ProductsController extends BaseController
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-
-			product.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 			if (null != e.getErrorMessage())
 			{
 				product.setError(e.getErrorMessage());
 			}
-
+			product.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
+		//TPR-799
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			product.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			product.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			product.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
 		return product;
 	}
 
@@ -776,10 +784,9 @@ public class ProductsController extends BaseController
 		}
 		catch (final Exception e)
 		{
-			if (null != e.getMessage())
-			{
-				sizeGuideDataList.setError(e.getMessage());
-			}
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			sizeGuideDataList.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			sizeGuideDataList.setErrorCode(MarketplacecommerceservicesConstants.E0000);
 			sizeGuideDataList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		return sizeGuideDataList;
@@ -837,7 +844,20 @@ public class ProductsController extends BaseController
 		return productSearchPage;
 	}
 
-	@RequestMapping(value = "/serpsearch", method = RequestMethod.POST, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
+	/**
+	 * @desc SERP search with key word redirects
+	 * @param searchText
+	 * @param typeID
+	 * @param page
+	 * @param pageSize
+	 * @param sortCode
+	 * @param isTextSearch
+	 * @param isFilter
+	 * @param fields
+	 * @return
+	 */
+	@RequestMapping(value = "/serpsearch", method =
+	{ RequestMethod.POST, RequestMethod.GET }, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ProductSearchPageWsDto searchProductDto(@RequestParam(required = false) String searchText,
 			@RequestParam(required = false) String typeID, @RequestParam(required = false) int page,
@@ -903,7 +923,7 @@ public class ProductsController extends BaseController
 				searchQueryData.setValue(searchText);
 				searchState.setQuery(searchQueryData);
 
-				if (typeID != null)
+				if (StringUtils.isNotEmpty(typeID))
 				{
 					if (typeID.equalsIgnoreCase("all"))
 					{
@@ -938,10 +958,8 @@ public class ProductsController extends BaseController
 						searchSuggestUtilityMethods.setSearchPageData(productSearchPage, searchPageData);
 					}
 				}
-
 				else
 				{
-
 					productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 					productSearchPage.setError(MarketplacecommerceservicesConstants.INVALIDSEARCHKEY);
 				}
@@ -972,7 +990,8 @@ public class ProductsController extends BaseController
 				productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 				productSearchPage.setError(MarketplacecommerceservicesConstants.INVALIDSEARCHKEY);
 			}
-			if (null != typeID)
+
+			if (StringUtils.isNotEmpty(typeID))
 			{
 				productSearchPage.setCategoryCode(typeID);
 			}
@@ -1023,10 +1042,10 @@ public class ProductsController extends BaseController
 		}
 		catch (final Exception e)
 		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
-			//e.printStackTrace();
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			productSearchPage.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			productSearchPage.setErrorCode(MarketplacecommerceservicesConstants.E0000);
 			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-			productSearchPage.setError(MarketplacecommerceservicesConstants.EXCEPTION_IS + ":" + e);
 		}
 		return productSearchPage;
 	}

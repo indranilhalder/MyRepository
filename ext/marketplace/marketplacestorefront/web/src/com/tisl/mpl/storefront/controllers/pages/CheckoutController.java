@@ -334,11 +334,33 @@ public class CheckoutController extends AbstractCheckoutController
 	 */
 	protected String getCheckoutRedirectUrl()
 	{
+		//TPR-174
+
+		if (checkoutFacade.getCheckoutCart() != null && checkoutFacade.getCheckoutCart().isGotMerged())
+		{
+			return REDIRECT_PREFIX + "/cart";
+		}
 		// Default to the multi-step checkout
 		return REDIRECT_PREFIX + "/checkout/multi";
 	}
 
+	//	/**
+	//	 * Checks if there are any items in the cart.
+	//	 *
+	//	 * @return returns true if items found in cart.
+	//	 */
+	//	@SuppressWarnings("boxing")
+	//	protected boolean hasItemsInCart()
+	//	{
+	//
+	//		if (checkoutFacade.getCheckoutCart() != null && checkoutFacade.getCheckoutCart().isGotMerged())
+	//		{
+	//			return true;
+	//		}
+	//		return false;
+	//	}
 
+	//TPR-174 ends
 
 	//TISPT-175 ---- Not used
 	//	protected String processRegisterGuestUserRequest(final GuestRegisterForm form, final BindingResult bindingResult,

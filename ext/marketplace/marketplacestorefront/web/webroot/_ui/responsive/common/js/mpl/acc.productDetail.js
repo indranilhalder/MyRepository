@@ -2685,22 +2685,22 @@ function loadDefaultWishListName_SizeGuide() {
 	} 
 /*TPR-630*/
 	$(document).ready(function(){
-		$(".Emi > p").on("click",function(e){
+		$(".pdp .Emi > p").on("click",function(e){
 			e.stopPropagation();
 			if(!$(this).hasClass("active") && $(window).width() > 1024){
 				$(this).addClass("active");
 				openPopForBankEMI();
 			}
 		});
-		$(".Emi .modal-content .Close").on("click",function(e){
+		$(".pdp .Emi .modal-content .Close").on("click",function(e){
 			e.stopPropagation();
 			$(".Emi > p").removeClass("active mobile");
 			$(".emi-overlay").remove();
 			});
-		$(".Emi > #EMImodal-content").on("click",function(e){
+		$(".pdp .Emi > #EMImodal-content").on("click",function(e){
 			e.stopPropagation();
 			if($(window).width() > 1024){
-				$(".Emi > p").addClass("active")
+				$(".pdp .Emi > p").addClass("active")
 			}
 		});
 		/*$(".Emi > #EMImodal-content").on("click",".Emi .modal-content .Close",function(){
@@ -2709,13 +2709,13 @@ function loadDefaultWishListName_SizeGuide() {
 		$(document).on("click", function(e){
 			//console.log($(e.currentTarget).attr('class'))
 			if(!$(e.currentTarget).parents(".Emi").hasClass("Emi_wrapper")) {
-				$(".Emi > p").removeClass("active")
+				$(".pdp .Emi > p").removeClass("active")
 			} else {
-				$(".Emi > p").addClass("active")
+				$(".pdp .Emi > p").addClass("active")
 			}
 		});
 		
-		$(".Emi > p").on("click",function(){
+		$(".pdp .Emi > p").on("click",function(){
 			if($(window).width() <= 1024){
 				$(this).addClass("active mobile");
 				$("body").append("<div class='emi-overlay' style='opacity:0.65; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
@@ -2724,16 +2724,18 @@ function loadDefaultWishListName_SizeGuide() {
 				
 			}
 		});
-		$(document).on("click",".emi-overlay,.Emi .modal-content .Close",function(){
-			$(".Emi > p").removeClass("active mobile");
+		$(document).on("click",".pdp .emi-overlay,.pdp .Emi .modal-content .Close",function(){
+			$(".pdp .Emi > p").removeClass("active mobile");
 			$(".emi-overlay").remove();
 			$("body").removeClass("no-scroll");
 		});
 		
 		$(window).resize(function(){
 			if($(window).width() > 1024){
-				$(".Emi > p").removeClass("active mobile");
-				$(".emi-overlay").remove();
+				$(".pdp .Emi > p").removeClass("active mobile");
+				$(".pdp .emi-overlay").remove();
+				/*$(".Emi > p").removeClass("active mobile");
+				$(".emi-overlay").remove();*/
 				$("body").removeClass("no-scroll");
 			}
 		})

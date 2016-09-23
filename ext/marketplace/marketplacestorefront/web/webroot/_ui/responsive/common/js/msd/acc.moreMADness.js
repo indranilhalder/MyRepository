@@ -168,7 +168,7 @@ var loadMAD = function(productID, categoryID,msdRESTURL) {
                               		  } else {
                               		  sizes.sort() /*Not a string-based size array, sort normally*/
                               		  }
-                              		  dS = dS + '<span class="sizesAvailableMSD" style="padding:5px;">Size : ['+sizes+'] </span>';
+                              		  dS = dS + '<span class="sizesAvailableMSD">Size :  <span class="size-col">['+sizes+'] </span></span>';
                               		 }
                                 }                                
                             } 
@@ -194,33 +194,31 @@ var loadMAD = function(productID, categoryID,msdRESTURL) {
                         
                         
                         $(".visuallySimilarItems").owlCarousel({
-                        	items:5,
-            		loop: true,
+                    items:4,
+                    loop: true,
             		nav:true,
             		dots:false,
             		navText:[],
-            		slideBy:'page',
-            		responsive : {
-            			// breakpoint from 0 up
-            			0 : {
-            				items:1,
-            				stagePadding: 50,
-            			},	
-            			480 : {
-            				items:2,
-            				stagePadding: 50,
-            			},
-            			768 : {
-            				items:3,
-            			},
-            			980 : {
-            				items:4,
-            			},		
-            			// breakpoint from 650 up
-            			1200 : {
-            				items:5,
-            			}			
-            		}	
+            		responsive: {
+                        // breakpoint from 0 up
+                        0: {
+                            items: 1,
+                            stagePadding: 50,
+                        },
+                        // breakpoint from 480 up
+                        480: {
+                            items: 2,
+                            stagePadding: 50,
+                        },
+                        // breakpoint from 768 up
+                        768: {
+                            items: 3,
+                        },
+                        // breakpoint from 768 up
+                        1280: {
+                            items: 5,
+                        }
+                    }
                             /*items : 5,
                             scrollPerPage: true,
                             itemsDesktop : [1199,4],
@@ -258,6 +256,12 @@ function showBothMSD(productElementMSD) {
 	var qvMSD = productElementMSD.getElementsByClassName("MSDQuickView")[0];	 
 	qvMSD.style.zIndex = 11;
 	qvMSD.style.visibility = "visible";	
+	// Added as part of TPR-859 (size on hover)
+	var size_bottom = $(productElementMSD).find(".short-info").height() + 31;
+	$(productElementMSD).find(".sizesAvailableMSD").css("bottom",size_bottom + "px");
+	if($(productElementMSD).find(".sizesAvailableMSD").length > 0){
+		$(productElementMSD).find(".MSDQuickView").addClass("size_on_hover");
+	}
 	}
 
 

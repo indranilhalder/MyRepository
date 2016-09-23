@@ -5,13 +5,17 @@ package com.tisl.mpl.promotion.helper;
 
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.core.Registry;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.enumeration.EnumerationValue;
 import de.hybris.platform.jalo.order.AbstractOrder;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
+import de.hybris.platform.jalo.order.delivery.DeliveryMode;
 import de.hybris.platform.jalo.product.Product;
 import de.hybris.platform.jalo.security.JaloSecurityException;
+import de.hybris.platform.order.CartService;
 import de.hybris.platform.promotions.jalo.AbstractPromotionRestriction;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.promotions.model.OrderPromotionModel;
@@ -22,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -54,6 +59,8 @@ public class MplPromotionHelper
 	private final static Logger LOG = Logger.getLogger(MplPromotionHelper.class.getName());
 	@Autowired
 	private ModelService modelService;
+	@Autowired
+	private CartService cartService;
 
 
 
@@ -548,7 +555,7 @@ public class MplPromotionHelper
 	 * The Method checks if The entry is BOGO Free Product
 	 *
 	 * Added for TISPRO-318
-	 * 
+	 *
 	 * @param entry
 	 * @return flag
 	 */
@@ -575,5 +582,192 @@ public class MplPromotionHelper
 		return Registry.getApplicationContext().getBean("bulkPromotionCreationDao", BulkPromotionCreationDao.class);
 	}
 
+
+
+	/**
+	 * Populate Seller Specific Data for Cart Promotions
+	 *
+	 * TPR-715
+	 *
+	 * @param arg0
+	 * @param order
+	 * @param restrictionList
+	 * @return validProductUssidMap
+	 */
+	public Map<String, AbstractOrderEntry> getCartSellerEligibleProducts(final SessionContext arg0, final AbstractOrder order,
+			final List<AbstractPromotionRestriction> restrictionList)
+	{
+		//CR Changes
+		final Map<String, AbstractOrderEntry> validProductUssidMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
+
+		if (null != order && CollectionUtils.isNotEmpty(order.getEntries()))
+		{
+			boolean isFreebie = false;
+			boolean isofValidSeller = false;
+			String selectedUSSID = MarketplacecommerceservicesConstants.EMPTYSPACE;
+
+
+			for (final AbstractOrderEntry entry : order.getEntries())
+			{
+				isFreebie = validateEntryForFreebie(entry);
+				if (!isFreebie)
+				{
+					isofValidSeller = getDefaultPromotionsManager().checkSellerData(arg0, restrictionList, entry);
+					if (isofValidSeller)
+					{
+						try
+						{
+							selectedUSSID = (String) entry.getAttribute(arg0, MarketplacecommerceservicesConstants.SELECTEDUSSID);
+						}
+						catch (JaloInvalidParameterException | JaloSecurityException e)
+						{
+							LOG.error(e);
+						}
+						validProductUssidMap.put(selectedUSSID, entry);
+					}
+				}
+			}
+		}
+
+		return validProductUssidMap;
+	}
+
+
+	/**
+	 * Populate Exclude Seller Specific Data for Cart Promotions
+	 *
+	 * TPR-715
+	 *
+	 * @param arg0
+	 * @param order
+	 * @param restrictionList
+	 * @return validProductUssidMap
+	 */
+	public Map<String, AbstractOrderEntry> getCartSellerInEligibleProducts(final SessionContext arg0, final AbstractOrder order,
+			final List<AbstractPromotionRestriction> restrictionList)
+	{
+		//CR Changes
+		final Map<String, AbstractOrderEntry> validProductUssidMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
+
+		if (null != order && CollectionUtils.isNotEmpty(order.getEntries()))
+		{
+			boolean isFreebie = false;
+			boolean isofValidSeller = false;
+			String selectedUSSID = MarketplacecommerceservicesConstants.EMPTYSPACE;
+
+			for (final AbstractOrderEntry entry : order.getEntries())
+			{
+				isFreebie = validateEntryForFreebie(entry);
+				if (!isFreebie)
+				{
+					isofValidSeller = getDefaultPromotionsManager().isProductExcludedForSeller(arg0, restrictionList, entry);
+					if (!isofValidSeller)
+					{
+						try
+						{
+							selectedUSSID = (String) entry.getAttribute(arg0, MarketplacecommerceservicesConstants.SELECTEDUSSID);
+						}
+						catch (JaloInvalidParameterException | JaloSecurityException e)
+						{
+							LOG.error(e);
+						}
+						validProductUssidMap.put(selectedUSSID, entry);
+					}
+				}
+			}
+		}
+
+		return validProductUssidMap;
+	}
+
+	/**
+	 * Return Product Data based on Seller Data for Cart Shipping Promotion
+	 *
+	 *
+	 * TPR-715
+	 *
+	 * @param deliveryModeDetailsList
+	 * @param validUssidMap
+	 * @return validProdQCountMap
+	 */
+	public Map<String, Integer> getvalidProdQCForOrderShippingPromotion(final List<DeliveryMode> deliveryModeDetailsList,
+			final Map<String, AbstractOrderEntry> validUssidMap)
+	{
+		final Map<String, Integer> validProdQCountMap = new HashMap<String, Integer>();
+		final CartModel cartModel = cartService.getSessionCart();
+
+		final List<String> deliveryModeCodeList = new ArrayList<String>();
+		for (final DeliveryMode deliveryMode : deliveryModeDetailsList)
+		{
+			deliveryModeCodeList.add(deliveryMode.getCode());
+		}
+		try
+		{
+			if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
+			{
+				for (final AbstractOrderEntryModel oModel : cartModel.getEntries())
+				{
+					for (final Map.Entry<String, AbstractOrderEntry> mapentry : validUssidMap.entrySet())
+					{
+						if (null != mapentry.getValue() && null != mapentry.getValue().getEntryNumber()
+								&& mapentry.getValue().getEntryNumber() == oModel.getEntryNumber() && oModel.getMplDeliveryMode() != null)
+						{
+							final String selectedDeliveryMode = oModel.getMplDeliveryMode().getDeliveryMode().getCode();
+							if (deliveryModeCodeList.contains(selectedDeliveryMode))
+							{
+								validProdQCountMap.put(oModel.getSelectedUSSID(), Integer.valueOf(oModel.getQuantity().intValue()));
+							}
+						}
+					}
+				}
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e);
+		}
+		return validProdQCountMap;
+	}
+
+	/**
+	 * @return the cartService
+	 */
+	public CartService getCartService()
+	{
+		return cartService;
+	}
+
+	/**
+	 * @param cartService
+	 *           the cartService to set
+	 */
+	public void setCartService(final CartService cartService)
+	{
+		this.cartService = cartService;
+	}
+
+	/**
+	 * Calculates Delivery Charge at Entry Level
+	 *
+	 * @param deliveryVal
+	 * @param entry
+	 * @return deliveryChargeForEntry
+	 */
+	public double getDeliveryEntryCharge(final double deliveryVal, final AbstractOrderEntryModel entry)
+	{
+		double deliveryChargeForEntry = 0;
+
+		if (null != entry && (entry.getQuantity().longValue() > 0 && StringUtils.isNotEmpty(entry.getBogoFreeItmCount())))
+		{
+			deliveryChargeForEntry = deliveryVal
+					* (entry.getQuantity().longValue() - Long.valueOf(entry.getBogoFreeItmCount()).longValue());
+		}
+		else
+		{
+			deliveryChargeForEntry = deliveryVal * (entry.getQuantity().longValue());
+		}
+
+		return deliveryChargeForEntry;
+	}
 
 }

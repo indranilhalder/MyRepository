@@ -14,7 +14,7 @@
 
 
 
-	function selectProductSize() {
+	function selectProductSize() { 
 		var requiredUrl = $("#sizevariant option:selected").val();
 		if (requiredUrl == "#") {
 			return false;
@@ -176,12 +176,19 @@
 </c:choose>
 	<!-- Size guide Pop-up -->
 	<input type="hidden" value="${selectedSize}" name="isSizeSelectedQV" id="isSizeSelectedQV">
-	<a class="size-guide" href="${sizeGuideUrl}" role="button" data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}">
+	<%-- <a class="size-guide" href="${sizeGuideUrl}" role="button" data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}">
 		<spring:theme code="product.variants.quickview.size.guide"/>
-	</a>
+	</a> --%>
+
 	<!-- End Size guide Pop-up -->
 	<form:form action="/" method="get" id="variantForm"  class="sizeVariantForm" >
-    <p style="margin-top:15px;"><spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if></p>
+
+    <p class="sizetext"><spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if></p>
+		
+		<a class="size-guide" href="${sizeGuideUrl}" role="button" data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}">
+		<spring:theme code="product.variants.quickview.size.guide"/>
+		</a>
+
 		<div class="select-size">
 		 <c:choose>
 		    <c:when test="${selectedSize!=null}"> 
@@ -192,7 +199,7 @@
 							code="text.select.size" /></span>
 			</c:otherwise>
 			</c:choose> 
-				<ul label="sizes">
+				<ul label="sizes" id="quickViewVariant">
 				 <li style="display:none;"><a href="#" class="js-reference-item cboxElement">select size</a></li>
 				 <%-- <li><spring:theme
 							code="text.select.size" /></li> --%>
