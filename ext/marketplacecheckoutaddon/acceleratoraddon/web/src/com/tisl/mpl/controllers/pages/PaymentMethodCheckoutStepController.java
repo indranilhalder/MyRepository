@@ -510,6 +510,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		storeCmsPageInModel(model, contentPage);
 		setUpMetaDataForContentPage(model, contentPage);
 		setCheckoutStepLinksForModel(model, getCheckoutStep());
+		model.addAttribute("paymentPage", "paymentPage");
 	}
 
 

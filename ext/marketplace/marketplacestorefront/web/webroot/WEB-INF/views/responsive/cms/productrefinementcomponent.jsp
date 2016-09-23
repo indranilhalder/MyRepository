@@ -20,7 +20,7 @@ $(document).ready(function(){
 		}
 	}); 
 });
-	
+
 </script>
 
 	<input type="hidden" name="isConceirge" id="isConceirge" value="${isConceirge}" />
@@ -38,7 +38,8 @@ $(document).ready(function(){
 		</div>
 		<div class="facet-name js-facet-name facet_desktop">
 				<c:if test="${empty hideDepartments}">
-				<h4 class="true active tree-dept"><spring:theme code="search.nav.facetTitle" arguments="Department"/></h4>
+				<h3 class="true active tree-dept"><spring:theme code="search.nav.facetTitle" arguments="Department"/></h3>
+				
 				</c:if>
 		</div>
 		<c:choose>

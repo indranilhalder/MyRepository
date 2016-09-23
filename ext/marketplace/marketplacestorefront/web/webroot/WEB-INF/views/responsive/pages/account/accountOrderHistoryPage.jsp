@@ -80,9 +80,9 @@
 			<div class="right-account">
 				<div class="order-history">
 					<div class="navigation" id=order_pagination>
-						<h1>
+						<h2>
 							<spring:theme text="Order History" />
-						</h1>
+						</h2>
 						<c:if test="${not empty searchPageData.results}">
 						<!-- TISPRO-48 ---- Set values in hidden filed for lazy loading pagination -->
 							<input type="hidden" id="pageIndex" value="${pageIndex}" />
@@ -197,10 +197,10 @@
 														</a>
 													</div>
 													<div class="details">
-														<h4 class="product-name">${entry.brandName}</h4>
-														<h3 class="product-name">
+														<h2 class="product-name">${entry.brandName}</h2>
+														<h2 class="product-name">
 															<a href="${productUrl}">${entry.product.name}</a>
-														</h3>
+														</h2>
 														<div class="attributes">
 
 															<p>

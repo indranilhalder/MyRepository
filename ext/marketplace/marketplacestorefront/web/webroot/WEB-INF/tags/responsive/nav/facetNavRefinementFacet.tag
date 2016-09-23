@@ -63,14 +63,14 @@ function navigateToPage(queryString,textString)
 	
 			<c:when test="${facetData.code == 'inStockFlag'}">
 			<c:if test="${facetStockSize=='2'}">
-				<h4 class="${facetData.genericFilter}">${facetData.name}</h4>
+				<h3 class="${facetData.genericFilter}">${facetData.name}</h3>
 			</c:if>		 
 			</c:when> 
 			<%-- <c:when test="${facetData.code == 'price'}">
 				<h4 class="true">${facetData.name}</h4>
 			</c:when> --%>
 			<c:otherwise>
-				<h4 class="true">${facetData.name}</h4>
+				<h3 class="true">${facetData.name}</h3>
 			</c:otherwise>
 	   </c:choose>
 		
@@ -504,4 +504,3 @@ function navigateToPage(queryString,textString)
 
 	
 </script>
-

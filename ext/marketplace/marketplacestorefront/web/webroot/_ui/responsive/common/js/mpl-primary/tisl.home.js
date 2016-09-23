@@ -338,7 +338,7 @@ function getBrandsYouLoveAjaxCall() {
             success: function(response) {
                 //console.log(response.subComponents);
                 defaultComponentId = "";
-                renderHtml = "<h1>" + response.title + "</h1>" +
+                renderHtml = "<h2>" + response.title + "</h2>" +
                     "<div class='home-brands-you-love-carousel'>";
                 $.each(response.subComponents, function(k, v) {
                     //console.log(v.brandLogoUrl);
@@ -687,7 +687,7 @@ function getBestPicksAjaxCall() {
             url: ACC.config.encodedContextPath + "/getBestPicks",
             data: dataString,
             success: function(response) {
-                renderHtml = "<h1>" + response.title + "</h1>" +
+                renderHtml = "<h2>" + response.title + "</h2>" +
                     "<div class='home-best-pick-carousel'>";
                 $.each(response.subItems, function(k, v) {
                     if (v.url) {
@@ -794,7 +794,7 @@ function getProductsYouCareAjaxCall() {
             url: ACC.config.encodedContextPath + "/getProductsYouCare",
             data: dataString,
             success: function(response) {
-                renderHtml = "<h1>" + response.title + "</h1>";
+                renderHtml = "<h2>" + response.title + "</h2>";
                 renderHtml +=
                     "<div class='home-product-you-care-carousel'>";
                 $.each(response.categories, function(k, v) {
@@ -877,7 +877,7 @@ function getNewAndExclusiveAjaxCall() {
             //console.log(response.newAndExclusiveProducts);
         	var staticHost=$('#staticHost').val();
             var defaultHtml = "";
-            renderHtml = "<h1>" + response.title + "</h1>" +
+            renderHtml = "<h2>" + response.title + "</h2>" +
                 "<div class='js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference' id='new_exclusive'>";
             $.each(response.newAndExclusiveProducts, function(
                 key, value) {
@@ -1088,7 +1088,7 @@ function showStayQued(response){
         linkText = promoText2;
     }
     renderHtml =
-        '<div class="qued-padding"><div class="qued-content"><h1><span class="spriteImg"></span><span class="h1-qued">Stay Qued</span></h1>' +
+        '<div class="qued-padding"><div class="qued-content"><h2><span class="spriteImg"></span><span class="h1-qued">Stay Qued</span></h2>' +
         promoText1 + '<a href="' + bannerUrlLink +
         '" class="button maroon">' + linkText +
         '</a></div><div class="qued-image"><img class="lazy" src="' +
@@ -1116,7 +1116,7 @@ function getShowCaseAjaxCall() {
             success: function(response) {
                 //console.log(response.subComponents);
                 defaultComponentId = "";
-                renderHtml = "<h1>" + response.title + "</h1>" +
+                renderHtml = "<h2>" + response.title + "</h2>" +
                     "<div class='MenuWrap'><div class='mobile selectmenu'></div> <div class='showcase-heading showcase-switch'>";
                 $.each(response.subComponents, function(k, v) {
                     if (!v.showByDefault) {
@@ -1207,9 +1207,9 @@ function getShowcaseContentAjaxCall(id) {
                         if (typeof response.firstProductTitle !==
                             "undefined") {
                             defaultHtml +=
-                                "<h3 class='product-name'>" +
+                                "<h2 class='product-name'>" +
                                 response.firstProductTitle +
-                                "</h3>";
+                                "</h2>";
                         }
                         if (typeof response.firstProductPrice !==
                             "undefined") {

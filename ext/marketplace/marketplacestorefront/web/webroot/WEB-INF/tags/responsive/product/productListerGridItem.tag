@@ -261,7 +261,7 @@
 
 				<ycommerce:testId code="product_productName">
 					<div>
-						<h3 class="product-name">
+						<h2 class="product-name">
 							<a class="name_${product.code}" href="${productUrl}">${product.name}</a>
 							<%-- <c:forEach var="url" items="${product.displayUrl}">
 							<c:set var="urlFirst" value="${fn:replace(url,'[', '')}" />
@@ -272,7 +272,7 @@
                               </c:forEach> --%>
 
 							<%--  <input type="hidden" id="url_${product.code}" value="${urlSecond}"/> --%>
-						</h3>
+						</h2>
 					</div>
 				</ycommerce:testId>
 
