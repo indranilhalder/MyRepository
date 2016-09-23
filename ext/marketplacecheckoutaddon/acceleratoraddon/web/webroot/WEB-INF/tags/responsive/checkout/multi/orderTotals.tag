@@ -66,6 +66,7 @@
 		<span id="promotion" style="float: right"> - <format:price priceData="${cartData.totalDiscounts}"/> 	</span>
 
 	</li> 
+	
      
     <li id="couponApplied" >
 	<button class="remove-coupon-button"></button>

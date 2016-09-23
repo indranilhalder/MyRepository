@@ -3262,15 +3262,9 @@ function checkPincodeServiceability(buttonType)
  		type: "GET",
  		cache: false,
  		success : function(responseData) {
- 			var orderData = responseData.cartData.entries;
- 			$(orderData).each(function(){
- 				console.log($(this).selectedUssid);
- 			});
- 			console.log(responseData.cartData.entries);
  			var response = responseData['pincodeData'];
  			var cartValue=responseData['cartData'];
  			var cartData=responseData['cartEntries'];
- 			console.log("cartdata"+cartData);
  			for(var cart in cartData){
  				var entryNumber=parseInt(cartData[cart]['entryNumber']);
  				console.log("datavalue"+entryNumber+cartData[cart]['amountAfterAllDisc']+cartData[cart]['cartLevelDisc']);
@@ -3312,6 +3306,12 @@ function checkPincodeServiceability(buttonType)
  				if(cartData[cart]['cartLevelDisc']!=null){
  					$("#CartofferDisplay_"+entryNumber).show();
  					$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("<span>Off Bag</span>");
+ 				    $("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
+ 				}
+ 				
+ 				if(cartData[cart]['cartLevelPercentage']!=null){
+ 					$("#CartofferDisplay_"+entryNumber).show();
+ 					$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelPercentage']+"%").addClass("priceFormat").append("<span>Off Bag</span>");
  				    $("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
  				}
  			
