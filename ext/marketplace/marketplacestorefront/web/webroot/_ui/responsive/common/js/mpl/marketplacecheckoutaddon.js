@@ -3267,7 +3267,6 @@ function checkPincodeServiceability(buttonType)
  			var cartData=responseData['cartEntries'];
  			for(var cart in cartData){
  				var entryNumber=parseInt(cartData[cart]['entryNumber']);
- 				console.log("datavalue"+entryNumber+cartData[cart]['amountAfterAllDisc']+cartData[cart]['cartLevelDisc']);
  				$("#off-cartLevelDiscAmt_"+entryNumber).html("");
  				$("#off-bag-cartLevelDisc_"+entryNumber).html("");
  				$("#off-bag-ItemLevelDisc_"+entryNumber).html("");
@@ -3314,7 +3313,23 @@ function checkPincodeServiceability(buttonType)
  					$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelPercentage']+"%").addClass("priceFormat").append("<span>Off Bag</span>");
  				    $("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
  				}
- 			
+ 				
+ 				
+ 				if($("#off-bag-ItemLevelDiscAmt_"+entryNumber).html() === ""){
+ 					$("#off-bag-ItemLevelDiscAmt_"+entryNumber).parents(".ItemAmtofferDisplayPrFm").siblings("span.delSeat").removeClass("delAction");
+ 					
+ 				}
+ 				else{
+ 					$("#off-bag-ItemLevelDiscAmt_"+entryNumber).parents(".ItemAmtofferDisplayPrFm").siblings("span.delSeat").addClass("delAction");
+ 					
+ 				}
+ 				if($("#off-bag-cartLevelDisc_"+entryNumber).html() === ""){
+ 					$("#off-bag-cartLevelDisc_"+entryNumber).parents(".ItemAmtofferDisplayPrFm").siblings("span.delSeat").removeClass("delAction");
+ 					
+ 				}
+ 				else{
+ 					$("#off-bag-cartLevelDisc_"+entryNumber).parents(".ItemAmtofferDisplayPrFm").siblings("span.delSeat").addClass("delAction");
+ 				}
  			}
  			$("#subtotal_Value").show();
  			$("#subtotal").hide();
@@ -3326,18 +3341,25 @@ function checkPincodeServiceability(buttonType)
  			$("#total_Value").show();
  			$("#totalValue").html(cartValue['totalPrice'].formattedValue);
  			
- 			$("li.price").each(function(){
-					var len = $(this).find(".ItemAmtofferDisplayPrFm").length;
-					var count=0;
-					$(this).find(".ItemAmtofferDisplayPrFm").each(function(){
-					if($(this).css("display") === "none"){
-					count++;
+ 			
+ 			
+ 			
+ 			
+ 			/*$("li.price").each(function(){
+ 				
+ 				$(this).find(".ItemAmtofferDisplayPrFm").each(function(){
+ 					
+ 					if($(this).css("display") === "inline-block"){
+						$(this).siblings(".delSeat").addClass("delAction");
 					}
-					if(count === len){
-					$(this).parent("ul").find("del").css({"text-decoration":"inherit","color":"#000"});
+					else{
+						$(this).siblings(".delSeat").removeClass("delAction");
 					}
-					});
-					});
+ 					
+ 				});
+					
+				
+					});*/
  			
  			if(response=="N")
  				{
@@ -4454,6 +4476,16 @@ $(document).ready(function(){
 		var selection = $("#voucherDisplaySelection").val();
 		$("#couponFieldId").val(selection);
 	}
+	
+	$("li.price").each(function(){
+		if($(this).find(".off-bag").css("display") === "block"){
+			$(this).find("span.delSeat").addClass("delAction");
+		}
+		else{
+			$(this).find("span.delSeat").removeClass("delAction");
+		}
+	});
+	
 });
 $("#voucherDisplaySelection").change(function(){
 	if($('#couponFieldId').prop('readonly') == false)

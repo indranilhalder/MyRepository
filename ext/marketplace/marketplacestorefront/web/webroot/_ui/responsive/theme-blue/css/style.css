@@ -45654,4 +45654,12 @@ body.no-scroll {
   	margin-top: -2px;
     display: inline-block;
   }
+  span.delSeat{
+  	margin-bottom: 5px;
+    display: inline-block;
+  }
+  span.delSeat.delAction{
+  	text-decoration: line-through;
+    color: #b9b9b9;
+  }
     /* TPR-970 changes ends */

@@ -197,9 +197,9 @@ tr.d0 td {
 									<c:otherwise>
 										<c:choose>
 										<c:when test="${entry.isBOGOapplied eq true}">
-											<del>
+											<span class="delSeat">
 												 <format:price priceData="${strikeoffprice}" displayFreeForZero="true" />
-											</del>
+											</span>
 											<c:choose>
 												 <c:when test="${entry.totalPrice.value<'1.00'}">
 													<span>Free</span>
@@ -217,14 +217,14 @@ tr.d0 td {
 												<c:choose>
     											<c:when test="${not empty entry.cartLevelDisc || not empty entry.productLevelDisc}">
     											        <c:set var="totalPrice"  value="${entry.totalPrice.formattedValue}"/>
-        												<span id="totalPrice_${entry.entryNumber}"><del>
+        												<span class="delSeat" id="totalPrice_${entry.entryNumber}">
 															<format:price priceData="${entry.totalPrice}" displayFreeForZero="false" />
-		 												</del>
+		 												
 		 												</span>
     											</c:when>    
     											<c:otherwise>
     											         <c:set var="totalPrice"  value="${entry.totalPrice.formattedValue}"/>
-       													<span><format:price priceData="${entry.totalPrice}"/></span>
+       													<span class="delSeat"><format:price priceData="${entry.totalPrice}"/></span>
    												 </c:otherwise>
 												</c:choose>
 												<%-- TISPRO-215 ends --%>
@@ -233,7 +233,7 @@ tr.d0 td {
 												<c:choose>
 													<c:when test="${entry.basePrice.formattedValue == entry.totalPrice.formattedValue}">
 													<c:set var="totalPrice"  value="${entry.totalPrice}"/>
-												<span><format:price priceData="${entry.totalPrice}"/></span>
+												<span class="delSeat"><format:price priceData="${entry.totalPrice}"/></span>
 											</c:when>
 													<c:otherwise>
 														<c:if test="${entry.basePrice.formattedValue != entry.totalPrice.formattedValue}">
@@ -242,14 +242,14 @@ tr.d0 td {
 																	<c:when	test="${baseprice.key == entry.entryNumber}">
 																		<c:if test="${baseprice.value.formattedValue != entry.totalPrice.formattedValue||not empty entry.cartLevelDisc}">
 																		 	<c:set var="totalPrice"  value="${baseprice.value.formattedValue}"/>
-																		 	<li id="totalPrice_${entry.entryNumber}"><del><format:price priceData="${baseprice.value}" displayFreeForZero="true" /></del></li>
+																		 	<li id="totalPrice_${entry.entryNumber}"><span class="delSeat"><format:price priceData="${baseprice.value}" displayFreeForZero="true" /></span></li>
 																		</c:if>
 																	</c:when>
 																</c:choose>
 															</c:forEach>
 															<c:if test="${empty entry.cartLevelDisc && empty entry.productLevelDisc}">
 															<c:set var="totalPrice"  value="${entry.totalPrice.formattedValue}"/>
-															 <span><format:price priceData="${entry.totalPrice}"/></span>
+															 <span class="delSeat"><format:price priceData="${entry.totalPrice}"/></span>
 															 </c:if>
 														</c:if>
 													</c:otherwise>
@@ -263,11 +263,11 @@ tr.d0 td {
 								<c:when test="${not empty entry.cartLevelDisc}">
 								<c:choose>
 								<c:when test="${not empty entry.productLevelDisc && not empty entry.prodLevelPercentage}">
-								<span id="itemCartCentDisplay_${entry.entryNumber}"><span class="off-bag">${entry.prodLevelPercentage}<spring:theme code="off.item.percentage"/><del><format:price priceData="${entry.netSellingPrice}"/></del></span></span>
+								<span id="itemCartCentDisplay_${entry.entryNumber}"><span class="off-bag">${entry.prodLevelPercentage}<spring:theme code="off.item.percentage"/><span class="delSeat"><format:price priceData="${entry.netSellingPrice}"/></span></span></span>
 								</c:when>
 								<c:otherwise>
 								<c:if test="${not empty entry.productLevelDisc}">
-								<span id="itemCartAmtDisplay_${entry.entryNumber}"><span class="off-bag"><format:price priceData="${entry.productLevelDisc}"/><spring:theme code="off.item"/><del><format:price priceData="${entry.netSellingPrice}"/></del></span></span>
+								<span id="itemCartAmtDisplay_${entry.entryNumber}"><span class="off-bag"><format:price priceData="${entry.productLevelDisc}"/><spring:theme code="off.item"/><span class="delSeat"><format:price priceData="${entry.netSellingPrice}"/></span></span></span>
 								</c:if>
 								</c:otherwise>
 								</c:choose>
