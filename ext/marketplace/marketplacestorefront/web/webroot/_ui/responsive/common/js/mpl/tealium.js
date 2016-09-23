@@ -353,12 +353,13 @@ $(document).ready(
 							+ $("#product_id").val() + ',';
 						tealiumData += '"product_brand":'
 							+ $("#product_brand").val() + ',';
-						tealiumData += '"product_category":"'
-							+ $("#product_category").val() + '",';
-						tealiumData += '"page_subcategory_name":"'
-							+ $("#page_subcategory_name").val() + '",';
-					tealiumData += '"page_subcategory_name_l3":"'
-						+ $("#page_subcategory_name_l3").val() + '",';
+						//TPR-430 Start
+						tealiumData += '"product_category":'
+							+ $("#product_category").val() + ',';
+						tealiumData += '"page_subcategory_name":'
+							+ $("#page_subcategory_name").val() + ',';
+					tealiumData += '"page_subcategory_name_l3":'
+						+ $("#page_subcategory_name_l3").val() + ',';
 					//TPR-430 End
 						tealiumData += '"checkout_seller_ids":"'		//for TPR-429
 							+ $("#checkoutSellerIDs").val() + '"}';
