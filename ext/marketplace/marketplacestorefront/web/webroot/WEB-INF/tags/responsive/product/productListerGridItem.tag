@@ -342,7 +342,7 @@
 
 
 							<%-- <li class="product-size-list"><span class="product-size">Size : ${fn:toUpperCase(product.displaySize)} </span></li> --%>
-							<li class="product-size-list"><span class="product-size">Size:${product.displaySize}<%-- Price : ${product.displayPrice}### ${product.displayUrl} --%>
+							<li class="product-size-list"><span class="product-size">Size:${product.displaySizes}<%-- Price : ${product.displayPrice}### ${product.displayUrl} --%>
 							</span></li>
 						</c:if>
 						<%-- <li>Color: ${product.swatchColor}</li> --%>
