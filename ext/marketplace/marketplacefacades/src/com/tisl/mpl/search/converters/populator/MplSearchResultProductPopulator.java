@@ -21,8 +21,8 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
-
-
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 /**
  * This class populates data into product data from solr search results
  *
@@ -37,7 +37,8 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 
 	@Autowired
 	private SizeAttributeComparator sizeAttributeComparator;
-
+        private static final String DELIMETER = ":";
+        private static final String STOCK = "STOCK";
 	@Override
 	public void populate(final SearchResultValueData source, final ProductData target)
 	{
