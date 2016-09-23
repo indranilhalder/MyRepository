@@ -90,7 +90,7 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 			//checkChannelFlag = getMplPromotionHelper().checkChannel(listOfChannel); // Verifying the Channel : Web/Web Mobile/ CockPit
 			//changes Start for omni cart fix @atmaram
 			final AbstractOrder cart = arg1.getOrder();
-
+			boolean flagForPincodeRestriction = false;
 			checkChannelFlag = getDefaultPromotionsManager().checkChannelData(listOfChannel, cart);
 
 			//changes end for omni cart fix @atmaram
@@ -104,9 +104,10 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 				//for delivery mode restriction check
 				flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForABPromo(restrictionList,
 						validProductUssidMap);
+				flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList);
 				if (!eligibleProductList.isEmpty()) //Apply percentage/amount discount to valid products
 				{
-					if (flagForDeliveryModeRestrEval)
+					if (flagForDeliveryModeRestrEval && flagForPincodeRestriction)
 					{
 						final Map<String, Integer> qCount = getDefaultPromotionsManager().getQualifyingCountForABPromotion(
 								eligibleProductList, totalFactorCount);
