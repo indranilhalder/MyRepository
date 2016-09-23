@@ -2402,13 +2402,18 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			throws EtailNonBusinessExceptions
 	{
 		BinData binData = null;
-
+		//getting current user
+		final String mplCustomerID = (null == getUserService().getCurrentUser().getUid()) ? "" : getUserService().getCurrentUser()
+				.getUid();
+		final String cardType = request.getParameter("cardType");
 		try
 		{
 			//Code Change for TISPRO-175
-			if (StringUtils.isNotEmpty(binNumber))
+			if (StringUtils.isNotEmpty(binNumber) && !cardType.equals(""))
 			{
-				binData = getBinFacade().binCheck(binNumber);
+				//binData = getBinFacade().binCheck(binNumber);
+				//Added For TPR-1035
+				binData = getBinFacade().binCheck(binNumber, cardType, mplCustomerID, true);
 			}
 
 		}

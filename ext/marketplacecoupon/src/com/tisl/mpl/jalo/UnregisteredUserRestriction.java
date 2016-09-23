@@ -76,32 +76,36 @@ public class UnregisteredUserRestriction extends GeneratedUnregisteredUserRestri
 		if (user instanceof Customer)
 		{
 			final Object originalUidObj = ((Customer) user).getProperty("originalUid");
-			final String originalUid = originalUidObj.toString();
-			if (positive.booleanValue())
+			if (null != originalUidObj)
 			{
-				if (CollectionUtils.isNotEmpty(emailIdList) && emailIdList.contains(originalUid))
+				final String originalUid = originalUidObj.toString();
+				if (positive.booleanValue())
 				{
-					result = true;
-					LOG.debug("selected  'Valid' field in hmc is ::::" + positive.booleanValue() + "emailid list  size is"
-							+ emailIdList.size());
+					if (CollectionUtils.isNotEmpty(emailIdList) && emailIdList.contains(originalUid))
+					{
+						result = true;
+						LOG.debug("selected  'Valid' field in hmc is ::::" + positive.booleanValue() + "emailid list  size is"
+								+ emailIdList.size());
+					}
+				}
+				else
+				{
+					if (!emailIdList.contains(originalUid) || CollectionUtils.isEmpty(emailIdList))
+					{
+						result = true;
+						LOG.debug("selected  'Valid' field in hmc is ::::" + positive.booleanValue() + "emailid list  size is"
+								+ emailIdList.size());
+					}
 				}
 			}
-			else
-			{
-				if (!emailIdList.contains(originalUid) || CollectionUtils.isEmpty(emailIdList))
-				{
-					result = true;
-					LOG.debug("selected  'Valid' field in hmc is ::::" + positive.booleanValue() + "emailid list  size is"
-							+ emailIdList.size());
-				}
-			}
-		} 
+		}
 		return result;
 
 	}
+
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.voucher.jalo.Restriction#isFulfilledInternal(de.hybris.platform.jalo.product.Product)
 	 */
 	@Override

@@ -21,7 +21,10 @@ public interface BinFacade
 	 * @return BinModel
 	 * @throws EtailNonBusinessExceptions
 	 */
-	BinModel performBinCheck(final String bin) throws EtailNonBusinessExceptions;
+	//Added For TPR-1035
+	BinModel performBinCheck(final String bin, final String cardType, final String mplCustomerID, boolean flag)
+			throws EtailNonBusinessExceptions;
 
-	BinData binCheck(final String binNumber) throws EtailNonBusinessExceptions;
+	BinData binCheck(final String binNumber, final String cardType, final String mplCustomerID, boolean flag)
+			throws EtailNonBusinessExceptions;
 }

@@ -87,8 +87,9 @@ public interface MplPaymentWebService
 	 * @return MplPromotionDTO
 	 * @throws EtailNonBusinessExceptions
 	 */
-	public MplPromoPriceWsDTO validateBinNumber(final String binNo, final String paymentMode, final String bankName)
-			throws EtailNonBusinessExceptions;
+
+	public MplPromoPriceWsDTO validateBinNumber(final String binNo, final String paymentMode, final String bankName,
+			final String userId) throws EtailNonBusinessExceptions;
 
 	/**
 	 * @param userId

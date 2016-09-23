@@ -149,7 +149,9 @@ public class CODPaymentServiceImpl implements CODPaymentService
 		codPaymentInfoModel.setCashOwner(StringUtils.isNotEmpty(cart.getUser().getName()) ? cart.getUser().getName()
 				: ((CustomerModel) cart.getUser()).getOriginalUid());
 		cart.setPaymentInfo(codPaymentInfoModel);
-		cart.setConvenienceCharges(Double.valueOf(baseStoreService.getCurrentBaseStore().getConvenienceChargeForCOD().longValue()));
+		cart.setConvenienceCharges(Double
+				.valueOf(null != baseStoreService.getCurrentBaseStore().getConvenienceChargeForCOD() ? baseStoreService
+						.getCurrentBaseStore().getConvenienceChargeForCOD().longValue() : 0.0)); //NullPointerException handled
 		//setting the payment modes and the amount against it in session to be used later
 		final Map<String, Double> paymentInfo = new HashMap<String, Double>();
 		paymentInfo.put("COD", cart.getConvenienceCharges());

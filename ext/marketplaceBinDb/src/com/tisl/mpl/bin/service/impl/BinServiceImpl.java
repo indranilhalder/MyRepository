@@ -4,6 +4,7 @@
 package com.tisl.mpl.bin.service.impl;
 
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -25,6 +26,8 @@ import com.tisl.mpl.bin.dao.BinDao;
 import com.tisl.mpl.bin.pojo.BankDataPojo;
 import com.tisl.mpl.bin.service.BinService;
 import com.tisl.mpl.binDb.model.BinModel;
+import com.tisl.mpl.core.enums.TypeOfError;
+import com.tisl.mpl.core.model.BinErrorModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -47,6 +50,10 @@ public class BinServiceImpl implements BinService
 	@Autowired
 	private ConfigurationService configurationService;
 
+	@Autowired
+	private ModelService modelService;
+
+
 	/**
 	 * @Description This method sends the bin to call DB to fetch details related to Bin
 	 *
@@ -55,9 +62,31 @@ public class BinServiceImpl implements BinService
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public BinModel checkBin(final String bin) throws EtailNonBusinessExceptions
+	public BinModel checkBin(final String bin, final String cardType, final String mplCustomerID, final boolean isErrorCreation)
+			throws EtailNonBusinessExceptions
 	{
-		return getBinDao().fetchBankFromBin(bin);
+		final BinModel binmodel = getBinDao().fetchBankFromBin(bin);
+		//Added For TPR-1035
+		if (null == binmodel && isErrorCreation == true)
+		{
+			final BinErrorModel binError = getModelService().create(BinErrorModel.class);
+			binError.setBin(bin);
+			binError.setPaymentMode(cardType);
+			binError.setTypeOfError(TypeOfError.BINNOTFOUND);
+			binError.setCustomerId(mplCustomerID);
+			getModelService().save(binError);
+		}
+		else if (StringUtils.isNotEmpty(binmodel.getBinNo()) && !binmodel.getCardType().equalsIgnoreCase(cardType)
+				&& isErrorCreation == true)
+		{
+			final BinErrorModel binError = getModelService().create(BinErrorModel.class);
+			binError.setBin(bin);
+			binError.setPaymentMode(cardType);
+			binError.setCustomerId(mplCustomerID);
+			binError.setTypeOfError(TypeOfError.CARDMISMATCH);
+			getModelService().save(binError);
+		}
+		return binmodel;
 	}
 
 
@@ -208,5 +237,22 @@ public class BinServiceImpl implements BinService
 	public void setBinDao(final BinDao binDao)
 	{
 		this.binDao = binDao;
+	}
+
+	/**
+	 * @return the modelService
+	 */
+	public ModelService getModelService()
+	{
+		return modelService;
+	}
+
+	/**
+	 * @param modelService
+	 *           the modelService to set
+	 */
+	public void setModelService(final ModelService modelService)
+	{
+		this.modelService = modelService;
 	}
 }

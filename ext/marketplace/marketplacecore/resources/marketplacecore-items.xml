@@ -753,7 +753,12 @@
 			<value code="false" />
 		</enumtype>
 
-
+		<!-- TPR-1035 ENUM added For BinDB   -->
+		<enumtype code="TypeOfError" autocreate="true"
+			generate="true" dynamic="true">
+			<value code="BINNOTFOUND" />
+			<value code="CARDMISMATCH" />
+		</enumtype>
 
 	</enumtypes>
 
@@ -8593,5 +8598,36 @@
 				</indexes>
 			</itemtype>
 			</typegroup>
+			
+			
+			<!-- TPR-1035 : Item Creation for Bin Error  -->
+		<typegroup name="BinErrorGroup">
+			<itemtype code="BinError" autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.core.jalo.BinError">
+				<deployment table="mplBinError" typecode="20001" />
+				<attributes>
+					<attribute autocreate="true" qualifier="customerId" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers unique="false" optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="Bin" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers unique="false" optional="false" />
+					</attribute>					
+					<attribute autocreate="true" qualifier="paymentMode"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers unique="false" optional="true" />
+					</attribute>
+					<attribute type="TypeOfError" qualifier="typeOfError">
+						<modifiers read="true" write="true" optional="false" />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+		</typegroup>
+	<!-- TPR-1035 : Item Creation for Bin Error ends  -->
 	</itemtypes>
 </items>

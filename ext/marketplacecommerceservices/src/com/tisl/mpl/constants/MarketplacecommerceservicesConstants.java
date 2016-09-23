@@ -1656,4 +1656,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String MESSAGEDET = "messageDet".intern();
 	public static final String MESSAGESTARTDATE = "startDate".intern();
 	public static final String MESSAGEENDDATE = "endDate".intern();
+
+	//Added For TPR-1035
+	public static final String BIN_ERROR_HEADER = "BIN,CUSTOMER_ID,PAYMENTMODE,DATE,TYPE_OF_ERROR".intern();
+	public static final String BIN_ERROR_FILE_LOCATION = "bin.errorreport.csv.path".intern();
+	public static final String BIN_ERROR_FILE_PATH = "${HYBRIS_DATA_DIR}/feed/report".intern();
+	public static final String BIN_ERROR_FILE_NAME = "binErrorReport".intern();
 }

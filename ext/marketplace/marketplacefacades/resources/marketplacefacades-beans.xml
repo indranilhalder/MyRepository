@@ -187,6 +187,8 @@
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<!-- Added for TISPRM-56 -->
 		<property name="allVariantsId" type="java.util.List&lt;java.lang.String>"/>
+		<!-- CHANGES FOR TPR-249 -->
+		<property name="displaySizes" type="java.util.List&lt;java.lang.String>"></property>
 	</bean>
 
 	<!-- pdp changes begins -->
