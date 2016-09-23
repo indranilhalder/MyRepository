@@ -492,6 +492,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				componentListForASlot.add(luxuryComponent);
 
 			}
+
 		}
 		//}
 		return componentListForASlot;
@@ -502,7 +503,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	{
 
 		final ContentPageModel contentPage = getMplCMSPageService().getPageByLabelOrId("luxuryhomepage");
-		final LuxHomePageCompWsDTO finalLuxuryComponent = new LuxHomePageCompWsDTO();
+		final LuxHomePageCompWsDTO luxuryHomePageDto = new LuxHomePageCompWsDTO();
 
 		if (contentPage != null)
 		{
@@ -515,9 +516,12 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				listComp.addAll(luxuryComponentsForASlot);
 			}
 
-			finalLuxuryComponent.setComponents(listComp);
+			luxuryHomePageDto.setComponents(listComp);
+			luxuryHomePageDto.setPageTitle(contentPage.getTitle());
+			luxuryHomePageDto.setMetaDescription(contentPage.getDescription());
+			luxuryHomePageDto.setMetaKeywords(contentPage.getKeywords());
 		}
-		return finalLuxuryComponent;
+		return luxuryHomePageDto;
 
 	}
 
@@ -694,36 +698,73 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	}
 
+
 	/**
-	 * @param abstractCMSComponentModel
+	 * @param luxuryBannerComponent
 	 * @return
-	 *
 	 */
 	private LuxComponentsListWsDTO getLuxHeroBannerWsDTO(final RotatingImagesComponentModel luxuryBannerComponent)
 	{
 		final ArrayList<LuxHeroBannerWsDTO> heroBannerDtoList = new ArrayList<LuxHeroBannerWsDTO>();
-		//final List<LuxComponentsListWsDTO> component = new ArrayList<LuxComponentsListWsDTO>();
 		final LuxComponentsListWsDTO luxComponent = new LuxComponentsListWsDTO();
-		int count = 1;
+		int countMobile = 1;
+		int countDesktop = 1;
 		for (final BannerComponentModel banner : luxuryBannerComponent.getBanners())
 		{
 			//final MplBigPromoBannerComponentModel heroBanner = (MplBigPromoBannerComponentModel) banner;
 			final LuxHeroBannerWsDTO heroBanner = new LuxHeroBannerWsDTO();
-			if (null != banner.getMedia() && null != banner.getMedia().getURL())
+			MplBigPromoBannerComponentModel promotionalBanner = null;
+			String bannertext = null;
+			String bannerMediaUrl = null;
+			String altText = null;
+			if (banner instanceof MplBigPromoBannerComponentModel)
 			{
-				heroBanner.setBannerMedia(banner.getMedia().getURL());
+				promotionalBanner = (MplBigPromoBannerComponentModel) banner;
+				if (StringUtils.isNotEmpty(promotionalBanner.getMajorPromoText()))
+				{
+					bannertext = promotionalBanner.getMajorPromoText();
+
+				}
+				if (null != promotionalBanner.getBannerImage() && StringUtils.isNotEmpty(promotionalBanner.getBannerImage().getURL()))
+				{
+					bannerMediaUrl = promotionalBanner.getBannerImage().getURL();
+					altText = promotionalBanner.getBannerImage().getAltText();
+
+				}
 			}
-			if (null != banner.getUrlLink())
+			else
 			{
-				heroBanner.setBannerUrl(banner.getUrlLink());
+				if (null != banner.getMedia())
+				{
+					bannerMediaUrl = banner.getMedia().getURL();
+					altText = banner.getMedia().getAltText();
+				}
 			}
-			heroBanner.setBannerNumber(count);
+			heroBanner.setBannerMedia(bannerMediaUrl);
+			heroBanner.setBannerText(bannertext);
+			heroBanner.setAltText(altText);
+			heroBanner.setBannerUrl(banner.getUrlLink());
+			heroBanner.setIcid(banner.getPk().getLongValueAsString());
+
+			if (null != banner.getBannerView())
+			{
+				heroBanner.setResolution(banner.getBannerView().getCode());
+				if (banner.getBannerView().getCode().equalsIgnoreCase("desktop"))
+				{
+					heroBanner.setBannerNumber(countDesktop);
+					countDesktop++;
+				}
+				else
+				{
+					heroBanner.setBannerNumber(countMobile);
+					countMobile++;
+				}
+			}
 			if (null != luxuryBannerComponent.getTimeout())
 			{
 				heroBanner.setTimeout(luxuryBannerComponent.getTimeout().intValue());
 			}
 			heroBannerDtoList.add(heroBanner);
-			count++;
 		}
 
 		luxComponent.setBannerlist(heroBannerDtoList);

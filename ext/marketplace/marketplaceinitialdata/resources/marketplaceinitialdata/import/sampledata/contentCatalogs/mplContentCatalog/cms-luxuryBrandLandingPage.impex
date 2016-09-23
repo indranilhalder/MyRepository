@@ -82,8 +82,8 @@ INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTe
 ################################### BottomHeader BLP Logo Section ############################################
 
 # BLP Logo Component
-INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];$picture;&componentRef
-;;luxuryBLPLogoComponent;/images/microsite/westside-logo.png;luxuryBLPLogoComponent
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];$picture;title;&componentRef
+;;luxuryBLPLogoComponent;/images/microsite/westside-logo.png;JIMMY CHOO;luxuryBLPLogoComponent
 
 ### Content Slot
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)

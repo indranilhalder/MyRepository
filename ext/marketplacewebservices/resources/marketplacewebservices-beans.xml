@@ -2386,12 +2386,19 @@
     <bean class="com.tisl.mpl.wsdto.LuxHomePageCompWsDTO">
     	<property name="sectionId" type="String" />
     	<property name="Components" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxComponentsListWsDTO>"/>
+    	<property name="pageTitle" type="String" />
+    	<property name="metaKeywords" type="String" />
+    	<property name="metaDescription" type="String" />
     </bean>
  	<bean class="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO">
     	<property name="bannerMedia" type="String" />
     	<property name="bannerUrl" type="String" />
     	<property name="timeout" type="int" />
     	<property name="bannerNumber" type="int" /> 	
+    	<property name="bannerText" type="String" /> 
+    	<property name="resolution" type="String" />
+    	<property name="altText" type="String" /> 
+    	<property name="icid" type="String" /> 
     </bean>
     <bean class="com.tisl.mpl.wsdto.LuxSignatureWsDTO">
     	<property name="brandLogoUrl" type="String" />
