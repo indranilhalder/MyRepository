@@ -78,6 +78,7 @@
 						<value>MplAdvancedCategoryCarouselComponent.categories</value>
 						<value>MplShowcaseComponent.showcaseItems</value>
 						<value>ImageCarouselComponent.collectionItems</value>
+						<value>SignColComponent.signColItemsCollection</value>
 					</list>
 				</entry>
 				<entry key="AbstractCMSComponent">
@@ -146,6 +147,12 @@
 				<entry key="ImageCarouselComponent">
 					<list>
 						<value>ImageCarouselComponent.collectionItems</value>
+					</list>
+				</entry>
+				
+				<entry key="SignColComponent">
+					<list>
+						<value>SignColComponent.signColItemsCollection</value>
 					</list>
 				</entry>
 			</map>
