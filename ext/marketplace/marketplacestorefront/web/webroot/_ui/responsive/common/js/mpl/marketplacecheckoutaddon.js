@@ -282,7 +282,7 @@ function displayEMIForm(){
 // document.getElementById("convChargeField").innerHTML="Free"; //TISPRD-146
 // $("#convChargeMessage").css("display","none");
 // }
-// //document.getElementById("totalWithConvField").innerHTML=totalPrice;
+// //document.getElementById("totalWithConvFields").innerHTML=totalPrice;
 // TISPT-29
 // if(paymentMode!=null){
 // applyPromotion(null);
@@ -403,7 +403,7 @@ function displayCODForm()
 									document.getElementById("convChargeField").innerHTML="Free"; // TISPRD-146
 									$("#convChargeMessage").css("display","none");
 								}
-								// document.getElementById("totalWithConvField").innerHTML=totalPrice;
+								// document.getElementById("totalWithConvFields").innerHTML=totalPrice;
 								// TISPT-29
 								if(paymentMode!=null){
 									applyPromotion(null);
@@ -1235,7 +1235,7 @@ $("#otpMobileNUMField").focus(function(){
 // var convCharge=values[1];
 // $("#convChargeFieldId, #convChargeField").css("display","none");
 // document.getElementById("convChargeField").innerHTML=convCharge;
-// document.getElementById("totalWithConvField").innerHTML=totalPrice;
+// document.getElementById("totalWithConvFields").innerHTML=totalPrice;
 // isCodSet = false;
 // if($("#paymentMode").val()=="Credit Card")
 // {
@@ -1277,7 +1277,7 @@ $("#otpMobileNUMField").focus(function(){
 			var convCharge=values[1];
 			$("#convChargeFieldId, #convChargeField").css("display","none");
 			document.getElementById("convChargeField").innerHTML=convCharge;
-			document.getElementById("totalWithConvField").innerHTML=totalPrice;
+			document.getElementById("totalWithConvFields").innerHTML=totalPrice;
  			isCodSet = false;
  			if(paymentMode!=null){
  				applyPromotion(null);
@@ -2727,7 +2727,7 @@ function applyPromotion(bankName)
 				var orderDiscount="";
 				$("#promotionMessage").empty();
 				var total=response.totalPrice.formattedValue;
-				document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
+				document.getElementById("totalWithConvFields").innerHTML=response.totalPrice.formattedValue;
 				$("#cartPromotionApplied").css("display","none");
 				$("#codAmount").text(response.totalPrice.formattedValue);
 
@@ -3113,7 +3113,7 @@ function calculateDeliveryCost(radioId,deliveryCode)
 	 				document.getElementById("deliveryCostSpanId").innerHTML="Free";
 		 		}
 	 			
-	 			document.getElementById("totalWithConvField").innerHTML=currency+totalPrice;
+	 			document.getElementById("totalWithConvFields").innerHTML=currency+totalPrice;
 	 			isCodSet = false;
 	 		},
 	 		error : function(resp) {
@@ -4348,7 +4348,7 @@ $("#couponSubmitButton").click(function(){
 	 		cache: false,
 	 		data: { 'couponCode' : couponCode , 'paymentMode' : paymentMode , 'bankNameSelected' : bankNameSelected},
 	 		success : function(response) {
-	 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
+	 			document.getElementById("totalWithConvFields").innerHTML=response.totalPrice.formattedValue;
 	 			$("#codAmount").text(response.totalPrice.formattedValue);
 	 			if(response.redeemErrorMsg!=null){
 	 				if(response.redeemErrorMsg=="Price_exceeded")
@@ -4441,7 +4441,7 @@ $(".remove-coupon-button").click(function(){
  		cache: false,
  		data: { 'couponCode' : couponCode },
  		success : function(response) {
- 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
+ 			document.getElementById("totalWithConvFields").innerHTML=response.totalPrice.formattedValue;
  			$("#codAmount").text(response.totalPrice.formattedValue);
  			// alert(response.totalPrice.formattedValue);
  			if(response.couponReleased==true){

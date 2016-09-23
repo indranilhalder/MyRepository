@@ -79,7 +79,8 @@
 	<li class="total" id="total">
 		<div id="totalPriceConvChargeId">
 			<spring:theme code="basket.page.totals.total"/> 
-			<span id="totalWithConvField" style="float: right"><format:price priceData="${cartData.totalPrice}"/></span>
+			
+			<span id="totalWithConvFields" style="float: right"><format:price priceData="${cartData.totalPrice}"/></span>
 		</div>
 	</li>
 	
