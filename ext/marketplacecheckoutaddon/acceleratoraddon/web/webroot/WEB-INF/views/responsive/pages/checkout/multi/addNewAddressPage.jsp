@@ -41,6 +41,7 @@
 						        $(".editnewAddresPage, .formaddress").slideUp();
 						        $(".add-address").slideDown();
 						    });
+						  $('.checkout.wrapper .formaddress select[name="state"]').on("change",function(){$(this).css("color","#000");});
 					});
 					var timeoutID;
 					function setup() {

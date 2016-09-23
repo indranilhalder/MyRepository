@@ -6044,7 +6044,7 @@ $(document).ready(function(){
 	}
 
 	if ($("#checkoutPageName").val() == "Select Address"){
-		$(" body.page-multiStepCheckoutSummaryPage .right-block.shipping").css("display","none");
+		$(" body.page-multiStepCheckoutSummaryPage .right-block.shipping").css("visibility","hidden");
 	}
 	if ($("#checkoutPageName").val() == "Payment Options"){
 		$(" body.page-multiStepCheckoutSummaryPage .progress-barcheck .step-done span").addClass("paymentStepDone");
