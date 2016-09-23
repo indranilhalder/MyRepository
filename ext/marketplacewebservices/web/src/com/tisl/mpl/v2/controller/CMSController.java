@@ -4,7 +4,10 @@
 package com.tisl.mpl.v2.controller;
 
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
-import de.hybris.platform.commercesearchbackoffice.data.CategoryData;
+import de.hybris.platform.commercefacades.product.data.CategoryData;
+import de.hybris.platform.commercefacades.product.data.ProductData;
+import de.hybris.platform.commercefacades.search.data.SearchStateData;
+import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControl;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControlDirective;
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
