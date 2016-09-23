@@ -182,7 +182,7 @@ tr.d0 td {
    				 </div>
    </li>
    
-    <li class="price">
+    <li class="price priceCartIter">
 					<ul>
 						<c:set var="quantity" value="${entry.quantity}"/>
 						<c:set var="subPrice" value="${entry.basePrice.value}" />
@@ -224,7 +224,7 @@ tr.d0 td {
     											</c:when>    
     											<c:otherwise>
     											         <c:set var="totalPrice"  value="${entry.totalPrice.formattedValue}"/>
-       													<span class="delSeat"><format:price priceData="${entry.totalPrice}"/></span>
+       													<span id ="totalPrice_${entry.entryNumber}" class="delSeat"><format:price priceData="${entry.totalPrice}"/></span>
    												 </c:otherwise>
 												</c:choose>
 												<%-- TISPRO-215 ends --%>
@@ -233,7 +233,7 @@ tr.d0 td {
 												<c:choose>
 													<c:when test="${entry.basePrice.formattedValue == entry.totalPrice.formattedValue}">
 													<c:set var="totalPrice"  value="${entry.totalPrice}"/>
-												<span class="delSeat"><format:price priceData="${entry.totalPrice}"/></span>
+												  <span id ="totalPrice_${entry.entryNumber}" class="delSeat"><format:price priceData="${entry.totalPrice}"/></span>
 											</c:when>
 													<c:otherwise>
 														<c:if test="${entry.basePrice.formattedValue != entry.totalPrice.formattedValue}">
@@ -241,15 +241,16 @@ tr.d0 td {
 																<c:choose>	
 																	<c:when	test="${baseprice.key == entry.entryNumber}">
 																		<c:if test="${baseprice.value.formattedValue != entry.totalPrice.formattedValue||not empty entry.cartLevelDisc}">
-																		 	<c:set var="totalPrice"  value="${baseprice.value.formattedValue}"/>
-																		 	<li id="totalPrice_${entry.entryNumber}"><span class="delSeat"><format:price priceData="${baseprice.value}" displayFreeForZero="true" /></span></li>
+																		 	<input type="hidden" id="basePrice_${entry.entryNumber}" value='${baseprice.value.formattedValue}'/>
+																		 	<%-- <c:set var="base"  value="${baseprice.value.formattedValue}"/> --%>
+																		 	<li><span id ="totalPrice_${entry.entryNumber}" class="delSeat"><format:price priceData="${baseprice.value}" displayFreeForZero="true" /></span></li>
 																		</c:if>
 																	</c:when>
 																</c:choose>
 															</c:forEach>
 															<c:if test="${empty entry.cartLevelDisc && empty entry.productLevelDisc}">
 															<c:set var="totalPrice"  value="${entry.totalPrice.formattedValue}"/>
-															 <span class="delSeat"><format:price priceData="${entry.totalPrice}"/></span>
+															<span id ="totalPrice_${entry.entryNumber}"  class="delSeat"><format:price priceData="${entry.totalPrice}"/></span>
 															 </c:if>
 														</c:if>
 													</c:otherwise>

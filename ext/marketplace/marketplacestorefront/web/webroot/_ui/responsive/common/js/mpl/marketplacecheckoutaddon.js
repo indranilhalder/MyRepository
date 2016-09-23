@@ -3277,58 +3277,44 @@ function checkPincodeServiceability(buttonType)
  				$("#cartAmtOfferDisplay_"+entryNumber).hide();
  				$("#itemCartCentDisplay_"+entryNumber).hide();
  				$("#itemCartAmtDisplay_"+entryNumber).hide();
- 				
- 				
- 			/*	$(".ItemAmtofferDisplayPrFm").each(function(){
- 					if($(".ItemAmtofferDisplayPrFm").css("display") === "none"){
- 	 					$(this).parent("ul").children("del").css({"text-decoration":"inherit","color":"#000"});
- 	 				}
- 				});*/
- 				if(cartData[cart]['productLevelDisc']!=null&&cartData[cart]['prodLevelPercentage']!=null&&cartData[cart]['cartLevelDisc']!=null&&cartData[cart]['cartLevelPercentage']){
- 					var totalPrice=$("#basePrice_"+entryNumber).val();
- 					$("#totalPrice_"+entry.entryNumber).hide();
- 					$("#totalPriceDisplay_"+entryNumber).val(totalPrice);
+ 				var isOfferPresent=false;
+ 				var basePrice=$("#basePrice_"+entryNumber).val();
+ 				if(basePrice!=""){
+ 					$("#totalPrice_"+entryNumber).html(basePrice).addClass("delAction");
+ 				}
+ 				else{
+ 					$("#totalPrice_"+entryNumber).html(cartData[cart]['totalPrice'].formattedValue).addClass("delAction");
  				}
  				
  				if(cartData[cart]['productLevelDisc']!=null){
+ 					isOfferPresent=true;
  					$("#ItemAmtofferDisplay_"+entryNumber).show();
  					console.log("productLevl"+cartData[cart]['productLevelDisc'].formattedValue);
  					$("#off-bag-ItemLevelDisc_"+entryNumber).html(cartData[cart]['productLevelDisc'].formattedValue).append("<span>Off Item</span>");
  				    $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
  				}
  				if(cartData[cart]['prodLevelPercentage']!=null){
+ 					isOfferPresent=true;
  					$("#ItemAmtofferDisplay_"+entryNumber).show();
  					console.log("productLevl"+cartData[cart]['prodLevelPercentage']);
  					$("#off-bag-ItemLevelDisc_"+entryNumber).html(cartData[cart]['prodLevelPercentage']+"%").append("<span>Off Item</span>");
  				    $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
  				}
  				if(cartData[cart]['cartLevelDisc']!=null){
+ 					isOfferPresent=true;
  					$("#CartofferDisplay_"+entryNumber).show();
  					$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("<span>Off Bag</span>");
  				    $("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
  				}
  				
  				if(cartData[cart]['cartLevelPercentage']!=null){
+ 					isOfferPresent=true;
  					$("#CartofferDisplay_"+entryNumber).show();
  					$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelPercentage']+"%").addClass("priceFormat").append("<span>Off Bag</span>");
  				    $("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
  				}
- 				
- 				
- 				if($("#off-bag-ItemLevelDiscAmt_"+entryNumber).html() === ""){
- 					$("#off-bag-ItemLevelDiscAmt_"+entryNumber).parents(".ItemAmtofferDisplayPrFm").siblings("span.delSeat").removeClass("delAction");
- 					
- 				}
- 				else{
- 					$("#off-bag-ItemLevelDiscAmt_"+entryNumber).parents(".ItemAmtofferDisplayPrFm").siblings("span.delSeat").addClass("delAction");
- 					
- 				}
- 				if($("#off-bag-cartLevelDisc_"+entryNumber).html() === ""){
- 					$("#off-bag-cartLevelDisc_"+entryNumber).parents(".ItemAmtofferDisplayPrFm").siblings("span.delSeat").removeClass("delAction");
- 					
- 				}
- 				else{
- 					$("#off-bag-cartLevelDisc_"+entryNumber).parents(".ItemAmtofferDisplayPrFm").siblings("span.delSeat").addClass("delAction");
+ 				if(isOfferPresent==false){
+ 					$("#totalPrice_"+entryNumber).removeClass("delAction");
  				}
  			}
  			$("#subtotal_Value").show();
@@ -3340,27 +3326,6 @@ function checkPincodeServiceability(buttonType)
  			$("#total").hide();
  			$("#total_Value").show();
  			$("#totalValue").html(cartValue['totalPrice'].formattedValue);
- 			
- 			
- 			
- 			
- 			
- 			/*$("li.price").each(function(){
- 				
- 				$(this).find(".ItemAmtofferDisplayPrFm").each(function(){
- 					
- 					if($(this).css("display") === "inline-block"){
-						$(this).siblings(".delSeat").addClass("delAction");
-					}
-					else{
-						$(this).siblings(".delSeat").removeClass("delAction");
-					}
- 					
- 				});
-					
-				
-					});*/
- 			
  			if(response=="N")
  				{
  				// TISTI-255
