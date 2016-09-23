@@ -72,7 +72,7 @@ public class CMSController extends BaseController
 
 	/*
 	 * private static final Set<CatalogOption> OPTIONS;
-	 *
+	 * 
 	 * static { OPTIONS = getOptions(); }
 	 */
 
@@ -619,7 +619,7 @@ public class CMSController extends BaseController
 	/*
 	 * luxury homepage controller
 	 */
-	@RequestMapping(value = "/luxuryhomepage", method = RequestMethod.GET)
+	@RequestMapping(value = "/luxuryBLP", method = RequestMethod.GET)
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
 	@ResponseBody
 	public LuxHomePageCompWsDTO getLuxuryBLP(@RequestParam(defaultValue = DEFAULT) final String fields)
