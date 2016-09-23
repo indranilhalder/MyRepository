@@ -50390,6 +50390,7 @@ body.no-scroll {
  }
   .formaddress .checkout-indent #new-address-option-1 + label, #new-address-option-2 + label {
  	width: 49%;
+ 	font-weight:normal;
  }
 /*   .formaddress .checkout-indent .i18nAddressForm.address-form{
   	padding: 0 2px;
@@ -50801,7 +50802,8 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
 .smk_accordion .accordion_in .acc_content .blocks.netbankingPanel {  padding-bottom:0px;}
 .smk_accordion .accordion_in .acc_content .blocks h3 { font-size: 16px; padding-bottom :15px; letter-spacing:.8px; font-weight:500;}
 .smk_accordion .accordion_in .acc_content .blocks .mycards { color:#a7183e; display:block; font-size:16px; padding-bottom:15px; }
-.smk_accordion .accordion_in .acc_content .blocks .card-sec {border:1px solid #dbdbdb; background-color:#fff; font-weight:normal; padding:8px 15px 13px 14px; }
+.smk_accordion .accordion_in .acc_content .blocks .card-sec {border:1px solid #dbdbdb; background-color:#fff; font-weight:normal; padding:8px 15px 13px 14px; margin-top:10px; }
+.smk_accordion .accordion_in .acc_content .blocks .card-sec:first-child {margin-top:0px; }
 .smk_accordion .accordion_in .acc_content .card-sec .card-num .visa { margin-right:12px; }
 .smk_accordion .accordion_in .acc_content .card-sec .card-num .card_image { float:left;     margin-bottom: 30px;}
 .smk_accordion .accordion_in .acc_content .card-sec .card-num .saved{ color:#a5a5a5; display:block; font-size:13px;padding:0 0 10px 20px; text-transform:capitalize; }
@@ -50833,8 +50835,7 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
 .smk_accordion .accordion_in .acc_content .blocks .new-card .remember input[type="checkbox"] + label{ color:#999999; font-size:14px; font-weight:normal; padding:0; line-height:26px; width:96%; letter-spacing:0.5px;    text-transform: uppercase; }
 .smk_accordion .accordion_in .acc_content .blocks .new-card .remember input[type="checkbox"] + label:before{ transition: none 0s ease 0s ;background: url("../images/payment-checbox.png") no-repeat scroll left top;    border: 0 none;    box-shadow: none;    height: 18px;    outline: medium none;    width: 18px;}
 .smk_accordion .accordion_in .acc_content .blocks .new-card .remember input[type="checkbox"]:checked + label:before{background: url("../images/payment-checbox.png") no-repeat scroll left bottom;}
-.smk_accordion .accordion_in .acc_content .blocks .new-card  + .redirect,.smk_accordion .accordion_in .acc_content .blocks #savedCard .redirect,
-.smk_accordion .accordion_in .acc_content .blocks.net-bank +  .redirect { padding:16px 0 30px 30px;   text-transform: none; width:100%; font-weight:normal; font-size:14px; color:#333; }
+.smk_accordion .accordion_in .acc_content .terms .redirect { padding:16px 0 30px 30px;   text-transform: none; width:100%; font-weight:normal; font-size:14px; color:#333; }
 .smk_accordion .accordion_in .acc_content .blocks .new-card button,
 .smk_accordion .accordion_in .acc_content .blocks.net-bank button { background:#a7183e; color:#fff; font-size:14px; font-weight:normal; height:47px; text-align:center; width:204px; padding:0; }
 
@@ -50843,9 +50844,8 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
 .smk_accordion .accordion_in .acc_content .blocks.net-bank .activetrigger { font-size:14px; width:97%; padding:14px 10px; font-weight:normal; letter-spacing:1px; color:#000; }
 .smk_accordion .accordion_in .acc_content .blocks.net-bank .dropcontainer ul { width:93.3%; font-weight:normal; padding:0; }
 .smk_accordion .accordion_in .acc_content .blocks.net-bank .dropcontainer li { padding:10px; }
-.smk_accordion .accordion_in .acc_content .blocks .redirect { font-size:14px; font-weight:normal; padding: 16px 0 30px 30px; text-transform: none;width: 100%;}
-.smk_accordion .accordion_in .acc_content .blocks #savedCard .redirect ,.smk_accordion .accordion_in .acc_content .blocks #newCardCC .redirect,
-.smk_accordion .accordion_in .acc_content .blocks .redirect, .smk_accordion .accordion_in .acc_content .blocks #debitCard .redirect{ padding-left:0px;}
+.smk_accordion .accordion_in .acc_content .terms .redirect { font-size:14px; font-weight:normal; padding: 16px 0 30px 30px; text-transform: none;width: 100%;}
+.smk_accordion .accordion_in .acc_content .terms .redirect{ padding-left:0px;}
 .terms { background:#fff; font-size:13px; text-align:left;padding-left:30px;}
 .saved-card-button + .terms { background:inherit;    font-weight: normal;text-transform: none; }
 .smk_accordion .accordion_in .acc_content .blocks .cash .cont-del .terms p { color:#000;font-size:13px;text-transform:none;    line-height: inherit;}
@@ -51014,7 +51014,7 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
 .cart.wrapper .left-block.choose-payment .button:hover, .confirmation .left-block .button:hover { background: #fff !important;}
 .cart.wrapper .left-block .payments.tab-view .pay .button{background: #a7183e !important;height: 47px !important; width: 204px; font-size: 14px !important;font-weight:normal;}
 .cart.wrapper .left-block .payments.tab-view .pay .button#make_saved_cc_payment,.cart.wrapper .left-block .payments.tab-view .pay .button#make_saved_dc_payment{margin:0px;}
-.cart.wrapper .left-block .payments.tab-view .pay.nbButton .button{margin: 0px; margin-left:30px;margin-bottom: 30px; }
+.cart.wrapper .left-block .payments.tab-view .pay.nbButton .button{margin-left:30px;margin-bottom: 30px; }
 .cart.wrapper .left-block .payments.tab-view .pay.nbButton .terms p{font-size:13px;line-height:13px;text-align:left;}
 .cart.wrapper .left-block .payments.tab-view .pay .button:hover{background: #a7183e !important;}
 .product-block.net-bank .item.cardForm p.popular-netbanks{font-size:16px;color: #A7183E;}
@@ -51122,6 +51122,7 @@ a#cvvHelp{display:none;}
 .cart.wrapper .left-block .payments.tab-view .pay .button#make_emi_payment
 {
 	margin:0;
+	margin-top:30px;
 }
 .cart.wrapper .product-block li.item#savedCard + li + div.terms, 
 .cart.wrapper .product-block #cardEmi div.terms{
@@ -51340,7 +51341,6 @@ display:block;}
     padding-left: 40px;
 }
 .cart.wrapper .product-block li.item.cardForm > ul > li{margin-right:2%;font-size:12px;}
-.smk_accordion .accordion_in .acc_content .blocks.net-bank +  .redirect{padding-left:40px;}
 .cart.wrapper .left-block .payments.tab-view .pay.nbButton .button{margin-left:40px;margin-bottom:30px;}
 /* .cart.wrapper .make_payment_top_savedCard, .cart.wrapper .make_payment_top_newCard, .cart.wrapper .make_payment_top_nb, .cart.wrapper .cod_payment_button_top {
     margin-top: -84px;
@@ -51408,7 +51408,7 @@ display:block;}
 .prd-info .product,
 .prd-info .item .product .prd-rate,
 .prd-info .item-mthd,
-.smk_accordion .accordion_in .acc_content .blocks.net-bank  + .redirect,
+.smk_accordion .accordion_in .acc_content .terms .redirect,
 .smk_accordion .accordion_in .acc_content .blocks.net-bank .trigger,
 .smk_accordion .accordion_in .acc_content .blocks .cash { font-size:12px; }
 .cart.wrapper .left-block .payments.tab-view .nav li span.mycards { padding:0px;padding-bottom:10px; line-height:12px !important;    height: auto;}
@@ -51428,7 +51428,7 @@ display:block;}
 .smk_accordion .accordion_in .acc_content .blocks .new-card .cardNumber input,
 input.year { height:40px; }
 .smk_accordion .accordion_in .acc_content .blocks .new-card .cardExpiration { padding-bottom:18px; }
-.smk_accordion .accordion_in .acc_content .blocks .new-card  .redirect { font-weight:normal; padding-bottom:0; }
+.smk_accordion .accordion_in .acc_content .terms .redirect { font-weight:normal; padding-bottom:0; }
 .smk_accordion .accordion_in .acc_content .blocks .new-card button,
 /* .smk_accordion .accordion_in .acc_content .blocks.net-bank button { display:none; } */
 .cart.wrapper .right-block.billing.checkout-list-right h3 { font-size:15px; font-weight:bold; }
@@ -51443,7 +51443,7 @@ input.year { height:40px; }
 
 .smk_accordion .accordion_in .acc_content .blocks.net-bank label { margin:0 0 10px 0; width:48%; font-size:12px; }
 .smk_accordion .accordion_in .acc_content .blocks.net-bank .trigger { width:100%; }
-.smk_accordion .accordion_in .acc_content .blocks.net-bank + .redirect { padding:12px 0 12px 11px; }
+.smk_accordion .accordion_in .acc_content .terms .redirect{ padding:12px 0 12px 11px; }
 .smk_accordion .accordion_in .acc_content .blocks .cash h4{ padding:8px 0;font-size:12px; }
 .smk_accordion .accordion_in .acc_content .blocks .cash h3 { line-height:14px; }
 .smk_accordion .accordion_in .acc_content .blocks .cash .cont-del button {/*  border:0 none; */ width:100%; margin:15px 0; text-align:center; }
@@ -51481,6 +51481,8 @@ input.year { height:40px; }
 .cart.wrapper .left-block .payments.tab-view .pay.nbButton .button, .cart.wrapper .left-block .payments.tab-view .pay .button.confirm,
 .cart.wrapper .left-block .payments.tab-view .pay .button
 {display:none !important;}
+  .cart.wrapper .payments.tab-view .product-block li.item + li + .terms,.terms, .cart.wrapper .left-block .payments.tab-view .pay.nbButton .terms{
+  display:none;}
 .cart.wrapper .payments.tab-view .product-block li.item#savedCardDebit + li + .terms, .cart.wrapper .payments.tab-view .product-block li.item#savedCard + li + .terms{
 	    padding:15px 0;
 	        margin-bottom: 0px;
@@ -51502,13 +51504,17 @@ div#savedCreditCard, div#savedDebitCard {
     width: 95%;
     right: 0;
     float: right;
-    margin-bottom:10px;
+    margin-bottom:20px;
 }
+ .cart.wrapper .payments.tab-view .product-block li.item#savedCardDebit,
+ .cart.wrapper .payments.tab-view .product-block li.item#savedCard{
+    border-bottom: 1px solid #e4e4e4;
+ }
 .cart.wrapper .left-block .payments.tab-view .nav li#newCardCC,
 .cart.wrapper .left-block .payments.tab-view .nav #emi li
 {margin:0;padding:0;}
 .smk_accordion .accordion_in .acc_content .blocks .new-card input.card_number{height:40px;}
-.smk_accordion .accordion_in .acc_content .blocks #savedCard .redirect{overflow:hidden;}
+.smk_accordion .accordion_in .acc_content .terms .redirect{overflow:hidden;}
 #EMITermTable tr{
 	    width: 48.5%;
     margin-right: 1%;
@@ -51529,8 +51535,9 @@ div#savedCreditCard, div#savedDebitCard {
 	width:100%;
 	height:40px;
 }
-.smk_accordion .accordion_in .acc_content .blocks #savedCard .redirect, .smk_accordion .accordion_in .acc_content .blocks #newCardCC .redirect, .smk_accordion .accordion_in .acc_content .blocks .redirect, .smk_accordion .accordion_in .acc_content .blocks #debitCard .redirect{
+.smk_accordion .accordion_in .acc_content .terms .redirect{
 	padding-bottom:0px;
+	display:none;
 }
 .checkout-content.checkout-payment.cart.checkout.wrapper ul.product-block.net-bank.netbankingPanel li.item > ul > li{
 	min-width:48%;
@@ -51676,6 +51683,9 @@ ul.delivery-checkout input[type=radio]:checked ~ label, input[type=radio]:checke
 }
 .cart.wrapper .product-block li.header .mybag-item-head .Product, .mybag-items.checkout-items .mybag-item .Product-detail {
 	width: 38.5%;
+}
+.cart.wrapper .product-block li.header .mybag-item-head .Product{
+	padding-left:5px;
 }
 .cart.wrapper .product-block li.header .mybag-item-head .Price, .checkout-items .mybag-item .Price {
 	width: 19.5%;
@@ -52807,6 +52817,7 @@ background:#f8f8f8;
     position: fixed;
     z-index: 99;
         text-transform: none;
+          visibility:visible;
 }
  } 
  
