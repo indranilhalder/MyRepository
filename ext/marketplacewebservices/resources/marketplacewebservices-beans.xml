@@ -2456,32 +2456,11 @@
     	<property name="Components" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxBlpCompListWsDTO>"/>
     </bean>
     
-    <bean class="com.tisl.mpl.wsdto.LuxBlpCompListWsDTO">
-    	<property name="title" type="String" />
-    	<property name="sectionid" type="String" />
-    	<!-- For SimpleBannerComponent -->
-		<property name="banner_strip_component" type="com.tisl.mpl.wsdto.LuxBlpStripWsDTO>"/>
-    	<!-- For RotatingImagesComponent -->
-    	<property name="hero_banner_component" type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/>		
-    	<!-- For him/her, RotatingImagesComponent-->
-    	<property name="gender_component" type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/>
-    	<!-- For MplAdvancedCategoryCarouselComponent -->
-    	<property name="category_component" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxShopYourFavListWsDTO>"/>
-    	<!-- For spring_component -->
-    	<property name="spring_component" type="com.tisl.mpl.wsdto.LuxTextMediaComponentWsDTO"/>
-    	<!-- For Featured Products -->
-    	<property name="featured_component" type="com.tisl.mpl.wsdto.LuxTextMediaComponentWsDTO"/>
-    	<!-- For VideoComponent -->
-    	<property name="videocomponent" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxVideocomponentWsDTO>"/>
-    	<!-- For Why Out Products, MplShowcaseComponent -->
-    	<property name="why_our_product_component" type="com.tisl.mpl.wsdto.LuxShowcasecomponentWsDTO>"/>     	    	
-    </bean>
-    
     <bean class="com.tisl.mpl.wsdto.LuxTextMediaComponentWsDTO">
          <!-- For RotatingImagesComponent -->
-        <property name="textContent" type="java.util.List&lt;com.tisl.mpl.wsdto.TextComponentWsDTO"/>
+        <property name="textContent" type="java.util.List&lt;com.tisl.mpl.wsdto.TextComponentWsDTO>"/>
          <!-- For RotatingImagesComponent -->
-    	<property name="carousal_images" type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/>    	
+    	<property name="carousal_images" type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO"/>    	
     </bean>
     
     <bean class="com.tisl.mpl.wsdto.LuxBlpStripWsDTO">         
@@ -2494,11 +2473,32 @@
     </bean>
     
     <bean class="com.tisl.mpl.wsdto.TabWsDTO">        
-    	<property name="image_url" type="String>"/>
-    	<property name="img_alt" type="String>"/>
+    	<property name="image_url" type="String"/>
+    	<property name="img_alt" type="String"/>
     	<property name="position" type="int"/> 
-    	<property name="heading" type="String>"/>
-    	<property name="text" type="String>"/>    	   	
+    	<property name="heading" type="String"/>
+    	<property name="text" type="String"/>    	   	
     </bean>
+    
+    <bean class="com.tisl.mpl.wsdto.LuxBlpCompListWsDTO">
+    	<property name="title" type="String" />
+    	<property name="sectionid" type="String" />
+    	<!-- For SimpleBannerComponent -->
+		<property name="banner_strip_component" type="com.tisl.mpl.wsdto.LuxBlpStripWsDTO"/>
+    	<!-- For RotatingImagesComponent -->
+    	<property name="hero_banner_component" type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO"/>		
+    	<!-- For him/her, RotatingImagesComponent-->
+    	<property name="gender_component" type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO"/>
+    	<!-- For MplAdvancedCategoryCarouselComponent -->
+    	<property name="category_component" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxShopYourFavListWsDTO>"/>
+    	<!-- For spring_component -->
+    	<property name="spring_component" type="com.tisl.mpl.wsdto.LuxTextMediaComponentWsDTO"/>
+    	<!-- For Featured Products -->
+    	<property name="featured_component" type="com.tisl.mpl.wsdto.LuxTextMediaComponentWsDTO"/>
+    	<!-- For VideoComponent -->
+    	<property name="videocomponent" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxVideocomponentWsDTO>"/>
+    	<!-- For Why Out Products, MplShowcaseComponent -->
+    	<property name="why_our_product_component" type="com.tisl.mpl.wsdto.LuxShowcasecomponentWsDTO"/>     	    	
+    </bean>    
     
 </beans>
