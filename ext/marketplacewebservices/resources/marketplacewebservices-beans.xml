@@ -2448,4 +2448,21 @@
     	<property name="shopbycomponents" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxShopByListWsDTO>"/>
     	<property name="socialfeedcomponent" type="com.tisl.mpl.wsdto.TextComponentWsDTO"/>
     </bean>
+    
+    <bean class="com.tisl.mpl.wsdto.LuxBlpCompListWsDTO">
+    	<property name="title" type="String" />
+    	<property name="sectionid" type="String" />
+		<property name="banner_strip_component" type="com.tisl.mpl.wsdto.LuxBlpStripWsDTO>"/>
+    	<!-- For RotatingImagesComponent -->
+    	<property name="hero_banner_component" type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/>		
+    	<!-- For him/her, RotatingImagesComponent-->
+    	<property name="gender_component" type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/>
+    	<!-- For MplAdvancedCategoryCarouselComponent -->
+    	<property name="category_component" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxShopYourFavListWsDTO>"/>
+    	<!-- For RotatingImagesComponent -->
+    	<property name="carousal_images" type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/>
+    	<!-- For VideoComponent -->
+    	<property name="videocomponent" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxVideocomponentWsDTO>"/>    	    	
+    </bean>
+    
 </beans>
