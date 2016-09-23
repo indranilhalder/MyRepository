@@ -2,6 +2,8 @@ ACC.carousel = {
 
 	_autoload: [
 	     "myFun",
+	     "ClpTopDealsCarousel",
+	     "ClpBestSellerCarousel",
 	     "shopByLookCarousel",
 	     "offersCarousel",
 	     "categoryCarousel",
@@ -217,6 +219,31 @@ ACC.carousel = {
 			itemsMobile : false*/
 		});
 	},
+	ClpBestSellerCarousel: function(){
+		$(".best_seller_section .shopByLookCarousel").owlCarousel({
+			items:5,
+    		loop: true,
+    		nav:true,
+    		dots:false,
+    		navText:[],
+    		responsive: {
+                0: {
+                    items: 1,
+    				stagePadding: 50
+                },
+                480: {
+                    items: 2,
+    				stagePadding: 75
+                },
+                700: {
+                    items: 3
+                },
+                1000: {
+                    items: 5
+                }
+            }
+		});
+	},
 	offersCarousel: function(){
 		$(".offersCarousel").owlCarousel({
 					items:4,
@@ -242,6 +269,48 @@ ACC.carousel = {
             			// breakpoint from 768 up
             			1280 : {
             				items:4,
+            			}			
+            		}	
+			/*navigation:true,
+			rewindNav: false,
+			navigationText :[],
+			pagination:false,
+			items:4,
+			itemsDesktop : false, 
+			itemsDesktopSmall : false, 
+			itemsTablet: false, 
+			itemsMobile : true
+		itemsDesktop : [5000,4], 
+		itemsDesktopSmall : [1400,4], 
+		itemsTablet: [650,2], 
+		itemsMobile : [480,2],*/
+			});
+	},
+	ClpTopDealsCarousel: function(){
+		$(".top_deal .offersCarousel").owlCarousel({
+					items:5,
+            		loop: true,
+            		nav:true,
+            		dots:false,
+            		navText:[],
+            		responsive : {
+            			// breakpoint from 0 up
+            			0 : {
+            				items:1,
+            				stagePadding: 50,
+            			},
+            			// breakpoint from 480 up
+            			480 : {
+            				items:2,
+            				stagePadding: 75,
+            			},
+            			// breakpoint from 768 up
+            			700 : {
+            				items:3,
+            			},
+            			// breakpoint from 768 up
+            			1000 : {
+            				items:5,
             			}			
             		}	
 			/*navigation:true,

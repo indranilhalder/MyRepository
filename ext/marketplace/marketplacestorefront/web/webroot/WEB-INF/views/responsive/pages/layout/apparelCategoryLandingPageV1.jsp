@@ -5,29 +5,51 @@
 
 <template:page pageTitle="${pageTitle}">
 
+	<cms:pageSlot position="CommonLogoParaSlot" var="feature">
+		<cms:component component="${feature}" element="div" class="clp_title_banner" />
+	</cms:pageSlot>
 	<cms:pageSlot position="Section1" var="feature">
 		<cms:component component="${feature}" element="div" class="" />
 	</cms:pageSlot>
-
-
+	<%-- <cms:pageSlot position="ForHimForHerSlot" var="feature">
+		<cms:component component="${feature}" element="div" class="" />
+	</cms:pageSlot> --%>
+	<div class="top_categories">
 	<cms:pageSlot position="Section2A" var="feature">
-		<cms:component component="${feature}" />
+		<cms:component component="${feature}" element="div" class="top_categories_section"/>
 	</cms:pageSlot>
-	<div class="feature-collections">
-		<ul class="collections">
-			<li class="chef sub"><cms:pageSlot position="Section2C"
-					var="feature">
-				</cms:pageSlot> <cms:pageSlot position="Section2B" var="feature">
-					<cms:component component="${feature}" />
-				</cms:pageSlot></li>
+	</div>
+	<div class="top_brands">
+	<cms:pageSlot position="TopBrandSlot" var="feature">
+		<cms:component component="${feature}" element="div" class="top_brands_section"/>
+	</cms:pageSlot>
+	</div>
+	<div class="best_seller">
+	<!-- <div class='Menu'><div class='mobile selectmenu'></div><ul></ul></div> -->
+				<cms:pageSlot position="Section2B" var="feature">
+					<cms:component component="${feature}" element="div" class="best_seller_section"/>
+				</cms:pageSlot>
+	</div>		
+				<div class="winter_launch">
+				 <cms:pageSlot position="Section2D" var="feature">
+					<cms:component component="${feature}" element="div" class="winter_launch_section" />
+				</cms:pageSlot>
+				</div>
+				<div class="style_edit">
+				 <cms:pageSlot position="Section2C" var="feature">
+					<cms:component component="${feature}" element="div" class="" />
+				</cms:pageSlot>
+				</div>
+				<div class="top_deal">
 			<cms:pageSlot position="Section3" var="feature">
-				<cms:component component="${feature}" element="li" class="sub" />
+				<cms:component component="${feature}" />
 			</cms:pageSlot>
-		</ul>
+			</div>
+			<div class="shop_for">
 		<cms:pageSlot position="Section3A" var="feature">
 				<cms:component component="${feature}"/>
 			</cms:pageSlot>
-	</div>
+			</div>
 	<div id="productGrid" class="listing wrapper"> <!-- Added for TPR-198 -->
 			<div class="left-block">
 			<cms:pageSlot position="Section4A" var="feature">
