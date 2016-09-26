@@ -480,22 +480,36 @@ $(document).on("click",".filter-apply",function(e){
 
 //TPR-845
 $(document).on("click"," .filter-clear ",function(e){
-	$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-	$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
-
-	var browserURL = window.location.href;
-	var pageURL;
-	if(browserURL.indexOf("%3A")!=-1){
-		pageURL = browserURL.substring(0,browserURL.indexOf("%3A"));
+	//TPR-1536
+	var filterCount=0;
+	$(".facet_mobile .facet.js-facet").each(function(){
+		filterCount+=$(this).find(".facet-list.js-facet-list li").find("input[type=checkbox]:checked").length;
+		filterCount+=$(".facet_mobile .filter-colour.selected-colour").length;
+		filterCount+=$(".facet_mobile .filter-size.selected-size").length;
+	})
+	if(filterCount<=0){
+		return false;
 	}
-	else{
-		pageURL=browserURL;
-	}
+	//TPR-1536 Ends
 	
-	//redirecting to pageURL on page reload
-	window.location.href =pageURL;
-	return false;
-})
+	else{
+		$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+		$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
+
+		var browserURL = window.location.href;
+		var pageURL;
+		if(browserURL.indexOf("%3A")!=-1){
+			pageURL = browserURL.substring(0,browserURL.indexOf("%3A"));
+		}
+		else{
+			pageURL=browserURL;
+		}
+		
+		//redirecting to pageURL on page reload
+		window.location.href =pageURL;
+		return false;
+	}
+	})
 
 $(document).off('click', '.js-facet-colourbutton').on('click', '.js-facet-colourbutton', function() { 
 	$(this).parents(".filter-colour").toggleClass("selected-colour");
