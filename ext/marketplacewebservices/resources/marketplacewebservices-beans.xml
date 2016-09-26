@@ -2363,8 +2363,7 @@
 		<property name="eDD" type="String"/>
 		<property name="nextEDD" type="String"/>
 		<property name="isScheduled" type="String"/>
-		<property name="codEligible" type="String"/>
-		
+		<property name="codEligible" type="String"/>		
 	</bean>
 	<!--END: Added for Inventory Reservation with Delivery Slots  -->
 	
@@ -2376,6 +2375,6 @@
 		<property name="errorCode" type="String" />		
 		<property name="error" type="String" />		
 		<property name="status" type="String" />		
-		</bean>
+	</bean>
 	
 </beans>

@@ -80,15 +80,15 @@ public class TrackOrdersController extends BaseController
 
 				if (FieldName_EmailId.equals(err.getFieldError().getField()))
 				{
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.F0001);
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9104);
 				}
 				else if (FieldName_OrderCode.equals(err.getFieldError().getField()))
 				{
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.F0002);
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9105);
 				}
 				else if (FieldName_CaptchaCode.equals(err.getFieldError().getField()))
 				{
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.F0003);
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9106);
 				}
 			}
 			try
@@ -103,7 +103,7 @@ public class TrackOrdersController extends BaseController
 				}
 				else
 				{
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.F0005);
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9108);
 				}
 
 			}
@@ -115,7 +115,7 @@ public class TrackOrdersController extends BaseController
 				}
 
 				LOG.error("Error while tracking order for " + orderCode + " and " + emailId + " " + e.getMessage());
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.F0004);
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9107);
 			}
 
 		}

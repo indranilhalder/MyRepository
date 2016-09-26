@@ -1617,11 +1617,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	}
 
 	// track order error codes
-	public static final String F0001 = "F0001";
-	public static final String F0002 = "F0002";
-	public static final String F0003 = "F0003";
-	public static final String F0004 = "F0004";
-	public static final String F0005 = "F0005";
+	public static final String B9104 = "B9104";
+	public static final String B9105 = "B9105";
+	public static final String B9106 = "B9106";
+	public static final String B9107 = "B9107";
+	public static final String B9108 = "B9108";
 
 	// implement here constants used by this extension
 }
