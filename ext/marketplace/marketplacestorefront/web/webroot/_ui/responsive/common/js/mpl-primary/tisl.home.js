@@ -330,12 +330,12 @@ function getBrandsYouLoveAjaxCall() {
                         renderHtml +=
                             "<div class='home-brands-you-love-carousel-brands item' data-count ="+ count +" id='" +
                             v.compId + "'><img src='" + v.brandLogoUrl +
-                            "'></img></div>";
+                            "' alt='"+v.brandLogoAltText+"'></img></div>";
                     } else {
                         renderHtml +=
                             "<div class='home-brands-you-love-carousel-brands item' data-count ="+ count +" id='" +
                             v.compId + "'><img src='" + v.brandLogoUrl +
-                            "'></img></div>";
+                            "' alt='"+v.brandLogoAltText+"'></img></div>";
                         defaultComponentId = v.compId;
                     }
                     count++;
