@@ -4890,8 +4890,8 @@ function changeCTAButtonName(deliveryCode) {
 		}
 		else
 		{
-			$("#deliveryMethodSubmit").text("Choose Address");
-			$("#deliveryMethodSubmitUp").text("Choose Address");
+			$("#deliveryMethodSubmit").text("Proceed To Address");
+			$("#deliveryMethodSubmitUp").text("Proceed To Address");
 		}
 	}
 }
