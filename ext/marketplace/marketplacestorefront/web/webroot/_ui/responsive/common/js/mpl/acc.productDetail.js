@@ -2816,7 +2816,7 @@ function loadDefaultWishListName_SizeGuide() {
 					availibility = stockInfo;
 					$.each(stockInfo,function(key,value){
 						$("#variant>li>span").each(function(){
-							console.log($(this));
+							
 							if($(this).data("productcode1").toString().toUpperCase().indexOf(key)!= -1){  
 									
 									$(this).attr("disabled",true);

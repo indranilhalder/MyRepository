@@ -92,10 +92,12 @@ function setSizeforAkamai()
 function isOOSQuick(){
 	var totalOptions = $("ul[label=sizes] li").length;
 	totalOptions = totalOptions -1;
-	var disabledOption = $("ul[label=sizes] li").find("[style]").length;
+	var disabledOption = $("ul[label=sizes] li.strike").length;
 	if(totalOptions == disabledOption){
+		
 		return true;
 	}else{
+		
 		return false;
 	}
 }
@@ -151,20 +153,25 @@ function setBuyBoxDetails()
 				//alert("...>>"+data['sellerArticleSKU']+"<<"+productCode+"..."+productCodeQuickView);
 				
 				if(typeof data['sellerArticleSKU'] === 'undefined')
-					{
+					{					
 					$("#addToCartButtonQuick-wrong").show();
+					$("#buyNowButtonQuick-wrong").show();
+					$("#buyNowQv").hide();
 					$("#addToCartButtonQuick").hide();
 					$('#buyNowButton').hide();
-					//$("#dListedErrorMsg").show();				
+					$("#dListedErrorMsg").show();				
 					return false;
 					}					
 				
 				if(data['sellerArticleSKU']==null)
 					{
+									
 					$("#addToCartButtonQuick-wrong").show();
+					$("#buyNowButtonQuick-wrong").show();
+					$("#buyNowQv").hide();
 					$("#addToCartButtonQuick").hide();
 					$('#buyNowButton').hide();
-					//$("#dListedErrorMsg").show();					
+					$("#dListedErrorMsg").show();					
 					return false;
 					}
 				
