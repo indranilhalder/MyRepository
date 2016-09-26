@@ -2793,3 +2793,62 @@ function loadDefaultWishListName_SizeGuide() {
 		}
 		$("#offerPopup").modal('show');
 	} 
+	function setDetailsForStock(){
+		var productCode = $('#productCodeSizeGuid').val();//$("#productCodePost").val();
+		var variantCodesJson = "";
+		if(typeof(variantCodesPdp)!= 'undefined' && variantCodesPdp!= ""){
+			variantCodes = variantCodesPdp.split(",");
+			variantCodesJson = JSON.stringify(variantCodes);
+		}
+		//var code = productCode+","+variantCodesPdp;
+		var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
+		+ "/buybox";
+		var availibility = null;
+			//var dataString = 'productCode=' + productCode;	
+			$.ajax({
+				contentType : "application/json; charset=utf-8",
+				url : requiredUrl,
+				data : {productCode:productCode,variantCode:variantCodesJson},
+				cache : false,
+				dataType : "json",
+				success:function(data){
+					var stockInfo = data['availibility'];
+					availibility = stockInfo;
+					$.each(stockInfo,function(key,value){
+						$("#variant>li>span").each(function(){
+							console.log($(this));
+							if($(this).data("productcode1").toString().toUpperCase().indexOf(key)!= -1){  
+									
+									$(this).attr("disabled",true);
+									$(this).parent("li").addClass("strike");
+									
+									
+									/*$(this).css({
+										"color": "gray"
+								});*/
+									$(this).on("mouseenter",function(){
+										$(this).parent("li").css("background","#fff");
+										
+									});
+									
+									 $(this).on('click', function(event) {
+									      event.preventDefault();
+									      return false;
+									   });
+								//$(this).parent().css("border-color","gray");
+								}
+							
+						});
+					});
+					},
+					error:function(err){
+						
+					}
+				
+			});
+		
+		
+		
+		
+	}
+
