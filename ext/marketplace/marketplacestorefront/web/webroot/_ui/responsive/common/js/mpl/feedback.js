@@ -1989,7 +1989,7 @@ $(window).resize(function(){
 	},100);
 });
 $(window).scroll(function(){
-	if($(window).scrollTop()  > $(".pdp .trending#ia_products").offset().top - $(window).height()) {
+	if($(".pdp .trending#ia_products").children().length > 0 && $(window).scrollTop()  > $(".pdp .trending#ia_products").offset().top - $(window).height()) {
 		var a = $(".pdp .trending#ia_products .image").height()/2 + 20;
 		$(".pdp .trending#ia_products .owl-controls").css("top",a);
 	}
