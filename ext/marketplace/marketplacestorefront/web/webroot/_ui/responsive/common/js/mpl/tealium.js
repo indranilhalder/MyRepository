@@ -773,3 +773,18 @@ $(document).on('mousedown','.owl-prev,.owl-next',function(e){
 			});
 			
 			/*TPR-691 Ends(Few Functionality)*/
+			
+			/*TPR-675 starts 2nd part*/
+			$(document).on("click", ".gig-comments-share-provider-checkbox.gig-comments-checkbox", function(e) {
+				var selectedOption = $(this).attr('data-provider'); 
+				//alert(selectedOption)
+				 if(selectedOption=="twitter")
+				  {
+					 utag.link({link_text: 'review_social_share_twitter' , event_type : 'review_social_share'});
+				  }
+			     else if(selectedOption=="facebook")
+				  {
+			    	 utag.link({link_text: 'review_social_share_facebook' , event_type : 'review_social_share'});
+				  }
+				});
+			/*TPR-675 ends 2nd part*/ 
