@@ -4719,7 +4719,7 @@ function calculateDeliveryCost(radioId,deliveryCode)
 }
 
 //TPR-1214
-$(".pincode-button").click(function(){
+$("#address-form").click(function(){
 	
 	$.ajax({
  		url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/new-address",
@@ -4798,6 +4798,40 @@ $(".regular-radio").click(function(){
  		
  		});
 	return false;
+});
+
+//viewMore Address tpr-1212
+$(".viewMore,.viewMoreSign").click(function(e){
+	
+e.preventDefault();	
+$(".add-address").removeClass("add-addressShifts");
+$(".addsign.viewMoreSign").removeClass("addsignContent");
+$('.checkTab .address-list.hideItem').slideToggle(function(){
+	 if ($(this).is(':visible'))
+	        $(this).css('display','inline-block');
+	if($( ".checkTab .address-list.hideItem" ).is( ":visible" ))
+	{
+		$('.viewMore').text('View Less');
+	}else{
+		$('.viewMore').text('View More');	
+	}
+	
+	var len=0;
+	$(".address-list").each(function(){
+		if($(this).css("display") != "none"){
+			len++;
+		}
+	});
+	if(len%2 != 0){
+		$(".add-address").addClass("add-addressShifts");
+		$(".addsign.viewMoreSign").addClass("addsignContent");
+	}
+	
+});
+
+/*else{
+	$(".add-address").removeClass("add-addressShifts");
+}*/
 });
 
 

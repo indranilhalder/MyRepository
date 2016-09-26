@@ -49251,7 +49251,7 @@ body.no-scroll {
 }
 
 /*Add address*/
-.add-address {
+.add-address,.add-address_viewMore {
     width: 45.7%;
     margin-right: 70px;
     clear: both;
@@ -49281,7 +49281,7 @@ body.no-scroll {
 
 }
 
-.add-address a {
+.add-address a, .add-address_viewMore a {
     font-size: 14px;
     color: #a7183e;
     text-transform: uppercase;
@@ -49457,7 +49457,7 @@ body.no-scroll {
         padding: 20px;
     }
 
-    .checkTab .add-address, .checkTab .formaddress {
+    .checkTab .add-address, .checkTab .formaddress, .add-address_viewMore {
         min-height: 133px;
         padding: 37px 0;
     }
@@ -49680,7 +49680,7 @@ body.no-scroll {
         border: 0 none;
     }
 
-    .add-address {
+    .add-address , .add-address_viewMore {
         width: 100%;
     }
 
@@ -49827,7 +49827,7 @@ body.no-scroll {
         height: 10px;
     }
 
-    .add-address {
+    .add-address, .add-address_viewMore{
         margin-bottom: 10px;
         padding-bottom: 40px;
         padding-top: 30px;
@@ -50056,7 +50056,7 @@ body.no-scroll {
 
 
 
-.checkTab .add-address,.checkTab .formaddress {
+.checkTab .add-address,.checkTab .formaddress, .add-address_viewMore {
     float: left;
     margin-right: 0;
     width: 47.3%;
@@ -50124,7 +50124,7 @@ body.no-scroll {
         width: 88%;
     }
 
-    .checkTab .add-address, .checkTab .formaddress,.checkTab .map-view {
+    .checkTab .add-address, .checkTab .formaddress,.checkTab .map-view, .add-address_viewMore {
         width: 47.2%;
     }
     .editnewAddresPage .formaddress{width:100%;}
@@ -50141,7 +50141,7 @@ body.no-scroll {
         background-position: 98% 28px;
     }
 
-    .checkTab .add-address, .checkTab .formaddress {
+    .checkTab .add-address, .checkTab .formaddress, .add-address_viewMore {
         min-height: 133px;
         padding: 35px;
     }
@@ -50224,7 +50224,7 @@ body.no-scroll {
         width: 100%;
     }
 
-    .checkTab .add-address,.checkTab .formaddress,.checkTab .map-view {
+    .checkTab .add-address,.checkTab .formaddress,.checkTab .map-view, .add-address_viewMore {
         width: 100%;
         border: 1px solid #e4e4e4;
         background: #fff;
@@ -50295,7 +50295,7 @@ body.no-scroll {
         border-bottom: 0 none;
     }
 
-    .checkTab .add-address {
+    .checkTab .add-address, .add-address_viewMore {
         border: 1px solid #e4e4e4;
     }
 
@@ -50344,7 +50344,7 @@ body.no-scroll {
         padding: 10px 2px 15px;
     }
 
-    .checkTab .add-address, .checkTab .formaddress {
+    .checkTab .add-address, .checkTab .formaddress, .add-address_viewMore {
         min-height: 130px;
         padding-top: 30px;
     }
@@ -50367,7 +50367,7 @@ body.no-scroll {
         padding: 10px 12px 15px;
     }
 
-    .checkTab .add-address {
+    .checkTab .add-address, .add-address_viewMore {
         float: none;
         width: 93%;
         clear: both;
@@ -53050,4 +53050,20 @@ div.radio.creditDebitLabelRadio{
  .checkout.wrapper .product-block.addresses.new-form li.item fieldset .help-block {
     margin-top: -17px;
     margin-bottom: 15px;
+}
+
+@media only screen and (max-width: 1450px){
+	.checkTab .add-address_viewMore.viewMoreContainer{
+		margin-right: 55px;
+		width: 47%;
+	}
+	.checkTab .add-address,.add-address_viewMore{
+		width: 47%;
+	}
+}
+.add-addressShifts{
+	margin-left: 0 !important;
+}
+.addsign.addsignContent:before{
+	content:"\f068";
 }
