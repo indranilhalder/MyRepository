@@ -1850,6 +1850,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					blpComponent = getwhyourproductsWsDTO(luxurywhyourproductsComponent);
 				}
 				LOG.debug("Adding component" + abstractCMSComponentModel.getUid() + "for section" + contentSlot.getUid());
+
 				blpComponent.setSectionid(contentSlot.getUid());
 
 			}
