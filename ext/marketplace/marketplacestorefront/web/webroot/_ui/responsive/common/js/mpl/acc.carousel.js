@@ -4,6 +4,7 @@ ACC.carousel = {
 	     "myFun",
 	     "shopByLookCarousel",
 	     "offersCarousel",
+	     "blpTopDealsCarousel",
 	     "categoryCarousel",
 	     "myStyleCarousel",
 	     "heroProductCarousel",
@@ -259,6 +260,51 @@ ACC.carousel = {
 		itemsMobile : [480,2],*/
 			});
 	},
+	
+	blpTopDealsCarousel: function(){
+		$(".top_deal_blp #mplAdvancedCategoryCarousel").owlCarousel({
+					items:5,
+            		loop: true,
+            		nav:true,
+            		dots:false,
+            		navText:[],
+            		responsive : {
+            			// breakpoint from 0 up
+            			0 : {
+            				items:1,
+            				stagePadding: 50,
+            			},
+            			// breakpoint from 480 up
+            			480 : {
+            				items:2,
+            				stagePadding: 75,
+            			},
+            			// breakpoint from 768 up
+            			700 : {
+            				items:3,
+            			},
+            			// breakpoint from 768 up
+            			1000 : {
+            				items:5,
+            			}			
+            		}	
+			/*navigation:true,
+			rewindNav: false,
+			navigationText :[],
+			pagination:false,
+			items:4,
+			itemsDesktop : false, 
+			itemsDesktopSmall : false, 
+			itemsTablet: false, 
+			itemsMobile : true
+		itemsDesktop : [5000,4], 
+		itemsDesktopSmall : [1400,4], 
+		itemsTablet: [650,2], 
+		itemsMobile : [480,2],*/
+			});
+	},
+	
+	
 	myStyleCarousel: function(){
 		$(".mystyle-carousel").owlCarousel({
 			items:5,

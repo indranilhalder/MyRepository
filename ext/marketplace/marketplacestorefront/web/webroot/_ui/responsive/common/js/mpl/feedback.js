@@ -1994,3 +1994,24 @@ $(window).scroll(function(){
 		$(".pdp .trending#ia_products .owl-controls").css("top",a);
 	}
 })
+
+//----BLP------//
+//--top category section---//
+$(".top_categories").first().find("ul.categories.count-3>li:nth-child(3n + 1)").each(function(){
+		$(this).nextAll().slice(0, 2).wrapAll("<li class='sub_li_blp'><ul class='sub_ul_blp'>");
+		});
+//--top category section end---//
+//--top brands section----//
+$(".blp_top_brands > div").slice(1).wrapAll("<div class='top_brands_blp'>");
+//--top brands section end----//
+//---style edit section start---//
+$(".style_edit_blp > div").slice(0,2).wrapAll("<div class='style_edit_left_blp'>");
+//---style edit section end-----//
+//---feature collection section start---//
+$(".featured_collection  > .featured_collection_section").slice(-4).wrapAll("<div class='blp_featured_collection_wrapper'>");
+//----feature collection section end-----//
+//--shop for section----//
+$(".shop_for_blp > a").slice(0,4).wrapAll("<div class='shop_for_links_blp'>");
+//--shop for section end----//
+
+//-----BLP------//

@@ -28,9 +28,9 @@
 					<cockpit code="BottomHeaderSlot"/>
 				</td>
 			</tr>
-			<tr>
+					<tr>
 				<td colspan="5" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="BrandLogoSection" />
+					<cockpit code="CommonLogoParaSlot" />
 				</td>
 			</tr>
 			<tr>
@@ -39,14 +39,31 @@
 				</td>
 			</tr>
 			<tr>
+				<td colspan="5" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="ForHimForHerSlot" />
+				</td>
+			</tr>
+			<tr>
 				<td width="33%" style="vertical-align:top;" class="structureViewSection">
 					<cockpit code="Section2A" />
 				</td>
+				<td width="33%" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="TopBrandSlot" />
+				</td>
 				<td width="33%"  style="vertical-align:top;" class="structureViewSection">
 					<cockpit code="Section2B" />
+					
 				</td>
 				<td width="33%"  style="vertical-align:top;" class="structureViewSection">
 					<cockpit code="Section2C" />
+					
+				</td>
+			</tr>
+			
+			<tr>
+				<td colspan="5" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Section2D" />
+					
 				</td>
 			</tr>
 			<tr>
@@ -59,12 +76,6 @@
 					<cockpit code="Section3A" />
 				</td>
 			</tr>
-				<tr>
-				<td colspan="5" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="Section3B" />
-				</td>
-			</tr>
-			
 			<tr>
 				<td colspan="5" style="vertical-align:top;" class="structureViewSection">
 					<cockpit code="Section4A" />
