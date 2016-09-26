@@ -4804,7 +4804,7 @@ $(".regular-radio").click(function(){
 	return false;
 });
 
-//viewMore Address tpr-1212
+//viewMore Address tpr-1212 starts
 $(".viewMore,.viewMoreSign").click(function(e){
 	
 e.preventDefault();	
@@ -4817,7 +4817,8 @@ $('.checkTab .address-list.hideItem').slideToggle(function(){
 	{
 		$('.viewMore').text('View Less');
 	}else{
-		$('.viewMore').text('View More');	
+		$('.viewMore').text('View More');
+		$(".viewMoreContainer").removeClass("addressClear");
 	}
 	
 	var len=0;
@@ -4829,14 +4830,72 @@ $('.checkTab .address-list.hideItem').slideToggle(function(){
 	if(len%2 != 0){
 		$(".add-address").addClass("add-addressShifts");
 		$(".addsign.viewMoreSign").addClass("addsignContent");
+		$(".viewMoreContainer").removeClass("addressClear");
 	}
+	else{
+		$(".add-address").removeClass("add-addressShifts");
+		$(".addsign.viewMoreSign").removeClass("addsignContent");
+	}
+	
+	
 	
 });
 
-/*else{
-	$(".add-address").removeClass("add-addressShifts");
-}*/
 });
+
+
+
+
+$(".edit").eq(2).children("a").click(function(e){
+	e.preventDefault();
+	if(($(".address-list").length % 2 !=0)){
+		$(".add-address").addClass("add-addressShifts");
+		$(".add-address").addClass("addressClear");
+	}
+});
+
+
+$(".edit").children("a").click(function(e){
+	e.preventDefault();
+	
+	if(!$(".addsign").hasClass("addsignContent")){
+		$(".add-address").removeClass("add-addressShifts");
+		$(".add-address").removeClass("addressClear");
+		$(".viewMoreContainer").addClass("addressClear");
+	}
+	/*else{
+		$(".add-address").removeClass("add-addressShifts");
+		$(".add-address").removeClass("addressClear");
+		$(".viewMoreContainer").addClass("addressClear");
+	}*/
+	
+
+});
+
+
+$(document).on("click",".cancelBtnEdit",function(){
+	if($(".address-list").length % 2 !=0){
+	$(".add-address").removeClass("add-addressShifts");
+	$(".add-address").removeClass("addressClear");
+	}
+});
+
+$(document).on("click",".cancelBtnEdit:last",function(){
+	if($(".viewMoreSign").hasClass("addsignContent") && ($(".address-list").length % 2 !=0)){
+		$(".add-address").addClass("add-addressShifts");
+		$(".add-address").addClass("addressClear");
+	}
+});
+
+$(".edit:last").children("a.edit_address").on("click",function(){
+	if($(".viewMoreSign").hasClass("addsignContent") && ($(".address-list").length % 2 !=0)){
+		$(".add-address").addClass("add-addressShifts");
+		$(".add-address").addClass("addressClear");
+	}
+});
+
+
+//viewMore Address tpr-1212 ends
 
 
 function selectDefaultDeliveryMethod() {
