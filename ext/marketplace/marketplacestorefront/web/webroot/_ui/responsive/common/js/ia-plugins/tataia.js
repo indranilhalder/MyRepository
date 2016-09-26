@@ -85,11 +85,7 @@ if (searchCategory_id){
 			if(currentPageURL.indexOf("/c-msh") > -1 || currentPageURL.indexOf("/c-ssh") > -1)
 			{
 			  site_page_type = 'category_landing_page';
-			  category_id = currentPageURL.split('-').pop().toUpperCase();
-			 			  
-			  if(category_id.indexOf('?') > 0) {
-				 category_id = category_id.substr(0, category_id.indexOf('?'));
-			  }
+			  category_id = $('#ia_category_code').val();
 			}
 			if(currentPageURL.indexOf("/s/") > -1){
 			  site_page_type = 'seller';
@@ -100,10 +96,7 @@ if (searchCategory_id){
 			}
 			if(currentPageURL.indexOf("/c-mbh") > -1){
 			  site_page_type = 'brand';
-			  brand_id = currentPageURL.split('-').pop().toUpperCase();  
-			    if(brand_id.indexOf('?') > 0) {
-			    brand_id = brand_id.substr(0, brand_id.indexOf('?'));
-			  }
+			  brand_id = $('#ia_category_code').val();
 			}
 			//changes end
 			if(currentPageURL.indexOf("/m/") > -1){

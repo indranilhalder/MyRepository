@@ -471,6 +471,9 @@ var allSellers='${allsellers}';
 			<!-- EMI section -->
 			<product:emiDetail product="${product}" />
 			<product:productMainVariant />
+			<cms:pageSlot position="AddToCart" var="component">
+				<cms:component component="${component}" />
+			</cms:pageSlot>
 			<div class="SoldWrap">
 				<ycommerce:testId
 					code="productDetails_productNamePrice_label_${product.code}">
@@ -494,9 +497,9 @@ var allSellers='${allsellers}';
 
 
 
-			<cms:pageSlot position="AddToCart" var="component">
+			<%-- <cms:pageSlot position="AddToCart" var="component">
 				<cms:component component="${component}" />
-			</cms:pageSlot>
+			</cms:pageSlot> --%>
 			
 		</div>
 		</div>

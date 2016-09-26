@@ -848,6 +848,9 @@ h2 {
     position: relative;
     clear: both;
     margin-bottom: 0; }
+    header .content .top{
+    min-height:50px;
+    }
     header .content .top::after, header .content .bottom::after {
       clear: both;
       content: "";
@@ -8749,10 +8752,26 @@ footer .banner {
 }
   
 /*       .page-login .sign-in.tab-view .tabs > li .left form .forgotten-password{
+    .sign-in.tab-view .tabs > li .left form a {
+      display: block;
+      width: 100%;
+      text-align: center;
+      text-transform: uppercase;
+      padding: 10px 0;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-decoration: underline;
+      color: #A9143C; }
+      .page-login .sign-in.tab-view .tabs > li .left form .forgotten-password,.page-login .sign-in.tab-view .tabs > li .left form .forgotten-password_register{
       padding: 20px 0 10px 0;
       text-align: center;
       } */
-      .sign-in.tab-view .tabs > li .left form .forgotten-password{
+.page-login .sign-in.tab-view .tabs > li .left form .forgotten-password,.page-login .sign-in.tab-view .tabs > li .left form .forgotten-password_register{
+      padding: 20px 0 10px 0;
+      text-align: center;
+      }
+      .sign-in.tab-view .tabs > li .left form .forgotten-password,.sign-in.tab-view .tabs > li .left form .forgotten-password_register{
       text-align: center;
       padding:10px 0;
       font-size:11px;
@@ -11410,7 +11429,7 @@ button.otherSellersFont {
 .reviews .header h2 {
     text-align: center;
     font-size: 28px;
-    padding: 40px 0 20px;
+    padding: 10px 0 20px;
     font-weight: 500;
     font-family: "Montserrat";
 }
@@ -22439,6 +22458,7 @@ ul.color-swatch li span{
 }
 span.sizesAvailable { 
 	opacity:0;
+	display: none;
 	}
 .productParentList:hover .sizesAvailable { 
 	position:relative !important;
@@ -39376,7 +39396,8 @@ button.make_payment[disabled] {
 } */
 
 .modal.size-guide .apparelSizes table{
-width: 100%;
+	width: auto;
+  	min-width: 100%;
     float: left;
     border: 1px solid #ccc;
     table-layout: fixed;
@@ -42449,6 +42470,7 @@ float: right;
 	   left: 10px;
 	}
 }
+
 /*Filter scroll changes end*/
 /* TPR-168 */  
    #customPriceFilter .minPriceSearchTxt{
@@ -42565,7 +42587,7 @@ float: right;
 }
 
 .product-info .product-detail .price {
-	margin: 0 0 5px;
+	margin: 0 0 15px;
 }
 
 .product-info .product-detail .price .sale {
@@ -43443,18 +43465,18 @@ float: right;
 	/*Products Right Share*/
 	.color-swatch {
 		float: left;
-		width: 50%;
+		width: 100%;
 	}
 	.product-info .product-content .wish-share.desktop {
-		display: none;
+		    padding: 0px 8%;
 	}
-	.product-info .product-detail .wish-share.mobile {
+	/* .product-info .product-detail .wish-share.mobile {
 		clear: none;
 		display: block;
 		float: right;
 		width: 40%;
 		margin: 0;
-	}
+	} */
 	.product-info .product-detail .wish-share.mobile li {
 		padding: 0;
 		width: 100%;
@@ -44095,9 +44117,9 @@ body.page-productDetails .breadcrumbs.wrapper {
 }
 
 .product-detail .Emi p.active {
-	-webkit-box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
-	-moz-box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
-	box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
+	-webkit-box-shadow: 0px 0px 10px 0px rgba(138,134,138,0.5);
+	-moz-box-shadow: 0px 0px 10px 0px rgba(138,134,138,0.5);
+	box-shadow: 0px 0px 10px 0px rgba(138,134,138,0.5);
 }
 
 .product-detail .Emi p:after {
@@ -44119,9 +44141,9 @@ body.page-productDetails .breadcrumbs.wrapper {
 	background: #fff;
 	z-index: 10;
 	text-align: center;
-	-webkit-box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
-	-moz-box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
-	box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
+	-webkit-box-shadow:0px 0px 10px 0px rgba(138,134,138,0.5);
+	-moz-box-shadow: 0px 0px 10px 0px rgba(138,134,138,0.5);
+	box-shadow:0px 0px 10px 0px rgba(138,134,138,0.5);
 }
 
 .product-detail .Emi p.active+.modal-content {
@@ -45602,6 +45624,10 @@ margin-top:0px;
 	margin-bottom: 10px;
     line-height: 1.5;
 }
+
+body.pageLabel--Lingerie-page-revised .brand-content-grid .hero ul{
+	overflow:hidden;
+}
 .pdp-promo-block.promo-block .pdp-promo-title {
 	cursor: pointer;
 }
@@ -45622,3 +45648,14 @@ margin-top:0px;
     height: auto;
     padding-top: 10px;
 }
+body.no-scroll {
+	overflow-y: hidden; 
+}
+#zoomId img {
+	padding-bottom: 40px;
+}
+
+/*  Chnage for TISPRD-4587 */
+ .importantDisplay{ 
+ 	display: block !important; 
+ } 
