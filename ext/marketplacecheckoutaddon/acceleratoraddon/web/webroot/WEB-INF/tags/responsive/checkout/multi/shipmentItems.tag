@@ -289,7 +289,7 @@
 																			<input type="radio"  name="${entry.entryNumber}" value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code}" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"   checked="checked"/>
 																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label>
 																			
-																		<span>	${delMode.description }</span></li>
+																		<span>	${delMode.description }.</span></li>
 																					
 																	</c:when>
 																	<c:otherwise>
@@ -297,7 +297,7 @@
 																			<input type="radio"   name="${entry.entryNumber}"  value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code }" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"  />
 																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label>
 																			
-																		<span>${delMode.description }</span> </li>
+																		<span>${delMode.description }.</span> </li>
 																			
 																	</c:otherwise>
 															</c:choose>
