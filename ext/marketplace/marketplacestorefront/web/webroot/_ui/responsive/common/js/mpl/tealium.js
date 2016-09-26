@@ -564,6 +564,20 @@ $(document).on('mousedown','.owl-prev,.owl-next',function(e){
 		});
 	}
 })
+
+$(document).on("click", ".home-brands-you-love-carousel-brands", function() {
+	var text = $(this).find('img').attr('alt');
+	if(text != ""){
+		text = $(this).find('img').attr('alt').toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+		var header = $(this).parents('#brandsYouLove').find('h1').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+		utag.link({
+			link_obj: this,
+			link_text: header+":"+text,
+			event_type : header+"_click"
+		});
+	}
+})
+
 /*TPR-650 End*/
 
 /*TPR-691 Starts(Few Functionality)*/
