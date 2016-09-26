@@ -33351,17 +33351,22 @@ body.page-cartPage .cart-top-block > .simple-banner-component{
 	height:0;
 }
 body.page-cartPage .cart.wrapper .MyBag-buttons ul.checkout-types a.checkoutButton, body.page-cartPage .cart.wrapper .MyBag-buttons ul.checkout-types button.express-checkout-button{
-height: 40px !important;
 width:175px;
 letter-spacing:1px;
 }
-body.page-cartPage .cart.wrapper .checkout-types a.checkoutButton{
-line-height: 14px !important;
-}
+
 body.page-cartPage .MyBag-pincode button#pinCodeButtonIds {
     line-height:1.4;
     padding:0 10px;
 }
+@media only screen and (min-width: 1451px){
+	body.page-cartPage .cart.wrapper .checkout-types a.checkoutButton{
+line-height: 22px !important;
+}
+body.page-cartPage .continue-shopping.desk-view-shopping{
+	bottom:5px !important;
+}
+	}
 @media only screen and (max-width: 1450px){
 body.page-cartPage .MyBagHeadingDesktop, body.page-cartPage .MyBag-pincode h2 {
     font-size: 20px;
@@ -33819,6 +33824,7 @@ body.page-cartPage .MyBag-pincode button#pinCodeButtonIds{
 }
 body.page-cartPage .cart.wrapper .product-block{
 	margin-top:13px;
+	margin-bottom:8px;
 }
 body.page-cartPage .MyBagHeadingDesktop{
 	position: absolute;
