@@ -630,84 +630,79 @@ $(document).on("click", ".home-brands-you-love-carousel-brands", function() {
 							  );
 					  }
 				});
-			/*cancel chat*/
-			$(document).on("mousedown", ".bcancel", function(e) {
-				
-				var selectedOption = $('select[name="reason"] option:selected').val();
-				//alert("You have selected the country - " + selectedOption);
-				//alert("hi");
-				
-				if(selectedOption=="Order enquiry/ Place or cancel order")
-				  {
-				  utag.link(
-						  {link_obj: this,link_text: 'support_chat_Order_enquiry_Place_or_cancel_order_cancel', event_type : 'support_chat_click'}
-						  );
-				  }
-			  else if(selectedOption=="Return  Product")
-				  {
-				  utag.link(
-						  {link_obj: this,link_text: 'support_chat_Return_Product_cancel', event_type : 'support_chat_click'}
-						  );
-				  }
-			  else if(selectedOption=="Refund Enquiry")
-				  {
-				  utag.link(
-						  {link_obj: this,link_text: 'support_chat_Refund_Enquiry_cancel', event_type : 'support_chat_click'}
-						  );
-				  }
-			  else if(selectedOption=="Product Information")
-				  {
-				  utag.link(
-						  {link_obj: this,link_text: 'support_chat_Product_Information_cancel', event_type : 'support_chat_click'}
-						  );
-				  }
-			  else
-				  {
-				  utag.link(
-						  {link_obj: this,link_text: 'support_chat_Other_Assistance_cancel', event_type : 'support_chat_click'}
-						  );
-				  }
-				  
-				});
 			
 			/*cancel call*/
 			$(document).on("mousedown", ".bcancel", function(e) {
-				
+				var id = $(this).attr('id');
+			    //alert(id);
 				var selectedOption = $('select[name="reason"] option:selected').val();
 				//alert("You have selected the country - " + selectedOption);
 				//alert("hi");
-				
-				if(selectedOption=="Order enquiry/ Place or cancel order")
-				  {
-				  utag.link(
-						  {link_obj: this,link_text: 'support_call_Order_enquiry_Place_or_cancel_order_cancel', event_type : 'support_call_click'}
-						  );
-				  }
-			  else if(selectedOption=="Return  Product")
-				  {
-				  utag.link(
-						  {link_obj: this,link_text: 'support_call_Return_Product_cancel', event_type : 'support_call_click'}
-						  );
-				  }
-			  else if(selectedOption=="Refund Enquiry")
-				  {
-				  utag.link(
-						  {link_obj: this,link_text: 'support_call_Refund_Enquiry_cancel', event_type : 'support_call_click'}
-						  );
-				  }
-			  else if(selectedOption=="Product Information")
-				  {
-				  utag.link(
-						  {link_obj: this,link_text: 'support_call_Product_Information_cancel', event_type : 'support_call_click'}
-						  );
-				  }
-			  else
-				  {
-				  utag.link(
-						  {link_obj: this,link_text: 'support_call_Other_Assistance_cancel', event_type : 'support_call_click'}
-						  );
-				  }
-				  
+				if(id=="call"){
+					if(selectedOption=="Order enquiry/ Place or cancel order")
+					{
+						utag.link(
+								{link_obj: this,link_text: 'support_call_Order_enquiry_Place_or_cancel_order_cancel', event_type : 'support_call_click'}
+						  	);
+					}
+					else if(selectedOption=="Return  Product")
+					{
+						utag.link(
+								{link_obj: this,link_text: 'support_call_Return_Product_cancel', event_type : 'support_call_click'}
+						  	);
+					}
+					else if(selectedOption=="Refund Enquiry")
+					{
+						utag.link(
+								{link_obj: this,link_text: 'support_call_Refund_Enquiry_cancel', event_type : 'support_call_click'}
+						  	);
+					}
+					else if(selectedOption=="Product Information")
+					{
+						utag.link(
+								{link_obj: this,link_text: 'support_call_Product_Information_cancel', event_type : 'support_call_click'}
+							);
+					}
+					else
+					{
+						utag.link(
+								{link_obj: this,link_text: 'support_call_Other_Assistance_cancel', event_type : 'support_call_click'}
+						  	);
+					}
+				  } 
+				if(id=="chat"){
+					if(selectedOption=="Order enquiry/ Place or cancel order")
+					  {
+					  utag.link(
+							  {link_obj: this,link_text: 'support_chat_Order_enquiry_Place_or_cancel_order_cancel', event_type : 'support_chat_click'}
+							  );
+					  }
+				  else if(selectedOption=="Return  Product")
+					  {
+					  utag.link(
+							  {link_obj: this,link_text: 'support_chat_Return_Product_cancel', event_type : 'support_chat_click'}
+							  );
+					  }
+				  else if(selectedOption=="Refund Enquiry")
+					  {
+					  utag.link(
+							  {link_obj: this,link_text: 'support_chat_Refund_Enquiry_cancel', event_type : 'support_chat_click'}
+							  );
+					  }
+				  else if(selectedOption=="Product Information")
+					  {
+					  utag.link(
+							  {link_obj: this,link_text: 'support_chat_Product_Information_cancel', event_type : 'support_chat_click'}
+							  );
+					  }
+				  else
+					  {
+					  utag.link(
+							  {link_obj: this,link_text: 'support_chat_Other_Assistance_cancel', event_type : 'support_chat_click'}
+							  );
+					  }
+					
+					}
 				});
 			
 			/*call generate OTP*/

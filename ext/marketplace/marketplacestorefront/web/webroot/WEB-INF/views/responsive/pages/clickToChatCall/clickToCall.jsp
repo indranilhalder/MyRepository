@@ -94,7 +94,7 @@
 					<button id="generateOTPBtn" type="button" class="bsubmit">
 						<spring:theme code="popupc2c.call.generateOtp" />
 					</button>
-					<a class="close bcancel" href="#nogo" data-dismiss="modal"><spring:theme
+					<a class="close bcancel" href="#nogo" data-dismiss="modal" id="call"><spring:theme
 							code="text.button.cancel" /></a>
 				</div>
 			</form>
