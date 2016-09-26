@@ -5379,7 +5379,7 @@ text-transform: uppercase;
           padding: 0 10px; }
         .cart.wrapper .right-block .block.bottom.order-details > p, .cart.wrapper .right-block .block.bottom.order-details li.item > p, .confirmation .right-block .block.bottom.order-details > p, .confirmation .right-block .block.bottom.order-details li.item > p {
           margin-bottom: 0;
-          font-weight: 500; }
+          font-weight: normal; }
         .cart.wrapper .right-block .block.bottom.order-details > p, .cart.wrapper .right-block .block.bottom.order-details address, .cart.wrapper .right-block .block.bottom.order-details li.item > p, .cart.wrapper .right-block .block.bottom.order-details address, .confirmation .right-block .block.bottom.order-details > p, .confirmation .right-block .block.bottom.order-details address, .confirmation .right-block .block.bottom.order-details li.item > p, .confirmation .right-block .block.bottom.order-details address {
           font-size: 12px;
           line-height: 1.2; }
