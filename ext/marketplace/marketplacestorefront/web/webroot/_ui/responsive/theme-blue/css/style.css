@@ -39385,13 +39385,14 @@ fieldset#cardDate .form-group .control-label, fieldset#startDate .form-group .co
 	width: 899px !important;
 	position: relative;
 }
-
-#cboxLoadedContent {
-	overflow: hidden !important;
+/* TPR-1779 */
+#cboxContent #cboxLoadedContent {
+	/* overflow: hidden !important; */
 	width: 839px !important;
 	-webkit-overflow-scrolling: touch;
 	min-height:30px !important;
 }
+/* End TPR-1779 */
 
 #cboxTitle {
 	margin: 0;
@@ -47098,8 +47099,13 @@ padding:0 40px;	}
 	text-align: center;
 	min-width: 33px;
 	/* border-right:none; */
-	margin-left: -1px;
+	margin-right: -1px;
 }
+/* TPR-1631 */
+.modal.size-guide .sizes .details .size ul#variant li {
+	margin-right: 0;
+}
+/*End TPR-1631 */
 
 .modal.size-guide .sizes .details .size ul#variant li span {
 	display: block;
