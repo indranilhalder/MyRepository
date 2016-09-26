@@ -225,8 +225,6 @@
 		</cookie-config> -->
        <session-timeout>30</session-timeout>
 	</session-config> 
-
-
 	<!-- JSP Configuration -->
 
 	<jsp-config>

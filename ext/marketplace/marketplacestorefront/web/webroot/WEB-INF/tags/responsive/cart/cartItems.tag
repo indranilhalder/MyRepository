@@ -197,7 +197,7 @@ tr.d0 td {
 									<c:otherwise>
 										<c:choose>
 										<c:when test="${entry.isBOGOapplied eq true}">
-											<span class="delSeat">
+											<span class="delSeat" id="totalPrice_${entry.entryNumber}">
 												 <format:price priceData="${strikeoffprice}" displayFreeForZero="true" />
 											</span>
 											<c:choose>
