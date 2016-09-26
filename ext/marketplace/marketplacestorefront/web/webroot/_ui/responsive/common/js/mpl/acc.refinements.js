@@ -345,7 +345,7 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 			$(".spinner").remove();
 			
 			// Keeps expansion-closure state of facets
-			$(".facet-name.js-facet-name h4").each(function(){
+			$(".facet-name.js-facet-name h3").each(function(){
 				if($(this).hasClass("true")){
 					
 					if(sessionStorage.getItem($(this).text()) == "true" || sessionStorage.getItem($(this).text()) == null){
@@ -358,8 +358,8 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 				}
 			 });
 			
-			if(sessionStorage.getItem($('ul.product-facet > .js-facet-name > h4').text()) == "false" && null != sessionStorage.getItem($('ul.product-facet > .js-facet-name > h4').text())) {
-				$('ul.product-facet > .js-facet-name > h4').removeClass('active');
+			if(sessionStorage.getItem($('ul.product-facet > .js-facet-name > h3').text()) == "false" && null != sessionStorage.getItem($('ul.product-facet > .js-facet-name > h3').text())) {
+				$('ul.product-facet > .js-facet-name > h3').removeClass('active');
 				$('#searchPageDeptHierTreeForm #searchPageDeptHierTree').hide(100);
 		    	$("#categoryPageDeptHierTreeForm #categoryPageDeptHierTree").hide(100);
 			}

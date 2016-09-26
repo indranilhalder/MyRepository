@@ -31,12 +31,12 @@
 		
 				<div class="facet-name js-facet-name facet_mobile">
 						<c:if test="${empty hideDepartments}">
-						<h4 class="true tree-dept"><span class="filter-nav"><spring:theme code="search.nav.facetTitle" arguments="Department"/></span><span class="category-icons"><span></span></span></h4>
+						<h3 class="true tree-dept"><span class="filter-nav"><spring:theme code="search.nav.facetTitle" arguments="Department"/></span><span class="category-icons"><span></span></span></h3>
 						</c:if>
 				</div>
 				<div class="facet-name js-facet-name facet_desktop">
 						<c:if test="${empty hideDepartments}">
-						<h4 class="true active tree-dept"><spring:theme code="search.nav.facetTitle" arguments="Department"/></h4>
+						<h3 class="true active tree-dept"><spring:theme code="search.nav.facetTitle" arguments="Department"/></h3>
 						</c:if>
 				</div>
 				<c:choose>

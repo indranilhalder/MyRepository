@@ -13,7 +13,7 @@ $(function() {
 	
 	
 $(document).ready(function(){
-	 $(".facet-name.js-facet-name h4").each(function(){
+	 $(".facet-name.js-facet-name h3").each(function(){
 		if($(this).hasClass("false")){
 	    	$(this).parent().siblings('#searchPageDeptHierTreeForm').find("#searchPageDeptHierTree").hide(100);
 	    	$(this).parent().siblings('#categoryPageDeptHierTreeForm').find("#categoryPageDeptHierTree").hide(100);
@@ -33,7 +33,7 @@ $(document).ready(function(){
 
 		<div class="facet-name js-facet-name facet_mobile">
 				<c:if test="${empty hideDepartments}">
-				<h4 class="true tree-dept"><span class="filter-nav"><spring:theme code="search.nav.facetTitle" arguments="Department"/></span><span class="category-icons"><span></span></span></h4>
+				<h3 class="true tree-dept"><span class="filter-nav"><spring:theme code="search.nav.facetTitle" arguments="Department"/></span><span class="category-icons"><span></span></span></h3>
 				</c:if>
 		</div>
 		<div class="facet-name js-facet-name facet_desktop">

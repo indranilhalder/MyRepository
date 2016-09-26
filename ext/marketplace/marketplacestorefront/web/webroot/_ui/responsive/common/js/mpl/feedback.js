@@ -267,8 +267,8 @@ $(document).ready(function(){
 				$(".facet-name.js-facet-name h4.active-mob").parent().siblings().show();*/
 				}
 				else{
-				$(".facet-name.js-facet-name h4").removeClass("active-mob");
-					$(".facet-name.js-facet-name h4").each(function(){
+				$(".facet-name.js-facet-name h3").removeClass("active-mob");
+					$(".facet-name.js-facet-name h3").each(function(){
 					if($(this).hasClass("active")){
 						$(this).parent().siblings().show();
 						$(this).parent().siblings().find("#searchPageDeptHierTree").show();
@@ -282,7 +282,7 @@ $(document).ready(function(){
 			$(document).on("click",".facet-name.js-facet-name h3",function(){
 				if(typeof(Storage) !== "undefined") {
 						if($(this).parents().hasClass("facet_mobile")){
-							$(".facet-name.js-facet-name h4").removeClass("active-mob");
+							$(".facet-name.js-facet-name h3").removeClass("active-mob");
 							$(this).parents(".facet_mobile").siblings().find(".facet-values.js-facet-values.js-facet-form").hide();
 							if($(this).parent().siblings('#searchPageDeptHierTreeForm').length == 0){
 								$('#searchPageDeptHierTreeForm').find("#searchPageDeptHierTree").hide();
@@ -1948,12 +1948,12 @@ $(document).on('click','.left-block .toggle-filterSerp',function(){
 				$(this).removeClass("blank");
 			}
 		});
-		$(".facet-name.js-facet-name h4").removeClass("active-mob");
-		$(".facet-name.js-facet-name h4").first().addClass("active-mob");
-		$(".facet-name.js-facet-name h4").parent().siblings().hide();
-		$(".facet-name.js-facet-name h4.active-mob").parent().siblings().show();
-		$(".facet-name.js-facet-name h4.active-mob").parent().siblings().find("#searchPageDeptHierTree").show();
-		$(".facet-name.js-facet-name h4.active-mob").parent().siblings().find("#categoryPageDeptHierTree").show();
+		$(".facet-name.js-facet-name h3").removeClass("active-mob");
+		$(".facet-name.js-facet-name h3").first().addClass("active-mob");
+		$(".facet-name.js-facet-name h3").parent().siblings().hide();
+		$(".facet-name.js-facet-name h3.active-mob").parent().siblings().show();
+		$(".facet-name.js-facet-name h3.active-mob").parent().siblings().find("#searchPageDeptHierTree").show();
+		$(".facet-name.js-facet-name h3.active-mob").parent().siblings().find("#categoryPageDeptHierTree").show();
 	});
 	$(".category-icons").each(function(){
 	if($(this).find("span").text() == ""){

@@ -520,7 +520,7 @@ function constructDepartmentHierarchy(inputArray) {
 		  event.preventDefault();
 	});
 	
-	 $(".facet-name.js-facet-name h4").each(function(){
+	 $(".facet-name.js-facet-name h3").each(function(){
 		 var facetStockSize=$("#facetStockSize").val();
 		 if($("#stockStatusId").val()!= "true" && facetStockSize==1){
 			 $(".Availability").hide();
