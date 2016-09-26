@@ -116,7 +116,9 @@ function refresh(){
 	//$(".checkout-content.checkout-payment .left-block").css("margin-top","0px");
 	
 	$("#paymentMode, #bankNameForEMI, #selectedTerm, #bankCodeSelection").val("select");
-	document.getElementById('silentOrderPostForm').reset();
+	if(null!= document.getElementById('silentOrderPostForm')){
+		document.getElementById('silentOrderPostForm').reset();
+	}
 	$(".card_number, .name_on_card, #cardType, #otpNUMField, .security_code").val("");
 	$(".card_exp_month").val("month");	
 	$(".card_exp_year").val("year");	
@@ -136,10 +138,12 @@ function refresh(){
 	$(".make_payment_top_nb, .make_payment_top_savedCard, .make_payment_top_newCard, .cod_payment_button_top").css("display","none");
 	$("").css("display","none");
 	hideTable();
-	var selection = document.silentOrderPostForm.EMIBankCode;
-	if(selection!=undefined){
-		for (i=0; i<selection.length; i++){
-			selection[i].checked = false;
+	if("undefined" != typeof(document.silentOrderPostForm)){
+		var selection = document.silentOrderPostForm.EMIBankCode;
+		if(selection!=undefined){
+			for (i=0; i<selection.length; i++){
+				selection[i].checked = false;
+			}
 		}
 	}
 	$('#savedEMICard').find(".credit-card-group").remove();
@@ -6831,32 +6835,34 @@ $("*[data-id=savedDCard]").change(function(){
 
 $("#payment_form").find("input[type=text]").click(function(){
 	$("*[data-id=newCCard]").prop("checked","true");
-	$("*[data-id=newCCard]").click();
+	$("*[data-id=newCCard]").trigger("click");
 });
 
 $("#payment_form").find("select").click(function(){
 	$("*[data-id=newCCard]").prop("checked","true");
-	$("*[data-id=newCCard]").click();
+	$("*[data-id=newCCard]").trigger("click");
 });
 
 $("#debit_payment_form").find("input[type=text]").click(function(){
 	$("*[data-id=newDCard]").prop("checked","true");
-	$("*[data-id=newDCard]").click();
+	$("*[data-id=newDCard]").trigger("click");
 });
 
 $("#debit_payment_form").find("select").click(function(){
 	$("*[data-id=newDCard]").prop("checked","true");
-	$("*[data-id=newDCard]").click();
+	$("*[data-id=newDCard]").trigger("click");
 });
 
 $("#savedCreditCard").find("input[type=password]").click(function(){
 	$("*[data-id=savedCCard]").prop("checked","true");
-	$("*[data-id=savedCCard]").click();
+	$("*[data-id=savedCCard]").trigger("change");
+	$("#payment_form").find(".error-message").empty();
 });
 
 $("#savedDebitCard").find("input[type=password]").click(function(){
 	$("*[data-id=savedDCard]").prop("checked","true");
-	$("*[data-id=savedDCard]").click();
+	$("*[data-id=savedDCard]").trigger("change");
+	$("#debit_payment_form").find(".error-message").empty();
 });
 	//TPR-1055
 	$("#defaultPinCodeIds").click(function(){

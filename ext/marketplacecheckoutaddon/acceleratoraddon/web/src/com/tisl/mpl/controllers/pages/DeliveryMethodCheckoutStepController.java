@@ -69,7 +69,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -82,6 +81,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.granule.json.JSONObject;
 import com.tisl.mpl.checkout.form.DeliveryMethodEntry;
 import com.tisl.mpl.checkout.form.DeliveryMethodForm;
 import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
@@ -843,7 +843,10 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		}
 		storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
 		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
+		//		/TPR-1803
 		setCheckoutStepLinksForModel(model, getCheckoutStep());
+		model.addAttribute("checkoutPageName", checkoutPageName);
+		model.addAttribute("progressBarClass", "choosePage");
 		return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChoosePickupLocationPage;
 	}
 
