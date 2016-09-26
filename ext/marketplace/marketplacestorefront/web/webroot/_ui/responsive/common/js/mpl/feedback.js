@@ -1741,6 +1741,8 @@ $(document).ready(function(){
 			});
 			if($("body.page-cartPage .cart.wrapper .checkout-types li.express-checkout").children().length == 0){
 				$("body.page-cartPage .cart.wrapper .checkout-types li#checkout-id").addClass("onlyCheckout");
+				$("body.page-cartPage .cart.wrapper .checkout-types").addClass("onlyCheckoutButton");
+				$("body.page-cartPage .continue-shopping.desk-view-shopping").addClass("onlyCheckoutLink");
 			}
 			});
 		

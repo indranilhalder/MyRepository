@@ -33350,6 +33350,18 @@ body.page-cartPage .cart.wrapper .product-block li.item > ul > li.delivery span.
 body.page-cartPage .cart-top-block > .simple-banner-component{
 	height:0;
 }
+body.page-cartPage .cart.wrapper .MyBag-buttons ul.checkout-types a.checkoutButton, body.page-cartPage .cart.wrapper .MyBag-buttons ul.checkout-types button.express-checkout-button{
+height: 40px !important;
+width:175px;
+letter-spacing:1px;
+}
+body.page-cartPage .cart.wrapper .checkout-types a.checkoutButton{
+line-height: 14px !important;
+}
+body.page-cartPage .MyBag-pincode button#pinCodeButtonIds {
+    line-height:1.4;
+    padding:0 10px;
+}
 @media only screen and (max-width: 1450px){
 body.page-cartPage .MyBagHeadingDesktop, body.page-cartPage .MyBag-pincode h2 {
     font-size: 20px;
@@ -34047,6 +34059,12 @@ body.page-cartPage .continue-shopping.desk-view-shopping{
     bottom: 0px;
     width: 17.1%;
 }
+body.page-cartPage .MyBag-top-section .MyBag-buttons ul.checkout-types.onlyCheckoutButton{
+    width: 195px;
+}
+body.page-cartPage .continue-shopping.desk-view-shopping.onlyCheckoutLink{
+    left: 195px;
+}
 }
 @media (min-width: 1025px) and (max-width:1280px){
 body.page-cartPage .MyBag-top-section .MyBag-buttons ul.checkout-types{
@@ -34061,6 +34079,14 @@ body.page-cartPage .continue-shopping.desk-view-shopping{
     left: -webkit-calc(350px + 1.8%);
     bottom: 0px;
     width: 17.1%;
+}
+body.page-cartPage .MyBag-top-section .MyBag-buttons ul.checkout-types.onlyCheckoutButton{
+    width: calc(175px + 0.9%);
+    width: -webkit-calc(175px + 0.9%);
+}
+body.page-cartPage .continue-shopping.desk-view-shopping.onlyCheckoutLink{
+    left: calc(175px + 0.9%);
+    left: -webkit-calc(175px + 0.9%);
 }
 }
 body.page-cartPage .cart.wrapper .product-block li.item > ul > li:first-child div.product p.item-info,
@@ -34091,6 +34117,12 @@ body.page-cartPage .MyBag-pincode input#defaultPinCodeIds:focus{
     bottom: 0;
 }
 
+}
+
+@media(max-width: 1037px) and (min-width: 1032px){
+.product-facet .facet .facet-list .facet-mark{
+margin-right: 9px;
+}
 }
 /*Mybag css changes ends*/
 .cart.wrapper .right-block .block.bottom.order-details address, .checkout.wrapper .product-block.addresses li.item address,
