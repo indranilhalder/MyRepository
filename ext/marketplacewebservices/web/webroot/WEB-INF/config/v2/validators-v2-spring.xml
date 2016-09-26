@@ -336,4 +336,22 @@
 	</property>
 	</bean>
 
+<!-- added for trackOrderWsDTO Validation -->
+
+	<bean id="trackOrderWsDTOValidator" class="com.tisl.mpl.validator.CompositeValidator">
+		<property name="validators">
+			<list>
+				<bean class="com.tisl.mpl.validator.EmailValidator">
+					<property name="fieldPath" value="emailId"/>
+				</bean>
+				<bean class="com.tisl.mpl.validator.FieldNotEmptyValidator">
+					<property name="fieldPath" value="orderCode"/>
+				</bean>
+				<bean class="com.tisl.mpl.validator.FieldNotEmptyValidator">
+					<property name="fieldPath" value="captchaCode"/>
+				</bean>
+			</list>
+		</property>
+	</bean>		
+
 </beans>

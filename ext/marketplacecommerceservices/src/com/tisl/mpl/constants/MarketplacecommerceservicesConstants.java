@@ -1604,17 +1604,24 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String RETURN_TYPE_RSP = "RSP";
 	public static final String TICKETID_PREFIX_E = "E";
 	public static final String RETURN_METHOD_QUICKDROP = "quickdrop";
-	public static final String RETURN_METHOD_SELFSHIP ="self";
+	public static final String RETURN_METHOD_SELFSHIP = "self";
 	public static final String RETURN_TYPE = "R";
 	public static final String ORDERTAG_TYPE_PREPAID = "PREPAIDRRF";
 	public static final String ORDERTAG_TYPE_POSTPAID = "POSTPAIDRRF";
-	
+
 	public static final String TO = "TO".intern();
 
 	private MarketplacecommerceservicesConstants()
 	{
 		//empty to avoid instantiating this constant class
 	}
+
+	// track order error codes
+	public static final String F0001 = "F0001";
+	public static final String F0002 = "F0002";
+	public static final String F0003 = "F0003";
+	public static final String F0004 = "F0004";
+	public static final String F0005 = "F0005";
 
 	// implement here constants used by this extension
 }
