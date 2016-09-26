@@ -52169,6 +52169,7 @@ left: -5px;
     font-weight: 600;
     text-transform: uppercase;
     padding: 0;
+    line-height: 22px;
 }
 .checkout.wrapper .product-block li.item > ul li.delivery span{
 	margin: 0;
@@ -52296,7 +52297,7 @@ input[type="radio"] + label:before, input[type="checkbox"] + label:before{
 	.checkout.wrapper .checkout-shipping.left-block .product-block li.item > ul li.delivery li label.deliveryModeLabel{
 	    font-size: 12px;
     	font-weight: 600;
-    	line-height: normal;
+    	line-height: 22px;
 	}
 	.cart.wrapper .checkout-shipping.left-block .product-block li.item > ul > li.delivery ul{
 	    color: #a7183e !important;
