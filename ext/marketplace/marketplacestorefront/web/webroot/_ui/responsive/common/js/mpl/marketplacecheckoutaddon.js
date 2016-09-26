@@ -6836,7 +6836,7 @@ $("*[data-id=savedDCard]").change(function(){
 $("#payment_form").find("input[type=text]").click(function(){
 	$("*[data-id=newCCard]").prop("checked","true");
 	$("*[data-id=newCCard]").trigger("click");
-	$("#make_cc_payment_up").show();
+	$("#cvvErrorSavedCard").hide();
 	//$("#savedCreditCard").find(".error-message").hide();
 });
 
@@ -6848,17 +6848,28 @@ $("#payment_form").find("select").click(function(){
 $("#debit_payment_form").find("input[type=text]").click(function(){
 	$("*[data-id=newDCard]").prop("checked","true");
 	$("*[data-id=newDCard]").trigger("click");
+	$(".card_cvvErrorSavedCard").hide();
 });
 
 $("#debit_payment_form").find("select").click(function(){
 	$("*[data-id=newDCard]").prop("checked","true");
 	$("*[data-id=newDCard]").trigger("click");
+	$(".card_cvvErrorSavedCard").hide();
 });
 
 $("#savedCreditCard").find("input[type=password]").click(function(){
 	$(".radio input[type='radio']").removeAttr("checked");
 	$("*[data-id=savedCCard]").prop("checked","true");
 	$("*[data-id=savedCCard]").trigger("change");
+	$("#make_cc_payment_up").show();
+	$("#cardNoError").empty();
+	$("#memberNameError").empty();
+	$("#expYYError").empty();
+	$("#cvvError").empty();
+	$(".proceed-button").each(function(){
+		$(this).hide();
+	});
+	$("#make_saved_cc_payment_up").show();
 	//$("#payment_form").find(".error-message").hide();
 });
 
@@ -6866,6 +6877,15 @@ $("#savedDebitCard").find("input[type=password]").click(function(){
 	$(".radio input[type='radio']").removeAttr("checked");
 	$("*[data-id=savedDCard]").prop("checked","true");
 	$("*[data-id=savedDCard]").trigger("change");
+	$("#make_cc_payment_up").show();
+	$("#cardNoErrorDc").empty();
+	$("#memberNameErrorDc").empty();
+	$("#expYYErrorDc").empty();
+	$("#cvvErrorDc").empty();
+	$(".proceed-button").each(function(){
+		$(this).hide();
+	});
+	$("#make_saved_dc_payment_up").show();
 	//$("#debit_payment_form").find(".error-message").hide();
 });
 	//TPR-1055
