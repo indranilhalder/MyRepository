@@ -1839,10 +1839,21 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 			for (final AbstractCMSComponentModel abstractCMSComponentModel : contentSlot.getCmsComponents())
 			{
 				final String typecode = abstractCMSComponentModel.getTypeCode();
-				if (typecode.equalsIgnoreCase("RotatingImagesComponent"))
+				if (typecode.equalsIgnoreCase("RotatingImagesComponent")
+						&& contentSlot.getUid().equalsIgnoreCase("Section2-luxurybrandlandingpage"))
 				{
 					final RotatingImagesComponentModel luxuryBannerComponent = (RotatingImagesComponentModel) abstractCMSComponentModel;
-					// blpComponent = getForHimHerBannerWsDTO(luxuryBannerComponent);
+					blpComponent = getForHimHerBannerWsDTO(luxuryBannerComponent);
+				}
+				else if (typecode.equalsIgnoreCase("VideoComponent"))
+				{
+					final VideoComponentModel BlpVideoComponent = (VideoComponentModel) abstractCMSComponentModel;
+					blpComponent = getLuxBlpVideocomponentWsDTO(BlpVideoComponent);
+				}
+				else if (typecode.equalsIgnoreCase("MplAdvancedCategoryCarouselComponent"))
+				{
+					final MplAdvancedCategoryCarouselComponentModel BlpVideoComponent = (MplAdvancedCategoryCarouselComponentModel) abstractCMSComponentModel;
+					blpComponent = getBlpAdvanceCategory(BlpVideoComponent);
 				}
 				if (typecode.equalsIgnoreCase("MplShowcaseComponent"))
 				{
@@ -1852,9 +1863,9 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				LOG.debug("Adding component" + abstractCMSComponentModel.getUid() + "for section" + contentSlot.getUid());
 
 				blpComponent.setSectionid(contentSlot.getUid());
-
+				componentListForASlot.add(blpComponent);
 			}
-			componentListForASlot.add(blpComponent);
+
 
 
 		}
@@ -1959,13 +1970,148 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 		return luxComponent;
 	}
 
+	private LuxBlpCompListWsDTO getBlpAdvanceCategory(final MplAdvancedCategoryCarouselComponentModel luxuryCategoryComponent)
+	{
+		// YTODO Auto-generated method stub
+		final ArrayList<LuxShopYourFavListWsDTO> shopYourFavList = new ArrayList<LuxShopYourFavListWsDTO>();
+		//	final LuxShopYourFavListWsDTO luxshopYourFav = new LuxShopYourFavListWsDTO();
+		final LuxBlpCompListWsDTO luxComponentents = new LuxBlpCompListWsDTO();
+		int position = 1;
+		for (final MplImageCategoryComponentModel catCompObj : luxuryCategoryComponent.getCategories())
+		{
+			final LuxShopYourFavListWsDTO luxshopYourFav = new LuxShopYourFavListWsDTO();
+			if (null != catCompObj.getCategory() && null != catCompObj.getCategory().getCode())
+			{
+				luxshopYourFav.setCategoryId(catCompObj.getCategory().getCode());
+			}
+			if (catCompObj.getIsImageFromPCM().booleanValue())
+			{
+				luxshopYourFav.setCategoryImageUrl(getCategoryMediaUrl(catCompObj.getCategory()));
+			}
+			else
+			{
+				if (null != catCompObj.getImage() && StringUtils.isNotEmpty(catCompObj.getImage().getURL()))
+				{
+					luxshopYourFav.setCategoryImageUrl(catCompObj.getImage().getURL());
+				}
+			}
+
+			if (null != catCompObj.getCategory() && null != catCompObj.getCategory().getName())
+			{
+				luxshopYourFav.setCategoryName(catCompObj.getCategory().getName());
+			}
+			if (null != catCompObj.getCategory())
+			{
+				luxshopYourFav.setCategoryUrl(defaultCategoryModelUrlResolver.resolve(catCompObj.getCategory()));
+			}
+
+			if (null != catCompObj.getImage() && null != catCompObj.getImage().getAltText())
+			{
+				luxshopYourFav.setAltText(catCompObj.getImage().getAltText());
+			}
+			luxshopYourFav.setPosition(Integer.valueOf(position));
+
+
+
+			luxshopYourFav.setPosition(Integer.valueOf(position));
+
+			position++;
+
+			shopYourFavList.add(luxshopYourFav);
+		}
+		luxComponentents.setCategory_component(shopYourFavList);
+		return luxComponentents;
+
+
+	}
+
+	/**
+	 * @param luxuryBlpVideoComponent
+	 * @return
+	 */
+
+	private LuxBlpCompListWsDTO getLuxBlpVideocomponentWsDTO(final VideoComponentModel luxuryBlpVideoComponent)
+	{
+		final ArrayList<LuxVideocomponentWsDTO> videoComponentDtoList = new ArrayList<LuxVideocomponentWsDTO>();
+		final LuxVideocomponentWsDTO video = new LuxVideocomponentWsDTO();
+		final LuxBlpCompListWsDTO luxBlpComponent = new LuxBlpCompListWsDTO();
+		if (null != luxuryBlpVideoComponent)
+		{
+			if (null != luxuryBlpVideoComponent.getVideoDescription())
+
+			{
+
+				video.setVideoDescription(luxuryBlpVideoComponent.getVideoDescription());
+			}
+
+			if (null != luxuryBlpVideoComponent.getVideoUrl())
+			{
+				video.setVideoUrl(luxuryBlpVideoComponent.getVideoUrl());
+			}
+
+			if (null != luxuryBlpVideoComponent.getPreviewUrl())
+			{
+				video.setPreviewUrl(luxuryBlpVideoComponent.getPreviewUrl());
+			}
+			videoComponentDtoList.add(video);
+
+			luxBlpComponent.setVideocomponent(videoComponentDtoList);
+		}
+		return luxBlpComponent;
+	}
+
+
+
+	/**
+	 * @param luxuryBannerComponent
+	 * @return
+	 */
 	/**
 	 * @param luxuryBannerComponent
 	 * @return
 	 */
 	private LuxBlpCompListWsDTO getForHimHerBannerWsDTO(final RotatingImagesComponentModel luxuryBannerComponent)
 	{
-		// YTODO Auto-generated method stub
-		return null;
+		final LuxBlpCompListWsDTO luxComponentforGender = new LuxBlpCompListWsDTO();
+		final ArrayList<LuxHeroBannerWsDTO> genderlist = new ArrayList<LuxHeroBannerWsDTO>();
+		int sequenceno = 1;
+		for (final BannerComponentModel banner : luxuryBannerComponent.getBanners())
+		{
+			final LuxHeroBannerWsDTO heroBanner = new LuxHeroBannerWsDTO();
+			MplBigPromoBannerComponentModel promotionalBanner = null;
+
+			String bannerMediaUrl = null;
+			String altText = null;
+			if (banner instanceof MplBigPromoBannerComponentModel)
+			{
+				promotionalBanner = (MplBigPromoBannerComponentModel) banner;
+
+				if (null != promotionalBanner.getBannerImage() && StringUtils.isNotEmpty(promotionalBanner.getBannerImage().getURL()))
+				{
+					bannerMediaUrl = promotionalBanner.getBannerImage().getURL();
+					altText = promotionalBanner.getBannerImage().getAltText();
+
+				}
+			}
+			else
+			{
+				if (null != banner.getMedia())
+				{
+					bannerMediaUrl = banner.getMedia().getURL();
+					altText = banner.getMedia().getAltText();
+				}
+			}
+			heroBanner.setBannerNumber(sequenceno);
+			heroBanner.setBannerMedia(bannerMediaUrl);
+			heroBanner.setAltText(altText);
+			heroBanner.setBannerUrl(banner.getUrlLink());
+			sequenceno++;
+
+			genderlist.add(heroBanner);
+		}
+		luxComponentforGender.setGender_component(genderlist);
+		return luxComponentforGender;
+
 	}
+
 }

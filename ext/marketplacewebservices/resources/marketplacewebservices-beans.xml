@@ -2423,10 +2423,13 @@
     	<property name="categoryImageUrl" type="String" />
     	<property name="categoryName" type="String"/> 
     	<property name="categoryUrl" type="String"/> 
+    	<property name="altText" type="String"/> 
+    	<property name="position" type="Integer"/>
     </bean>
      <bean class="com.tisl.mpl.wsdto.LuxVideocomponentWsDTO">
     	<property name="videoUrl" type="String"/>
     	<property name="videoDescription" type="String" />
+    	<property name="previewUrl" type="String"/>
     </bean>
      <bean class="com.tisl.mpl.wsdto.LuxEngagementcomponentWsDTO">
     	<property name="bannerMedia" type="String"/>
@@ -2495,7 +2498,7 @@
     	<!-- For RotatingImagesComponent -->
     	<property name="hero_banner_component" type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO"/>		
     	<!-- For him/her, RotatingImagesComponent-->
-    	<property name="gender_component" type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO"/>
+    	<property name="gender_component" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/>
     	<!-- For MplAdvancedCategoryCarouselComponent -->
     	<property name="category_component" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxShopYourFavListWsDTO>"/>
     	<!-- For spring_component -->
