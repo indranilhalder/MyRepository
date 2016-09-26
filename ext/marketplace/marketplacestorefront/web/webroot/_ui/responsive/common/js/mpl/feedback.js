@@ -2020,19 +2020,22 @@ $(document).ajaxComplete(function(){
 
 /*TPR-179(Shop The Style start)*/
 $(document).ready(function(){
-	  $(".test").on('click', function(event) {
-		  if (this.hash !== "") {
-	       event.preventDefault();
-	       var hash = this.hash;
-	       $('html, body').animate({
-	        scrollTop: $(hash).offset().top -100
-	      }, 800, function(){
-	   
-	        window.location.hash = hash;
-	      });
-	    } 
-	  });
+	
+	$(".timeout-slider").find(".owl-item.active").find(".item.slide").click(function(){
+		var link = $(this).find("a").attr("href");
+		console.log(link);
 	});
+	
+	$(".item.slide").find("a").click(function(){
+		  var link= $(this).attr("href"); //$(".item.slide").find("a").attr("href"); 
+		  var sublink=link.substr(0, link.indexOf('?')); 
+		  var id = "#"+sublink.split("#")[1];
+		  console.log(id);
+		  $('html, body').animate({
+		        scrollTop: $(id).offset().top -125
+		    }, 1000);
+	});
+});
 
 
 

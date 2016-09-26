@@ -1109,16 +1109,22 @@ INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=d
 ;;nikkon.png;$siteResource/images/banners/homepage/responsive/nikkon.png;nikkon.png;"Nikkon";
 ;;lovbrandbanner.png;$siteResource/images/banners/homepage/responsive/lovbrandbanner.png;lovbrandbanner.png;"LookBook";
 ;;ShopTheStyleBanner1.jpg;$siteResource/images/banners/homepage/responsive/ShopTheStyleBanner1.jpg;ShopTheStyleBanner1.jpg;"Tata Style";
+;;ShoeBanner.jpeg;$siteResource/images/banners/homepage/responsive/ShoeBanner.jpeg;ShoeBanner.jpeg;"Tata Look";
 
 
 
-INSERT_UPDATE BannerComponent;$contentCV[unique=true];uid[unique=true];$picture;&componentRef
-;;ShopTheStyleBanner1;ShopTheStyleBanner1.jpg;ShopTheStyleBanner1
-;;ShopTheStyleBanner2;nikkon.png;ShopTheStyleBanner2
-;;ShopTheStyleBanner3;lovbrandbanner.png;ShopTheStyleBanner3
+INSERT_UPDATE BannerComponent;$contentCV[unique=true];uid[unique=true];$picture;&componentRef;urlLink;bannerView(code)
+;;ShopTheStyleBanner1;ShopTheStyleBanner1.jpg;ShopTheStyleBanner1;#wisely-white;desktopView
+;;ShopTheStyleBanner2;nikkon.png;ShopTheStyleBanner2;#throw-like-apro;desktopView
+;;ShopTheStyleBanner3;lovbrandbanner.png;ShopTheStyleBanner3;#date-night;desktopView
+;;ShopTheStyleBanner4;ShoeBanner.jpeg;ShopTheStyleBanner4;#desi-dapper-look;desktopView
+;;ShopTheStyleBanner5;ShopTheStyleBanner1.jpg;ShopTheStyleBanner5;#wisely-white;mobileView
+;;ShopTheStyleBanner6;nikkon.png;ShopTheStyleBanner6;#throw-like-apro;mobileView
+;;ShopTheStyleBanner7;lovbrandbanner.png;ShopTheStyleBanner7;#date-night;mobileView
+;;ShopTheStyleBanner8;ShoeBanner.jpeg;ShopTheStyleBanner8;#desi-dapper-look;mobileView
 
 INSERT_UPDATE RotatingImagesComponent;$contentCV[unique=true];uid[unique=true];name;banners(&componentRef);&componentRef;timeout
-;;TataStylesRotatingBannerComponent;Tata Style Rotating Banner Component;ShopTheStyleBanner1,ShopTheStyleBanner2,ShopTheStyleBanner3;TataStylesRotatingBannerComponent;5
+;;TataStylesRotatingBannerComponent;Tata Style Rotating Banner Component;ShopTheStyleBanner1,ShopTheStyleBanner2,ShopTheStyleBanner3,ShopTheStyleBanner4,ShopTheStyleBanner5,ShopTheStyleBanner6,ShopTheStyleBanner7,ShopTheStyleBanner8;TataStylesRotatingBannerComponent;5
 
 INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];$picture;&componentRef
 ;;3BBannerComponent;WiselyWhite.png;3BBannerComponent

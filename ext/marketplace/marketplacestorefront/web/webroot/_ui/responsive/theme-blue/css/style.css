@@ -46288,12 +46288,19 @@ margin-top:0px;
     height: auto;
     padding-top: 10px;
 }
-
+/* -------------TPR-179 Start Style For ShopTheStyle---------- */
+@media (max-width: 767px){
+.shopstyle-carousel .owl-controls{
+    display:block !important;
+	}
+}
 @media (max-width:990px){
 .yCmsContentSlot.shopstyle1, .yCmsContentSlot.shopstyle2 {
     width: 100%;
 	}
 }
+
+/* -------------End TPR-179 Start Style For ShopTheStyle---------- */
 
 
 

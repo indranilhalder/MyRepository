@@ -264,25 +264,30 @@ ACC.carousel = {
 	        autoHeight : true,
 	        autoplayTimeout: timeout
 	    });
-	    $('.owl-dot1 a').click(function(e){			
+	    $('.owl-dot1 a').click(function(e){
+	    				
 			e.preventDefault();	
 			$('.owl-controls li').removeClass('active');		
 			owl1.trigger('to.owl.carousel',  0);
+			console.log("1");
 			$(this).parent().parent().addClass('active');
 		}); 
-		 $('.owl-dot2 a').click(function(e){			
+		 $('.owl-dot2 a').click(function(e){	
+		 console.log("2");		
 			e.preventDefault();	
 			$('.owl-controls li').removeClass('active');		
 			owl1.trigger('to.owl.carousel',  1);
 			$(this).parent().parent().addClass('active');
 		}); 
-		 $('.owl-dot3 a').click(function(e){			
+		 $('.owl-dot3 a').click(function(e){
+		 console.log("3");			
 			e.preventDefault();
 			$('.owl-controls li').removeClass('active');				
 			owl1.trigger('to.owl.carousel',  2);
 			$(this).parent().parent().addClass('active');
 		}); 
-		 $('.owl-dot4 a').click(function(e){			
+		 $('.owl-dot4 a').click(function(e){	
+		 console.log("4");		
 			e.preventDefault();	
 			$('.owl-controls li').removeClass('active');		
 			owl1.trigger('to.owl.carousel',  3);

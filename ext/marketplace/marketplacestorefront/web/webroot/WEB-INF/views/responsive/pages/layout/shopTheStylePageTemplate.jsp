@@ -45,7 +45,7 @@
 			</ul>
 		</div>
 	</div>
-	<section class="span-24 section3" id="shop-wisely">
+	<section class="span-24 section3" id="wisely-white">
 		<cms:pageSlot position="Section3A" var="feature" element="div"
 			class="shopstyle shopstyle-borderTop">
 			<cms:component component="${feature}" />
@@ -59,7 +59,7 @@
 			<cms:component component="${feature}" />
 		</cms:pageSlot>
 	</section>
-	<section class="span-24 section4" id="shop-throw">
+	<section class="span-24 section4" id="throw-like-apro">
 		<cms:pageSlot position="Section4A" var="feature" element="div" class="shopstyle shopstyle-borderTop">
 			<cms:component component="${feature}" />
 		</cms:pageSlot>
@@ -71,7 +71,7 @@
 			<cms:component component="${feature}" />
 		</cms:pageSlot>
 	</section>
-	<section class="span-24 section5" id="shop-date">
+	<section class="span-24 section5" id="date-night">
 		<cms:pageSlot position="Section5A" var="feature" element="div" class="shopstyle shopstyle-borderTop">
 			<cms:component component="${feature}" />
 		</cms:pageSlot>
@@ -82,7 +82,7 @@
 			<cms:component component="${feature}" />
 		</cms:pageSlot>
 	</section>
-	<section class="span-24 section6">
+	<section class="span-24 section6" id="desi-dapper-look">
 		<cms:pageSlot position="Section6A" var="feature" element="div" class="shopstyle shopstyle-borderTop">
 			<cms:component component="${feature}" />
 		</cms:pageSlot>
