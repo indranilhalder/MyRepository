@@ -206,6 +206,7 @@ display: none;
 	  	<div class="acc_content" style="display:block">
 		
       <form>
+                <div class="addressList_wrapper">
                 <c:forEach items="${deliveryAddresses}" var="deliveryAddress"
 														varStatus="status">
 														
@@ -364,7 +365,7 @@ display: none;
 		  <div class="editnewAddresPage" id="${adressid}"></div>
            </div>
            </c:forEach>
-		 
+		</div> 
       </form>
 	  <%-- <div class="formaddress" style="display: none;">
 		<div class="heading-form">
@@ -388,8 +389,7 @@ display: none;
 									</div>
 	  
 	  </div> --%>
-	 
-	  <div class="addnewAddresPage"></div>
+	 <div class="addNew_wrapper">	  
 	  
 	     <c:if test="${deliveryAddressCount gt 3}">
 	    <!--  <li style="float:left;width:500px;"><a href="#" class="viewMore">View More</a></li> -->	
@@ -404,7 +404,7 @@ display: none;
 		
       </div>
 	  </c:if>
-	  
+	  <div class="addnewAddresPage"></div>
      <div class="add-address" style="display: block;margin-left:56px;">
         <p id="address-form">
 														<span class="addsign pincode-button">
@@ -418,7 +418,7 @@ display: none;
 		
       </div>
       
-    
+    </div>
 	  
 	  </div> 
    
@@ -462,7 +462,7 @@ display: none;
 		
       <form>
         
-          
+          <div class="addressList_wrapper">
           <c:forEach items="${deliveryAddresses}" var="deliveryAddress"
 														varStatus="status">
         <div class="address-list">
@@ -593,7 +593,7 @@ display: none;
 		  <div class="editnewAddresPage" id="${adressid}"></div>
            </div>
            </c:forEach>
-		 
+		</div> 
       </form>
 	  <%-- <div class="formaddress" style="display: none;">
 		<div class="heading-form">
@@ -617,6 +617,7 @@ display: none;
 									</div>
 	  
 	  </div> --%>
+	  <div class="addNew_wrapper no_address">
 	   <div class="addnewAddresPage"></div>
      <div class="add-address" style="display: block;">
         <p id="address-form">
@@ -629,6 +630,7 @@ display: none;
 		</a>
         </p>
 		
+      </div>
       </div>
 	  
 	  </div> 
