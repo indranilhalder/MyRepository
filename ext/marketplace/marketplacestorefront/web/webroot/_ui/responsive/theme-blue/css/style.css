@@ -18176,9 +18176,10 @@ font-weight: 600;
 .product-facet .facet .facet-list div.facet-text{
 	display:block;
 	margin-left:17px;
+	line-height: 18px;
 }	
 .product-facet .facet .facet-list span.facet-text {		
-	line-height: 16px;		
+	line-height: 18px;		
 	/* float:left; */
 	/* width: -webkit-calc(100% - 25px);
 	width: calc(100% - 25px); */
@@ -20001,6 +20002,9 @@ body.page-shoe .feature-collections ul.collections li.chef.sub h3 span a{
     padding-bottom: 0px;
   padding-left:15px;
   margin-top: 2px;
+}
+.listing.wrapper .right-block .listing-menu .wrapped-form.view label{
+	height:34px;
 }
 .listing.wrapper .right-block .listing-menu > div:last-child > form.paginationForm#paginationForm{
 min-height:46px;
