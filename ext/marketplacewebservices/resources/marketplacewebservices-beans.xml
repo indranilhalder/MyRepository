@@ -2496,7 +2496,7 @@
     	<!-- For SimpleBannerComponent -->
 		<property name="banner_strip_component" type="com.tisl.mpl.wsdto.LuxBlpStripWsDTO"/>
     	<!-- For RotatingImagesComponent -->
-    	<property name="hero_banner_component" type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO"/>		
+    	<property name="hero_banner_component" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/>		
     	<!-- For him/her, RotatingImagesComponent-->
     	<property name="gender_component" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/>
     	<!-- For MplAdvancedCategoryCarouselComponent -->

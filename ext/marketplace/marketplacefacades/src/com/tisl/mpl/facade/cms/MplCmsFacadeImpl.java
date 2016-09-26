@@ -358,7 +358,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getLandingPageForCategory(java.lang.String)
 	 */
 	@Override
@@ -383,7 +383,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getHomePageForMobile()
 	 */
 	@Override
@@ -1249,7 +1249,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateCategoryLandingPageForMobile()
 	 */
 	@Override
@@ -1365,7 +1365,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.facade.cms.MplCmsFacade#populateSubBrandLandingPageForMobile(de.hybris.platform.cms2.model.pages.
 	 * ContentPageModel, java.lang.String)
@@ -1416,7 +1416,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populatePageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -1563,7 +1563,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getCategoryNameForCode(java.lang.String)
 	 */
 	@Override
@@ -1575,7 +1575,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getHeroProducts(java.lang.String)
 	 */
 	@Override
@@ -1649,7 +1649,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateSellerLandingPageForMobile()
 	 */
 	@Override
@@ -1690,7 +1690,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				 * (SmallBrandMobileAppComponentModel) abstractCMSComponentModel; final ComponentData componentData =
 				 * getMobileCategoryComponentConverter().convert(smallBrandMobileComponentModel);
 				 * componentDatas.add(componentData);
-				 *
+				 * 
 				 * }
 				 */
 				else if (abstractCMSComponentModel instanceof PromotionalProductsComponentModel)
@@ -1748,7 +1748,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getSellerMasterName(java.lang.String)
 	 */
 	@Override
@@ -1760,7 +1760,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateSellerPageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -1776,7 +1776,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateOfferPageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -1793,7 +1793,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getlandingForBrand()
 	 */
 	@Override
@@ -1845,6 +1845,12 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					final RotatingImagesComponentModel luxuryBannerComponent = (RotatingImagesComponentModel) abstractCMSComponentModel;
 					blpComponent = getForHimHerBannerWsDTO(luxuryBannerComponent);
 				}
+				if (typecode.equalsIgnoreCase("RotatingImagesComponent")
+						&& contentSlot.getUid().equalsIgnoreCase("Section1-heroBannerComponent"))
+				{
+					final RotatingImagesComponentModel luxBlpBannerComponent = (RotatingImagesComponentModel) abstractCMSComponentModel;
+					blpComponent = getBlpBannerWsDTO(luxBlpBannerComponent);
+				}
 				else if (typecode.equalsIgnoreCase("VideoComponent"))
 				{
 					final VideoComponentModel BlpVideoComponent = (VideoComponentModel) abstractCMSComponentModel;
@@ -1874,55 +1880,88 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	}
 
 	/**
+	 * @param luxBlpBannerComponent
+	 * @return
+	 */
+	private LuxBlpCompListWsDTO getBlpBannerWsDTO(final RotatingImagesComponentModel luxBlpBannerComponent)
+	{
+
+		final ArrayList<LuxHeroBannerWsDTO> blpDisplayBannerList = new ArrayList<LuxHeroBannerWsDTO>();
+
+
+		final LuxBlpCompListWsDTO herocomponents = new LuxBlpCompListWsDTO();
+		//	final LuxComponentsListWsDTO luxComponent = new LuxComponentsListWsDTO();
+		int countMobile = 1;
+		int countDesktop = 1;
+		for (final BannerComponentModel banner : luxBlpBannerComponent.getBanners())
+		{
+			//final MplBigPromoBannerComponentModel heroBanner = (MplBigPromoBannerComponentModel) banner;
+			final LuxHeroBannerWsDTO heroBanner = new LuxHeroBannerWsDTO();
+			MplBigPromoBannerComponentModel promotionalBanner = null;
+			String bannertext = null;
+			String bannerMediaUrl = null;
+			String altText = null;
+			if (banner instanceof MplBigPromoBannerComponentModel)
+			{
+				promotionalBanner = (MplBigPromoBannerComponentModel) banner;
+				if (StringUtils.isNotEmpty(promotionalBanner.getMajorPromoText()))
+				{
+					bannertext = promotionalBanner.getMajorPromoText();
+
+				}
+				if (null != promotionalBanner.getBannerImage() && StringUtils.isNotEmpty(promotionalBanner.getBannerImage().getURL()))
+				{
+					bannerMediaUrl = promotionalBanner.getBannerImage().getURL();
+					altText = promotionalBanner.getBannerImage().getAltText();
+
+				}
+			}
+			else
+			{
+				if (null != banner.getMedia())
+				{
+					bannerMediaUrl = banner.getMedia().getURL();
+					altText = banner.getMedia().getAltText();
+				}
+			}
+			heroBanner.setBannerMedia(bannerMediaUrl);
+			heroBanner.setBannerText(bannertext);
+			heroBanner.setAltText(altText);
+			heroBanner.setBannerUrl(banner.getUrlLink());
+			heroBanner.setIcid(banner.getPk().getLongValueAsString());
+
+			if (null != banner.getBannerView())
+			{
+				heroBanner.setResolution(banner.getBannerView().getCode());
+				if (banner.getBannerView().getCode().equalsIgnoreCase("desktop"))
+				{
+					heroBanner.setBannerNumber(countDesktop);
+					countDesktop++;
+				}
+				else
+				{
+					heroBanner.setBannerNumber(countMobile);
+					countMobile++;
+				}
+			}
+			if (null != luxBlpBannerComponent.getTimeout())
+			{
+				heroBanner.setTimeout(luxBlpBannerComponent.getTimeout().intValue());
+			}
+			blpDisplayBannerList.add(heroBanner);
+		}
+
+		herocomponents.setHero_banner_component(blpDisplayBannerList);
+		return herocomponents;
+	}
+
+	/**
 	 * @param luxuryBannerComponent
 	 * @return
 	 */
 	private LuxBlpCompListWsDTO getwhyourproductsWsDTO(final MplShowcaseComponentModel luxurywhyourproductsComponent)
 	{
-		// YTODO Auto-generated method stub
-		/*
-		 * final ArrayList<LuxShowcasecomponentWsDTO> showcaseComponentDtoList = new
-		 * ArrayList<LuxShowcasecomponentWsDTO>();
-		 * 
-		 * final LuxBlpCompListWsDTO luxComponent = new LuxBlpCompListWsDTO();
-		 * 
-		 * final List<MplShowcaseItemComponentModel> showcaseParaList = luxurywhyourproductsComponent.getShowcaseItems();
-		 * 
-		 * final ArrayList<TabWsDTO> tabDtoList = new ArrayList<TabWsDTO>(); //final LuxShowcasecomponentWsDTO showcase =
-		 * new LuxShowcasecomponentWsDTO();
-		 * 
-		 * for (final MplShowcaseItemComponentModel cmsshowcasePara : showcaseParaList) { final LuxShowcasecomponentWsDTO
-		 * showcase = new LuxShowcasecomponentWsDTO();
-		 * 
-		 * //final ArrayList<TabWsDTO> tabDtoList = new ArrayList<TabWsDTO>();
-		 * 
-		 * final TabWsDTO tab = new TabWsDTO();
-		 * 
-		 * if (null != cmsshowcasePara.getBannerImage().getUrl()) {
-		 * tab.setImage_url(cmsshowcasePara.getBannerImage().getUrl()); } if (null != cmsshowcasePara.getText()) {
-		 * tab.setText(cmsshowcasePara.getText()); } if (null != cmsshowcasePara.getHeaderText()) {
-		 * tab.setHeading(cmsshowcasePara.getHeaderText()); } if (null != cmsshowcasePara.getBannerImage().getAlttext()) {
-		 * tab.setImg_alt(cmsshowcasePara.getBannerImage().getAlttext()); } if (null !=
-		 * cmsshowcasePara.getShowByDefault()) { tab.setShowByDefault(cmsshowcasePara.getShowByDefault().booleanValue());
-		 * }
-		 * 
-		 * tabDtoList.add(tab);
-		 * 
-		 * showcase.setTabs(tabDtoList);
-		 * 
-		 * 
-		 * if (null != luxurywhyourproductsComponent.getTitle()) {
-		 * showcase.setSection_header(luxurywhyourproductsComponent.getTitle()); }
-		 * 
-		 * showcaseComponentDtoList.add(showcase); }
-		 * 
-		 * if(null!= luxurywhyourproductsComponent.getTitle()) {
-		 * showcase.setSection_header(luxurywhyourproductsComponent.getTitle()); }
-		 * 
-		 * if (null != luxurywhyourproductsComponent.getTitle()) {
-		 * luxComponent.setTitle(luxurywhyourproductsComponent.getTitle()); }
-		 * //luxComponent.setWhy_our_product_component(showcaseComponentDtoList); return luxComponent;
-		 */
+
 		final ArrayList<LuxShowcasecomponentWsDTO> showcaseComponentDtoList = new ArrayList<LuxShowcasecomponentWsDTO>();
 		final LuxBlpCompListWsDTO luxComponent = new LuxBlpCompListWsDTO();
 
@@ -2010,11 +2049,6 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				luxshopYourFav.setAltText(catCompObj.getImage().getAltText());
 			}
 			luxshopYourFav.setPosition(Integer.valueOf(position));
-
-
-
-			luxshopYourFav.setPosition(Integer.valueOf(position));
-
 			position++;
 
 			shopYourFavList.add(luxshopYourFav);
