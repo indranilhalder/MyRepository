@@ -91,7 +91,7 @@ $(document).ready(
 						var tealiumData = "";
 						tealiumData += ',"user_login_type":"'	//TPR-668
 							+ user_login_type + '",';
-						tealiumData += ',"product_unit_price":["'
+						tealiumData += '"product_unit_price":["'
 								+ $("#product_unit_price").val() + '"],';
 						tealiumData += '"site_section":"'
 								+ $("#site_section").val() + '",';
@@ -208,7 +208,7 @@ $(document).ready(
 								var tealiumData = "";
 								tealiumData += ',"user_login_type":"'	//TPR-668
 									+ user_login_type + '",';
-								tealiumData += ',"page_category_name":"'
+								tealiumData += '"page_category_name":"'
 										+ $("#page_category_name").val() + '",';
 								tealiumData += '"site_section":"'
 										+ $("#site_section").val() + '",';
@@ -244,7 +244,7 @@ $(document).ready(
 						var tealiumData = "";
 						tealiumData += ',"user_login_type":"'	//TPR-668
 							+ user_login_type + '",';
-						tealiumData += ',"search_keyword":"'
+						tealiumData += '"search_keyword":"'
 								+ $("#search_keyword").val() + '",';
 						tealiumData += '"searchCategory":"'
 								+ $("#searchCategory").val() + '",';
@@ -287,7 +287,7 @@ $(document).ready(
 						var tealiumData = "";
 						tealiumData += ',"user_login_type":"'	//TPR-668
 							+ user_login_type + '",';
-						tealiumData += ',"cart_total":"'
+						tealiumData += '"cart_total":"'
 								+ $("#cart_total").val() + '",';
 						tealiumData += '"product_unit_price":'
 								+ $("#product_unit_price").val() + ',';
@@ -335,7 +335,7 @@ $(document).ready(
 						var tealiumData = "";
 						tealiumData += ',"user_login_type":"'	//TPR-668
 							+ user_login_type + '",';
-						tealiumData += ',"cart_total":"'
+						tealiumData += '"cart_total":"'
 								+ $("#cart_total").val() + '",';
 						tealiumData += '"product_unit_price":'
 								+ $("#product_unit_price").val() + ',';
