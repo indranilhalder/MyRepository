@@ -566,6 +566,7 @@ display:none;
 		<spring:theme code="pdp.delisted.message" />
 	</span>
 		<button id="addToCartButtonQuick-wrong" type="button" class="btn-block" disable="true" style="display: none;"> <spring:theme code="basket.add.to.basket" /></button>
+		<button id="buyNowButtonQuick-wrong" type="button" class="btn-block" disable="true" style="display: none;"> <spring:theme code="buyNow.button.pdp" /></button>
 											
 		<span id="addToCartFormnoInventory" style="display: none" class="no_inventory"><p class="inventory">
 			<font color="#ff1c47"><spring:theme code="Product.outofinventory" /></font>
