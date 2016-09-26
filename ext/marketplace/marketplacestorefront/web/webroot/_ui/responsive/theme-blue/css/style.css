@@ -53122,6 +53122,51 @@ div.radio.creditDebitLabelRadio{
 	line-height:12px;
 	font-size:12px;
 }
+@media only screen and (max-width: 1450px){
+	.checkTab .add-address_viewMore.viewMoreContainer{
+		margin-right: 55px;
+		width: 47%;
+		float: left;
+	}
+	.checkTab .add-address,.add-address_viewMore{
+		width: 47%;
+	}
+	
+	 .checkTab .addNew_wrapper .add-address{
+		float: left !important;
+		margin-left: 56px !important;
+	}
+}
 .cart.wrapper .checkout-shipping .checkout-shipping-items ul li.header{
 	width:100%;
+}
+.addsign.addsignContent:before{
+	content:"\f068";
+}
+.checkTab .addressClear{
+	clear: both;
+}
+.addressList_wrapper,.addNew_wrapper{
+	clear: both;
+}
+.addNew_wrapper{
+	padding-top: 20px;
+}
+.addNew_wrapper .addnewAddresPage .formaddress{
+	width: 47% !important;
+	float: left !important;
+	margin-left: 56px !important;
+}
+.addNew_wrapper.no_address{
+	width: 100%;
+}
+.addNew_wrapper.no_address .add-address{
+	float: none !important;
+    width: 60%;
+    margin-left: auto !important;
+}
+.addNew_wrapper.no_address .addnewAddresPage .formaddress{
+	width: 60% !important;
+	margin-left: auto !important;
+    float: none !important;
 }
