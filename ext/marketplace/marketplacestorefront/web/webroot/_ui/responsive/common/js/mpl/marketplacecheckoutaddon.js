@@ -6806,7 +6806,7 @@ $("*[data-id=newCCard]").click(function(){
 		$(this).hide();
 	});
 	$("#make_cc_payment_up").show();
-	$("#savedCreditCard").find(".error-message").empty();
+	//$("#savedCreditCard").find(".error-message").hide();
 });
 
 $("*[data-id=savedCCard]").change(function(){
@@ -6814,7 +6814,7 @@ $("*[data-id=savedCCard]").change(function(){
 		$(this).hide();
 	});
 	$("#make_saved_cc_payment_up").show();
-	$("#payment_form").find(".error-message").empty();
+	//$("#payment_form").find(".error-message").hide();
 });
 
 $("*[data-id=newDCard]").click(function(){
@@ -6822,7 +6822,7 @@ $("*[data-id=newDCard]").click(function(){
 		$(this).hide();
 	});
 	$("#make_dc_payment_up").show();
-	$("#savedDebitCard").find(".error-message").empty();
+	//$("#savedDebitCard").find(".error-message").hide();
 });
 
 $("*[data-id=savedDCard]").change(function(){
@@ -6830,12 +6830,14 @@ $("*[data-id=savedDCard]").change(function(){
 		$(this).hide();
 	});
 	$("#make_saved_dc_payment_up").show();
-	$("#debit_payment_form").find(".error-message").empty();
+	//$("#debit_payment_form").find(".error-message").hide();
 });
 
 $("#payment_form").find("input[type=text]").click(function(){
 	$("*[data-id=newCCard]").prop("checked","true");
 	$("*[data-id=newCCard]").trigger("click");
+	$("#make_cc_payment_up").show();
+	//$("#savedCreditCard").find(".error-message").hide();
 });
 
 $("#payment_form").find("select").click(function(){
@@ -6854,15 +6856,17 @@ $("#debit_payment_form").find("select").click(function(){
 });
 
 $("#savedCreditCard").find("input[type=password]").click(function(){
+	$(".radio input[type='radio']").removeAttr("checked");
 	$("*[data-id=savedCCard]").prop("checked","true");
 	$("*[data-id=savedCCard]").trigger("change");
-	$("#payment_form").find(".error-message").empty();
+	//$("#payment_form").find(".error-message").hide();
 });
 
 $("#savedDebitCard").find("input[type=password]").click(function(){
+	$(".radio input[type='radio']").removeAttr("checked");
 	$("*[data-id=savedDCard]").prop("checked","true");
 	$("*[data-id=savedDCard]").trigger("change");
-	$("#debit_payment_form").find(".error-message").empty();
+	//$("#debit_payment_form").find(".error-message").hide();
 });
 	//TPR-1055
 	$("#defaultPinCodeIds").click(function(){
