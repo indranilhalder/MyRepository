@@ -1756,8 +1756,12 @@ $(document).ready(function() {
         });
 		$(".winter_launch  > .winter_launch_section").slice(-4).wrapAll("<div class='clp_winter_launch_wrapper'>");
 		$(".top_deal  > a").nextAll().wrapAll("<div class='blog_container'>");
-		$(".top_deal  > .blog_container").slice(0,2).wrapAll("<div class='blog_feature'>");
-		$(".top_deal  > .blog_container").slice(2,4).wrapAll("<div class='blog_feature'>");
+		var clp_blog_count = $(".top_deal  > .blog_container").children().length;
+		$(".top_deal  > .blog_container").children().slice(0,clp_blog_count/2).wrapAll("<div class='blog_feature'>");
+		$(".top_deal  > .blog_container").children().slice(1,clp_blog_count - 1).wrapAll("<div class='blog_feature'>");
+		$(".top_deal  > .blog_container > .blog_feature").each(function(){
+			$(this).children().last().prevAll().wrapAll("<div class='blog_content'>");
+		});
 		$(".shop_for > a").slice(0,4).wrapAll("<div class='shop_for_links'>");
 });
 $(window).resize(function() {
