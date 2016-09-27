@@ -24,16 +24,16 @@
 						showPromotionTag();
 						if($(".choose-address .acc_content").children(".address-list").length == 0){
 							$(".add-address").css({
-							  margin : "0px auto",
+							  //margin : "0px auto",
 							  float: "none"
 						});
 							$(".checkout-shipping.addNewAddress .formaddress").css({
-								margin : "0px auto",
+								//margin : "0px auto",
 								float: "none",
 								width: "80%",
 								overflow: "hidden"
 							});
-						$(".choose-address .acc_head").css("text-align","center");
+						//$(".choose-address .acc_head").css("text-align","center");
 						}
 						  $(".cancelBtn").click(function() {
 							  //alert('here');

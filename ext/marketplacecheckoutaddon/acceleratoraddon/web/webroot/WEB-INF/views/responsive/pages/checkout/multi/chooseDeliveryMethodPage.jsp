@@ -213,6 +213,7 @@ display: none;
 		<c:if test="${status.last}">
 				<c:set var="deliveryAddressCount" value="${status.index}"></c:set>
 		</c:if>	
+		
 				
 		<c:choose>
 			<c:when test="${status.index eq 0 ||  status.index eq 1 ||  status.index eq 2 ||  status.index eq 3}"> 
@@ -224,7 +225,7 @@ display: none;
 			</c:otherwise>
 		</c:choose>	
 																
-        <div class="address-list ${showItem}">
+        <div class="address-list ${showItem}" id="${singleAddress}">
         	<c:choose>
 			<c:when test="${deliveryAddress.defaultAddress}">
           <input type="radio" class="radio1" name="selectedAddressCode"
@@ -389,11 +390,31 @@ display: none;
 									</div>
 	  
 	  </div> --%>
-	 <div class="addNew_wrapper">	  
+	  <c:choose>
+	  <c:when test="${deliveryAddressCount eq 0}">
+				<c:set var="deliveryAddressClass" value="single_address"></c:set>
+		</c:when>
+		<c:when test="${deliveryAddressCount eq 1}">
+				<c:set var="deliveryAddressClass" value="two_address"></c:set>
+		</c:when>
+		<c:when test="${deliveryAddressCount eq 2}">
+				<c:set var="deliveryAddressClass" value="three_address"></c:set>
+		</c:when>
+		<c:when test="${deliveryAddressCount eq 3}">
+				<c:set var="deliveryAddressClass" value="four_address"></c:set>
+		</c:when>
+		
+		<%-- <c:when test="${deliveryAddressCount gt 3 && deliveryAddressCount % 2 == 0}">
+				<c:set var="deliveryAddressClass" value="moreEvens_address"></c:set>
+		</c:when> --%>
+		</c:choose>
+		
+	  
+	 <div class="addNew_wrapper ${deliveryAddressClass}">	  
 	  
 	     <c:if test="${deliveryAddressCount gt 3}">
 	    <!--  <li style="float:left;width:500px;"><a href="#" class="viewMore">View More</a></li> -->	
-	    <div class="add-address_viewMore viewMoreContainer" style="display: inline-block !important;margin-right: 0;margin-bottom: 104px;">
+	    <div class="add-address_viewMore viewMoreContainer" style="display: inline-block !important;margin-bottom: 64px;">
         <p>
 														<span class="addsign viewMoreSign">
         
@@ -405,7 +426,7 @@ display: none;
       </div>
 	  </c:if>
 	  <div class="addnewAddresPage"></div>
-     <div class="add-address" style="display: block;margin-left:56px;">
+     <div class="add-address" style="display: block;">
         <p id="address-form">
 														<span class="addsign pincode-button">
         
@@ -465,7 +486,7 @@ display: none;
           <div class="addressList_wrapper">
           <c:forEach items="${deliveryAddresses}" var="deliveryAddress"
 														varStatus="status">
-        <div class="address-list">
+        <div class="address-list ${singleAddress}">
         	<c:choose>
 			<c:when test="${deliveryAddress.defaultAddress}">
           <input type="radio" class="radio1" name="selectedAddressCode"

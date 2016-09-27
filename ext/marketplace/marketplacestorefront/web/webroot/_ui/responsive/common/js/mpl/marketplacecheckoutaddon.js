@@ -4811,12 +4811,25 @@ e.preventDefault();
 $(".add-address").removeClass("add-addressShifts");
 $(".addsign.viewMoreSign").removeClass("addsignContent");
 $('.checkTab .address-list.hideItem').slideToggle(function(){
-	 if ($(this).is(':visible'))
-	        $(this).css('display','inline-block');
+	 $(".addNew_wrapper").removeClass("moreEvens_address");
+	if ($(this).is(':visible') && $(".address-list").length % 2 != 0){
+		 $(".addNew_wrapper").addClass("moreEvens_address");
+	 }
+	else{
+		$(".add-address").removeClass("add-addressShifts");
+		$(".add-address").removeClass("addressClear");
+	}
+	 
+	
+	 
+	
+	 
 	if($( ".checkTab .address-list.hideItem" ).is( ":visible" ))
 	{
+		$(".addsign.viewMoreSign").addClass("addsignContent");
 		$('.viewMore').text('View Less');
 	}else{
+		$(".addsign.viewMoreSign").removeClass("addsignContent");
 		$('.viewMore').text('View More');
 		$(".viewMoreContainer").removeClass("addressClear");
 	}
@@ -4829,22 +4842,22 @@ $('.checkTab .address-list.hideItem').slideToggle(function(){
 	});
 	if(len%2 != 0){
 		$(".add-address").addClass("add-addressShifts");
-		$(".addsign.viewMoreSign").addClass("addsignContent");
+		//$(".addsign.viewMoreSign").addClass("addsignContent");
 		$(".viewMoreContainer").removeClass("addressClear");
 	}
 	else{
 		$(".add-address").removeClass("add-addressShifts");
-		$(".addsign.viewMoreSign").removeClass("addsignContent");
+		/*$(".addsign.viewMoreSign").removeClass("addsignContent");*/
 	}
 	
-	
-	
 });
 
 });
 
 
-
+/*$(document).on("click",".edit>a.edit_address",function(){
+	$(".viewMoreContainer").removeClass("addressClear");
+});*/
 
 $(".edit").eq(2).children("a").click(function(e){
 	e.preventDefault();
@@ -4861,7 +4874,9 @@ $(".edit").children("a").click(function(e){
 	if(!$(".addsign").hasClass("addsignContent")){
 		$(".add-address").removeClass("add-addressShifts");
 		$(".add-address").removeClass("addressClear");
-		$(".viewMoreContainer").addClass("addressClear");
+		/*if($(".address-list").length % 2 !=0){
+			$(".viewMoreContainer").addClass("addressClear");
+		}*/
 	}
 	/*else{
 		$(".add-address").removeClass("add-addressShifts");
@@ -4974,6 +4989,20 @@ $(document).ready(function(){
 
 	$("#popUpExpAddress input.address_radio[data-index='0']").attr("checked","checked");	
 
+	/*TPR-1212 starts*/
+	
+	/*if(!$(".addsign.viewMoreSign").hasClass("addsignContent") && $(".address-list").length % 2 == 0){
+		$(".addNew_wrapper").removeClass("moreEvens_address");
+	}
+	else{
+		$(".addNew_wrapper").addClass("moreEvens_address");
+	}
+	if(!$(".addsign.viewMoreSign").hasClass("addsignContent")){
+		$(".addNew_wrapper").removeClass("moreEvens_address");
+	}*/
+	
+	/*TPR-1212 ends*/
+	
 });
 
 

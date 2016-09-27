@@ -49317,6 +49317,7 @@ body.no-scroll {
 .addsign {
     display: block;
     margin-bottom: 23px;
+    text-align: center;
 }
 
 .addsign:before {
@@ -53157,9 +53158,11 @@ div.radio.creditDebitLabelRadio{
 }
 @media only screen and (max-width: 1450px){
 	.checkTab .add-address_viewMore.viewMoreContainer{
-		margin-right: 55px;
+		/* margin-right: 55px; */
 		width: 47%;
 		float: left;
+		border: 1px solid #e4e4e4;
+        padding: 38px;
 	}
 	.checkTab .add-address,.add-address_viewMore{
 		width: 47%;
@@ -53167,7 +53170,9 @@ div.radio.creditDebitLabelRadio{
 	
 	 .checkTab .addNew_wrapper .add-address{
 		float: left !important;
-		margin-left: 56px !important;
+	}
+	.checkTab .moreEvens_address .add-address_viewMore.viewMoreContainer{
+		margin-right: 0 !important;
 	}
 }
 @media (max-width: 767px){
@@ -53182,6 +53187,7 @@ div.radio.creditDebitLabelRadio{
 }
 .checkTab .addressClear{
 	clear: both;
+	margin-top: 20px;
 }
 .addressList_wrapper,.addNew_wrapper{
 	clear: both;
@@ -53192,7 +53198,8 @@ div.radio.creditDebitLabelRadio{
 .addNew_wrapper .addnewAddresPage .formaddress{
 	width: 47% !important;
 	float: left !important;
-	margin-left: 56px !important;
+	/* margin-left: 56px !important; */
+	margin-left: 56px;
 }
 .addNew_wrapper.no_address{
 	width: 100%;
@@ -53201,11 +53208,13 @@ div.radio.creditDebitLabelRadio{
 	float: none !important;
     width: 60%;
     margin-left: auto !important;
+    margin-right: auto;
 }
 .addNew_wrapper.no_address .addnewAddresPage .formaddress{
 	width: 60% !important;
 	margin-left: auto !important;
     float: none !important;
+    margin-right: auto;
 }
 .checkout.wrapper .product-block li.item > ul li:first-child .delivery-price{
 	font-weight:bold;
@@ -53289,3 +53298,38 @@ div.radio.creditDebitLabelRadio{
     }
 }
 
+.addressList_wrapper,.addNew_wrapper{
+	clear: both;
+}
+.addNew_wrapper.single_address,.addNew_wrapper.three_address,.addNew_wrapper.moreEvens_address{
+	clear: none;
+	padding-top: 0;
+}
+.checkTab .addressList_wrapper .address-list:last-of-type{
+	/* margin-bottom: 20px; */
+}
+.addsign.viewMoreSign + a.viewMore{
+	font-size: 14px;
+    color: #a7183e;
+    text-transform: uppercase;
+}
+.add-address_viewMore.viewMoreContainer > p{
+	text-align: center;
+}
+.add-address{
+	margin:0 auto;
+	margin-left: 56px;
+}
+.moreEvens_address .add-address{
+	margin-left: 0;
+}
+.addNew_wrapper.moreEvens_address .addnewAddresPage .formaddress{
+	margin-left: 0;
+}
+#defaultAddress{
+	display: none;
+}
+.addNew_wrapper.single_address .add-address,.addNew_wrapper.single_address .addnewAddresPage .formaddress,.addNew_wrapper.two_address .add-address,.addNew_wrapper.two_address .addnewAddresPage .formaddress,
+.addNew_wrapper.three_address .add-address,.addNew_wrapper.three_address .addnewAddresPage .formaddress,.addNew_wrapper.four_address .add-address,.addNew_wrapper.four_address .addnewAddresPage .formaddress{
+	margin-left: auto;
+}

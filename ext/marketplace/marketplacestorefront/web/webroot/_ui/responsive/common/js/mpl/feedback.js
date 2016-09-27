@@ -2341,7 +2341,6 @@ $("#address-form").click(function() {
 $(".checkTab .address-list").last().addClass("last");
 if($(".choose-address .acc_content").children(".address-list").length == 0){
 	$(".add-address").css({
-	  margin : "0px auto",
 	  float: "none"
 });
 	$(".checkTab .formaddress").css({
@@ -2350,7 +2349,7 @@ if($(".choose-address .acc_content").children(".address-list").length == 0){
 		width: "80%",
 		overflow: "hidden"
 	});
-$(".choose-address .acc_head").css("text-align","center");
+//$(".choose-address .acc_head").css("text-align","center");
 }
 if ($("#couponMessage").children().length == 0){
 	$("#couponMessage").css("padding","0px");
