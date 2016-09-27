@@ -432,7 +432,7 @@ public class MplScheduleDeliveryWidgetRenderer extends AbstractCsWidgetRenderer<
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
 		String  deteWithOutTIme=dateUtilHelper.getDateFromat(estDeliveryDateAndTime,format);
 		String timeWithOutDate=dateUtilHelper.getTimeFromat(estDeliveryDateAndTime);
-		List<String>   calculatedDateList=dateUtilHelper.getDeteList(deteWithOutTIme,format);
+		List<String>   calculatedDateList=dateUtilHelper.getDeteList(deteWithOutTIme,format,2);
 		List<MplTimeSlotsModel> modelList=null;
 		if(timeSlotType.equalsIgnoreCase(MarketplaceCockpitsConstants.SD)){
 			modelList=mplConfigFacade.getDeliveryTimeSlotByKey(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD);
@@ -467,7 +467,7 @@ public class MplScheduleDeliveryWidgetRenderer extends AbstractCsWidgetRenderer<
 			LOG.debug("timeList.size()**************"+timeList.size());
 			if(timeList.size()==0){
 				String nextDate= dateUtilHelper.getNextDete(deteWithOutTIme,format);
-				calculatedDateList=dateUtilHelper.getDeteList(nextDate,format);
+				calculatedDateList=dateUtilHelper.getDeteList(nextDate,format,2);
 				timeList.addAll(modelList);
 			}
 			List<String> finalTimeSlotList=null;
