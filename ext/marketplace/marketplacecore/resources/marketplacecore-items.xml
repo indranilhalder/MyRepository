@@ -1562,7 +1562,7 @@
 							<attribute qualifier='categoryId' type="java.lang.String">
 						<description>Seo Content unique Id</description>
 						<modifiers read="true" write="true" optional="true"
-							unique="true" />
+							unique="false" />
 						<persistence type="property">
 									</persistence>
 					</attribute>
