@@ -20134,7 +20134,7 @@ body .account .right-account .navigation .order-history
   margin-top: 1px;
 }
 
-#EMITermTable{
+.cart.wrapper .product-block.emi #EMITermTable{
 border:1px solid #cdcdcd;
 width:100%;
 font-size:14px;
@@ -20145,7 +20145,7 @@ font-size:14px;
 /*  display: none; */
  border-collapse: separate;
 }
-#EMITermTable th{
+.cart.wrapper .product-block.emi #EMITermTable th{
     font-weight: 500;
     vertical-align: middle;
     text-align: center;
@@ -20153,23 +20153,23 @@ font-size:14px;
     border-bottom:1px solid #cdcdcd;
 }
 
-#EMITermTable td{
+.cart.wrapper .product-block.emi #EMITermTable td{
   position:relative;
   vertical-align: middle;
   padding: 8px 15px;
   text-align: center;
 }
-#EMITermTable td input[type="radio"]{
+.cart.wrapper .product-block.emi #EMITermTable td input[type="radio"]{
 display:none !important;
 }
-#EMITermTable td input[type="radio"] + label{
+.cart.wrapper .product-block.emi #EMITermTable td input[type="radio"] + label{
 position:relative
 }
-#EMITermTable td input[type="radio"] + label:before{
+.cart.wrapper .product-block.emi #EMITermTable td input[type="radio"] + label:before{
   top: -2px;
   box-shadow: 0 0 0 2px #a9143c;
 }
-#EMITermTable td input[type="radio"]:checked + label:before{
+.cart.wrapper .product-block.emi #EMITermTable td input[type="radio"]:checked + label:before{
   background-color: #a9143c;
   border:2px solid #fff;
 }
@@ -25860,7 +25860,7 @@ line-height:19px;
 	float:right;
 	}
 	
-	#EMITermTable td{
+	.cart.wrapper .product-block.emi #EMITermTable td{
 	padding:8px;
 	}
 	.cart.wrapper .left-block .payments.tab-view .tabs .product-block.emi li.item{
@@ -40558,14 +40558,14 @@ button#expressCheckoutButtonId.express-checkout-disabled:hover {
 	display: none;
 }
 
-#EMITermTable {
+.cart.wrapper .product-block.emi #EMITermTable {
 	padding: 2px;
 }
 
-#EMITermTable td {
+.cart.wrapper .product-block.emi #EMITermTable td {
 	padding: 10px 5px;
 }
-#EMITermTable td:first-child {
+.cart.wrapper .product-block.emi #EMITermTable td:first-child {
 	padding-left: 10px;
 }
 
@@ -41415,7 +41415,7 @@ a#cvvHelp,.payment-redirect,.cart.wrapper .left-block .payments.tab-view .pay p,
 #bankNameForEMI{
 width:auto;
 }
-#EMITermTable {
+.cart.wrapper .product-block.emi #EMITermTable {
     word-break: break-all;
 }
 }
@@ -41501,12 +41501,12 @@ margin-top:10px;
     padding-right: 25px;
 }
 @media(max-width:850px){
-#EMITermTable{
+.cart.wrapper .product-block.emi #EMITermTable{
 font-size:12px;
 }
 }
 @media(max-width:790px){
-#EMITermTable td{
+.cart.wrapper .product-block.emi #EMITermTable td{
 padding:10px 2px;
 }
 }
@@ -47459,7 +47459,7 @@ padding:0;
 .product-info .product-image-container.device .owl-carousel {
     padding: 0 8%;
 }
-#EMITermTable th {
+.cart.wrapper .product-block.emi #EMITermTable th {
 	width: auto;
 }
 }
@@ -50992,7 +50992,7 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
   width: 1px;
 }
 
-.cart.wrapper .left-block .item.cardForm li input[type="radio"] + label:before, #EMITermTable td input[type="radio"] + label:before{
+.cart.wrapper .left-block .item.cardForm li input[type="radio"] + label:before, .cart.wrapper .product-block.emi #EMITermTable td input[type="radio"] + label:before{
     content: '';
     display: inline-block;
     width: 20px;
@@ -51005,11 +51005,11 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
     transition: 0.5s ease all;
     left: 11px;
 }
-#EMITermTable td input[type="radio"] + label:before{
+.cart.wrapper .product-block.emi #EMITermTable td input[type="radio"] + label:before{
 	left:-4px;
 }
 
-.cart.wrapper .left-block .item.cardForm li input[type="radio"]:checked + label:before, #EMITermTable td input[type="radio"]:checked + label:before {
+.cart.wrapper .left-block .item.cardForm li input[type="radio"]:checked + label:before, .cart.wrapper .product-block.emi #EMITermTable td input[type="radio"]:checked + label:before {
   background: #555555;
 }
 .cart.wrapper .left-block .item.cardForm li input[type="radio"]:focus + label:after {
@@ -51279,38 +51279,38 @@ a#cvvHelp{display:none;}
 	display:block;
 	text-transform:uppercase;
 }
-#EMITermTable{
+.cart.wrapper .product-block.emi #EMITermTable{
 	border:none;
 	background:none;
 }
-#EMITermTable tr:first-child{
+.cart.wrapper .product-block.emi #EMITermTable tr:first-child{
 	/* display:none; */
 }
-#EMITermTable tr{
+.cart.wrapper .product-block.emi #EMITermTable tr{
 	    width: 23.5%;
     float: left;
     border: 1px solid #cdcdcd;
     background: #fff;
     margin-right: 1%;
 }
-#EMITermTable td:first-child {
+.cart.wrapper .product-block.emi #EMITermTable td:first-child {
     padding: 15px;
 }
-#EMITermTable td{
+.cart.wrapper .product-block.emi #EMITermTable td{
     display: list-item;
     text-transform: none;}
-#EMITermTable td:nth-last-child(3),#EMITermTable td:nth-last-child(2){
+.cart.wrapper .product-block.emi #EMITermTable td:nth-last-child(3),.cart.wrapper .product-block.emi #EMITermTable td:nth-last-child(2){
     background:#f8f8f8;}
-#EMITermTable td:nth-last-child(2){
+.cart.wrapper .product-block.emi #EMITermTable td:nth-last-child(2){
 color:#a7183e;
 padding-top:1px;
 }
-#EMITermTable td:nth-last-child(3){
+.cart.wrapper .product-block.emi #EMITermTable td:nth-last-child(3){
 	padding-bottom:1px;
 }
-#EMITermTable td:last-child{
+.cart.wrapper .product-block.emi #EMITermTable td:last-child{
     display: none;}
-#EMITermTable td input[type="radio"] + label{
+.cart.wrapper .product-block.emi #EMITermTable td input[type="radio"] + label{
 	padding-left:23px;
 }
 .saved-card-button{
@@ -51389,6 +51389,31 @@ display:block;}
 .prd-info .item-adds{line-height:12px;}
 .prd-info .item .product, .cart.wrapper .right-block.billing .block h3,
 .cart.wrapper .right-block.billing .block.bottom.order-details > ul li.item .product h3.product-name{font-size:12px !important;font-weight:normal;margin:0px;}
+}
+.cart.wrapper .product-block.emi #EMITermTable tr{
+	background-color:#f1f1f1; 
+	margin: 0 2.6% 10px 0;
+}
+.cart.wrapper .product-block.emi #EMITermTable td:first-child{
+	color: #333;
+    font-size: 16px;
+
+    font-weight: normal;
+    letter-spacing: 1px;
+    text-transform: none;
+    /* padding: 0 13px 15px; */
+    /* display: inline-block; */
+    padding: 10px 5px;
+    padding-top: 20px;
+    padding-left: 10px;
+    padding-bottom: 19px;
+    font-size: 13px;
+    background-color: #fff;
+}
+
+
+.cart.wrapper .product-block.emi #EMITermTable td:nth-last-child(2){
+	padding-right: 12px;
 }
 @media only screen and (max-width:1250px){
 .choose-payment{ padding: 90px 0 0 24px;}	
@@ -51628,7 +51653,7 @@ div#savedCreditCard, div#savedDebitCard {
 {margin:0;padding:0;}
 .smk_accordion .accordion_in .acc_content .blocks .new-card input.card_number{height:40px;}
 .smk_accordion .accordion_in .acc_content .terms .redirect{overflow:hidden;}
-#EMITermTable tr{
+.cart.wrapper .product-block.emi #EMITermTable tr{
 	    width: 48.5%;
     margin-right: 1%;
 }
@@ -53054,31 +53079,7 @@ div.radio.creditDebitLabelRadio{
     margin: 30px 0 20px;
     font-weight: normal;
 }
-#EMITermTable tr{
-	background-color:#f1f1f1; 
-	margin: 0 2.6% 10px 0;
-}
-#EMITermTable td:first-child{
-	color: #333;
-    font-size: 16px;
 
-    font-weight: normal;
-    letter-spacing: 1px;
-    text-transform: none;
-    /* padding: 0 13px 15px; */
-    /* display: inline-block; */
-    padding: 10px 5px;
-    padding-top: 20px;
-    padding-left: 10px;
-    padding-bottom: 19px;
-    font-size: 13px;
-    background-color: #fff;
-}
-
-
-#EMITermTable td:nth-last-child(2){
-	padding-right: 12px;
-}
 #newCardCCEmi .item.new-form.new-card.active #emi_payment_form p:first-child{
 	
 }
@@ -53204,3 +53205,81 @@ div.radio.creditDebitLabelRadio{
 	font-weight:bold;
 	line-height:14px;
 }
+#emiTableDiv #EMITermTable {
+    border: 1px solid #cdcdcd;
+    width: 100%;
+    font-size: 14px;
+    margin-top: 10px;
+    font-weight: 500;
+    background: #fff;
+    border-collapse: separate
+}
+
+#emiTableDiv #EMITermTable th {
+    font-weight: 500;
+    vertical-align: middle;
+    text-align: center;
+    padding: 10px 5px;
+    border-bottom: 1px solid #cdcdcd
+}
+
+#emiTableDiv #EMITermTable td {
+    position: relative;
+    vertical-align: middle;
+    padding: 8px 15px;
+    text-align: center
+}
+
+#emiTableDiv #EMITermTable td input[type="radio"] {
+    display: none !important
+}
+
+#emiTableDiv #EMITermTable td input[type="radio"]+label {
+    position: relative
+}
+
+#emiTableDiv #EMITermTable td input[type="radio"]+label:before {
+    top: -2px;
+    box-shadow: 0 0 0 2px #a9143c
+}
+
+#emiTableDiv #EMITermTable td input[type="radio"]:checked+label:before {
+    background-color: #a9143c;
+    border: 2px solid #fff
+}
+@media(max-width: 650px) {
+ #emiTableDiv  #EMITermTable td {
+        padding: 8px
+    }
+#emiTableDiv #EMITermTable {
+        word-break: break-all
+    }
+}
+#emiTableDiv #EMITermTable {
+    padding: 2px
+}
+
+#emiTableDiv #EMITermTable td {
+    padding: 10px 5px
+}
+
+#emiTableDiv #EMITermTable td:first-child {
+    padding-left: 10px
+}
+@media(max-width: 850px) {
+ #emiTableDiv   #EMITermTable {
+        font-size:12px
+    }
+}
+
+@media(max-width: 790px) {
+    #EMITermTable td {
+        padding:10px 2px
+    }
+}
+@media(max-width: 767px) {
+    #EMITermTable th {
+        width: auto
+    }
+}
+
