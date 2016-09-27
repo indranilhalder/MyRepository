@@ -64,7 +64,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Section3;;CMSParagraphComponent,RotatingImagesComponent;
 ;Section4;;CMSParagraphComponent,RotatingImagesComponent;
 ;Section5;;VideoComponent;
-;Section6;;CMSParagraphComponent,CMSMediaParagraphComponent,ProductCarouselComponent;
+;Section6;;MplBigPromoBannerComponent,ProductCarouselComponent;
 ;Section7;;MplShowcaseComponent;
 
 ;Footer;;;footer
@@ -253,12 +253,11 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images']
 ;;bannerImage1;text/png;banner_image1.png;$siteResource/images/mobile/banner_image1.png;
 
-INSERT_UPDATE  CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;content[lang=$lang];&componentRef;
-;;shopTheLookHeaderComponent;Shop The Look Header Component;"SHOP THE LOOK";shopTheLookHeaderComponent;
-;;STLProductCarouselHeaderComponent;Product Carousel Header Component;<span>LOREM IPSUM DOLOR</span><span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span>;STLProductCarouselHeaderComponent;
+INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
+;;STLHeroImageComponent;Shop The Look Hero Image;STLHeroImageComponent
 
-INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;content;$picture;url
-;;STLHeroImageComponent;Shop The Look Hero Image;STLHeroImageComponent;<span>SHOP THE LOOK<span>;bannerImage1;"#";
+UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];bannerImage(code,$contentCV);majorPromoText;minorPromo1Text;minorPromo2Text
+;;STLHeroImageComponent;bannerImage1;<h2>SHOP THE LOOK</h2>;<h3>SHOP THE LOOK</h3>;"SHOP THE LOOK"
 
 #### Product carousel
 INSERT_UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];name;scroll(code);popup;&componentRef
