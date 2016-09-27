@@ -22,6 +22,10 @@
 					<td><cockpit code="property" value="MplAdvancedCategoryCarouselComponent.categories"/></td>
 					<td><div style="height:6px"/></td>
 				</tr>
+				<tr>
+					<td><cockpit code="property" value="MplAdvancedCategoryCarouselComponent.altText"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
 			</tbody>
 		</table>
 	]]>
