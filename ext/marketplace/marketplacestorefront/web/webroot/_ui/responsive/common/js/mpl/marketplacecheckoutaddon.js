@@ -6903,6 +6903,7 @@ $("*[data-id=newCCard]").click(function(){
 		$(this).hide();
 	});
 	$("#make_cc_payment_up").show();
+	$(".card_cvvErrorSavedCard").hide();
 	//$("#savedCreditCard").find(".error-message").hide();
 });
 
@@ -6911,6 +6912,10 @@ $("*[data-id=savedCCard]").change(function(){
 		$(this).hide();
 	});
 	$("#make_saved_cc_payment_up").show();
+	$("#cardNoError").empty();
+	$("#memberNameError").empty();
+	$("#expYYError").empty();
+	$("#cvvError").empty();
 	//$("#payment_form").find(".error-message").hide();
 });
 
@@ -6919,6 +6924,7 @@ $("*[data-id=newDCard]").click(function(){
 		$(this).hide();
 	});
 	$("#make_dc_payment_up").show();
+	$(".card_cvvErrorSavedCard").hide();
 	//$("#savedDebitCard").find(".error-message").hide();
 });
 
@@ -6927,6 +6933,10 @@ $("*[data-id=savedDCard]").change(function(){
 		$(this).hide();
 	});
 	$("#make_saved_dc_payment_up").show();
+	$("#cardNoErrorDc").empty();
+	$("#memberNameErrorDc").empty();
+	$("#expYYErrorDc").empty();
+	$("#cvvErrorDc").empty();
 	//$("#debit_payment_form").find(".error-message").hide();
 });
 
