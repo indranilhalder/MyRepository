@@ -51825,8 +51825,11 @@ ul.delivery-checkout input[type=radio]:checked ~ label, input[type=radio]:checke
 .cart.wrapper .product-block li.header .mybag-item-head .Product{
 	padding-left:5px;
 }
-.cart.wrapper .product-block li.header .mybag-item-head .Price, .checkout-items .mybag-item .Price {
+ .checkout-items .mybag-item .Price {
 	width: 19.5%;
+}
+.cart.wrapper .product-block li.header .mybag-item-head .Price{
+	width: 19.5% !important;
 }
 .checkout-items .mybag-item .Price {
 	padding-top: 53px;
@@ -53148,6 +53151,9 @@ div.radio.creditDebitLabelRadio{
 .cart.wrapper .right-block.shipping .subtotals.top.block .totals li span + span{
 	line-height:12px;
 	font-size:12px;
+}
+.cart.wrapper .right-block.shipping .subtotals.top.block .totals li#total span + span{
+	line-height:inherit;
 }
 @media only screen and (max-width: 1450px){
 	.checkTab .add-address_viewMore.viewMoreContainer{
