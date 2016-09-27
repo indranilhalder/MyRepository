@@ -3312,4 +3312,129 @@ public class DefaultPromotionManager extends PromotionsManager
 		return isExcludeBrand;
 
 	}
+
+	/**
+	 * @Description: This is for validating pincode specific restriction against order level
+	 * @param restrictionList
+	 * @param order
+	 * @return true
+	 */
+
+	public boolean checkPincodeSpecificRestriction(final List<AbstractPromotionRestriction> restrictionList)
+	{
+		boolean flag = false;
+		boolean isPinCodeRestrictionPresent = false;
+		final CartModel cartModel = cartService.getSessionCart();
+		if (null != cartModel.getPincodeNumber())
+		{
+			if (null == restrictionList || restrictionList.isEmpty())
+			{
+				flag = true;
+			}
+			else
+			{
+				for (final AbstractPromotionRestriction restriction : restrictionList)
+				{
+					if (restriction instanceof MplPincodeSpecificRestriction)
+					{
+						isPinCodeRestrictionPresent = true;
+						final List<State> includedStates = ((MplPincodeSpecificRestriction) restriction).getStates();
+						final List<City> excudedCity = ((MplPincodeSpecificRestriction) restriction).getCities();
+						//	final CartModel cartModel = cartService.getSessionCart();
+						if (includedStates.isEmpty() && excudedCity.isEmpty())
+						{
+							flag = true;
+						}
+						else if (excudedCity.isEmpty())
+						{
+							flag = isAppliedPinCodeStatesIncludes(includedStates, cartModel.getStateForPincode());
+						}
+						else
+						{
+							final boolean isValid = ((MplPincodeSpecificRestriction) restriction).isIncludeCities().booleanValue();
+							flag = checkForCityRestriction(isValid, excudedCity, includedStates, cartModel.getCityForPincode(),
+									cartModel.getStateForPincode());
+						}
+
+					}
+				}
+				if (!isPinCodeRestrictionPresent)
+				{
+					flag = true;
+				}
+			}
+
+		}
+		else
+		{
+			flag = true;
+		}
+		return flag;
+	}
+
+	/**
+	 * @param isValid
+	 * @param string2
+	 * @param string
+	 * @param includedStates
+	 * @param excudedCity
+	 *
+	 */
+	private boolean checkForCityRestriction(final boolean isValid, final List<City> excudedCity, final List<State> includedStates,
+			final String cityName, final String state)
+	{
+		boolean isCityIncluded = false;
+		//boolean flag = false;
+		for (final City city : excudedCity)
+		{
+			if (isValid)
+			{
+				if (city.getCityName().equalsIgnoreCase(cityName))
+				{
+					isCityIncluded = true;
+					break;
+				}
+			}
+			else
+			{
+				if (city.getCityName() != cityName)
+				{
+					isCityIncluded = true;
+					break;
+				}
+			}
+
+		}
+		return isCityIncluded;
+
+	}
+
+	/**
+	 * @param excudedCity
+	 *
+	 */
+
+	/**
+	 * @param includedStates
+	 * @param string
+	 */
+	private boolean isAppliedPinCodeStatesIncludes(final List<State> includedStates, final String pinCode)
+	{
+		boolean flag = false;
+		if (CollectionUtils.isEmpty(includedStates))
+		{
+			flag = true;
+		}
+		for (final State state : includedStates)
+		{
+			if (state.getCountrykey().equalsIgnoreCase(pinCode))
+			{
+				flag = true;
+				break;
+			}
+
+		}
+		return flag;
+
+	}
 }

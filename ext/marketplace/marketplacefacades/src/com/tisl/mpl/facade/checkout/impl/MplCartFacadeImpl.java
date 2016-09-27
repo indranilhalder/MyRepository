@@ -88,6 +88,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
+import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
 
 
@@ -134,7 +135,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	@Resource(name = "pincodeService")
 	private PincodeService pincodeService;
 
-
+	@Resource(name = "pincodeServiceFacade")
+	private PincodeServiceFacade pincodeServiceFacade;
 	@Autowired
 	private MplConfigService mplConfigService;
 	@Resource
@@ -2502,6 +2504,17 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		this.mplExtendedPromoCartConverter = mplExtendedPromoCartConverter;
 	}
 
-
+	/* tpr-970 */
+	@Override
+	public void populatePinCodeData(final CartModel cartModel, final String pincode)
+	{
+		final PincodeModel pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(pincode);
+		if (null != pinCodeModelObj)
+		{
+			cartModel.setStateForPincode(pinCodeModelObj.getState() == null ? "" : pinCodeModelObj.getState().getCountrykey());
+			cartModel.setCityForPincode(pinCodeModelObj.getCity() == null ? "" : pinCodeModelObj.getCity().getCityName());
+			cartModel.setPincodeNumber(pincode);
+		}
+	}
 
 }

@@ -45674,3 +45674,34 @@ body.no-scroll {
         padding: 10px;
         cursor:pointer;
   }
+  /* TPR-970 changes starts */
+  span.priceFormat.priceFormatOnUpdate{
+  	font-size: 12px;
+    color: #ff2c43;
+    margin-bottom: 6px;
+    display: inline-block;
+  }
+  span.priceFormat.priceFormatOnUpdate>span>span{
+  	margin-left: 5px;
+  }
+  .ItemAmtofferDisplayPrFm{
+  	margin-top: -2px;
+    display: inline-block;
+  }
+  span.delSeat{
+  	margin-bottom: 5px;
+    display: inline-block;
+  }
+  span.delSeat.delAction{
+  	text-decoration: line-through;
+    color: #b9b9b9;
+  }
+   li.totalValue{
+	   font-size: 28px;
+	   font-weight:bold;
+    padding: 20px 0px;
+    border-top: 1px solid #e8e8e8;
+    border-bottom: 1px solid #e8e8e8;
+}
+  
+    /* TPR-970 changes ends */

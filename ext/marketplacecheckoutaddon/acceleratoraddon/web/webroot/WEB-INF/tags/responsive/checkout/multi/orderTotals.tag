@@ -66,6 +66,7 @@
 		<span id="promotion" style="float: right"> - <format:price priceData="${cartData.totalDiscounts}"/> 	</span>
 
 	</li> 
+	
      
     <li id="couponApplied" >
 	<button class="remove-coupon-button"></button>
@@ -78,7 +79,8 @@
 	<li class="total" id="total">
 		<div id="totalPriceConvChargeId">
 			<spring:theme code="basket.page.totals.total"/> 
-			<span id="totalWithConvField" style="float: right"><format:price priceData="${cartData.totalPrice}"/></span>
+			
+			<span id="totalWithConvFields" style="float: right"><format:price priceData="${cartData.totalPrice}"/></span>
 		</div>
 	</li>
 	

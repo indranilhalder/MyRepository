@@ -49,12 +49,9 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 
 	/**
 	 * @Description : This method is for creating item type
-	 * @param :
-	 *           ctx
-	 * @param :
-	 *           type
-	 * @param :
-	 *           allAttributes
+	 * @param : ctx
+	 * @param : type
+	 * @param : allAttributes
 	 * @return : item
 	 */
 	@Override
@@ -71,10 +68,8 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 
 	/**
 	 * @Description : Buy A Above X and get y percentage/amount off - this is for seller brand threshold promotion
-	 * @param :
-	 *           ctx
-	 * @param :
-	 *           evaluationContext
+	 * @param : ctx
+	 * @param : evaluationContext
 	 * @return : List<PromotionResult> promotionResults
 	 */
 	@Override
@@ -175,12 +170,15 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 	 * @param validProductUssidMap
 	 * @param totalEligibleProductPrice
 	 */
-	private List<PromotionResult> promotionEvaluation(final SessionContext ctx, final PromotionEvaluationContext evaluationContext,
-			final Map<String, AbstractOrderEntry> validProductUssidMap, final Double totalEligibleProductPrice)
+	private List<PromotionResult> promotionEvaluation(final SessionContext ctx,
+			final PromotionEvaluationContext evaluationContext, final Map<String, AbstractOrderEntry> validProductUssidMap,
+			final Double totalEligibleProductPrice)
 	{
 
 		boolean flagForDeliveryModeRestrEval = false;
 		boolean flagForPaymentModeRestrEval = false;
+
+
 		//double percentageDiscount = Double.valueOf(0.0D).doubleValue();	SONAR Fix
 		double percentageDiscount = 0.0D;
 		double totalProductPrice = 0.0D;
@@ -192,10 +190,8 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 		Double thresholdVal = getPriceForOrder(ctx, getThresholdTotals(ctx), cart,
 				MarketplacecommerceservicesConstants.THRESHOLD_TOTALS);
 		final Double discountPrice = getPriceForOrder(ctx, getDiscountPrices(ctx), cart,
-				MarketplacecommerceservicesConstants.DISCOUNT_PRICES) != null
-						? (Double) getPriceForOrder(ctx, getDiscountPrices(ctx), cart,
-								MarketplacecommerceservicesConstants.DISCOUNT_PRICES)
-						: new Double(0.0);
+				MarketplacecommerceservicesConstants.DISCOUNT_PRICES) != null ? (Double) getPriceForOrder(ctx,
+				getDiscountPrices(ctx), cart, MarketplacecommerceservicesConstants.DISCOUNT_PRICES) : new Double(0.0);
 
 		if (null == thresholdVal)
 		{
@@ -208,9 +204,9 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 				validProductUssidMap);
 		//for payment mode restriction check
 		flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList, ctx);
-
+		final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList);
 		if (null != thresholdVal && totalEligibleProductPrice.doubleValue() >= thresholdVal.doubleValue()
-				&& flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval)
+				&& flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval && flagForPincodeRestriction)
 		{
 			boolean isPercentageDisc = false;
 			if (isPercentageOrAmount().booleanValue() && null != getPercentageDiscount())
@@ -266,8 +262,8 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 
 				if (percentageDiscount < 100)
 				{
-					final double adjustment = -(entry.getBasePrice().doubleValue() * percentageDiscountvalue
-							* entry.getQuantity().doubleValue());
+					final double adjustment = -(entry.getBasePrice().doubleValue() * percentageDiscountvalue * entry.getQuantity()
+							.doubleValue());
 					LOG.debug("Adjustment" + adjustment);
 					final PromotionResult result = promotionsManager.createPromotionResult(ctx, this, evaluationContext.getOrder(),
 							1.0F);
@@ -307,8 +303,8 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 		for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
 		{
 			final AbstractOrderEntry entry = mapEntry.getValue();
-			totalVal = Double
-					.valueOf(totalVal.doubleValue() + (entry.getBasePrice().doubleValue() * entry.getQuantity().doubleValue()));
+			totalVal = Double.valueOf(totalVal.doubleValue()
+					+ (entry.getBasePrice().doubleValue() * entry.getQuantity().doubleValue()));
 			count = count + 1;
 		}
 
@@ -371,8 +367,8 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 
 				if (applyPromotion && sellerFlag && brandFlag)
 				{
-					validProductUssidMap.putAll(
-							getDefaultPromotionsManager().populateValidProductUssidMap(product, cart, restrictionList, ctx, entry));
+					validProductUssidMap.putAll(getDefaultPromotionsManager().populateValidProductUssidMap(product, cart,
+							restrictionList, ctx, entry));
 					sellerID = getDefaultPromotionsManager().getSellerID(ctx, restrictionList, entry);
 					productSellerDetails.put(entry, sellerID);
 				}
@@ -396,12 +392,9 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 
 	/**
 	 * @Description : Assign Promotion Fired and Potential-Promotion Message
-	 * @param :
-	 *           ctx
-	 * @param :
-	 *           result
-	 * @param :
-	 *           locale
+	 * @param : ctx
+	 * @param : result
+	 * @param : locale
 	 * @return : String
 	 */
 	@Override

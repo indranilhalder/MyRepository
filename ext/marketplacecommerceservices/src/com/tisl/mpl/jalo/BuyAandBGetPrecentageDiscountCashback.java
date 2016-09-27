@@ -51,12 +51,9 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 
 	/**
 	 * @Description : This method is for creating item type
-	 * @param :
-	 *           ctx
-	 * @param :
-	 *           type
-	 * @param :
-	 *           allAttributes
+	 * @param : ctx
+	 * @param : type
+	 * @param : allAttributes
 	 * @return : item
 	 *
 	 */
@@ -156,16 +153,21 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 			double percentageDiscount = getPercentageDiscount().doubleValue();
 			boolean flagForDeliveryModeRestrEval = false;
 			boolean flagForPaymentModeRestrEval = false;
+
+
+
 			//for delivery mode restriction check
 			flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForABPromo(restrictionList,
 					validProductUssidMap);
 			//for payment mode restriction check
-			flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList,
-					paramSessionContext);
+			flagForPaymentModeRestrEval = getDefaultPromotionsManager()
+					.getPaymentModeRestrEval(restrictionList, paramSessionContext);
+
+			final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList);
 
 			if (!eligibleProductList.isEmpty()) //Apply percentage/amount discount to valid products
 			{
-				if (flagForPaymentModeRestrEval && flagForDeliveryModeRestrEval)
+				if (flagForPaymentModeRestrEval && flagForDeliveryModeRestrEval && flagForPincodeRestriction)
 				{
 					final int totalCountFactor = eligibleProductList.size() / 2;
 
@@ -173,8 +175,8 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 					//amount discount
 					if (!isPercentageOrAmount().booleanValue())
 					{
-						final Double discountPrice = getPriceForOrder(paramSessionContext, getDiscountPrices(paramSessionContext), cart,
-								MarketplacecommerceservicesConstants.DISCOUNT_PRICES);
+						final Double discountPrice = getPriceForOrder(paramSessionContext, getDiscountPrices(paramSessionContext),
+								cart, MarketplacecommerceservicesConstants.DISCOUNT_PRICES);
 						double discountPriceValue = discountPrice == null ? 0.0D : discountPrice.doubleValue();
 						discountPriceValue = discountPriceValue * totalCountFactor;
 						percentageDiscount = (discountPriceValue * 100) / totalvalidproductsPricevalue;
@@ -264,8 +266,7 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 
 	/**
 	 * @Description : Assign Promotion Fired and Potential-Promotion Message
-	 * @param :
-	 *           SessionContext arg0 ,PromotionResult arg1 ,Locale arg2
+	 * @param : SessionContext arg0 ,PromotionResult arg1 ,Locale arg2
 	 * @return : String
 	 */
 	@Override
@@ -284,8 +285,8 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 			else if (arg1.getCouldFire(arg0))
 			{
 				final Object[] args = new Object[6];
-				final double minimumCategoryValue = getProperty(arg0, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT) != null
-						? ((Double) getProperty(arg0, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)).doubleValue() : 0.00D;
+				final double minimumCategoryValue = getProperty(arg0, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT) != null ? ((Double) getProperty(
+						arg0, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)).doubleValue() : 0.00D;
 				final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(
 						getRestrictions());
 				String paymentModes = "";
@@ -458,10 +459,8 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 
 	/**
 	 * @Description : Provides List of Products eligible for Promotion
-	 * @param: SessionContext
-	 *            paramSessionContext
-	 * @param: AbstractOrder
-	 *            cart
+	 * @param: SessionContext paramSessionContext
+	 * @param: AbstractOrder cart
 	 * @return : List<Product> validProductListFinal
 	 */
 	@SuppressWarnings(
@@ -592,8 +591,8 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 						validProductListB.add(valiProdBUssid);
 					}
 				}
-				totalFactorCount = validProductListA.size() < validProductListB.size() ? validProductListA.size()
-						: validProductListB.size();
+				totalFactorCount = validProductListA.size() < validProductListB.size() ? validProductListA.size() : validProductListB
+						.size();
 				final Set<String> validProdAUssidSet = getDefaultPromotionsManager().populateSortedValidProdUssidMap(
 						validProductAUssidMap, totalFactorCount, paramSessionContext, restrictionList, null);
 
@@ -640,8 +639,7 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 
 	/**
 	 * @Description : Provides Total Price of Promotion Valid Products
-	 * @param :
-	 *           List<Product> eligibleProductList ,AbstractOrder cart
+	 * @param : List<Product> eligibleProductList ,AbstractOrder cart
 	 * @return : totalvalidproductsPricevalue
 	 */
 	private double getvalidProductTotalPrice(final Map<String, AbstractOrderEntry> validProductUssidMap)
@@ -685,8 +683,7 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 
 	/**
 	 * @Description : Reset Flag Variables
-	 * @param :
-	 *           no
+	 * @param : no
 	 * @return : void
 	 */
 	private void resetFlag()
