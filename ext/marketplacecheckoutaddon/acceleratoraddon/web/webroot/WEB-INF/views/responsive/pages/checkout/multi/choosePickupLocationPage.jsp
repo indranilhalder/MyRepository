@@ -749,8 +749,8 @@
 													<div class="change_pincode_block block${status1.index}">
 														<span class="change_txt txt${status1.index}">Change Pincode?</span>
 														<div class="input${status1.index} row" style="width: 111%">
-															<div class="col-md-8 col-sm-4 col-xs-4">
-																<input type="text" name="changepin${status1.index}" class="changepin${status1.index}" maxlength="6" placeholder="Enter Pincode to Change.">
+															<div class="col-md-8 col-sm-4 col-xs-4" style="padding:0px;">
+																<input style="width: 100%" type="text" name="changepin${status1.index}" class="changepin${status1.index}" maxlength="6" placeholder="Enter Pincode to Change.">
 															</div>
 															<div class="col-md-4 col-sm-2 col-xs-2">
 																<button class="submitPincode submitPincode${status1.index}" style="height: 40px !important; background: #A9143C !important; border: none !important; color: #fff !important;" name="submitPincode${status1.index}">Submit</button>

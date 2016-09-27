@@ -42599,7 +42599,8 @@ Samsung Galaxy S5 -----------
   }
   .submitPincode {
  	    width: 98px !important;
-    margin-left: 88px;
+    /* margin-left: 88px; */
+        line-height: normal;
   }
   
   .scrollThis {
@@ -50966,7 +50967,8 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
 .smk_accordion .accordion_in .acc_content .blocks .cash p { color:#a7183e; line-height:26px; }
 .smk_accordion .accordion_in .acc_content .blocks .cash h4  { padding:8px 0 30px 0; text-transform:none; font-weight:normal; }
 .smk_accordion .accordion_in .acc_content .blocks .cash .cont-del p { padding:0; }
-.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del input { height:45px; margin:7px 0 10px 0; width:93.3%; }
+.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del input { height:45px; margin:7px 0 10px 0; width: 84.52%; }
+.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del input#otpNUMField { width:93.3%; }
 .smk_accordion .accordion_in .acc_content .blocks .cash #otpNUM p.process, .smk_accordion .accordion_in .acc_content .blocks .cash .cont-del .cod-link { font-size:13px; font-weight:normal; text-transform:capitalize;    color: #000;line-height: 13px; }
 .smk_accordion .accordion_in .acc_content .blocks .cash .cont-del button { color:#a7183e;line-height:20px; font-weight:normal; margin:15px 0 36px 0; background:none; border:1px solid #a7183e; height:47px !important;font-size: 13px !important;    letter-spacing: 1px;    padding: 13px 18px; width:204px; }
 .smk_accordion .accordion_in .acc_content .blocks .cash .cont-del .otp	{ color:#60a119; display:block; text-transform:capitalize; font-size:13px; font-weight:normal; }
@@ -52616,7 +52618,7 @@ padding:0px;
  .retail-bag{
  	font-size: 12px;
     letter-spacing: 0;
-    padding-bottom: 28px;
+    padding-bottom: 5px;
  }
  .retail-detail{
  	font-size: 12px;
