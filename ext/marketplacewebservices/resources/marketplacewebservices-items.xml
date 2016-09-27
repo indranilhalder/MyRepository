@@ -227,29 +227,10 @@
 			</attributes>
 	</itemtype>
 
-	<itemtype code="State" autocreate="true"
-					 generate="true">
-			<attributes>
-					<attribute autocreate="true" qualifier="countrykey"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="false" />
-					</attribute>
-					<attribute autocreate="true" qualifier="region"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="false" />
-					</attribute>
-					<attribute autocreate="true" qualifier="description"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="false" />
-					</attribute>					
-			</attributes>
-	</itemtype>
+	
+	
+	
+	
 <itemtype code="MerchantMasterTable" autocreate="true"
 					 generate="true">
 			<attributes>

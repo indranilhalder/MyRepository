@@ -63,10 +63,8 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 
 	/**
 	 * @Description : Buy A B Free Percentage Discount Promotion
-	 * @param :
-	 *           arg0
-	 * @param :
-	 *           arg1
+	 * @param : arg0
+	 * @param : arg1
 	 * @return :promotionResults
 	 */
 	@Override
@@ -116,15 +114,11 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 
 	/**
 	 * @Description : Buy A B Free Percentage Discount Promotion
-	 * @param :
-	 *           arg0
-	 * @param :
-	 *           arg1
-	 * @param :
-	 *           excludedProductList
+	 * @param : arg0
+	 * @param : arg1
+	 * @param : excludedProductList
 	 * @param :excludeManufactureList
-	 * @param :
-	 *           restrictionList
+	 * @param : restrictionList
 	 * @return: promotionResults
 	 */
 	public List<PromotionResult> promotionEvaluation(final SessionContext arg0, final PromotionEvaluationContext arg1,
@@ -150,10 +144,8 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 				&& !getDefaultPromotionsManager().promotionAlreadyFired(arg0, validProductUssidMap))
 		{
 			final Double discountPrice = getPriceForOrder(arg0, getDiscountPrices(arg0), order,
-					MarketplacecommerceservicesConstants.DISCOUNT_PRICES) != null
-							? (Double) getPriceForOrder(arg0, getDiscountPrices(arg0), order,
-									MarketplacecommerceservicesConstants.DISCOUNT_PRICES)
-							: new Double(0.0);
+					MarketplacecommerceservicesConstants.DISCOUNT_PRICES) != null ? (Double) getPriceForOrder(arg0,
+					getDiscountPrices(arg0), order, MarketplacecommerceservicesConstants.DISCOUNT_PRICES) : new Double(0.0);
 
 			boolean isPercentageDisc = false;
 			final Long eligibleQuantity = getQuantity();
@@ -177,7 +169,9 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 				//for delivery mode restriction check
 				flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForAPromo(restrictionList,
 						validProductUssidMap);
-				if (flagForDeliveryModeRestrEval)
+				final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(
+						restrictionList);
+				if (flagForDeliveryModeRestrEval && flagForPincodeRestriction)
 				{
 					double percentageDiscount = getPercentageDiscount().doubleValue();
 
@@ -257,8 +251,8 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 							arg1.getOrder(), 1.0F);
 					if (null != promotionGiftProductList && !promotionGiftProductList.isEmpty())
 					{
-						final Map<String, Product> giftProductDetails = getDefaultPromotionsManager()
-								.getGiftProductsUSSID(promotionGiftProductList, sellerIDData);
+						final Map<String, Product> giftProductDetails = getDefaultPromotionsManager().getGiftProductsUSSID(
+								promotionGiftProductList, sellerIDData);
 						if (null != giftProductDetails && !giftProductDetails.isEmpty())
 						{
 							getPromotionUtilityPOJO().setPromoProductList(promotionalProductData);
@@ -270,8 +264,10 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 										.getAssociatedItemsForAorBOGOorFreebiePromotions(validProductUssidMap, entry.getKey());
 								arg0.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, productAssociatedItemsMap);
 								arg0.setAttribute(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, String.valueOf(this.getCode()));
-								freeResult.addAction(arg0, getDefaultPromotionsManager().createCustomPromotionOrderAddFreeGiftAction(arg0,
-										entry.getValue(), entry.getKey(), freeResult, Double.valueOf(giftCount)));
+								freeResult.addAction(
+										arg0,
+										getDefaultPromotionsManager().createCustomPromotionOrderAddFreeGiftAction(arg0, entry.getValue(),
+												entry.getKey(), freeResult, Double.valueOf(giftCount)));
 							}
 						}
 					}
@@ -302,8 +298,8 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 		{
 			if (GenericUtilityMethods.checkRestrictionData(restrictionList))
 			{
-				final PromotionResult result = getDefaultPromotionsManager().createPromotionResult(arg0, this, arg1.getOrder(),
-						0.00F);
+				final PromotionResult result = getDefaultPromotionsManager()
+						.createPromotionResult(arg0, this, arg1.getOrder(), 0.00F);
 				promotionResults.add(result);
 			}
 		}
@@ -313,8 +309,7 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 
 	/**
 	 * @Description : Assign Promotion Fired and Potential-Promotion Message
-	 * @param :
-	 *           SessionContext paramSessionContext ,PromotionResult paramPromotionResult ,Locale paramLocale
+	 * @param : SessionContext paramSessionContext ,PromotionResult paramPromotionResult ,Locale paramLocale
 	 * @return : String
 	 */
 	@Override

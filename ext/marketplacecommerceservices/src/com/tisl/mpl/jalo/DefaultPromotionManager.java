@@ -3314,8 +3314,9 @@ public class DefaultPromotionManager extends PromotionsManager
 	}
 
 	/**
+	 *
 	 * TPR-970 changes
-	 * 
+	 *
 	 * @Description: This is for validating pincode specific restriction against order level
 	 * @param restrictionList
 	 * @param order
@@ -3375,7 +3376,7 @@ public class DefaultPromotionManager extends PromotionsManager
 
 	/**
 	 * TPR-970 changes check for city restriction against a particular pincode
-	 * 
+	 *
 	 * @param isValid
 	 * @param includedStates
 	 * @param cityName
@@ -3414,12 +3415,14 @@ public class DefaultPromotionManager extends PromotionsManager
 
 
 
+
+
 	/**
-	 * TPR-970 check whether a particular state for a pin code is included or not
+	 * TPR-970 changes checking whether a particular state exits against a pincode or not
 	 *
 	 * @param includedStates
-	 *           ,pinCode
-	 * @param flag
+	 * @param string
+	 *
 	 */
 	private boolean isAppliedPinCodeStatesIncludes(final List<State> includedStates, final String pinCode)
 	{

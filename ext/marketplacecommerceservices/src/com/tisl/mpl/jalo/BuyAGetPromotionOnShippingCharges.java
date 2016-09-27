@@ -344,7 +344,6 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 		int totalCount = 0;
 		final Long eligibleQuantity = getQuantity();
 		boolean flagForDeliveryModeRestrEval = false;
-
 		try
 		{
 			if (GenericUtilityMethods.checkBrandAndCategoryMinimumAmt(validProductUssidMap, paramSessionContext,
@@ -388,7 +387,10 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 					flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForAPromo(restrictionList,
 							validProductUssidMap);
 
-					if (flagForDeliveryModeRestrEval) // delivery mode true and If Total no of valid Products exceeds Qualifying Count
+					final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(
+							restrictionList);
+
+					if (flagForDeliveryModeRestrEval && flagForPincodeRestriction) // delivery mode true and If Total no of valid Products exceeds Qualifying Count
 					{
 						final Map<String, List<String>> productAssociatedItemsMap = getDefaultPromotionsManager()
 								.getAssociatedItemsForAorBOGOorFreebiePromotions(validProductUssidMap, null);

@@ -2302,6 +2302,30 @@
 			</editor>
 		</organizer>
 	</type>
+	
+	<!-- TPR-970 changes pincode specific restriction-->
+	<type name="EtailPincodeRestriction" mode="append">
+		<organizer>
+			<editor>
+				<tab name="properties">
+					<section name="section.restrictions" mode="replace"
+						position="0">
+						<listlayout>
+							<attribute name="states"></attribute>
+							<attribute name="cities"></attribute>
+							<attribute name="includeCities"  width="200"/>
+							<!-- <attribute name="includeCities" width="500">
+	                         <advancedbooleaneditor truename="pincoderestrictions.includeCities.true"
+	                                            falsename="pincoderestrictions.includeCities.false"/>
+	                  </attribute> -->
+						</listlayout>
+					</section>
+				</tab>
+				
+			</editor>
+		</organizer>
+	</type>
+	
 	<!-- Product Setup Start -->
 	<type name="Product" mode="append">
 		<organizer mode="append">
@@ -3086,6 +3110,55 @@
 			</result>
 		</organizer>
 	</type>
+	<!-- TPR-970 changes starts-->
+	<type name="State" mode="append">
+		<organizer>
+			<search mode="replace">
+				<condition attribute="countrykey" />
+				<condition attribute="description" />
+				<condition attribute="region" />
+			</search>
+			<result>
+				<listview mode="replace">
+					<itemlayout>
+						<attribute name="countrykey" />
+						<attribute name="description" />
+						<attribute name="region" />
+					</itemlayout>
+				</listview>
+			</result>
+		</organizer>
+		<defaultreference searchattribute="countrykey" mode="replace">
+			<itemlayout>
+				 <attribute name="countrykey" />
+			</itemlayout>
+		</defaultreference>
+	</type>
+	<type name="City" mode="append">
+		<organizer>
+			<search mode="replace">
+				<condition attribute="cityName" />
+				<condition attribute="description" />
+			</search>
+			<result>
+				<listview mode="replace">
+					<itemlayout>
+						<attribute name="cityName"/>
+						<attribute name="description" />
+					</itemlayout>
+				</listview>
+			</result>
+		</organizer>
+		<defaultreference searchattribute="cityName" mode="replace">
+			<itemlayout>
+				 <attribute name="cityName" />
+			</itemlayout>
+		</defaultreference>
+	</type>
+	<!-- TPR-970 changes ends-->
+	
+	
+	
 	  <!-- seller priority starts -->
   <explorertree>
 		<group name="sellerpriority" description="group.MplSellerPriority.description">

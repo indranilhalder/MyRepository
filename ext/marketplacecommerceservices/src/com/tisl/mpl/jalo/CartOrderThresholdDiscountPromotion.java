@@ -98,9 +98,10 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 				//for payment mode restriction check
 				final boolean flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList,
 						ctx);
-
+				final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(
+						restrictionList);
 				if (checkRestrictions(ctx, evalCtx) && checkChannelFlag && flagForDeliveryModeRestrEval
-						&& flagForPaymentModeRestrEval)
+						&& flagForPaymentModeRestrEval && flagForPincodeRestriction)
 				{
 					final boolean isPercentageDisc = false;
 					final double percentageDiscount = getPercentageDiscount() == null ? 0.0D : getPercentageDiscount().doubleValue();
