@@ -20237,8 +20237,10 @@ font-size:12px;
     float: left;
 	}
 #mobilePrefix{
-	width:50px;
-	/* height:30px; */
+	width: 8.3%;
+    /* height: 30px; */
+    min-width: 30px;
+    padding-left: 10px;
 }
 /* #otpMobileNUMField{
 	width:45%;
@@ -20646,6 +20648,9 @@ ul.accepted-cards li span img{
 		width: 100%;
 		float: none;
 	}
+	#mobilePrefix{
+    padding-left: 5px;
+}
 }
 #sendOTPButton p{
 	text-align: center;
@@ -50216,6 +50221,9 @@ body.no-scroll {
     	margin-top: 26px;
     	display: none;
     }
+    .checkTab .add-address {
+    width: 47%;
+}
     
 }
 
@@ -50252,6 +50260,7 @@ body.no-scroll {
 
     .checkTab .smk_accordion .accordion_in.acc_active,.checkTab .smk_accordion .accordion_in {
         background-position: 98% 18px;
+            padding-bottom: 10px;
     }
 
     .checkTab .choose-address h2 {
@@ -50284,6 +50293,7 @@ body.no-scroll {
         border: 1px solid #e4e4e4;
         background: #fff;
         padding: 40px 0 20px;
+            margin: 0 auto;
     }
 
     .checkTab .formaddress {
@@ -50968,7 +50978,7 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
 .smk_accordion .accordion_in .acc_content .blocks .cash p { color:#a7183e; line-height:26px; }
 .smk_accordion .accordion_in .acc_content .blocks .cash h4  { padding:8px 0 30px 0; text-transform:none; font-weight:normal; }
 .smk_accordion .accordion_in .acc_content .blocks .cash .cont-del p { padding:0; }
-.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del input { height:45px; margin:7px 0 10px 0; width: 84.52%; }
+.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del input { height:45px; margin:7px 0 10px 0; width: 85%; }
 .smk_accordion .accordion_in .acc_content .blocks .cash .cont-del input#otpNUMField { width:93.3%; }
 .smk_accordion .accordion_in .acc_content .blocks .cash #otpNUM p.process, .smk_accordion .accordion_in .acc_content .blocks .cash .cont-del .cod-link { font-size:13px; font-weight:normal; text-transform:capitalize;    color: #000;line-height: 13px; }
 .smk_accordion .accordion_in .acc_content .blocks .cash .cont-del button { color:#a7183e;line-height:20px; font-weight:normal; margin:15px 0 36px 0; background:none; border:1px solid #a7183e; height:47px !important;font-size: 13px !important;    letter-spacing: 1px;    padding: 13px 18px; width:204px; }
@@ -51426,6 +51436,9 @@ display:block;}
 .cart.wrapper .right-block.billing.checkout-list-right {
     width: 31.8%;
 }
+.smk_accordion .accordion_in .acc_content,#COD {
+    margin: 0 30px 30px 30px;
+}
 }
 @media(max-width:1200px){
 	    .cart.wrapper .button.proceed-button {
@@ -51604,7 +51617,7 @@ input.year { height:40px; }
 #COD{margin:0px;}
 .smk_accordion .accordion_in .acc_content .blocks .cash #otpNUM p{padding:0px;font-size:12px;}
 .smk_accordion .accordion_in .acc_content .blocks.net-bank label.cod-mob-label{margin:0px; width:100%;}
-.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del input{width:80%;}
+.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del input{width:85%;}
 .smk_accordion .accordion_in .acc_content .blocks .cash .cont-del input#otpNUMField{width:93.3%;}
 .cart.wrapper .right-block.billing .block.summary-info .totals {
 /*    padding: 25px 0;
@@ -53164,7 +53177,7 @@ div.radio.creditDebitLabelRadio{
 		border: 1px solid #e4e4e4;
         padding: 38px;
 	}
-	.checkTab .add-address,.add-address_viewMore{
+	.add-address_viewMore{
 		width: 47%;
 	}
 	
