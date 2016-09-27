@@ -2013,5 +2013,17 @@ $(".featured_collection  > .featured_collection_section").slice(-4).wrapAll("<di
 //--shop for section----//
 $(".shop_for_blp > a").slice(0,4).wrapAll("<div class='shop_for_links_blp'>");
 //--shop for section end----//
+//---shop the look section start----//
+$(".shop_the_look > div").slice(1,3).wrapAll("<div class='shop_the_look_left'>");
+//----shop the look section end-----//
+//----blog section start------//
+$(".top_deal_blp  > a").nextAll().wrapAll("<div class='blog_container_blp'>");
+var blp_blog_count = $(".top_deal_blp  > .blog_container_blp").children().length;
+$(".top_deal_blp  > .blog_container_blp").children().slice(0,blp_blog_count/2).wrapAll("<div class='blog_feature_blp'>");
+$(".top_deal_blp  > .blog_container_blp").children().slice(1,blp_blog_count - 1).wrapAll("<div class='blog_feature_blp'>");
+$(".top_deal_blp  > .blog_container_blp > .blog_feature_blp").each(function(){
+	$(this).children().last().prevAll().wrapAll("<div class='blog_content_blp'>");
+});
+//-----blog section end------//
 
 //-----BLP------//

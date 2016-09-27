@@ -2,6 +2,7 @@ ACC.carousel = {
 
 	_autoload: [
 	     "myFun",
+	     "shopTheLookCarousel",
 	     "shopByLookCarousel",
 	     "offersCarousel",
 	     "blpTopDealsCarousel",
@@ -260,7 +261,64 @@ ACC.carousel = {
 		itemsMobile : [480,2],*/
 			});
 	},
-	
+	shopTheLookCarousel: function(){
+		$(".shop_the_look #shopByLookCarousel").owlCarousel({
+			/*items:2,
+    		loop: true,
+    		nav:true,
+    		dots:false,
+    		navText:[]
+		    responsive : {
+			// breakpoint from 0 up
+			0 : {
+				items:1,
+				stagePadding: 50,
+			},
+			// breakpoint from 480 up
+			480 : {
+				items:2,
+				stagePadding: 75,
+			},
+			// breakpoint from 768 up
+			700 : {
+				items:3,
+			},
+			// breakpoint from 768 up
+			1000 : {
+				items:5,
+			}			
+		}*/
+			items:3,
+			nav: true,
+	        navText: [],
+	        loop: true,
+	        responsive: {
+	            0: {
+	                items: 1,
+					stagePadding: 75
+	            },
+	            480: {
+	                items: 2,
+					stagePadding: 75
+	            },
+	            768: {
+	                items: 2
+	            },
+	            1280: {
+	                items: 3
+	            }
+	        }
+			/*navigation:true,
+			rewindNav: false,
+			navigationText :[],
+			pagination:false,
+			items:2,
+			itemsDesktop : false, 
+			itemsDesktopSmall : false, 
+			itemsTablet: false, 
+			itemsMobile : false*/
+		});
+	},
 	blpTopDealsCarousel: function(){
 		$(".top_deal_blp #mplAdvancedCategoryCarousel").owlCarousel({
 					items:5,
@@ -279,7 +337,7 @@ ACC.carousel = {
             				items:2,
             				stagePadding: 75,
             			},
-            			// breakpoint from 768 up
+            			// breakpoint from 700 up
             			700 : {
             				items:3,
             			},

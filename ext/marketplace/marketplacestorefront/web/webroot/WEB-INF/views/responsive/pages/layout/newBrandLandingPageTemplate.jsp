@@ -11,9 +11,11 @@
 	<cms:pageSlot position="Section1" var="feature">
 		<cms:component component="${feature}" element="div" class="" />
 	</cms:pageSlot>
+	<div class="men_women_sec">
 	<cms:pageSlot position="ForHimForHerSlot" var="feature">
 		<cms:component component="${feature}" element="div" class="" />
 	</cms:pageSlot>
+	</div>
 	<div class="top_categories">
 	<cms:pageSlot position="Section2A" var="feature">
 		<cms:component component="${feature}" class="top_categories_section"/>
