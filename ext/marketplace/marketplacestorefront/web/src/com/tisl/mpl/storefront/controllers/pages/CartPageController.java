@@ -218,6 +218,11 @@ public class CartPageController extends AbstractPageController
 
 				getMplCartFacade().setCartSubTotal();
 				final CartModel cartModel = getCartService().getSessionCart();
+
+				//To calculate discount percentage amount for display purpose
+				// TPR-774-- Total MRP calculation and the Product percentage calculation
+				getMplCartFacade().totalMrpCal(cartModel);
+
 				final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 				final boolean isUserAnym = getUserFacade().isAnonymousUser();
 				model.addAttribute("isUserAnym", isUserAnym);
@@ -309,6 +314,8 @@ public class CartPageController extends AbstractPageController
 			final Map<String, String> priceModifiedMssg = new HashMap<String, String>();
 			final Map<String, PriceData> basePriceMap = new HashMap<String, PriceData>();
 			final Map<String, String> promoModified = new HashMap<String, String>();
+			//TPR-774- Map for Entry respective MRP
+			final Map<String, PriceData> mrpPriceMap = new HashMap<String, PriceData>();
 			if (cartDataOld != null && cartDataLatest != null && cartDataOld.getEntries() != null)
 			{
 				for (final OrderEntryData entryOld : cartDataOld.getEntries())
@@ -330,7 +337,15 @@ public class CartPageController extends AbstractPageController
 							{
 								final Long qty = entryLatest.getQuantity();
 								@SuppressWarnings(MarketplacecommerceservicesConstants.BOXING)
-								final Long priceForStrikeOff = ((entryLatest.getBasePrice().getValue().longValue()) * qty);
+								/*
+								 * final Long priceForStrikeOff = ((entryLatest.getBasePrice().getValue().longValue()) * qty);
+								 * final BigDecimal strikeOffPrice = new BigDecimal(priceForStrikeOff.longValue()); final
+								 * PriceData strikeoffprice = priceDataFactory.create(PriceDataType.BUY, strikeOffPrice,
+								 * MarketplaceFacadesConstants.INR);
+								 */
+								//final Long priceForStrikeOff = ((entryLatest.getBasePrice().getValue().longValue()) * qty);
+								//TPR-774
+								final Long priceForStrikeOff = ((entryLatest.getMrp().getValue().longValue()) * qty);
 								final BigDecimal strikeOffPrice = new BigDecimal(priceForStrikeOff.longValue());
 								final PriceData strikeoffprice = priceDataFactory.create(PriceDataType.BUY, strikeOffPrice,
 										MarketplaceFacadesConstants.INR);
@@ -367,11 +382,19 @@ public class CartPageController extends AbstractPageController
 									* entryLatest.getQuantity());
 							final PriceData baseTotalPrice = priceDataFactory.create(PriceDataType.BUY, basetotal,
 									MarketplaceFacadesConstants.INR);
-
-
 							basePriceMap.put(entryLatest.getEntryNumber().toString(), baseTotalPrice);
-
 							model.addAttribute(ModelAttributetConstants.BASEPRICEMAP, basePriceMap);
+
+							//TPR-774
+							final BigDecimal mrptotal = new BigDecimal(entryLatest.getMrp().getValue().doubleValue()
+									* entryLatest.getQuantity());
+							final PriceData mrpTotalPrice = priceDataFactory.create(PriceDataType.BUY, mrptotal,
+									MarketplaceFacadesConstants.INR);
+							mrpPriceMap.put(entryLatest.getEntryNumber().toString(), mrpTotalPrice);
+							model.addAttribute(ModelAttributetConstants.MRPPRICEMAP, mrpPriceMap);
+							//TPR-774
+
+
 
 							if (entryLatest.getCartLevelDisc() != null && entryLatest.getCartLevelDisc().getValue() != null)
 							{
@@ -390,7 +413,7 @@ public class CartPageController extends AbstractPageController
 									model.addAttribute("cartLevelDiscountModified", "Cart Promotion has been modified");
 								}
 							}
-							//TISPRM-33
+							//TPR-774
 							/*
 							 * if (null != entryLatest.getTotalSalePrice() && null != entryLatest.getAmountAfterAllDisc()) {
 							 * final double savingPriceCal = entryLatest.getTotalSalePrice().getDoubleValue() -
@@ -401,7 +424,7 @@ public class CartPageController extends AbstractPageController
 							 * != entryLatest.getTotalPrice()) { model.addAttribute(ModelAttributetConstants.SAVINGONPRODUCT,
 							 * null); }
 							 */
-							//TISPRM-33
+							//TPR-774
 
 						}
 					}

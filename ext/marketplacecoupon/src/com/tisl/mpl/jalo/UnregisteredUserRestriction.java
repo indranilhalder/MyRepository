@@ -66,7 +66,7 @@ public class UnregisteredUserRestriction extends GeneratedUnregisteredUserRestri
 		//include  these unregistered email list  for the voucher applicability
 		final ArrayList<String> emailIdList = new ArrayList<String>();
 		final StringTokenizer emailIdListToken = new StringTokenizer(super.getEmailList(),
-				MarketplacecommerceservicesConstants.CAMPAIGN_FILE_DELIMITTER);//TO DO add null check for emailIdListToken
+				MarketplacecommerceservicesConstants.CAMPAIGN_FILE_DELIMITTER);
 		while (emailIdListToken.hasMoreTokens())
 		{
 			emailIdList.add(emailIdListToken.nextToken().trim());
@@ -76,35 +76,26 @@ public class UnregisteredUserRestriction extends GeneratedUnregisteredUserRestri
 		if (user instanceof Customer)
 		{
 			final Object originalUidObj = ((Customer) user).getProperty("originalUid");
-			final String originalUid = originalUidObj.toString();
-			if (positive.booleanValue())
+			if (null != originalUidObj)
 			{
-				if (CollectionUtils.isEmpty(emailIdList))
+				final String originalUid = originalUidObj.toString();
+				if (positive.booleanValue())
 				{
-					result = false;
-					LOG.debug("selected  'Valid' field in hmc is ::::" + positive.booleanValue() + "emailid list  size is"
-							+ emailIdList.size());
+					if (CollectionUtils.isNotEmpty(emailIdList) && emailIdList.contains(originalUid))
+					{
+						result = true;
+						LOG.debug("selected  'Valid' field in hmc is ::::" + positive.booleanValue() + "emailid list  size is"
+								+ emailIdList.size());
+					}
 				}
-				else if (emailIdList.contains(originalUid))
+				else
 				{
-					result = true;
-					LOG.debug("selected  'Valid' field in hmc is ::::" + positive.booleanValue() + "emailid list  size is"
-							+ emailIdList.size());
-				}
-			}
-			else
-			{
-				if ((!emailIdList.contains(originalUid)) && (CollectionUtils.isEmpty(emailIdList)))
-				{
-					result = false;
-					LOG.debug("selected  'Valid' field in hmc is ::::" + positive.booleanValue() + "emailid list  size is"
-							+ emailIdList.size());
-				}
-				else if (!emailIdList.contains(originalUid))
-				{
-					result = true;
-					LOG.debug("selected  'Valid' field in hmc is ::::" + positive.booleanValue() + "emailid list  size is"
-							+ emailIdList.size());
+					if (!emailIdList.contains(originalUid) || CollectionUtils.isEmpty(emailIdList))
+					{
+						result = true;
+						LOG.debug("selected  'Valid' field in hmc is ::::" + positive.booleanValue() + "emailid list  size is"
+								+ emailIdList.size());
+					}
 				}
 			}
 		}
@@ -114,7 +105,7 @@ public class UnregisteredUserRestriction extends GeneratedUnregisteredUserRestri
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.voucher.jalo.Restriction#isFulfilledInternal(de.hybris.platform.jalo.product.Product)
 	 */
 	@Override

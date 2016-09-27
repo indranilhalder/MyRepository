@@ -357,6 +357,7 @@ public interface ControllerConstants
 				public static final String SearchResultsPanel = "fragments/product/searchResultPanel";
 				public static final String SellerResultsPage = "fragments/product/sellerResultPage";
 
+				public static final String OFFERMESSAGEMAP = "offerMessageMap";
 			}
 		}
 	}

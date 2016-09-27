@@ -148,8 +148,6 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 			boolean isPercentageDisc = false;
 			boolean flagForDeliveryModeRestrEval = false;
 			boolean flagForPaymentModeRestrEval = false;
-			boolean flagForPincodeRestriction = false;
-
 			final double maxDiscount = getMaxDiscount() == null ? 0.0D : getMaxDiscount().doubleValue(); // Sets the Promotion set Max Discount to a variable
 			double percentageDiscount = getPercentageDiscount().doubleValue(); // Sets the Percentage Discount Value to a variable
 			//for delivery mode restriction check
@@ -159,7 +157,7 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 			flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList, arg0);
 
 
-			flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList);
+			final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList);
 
 			final List<Product> validProductList = new ArrayList<Product>();
 			final Map<String, Integer> tcMapForValidEntries = new HashMap<String, Integer>();

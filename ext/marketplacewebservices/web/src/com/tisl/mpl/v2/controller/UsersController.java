@@ -450,8 +450,10 @@ public class UsersController extends BaseCommerceController
 		final boolean isNewusers = true;
 		try
 		{
-			userResult = mobileUserService.registerNewMplUser(emailId, password);
-			final CustomerModel customerModel = mplPaymentWebFacade.getCustomer(emailId);
+			/* TPR-1140 Case-sensitive nature resulting in duplicate customer e-mails IDs */
+			final String emailIdLwCase = emailId.toLowerCase();
+			userResult = mobileUserService.registerNewMplUser(emailIdLwCase, password);
+			final CustomerModel customerModel = mplPaymentWebFacade.getCustomer(emailIdLwCase);
 			gigyaWsDto = gigyaFacade.gigyaLoginHelper(customerModel, isNewusers);
 			if (StringUtils.isNotEmpty(gigyaWsDto.getSessionSecret()))
 			{
@@ -506,7 +508,7 @@ public class UsersController extends BaseCommerceController
 	@ResponseBody
 	public MplUserResultWsDto loginUser(@PathVariable final String emailId, @RequestParam final String newCustomer,
 			@RequestParam final String password)
-			throws RequestParameterException, WebserviceValidationException, MalformedURLException
+					throws RequestParameterException, WebserviceValidationException, MalformedURLException
 	{
 		MplUserResultWsDto result = new MplUserResultWsDto();
 		GigyaWsDTO gigyaWsDTO = new GigyaWsDTO();
@@ -578,6 +580,8 @@ public class UsersController extends BaseCommerceController
 		MplUserResultWsDto result = new MplUserResultWsDto();
 		try
 		{
+			/* TPR-1140 Case-sensitive nature resulting in duplicate customer e-mails IDs */
+			final String emailIdLwCase = emailId.toLowerCase();
 			LOG.debug("****************** Social Media User Registration mobile web service ***********" + emailId);
 			if (!(StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK)
 					|| (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))))
@@ -586,11 +590,11 @@ public class UsersController extends BaseCommerceController
 			}
 			else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK))
 			{
-				result = mobileUserService.socialMediaRegistration(emailId, MarketplacewebservicesConstants.FACEBOOK);
+				result = mobileUserService.socialMediaRegistration(emailIdLwCase, MarketplacewebservicesConstants.FACEBOOK);
 			}
 			else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))
 			{
-				result = mobileUserService.socialMediaRegistration(emailId, MarketplacecommerceservicesConstants.GOOGLE);
+				result = mobileUserService.socialMediaRegistration(emailIdLwCase, MarketplacecommerceservicesConstants.GOOGLE);
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -977,6 +981,7 @@ public class UsersController extends BaseCommerceController
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9204);
 			}
+
 			final AddressDataList addressDataList = new AddressDataList();
 			addressDataList.setAddresses(addressList);
 			successFlag = true;
@@ -1820,7 +1825,7 @@ public class UsersController extends BaseCommerceController
 	@ResponseBody
 	public UserResultWsDto inviteFriend(@RequestParam final String custEmailId, @RequestParam String textMessage,
 			@RequestParam final List friendEmailIdList, final HttpServletRequest request)
-			throws RequestParameterException, CMSItemNotFoundException, MalformedURLException
+					throws RequestParameterException, CMSItemNotFoundException, MalformedURLException
 	{
 		final UserResultWsDto result = new UserResultWsDto();
 		final MplCustomerProfileData mplCustData = mplCustomerProfileService.getCustomerProfileDetail(custEmailId);
@@ -2244,7 +2249,7 @@ public class UsersController extends BaseCommerceController
 	public UserResultWsDto addProductInWishlist(@PathVariable final String emailId,
 			@RequestParam(required = false) final String wishlistName, @RequestParam final String productCode,
 			@RequestParam final String ussid, @RequestParam(required = false) final boolean isSelectedSize)
-			throws RequestParameterException
+					throws RequestParameterException
 	{
 		MplCustomerProfileData mplCustData = new MplCustomerProfileData();
 		final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists();
@@ -2676,7 +2681,7 @@ public class UsersController extends BaseCommerceController
 			@RequestParam final String line2, @RequestParam final String line3, @RequestParam final String town,
 			@RequestParam final String state, @RequestParam final String countryIso, @RequestParam final String postalCode,
 			@RequestParam final String phone, @RequestParam final String addressType, @RequestParam final boolean defaultFlag)
-			throws RequestParameterException
+					throws RequestParameterException
 	{
 
 		String errorMsg = null;
@@ -4146,7 +4151,7 @@ public class UsersController extends BaseCommerceController
 	@ResponseBody
 	public UserResultWsDto resetPassword(@PathVariable final String userId, @RequestParam final String old,
 			@RequestParam final String newPassword, final HttpServletRequest request)
-			throws RequestParameterException, de.hybris.platform.commerceservices.customer.PasswordMismatchException
+					throws RequestParameterException, de.hybris.platform.commerceservices.customer.PasswordMismatchException
 	{
 		final UserResultWsDto result = new UserResultWsDto();
 		final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -5820,7 +5825,7 @@ public class UsersController extends BaseCommerceController
 	@ResponseBody
 	public MplAllFavouritePreferenceWsDTO getFavCategoriesBrands(@PathVariable final String emailId, final String fields,
 			@RequestParam(required = false) final String deviceId)
-			throws RequestParameterException, WebserviceValidationException, MalformedURLException
+					throws RequestParameterException, WebserviceValidationException, MalformedURLException
 	{
 		final MplAllFavouritePreferenceWsDTO mplAllFavouritePreferenceWsDTO = new MplAllFavouritePreferenceWsDTO();
 		final List<MplFavBrandCategoryWsDTO> favBrandCategoryDtoForCategory = new ArrayList<MplFavBrandCategoryWsDTO>();
@@ -5993,7 +5998,7 @@ public class UsersController extends BaseCommerceController
 	@ResponseBody
 	public UserResultWsDto addFavCategoriesBrand(@PathVariable final String emailId, @RequestParam final List codeList,
 			@RequestParam final String type, @RequestParam(required = false) final String deviceId)
-			throws RequestParameterException, WebserviceValidationException, MalformedURLException
+					throws RequestParameterException, WebserviceValidationException, MalformedURLException
 	{
 		final UserResultWsDto resultDto = new UserResultWsDto();
 		boolean result = false;
@@ -6061,7 +6066,7 @@ public class UsersController extends BaseCommerceController
 	@ResponseBody
 	public UserResultWsDto deleteFavCategoriesBrands(@PathVariable final String emailId, @RequestParam final String code,
 			@RequestParam final String type, @RequestParam(required = false) final String deviceId)
-			throws RequestParameterException, WebserviceValidationException, MalformedURLException
+					throws RequestParameterException, WebserviceValidationException, MalformedURLException
 	{
 		final UserResultWsDto resultDto = new UserResultWsDto();
 		boolean result = false;
@@ -6439,7 +6444,7 @@ public class UsersController extends BaseCommerceController
 			@RequestParam final String addressLine3, @RequestParam final String country, @RequestParam final String city,
 			@RequestParam final String state, @RequestParam final String pincode, @RequestParam final String cartID,
 			@RequestParam final String cardSaved, @RequestParam final String sameAsShipping, @PathVariable final String userId)
-			throws EtailNonBusinessExceptions
+					throws EtailNonBusinessExceptions
 	{
 		final OrderCreateInJusPayWsDto orderCreateInJusPayWsDto = new OrderCreateInJusPayWsDto();
 		final UserModel user = userService.getCurrentUser();
@@ -6587,7 +6592,7 @@ public class UsersController extends BaseCommerceController
 	public CommonCouponsDTO getCoupons(@PathVariable final String emailId, @RequestParam final int currentPage,
 			/* @RequestParam final int pageSize, */@RequestParam final String usedCoupon,
 			@RequestParam(value = MarketplacewebservicesConstants.SORT, required = false) final String sortCode)
-			throws RequestParameterException, WebserviceValidationException, MalformedURLException
+					throws RequestParameterException, WebserviceValidationException, MalformedURLException
 	{
 		CommonCouponsDTO couponDto = new CommonCouponsDTO();
 		try

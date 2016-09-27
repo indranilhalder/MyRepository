@@ -68,8 +68,8 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 	<import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_manualRefund-spring.xml"/>
 	
 	<import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_userGroup-spring.xml"/>
-		
-
+			<!-- Added for offer Engine, TPR-589 -->	
+<import resource="classpath:/marketplacecore/integration/hot-folder-marketplace-offer-product-details.xml"/>
 
 
 
@@ -1647,6 +1647,10 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 	
 	<!-- TISPRD-4666 -->
 	<bean id="facetDisplayNameComparator" class="com.tisl.mpl.core.comparator.DisplayFacetNameComparator" />	
+	
+	 <!-- Added for TPR-1035-->
+   	<bean id="mplBinErrorJob" class="com.tisl.mpl.core.payment.cronjob.MplBinErrorJob"
+   		autowire="byName" />
 		
 	
 </beans>

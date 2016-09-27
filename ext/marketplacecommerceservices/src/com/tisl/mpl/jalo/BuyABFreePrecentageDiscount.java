@@ -129,7 +129,6 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 		final List<String> sellerIDData = new ArrayList<String>();
 		final Map<AbstractOrderEntry, String> eligibleProductMap = new HashMap<AbstractOrderEntry, String>();
 		boolean flagForDeliveryModeRestrEval = false;
-		boolean flagForPincodeRestriction = false;
 		final double maxDiscount = getMaxDiscountVal().doubleValue();
 		final List<Product> promotionProductList = new ArrayList<>(getProducts());
 		final List<Category> promotionCategoryList = new ArrayList<>(getCategories());
@@ -170,7 +169,8 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 				//for delivery mode restriction check
 				flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForAPromo(restrictionList,
 						validProductUssidMap);
-				flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList);
+				final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(
+						restrictionList);
 				if (flagForDeliveryModeRestrEval && flagForPincodeRestriction)
 				{
 					double percentageDiscount = getPercentageDiscount().doubleValue();

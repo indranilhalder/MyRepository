@@ -160,24 +160,29 @@ tr.d0 td {
 				<c:forEach var="channel"
 							items="${product.potentialPromotions[0].channels}">
 				<c:if test="${channel eq 'Web'||channel eq ''||channel==null}">	
-			<div class="pdp-promo-title">
+			<div class="pdp-promo-title pdp-title">
 				<b>OFFER:</b> ${product.potentialPromotions[0].title}
-				<a class="details">View more</a>
+				<!-- <a class="details">View more</a> --> <!-- commented for TPR-589  -->
 			</div>
 			</c:if> <!-- end if check for channel web -->
 			</c:forEach>
 			</c:when>
 			
 			<c:otherwise>
-			<div class="pdp-promo-title">
+			<div class="pdp-promo-title pdp-title">
 				<b>OFFER:</b> ${product.potentialPromotions[0].title}
-				<a class="details">View more</a>
+			<!-- 	<a class="details">View more</a> --><!-- commented for TPR-589  -->
 			</div>
 			</c:otherwise>
-			</c:choose>
-			
+			</c:choose>			
 			</c:if>
 			</div>
+			
+			<!--  Added for displaying offer messages other than promotion, TPR-589 -->
+				 <div>
+					<a class="pdp-promo-title-link">View more</a>
+				</div>	
+				
 			<!-- TISPRM-97 ends -->
 			<!-- TPR-275 starts  -->
 			<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('freebiePriceThreshold')" var="freebiePriceThreshVal"/>

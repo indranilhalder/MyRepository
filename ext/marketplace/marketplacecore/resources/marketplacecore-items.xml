@@ -753,7 +753,12 @@
 			<value code="false" />
 		</enumtype>
 
-
+		<!-- TPR-1035 ENUM added For BinDB   -->
+		<enumtype code="TypeOfError" autocreate="true"
+			generate="true" dynamic="true">
+			<value code="BINNOTFOUND" />
+			<value code="CARDMISMATCH" />
+		</enumtype>
 
 	</enumtypes>
 
@@ -1059,6 +1064,17 @@
 			<targetElement type="Product" cardinality="many"
 				qualifier="collectionProducts"></targetElement>
 		</relation>
+		
+		<!-- Added for offer Engine  TPR-589-->
+		<!-- Relationship between Offer && ProductOfferDetail-->
+		<relation code="OfferProductDetailRelation"
+			localized="false" autocreate="true">
+			<sourceElement qualifier="offer" type="OfferDetail" cardinality="one">
+			</sourceElement>
+			<targetElement qualifier="productsWithOffer" type="ProductOfferDetail" cardinality="many">
+			</targetElement>
+		</relation>
+		
 	</relations>
 	<itemtypes>
 	<!-- TPR-628 : Make changes to Banners rendering in MObile Viewports		 -->
@@ -5662,6 +5678,29 @@
 							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
 					</attribute>
+					<!-- TPR-774 -->		
+					<attribute qualifier="mrp" autocreate="true"		
+						type="java.lang.Double">		
+						<description>Product Mrp</description>		
+						<modifiers read="true" write="true" removable="true"		
+							optional="true" initial="true" unique="true" />		
+						<persistence type="property" />		
+					</attribute>		
+					<attribute qualifier="totalMrp" autocreate="true"		
+						type="java.lang.Double">		
+						<description>Total Mrp</description>		
+						<modifiers read="true" write="true" removable="true"		
+							optional="true" initial="true" unique="true" />		
+						<persistence type="property" />		
+					</attribute>		
+					<attribute qualifier="productPerDiscDisplay" autocreate="true"		
+						type="java.lang.Double">		
+						<description>Product Percentage Discount Display</description>		
+						<modifiers read="true" write="true" removable="true"		
+							optional="true" initial="true" unique="true" />		
+						<persistence type="property" />		
+					</attribute>
+					<!-- TPR-774 -->
 				</attributes>
 			</itemtype>
 
@@ -8415,6 +8454,128 @@
 			</itemtype>
 		</typegroup>
 		<!-- Search POC ends-->
+		
+		
+		<!-- Added for offer Engine, TPR-589 -->
+		
+		<typegroup name="OfferEngine">
+			<itemtype code="OfferDetail" autocreate="true" generate="true">
+				<deployment table="OfferDetail" typecode="16998" />
+				<attributes>
+					<attribute autocreate="true" qualifier="offerId" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers unique="true" optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="message" type="java.lang.String" generate="true">
+					<persistence type="property" />
+					</attribute>
+					<attribute autocreate="true" qualifier="messageDet" type="java.lang.String" generate="true">
+					<persistence type="property" />
+					</attribute>
+					<attribute autocreate="true" qualifier="column1" type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" unique="false" optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="column2" type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" unique="false" optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="column3" type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" unique="false" optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="column4" type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" unique="false" optional="true" />
+					</attribute>					
+				</attributes>
+				<indexes>
+					<index name="offerId_Index">
+						<key attribute="offerId" />
+					</index>
+				</indexes>
+			</itemtype>
+			<itemtype code="ProductOfferDetail" autocreate="true" generate="true">
+				<deployment table="ProductOfferDetail" typecode="16999" />
+				<attributes>
+					<attribute autocreate="true" qualifier="productId" type="java.lang.String" generate="true">
+					    <description>Product Id for promotion</description>
+						<persistence type="property" />
+						<modifiers unique="true" optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="sellerId" type="java.lang.String" generate="true">
+					    <description>Seller Id for promotion</description>
+						<persistence type="property" />
+						<modifiers unique="true" optional="false" />
+					</attribute>
+					<attribute qualifier='startDate' type="java.util.Date"  generate="true">
+						<description>Date on which the product promotion would start</description>
+						<modifiers read="true" write="true" optional="false"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier='endDate' type="java.util.Date"  generate="true">
+						<description>Date on which the product promotion would start</description>
+						<modifiers read="true" write="true" optional="false"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute autocreate="true" qualifier="column1" type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" unique="false" optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="column2" type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" unique="false" optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="column3" type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" unique="false" optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="column4" type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" unique="false" optional="true" />
+					</attribute>
+				</attributes>
+				<indexes>
+					<index name="productId_Index">
+						<key attribute="productId" />
+					</index>
+					<index name="sellerId_Index">
+						<key attribute="sellerId" />
+					</index>
+				</indexes>
+			</itemtype>
+			</typegroup>
+			
+			
+			<!-- TPR-1035 : Item Creation for Bin Error  -->
+		<typegroup name="BinErrorGroup">
+			<itemtype code="BinError" autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.core.jalo.BinError">
+				<deployment table="mplBinError" typecode="20001" />
+				<attributes>
+					<attribute autocreate="true" qualifier="customerId" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers unique="false" optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="Bin" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers unique="false" optional="false" />
+					</attribute>					
+					<attribute autocreate="true" qualifier="paymentMode"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers unique="false" optional="true" />
+					</attribute>
+					<attribute type="TypeOfError" qualifier="typeOfError">
+						<modifiers read="true" write="true" optional="false" />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+		</typegroup>
+	<!-- TPR-1035 : Item Creation for Bin Error ends  -->
 	</itemtypes>
-	
 </items>

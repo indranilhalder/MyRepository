@@ -2244,10 +2244,21 @@ function validateCardNo() {
 	}
 	// BIN Validation
 	var bin=value.slice(0,6);
-	
 	// calling BIN Check AJAX
+
+	// Added for TPR-1035 
+	var dataString= $("#paymentMode").val();
+	if( dataString == "Debit Card"){		
+		cardType = "DEBIT";			
+	}else if(dataString == "Credit Card")		
+	{
+		cardType = "CREDIT";
+	}
+	//calling BIN Check AJAX
+
 	$.ajax({
 		url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/binCheck/"+bin,
+		data: "cardType="+cardType,
 		type: "POST",
 		cache: false,
 		success : function(response) {	
@@ -3264,73 +3275,7 @@ function checkPincodeServiceability(buttonType)
  		success : function(responseData) {
  			var response = responseData['pincodeData'];
  			//TPR-970 changes
- 			if(null!=responseData['cartData']||""!=responseData['cartData']){
- 			var cartValue=responseData['cartData'];
- 			var cartData=responseData['cartEntries'];
- 			for(var cart in cartData){
- 				var entryNumber=parseInt(cartData[cart]['entryNumber']);
- 				$("#off-cartLevelDiscAmt_"+entryNumber).html("");
- 				$("#off-bag-cartLevelDisc_"+entryNumber).html("");
- 				$("#off-bag-ItemLevelDisc_"+entryNumber).html("");
- 				$("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(""); 
- 				$("#itemCentOfferDisplay_"+entryNumber).hide();
- 				$("#itemAmtOfferDisplay_"+entryNumber).hide();
- 				$("#cartCentOfferDisplay_"+entryNumber).hide();
- 				$("#cartAmtOfferDisplay_"+entryNumber).hide();
- 				$("#itemCartCentDisplay_"+entryNumber).hide();
- 				$("#itemCartAmtDisplay_"+entryNumber).hide();
- 				var isOfferPresent=false;
- 				var basePrice=$("#basePrice_"+entryNumber).val();
- 				if(basePrice!=""){
- 					$("#totalPrice_"+entryNumber).html(basePrice).addClass("delAction");
- 				}
- 				else{
- 					$("#totalPrice_"+entryNumber).html(cartData[cart]['totalPrice'].formattedValue).addClass("delAction");
- 				}
- 				
- 				if(cartData[cart]['productLevelDisc']!=null){
- 					isOfferPresent=true;
- 					$("#ItemAmtofferDisplay_"+entryNumber).show();
- 					console.log("productLevl"+cartData[cart]['productLevelDisc'].formattedValue);
- 					$("#off-bag-ItemLevelDisc_"+entryNumber).html(cartData[cart]['productLevelDisc'].formattedValue).append("<span>Off Item</span>");
- 				    $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
- 				}
- 				if(cartData[cart]['prodLevelPercentage']!=null){
- 					isOfferPresent=true;
- 					$("#ItemAmtofferDisplay_"+entryNumber).show();
- 					console.log("productLevl"+cartData[cart]['prodLevelPercentage']);
- 					$("#off-bag-ItemLevelDisc_"+entryNumber).html(cartData[cart]['prodLevelPercentage']+"%").append("<span>Off Item</span>");
- 				    $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
- 				}
- 				if(cartData[cart]['cartLevelDisc']!=null){
- 					isOfferPresent=true;
- 					$("#CartofferDisplay_"+entryNumber).show();
- 					$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("<span>Off Bag</span>");
- 				    $("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
- 				}
- 				
- 				if(cartData[cart]['cartLevelPercentage']!=null){
- 					isOfferPresent=true;
- 					$("#CartofferDisplay_"+entryNumber).show();
- 					$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelPercentage']+"%").addClass("priceFormat").append("<span>Off Bag</span>");
- 				    $("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
- 				}
- 				if(isOfferPresent==false){
- 					$("#totalPrice_"+entryNumber).removeClass("delAction");
- 				}
- 			}
- 			if(cartValue!=null){
- 			$("#subtotal_Value").show();
- 			$("#subtotal").hide();
- 			$("#subtotalValue").html(cartValue['subTotal'].formattedValue);
- 			$("#discount").hide();
- 			$("#discount_Value").show();
- 			$("#discountValue").html(cartValue['totalDiscounts'].formattedValue);
- 			$("#total").hide();
- 			$("#total_Value").show();
- 			$("#totalValue").html(cartValue['totalPrice'].formattedValue);
- 			}
- 			}
+ 			populateCartDetailsafterPincodeCheck(responseData);
  			//TPR-970 changes
  			if(response=="N")
  				{
@@ -3381,6 +3326,99 @@ function checkPincodeServiceability(buttonType)
 
    }
 }
+//TPR-970 changes starts
+function populateCartDetailsafterPincodeCheck(responseData){
+	if(null!=responseData['cartData']||""!=responseData['cartData']){
+		var cartValue=responseData['cartData'];
+		var cartData=responseData['cartEntries'];
+		for(var cart in cartData){
+			var entryNumber=parseInt(cartData[cart]['entryNumber']);
+			$("#off-cartLevelDiscAmt_"+entryNumber).html("");
+			$("#off-bag-cartLevelDisc_"+entryNumber).html("");
+			$("#off-bag-ItemLevelDisc_"+entryNumber).html("");
+			$("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(""); 
+			$("#off-bag-itemDisc_"+entryNumber).html("");
+			$("#off-itemDiscAmt_"+entryNumber).html("");
+			$("#cartCentOfferDisplay_"+entryNumber).hide();
+			$("#cartAmtOfferDisplay_"+entryNumber).hide();
+			$("#itemCartCentDisplay_"+entryNumber).hide();
+			$("#itemCartAmtDisplay_"+entryNumber).hide();
+			var isOfferPresent=false;
+			var basePrice=$("#basePrice_"+entryNumber).val();
+			if(basePrice!=""){
+				$("#totalPrice_"+entryNumber).html(basePrice).addClass("delAction");
+			}
+			else{
+				$("#totalPrice_"+entryNumber).html(cartData[cart]['totalPrice'].formattedValue).addClass("delAction");
+			}
+			if(cartData[cart]['cartLevelDisc']!=null){
+				isOfferPresent=true;
+				$("#CartofferDisplay_"+entryNumber).show();
+				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("<span>Off Bag</span>");
+			    $("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
+			}
+			
+			if(cartData[cart]['cartLevelPercentage']!=null){
+				isOfferPresent=true;
+				$("#CartofferDisplay_"+entryNumber).show();
+				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelPercentage']+"%").addClass("priceFormat").append("<span>Off Bag</span>");
+			    $("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
+			}
+			if(cartData[cart]['cartLevelDisc']!=null&&cartData[cart]['productPerDiscDisplay']!=null && cartData[cart]['productLevelDisc']){
+				isOfferPresent=true;
+				$("#ItemAmtofferDisplay_"+entryNumber).show();
+				$("#off-bag-itemDisc_"+entryNumber).html(cartData[cart]['productPerDiscDisplay'].value+"%").addClass("priceFormat").append("<span>Off Item</span>");
+				 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
+			}
+			else{
+				isOfferPresent=true;
+				$("#ItemAmtofferDisplay_"+entryNumber).show();
+				$("#off-bag-ItemLevelDisc_"+entryNumber).html(cartData[cart]['productPerDiscDisplay'].value+"%").addClass("priceFormat").append("<span>Off Item</span>");
+				 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartValue['totalPrice'].formattedValue).addClass("priceFormat");
+			}
+			if(cartData[cart]['productPerDiscDisplay']!=null && cartData[cart]['productLevelDisc']){
+				isOfferPresent=true;
+				$("#ItemAmtofferDisplay_"+entryNumber).show();
+				$("#off-bag-itemDisc_"+entryNumber).html(cartData[cart]['productPerDiscDisplay'].value+"%").addClass("priceFormat").append("<span>Off Item</span>");
+				 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
+			}
+			else{
+				isOfferPresent=true;
+				$("#ItemAmtofferDisplay_"+entryNumber).show();
+				$("#off-bag-ItemLevelDisc_"+entryNumber).html(cartData[cart]['productPerDiscDisplay'].value+"%").addClass("priceFormat").append("<span>Off Item</span>");
+				 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['totalPrice'].formattedValue).addClass("priceFormat");
+			}
+			
+			if(isOfferPresent==false){
+				$("#totalPrice_"+entryNumber).removeClass("delAction");
+			}
+		}
+		if(cartValue!=null){
+		$("#subtotal_Value").show();
+		$("#subtotal").hide();
+		$("#subtotalValue").html(cartValue['subTotal'].formattedValue).addClass("priceFormat");
+		$("#discount").show();
+		$("discount .amt").html("");
+		if(null!=cartValue['totalDiscounts']&&cartValue['totalDiscounts'].value>0){
+		$("#discount").show();
+		$("#discount .amt").html(cartValue['totalDiscounts'].formattedValue);
+		}
+		else{
+			$("#discount").hide();
+		}
+		$("#total .amt").html("");
+		if(null!=cartValue['totalPriceWithTax']){
+		$("#total .amt").html(cartValue['totalPriceWithTax'].formattedValue);
+		}
+		else{
+			$("#total .amt").html(cartValue['totalPrice'].formattedValue);
+		}
+		}
+		}
+	
+}
+
+//TPR-970 changes ends
 
 function reloadpage(selectedPincode,buttonType) {
 	if ($('#giftYourselfProducts').html().trim().length > 0 && selectedPincode!=null && selectedPincode != undefined && selectedPincode!="") 

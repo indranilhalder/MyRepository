@@ -20,7 +20,9 @@ public interface BinService
 	 * @return BinModel
 	 * @throws EtailNonBusinessExceptions
 	 */
-	public BinModel checkBin(final String bin) throws EtailNonBusinessExceptions;
+	//Added For TPR-1035
+	public BinModel checkBin(final String bin, final String cardType, final String mplCustomerID, final boolean isErrorCreation)
+			throws EtailNonBusinessExceptions;
 
 	/**
 	 * Generate CSV with Bank Details present in Bin but not in Bank

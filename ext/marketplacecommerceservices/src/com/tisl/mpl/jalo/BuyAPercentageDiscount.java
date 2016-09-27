@@ -230,7 +230,6 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 				boolean flagForDeliveryModeRestrEval = false;
 				boolean flagForPaymentModeRestrEval = false;
 				boolean isPercentageDisc = false;
-				boolean flagForPincodeRestriction = false;
 				final double maxDiscount = getMaxDiscountVal() == null ? 0.0D : getMaxDiscountVal().doubleValue(); //Adding the Promotion set Max  Discount Value to a variable
 				final Double discountPrice = getPriceForOrder(paramSessionContext, getDiscountPrices(paramSessionContext), order,
 						MarketplacecommerceservicesConstants.DISCOUNT_PRICES) != null ? (Double) getPriceForOrder(paramSessionContext,
@@ -289,7 +288,8 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 					//for payment mode restriction check
 					flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList,
 							paramSessionContext);
-					flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList);
+					final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(
+							restrictionList);
 					if (flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval && flagForPincodeRestriction) // If Total no of valid Products exceeds Qualifying Count
 					{
 						int totalValidProdCount = 0;

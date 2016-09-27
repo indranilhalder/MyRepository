@@ -2903,7 +2903,8 @@ public class CartsController extends BaseCommerceController
 				BinModel bin = null;
 				if (StringUtils.isNotEmpty(binNo))
 				{
-					bin = getBinService().checkBin(binNo);
+					//Added For TPR-1035
+					bin = getBinService().checkBin(binNo, paymentMode, null, false);
 				}
 				if (null != bin && StringUtils.isNotEmpty(bin.getBankName()))
 				{

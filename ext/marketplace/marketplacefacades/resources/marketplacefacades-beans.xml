@@ -187,6 +187,8 @@
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<!-- Added for TISPRM-56 -->
 		<property name="allVariantsId" type="java.util.List&lt;java.lang.String>"/>
+		<!-- CHANGES FOR TPR-249 -->
+		<property name="displaySizes" type="java.util.List&lt;java.lang.String>"></property>
 	</bean>
 
 	<!-- pdp changes begins -->
@@ -901,5 +903,13 @@
 		<property name="brandData" type="java.util.List&lt;com.tisl.mpl.facades.data.EnhancedSearchBrandData>"></property>
 		<property name="sellerData" type="java.util.List&lt;com.tisl.mpl.facades.data.EnhancedSearchSellerData>"></property>
 	</bean>
+	
+	<!-- TPR-774 -->
+	<bean class="de.hybris.platform.commercefacades.order.data.OrderEntryData">		
+		<property name="mrp" type="de.hybris.platform.commercefacades.product.data.PriceData"/>		
+		<property name="totalMrp" type="de.hybris.platform.commercefacades.product.data.PriceData"/>		
+		<property name="productPerDiscDisplay" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+	</bean>
+	<!-- TPR-774 -->
 	
 </beans>

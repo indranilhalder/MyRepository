@@ -23,6 +23,7 @@ import com.tisl.mpl.cockpits.cscockpit.services.MarketplaceCsCheckoutService;
 import com.tisl.mpl.cockpits.cscockpit.strategies.MplFindDeliveryFulfillModeStrategy;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceBasketController;
 import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceabilityCheckHelper;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.data.VoucherDiscountData;
@@ -31,6 +32,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
+import com.tisl.mpl.model.UnregisteredUserRestrictionModel;
 import com.tisl.mpl.mplcommerceservices.service.data.CartSoftReservationData;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.InventoryReservationService;
@@ -73,6 +75,7 @@ import de.hybris.platform.util.WeakArrayList;
 import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.VoucherService;
 import de.hybris.platform.voucher.model.DateRestrictionModel;
+import de.hybris.platform.voucher.model.NewCustomerRestrictionModel;
 import de.hybris.platform.voucher.model.RestrictionModel;
 import de.hybris.platform.voucher.model.UserRestrictionModel;
 import de.hybris.platform.voucher.model.VoucherModel;
@@ -850,6 +853,12 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 			{
 				return "user_not_valid";
 			}
+			/* TPR-1075 Changes Start */
+			else if( error.equalsIgnoreCase("NewCustomer"))
+			{
+				return "newCustomer_not_valid";
+			}
+			/* TPR-1075 Changes end */
 			else
 			{
 				return "voucher_inapplicable";
@@ -1019,12 +1028,21 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 				error = "Date";
 				break;
 			}
-			else if (restriction instanceof UserRestrictionModel)
+			//TPR-1076
+			else if (restriction instanceof UserRestrictionModel || restriction instanceof UnregisteredUserRestrictionModel)
 			{
 				LOG.error("user restriction is violated");
 				error = "User";
 				break;
 			}
+			/* TPR-1075 Changes Start */
+			else if (restriction instanceof NewCustomerRestrictionModel)
+			{
+				LOG.error("Voucher for New Customer is violated");
+				error = "NewCustomer";
+				break;
+			}
+			/* TPR-1075 Changes End */
 		}
 		return error;
 	}
