@@ -271,7 +271,7 @@ INSERT_UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];
 
 ### Content Slot
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
-;;Section6-luxurybrandlandingpage;true;Shop The Look Slot;shopTheLookHeaderComponent,STLHeroImageComponent,STLProductCarouselHeaderComponent,STLProductCarouselComponent
+;;Section6-luxurybrandlandingpage;true;Shop The Look Slot;STLHeroImageComponent,STLProductCarouselComponent
 
 ## Content Slot for page
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxurybrandlandingpage'];contentSlot(uid,$contentCV)[unique=true];;;
