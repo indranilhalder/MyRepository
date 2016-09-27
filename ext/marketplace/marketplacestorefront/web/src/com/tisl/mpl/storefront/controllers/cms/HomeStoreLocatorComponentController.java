@@ -3,7 +3,6 @@
  */
 package com.tisl.mpl.storefront.controllers.cms;
 
-import de.hybris.platform.acceleratorcms.model.components.HomeStoreLocatorComponentModel;
 import de.hybris.platform.commercefacades.storefinder.StoreFinderFacade;
 import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
@@ -58,7 +57,7 @@ public class HomeStoreLocatorComponentController extends AbstractCMSComponentCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.storefront.controllers.cms.AbstractCMSComponentController#fillModel(javax.servlet.http.
 	 * HttpServletRequest, org.springframework.ui.Model,
 	 * de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel)
