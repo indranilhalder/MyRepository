@@ -53333,3 +53333,6 @@ div.radio.creditDebitLabelRadio{
 .addNew_wrapper.three_address .add-address,.addNew_wrapper.three_address .addnewAddresPage .formaddress,.addNew_wrapper.four_address .add-address,.addNew_wrapper.four_address .addnewAddresPage .formaddress{
 	margin-left: auto;
 }
+.acc_head.newAddressCenter{
+	text-align: center;
+}
