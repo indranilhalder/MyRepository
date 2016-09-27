@@ -112,6 +112,7 @@ INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=d
 # changes for help and service page
 ;;callus-getintouch.png;$siteResource/images/banners/homepage/callus-getintouch.png;callus-getintouch.png;"Call us";
 ;;chatwidus-getintouch.png;$siteResource/images/banners/homepage/chatwidus-getintouch.png;chatwidus-getintouch.png;"Chat With Us";
+;;CatBanner.png;$siteResource/images/banners/category_banners/CatBanner.png;CatBanner.png;"Category Banner";
 
 
 #Component Attached with the Authentic And Exclusive Page

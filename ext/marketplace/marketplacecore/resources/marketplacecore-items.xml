@@ -3322,7 +3322,15 @@
 					</attribute>
 				</attributes>
 			</itemtype>
+			<!-- PRoduct Carousel Component TPR-1316-->
 
+			<itemtype code="MplProductCollectionComponent" autocreate="true"
+				generate="true" extends="ProductCarouselComponent"
+				jaloclass="com.tisl.mpl.core.jalo.MplProductCollectionComponent">
+				<description>This component is made to show the Products in a carousel</description>
+				
+			</itemtype>
+			
 			<!-- Now Trending Carousel Component -->
 			<itemtype code="MplNowTrendingProductCarouselComponent"
 				autocreate="true" generate="true" extends="ProductCarouselComponent"
@@ -5991,6 +5999,11 @@
 			<itemtype code="MicrositeSelectBrandCollectionComponent"
 				generate="true" autocreate="true" extends="BrandCollectionComponent"
 				jaloclass="com.tisl.mpl.core.jalo.MicrositeSelectBrandCollectionComponent">
+			</itemtype>
+			<itemtype code="MplBrandSearchBoxComponent"
+				autocreate="true" generate="true" extends="MplEnhancedSearchBoxComponent"
+				jaloclass="com.tisl.mpl.core.jalo.MplBrandSearchBoxComponent">
+				<description>Represents Microsite Enhanced Search Box component that displays a list of categories, brands and seller as a dropdown.</description>
 			</itemtype>
 		</typegroup>
 		<!-- For Microsite -->
