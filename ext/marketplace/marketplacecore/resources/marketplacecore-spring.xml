@@ -69,7 +69,9 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 	
 	<import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_userGroup-spring.xml"/>
 		
-
+<!-- TPR-1316 -->	
+	<import
+		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_cms-spring.xml" />
 
 
 

@@ -1714,12 +1714,18 @@
     	<property name="bannerslist" type="java.util.List&lt;com.tisl.mpl.wsdto.BannerComponentWsDTO>"/>
     	<property name="componentType" type="String" />
     </bean> 
+    
+    <bean class="com.tisl.mpl.wsdto.ProductComponentWsDTO">
+    	<property name="productList" type="java.util.List&lt;com.tisl.mpl.wsdto.ProductListComponentWsDTO>"/>
+       	<property name="componentType" type="String" />
+    </bean> 
    
     <bean class="com.tisl.mpl.wsdto.MplPageWsDTO">
     	<property name="sectionId" type="String" />
     	<property name="textComponents" type="java.util.List&lt;com.tisl.mpl.wsdto.TextComponentWsDTO>"/>
     	<property name="bannerComponents" type="java.util.List&lt;com.tisl.mpl.wsdto.BannerComponentWsDTO>"/>
     	<property name="productComponents" type="java.util.List&lt;com.tisl.mpl.wsdto.ProductListComponentWsDTO>"/>
+    	<property name="productSliderComponents" type="java.util.List&lt;com.tisl.mpl.wsdto.ProductComponentWsDTO>"/>
 		<property name="bannerslistComponents" type="java.util.List&lt;com.tisl.mpl.wsdto.ImageListComponentWsDTO>"/>
     	<property name="sectionName" type="String" />
     </bean>
