@@ -2519,9 +2519,24 @@
     	<!-- For VideoComponent -->
     	<property name="videocomponent" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxVideocomponentWsDTO>"/>
     	<!-- For Why Out Products, MplShowcaseComponent -->
-    	<property name="why_our_product_component" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxShowcasecomponentWsDTO>"/>
+
     	<!-- Shop The Look -->     	    	
     	<property name="shop_the_look_component" type="com.tisl.mpl.wsdto.LuxShopTheLookWsDTO"/>
+    	<property name="why_our_product_component" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxShowcasecomponentWsDTO>"/>    
+    	<property name="our_journey_component" type="com.tisl.mpl.wsdto.LuxOurJourneyComponentWsDTO"/> 	    	
     </bean>    
+    
+    <bean class="com.tisl.mpl.wsdto.LuxOurJourneyComponentWsDTO">
+    	<property name="sectionHeading" type="String" />
+    	<property name="timelineBeginText" type="String" />
+    	<property name="timelines" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxJourneyTimeLineListWsDTO>" />
+    </bean>
+	
+	<bean class="com.tisl.mpl.wsdto.LuxJourneyTimeLineListWsDTO">
+    	<property name="year" type="String" />
+    	<property name="image" type="String" />
+		<property name="img_alt" type="String" />
+		<property name="text" type="String" />	
+    </bean>
     
 </beans>

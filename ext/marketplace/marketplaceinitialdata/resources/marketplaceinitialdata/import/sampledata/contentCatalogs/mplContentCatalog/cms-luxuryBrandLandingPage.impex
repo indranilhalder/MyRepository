@@ -66,6 +66,8 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Section5;;VideoComponent;
 ;Section6;;MplBigPromoBannerComponent,ProductCarouselComponent;
 ;Section7;;MplShowcaseComponent;
+;Section8;;SimpleBannerComponent;
+;Section9;;OurJourneyComponent;
 
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide
@@ -322,3 +324,29 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 ;;Section7Slot-luxuryBLP;Section7;;Section7-whyourproducts;;;
 
 ############################### SECTION 7 End ####################################
+
+############################### SECTION 9 Start ####################################
+ 
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink
+;;seeOurJourneyComponent1;See Our Journey Component;seeOurJourneyComponent1;"/"
+;;seeOurJourneyComponent2;See Our Journey Component;seeOurJourneyComponent2;"/"
+;;seeOurJourneyComponent3;See Our Journey Component;seeOurJourneyComponent3;"/"
+
+
+UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang];description;title
+;;seeOurJourneyComponent1;sitelogo.png;This is our journey in 1967;1967
+;;seeOurJourneyComponent2;sitelogo.png;This is our journey in 1968;1968
+;;seeOurJourneyComponent3;sitelogo.png;This is our journey in 1969;1969
+
+####New Homepage change
+INSERT_UPDATE OurJourneyComponent;$contentCV[unique=true];uid[unique=true];name;footerImageList(&componentRef);&componentRef;headerText;title
+;;luxurySeeOurJourneyComponent;Luxury See Our Journey Component;seeOurJourneyComponent1,seeOurJourneyComponent2,seeOurJourneyComponent3;luxurySeeOurJourneyComponent;<h2>See Our Journey</h2>;then
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
+;;Section9-ourJourney; our Jouney slot;true;luxurySeeOurJourneyComponent
+
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxurybrandlandingpage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section9-luxurybrandlandingpage;Section9;;Section9-ourJourney;;; 
+############################### SECTION 9 End ####################################

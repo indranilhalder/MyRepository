@@ -54,6 +54,7 @@ import com.tisl.mpl.core.model.MplImageCategoryComponentModel;
 import com.tisl.mpl.core.model.MplShopByLookModel;
 import com.tisl.mpl.core.model.MplShowcaseComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseItemComponentModel;
+import com.tisl.mpl.core.model.OurJourneyComponentModel;
 import com.tisl.mpl.core.model.SignColComponentModel;
 import com.tisl.mpl.core.model.SignColItemComponentModel;
 import com.tisl.mpl.core.model.VideoComponentModel;
@@ -100,6 +101,8 @@ import com.tisl.mpl.wsdto.LuxComponentsListWsDTO;
 import com.tisl.mpl.wsdto.LuxEngagementcomponentWsDTO;
 import com.tisl.mpl.wsdto.LuxHeroBannerWsDTO;
 import com.tisl.mpl.wsdto.LuxHomePageCompWsDTO;
+import com.tisl.mpl.wsdto.LuxJourneyTimeLineListWsDTO;
+import com.tisl.mpl.wsdto.LuxOurJourneyComponentWsDTO;
 import com.tisl.mpl.wsdto.LuxShopByListWsDTO;
 import com.tisl.mpl.wsdto.LuxShopTheLookWsDTO;
 import com.tisl.mpl.wsdto.LuxShopYourFavListWsDTO;
@@ -1879,6 +1882,13 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					final MplShowcaseComponentModel luxurywhyourproductsComponent = (MplShowcaseComponentModel) abstractCMSComponentModel;
 					blpComponent = getwhyourproductsWsDTO(luxurywhyourproductsComponent);
 				}
+
+				if (typecode.equalsIgnoreCase("OurJourneyComponent"))
+				{
+					final OurJourneyComponentModel seeOurJourneyComponent = (OurJourneyComponentModel) abstractCMSComponentModel;
+					blpComponent = getSeeOurJourneyWsDTO(seeOurJourneyComponent);
+				}
+
 				LOG.debug("Adding component" + abstractCMSComponentModel.getUid() + "for section" + contentSlot.getUid());
 
 				blpComponent.setSectionid(contentSlot.getUid());
@@ -1990,6 +2000,60 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 		}
 		luxComponent.setShop_the_look_component(luxStlComponentObj);
 		return luxComponent;
+	}
+
+	/** @param seeOurJourneyComponent
+	 * @return
+	 */
+	private LuxBlpCompListWsDTO getSeeOurJourneyWsDTO(final OurJourneyComponentModel seeOurJourneyComponent)
+	{
+
+		final ArrayList<LuxJourneyTimeLineListWsDTO> ourJourneyComponentDtoList = new ArrayList<LuxJourneyTimeLineListWsDTO>();
+		final LuxOurJourneyComponentWsDTO ourJourneyDto = new LuxOurJourneyComponentWsDTO();
+		final LuxBlpCompListWsDTO luxBlpComponent = new LuxBlpCompListWsDTO();
+		if (null != seeOurJourneyComponent)
+		{
+			if (null != seeOurJourneyComponent.getTitle())
+
+			{
+				ourJourneyDto.setTimelineBeginText(seeOurJourneyComponent.getTitle());
+			}
+
+			if (null != seeOurJourneyComponent.getHeaderText())
+			{
+				ourJourneyDto.setSectionHeading(seeOurJourneyComponent.getHeaderText());
+			}
+			for (final SimpleBannerComponentModel banner : seeOurJourneyComponent.getFooterImageList())
+			{
+				final LuxJourneyTimeLineListWsDTO seeOurJourneyDto = new LuxJourneyTimeLineListWsDTO();
+				if (null != banner.getMedia() && null != banner.getMedia().getUrl2())
+				{
+					seeOurJourneyDto.setImage(banner.getMedia().getUrl2());
+				}
+
+				if (null != banner.getMedia() && null != banner.getMedia().getAltText())
+				{
+					seeOurJourneyDto.setImage(banner.getMedia().getAltText());
+				}
+
+				if (null != banner.getTitle())
+				{
+					seeOurJourneyDto.setYear(banner.getTitle());
+				}
+
+				if (null != banner.getDescription())
+				{
+					seeOurJourneyDto.setYear(banner.getDescription());
+				}
+				ourJourneyComponentDtoList.add(seeOurJourneyDto);
+			}
+
+			ourJourneyDto.setTimelines(ourJourneyComponentDtoList);
+
+			luxBlpComponent.setOur_journey_component(ourJourneyDto);
+		}
+		return luxBlpComponent;
+
 	}
 
 	/**
