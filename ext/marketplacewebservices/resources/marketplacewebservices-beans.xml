@@ -2416,7 +2416,8 @@
     	<property name="productPrice" type="String"/>
     	<property name="productMOP" type="String"/>
     	<property name="productSpecialPrice" type="String"/>
-    	<property name="productBrand" type="String"/>		
+    	<property name="productBrand" type="String"/>
+    			
     </bean>
     <bean class="com.tisl.mpl.wsdto.LuxShopYourFavListWsDTO">
     	<property name="categoryId" type="String"/>
@@ -2490,6 +2491,16 @@
     	<property name="text" type="String"/>    	   	
     </bean>
     
+    <bean class="com.tisl.mpl.wsdto.LuxShopTheLookWsDTO">
+    	<property name="image" type="String"/>
+    	<property name="img_alt" type="String"/>
+    	<property name="destination" type="String"/> 
+    	<property name="cta" type="String"/>
+    	<property name="header" type="String"/>
+    	<property name="section_text" type="String"/>
+    	<property name="productlisting" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxBrandProductsListWsDTO>"/>    	   	
+    </bean>
+    
     <bean class="com.tisl.mpl.wsdto.LuxBlpCompListWsDTO">
     	<property name="title" type="String" />
     	<property name="sectionid" type="String" />
@@ -2508,7 +2519,9 @@
     	<!-- For VideoComponent -->
     	<property name="videocomponent" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxVideocomponentWsDTO>"/>
     	<!-- For Why Out Products, MplShowcaseComponent -->
-    	<property name="why_our_product_component" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxShowcasecomponentWsDTO>"/>     	    	
+    	<property name="why_our_product_component" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxShowcasecomponentWsDTO>"/>
+    	<!-- Shop The Look -->     	    	
+    	<property name="shop_the_look_component" type="com.tisl.mpl.wsdto.LuxShopTheLookWsDTO"/>
     </bean>    
     
 </beans>
