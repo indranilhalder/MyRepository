@@ -4978,185 +4978,194 @@ $(document).ready(function(){
 
 
 
+//TPR-1786
 
-function checkPincodeServiceability(buttonType)
+function checkPincodeServiceability(buttonType,el)
 {
-
+// alert($(el).attr("id")+" :::button id")
 	$("#pinCodeDispalyDiv").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right:0;bottom:0; left:0; top:0; margin:auto; height: 30px;">');
-
-	//$("#pinCodeDispalyDiv .spinner").css("left",(($("#pinCodeDispalyDiv").width()+$("#pinCodeDispalyDiv").width())/2)+10);
+	// $("#pinCodeDispalyDiv
+	// .spinner").css("left",(($("#pinCodeDispalyDiv").width()+$("#pinCodeDispalyDiv").width())/2)+10);
 	$("body").append("<div id='no-click' style='opacity:0.6; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-
-	
 	var selectedPincode=$('#defaultPinCodeIds').val();
 	var regPostcode = /^([1-9])([0-9]){5}$/;
-
+	$(".deliveryUlClass").remove();//TPR-1341
 	
-	if(selectedPincode === ""){
-		
+	if(selectedPincode === ""){	
 		$( "#error-Id").hide();
 		$("#emptyId").css({
 			"color":"#ff1c47",
 			"display":"block",
 			});
-		
-
-
-		//setTimeout(function(){
-
-
-
-
-
-
+		 $("#cartPinCodeAvailable").hide();// TPR-1055
+		 $("#pinCodeButtonIds").text("Change Pincode");
+		// setTimeout(function(){
+		 $("#unserviceablepincode").hide();// tpr-1341
+		 $(".cartItemBlankPincode").show();
+		$("#pinCodeButtonIds").text("Check Availability");
+		 $("#AvailableMessage").hide();
+		 $(".pincodeServiceError").hide();
+		 $(".delivery ul.success_msg").hide();
 		$("#pinCodeDispalyDiv .spinner").remove();
 		$("#no-click").remove();
-		//},500);
+		// },500);
 
 		return false;
 	}
 	else if(regPostcode.test(selectedPincode) != true){
-
+		
     	$("#defaultPinCodeIds").css("color","red");
         $("#error-Id").show();
-
-
-
-
-
-
-
-
+        $("#cartPinCodeAvailable").hide();// TPR-1055
+        $("#unserviceablepincode").hide();
+        $("#AvailableMessage").hide();
+        //TPR-1341
+        $(".pincodeServiceError").hide();
+        $(".delivery ul.success_msg").hide();
+        $("#pinCodeButtonIds").text("Change Pincode");
+        $(".cartItemBlankPincode").show();
 		$("#emptyId").hide();
 		$("#error-Id").css({
 			"color":"red",
 			"display":"block",
 
 			});
-		//setTimeout(function(){
+		// setTimeout(function(){
 		$("#pinCodeDispalyDiv .spinner").remove();
 		$("#no-click").remove();
-		//},500);
-		
-        return false;  
-
+		// },500);
+        return false; 
+        
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	// TPR-1055 starts
+	else if($("#pinCodeButtonIds").text() == 'Change Pincode'&& $(el).attr("id") =="pinCodeButtonIds"){
+		
+		
+		$("#unserviceablepincode").hide();
+		$("#cartPinCodeAvailable").show();
+		 $(".pincodeServiceError").hide();
+		 $("#AvailableMessage").hide();
+		 $(".cartItemBlankPincode").show();
+		$("#pinCodeButtonIds").text("Check Availability");
+		 $('#defaultPinCodeIds').focus();
+		$("#pinCodeDispalyDiv .spinner").remove();
+		$("#emptyId").hide();
+		$("#error-Id").hide();
+		$("#no-click").remove();
+		$(".delivery ul.success_msg").hide();//TPR-1341
+		return false; 
+		// TPR-1055 ends
+	}
 	else
     {
-
-
+		// $("#defaultPinCodeIds").prop('disabled', true);
+		$("#pinCodeButtonIds").text("Check Pincode");
 		$("#defaultPinCodeIds").css("color","black");
 		$( "#error-Id").hide();
-
+		// $("#cartPinCodeAvailable").show();//TPR-1055
 		$("#emptyId").hide();
 	$.ajax({
  		url: ACC.config.encodedContextPath + "/cart/checkPincodeServiceability/"+selectedPincode,
  		type: "GET",
  		cache: false,
  		success : function(response) {
- 			if(response=="N")
-
-
-
+ 			
+ 			var responeStr=response.split("|");
+ 			if(responeStr[0]=="N")
  				{
-
- 				//TISTI-255
- 				//	alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
-
- 				//	TISPRD-1666 - console replaced with alert and resp print
-
-
-
-
-
-
- 				console.log('Response coming as N in checkPincodeServiceability');
-
+ 				
+ 				// TISTI-255
+ 				// alert("Some issues are there with Checkout at this time.
+				// Please try later or contact our helpdesk");
+ 				// TISPRD-1666 - console replaced with alert and resp print
+ 				$("#AvailableMessage").hide();
+ 				$("#cartPinCodeAvailable").hide();
+ 				$("#unserviceablepincode").show();
+ 				 $(".pincodeServiceError").show();
+ 				populatePincodeDeliveryMode(response,buttonType);
+					reloadpage(selectedPincode,buttonType);
+ 				// console.log('Response coming as N in
+				// checkPincodeServiceability');
  	 			$("#isPincodeServicableId").val('N');
- 	 			reloadpage(selectedPincode,buttonType);
- 				}
-
+ 	 			// reloadpage(selectedPincode,buttonType);
+ 				} 
  			else
  				{
-
-
-
-
-
+ 				$(".pincodeServiceError").hide();
+ 				$("#unserviceablepincode").hide();
+ 				$("#cartPinCodeAvailable").hide();
+ 				$("#AvailableMessage").html("Available delivery options for the pincode " +selectedPincode+ " are");
+	 			$("#AvailableMessage").show();
  					populatePincodeDeliveryMode(response,buttonType);
  					reloadpage(selectedPincode,buttonType);
  				}
- 			//TISPRM-33
-
+ 			// TISPRM-33
+ 				
 	 			$("#defaultPinDiv").show();
-
- 	 			$("#changePinDiv").hide();
+	 			
+ 	 			// $("#changePinDiv").hide();
  	 			$('#defaultPinCodeIdsq').val(selectedPincode);
- 	 			//setTimeout(function(){
+ 	 			// setTimeout(function(){
  	 				$("#pinCodeDispalyDiv .spinner").remove();
  	 				$("#no-click").remove();
- 	 			//},500);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 	 			// },500);
+ 	 				// TPR-1055
+ 	 				$('#defaultPinCodeIds').blur();
+ 	 				if ( $('#defaultPinCodeIds').val() == "") {
+ 	 				
+ 	 				// $("#cartPinCodeAvailable").html("Enter your pincode to
+					// see your available delivery options");
+ 	 					$("#cartPinCodeAvailable").show();
+ 	 					$("#pinCodeButtonIds").text("Check Availability")
+ 	 					
+ 	 				} else {
+ 	 					$("#cartPinCodeAvailable").hide();
+ 	 					// $("#unserviceablepincode").hide();
+ 	 					$("#pinCodeButtonIds").text("Change Pincode")
+ 	 				}
  		},
  		error : function(resp) {
- 			//TISTI-255
- 			//alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
-
+ 			// TISTI-255
+ 			// alert("Some issues are there with Checkout at this time. Please
+			// try later or contact our helpdesk");
  			console.log(resp);
  			$("#isPincodeServicableId").val('N');
  			reloadpage(selectedPincode,buttonType);
  			
-// 			TISPRD-1666 - console replaced with alert and resp print
+// TISPRD-1666 - console replaced with alert and resp print
  			var errorDetails=JSON.stringify(resp);
  			console.log("errorDetails 1>> "+errorDetails);
  			
  			handleExceptionOnServerSide(errorDetails);
  			console.log('Some issue occured in checkPincodeServiceability');
- 			//setTimeout(function(){
+ 			// setTimeout(function(){
  	 			$("#pinCodeDispalyDiv .spinner").remove();
  	 			$("#no-click").remove();
- 	 		//},500);
+ 	 		// },500);
  		}
  	});
-
-
-
+	
 
    }
 }
+
+//TPR-1055
+$("#defaultPinCodeIds").click(function(){
+	$("#unserviceablepincode").hide();
+	$(".deliveryUlClass").remove();//TPR-1341
+	$("#cartPinCodeAvailable").show();
+	 $( "#error-Id").hide();
+	 $("#emptyId").hide();
+	 $(".pincodeServiceError").hide();
+	 //TPR-1341
+	 $(".cartItemBlankPincode").show();
+	 $(".delivery ul.success_msg").hide();
+	if($("#pinCodeButtonIds").text() == 'Change Pincode'){
+		$("#pinCodeButtonIds").text("Check Availability");
+		$("#AvailableMessage").hide();
+	}
+	
+});
 
 
 
@@ -5194,7 +5203,6 @@ function reloadpage(selectedPincode,buttonType) {
 
 
 function populatePincodeDeliveryMode(response,buttonType){
-
 	
 	var checkoutLinkURlId = $('#checkoutLinkURlId').val(); 
 	// response='Y|123456|[{"fulfilmentType":null,"isPrepaidEligible":"Y","ussid":"123653098765485130011717","pinCode":null,"validDeliveryModes":[{"isCOD":true,"isPrepaidEligible":null,"isPincodeServiceable":null,"isCODLimitFailed":null,"type":"ED","inventory":"2","deliveryDate":null},{"isCOD":true,"isPrepaidEligible":null,"isPincodeServiceable":null,"isCODLimitFailed":null,"type":"HD","inventory":"4","deliveryDate":null}],"cod":"Y","transportMode":null,"isCODLimitFailed":"N","deliveryDate":"2015-08-29T13:30:00Z","isServicable":"Y","stockCount":12},{"fulfilmentType":null,"isPrepaidEligible":"Y","ussid":"123653098765485130011719","pinCode":null,"validDeliveryModes":[{"isCOD":true,"isPrepaidEligible":null,"isPincodeServiceable":null,"isCODLimitFailed":null,"type":"HD","inventory":"12","deliveryDate":null}],"cod":"Y","transportMode":null,"isCODLimitFailed":"N","deliveryDate":"2015-08-29T13:30:00Z","isServicable":"Y","stockCount":12}]';
@@ -5396,7 +5404,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 }
 
 
-
+//TPR-1786
 //TISBOX-879
 function redirectToCheckout(checkoutLinkURlId)
 {
@@ -5498,8 +5506,9 @@ function checkIsServicable()
 
 	 	});
 	}
-
+	
 }
+
 
 function activateSignInTab()
 {
