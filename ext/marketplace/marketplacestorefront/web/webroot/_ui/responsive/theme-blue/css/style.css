@@ -33284,11 +33284,13 @@ h1.r2-landing-heading {
         margin-bottom: 90px;
     }
 }
+/* TPR-179(shop the style) */
 @media ( min-width: 768px) {
     .shopstyle-carousel .shopstyle-indicator-number li {
         width: 20%;
         margin: 0 2px;
     }
+/* TPR-179(shop the style) */
     .r2-landing-banner {
         background-image: url('../images/banner-app.png');
         -webkit-background-size: cover;
