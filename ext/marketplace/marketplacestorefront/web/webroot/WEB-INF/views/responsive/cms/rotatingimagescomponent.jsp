@@ -75,6 +75,7 @@ var homePageBannerTimeout='${timeout}';
 						<c:otherwise>
 						<c:choose>
 							<c:when test="${fn:contains(encodedUrl,'?')}">
+								<span class="style_edit_title">${banner.headline}</span>
 								<a tabindex="-1" href="${encodedUrl}&icid=${banner.pk}"
 								<c:if test="${banner.external}"> target="_blank"</c:if>><img
 								src="${banner.media.url}"
@@ -83,6 +84,7 @@ var homePageBannerTimeout='${timeout}';
 								</a>
 							</c:when>
 							<c:otherwise>
+								<span class="style_edit_title">${banner.headline}</span>
 								<a tabindex="-1" href="${encodedUrl}?icid=${banner.pk}"
 								<c:if test="${banner.external}"> target="_blank"</c:if>><img
 								src="${banner.media.url}"
@@ -243,6 +245,7 @@ var homePageBannerTimeout='${timeout}';
 						<c:otherwise>
 						<c:choose>
 							<c:when test="${fn:contains(encodedUrl,'?')}">
+								<span class="style_edit_title">${banner.headline}</span>
 								<a tabindex="-1" href="${encodedUrl}&icid=${banner.pk}"
 								<c:if test="${banner.external}"> target="_blank"</c:if>><img
 								src="${banner.media.url}"
@@ -251,6 +254,7 @@ var homePageBannerTimeout='${timeout}';
 								</a>
 							</c:when>
 							<c:otherwise>
+								<span class="style_edit_title">${banner.headline}</span>
 								<a tabindex="-1" href="${encodedUrl}?icid=${banner.pk}"
 								<c:if test="${banner.external}"> target="_blank"</c:if>><img
 								src="${banner.media.url}"
