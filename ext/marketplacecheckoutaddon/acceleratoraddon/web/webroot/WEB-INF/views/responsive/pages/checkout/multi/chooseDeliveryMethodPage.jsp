@@ -420,7 +420,7 @@ display: none;
         
         </span>
         <a class="viewMore"> 
-		View More</a>
+		View More Address</a>
         </p>
 		
       </div>

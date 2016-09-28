@@ -175,9 +175,6 @@
 					<button type="button" class="button btn-block payment-button make_payment_top_savedCard proceed-button" id="make_emi_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 					<%-- <button type="button" class="positive right cod-otp-button_top" onclick="mobileBlacklist()" ><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sendOTP" text="Verify Number" /></button> --%>
 					<button type="button" class="button positive right cod_payment_button_top proceed-button" onclick="submitForm()" id="paymentButtonId_up"><spring:theme code="checkout.multi.paymentMethod.codContinue" /></button>
-				
-				<!-- TISCR-305 ends -->	
-				<div class="left-block choose-payment">
 					<h1 class="payment-options"><spring:theme code="text.payment.options"/></h1>
 						<p class="cart-items">You have an outstanding amount of &nbsp;&nbsp;<span class="prices"  id="outstanding-amount">
 					<ycommerce:testId code="cart_totalPrice_label">
@@ -191,6 +188,9 @@
                 </c:choose>
             </ycommerce:testId>
 					</span></p>
+				<!-- TISCR-305 ends -->	
+				<div class="left-block choose-payment">
+				
 						<div class="checkout-indent payments tab-view smk_accordion acc_with_icon">
 							<div class="checkout-paymentmethod nav">
 							<div class="head-mobile">PAYMENT METHOD</div>

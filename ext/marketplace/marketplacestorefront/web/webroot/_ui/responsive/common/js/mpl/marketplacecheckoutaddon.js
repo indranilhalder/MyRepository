@@ -4827,10 +4827,10 @@ $('.checkTab .address-list.hideItem').slideToggle(function(){
 	if($( ".checkTab .address-list.hideItem" ).is( ":visible" ))
 	{
 		$(".addsign.viewMoreSign").addClass("addsignContent");
-		$('.viewMore').text('View Less');
+		$('.viewMore').text('View Less Address');
 	}else{
 		$(".addsign.viewMoreSign").removeClass("addsignContent");
-		$('.viewMore').text('View More');
+		$('.viewMore').text('View More Address');
 		$(".viewMoreContainer").removeClass("addressClear");
 	}
 	

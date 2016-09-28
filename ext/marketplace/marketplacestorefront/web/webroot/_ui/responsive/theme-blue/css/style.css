@@ -852,7 +852,7 @@ h2 {
     clear: both;
     margin-bottom: 0; }
     header .content .top{
-    min-height:50px;
+ /*    min-height:50px; */
     }
     header .content .top::after, header .content .bottom::after {
       clear: both;
@@ -20257,9 +20257,9 @@ font-size:12px;
 	}
 #mobilePrefix{
 	width: 8.3%;
+	padding:0px;
+	text-align: center;
     /* height: 30px; */
-    min-width: 30px;
-    padding-left: 10px;
 }
 /* #otpMobileNUMField{
 	width:45%;
@@ -20668,7 +20668,7 @@ ul.accepted-cards li span img{
 		float: none;
 	}
 	#mobilePrefix{
-    padding-left: 5px;
+     width: 12.3%;
 }
 }
 #sendOTPButton p{
@@ -30344,6 +30344,7 @@ body.page-checkout-login .top.checkout-top{
     font-weight: 500;
     background-color: #A9143C;
     color:#fff;	
+
 }
 #sharepretext,#shareposttext{
 	color:#60A119;
@@ -45203,6 +45204,7 @@ float: right;
 
 .star-review .empty.sel:before {
 	content: "ï€…";
+
 }
 
 .star-review span {
@@ -46261,6 +46263,7 @@ float: right;
 	.Star .overall .Bottom>ul>li.active:after {		
 		color: #a9183c;		
 		content: "";		
+
 		display: inline-block;		
 		font-size: 20px;		
 		position: absolute;		
@@ -46269,6 +46272,7 @@ float: right;
 	}		
 	.Star .overall .Bottom>ul.active>li.active:after {		
 		content: "";		
+
 	}		
 	.Star .overall .Bottom>ul>li:first-child {		
 		border-bottom: 0 none;		
@@ -48334,6 +48338,7 @@ border-right: 2px solid #9b9b9b;
 .quickview .product-info .product-content #buyNowQv {
 	width: 50%;
 	float: left;
+
     margin-top: 0;
    	letter-spacing: 0;
    	font-weight: bold;
@@ -48367,6 +48372,9 @@ border-right: 2px solid #9b9b9b;
     position: relative;
     float: left;
     width: 50%;
+
+
+
 }
 .product-info .product-content #addToCartFormQuickTitle{
     text-align: center;
@@ -50929,7 +50937,11 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
     z-index: 99;
         text-transform: none;
             font-weight: normal;
+
 }
+.cart.wrapper .right-block.shipping .checkout-order-summary .totals.outstanding-totalss li:first-child{
+ padding:0px;	}
+
 .cart.wrapper .button#deliveryMethodSubmit{
   display:none;
   }
@@ -50960,10 +50972,11 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
 .cart.wrapper .left-block .payments.tab-view{
       margin-top: 0px; }
 /*Checkout-steps*/
-.choose-payment {    padding: 128px 0 0;}
+.choose-payment {   /*  padding: 128px 0 0; */}
+.checkout-payment.cart.checkout.wrapper .step-body{    padding: 128px 0 0;}
 .checkout-payment h2 { font-size: 24px; font-weight: bold; color: #202020; text-transform:uppercase; }
-.cart.wrapper .left-block > p.cart-items { color: #000000; font-size: 14px; padding:10px 0 25px 0; letter-spacing:1px;}
-.cart.wrapper .left-block > p.cart-items .prices { font-size:24px; color:#a7183e; font-weight:bold; }
+.cart.wrapper.checkout-payment p.cart-items { color: #000000; font-size: 14px; padding:10px 0 25px 0; letter-spacing:1px;}
+.cart.wrapper.checkout-payment p.cart-items .prices { font-size:24px; color:#a7183e; font-weight:bold; }
 .checkout-list .acc_head{ letter-spacing:0.5px; }
 .choose-payment .smk_accordion{ padding:0;}
 .smk_accordion { position: relative; margin: 0; padding: 0; list-style: none; margin-bottom: 20px; /* padding: 120px 0 0; */}
@@ -51141,7 +51154,7 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
 /*Summary*/
 
 
-.cart.wrapper .right-block.billing.checkout-list-right {width: 30.8%; float: right; padding:0 0 38px 0; letter-spacing:1px; }
+.cart.wrapper .right-block.billing.checkout-list-right {width: 30.8%; float: right; padding-bottom:38px; letter-spacing:1px; }
 .cart.wrapper .right-block.billing.checkout-list-right h3 {font-size: 24px; font-weight:bold; color: #a7183e; text-transform: uppercase; }
 .cart.wrapper .right-block.billing .block.summary-info {margin: 18px auto; padding: 28px 0px 25px 0px;  border:none;background-color: #fbfbfb;}
 .cart.wrapper .right-block.billing .block.summary-info  ul.totals li {padding: 6px 0 10px 0;font-size: 12px; text-transform: uppercase; margin:0px;}
@@ -51210,7 +51223,7 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
    /*  margin-top: -69px; */
         line-height: 41px;
 }
-.checkout.wrapper .left-block.choose-payment h1{
+.checkout.wrapper.checkout-payment h1{
 	margin:0px;
 	    font-size: 24px;
     font-weight: bold;
@@ -51218,7 +51231,7 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
     text-transform: uppercase;
 }
 .cart.wrapper .right-block.billing{
-	margin-top: 160px;
+	margin-top: 0px;
 }
 .cart.wrapper .right-block.billing.checkout-list-right .block{
 	border:none;
@@ -51422,9 +51435,9 @@ display:block;}
 @media only screen and (max-width:1450px){	
 #wrapper .container-address{ padding:0;}
 .smk_accordion .accordion_in .acc_head,
-.cart.wrapper .left-block > p.cart-items .prices,
+.cart.wrapper.checkout-payment p.cart-items .prices,
 .checkout-payment h2{ font-size: 18px;}
-.cart.wrapper .left-block > p.cart-items{font-size: 12px;letter-spacing: 0;}	
+.cart.wrapper.checkout-payment p.cart-items{font-size: 12px;letter-spacing: 0;}	
 .smk_accordion .accordion_in .acc_head span{ padding: 20px 0 20px 20px;}
 .smk_accordion .accordion_in{ background: #fff url("../images/down-arrow.png") no-repeat scroll 96% 25px;}
 .smk_accordion .accordion_in.acc_active{ background: rgba(0, 0, 0, 0) url("../images/up-arrow.png") no-repeat scroll 96% 25px;}
@@ -51440,10 +51453,11 @@ display:block;}
 .smk_accordion .accordion_in .acc_content .blocks h3{font-size: 12px;}
 .cart.wrapper .right-block.billing.checkout-list-right .block.delivery-info .prd-info .item .product .prd-rate p{font-size: 14px;}
 .cart.wrapper .right-block.billing.checkout-list-right .block.delivery-info .prd-info .item-mthd{padding: 30px 0 0;font-size: 12px;}
-.choose-payment{ padding: 90px 0 0;padding-bottom: 65px;}
+.choose-payment{/* padding: 90px 0 0; */padding-bottom: 65px;}
+.checkout-payment.cart.checkout.wrapper .step-body{padding: 70px 24px 0;}
 .cart.wrapper{ margin: 0 auto;max-width: 1200px;padding:0px;}
 .product-block.net-bank .item.cardForm p.popular-netbanks{margin-top:0px;    padding: 0 0 16px 0;    font-size: 12px;}
-.checkout.wrapper .left-block.choose-payment h1{
+.checkout.wrapper.checkout-payment h1{
 	    font-size: 18px;
 }
 .cart.wrapper .right-block.billing.checkout-list-right h3 { font-size:20px;}
@@ -51478,15 +51492,15 @@ display:block;}
 	padding-right: 12px;
 }
 @media only screen and (max-width:1250px){
-.choose-payment{ padding: 90px 0 0 24px;}	
-.cart.wrapper .right-block.billing.checkout-list-right{ padding: 0px 24px;    margin-bottom: 40px;}
+.choose-payment{ padding: 0px;}	
+.cart.wrapper .right-block.billing.checkout-list-right{ padding: 0px 24px 0 0;     margin-bottom: 40px;}
 #wrapper .container-address{ padding:0 24px;}
-.cart.wrapper .left-block {
+/* .cart.wrapper .left-block {
     width: 66.2%;
 }
 .cart.wrapper .right-block.billing.checkout-list-right {
     width: 31.8%;
-}
+} */
 .smk_accordion .accordion_in .acc_content,#COD {
     margin: 0 30px 30px 30px;
 }
@@ -51525,7 +51539,7 @@ display:block;}
 .checkout.wrapper .left-block.choose-payment h1{ font-size:16px; }
 .cart.wrapper .left-block > p { font-size:13px; }
 .cart.wrapper .left-block > p.cart-items .prices { font-size:18px; }
-.cart.wrapper .right-block.billing.checkout-list-right { float:none;  margin: 0 0 25px;width:100%; }
+.cart.wrapper .right-block.billing.checkout-list-right { float:none;  margin: 0 0 25px;width:100%; padding:0 24px; }
 .smk_accordion{  padding: 120px 0 0;}
 .smk_accordion .accordion_in{background: #fff url("../images/down-arrow.png") no-repeat scroll 96% 23px;}
 .smk_accordion .accordion_in.acc_active{background: url("../images/up-arrow.png") no-repeat scroll 96% 23px;}
@@ -51551,8 +51565,9 @@ display:block;}
 .cart.wrapper .button.proceed-button{top:20px;}
 .cart.wrapper .left-block > p.cart-items{font-size:13px;}
 .choose-payment {
-    padding: 60px 24px 0;
+   /*  padding: 60px 24px 0; */
 }
+
 .cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.exp select.card_exp_month, .cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.exp select.card_exp_year{
 	padding-left:18px;
 }
@@ -51577,15 +51592,21 @@ display:block;}
 } */
 .cart.wrapper .button.proceed-button{top:16px;}
 .choose-payment {
-    padding: 70px 24px 0;
+   /*  padding: 70px 24px 0; */
 }
+.cart.wrapper .right-block.billing.checkout-list-right{padding:0 24px;}
+
 
 }
 
 /*Mobile
 ---------------------------------------------*/
 @media(max-width:767px){
-.choose-payment{   padding: 70px 0 0;}
+.choose-payment{  /* padding: 70px 0 0; */}
+.checkout-payment.cart.checkout.wrapper .step-body{ padding: 70px 0px 0;}
+.checkout.wrapper.checkout-payment h1,
+.cart.wrapper.checkout-payment p.cart-items{display:none;}
+
 #wrapper .container-address{ padding: 14px 0 0;}
 #wrapper.checkout-payment, .checkout-payment .container-mobile { margin:0; width:100%; font-size:12px; }
 #wrapper.checkout-payment{ margin: 0 0 65px;}
@@ -51668,7 +51689,10 @@ input.year { height:40px; }
 #COD{margin:0px;}
 .smk_accordion .accordion_in .acc_content .blocks .cash #otpNUM p{padding:0px;font-size:12px;}
 .smk_accordion .accordion_in .acc_content .blocks.net-bank label.cod-mob-label{margin:0px; width:100%;}
-.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del input{width:85%;}
+.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del input{width:81%;}
+#mobilePrefix {
+    width: 12.3%;
+}
 .smk_accordion .accordion_in .acc_content .blocks .cash .cont-del input#otpNUMField{width:93.3%;}
 .cart.wrapper .right-block.billing .block.summary-info .totals {
 /*    padding: 25px 0;
@@ -53170,10 +53194,10 @@ div.radio.creditDebitLabelRadio{
 		padding-bottom:5px;
 	}
 	.smk_accordion .checkout-paymentmethod.nav .accordion_in{
-		border: none;
+		/* 	border: none; */
 	}
 	.smk_accordion .checkout-paymentmethod.nav .accordion_in .acc_head{
-		border: 1px solid #e4e4e4;
+	/* border: 1px solid #e4e4e4; */
 		
 	}
 	.smk_accordion .checkout-paymentmethod.nav .accordion_in.acc_active .acc_head{
@@ -53242,6 +53266,9 @@ div.radio.creditDebitLabelRadio{
 @media (max-width: 767px){
 .checkTab .add-address {
     width: 93%;
+}
+.checkTab .addNew_wrapper .add-address {
+    float: none !important;
 }}
 .cart.wrapper .checkout-shipping .checkout-shipping-items ul li.header{
 	width:100%;
