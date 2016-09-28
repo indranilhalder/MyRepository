@@ -49,6 +49,7 @@ import com.tisl.mpl.model.CartOrderThresholdDiscountCashbackModel;
 import com.tisl.mpl.model.CartOrderThresholdDiscountPromotionModel;
 import com.tisl.mpl.model.CustomOrderThresholdFreeGiftPromotionModel;
 import com.tisl.mpl.model.CustomProductBOGOFPromotionModel;
+import com.tisl.mpl.model.MplProductSteppedMultiBuyPromotionModel;
 
 
 
@@ -120,6 +121,10 @@ public class MplDiscountUtil
 		{
 			promoData = getBuyXItemsofproductAgetproductBforfreeData(productPromotion, cart);
 
+		}
+		else if (productPromotion instanceof MplProductSteppedMultiBuyPromotionModel)
+		{
+			promoData = getMplProductSteppedMultiBuyPromotionData(productPromotion, cart); // TPR-1296
 		}
 		////////////////////////////////////
 		return promoData;
@@ -1018,6 +1023,52 @@ public class MplDiscountUtil
 	}
 
 	////////////////////////////
+
+
+	// TPR-1296
+	/**
+	 * @Description : For Bundle Promotion
+	 * @param productPromotion
+	 * @param cart
+	 * @return responseData
+	 */
+	private MplPromotionData getMplProductSteppedMultiBuyPromotionData(final ProductPromotionModel productPromotion,
+			final CartModel cart)
+	{
+		final MplPromotionData promoData = new MplPromotionData();
+
+		final MplProductSteppedMultiBuyPromotionModel mplProductSteppedMultiBuyPromotionModel = (MplProductSteppedMultiBuyPromotionModel) productPromotion;
+
+		if (null != mplProductSteppedMultiBuyPromotionModel)
+		{
+			promoData.setPromoTypeIdentifier(MarketplacecommerceservicesConstants.PRODUCT_PROMO);
+
+			if (null != mplProductSteppedMultiBuyPromotionModel.getMessageFired())
+			{
+				final PotentialPromoData potentialPromo = new PotentialPromoData();
+				potentialPromo.setPromoMessage(mplProductSteppedMultiBuyPromotionModel.getMessageFired());
+				if (StringUtils.isNotEmpty(potentialPromo.getPromoMessage()))
+				{
+					promoData.setPotentialPromotion(potentialPromo);
+				}
+			}
+
+			if (null != mplProductSteppedMultiBuyPromotionModel.getMessageCouldHaveFired())
+			{
+				final FiredPromoData firedPromo = new FiredPromoData();
+				firedPromo.setPromoMessage(mplProductSteppedMultiBuyPromotionModel.getMessageFired());
+				if (StringUtils.isNotEmpty(firedPromo.getPromoMessage()))
+				{
+					promoData.setFiredPromotion(firedPromo);
+				}
+			}
+		}
+		return promoData;
+	}
+
+	// TPR-1296 ends
+
+
 	/**
 	 * @Description : For Buy A and B get C
 	 * @param productPromotion
