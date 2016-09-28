@@ -338,9 +338,11 @@ public class ProductPageController extends AbstractPageController
 				final String metaTitle = productData.getSeoMetaTitle();
 				final String pdCode = productData.getCode();
 				final String metaDescription = productData.getSeoMetaDescription();
+				//TISPRD-4977
+				final String metaKeyword = productData.getSeoMetaKeyword();
 				//final String metaKeywords = productData.gets
 
-				setUpMetaData(model, metaDescription, metaTitle, pdCode);
+				setUpMetaData(model, metaDescription, metaTitle, pdCode, metaKeyword);
 				//AKAMAI fix
 				if (productModel instanceof PcmProductVariantModel)
 				{
@@ -383,17 +385,17 @@ public class ProductPageController extends AbstractPageController
 	 * @param metaTitle
 	 * @param pdCode
 	 */
-	private void setUpMetaData(final Model model, final String metaDescription, final String metaTitle, final String pdCode)
-	{
-		final List<MetaElementData> metadata = new LinkedList<>();
-		metadata.add(createMetaElement(ModelAttributetConstants.DESCRIPTION, metaDescription));
-		//metadata.add(createMetaElement(ModelAttributetConstants.TITLE, metaTitle));
-		metadata.add(createMetaElement("productCode", pdCode));
-		//metadata.add(createMetaElement(ModelAttributetConstants.KEYWORDS, metaKeywords));
-		model.addAttribute(ModelAttributetConstants.METATAGS, metadata);
-		model.addAttribute(ModelAttributetConstants.PMETATTITLE, metaTitle); //TISPRD-4977
-
-	}
+	//	private void setUpMetaData(final Model model, final String metaDescription, final String metaTitle, final String pdCode)
+	//	{
+	//		final List<MetaElementData> metadata = new LinkedList<>();
+	//		metadata.add(createMetaElement(ModelAttributetConstants.DESCRIPTION, metaDescription));
+	//		//metadata.add(createMetaElement(ModelAttributetConstants.TITLE, metaTitle));
+	//		metadata.add(createMetaElement("productCode", pdCode));
+	//		//metadata.add(createMetaElement(ModelAttributetConstants.KEYWORDS, metaKeywords));
+	//		model.addAttribute(ModelAttributetConstants.METATAGS, metadata);
+	//		model.addAttribute(ModelAttributetConstants.PMETATTITLE, metaTitle); //TISPRD-4977
+	//
+	//	}
 
 	/**
 	 * @param productData
@@ -1006,13 +1008,14 @@ public class ProductPageController extends AbstractPageController
 			final String metaDescription = productData.getSeoMetaDescription();
 			final String metaTitle = productData.getSeoMetaTitle();
 			final String pdCode = productData.getCode();
+			final String metaKeyword = productData.getSeoMetaKeyword();
 			model.addAttribute(DEFAULT_SELECTED_SIZE, form.getSelectedSizeVariant());
 			model.addAttribute(ModelAttributetConstants.SELECTED_SIZE, selectedSize);
 			model.addAttribute(PINCODE_CHECKED, form.getIsPinCodeChecked());
 			model.addAttribute(ModelAttributetConstants.SELLER_PAGE, ModelAttributetConstants.Y);
 			model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY_TYPE, productModel.getProductCategoryType());
 			model.addAttribute(PRODUCT_SIZE_TYPE, productDetailsHelper.getSizeType(productModel));
-			setUpMetaData(model, metaDescription, metaTitle, pdCode);
+			setUpMetaData(model, metaDescription, metaTitle, pdCode, metaKeyword);
 			final String googleClientid = configurationService.getConfiguration().getString("google.data-clientid");
 			final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
 			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
@@ -1361,8 +1364,10 @@ public class ProductPageController extends AbstractPageController
 
 	protected void updatePageTitle(final ProductData product, final Model model)
 	{
-		model.addAttribute(CMS_PAGE_TITLE,
-				ModelAttributetConstants.Product_Page_Title.replace(ModelAttributetConstants.META_VARIABLE_ZERO, product.getName()));
+		//model.addAttribute(CMS_PAGE_TITLE,
+		//		ModelAttributetConstants.Product_Page_Title.replace(ModelAttributetConstants.META_VARIABLE_ZERO, product.getName()));
+		//TISPRD-5001 Reflecting seoTitle under <title> tag
+		model.addAttribute(CMS_PAGE_TITLE, product.getSeoMetaTitle());
 	}
 
 	/**
@@ -1444,7 +1449,8 @@ public class ProductPageController extends AbstractPageController
 			final String metaDescription = productData.getSeoMetaDescription();
 			final String metaTitle = productData.getSeoMetaTitle();
 			final String productCode = productData.getCode();
-			setUpMetaData(model, metaDescription, metaTitle, productCode);
+			final String metaKeyword = productData.getSeoMetaKeyword();
+			setUpMetaData(model, metaDescription, metaTitle, productCode, metaKeyword);
 			populateTealiumData(productData, model, breadcrumbs);
 
 
@@ -1489,9 +1495,13 @@ public class ProductPageController extends AbstractPageController
 	{
 		final List<MetaElementData> metadata = new LinkedList<>();
 		metadata.add(createMetaElement(ModelAttributetConstants.DESCRIPTION, metaDescription));
+		//TISPRD-4977
+		if (null != metaKeywords)
+		{
+			metadata.add(createMetaElement(ModelAttributetConstants.KEYWORDS, metaKeywords));
+		}
 		//metadata.add(createMetaElement(ModelAttributetConstants.TITLE, metaTitle));
 		metadata.add(createMetaElement("productCode", productCode));
-		// metadata.add(createMetaElement(ModelAttributetConstants.KEYWORDS, metaKeywords));
 		model.addAttribute(ModelAttributetConstants.METATAGS, metadata);
 		model.addAttribute(ModelAttributetConstants.PMETATTITLE, metaTitle); //TISPRD-4977
 	}
@@ -1961,11 +1971,11 @@ public class ProductPageController extends AbstractPageController
 	 */
 	/*
 	 * private MarketplaceDeliveryModeData fetchDeliveryModeDataForUSSID(final String deliveryMode, final String ussid) {
-	 * 
+	 *
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 * 
+	 *
 	 * final PriceData priceData = productDetailsHelper.formPriceData(mplZoneDeliveryModeValueModel.getValue());
 	 * deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
 	 * deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
@@ -1985,76 +1995,76 @@ public class ProductPageController extends AbstractPageController
 	 */
 	/*
 	 * private List<PincodeServiceData> populatePinCodeServiceData(final String productCode) {
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * final List<PincodeServiceData> requestData = new ArrayList<>(); PincodeServiceData data = null;
-	 * 
+	 *
 	 * MarketplaceDeliveryModeData deliveryModeData = null; try { final ProductModel productModel =
-	 * 
-	 * 
+	 *
+	 *
 	 * productService.getProductForCode(productCode); final ProductData productData =
-	 * 
+	 *
 	 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER,
 	 * ProductOption.PRICE));
-	 * 
-	 * 
+	 *
+	 *
 	 * for (final SellerInformationData seller : productData.getSeller()) { final List<MarketplaceDeliveryModeData>
-	 * 
+	 *
 	 * deliveryModeList = new ArrayList<MarketplaceDeliveryModeData>(); data = new PincodeServiceData(); if ((null !=
-	 * 
+	 *
 	 * seller.getDeliveryModes()) && !(seller.getDeliveryModes().isEmpty())) { for (final MarketplaceDeliveryModeData
-	 * 
+	 *
 	 * deliveryMode : seller.getDeliveryModes()) { deliveryModeData =
-	 * 
+	 *
 	 * fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid()); deliveryModeList.add(deliveryModeData);
-	 * 
-	 * 
+	 *
+	 *
 	 * } data.setDeliveryModes(deliveryModeList); } if (null != seller.getFullfillment() &&
-	 * 
+	 *
 	 * StringUtils.isNotEmpty(seller.getFullfillment())) {
-	 * 
+	 *
 	 * data.setFullFillmentType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getFullfillment().toUpperCase())); }
-	 * 
+	 *
 	 * if (null != seller.getShippingMode() && (StringUtils.isNotEmpty(seller.getShippingMode()))) {
-	 * 
+	 *
 	 * data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getShippingMode().toUpperCase())); } if
-	 * 
+	 *
 	 * (null != seller.getSpPrice() && !(seller.getSpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 * 
+	 *
 	 * Double(seller.getSpPrice().getValue().doubleValue())); } else if (null != seller.getMopPrice() &&
-	 * 
+	 *
 	 * !(seller.getMopPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 * 
+	 *
 	 * Double(seller.getMopPrice().getValue().doubleValue())); } else if (null != seller.getMrpPrice() &&
-	 * 
+	 *
 	 * !(seller.getMrpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 * 
+	 *
 	 * Double(seller.getMrpPrice().getValue().doubleValue())); } else {
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * LOG.info("*************** No price avaiable for seller :" + seller.getSellerID()); continue; } if (null !=
-	 * 
-	 * 
+	 *
+	 *
 	 * seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod())) { data.setIsCOD(seller.getIsCod()); }
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * data.setSellerId(seller.getSellerID()); data.setUssid(seller.getUssid());
-	 * 
+	 *
 	 * data.setIsDeliveryDateRequired(ControllerConstants.Views.Fragments.Product.N); requestData.add(data); } } catch
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
+	 *
 	 * (final EtailBusinessExceptions e) { ExceptionUtil.etailBusinessExceptionHandler(e, null); }
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * catch (final Exception e) {
-	 * 
+	 *
 	 * throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } return requestData; }
 	 */
 
