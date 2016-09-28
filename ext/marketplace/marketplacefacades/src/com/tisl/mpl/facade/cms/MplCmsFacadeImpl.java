@@ -363,7 +363,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getLandingPageForCategory(java.lang.String)
 	 */
 	@Override
@@ -388,7 +388,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getHomePageForMobile()
 	 */
 	@Override
@@ -669,7 +669,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 		if (StringUtils.isNotEmpty(product.getCode()))
 		{
 			final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(product.getCode());
-			if (buyboxdata.getMrp() != null)
+			if (null != buyboxdata && null != buyboxdata.getMrp())
 			{
 				productDto.setProductPrice(buyboxdata.getMrp().getFormattedValue());
 			}
@@ -751,17 +751,20 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				if (StringUtils.isNotEmpty(productCode))
 				{
 					final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productCode);
-					if (buyboxdata.getPrice() != null)
+					if (null != buyboxdata)
 					{
-						productDto.setProductMOP(buyboxdata.getPrice().getFormattedValue());
-					}
-					if (buyboxdata.getSpecialPrice() != null)
-					{
-						productDto.setProductMOP(buyboxdata.getSpecialPrice().getFormattedValue());
-					}
-					if (buyboxdata.getMrp() != null)
-					{
-						productDto.setProductPrice(buyboxdata.getMrp().getFormattedValue());
+						if (buyboxdata.getPrice() != null)
+						{
+							productDto.setProductMOP(buyboxdata.getPrice().getFormattedValue());
+						}
+						if (buyboxdata.getSpecialPrice() != null)
+						{
+							productDto.setProductSpecialPrice(buyboxdata.getSpecialPrice().getFormattedValue());
+						}
+						if (buyboxdata.getMrp() != null)
+						{
+							productDto.setProductPrice(buyboxdata.getMrp().getFormattedValue());
+						}
 					}
 
 				}
@@ -1254,7 +1257,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateCategoryLandingPageForMobile()
 	 */
 	@Override
@@ -1370,7 +1373,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.facade.cms.MplCmsFacade#populateSubBrandLandingPageForMobile(de.hybris.platform.cms2.model.pages.
 	 * ContentPageModel, java.lang.String)
@@ -1421,7 +1424,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populatePageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -1568,7 +1571,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getCategoryNameForCode(java.lang.String)
 	 */
 	@Override
@@ -1580,7 +1583,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getHeroProducts(java.lang.String)
 	 */
 	@Override
@@ -1654,7 +1657,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateSellerLandingPageForMobile()
 	 */
 	@Override
@@ -1695,7 +1698,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				 * (SmallBrandMobileAppComponentModel) abstractCMSComponentModel; final ComponentData componentData =
 				 * getMobileCategoryComponentConverter().convert(smallBrandMobileComponentModel);
 				 * componentDatas.add(componentData);
-				 *
+				 * 
 				 * }
 				 */
 				else if (abstractCMSComponentModel instanceof PromotionalProductsComponentModel)
@@ -1753,7 +1756,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getSellerMasterName(java.lang.String)
 	 */
 	@Override
@@ -1765,7 +1768,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateSellerPageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -1781,7 +1784,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateOfferPageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -1798,7 +1801,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getlandingForBrand()
 	 */
 	@Override
@@ -1849,39 +1852,66 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				{
 					final RotatingImagesComponentModel luxuryBannerComponent = (RotatingImagesComponentModel) abstractCMSComponentModel;
 					blpComponent = getForHimHerBannerWsDTO(luxuryBannerComponent);
+					componentListForASlot.add(blpComponent);
 				}
 				if (typecode.equalsIgnoreCase("RotatingImagesComponent")
 						&& contentSlot.getUid().equalsIgnoreCase("Section1-heroBannerComponent"))
 				{
 					final RotatingImagesComponentModel luxBlpBannerComponent = (RotatingImagesComponentModel) abstractCMSComponentModel;
 					blpComponent = getBlpBannerWsDTO(luxBlpBannerComponent);
+					componentListForASlot.add(blpComponent);
 				}
 				else if (typecode.equalsIgnoreCase("VideoComponent"))
 				{
 					final VideoComponentModel BlpVideoComponent = (VideoComponentModel) abstractCMSComponentModel;
 					blpComponent = getLuxBlpVideocomponentWsDTO(BlpVideoComponent);
+					componentListForASlot.add(blpComponent);
 				}
 				else if (typecode.equalsIgnoreCase("MplBigPromoBannerComponent")
 						&& contentSlot.getUid().equalsIgnoreCase("Section6-luxurybrandlandingpage"))
 				{
+					LuxBlpCompListWsDTO blppromoComponent = new LuxBlpCompListWsDTO();
 					final MplBigPromoBannerComponentModel promobannerComponent = (MplBigPromoBannerComponentModel) abstractCMSComponentModel;
-					blpComponent = getBlpShopThelookComponent(promobannerComponent);
+					if (null != blpComponent.getShop_the_look_component())
+					{
+						blppromoComponent = getBlpShopThelookComponentMedia(promobannerComponent,
+								blpComponent.getShop_the_look_component());
+
+						componentListForASlot.add(blppromoComponent);
+					}
+					else
+					{
+						blpComponent = getBlpShopThelookComponentMedia(promobannerComponent, blpComponent.getShop_the_look_component());
+					}
+
 				}
 				else if (typecode.equalsIgnoreCase("ProductCarouselComponent")
 						&& contentSlot.getUid().equalsIgnoreCase("Section6-luxurybrandlandingpage"))
 				{
+					LuxBlpCompListWsDTO blpproductComponent = new LuxBlpCompListWsDTO();
 					final ProductCarouselComponentModel productCarouselComponent = (ProductCarouselComponentModel) abstractCMSComponentModel;
-					blpComponent = getBlpShopThelookComponent(productCarouselComponent);
+					if (null != blpComponent.getShop_the_look_component())
+					{
+						blpproductComponent = getBlpShopThelookComponent(productCarouselComponent,
+								blpComponent.getShop_the_look_component());
+						componentListForASlot.add(blpproductComponent);
+					}
+					else
+					{
+						blpComponent = getBlpShopThelookComponent(productCarouselComponent, blpComponent.getShop_the_look_component());
+					}
 				}
 				else if (typecode.equalsIgnoreCase("MplAdvancedCategoryCarouselComponent"))
 				{
 					final MplAdvancedCategoryCarouselComponentModel BlpVideoComponent = (MplAdvancedCategoryCarouselComponentModel) abstractCMSComponentModel;
 					blpComponent = getBlpAdvanceCategory(BlpVideoComponent);
+					componentListForASlot.add(blpComponent);
 				}
 				if (typecode.equalsIgnoreCase("MplShowcaseComponent"))
 				{
 					final MplShowcaseComponentModel luxurywhyourproductsComponent = (MplShowcaseComponentModel) abstractCMSComponentModel;
 					blpComponent = getwhyourproductsWsDTO(luxurywhyourproductsComponent);
+					componentListForASlot.add(blpComponent);
 				}
 
 				if (typecode.equalsIgnoreCase("RotatingImagesComponent")
@@ -1889,12 +1919,14 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				{
 					final RotatingImagesComponentModel luxurySpringBannerComponent = (RotatingImagesComponentModel) abstractCMSComponentModel;
 					blpComponent = getspringBannerWsDTO(luxurySpringBannerComponent);
+					componentListForASlot.add(blpComponent);
 				}
 				if (typecode.equalsIgnoreCase("SimpleBannerComponent")
 						&& contentSlot.getUid().equalsIgnoreCase("Section3-SpringCollectionOfimages"))
 				{
 					final SimpleBannerComponentModel luxurySpringSimpleBannerComponent = (SimpleBannerComponentModel) abstractCMSComponentModel;
 					blpComponent = getspringSimpleBannerWsDTO(luxurySpringSimpleBannerComponent);
+					componentListForASlot.add(blpComponent);
 				}
 
 
@@ -1902,12 +1934,13 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				{
 					final OurJourneyComponentModel seeOurJourneyComponent = (OurJourneyComponentModel) abstractCMSComponentModel;
 					blpComponent = getSeeOurJourneyWsDTO(seeOurJourneyComponent);
+					componentListForASlot.add(blpComponent);
 				}
 
 				LOG.debug("Adding component" + abstractCMSComponentModel.getUid() + "for section" + contentSlot.getUid());
 
 				blpComponent.setSectionid(contentSlot.getUid());
-				componentListForASlot.add(blpComponent);
+				//	componentListForASlot.add(blpComponent);
 			}
 
 
@@ -1919,9 +1952,11 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/**
 	 * @param productcomponent
+	 * @param luxShopTheLookWsDTO
 	 * @return LuxBlpCompListWsDTO
 	 */
-	private LuxBlpCompListWsDTO getBlpShopThelookComponent(final ProductCarouselComponentModel productcomponent)
+	private LuxBlpCompListWsDTO getBlpShopThelookComponent(final ProductCarouselComponentModel productcomponent,
+			final LuxShopTheLookWsDTO luxShopTheLookWsDTO)
 	{
 		final ArrayList<LuxBrandProductsListWsDTO> productList = new ArrayList<LuxBrandProductsListWsDTO>();
 		//final List<LuxComponentsListWsDTO> component = new ArrayList<LuxComponentsListWsDTO>();
@@ -1946,24 +1981,26 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 				if (null != product.getPicture())
 				{
-					productDto.setProductImageUrl(product.getPicture().getUrl2());
+					productDto.setProductImageUrl(product.getPicture().getURL());
 				}
 				if (StringUtils.isNotEmpty(productCode))
 				{
 					final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productCode);
-					if (buyboxdata.getPrice() != null)
+					if (null != buyboxdata)
 					{
-						productDto.setProductMOP(buyboxdata.getPrice().getFormattedValue());
+						if (buyboxdata.getPrice() != null)
+						{
+							productDto.setProductMOP(buyboxdata.getPrice().getFormattedValue());
+						}
+						if (buyboxdata.getSpecialPrice() != null)
+						{
+							productDto.setProductSpecialPrice(buyboxdata.getSpecialPrice().getFormattedValue());
+						}
+						if (buyboxdata.getMrp() != null)
+						{
+							productDto.setProductPrice(buyboxdata.getMrp().getFormattedValue());
+						}
 					}
-					if (buyboxdata.getSpecialPrice() != null)
-					{
-						productDto.setProductMOP(buyboxdata.getSpecialPrice().getFormattedValue());
-					}
-					if (buyboxdata.getMrp() != null)
-					{
-						productDto.setProductPrice(buyboxdata.getMrp().getFormattedValue());
-					}
-
 				}
 				if (StringUtils.isNotEmpty(defaultProductModelUrlResolver.resolveInternal(product)))
 				{
@@ -1984,6 +2021,22 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 			}
 
 		}
+		if (null != luxShopTheLookWsDTO)
+		{
+			if (null != luxShopTheLookWsDTO.getHeader())
+			{
+				stlProductList.setHeader(luxShopTheLookWsDTO.getHeader());
+			}
+			if (null != luxShopTheLookWsDTO.getSection_text())
+			{
+				stlProductList.setSection_text(luxShopTheLookWsDTO.getSection_text());
+			}
+			if (null != luxShopTheLookWsDTO.getCta())
+			{
+				stlProductList.setCta(luxShopTheLookWsDTO.getCta());
+			}
+
+		}
 		stlProductList.setProductlisting(productList);
 		luxComponent.setShop_the_look_component(stlProductList);
 		return luxComponent;
@@ -1991,11 +2044,14 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/**
 	 * @param promobannerComponent
+	 * @param luxShopTheLookWsDTO
 	 * @return LuxBlpCompListWsDTO
 	 */
-	private LuxBlpCompListWsDTO getBlpShopThelookComponent(final MplBigPromoBannerComponentModel promobannerComponent)
+	private LuxBlpCompListWsDTO getBlpShopThelookComponentMedia(final MplBigPromoBannerComponentModel promobannerComponent,
+			final LuxShopTheLookWsDTO luxShopTheLookWsDTO)
 	{
 		// YTODO Auto-generated method stub
+		final ArrayList<LuxBrandProductsListWsDTO> productList = new ArrayList<LuxBrandProductsListWsDTO>();
 		final LuxShopTheLookWsDTO luxStlComponentObj = new LuxShopTheLookWsDTO();
 		final LuxBlpCompListWsDTO luxComponent = new LuxBlpCompListWsDTO();
 		if (null != promobannerComponent)
@@ -2012,6 +2068,49 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 			{
 				luxStlComponentObj.setCta(promobannerComponent.getMinorPromo2Text());
 			}
+		}
+		if (null != luxShopTheLookWsDTO)
+		{
+			for (final LuxBrandProductsListWsDTO products : luxShopTheLookWsDTO.getProductlisting())
+			{
+				final LuxBrandProductsListWsDTO productDto = new LuxBrandProductsListWsDTO();
+				if (null != products.getProductId())
+				{
+					productDto.setProductId(products.getProductId());
+				}
+				if (null != products.getProductImageUrl())
+				{
+					productDto.setProductImageUrl(products.getProductImageUrl());
+				}
+				if (null != products.getProductTitle())
+				{
+					productDto.setProductTitle(products.getProductTitle());
+				}
+				if (null != products.getProductPrice())
+				{
+					productDto.setProductPrice(products.getProductPrice());
+				}
+				if (null != products.getProductMOP())
+				{
+					productDto.setProductMOP(products.getProductMOP());
+				}
+				if (null != products.getProductSpecialPrice())
+				{
+					productDto.setProductSpecialPrice(products.getProductSpecialPrice());
+				}
+				if (null != products.getProductUrl())
+				{
+					productDto.setProductUrl(products.getProductUrl());
+				}
+				if (null != products.getProductBrand())
+				{
+					productDto.setProductBrand(products.getProductBrand());
+				}
+
+				productList.add(productDto);
+			}
+			luxStlComponentObj.setProductlisting(productList);
+
 		}
 		luxComponent.setShop_the_look_component(luxStlComponentObj);
 		return luxComponent;
