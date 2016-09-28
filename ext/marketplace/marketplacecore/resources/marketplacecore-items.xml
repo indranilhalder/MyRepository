@@ -4349,6 +4349,47 @@
 					</attribute>
 					</attributes>
 			</itemtype>
+			
+			
+			<!--  Luxury Site -->
+			
+			<itemtype code="OurJourneyComponent" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.core.jalo.OurJourneyComponent">
+				<description>This component is created for see our journey section</description>
+				<attributes>
+
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<description>This attribute is for showing the title of the component</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+
+					<attribute type="java.lang.String" qualifier="headerText"
+						autocreate="true" generate="true">
+						<description>This attribute is for showing the header text of the component</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+
+					<attribute qualifier="footerImageList" type="FooterImageCollection"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<description>This attribute represents the list of footer images</description>
+					</attribute>
+					
+					<!--
+						<attribute type="signatureCollectionLayout" qualifier="layout"
+							autocreate="true" generate="true">
+							<description>This attribute is for determining the layout structure of the component</description>
+							<defaultvalue>em().getEnumerationValue("showCaseLayout","BrandShowCase")</defaultvalue>
+							<modifiers read="true" write="true" search="true" />
+							<persistence type='property' />
+						</attribute>
+					-->
+				</attributes>
+			</itemtype>
 
 		</typegroup>
 
