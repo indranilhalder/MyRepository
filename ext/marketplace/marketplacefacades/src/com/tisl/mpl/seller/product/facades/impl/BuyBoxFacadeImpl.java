@@ -77,7 +77,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	@Resource(name = "productDetailsHelper")
 	private ProductDetailsHelper productDetailsHelper;
 
-
+	private static final String BUYBOX_LIST = "buyboxList";
 
 	/**
 	 * @return the configurationService
@@ -139,10 +139,10 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	@Override
 	public Map<String, Object> buyboxPricePDP(final String productCode) throws EtailNonBusinessExceptions
 	{
-		final BuyBoxData buyboxData = new BuyBoxData();
+		BuyBoxData buyboxData = new BuyBoxData();
 		boolean onlyBuyBoxHasStock = false;
 		BuyBoxModel buyBoxMod = null;
-
+		final List<BuyBoxData> buyBoxDataList = new ArrayList<BuyBoxData>();
 		//TISPRM -56
 		String products[] = null;
 		String pdpProduct = null;
@@ -236,91 +236,101 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					productsWithNoStock = arrayToProductList;
 				}
 			}
+			//TPR-1375 changes
+			if (CollectionUtils.isNotEmpty(buyboxModelList) && buyboxModelList.size() > 1)
+			{
+				for (final BuyBoxModel buyBoxModel : buyboxModelList)
+				{
+					buyBoxDataList.add(populateBuyBoxData(buyBoxModel, onlyBuyBoxHasStock, buyboxModelList));
+				}
+				returnData.put(BUYBOX_LIST, buyBoxDataList);
+			}
 			if (buyboxModelList.size() > 0)
 			{
+				buyboxData = populateBuyBoxData(buyBoxMod, onlyBuyBoxHasStock, buyboxModelList);
+				returnData.put(BUYBOX_LIST, Arrays.asList(buyboxData));
 
-
-				if (null != buyBoxMod.getSpecialPrice() && buyBoxMod.getSpecialPrice().doubleValue() > 0)
-				{
-					final double spPrice = buyBoxMod.getSpecialPrice().doubleValue();
-					//final double roundedSpPrice = Math.round(spPrice * 100) / 100;
-					buyboxData.setSpecialPrice(productDetailsHelper.formPriceData(new Double(spPrice)));
-				}
-				final double price = buyBoxMod.getPrice().doubleValue();
-				buyboxData.setPrice(productDetailsHelper.formPriceData(new Double(price)));
-				buyboxData.setSellerAssociationstatus(SellerAssociationStatusEnum.YES.toString());
-				buyboxData.setSellerName(buyBoxMod.getSellerName());
-				buyboxData.setSellerId(buyBoxMod.getSellerId());
-				buyboxData.setSellerArticleSKU(buyBoxMod.getSellerArticleSKU());
-				buyboxData.setAvailable(buyBoxMod.getAvailable());
-				if (null != buyBoxMod.getMrp())
-				{
-					buyboxData.setMrp(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
-					buyboxData.setMrpPriceValue(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
-				}
-
-
-				//other sellers count
-				final int sellerSize = buyboxModelList.size() - 1;
-				final Integer noofsellers = Integer.valueOf(sellerSize);
-				if (onlyBuyBoxHasStock && sellerSize > 0)
-				{
-					buyboxData.setNumberofsellers(Integer.valueOf(-1));
-					//buyboxData.setNumberofsellers(Integer.valueOf(-1));
-				}
-				else
-				{
-					buyboxData.setNumberofsellers(noofsellers);
-				}
-				//Minimum price for other sellers
-				double minPrice = 0.0d;
-				if (sellerSize > 0)
-				{
-
-					for (int i = 1; i <= sellerSize; i++)
-					{
-						if (null != buyboxModelList.get(i).getSpecialPrice()
-								&& buyboxModelList.get(i).getSpecialPrice().doubleValue() > 0)
-						{
-
-							final double specialPrice = buyboxModelList.get(i).getSpecialPrice().doubleValue();
-
-							if (i == 1)
-							{
-								minPrice = specialPrice;
-							}
-							else
-							{
-								if (minPrice > specialPrice)
-								{
-									minPrice = specialPrice;
-								}
-							}
-						}
-						else
-						{
-							double actualPrice = 0.0D;
-							if (null != buyboxModelList.get(i).getPrice())
-							{
-								actualPrice = buyboxModelList.get(i).getPrice().doubleValue();
-							}
-							if (i == 1)
-							{
-								minPrice = actualPrice;
-							}
-							else
-							{
-								if (minPrice > actualPrice)
-								{
-									minPrice = actualPrice;
-								}
-							}
-						}
-					}
-
-				}
-				final double roundedMinPrice = Math.round(minPrice * 100) / 100;
-				buyboxData.setMinPrice(productDetailsHelper.formPriceData(new Double(roundedMinPrice)));
+				//				if (null != buyBoxMod.getSpecialPrice() && buyBoxMod.getSpecialPrice().doubleValue() > 0)
+				//				{
+				//					final double spPrice = buyBoxMod.getSpecialPrice().doubleValue();
+				//					//final double roundedSpPrice = Math.round(spPrice * 100) / 100;
+				//					buyboxData.setSpecialPrice(productDetailsHelper.formPriceData(new Double(spPrice)));
+				//				}
+				//				final double price = buyBoxMod.getPrice().doubleValue();
+				//				buyboxData.setPrice(productDetailsHelper.formPriceData(new Double(price)));
+				//				buyboxData.setSellerAssociationstatus(SellerAssociationStatusEnum.YES.toString());
+				//				buyboxData.setSellerName(buyBoxMod.getSellerName());
+				//				buyboxData.setSellerId(buyBoxMod.getSellerId());
+				//				buyboxData.setSellerArticleSKU(buyBoxMod.getSellerArticleSKU());
+				//				buyboxData.setAvailable(buyBoxMod.getAvailable());
+				//				if (null != buyBoxMod.getMrp())
+				//				{
+				//					buyboxData.setMrp(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
+				//					buyboxData.setMrpPriceValue(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
+				//				}
+				//
+				//
+				//				//other sellers count
+				//				final int sellerSize = buyboxModelList.size() - 1;
+				//				final Integer noofsellers = Integer.valueOf(sellerSize);
+				//				if (onlyBuyBoxHasStock && sellerSize > 0)
+				//				{
+				//					buyboxData.setNumberofsellers(Integer.valueOf(-1));
+				//					//buyboxData.setNumberofsellers(Integer.valueOf(-1));
+				//				}
+				//				else
+				//				{
+				//					buyboxData.setNumberofsellers(noofsellers);
+				//				}
+				//				//Minimum price for other sellers
+				//				double minPrice = 0.0d;
+				//				if (sellerSize > 0)
+				//				{
+				//
+				//					for (int i = 1; i <= sellerSize; i++)
+				//					{
+				//						if (null != buyboxModelList.get(i).getSpecialPrice()
+				//								&& buyboxModelList.get(i).getSpecialPrice().doubleValue() > 0)
+				//						{
+				//
+				//							final double specialPrice = buyboxModelList.get(i).getSpecialPrice().doubleValue();
+				//
+				//							if (i == 1)
+				//							{
+				//								minPrice = specialPrice;
+				//							}
+				//							else
+				//							{
+				//								if (minPrice > specialPrice)
+				//								{
+				//									minPrice = specialPrice;
+				//								}
+				//							}
+				//						}
+				//						else
+				//						{
+				//							double actualPrice = 0.0D;
+				//							if (null != buyboxModelList.get(i).getPrice())
+				//							{
+				//								actualPrice = buyboxModelList.get(i).getPrice().doubleValue();
+				//							}
+				//							if (i == 1)
+				//							{
+				//								minPrice = actualPrice;
+				//							}
+				//							else
+				//							{
+				//								if (minPrice > actualPrice)
+				//								{
+				//									minPrice = actualPrice;
+				//								}
+				//							}
+				//						}
+				//					}
+				//
+				//				}
+				//				final double roundedMinPrice = Math.round(minPrice * 100) / 100;
+				//				buyboxData.setMinPrice(productDetailsHelper.formPriceData(new Double(roundedMinPrice)));
 
 			}
 			else
@@ -870,5 +880,98 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		return buyBoxService.getpriceForUssid(ussid);
 	}
 
+	/**
+	 * changes for TPR-1375 poulating buybox details from buybox models
+	 *
+	 * @param buyBoxMod
+	 * @param buyboxModelList
+	 * @param onlyBuyBoxHasStock
+	 * @return buyboxData
+	 */
+	private BuyBoxData populateBuyBoxData(final BuyBoxModel buyBoxMod, final boolean onlyBuyBoxHasStock,
+			final List<BuyBoxModel> buyboxModelList)
+	{
+		final BuyBoxData buyboxData = new BuyBoxData();
+		if (null != buyBoxMod.getSpecialPrice() && buyBoxMod.getSpecialPrice().doubleValue() > 0)
+		{
+			final double spPrice = buyBoxMod.getSpecialPrice().doubleValue();
+			//final double roundedSpPrice = Math.round(spPrice * 100) / 100;
+			buyboxData.setSpecialPrice(productDetailsHelper.formPriceData(new Double(spPrice)));
+		}
+		final double price = buyBoxMod.getPrice().doubleValue();
+		buyboxData.setPrice(productDetailsHelper.formPriceData(new Double(price)));
+		buyboxData.setSellerAssociationstatus(SellerAssociationStatusEnum.YES.toString());
+		buyboxData.setSellerName(buyBoxMod.getSellerName());
+		buyboxData.setSellerId(buyBoxMod.getSellerId());
+		buyboxData.setSellerArticleSKU(buyBoxMod.getSellerArticleSKU());
+		buyboxData.setAvailable(buyBoxMod.getAvailable());
+		if (null != buyBoxMod.getMrp())
+		{
+			buyboxData.setMrp(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
+		}
+		buyboxData.setMrpPriceValue(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
 
+		//other sellers count
+		final int sellerSize = buyboxModelList.size() - 1;
+		final Integer noofsellers = Integer.valueOf(sellerSize);
+		if (onlyBuyBoxHasStock && sellerSize > 0)
+		{
+			buyboxData.setNumberofsellers(Integer.valueOf(-1));
+			//buyboxData.setNumberofsellers(Integer.valueOf(-1));
+		}
+		else
+		{
+			buyboxData.setNumberofsellers(noofsellers);
+		}
+		//Minimum price for other sellers
+		double minPrice = 0.0d;
+		if (sellerSize > 0)
+		{
+
+			for (int i = 1; i <= sellerSize; i++)
+			{
+				if (null != buyboxModelList.get(i).getSpecialPrice() && buyboxModelList.get(i).getSpecialPrice().doubleValue() > 0)
+				{
+
+					final double specialPrice = buyboxModelList.get(i).getSpecialPrice().doubleValue();
+
+					if (i == 1)
+					{
+						minPrice = specialPrice;
+					}
+					else
+					{
+						if (minPrice > specialPrice)
+						{
+							minPrice = specialPrice;
+						}
+					}
+				}
+				else
+				{
+					double actualPrice = 0.0D;
+					if (null != buyboxModelList.get(i).getPrice())
+					{
+						actualPrice = buyboxModelList.get(i).getPrice().doubleValue();
+					}
+					if (i == 1)
+					{
+						minPrice = actualPrice;
+					}
+					else
+					{
+						if (minPrice > actualPrice)
+						{
+							minPrice = actualPrice;
+						}
+					}
+				}
+			}
+
+		}
+		final double roundedMinPrice = Math.round(minPrice * 100) / 100;
+		buyboxData.setMinPrice(productDetailsHelper.formPriceData(new Double(roundedMinPrice)));
+		return buyboxData;
+
+	}
 }
