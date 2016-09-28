@@ -46644,6 +46644,9 @@ padding: 0 24px;
 	font-size: 20px;
     margin-bottom: 30px;
 }
+.style_edit_blp .style_edit_left_blp .content p{
+	font-size: 12px;
+}
 .style_edit_blp .style_edit_left_blp .content{
 	font-size: 20px;
     margin: 30px 0;
@@ -46651,8 +46654,11 @@ padding: 0 24px;
 .style_edit_left_blp, .style_edit_blp > div:last-child{
 	width:100%;
 }
-.blp_top_brands  .blp_top_brands_section{
+/* .blp_top_brands  .blp_top_brands_section{
 	width: 100%;
+} */
+.blp_top_brands .blp_top_brands_section .content{
+	padding-left: 149px;
 }
 .style_edit_blp .style_edit_left_blp > div:first-child p:first-child {
     font-size: 20px;
