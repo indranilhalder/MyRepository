@@ -51581,6 +51581,7 @@ display:block;}
     margin-right: 7%;
     width: 42.49%;
 }
+
 }
 
 @media(max-width:790px){
@@ -53382,11 +53383,15 @@ div.radio.creditDebitLabelRadio{
     #EMITermTable td {
         padding:10px 2px
     }
+    
 }
 @media(max-width: 767px) {
     #EMITermTable th {
         width: auto
     }
+}
+@media(max-width: 980px) {
+  .checkTab .add-address_viewMore.viewMoreContainer{width:100%;}
 }
 
 .addressList_wrapper,.addNew_wrapper{
