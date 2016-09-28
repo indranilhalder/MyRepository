@@ -51593,7 +51593,7 @@ display:block;}
 	width:63%;
 }
 .smk_accordion .accordion_in .acc_content .blocks .new-card .card_exp_month, .smk_accordion .accordion_in .acc_content .blocks .new-card .card_exp_year {
-    margin-right: 7%;
+    margin-right: 6%;
     width: 42.49%;
 }
 
@@ -53408,8 +53408,18 @@ div.radio.creditDebitLabelRadio{
 	width: 85% !important;
 }
 }
+.checkTab .add-address_viewMore.viewMoreContainer{    display: inline-block !important;margin-bottom: 64px;}
 @media(max-width: 980px) {
-  .checkTab .add-address_viewMore.viewMoreContainer{width:100%;margin:0 auto;float:none;display:block !important;margin-top:10px;}
+  .checkTab .add-address_viewMore.viewMoreContainer,.checkTab .moreEvens_address .add-address_viewMore.viewMoreContainer
+  {width:93%;margin:0 auto;float:none;display:block !important;margin-top:10px;margin-bottom:30px;margin-right:auto !important;clear:both;}
+  .addNew_wrapper .addnewAddresPage .formaddress {
+    width: 100% !important;
+    margin-left:auto;
+}
+.addNew_wrapper {
+    padding-top: 20px;
+    
+}
 }
 
 .addressList_wrapper,.addNew_wrapper{

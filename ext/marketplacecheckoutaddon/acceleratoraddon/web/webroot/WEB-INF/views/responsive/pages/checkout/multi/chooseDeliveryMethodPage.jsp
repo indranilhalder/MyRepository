@@ -414,7 +414,7 @@ display: none;
 	  
 	     <c:if test="${deliveryAddressCount gt 3}">
 	    <!--  <li style="float:left;width:500px;"><a href="#" class="viewMore">View More</a></li> -->	
-	    <div class="add-address_viewMore viewMoreContainer" style="display: inline-block !important;margin-bottom: 64px;">
+	    <div class="add-address_viewMore viewMoreContainer">
         <p>
 														<span class="addsign viewMoreSign">
         
