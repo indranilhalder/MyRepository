@@ -1,0 +1,112 @@
+#
+# Import the CMS content for the site
+#
+$storePrefix=mpl
+$contentCatalog=$storePrefixContentCatalog
+$productCatalog=mplProductCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Staged])[default=$productCatalog:Staged]
+# Import modulegen config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=$config-jarResourceCmsValue
+
+$category=category(code, $productCV)
+$product=product(code, $productCV)
+
+# Necessary headers for Responsive Tata marketplace Site CMS Content 
+# 
+$productCatalogName=MarketPlace Product Catalog 
+$picture=media(code, $contentCV) ;
+$siteResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/contentCatalogs/$contentCatalog
+
+
+# 
+# Necessary headers for Responsive_en Tata Marketplace Site CMS Content 
+# 
+$siteResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/contentCatalogs/$contentCatalog
+$medias=medias(code, $contentCV);
+$lang=en
+$mediaContainer=media(qualifier, $contentCV)[lang=$lang];
+
+# Load the storefront context root config param
+$storefrontContextRoot=$config-storefrontContextRoot
+
+
+# Add Velocity templates that are in the CMS Cockpit. These give a better layout for editing pages
+# The FileLoaderValueTranslator loads a File into a String property. The templates could also be inserted in-line in this file.
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;luxuryBLPTemplate;$jarResourceCms/structure-view/structure_luxuryBLPTemplate.vm
+
+# Create ContentSlotNames
+# Each PageTemplate has a number of ContentSlotNames, with a list of valid components for the slot.
+# There are a standard set of slots and a number of specific slots for each template.
+# Standard slots are SiteLogo, HeaderLinks, MiniCart and NavigationBar (that all appear in the Header), and the Footer. 
+
+# Luxury Brand Landing Page Template
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='luxuryBLPTemplate'];validComponentTypes(code);compTypeGroup(code)
+;NavigationBar;;NavigationBarCollectionComponent;
+
+# Create Content Pages
+# Site-wide Luxury Brand Landing Page
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;luxurybrandlandingpage;Luxury BLP;luxuryBLPTemplate;luxurybrandlandingpage
+
+
+##########################################################
+INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;&linkRef;&componentRef;target(code)[default='sameWindow'];$category;$product;linkName[lang=$lang]
+;;XYZComponentCategoryLink;XYZ Categoty Link;/womens-clothing/c-MSH1011105;XYZComponentCategoryLink;XYZComponentCategoryLink;;MSH1011105;;"XYZ Clothing"
+;;MenCategoryLink;Men Categoty Link;/mens-clothing/c-msh11;MenCategoryLink;MenCategoryLink;;MSH11;;"Men Clothing"
+;;WomenCategoryLink;Women Categoty Link;/womens-clothing/c-msh10;WomenCategoryLink;WomenCategoryLink;;MSH10;;"Women Clothing"
+;;KidsCategoryLink;Kids Categoty Link;/electronics/c-msh12;KidsCategoryLink;KidsCategoryLink;;MSH12;;"Kids"
+#### L2
+;;ClothingL2Link;Clothing Link;/womens-clothing-ethnic-wear-sarees/c-msh1012102;ClothingL2Link;ClothingL2Link;;MSH1012102;;"Clothing"
+;;ShoeL2Link;Shoe Link;/womens-clothing-ethnic-wear-sarees/c-msh1012102;ShoeL2Link;ShoeL2Link;;MSH1012102;;"Shoe"
+
+#### L4
+;;AllClothingLink;All Clothing Categoty Link;/footwear/c-msh1013103;AllClothingLink;AllClothingLink;;MSH1013103;;"All Clothing"
+;;CoatsLink;Coats Categoty Link;/footwear/c-msh13;CoatsLink;CoatsLink;;MSH13;;"Coats"
+;;BestsellersLink;Best Seller Link;/footwear/c-msh1013103;BestsellersLink;BestsellersLink;;MSH1013103;;"Bestsellers"
+;;ActivewearLink;Active Wear Link;/footwear/c-msh1013103;ActivewearLink;ActivewearLink;;MSH1013103;;"Activewear"
+
+
+### L1
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);links(&linkRef);&nodeRef;title[lang=en]
+#;XYZComponentNavNode;;XYZ Nav Node Links;SiteRootNode;XYZComponentCategoryLink;XYZComponentNavNode;"XYZ"
+;LuxurySiteRootNode;;LuxurySiteRootNode;root;;LuxurySiteRootNode;
+;MenNavNode;;Men Nav Node Links;LuxurySiteRootNode;MenCategoryLink;MenNavNode;"Men"
+;WomenNavNode;;Women Nav Node Links;LuxurySiteRootNode;WomenCategoryLink;WomenNavNode;"Women"
+;KidsNavNode;;Kids Nav Node Links;LuxurySiteRootNode;KidsCategoryLink;KidsNavNode;"Kids"
+#Subnodes L2
+### subnodes L2
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);links(&linkRef);&nodeRef;title[lang=en]
+## Men
+;MenClothingsNavNode;;Men's Clothings Nav Node;MenNavNode;ClothingL2Link;MenClothingsNavNode;"Clothings"
+;MenShoesNavNode;;Men's Shoes Nav Node;MenNavNode;ShoeL2Link;MenShoesNavNode;"Shoes"
+
+### subnodes L3
+## Men
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);links(&linkRef);&nodeRef;title[lang=en]
+;MenL3ClothingNavNode;;Men's Clothing Nav Node;MenClothingsNavNode;AllClothingLink,CoatsLink;MenL3ClothingNavNode;"Clothing"
+;MenL3EssentialsNavNode;;Men's Essential Nav Node;MenClothingsNavNode;BestsellersLink,ActivewearLink;MenL3EssentialsNavNode;"Essential"
+
+INSERT_UPDATE NavigationBarComponent;$contentCV[unique=true];uid[unique=true];name;wrapAfter;navigationNode(&nodeRef);link(uid, $contentCV);styleClass;dropDownLayout(code);&componentRef
+#;;XYZComponent;XYZ Component;10;XYZComponentNavNode;XYZComponentCategoryLink;;AUTO;XYZComponent
+;;menNavigationBarComponent;Men Navigation Bar Component;10;MenNavNode;MenCategoryLink;;AUTO;menNavigationBarComponent
+;;womenNavigationBarComponent;Women Navigation Bar Component;10;WomenNavNode;WomenCategoryLink;;AUTO;womenNavigationBarComponent
+;;kidsNavigationBarComponent;Kids Navigation Bar Component;10;KidsNavNode;KidsCategoryLink;;AUTO;kidsNavigationBarComponent
+
+
+# Navigation Bar Component
+INSERT_UPDATE NavigationBarCollectionComponent;$contentCV[unique=true];uid[unique=true];name;components(uid, $contentCV);&componentRef
+;;luxuryDepartment;Luxury Departments;menNavigationBarComponent,womenNavigationBarComponent,kidsNavigationBarComponent;luxuryDepartment
+
+##################################################
+### Content Slot
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+;;NavigationBarSlot-luxurybrandlandingpage;true;Navigation Bar Slot;luxuryDepartment
+
+## Content Slot for page
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxurybrandlandingpage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;NavigationBarSlot-luxurybrandlandingpage;NavigationBar;;NavigationBarSlot-luxurybrandlandingpage;;;
