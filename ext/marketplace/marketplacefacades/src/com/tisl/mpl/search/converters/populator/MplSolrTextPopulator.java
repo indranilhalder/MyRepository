@@ -52,7 +52,7 @@ public class MplSolrTextPopulator<FACET_SEARCH_CONFIG_TYPE, INDEXED_TYPE_TYPE, I
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.converters.Populator#populate(java.lang.Object, java.lang.Object)
 	 */
 
@@ -155,7 +155,7 @@ public class MplSolrTextPopulator<FACET_SEARCH_CONFIG_TYPE, INDEXED_TYPE_TYPE, I
 		// phrase slop for getting better relevance
 		searchQuery.addSolrParams("ps", "5");
 		// minimum match changes for TPR-1198
-		searchQuery.addSolrParams("mm", "50%");
+		searchQuery.addSolrParams("mm", "2");
 	}
 
 
