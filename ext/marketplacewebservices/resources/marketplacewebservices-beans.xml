@@ -1691,6 +1691,7 @@
         <property name="type" type="String" />
     	<property name="typeId" type="String" />
     	<property name="typeVal" type="String" />
+    	<property name="title" type="String" />
     </bean>
     
      <bean class="com.tisl.mpl.wsdto.ProductListComponentWsDTO">
@@ -2399,6 +2400,8 @@
     	<property name="resolution" type="String" />
     	<property name="altText" type="String" /> 
     	<property name="icid" type="String" /> 
+    	<property name="position" type="Integer"/>
+    	
     </bean>
     <bean class="com.tisl.mpl.wsdto.LuxSignatureWsDTO">
     	<property name="brandLogoUrl" type="String" />
@@ -2461,9 +2464,9 @@
     
     <bean class="com.tisl.mpl.wsdto.LuxTextMediaComponentWsDTO">
          <!-- For RotatingImagesComponent -->
-        <property name="textContent" type="java.util.List&lt;com.tisl.mpl.wsdto.TextComponentWsDTO>"/>
+        <property name="textContent" type="com.tisl.mpl.wsdto.TextComponentWsDTO"/>
          <!-- For RotatingImagesComponent -->
-    	<property name="carousal_images" type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO"/>    	
+    	<property name="carousal_images" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/>    	
     </bean>
     
     <bean class="com.tisl.mpl.wsdto.LuxBlpStripWsDTO">         

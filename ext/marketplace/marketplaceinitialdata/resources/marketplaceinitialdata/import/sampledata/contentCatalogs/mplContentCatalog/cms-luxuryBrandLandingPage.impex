@@ -61,7 +61,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;BottomHeaderSlot;;SimpleBannerComponent;
 ;Section1;;RotatingImagesComponent;
 ;Section2;;RotatingImagesComponent,MplAdvancedCategoryCarouselComponent;
-;Section3;;CMSParagraphComponent,RotatingImagesComponent;
+;Section3;;SimpleBannerComponent,RotatingImagesComponent;
 ;Section4;;CMSParagraphComponent,RotatingImagesComponent;
 ;Section5;;VideoComponent;
 ;Section6;;CMSParagraphComponent,CMSMediaParagraphComponent,ProductCarouselComponent;
@@ -149,8 +149,8 @@ INSERT_UPDATE MplImageCategoryComponent;$contentCV[unique=true];uid[unique=true]
 ;;categoryComponent4;Fourth Thumbnail Category;MSH1210100;categoryComponent4
 ;;categoryComponent5;Fifth Thumbnail Category;MSH1010100;categoryComponent5
 
-INSERT_UPDATE MplAdvancedCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];name;categories(&componentRef);&componentRef;imageSize(code)
-;;categoriesAdvancedComponent;Categories Carousel Component;categoryComponent1,categoryComponent2,categoryComponent3,categoryComponent4,categoryComponent5;categoriesAdvancedComponent;thumbnail
+INSERT_UPDATE MplAdvancedCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];name;categories(&componentRef);&componentRef;imageSize(code);altText
+;;categoriesAdvancedComponent;Categories Carousel Component;categoryComponent1,categoryComponent2,categoryComponent3,categoryComponent4,categoryComponent5;categoriesAdvancedComponent;thumbnail;Test for alt text
 
 
 ### Content Slot
@@ -170,10 +170,9 @@ INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;
 ;;SpringBannerImage2;text/png;banner_image2.png;$siteResource/images/mobile/banner_image2.png;
 ;;SpringBannerImage3;text/png;banner_image1.png;$siteResource/images/mobile/banner_image3.png;
 
-INSERT_UPDATE  CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;content[lang=$lang];&componentRef;
-;;spring16HeaderComponent;Spring 16 Component;"SPRING 2016";spring16HeaderComponent;
-;;spring16ParagraphComponent1;Spring 16 First Paragraph Component;<span>These image description guidelines were developed by the Carl and Ruth Shapiro Family National Center for Accessible Media</span>;spring16ParagraphComponent1;
 
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;title;description;
+;;spring16BannerComponent;Spring 16 Component;spring16BannerComponent;"SPRING 2016"; Collection for this Spring;
 
 INSERT_UPDATE BannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;$picture
 ;;spring16BannerComponent1;Spring 16 First Banner;spring16BannerComponent1;/;SpringBannerImage1
@@ -186,7 +185,7 @@ INSERT_UPDATE RotatingImagesComponent;$contentCV[unique=true];uid[unique=true];n
 
 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
-;;Section3-SpringCollectionOfimages; Spring 2016 First slot;true;spring16HeaderComponent,spring16ParagraphComponent1,spring16RotatingImageComponent1
+;;Section3-SpringCollectionOfimages; Spring 2016 First slot;true;spring16BannerComponent,spring16RotatingImageComponent1
 
 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxurybrandlandingpage'];contentSlot(uid,$contentCV)[unique=true];;;
