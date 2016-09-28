@@ -26,6 +26,7 @@ tr.d0 td {
 }
 </style>
  <script type="text/javascript">
+
       (function() {
        var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
        po.src = 'https://apis.google.com/js/client:plusone.js';
@@ -40,6 +41,7 @@ tr.d0 td {
 	function gotoLogin() {
 		window.open(ACC.config.encodedContextPath + "/login", "_self");
 	}
+	
 
 	var wishListList = [];
 
@@ -96,31 +98,21 @@ tr.d0 td {
 
  
  $( document ).ready(function() {
-	 
 	//AKAMAI Fix
 	 setSizeforAkamai();
 	//AJAX BuyBox call
 	 setBuyBoxDetails();
 	 
 	 
+	 
 	 getRating_Qview('${gigyaAPIKey}','${product.code}','${product.rootCategory}');
 	 
-	$(document).on("click","#variantForm div ul li a,.color-swatch-container .color-swatch li a",function(){
-		setTimeout(function(){
-		$(".zoomContainer").remove();
-		$('.picZoomer-pic').removeData('zoom-image');
-		$("img.picZoomer-pic").attr('data-zoom-image',$(".quickview .product-image-container .productImageGallery .active img").attr("data-zoomimagesrc")); 
-		$('.quickview .picZoomer-pic').elevateZoom({
-		    zoomType: "window",
-		    cursor: "crosshair",
-		    zoomWindowFadeIn: 500,
-		    zoomWindowFadeOut: 750
-	    });
-		var mainImageHeight = $(".main-image").find("img.picZoomer-pic").height();
-		var thumbnailImageHeight = (mainImageHeight / 5);
-		$(".imageList ul li img").css("height", thumbnailImageHeight);		
-		}, 1000); 
-	}); 
+	 var timer = setInterval(function(){
+			if($(document).find("#ussid_quick").length>0){
+			isItemInWishList($('#ussid_quick').val());
+			clearInterval(timer);
+			}
+		},1000);
 	 
 	
 	$(document).on('show.bs.modal', "#modalProd", function() {
@@ -134,6 +126,7 @@ tr.d0 td {
 			zoomWindowFadeIn : 500,
 			zoomWindowFadeOut : 750
 		});
+		
 	});
 	
 	 	$("#previousImage").css("opacity","0.5");
@@ -158,6 +151,7 @@ tr.d0 td {
 	    zoomWindowFadeIn: 500,
 	    zoomWindowFadeOut: 750
 	       });
+		
 	 });
 	 $("#cboxClose").click(function(){
 		$(".zoomContainer").remove();
@@ -190,18 +184,18 @@ tr.d0 td {
  	$(".tempAddToCartQuickView").css("display","block");
  } 
  
- $('a.wishlist#wishlist_quick').popover({ 
+/*  $('a.wishlist#wishlist_quick').popover({ 
 	    html : true,
 	    content: function() {
 	      return $(this).parents().find('.add-to-wishlist-container_quick').html();
 	    }
-	  });
+	  });*/
  $('input.wishlist#add_to_wishlist_quick').popover({ 
 		html : true,
 		content: function() {
 			return $(this).parents().find('.add-to-wishlist-container_quick').html();
 		}
-	});
+	}); 
  
  function getRating_Qview(key,productCode,category)
  {
@@ -260,9 +254,9 @@ tr.d0 td {
  	  
  	// var avgrating = '${product.averageRating}';
  		//alert(":-:"+avgrating);
+ 	 
  		
- }
- 	  
+ }	  
  </script>
  <style type="text/css">
 tr.d0 td {
@@ -303,8 +297,16 @@ display:none;
 <div class="quickview active">
 <div class="content">
 <div class="quick-view-popup product-info wrapper">
-
+<!-- TPR-924 -->
+<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
+			<input type="hidden" id="loggedIn" value="false"/> 
+		</sec:authorize>
+		<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
+			<input type="hidden" id="loggedIn" value="true"/> 
+		</sec:authorize>
+		<!-- TPR-924 -->
 <div class="product-image-container">
+	<a class="wishlist-icon" onclick="openPop_quick()"></a>	
    <c:set var="increment" value="0"/>
 <c:set var="thumbNailImageLength" value="${fn:length(galleryImages)}" />
 
@@ -342,9 +344,14 @@ display:none;
 </div>
 
     <div class="main-image">
+	<a onClick="openPop_quick();" class="wishlist-icon-qv normal"></a>
+	<a onClick="openPop_quick();" class="wishlist-icon-qv zoom-qv" style="display: none;"></a>
     <a href="${productUrl}"> <product:productPrimaryImage
 				product="${product}" format="product" />
 		</a>
+<!-- 		<div class="zoom" style="z-index:10000;">
+		<a onClick="openPop_quick();" id="wishlist_quick" class="wishlist" data-toggle="popover" data-placement='bottom'></a>
+		</div> -->
 		 <%-- <c:if test="${isCodEligible=='Y'}">
           <div class="cod" id="codId">
 		  <span ><spring:theme code="product.cod"/></span> 
@@ -365,13 +372,13 @@ display:none;
 		<%-- </c:if> --%>
 		</div>
 		
-		<div id="emiStickerId" class="emi" style="display:none;">
+<%-- 		<div id="emiStickerId" class="emi" style="display:none;">
 							<spring:theme code="marketplace.emiavailable" />&nbsp;
 							<a type="button" name="yes" id="prodEMI"
 		data-target="#modalProd" onclick="openPopForBankEMI_quick()"
 		data-toggle="modal"><spring:theme code="marketplace.emiinfo"></spring:theme></a> <input id="prodPrice" type="hidden" />
-						</div>
-				<product:emiDetail product="${product}" />
+						</div> --%>
+<%-- 		emi		<product:emiDetail product="${product}" /> --%>
 	
 <%-- 		<c:choose>
 		<c:when test="${spPrice ne null}">
@@ -422,7 +429,7 @@ display:none;
     <div class="product-detail">
     
     <h2 class="company">
-              <span class="logo"></span>${product.brand.brandname}&nbsp;<spring:theme code="product.by"/>&nbsp;<span id="sellerNameIdQuick"></span>${sellerName}</h2><!-- Convert into AJAX call -->
+              <span class="logo"></span>${product.brand.brandname}<%-- &nbsp;<spring:theme code="product.by"/>&nbsp;<span id="sellerNameIdQuick"></span>${sellerName} --%></h2><!-- Convert into AJAX call -->
               
     <h3 class="product-name"><a href="${productUrl}">${product.productTitle}</a></h3>
     <div class="price">
@@ -474,27 +481,18 @@ display:none;
 	  <span></span>
 	</p>
     
-  </div>   
+  </div>  
+	<%-- <div id="emiStickerId" class="Emi Emi_wrapper" style="display:none;">		
+				<spring:theme code="marketplace.emiavailable" />&nbsp;		
+							<a type="button" name="yes" id="prodEMI"		
+		data-target="#modalProd" onclick="openPopForBankEMI_quick()"		
+		data-toggle="modal"><spring:theme code="marketplace.emiinfo"></spring:theme></a> <input id="prodPrice" type="hidden" />		
+	</div>	 --%>	
+<%-- <product:emiDetail product="${product}" />  --%>
 <a href="#" class="gig--readReviewsLink"></a>
 	<span id="gig-rating-readReviewsLink_quick" ></span>	
   <input type="hidden" id="rating_review" value="${product.code}">
-		 <ul class="star-review" id="quick_view_rating">
-				<li class="empty"></li>
-				<li class="empty"></li>
-				<li class="empty"></li>
-				<li class="empty"></li>
-				<li class="empty"></li>
 		
-		<%-- 	<c:choose>
-				<c:when test="${not empty product.ratingCount}">
-			
-					<span id="gig-rating-readReviewsLink_quick" >  <spring:theme code="rating.reviews"/></span>
-				</c:when>
-				<c:otherwise> --%>
-					<span class="gig-rating-readReviewsLink_quick"> <spring:theme code="rating.noreviews"/></span>
-				<%-- </c:otherwise>
-			</c:choose> --%>
-			</ul> 
 			
 <!-- 			 <script>
 				var avgrating = '${product.averageRating}';
@@ -513,32 +511,21 @@ display:none;
 				
 			</script>  -->
  
- 	<div class="fullfilled-by">
-		<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;
-		<%-- <c:choose>
-		<c:when test="${fn:toLowerCase(fullfilmentType) == fn:toLowerCase('sship')}">
-			<span id="fullFilledById">${sellerName}</span>
-		</c:when>
-		<c:otherwise>
-			<span id="fullFilledById"><spring:theme code="product.default.fulfillmentType"/></span>
-		</c:otherwise>
-		</c:choose> --%>
-		<span id="fulFilledByTshipQuick" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
-			<span id="fulFilledBySshipQuick"  style="display:none;"></span>
-	</div>
-   <div class="product-content" style="margin-top:15px;">
+ 	
+   <div class="product-content" style="margin-top:5px;">
+   <product:emiDetail product="${product}" />
 	   <div class="swatch">
 	<product:viewQuickViewVariant/>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.cart.maximumConfiguredQuantity.lineItem')" var="maxQuantityCount"/>
-	<div class="qty">
+	<%-- <div class="qty">
 	<!-- TISPRM-131 -->
-		<%-- <p> <spring:theme code="product.configureproductscount.qty"/></p> --%>
-		<%-- <select id="quantity">		
+		<p> <spring:theme code="product.configureproductscount.qty"/></p>
+		<select id="quantity">		
 		<c:forEach var="qtyCnt" begin="1" end="${maxQuantityCount}">
    		<option value="${qtyCnt}">${qtyCnt}</option>
 		</c:forEach>
-		</select> --%>
-	</div> 
+		</select>
+	</div> --%> 
 
 </div>
 <%--  <div id="ajax-loader" style="margin: 0 auto; height:20px; width: 20px;"><img src="${commonResourcePath}/images/ajax-loader.gif"></div> --%>     
@@ -546,6 +533,14 @@ display:none;
 <div id="addToCartFormQuickTitle" class="addToCartTitle">
 		</div>
 	<ycommerce:testId code="quickview_addToCart_button_${product.code}">
+	<div class="Cta">
+	 <!-- TPR-924 -->
+		 <div id="buyNowQv"> 
+	        <button style="display: block" id="buyNowButton" type="button" class="btn-block js-add-to-cart-qv">
+				<spring:theme code="buyNow.button.pdp" />
+			</button>
+	    </div> 
+	    <!-- TPR-924 -->
 		<%-- <form:form id="addToCartFormQuick" action="${request.contextPath }/cart/add" method="post" class="add_to_cart_form"> --%>
 		<form:form id="addToCartFormQuick" action="#" method="post" class="add_to_cart_form">
 		<span id="addToCartFormQuickTitleSuccess" class="addToCartTitle">
@@ -562,7 +557,7 @@ display:none;
 		<input type="hidden" maxlength="3" size="1" id="stock" name="stock"
 		 /> <!-- value="${availablestock}" --> <!-- Convert into AJAX call -->
 		 <input type="hidden" name="sellerSelId" id="sellerSelId" /> 
-		 
+		
 		 <button id="addToCartButtonQuick" type="${buttonType}"
 												class="btn-block js-add-to-cart tempAddToCartQuickView" style="display:none;">
 												<spring:theme code="basket.add.to.basket" />
@@ -570,7 +565,8 @@ display:none;
 		<span id="dListedErrorMsg" style="display: none"  class="dlist_message">
 		<spring:theme code="pdp.delisted.message" />
 	</span>
-		<button id="addToCartButtonQuick-wrong" type="button" class="btn-block" disable="true" style="display: none;"> <spring:theme code="basket.add.to.basket" /></button>
+		<button id="addToCartButtonQuick-wrong" type="button" class="btn-block" disable="true" style="display: none;" disabled> <spring:theme code="basket.add.to.basket" /></button>
+		<button id="buyNowButtonQuick-wrong" type="button" class="btn-block" disable="true" style="display: none;" disabled > <spring:theme code="buyNow.button.pdp" /></button>
 											
 		<span id="addToCartFormnoInventory" style="display: none" class="no_inventory"><p class="inventory">
 			<font color="#ff1c47"><spring:theme code="Product.outofinventory" /></font>
@@ -617,17 +613,51 @@ display:none;
 				<input type="button" id="add_to_wishlist_quick" onClick="openPop_quick();" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/>
 			</span>				
 	<%-- </c:if> --%>
-	</ycommerce:testId>    
+	</div>
+	</ycommerce:testId> 
+	<div class="SoldWrap">
+	<div class="seller">Sold by <span id="sellerNameIdQuick"></span></div>
+	<div class="fullfilled-by">
+		<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;
+		<%-- <c:choose>
+		<c:when test="${fn:toLowerCase(fullfilmentType) == fn:toLowerCase('sship')}">
+			<span id="fullFilledById">${sellerName}</span>
+		</c:when>
+		<c:otherwise>
+			<span id="fullFilledById"><spring:theme code="product.default.fulfillmentType"/></span>
+		</c:otherwise>
+		</c:choose> --%>
+		<span id="fulFilledByTshipQuick" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
+			<span id="fulFilledBySshipQuick"  style="display:none;"></span>
+	</div>
+	</div>
+	 <ul class="star-review" id="quick_view_rating">
+				<li class="empty"></li>
+				<li class="empty"></li>
+				<li class="empty"></li>
+				<li class="empty"></li>
+				<li class="empty"></li>
+		
+		<%-- 	<c:choose>
+				<c:when test="${not empty product.ratingCount}">
+			
+					<span id="gig-rating-readReviewsLink_quick" >  <spring:theme code="rating.reviews"/></span>
+				</c:when>
+				<c:otherwise> --%>
+					<span class="gig-rating-readReviewsLink_quick"> <spring:theme code="rating.noreviews"/></span>
+				<%-- </c:otherwise>
+			</c:choose> --%>
+			</ul>    
 <!-- adding to wishlist -->
 				<ul class="wish-share">
-					<li><!-- <span id="addedMessage" style="display:none"></span> -->
-						<%-- <a onClick="openPop_quick('${buyboxUssid}');scrollbottom();" id="wishlist_quick" class="wishlist" data-toggle="popover" data-placement='bottom'>....<spring:theme code="text.add.to.wishlist"/></a></li> --%>
+					  <%--   <li><!-- <span id="addedMessage" style="display:none"></span> -->
+						<a onClick="openPop_quick('${buyboxUssid}');scrollbottom();" id="wishlist_quick" class="wishlist" data-toggle="popover" data-placement='bottom'>....<spring:theme code="text.add.to.wishlist"/></a></li>
 						<a onClick="openPop_quick();" id="wishlist_quick" class="wishlist" data-toggle="popover" data-placement='bottom'><spring:theme code="text.add.to.wishlist"/></a></li>
-				<%-- <a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement='bottom'><spring:theme code="text.add.to.wishlist"/></a></li> --%>
+				<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement='bottom'><spring:theme code="text.add.to.wishlist"/></a></li>  --%>
 					<li>
 						<div class="share">
-							<span><spring:theme code="product.socialmedia.share"/></span>
-							<ul style="width: 200px;">
+							<%-- <span><spring:theme code="product.socialmedia.share"/></span> --%>
+							<ul style="width: 100%;">
 								<li>
 							<a class="tw" onclick="return openPopup('https://twitter.com/intent/tweet?text='+ $('#sharepretext').text() + ' ' +window.location.host+ $('#productUrl').text() + ' ' + $('#shareposttext').text())"></a>
 							</li>
@@ -656,6 +686,9 @@ display:none;
 						</div>
 					</li>
 				</ul>
+				<div class="full-details">
+<a href="${productUrl}" class="quick-view-prod-details-link"><spring:theme code="quickview.productdetails"/></a>
+</div>
 				
 	<script>
 			$(".g-interactivepost").attr("data-contenturl",window.location.host+$('#productUrl').text());
@@ -767,9 +800,9 @@ display:none;
 		<input type="hidden" id="loggedInQuick" value="true"/> 
 		</sec:authorize>
  	
-<div class="quick-view-prod-details-container">
+<%-- <div class="quick-view-prod-details-container">
 <a href="${productUrl}" class="quick-view-prod-details-link"><spring:theme code="quickview.productdetails"/></a>
-</div>
+</div>  --%>
 <span id="addtobag" style="display:none"><spring:theme code="product.addtocart.success"/></span>
 <span id="addtobagerror" style="display:none"><spring:theme code="product.error"/></span>
 <span id="bagtofull" style="display:none"><spring:theme code="product.addtocart.aboutfull"/></span>
@@ -798,6 +831,10 @@ display:none;
     -webkit-transition: font-weight 0.15s;
     -moz-transition: font-weight 0.15s;
     transition: font-weight 0.15s;
+}
+#cboxLoadedContent {
+	margin-top: 0;
+	overflow: visible !important;
 }
 </style>
 
@@ -914,5 +951,47 @@ $(document).on("keypress","#defaultWishName_quick",function(e) {
 	validateSpcharWlName(e,wishlistname,mainDiv,errorDiv);
 }); 
 
+/*add to wishlist st*/
+var wishQv;
+wishQv = setInterval(function(){
+	if($(".zoomContainer .wishlist-icon-qv.zoom-qv").length == 0) {
+		$(".zoomContainer").append($(".wishlist-icon-qv.zoom-qv").clone());
+		$(".zoomContainer .wishlist-icon-qv.zoom-qv").css({
+			"left":$(".quickview .main-image").width() - 50,
+			"display":"block"
+			});
+	} else {
+		clearInterval(wishQv);
+	}
+	
+},50);
+$(document).on("mouseover",".zoomContainer",function(e) {
+	if($(".zoomContainer .wishlist-icon-qv.zoom-qv").length == 0) {
+		$(".zoomContainer").append($(".wishlist-icon-qv.zoom-qv").clone());
+		$(".zoomContainer .wishlist-icon-qv.zoom-qv").css({
+			"left":$(".quickview .main-image").width() - 50,
+			"display":"block"
+			});
+	}
+	$(".wishlist-icon-qv.normal").hide();
+	$(".zoomContainer .wishlist-icon-qv.zoom-qv").show();
+	$(".zoomContainer .wishlist-icon-qv.zoom-qv").css({
+		"left":$(".quickview .main-image").width() - 50
+		});
+});
+$(document).on("mouseleave",".zoomContainer",function(e) {
+	$(".zoomContainer .wishlist-icon-qv.zoom-qv").remove();
+	$(".wishlist-icon-qv.normal").show();
+	$(".zoomContainer .wishlist-icon-qv.zoom-qv").hide();
+});
+$(window).resize(function(){
+	if($(window).width() < 1024) {
+		$(".wishlist-icon-qv.normal").show();
+		
+	}
+	
+});
+
+/*add to wishlist st*/
 
 </script>

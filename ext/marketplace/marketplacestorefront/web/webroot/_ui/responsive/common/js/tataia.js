@@ -1430,7 +1430,7 @@ if (searchCategory_id){
 
 				  html += '<p class="company" >'+obj.brand+'</p>';
 
-				  html += '<span class="product-name" style="text-overflow: ellipsis;word-break: break-word;">'+obj.name+'</span>';
+				  html += '<h2 class="product-name" style="text-overflow: ellipsis;word-break: break-word;">'+obj.name+'</h2>';
 
 				  html += '<div class="price">';
 

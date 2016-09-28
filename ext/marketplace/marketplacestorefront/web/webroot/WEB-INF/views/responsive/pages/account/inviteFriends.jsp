@@ -89,7 +89,8 @@
 			        
 		<div class="right-account">
 		 	<div class="invites">
-				<h1><spring:theme code="text.InviteFriends.SendYourInvite" text="Invite your friends"/></h1>
+				<h2><spring:theme code="text.InviteFriends.SendYourInvite" text="Invite your friends"/></h2>
+				
 				<p><spring:theme code="text.InviteFriends.SendInvitationEmail" text="Invite your mum, dad, friends, bros, aunties, uncles, next-door neighbors Call everybody here!"/></p>
                 <form>
 						<c:if test="${not empty textMessage}">
@@ -110,7 +111,7 @@
 					
 					<span class="or"><spring:theme code="text.or"/></span>
 					
-					<h1><spring:theme code="text.inviteFriends.invite.social" text="The social network"/></h1>
+					<h2><spring:theme code="text.inviteFriends.invite.social" text="The social network"/></h2>
 					
 					<p><spring:theme code="text.inviteFriends.invite.more.friends" text="Get all your FB friends (true or fake), Twitter birds, Insta stalkers and the whole shebang here "/></p>
 					
@@ -163,7 +164,7 @@
 					<div class="personal-invites">
 					
 					<span class="or"><spring:theme code="text.or"/></span>
-					<h1><spring:theme code="text.inviteFriends.invite.personal" text="One on one"/></h1>
+					<h2><spring:theme code="text.inviteFriends.invite.personal" text="One on one"/></h2>
 					<p><spring:theme code="text.inviteFriends.invite.copy.and.share" text="Get personal. Copy this link and send it to your chosen few."/></p>
 					
 					<%-- <c:url value='/login/?affiliateId=${affiliateId}' var="regUrl" />

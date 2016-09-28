@@ -761,6 +761,8 @@ public final class ModelAttributetConstants
 	public static final String META_VARIABLE_FIVE = "{5}";
 	public static final String META_VARIABLE_SIX = "{6}";
 
+	//TPR-174
+	public static final String WELCOME_BACK_MESSAGE = "welcome_message";
 
 
 	public static final String CATEGORY_PAGE_META_DESCRIPTION = "Buy {0} Online at best price in India. Shop from wide range of {1} online from popular brands and get 100% Genuine Products!";

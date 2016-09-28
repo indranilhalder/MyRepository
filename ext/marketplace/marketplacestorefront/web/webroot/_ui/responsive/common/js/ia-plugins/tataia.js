@@ -503,6 +503,12 @@ if (searchCategory_id){
 			  var qv = productElement.getElementsByClassName("IAQuickView")[0];
 			  qv.style.zIndex = 11;
 			  qv.style.visibility = "visible";
+			// Added as part of TPR-859 (size on hover)
+				var size_bottom = $(productElement).find(".short-info").height() + 31;
+				$(productElement).find(".sizesAvailable").css("bottom",size_bottom + "px");
+				if($(productElement).find(".sizesAvailable").length > 0){
+					$(productElement).find(".IAQuickView").addClass("size_on_hover");
+				}
 			}
 			/*Make quickview and Add to cart visible and on top*/
 			function showBoth(productElement) {
@@ -659,7 +665,7 @@ if (searchCategory_id){
 						  }
 						 /* TISPRD-2119 Changes for Quick View position*/
 						 if((obj.colors != null && obj.colors.length < 2) && (obj.sizes != null && obj.sizes.length < 2)&& (obj.type == 'Electronics')){ 
-							 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0;left: 0px; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block; width: 50%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height:70px;font-size:12px;"><span>Quick View</span></div><div onclick=submitAddToCart("'+obj.site_product_id+'","'+obj.site_uss_id+'") class="iaAddToCartButton" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block;right:0; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;width: 50%;font-size:12px;"><span>Add To Bag</span></div>';
+							 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView ia_both" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0;left: 0px; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block; width: 50%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height:70px;font-size:12px;"><span>Quick View</span></div><div onclick=submitAddToCart("'+obj.site_product_id+'","'+obj.site_uss_id+'") class="iaAddToCartButton ia_both" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block;right:0; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;width: 50%;font-size:12px;"><span>Add To Bag</span></div>';
 							
 						 }else{
 							 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0; z-index: -1; visibility: hidden; color: #00cbe9;display: block; width: 100%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;font-size:12px;"><span>Quick View</span></div>';
@@ -679,7 +685,7 @@ if (searchCategory_id){
 						  }
 						  /* TISPRD-2119 Changes for Quick View position*/
 							 if((obj.colors != null && obj.colors.length < 2) && (obj.sizes != null && obj.sizes.length < 2)&& (obj.type == 'Electronics')){ 
-								 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0;left: 0px; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block; width: 50%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height:70px;font-size:12px;"><span>Quick View</span></div><div onclick=submitAddToCart("'+obj.site_product_id+'","'+obj.site_uss_id+'") class="iaAddToCartButton" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block;right:0; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;width: 50%;font-size:12px;"><span>Add To Bag</span></div>';
+								 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView ia_both" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0;left: 0px; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block; width: 50%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height:70px;font-size:12px;"><span>Quick View</span></div><div onclick=submitAddToCart("'+obj.site_product_id+'","'+obj.site_uss_id+'") class="iaAddToCartButton ia_both" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block;right:0; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;width: 50%;font-size:12px;"><span>Add To Bag</span></div>';
 								
 							 }else{
 								 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0; z-index: -1; visibility: hidden; color: #00cbe9;display: block; width: 100%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;font-size:12px;"><span>Quick View</span></div>';
@@ -768,7 +774,7 @@ if (searchCategory_id){
 					  } else {
 					  obj.sizes.sort() /*Not a string-based size array, sort normally*/
 					  }
-					   	html += '</div><span style="padding-bottom: 0;line-height:2;" class="sizesAvailable">Size : ['+obj.sizes+'] </span>';
+					   	html += '</div><span class="sizesAvailable">Size : <span class="size-col">['+obj.sizes+'] </span></span>';
 					  }
 					  } 
 				  html += '</div></a>';
@@ -1112,28 +1118,26 @@ if (searchCategory_id){
 			            		nav:true,
 			            		dots:false,
 			            		navText:[],
-			            		slideBy:'page',
-			            		responsive : {
-			            			// breakpoint from 0 up
-			            			0 : {
-			            				items:1,
-			            				stagePadding: 50,
-			            			},	
-			            			480 : {
-			            				items:2,
-			            				stagePadding: 50,
-			            			},
-			            			768 : {
-			            				items:2,
-			            			},
-			            			980 : {
-			            				items:3,
-			            			},		
-			            			// breakpoint from 650 up
-			            			1200 : {
-			            				items:4,
-			            			}			
-			            		}	
+			            		responsive: {
+			                        // breakpoint from 0 up
+			                        0: {
+			                            items: 1,
+			                            stagePadding: 50,
+			                        },
+			                        // breakpoint from 480 up
+			                        480: {
+			                            items: 2,
+			                            stagePadding: 50,
+			                        },
+			                        // breakpoint from 768 up
+			                        768: {
+			                            items: 3,
+			                        },
+			                        // breakpoint from 768 up
+			                        1280: {
+			                            items: 5,
+			                        }
+			                    }
 
 						    	    	  /*items : 4,
 
@@ -1166,28 +1170,26 @@ if (searchCategory_id){
 	            		nav:true,
 	            		dots:false,
 	            		navText:[],
-	            		slideBy:'page',
-	            		responsive : {
-	            			// breakpoint from 0 up
-	            			0 : {
-	            				items:1,
-	            				stagePadding: 50,
-	            			},	
-	            			480 : {
-	            				items:2,
-	            				stagePadding: 50,
-	            			},
-	            			768 : {
-	            				items:3,
-	            			},
-	            			980 : {
-	            				items:4,
-	            			},		
-	            			// breakpoint from 650 up
-	            			1200 : {
-	            				items:5,
-	            			}			
-	            		}	
+	            		responsive: {
+	                        // breakpoint from 0 up
+	                        0: {
+	                            items: 1,
+	                            stagePadding: 50,
+	                        },
+	                        // breakpoint from 480 up
+	                        480: {
+	                            items: 2,
+	                            stagePadding: 50,
+	                        },
+	                        // breakpoint from 768 up
+	                        768: {
+	                            items: 3,
+	                        },
+	                        // breakpoint from 768 up
+	                        1280: {
+	                            items: 5,
+	                        }
+	                    }
 
 			        /*items : 5,
 
@@ -1407,28 +1409,26 @@ if (searchCategory_id){
 	            		nav:true,
 	            		dots:false,
 	            		navText:[],
-	            		slideBy:'page',
-	            		responsive : {
-	            			// breakpoint from 0 up
-	            			0 : {
-	            				items:1,
-	            				stagePadding: 50,
-	            			},	
-	            			480 : {
-	            				items:2,
-	            				stagePadding: 50,
-	            			},
-	            			768 : {
-	            				items:2,
-	            			},
-	            			980 : {
-	            				items:3,
-	            			},		
-	            			// breakpoint from 650 up
-	            			1200 : {
-	            				items:4,
-	            			}			
-	            		}	
+	            		responsive: {
+	                        // breakpoint from 0 up
+	                        0: {
+	                            items: 1,
+	                            stagePadding: 50,
+	                        },
+	                        // breakpoint from 480 up
+	                        480: {
+	                            items: 2,
+	                            stagePadding: 50,
+	                        },
+	                        // breakpoint from 768 up
+	                        768: {
+	                            items: 3,
+	                        },
+	                        // breakpoint from 768 up
+	                        1280: {
+	                            items: 5,
+	                        }
+	                    }
 					    	/*items : 4,
 
 							navigation:true,

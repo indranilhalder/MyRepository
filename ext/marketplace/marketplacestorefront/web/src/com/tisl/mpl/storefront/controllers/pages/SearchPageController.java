@@ -46,9 +46,14 @@ import de.hybris.platform.commerceservices.search.facetdata.SpellingSuggestionDa
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.product.impl.DefaultProductService;
+import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.session.Session;
 import de.hybris.platform.servicelayer.session.SessionService;
+import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
+import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -86,10 +91,13 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.helpmeshop.HelpMeShopFacade;
+import com.tisl.mpl.facade.wishlist.WishlistFacade;
+import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.model.cms.components.NeedHelpComponentModel;
 import com.tisl.mpl.solrfacet.search.impl.DefaultMplProductSearchFacade;
 import com.tisl.mpl.storefront.breadcrumb.impl.MplSearchBreadcrumbBuilder;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
+import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.storefront.web.data.MplAutocompleteResultData;
@@ -145,6 +153,11 @@ public class SearchPageController extends AbstractSearchPageController
 
 	@Autowired
 	private CatalogVersionService catalogVersionService;
+	@Autowired
+	private UserService userService;
+	@Autowired
+	private WishlistFacade wishlistFacade;
+
 	@Resource(name = "productSearchFacade")
 	private ProductSearchFacade<ProductData> productSearchFacade;
 
@@ -162,6 +175,9 @@ public class SearchPageController extends AbstractSearchPageController
 
 	@Resource(name = "categoryService")
 	private CategoryService categoryService;
+
+	@Resource(name = "productDetailsHelper")
+	private ProductDetailsHelper productDetailsHelper;
 
 
 
@@ -1479,5 +1495,115 @@ public class SearchPageController extends AbstractSearchPageController
 		competingProductsSearchState.setQuery(competingProductsSearchQueryData);
 
 		return competingProductsSearchState;
+	}
+
+	/**
+	 * This is the GET method which fetches the bank last modified wishlist in PLP
+	 *
+	 *
+	 * @return Wishlist2Model
+	 */
+	@RequestMapping(value = "/getLastModifiedWishlistByPcode", method = RequestMethod.GET)
+	public @ResponseBody boolean getLastModifiedWishlist(@RequestParam("pcode") final String pcode)
+	{
+		boolean existPcode = false;
+
+		try
+		{
+			existPcode = getLastModifiedWishlistByPcode(pcode);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+
+		return existPcode;
+
+	}
+
+
+	/**
+	 * @param pcode
+	 * @return
+	 */
+	public boolean getLastModifiedWishlistByPcode(final String pcode)
+	{
+		Wishlist2Model lastCreatedWishlist = null;
+		boolean existPcode = false;
+		try
+		{
+			final UserModel user = userService.getCurrentUser();
+			lastCreatedWishlist = wishlistFacade.getSingleWishlist(user);
+			if (null != lastCreatedWishlist)
+			{
+				for (final Wishlist2EntryModel entry : lastCreatedWishlist.getEntries())
+				{
+					if (null != (entry) && null != entry.getProduct() && (entry.getProduct()).equals(pcode))
+					{
+						existPcode = true;
+						break;
+					}
+				}
+			}
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return existPcode;
+	}
+
+
+
+
+	/**
+	 * @description method is to add products in wishlist in popup in plp
+	 * @param productCode
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @throws CMSItemNotFoundException
+	 */
+	@ResponseBody
+	@RequestMapping(value = RequestMappingUrlConstants.ADD_WISHLIST_IN_POPUP_PLP, method = RequestMethod.GET)
+	//@RequireHardLogIn
+	public boolean addWishListsForPLP(@RequestParam(ModelAttributetConstants.PRODUCT) final String productCode,
+			@RequestParam("wish") final String wishName, @RequestParam("sizeSelected") final String sizeSelected, final Model model,
+			final HttpServletRequest request, final HttpServletResponse response) throws CMSItemNotFoundException
+	{
+		model.addAttribute(ModelAttributetConstants.MY_ACCOUNT_FLAG, ModelAttributetConstants.N_CAPS_VAL);
+
+		boolean add = false;
+		try
+		{
+			//add = productDetailsHelper.addToWishListInPopup(productCode, ussid, wishName, Boolean.valueOf(sizeSelected));
+			add = productDetailsHelper.addSingleToWishListForPLP(productCode, Boolean.valueOf(sizeSelected));
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+
+		return add;
+
 	}
 }
