@@ -898,154 +898,167 @@ public class AccountPageController extends AbstractMplSearchPageController
 				final List<OrderData> subOrderList = orderDetail.getSellerOrderList();
 				final List<OrderEntryData> orderList = orderDetail.getEntries();
 				//TRP1081
-				for (final OrderEntryData orderEntry : orderList)
+				if (subOrderList.isEmpty())
 				{
-					//statusTrackMap = getOrderDetailsFacade.getOrderPaymentStatus(orderEntry, orderDetail, orderModel);
-					statusTrackMap = getOrderDetailsFacade.getOrderStatusTrack(orderEntry, orderDetail, orderModel);
-					if (null == orderEntry.getConsignment() && orderEntry.getQuantity() != 0)
+					for (final OrderEntryData orderEntry : orderList)
 					{
-						if (orderDetail.getStatus() != null)
+						//statusTrackMap = getOrderDetailsFacade.getOrderPaymentStatus(orderEntry, orderDetail, orderModel);
+						statusTrackMap = getOrderDetailsFacade.getOrderStatusTrack(orderEntry, orderDetail, orderModel);
+						if (null == orderEntry.getConsignment() && orderEntry.getQuantity() != 0)
 						{
-							consignmentStatus = orderDetail.getStatus().getCode();
-						}
-					}
-					trackStatusMap.put(orderDetail.getCode() + orderEntry.getEntryNumber(), statusTrackMap);
-					currentStatusMap.put(orderDetail.getCode() + orderEntry.getEntryNumber(), consignmentStatus);
-				}
-
-				for (final OrderData subOrder : subOrderList)
-				{
-					//TISPT-385
-					subOrderModel = orderModelService.getOrder(subOrder.getCode());
-					for (final OrderEntryData orderEntry : subOrder.getEntries())
-					{
-						//getting the product code
-						final ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntry.getProduct().getCode());
-						if (CollectionUtils.isNotEmpty(productModel.getBrands()))
-						{
-							for (final BrandModel brand : productModel.getBrands())
+							if (orderDetail.getStatus() != null)
 							{
-								orderEntry.setBrandName(brand.getName());
-								break;
+								consignmentStatus = orderDetail.getStatus().getCode();
 							}
 						}
-
-						//Fetching invoice from consignment entries
-						if (null != orderEntry.getConsignment() && orderEntry.getConsignment().getStatus() != null)
+						trackStatusMap.put(orderDetail.getCode() + orderEntry.getEntryNumber(), statusTrackMap);
+						currentStatusMap.put(orderDetail.getCode() + orderEntry.getEntryNumber(), consignmentStatus);
+					}
+				}
+				else
+				{
+					for (final OrderData subOrder : subOrderList)
+					{
+						//TISPT-385
+						subOrderModel = orderModelService.getOrder(subOrder.getCode());
+						for (final OrderEntryData orderEntry : subOrder.getEntries())
 						{
-							consignmentModel = mplOrderService.fetchConsignment(orderEntry.getConsignment().getCode());
-							//TISEE-1067
-							consignmentStatus = orderEntry.getConsignment().getStatus().getCode();
-							if (null != consignmentModel
-									&& null != consignmentModel.getInvoice()
-									&& null != consignmentModel.getInvoice().getInvoiceUrl()
-									&& (consignmentStatus.equalsIgnoreCase(ModelAttributetConstants.DELIVERED) || consignmentStatus
-											.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED)))
+							//getting the product code
+							final ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntry.getProduct().getCode());
+							if (CollectionUtils.isNotEmpty(productModel.getBrands()))
 							{
-								sortInvoice.put(orderEntry.getTransactionId(), true);
-								final String tranSactionId = orderEntry.getTransactionId();
-								if (sortInvoice.containsKey(tranSactionId))
+								for (final BrandModel brand : productModel.getBrands())
 								{
-									orderEntry.setShowInvoiceStatus(sortInvoice.get(tranSactionId));
+									orderEntry.setBrandName(brand.getName());
+									break;
 								}
 							}
-						}
 
-						final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
-								.getSellerInformationRelator();
-
-						for (final SellerInformationModel sellerInformationModel : sellerInfo)
-						{
-							if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid()))
+							//Fetching invoice from consignment entries
+							if (null != orderEntry.getConsignment() && orderEntry.getConsignment().getStatus() != null)
 							{
-								final List<RichAttributeModel> richAttributeModelForSeller = (List<RichAttributeModel>) sellerInformationModel
-										.getRichAttribute();
-								final SellerInformationData sellerInfoData = new SellerInformationData();
-								sellerInfoData.setSellername(sellerInformationModel.getSellerName());
-								sellerInfoData.setUssid(sellerInformationModel.getSellerArticleSKU());
-								orderEntry.setSelectedSellerInformation(sellerInfoData);
-								//Code to check cancel status of an item
-								if (richAttributeModelForSeller != null)
+								consignmentModel = mplOrderService.fetchConsignment(orderEntry.getConsignment().getCode());
+								//TISEE-1067
+								consignmentStatus = orderEntry.getConsignment().getStatus().getCode();
+								if (null != consignmentModel
+										&& null != consignmentModel.getInvoice()
+										&& null != consignmentModel.getInvoice().getInvoiceUrl()
+										&& (consignmentStatus.equalsIgnoreCase(ModelAttributetConstants.DELIVERED) || consignmentStatus
+												.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED)))
 								{
-									//TISEE-5389 - Cancellation window check while initiating a cancel request need not be performed.
-									//Commenting cancellation window check, as not all seller will set this value. If it is not set,
-									//the default value would be '0' and as per the below check cancellation link won't shown at all.
-									/*
-									 * if (Integer.parseInt(richAttributeModelForSeller.get(0).getCancellationWindow()) == 0) {
-									 * orderEntry.setItemCancellationStatus(false); } else
-									 */
-									//TISEE-6419
-									if (!mplOrderFacade.isChildCancelleable(subOrder, orderEntry.getTransactionId()))
+									sortInvoice.put(orderEntry.getTransactionId(), true);
+									final String tranSactionId = orderEntry.getTransactionId();
+									if (sortInvoice.containsKey(tranSactionId))
 									{
-										orderEntry.setItemCancellationStatus(false);
+										orderEntry.setShowInvoiceStatus(sortInvoice.get(tranSactionId));
 									}
-									else if (null == orderEntry.getConsignment() && orderEntry.getQuantity() != 0)
-									{
-										if (subOrder.getStatus() != null)
-										{
-											consignmentStatus = subOrder.getStatus().getCode();
+								}
+							}
 
-											LOG.debug(" order: Consignemnt is null or empty : Order code :" + orderCode
+							final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
+									.getSellerInformationRelator();
+
+							for (final SellerInformationModel sellerInformationModel : sellerInfo)
+							{
+								if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid()))
+								{
+									final List<RichAttributeModel> richAttributeModelForSeller = (List<RichAttributeModel>) sellerInformationModel
+											.getRichAttribute();
+									final SellerInformationData sellerInfoData = new SellerInformationData();
+									sellerInfoData.setSellername(sellerInformationModel.getSellerName());
+									sellerInfoData.setUssid(sellerInformationModel.getSellerArticleSKU());
+									orderEntry.setSelectedSellerInformation(sellerInfoData);
+									//Code to check cancel status of an item
+									if (richAttributeModelForSeller != null)
+									{
+										//TISEE-5389 - Cancellation window check while initiating a cancel request need not be performed.
+										//Commenting cancellation window check, as not all seller will set this value. If it is not set,
+										//the default value would be '0' and as per the below check cancellation link won't shown at all.
+										/*
+										 * if (Integer.parseInt(richAttributeModelForSeller.get(0).getCancellationWindow()) == 0)
+										 * { orderEntry.setItemCancellationStatus(false); } else
+										 */
+										//TISEE-6419
+										if (!mplOrderFacade.isChildCancelleable(subOrder, orderEntry.getTransactionId()))
+										{
+											orderEntry.setItemCancellationStatus(false);
+										}
+										else if (null == orderEntry.getConsignment() && orderEntry.getQuantity() != 0)
+										{
+											if (subOrder.getStatus() != null)
+											{
+												consignmentStatus = subOrder.getStatus().getCode();
+
+												LOG.debug(" order: Consignemnt is null or empty : Order code :" + orderCode
+														+ MarketplacecommerceservicesConstants.CONSIGNMENT_STATUS + consignmentStatus);
+
+												if (getMplOrderFacade().checkCancelStatus(subOrder.getStatus().getCode(),
+														MessageConstants.CANCEL_ORDER_STATUS))
+												{
+
+													LOG.debug(" order: Consignemnt is null or empty : Setting cancel status to true for  Order code :"
+															+ orderCode
+															+ MarketplacecommerceservicesConstants.CONSIGNMENT_STATUS
+															+ consignmentStatus);
+
+													orderEntry.setItemCancellationStatus(true);
+												}
+											}
+										}
+										else if (null != orderEntry.getConsignment() && null != orderEntry.getConsignment().getStatus())
+										{
+											consignmentStatus = orderEntry.getConsignment().getStatus().getCode();
+
+											LOG.debug(" order :Inside Consignemnt is present : for  Order code :" + orderCode
 													+ MarketplacecommerceservicesConstants.CONSIGNMENT_STATUS + consignmentStatus);
 
-											if (getMplOrderFacade().checkCancelStatus(subOrder.getStatus().getCode(),
-													MessageConstants.CANCEL_ORDER_STATUS))
+											if (getMplOrderFacade().checkCancelStatus(consignmentStatus, MessageConstants.CANCEL_STATUS))
 											{
-
-												LOG.debug(" order: Consignemnt is null or empty : Setting cancel status to true for  Order code :"
+												orderEntry.setItemCancellationStatus(true);
+												LOG.debug(" order :Inside Consignemnt is present : Setting cancel status to true for  Order code :"
 														+ orderCode
 														+ MarketplacecommerceservicesConstants.CONSIGNMENT_STATUS
 														+ consignmentStatus);
-
-												orderEntry.setItemCancellationStatus(true);
 											}
-										}
-									}
-									else if (null != orderEntry.getConsignment() && null != orderEntry.getConsignment().getStatus())
-									{
-										consignmentStatus = orderEntry.getConsignment().getStatus().getCode();
 
-										LOG.debug(" order :Inside Consignemnt is present : for  Order code :" + orderCode
-												+ MarketplacecommerceservicesConstants.CONSIGNMENT_STATUS + consignmentStatus);
 
-										if (getMplOrderFacade().checkCancelStatus(consignmentStatus, MessageConstants.CANCEL_STATUS))
-										{
-											orderEntry.setItemCancellationStatus(true);
-											LOG.debug(" order :Inside Consignemnt is present : Setting cancel status to true for  Order code :"
-													+ orderCode + MarketplacecommerceservicesConstants.CONSIGNMENT_STATUS + consignmentStatus);
 										}
 
-
-									}
-
-									//Code to check return status of an item
-									if (Integer.parseInt(richAttributeModelForSeller.get(0).getReturnWindow()) == 0)
-									{
-										orderEntry.setItemReturnStatus(false);
-									}
-									else
-									{
-										if (null != orderEntry.getConsignment() && null != orderEntry.getConsignment().getStatus())
+										//Code to check return status of an item
+										if (Integer.parseInt(richAttributeModelForSeller.get(0).getReturnWindow()) == 0)
 										{
-											consignmentStatus = orderEntry.getConsignment().getStatus().getCode();
-											if ((consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED) || consignmentStatus
-													.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED))
-													&& null != consignmentModel)
+											orderEntry.setItemReturnStatus(false);
+										}
+										else
+										{
+											if (null != orderEntry.getConsignment() && null != orderEntry.getConsignment().getStatus())
 											{
-												final Date sDate = new Date();
-												final int returnWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
-
-												consignmentModel.getDeliveryDate(), sDate);
-
-												final int actualReturnWindow = Integer.parseInt(richAttributeModelForSeller.get(0)
-														.getReturnWindow());
-
-												LOG.debug(" order : Setting Item Retrun status to true for  Order code :" + orderCode
-														+ MarketplacecommerceservicesConstants.CONSIGNMENT_STATUS + consignmentStatus);
-
-												if (returnWindow <= actualReturnWindow)
+												consignmentStatus = orderEntry.getConsignment().getStatus().getCode();
+												if ((consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED) || consignmentStatus
+														.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED))
+														&& null != consignmentModel)
 												{
-													orderEntry.setItemReturnStatus(true);
+													final Date sDate = new Date();
+													final int returnWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
+
+													consignmentModel.getDeliveryDate(), sDate);
+
+													final int actualReturnWindow = Integer.parseInt(richAttributeModelForSeller.get(0)
+															.getReturnWindow());
+
+													LOG.debug(" order : Setting Item Retrun status to true for  Order code :" + orderCode
+															+ MarketplacecommerceservicesConstants.CONSIGNMENT_STATUS + consignmentStatus);
+
+													if (returnWindow <= actualReturnWindow)
+													{
+														orderEntry.setItemReturnStatus(true);
+													}
+													else
+													{
+														LOG.debug(" order : Setting Item Retrun status to false for  Order code :" + orderCode
+																+ MarketplacecommerceservicesConstants.CONSIGNMENT_STATUS + consignmentStatus);
+														orderEntry.setItemReturnStatus(false);
+													}
 												}
 												else
 												{
@@ -1056,60 +1069,53 @@ public class AccountPageController extends AbstractMplSearchPageController
 											}
 											else
 											{
-												LOG.debug(" order : Setting Item Retrun status to false for  Order code :" + orderCode
-														+ MarketplacecommerceservicesConstants.CONSIGNMENT_STATUS + consignmentStatus);
+
+												LOG.debug(" order : Consignment is null or empty :Setting Item Retrun status to false for  Order code :"
+														+ orderCode);
 												orderEntry.setItemReturnStatus(false);
 											}
 										}
-										else
-										{
-
-											LOG.debug(" order : Consignment is null or empty :Setting Item Retrun status to false for  Order code :"
-													+ orderCode);
-											orderEntry.setItemReturnStatus(false);
-										}
 									}
-								}
 
-								statusTrackMap = getOrderDetailsFacade.getOrderStatusTrack(orderEntry, subOrder, subOrderModel);
-								trackStatusMap.put(orderEntry.getOrderLineId(), statusTrackMap);
-								currentStatusMap.put(orderEntry.getOrderLineId(), consignmentStatus);
+									statusTrackMap = getOrderDetailsFacade.getOrderStatusTrack(orderEntry, subOrder, subOrderModel);
+									trackStatusMap.put(orderEntry.getOrderLineId(), statusTrackMap);
+									currentStatusMap.put(orderEntry.getOrderLineId(), consignmentStatus);
 
-								if (consignmentModel != null)
-								{
-									formattedProductDate = getFormattedDate(consignmentModel.getEstimatedDelivery());
-									formattedDeliveryDates.put(orderEntry.getOrderLineId(), formattedProductDate);
-									formattedActualProductDate = getFormattedDate(consignmentModel.getDeliveryDate());
-									formattedActualDeliveryDates.put(orderEntry.getOrderLineId(), formattedActualProductDate);
-
-									trackStatusAWBMap.put(orderEntry.getOrderLineId(), consignmentModel.getTrackingID());
-									trackStatusLogisticMap.put(orderEntry.getOrderLineId(), consignmentModel.getCarrier());
-									trackStatusReturnAWBMap.put(orderEntry.getOrderLineId(), consignmentModel.getReturnAWBNum());
-									trackStatusReturnLogisticMap.put(orderEntry.getOrderLineId(), consignmentModel.getReturnCarrier());
-									trackStatusTrackingURLMap.put(orderEntry.getOrderLineId(), consignmentModel.getTrackingURL());
-
-									//TISCR-410 : To check whether to show missed cancellation deadline message to customer
-									final String orderEntryStatus = consignmentModel.getStatus().getCode();
-									final String stage = cancelReturnFacade.getOrderStatusStage(orderEntryStatus);
-									boolean cancellationMsgFlag = false;
-									if (StringUtils.isNotEmpty(stage) && stage.equalsIgnoreCase("SHIPPING"))
+									if (consignmentModel != null)
 									{
-										cancellationMsgFlag = true;
+										formattedProductDate = getFormattedDate(consignmentModel.getEstimatedDelivery());
+										formattedDeliveryDates.put(orderEntry.getOrderLineId(), formattedProductDate);
+										formattedActualProductDate = getFormattedDate(consignmentModel.getDeliveryDate());
+										formattedActualDeliveryDates.put(orderEntry.getOrderLineId(), formattedActualProductDate);
+
+										trackStatusAWBMap.put(orderEntry.getOrderLineId(), consignmentModel.getTrackingID());
+										trackStatusLogisticMap.put(orderEntry.getOrderLineId(), consignmentModel.getCarrier());
+										trackStatusReturnAWBMap.put(orderEntry.getOrderLineId(), consignmentModel.getReturnAWBNum());
+										trackStatusReturnLogisticMap.put(orderEntry.getOrderLineId(), consignmentModel.getReturnCarrier());
+										trackStatusTrackingURLMap.put(orderEntry.getOrderLineId(), consignmentModel.getTrackingURL());
+
+										//TISCR-410 : To check whether to show missed cancellation deadline message to customer
+										final String orderEntryStatus = consignmentModel.getStatus().getCode();
+										final String stage = cancelReturnFacade.getOrderStatusStage(orderEntryStatus);
+										boolean cancellationMsgFlag = false;
+										if (StringUtils.isNotEmpty(stage) && stage.equalsIgnoreCase("SHIPPING"))
+										{
+											cancellationMsgFlag = true;
+										}
+										model.addAttribute(ModelAttributetConstants.DISPLAY_CANCELLATION_MSG, cancellationMsgFlag);
 									}
-									model.addAttribute(ModelAttributetConstants.DISPLAY_CANCELLATION_MSG, cancellationMsgFlag);
+
 								}
-
 							}
+
+							//setting cancel product for BOGO
+							cancelProduct = cancelReturnFacade.associatedEntriesData(orderModelService.getOrder(subOrder.getCode()),
+									orderEntry.getOrderLineId());
+							currentProductMap.put(orderEntry.getOrderLineId(), cancelProduct);
+
 						}
-
-						//setting cancel product for BOGO
-						cancelProduct = cancelReturnFacade.associatedEntriesData(orderModelService.getOrder(subOrder.getCode()),
-								orderEntry.getOrderLineId());
-						currentProductMap.put(orderEntry.getOrderLineId(), cancelProduct);
-
 					}
 				}
-
 
 				////TISEE-6290
 				fullfillmentDataMap = mplCartFacade.getOrderEntryFullfillmentMode(orderDetail);
