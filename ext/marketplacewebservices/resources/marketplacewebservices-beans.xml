@@ -2542,4 +2542,48 @@
 		<property name="text" type="String" />	
     </bean>
     
+    <!-- Mega navigation DTO struture starts -->
+    <bean class="com.tisl.mpl.wsdto.LuxNavigationWsDTO">
+    	<property name="isLuxury" type="boolean" />
+    	<property name="values" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxLevelOneWsDTO>" />
+    </bean>
+    
+    <bean class="com.tisl.mpl.wsdto.LuxLevelOneWsDTO">
+    	<property name="name" type="String" />
+    	<property name="value" type="String" />
+    	<property name="destination" type="String" />
+    	<property name="subcategories" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxLevelTwoWsDTO>" />
+    </bean>
+    
+     <bean class="com.tisl.mpl.wsdto.LuxLevelTwoWsDTO">
+    	<property name="name" type="String" />
+    	<property name="value" type="String" />
+    	<property name="image" type="String" />
+    	<property name="destination" type="String" />
+    	<property name="collections" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxLevelThreeWsDTO>" />
+    	<property name="sliders" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxLevelTwoSliderWsDTO>" />
+    </bean>
+    
+     <bean class="com.tisl.mpl.wsdto.LuxLevelThreeWsDTO">
+    	<property name="name" type="String" />
+    	<property name="subCategory" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxLevelFourWsDTO>" />
+    </bean>
+    
+      <bean class="com.tisl.mpl.wsdto.LuxLevelFourWsDTO">
+    	<property name="name" type="String" />
+    	<property name="isBrand" type="boolean" />
+    	<property name="value" type="String" />
+    	<property name="destination" type="String" />
+    	<property name="image" type="String" />
+    </bean>
+    
+    <bean class="com.tisl.mpl.wsdto.LuxLevelTwoSliderWsDTO">
+    	<property name="title" type="String" />
+    	<property name="image" type="String" />
+    	<property name="destination" type="String" />
+    	<property name="cta" type="String" />
+    </bean>
+    
+    <!-- Mega navigation DTO struture ends -->
+    
 </beans>
