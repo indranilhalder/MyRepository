@@ -71,8 +71,7 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 
 	/**
 	 * @Description : Buy Product A and B to get Product C Free
-	 * @param :
-	 *           SessionContext arg0 ,PromotionEvaluationContext arg1
+	 * @param : SessionContext arg0 ,PromotionEvaluationContext arg1
 	 * @return : List<PromotionResult> promotionResults
 	 */
 	@Override
@@ -144,6 +143,7 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 		final List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
 		boolean flagForDeliveryModeRestrEval = false;
 
+		final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList);
 		//for delivery mode restriction check
 		flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForABPromo(restrictionList,
 				validProductUssidMap);
@@ -154,7 +154,7 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 			tcMapForValidEntries.put(mapEntry.getKey(), Integer.valueOf(mapEntry.getValue().getQuantity().intValue()));
 		}
 
-		if (flagForDeliveryModeRestrEval)
+		if (flagForDeliveryModeRestrEval && flagForPincodeRestriction)
 		{
 			if (!eligibleProductList.isEmpty()) //Apply percentage/amount discount to valid products
 			{
@@ -183,8 +183,8 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 							sellerID); //Validating the free gift corresponding to seller ID for scenario : Eligible product and Free gift from same DC
 
 					getPromotionUtilityPOJO().setPromoProductList(validProductList); // Setting valid Products
-					final Map<String, Integer> qCount = getDefaultPromotionsManager()
-							.getQualifyingCountForABPromotion(eligibleProductList, totalFactorCount);
+					final Map<String, Integer> qCount = getDefaultPromotionsManager().getQualifyingCountForABPromotion(
+							eligibleProductList, totalFactorCount);
 					for (final Map.Entry<String, Product> entry : giftProductDetails.entrySet())
 					{
 						final Map<String, List<String>> productAssociatedItemsMap = getMplPromotionHelper().getAssociatedData(order,
@@ -194,8 +194,10 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 						arg0.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, qCount);
 						arg0.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, productAssociatedItemsMap);
 
-						result.addAction(arg0, getDefaultPromotionsManager().createCustomPromotionOrderAddFreeGiftAction(arg0,
-								entry.getValue(), entry.getKey(), result, Double.valueOf(noOfTimes))); //Adding Free gifts to cart
+						result.addAction(
+								arg0,
+								getDefaultPromotionsManager().createCustomPromotionOrderAddFreeGiftAction(arg0, entry.getValue(),
+										entry.getKey(), result, Double.valueOf(noOfTimes))); //Adding Free gifts to cart
 					}
 				}
 				promotionResults.add(result);
@@ -232,8 +234,7 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 
 	/**
 	 * @Description : Returns Minimum Category Amount
-	 * @param :
-	 *           SessionContext arg0
+	 * @param : SessionContext arg0
 	 * @return : minimumCategoryValue
 	 */
 	//	private double calculateMinCategoryAmnt(final SessionContext arg0)
@@ -252,8 +253,7 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 
 	/**
 	 * @Description : Assign Promotion Fired and Potential-Promotion Message
-	 * @param :
-	 *           SessionContext arg0 ,PromotionResult arg1 ,Locale arg2
+	 * @param : SessionContext arg0 ,PromotionResult arg1 ,Locale arg2
 	 * @return : String
 	 */
 	@Override
@@ -276,8 +276,8 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 				{
 					//eligibleForPromotion(order, arg0);
 					final Object[] args = new Object[6];
-					final double minimumCategoryValue = getProperty(arg0, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT) != null
-							? ((Double) getProperty(arg0, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)).doubleValue() : 0.00D;
+					final double minimumCategoryValue = getProperty(arg0, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT) != null ? ((Double) getProperty(
+							arg0, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)).doubleValue() : 0.00D;
 
 					final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(
 							getRestrictions());
@@ -474,8 +474,7 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 
 	/**
 	 * @Description : Provides List of Products eligible for Promotion
-	 * @param :
-	 *           SessionContext paramSessionContext ,AbstractOrder cart
+	 * @param : SessionContext paramSessionContext ,AbstractOrder cart
 	 * @return : List<Product> validProductListFinal
 	 */
 	private List<String> eligibleForPromotion(final AbstractOrder cart, final SessionContext paramSessionContext)

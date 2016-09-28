@@ -58,7 +58,7 @@ public class HomeStoreLocatorComponentController extends AbstractCMSComponentCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.storefront.controllers.cms.AbstractCMSComponentController#fillModel(javax.servlet.http.
 	 * HttpServletRequest, org.springframework.ui.Model,
 	 * de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel)

@@ -6011,12 +6011,64 @@
 						<modifiers optional="true" read="true" write="true" />
 						<persistence type="property" />
 					</attribute>
+					<!-- TPR-970 changes -->
+					<attribute qualifier="stateForPincode" type="java.lang.String">
+						<modifiers optional="true" read="true" write="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="cityForPincode" type="java.lang.String">
+						<modifiers optional="true" read="true" write="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="pincodeNumber" type="java.lang.String">
+						<modifiers optional="true" read="true" write="true" />
+						<persistence type="property" />
+					</attribute>
+					
 					<!-- TISPRO-540 - Payment Type -->
 				</attributes>
 			</itemtype>
 		</typegroup>
 
+        <!-- Store localtor start here -->
+		<typegroup name="storeLocatorCmsGrp">
+			<itemtype code="HomeStoreLocatorComponent" extends="SimpleCMSComponent"
+				autocreate="true" generate="true"
+				jaloclass="de.hybris.platform.acceleratorcms.jalo.components.HomeStoreLocatorComponent">
+				<description>It represents product references component, that is the component that displays configured references to the specified product.</description>
+				<attributes>
+					<attribute qualifier="latitude" type="java.lang.Double">
+						<persistence type="property" />
+						<description>latitude value.</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
 
+					<attribute qualifier="longitude" type="java.lang.Double">
+						<persistence type="property" />
+						<description>longitude value</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+
+					<attribute qualifier="initialZoom" type="java.lang.Integer">
+						<persistence type="property" />
+						<description>Initial Zoom</description>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+
+					<attribute qualifier="markerZoom" type="java.lang.Integer">
+						<persistence type="property" />
+						<description>Zoom label on marker click</description>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+
+				</attributes>
+			</itemtype>
+		</typegroup>
+		<!-- Store Localotor end here -->
 
 
 
@@ -8210,73 +8262,7 @@
 			</itemtype>
 
 		</typegroup>
-		<!-- pincode ,latitude and longitude Model -->
-		<typegroup name="Pincode">
-			<itemtype code="Pincode" extends="GenericItem"
-				jaloclass="de.hybris.platform.jalo.product.Pincode" autocreate="true"
-				generate="true">
-				<deployment table="Pincodes" typecode="11299" />
-				<attributes>
-					<attribute autocreate="true" qualifier="pincode" type="java.lang.String"
-						generate="true">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="false" unique="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="latitude" type="java.lang.Double">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="false" />
-					</attribute>
-					<attribute autocreate="true" qualifier="longitude" type="java.lang.Double">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="false" />
-					</attribute>
-				</attributes>
-			</itemtype>
-
-		</typegroup>
-
-		<!-- Store localtor start here -->
-		<typegroup name="storeLocatorCmsGrp">
-			<itemtype code="HomeStoreLocatorComponent" extends="SimpleCMSComponent"
-				autocreate="true" generate="true"
-				jaloclass="de.hybris.platform.acceleratorcms.jalo.components.HomeStoreLocatorComponent">
-				<description>It represents product references component, that is the component that displays configured references to the specified product.</description>
-				<attributes>
-					<attribute qualifier="latitude" type="java.lang.Double">
-						<persistence type="property" />
-						<description>latitude value.</description>
-						<modifiers read="true" write="true" search="true"
-							optional="false" />
-					</attribute>
-
-					<attribute qualifier="longitude" type="java.lang.Double">
-						<persistence type="property" />
-						<description>longitude value</description>
-						<modifiers read="true" write="true" search="true"
-							optional="false" />
-					</attribute>
-
-					<attribute qualifier="initialZoom" type="java.lang.Integer">
-						<persistence type="property" />
-						<description>Initial Zoom</description>
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-
-					<attribute qualifier="markerZoom" type="java.lang.Integer">
-						<persistence type="property" />
-						<description>Zoom label on marker click</description>
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-
-				</attributes>
-			</itemtype>
-		</typegroup>
-		<!-- Store Localotor end here -->
+		
 
 		<typegroup name="User">
 			<itemtype code="PrincipalGroup" generate="false" autocreate="false">
