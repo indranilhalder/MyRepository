@@ -1721,11 +1721,18 @@ $(document).ready(function() {
 	colorSwatch();
 	sizeSwatch();
 	
+	
+	/*CLP section js starts*/
+	
+	//Top Categories section
 	$(".top_categories").find("ul.categories.count-3>li:nth-child(3n + 1)").each(function(){
 		$(this).nextAll().slice(0, 2).wrapAll("<li class='sub_li'><ul class='sub_ul'>");
 		});
+	//Style Edit section
 		$(".style_edit > div").slice(0,2).wrapAll("<div class='style_edit_left'>");
+	//Top Brands section
 		$(".top_brands > div").slice(1).wrapAll("<div class='clp_top_brands'>");
+	//Best Seller section
 		$(".best_seller .best_seller_section:first-child").after("<div class='Menu'><div class='mobile selectmenu'></div><ul></ul></div>");
 		$(".best_seller .best_seller_section").each(function(){
 		var li_text= $(this).children("h1").text();
@@ -1745,7 +1752,6 @@ $(document).ready(function() {
 		if(li_text == active_text){
 		$(".best_seller .best_seller_section").removeClass("show_clplist").addClass("hide_clplist");
 		$(this).removeClass("hide_clplist").addClass("show_clplist");
-		//$(".best_seller_section .shopByLookCarousel").resize();
 		}
 		});
 		$(".best_seller .Menu .mobile.selectmenu").text(active_text);
@@ -1754,11 +1760,20 @@ $(document).ready(function() {
 		$(".best_seller .Menu .selectmenu").off("click").on("click", function() {
             $(this).next().slideToggle();
         });
+		//Winter Launch section
 		$(".winter_launch  > .winter_launch_section").slice(-4).wrapAll("<div class='clp_winter_launch_wrapper'>");
+		//Top deal blog section
 		$(".top_deal  > a").nextAll().wrapAll("<div class='blog_container'>");
-		$(".top_deal  > .blog_container").slice(0,2).wrapAll("<div class='blog_feature'>");
-		$(".top_deal  > .blog_container").slice(2,4).wrapAll("<div class='blog_feature'>");
+		var clp_blog_count = $(".top_deal  > .blog_container").children().length;
+		$(".top_deal  > .blog_container").children().slice(0,clp_blog_count/2).wrapAll("<div class='blog_feature'>");
+		$(".top_deal  > .blog_container").children().slice(1,clp_blog_count - 1).wrapAll("<div class='blog_feature'>");
+		$(".top_deal  > .blog_container > .blog_feature").each(function(){
+			$(this).children().last().prevAll().wrapAll("<div class='blog_content'>");
+		});
+		//Shop For section
 		$(".shop_for > a").slice(0,4).wrapAll("<div class='shop_for_links'>");
+		
+		/*CLP section js ends*/
 });
 $(window).resize(function() {
 
