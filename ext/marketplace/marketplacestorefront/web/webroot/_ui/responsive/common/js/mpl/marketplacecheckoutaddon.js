@@ -4951,8 +4951,8 @@ function changeCTAButtonName(deliveryCode) {
 	//TISPRO-625
 	var isExpressCheckoutSelected=$('#isExpressCheckoutSelected').val();
 	if(deliveryCode == "click-and-collect") {
-		$("#deliveryMethodSubmit").text("Choose Store");
-		$("#deliveryMethodSubmitUp").text("Choose Store");
+		$("#deliveryMethodSubmit").text("Proceed To Store");
+		$("#deliveryMethodSubmitUp").text("Proceed To Store");
 	} else if(deliveryCode== "DefaultName") {
 		//TISPRO-625
 		//$("#deliveryMethodSubmit").text("Choose Address");
