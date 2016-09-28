@@ -46029,11 +46029,11 @@ margin-top: 6.2%;
 .blp_title_banner{
 background: #000;
     width: 100%;
-    padding: 30px 0;
+   padding: 20px 0;
 }
 .blp_title_banner a{
 	    display: block;
-    text-align: center;
+    /* text-align: center; */
     margin: 0 auto;   
 }
 /*  title banner end */
@@ -46095,6 +46095,14 @@ background: #000;
   vertical-align: top;
     float: right;
     width: 29%;
+  }
+  .shop_the_look .shop_the_look_left .shop_the_look_section .carousel-component .owl-controls .owl-nav .owl-prev:after{
+  left: 68px;
+  font-size: 30px;
+  }
+  .shop_the_look .shop_the_look_left .shop_the_look_section .carousel-component .owl-controls .owl-nav .owl-next:after{
+  left: -97px;
+  font-size: 30px;
   }
   .shop_the_look .shop_the_look_left .shop_the_look_section .carousel-component .owl-controls{
   top: 90% !important;
@@ -46227,14 +46235,29 @@ text-align:left;
 .men_women_sec .top-promos li:first-child{
 	position: absolute;
     top: 94%;
-    right: 10%;
-    margin: -84px 0 0 0;
+    right: -10%;
+    margin: 24px 0 0 0;
+}
+.template-pages-layout-newBrandLandingPageTemplate #rotatingImageTimeout, .template-pages-layout-newBrandLandingPageTemplate #rotatingImage{
+	margin: -22px 0;
+}
+.shop_the_look .shop_the_look_left{
+	width: 59%;
+	padding:0;
+}
+.shop_the_look .shop_the_look_section:last-child{
+	width: 40%;
+    margin-left: 1%;
+}
+.featured_collection .blp_featured_collection_wrapper .featured_collection_section .top-promos li{
+	    top: 250px;
+	    left: -11px;
 }
 .men_women_sec .top-promos li:first-child p:first-child{
-	font-size: 20px;
+	font-size: 24px;
 }
 .men_women_sec .top-promos li:first-child p:nth-child(2){
-	font-size: 30px;
+	font-size: 38px;
 }
 .men_women_sec .minor-promos,.men_women_sec .bottom-promos{
 	display:none;
@@ -46251,9 +46274,12 @@ text-align:left;
 .top_categories .feature-categories ul.categories span {
     font-size: 14px;
 }
-.blp_top_brands  .blp_top_brands_section {
+blp_top_brands .blp_top_brands_section{
+	width:100%
+}
+.blp_top_brands .top_brands_blp .blp_top_brands_section {
     width: 31%;
-    margin-right: 2%;
+    margin-right: 10px;
     margin-bottom: 2%;
 }
 .blp_top_brands  .simple-banner-component a, .blp_top_brands  .simple-banner-component a img{
@@ -46305,12 +46331,44 @@ padding: 0 24px;
 .top_deal_blp .owl-prev:after {
     left: 10px;
 }
+.style_edit_blp .style_edit_left_blp .content p{
+	margin: 15px 0;
+}
+.top_deal_blp {
+	padding: 0 24px;
+}
+ .shop_the_look_left .shop_the_look_section .carousel-component #shopByLookCarousel{
+  padding: 0;
+  }
+  .shop_the_look .shop_the_look_left .shop_the_look_section .carousel-component .owl-controls .owl-nav .owl-prev:after,
+  .shop_the_look .shop_the_look_left .shop_the_look_section .carousel-component .owl-controls .owl-nav .owl-next:after{
+  display:none;
+  }
+  .top_deal_blp .feature-categories .owl-carousel{
+	padding: 0;
+}
+}
+@media (max-width: 1280px) and (min-width: 790px){
+.featured_collection .blp_featured_collection_wrapper .featured_collection_section .top-promos li {
+	top: 239px;
+    left: -39px;
 }
 
+}
+.men_women_sec .top-promos li:first-child{
+	margin: 38px 0 0 0;
+    right: -5%;
+}
+}
 @media (max-width: 790px){
 	.featured_collection{
 	padding: 40px 24px;
 	margin-top: 40px;
+	}
+	.men_women_sec .top-promos li:first-child{
+	top: 94%;
+    right: 10%;
+    margin: -84px 0 0 0;
 	}
 	.featured_collection .content{
 	margin: 0 0 40px;
@@ -46342,6 +46400,25 @@ padding: 0 24px;
     text-align: center;
     margin: 0 0 60px;
 }
+.top_deal_blp .feature-categories .owl-carousel{
+	padding: 0;
+}
+.top_deal_blp > a{
+	min-width: 200px;
+	margin-top: -3px;
+}
+.style_edit_blp .style_edit_left_blp .content{
+	font-size: 24px;
+}
+.style_edit_blp .style_edit_left_blp .content p{
+	font-size: 20px;
+	margin-bottom: -24px;
+	
+}
+.shop_the_look .shop_the_look_section .content{
+	    margin: 0 0 40px;
+	    font-size: 24px;
+}
 .style_edit_blp > div:last-child {
     max-width: 505px;
     margin: 0 auto;
@@ -46356,6 +46433,44 @@ padding: 0 24px;
 	border: 0 none;
     padding: 0 24px;
 }
+.shop_the_look .shop_the_look_left .shop_the_look_section .carousel-component .owl-controls .owl-nav .owl-prev:after{
+  left: 23px;
+  font-size: 30px;
+  transform: scale(0.8);
+  }
+  .shop_the_look .shop_the_look_left .shop_the_look_section .carousel-component .owl-controls .owl-nav .owl-next:after{
+  left: -7px;
+  font-size: 30px;
+  transform: scale(0.8);
+  }
+  .shop_the_look .shop_the_look_section:last-child{
+  width: 38%;
+    margin-left: 2%;
+  }
+  .shop_the_look{
+  padding: 0 24px 40px !important;
+  margin:0;
+  border-bottom:none;
+  }
+  .top_deal_blp .feature-categories h1{
+  border-top: 1px solid #ccc;
+  padding: 40px 0 0;
+  }
+  .top_deal_blp{
+  margin:0;
+  }
+  .top_deal_blp .feature-categories{
+  padding:0;
+  }
+  .shop_the_look .shop_the_look_left .shop_the_look_section:last-child a{
+  min-width: 200px;
+  }
+  .shop_the_look .shop_the_look_left{
+  width: 60%;
+  }
+  .shop_the_look_left .shop_the_look_section .carousel-component #shopByLookCarousel{
+  padding: 0;
+  }
 .style_edit_blp .video-container,.template-pages-layout-newBrandLandingPageTemplate #rotatingImageTimeout .item, .template-pages-layout-newBrandLandingPageTemplate #rotatingImage .item {
     margin: 0;
 }
@@ -46380,7 +46495,7 @@ padding: 0 24px;
 }
 .shop_for_blp {
     margin: 0 24px;
-    padding: 104px 0 40px;
+    padding: 100px 0 40px;
     border-top: 1px solid #ccc;
 }
 .shop_for_blp .shop_the_look_section .content {
@@ -46396,18 +46511,22 @@ padding: 0 24px;
     margin-bottom: 1.3%;
 }
 .shop_for_blp .shop_for_links_blp + a {
+    margin: 56px 0 0;
     min-width: 200px;
     position: relative;
     left: calc(50% - 100px);
     left: -webkit-calc(50% - 100px);
 }
-
+.shop_for_blp .feature-categories h1{
+	padding: 40px 0 0;
+	font-size: 24px;
+}
 
 
 .blog_container_blp {
     margin: 40px 0 0 0;
     border: 0;
-    padding: 0 24px 30px;
+    padding: 0 0px 30px;
 }
 .blog_container_blp .blog_feature_blp, .blog_container_blp .blog_feature_blp:first-child {
     width: 100%;
@@ -46422,6 +46541,53 @@ padding: 0 24px;
 }
 
 @media (max-width: 767px){
+	.blp_title_banner .simple-banner-component{
+	text-align:left;
+	}
+	.blp_title_banner .simple-banner-component img{
+	transform: scale(0.8);
+	}
+	 .featured_collection .blp_featured_collection_wrapper .featured_collection_section .major-promos,
+	.featured_collection .blp_featured_collection_wrapper .featured_collection_section .minor-promos,
+	.featured_collection .blp_featured_collection_wrapper .featured_collection_section .bottom-promos{
+	display:none;
+	} 
+	.featured_collection .blp_featured_collection_wrapper .featured_collection_section .top-promos li{
+	top: 247px;
+	font-size: 12px;
+	    left: -4px;
+	}
+	.blp_top_brands{
+	padding: 30px 70px;
+	}
+	.blp_top_brands .top_brands_blp{
+	padding:0;
+	}
+	.men_women_sec .major-promos,.men_women_sec .minor-promos ,.men_women_sec .bottom-promos{
+	display:none;}
+	.men_women_sec .top-promos li:first-child {
+    margin: -36px 0 0 0;
+    right: 11%;
+}
+.featured_collection .content{
+	font-size: 20px;
+    margin-bottom: 30px;
+}
+.men_women_sec{
+	padding: 0;
+}
+/* .men_women_sec div{
+	width: 48.5%;
+}
+.men_women_sec div:last-child{
+	margin-left: 20px;
+} */
+	.men_women_sec .top-promos li:first-child p:first-child{
+	font-size: 20px;
+	}
+	.men_women_sec .top-promos li:first-child p:nth-child(2){
+	font-size: 30px;
+	}
 		.top_categories .feature-categories ul.categories.count-3 > li {
     padding: 0;
 }
@@ -46469,12 +46635,24 @@ padding: 0 24px;
     min-width: 125px;
     font-size: 10px;
 }
-.top_brands_blp > .blp_top_brands_section:first-child{
+.top_brands_blp > .blp_top_brands_section{
+	font-size: 20px;
+    margin-bottom: 6px;
+    margin-right: 7px;
+}
+.blp_top_brands .blp_top_brands_section > .content h1{
 	font-size: 20px;
     margin-bottom: 30px;
 }
+.style_edit_blp .style_edit_left_blp .content{
+	font-size: 20px;
+    margin: 30px 0;
+}
 .style_edit_left_blp, .style_edit_blp > div:last-child{
 	width:100%;
+}
+.blp_top_brands  .blp_top_brands_section{
+	width: 100%;
 }
 .style_edit_blp .style_edit_left_blp > div:first-child p:first-child {
     font-size: 20px;
