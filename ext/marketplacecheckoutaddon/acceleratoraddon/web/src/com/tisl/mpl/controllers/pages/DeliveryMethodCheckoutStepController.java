@@ -507,10 +507,10 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			//			deliveryAddress = getMplCheckoutFacade().rePopulateDeliveryAddress(deliveryAddress);
 
 			//TISST-7473
-			if (deliveryAddress == null || deliveryAddress.isEmpty())
-			{
-				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.NEWADDRESSLINK;
-			}
+			/*
+			 * if (deliveryAddress == null || deliveryAddress.isEmpty()) { return
+			 * MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.NEWADDRESSLINK; }
+			 */
 
 			//TISPT-400
 			deliveryAddress = getMplCheckoutFacade().rePopulateDeliveryAddress(deliveryAddress);

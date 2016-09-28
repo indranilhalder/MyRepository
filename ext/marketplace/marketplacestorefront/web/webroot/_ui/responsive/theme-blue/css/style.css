@@ -50048,12 +50048,13 @@ body.no-scroll {
     .formaddress {
         padding: 20px 15px;
         margin-bottom: 28px;
+        
     }
 
     .heading-form {
         padding-bottom: 14px;
     }
-
+	.checkTab .formaddress  .heading-form {padding:0px;}
     .formaddress form .name-address {
         width: 100%;
         margin-right: 0;
@@ -50485,7 +50486,10 @@ body.no-scroll {
 
     .checkTab .smk_accordion .accordion_in .acc_head, .checkTab .formaddress {
         padding: 0 12px;
+        padding-top:10px;
     }
+    .checkTab .addNew_wrapper .add-address{
+    margin-top:10px;}
 
     .checkTab .choose-address .address-list, .checkTab .choose-address.choose-retailer .address-list {
         padding: 10px 12px 15px;
@@ -52542,7 +52546,7 @@ input[type="radio"] + label:before, input[type="checkbox"] + label:before{
 	padding: 72px 24px 0;
 	}
 	#selectDeliveryMethodForm .button#deliveryMethodSubmitUp{
-	top: -67px;
+	/* top: -67px; */
 	right: 26px;
 	}
 	.checkout.wrapper .left-block  .checkout-headers h1{
@@ -53389,9 +53393,12 @@ div.radio.creditDebitLabelRadio{
     #EMITermTable th {
         width: auto
     }
+    .addNew_wrapper.no_address .addnewAddresPage .formaddress{
+	width: 85% !important;
+}
 }
 @media(max-width: 980px) {
-  .checkTab .add-address_viewMore.viewMoreContainer{width:100%;}
+  .checkTab .add-address_viewMore.viewMoreContainer{width:100%;margin:0 auto;float:none;display:block !important;margin-top:10px;}
 }
 
 .addressList_wrapper,.addNew_wrapper{
