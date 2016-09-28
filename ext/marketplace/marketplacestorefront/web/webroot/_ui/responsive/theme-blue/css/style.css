@@ -45330,7 +45330,7 @@ display:none;
           float: none;
           margin:0px auto;
       }
-      .sign-in.tab-view .tabs > li .left form .forgotten-password{
+      .sign-in.tab-view .tabs > li .left form .forgotten-password_register{
       display:none;} 
       .sign-in.tab-view .tabs > li .left form .forgotten-password.forgotten-password_checkout{
       display:block;} 

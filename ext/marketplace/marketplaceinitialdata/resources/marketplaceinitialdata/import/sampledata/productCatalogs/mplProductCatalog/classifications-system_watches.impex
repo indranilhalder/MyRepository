@@ -291,8 +291,6 @@ INSERT_UPDATE classificationclass;code[unique=true];name[lang=en];$classCatalogV
 ;20011;watch_group_011;pcmClassification:1
 ;20012;watch_group_012;pcmClassification:1
 
-
-
 # Create Class Attr Assignment 
 INSERT_UPDATE ClassAttributeAssignment;$attribute;$unit;attributeType(code[default=string]);$class;attributeValues(code);multiValued(code);mandatory(code)
 ;stylecodewatches;;string;20001;;false;true;30
@@ -374,6 +372,12 @@ INSERT_UPDATE CategoryCategoryRelation;$categories;$supercategories
 ;MPH1505001000;20010
 ;MPH1505004000;20010
 ;MPH1505004000;20011
+;MPH1500;20012
+;MPH1501;20012
+;MPH1502;20012
+;MPH1503;20012
+;MPH1505001000;20012
+;MPH1505004000;20012
 ;MPH1500000000;20007
 ;MPH1500002000;20007
 ;MPH1500003000;20007
