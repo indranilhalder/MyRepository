@@ -33441,6 +33441,7 @@ body.page-cartPage .cart.wrapper .MyBag-buttons ul.checkout-types a.checkoutButt
 height: 40px !important;
 width:175px;
 letter-spacing:1px;
+font-weight: 500 !important;
 }
 body.page-cartPage .cart.wrapper .checkout-types a.checkoutButton{
 line-height: 14px !important;
@@ -33650,7 +33651,7 @@ div#defaultPinDiv p,.MyBag-pincode #changePinDiv>p{
 	margin: 0 0 18px;
     letter-spacing: 0;
     font-size: 12px;
-    line-height: 20px;
+    line-height: 16px;
 }
 div#defaultPinDiv a#changePinAnchor{
 	font-size: 12px;
@@ -33796,7 +33797,7 @@ body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo ul.item
     font-size: 8px;
     width: 120px;
     top: -3px;
-    height: 30px;
+    height: 29px;
     line-height: 1;
 
 }
@@ -34176,6 +34177,16 @@ body.page-cartPage .MyBag-pincode input#defaultPinCodeIds:focus{
 @media(max-width: 1037px) and (min-width: 1032px){
 .product-facet .facet .facet-list .facet-mark{
 margin-right: 9px;
+}
+}
+body.page-cartPage .callouts{
+	 margin: 0 auto;
+	margin-top: -27px;
+    max-width: 1200px;
+}
+@media(max-width:790px){
+	body.page-cartPage .callouts{
+	margin-top: -7px;
 }
 }
 /*Mybag css changes ends*/
