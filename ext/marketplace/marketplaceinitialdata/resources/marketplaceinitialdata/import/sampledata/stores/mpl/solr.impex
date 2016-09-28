@@ -151,7 +151,7 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 ;$solrIndexedType; sellerId            	  ;string ; 	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplSellerIdValueProvider             ;                						;                           ;
 ;$solrIndexedType; deliveryMode           ;string ;  	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplDeliveryModeValueProvider         ;    									;                           ;
 ;$solrIndexedType; collectionIds          ;string ; 	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplOccasionIDValueProvider           ;                						;                           ;
-# ;$solrIndexedType; vouchers		          ;string ;     ;	 ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 0   ;true;     ;     ;mplVoucherCodeValueProvider		    ;	;                         	;
+#;$solrIndexedType; vouchers		          ;string ;     ;	 ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 0   ;true;     ;     ;mplVoucherCodeValueProvider		    ;	;                         	;
 
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;valueProviderParameter;facet[default=true]
 ;$solrIndexedType; snsCategory            ;string ;     ;    ;     ;true ;true ;	 ;mplSnscategoryValueProvider;
@@ -168,7 +168,7 @@ INSERT_UPDATE SolrIndexerQuery;solrIndexedType(identifier)[unique=true];identifi
 										{{ SELECT * FROM {BuyBox AS bbox} 
 													WHERE {bbox.product}={p.code} 
 													AND {bbox.delisted} != 1 
-													AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
+													AND (sysdate() between {bbox.sellerstartdate} and {bbox.sellerenddate})
 										}} 
 									) 
 						AND {p.varianttype} IS NULL   
@@ -195,7 +195,7 @@ SELECT DISTINCT tbl.pk, tbl.code FROM (
 			{{
 				SELECT DISTINCT {bbox:product} FROM {BuyBox AS bbox} WHERE {bbox:modifiedtime} >= ?lastIndexTime
 																	 AND {bbox.delisted} != 1 
-																	 AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
+																	 AND (sysdate() between {bbox.sellerstartdate} and {bbox.sellerenddate})
 			}}
 		)
 	}}
@@ -214,13 +214,13 @@ SELECT DISTINCT tbl.pk, tbl.code FROM (
 where tbl.code IN ( 
 					{{ SELECT {bbox.product} FROM {BuyBox AS bbox} 
 								WHERE {bbox.delisted} != 1 
-								AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
+								AND (sysdate() between {bbox.sellerstartdate} and {bbox.sellerenddate})
 					}} 
 				)
 
  ORDER BY tbl.code
 ";anonymous
-;$solrIndexedType;$searchIndexNamePrefix-deleteQuery;delete;;;;"SELECT distinct{p.PK} FROM {Product AS p} 						WHERE {p.code} IN ( 										{{ SELECT distinct{bbox.product} FROM 	{BuyBox AS bbox} 													WHERE 	{bbox:modifiedtime} >= ?lastIndexTime 													AND ({bbox.product}={p.code} 													AND ({bbox.delisted} = 1 														OR (sysdate not between {bbox.sellerstartdate} and {bbox.sellerenddate})))													AND {bbox.product} NOT IN (													{{														SELECT distinct{bbox.product} FROM {BuyBox AS bbox} 															WHERE {bbox.delisted} != 1 															AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})}})										}} 									) 						AND {p.varianttype} IS NULL";anonymous
+;$solrIndexedType;$searchIndexNamePrefix-deleteQuery;delete;;;;"SELECT distinct{p.PK} FROM {Product AS p} 						WHERE {p.code} IN ( 										{{ SELECT distinct{bbox.product} FROM 	{BuyBox AS bbox} 													WHERE 	{bbox:modifiedtime} >= ?lastIndexTime 													AND ({bbox.product}={p.code} 													AND ({bbox.delisted} = 1 														OR (sysdate() not between {bbox.sellerstartdate} and {bbox.sellerenddate})))													AND {bbox.product} NOT IN (													{{														SELECT distinct{bbox.product} FROM {BuyBox AS bbox} 															WHERE {bbox.delisted} != 1 															AND (sysdate() between {bbox.sellerstartdate} and {bbox.sellerenddate})}})										}} 									) 						AND {p.varianttype} IS NULL";anonymous
 
 # Define the available sorts
 INSERT_UPDATE SolrSort;&sortRefID;indexedType(identifier)[unique=true];code[unique=true];useBoost;name
@@ -370,7 +370,7 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 								 ;$solrIndexedType                        ;multipack						;string		;		true;			; 					;true						;false   				;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;multipackfashiona:10001
 								 ;$solrIndexedType                        ;materialType						;string	    ;		true;			; 					;true						;false   				;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;materialtypefashiona:10001
 								 ;$solrIndexedType                        ;bagType							;string	    ;		true;			; 					;true						;   					;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;bagtypefashiona:10003
-#								 ;$solrIndexedType                        ;hairAccessoryType				;string	    ;		true;			; 					;true						;false   				;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;hairaccessoriestypefashiona:10009
+								 ;$solrIndexedType                        ;hairAccessoryType				;string	    ;		true;			; 					;true						;false   				;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;hairaccessoriestypefashiona:10009
 #								 ;$solrIndexedType                        ;typeofBelt						;string	    ;		true;			; 					;true						;   					;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;typeofbeltfashiona:10010
 								 ;$solrIndexedType                        ;beltSize							;string	    ;		true;			; 					;true						;false   				;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;beltsizefashiona:10010
 								 ;$solrIndexedType                        ;type								;string		;		true;			; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;typecamerabinotelescope:camerasgf,typecamerasecurity:securitycamerasgf,typeearheadphone:headphonesandheadsetsgf,typehealthcare:healthcaregf,typehealthcare:personalcaregf,typehts:hometheatresystemsgf,typemixer:mixers&foodprocessorsgf,typenetworking:networkinggf,typeofassistivetechnology:healthcaretypeofasstech,typeperipheralsoftware:peripheralsandsoftwaregf,typepersonalcare:healthcaregf,typepersonalcare:personalcaregf,typepurifier:waterpurifiersgf,typestorage:laptopsgf,typetvacc:tvaccessoriesgf,typevacuumcleaner:vacuumcleanergf

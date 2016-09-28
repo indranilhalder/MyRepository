@@ -36,3 +36,4 @@ UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=
  ;$solrIndexedType         ;patternWatches	         	       ;"Pattern"
  ;$solrIndexedType         ;dialColourWatches	         	   ;"Dial Colour"
  ;$solrIndexedType         ;typeWatches	         	   		   ;"Type"
+ ;$solrIndexedType         ;hairAccessoryType	         	   ;"Type"

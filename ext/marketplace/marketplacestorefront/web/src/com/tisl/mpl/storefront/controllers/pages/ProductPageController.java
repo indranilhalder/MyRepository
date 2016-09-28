@@ -1678,8 +1678,7 @@ public class ProductPageController extends AbstractPageController
 							//apparel
 							final FeatureValueData featureValueData = featureValueList.get(0);
 							if ((ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory()))
-									|| (ModelAttributetConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory()))
-									|| ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productData.getRootCategory()))
+									|| (ModelAttributetConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory())))
 							{
 
 								//								mapConfigurableAttribute.put(featureValueData.getValue(),
@@ -1697,6 +1696,25 @@ public class ProductPageController extends AbstractPageController
 								mapConfigurableAttributes.put(featureData.getName(), productFeatureMap);
 							} //end apparel
 							  //electronics
+							
+							else if ( ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productData.getRootCategory()) || ModelAttributetConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory())){
+								String[] propertiesValues=properitsValue.split(",");
+								if(propertiesValues!=null && propertiesValues.length>0){
+									for(String value: propertiesValues){
+										if(value.equalsIgnoreCase(featureData.getName())){
+											if (productFeatureMap.size() > 0)
+											{
+												productFeatureMap.clear();
+											}
+											productFeatureMap.put(featureValueData.getValue(),
+													productFeature != null && productFeature.getUnit() != null
+															&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit().getSymbol()
+															: "");
+											mapConfigurableAttributes.put(featureData.getName(), productFeatureMap);
+										}
+									}
+								}
+							}
 							else
 							{
 								if (properitsValue.toLowerCase().contains(configurableAttributData.getCode().toLowerCase()))
@@ -1719,7 +1737,7 @@ public class ProductPageController extends AbstractPageController
 			//model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE, mapConfigurableAttribute);
 			if (ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory())
 					|| ModelAttributetConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory())
-					|| ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productData.getRootCategory()))
+					|| ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productData.getRootCategory()) || ModelAttributetConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory()))
 			{
 				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTES, mapConfigurableAttributes);
 			}

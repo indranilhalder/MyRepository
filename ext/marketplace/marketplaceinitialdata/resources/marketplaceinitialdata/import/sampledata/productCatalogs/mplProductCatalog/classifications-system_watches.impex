@@ -289,6 +289,7 @@ INSERT_UPDATE classificationclass;code[unique=true];name[lang=en];$classCatalogV
 ;20009;watch_group_009;pcmClassification:1
 ;20010;watch_group_010;pcmClassification:1
 ;20011;watch_group_011;pcmClassification:1
+;20012;watch_group_012;pcmClassification:1
 
 
 
@@ -326,7 +327,7 @@ INSERT_UPDATE ClassAttributeAssignment;$attribute;$unit;attributeType(code[defau
 ;strapwidthwatches;103;number;20011;;false;false;10
 ;bandstylewatches;;enum;20011;bangle,bracelet,cuff,strap;false;false;30
 ;clasptypewatches;;enum;20011;ardillon,deployment,bangle,boxsafetyclasp,boxwithtongueandsafetyclasp,boxwithtongueclasp,buckle,deploymentbuckle,deploymentclasp,deploymentclaspwithpushbutton,deploymentpushbuttonclaspwithbuckle,doublelockingfoldoverclasp,expansionband,fancyclasp,foldoverclasp,foldoverclaspwithdoublepushbuttonsafety,foldoverclaspwithhiddendoublepushbutton,foldoverclaspwithsafety,foldoverclaspwithsinglepushbuttonsafety,foldoverpushbuttonclaspwithsafety,hookbuckle,invisibledoublelockingclasp,jewelleryclasp,jewelleryclaspwithpushbutton,leatherdeploymentbuckle,leatherdeploymentbucklewithsafety,lobsterclawclasp,multistrandboxclasp,pearlclasp,pushandslideclasp,pushbuttonclasp,singlelockingfoldoverclasp,springringclasp,toggleclasp,velcro;false;false;100
-;embellishmentwatches;;enum;20010;diamond,gemstone,rhinestone,cubiczirconium,crystals,swarovski,glass;true;false;30
+;embellishmentwatches;;enum;20012;diamond,gemstone,rhinestone,cubiczirconium,crystals,swarovski,glass;true;false;30
 ;needleswatches;;enum;20007;plume,baton,dauphine,galba,sword,breguet,squelette,stick;false;false;30; 
 ;careinstructionswatches;;string;20008;;false;true;300
 ;batterycompositionwatches;;enum;20009;alkaline,aluminumoxygen,leadacid,leadcalcium,lithium,lithiumion,lithiummanganesedioxide,lithiummetal,lithiumpolymer,manganese,mercuryoxide,nicad,nimh,nickeloxyhydroxide,polymer,sealedleadacid,silveroxide,zinc,zinccarbon,zincchloride;false;false;80
@@ -366,6 +367,10 @@ INSERT_UPDATE CategoryCategoryRelation;$categories;$supercategories
 ;MPH1500;20011
 ;MPH1501;20011
 ;MPH1502;20011
+;MPH1500;20012
+;MPH1501;20012
+;MPH1502;20012
+;MPH1503;20012
 ;MPH1505001000;20010
 ;MPH1505004000;20010
 ;MPH1505004000;20011
@@ -436,3 +441,5 @@ INSERT_UPDATE CategoryCategoryRelation;$categories;$supercategories
 ;MPH1504002000;20009
 ;MPH1504003000;20009
 ;MPH1505000000;20009
+;MPH1505001000;20012
+;MPH1505004000;20012

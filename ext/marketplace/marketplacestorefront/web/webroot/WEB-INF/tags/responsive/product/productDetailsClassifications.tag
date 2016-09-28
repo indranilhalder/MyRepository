@@ -54,11 +54,34 @@
 				<c:if test="${product.rootCategory!=electronics}">
 					<tr style="background-color: #f0f4f5;"><td colspan='2' style="font-weight: 700;"><div class="headline">Functions and Features</div></td></tr>
 				</c:if>
-				<c:forEach items="${product.classifications}" var="classification" varStatus="outer">
+				<p>======${product.rootCategory} + ${mapConfigurableAttributes }</p>
+				<c:choose>
+					<c:when test="${product.rootCategory=='Watches' && not empty mapConfigurableAttributes}">
+						<c:forEach var="classification" items="${mapConfigurableAttributes}">
+				   			<tr style="border: 1px solid #f0f4f5;">
+							<td style="border-right: 1px solid #f0f4f5;" class="title"><%-- ${outer.index} - ${inner.index} --%>  ${classification.key}</td>
+							
+							
+							<td><c:choose>
+   							<c:when test="${not empty classification.value }">
+   						 		<c:forEach var="classValue" items="${classification.value }">
+   						 			${classValue.key} &nbsp;&nbsp;${classValue.value}
+   						 		 </c:forEach>
+   							</c:when>
+   						<c:otherwise>
+   						 ${classification.key}
+   						</c:otherwise>	
+   						</c:choose></td>
+						</tr>
+						</c:forEach>
+					</c:when>
+					<c:otherwise>
+						<c:forEach items="${product.classifications}" var="classification" varStatus="outer">
 				
 				<c:if test="${product.rootCategory==electronics }">
 					<tr style="background-color: #f0f4f5;"><td colspan='2' style="font-weight: 700;"><div class="headline">${classification.name}</div></td></tr>
 				</c:if>
+				
 					<c:forEach items="${classification.features}" var="feature" varStatus="inner">
 						<tr style="border: 1px solid #f0f4f5;">
 							<td style="border-right: 1px solid #f0f4f5;" class="title"><%-- ${outer.index} - ${inner.index} --%>  ${feature.name}</td>
@@ -78,6 +101,11 @@
 						</tr>
 					</c:forEach>
 				</c:forEach>
+						
+					</c:otherwise>
+				</c:choose>
+				
+				
 			</tbody>
 		</table>
 		<table class="stats-table mobile">
