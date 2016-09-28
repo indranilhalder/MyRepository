@@ -46706,12 +46706,16 @@ body.no-scroll {
 	}
 }
 
-.best_seller_section .owl-controls {
+.best_seller_section .owl-controls, .top_deal .carousel-component #shopByLookCarousel .owl-controls{
 	display: block !important;
 }
-
+@media(min-width:701px){
+	.top_deal .carousel-component #shopByLookCarousel {
+    padding: 0 40px;
+	}
+}
 @media(max-width:700px) {
-	.best_seller_section .owl-controls {
+	.best_seller_section .owl-controls, .top_deal .carousel-component #shopByLookCarousel .owl-controls {
 		display: none !important;
 	}
 	.best_seller .carousel.shopByLookCarousel {
