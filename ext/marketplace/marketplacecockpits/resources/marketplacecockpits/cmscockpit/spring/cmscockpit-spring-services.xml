@@ -79,6 +79,7 @@
 						<value>MplShowcaseComponent.showcaseItems</value>
 						<value>ImageCarouselComponent.collectionItems</value>
 						<value>SignColComponent.signColItemsCollection</value>
+						<value>OurJourneyComponent.footerImageList</value>
 					</list>
 				</entry>
 				<entry key="AbstractCMSComponent">
@@ -153,6 +154,11 @@
 				<entry key="SignColComponent">
 					<list>
 						<value>SignColComponent.signColItemsCollection</value>
+					</list>
+				</entry>
+				<entry key="OurJourneyComponent">
+					<list>
+						<value>OurJourneyComponent.footerImageList</value>
 					</list>
 				</entry>
 			</map>
