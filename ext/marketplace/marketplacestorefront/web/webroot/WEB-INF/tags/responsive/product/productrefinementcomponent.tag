@@ -45,13 +45,13 @@ $(document).ready(function(){
 				<input type="hidden" name="q" id="q" value="${searchPageData.currentQuery.query.value}"/>
 				<div id="categoryPageDeptHierTree"></div>
 			</form>
-		</c:when>
+		</c:when>		
 		<c:otherwise>
 			<form id="searchPageDeptHierTreeForm" method="get">
-				<input type="hidden" name="q" id="q" />
+				<input type="hidden" name="q" id="q" value="${searchPageData.currentQuery.query.value}"/>
 				<input type="hidden" name="text" id="text" value="${searchPageData.freeTextSearch}"/>
-				<input type="hidden" name="searchCategory" id="searchCategoryTree"/>
-				<div id="searchPageDeptHierTree"></div>
+				<input type="hidden" name="searchCategory" id="searchCategoryTree"/>				
+				<div id="searchPageDeptHierTree"></div>				
 				<div id="displayAll"> Show all</div>
 				<div id="clickToMore"> Hide</div>
 			</form>
