@@ -80,10 +80,22 @@ INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;pa
 ;KidsNavNode;;Kids Nav Node Links;LuxurySiteRootNode;KidsCategoryLink;KidsNavNode;"Kids"
 #Subnodes L2
 ### subnodes L2
-INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);links(&linkRef);&nodeRef;title[lang=en]
+INSERT_UPDATE MplNavigationNodeComponent;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);links(&linkRef);&nodeRef;title[lang=en]
 ## Men
 ;MenClothingsNavNode;;Men's Clothings Nav Node;MenNavNode;ClothingL2Link;MenClothingsNavNode;"Clothings"
 ;MenShoesNavNode;;Men's Shoes Nav Node;MenNavNode;ShoeL2Link;MenShoesNavNode;"Shoes"
+
+######### Image
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images']
+;;AutumnWinter1;text/png;banner_image1.png;$siteResource/images/mobile/banner_image1.png;
+;;AutumnWinter2;text/png;banner_image2.png;$siteResource/images/mobile/banner_image2.png;
+
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;title;&componentRef;urlLink;$picture[lang=$lang];description
+;;Autumn_Winter_1;Autumn Winter One;"Autumn Winter 2016";Autumn_Winter_1;"https://plus.google.com";AutumnWinter1;"Discover"
+;;Autumn_Winter_2;Autumn Winter Two;"Autumn Winter 2016 2";Autumn_Winter_2;"https://www.facebook.com";AutumnWinter2;"Shop"
+
+INSERT_UPDATE MplNavigationNodeComponent;uid[unique=true];$contentCV[unique=true];sliders(uid,$contentCV);
+;MenClothingsNavNode;;Autumn_Winter_1,Autumn_Winter_2;
 
 ### subnodes L3
 ## Men

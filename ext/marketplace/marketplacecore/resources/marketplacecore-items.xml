@@ -3624,6 +3624,19 @@
 					</attribute>
 				</attributes>
 			</itemtype>
+			<itemtype code="MplNavigationNodeComponent" autocreate="true"
+				generate="true" extends="CMSNavigationNode"
+				jaloclass="com.tisl.mpl.core.jalo.MplNavigationNodeComponent">
+				<description>This component is made to support Luxury mega Navigation wire frame structure</description>
+				<attributes>
+					<attribute qualifier="sliders" type="FooterImageCollection"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<description>This attribute represents the list of L2 images</description>
+					</attribute>
+				</attributes>
+			</itemtype>
+			
 			<!-- CMS Media Paragraph Component -->
 			<itemtype code="CMSMediaParagraphComponent" generate="true"
 				jaloclass="com.tisl.mpl.jalo.cms.components.CMSMediaParagraphComponent"
