@@ -534,14 +534,28 @@ display:none;
 		</div>
 	<ycommerce:testId code="quickview_addToCart_button_${product.code}">
 	<div class="Cta">
+	
+	
+	<span id="dListedErrorMsg" style="display: none"  class="dlist_message prod-dlisted-msg">
+		<spring:theme code="pdp.delisted.message" />
+    </span>
+	
+	
 	 <!-- TPR-924 -->
-		 <div id="buyNowQv"> 
+	 
+	<div class="buy-btn-holder clearfix"> 
+		<div id="buyNowQv"> 
 	        <button style="display: block" id="buyNowButton" type="button" class="btn-block js-add-to-cart-qv">
 				<spring:theme code="buyNow.button.pdp" />
-			</button>
+			</button> 
+			<%-- <button id="buyNowButtonQuick-wrong" type="button" class="btn-block" disabled="disabled"> <spring:theme code="buyNow.button.pdp" /></button> --%>
 	    </div> 
+	    
+	    
 	    <!-- TPR-924 -->
 		<%-- <form:form id="addToCartFormQuick" action="${request.contextPath }/cart/add" method="post" class="add_to_cart_form"> --%>
+		
+		
 		<form:form id="addToCartFormQuick" action="#" method="post" class="add_to_cart_form">
 		<span id="addToCartFormQuickTitleSuccess" class="addToCartTitle">
 		</span>
@@ -558,15 +572,15 @@ display:none;
 		 /> <!-- value="${availablestock}" --> <!-- Convert into AJAX call -->
 		 <input type="hidden" name="sellerSelId" id="sellerSelId" /> 
 		
-		 <button id="addToCartButtonQuick" type="${buttonType}"
-												class="btn-block js-add-to-cart tempAddToCartQuickView" style="display:none;">
-												<spring:theme code="basket.add.to.basket" />
-											</button>
-		<span id="dListedErrorMsg" style="display: none"  class="dlist_message">
-		<spring:theme code="pdp.delisted.message" />
-	</span>
-		<button id="addToCartButtonQuick-wrong" type="button" class="btn-block" disable="true" style="display: none;" disabled> <spring:theme code="basket.add.to.basket" /></button>
-		<button id="buyNowButtonQuick-wrong" type="button" class="btn-block" disable="true" style="display: none;" disabled > <spring:theme code="buyNow.button.pdp" /></button>
+		 <button id="addToCartButtonQuick" type="${buttonType}" class="btn-block js-add-to-cart tempAddToCartQuickView" style="display:none;">
+			<spring:theme code="basket.add.to.basket" />
+		</button>
+		<%-- <span id="dListedErrorMsg" style="display: none"  class="dlist_message">
+			<spring:theme code="pdp.delisted.message" />
+	    </span> --%>
+		
+		<button id="addToCartButtonQuick-wrong" type="button" class="btn-block" disabled="disabled" > <spring:theme code="basket.add.to.basket" /></button>
+		
 											
 		<span id="addToCartFormnoInventory" style="display: none" class="no_inventory"><p class="inventory">
 			<font color="#ff1c47"><spring:theme code="Product.outofinventory" /></font>
@@ -606,6 +620,9 @@ display:none;
 		
 	
 	</form:form>
+	
+	</div>
+	
 	<%-- <c:if test="${allOOStock==stock_y}"> --%>
 			<span id="outOfStockIdQuick" style="display: none"  class="out_of_stock">
 				<font color="red"><spring:theme code="product.product.outOfStock" /></font>

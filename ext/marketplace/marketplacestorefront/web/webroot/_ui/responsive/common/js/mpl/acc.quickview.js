@@ -155,23 +155,26 @@ function setBuyBoxDetails()
 				if(typeof data['sellerArticleSKU'] === 'undefined')
 					{					
 					$("#addToCartButtonQuick-wrong").show();
-					$("#buyNowButtonQuick-wrong").show();
-					$("#buyNowQv").hide();
+					/*TPR-1772 functionality change for non-saleable products*/
+					/*$("#buyNowButtonQuick-wrong").show();*/
+					/*$('#buyNowButton').hide();*/
+					$("#buyNowButton").attr("disabled","disabled");
+					/*TPR-1772 functionality change for non-saleable products*/
 					$("#addToCartButtonQuick").hide();
-					$('#buyNowButton').hide();
 					$("#dListedErrorMsg").show();				
 					return false;
 					}					
 				
 				if(data['sellerArticleSKU']==null)
 					{
-									
 					$("#addToCartButtonQuick-wrong").show();
-					$("#buyNowButtonQuick-wrong").show();
-					$("#buyNowQv").hide();
+					/*TPR-1772 functionality change for non-saleable products*/
+					/*$("#buyNowButtonQuick-wrong").show();*/
+					/*$('#buyNowButton').hide();*/
+					$("#buyNowButton").attr("disabled","disabled");
+					/*TPR-1772 functionality change for non-saleable products*/
 					$("#addToCartButtonQuick").hide();
-					$('#buyNowButton').hide();
-					$("#dListedErrorMsg").show();					
+					$("#dListedErrorMsg").show();				
 					return false;
 					}
 				

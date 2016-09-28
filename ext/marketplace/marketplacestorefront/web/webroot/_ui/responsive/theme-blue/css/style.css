@@ -24847,7 +24847,7 @@ input.brandSearchTxt {
 	border: 1px solid #DFD1D5;
     height: 30px;
 }
-#addToCartButton-wrong,#addToCartButtonQuick-wrong{
+#addToCartButton-wrong, #addToCartButtonQuick-wrong[disabled="disabled"]{
     background-color: #ccc;
     border: 1px solid #a9143c;
     cursor: default;
@@ -24866,7 +24866,7 @@ input.brandSearchTxt {
 #addToCartButtonQuick-wrong{
 	margin-top: 15px;
 }
-button#buyNowButton[disabled="disabled"] {
+button#buyNowButton[disabled="disabled"], #buyNowButtonQuick-wrong[disabled="disabled"] {
     opacity: 0.5;
 } 
 .account-userTitle-custom{
@@ -25118,7 +25118,7 @@ padding:0;
     display:block;
 }
 
-#addToCartButton,#addToCartButtonQuick {
+#addToCartButton,#addToCartButtonQuick, #addToCartButtonQuick-wrong {
     font-size: 12px;
     letter-spacing: 1px;
     height: 42px;
@@ -30287,22 +30287,44 @@ right: 0px !important;
 
 
 
+/* Start QuickView for non sealable product */
+.prod-dlisted-msg{
+	color: #ff1c47;
+	display: block;
+	margin-bottom: 10px;
+	text-align: center;
+}
 
+.buy-btn-holder{
+	margin-bottom: 10px;
+}
 
+.clearfix:after {
+     visibility: hidden;
+     display: block;
+     font-size: 0;
+     content: " ";
+     clear: both;
+     height: 0;
+ }
+ /* End QuickView for non sealable product */
+.clearfix { display: inline-block; }
+/* start commented backslash hack \*/
+* html .clearfix { height: 1%; }
+.clearfix { display: block; }
 
 body.page-checkout-login .top.checkout-top{
 	width: 100%;
     margin-left: 0px;
  }
-#buyNowButton{
-	margin-top: 20px;
+#buyNowButton, #buyNowButtonQuick-wrong{
+	/* margin-top: 20px; */
     line-height: 12px;
     height: 42px;
     font-size: 12px!important;
     font-weight: 500;
-     background-color: #A9143C;
-   color:#fff;
-	
+    background-color: #A9143C;
+    color:#fff;	
 }
 #sharepretext,#shareposttext{
 	color:#60A119;
@@ -45170,7 +45192,7 @@ float: right;
 
 .product-info .product-detail .Cta {
 	margin: 15px 0 0;
-	display: flex;
+	/* display: flex; */
 	align-items: flex-end;
 }
 
@@ -48285,7 +48307,7 @@ border-right: 2px solid #9b9b9b;
 }
 .quickview .product-info .product-content #buyNowQv {
 	width: 50%;
-
+	float: left;
     margin-top: 0;
    	letter-spacing: 0;
    	font-weight: bold;
@@ -48310,17 +48332,15 @@ border-right: 2px solid #9b9b9b;
 }
 .quickview .product-info .product-detail .Cta{
 
-    display: flex;
+    /* display: flex; */
     align-items: flex-end;
     width: 100%;
 
 }
 .quickview .product-info .product-detail #addToCartFormQuick {
     position: relative;
+    float: left;
     width: 50%;
-   
-
-
 }
 .product-info .product-content #addToCartFormQuickTitle{
     text-align: center;
