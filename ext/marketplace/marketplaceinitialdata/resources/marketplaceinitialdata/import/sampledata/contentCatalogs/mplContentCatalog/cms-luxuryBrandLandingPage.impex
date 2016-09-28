@@ -324,6 +324,19 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 
 ############################### SECTION 7 End ####################################
 
+############################### SECTION 8 Start ####################################
+
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;description;title
+;;ourMissionComponent;Our Mission Component;ourMissionComponent;Lorem ipsum donet;Our Mission
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
+;;Section8-OurMissionSlot; Our Mission slot;true;ourMissionComponent
+
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxurybrandlandingpage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section8-luxuryBLP;Section8;;Section8-OurMissionSlot;;; 
+############################### SECTION 8 End ####################################
+
 ############################### SECTION 9 Start ####################################
  
 INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink
