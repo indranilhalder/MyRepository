@@ -469,7 +469,7 @@ display: none;
 									<div class="address-accordion smk_accordion acc_with_icon">
   <div class="choose-address accordion_in acc_active">
     
-      <div class="acc_head">
+      <div class="acc_head newAddressCenter">
 												<div class="acc_icon_expand"></div>
 												<h2>Add New Address</h2>
 												<p class="cart-items">
