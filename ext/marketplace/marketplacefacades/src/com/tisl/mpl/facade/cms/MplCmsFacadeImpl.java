@@ -578,9 +578,9 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				signColItemWsDto.setBrandBannerUrl(signColItem.getBannerUrl());
 			}
 
-			if (null != signColItem.getBannerImage() && null != signColItem.getBannerImage().getUrl2())
+			if (null != signColItem.getBannerImage() && null != signColItem.getBannerImage().getURL())
 			{
-				signColItemWsDto.setBrandBannerImageUrl(signColItem.getBannerImage().getUrl2());
+				signColItemWsDto.setBrandBannerImageUrl(signColItem.getBannerImage().getURL());
 			}
 
 			if (null != signColItem.getShowByDefault())
@@ -588,9 +588,9 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				signColItemWsDto.setShowByDefault(signColItem.getShowByDefault().booleanValue());
 			}
 
-			if (null != signColItem.getLogo() && null != signColItem.getLogo().getUrl2())
+			if (null != signColItem.getLogo() && null != signColItem.getLogo().getURL())
 			{
-				signColItemWsDto.setBrandLogoUrl(signColItem.getLogo().getUrl2());
+				signColItemWsDto.setBrandLogoUrl(signColItem.getLogo().getURL());
 			}
 
 
@@ -661,9 +661,9 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 			productDto.setProductUrl(defaultProductModelUrlResolver.resolveInternal(product));
 		}
 
-		if (null != product.getPicture() && null != product.getPicture().getUrl2())
+		if (null != product.getPicture() && null != product.getPicture().getURL())
 		{
-			productDto.setProductImageUrl(product.getPicture().getUrl2());
+			productDto.setProductImageUrl(product.getPicture().getURL());
 		}
 
 		if (StringUtils.isNotEmpty(product.getCode()))
@@ -744,9 +744,9 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					productDto.setProductTitle(product.getTitle());
 				}
 
-				if (null != product.getPicture())
+				if (null != product.getPicture() && null != product.getPicture().getURL())
 				{
-					productDto.setProductImageUrl(product.getPicture().getUrl2());
+					productDto.setProductImageUrl(product.getPicture().getURL());
 				}
 				if (StringUtils.isNotEmpty(productCode))
 				{
@@ -2017,7 +2017,8 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 		return luxComponent;
 	}
 
-	/** @param seeOurJourneyComponent
+	/**
+	 * @param seeOurJourneyComponent
 	 * @return
 	 */
 	private LuxBlpCompListWsDTO getSeeOurJourneyWsDTO(final OurJourneyComponentModel seeOurJourneyComponent)
