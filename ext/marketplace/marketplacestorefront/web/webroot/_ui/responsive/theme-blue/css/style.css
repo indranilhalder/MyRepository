@@ -45232,7 +45232,7 @@ float: right;
 
 .product-info .product-detail .Cta #buyNow, .product-info .product-detail .Cta .addtocart-component
 	{
-/* 	float: left; */
+	float: left;
 	width: 50%;
 }
 

@@ -124,9 +124,9 @@ $(document).ready(function(){
 			<font color="#ff1c47">Please decrease the quantity</font>
 		</p></span>
 	 <!-- TISST-13959 fix  -->
-	<span id="dListedErrorMsg" style="display: none"  class="dlist_message">
+<%-- 	<span id="dListedErrorMsg" style="display: none"  class="dlist_message">
 		<spring:theme code="pdp.delisted.message" />
-	</span>
+	</span> --%>
 	<span id="outOfStockId" style="display: none"  class="out_of_stock">
 <%-- 		<spring:theme code="product.product.outOfStock" /> --%>
 		<%-- <input type="button" id="add_to_wishlist" onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/> --%>
