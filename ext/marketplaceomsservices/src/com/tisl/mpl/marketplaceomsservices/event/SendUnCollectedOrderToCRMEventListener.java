@@ -6,6 +6,7 @@ package com.tisl.mpl.marketplaceomsservices.event;
 import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.servicelayer.event.impl.AbstractEventListener;
+import de.hybris.platform.servicelayer.model.ModelService;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,8 @@ public class SendUnCollectedOrderToCRMEventListener extends AbstractEventListene
 	
 	@Autowired
 	private CustomOmsCancelAdapter customOmsCancelAdapter;
-	
-
+	@Autowired
+	private ModelService modelService;
 	@Override
 	protected void onEvent(SendUnCollectedOrderToCRMEvent sendUnColletedToCRMEvent)
 	{
@@ -41,6 +42,9 @@ public class SendUnCollectedOrderToCRMEventListener extends AbstractEventListene
 						boolean isSsb=false;
 						if(null!=sendUnColletedToCRMEvent.getShipment().getSsb() && sendUnColletedToCRMEvent.getShipment().getSsb().booleanValue()){
 						 isSsb=sendUnColletedToCRMEvent.getShipment().getSsb().booleanValue();
+						 sendUnColletedToCRMEvent.getConsignmentModel().setSsb(Boolean.TRUE);
+						 sendUnColletedToCRMEvent.getConsignmentModel().setSsbCheck(Boolean.TRUE);
+        			    modelService.save(sendUnColletedToCRMEvent.getConsignmentModel());
 						}
 						customOmsCancelAdapter.createTicketInCRM(orderEntryModel.getTransactionID(),
 				MarketplaceomsordersConstants.TICKET_TYPE_CODE, MarketplaceomsordersConstants.EMPTY,

@@ -593,6 +593,9 @@
 			<value code="QCPASSED" />
 			<value code="RETURN_COMPLETED" />
 			<value code="RETURN_INPROGRESS" />
+			<!-- Added New Status EDTOHD and SDB -->
+			<value code="ISEDTOHD" />
+			<value code="ISSDB" />
 		</enumtype>
 
 		<enumtype code="TypeofReturn" autocreate="true" generate="true"
@@ -727,6 +730,9 @@
 			<value code="DoesNotFit" />
 			<value code="DamagedProduct" />
 			<value code="ReturnToOrigin" />
+			<!-- Added Refund reason codes for IsEDtoHd and SDB -->
+			<value code="IsEDtoHD" />
+			<value code="IsSDB" />
 
 		</enumtype>
 
@@ -6099,6 +6105,29 @@
 							<persistence type="property" />
 					</attribute>
 					
+					<attribute qualifier="isEDtoHDCheck" type="java.lang.Boolean">
+							<modifiers optional="true" read="true" write="true" />
+							<description>for isEDtoHD</description>
+							<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="ssbCheck" type="java.lang.Boolean">
+							<modifiers optional="true" read="true" write="true" />
+							<description>for ssb</description>
+							<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="sdbCheck" type="java.lang.Boolean">
+							<modifiers optional="true" read="true" write="true" />
+							<description>for sdb</description>
+							<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="returnInitiateCheck" type="java.lang.Boolean">
+							<modifiers optional="true" read="true" write="true" />
+							<description>for return Initiate</description>
+							<persistence type="property" />
+					</attribute>
 					
 					<!--End  Added new Attributes for Order Update  -->
 

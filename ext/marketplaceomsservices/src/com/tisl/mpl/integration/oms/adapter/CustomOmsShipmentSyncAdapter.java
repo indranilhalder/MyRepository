@@ -511,7 +511,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				}
 				
 			}
-				createRefundEntry(shipmentNewStatus, consignmentModel, orderModel);
+				createRefundEntry(shipment,shipmentNewStatus, consignmentModel, orderModel);
 				if (ObjectUtils.notEqual(shipmentCurrentStatus, shipmentNewStatus))
 				{
 					if(!checkConsignmentStatus){
@@ -667,95 +667,182 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 		newConsignmentEntry.setQuantity(Long.valueOf(1));
 		return newConsignmentEntry;
 	}
-
-
-	private void createRefundEntry(final ConsignmentStatus newStatus, final ConsignmentModel consignmentModel,
-			final OrderModel orderModel)
-	{
-		if ((ConsignmentStatus.RETURN_INITIATED.equals(newStatus) || ConsignmentStatus.LOST_IN_TRANSIT.equals(newStatus) || ConsignmentStatus.RETURN_TO_ORIGIN
-				.equals(newStatus))
-				|| (ConsignmentStatus.RETURNINITIATED_BY_RTO.equals(newStatus))
-				|| (ConsignmentStatus.QC_FAILED.equals(newStatus))
-				|| (ConsignmentStatus.RETURN_CLOSED.equals(newStatus))
-				|| (ConsignmentStatus.RETURN_CANCELLED.equals(newStatus))
-				&& CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))
+	
+	private void createRefundEntryModel(final ConsignmentStatus newStatus, final ConsignmentModel consignmentModel,
+			final OrderModel orderModel ,final Boolean isEDtoHDCheck,final Boolean isSDBCheck,final Boolean isRetrunInitiatedCheck){
+		try
 		{
-			try
+			final AbstractOrderEntryModel orderEntry = consignmentModel.getConsignmentEntries().iterator().next().getOrderEntry();
+			RefundEntryModel refundEntryModel = new RefundEntryModel();
+			refundEntryModel.setOrderEntry(orderEntry);
+			//Create Multiple Refund Entry Models for SDB and IsEDTOHD
+			//if (CollectionUtils.isEmpty(flexibleSearchService.getModelsByExample(refundEntryModel)))
+			if (isEDtoHDCheck.booleanValue() || isSDBCheck.booleanValue() ||isRetrunInitiatedCheck.booleanValue())
 			{
-				final AbstractOrderEntryModel orderEntry = consignmentModel.getConsignmentEntries().iterator().next().getOrderEntry();
-				RefundEntryModel refundEntryModel = new RefundEntryModel();
+				final ReturnRequestModel returnRequestModel = returnService.createReturnRequest(orderModel);
+				returnRequestModel.setRMA(returnService.createRMA(returnRequestModel));
+
+
+				refundEntryModel = modelService.create(RefundEntryModel.class);
 				refundEntryModel.setOrderEntry(orderEntry);
-				if (CollectionUtils.isEmpty(flexibleSearchService.getModelsByExample(refundEntryModel)))
+				refundEntryModel.setReturnRequest(returnRequestModel);
+				//TISEE-5246
+				//refundEntryModel.setReason(RefundReason.SITEERROR);
+				if (ConsignmentStatus.LOST_IN_TRANSIT.equals(newStatus))
 				{
-					final ReturnRequestModel returnRequestModel = returnService.createReturnRequest(orderModel);
-					returnRequestModel.setRMA(returnService.createRMA(returnRequestModel));
-
-
-					refundEntryModel = modelService.create(RefundEntryModel.class);
-					refundEntryModel.setOrderEntry(orderEntry);
-					refundEntryModel.setReturnRequest(returnRequestModel);
-					//TISEE-5246
-					//refundEntryModel.setReason(RefundReason.SITEERROR);
-					if (ConsignmentStatus.LOST_IN_TRANSIT.equals(newStatus))
-					{
-						refundEntryModel.setReason(RefundReason.LOSTINTRANSIT);
-					}
-					else if (ConsignmentStatus.RETURN_TO_ORIGIN.equals(newStatus))
-					{
-						refundEntryModel.setReason(RefundReason.RETURNTOORIGIN);
-					}
-					//CM 1: Added as part of R2.1 to handle new order status 'RETURNINITIATED_BY_RTO','QC_FAILED','RETURN_CLOSED'
-					else if (ConsignmentStatus.RETURNINITIATED_BY_RTO.equals(newStatus))
-					{
-						refundEntryModel.setReason(RefundReason.RETURNTOORIGIN);
-					}
-					else if (ConsignmentStatus.QC_FAILED.equals(newStatus))
-					{
-						refundEntryModel.setReason(RefundReason.LOSTINTRANSIT);
-					}
-					else if (ConsignmentStatus.RETURN_CLOSED.equals(newStatus))
-					{
-						refundEntryModel.setReason(RefundReason.LOSTINTRANSIT);
-					}
-					else
-					{
-						refundEntryModel.setReason(RefundReason.SITEERROR);
-					}
-					refundEntryModel.setStatus(ReturnStatus.RETURN_INITIATED);
-					refundEntryModel.setAction(ReturnAction.IMMEDIATE);
-					refundEntryModel.setNotes("Return Initiated by Seller Portal");
-					refundEntryModel.setExpectedQuantity(orderEntry.getQuantity());//Single line quantity
-					refundEntryModel.setReceivedQuantity(orderEntry.getQuantity());//Single line quantity
-					refundEntryModel.setRefundedDate(new Date());
-					final List<PaymentTransactionModel> tranactions = orderModel.getPaymentTransactions();
-					if (CollectionUtils.isNotEmpty(tranactions))
-					{
-						final PaymentTransactionEntryModel entry = tranactions.iterator().next().getEntries().iterator().next();
-
-						if (entry.getPaymentMode() != null && entry.getPaymentMode().getMode() != null
-								&& "COD".equalsIgnoreCase(entry.getPaymentMode().getMode()))
-						{
-							refundEntryModel.setAmount(NumberUtils.createBigDecimal("0"));
-						}
-						else
-						{
-							final Double amount = orderEntry.getNetAmountAfterAllDisc()
-									+ (orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge() : 0D);
-
-							refundEntryModel.setAmount(NumberUtils.createBigDecimal(amount.toString()));
-						}
-
-					}
-
-					modelService.save(refundEntryModel);
-					modelService.save(returnRequestModel);
+					refundEntryModel.setReason(RefundReason.LOSTINTRANSIT);
 				}
-			}
-			catch (final Exception e)
-			{
-				LOG.error(e.getMessage(), e);
+				else if (ConsignmentStatus.RETURN_TO_ORIGIN.equals(newStatus))
+				{
+					refundEntryModel.setReason(RefundReason.RETURNTOORIGIN);
+				}
+				//CM 1: Added as part of R2.1 to handle new order status 'RETURNINITIATED_BY_RTO','QC_FAILED','RETURN_CLOSED'
+				else if (ConsignmentStatus.RETURNINITIATED_BY_RTO.equals(newStatus))
+				{
+					refundEntryModel.setReason(RefundReason.RETURNTOORIGIN);
+				}
+				else if (ConsignmentStatus.QC_FAILED.equals(newStatus))
+				{
+					refundEntryModel.setReason(RefundReason.LOSTINTRANSIT);
+				}
+				else if (ConsignmentStatus.RETURN_CLOSED.equals(newStatus))
+				{
+					refundEntryModel.setReason(RefundReason.LOSTINTRANSIT);
+				}
+				else if(isEDtoHDCheck.booleanValue())
+				{
+					refundEntryModel.setReason(RefundReason.ISEDTOHD);
+					refundEntryModel.setStatus(ReturnStatus.ISEDTOHD);
+				}
+				else if(isSDBCheck.booleanValue()){
+					refundEntryModel.setReason(RefundReason.ISSDB);
+					refundEntryModel.setStatus(ReturnStatus.ISSDB);
+				}
+				else
+				{
+					refundEntryModel.setReason(RefundReason.SITEERROR);
+					refundEntryModel.setStatus(ReturnStatus.RETURN_INITIATED);
+				}
+				refundEntryModel.setAction(ReturnAction.IMMEDIATE);
+				
+				if(isEDtoHDCheck.booleanValue()){
+					refundEntryModel.setNotes("IsEDToHD Breach "); 
+				}else if(isSDBCheck.booleanValue()){
+					 refundEntryModel.setNotes("IsSDB Breach "); 
+				}else{
+					 refundEntryModel.setNotes("Return Initiated by Seller Portal");
+				}
+				refundEntryModel.setExpectedQuantity(orderEntry.getQuantity());//Single line quantity
+				refundEntryModel.setReceivedQuantity(orderEntry.getQuantity());//Single line quantity
+				refundEntryModel.setRefundedDate(new Date());
+				final List<PaymentTransactionModel> tranactions = orderModel.getPaymentTransactions();
+				if (CollectionUtils.isNotEmpty(tranactions))
+				{
+					final PaymentTransactionEntryModel entry = tranactions.iterator().next().getEntries().iterator().next();
+					
+					 if(isEDtoHDCheck.booleanValue() ){
+   						if (entry.getPaymentMode() != null && entry.getPaymentMode().getMode() != null
+   								&& "COD".equalsIgnoreCase(entry.getPaymentMode().getMode()))
+   						{
+   							refundEntryModel.setAmount(NumberUtils.createBigDecimal("0"));
+   						}
+   						else
+   						{
+   							final Double amount = orderEntry.getCurrDelCharge() ;
+   
+   							refundEntryModel.setAmount(NumberUtils.createBigDecimal(amount.toString()));
+   						}
+   						
+					 }else if(isSDBCheck.booleanValue()){
+						 
+						 if (entry.getPaymentMode() != null && entry.getPaymentMode().getMode() != null
+ 								&& "COD".equalsIgnoreCase(entry.getPaymentMode().getMode()))
+ 						{
+ 							refundEntryModel.setAmount(NumberUtils.createBigDecimal("0"));
+ 						}
+ 						else
+ 						{
+ 							final Double amount = orderEntry.getScheduledDeliveryCharge() ;
+ 
+ 							refundEntryModel.setAmount(NumberUtils.createBigDecimal(amount.toString()));
+ 						}
+					 }else {
+						 if (entry.getPaymentMode() != null && entry.getPaymentMode().getMode() != null
+ 								&& "COD".equalsIgnoreCase(entry.getPaymentMode().getMode()))
+ 						{
+ 							refundEntryModel.setAmount(NumberUtils.createBigDecimal("0"));
+ 						}
+ 						else
+ 						{
+ 							final Double amount = orderEntry.getNetAmountAfterAllDisc() + (orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge() : 0D);
+ 
+ 							refundEntryModel.setAmount(NumberUtils.createBigDecimal(amount.toString()));
+ 						}
+					 }
+				}
+
+				modelService.save(refundEntryModel);
+				modelService.save(returnRequestModel);
 			}
 		}
+		catch (final Exception e)
+		{
+			LOG.error(e.getMessage(), e);
+		}
+	}
+
+	private void createRefundEntry(final Shipment shipment,final ConsignmentStatus newStatus, final ConsignmentModel consignmentModel,
+			final OrderModel orderModel)
+	{
+		try{
+		Boolean isEDtoHDCheck=Boolean.FALSE;
+		Boolean isSDBCheck=Boolean.FALSE;
+		Boolean isRetrunInitiatedCheck=Boolean.FALSE;
+		     if(null!= shipment && null!=shipment.getIsEDtoHD()){
+         		if(shipment.getIsEDtoHD().booleanValue() && ( CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries())) && (consignmentModel.getIsEDtoHDCheck()==null || consignmentModel.getIsEDtoHDCheck() ==Boolean.FALSE )){
+         			 LOG.debug("************************In IsEDtoHD Check .......");
+         			  isEDtoHDCheck=Boolean.TRUE;
+         			  createRefundEntryModel(newStatus,consignmentModel,orderModel,isEDtoHDCheck,isSDBCheck,isRetrunInitiatedCheck);
+         			  consignmentModel.setIsEDtoHD(Boolean.TRUE);
+         			  consignmentModel.setIsEDtoHDCheck(Boolean.TRUE);
+         			  modelService.save(consignmentModel);
+         			  isEDtoHDCheck=Boolean.FALSE;
+         		}
+		     }
+		     if(null!= shipment && null!=shipment.getSdb()){
+         		if(shipment.getSdb().booleanValue() &&  ( CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))  &&  (consignmentModel.getSdbCheck()==null || consignmentModel.getSdbCheck() ==Boolean.FALSE)){
+         			  LOG.debug("************************In SDD Check .......");
+         			  isSDBCheck=Boolean.TRUE;
+         			  createRefundEntryModel(newStatus,consignmentModel,orderModel,isEDtoHDCheck,isSDBCheck,isRetrunInitiatedCheck);
+         			  consignmentModel.setSdb(Boolean.TRUE);
+         			  consignmentModel.setSdbCheck(Boolean.TRUE);
+         			  modelService.save(consignmentModel);
+         			  isSDBCheck=Boolean.FALSE;
+         		}
+		     }
+      		if ((ConsignmentStatus.RETURN_INITIATED.equals(newStatus) 
+      				|| ConsignmentStatus.LOST_IN_TRANSIT.equals(newStatus) 
+      				|| ConsignmentStatus.RETURN_TO_ORIGIN.equals(newStatus))
+      				|| (ConsignmentStatus.RETURNINITIATED_BY_RTO.equals(newStatus))
+      				|| (ConsignmentStatus.QC_FAILED.equals(newStatus))
+      				|| (ConsignmentStatus.RETURN_CLOSED.equals(newStatus))
+      				|| (ConsignmentStatus.RETURN_CANCELLED.equals(newStatus))
+      				&& CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))
+      		{
+      			 LOG.debug("************************In "+newStatus +" Check .......");
+      			 isRetrunInitiatedCheck=Boolean.TRUE;
+      			 createRefundEntryModel(newStatus,consignmentModel,orderModel,isEDtoHDCheck,isSDBCheck,isRetrunInitiatedCheck);
+      			 consignmentModel.setReturnInitiateCheck(Boolean.TRUE);
+      			  modelService.save(consignmentModel);
+      			  isRetrunInitiatedCheck=Boolean.FALSE; 
+      		}
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e.getMessage(), e);
+		}
+			
+			
 	}
 
 	/**
