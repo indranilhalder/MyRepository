@@ -344,31 +344,31 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 			if (null == orderModel.getPaymentInfo())
 			{
 				updateOrder(orderModel, juspayWebhookModel);
-			}
 
-			//Re-trigger submit order process from Payment_Pending to Payment_Successful
-			final CommerceCheckoutParameter parameter = new CommerceCheckoutParameter();
-			parameter.setEnableHooks(true);
-			parameter.setSalesApplication(orderModel.getSalesApplication());
+				//Re-trigger submit order process from Payment_Pending to Payment_Successful
+				final CommerceCheckoutParameter parameter = new CommerceCheckoutParameter();
+				parameter.setEnableHooks(true);
+				parameter.setSalesApplication(orderModel.getSalesApplication());
 
-			final CommerceOrderResult result = new CommerceOrderResult();
-			result.setOrder(orderModel);
+				final CommerceOrderResult result = new CommerceOrderResult();
+				result.setOrder(orderModel);
 
-			mplCommerceCheckoutService.beforeSubmitOrder(parameter, result);
-			getOrderService().submitOrder(orderModel);
+				mplCommerceCheckoutService.beforeSubmitOrder(parameter, result);
+				getOrderService().submitOrder(orderModel);
 
-			//Email and sms for Payment_Successful
-			try
-			{
-				getNotificationService().triggerEmailAndSmsOnOrderConfirmation(orderModel, trackOrderUrl);
-			}
-			catch (final JAXBException e)
-			{
-				LOG.error("Error while sending notifications from job>>>>>>", e);
-			}
-			catch (final Exception ex)
-			{
-				LOG.error("Error while sending notifications>>>>>>", ex);
+				//Email and sms for Payment_Successful
+				try
+				{
+					getNotificationService().triggerEmailAndSmsOnOrderConfirmation(orderModel, trackOrderUrl);
+				}
+				catch (final JAXBException e)
+				{
+					LOG.error("Error while sending notifications from job>>>>>>", e);
+				}
+				catch (final Exception ex)
+				{
+					LOG.error("Error while sending notifications>>>>>>", ex);
+				}
 			}
 
 			juspayWebhookModel.setIsExpired(Boolean.TRUE);
@@ -380,35 +380,35 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 			if (null == orderModel.getPaymentInfo())
 			{
 				updateOrder(orderModel, juspayWebhookModel);
-			}
 
-			//getting PinCode against Order
-			final String defaultPinCode = getPinCodeForOrder(orderModel);
+				//getting PinCode against Order
+				final String defaultPinCode = getPinCodeForOrder(orderModel);
 
-			//OMS Deallocation call for failed order
-			getMplCommerceCartService().isInventoryReserved(orderModel,
-					MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
+				//OMS Deallocation call for failed order
+				getMplCommerceCartService().isInventoryReserved(orderModel,
+						MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
 
-			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
+				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
 
-			if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()))
-			{
-				final PromotionVoucherModel voucherModel = (PromotionVoucherModel) orderModel.getDiscounts().get(0);
-				getMplVoucherService().releaseVoucher(voucherModel.getVoucherCode(), null, orderModel);
-				getMplVoucherService().recalculateCartForCoupon(null, orderModel);
-			}
-			//Email and sms for Payment_Failed
-			try
-			{
-				getNotificationService().triggerEmailAndSmsOnPaymentFailed(orderModel, trackOrderUrl);
-			}
-			catch (final JAXBException e)
-			{
-				LOG.error("Error while sending notifications from job>>>>>>", e);
-			}
-			catch (final Exception ex)
-			{
-				LOG.error("Error while sending notifications>>>>>>", ex);
+				if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()))
+				{
+					final PromotionVoucherModel voucherModel = (PromotionVoucherModel) orderModel.getDiscounts().get(0);
+					getMplVoucherService().releaseVoucher(voucherModel.getVoucherCode(), null, orderModel);
+					getMplVoucherService().recalculateCartForCoupon(null, orderModel);
+				}
+				//Email and sms for Payment_Failed
+				try
+				{
+					getNotificationService().triggerEmailAndSmsOnPaymentFailed(orderModel, trackOrderUrl);
+				}
+				catch (final JAXBException e)
+				{
+					LOG.error("Error while sending notifications from job>>>>>>", e);
+				}
+				catch (final Exception ex)
+				{
+					LOG.error("Error while sending notifications>>>>>>", ex);
+				}
 			}
 
 			juspayWebhookModel.setIsExpired(Boolean.TRUE);
@@ -485,7 +485,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 
 	/**
 	 * This method removes voucher invalidation model when payment is timed-out, without releasing the coupon.
-	 * 
+	 *
 	 * @param orderModel
 	 * @throws EtailNonBusinessExceptions
 	 */

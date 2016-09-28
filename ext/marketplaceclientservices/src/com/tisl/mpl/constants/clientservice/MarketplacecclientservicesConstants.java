@@ -234,6 +234,10 @@ public class MarketplacecclientservicesConstants
 	public static final String EXCEPTION_TYPE_PINCODE = "pincode";
 	public static final String EXCEPTION_TYPE_INVENTORY = "inventory";
 
+	//TPR-815
+	public static final String OMS_ORDER_INVENTORY_RESV_SESSION_ID = "orderInventoryReservationFailed";
+	public static final String ORDER_INV_FAIL_MSG = "Uh oh! Looks like what you wanted isn't available right now, but it could come back soon. Please try again later";
+
 	// Strat OMS Fallback constants PLAN C
 
 	public static final String UIDSIG = "UIDSig";

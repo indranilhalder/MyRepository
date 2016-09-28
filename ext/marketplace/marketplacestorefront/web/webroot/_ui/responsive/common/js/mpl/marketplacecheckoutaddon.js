@@ -547,7 +547,12 @@ function submitForm(){
 			success : function(response) {
 				if(response=='redirect'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/cart"); //TIS 404
-				}else{
+				}
+				//TPR-815
+				else if(response=='redirect_to_payment'){
+					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?value="+guid); //TPR-629
+				}
+				else{
 					$("#emptyOTPMessage").css("display","none");
 					if(response!=null)
 					{
@@ -2748,7 +2753,7 @@ function applyPromotion(bankName,binValue,formSubmit)
 		 				$('#couponFieldId').attr('readonly', false);
 		 				var selection = $("#voucherDisplaySelection").val();
 		 				$("#couponFieldId").val(selection);
-		 				$("#couponMessage").html("Coupon has been removed after applying promotion");
+		 				$("#couponMessage").html("Oh no! This coupon code can't be used anymore. Please try another.");	//TPR-815
 		 				$('#couponMessage').show();
 		 				$('#couponMessage').delay(5000).fadeOut('slow');
 		 				setTimeout(function(){ $("#couponMessage").html(""); }, 10000); 	
