@@ -6605,6 +6605,7 @@ public class UsersController extends BaseCommerceController
 							paymentAddressLine1, paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 							cardSaved + MarketplacecommerceservicesConstants.STRINGSEPARATOR + sameAsShipping,
 							returnUrlBuilder.toString(), uid, MarketplacecommerceservicesConstants.CHANNEL_MOBILE);
+					orderData = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
 				}
 
 			}
