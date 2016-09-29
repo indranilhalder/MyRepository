@@ -4323,7 +4323,7 @@ function applyPromotion(bankName)
 					{
 		 				$("#couponApplied, #priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError," +
 		 						" #expiredCouponError, #issueCouponError, #freebieCouponError").css("display","none");
-		 				document.getElementById("couponValue").innerHTML="-"+response.voucherDiscount.couponDiscount.formattedValue;
+		 				document.getElementById("couponValue").innerHTML=response.voucherDiscount.couponDiscount.formattedValue;
 		 				$('#couponFieldId').attr('readonly', false);
 		 				var selection = $("#voucherDisplaySelection").val();
 		 				$("#couponFieldId").val(selection);
@@ -4335,7 +4335,7 @@ function applyPromotion(bankName)
 					else
 					{
 						$("#couponApplied").css("display","block");
-		 				document.getElementById("couponValue").innerHTML="-"+response.voucherDiscount.couponDiscount.formattedValue;
+		 				document.getElementById("couponValue").innerHTML=response.voucherDiscount.couponDiscount.formattedValue;
 		 				//$("#couponFieldId").attr('disabled','disabled');
 		 				if($("#couponFieldId").val()=="")
 		 				{
@@ -6376,7 +6376,7 @@ $("#couponSubmitButton").click(function(){
 		 				if(response.couponDiscount.doubleValue>0)
 			 			{
 			 				$("#couponApplied").css("display","block");
-			 				document.getElementById("couponValue").innerHTML="-"+response.couponDiscount.formattedValue;
+			 				document.getElementById("couponValue").innerHTML=response.couponDiscount.formattedValue;
 			 				//$("#couponFieldId").attr('disabled','disabled');
 			 				$('#couponFieldId').attr('readonly', true);
 			 				$("#couponMessage").html("Coupon <b>"+couponCode+"</b> is applied successfully");
@@ -6427,7 +6427,7 @@ $(".remove-coupon-button").click(function(){
  			if(couponApplied==true){
  				$("#couponApplied, #priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError," +
  						" #expiredCouponError, #issueCouponError, #freebieCouponError, #userInvalidCouponError").css("display","none");
- 				document.getElementById("couponValue").innerHTML="-"+response.couponDiscount.formattedValue;
+ 				document.getElementById("couponValue").innerHTML=response.couponDiscount.formattedValue;
  				//$("#couponFieldId").attr('disabled','enabled');
  				$('#couponFieldId').attr('readonly', false);
  				var selection = $("#voucherDisplaySelection").val();
