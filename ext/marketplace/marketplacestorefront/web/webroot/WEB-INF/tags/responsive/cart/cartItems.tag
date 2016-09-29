@@ -217,9 +217,9 @@ tr.d0 td {
 													<%-- TISPRO-215--%>
 												<c:choose>
     											<c:when test="${not empty entry.cartLevelDisc || not empty entry.productLevelDisc || not empty entry.productPerDiscDisplay}">
-        												<c:set var="totalPrice"  value="${entry.totalPrice.formattedValue}"/>
-        												<span class="delSeat" id="totalPrice_${entry.entryNumber}">
-															<format:price priceData="${entry.totalMrp}" displayFreeForZero="false" />
+        											<!-- TPR-970 changes-->	<c:set var="totalPrice"  value="${entry.totalPrice.formattedValue}"/>
+        											<!-- TPR-970 changes-->	<span class="delSeat" id="totalPrice_${entry.entryNumber}">
+													<!-- TPR-970 changes-->		<format:price priceData="${entry.totalMrp}" displayFreeForZero="false" />
 		 												</span>
     											</c:when>    
     											<c:otherwise>
@@ -229,8 +229,8 @@ tr.d0 td {
     												</c:when>
     												<c:otherwise>
     													<del> --%>
-    													<c:set var="totalPrice"  value="${entry.totalMrp.formattedValue}"/>
-       													<span id ="totalPrice_${entry.entryNumber}" class="delSeat"><format:price priceData="${entry.totalMrp}"/></span>
+    												<!-- TPR-970 changes-->	<c:set var="totalPrice"  value="${entry.totalMrp.formattedValue}"/>
+       												<!-- TPR-970 changes-->	<span id ="totalPrice_${entry.entryNumber}" class="delSeat"><format:price priceData="${entry.totalMrp}"/></span>
        													<%-- <span><format:price priceData="${entry.totalMrp}"/></span> --%>
        													<!-- </del> -->
        													<%-- <span><format:price priceData="${entry.basePrice}"/></span> --%>
@@ -246,8 +246,8 @@ tr.d0 td {
 													<c:when test="${entry.basePrice.formattedValue == entry.totalPrice.formattedValue}">
 													<c:choose>
     													<c:when test="${not empty entry.cartLevelDisc || not empty entry.productLevelDisc || not empty entry.productPerDiscDisplay}">
-        													<c:set var="totalPrice"  value="${entry.totalPrice}"/>
-												             <span id ="totalPrice_${entry.entryNumber}" class="delSeat"><format:price priceData="${entry.totalPrice}"/>
+        												<!-- TPR-970 changes-->	<c:set var="totalPrice"  value="${entry.totalPrice}"/>
+												          <!-- TPR-970 changes-->   <span id ="totalPrice_${entry.entryNumber}" class="delSeat"><format:price priceData="${entry.totalPrice}"/>
 																<format:price priceData="${entry.totalMrp}" displayFreeForZero="false" />
 		 													</span>
     													</c:when>    
@@ -263,12 +263,12 @@ tr.d0 td {
 																	<c:when	test="${mrpPrice.key == entry.entryNumber}">
 																	<c:choose>
 																		<c:when test="${mrpPrice.value.formattedValue != entry.totalMrp.formattedValue||not empty entry.cartLevelDisc}">
-																		<input type="hidden" id="basePrice_${entry.entryNumber}" value='${mrpPrice.value.formattedValue}'/>
-																		<li><span id ="totalPrice_${entry.entryNumber}" class="delSeat"> <format:price priceData="${mrpPrice.value}" displayFreeForZero="true" /></span></li>
+																		<!-- TPR-970 changes--><input type="hidden" id="basePrice_${entry.entryNumber}" value='${mrpPrice.value.formattedValue}'/>
+																	<!-- TPR-970 changes-->	<li><span id ="totalPrice_${entry.entryNumber}" class="delSeat"> <format:price priceData="${mrpPrice.value}" displayFreeForZero="true" /></span></li>
 																		</c:when>
 																		<c:otherwise>
 																			<c:if test="${mrpPrice.value.formattedValue != entry.totalMrp }">
-																			<li><span id ="totalPrice_${entry.entryNumber}" class="delSeat"> <format:price priceData="${mrpPrice.value}" displayFreeForZero="true" /></span></li>
+																		<!-- TPR-970 changes-->	<li><span id ="totalPrice_${entry.entryNumber}" class="delSeat"> <format:price priceData="${mrpPrice.value}" displayFreeForZero="true" /></span></li>
 																			</c:if>
 																		</c:otherwise>
 																	</c:choose>
@@ -277,14 +277,14 @@ tr.d0 td {
 															</c:forEach>
 															<c:choose>
 															<c:when test="${not empty entry.cartLevelDisc && empty entry.productPerDiscDisplay}">
-																<c:set var="totalPrice"  value="${entry.totalMrp.formattedValue}"/>
-																<span id ="totalPrice_${entry.entryNumber}"  class="delSeat"><format:price priceData="${entry.totalMrp}"/></span>
+																<!-- TPR-970 changes--><c:set var="totalPrice"  value="${entry.totalMrp.formattedValue}"/>
+																<!-- TPR-970 changes--><span id ="totalPrice_${entry.entryNumber}"  class="delSeat"><format:price priceData="${entry.totalMrp}"/></span>
 															</c:when>
 															</c:choose>
 															
 															<c:if test="${empty entry.cartLevelDisc && empty entry.productPerDiscDisplay}">
-															 <c:set var="totalPrice"  value="${entry.totalPrice.formattedValue}"/>
-															<span id ="totalPrice_${entry.entryNumber}"  class="delSeat"><format:price priceData="${entry.totalPrice}"/></span>
+															<!-- TPR-970 changes--> <c:set var="totalPrice"  value="${entry.totalPrice.formattedValue}"/>
+														<!-- TPR-970 changes-->	<span id ="totalPrice_${entry.entryNumber}"  class="delSeat"><format:price priceData="${entry.totalPrice}"/></span>
 															 </c:if>
 														</c:if>
 													</c:otherwise>
@@ -318,10 +318,10 @@ tr.d0 td {
 										<c:when test="${not empty entry.productPerDiscDisplay}">
 											<c:choose>
 												<c:when test="${not empty entry.productLevelDisc}">
-													<span id="itemCartCentDisplay_${entry.entryNumber}"><span class="off-bag">${entry.productPerDiscDisplay.value}<spring:theme code="off.item.percentage"/><span   class="delSeat"><format:price priceData="${entry.netSellingPrice}"/></span></span></span>
+													<!-- TPR-970 changes--><span id="itemCartCentDisplay_${entry.entryNumber}"><span class="off-bag">${entry.productPerDiscDisplay.value}<spring:theme code="off.item.percentage"/><span   class="delSeat"><format:price priceData="${entry.netSellingPrice}"/></span></span></span>
 												</c:when>
 												<c:otherwise>
-													<span id="itemCartCentDisplay_${entry.entryNumber}"><span class="off-bag">${entry.productPerDiscDisplay.value}<spring:theme code="off.item.percentage"/><span   class="delSeat"><format:price priceData="${entry.totalPrice}"/></span></span></span>
+													<!-- TPR-970 changes--><span id="itemCartCentDisplay_${entry.entryNumber}"><span class="off-bag">${entry.productPerDiscDisplay.value}<spring:theme code="off.item.percentage"/><span   class="delSeat"><format:price priceData="${entry.totalPrice}"/></span></span></span>
 												</c:otherwise>
 											</c:choose>
 										</c:when>
@@ -337,10 +337,10 @@ tr.d0 td {
 										<c:when test="${not empty entry.productPerDiscDisplay}">
 										<c:choose>
 												<c:when test="${not empty entry.productLevelDisc}">
-													<span id="itemCartAmtDisplay_${entry.entryNumber}"><span class="off-bag">${entry.productPerDiscDisplay.value}<spring:theme code="off.item.percentage"/><format:price priceData="${entry.netSellingPrice}"/></span></span>
+													<!-- TPR-970 changes--><span id="itemCartAmtDisplay_${entry.entryNumber}"><span class="off-bag">${entry.productPerDiscDisplay.value}<spring:theme code="off.item.percentage"/><format:price priceData="${entry.netSellingPrice}"/></span></span>
 												</c:when>
 												<c:otherwise>
-													<span id="itemCartAmtDisplay_${entry.entryNumber}"><span class="off-bag">${entry.productPerDiscDisplay.value}<spring:theme code="off.item.percentage"/><format:price priceData="${entry.totalPrice}"/></span></span>
+													<!-- TPR-970 changes--><span id="itemCartAmtDisplay_${entry.entryNumber}"><span class="off-bag">${entry.productPerDiscDisplay.value}<spring:theme code="off.item.percentage"/><format:price priceData="${entry.totalPrice}"/></span></span>
 												</c:otherwise>
 											</c:choose>
 										</c:when>
@@ -360,7 +360,7 @@ tr.d0 td {
 									<c:choose>
 										<c:when test="${not empty entry.cartLevelDisc && not empty entry.cartLevelPercentage}">
 											<c:if test="${entry.amountAfterAllDisc.value gt 0.1}">
-											<span id="cartCentOfferDisplay_${entry.entryNumber}"><span class="off-bag">${entry.cartLevelPercentage}<spring:theme code="off.bag.percentage"/><format:price priceData="${entry.amountAfterAllDisc}"/></span></span>
+											<!-- TPR-970 changes--><span id="cartCentOfferDisplay_${entry.entryNumber}"><span class="off-bag">${entry.cartLevelPercentage}<spring:theme code="off.bag.percentage"/><format:price priceData="${entry.amountAfterAllDisc}"/></span></span>
 												<%-- <span class="off-bag">${entry.cartLevelPercentage}<spring:theme code="off.bag.percentage"/><format:price priceData="${entry.amountAfterAllDisc}"/></span> --%>
 											</c:if>
 										</c:when>
@@ -371,9 +371,11 @@ tr.d0 td {
 											</c:if>
 									</c:otherwise>
 							</c:choose></c:if>
+							<!-- TPR-970 changes starts-->
 							<span id="totalPriceDisplay_${entry.entryNumber}"></span>
                             <span id="ItemAmtofferDisplay_${entry.entryNumber}" style="display: none" class="ItemAmtofferDisplayPrFm"><span class="priceFormat priceFormatOnUpdate"><span id="off-bag-ItemLevelDisc_${entry.entryNumber}"></span></span><br/><span class="priceFormat"><span id="off-bag-ItemLevelDiscAmt_${entry.entryNumber}"></span></span></span>
 							<span id="CartofferDisplay_${entry.entryNumber}" style="display: none" class="ItemAmtofferDisplayPrFm"><span class="priceFormat priceFormatOnUpdate"><span id="off-bag-cartLevelDisc_${entry.entryNumber}"></span></span><br/><span class="priceFormat"><span id="off-cartLevelDiscAmt_${entry.entryNumber}"></span></span></span>
+							<!-- TPR-970 changes ends-->
 								<%--  <c:if test="${not empty entry.cartLevelDisc}">
 									<span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/><spring:theme code="off.bag"/><format:price priceData="${entry.amountAfterAllDisc}"/></span>
 								</c:if>  --%>
