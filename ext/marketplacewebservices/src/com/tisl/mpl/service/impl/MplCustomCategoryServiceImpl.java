@@ -3,13 +3,17 @@
  */
 package com.tisl.mpl.service.impl;
 
+import de.hybris.platform.acceleratorcms.model.components.NavigationBarCollectionComponentModel;
+import de.hybris.platform.acceleratorcms.model.components.NavigationBarComponentModel;
 import de.hybris.platform.acceleratorcms.model.components.SimpleBannerComponentModel;
 import de.hybris.platform.catalog.model.classification.ClassificationClassModel;
 import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
+import de.hybris.platform.cms2.model.contents.components.CMSLinkComponentModel;
 import de.hybris.platform.cms2.model.contents.components.CMSParagraphComponentModel;
+import de.hybris.platform.cms2.model.navigation.CMSNavigationNodeModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
@@ -46,7 +50,6 @@ import com.tisl.mpl.category.data.WAHASTTSec2detailsData;
 import com.tisl.mpl.category.populator.ProductCategoryPopulator;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
-import com.tisl.mpl.core.model.DepartmentCollectionComponentModel;
 import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplCategoryCarouselComponentModel;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
@@ -283,129 +286,136 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 	/*
 	 * To get all categories shop by department
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplCustomCategoryService#getallCategories()
 	 */
+
+	//TPR-561
 	@Override
 	public DepartmentListHierarchyData getAllCategories() throws EtailNonBusinessExceptions
 	{
-
 		final DepartmentListHierarchyData shopByDeptData = new DepartmentListHierarchyData();
 		final List<DepartmentHierarchyData> deptDataList = new ArrayList<DepartmentHierarchyData>();
+		//	List<DepartmentSubHierarchyData> subDeptDataList = null;
+		DepartmentHierarchyData deptData = null;
+		DepartmentSubHierarchyData subDeptData = null;
+		List<NavigationBarComponentModel> departmentList = new ArrayList<NavigationBarComponentModel>();
+		Date modifiedTime = null;
+		subDeptData = new DepartmentSubHierarchyData();
+
+		DepartmentSuperSubHierarchyData thirdLevelCat = null;
+		thirdLevelCat = new DepartmentSuperSubHierarchyData();
+		List<DepartmentSubHierarchyData> subDeptDataList = null;
+		List<DepartmentSuperSubHierarchyData> superSubDeptDataList = null;
+
 		try
 		{
-			Date modifiedTime = null;
-			final DepartmentCollectionComponentModel shopByDeptComponent = getShopByDept();
-			if (null != shopByDeptComponent)
+
+			final NavigationBarCollectionComponentModel shopByDeptComponent = getShopByDept();
+
+			if (CollectionUtils.isNotEmpty(shopByDeptComponent.getComponents()))
 			{
-				modifiedTime = getModifiedTime();
+				departmentList = shopByDeptComponent.getComponents();
 			}
-			List<CategoryModel> deptList = new ArrayList<CategoryModel>();
-			CategoryModel category = getModelService().create(CategoryModel.class);
-			CategoryModel department = null;
-			List<DepartmentSubHierarchyData> subDeptDataList = null;
-			DepartmentHierarchyData deptData = null;
-			List<CategoryModel> secondSubCatList = null;
-			List<CategoryModel> thirdSubCatList = null;
-			DepartmentSubHierarchyData subDeptData = null;
-			List<DepartmentSuperSubHierarchyData> superSubDeptDataList = null;
-			DepartmentSuperSubHierarchyData thirdLevelCat = null;
-			if (null != shopByDeptComponent.getDepartmentCollection())
+
+			for (final NavigationBarComponentModel dept : departmentList)
 			{
-				deptList = (List<CategoryModel>) shopByDeptComponent.getDepartmentCollection();
-			}
-			for (final CategoryModel dept : deptList)
-			{
-				department = getModelService().create(CategoryModel.class);
+				final CMSLinkComponentModel superNode = dept.getLink();
+				final CMSNavigationNodeModel linkNode = dept.getNavigationNode();
+				deptData = new DepartmentHierarchyData();
+				subDeptDataList = new ArrayList<DepartmentSubHierarchyData>();
+
+				//Super category
 				if (null != modifiedTime && null != dept.getModifiedtime() && dept.getModifiedtime().compareTo(modifiedTime) > 0)
 				{
 					modifiedTime = dept.getModifiedtime();
 				}
-				subDeptDataList = new ArrayList<DepartmentSubHierarchyData>();
-				deptData = new DepartmentHierarchyData();
-				if (null != dept)
+
+				if (null != superNode.getCategory() && StringUtils.isNotEmpty(superNode.getCategory().getCode()))
 				{
-					category = dept;
+					deptData.setSuper_category_id(superNode.getCategory().getCode());
 				}
-				if (null != category.getCode() && !StringUtils.isEmpty(category.getCode()))
+				if (StringUtils.isNotEmpty(superNode.getLinkName()))
 				{
-					deptData.setSuper_category_id(category.getCode());
-				}
-				if (null != category.getName() && !StringUtils.isEmpty(category.getName()))
-				{
-					deptData.setSuper_category_name(category.getName());
-				}
-				secondSubCatList = new ArrayList<CategoryModel>();
-				if (null != category.getCode())
-				{
-					department = categoryService.getCategoryForCode(category.getCode());
-				}
-				if (null != department && null != modifiedTime && null != department.getModifiedtime()
-						&& department.getModifiedtime().compareTo(modifiedTime) > 0)
-				{
-					modifiedTime = department.getModifiedtime();
+					deptData.setSuper_category_name(superNode.getLinkName());
 				}
 
-				if (null != department)
+				//Sub category
+				if (CollectionUtils.isNotEmpty(linkNode.getChildren()))
 				{
-					secondSubCatList = department.getCategories();
-				}
-				for (final CategoryModel subCategory : secondSubCatList)
-				{
-					if (null != subCategory && null != modifiedTime && null != subCategory.getModifiedtime()
-							&& subCategory.getModifiedtime().compareTo(modifiedTime) > 0)
+					for (final CMSNavigationNodeModel sublink : linkNode.getChildren())
 					{
-						modifiedTime = subCategory.getModifiedtime();
-					}
-					thirdSubCatList = new ArrayList<CategoryModel>();
-					subDeptData = new DepartmentSubHierarchyData();
-					superSubDeptDataList = new ArrayList<DepartmentSuperSubHierarchyData>();
-					if (null != subCategory.getCode() && !StringUtils.isEmpty(subCategory.getCode()))
-					{
-						subDeptData.setSub_category_id(subCategory.getCode());
-					}
-					if (null != subCategory.getName() && !StringUtils.isEmpty(subCategory.getName()))
-					{
-						subDeptData.setSub_category_name(subCategory.getName());
-					}
-					if (null != subCategory.getCategories() && !subCategory.getCategories().isEmpty())
-					{
-						thirdSubCatList = subCategory.getCategories();
-					}
-					for (final CategoryModel thirdlevelSubCategory : thirdSubCatList)
-					{
-						if (null != thirdlevelSubCategory && null != modifiedTime && null != thirdlevelSubCategory.getModifiedtime()
-								&& thirdlevelSubCategory.getModifiedtime().compareTo(modifiedTime) > 0)
+						if (CollectionUtils.isNotEmpty(sublink.getLinks()))
 						{
-							modifiedTime = thirdlevelSubCategory.getModifiedtime();
-						}
-						thirdLevelCat = new DepartmentSuperSubHierarchyData();
-						if (null != thirdlevelSubCategory.getCode() && !StringUtils.isEmpty(thirdlevelSubCategory.getCode()))
-						{
-							thirdLevelCat.setSuper_sub_category_id(thirdlevelSubCategory.getCode());
-						}
-						if (null != thirdlevelSubCategory.getName() && !StringUtils.isEmpty(thirdlevelSubCategory.getName()))
-						{
-							thirdLevelCat.setSuper_sub_category_name(thirdlevelSubCategory.getName());
-						}
+							subDeptData = new DepartmentSubHierarchyData();
+							superSubDeptDataList = new ArrayList<DepartmentSuperSubHierarchyData>();
 
-						superSubDeptDataList.add(thirdLevelCat);
-					}
-					subDeptData.setSupersubCategories(superSubDeptDataList);
+							final CMSLinkComponentModel sublinknode = sublink.getLinks().get(0);
 
-					subDeptDataList.add(subDeptData);
-				}
-				if (!subDeptDataList.isEmpty())
-				{
-					deptData.setSubCategories(subDeptDataList);
+							if (null != modifiedTime && null != sublink.getModifiedtime()
+									&& sublink.getModifiedtime().compareTo(modifiedTime) > 0)
+							{
+								modifiedTime = sublink.getModifiedtime();
+							}
+
+							if (null != sublinknode.getCategory() && StringUtils.isNotEmpty(sublinknode.getCategory().getCode()))
+							{
+								subDeptData.setSub_category_id(sublinknode.getCategory().getCode());
+							}
+							if (StringUtils.isNotEmpty(sublink.getTitle()))
+							{
+								subDeptData.setSub_category_name(sublink.getTitle());
+							}
+							int count = 0;
+							//Super sub category
+							for (final CMSLinkComponentModel thirdLevelsublink : sublink.getLinks())
+							{
+
+								if (count > 0)
+								{
+									thirdLevelCat = new DepartmentSuperSubHierarchyData();
+
+									if (null != modifiedTime && null != thirdLevelsublink.getModifiedtime()
+											&& thirdLevelsublink.getModifiedtime().compareTo(modifiedTime) > 0)
+									{
+										modifiedTime = thirdLevelsublink.getModifiedtime();
+									}
+
+									if (null != thirdLevelsublink.getCategory()
+											&& StringUtils.isNotEmpty(thirdLevelsublink.getCategory().getCode()))
+									{
+										thirdLevelCat.setSuper_sub_category_id(thirdLevelsublink.getCategory().getCode());
+									}
+									if (StringUtils.isNotEmpty(thirdLevelsublink.getLinkName()))
+									{
+										thirdLevelCat.setSuper_sub_category_name(thirdLevelsublink.getLinkName());
+									}
+
+									superSubDeptDataList.add(thirdLevelCat);
+								}
+								count++;
+
+							}
+
+							subDeptData.setSupersubCategories(superSubDeptDataList);
+							subDeptDataList.add(subDeptData);
+						}
+					}
+
+					if (!subDeptDataList.isEmpty())
+					{
+						deptData.setSubCategories(subDeptDataList);
+					}
 				}
 
 				deptDataList.add(deptData);
 			}
+
 			if (null != modifiedTime && !StringUtils.isEmpty(modifiedTime.toString()))
 			{
 				shopByDeptData.setModifiedTime(modifiedTime.toString());
 			}
+
 			if (!deptDataList.isEmpty())
 			{
 				shopByDeptData.setShopbydepartment(deptDataList);
@@ -419,13 +429,13 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
 		}
-
 		return shopByDeptData;
 	}
 
+
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplCustomCategoryService#getAboutusBanner()
 	 */
 	@Override
@@ -497,7 +507,7 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplCustomCategoryService#getHelpnServices()
 	 */
 	@Override
@@ -593,7 +603,7 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 	 * @return DepartmentCollectionComponentModel
 	 * @throws CMSItemNotFoundException
 	 */
-	private DepartmentCollectionComponentModel getShopByDept() throws CMSItemNotFoundException
+	private NavigationBarCollectionComponentModel getShopByDept() throws CMSItemNotFoundException
 	{
 		String componentUid = null;
 		if (null != configurationService && null != configurationService.getConfiguration()
@@ -603,7 +613,7 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 					MarketplacecommerceservicesConstants.SHOPBYDEPTCOMPONENT, "");
 		}
 
-		final DepartmentCollectionComponentModel shopByDeptComponent = (DepartmentCollectionComponentModel) cmsComponentService
+		final NavigationBarCollectionComponentModel shopByDeptComponent = (NavigationBarCollectionComponentModel) cmsComponentService
 				.getSimpleCMSComponent(componentUid);
 		return shopByDeptComponent;
 	}
@@ -617,7 +627,7 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 	private Date getModifiedTime() throws CMSItemNotFoundException
 	{
-		final DepartmentCollectionComponentModel shopByDeptComponent = getShopByDept();
+		final NavigationBarCollectionComponentModel shopByDeptComponent = getShopByDept();
 		Date modifiedTime = null;
 		if (null != shopByDeptComponent && null != shopByDeptComponent.getModifiedtime())
 		{

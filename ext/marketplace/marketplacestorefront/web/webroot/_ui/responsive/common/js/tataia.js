@@ -172,13 +172,7 @@ if (searchCategory_id){
 
 			  site_page_type = 'category_landing_page';
 
-			  category_id = currentPageURL.split('-').pop().toUpperCase();
-
-			 			  
-
-			  if(category_id.indexOf('?') > 0) {
-
-				 category_id = category_id.substr(0, category_id.indexOf('?'));
+			  category_id = $('#ia_category_code').val();
 
 			  }
 
@@ -202,13 +196,7 @@ if (searchCategory_id){
 
 			  site_page_type = 'brand';
 
-			  brand_id = currentPageURL.split('-').pop().toUpperCase();  
-
-			    if(brand_id.indexOf('?') > 0) {
-
-			    brand_id = brand_id.substr(0, brand_id.indexOf('?'));
-
-			  }
+			  brand_id =  $('#ia_category_code').val();
 
 			}
 
@@ -1442,7 +1430,7 @@ if (searchCategory_id){
 
 				  html += '<p class="company" >'+obj.brand+'</p>';
 
-				  html += '<span class="product-name" style="text-overflow: ellipsis;word-break: break-word;">'+obj.name+'</span>';
+				  html += '<h2 class="product-name" style="text-overflow: ellipsis;word-break: break-word;">'+obj.name+'</h2>';
 
 				  html += '<div class="price">';
 
