@@ -80,6 +80,7 @@
 						<value>ImageCarouselComponent.collectionItems</value>
 						<value>SignColComponent.signColItemsCollection</value>
 						<value>OurJourneyComponent.footerImageList</value>
+						<value>MplNavigationNodeComponent.sliders</value>
 					</list>
 				</entry>
 				<entry key="AbstractCMSComponent">
@@ -102,6 +103,11 @@
 						<value>CMSNavigationNode.links</value>
 						<value>CMSNavigationEntry.item</value>
 						<value>CMSLinkComponent</value>
+					</list>
+				</entry>
+				<entry key="MplNavigationNodeComponent">
+					<list>
+						<value>MplNavigationNodeComponent.sliders</value>
 					</list>
 				</entry>
 				<entry key="ContentSlot">
