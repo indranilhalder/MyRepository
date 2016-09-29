@@ -36,9 +36,18 @@
 						<nav:facetNavRefinementFacet facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
 				   	</c:when>
 			   		<c:otherwise>
-			   			<c:if test="${facet.genericFilter}">
+			   		
+			   			 <%-- <c:if test="${facet.genericFilter}">
 					 		<nav:facetNavRefinementFacet facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
-						</c:if> 
+						</c:if>  --%>
+						<c:choose>
+						<c:when test="${not empty shopbylook}">
+							<nav:facetNavRefinementFacet facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
+						</c:when>
+						<c:otherwise>
+							<nav:facetNavRefinementFacet facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
+						</c:otherwise>
+					 </c:choose>
 			   		</c:otherwise>
 				 </c:choose> 
 			  </c:if>

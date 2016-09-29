@@ -95,7 +95,8 @@ ACC.refinements = {
 		/*TPR-198 : AJAX Call in SERP and PDP START*/
 		
 		var browserURL = window.location.href.split('?');
-
+		//console.log(browserURL[0].indexOf('/collection/'));
+		//console.log(browserURL[0]);
 		// AJAX for checkbox
 		$(document).on("change",".js-product-facet .js-facet-checkbox",function(){
 			var staticHost=$('#staticHost').val();
@@ -137,9 +138,10 @@ ACC.refinements = {
 				requiredUrl += "/getFacetData";
 			} else {
 				if(action.indexOf("/getFacetData") == -1){
-					if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1){
+					if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1 || action.indexOf('/collection/') > -1){
 						requiredUrl = action.concat("/getFacetData");
 					}
+					
 					else{
 						requiredUrl = action.concat("getFacetData");
 					}
@@ -195,8 +197,12 @@ ACC.refinements = {
 				requiredUrl += "/getFacetData";
 			} else {
 				if(action.indexOf("/getFacetData") == -1){
-					if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1){
+					if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1 || action.indexOf('/collection/') > -1){
 						requiredUrl = action.concat("/getFacetData");
+					}
+					else if(action.indexOf('/collection/') > -1){						
+						alert('Inside collection');
+						requiredUrl = '/search/getFacetData';					
 					}
 					else{
 						requiredUrl = action.concat("getFacetData");
@@ -237,7 +243,12 @@ ACC.refinements = {
 				action = action[1].split('/');
 				requiredUrl = "/c-"+action[0];
 				requiredUrl += "/getFacetData";
-			} else {
+			}
+			else if(action.indexOf('/collection/') > -1){				
+				alert('Inside collection');
+				requiredUrl = '/search/getFacetData';				
+			}
+			else {
 				requiredUrl = action[0].concat("/getFacetData");
 			}
 			
@@ -280,7 +291,7 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 		url : requiredUrl,
 		data : dataString,
 		success : function(response) {
-			
+			//console.log(response);
 			// putting AJAX respons to view
 			if($("#isCategoryPage").val() == 'true'){
 				$("#productGrid").html(response);
