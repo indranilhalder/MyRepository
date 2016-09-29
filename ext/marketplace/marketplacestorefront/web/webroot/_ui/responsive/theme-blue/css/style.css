@@ -18207,8 +18207,9 @@ font-weight: 600;
 	opacity:0.9;
 	font-size:13px;					
 	text-transform:capitalize !important;
-		margin-bottom:6px;	
-		margin-right: 5px;		
+	margin-bottom:6px;	
+	margin-right: 5px;	
+	margin-left:-1px;	
 }	
 .product-facet .facet .facet-list .facet-count{
 	font-size: 13px;
@@ -33947,6 +33948,7 @@ body.page-cartPage .outstanding-total .outstanding-amount {
     padding: 15px 25px !important;
     font-size: 12px;
     border-top: 0 !important;
+    margin-top: 0 !important;
 }
 body.page-cartPage .outstanding-total .outstanding-amount span.amt{
     float: right;
@@ -34174,11 +34176,11 @@ body.page-cartPage .MyBag-pincode input#defaultPinCodeIds:focus{
 
 }
 
-@media(max-width: 1037px) and (min-width: 1032px){
+/* @media(max-width: 1037px) and (min-width: 1032px){
 .product-facet .facet .facet-list .facet-mark{
 margin-right: 9px;
 }
-}
+} */
 body.page-cartPage .callouts{
 	 margin: 0 auto;
 	margin-top: -27px;
