@@ -5,6 +5,8 @@
 
 <template:page pageTitle="${pageTitle}">
    
+   <c:set var="brandCode" value="${searchCode}" scope="session" /> 
+  <c:set var="categoryName" value="${dropDownText}" scope="session" />
    <cms:pageSlot position="CommonLogoParaSlot" var="feature">
 		<cms:component component="${feature}" element="div" class="blp_title_banner" />
 	</cms:pageSlot>
@@ -16,9 +18,9 @@
 		<cms:component component="${feature}" element="div" class="" />
 	</cms:pageSlot>
 	</div>
-	<div class="top_categories">
+	<div class="top_categories_blp">
 	<cms:pageSlot position="Section2A" var="feature">
-		<cms:component component="${feature}" class="top_categories_section"/>
+		<cms:component component="${feature}" class="top_categories_section_blp"/>
 	</cms:pageSlot>
 	</div>
 	<div class="featured_collection">

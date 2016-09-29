@@ -2035,7 +2035,7 @@ $(window).scroll(function(){
 
 //----BLP------//
 //--top category section---//
-$(".top_categories").first().find("ul.categories.count-3>li:nth-child(3n + 1)").each(function(){
+$(".top_categories_blp").first().find("ul.categories.count-3>li:nth-child(3n + 1)").each(function(){
 		$(this).nextAll().slice(0, 2).wrapAll("<li class='sub_li_blp'><ul class='sub_ul_blp'>");
 		});
 //--top category section end---//
