@@ -27454,9 +27454,6 @@ header > .content .bottom .bag{
 	top:-5px;
 }
 } 
-div#compareSection {
-    bottom: 42px;
-}
 
 .compareSection #compareProducts .compare-item .content li:first-child,.compareSection #compareProducts .compare-item .content li:nth-child(2){
 word-break: break-word;
@@ -35208,6 +35205,9 @@ body.template-pages-category-productGridPage .trending h1,body.template-pages-se
 .facet_mobile .facet-name.js-facet-name {
     display: table;
     width: 100%;
+}
+div#compareSection {
+    bottom: 42px;
 }
 }
 .category-icons.blank span{
