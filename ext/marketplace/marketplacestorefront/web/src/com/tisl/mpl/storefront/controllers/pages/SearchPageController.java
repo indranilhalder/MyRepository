@@ -682,50 +682,50 @@ public class SearchPageController extends AbstractSearchPageController
 
 		model.addAttribute("page_name", "Search Results Page:" + breadcrumbName);
 		//TPR-430
-		if (null != searchPageData && null != searchPageData.getDepartmentHierarchyData()
-				&& null != searchPageData.getDepartmentHierarchyData().getHierarchyList()
-				&& searchPageData.getDepartmentHierarchyData().getHierarchyList().size() > 0)
-		{
-			String product_category = null;
-			String page_subcategory_name = null;
-			String page_subcategory_name_l3 = null;
-			final String[] productCatArray = searchPageData.getDepartmentHierarchyData().getHierarchyList().get(0).split("\\|");
-
-			for (final String category : productCatArray)
-			{
-				if (StringUtils.isNotEmpty(category))
-				{
-					final String[] categoryLevelArray = category.split(":");
-
-					if (categoryLevelArray.length > 2)
-					{
-						final String categoryLevel = categoryLevelArray[2];
-
-						if (categoryLevel.contains(MarketplacecommerceservicesConstants.DEPT_L1))
-						{
-							product_category = categoryLevelArray[1];
-						}
-						else if (categoryLevel.contains(MarketplacecommerceservicesConstants.DEPT_L2))
-						{
-							page_subcategory_name = categoryLevelArray[1];
-						}
-						else if (categoryLevel.contains(MarketplacecommerceservicesConstants.DEPT_L3))
-						{
-							page_subcategory_name_l3 = categoryLevelArray[1];
-						}
-					}
-
-				}
-
-			}
-
-			model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY,
-					product_category.replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
-			model.addAttribute(ModelAttributetConstants.PAGE_SUBCATEGORY_NAME, page_subcategory_name.replaceAll("[^\\w\\s]", "")
-					.replaceAll(" ", "_").toLowerCase());
-			model.addAttribute(ModelAttributetConstants.PAGE_SUBCATEGORY_NAME_L3,
-					page_subcategory_name_l3.replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
-		}
+		//		if (null != searchPageData && null != searchPageData.getDepartmentHierarchyData()
+		//				&& null != searchPageData.getDepartmentHierarchyData().getHierarchyList()
+		//				&& searchPageData.getDepartmentHierarchyData().getHierarchyList().size() > 0)
+		//		{
+		//			String product_category = null;
+		//			String page_subcategory_name = null;
+		//			String page_subcategory_name_l3 = null;
+		//			final String[] productCatArray = searchPageData.getDepartmentHierarchyData().getHierarchyList().get(0).split("\\|");
+		//
+		//			for (final String category : productCatArray)
+		//			{
+		//				if (StringUtils.isNotEmpty(category))
+		//				{
+		//					final String[] categoryLevelArray = category.split(":");
+		//
+		//					if (categoryLevelArray.length > 2)
+		//					{
+		//						final String categoryLevel = categoryLevelArray[2];
+		//
+		//						if (categoryLevel.contains(MarketplacecommerceservicesConstants.DEPT_L1))
+		//						{
+		//							product_category = categoryLevelArray[1];
+		//						}
+		//						else if (categoryLevel.contains(MarketplacecommerceservicesConstants.DEPT_L2))
+		//						{
+		//							page_subcategory_name = categoryLevelArray[1];
+		//						}
+		//						else if (categoryLevel.contains(MarketplacecommerceservicesConstants.DEPT_L3))
+		//						{
+		//							page_subcategory_name_l3 = categoryLevelArray[1];
+		//						}
+		//					}
+		//
+		//				}
+		//
+		//			}
+		//
+		//			model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY,
+		//					product_category.replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
+		//			model.addAttribute(ModelAttributetConstants.PAGE_SUBCATEGORY_NAME, page_subcategory_name.replaceAll("[^\\w\\s]", "")
+		//					.replaceAll(" ", "_").toLowerCase());
+		//			model.addAttribute(ModelAttributetConstants.PAGE_SUBCATEGORY_NAME_L3,
+		//					page_subcategory_name_l3.replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
+		//		}
 
 	}
 
@@ -1305,9 +1305,9 @@ public class SearchPageController extends AbstractSearchPageController
 	/*
 	 * protected <E> List<E> subList(final List<E> list, final int maxElements) { if (CollectionUtils.isEmpty(list)) {
 	 * return Collections.emptyList(); }
-	 * 
+	 *
 	 * if (list.size() > maxElements) { return list.subList(0, maxElements); }
-	 * 
+	 *
 	 * return list; }
 	 */
 

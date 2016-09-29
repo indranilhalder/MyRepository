@@ -788,13 +788,19 @@ function deselectRadio(){
 	var handle = $("#bankCodeSelection");
 	var number = handle.val();
 	var selection = $(".NBBankCode");
+	var bankName = $("#bankCodeSelection option:selected").html();
 	$("#netbankingError").css("display","none");
+	
 	if(number!="select"){
 	for (i=0; i<selection.length; i++)
 		  if (selection[i].checked == true){
 			  checkedValue=selection[i].value;
 			  selection[i].checked = false;
 		  }
+	//TPR-665
+	utag.link(
+			{"link_text": "net_banking_dropdown_"+bankName.replace(/ /g,'_').toLowerCase() , "event_type" : "payment_mode_dropdown"}
+			);
 		setBankForSavedCard($("#bankCodeSelection option:selected").html());
 		
 	}
@@ -819,7 +825,7 @@ function deselectSelection(){
 			  
 		//TPR-665
 			utag.link({
-				"link_text": "net_banking_popular_"+bankName , "event_type" : "payment_mode_popular"
+				"link_text": "net_banking_popular_"+bankName.replace(/ /g,'_').toLowerCase() , "event_type" : "payment_mode_popular"
 			});
 	}
 	//setBankForSavedCard(bankName);
@@ -4502,7 +4508,7 @@ function sendTealiumData(){
 		        	
 		        	if(payment_mode === "COD"){
 		        		utag.link({
-				            "link_name": 'Final Checkout',
+				            "link_text": 'Final Checkout',
 				            "event_type": 'PayNow',
 				            "payment_method": "" + payment_type,
 				            "product_id": utag.data.product_id
@@ -4511,7 +4517,7 @@ function sendTealiumData(){
 		        		
 		        	}else{
 			        	utag.link({
-				            "link_name": 'Final Checkout',
+				            "link_text": 'Final Checkout',
 				            "event_type": 'PayNow',
 				            "payment_method": "" + payment_mode + "|" + payment_type,
 				            "product_id": utag.data.product_id
