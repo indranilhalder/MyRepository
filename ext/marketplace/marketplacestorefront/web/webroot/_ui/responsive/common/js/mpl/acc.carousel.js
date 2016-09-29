@@ -1,6 +1,7 @@
 ACC.carousel = {
 
 	_autoload: [
+	     "StyleEditCarousel",
 	     "myFun",
 	     "ClpTopDealsCarousel",
 	     "ClpBestSellerCarousel",
@@ -183,6 +184,35 @@ ACC.carousel = {
 		}
 	},
 	
+	
+	StyleEditCarousel: function(){
+		if(typeof homePageBannerTimeout!== "undefined"){
+			var timeout = parseInt(homePageBannerTimeout) * 1000 ;
+		}
+		else{
+			var timeout = 0 ;
+		}
+			$(".style_edit .home-rotatingImage").owlCarousel({
+				items:1,
+				nav:false,
+				dots:($(".style_edit .home-rotatingImage img").length == 1)?false:true,
+				loop: ($(".style_edit .home-rotatingImage img").length == 1)?false:true,
+		        autoplay: true,
+		        autoHeight : true,
+		        autoplayTimeout: timeout
+		    });
+			$(".style_edit .electronic-rotatingImage").owlCarousel({
+				items:1,
+				nav:false,
+				dots:($(".style_edit .electronic-rotatingImage img").length == 1)?false:true,
+				loop: ($(".style_edit .electronic-rotatingImage img").length == 1)?false:true,
+				autoplay: true,
+				autoHeight : true,
+				autoplayTimeout: timeout
+			});
+		
+	},
+	
 	/*homePageBannerCarousel: function(count){
 		
 			var iw = $('#rotatingImageTimeout .owl-item').outerWidth(), ih = $("#rotatingImageTimeout .owl-item").first().next().find('.hero').height();
@@ -290,7 +320,7 @@ ACC.carousel = {
 		$(".top_deal .offersCarousel").owlCarousel({
 					items:5,
             		loop: true,
-            		nav:true,
+            		nav:false,
             		dots:false,
             		navText:[],
             		responsive : {
@@ -298,19 +328,27 @@ ACC.carousel = {
             			0 : {
             				items:1,
             				stagePadding: 50,
+            				loop: ($(".top_deal .offersCarousel .image").length == 1)?false:true,
+            				nav: ($(".top_deal .offersCarousel .image").length == 1)?false:true,
             			},
             			// breakpoint from 480 up
             			480 : {
             				items:2,
             				stagePadding: 75,
+            				loop: ($(".top_deal .offersCarousel .image").length <= 2)?false:true,
+            				nav: ($(".top_deal .offersCarousel .image").length <= 2)?false:true,
             			},
-            			// breakpoint from 768 up
+            			// breakpoint from 700 up
             			700 : {
             				items:3,
+            				loop: ($(".top_deal .offersCarousel .image").length <= 3)?false:true,
+            				nav: ($(".top_deal .offersCarousel .image").length <= 3)?false:true,
             			},
-            			// breakpoint from 768 up
+            			// breakpoint from 1000 up
             			1000 : {
             				items:5,
+            				loop: ($(".top_deal .offersCarousel .image").length <= 5)?false:true,
+            				nav: ($(".top_deal .offersCarousel .image").length <= 5)?false:true,
             			}			
             		}	
 			/*navigation:true,
