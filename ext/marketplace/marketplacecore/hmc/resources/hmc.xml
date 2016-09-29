@@ -2322,13 +2322,15 @@
 	</type>
 	<!-- Product Setup End -->
 
-	<!-- Shop By Look HMC config -->
+	<!-- Shop By Look HMC config updated for TPR-565-->
 	<type name="MplShopByLook" mode="append">
 
 		<organizer>
 			<search mode="append">
-				<condition attribute="collectionCategory" />
+				<!-- <condition attribute="collectionCategory" /> -->
 				<condition attribute="collectionName" />
+				<condition attribute="collectionId"></condition>
+				<condition attribute="customSku" />
 			</search>
 			<result defaultview="list">
 				<listview>
@@ -2336,8 +2338,9 @@
 						<attribute name="collectionCategory" width="300"></attribute>
 						<attribute name="collectionName" width="300"></attribute>
 						<attribute name="collectionId" width="150"></attribute>
-						<attribute name="startDate" width="150"></attribute>
-						<attribute name="endDate" width="150"></attribute>
+						<attribute name="customSku" width="300"></attribute>
+						<!-- <attribute name="startDate" width="150"></attribute>
+						<attribute name="endDate" width="150"></attribute> -->
 					</itemlayout>
 				</listview>
 				<editview mode="replace">
@@ -2346,6 +2349,7 @@
 						<attribute name="collectionName" width="300"></attribute>
 						<attribute name="collectionDescription" width="300"></attribute>
 						<attribute name="collectionId" width="150"></attribute>
+						<attribute name="customSku" width="300"></attribute>
 						<attribute name="productCollections" width="300"></attribute>
 						<attribute name="startDate" width="150"></attribute>
 						<attribute name="endDate" width="150"></attribute>
@@ -2373,6 +2377,7 @@
 						<attribute name="collectionDescription" width="300"></attribute>
 						<attribute name="collectionId" width="150"></attribute>
 						<attribute name="productCollections" width="300"></attribute>
+						<attribute name="customSku" width="300"></attribute>
 						<attribute name="startDate" width="150"></attribute>
 						<attribute name="endDate" width="150"></attribute>
 						</listlayout>

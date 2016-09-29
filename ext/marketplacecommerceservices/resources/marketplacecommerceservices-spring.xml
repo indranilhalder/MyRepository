@@ -1782,5 +1782,14 @@
 		<property name="typeCode" value="Sizesystem" />
 	</bean>
 	<!-- Bean for POC Search ends-->
+	
+	<!-- TPR-565 -->
+	<bean id="mplShopByLookSaveInterceptor" class="com.tisl.mpl.interceptor.MplShopByLookInterceptor" />
+
+	<bean id="mplShopByLookSaveInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="mplShopByLookSaveInterceptor" />
+		<property name="typeCode" value="MplShopByLook" />
+	</bean>
 </beans>
 
