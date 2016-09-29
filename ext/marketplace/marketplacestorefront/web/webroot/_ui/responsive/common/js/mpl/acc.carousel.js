@@ -264,35 +264,51 @@ ACC.carousel = {
 	        autoHeight : true,
 	        autoplayTimeout: timeout
 	    });
+	var owl2 = $("body.page-shopTheStyle .home-rotatingImage#rotatingImageTimeoutMobile"); 
+	owl2.owlCarousel({
+		items:1,
+		nav:false,
+		dots:true,
+		loop: true,
+        autoplay: true,
+        autoHeight : true,
+        autoplayTimeout: timeout
+    });
 	    $('.owl-dot1 a').click(function(e){
 	    				
 			e.preventDefault();	
 			$('.owl-controls li').removeClass('active');		
 			owl1.trigger('to.owl.carousel',  0);
-			console.log("1");
+			owl2.trigger('to.owl.carousel',  0);
+			//console.log("1");
 			$(this).parent().parent().addClass('active');
 		}); 
-		 $('.owl-dot2 a').click(function(e){	
-		 console.log("2");		
+		 $('.owl-dot2 a').click(function(e){		
 			e.preventDefault();	
 			$('.owl-controls li').removeClass('active');		
 			owl1.trigger('to.owl.carousel',  1);
+			owl2.trigger('to.owl.carousel',  1);
+			//console.log("2");	
 			$(this).parent().parent().addClass('active');
 		}); 
-		 $('.owl-dot3 a').click(function(e){
-		 console.log("3");			
+		 $('.owl-dot3 a').click(function(e){		
 			e.preventDefault();
 			$('.owl-controls li').removeClass('active');				
 			owl1.trigger('to.owl.carousel',  2);
+			owl2.trigger('to.owl.carousel',  2);
+			//console.log("3");	
 			$(this).parent().parent().addClass('active');
 		}); 
 		 $('.owl-dot4 a').click(function(e){	
-		 console.log("4");		
 			e.preventDefault();	
 			$('.owl-controls li').removeClass('active');		
 			owl1.trigger('to.owl.carousel',  3);
+			owl2.trigger('to.owl.carousel',  3);
+			//console.log("4");
 			$(this).parent().parent().addClass('active');
-		}); 
+		});
+		 
+		/*var owl2 = $("body.page-shopTheStyle .home-rotatingImage#rotatingImageTimeoutMobile");*/ 
     },
 	 /*----------End TPR-179(Shop The Style)------------*/  
 	offersCarousel: function(){
