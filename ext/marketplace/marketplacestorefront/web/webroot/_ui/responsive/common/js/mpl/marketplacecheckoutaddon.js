@@ -4376,7 +4376,7 @@ function applyPromotion(bankName)
 					//TISEE-352
 					if(response.totalDiscount.value != 0){
 						$("#promotionApplied").css("display","block");
-						document.getElementById("promotion").innerHTML="-"+response.totalDiscount.formattedValue;				
+						document.getElementById("promotion").innerHTML=response.totalDiscount.formattedValue;				
 					}
 					
 					//TISST-7955
@@ -6454,6 +6454,8 @@ $(document).ready(function(){
 
 	if ($("#checkoutPageName").val() == "Select Address"){
 		$(" body.page-multiStepCheckoutSummaryPage .right-block.shipping").css("visibility","hidden");
+		$(" body.page-multiStepCheckoutSummaryPage .right-block.shipping .subtotals.top.block.summary-info").css("display","none");
+		
 	}
 	if ($("#checkoutPageName").val() == "Payment Options"){
 		$(" body.page-multiStepCheckoutSummaryPage .progress-barcheck .step-done span").addClass("paymentStepDone");
