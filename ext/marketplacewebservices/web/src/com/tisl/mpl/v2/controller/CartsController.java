@@ -2612,7 +2612,7 @@ public class CartsController extends BaseCommerceController
 			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
 			 * StringUtils.isNotEmpty(bin.getBankName())) {
 			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 *
+			 * 
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */
@@ -3209,7 +3209,7 @@ public class CartsController extends BaseCommerceController
 	@RequestMapping(value = "/{cartId}/applyCoupons", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public ApplyCouponsDTO applyCoupons(@PathVariable final String cartId, @RequestParam final String couponCode,
-			@RequestParam(required = false) final String guid, @RequestParam(required = false) final String paymentMode)
+			@RequestParam(required = false) final String cartGuid, @RequestParam(required = false) final String paymentMode)
 			throws RequestParameterException, WebserviceValidationException, MalformedURLException, NumberFormatException,
 			JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException
 	{
@@ -3222,9 +3222,9 @@ public class CartsController extends BaseCommerceController
 			LOG.debug(logBuilder.append("Step 1:::The coupon code entered by the customer is :::").append(couponCode));
 
 			//Fetching orderModel based on guid TPR-629
-			if (StringUtils.isNotEmpty(guid))
+			if (StringUtils.isNotEmpty(cartGuid))
 			{
-				orderModel = mplPaymentFacade.getOrderByGuid(guid);
+				orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
 			}
 			//Redeem coupon for cartModel
 			if (orderModel == null)
@@ -3304,7 +3304,7 @@ public class CartsController extends BaseCommerceController
 	@RequestMapping(value = "/{cartId}/releaseCoupons", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public ReleaseCouponsDTO releaseCoupons(@PathVariable final String cartId, @RequestParam final String couponCode,
-			@RequestParam(required = false) final String guid, @RequestParam(required = false) final String paymentMode)
+			@RequestParam(required = false) final String cartGuid, @RequestParam(required = false) final String paymentMode)
 			throws RequestParameterException, WebserviceValidationException, MalformedURLException, NumberFormatException,
 			JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException,
 			JaloPriceFactoryException, CalculationException
@@ -3315,9 +3315,9 @@ public class CartsController extends BaseCommerceController
 		try
 		{
 
-			if (StringUtils.isNotEmpty(guid))
+			if (StringUtils.isNotEmpty(cartGuid))
 			{
-				orderModel = mplPaymentFacade.getOrderByGuid(guid);
+				orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
 			}
 			//Release coupon for cartModel
 			if (null == orderModel)
