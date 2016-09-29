@@ -2526,7 +2526,8 @@
     	<!-- Shop The Look -->     	    	
     	<property name="shop_the_look_component" type="com.tisl.mpl.wsdto.LuxShopTheLookWsDTO"/>
     	<property name="why_our_product_component" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxShowcasecomponentWsDTO>"/>    
-    	<property name="our_journey_component" type="com.tisl.mpl.wsdto.LuxOurJourneyComponentWsDTO"/> 	    	
+    	<property name="our_journey_component" type="com.tisl.mpl.wsdto.LuxOurJourneyComponentWsDTO"/> 	 
+    	<property name="our_mission_component" type="com.tisl.mpl.wsdto.LuxOurMissionComponentWsDTO"/>   	
     </bean>    
     
     <bean class="com.tisl.mpl.wsdto.LuxOurJourneyComponentWsDTO">
@@ -2539,6 +2540,11 @@
     	<property name="year" type="String" />
     	<property name="image" type="String" />
 		<property name="img_alt" type="String" />
+		<property name="text" type="String" />	
+    </bean>
+    
+     <bean class="com.tisl.mpl.wsdto.LuxOurMissionComponentWsDTO">
+    	<property name="sectionHeading" type="String" />
 		<property name="text" type="String" />	
     </bean>
     
