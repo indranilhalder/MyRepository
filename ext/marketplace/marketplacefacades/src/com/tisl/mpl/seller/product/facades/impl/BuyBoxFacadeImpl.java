@@ -236,19 +236,28 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					productsWithNoStock = arrayToProductList;
 				}
 			}
-			//TPR-1375 changes
+			//TPR-1375 changes start
 			if (CollectionUtils.isNotEmpty(buyboxModelList) && buyboxModelList.size() > 1)
 			{
 				for (final BuyBoxModel buyBoxModel : buyboxModelList)
 				{
 					buyBoxDataList.add(populateBuyBoxData(buyBoxModel, onlyBuyBoxHasStock, buyboxModelList));
 				}
+
+			}
+			if (buyBoxDataList.size() == 1)
+			{
+				returnData.put(BUYBOX_LIST, Arrays.asList(buyboxData));
+			}
+			else
+			{
 				returnData.put(BUYBOX_LIST, buyBoxDataList);
 			}
+			//TPR-1375 changes end
 			if (buyboxModelList.size() > 0)
 			{
 				buyboxData = populateBuyBoxData(buyBoxMod, onlyBuyBoxHasStock, buyboxModelList);
-				returnData.put(BUYBOX_LIST, Arrays.asList(buyboxData));
+
 
 				//				if (null != buyBoxMod.getSpecialPrice() && buyBoxMod.getSpecialPrice().doubleValue() > 0)
 				//				{

@@ -103,7 +103,6 @@ function focusOnElement() {
 	/*Retrieving total number of sellers*/
 	function fetchSellers(sellersArray,buyboxSeller)
 	{
-	//	alert(buyboxSeller+sellersArray);
 		var promorestrictedSellers=$("#promotedSellerId").val();
 		var isproductPage = $("#isproductPage").val();
 		var pretext=$("#deliveryPretext").text();
@@ -121,17 +120,13 @@ function focusOnElement() {
 	    var originalPrice = "";
 	    var sellerPriceValue = 0;
 	    var originalPriceValue = 0;
-	 //   var deliveryModeMap="${deliveryModeMap}
 	    if(isproductPage=='false' && null!=sessionStorage.getItem('pincodeChecked')){
 	    	var dataVal='';
 	    	var  allOosFlag='';
 	    	var otherSellerCount='';
-	    	
-	    //	alert("hii"+sessionStorage.getItem('servicableList'));
 	    	if(sessionStorage.getItem('servicableList')!=""){
 	    	if(null!=sessionStorage.getItem('servicableList')){
 				    dataVal=JSON.parse(sessionStorage.getItem("servicableList"));
-				   // dataVal='123654098765485130011712';
 			   }
 	           if(null!=sessionStorage.getItem('allOosFlag')){
 	        	    allOosFlag=sessionStorage.getItem('allOosFlag');
@@ -141,21 +136,10 @@ function focusOnElement() {
 			   }
 			populateBuyBoxData(dataVal,otherSellerCount,isproductPage,allOosFlag);
 			var buyboxSeller = $("#ussid").val();
-		//	var sellerskuidList = sessionStorage.getItem('notServicables');
-            
-            
-//	    	sellerskuidList=sessionStorage.getItem('notServicables');
-//	    	ussidIdsForED=sessionStorage.getItem('skuIdsForED');
-//	    	ussidIdsForHD=sessionStorage.getItem('skuIdsForHD');
-//	    	ussidIdsForCNC=sessionStorage.getItem('skuIdForCNC');
-//	    	ussidIdsForCOD=sessionStorage.getItem('skuIdForCod');
-//	    	stockUssidIds=sessionStorage.getItem('skuIdsWithNoStock');
-//	    	stockUssidArray=sessionStorage.getItem('stockDataArrayList');
 	    	}
 	    	
 	    //	pincodeChecked=$("#pinCodeCheckedFlag").val();
 	    }
-	   // console.log("sellers"+sessionStorage.getItem('notServicables'));
 	    var sellerskuidList = sessionStorage.getItem('notServicables')== null ? "" : sessionStorage.getItem('notServicables');
         var ussidIdsForED = sessionStorage.getItem('ussidIdsForED')== null ? "" :   sessionStorage.getItem('ussidIdsForED');
         var ussidIdsForHD = sessionStorage.getItem('ussidIdsForHD')== null ? "" :   sessionStorage.getItem('ussidIdsForHD');
@@ -163,10 +147,8 @@ function focusOnElement() {
         var ussidIdsForCOD = sessionStorage.getItem('ussidIdsForCOD')== null ? "" :  sessionStorage.getItem('ussidIdsForCOD');
         var stockUssidIds = sessionStorage.getItem('stockUssidIds')== null ? "" :   sessionStorage.getItem('stockUssidIds');
         var stockUssidArray = sessionStorage.getItem('stockUssidArray')== null ? "" : sessionStorage.getItem('stockUssidArray');
-	    //alert("non servicables"+  var sellerskuidList = sessionStorage.getItem('notServicables'))
 	    for (var i = 0; i < sellersArray.length; i++) {
 		if(buyboxSeller!=sellersArray[i]['ussid']){
-			//alert(buyboxSeller+"##"+sellersArray[i]['ussid']);
 			var leadTime=0;
 			if(null!=sellersArray[i]['leadTimeForHomeDelivery']){
 				leadTime=sellersArray[i]['leadTimeForHomeDelivery'];
@@ -391,6 +373,7 @@ function focusOnElement() {
 		sessionStorage.removeItem('skuIdForCod');
 		sessionStorage.removeItem('skuIdsWithNoStock');
 		sessionStorage.removeItem('stockDataArrayList');
+		sessionStorage.removeItem('pincodeChecked');
 }
 	 function addToBag(index){
 		
@@ -442,7 +425,6 @@ function focusOnElement() {
 	 function fetchAllSellers() {
 			
 		  var buyboxSeller = $("#ussid").val();
-		//  alert(buyboxSeller);
 		    var modifiedData="";
 			var isproductPage = $("#isproductPage").val();
 			var productCode = $("#product").val();
@@ -822,7 +804,6 @@ function focusOnElement() {
 					}
 
 					$("#ussid").val(data['sellerArticleSKU']);
-					//alert("ussid"+$("#ussid").val());
 					$("#sellerSkuId").val(data['sellerArticleSKU']);
 					var spPrice = data['specialPrice'];
 					var mrpPrice = data['mrp'];

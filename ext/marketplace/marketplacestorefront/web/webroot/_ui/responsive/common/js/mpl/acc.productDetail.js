@@ -1026,7 +1026,6 @@ $(function() {
 						//TPR900
 						if($("#pdpPincodeCheck").text() == 'Check Availability')
 						{
-							//alert($("#pdpPincodeCheck").text());
 							pinCodeChecked = true;
 							$("#home").hide();
 							$("#homeli").hide();
@@ -1353,13 +1352,13 @@ $( document ).ready(function() {
 		cache : false,//added to resolve browser specific the OOS issue
 		dataType : "json",
 		success : function(data) {
-			//TISPRM-56
-			//alert("testbuybox"+data['buyboxList']);
+			//TPR-1375
 			for(var i in data['buyboxList'] ){
-				alert("testbuybox"+data['buyboxList'][i]);
 				buyBoxList.push(data['buyboxList'][i]);
 			}
+			if($("#isProductPage").val()=='true'){
 			sessionStorage.setItem('servicableList',"");
+			}
 			//TISPRM-56
 			var stockInfo = data['availibility'];
 			availibility = stockInfo;
@@ -1520,7 +1519,6 @@ $( document ).ready(function() {
 					var mrpPrice = data['mrp'];
 					var mop = data['price'];
 					var savingsOnProduct= data['savingsOnProduct'];
-					/*alert(savingsOnProduct);*/
 					$("#stock").val(data['availablestock']);
 					$(".selectQty").change(function() {
 						$("#qty").val($(".selectQty :selected").val());
@@ -1645,8 +1643,6 @@ function displayDeliveryDetails(sellerName) {
 				} else {
 					var start=$("#expressStartId").val();
 					var end=$("#expressEndId").val();
-					
-					//alert(pretext);
 					$("#expressDate").html(pretext+start+"-"+end+posttext);
 					$("#express").show();
 					$("#expressli").show();
@@ -2283,7 +2279,6 @@ function dispPriceForSizeGuide(mrp, mop, spPrice, savingsOnProduct) {
 			$("#sizemrpPriceId").show();
 			$("#sizespPriceId").show();
 		} else {
-			//alert("mop!=mrp sp");
 			$('#sizemrpPriceId').css('text-decoration', 'line-through');
 			$("#sizemrpPriceId").show();
 			$("#sizespPriceId").show();
@@ -2295,7 +2290,6 @@ function dispPriceForSizeGuide(mrp, mop, spPrice, savingsOnProduct) {
 				$("#sizemrpPriceId").removeClass("old").addClass("sale");
 				$("#sizemrpPriceId").show();
 			} else {
-				//alert("mop!=mrp");
 				$('#sizemrpPriceId').css('text-decoration', 'line-through');
 				$("#sizemrpPriceId").show();
 				$("#sizemopPriceId").show();
@@ -2458,7 +2452,6 @@ function openPop_SizeGuide() {
 			}
 
 			else if (data == "" || data == []) {
-				//alert("fasle");
 				loadDefaultWishListName_SizeGuide();
 
 			} else {
@@ -2547,7 +2540,6 @@ function loadDefaultWishListName_SizeGuide() {
 			+ "<tr><td><input type='text' id='defaultWishName_sizeGuide' value='"
 			+ wishName + "'/></td></td></tr>";
 	$("#wishlistTbodyId_sizeGuide").html(wishListContent);
-	//alert(wishListContent+" wishListContent");
 
 	}
 	function selectWishlist_SizeGuide(i) {
@@ -2575,11 +2567,9 @@ function loadDefaultWishListName_SizeGuide() {
 		var msg=$('#wishlistnotblank_sizeGuide').text();
 		$('#addedMessage_sizeGuide').show();
 		$('#addedMessage_sizeGuide').html(msg);
-		//alert("1");
 		return false;
 	}
 	if(wishName==undefined||wishName==null){
-		//alert("2");
 		return false;
 	}
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
@@ -2814,24 +2804,22 @@ function loadDefaultWishListName_SizeGuide() {
 	      }
 		var allOosFlag=true;
 		for(var i in buyBoxList){
-		//	alert("1"+servicableUssids);
 			if(buyBoxList[i]['available']>0){
 				allOosFlag=false;
 			}
+			//alert(servicableUssids+"###"+buyBoxList[i]['sellerArticleSKU']+"$$$"+servicableUssids.indexOf(buyBoxList[i]['sellerArticleSKU']));
 			if(servicableUssids!="" && servicableUssids.indexOf(buyBoxList[i]['sellerArticleSKU'])!=-1){
-				//alert("2"+servicableUssids+buyBoxList[i]['sellerArticleSKU']);
-				//alert(servicableUssids+"###"+buyBoxList[i]['sellerArticleSKU']);
-				servicableList.push(buyBoxList[i]);
+			servicableList.push(buyBoxList[i]);
 			}
-			if(servicableUssids!="" && servicableUssids.indexOf(buyBoxList[i]['sellerArticleSKU'])==-1){
+			if(servicableUssids!="" && servicableUssids.indexOf(buyBoxList[0]['sellerArticleSKU'])==-1){
 				    nonServicableList.push(buyBoxList[i]);
 			}
 		}
-		console.log(servicableList);
 		sessionStorage.setItem('servicableList', JSON.stringify(servicableList[0]));
 		sessionStorage.setItem('isproductPage', isproductPage);
 		sessionStorage.setItem('allOosFlag', allOosFlag);
 		sessionStorage.setItem('otherSellerCount', servicableList.length-1);
+		sessionStorage.setItem('pincodeChecked', 'Y');
 		//TPR-1375 populating buybox details so that buybox seller should be servicable
 		populateBuyBoxData(JSON.parse(sessionStorage.getItem("servicableList")),servicableList.length-1,isproductPage,allOosFlag);
 	}

@@ -40,6 +40,9 @@ tr.d0 td {
 <input type="hidden" name="selectedSize" id="selectedSize"	value="${selectedSize}"/>
 
 <!--- START: INSERTED for MSD --->
+<!-- TPR-1375 changes -->
+<input type="hidden" value="true" id="isProductPage" name="isProductPage"/>
+
 <c:if test="${isMSDEnabled}">
 	<input type="hidden" value="${isMSDEnabled}" name="isMSDEnabled"/>
 		<c:if test="${product.rootCategory eq 'Clothing'}">
