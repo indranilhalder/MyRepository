@@ -47,7 +47,7 @@
 			<!-- START OF LEFT SECTION -->
 			<div class="wishlist-nav">
 				<!-- START OF SEARCH LIST ITEM STATIC COMPONENT -->
-				<h3><spring:theme code="header.link.myWishList" /></h3>
+				<h1><spring:theme code="header.link.myWishList" /></h1>
 				<%-- <form action="">
 					<button type="submit"></button>
 					<input type="text" placeholder="Find an item in your list">
@@ -607,8 +607,8 @@
 					<button type="submit" data-dismiss="modal" onClick="saveChangesWl()">
 						<spring:theme code="wishlist.save" />
 					</button>
-					
-					<a class="close" href="" data-dismiss="modal"><spring:theme code="text.button.cancel" /></a>
+					<!-- TPR-646 Changes added class -->
+					<a class="close manageWishlistClose" href="" data-dismiss="modal"><spring:theme code="text.button.cancel" /></a>
 					
 					</div>
 					</div>

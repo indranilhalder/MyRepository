@@ -177,6 +177,10 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	private BaseSiteService baseService;
 
 
+	//TISPT-400
+	@Autowired
+	private Converter<CartModel, CartData> mplExtendedPromoCartConverter;
+
 
 	/**
 	 * @description: It is used to set delivery mode to cart
@@ -574,7 +578,8 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		final CartModel cartModel = getCart();
 		Double totalPriceAfterDeliveryCost = Double.valueOf(0.0);
 		Double discountValue = Double.valueOf(0.0);
-		final CartData cartData = getMplExtendedCartConverter().convert(cartModel);
+		//final CartData cartData = getMplExtendedCartConverter().convert(cartModel);
+		final CartData cartData = mplExtendedPromoCartConverter.convert(cartModel); //TISPT-400
 		boolean deliveryCostCalcStatus = false;
 		final Double subTotal = cartModel.getSubtotal();
 		if (cartData.getTotalDiscounts() != null && cartData.getTotalDiscounts().getValue() != null)

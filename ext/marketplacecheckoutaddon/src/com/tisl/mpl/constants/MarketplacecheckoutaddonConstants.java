@@ -279,6 +279,13 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String CART_DELIVERYMODE_ADDRESS_INVALID = "cartDelModeAddrInvalid";
 	public static final String CART_DELIVERYMODE_ADDRESS_INVALID_MSG = "Either delivery mode or delivery address is not present";
 	public static final String CART_EXPRESS_CHECKOUT_SELECTED = "isExpressCheckoutSelected";
+	public static final String YES = "yes";
+	public static final String NO = "no";
+	public static final String TRUE = "true";
+	public static final String FALSE = "false";
+
+	//TPR-1215
+	public static final String LINK_SET_DEFAUT_ADDRESS = "/set-default-address/";
 
 	//TPR-629
 	public static final String GUID = "guid";

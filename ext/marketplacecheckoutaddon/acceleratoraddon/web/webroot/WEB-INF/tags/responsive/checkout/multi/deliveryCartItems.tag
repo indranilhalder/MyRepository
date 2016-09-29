@@ -24,9 +24,9 @@
 	.rightBlockSubHeading {
 		font-weight: 600;
 	}
-	.cart.wrapper .right-block .block.bottom.order-details > ul li.items-shipped-count {
+/* 	.cart.wrapper .right-block .block.bottom.order-details > ul li.items-shipped-count {
 		margin-left: 0px !important;
-	}
+	} */
 </style>
 
 <c:choose>
@@ -48,8 +48,8 @@
 			<h2>Delivery Details</h2>
 				<p><spring:theme code="checkout.pickup.items.to.be.shipped" text="Shipping Address"/></p>
 				<address>
-					${fn:escapeXml(deliveryAddress.title)}${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}
-					<br>
+				<span>
+					<b>${fn:escapeXml(deliveryAddress.title)}${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</b>
 					<c:if test="${ not empty deliveryAddress.line1 }">
 						${fn:escapeXml(deliveryAddress.line1)},&nbsp;
 					</c:if>
@@ -94,7 +94,7 @@
 					</c:if>
 					<!-- For TISST-11525 Ends -->
 					
-					
+					</span>
 				</address>
 			</c:when>
 			<c:otherwise>
@@ -103,8 +103,9 @@
 		</c:choose>
 
 </c:if>
-<ul>
-<li class="items-shipped-count">
+<hr>
+<ul class="prd-info">
+<li class="items-shipped-count item-adds">
 <c:if test="${ not empty cartData.totalUnitCount }">
 <%-- 	${cartData.totalUnitCount}&nbsp;<spring:theme code="basket.page.totalQtyForAddress"/> --%>
 		<c:if test="${not hasShippedItems}">
@@ -130,6 +131,7 @@
                   <p class="company"></p>
                   <h3 class="product-brand-name"><a href="${entryProductUrl}">${entry.product.brand.brandname}</a></h3>
                   <h3 class="product-name"><a href="${productUrl}">${entry.product.name}</a></h3>
+                  <div class="prd-rate">
                   <p class="qty"><spring:theme code="basket.page.qty"/>&nbsp;${entry.quantity}</p>
                   <!--TISPRO-536-->     
 				  <c:if test="${not empty entry.product.size}">
@@ -157,12 +159,8 @@
 					</c:otherwise>
 					</c:choose>
                   </p>
-                    
-                    <div class="method">
-                   <h3> <spring:theme code="checkout.multi.shipmentMethod"/></h3>
-                   <p class="delivery-method-description"><c:out value="${entry.mplDeliveryMode.name}"></c:out>&nbsp;-&nbsp;<c:if test="${entry.currDelCharge.value.unscaledValue() == 0}"><c:out value="FREE"></c:out></c:if><c:if test="${entry.currDelCharge.value.unscaledValue() != 0}"><c:out value="${entry.currDelCharge.formattedValue}"></c:out></c:if></p>
-                  <p class="delivery-method-description delivery-method-description-time"><c:out value="${entry.mplDeliveryMode.description}"></c:out></p>
-                  </div>
+                    </div>
+                
                   <!-- <div class="method">
                     <h3>Shipping Method:</h3>
                     <p>Home Delivery - Free</p>
@@ -258,6 +256,13 @@
 			</div> --%>
 			<!--  <div class="stock-status">Item In Stock</div> -->
 		
+		</li>
+		<li>
+		    <div class="method item-mthd">
+                   <h3> <spring:theme code="checkout.multi.shipmentMethod"/></h3>
+                   <p class="delivery-method-description"><c:out value="${entry.mplDeliveryMode.name}"></c:out>&nbsp;-&nbsp;<c:if test="${entry.currDelCharge.value.unscaledValue() == 0}"><c:out value="FREE"></c:out></c:if><c:if test="${entry.currDelCharge.value.unscaledValue() != 0}"><c:out value="${entry.currDelCharge.formattedValue}"></c:out></c:if></p>
+                  <p class="delivery-method-description delivery-method-description-time"><c:out value="${entry.mplDeliveryMode.description}"></c:out></p>
+                  </div>
 		</li>
 	</c:if>
 </c:forEach>

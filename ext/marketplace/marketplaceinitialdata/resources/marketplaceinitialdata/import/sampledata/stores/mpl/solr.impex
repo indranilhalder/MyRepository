@@ -416,3 +416,66 @@ INSERT_UPDATE Trigger;cronJob(code)[unique=true];second;minute;hour;day;month;ye
 ;mplIndexingCompositeCronjob;0;15;-1;-1;-1;-1;true;true;-1
 
 #TISPRO-371 End
+
+#Search POC start
+INSERT_UPDATE Sizesystem;name[unique=true];from;to;conversionUnit;propertyName;
+;MPtoMP;MP;MP;1;primaryCamera-classification
+;GBtoMB;GB;MB;1024;rAM-classification
+;MbtoGB;MB;GB;0.00098;rAM-classification
+;GHztoMHz;GHZ;MHZ;1000;processor-classification
+;MHztoGHz;MHZ;GHZ;0.001;processor-classification
+;cmtoInches;CM;INCHES;0.3937;screenSize-classification
+;Inchestocm;INCHES;CM;2.54;screenSize-classification
+;InchestoInches;INCHES;INCHES;1;screenSize-classification
+
+INSERT_UPDATE  SolrIndexedProperty;solrIndexedType(identifier);name[unique=true];type(code);isRangeFaceted;isNumeric;unittype
+;$solrIndexedType;primaryCamera-classification;double;true;false;primaryCamera
+;$solrIndexedType;processor-classification;double;true;false;processor
+;$solrIndexedType;rAM-classification;double;true;false;memory
+;$solrIndexedType;screenSize-classification;double;true;false;screen
+;$solrIndexedType;memory-classification;double;true;false;memory
+
+
+INSERT_UPDATE SolrValueRangeSet;name[unique=true];qualifier;type;solrValueRanges(&rangeValueRefID)
+;mplPrimaryCameraRange;;double;mplPrimaryCameraRange1,mplPrimaryCameraRange2,mplPrimaryCameraRange3,mplPrimaryCameraRange4,mplPrimaryCameraRange5
+;mplProcessorRange;;double;mplProcessorRange1,mplProcessorRange2,mplProcessorRange3,mplProcessorRange4
+;mplRamFacetRange;;double;mplRamRange1,mplRamRange2,mplRamRange3,mplRamRange4
+;mplScreenSizeRange;;double;mplScreenSize1,mplScreenSize2,mplScreenSize3,mplScreenSize4,mplScreenSize5
+;mplMemoryRange;;double;mplMemoryRange1,mplMemoryRange2,mplMemoryRange3,mplMemoryRange4,mplMemoryRange5,mplMemoryRange6,mplMemoryRange7,mplMemoryRange8,mplMemoryRange9
+
+INSERT_UPDATE SolrValueRange;&rangeValueRefID;solrValueRangeSet(name);name[unique=true];from;to
+;mplPrimaryCameraRange1;mplPrimaryCameraRange;Below 2 MP;0.0;1.9
+;mplPrimaryCameraRange2;mplPrimaryCameraRange;2 - 2.9 MP;2.0;2.9
+;mplPrimaryCameraRange3;mplPrimaryCameraRange;3 - 4.9 MP;3.0;4.9
+;mplPrimaryCameraRange4;mplPrimaryCameraRange;5 - 7.9 MP;5.0;7.9
+;mplPrimaryCameraRange5;mplPrimaryCameraRange;8 MP and above;8.0;50.0
+;mplProcessorRange1;mplProcessorRange;1 - 1.49 GHz	;  1000	    ; 1499
+;mplProcessorRange2;mplProcessorRange;   1.5 - 1.99 GHz	; 1500; 1999
+;mplProcessorRange3;mplProcessorRange;   2 - 2.4 GHz; 	2000 ;2499
+;mplProcessorRange4;mplProcessorRange;   2.5 GHz and above; 	2500 ;10000
+;mplRamRange1;mplRamFacetRange;Less than 1GB	;  0	    ; 1024
+;mplRamRange2;mplRamFacetRange;   1GB to 2GB	; 1024.5; 2048
+;mplRamRange3;mplRamFacetRange;   2GB-4GB; 	2048.5 ;4096.0
+;mplRamRange4;mplRamFacetRange;   More than 4GB; 	4096.5 ;10096.0
+;mplScreenSize1;mplScreenSizeRange;3.9 inches or less;  0	    ; 3.9
+;mplScreenSize2;mplScreenSizeRange; 4 - 4.4 inches; 4.0; 4.4
+;mplScreenSize3;mplScreenSizeRange; 4.5 - 4.9 inches; 	4.5 ;4.9
+;mplScreenSize4;mplScreenSizeRange; 5 - 5.4 inches; 	5.0 ;5.4
+;mplScreenSize5;mplScreenSizeRange; 5.5 inches and above; 	5.5 ;100.0
+;mplMemoryRange1;mplMemoryRange;1 GB or less	;  0.0	    ; 1024.0
+;mplMemoryRange2;mplMemoryRange;   1.1 - 2 GB	; 1025.0; 2048.0
+;mplMemoryRange3;mplMemoryRange;   2.1 - 4 GB; 	2049.0 ;4096.0
+;mplMemoryRange4;mplMemoryRange;    4.1 - 8 GB; 	4097.0 ;8192.0
+;mplMemoryRange5;mplMemoryRange;    8.1 - 16 GB; 	8193.0 ;16384.0
+;mplMemoryRange6;mplMemoryRange;    16.1 - 32 GB; 	16385.0 ;32768.0
+;mplMemoryRange7;mplMemoryRange;    32.1 - 64 GB; 	32769.0 ;65536.0
+;mplMemoryRange8;mplMemoryRange;    64.1 - 128 GB; 	65537.0 ;131072.0
+;mplMemoryRange9;mplMemoryRange;    More than 128 GB; 	131073.0 ;800000.0
+
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);genericFacet[default=false];sortableType(code);currency[default=false];localized[default=true];multiValue[default=false];facet[default=true];facetType(code);facetSort(code);priority;visible;useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;facetDisplayNameProvider;customFacetSortProvider;topValuesProvider;rangeSets(name);displayname
+;$solrIndexedType						; primaryCamera-classification 	;double; 							;	 			;							 ;  				   ;  					   ; 				    ;MultiSelectOr 	;Alpha 			; 2500		;true;   								  ;     						;mplClassificationPropertyValueProvider;	;							;	;mplPrimaryCameraRange;Primary Camera Resolution
+;$solrIndexedType						; processor-classification		;double; 							;	 			;							 ;  				   ;  					   ; 				    ;MultiSelectOr 	;Alpha 			; 3000		;true;   								  ;     						;mplClassificationPropertyValueProvider;	;							;	;mplProcessorRange;Processor Speed
+;$solrIndexedType						; rAM-classification			;double; 							;	 			;							 ;  				   ;  					   ; 				    ;MultiSelectOr 	;Alpha 			; 3000		;true;   								  ;     						;mplClassificationPropertyValueProvider;	;							;	;mplRamFacetRange;RAM
+;$solrIndexedType						; screenSize-classification		;double; 							;	 			;							 ;  				   ;  					   ; 				    ;MultiSelectOr 	;Alpha 			; 3000		;true;   								  ;     						;mplClassificationPropertyValueProvider;	;							;	;mplScreenSizeRange;Screen Size
+;$solrIndexedType						; memory-classification			;double; 							;	 			;							 ;  				   ;  			true	   ; 				    ;MultiSelectOr 	;Alpha 			; 3000		;true;   								  ;     						;mplClassificationPropertyValueProvider;	;							;	;mplMemoryRange;Internal Memory
+#Search POC end

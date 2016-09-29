@@ -1,4 +1,6 @@
 $(document).ready(
+		
+
 		function() {
 
             var UTAG_SCRIPT_PROD = "<script type='text/javascript'>(function(a,b,c,d){a='//tags.tiqcdn.com/utag/tataunistore/main/prod/utag.js';b=document;c='script';d=b.createElement(c);d.src=a;d.type='text/java'+c;d.async=true;a=b.getElementsByTagName(c)[0];a.parentNode.insertBefore(d,a);})();</script>";
@@ -20,6 +22,8 @@ $(document).ready(
 			
 			// Added for tealium
 			if (pageType == "homepage") {
+				
+			
 				// Added for tealium
 				/*$
 						.ajax({
@@ -86,14 +90,18 @@ $(document).ready(
 								+ $("#product_id").val() + '"],';
 						tealiumData += '"page_subcategory_name":"'
 								+ $("#page_subcategory_name").val() + '",';
+						tealiumData += '"page_subcategory_name_L3":"'
+							+ $("#page_subcategory_name_L3").val() + '",';
 						tealiumData += '"product_brand":["'
 								+ $("#product_brand").val() + '"],';
 						tealiumData += '"site_section_detail":"'
 								+ $("#site_section_detail").val() + '",';
 						tealiumData += '"product_category":["'
 								+ $("#product_category").val() + '"]}';
+					
 						data = data.replace("}<TealiumScript>", tealiumData);
 						// console.log(data);
+						
 						$('#tealiumHome').html(data);
 					}
 				});
@@ -227,6 +235,8 @@ $(document).ready(
 							+ $("#product_brand").val() + ',';
 						tealiumData += '"page_subcategory_name":'
 							+ $("#page_subcategory_name").val() + ',';
+						tealiumData += '"page_subcategory_name_L3":"'
+							+ $("#page_subcategory_name_L3").val() + '",';
 						tealiumData += '"product_category":'
 							+ $("#product_category").val() + '}';
 						data = data.replace("}<TealiumScript>", tealiumData);
@@ -266,6 +276,8 @@ $(document).ready(
 							+ $("#product_brand").val() + ',';
 						tealiumData += '"page_subcategory_name":'
 							+ $("#page_subcategory_name").val() + ',';
+						tealiumData += '"page_subcategory_name_L3":"'
+							+ $("#page_subcategory_name_L3").val() + '",';
 						tealiumData += '"product_category":'
 							+ $("#product_category").val() + '}';
 						data = data.replace("}<TealiumScript>", tealiumData);
@@ -280,5 +292,32 @@ $(document).ready(
 				
 			}
 
-		
+			/*TPR-648 start*/
+			$('.shop-promos .promos a').click(function(){
+				var brandText=$(this).text().replace(/ /g,'').toLowerCase()+ "_viewdetails";
+				var brandClick="abcde_click";
+				utag.link({"link_obj": this, "link_text": brandText, "event_type" : brandClick
+						});
+					
+			});
+			/*TPR-648 end*/
+			
+			
+			/*TPR-657 starts*/
+			$('.feedBack-block .search-feedback ul li').click(function(){				
+				var msg="search_feedback_start";
+				utag.link({"link_obj": this, "link_text": msg, "event_type" : msg
+						});
+					
+			});
+			$('.feedBack-block #feedBackFormNo .feed-back #submit_button').click(function(){				
+				var msg="search_feedback_submit";
+				utag.link({"link_obj": this, "link_text": msg, "event_type" : msg
+						});
+					
+			});
+			/*TPR-657 ends*/
+			
+			
+			
 		});

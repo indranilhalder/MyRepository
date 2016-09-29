@@ -220,6 +220,7 @@ public final class ModelAttributetConstants
 	public static final String SELECTED_SIZE = "selectedSize";
 	public static final String DESCRIPTION = "description";
 	public static final String METATAGS = "metatags";
+	public static final String PMETATTITLE = "metaTitle";
 	public static final String E0000 = "E0000";
 	public static final String PRODUCT_CATEGORY_TYPE = "productCategoryType";
 	public static final String NOSELLER = "noseller";
@@ -633,6 +634,22 @@ public final class ModelAttributetConstants
 	public static final String SEARCH_META_DESC = "search.meta.description.results";
 	public static final String SEARCH_META_DESC_ON = "search.meta.description.on";
 
+	//For TPR-198
+	public static final String SIZE_COUNT = "sizeCount";
+	public static final String SEARCH_QUERY_VALUE = "searchQueryValue";
+	public static final String SEARCH_CODE = "searchCode";
+	public static final String IS_CATEGORY_PAGE = "isCategoryPage";
+	public static final String IS_CONCEIRGE = "isConceirge";
+	public static final String DEPARTMENT_HIERARCHY_DATA = "departmentHierarchyData";
+	public static final String DEPARTMENTS = "departments";
+	public static final String NORMAL_PRODUCTS = "normalProducts";
+	public static final String COMPETING_PRODUCTS_SEARCH_PAGE_DATA = "competingProductsSearchPageData";
+	public static final String HIDE_DEPARTMENTS = "hideDepartments";
+	public static final String OTHER_PRODUCTS = "otherProducts";
+	public static final String SHOP_THE_SALE_URL = "shop_the_sale_url";
+	public static final String CURRENT_QUERY = "currentQuery";
+
+
 	//PickupInStoreController
 	public static final String ENTRY_NO = "entryNumber";
 	public static final String QTY_REDUCED_NO_ITEMS_ADDED = "basket.information.quantity.reducedNumberOfItemsAdded.";
@@ -745,6 +762,8 @@ public final class ModelAttributetConstants
 	public static final String META_VARIABLE_FIVE = "{5}";
 	public static final String META_VARIABLE_SIX = "{6}";
 
+	//TPR-174
+	public static final String WELCOME_BACK_MESSAGE = "welcome_message";
 
 
 	public static final String CATEGORY_PAGE_META_DESCRIPTION = "Buy {0} Online at best price in India. Shop from wide range of {1} online from popular brands and get 100% Genuine Products!";

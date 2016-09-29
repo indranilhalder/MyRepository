@@ -17,17 +17,17 @@
 <%@ taglib prefix="multi-checkout" tagdir="/WEB-INF/tags/addons/marketplacecheckoutaddon/responsive/checkout/multi" %>
 <%@ attribute name="cartData" required="false" type="de.hybris.platform.commercefacades.order.data.CartData" %>
 <%@ attribute name="orderData" required="false" type="de.hybris.platform.commercefacades.order.data.OrderData" %>	<!-- TPR-629 -->
-
-
 <!-- TPR-629 orderData added to tag parameters -->
-<div class="right-block billing">
+
+<div class="right-block billing  checkout-list-right">
 	<div class="checkout-order-summary">
+	<h3>Summary</h3>
 		<%-- <div class="headline"><spring:theme code="checkout.multi.order.summary" text="Order Summary" /></div> --%>
 		<multi-checkout:orderTotals cartData="${cartData}" showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" isCart="${isCart}" orderData="${orderData}"/>
 		<c:if test="${isCart eq true}">
 		<multi-checkout:coupons cartData="${cartData}" isCart="${isCart}"/>
 		</c:if>
-		<div class="bottom order-details block">
+		<div class="bottom order-details block delivery-info">
 			<!-- <ul class="checkout-order-summary-list"> -->
 				<multi-checkout:deliveryCartItems cartData="${cartData}" showDeliveryAddress="${showDeliveryAddress}" isCart="${isCart}" orderData="${orderData}"/>
 				

@@ -55,12 +55,12 @@ function constructDepartmentHierarchy(inputArray) {
 	//TISPT-304 starts
 	
 	$( ".serpProduct" ).each(function( index ) {
-		  var product=$(this).closest('span').find('#productCode').val();
+		var product=$(this).closest('span').find('#productCode').val();
 		 // console.log("prod"+product);
 		  var categoryTypeValue=$(this).closest('span').find('#categoryType').val()
 		 //  console.log("categoryTypeValue"+categoryTypeValue);
 		  var productUrl=$(this).closest('span').find('#productUrl').val();
-		 // console.log("productUrl"+productUrl);
+		 //console.log("productUrl"+productUrl);
 		  var productPrice=$(this).closest('span').find('#productPrice').val();
 		//  console.log("productPrice"+productPrice);
 		  var list=$(this).closest('span').find('#list').val();
@@ -71,7 +71,7 @@ function constructDepartmentHierarchy(inputArray) {
 		 // console.log("sizeStockLevel"+sizeStockLevel);
 		  var productPromotion=$(this).closest('span').find('#productPromotion').val();
 		 // console.log("productPromotion"+productPromotion);
-		 
+		  populateFacet();
 		  if(typeof(serpSizeList)!= "undefined"){
 			modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,sizeStockLevel,productPromotion);
 		 } 
@@ -144,10 +144,8 @@ function constructDepartmentHierarchy(inputArray) {
 	}
 
 	//change serp product details based on filters
-	function modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,stockLevel,productPromotion){
+	function modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,stockLevel,productPromotion,wishListUrl){
 		if(mrpPriceValue!="" && productPrice!=""){
-	/*	console.log("in search js...for product"+product+"mrpPriceJSon"+mrpPriceValue+"price json"+productPrice);	
-		console.log("original prices for "+product+$("#price_"+product).text()+$("#priceEqual_"+product).text());*/
 		}
 
 		if(categoryTypeValue=='Apparel'||categoryTypeValue=='Footwear'){
@@ -522,11 +520,7 @@ function constructDepartmentHierarchy(inputArray) {
 		  event.preventDefault();
 	});
 	
-	 $(".facet-name.js-facet-name h4").each(function(){
-		 
-		 /*if($("#stockStatusId").val()!= "true"){
-			 $(".Availability").hide();
-		 }*/
+	 $(".facet-name.js-facet-name h3").each(function(){
 		 var facetStockSize=$("#facetStockSize").val();
 		 if($("#stockStatusId").val()!= "true" && facetStockSize==1){
 			 $(".Availability").hide();
@@ -549,3 +543,104 @@ function constructDepartmentHierarchy(inputArray) {
 	      }
 
 	});*/
+
+	 
+	 $( document ).ready(function() {
+		//Add to Wishlist PLP TPR-844 CR
+		 $(".wishlist a").mouseover();
+		var productCodePost = $("#productCode").val();
+		getLastModifiedWishlistForPLP(productCodePost);
+		//Ended here//
+		}); 
+
+		/*Wishlist In PLP changes*/
+		function getLastModifiedWishlistForPLP(productCodePost) {
+			var requiredUrl = ACC.config.encodedContextPath + "/search/"
+					+ "getLastModifiedWishlistByPcode";	
+			var dataString = 'pcode=' + productCodePost;	
+			$.ajax({		
+				contentType : "application/json; charset=utf-8",
+				url : requiredUrl,
+				data : dataString,
+				dataType : "json",
+				success : function(data) {
+				if (data == true) {
+					$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').addClass("added");
+					$("#add_to_wishlist").attr("disabled",true);
+					$('.add_to_cart_form .out_of_stock #add_to_wishlist').addClass("wishDisabled");
+				}
+				
+				},
+				error : function(xhr, status, error) {		
+					//alert("error"+error);
+				}
+			});
+		}
+
+$(document).on("click",".plp-wishlist",function(e){
+	
+	addToWishlistForPLP($(this).data("product"),this);
+	return false;
+})
+		function addToWishlistForPLP(productURL,el) {
+			var loggedIn=$("#loggedIn").val();
+			var productCode=urlToProductCode(productURL);
+			var wishName = "";
+			var requiredUrl = ACC.config.encodedContextPath + "/search/"
+					+ "addToWishListInPLP";	
+		    var sizeSelected=true;
+		    if( $("#variant,#sizevariant option:selected").val()=="#"){
+		    	sizeSelected=false;
+		    }
+			var dataString = 'wish=' + wishName + '&product=' + productCode
+					+ '&sizeSelected=' + sizeSelected;
+			
+			if(loggedIn == 'false') {
+				$(".wishAddLoginPlp").addClass("active");
+				setTimeout(function(){
+					$(".wishAddLoginPlp").removeClass("active")
+				},3000)
+				return false;
+			}	
+			else {	
+				$.ajax({			
+					contentType : "application/json; charset=utf-8",
+					url : requiredUrl,
+					data : dataString,
+					dataType : "json",			
+					success : function(data){
+						if (data == true) {					
+							$(".wishAddSucessPlp").addClass("active");
+							setTimeout(function(){
+								$(".wishAddSucessPlp").removeClass("active")
+							},3000)
+							$(el).addClass("added");
+						}
+						else{
+							$(".wishAlreadyAddedPlp").addClass("active");
+							setTimeout(function(){
+								$(".wishAlreadyAddedPlp").removeClass("active")
+							},3000)
+						}
+					},
+					error : function(xhr, status, error){
+						alert(error);
+					}
+				});
+				
+				setTimeout(function() {
+					$('a.wishlist#wishlist').popover('hide');
+					$('input.wishlist#add_to_wishlist').popover('hide');
+
+					}, 0);
+			}
+			return false;
+		}
+		
+		function urlToProductCode(productURL) {
+			var n = productURL.lastIndexOf("-");
+			var productCode=productURL.substring(n+1, productURL.length);
+		    return productCode.toUpperCase();
+			
+		}
+		

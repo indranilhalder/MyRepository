@@ -11,8 +11,8 @@
 <div class="tab-details">
 	<%-- <ycommerce:testId code="productDetails_content_label"> --%> 
 	<ycommerce:testId code="productStyleNotes_content_label">
-		<ul style="list-style:none">
-  			<li>${product.articleDescription}</li>
+		<ul style="list-style:none; padding-left:0;">
+  			<li class="stylenote">${product.articleDescription}</li>
   		</ul>
 	</ycommerce:testId>
 </div>

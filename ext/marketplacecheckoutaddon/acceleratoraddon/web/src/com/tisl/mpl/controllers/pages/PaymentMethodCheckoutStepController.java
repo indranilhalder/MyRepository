@@ -542,6 +542,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		storeCmsPageInModel(model, contentPage);
 		setUpMetaDataForContentPage(model, contentPage);
 		setCheckoutStepLinksForModel(model, getCheckoutStep());
+		model.addAttribute("paymentPage", "paymentPage");
 	}
 
 
@@ -2043,6 +2044,58 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 
 
+
+	/**
+	 * TPR-627, TPR-622 Separate method the check COD Eligibility to avoid redundant code
+	 *
+	 * @param richAttributeModel
+	 * @param cart
+	 * @param model
+	 * @return boolean
+	 */
+	private boolean paymentModecheckForCOD(final List<RichAttributeModel> richAttributeModel,
+			final AbstractOrderModel abstractOrderModel, final Model model)
+	{
+		boolean breakFlag = true;
+		//Start TISPT-204 Point No 1
+		if (richAttributeModel.get(0).getPaymentModes() != null)
+		{
+			final PaymentModesEnum paymentMode = richAttributeModel.get(0).getPaymentModes();
+			if (null != paymentMode)
+			{
+				if (PaymentModesEnum.COD.equals(paymentMode) || PaymentModesEnum.BOTH.equals(paymentMode))
+				{
+					if (null != abstractOrderModel.getIsCODEligible() && abstractOrderModel.getIsCODEligible().equals(Boolean.FALSE))
+					{
+						//Adding to model true if the pincode is serviceable
+						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE,
+								CodCheckMessage.NOT_PINCODE_SERVICEABLE.toString());
+						breakFlag = false;
+					}
+				}
+				else
+				{
+					//Adding to model true if the flag value is true
+					model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
+					breakFlag = false;
+				}
+			}
+			//End TISPT-204 Point No 1
+			else
+			{
+				//Adding to model true if the flag value is true
+				model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
+				breakFlag = false;
+			}
+		}
+		else
+		{
+			//Adding to model true if the flag value is true
+			model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
+			breakFlag = false;
+		}
+		return breakFlag;
+	}
 
 	/**
 	 * This method is used to set up the details for Card Payment
@@ -3730,60 +3783,39 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							if (DeliveryFulfillModesEnum.TSHIP.toString().equalsIgnoreCase(fulfillmentType))
 							{
 								LOG.debug("Entry is TSHIP");
-								final PaymentModesEnum paymentMode = richAttributeModel.get(0).getPaymentModes();
-								//Start TISPT-204 Point No 1
-								//if (richAttributeModel.get(0).getPaymentModes() != null)	//Unnecessary code commented TPR-629
-								//{
-
-								if (null != paymentMode)
+								//TPR-627, TPR-622 Separate method the check COD Eligibility to avoid redundant code
+								final boolean returnFlag = paymentModecheckForCOD(richAttributeModel, abstractOrder, model);
+								if (!returnFlag)
 								{
-									if (PaymentModesEnum.COD.equals(paymentMode) || PaymentModesEnum.BOTH.equals(paymentMode))
-									{
-										LOG.debug("Entry is COD or Both");
-										if (null != abstractOrder.getIsCODEligible()
-												&& abstractOrder.getIsCODEligible().equals(Boolean.FALSE))
-										{
-											//Adding to model true if the pincode is serviceable
-											model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE,
-													CodCheckMessage.NOT_PINCODE_SERVICEABLE.toString());
-											break;
-										}
-									}
-									else
-									{
-										LOG.debug("Entry is not eligible for paymentMode");
-										//Adding to model true if the flag value is true
-										model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE,
-												CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
-										break;
-									}
-								}
-								//End TISPT-204 Point No 1
-								else
-								{
-									LOG.debug("No paymentMode available for entry");
-									//Adding to model true if the flag value is true
-									model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE,
-											CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
 									break;
 								}
-
-								//Unnecessary code commented TPR-629
-								//								}
-								//								else
-								//								{
-								//									//Adding to model true if the flag value is true
-								//									model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE,
-								//											CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
-								//									break;
-								//								}
 							}
 							else
 							{
 								LOG.debug("At least one entry is SSHIP");
-								//error message for Fulfillment will go here
-								model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.NOT_TSHIP.toString());
-								break;
+								//TPR-627, TPR-622
+								//Changes to TRUE & FALSE
+								final String isSshipCodEligble = (richAttributeModel.get(0).getIsSshipCodEligible() != null ? richAttributeModel
+										.get(0).getIsSshipCodEligible().getCode()
+										: MarketplacecheckoutaddonConstants.FALSE);
+								// isSshipCodEligble to enable disable COD Eligible for SSHIP Products
+								//Changes to TRUE & FALSE
+								if (StringUtils.isNotEmpty(isSshipCodEligble)
+										&& isSshipCodEligble.equalsIgnoreCase(MarketplacecheckoutaddonConstants.TRUE))
+								{
+									//TPR-627,TPR-622 Separate method the check COD Eligibility to avoid redundant code
+									final boolean returnFlag = paymentModecheckForCOD(richAttributeModel, abstractOrder, model);
+									if (!returnFlag)
+									{
+										break;
+									}
+								}
+								else
+								{
+									//error message for Fulfillment will go here
+									model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.NOT_TSHIP.toString());
+									break;
+								}
 							}
 						}
 					}
@@ -4052,7 +4084,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */

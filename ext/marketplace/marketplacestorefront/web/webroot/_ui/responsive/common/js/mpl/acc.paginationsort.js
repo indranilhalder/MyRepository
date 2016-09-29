@@ -2,7 +2,7 @@ ACC.paginationsort = {
 
 	downUpKeysPressed: false,
 	_autoload: [
-	    		"bindAll"
+	    		/*"bindAll"*/ /*removed for TPR-198*/
 	    	],
 	    	
 	bindAll: function ()

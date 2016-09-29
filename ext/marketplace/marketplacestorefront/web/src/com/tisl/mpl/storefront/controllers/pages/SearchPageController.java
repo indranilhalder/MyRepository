@@ -46,9 +46,14 @@ import de.hybris.platform.commerceservices.search.facetdata.SpellingSuggestionDa
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.product.impl.DefaultProductService;
+import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.session.Session;
 import de.hybris.platform.servicelayer.session.SessionService;
+import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
+import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -86,10 +91,14 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.helpmeshop.HelpMeShopFacade;
+import com.tisl.mpl.facade.wishlist.WishlistFacade;
+import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.model.cms.components.NeedHelpComponentModel;
 import com.tisl.mpl.solrfacet.search.impl.DefaultMplProductSearchFacade;
 import com.tisl.mpl.storefront.breadcrumb.impl.MplSearchBreadcrumbBuilder;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
+import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
+import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.storefront.web.data.MplAutocompleteResultData;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -134,11 +143,21 @@ public class SearchPageController extends AbstractSearchPageController
 	private static final String NEW_PRODUCTS_URL_PATTERN_PAGINATION = "/**/viewOnlineProducts";
 	private static final String NEW_PRODUCTS_NEW_URL_PATTERN_PAGINATION = "/**/viewOnlineProducts/page-{pageNo}";
 
+	// TPR-198
+	private static final String REFINE_SEARCH_URL_PATTERN = "/page-{page}";
+	private static final String REFINE_FACET_SEARCH_URL_PATTERN_1 = "/page-{page}/**/getFacetData";
+	private static final String REFINE_FACET_SEARCH_URL_PATTERN_2 = "/getFacetData";
+	private static final String COMPILE_PATTERN = "page-[0-9]+";
 	@Resource(name = "mplCartFacade")
 	private MplCartFacade mplCartFacade;
 
 	@Autowired
 	private CatalogVersionService catalogVersionService;
+	@Autowired
+	private UserService userService;
+	@Autowired
+	private WishlistFacade wishlistFacade;
+
 	@Resource(name = "productSearchFacade")
 	private ProductSearchFacade<ProductData> productSearchFacade;
 
@@ -156,6 +175,9 @@ public class SearchPageController extends AbstractSearchPageController
 
 	@Resource(name = "categoryService")
 	private CategoryService categoryService;
+
+	@Resource(name = "productDetailsHelper")
+	private ProductDetailsHelper productDetailsHelper;
 
 
 
@@ -389,16 +411,16 @@ public class SearchPageController extends AbstractSearchPageController
 
 
 
-			final String metaDescription = MetaSanitizerUtil.sanitizeDescription(getMessageSource().getMessage(
-					ModelAttributetConstants.SEARCH_META_DESC, null, ModelAttributetConstants.SEARCH_META_DESC,
+			final String metaDescription = MetaSanitizerUtil
+					.sanitizeDescription(getMessageSource().getMessage(ModelAttributetConstants.SEARCH_META_DESC, null,
+							ModelAttributetConstants.SEARCH_META_DESC,
 
 
-					getI18nService().getCurrentLocale())
-					+ " "
-					+ searchText
-					+ " "
-					+ getMessageSource().getMessage(ModelAttributetConstants.SEARCH_META_DESC_ON, null,
-							ModelAttributetConstants.SEARCH_META_DESC_ON, getI18nService().getCurrentLocale()) + " " + getSiteName());
+							getI18nService().getCurrentLocale()) + " " + searchText
+							+ " "
+							+ getMessageSource().getMessage(ModelAttributetConstants.SEARCH_META_DESC_ON, null,
+									ModelAttributetConstants.SEARCH_META_DESC_ON, getI18nService().getCurrentLocale())
+							+ " " + getSiteName());
 
 			final String metaKeywords = MetaSanitizerUtil.sanitizeKeywords(searchText);
 			setUpMetaData(model, metaKeywords, metaDescription);
@@ -432,8 +454,8 @@ public class SearchPageController extends AbstractSearchPageController
 		{
 
 
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exp,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exp, MarketplacecommerceservicesConstants.E0000));
 			return frontEndErrorHelper.callNonBusinessError(model, exp.getMessage());
 			//frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
@@ -445,8 +467,8 @@ public class SearchPageController extends AbstractSearchPageController
 	 * @return
 	 */
 	private ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> updatePageData(
-			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData,
-			final String whichSearch, final String searchQuery)
+			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData, final String whichSearch,
+			final String searchQuery)
 	{
 		// YTODO Auto-generated method stub
 		if (null != whichSearch)
@@ -470,6 +492,36 @@ public class SearchPageController extends AbstractSearchPageController
 		return searchPageData;
 	}
 
+
+	/**
+	 * @desc Method for SERP for AJAX call : TPR-198
+	 * @param searchQuery
+	 * @param page
+	 * @param showMode
+	 * @param sortCode
+	 * @param searchText
+	 * @param request
+	 * @param model
+	 * @return String
+	 * @throws CMSItemNotFoundException
+	 */
+	@RequestMapping(method = RequestMethod.GET, params = "q", value =
+	{ REFINE_FACET_SEARCH_URL_PATTERN_1, REFINE_FACET_SEARCH_URL_PATTERN_2 })
+	public String refineFacetSearch(@RequestParam("q") final String searchQuery,
+			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = "0") final int page,
+			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
+			@RequestParam(value = "sort", required = false) final String sortCode,
+			@RequestParam(value = "text", required = false) final String searchText,
+			@RequestParam(value = "pageSize", required = false) final Integer pageSize, final HttpServletRequest request,
+			final Model model) throws CMSItemNotFoundException, JSONException, ParseException
+	{
+
+		populateRefineSearchResult(searchQuery, page, showMode, sortCode, searchText, pageSize, request, model);
+		return ControllerConstants.Views.Pages.Search.FacetResultPanel;
+	}
+
+
+
 	/**
 	 *
 	 * @param searchQuery
@@ -483,9 +535,9 @@ public class SearchPageController extends AbstractSearchPageController
 	 * @throws CMSItemNotFoundException
 	 */
 	@RequestMapping(method = RequestMethod.GET, params = "q", value =
-	{ "/page-{page}", "" })
+	{ REFINE_SEARCH_URL_PATTERN, BLANKSTRING })
 	public String refineSearch(@RequestParam("q") final String searchQuery,
-			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = "0") int page,
+			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = "0") final int page,
 			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode,
 			@RequestParam(value = "text", required = false) final String searchText,
@@ -493,11 +545,29 @@ public class SearchPageController extends AbstractSearchPageController
 			final Model model) throws CMSItemNotFoundException, JSONException, ParseException
 	{
 
+		populateRefineSearchResult(searchQuery, page, showMode, sortCode, searchText, pageSize, request, model);
+		return getViewForPage(model);
+	}
 
+	/**
+	 * @desc private method, responsible for populating the entire search page data for view
+	 * @param searchQuery
+	 * @param page
+	 * @param showMode
+	 * @param sortCode
+	 * @param searchText
+	 * @param pageSize
+	 * @param request
+	 * @param model
+	 */
+	private void populateRefineSearchResult(final String searchQuery, int page, final ShowMode showMode, final String sortCode,
+			final String searchText, final Integer pageSize, final HttpServletRequest request, final Model model)
+			throws CMSItemNotFoundException
+	{
 		final String uri = request.getRequestURI();
 		if (uri.contains("page"))
 		{
-			final Pattern p = Pattern.compile("page-[0-9]+");
+			final Pattern p = Pattern.compile(COMPILE_PATTERN);
 			final Matcher m = p.matcher(uri);
 			if (m.find())
 			{
@@ -511,8 +581,8 @@ public class SearchPageController extends AbstractSearchPageController
 		}
 
 		final Iterable<String> splitStr = Splitter.on(':').split(searchQuery);
-		model.addAttribute("sizeCount", Integer.valueOf(Iterables.frequency(splitStr, "size")));
-		model.addAttribute("searchQueryValue", searchQuery);
+		model.addAttribute(ModelAttributetConstants.SIZE_COUNT, Integer.valueOf(Iterables.frequency(splitStr, "size")));
+		model.addAttribute(ModelAttributetConstants.SEARCH_QUERY_VALUE, searchQuery);
 		int count = getSearchPageSize();
 		final UserPreferencesData preferencesData = updateUserPreferences(pageSize);
 		if (preferencesData != null && preferencesData.getPageSize() != null)
@@ -540,19 +610,19 @@ public class SearchPageController extends AbstractSearchPageController
 			}
 		}
 
-		model.addAttribute("searchCode", searchCode);
+		model.addAttribute(ModelAttributetConstants.SEARCH_CODE, searchCode);
 		model.addAttribute(ModelAttributetConstants.SEARCH_CATEGORY, searchCategory);
-		model.addAttribute("isConceirge", "false");
+		model.addAttribute(ModelAttributetConstants.IS_CONCEIRGE, "false");
 		if (searchPageData != null)
 		{
-			model.addAttribute("departmentHierarchyData", searchPageData.getDepartmentHierarchyData());
-			model.addAttribute("departments", searchPageData.getDepartments());
+			model.addAttribute(ModelAttributetConstants.DEPARTMENT_HIERARCHY_DATA, searchPageData.getDepartmentHierarchyData());
+			model.addAttribute(ModelAttributetConstants.DEPARTMENTS, searchPageData.getDepartments());
 			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> competingProductsSearchPageData = mplCompetingProductsUtility
 					.getCompetingProducts(searchPageData);
 
 			if (competingProductsSearchPageData != null)
 			{
-				model.addAttribute("competingProductsSearchPageData", competingProductsSearchPageData);
+				model.addAttribute(ModelAttributetConstants.COMPETING_PRODUCTS_SEARCH_PAGE_DATA, competingProductsSearchPageData);
 			}
 
 		}
@@ -575,7 +645,7 @@ public class SearchPageController extends AbstractSearchPageController
 		model.addAttribute(WebConstants.BREADCRUMBS_KEY, breadcrumbs);
 		populateTealiumData(breadcrumbs, model);
 
-		model.addAttribute("pageType", PageType.PRODUCTSEARCH.name());
+		model.addAttribute(ModelAttributetConstants.PAGE_TYPE, PageType.PRODUCTSEARCH.name());
 
 		//Changes Done for TPR-432
 
@@ -585,19 +655,17 @@ public class SearchPageController extends AbstractSearchPageController
 		}
 
 
-		final String metaDescription = MetaSanitizerUtil.sanitizeDescription(getMessageSource().getMessage(
-				ModelAttributetConstants.SEARCH_META_DESC, null, ModelAttributetConstants.SEARCH_META_DESC,
-				getI18nService().getCurrentLocale())
-				+ " "
-				+ searchText
-				+ " "
-				+ getMessageSource().getMessage(ModelAttributetConstants.SEARCH_META_DESC_ON, null,
-						ModelAttributetConstants.SEARCH_META_DESC_ON, getI18nService().getCurrentLocale()) + " " + getSiteName());
+		final String metaDescription = MetaSanitizerUtil
+				.sanitizeDescription(
+						getMessageSource().getMessage(ModelAttributetConstants.SEARCH_META_DESC, null,
+								ModelAttributetConstants.SEARCH_META_DESC, getI18nService().getCurrentLocale()) + " " + searchText
+								+ " "
+								+ getMessageSource().getMessage(ModelAttributetConstants.SEARCH_META_DESC_ON, null,
+										ModelAttributetConstants.SEARCH_META_DESC_ON, getI18nService().getCurrentLocale())
+								+ " " + getSiteName());
 
 		final String metaKeywords = MetaSanitizerUtil.sanitizeKeywords(searchText);
 		setUpMetaData(model, metaKeywords, metaDescription);
-
-		return getViewForPage(model);
 	}
 
 	/**
@@ -626,95 +694,22 @@ public class SearchPageController extends AbstractSearchPageController
 		}
 
 		model.addAttribute("page_name", "Search Results Page:" + breadcrumbName);
+		//TPR-430
+		/*if (null != breadcrumbs.get(0).getName())
+		{
+			model.addAttribute("product_category", breadcrumbs.get(0).getName().replaceAll(" ", "_").toLowerCase());
+		}
+		if (null != breadcrumbs.get(1).getName())
+		{
+			model.addAttribute("page_subcategory_name", breadcrumbs.get(1).getName().replaceAll(" ", "_").toLowerCase());
+		}
+		if (null != breadcrumbs.get(2).getName())
+		{
+			model.addAttribute("page_subcategory_name_L3", breadcrumbs.get(2).getName().replaceAll(" ", "_").toLowerCase());
+		}*/
 
 
 	}
-
-	//	@RequestMapping(method = RequestMethod.GET, params = "q")
-	//	public String refineSearch(@RequestParam("q") final String searchQuery,
-	//			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = "0") final int page,
-	//			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
-	//			@RequestParam(value = "sort", required = false) final String sortCode,
-	//			@RequestParam(value = "text", required = false) final String searchText,
-	//			@RequestParam(value = "pageSize", required = false) final Integer pageSize, final HttpServletRequest request,
-	//			final Model model) throws CMSItemNotFoundException
-	//	{
-	//
-	//		/* Storing the user preferred search results count - START */
-	//		final UserPreferencesData preferencesData = updateUserPreferences(pageSize);
-	//
-	//		int count = getSearchPageSize();
-	//		if (preferencesData != null && preferencesData.getPageSize() != null)
-	//		{
-	//			count = preferencesData.getPageSize().intValue();
-	//		}
-	//
-	//		final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
-	//				searchQuery, page, showMode, sortCode, count);
-	//		/* Storing the user preferred search results count - END */
-	//
-	//		final String searchCategory = request.getParameter(ModelAttributetConstants.SEARCH_CATEGORY);
-	//		String searchCode = searchCategory;
-	//		if (searchCategory != null && searchCategory.startsWith(DROPDOWN_CATEGORY))
-	//		{
-	//			if (searchCategory.substring(0, 5).equals(searchCategory))
-	//			{
-	//				searchCode = searchCategory;
-	//			}
-	//			else
-	//			{
-	//				searchCode = searchCategory.substring(0, 5);
-	//			}
-	//		}
-	//
-	//		model.addAttribute("searchCode", searchCode);
-	//		model.addAttribute(ModelAttributetConstants.SEARCH_CATEGORY, searchCategory);
-	//		model.addAttribute("isConceirge", "false");
-	//		if (searchPageData != null)
-	//		{
-	//			model.addAttribute("departmentHierarchyData", searchPageData.getDepartmentHierarchyData());
-	//			model.addAttribute("departments", searchPageData.getDepartments());
-	//			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> competingProductsSearchPageData = mplCompetingProductsUtility
-	//					.getCompetingProducts(searchPageData);
-	//
-	//			if (competingProductsSearchPageData != null)
-	//			{
-	//				model.addAttribute("competingProductsSearchPageData", competingProductsSearchPageData);
-	//			}
-	//
-	//		}
-	//
-	//		populateModel(model, searchPageData, showMode);
-	//		model.addAttribute(MarketplaceCoreConstants.USER_LOCATION, customerLocationService.getUserLocation());
-	//
-	//		if (searchPageData.getPagination().getTotalNumberOfResults() == 0)
-	//		{
-	//			updatePageTitle(searchPageData.getFreeTextSearch(), model);
-	//			storeCmsPageInModel(model, getContentPageForLabelOrId(NO_RESULTS_CMS_PAGE_ID));
-	//		}
-	//		else
-	//		{
-	//			storeContinueUrl(request);
-	//			updatePageTitle(searchPageData.getFreeTextSearch(), model);
-	//			storeCmsPageInModel(model, getContentPageForLabelOrId(SEARCH_CMS_PAGE_ID));
-	//		}
-	//		model.addAttribute(WebConstants.BREADCRUMBS_KEY, searchBreadcrumbBuilder.getBreadcrumbs(null, searchPageData));
-	//		model.addAttribute("pageType", PageType.PRODUCTSEARCH.name());
-	//
-	//		final String metaDescription = MetaSanitizerUtil.sanitizeDescription(getMessageSource().getMessage(
-	//				ModelAttributetConstants.SEARCH_META_DESC, null, ModelAttributetConstants.SEARCH_META_DESC,
-	//				getI18nService().getCurrentLocale())
-	//				+ " "
-	//				+ searchText
-	//				+ " "
-	//				+ getMessageSource().getMessage(ModelAttributetConstants.SEARCH_META_DESC_ON, null,
-	//						ModelAttributetConstants.SEARCH_META_DESC_ON, getI18nService().getCurrentLocale()) + " " + getSiteName());
-	//
-	//		final String metaKeywords = MetaSanitizerUtil.sanitizeKeywords(searchText);
-	//		setUpMetaData(model, metaKeywords, metaDescription);
-	//
-	//		return getViewForPage(model);
-	//	}
 
 	/**
 	 *
@@ -740,9 +735,8 @@ public class SearchPageController extends AbstractSearchPageController
 		{
 			sellerId = searchQuery.substring(searchQuery.indexOf("sellerId:") + 9, searchQuery.indexOf("sellerId:") + 15);
 		}
-		return updatePageData(
-				(ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade.textSearch(
-						searchState, pageableData), sellerId, searchQuery);
+		return updatePageData((ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
+				.textSearch(searchState, pageableData), sellerId, searchQuery);
 	}
 
 	/**
@@ -784,13 +778,54 @@ public class SearchPageController extends AbstractSearchPageController
 	@RequestMapping(value =
 	{ NEW_PRODUCTS_URL_PATTERN_PAGINATION, NEW_PRODUCTS_NEW_URL_PATTERN_PAGINATION }, method = RequestMethod.GET)
 	public String displayNewAndExclusiveProducts(@RequestParam(value = "q", required = false) final String searchQuery,
-			@RequestParam(value = "page", defaultValue = "0", required = false) int page,
+			@RequestParam(value = "page", defaultValue = "0", required = false) final int page,
 			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
-			@RequestParam(value = "sort", required = false) String sortCode,
+			@RequestParam(value = "sort", required = false) final String sortCode,
 			@RequestParam(value = "pageSize", required = false) final Integer pageSize, final HttpServletRequest request,
 			final Model model) throws CMSItemNotFoundException
 	{
+		populateNewAndExclusiveProducts(searchQuery, page, showMode, sortCode, pageSize, request, model);
+		return getViewForPage(model);
+	}
 
+	/**
+	 * DISPLAY ONLINE and NEW TRENDING PRODUCTS UPLOADED BY BUSINESS AS PROMOTED PRODUCTS BY AJAX CALL
+	 *
+	 * @param searchQuery
+	 * @param page
+	 * @param showMode
+	 * @param sortCode
+	 * @throws CMSItemNotFoundException
+	 */
+
+
+	@RequestMapping(value =
+	{ NEW_PRODUCTS_URL_PATTERN_PAGINATION + "/getFacetData",
+			NEW_PRODUCTS_NEW_URL_PATTERN_PAGINATION + "/getFacetData" }, method = RequestMethod.GET)
+	public String displayNewAndExclusiveFacetData(@RequestParam(value = "q", required = false) final String searchQuery,
+			@RequestParam(value = "page", defaultValue = "0", required = false) final int page,
+			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
+			@RequestParam(value = "sort", required = false) final String sortCode,
+			@RequestParam(value = "pageSize", required = false) final Integer pageSize, final HttpServletRequest request,
+			final Model model) throws CMSItemNotFoundException
+	{
+		populateNewAndExclusiveProducts(searchQuery, page, showMode, sortCode, pageSize, request, model);
+		return ControllerConstants.Views.Fragments.Product.SearchResultsPanel;
+	}
+
+	/**
+	 * @param searchQuery
+	 * @param page
+	 * @param showMode
+	 * @param sortCode
+	 * @param pageSize
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	private String populateNewAndExclusiveProducts(final String searchQuery, int page, final ShowMode showMode, String sortCode,
+			final Integer pageSize, final HttpServletRequest request, final Model model) throws CMSItemNotFoundException
+	{
 		try
 		{
 			//tispro-511
@@ -876,17 +911,16 @@ public class SearchPageController extends AbstractSearchPageController
 
 		catch (final Exception exp)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exp,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exp, MarketplacecommerceservicesConstants.E0000));
 
 
 
 			return frontEndErrorHelper.callNonBusinessError(model, exp.getMessage());
 
 		}
+		return null;
 
-
-		return getViewForPage(model);
 	}
 
 	/**
@@ -960,8 +994,7 @@ public class SearchPageController extends AbstractSearchPageController
 	@ResponseBody
 	@RequestMapping(value = "/autocomplete/" + COMPONENT_UID_PATH_VARIABLE_PATTERN, method = RequestMethod.GET)
 	public AutocompleteResultData getAutocompleteSuggestions(@PathVariable final String componentUid,
-			@RequestParam("term") final String term, @RequestParam("category") final String category)
-			throws CMSItemNotFoundException
+			@RequestParam("term") final String term, @RequestParam("category") final String category) throws CMSItemNotFoundException
 	{
 		final MplAutocompleteResultData resultData = new MplAutocompleteResultData();
 
@@ -1064,8 +1097,8 @@ public class SearchPageController extends AbstractSearchPageController
 					cleanSearchResults(suggestedProducts);
 					//resultData.setProductNames(subList(suggestedProducts, component.getMaxSuggestions()));
 					resultData.setProducts(suggestedProducts);
-					resultData.setSearchTerm(resultData.getSuggestions().size() > 0 ? resultData.getSuggestions().get(0).getTerm()
-							: term);
+					resultData
+							.setSearchTerm(resultData.getSuggestions().size() > 0 ? resultData.getSuggestions().get(0).getTerm() : term);
 				}
 
 
@@ -1147,10 +1180,8 @@ public class SearchPageController extends AbstractSearchPageController
 			getRequestContextData(request).setSearch(searchPageData);
 			if (searchPageData != null)
 			{
-				model.addAttribute(
-						WebConstants.BREADCRUMBS_KEY,
-						searchBreadcrumbBuilder.getBreadcrumbs(null, typeOfProduct,
-								CollectionUtils.isEmpty(searchPageData.getBreadcrumbs())));
+				model.addAttribute(WebConstants.BREADCRUMBS_KEY, searchBreadcrumbBuilder.getBreadcrumbs(null, typeOfProduct,
+						CollectionUtils.isEmpty(searchPageData.getBreadcrumbs())));
 			}
 		}
 		else
@@ -1161,11 +1192,12 @@ public class SearchPageController extends AbstractSearchPageController
 		model.addAttribute("metaRobots", "index,follow");
 
 
-		final String metaDescription = MetaSanitizerUtil.sanitizeDescription(getMessageSource().getMessage(
-				ModelAttributetConstants.SEARCH_META_DESC, null, getI18nService().getCurrentLocale())
-				+ " " + typeOfProduct + " " + getMessageSource().getMessage(ModelAttributetConstants.SEARCH_META_DESC_ON, null,
+		final String metaDescription = MetaSanitizerUtil.sanitizeDescription(
+				getMessageSource().getMessage(ModelAttributetConstants.SEARCH_META_DESC, null, getI18nService().getCurrentLocale())
+						+ " " + typeOfProduct + " " + getMessageSource().getMessage(ModelAttributetConstants.SEARCH_META_DESC_ON, null,
 
-				getI18nService().getCurrentLocale()) + " " + getSiteName());
+								getI18nService().getCurrentLocale())
+						+ " " + getSiteName());
 		final String metaKeywords = MetaSanitizerUtil.sanitizeKeywords(typeOfProduct);
 		setUpMetaData(model, metaKeywords, metaDescription);
 
@@ -1215,15 +1247,15 @@ public class SearchPageController extends AbstractSearchPageController
 			//	final String metaKeywords = MetaSanitizerUtil.sanitizeKeywords(searchPageData.getFreeTextSearch());
 
 
-			final String metaDescription = MetaSanitizerUtil.sanitizeDescription(getMessageSource().getMessage(
-					ModelAttributetConstants.SEARCH_META_DESC, null, ModelAttributetConstants.SEARCH_META_DESC,
+			final String metaDescription = MetaSanitizerUtil
+					.sanitizeDescription(getMessageSource().getMessage(ModelAttributetConstants.SEARCH_META_DESC, null,
+							ModelAttributetConstants.SEARCH_META_DESC,
 
-					getI18nService().getCurrentLocale())
-					+ " "
-					+ searchPageData.getFreeTextSearch()
-					+ " "
-					+ getMessageSource().getMessage(ModelAttributetConstants.SEARCH_META_DESC_ON, null,
-							ModelAttributetConstants.SEARCH_META_DESC_ON, getI18nService().getCurrentLocale()) + " " + getSiteName());
+							getI18nService().getCurrentLocale()) + " " + searchPageData.getFreeTextSearch()
+							+ " "
+							+ getMessageSource().getMessage(ModelAttributetConstants.SEARCH_META_DESC_ON, null,
+									ModelAttributetConstants.SEARCH_META_DESC_ON, getI18nService().getCurrentLocale())
+							+ " " + getSiteName());
 
 			final String metaKeywords = MetaSanitizerUtil.sanitizeKeywords(searchPageData.getFreeTextSearch());
 			setUpMetaData(model, metaKeywords, metaDescription);
@@ -1266,12 +1298,9 @@ public class SearchPageController extends AbstractSearchPageController
 	 */
 	protected void updatePageTitle(final String searchText, final Model model)
 	{
-		storeContentPageTitleInModel(
-				model,
-				getPageTitleResolver().resolveContentPageTitle(
-						getMessageSource().getMessage("search.meta.title", null, "search.meta.title",
-								getI18nService().getCurrentLocale())
-								+ " " + searchText));
+		storeContentPageTitleInModel(model, getPageTitleResolver().resolveContentPageTitle(
+				getMessageSource().getMessage("search.meta.title", null, "search.meta.title", getI18nService().getCurrentLocale())
+						+ " " + searchText));
 	}
 
 	/**
@@ -1466,5 +1495,115 @@ public class SearchPageController extends AbstractSearchPageController
 		competingProductsSearchState.setQuery(competingProductsSearchQueryData);
 
 		return competingProductsSearchState;
+	}
+
+	/**
+	 * This is the GET method which fetches the bank last modified wishlist in PLP
+	 *
+	 *
+	 * @return Wishlist2Model
+	 */
+	@RequestMapping(value = "/getLastModifiedWishlistByPcode", method = RequestMethod.GET)
+	public @ResponseBody boolean getLastModifiedWishlist(@RequestParam("pcode") final String pcode)
+	{
+		boolean existPcode = false;
+
+		try
+		{
+			existPcode = getLastModifiedWishlistByPcode(pcode);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+
+		return existPcode;
+
+	}
+
+
+	/**
+	 * @param pcode
+	 * @return
+	 */
+	public boolean getLastModifiedWishlistByPcode(final String pcode)
+	{
+		Wishlist2Model lastCreatedWishlist = null;
+		boolean existPcode = false;
+		try
+		{
+			final UserModel user = userService.getCurrentUser();
+			lastCreatedWishlist = wishlistFacade.getSingleWishlist(user);
+			if (null != lastCreatedWishlist)
+			{
+				for (final Wishlist2EntryModel entry : lastCreatedWishlist.getEntries())
+				{
+					if (null != (entry) && null != entry.getProduct() && (entry.getProduct()).equals(pcode))
+					{
+						existPcode = true;
+						break;
+					}
+				}
+			}
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return existPcode;
+	}
+
+
+
+
+	/**
+	 * @description method is to add products in wishlist in popup in plp
+	 * @param productCode
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @throws CMSItemNotFoundException
+	 */
+	@ResponseBody
+	@RequestMapping(value = RequestMappingUrlConstants.ADD_WISHLIST_IN_POPUP_PLP, method = RequestMethod.GET)
+	//@RequireHardLogIn
+	public boolean addWishListsForPLP(@RequestParam(ModelAttributetConstants.PRODUCT) final String productCode,
+			@RequestParam("wish") final String wishName, @RequestParam("sizeSelected") final String sizeSelected, final Model model,
+			final HttpServletRequest request, final HttpServletResponse response) throws CMSItemNotFoundException
+	{
+		model.addAttribute(ModelAttributetConstants.MY_ACCOUNT_FLAG, ModelAttributetConstants.N_CAPS_VAL);
+
+		boolean add = false;
+		try
+		{
+			//add = productDetailsHelper.addToWishListInPopup(productCode, ussid, wishName, Boolean.valueOf(sizeSelected));
+			add = productDetailsHelper.addSingleToWishListForPLP(productCode, Boolean.valueOf(sizeSelected));
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+
+		return add;
+
 	}
 }

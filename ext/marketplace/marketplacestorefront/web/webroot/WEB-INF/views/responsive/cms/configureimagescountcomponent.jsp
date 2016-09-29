@@ -18,13 +18,14 @@ var imagePageLimit = ${count};
 $(document).ready(function(){
 	var mainImageHeight = $(".main-image").find("img.picZoomer-pic").height();
 	var thumbnailImageHeight = (mainImageHeight / 5);
+	var buttonHeight = $(".productImageGallery #previousImage").outerHeight();
 	$(".imageList ul li img").css("height", thumbnailImageHeight);
 	$("#previousImage").css("opacity","0.5");
 	$("#nextImage").css("opacity","1");
 	var listHeight = $(".imageList li").height();
 	if($("#previousImage").length){
 		$(".imageList").css("height",(listHeight*imagePageLimit)+"px");
-		$(".productImageGallery").css("height",(listHeight*imagePageLimit+100)+"px");
+		$(".productImageGallery").css("max-height",(mainImageHeight - buttonHeight)+"px");
 	}
 	$(".imageListCarousel").show();
 });

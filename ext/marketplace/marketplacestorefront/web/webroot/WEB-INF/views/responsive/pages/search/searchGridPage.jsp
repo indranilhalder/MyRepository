@@ -4,11 +4,11 @@
 <%@ taglib prefix="storepickup"
 	tagdir="/WEB-INF/tags/responsive/storepickup"%>
 	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="nav" tagdir="/WEB-INF/tags/responsive/nav" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product" %>
 <%@ taglib prefix="pagination" tagdir="/WEB-INF/tags/responsive/nav/pagination" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="nav" tagdir="/WEB-INF/tags/responsive/nav" %>
 
 <c:set value="${(searchPageData.pagination.currentPage * searchPageData.pagination.pageSize) + 1}" var="currentPageStart"/>
 <c:set value="${(searchPageData.pagination.currentPage + 1) * searchPageData.pagination.pageSize}" var="currentPageEnd"/>
@@ -22,66 +22,8 @@
 <input type="hidden" id="page_name" value="${page_name}">
 <!-- End -->
 <template:page pageTitle="${pageTitle}">
-	<div class="listing wrapper">
-		<div class="search-result">
-			<h2>
-				<c:choose>
-					<c:when test="${not empty searchPageData.spellingSuggestion.suggestion && not empty searchPageData.results}">
-					<!-- Added for TPR-812 -->
-					<c:set var="resultCount" value="${fn:length(searchPageData.results)}" />					
-					<c:set var="resultStr" value="${resultCount > 1 ? 'results' : 'result'}" />
-					<!-- Added for TPR-812 -->
-						0 Result for '<span class="searchString"><spring:theme code="search.page.searchTextValue"
-							arguments="${spellingSearchterm}" /></span>', <spring:theme code="search.page.searchTextForDYMShow"/>&nbsp;
-						${resultCount}&nbsp;${resultStr} for
-						<span class="searchString">"<i><c:set value="${fn:split(searchPageData.freeTextSearch, ' ')}" var="searchTextAry" />
-						<c:set value="${fn:split(searchPageData.spellingSuggestion.suggestion, ' ')}" var="suggestionAry" />
-						<c:choose>
-							<c:when test="${fn:length(suggestionAry) > 1}">							  
-								<c:forEach begin="0" end="${fn:length(suggestionAry)}" var="current">
-									<c:choose>
-										<c:when test="${suggestionAry[current] ne searchTextAry[current]}">
-											<strike>${searchTextAry[current]}</strike>&nbsp; 
-										</c:when>
-										<c:otherwise>
-											<c:out value="${searchTextAry[current]}"/>&nbsp;
-										</c:otherwise>
-									</c:choose>
-								</c:forEach>
-							</c:when>
-							<c:otherwise>
-								<spring:theme code="search.page.searchTextValue"
-							arguments="${searchPageData.freeTextSearch}" />
-							</c:otherwise>
-						</c:choose>
-						
-							
-							
-							</i>&nbsp;"</span>
-					</c:when>
-					<c:otherwise>
-					 <spring:theme code="search.page.searchText"/>	
-					 <span>"<spring:theme code="search.page.searchResultsCount" arguments="${searchPageData.pagination.totalNumberOfResults}"/>"</span> 
-					  <spring:theme code="search.page.searchTextItem"/>
-					  <span class="searchString">					
-					 "<spring:theme code="search.page.searchTextValue" arguments="${searchPageData.freeTextSearch}"/>"</span>
-					</c:otherwise>
-				</c:choose>
-			</h2>
-		</div>
-	
-		<div class="left-block">
-		<%-- <cms:pageSlot position="ProductLeftRefinements" var="feature">
-			<cms:component component="${feature}" />
-		</cms:pageSlot> --%>
-		<product:productrefinementcomponent/>
-		</div>
-
-		<%-- <cms:pageSlot position="SearchResultsGridSlot" var="feature">
-			<cms:component component="${feature}" />
-		</cms:pageSlot> --%>
-		<product:searchresultsgridcomponent/>
-		
+	<div id="facetSearchAjaxData"> <!-- Div to be overridden by AJAX response : TPR-198 -->
+		<nav:searchFacetFilterData/>
 	</div>
 
 	<div class="feedBack-block">

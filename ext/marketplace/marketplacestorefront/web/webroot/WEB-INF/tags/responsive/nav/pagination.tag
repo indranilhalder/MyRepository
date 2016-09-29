@@ -58,6 +58,7 @@
 						   <c:url value="${breadcrumb.removeQuery.url}&searchCategory=${searchCategory}" var="removeQueryUrl"/>
 						   </c:otherwise>
 						   </c:choose>
+						   <input type="hidden" class="${breadcrumb.facetCode}">
 							<input type="hidden" class="applied-color" value="${breadcrumb.facetValueName}">
 							${breadcrumb.facetValueName}&nbsp;<a href="${removeQueryUrl}" ><span class="remove_filter">x</span></a>
 						</li>
@@ -78,14 +79,14 @@
 			<c:if test="${not empty searchPageData.sorts}">				
 				<c:if test="${ top}">
 					<!-- <div class="helper clearfix hidden-md hidden-lg"></div> -->
-					<div>
+					<div class="prolist-sort">
 					<div class="sort-refine-bar wrapped-form sort">
 					
 							<div class="form-group">
 								<form id="sortForm${top ? '1' : '2'}" name="sortForm${top ? '1' : '2'}" method="get" action="#">
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
-									<label class="sortBy">Sort by:</label>
-									<select class="black-arrow" id="sortOptions${top ? '1' : '2'}" name="sort">
+									<label class="sortBy">Sort by</label>
+									<select class="black-arrow" id="sortOptions${top ? '1' : '2'}" name="sort" onchange="sortByFilterResult(${top ? '1' : '2'})"> <!-- On change method added for TPR-198 -->
 										<option disabled><spring:theme code="${themeMsgKey}.sortTitle"/></option>
 										<c:forEach items="${searchPageData.sorts}" var="sort">
 											<c:if test="${sort.code ne 'promotedpriority-asc' }">
@@ -130,7 +131,7 @@
 								<!-- End Fix to TISTI-198 -->
 								<form id="sortForm${top ? '1' : '2'}" name="sortForm${top ? '1' : '2'}" method="get" action="#">
 									
-									<select id="sortOptions${top ? '1' : '2'}" name="sort" class="black-arrow-left">
+									<select id="sortOptions${top ? '1' : '2'}" name="sort" class="black-arrow-left" style="display:block" onchange="sortByFilterResult(${top ? '1' : '2'})"> <!-- On change method added for TPR-198 -->
 										<!-- Start Fix to TISTI-198 -->
 										<c:set var="top" value="true" />
 										<!-- End Fix to TISTI-198 -->
@@ -169,6 +170,7 @@
 									</c:if>
 								</form>
 							</div>
+							<span id="hidden-option-width" style="display: none;"></span>
 						</div>
 						<!-- SORT BY FOR MOBILE ENDS -->
 					<%-- 	<div class="col-xs-6 col-md-4 hidden-md hidden-lg">
@@ -181,10 +183,9 @@
 					</div>
 					<div class="form-group wrapped-form view">
 
-				<form id="pageSize_form${top ? '1' : '2'}" name="pageSize_form${top ? '1' : '2'}" method="get" action="${url}" class="pageSizeForm">
-					<label for="pageSizeOptions${top ? '1' : '2'}">
-						<spring:theme code="${themeMsgKey}.display"/>:	</label>
-						<select class="black-arrow" id="pageSizeOptions${top ? '1' : '2'}" name="pageSize" class="pageSizeOptions">
+				<form id="pageSize_form${top ? '1' : '2'}" name="pageSize_form${top ? '1' : '2'}" method="get" action="#" class="pageSizeForm">
+					<label for="pageSizeOptions${top ? '1' : '2'}"><spring:theme code="${themeMsgKey}.display"/></label>
+						<select class="black-arrow" id="pageSizeOptions${top ? '1' : '2'}" name="pageSize" class="pageSizeOptions" onchange="viewByFilterResult(${top ? '1' : '2'})">
 							<option value="24" ${not empty searchPageData.pagination.pageSize and searchPageData.pagination.pageSize eq 24 ? 'selected="selected"' : ''}>24</option>
 							<option value="48" ${not empty searchPageData.pagination.pageSize and searchPageData.pagination.pageSize eq 48 ? 'selected="selected"' : ''}>48</option>
 							<option value="72" ${not empty searchPageData.pagination.pageSize and searchPageData.pagination.pageSize eq 72 ? 'selected="selected"' : ''}>72</option>

@@ -122,7 +122,7 @@ public class MplProductStockValueProvider extends AbstractPropertyFieldValueProv
 					{
 						stockStatus = StockLevelStatus.INSTOCK.toString();
 					}
-					else if (stockValue == 0)
+					else
 					{
 						stockStatus = StockLevelStatus.OUTOFSTOCK.toString();
 					}

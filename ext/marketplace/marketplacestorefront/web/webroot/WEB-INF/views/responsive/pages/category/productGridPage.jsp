@@ -12,20 +12,23 @@
 <template:page pageTitle="${pageTitle}">
 <div class="list_title"><h1>${dropDownText}</h1></div>
 <div class="listing wrapper">
+	<div id="productGrid">	<!-- Div to be overridden by AJAX response : TPR-198 --> 
 	<c:if test="${searchPageData.pagination.totalNumberOfResults ne 0}">
 	<div class="left-block">
 			<cms:pageSlot position="ProductLeftRefinements" var="feature">
 				<cms:component component="${feature}"/>
 			</cms:pageSlot>
-</div>
-</c:if>
-
-			<cms:pageSlot position="ProductGridSlot" var="feature">
-				<cms:component component="${feature}"/>
-			</cms:pageSlot>
+	</div>
+	</c:if>
 
 	
+		<cms:pageSlot position="ProductGridSlot" var="feature">
+			<cms:component component="${feature}"/>
+		</cms:pageSlot>
 	</div>
+
+	
+</div>
 	<product:productCompare/>
 	<storepickup:pickupStorePopup />
 	

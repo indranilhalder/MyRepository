@@ -248,6 +248,13 @@ public interface ControllerConstants
 				String callPage = "pages/clickToChatCall/clickToCall";
 			}
 
+			interface Search
+			{
+				// TPR-198
+				String FacetResultPanel = "pages/search/facetResultPanel";
+
+			}
+
 		}
 
 		interface Fragments
@@ -346,6 +353,9 @@ public interface ControllerConstants
 				//TISPRM-33
 				public static final String SAVINGONPRODUCT = "savingsOnProduct";
 
+				//TPR-198
+				public static final String SearchResultsPanel = "fragments/product/searchResultPanel";
+				public static final String SellerResultsPage = "fragments/product/sellerResultPage";
 
 			}
 		}

@@ -431,6 +431,8 @@ public class UsersController extends BaseCommerceController
 	private static final String UTF = "UTF-8";
 
 	/**
+	 * TPR-1372
+	 * 
 	 * @param emailId
 	 * @param password
 	 * @return MplUserResultWsDto
@@ -443,8 +445,9 @@ public class UsersController extends BaseCommerceController
 	{ ROLE_CLIENT, TRUSTED_CLIENT, CUSTOMERMANAGER })
 	@RequestMapping(value = "/registration", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public MplUserResultWsDto registerUser(@RequestParam final String emailId, @RequestParam final String password)
-			throws RequestParameterException, WebserviceValidationException, MalformedURLException
+	public MplUserResultWsDto registerUser(@RequestParam final String emailId, @RequestParam final String password,
+			@RequestParam(required = false) final boolean tataTreatsEnable) throws RequestParameterException,
+			WebserviceValidationException, MalformedURLException
 
 	{
 		LOG.debug("****************** User Registration mobile web service ***********" + emailId);
@@ -453,7 +456,7 @@ public class UsersController extends BaseCommerceController
 		final boolean isNewusers = true;
 		try
 		{
-			userResult = mobileUserService.registerNewMplUser(emailId, password);
+			userResult = mobileUserService.registerNewMplUser(emailId, password, tataTreatsEnable);
 			final CustomerModel customerModel = mplPaymentWebFacade.getCustomer(emailId);
 			gigyaWsDto = gigyaFacade.gigyaLoginHelper(customerModel, isNewusers);
 			if (StringUtils.isNotEmpty(gigyaWsDto.getSessionSecret()))
@@ -562,7 +565,7 @@ public class UsersController extends BaseCommerceController
 	}
 
 	/**
-	 * Register in portal via social media login such as facebook and googleplus
+	 * Register in portal via social media login such as facebook and googleplus TPR-1372
 	 *
 	 * @param emailId
 	 * @param socialMedia
@@ -575,8 +578,9 @@ public class UsersController extends BaseCommerceController
 	{ ROLE_CLIENT, CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
 	@RequestMapping(value = "/socialMediaRegistration", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public MplUserResultWsDto socialMediaRegistration(@RequestParam final String emailId, @RequestParam final String socialMedia)
-			throws RequestParameterException, WebserviceValidationException, MalformedURLException
+	public MplUserResultWsDto socialMediaRegistration(@RequestParam final String emailId, @RequestParam final String socialMedia,
+			@RequestParam(required = false) final boolean tataTreatsEnable) throws RequestParameterException,
+			WebserviceValidationException, MalformedURLException
 	{
 		MplUserResultWsDto result = new MplUserResultWsDto();
 		try
@@ -589,11 +593,13 @@ public class UsersController extends BaseCommerceController
 			}
 			else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK))
 			{
-				result = mobileUserService.socialMediaRegistration(emailId, MarketplacewebservicesConstants.FACEBOOK);
+				result = mobileUserService.socialMediaRegistration(emailId, MarketplacewebservicesConstants.FACEBOOK,
+						tataTreatsEnable);
 			}
 			else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))
 			{
-				result = mobileUserService.socialMediaRegistration(emailId, MarketplacecommerceservicesConstants.GOOGLE);
+				result = mobileUserService.socialMediaRegistration(emailId, MarketplacecommerceservicesConstants.GOOGLE,
+						tataTreatsEnable);
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -6517,13 +6523,6 @@ public class UsersController extends BaseCommerceController
 				 * //getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID,
 				 * "TRUE"); failFlag = true; failErrorCode = MarketplacecommerceservicesConstants.B9047; }
 				 */
-
-				if (!failFlag && !mplCheckoutFacade.isCouponValid(cart))
-				{
-					//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID, "TRUE");
-					failFlag = true;
-					failErrorCode = MarketplacecommerceservicesConstants.B9509;
-				}
 
 				if (!failFlag)
 				{

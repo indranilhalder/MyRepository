@@ -513,6 +513,11 @@
 		<property name="genericFacet" type="boolean" />
 		<property name="classificationProductType" type="java.lang.String" />
 		<property name="facetTopValue" type="Integer" />
+		<!-- Search POC Start -->
+		<property name="isRangeFaceted" type="java.lang.Boolean" />
+		<property name="isNumeric" type="java.lang.Boolean" />
+		<property name="unitType" type="java.lang.String" />
+		<!-- Search POC End -->
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.product.data.AddressRadioTypeData">
@@ -649,6 +654,8 @@
     	<property name="typeId" type="String" />
     	<property name="typeVal" type="String" />
     	<property name="imageDiscription" type="String" />
+    	<!-- TPR-472 -->
+    	<property name="icid" type="String" />
     	<property name="componentType" type="String" />
     </bean>
 

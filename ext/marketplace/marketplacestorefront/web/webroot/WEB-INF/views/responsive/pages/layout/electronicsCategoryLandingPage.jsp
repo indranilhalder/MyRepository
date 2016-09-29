@@ -32,7 +32,7 @@
 			</cms:pageSlot>
 		</ul>
 	</div>
-			<div class="listing wrapper">
+			<div id="productGrid" class="listing wrapper"> <!-- Added for TPR-198 -->
 			<div class="left-block">
 			<cms:pageSlot position="Section4A" var="feature">
 				<cms:component component="${feature}"/>

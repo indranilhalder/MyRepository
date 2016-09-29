@@ -99,5 +99,14 @@ public interface MplCustomAddressFacade
 	 */
 	PriceData setTotalWithConvCharge(OrderModel source, OrderData prototype);
 
+	
+	/**
+	 * @param deliveryCode
+	 * @param sellerArticleSKU
+	 * @param cartModel
+	 * @return Double
+	 */
+	Double populateDeliveryMethodData(String deliveryCode, String sellerArticleSKU, CartModel cartModel);
+
 
 }

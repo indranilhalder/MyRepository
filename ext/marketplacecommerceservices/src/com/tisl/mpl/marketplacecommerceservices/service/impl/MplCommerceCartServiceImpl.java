@@ -1793,8 +1793,10 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	private PriceData formPriceData(final Double price) throws EtailNonBusinessExceptions
 	{
+
 		final PriceData priceData = new PriceData();
 		PriceData formattedPriceData = new PriceData();
+		final AbstractOrderModel cart = getCartService().getSessionCart();
 		if (price != null)
 		{
 			priceData.setPriceType(PriceDataType.BUY);
@@ -1802,7 +1804,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			priceData.setCurrencyIso(MarketplacecommerceservicesConstants.INR);
 			final CurrencyModel currency = new CurrencyModel();
 			currency.setIsocode(priceData.getCurrencyIso());
-			currency.setSymbol(priceData.getCurrencyIso());
+			currency.setSymbol(cart.getCurrency().getSymbol());
 			formattedPriceData = getPriceDataFactory().create(PriceDataType.BUY, priceData.getValue(), currency);
 
 		}
@@ -2300,7 +2302,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		try
 		{
 			final List<CartSoftReservationData> cartSoftReservationDatalist = populateDataForSoftReservation(abstractOrderModel);
-			if (requestType != null && !cartSoftReservationDatalist.isEmpty() && pincode != null)
+			if (requestType != null && CollectionUtils.isNotEmpty(cartSoftReservationDatalist) && pincode != null)
 			{
 				try
 				{
@@ -2309,7 +2311,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 				}
 				catch (final ClientEtailNonBusinessExceptions e)
 				{
-					LOG.error("::::::Exception in calling OMS Inventory reservation:::::::::" + e.getErrorCode());
+					LOG.error("::::::Mobility  ClientEtailNonBusinessExceptions in calling OMS Inventory reservation:::::::::"
+							+ e.getErrorCode());
 					if (null != e.getErrorCode()
 							&& (MarketplacecclientservicesConstants.O0003_EXCEP.equalsIgnoreCase(e.getErrorCode())
 									|| MarketplacecclientservicesConstants.O0004_EXCEP.equalsIgnoreCase(e.getErrorCode()) || MarketplacecclientservicesConstants.O0007_EXCEP
@@ -3084,8 +3087,16 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 								if (StringUtils.isNotEmpty(fulfillmentType)
 										&& fulfillmentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.SSHIP))
 								{
-									codEligible = false;
-									break;
+									//Changes to TRUE & FALSE
+									final String isSshipCodEligble = (richAttributeModel.get(0).getIsSshipCodEligible() != null ? richAttributeModel
+											.get(0).getIsSshipCodEligible().getCode()
+											: MarketplacecommerceservicesConstants.FALSE);
+									if (StringUtils.isNotEmpty(isSshipCodEligble)
+											&& isSshipCodEligble.equalsIgnoreCase(MarketplacecommerceservicesConstants.FALSE))
+									{
+										codEligible = false;
+										break;
+									}
 								}
 							}
 						}
@@ -3573,7 +3584,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 						{
 							LOG.error("TISPRD-2758 Freebie Data Population  is empty  ");
 						}
-					}//End Code added for TISPRD-2758
+					} //End Code added for TISPRD-2758
 					else
 					{
 						String deliveryModeGlobalCode = null;

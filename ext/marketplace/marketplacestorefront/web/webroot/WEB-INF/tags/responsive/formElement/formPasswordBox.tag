@@ -24,6 +24,6 @@
 					<spring:theme code="login.optional" />
 				</c:if>
 			</label>
-			<form:password cssClass="${inputCSS}" id="${idKey}" path="${path}" />
+			<form:password cssClass="${inputCSS}" id="${idKey}" path="${path}" placeHolder="PASSWORD" />
 	</ycommerce:testId>
 </template:errorSpanField>

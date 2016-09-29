@@ -478,10 +478,10 @@ public class OrdersController extends BaseCommerceController
 									}
 									catch (final Exception ex)
 									{
-										LOG.error("Exception is" + ex);
+										ExceptionUtil.getCustomizedExceptionTrace(ex);
+										response.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+										response.setErrorCode(MarketplacecommerceservicesConstants.E0000);
 										response.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-										response.setError(MarketplacewebservicesConstants.ETAIL_NON_BUSINESS_EXCEPTION + ex);
-										LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
 										return response;
 									}
 
@@ -1987,7 +1987,8 @@ public class OrdersController extends BaseCommerceController
 		catch (final Exception e)
 		{
 			ExceptionUtil.getCustomizedExceptionTrace(e);
-			orderTrackingWsDTO.setError(MarketplacecommerceservicesConstants.E0000);
+			orderTrackingWsDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			orderTrackingWsDTO.setErrorCode(MarketplacecommerceservicesConstants.E0000);
 			orderTrackingWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		return orderTrackingWsDTO;
@@ -2356,10 +2357,9 @@ public class OrdersController extends BaseCommerceController
 		}
 		catch (final Exception e)
 		{
-			if (null != e.getMessage())
-			{
-				result.setError(e.getMessage());
-			}
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			result.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			result.setErrorCode(MarketplacecommerceservicesConstants.E0000);
 			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 

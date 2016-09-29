@@ -1785,6 +1785,44 @@
 
 	<bean id="mplVoucherDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplVoucherDaoImpl" />
+	<!-- TPR-629 ends -->
+	
+	<!-- Bean for POC Search starts-->
 
+	<bean id="standardizationDao"
+		class="com.tisl.mpl.standardizationfactory.StandardizationDaoImpl">
+	</bean>
+	<bean id="standardizationService"
+		class="com.tisl.mpl.standardizationfactory.StandardizationServiceImpl">
+	</bean>
+	
+	<bean id="sizeStandardInterceptor"
+		class="com.tisl.mpl.interceptor.SizeStandardInterceptor">
+	</bean>
+
+	<bean id="sizeStandardInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="sizeStandardInterceptor" />
+		<property name="typeCode" value="Sizesystem" />
+	</bean>
+	<!-- Bean for POC Search ends-->
+	
+	 <!-- For Bulk Seller  Upload on HMC Configuration Screen  TPR -715-->
+	<bean id="sellerBulkLoadInterceptor" class="com.tisl.mpl.interceptor.SellerBulkLoadInterceptor" />
+	
+	<bean id="sellerBulkLoadInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="sellerBulkLoadInterceptor" />
+		<property name="typeCode" value="EtailSellerSpecificRestriction" />
+	</bean>
+	
+	<!-- For Bulk Seller  Upload on HMC Configuration Screen  TPR -715 + TPR-1620-->
+	<bean id="exSellerBulkLoadInterceptor" class="com.tisl.mpl.interceptor.ExSellerBulkLoadInterceptor" />
+	
+	<bean id="exSellerBulkLoadInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="exSellerBulkLoadInterceptor" />
+		<property name="typeCode" value="EtailExcludeSellerSpecificRestriction" />
+	</bean>
 </beans>
 

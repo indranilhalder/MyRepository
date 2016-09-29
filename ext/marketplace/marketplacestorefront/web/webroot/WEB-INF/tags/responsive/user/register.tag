@@ -22,20 +22,20 @@
 	<%-- <formElement:formInputBox idKey="register.email" labelKey="register.email" 
 		path="email" inputCSS="form-control" mandatory="true"/> --%>
 
-	<label class="email_Label"><spring:theme
-				code="text.account.email" text="Email Address" /></label>
+	<%-- <label class="email_Label"><spring:theme
+				code="text.account.email" text="Email Address" /></label> --%>
 	
 	<form:input id="register.email_login" class="inputText"
-		idKey="register.email" labelKey="register.email" path="email" maxlength="240" />
+		idKey="register.email" labelKey="" placeholder="EMAIL ADDRESS" path="email" maxlength="240" />
 	<div class="help-block has-error" id="signupEmailIdDiv" style="display: none;"></div>
 	
-	<formElement:formPasswordBox idKey="password_login" labelKey="register.pwd"
-		path="pwd" inputCSS="form-control password-strength" mandatory="true" />
+	<formElement:formPasswordBox idKey="password_login" labelKey="" 
+		path="pwd" inputCSS="form-control password-strength" mandatory="true"  />
 	<div class="help-block has-error" id="signupPasswordDiv" style="display: none;"></div>
 	
-	<formElement:formPasswordBox idKey="register.checkPwd_login"
-		labelKey="register.checkPwd" path="checkPwd" inputCSS="form-control"
-		mandatory="true" />
+	<formElement:formConfirmPasswordBox idKey="register.checkPwd_login"
+		labelKey="" path="checkPwd" inputCSS="form-control"
+		mandatory="true"  />
 <div class="help-block has-error" id="signupConfirmPasswordDiv" style="display: none;"></div>
 	<%-- <input type="hidden" id="recaptchaChallangeAnswered"
 		value="${requestScope.recaptchaChallangeAnswered}" /> --%>
@@ -48,18 +48,18 @@
 		<c:url value="/mytatarewards" var="mytatarewards" />
 		<c:url value="/tncmytatarewards" var="tncmytatarewards" />
 		 <div id="checkBox">
-					<div class="reward-popover">
+					<%-- <div class="reward-popover">
 					<p class="reward-popover-container">
 					<span class="reward-popover-left">'Tata Treats' an exclusive program to celebrate your patronage with the Tata Group.
 					<!-- <span><a class="reward-popover-dash-border" href="#" target="_blank">rewards </a></span><span> &nbsp; instantly!</span> -->
 					</span>
-					<%-- <span class="reward-popover-img">
+					<span class="reward-popover-img">
 					<img src="${commonResourcePath}/images/Logo-Rewards.png">
-					</span> --%>
+					</span>
 					</p>
-					</div>					
+					</div>		 --%>			
 				<input type="checkbox" id="check_MyRewards" name="check_MyRewards" value="true"/>
-				<label for="check_MyRewards">I want to be a part of <a href="${mytatarewards }" target="_blank" class="tata-rewards">Tata Treats</a> (You can opt-out anytime) By opting in I agree to <a href="${tncmytatarewards }" target="_blank"> T&C </a> of Tata Treats.</label>
+				<label for="check_MyRewards">I want to be a part of <a href="${mytatarewards }" target="_blank" class="tata-rewards">Tata Treats.</a> By opting in I agree to <a href="${tncmytatarewards }" target="_blank"> T&C </a> of Tata Treats.</label>
 		</div> 
 	
 	<div class="form-actions clearfix">
@@ -67,19 +67,20 @@
 			<button type="submit" onclick="return checkSignUpValidation('login');" ><spring:theme code='${actionNameKey}' /></button>
 		</ycommerce:testId>
 	</div>
-	<div class="exist-account">
+	<label class="accept-cond">By signing up, you agree to our <a href="/buyer-policies" target="_blank" class="spec-notes">T&amp;C </a></label>
+	<!-- <div class="exist-account">
 	<span>Already have a Tata CLiQ account?  </span>
 	<span><a href="/store/mpl/en/login"> &nbsp;  Sign in here</a></span>
-	</div>
+	</div> -->
 </form:form>
-</div>
-<span class="or"><spring:theme code="text.or"/></span>
+
+<%-- <span class="or"><spring:theme code="text.or"/></span> --%>
+<div class="else-sec"><span class="else-brdrtp"></span><span class="else">or </span> <span class="else-brdrbtm"></span></div>
 <!-- For  Gigya and API Social Login -->
 <c:choose> 
  <c:when test="${isGigyaEnabled=='Y'}">
 <ul class="social-connect" id="gSignInWrapper">
 <li>
-    <br />
    <!--  <h4>Please sign in using one of the following providers:</h4><br /><br /> -->
     <div id="loginDivReg"></div>
     </li>
@@ -94,3 +95,4 @@
 </c:choose> 
 
 <!-- End  Gigya and API Social Login -->
+</div>

@@ -301,7 +301,7 @@ public class MarketplacewebservicesConstants
 
 
 	// Pincode Servicibility
-	public static final String URL = "/{baseSiteId}/users/{userId}/checkPincode";
+	public static final String CHECK_PINCODE = "/{baseSiteId}/users/{userId}/checkPincode";
 	public static final String CREATEENTRYINAUDITURL = "/createEntryInAudit";
 	public static final String SAVEDCARDS = "/savedCards";
 	public static final String REMOVESAVEDCARDS = "/removeSavedCards";
@@ -519,5 +519,10 @@ public class MarketplacewebservicesConstants
 	public static final String JUSPAYRETURNMETHOD = "payment.juspay.returnMethod.mobile";
 	public static final String CHARGED = "CHARGED";
 	public final static double WALLETAMOUNT = 0.00D;
+
+	//TPR_622, 627
+	public static final String YES = "yes";
+	public static final String NO_SSHIP = "no";
+
 
 }

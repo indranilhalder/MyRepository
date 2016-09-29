@@ -268,6 +268,10 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="mediaFormat" value="252Wx374H" />
 
 	</bean>
+	<!-- TPR-796 EQA -->
+	<bean id="mediaHelper"
+		class="com.tisl.mpl.core.util.MediaHelper" />
+		
 	<bean id="newSearchImageHovervalueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.NewCustomSearchImageValueProvider">
 
@@ -277,6 +281,16 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="mediaFormat" value="252Wx374H" />
 
 	</bean>
+	<!--TPR-796  -->
+	<bean id="mplProductSearchImageValueProvider"
+		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MPLCustomSearchProductImageValueProvider">
+		<property name="mediaService" ref="mediaService" />
+		<property name="mediaContainerService" ref="mediaContainerService" />
+		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+		<property name="mediaFormat" value="437Wx649H" />
+	</bean>
+	
+	
 	<!-- Value Provider to display Serach Page Image - End -->
 
 

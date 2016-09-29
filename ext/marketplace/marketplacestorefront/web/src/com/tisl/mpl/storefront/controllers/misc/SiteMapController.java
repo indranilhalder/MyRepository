@@ -24,6 +24,7 @@ import de.hybris.platform.cms2.servicelayer.services.CMSSiteService;
 import de.hybris.platform.cms2.servicelayer.services.impl.DefaultCMSContentSlotService;
 import de.hybris.platform.core.model.media.MediaModel;
 
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -34,6 +35,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -45,10 +47,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.tisl.mpl.core.model.DepartmentCollectionComponentModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 @Controller
@@ -68,6 +72,9 @@ public class SiteMapController extends AbstractPageController
 
 	@Autowired
 	private DefaultCMSContentSlotService contentSlotService;
+
+	@Resource
+	private HomepageComponentService homepageComponentService;
 
 	@RequestMapping(value = "/sitemap.xml", method = RequestMethod.GET, produces = "application/xml")
 	public String getSitemapXml(final Model model, final HttpServletResponse response)
@@ -118,16 +125,37 @@ public class SiteMapController extends AbstractPageController
 						final CategoryModel department = categoryService.getCategoryForCode(categoryModel.getCode());
 						final Collection<CategoryModel> secondLevelCategories = department.getCategories();
 
+
+
 						// Iterating through the second level categories
 						for (final CategoryModel secondLevelCategory : secondLevelCategories)
 						{
+							/* code changes for TISPRD-3183 */
 							// Fetching the third level category against a second
 							// level category
 							final Collection<CategoryModel> thirdLevelCategory = secondLevelCategory.getCategories();
+
+							for (final CategoryModel thirdLevelCategories : thirdLevelCategory)
+							{
+
+								final String categoryPathChildlevel3 = getCategoryPath(thirdLevelCategories);
+
+								final StringBuilder catName3 = new StringBuilder();
+								catName3.append(thirdLevelCategories.getName()).append("||").append(categoryPathChildlevel3);
+								thirdLevelCategories.setName(catName3.toString());
+							}
+							final String categoryPathChildlevel2 = getCategoryPath(secondLevelCategory);
+
+							final StringBuilder catName2 = new StringBuilder();
+							catName2.append(secondLevelCategory.getName()).append("||").append(categoryPathChildlevel2);
+							secondLevelCategory.setName(catName2.toString());
+
+							/* code changes end for TISPRD-3183 */
 							// Storing the third level categories in a map
 							//thirdLevelCategoryMap.put(secondLevelCategory.getCode(), thirdLevelCategory);
 							innerLevelMap.put(secondLevelCategory, thirdLevelCategory);
 						}
+
 						// Storing the second level categories in a map
 						//secondLevelCategoryMap.put(department.getCode(), secondLevelCategories);
 						megaMap.put(categoryModel, innerLevelMap);
@@ -153,6 +181,36 @@ public class SiteMapController extends AbstractPageController
 		storeCmsPageInModel(modelSpring, getContentPageForLabelOrId(SITEMAP_CMS_PAGE));
 		setUpMetaDataForContentPage(modelSpring, getContentPageForLabelOrId(SITEMAP_CMS_PAGE));
 		return getViewForPage(modelSpring);
+	}
+
+	private String getCategoryPath(final CategoryModel Category)
+	{
+		String categoryPathChildlevel = null;
+		try
+		{
+			categoryPathChildlevel = GenericUtilityMethods.buildPathString(homepageComponentService.getCategoryPath(Category));
+			if (StringUtils.isNotEmpty(categoryPathChildlevel))
+			{
+				categoryPathChildlevel = URLDecoder.decode(categoryPathChildlevel, ModelAttributetConstants.UTF8);
+				categoryPathChildlevel = categoryPathChildlevel.toLowerCase();
+				categoryPathChildlevel = GenericUtilityMethods.changeUrl(categoryPathChildlevel);
+			}
+		}
+		catch (final EtailBusinessExceptions businessException)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(businessException, null);
+		}
+		catch (final EtailNonBusinessExceptions nonBusinessException)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(nonBusinessException);
+		}
+		catch (final Exception exception)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception));
+		}
+
+
+		return categoryPathChildlevel;
 	}
 
 }

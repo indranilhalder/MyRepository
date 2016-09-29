@@ -38,6 +38,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.solrfacet.search.impl.DefaultMplProductSearchFacade;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
+import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.storefront.controllers.pages.SearchPageController.UserPreferencesData;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -72,6 +73,7 @@ public class OfferPageController extends AbstractSearchPageController
 	 */
 
 	private static final String LAST_LINK_CLASS = "active";
+	private static final String PAGE = "page";
 
 	protected static final Logger LOG = Logger.getLogger(OfferPageController.class);
 
@@ -92,7 +94,7 @@ public class OfferPageController extends AbstractSearchPageController
 	public String offer(@PathVariable("categoryID") final String categoryID,
 			@RequestParam(value = "offer", required = false) final String offerID,
 			@RequestParam(value = "q", required = false) final String searchQuery,
-			@RequestParam(value = "page", defaultValue = "0") final int page,
+			@RequestParam(value = PAGE, defaultValue = "0") final int page,
 			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response) throws UnsupportedEncodingException,
@@ -133,21 +135,40 @@ public class OfferPageController extends AbstractSearchPageController
 		return getViewForPage(model);
 	}
 
+
 	//Added to render all the offer related products
-	//@RequestMapping(value = "/viewAllOffers/page-{pageNo}",
+	//@RequestMapping(value = "/viewAllOffers/page-{pageNo}/getFacetData",
 	@RequestMapping(value =
-	{ NEW_OFFER_URL_PATTERN_PAGINATION, NEW_OFFER_NEW_URL_PATTERN_PAGINATION }, method = RequestMethod.GET)
-	public String displayOfferRelatedProducts(@RequestParam(value = "q", required = false) final String searchQuery,
-			@RequestParam(value = "page", defaultValue = "0", required = false) int page,
+	{ NEW_OFFER_URL_PATTERN_PAGINATION + "/getFacetData", NEW_OFFER_NEW_URL_PATTERN_PAGINATION + "/getFacetData" }, method = RequestMethod.GET)
+	public String offerRelatedFacetResult(@RequestParam(value = "q", required = false) final String searchQuery,
+			@RequestParam(value = PAGE, defaultValue = "0", required = false) final int page,
 			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode,
 			@RequestParam(value = "pageSize", required = false) final Integer pageSize, final HttpServletRequest request,
 			final Model model) throws CMSItemNotFoundException
 	{
+
+		populateRefineSearchResult(searchQuery, page, showMode, sortCode, pageSize, request, model);
+		return ControllerConstants.Views.Fragments.Product.SearchResultsPanel;
+	}
+
+	/**
+	 * @param searchQuery
+	 * @param page
+	 * @param showMode
+	 * @param sortCode
+	 * @param pageSize
+	 * @param request
+	 * @param model
+	 * @return null or exception message
+	 */
+	private String populateRefineSearchResult(final String searchQuery, int page, final ShowMode showMode, final String sortCode,
+			final Integer pageSize, final HttpServletRequest request, final Model model) throws CMSItemNotFoundException
+	{
 		try
 		{
 			final String uri = request.getRequestURI();
-			if (uri.contains("page"))
+			if (uri.contains(PAGE))
 			{
 				final Pattern p = Pattern.compile("page-[0-9]+");
 				final Matcher m = p.matcher(uri);
@@ -209,8 +230,22 @@ public class OfferPageController extends AbstractSearchPageController
 			return frontEndErrorHelper.callNonBusinessError(model, exp.getMessage());
 
 		}
+		return null;
+	}
 
 
+	//Added to render all the offer related products
+	//@RequestMapping(value = "/viewAllOffers/page-{pageNo}",
+	@RequestMapping(value =
+	{ NEW_OFFER_URL_PATTERN_PAGINATION, NEW_OFFER_NEW_URL_PATTERN_PAGINATION }, method = RequestMethod.GET)
+	public String displayOfferRelatedProducts(@RequestParam(value = "q", required = false) final String searchQuery,
+			@RequestParam(value = PAGE, defaultValue = "0", required = false) final int page,
+			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
+			@RequestParam(value = "sort", required = false) final String sortCode,
+			@RequestParam(value = "pageSize", required = false) final Integer pageSize, final HttpServletRequest request,
+			final Model model) throws CMSItemNotFoundException
+	{
+		populateRefineSearchResult(searchQuery, page, showMode, sortCode, pageSize, request, model);
 		return getViewForPage(model);
 	}
 
