@@ -127,13 +127,18 @@ function constructDepartmentHierarchy(inputArray) {
 			'tree.click',
 			function(event) {
 				var node = event.node;
+				var searchQuery = document.getElementById("q").value;				
 				if(node.categoryType == 'All') {
 					$('#q').val($('#text').val() + ":relevance");
 					$('#searchCategoryTree').val("all");
 				}
 				else{
-					$('#q').val($('#text').val() + ":relevance:category:" + node.categoryCode);
-					$('#searchCategoryTree').val(node.categoryCode);
+					//Changes Added for TOR-488
+					//$('#q').val($('#text').val() + ":relevance:category:" + node.categoryCode);
+					//$('#searchCategoryTree').val(node.categoryCode);
+					 $('#q').val(searchQuery +":category:" + node.categoryCode);
+					 $('#searchCategoryTree').val(node.categoryCode);
+					
 				} 
 				
 				$('#searchPageDeptHierTreeForm').submit();
