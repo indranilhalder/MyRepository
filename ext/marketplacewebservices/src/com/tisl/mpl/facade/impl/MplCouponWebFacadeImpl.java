@@ -73,12 +73,12 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 		boolean applycouponDtoflag = false;
 		try
 		{
-			applycouponDtoflag = mplCouponFacade.applyVoucher(couponCode, cartModel);
+			applycouponDtoflag = mplCouponFacade.applyVoucher(couponCode, cartModel, null);
 			if (applycouponDtoflag)
 			{
 				VoucherDiscountData data = new VoucherDiscountData();
 
-				data = mplCouponFacade.calculateValues(cartModel, applycouponDtoflag, true);
+				data = mplCouponFacade.calculateValues(null, cartModel, applycouponDtoflag, true);
 
 				if (null != data.getCouponDiscount() && null != data.getCouponDiscount().getValue())
 				{
@@ -160,14 +160,14 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 		ReleaseCouponsDTO releaseCouponsDTO = new ReleaseCouponsDTO();
 		try
 		{
-			mplCouponFacade.releaseVoucher(couponCode, cartModel);
+			mplCouponFacade.releaseVoucher(couponCode, cartModel, null);
 			couponRelStatus = true;
 			mplCouponFacade.recalculateCartForCoupon(cartModel, null);
 			LOG.debug("Coupon Release Status is:::" + couponRelStatus);
 			VoucherDiscountData data = new VoucherDiscountData();
 			if (couponRelStatus)
 			{
-				data = mplCouponFacade.calculateValues(cartModel, couponRelStatus, redeem);
+				data = mplCouponFacade.calculateValues(null, cartModel, couponRelStatus, redeem);
 				if (null != data.getTotalPrice() && null != data.getTotalPrice().getValue())
 				{
 					releaseCouponsDTO.setTotal(String.valueOf(data.getTotalPrice().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
