@@ -55,7 +55,7 @@
 
 	<filter>
 		<filter-name>CORS</filter-name>
-		<filter-class>com.thetransactioncompany.cors.CORSFilter</filter-class>
+		<filter-class>com.tisl.mpl.filter.ExtendedCORSFilter</filter-class>
 		<init-param>
 			<param-name>cors.supportedMethods</param-name>
 			<param-value>GET, POST, HEAD, PUT, PATCH, DELETE, OPTIONS</param-value>
