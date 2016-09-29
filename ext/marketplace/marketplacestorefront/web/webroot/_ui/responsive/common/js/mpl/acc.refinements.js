@@ -199,11 +199,7 @@ ACC.refinements = {
 				if(action.indexOf("/getFacetData") == -1){
 					if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1 || action.indexOf('/collection/') > -1){
 						requiredUrl = action.concat("/getFacetData");
-					}
-					else if(action.indexOf('/collection/') > -1){						
-						alert('Inside collection');
-						requiredUrl = '/search/getFacetData';					
-					}
+					}					
 					else{
 						requiredUrl = action.concat("getFacetData");
 					}
@@ -243,11 +239,7 @@ ACC.refinements = {
 				action = action[1].split('/');
 				requiredUrl = "/c-"+action[0];
 				requiredUrl += "/getFacetData";
-			}
-			else if(action.indexOf('/collection/') > -1){				
-				alert('Inside collection');
-				requiredUrl = '/search/getFacetData';				
-			}
+			}			
 			else {
 				requiredUrl = action[0].concat("/getFacetData");
 			}

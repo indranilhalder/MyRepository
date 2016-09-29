@@ -107,11 +107,11 @@ public class ShopByLookController extends AbstractSearchPageController
 	{
 		String formedPaginationUrl = null;
 
+		int count = getSearchPageSize();
+		final UserPreferencesData preferencesData = updateUserPreferences(count);
+
 		if (null != searchQuery || null != sortCode)
 		{
-			int count = getSearchPageSize();
-			final UserPreferencesData preferencesData = updateUserPreferences(count);
-
 			if (preferencesData != null && preferencesData.getPageSize() != null)
 			{
 				count = preferencesData.getPageSize().intValue();
@@ -125,16 +125,29 @@ public class ShopByLookController extends AbstractSearchPageController
 		}
 		else
 		{
-			ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
-			final SearchStateData searchState = new SearchStateData();
-			final SearchQueryData searchQueryData = new SearchQueryData();
-			final PageableData pageableData = createPageableData(page, getSearchPageSize(), null, ShowMode.Page);
-			searchState.setQuery(searchQueryData);
-			searchPageData = searchFacade.collectionSearch(lookId, searchState, pageableData);
+			//ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
+			//final SearchStateData searchState = new SearchStateData();
+			//final SearchQueryData searchQueryData = new SearchQueryData();
+			//final PageableData pageableData = createPageableData(page, getSearchPageSize(), null, ShowMode.Page);
+			//searchState.setQuery(searchQueryData);
+			//searchPageData = searchFacade.collectionSearch(lookId, searchState, pageableData);
+			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
+					lookId, searchQuery, page, showMode, sortCode, count, null);
 			final String url = searchPageData.getCurrentQuery().getUrl();
 			formedPaginationUrl = url.replace("/search", "");
 			searchPageData.getCurrentQuery().setUrl(formedPaginationUrl);
 			populateModel(model, searchPageData, ShowMode.Page);
+			//Checking Department Hierarchy
+			model.addAttribute("departmentHierarchyData", searchPageData.getDepartmentHierarchyData());
+			model.addAttribute("departments", searchPageData.getDepartments());
+			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> competingProductsSearchPageData = mplCompetingProductsUtility
+					.getCompetingProducts(searchPageData);
+
+			if (competingProductsSearchPageData != null)
+			{
+				model.addAttribute("competingProductsSearchPageData", competingProductsSearchPageData);
+
+			}
 		}
 
 		if (null != lookId)
@@ -169,6 +182,8 @@ public class ShopByLookController extends AbstractSearchPageController
 					model.addAttribute(ModelAttributetConstants.SHOP_THE_LOOK_PAGE_EXPIRED, "yes");
 				}
 			}
+
+
 			model.addAttribute("shopbylook", "shopbylook");
 		}
 		/*
