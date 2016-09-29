@@ -2066,5 +2066,4 @@ $(".top_deal_blp  > .blog_container_blp > .blog_feature_blp").each(function(){
 
 //-----BLP------//
 
-})
 
