@@ -3322,7 +3322,15 @@
 					</attribute>
 				</attributes>
 			</itemtype>
+			<!-- PRoduct Carousel Component TPR-1316-->
 
+			<itemtype code="MplProductCollectionComponent" autocreate="true"
+				generate="true" extends="ProductCarouselComponent"
+				jaloclass="com.tisl.mpl.core.jalo.MplProductCollectionComponent">
+				<description>This component is made to show the Products in a carousel</description>
+				
+			</itemtype>
+			
 			<!-- Now Trending Carousel Component -->
 			<itemtype code="MplNowTrendingProductCarouselComponent"
 				autocreate="true" generate="true" extends="ProductCarouselComponent"
@@ -3470,7 +3478,7 @@
 			<!-- Shop The Look Model Structure -->
 
 			<itemtype code="MplShopByLook" generate="true" autocreate="true"
-				jaloclass="com.tisl.mpl.core.jalo.MplShopByLook">
+				jaloclass="com.tisl.mpl.core.jalo.MplShopByLook" extends="SimpleCMSComponent">
 				<deployment table="MplShopByLook" typecode="14145" />
 				<attributes>
 					<attribute type="SNSCategoryCollection" qualifier="collectionCategory"
@@ -3556,7 +3564,28 @@
 						<persistence type="property"></persistence>
 						<modifiers optional="true" />
 					</attribute>
-
+					<!--  TPR-565  -->
+					<attribute type="java.lang.String" qualifier="customSku">
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+					</attribute>
 				</attributes>
 
 			</itemtype>
@@ -5991,6 +6020,11 @@
 			<itemtype code="MicrositeSelectBrandCollectionComponent"
 				generate="true" autocreate="true" extends="BrandCollectionComponent"
 				jaloclass="com.tisl.mpl.core.jalo.MicrositeSelectBrandCollectionComponent">
+			</itemtype>
+			<itemtype code="MplBrandSearchBoxComponent"
+				autocreate="true" generate="true" extends="MplEnhancedSearchBoxComponent"
+				jaloclass="com.tisl.mpl.core.jalo.MplBrandSearchBoxComponent">
+				<description>Represents Microsite Enhanced Search Box component that displays a list of categories, brands and seller as a dropdown.</description>
 			</itemtype>
 		</typegroup>
 		<!-- For Microsite -->

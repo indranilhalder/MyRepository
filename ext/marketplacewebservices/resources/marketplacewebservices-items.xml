@@ -29,6 +29,9 @@
 			<value code="SingleBanner"/>
 			<value code="Banners3TypeReverse"/>	
 			<value code="Banner3Type"/>
+			<!--  TPR-1316 -->
+			<value code="ProductSliderType"/>
+			<value code="ProductListType"/>
 		</enumtype>
 	</enumtypes>
 	
