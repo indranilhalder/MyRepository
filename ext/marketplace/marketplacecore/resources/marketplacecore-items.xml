@@ -8601,6 +8601,20 @@
 			</itemtype>
 		</typegroup>
 		<!-- Search POC ends-->
+		
+		<!-- Added for Luxury -->
+		<typegroup name="Luxury">
+			<itemtype code="Product" autocreate="false" generate="false">
+				<attributes>	
+			        <attribute qualifier="isLuxuryProduct" type="java.lang.Boolean" autocreate="true" generate="true">
+						<description>It is a flag for Luxury Products.</description>
+						<modifiers optional="true" />
+						<persistence type="property" />
+					</attribute>
+			    </attributes>
+			</itemtype>		
+       </typegroup>
+       
 	</itemtypes>
 	
 </items>
