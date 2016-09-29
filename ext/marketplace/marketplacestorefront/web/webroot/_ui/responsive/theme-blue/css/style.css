@@ -21551,7 +21551,7 @@ body .lookbook_wrapper .page-header h2 {
     color: #A9143C;
 }
 body .lookbook_wrapper .listing.wrapper .right-block {
-    width: 100%;
+   /*  width: 100%; */
 }
 body .lookbook_wrapper .lookbook-pagination {
     margin: 0 auto;
@@ -25377,7 +25377,7 @@ padding-left: 0px;}
     left:32%;
     }
    .lookbook_wrapper .sort-refine-bar.wrapped-form.sort.mobile{
-    left:20px;
+    /* left:20px; */
     }
     .listing-leftmenu h4{
     font-weight:500;}
@@ -46441,3 +46441,13 @@ padding: 0;
     border: 1px solid #a9143c;
 	
 }
+/* shop the look start */
+.lookbook_wrapper .sort-refine-bar.wrapped-form.sort.mobile{
+	top:20px !important;
+}
+body .lookbook_wrapper .listing.wrapper .left-block{
+    text-align: left;
+}
+/* shop the look end */
+
+

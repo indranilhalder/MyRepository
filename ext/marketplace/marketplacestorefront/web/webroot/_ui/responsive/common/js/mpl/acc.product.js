@@ -1120,7 +1120,9 @@ $(document).on('click','.go-to-bag.mini-cart-checkout-button',function(){
 
 
 //For AJAX Call  
-$(document).on("click",'#applyCustomPriceFilter',function(){					
+$(document).on("click",'#applyCustomPriceFilter',function(){
+	 
+	
 
 					// construct custom price query params					
 					var minPriceSearchTxt = ($('.minPriceSearchTxt').val() == null || $('.minPriceSearchTxt').val() == "") ? 0 : $('.minPriceSearchTxt').val() ;
@@ -1232,15 +1234,22 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 							requiredUrl = "/c-"+action[0];
 							requiredUrl += "/getFacetData";
 						} else {
+							alert('Inside else of category');
 							if(action.indexOf("/getFacetData") == -1){
-								if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1){
+							
+								if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1 || action.indexOf('/collection/') > -1){
+									alert('Inside offer');
 									requiredUrl = action.concat("/getFacetData");
-								}
+									alert(requiredUrl);
+									
+								} 
 								else{
+									
 									requiredUrl = action.concat("getFacetData");
 								}
 							}
 							else{
+								
 								requiredUrl = action;
 							}
 						}

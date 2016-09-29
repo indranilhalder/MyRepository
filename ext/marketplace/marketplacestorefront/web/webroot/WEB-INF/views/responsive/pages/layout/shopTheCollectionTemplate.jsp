@@ -10,6 +10,7 @@
 <%@ taglib prefix="nav" tagdir="/WEB-INF/tags/responsive/nav"%>
 
 <template:page pageTitle="${pageTitle}">
+	
 	<div class="lookbook_wrapper">
 		<c:choose>
 			<c:when test="${pageExpired eq 'yes'}">
@@ -89,16 +90,31 @@
 				<div class="page-header">
 					<h2>${collectionName}</h2>
 				</div>
-				<!-- item container -->
-				<div class="listing wrapper">
 				
+				<!-- item container -->
+				<%-- <div id="facetSearchAjaxData" class="listing wrapper"> <!-- Div to be overridden by AJAX response : TPR-198 -->
+					<nav:searchFacetFilterData/>
+				</div> --%>
+				
+			  <div class="listing wrapper" id="facetSearchAjaxData">
+				 
+				<div class="left-block" >
+				<span class="toggle-filterSerp">Filter By</span>
+				<ul class="product-facet js-product-facet listing-leftmenu">
+	             <%-- <nav:facetNavRefinements pageData="${searchPageData}"/> --%>
+	             <product:productrefinementcomponent/>
+				</ul>
+				 
+				 </div>
 					<div class="right-block">
 					
 						<nav:pagination top="true" supportShowPaged="${isShowPageAllowed}"
 							supportShowAll="${isShowAllAllowed}"
 							searchPageData="${searchPageData}"
 							searchUrl="${searchPageData.currentQuery.url}"
-							numberPagesShown="${numberPagesShown}" />
+							numberPagesShown="${numberPagesShown}" /><c:out value="${numberPagesShown}"></c:out>
+							
+							
 
 						<ul class="product-listing product-grid">
 							<c:forEach items="${searchPageData.results}" var="product"
