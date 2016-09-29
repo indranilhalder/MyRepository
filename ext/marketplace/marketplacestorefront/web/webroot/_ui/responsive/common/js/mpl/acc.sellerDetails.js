@@ -103,7 +103,6 @@ function focusOnElement() {
 	/*Retrieving total number of sellers*/
 	function fetchSellers(sellersArray,buyboxSeller)
 	{
-		//alert("seller page...");
 		var promorestrictedSellers=$("#promotedSellerId").val();
 		var isproductPage = $("#isproductPage").val();
 		var pretext=$("#deliveryPretext").text();
@@ -121,20 +120,35 @@ function focusOnElement() {
 	    var originalPrice = "";
 	    var sellerPriceValue = 0;
 	    var originalPriceValue = 0;
-	 //   var deliveryModeMap="${deliveryModeMap}
-	    if(isproductPage=='false'){
-	    	sellerskuidList=$("#sellersSkuListId").val();
-	    	ussidIdsForED=$("#skuIdForED").val();
-	    	ussidIdsForHD=$("#skuIdForHD").val();
-	    	ussidIdsForCNC=$("#skuIdForCNC").val();
-	    	ussidIdsForCOD=$("#skuIdForCod").val();
-	    	stockUssidIds=$("#skuIdsWithNoStock").val();
-	    	stockUssidArray=$("#stockDataArray").val();
+	    if(isproductPage=='false' && null!=sessionStorage.getItem('pincodeChecked')){
+	    	var dataVal='';
+	    	var  allOosFlag='';
+	    	var otherSellerCount='';
+	    	if(sessionStorage.getItem('servicableList')!=""){
+	    	if(null!=sessionStorage.getItem('servicableList')){
+				    dataVal=JSON.parse(sessionStorage.getItem("servicableList"));
+			   }
+	           if(null!=sessionStorage.getItem('allOosFlag')){
+	        	    allOosFlag=sessionStorage.getItem('allOosFlag');
+			   }
+	           if(null!=sessionStorage.getItem('otherSellerCount')){
+	        	   otherSellerCount=sessionStorage.getItem('otherSellerCount');
+			   }
+			populateBuyBoxData(dataVal,otherSellerCount,isproductPage,allOosFlag);
+			var buyboxSeller = $("#ussid").val();
+	    	}
+	    	
 	    //	pincodeChecked=$("#pinCodeCheckedFlag").val();
 	    }
-	   
+	    var sellerskuidList = sessionStorage.getItem('notServicables')== null ? "" : sessionStorage.getItem('notServicables');
+        var ussidIdsForED = sessionStorage.getItem('ussidIdsForED')== null ? "" :   sessionStorage.getItem('ussidIdsForED');
+        var ussidIdsForHD = sessionStorage.getItem('ussidIdsForHD')== null ? "" :   sessionStorage.getItem('ussidIdsForHD');
+        var ussidIdsForCNC = sessionStorage.getItem('ussidIdsForCNC')== null ? "" :  sessionStorage.getItem('ussidIdsForCNC');
+        var ussidIdsForCOD = sessionStorage.getItem('ussidIdsForCOD')== null ? "" :  sessionStorage.getItem('ussidIdsForCOD');
+        var stockUssidIds = sessionStorage.getItem('stockUssidIds')== null ? "" :   sessionStorage.getItem('stockUssidIds');
+        var stockUssidArray = sessionStorage.getItem('stockUssidArray')== null ? "" : sessionStorage.getItem('stockUssidArray');
 	    for (var i = 0; i < sellersArray.length; i++) {
-		if(buyboxSeller!=sellersArray[i]['ussid']){	 
+		if(buyboxSeller!=sellersArray[i]['ussid']){
 			var leadTime=0;
 			if(null!=sellersArray[i]['leadTimeForHomeDelivery']){
 				leadTime=sellersArray[i]['leadTimeForHomeDelivery'];
@@ -265,25 +279,7 @@ function focusOnElement() {
 		  			 deliveryModeMap+=atpMap+"<br/>";
 			  	}
 		  	}
-			  /*for(var k in availableDeliveryATP){
-				  if($("#isPinCodeChecked").val()!="true"){
-			  		//if((ussidIdsForED=="") || (ussidIdsForHD=="")){
-			  		  		if(isHomeDelivery && (availableDeliveryATP[k].toLowerCase().indexOf("home")!=-1)){
-			  		  			deliveryModeMap+=availableDeliveryATP[k]+"<br/>";
-			  		  		}
-			  		  	   if(isExpressDelivery&&(availableDeliveryATP[k].toLowerCase().indexOf("express")!=-1)){
-			  	           	 deliveryModeMap+=availableDeliveryATP[k]+"<br/>";
-		  		  		}
-			  			}
-			  		else{
-			  			if((availableDeliveryATP[k].toLowerCase().indexOf("express")!=-1) && (ussidIdsForED.indexOf(ussid)!=-1)){
-				  			deliveryModeMap+=availableDeliveryATP[k]+"<br/>";
-				  		}
-				  		if((availableDeliveryATP[k].toLowerCase().indexOf("home")!=-1) && (ussidIdsForHD.indexOf(ussid)!=-1)){
-				  			deliveryModeMap+=availableDeliveryATP[k]+"<br/>";
-					  		}
-			  		}
-			     	}  */
+			
 	  	tbodycontent+='<div data="Delivery Information" class="Delivery"><ul>';
 	  		  
 	    tbodycontent+="<li>";
@@ -347,15 +343,6 @@ function focusOnElement() {
 	    }
 	    
 	  	tbodycontent+=formEnd;
-	  	
-	  	//commented as part of TPR-903
-	  	/*tbodycontent+=formStartForWishList;
-		tbodycontent+=$("#hiddenWishListId").html();
-		    
-
-		tbodycontent+="<a onClick='openPop(\""+ussid+"\");' id='wishlist' class='wishlist add-to-wishlist' data-toggle='popover' data-placement='bottom'>Add to Wishlist</a>";
-		tbodycontent+=formEnd;*/
-		
 	  	tbodycontent+="</div>";  	  	
 	  	tbodycontent+="</div></li>";
 	  	
@@ -378,7 +365,15 @@ function focusOnElement() {
 		      return $(this).parents('body').find('.add-to-wishlist-container').html();
 		    }
 		  });
-	
+		sessionStorage.removeItem('notServicables');
+		sessionStorage.removeItem('servicableList');
+		sessionStorage.removeItem('skuIdsForED');
+		sessionStorage.removeItem('skuIdsForHD');
+		sessionStorage.removeItem('skuIdForCNC');
+		sessionStorage.removeItem('skuIdForCod');
+		sessionStorage.removeItem('skuIdsWithNoStock');
+		sessionStorage.removeItem('stockDataArrayList');
+		sessionStorage.removeItem('pincodeChecked');
 }
 	 function addToBag(index){
 		
@@ -427,13 +422,16 @@ function focusOnElement() {
 			});
 	}
 
-	 function fetchAllSellers(stockDataArrayList) {
-		 var buyboxSeller = $("#ussid").val();
+	 function fetchAllSellers() {
+			
+		  var buyboxSeller = $("#ussid").val();
 		    var modifiedData="";
 			var isproductPage = $("#isproductPage").val();
 			var productCode = $("#product").val();
 			var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
 					+ "/otherSellerDetails";
+			var dataString = 'productCode=' + productCode;
+						
 			var dataString = 'productCode=' + productCode;
 			$.ajax({
 				contentType : "application/json; charset=utf-8",
@@ -445,12 +443,14 @@ function focusOnElement() {
 						$("#sellerTable").hide();
 						$("#other-sellers-id").hide();
 					}else{
+					var stockDataArrayList=
 					fetchSellers(data,buyboxSeller);
 					otherSellersCount = data.length;
 					setSellerLimits(1);
 					  var stock_id="stock";
 					  var ussid = "ussid";
 					  var input_name = "qty";
+					  var stockDataArrayList=sessionStorage.getItem('stockDataArrayList');
 					  //setting the stock value for other sellers after pincode servicability
 					  if(stockDataArrayList!=undefined){
 					
@@ -465,12 +465,7 @@ function focusOnElement() {
 			 			  	    }	
 				 			});
 					  }
-					
-					
 					}
-					
-						
-					
 				},
 				error : function(xhr, status, error) {
 					$("#sellerTable").hide();
@@ -691,4 +686,160 @@ function focusOnElement() {
 	 
 	 function firstToUpperCase( str ) {
 		    return str.substr(0, 1).toUpperCase() + str.substr(1);
+		}
+	 
+	 
+	//TPR-1375 changes for pin code
+	 function populateBuyBoxData(data,sellerCount,isproductPage,allOosFlag){
+		   
+			var stockInfo = +data['available'];
+			availibility = stockInfo;
+			$.each(stockInfo,function(key,value){
+
+				$("#variant li a").each(function(){
+					if(typeof($(this).attr("href"))!= 'undefined' && $(this).attr("href").toUpperCase().indexOf(key)!= -1 && value == 0){ 
+
+					$(this).removeAttr("href");
+					$(this).parent().addClass('strike');
+				//$(this).parent().css("border-color","gray");
+				$("#outOfStockId").hide();
+				
+					}
+				});		
+						$(".variant-select-sizeGuidePopUp option").each(function(){
+							if(typeof($(this).attr("data-producturl"))!= 'undefined' && $(this).attr("data-producturl").indexOf(key)!= -1 && value == 0){
+								$(this).attr("disabled","disabled");
+								}
+						});
+					});
+			if (data['sellerArticleSKU'] != undefined) {
+				if (typeof(data['errMsg']) != "undefined" && data['errMsg'] != "") {
+					return false;
+				} else {
+					var promorestrictedSellers = $("#promotedSellerId").val();
+					if (promorestrictedSellers == null
+							|| promorestrictedSellers == undefined
+							|| promorestrictedSellers == "") {
+						//TPR-772
+						$(".promo-block").show();
+
+					} else {
+						if (promorestrictedSellers.length > 0
+								&& !(promorestrictedSellers
+										.indexOf(data['sellerId']) == -1))
+
+							//TPR-772
+							$(".promo-block").show();
+					}
+					var allStockZero = allOosFlag;
+					// var codEnabled = data['isCod'];
+					var sellerName = data['sellerName'];
+					var sellerID = data['sellerId'];
+					
+					
+					$("#sellerNameId").html(sellerName);
+					$("#sellerSelId").val(sellerID);
+					if (isOOS() && sellerCount>0) {
+						$("#addToCartButton").hide();
+						$("#outOfStockId").show();
+						$("#buyNowButton").hide();
+						$("#otherSellerInfoId").hide();
+						$("#otherSellerLinkId").show();
+						 $("#pdpPincodeCheck").hide();
+						 $("#pin").attr("disabled",true);
+						 $("#pdpPincodeCheckDList").show();
+						 $("#buyNowButton").attr("disabled",true);
+						
+						
+					}
+					else if (isOOS() && sellerCount==0){
+						$("#addToCartButton").hide();
+						$("#buyNowButton").hide();
+						$("#outOfStockId").show();
+						$("#otherSellerInfoId").hide();
+						$("#otherSellerLinkId").hide();
+						 $("#pdpPincodeCheck").hide();
+						 $("#pin").attr("disabled",true);
+						 $("#pdpPincodeCheckDList").show();
+						 $("#buyNowButton").attr("disabled",true);
+						
+						
+					}else if (allStockZero == 'Y' && sellerCount>0 && $("#variant option").length == 0) {
+						$("#addToCartButton").hide();
+						$("#outOfStockId").show();
+						$("#allVariantOutOfStock").show();
+						$("#buyNowButton").hide();
+						//}
+						 $("#otherSellerInfoId").hide();
+						 $("#otherSellerLinkId").show();
+						 $("#pdpPincodeCheck").hide();
+						 $("#pin").attr("disabled",true);
+						 $("#pdpPincodeCheckDList").show();
+						 $("#buyNowButton").attr("disabled",true);
+						
+					}
+					else if (allStockZero == 'Y' && sellerCount==0 && $("#variant option").length == 0){
+							$("#addToCartButton").hide();
+							$("#buyNowButton").hide();
+							$("#outOfStockId").show();
+							$("#allVariantOutOfStock").show();
+							 $("#otherSellerInfoId").hide();
+							 $("#otherSellerLinkId").hide();
+							 $("#pdpPincodeCheck").hide();
+							 $("#pin").attr("disabled",true);
+							 $("#pdpPincodeCheckDList").show();
+							 $("#buyNowButton").attr("disabled",true);
+					}
+					else if (sellerCount == 0) {
+						$("#otherSellerInfoId").hide();
+						$("#otherSellerLinkId").hide();
+					} 
+					else if(sellerCount == -1) {
+						$("#otherSellerInfoId").hide();
+						$("#otherSellerLinkId").show();
+					}
+					else {
+						$("#otherSellersId").html(sellerCount);
+						$("#minPriceId").html(data['minPrice'].formattedValue);
+					}
+
+					$("#ussid").val(data['sellerArticleSKU']);
+					$("#sellerSkuId").val(data['sellerArticleSKU']);
+					var spPrice = data['specialPrice'];
+					var mrpPrice = data['mrp'];
+					var mop = data['price'];
+					var savingsOnProduct= data['savingsOnProduct'];
+					$("#stock").val(data['availablestock']);
+					$(".selectQty").change(function() {
+						$("#qty").val($(".selectQty :selected").val());
+					});
+					displayDeliveryDetails(sellerName);
+					//TISPRM-33 savingsOnProduct added
+					dispPrice(mrpPrice, mop, spPrice, savingsOnProduct);
+					//Add to Wishlist PDP CR
+					var ussIdWishlist = data['sellerArticleSKU'];
+					getLastModifiedWishlist(ussIdWishlist);
+					//Ended here//
+					if (isproductPage == 'false') {
+						//fetchAllSellers();
+						$("#minPrice").html(data['minPrice'].formattedValue);
+					}
+				}
+			} 
+				else {
+				 $(".reviews").hide(); 	
+				 $('#addToCartButton-wrong').attr("disable",true);
+				 $('#addToCartButton-wrong').show();
+				 $('#addToCartButton').hide();
+				 $("#otherSellerInfoId").hide();
+				 $(".wish-share").hide();
+				 $(".fullfilled-by").hide();
+				// TISST-13959 fix
+				 $("#dListedErrorMsg").show();
+				 // TISEE-6552 fix
+				 $("#pdpPincodeCheck").hide();
+				 $("#pin").attr("disabled",true);
+				 $("#pdpPincodeCheckDList").show();
+				 $("#buyNowButton").attr("disabled",true);
+			}
 		}
