@@ -2032,7 +2032,7 @@ $(document).ready(function(){
 		  var id = "#"+sublink.split("#")[1];
 		  console.log(id);
 		  $('html, body').animate({
-		        scrollTop: $(id).offset().top -125
+		        scrollTop: $(id).offset().top -100
 		    }, 1000);
 	});
 });
