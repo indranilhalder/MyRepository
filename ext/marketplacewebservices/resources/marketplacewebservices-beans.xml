@@ -2438,6 +2438,8 @@
      <bean class="com.tisl.mpl.wsdto.LuxEngagementcomponentWsDTO">
     	<property name="bannerMedia" type="String"/>
     	<property name="bannerUrl" type="String" />
+    	<property name="textArea" type="String" />
+    	<property name="linkArea" type="String" />
     </bean>
      <bean class="com.tisl.mpl.wsdto.LuxShopByListWsDTO">
     	<property name="brandLogoUrl" type="String"/>

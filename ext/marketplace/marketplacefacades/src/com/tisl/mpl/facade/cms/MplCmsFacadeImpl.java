@@ -468,6 +468,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 		final List<LuxComponentsListWsDTO> componentListForASlot = new ArrayList<LuxComponentsListWsDTO>();
 		LuxComponentsListWsDTO luxuryComponent = new LuxComponentsListWsDTO();
+		LuxComponentsListWsDTO luxComponentObj = new LuxComponentsListWsDTO();
 		if (null != contentSlot)
 		{
 
@@ -478,48 +479,62 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				{
 					final RotatingImagesComponentModel luxuryBannerComponent = (RotatingImagesComponentModel) abstractCMSComponentModel;
 					luxuryComponent = getLuxHeroBannerWsDTO(luxuryBannerComponent);
+					componentListForASlot.add(luxuryComponent);
 				}
 				else if (typecode.equalsIgnoreCase("SignColComponent"))
 				{
 					final SignColComponentModel luxurySignatureCollectionComponent = (SignColComponentModel) abstractCMSComponentModel;
 					luxuryComponent = getSignatureCollectionWsDTO(luxurySignatureCollectionComponent);
+					componentListForASlot.add(luxuryComponent);
 				}
 				else if (typecode.equalsIgnoreCase("MplAdvancedCategoryCarouselComponent"))
 				{
 					final MplAdvancedCategoryCarouselComponentModel luxuryCategoryComponent = (MplAdvancedCategoryCarouselComponentModel) abstractCMSComponentModel;
 					luxuryComponent = getLuxShopYourFavListWsDTO(luxuryCategoryComponent);
+					componentListForASlot.add(luxuryComponent);
 				}
 				else if (typecode.equalsIgnoreCase("VideoComponent"))
 				{
 					final VideoComponentModel luxuryVideoComponent = (VideoComponentModel) abstractCMSComponentModel;
 					luxuryComponent = getLuxVideocomponentWsDTO(luxuryVideoComponent);
+					componentListForASlot.add(luxuryComponent);
 				}
 				else if (typecode.equalsIgnoreCase("MplBigPromoBannerComponent"))
 				{
 					// To do for this
 					final MplBigPromoBannerComponentModel engagementComponent = (MplBigPromoBannerComponentModel) abstractCMSComponentModel;
-
-					luxuryComponent = getLuxEngagementcomponentWsDTO(engagementComponent);
+					if (null != luxuryComponent.getEngagementcomponent())
+					{
+						luxComponentObj = getLuxEngagementcomponentWsDTO(engagementComponent, luxuryComponent.getEngagementcomponent());
+						componentListForASlot.add(luxComponentObj);
+					}
+					else
+					{
+						luxuryComponent = getLuxEngagementcomponentWsDTO(engagementComponent, luxuryComponent.getEngagementcomponent());
+					}
 				}
 				else if (typecode.equalsIgnoreCase("ProductCarouselComponent"))
 				{
 					final ProductCarouselComponentModel luxuryProductListComponent = (ProductCarouselComponentModel) abstractCMSComponentModel;
 					luxuryComponent = getLuxProductsListWsDTO(luxuryProductListComponent);
+					componentListForASlot.add(luxuryComponent);
 				}
 				else if (typecode.equalsIgnoreCase("ImageCarouselComponent"))
 				{
 					final ImageCarouselComponentModel luxuryShopByComponent = (ImageCarouselComponentModel) abstractCMSComponentModel;
 					luxuryComponent = getLuxShopByListWsDTO(luxuryShopByComponent);
+					componentListForASlot.add(luxuryComponent);
 				}
 				// Social Feed Component added
 				else if (typecode.equalsIgnoreCase("CMSParagraphComponent"))
 				{
 					final CMSParagraphComponentModel socialFeedComponent = (CMSParagraphComponentModel) abstractCMSComponentModel;
 					luxuryComponent = getLuxSocialFeedcomponentWsDTO(socialFeedComponent);
+					componentListForASlot.add(luxuryComponent);
 				}
 				LOG.debug("Adding component" + abstractCMSComponentModel.getUid() + "for section" + contentSlot.getUid());
 				luxuryComponent.setSectionid(contentSlot.getUid());
-				componentListForASlot.add(luxuryComponent);
+				//		componentListForASlot.add(luxuryComponent);
 
 			}
 
@@ -799,12 +814,16 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/**
 	 * @param bigPromoBannerModel
+	 * @param list
 	 * @return
 	 */
-	private LuxComponentsListWsDTO getLuxEngagementcomponentWsDTO(final MplBigPromoBannerComponentModel bigPromoBannerModel)
+	private LuxComponentsListWsDTO getLuxEngagementcomponentWsDTO(final MplBigPromoBannerComponentModel bigPromoBannerModel,
+			final List<LuxEngagementcomponentWsDTO> engagementlist)
 	{
 		final ArrayList<LuxEngagementcomponentWsDTO> engagementDtoList = new ArrayList<LuxEngagementcomponentWsDTO>();
+		//	final ArrayList<LuxEngagementcomponentWsDTO> previousEngagementList = new ArrayList<LuxEngagementcomponentWsDTO>();
 		final LuxEngagementcomponentWsDTO engagementDto = new LuxEngagementcomponentWsDTO();
+		final LuxEngagementcomponentWsDTO prevEngagementDto = new LuxEngagementcomponentWsDTO();
 		final LuxComponentsListWsDTO luxcomponentObj = new LuxComponentsListWsDTO();
 		if (null != bigPromoBannerModel)
 		{
@@ -818,8 +837,29 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 			{
 				engagementDto.setBannerUrl(bigPromoBannerModel.getUrlLink());
 			}
+			if (null != bigPromoBannerModel.getMajorPromoText())
+			{
+				engagementDto.setTextArea(bigPromoBannerModel.getMajorPromoText());
+			}
+			if (null != bigPromoBannerModel.getMinorPromo1Text())
+			{
+				engagementDto.setLinkArea(bigPromoBannerModel.getMinorPromo1Text());
+			}
+
+			if (null != engagementlist && engagementlist.size() > 0)
+			{
+				for (final LuxEngagementcomponentWsDTO luxEngagementcomponentWsDTO : engagementlist)
+				{
+					prevEngagementDto.setBannerUrl(luxEngagementcomponentWsDTO.getBannerUrl());
+					prevEngagementDto.setBannerMedia(luxEngagementcomponentWsDTO.getBannerMedia());
+					prevEngagementDto.setLinkArea(luxEngagementcomponentWsDTO.getLinkArea());
+					prevEngagementDto.setTextArea(luxEngagementcomponentWsDTO.getTextArea());
+				}
+				engagementDtoList.add(prevEngagementDto);
+			}
 			engagementDtoList.add(engagementDto);
 			luxcomponentObj.setEngagementcomponent(engagementDtoList);
+
 		}
 		return luxcomponentObj;
 	}

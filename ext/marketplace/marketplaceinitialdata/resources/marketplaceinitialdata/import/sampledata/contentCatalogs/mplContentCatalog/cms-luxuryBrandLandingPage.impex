@@ -151,8 +151,8 @@ INSERT_UPDATE MplImageCategoryComponent;$contentCV[unique=true];uid[unique=true]
 ;;categoryComponent4;Fourth Thumbnail Category;MSH1210100;categoryComponent4
 ;;categoryComponent5;Fifth Thumbnail Category;MSH1010100;categoryComponent5
 
-INSERT_UPDATE MplAdvancedCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];name;categories(&componentRef);&componentRef;imageSize(code);altText
-;;categoriesAdvancedComponent;Categories Carousel Component;categoryComponent1,categoryComponent2,categoryComponent3,categoryComponent4,categoryComponent5;categoriesAdvancedComponent;thumbnail;Test for alt text
+INSERT_UPDATE MplAdvancedCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];name;categories(&componentRef);&componentRef;imageSize(code);
+;;categoriesAdvancedComponent;Categories Carousel Component;categoryComponent1,categoryComponent2,categoryComponent3,categoryComponent4,categoryComponent5;categoriesAdvancedComponent;thumbnail
 
 
 ### Content Slot
