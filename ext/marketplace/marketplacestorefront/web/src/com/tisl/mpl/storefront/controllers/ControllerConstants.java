@@ -115,6 +115,7 @@ public interface ControllerConstants
 			String ContactUsTabComponent = _Prefix + ContactUsTabComponentModel._TYPECODE + _Suffix;
 			String MplBrandLogoComponent = _Prefix + MplBrandLogoComponentModel._TYPECODE + _Suffix;
 			String RotatingImagesComponent = _Prefix + RotatingImagesComponentModel._TYPECODE + _Suffix;
+			String CustomSkuComponent = _Prefix + "MplCustomSkuRefinementComponent" + _Suffix;
 		}
 	}
 
