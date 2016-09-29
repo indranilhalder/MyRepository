@@ -262,7 +262,7 @@ ACC.carousel = {
 			});
 	},
 	shopTheLookCarousel: function(){
-		$(".shop_the_look #shopByLookCarousel").owlCarousel({
+		$(".shop_the_look .shopByLookCarousel").owlCarousel({
 			/*items:2,
     		loop: true,
     		nav:true,

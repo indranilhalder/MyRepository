@@ -2014,7 +2014,7 @@ $(".featured_collection  > .featured_collection_section").slice(-4).wrapAll("<di
 $(".shop_for_blp > a").slice(0,4).wrapAll("<div class='shop_for_links_blp'>");
 //--shop for section end----//
 //---shop the look section start----//
-$(".shop_the_look > div").slice(1,3).wrapAll("<div class='shop_the_look_left'>");
+$(".shop_the_look > div").slice(2,4).wrapAll("<div class='shop_the_look_left'>");
 //----shop the look section end-----//
 //----blog section start------//
 $(".top_deal_blp  > a").nextAll().wrapAll("<div class='blog_container_blp'>");
