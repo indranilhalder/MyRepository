@@ -61,8 +61,8 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;BottomHeaderSlot;;SimpleBannerComponent;
 ;Section1;;RotatingImagesComponent;
 ;Section2;;RotatingImagesComponent,MplAdvancedCategoryCarouselComponent;
-;Section3;;SimpleBannerComponent,RotatingImagesComponent;
-;Section4;;CMSParagraphComponent,RotatingImagesComponent;
+;Section3;;OurJourneyComponent;
+;Section4;;OurJourneyComponent;
 ;Section5;;VideoComponent;
 ;Section6;;MplBigPromoBannerComponent,ProductCarouselComponent;
 ;Section7;;MplShowcaseComponent;
@@ -167,27 +167,24 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 
 ##############################Section 3  Start ##########################################
 
-INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images']
-;;SpringBannerImage1;text/png;banner_image1.png;$siteResource/images/mobile/banner_image1.png;
-;;SpringBannerImage2;text/png;banner_image2.png;$siteResource/images/mobile/banner_image2.png;
-;;SpringBannerImage3;text/png;banner_image1.png;$siteResource/images/mobile/banner_image3.png;
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];altText;mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images']
+;;SpringBannerImage11;banner Image1;text/png;banner_image1.png;$siteResource/images/mobile/banner_image1.png;
+;;SpringBannerImage2;banner Image2;text/png;banner_image2.png;$siteResource/images/mobile/banner_image2.png;
+;;SpringBannerImage3;banner Image3;text/png;banner_image1.png;$siteResource/images/mobile/banner_image3.png;
 
 
-INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;title;description;
-;;spring16BannerComponent;Spring 16 Component;spring16BannerComponent;"SPRING 2016"; Collection for this Spring;
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;$picture[lang=$lang];description;title
+;;spring16BannerComponent10;Spring 16 First Banner;spring16BannerComponent10;/;SpringBannerImage1;Test for description;Spring collection1
+;;spring16BannerComponent20;Spring 16 Second Banner;spring16BannerComponent20;/;SpringBannerImage2;Test for description;Spring collection2
+;;spring16BannerComponent30;Spring 16 Third Banner;spring16BannerComponent30;/;SpringBannerImage3;Test for description;Spring collection3
 
-INSERT_UPDATE BannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;$picture
-;;spring16BannerComponent1;Spring 16 First Banner;spring16BannerComponent1;/;SpringBannerImage1
-;;spring16BannerComponent2;Spring 16 Second Banner;spring16BannerComponent2;/;SpringBannerImage2
-;;spring16BannerComponent3;Spring 16 Third Banner;spring16BannerComponent3;/;SpringBannerImage3
 
-####spring 16 change
-INSERT_UPDATE RotatingImagesComponent;$contentCV[unique=true];uid[unique=true];name;banners(&componentRef);&componentRef;timeout
-;;spring16RotatingImageComponent1;Spring 16 Rotating Image Component;spring16BannerComponent1,spring16BannerComponent2,spring16BannerComponent3;spring16RotatingImageComponent1;10
-
+####New Homepage change
+INSERT_UPDATE OurJourneyComponent;$contentCV[unique=true];uid[unique=true];name;footerImageList(&componentRef);&componentRef;headerText;title
+;;springComponent1;Spring Collection Component;spring16BannerComponent10,spring16BannerComponent20,spring16BannerComponent30;springComponent1;<h2>Spring collection</h2>;then
 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
-;;Section3-SpringCollectionOfimages; Spring 2016 First slot;true;spring16BannerComponent,spring16RotatingImageComponent1
+;;Section3-SpringCollectionOfimages; Spring 2016 First slot;true;springComponent1
 
 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxurybrandlandingpage'];contentSlot(uid,$contentCV)[unique=true];;;
@@ -196,36 +193,31 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 ##############################Section 3  End ##########################################
 
 
+ 
 ############################### SECTION 4 STARTS###################################
-INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images']
-;;FeaturedCollectionBannerImage1;text/png;banner_image1.png;$siteResource/images/mobile/banner_image1.png;
-;;FeaturedCollectionBannerImage2;text/png;banner_image2.png;$siteResource/images/mobile/banner_image2.png;
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];altText;mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images']
+;;FeaturedCollectionBannerImage1.png; Banner 1;text/png;banner_image1.png;$siteResource/images/mobile/banner_image1.png;
+;;FeaturedCollectionBannerImage2.png;Banner 2;text/png;banner_image2.png;$siteResource/images/mobile/banner_image2.png; 
+ 
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;description;title;$picture[lang=$lang]
+;;SimpleBannerComponent18;Featured Collection Component 1;SimpleBannerComponent18;"/"; Test for description;Featured collection;FeaturedCollectionBannerImage1.png
+;;SimpleBannerComponent28;Featured Collection Component 2;SimpleBannerComponent28;"/";Test for description;Featured collection;FeaturedCollectionBannerImage2.png
 
 
-INSERT_UPDATE  CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;content[lang=$lang];&componentRef;
-;;FeaturedCollectionHeaderComponent;Featured Collection Header Component;"Featured Collection";FeaturedCollectionHeaderComponent;
-;;FeaturedCollectionParagraphComponent1;Featured Collection Paragraph Component;<span>These image description guidelines were developed by the Carl and Ruth Shapiro Family National Center for Accessible Media</span>;FeaturedCollectionParagraphComponent1;
 
-
-INSERT_UPDATE BannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;$picture
-;;FeaturedCollectionBannerComponent1;Featured Collection First Banner;FeaturedCollectionBannerComponent1;/;FeaturedCollectionBannerImage1
-;;FeaturedCollectionBannerComponent2;Featured Collection Second Banner;FeaturedCollectionBannerComponent2;/;FeaturedCollectionBannerImage2
-
-
-####FeaturedCollection change
-INSERT_UPDATE RotatingImagesComponent;$contentCV[unique=true];uid[unique=true];name;banners(&componentRef);&componentRef;timeout
-;;FeaturedCollectionRotatingImageComponent1;Featured Collection Rotating Image Component;spring16BannerComponent1,FeaturedCollectionBannerComponent1,FeaturedCollectionBannerComponent2;10
+####New Homepage change
+INSERT_UPDATE OurJourneyComponent;$contentCV[unique=true];uid[unique=true];name;footerImageList(&componentRef);&componentRef;headerText;title
+;;featuredComponent1;Featured Collection Component;SimpleBannerComponent18,SimpleBannerComponent28;featuredComponent1;<h2>Featured collection</h2>;then
 
 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
-;;Section4-FeaturedCollectionofimages;Featured Collection First slot;true;FeaturedCollectionHeaderComponent,FeaturedCollectionParagraphComponent1,FeaturedCollectionRotatingImageComponent1
+;;Section4-FeaturedCollectionofimages; Featured Collection;true;featuredComponent1
 
 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxurybrandlandingpage'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;Section4-luxurybrandlandingpage;Section4;;Section4-FeaturedCollectionofimages;;; 
 
 ############################### SECTION 4 END ###################################
-
 
 ################################ SECTION 5 STARTS #################################
 
