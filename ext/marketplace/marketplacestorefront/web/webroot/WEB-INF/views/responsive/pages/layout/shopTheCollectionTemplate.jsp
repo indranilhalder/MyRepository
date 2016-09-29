@@ -112,7 +112,7 @@
 							supportShowAll="${isShowAllAllowed}"
 							searchPageData="${searchPageData}"
 							searchUrl="${searchPageData.currentQuery.url}"
-							numberPagesShown="${numberPagesShown}" /><c:out value="${numberPagesShown}"></c:out>
+							numberPagesShown="${numberPagesShown}" />
 							
 							
 
