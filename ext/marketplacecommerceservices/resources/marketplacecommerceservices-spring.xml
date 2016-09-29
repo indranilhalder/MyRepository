@@ -1782,5 +1782,12 @@
 		<property name="typeCode" value="Sizesystem" />
 	</bean>
 	<!-- Bean for POC Search ends-->
+	
+	<alias name="mplCmsCacheService" alias="cmsCacheService"/>
+	<bean id="mplCmsCacheService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplCmsCacheServiceImpl"
+		parent="defaultCmsCacheService">
+		
+	</bean>
+	
 </beans>
 

@@ -272,6 +272,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 				populateModel(model, searchPageData, ShowMode.Page);
 				model.addAttribute(ModelAttributetConstants.NORMAL_PRODUCTS, normalProductDatas);
 				model.addAttribute(ModelAttributetConstants.SHOW_CATEGORIES_ONLY, Boolean.FALSE);
+				// For Category Footer
+				model.addAttribute("categoryFooterTxt", category.getCategoryFooterText());
 			}
 		}
 
@@ -429,6 +431,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 				populateModel(model, searchPageData, ShowMode.Page);
 				model.addAttribute(ModelAttributetConstants.NORMAL_PRODUCTS, normalProductDatas);
 				model.addAttribute(ModelAttributetConstants.SHOW_CATEGORIES_ONLY, Boolean.FALSE);
+				// For Category Footer
+				model.addAttribute("categoryFooterTxt", category.getCategoryFooterText());
 				storeCmsPageInModel(model, categoryLandingPage);
 
 
@@ -830,6 +834,9 @@ public class CategoryPageController extends AbstractCategoryPageController
 		model.addAttribute("pageType", PageType.CATEGORY.name());
 		model.addAttribute("userLocation", getCustomerLocationService().getUserLocation());
 		model.addAttribute("otherProducts", true);
+		// For Category Footer
+		model.addAttribute("categoryFooterTxt", category.getCategoryFooterText());
+
 		updatePageTitle(category, searchPageData.getBreadcrumbs(), model);
 		if (CollectionUtils.isNotEmpty(searchPageData.getResults()))
 		{
