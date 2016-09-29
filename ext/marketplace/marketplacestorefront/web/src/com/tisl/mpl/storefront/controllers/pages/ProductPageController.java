@@ -1754,57 +1754,6 @@ public class ProductPageController extends AbstractPageController
 				buyboxJson = getPopulatedBuyBoxJson(buydata, buyboxJson);
 				buyboxJson.put("buyboxList", buyboxdata);
 			}
-			//			final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(productCode);
-			//			if (buydata != null)
-			//
-			//			{
-			//				final BuyBoxData buyboxdata = (BuyBoxData) buydata.get("pdp_buy_box");
-			//				if (buyboxdata.getSpecialPrice() != null && buyboxdata.getSpecialPrice().getValue().doubleValue() > 0)
-			//				{
-			//					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, buyboxdata.getSpecialPrice());
-			//				}
-			//				// populate json with price,ussid,sellername and other details
-			//				buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, buyboxdata.getPrice());
-			//				buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP, buyboxdata.getMrp());
-			//				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_NAME, buyboxdata.getSellerName());
-			//				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ARTICLE_SKU, buyboxdata.getSellerArticleSKU());
-			//				buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, buyboxdata.getAvailable());
-			//				buyboxJson.put(ControllerConstants.Views.Fragments.Product.OTHERS_SELLERS_COUNT, buyboxdata.getNumberofsellers());
-			//				buyboxJson.put(ControllerConstants.Views.Fragments.Product.MIN_PRICE, buyboxdata.getMinPrice());
-			//				buyboxJson.put(ControllerConstants.Views.Fragments.Product.ALL_OF_STOCK, buyboxdata.getAllOOStock());
-			//				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
-			//				final Map<String, Integer> stockAvailibilty = new TreeMap<String, Integer>();
-			//				final List<String> noStockPCodes = (List<String>) buydata.get("no_stock_p_codes");
-			//				for (final String pCode : noStockPCodes)
-			//				{
-			//					stockAvailibilty.put(pCode, Integer.valueOf(0));
-			//				}
-			//				buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABILITY, stockAvailibilty);
-			//				//TISPRM-33
-			//				if (null != buyboxdata.getMrp())
-			//				{
-			//					if (buyboxdata.getSpecialPrice() != null && buyboxdata.getSpecialPrice().getValue().doubleValue() > 0)
-			//					{
-			//						final double savingPriceCal = buyboxdata.getMrp().getDoubleValue()
-			//								- buyboxdata.getSpecialPrice().getDoubleValue();
-			//						final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue()) * 100;
-			//						//Critical Sonar Fix
-			//						final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
-			//						final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
-			//
-			//						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
-			//					}
-			//					else if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getValue().doubleValue() > 0)
-			//					{
-			//						final double savingPriceCal = buyboxdata.getMrp().getDoubleValue() - buyboxdata.getPrice().getDoubleValue();
-			//						final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue()) * 100;
-			//						//Critical Sonar Fix
-			//						final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
-			//						final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
-			//						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
-			//					}
-			//				}
-			//			}
 			else
 			{
 
@@ -1976,11 +1925,11 @@ public class ProductPageController extends AbstractPageController
 	 */
 	/*
 	 * private MarketplaceDeliveryModeData fetchDeliveryModeDataForUSSID(final String deliveryMode, final String ussid) {
-	 * 
+	 *
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 * 
+	 *
 	 * final PriceData priceData = productDetailsHelper.formPriceData(mplZoneDeliveryModeValueModel.getValue());
 	 * deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
 	 * deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
@@ -2000,76 +1949,76 @@ public class ProductPageController extends AbstractPageController
 	 */
 	/*
 	 * private List<PincodeServiceData> populatePinCodeServiceData(final String productCode) {
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * final List<PincodeServiceData> requestData = new ArrayList<>(); PincodeServiceData data = null;
-	 * 
+	 *
 	 * MarketplaceDeliveryModeData deliveryModeData = null; try { final ProductModel productModel =
-	 * 
-	 * 
+	 *
+	 *
 	 * productService.getProductForCode(productCode); final ProductData productData =
-	 * 
+	 *
 	 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER,
 	 * ProductOption.PRICE));
-	 * 
-	 * 
+	 *
+	 *
 	 * for (final SellerInformationData seller : productData.getSeller()) { final List<MarketplaceDeliveryModeData>
-	 * 
+	 *
 	 * deliveryModeList = new ArrayList<MarketplaceDeliveryModeData>(); data = new PincodeServiceData(); if ((null !=
-	 * 
+	 *
 	 * seller.getDeliveryModes()) && !(seller.getDeliveryModes().isEmpty())) { for (final MarketplaceDeliveryModeData
-	 * 
+	 *
 	 * deliveryMode : seller.getDeliveryModes()) { deliveryModeData =
-	 * 
+	 *
 	 * fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid()); deliveryModeList.add(deliveryModeData);
-	 * 
-	 * 
+	 *
+	 *
 	 * } data.setDeliveryModes(deliveryModeList); } if (null != seller.getFullfillment() &&
-	 * 
+	 *
 	 * StringUtils.isNotEmpty(seller.getFullfillment())) {
-	 * 
+	 *
 	 * data.setFullFillmentType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getFullfillment().toUpperCase())); }
-	 * 
+	 *
 	 * if (null != seller.getShippingMode() && (StringUtils.isNotEmpty(seller.getShippingMode()))) {
-	 * 
+	 *
 	 * data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getShippingMode().toUpperCase())); } if
-	 * 
+	 *
 	 * (null != seller.getSpPrice() && !(seller.getSpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 * 
+	 *
 	 * Double(seller.getSpPrice().getValue().doubleValue())); } else if (null != seller.getMopPrice() &&
-	 * 
+	 *
 	 * !(seller.getMopPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 * 
+	 *
 	 * Double(seller.getMopPrice().getValue().doubleValue())); } else if (null != seller.getMrpPrice() &&
-	 * 
+	 *
 	 * !(seller.getMrpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 * 
+	 *
 	 * Double(seller.getMrpPrice().getValue().doubleValue())); } else {
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * LOG.info("*************** No price avaiable for seller :" + seller.getSellerID()); continue; } if (null !=
-	 * 
-	 * 
+	 *
+	 *
 	 * seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod())) { data.setIsCOD(seller.getIsCod()); }
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * data.setSellerId(seller.getSellerID()); data.setUssid(seller.getUssid());
-	 * 
+	 *
 	 * data.setIsDeliveryDateRequired(ControllerConstants.Views.Fragments.Product.N); requestData.add(data); } } catch
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
+	 *
 	 * (final EtailBusinessExceptions e) { ExceptionUtil.etailBusinessExceptionHandler(e, null); }
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * catch (final Exception e) {
-	 * 
+	 *
 	 * throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } return requestData; }
 	 */
 

@@ -245,102 +245,17 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				}
 
 			}
-			if (buyBoxDataList.size() == 1)
-			{
-				returnData.put(BUYBOX_LIST, Arrays.asList(buyboxData));
-			}
-			else
-			{
-				returnData.put(BUYBOX_LIST, buyBoxDataList);
-			}
+			returnData.put(BUYBOX_LIST, buyBoxDataList);
 			//TPR-1375 changes end
 			if (buyboxModelList.size() > 0)
 			{
 				buyboxData = populateBuyBoxData(buyBoxMod, onlyBuyBoxHasStock, buyboxModelList);
-
-
-				//				if (null != buyBoxMod.getSpecialPrice() && buyBoxMod.getSpecialPrice().doubleValue() > 0)
-				//				{
-				//					final double spPrice = buyBoxMod.getSpecialPrice().doubleValue();
-				//					//final double roundedSpPrice = Math.round(spPrice * 100) / 100;
-				//					buyboxData.setSpecialPrice(productDetailsHelper.formPriceData(new Double(spPrice)));
-				//				}
-				//				final double price = buyBoxMod.getPrice().doubleValue();
-				//				buyboxData.setPrice(productDetailsHelper.formPriceData(new Double(price)));
-				//				buyboxData.setSellerAssociationstatus(SellerAssociationStatusEnum.YES.toString());
-				//				buyboxData.setSellerName(buyBoxMod.getSellerName());
-				//				buyboxData.setSellerId(buyBoxMod.getSellerId());
-				//				buyboxData.setSellerArticleSKU(buyBoxMod.getSellerArticleSKU());
-				//				buyboxData.setAvailable(buyBoxMod.getAvailable());
-				//				if (null != buyBoxMod.getMrp())
-				//				{
-				//					buyboxData.setMrp(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
-				//					buyboxData.setMrpPriceValue(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
-				//				}
-				//
-				//
-				//				//other sellers count
-				//				final int sellerSize = buyboxModelList.size() - 1;
-				//				final Integer noofsellers = Integer.valueOf(sellerSize);
-				//				if (onlyBuyBoxHasStock && sellerSize > 0)
-				//				{
-				//					buyboxData.setNumberofsellers(Integer.valueOf(-1));
-				//					//buyboxData.setNumberofsellers(Integer.valueOf(-1));
-				//				}
-				//				else
-				//				{
-				//					buyboxData.setNumberofsellers(noofsellers);
-				//				}
-				//				//Minimum price for other sellers
-				//				double minPrice = 0.0d;
-				//				if (sellerSize > 0)
-				//				{
-				//
-				//					for (int i = 1; i <= sellerSize; i++)
-				//					{
-				//						if (null != buyboxModelList.get(i).getSpecialPrice()
-				//								&& buyboxModelList.get(i).getSpecialPrice().doubleValue() > 0)
-				//						{
-				//
-				//							final double specialPrice = buyboxModelList.get(i).getSpecialPrice().doubleValue();
-				//
-				//							if (i == 1)
-				//							{
-				//								minPrice = specialPrice;
-				//							}
-				//							else
-				//							{
-				//								if (minPrice > specialPrice)
-				//								{
-				//									minPrice = specialPrice;
-				//								}
-				//							}
-				//						}
-				//						else
-				//						{
-				//							double actualPrice = 0.0D;
-				//							if (null != buyboxModelList.get(i).getPrice())
-				//							{
-				//								actualPrice = buyboxModelList.get(i).getPrice().doubleValue();
-				//							}
-				//							if (i == 1)
-				//							{
-				//								minPrice = actualPrice;
-				//							}
-				//							else
-				//							{
-				//								if (minPrice > actualPrice)
-				//								{
-				//									minPrice = actualPrice;
-				//								}
-				//							}
-				//						}
-				//					}
-				//
-				//				}
-				//				final double roundedMinPrice = Math.round(minPrice * 100) / 100;
-				//				buyboxData.setMinPrice(productDetailsHelper.formPriceData(new Double(roundedMinPrice)));
-
+				//TPR-1375 changes starts
+				if (CollectionUtils.isEmpty(buyBoxDataList))
+				{
+					returnData.put(BUYBOX_LIST, Arrays.asList(buyboxData));
+				}
+				//TPR-1375 changes ends
 			}
 			else
 			{
@@ -879,7 +794,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/*
 	 * This method is used to get the price of a product by giving the ussid
-	 * 
+	 *
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getpriceForUssid(java.lang.String)
 	 */
 
