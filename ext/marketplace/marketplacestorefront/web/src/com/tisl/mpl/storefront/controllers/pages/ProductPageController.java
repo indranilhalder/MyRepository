@@ -1714,6 +1714,10 @@ public class ProductPageController extends AbstractPageController
 										}
 									}
 								}
+								if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.WARRANTY.toLowerCase()))
+								{
+									warrentyList.add(featureValueData.getValue());
+								}
 							}
 							else
 							{
