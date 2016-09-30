@@ -129,9 +129,7 @@ $(document).ready(
 							+promo_id+ '"],';
 						//TPR-672 END
 					
-						//TPR-
-						
-						START
+						//TPR-429 START
 						tealiumData += '"buybox_seller_id":"'
 							+ $("#pdpBuyboxWinnerSellerID").val() + '",';
 						tealiumData += '"other_seller_ids":"'
