@@ -92,10 +92,12 @@ function setSizeforAkamai()
 function isOOSQuick(){
 	var totalOptions = $("ul[label=sizes] li").length;
 	totalOptions = totalOptions -1;
-	var disabledOption = $("ul[label=sizes] li").find("[style]").length;
+	var disabledOption = $("ul[label=sizes] li.strike").length;
 	if(totalOptions == disabledOption){
+		
 		return true;
 	}else{
+		
 		return false;
 	}
 }
@@ -121,17 +123,18 @@ function setBuyBoxDetails()
 			success : function(data) {
 				var stockInfo = data['availibility'];
 				availibility = stockInfo;
-				
 				$.each(stockInfo,function(key,value){
 					$("ul[label=sizes] li a").each(function(){
 						
 				if(typeof($(this).attr("href"))!= 'undefined' && $(this).attr("href").toUpperCase().indexOf(key)!= -1 && value == 0){ 
 								
 								$(this).attr("disabled",true);
+								$(this).parent("li").addClass("strike");
 								
-								$(this).css({
+								
+								/*$(this).css({
 									"color": "gray"
-							});
+							});*/
 								$(this).on("mouseenter",function(){
 									$(this).parent("li").css("background","#fff");
 									
@@ -141,7 +144,7 @@ function setBuyBoxDetails()
 								      event.preventDefault();
 								      return false;
 								   });
-							$(this).parent().css("border-color","gray");
+							//$(this).parent().css("border-color","gray");
 							}
 						
 					});
@@ -150,18 +153,28 @@ function setBuyBoxDetails()
 				//alert("...>>"+data['sellerArticleSKU']+"<<"+productCode+"..."+productCodeQuickView);
 				
 				if(typeof data['sellerArticleSKU'] === 'undefined')
-					{
+					{					
 					$("#addToCartButtonQuick-wrong").show();
-					$("#addToCartButtonQuick").hide();					
-					//$("#dListedErrorMsg").show();				
+					/*TPR-1772 functionality change for non-saleable products*/
+					/*$("#buyNowButtonQuick-wrong").show();*/
+					/*$('#buyNowButton').hide();*/
+					$("#buyNowButton").attr("disabled","disabled");
+					/*TPR-1772 functionality change for non-saleable products*/
+					$("#addToCartButtonQuick").hide();
+					$("#dListedErrorMsg").show();				
 					return false;
 					}					
 				
 				if(data['sellerArticleSKU']==null)
 					{
 					$("#addToCartButtonQuick-wrong").show();
+					/*TPR-1772 functionality change for non-saleable products*/
+					/*$("#buyNowButtonQuick-wrong").show();*/
+					/*$('#buyNowButton').hide();*/
+					$("#buyNowButton").attr("disabled","disabled");
+					/*TPR-1772 functionality change for non-saleable products*/
 					$("#addToCartButtonQuick").hide();
-					//$("#dListedErrorMsg").show();					
+					$("#dListedErrorMsg").show();				
 					return false;
 					}
 				
@@ -185,25 +198,30 @@ function setBuyBoxDetails()
 				//if (allStockZero == 'Y' && data['othersSellersCount']>0) {
 				if (isOOSQuick() && data['othersSellersCount']>0) {
 					$("#addToCartButtonQuick").hide();
+					$('#buyNowButton').hide();
 					$("#outOfStockIdQuick").show();
 				}else if (isOOSQuick() && data['othersSellersCount']==0){
 					$("#addToCartButtonQuick").hide();
+					$('#buyNowButton').hide();
 					$("#outOfStockIdQuick").show();
 				}else if (allStockZero == 'Y' && data['othersSellersCount']>0 && $("ul[label=sizes] li").length == 0) { //TPR-465
 					//if( $(".quickViewSelect").html()!="Select") {  //TISPRD-1173
 					$("#addToCartButtonQuick").hide();
+					$('#buyNowButton').hide();
 					$("#outOfStockIdQuick").show();
 					//}					
 				}
 				else if (allStockZero == 'Y' && data['othersSellersCount']==0 && $("ul[label=sizes] li").length == 0){
 					//if($(".quickViewSelect").html()!="Select"){	//TISPRD-1173 TPR-465
 						$("#addToCartButton").hide();
+						$('#buyNowButton').hide();
 						$("#outOfStockIdQuick").show();
 					//}					
 				}
 				else
 					{
 					$("#addToCartButtonQuick").show();
+					$('#buyNowButton').show();
 					$("#outOfStockIdQuick").hide();
 					}				
 				
@@ -399,10 +417,11 @@ function addToWishlist_quick(alreadyAddedWlName_quick) {
 			if (data == true) {
 				$("#radio_" + $("#hidWishlist_quick").val()).prop("disabled", true);
 				var msg=$('#wishlistSuccess_quick').text();
-				$('#addedMessage_quick').show();
+				$('#addedMessage_quick').show();				
 				$('#addedMessage_quick').html(msg);
 				setTimeout(function() {
 					  $("#addedMessage_quick").fadeOut().empty();
+					 					  
 					}, 1500);
 				populateMyWishlistFlyOut(wishName);
 				
@@ -515,7 +534,12 @@ function selectWishlist_quick(i) {
 }
 
 
-function openPop_quick(ussidfromSeller) {
+/*function openPop_quick(ussidfromSeller) {
+	alert("HEllo");
+	$(".wishAddSucessQV").addClass("active");
+	setTimeout(function(){
+		$(".wishAddSucessQV").removeClass("active")
+	},3000);
 	$('#addedMessage_quick').hide();
 	if (ussidfromSeller == null || ussidfromSeller == "") {
 		ussidValue = $("#ussid_quick").val();
@@ -528,6 +552,8 @@ function openPop_quick(ussidfromSeller) {
 			+ "-viewWishlistsInPDP";
 
 	var dataString = 'productCode=' + productCode + '&ussid=' + ussidValue;// modified
+	console.log(dataString);
+	console.log(requiredUrl);
 	// for
 	// ussid
 
@@ -538,23 +564,163 @@ function openPop_quick(ussidfromSeller) {
 		dataType : "json",
 		success : function(data) {
 			if (data == null) {
+				alert("Login");
 				$("#wishListNonLoggedInId_quick").show();
 				$("#wishListDetailsId_quick").hide();
 			}
 
 			else if (data == "" || data == []) {
-
+				alert("Login 2");
 				loadDefaultWishListName_quick();
 
-			} else {
+			} else {alert("Login 3");
 				LoadWishLists_quick(ussidValue, data, productCode);
 			}
 		},
-		error : function(xhr, status, error) {
+		error : function(xhr, status, error) {alert(xhr.status+"---"+error);
 			$("#wishListNonLoggedInId_quick").show();
 			$("#wishListDetailsId_quick").hide();
 		}
 	});
+}*/
+function openPop_quick(ussidfromSeller){
+
+	
+	var loggedIn=$("#loggedIn").val();
+
+	var productCodePost = $("#productCodePost").val();
+
+	var wishName = "";
+	
+	var ussidValue=$("#ussid_quick").val();
+  
+	/*if (wishListList == "") {
+		wishName = $("#defaultWishName").val();
+	} else {
+		wishName = wishListList[$("#hidWishlist").val()];
+	}
+	if(wishName==""){
+		var msg=$('#wishlistnotblank').text();
+		$('#addedMessage').show();
+		$('#addedMessage').html(msg);
+		return false;
+	}
+    if(wishName==undefined||wishName==null){
+    	if(alreadyAddedWlName_pdp!=undefined || alreadyAddedWlName_pdp!=""){
+    		if(alreadyAddedWlName_pdp=="[]"){
+    			$("#wishlistErrorId_pdp").html("Please select a wishlist");
+    		}
+    		else{
+    			alreadyAddedWlName_pdp=alreadyAddedWlName_pdp.replace("[","");
+    			alreadyAddedWlName_pdp=alreadyAddedWlName_pdp.replace("]","");
+    			$("#wishlistErrorId_pdp").html("Product already added in your wishlist "+alreadyAddedWlName_pdp);
+    		}
+    		$("#wishlistErrorId_pdp").css("display","block");
+    	}
+    	return false;
+    }*/
+	var requiredUrl = ACC.config.encodedContextPath + "/p"
+			+ "-addToWishListInPDP";
+    var sizeSelected=true;
+    if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'){
+    	sizeSelected=false;
+    }
+	var dataString = 'wish=' + wishName + '&product=' + productCodePost
+			+ '&ussid=' + ussidValue+'&sizeSelected=' + sizeSelected;
+
+	if(loggedIn == 'false') {
+		$(".wishAddLoginQv").addClass("active");
+		setTimeout(function(){
+			$(".wishAddLoginQv").removeClass("active")
+		},3000)
+	}
+	else {
+			
+		$.ajax({
+			contentType : "application/json; charset=utf-8",
+			url : requiredUrl,
+			data : dataString,
+			dataType : "json",
+			success : function(data) {
+				
+				if (data == true) {
+					
+					//$("#radio_" + $("#hidWishlist").val()).prop("disabled", true);
+					//var msg=$('#wishlistSuccess').text();
+					//$('#addedMessage').show();
+					//$('#addedMessage').html(msg);
+					$(".wishAddSucessQv").addClass("active");
+					$('.wishlist-icon-qv').addClass("added");
+					setTimeout(function(){
+						$(".wishAddSucessQv").removeClass("active")
+					},3000)
+					$("#add_to_wishlist_quick").attr("disabled",true);
+					$('.add_to_cart_form .out_of_stock #add_to_wishlist_quick').addClass("wishDisabled");
+					$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').addClass("added");
+					/*setTimeout(function() {
+						  $("#addedMessage").fadeOut().empty();
+						}, 1500);*/
+					//$('#addedMessage').delay(3000).fadeOut('slow'); // TISTI-225
+					populateMyWishlistFlyOut(wishName);
+					
+					//For MSD
+					var isMSDEnabled =  $("input[name=isMSDEnabled]").val();								
+					if(isMSDEnabled === 'true')
+					{
+					
+					var isApparelExist  = $("input[name=isApparelExist]").val();
+							
+					var salesHierarchyCategoryMSD =  $("input[name=salesHierarchyCategoryMSD]").val();
+					
+					var rootCategoryMSD  = $("input[name=rootCategoryMSD]").val();
+						
+					var productCodeMSD =  $("input[name=productCodeMSD]").val();
+							
+					var priceformad =  $("input[id=price-for-mad]").val();
+								
+					
+					if(typeof isMSDEnabled === 'undefined')
+					{
+						isMSDEnabled = false;						
+					}
+					
+					if(typeof isApparelExist === 'undefined')
+					{
+						isApparelExist = false;						
+					}	
+					
+					if(Boolean(isMSDEnabled) && Boolean(isApparelExist) && (rootCategoryMSD === 'Clothing'))
+						{					
+						ACC.track.trackAddToWishListForMAD(productCodeMSD, salesHierarchyCategoryMSD, priceformad,"INR");
+						}	
+					}
+					//End MSD
+					
+					
+					
+					//openPop(ussidValue);
+				//	$('#myModal').modal('hide');
+				//	
+				}
+				else{
+					$(".wishAlreadyAddedQv").addClass("active");
+					setTimeout(function(){
+						$(".wishAlreadyAddedQv").removeClass("active")
+					},3000)
+				}
+			},
+		});
+	
+	//$('a.wishlist#wishlist').popover('hide');
+	//$('input.wishlist#add_to_wishlist').popover('hide');
+	
+		/*setTimeout(function() {
+			$('a.wishlist#wishlist').popover('hide');
+			$('input.wishlist#add_to_wishlist').popover('hide');
+
+			}, 0);*/
+	}
+
 }
 
 function loadDefaultWishListName_quick() {
@@ -640,4 +806,133 @@ function getSelectedEMIBankForPDP() {
 	} else {
 
 	}
+}
+/**/
+$(document).on("click","#variantForm div ul li a,.color-swatch-container .color-swatch li a",function(){
+	setTimeout(function(){
+	$(".zoomContainer").remove();
+	$('.picZoomer-pic').removeData('zoom-image');
+	$("img.picZoomer-pic").attr('data-zoom-image',$(".quickview .product-image-container .productImageGallery .active img").attr("data-zoomimagesrc")); 
+	$('.quickview .picZoomer-pic').elevateZoom({
+	    zoomType: "window",
+	    cursor: "crosshair",
+	    zoomWindowFadeIn: 500,
+	    zoomWindowFadeOut: 750
+    });
+	var mainImageHeight = $(".main-image").find("img.picZoomer-pic").height();
+	var thumbnailImageHeight = (mainImageHeight / 5);
+	$(".imageList ul li img").css("height", thumbnailImageHeight);		
+	}, 1000); 
+});
+/* Start of Quickview EMI  */
+$(document).on("click",".quickview #emiStickerId p",function(e){
+	e.stopPropagation();
+	$(this).addClass("active")
+	openPopForBankEMI_quick();
+		
+	});
+$(document).on("click",".quickview .Emi .modal-content .Close",function(e){
+	$(".quickview .Emi > p").removeClass("active mobile");
+	e.stopPropagation();
+	
+});
+$(document).on("click", function(e){
+	//console.log($(e.currentTarget).attr('class'))
+	if(!$(e.currentTarget).parents(".Emi").hasClass("Emi_wrapper")) {
+		$(".quickview .Emi > p").removeClass("active")
+	} else {
+		$(".quickview .Emi > p").addClass("active")
+	}
+});
+$(document).on("click",".quickview .Emi > #EMImodal-content",function(e){
+	e.stopPropagation();
+		$(".quickview .Emi > p").addClass("active")
+});
+
+$(document).on('click','#buyNowQv .js-add-to-cart-qv',function(event){
+	
+	 if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#categoryType").val()!='Electronics'){
+		 $("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+		 				$("#addToCartFormQuickTitle").show();
+		  				$("#addToCartFormQuickTitle").fadeOut(5000);
+ 	    return false;
+ }else{			 
+	ACC.product.sendToCartPageQuick("addToCartFormQuick",true);
+}
+});
+/*End of quickview Emi*/
+/*TPR-924*/
+/*Wishlist icon activation*/
+function isItemInWishList(ussidfromSeller) {
+	
+	var loggedIn=$("loggedIn").val();
+	$('#addedMessage').hide();
+	if ($.isEmptyObject(ussidfromSeller)) {
+		ussidValue = $("#ussid_quick").val();
+	} else {
+		ussidValue = ussidfromSeller;
+	}
+	var productCode = $("#productCodePost").val();
+
+	var requiredUrl = ACC.config.encodedContextPath + "/p"
+			+ "-viewWishlistsInPDP";
+
+	var dataString = 'productCode=' + productCode + '&ussid=' + ussidValue;// modified
+	// for
+	// ussid
+
+	$.ajax({
+		contentType : "application/json; charset=utf-8",
+		url : requiredUrl,
+		data : dataString,
+		dataType : "json",
+		success : function(data) {
+		if (!$.isEmptyObject(data)) {			
+				LoadWishLists(ussidValue, data, productCode);
+			}
+		},
+		error : function(xhr, status, error) {
+			
+		}
+	});
+}
+
+function LoadWishLists(ussid, data, productCode) {
+	    
+	// modified for ussid
+	var addedWlList_pdp = [];
+	var wishListContent = "";
+	var wishName = "";
+	$this = this;
+	
+
+	for ( var i in data) {
+		
+		var index = -1;
+		var checkExistingUssidInWishList = false;
+		var wishList = data[i];
+		wishName = wishList['particularWishlistName'];
+		wishListList[i] = wishName;
+		var entries = wishList['ussidEntries'];
+		for ( var j in entries) {
+			var entry = entries[j];
+
+			if (entry == ussid) {
+
+				checkExistingUssidInWishList = true;
+				break;
+
+			}
+		}
+		
+		if (checkExistingUssidInWishList) {
+			
+			$('.wishlist-icon-qv').addClass("added");
+			           
+		} 
+		index++;
+	}
+
+	
+
 }

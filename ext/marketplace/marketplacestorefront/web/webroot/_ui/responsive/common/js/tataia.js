@@ -725,7 +725,9 @@ if (searchCategory_id){
 
 				  html += '</ul>';
 				  html += '<p class="company" >'+obj.brand+'</p>';
-				  html += '<span class="product-name" style="text-overflow: ellipsis;word-break: break-word;">'+obj.name+'</span>';
+
+				  html += '<h2 class="product-name" style="text-overflow: ellipsis;word-break: break-word;">'+obj.name+'</h2>';
+
 				  html += '<div class="price">';
 				  
 					 
@@ -1518,4 +1520,5 @@ if (searchCategory_id){
     //console.log("widget mode we don't account for: " + widgetMode);
   }
 }
+
 			$(document).on('click',".IAQuickView,.iaAddToCartButton",function(e){e.preventDefault();})

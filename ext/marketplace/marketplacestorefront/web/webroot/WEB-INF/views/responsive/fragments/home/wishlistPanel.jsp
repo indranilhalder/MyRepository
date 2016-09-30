@@ -22,6 +22,7 @@
 							<c:if test="${not empty wishlistEntry.product}">
 								<c:set var="size" value="${size +1}"></c:set>
 							</c:if>
+							<span class="wlCode" style="display: none;">${wishlistEntry.product.code}</span>
 						</c:forEach>
 						<span> <c:if test="${size> 1}">${size}&nbsp;<spring:theme
 									code="text.items" />
