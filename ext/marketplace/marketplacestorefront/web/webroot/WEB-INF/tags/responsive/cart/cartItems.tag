@@ -70,7 +70,7 @@ tr.d0 td {
    <input type="hidden" value="${entry.selectedSellerInformation.ussid}" id=ussid />
    <input type="hidden" value="${entry.product.code}" id="product" />
    <input type="hidden" name="hidWishlist" id="hidWishlist">
-   
+  
    
    <!-- for MSD -->
    <div>
@@ -183,6 +183,7 @@ tr.d0 td {
    </li>
    
     <li class="price">
+   <%--  <c:out value="${entry.basePrice.value}"></c:out> --%>
 					<ul>
 						<c:set var="quantity" value="${entry.quantity}"/>
 						<c:set var="subPrice" value="${entry.basePrice.value}" />
@@ -212,11 +213,12 @@ tr.d0 td {
 										   	<span><format:price priceData="${entry.productLevelDisc}" displayFreeForZero="true"/></span><span class="discount-off">Off</span> 
 											--%>
 										</c:when>
-										<c:when test="${entry.basePrice.formattedValue == entry.totalPrice.formattedValue}">
+										<c:when test="${entry.basePrice.formattedValue == entry.totalPrice.formattedValue}  ">
 													<%-- TISPRO-215--%>
 												<c:choose>
-    											<c:when test="${not empty entry.cartLevelDisc || not empty entry.productLevelDisc}">
+    											<c:when test="${ not empty entry.productLevelDisc}">
         												<del>
+        												
 															<format:price priceData="${entry.totalPrice}" displayFreeForZero="false" />
 		 												</del>
     											</c:when>    
@@ -228,7 +230,7 @@ tr.d0 td {
 											</c:when>
 											<c:otherwise>
 												<c:choose>
-													<c:when test="${entry.basePrice.formattedValue == entry.totalPrice.formattedValue}">
+													<c:when test="${entry.basePrice.formattedValue == entry.totalPrice.formattedValue or entry.totalPrice.value / entry.quantity == entry.basePrice.value}">
 												<span><format:price priceData="${entry.totalPrice}"/></span>
 											</c:when>
 													<c:otherwise>
@@ -269,6 +271,7 @@ tr.d0 td {
 								${entry.totalSalePrice.value}
 								--
 								${entry.amountAfterAllDisc.value} --%>
+								
 								<c:choose>
 								<c:when test="${not empty entry.cartLevelDisc}">
 								<c:choose>
@@ -294,8 +297,10 @@ tr.d0 td {
 								</c:otherwise>
 								</c:choose>
 								</c:otherwise>
-								</c:choose>
-								<c:if test="${not empty entry.cartLevelDisc}">
+								</c:choose> 
+								
+								<!-- TPR-928 commenting the following lines-->
+								 <%-- <c:if test="${not empty entry.cartLevelDisc}">
 							<c:choose>
 								<c:when test="${not empty entry.cartLevelDisc && not empty entry.cartLevelPercentage}">
 								<c:if test="${entry.amountAfterAllDisc.value gt 0.1}">
@@ -307,7 +312,10 @@ tr.d0 td {
 								<span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/><spring:theme code="off.bag"/><format:price priceData="${entry.amountAfterAllDisc}"/></span>
 								</c:if>
 								</c:otherwise>
-							</c:choose></c:if>
+							</c:choose></c:if> 	 --%>					
+							<!-- TPR-928 commenting the following lines-->
+							
+							
 								<%--  <c:if test="${not empty entry.cartLevelDisc}">
 									<span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/><spring:theme code="off.bag"/><format:price priceData="${entry.amountAfterAllDisc}"/></span>
 								</c:if>  --%>
@@ -1042,7 +1050,7 @@ tr.d0 td {
  
  
 <div class="cart-bottom-block">
-<%-- <div class="coupon block" style="width: 40%;display: inline-block;">
+ <%-- <div class="coupon block" style="width: 40%;display: inline-block;">
 <h2>Have a promo code?</h2>
 		<input type="text" id="couponFieldId" placeholder="Enter coupon code" style="width:calc(100% - 65px);display:inline-block;"/>
 		<button type="submit" id="couponSubmitButton" class="button btn-block" style="width:60px;background:#a9143c;color:#fff;display:inline-block;">Submit</button>
@@ -1069,23 +1077,28 @@ tr.d0 td {
 		</c:if>
 	</div>
 		
-</div> --%>
+</div>  --%>
 <div class="cart-total-block">
+   <%-- <c:out value="${cartData.entries[0].netSellingPrice}"></c:out> --%>
     <%--  <h2><spring:theme code="mpl.orderDetails" /></h2> --%>
 	<ul class="totals">
             <li id="subtotal"><spring:theme code="basket.page.totals.subtotal"/> <span class="amt"><ycommerce:testId code="Order_Totals_Subtotal"><format:price priceData="${cartData.subTotal}"/></ycommerce:testId></span></li>
+           <%-- <c:choose>
+           <c:when test="${cartData.deliveryCost.value eq '0.0'}">
+            <li id="delivery-amt"><spring:theme code="basket.page.totals.delivery"/><span class="amt">FREE</span></li>
+            </c:when>
+            <c:otherwise>
+             <li id="delivery-amt"><spring:theme code="basket.page.totals.delivery"/> <span class="amt"><c:out value="${cartData.deliveryCost.formattedValue}"></c:out></span></li>
+            </c:otherwise>
             
-            
+            </c:choose> --%>
+            <%-- <li id="delivery-amt"><spring:theme code="basket.page.totals.shipping"/><span class="amt"><c:out value="${cartData.deliveryCost.formattedValue}"></c:out></span></li> --%>
          <c:if test="${cartData.totalDiscounts.value > 0}">
-        <li id="discount"><spring:theme code="basket.page.totals.savings"/> <span class="amt">
-        
-       
-        
-        
-        
+        <li id="discount"><spring:theme code="basket.page.totals.savings"/><span class="amt">
         -<ycommerce:testId code="Order_Totals_Savings"><format:price priceData="${cartData.totalDiscounts}"/></ycommerce:testId>
+       <spring:theme code="text.parenthesis.open"/>  <c:out value="${cartData.discountPercentage}"></c:out><spring:theme code="text.percentage"/><spring:theme code="text.parenthesis.close"/>
+        </c:if> 
         
-         </c:if> 
         </span></li>
             
             <li id="total"><spring:theme code="basket.page.totals.total"/><span class="amt"><ycommerce:testId code="cart_totalPrice_label">

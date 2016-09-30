@@ -50,17 +50,23 @@ INSERT_UPDATE CMSMediaParagraphComponent ;$contentCV[unique=true];uid[unique=tru
 ;;CmsMediaParagraph6;Cms Media paragraph;CmsMediaParagraph6;bannerImage6;;;;category;MSH11;Ethnic Wear
 
 INSERT_UPDATE ImageCarouselComponent;$contentCV[unique=true];uid[unique=true];name;collectionItems(uid,$contentCV);componentType(code)
-;;ImageCarouselComponent1;Image Carousel Component;CmsMediaParagraph1,CmsMediaParagraph2,CmsMediaParagraph3;Carousel
-;;ImageCarouselComponent2;Image Carousel Component;CmsMediaParagraph4,CmsMediaParagraph5,CmsMediaParagraph6;Banners3CarouselType1
+;;ImageCarouselComponent1;Image Carousel Component;CmsMediaParagraph1,CmsMediaParagraph2,CmsMediaParagraph3;BannerCarousel
+;;ImageCarouselComponent2;Image Carousel Component;CmsMediaParagraph4,CmsMediaParagraph5,CmsMediaParagraph6;Banners3CarouselType
 ;;ImageCarouselComponent3;Image Carousel Component;CmsMediaParagraph1,CmsMediaParagraph2,CmsMediaParagraph3;GridCarousel2x2
-;;ImageCarouselComponent4;Image Carousel Component;CmsMediaParagraph4,CmsMediaParagraph5,CmsMediaParagraph6;SliderType1
-;;ImageCarouselComponent5;Image Carousel Component;CmsMediaParagraph1,CmsMediaParagraph2,CmsMediaParagraph3;Carousel
+;;ImageCarouselComponent4;Image Carousel Component;CmsMediaParagraph4,CmsMediaParagraph5,CmsMediaParagraph6;SliderType
+;;ImageCarouselComponent5;Image Carousel Component;CmsMediaParagraph1,CmsMediaParagraph2,CmsMediaParagraph3;BannerCarousel
 ;;ImageCarouselComponent6;Image Carousel Component;CmsMediaParagraph4,CmsMediaParagraph5,CmsMediaParagraph6;Col2BannerLarge
-;;ImageCarouselComponent7;Image Carousel Component;CmsMediaParagraph1,CmsMediaParagraph2,CmsMediaParagraph3;Banners3CarouselType1Reverse
+;;ImageCarouselComponent7;Image Carousel Component;CmsMediaParagraph1,CmsMediaParagraph2,CmsMediaParagraph3;Banners3TypeReverse
  
 INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=en];deeplinkType;deeplinkTypeId;deeplinkTypeVal
 ;;SampleParagraph;"Section message";category;MSH11;Ethnic Wear
 ;;SampleMarketingParagraph;"Marketing message";category;MSH11;Ethnic Wear
+;;SampleParagraph1;"Section Message 8";;;
+;;SampleParagraph2;"Section message 9";;;
+
+INSERT_UPDATE MplProductCollectionComponent;$contentCV[unique=true];uid[unique=true];name;productCodes(code,$productCV);componentType(code)
+;;MplProductCollectionComponent1;Product Carousel Component;MP100000000005744,MP100000000005599;ProductSliderType
+;;MplProductCollectionComponent2;Product List Component;MP100000000005744,MP100000000005599;ProductListType
 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
 ;;HeroBannersSlot-MobileNewHomepageDiscover;HeroBanners Slot for MobileNewHomepageDiscover;true;SampleParagraph,ImageCarouselComponent1
@@ -69,6 +75,8 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;TopDealsSlot-MobileNewHomepageDiscover;TopDeals Slot for MobileNewHomepageDiscover;true;SampleParagraph,ImageCarouselComponent4
 ;;WhatToBuyNowSlot-MobileNewHomepageDiscover;WhatToBuyNow Slot for MobileNewHomepageDiscover;true;SampleParagraph,ImageCarouselComponent5
 ;;TrendingNowSlot-MobileNewHomepageDiscover;TrendingNow Slot for MobileNewHomepageDiscover;true;SampleParagraph,ImageCarouselComponent6,ImageCarouselComponent7
+;;ProductSliderBannersSlot-MobileNewHomepageDiscover;Product slider Banner Slot for MobileNewHomepageDiscover;true;SampleParagraph1,MplProductCollectionComponent1
+;;ProductListBannersSlot-MobileNewHomepageDiscover;Product List Banner Slot for MobileNewHomepageDiscover;true;SampleParagraph2,MplProductCollectionComponent2
 
 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true];contentSlot(uid,$contentCV)[unique=true]
@@ -78,3 +86,5 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 ;;TopDeals-MobileNewHomepageDiscover;Section4;MobileNewHomepageDiscover;TopDealsSlot-MobileNewHomepageDiscover
 ;;WhatToBuyNow-MobileNewHomepageDiscover;Section5;MobileNewHomepageDiscover;WhatToBuyNowSlot-MobileNewHomepageDiscover
 ;;TrendingNow-MobileNewHomepageDiscover;Section6;MobileNewHomepageDiscover;TrendingNowSlot-MobileNewHomepageDiscover
+;;ProductSliderBannersSlot-MobileNewHomepageDiscover;Section9;MobileNewHomepageDiscover;ProductSliderBannersSlot-MobileNewHomepageDiscover
+;;ProductListBannersSlot-MobileNewHomepageDiscover;Section10;MobileNewHomepageDiscover;ProductListBannersSlot-MobileNewHomepageDiscover

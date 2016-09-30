@@ -75,6 +75,7 @@ var homePageBannerTimeout='${timeout}';
 						<c:otherwise>
 						<c:choose>
 							<c:when test="${fn:contains(encodedUrl,'?')}">
+								<span class="style_edit_title">${banner.headline}</span>
 								<a tabindex="-1" href="${encodedUrl}&icid=${banner.pk}"
 								<c:if test="${banner.external}"> target="_blank"</c:if>><img
 								src="${banner.media.url}"
@@ -83,6 +84,7 @@ var homePageBannerTimeout='${timeout}';
 								</a>
 							</c:when>
 							<c:otherwise>
+								<span class="style_edit_title">${banner.headline}</span>
 								<a tabindex="-1" href="${encodedUrl}?icid=${banner.pk}"
 								<c:if test="${banner.external}"> target="_blank"</c:if>><img
 								src="${banner.media.url}"
@@ -243,6 +245,7 @@ var homePageBannerTimeout='${timeout}';
 						<c:otherwise>
 						<c:choose>
 							<c:when test="${fn:contains(encodedUrl,'?')}">
+								<span class="style_edit_title">${banner.headline}</span>
 								<a tabindex="-1" href="${encodedUrl}&icid=${banner.pk}"
 								<c:if test="${banner.external}"> target="_blank"</c:if>><img
 								src="${banner.media.url}"
@@ -251,7 +254,7 @@ var homePageBannerTimeout='${timeout}';
 								</a>
 							</c:when>
 							<c:otherwise>
-								<c:set var="urlWithIcid" value="${encodedUrl}"/>
+							<c:set var="urlWithIcid" value="${encodedUrl}"/>
 								<c:if test="${not empty encodedUrl}">
 									<c:set var="urlWithIcid" value="${encodedUrl}?icid=${banner.pk}"/>
 								</c:if>
@@ -261,7 +264,6 @@ var homePageBannerTimeout='${timeout}';
 								alt="${not empty banner.headline ? banner.headline : banner.media.altText}"
 								<%-- title="${not empty banner.headline ? banner.headline : banner.media.altText}" --%> />
 							</a>
-							
 							</c:otherwise>
 						</c:choose>
 						</c:otherwise>

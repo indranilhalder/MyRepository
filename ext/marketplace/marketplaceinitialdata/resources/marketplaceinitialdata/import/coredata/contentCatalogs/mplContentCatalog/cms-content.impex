@@ -1741,3 +1741,51 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;TopHeaderSlot-ShopTheStylePageTemplate;TopHeaderSlot;;TopHeaderSlot;true
 ;;BottomHeaderSlot-ShopTheStylePageTemplate;BottomHeaderSlot;;BottomHeaderSlot;true
 ;;PlaceholderContentSlot-ShopTheStylePageTemplate;PlaceholderContentSlot;;PlaceholderContentSlot;true
+
+
+### Category Landing Page V1#########
+
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
+;;ApparelCategoryLandingPageTemplateV1;Apparel Category Landing Page Template V1;layout/apparelCategoryLandingPageV1;CategoryPage,ContentPage
+
+
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;ApparelCategoryLandingPageTemplateV1      ;$jarResourceCms/structure-view/structure_ApparelCategoryLandingPageTemplateV1.vm
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ApparelCategoryLandingPageTemplateV1'];validComponentTypes(code);compTypeGroup(code)
+;SiteLogo;;;logo
+;HeaderLinks;;;headerlinks
+;SearchBox;;;searchbox
+;MiniCart;;CMSLinkComponent,TrackOrderHeaderComponent,MyWishListInHeaderComponent,SignInFlyOutComponent;minicart
+;NavigationBar;;;navigation
+;Section1;;SimpleResponsiveBannerComponent,MplBigPromoBannerComponent,MplBigFourPromoBannerComponent,SimpleBannerComponent,CMSParagraphComponent;
+;Section2A;;SimpleBannerComponent,CMSParagraphComponent,MplAdvancedCategoryCarouselComponent,CMSLinkComponent;
+;Section2B;;CMSParagraphComponent,CMSLinkComponent,SimpleBannerComponent;
+;Section2C;;RotatingImagesComponent,CMSParagraphComponent,VideoComponent
+;Section3;;SimpleBannerComponent,CMSParagraphComponent,CMSLinkComponent;
+;Section3A;;CMSLinkComponent,MplAdvancedCategoryCarouselComponent;
+;Section4A;;ProductRefinementComponent;
+;Section4B;;ProductGridComponent;
+;Footer;;;footer
+;TopHeaderSlot;;;wide
+;BottomHeaderSlot;;BreadcrumbComponent
+;PlaceholderContentSlot;;;
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ApparelCategoryLandingPageTemplateV1'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-ApparelCategoryLandingPageV1;SiteLogo;;SiteLogoSlot;true
+;;HomepageLink-ApparelCategoryLandingPageV1;HomepageNavLink;;HomepageNavLinkSlot;true
+;;NavigationBar-ApparelCategoryLandingPageV1;NavigationBar;;NavigationBarSlot;true
+;;MiniCart-ApparelCategoryLandingPageV1;MiniCart;;MiniCartSlot;true
+;;Footer-ApparelCategoryLandingPageV1;Footer;;FooterSlot;true
+;;HeaderLinks-ApparelCategoryLandingPageV1;HeaderLinks;;HeaderLinksSlot;true
+;;SearchBox-ApparelCategoryLandingPageV1;SearchBox;;SearchBoxSlot;true
+;;TopHeaderSlot-ApparelCategoryLandingPageV1;TopHeaderSlot;;TopHeaderSlot;true
+;;BottomHeaderSlot-ApparelCategoryLandingPageV1;BottomHeaderSlot;;BottomHeaderSlot;true
+;;PlaceholderContentSlot-ApparelCategoryLandingPageV1;PlaceholderContentSlot;;PlaceholderContentSlot;true
+
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;categoryAssociated(code,$productCV);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;WomenV1;Women's Category Landing Page;ApparelCategoryLandingPageTemplateV1;WomenV1;MSH10
+### Category Landing Page V1#########
+

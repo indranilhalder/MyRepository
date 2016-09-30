@@ -277,6 +277,8 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String CART_EXPRESS_CHECKOUT_SELECTED = "isExpressCheckoutSelected";
 	public static final String YES = "yes";
 	public static final String NO = "no";
+	public static final String TRUE = "true";
+	public static final String FALSE = "false";
 
 	private MarketplacecheckoutaddonConstants()
 	{
