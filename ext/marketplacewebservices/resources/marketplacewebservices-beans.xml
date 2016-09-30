@@ -2598,7 +2598,7 @@
     
       <bean class="com.tisl.mpl.wsdto.LuxLevelFourWsDTO">
     	<property name="name" type="String" />
-    	<property name="isBrand" type="boolean" />
+    	<!-- <property name="isBrand" type="boolean" /> -->
     	<property name="value" type="String" />
     	<property name="destination" type="String" />
     	<property name="image" type="String" />
