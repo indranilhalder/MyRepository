@@ -123,7 +123,18 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 		}
 		else if (checkIfShopByLookPage(source.getFilterTerms()))
 		{
-			target.setUrl("/collection/chef" + PAGE_PAGE_NO_Q + buildUrlQueryStringForNew(source, target).replace("?", "&"));
+			String lookId = "";
+			for (final SolrSearchQueryTermData data : source.getFilterTerms())
+			{
+				if (data.getKey().equalsIgnoreCase("collectionIds"))
+				{
+					lookId = data.getValue();
+					break;
+				}
+			}
+			//changed with dynamic collection id key
+			//target.setUrl("/collection/chef" + PAGE_PAGE_NO_Q + buildUrlQueryStringForNew(source, target).replace("?", "&"));
+			target.setUrl("/collection/" + lookId + PAGE_PAGE_NO_Q + buildUrlQueryStringForNew(source, target).replace("?", "&"));
 			//target.setUrl("/search/viewOnlineProducts" + buildUrlQueryString(source, target).replace("?", "&"));
 		}
 		//		else if (source.getOfferID() != null)
