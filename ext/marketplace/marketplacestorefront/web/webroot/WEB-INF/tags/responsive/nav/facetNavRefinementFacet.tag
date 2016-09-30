@@ -85,7 +85,7 @@ function navigateToPage(queryString,textString)
 						<c:url value="${facetValue.query.url}" var="facetValueQueryUrl"/>
 						<c:choose>
 						
-						<c:when test="${facetData.code eq 'colour' && not empty facetValue.name}">
+						<c:when test="${(facetData.code eq 'colour' || facetData.code  eq 'strapcolor' || facetData.code  eq 'dialColourWatches')&& not empty facetValue.name}">
 							<c:set var="colorAry" value="${fn:split(facetValue.code, '_')}" />
 							<c:choose>
 								<c:when test="${colorAry[0]=='Multi' || colorAry[0]=='multi'}">
@@ -193,7 +193,7 @@ function navigateToPage(queryString,textString)
 					<li class="filter-${facetData.code}">
 
 					<c:choose>
-						<c:when test="${facetData.code eq 'colour' && not empty facetValue.name}">						
+						<c:when test="${(facetData.code eq 'colour'|| facetData.code  eq 'strapcolor' || facetData.code  eq 'dialColourWatches') && not empty facetValue.name }">						
 							<c:set var="colorAry" value="${fn:split(facetValue.code, '_')}" />
 							<c:choose>
 								<c:when test="${colorAry[0]=='Multi' || colorAry[0]=='multi'}">
@@ -226,7 +226,9 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="facetValue" value="${facetValue.code}"/>
 								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 								<!-- <input type="submit" value="" style="background-color:${colorHexCode}; border:1px solid rgb(204, 211, 217); height: 36px;    padding: 13px 17px;"  />-->
-								<input type="button" class="js-facet-colourbutton" style="background-color:${colorHexCode}; border:1px solid rgb(204, 211, 217); height: 36px;    padding: 13px 17px;">
+								<input type="button" class="js-facet-colourbutton" style="background-color:${colorHexCode}; border:1px solid rgb(204, 211, 217); height: 36px;border-radius: 50%;    padding: 13px 17px;">
+								<%-- <input type="button" class="js-facet-colourbutton" style="background-color:${colorHexCode}; border:1px solid rgb(204, 211, 217); height: 36px;    padding: 13px 17px;"  />
+								<input type="button" class="js-facet-colourbutton" style="background-color:${colorHexCode}; border:1px solid rgb(204, 211, 217); height: 36px;    padding: 13px 17px;"> --%>
 								<span><span>${facetValue.name}</span></span>
 									<%-- <c:if test="${facetData.code == 'inStockFlag'}">
 									<c:if test="${facetValue.code == 'true' && facetStockSize=='2'}">
@@ -287,7 +289,7 @@ function navigateToPage(queryString,textString)
 						<c:if test="${facetData.multiSelect}">											
 							<ycommerce:testId code="facetNav_selectForm"> 
 							<!-- Added for TISPRO-490 Start here -->							
-							<c:if test="${facetData.code eq 'dialColour' || facetData.code  eq 'strapcolor' || facetData.code  eq 'dialColourWatches'}">
+							<c:if test="${facetData.code eq 'dialColour'}">
 							<form action="#" method="get"> 
 								<input type="hidden" name="offer" value="${offer}"/>
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
@@ -336,7 +338,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 								<input type="hidden" name="isFacet" value="true"/>
 								<input type="hidden" name="facetValue" value="${facetValue.code}"/>
-								<c:if test="${facetData.code ne 'dialColour' && facetData.code ne 'strapcolor' && facetData.code  ne 'dialColourWatches'}"> <!-- Added for TISPRO-490  -->		
+								<c:if test="${facetData.code ne 'dialColour'}"> <!-- Added for TISPRO-490  -->		
 								<label>
 									<input type="checkbox" ${facetValue.selected ? 'checked="checked"' : ''}  class="facet-checkbox js-facet-checkbox sr-only" />																		
 									<c:if test="${facetData.code == 'inStockFlag'}">

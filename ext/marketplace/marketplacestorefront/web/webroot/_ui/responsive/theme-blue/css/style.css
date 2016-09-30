@@ -31506,6 +31506,24 @@ body.page-homepage .feature-collections{
     padding: 0 !important;
     border-radius: 50%;
 }
+
+.product-facet .filter-strapcolor input.js-facet-colourbutton {
+    margin-left: 0;
+    margin-right: 0;
+    width: 25px !important;
+    height: 25px !important;
+    padding: 0 !important;
+    border-radius: 50%;
+}
+
+.product-facet .filter-filter-dialColourWatches input.js-facet-colourbutton {
+    margin-left: 0;
+    margin-right: 0;
+    width: 25px !important;
+    height: 25px !important;
+    padding: 0 !important;
+    border-radius: 50%;
+}
 @media(max-width:650px){
 	.cart.wrapper .product-block li.item, .confirmation .product-block li.item{
 	padding: 10px 0;
