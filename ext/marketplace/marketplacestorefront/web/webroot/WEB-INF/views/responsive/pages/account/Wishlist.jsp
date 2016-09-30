@@ -47,7 +47,7 @@
 			<!-- START OF LEFT SECTION -->
 			<div class="wishlist-nav">
 				<!-- START OF SEARCH LIST ITEM STATIC COMPONENT -->
-				<h3><spring:theme code="header.link.myWishList" /></h3>
+				<h1><spring:theme code="header.link.myWishList" /></h1>
 				<%-- <form action="">
 					<button type="submit"></button>
 					<input type="text" placeholder="Find an item in your list">

@@ -17,6 +17,7 @@ var productCodeSG = '${product.code}';
 
 <input type="hidden"  id="categoryType"  value="${product.rootCategory}"/>
 <input type="hidden"  name= "noseller" id="nosellerVal"  value=" "/>
+<input type="hidden" name="pcode" id="productCodeSizeGuid" value="${product.code}"/>
 <div class="sizes">
 
 	<h3>${brand}&nbsp;${category}&nbsp;Size Chart</h3>
@@ -565,6 +566,7 @@ var productCodeSG = '${product.code}';
 $(document).ready(function(){
 	
 	openSizeGuidePopuponLoad();
+	
 	var qtyData = $("#pdpQty").val();
 	localStorage.setItem("sizeguideselectvaluePdp", qtyData);
 	
@@ -609,6 +611,7 @@ $(document).ready(function(){
 		if(currentColour == title){
 			//TISPRO-322 PDP Size Guide issue fixed
 			$(this).parent().addClass("active");
+			
 		}			
 	});
 	 if($('body').find('input.wishlist#add_to_wishlist-sizeguide').length > 0){
@@ -644,8 +647,13 @@ $(document).ready(function(){
 		 localStorage.removeItem('sizeguideselectvalue');
 		 
 		 });
-	
-	
+	 setDetailsForStock();
 });
+
+
+
+
+		
+		
 
 </script> 	

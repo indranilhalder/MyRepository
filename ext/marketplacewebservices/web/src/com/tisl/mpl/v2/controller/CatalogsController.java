@@ -138,6 +138,7 @@ public class CatalogsController extends BaseController
 	 * @param fields
 	 * @return DepartmentListHierarchyWsDTO
 	 */
+	//TPR-561
 	@RequestMapping(value = "/getAllCategories", method = RequestMethod.GET)
 	@ResponseBody
 	public DepartmentListHierarchyWsDTO fetchAllCategories(@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)

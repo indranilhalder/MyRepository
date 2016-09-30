@@ -1791,5 +1791,22 @@
 		<property name="interceptor" ref="mplShopByLookSaveInterceptor" />
 		<property name="typeCode" value="MplShopByLook" />
 	</bean>
+	
+	 <!-- For Bulk Seller  Upload on HMC Configuration Screen  TPR -715-->
+	<bean id="sellerBulkLoadInterceptor" class="com.tisl.mpl.interceptor.SellerBulkLoadInterceptor" />
+	
+	<bean id="sellerBulkLoadInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="sellerBulkLoadInterceptor" />
+		<property name="typeCode" value="EtailSellerSpecificRestriction" />
+	</bean>
+	
+	<!-- For Bulk Seller  Upload on HMC Configuration Screen  TPR -715 + TPR-1620-->
+	<bean id="exSellerBulkLoadInterceptor" class="com.tisl.mpl.interceptor.ExSellerBulkLoadInterceptor" />
+	
+	<bean id="exSellerBulkLoadInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="exSellerBulkLoadInterceptor" />
+		<property name="typeCode" value="EtailExcludeSellerSpecificRestriction" />
+	</bean>
 </beans>
-

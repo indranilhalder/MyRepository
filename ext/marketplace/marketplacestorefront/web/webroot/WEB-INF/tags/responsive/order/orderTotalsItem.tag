@@ -23,14 +23,14 @@
 		<c:if test="${order.totalDiscounts.value > 0}">
 			<li>
 				<spring:theme code="text.account.order.savings" text="Discount"/>
-				<span class="amt"> -<format:price priceData="${order.totalDiscounts}"/></span>
+				<span class="amt"> <format:price priceData="${order.totalDiscounts}"/></span>
 			</li>
 		</c:if>
 		
 		<c:if test="${order.couponDiscount.value > 0}">
 			<li>
 				<spring:theme code="text.account.order.couponSavings" text="Coupon"/>
-				<span class="amt"> -<format:price priceData="${order.couponDiscount}"/></span>
+				<span class="amt"> <format:price priceData="${order.couponDiscount}"/></span>
 			</li>
 		</c:if>
 		

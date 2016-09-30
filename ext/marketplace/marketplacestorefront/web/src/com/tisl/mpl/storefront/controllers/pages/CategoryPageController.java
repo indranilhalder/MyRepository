@@ -16,6 +16,7 @@ package com.tisl.mpl.storefront.controllers.pages;
 
 import de.hybris.platform.acceleratorservices.controllers.page.PageType;
 import de.hybris.platform.acceleratorservices.data.RequestContextData;
+import de.hybris.platform.acceleratorservices.storefront.data.MetaElementData;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.Breadcrumb;
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractCategoryPageController;
@@ -41,6 +42,7 @@ import de.hybris.platform.servicelayer.session.SessionService;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -68,6 +70,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants;
+import com.tisl.mpl.core.model.SeoContentModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
@@ -259,8 +262,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 				if (CollectionUtils.isNotEmpty(normalProductDatas))
 				{
-					model.addAttribute(ModelAttributetConstants.DEPARTMENT_HIERARCHY_DATA,
-							searchPageData.getDepartmentHierarchyData());
+					model.addAttribute(ModelAttributetConstants.DEPARTMENT_HIERARCHY_DATA, searchPageData.getDepartmentHierarchyData());
 					model.addAttribute(ModelAttributetConstants.DEPARTMENTS, searchPageData.getDepartments());
 					model.addAttribute(ModelAttributetConstants.CURRENT_QUERY, searchPageData.getCurrentQuery().getQuery().getValue());
 				}
@@ -278,8 +280,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 		catch (final Exception exception)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(
-					new EtailNonBusinessExceptions(exception, MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception,
+					MarketplacecommerceservicesConstants.E0000));
 			try
 			{
 				return frontEndErrorHelper.callNonBusinessError(model, exception.getMessage());
@@ -414,16 +416,37 @@ public class CategoryPageController extends AbstractCategoryPageController
 				//if (normalProductDatas.size() > 0)
 				if (CollectionUtils.isNotEmpty(normalProductDatas))
 				{
-					model.addAttribute(ModelAttributetConstants.DEPARTMENT_HIERARCHY_DATA,
-							searchPageData.getDepartmentHierarchyData());
+					model.addAttribute(ModelAttributetConstants.DEPARTMENT_HIERARCHY_DATA, searchPageData.getDepartmentHierarchyData());
 					model.addAttribute(ModelAttributetConstants.DEPARTMENTS, searchPageData.getDepartments());
 					model.addAttribute(ModelAttributetConstants.CURRENT_QUERY, searchPageData.getCurrentQuery().getQuery().getValue());
 				}
 
 				final String categoryName = category.getName();
 
+				String metaKeywords = null;
+				String metaDescription = null;
+				String metaTitle = null;
 
-				setUpMetaDataForContentPage(model, categoryLandingPage);
+				//(TPR-243) SEO Meta Tags and Titles for Landing Page *: starts
+				if (CollectionUtils.isEmpty(category.getSeoContents()))
+				{
+					setUpMetaDataForContentPage(model, categoryLandingPage);
+				}
+				/*
+				 * (TPR-243) SEO Meta Tags and Titles for Landing Page *: ends else
+				 */
+				else
+				{
+					final List<SeoContentModel> seoContent = new ArrayList<SeoContentModel>(category.getSeoContents());
+					if (seoContent.size() >= 1)
+					{
+						metaKeywords = seoContent.get(seoContent.size() - 1).getSeoMetaKeyword();
+						metaDescription = seoContent.get(seoContent.size() - 1).getSeoMetaDescription();
+						metaTitle = seoContent.get(seoContent.size() - 1).getSeoMetaTitle();
+					}
+					setUpMetaDataForSeo(model, metaKeywords, metaDescription, metaTitle);
+					updatePageTitle(model, metaTitle);
+				}
 
 				model.addAttribute(WebConstants.BREADCRUMBS_KEY,
 						getSearchBreadcrumbBuilder().getBreadcrumbs(categoryCode, categoryName, false));
@@ -454,8 +477,10 @@ public class CategoryPageController extends AbstractCategoryPageController
 			}
 			catch (final Exception exp)
 			{
-				ExceptionUtil.etailNonBusinessExceptionHandler(
-						new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
+
+				LOG.error("************** category method exception " + exp);
+				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+						MarketplacecommerceservicesConstants.E0000));
 				try
 				{
 					return frontEndErrorHelper.callNonBusinessError(model, exp.getMessage());
@@ -470,8 +495,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 		catch (final Exception exception)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(
-					new EtailNonBusinessExceptions(exception, MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception,
+					MarketplacecommerceservicesConstants.E0000));
 			try
 			{
 				return frontEndErrorHelper.callNonBusinessError(model, exception.getMessage());
@@ -511,15 +536,16 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 		model.addAttribute("page_name", "Product Grid:" + breadcrumbName);
 		//TPR-430
-		if (null != breadcrumbs.get(1).getName())
+		//Additional Checking Added for breadcrumbs for TISUATMS-300
+		if (CollectionUtils.isNotEmpty(breadcrumbs) && breadcrumbs.size() > 0 && null != breadcrumbs.get(1).getName())
 		{
 			model.addAttribute("product_category", breadcrumbs.get(0).getName().replaceAll(" ", "_").toLowerCase());
 		}
-		if (null != breadcrumbs.get(1).getName())
+		if (CollectionUtils.isNotEmpty(breadcrumbs) && breadcrumbs.size() > 1 && null != breadcrumbs.get(1).getName())
 		{
 			model.addAttribute("page_subcategory_name", breadcrumbs.get(1).getName().replaceAll(" ", "_").toLowerCase());
 		}
-		if (null != breadcrumbs.get(2).getName())
+		if (CollectionUtils.isNotEmpty(breadcrumbs) && breadcrumbs.size() > 2 && null != breadcrumbs.get(2).getName())
 		{
 			model.addAttribute("page_subcategory_name_L3", breadcrumbs.get(2).getName().replaceAll(" ", "_").toLowerCase());
 		}
@@ -580,8 +606,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	 * @throws UnsupportedEncodingException
 	 */
 	@ResponseBody
-	@RequestMapping(value = CATEGORY_URL_OLD_PATTERN + CATEGORY_CODE_PATH_VARIABLE_PATTERN
-			+ "/results", method = RequestMethod.GET)
+	@RequestMapping(value = CATEGORY_URL_OLD_PATTERN + CATEGORY_CODE_PATH_VARIABLE_PATTERN + "/results", method = RequestMethod.GET)
 	public SearchResultsData<ProductData> getResults(@PathVariable(CATERGORYCODE) String categoryCode,
 			@RequestParam(value = "q", required = false) final String searchQuery,
 			@RequestParam(value = PAGE, defaultValue = "0") final int pgNum,
@@ -737,8 +762,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 
 	private ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> updatePageData(
-			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData, final String whichSearch,
-			final String searchQuery)
+			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData,
+			final String whichSearch, final String searchQuery)
 	{
 		// YTODO Auto-generated method stub
 		if (null != whichSearch)
@@ -851,27 +876,29 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 		/* (TPR-243) SEO Meta Tags and Titles for Listing Page */
 
-		//		final SeoContentModel seoContent = category.getSeoContent();
-		//		String metaKeywords = null;
-		//		String metaDescription = null;
-		//		String metaTitle = null;
-		//		if (null != seoContent)
-		//		{
-		//
-		//			metaKeywords = seoContent.getSeoMetaKeyword();
-		//			metaDescription = seoContent.getSeoMetaDescription();
-		//			metaTitle = seoContent.getSeoMetaTitle();
-		//		}
-		//		//metaKeywords = MetaSanitizerUtil.sanitizeKeywords(metaKeywords);
-		//		//	metaDescription = MetaSanitizerUtil.sanitizeDescription(metaDescription);
-		//		setUpMetaDataForSeo(model, metaKeywords, metaDescription, metaTitle);
-		//		updatePageTitle(model, metaTitle);
-		//		final List<Breadcrumb> breadcrumbs = getSearchBreadcrumbBuilder().getBreadcrumbs(categoryCode, searchPageData);
-		//		populateTealiumData(breadcrumbs, model);
-		//		return getViewPage(categorySearch.getCategoryPage());
-		final String metaKeywords = MetaSanitizerUtil.sanitizeKeywords(category.getKeywords());
-		final String metaDescription = MetaSanitizerUtil.sanitizeDescription(category.getDescription());
-		setUpMetaData(model, metaKeywords, metaDescription);
+		final List<SeoContentModel> seoContent = new ArrayList<SeoContentModel>(category.getSeoContents());
+		String metaKeywords = null;
+		String metaDescription = null;
+		String metaTitle = null;
+		if (CollectionUtils.isNotEmpty(seoContent))
+		{
+
+			metaKeywords = seoContent.get(seoContent.size() - 1).getSeoMetaKeyword();
+			metaDescription = seoContent.get(seoContent.size() - 1).getSeoMetaDescription();
+			metaTitle = seoContent.get(seoContent.size() - 1).getSeoMetaTitle();
+			setUpMetaDataForSeo(model, metaKeywords, metaDescription, metaTitle);
+			updatePageTitle(model, metaTitle);
+		}
+		else
+		{
+
+			metaKeywords = MetaSanitizerUtil.sanitizeKeywords(category.getKeywords());
+			metaDescription = MetaSanitizerUtil.sanitizeDescription(category.getDescription());
+			updatePageTitle(category, searchPageData.getBreadcrumbs(), model);
+			setUpMetaData(model, metaKeywords, metaDescription);
+
+		}
+
 		final List<Breadcrumb> breadcrumbs = getSearchBreadcrumbBuilder().getBreadcrumbs(categoryCode, searchPageData);
 		populateTealiumData(breadcrumbs, model);
 		return getViewPage(categorySearch.getCategoryPage());
@@ -900,6 +927,58 @@ public class CategoryPageController extends AbstractCategoryPageController
 	//	{
 	//		model.addAttribute("metaPageTitle", metaTitle);
 	//	}
+
+
+	/* changes for metaData content - (TPR-243) SEO Meta Tags and Titles */
+	/**
+	 * @param model
+	 * @param metaKeywords
+	 * @param metaDescription
+	 * @param metaTitle
+	 */
+	//private void setUpMetaDataForSeo(final Model model, final String metaKeywords, final String metaDescription,
+		//	final String metaTitle)
+//	{
+	//	final List<MetaElementData> metadata = new LinkedList<>();
+	//	metadata.add(createMetaElement("keywords", metaKeywords));
+	//	metadata.add(createMetaElement("description", metaDescription));
+		//metadata.add(createMetaElement("title", metaTitle));
+	//	model.addAttribute("metatags", metadata);
+
+//	}
+
+	/* PageTitle in header - (TPR-243) SEO Meta Tags and Titles */
+//	private void updatePageTitle(final Model model, final String metaTitle)
+//	{
+//		model.addAttribute("metaPageTitle", metaTitle);
+//	}
+
+
+
+	/* changes for metaData content - (TPR-243) SEO Meta Tags and Titles */
+	/**
+	 * @param model
+	 * @param metaKeywords
+	 * @param metaDescription
+	 * @param metaTitle
+	 */
+	private void setUpMetaDataForSeo(final Model model, final String metaKeywords, final String metaDescription,
+			final String metaTitle)
+	{
+		final List<MetaElementData> metadata = new LinkedList<>();
+		metadata.add(createMetaElement("keywords", metaKeywords));
+		metadata.add(createMetaElement("description", metaDescription));
+		//metadata.add(createMetaElement("title", metaTitle));
+		model.addAttribute("metatags", metadata);
+
+	}
+
+	/* PageTitle in header - (TPR-243) SEO Meta Tags and Titles */
+	private void updatePageTitle(final Model model, final String metaTitle)
+	{
+		model.addAttribute("metaPageTitle", metaTitle);
+	}
+
 
 
 	/**
@@ -945,8 +1024,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 		private ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData;
 		private final String pageFacets;
 
-		public CategorySearchEvaluator(final String categoryCode, final String searchQuery, final int page, final ShowMode showMode,
-				final String sortCode, final CategoryPageModel categoryPage, final String pageFacets)
+		public CategorySearchEvaluator(final String categoryCode, final String searchQuery, final int page,
+				final ShowMode showMode, final String sortCode, final CategoryPageModel categoryPage, final String pageFacets)
 		{
 			this.categoryCode = categoryCode;
 			this.searchQueryData.setValue(searchQuery);

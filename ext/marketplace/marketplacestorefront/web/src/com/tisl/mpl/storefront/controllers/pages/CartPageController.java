@@ -26,6 +26,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.Abstrac
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
 import de.hybris.platform.acceleratorstorefrontcommons.forms.UpdateQuantityForm;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.commercefacades.order.CheckoutFacade;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.CartModificationData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
@@ -168,6 +169,9 @@ public class CartPageController extends AbstractPageController
 	@Autowired
 	private MplCouponFacade mplCouponFacade;
 
+	@Resource(name = "checkoutFacade")
+	private CheckoutFacade checkoutFacade;
+
 	/*
 	 * Display the cart page
 	 */
@@ -184,6 +188,7 @@ public class CartPageController extends AbstractPageController
 		try
 		{
 
+			final CartModel cartModel = getCartService().getSessionCart();
 			//TISST-13012
 			//if (StringUtils.isNotEmpty(cartDataOnLoad.getGuid())) //TISPT-104
 			if (getCartService().hasSessionCart())
@@ -205,7 +210,8 @@ public class CartPageController extends AbstractPageController
 				//TISST-13010
 
 				getMplCartFacade().setCartSubTotal();
-				final CartModel cartModel = getCartService().getSessionCart();
+				//final CartModel cartModel = getCartService().getSessionCart();
+
 				final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 				final boolean isUserAnym = getUserFacade().isAnonymousUser();
 				model.addAttribute("isUserAnym", isUserAnym);
@@ -240,7 +246,15 @@ public class CartPageController extends AbstractPageController
 				prepareDataForPage(model, new CartData());
 			}
 			// for MSD
+			//TPR-174
 
+			if (checkoutFacade.getCheckoutCart() != null && checkoutFacade.getCheckoutCart().isGotMerged())
+			{
+				model.addAttribute(ModelAttributetConstants.WELCOME_BACK_MESSAGE, MessageConstants.WELCOME_BACK_MESSAGE);
+			}
+			//TPR-174
+			cartModel.setMerged(false);
+			modelService.save(cartModel);
 			final String msdjsURL = getConfigurationService().getConfiguration().getString("msd.js.url");
 			final Boolean isMSDEnabled = Boolean.valueOf(getConfigurationService().getConfiguration().getString("msd.enabled"));
 			model.addAttribute(ModelAttributetConstants.MSD_JS_URL, msdjsURL);
@@ -278,7 +292,7 @@ public class CartPageController extends AbstractPageController
 	 * private void setExpressCheckout(final CartModel serviceCart) {
 	 * serviceCart.setIsExpressCheckoutSelected(Boolean.FALSE); if (serviceCart.getDeliveryAddress() != null) {
 	 * serviceCart.setDeliveryAddress(null); modelService.save(serviceCart); }
-	 * 
+	 *
 	 * }
 	 */
 
@@ -483,7 +497,7 @@ public class CartPageController extends AbstractPageController
 	/*
 	 * @description This controller method is used to allow the site to force the visitor through a specified checkout
 	 * flow. If you only have a static configured checkout flow then you can remove this method.
-	 * 
+	 *
 	 * @param model ,redirectModel
 	 */
 
@@ -1275,7 +1289,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -1332,7 +1346,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody

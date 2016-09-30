@@ -619,7 +619,8 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 	var dataString = 'wish=' + wishName + '&product=' + productCodePost
 			+ '&ussid=' + ussidValue+'&sizeSelected=' + sizeSelected;
 
-	if(loggedIn == 'false') {
+//	if(loggedIn == 'false') {
+	if(!headerLoggedinStatus) {
 		$(".wishAddLogin").addClass("active");
 		setTimeout(function(){
 			$(".wishAddLogin").removeClass("active")
@@ -2685,22 +2686,22 @@ function loadDefaultWishListName_SizeGuide() {
 	} 
 /*TPR-630*/
 	$(document).ready(function(){
-		$(".Emi > p").on("click",function(e){
+		$(".pdp .Emi > p").on("click",function(e){
 			e.stopPropagation();
 			if(!$(this).hasClass("active") && $(window).width() > 1024){
 				$(this).addClass("active");
 				openPopForBankEMI();
 			}
 		});
-		$(".Emi .modal-content .Close").on("click",function(e){
+		$(".pdp .Emi .modal-content .Close").on("click",function(e){
 			e.stopPropagation();
 			$(".Emi > p").removeClass("active mobile");
 			$(".emi-overlay").remove();
 			});
-		$(".Emi > #EMImodal-content").on("click",function(e){
+		$(".pdp .Emi > #EMImodal-content").on("click",function(e){
 			e.stopPropagation();
 			if($(window).width() > 1024){
-				$(".Emi > p").addClass("active")
+				$(".pdp .Emi > p").addClass("active")
 			}
 		});
 		/*$(".Emi > #EMImodal-content").on("click",".Emi .modal-content .Close",function(){
@@ -2709,13 +2710,13 @@ function loadDefaultWishListName_SizeGuide() {
 		$(document).on("click", function(e){
 			//console.log($(e.currentTarget).attr('class'))
 			if(!$(e.currentTarget).parents(".Emi").hasClass("Emi_wrapper")) {
-				$(".Emi > p").removeClass("active")
+				$(".pdp .Emi > p").removeClass("active")
 			} else {
-				$(".Emi > p").addClass("active")
+				$(".pdp .Emi > p").addClass("active")
 			}
 		});
 		
-		$(".Emi > p").on("click",function(){
+		$(".pdp .Emi > p").on("click",function(){
 			if($(window).width() <= 1024){
 				$(this).addClass("active mobile");
 				$("body").append("<div class='emi-overlay' style='opacity:0.65; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
@@ -2724,16 +2725,18 @@ function loadDefaultWishListName_SizeGuide() {
 				
 			}
 		});
-		$(document).on("click",".emi-overlay,.Emi .modal-content .Close",function(){
-			$(".Emi > p").removeClass("active mobile");
+		$(document).on("click",".pdp .emi-overlay,.pdp .Emi .modal-content .Close",function(){
+			$(".pdp .Emi > p").removeClass("active mobile");
 			$(".emi-overlay").remove();
 			$("body").removeClass("no-scroll");
 		});
 		
 		$(window).resize(function(){
 			if($(window).width() > 1024){
-				$(".Emi > p").removeClass("active mobile");
-				$(".emi-overlay").remove();
+				$(".pdp .Emi > p").removeClass("active mobile");
+				$(".pdp .emi-overlay").remove();
+				/*$(".Emi > p").removeClass("active mobile");
+				$(".emi-overlay").remove();*/
 				$("body").removeClass("no-scroll");
 			}
 		})
@@ -2791,3 +2794,62 @@ function loadDefaultWishListName_SizeGuide() {
 		}
 		$("#offerPopup").modal('show');
 	} 
+	function setDetailsForStock(){
+		var productCode = $('#productCodeSizeGuid').val();//$("#productCodePost").val();
+		var variantCodesJson = "";
+		if(typeof(variantCodesPdp)!= 'undefined' && variantCodesPdp!= ""){
+			variantCodes = variantCodesPdp.split(",");
+			variantCodesJson = JSON.stringify(variantCodes);
+		}
+		//var code = productCode+","+variantCodesPdp;
+		var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
+		+ "/buybox";
+		var availibility = null;
+			//var dataString = 'productCode=' + productCode;	
+			$.ajax({
+				contentType : "application/json; charset=utf-8",
+				url : requiredUrl,
+				data : {productCode:productCode,variantCode:variantCodesJson},
+				cache : false,
+				dataType : "json",
+				success:function(data){
+					var stockInfo = data['availibility'];
+					availibility = stockInfo;
+					$.each(stockInfo,function(key,value){
+						$("#variant>li>span").each(function(){
+							
+							if($(this).data("productcode1").toString().toUpperCase().indexOf(key)!= -1){  
+									
+									$(this).attr("disabled",true);
+									$(this).parent("li").addClass("strike");
+									
+									
+									/*$(this).css({
+										"color": "gray"
+								});*/
+									$(this).on("mouseenter",function(){
+										$(this).parent("li").css("background","#fff");
+										
+									});
+									
+									 $(this).on('click', function(event) {
+									      event.preventDefault();
+									      return false;
+									   });
+								//$(this).parent().css("border-color","gray");
+								}
+							
+						});
+					});
+					},
+					error:function(err){
+						
+					}
+				
+			});
+		
+		
+		
+		
+	}
+
