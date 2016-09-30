@@ -948,7 +948,7 @@
 	<bean class="com.tisl.mpl.facades.data.RescheduleData">
 		<property name="date" type="String"></property>
 		<property name="time" type="String"></property>
-		<property name="transactionId" type="String"></property>
+		<property name="productCode" type="String"></property>
 	</bean>
 	
 	<bean class="com.tisl.mpl.facades.data.RescheduleDataList">
