@@ -123,7 +123,14 @@
 	
 	
 $(document).ready(function(){
+	/*alert("fhgfhfgh");
+	$(".shopstyle-indicator li").on("click", function(){
 
+
+	    $("#rotatingImageTimeout").trigger("to.owl.carousel", [toIndex, $(this).index , true]);
+
+
+	});*/
 
 	//TISEEII-640 issue fix -- Start
 	$(".facet.js-facet .js-facet-name").each(function(){
@@ -1652,20 +1659,20 @@ $(document).ready(function(){
 				}
 			}
 		});
-		setTimeout(function () {
+		//setTimeout(function () {
 		$("body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.delivery").addClass("collapsed");
 				$(".mobile-delivery").click(function(){
 					$(this).parents("li.delivery").toggleClass("collapsed");
 				});
-		}, 100);
+		//}, 100);
 		$(window).on("load resize", function() {
 			$("body.page-cartPage .cart.wrapper .product-block li.item").each(function(){
 				if($(this).find("ul.desktop>li.price").css("position")=="absolute"){
 					var price_height=$(this).find("ul.desktop>li.price").height() + 15;
 					$(this).find(".cart-product-info").css("padding-bottom",price_height+"px");
-					var price_top = $(this).find(".cart-product-info").height() + 20;
+					var price_top = $(this).find(".cart-product-info").height() + 8;
 					$(this).find("ul.desktop>li.price").css("top",price_top+"px");
-					var qty_top = price_top + price_height - 1;
+					var qty_top = price_top + $(this).find("ul.desktop>li.price").height() + 6;
 					$(this).find("ul.desktop>li.qty").css("top",qty_top+"px");
 				}
 				else{
@@ -1679,6 +1686,37 @@ $(document).ready(function(){
 			}
 			});
 		
+		$(".product-tile .image .item.quickview").each(function(){
+			if($(this).find(".addtocart-component").length == 1){
+				$(this).addClass("quick-bag-both");
+			}
+			});
+		if($(".facet-list.filter-opt").children().length > 0){
+		var filter_html = $(".listing.wrapper .right-block .facet-values.js-facet-values").html();
+		$(".listing.wrapper .left-block").before(filter_html);
+		$(".listing.wrapper .right-block .facet-values.js-facet-values").html("").hide();
+		}
+		else{
+			$(".facet-list.filter-opt").hide();
+		}
+		$(document).ajaxComplete(function(){
+			if($(".facet-list.filter-opt").children().length > 0){
+			var filter_html = $(".listing.wrapper .right-block .facet-values.js-facet-values").html();
+			$(".listing.wrapper .left-block").before(filter_html);
+			$(".listing.wrapper .right-block .facet-values.js-facet-values").html("").hide();
+			}
+		});
+		$(window).on("load resize", function() {
+		if($(".listing.wrapper").length > 0){
+			if($(".searchSpellingSuggestionPrompt").length>0){
+				$(".toggle-filterSerp").css("margin-top","40px");
+			}
+			if($(".toggle-filterSerp").length>0){
+				var sort_top= $(".toggle-filterSerp").offset().top - $(".listing.wrapper").offset().top - 20;
+				$(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("top",sort_top+"px")
+			}
+		}
+		});
 });
 
         var screenXs="480px";
@@ -1974,7 +2012,7 @@ function viewByFilterResult(top){
 }
 /*Filter scroll changes start*/
 $(window).on("scroll",function(){
-	if($(window).width() > 650 && $('.listing.wrapper .right-block').height() > $('.listing.wrapper .left-block').height()) {
+	if($(window).width() > 790 && $('.listing.wrapper .right-block').height() > $('.listing.wrapper .left-block').height()) {
 		
 		if ($('.listing.wrapper .right-block').offset().top >= $('.listing.wrapper .left-block').offset().top - parseInt($('.listing.wrapper .left-block').css("margin-top"))){
 			$('.listing.wrapper .left-block').removeClass("fix bottom");
@@ -2030,7 +2068,33 @@ $(document).ajaxComplete(function(){
 	if(!$("body").hasClass("pageLabel-homepage") && !$("body").hasClass("template-pages-layout-micrositePage1")){
 		$("body").find(".content-block-slider.electronic-brand-slider").removeClass("timeout-slider");
 	}
+
 });
+
+/*TPR-179(Shop The Style start)*/
+$(document).ready(function(){
+	
+	$(".timeout-slider").find(".owl-item.active").find(".item.slide").click(function(){
+		var link = $(this).find("a").attr("href");
+		console.log(link);
+	});
+	
+	$(".item.slide").find("a").click(function(){
+		  var link= $(this).attr("href"); //$(".item.slide").find("a").attr("href"); 
+		  var sublink=link.substr(0, link.indexOf('?')); 
+		  var id = "#"+sublink.split("#")[1];
+		  console.log(id);
+		  $('html, body').animate({
+		        scrollTop: $(id).offset().top -100
+		    }, 1000);
+	});
+});
+
+
+
+/*END TPR-179(Shop The Style start)*/
+
+
 
 var ia_prod;
 $(window).resize(function(){
@@ -2046,3 +2110,4 @@ $(window).resize(function(){
 		$(".pdp .trending#ia_products .owl-controls").css("top",a);
 	}
 })*/
+

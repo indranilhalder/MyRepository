@@ -14,6 +14,7 @@
     <%-- <input type="hidden" id="isServicableId" value="${isServicable}"> Not required --%>
     <c:set var="showTax" value="false"/>
     <c:set var="userName" value="${user.firstName}"/>
+    <div class="MyBag-top-section">
     <div class="MyBag-buttons">
 	<h1 class="MyBagHeadingDesktop" ><spring:theme code="mpl.myBag" /><span id="mybagcnt"></span></h1>
 	
@@ -119,7 +120,7 @@
 		
 		
 	</div>
-	
+	</div>
 	<script>
    				window.onload =	function(){
    						checkIsServicable();
