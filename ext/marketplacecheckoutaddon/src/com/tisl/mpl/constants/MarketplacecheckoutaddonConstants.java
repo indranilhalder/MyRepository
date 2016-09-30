@@ -103,7 +103,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String SELECTEDPAYMENTMETHODID = "selectedPaymentMethodId";
 	public static final String HASNOPAYMENTINFO = "hasNoPaymentInfo";
 	public static final String ORDERPLACEFAIL = "Failed to place Order";
-	public static final String CARDPAYMENT = "/cardPayment";
+	public static final String CARDPAYMENT = "/cardPayment/{guid:.*}";
 	public static final String CHARGED = "CHARGED";
 	public static final String REDIRECT = "redirect:";
 	public static final String CREATEDEBITCARDORDER = "/createDebitCardOrder";

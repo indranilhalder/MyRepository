@@ -1769,7 +1769,7 @@ $("#otpMobileNUMField").focus(function(){
 					//$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add");
 				}
 				else if(response=='redirect_with_details'){
-					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment?value="+guid); //TPR-629
+					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TPR-629
 				}
 				else{
 					//TISSTRT-1391
@@ -1796,18 +1796,18 @@ $("#otpMobileNUMField").focus(function(){
 								var p = "order_id=" + statusObj.orderId
 								p = p + "&status=" + statusObj.status 
 								p = p + "&status_id=" + statusObj.statusId
-								window.location.href = thank_you_page+"?value="+values[1]
+								window.location.href = thank_you_page+"/"+values[1]
 
 							},
 							error_handler: function(error_code, error_message, bank_error_code, bank_error_message, gateway_id) {
 								//redirect to failure page
 								//alert("Transaction not successful. Error: " + bank_error_message)
-								window.location.href = error_page+"?value="+values[1]
+								window.location.href = error_page+"/"+values[1]
 
 							},
 							second_factor_window_closed_handler: function() {
 							    // enable the pay button for the user
-								window.location.href = error_page+"?value="+values[1]
+								window.location.href = error_page+"/"+values[1]
 							}
 						})
 						$("#card_form").submit(); 		
@@ -1849,7 +1849,7 @@ $("#otpMobileNUMField").focus(function(){
 		var guid=$("#guid").val();
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid},
 			type: "GET",
 			cache: false,
 			async: false,
@@ -1862,7 +1862,7 @@ $("#otpMobileNUMField").focus(function(){
 				}else if(response=='redirect_to_payment'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?value="+guid); //TPR-629
 				}else if(response=='redirect_with_details'){
-					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment?value="+guid); //TPR-629
+					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TPR-629
 				}
 				else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){
 //					if($(".redirect").val()=="false"){
@@ -1896,18 +1896,18 @@ $("#otpMobileNUMField").focus(function(){
 								var p = "order_id=" + statusObj.orderId
 								p = p + "&status=" + statusObj.status 
 								p = p + "&status_id=" + statusObj.statusId
-								window.location.href = thank_you_page+"?value="+values[1]
+								window.location.href = thank_you_page+"/"+values[1]
 
 							},
 							error_handler: function(error_code, error_message, bank_error_code, bank_error_message, gateway_id) {
 								//redirect to failure page
 								//alert("Transaction not successful. Error: " + bank_error_message)
-								window.location.href = error_page+"?value="+values[1]
+								window.location.href = error_page+"/"+values[1]
 
 							},
 							second_factor_window_closed_handler: function() {
 							    // enable the pay button for the user
-								window.location.href = error_page+"?value="+values[1]
+								window.location.href = error_page+"/"+values[1]
 							}
 						})
 						$("#card_form_saved_debit").submit(); 		
@@ -1989,7 +1989,7 @@ $("#otpMobileNUMField").focus(function(){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?value="+guid); //TPR-629
 				}
 				else if(response=='redirect_with_details'){
-					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment?value="+guid); //TPR-629
+					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TPR-629
 				}
 				else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){	
 //					if($(".redirect").val()=="false"){
@@ -2079,7 +2079,7 @@ $("#otpMobileNUMField").focus(function(){
 		
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid},
 			type: "GET",
 			cache: false,
 			async: false,
@@ -2090,7 +2090,7 @@ $("#otpMobileNUMField").focus(function(){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?value="+guid); //TPR-629
 				}
 				else if(response=='redirect_with_details'){
-					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment?value="+guid); //TPR-629
+					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TPR-629
 				}
 				else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){	
 					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The system is down, please try again";
@@ -2197,7 +2197,7 @@ $("#otpMobileNUMField").focus(function(){
 			}
 			else{
 		var bin_current_status = getCardBinstatusDc();
-		dopaymentDc(bin_current_status);
+		//dopaymentDc(bin_current_status);
 			}
  }); 
  
@@ -2207,7 +2207,7 @@ $("#otpMobileNUMField").focus(function(){
 			}
 			else{
 		var bin_current_status = getCardBinstatusEmiCc();
-		dopaymentEmi(bin_current_status);
+		//dopaymentEmi(bin_current_status);
 			}
 });
   
@@ -2413,17 +2413,17 @@ $("#otpMobileNUMField").focus(function(){
 				 var p = "order_id=" + statusObj.orderId
 				 p = p + "&status=" + statusObj.status 
 				 p = p + "&status_id=" + statusObj.statusId
-				 window.location.href = thank_you_page+"?value="+value
+				 window.location.href = thank_you_page+"/"+value
 			 },
 			 error_handler: function(error_code, error_message, bank_error_code, bank_error_message, gateway_id) {
 	         //redirect to failure page
 				 /*alert("Transaction not successful. Error: " + bank_error_message)*/
 
-				 window.location.href = error_page+"?value="+value
+				 window.location.href = error_page+"/"+value
 			 },
 			 second_factor_window_closed_handler: function() {
 				    // enable the pay button for the user
-					window.location.href = error_page+"?value="+value
+					window.location.href = error_page+"/"+value
 			 }
 		 });
  $("#payment_form").submit() ;   
@@ -2442,17 +2442,17 @@ $("#otpMobileNUMField").focus(function(){
 				 var p = "order_id=" + statusObj.orderId
 				 p = p + "&status=" + statusObj.status 
 				 p = p + "&status_id=" + statusObj.statusId
-				 window.location.href = thank_you_page+"?value="+value
+				 window.location.href = thank_you_page+"/"+value
 			 },
 			 error_handler: function(error_code, error_message, bank_error_code, bank_error_message, gateway_id) {
 	         //redirect to failure page
 				 /*alert("Transaction not successful. Error: " + bank_error_message)*/
 
-				 window.location.href = error_page+"?value="+value
+				 window.location.href = error_page+"/"+value
 			 },
 			 second_factor_window_closed_handler: function() {
 				    // enable the pay button for the user
-					window.location.href = error_page+"?value="+value
+					window.location.href = error_page+"/"+value
 			 }
 		 });
 		 	$("#debit_payment_form").submit() ;   
@@ -2471,17 +2471,17 @@ $("#otpMobileNUMField").focus(function(){
 				 var p = "order_id=" + statusObj.orderId
 				 p = p + "&status=" + statusObj.status 
 				 p = p + "&status_id=" + statusObj.statusId
-				 window.location.href = thank_you_page+"?value="+value
+				 window.location.href = thank_you_page+"/"+value
 			 },
 			 error_handler: function(error_code, error_message, bank_error_code, bank_error_message, gateway_id) {
 	         //redirect to failure page
 				 /*alert("Transaction not successful. Error: " + bank_error_message)*/
 
-				 window.location.href = error_page+"?value="+value
+				 window.location.href = error_page+"/"+value
 			 },
 			 second_factor_window_closed_handler: function() {
 				    // enable the pay button for the user
-					window.location.href = error_page+"?value="+value
+					window.location.href = error_page+"/"+value
 			 }
 		 });
 		 $("#emi_payment_form").submit() ;   
@@ -3202,56 +3202,92 @@ function validateCardNo(formSubmit) {
 	// accept only digits, dashes or spaces	
 	if (/[^0-9-\s]+/.test(value)) {
 		binStatus=false;
-		dopayment(binStatus);
+		//TPR-629
+		if(formSubmit=="formSubmit")
+		{
+			dopayment(binStatus);
+		}
 		errorHandle.innerHTML = "Please enter a valid card number";
 		return false;
 	}
 	else if(value.length<13 || value.length>19){
 		binStatus=false;
-		dopayment(binStatus);
+		//TPR-629
+		if(formSubmit=="formSubmit")
+		{
+			dopayment(binStatus);
+		}
 		errorHandle.innerHTML = "Please enter a valid card number";
 		return false;
 	}
 	else if(cardType=='MAESTRO' && !(value.length==13 || value.length==14 || value.length==15 || value.length==16 || value.length==17 || value.length==18 || value.length==19)){
 		binStatus=false;
-		dopayment(binStatus);
+		//TPR-629
+		if(formSubmit=="formSubmit")
+		{
+			dopayment(binStatus);
+		}
 		errorHandle.innerHTML = "Please enter a valid card number";
 		return false;
 	}
 	else if(cardType=='VISA' && !(value.length==16 || value.length==13)){
 		binStatus=false;
-		dopayment(binStatus);
+		//TPR-629
+		if(formSubmit=="formSubmit")
+		{
+			dopayment(binStatus);
+		}
 		errorHandle.innerHTML = "Please enter a valid card number";
 		return false;
 	}
 	else if(cardType=='MASTERCARD' && value.length!=16){
 		binStatus=false;
-		dopayment(binStatus);
+		//TPR-629
+		if(formSubmit=="formSubmit")
+		{
+			dopayment(binStatus);
+		}
 		errorHandle.innerHTML = "Please enter a valid card number";
 		return false;
 	}
 	else if(cardType=='AMEX' && value.length!=15){
 		binStatus=false;
-		dopayment(binStatus);
+		//TPR-629
+		if(formSubmit=="formSubmit")
+		{
+			dopayment(binStatus);
+		}
 		errorHandle.innerHTML = "Please enter a valid card number";
 		return false;
 	}
 	//TISPRO-572 - Commenting check for EMI in case of AMEX
 	else if(cardType=='AMEX' && value.length==15 && (/*$("#paymentMode").val()=='EMI' ||*/ $("#paymentMode").val()=='Debit Card')){
 		binStatus=false;
-		dopayment(binStatus);
+		//TPR-629
+		if(formSubmit=="formSubmit")
+		{
+			dopayment(binStatus);
+		}
 		errorHandle.innerHTML = "Please enter a valid debit card";
 		return false;
 	}
 	else if(cardType=='MAESTRO' && (value.length==16 || value.length==18 || value.length==19) && ($("#paymentMode").val()=='EMI' || $("#paymentMode").val()=='Credit Card')){
 		binStatus=false;
-		dopayment(binStatus);
+		//TPR-629
+		if(formSubmit=="formSubmit")
+		{
+			dopayment(binStatus);
+		}
 		errorHandle.innerHTML = "Please enter a valid credit card";
 		return false;
 	}
 	else if(cardType==""){
 		binStatus=false;
-		dopayment(binStatus);
+		//TPR-629
+		if(formSubmit=="formSubmit")
+		{
+			dopayment(binStatus);
+		}
 		errorHandle.innerHTML = "Sorry, the entered card type is not supported";
 		return false;
 	}
@@ -3276,7 +3312,11 @@ function validateCardNo(formSubmit) {
 
 	else if(result==false){
 		binStatus=false;
-		dopayment(binStatus);
+		//TPR-629
+		if(formSubmit=="formSubmit")
+		{
+			dopayment(binStatus);
+		}
 		errorHandle.innerHTML = "Please enter a valid card number";
 		return false;
 	}
@@ -3292,7 +3332,11 @@ function validateCardNo(formSubmit) {
 		success : function(response) {	
 			if(!response.isValid)
 			{
-				dopayment(binStatus);
+				//TPR-629
+				if(formSubmit=="formSubmit")
+				{
+					dopayment(binStatus);
+				}
 				errorHandle.innerHTML = "Cannot proceed. Please try with diff card";
 				return false;
 			}
@@ -3306,7 +3350,11 @@ function validateCardNo(formSubmit) {
 					}
 					else
 					{
-						dopayment(binStatus);
+						//TPR-629
+						if(formSubmit=="formSubmit")
+						{
+							dopayment(binStatus);
+						}
 					}
 					errorHandle.innerHTML = "";
 					return true;
@@ -3317,32 +3365,7 @@ function validateCardNo(formSubmit) {
 					//TISPRO-572 bank selection drop down
 					var selectedBankVal=selectedBank.split(" ", 1);
 					var responseBankVal=response.bankName;
-					if($("#paymentMode").val()=='EMI')
-					{
-						if(response.cardType=="" || response.cardType==null || response.cardType=="CREDIT" || response.cardType=="CC" || response.cardType=="Credit")
-						{
-							if(selectedBank!="select" && responseBankVal.includes(selectedBankVal)){
-								binStatus=true;
-								dopayment(binStatus);
-								//applyPromotion();
-								errorHandle.innerHTML = "";
-								return true;			
-							}
-							else if(selectedBank!="select" && !responseBankVal.includes(selectedBankVal)){
-								binStatus=false;
-								dopayment(binStatus);
-								errorHandle.innerHTML = "Please enter a card same as the selected bank";
-								return false;	
-							}
-						}
-						else
-						{
-							binStatus=false;
-							dopayment(binStatus);
-							errorHandle.innerHTML = "Please enter a valid Credit Card number";
-						}
-					}
-					else if(document.getElementById("paymentMode").value=='Credit Card'){
+					if(document.getElementById("paymentMode").value=='Credit Card'){
 						if(response.cardType=="" || response.cardType==null || response.cardType=="CREDIT" || response.cardType=="CC" || response.cardType=="Credit")
 						{
 							binStatus=true;
@@ -3353,23 +3376,12 @@ function validateCardNo(formSubmit) {
 						else
 						{
 							binStatus=false;
-							dopayment(binStatus);
+							//TPR-629
+							if(formSubmit=="formSubmit")
+							{
+								dopayment(binStatus);
+							}
 							errorHandle.innerHTML = "Please enter a valid Credit Card number";
-						}
-					}
-					else if(document.getElementById("paymentMode").value=='Debit Card'){
-						if(response.cardType=="" || response.cardType==null || response.cardType=="DEBIT" || response.cardType=="DC" || response.cardType=="Debit")
-						{
-							binStatus=true;
-							applyPromotion(null,binStatus,formSubmit);
-							errorHandle.innerHTML = "";
-							return true;
-						}
-						else
-						{
-							binStatus=false;
-							dopayment(binStatus);
-							errorHandle.innerHTML = "Please enter a valid Debit Card number";
 						}
 					}
 				}
@@ -3377,7 +3389,11 @@ function validateCardNo(formSubmit) {
 		},
 		error : function(resp) {
 			binStatus=false;
-			dopayment(binStatus);
+			//TPR-629
+			if(formSubmit=="formSubmit")
+			{
+				dopayment(binStatus);
+			}
 			errorHandle.innerHTML = "   Please enter a valid card number ";
 			$("#promotionApplied").css("display","none");
 			//resetConvCharge(binStatus);		//Commenting as method commented for perf fixes
@@ -3409,47 +3425,92 @@ function validateDebitCardNo(formSubmit) {
 		// accept only digits, dashes or spaces	
 		if (/[^0-9-\s]+/.test(value)) {
 			binStatus=false;
+			//TPR-629
+			if(formSubmit=="formSubmit")
+			{
+				dopayment(binStatus);
+			}
 			errorHandle.innerHTML = "Please enter a valid card number";
 			return false;
 		}
 		else if(value.length<13 || value.length>19){
 			binStatus=false;
+			//TPR-629
+			if(formSubmit=="formSubmit")
+			{
+				dopayment(binStatus);
+			}
 			errorHandle.innerHTML = "Please enter a valid card number";
 			return false;
 		}
 		else if(cardType=='MAESTRO' && !(value.length==13 || value.length==14 || value.length==15 || value.length==16 || value.length==17 || value.length==18 || value.length==19)){
 			binStatus=false;
+			//TPR-629
+			if(formSubmit=="formSubmit")
+			{
+				dopayment(binStatus);
+			}
 			errorHandle.innerHTML = "Please enter a valid card number";
 			return false;
 		}
 		else if(cardType=='VISA' && !(value.length==16 || value.length==13)){
 			binStatus=false;
+			//TPR-629
+			if(formSubmit=="formSubmit")
+			{
+				dopayment(binStatus);
+			}
 			errorHandle.innerHTML = "Please enter a valid card number";
 			return false;
 		}
 		else if(cardType=='MASTERCARD' && value.length!=16){
 			binStatus=false;
+			//TPR-629
+			if(formSubmit=="formSubmit")
+			{
+				dopayment(binStatus);
+			}
 			errorHandle.innerHTML = "Please enter a valid card number";
 			return false;
 		}
 		else if(cardType=='AMEX' && value.length!=15){
 			binStatus=false;
+			//TPR-629
+			if(formSubmit=="formSubmit")
+			{
+				dopayment(binStatus);
+			}
 			errorHandle.innerHTML = "Please enter a valid card number";
 			return false;
 		}
 		//TISPRO-572 - Commenting check for EMI in case of AMEX
 		else if(cardType=='AMEX' && value.length==15 && (/*$("#paymentMode").val()=='EMI' ||*/ $("#paymentMode").val()=='Debit Card')){
 			binStatus=false;
+			//TPR-629
+			if(formSubmit=="formSubmit")
+			{
+				dopayment(binStatus);
+			}
 			errorHandle.innerHTML = "Please enter a valid debit card";
 			return false;
 		}
 		else if(cardType=='MAESTRO' && (value.length==16 || value.length==18 || value.length==19) && ($("#paymentMode").val()=='EMI' || $("#paymentMode").val()=='Credit Card')){
 			binStatus=false;
+			//TPR-629
+			if(formSubmit=="formSubmit")
+			{
+				dopayment(binStatus);
+			}
 			errorHandle.innerHTML = "Please enter a valid credit card";
 			return false;
 		}
 		else if(cardType==""){
 			binStatus=false;
+			//TPR-629
+			if(formSubmit=="formSubmit")
+			{
+				dopayment(binStatus);
+			}
 			errorHandle.innerHTML = "Sorry, the entered card type is not supported";
 			return false;
 		}
@@ -3472,6 +3533,11 @@ function validateDebitCardNo(formSubmit) {
 		}*/
 		else if(result==false){
 			binStatus=false;
+			//TPR-629
+			if(formSubmit=="formSubmit")
+			{
+				dopayment(binStatus);
+			}
 			errorHandle.innerHTML = "Please enter a valid card number";
 			return false;
 		}
@@ -3486,6 +3552,11 @@ function validateDebitCardNo(formSubmit) {
 			success : function(response) {	
 				if(!response.isValid)
 				{
+					//TPR-629
+					if(formSubmit=="formSubmit")
+					{
+						dopayment(binStatus);
+					}
 					errorHandle.innerHTML = "Cannot proceed. Please try with diff card";
 					return false;
 				}
@@ -3496,7 +3567,15 @@ function validateDebitCardNo(formSubmit) {
 						binStatus=true;
 						if($("#paymentMode").val()!='EMI'){
 							applyPromotion(null,binStatus,formSubmit);
-						}					
+						}
+						//TPR-629
+						else
+						{
+							if(formSubmit=="formSubmit")
+							{
+								dopayment(binStatus);
+							}
+						}
 						errorHandle.innerHTML = "";
 						return true;
 					}
@@ -3506,43 +3585,7 @@ function validateDebitCardNo(formSubmit) {
 						//TISPRO-572 bank selection drop down
 						var selectedBankVal=selectedBank.split(" ", 1);
 						var responseBankVal=response.bankName;
-						if($("#paymentMode").val()=='EMI')
-						{
-							if(response.cardType=="" || response.cardType==null || response.cardType=="CREDIT" || response.cardType=="CC" || response.cardType=="Credit")
-							{
-								if(selectedBank!="select" && responseBankVal.includes(selectedBankVal)){
-									binStatus=true;
-									//applyPromotion();
-									errorHandle.innerHTML = "";
-									return true;			
-								}
-								else if(selectedBank!="select" && !responseBankVal.includes(selectedBankVal)){
-									binStatus=false;
-									errorHandle.innerHTML = "Please enter a card same as the selected bank";
-									return false;	
-								}
-							}
-							else
-							{
-								binStatus=false;
-								errorHandle.innerHTML = "Please enter a valid Credit Card number";
-							}
-						}
-						else if(document.getElementById("paymentMode").value=='Credit Card'){
-							if(response.cardType=="" || response.cardType==null || response.cardType=="CREDIT" || response.cardType=="CC" || response.cardType=="Credit")
-							{
-								binStatus=true;
-								applyPromotion(null,binStatus,formSubmit);
-								errorHandle.innerHTML = "";
-								return true;
-							}
-							else
-							{
-								binStatus=false;
-								errorHandle.innerHTML = "Please enter a valid Credit Card number";
-							}
-						}
-						else if(document.getElementById("paymentMode").value=='Debit Card'){
+						if(document.getElementById("paymentMode").value=='Debit Card'){
 							if(response.cardType=="" || response.cardType==null || response.cardType=="DEBIT" || response.cardType=="DC" || response.cardType=="Debit")
 							{
 								binStatus=true;
@@ -3561,6 +3604,11 @@ function validateDebitCardNo(formSubmit) {
 			},
 			error : function(resp) {
 				binStatus=false;
+				//TPR-629
+				if(formSubmit=="formSubmit")
+				{
+					dopayment(binStatus);
+				}
 				errorHandle.innerHTML = "   Please enter a valid card number ";
 				$("#promotionApplied").css("display","none");
 				resetConvCharge();
@@ -3592,47 +3640,92 @@ function validateEmiCardNo(formSubmit) {
 		// accept only digits, dashes or spaces	
 		if (/[^0-9-\s]+/.test(value)) {
 			binStatus=false;
+			//TPR-629
+			if(formSubmit=="formSubmit")
+			{
+				dopayment(binStatus);
+			}
 			errorHandle.innerHTML = "Please enter a valid card number";
 			return false;
 		}
 		else if(value.length<13 || value.length>19){
 			binStatus=false;
+			//TPR-629
+			if(formSubmit=="formSubmit")
+			{
+				dopayment(binStatus);
+			}
 			errorHandle.innerHTML = "Please enter a valid card number";
 			return false;
 		}
 		else if(cardType=='MAESTRO' && !(value.length==13 || value.length==14 || value.length==15 || value.length==16 || value.length==17 || value.length==18 || value.length==19)){
 			binStatus=false;
+			//TPR-629
+			if(formSubmit=="formSubmit")
+			{
+				dopayment(binStatus);
+			}
 			errorHandle.innerHTML = "Please enter a valid card number";
 			return false;
 		}
 		else if(cardType=='VISA' && !(value.length==16 || value.length==13)){
 			binStatus=false;
+			//TPR-629
+			if(formSubmit=="formSubmit")
+			{
+				dopayment(binStatus);
+			}
 			errorHandle.innerHTML = "Please enter a valid card number";
 			return false;
 		}
 		else if(cardType=='MASTERCARD' && value.length!=16){
 			binStatus=false;
+			//TPR-629
+			if(formSubmit=="formSubmit")
+			{
+				dopayment(binStatus);
+			}
 			errorHandle.innerHTML = "Please enter a valid card number";
 			return false;
 		}
 		else if(cardType=='AMEX' && value.length!=15){
 			binStatus=false;
+			//TPR-629
+			if(formSubmit=="formSubmit")
+			{
+				dopayment(binStatus);
+			}
 			errorHandle.innerHTML = "Please enter a valid card number";
 			return false;
 		}
 		//TISPRO-572 - Commenting check for EMI in case of AMEX
 		else if(cardType=='AMEX' && value.length==15 && (/*$("#paymentMode").val()=='EMI' ||*/ $("#paymentMode").val()=='Debit Card')){
 			binStatus=false;
+			//TPR-629
+			if(formSubmit=="formSubmit")
+			{
+				dopayment(binStatus);
+			}
 			errorHandle.innerHTML = "Please enter a valid debit card";
 			return false;
 		}
 		else if(cardType=='MAESTRO' && (value.length==16 || value.length==18 || value.length==19) && ($("#paymentMode").val()=='EMI' || $("#paymentMode").val()=='Credit Card')){
 			binStatus=false;
+			//TPR-629
+			if(formSubmit=="formSubmit")
+			{
+				dopayment(binStatus);
+			}
 			errorHandle.innerHTML = "Please enter a valid credit card";
 			return false;
 		}
 		else if(cardType==""){
 			binStatus=false;
+			//TPR-629
+			if(formSubmit=="formSubmit")
+			{
+				dopayment(binStatus);
+			}
 			errorHandle.innerHTML = "Sorry, the entered card type is not supported";
 			return false;
 		}
@@ -3655,6 +3748,11 @@ function validateEmiCardNo(formSubmit) {
 		}*/
 		else if(result==false){
 			binStatus=false;
+			//TPR-629
+			if(formSubmit=="formSubmit")
+			{
+				dopayment(binStatus);
+			}
 			errorHandle.innerHTML = "Please enter a valid card number";
 			return false;
 		}
@@ -3677,9 +3775,6 @@ function validateEmiCardNo(formSubmit) {
 					if(response.cardType==null)
 					{
 						binStatus=true;
-						if($("#paymentMode").val()!='EMI'){
-							applyPromotion(null,binStatus,formSubmit);
-						}					
 						errorHandle.innerHTML = "";
 						return true;
 					}
@@ -3695,12 +3790,22 @@ function validateEmiCardNo(formSubmit) {
 							{
 								if(selectedBank!="select" && responseBankVal.includes(selectedBankVal)){
 									binStatus=true;
+									//TPR-629
+									if(formSubmit=="formSubmit")
+									{
+										dopayment(binStatus);
+									}
 									//applyPromotion();
 									errorHandle.innerHTML = "";
 									return true;			
 								}
 								else if(selectedBank!="select" && !responseBankVal.includes(selectedBankVal)){
 									binStatus=false;
+									//TPR-629
+									if(formSubmit=="formSubmit")
+									{
+										dopayment(binStatus);
+									}
 									errorHandle.innerHTML = "Please enter a card same as the selected bank";
 									return false;	
 								}
@@ -3708,35 +3813,12 @@ function validateEmiCardNo(formSubmit) {
 							else
 							{
 								binStatus=false;
+								//TPR-629
+								if(formSubmit=="formSubmit")
+								{
+									dopayment(binStatus);
+								}
 								errorHandle.innerHTML = "Please enter a valid Credit Card number";
-							}
-						}
-						else if(document.getElementById("paymentMode").value=='Credit Card'){
-							if(response.cardType=="" || response.cardType==null || response.cardType=="CREDIT" || response.cardType=="CC" || response.cardType=="Credit")
-							{
-								binStatus=true;
-								applyPromotion(null,binStatus,formSubmit);
-								errorHandle.innerHTML = "";
-								return true;
-							}
-							else
-							{
-								binStatus=false;
-								errorHandle.innerHTML = "Please enter a valid Credit Card number";
-							}
-						}
-						else if(document.getElementById("paymentMode").value=='Debit Card'){
-							if(response.cardType=="" || response.cardType==null || response.cardType=="DEBIT" || response.cardType=="DC" || response.cardType=="Debit")
-							{
-								binStatus=true;
-								applyPromotion(null,binStatus,formSubmit);
-								errorHandle.innerHTML = "";
-								return true;
-							}
-							else
-							{
-								binStatus=false;
-								errorHandle.innerHTML = "Please enter a valid Debit Card number";
 							}
 						}
 					}
@@ -4601,6 +4683,9 @@ function submitNBForm(){
 				else if(response=='redirect_to_payment'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?value="+guid); //TIS 404
 				}
+				else if(response=='redirect_with_details'){
+					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TPR-629
+				}
 
 				else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){
 					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The system is down, please try again";
@@ -4611,15 +4696,15 @@ function submitNBForm(){
 					$("#no-click").remove();
 				}
 				else if(response=='redirect_with_details'){
-					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment?value="+guid); //TIS 404
+					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TIS 404
 				}
 				else{
 					//TISSTRT-1391 
 					window.sessionStorage.removeItem("header");
 					//TISPRO-153
 					sendTealiumData();
-
-					$("#juspayOrderId").val(response);
+					var values=response.split("|"); 
+					$("#juspayOrderId").val(values[0]);
 					var juspayOrderId=$("#juspayOrderId").val();
 					$.ajax({
 						url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/submitNBForm",
@@ -4647,12 +4732,6 @@ function submitNBForm(){
 									if(method === "POST") {
 										var frm = document.createElement("form")
 										frm.style.display = "none"; // ensure that the form is hidden from the user
-
-
-
-
-
-
 										frm.setAttribute("method", method);
 										frm.setAttribute("action", url);
 	
@@ -6974,6 +7053,7 @@ $("*[data-id=newCCard]").click(function(){
 	});
 	$("#make_cc_payment_up").show();
 	$(".card_cvvErrorSavedCard").hide();
+	$("#card_form").find("input[type=password]").val("");
 	//$("#savedCreditCard").find(".error-message").hide();
 });
 
@@ -6995,6 +7075,7 @@ $("*[data-id=newDCard]").click(function(){
 	});
 	$("#make_dc_payment_up").show();
 	$(".card_cvvErrorSavedCard").hide();
+	$("#card_form_saved_debit").find("input[type=password]").val("");
 	//$("#savedDebitCard").find(".error-message").hide();
 });
 
@@ -7014,30 +7095,31 @@ $("#payment_form").find("input[type=text]").click(function(){
 	$("*[data-id=newCCard]").prop("checked","true");
 	$("*[data-id=newCCard]").trigger("click");
 	$("#cvvErrorSavedCard").hide();
+	$("#card_form").find("input[type=password]").val("");
 	//$("#savedCreditCard").find(".error-message").hide();
 });
 
 $("#payment_form").find("select").click(function(){
 	$("*[data-id=newCCard]").prop("checked","true");
 	$("*[data-id=newCCard]").trigger("click");
+	$("#card_form").find("input[type=password]").val("");
 });
 
 $("#debit_payment_form").find("input[type=text]").click(function(){
 	$("*[data-id=newDCard]").prop("checked","true");
 	$("*[data-id=newDCard]").trigger("click");
 	$(".card_cvvErrorSavedCard").hide();
+	$("#card_form_saved_debit").find("input[type=password]").val("");
 });
 
 $("#debit_payment_form").find("select").click(function(){
 	$("*[data-id=newDCard]").prop("checked","true");
 	$("*[data-id=newDCard]").trigger("click");
 	$(".card_cvvErrorSavedCard").hide();
+	$("#card_form_saved_debit").find("input[type=password]").val("");
 });
 
 $("#savedCreditCard").find("input[type=password]").click(function(){
-	$(".radio input[type='radio']").removeAttr("checked");
-	$("*[data-id=savedCCard]").prop("checked","true");
-	$("*[data-id=savedCCard]").trigger("change");
 	$("#make_cc_payment_up").show();
 	$("#cardNoError").empty();
 	$("#memberNameError").empty();
@@ -7051,9 +7133,6 @@ $("#savedCreditCard").find("input[type=password]").click(function(){
 });
 
 $("#savedDebitCard").find("input[type=password]").click(function(){
-	$(".radio input[type='radio']").removeAttr("checked");
-	$("*[data-id=savedDCard]").prop("checked","true");
-	$("*[data-id=savedDCard]").trigger("change");
 	$("#make_cc_payment_up").show();
 	$("#cardNoErrorDc").empty();
 	$("#memberNameErrorDc").empty();

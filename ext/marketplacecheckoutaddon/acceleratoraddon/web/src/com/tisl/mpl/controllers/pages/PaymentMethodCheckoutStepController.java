@@ -2429,8 +2429,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.CARDPAYMENT, method = RequestMethod.GET)
 	@RequireHardLogIn
 	public String cardPayment(final Model model, @Valid final PaymentForm paymentForm,
-			final RedirectAttributes redirectAttributes,
-			@RequestParam(value = "value", required = false, defaultValue = "") final String guid) throws CMSItemNotFoundException,
+			final RedirectAttributes redirectAttributes, @PathVariable("guid") final String guid) throws CMSItemNotFoundException,
 			InvalidCartException
 	{
 		//Commented as not needed for TPR-629
@@ -3161,7 +3160,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.JUSPAYRETURNMETHOD));
 			if (StringUtils.isNotEmpty(guid))
 			{
-				returnUrlBuilder.append("?value=").append(guid);
+				returnUrlBuilder.append("/").append(guid);
 			}
 			String paymentAddressLine1 = "";
 			String paymentAddressLine2 = "";
