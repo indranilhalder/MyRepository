@@ -45729,10 +45729,10 @@ margin-top: 6.2%;
     text-align: center;
 }
 .featured_collection .blp_featured_collection_wrapper .featured_collection_section .top-promos li{
-	top: 298px;
+	top: 295px;
+    left: -13px;
     color: #fff;
     font-size: 16px;
-   left: -18px;
     position: absolute;
     text-align: center;
     text-transform: uppercase;
@@ -46269,6 +46269,12 @@ text-align:left;
 	margin-top: -150px;
 }
 } */
+@media (min-width: 1024px) and (max-width: 1122px) {
+	.featured_collection .blp_featured_collection_wrapper .featured_collection_section .top-promos li{
+	top: 244px;
+	left: -28px;
+	}
+	}
 @media (max-width: 1024px) and (min-width: 768px){
 	.shop_the_look .shop_the_look_left .shop_the_look_section .carousel-component .owl-controls .owl-nav .owl-prev:after{
   left: 25px;
@@ -46302,10 +46308,10 @@ text-align:left;
 	width: 40%;
     margin-left: 1%;
 }
-.featured_collection .blp_featured_collection_wrapper .featured_collection_section .top-promos li{
+/* .featured_collection .blp_featured_collection_wrapper .featured_collection_section .top-promos li{
 	    top: 250px;
 	    left: -11px;
-}
+} */
 .men_women_sec .top-promos li:first-child p:first-child{
 	font-size: 24px;
 }
@@ -46398,11 +46404,19 @@ padding: 0 24px;
 	padding: 0;
 }
 }
+@media (max-width: 1024px) and (min-width: 790px){
+	.featured_collection .blp_featured_collection_wrapper .featured_collection_section .top-promos li{
+	top: 283px;
+	left: -17px;
+	}
+
+	}
+	
 @media (max-width: 1280px) and (min-width: 790px){
-.featured_collection .blp_featured_collection_wrapper .featured_collection_section .top-promos li {
+/* .featured_collection .blp_featured_collection_wrapper .featured_collection_section .top-promos li {
 	top: 239px;
     left: -39px;
-}
+} */
 
 
 .men_women_sec .top-promos li:first-child{
@@ -46411,6 +46425,11 @@ padding: 0 24px;
 }
 }
 @media (max-width: 790px){
+	.featured_collection .blp_featured_collection_wrapper .featured_collection_section .top-promos li{
+	top: 209px;
+	left: 4px;
+	
+	}
 	.top_deal_blp{
 	border:none;
 	}
@@ -46436,10 +46455,10 @@ padding: 0 24px;
 	.featured_collection .blp_featured_collection_wrapper .featured_collection_section .bottom-promos{
 	display:none;
 	}
-	.featured_collection .blp_featured_collection_wrapper .featured_collection_section .top-promos li{
+	/* .featured_collection .blp_featured_collection_wrapper .featured_collection_section .top-promos li{
 	top: 196px;
 	left: -3px;
-	}
+	} */
 	.blp_top_brands .blp_top_brands_section > .content h1{
 	font-size: 24px;
 	}
@@ -46627,11 +46646,11 @@ padding: 0 24px;
 	.featured_collection .blp_featured_collection_wrapper .featured_collection_section .bottom-promos{
 	display:none;
 	} 
-	.featured_collection .blp_featured_collection_wrapper .featured_collection_section .top-promos li{
-	top: 247px;
+ 	.featured_collection .blp_featured_collection_wrapper .featured_collection_section .top-promos li{
+	    /* top: 292px; */
 	font-size: 12px;
-	    left: -4px;
-	}
+	    /* left: -4px; */
+	} 
 	.blp_top_brands{
 	padding: 30px 12px;
 	}
@@ -46967,6 +46986,26 @@ padding: 0 24px;
 	.shop_the_look .shop_the_look_left  div.shop_the_look_section:nth-child(2){
 	margin:0;
 	}
+	.men_women_sec .top-promos li:first-child{
+	margin: -72px 0 0 0;
+	}
+	.featured_collection .blp_featured_collection_wrapper .featured_collection_section .top-promos li{
+	    left: -4px;
+    top: -86px;
+	}
+}
+@media (max-width: 480px){
+	.men_women_sec .top-promos li:first-child {
+    margin: -58px 0 0 0;
+        right: 14%;
+}
+.featured_collection .blp_featured_collection_wrapper .featured_collection_section .top-promos li{
+	top: 134px;
+}
+.shop_the_look div.shop_the_look_section:nth-child(2){
+	margin: 0 40px 20px 0px;
+}
+
 }
 /* ----BLP start end------ */
 
