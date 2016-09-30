@@ -40,6 +40,7 @@ import com.tisl.mpl.data.MplPromoPriceWsDTO;
 import com.tisl.mpl.data.SavedCardData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
@@ -72,6 +73,8 @@ public class PaymentServicesController extends BaseController
 	//	private CartService cartService;
 	@Resource(name = "mplCheckoutFacade")
 	private MplCheckoutFacade mplCheckoutFacade;
+	@Resource(name = "mplCartFacade")
+	private MplCartFacade mplCartFacade;
 	//	@Resource(name = "customerFacade")
 	//	private CustomerFacade customerFacade;
 	@Resource(name = "discountUtility")
@@ -519,6 +522,8 @@ public class PaymentServicesController extends BaseController
 		OrderModel orderModel = null;
 		OrderData orderData = null;
 		CartModel cart = null;
+		String failErrorCode = "";
+		boolean failFlag = false;
 		LOG.debug(String.format("updateTransactionDetailsforCOD : CartId: %s | UserId : %s |", cartGuid, userId));
 		try
 		{
@@ -553,8 +558,48 @@ public class PaymentServicesController extends BaseController
 								getMplPaymentFacade().saveCODPaymentInfo(cartValue, totalCODCharge, cart);
 
 								//Mandatory checks agains cart
-								final boolean isValidCart = getMplPaymentFacade().checkCart(cart);
-								if (isValidCart)
+								if (!getMplPaymentFacade().checkCart(cart))
+								{
+									failFlag = true;
+									failErrorCode = MarketplacecommerceservicesConstants.B9064;
+								}
+
+								if (!getMplCheckoutFacade().isPromotionValid(cart))
+								{
+									failFlag = true;
+									failErrorCode = MarketplacecommerceservicesConstants.B9075;
+								}
+
+								//TISST-13012
+								final boolean cartItemDelistedStatus = mplCartFacade.isCartEntryDelisted(cart);
+								if (!failFlag && cartItemDelistedStatus)
+								{
+									failFlag = true;
+									failErrorCode = MarketplacecommerceservicesConstants.B9325;
+								}
+
+								//TISUTO-12 , TISUTO-11
+								/*
+								 * if (!failFlag && !mplCartFacade.isInventoryReservedMobile(
+								 * MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel,
+								 * pincode)) { //getSessionService().setAttribute(MarketplacecclientservicesConstants.
+								 * OMS_INVENTORY_RESV_SESSION_ID,"TRUE"); //getMplCartFacade().recalculate(cart); failFlag =
+								 * true; failErrorCode = MarketplacecommerceservicesConstants.B9047; }
+								 */
+
+								if (!failFlag && !getMplCheckoutFacade().isCouponValid(cart))
+								{
+									//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID, "TRUE");
+									failFlag = true;
+									failErrorCode = MarketplacecommerceservicesConstants.B9509;
+								}
+
+
+								if (failFlag)
+								{
+									throw new EtailBusinessExceptions(failErrorCode);
+								}
+								else
 								{
 									orderData = mplCheckoutFacade.placeOrderByCartId(cartGuid);
 									if (orderData == null)
@@ -567,11 +612,7 @@ public class PaymentServicesController extends BaseController
 										updateTransactionDtls.setOrderId(orderData.getCode());
 									}
 								}
-								else
-								{
-									updateTransactionDtls.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-									updateTransactionDtls.setError(MarketplacecommerceservicesConstants.INVALID_CART);
-								}
+
 							}
 							else
 							{
@@ -588,18 +629,48 @@ public class PaymentServicesController extends BaseController
 							//saving COD Payment related info
 							getMplPaymentFacade().saveCODPaymentInfo(orderValue, totalCODCharge, orderModel);
 
-							//adding Payment id to model
-							if (mplPaymentWebFacade.updateOrder(orderModel))
+							//Mandatory checks agains order
+							if (!getMplCheckoutFacade().isPromotionValid(orderModel))
 							{
-								updateTransactionDtls.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-								updateTransactionDtls.setOrderId(orderModel.getCode());
+								failFlag = true;
+								failErrorCode = MarketplacecommerceservicesConstants.B9075;
+							}
+
+							//TISUTO-12 , TISUTO-11
+							/*
+							 * if (!failFlag && !mplCartFacade .isInventoryReservedMobile(
+							 * MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel,
+							 * pincode)) {
+							 * //getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID
+							 * ,"TRUE"); //getMplCartFacade().recalculate(cart); failFlag = true; failErrorCode =
+							 * MarketplacecommerceservicesConstants.B9047; }
+							 */
+
+							if (!failFlag && !getMplCheckoutFacade().isCouponValid(orderModel))
+							{
+								//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID, "TRUE");
+								failFlag = true;
+								failErrorCode = MarketplacecommerceservicesConstants.B9509;
+							}
+
+							if (failFlag)
+							{
+								throw new EtailBusinessExceptions(failErrorCode);
 							}
 							else
 							{
-								updateTransactionDtls.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-								updateTransactionDtls.setError(MarketplacecommerceservicesConstants.INVALIDORDERID);
+								//adding Payment id to model
+								if (mplPaymentWebFacade.updateOrder(orderModel))
+								{
+									updateTransactionDtls.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+									updateTransactionDtls.setOrderId(orderModel.getCode());
+								}
+								else
+								{
+									updateTransactionDtls.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+									updateTransactionDtls.setError(MarketplacecommerceservicesConstants.INVALIDORDERID);
+								}
 							}
-
 						}
 
 						updateTransactionDtls.setOtpStatus(MarketplacecommerceservicesConstants.OTP_SENT);

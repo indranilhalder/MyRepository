@@ -35,6 +35,7 @@ import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.promotions.util.Tuple2;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -61,6 +62,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.annotation.Resource;
+import javax.xml.bind.JAXBException;
 
 import net.sourceforge.pmd.util.StringUtil;
 
@@ -86,6 +88,7 @@ import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService;
+import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
@@ -134,6 +137,12 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	@Resource(name = "pincodeService")
 	private PincodeService pincodeService;
+
+	@Resource(name = "notificationService")
+	private NotificationService notificationService;
+
+	@Resource(name = "configurationService")
+	private ConfigurationService configurationService;
 
 
 	@Autowired
@@ -1470,6 +1479,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		//final AbstractOrderModel abstractOrderModel = cartService.getSessionCart();
 		final String defaultPinCodeId = sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
 		return mplCommerceCartService.isInventoryReserved(abstractOrderModel, requestType, defaultPinCodeId);
+
 	}
 
 	/*
@@ -2472,6 +2482,38 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	public void setMplExtendedPromoCartConverter(final Converter<CartModel, CartData> mplExtendedPromoCartConverter)
 	{
 		this.mplExtendedPromoCartConverter = mplExtendedPromoCartConverter;
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.tisl.mpl.facade.checkout.MplCartFacade#notifyEmailAndSmsOnInventoryFail(de.hybris.platform.core.model.order
+	 * .OrderModel)
+	 */
+	@Override
+	public boolean notifyEmailAndSmsOnInventoryFail(final OrderModel orderModel) throws EtailNonBusinessExceptions
+	{
+		boolean flag = false;
+		//Email and sms for Payment_Timeout
+		final String trackOrderUrl = configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
+				+ orderModel.getCode();
+		try
+		{
+			notificationService.triggerEmailAndSmsOnPaymentTimeout(orderModel, trackOrderUrl);
+			flag = true;
+		}
+		catch (final JAXBException e)
+		{
+			LOG.error("Error while sending notifications>>>>>>", e);
+		}
+		catch (final Exception ex)
+		{
+			LOG.error("Error while sending notifications>>>>>>", ex);
+		}
+		return flag;
 	}
 
 

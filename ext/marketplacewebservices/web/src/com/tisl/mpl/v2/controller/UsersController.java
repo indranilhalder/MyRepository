@@ -432,7 +432,7 @@ public class UsersController extends BaseCommerceController
 
 	/**
 	 * TPR-1372
-	 * 
+	 *
 	 * @param emailId
 	 * @param password
 	 * @return MplUserResultWsDto
@@ -6453,8 +6453,8 @@ public class UsersController extends BaseCommerceController
 	{
 		final OrderCreateInJusPayWsDto orderCreateInJusPayWsDto = new OrderCreateInJusPayWsDto();
 		String uid = "";
-
 		String failErrorCode = "";
+		boolean failFlag = false;
 		String juspayOrderId = "";
 		OrderModel orderModel = null;
 		OrderData orderData = null;
@@ -6503,7 +6503,7 @@ public class UsersController extends BaseCommerceController
 			//If cart is present
 			if (orderModel == null)
 			{
-				boolean failFlag = false;
+
 				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
 				if (!failFlag && !mplCheckoutFacade.isPromotionValid(cart))
 				{
@@ -6516,13 +6516,16 @@ public class UsersController extends BaseCommerceController
 					failErrorCode = MarketplacecommerceservicesConstants.B9325;
 				}
 				//TISUTO-12 , TISUTO-11
-				//Soft reservation calls already made
-				/*
-				 * if (!failFlag && !mplCartFacade.isInventoryReservedMobile(
-				 * MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cart, pincode)) {
-				 * //getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID,
-				 * "TRUE"); failFlag = true; failErrorCode = MarketplacecommerceservicesConstants.B9047; }
-				 */
+				//TODO Soft reservation calls already made
+				if (!failFlag
+						&& !mplCartFacade.isInventoryReservedMobile(
+								MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cart, pincode))
+				{
+					//getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID,"TRUE");
+					//getMplCartFacade().recalculate(cart);
+					failFlag = true;
+					failErrorCode = MarketplacecommerceservicesConstants.B9047;
+				}
 
 				if (!failFlag)
 				{
@@ -6577,7 +6580,6 @@ public class UsersController extends BaseCommerceController
 			}
 			else
 			{
-				boolean failFlag = false;
 				if (!getMplCheckoutFacade().isPromotionValid(orderModel))
 				{
 
@@ -6587,13 +6589,19 @@ public class UsersController extends BaseCommerceController
 					failErrorCode = MarketplacecommerceservicesConstants.B9075;
 				}
 				//Soft reservation calls already made
-				/*
-				 * if (!failFlag && !mplCartFacade.isInventoryReservedMobile(
-				 * MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel, pincode)) {
-				 * //getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID,
-				 * "TRUE"); getMplCartFacade().recalculateOrder(orderModel); failFlag = true; failErrorCode =
-				 * MarketplacecommerceservicesConstants.B9047; }
-				 */
+
+				if (!failFlag
+						&& !mplCartFacade.isInventoryReservedMobile(
+								MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel, pincode))
+				{
+					//getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID,"TRUE");
+					getMplCartFacade().recalculateOrder(orderModel);
+					failFlag = true;
+					failErrorCode = MarketplacecommerceservicesConstants.B9047;
+					//notify EMAil SMS TPR-815
+					mplCartFacade.notifyEmailAndSmsOnInventoryFail(orderModel);
+				}
+
 				if (failFlag)
 				{
 					throw new EtailBusinessExceptions(failErrorCode);

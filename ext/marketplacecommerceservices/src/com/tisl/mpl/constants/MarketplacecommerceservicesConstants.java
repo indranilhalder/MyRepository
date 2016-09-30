@@ -1670,7 +1670,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//public static final String VOUCHERINVALIDATIONQUERY = "select {v.pk} from {voucherinvalidation as v},{order as o},{customer as c},{voucher as vo} where {v.order}={o.pk} and {o.code}=?code and {v.user}={c.pk} and {c.originaluid}=?customerUid and {v.voucher}={vo.pk} and {vo.code}=?voucherIdentifier";
 	public static final String VOUCHERINVALIDATIONQUERY = "select {v.pk} from {voucherinvalidation as v},{order as o},{customer as c},{voucher as vo} where {v.order}={o.pk} and {o.code}=?code and {v.user}={c.pk} and {c.originaluid}=?customerUid and {v.voucher}={vo.pk} ";
 	public static final String CUSTOMERUID = "customerUid";
-
+	public static final String OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING = "paymentPending";
 
 
 

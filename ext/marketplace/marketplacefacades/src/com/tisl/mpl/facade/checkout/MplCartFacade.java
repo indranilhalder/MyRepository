@@ -439,5 +439,11 @@ public interface MplCartFacade extends CartFacade
 	 */
 	void recalculateOrder(OrderModel orderModel);
 
-
+	/**
+	 * @Desc : To notify user about inventory reserve fail TPR-815
+	 * @param orderModel
+	 * @return boolean
+	 * @throws EtailNonBusinessExceptions
+	 */
+	boolean notifyEmailAndSmsOnInventoryFail(final OrderModel orderModel) throws EtailNonBusinessExceptions;
 }

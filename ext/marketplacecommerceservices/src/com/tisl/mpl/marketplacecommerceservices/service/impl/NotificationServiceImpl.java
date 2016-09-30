@@ -41,6 +41,7 @@ import com.tisl.mpl.data.NotificationData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.NotificationDao;
+import com.tisl.mpl.marketplacecommerceservices.event.InventoryReservationFailedEvent;
 import com.tisl.mpl.marketplacecommerceservices.event.OrderPlacedEvent;
 import com.tisl.mpl.marketplacecommerceservices.event.PaymentPendingEvent;
 import com.tisl.mpl.marketplacecommerceservices.event.PaymentTimeoutEvent;
@@ -268,6 +269,33 @@ public class NotificationServiceImpl implements NotificationService
 			catch (final Exception e1)
 			{
 				LOG.error("Exception during sending mail or SMS >> " + e1.getMessage());
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#triggerEmailAndSmsOnInventoryFail(de.hybris
+	 * .platform.core.model.order.OrderModel)
+	 */
+	@Override
+	public void triggerEmailAndSmsOnInventoryFail(final OrderModel orderDetails, final String trackorderurl) throws JAXBException
+	{
+		if (orderDetails.getStatus().equals(OrderStatus.PAYMENT_PENDING))
+		{
+			final OrderProcessModel orderProcessModel = new OrderProcessModel();
+			orderProcessModel.setOrder(orderDetails);
+			orderProcessModel.setOrderTrackUrl(trackorderurl);
+			final InventoryReservationFailedEvent invReservationFailedEvent = new InventoryReservationFailedEvent(orderProcessModel);
+			try
+			{
+				eventService.publishEvent(invReservationFailedEvent);
+			}
+			catch (final Exception e1)
+			{
+				LOG.error("Exception during sending mail or SMS from PaymentPending>> " + e1.getMessage());
 			}
 		}
 	}
@@ -759,4 +787,6 @@ public class NotificationServiceImpl implements NotificationService
 	{
 		this.modelService = modelService;
 	}
+
+
 }

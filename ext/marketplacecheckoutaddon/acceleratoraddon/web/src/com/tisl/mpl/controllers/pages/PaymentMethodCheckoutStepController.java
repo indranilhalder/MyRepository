@@ -1035,6 +1035,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								"TRUE");
 						getMplCartFacade().recalculateOrder(orderModel);
 						redirectFlag = true;
+						//notify EMAil SMS TPR-815
+						mplCartFacade.notifyEmailAndSmsOnInventoryFail(orderModel);
 					}
 				}
 				if (redirectFlag)
@@ -1194,6 +1196,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								"TRUE");
 						getMplCartFacade().recalculateOrder(orderModel);
 						redirectFlag = true;
+						//notify EMAil SMS TPR-815
+						mplCartFacade.notifyEmailAndSmsOnInventoryFail(orderModel);
 					}
 				}
 				if (redirectFlag)
@@ -3248,6 +3252,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
 					if (!inventoryReservationStatus)
 					{
+
 						getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
 						redirectFlag = true;
 					}
@@ -3339,6 +3344,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 									"TRUE");
 							getMplCartFacade().recalculateOrder(orderModel);
 							redirectFlag = true;
+							//notify EMAil SMS TPR-815
+							mplCartFacade.notifyEmailAndSmsOnInventoryFail(orderModel);
 						}
 					}
 					if (redirectFlag)
