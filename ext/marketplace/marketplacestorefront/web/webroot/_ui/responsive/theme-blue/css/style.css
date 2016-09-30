@@ -49408,3 +49408,17 @@ body.template-pages-layout-apparelCategoryLandingPageV1 .content-block-slider.el
     color: #a9143c;
     border: 1px solid #a9143c;
 }
+/* -------------TPR-179 Start Style For ShopTheStyle---------- */
+
+@media (max-width: 767px) {
+    .shopstyle-carousel .owl-controls {
+        display:block !important;
+    }
+}
+@media (max-width: 990px) {
+    .yCmsContentSlot.shopstyle1,
+    .yCmsContentSlot.shopstyle2 {
+        width: 100%;
+    }
+}
+/* -------------End TPR-179 Start Style For ShopTheStyle---------- */
