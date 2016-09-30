@@ -307,7 +307,8 @@ $(document).ready(
 							+ $("#product_brand").val() + ',';				
 						tealiumData += '"product_quantity_update":'
 							+ qtyUpdated + ',';				
-
+						tealiumData += '"checkout_seller_ids":"'		//for TPR-429
+							+ $("#checkoutSellerIDs").val() + ',';
 						//TPR-430 Start
 						tealiumData += '"product_category":'
 							+ $("#product_category").val() + ',';
@@ -443,18 +444,25 @@ $(document).on('mousedown','.btn-block.js-add-to-cart',function(){
 		eventType = 'addtobag_winner_seller';
 	}
 	else{
-		eventType = 'addtobag_other_seller';
+		if($(this).attr('id').indexOf("Quick") != -1){
+			eventType = 'addtobag_winner_seller';
+		}
+		else{
+			eventType = 'addtobag_other_seller';
+		}
 	}
 	
 	/*var productSKU = $(this).parents('form').find('input[type="hidden"]#ussid').val();*/
 	var productSKU = $('#productCodePost').val();
 	
-	utag.link({
-		link_obj: this,
-		link_text: 'addtobag' ,
-		event_type : eventType ,
-		product_sku : productSKU
-	});
+	if($(this).attr('id').toLowerCase().indexOf("buybox") == -1){
+		utag.link({
+			link_obj: this,
+			link_text: 'addtobag' ,
+			event_type : eventType ,
+			product_sku : productSKU
+		});
+	}
 })
 
 

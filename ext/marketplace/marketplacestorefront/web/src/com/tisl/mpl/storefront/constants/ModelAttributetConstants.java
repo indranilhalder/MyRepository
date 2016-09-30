@@ -779,7 +779,7 @@ public final class ModelAttributetConstants
 	// TPR-666
 	public static final String SEARCH_TYPE = "searchType";
 	//TPR-429
-	public static final String CART_LEVEL_SELLER_IDS = "cartLevelSellerIDs";
+	public static final String CHECKOUT_SELLER_IDS = "checkoutSellerIDs";
 	public static final String PDP_SELLER_IDS = "pdpSellerIDs";
 	//TPR-430
 	public static final String PRODUCT_CATEGORY = "product_category";

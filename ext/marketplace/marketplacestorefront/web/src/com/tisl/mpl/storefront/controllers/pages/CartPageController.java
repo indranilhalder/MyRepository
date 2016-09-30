@@ -218,6 +218,23 @@ public class CartPageController extends AbstractPageController
 				final boolean isUserAnym = getUserFacade().isAnonymousUser();
 				model.addAttribute("isUserAnym", isUserAnym);
 
+				// TPR-429
+				String cartLevelSellerID = null;
+				final List<OrderEntryData> sellerList = cartData.getEntries();
+				for (final OrderEntryData seller : sellerList)
+				{
+					final String sellerID = seller.getSelectedSellerInformation().getSellerID();
+					if (cartLevelSellerID != null)
+					{
+						cartLevelSellerID += "_" + sellerID;
+					}
+					else
+					{
+						cartLevelSellerID = sellerID;
+					}
+				}
+				model.addAttribute(ModelAttributetConstants.CHECKOUT_SELLER_IDS, cartLevelSellerID);
+
 				//TISEE-432
 				final String selectedPinCode = fetchPincode(isUserAnym);
 

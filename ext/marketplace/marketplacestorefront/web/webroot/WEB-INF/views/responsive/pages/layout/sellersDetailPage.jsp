@@ -36,6 +36,12 @@
 <input type="hidden" id="product_brand" value="${product_brand}" />
 <input type="hidden" id="site_section_detail" value="${site_section_detail}" />
 <input type="hidden" id="product_category" value="${product_category}" />	
+<!-- TPR-429 START-->
+<input type="hidden" id="pdpSellerIDs" value='${pdpSellerIDs}'/>
+<input type="hidden" id="pdpBuyboxWinnerSellerID" value=''/>
+<input type="hidden" id="pdpOtherSellerIDs" value=''/>
+<!-- TPR-429 END-->
+
 <!-- End Tealium -->
 	<input type="hidden" maxlength="10" size="1" id="pinCodeCheckedFlag" name="pinCodeCheckedFlag" value="${pincodeChecked}" />	
 		<input type="hidden" value="${productCategoryType}" id="categoryType"/>
