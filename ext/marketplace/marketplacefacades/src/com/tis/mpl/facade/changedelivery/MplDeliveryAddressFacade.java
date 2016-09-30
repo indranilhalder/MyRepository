@@ -19,7 +19,7 @@ import com.tisl.mpl.facades.data.RescheduleDataList;
 import com.tisl.mpl.facades.data.ScheduledDeliveryData;
 
 
-/**
+/** 
  * @author Techouts
  *
  */
@@ -75,7 +75,7 @@ public interface MplDeliveryAddressFacade
 
 	public String getPartialEncryptValue(String encryptSymbol, int encryptLength, String source);
 
-	public void reScheduleddeliveryDate(RescheduleDataList rescheduleDataList);
+	List<TransactionSDDto> reScheduleddeliveryDate(OrderModel orderModel,RescheduleDataList rescheduleDataListDto);
 
 	public Map<String, Object> getDeliveryDate(List<TransactionEddDto> transactionEddDtoList,OrderModel orderModel);
 
