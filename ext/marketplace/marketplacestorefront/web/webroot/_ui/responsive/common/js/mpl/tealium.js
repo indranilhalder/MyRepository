@@ -177,8 +177,8 @@ $(document).ready(
             	if($("#product_category").val() !=undefined){
                 var product_category = $("#product_category").val();
                 }
-            	var page_subcategory_name = '';
-            	var page_subcategory_name_l3 = '';
+            	var page_subcategory_name = null;
+            	var page_subcategory_name_l3 = null;
 				
                 genericPageTealium+='<script type="text/javascript"> var utag_data ={"site_region":"'+site_region+'","user_type":"'+user_type+'","user_login_type":"'+user_login_type+'","user_id":"'+user_id+'","page_type":"'+pageTypeGeneric+'","page_name":"'+pageName+'","product_category":"'+product_category+'","page_subcategory_name":"'+page_subcategory_name+'","page_subcategory_name_L3":"'+page_subcategory_name_l3+'","session_id":"'+session_id+'","visitor_ip":"'+visitor_ip+'","site_currency":"'+site_currency+'","site_section":"'+site_section+'","IA_company":"'+domain_name+'"}</script>';
 				var script="";
