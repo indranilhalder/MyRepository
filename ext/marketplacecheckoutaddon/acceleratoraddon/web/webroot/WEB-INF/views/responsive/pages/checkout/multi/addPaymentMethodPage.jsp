@@ -72,34 +72,38 @@
     					{
     						if($("#CreditCard").val()=="true")
         					{
-        						displayCreditCardForm();
+        						//displayCreditCardForm();
         						$("#viewPaymentCredit").parent("li").addClass("active");
         						$(".checkout-paymentmethod").css("display","block");
         						setTimeout(function(){$('#viewPaymentCredit').click();},1000);
         					}
         					else if($("#DebitCard").val()=="true")
         					{
-        						displayDebitCardForm();
+        						//displayDebitCardForm();
         						$("#viewPaymentDebit").parent("li").addClass("active");
         						$(".checkout-paymentmethod").css("display","block");
+        						setTimeout(function(){$('#viewPaymentDebit').click();},1000);
         					}
         					else if($("#EMI").val()=="true")
         					{
-        						displayEMIForm();
+        						//displayEMIForm();
         						$("#viewPaymentEMI").parent("li").addClass("active");
-        					$(".checkout-paymentmethod").css("display","block");
+        						$(".checkout-paymentmethod").css("display","block");
+        						setTimeout(function(){$('#viewPaymentEMI').click();},1000);
         					}
         					else if($("#Netbanking").val()=="true")
         					{
-        						displayNetbankingForm();
+        						//displayNetbankingForm();
         						$("#viewPaymentNetbanking").parent("li").addClass("active");
         						$(".checkout-paymentmethod").css("display","block");
+        						setTimeout(function(){$('#viewPaymentNetbanking').click();},1000);
         					}
         					else if($("#COD").val()=="true")
         					{
-        						displayCODForm();
+        						//displayCODForm();
         						$("#viewPaymentCOD").parent("li").addClass("active");
         						$(".checkout-paymentmethod").css("display","block");
+        						setTimeout(function(){$('#viewPaymentCOD').click();},1000);
         					}	
     					}
     					});
@@ -385,12 +389,24 @@
 												</fieldset>
 		            							<div class="controls remember" id="billingAddress">
 					                            	<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.billingAddress"/></h2>
-					                            <c:forEach var="cartItem" items="${cartData.entries}">
-					                            <c:set var="deliveryMode" value="${cartItem.mplDeliveryMode.code}"/>
-													 <c:if test="${deliveryMode ne 'click-and-collect'}"> 
-														 <c:set var="flag" value="true"/>
-													  </c:if>  
-										    	</c:forEach>
+					                             <c:choose>
+						                             <c:when test="${isCart eq true}">
+							                            <c:forEach var="cartItem" items="${cartData.entries}">
+							                            <c:set var="deliveryMode" value="${cartItem.mplDeliveryMode.code}"/>
+															 <c:if test="${deliveryMode ne 'click-and-collect'}"> 
+																 <c:set var="flag" value="true"/>
+															  </c:if>  
+												    	</c:forEach>
+												    </c:when>
+												    <c:otherwise>
+												    	<c:forEach var="orderItem" items="${orderData.entries}">
+							                            <c:set var="deliveryMode" value="${orderItem.mplDeliveryMode.code}"/>
+															 <c:if test="${deliveryMode ne 'click-and-collect'}"> 
+																 <c:set var="flag" value="true"/>
+															  </c:if>  
+												    	</c:forEach>
+												    </c:otherwise>
+											    </c:choose>
 										    	<c:if test="${flag eq true}">
 					                            	<input type="checkbox" id="sameAsShipping" name="billing-shipping" checked="checked" /><label for="sameAsShipping"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sameAsShipping"/></label>
 					                           	</c:if>   	
@@ -853,12 +869,24 @@
 												</fieldset>
 		            							<div class="controls remember" id="billingAddressEmi">
 					                            	<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.billingAddress"/></h2>
-					                            <c:forEach var="cartItem" items="${cartData.entries}">
-					                            <c:set var="deliveryMode" value="${cartItem.mplDeliveryMode.code}"/>
-													 <c:if test="${deliveryMode ne 'click-and-collect'}"> 
-														 <c:set var="flag" value="true"/>
-													  </c:if>  
-										    	</c:forEach>
+					                             <c:choose>
+						                             <c:when test="${isCart eq true}">
+							                            <c:forEach var="cartItem" items="${cartData.entries}">
+							                            <c:set var="deliveryMode" value="${cartItem.mplDeliveryMode.code}"/>
+															 <c:if test="${deliveryMode ne 'click-and-collect'}"> 
+																 <c:set var="flag" value="true"/>
+															  </c:if>  
+												    	</c:forEach>
+												    </c:when>
+												    <c:otherwise>
+												    	<c:forEach var="orderItem" items="${orderData.entries}">
+							                            <c:set var="deliveryMode" value="${orderItem.mplDeliveryMode.code}"/>
+															 <c:if test="${deliveryMode ne 'click-and-collect'}"> 
+																 <c:set var="flag" value="true"/>
+															  </c:if>  
+												    	</c:forEach>
+												    </c:otherwise>
+											    </c:choose>
 										    	<c:if test="${flag eq true}">
 					                            	<input type="checkbox" id="sameAsShippingEmi" name="billing-shipping" checked="checked" /><label for="sameAsShippingEmi"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sameAsShipping"/></label>
 					                           	</c:if>   	
