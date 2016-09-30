@@ -758,8 +758,11 @@
 			<value code="true" />
 			<value code="false" />
 		</enumtype>
+		
+		<!-- For Luxury Products -->
 
-
+        <enumtype code="luxIndicatorEnum" autocreate="true" generate="true" dynamic="true">
+		</enumtype>
 
 	</enumtypes>
 
@@ -8605,12 +8608,18 @@
 		<!-- Added for Luxury -->
 		<typegroup name="Luxury">
 			<itemtype code="Product" autocreate="false" generate="false">
-				<attributes>	
-			        <attribute qualifier="isLuxuryProduct" type="java.lang.Boolean" autocreate="true" generate="true">
+				<attributes>
+				    <attribute type="luxIndicatorEnum" qualifier="luxIndicator">
+						<description>The flag for the luxury Indicator</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type='property' />					
+				    </attribute>	
+			        <!-- <attribute qualifier="isLuxuryProduct" type="java.lang.Boolean" autocreate="true" generate="true">
 						<description>It is a flag for Luxury Products.</description>
 						<modifiers optional="true" />
 						<persistence type="property" />
-					</attribute>
+					</attribute> -->
 			    </attributes>
 			</itemtype>		
        </typegroup>

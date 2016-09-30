@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 
 
@@ -78,7 +79,8 @@ public class LuxuryProductValueProvider extends AbstractPropertyFieldValueProvid
 
 	private boolean checkIfLuxury(final ProductModel product)
 	{
-		return product.getIsLuxuryProduct() != null ? product.getIsLuxuryProduct() : false;
+		return (product.getLuxIndicator() != null && product.getLuxIndicator().getCode() != null && product.getLuxIndicator()
+				.getCode().equalsIgnoreCase(MarketplaceCoreConstants.LUXURY));
 	}
 
 	protected FieldNameProvider getFieldNameProvider()
