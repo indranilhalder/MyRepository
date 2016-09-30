@@ -27455,9 +27455,6 @@ header > .content .bottom .bag{
 	top:-5px;
 }
 } 
-div#compareSection {
-    bottom: 42px;
-}
 
 .compareSection #compareProducts .compare-item .content li:first-child,.compareSection #compareProducts .compare-item .content li:nth-child(2){
 word-break: break-word;
@@ -27669,9 +27666,10 @@ min-width: 12px;
     height: 12px !important;
     background-color: transparent;
     margin-right: 5px;
+    padding:0px;
 }
 .cart.wrapper .right-block .block.top li#couponApplied{
-color: #A9143C;
+color: #a9143c;
 }
 .cart.wrapper .right-block .block.top button.remove-coupon-button:before{
  font-family: 'FontAwesome';
@@ -30026,9 +30024,13 @@ header:not(.compact) .content .marketplace.compact{
 	
 	#couponMessage{
 	line-height:16px;
+
 	}
 	#couponMessage b{
 	word-break:break-word;
+		float:none;
+	display:inline-block;
+	width:auto;
 	}
 	.add-to-wishlist-container-sizeguide{
 	display:none;
@@ -35210,6 +35212,9 @@ body.template-pages-category-productGridPage .trending h1,body.template-pages-se
     display: table;
     width: 100%;
 }
+div#compareSection {
+    bottom: 42px;
+}
 }
 .category-icons.blank span{
 	display:none;
@@ -40325,7 +40330,7 @@ ul li a:hover .dropdown-menu {
 }
 
 .cart.wrapper .right-block .block .totals #discount,.cart.wrapper .right-block #promotionApplied,.cart.wrapper .right-block #cartPromotionApplied{
-	color:red;
+	color:#a9143c;
 }
 del{
 	color:black;
@@ -52256,7 +52261,8 @@ display:block;}
  .cart.wrapper .right-block.billing .block .totals li .amt, .cart.wrapper .right-block.billing .block .totals li span + span{
  font-weight:bold;
  }
- .cart.wrapper .right-block.billing .block .totals li#promotionApplied span{
+ .cart.wrapper .right-block.billing .block .totals li#promotionApplied span,
+ .cart.wrapper .right-block.billing .block .totals li#couponApplied span{
  float:none;
  }
  .cart.wrapper .right-block #promotionApplied > span:first-child,.cart.wrapper .right-block #cartPromotionApplied > span:first-child{
@@ -53060,7 +53066,8 @@ left: -5px;
 	width:43%;
 }
 
-.checkout-order-summary .subtotal span.subTotalSpan,.checkout-order-summary .shipping span.shippingSpan,.checkout-order-summary #cartPromotionApplied span.cartpromotionSpan{
+.checkout-order-summary .subtotal span.subTotalSpan,.checkout-order-summary .shipping span.shippingSpan,.checkout-order-summary #cartPromotionApplied span.cartpromotionSpan,
+.cart.wrapper .right-block .block.top li#couponApplied .couponSpan{
 	float:none;
 	/*margin-right:315px; */
 	padding: 0 0 10px;

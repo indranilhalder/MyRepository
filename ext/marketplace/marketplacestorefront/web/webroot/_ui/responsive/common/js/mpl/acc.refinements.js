@@ -473,7 +473,7 @@ $(document).on("click",".filter-apply",function(e){
 		// AJAX call
 		console.log("Controle Came");
 
-		filterDataAjax(requiredUrl,dataString,pageURL);
+		filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
 		return false;
 	}	
 })
