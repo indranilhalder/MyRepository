@@ -828,9 +828,9 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 
 
 
-	/***
+   /***
 	 * 
-	 *Setting  TransactionId to list of time Slots 
+	 * Setting Delivery  date and time Slots for product 
 	 */
 	@Override
 	public Map<String, Object> getDeliveryDate(List<TransactionEddDto> transactionEddDtoList, OrderModel orderModel)
@@ -840,10 +840,12 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		{
 			String timeSlotType = null;
 			Map<String, List<String>> scheduledDeliveryTime = null;
-			for (TransactionEddDto transactionEddDto : transactionEddDtoList)
+			Map<String, TransactionEddDto> mapTransactionEddDto = getEligibleEntry(orderModel, transactionEddDtoList);
+
+			for (Entry<String, TransactionEddDto> key : mapTransactionEddDto.entrySet())
 			{
-				 String deliveryMode = null;
-				//get DeliveryMode for transactionId 
+				TransactionEddDto transactionEddDto = key.getValue();
+				String deliveryMode = null;
 				for (OrderModel subOrder : orderModel.getChildOrders())
 				{
 					for (AbstractOrderEntryModel abstractOrderEntryModel : subOrder.getEntries())
@@ -859,7 +861,6 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 						break;
 					}
 				}
-				
 				if (deliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
 				{
 					timeSlotType = MarketplacecommerceservicesConstants.INTERFACE_TYPE_SD;
@@ -868,13 +869,12 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 				{
 					timeSlotType = MarketplacecommerceservicesConstants.ED;
 				}
-				
 				ServicesUtil.validateParameterNotNull(timeSlotType, "timeSlotType must not be null");
 				LOG.info("send timeSlotType and date  get List of Date and Time Slot for transactionId::::::::");
-				scheduledDeliveryTime = getDateAndTimeMap(timeSlotType,transactionEddDto.getEDD());	
+				scheduledDeliveryTime = getDateAndTimeMap(timeSlotType, transactionEddDto.getEDD());
 				if (scheduledDeliveryTime != null && StringUtils.isNotEmpty(transactionEddDto.getEDD()))
 				{
-					scheduledDeliveryDate.put(transactionEddDto.getTransactionID(), scheduledDeliveryTime);
+					scheduledDeliveryDate.put(key.getKey(), scheduledDeliveryTime);
 				}
 			}
 		}
@@ -884,6 +884,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		}
 		return scheduledDeliveryDate;
 	}
+
 
 
 
@@ -925,7 +926,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	}
 
 	/**
-	 * 
+	 * get Delievry Date And time sloat
 	 * @param edd
 	 * @return
 	 * @throws java.text.ParseException
@@ -1012,6 +1013,13 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	}
 
 
+	/***
+	 * Preparing product EligibleEntry for  reScheduleddeliveryDate
+	 * @param orderModel
+	 * @param transactionEddDtoList
+	 * @return
+	 * @throws ParseException
+	 */
 	public Map<String, TransactionEddDto> getEligibleEntry(OrderModel orderModel, List<TransactionEddDto> transactionEddDtoList)
 			throws ParseException
 	{
@@ -1056,7 +1064,9 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		return mapTransactionEdd;
 	}
 	
-	
+ /***
+  *   Preparing  TransactionSDDto data related to customer selected date and time
+  */
 	@Override
 	public List<TransactionSDDto> reScheduleddeliveryDate(OrderModel orderModel,RescheduleDataList rescheduleDataListDto){
 			 List<TransactionSDDto>  transactionSDDtoList=new  ArrayList<TransactionSDDto>();
