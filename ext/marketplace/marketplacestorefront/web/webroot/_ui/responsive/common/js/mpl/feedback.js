@@ -2035,9 +2035,15 @@ $(window).scroll(function(){
 
 //----BLP------//
 //--top category section---//
-$(".top_categories_blp").first().find("ul.categories.count-3>li:nth-child(3n + 1)").each(function(){
+/*$(".top_categories_blp").first().find("ul.categories.count-3>li:nth-child(3n + 1)").each(function(){
 		$(this).nextAll().slice(0, 2).wrapAll("<li class='sub_li_blp'><ul class='sub_ul_blp'>");
-		});
+		});*/
+
+
+$(".top_categories_blp .top_categories_section_blp:not(:first-child)").wrapAll("<div class='top_categories_wrapper_blp'></div>");
+$(".top_categories_blp").find(".top_categories_wrapper_blp>.top_categories_section_blp:nth-child(3n + 1)").each(function(){
+	$(this).nextAll().slice(0, 2).wrapAll("<div class='top_categories_section_blp sub_categories_blp'>");
+	});
 //--top category section end---//
 //--top brands section----//
 $(".blp_top_brands > div").slice(1).wrapAll("<div class='top_brands_blp'>");
@@ -2049,7 +2055,10 @@ $(".style_edit_blp > div").slice(0,3).wrapAll("<div class='style_edit_left_blp'>
 $(".featured_collection  > .featured_collection_section").slice(-4).wrapAll("<div class='blp_featured_collection_wrapper'>");
 //----feature collection section end-----//
 //--shop for section----//
-$(".shop_for_blp > a").slice(0,4).wrapAll("<div class='shop_for_links_blp'>");
+/*$(".shop_for_blp > a").slice(0,4).wrapAll("<div class='shop_for_links_blp'>");*/
+
+$(".shop_for_blp .shop_for_component_blp:not(:first-child)").slice(0,3).wrapAll("<div class='shop_for_left_wrapper_blp'></div>");
+$(".shop_for_blp > .shop_for_left_wrapper_blp").nextAll().slice(0,4).wrapAll("<div class='shop_for_links_blp'>");
 //--shop for section end----//
 //---shop the look section start----//
 $(".shop_the_look > div").slice(2,4).wrapAll("<div class='shop_the_look_left'>");

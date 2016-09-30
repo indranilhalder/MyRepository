@@ -20,7 +20,7 @@
 	</div>
 	<div class="top_categories_blp">
 	<cms:pageSlot position="Section2A" var="feature">
-		<cms:component component="${feature}" class="top_categories_section_blp"/>
+		<cms:component component="${feature}" element="div" class="top_categories_section_blp"/>
 	</cms:pageSlot>
 	</div>
 	<div class="featured_collection">
@@ -52,7 +52,7 @@
 			</div>
 	<div class="shop_for_blp">
 		<cms:pageSlot position="Section3A" var="feature">
-				<cms:component component="${feature}"/>
+				<cms:component component="${feature}" element="div" class="shop_for_component_blp"/>
 			</cms:pageSlot>
 			</div>
 	
