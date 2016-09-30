@@ -1,0 +1,19 @@
+INSERT_UPDATE Customer;uid[unique=true];customerID;name;description;sessionLanguage(isocode);sessionCurrency(isocode);groups(uid);password
+;2000000000;480799e8-24ca-4cd8-b1d5-49b5df534bb7;Scholes;a good customer from denmark;en;INR;customergroup;1234
+;2000000001;480799e8-24ca-4cd8-b1d5-49b5df534bb8;Bekham;The StoreFoundation Demo Customer;en;INR;customergroup;1234
+;2000000003;480799e8-24ca-4cd8-b1d5-49b5df534bb9;Ryan;actor;en;INR;customergroup;1234
+;2000000004;480799e8-24ca-4cd8-b1d5-49b5df534b10;Pele;;en;INR;customergroup;1234
+;2000000005;480799e8-24ca-4cd8-b1d5-49b5df534b11;demo;;en;INR;customergroup;1234
+;2000000006;480799e8-24ca-4cd8-b1d5-49b5df534b12;test;;en;INR;customergroup;1234
+;2000000007;480799e8-24ca-4cd8-b1d5-49b5df534b13;Ron;;en;INR;customergroup;1234
+;2000000008;480799e8-24ca-4cd8-b1d5-49b5df534b14;Maradona;;en;INR;customergroup;1234
+;2000000009;480799e8-24ca-4cd8-b1d5-49b5df534b15;Zidane;;en;INR;customergroup;1234
+;2000000010;480799e8-24ca-4cd8-b1d5-49b5df534b16;Cavani;;en;INR;customergroup;1234
+;2000000011;480799e8-24ca-4cd8-b1d5-49b5df534b17;Turan;the inventor of the famous power button;en;INR;customergroup;1234
+;2000000012;480799e8-24ca-4cd8-b1d5-49b5df534b18;Tevez;;en;INR;customergroup;1234
+;2000000013;480799e8-24ca-4cd8-b1d5-49b5df534b19;Klinzman;;en;INR;customergroup;1234
+;2000000014;480799e8-24ca-4cd8-b1d5-49b5df534b20;Pogba;;en;INR;customergroup;1234
+;2000000015;480799e8-24ca-4cd8-b1d5-49b5df534b21;Zlatan;;en;INR;customergroup;1234
+;2000000016;480799e8-24ca-4cd8-b1d5-49b5df534b22;Saha;;en;INR;customergroup;1234
+;2000000018;480799e8-24ca-4cd8-b1d5-49b5df534b23;Nistleroy;;en;INR;customergroup;1234
+

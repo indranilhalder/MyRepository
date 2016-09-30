@@ -61,15 +61,19 @@
 	<div class="form-additionals">
 		<c:choose>
 			<c:when test="${showSaveToAddressBook}">
-				<formElement:formCheckbox idKey="saveAddressInMyAddressBook" 
+				<%-- <formElement:formCheckbox idKey="saveAddressInMyAddressBook" 
 						labelKey="checkout.summary.deliveryAddress.saveAddressInMyAddressBook" 
 						path="saveInAddressBook" 
-						labelCSS="add-address-left-label" mandatory="false"/>
+						labelCSS="add-address-left-label" mandatory="false"/> --%>
+						<input type="checkbox" id="saveAddressInMyAddressBook" name="saveInAddressBook" value="true"/>
+												<label for="saveAddressInMyAddressBook">SAVE THIS ADDRESS FOR LATER</label>
 			</c:when>
 			<c:when test="${not addressBookEmpty && not isDefaultAddress}">
-				<formElement:formCheckbox idKey="defaultAddress" 
+				<%-- <formElement:formCheckbox idKey="defaultAddress" 
 						labelKey="address.default" path="defaultAddress"
-						        labelCSS="add-address-left-label" mandatory="false"/>	
+						        labelCSS="add-address-left-label" mandatory="false"/> --%>	
+						        <input type="checkbox" id="defaultAddress" name="defaultAddress" value="true"/>
+												<label for="defaultAddress">SAVE THIS ADDRESS FOR LATER</label>
 			</c:when>
 		</c:choose>
 	</div>
@@ -96,8 +100,8 @@
 							</c:when>
 							<c:otherwise>
 								<ycommerce:testId code="multicheckout_saveAddress_button">
-									<button id="newAddressButton" class="button" type="submit">
-										<spring:theme code="mobile.checkout.continue.button" text="Continue"/>
+									<button id="newAddressButton" class="button" type="button">
+										<spring:theme code="mobile.checkout.continue.save" text="Continue"/>
 									</button>
 								</ycommerce:testId>
 							</c:otherwise>

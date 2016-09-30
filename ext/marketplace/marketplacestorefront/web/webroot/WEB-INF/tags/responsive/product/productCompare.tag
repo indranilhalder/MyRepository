@@ -227,7 +227,7 @@
 		
 		var screenwidth=$(window).width();
 		var items=4;
-		if(screenwidth < 650){
+		if(screenwidth < 768){
 			var items=2;
 		}
 		$('#number-items').html(items);

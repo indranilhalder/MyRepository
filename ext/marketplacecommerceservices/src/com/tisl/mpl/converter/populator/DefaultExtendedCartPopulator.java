@@ -101,7 +101,8 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 
 						if (promotionResultModel.getCertainty().floatValue() == 1.0F
 								&& (promotion instanceof BuyAGetPromotionOnShippingChargesModel
-										|| promotion instanceof BuyAandBGetPromotionOnShippingChargesModel || promotion instanceof BuyAboveXGetPromotionOnShippingChargesModel))
+										|| promotion instanceof BuyAandBGetPromotionOnShippingChargesModel
+										|| promotion instanceof BuyAboveXGetPromotionOnShippingChargesModel))
 						{
 							isShippingPromoApplied = true;
 							break;
@@ -130,7 +131,11 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 				{
 					target.setTotalPriceWithConvCharge(createPrice(source, Double.valueOf(0.0d)));
 				}
-
+				//TPR-174
+				if (null != source.getMerged())
+				{
+					target.setGotMerged(source.getMerged().booleanValue());
+				}
 			}
 			else
 			{

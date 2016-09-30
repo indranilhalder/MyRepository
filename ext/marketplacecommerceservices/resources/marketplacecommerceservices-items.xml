@@ -1362,6 +1362,27 @@
 						optional="false" />
 					<persistence type="property" />
 				</attribute>
+				<attribute qualifier="sellerBulkList" type="java.lang.String"
+						generate="true" autocreate="true">
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+						<description>This attribute represents footer text to be displayed in the footer</description>
+					</attribute>
 			</attributes>
 		</itemtype>
 
@@ -1382,6 +1403,28 @@
 						optional="false" />
 					<persistence type="property" />
 				</attribute>
+				<!-- For TPR-1620 : Bulk Load in Exclude Seller -->
+				<attribute qualifier="exSellerBulkList" type="java.lang.String"
+						generate="true" autocreate="true">
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+					</attribute>
+					<!-- For TPR-1620 : Bulk Load in Exclude Seller ends -->
 			</attributes>
 		</itemtype>
 
