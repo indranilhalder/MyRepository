@@ -19,8 +19,6 @@ $indexCurrencies=INR
 $lang=en
 
 UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];displayName[lang=$lang]
- ;$solrIndexedType		   ;discountFlag					   ;"Discount"
- ;$solrIndexedType		   ;discountAll						;"All Discount"
  ;$solrIndexedType		   ;colour							   ;"Colour"
  ;$solrIndexedType		   ;Occasion						   ;"Occasion"
  ;$solrIndexedType		   ;gender							   ;"Ideal For"
