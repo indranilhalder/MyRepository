@@ -275,9 +275,9 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 
 INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
 #showcasebanner
-;;showcase1.png;$siteResource/images/banners/homepage/responsive/showcase1.png;showcase1.png;;
-;;showcase2.png;$siteResource/images/banners/homepage/responsive/showcase2.png;showcase2.png;;
-;;showcase3.png;$siteResource/images/banners/homepage/responsive/showcase3.png;showcase3.png;;
+;;showcase1.png;$siteResource/images/banners/homepage/responsive/showcase1.png;showcase1.png;image 1;
+;;showcase2.png;$siteResource/images/banners/homepage/responsive/showcase2.png;showcase2.png;image 2;
+;;showcase3.png;$siteResource/images/banners/homepage/responsive/showcase3.png;showcase3.png;image 3;
 
 UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];logo(code, $contentCV);bannerImage(code, $contentCV)
 #CollectionShowcase
