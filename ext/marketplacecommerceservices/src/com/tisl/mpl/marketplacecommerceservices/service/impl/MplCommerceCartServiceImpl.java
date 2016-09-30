@@ -3847,6 +3847,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9047);
 		}
+		
+		getSessionService().setAttribute(MarketplacecommerceservicesConstants.RESERVATION_DATA_TO_SESSION,cartSoftReservationDataList);
+		
 		return cartSoftReservationDataList;
 	}
 

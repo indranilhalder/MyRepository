@@ -192,6 +192,9 @@ public class DateUtilHelper
 			        	}else{
 			        		eddObj.setEDD(exisEddObj.getEDD());	
 			        	}
+			        	if(eddObj.getIsScheduled().equalsIgnoreCase("N")){
+			        		exisEddObj.setIsScheduled("N");
+			        	}
 						isExist = true;
 						break;
 					}

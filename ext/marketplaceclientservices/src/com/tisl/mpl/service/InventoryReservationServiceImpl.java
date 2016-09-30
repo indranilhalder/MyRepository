@@ -142,7 +142,9 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 						List<ServiceableSlavesDTO> serviceableSlavesDTOList = new ArrayList<ServiceableSlavesDTO>();
 						for (final CNCServiceableSlavesData data : cartObj.getCncServiceableSlaves())
 						{
+							if(cartObj.getStoreId().equalsIgnoreCase(data.getStoreId())){
 							serviceableSlavesDTOList = populateServiceableSlaves(data.getServiceableSlaves());
+							}
 						}
 						reqObj.setServiceableSlaves(serviceableSlavesDTOList);
 					}

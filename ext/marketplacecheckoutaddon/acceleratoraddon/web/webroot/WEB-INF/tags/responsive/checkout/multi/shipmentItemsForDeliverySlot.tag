@@ -34,11 +34,13 @@
 	}
 	
 	.deliverySlotOptions .deliverySlotType {
-		width: 30% !important;
+		width: 20% !important;
 	}
 	
 	.deliverySlotOptions .deliverySlotRadio {
-		width: 30% !important;
+		width: 40% !important;
+		padding-right: 0px !important;
+		padding-left: 0px !important;
 	}
 }
 
@@ -69,11 +71,12 @@
 	margin: 0px;
 	padding: 0px !important;
 	font-size: 10px;
+	display: block;
+    text-align: left;
 }
 
 .deliverySlotOptions .deliverySlotRadio .heading {
 	margin-bottom: 10px;
-	margin-top: 15px;
 	color: #333;
 	font-size: 14px;
 }
@@ -82,11 +85,147 @@
 	padding: 0px;
 }
 
+.pardhuBlock {
+	text-align: left;
+}
+
+.radioPardhu {
+	display: inline-block !important;
+}
+
+.greyText {
+	font-size: 10px;
+	color: #333;
+	padding: 5px 0px;
+}
+
+.pardhuBlock span.dateTime {
+	font-size: 12px;
+}
+
+.pardhuBlock {
+	margin-bottom: 10px;
+	margin-left: 5px;	
+	display: block;
+}
+
+.timeSlotsLat span {
+	font-size: 10px;
+	color: #000;
+}
+
+.workingTimeslots {
+	width: 100%;
+}
+
+.workingTimeslots li {
+	float: left;
+	display: inline-blok;
+	width: auto !important;
+	padding-right: 5px;
+	padding-top: 5px;
+}
+
+span.selectTime {
+	padding: 5px 0px;
+	font-size: 12px;
+	color: #333;
+	display: block;
+}
+
+div.displayClick {
+	display: none;
+	margin-left: 20px;
+}
+ .display{
+			display: none;
+		} 
+.timeDelivery{
+			    width: 300%;
+			    position: absolute;
+		}
+li.deliverySlotRadio .reset{margin: 0px auto !important;    height: 30px !important; line-height: 30px;} 
 
 </style>
 <script>
 	$(document).ready(function(){
 		$(".click-and-collect").addClass("click-collect");
+		$(".radioClickDate").click(function(){
+			$(this).parent().parent().find("div.displayClick").hide();
+			if($(this).next().next().css("display") == "none") {
+				$(this).next().next().slideToggle().find("input").filter(':input:visible:first').prop("checked", true);
+			}
+			$(this).parent().parent().find("button").removeAttr("disabled");
+			
+			
+		});
+		
+		$(".radioPardhu").click(function(){
+			/* Set Values For Ajax Call */
+			var mplconfigModel = $('#mplconfigModel').val();
+			var selectedUssId;
+			var date;
+			var time;
+			
+			if($(this).attr("data-name") == "date") {
+				mplconfigModel = $('#mplconfigModel').val();
+				date = $(this).val();
+				time = $(this).next().next().find("input").filter(':input:visible:first').val();
+				selectedUssId = $(this).parent().parent().parent().find("#selectedUssId").val();
+			} else {
+				mplconfigModel = "0";
+				date = $(this).parent().parent().parent().parent().parent().find(".radioClickDate").val();
+				time = $(this).val();
+				selectedUssId = $(this).parent().parent().parent().parent().parent().parent().parent().find("#selectedUssId").val();
+			}
+			var dataString = 'deliverySlotCost='+mplconfigModel+'&deliverySlotDate='+date+'&deliverySlotTime='+time+'&ussId='+selectedUssId;
+    		//alert(dataString);
+    		
+    		$.ajax({                            
+    	 		url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/deliverySlotCostForEd",
+    	 		data : dataString,
+    	 		success : function(response) {
+    	 			var result = response.split("-");
+    	 			if(response == '-'){
+    	 				
+    	 			}else{
+    	 			$("#deliveryCostSpanId").empty().text(result[0]);
+    	 			$("#totalWithConvField").empty().text(result[1]);
+    	 		}
+    	 		},
+    	 		error : function(error) {
+    	 			
+    	 		}
+    	 	});
+		});
+    	
+    	$(".reset").click(function(){
+    		var currentReset = $(this);
+    		$(this).parent().find(".pardhuBlock input[type='radio']").prop('checked', false);
+    		$(this).parent().find(".pardhuBlock input[data-name='time']").prop('checked', false);
+    		var ussId=$(this).attr('data-ussid');
+    		var mplconfigModel= $('#mplconfigModel').val();
+    		$(this).parent().find(".displayClick").hide()
+    		var dataString = 'deliverySlotCost='+mplconfigModel+'&ussId='+ussId;
+    		//alert(dataString);
+    		 $.ajax({                            
+    	 		url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/updateDeliverySlotCostForEd",
+    	 		data : dataString,
+    	 		success : function(response) {
+    	 			currentReset.prop('disabled','disabled');
+    	 			var result = response.split("-");
+    	 			$("#deliveryCostSpanId").empty().text(result[0]);
+    	 			$("#totalWithConvField").empty().text(result[1]);
+    	 		},
+    	 		error : function(error) {
+
+    	 		}
+    	 	}); 
+    		
+    	});
+		
+		
+		
 	});
 </script>
 	<div class="checkout-shipping-items">
@@ -264,65 +403,61 @@
 									<li class="deliverySlotRadio">
 									   <input type="hidden" id="mplconfigModel" name="mplconfigModel" value="${mplconfigModel}"/>
 									    <input type="hidden" id="selectedUssId" name="selectedUssId" value="${entry.selectedUssid}"/>
-										<button class="button reset pull-right" type="button" data-ussid="${entry.selectedUssid}" disabled="disabled">Reset</button>
-										<label class="heading" for="date">Preferred Date of Delivery</label>
-										<div class="row"  id="content">
 										
 										
-										<c:if test="${not empty entry.deliverySlotsTime}">
-										<c:set var="dateTimeSlotId" value="0" scope="page"></c:set>
-									<c:forEach items="${entry.deliverySlotsTime}" var="dateSlots">
-									<c:set var="dateTimeSlotId" value="${dateTimeSlotId + 1}" scope="page"></c:set>
-									
-											<div class="col-md-4 col-xs-4 col-sm-4" >
-												<div class="form-control scheduleDate">
-													<input type="radio" class="timeTribhuvan" data-name="date" name="date${scheduleIndex}" value="${dateSlots.key}"> <br/>
-													<fmt:parseDate value="${dateSlots.key}" var="parseddeliveryDate" pattern="dd-MM-yyyy" />
-													<label for="date1"><fmt:formatDate value="${parseddeliveryDate}" pattern="MMM dd"/></label>
+										<div class="row" id="content">
 										<c:choose>
-      										<c:when test="${dateTimeSlotId ==1}">
-      										<div class="timeDelivery" id="${dateTimeSlotId}">
-										<label class="heading" for="time">Preferred Time of Delivery</label>
-										<c:set var="timeSlotId" value="0" scope="page"></c:set>
-      										 <c:forEach items="${dateSlots.value}" var="timeSlots">
-      										  <c:set var="timeSlotId" value="${timeSlotId + 1}" scope="page"></c:set>
-										   <div class="row" id="${dateTimeSlotId}${timeSlotId}">
-											<div class="col-md-4 col-xs-4 col-sm-4 " >
-												<div class="form-control scheduleTime"  >
-													<input type="radio" class="timeTribhuvan" data-Date='${dateSlots.key}' data-name="time"  name="time${scheduleIndex}${dateTimeSlotId}" value="${timeSlots}" disabled="disabled"> <br/>
-													<label for="time1">${timeSlots}</label>
+										<c:when test="${not empty entry.deliverySlotsTime}">
+										<label class="heading" for="date">Preferred Date of Delivery</label>
+										<c:set var="dateTimeSlotId" value="0" scope="page"></c:set>
+											<c:forEach items="${entry.deliverySlotsTime}" var="dateSlots">
+												<c:set var="dateTimeSlotId" value="${dateTimeSlotId + 1}" scope="page"></c:set>
+												<fmt:parseDate value="${dateSlots.key}" var="parseddeliveryDate" pattern="dd-MM-yyyy" />
+												<div class="col-md-12 NOP pardhuBlock">
+													<input type="radio" class="radioPardhu radioClickDate" data-name="date" name="date${scheduleIndex}" value="${dateSlots.key}"> <span class="dateTime"><fmt:formatDate value="${parseddeliveryDate}" pattern="'ON' d  MMMM, yyyy"/></span>
+													<c:choose>
+		      										<c:when test="${dateTimeSlotId ==1}">
+														<div class="displayClick" id="${dateTimeSlotId}">
+															<div class="greyText">(Shipped at INR ${mplconfigModel} per order)</div>
+															<div class="timeSlotsLat">
+																<span class="selectTime">Select a time slot</span>
+																<ul class="workingTimeslots">
+																	<c:set var="timeSlotId" value="0" scope="page"></c:set>
+					      										 	<c:forEach items="${dateSlots.value}" var="timeSlots">
+					      										  	<c:set var="timeSlotId" value="${timeSlotId + 1}" scope="page"></c:set>
+																		<li id="${dateTimeSlotId}${timeSlotId}"><input type="radio" class="radioPardhu timeSlots" data-Date='${dateSlots.key}' data-name="time"  name="time${scheduleIndex}${dateTimeSlotId}" value="${timeSlots}"> <span class="dateTime1">${timeSlots}</span></li>
+																	</c:forEach>
+																</ul>
+															</div>
+														</div>
+													</c:when>
+													<c:otherwise>
+														<div class="displayClick" id="${dateTimeSlotId}">
+															<div class="greyText">(Shipped at INR 100 per order)</div>
+															<div class="timeSlotsLat">
+																<span class="selectTime">Select a time slot</span>
+																<ul class="workingTimeslots">
+																	<c:set var="timeSlotId" value="0" scope="page"></c:set>
+					      										 	<c:forEach items="${dateSlots.value}" var="timeSlots">
+					      										  	<c:set var="timeSlotId" value="${timeSlotId + 1}" scope="page"></c:set>
+																		<li id="${dateTimeSlotId}${timeSlotId}"><input type="radio" class="radioPardhu timeSlots" data-Date='${dateSlots.key}' data-name="time"  name="time${scheduleIndex}${dateTimeSlotId}" value="${timeSlots}"> <span class="dateTime1">${timeSlots}</span></li>
+																	</c:forEach>
+																</ul>
+															</div>
+														</div>
+													</c:otherwise>
+												</c:choose>
 												</div>
-											</div>
-											</div>
-											
 											</c:forEach>
-											</div>
-      										</c:when>
-      										<c:otherwise>
-      										
-      										 <div class="display timeDelivery" id="${dateTimeSlotId}">
-										<label class="heading" for="time">Preferred Time of Delivery</label>
-										<c:set var="timeSlotId" value="0" scope="page"></c:set>
-      										 <c:forEach items="${dateSlots.value}" var="timeSlots">
-      										
-      										 <c:set var="timeSlotId" value="${timeSlotId + 1}" scope="page"></c:set>
-										   <div class="row" id="${dateTimeSlotId}${timeSlotId}">
-											<div class="col-md-4 col-xs-4 col-sm-4">
-												<div class="form-control scheduleContent"  >
-													<input type="radio" class="timeTribhuvan" data-Date='${dateSlots.key}' data-name="time" name="time${scheduleIndex}${dateTimeSlotId}" value="${timeSlots}" disabled="disabled"> <br/>
-													<label for="time1">${timeSlots}</label>
-												</div>
-											</div>
-											</div>
-											
-											</c:forEach>
-      										</div>
-      										</c:otherwise>
-      										 </c:choose>
-												</div>
-											</div>
-										</c:forEach>
-										</c:if>
+											<p class="clearfix"></p>
+											<button class="button reset pull-right" type="button" data-ussid="${entry.selectedUssid}" disabled="disabled">Reset</button>
+											<p class="clearfix"></p>
+										</c:when>
+										<c:otherwise>
+										<div class="">Not Applicable</div>
+										
+										</c:otherwise>
+										</c:choose>
 										</div>
 									</li>
 									</ul>
@@ -333,135 +468,3 @@
 		
 	</div>
 	</c:if>
-	
-	<style>
-		 .display{
-			display: none;
-		} 
-		.timeDelivery{
-			    width: 300%;
-			    position: absolute;
-			   
-   
-		}
-		li.deliverySlotRadio .reset{margin: 0px auto !important;    height: 30px !important; line-height: 30px;} 
-	</style>
-	
-	<script>
-	$(document).ready(function() {
-	    
-	    	
-	    	$(".reset").click(function(){
-	    		var currentReset = $(this);
-	    		$(this).parent().find(".scheduleDate input[type='radio']").prop('checked', false);
-	    		$(this).parent().find(".scheduleDate input[data-name='time']").prop('disabled', 'disabled');
-	    		var ussId=$(this).attr('data-ussid');
-	    		var mplconfigModel= $('#mplconfigModel').val();
-	    		
-	    		var dataString = 'deliverySlotCost='+mplconfigModel+'&ussId='+ussId;
-	    		$.ajax({                            
-	    	 		url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/updateDeliverySlotCostForEd",
-	    	 		data : dataString,
-	    	 		success : function(response) {
-	    	 			currentReset.prop('disabled','disabled');
-	    	 			var result = response.split("-");
-	    	 			$("#deliveryCostSpanId").empty().text(result[0]);
-	    	 			$("#totalWithConvField").empty().text(result[1]);
-	    	 		},
-	    	 		error : function(error) {
-
-	    	 		}
-	    	 	});	
-	    		
-	    	});
-    
-	    	$(".timeTribhuvan").click(function(){
-	    		
-	    		var selectedElement = $(this);
-	    		var selectedParent  = selectedElement.closest(".scheduleDate");
-	    		var resetDisable = selectedElement.closest("li").children(".reset");
-	    		var elem = selectedElement.next().next().next();
-	    		var time; var temp; 
-	    		var date;
-	    		var mplconfigModel;
-	    		var selectedUssId;
-	    		var datanametimeall = selectedParent.find(".timeDelivery input[data-name='time']");
-	    		var datanamedateall = selectedParent.find(".scheduleDate input[data-name='date']");
-	    		var datanametimeallDates = selectedParent.closest(".row").find(".scheduleDate .timeDelivery input[data-name='time']");
-	    		selectedUssId = $('#selectedUssId').val();
-	    		resetDisable.prop('disabled',false);
-	    		
-	    		datanametimeallDates.each(function(){
-	    			
-	    			if(!$(this).prop('checked')){
-	    			
-	    			 mplconfigModel = $('#mplconfigModel').val();
-	    			 
-	    			}else{
-	    				temp = $(this).val();
-	    				mplconfigModel=0;
-	    				return false;
-	    				
-	    			}
-	    		});
-	    		
-	    		
-	    		
-	    		
-	    		if(selectedElement.attr('data-name')=='date'){
-	    			date = selectedElement.val();
-	    			$(".scheduleDate .timeDelivery").addClass("display");
-	    		//	alert(resetDisable.attr('class'));
-	    			datanametimeall.prop('disabled',false);
-	    			
-	    			selectedParent.find(".timeDelivery input[data-name='time']").first().prop('checked','checked');
-		    		    
-		    			 if(elem.attr('id') == 1){
-			    			
-			    			elem.css({'left':'0px','position':'relative'});
-			    		}
-			    			
-			    		else if(elem.attr('id') == 2){
-			    			
-			    			 elem.css({'left':'-74px','position':'relative'});
-			    			
-			    		}
-			    		else if(elem.attr('id') == 3){
-			    			
-			    			 elem.css({'left':'-148px','position':'relative'});
-			    		} 
-		    		elem.removeClass("display");
-		    		datanametimeall.each(function(){if($(this).prop('checked')){time =  $(this).val(); }});
-	    		}else{
-	    			time = selectedElement.val();
-	    			date = selectedElement.attr('data-Date');
-	    			
-	    		}
-	    		
-    			//alert("time is "+time+" money is "+mplconfigModel + "date is "+date);
-	    		var dataString = 'deliverySlotCost='+mplconfigModel+'&deliverySlotDate='+date+'&deliverySlotTime='+time+'&ussId='+selectedUssId;
-	    		$.ajax({                            
-	    	 		url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/deliverySlotCostForEd",
-	    	 		data : dataString,
-	    	 		success : function(response) {
-	    	 			var result = response.split("-");
-	    	 			if(response == '-'){
-	    	 				
-	    	 			}else{
-	    	 			$("#deliveryCostSpanId").empty().text(result[0]);
-	    	 			$("#totalWithConvField").empty().text(result[1]);
-	    	 		}
-	    	 		},
-	    	 		error : function(error) {
-	    	 			
-	    	 		}
-	    	 	});	
-	    		
-	    	});
-	    	
-	    	
-	    	
-	});
-	</script>
-
-
