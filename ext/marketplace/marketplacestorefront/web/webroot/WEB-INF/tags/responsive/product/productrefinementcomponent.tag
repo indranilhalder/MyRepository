@@ -10,16 +10,6 @@ $(function() {
 	constructDepartmentHierarchy(inputArray);
 	}
 	});
-
-//TPR-158 and 413 starts here
-//alert( "document loaded" );
-//load limited department hierarchy on page load
-$(document).ready(function(){
-	$("#displayAll").show();
-	$("#clickToMore").hide();
-	donotShowAll();		
-});
-//TPR-158 and 413 ends here
 </script>
 
 	<input type="hidden" name="isConceirge" id="isConceirge" value="${isConceirge}" />

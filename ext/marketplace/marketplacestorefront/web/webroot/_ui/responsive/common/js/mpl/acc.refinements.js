@@ -98,6 +98,7 @@ ACC.refinements = {
 
 		// AJAX for checkbox
 		$(document).on("change",".js-product-facet .js-facet-checkbox",function(){
+			//alert('here');
 			var staticHost=$('#staticHost').val();
 			$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 			$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
@@ -326,6 +327,26 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 			
 			//Re-write URL after ajax
 			window.history.replaceState(response,"",pageURL);
+			
+			//TPR-158 and TPR-413 starts here
+			
+			$("#displayAll").show();
+			$("#clickToMore").hide();
+			donotShowAll();
+			
+			$("#displayAll").on("click",function(e){
+				showAll();		
+				$("#displayAll").hide();
+				$("#clickToMore").show();
+			});
+			
+			$("#clickToMore").click(function(e){
+				donotShowAll();		
+				$("#displayAll").show();
+				$("#clickToMore").hide();
+				});	
+			//TPR-158 and TPR-413 ends here
+			
 		},
 		error : function(xhr, status, error) {
 			$('#wrongPin,#unsevisablePin,#emptyPin')

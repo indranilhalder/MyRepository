@@ -118,6 +118,7 @@ function constructDepartmentHierarchy(inputArray) {
 					var actionText = ACC.config.contextPath;
 					actionText = (actionText + '/Categories/' + node.name + '/c-' + node.categoryCode);
 					$('#categoryPageDeptHierTreeForm').attr('action',actionText);
+					
 					$('#categoryPageDeptHierTreeForm').submit();
 				}
 			}
@@ -151,9 +152,31 @@ function constructDepartmentHierarchy(inputArray) {
 
   //TPR-158 and TPR-413 starts here
 
+$(document).ready(function(){	
+	$("#displayAll").show();
+	$("#clickToMore").hide();
+	donotShowAll();	
+	
+	$("#displayAll").on("click",function(e){	
+		showAll();		
+		$("#displayAll").hide();
+		$("#clickToMore").show();
+		});
+
+		//clicking on the clickToMore div will display limited department categories.
+	$("#clickToMore").click(function(e){	
+		donotShowAll();		
+		$("#displayAll").show();
+		$("#clickToMore").hide();
+		});
+});
+
+
+
 //For department Hierarchy Expansion
 function showAll()
 {
+	//alert("Hi in Show All");
 	$(".jqtree-tree >li").each(function(e){		
 	$(this).show();//show all		
 	$(this).find("ul>li").each(function(e){
@@ -162,8 +185,9 @@ function showAll()
 	});
 }
 
+
 function donotShowAll()
-{	
+{	//alert("Hi in donotShowAll");
 	//below attributes can be made configurable through local.properties. The number of categories to be displayed are configurable for L1,L2 and L3 separately
 	var l1ClassCount = -1;
 	var l2ClassCount = -1;
@@ -175,12 +199,7 @@ function donotShowAll()
 	
 	//***************below first iteration for L1 categories
 	$(".jqtree-tree >li").each(function(e){
-		
-//	if((!$(this).is(':visible')) )
-//	{
-//		displayHideShowAll = true;
-//	}		
-
+	
 	l1ClassCount= l1ClassCount+1;
 	
 	if(l1ClassCount>l1displayLimit)
@@ -192,10 +211,6 @@ function donotShowAll()
 	l2ClassCount = -1;	
 	//**********below iteration for L2 and L3 categories
 	$(this).find("ul>li").each(function(e){	
-//	if((!$(this).is(':visible')) )
-//	{
-//		displayHideShowAll = true;
-//	}
 	
 	//if li has both class jqtree_common and jqtree-folder then it will be L2 category
 	if($(this).hasClass('jqtree_common') && $(this).hasClass('jqtree-folder'))
@@ -233,26 +248,9 @@ function donotShowAll()
 }
 
 
-$("#displayAll").click(function(e){		
-	showAll();		
-	$("#displayAll").hide();
-	$("#clickToMore").show();
-	});
-
-	//***********clicking on the clickToMore div will display limited department categories.
-	$("#clickToMore").click(function(e){		
-	donotShowAll();		
-	$("#displayAll").show();
-	$("#clickToMore").hide();
-	});	
+	
 		
 //CR Changes End
-
-
-
-
-
-
 //TPR-158 and TPR-413 ends here
 
 

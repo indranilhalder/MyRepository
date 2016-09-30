@@ -908,35 +908,6 @@ sendAddToBag : function(formId, isBuyNow) {
 	
 applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("span.facet-label");
 	
-//	$(document).on("click",".applyBrandFilters",function(){
-//		
-//		//Iterate and get all checked brand values
-//		   var allBrands = "";
-//		  $('li.Brand').find('input[type="checkbox"]:checked').each(function(){	
-//				if ( $(this).parents('.facet-list').css('display') != 'none' ){
-//				var facetValue = $(this).parents('.filter-brand').find('input[name="facetValue"]').val();
-//				allBrands = allBrands + ':brand:' + facetValue;
-//				}		   					
-//		   });
-//		  
-//		//construct non brand query params
-//		  var currentQryParam = $('.currentQueryParamsApply').val();
-//		  var queryParamsAry = currentQryParam.split(':');
-//		  var nonBrandQueryParams = "";
-//			for (var i = 0; i <  queryParamsAry.length; i = i + 2) { 
-//				if(queryParamsAry[i].indexOf('brand') == -1) {
-//					if(nonBrandQueryParams != ""){
-//						nonBrandQueryParams = nonBrandQueryParams +':'+ queryParamsAry[i] +':'+queryParamsAry[i+1];
-//					}else{
-//						nonBrandQueryParams = queryParamsAry[i] +':'+queryParamsAry[i+1];
-//					}
-//				}
-//			}
-//		   //append non brand query and checked brands
-//		   $('.qValueForApply').val(nonBrandQueryParams+allBrands);
-//		   // submit brand apply form
-//		   $('form#brandApply').submit();
-//	});
 
   //Code changes done for TPR-432
   $(document).on("click",".applyBrandFilters",function() {	
@@ -1089,7 +1060,6 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 //END AJAX
 		
 	},	
-	
 	scrollForTransientCart: function ()
 	{
 		if($(window).width() > 773) {
@@ -1100,9 +1070,6 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 		} 
 		
 	}
-	
-	
-
 };
 
 /*TPR-655 START*/
@@ -1116,8 +1083,6 @@ $(document).on('click','.go-to-bag.mini-cart-checkout-button',function(){
 /*TPR-655 END*/
 
 //Code changes start for TPR -168//
-
-
 
 //For AJAX Call  
 $(document).on("click",'#applyCustomPriceFilter',function(){					
@@ -1145,30 +1110,6 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 						// Iterate and get all checked brand values
 						var Price = "₹" + minPriceSearchTxt + "-" + "₹"
 								+ maxPriceSearchTxt;
-						
-
-
-
-
-
-
-
-
-
-
-
-
-						
-
-
-
-
-
-
-
-
-
-
 						for (var i = 0; i < queryParamsAry.length; i = i + 2) {					
 							if (queryParamsAry[i].indexOf('price') == -1) {								
 								if (nonPriceQueryParams != "") {
@@ -1184,11 +1125,6 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 						}
 						
 
-
-
-
-
-					
 						$('.qValueForCustomPrice').val(
 								nonPriceQueryParams + ":price:" + Price);
 
@@ -1291,11 +1227,6 @@ function splitPrice(value) {
 	var minPrice = priceRange[0].substring(1);
 	var maxPrice = priceRange[1].substring(1);
 
-//		var priceRange = value.split('-');
-//		alert("priceRange[0]: "+priceRange[0]);
-//		alert("priceRange[1]: "+priceRange[1]);	
-//		var minPrice = priceRange[0].substring(1);
-//		var maxPrice = priceRange[1].substring(1);	
 	return [ minPrice, maxPrice ];
 }
 
