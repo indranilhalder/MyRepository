@@ -114,7 +114,7 @@ public class ExcelConstants
 	public static final String DATA_MODE_TYPE1 = Config.getParameter("dataModeType1");
 	public static final String DATA_MODE_TYPE2 = Config.getParameter("dataModeType2");
 	public static final String COUNTRY = Config.getParameter("country");
-	public static final String NEW_LINE = Config.getParameter("newLine");
+	public static final String NEW_LINE = "\n";
 	public static final String TRANSPORT_MODE_TYPE = Config.getParameter("transportModeType");
 	//surface cod column,surface prepaid limit column
 	public static final String SURFACE_COD = Config.getParameter("surfaceCod");
