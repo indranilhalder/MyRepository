@@ -53469,3 +53469,8 @@ div.radio.creditDebitLabelRadio{
 .acc_head.newAddressCenter{
 	text-align: center;
 }
+ /* change for TPR-561 */
+ header .content nav > ul > li > ul > li > ul > li.long.words .toggle {
+               font-weight: normal;
+    }
+
