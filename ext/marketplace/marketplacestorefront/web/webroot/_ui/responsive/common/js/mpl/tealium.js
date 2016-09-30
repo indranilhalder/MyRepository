@@ -62,8 +62,9 @@ $(document).ready(
 				//TPR-430
 				var product_category = null;
 				var page_subcategory_name = null;
+				var page_subcategory_name_L3 = null;
 				
-				homePageTealium+='<script type="text/javascript"> var utag_data ={"site_region":"'+site_region+'","user_type":"'+user_type+'","user_login_type":"'+user_login_type+'","user_id":"'+user_id+'","page_type":"'+pageTypeHome+'","page_name":"'+pageName+'","product_category":"'+product_category+'","page_subcategory_name":"'+page_subcategory_name+'","session_id":"'+session_id+'","visitor_ip":"'+visitor_ip+'","site_currency":"'+site_currency+'","site_section":"'+site_section+'","IA_company":"'+domain_name+'"}</script>';
+				homePageTealium+='<script type="text/javascript"> var utag_data ={"site_region":"'+site_region+'","user_type":"'+user_type+'","user_login_type":"'+user_login_type+'","user_id":"'+user_id+'","page_type":"'+pageTypeHome+'","page_name":"'+pageName+'","product_category":"'+product_category+'","page_subcategory_name":"'+page_subcategory_name+'","page_subcategory_name_L3":"'+page_subcategory_name_L3+'", "session_id":"'+session_id+'","visitor_ip":"'+visitor_ip+'","site_currency":"'+site_currency+'","site_section":"'+site_section+'","IA_company":"'+domain_name+'"}</script>';
 				var script="";
 				if(domain_name =="www.tatacliq.com"){
 					
@@ -114,7 +115,7 @@ $(document).ready(
 							+ $("#product_category").val() + '",';
 						tealiumData += '"page_subcategory_name":"'
 								+ $("#page_subcategory_name").val() + '",';
-						tealiumData += '"page_subcategory_name_l3":"'
+						tealiumData += '"page_subcategory_name_L3":"'
 							+ $("#page_subcategory_name_l3").val() + '",';
 						//TPR-430 End
 						tealiumData += '"product_brand":["'
@@ -179,7 +180,7 @@ $(document).ready(
             	var page_subcategory_name = '';
             	var page_subcategory_name_l3 = '';
 				
-                genericPageTealium+='<script type="text/javascript"> var utag_data ={"site_region":"'+site_region+'","user_type":"'+user_type+'","user_login_type":"'+user_login_type+'","user_id":"'+user_id+'","page_type":"'+pageTypeGeneric+'","page_name":"'+pageName+'","product_category":"'+product_category+'","page_subcategory_name":"'+page_subcategory_name+'","page_subcategory_name_l3":"'+page_subcategory_name_l3+'","session_id":"'+session_id+'","visitor_ip":"'+visitor_ip+'","site_currency":"'+site_currency+'","site_section":"'+site_section+'","IA_company":"'+domain_name+'"}</script>';
+                genericPageTealium+='<script type="text/javascript"> var utag_data ={"site_region":"'+site_region+'","user_type":"'+user_type+'","user_login_type":"'+user_login_type+'","user_id":"'+user_id+'","page_type":"'+pageTypeGeneric+'","page_name":"'+pageName+'","product_category":"'+product_category+'","page_subcategory_name":"'+page_subcategory_name+'","page_subcategory_name_L3":"'+page_subcategory_name_l3+'","session_id":"'+session_id+'","visitor_ip":"'+visitor_ip+'","site_currency":"'+site_currency+'","site_section":"'+site_section+'","IA_company":"'+domain_name+'"}</script>';
 				var script="";
 				if(domain_name =="www.tatacliq.com"){
 					
@@ -221,7 +222,7 @@ $(document).ready(
 									+ $("#product_category").val() + '",';
 								tealiumData += '"page_subcategory_name":"'
 									+ $("#page_subcategory_name").val() + '",';
-								tealiumData += '"page_subcategory_name_l3":"'
+								tealiumData += '"page_subcategory_name_L3":"'
 									+ $("#page_subcategory_name_l3").val() + '"}';
 								/*TPR-430 End*/
 								data = data.replace("}<TealiumScript>", tealiumData);
@@ -314,7 +315,7 @@ $(document).ready(
 							+ $("#product_category").val() + ',';
 						tealiumData += '"page_subcategory_name":'
 							+ $("#page_subcategory_name").val() + ',';
-					tealiumData += '"page_subcategory_name_l3":'
+					tealiumData += '"page_subcategory_name_L3":'
 						+ $("#page_subcategory_name_l3").val() + '}';
 					//TPR-430 End
 						data = data.replace("}<TealiumScript>", tealiumData);
@@ -359,7 +360,7 @@ $(document).ready(
 							+ $("#product_category").val() + ',';
 						tealiumData += '"page_subcategory_name":'
 							+ $("#page_subcategory_name").val() + ',';
-					tealiumData += '"page_subcategory_name_l3":'
+					tealiumData += '"page_subcategory_name_L3":'
 						+ $("#page_subcategory_name_l3").val() + ',';
 					//TPR-430 End
 						tealiumData += '"checkout_seller_ids":"'		//for TPR-429

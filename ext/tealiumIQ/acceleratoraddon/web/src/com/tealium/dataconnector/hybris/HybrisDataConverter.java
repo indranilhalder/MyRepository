@@ -42,6 +42,7 @@ import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.CCPaymentInfoData;
 import de.hybris.platform.core.Registry;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
@@ -67,6 +68,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
+import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 
 import de.hybris.platform.commercefacades.product.ProductFacade;
@@ -80,6 +82,7 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
+import com.tisl.mpl.storefront.security.cookie.UserTypeCookieGenerator;
 
 public final class HybrisDataConverter
 {
@@ -99,6 +102,12 @@ public final class HybrisDataConverter
 		LanguageData languageData = (LanguageData) request.getAttribute("currentLanguage");
 		List<Breadcrumb> breadcrumbs = new ArrayList();
 		breadcrumbs = (List<Breadcrumb>) request.getAttribute("breadcrumbs");
+		final UserService userService = (UserService) Registry.getApplicationContext().getBean("userService");
+		final CustomerModel currCust = (CustomerModel) userService.getCurrentUser();
+		final UserTypeCookieGenerator userTypeCookieGenerator = (UserTypeCookieGenerator) Registry.getApplicationContext().getBean("defaultUserTypeCookieGenerator");
+		final String userTypeCookieName = userTypeCookieGenerator.getCookieName();
+		final UserModel currentUser = userService.getCurrentUser();
+		String userLoginType = null; //TPR-668
 
 		if (breadcrumbs != null)
 		{
@@ -109,7 +118,34 @@ public final class HybrisDataConverter
 		{
 			for (final Cookie cookie : cookies)
 			{
-
+				if (userTypeCookieName.equals(cookie.getName())) {
+					if (userService.isAnonymousUser(currentUser))
+					{
+						userLoginType = MessageConstants.GUESTUSER;
+						udo.setValue("user_login_type", userLoginType);
+					}
+					else
+					{
+						if (null != currCust && null != currCust.getType())
+						{
+							if (currCust.getType().toString().equals("FACEBOOK_LOGIN"))
+							{
+								userLoginType = "facebook";
+								udo.setValue("user_login_type", userLoginType);
+							}
+							else if (currCust.getType().toString().equals(MessageConstants.GOOGLE_LOGIN)) // TPR-668
+							{
+								userLoginType = "google";
+								udo.setValue("user_login_type", userLoginType);
+							}
+							else
+							{
+								userLoginType = "email";
+								udo.setValue("user_login_type", userLoginType);
+							}
+						}
+					}
+				}
 
 
 				if (cookie.getName().equals("mpl-user"))
