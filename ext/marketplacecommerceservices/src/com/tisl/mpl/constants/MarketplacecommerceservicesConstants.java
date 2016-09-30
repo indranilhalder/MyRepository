@@ -1402,6 +1402,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String TICKET_SUB_TYPE = "AC";
 	//CRM Ticket Source From Commerce
 	public static final String SOURCE = "commerce";
+	public static final String DEFAULT_COUNTRY_CODE = "IN";
+	public static final int PIN_CODE_LENGTH = 6;
 
 	//Coupon
 	public static final String ZEROPOINTZEROONE = "0.01".intern();
