@@ -31,6 +31,7 @@ import com.tisl.mpl.core.model.BrandCollectionComponentModel;
 import com.tisl.mpl.core.model.BrandComponentModel;
 import com.tisl.mpl.core.model.ConfigureImagesCountComponentModel;
 import com.tisl.mpl.core.model.ConfigureProductsCountComponentModel;
+import com.tisl.mpl.core.model.CustomSkuComponentModel;
 import com.tisl.mpl.core.model.DepartmentCollectionComponentModel;
 import com.tisl.mpl.core.model.MicrositeSelectBrandCollectionComponentModel;
 import com.tisl.mpl.core.model.MplBigFourPromoBannerComponentModel;
@@ -115,7 +116,7 @@ public interface ControllerConstants
 			String ContactUsTabComponent = _Prefix + ContactUsTabComponentModel._TYPECODE + _Suffix;
 			String MplBrandLogoComponent = _Prefix + MplBrandLogoComponentModel._TYPECODE + _Suffix;
 			String RotatingImagesComponent = _Prefix + RotatingImagesComponentModel._TYPECODE + _Suffix;
-			String CustomSkuComponent = _Prefix + "MplCustomSkuRefinementComponent" + _Suffix;
+			String CustomSkuComponent = _Prefix + CustomSkuComponentModel._TYPECODE + _Suffix;
 		}
 	}
 

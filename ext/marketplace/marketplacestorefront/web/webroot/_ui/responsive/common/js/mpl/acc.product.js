@@ -1236,9 +1236,14 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 						} else {
 							if(action.indexOf("/getFacetData") == -1){
 							
-								if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1 || action.indexOf('/collection/') > -1){
+								//if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1 || action.indexOf('/collection/') > -1){
+								if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1 ){
 									requiredUrl = action.concat("/getFacetData");
 								} 
+								else if (action.indexOf('/collection/') > -1) {
+									alert('aaa');
+									requiredUrl = '/CustomSkuCollection/getFacetData';
+								}
 								else{
 									
 									requiredUrl = action.concat("getFacetData");

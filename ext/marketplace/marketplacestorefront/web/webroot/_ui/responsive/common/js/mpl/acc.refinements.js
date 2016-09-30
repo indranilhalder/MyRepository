@@ -345,3 +345,9 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 	
 }
 
+/*$("#paginationForm .pagination.mobile li a").click(function(e){
+	
+	e.prevent
+	alert($(this).attr('href'));
+});*/
+
