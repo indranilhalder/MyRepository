@@ -129,7 +129,9 @@ $(document).ready(
 							+promo_id+ '"],';
 						//TPR-672 END
 					
-						//TPR-429 START
+						//TPR-
+						
+						START
 						tealiumData += '"buybox_seller_id":"'
 							+ $("#pdpBuyboxWinnerSellerID").val() + '",';
 						tealiumData += '"other_seller_ids":"'
@@ -456,7 +458,7 @@ $(document).on('mousedown','.btn-block.js-add-to-cart',function(){
 	/*var productSKU = $(this).parents('form').find('input[type="hidden"]#ussid').val();*/
 	var productSKU = $('#productCodePost').val();
 	
-	if($(this).attr('id').toLowerCase().indexOf("buybox") == -1){
+	if($(this).attr('id').toLowerCase().indexOf("buynow") == -1){
 		utag.link({
 			link_obj: this,
 			link_text: 'addtobag' ,
