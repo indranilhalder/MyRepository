@@ -50,6 +50,7 @@ import com.tisl.mpl.wsdto.HelpmeShopWsDTO;
 import com.tisl.mpl.wsdto.HeroProductWsDTO;
 import com.tisl.mpl.wsdto.LuxBlpCompWsDTO;
 import com.tisl.mpl.wsdto.LuxHomePageCompWsDTO;
+import com.tisl.mpl.wsdto.LuxNavigationWsDTO;
 import com.tisl.mpl.wsdto.MplPageComponentsWsDTO;
 import com.tisl.mpl.wsdto.MplPageWsDTO;
 import com.tisl.mpl.wsdto.PageWsDTO;
@@ -76,7 +77,7 @@ public class CMSController extends BaseController
 
 	/*
 	 * private static final Set<CatalogOption> OPTIONS;
-	 * 
+	 *
 	 * static { OPTIONS = getOptions(); }
 	 */
 
@@ -634,6 +635,30 @@ public class CMSController extends BaseController
 			final LuxBlpCompWsDTO blpcomponentdto = mplCmsFacade.getlandingForBrand();
 
 			return blpcomponentdto;
+		}
+		catch (final CMSItemNotFoundException e)
+		{
+			// YTODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/*
+	 * luxury megaNavigation
+	 */
+	@RequestMapping(value = "/getluxuryMegaNav", method = RequestMethod.GET)
+	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
+	@ResponseBody
+	public LuxNavigationWsDTO getluxuryMegaNav(@RequestParam(defaultValue = DEFAULT) final String fields)
+	{
+
+		try
+		{
+			final LuxNavigationWsDTO megaNavDto = mplCmsFacade.getMegaNavigation();
+
+			return megaNavDto;
 		}
 		catch (final CMSItemNotFoundException e)
 		{
