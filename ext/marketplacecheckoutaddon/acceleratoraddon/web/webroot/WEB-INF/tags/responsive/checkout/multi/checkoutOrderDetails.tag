@@ -24,9 +24,7 @@
 	<h3>Summary</h3>
 		<%-- <div class="headline"><spring:theme code="checkout.multi.order.summary" text="Order Summary" /></div> --%>
 		<multi-checkout:orderTotals cartData="${cartData}" showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" isCart="${isCart}" orderData="${orderData}"/>
-		<c:if test="${isCart eq true}">
-		<multi-checkout:coupons cartData="${cartData}" isCart="${isCart}"/>
-		</c:if>
+		<multi-checkout:coupons isCart="${isCart}"/>
 		<div class="bottom order-details block delivery-info">
 			<!-- <ul class="checkout-order-summary-list"> -->
 				<multi-checkout:deliveryCartItems cartData="${cartData}" showDeliveryAddress="${showDeliveryAddress}" isCart="${isCart}" orderData="${orderData}"/>

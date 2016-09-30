@@ -618,7 +618,12 @@ function submitForm(){
 				if(response=='redirect'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/cart"); //TIS 404
 
-				}else{
+				}
+				//TPR-815
+				else if(response=='redirect_to_payment'){
+					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?value="+guid); //TPR-629
+				}
+				else{
 					$("#emptyOTPMessage").css("display","none");
 					if(response!=null)
 					{
@@ -4349,7 +4354,7 @@ function applyPromotion(bankName,binValue,formSubmit)
 		 				$('#couponFieldId').attr('readonly', false);
 		 				var selection = $("#voucherDisplaySelection").val();
 		 				$("#couponFieldId").val(selection);
-		 				$("#couponMessage").html("Coupon has been removed after applying promotion");
+		 				$("#couponMessage").html("Oh no! This coupon code can't be used anymore. Please try another.");	//TPR-815
 		 				$('#couponMessage').show();
 		 				$('#couponMessage').delay(5000).fadeOut('slow');
 		 				setTimeout(function(){ $("#couponMessage").html(""); }, 10000); 	
@@ -6368,11 +6373,12 @@ $("#couponSubmitButton").click(function(){
 	else{
 		var couponCode=$("#couponFieldId").val();
 		var paymentMode=$("#paymentMode").val();
+		var guid=$("#guid").val();
 		$.ajax({
 	 		url: ACC.config.encodedContextPath + "/checkout/multi/coupon/redeem",
 	 		type: "GET",
 	 		cache: false,
-	 		data: { 'couponCode' : couponCode , 'paymentMode' : paymentMode , 'bankNameSelected' : bankNameSelected},
+	 		data: { 'couponCode' : couponCode , 'paymentMode' : paymentMode , 'bankNameSelected' : bankNameSelected , 'guid' : guid},
 	 		success : function(response) {
 	 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
 	 			$("#codAmount").text(response.totalPrice.formattedValue);
@@ -6456,11 +6462,12 @@ $("#couponFieldId").focus(function(){
 
 $(".remove-coupon-button").click(function(){
 	var couponCode=$("#couponFieldId").val();
+	var guid=$("#guid").val();
 	$.ajax({
  		url: ACC.config.encodedContextPath + "/checkout/multi/coupon/release",
  		type: "GET",
  		cache: false,
- 		data: { 'couponCode' : couponCode },
+ 		data: { 'couponCode' : couponCode , 'guid' : guid},
  		success : function(response) {
  			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
  			$("#codAmount").text(response.totalPrice.formattedValue);

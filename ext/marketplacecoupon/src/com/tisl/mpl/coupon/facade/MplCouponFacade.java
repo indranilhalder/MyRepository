@@ -7,6 +7,7 @@ import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationExc
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
@@ -33,12 +34,15 @@ public interface MplCouponFacade
 {
 
 	/**
+	 * @param orderModel
 	 * @param cartModel
 	 * @param couponStatus
 	 * @param reddemIdentifier
 	 * @return VoucherDiscountData
+	 * @throws VoucherOperationException
 	 */
-	VoucherDiscountData calculateValues(CartModel cartModel, boolean couponStatus, boolean reddemIdentifier);
+	VoucherDiscountData calculateValues(OrderModel orderModel, CartModel cartModel, boolean couponStatus, boolean reddemIdentifier)
+			throws VoucherOperationException;
 
 
 	/**
@@ -59,12 +63,14 @@ public interface MplCouponFacade
 	/**
 	 * @param voucherCode
 	 * @param cartModel
+	 * @param orderModel
 	 * @return boolean
 	 * @throws VoucherOperationException
 	 * @throws JaloInvalidParameterException
 	 * @throws NumberFormatException
 	 */
-	boolean applyVoucher(String voucherCode, CartModel cartModel) throws VoucherOperationException, EtailNonBusinessExceptions;
+	boolean applyVoucher(String voucherCode, final CartModel cartModel, final OrderModel orderModel)
+			throws VoucherOperationException, EtailNonBusinessExceptions;
 
 
 	/**
@@ -108,20 +114,21 @@ public interface MplCouponFacade
 	/**
 	 * @param voucherCode
 	 * @param cartModel
+	 * @param orderModel
 	 * @throws VoucherOperationException
 	 */
-	void releaseVoucher(String voucherCode, CartModel cartModel) throws VoucherOperationException;
+	void releaseVoucher(String voucherCode, CartModel cartModel, OrderModel orderModel) throws VoucherOperationException;
 
 
 	/**
 	 *
 	 * @param voucher
-	 * @param cartModel
+	 * @param abstractOrderModel
 	 * @param voucherCode
 	 * @param applicableOrderEntryList
 	 * @throws EtailNonBusinessExceptions
 	 */
-	void setApportionedValueForVoucher(VoucherModel voucher, CartModel cartModel, String voucherCode,
+	void setApportionedValueForVoucher(VoucherModel voucher, AbstractOrderModel abstractOrderModel, String voucherCode,
 			List<AbstractOrderEntryModel> applicableOrderEntryList);
 
 
@@ -144,9 +151,9 @@ public interface MplCouponFacade
 
 	/**
 	 * @param paymentInfo
-	 * @param cartModel
+	 * @param abstractOrderModel
 	 */
-	void updatePaymentInfoSession(Map<String, Double> paymentInfo, CartModel cartModel);
+	void updatePaymentInfoSession(Map<String, Double> paymentInfo, AbstractOrderModel abstractOrderModel);
 
 
 	/**

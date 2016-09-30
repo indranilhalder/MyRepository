@@ -7,9 +7,11 @@ import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.payment.AdapterException;
 import de.hybris.platform.payment.enums.PaymentTransactionType;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -23,6 +25,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
+import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -40,6 +44,8 @@ import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.RefundTransactionMappingModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.juspay.PaymentService;
+import com.tisl.mpl.juspay.request.GetOrderStatusRequest;
 import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
 import com.tisl.mpl.marketplacecommerceservices.daos.JuspayWebHookDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplPaymentDao;
@@ -84,6 +90,9 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 
 	@Autowired
 	private MplPaymentDao mplPaymentDao;
+
+	@Resource(name = "configurationService")
+	private ConfigurationService configurationService;
 
 	private static final String REFUND = "REFUND_SUCCESSFUL";
 	private static final String REFUND_FAIL = "REFUND_UNSUCCESSFUL";
@@ -167,7 +176,6 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	 * @param webHookDetailList
 	 */
 	private void processWebhook(final JuspayWebhookModel hook, final List<JuspayWebhookModel> webHookDetailList)
-			throws EtailNonBusinessExceptions
 	{
 		//TISPRO-607
 		if (null != hook.getOrderStatus())
@@ -779,7 +787,6 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	 * @param status
 	 */
 	private void getResponseBasedOnStatus(final JuspayWebhookModel oModel, final String orderId, final String status)
-			throws EtailNonBusinessExceptions
 	{
 		try
 		{
@@ -793,11 +800,15 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 					//check parent order in Commerce exists or not
 					final String guid = auditDataModel.getCartGUID();
 
-					boolean isParentOrder = false;
+					//boolean isParentOrder = false;
 					if (StringUtils.isNotEmpty(guid))
 					{
-						isParentOrder = checkParentOrderExists(guid);
-						if (!isParentOrder)
+						//Logic changed for TPR-629
+						//isParentOrder = checkParentOrderExists(guid);
+						//if (isParentOrder)
+						final OrderModel orderModel = getParentOrder(guid);
+
+						if (null == orderModel)
 						{
 							try
 							{
@@ -830,7 +841,37 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 								LOG.error(e.getMessage(), e);
 							}
 							LOG.debug(MarketplacecommerceservicesConstants.WEBHOOKUPDATEMSG);
+							//updateWebHookExpired(oModel);		//Commented for TPR-629 --- forward flow handled in processOrderJob
+						}
+
+						//Logic when juspay webhook data does not come before payment_timeout TAT ---- TPR-629
+						else if (OrderStatus.PAYMENT_TIMEOUT.equals(orderModel.getStatus()))
+						{
+							final PaymentService juspayService = new PaymentService();
+
+							juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
+									MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+							juspayService.withKey(
+									getConfigurationService().getConfiguration().getString(
+											MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY)).withMerchantId(
+									getConfigurationService().getConfiguration().getString(
+											MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
+
+							final GetOrderStatusRequest orderStatusRequest = new GetOrderStatusRequest();
+							orderStatusRequest.withOrderId(orderId);
+
+							//getting the response by calling get Order Status service
+							final GetOrderStatusResponse orderStatusResponse = juspayService.getOrderStatus(orderStatusRequest);
+
+							if (orderStatusResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.CHARGED)
+									&& CollectionUtils.isEmpty(orderStatusResponse.getRefunds()))
+							{
+								//Calling refund for Payment_Timeout order
+								getMplJusPayRefundService().doRefund(orderId, oModel.getOrderStatus().getCardResponse().getCardType());
+							}
+
 							updateWebHookExpired(oModel);
+
 						}
 						//Blocked for TPR-629
 						//						else
@@ -845,58 +886,69 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 		catch (final ModelNotFoundException exception)
 		{
 			LOG.error("Model not found while processing forward flow", exception);
-			throw new EtailNonBusinessExceptions(exception, MarketplacecommerceservicesConstants.E0008);
+			//throw new EtailNonBusinessExceptions(exception, MarketplacecommerceservicesConstants.E0008);
+		}
+		catch (final AdapterException e)
+		{
+			LOG.error("Error with connection", e);
+			//throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0023);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			LOG.error("Exception while processing forward flow", e);
 		}
 		catch (final Exception exception)
 		{
 			LOG.error("Exception while processing forward flow", exception);
-			throw new EtailNonBusinessExceptions(exception, MarketplacecommerceservicesConstants.E0000);
+			//throw new EtailNonBusinessExceptions(exception, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
 
-	/**
-	 * To check whether there is a parent order created against which Payment took place
-	 *
-	 * @param orderGuid
-	 * @return boolean
-	 */
-	private boolean checkParentOrderExists(final String orderGuid) throws EtailNonBusinessExceptions
-	{
-		try
-		{
-			final List<OrderModel> orders = getJuspayWebHookDao().fetchOrder(orderGuid);
-			if (!CollectionUtils.isEmpty(orders))
-			{
-				int subOrderCount = 0;
-				//int parentOrderCount = 0;
-				for (final OrderModel orderModel : orders)
-				{
-					if (StringUtils.isNotEmpty(orderModel.getType()))
-					{
-						if (orderModel.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUBORDER)
-								&& null != orderModel.getParentReference())
-						{
-							subOrderCount++;
-						}
-						else if (orderModel.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.PARENTORDER)
-								&& null != orderModel.getChildOrders() && !CollectionUtils.isEmpty(orderModel.getChildOrders()))
-						{
-							continue;
-						}
-					}
-				}
-				return subOrderCount > 0;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		catch (final Exception e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-		}
-	}
+
+	//Commented as not used anymore - TPR-629
+	//	/**
+	//	 * To check whether there is a parent order created against which Payment took place
+	//	 *
+	//	 * @param orderGuid
+	//	 * @return boolean
+	//	 */
+	//	private boolean checkParentOrderExists(final String orderGuid) throws EtailNonBusinessExceptions
+	//	{
+	//		try
+	//		{
+	//			final List<OrderModel> orders = getJuspayWebHookDao().fetchOrder(orderGuid);
+	//			if (!CollectionUtils.isEmpty(orders))
+	//			{
+	//				int subOrderCount = 0;
+	//				//int parentOrderCount = 0;
+	//				for (final OrderModel orderModel : orders)
+	//				{
+	//					if (StringUtils.isNotEmpty(orderModel.getType()))
+	//					{
+	//						if (orderModel.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUBORDER)
+	//								&& null != orderModel.getParentReference())
+	//						{
+	//							subOrderCount++;
+	//						}
+	//						else if (orderModel.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.PARENTORDER)
+	//								&& null != orderModel.getChildOrders() && !CollectionUtils.isEmpty(orderModel.getChildOrders()))
+	//						{
+	//							continue;
+	//						}
+	//					}
+	//				}
+	//				return subOrderCount > 0;
+	//			}
+	//			else
+	//			{
+	//				return false;
+	//			}
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+	//		}
+	//	}
 
 	/**
 	 * @Description : Update Web Hook Entry
@@ -1406,6 +1458,23 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 		return auditEntry;
 	}
 
+
+
+
+
+	/**
+	 * To check whether there is a parent order created against which Payment took place
+	 *
+	 * @param orderGuid
+	 * @return boolean
+	 */
+	private OrderModel getParentOrder(final String orderGuid) throws EtailNonBusinessExceptions
+	{
+		return getJuspayWebHookDao().fetchOrderOnGUID(orderGuid);
+
+	}
+
+
 	//Getters and setters
 	/**
 	 * @return the juspayWebHookDao
@@ -1525,4 +1594,24 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	{
 		this.mplFraudModelService = mplFraudModelService;
 	}
+
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
+	}
+
+
+
 }

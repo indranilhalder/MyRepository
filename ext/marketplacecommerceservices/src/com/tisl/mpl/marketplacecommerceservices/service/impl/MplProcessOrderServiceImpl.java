@@ -6,7 +6,6 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commerceservices.service.data.CommerceCheckoutParameter;
 import de.hybris.platform.commerceservices.service.data.CommerceOrderResult;
-import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -15,6 +14,7 @@ import de.hybris.platform.order.OrderService;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.exceptions.ModelRemovalException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
@@ -86,10 +86,10 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	private ConfigurationService configurationService;
 	@Autowired
 	private NotificationService notificationService;
-	@Resource(name = "mplVoucherDao")
-	private MplVoucherDao mplVoucherDao;
 	@Resource(name = "mplVoucherService")
 	private MplVoucherService mplVoucherService;
+	@Resource(name = "mplVoucherDao")
+	private MplVoucherDao mplVoucherDao;
 
 	/**
 	 * This method processes pending orders
@@ -344,31 +344,31 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 			if (null == orderModel.getPaymentInfo())
 			{
 				updateOrder(orderModel, juspayWebhookModel);
-			}
 
-			//Re-trigger submit order process from Payment_Pending to Payment_Successful
-			final CommerceCheckoutParameter parameter = new CommerceCheckoutParameter();
-			parameter.setEnableHooks(true);
-			parameter.setSalesApplication(orderModel.getSalesApplication());
+				//Re-trigger submit order process from Payment_Pending to Payment_Successful
+				final CommerceCheckoutParameter parameter = new CommerceCheckoutParameter();
+				parameter.setEnableHooks(true);
+				parameter.setSalesApplication(orderModel.getSalesApplication());
 
-			final CommerceOrderResult result = new CommerceOrderResult();
-			result.setOrder(orderModel);
+				final CommerceOrderResult result = new CommerceOrderResult();
+				result.setOrder(orderModel);
 
-			mplCommerceCheckoutService.beforeSubmitOrder(parameter, result);
-			getOrderService().submitOrder(orderModel);
+				mplCommerceCheckoutService.beforeSubmitOrder(parameter, result);
+				getOrderService().submitOrder(orderModel);
 
-			//Email and sms for Payment_Successful
-			try
-			{
-				getNotificationService().triggerEmailAndSmsOnOrderConfirmation(orderModel, trackOrderUrl);
-			}
-			catch (final JAXBException e)
-			{
-				LOG.error("Error while sending notifications from job>>>>>>", e);
-			}
-			catch (final Exception ex)
-			{
-				LOG.error("Error while sending notifications>>>>>>", ex);
+				//Email and sms for Payment_Successful
+				try
+				{
+					getNotificationService().triggerEmailAndSmsOnOrderConfirmation(orderModel, trackOrderUrl);
+				}
+				catch (final JAXBException e)
+				{
+					LOG.error("Error while sending notifications from job>>>>>>", e);
+				}
+				catch (final Exception ex)
+				{
+					LOG.error("Error while sending notifications>>>>>>", ex);
+				}
 			}
 
 			juspayWebhookModel.setIsExpired(Boolean.TRUE);
@@ -380,35 +380,35 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 			if (null == orderModel.getPaymentInfo())
 			{
 				updateOrder(orderModel, juspayWebhookModel);
-			}
 
-			//getting PinCode against Order
-			final String defaultPinCode = getPinCodeForOrder(orderModel);
+				//getting PinCode against Order
+				final String defaultPinCode = getPinCodeForOrder(orderModel);
 
-			//OMS Deallocation call for failed order
-			getMplCommerceCartService().isInventoryReserved(orderModel,
-					MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
+				//OMS Deallocation call for failed order
+				getMplCommerceCartService().isInventoryReserved(orderModel,
+						MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
 
-			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
+				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
 
-			if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()))
-			{
-				final PromotionVoucherModel voucherModel = (PromotionVoucherModel) orderModel.getDiscounts().get(0);
-				getMplVoucherService().releaseVoucher(voucherModel.getVoucherCode(), null, orderModel);
-				getMplVoucherService().recalculateCartForCoupon(null, orderModel);
-			}
-			//Email and sms for Payment_Failed
-			try
-			{
-				getNotificationService().triggerEmailAndSmsOnPaymentFailed(orderModel, trackOrderUrl);
-			}
-			catch (final JAXBException e)
-			{
-				LOG.error("Error while sending notifications from job>>>>>>", e);
-			}
-			catch (final Exception ex)
-			{
-				LOG.error("Error while sending notifications>>>>>>", ex);
+				if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()))
+				{
+					final PromotionVoucherModel voucherModel = (PromotionVoucherModel) orderModel.getDiscounts().get(0);
+					getMplVoucherService().releaseVoucher(voucherModel.getVoucherCode(), null, orderModel);
+					getMplVoucherService().recalculateCartForCoupon(null, orderModel);
+				}
+				//Email and sms for Payment_Failed
+				try
+				{
+					getNotificationService().triggerEmailAndSmsOnPaymentFailed(orderModel, trackOrderUrl);
+				}
+				catch (final JAXBException e)
+				{
+					LOG.error("Error while sending notifications from job>>>>>>", e);
+				}
+				catch (final Exception ex)
+				{
+					LOG.error("Error while sending notifications>>>>>>", ex);
+				}
 			}
 
 			juspayWebhookModel.setIsExpired(Boolean.TRUE);
@@ -483,32 +483,40 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 
 
 
-
 	/**
-	 * This method only removes voucher invalidation created
+	 * This method removes voucher invalidation model when payment is timed-out, without releasing the coupon.
 	 *
 	 * @param orderModel
+	 * @throws EtailNonBusinessExceptions
 	 */
-	private void removeVoucherInvalidation(final OrderModel orderModel)
+	private void removeVoucherInvalidation(final OrderModel orderModel) throws EtailNonBusinessExceptions
 	{
-		if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()))
+		try
 		{
-
-			final CustomerModel customer = (CustomerModel) orderModel.getUser();
-			final List<VoucherInvalidationModel> invalidationList = new ArrayList<VoucherInvalidationModel>(getMplVoucherDao()
-					.findVoucherInvalidation(orderModel.getDiscounts().get(0).getCode(), customer.getOriginalUid(),
-							orderModel.getCode()));
-
-			final Iterator<VoucherInvalidationModel> iter = invalidationList.iterator();
-
-			//Remove the existing discount
-			while (iter.hasNext())
+			if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()))
 			{
-				final VoucherInvalidationModel model = iter.next();
-				getModelService().remove(model);
+
+				final CustomerModel customer = (CustomerModel) orderModel.getUser();
+				final List<VoucherInvalidationModel> invalidationList = new ArrayList<VoucherInvalidationModel>(getMplVoucherDao()
+						.findVoucherInvalidation(orderModel.getDiscounts().get(0).getCode(), customer.getOriginalUid(),
+								orderModel.getCode()));
+
+				final Iterator<VoucherInvalidationModel> iter = invalidationList.iterator();
+
+				//Remove the existing discount
+				while (iter.hasNext())
+				{
+					final VoucherInvalidationModel model = iter.next();
+					getModelService().remove(model);
+				}
 			}
 		}
+		catch (final ModelRemovalException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0020);
+		}
 	}
+
 
 
 
@@ -705,22 +713,6 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 		this.notificationService = notificationService;
 	}
 
-	/**
-	 * @return the mplVoucherDao
-	 */
-	public MplVoucherDao getMplVoucherDao()
-	{
-		return mplVoucherDao;
-	}
-
-	/**
-	 * @param mplVoucherDao
-	 *           the mplVoucherDao to set
-	 */
-	public void setMplVoucherDao(final MplVoucherDao mplVoucherDao)
-	{
-		this.mplVoucherDao = mplVoucherDao;
-	}
 
 	/**
 	 * @return the mplVoucherService
@@ -737,6 +729,23 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	public void setMplVoucherService(final MplVoucherService mplVoucherService)
 	{
 		this.mplVoucherService = mplVoucherService;
+	}
+
+	/**
+	 * @return the mplVoucherDao
+	 */
+	public MplVoucherDao getMplVoucherDao()
+	{
+		return mplVoucherDao;
+	}
+
+	/**
+	 * @param mplVoucherDao
+	 *           the mplVoucherDao to set
+	 */
+	public void setMplVoucherDao(final MplVoucherDao mplVoucherDao)
+	{
+		this.mplVoucherDao = mplVoucherDao;
 	}
 
 

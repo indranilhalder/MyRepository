@@ -1031,7 +1031,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel);
 					if (!inventoryReservationStatus)
 					{
-						getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
+						getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_ORDER_INVENTORY_RESV_SESSION_ID,
+								"TRUE");
 						getMplCartFacade().recalculateOrder(orderModel);
 						redirectFlag = true;
 					}
@@ -1175,6 +1176,32 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			//Code implemented for Order TPR-629
 			else
 			{
+				//TPR-815
+				if (!getMplCheckoutFacade().isPromotionValid(orderModel))
+				{
+					//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED, "TRUE");
+					getMplCartFacade().recalculateOrder(orderModel);
+					redirectFlag = true;
+				}
+
+				if (!redirectFlag)
+				{
+					final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
+							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel);
+					if (!inventoryReservationStatus)
+					{
+						getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_ORDER_INVENTORY_RESV_SESSION_ID,
+								"TRUE");
+						getMplCartFacade().recalculateOrder(orderModel);
+						redirectFlag = true;
+					}
+				}
+				if (redirectFlag)
+				{
+					return MarketplacecheckoutaddonConstants.REDIRECTTOPAYMENT;
+				}
+
+
 				//If customer is not null
 				if (null != mplCustomerID)
 				{
@@ -3307,7 +3334,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel);
 						if (!inventoryReservationStatus)
 						{
-							getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
+							//TPR-815
+							getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_ORDER_INVENTORY_RESV_SESSION_ID,
+									"TRUE");
 							getMplCartFacade().recalculateOrder(orderModel);
 							redirectFlag = true;
 						}

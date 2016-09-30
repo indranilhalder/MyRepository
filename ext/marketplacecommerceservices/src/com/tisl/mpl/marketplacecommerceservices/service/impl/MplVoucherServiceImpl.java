@@ -587,10 +587,11 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 * @param orderModel
 	 *           for TPR-629
 	 * @throws VoucherOperationException
+	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
 	public void releaseVoucher(final String voucherCode, final CartModel cartModel, final OrderModel orderModel)
-			throws VoucherOperationException
+			throws VoucherOperationException, EtailNonBusinessExceptions
 	{
 		try
 		{
