@@ -111,6 +111,7 @@ function generateOTP(orderId){
 }
 
 </script>
+
 <style>
 .otpForm .messageSpace{
 550065

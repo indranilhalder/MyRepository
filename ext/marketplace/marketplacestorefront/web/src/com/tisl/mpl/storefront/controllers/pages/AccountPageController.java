@@ -7161,11 +7161,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 					if (scheduledDeliveryData.getIsPincodeServiceable().booleanValue())
 					{
 						final OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
-						final List<OrderData> subOrderList = orderDetail.getSellerOrderList();
-						Map<String, String> fullfillmentDataMap = new HashMap<String, String>();
-						for (final OrderData subOrder : subOrderList)
-						{
-							for (final OrderEntryData orderEntry : subOrder.getEntries())
+						  Map<String, String> fullfillmentDataMap = new HashMap<String, String>();
+							for (final OrderEntryData orderEntry : orderDetail.getEntries())
 							{
 								//getting the product code
 								ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntry.getProduct().getCode());
@@ -7192,8 +7189,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 									}
 								}
 							}
-						}
-						fullfillmentDataMap = mplCartFacade.getOrderEntryFullfillmentMode(orderDetail);
+					
+						/*fullfillmentDataMap = mplCartFacade.getOrderEntryFullfillmentMode(orderDetail);*/
 						model.addAttribute(ModelAttributetConstants.ORDERDETAIL, orderDetail);
 						model.addAttribute(ModelAttributetConstants.CART_FULFILMENTDATA, fullfillmentDataMap);
 						model.addAttribute(ModelAttributetConstants.TXNSCHEDULEDATA, scheduledDeliveryData);
@@ -7228,6 +7225,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	}
 
 
+
 	@RequestMapping(value = RequestMappingUrlConstants.OTP_VALIDATION_URL, method = {RequestMethod.POST, RequestMethod.GET})
 	public String submitChangeDeliveryAddress(@RequestParam(value = "orderId") final String orderId,
 			@RequestParam(value = "otpNumber") final String enteredOTPNumber,Model model)
@@ -7257,22 +7255,30 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 	@RequestMapping(value = RequestMappingUrlConstants.RESCHEDULEDDELIVERYDATE, method = {RequestMethod.POST, RequestMethod.GET})
 	public String scheduledDeliveryDate(@PathVariable final String orderCode,
-			@RequestParam(value = "entryData") final String entryData)
+			@RequestParam(value = "entryData") final String entryData,Model model)
 	{
 		try
 		{
 			if (StringUtils.isNotEmpty(entryData))
 			{
-				RescheduleDataList reschList = (RescheduleDataList) GenericUtilityMethods.jsonToObject(RescheduleDataList.class,
+				RescheduleDataList rescheduleDataList = (RescheduleDataList) GenericUtilityMethods.jsonToObject(RescheduleDataList.class,
 						entryData);
-				if (reschList != null)
-				{
-					mplDeliveryAddressFacade.reScheduleddeliveryDate(reschList);
+				if (rescheduleDataList != null)
+				{  
+					// if Exiting session key related value is available we need to remove first  
+					sessionService.removeAttribute("rescheduleDataList");
+					sessionService.setAttribute("rescheduleDataList", rescheduleDataList);
 				}
 			}
 			if (StringUtils.isNotEmpty(orderCode))
 			{
-				mplDeliveryAddressFacade.generateNewOTP(orderCode);
+			 	mplDeliveryAddressFacade.generateNewOTP(orderCode);
+				LOG.info("OTP generate  after ReSchduledDliveryDate");
+				final OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+				String phoneNumber = orderDetail.getDeliveryAddress().getPhone();
+				phoneNumber = mplDeliveryAddressFacade.getPartialEncryptValue("*", 6, phoneNumber);
+				model.addAttribute(ModelAttributetConstants.PHONE_NUMBER, phoneNumber);
+				model.addAttribute(ModelAttributetConstants.ORDERCODE, orderCode);
 			}
 	   LOG.info("OTP generate  after ReSchduledDliveryDate");
 		}

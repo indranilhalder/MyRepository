@@ -17,6 +17,7 @@ import de.hybris.platform.servicelayer.util.ServicesUtil;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,6 +25,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
@@ -397,21 +399,21 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	}
 
 
-	@Override
-	public ScheduledDeliveryData saveAsTemporaryAddressForCustomer(String orderCode,AddressData addressData)
+		@Override
+	public ScheduledDeliveryData saveAsTemporaryAddressForCustomer(String orderCode, AddressData addressData)
 	{
 		ScheduledDeliveryData scheduledDeliveryData = new ScheduledDeliveryData();
 		try
 		{
-			 TemproryAddressModel temproryAddressModel = tempAddressReverseConverter.convert(addressData);
-			 OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
-			 CustomerModel customer = (CustomerModel) orderModel.getUser();
+			TemproryAddressModel temproryAddressModel = tempAddressReverseConverter.convert(addressData);
+			OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
+			CustomerModel customer = (CustomerModel) orderModel.getUser();
 			temproryAddressModel.setEmail(customer.getOriginalUid());
-			 String customerId = customer.getUid();
-			 AddressModel deliveryAddressModel = orderModel.getDeliveryAddress();
+			String customerId = customer.getUid();
+			AddressModel deliveryAddressModel = orderModel.getDeliveryAddress();
 
-			 boolean isDifferentAddress = mplAddressValidator.compareAddress(deliveryAddressModel, temproryAddressModel);
-			 boolean isDiffrentContact = mplAddressValidator.compareContactDetails(deliveryAddressModel, temproryAddressModel);
+			boolean isDifferentAddress = mplAddressValidator.compareAddress(deliveryAddressModel, temproryAddressModel);
+			boolean isDiffrentContact = mplAddressValidator.compareContactDetails(deliveryAddressModel, temproryAddressModel);
 
 			if (isDifferentAddress || isDiffrentContact)
 			{
@@ -421,12 +423,13 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 					boolean isEligibleScheduledDelivery = checkScheduledDeliveryForOrder(orderModel);
 					if (isEligibleScheduledDelivery)
 					{
-						List<TransactionEddDto> transactionEddDtoList;
-						transactionEddDtoList = getScheduledDeliveryDate(orderModel, temproryAddressModel.getPostalcode());
+						List<TransactionEddDto> transactionEddDtoList =new ArrayList<TransactionEddDto>();
+					  transactionEddDtoList = getScheduledDeliveryDate(orderModel, temproryAddressModel.getPostalcode());
+						
 						if (CollectionUtils.isNotEmpty(transactionEddDtoList))
 						{
 							Map<String, Object> scheduledDeliveryDate = null;
-							scheduledDeliveryDate = getDeliveryDate(transactionEddDtoList,orderModel);
+							scheduledDeliveryDate = getDeliveryDate(transactionEddDtoList, orderModel);
 							scheduledDeliveryData.setEntries(scheduledDeliveryDate);
 							scheduledDeliveryData.setIsActive(Boolean.TRUE);
 							scheduledDeliveryData.setIsPincodeServiceable(Boolean.TRUE);
@@ -441,8 +444,9 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 					}
 					else
 					{
-						 // Pincode Serviceable Check 
-						String pincodeServiceableCheck = changeDeliveryRequestCallToOMS(orderCode, temproryAddressModel,MarketplaceFacadesConstants.CDP, null);
+						// Pincode Serviceable Check 
+						String pincodeServiceableCheck = changeDeliveryRequestCallToOMS(orderCode, temproryAddressModel,
+								MarketplaceFacadesConstants.CDP, null);
 						if (StringUtils.isNotEmpty(pincodeServiceableCheck))
 						{
 							if (pincodeServiceableCheck.equalsIgnoreCase(MarketplaceFacadesConstants.SUCCESS))
@@ -451,11 +455,13 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 								{
 									generateOTP(customerId, orderModel.getDeliveryAddress().getPhone1());
 								}
-							   scheduledDeliveryData.setIsActive(Boolean.FALSE);
-							}else{
-								  mplDeliveryAddressService.setStatusForTemporaryAddress(orderCode, false);
-								  scheduledDeliveryData.setIsActive(Boolean.TRUE);
-								  scheduledDeliveryData.setIsPincodeServiceable(Boolean.FALSE);
+								scheduledDeliveryData.setIsActive(Boolean.FALSE);
+							}
+							else
+							{
+								mplDeliveryAddressService.setStatusForTemporaryAddress(orderCode, false);
+								scheduledDeliveryData.setIsActive(Boolean.TRUE);
+								scheduledDeliveryData.setIsPincodeServiceable(Boolean.FALSE);
 							}
 						}
 					}
@@ -515,23 +521,34 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 */
 	@SuppressWarnings("deprecation")
 	@Override
-	public String submitChangeDeliveryAddress(String customerID,String enteredOTPNumber,String orderCode)
+	public String submitChangeDeliveryAddress(String customerID, String enteredOTPNumber, String orderCode)
 	{
 		String valditionMsg = null;
 
-		 OTPResponseData otpResponse = otpGenericService.validateOTP(customerID, null, enteredOTPNumber, OTPTypeEnum.CDA,
+		OTPResponseData otpResponse = otpGenericService.validateOTP(customerID, null, enteredOTPNumber, OTPTypeEnum.CDA,
 				Long.parseLong(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.TIMEFOROTP)));
 		if (otpResponse.getOTPValid().booleanValue())
 		{
-			 TemproryAddressModel temproryAddressModel = mplDeliveryAddressService.getTemporaryAddressModel(orderCode);
-			 OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
+			TemproryAddressModel temproryAddressModel = mplDeliveryAddressService.getTemporaryAddressModel(orderCode);
+			OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
 			try
 			{
 				boolean isDiffrentAddress = false;
 				isDiffrentAddress = mplAddressValidator.compareAddress(orderModel.getDeliveryAddress(), temproryAddressModel);
 				if (isDiffrentAddress)
 				{
-					List<TransactionSDDto> transactionEddDtoList = sessionService.getAttribute("transactionEddDtoList");
+					
+					List<TransactionSDDto> transactionEddDtoList=null;
+					boolean isEligibleScheduledDelivery =checkScheduledDeliveryForOrder(orderModel);
+					 if(isEligibleScheduledDelivery){
+						 RescheduleDataList rescheduleDataList= sessionService.getAttribute("rescheduleDataList");
+
+						if (CollectionUtils.isNotEmpty(rescheduleDataList.getRescheduleDataList()))
+						{
+							transactionEddDtoList = reScheduleddeliveryDate(orderModel, rescheduleDataList);
+						}
+					}
+					
 					valditionMsg = changeDeliveryRequestCallToOMS(orderCode, temproryAddressModel, MarketplaceFacadesConstants.CA,
 							transactionEddDtoList);
 					if (valditionMsg != null)
@@ -539,7 +556,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 						if (valditionMsg.equalsIgnoreCase(MarketplaceFacadesConstants.SUCCESS))
 						{
 							LOG.debug("change delivery address:MplChangeDeliveryAddressFacadeImpl");
-						   boolean isAddressSaved = mplDeliveryAddressService.saveDeliveryAddress(orderCode);
+							boolean isAddressSaved = mplDeliveryAddressService.saveDeliveryAddress(orderCode);
 							valditionMsg = MarketplaceFacadesConstants.SUCCESS;
 							try
 							{
@@ -555,7 +572,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 								LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + e.getMessage());
 							}
 						}
-						
+
 					}
 					else
 					{
@@ -701,33 +718,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 * ReScheduleding DeliveryDate for Order return list
 	 */
 
-	@Override
-	public void reScheduleddeliveryDate(RescheduleDataList reschList)
-	{
-		if (CollectionUtils.isNotEmpty(reschList.getRescheduleDataList()))
-		{
-			 List<TransactionSDDto> transactionEddDtoList = new ArrayList<TransactionSDDto>();
-			 TransactionSDDto transactionEddDto = new TransactionSDDto();
-			String timeSlotTo;
-			String timeSlotFrom;
-			for (RescheduleData rescheduleData : reschList.getRescheduleDataList())
-			{
-				if (StringUtils.isNotEmpty(rescheduleData.getTransactionId()))
-				{
-					LOG.info("PopulateData" + rescheduleData.getTransactionId());
-					transactionEddDto.setPickupDate(rescheduleData.getDate());
-					transactionEddDto.setTransactionID(rescheduleData.getTransactionId());
-					timeSlotTo = rescheduleData.getTime().split("-")[0];
-					timeSlotFrom = rescheduleData.getTime().split("-")[1];
-					transactionEddDto.setTimeSlotTo(timeSlotTo);
-					transactionEddDto.setTimeSlotFrom(timeSlotFrom);
-					transactionEddDtoList.add(transactionEddDto);
-				}
-			}
-			sessionService.setAttribute("transactionEddDtoList", transactionEddDtoList);
 
-		}
-	}
 
 	/**
 	 * OMS Request Sending For ScheduledDeliveryDate Argument- OrderModel 
@@ -1018,5 +1009,79 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 			return dateTimeslotMapList;
 		}
 		return null;
+	}
+
+
+	public Map<String, TransactionEddDto> getEligibleEntry(OrderModel orderModel, List<TransactionEddDto> transactionEddDtoList)
+			throws ParseException
+	{
+		Map<String, TransactionEddDto> mapTransactionEdd = new HashMap<String, TransactionEddDto>();
+		for (OrderModel subOrder : orderModel.getChildOrders())
+		{
+			for (AbstractOrderEntryModel abstractOrderEntryModel : subOrder.getEntries())
+			{
+				if (!abstractOrderEntryModel.getMplDeliveryMode().getDeliveryMode().getCode()
+						.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
+				{
+					if (abstractOrderEntryModel.getEdScheduledDate() != null)
+					{
+						for (TransactionEddDto transactionEddDto : transactionEddDtoList)
+						{
+							if (transactionEddDto.getTransactionID().equals(abstractOrderEntryModel.getTransactionID()))
+							{
+								TransactionEddDto rescheduleData = null;
+								if (mapTransactionEdd.containsKey(abstractOrderEntryModel.getProduct().getCode()))
+								{
+									rescheduleData = mapTransactionEdd.get(abstractOrderEntryModel.getProduct().getCode());
+									SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+									Date oldDate = formatter.parse(rescheduleData.getEDD());
+									Date newDate = formatter.parse(transactionEddDto.getEDD());
+									if (oldDate.before(newDate))
+									{
+										mapTransactionEdd.replace(abstractOrderEntryModel.getProduct().getCode(), transactionEddDto);
+									}
+								}
+								else
+								{
+									mapTransactionEdd.put(abstractOrderEntryModel.getProduct().getCode(), transactionEddDto);
+								}
+
+							}
+						}
+					}
+
+				}
+			}
+		}
+		return mapTransactionEdd;
+	}
+	
+	
+	@Override
+	public List<TransactionSDDto> reScheduleddeliveryDate(OrderModel orderModel,RescheduleDataList rescheduleDataListDto){
+			 List<TransactionSDDto>  transactionSDDtoList=new  ArrayList<TransactionSDDto>();
+		 List<RescheduleData> rescheduleDataList=rescheduleDataListDto.getRescheduleDataList();
+		 for(OrderModel subModel:orderModel.getChildOrders()){ 
+			 for(AbstractOrderEntryModel abstractOrderEntryModel:subModel.getEntries()){	 
+				for(RescheduleData rescheduleData:rescheduleDataList){
+					if(StringUtils.isNotEmpty(rescheduleData.getProductCode())){
+						if(abstractOrderEntryModel.getProduct().getCode().equalsIgnoreCase(rescheduleData.getProductCode())){
+							TransactionSDDto transactionSDDto=new TransactionSDDto();
+							transactionSDDto.setTransactionID(abstractOrderEntryModel.getTransactionID());
+							transactionSDDto.setPickupDate(rescheduleData.getDate());
+							String timeFromTo=rescheduleData.getTime();
+							if (StringUtils.isNotEmpty(timeFromTo))
+							{
+								transactionSDDto.setTimeSlotFrom(timeFromTo.substring(0, timeFromTo.indexOf("TO") - 1));
+								transactionSDDto.setTimeSlotTo(timeFromTo.substring(timeFromTo.indexOf("TO") + 3, timeFromTo.length()));
+							}
+							transactionSDDtoList.add(transactionSDDto);
+							break;
+						}
+					}
+				}
+			 }
+		 }
+		return transactionSDDtoList;
 	}
 }
