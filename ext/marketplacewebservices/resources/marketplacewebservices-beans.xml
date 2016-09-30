@@ -1806,7 +1806,12 @@
 		<property name="currentQuery" type="de.hybris.platform.commercewebservicescommons.dto.search.SearchStateWsDTO"/>
 		<property name="facetdatacategory"
 		          type="com.tisl.mpl.wsdto.DepartmentHierarchyWs"/>
-		  
+		 <!-- Added for Luxury -->
+		<property name="crosssellBanner"
+		          type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO"/>
+		<property name="plpHeroBanner"
+		          type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO"/>
+		<!-- Ended -->
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.FacetDataWsDTO">
 		<property name="name" type="String"/>

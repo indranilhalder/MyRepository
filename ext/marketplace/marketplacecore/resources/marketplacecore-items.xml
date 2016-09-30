@@ -1065,6 +1065,17 @@
 			<targetElement type="Product" cardinality="many"
 				qualifier="collectionProducts"></targetElement>
 		</relation>
+		
+		<!-- relation of category to cross-sell banners -->
+		<relation code="CategoryCrosssellBannerRelation" generate="true" localized="false" autocreate="true">
+			<sourceElement qualifier="associatedCategory" type="Category" cardinality="one">
+				<modifiers read="true" write="true" search="true" optional="true" />
+			</sourceElement>
+			<targetElement qualifier="crosssellBanners" type="SimpleBannerComponent" cardinality="many" collectiontype="list">
+				<modifiers read="true" write="true" search="true" optional="true" />
+			</targetElement>
+		</relation>
+		<!-- End -->
 	</relations>
 	<itemtypes>
 	<!-- TPR-628 : Make changes to Banners rendering in MObile Viewports		 -->
