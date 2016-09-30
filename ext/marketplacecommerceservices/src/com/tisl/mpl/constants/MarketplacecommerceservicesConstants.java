@@ -521,6 +521,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SMS_MESSAGE_PAYMENT_PENDING = "Hmmm… There seems to be a spot of bother. Please hold on.";
 	public static final String SMS_MESSAGE_PAYMENT_FAILED = "Uh oh. Looks like your order was declined for some reason. Please try again.";
 	public static final String SMS_MESSAGE_PAYMENT_TIMEOUT = "Oh no! Your order couldn't go through due to techincal issues. Please try again.";
+	public static final String SMS_MESSAGE_INVENTORY_RESERVATION_FAILED = "Uh oh! Looks like what you wanted isn't available right now, but it could come back soon. Please try again later";
 
 	public static final String PUSH_MESSAGE_ORDER_PLACED = "Awesome! We think your bag looks great. Track your order {0} in the Order History section of your account.";
 	public static final String PUSH_MESSAGE_ORDER_OFD_PREPAID = "Hi! Your order {0} of {1} item(s) will reach you today. To know more, check out the Order History section of the app.";
@@ -1669,6 +1670,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//public static final String VOUCHERINVALIDATIONQUERY = "select {v.pk} from {voucherinvalidation as v},{order as o},{customer as c},{voucher as vo} where {v.order}={o.pk} and {o.code}=?code and {v.user}={c.pk} and {c.originaluid}=?customerUid and {v.voucher}={vo.pk} and {vo.code}=?voucherIdentifier";
 	public static final String VOUCHERINVALIDATIONQUERY = "select {v.pk} from {voucherinvalidation as v},{order as o},{customer as c},{voucher as vo} where {v.order}={o.pk} and {o.code}=?code and {v.user}={c.pk} and {c.originaluid}=?customerUid and {v.voucher}={vo.pk} ";
 	public static final String CUSTOMERUID = "customerUid";
+
 
 
 

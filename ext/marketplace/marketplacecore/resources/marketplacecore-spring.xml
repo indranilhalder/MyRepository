@@ -396,6 +396,12 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="businessProcessService" ref="businessProcessService" />
 	</bean>
 	
+	<bean id="inventoryReservationFailedEventListener" class="com.tisl.mpl.core.event.InventoryReservationFailedEventListener"
+		parent="abstractSiteEventListener">
+		<property name="modelService" ref="modelService" />
+		<property name="businessProcessService" ref="businessProcessService" />
+	</bean>
+	
 	<!-- TPR-815 End -->
 	
 	
