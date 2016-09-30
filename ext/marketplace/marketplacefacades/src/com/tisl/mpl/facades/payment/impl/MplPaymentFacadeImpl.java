@@ -1579,11 +1579,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 *
+	 * 
 	 * @param bankName
-	 *
+	 * 
 	 * @return Boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1634,9 +1634,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Override
@@ -2204,6 +2204,10 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			LOG.error("Cart total and Juspay end total are not same!!!", e);
 			throw new EtailBusinessExceptions("Cart Total and Transaction total at Juspay Mismatch", e);
 		}
+		catch (final AdapterException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplaceFacadesConstants.B9327);
+		}
 		//		catch (final EtailNonBusinessExceptions e)
 		//		{
 		//			throw e;
@@ -2211,7 +2215,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		catch (final Exception e)
 		{
 			LOG.error("Failed to save order status in payment transaction with error: ", e);
-			throw new EtailNonBusinessExceptions(e);
+			throw new EtailNonBusinessExceptions(e, MarketplaceFacadesConstants.E0000);
 		}
 
 	}

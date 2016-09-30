@@ -782,7 +782,7 @@ public class PaymentServicesController extends BaseController
 		}
 		catch (final Exception ex)
 		{
-			LOG.error(MarketplacewebservicesConstants.UPDATE_CARD_TRAN_FAILED, ex);
+			ExceptionUtil.getCustomizedExceptionTrace(ex);
 			// Error message for All Exceptions
 			if (null != ex.getMessage())
 			{
