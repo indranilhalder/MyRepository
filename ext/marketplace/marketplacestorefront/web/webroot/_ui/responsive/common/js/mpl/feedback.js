@@ -1777,13 +1777,15 @@ $(document).on('click','.facet.js-facet.Size .js-facet-name h4',function(){
 		}
 	},80)
 });
-$(document).on('click','.left-block .toggle-filterSerp',function(){
+//$(document).on('click','.left-block .toggle-filterSerp',function(){
+function toggleFilter(){
 		colorSwatch();
 		sizeSwatch();
 		//Mobile view filter ajax
 		$(".product-facet.js-product-facet.listing-leftmenu").slideToggle();
-		$(this).toggleClass("active");
-});
+		$(".toggle-filterSerp").toggleClass("active");
+}
+//});
 
 function colorSwatch() {
 	var row = 0, start = 0, count = 0, end = 0, back = true;
