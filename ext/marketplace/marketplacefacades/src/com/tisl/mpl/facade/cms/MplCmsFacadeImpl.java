@@ -81,6 +81,7 @@ import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 
 
+
 /**
  * @author 584443
  *
@@ -538,6 +539,11 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 								{
 									banner.setIcid(cmsMediaPara.getPk().getLongValueAsString());
 								}
+								// TPR-472
+								if (cmsMediaPara.getPk() != null)
+								{
+									banner.setIcid(cmsMediaPara.getPk().getLongValueAsString());
+								}
 								if (cmsMediaPara.getMedia().getUrl2() != null)
 								{
 									banner.setUrl(cmsMediaPara.getMedia().getUrl2());
@@ -583,7 +589,6 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 										Arrays.asList(ProductOption.BASIC, ProductOption.PRICE, ProductOption.CATEGORIES));
 								buyboxdata = buyBoxFacade.buyboxPrice(productCode);
 								productModel = productService.getProductForCode(productCode);
-
 								if (null != productModel && null != productModel.getPicture())
 								{
 									productComp.setImage(productModel.getPicture().getUrl2());
