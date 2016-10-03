@@ -377,7 +377,7 @@ input[type="checkbox"] + label, input[type="radio"] + label {
 	visibility: hidden;
 }
 
-.timeout-slider .owl-controls .owl-dots {
+body.page-shopTheStyle .timeout-slider .owl-controls .owl-dots {
 	visibility: hidden;
 }
 
@@ -35399,6 +35399,13 @@ padding-top:15px !important;
 	border-top: 1px #ccc solid;
     margin-top: 45px;
 }
+
+/*size selection highlight in PLP*/
+.listing-leftmenu .Size .facet-list li.filter-size.selected-size form input[type="button"].js-facet-sizebutton {
+    border-color: #a9143c;
+    color: #000;
+}
+
 /*PLP changes ends*/
 /*--------------maincss-----------*/
 .row
