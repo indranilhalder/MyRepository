@@ -22,7 +22,7 @@ public interface MplProductSearchFacade<ITEM extends ProductData> extends Produc
 {
 	/*
 	 * Returns Products based on the search query.
-	 * 
+	 *
 	 * @return the search results
 	 */
 	/**
@@ -89,4 +89,7 @@ public interface MplProductSearchFacade<ITEM extends ProductData> extends Produc
 
 	ProductCategorySearchPageData dropDownSearchForMicrosite(final SearchStateData searchState, final String sellerId,
 			final String type, final PageableData pageableData);
+
+	public void populateSolrSearchQueryData(final SearchStateData searchState, final SolrSearchQueryData searchQueryData);
+
 }
