@@ -324,6 +324,116 @@ input[type="checkbox"] + label:before, input[type="radio"] + label:before {
 
 input[type="checkbox"] + label, input[type="radio"] + label {
   display: inline-block; }
+/* -------------TPR-179 Start Style For ShopTheStyle---------- */
+.yCmsContentSlot.shopstyle .content h1 {
+	text-transform: uppercase;
+	padding: 40px 0px 20px 0px;
+	letter-spacing: 2px;
+	font-size: 27.8px;
+	text-shadow: 1px 1px 1px #BBB8B8;
+	color: #222222;
+	text-align: center;
+	font-weight: bold;
+}
+
+.yCmsContentSlot.shopstyle .content p {
+	text-align: center;
+	margin: auto;
+	line-height: 30px;
+	font-size: 15px;
+	width: 70%;
+	color: #222222;
+	font-weight: normal;
+}
+
+.yCmsContentSlot.shopstyle1, .yCmsContentSlot.shopstyle2 {
+	width: 50%;
+	float: left;
+	text-align: center;
+}
+
+.section3, .section4, .section5, .section6 {
+	clear: both;
+	overflow: hidden;
+}
+
+.shopstyle-borderTop {
+	border-top: 1px solid #f0f3f5;
+	margin-top: 20px;
+}
+
+.yCmsContentSlot.shopstyle1 .simple-banner-component, .yCmsContentSlot.shopstyle2 .simple-banner-component
+	{
+	padding: 0px 15px 60px 15px;
+}
+
+.yCmsContentSlot.shopstyle.shopstyle-borderTop {
+	padding-bottom: 60px;
+}
+/* .yCmsContentSlot.shopstyle1{
+	padding-left: 20px;
+} */
+.owl-stage-outer .details.short-info .color-swatch {
+	visibility: hidden;
+}
+
+.timeout-slider .owl-controls .owl-dots {
+	visibility: hidden;
+}
+
+.shopstyle-carousel {
+	position: relative;
+}
+
+.shopstyle-indicator {
+	bottom: 40px;
+	display: block;
+	position: absolute;
+	text-align: center;
+	top: inherit;
+	z-index: 15;
+}
+
+.shopstyle-indicator .yCmsContentSlot {
+	display: block;
+	text-align: center;
+}
+
+.shopstyle-indicator, .shopstyle-carousel .shopstyle-indicator-number {
+	width: 100%;
+}
+
+.shopstyle-carousel .shopstyle-indicator-number li {
+	display: inline-block;
+	text-indent: 0;
+	margin: 0 2px 28px;
+	width: 100%;
+	height: 0px;
+	border: none;
+	border-radius: 10px;
+	background-color: #fff;
+	transition: all 0.25s ease;
+}
+
+.shopstyle-carousel .shopstyle-indicator-number li a {
+	/* position: absolute; */
+	color: #fff !important;
+	/* top: -10px; */
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	text-decoration: none;
+	/* margin-left: 150px; */
+}
+
+.shopstyle-carousel .shopstyle-indicator-number li.active a,
+	.shopstyle-carousel .shopstyle-indicator-number li a:hover {
+	text-decoration: none;
+	padding-bottom: 0px;
+	border-bottom: 4px solid #fff;
+}
+/* -------------End TPR-179 Style For ShopTheStyle---------- */
   @media (min-width: 651px) {
     input[type="checkbox"] + label, input[type="radio"] + label {
       padding-left: 10px; } }
@@ -8831,6 +8941,15 @@ footer .banner {
       padding-top: 110px;
       background: transparent; }
       @media (min-width: 768px) {
+		.yCmsContentSlot.shopstyle2 {
+		float: right;
+		}
+		/* TPR-179(shop the style) */
+		.shopstyle-carousel .shopstyle-indicator-number li.active a,
+			.shopstyle-carousel .shopstyle-indicator-number li a:hover {
+			padding-bottom: 10px;
+		}
+		/* End TPR-179(shop the style) */
         .sign-in.tab-view .tabs > li .register-section .social-connect {
           width: 40%;
           float: right;
@@ -31121,8 +31240,13 @@ img.r2-app-brand-img {
 		margin-bottom: 90px;
 	}
 }
-
 @media ( min-width : 768px) {
+	/* TPR-179(shop the style) */
+    .shopstyle-carousel .shopstyle-indicator-number li {
+        width: 20%;
+        margin: 0 2px;
+    }
+   /* END TPR-179(shop the style) */
 	.r2-landing-banner {
 		background-image: url('../images/banner-app.png');
 		-webkit-background-size: cover;
@@ -31246,7 +31370,15 @@ img.r2-app-brand-img {
 		font-size: 14px;
 	}
 }
+/* Start TPR-179(shop The Style) */
 
+@media (min-width: 768px) and (max-width: 791px) {
+    .shopstyle-carousel .shopstyle-indicator-number li {
+        width: 23%;
+        margin: 0 2px;
+    }
+}
+/* End TPR-179(shop The Style) */
 @media ( max-width : 1098px) and (min-width: 791px) {
 	.r2-landing-banner img.r2-app-mob-up {
 		margin-top: 50px !important;
@@ -48153,6 +48285,19 @@ body.pageLabel--Lingerie-page-revised .brand-content-grid .hero ul{
     height: auto;
     padding-top: 10px;
 }
+/* -------------TPR-179 Start Style For ShopTheStyle---------- */
+@media ( max-width : 767px) {
+	.shopstyle-carousel .owl-controls {
+		display: block !important;
+	}
+}
+
+@media ( max-width : 990px) {
+	.yCmsContentSlot.shopstyle1, .yCmsContentSlot.shopstyle2 {
+		width: 100%;
+	}
+}
+/* -------------End TPR-179 Start Style For ShopTheStyle---------- */
 .plp-wishlist{
     background: url('../images/wishlist.png') no-repeat 0 0;
     padding: 0;
