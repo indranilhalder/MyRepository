@@ -49800,7 +49800,7 @@ text-align:left;
 	padding:0;
 }
 .shop_the_look .shop_the_look_section:nth-child(2){
-	width: 40%;
+	width: 40% !important;
     margin-left: 1%;
 }
 /* .featured_collection .blp_featured_collection_wrapper .featured_collection_section .top-promos li{
@@ -50162,7 +50162,7 @@ padding: 0 24px;
 }
 .shop_the_look div.shop_the_look_section:nth-child(2){
 	    float: right;
-    width: 38%;
+    width: 38% !important;
     margin-left: 2%;
 }
 .shop_the_look .shop_the_look_left .shop_the_look_section:last-child {
