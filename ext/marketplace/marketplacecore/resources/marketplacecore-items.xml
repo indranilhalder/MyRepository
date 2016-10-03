@@ -1078,6 +1078,14 @@
 				<modifiers read="true" write="true" search="true" optional="true" />
 			</targetElement>
 		</relation>
+		<relation code="CategoryDynamicBannerRelation" generate="true" localized="false" autocreate="true">
+			<sourceElement qualifier="bannerForCategory" type="Category" cardinality="one">
+				<modifiers read="true" write="true" search="true" optional="true" />
+			</sourceElement>
+			<targetElement qualifier="dynamicBanners" type="SimpleBannerComponent" cardinality="many" collectiontype="list">
+				<modifiers read="true" write="true" search="true" optional="true" />
+			</targetElement>
+		</relation>
 		<!-- End -->
 	</relations>
 	<itemtypes>
