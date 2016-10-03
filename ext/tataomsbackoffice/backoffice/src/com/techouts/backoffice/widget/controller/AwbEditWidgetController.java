@@ -13,11 +13,18 @@ import java.util.Set;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.ContextParam;
+import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
+import org.zkoss.zul.Listitem;
+import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.Messagebox;
 
 import com.hybris.cockpitng.core.user.AuthorityGroupService;
@@ -73,7 +80,7 @@ public class AwbEditWidgetController
 	public void init()
 	{
 		LOG.info("inside init");
-		ordersStatus = getOrderStatuses();
+		ordersStatus = getOrderStatuses(isReturn);
 		lpList = getLpSet();
 		if (map == null)
 		{
@@ -83,6 +90,14 @@ public class AwbEditWidgetController
 		{
 			listOfTransactions = new ArrayList<TransactionInfo>();
 		}
+		awbSearch();
+	}
+
+
+	@AfterCompose
+	public void afterCompose(@ContextParam(ContextType.VIEW) final Component view)
+	{
+		Selectors.wireComponents(view, this, false);
 	}
 
 	private Set<String> getLpSet()
@@ -127,10 +142,11 @@ public class AwbEditWidgetController
 	@Command("isReturnCheck")
 	@NotifyChange(
 	{ "ordersStatus" })
-	public void isReturnCheck()
+	public void isReturnCheck(@BindingParam("checkedValue") final Boolean isReturnCheckdValue)
 	{
-		LOG.info("is Return is clicked " + isReturn);
-		ordersStatus = getOrderStatuses();
+		LOG.info("is Return Checked Value" + isReturnCheckdValue);
+		this.isReturn = isReturnCheckdValue;
+		this.ordersStatus = getOrderStatuses(this.isReturn);
 	}
 
 	/*
@@ -138,14 +154,19 @@ public class AwbEditWidgetController
 	 *
 	 * @return active order staueses
 	 */
-	private List<String> getOrderStatuses()
+	private List<String> getOrderStatuses(final Boolean isReturn)
 	{
 		if (ordersStatus == null)
 		{
 			ordersStatus = new ArrayList<String>();
 		}
-
-		if (isReturn.equals(Boolean.FALSE))
+		if (isReturn)
+		{
+			ordersStatus.clear();
+			ordersStatus.add("REVERSEAWB");
+			ordersStatus.add("RETURINIT");
+		}
+		else
 		{
 			ordersStatus.clear();
 			ordersStatus.add("ODREALOC");
@@ -155,12 +176,6 @@ public class AwbEditWidgetController
 			ordersStatus.add("HOTCOURI");
 			ordersStatus.add("SCANNED");
 		}
-		else
-		{
-			ordersStatus.clear();
-			ordersStatus.add("REVERSEAWB");
-			ordersStatus.add("RETURINIT");
-		}
 		return ordersStatus;
 	}
 
@@ -168,10 +183,10 @@ public class AwbEditWidgetController
 	/*
 	 * this method is used for search the list of orders based on the parameters
 	 */
-	@Command("awbSearch")
+	@Command
 	@NotifyChange(
 	{ "listOfTransactions" })
-	public void lpAwbSearch()
+	public void awbSearch()
 	{
 		LOG.info("inside lpawb search");
 		final LPAWBSearch lpAwbSearch = new LPAWBSearch();
@@ -481,4 +496,25 @@ public class AwbEditWidgetController
 	{
 		return transactionType;
 	}
+
+
+	public ListitemRenderer<String> getListItemRenderer()
+	{
+		ListitemRenderer<String> _rowRenderer = null;
+		if (_rowRenderer == null)
+		{
+			_rowRenderer = new ListitemRenderer<String>()
+			{
+				public void render(final Listitem item, final String value,
+
+						final int index) throws Exception
+				{
+					item.setLabel(value);
+				}
+			};
+		}
+		return _rowRenderer;
+	}
+
+
 }

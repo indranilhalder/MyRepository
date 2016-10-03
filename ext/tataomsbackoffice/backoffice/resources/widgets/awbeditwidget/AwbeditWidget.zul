@@ -61,7 +61,7 @@
 								<label value="Order Status" hflex="1" />
 							</vlayout>
 							<vlayout width="200px">
-								<listbox model="@bind(vm.ordersStatus)" itemRenderer="com.techouts.backoffice.render.OrderStatusListRenderer"
+								<listbox model="@bind(vm.ordersStatus)" itemRenderer="@load(vm.listItemRenderer)"
 									mold="select" selectedItem="@bind(vm.selectionOrderStatus)" style="width:200px;">
 								</listbox>
 							</vlayout>
@@ -72,7 +72,7 @@
 								<label value="LP Name" hflex="1" />
 							</vlayout>
 							<vlayout width="200px">
-								<listbox   model="@bind(vm.lpList)" mold="select"  itemRenderer="com.techouts.backoffice.render.LogistcsPartenerListRenderer"  selectedItem="@save(vm.selectionLpName)"
+								<listbox   model="@bind(vm.lpList)" mold="select"  itemRenderer="@load(vm.listItemRenderer)"  selectedItem="@save(vm.selectionLpName)"
 									style="width:200px">
 								</listbox>
 							</vlayout>
@@ -80,8 +80,8 @@
 								<label></label>
 							</vlayout>
 							<vlayout>
-								<checkbox checked="@bind(vm.isReturn)" label="Is Return"
-									onCheck="@command('isReturnCheck')">
+								<checkbox  label="Is Return"
+									onCheck="@command('isReturnCheck',checkedValue=self.checked)">
 								</checkbox>
 							</vlayout>
 							<vlayout
