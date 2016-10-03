@@ -912,15 +912,5 @@
 		<value>DELETE</value>
 		<value>PARTIAL_UPDATE</value>
 		<value>STAGED_INDEXED</value>
-	</enum>
-	
-	<!-- Added for Luxury Site POC -->
-	<bean class="de.hybris.platform.commerceservices.search.solrfacetsearch.data.SolrSearchQueryData">
-		<property name="luxury" type="boolean"/>
-	</bean>
-
-	<bean class="de.hybris.platform.commercefacades.search.data.SearchStateData">
-		<property name="luxury" type="boolean"/>
-	</bean>
-	
+	</enum>	
 </beans>
