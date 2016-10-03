@@ -25467,6 +25467,8 @@ padding-left: 0px;}
 	width:28%;
 	background-image: url('../images/arrow-black-left.png');
 	cursor:pointer;
+	background-position: 67px 48%;
+    background-repeat: no-repeat;
   }
 
 
