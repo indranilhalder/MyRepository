@@ -49339,12 +49339,14 @@ overflow: hidden;
 	margin-top: 0;
 }
 
-.top_deal .carousel-component h1 {
+.top_deal .carousel-component h2 {
 	padding: 0px;
 	text-align: center;
 	font-size: 28px;
 	font-weight: bold;
 	margin-bottom: 40px;
+	text-transform: none;
+    letter-spacing: 0px;
 }
 
 .top_deal .carousel-component .product-tile {
@@ -49777,11 +49779,11 @@ overflow: hidden;
 		min-width: 200px;
 	}
 	.top_categories > .top_categories_section:first-child, .top_brands>.top_brands_section:first-child,
-		.winter_launch>.winter_launch_section:first-child, .top_deal .carousel-component h1
+		.winter_launch>.winter_launch_section:first-child, .top_deal .carousel-component h2
 		{
 		font-size: 24px;
 	}
-	.top_deal .carousel-component h1 {
+	.top_deal .carousel-component h2 {
 		border-top: 1px solid #ccc;
 		padding: 40px 0 0;
 	}
@@ -49982,7 +49984,7 @@ overflow: hidden;
 	.top_deal .carousel .item {
 		margin: 0 5px;
 	}
-	.top_deal .carousel-component h1 {
+	.top_deal .carousel-component h2 {
 		margin: 0 12px 30px;
 		padding: 30px 0 0;
 		font-size: 20px;
