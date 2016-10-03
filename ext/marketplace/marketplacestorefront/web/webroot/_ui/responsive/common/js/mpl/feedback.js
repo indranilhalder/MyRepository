@@ -1914,10 +1914,13 @@ $(document).on('click','.facet.js-facet.Size .js-facet-name h3',function(){
 		}
 	},80)
 });
-$(document).on('click','.left-block .toggle-filterSerp',function(){
+//$(document).on('click','.left-block .toggle-filterSerp',function(){
+function toggleFilter(){
 		colorSwatch();
 		sizeSwatch();
 		//Mobile view filter ajax
+		$(".product-facet.js-product-facet.listing-leftmenu").slideToggle();
+		$(".toggle-filterSerp").toggleClass("active");
 		/*mobile filter*/
 		$(".mob-filter-wrapper").fadeIn();
 		$(this).toggleClass("active");
@@ -1956,7 +1959,8 @@ $(document).on('click','.left-block .toggle-filterSerp',function(){
 		$(".facet-name.js-facet-name h3.active-mob").parent().siblings().show();
 		$(".facet-name.js-facet-name h3.active-mob").parent().siblings().find("#searchPageDeptHierTree").show();
 		$(".facet-name.js-facet-name h3.active-mob").parent().siblings().find("#categoryPageDeptHierTree").show();
-	});
+}
+		//	});
 	$(".category-icons").each(function(){
 	if($(this).find("span").text() == ""){
 	$(this).addClass("blank");
