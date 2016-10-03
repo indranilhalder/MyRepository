@@ -1,3 +1,6 @@
+
+var updatedsearchQuery = "";
+var dummyForm ;
 ACC.refinements = {
 
 	_autoload: [
@@ -95,9 +98,10 @@ ACC.refinements = {
 		/*TPR-198 : AJAX Call in SERP and PDP START*/
 		
 		var browserURL = window.location.href.split('?');
-
+		//console.log(browserURL[0].indexOf('/collection/'));
+		//console.log(browserURL[0]);
 		// AJAX for checkbox
-		$(document).on("change",".js-product-facet .js-facet-checkbox",function(){
+		$(document).on("change",".js-product-facet .facet_desktop .js-facet-checkbox",function(){
 			var staticHost=$('#staticHost').val();
 			$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 			$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
@@ -137,9 +141,10 @@ ACC.refinements = {
 				requiredUrl += "/getFacetData";
 			} else {
 				if(action.indexOf("/getFacetData") == -1){
-					if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1){
+					if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1 || action.indexOf('/collection/') > -1){
 						requiredUrl = action.concat("/getFacetData");
 					}
+					
 					else{
 						requiredUrl = action.concat("getFacetData");
 					}
@@ -153,8 +158,27 @@ ACC.refinements = {
 			filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
 		})
 		
+		//TPR-845
+		$(document).on("change",".js-product-facet .facet_mobile .js-facet-checkbox, .js-product-facet .facet_mobile .js-facet-checkbox-price",function(){
+			var filterMobileQuery = $(this).parents("form").find('input[name="q"]').val();
+			dummyForm = $(this).parents("form");
+			if(updatedsearchQuery==''){
+				updatedsearchQuery=filterMobileQuery;
+			}else{
+				var newFilter=createSearchQuery(filterMobileQuery);	
+				if(updatedsearchQuery.includes(newFilter))
+				{
+					updatedsearchQuery=updatedsearchQuery.replace(newFilter,"");
+				}
+				else{
+					updatedsearchQuery+=newFilter;
+				}
+			}
+			console.log("updatedsearchQuery : "+updatedsearchQuery);			
+		})
+		
 		// AJAX for Colourbutton and sizebuttons 
-		$(document).on("click",".js-product-facet .js-facet-colourbutton , .js-product-facet .js-facet-sizebutton",function(){
+		$(document).on("click",".js-product-facet .facet_desktop .js-facet-colourbutton , .js-product-facet .facet_desktop .js-facet-sizebutton",function(){
 			
 			$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 			$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
@@ -195,9 +219,9 @@ ACC.refinements = {
 				requiredUrl += "/getFacetData";
 			} else {
 				if(action.indexOf("/getFacetData") == -1){
-					if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1){
+					if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1 || action.indexOf('/collection/') > -1){
 						requiredUrl = action.concat("/getFacetData");
-					}
+					}					
 					else{
 						requiredUrl = action.concat("getFacetData");
 					}
@@ -208,6 +232,28 @@ ACC.refinements = {
 			}
 			// AJAX call
 			filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
+		})
+		
+		//TPR-845
+		$(document).on("click",".js-product-facet .facet_mobile .js-facet-colourbutton , .js-product-facet .facet_mobile .js-facet-sizebutton",function(){
+			var filterMobileQuery = $(this).parents("form").find('input[name="q"]').val();
+			dummyForm = $(this).parents("form");
+			if(updatedsearchQuery==''){
+				updatedsearchQuery=filterMobileQuery;
+				
+			}else{
+				var newFilter=createSearchQuery(filterMobileQuery);
+				
+				if(updatedsearchQuery.includes(newFilter))
+				{
+					updatedsearchQuery=updatedsearchQuery.replace(newFilter,"");
+				}
+				else{
+					updatedsearchQuery+=newFilter;
+				}			
+			}
+			console.log("updatedsearchQuery : "+updatedsearchQuery);
+			
 		})
 		
 		// AJAX for removal of filters
@@ -237,7 +283,8 @@ ACC.refinements = {
 				action = action[1].split('/');
 				requiredUrl = "/c-"+action[0];
 				requiredUrl += "/getFacetData";
-			} else {
+			}			
+			else {
 				requiredUrl = action[0].concat("/getFacetData");
 			}
 			
@@ -247,6 +294,8 @@ ACC.refinements = {
 		})
 		
 		/*TPR-198 : AJAX Call in SERP and PDP END*/
+		
+		
 		
 		
 		$(document).on("click",".js-product-facet .js-more-facet-values-link",function(e){
@@ -280,7 +329,7 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 		url : requiredUrl,
 		data : dataString,
 		success : function(response) {
-			
+			//console.log(response);
 			// putting AJAX respons to view
 			if($("#isCategoryPage").val() == 'true'){
 				$("#productGrid").html(response);
@@ -299,7 +348,7 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 			$(".spinner").remove();
 			
 			// Keeps expansion-closure state of facets
-			$(".facet-name.js-facet-name h4").each(function(){
+			$(".facet-name.js-facet-name h3").each(function(){
 				if($(this).hasClass("true")){
 					
 					if(sessionStorage.getItem($(this).text()) == "true" || sessionStorage.getItem($(this).text()) == null){
@@ -312,14 +361,14 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 				}
 			 });
 			
-			if(sessionStorage.getItem($('ul.product-facet > .js-facet-name > h4').text()) == "false" && null != sessionStorage.getItem($('ul.product-facet > .js-facet-name > h4').text())) {
-				$('ul.product-facet > .js-facet-name > h4').removeClass('active');
+			if(sessionStorage.getItem($('ul.product-facet > .js-facet-name > h3').text()) == "false" && null != sessionStorage.getItem($('ul.product-facet > .js-facet-name > h3').text())) {
+				$('ul.product-facet > .js-facet-name > h3').removeClass('active');
 				$('#searchPageDeptHierTreeForm #searchPageDeptHierTree').hide(100);
 		    	$("#categoryPageDeptHierTreeForm #categoryPageDeptHierTree").hide(100);
 			}
 			
-			var filter_height=$(".facet-list.filter-opt").height() + 55;
-			$(".listing.wrapper .left-block").css("margin-top",filter_height+"px");
+			/*var filter_height=$(".facet-list.filter-opt").height() + 55;
+			$(".listing.wrapper .left-block").css("margin-top",filter_height+"px");*/
 			
 			// Scroll up to the top
 			$("body,html").animate({scrollTop:0},500);
@@ -342,3 +391,174 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 	
 }
 
+/*$("#paginationForm .pagination.mobile li a").click(function(e){
+	
+	e.prevent
+	alert($(this).attr('href'));
+});*/
+
+//TPR-845
+function createSearchQuery(filterMobileQuery){
+	var queryString='';
+	var splited=filterMobileQuery.split(':');
+	for (k = 0; k < splited.length; k++) {
+	if(splited.length-3<k){
+		queryString+=':'+splited[k];
+		}
+	}
+	return queryString;
+}
+
+//AJAX for removal of filters
+$(document).on("click",".filter-apply",function(e){
+	//TPR-1507
+	var filterCount=0;
+	$(".facet_mobile .facet.js-facet").each(function(){
+		filterCount+=$(this).find(".facet-list.js-facet-list li").find("input[type=checkbox]:checked").length;
+		filterCount+=$(".facet_mobile .filter-colour.selected-colour").length;
+		filterCount+=$(".facet_mobile .filter-size.selected-size").length;
+	})
+	if(filterCount<=0){
+		return false;
+	}
+	//TPR-1507 Ends
+	else{
+		$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+		$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
+		// generating postAjaxURL
+		var browserURL = window.location.href.split('?');
+		var dataString = null;
+		var nonEmptyDataString= null;
+		
+		// generating datastring and postAjaxURL
+		dummyForm.find('input[type="hidden"]').each(function(){
+			if(dataString == null){
+				dataString = $(this).attr('name')+"="+$(this).val();
+			}
+			else{
+				if($(this).attr('name') == 'q'){
+					dataString = dataString + ("&"+$(this).attr('name')+"="+updatedsearchQuery);
+				}else{
+					dataString = dataString + ("&"+$(this).attr('name')+"="+$(this).val());
+				}
+				
+			}
+			console.log("dataString : "+dataString);
+			
+			if($(this).val().length >0){
+				if(nonEmptyDataString == null){
+					nonEmptyDataString = $(this).attr('name')+"="+$(this).val();
+				}
+				else{
+					nonEmptyDataString = nonEmptyDataString + ("&"+$(this).attr('name')+"="+$(this).val());
+				}
+			}
+		})
+		
+		// generating postAjaxURL
+		var pageURL = browserURL[0]+'?'+nonEmptyDataString.replace(/:/g,"%3A");
+		var requiredUrl="";
+		var action = dummyForm.attr('action');
+		
+		// generating request mapping URL
+		if($("#isCategoryPage").val() == 'true'){
+			action = action.split('/c-');
+			action = action[1].split('/');
+			requiredUrl = "/c-"+action[0];
+			requiredUrl += "/getFacetData";
+		} else {
+			if(action.indexOf("/getFacetData") == -1){
+				if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1){
+					requiredUrl = action.concat("/getFacetData");
+				}
+				else{
+					requiredUrl = action.concat("getFacetData");
+				}
+			}
+			else{
+				requiredUrl = action;
+			}
+		}
+		// AJAX call
+		console.log("Controle Came");
+
+		filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
+		return false;
+	}	
+})
+
+//TPR-845
+$(document).on("click"," .filter-clear ",function(e){
+	//TPR-1536
+	var filterCount=0;
+	$(".facet_mobile .facet.js-facet").each(function(){
+		filterCount+=$(this).find(".facet-list.js-facet-list li").find("input[type=checkbox]:checked").length;
+		filterCount+=$(".facet_mobile .filter-colour.selected-colour").length;
+		filterCount+=$(".facet_mobile .filter-size.selected-size").length;
+	})
+	if(filterCount<=0){
+		return false;
+	}
+	//TPR-1536 Ends
+	
+	else{
+		$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+		$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
+
+		var browserURL = window.location.href;
+		var pageURL;
+		if(browserURL.indexOf("%3A")!=-1){
+			pageURL = browserURL.substring(0,browserURL.indexOf("%3A"));
+		}
+		else{
+			pageURL=browserURL;
+		}
+		
+		//redirecting to pageURL on page reload
+		window.location.href =pageURL;
+		return false;
+	}
+	})
+
+$(document).off('click', '.js-facet-colourbutton').on('click', '.js-facet-colourbutton', function() { 
+	$(this).parents(".filter-colour").toggleClass("selected-colour");
+	var spanCount=$(".facet_mobile .filter-colour.selected-colour").length;
+	if(spanCount>0)
+	{
+		$(this).parents(".facet.js-facet").find(".category-icons").removeClass("blank");
+		$(this).parents(".facet.js-facet").find(".category-icons span").text(spanCount);
+	}	
+	else
+	{
+		$(this).parents(".facet.js-facet").find(".category-icons").addClass("blank");
+	}
+});
+
+$(document).off('click', '.js-facet-sizebutton').on('click', '.js-facet-sizebutton', function() { 
+	$(this).parents(".filter-size").toggleClass("selected-size");
+	var spanCount=$(".facet_mobile .filter-size.selected-size").length;
+	if(spanCount>0)
+	{
+		$(this).parents(".facet.js-facet").find(".category-icons").removeClass("blank");
+		$(this).parents(".facet.js-facet").find(".category-icons span").text(spanCount);
+	}
+	else
+	{
+		$(this).parents(".facet.js-facet").find(".category-icons").addClass("blank");
+	}
+});
+
+$(document).off('change', '.facet_mobile .facet.js-facet').on('change', '.facet_mobile .facet.js-facet', function() { 
+	$(".facet_mobile .facet.js-facet").not(".Colour,.Size").each(function(){
+		var spanCount=$(this).find(".facet-list li").find("input[type=checkbox]:checked").length;
+		if(spanCount>0)
+		{
+			$(this).find(".category-icons").removeClass("blank");
+			$(this).find(".category-icons span").text(spanCount);
+		}
+		else
+		{
+			$(this).find(".category-icons").addClass("blank");
+		}
+	});
+});

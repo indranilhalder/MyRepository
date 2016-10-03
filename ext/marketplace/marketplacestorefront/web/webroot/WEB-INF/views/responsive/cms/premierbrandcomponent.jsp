@@ -10,7 +10,7 @@
 <div class="brands">
 <div class="wrapper">
 	<c:if test="${not empty component.title }">
-		<h1>${component.title}</h1>
+		<h2>${component.title}</h2>
 	</c:if>
 
 	<c:if test="${component.imageSize eq 'LARGE'}">

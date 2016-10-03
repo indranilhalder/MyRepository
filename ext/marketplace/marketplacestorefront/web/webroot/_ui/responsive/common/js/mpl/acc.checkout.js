@@ -32,7 +32,7 @@ ACC.checkout = {
 			var selectedAddressCode = $('input[name=selectedAddressCode]:checked').val();
 			if(selectedAddressCode == null || selectedAddressCode=='undefined')
 			{
-				alert("Please select a delivery address");
+				//alert("Please select a delivery address");
 				return false;
 			}
 			$('#selectAddressForm').submit();	
@@ -45,7 +45,7 @@ ACC.checkout = {
 			var selectedAddressCode = $('input[name=selectedAddressCode]:checked').val();
 			if(selectedAddressCode == null || selectedAddressCode=='undefined')
 			{
-				alert("Please select a delivery address");
+				//alert("Please select a delivery address");
 				return false;
 			}
 			$('#selectAddressForm').submit();	

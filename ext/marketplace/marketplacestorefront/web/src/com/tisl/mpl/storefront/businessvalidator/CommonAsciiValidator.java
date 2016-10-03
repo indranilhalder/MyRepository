@@ -48,6 +48,34 @@ public class CommonAsciiValidator
 	 * @param Str
 	 * @return boolean
 	 */
+	public static boolean validateAlphaWithoutSpaceNoSpCh(final String Str)
+	{
+		boolean flag = false;
+		char s;
+		if (Str.length() > 0)
+		{
+			for (int i = 0; i < Str.length(); i++)
+			{
+				s = Str.charAt(i);
+				final char ch = s;
+				if ((ch >= 65 && ch <= 90) || (ch >= 97 && ch <= 122))
+				{
+					flag = true;
+				}
+				else
+				{
+					flag = false;
+					break;
+				}
+			}
+		}
+		return flag;
+	}
+
+	/**
+	 * @param Str
+	 * @return boolean
+	 */
 	public static boolean validateNumericWithoutSpace(final String Str)
 	{
 		boolean flag = false;

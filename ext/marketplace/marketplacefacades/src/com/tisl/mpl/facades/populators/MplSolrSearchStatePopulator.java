@@ -39,7 +39,7 @@ import reactor.util.CollectionUtils;
 public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryData, SearchStateData>
 {
 	/**
-	 * 
+	 *
 	 */
 	private static final String UTF_8 = "UTF-8";
 	/**
@@ -121,6 +121,22 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 					+ buildUrlQueryStringForNew(source, target).replace("?", "&"));
 			//target.setUrl("/search/viewOnlineProducts" + buildUrlQueryString(source, target).replace("?", "&"));
 		}
+		else if (checkIfShopByLookPage(source.getFilterTerms()))
+		{
+			String lookId = "";
+			for (final SolrSearchQueryTermData data : source.getFilterTerms())
+			{
+				if (data.getKey().equalsIgnoreCase("collectionIds"))
+				{
+					lookId = data.getValue();
+					break;
+				}
+			}
+			//changed with dynamic collection id key
+			//target.setUrl("/collection/chef" + PAGE_PAGE_NO_Q + buildUrlQueryStringForNew(source, target).replace("?", "&"));
+			target.setUrl("/collection/" + lookId + PAGE_PAGE_NO_Q + buildUrlQueryStringForNew(source, target).replace("?", "&"));
+			//target.setUrl("/search/viewOnlineProducts" + buildUrlQueryString(source, target).replace("?", "&"));
+		}
 		//		else if (source.getOfferID() != null)
 		//		{
 		//
@@ -147,6 +163,23 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 			}
 		}
 		return isNew;
+
+	}
+
+
+	private boolean checkIfShopByLookPage(final List<SolrSearchQueryTermData> filterTerms)
+	{
+		// YTODO Auto-generated method stub
+		boolean exists = false;
+		for (final SolrSearchQueryTermData term : filterTerms)
+		{
+			if (term.getKey().equalsIgnoreCase("collectionIds"))
+			{
+				exists = true;
+				break;
+			}
+		}
+		return exists;
 
 	}
 

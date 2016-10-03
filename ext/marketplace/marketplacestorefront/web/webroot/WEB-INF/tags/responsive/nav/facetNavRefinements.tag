@@ -34,26 +34,37 @@
 				<c:choose>
 					<c:when test="${(fn:length(searchCategory) > 5 || fn:length(categoryCode) > 5 && !fn:contains(categoryCode, 'mbh'))}">
 						<nav:facetNavRefinementFacet facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
+				   		<nav:facetNavRefinementFacetMobile facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
 				   	</c:when>
 			   		<c:otherwise>
-			   			<c:if test="${facet.genericFilter}">
+			   		
+			   			 <%-- <c:if test="${facet.genericFilter}">
 					 		<nav:facetNavRefinementFacet facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
+						</c:if>  --%>
+						<c:if test="${facet.genericFilter}">
+					 		<nav:facetNavRefinementFacetMobile facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
 						</c:if> 
+						<c:choose>
+						<c:when test="${not empty shopbylook}">
+							<nav:facetNavRefinementFacet facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
+						</c:when>
+						<c:otherwise>
+							<nav:facetNavRefinementFacet facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
+						</c:otherwise>
+					 </c:choose>
 			   		</c:otherwise>
 				 </c:choose> 
 			  </c:if>
 		</c:otherwise>
 	</c:choose>
 </c:forEach>
-
+<div class="facet_desktop">
 <li class="facet js-facet AvailabilitySize" style="display: none">
-
-		<div class="facet-name js-facet-name">
 		
 		<h4 class="true">Availability</h4>
-			</div>
         
 		<div class="facet-values js-facet-values js-facet-form ">
+		<p class="filter-name facet_mobile">Availability</p>
 			<ul class="facet-list js-facet-list  ">
 
 
@@ -96,3 +107,57 @@
 			</div>
 		
 	</li>
+	</div>
+<div class="facet_mobile">
+<li class="facet js-facet AvailabilitySize" style="display: none">
+		<h4 class="true"><span class="filter-nav">Availability</span><span class="category-icons"><span></span></span></h4>
+        
+		<div class="facet-values js-facet-values js-facet-form ">
+		<p class="filter-name facet_mobile">Availability</p>
+			<ul class="facet-list js-facet-list  ">
+
+
+
+
+
+
+				<li class="filter-inStockFlag">
+					<c:set var="url" value="${requestScope['javax.servlet.forward.request_uri']}"/>
+					<form action="${url}" method="get"> 
+								<input type="hidden" name="offer" value=""/>
+								<input type="hidden" name="searchCategory" value="all"/>
+								<input type="hidden" name="q" value="${currentQuery}:inStockFlag:true"/>
+								<input type="hidden" name="text" value="shirt"/>
+								<label>
+									<input type="checkbox"   class="facet-checkbox js-facet-checkbox sr-only" />
+									<span class="facet-label">
+										<span class="facet-mark"></span>
+										<span class="facet-text">
+											Exclude out of stock &nbsp;
+											</span>
+									</span>
+									</label>
+							</form>
+							</li>
+				<li class="filter-inStockFlag">
+
+					<form action="#" method="get"> 
+								<input type="hidden" name="offer" value=""/>
+								<input type="hidden" name="searchCategory" value="all"/>
+								<input type="hidden" name="q" value="shirt:relevance:inStockFlag:false"/>
+								<input type="hidden" name="text" value="shirt"/>
+								<label>
+									<input type="checkbox"   class="facet-checkbox js-facet-checkbox sr-only" />
+									</label>
+							</form>
+							</li>
+				</ul>
+
+			</div>
+		
+	</li>
+	</div>
+	<div class="apply-clear">
+                <button class="filter-clear">CLEAR ALL</button>
+                <button class="filter-apply">Apply</button>
+              </div>

@@ -53,7 +53,7 @@
 			
 			<div class="right-account">
 				<div class="info">
-					<h1><spring:theme code="profile.heading.text" text="Personal Information"/></h1>
+					<h2><spring:theme code="profile.heading.text" text="Personal Information"/></h2>
 					<p><spring:theme code="profile.heading.deatils" text="Change your name, email, phone number here. "/></p>
 					<%-- <form> --%>
 					<fieldset>
@@ -246,7 +246,7 @@
 				<!-- Update Password -->
 				
 				<div class="password">
-					<h1><spring:theme code="profile.Password" text="Password"/></h1>	
+					<h2><spring:theme code="profile.Password" text="Password"/></h2>	
 					<p><spring:theme code="profile.Password.details" text="If you aren't a bot, you can change your password here."/></p>
 					
 					<div >
@@ -293,9 +293,8 @@
 				<!-- End of Update Password -->
 			
 				<!-- Update NickName -->
-			
 				<div class="nickname">
-					<h1><spring:theme code="profile.Nickname" text="Nickname"/></h1>
+					<h2><spring:theme code="profile.Nickname" text="Nickname"/></h2>
 					<p><spring:theme code="profile.Nickname.details" text="What's your alter ego called?"/></p>
 						<form:form action="update-nickName" method="post" commandName="mplCustomerProfileForm">
 						<fieldset>
@@ -321,4 +320,3 @@
 	src="${commonResourcePath}/js/jquery-2.1.1.min.js"></script>
 <script type="text/javascript"
 	src="${commonResourcePath}/js/acc.accountaddress.js"></script> --%>
-
