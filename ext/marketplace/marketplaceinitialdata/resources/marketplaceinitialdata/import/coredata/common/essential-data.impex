@@ -468,9 +468,9 @@ INSERT_UPDATE OrderStatusCodeMaster;id[unique=true];statusCode;responseStatus;st
 ;100040;ORDER_CANCELLED;Order Cancelled;Your order has been cancelled;CANCEL;true;true;ff1c47;D11; 
 
 
-;100041;PAYMENT_PENDING;Payment Pending;Oops! technical delay;PAYMENT;true;true;ff0000;D12;
-;100042;PAYMENT_TIMEOUT;Payment Timeout;Oops! technical issue;PAYMENT;true;true;ff0000;D12;
-;100043;PAYMENT_FAILED;Payment Failed;Invalid payment details;PAYMENT;true;true;ff0000;D12;
+;100041;PAYMENT_PENDING;Payment Pending;Payment In-Process;PAYMENT;true;true;ff0000;D12;
+;100042;PAYMENT_TIMEOUT;Payment Timeout;Order Failed;PAYMENT;true;true;ff0000;D12;
+;100043;PAYMENT_FAILED;Payment Failed;Payment Declined;PAYMENT;true;true;ff0000;D12;
 
 
 ###Payment Related

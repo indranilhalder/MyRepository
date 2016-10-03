@@ -897,7 +897,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				final String finalOrderDate = getFormattedDate(orderDetail.getCreated());
 				final List<OrderData> subOrderList = orderDetail.getSellerOrderList();
 				final List<OrderEntryData> orderList = orderDetail.getEntries();
-				//TRP1081
+				//TPR-1081
 				if (subOrderList.isEmpty())
 				{
 					for (final OrderEntryData orderEntry : orderList)
