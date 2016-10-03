@@ -18,7 +18,6 @@ import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
-import de.hybris.platform.commercefacades.i18n.I18NFacade;
 import de.hybris.platform.commercefacades.order.CheckoutFacade;
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
@@ -55,15 +54,12 @@ import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.enumeration.EnumerationService;
-import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
-import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
 import de.hybris.platform.util.localization.Localization;
-import de.hybris.platform.wishlist2.Wishlist2Service;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -117,20 +113,13 @@ import com.tisl.mpl.core.enums.FeedbackCategory;
 import com.tisl.mpl.core.model.MplEnhancedSearchBoxComponentModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.netbank.MplNetBankingFacade;
-import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
-import com.tisl.mpl.facades.account.register.ForgetPasswordFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
-import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
-import com.tisl.mpl.marketplacecommerceservices.service.MplCategoryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
-import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtendedUserServiceImpl;
-import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
 import com.tisl.mpl.model.SellerMasterModel;
 import com.tisl.mpl.order.data.CardTypeDataList;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
@@ -193,32 +182,36 @@ public class MiscsController extends BaseController
 	private StoreSessionFacade storeSessionFacade;
 	@Resource(name = "checkoutFacade")
 	private CheckoutFacade checkoutFacade;
-	@Autowired
-	private ConfigurationService configurationService;
+	/*
+	 * @Autowired private ConfigurationService configurationService;
+	 */
 	@Resource(name = "httpRequestCustomerUpdatePopulator")
 	private HttpRequestCustomerUpdatePopulator httpRequestCustomerUpdatePopulator;
 	@Resource(name = "customerFacade")
 	private CustomerFacade customerFacade;
-	@Resource
-	private ModelService modelService;
-	@Autowired
-	private ForgetPasswordFacade forgetPasswordFacade;
-	@Autowired
-	private ExtendedUserServiceImpl userexService;
-	@Autowired
-	private WishlistFacade wishlistFacade;
-	@Autowired
-	private MplSellerMasterService mplSellerInformationService;
+	/*
+	 * @Resource private ModelService modelService;
+	 * 
+	 * @Autowired private ForgetPasswordFacade forgetPasswordFacade;
+	 * 
+	 * @Autowired private ExtendedUserServiceImpl userexService;
+	 * 
+	 * @Autowired private WishlistFacade wishlistFacade;
+	 * 
+	 * @Autowired private MplSellerMasterService mplSellerInformationService;
+	 */
 	@Autowired
 	private UserService userService;
 	@Autowired
 	private MplCustomerProfileService mplCustomerProfileService;
-	@Autowired
-	private Wishlist2Service wishlistService;
+	/*
+	 * @Autowired private Wishlist2Service wishlistService;
+	 */
 	@Resource(name = "passwordStrengthValidator")
 	private Validator passwordStrengthValidator;
-	@Autowired
-	private MplCartFacade mplCartFacade;
+	/*
+	 * @Autowired private MplCartFacade mplCartFacade;
+	 */
 	@Autowired
 	private ExtendedUserService extUserService;
 	@Autowired
@@ -229,10 +222,11 @@ public class MiscsController extends BaseController
 	private HomescreenService homescreenservice;
 	@Resource(name = "fieldSetBuilder")
 	private FieldSetBuilder fieldSetBuilder;
-	@Resource(name = "i18NFacade")
-	private I18NFacade i18NFacade;
-	@Autowired
-	private MplCommerceCartServiceImpl mplCommerceCartService;
+	/*
+	 * @Resource(name = "i18NFacade") private I18NFacade i18NFacade;
+	 * 
+	 * @Autowired private MplCommerceCartServiceImpl mplCommerceCartService;
+	 */
 	@Autowired
 	private MplRestrictionServiceImpl restrictionserviceimpl;
 	@Autowired
@@ -251,8 +245,9 @@ public class MiscsController extends BaseController
 	private PincodeServiceFacade pincodeServiceFacade;
 	@Resource(name = "categoryService")
 	private CategoryService categoryService;
-	@Resource(name = "mplPaymentFacade")
-	private MplPaymentFacade mplPaymentFacade;
+	/*
+	 * @Resource(name = "mplPaymentFacade") private MplPaymentFacade mplPaymentFacade;
+	 */
 	@Autowired
 	private MplVersionService mplVersionService;
 	//Priority
@@ -265,8 +260,9 @@ public class MiscsController extends BaseController
 	private EnumerationService enumerationService;
 	@Resource(name = "defaultMplProductSearchFacade")
 	private DefaultMplProductSearchFacade searchFacade;
-	@Resource(name = "mplCategoryServiceImpl")
-	private MplCategoryService mplCategoryService;
+	/*
+	 * @Resource(name = "mplCategoryServiceImpl") private MplCategoryService mplCategoryService;
+	 */
 	@Autowired
 	private SearchSuggestUtilityMethods searchSuggestUtilityMethods;
 	//End of Declaration for SNS
@@ -275,8 +271,9 @@ public class MiscsController extends BaseController
 	@Autowired
 	private PriceDataFactory priceDataFactory;
 
-	private static final String DROPDOWN_BRAND = "MBH";
-	private static final String DROPDOWN_CATEGORY = "MSH";
+	/*
+	 * private static final String DROPDOWN_BRAND = "MBH"; private static final String DROPDOWN_CATEGORY = "MSH";
+	 */
 	/*
 	 * @Autowired private MplCheckoutFacade mplCheckoutFacade;
 	 */
@@ -642,9 +639,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * restriction set up interface to save the data comming from seller portal
-	 * 
+	 *
 	 * @param restrictionXML
-	 * 
+	 *
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/restrictionServer", method = RequestMethod.POST)

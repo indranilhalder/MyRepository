@@ -286,7 +286,7 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 	/*
 	 * To get all categories shop by department
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplCustomCategoryService#getallCategories()
 	 */
 
@@ -435,7 +435,7 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplCustomCategoryService#getAboutusBanner()
 	 */
 	@Override
@@ -507,7 +507,7 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplCustomCategoryService#getHelpnServices()
 	 */
 	@Override
@@ -624,17 +624,12 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 	 * @return String
 	 * @throws CMSItemNotFoundException
 	 */
-
-	private Date getModifiedTime() throws CMSItemNotFoundException
-	{
-		final NavigationBarCollectionComponentModel shopByDeptComponent = getShopByDept();
-		Date modifiedTime = null;
-		if (null != shopByDeptComponent && null != shopByDeptComponent.getModifiedtime())
-		{
-			modifiedTime = shopByDeptComponent.getModifiedtime();
-		}
-		return modifiedTime;
-	}
+	/*
+	 * private Date getModifiedTime() throws CMSItemNotFoundException { final NavigationBarCollectionComponentModel
+	 * shopByDeptComponent = getShopByDept(); Date modifiedTime = null; if (null != shopByDeptComponent && null !=
+	 * shopByDeptComponent.getModifiedtime()) { modifiedTime = shopByDeptComponent.getModifiedtime(); } return
+	 * modifiedTime; }
+	 */
 
 
 	//************************************Retrieving Catergory name through id and checking the page*****************************
