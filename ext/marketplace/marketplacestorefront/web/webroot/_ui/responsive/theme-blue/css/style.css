@@ -50317,7 +50317,7 @@ overflow: hidden;
 }
 /* CLP css ends */
 
-.InfoWrap .Buying .button add-to-bag{
+.InfoWrap .Buying .button.add-to-bag{
 	
     background-color: #fff;
     color: #a9143c;
