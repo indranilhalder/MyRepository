@@ -50557,7 +50557,7 @@ padding: 0 24px;
     float:none; 
     margin: 0 0px 0px;
     order: -1;
-    width: 100%;
+    width: 100% !important;
 }
 .shop_the_look .shop_the_look_left{
 	width:100%;
@@ -50616,6 +50616,7 @@ padding: 0 24px;
 @media (max-width: 600px){
 	.shop_the_look div.shop_the_look_section:nth-child(2){
 	margin: 0 40px 20px 50px;
+	    width: 100% !important;
 	}
 	.shop_the_look .shop_the_look_left  div.shop_the_look_section:nth-child(2){
 	margin:0;
