@@ -42,7 +42,6 @@ import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.CCPaymentInfoData;
 import de.hybris.platform.core.Registry;
-import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
@@ -68,7 +67,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
-import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 
 import de.hybris.platform.commercefacades.product.ProductFacade;
@@ -82,7 +80,8 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
-import com.tisl.mpl.storefront.security.cookie.UserTypeCookieGenerator;
+import de.hybris.platform.product.ProductService;
+import de.hybris.platform.core.model.product.ProductModel;
 
 public final class HybrisDataConverter
 {
@@ -102,12 +101,6 @@ public final class HybrisDataConverter
 		LanguageData languageData = (LanguageData) request.getAttribute("currentLanguage");
 		List<Breadcrumb> breadcrumbs = new ArrayList();
 		breadcrumbs = (List<Breadcrumb>) request.getAttribute("breadcrumbs");
-		final UserService userService = (UserService) Registry.getApplicationContext().getBean("userService");
-		final CustomerModel currCust = (CustomerModel) userService.getCurrentUser();
-		final UserTypeCookieGenerator userTypeCookieGenerator = (UserTypeCookieGenerator) Registry.getApplicationContext().getBean("defaultUserTypeCookieGenerator");
-		final String userTypeCookieName = userTypeCookieGenerator.getCookieName();
-		final UserModel currentUser = userService.getCurrentUser();
-		String userLoginType = null; //TPR-668
 
 		if (breadcrumbs != null)
 		{
@@ -118,34 +111,7 @@ public final class HybrisDataConverter
 		{
 			for (final Cookie cookie : cookies)
 			{
-				if (userTypeCookieName.equals(cookie.getName())) {
-					if (userService.isAnonymousUser(currentUser))
-					{
-						userLoginType = MessageConstants.GUESTUSER;
-						udo.setValue("user_login_type", userLoginType);
-					}
-					else
-					{
-						if (null != currCust && null != currCust.getType())
-						{
-							if (currCust.getType().toString().equals("FACEBOOK_LOGIN"))
-							{
-								userLoginType = "facebook";
-								udo.setValue("user_login_type", userLoginType);
-							}
-							else if (currCust.getType().toString().equals(MessageConstants.GOOGLE_LOGIN)) // TPR-668
-							{
-								userLoginType = "google";
-								udo.setValue("user_login_type", userLoginType);
-							}
-							else
-							{
-								userLoginType = "email";
-								udo.setValue("user_login_type", userLoginType);
-							}
-						}
-					}
-				}
+
 
 
 				if (cookie.getName().equals("mpl-user"))
@@ -861,6 +827,9 @@ public final class HybrisDataConverter
 			CurrencyModel currency = orderModel.getCurrency();
 			String currencySymbol = currency.getSymbol();
 			String transactionIds = null;
+			String productCategoryListText = null;
+			String pageSubCategoriesText = null;
+			String pageSubcategoryNameL3ListText = null;
 			
 			if(null != orderModel)
 			{
@@ -938,14 +907,17 @@ public final class HybrisDataConverter
 						final String[] categoryNames = categoryName.toString().split(":");
 						category = categoryNames[2].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase();
 						productCategoryList.add(category);
+						productCategoryListText = productCategoryList.toString().replaceAll("[\\[\\](){}]","");
 
 						page_subCategory_name = categoryNames[1].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
 								.toLowerCase();
 						pageSubCategories.add(page_subCategory_name);
+						pageSubCategoriesText = pageSubCategories.toString().replaceAll("[\\[\\](){}]","");
 
 						page_subcategory_name_L3 = categoryNames[0].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
 								.toLowerCase();
 						pageSubcategoryNameL3List.add(page_subcategory_name_L3);
+						pageSubcategoryNameL3ListText = pageSubcategoryNameL3List.toString().replaceAll("[\\[\\](){}]","");
 
 
 					}
@@ -1039,8 +1011,11 @@ public final class HybrisDataConverter
 //			}
 
 			udo.setValue(TealiumHelper.HomePageUDO.PredefinedUDOFields.PAGE_TYPE, "checkout")
+			.setValue(TealiumHelper.ConfirmationPageUDO.PredefinedUDOFields.PRODUCT_CATEGORY, productCategoryListText)
+			.setValue("page_subcategory_name", pageSubCategoriesText)
+					.setValue("page_subcategory_name_l3", pageSubcategoryNameL3ListText)
 					.addArrayValues(TealiumHelper.ConfirmationPageUDO.PredefinedUDOFields.PRODUCT_BRAND, productBrandList)
-					.addArrayValues(TealiumHelper.ConfirmationPageUDO.PredefinedUDOFields.PRODUCT_CATEGORY, productCategoryList)
+//					.addArrayValues(TealiumHelper.ConfirmationPageUDO.PredefinedUDOFields.PRODUCT_CATEGORY, productCategoryList)
 					.addArrayValues(TealiumHelper.ConfirmationPageUDO.PredefinedUDOFields.PRODUCT_ID, productIdList)
 					.addArrayValues(TealiumHelper.ConfirmationPageUDO.PredefinedUDOFields.PRODUCT_LIST_PRICE, productListPriceList)
 					.addArrayValues(TealiumHelper.ConfirmationPageUDO.PredefinedUDOFields.PRODUCT_NAME, productNameList)
@@ -1048,8 +1023,9 @@ public final class HybrisDataConverter
 					.addArrayValues(TealiumHelper.ConfirmationPageUDO.PredefinedUDOFields.PRODUCT_SKU, productSkuList)
 					.addArrayValues(TealiumHelper.ConfirmationPageUDO.PredefinedUDOFields.PRODUCT_UNIT_PRICE, productUnitPriceList)
 					.addArrayValues(TealiumHelper.ConfirmationPageUDO.PredefinedUDOFields.PRODUCT_DISCOUNT, productDiscountList)
-					.addArrayValues("order_shipping_modes", deliveryModes).addArrayValues("page_subcategory_name", pageSubCategories)
-					.addArrayValues("page_subcategory_name_l3", pageSubcategoryNameL3List)
+					.addArrayValues("order_shipping_modes", deliveryModes)
+//					.addArrayValues("page_subcategory_name", pageSubCategories)
+//					.addArrayValues("page_subcategory_name_l3", pageSubcategoryNameL3List)
 					.addArrayValues("order_shipping_charges", orderShippingCharges);
 			udo.setValue("transaction_id",transactionIds);	
 
@@ -1190,7 +1166,8 @@ public final class HybrisDataConverter
 			final UDO udo = setupUDO(tealiumHelper, PrebuiltUDOPageTypes.CUSTOMER);
 
 			final HttpServletRequest request = getRequest();
-			String productSubCategoryName = "";
+			final ProductService productService = (ProductService) Registry.getApplicationContext().getBean("defaultProductService");
+			//String productSubCategoryName = "";
 			final List<ProductData> datas = (List<ProductData>) request.getAttribute("ProductDatas");
 			final WishlistFacade wishlistFacade = (WishlistFacade) Registry.getApplicationContext().getBean("defaultWishlistFacade");
 			final ProductFacade productFacade = (ProductFacade) Registry.getApplicationContext().getBean("productFacade");
@@ -1201,9 +1178,18 @@ public final class HybrisDataConverter
 			final List<String> productListPriceListInWl = new ArrayList<String>();
 			final List<String> productUnitPriceListInWl = new ArrayList<String>();
 			final List<String> productSkuListInWl = new ArrayList<String>();
-			final List<String> productCategoryListInWl = new ArrayList<String>();
-			final List<String> productSubCategoryListInWl = new ArrayList<String>();
+//			final List<String> productCategoryListInWl = new ArrayList<String>();
+//			final List<String> productSubCategoryListInWl = new ArrayList<String>();
 			final List<String> productQuantityListInWl = new ArrayList<String>();
+			final List<String> productCategoryList = new ArrayList<String>();
+			final List<String> pageSubCategories = new ArrayList<String>();
+			final List<String> pageSubcategoryNameL3List = new ArrayList<String>();
+			String category = null;
+			String page_subCategory_name = null;
+			String page_subcategory_name_L3 = null;
+			String productCategoryListText = null;
+			String pageSubCategoriesText = null;
+			String pageSubcategoryNameL3ListText = null;
 			/*TPR-646*/
 			int totalCountInWishlist = 0;
 
@@ -1225,24 +1211,57 @@ public final class HybrisDataConverter
 							if (productData.getBrand() != null)
 							{
 								productBrandListInWl.add(productData.getBrand().getBrandname());
+								
+								final ProductModel productModel = productService.getProductForCode(itemEntry.getProduct().getCode());
+								
+								final StringBuffer categoryName = new StringBuffer();
+								for (final CategoryModel categoryModel : productModel.getSupercategories())
+								{
+									if (categoryModel.getCode().contains("MSH"))
+									{
+										categoryName.append(categoryModel.getName()).append(":");
+										getCategoryLevel(categoryModel, 1, categoryName);
+									}
+								}
+								
+								if (StringUtils.isNotEmpty(categoryName.toString()))
+								{
+									final String[] categoryNames = categoryName.toString().split(":");
+									category = categoryNames[2].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase();
+									productCategoryList.add(category);
+//									productCategoryListText = productCategoryList.toString().replaceAll("[\\[\\](){}]","");
+									productCategoryListText = productCategoryList.toString().replace("[", "").replace("]", "");
+									
+									page_subCategory_name = categoryNames[1].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
+											.toLowerCase();
+									pageSubCategories.add(page_subCategory_name);
+									pageSubCategoriesText = pageSubCategories.toString().replaceAll("[\\[\\](){}]","");
+
+									page_subcategory_name_L3 = categoryNames[0].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
+											.toLowerCase();
+									pageSubcategoryNameL3List.add(page_subcategory_name_L3);
+									pageSubcategoryNameL3ListText = pageSubcategoryNameL3List.toString().replaceAll("[\\[\\](){}]","");
+
+
+								}
 							}
-							final List<String> productCategoryList = new ArrayList<String>();
-							for (final CategoryData category : productData.getCategories())
-							{
-								productCategoryList.add(category.getName());
-							}
-							final Object[] productCategoryStrings = productCategoryList.toArray();
-							String productCategory = "";
-							if (productCategoryStrings.length > 0)
-							{
-								productCategory = (String) productCategoryStrings[0];
-								productCategoryListInWl.add(productCategory);
-							}
-							if (productCategoryStrings.length >= 2)
-							{
-								productSubCategoryName = (String) (productCategoryStrings[1]);
-								productSubCategoryListInWl.add(productSubCategoryName);
-							}
+//							final List<String> productCategoryList = new ArrayList<String>();
+//							for (final CategoryData category : productData.getCategories())
+//							{
+//								productCategoryList.add(category.getName());
+//							}
+//							final Object[] productCategoryStrings = productCategoryList.toArray();
+//							String productCategory = "";
+//							if (productCategoryStrings.length > 0)
+//							{
+//								productCategory = (String) productCategoryStrings[0];
+//								productCategoryListInWl.add(productCategory);
+//							}
+//							if (productCategoryStrings.length >= 2)
+//							{
+//								productSubCategoryName = (String) (productCategoryStrings[1]);
+//								productSubCategoryListInWl.add(productSubCategoryName);
+//							}
 							if (buyboxfacade != null)
 							{
 								final BuyBoxData buyboxdata = buyboxfacade.buyboxPrice(productData.getCode());
@@ -1273,11 +1292,12 @@ public final class HybrisDataConverter
 			udo.setValue(TealiumHelper.HomePageUDO.PredefinedUDOFields.PAGE_TYPE, "wishlist")
 					.addArrayValues("product_id", productIdListInWl).addArrayValues("product_name", productNameListInWl)
 					.addArrayValues("product_quantity", productQuantityListInWl).addArrayValues("product_brand", productBrandListInWl)
-					.addArrayValues("product_category", productCategoryListInWl)
-					.addArrayValues("page_subcategory_name", productSubCategoryListInWl)
 					.addArrayValues("product_sku", productSkuListInWl).addArrayValues("product_list_price", productListPriceListInWl)
 					.addArrayValues("product_unit_price", productUnitPriceListInWl);
 			udo.setValue("wishlist_items_count", String.valueOf(totalCountInWishlist));
+			udo.setValue("product_category", productCategoryListText);
+			udo.setValue("page_subcategory_name", pageSubCategoriesText);
+			udo.setValue("page_subcategory_name_L3", pageSubcategoryNameL3ListText);
 
 			scriptString = tealiumHelper.outputFullHtml(udo);
 		}

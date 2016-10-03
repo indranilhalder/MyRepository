@@ -177,6 +177,9 @@ $(document).ready(
             	if($("#product_category").val() !=undefined){
                 var product_category = $("#product_category").val();
                 }
+            	if($("#product_category").val() == undefined){
+                    var product_category = null;
+                    }
             	var page_subcategory_name = null;
             	var page_subcategory_name_l3 = null;
 				
@@ -312,11 +315,11 @@ $(document).ready(
 							+ $("#checkoutSellerIDs").val() + ',';
 						//TPR-430 Start
 						tealiumData += '"product_category":'
-							+ $("#product_category").val() + ',';
+							+ $("#product_category").val().replace(/[\[\]']+/g, '') + ',';
 						tealiumData += '"page_subcategory_name":'
-							+ $("#page_subcategory_name").val() + ',';
+							+ $("#page_subcategory_name").val().replace(/[\[\]']+/g, '') + ',';
 					tealiumData += '"page_subcategory_name_L3":'
-						+ $("#page_subcategory_name_l3").val() + '}';
+						+ $("#page_subcategory_name_l3").val().replace(/[\[\]']+/g, '') + '}';
 					//TPR-430 End
 						data = data.replace("}<TealiumScript>", tealiumData);
 						$('#tealiumHome').html(data);
@@ -357,11 +360,11 @@ $(document).ready(
 							+ $("#product_brand").val() + ',';
 						//TPR-430 Start
 						tealiumData += '"product_category":'
-							+ $("#product_category").val() + ',';
+							+ $("#product_category").val().replace(/[\[\]']+/g, '') + ',';
 						tealiumData += '"page_subcategory_name":'
-							+ $("#page_subcategory_name").val() + ',';
+							+ $("#page_subcategory_name").val().replace(/[\[\]']+/g, '') + ',';
 					tealiumData += '"page_subcategory_name_L3":'
-						+ $("#page_subcategory_name_l3").val() + ',';
+						+ $("#page_subcategory_name_l3").val().replace(/[\[\]']+/g, '') + ',';
 					//TPR-430 End
 						tealiumData += '"checkout_seller_ids":"'		//for TPR-429
 							+ $("#checkoutSellerIDs").val() + '"}';
@@ -455,8 +458,7 @@ $(document).on('mousedown','.btn-block.js-add-to-cart',function(){
 	
 	/*var productSKU = $(this).parents('form').find('input[type="hidden"]#ussid').val();*/
 	var productSKU = $('#productCodePost').val();
-	
-	if($(this).attr('id').toLowerCase().indexOf("buybox") == -1){
+	if($(this).attr('id').toLowerCase().indexOf("buynow") == -1){
 		utag.link({
 			link_obj: this,
 			link_text: 'addtobag' ,
