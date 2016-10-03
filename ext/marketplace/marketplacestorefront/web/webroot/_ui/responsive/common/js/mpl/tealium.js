@@ -458,6 +458,7 @@ $(document).on('mousedown','.btn-block.js-add-to-cart',function(){
 	
 	/*var productSKU = $(this).parents('form').find('input[type="hidden"]#ussid').val();*/
 	var productSKU = $('#productCodePost').val();
+
 	if($(this).attr('id').toLowerCase().indexOf("buynow") == -1){
 		utag.link({
 			link_obj: this,

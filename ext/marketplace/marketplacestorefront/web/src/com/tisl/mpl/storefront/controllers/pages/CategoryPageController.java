@@ -132,7 +132,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 	private static final String LOCATION = "Location";
 	private static final String PAGE_FACET_DATA = "pageFacetData";
 
-
+	//TPR_1282
+	private static final String CATEGORY_FOOTER_TEXT = "categoryFooterTxt";
 	private int pageSiseCount;
 
 	/**
@@ -273,7 +274,11 @@ public class CategoryPageController extends AbstractCategoryPageController
 				model.addAttribute(ModelAttributetConstants.NORMAL_PRODUCTS, normalProductDatas);
 				model.addAttribute(ModelAttributetConstants.SHOW_CATEGORIES_ONLY, Boolean.FALSE);
 				// For Category Footer
-				model.addAttribute("categoryFooterTxt", category.getCategoryFooterText());
+				if (null != category.getCategoryFooterText())
+				{
+					model.addAttribute(CATEGORY_FOOTER_TEXT, category.getCategoryFooterText());
+				}
+
 			}
 		}
 
@@ -432,7 +437,10 @@ public class CategoryPageController extends AbstractCategoryPageController
 				model.addAttribute(ModelAttributetConstants.NORMAL_PRODUCTS, normalProductDatas);
 				model.addAttribute(ModelAttributetConstants.SHOW_CATEGORIES_ONLY, Boolean.FALSE);
 				// For Category Footer
-				model.addAttribute("categoryFooterTxt", category.getCategoryFooterText());
+				if (null != category.getCategoryFooterText())
+				{
+					model.addAttribute(CATEGORY_FOOTER_TEXT, category.getCategoryFooterText());
+				}
 				storeCmsPageInModel(model, categoryLandingPage);
 
 
@@ -835,7 +843,11 @@ public class CategoryPageController extends AbstractCategoryPageController
 		model.addAttribute("userLocation", getCustomerLocationService().getUserLocation());
 		model.addAttribute("otherProducts", true);
 		// For Category Footer
-		model.addAttribute("categoryFooterTxt", category.getCategoryFooterText());
+		if (null != category.getCategoryFooterText())
+		{
+			model.addAttribute(CATEGORY_FOOTER_TEXT, category.getCategoryFooterText());
+		}
+
 
 		updatePageTitle(category, searchPageData.getBreadcrumbs(), model);
 		if (CollectionUtils.isNotEmpty(searchPageData.getResults()))
