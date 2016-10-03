@@ -176,7 +176,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 *
+	 * 
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -671,10 +671,9 @@ public class SearchSuggestUtilityMethods
 				{
 					sellingItemDetail.setGalleryImagesList(galleryImages);
 				}
-				if (null != (productData.getSavingsOnProduct()))
+				if (null != productData.getSavingsOnProduct() && null != productData.getSavingsOnProduct().getValue())
 				{
-					sellingItemDetail.setDiscountPercent(Integer.valueOf(productData.getSavingsOnProduct().getValue().toString())
-							.toString());
+					sellingItemDetail.setDiscountPercent(String.valueOf(productData.getSavingsOnProduct().getValue().intValue()));
 				}
 				if (null != productData.getName())
 				{
