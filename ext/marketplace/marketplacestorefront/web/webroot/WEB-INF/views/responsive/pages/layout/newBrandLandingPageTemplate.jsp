@@ -57,11 +57,11 @@
 			</div>
 	
 	<div id="productGrid" class="listing wrapper"> <!-- Added for TPR-198 -->
-			<div class="left-block">
+			<!-- <div class="left-block"> -->
 			<cms:pageSlot position="Section4A" var="feature">
 				<cms:component component="${feature}"/>
 			</cms:pageSlot>
-			</div>
+			<!-- </div> -->
 			<cms:pageSlot position="Section4B" var="feature">
 				<cms:component component="${feature}"/>
 			</cms:pageSlot>
