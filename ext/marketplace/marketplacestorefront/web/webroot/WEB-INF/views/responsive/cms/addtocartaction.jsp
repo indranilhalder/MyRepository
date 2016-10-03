@@ -85,10 +85,10 @@ $(document).ready(function(){
 <%-- <c:url value="${url}" var="addToCartUrl" /> --%>
 <c:url value="/cart/addBag" var="addToCartUrl" />
 
-<div id="addToCartFormTitle" class="addToCartTitle">
-	<%-- <spring:theme code="basket.added.to.basket" /> --%>
+<%-- <div id="addToCartFormTitle" class="addToCartTitle">
+	<spring:theme code="basket.added.to.basket" />
 	<spring:theme code="product.addtocart.success" />
-</div>
+</div> --%>
 <span id="addtobag" style="display:none"><spring:theme code="product.addtocart.success"/></span>
 <span id="addtobagerror" style="display:none"><spring:theme code="product.wishlist.outOfStock"/></span>
 <span id="bagtofull" style="display:none"><spring:theme code="product.addtocart.aboutfull"/></span>
