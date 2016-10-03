@@ -1633,4 +1633,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// Sonar Fix
 	public static final String ALLVARIANTSSTRING = "allVariantsString";
+
+
+	//Added for luxury
+	public static final String CHANNEL_APP = "APP";
 }
