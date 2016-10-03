@@ -47,7 +47,7 @@
 			</div>
 			<div class="shop_for">
 		<cms:pageSlot position="Section3A" var="feature">
-				<cms:component component="${feature}"/>
+				<cms:component component="${feature}" element="div" class="shop_for_component"/>
 			</cms:pageSlot>
 			</div>
 	<div id="productGrid" class="listing wrapper"> <!-- Added for TPR-198 -->

@@ -1869,8 +1869,9 @@ $(document).ready(function() {
 	/*CLP section js starts*/
 	
 	//Top Categories section
-	$(".top_categories").find("ul.categories.count-3>li:nth-child(3n + 1)").each(function(){
-		$(this).nextAll().slice(0, 2).wrapAll("<li class='sub_li'><ul class='sub_ul'>");
+	$(".top_categories .top_categories_section:not(:first-child)").wrapAll("<div class='top_categories_wrapper'></div>");
+	$(".top_categories").find(".top_categories_wrapper>.top_categories_section:nth-child(3n + 1)").each(function(){
+		$(this).nextAll().slice(0, 2).wrapAll("<div class='top_categories_section sub_categories'>");
 		});
 	//Style Edit section
 		$(".style_edit > div").slice(0,2).wrapAll("<div class='style_edit_left'>");
@@ -1915,7 +1916,8 @@ $(document).ready(function() {
 			$(this).children().last().prevAll().wrapAll("<div class='blog_content'>");
 		});
 		//Shop For section
-		$(".shop_for > a").slice(0,4).wrapAll("<div class='shop_for_links'>");
+		$(".shop_for .shop_for_component:not(:first-child)").slice(0,3).wrapAll("<div class='shop_for_left_wrapper'></div>");
+		$(".shop_for > .shop_for_left_wrapper").nextAll().slice(0,4).wrapAll("<div class='shop_for_links'>");
 		
 		/*CLP section js ends*/
 });

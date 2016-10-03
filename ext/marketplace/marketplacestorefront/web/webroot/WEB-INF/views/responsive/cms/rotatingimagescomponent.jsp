@@ -258,6 +258,7 @@ var homePageBannerTimeout='${timeout}';
 								<c:if test="${not empty encodedUrl}">
 									<c:set var="urlWithIcid" value="${encodedUrl}?icid=${banner.pk}"/>
 								</c:if>
+								<span class="style_edit_title">${banner.headline}</span>
 								<a tabindex="-1" href="${urlWithIcid}"
 								<c:if test="${banner.external}"> target="_blank"</c:if>><img
 								src="${banner.media.url}"
