@@ -280,6 +280,9 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String TRUE = "true";
 	public static final String FALSE = "false";
 
+	//TPR-1215
+	public static final String LINK_SET_DEFAUT_ADDRESS = "/set-default-address/";
+
 	private MarketplacecheckoutaddonConstants()
 	{
 		//empty to avoid instantiating this constant class

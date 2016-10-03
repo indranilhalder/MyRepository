@@ -20,6 +20,17 @@
 	<c:set var="hideSecureTransaction" value="true"></c:set>
 	<c:set var="hideLogo" value="true"></c:set>
 </c:if>
+<!-- TPR-844 -->
+			<div class="wishAddLoginPlp">
+			<span><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
+			</div>
+			<div class="wishAddSucessPlp">
+			<span><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
+			</div>
+			<div class="wishAlreadyAddedPlp">
+			<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
+			</div>
+	<!-- TPR-844 -->
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticHost"/>
 <header>	
 	<!-- For Infinite Analytics Start -->
@@ -57,9 +68,7 @@
 		</c:when>
 		<c:otherwise>
 			<c:if test="${empty hideSecureTransaction}">
-				<span class="secure secureTransaction"> <spring:theme
-						code="text.secure.transaction" /></span>
-						<span class="secure secureTransaction secMobile"></span>
+						<!-- <span class="secure secureTransaction secMobile"></span> -->
 			</c:if>
 		</c:otherwise>
 	</c:choose>
@@ -89,6 +98,7 @@
 						<cms:pageSlot position="TopHeaderSlot" var="logo" limit="1">
 							<cms:component component="${logo}" />
 						</cms:pageSlot>
+					
 					</c:if>
 				</div>
 				<div class="right">
@@ -153,9 +163,26 @@
 				<c:otherwise>
 					<div class="marketplace-checkout">
 						<c:if test="${empty hideLogo}">
-							<cms:pageSlot position="TopHeaderSlot" var="logo" limit="1">
+							<%-- <cms:pageSlot position="TopHeaderSlot" var="logo" limit="1">
 								<cms:component component="${logo}" />
-							</cms:pageSlot>
+							</cms:pageSlot> --%>
+							<div class="logo">
+							<div class="desktop-logo" data-logo="marketplace">
+						<cms:pageSlot position="SiteLogo" var="logo" limit="1">
+							<cms:component component="${logo}"/>
+						</cms:pageSlot>
+					</div>
+					<div class="tab-logo">
+						<cms:pageSlot position="TopHeaderSlot" var="logo" limit="1">
+							<cms:component component="${logo}"/>
+						</cms:pageSlot>
+					</div>
+					</div>
+					
+					<span>CHECKOUT</span>
+					
+					
+					<button id="deliveryAddressSubmitUp" type="submit" class="button checkout-next" style="display:none;">Proceed to Payment</button>
 						</c:if>
 					</div>
 				</c:otherwise>
@@ -240,6 +267,12 @@
 }
 </style>
 <script>
+var pathname = window.location.pathname;
+if(pathname =='/checkout/multi/delivery-method/select'){
+	$('#deliveryAddressSubmitUp').show();
+	
+	
+}
 </script>
 <!--  Commented for TISPRD-1440  -->
 <!-- <script>
@@ -250,3 +283,12 @@
 });*/
 
 </script>  -->
+<div class="wishAddSucessQV">
+	<span><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
+</div>
+<div class="wishAddLoginQV">
+	<span><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
+</div>
+<div class="wishAlreadyAddedQV">
+	<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
+</div>
