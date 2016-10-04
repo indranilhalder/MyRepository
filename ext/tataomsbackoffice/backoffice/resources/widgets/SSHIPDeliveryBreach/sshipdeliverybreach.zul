@@ -8,38 +8,23 @@
 	<columnlayout width="100%" height="100%">
 		<columnchildren width="100%">
 			<panel
-				style="height:24%;font-size:14px;border-bottom:none solid #27394f">
+				style="height:18%;font-size:14px;border-bottom:none solid #27394f">
 				<panelchildren style="border:none">
-					<vlayout style="width:100%;height:200px">
+					<vlayout style="width:100%;height:200px">				
 						<hlayout>
 							<vlayout width="100px">
-								<label value="Start Date"></label>
-							</vlayout>
-							<vlayout width="200px">
-								<datebox id="startdpic" cols="12"
-									constraint="no future: NO FUTURE" format="dd/MM/yyyy" />
-							</vlayout>
-							<vlayout width="100px">
-								<label value="End Date"></label>
-							</vlayout>
-
-							<vlayout width="200px">
-								<datebox id="enddpic" cols="12"
-									constraint="no future: NO FUTURE" format="dd/MM/yyyy" />
-							</vlayout>
-						</hlayout>
-						<hlayout>
-							<vlayout width="100px">
-								<label value="Order Id" hflex="1" />
+								<label value="Order ID" hflex="1" />
 							</vlayout>
 							<vlayout width="200px">
 								<textbox hflex="1" id="txtOrderId"
 									style="width:200px;height:10px">
 								</textbox>
 							</vlayout>
-
+                            <vlayout width="100px">
+								<label value=""/>
+							</vlayout>     
 							<vlayout width="100px">
-								<label value="Orderline Id" hflex="1" />
+								<label value="Orderline ID" hflex="1" />
 							</vlayout>
 							<vlayout width="200px">
 								<textbox hflex="1" id="txtOrderlineId"
@@ -56,6 +41,9 @@
 									style="width:200px;height:10px">
 								</textbox>
 							</vlayout>
+							<vlayout width="100px">
+								<label value=""/>
+							</vlayout> 
 							<vlayout width="100px">
 								<label value="Slave ID" hflex="1" />
 							</vlayout>
@@ -76,8 +64,8 @@
 			<panel>
 				<panelchildren>
                
-					<listbox id="listBoxData"  rows="10"
-						checkmark="true" emptyMessage="No result found in the result">
+					<listbox id="listBoxData"  mold="paging" pageSize="10" pagingPosition="top"
+						emptyMessage="No result found in the result">
 						<listhead sizable="true">
 							<listheader style="text-align:left"
 								label="Order Id ">

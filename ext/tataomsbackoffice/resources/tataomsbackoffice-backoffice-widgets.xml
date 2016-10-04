@@ -234,7 +234,7 @@
 				<widget id="configarable_params" widgetDefinitionId="com.hybris.oms.widgets.configurableParamWidget"
 					slotId="perspectives" template="true">
 				</widget>
-				
+
 
 				<!-- Tship vs SShip Assignment Report -->
 
@@ -441,9 +441,43 @@
 
 				<!-- add for SShip Delivery Breach -->
 
-				<widget widgetDefinitionId="com.techouts.widgets.sshipdeliverybreach"
-					title="SSHiP delivery Breach Widget" id="sshipdeliverybreach"
-					slotId="perspectives" template="true"></widget>
+
+				<widget id="sship_delivery_breach_collapseble"
+					widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
+					title="sship breach collapsible contatiner" slotId="perspectives"
+					template="true">
+
+					<widget id="sship_delivery_breach_datepic"
+						widgetDefinitionId="com.hybris.oms.tata.pincodelogistics.datepicwidget"
+						title="sship breach date pic" slotId="center" template="false">
+					</widget>
+					<widget id="sship_breach_widget" widgetDefinitionId="com.techouts.widgets.sshipdeliverybreach"
+						slotId="bottom" title="sship breach widget " template="false">
+						<virtual-sockets />
+					</widget>
+					<setting key="widgetStyleAttribute" type="String"></setting>
+					<setting key="allowLockingCenterPanel" type="Boolean">true</setting>
+					<setting key="bottomPanelCollapsed" type="Boolean">false</setting>
+					<setting key="topHeight" type="String">14%</setting>
+					<setting key="centerCaption" type="String">Editor</setting>
+					<setting key="bottomPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="centerHeight" type="String">14%</setting>
+					<setting key="topPanelInitiallyLocked" type="Boolean">false</setting>
+					<setting key="thirdSectionDisabled" type="Boolean">true</setting>
+					<setting key="allowLockingBottomPanel" type="Boolean">true</setting>
+					<setting key="bottomCaption" type="String"></setting>
+					<setting key="centerPanelCollapsed" type="Boolean">false</setting>
+					<setting key="widgetStyleClass" type="String"></setting>
+					<setting key="topCaption" type="String">SShip Delivery Breached
+						Orders Search
+					</setting>
+					<setting key="centerPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="topPanelCollapsed" type="Boolean">true</setting>
+					<setting key="allowLockingTopPanel" type="Boolean">true</setting>
+					<virtual-sockets />
+				</widget>
 
 				<!-- Added for Pin code serviceability and LogisticsReport -->
 				<widget id="container_pincode_logistics_report"
@@ -484,6 +518,45 @@
 					<virtual-sockets />
 				</widget>
 
+				<!-- Added for delivery date against promised date -->
+				<widget id="delivery_date_against_promisddate_collapseble"
+					widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
+					title="Delivery date against promised date report" slotId="perspectives"
+					template="true">
+
+					<widget id="deliverydate_against_promiseddate_datepic"
+						widgetDefinitionId="com.hybris.oms.tata.pincodelogistics.datepicwidget"
+						slotId="center" template="false">
+					</widget>
+					<widget id="deliverydate_against_promiseddate-widget"
+						widgetDefinitionId="com.techouts.widgets.delverydateagainstpromiseddate"
+						slotId="bottom" title="Delivery date against promised date"
+						template="false">
+						<virtual-sockets />
+					</widget>
+					<setting key="widgetStyleAttribute" type="String"></setting>
+					<setting key="allowLockingCenterPanel" type="Boolean">true</setting>
+					<setting key="bottomPanelCollapsed" type="Boolean">false</setting>
+					<setting key="topHeight" type="String">14%</setting>
+					<setting key="centerCaption" type="String">Editor</setting>
+					<setting key="bottomPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="centerHeight" type="String">14%</setting>
+					<setting key="topPanelInitiallyLocked" type="Boolean">false</setting>
+					<setting key="thirdSectionDisabled" type="Boolean">true</setting>
+					<setting key="allowLockingBottomPanel" type="Boolean">true</setting>
+					<setting key="bottomCaption" type="String"></setting>
+					<setting key="centerPanelCollapsed" type="Boolean">false</setting>
+					<setting key="widgetStyleClass" type="String"></setting>
+					<setting key="topCaption" type="String">Delivery Date Against
+						Promised Date Report
+					</setting>
+					<setting key="centerPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="topPanelCollapsed" type="Boolean">true</setting>
+					<setting key="allowLockingTopPanel" type="Boolean">true</setting>
+					<virtual-sockets />
+				</widget>
 
 				<virtual-sockets />
 			</widget>
@@ -606,7 +679,10 @@
 		outputId="startendDates" inputId="startendDates" sourceWidgetId="schdeuled_delivery_tracking_datepic" />
 	<widget-connection targetWidgetId="express_delivery_tracking_widget_report"
 		outputId="startendDates" inputId="startendDates" sourceWidgetId="express_delivery_tracking_datepic" />
-
-
+	<widget-connection targetWidgetId="deliverydate_against_promiseddate-widget"
+		outputId="startendDates" inputId="startendDates"
+		sourceWidgetId="deliverydate_against_promiseddate_datepic" />
+	<widget-connection sourceWidgetId="sship_delivery_breach_datepic"
+		outputId="startendDates" targetWidgetId="sship_breach_widget" inputId="startendDates" />
 </widgets>
  

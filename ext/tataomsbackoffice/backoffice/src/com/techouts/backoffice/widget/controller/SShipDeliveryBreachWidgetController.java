@@ -3,6 +3,9 @@
  */
 package com.techouts.backoffice.widget.controller;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -26,6 +29,7 @@ import org.zkoss.zul.Listitem;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Textbox;
 
+import com.hybris.cockpitng.annotations.SocketEvent;
 import com.hybris.cockpitng.annotations.ViewEvent;
 import com.hybris.cockpitng.util.DefaultWidgetController;
 import com.hybris.oms.api.ordercancel.CancelOrderFacade;
@@ -63,7 +67,6 @@ public class SShipDeliveryBreachWidgetController extends DefaultWidgetController
 	private Datebox startdpic;
 	@Wire
 	private Datebox enddpic;
-	@Wire
 	private Listbox listBoxData;
 	@Wire
 	private Textbox txtOrderId;
@@ -79,24 +82,28 @@ public class SShipDeliveryBreachWidgetController extends DefaultWidgetController
 	private SShipTxnFacade sShipTxnFacade;
 	@WireVariable("orderCancellationRestClient")
 	private CancelOrderFacade cancelOrderFacade;
+	private String startDate;
+	private String endDate;
 
 	@Override
 	public void initialize(final Component comp)
 	{
+		super.initialize(comp);
 		final Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, -6);
-		super.initialize(comp);
 		LOG.info("inside initialize method" + "Start Date " + cal.getTime() + "******* End Date " + new Date());
 		final SShipTxnInfo shipTxnInfo = new SShipTxnInfo();
 		shipTxnInfo.setFromDate(cal.getTime());
 		shipTxnInfo.setToDate(new Date());
+		listBoxData.setCheckmark(Boolean.TRUE);
+		listBoxData.setMultiple(Boolean.TRUE);
 		displaySshipDeiveryBreachData(shipTxnInfo);
-		listBoxData.setMultiple(true);
 	}
 
 	@ViewEvent(componentID = "sshipOrderSearch", eventName = Events.ON_CLICK)
 	public void sshipOrderSearch()
 	{
+
 		LOG.info("inside sship order search");
 		final SShipTxnInfo shipTxnInfo = new SShipTxnInfo();
 		int count = 0;
@@ -128,30 +135,48 @@ public class SShipDeliveryBreachWidgetController extends DefaultWidgetController
 		}
 		if (count > 0)
 		{
+			listBoxData.setMultiple(Boolean.TRUE);
 			displaySshipDeiveryBreachData(shipTxnInfo);
 		}
 		else
 		{
-			if (startdpic.getValue() == null)
-			{
-				msgBox("Please choose the Start Date");
-				return;
-			}
-			if (enddpic.getValue() == null)
-			{
-				msgBox("Please choose the End Date");
-				return;
-			}
-			if (startdpic.getValue().compareTo(enddpic.getValue()) > 0)
-			{
-				msgBox("Start date must be less than or equal to End date");
-				return;
-			}
-			LOG.info("statdate" + startdpic.getValue() + "end date" + enddpic.getValue());
-			shipTxnInfo.setFromDate(startdpic.getValue());
-			shipTxnInfo.setToDate(enddpic.getValue());
-			displaySshipDeiveryBreachData(shipTxnInfo);
+			Messagebox.show("Empty Search fields Please Provide at least one value");
 		}
+
+	}
+
+
+	/**
+	 *
+	 * @param startendDates
+	 *
+	 */
+	@SocketEvent(socketId = "startendDates")
+	public void getDeliveryBreachDataByDates(final String startendDates)
+	{
+
+
+		final String[] startEndArray = startendDates.trim().split(",");
+		startDate = startEndArray[0];
+		endDate = startEndArray[1];
+		final DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+
+		LOG.info(" SShip Breach " + startDate + "******* End Date " + endDate);
+		final SShipTxnInfo shipTxnInfo = new SShipTxnInfo();
+		try
+		{
+
+			shipTxnInfo.setFromDate(dateFormat.parse(startDate));
+			shipTxnInfo.setToDate(dateFormat.parse(endDate));
+		}
+		catch (final ParseException e)
+		{
+
+			e.printStackTrace();
+		}
+		listBoxData.setMultiple(Boolean.TRUE);
+		displaySshipDeiveryBreachData(shipTxnInfo);
+
 	}
 
 	@ViewEvent(componentID = "sshipOrderCancel", eventName = Events.ON_CLICK)
@@ -251,16 +276,15 @@ public class SShipDeliveryBreachWidgetController extends DefaultWidgetController
 		}
 	}
 
-	private void msgBox(final String mesg)
-	{
-		Messagebox.show(mesg, "Error", Messagebox.OK, Messagebox.ERROR);
-	}
-
 	private void displaySshipDeiveryBreachData(final SShipTxnInfo shipTxnInfo)
 	{
+
 		final SShipTxnResponseInfos sshipTxnResponse = sShipTxnFacade.getSShipTxns(shipTxnInfo);
 		final List<SShipTxnResponseInfo> listOfSshipResponse = sshipTxnResponse.getSShipTxnResponseInfo();
-		listBoxData.setModel(new ListModelList<SShipTxnResponseInfo>(listOfSshipResponse));
+		final ListModelList<SShipTxnResponseInfo> sshipResponce = new ListModelList<SShipTxnResponseInfo>(listOfSshipResponse);
+		sshipResponce.setMultiple(Boolean.TRUE);
+		listBoxData.setModel(sshipResponce);
 		listBoxData.setItemRenderer(new SShipTransactionInfoItemRenderer());
+
 	}
 }

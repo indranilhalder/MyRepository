@@ -28,6 +28,10 @@ import com.hybris.cockpitng.util.DefaultWidgetController;
 public class PincodeLogisticsDateController extends DefaultWidgetController
 {
 
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
 	private Datebox startdpic;
 	private Datebox enddpic;
 	@Wire
@@ -57,21 +61,22 @@ public class PincodeLogisticsDateController extends DefaultWidgetController
 	{
 
 
-		if (startdpic.getValue() == null || enddpic.getValue() == null)
+		if (enddpic.getValue() == null)
 		{
+			msgBox("Please choose the End Date");
 			return;
 		}
 
-		if (dateFormat.format(startdpic.getValue()).compareTo(dateFormat.format(enddpic.getValue())) > 0)
+		if (startdpic.getValue().after(enddpic.getValue())) //this kind of comparison ,it will check date along with time sec
 		{
-			msgBox("Start date must be less than or equal to End date");
+			msgBox("Start date must be less than End date");
 			return;
 		}
 
 
 		sendOutput("startendDates", dateFormat.format(startdpic.getValue()) + "," + dateFormat.format(enddpic.getValue()));
-		LOG.info("Start date " + startdpic.getValue() + "end date " + dateFormat.format(enddpic.getValue())
-				+ "output socket sended");
+		LOG.info(
+				"Start date " + startdpic.getValue() + "end date " + dateFormat.format(enddpic.getValue()) + "output socket sended");
 
 	}
 
@@ -86,20 +91,15 @@ public class PincodeLogisticsDateController extends DefaultWidgetController
 			msgBox("Please choose the Start Date");
 			return;
 		}
-		if (enddpic.getValue() == null)
+		if (enddpic.getValue().before(startdpic.getValue()))
 		{
-			msgBox("Please choose the End Date");
-			return;
-		}
-		if (dateFormat.format(startdpic.getValue()).compareTo(dateFormat.format(enddpic.getValue())) > 0)
-		{
-			msgBox("End date must be greater than or equal to Start date");
+			msgBox("End date must be greater than  Start date");
 			return;
 		}
 
 		sendOutput("startendDates", dateFormat.format(startdpic.getValue()) + "," + dateFormat.format(enddpic.getValue()));
-		LOG.info("Start date " + startdpic.getValue() + "end date " + dateFormat.format(enddpic.getValue())
-				+ "output socket sended");
+		LOG.info(
+				"Start date " + startdpic.getValue() + "end date " + dateFormat.format(enddpic.getValue()) + "output socket sended");
 
 	}
 

@@ -16,10 +16,12 @@
 	id="com.techouts.widgets.sshipdeliverybreach">
 	<name>SShip Delivery Breach</name>
 	<view src="sshipdeliverybreach.zul" />	
-<keywords>
-       
+	<keywords> 
         <keyword>SShip Delivery Breach </keyword>
     </keywords>
+    <sockets>
+		<input id="startendDates" type="java.lang.String" />
+	</sockets>
    <controller class="com.techouts.backoffice.widget.controller.SShipDeliveryBreachWidgetController" /> 
    
 </widget-definition>
