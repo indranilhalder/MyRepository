@@ -9,7 +9,16 @@
 <div class="ui-front active ">
 	<form id="search_form_brand" name="search_form_brand" method="get"
 		action="${searchUrl}">
+		
+		<select>
+  <option value="${categoryName}">${categoryName}</option>
+  </select>
+		
 		<button id="brandSearchButton">${categoryName}</button>
+		
+		
+			   
+		
 		<spring:theme code="search.placeholder" var="searchPlaceholder" />
 		
 		<ycommerce:testId code="header_search_input">
