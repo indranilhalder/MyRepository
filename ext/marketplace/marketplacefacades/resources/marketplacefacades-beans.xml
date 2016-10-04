@@ -904,13 +904,5 @@
 		<property name="categoryData" type="java.util.List&lt;com.tisl.mpl.facades.data.EnhancedSearchCategoryData>"></property>
 		<property name="brandData" type="java.util.List&lt;com.tisl.mpl.facades.data.EnhancedSearchBrandData>"></property>
 		<property name="sellerData" type="java.util.List&lt;com.tisl.mpl.facades.data.EnhancedSearchSellerData>"></property>
-	</bean>
-	<!-- //indexing -->
-	<enum class="de.hybris.platform.solrfacetsearch.config.IndexOperation">
-		<value>FULL</value>
-		<value>UPDATE</value>
-		<value>DELETE</value>
-		<value>PARTIAL_UPDATE</value>
-		<value>STAGED_INDEXED</value>
-	</enum>	
+	</bean>	
 </beans>
