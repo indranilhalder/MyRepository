@@ -202,7 +202,7 @@ function displayNetbankingForm(){
 			$(".name_on_card").val("");	
 			applyPromotion(null);
 			$("#paymentDetails, #make_nb_payment").css("display","block");
-			//$(".make_payment_top_nb").css("display","block");
+			$(".make_payment_top_nb").css("display","block");
 			$("#submitButtons, #paymentFormButton, #submitPaymentFormButton, #submitPaymentFormCODButton").css("display","none");
 		},
 		error : function(resp) {
