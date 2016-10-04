@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.cockpits.cscockpit.strategies.MplFindDeliveryFulfillModeStrategy;
+import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.marketplacecommerceservices.strategy.MplFindDeliveryCostStrategy;
 
 /**
@@ -26,7 +27,11 @@ public class MplDefaultFindDeliveryFulfillModeStrategy implements MplFindDeliver
 	@Override
 	public String findDeliveryFulfillMode(String selectedUssid) {
 		 LOG.debug("MplDefaultFindDeliveryFulfillModeStrategy for SKUID:: " + selectedUssid);
-				 return findDeliveryCostStrategy.findDeliveryFulfillMode(selectedUssid).toUpperCase();
+				 //return findDeliveryCostStrategy.findDeliveryFulfillMode(selectedUssid).toUpperCase();
+		 
+		//TPR-622,627--- CSCOCKPIT Add to cart to get and isSshipCodEligble checking need to done for SSHIP Products hence return type changed
+		 RichAttributeModel richAttribute = findDeliveryCostStrategy.findDeliveryFulfillMode(selectedUssid);
+		 return richAttribute.getDeliveryFulfillModes().getCode().toUpperCase();
 	}
 
 

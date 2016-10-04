@@ -37,10 +37,10 @@
 			</div>
 		</c:if>
 		
-		<formElement:formInputBox idKey="j_username_login" labelKey="login.email" path="j_username" inputCSS="form-control" mandatory="true" />
+		<formElement:formInputBox idKey="j_username_login" labelKey="" placeholder="EMAIL ADDRESS" path="j_username" inputCSS="form-control" mandatory="true" />
 		<div class="help-block has-error" id="signinEmailIdDiv" style="display: none;"></div>
 		<formElement:formPasswordBox idKey="j_password_login"
-			labelKey="login.password" path="j_password" inputCSS="form-control"
+			labelKey=""  path="j_password" inputCSS="form-control"
 			mandatory="true" />
 		<div class="help-block has-error" id="signinPasswordDiv" style="display: none;"></div>
 		
@@ -51,7 +51,12 @@
 
 		<div id="captchaError"></div>
 		<!-- Captcha end -->
-		
+			<div class="forgotten-password_login">
+			<a href="<c:url value='/login/pw/request'/>"
+				class="js-password-forgotten"> <spring:theme
+					code="login.link.forgottenPwd" /></a> <input type="hidden"
+				name="Mobileno" id="Mobileno" value="${Mobileno}" />
+		</div>
 		<div class="button_fwd_wrapper">
 			<ycommerce:testId code="login_Login_button">
 				<button type="submit"
@@ -61,12 +66,13 @@
 			</ycommerce:testId>
 		</div>
 
-		<div class="forgotten-password_login">
+
+		<%-- <div class="forgotten-password_login">
 			<a href="<c:url value='/login/pw/request'/>"
 				class="js-password-forgotten"> <spring:theme
 					code="login.link.forgottenPwd" /></a> <input type="hidden"
 				name="Mobileno" id="Mobileno" value="${Mobileno}" />
-		</div>
+		</div> --%>
 		<div class="forgotten-password_register">
 			New to Tatacliq? &nbsp;<a id="newToTata" href="javascript:void(0);">Register here</a>
 		</div>
@@ -130,17 +136,14 @@
 		</script>
 
 	</form:form>
-</div>
 
-<span class="or"><spring:theme code="text.or" /></span>
-
-<!-- For  Gigya and API Social Login -->
-
+<div class="else-sec"><span class="else-brdrtp"></span><span class="else">or </span> <span class="else-brdrbtm"></span></div>
+	<!-- For  Gigya and API Social Login -->
 <c:choose> 
   <c:when test="${isGigyaEnabled=='Y'}">
    <ul class="social-connect" id="gSignInWrapper">
 <li>
-    <br />
+   <!--  <br /> -->
    <!--  <h4>Please sign in using one of the following providers:</h4><br /><br /> -->
     <div id="loginDiv"></div>
     
@@ -158,6 +161,11 @@
 </c:choose>
 
 <!-- End  Gigya and API Social Login -->
+</div>
+
+<%-- <span class="or"><spring:theme code="text.or" /></span> --%>
+
+
 
 <script type="text/javascript" >
 $(document).ready(function (){

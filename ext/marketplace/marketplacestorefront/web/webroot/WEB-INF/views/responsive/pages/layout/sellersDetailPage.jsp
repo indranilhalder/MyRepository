@@ -446,7 +446,15 @@ var allSellers='${allsellers}';
 				</c:forEach>
 			</div>
 		</div>
-		
+		<div class="wishAddSucess">
+			<span><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
+		</div>
+		<div class="wishAddLogin">
+			<span><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
+		</div>
+		<div class="wishAlreadyAdded">
+			<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
+		</div>
 		<div class="product-detail">
 			<ycommerce:testId
 				code="productDetails_productNamePrice_label_${product.code}">
@@ -462,7 +470,14 @@ var allSellers='${allsellers}';
 				value="${emiCuttOffAmount}" />
 			<!-- EMI section -->
 			<product:emiDetail product="${product}" />
+			<!-- TISPRD-5467 starts  -->
+			<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('freebiePriceThreshold')" var="freebiePriceThreshVal"/>
+			<input type="hidden" id="freebiePriceThreshId" value="${freebiePriceThreshVal}">
+			<!-- TISPRD-5467 end  -->
 			<product:productMainVariant />
+			<cms:pageSlot position="AddToCart" var="component">
+				<cms:component component="${component}" />
+			</cms:pageSlot>
 			<div class="SoldWrap">
 				<ycommerce:testId
 					code="productDetails_productNamePrice_label_${product.code}">
@@ -486,9 +501,9 @@ var allSellers='${allsellers}';
 
 
 
-			<cms:pageSlot position="AddToCart" var="component">
+			<%-- <cms:pageSlot position="AddToCart" var="component">
 				<cms:component component="${component}" />
-			</cms:pageSlot>
+			</cms:pageSlot> --%>
 			
 		</div>
 		</div>

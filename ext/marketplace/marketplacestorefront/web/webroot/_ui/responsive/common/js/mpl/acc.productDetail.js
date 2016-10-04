@@ -1053,23 +1053,25 @@ $(function() {
 								$('#unsevisablePin,#unableprocessPin,#wrongPin,#serviceablePin')
 										.hide();
 								$("#emptyPin").show();
+								$("#pdpPinCodeAvailable").hide();
 								
 								$('#addToCartButton').show();
 								$('#buyNowButton').attr("disabled",false);
 								//TPR-794
-								$("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options.");
-								$("#pdpPinCodeAvailable").show();
+								//$("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options.");
+								//$("#pdpPinCodeAvailable").show();
 								return false;
 							} else if (!regExp.test(pin)) {
 								$('#unsevisablePin,#unableprocessPin,#emptyPin').hide();
 								$("#wrongPin").show();
+								$("#pdpPinCodeAvailable").hide();
 								$("#serviceablePin").hide();
 							//	$("#pdpPinCodeAvailable").hide();
 								$('#addToCartButton').show();
 								$('#buyNowButton').attr("disabled",false);
 								//TPR-794
-								$("#pdpPinCodeAvailable").show();
-								$("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options.");
+								//$("#pdpPinCodeAvailable").show();
+								//$("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options.");
 								return false;
 							}
 							var dataString = "pin=" + pin + "&productCode="
@@ -1394,7 +1396,6 @@ $( document ).ready(function() {
 					if (promorestrictedSellers == null
 							|| promorestrictedSellers == undefined
 							|| promorestrictedSellers == "") {
-
 						//TPR-772
 						$(".promo-block").show();
 
@@ -2720,22 +2721,25 @@ function loadDefaultWishListName_SizeGuide() {
 				$(this).addClass("active mobile");
 				$("body").append("<div class='emi-overlay' style='opacity:0.65; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 				openPopForBankEMI();
+				$("body").addClass("no-scroll");
 				
 			}
 		});
 		$(document).on("click",".emi-overlay,.Emi .modal-content .Close",function(){
 			$(".Emi > p").removeClass("active mobile");
 			$(".emi-overlay").remove();
+			$("body").removeClass("no-scroll");
 		});
 		
 		$(window).resize(function(){
 			if($(window).width() > 1024){
 				$(".Emi > p").removeClass("active mobile");
 				$(".emi-overlay").remove();
+				$("body").removeClass("no-scroll");
 			}
 		})
 		
-		$(document).on("click",".product-detail .promo-block .details",function(e){
+		$(document).on("click",".product-detail .promo-block .pdp-promo-title",function(e){
 			e.preventDefault();
 			offerPopup($("#promotionDetailsId").html());
 		});
@@ -2783,5 +2787,8 @@ function loadDefaultWishListName_SizeGuide() {
 	/*Offer popup*/
 	function offerPopup(comp) {
 		$("body").append('<div class="modal fade" id="offerPopup"><div class="content offer-content" style="padding: 40px;max-width: 650px;">'+comp+'<button class="close" data-dismiss="modal"></button></div><div class="overlay" data-dismiss="modal"></div></div>');
+		if($("#OfferWrap .Inner .Left").children().length == 0) {
+			$("#OfferWrap .Inner .Left").remove();
+		}
 		$("#offerPopup").modal('show');
 	} 

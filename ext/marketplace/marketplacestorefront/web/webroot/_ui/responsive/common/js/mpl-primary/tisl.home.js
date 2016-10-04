@@ -166,6 +166,14 @@ $(document).on("mouseover touchend", "div.departmenthover", function() {
 
 
 $("span.latestOffersBanner").on("click touchend", function() {
+	/*TPR-644 START*/
+	utag.link(
+		{
+			link_obj: this, 
+			link_text: 'concierge_view_details' , 
+			event_type : 'concierge_view_details' 
+		});
+	/*TPR-644 END*/
 	$.ajax({
 		url : ACC.config.encodedContextPath + "/listOffers",
 		type : 'GET',
@@ -1959,7 +1967,6 @@ $(document).ready(function(){
 		
 		
 	});
-
 
 	//TISPRD-4587
 	/*$(document).ajaxComplete(function(){

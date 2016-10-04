@@ -157,6 +157,7 @@
 		<property name="capacity" type="java.util.List&lt;java.lang.String>"></property>
 		<property name="seoMetaTitle" type="String"/>
 		<property name="seoMetaDescription" type="String"/>
+		<property name="seoMetaKeyword" type="String"/>
 		<property name="inStockFlag" type="Boolean"/>
 		<property name="isVariant" type="Boolean"/>
 		<property name="mobileBrandName" type="String"/>
@@ -169,6 +170,7 @@
 		<property name="productTitle" type="String" />
 		<property name="fulfillmentType" type="String" />
 		<property name="sellerName" type="String" />
+		<property name="stockValue" type="boolean" />
 		<!-- pdp changes ends -->
 
 		<property name="freebieProducts" type="java.util.List&lt;com.tisl.mpl.facades.data.FreebieProduct>"/>
@@ -513,6 +515,11 @@
 		<property name="genericFacet" type="boolean" />
 		<property name="classificationProductType" type="java.lang.String" />
 		<property name="facetTopValue" type="Integer" />
+		<!-- Search POC Start -->
+		<property name="isRangeFaceted" type="java.lang.Boolean" />
+		<property name="isNumeric" type="java.lang.Boolean" />
+		<property name="unitType" type="java.lang.String" />
+		<!-- Search POC End -->
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.product.data.AddressRadioTypeData">

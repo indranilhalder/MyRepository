@@ -262,7 +262,7 @@ $(document).ready(function(){
 	/*-----------Start of SERP codes-----------------*/ 
 			
 			var sessionFacetName;
-			$(".facet-name.js-facet-name h4").on("click",function(){
+			$(document).on("click",".facet-name.js-facet-name h4",function(){
 				if(typeof(Storage) !== "undefined") {
 					
 					    if($(this).hasClass('active')) {
@@ -313,15 +313,11 @@ $(document).ready(function(){
 			}
 			
 			
-			
-			$(".toggle-filterSerp").click(function(){
+			//Moved out from document-ready
+			/*$(".toggle-filterSerp").click(function(){
 				$(".product-facet.js-product-facet.listing-leftmenu").slideToggle();
 				$(this).toggleClass("active");
-
-
-
-
-				});
+				});*/
 			$(".product-facet .facet-list li input.applied-color").each(function(){
 				var appliedColor = $(this).attr("value");
 				$(".product-facet li.filter-colour a").each(function(){
@@ -1274,16 +1270,6 @@ $(document).ready(function(){
 		
 		/*--- END of  Mobile view Left menu Sign In toggle---- */
 	/*--- Start of  Mobile view sort by arrow in SERP and PLP---- */
-	$(window).on("load",function(e){
-		$('.sort-refine-bar.mobile').append('<span id="hidden-option-width" style="display: none;"></span>')
-		$(".sort-refine-bar select.black-arrow-left").css("display","block");
-		$(".sort-refine-bar select").change(function(){
-			 $("#hidden-option-width").html($(this).find('option:selected').text());
-			 var option_width=$("#hidden-option-width").width() + 22;
-			$(".sort-refine-bar select.black-arrow-left").css("background-position-x",option_width);
-		});
-	});
-	/*--- End of  Mobile view sort by arrow in SERP and PLP---- */
 	
 	$(".progtrckr .progress.processing").each(function(){
 		var len = $(this).children("span.dot").length;
@@ -1577,9 +1563,11 @@ $(document).ready(function(){
 			$(this).click();
 		});
 		$(window).on("load resize", function() {
-			var filter_height=$(".facet-list.filter-opt").height() + 55;
-			if($(".searchSpellingSuggestionPrompt").height() > 0){
-				filter_height= $(".facet-list.filter-opt").height() + 55 + $(".searchSpellingSuggestionPrompt").height() + 40;
+			var filter_height = 0;
+			if ($(".searchSpellingSuggestionPrompt").is(":visible")) {
+				filter_height=$(".searchSpellingSuggestionPrompt").outerHeight() + 95;
+			} else {
+				filter_height=$(".facet-list.filter-opt").height() + 55;
 			}
 			$(".listing.wrapper .left-block").css("margin-top",filter_height+"px");
 		});
@@ -1732,6 +1720,8 @@ $(document).ready(function() {
 	$(".facet.js-facet.Size .js-facet-values.js-facet-form").append(sizeMoreLess);
 	colorSwatch();
 	sizeSwatch();
+	
+	
 });
 $(window).resize(function() {
 
@@ -1787,10 +1777,15 @@ $(document).on('click','.facet.js-facet.Size .js-facet-name h4',function(){
 		}
 	},80)
 });
-$(document).on('click','.left-block .toggle-filterSerp',function(){
+//$(document).on('click','.left-block .toggle-filterSerp',function(){
+function toggleFilter(){
 		colorSwatch();
 		sizeSwatch();
-});
+		//Mobile view filter ajax
+		$(".product-facet.js-product-facet.listing-leftmenu").slideToggle();
+		$(".toggle-filterSerp").toggleClass("active");
+}
+//});
 
 function colorSwatch() {
 	var row = 0, start = 0, count = 0, end = 0, back = true;
@@ -1913,9 +1908,23 @@ function callGigyaWhenNotMinified(){
 
 /* Changes for TISPT-203 ends  */
 
+/*TPR-198 : Page reload on SortBy and ViewBy*/
+//Sort by filter
+function sortByFilterResult(top){
+	 $("#hidden-option-width").html($(".sort-refine-bar select").find('option:selected').text());
+	 var option_width=$("#hidden-option-width").width() + 22;
+	$(".sort-refine-bar select.black-arrow-left").css("background-position-x",option_width);
+	
+	$('#sortForm'+top).submit();
+}
+
+//View by filter
+function viewByFilterResult(top){
+	$('#pageSize_form'+top).submit();
+}
 /*Filter scroll changes start*/
 $(window).on("scroll",function(){
-	if($(window).width() > 650 && $('.listing.wrapper .right-block').height() > $('.listing.wrapper .left-block').height()) {
+	if($(window).width() > 790 && $('.listing.wrapper .right-block').height() > $('.listing.wrapper .left-block').height()) {
 		
 		if ($('.listing.wrapper .right-block').offset().top >= $('.listing.wrapper .left-block').offset().top - parseInt($('.listing.wrapper .left-block').css("margin-top"))){
 			$('.listing.wrapper .left-block').removeClass("fix bottom");
@@ -1930,6 +1939,8 @@ $(window).on("scroll",function(){
 		if($(window).scrollTop() >  $('.listing.wrapper .right-block').height() - $(window).height() + $('.listing.wrapper .right-block').offset().top ){
 			$('.listing.wrapper .left-block').removeClass("fix").addClass("bottom");
 		}
+	} else {
+		$('.listing.wrapper .left-block').removeClass("fix bottom");
 	}
 });
 /*Filter scroll changes end*/
@@ -1970,3 +1981,18 @@ $(document).ajaxComplete(function(){
 		$("body").find(".content-block-slider.electronic-brand-slider").removeClass("timeout-slider");
 	}
 });
+
+var ia_prod;
+$(window).resize(function(){
+	clearTimeout(ia_prod);
+	ia_prod = setTimeout(function(){
+		var a = $(".pdp .trending#ia_products .image").height()/2 + 20;
+		$(".pdp .trending#ia_products .owl-controls").css("top",a)
+	},100);
+});
+$(window).scroll(function(){
+	if($(".pdp .trending#ia_products").children().length > 0 && $(window).scrollTop()  > $(".pdp .trending#ia_products").offset().top - $(window).height()) {
+		var a = $(".pdp .trending#ia_products .image").height()/2 + 20;
+		$(".pdp .trending#ia_products .owl-controls").css("top",a);
+	}
+})

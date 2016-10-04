@@ -1762,6 +1762,25 @@
 	<!-- New Keyword Redirection Implementation End -->
 	<bean id="mplKeywordRedirectDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplKeywordRedirectDaoImpl">
 	</bean>
+	
+	<!-- Bean for POC Search starts-->
 
+	<bean id="standardizationDao"
+		class="com.tisl.mpl.standardizationfactory.StandardizationDaoImpl">
+	</bean>
+	<bean id="standardizationService"
+		class="com.tisl.mpl.standardizationfactory.StandardizationServiceImpl">
+	</bean>
+	
+	<bean id="sizeStandardInterceptor"
+		class="com.tisl.mpl.interceptor.SizeStandardInterceptor">
+	</bean>
+
+	<bean id="sizeStandardInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="sizeStandardInterceptor" />
+		<property name="typeCode" value="Sizesystem" />
+	</bean>
+	<!-- Bean for POC Search ends-->
 </beans>
 

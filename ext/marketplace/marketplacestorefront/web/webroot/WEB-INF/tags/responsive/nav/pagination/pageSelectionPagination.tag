@@ -29,7 +29,7 @@
 <form action="#" method="get" class="paginationForm" id="paginationForm"> 
 	<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 	<input type="hidden" name="q" value="${searchPageData.currentQuery.query.value}"/>
-<%-- <input type="hidden" name="pageFacetData" value="${pageFacets}"/> --%>
+
 	<input type="hidden" name="pageSize" value="${searchPageData.pagination.pageSize}"/>
 
 		<c:if test="${(searchPageData.pagination.numberOfPages > 1)}">
@@ -195,7 +195,7 @@
 <form action="#" method="get" class="paginationForm" id="paginationFormBottom"> 
 	 <input type="hidden" name="searchCategory" value="${searchCategory}"/>
 	<input type="hidden" name="q" value="${searchPageData.currentQuery.query.value}"/>
-	<%-- <input type="hidden" name="pageFacetData" value="${pageFacets}"/>--%>
+
 	<input type="hidden" name="pageSize" value="${searchPageData.pagination.pageSize}"/> 
 
 		<c:if test="${(searchPageData.pagination.numberOfPages > 1)}">

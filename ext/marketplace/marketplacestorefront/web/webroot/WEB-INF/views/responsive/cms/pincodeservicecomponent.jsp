@@ -9,6 +9,16 @@
 	<ul class="delivery-block">
 	<li><h3><spring:theme code="pdp.delivery.options"/></h3><p id="pdpPinCodeAvailable"><spring:theme code="product.pincode"/></p>
 	<span id="unsevisablePin" style="display:none;color:#ff1c47"><spring:theme code="pincode.unsevisable"/></span>
+	<%--Tpr-634 - added for scope of improvement --%>
+	<span class="pincodeErrorMsg">
+		<span id="emptyPin" style="display:none;color:#ff1c47"><spring:theme code="product.empty.pincode"/></span>
+		<span id="wrongPin" style="display:none;color:#ff1c47"><spring:theme code="pincode.invalid"/></span>
+		<span id="unsevisablePin" style="display:none;color:#ff1c47"><spring:theme code="pincode.unsevisable"/></span>
+		<span id="serviceablePin" style="display:none;color:#00994d"><spring:theme code="pincode.serviceable"/></span> <!-- Changes for TISPRM-20,65 -->
+		<span id="unableprocessPin" style="display:none;color:#ff1c47"><spring:theme code="pincode.unableprocess"/></span>
+
+		</span>
+		
 		<div class="inline-form">
 		 <c:choose>
 		 <c:when test="${not empty pincode}">
@@ -24,14 +34,14 @@
 			<button class="gray submitDList" id="pdpPincodeCheckDList" style="display:none;"><spring:theme code="text.submit"/></button>
 		</div></li>
 		 
-		<span>
+		<%-- <span>
 		<span id="emptyPin" style="display:none;color:#ff1c47"><spring:theme code="product.empty.pincode"/></span>
 		<span id="wrongPin" style="display:none;color:#ff1c47"><spring:theme code="pincode.invalid"/></span>
 		<span id="unsevisablePin" style="display:none;color:#ff1c47"><spring:theme code="pincode.unsevisable"/></span>
 		<span id="serviceablePin" style="display:none;color:#00994d"><spring:theme code="pincode.serviceable"/></span> <!-- Changes for TISPRM-20,65 -->
 		<span id="unableprocessPin" style="display:none;color:#ff1c47"><spring:theme code="pincode.unableprocess"/></span>
 
-		</span>
+		</span> --%>
 	   <c:forEach var="entry" items="${deliveryModeMap}">
 		<%-- Key: <c:out value="${entry.key}"/> --%>
 		<c:if test="${entry.key eq 'home-delivery'}">

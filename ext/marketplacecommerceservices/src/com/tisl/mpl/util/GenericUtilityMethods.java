@@ -89,7 +89,8 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: Sends the year from Date
-	 * @param : date
+	 * @param :
+	 *           date
 	 * @return year
 	 */
 	public static String redirectYear(final Date date)
@@ -114,7 +115,8 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: Modifies Date with the required Year
-	 * @param : date,yeartoModify
+	 * @param :
+	 *           date,yeartoModify
 	 * @return modifedDate
 	 */
 	public static Date modifiedBDate(final Date date, final String yeartoModify)
@@ -207,7 +209,8 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: Compares with System Date
-	 * @param : date
+	 * @param :
+	 *           date
 	 * @return flag
 	 */
 	public static boolean compareDateWithSysDate(final Date date)
@@ -246,7 +249,8 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: @Promtion: Checks Excluded Manufacturer Restriction
-	 * @param : List<AbstractPromotionRestriction> restrictionLists
+	 * @param :
+	 *           List<AbstractPromotionRestriction> restrictionLists
 	 * @param restrictionList
 	 * @return manufactureList
 	 */
@@ -632,7 +636,8 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description : Populate the Excluded Product and Manufacture Data in separate Lists
-	 * @param : SessionContext arg0,PromotionEvaluationContext arg1
+	 * @param :
+	 *           SessionContext arg0,PromotionEvaluationContext arg1
 	 */
 	public static void populateExcludedProductManufacturerList(final SessionContext arg0, final PromotionEvaluationContext arg1,
 			final List<Product> excludedProductList, final List<String> excludeManufactureList,
@@ -643,8 +648,8 @@ public class GenericUtilityMethods
 			if (productPromotion.getProperty(arg0, MarketplacecommerceservicesConstants.EXCLUDEDPRODUCTS) != null
 					&& excludedProductList != null)
 			{
-				excludedProductList.addAll((List<Product>) productPromotion.getProperty(arg0,
-						MarketplacecommerceservicesConstants.EXCLUDEDPRODUCTS));
+				excludedProductList.addAll(
+						(List<Product>) productPromotion.getProperty(arg0, MarketplacecommerceservicesConstants.EXCLUDEDPRODUCTS));
 			}
 			if (excludeManufactureList != null)
 			{
@@ -679,8 +684,8 @@ public class GenericUtilityMethods
 			final SessionContext ctx, final PromotionEvaluationContext promoEvalCtx, final ProductPromotion productPromotion,
 			final List<AbstractPromotionRestriction> restrictionList)
 	{
-		return (getDefaultPromotionsManager().checkMinimumCategoryValue(validProductUssidMap, ctx, productPromotion) && getDefaultPromotionsManager()
-				.checkMinimumBrandAmount(ctx, promoEvalCtx, validProductUssidMap, restrictionList));
+		return (getDefaultPromotionsManager().checkMinimumCategoryValue(validProductUssidMap, ctx, productPromotion)
+				&& getDefaultPromotionsManager().checkMinimumBrandAmount(ctx, promoEvalCtx, validProductUssidMap, restrictionList));
 
 	}
 
@@ -714,11 +719,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 * 
+	 *
 	 * @param orderDetail
-	 * 
+	 *
 	 * @param type (1-Billing, 2-Shipping)
-	 * 
+	 *
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -990,8 +995,8 @@ public class GenericUtilityMethods
 	public static String getMissingImageUrl()
 
 	{
-		final ConfigurationService configService = (ConfigurationService) Registry.getApplicationContext().getBean(
-				"configurationService");
+		final ConfigurationService configService = (ConfigurationService) Registry.getApplicationContext()
+				.getBean("configurationService");
 		String missingImageUrl = MISSING_IMAGE_URL;
 		String staticHost = null;
 		if (null != configService)
@@ -1019,6 +1024,7 @@ public class GenericUtilityMethods
 		String adobeProductSku = null;
 		String page_subCategory_name = null;
 		String cartTotal = null;
+		String page_subcategory_name_L3 = null;
 		final List<String> productBrandList = new ArrayList<String>();
 		final List<String> productCategoryList = new ArrayList<String>();
 		final List<String> productIdList = new ArrayList<String>();
@@ -1029,6 +1035,7 @@ public class GenericUtilityMethods
 		final List<String> productUnitPriceList = new ArrayList<String>();
 		final List<String> pageSubCategories = new ArrayList<String>();
 		final List<String> adobeProductSkuList = new ArrayList<String>();
+		final List<String> pageSubcategoryNameL3List = new ArrayList<String>();
 
 		try
 		{
@@ -1093,10 +1100,17 @@ public class GenericUtilityMethods
 						{
 							brand = appendQuote(entry.getProduct().getBrand().getBrandname());
 						}
+						if (categoryStrings.length >= 1)
+						{
+							page_subCategory_name = appendQuote((String) categoryStrings[1]).replaceAll(" ", "_").toLowerCase();
+							pageSubCategories.add(page_subCategory_name);
+						}
+
 						if (categoryStrings.length >= 2)
 						{
-							page_subCategory_name = appendQuote((String) categoryStrings[1]);
-							pageSubCategories.add(page_subCategory_name);
+							page_subcategory_name_L3 = appendQuote((String) categoryStrings[2]).replaceAll(" ", "_").toLowerCase();
+							pageSubcategoryNameL3List.add(page_subcategory_name_L3);
+
 						}
 						productBrandList.add(brand);
 						productCategoryList.add(category);
@@ -1142,6 +1156,8 @@ public class GenericUtilityMethods
 				model.addAttribute("pageSubCategories", pageSubCategories);
 				model.addAttribute("adobe_product", adobeProductSku);
 				model.addAttribute("cart_total", cartTotal);
+				//TPR-430
+				model.addAttribute("page_subcategory_name_L3", pageSubcategoryNameL3List);
 			}
 		}
 		catch (final Exception te)

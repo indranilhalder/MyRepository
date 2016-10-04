@@ -3385,12 +3385,13 @@ function populatePincodeDeliveryMode(response,buttonType){
 				}
 			}
 			/****TISPRM-65 - Cart Page show pincode serviceability msg***/
-			var cartMessage = document.createElement("span");
+			/****Tpr-634 - commented for scope of improvement***/
+			/*var cartMessage = document.createElement("span");
 			cartMessage.id = "successPin"
 			cartMessage.style.color = "green";
 			var message = document.createTextNode("Yes, it's available. Go ahead.");
 			cartMessage.appendChild(message);
-			newUi.appendChild(cartMessage);
+			newUi.appendChild(cartMessage);*/
 			$("#"+ussId+"_li").append(newUi);
 			
 		}

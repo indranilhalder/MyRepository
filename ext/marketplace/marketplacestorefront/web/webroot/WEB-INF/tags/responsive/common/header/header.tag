@@ -59,6 +59,7 @@
 			<c:if test="${empty hideSecureTransaction}">
 				<span class="secure secureTransaction"> <spring:theme
 						code="text.secure.transaction" /></span>
+						<span class="secure secureTransaction secMobile"></span>
 			</c:if>
 		</c:otherwise>
 	</c:choose>

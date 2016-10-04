@@ -22,12 +22,12 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.util.PriceValue;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
+import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
@@ -201,31 +201,85 @@ public class DefaultMplFindDeliveryCostStrategy extends AbstractBusinessService 
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
 
+	//	@Override
+	//	public String findDeliveryFulfillMode(final String selectedUssid)
+	//	{
+	//		LOG.debug("MplDefaultFindDeliveryFulfillModeStrategy" + selectedUssid);
+	//		try
+	//		{
+	//
+	//			final SellerInformationModel seller = mplSellerInformationService.getSellerDetail(selectedUssid);
+	//			return seller.getRichAttribute().iterator().next().getDeliveryFulfillModes().getCode();
+	//
+	//		}
+	//		catch (final Exception ex)
+	//		{
+	//			LOG.error(ex);
+	//		}
+	//		return StringUtils.EMPTY;
+	//	}
+	//
+	//	@Override
+	//	public boolean isTShip(final String selectedUssid)
+	//	{
+	//		LOG.debug("MplDefaultFindDeliveryFulfillModeStrategy" + selectedUssid);
+	//		return DeliveryFulfillModesEnum.TSHIP.getCode().equalsIgnoreCase(findDeliveryFulfillMode(selectedUssid));
+	//	}
+
+
+	//TPR-622,627--- CSCOCKPIT Add to cart to get and isSshipCodEligble checking need to done for SSHIP Products hence return type changed
 	@Override
-	public String findDeliveryFulfillMode(final String selectedUssid)
+	public RichAttributeModel findDeliveryFulfillMode(final String selectedUssid)
 	{
 		LOG.debug("MplDefaultFindDeliveryFulfillModeStrategy" + selectedUssid);
 		try
 		{
 
 			final SellerInformationModel seller = mplSellerInformationService.getSellerDetail(selectedUssid);
-			return seller.getRichAttribute().iterator().next().getDeliveryFulfillModes().getCode();
+			final RichAttributeModel richAttribute = seller.getRichAttribute().iterator().next();
+
+			//return seller.getRichAttribute().iterator().next().getDeliveryFulfillModes().getCode();
+			return richAttribute;
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(ex);
+		}
+		return null;
+	}
+
+	@Override
+	public boolean isTShip(final String selectedUssid)
+	{
+		boolean tShip = false;
+		LOG.debug("MplDefaultFindDeliveryFulfillModeStrategy" + selectedUssid);
+		try
+		{
+			final RichAttributeModel richAttribute = findDeliveryFulfillMode(selectedUssid);
+			if (DeliveryFulfillModesEnum.TSHIP.getCode().equalsIgnoreCase(richAttribute.getDeliveryFulfillModes().getCode()))
+			{
+				tShip = true;
+			}
+			else
+			{
+				if (null != richAttribute.getIsSshipCodEligible()
+						&& richAttribute.getIsSshipCodEligible().getCode().equalsIgnoreCase("true"))
+				{
+					tShip = true;
+				}
+
+
+			}
 
 		}
 		catch (final Exception ex)
 		{
 			LOG.error(ex);
 		}
-		return StringUtils.EMPTY;
-	}
+		return tShip;
 
-	@Override
-	public boolean isTShip(final String selectedUssid)
-	{
-		LOG.debug("MplDefaultFindDeliveryFulfillModeStrategy" + selectedUssid);
-		return DeliveryFulfillModesEnum.TSHIP.getCode().equalsIgnoreCase(findDeliveryFulfillMode(selectedUssid));
+		//return DeliveryFulfillModesEnum.TSHIP.getCode().equalsIgnoreCase(richAttribute.getDeliveryFulfillModes().getCode());
 	}
-
 
 	@Override
 	public String getDeliveryModeDesc(final MplZoneDeliveryModeValueModel deliveryEntry, final String selectedUssid)

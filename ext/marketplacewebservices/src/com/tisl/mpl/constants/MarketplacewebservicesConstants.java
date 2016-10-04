@@ -517,4 +517,9 @@ public class MarketplacewebservicesConstants
 	public static final String GENERIC = "Generic".intern();
 	public static final String CATEGORY = "category".intern();
 
+	//TPR_622, 627
+	public static final String YES = "yes";
+	public static final String NO_SSHIP = "no";
+
+
 }
