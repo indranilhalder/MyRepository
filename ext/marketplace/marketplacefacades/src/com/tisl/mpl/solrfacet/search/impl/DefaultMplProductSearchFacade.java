@@ -284,7 +284,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.solrfacet.search.MplProductSearchFacade#mplProductSearch(de.hybris.platform.commercefacades.search.
 	 * data.SearchStateData, de.hybris.platform.commerceservices.search.pagedata.PageableData, java.lang.String)
@@ -1113,7 +1113,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.solrfacet.search.MplProductSearchFacade#populateSearchState(de.hybris.platform.commercefacades.search
 	 * .data.SearchStateData)
@@ -1121,6 +1121,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	@Override
 	public void populateSolrSearchQueryData(final SearchStateData searchState, final SolrSearchQueryData searchQueryData)
 	{
+
 		final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
 
 		if (null == searchState.getLuxarySiteFrom())//For Marketplace Web
@@ -1132,6 +1133,10 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		{
 			solrSearchQueryTermData.setKey("isLuxuryProduct");
 			solrSearchQueryTermData.setValue(Boolean.TRUE.toString());
+		}
+		else
+		{
+			return;
 		}
 
 		if (null == searchQueryData.getFilterTerms())
