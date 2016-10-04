@@ -49466,15 +49466,85 @@ border-bottom: 1px solid #ccc;
 
 /* --shop for section end-- */
 /* title banner start */
-.blp_title_banner{
-background: #000;
-    width: 100%;
-   padding: 20px 0;
+.common_logo_slot_wrapper .blp_title_banner:first-child{
+width: auto;
+    float: left;
 }
 .blp_title_banner a{
 	    display: block;
     /* text-align: center; */
     margin: 0 auto;   
+}
+.common_logo_slot_wrapper .blp_title_banner:last-child{
+	float: right;
+    max-width: 800px;
+    width: calc(100% - 500px);
+    transition: margin-right 0.3s, width 0.3s;
+    min-width: 349px;
+}
+.common_logo_slot_wrapper .blp_title_banner:last-child form{
+	height: 50px;
+    margin: 10px 20px 0px 0;
+    position: relative;
+    clear: both;
+}
+.common_logo_slot_wrapper .blp_title_banner:last-child form select{
+	background-color: #000;
+    border-color: #fff;
+    color: #fff;
+    border: 1px solid #fff;
+    margin-left: -1px;
+    margin-right: -1px;
+    width: 155px;
+    z-index: 3;
+        transition: border 0.3s;
+        font-size: 13px;
+    font-weight: 500;
+    height: 50px;
+        display: inline-block;
+    float: left;
+    background-image: url(../images/select-arrow-new_white.png);
+}
+.common_logo_slot_wrapper .blp_title_banner:last-child form input{
+	background-color: #000;
+    border-color: #fff;
+    color: #fff;
+        width: calc(100% - 204px);
+    line-height: 50px;
+    border-radius: 0px;
+    border-width: 1px;
+    font-size: 13px;
+    font-weight: 500;
+    height: 50px;
+    float: left;
+    display: inline-block;
+}
+.common_logo_slot_wrapper .blp_title_banner:last-child form #brandSearchButton{
+	background-color: #000;
+    border-color: #fff;
+    color: #fff;
+    position: relative;
+    width: 51px;
+    border: 1px solid #fff;
+    border-left: none;
+    float: right;
+    background: url(../images/sprite.svg) no-repeat scroll -117px 11px;
+}
+.common_logo_slot_wrapper{
+	background: #000;
+    width: 100%;
+   padding: 20px 0;
+   overflow: hidden;
+   padding-top: 10px;
+    max-height: 80px;
+}
+.common_logo_slot_wrapper .blp_title_banner .simple-banner-component{
+	margin-left: 25px;
+	height: 70px;
+	font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
 }
 /*  title banner end */
  /* him-her section start */
@@ -49784,7 +49854,7 @@ text-align:left;
 	padding: 0 24px;
 	}
 .blp_title_banner{
-	padding: 20px 0;
+	/* padding: 20px 0; */
 }
 .men_women_sec .top-promos li:first-child{
 	position: absolute;
@@ -49923,6 +49993,16 @@ padding: 0 24px;
 	
 }
 @media (max-width: 790px){
+	.common_logo_slot_wrapper .blp_title_banner:last-child{
+	width: 100%;
+    float: left;
+    text-align: center;
+    margin-top: 10px;
+	}
+	.common_logo_slot_wrapper{
+	    padding-top: 15px;
+	    padding: 15px 23px 30px;
+	}
 	.top_categories_blp > .top_categories_section_blp:first-child
 		{
 		font-size: 24px;

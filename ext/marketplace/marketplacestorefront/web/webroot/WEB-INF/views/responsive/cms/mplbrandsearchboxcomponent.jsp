@@ -14,7 +14,7 @@
   <option value="${categoryName}">${categoryName}</option>
   </select>
 		
-		<button id="brandSearchButton">${categoryName}</button>
+		<button id="brandSearchButton"><%-- ${categoryName} --%></button>
 		
 		
 			   

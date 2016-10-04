@@ -2471,6 +2471,9 @@ $(".top_deal_blp  > .blog_container_blp > .blog_feature_blp").each(function(){
 	$(this).children().last().prevAll().wrapAll("<div class='blog_content_blp'>");
 });
 //-----blog section end------//
+//-----Logo slot start------//
+$(".common_logo_slot > div").slice(0,2).wrapAll("<div class='common_logo_slot_wrapper'>");
+//-----Logo slot end------//
 
 //-----BLP------//
 
