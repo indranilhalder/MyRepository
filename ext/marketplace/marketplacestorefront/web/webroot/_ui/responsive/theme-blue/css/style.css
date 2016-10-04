@@ -35274,6 +35274,13 @@ display: block !important;
 .listing.wrapper .right-block{
 padding-top:15px !important;
 }
+.listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile select {
+    margin-left: 3px !important;
+    direction: rtl;
+}
+.listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile .sortByMobile {
+    text-align: center;
+}
 }
 .IAQuickView,.iaAddToCartButton,div.MSDQuickView{
 	height: auto !important;
