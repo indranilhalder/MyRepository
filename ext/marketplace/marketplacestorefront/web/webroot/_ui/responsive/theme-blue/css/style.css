@@ -50586,6 +50586,12 @@ padding: 0 24px;
 }
 
  @media (max-width: 767px) and (min-width: 600px){
+ .men_women_sec .top-promos li:first-child p:first-child{
+ font-size: 20px;
+ }
+ .men_women_sec .top-promos li:first-child p:nth-child(2){
+ font-size: 30px;
+ }
  .top_categories_blp .top_categories_wrapper_blp {
 		padding: 0 90px;
 	}
@@ -50629,8 +50635,13 @@ padding: 0 24px;
     top: -86px;
 	}
 	.shop_the_look .shop_the_look_section .simple-banner-component {
-	padding-left: 48px;
+	padding-left: 14px;
 	}
+}
+@media (max-width: 600px) and (min-width: 481px){
+.featured_collection .blp_featured_collection_wrapper .featured_collection_section .top-promos li{
+	    top: 203px;
+}
 }
 @media (max-width: 480px){
 	.men_women_sec .top-promos li:first-child {
