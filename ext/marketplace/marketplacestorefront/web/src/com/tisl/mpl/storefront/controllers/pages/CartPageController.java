@@ -190,10 +190,8 @@ public class CartPageController extends AbstractPageController
 	{
 		LOG.debug("Entering into showCart" + "Class Nameshowcart :" + className + "pinCode " + pinCode);
 		String returnPage = ControllerConstants.Views.Pages.Cart.CartPage;
-
 		try
 		{
-
 			final CartModel cartModel = getCartService().getSessionCart();
 			//TISST-13012
 			//if (StringUtils.isNotEmpty(cartDataOnLoad.getGuid())) //TISPT-104
@@ -222,7 +220,7 @@ public class CartPageController extends AbstractPageController
 				//TISST-13010
 
 				getMplCartFacade().setCartSubTotal();
-				final CartModel cartModel = getCartService().getSessionCart();
+				//final CartModel cartModel = getCartService().getSessionCart();
 
 				//To calculate discount percentage amount for display purpose
 				// TPR-774-- Total MRP calculation and the Product percentage calculation
