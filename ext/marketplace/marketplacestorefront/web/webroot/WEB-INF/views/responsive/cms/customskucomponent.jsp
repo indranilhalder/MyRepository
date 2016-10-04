@@ -11,7 +11,7 @@
 
 <div class="listing wrapper" id="facetSearchAjaxData">
 				 
-				<div class="left-block" >
+				<div class="left-block">
 				<span class="toggle-filterSerp">Filter By</span>
 				<ul class="product-facet js-product-facet listing-leftmenu">
 	             <%-- <nav:facetNavRefinements pageData="${searchPageData}"/> --%>
@@ -25,7 +25,7 @@
 							supportShowAll="${isShowAllAllowed}"
 							searchPageData="${searchPageData}"
 							searchUrl="${searchPageData.currentQuery.url}"
-							numberPagesShown="${numberPagesShown}" /><c:out value="${numberPagesShown}"></c:out>
+							numberPagesShown="${numberPagesShown}" />
 							
 							
 

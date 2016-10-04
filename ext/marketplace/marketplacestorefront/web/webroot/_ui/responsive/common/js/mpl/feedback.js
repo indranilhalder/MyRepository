@@ -2327,7 +2327,6 @@ $(window).resize(function(){
 		$(".pdp .trending#ia_products .owl-controls").css("top",a)
 	},100);
 });
-
 $(window).scroll(function(){
 	if($(".pdp .trending#ia_products").children().length > 0 && $(window).scrollTop()  > $(".pdp .trending#ia_products").offset().top - $(window).height()) {
 		var a = $(".pdp .trending#ia_products .image").height()/2 + 20;
@@ -2432,3 +2431,48 @@ $(document).ready(function(){
 	}
 });
 /* TPR-1601 checkout progress bar end  */
+
+//----BLP------//
+//--top category section---//
+/*$(".top_categories_blp").first().find("ul.categories.count-3>li:nth-child(3n + 1)").each(function(){
+		$(this).nextAll().slice(0, 2).wrapAll("<li class='sub_li_blp'><ul class='sub_ul_blp'>");
+		});*/
+
+
+$(".top_categories_blp .top_categories_section_blp:not(:first-child)").wrapAll("<div class='top_categories_wrapper_blp'></div>");
+$(".top_categories_blp").find(".top_categories_wrapper_blp>.top_categories_section_blp:nth-child(3n + 1)").each(function(){
+	$(this).nextAll().slice(0, 2).wrapAll("<div class='top_categories_section_blp sub_categories_blp'>");
+	});
+//--top category section end---//
+//--top brands section----//
+$(".blp_top_brands > div").slice(1).wrapAll("<div class='top_brands_blp'>");
+//--top brands section end----//
+//---style edit section start---//
+$(".style_edit_blp > div").slice(0,3).wrapAll("<div class='style_edit_left_blp'>");
+//---style edit section end-----//
+//---feature collection section start---//
+$(".featured_collection  > .featured_collection_section").slice(-4).wrapAll("<div class='blp_featured_collection_wrapper'>");
+//----feature collection section end-----//
+//--shop for section----//
+/*$(".shop_for_blp > a").slice(0,4).wrapAll("<div class='shop_for_links_blp'>");*/
+
+$(".shop_for_blp .shop_for_component_blp:not(:first-child)").slice(0,3).wrapAll("<div class='shop_for_left_wrapper_blp'></div>");
+$(".shop_for_blp > .shop_for_left_wrapper_blp").nextAll().slice(0,4).wrapAll("<div class='shop_for_links_blp'>");
+//--shop for section end----//
+//---shop the look section start----//
+$(".shop_the_look > div").slice(2,4).wrapAll("<div class='shop_the_look_left'>");
+//----shop the look section end-----//
+//----blog section start------//
+$(".top_deal_blp  > a").nextAll().wrapAll("<div class='blog_container_blp'>");
+var blp_blog_count = $(".top_deal_blp  > .blog_container_blp").children().length;
+$(".top_deal_blp  > .blog_container_blp").children().slice(0,blp_blog_count/2).wrapAll("<div class='blog_feature_blp'>");
+$(".top_deal_blp  > .blog_container_blp").children().slice(1,blp_blog_count - 1).wrapAll("<div class='blog_feature_blp'>");
+$(".top_deal_blp  > .blog_container_blp > .blog_feature_blp").each(function(){
+	$(this).children().last().prevAll().wrapAll("<div class='blog_content_blp'>");
+});
+//-----blog section end------//
+
+//-----BLP------//
+
+
+
