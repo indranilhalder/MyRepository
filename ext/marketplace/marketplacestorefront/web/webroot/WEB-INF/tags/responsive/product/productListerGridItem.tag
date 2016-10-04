@@ -10,6 +10,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <script>
 	//Refresh the page if compare page is already visted
 	if (sessionStorage.getItem("comparePageVisited") != null) {
@@ -34,6 +35,12 @@
 <input type ="hidden"  id="mrpPriceValue" value='${product.displayMrp}'/>
 <input type ="hidden"  id="sizeStockLevel" value='${product.displayStock}'/>
 <input type ="hidden"  id="productPromotion" value='${product.displayPromotion}'/>
+<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
+<input type="hidden" id="loggedIn" value="false"/> 
+</sec:authorize>
+<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
+<input type="hidden" id="loggedIn" value="true"/> 
+</sec:authorize>  
 </span>
 
 <ycommerce:testId
@@ -48,27 +55,29 @@
 							src="//${staticHost}/_ui/responsive/common/images/transparent.png"><span>New</span>
 					</div>
 				</c:if>
-
 				<a class="thumb_${product.code}" href="${productUrl}"
 					title="${product.name}"> <%-- <product:productPrimaryImage
 						product="${product}" format="searchPage" /> --%> <product:productSearchPrimaryImage product="${product}" format="searchPage"/>
+						<span class="plp-wishlist" data-product="${productUrl}"></span>
+						<span class="plpWlcode" style="display: none;">${productUrl}</span>
+			
 
 				</a>
-		
+				
 				<c:if test="${!product.isOnlineExclusive && product.isOfferExisting}">
 					<%-- <div style="z-index: 2;display: none;" class="on-sale" id="on-sale_${product.code}"> --%>
 						<div style="z-index: 2;" class="on-sale" id="on-sale_${product.code}">
 				<%-- 	<div style="z-index: 2;" class="on-sale" id="on-sale_${product.code}"> --%>
 						<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
 							src="//${staticHost}/_ui/responsive/common/images/transparent.png">
-						<span>On Offer</span>
+						<span>On<br>Offer</span>
 					</div>
 		         </c:if>
 				<c:if test="${product.isOnlineExclusive}">
 					<div style="z-index: 1;" class="online-exclusive">
 						<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
 							src="//${staticHost}/_ui/responsive/common/images/transparent.png">
-						<span>online exclusive</span>
+						<span>online<br>exclusive</span>
 					</div>
 				</c:if>
 
@@ -103,7 +112,6 @@
 						    <a style="display:none" id="stockIdDefault_${product.code}" class="stockLevelStatusinStock"
 								href="${productUrl}" title="${product.name}"> 
 							</a>
-						
 							<a  style="display:none" class="stockLevelStatusinStock" href="${productUrl}"
 								title="${product.name}"><span id="stockIdFiltered_${product.code}"></span>
 						    </a>
@@ -166,6 +174,31 @@
 							</form:form>
 						</div>
 					</c:if>
+					<!-- TPR-523 -->
+					<div class="productInfo">
+					<ul>
+						<!-- commented as part of defect fix - 3in1_box_178 -->
+						<%-- <li>Size : ${product.displaySize}</li> --%>
+						<!-- TISSTRT - 985  TISPRO-277::Size of footwear products are not displayed in SERP page-->
+						<c:if
+							test="${not empty product.productCategoryType && product.isVariant &&  (product.productCategoryType eq 'Apparel' 
+							                          || product.productCategoryType eq 'Footwear') }">
+
+
+							<%-- <li class="product-size-list"><span class="product-size">Size : ${fn:toUpperCase(product.displaySize)} </span></li> --%>
+							<li class="product-size-list"><span class="product-size">Size: <span class="size-col">${product.displaySize}</span><%-- Price : ${product.displayPrice}### ${product.displayUrl} --%>
+							</span></li>
+						</c:if>
+						<%-- <li>Color: ${product.swatchColor}</li> --%>
+						<c:if
+							test="${not empty product.productCategoryType && product.isVariant &&  product.productCategoryType eq 'Electronics'}">
+							<li><span class="capacity-list">Capacity: <span class="size-col">${product.capacity}</span></span></li>
+						</c:if>
+						<c:if test="${not empty product.ratingCount}">
+							<li><span class="rating-list">Rating Count : <span class="size-col">${product.ratingCount}</span></span></li>
+						</c:if>
+					</ul>
+				</div>
 				</div>
 
 				<!-- Added for Addtocart -->
@@ -228,7 +261,7 @@
 
 				<ycommerce:testId code="product_productName">
 					<div>
-						<h3 class="product-name">
+						<h2 class="product-name">
 							<a class="name_${product.code}" href="${productUrl}">${product.name}</a>
 							<%-- <c:forEach var="url" items="${product.displayUrl}">
 							<c:set var="urlFirst" value="${fn:replace(url,'[', '')}" />
@@ -239,7 +272,7 @@
                               </c:forEach> --%>
 
 							<%--  <input type="hidden" id="url_${product.code}" value="${urlSecond}"/> --%>
-						</h3>
+						</h2>
 					</div>
 				</ycommerce:testId>
 
@@ -331,10 +364,10 @@
 				</c:if> --%>
 				<%-- <c:if
 					test="${not empty product.productCategoryType && product.productCategoryType == 'Clothing'}"> --%>
-				<div class="productInfo">
+				<%-- <div class="productInfo">
 					<ul>
 						<!-- commented as part of defect fix - 3in1_box_178 -->
-						<%-- <li>Size : ${product.displaySize}</li> --%>
+						<li>Size : ${product.displaySize}</li>
 						<!-- TISSTRT - 985  TISPRO-277::Size of footwear products are not displayed in SERP page-->
 						<c:if
 							test="${not empty product.productCategoryType && product.isVariant &&  (product.productCategoryType eq 'Apparel' 
@@ -345,7 +378,7 @@
 							<li class="product-size-list"><span class="product-size">Size:${product.displaySizes}<%-- Price : ${product.displayPrice}### ${product.displayUrl} --%>
 							</span></li>
 						</c:if>
-						<%-- <li>Color: ${product.swatchColor}</li> --%>
+						<li>Color: ${product.swatchColor}</li>
 						<c:if
 							test="${not empty product.productCategoryType && product.isVariant &&  product.productCategoryType eq 'Electronics'}">
 							<li>Capacity: ${product.capacity}</li>
@@ -354,7 +387,7 @@
 							<li>Rating Count : ${product.ratingCount}</li>
 						</c:if>
 					</ul>
-				</div>
+				</div> --%>
 				<%-- </c:if> --%>
 
 			</div>

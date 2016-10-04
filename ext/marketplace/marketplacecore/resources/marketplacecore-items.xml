@@ -808,6 +808,17 @@
 			<targetElement type="SeoContent" cardinality="many"
 				qualifier="seoContents"></targetElement>
 		</relation>
+		
+		<!-- for category -->
+		
+		
+			<relation localized="false" code="SeoContentCategoryRelation">
+			<sourceElement type="Category" cardinality="one"
+			qualifier="categorySource"></sourceElement>
+			<targetElement type="SeoContent" cardinality="many"
+			qualifier="seoContents"></targetElement>
+		    </relation>
+		
 		<relation localized="false" code="BrandRelation">
 			<sourceElement type="Product" cardinality="one"
 				qualifier="productSource"></sourceElement>
@@ -1551,7 +1562,7 @@
 							unique="false" />
 						<persistence type="property">
 							<columntype database='oracle'>
-								<value>VARCHAR2(100)</value>
+								<value>VARCHAR2(255)</value>
 							</columntype>
 						</persistence>
 					</attribute>
@@ -1578,7 +1589,7 @@
 							<attribute qualifier='categoryId' type="java.lang.String">
 						<description>Seo Content unique Id</description>
 						<modifiers read="true" write="true" optional="true"
-							unique="true" />
+							unique="false" />
 						<persistence type="property">
 									</persistence>
 					</attribute>
@@ -3338,7 +3349,15 @@
 					</attribute>
 				</attributes>
 			</itemtype>
+			<!-- PRoduct Carousel Component TPR-1316-->
 
+			<itemtype code="MplProductCollectionComponent" autocreate="true"
+				generate="true" extends="ProductCarouselComponent"
+				jaloclass="com.tisl.mpl.core.jalo.MplProductCollectionComponent">
+				<description>This component is made to show the Products in a carousel</description>
+				
+			</itemtype>
+			
 			<!-- Now Trending Carousel Component -->
 			<itemtype code="MplNowTrendingProductCarouselComponent"
 				autocreate="true" generate="true" extends="ProductCarouselComponent"
@@ -6026,6 +6045,11 @@
 					</attribute>
 					
 					<!-- TISPRO-540 - Payment Type -->
+					<!-- TPR-174 - Welcome back status message -->
+					<attribute qualifier="merged" type="java.lang.Boolean">
+						<modifiers optional="true" read="true" write="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 		</typegroup>
@@ -6082,6 +6106,11 @@
 			<itemtype code="MicrositeSelectBrandCollectionComponent"
 				generate="true" autocreate="true" extends="BrandCollectionComponent"
 				jaloclass="com.tisl.mpl.core.jalo.MicrositeSelectBrandCollectionComponent">
+			</itemtype>
+			<itemtype code="MplBrandSearchBoxComponent"
+				autocreate="true" generate="true" extends="MplEnhancedSearchBoxComponent"
+				jaloclass="com.tisl.mpl.core.jalo.MplBrandSearchBoxComponent">
+				<description>Represents Microsite Enhanced Search Box component that displays a list of categories, brands and seller as a dropdown.</description>
 			</itemtype>
 		</typegroup>
 		<!-- For Microsite -->

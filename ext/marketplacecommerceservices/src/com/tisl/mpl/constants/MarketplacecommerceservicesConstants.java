@@ -95,12 +95,14 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String LINK_PASSWORD_CHANGE = "/login/pw/change";
 
 	//For Promotion Intercepter
+
 	public static final String PROMOCODE = "Promotion Identifier :".intern();
 	public static final String PROMOPRODUCT = "Promotion Product :".intern();
 	public static final String PROMOCATEGORY = "Promotion Category :".intern();
 	public static final String PROMOPRIORITY = "Promotion Priority :".intern();
 	public static final String PRODUCT_PRICE_COLUMN = "price".intern();
 	public static final String PRESENT_CATEGORY = "Present Category :".intern();
+	public static final String PROMO_ERROR_MESSAGE = "Cannot exceed 25 characters.".intern();
 
 	//For SuperCategoryDecorator
 	public static final String CONFIGURATION_SER = "configurationService";
@@ -1608,6 +1610,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public final static String IMAGEURLMSG = "Image url is:::";
 	public final static String IMAGEDIMENSION = "257Wx257H";
+	public final static String IMAGE_MEDIA_TYPE = "Image";
 
 	public final static String DEFAULT_RISK = "-1.0";
 
@@ -1619,6 +1622,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public final static String HOTFOLDERLOCATION = "hotFolderLocation";
 	public static final String BUYBOX_FILE_NAME = "filename";
 	public static final String BUYBOX_FILE_EXTENSION = "csv";
+	public static final String BUYBOX_FILE_NAME_TEMP = "filename.temp";
 
 
 	public static final String CURRENT = "current".intern();
@@ -1629,6 +1633,20 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//TISPRO-675
 	public static final String EMIBANK = "emi_bank".intern();
 	public static final String EMITENURE = "emi_tenure".intern();
+	public static final String B9421 = "B9421".intern();
+	public static final String RELEVANCE_CATEGORY = ":relevance:category:".intern();
+	public static final String RELEVANCE_OFFER = ":relevance:allPromotions:".intern();
+	public static final String RELEVANCE_COLOR = ":relevance:colour:".intern();
+	public static final String RELEVANCE_SIZE = ":relevance:size:".intern();
+	public static final String OFFER = "offer".intern();
+	public static final String COLOUR = "colour".intern();
+	public static final String SIZE_COLON = ":size:".intern();
+	public static final String COLOUR_COLON = ":colour:".intern();
+	public static final String OFFER_COLON = ":allPromotions:".intern();
+
+	//CR Changes : TPR-715
+	public static final String CART_SELLER_PRODUCTS = "cartSellerValidProducts".intern();
+	public static final String VALIDATE_SELLER = "validateSeller".intern();
 
 	private MarketplacecommerceservicesConstants()
 	{

@@ -196,6 +196,10 @@
 	<bean class="de.hybris.platform.commercefacades.order.data.CartData">
 		<property name="convenienceChargeForCOD" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
 		<property name="totalPriceWithConvCharge" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<!-- TPR-928 -->
+		<property name="discountPercentage" type="java.lang.String"/>
+		<!-- TPR-174 - Welcome back status message -->
+		<property name="gotMerged" type="boolean"/>
 	</bean>
 	<bean class="de.hybris.platform.commercefacades.order.data.OrderData">
 		<property name="convenienceChargeForCOD" type="de.hybris.platform.commercefacades.product.data.PriceData"/>

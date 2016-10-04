@@ -189,6 +189,7 @@
 		<property name="allVariantsId" type="java.util.List&lt;java.lang.String>"/>
 		<!-- CHANGES FOR TPR-249 -->
 		<property name="displaySizes" type="java.util.List&lt;java.lang.String>"></property>
+
 	</bean>
 
 	<!-- pdp changes begins -->
@@ -656,6 +657,8 @@
     	<property name="typeId" type="String" />
     	<property name="typeVal" type="String" />
     	<property name="imageDiscription" type="String" />
+    	<!-- TPR-472 -->
+    	<property name="icid" type="String" />
     	<property name="componentType" type="String" />
     </bean>
 
@@ -680,6 +683,11 @@
     	<property name="productID" type="String" />
        	<property name="componentType" type="String" />
     </bean>
+    <!-- TPR-1316 -->
+    <bean class="com.tisl.mpl.facades.cms.data.ProductComponentData">
+    	<property name="productList" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.ProductListComponentData>"/>
+       	<property name="componentType" type="String" />
+    </bean>
     
     <bean class="com.tisl.mpl.facades.cms.data.ImageListComponentData">
     	<property name="type" type="String" />
@@ -695,6 +703,7 @@
     	<property name="textComponents" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.TextComponentData>"/>
     	<property name="bannerComponents" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.BannerComponentData>"/>
     	<property name="productComponents" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.ProductListComponentData>"/>
+    	<property name="productSliderComponents" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.ProductComponentData>"/>
     	<property name="bannerslistComponents" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.ImageListComponentData>"/>
     	<property name="sectionName" type="String" />
        	<property name="lastModifiedTime" type="java.util.Date" />

@@ -20,8 +20,11 @@ import de.hybris.platform.util.localization.Localization;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.log4j.Logger;
 
@@ -32,12 +35,14 @@ import com.tisl.mpl.promotion.helper.MplPromotionHelper;
 import com.tisl.mpl.util.ExceptionUtil;
 
 
+@SuppressWarnings("deprecation")
 public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThresholdDiscountPromotion
 {
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(CartOrderThresholdDiscountPromotion.class.getName());
 
 	private double adjustedDiscounts = 0.0d;
+	private double sellersubTotalValue = 0.0D;
 
 	//private boolean flagForDeliveryModeRestrEval;
 
@@ -131,7 +136,6 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 					if (threshold != null)
 					{
 						//final double orderSubtotalAfterDiscounts = getSubtotalAfterDiscount(arg0, order);
-
 
 						//Commented as not needed for TPR-969
 						//							if (isPercentageOrAmount().booleanValue())
@@ -414,7 +418,6 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 					//							Double.valueOf(amountRequired), Helper.formatCurrencyAmount(ctx, locale, orderCurrency, amountRequired) };
 					//					return formatMessage(getMessageCouldHaveFired(ctx), args, locale);
 
-
 					//TPR-969 - When no entry count restriction is added
 					if (null == entryQualifyingCount)
 					{
@@ -465,8 +468,6 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 
 
 
-
-
 	/**
 	 * This method formats message for the promotion when threshold is present
 	 *
@@ -509,7 +510,6 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 				Double.valueOf(amountRequired), Helper.formatCurrencyAmount(ctx, locale, orderCurrency, amountRequired), qtyNeededMsg };
 		return formatMessage(getMessageCouldHaveFired(ctx), args, locale);
 	}
-
 
 
 
@@ -641,4 +641,99 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 		return orderSubtotalAfterDiscounts;
 	}
 
+
+	/**
+	 * The Method returns the total entry price post product discount
+	 *
+	 * CR Changes : TPR-715
+	 *
+	 * @param arg0
+	 * @param validProductUssidMap
+	 * @return orderSubtotalAfterDiscounts
+	 */
+	private double getSellerSpecificSubtotal(final SessionContext arg0, final Map<String, AbstractOrderEntry> validProductUssidMap)
+	{
+		double orderSubtotalAfterDiscounts = 0.0D;
+		try
+		{
+			if (MapUtils.isNotEmpty(validProductUssidMap))
+			{
+				double bogoFreePrice = 0.0D;
+				double totalPrice = 0.0D;
+
+				for (final Map.Entry<String, AbstractOrderEntry> mapentry : validProductUssidMap.entrySet())
+				{
+					if (null != mapentry && null != mapentry.getValue() && null != mapentry.getValue().getTotalPrice())
+					{
+						totalPrice = totalPrice + (mapentry.getValue().getTotalPrice().doubleValue());
+					}
+
+					if ((null != mapentry.getValue().getAttribute(arg0, "isBOGOapplied")
+							&& BooleanUtils.toBoolean(mapentry.getValue().getAttribute(arg0, "isBOGOapplied").toString()) && null != mapentry
+							.getValue().getAttribute(arg0, "bogoFreeItmCount")))
+					{
+						final double freecount = Double.parseDouble(mapentry.getValue().getAttribute(arg0, "bogoFreeItmCount")
+								.toString());
+						bogoFreePrice = bogoFreePrice + (freecount * 0.01);
+					}
+				}
+
+				if (totalPrice != 0.0D)
+				{
+					orderSubtotalAfterDiscounts = totalPrice - bogoFreePrice;
+				}
+			}
+		}
+		catch (final Exception exception)
+		{
+			LOG.error(exception.getMessage());
+		}
+
+		return orderSubtotalAfterDiscounts;
+	}
+
+	/**
+	 * The Method Calculates Data for Message
+	 *
+	 * CR Changes : TPR-715
+	 *
+	 * @param order
+	 *
+	 * @return subtotalVal
+	 */
+	private double getEligibleSubtotal(final AbstractOrder order)
+	{
+		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());
+		double subtotalVal = 0.0D;
+		if (getDefaultPromotionsManager().isSellerRestrExists(restrictionList))
+		{
+			subtotalVal = getSellersubTotalValue();
+		}
+		else if (getDefaultPromotionsManager().isExSellerRestrExists(restrictionList))
+		{
+			subtotalVal = getSellersubTotalValue();
+		}
+		else
+		{
+			subtotalVal = getMplPromotionHelper().getTotalPrice(order);
+		}
+		return subtotalVal;
+	}
+
+	/**
+	 * @return the sellersubTotalValue
+	 */
+	public double getSellersubTotalValue()
+	{
+		return sellersubTotalValue;
+	}
+
+	/**
+	 * @param sellersubTotalValue
+	 *           the sellersubTotalValue to set
+	 */
+	public void setSellersubTotalValue(final double sellersubTotalValue)
+	{
+		this.sellersubTotalValue = sellersubTotalValue;
+	}
 }

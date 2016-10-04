@@ -70,7 +70,7 @@ tr.d0 td {
    <input type="hidden" value="${entry.selectedSellerInformation.ussid}" id=ussid />
    <input type="hidden" value="${entry.product.code}" id="product" />
    <input type="hidden" name="hidWishlist" id="hidWishlist">
-   
+  
    
    <!-- for MSD -->
    <div>
@@ -183,6 +183,7 @@ tr.d0 td {
    </li>
    
     <li class="price">
+   <%--  <c:out value="${entry.basePrice.value}"></c:out> --%>
 					<ul>
 					<!-- TPR-774 -->
 						<c:set var="quantity" value="${entry.quantity}"/>
@@ -212,7 +213,6 @@ tr.d0 td {
 										   	<span class="delSeat" id="totalPrice_${entry.entryNumber}"><format:price priceData="${entry.productLevelDisc}" displayFreeForZero="true"/></span><span class="discount-off">Off</span> 
 											--%>
 										</c:when>
-										
 										<c:when test="${entry.basePrice.formattedValue == entry.totalPrice.formattedValue}">
 													<%-- TISPRO-215--%>
 												<c:choose>
@@ -461,7 +461,11 @@ tr.d0 td {
 						<c:otherwise>
 							<li id ="${entry.selectedSellerInformation.ussid}_li" class="delivery">
 							<p class="mobile-delivery"><spring:theme code="basket.delivery.options"/></p>
-								<ul id="${entry.selectedSellerInformation.ussid}">
+							<!-- TPR-1458-->
+							<!-- <span class='pincodeServiceError'></span> -->
+							<!-- 1341 -->
+							<p class="cartItemBlankPincode"><spring:theme code="cart.pincode.blank"/></p>	
+							<ul id="${entry.selectedSellerInformation.ussid}">
 						</c:otherwise>
 					</c:choose>	
 	             	 
@@ -470,7 +474,8 @@ tr.d0 td {
 								</c:when>
 								
 								<c:when test="${empty selectedPincode ||  fn:length(selectedPincode) == 0  }"> 
-									<spring:theme code="cart.pincode.blank"/>
+									<!-- TPR-1341 -->
+									<%-- <p id="cartItemBlankPincode"><spring:theme code="cart.pincode.blank"/></p> --%>
 								</c:when>
 								
 		            			<%-- Commented as part of performance fix TISPT-104
@@ -1097,21 +1102,8 @@ tr.d0 td {
  
  
  
- <div class="wishlist-banner" id="wishlistBanner" style="display:none">
-		<h2>
-			<spring:theme code="Treat Yourself" />
-			<span><spring:theme code="mpl.gift.Yourself" /></span>
-		</h2>
-	</div>
-	<ul class="product-block wishlist" id="giftYourselfProducts">
-		
-	</ul>
- 
- 
- 
- 
 <div class="cart-bottom-block">
-<%-- <div class="coupon block" style="width: 40%;display: inline-block;">
+ <%-- <div class="coupon block" style="width: 40%;display: inline-block;">
 <h2>Have a promo code?</h2>
 		<input type="text" id="couponFieldId" placeholder="Enter coupon code" style="width:calc(100% - 65px);display:inline-block;"/>
 		<button type="submit" id="couponSubmitButton" class="button btn-block" style="width:60px;background:#a9143c;color:#fff;display:inline-block;">Submit</button>
@@ -1138,8 +1130,9 @@ tr.d0 td {
 		</c:if>
 	</div>
 		
-</div> --%>
+</div>  --%>
 <div class="cart-total-block">
+   <%-- <c:out value="${cartData.entries[0].netSellingPrice}"></c:out> --%>
     <%--  <h2><spring:theme code="mpl.orderDetails" /></h2> --%>
 	<ul class="totals">
             <li id="subtotal"><spring:theme code="basket.page.totals.subtotal"/> <span class="amt"><ycommerce:testId code="Order_Totals_Subtotal"><format:price priceData="${cartData.subTotal}"/></ycommerce:testId></span></li>
@@ -1147,10 +1140,11 @@ tr.d0 td {
             <li id="discount_Value" style="display:none"><spring:theme code="basket.page.totals.savings"/> <span class="amt"><span id="discountValue"></span></span></li>
             <li id="total_Value" class="totalValue" style="display:none"><spring:theme code="basket.page.totals.total"/><span class="amt"><span id="totalValue"></span></span></li>
          <c:if test="${cartData.totalDiscounts.value > 0}">
-        <li id="discount"><spring:theme code="basket.page.totals.savings"/> <span class="amt">
+        <li id="discount"><spring:theme code="basket.page.totals.savings"/><span class="amt">
         -<ycommerce:testId code="Order_Totals_Savings"><format:price priceData="${cartData.totalDiscounts}"/></ycommerce:testId>
+       <spring:theme code="text.parenthesis.open"/>  <c:out value="${cartData.discountPercentage}"></c:out><spring:theme code="text.percentage"/><spring:theme code="text.parenthesis.close"/>
+        </c:if> 
         
-         </c:if> 
         </span></li>
             
             <li id="total"><spring:theme code="basket.page.totals.total"/><span class="amt"><ycommerce:testId code="cart_totalPrice_label">
@@ -1179,4 +1173,17 @@ tr.d0 td {
                 </c:choose>
             </ycommerce:testId></span></li>
           </ul>
+      <!--    As part of improvement TPR-1468 -->
+         <div class="wishlist-banner" id="wishlistBanner" style="display:none">
+		<h2>
+			<spring:theme code="Treat Yourself" />
+			<span><spring:theme code="mpl.gift.Yourself" /></span>
+		</h2>
+	</div>
+	<ul class="product-block wishlist" id="giftYourselfProducts">
+		
+	</ul>
+         
+         
 <storepickup:pickupStorePopup />
+

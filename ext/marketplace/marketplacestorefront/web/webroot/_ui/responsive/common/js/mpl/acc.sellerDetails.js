@@ -323,10 +323,17 @@ function focusOnElement() {
 	    			$("#addToCartButton"+index).hide();
 					//tbodycontent+=$("#hiddenIdForNoStock").html();
 					}else{
+						//TPR-887
+						tbodycontent+="<div id='buyNowFormIdOthersel"+index+"' class='OSErrorMsg' style='display:none;'></div>";
+						tbodycontent+="<div id='buyNowFormId"+index+"excedeInventory' style='display:none;'>"+$('#buyNowFormexcedeInventory').text()+"</div>";
+						tbodycontent+="<div id='buyNowFormId"+index+"noInventory' style='display:none;'>"+$('#buyNowFormnoInventory').text()+"</div>";
+						tbodycontent+="<div class='btn-buy-now'><button id='buyNowButton"+index+"' type='button' class='button add-to-bag btn-block js-add-to-cart buy-now'>"+$('#buynowid').text()+"</button>";
+						tbodycontent+="<span id='addToCartButtonId' class='btn-buy-now-holder'><button id='addToCartButton"+index+"' type='button' class='button add-to-bag btn-block js-add-to-cart add-to-bag-seller'>"+$('#addtobagid').text()+"</button></span></div>";
+						
 						tbodycontent+="<div id='addToCartFormIdOthersel"+index+"' class='OSErrorMsg' style='display:none;'></div>";
 						tbodycontent+="<div id='addToCartFormId"+index+"excedeInventory' style='display:none;'>"+$('#addToCartFormexcedeInventory').text()+"</div>";
 						tbodycontent+="<div id='addToCartFormId"+index+"noInventory' style='display:none;'>"+$('#addToCartFormnoInventory').text()+"</div>";
-						tbodycontent+="<button id='addToCartButton"+index+"' type='button' class='button add-to-bag btn-block js-add-to-cart'>"+$('#addtobagid').text()+"</button>";
+						
 						tbodycontent+=$("#hiddenIdForStock").html();
 					}
 			  	}
@@ -334,10 +341,17 @@ function focusOnElement() {
 	    	if(stockUssidIds.indexOf(sellersArray[i]['ussid'])!=-1){
 	    	$("#addToCartButton"+index).hide();
 		  	}else{
+		  	//TPR-887
+				tbodycontent+="<div id='buyNowFormIdOthersel"+index+"' class='OSErrorMsg' style='display:none;'></div>";
+				tbodycontent+="<div id='buyNowFormId"+index+"excedeInventory' style='display:none;'>"+$('#buyNowFormexcedeInventory').text()+"</div>";
+				tbodycontent+="<div id='buyNowFormId"+index+"noInventory' style='display:none;'>"+$('#buyNowFormnoInventory').text()+"</div>";
+				tbodycontent+="<div class='btn-buy-now'><button id='buyNowButton"+index+"' type='button' class='button add-to-bag btn-block js-add-to-cart buy-now'>"+$('#buynowid').text()+"</button>";
+				tbodycontent+="<span id='addToCartButtonId' class='btn-buy-now-holder'><button id='addToCartButton"+index+"' type='button' class='button add-to-bag btn-block js-add-to-cart add-to-bag-seller'>"+$('#addtobagid').text()+"</button></span></div>";
+				
 		  		tbodycontent+="<div id='addToCartFormIdOthersel"+index+"' class='OSErrorMsg' style='display:none;'></div>";
 		  		tbodycontent+="<div id='addToCartFormId"+index+"excedeInventory' style='display:none;'>"+$('#addToCartFormexcedeInventory').text()+"</div>";
 				tbodycontent+="<div id='addToCartFormId"+index+"noInventory' style='display:none;'>"+$('#addToCartFormnoInventory').text()+"</div>";
-				tbodycontent+="<button id='addToCartButton"+index+"' type='button' class='button add-to-bag btn-block js-add-to-cart'>"+$('#addtobagid').text()+"</button>";
+				
 				tbodycontent+=$("#hiddenIdForStock").html();
 		  	}
 	    }
@@ -377,7 +391,8 @@ function focusOnElement() {
 }
 	 function addToBag(index){
 		
-		$(document).on('click','#addToCartFormId'+index+' .js-add-to-cart',function(){
+		//$(document).on('click','#addToCartFormId'+index+' .js-add-to-cart',function(){ //Changed for TPR-887
+		 $(document).on('click','#addToCartFormId'+index+' #addToCartButton'+index,function(){
 			
         if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'){
 		  		
@@ -387,6 +402,17 @@ function focusOnElement() {
 		   	 }
 			ACC.product.sendAddToBag("addToCartFormId"+index);
 		});
+		 
+		//TPR-887
+		 $(document).on('click','#addToCartFormId'+index+' #buyNowButton'+index,function(){
+	        if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'){
+			  		
+			   		$("#buyNowFormIdOthersel"+index).html($('#selectSizeId').text());
+					$("#buyNowFormIdOthersel"+index).show();
+					 return false;
+			   	 }
+				ACC.product.sendAddToBag("addToCartFormId"+index,true);
+			});
 	
 	}
 	 function sendAddToBag(formId){

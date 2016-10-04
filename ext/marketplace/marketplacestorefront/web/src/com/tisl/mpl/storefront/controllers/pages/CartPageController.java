@@ -26,6 +26,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.Abstrac
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
 import de.hybris.platform.acceleratorstorefrontcommons.forms.UpdateQuantityForm;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.commercefacades.order.CheckoutFacade;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.CartModificationData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
@@ -174,6 +175,9 @@ public class CartPageController extends AbstractPageController
 	@Autowired
 	private MplCouponFacade mplCouponFacade;
 
+	@Resource(name = "checkoutFacade")
+	private CheckoutFacade checkoutFacade;
+
 	/*
 	 * Display the cart page
 	 */
@@ -190,6 +194,7 @@ public class CartPageController extends AbstractPageController
 		try
 		{
 
+			final CartModel cartModel = getCartService().getSessionCart();
 			//TISST-13012
 			//if (StringUtils.isNotEmpty(cartDataOnLoad.getGuid())) //TISPT-104
 			if (getCartService().hasSessionCart())
@@ -222,6 +227,8 @@ public class CartPageController extends AbstractPageController
 				//To calculate discount percentage amount for display purpose
 				// TPR-774-- Total MRP calculation and the Product percentage calculation
 				getMplCartFacade().totalMrpCal(cartModel);
+				//final CartModel cartModel = getCartService().getSessionCart();
+
 
 				final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 				final boolean isUserAnym = getUserFacade().isAnonymousUser();
@@ -257,7 +264,15 @@ public class CartPageController extends AbstractPageController
 				prepareDataForPage(model, new CartData());
 			}
 			// for MSD
+			//TPR-174
 
+			if (checkoutFacade.getCheckoutCart() != null && checkoutFacade.getCheckoutCart().isGotMerged())
+			{
+				model.addAttribute(ModelAttributetConstants.WELCOME_BACK_MESSAGE, MessageConstants.WELCOME_BACK_MESSAGE);
+			}
+			//TPR-174
+			cartModel.setMerged(false);
+			modelService.save(cartModel);
 			final String msdjsURL = getConfigurationService().getConfiguration().getString("msd.js.url");
 			final Boolean isMSDEnabled = Boolean.valueOf(getConfigurationService().getConfiguration().getString("msd.enabled"));
 			model.addAttribute(ModelAttributetConstants.MSD_JS_URL, msdjsURL);

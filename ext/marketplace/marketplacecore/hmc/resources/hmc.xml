@@ -2280,6 +2280,7 @@
 						position="0">
 						<listlayout>
 							<attribute name="sellerMasterList"></attribute>
+							<attribute name="sellerBulkList"></attribute>
 						</listlayout>
 					</section>
 				</tab>
@@ -2296,6 +2297,7 @@
 						position="0">
 						<listlayout>
 							<attribute name="sellerMasterList"></attribute>
+							<attribute name="exSellerBulkList"></attribute>
 						</listlayout>
 					</section>
 				</tab>
@@ -3432,7 +3434,59 @@
 	      </editor>
 	   </organizer>
 	</type>
+	<!-- TPR-715  changes starts-->
+	<type name="SellerRestriction" mode="append">
+	   <organizer>
+	       <result>
+	         <listview>
+	            <itemlayout>
+	               <attribute name="seller"/>
+	            </itemlayout>
+	         </listview>
+	         <editview>
+	            <itemlayout>
+	               <attribute name="seller" width="150"/>
+	            </itemlayout>
+	         </editview>
+	         <treeview>
+	            <itemlayout>
+	               <attribute name="seller"/>
+	            </itemlayout>
+	         </treeview>
+	      </result>
+	      <editor>
+	         <essentials mode="replace">
+	            <listlayout>
+	               <text name="text.productcategoryrestriction.common" width="353"/>
+	               <attribute name="voucher"/>
+	               <attribute name="description"/>
+	            </listlayout>
+	         </essentials>
+	         <tab name="properties">
+	            <section name="section.restrictions" mode="replace" position="0">
+	               <listlayout>
+	                   <attribute name="seller">
+								<referencecollectioneditor create="false" add="true" remove="true">
+									<itemlayout>
+										<attribute name="id" width="85"/>
+										<attribute name="firstname" width="92"/>										
+									</itemlayout>
+								</referencecollectioneditor>
+	                  </attribute> 
+	                  <attribute name="positive" width="500">
+	                     <advancedbooleaneditor truename="sellers.positive.true"
+	                                            falsename="sellers.positive.false"/>
+	                  </attribute>
+	                  <attribute name="sellerCodeList"/>
+	                 <!--  <attribute name="sellerNumber"/> -->
+	               </listlayout>
+	            </section>
+	         </tab>
+	      </editor>
+	   </organizer>
+	</type>
 	
+	<!-- TPR-715  changes ends-->
 	
 	<type name="UserRestriction" mode="append">
 	   <organizer>
