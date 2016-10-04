@@ -2439,6 +2439,7 @@
     	<property name="videoUrl" type="String"/>
     	<property name="videoDescription" type="String" />
     	<property name="previewUrl" type="String"/>
+    	<property name="videoTitle" type="String"/>
     </bean>
      <bean class="com.tisl.mpl.wsdto.LuxEngagementcomponentWsDTO">
     	<property name="bannerMedia" type="String"/>
