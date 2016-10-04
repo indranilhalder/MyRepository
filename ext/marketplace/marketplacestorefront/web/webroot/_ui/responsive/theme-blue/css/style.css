@@ -34678,6 +34678,7 @@ cursor: auto;
 	padding-left: 0;
 	display: block;
 	width: 100%;
+	text-align: left;
 }
 	
 .listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile select{
@@ -34685,6 +34686,7 @@ cursor: auto;
 	font-size: 9px;
 	line-height: normal;
 	height: 20px;
+	margin-left: 0 !important;
 }
 	
 .listing.wrapper .left-block .product-facet.js-product-facet.listing-leftmenu {
