@@ -93,6 +93,7 @@
 								code="pickup.out.of.stock" text="Out Of Stock" /></span>
 					</a>
 				</c:if> --%>
+				
 				<c:choose>
 				 <c:when test="${product.stockValue eq false}">
 				  <input type="hidden" id="stockStatusId" value="true"/>
