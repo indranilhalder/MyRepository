@@ -46310,7 +46310,7 @@ float: right;
 	}		
 	.Star .overall .Bottom>ul>li.active:after {		
 		color: #a9183c;		
-		content: "";		
+		content: "?";		
 
 		display: inline-block;		
 		font-size: 20px;		
@@ -46319,7 +46319,7 @@ float: right;
 		top: 0;		
 	}		
 	.Star .overall .Bottom>ul.active>li.active:after {		
-		content: "";		
+		content: "?";		
 
 	}		
 	.Star .overall .Bottom>ul>li:first-child {		
@@ -51507,7 +51507,7 @@ display:block;}
 .cart.wrapper .right-block.billing.checkout-list-right .block.delivery-info .prd-info .item .product .prd-rate p{font-size: 14px;}
 .cart.wrapper .right-block.billing.checkout-list-right .block.delivery-info .prd-info .item-mthd{padding: 30px 0 0;font-size: 12px;}
 .choose-payment{/* padding: 90px 0 0; */padding-bottom: 65px;}
-.checkout-payment.cart.checkout.wrapper .step-body{padding: 70px 24px 0;}
+.checkout-payment.cart.checkout.wrapper .step-body{padding: 90px 0px 0;}
 .cart.wrapper{ margin: 0 auto;max-width: 1200px;padding:0px;}
 .product-block.net-bank .item.cardForm p.popular-netbanks{margin-top:0px;    padding: 0 0 16px 0;    font-size: 12px;}
 .checkout.wrapper.checkout-payment h1{
@@ -51556,6 +51556,9 @@ display:block;}
 } */
 .smk_accordion .accordion_in .acc_content,#COD {
     margin: 0 30px 30px 30px;
+}
+.checkout-payment.cart.checkout.wrapper .step-body {
+    padding: 90px 24px 0;
 }
 }
 @media(max-width:1200px){
@@ -51634,6 +51637,10 @@ display:block;}
     margin-right: 6%;
     width: 42.49%;
 }
+.checkout.wrapper.checkout-payment h1{font-size:16px;}
+.cart.wrapper.checkout-payment p.cart-items{font-size:13px;}
+.checkout-payment.cart.checkout.wrapper .step-body{    padding: 60px 24px 0;}
+
 
 }
 
@@ -51649,7 +51656,7 @@ display:block;}
    /*  padding: 70px 24px 0; */
 }
 .cart.wrapper .right-block.billing.checkout-list-right{padding:0 24px;}
-
+.checkout-payment.cart.checkout.wrapper .step-body{    padding: 70px 24px 0;}
 
 }
 
@@ -52818,8 +52825,30 @@ padding:0px;
     font-size: 14px;
     height: 44px;
     font-weight: normal;
-    text-transform: uppercase;
  }
+  .cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.nameFullSubPanel>input::-webkit-input-placeholder,
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.mobileSubPanel>input::-webkit-input-placeholder
+  {
+	text-transform:uppercase;
+}
+
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.nameFullSubPanel>input::-moz-placeholder,
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.mobileSubPanel>input::-moz-placeholder
+  {
+	text-transform:uppercase;
+}
+
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.nameFullSubPanel>input:-moz-placeholder,
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.mobileSubPanel>input:-moz-placeholder
+  {
+	text-transform:uppercase;
+}
+
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.nameFullSubPanel>input:-ms-input-placeholder,
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.mobileSubPanel>input:-ms-input-placeholder
+  {
+	text-transform:uppercase;
+}
  .cart.wrapper .checkout-shipping-items.left-block.left-block-width .panel.panel-body form[name="pickupPersonDetails"]>div.nameBlankSubPanel{
  	width: 3%;
  	visibility: hidden;
@@ -53503,4 +53532,5 @@ div.radio.creditDebitLabelRadio{
  header .content nav > ul > li > ul > li > ul > li.long.words .toggle {
                font-weight: normal;
     }
-
+	 .checkout.wrapper .product-block li.item.delivery_options>ul li.delivery{
+ padding:15px 0 0 0;}
