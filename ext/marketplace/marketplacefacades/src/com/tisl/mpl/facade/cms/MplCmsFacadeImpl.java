@@ -382,7 +382,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getLandingPageForCategory(java.lang.String)
 	 */
 	@Override
@@ -407,7 +407,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getHomePageForMobile()
 	 */
 	@Override
@@ -663,7 +663,10 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 			signColList.add(signColItemWsDto);
 		}
 
-		luxComponent.setTitle("Signature Collections");
+		if (null != luxurySignatureColComponent.getTitle())
+		{
+			luxComponent.setTitle(luxurySignatureColComponent.getTitle());
+		}
 		luxComponent.setSubsections(signColList);
 		return luxComponent;
 
@@ -919,6 +922,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 			{
 				video.setVideoDescription(luxuryVideoComponent.getVideoDescription());
 			}
+			video.setPreviewUrl(luxuryVideoComponent.getPreviewUrl());
 			videoComponentDtoList.add(video);
 
 			luxComponent.setVideocomponent(videoComponentDtoList);
@@ -1316,7 +1320,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateCategoryLandingPageForMobile()
 	 */
 	@Override
@@ -1432,7 +1436,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.facade.cms.MplCmsFacade#populateSubBrandLandingPageForMobile(de.hybris.platform.cms2.model.pages.
 	 * ContentPageModel, java.lang.String)
@@ -1483,7 +1487,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populatePageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -1630,7 +1634,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getCategoryNameForCode(java.lang.String)
 	 */
 	@Override
@@ -1642,7 +1646,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getHeroProducts(java.lang.String)
 	 */
 	@Override
@@ -1716,7 +1720,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateSellerLandingPageForMobile()
 	 */
 	@Override
@@ -1757,7 +1761,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				 * (SmallBrandMobileAppComponentModel) abstractCMSComponentModel; final ComponentData componentData =
 				 * getMobileCategoryComponentConverter().convert(smallBrandMobileComponentModel);
 				 * componentDatas.add(componentData);
-				 * 
+				 *
 				 * }
 				 */
 				else if (abstractCMSComponentModel instanceof PromotionalProductsComponentModel)
@@ -1815,7 +1819,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getSellerMasterName(java.lang.String)
 	 */
 	@Override
@@ -1827,7 +1831,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateSellerPageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -1843,7 +1847,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateOfferPageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -1860,7 +1864,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getlandingForBrand()
 	 */
 	@Override
@@ -2652,7 +2656,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getMegaNavigation()
 	 */
 	@Override
@@ -2734,10 +2738,10 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 					if (CollectionUtils.isNotEmpty(cmsNav.getChildren()))
 					{
-						for (final CMSNavigationNodeModel levelTwo : cmsNav.getChildren())
+						for (final CMSNavigationNodeModel levelTwoComp : cmsNav.getChildren())
 						{
 							//levelTwo is for clothings,essential
-							final MplNavigationNodeComponentModel levelTwoComp = (MplNavigationNodeComponentModel) levelTwo;
+							//final MplNavigationNodeComponentModel levelTwoComp = (MplNavigationNodeComponentModel) levelTwo;
 							final LuxLevelTwoWsDTO level2Dto = new LuxLevelTwoWsDTO();
 							final ArrayList<LuxLevelThreeWsDTO> levelThreeListDto = new ArrayList<LuxLevelThreeWsDTO>();
 							final ArrayList<LuxLevelTwoSliderWsDTO> levelTwoSliderListDto = new ArrayList<LuxLevelTwoSliderWsDTO>();
@@ -2774,27 +2778,31 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 								}
 
 							}
-							if (CollectionUtils.isNotEmpty(levelTwoComp.getSliders()))
+							if (levelTwoComp instanceof MplNavigationNodeComponentModel)
 							{
-								for (final SimpleBannerComponentModel luxLevelTwoSlider : levelTwoComp.getSliders())
+								if (CollectionUtils.isNotEmpty(((MplNavigationNodeComponentModel) levelTwoComp).getSliders()))
 								{
-									final LuxLevelTwoSliderWsDTO sliderDto = new LuxLevelTwoSliderWsDTO();
-									if (null != luxLevelTwoSlider.getTitle())
+									for (final SimpleBannerComponentModel luxLevelTwoSlider : ((MplNavigationNodeComponentModel) levelTwoComp)
+											.getSliders())
 									{
-										sliderDto.setTitle(luxLevelTwoSlider.getTitle());
-									}
+										final LuxLevelTwoSliderWsDTO sliderDto = new LuxLevelTwoSliderWsDTO();
+										if (null != luxLevelTwoSlider.getTitle())
+										{
+											sliderDto.setTitle(luxLevelTwoSlider.getTitle());
+										}
 
-									if (null != luxLevelTwoSlider.getMedia() && null != luxLevelTwoSlider.getMedia().getURL())
-									{
-										sliderDto.setImage(luxLevelTwoSlider.getMedia().getURL());
-									}
+										if (null != luxLevelTwoSlider.getMedia() && null != luxLevelTwoSlider.getMedia().getURL())
+										{
+											sliderDto.setImage(luxLevelTwoSlider.getMedia().getURL());
+										}
 
-									if (null != luxLevelTwoSlider.getUrlLink())
-									{
-										sliderDto.setDestination(luxLevelTwoSlider.getUrlLink());
+										if (null != luxLevelTwoSlider.getUrlLink())
+										{
+											sliderDto.setDestination(luxLevelTwoSlider.getUrlLink());
+										}
+										//cta is to be decided
+										levelTwoSliderListDto.add(sliderDto);
 									}
-									//cta is to be decided
-									levelTwoSliderListDto.add(sliderDto);
 								}
 							}
 
