@@ -95,8 +95,7 @@
 				</c:if> --%>
 				
 				<c:choose>
-				 <%-- <c:when test="${product.stockValue eq false}"> --%>
-				 <c:when test="${product.stock.stockLevelStatus eq 'outOfStock'}">
+				 <c:when test="${product.stockValue eq false}">
 				  <input type="hidden" id="stockStatusId" value="true"/>
 					<a id="stockIdDefault_${product.name}" class="stockLevelStatus"
 						href="${productUrl}" title="${product.name}"> <spring:theme
