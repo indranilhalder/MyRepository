@@ -268,7 +268,7 @@ $(document).ready(function(){
 				}
 				else{
 				$(".facet-name.js-facet-name h3").removeClass("active-mob");
-					$(".facet-name.js-facet-name h3").each(function(){
+					$(".facet_desktop .facet-name.js-facet-name h3").each(function(){
 					if($(this).hasClass("active")){
 						$(this).parent().siblings().show();
 						$(this).parent().siblings().find("#searchPageDeptHierTree").show();
@@ -1919,8 +1919,8 @@ function toggleFilter(){
 		colorSwatch();
 		sizeSwatch();
 		//Mobile view filter ajax
-		$(".product-facet.js-product-facet.listing-leftmenu").slideToggle();
-		$(".toggle-filterSerp").toggleClass("active");
+		//$(".product-facet.js-product-facet.listing-leftmenu").slideToggle();
+		//$(".toggle-filterSerp").toggleClass("active");
 		/*mobile filter*/
 		$(".mob-filter-wrapper").fadeIn();
 		$(this).toggleClass("active");

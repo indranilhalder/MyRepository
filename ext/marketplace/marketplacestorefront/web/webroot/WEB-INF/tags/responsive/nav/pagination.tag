@@ -130,7 +130,7 @@
 											<c:set var="top" value="false" />
 								<!-- End Fix to TISTI-198 -->
 								<form id="sortForm${top ? '1' : '2'}" name="sortForm${top ? '1' : '2'}" method="get" action="#">
-									
+									<label class="sortByMobile">Sort by</label>
 									<select id="sortOptions${top ? '1' : '2'}" name="sort" class="black-arrow-left" style="display:block" onchange="sortByFilterResult(${top ? '1' : '2'})"> <!-- On change method added for TPR-198 -->
 										<!-- Start Fix to TISTI-198 -->
 										<c:set var="top" value="true" />
@@ -150,7 +150,7 @@
 											</option>
 											</c:if>
 										</c:forEach>
-										<option selected disabled  style="display:none;"><spring:theme code="${themeMsgKey}.sortTitle.mobile"/></option>
+										<%-- <option selected disabled  style="display:none;"><spring:theme code="${themeMsgKey}.sortTitle.mobile"/></option> --%>
 									</select>
 									
 									<c:catch var="errorException">
