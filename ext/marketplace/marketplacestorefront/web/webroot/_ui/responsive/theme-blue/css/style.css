@@ -30320,7 +30320,7 @@ right: 0px !important;
 }
 
 .buy-btn-holder{
-	margin-bottom: 10px;
+	/* margin-bottom: 10px; */ /* TPR-1870 remove whitespace*/
 }
 
 .clearfix:after {
@@ -43241,7 +43241,8 @@ ul.jqtree-tree .jqtree-moving > .jqtree-element .jqtree-title {
 }
 .picZoomer-pic{
 	width: 100%;
-    height: auto;
+    /* height: auto; */
+    max-height: 650px; /* TPR-1865(image goes outside the container)*/
     opacity: 1;
     z-index: 1;
     -webkit-transition: opacity 0.3s,z-index 0s 0.3s;
@@ -45256,6 +45257,7 @@ float: right;
 	margin: 15px 0 0;
 	/* display: flex; */
 	align-items: flex-end;
+	overflow: hidden;/* TPR-1870 for spacing */
 }
 
 .product-info .product-detail .Cta #buyNow, .product-info .product-detail .Cta .addtocart-component
