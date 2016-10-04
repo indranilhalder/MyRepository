@@ -2184,17 +2184,83 @@ function callGigyaWhenNotMinified(){
 
 /*TPR-198 : Page reload on SortBy and ViewBy*/
 //Sort by filter
+//TPR- 565 custom sku addded functionality
 function sortByFilterResult(top){
-	 $("#hidden-option-width").html($(".sort-refine-bar select").find('option:selected').text());
-	 var option_width=$("#hidden-option-width").width() + 22;
-	$(".sort-refine-bar select.black-arrow-left").css("background-position-x",option_width);
 	
-	$('#sortForm'+top).submit();
+	if($("input[name=customSku]").length > 0){
+		var pageNo = 1;
+		if ($("#paginationFormBottom .pagination.mobile li.active span").length) {
+			pageNo = $("#paginationFormBottom .pagination.mobile li.active span").text();
+			if (typeof(pageNo) === "undefined"){
+				pageNo = 1;
+			}
+		}  
+		var requiredUrl = '/CustomSkuCollection/' + $("input[name=customSkuCollectionId]").val() + '/page-' + pageNo;
+		var dataString = $('#sortForm' + top).serialize() + "&pageSize=" + $("select[name=pageSize]").val();
+		$.ajax({
+			contentType : "application/json; charset=utf-8",
+			url : requiredUrl,
+			data : dataString,
+			success : function(response) {
+				console.log(response);
+				// putting AJAX respons to view
+				$('#facetSearchAjaxData .right-block, #facetSearchAjaxData .bottom-pagination, #facetSearchAjaxData .facet-list.filter-opt').remove();
+				$('#facetSearchAjaxData .left-block').after(response);
+			},
+			error : function(xhr, status, error) {				
+				console.log("Error >>>>>> " + error);
+			},
+			complete: function() {
+				// AJAX changes for custom price filter
+				
+			}
+		});
+		
+	}else{
+		$("#hidden-option-width").html($(".sort-refine-bar select").find('option:selected').text());
+		 var option_width=$("#hidden-option-width").width() + 22;
+		$(".sort-refine-bar select.black-arrow-left").css("background-position-x",option_width);
+		
+		$('#sortForm'+top).submit();
+	}
+	
 }
 
 //View by filter
+//TPR- 565 custom sku addded functionality
 function viewByFilterResult(top){
-	$('#pageSize_form'+top).submit();
+	if($("input[name=customSku]").length > 0){
+		var pageNo = 1;
+		if ($("#paginationFormBottom .pagination.mobile li.active span").length) {
+			pageNo = $("#paginationFormBottom .pagination.mobile li.active span").text();
+			if (typeof(pageNo) === "undefined"){
+				pageNo = 1;
+			}
+		}		   
+		var requiredUrl = '/CustomSkuCollection/' + $("input[name=customSkuCollectionId]").val() + '/page-' + pageNo;
+		var dataString = $('#pageSize_form' + top).serialize();
+		$.ajax({
+			contentType : "application/json; charset=utf-8",
+			url : requiredUrl,
+			data : dataString,
+			success : function(response) {
+				console.log(response);
+				// putting AJAX respons to view
+				$('#facetSearchAjaxData .right-block, #facetSearchAjaxData .bottom-pagination, #facetSearchAjaxData .facet-list.filter-opt').remove();
+				$('#facetSearchAjaxData .left-block').after(response);
+			},
+			error : function(xhr, status, error) {				
+				console.log("Error >>>>>> " + error);
+			},
+			complete: function() {
+				// AJAX changes for custom price filter
+				
+			}
+		});
+		
+	}else{
+		$('#pageSize_form'+top).submit();
+	}	
 }
 /*Filter scroll changes start*/
 $(window).on("scroll",function(){

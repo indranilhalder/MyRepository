@@ -1383,17 +1383,15 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 								if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1 ){
 									requiredUrl = action.concat("/getFacetData");
 								} 
-								else if (action.indexOf('/collection/') > -1) {
-									alert('aaa');
-									requiredUrl = '/CustomSkuCollection/getFacetData';
+								else if ($("input[name=customSku]").val()) {
+									var collectionId = $("input[name=customSkuCollectionId]").val();
+									requiredUrl = '/CustomSkuCollection/'+collectionId+'/getFacetData';
 								}
 								else{
-									
 									requiredUrl = action.concat("getFacetData");
 								}
 							}
 							else{
-								
 								requiredUrl = action;
 							}
 						}
@@ -1468,7 +1466,8 @@ function queryParam(name) {
 //selected ranges.
 $(document).ready(function() {
 	
-	loadPriceRange();
+	loadPriceRange();	
+	
 });
 
 
@@ -1493,3 +1492,5 @@ function loadPriceRange(){
 }
 
 //Code changes end for TPR -168//
+
+
