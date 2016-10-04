@@ -12,6 +12,8 @@ import de.hybris.platform.integration.oms.order.service.ProductAttributeStrategy
 import de.hybris.platform.integration.oms.order.strategies.OrderEntryNoteStrategy;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -278,14 +280,35 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			
 			if (source.getTimeSlotFrom() != null)
 			{
-				target.setTimeSlotFrom(String.valueOf(source.getTimeSlotFrom()));
+				
+				 String timeSlotFrom= source.getTimeSlotFrom();
+				 SimpleDateFormat format1 = new SimpleDateFormat("hh:mm a");
+			    SimpleDateFormat format2 = new SimpleDateFormat("HH:mm:ss");
+			    
+				try
+				{
+					target.setTimeSlotFrom(String.valueOf(format2.format(format1.parse(timeSlotFrom))));
+				}
+				catch (ParseException e)
+				{
+					LOG.error("unable to parse timeslots "+ e.getMessage());
+				}
 			}
 			
 			if (source.getTimeSlotTo() != null)
 			{
-				target.setTimeSlotTo(String.valueOf(source.getTimeSlotTo()));
+				 String timeSlotTo= source.getTimeSlotFrom();
+				 SimpleDateFormat format1 = new SimpleDateFormat("hh:mm a");
+			    SimpleDateFormat format2 = new SimpleDateFormat("HH:mm:ss");   
+				try
+				{
+					target.setTimeSlotTo(String.valueOf(format2.format(format1.parse(timeSlotTo))));
+				}
+				catch (ParseException e)
+				{
+					LOG.error("unable to parse timeslots "+ e.getMessage());
+				}
 			}
-			
 			if (source.getScheduledDeliveryCharge() != null)
 			{
 				target.setScheduledDeliveryCharge(source.getScheduledDeliveryCharge().doubleValue());
