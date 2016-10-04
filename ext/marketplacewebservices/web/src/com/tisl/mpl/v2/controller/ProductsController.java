@@ -933,6 +933,18 @@ public class ProductsController extends BaseController
 							}
 							productSearchPage.setCrosssellBanner(bannerDto);
 						}
+						if (CollectionUtils.isNotEmpty(category.getDynamicBanners()))
+						{
+							final SimpleBannerComponentModel dynamicBannerModel = category.getDynamicBanners().get(0);
+							final LuxHeroBannerWsDTO bannerDto = new LuxHeroBannerWsDTO();
+							bannerDto.setBannerUrl(dynamicBannerModel.getUrlLink());
+							if (null != dynamicBannerModel.getMedia())
+							{
+								bannerDto.setBannerMedia(dynamicBannerModel.getMedia().getURL2());
+								bannerDto.setAltText(dynamicBannerModel.getMedia().getAltText());
+							}
+							productSearchPage.setPlpHeroBanner(bannerDto);
+						}
 					}
 					else
 					{

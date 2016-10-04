@@ -26,6 +26,7 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.core.model.RatingReviewModel;
@@ -114,7 +115,6 @@ public class CustomProductBasicPopulator<SOURCE extends ProductModel, TARGET ext
 	 */
 	@Override
 	public void populate(final SOURCE productModel, final TARGET productData) throws ConversionException
-
 	{
 		productData.setName((String) getProductAttribute(productModel, ProductModel.NAME));
 		productData.setArticleDescription((String) getProductAttribute(productModel, ProductModel.ARTICLEDESCRIPTION));
@@ -184,7 +184,12 @@ public class CustomProductBasicPopulator<SOURCE extends ProductModel, TARGET ext
 		productData.setPurchasable(Boolean.valueOf(productModel.getVariantType() == null && isApproved(productModel)));
 		//}
 
-
+		//Added for Luxury Product, LW-216
+		if ((productModel.getLuxIndicator() != null && productModel.getLuxIndicator().getCode() != null && productModel
+				.getLuxIndicator().getCode().equalsIgnoreCase(MarketplaceCoreConstants.LUXURY)))
+		{
+			productData.setLuxIndicator(MarketplaceCoreConstants.LUXURY);
+		}
 	}
 
 	/**
