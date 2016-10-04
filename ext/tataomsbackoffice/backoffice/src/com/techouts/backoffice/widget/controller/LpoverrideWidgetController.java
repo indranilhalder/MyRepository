@@ -89,7 +89,6 @@ public class LpoverrideWidgetController
 		{
 			listOfTransactions = new ArrayList<TransactionInfo>();
 		}
-		lpSearch();
 	}
 
 	@AfterCompose

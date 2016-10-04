@@ -90,7 +90,6 @@ public class AwbEditWidgetController
 		{
 			listOfTransactions = new ArrayList<TransactionInfo>();
 		}
-		awbSearch();
 	}
 
 
