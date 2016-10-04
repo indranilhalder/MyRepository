@@ -49998,10 +49998,57 @@ padding: 0 24px;
     float: left;
     text-align: center;
     margin-top: 10px;
+    padding:0;
 	}
+	.common_logo_slot_wrapper .blp_title_banner .simple-banner-component{
+	padding:0;
+	margin-top: 10px;
+	margin-left:0;
+	}
+	.blp_title_banner {
+    padding:0;
+}
+.common_logo_slot_wrapper .blp_title_banner:last-child form select{
+	border-right: 0;
+    border-width: 1px;
+    border-color: #AAA;
+    height: 40px;
+    font-size: 12px;
+    font-weight: 500;
+    width: calc(100% - 65%);
+    padding: 8px 37px 8px 5px !important;
+    line-height: 1;
+    border: 1px solid #dfd1d5;
+    background-color: #fff;
+    color:#000;
+    background-image: url(../images/select-arrow-new.png);
+    background-position: 95% 51%;
+}
+.common_logo_slot_wrapper .blp_title_banner:last-child form input{
+	border-left: 1px solid #AAA;
+	border: 1px solid #AAA;
+	height: 40px;
+    font-size: 12px;
+    line-height: 24px;
+    border-radius: 0;
+    width: calc(65% - 40px);
+    background-color: #fff;
+    color: #555;
+}
+.common_logo_slot_wrapper .blp_title_banner:last-child form #brandSearchButton{
+	height: 40px;
+    width: 40px;
+    position: relative;
+    border: 1px solid #AAA;
+    background-color: #fff;
+    float: right;
+    border-left: 0;
+    background: url(../images/sprite.svg) no-repeat scroll -121px 6px;
+}
 	.common_logo_slot_wrapper{
 	    padding-top: 15px;
 	    padding: 15px 23px 30px;
+	    max-height:none;
 	}
 	.top_categories_blp > .top_categories_section_blp:first-child
 		{
