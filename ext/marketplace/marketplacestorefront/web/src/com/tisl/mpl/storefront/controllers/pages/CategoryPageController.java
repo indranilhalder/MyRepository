@@ -437,10 +437,10 @@ public class CategoryPageController extends AbstractCategoryPageController
 				model.addAttribute(ModelAttributetConstants.NORMAL_PRODUCTS, normalProductDatas);
 				model.addAttribute(ModelAttributetConstants.SHOW_CATEGORIES_ONLY, Boolean.FALSE);
 				// For Category Footer
-				if (null != category.getCategoryFooterText())
-				{
-					model.addAttribute(CATEGORY_FOOTER_TEXT, category.getCategoryFooterText());
-				}
+				//				if (null != category.getCategoryFooterText())
+				//				{
+				//					model.addAttribute(CATEGORY_FOOTER_TEXT, category.getCategoryFooterText());
+				//				}
 				storeCmsPageInModel(model, categoryLandingPage);
 
 
