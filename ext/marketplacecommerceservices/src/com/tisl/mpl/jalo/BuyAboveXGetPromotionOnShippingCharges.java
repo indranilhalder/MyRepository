@@ -73,7 +73,6 @@ public class BuyAboveXGetPromotionOnShippingCharges extends GeneratedBuyAboveXGe
 		final List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
 		boolean checkChannelFlag = false;
 		//CR Changes : TPR-715
-		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());
 		Map<String, AbstractOrderEntry> validUssidMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
 		//CR Changes : TPR-715 Ends
 		try
@@ -244,7 +243,7 @@ public class BuyAboveXGetPromotionOnShippingCharges extends GeneratedBuyAboveXGe
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.promotions.jalo.AbstractPromotion#getResultDescription(de.hybris.platform.jalo.SessionContext,
 	 * de.hybris.platform.promotions.jalo.PromotionResult, java.util.Locale)
