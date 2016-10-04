@@ -1839,6 +1839,7 @@
 
 	<bean class="com.tisl.mpl.wsdto.SellingItemDetailWsDto">
 		<property name="sellerName" type="String" />
+		<property name="Ussid" type="String" />
 		<property name="sellerId" type="String" />
 		<property name="brandname" type="String" />
 		<property name="productId" type="String" />
