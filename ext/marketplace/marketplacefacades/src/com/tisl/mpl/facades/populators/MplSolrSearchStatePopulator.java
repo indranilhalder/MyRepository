@@ -134,7 +134,8 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 			}
 			//changed with dynamic collection id key
 			//target.setUrl("/collection/chef" + PAGE_PAGE_NO_Q + buildUrlQueryStringForNew(source, target).replace("?", "&"));
-			target.setUrl("/collection/" + lookId + PAGE_PAGE_NO_Q + buildUrlQueryStringForNew(source, target).replace("?", "&"));
+			target.setUrl("/CustomSkuCollection/" + lookId + PAGE_PAGE_NO_Q
+					+ buildUrlQueryStringForNew(source, target).replace("?", "&"));
 			//target.setUrl("/search/viewOnlineProducts" + buildUrlQueryString(source, target).replace("?", "&"));
 		}
 		//		else if (source.getOfferID() != null)

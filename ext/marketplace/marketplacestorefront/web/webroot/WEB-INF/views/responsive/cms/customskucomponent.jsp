@@ -11,7 +11,7 @@
 
 <div class="listing wrapper" id="facetSearchAjaxData">
 				 
-				<div class="left-block">
+				<div class="left-block" >
 				<span class="toggle-filterSerp">Filter By</span>
 				<ul class="product-facet js-product-facet listing-leftmenu">
 	             <%-- <nav:facetNavRefinements pageData="${searchPageData}"/> --%>
@@ -45,4 +45,6 @@
 							searchUrl="${searchPageData.currentQuery.url}"
 							numberPagesShown="${numberPagesShown}" />
 					</div>
+					<input type="hidden" name="customSku" value="true"/>
+					<input type="hidden" name="customSkuCollectionId" value="${component.labelOrId}"/>
 				</div>

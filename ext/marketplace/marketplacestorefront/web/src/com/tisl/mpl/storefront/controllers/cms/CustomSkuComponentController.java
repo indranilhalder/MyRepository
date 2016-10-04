@@ -97,11 +97,9 @@ public class CustomSkuComponentController extends AbstractCMSComponentController
 	private static final String REFINE_FACET_SEARCH_URL_PATTERN_2 = "/getFacetData";
 	private static final String COMPILE_PATTERN = "page-[0-9]+";
 	private static final String DROPDOWN_CATEGORY = "MSH";
-	private static final String NO_RESULTS_CMS_PAGE_ID = "searchEmpty";
-	private static final String SEARCH_CMS_PAGE_ID = "search";
-
 	public static final String CMS_PAGE_MODEL = "cmsPage";
 	public static final String PAGE_ROOT = "pages/";
+	public static final String CUSTOM_SKU_GRID_PAGE = "pages/search/customSkuGridPage";
 
 	public static final int MAX_PAGE_LIMIT = 100; // should be configured
 	private static final String PAGINATION_NUMBER_OF_RESULTS_COUNT = "pagination.number.results.count";
@@ -288,17 +286,15 @@ public class CustomSkuComponentController extends AbstractCMSComponentController
 	 * @throws CMSItemNotFoundException
 	 */
 	@RequestMapping(method = RequestMethod.GET, params = "q", value =
-	{ REFINE_FACET_SEARCH_URL_PATTERN_1, REFINE_FACET_SEARCH_URL_PATTERN_2 })
-	public String refineFacetSearch(@RequestParam("q") final String searchQuery,
+	{ "{look-id}" + REFINE_FACET_SEARCH_URL_PATTERN_1, "{look-id}" + REFINE_FACET_SEARCH_URL_PATTERN_2 })
+	public String refineFacetSearch(@PathVariable("look-id") final String lookId, @RequestParam("q") final String searchQuery,
 			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = "0") final int page,
 			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode,
 			@RequestParam(value = "text", required = false) final String searchText,
 			@RequestParam(value = "pageSize", required = false) final Integer pageSize, final HttpServletRequest request,
-			final Model model, final CustomSkuComponentModel component) throws CMSItemNotFoundException, JSONException,
-			ParseException
+			final Model model) throws CMSItemNotFoundException, JSONException, ParseException
 	{
-		this.lookId = component.getLabelOrId();
 		populateRefineSearchResult(lookId, searchQuery, page, showMode, sortCode, searchText, pageSize, request, model);
 		return ControllerConstants.Views.Pages.Search.FacetResultPanel;
 	}
@@ -381,6 +377,7 @@ public class CustomSkuComponentController extends AbstractCMSComponentController
 
 		}
 		model.addAttribute("shopbylook", "shopbylook");
+		model.addAttribute("lookId", lookId);
 		populateModel(model, searchPageData, showMode);
 		model.addAttribute(MarketplaceCoreConstants.USER_LOCATION, customerLocationService.getUserLocation());
 
@@ -491,10 +488,7 @@ public class CustomSkuComponentController extends AbstractCMSComponentController
 	{
 
 		populateRefineSearchResult(lookId, searchQuery, page, showMode, sortCode, searchText, pageSize, request, model);
-		//
-		
-		
-		return getViewForPage(model);
+		return CUSTOM_SKU_GRID_PAGE;
 	}
 
 	protected String getViewForPage(final Model model)

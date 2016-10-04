@@ -58,4 +58,9 @@
 		</c:if>
 
 		<product:searchresultsgridcomponent/>
+		<!--  TPR-656 -->
+		<c:if test="${not empty lookId}">
+		<input type="hidden" name="customSku" value="true"/>
+	    <input type="hidden" name="customSkuCollectionId" value="${lookId}"/>
+	    </c:if>
 </div>
