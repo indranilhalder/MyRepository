@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
@@ -250,8 +249,8 @@ public class SShipDeliveryBreachWidgetController extends DefaultWidgetController
 									cancelOrderLine.setTransactionId(sshipTxnOrder.getOrderLineId());
 									cancelOrderLine.setReturnCancelFlag("C");
 									cancelOrderLine.setReasonCode("05");
-									cancelOrderLine.setReturnCancelRemarks("The product is missing a part");
-									cancelOrderLine.setRequestId(new Random(123456789) + "CANCEL");
+									cancelOrderLine.setReturnCancelRemarks("admin cancled the breached order");
+									cancelOrderLine.setRequestId(sshipTxnOrder.getOrderLineId());
 									cancelOrderList.add(cancelOrderLine);
 								}
 
