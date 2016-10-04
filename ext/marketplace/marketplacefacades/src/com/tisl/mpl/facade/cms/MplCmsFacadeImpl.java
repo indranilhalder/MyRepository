@@ -551,15 +551,11 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					componentListForASlot.add(luxuryComponent);
 				}
 				LOG.debug("Adding component" + abstractCMSComponentModel.getUid() + "for section" + contentSlot.getUid());
-				//				luxuryComponent.setSectionid(contentSlot.getUid());
+				luxuryComponent.setSectionid(contentSlot.getUid());
 				//		componentListForASlot.add(luxuryComponent);
 
 			}
 
-			if (!(componentListForASlot.isEmpty()))
-			{
-				luxuryComponent.setSectionid(contentSlot.getUid());
-			}
 		}
 		//}
 		return componentListForASlot;
