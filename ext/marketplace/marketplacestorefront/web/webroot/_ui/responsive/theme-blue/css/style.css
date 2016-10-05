@@ -25986,9 +25986,9 @@ font-weight:600;
 .mainContent-wrapper{
 min-height:auto;
 }
-p#emptyId{
+/* p#emptyId{
 float:left;
-}
+} */
 .cart.wrapper .right-block .block input{
 height:40px;
 line-height:40px;
@@ -34098,7 +34098,7 @@ header > .content .top .toggle {
 }
 #error-Id, #emptyId{
 	clear:both;
-    margin: 0 0 23px 0 !important;
+    /* margin: 0 0 23px 0 !important; */
 }
 
 @media only screen and (max-width: 1400px) and (min-width: 1025px){
