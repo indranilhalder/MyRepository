@@ -2426,6 +2426,7 @@
     	<property name="productMOP" type="String"/>
     	<property name="productSpecialPrice" type="String"/>
     	<property name="productBrand" type="String"/>
+    	<property name="position" type="Integer"/>
     			
     </bean>
     <bean class="com.tisl.mpl.wsdto.LuxShopYourFavListWsDTO">

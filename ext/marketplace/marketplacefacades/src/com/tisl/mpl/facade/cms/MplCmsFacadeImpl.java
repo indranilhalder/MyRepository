@@ -2178,7 +2178,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 		//final List<LuxComponentsListWsDTO> component = new ArrayList<LuxComponentsListWsDTO>();
 		final LuxShopTheLookWsDTO stlProductList = new LuxShopTheLookWsDTO();
 		final LuxBlpCompListWsDTO luxComponent = new LuxBlpCompListWsDTO();
-
+		int count = 1;
 		for (final ProductModel product : productcomponent.getProducts())
 		{
 			final LuxBrandProductsListWsDTO productDto = new LuxBrandProductsListWsDTO();
@@ -2233,7 +2233,9 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					}
 
 				}
+				productDto.setPosition(Integer.valueOf(count));
 				productList.add(productDto);
+				count++;
 			}
 
 		}
