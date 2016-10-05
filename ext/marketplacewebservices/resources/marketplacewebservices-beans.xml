@@ -665,8 +665,8 @@
 			<property name="rootCategory" type="String" />
 			<property name="productLevelDiscount" type="java.lang.Double" />
 			<property name="productCategoryId" type="String" />
-			<!--  Added for luxury 
-			<property name="isLuxury" type="String" /> -->
+			<!--  Added for luxury -->
+			<property name="isLuxury" type="String" /> 
 			
 			
 			<!-- 	-->	
