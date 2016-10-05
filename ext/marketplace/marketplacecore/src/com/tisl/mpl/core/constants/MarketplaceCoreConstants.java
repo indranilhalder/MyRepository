@@ -77,6 +77,7 @@ public final class MarketplaceCoreConstants extends GeneratedMarketplaceCoreCons
 
 	//For Luxury Products
 	public static final String LUXURY = "luxury";
+	public static final String Marketplace = "Marketplace";
 
 	// implement here constants used by this extension
 }
