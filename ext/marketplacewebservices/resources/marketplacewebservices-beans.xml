@@ -2426,7 +2426,7 @@
     	<property name="productUrl" type="String" />
     	<property name="productImageUrl" type="String" /> 
     	<property name="productTitle" type="String" /> 
-    	<property name="productPrice" type="String"/>
+    	<property name="productMRP" type="String"/>
     	<property name="productMOP" type="String"/>
     	<property name="productSpecialPrice" type="String"/>
     	<property name="productBrand" type="String"/>

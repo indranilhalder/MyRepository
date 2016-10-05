@@ -709,7 +709,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 			final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(product.getCode());
 			if (null != buyboxdata && null != buyboxdata.getMrp())
 			{
-				productDto.setProductPrice(buyboxdata.getMrp().getFormattedValue());
+				productDto.setProductMRP(buyboxdata.getMrp().getFormattedValue());
 			}
 		}
 
@@ -801,7 +801,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 						}
 						if (buyboxdata.getMrp() != null)
 						{
-							productDto.setProductPrice(buyboxdata.getMrp().getFormattedValue());
+							productDto.setProductMRP(buyboxdata.getMrp().getFormattedValue());
 						}
 					}
 
@@ -2141,6 +2141,10 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					springBannerDto.setText(banner.getDescription());
 				}
 				springBannerDto.setPosition(Integer.valueOf(position));
+				if (position == 1)
+				{
+					springBannerDto.setIs_default(true);
+				}
 				position++;
 				springComponentDtoList.add(springBannerDto);
 			}
@@ -2219,7 +2223,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 						}
 						if (buyboxdata.getMrp() != null)
 						{
-							productDto.setProductPrice(buyboxdata.getMrp().getFormattedValue());
+							productDto.setProductMRP(buyboxdata.getMrp().getFormattedValue());
 						}
 					}
 				}
@@ -2320,9 +2324,9 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				{
 					productDto.setProductTitle(products.getProductTitle());
 				}
-				if (null != products.getProductPrice())
+				if (null != products.getProductMRP())
 				{
-					productDto.setProductPrice(products.getProductPrice());
+					productDto.setProductMRP(products.getProductMRP());
 				}
 				if (null != products.getProductMOP())
 				{
