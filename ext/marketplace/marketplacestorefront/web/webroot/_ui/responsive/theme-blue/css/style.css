@@ -42508,6 +42508,9 @@ Samsung Galaxy S5 -----------
 	background: #A9143C; 
 	width: 100% !important;
 	margin-bottom: 10px;
+	  font-size: 10px;
+    height: 40px;
+    line-height: normal;
 }
 
 .latlng {
@@ -42963,7 +42966,7 @@ transform-origin:0 0;
 	.pickupPersonNameError {
 		width: 115px;
 		font-size: 10px;
-		margin-left: 49px;
+		/* margin-left: 49px; */
 		margin-top: 3px;
 	}	
 	.pickup_mob {
@@ -42981,7 +42984,7 @@ transform-origin:0 0;
 	}
 	
 	.pickupPersonMobileError {
-		margin-left: -111px;
+		/* margin-left: -111px; */
 		width: 167px; 
 		font-size: 10px;
 		margin-top: 3px;
@@ -52763,9 +52766,9 @@ padding:0px;
     right: 74px;
  }
  .cart.wrapper .checkout-shipping-items.left-block.left-block-width + .right-block.shipping.right-block-width #selectDeliveryMethodForm1{
- 	margin-top: -260px;
+ 	/* margin-top: -260px;
     position: absolute;
-    right: 20px;
+    right: 20px; */
  }
  .cart.wrapper .checkout-shipping-items.left-block.left-block-width{
  	width: 100% !important;
