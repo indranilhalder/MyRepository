@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content-editor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="content-editor.xsd"
+                hideEmpty="true" hideReadOnly="true" groupCollections="true">
+	<template>
+	<![CDATA[
+		<table width="100%" style="margin:0px;padding:0px" class="structViewCnt">
+			<tbody>
+				<tr>
+					<td><cockpit code="property" value="SignColItemComponent.logo"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="SignColItemComponent.headerText"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="SignColItemComponent.product1"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="SignColItemComponent.product2"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				
+				<tr>
+					<td><cockpit code="property" value="SignColItemComponent.product3"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				
+				<tr>
+					<td><cockpit code="property" value="SignColItemComponent.product4"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				
+				<tr>
+					<td><cockpit code="property" value="SignColItemComponent.text"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="SignColItemComponent.bannerImage"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="SignColItemComponent.bannerText"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="SignColItemComponent.bannerUrl"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="SignColItemComponent.showByDefault"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+			</tbody>
+		</table>
+	]]>
+	</template>
+	<custom-editors>
+		<property qualifier="SignColItemComponent.text" editorCode="wysiwyg">
+			<parameter>
+				<name>inline</name>
+				<value>true</value>
+			</parameter>
+			<parameter>
+				<name>fckToolbarConfiguration</name>
+				<value>
+					[['Bold', 'Italic','Underline','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyFull','-','OrderedList','UnorderedList','-','Outdent','Indent','-','Table','Link','Unlink'],'/',['FontName','FontSize','TextColor','-','Source']]
+				</value>
+			</parameter>
+			<parameter>
+				<name>editorWidth</name>
+				<value>650px</value>
+			</parameter>
+			<parameter>
+				<name>editorHeight</name>
+				<value>300px</value>
+			</parameter>
+			<parameter>
+				<name>labelWidth</name>
+				<value>80px</value>
+			</parameter>
+		</property>
+		
+		<property qualifier="SignColItemComponent.bannerText" editorCode="wysiwyg">
+			<parameter>
+				<name>inline</name>
+				<value>true</value>
+			</parameter>
+			<parameter>
+				<name>fckToolbarConfiguration</name>
+				<value>
+					[['Bold', 'Italic','Underline','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyFull','-','OrderedList','UnorderedList','-','Outdent','Indent','-','Table','Link','Unlink'],'/',['FontName','FontSize','TextColor','-','Source']]
+				</value>
+			</parameter>
+			<parameter>
+				<name>editorWidth</name>
+				<value>650px</value>
+			</parameter>
+			<parameter>
+				<name>editorHeight</name>
+				<value>300px</value>
+			</parameter>
+			<parameter>
+				<name>labelWidth</name>
+				<value>80px</value>
+			</parameter>
+		</property>
+		
+	</custom-editors>
+</content-editor>

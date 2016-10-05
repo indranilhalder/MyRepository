@@ -1624,6 +1624,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String EMIBANK = "emi_bank".intern();
 	public static final String EMITENURE = "emi_tenure".intern();
 
+	//luxury
+	public static final String IS_LUXURY = "0".intern();
+	public static final String IS_MARKETPLACE = "0".intern();
+
 	private MarketplacecommerceservicesConstants()
 	{
 		//empty to avoid instantiating this constant class
@@ -1633,4 +1637,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// Sonar Fix
 	public static final String ALLVARIANTSSTRING = "allVariantsString";
+
+	//Luxury Site
+	public static final String MEGANAVNODE = "luxury.root.navigation.node.id";
 }
