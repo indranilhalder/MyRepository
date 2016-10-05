@@ -1068,6 +1068,25 @@
 			<targetElement type="Product" cardinality="many"
 				qualifier="collectionProducts"></targetElement>
 		</relation>
+		
+		<!-- relation of category to cross-sell banners -->
+		<relation code="CategoryCrosssellBannerRelation" generate="true" localized="false" autocreate="true">
+			<sourceElement qualifier="associatedCategory" type="Category" cardinality="one">
+				<modifiers read="true" write="true" search="true" optional="true" />
+			</sourceElement>
+			<targetElement qualifier="crosssellBanners" type="SimpleBannerComponent" cardinality="many" collectiontype="list">
+				<modifiers read="true" write="true" search="true" optional="true" />
+			</targetElement>
+		</relation>
+		<relation code="CategoryDynamicBannerRelation" generate="true" localized="false" autocreate="true">
+			<sourceElement qualifier="bannerForCategory" type="Category" cardinality="one">
+				<modifiers read="true" write="true" search="true" optional="true" />
+			</sourceElement>
+			<targetElement qualifier="dynamicBanners" type="SimpleBannerComponent" cardinality="many" collectiontype="list">
+				<modifiers read="true" write="true" search="true" optional="true" />
+			</targetElement>
+		</relation>
+		<!-- End -->
 	</relations>
 	<itemtypes>
 	<!-- TPR-628 : Make changes to Banners rendering in MObile Viewports		 -->
@@ -4535,6 +4554,52 @@
 
 
 			</itemtype>
+			
+<!-- 			luxury pdp question -->
+                  <itemtype code="LuxuryPdpQuestionProcess" extends="StoreFrontCustomerProcess"
+				autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.core.jalo.LuxuryPdpQuestionProcess">
+				<description>Represents process that is used for "Question about this item in luxury PDP page" in the contact us page</description>
+				<attributes>
+					<attribute qualifier="message" type="java.lang.String">
+						<persistence type="property" />
+						<description>Message given by the customer</description>
+					</attribute>
+					<attribute qualifier="productCode" type="java.lang.String">
+						<persistence type="property" />
+						<description>product code given by the customer</description>
+					</attribute>
+		
+					<attribute qualifier="attachedFileName" type="java.lang.String">
+						<persistence type="property" />
+						<description>Email attachment name</description>
+					</attribute>
+
+					<attribute qualifier="issueDetails" type="java.lang.String">
+						<persistence type="property" />
+						<description>Email attachment name</description>
+					</attribute>
+
+					<attribute qualifier="customerEmailId" type="java.lang.String">
+						<persistence type="property" />
+						<description>Customer Email Id</description>
+					</attribute>
+					<attribute qualifier="issueType" type="java.lang.String">
+						<persistence type="property" />
+						<description>Issue Type</description>
+					</attribute>
+					<attribute qualifier="emailTo" type="java.lang.String">
+						<persistence type="property" />
+						<description>Our Email Id</description>
+					</attribute>
+
+				</attributes>
+
+
+
+			</itemtype>
+
+
 
 
 			<itemtype code="OrderPlacedFeedbackProcess" extends="StoreFrontCustomerProcess"
@@ -6731,6 +6796,18 @@
 					<attribute qualifier="emailId " type="java.lang.String"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="IsLuxury" type="java.lang.Boolean"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="IsMarketplace" type="java.lang.Boolean"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<defaultvalue>Boolean.FALSE</defaultvalue>
 						<persistence type="property" />
 					</attribute>
 				</attributes>
