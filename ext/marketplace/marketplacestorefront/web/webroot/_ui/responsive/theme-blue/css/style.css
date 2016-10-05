@@ -53416,7 +53416,7 @@ div.radio.creditDebitLabelRadio{
     margin-top: 10px;
     font-weight: 500;
     background: #fff;
-    border-collapse: separate
+    border-collapse: separate;
 }
 
 #emiTableDiv #EMITermTable th {
@@ -53424,67 +53424,68 @@ div.radio.creditDebitLabelRadio{
     vertical-align: middle;
     text-align: center;
     padding: 10px 5px;
-    border-bottom: 1px solid #cdcdcd
+    border-bottom: 1px solid #cdcdcd;
 }
 
 #emiTableDiv #EMITermTable td {
     position: relative;
     vertical-align: middle;
     padding: 8px 15px;
-    text-align: center
+    text-align: center;
 }
 
 #emiTableDiv #EMITermTable td input[type="radio"] {
-    display: none !important
+    display: none !important;
 }
 
 #emiTableDiv #EMITermTable td input[type="radio"]+label {
-    position: relative
+    position: relative;
 }
 
 #emiTableDiv #EMITermTable td input[type="radio"]+label:before {
     top: -2px;
-    box-shadow: 0 0 0 2px #a9143c
+    box-shadow: 0 0 0 2px #a9143c;
 }
 
 #emiTableDiv #EMITermTable td input[type="radio"]:checked+label:before {
     background-color: #a9143c;
-    border: 2px solid #fff
+    border: 2px solid #fff;
 }
 @media(max-width: 650px) {
  #emiTableDiv  #EMITermTable td {
-        padding: 8px
+        padding: 8px;
     }
 #emiTableDiv #EMITermTable {
-        word-break: break-all
+        word-break: break-all;
     }
 }
 #emiTableDiv #EMITermTable {
-    padding: 2px
+    padding: 2px;
+    display: none;/* TPR-1866(Hiding Quickview EMI table buttom line)*/
 }
 
 #emiTableDiv #EMITermTable td {
-    padding: 10px 5px
+    padding: 10px 5px;
 }
 
 #emiTableDiv #EMITermTable td:first-child {
-    padding-left: 10px
+    padding-left: 10px;
 }
 @media(max-width: 850px) {
  #emiTableDiv   #EMITermTable {
-        font-size:12px
+        font-size:12px;
     }
 }
 
 @media(max-width: 790px) {
     #EMITermTable td {
-        padding:10px 2px
+        padding:10px 2px;
     }
     
 }
 @media(max-width: 767px) {
     #EMITermTable th {
-        width: auto
+        width: auto;
     }
     .addNew_wrapper.no_address .addnewAddresPage .formaddress{
 	width: 85% !important;
