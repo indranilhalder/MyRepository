@@ -104,10 +104,8 @@ import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.LuxBlpCompListWsDTO;
 import com.tisl.mpl.wsdto.LuxBlpCompWsDTO;
 import com.tisl.mpl.wsdto.LuxBrandProductsListWsDTO;
-import com.tisl.mpl.wsdto.LuxCollectionListWsDTO;
 import com.tisl.mpl.wsdto.LuxComponentsListWsDTO;
 import com.tisl.mpl.wsdto.LuxEngagementcomponentWsDTO;
-import com.tisl.mpl.wsdto.LuxFeaturedCollectionComponentWsDTO;
 import com.tisl.mpl.wsdto.LuxHeroBannerWsDTO;
 import com.tisl.mpl.wsdto.LuxHomePageCompWsDTO;
 import com.tisl.mpl.wsdto.LuxJourneyTimeLineListWsDTO;
@@ -1944,19 +1942,25 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					blpComponent = getBlpBannerWsDTO(luxBlpBannerComponent);
 					componentListForASlot.add(blpComponent);
 				}
-				if (typecode.equalsIgnoreCase("OurJourneyComponent")
+				if (typecode.equalsIgnoreCase("SimpleBannerComponent")
 						&& contentSlot.getUid().equalsIgnoreCase("Section3-SpringCollectionOfimages"))
 				{
-					final OurJourneyComponentModel springComponent = (OurJourneyComponentModel) abstractCMSComponentModel;
-					blpComponent = getSpringWsDTO(springComponent);
-					componentListForASlot.add(blpComponent);
+					final SimpleBannerComponentModel springComponent = (SimpleBannerComponentModel) abstractCMSComponentModel;
+					final LuxSpringCollectionComponentWsDTO springDto = getSpringWsDTO(springComponent);
+					final LuxBlpCompListWsDTO luxBlpComponent = new LuxBlpCompListWsDTO();
+					luxBlpComponent.setSpring_component(springDto);
+					luxBlpComponent.setSectionid(contentSlot.getUid());
+					componentListForASlot.add(luxBlpComponent);
 				}
-				if (typecode.equalsIgnoreCase("OurJourneyComponent")
+				if (typecode.equalsIgnoreCase("SimpleBannerComponent")
 						&& contentSlot.getUid().equalsIgnoreCase("Section4-FeaturedCollectionofimages"))
 				{
-					final OurJourneyComponentModel featuredCollectionComponent = (OurJourneyComponentModel) abstractCMSComponentModel;
-					blpComponent = getFeaturedCollectionWsDTO(featuredCollectionComponent);
-					componentListForASlot.add(blpComponent);
+					final SimpleBannerComponentModel springComponent = (SimpleBannerComponentModel) abstractCMSComponentModel;
+					final LuxSpringCollectionComponentWsDTO featuredComponentDto = getSpringWsDTO(springComponent);
+					final LuxBlpCompListWsDTO luxBlpComponent = new LuxBlpCompListWsDTO();
+					luxBlpComponent.setFeatured_component(featuredComponentDto);
+					luxBlpComponent.setSectionid(contentSlot.getUid());
+					componentListForASlot.add(luxBlpComponent);
 				}
 
 				else if (typecode.equalsIgnoreCase("VideoComponent"))
@@ -2040,71 +2044,17 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	}
 
-	/**
-	 * @param featuredCollectionComponent
-	 * @return
-	 */
-	private LuxBlpCompListWsDTO getFeaturedCollectionWsDTO(final OurJourneyComponentModel featuredCollectionComponent)
-	{
-		final ArrayList<LuxCollectionListWsDTO> featuredCollectionComponentDtoList = new ArrayList<LuxCollectionListWsDTO>();
-		final LuxFeaturedCollectionComponentWsDTO featuredCollectionDto = new LuxFeaturedCollectionComponentWsDTO();
-		final LuxBlpCompListWsDTO luxBlpComponent = new LuxBlpCompListWsDTO();
-		if (null != featuredCollectionComponent)
-		{
-			if (null != featuredCollectionComponent.getTitle())
 
-			{
-				featuredCollectionDto.setHeading(featuredCollectionComponent.getTitle());
-			}
-
-			if (null != featuredCollectionComponent.getHeaderText())
-			{
-				featuredCollectionDto.setText(featuredCollectionComponent.getHeaderText());
-			}
-			int position = 1;
-			for (final SimpleBannerComponentModel banner : featuredCollectionComponent.getFooterImageList())
-			{
-				final LuxCollectionListWsDTO featuredBannerDto = new LuxCollectionListWsDTO();
-				if (null != banner.getMedia() && null != banner.getMedia().getURL())
-				{
-					featuredBannerDto.setImage(banner.getMedia().getURL());
-				}
-
-				if (null != banner.getMedia() && null != banner.getMedia().getAltText())
-				{
-					featuredBannerDto.setAlt(banner.getMedia().getAltText());
-				}
-
-				if (null != banner.getUrlLink())
-				{
-					featuredBannerDto.setDestination(banner.getUrlLink());
-				}
-
-				if (null != banner.getDescription())
-				{
-					featuredBannerDto.setText(banner.getDescription());
-				}
-				featuredBannerDto.setPosition(Integer.valueOf(position));
-				position++;
-				featuredCollectionComponentDtoList.add(featuredBannerDto);
-			}
-
-			featuredCollectionDto.setCarousal_images(featuredCollectionComponentDtoList);
-
-			luxBlpComponent.setFeatured_component(featuredCollectionDto);
-		}
-		return luxBlpComponent;
-	}
 
 	/**
 	 * @param springComponent
 	 * @return
 	 */
-	private LuxBlpCompListWsDTO getSpringWsDTO(final OurJourneyComponentModel springComponent)
+	private LuxSpringCollectionComponentWsDTO getSpringWsDTO(final SimpleBannerComponentModel springComponent)
 	{
-		final ArrayList<LuxCollectionListWsDTO> springComponentDtoList = new ArrayList<LuxCollectionListWsDTO>();
 		final LuxSpringCollectionComponentWsDTO springDto = new LuxSpringCollectionComponentWsDTO();
-		final LuxBlpCompListWsDTO luxBlpComponent = new LuxBlpCompListWsDTO();
+
+		final LuxHeroBannerWsDTO bannerDto = new LuxHeroBannerWsDTO();
 		if (null != springComponent)
 		{
 			if (null != springComponent.getTitle())
@@ -2113,47 +2063,24 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				springDto.setText_heading(springComponent.getTitle());
 			}
 
-			if (null != springComponent.getHeaderText())
+			if (null != springComponent.getDescription())
 			{
-				springDto.setText(springComponent.getHeaderText());
-			}
-			int position = 1;
-			for (final SimpleBannerComponentModel banner : springComponent.getFooterImageList())
-			{
-				final LuxCollectionListWsDTO springBannerDto = new LuxCollectionListWsDTO();
-				if (null != banner.getMedia() && null != banner.getMedia().getURL())
-				{
-					springBannerDto.setImage(banner.getMedia().getURL());
-				}
-
-				if (null != banner.getMedia() && null != banner.getMedia().getAltText())
-				{
-					springBannerDto.setAlt(banner.getMedia().getAltText());
-				}
-
-				if (null != banner.getUrlLink())
-				{
-					springBannerDto.setDestination(banner.getUrlLink());
-				}
-
-				if (null != banner.getDescription())
-				{
-					springBannerDto.setText(banner.getDescription());
-				}
-				springBannerDto.setPosition(Integer.valueOf(position));
-				if (position == 1)
-				{
-					springBannerDto.setIs_default(true);
-				}
-				position++;
-				springComponentDtoList.add(springBannerDto);
+				springDto.setText(springComponent.getDescription());
 			}
 
-			springDto.setCarousal_images(springComponentDtoList);
+			if (null != springComponent.getMedia())
+			{
+				bannerDto.setBannerMedia(springComponent.getMedia().getURL());
+				bannerDto.setAltText(springComponent.getMedia().getAltText());
+			}
+			if (null != springComponent.getUrlLink())
+			{
+				bannerDto.setBannerUrl(springComponent.getUrlLink());
+			}
+			springDto.setImage(bannerDto);
 
-			luxBlpComponent.setSpring_component(springDto);
 		}
-		return luxBlpComponent;
+		return springDto;
 	}
 
 	private LuxBlpCompListWsDTO getOurMissionWsDTO(final SimpleBannerComponentModel luxuryOurMissionComponent)

@@ -2532,7 +2532,7 @@
     	<!-- For spring_component -->
     	<property name="spring_component" type="com.tisl.mpl.wsdto.LuxSpringCollectionComponentWsDTO"/>
     	<!-- For Featured Products -->
-    	<property name="featured_component" type="com.tisl.mpl.wsdto.LuxFeaturedCollectionComponentWsDTO"/>
+    	<property name="featured_component" type="com.tisl.mpl.wsdto.LuxSpringCollectionComponentWsDTO"/>
     	<!-- For VideoComponent -->
     	<property name="videocomponent" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxVideocomponentWsDTO>"/>
     	<!-- For Why Out Products, MplShowcaseComponent -->
@@ -2564,14 +2564,14 @@
     <bean class="com.tisl.mpl.wsdto.LuxSpringCollectionComponentWsDTO">
     	<property name="text_heading" type="String" />
     	<property name="text" type="String" />
-    	<property name="carousal_images" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxCollectionListWsDTO>" />
+    	<property name="image" type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO" />
     </bean>
     
-<bean class="com.tisl.mpl.wsdto.LuxFeaturedCollectionComponentWsDTO">
+<!-- <bean class="com.tisl.mpl.wsdto.LuxFeaturedCollectionComponentWsDTO">
     	<property name="heading" type="String" />
     	<property name="text" type="String" />
     	<property name="carousal_images" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxCollectionListWsDTO>" />
-    </bean>
+    </bean> -->
     <bean class="com.tisl.mpl.wsdto.LuxCollectionListWsDTO">
     	<property name="is_default" type="boolean" />
     	<property name="image" type="String" />
