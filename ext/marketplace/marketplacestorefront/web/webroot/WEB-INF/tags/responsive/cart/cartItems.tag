@@ -1075,7 +1075,7 @@ tr.d0 td {
         
         
         
-        -<ycommerce:testId code="Order_Totals_Savings"><format:price priceData="${cartData.totalDiscounts}"/></ycommerce:testId>
+        <ycommerce:testId code="Order_Totals_Savings"><format:price priceData="${cartData.totalDiscounts}"/></ycommerce:testId>
         
          </c:if> 
         </span></li>

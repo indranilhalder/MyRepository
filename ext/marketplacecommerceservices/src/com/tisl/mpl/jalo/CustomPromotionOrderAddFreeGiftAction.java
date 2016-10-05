@@ -218,7 +218,7 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 							Double.valueOf(netAmtAfterDisc));
 				}
 			}
-			else if (null == cartPromoCode && null != productPromoCode)
+			else if (StringUtils.isNotEmpty(productPromoCode))
 			{//This is for Product Level Freebie Promotions
 				String freebieUSSID = null;
 				try

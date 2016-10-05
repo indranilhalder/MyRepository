@@ -1560,20 +1560,22 @@ public class DefaultPromotionManager extends PromotionsManager
 		final CartModel cartModel = cartService.getSessionCart();
 		for (final AbstractOrderEntryModel entry : cartModel.getEntries())
 		{
-			final ProductModel entryProduct = entry.getProduct();
-			final String selectedUSSID = entry.getSelectedUSSID();
-			if (qCount.containsKey(selectedUSSID))
+			if (null != entry && !entry.getGiveAway().booleanValue()) // Added for TPR-1702 : Sprint1.0
 			{
-				for (final SellerInformationModel seller : entryProduct.getSellerInformationRelator())
+				final ProductModel entryProduct = entry.getProduct();
+				final String selectedUSSID = entry.getSelectedUSSID();
+				if (qCount.containsKey(selectedUSSID))
 				{
-					for (final RichAttributeModel rm : seller.getRichAttribute())
+					for (final SellerInformationModel seller : entryProduct.getSellerInformationRelator())
 					{
-						if (null != seller.getSellerArticleSKU() && seller.getSellerArticleSKU().equalsIgnoreCase(selectedUSSID))
+						for (final RichAttributeModel rm : seller.getRichAttribute())
 						{
-							productfullfillmentTypeMap.put(selectedUSSID, rm.getDeliveryFulfillModes().getCode());
+							if (null != seller.getSellerArticleSKU() && seller.getSellerArticleSKU().equalsIgnoreCase(selectedUSSID))
+							{
+								productfullfillmentTypeMap.put(selectedUSSID, rm.getDeliveryFulfillModes().getCode());
 
+							}
 						}
-
 					}
 				}
 			}
@@ -2102,12 +2104,16 @@ public class DefaultPromotionManager extends PromotionsManager
 		{
 			for (final AbstractOrderEntryModel entryModel : cartModel.getEntries())
 			{
-				if (entryModel.getMplDeliveryMode() != null)
+				if (null != entryModel && !entryModel.getGiveAway().booleanValue()) // Added for TPR-1702 : Sprint 1.0
 				{
-					final String selectedDeliveryMode = entryModel.getMplDeliveryMode().getDeliveryMode().getCode();
-					if (deliveryModeCodeList.contains(selectedDeliveryMode))
+					if (null != entryModel.getMplDeliveryMode() && null != entryModel.getMplDeliveryMode().getDeliveryMode()
+							&& null != entryModel.getMplDeliveryMode().getDeliveryMode().getCode())
 					{
-						validProdQCountMap.put(entryModel.getSelectedUSSID(), Integer.valueOf(entryModel.getQuantity().intValue()));
+						final String selectedDeliveryMode = entryModel.getMplDeliveryMode().getDeliveryMode().getCode();
+						if (deliveryModeCodeList.contains(selectedDeliveryMode))
+						{
+							validProdQCountMap.put(entryModel.getSelectedUSSID(), Integer.valueOf(entryModel.getQuantity().intValue()));
+						}
 					}
 				}
 			}

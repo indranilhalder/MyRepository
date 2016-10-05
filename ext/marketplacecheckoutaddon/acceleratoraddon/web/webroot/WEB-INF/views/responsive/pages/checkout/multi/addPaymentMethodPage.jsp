@@ -982,7 +982,7 @@
 			    								<ycommerce:testId code="paymentDetailsForm">
 								
 							<form:form id="silentOrderPostForm" name="silentOrderPostForm" class="create_update_payment_form" commandName="paymentForm" action="${newPaymentFormMplUrl}" autocomplete="off" method="POST">
-								<form:hidden path="paymentMode"/>
+								<%-- <form:hidden path="paymentMode"/> --%>
 								<input type="hidden" name="orderPage_receiptResponseURL" value="${silentOrderPageData.parameters['orderPage_receiptResponseURL']}"/>
 								<input type="hidden" name="orderPage_declineResponseURL" value="${silentOrderPageData.parameters['orderPage_declineResponseURL']}"/>
 								<input type="hidden" name="orderPage_cancelResponseURL" value="${silentOrderPageData.parameters['orderPage_cancelResponseURL']}"/>
@@ -1113,6 +1113,7 @@
 									</c:if>	
 								</c:forEach>	
 							</ul>
+							<input type="hidden" id="paymentMode" name="paymentMode"/>
 							<ul class="tabs">
 							<!-- <li class="change-payment">Change Payment Method</li> -->
 						<%-- <ycommerce:testId code="paymentDetailsForm">

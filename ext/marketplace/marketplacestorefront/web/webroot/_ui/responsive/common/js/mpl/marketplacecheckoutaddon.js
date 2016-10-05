@@ -199,9 +199,9 @@ function displayNetbankingForm(){
 			//resetConvCharge();	TISPT-29
 			$('input:password').val("");
 			$(".name_on_card").val("");	
-			applyPromotion(null,"none","none");
-			$("#paymentDetails, #netbanking, #make_nb_payment").css("display","block");
-			//$(".make_payment_top_nb").css("display","block");
+			applyPromotion(null);
+			$("#paymentDetails, #make_nb_payment").css("display","block");
+			$(".make_payment_top_nb").css("display","block");
 			$("#submitButtons, #paymentFormButton, #submitPaymentFormButton, #submitPaymentFormCODButton").css("display","none");
 		},
 		error : function(resp) {

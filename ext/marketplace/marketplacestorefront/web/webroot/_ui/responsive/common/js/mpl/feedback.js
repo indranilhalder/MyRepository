@@ -268,7 +268,7 @@ $(document).ready(function(){
 				}
 				else{
 				$(".facet-name.js-facet-name h3").removeClass("active-mob");
-					$(".facet-name.js-facet-name h3").each(function(){
+					$(".facet_desktop .facet-name.js-facet-name h3").each(function(){
 					if($(this).hasClass("active")){
 						$(this).parent().siblings().show();
 						$(this).parent().siblings().find("#searchPageDeptHierTree").show();
@@ -1914,10 +1914,13 @@ $(document).on('click','.facet.js-facet.Size .js-facet-name h3',function(){
 		}
 	},80)
 });
-$(document).on('click','.left-block .toggle-filterSerp',function(){
+//$(document).on('click','.left-block .toggle-filterSerp',function(){
+function toggleFilter(){
 		colorSwatch();
 		sizeSwatch();
 		//Mobile view filter ajax
+		//$(".product-facet.js-product-facet.listing-leftmenu").slideToggle();
+		//$(".toggle-filterSerp").toggleClass("active");
 		/*mobile filter*/
 		$(".mob-filter-wrapper").fadeIn();
 		$(this).toggleClass("active");
@@ -1956,7 +1959,8 @@ $(document).on('click','.left-block .toggle-filterSerp',function(){
 		$(".facet-name.js-facet-name h3.active-mob").parent().siblings().show();
 		$(".facet-name.js-facet-name h3.active-mob").parent().siblings().find("#searchPageDeptHierTree").show();
 		$(".facet-name.js-facet-name h3.active-mob").parent().siblings().find("#categoryPageDeptHierTree").show();
-	});
+}
+		//	});
 	$(".category-icons").each(function(){
 	if($(this).find("span").text() == ""){
 	$(this).addClass("blank");
@@ -2392,5 +2396,15 @@ $(document).ready(function(){
 		$(".step-1,.step-2").addClass("step-done");
 		$(".progress-barg span.step").addClass("step3");
 	}
+	 setTimeout(function () {
+		 if ($('body').find(".smartbanner.smartbanner-android").length > 0){
+				$("body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header").css("margin-top","82px");
+			}
+			else{
+				$("body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header").css("margin-top","0px");
+			}
+     }, 100);
+	
 });
 /* TPR-1601 checkout progress bar end  */
+	

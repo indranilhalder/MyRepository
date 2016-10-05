@@ -210,19 +210,11 @@
 						else
 						{
 							
-							if(address1.value.indexOf('#')!=-1)
-					    	{
-							address1.value=encodeURIComponent(address1.value);
-					    	}
 							
-							if(address2.value.indexOf('#')!=-1)
-					    	{
-							address2.value=encodeURIComponent(address2.value);
-					    	}
-							if(address3.value.indexOf('#')!=-1)
-					    	{
-							address3.value=encodeURIComponent(address3.value);
-					    	}
+							address1.value=encodeURIComponent(address1.value);
+					    	address2.value=encodeURIComponent(address2.value);
+					   		address3.value=encodeURIComponent(address3.value);
+					    	
 							$.ajax({
 						 		url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/new-address",
 						 		type: "POST",
