@@ -297,7 +297,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			
 			if (source.getTimeSlotTo() != null)
 			{
-				 String timeSlotTo= source.getTimeSlotFrom();
+				 String timeSlotTo= source.getTimeSlotTo();
 				 SimpleDateFormat format1 = new SimpleDateFormat("hh:mm a");
 			    SimpleDateFormat format2 = new SimpleDateFormat("HH:mm:ss");   
 				try
