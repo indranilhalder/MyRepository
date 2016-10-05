@@ -11,6 +11,7 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
 import java.util.List;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.brand.BrandDao;
 import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
@@ -112,11 +113,56 @@ public class DefaultBrandDao extends AbstractItemDao implements BrandDao
 		}
 		return false;
 
-
-
-
-
 	}
 
+	@Override
+	public List<MplNewsLetterSubscriptionModel> checkEmailIdForluxury(final String emailId)
+	{
 
+		if (null != emailId && !emailId.isEmpty())
+		{
+			final String queryString = //
+			"SELECT {p:" + MplNewsLetterSubscriptionModel.PK + "}" //
+					+ "FROM {" + MplNewsLetterSubscriptionModel._TYPECODE + " AS p} "//
+					+ "WHERE " + "{p:" + MplNewsLetterSubscriptionModel.EMAILID + "}=?emailId "//
+					+ "AND " + "{p:" + MplNewsLetterSubscriptionModel.ISLUXURY + "}IS NULL OR"//
+					+ "{p:" + MplNewsLetterSubscriptionModel.ISLUXURY + "} = ?isluxury";
+
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter("emailId", emailId);
+			query.addQueryParameter("isluxury", MarketplacecommerceservicesConstants.IS_LUXURY);
+			/*
+			 * if ((flexibleSearchService.<MplNewsLetterSubscriptionModel> search(query).getResult().isEmpty())) { return
+			 * false; }
+			 */
+			return flexibleSearchService.<MplNewsLetterSubscriptionModel> search(query).getResult();
+		}
+		//return true;
+		return null;
+	}
+
+	@Override
+	public List<MplNewsLetterSubscriptionModel> checkEmailIdForMarketplace(final String emailId)
+	{
+		if (null != emailId && !emailId.isEmpty())
+		{
+			final String queryString = //
+			"SELECT {p:" + MplNewsLetterSubscriptionModel.PK + "}" //
+					+ "FROM {" + MplNewsLetterSubscriptionModel._TYPECODE + " AS p} "//
+					+ "WHERE " + "{p:" + MplNewsLetterSubscriptionModel.EMAILID + "}=?emailId "//
+					+ "AND " + "{p:" + MplNewsLetterSubscriptionModel.ISMARKETPLACE + "}IS NULL OR"//
+					+ "{p:" + MplNewsLetterSubscriptionModel.ISMARKETPLACE + "} = ?ismarketplace";
+
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter("emailId", emailId);
+			query.addQueryParameter("ismarketplace", MarketplacecommerceservicesConstants.IS_MARKETPLACE);
+			/*
+			 * if ((flexibleSearchService.<MplNewsLetterSubscriptionModel> search(query).getResult().isEmpty())) { return
+			 * false; }
+			 */
+			return flexibleSearchService.<MplNewsLetterSubscriptionModel> search(query).getResult();
+		}
+		//return true;
+		return null;
+	}
 }
