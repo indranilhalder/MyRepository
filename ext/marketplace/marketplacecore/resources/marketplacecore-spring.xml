@@ -1665,7 +1665,14 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 	<bean id="disableMplIndexingCompositeJob" class="com.tisl.mpl.core.cronjob.search.indexing.jobs.DisableMplIndexingCompositeJob" autowire="byName"/>
 	
 	<!-- TISPRD-4666 -->
-	<bean id="facetDisplayNameComparator" class="com.tisl.mpl.core.comparator.DisplayFacetNameComparator" />	
+	<bean id="facetDisplayNameComparator" class="com.tisl.mpl.core.comparator.DisplayFacetNameComparator" />
+	
+	<!-- For Luxury Products -->	
+	<bean id="luxuryProductValueProvider"
+		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.LuxuryProductValueProvider"
+		parent="abstractPropertyFieldValueProvider">
+		<property name="fieldNameProvider" ref="solrFieldNameProvider" />		
+	</bean>	
 		
 	
 </beans>

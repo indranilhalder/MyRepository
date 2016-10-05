@@ -665,6 +665,9 @@
 			<property name="rootCategory" type="String" />
 			<property name="productLevelDiscount" type="java.lang.Double" />
 			<property name="productCategoryId" type="String" />
+			<!-- Added for luxury -->
+			<property name="isLuxury" type="String" />
+			
 			
 			<!-- 	-->	
 			<property name="discountPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
@@ -804,7 +807,8 @@
 		<property name="delistedMessage" type="String" />
 		<property name="pickupPersonName" type="String" />
 		<property name="pickupPersonMobile" type="String" />
-		
+		<!-- Added for luxury -->
+			<property name="isLuxury" type="String" />	
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.CartProductsDeliveryDetailsWsDTO">
 		<property name="data" type="String" />
@@ -1839,6 +1843,7 @@
 
 	<bean class="com.tisl.mpl.wsdto.SellingItemDetailWsDto">
 		<property name="sellerName" type="String" />
+		<property name="Ussid" type="String" />
 		<property name="sellerId" type="String" />
 		<property name="brandname" type="String" />
 		<property name="productId" type="String" />
@@ -2421,10 +2426,11 @@
     	<property name="productUrl" type="String" />
     	<property name="productImageUrl" type="String" /> 
     	<property name="productTitle" type="String" /> 
-    	<property name="productPrice" type="String"/>
+    	<property name="productMRP" type="String"/>
     	<property name="productMOP" type="String"/>
     	<property name="productSpecialPrice" type="String"/>
     	<property name="productBrand" type="String"/>
+    	<property name="position" type="Integer"/>
     			
     </bean>
     <bean class="com.tisl.mpl.wsdto.LuxShopYourFavListWsDTO">
@@ -2439,6 +2445,7 @@
     	<property name="videoUrl" type="String"/>
     	<property name="videoDescription" type="String" />
     	<property name="previewUrl" type="String"/>
+    	<property name="videoTitle" type="String"/>
     </bean>
      <bean class="com.tisl.mpl.wsdto.LuxEngagementcomponentWsDTO">
     	<property name="bannerMedia" type="String"/>
@@ -2618,5 +2625,10 @@
     
     <!-- Mega navigation DTO struture ends -->
     
+ 	<!-- Newsletter DTO struture starts -->
+    <bean class="com.tisl.mpl.wsdto.NewsletterWsDTO">
+    	<property name="success" type="String"/>
+    </bean>
+    <!-- Newsletter DTO struture ends -->
 
 </beans>

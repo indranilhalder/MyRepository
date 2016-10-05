@@ -758,8 +758,11 @@
 			<value code="true" />
 			<value code="false" />
 		</enumtype>
+		
+		<!-- For Luxury Products -->
 
-
+        <enumtype code="luxIndicatorEnum" autocreate="true" generate="true" dynamic="true">
+		</enumtype>
 
 	</enumtypes>
 
@@ -1072,6 +1075,14 @@
 				<modifiers read="true" write="true" search="true" optional="true" />
 			</sourceElement>
 			<targetElement qualifier="crosssellBanners" type="SimpleBannerComponent" cardinality="many" collectiontype="list">
+				<modifiers read="true" write="true" search="true" optional="true" />
+			</targetElement>
+		</relation>
+		<relation code="CategoryDynamicBannerRelation" generate="true" localized="false" autocreate="true">
+			<sourceElement qualifier="bannerForCategory" type="Category" cardinality="one">
+				<modifiers read="true" write="true" search="true" optional="true" />
+			</sourceElement>
+			<targetElement qualifier="dynamicBanners" type="SimpleBannerComponent" cardinality="many" collectiontype="list">
 				<modifiers read="true" write="true" search="true" optional="true" />
 			</targetElement>
 		</relation>
@@ -6787,6 +6798,18 @@
 						<modifiers read="true" write="true" search="true" />
 						<persistence type="property" />
 					</attribute>
+					<attribute qualifier="IsLuxury" type="java.lang.Boolean"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="IsMarketplace" type="java.lang.Boolean"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 		</typegroup>
@@ -8658,6 +8681,25 @@
 			</itemtype>
 		</typegroup>
 		<!-- Search POC ends-->
-	</itemtypes>
-	
+		
+		<!-- Added for Luxury -->
+		<typegroup name="Luxury">
+			<itemtype code="Product" autocreate="false" generate="false">
+				<attributes>
+				    <attribute type="luxIndicatorEnum" qualifier="luxIndicator">
+						<description>The flag for the luxury Indicator</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type='property' />					
+				    </attribute>	
+			        <!-- <attribute qualifier="isLuxuryProduct" type="java.lang.Boolean" autocreate="true" generate="true">
+						<description>It is a flag for Luxury Products.</description>
+						<modifiers optional="true" />
+						<persistence type="property" />
+					</attribute> -->
+			    </attributes>
+			</itemtype>		
+       </typegroup>
+       
+	</itemtypes>	
 </items>
