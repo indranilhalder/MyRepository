@@ -218,8 +218,8 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
  ####  VideoComponent section
  
  
-INSERT_UPDATE VideoComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;videoUrl;videoTitle;videoDescription;
-;;LuxuryHomepageVideoComponent;Luxury Homepage Video Component;LuxuryHomepageVideoComponent;/;;;
+INSERT_UPDATE VideoComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;videoUrl;videoTitle;videoDescription;previewUrl;
+;;LuxuryHomepageVideoComponent;Luxury Homepage Video Component;LuxuryHomepageVideoComponent;"https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA";"What if we could redefine your shopping experience?";"Lorem ipsum dolor sit amet, ex delenit qualisque gubergren vis, illud dicat per cu. Vel ullum ubique iracundia ei. Vim tritani deleniti interpretaris ut, clita democritum ex sit.";"//assetsia.tatacliq.com/medias/sys_master/images/9281187184670.png"
 
 #### create content slot
 
