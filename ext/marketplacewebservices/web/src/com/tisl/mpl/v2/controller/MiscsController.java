@@ -58,9 +58,11 @@ import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.enumeration.EnumerationService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.event.EventService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
@@ -131,6 +133,7 @@ import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.product.data.StateData;
+import com.tisl.mpl.marketplacecommerceservices.event.LuxuryPdpQuestionEvent;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCategoryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
@@ -548,6 +551,9 @@ public class MiscsController extends BaseController
 	@Autowired
 	private SearchSuggestUtilityMethods searchSuggestUtilityMethods;
 
+	@Autowired
+	private EventService eventservice;
+
 	//End of Declaration for SNS
 
 	@Resource(name = "pinCodeFacade")
@@ -555,6 +561,9 @@ public class MiscsController extends BaseController
 
 	@Autowired
 	private PriceDataFactory priceDataFactory;
+
+	@Autowired
+	private BaseSiteService baseSiteService;
 
 	/*
 	 * @Autowired private MplCheckoutFacade mplCheckoutFacade;
@@ -1731,6 +1740,31 @@ public class MiscsController extends BaseController
 		return userResultWsDto;
 	}
 
+	@RequestMapping(value = "/{baseSiteId}/askAQuestion", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public UserResultWsDto askquestion(@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields,
+			@RequestParam final String emailId, @RequestParam final String question, @RequestParam final String productCode)
+	{
+		final UserResultWsDto userResultWsDto = new UserResultWsDto();
+		try
+		{
+			final LuxuryPdpQuestionEvent eventObj = new LuxuryPdpQuestionEvent();
+			eventObj.setCustomerEmailId(emailId);
+			eventObj.setEmailTo("customerservices@tataunistore.com");
+			eventObj.setMessage(question);
+			eventObj.setSite(baseSiteService.getCurrentBaseSite());
+			eventObj.setProductCode(productCode);
+			eventservice.publishEvent(eventObj);
+			userResultWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+		}
+		catch (final Exception ex)
+		{
+			userResultWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			LOG.error("Exception occured while submitting question::::" + ex.getMessage());
+		}
+
+		return userResultWsDto;
+	}
 	//LW-176 starts
 	@RequestMapping(value = "/{baseSiteId}/{emailId}/newsletter", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody

@@ -232,6 +232,11 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		class="com.tisl.mpl.facades.process.email.context.SubmitRequestEmailContext"
 		parent="abstractEmailContext" scope="prototype" />
 	
+	<bean id="luxuryPdpQuestionEmailContext"
+		class="com.tisl.mpl.facades.process.email.context.LuxuryPdpQuestionEmailContext"
+		parent="abstractEmailContext" scope="prototype" />	
+		
+	
 	<bean id="orderHoldOnRiskEmailContext"
 		class="com.tisl.mpl.facades.process.email.context.OrderHoldOnRiskEmailContext"
 		parent="abstractEmailContext" scope="prototype" />
