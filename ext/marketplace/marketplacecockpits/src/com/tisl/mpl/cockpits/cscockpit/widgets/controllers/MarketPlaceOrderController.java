@@ -24,12 +24,18 @@ public interface MarketPlaceOrderController extends OrderController {
 
 	public TypedObject createRefundDeliveryChargesRequest(OrderModel object,
 			Map<AbstractOrderEntryModel, RefundDeliveryData> refundMap);
+	
+	public TypedObject createRefundScheduleDeliveryChargesRequest(OrderModel object,
+			Map<AbstractOrderEntryModel, RefundDeliveryData> refundMap);
 
 	public TypedObject createOrderHistoryRequest(OrderModel object,
 			Map<AbstractOrderEntryModel, RefundDeliveryData> refundMap,
 			Double totalRefundDeliveryCharges);
 
 	public boolean isOrderCODforDeliveryCharges(OrderModel order,
+			Map<AbstractOrderEntryModel, RefundDeliveryData> refundMap);
+	
+	public boolean isOrderCODforScheduleDeliveryCharges(OrderModel order,
 			Map<AbstractOrderEntryModel, RefundDeliveryData> refundMap);
 
 	public Map<String, List<TypedObject>> getOrderEntriesGroupByAWB(

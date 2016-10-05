@@ -109,6 +109,15 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 					"refundDeliveryCharge-popup", "refundDeliveryCharge",
 					"refunddeliverycharge.request", false);
 		}
+		
+		if (isUserInRole(configurationService.getConfiguration().getString(
+				"cscockpit.user.group.refunddelcsagentgroup"))) {
+
+			createButton(widget, (Div) component, "refundScheduleDeliveryCharge",
+					"csRefundScheduleDeliveryChargeWidgetConfig",
+					"ScheduleDeliveryCharge-popup", "ScheduleDeliveryCharge",
+					"ScheduleDeliveryCharge.request", false);
+		}
 		if (isUserInRole(configurationService
 				.getConfiguration()
 				.getString(

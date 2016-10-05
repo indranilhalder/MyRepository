@@ -1398,7 +1398,7 @@ body .hywin a.greenLink, body .hywin a.greenLink:visited {
 	text-align: left;
 }
 
-.csContentArea .checkoutCartWidget .csCartLineDeliveryActions Â  {
+.csContentArea .checkoutCartWidget .csCartLineDeliveryActions   {
 	text-align: left
 }
 
@@ -3407,11 +3407,11 @@ div.z-listbox {
 	text-align: left !important;
 }
 
-* html .appliedPromotionsWidget Â  {
+* html .appliedPromotionsWidget   {
 	text-align: left !important;
 }
 
-* html .orderPaymentTransactionsWidget Â  {
+* html .orderPaymentTransactionsWidget   {
 	text-align: left !important;
 }
 
@@ -3766,3 +3766,14 @@ margin-top: 15px;
     margin-top: 20px;
     margin-right: 72px;
 }
+
+.scheduleDeliveryChargeHeaderLabel {
+	width: 13% !important;
+	background-color: #F2F2F2;
+	height: 23px;
+} 
+.deliveryChargeHeaderLabel {
+	width: 12% !important;
+	background-color: #F2F2F2;
+	height: 23px;
+} 

@@ -565,6 +565,7 @@
 			<value code="NEW" />
 			<value code="PENDING_VBV" />
 			<value code="REFUND_DELIVERY_CHARGES" />
+			<value code="REFUND_SCHEDULE_DELIVERY_CHARGES" />
 			<value code="MANUAL_REFUND" />
 			<value code="JUSPAY_DECLINED" />
 			<value code="RETURN" />
@@ -692,6 +693,7 @@
 		<enumtype code="JuspayRefundType" generate="true" autocreate="true">
 			<value code="CANCELLED" />
 			<value code="REFUND_DELIVERY_CHARGE" />
+			<value code="REFUND_Schedule_DELIVERY_CHARGE" />
 			<value code="RETURN" />
 			<value code="CANCELLED_FOR_RISK" />
 		</enumtype>
@@ -6017,10 +6019,34 @@
 						<description>Rejection Reason Value</description>
 						<persistence type="property" />
 					</attribute>
+					<attribute qualifier="returnAddress" type="Address">
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 		</typegroup>
-
+	<typegroup name="Return">
+		<itemtype code="ReturnEntry" autocreate="false" generate="true">
+			<attributes>
+				<attribute qualifier="pickupDate" type="java.lang.String">
+						<description>pickUp Date  Value</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+				<attribute qualifier="pickupTimeFrom" type="java.lang.String">
+						<description>pickUp Time From  Value</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+				<attribute qualifier="pickUptimeTo" type="java.lang.String">
+						<description>pickUp Time To  Value</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+			</attributes>
+		</itemtype>
+	</typegroup>
 		<typegroup name="Consignment">
 			<itemtype code="Consignment" autocreate="false" generate="false">
 				<attributes>
@@ -8573,7 +8599,7 @@
 	<typegroup name="OrderShortUrlInfo">
 		<itemtype code="OrderShortUrlInfo" autocreate="true"  generate="true">
 				<description>Used to Generate Short url clicks report</description>
-				<deployment table="OrderShortUrlInfo" typecode="15011" />
+				<deployment table="OrderShortUrl" typecode="15017" />
 				
 				<attributes>
 					<attribute qualifier="orderId" type="java.lang.String"  autocreate="true" generate="true">
@@ -8805,6 +8831,7 @@
 						<persistence type="property" />
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
+					<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
 					</attribute>
 					
 					<attribute autocreate="true" qualifier="returnStoreId" type="java.lang.String"
@@ -8812,6 +8839,17 @@
 						<persistence type="property" />
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="refundedScheduleDeliveryChargeAmt"
+						type="java.lang.Double">
+						<persistence type="property" qualifier="refundedScheduleDeliveryChargeAmt">
+							<columntype>
+								<value>java.math.BigDecimal</value>
+							</columntype>
+						</persistence>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
 					</attribute>
 					
 				</attributes>
