@@ -43296,7 +43296,8 @@ ul.jqtree-tree .jqtree-moving > .jqtree-element .jqtree-title {
 .smartbanner-show body.template-pages-category-productGridPage .smartbanner-container,
 .smartbanner-show body.template-pages-my-account-accountMarketPreference .smartbanner-container,
 .smartbanner-show body.template-pages-my-account-inviteFriends .smartbanner-container,
-.smartbanner-show body.template-pages-my-account-myStyleProfile .smartbanner-container
+.smartbanner-show body.template-pages-my-account-myStyleProfile .smartbanner-container,
+.smartbanner-show body.page-multiStepCheckoutSummaryPage .smartbanner-container
 {
 	padding-top:15px;
 }
@@ -43311,7 +43312,7 @@ ul.jqtree-tree .jqtree-moving > .jqtree-element .jqtree-title {
 
 /** Default **/
 .smartbanner {
-	position: absolute;
+	position: fixed;
 	left: 0;
 	top: 0;
 	display: none;
