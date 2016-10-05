@@ -53461,7 +53461,7 @@ div.radio.creditDebitLabelRadio{
 }
 #emiTableDiv #EMITermTable {
     padding: 2px;
-    display: none;/* TPR-1866(Hiding Quickview EMI table buttom line)*/
+    display: none; /* TPR-1866(Hiding Quickview EMI table buttom line)*/
 }
 
 #emiTableDiv #EMITermTable td {
