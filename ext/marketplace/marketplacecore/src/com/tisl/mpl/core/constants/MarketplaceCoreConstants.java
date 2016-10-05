@@ -75,5 +75,8 @@ public final class MarketplaceCoreConstants extends GeneratedMarketplaceCoreCons
 	public static final String SeperaterHash = "\n###################################################################################";
 	public static final String EMPTY = "";
 
+	//For Luxury Products
+	public static final String LUXURY = "luxury";
+
 	// implement here constants used by this extension
 }

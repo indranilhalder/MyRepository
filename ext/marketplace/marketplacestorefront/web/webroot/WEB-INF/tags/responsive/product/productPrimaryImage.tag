@@ -7,8 +7,12 @@
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags" %>
 
 <c:set value="${ycommerce:productImage(product, format)}" var="primaryImage"/>
-
+<c:if test="${not empty product.luxIndicator}">
+${product.luxIndicator}
+</c:if>
 <c:choose>
+ <%-- ${product.luxIndicator}
+ --%>
 	<c:when test="${not empty primaryImage && not empty primaryImage.url}">
 		<c:choose>
 			<c:when test="${not empty primaryImage.altText}">
@@ -24,3 +28,10 @@
 		<theme:image code="img.missingProductImage.product" alt="${fn:escapeXml(product.name)}" title="${fn:escapeXml(product.name)}"/>
 	</c:otherwise>
 </c:choose>
+
+<%-- <c:choose>
+    <c:when test="${''}">
+    </c:when>    
+    <c:otherwise>
+    </c:otherwise>
+</c:choose> --%>

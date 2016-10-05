@@ -1806,7 +1806,12 @@
 		<property name="currentQuery" type="de.hybris.platform.commercewebservicescommons.dto.search.SearchStateWsDTO"/>
 		<property name="facetdatacategory"
 		          type="com.tisl.mpl.wsdto.DepartmentHierarchyWs"/>
-		  
+		 <!-- Added for Luxury -->
+		<property name="crosssellBanner"
+		          type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO"/>
+		<property name="plpHeroBanner"
+		          type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO"/>
+		<!-- Ended -->
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.FacetDataWsDTO">
 		<property name="name" type="String"/>
@@ -1834,6 +1839,7 @@
 
 	<bean class="com.tisl.mpl.wsdto.SellingItemDetailWsDto">
 		<property name="sellerName" type="String" />
+		<property name="Ussid" type="String" />
 		<property name="sellerId" type="String" />
 		<property name="brandname" type="String" />
 		<property name="productId" type="String" />
@@ -2434,6 +2440,7 @@
     	<property name="videoUrl" type="String"/>
     	<property name="videoDescription" type="String" />
     	<property name="previewUrl" type="String"/>
+    	<property name="videoTitle" type="String"/>
     </bean>
      <bean class="com.tisl.mpl.wsdto.LuxEngagementcomponentWsDTO">
     	<property name="bannerMedia" type="String"/>
@@ -2598,7 +2605,7 @@
     
       <bean class="com.tisl.mpl.wsdto.LuxLevelFourWsDTO">
     	<property name="name" type="String" />
-    	<property name="isBrand" type="boolean" />
+    	<!-- <property name="isBrand" type="boolean" /> -->
     	<property name="value" type="String" />
     	<property name="destination" type="String" />
     	<property name="image" type="String" />

@@ -1633,4 +1633,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// Sonar Fix
 	public static final String ALLVARIANTSSTRING = "allVariantsString";
+
+	//Luxury Site
+	public static final String MEGANAVNODE = "luxury.root.navigation.node.id";
 }

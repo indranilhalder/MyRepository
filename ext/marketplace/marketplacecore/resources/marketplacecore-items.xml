@@ -758,8 +758,11 @@
 			<value code="true" />
 			<value code="false" />
 		</enumtype>
+		
+		<!-- For Luxury Products -->
 
-
+        <enumtype code="luxIndicatorEnum" autocreate="true" generate="true" dynamic="true">
+		</enumtype>
 
 	</enumtypes>
 
@@ -1065,6 +1068,25 @@
 			<targetElement type="Product" cardinality="many"
 				qualifier="collectionProducts"></targetElement>
 		</relation>
+		
+		<!-- relation of category to cross-sell banners -->
+		<relation code="CategoryCrosssellBannerRelation" generate="true" localized="false" autocreate="true">
+			<sourceElement qualifier="associatedCategory" type="Category" cardinality="one">
+				<modifiers read="true" write="true" search="true" optional="true" />
+			</sourceElement>
+			<targetElement qualifier="crosssellBanners" type="SimpleBannerComponent" cardinality="many" collectiontype="list">
+				<modifiers read="true" write="true" search="true" optional="true" />
+			</targetElement>
+		</relation>
+		<relation code="CategoryDynamicBannerRelation" generate="true" localized="false" autocreate="true">
+			<sourceElement qualifier="bannerForCategory" type="Category" cardinality="one">
+				<modifiers read="true" write="true" search="true" optional="true" />
+			</sourceElement>
+			<targetElement qualifier="dynamicBanners" type="SimpleBannerComponent" cardinality="many" collectiontype="list">
+				<modifiers read="true" write="true" search="true" optional="true" />
+			</targetElement>
+		</relation>
+		<!-- End -->
 	</relations>
 	<itemtypes>
 	<!-- TPR-628 : Make changes to Banners rendering in MObile Viewports		 -->
@@ -8601,6 +8623,25 @@
 			</itemtype>
 		</typegroup>
 		<!-- Search POC ends-->
-	</itemtypes>
-	
+		
+		<!-- Added for Luxury -->
+		<typegroup name="Luxury">
+			<itemtype code="Product" autocreate="false" generate="false">
+				<attributes>
+				    <attribute type="luxIndicatorEnum" qualifier="luxIndicator">
+						<description>The flag for the luxury Indicator</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type='property' />					
+				    </attribute>	
+			        <!-- <attribute qualifier="isLuxuryProduct" type="java.lang.Boolean" autocreate="true" generate="true">
+						<description>It is a flag for Luxury Products.</description>
+						<modifiers optional="true" />
+						<persistence type="property" />
+					</attribute> -->
+			    </attributes>
+			</itemtype>		
+       </typegroup>
+       
+	</itemtypes>	
 </items>
