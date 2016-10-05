@@ -57,7 +57,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;HeaderLinks;;;headerlinks
 ;SearchBox;;;searchbox
 ;MiniCart;;CMSLinkComponent,TrackOrderHeaderComponent,MyWishListInHeaderComponent,SignInFlyOutComponent;
-;NavigationBar;;;navigation
+;LuxuryNavigationBar;;NavigationBarCollectionComponent;
 ;BottomHeaderSlot;;SimpleBannerComponent;
 ;Section1;;RotatingImagesComponent;
 ;Section2;;RotatingImagesComponent,MplAdvancedCategoryCarouselComponent;
