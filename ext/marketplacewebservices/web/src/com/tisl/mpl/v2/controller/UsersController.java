@@ -88,10 +88,12 @@ import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -3146,12 +3148,14 @@ public class UsersController extends BaseCommerceController
 							{
 								wldpDTO.setDate(entryModel.getAddedDate());
 							}
+
 							// Added for luxury
 							if (null != productData1 && null != productData1.getLuxIndicator()
 									&& (MarketplaceCoreConstants.LUXURY).equalsIgnoreCase(productData1.getLuxIndicator()))
 							{
 								wldpDTO.setIsLuxury(productData1.getLuxIndicator());
 							}
+
 
 							String delistMessage = MarketplacewebservicesConstants.EMPTY;
 							boolean delisted = false;
@@ -3179,7 +3183,6 @@ public class UsersController extends BaseCommerceController
 										{
 											wldpDTO.setAvailableStock(sellerData.getAvailableStock());
 										}
-
 										/*
 										 * if (null != sellerData.getMrpPrice()) { wldpDTO.setMrp(sellerData.getMrpPrice()); }
 										 * else if (null != productData1.getProductMRP()) {
@@ -3214,14 +3217,12 @@ public class UsersController extends BaseCommerceController
 										}
 									}
 								}
-
 							}
 							else
 							{//Set product price when product has no seller
 								if (null != productData1 && null != productData1.getProductMRP())
 								{
 									wldpDTO.setMrp(productData1.getProductMRP());
-
 								}
 							}
 
@@ -3252,8 +3253,6 @@ public class UsersController extends BaseCommerceController
 								}
 								wldDTO.setCount(Integer.valueOf(entryModels.size()));
 							}
-
-
 						}
 					}
 					wldDTO.setProducts(wldpDTOList);
@@ -3463,15 +3462,15 @@ public class UsersController extends BaseCommerceController
 		{
 			currentUser = mplPaymentWebFacade.getCustomer(userId);
 			final String authorization = httpRequest.getHeader("Authorization");
-			final String username = null;
+			String username = null;
 			if (authorization != null && authorization.startsWith("Basic"))
 			{
-				/*
-				 * // Authorization: Basic base64credentials final String base64Credentials =
-				 * authorization.substring("Basic".length()).trim(); //final String credentials = new
-				 * String(Base64.getDecoder().decode(base64Credentials), Charset.forName("UTF-8")); // credentials =
-				 * username:password //final String[] values = credentials.split(":", 2); username = values[0];
-				 */
+				// Authorization: Basic base64credentials
+				final String base64Credentials = authorization.substring("Basic".length()).trim();
+				final String credentials = new String(Base64.getDecoder().decode(base64Credentials), Charset.forName("UTF-8"));
+				// credentials = username:password
+				final String[] values = credentials.split(":", 2);
+				username = values[0];
 			}
 			if (StringUtils.isNotEmpty(username))
 			{
