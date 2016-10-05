@@ -13,6 +13,7 @@ import javax.annotation.Resource;
 
 import com.tisl.mpl.facade.brand.BrandFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.brand.impl.DefaultBrandService;
+import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
 
 
 /**
@@ -62,10 +63,25 @@ public class DefaultBrandFacade implements BrandFacade
 
 	}
 
+	@Override
+	public List<MplNewsLetterSubscriptionModel> checkEmailIdForluxury(final String emailId)
+	{
+
+		return brandService.checkEmailIdForluxury(emailId);
+
+
+	}
+
+	@Override
+	public List<MplNewsLetterSubscriptionModel> checkEmailIdForMarketplace(final String emailId)
+	{
+		return brandService.checkEmailIdForMarketplace(emailId);
+	}
+
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.brand.BrandFacade#getAllBrandsFromCmsCockpit(java.lang.String)
 	 */
 	@Override

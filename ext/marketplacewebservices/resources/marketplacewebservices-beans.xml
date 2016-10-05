@@ -2621,5 +2621,10 @@
     
     <!-- Mega navigation DTO struture ends -->
     
+ 	<!-- Newsletter DTO struture starts -->
+    <bean class="com.tisl.mpl.wsdto.NewsletterWsDTO">
+    	<property name="success" type="String"/>
+    </bean>
+    <!-- Newsletter DTO struture ends -->
 
 </beans>
