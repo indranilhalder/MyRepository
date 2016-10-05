@@ -144,7 +144,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.constants.YcommercewebservicesConstants;
-import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.enums.FeedbackArea;
 import com.tisl.mpl.core.enums.Frequency;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
@@ -3149,12 +3148,11 @@ public class UsersController extends BaseCommerceController
 								wldpDTO.setDate(entryModel.getAddedDate());
 							}
 
-							// Added for luxury
-							if (null != productData1 && null != productData1.getLuxIndicator()
-									&& (MarketplaceCoreConstants.LUXURY).equalsIgnoreCase(productData1.getLuxIndicator()))
-							{
-								wldpDTO.setIsLuxury(productData1.getLuxIndicator());
-							}
+							/*
+							 * // Added for luxury if (null != productData1 && null != productData1.getLuxIndicator() &&
+							 * (MarketplaceCoreConstants.LUXURY).equalsIgnoreCase(productData1.getLuxIndicator())) {
+							 * wldpDTO.setIsLuxury(productData1.getLuxIndicator()); }
+							 */
 
 
 							String delistMessage = MarketplacewebservicesConstants.EMPTY;
