@@ -66,6 +66,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -91,6 +92,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
 import com.tisl.mpl.bin.facade.BinFacade;
 import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -115,6 +117,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
+import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facades.account.register.MplCustomerProfileFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.juspay.response.ListCardsResponse;
@@ -192,6 +195,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	private MplCouponFacade mplCouponFacade;
 	@Autowired
 	private VoucherFacade voucherFacade;
+	
+	@Autowired
+	private MplConfigFacade mplConfigFacade;
 
 	private final String checkoutPageName = "Payment Options";
 	private final String RECEIVED_INR = "Received INR ";
@@ -1027,7 +1033,26 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			final String promotionMssg = RECEIVED_INR + totalDiscount + DISCOUNT_MSSG;
 			model.addAttribute("promotionMssgDeliveryMode", promotionMssg);
 		}
-
+       Map<String ,String> selectedDateMap=getSessionService().getAttribute(MarketplacecheckoutaddonConstants.DELIVERY_SLOTS_TO_SESSION);
+		for (final OrderEntryData cartEntryData : cartData.getEntries())
+		{
+			
+			if(null!=selectedDateMap){
+	   		 for (Entry<String, String> entry :selectedDateMap.entrySet()) {
+						if(entry.getKey().equalsIgnoreCase(cartEntryData.getSelectedUssid())){
+							cartEntryData.setEddDateBetWeen(entry.getValue());
+						}
+					}
+	   	 }
+			
+		    if(null !=cartEntryData && cartEntryData.getScheduledDeliveryCharge()!= null){
+   		   	 if(cartEntryData.getScheduledDeliveryCharge().doubleValue()>0){
+         		   	 final CartModel cartModel = getCartService().getSessionCart();
+         		   	 final MplBUCConfigurationsModel configModel = mplConfigFacade.getDeliveryCharges();
+         		   	 cartData.setDeliverySlotCharge(mplCheckoutFacade.createPrice(cartModel, Double.valueOf(configModel.getEdCharge())));
+   		   	 }
+		    }
+		}
 
 		//For Voucher when reloaded
 		//		final List<VoucherData> voucherDataList = voucherFacade.getVouchersForCart();

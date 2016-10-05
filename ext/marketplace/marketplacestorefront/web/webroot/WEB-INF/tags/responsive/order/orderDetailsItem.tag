@@ -127,7 +127,8 @@
 								<format:price priceData="${entry.currDelCharge}" />
 							</c:otherwise>
 						</c:choose>
-					<li class="deliver deliver-desc">${entry.mplDeliveryMode.description}</li>
+						<%--${entry.eddDateBetWeen}  ${entry.mplDeliveryMode.description}--%>
+					<li class="deliver deliver-desc"> Your Order Will Be Delivered Between ${entry.eddDateBetWeen}</li>
 				</ul>
 			</li>
 			<%-- <td headers="header5">

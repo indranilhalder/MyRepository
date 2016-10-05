@@ -59,8 +59,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -1528,6 +1530,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	public String selectDeleverySlots(final Model model) throws CMSItemNotFoundException
 	{
 		Map<String, String> fullfillmentDataMap = new HashMap<String, String>();
+		Map<String ,String> selectedDateBetWeen=new LinkedHashMap<String, String>();
 		try
 		{
 
@@ -1647,10 +1650,21 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 													isScheduleServiceble=true;
 													mplCheckoutFacade.constructDeliverySlotsForEDAndHD( deliverySlotsResponse, cartEntryData, mplLPHolidaysModel);
 												}
-											}else if(cartEntryData.getSelectedUssid().equalsIgnoreCase(deliverySlotsResponse.getUssId()) && fulfillmentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.SSHIP.toUpperCase())){
+											}/*else if(cartEntryData.getSelectedUssid().equalsIgnoreCase(deliverySlotsResponse.getUssId()) && fulfillmentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.SSHIP.toUpperCase())){
 												isScheduleServiceble=true;
 												mplCheckoutFacade.constructDeliverySlotsForEDAndHD(deliverySlotsResponse, cartEntryData, mplLPHolidaysModel);
+											}*/
+											
+											List<String> dateList=new ArrayList<String>();
+											for (Entry<String, List<String>> entry : cartEntryData.getDeliverySlotsTime().entrySet()) {
+												dateList.add(entry.getKey());
 											}
+											String startAndEndDates=null;
+											if( dateList.size()>0){
+												startAndEndDates =dateList.get(0) +MarketplacecommerceservicesConstants.AND +dateList.get(dateList.size() - 1);
+												selectedDateBetWeen.put(cartEntryData.getSelectedUssid(), startAndEndDates);
+											}
+											LOG.debug("********Ussid*****************"+startAndEndDates);
 										}
 									}
 								}
@@ -1668,13 +1682,12 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					cartDataSupport.setDeliverySlotCharge(mplCheckoutFacade.createPrice(cartModel, Double.valueOf(configModel.getEdCharge())));
 					deliverySlotCharge = df.format(configModel.getEdCharge());
 				}
+				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.DELIVERY_SLOTS_TO_SESSION, selectedDateBetWeen);
 				fullfillmentDataMap = getMplCartFacade().getFullfillmentMode(cartDataSupport);
 				model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartDataSupport);
 				model.addAttribute(MarketplacecheckoutaddonConstants.FULFILLMENTDATA, fullfillmentDataMap);
 				model.addAttribute(MarketplacecheckoutaddonConstants.SHOWDELIVERYMETHOD, Boolean.TRUE);
-				
 				model.addAttribute("mplconfigModel", deliverySlotCharge);
-
 				model.addAttribute("defaultPincode",
 						getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE));
 

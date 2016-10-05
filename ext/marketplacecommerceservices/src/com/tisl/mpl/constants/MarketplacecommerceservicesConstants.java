@@ -1610,6 +1610,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ORDERTAG_TYPE_POSTPAID = "POSTPAIDRRF";
 
 	public static final String TO = "TO".intern();
+	public static final String AND = " AND ";
 	public final static String RESERVATION_DATA_TO_SESSION = "reservationData";
 	private MarketplacecommerceservicesConstants()
 	{
