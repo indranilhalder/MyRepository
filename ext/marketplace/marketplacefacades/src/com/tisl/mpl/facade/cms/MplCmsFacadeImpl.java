@@ -524,6 +524,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					if (null != luxuryComponent.getEngagementcomponent())
 					{
 						luxComponentObj = getLuxEngagementcomponentWsDTO(engagementComponent, luxuryComponent.getEngagementcomponent());
+						luxComponentObj.setSectionid(contentSlot.getUid());
 						componentListForASlot.add(luxComponentObj);
 					}
 					else
