@@ -32977,6 +32977,9 @@ padding:0;
 margin:0;
 max-width:1400px;
 }
+body.page-cartPage .breadcrumbs.wrapper{
+display:none;
+}
 body.page-cartPage .cart.wrapper .product-block li.header{
 	color: #777777;
     font-size: 14px;
@@ -35008,7 +35011,7 @@ content:"";
     border: 0;
 }
 .mob-filter-wrapper .apply-clear {
-    position: absolute;
+    position: fixed;
     width: calc(100% - 237px);
     width: -webkit-calc(100% - 237px);
     right: 0;
