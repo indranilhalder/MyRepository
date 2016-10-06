@@ -1263,7 +1263,9 @@ $(document).on('click','.go-to-bag.mini-cart-checkout-button',function(){
 
 
 //For AJAX Call  
-$(document).on("click",'#applyCustomPriceFilter',function(){					
+$(document).on("click",'#applyCustomPriceFilter',function(){
+	 
+	
 
 					// construct custom price query params					
 					var minPriceSearchTxt = ($('.minPriceSearchTxt').val() == null || $('.minPriceSearchTxt').val() == "") ? 0 : $('.minPriceSearchTxt').val() ;
@@ -1376,8 +1378,14 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 							requiredUrl += "/getFacetData";
 						} else {
 							if(action.indexOf("/getFacetData") == -1){
-								if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1){
+							
+								//if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1 || action.indexOf('/collection/') > -1){
+								if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1 ){
 									requiredUrl = action.concat("/getFacetData");
+								} 
+								else if ($("input[name=customSku]").val()) {
+									var collectionId = $("input[name=customSkuCollectionId]").val();
+									requiredUrl = '/CustomSkuCollection/'+collectionId+'/getFacetData';
 								}
 								else{
 									requiredUrl = action.concat("getFacetData");
@@ -1458,7 +1466,8 @@ function queryParam(name) {
 //selected ranges.
 $(document).ready(function() {
 	
-	loadPriceRange();
+	loadPriceRange();	
+	
 });
 
 
@@ -1483,3 +1492,5 @@ function loadPriceRange(){
 }
 
 //Code changes end for TPR -168//
+
+

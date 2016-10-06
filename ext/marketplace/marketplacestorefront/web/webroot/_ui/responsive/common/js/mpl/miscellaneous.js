@@ -81,12 +81,13 @@
 			window.localStorage.removeItem("eventFired");
 		});*/
 
-		 $(document).on("click","form .pagination_a_link",function(e){
-			event.preventDefault();
-			var hrefurl = $(this).attr('href');
-			$("#paginationForm").attr("action", hrefurl);
-			$(this).closest('form').submit();
-		 });  
+         //TPR-565	
+   		 /*$(document).on("click","form .pagination_a_link",function(e){
+   			event.preventDefault();
+   			var hrefurl = $(this).attr('href');
+   			$("#paginationForm").attr("action", hrefurl);
+   			$(this).closest('form').submit();
+   		 });*/   
 
 		//TISPRO-183 -- Firing Tealium event only after successful user login
 	/*	if(loginStatus){

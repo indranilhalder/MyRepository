@@ -1783,6 +1783,15 @@
 	</bean>
 	<!-- Bean for POC Search ends-->
 	
+	<!-- TPR-565 -->
+	<bean id="mplShopByLookSaveInterceptor" class="com.tisl.mpl.interceptor.MplShopByLookInterceptor" />
+
+	<bean id="mplShopByLookSaveInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="mplShopByLookSaveInterceptor" />
+		<property name="typeCode" value="MplShopByLook" />
+	</bean>
+	
 	 <!-- For Bulk Seller  Upload on HMC Configuration Screen  TPR -715-->
 	<bean id="sellerBulkLoadInterceptor" class="com.tisl.mpl.interceptor.SellerBulkLoadInterceptor" />
 	
@@ -1801,4 +1810,3 @@
 		<property name="typeCode" value="EtailExcludeSellerSpecificRestriction" />
 	</bean>
 </beans>
-
