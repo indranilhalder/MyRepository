@@ -21,9 +21,9 @@ import org.zkoss.zul.Messagebox;
 
 import com.hybris.cockpitng.annotations.ViewEvent;
 import com.hybris.cockpitng.util.DefaultWidgetController;
-import com.hybris.oms.tata.facade.ShortUrlFacade;
 import com.hybris.oms.tata.renderer.ShortUrlReportItemRenderer;
-import com.techouts.backoffice.ShortUrlReportData;
+import com.tis.mpl.facade.shorturl.ShortUrlReportData;
+import com.tis.mpl.facade.shorturl.ShortUrlTrackFacade;
 
 
 /**
@@ -48,8 +48,8 @@ public class ShortUrlMappingWidgetController extends DefaultWidgetController
 	@Wire
 	private Listbox listBoxData;
 
-	@WireVariable
-	private ShortUrlFacade shortUrlFacade;
+	@WireVariable("shortUrlFacade")
+	private ShortUrlTrackFacade shortUrlFacade;
 	final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
 	@Override

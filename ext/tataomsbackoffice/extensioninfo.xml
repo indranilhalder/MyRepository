@@ -17,14 +17,10 @@
 
 		<requires-extension name="backoffice" />
 		<requires-extension name="omsbackoffice" />
-		<requires-extension name="marketplaceclientservices" />
 		<requires-extension name="marketplacefacades"/>
 		<coremodule generated="true"
 			manager="com.hybris.oms.tata.jalo.TataomsbackofficeManager"
 			packageroot="com.hybris.oms.tata" />
-
 		<meta key="backoffice-module" value="true" />
-
 	</extension>
-
 </extensioninfo>

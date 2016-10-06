@@ -24,12 +24,4 @@
 		<property name="sdCharge" type="double"></property>
 		<property name="edCharge" type="double"></property>
 	</bean>
-	<bean class="com.techouts.backoffice.ShortUrlReportData">
-		<property name="orderId" type="String"></property>
-		<property name="longUrl" type="String"></property>
-		<property name="shortUrl" type="String"></property>
-		<property name="cliks" type="int"></property>
-		<property name="logins" type="int"></property>
-	</bean>
-
 </beans>

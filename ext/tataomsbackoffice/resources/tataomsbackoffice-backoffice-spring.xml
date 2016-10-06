@@ -123,20 +123,7 @@
 			</list>
 		</property>
 	</bean>
-	<bean id="shortUrlPopulator"
-		class="com.hybris.oms.tata.populator.ShortUrlModelToDataPopulator" />
-
-	<alias name="defaultShortUrlConverter" alias="shortUrlConverter" />
-	<bean id="defaultShortUrlConverter" parent="abstractPopulatingConverter">
-		<property name="targetClass" value="com.techouts.backoffice.ShortUrlReportData" />
-		<property name="populators">
-			<list>
-				<ref bean="shortUrlPopulator" />
-			</list>
-		</property>
-	</bean>
-	<alias name="defaultShortUrlFacade" alias="shortUrlFacade" />
-	<bean id="defaultShortUrlFacade" class="com.hybris.oms.tata.facade.impl.DefaultShortUrlFacade"></bean>
+	
 	<bean id="bucFileComparitor" class="com.techouts.dataonboarding.util.BUCFileComparitor"></bean>
 	<!-- bulk upload -->
 	<bean id="excelToCsvConverter" class="com.hybris.oms.tata.exceltocsv.main.ExcelToCsvConverter">
