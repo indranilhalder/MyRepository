@@ -897,19 +897,45 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 
 
 	/***
-	 * Argument dateFrom and dateTo Changed Delivery Address Report Method return List<MplDeliveryAddressReportData>
+	 * Argument dateFrom and dateTo Changed Delivery Address 
+	 * Report Method return List<MplDeliveryAddressReportData>
 	 */
 	@Override
 	public List<MplDeliveryAddressReportData> getDeliveryAddressRepot(final String dateFrom, final String dateTo)
 	{
-        List<OrderModel> orderModelList=new ArrayList<OrderModel>();
-        List<MplDeliveryAddressReportData> mplDeliveryAddressReportDataList=new  ArrayList<MplDeliveryAddressReportData>();
-       for(OrderModel orderModel:orderModelList){
-      	 MplDeliveryAddressReportData mplDeliveryAddressReportData=new MplDeliveryAddressReportData();
-      	 mplDeliveryAddressReportData.setOrderId(orderModel.getCode());
-      	 mplDeliveryAddressReportData.setTotalRequestCount(orderModel.getChangeDeliveryTotalRequests().intValue());
-      	 mplDeliveryAddressReportData.setFailureRequsetCount(orderModel.getChangeDeliveryRejectsCount().intValue());
-       }
+
+		List<MplDeliveryAddressReportData> mplDeliveryAddressReportDataList = new ArrayList<MplDeliveryAddressReportData>();
+		try
+		{
+			LOG.info("MplDeliveryAddressFacadeImpl:Change Delivery Address Request Purpose Preparing Report  ");
+			ServicesUtil.validateParameterNotNull(dateFrom, "dateFrom must not be null");
+			ServicesUtil.validateParameterNotNull(dateTo, "dateTo must not be null");
+
+			List<OrderModel> orderModelList = mplDeliveryAddressService.getOrderModelList(dateFrom, dateTo);
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("MplDeliveryAddressFacadeImpl:Preparing Data For BackOffice DeliveryAddressRepot");
+			}
+			if (CollectionUtils.isNotEmpty(orderModelList))
+			{
+				for (OrderModel orderModel : orderModelList)
+				{
+					MplDeliveryAddressReportData mplDeliveryAddressReportData = new MplDeliveryAddressReportData();
+
+					ServicesUtil.validateParameterNotNull(orderModel.getCode(), "orderCode must not be null");
+					mplDeliveryAddressReportData.setOrderId(orderModel.getCode());
+					mplDeliveryAddressReportData.setTotalRequestCount(orderModel.getChangeDeliveryTotalRequests().intValue());
+					mplDeliveryAddressReportData.setFailureRequsetCount(orderModel.getChangeDeliveryRejectsCount().intValue());
+					mplDeliveryAddressReportDataList.add(mplDeliveryAddressReportData);
+
+				}
+			}
+		}
+		catch (Exception exp)
+		{
+			LOG.error("MplDeliveryAddressFacadeImpl:Exception occurs during whille createing Report" + exp.getMessage());
+			return null;
+		}
 		return mplDeliveryAddressReportDataList;
 	}
 
