@@ -9,6 +9,7 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -85,7 +86,7 @@ public interface MplDeliveryAddressFacade
 
 	public ChangeDeliveryAddressResponseDto scheduledDeliveryDateRequestToOMS(OrderModel orderModel, String newPincode);
 
-	public Collection<MplDeliveryAddressReportData> getDeliveryAddressRepot(String dateFrom, String toDate);
+	public Collection<MplDeliveryAddressReportData> getDeliveryAddressRepot(Date dateFrom, Date toDate);
 	
 	public OTPResponseData validteOTP(String customerID, String enteredOTPNumber);
     
