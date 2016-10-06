@@ -840,10 +840,14 @@
 	
 	<bean class="de.hybris.platform.commerceservices.search.solrfacetsearch.data.SolrSearchQueryData">
 		<property name="sns" type="boolean"/>
+		<!-- Added for Luxury -->
+		<!-- <property name="luxarySite" type="boolean"/> -->
 	</bean>
 
 	<bean class="de.hybris.platform.commercefacades.search.data.SearchStateData">
 		<property name="sns" type="boolean"/>
+		<!-- Added for Luxury -->
+		<property name="luxarySiteFrom" type="String"/>
 	</bean>
 
 	<!-- Return Item Address Data -->
@@ -903,6 +907,5 @@
 		<property name="categoryData" type="java.util.List&lt;com.tisl.mpl.facades.data.EnhancedSearchCategoryData>"></property>
 		<property name="brandData" type="java.util.List&lt;com.tisl.mpl.facades.data.EnhancedSearchBrandData>"></property>
 		<property name="sellerData" type="java.util.List&lt;com.tisl.mpl.facades.data.EnhancedSearchSellerData>"></property>
-	</bean>
-	
+	</bean>	
 </beans>
