@@ -122,9 +122,9 @@ import com.tisl.mpl.wsdto.LuxShopTheLookWsDTO;
 import com.tisl.mpl.wsdto.LuxShopYourFavListWsDTO;
 import com.tisl.mpl.wsdto.LuxShowcasecomponentWsDTO;
 import com.tisl.mpl.wsdto.LuxSignatureWsDTO;
+import com.tisl.mpl.wsdto.LuxSocialFeedComponentWsDTO;
 import com.tisl.mpl.wsdto.LuxSpringCollectionComponentWsDTO;
 import com.tisl.mpl.wsdto.LuxVideocomponentWsDTO;
-import com.tisl.mpl.wsdto.TextComponentWsDTO;
 
 
 /**
@@ -487,7 +487,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 		LuxComponentsListWsDTO luxComponentObj = new LuxComponentsListWsDTO();
 		if (null != contentSlot)
 		{
-
+			int count = 0;
 			for (final AbstractCMSComponentModel abstractCMSComponentModel : contentSlot.getCmsComponents())
 			{
 				final String typecode = abstractCMSComponentModel.getTypeCode();
@@ -536,18 +536,52 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					luxuryComponent = getLuxProductsListWsDTO(luxuryProductListComponent);
 					componentListForASlot.add(luxuryComponent);
 				}
-				else if (typecode.equalsIgnoreCase("ImageCarouselComponent"))
+				else if (typecode.equalsIgnoreCase("ImageCarouselComponent")
+						&& contentSlot.getUid().equalsIgnoreCase("Section7-shopby"))
 				{
 					final ImageCarouselComponentModel luxuryShopByComponent = (ImageCarouselComponentModel) abstractCMSComponentModel;
 					luxuryComponent = getLuxShopByListWsDTO(luxuryShopByComponent);
 					componentListForASlot.add(luxuryComponent);
 				}
 				// Social Feed Component added
-				else if (typecode.equalsIgnoreCase("CMSParagraphComponent"))
+				/*
+				 * else if (typecode.equalsIgnoreCase("CMSParagraphComponent")) { final CMSParagraphComponentModel
+				 * socialFeedComponent = (CMSParagraphComponentModel) abstractCMSComponentModel; luxuryComponent =
+				 * getLuxSocialFeedcomponentWsDTO(socialFeedComponent); componentListForASlot.add(luxuryComponent); }
+				 */
+
+				else if (typecode.equalsIgnoreCase("ImageCarouselComponent")
+						&& contentSlot.getUid().equalsIgnoreCase("Section8-socialFeed"))
 				{
-					final CMSParagraphComponentModel socialFeedComponent = (CMSParagraphComponentModel) abstractCMSComponentModel;
-					luxuryComponent = getLuxSocialFeedcomponentWsDTO(socialFeedComponent);
-					componentListForASlot.add(luxuryComponent);
+					final ImageCarouselComponentModel luxurySocialFeedBannerComponent = (ImageCarouselComponentModel) abstractCMSComponentModel;
+
+					if (null == luxuryComponent.getSocialfeedcomponent())
+					{
+						luxuryComponent = getSocialFeedBannerWsDTO(luxurySocialFeedBannerComponent,
+								luxuryComponent.getSocialfeedcomponent());
+
+					}
+					else
+					{
+						if (null != luxComponentObj.getSocialfeedcomponent())
+						{
+							luxComponentObj = getSocialFeedBannerWsDTO(luxurySocialFeedBannerComponent,
+									luxComponentObj.getSocialfeedcomponent());
+
+						}
+						else
+						{
+							luxComponentObj = getSocialFeedBannerWsDTO(luxurySocialFeedBannerComponent,
+									luxuryComponent.getSocialfeedcomponent());
+						}
+
+
+					}
+					count++;
+					if (contentSlot.getCmsComponents().size() == count)
+					{
+						componentListForASlot.add(luxComponentObj);
+					}
 				}
 				LOG.debug("Adding component" + abstractCMSComponentModel.getUid() + "for section" + contentSlot.getUid());
 				luxuryComponent.setSectionid(contentSlot.getUid());
@@ -559,6 +593,114 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 		//}
 		return componentListForASlot;
 	}
+
+	private LuxComponentsListWsDTO getSocialFeedBannerWsDTO(final ImageCarouselComponentModel luxurySocialFeedBannerComponent,
+			final LuxSocialFeedComponentWsDTO luxSocialFeedComponentWsDTO)
+	{
+		final ArrayList<LuxHeroBannerWsDTO> socialFeedComponentDtoList = new ArrayList<LuxHeroBannerWsDTO>();
+		final LuxSocialFeedComponentWsDTO socialFeedComponentDto = new LuxSocialFeedComponentWsDTO();
+		final LuxComponentsListWsDTO luxComponent = new LuxComponentsListWsDTO();
+		final List<CMSMediaParagraphComponentModel> socialFeedImgList = luxurySocialFeedBannerComponent.getCollectionItems();
+
+		if (null != luxSocialFeedComponentWsDTO)
+		{
+			if (null != luxSocialFeedComponentWsDTO.getLuxSocialFeedFacebook())
+			{
+				socialFeedComponentDto.setLuxSocialFeedFacebook(luxSocialFeedComponentWsDTO.getLuxSocialFeedFacebook());
+			}
+
+			if (null != luxSocialFeedComponentWsDTO.getLuxSocialFeedGooglePlus())
+			{
+				socialFeedComponentDto.setLuxSocialFeedGooglePlus(luxSocialFeedComponentWsDTO.getLuxSocialFeedGooglePlus());
+			}
+
+			if (null != luxSocialFeedComponentWsDTO.getLuxSocialFeedInstagram())
+			{
+				socialFeedComponentDto.setLuxSocialFeedInstagram(luxSocialFeedComponentWsDTO.getLuxSocialFeedInstagram());
+			}
+
+			if (null != luxSocialFeedComponentWsDTO.getLuxSocialFeedTwitter())
+			{
+				socialFeedComponentDto.setLuxSocialFeedTwitter(luxSocialFeedComponentWsDTO.getLuxSocialFeedTwitter());
+			}
+
+			for (final CMSMediaParagraphComponentModel cmsMediaPara : socialFeedImgList)
+			{
+
+				final LuxHeroBannerWsDTO luxHeroBannerWsDTO = new LuxHeroBannerWsDTO();
+				if (null != cmsMediaPara.getMedia())
+				{
+					if (cmsMediaPara.getMedia().getURL() != null)
+					{
+						luxHeroBannerWsDTO.setBannerMedia(cmsMediaPara.getMedia().getURL());
+					}
+					if (null != cmsMediaPara.getUrl())
+					{
+						luxHeroBannerWsDTO.setBannerUrl(cmsMediaPara.getUrl());
+					}
+				}
+				socialFeedComponentDtoList.add(luxHeroBannerWsDTO);
+			}
+
+			if (luxurySocialFeedBannerComponent.getUid().equalsIgnoreCase("LuxSocialFeedFacebook"))
+			{
+				socialFeedComponentDto.setLuxSocialFeedFacebook(socialFeedComponentDtoList);
+			}
+			if (luxurySocialFeedBannerComponent.getUid().equalsIgnoreCase("LuxSocialFeedTwitter"))
+			{
+				socialFeedComponentDto.setLuxSocialFeedTwitter(socialFeedComponentDtoList);
+			}
+			if (luxurySocialFeedBannerComponent.getUid().equalsIgnoreCase("LuxSocialFeedGooglePlus"))
+			{
+				socialFeedComponentDto.setLuxSocialFeedInstagram(socialFeedComponentDtoList);
+			}
+			if (luxurySocialFeedBannerComponent.getUid().equalsIgnoreCase("LuxSocialFeedInstagram"))
+			{
+				socialFeedComponentDto.setLuxSocialFeedGooglePlus(socialFeedComponentDtoList);
+			}
+
+		}
+		else
+		{
+			for (final CMSMediaParagraphComponentModel cmsMediaPara : socialFeedImgList)
+			{
+
+				final LuxHeroBannerWsDTO luxHeroBannerWsDTO = new LuxHeroBannerWsDTO();
+				if (null != cmsMediaPara.getMedia())
+				{
+					if (cmsMediaPara.getMedia().getURL() != null)
+					{
+						luxHeroBannerWsDTO.setBannerMedia(cmsMediaPara.getMedia().getURL());
+					}
+					if (null != cmsMediaPara.getUrl())
+					{
+						luxHeroBannerWsDTO.setBannerUrl(cmsMediaPara.getUrl());
+					}
+				}
+				socialFeedComponentDtoList.add(luxHeroBannerWsDTO);
+			}
+
+			if (luxurySocialFeedBannerComponent.getUid().equalsIgnoreCase("LuxSocialFeedFacebook"))
+			{
+				socialFeedComponentDto.setLuxSocialFeedFacebook(socialFeedComponentDtoList);
+			}
+			if (luxurySocialFeedBannerComponent.getUid().equalsIgnoreCase("LuxSocialFeedTwitter"))
+			{
+				socialFeedComponentDto.setLuxSocialFeedTwitter(socialFeedComponentDtoList);
+			}
+			if (luxurySocialFeedBannerComponent.getUid().equalsIgnoreCase("LuxSocialFeedGooglePlus"))
+			{
+				socialFeedComponentDto.setLuxSocialFeedInstagram(socialFeedComponentDtoList);
+			}
+			if (luxurySocialFeedBannerComponent.getUid().equalsIgnoreCase("LuxSocialFeedInstagram"))
+			{
+				socialFeedComponentDto.setLuxSocialFeedGooglePlus(socialFeedComponentDtoList);
+			}
+		}
+		luxComponent.setSocialfeedcomponent(socialFeedComponentDto);
+		return luxComponent;
+	}
+
 
 	@Override
 	public LuxHomePageCompWsDTO getHomePageForLuxury() throws CMSItemNotFoundException
@@ -891,20 +1033,13 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	/**
 	 * @param socialFeedComponent
 	 */
-	private LuxComponentsListWsDTO getLuxSocialFeedcomponentWsDTO(final CMSParagraphComponentModel socialFeedComponent)
-	{
-		final TextComponentWsDTO text = new TextComponentWsDTO();
-		final LuxComponentsListWsDTO luxComponent = new LuxComponentsListWsDTO();
-		if (null != socialFeedComponent)
-		{
-			if (null != socialFeedComponent.getContent())
-			{
-				text.setText(socialFeedComponent.getContent());
-			}
-		}
-		luxComponent.setSocialfeedcomponent(text);
-		return luxComponent;
-	}
+	/*
+	 * private LuxComponentsListWsDTO getLuxSocialFeedcomponentWsDTO(final CMSParagraphComponentModel
+	 * socialFeedComponent) { final TextComponentWsDTO text = new TextComponentWsDTO(); final LuxComponentsListWsDTO
+	 * luxComponent = new LuxComponentsListWsDTO(); if (null != socialFeedComponent) { if (null !=
+	 * socialFeedComponent.getContent()) { text.setText(socialFeedComponent.getContent()); } }
+	 * luxComponent.setSocialfeedcomponent(text); return luxComponent; }
+	 */
 
 	/**
 	 * @param luxuryVideoComponent
@@ -2680,7 +2815,12 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 							cmsChildNavDto.setValue(cmsNav.getLinks().get(0).getCategoryCode());
 						}
 
-						if (null != cmsNav.getLinks().get(0).getCategoryCode())
+						if (null != cmsNav.getLinks().get(0).getUrl())
+						{
+							cmsChildNavDto.setDestination(cmsNav.getLinks().get(0).getUrl());
+						}
+
+						else if (null != cmsNav.getLinks().get(0).getCategoryCode())
 						{
 							final CategoryModel categoryL1 = getCategoryService().getCategoryForCode(
 									cmsNav.getLinks().get(0).getCategoryCode());
