@@ -49533,7 +49533,7 @@ width: auto;
 }
 .common_logo_slot_wrapper .blp_title_banner:last-child form #brandSearchButton:before {
        content: "";
-    background: url(../images/sprite.svg) no-repeat scroll -130px 1px;
+    background: url(../images/sprite.svg) no-repeat scroll -130px 0px;
     display: inline-block;
     height: 22px;
     width: 26px;
@@ -50822,9 +50822,33 @@ padding: 0 24px;
 	padding-left:0px;
 }
 }
+@media (max-width: 479px){
+	.common_logo_slot_wrapper .blp_title_banner:last-child form input{
+	    width: calc(100% - 40px);
+	}
+	.common_logo_slot_wrapper .blp_title_banner:last-child form select{
+	display: none;
+	}
+}
+@media (max-width: 380px){
+.common_logo_slot_wrapper .blp_title_banner:last-child form input {
+	width: calc(100% - 55px);
+}
+.common_logo_slot_wrapper .blp_title_banner:last-child form #brandSearchButton{
+	margin-right: 15px;
+}
+}
+@media (max-width: 321px){
+	.common_logo_slot_wrapper .blp_title_banner:last-child form input{
+	width: calc(100% - 92px);
+	}
+	.common_logo_slot_wrapper .blp_title_banner:last-child form #brandSearchButton{
+	margin-right: 52px;
+	}
+
+	}
+
 /* ----BLP start end------ */
-
-
 
 /* CLP css starts */
 .clp_title_banner p:first-of-type{
