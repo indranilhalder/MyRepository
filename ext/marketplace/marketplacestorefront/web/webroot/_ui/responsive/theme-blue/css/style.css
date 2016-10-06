@@ -53475,28 +53475,4 @@ div.radio.creditDebitLabelRadio{
  header .content nav > ul > li > ul > li > ul > li.long.words .toggle {
                font-weight: normal;
     }
-/* TPR-1745 start*/
-@media(max-width:790px){
-  body.page-productDetails header .content .bottom.active,body.page-viewSellers header .content .bottom.active {
-        z-index: 10001;
-    }
-    header > .content .top{z-index:10002;}
-    header > .content .bottom {
-    background-color: #fff;
-}
-    header .content .bottom.active{
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 200;
-    width: 100%;
-    padding: 0 10px 10px;
-    border-bottom: 1px solid rgba(0,0,0,0.1);
-    -webkit-transition: position .3s;
-    -moz-transition: position .3s;
-    transition: position .3s;
-}
-header > .content .top.header_fix {position:fixed;}
-}
 
-/* TPR-1745 end*/
