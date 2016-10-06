@@ -2467,7 +2467,17 @@
     	<property name="engagementcomponent" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxEngagementcomponentWsDTO>"/>
     	<property name="featuredproducts" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxBrandProductsListWsDTO>"/>
     	<property name="shopbycomponents" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxShopByListWsDTO>"/>
-    	<property name="socialfeedcomponent" type="com.tisl.mpl.wsdto.TextComponentWsDTO"/>
+    	<!-- <property name="socialfeedcomponent" type="com.tisl.mpl.wsdto.TextComponentWsDTO"/> -->
+    	<property name="socialfeedcomponent" type="com.tisl.mpl.wsdto.LuxSocialFeedComponentWsDTO"/>
+    </bean>
+    
+    <bean class="com.tisl.mpl.wsdto.LuxSocialFeedComponentWsDTO">
+       <!--  <property name="textContent" type="com.tisl.mpl.wsdto.TextComponentWsDTO"/> -->
+         <!-- For RotatingImagesComponent -->
+    	<property name="LuxSocialFeedFacebook" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/> 
+    	<property name="LuxSocialFeedTwitter" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/> 
+    	<property name="LuxSocialFeedGooglePlus" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/> 
+    	<property name="LuxSocialFeedInstagram" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/>    	
     </bean>
     
     <bean class="com.tisl.mpl.wsdto.LuxBlpCompWsDTO">
