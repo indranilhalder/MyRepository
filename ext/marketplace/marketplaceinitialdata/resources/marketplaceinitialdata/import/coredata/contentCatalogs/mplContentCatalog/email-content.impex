@@ -33,6 +33,7 @@ INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocit
 ;;CustomerProfileUpdateEmailTemplate;$jarResourceCms/structure-view/structure_customerProfileUpdateEmailTemplate.vm
 ;;ChangePasswordEmailTemplate;$jarResourceCms/structure-view/structure_changePasswordEmailTemplate.vm
 ;;SubmitRequestEmailTemplate;$jarResourceCms/structure-view/structure_submitRequestEmailTemplate.vm
+;;LuxuryPdpQuestionEmailTemplate;$jarResourceCms/structure-view/structure_submitRequestEmailTemplate.vm
 #Shipping Confirmation Event
 ;;ShippingConfirmationEmailTemplate;$jarResourceCms/structure-view/structure_shippingConfirmationEmailTemplate.vm
 ;;OrderOnHoldEmailTemplate;$jarResourceCms/structure-view/structure_orderOnHoldEmailTemplate.vm
@@ -77,6 +78,7 @@ INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;ac
 ;;CustomerProfileUpdateEmailTemplate;Customer Profile Update Email Template;true;customerProfileUpdateEmail;mpl_Email_CustomerProfileUpdate_Subject;mpl_Email_CustomerProfileUpdate_Body;EmailPage
 ;;ChangePasswordEmailTemplate;Change Password Email Template;true;changePasswordEmail;mpl_Email_ChangePassword_Subject;mpl_Email_ChangePassword_Body;EmailPage
 ;;SubmitRequestEmailTemplate;Submit Request Email Template;true;submitRequestEmail;mpl_Email_SubmitRequest_Subject;mpl_Email_SubmitRequest_Body;EmailPage
+;;LuxuryPdpQuestionEmailTemplate;Luxury Pdp Question Email Template;true;luxuryPdpQuestionEmail;mpl_Email_LuxuryPdpQuestion_Subject;mpl_Email_LuxuryPdpQuestion_Body;EmailPage
 ;;OrderPlacedFeedbackEmailTemplate;OrderPlaced Feedback Email Template;true;orderPlacedFeedbackEmail;mpl_Email_OrderPlacedFeedback_Subject;mpl_Email_OrderPlacedFeedback_Body;EmailPage
 #Shipping Confirmation Event 
 ;;ShippingConfirmationEmailTemplate;Shipping Confirmation Email Template;true;shippingConfirmationEmail;mpl_Email_ShippingConfirmation_Subject;mpl_Email_ShippingConfirmation_Body;EmailPage
@@ -408,6 +410,11 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;SiteLogo;;;logo
 ;TopContent;;$wideContent;
 ;BottomContent;;$wideContent;
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='LuxuryPdpQuestionEmailTemplate'];validComponentTypes(code)
+#####;SiteLogo;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+#########;Footer;;CMSLinkComponent,CMSParagraphComponent
 
 
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderPlacedFeedbackEmailTemplate'];validComponentTypes(code)
@@ -1081,6 +1088,14 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;TopContent-SubmitRequestEmail;TopContent;;EmailTopSlot;true
 ;;BottomContent-SubmitRequestEmail;BottomContent;;EmailBottomSlot;true
 
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='LuxuryPdpQuestionEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+#######;;SiteLogo-LuxuryPdpQuestionEmail;SiteLogo;;SiteLogoSlot;true
+##########;;Footer-LuxuryPdpQuestionEmail;Footer;;FooterSlot;true
+;;TopContent-LuxuryPdpQuestionEmail;TopContent;;EmailTopSlot;true
+;;BottomContent-LuxuryPdpQuestionEmail;BottomContent;;EmailBottomSlot;true
+
+
+
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderPlacedFeedbackEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
 #;;SiteLogo-orderPlacedFeedbackEmail;SiteLogo;;EmailSiteLogoSlot;true
 ;;TopContent-orderPlacedFeedbackEmail;TopContent;;EmailTopSlot;true
@@ -1204,6 +1219,7 @@ INSERT_UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];name;masterTemp
 ;;CustomerProfileUpdateEmail;Customer Profile Update Email;CustomerProfileUpdateEmailTemplate;true;
 ;;ChangePasswordEmail;Change Password Email;ChangePasswordEmailTemplate;true;
 ;;ContactUsSubmitRequestEmail;Contact Us Submit Request Email;SubmitRequestEmailTemplate;true;
+;;ContactUsLuxuryPdpQuestionEmail;Contact Us Luxury Pdp Question Email;LuxuryPdpQuestionEmailTemplate;true;
 ;;OrderPlacedFeedbackEmail;Order Placed Feedback Email;OrderPlacedFeedbackEmailTemplate;true;
 #Shipping Confirmation Event
 ;;ShippingConfirmationEmail;Shipping Confirmation Email;ShippingConfirmationEmailTemplate;true;
@@ -1276,6 +1292,8 @@ INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)
 ;mpl_Email_ChangePassword_Body;$emailPackageName.ChangePasswordEmailContext
 ;mpl_Email_SubmitRequest_Body;$emailPackageName.SubmitRequestEmailContext
 ;mpl_Email_SubmitRequest_Subject;$emailPackageName.SubmitRequestEmailContext
+;mpl_Email_LuxuryPdpQuestion_Body;$emailPackageName.LuxuryPdpQuestionEmailContext
+;mpl_Email_LuxuryPdpQuestion_Subject;$emailPackageName.LuxuryPdpQuestionEmailContext
 ;mpl_Email_OrderPlacedFeedback_Body;$emailPackageName.OrderPlacedFeedbackEmailContext
 ;mpl_Email_OrderPlacedFeedback_Subject;$emailPackageName.OrderPlacedFeedbackEmailContext
 #Shipping Confirmation Event

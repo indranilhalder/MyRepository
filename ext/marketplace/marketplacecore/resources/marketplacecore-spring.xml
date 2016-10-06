@@ -435,6 +435,12 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 		<property name="modelService" ref="modelService" />
 		<property name="businessProcessService" ref="businessProcessService" />
 	</bean>
+	<bean id="luxuryPdpQuestionEventListener" class="com.tisl.mpl.core.event.LuxuryPdpQuestionEventListener"
+		parent="abstractSiteEventListener">
+		<property name="modelService" ref="modelService" />
+		<property name="businessProcessService" ref="businessProcessService" />
+	</bean>
+	
 	<bean id="orderOnHoldEventListener" class="com.tisl.mpl.core.event.OrderOnHoldEventListener"
 		parent="abstractSiteEventListener">
 		<property name="modelService" ref="modelService" />
@@ -569,6 +575,13 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 		<property name="resource"
 			value="classpath:/marketplacecore/processes/submitRequestEmailProcess.xml" />
 	</bean>
+	
+	<bean id="luxuryPdpQuestionEmailProcessDefinitionResource"
+		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
+		<property name="resource"
+			value="classpath:/marketplacecore/processes/luxuryPdpQuestionEmailProcess.xml" />
+	</bean>
+	
 
 
 	<bean id="orderPlacedFeedbackEmailProcessDefinitionResource"
@@ -703,7 +716,13 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 		<property name="frontendTemplateName" value="NotPickedUpConsignmentCanceledEmailTemplate" />
 	</bean>
 	<bean id="generateSubmitRequestEmail" parent="abstractGenerateEmailAction">
+	
   <property name="frontendTemplateName" value="SubmitRequestEmailTemplate" /> 
+  
+  </bean>
+	<bean id="generateLuxuryPdpQuestionEmail" parent="abstractGenerateEmailAction">
+	
+  <property name="frontendTemplateName" value="LuxuryPdpQuestionEmailTemplate" /> 
   </bean>
 	
 
@@ -1646,7 +1665,14 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 	<bean id="disableMplIndexingCompositeJob" class="com.tisl.mpl.core.cronjob.search.indexing.jobs.DisableMplIndexingCompositeJob" autowire="byName"/>
 	
 	<!-- TISPRD-4666 -->
-	<bean id="facetDisplayNameComparator" class="com.tisl.mpl.core.comparator.DisplayFacetNameComparator" />	
+	<bean id="facetDisplayNameComparator" class="com.tisl.mpl.core.comparator.DisplayFacetNameComparator" />
+	
+	<!-- For Luxury Products -->	
+	<bean id="luxuryProductValueProvider"
+		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.LuxuryProductValueProvider"
+		parent="abstractPropertyFieldValueProvider">
+		<property name="fieldNameProvider" ref="solrFieldNameProvider" />		
+	</bean>	
 		
 	
 </beans>

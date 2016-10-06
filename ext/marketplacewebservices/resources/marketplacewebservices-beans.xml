@@ -665,6 +665,9 @@
 			<property name="rootCategory" type="String" />
 			<property name="productLevelDiscount" type="java.lang.Double" />
 			<property name="productCategoryId" type="String" />
+			<!--  Added for luxury -->
+			<property name="isLuxury" type="String" /> 
+			
 			
 			<!-- 	-->	
 			<property name="discountPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
@@ -804,7 +807,8 @@
 		<property name="delistedMessage" type="String" />
 		<property name="pickupPersonName" type="String" />
 		<property name="pickupPersonMobile" type="String" />
-		
+		<!-- Added for luxury -->
+			<property name="isLuxury" type="String" />	
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.CartProductsDeliveryDetailsWsDTO">
 		<property name="data" type="String" />
@@ -1806,7 +1810,12 @@
 		<property name="currentQuery" type="de.hybris.platform.commercewebservicescommons.dto.search.SearchStateWsDTO"/>
 		<property name="facetdatacategory"
 		          type="com.tisl.mpl.wsdto.DepartmentHierarchyWs"/>
-		  
+		 <!-- Added for Luxury -->
+		<property name="crosssellBanner"
+		          type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO"/>
+		<property name="plpHeroBanner"
+		          type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO"/>
+		<!-- Ended -->
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.FacetDataWsDTO">
 		<property name="name" type="String"/>
@@ -1834,6 +1843,7 @@
 
 	<bean class="com.tisl.mpl.wsdto.SellingItemDetailWsDto">
 		<property name="sellerName" type="String" />
+		<property name="Ussid" type="String" />
 		<property name="sellerId" type="String" />
 		<property name="brandname" type="String" />
 		<property name="productId" type="String" />
@@ -2416,10 +2426,11 @@
     	<property name="productUrl" type="String" />
     	<property name="productImageUrl" type="String" /> 
     	<property name="productTitle" type="String" /> 
-    	<property name="productPrice" type="String"/>
+    	<property name="productMRP" type="String"/>
     	<property name="productMOP" type="String"/>
     	<property name="productSpecialPrice" type="String"/>
     	<property name="productBrand" type="String"/>
+    	<property name="position" type="Integer"/>
     			
     </bean>
     <bean class="com.tisl.mpl.wsdto.LuxShopYourFavListWsDTO">
@@ -2434,6 +2445,7 @@
     	<property name="videoUrl" type="String"/>
     	<property name="videoDescription" type="String" />
     	<property name="previewUrl" type="String"/>
+    	<property name="videoTitle" type="String"/>
     </bean>
      <bean class="com.tisl.mpl.wsdto.LuxEngagementcomponentWsDTO">
     	<property name="bannerMedia" type="String"/>
@@ -2455,7 +2467,17 @@
     	<property name="engagementcomponent" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxEngagementcomponentWsDTO>"/>
     	<property name="featuredproducts" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxBrandProductsListWsDTO>"/>
     	<property name="shopbycomponents" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxShopByListWsDTO>"/>
-    	<property name="socialfeedcomponent" type="com.tisl.mpl.wsdto.TextComponentWsDTO"/>
+    	<!-- <property name="socialfeedcomponent" type="com.tisl.mpl.wsdto.TextComponentWsDTO"/> -->
+    	<property name="socialfeedcomponent" type="com.tisl.mpl.wsdto.LuxSocialFeedComponentWsDTO"/>
+    </bean>
+    
+    <bean class="com.tisl.mpl.wsdto.LuxSocialFeedComponentWsDTO">
+       <!--  <property name="textContent" type="com.tisl.mpl.wsdto.TextComponentWsDTO"/> -->
+         <!-- For RotatingImagesComponent -->
+    	<property name="LuxSocialFeedFacebook" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/> 
+    	<property name="LuxSocialFeedTwitter" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/> 
+    	<property name="LuxSocialFeedGooglePlus" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/> 
+    	<property name="LuxSocialFeedInstagram" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/>    	
     </bean>
     
     <bean class="com.tisl.mpl.wsdto.LuxBlpCompWsDTO">
@@ -2493,7 +2515,8 @@
     	<property name="img_alt" type="String"/>
     	<property name="showByDefault" type="boolean"/> 
     	<property name="heading" type="String"/>
-    	<property name="text" type="String"/>    	   	
+    	<property name="text" type="String"/>
+    	<property name="position" type="Integer"/>    	   	
     </bean>
     
     <bean class="com.tisl.mpl.wsdto.LuxShopTheLookWsDTO">
@@ -2520,7 +2543,7 @@
     	<!-- For spring_component -->
     	<property name="spring_component" type="com.tisl.mpl.wsdto.LuxSpringCollectionComponentWsDTO"/>
     	<!-- For Featured Products -->
-    	<property name="featured_component" type="com.tisl.mpl.wsdto.LuxFeaturedCollectionComponentWsDTO"/>
+    	<property name="featured_component" type="com.tisl.mpl.wsdto.LuxSpringCollectionComponentWsDTO"/>
     	<!-- For VideoComponent -->
     	<property name="videocomponent" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxVideocomponentWsDTO>"/>
     	<!-- For Why Out Products, MplShowcaseComponent -->
@@ -2552,14 +2575,14 @@
     <bean class="com.tisl.mpl.wsdto.LuxSpringCollectionComponentWsDTO">
     	<property name="text_heading" type="String" />
     	<property name="text" type="String" />
-    	<property name="carousal_images" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxCollectionListWsDTO>" />
+    	<property name="image" type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO" />
     </bean>
     
-<bean class="com.tisl.mpl.wsdto.LuxFeaturedCollectionComponentWsDTO">
+<!-- <bean class="com.tisl.mpl.wsdto.LuxFeaturedCollectionComponentWsDTO">
     	<property name="heading" type="String" />
     	<property name="text" type="String" />
     	<property name="carousal_images" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxCollectionListWsDTO>" />
-    </bean>
+    </bean> -->
     <bean class="com.tisl.mpl.wsdto.LuxCollectionListWsDTO">
     	<property name="is_default" type="boolean" />
     	<property name="image" type="String" />
@@ -2598,7 +2621,7 @@
     
       <bean class="com.tisl.mpl.wsdto.LuxLevelFourWsDTO">
     	<property name="name" type="String" />
-    	<property name="isBrand" type="boolean" />
+    	<!-- <property name="isBrand" type="boolean" /> -->
     	<property name="value" type="String" />
     	<property name="destination" type="String" />
     	<property name="image" type="String" />
@@ -2613,5 +2636,10 @@
     
     <!-- Mega navigation DTO struture ends -->
     
+ 	<!-- Newsletter DTO struture starts -->
+    <bean class="com.tisl.mpl.wsdto.NewsletterWsDTO">
+    	<property name="success" type="String"/>
+    </bean>
+    <!-- Newsletter DTO struture ends -->
 
 </beans>

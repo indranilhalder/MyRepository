@@ -58,9 +58,11 @@ import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.enumeration.EnumerationService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.event.EventService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
@@ -85,6 +87,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletContext;
@@ -119,6 +123,7 @@ import com.tisl.mpl.core.enums.FeedbackCategory;
 import com.tisl.mpl.core.model.MplEnhancedSearchBoxComponentModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facade.brand.BrandFacade;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.netbank.MplNetBankingFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
@@ -128,12 +133,14 @@ import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.product.data.StateData;
+import com.tisl.mpl.marketplacecommerceservices.event.LuxuryPdpQuestionEvent;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCategoryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtendedUserServiceImpl;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
 import com.tisl.mpl.model.SellerMasterModel;
+import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
 import com.tisl.mpl.order.data.CardTypeDataList;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
@@ -162,6 +169,7 @@ import com.tisl.mpl.wsdto.HelpAndServicestWsData;
 import com.tisl.mpl.wsdto.HomescreenListData;
 import com.tisl.mpl.wsdto.ListPinCodeServiceData;
 import com.tisl.mpl.wsdto.MplAutoCompleteResultWsData;
+import com.tisl.mpl.wsdto.NewsletterWsDTO;
 import com.tisl.mpl.wsdto.PaymentInfoWsDTO;
 import com.tisl.mpl.wsdto.PinWsDto;
 import com.tisl.mpl.wsdto.RestrictionPins;
@@ -187,6 +195,8 @@ import com.tisl.mpl.wsdto.WthhldTAXWsDTO;
 public class MiscsController extends BaseController
 {
 
+	@Resource(name = "brandFacade")
+	private BrandFacade brandFacade;
 
 	@Resource(name = "userFacade")
 	private UserFacade userFacade;
@@ -266,6 +276,9 @@ public class MiscsController extends BaseController
 
 	@Resource(name = "pincodeServiceFacade")
 	private PincodeServiceFacade pincodeServiceFacade;
+
+	private static final String APPLICATION_TYPE = "application/json";
+	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
 
 	/**
 	 * @return the configurationService
@@ -538,6 +551,9 @@ public class MiscsController extends BaseController
 	@Autowired
 	private SearchSuggestUtilityMethods searchSuggestUtilityMethods;
 
+	@Autowired
+	private EventService eventservice;
+
 	//End of Declaration for SNS
 
 	@Resource(name = "pinCodeFacade")
@@ -545,6 +561,9 @@ public class MiscsController extends BaseController
 
 	@Autowired
 	private PriceDataFactory priceDataFactory;
+
+	@Autowired
+	private BaseSiteService baseSiteService;
 
 	/*
 	 * @Autowired private MplCheckoutFacade mplCheckoutFacade;
@@ -913,9 +932,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * restriction set up interface to save the data comming from seller portal
-	 * 
+	 *
 	 * @param restrictionXML
-	 * 
+	 *
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/restrictionServer", method = RequestMethod.POST)
@@ -1078,7 +1097,8 @@ public class MiscsController extends BaseController
 	@RequestMapping(value = "/{baseSiteId}/searchAndSuggest", method = RequestMethod.POST)
 	@ResponseBody
 	public MplAutoCompleteResultWsData getAutoCompleteSuggestions(@RequestParam final String searchString, final String category,
-			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields,
+			@RequestParam(required = false) final boolean isFromLuxaryWeb)
 	{
 		MplAutoCompleteResultWsData resultData = new MplAutoCompleteResultWsData();
 		final AutoCompleteResultWsData wsData = new AutoCompleteResultWsData();
@@ -1138,6 +1158,14 @@ public class MiscsController extends BaseController
 			//searchQueryData.setValue(resultData.getSuggestions().size() > 0 ? resultData.getSuggestions().get(0).getTerm() : term);
 			searchState.setQuery(searchQueryData);
 			searchState.setSns(true);
+			if (isFromLuxaryWeb)
+			{
+				searchState.setLuxarySiteFrom(MarketplacecommerceservicesConstants.CHANNEL_WEB);
+			}
+			else
+			{
+				searchState.setLuxarySiteFrom(MarketplacecommerceservicesConstants.CHANNEL_APP);
+			}
 
 			ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
 			if (CollectionUtils.isNotEmpty(wsData.getSuggestions()))
@@ -1348,7 +1376,7 @@ public class MiscsController extends BaseController
 					 * Arrays.asList(ProductOption.BASIC, ProductOption.PRICE)); } else { throw new
 					 * EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9037); } PincodeServiceData data = null;
 					 * MarketplaceDeliveryModeData deliveryModeData = null; List<PinCodeResponseData> response = null;
-					 * 
+					 *
 					 * if (null != productData && null != productData.getSeller()) { for (final SellerInformationData seller
 					 * : productData.getSeller()) { final List<MarketplaceDeliveryModeData> deliveryModeList = new
 					 * ArrayList<MarketplaceDeliveryModeData>(); data = new PincodeServiceData(); if
@@ -1357,7 +1385,7 @@ public class MiscsController extends BaseController
 					 * seller.getUssid()) { deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(),
 					 * seller.getUssid()); } deliveryModeList.add(deliveryModeData); }
 					 * data.setDeliveryModes(deliveryModeList); }
-					 * 
+					 *
 					 * if (StringUtils.isNotEmpty(seller.getFullfillment())) {
 					 * data.setFullFillmentType(seller.getFullfillment()); } if
 					 * (StringUtils.isNotEmpty(seller.getShippingMode())) { data.setTransportMode(seller.getShippingMode());
@@ -1500,7 +1528,7 @@ public class MiscsController extends BaseController
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel MplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 * 
+	 *
 	 * if (null != MplZoneDeliveryModeValueModel) { if (null != MplZoneDeliveryModeValueModel.getValue()) { final
 	 * PriceData priceData = formPriceData(MplZoneDeliveryModeValueModel.getValue()); if (null != priceData) {
 	 * deliveryModeData.setDeliveryCost(priceData); } } if (null != MplZoneDeliveryModeValueModel.getDeliveryMode() &&
@@ -1513,7 +1541,7 @@ public class MiscsController extends BaseController
 	 * MplZoneDeliveryModeValueModel.getDeliveryMode().getName()) {
 	 * deliveryModeData.setName(MplZoneDeliveryModeValueModel.getDeliveryMode().getName()); } if (null != ussid) {
 	 * deliveryModeData.setSellerArticleSKU(ussid); }
-	 * 
+	 *
 	 * } return deliveryModeData; }
 	 */
 	/**
@@ -1721,4 +1749,92 @@ public class MiscsController extends BaseController
 		return userResultWsDto;
 	}
 
+	@RequestMapping(value = "/{baseSiteId}/askAQuestion", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public UserResultWsDto askquestion(@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields,
+			@RequestParam final String emailId, @RequestParam final String question, @RequestParam final String productCode)
+	{
+		final UserResultWsDto userResultWsDto = new UserResultWsDto();
+		try
+		{
+			final LuxuryPdpQuestionEvent eventObj = new LuxuryPdpQuestionEvent();
+			eventObj.setCustomerEmailId(emailId);
+			eventObj.setEmailTo("customerservices@tataunistore.com");
+			eventObj.setMessage(question);
+			eventObj.setSite(baseSiteService.getCurrentBaseSite());
+			eventObj.setProductCode(productCode);
+			eventservice.publishEvent(eventObj);
+			userResultWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+		}
+		catch (final Exception ex)
+		{
+			userResultWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			LOG.error("Exception occured while submitting question::::" + ex.getMessage());
+		}
+
+		return userResultWsDto;
+	}
+	//LW-176 starts
+	@RequestMapping(value = "/{baseSiteId}/{emailId}/newsletter", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public NewsletterWsDTO getNewsletter(@PathVariable String emailId)
+	{
+		final NewsletterWsDTO news = new NewsletterWsDTO();
+		final MplNewsLetterSubscriptionModel newsLetter = modelService.create(MplNewsLetterSubscriptionModel.class);
+		List<MplNewsLetterSubscriptionModel> newsLetterSubscriptionList = new ArrayList<MplNewsLetterSubscriptionModel>();
+
+		emailId = emailId.toLowerCase();
+
+		if (!validateEmailAddress(emailId))
+		{
+			news.setSuccess("mailFormatError");
+		}
+
+		else
+		{
+
+			final boolean result = brandFacade.checkEmailId(emailId);
+
+			if (result)
+			{
+				newsLetter.setEmailId(emailId);
+				newsLetter.setIsLuxury(Boolean.TRUE);
+				modelService.save(newsLetter);
+				news.setSuccess("success");
+			}
+
+			else
+			{
+				newsLetterSubscriptionList = brandFacade.checkEmailIdForluxury(emailId);
+
+				if (null != newsLetterSubscriptionList && !newsLetterSubscriptionList.isEmpty())
+				{
+					for (final MplNewsLetterSubscriptionModel mplNewsLetterSubscriptionModel : newsLetterSubscriptionList)
+					{
+						if ((mplNewsLetterSubscriptionModel.getEmailId().equalsIgnoreCase(emailId))
+								&& (!(mplNewsLetterSubscriptionModel.getIsLuxury().booleanValue()) || mplNewsLetterSubscriptionModel
+										.getIsLuxury() == null))
+						{
+							mplNewsLetterSubscriptionModel.setIsLuxury(Boolean.TRUE);
+							modelService.save(mplNewsLetterSubscriptionModel);
+							news.setSuccess("success");
+						}
+					}
+
+				}
+				else
+				{
+					news.setSuccess("subscribed");
+				}
+			}
+		}
+		return news;
+	}
+
+	public boolean validateEmailAddress(final String email)
+	{
+		final Pattern pattern = Pattern.compile(EMAIL_REGEX);
+		final Matcher matcher = pattern.matcher(email);
+		return matcher.matches();
+	}//LW-176 ends
 }

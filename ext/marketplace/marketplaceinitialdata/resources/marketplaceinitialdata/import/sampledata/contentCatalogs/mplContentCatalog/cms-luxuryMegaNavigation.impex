@@ -32,28 +32,6 @@ $mediaContainer=media(qualifier, $contentCV)[lang=$lang];
 $storefrontContextRoot=$config-storefrontContextRoot
 
 
-# Add Velocity templates that are in the CMS Cockpit. These give a better layout for editing pages
-# The FileLoaderValueTranslator loads a File into a String property. The templates could also be inserted in-line in this file.
-INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
-;;luxuryBLPTemplate;$jarResourceCms/structure-view/structure_luxuryBLPTemplate.vm
-
-# Create ContentSlotNames
-# Each PageTemplate has a number of ContentSlotNames, with a list of valid components for the slot.
-# There are a standard set of slots and a number of specific slots for each template.
-# Standard slots are SiteLogo, HeaderLinks, MiniCart and NavigationBar (that all appear in the Header), and the Footer. 
-
-# Luxury Brand Landing Page Template
-
-
-INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='luxuryBLPTemplate'];validComponentTypes(code);compTypeGroup(code)
-;NavigationBar;;NavigationBarCollectionComponent;
-
-# Create Content Pages
-# Site-wide Luxury Brand Landing Page
-INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
-;;luxurybrandlandingpage;Luxury BLP;luxuryBLPTemplate;luxurybrandlandingpage
-
-
 ##########################################################
 INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;&linkRef;&componentRef;target(code)[default='sameWindow'];$category;$product;linkName[lang=$lang]
 ;;XYZComponentCategoryLink;XYZ Categoty Link;/womens-clothing/c-MSH1011105;XYZComponentCategoryLink;XYZComponentCategoryLink;;MSH1011105;;"XYZ Clothing"
@@ -159,7 +137,9 @@ INSERT_UPDATE NavigationBarCollectionComponent;$contentCV[unique=true];uid[uniqu
 ### Content Slot
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
 ;;NavigationBarSlot-luxurybrandlandingpage;true;Navigation Bar Slot;luxuryDepartment
+;;NavigationBarSlot-luxuryhomepage;true;Luxury Navigation Bar Slot;luxuryDepartment
 
 ## Content Slot for page
-INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxurybrandlandingpage'];contentSlot(uid,$contentCV)[unique=true];;;
-;;NavigationBarSlot-luxurybrandlandingpage;NavigationBar;;NavigationBarSlot-luxurybrandlandingpage;;;
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true];contentSlot(uid,$contentCV)[unique=true];;;
+;;NavigationBarSlot-luxurybrandlandingpage;LuxuryNavigationBar;luxurybrandlandingpage;NavigationBarSlot-luxurybrandlandingpage;;;
+;;NavigationBarSlot-luxuryhomepage;LuxuryNavigationBar;luxuryhomepage;NavigationBarSlot-luxuryhomepage;;;
