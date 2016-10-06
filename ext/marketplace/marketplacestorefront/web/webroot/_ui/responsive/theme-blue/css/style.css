@@ -25973,13 +25973,13 @@ font-weight:600;
 }
 .checkout.wrapper .product-block li.item > ul li.delivery li label.deliveryModeLabel{
     float: left;
-    width: 50%;
+    width: 100%;
     line-height: 17px;
     font-size: 14px;
 }
 .checkout.wrapper .product-block li.item > ul li.delivery li label.deliveryModeLabel+span{
     float: right;
-    width: 40%;
+    width: 100%;
     line-height: 14px;
     font-size: 12px;
 }
@@ -52122,7 +52122,7 @@ ul.delivery-checkout input[type=radio]:checked ~ label, input[type=radio]:checke
     left:25px;
 }
 .cart.wrapper .right-block.shipping{
-background:#f8f8f8;
+/* background:#f8f8f8; */
 padding:25px 30px;
 }
 .cart.wrapper .right-block.shipping .checkout-order-summary .totals li{
@@ -52208,7 +52208,7 @@ left: -5px;
 }
 .cart.wrapper .right-block.shipping {
      /*   margin: 0px 20px; */
-       padding: 25px 50px 15px;
+       padding: 25px 24px 15px;
 }
 .cart.wrapper .right-block.shipping .checkout-order-summary .totals li{
 	width:100%;
@@ -52296,7 +52296,7 @@ left: -5px;
 }
 .cart.wrapper .right-block.shipping{
 	margin-top:0px;
-	    margin-bottom: 60px;
+	   /*  margin-bottom: 60px; */
 }
 .cart.wrapper .right-block .block{
 	border:none;
@@ -52469,7 +52469,7 @@ input[type="radio"] + label:before, input[type="checkbox"] + label:before{
 	}
 	.cart.wrapper .right-block.shipping{
 	padding: 5px 15px 15px;
-	  margin: 0 0 83px;
+	 /*  margin: 0 0 83px; */
 	}
 	.right-block.shipping .checkout-order-summary{
 	border-bottom:none;
@@ -52618,7 +52618,7 @@ input[type="radio"] + label:before, input[type="checkbox"] + label:before{
     right: 26px;
 	}
 	.cart.wrapper .right-block.shipping {
-    margin-bottom: 92px;
+   /*  margin-bottom: 92px; */
 }
 	}  
 @media  (min-width: 791px) and (max-width: 980px){
@@ -53552,9 +53552,30 @@ div.radio.creditDebitLabelRadio{
 .acc_head.newAddressCenter{
 	text-align: center;
 }
+.cart.wrapper .right-block.shipping .subtotals.top.block{display:none;}
  /* change for TPR-561 */
  header .content nav > ul > li > ul > li > ul > li.long.words .toggle {
                font-weight: normal;
     }
+    @media (min-width: 1025px){
 	 .checkout.wrapper .product-block li.item.delivery_options>ul li.delivery{
- padding:15px 0 0 0;}
+ padding:15px 0 0 0;}}
+@media (max-width: 790px){
+.page-multiStepCheckoutSummaryPage footer {
+    position: absolute;
+    width: 100%;
+    bottom: -20px;
+}
+}
+ @media (min-width:768px) and (max-width:1024px){
+.callouts .Padd ul li {
+    width: 50%;
+    padding-left: 10%;
+    padding-top: 5px;
+    text-align:left;
+}
+.callouts .Padd ul li.omni,.callouts .Padd ul li.returns{
+	border:none;
+}
+}
+
