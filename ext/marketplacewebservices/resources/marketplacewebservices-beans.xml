@@ -2505,7 +2505,8 @@
     	<property name="img_alt" type="String"/>
     	<property name="showByDefault" type="boolean"/> 
     	<property name="heading" type="String"/>
-    	<property name="text" type="String"/>    	   	
+    	<property name="text" type="String"/>
+    	<property name="position" type="Integer"/>    	   	
     </bean>
     
     <bean class="com.tisl.mpl.wsdto.LuxShopTheLookWsDTO">
