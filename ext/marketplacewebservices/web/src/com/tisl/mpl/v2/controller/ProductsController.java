@@ -849,7 +849,8 @@ public class ProductsController extends BaseController
 			@RequestParam(required = false) String typeID, @RequestParam(required = false) int page,
 			@RequestParam(required = false) int pageSize, @RequestParam(required = false) String sortCode,
 			@RequestParam(required = false, defaultValue = "false") final boolean isTextSearch,
-			@RequestParam(required = false) boolean isFilter, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+			@RequestParam(required = false) boolean isFilter, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields,
+			@RequestParam(required = false) final boolean isFromLuxaryWeb)
 	{
 
 		final ProductSearchPageWsDto productSearchPage = new ProductSearchPageWsDto();
@@ -908,6 +909,14 @@ public class ProductsController extends BaseController
 				final SearchQueryData searchQueryData = new SearchQueryData();
 				searchQueryData.setValue(searchText);
 				searchState.setQuery(searchQueryData);
+				if (isFromLuxaryWeb)
+				{
+					searchState.setLuxarySiteFrom(MarketplacecommerceservicesConstants.CHANNEL_WEB);
+				}
+				else
+				{
+					searchState.setLuxarySiteFrom(MarketplacecommerceservicesConstants.CHANNEL_APP);
+				}
 
 				if (typeID != null)
 				{
