@@ -4,7 +4,6 @@
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
-import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -13,18 +12,17 @@ import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
-import de.hybris.platform.storelocator.data.AddressData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-
 
 //import com.sap.security.core.server.csi.util.StringUtils;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -379,7 +377,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 	 * Give List Of OrderModel Based one Mode
 	 */
 	@Override
-	public List<OrderModel> getOrderModelList(String fromDate, String toDate)
+	public List<OrderModel> getOrderModelList(Date fromDate, Date toDate)
 	{
 		return mplDeliveryAddressDao.getOrderModelList(fromDate, toDate);
 	}

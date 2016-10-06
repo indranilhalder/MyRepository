@@ -901,7 +901,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 * Report Method return List<MplDeliveryAddressReportData>
 	 */
 	@Override
-	public List<MplDeliveryAddressReportData> getDeliveryAddressRepot(final String dateFrom, final String dateTo)
+	public List<MplDeliveryAddressReportData> getDeliveryAddressRepot(Date dateFrom, Date   dateTo)
 	{
 
 		List<MplDeliveryAddressReportData> mplDeliveryAddressReportDataList = new ArrayList<MplDeliveryAddressReportData>();
