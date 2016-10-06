@@ -25,6 +25,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+
 //import com.sap.security.core.server.csi.util.StringUtils;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
@@ -48,8 +49,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 
 	@Autowired
 	private MplDeliveryAddressDao mplDeliveryAddressDao;
-	@Autowired
-	private Populator<AddressData, AddressModel> addressReversePopulator;
+	
 	@Autowired
 	private ModelService modelService;
 
@@ -372,6 +372,16 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 			}
 		}
 		return oldAddress;
+	}
+
+	
+	/**
+	 * Give List Of OrderModel Based one Mode
+	 */
+	@Override
+	public List<OrderModel> getOrderModelList(String fromDate, String toDate)
+	{
+		return mplDeliveryAddressDao.getOrderModelList(fromDate, toDate);
 	}
 
 

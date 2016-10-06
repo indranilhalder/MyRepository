@@ -7,6 +7,8 @@ package com.tisl.mpl.marketplacecommerceservices.service;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
 
+import java.util.List;
+
 
 /**
  * @author prasad1
@@ -43,6 +45,7 @@ public interface MplDeliveryAddressService
 	 * @param status
 	 */
 	public void saveChangeDeliveryRequests(String orderId, String status);
+	
+	public List<OrderModel> getOrderModelList(final String fromDate, final String toDate);
 
-  
 }

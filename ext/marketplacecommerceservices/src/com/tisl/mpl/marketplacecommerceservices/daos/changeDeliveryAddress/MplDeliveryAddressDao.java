@@ -4,6 +4,8 @@
 package com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress;
 
 
+import de.hybris.platform.core.model.order.OrderModel;
+
 import java.util.List;
 
 
@@ -15,14 +17,11 @@ import java.util.List;
 public interface MplDeliveryAddressDao
 {
 
-	/**
-	 * Based On OrderId We get TemAdresss
-	 * 
-	 * @param orderCode
-	 * @return temproryAddressModel
-	 */
-	//public TemproryAddressModel getTemporaryAddressModel(String orderCode);
-	
-	
-	//public List<TemproryAddressModel> getTemporaryAddressModelList(String dateFrom,String toDate);
+   /**
+    * Change deliveryAddressReport
+    * @param fromDate
+    * @param toDate
+    * @return
+    */
+	public List<OrderModel> getOrderModelList(final String fromDate, final String toDate);
 }
