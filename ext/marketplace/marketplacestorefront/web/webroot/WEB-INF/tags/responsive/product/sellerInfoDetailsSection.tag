@@ -33,9 +33,9 @@
 						<p id="otherSellerInfoId" class="other-sellers">
 							<span class="other-sellers-link">
 							<span id="otherSellersId"></span>&nbsp;
-							<span><spring:theme code="product.othersellers"></spring:theme></span></span>&nbsp;
+							<span><spring:theme code="product.othersellers"></spring:theme></span></span><%-- &nbsp;
 							<spring:theme code="product.available"></spring:theme>
-							&nbsp;<span id="minPriceId"></span>
+							&nbsp;<span id="minPriceId"></span> --%>
 						</p>
 						<div id="otherSellerLinkId" style="display: none">
 							<span id="otherSellersId"></span>&nbsp;<span
