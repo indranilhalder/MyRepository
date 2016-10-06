@@ -50,7 +50,7 @@ public class MplDeliveryAddressComparatorImpl implements MplDeliveryAddressCompa
 				&& StringUtils.isNotEmpty(newAddress.getLine3()))
 		{
 
-			if (!oldAddress.getLine2().trim().equalsIgnoreCase(newAddress.getLine3().trim()))
+			if (!oldAddress.getLine3().trim().equalsIgnoreCase(newAddress.getLine3().trim()))
 			{
 				return true;
 			}
