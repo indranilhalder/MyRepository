@@ -51231,7 +51231,7 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
 
 .cart.wrapper .right-block.billing.checkout-list-right {width: 30.8%; float: right; padding-bottom:38px; letter-spacing:1px; }
 .cart.wrapper .right-block.billing.checkout-list-right h3 {font-size: 24px; font-weight:bold; color: #a7183e; text-transform: uppercase; }
-.cart.wrapper .right-block.billing .block.summary-info {margin: 18px auto; padding: 28px 0px 25px 0px;  border:none;background-color: #fbfbfb;}
+.cart.wrapper .right-block.billing .block.summary-info {margin: 18px auto; padding: 28px 25px 25px 40px;  border:none;background-color: #fbfbfb;}
 .cart.wrapper .right-block.billing .block.summary-info  ul.totals li {padding: 6px 0 10px 0;font-size: 12px; text-transform: uppercase; margin:0px;}
 .cart.wrapper .right-block.billing .block.summary-info  ul.totals li .tot { color: #a7183e; }
 .cart.wrapper .right-block.billing .block.summary-info  ul.totals li:after {clear: both;content: '';display: block;}
@@ -51597,10 +51597,10 @@ display:block;}
 	padding: 28px 0 25px 0px;
    }
     .cart.wrapper .right-block.billing .block.summary-info  ul.totals li{
-        padding: 6px 0px 10px 0px;}
+        padding: 6px 20px 10px 20px;}
         .cart.wrapper .right-block.billing .block.summary-info  ul.totals li#total{
         font-weight: bold;
-    padding: 21px 0px 22px 0px;}
+    padding: 21px 20px 22px 20px;}
     .cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.exp select.card_exp_month, .cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.exp select.card_exp_year{
 	padding-left:5px;
 }
