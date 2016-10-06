@@ -169,6 +169,9 @@
 		<property name="productTitle" type="String" />
 		<property name="fulfillmentType" type="String" />
 		<property name="sellerName" type="String" />
+		<!-- LW-216 -->
+		<property name="luxIndicator" type="String" />
+		
 		<!-- pdp changes ends -->
 
 		<property name="freebieProducts" type="java.util.List&lt;com.tisl.mpl.facades.data.FreebieProduct>"/>

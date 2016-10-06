@@ -57,7 +57,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;HeaderLinks;;;headerlinks
 ;SearchBox;;;searchbox
 ;MiniCart;;CMSLinkComponent,TrackOrderHeaderComponent,MyWishListInHeaderComponent,SignInFlyOutComponent;
-;NavigationBar;;;navigation
+;LuxuryNavigationBar;;NavigationBarCollectionComponent;
 ;BottomHeaderSlot;;SimpleBannerComponent;
 ;Section1;;RotatingImagesComponent;
 ;Section2;;RotatingImagesComponent,MplAdvancedCategoryCarouselComponent;
@@ -168,23 +168,14 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 ##############################Section 3  Start ##########################################
 
 INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];altText;mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images']
-;;SpringBannerImage11;banner Image1;text/png;banner_image1.png;$siteResource/images/mobile/banner_image1.png;
-;;SpringBannerImage2;banner Image2;text/png;banner_image2.png;$siteResource/images/mobile/banner_image2.png;
-;;SpringBannerImage3;banner Image3;text/png;banner_image1.png;$siteResource/images/mobile/banner_image3.png;
+;;Spring16BannerImage;banner Image1;text/png;banner_image1.png;$siteResource/images/mobile/banner_image1.png;
 
 
 INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;$picture[lang=$lang];description;title
-;;spring16BannerComponent10;Spring 16 First Banner;spring16BannerComponent10;/;SpringBannerImage1;Test for description;Spring collection1
-;;spring16BannerComponent20;Spring 16 Second Banner;spring16BannerComponent20;/;SpringBannerImage2;Test for description;Spring collection2
-;;spring16BannerComponent30;Spring 16 Third Banner;spring16BannerComponent30;/;SpringBannerImage3;Test for description;Spring collection3
-
-
-####New Homepage change
-INSERT_UPDATE OurJourneyComponent;$contentCV[unique=true];uid[unique=true];name;footerImageList(&componentRef);&componentRef;headerText;title
-;;springComponent1;Spring Collection Component;spring16BannerComponent10,spring16BannerComponent20,spring16BannerComponent30;springComponent1;<h2>Spring collection</h2>;then
+;;Spring16BannerComponent;Spring 16 Banner Component;Spring16BannerComponent;/;Spring16BannerImage;"<h1>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</h1> Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. <a class='button' href='https://www.tatacliq.com'";Spring 2016
 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
-;;Section3-SpringCollectionOfimages; Spring 2016 First slot;true;springComponent1
+;;Section3-SpringCollectionOfimages; Spring 2016 First slot;true;Spring16BannerComponent
 
 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxurybrandlandingpage'];contentSlot(uid,$contentCV)[unique=true];;;
@@ -196,23 +187,13 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
  
 ############################### SECTION 4 STARTS###################################
 INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];altText;mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images']
-;;FeaturedCollectionBannerImage1.png; Banner 1;text/png;banner_image1.png;$siteResource/images/mobile/banner_image1.png;
-;;FeaturedCollectionBannerImage2.png;Banner 2;text/png;banner_image2.png;$siteResource/images/mobile/banner_image2.png; 
+;;FeaturedCollectionBannerImage;Banner Image For Featured Collections;text/png;banner_image2.png;$siteResource/images/mobile/banner_image2.png; 
  
 INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;description;title;$picture[lang=$lang]
-;;SimpleBannerComponent18;Featured Collection Component 1;SimpleBannerComponent18;"/"; Test for description;Featured collection;FeaturedCollectionBannerImage1.png
-;;SimpleBannerComponent28;Featured Collection Component 2;SimpleBannerComponent28;"/";Test for description;Featured collection;FeaturedCollectionBannerImage2.png
-
-
-
-####New Homepage change
-INSERT_UPDATE OurJourneyComponent;$contentCV[unique=true];uid[unique=true];name;footerImageList(&componentRef);&componentRef;headerText;title
-;;featuredComponent1;Featured Collection Component;SimpleBannerComponent18,SimpleBannerComponent28;featuredComponent1;<h2>Featured collection</h2>;then
-
+;;FeaturedCollectionBanner;Featured Collection Component;FeaturedCollectionBanner;"/"; "<h1>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</h1> Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. <a class='button' href='https://www.tatacliq.com'";;FeaturedCollectionBannerImage
 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
-;;Section4-FeaturedCollectionofimages; Featured Collection;true;featuredComponent1
-
+;;Section4-FeaturedCollectionofimages; Featured Collection;true;FeaturedCollectionBanner
 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxurybrandlandingpage'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;Section4-luxurybrandlandingpage;Section4;;Section4-FeaturedCollectionofimages;;; 
@@ -275,9 +256,9 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 
 INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
 #showcasebanner
-;;showcase1.png;$siteResource/images/banners/homepage/responsive/showcase1.png;showcase1.png;;
-;;showcase2.png;$siteResource/images/banners/homepage/responsive/showcase2.png;showcase2.png;;
-;;showcase3.png;$siteResource/images/banners/homepage/responsive/showcase3.png;showcase3.png;;
+;;showcase1.png;$siteResource/images/banners/homepage/responsive/showcase1.png;showcase1.png;image 1;
+;;showcase2.png;$siteResource/images/banners/homepage/responsive/showcase2.png;showcase2.png;image 2;
+;;showcase3.png;$siteResource/images/banners/homepage/responsive/showcase3.png;showcase3.png;image 3;
 
 UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];logo(code, $contentCV);bannerImage(code, $contentCV)
 #CollectionShowcase

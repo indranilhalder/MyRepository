@@ -78,7 +78,7 @@
 						<value>MplAdvancedCategoryCarouselComponent.categories</value>
 						<value>MplShowcaseComponent.showcaseItems</value>
 						<value>ImageCarouselComponent.collectionItems</value>
-						<value>SignColComponent.signColItemsCollection</value>
+						<value>SignColComponent.showcaseItems</value>
 						<value>OurJourneyComponent.footerImageList</value>
 						<value>MplNavigationNodeComponent.sliders</value>
 					</list>
@@ -159,7 +159,7 @@
 				
 				<entry key="SignColComponent">
 					<list>
-						<value>SignColComponent.signColItemsCollection</value>
+						<value>SignColComponent.showcaseItems</value>
 					</list>
 				</entry>
 				<entry key="OurJourneyComponent">

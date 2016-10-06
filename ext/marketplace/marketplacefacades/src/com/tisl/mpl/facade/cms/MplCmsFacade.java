@@ -16,6 +16,7 @@ import com.tisl.mpl.facades.cms.data.MplPageData;
 import com.tisl.mpl.facades.cms.data.PageData;
 import com.tisl.mpl.wsdto.LuxBlpCompWsDTO;
 import com.tisl.mpl.wsdto.LuxHomePageCompWsDTO;
+import com.tisl.mpl.wsdto.LuxNavigationWsDTO;
 
 
 
@@ -77,4 +78,9 @@ public interface MplCmsFacade
 	 * @return
 	 */
 	LuxBlpCompWsDTO getlandingForBrand() throws CMSItemNotFoundException;
+
+	/**
+	 * @return
+	 */
+	LuxNavigationWsDTO getMegaNavigation() throws CMSItemNotFoundException;
 }

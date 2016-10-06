@@ -13,7 +13,10 @@
  */
 package com.tisl.mpl.v2.controller;
 
+import de.hybris.platform.acceleratorcms.model.components.SimpleBannerComponentModel;
 import de.hybris.platform.catalog.enums.ProductReferenceTypeEnum;
+import de.hybris.platform.category.CategoryService;
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commercefacades.catalog.CatalogFacade;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
@@ -111,6 +114,7 @@ import com.tisl.mpl.utility.SearchSuggestUtilityMethods;
 import com.tisl.mpl.v2.helper.ProductsHelper;
 import com.tisl.mpl.validator.PointOfServiceValidator;
 import com.tisl.mpl.wsdto.DepartmentHierarchyWs;
+import com.tisl.mpl.wsdto.LuxHeroBannerWsDTO;
 import com.tisl.mpl.wsdto.ProductCompareWsDTO;
 import com.tisl.mpl.wsdto.ProductDetailMobileWsData;
 import com.tisl.mpl.wsdto.ProductSearchPageWsDto;
@@ -185,6 +189,8 @@ public class ProductsController extends BaseController
 	private SearchSuggestUtilityMethods searchSuggestUtilityMethods;
 	//	@Autowired
 	//	private ConfigurationService configurationService;
+	@Resource(name = "categoryService")
+	private CategoryService categoryService;
 
 	static
 	{
@@ -923,6 +929,31 @@ public class ProductsController extends BaseController
 					{
 						//searchPageData = productSearchFacade.categorySearch(typeID, searchState, pageableData);
 						searchPageData = searchFacade.searchCategorySearch(typeID, searchState, pageableData);
+						final CategoryModel category = categoryService.getCategoryForCode(typeID);
+						if (CollectionUtils.isNotEmpty(category.getCrosssellBanners()))
+						{
+							final SimpleBannerComponentModel crossSellBannerModel = category.getCrosssellBanners().get(0);
+							final LuxHeroBannerWsDTO bannerDto = new LuxHeroBannerWsDTO();
+							bannerDto.setBannerUrl(crossSellBannerModel.getUrlLink());
+							if (null != crossSellBannerModel.getMedia())
+							{
+								bannerDto.setBannerMedia(crossSellBannerModel.getMedia().getURL2());
+								bannerDto.setAltText(crossSellBannerModel.getMedia().getAltText());
+							}
+							productSearchPage.setCrosssellBanner(bannerDto);
+						}
+						if (CollectionUtils.isNotEmpty(category.getDynamicBanners()))
+						{
+							final SimpleBannerComponentModel dynamicBannerModel = category.getDynamicBanners().get(0);
+							final LuxHeroBannerWsDTO bannerDto = new LuxHeroBannerWsDTO();
+							bannerDto.setBannerUrl(dynamicBannerModel.getUrlLink());
+							if (null != dynamicBannerModel.getMedia())
+							{
+								bannerDto.setBannerMedia(dynamicBannerModel.getMedia().getURL2());
+								bannerDto.setAltText(dynamicBannerModel.getMedia().getAltText());
+							}
+							productSearchPage.setPlpHeroBanner(bannerDto);
+						}
 					}
 					else
 					{
@@ -1015,6 +1046,7 @@ public class ProductsController extends BaseController
 					productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion());
 				}
 			}
+
 		}
 		catch (final EtailBusinessExceptions e)
 		{
