@@ -960,7 +960,13 @@
 		<property name="totalRequestCount" type="int"></property>
 		<property name="failureRequsetCount" type="int"></property>
 	</bean>
-	
+	<bean class="com.tis.mpl.facade.shorturl.ShortUrlReportData">
+		<property name="orderId" type="String"></property>
+		<property name="longUrl" type="String"></property>
+		<property name="shortUrl" type="String"></property>
+		<property name="cliks" type="int"></property>
+		<property name="logins" type="int"></property>
+	</bean>
 	
 	
 </beans>

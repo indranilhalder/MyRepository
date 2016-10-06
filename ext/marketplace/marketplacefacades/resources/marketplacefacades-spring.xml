@@ -1633,7 +1633,20 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 			</list>
 		</property>
 	</bean>
-	
+	<bean id="shortUrlPopulator"
+		class="com.tisl.mpl.facades.populators.ShortUrlModelToDataPopulator" />
+
+	<alias name="defaultShortUrlConverter" alias="shortUrlConverter" />
+	<bean id="defaultShortUrlConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.tis.mpl.facade.shorturl.ShortUrlReportData" />
+		<property name="populators">
+			<list>
+				<ref bean="shortUrlPopulator" />
+			</list>
+		</property>
+	</bean>
+	<alias name="defaultShortUrlFacade" alias="shortUrlFacade" />
+	<bean id="defaultShortUrlFacade" class="com.tis.mpl.facade.shorturl.DefaultShortUrlTrackFacade"></bean>
 	
 
 	<!-- close R2.3 Changes -->
