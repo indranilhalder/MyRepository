@@ -5,7 +5,6 @@ import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -32,11 +31,11 @@ import org.zkoss.zul.Window;
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MplDeliveryAddressController;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.core.model.TemproryAddressModel;
 import com.tisl.mpl.facade.data.LandMarksData;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.data.PincodeData;
 import com.tisl.mpl.facades.product.data.StateData;
+import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
 
 import de.hybris.platform.cockpit.model.meta.TypedObject;
 import de.hybris.platform.cockpit.widgets.InputWidget;
@@ -45,6 +44,8 @@ import de.hybris.platform.cockpit.widgets.WidgetConfig;
 import de.hybris.platform.cockpit.widgets.WidgetContainer;
 import de.hybris.platform.cockpit.widgets.impl.DefaultWidgetContainer;
 import de.hybris.platform.cockpit.widgets.impl.DefaultWidgetFactory;
+import de.hybris.platform.commercefacades.user.data.AddressData;
+import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.model.c2l.CountryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
@@ -59,12 +60,15 @@ import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.i18n.impl.DefaultCommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.session.SessionService;
 
 public class MarketplaceDeliveryAddressWidgetRenderer extends
 				AddressCreateWidgetRenderer {
 	private static final Logger LOG = Logger
 			.getLogger(MarketplaceDeliveryAddressWidgetRenderer.class);
 	protected static final String CSS_CREATE_ADDRESS_ACTIONS = "csCreateAddressActions";
+	private static final String NO_RESPONCE_FROM_SERVER = "noresponce";
+	private static final String PINCODE_NOT_SERVICIBLE = "pincodeNotServicible";
 	private static final String INFO = "info";
 	protected static final String FAILED_ADDRESS_LOOKUP = "failedAddressLookup";
 	protected static final String FAILED_VALIDATION = "failedValidation";
@@ -81,6 +85,8 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 	}
 
 	@Autowired
+	private SessionService sessionService;
+	@Autowired
 	private MplDeliveryAddressController mplDeliveryAddressController;
 	@Autowired
 	private PopupWidgetHelper popupWidgetHelper;
@@ -90,6 +96,10 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 	private DefaultCommonI18NService commonI18NService;
 	@Autowired
 	private AccountAddressFacade accountAddressFacade;
+	@Autowired
+	private Populator<AddressModel, AddressData> addressPopulator ;
+	@Autowired
+	OrderModelDao orderModelDao;
 
 	private CallContextController callContextController;
 
@@ -254,6 +264,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 		final Textbox landMarkField = createTextbox(landMarkDiv);
 		landMarkField.setSclass("landMarkAddressField");
 		landMarkField.setMaxlength(30);
+		landMarkField.setVisible(false);
 		landMarkListbox.addEventListener(Events.ON_SELECT, new EventListener() {
 			@Override
 			public void onEvent(final Event event) throws InterruptedException,
@@ -379,13 +390,13 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 					address3Field.setValue(deliveryAddress.getAddressLine3());
 					if (null != deliveryAddress.getLandmark()) {
 						landMarkField.setValue(deliveryAddress.getLandmark());
-					} else {
-						landMarkField.setVisible(false);
+						landMarkField.setVisible(true);
 					}
 					if (pincodeData != null
 							&& null != pincodeData.getLandMarks()) {
 						createlandMarkDropDown(widget,
 								pincodeData.getLandMarks(), landMarkListbox);
+						landMarkField.setVisible(false);
 					} else {
 						Listitem listItem = new Listitem(
 								MarketplaceCockpitsConstants.NO_LANDMARKS_FOUND);
@@ -451,6 +462,8 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 					.equalsIgnoreCase(MarketplaceCockpitsConstants.OTHERS)) {
 				landMarkField.setDisabled(false);
 				landMarkField.setVisible(true);
+			} else if (landMarkField.getValue().isEmpty()) {
+				landMarkField.setVisible(false);
 			} else {
 				landMarkField.setDisabled(true);
 			}
@@ -575,6 +588,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 							}
 						}
 						if (null != pincodeData.getLandMarks()) {
+							landMarkField.setVisible(false);
 							createlandMarkDropDown(widget,
 									pincodeData.getLandMarks(), landMarkListbox);
 						} else {
@@ -582,6 +596,8 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 							landMarkField.setDisabled(false);
 						}
 					} else {
+						cityField
+						.setValue(MarketplacecommerceservicesConstants.EMPTY);
 						landMarkListbox.getItems().clear();
 						Listitem listItem;
 						listItem = new Listitem(
@@ -590,6 +606,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 						listItem.setParent(landMarkListbox);
 						landMarkListbox.addItemToSelection(listItem);
 						stateFieldListBox.setSelectedIndex(0);
+						stateFieldListBox.setDisabled(false);
 						landMarkField.setVisible(true);
 					}
 				} else {
@@ -857,14 +874,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 						LabelUtils.getLabel(widget, FAILED_VALIDATION),
 						Messagebox.OK, Messagebox.ERROR);
 				return;
-			}/*
-			 * else if (StringUtils.isBlank(LandMark) ||
-			 * StringUtils.isBlank(LandMark.trim())) {
-			 * Messagebox.show(LabelUtils.getLabel(widget,
-			 * "addressLandMarkValueField"), LabelUtils.getLabel( widget,
-			 * FAILED_VALIDATION), Messagebox.OK, Messagebox.ERROR); // valid =
-			 * Boolean.FALSE; return; }
-			 */else if (LandMark.length() > 20) {
+			}else if (address3Field.getValue().length() > 20) {
 				 Messagebox.show(
 						 LabelUtils.getLabel(widget, "invalidLandmarkLength"),
 						 LabelUtils.getLabel(widget, FAILED_VALIDATION),
@@ -1005,25 +1015,22 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 				final String country) {
 			final CustomerModel customerModel = (CustomerModel) widget
 					.getWidgetController().getCurrentCustomer().getObject();
-			// set the address to the model
-
-			final TemproryAddressModel deliveryAddress = modelService
-					.create(TemproryAddressModel.class);
+			final AddressModel deliveryAddress = modelService
+					.create(AddressModel.class);
 			TypedObject order = getOrder();
-			if (null != order) {
-				OrderModel orderModel = (OrderModel) order.getObject();
-				deliveryAddress.setOrderId(orderModel.getParentReference()
-						.getCode());
-			}
+			OrderModel orderModel = (OrderModel) order.getObject();
 			deliveryAddress.setOwner(customerModel);
 			deliveryAddress.setFirstname(firstName);
 			deliveryAddress.setLastname(lastName);
+			deliveryAddress.setPostalcode(postalCode);
 			deliveryAddress.setLine1(addressLine1);
 			deliveryAddress.setLine2(addressLine2);
 			deliveryAddress.setAddressLine3(addressLine3);
 			deliveryAddress.setTown(city);
+			deliveryAddress.setCity(city);
+			deliveryAddress.setState(state);
 			deliveryAddress.setDistrict(state);
-			deliveryAddress.setPostalcode(postalCode);
+			deliveryAddress.setAddressType(addressType);
 			deliveryAddress.setLandmark(LandMark);
 			deliveryAddress.setBillingAddress(false);
 			deliveryAddress.setShippingAddress(true);
@@ -1032,37 +1039,56 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 			deliveryAddress.setShippingAddress(Boolean.TRUE);
 			deliveryAddress.setBillingAddress(Boolean.TRUE);
 			deliveryAddress.setVisibleInAddressBook(Boolean.TRUE);
-
-			if (addressTypeListbox.getSelectedItem() != null) {
-				if (MarketplacecommerceservicesConstants.LIST_VAL_RESIDENTIAL
-						.equalsIgnoreCase(addressType)) {
-					deliveryAddress
-					.setAddressType(MarketplacecommerceservicesConstants.ADDRESS_TYPE_HOME);
-				} else if (MarketplacecommerceservicesConstants.LIST_VAL_COMMERCIAL
-						.equalsIgnoreCase(addressType)) {
-					deliveryAddress
-					.setAddressType(MarketplacecommerceservicesConstants.ADDRESS_TYPE_WORK);
-				}
-			}
-			if (countryListbox.getSelectedItem() != null) {
-				for (final CountryModel countryModel : commonI18NService
-						.getAllCountries()) {
-					if (countryListbox.getSelectedItem().getLabel()
-							.equalsIgnoreCase(countryModel.getName())) {
-						deliveryAddress.setCountry(countryModel);
-					}
-				}
-			}
+			deliveryAddress.setCountry(orderModel.getDeliveryAddress()
+					.getCountry());
 			try {
 				if (isChangeDeliveryAddress) {
-					proceedToChangeAddress(widget, deliveryAddress);
-
+					// Storing Delivery Address in a session
+					AddressData changeDeliveryAddressData = new AddressData();
+					addressPopulator.populate(deliveryAddress, changeDeliveryAddressData);
+					sessionService.setAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS, changeDeliveryAddressData);
+					String omsStatus = null;
+					// pincode Servicibility call To OMS  , only if pincode change
+					if (!deliveryAddress
+							.getPostalcode()
+							.trim()
+							.equalsIgnoreCase(
+									orderModel.getDeliveryAddress()
+									.getPostalcode())) {
+						try {
+							omsStatus = mplDeliveryAddressController
+									.changeDeliveryAddressCallToOMS(orderModel
+											.getParentReference().getCode(),
+											deliveryAddress, "CDP", null);
+						} catch (Exception e) {
+							LOG.error("Exception in picode servicibility call for change delivery address for the order "
+									+ orderModel.getCode() + "");
+						}
+						if (null != omsStatus) {
+							if (omsStatus
+									.equalsIgnoreCase(MarketplaceCockpitsConstants.SUCCESS)) {
+								proceedToChangeAddress(widget,
+										deliveryAddress);
+							} else {
+								
+								// Saving no_of Total requests and rejects for changeDelivery
+								mplDeliveryAddressController.saveChangeDeliveryRequests(orderModel.getParentReference().getCode(),MarketplaceCockpitsConstants.FAILED);
+								popupMessage(
+										widget,
+										"Pincode "
+												+ PINCODE_NOT_SERVICIBLE);
+								return;
+							}
+						} else {
+							// Saving no_of Total requests and rejects for changeDelivery
+							mplDeliveryAddressController.saveChangeDeliveryRequests(orderModel.getParentReference().getCode(),MarketplaceCockpitsConstants.FAILED);
+							popupMessage(widget, NO_RESPONCE_FROM_SERVER);
+						}
+					} else {
+						proceedToChangeAddress(widget, deliveryAddress);
+					}
 				} else {
-					AddressModel address = modelService
-							.create(AddressModel.class);
-					address = getNewDeliveryAddress(deliveryAddress);
-					address.setOwner(deliveryAddress.getOwner());
-					modelService.save(address);
+					modelService.save(deliveryAddress);
 				}
 			} catch (ModelSavingException e) {
 				LOG.error("Exception while saving the new Address "
@@ -1074,54 +1100,9 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 		}
 	}
 
-	private AddressModel getNewDeliveryAddress(
-			TemproryAddressModel newDeliveryAddress) {
-		AddressModel deliveryAddress = new AddressModel();
-		deliveryAddress.setCreationtime(new Date());
-		if (null != newDeliveryAddress.getFirstname()) {
-			deliveryAddress.setFirstname(newDeliveryAddress.getFirstname());
-		}
-		if (null != newDeliveryAddress.getLastname()) {
-			deliveryAddress.setLastname(newDeliveryAddress.getLastname());
-		}
-		if (null != newDeliveryAddress.getLine1()) {
-			deliveryAddress.setLine1(newDeliveryAddress.getLine1());
-		}
-		if (null != newDeliveryAddress.getLine2()) {
-			deliveryAddress.setLine2(newDeliveryAddress.getLine2());
-		}
-		if (null != newDeliveryAddress.getAddressLine3()) {
-			deliveryAddress.setAddressLine3(newDeliveryAddress
-					.getAddressLine3());
-		}
-		if (null != newDeliveryAddress.getEmail()) {
-			deliveryAddress.setEmail(newDeliveryAddress.getEmail());
-		}
-		if (null != newDeliveryAddress.getPostalcode()) {
-			deliveryAddress.setPostalcode(newDeliveryAddress.getPostalcode());
-		}
-		if (null != newDeliveryAddress.getCountry()) {
-			deliveryAddress.setCountry(newDeliveryAddress.getCountry());
-		}
-		if (null != newDeliveryAddress.getCity()) {
-			deliveryAddress.setCity(newDeliveryAddress.getCity());
-		}
-		if (null != newDeliveryAddress.getState()) {
-			deliveryAddress.setState(newDeliveryAddress.getState());
-		}
-		if (null != newDeliveryAddress.getLandmark()) {
-			deliveryAddress.setLandmark(newDeliveryAddress.getLandmark());
-		}
-		if (null != newDeliveryAddress.getPhone1()) {
-			deliveryAddress.setPhone1(newDeliveryAddress.getPhone1());
-		}
-		return deliveryAddress;
-	}
-
 	private void proceedToChangeAddress(
 			InputWidget<DefaultMasterDetailListWidgetModel<TypedObject>, CustomerController> widget,
-			TemproryAddressModel tempororyAddress) {
-		modelService.save(tempororyAddress);
+		AddressModel tempororyAddress) {
 		createOTPPopupWindow(widget, popupWidgetHelper.getCurrentPopup()
 				.getParent(), tempororyAddress);
 	}
@@ -1138,7 +1119,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 	private Window createOTPPopupWindow(
 			final InputWidget<DefaultMasterDetailListWidgetModel<TypedObject>, CustomerController> parentWidget,
 			final Component parentWindow,
-			final TemproryAddressModel tempororyAddress) {
+			final AddressModel tempororyAddress) {
 		try {
 			LOG.info("Inside createOTPPopupWindow method");
 			final WidgetContainer<Widget> widgetContainer = new DefaultWidgetContainer(
@@ -1155,13 +1136,12 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 				}
 
 				private void handleOTPPopupCloseEvent(
-						TemproryAddressModel tempororyAddress,
+					AddressModel tempororyAddress,
 						InputWidget<DefaultMasterDetailListWidgetModel<TypedObject>, CustomerController> parentWidget,
 						Component parentWindow,
 						WidgetContainer<Widget> widgetContainer, Window popup) {
 					widgetContainer.cleanup();
 					parentWindow.removeChild(popup);
-					modelService.remove(tempororyAddress);
 				}
 			});
 			popup.setTitle(LabelUtils.getLabel(popupWidget,

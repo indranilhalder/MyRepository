@@ -7,6 +7,7 @@ import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.model.c2l.CountryModel;
 import de.hybris.platform.core.model.c2l.RegionModel;
+import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 import de.hybris.platform.servicelayer.exceptions.AmbiguousIdentifierException;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
@@ -14,46 +15,44 @@ import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 
 import org.springframework.util.Assert;
 
-import com.tisl.mpl.core.model.TemproryAddressModel;
 
 
 /**
  * @author pankajk
  *
  */
-public class TemporaryAddressReversePopulator implements Populator<AddressData, TemproryAddressModel>
+public class AdressDtoToModelPopulator implements Populator<AddressData,AddressModel>
 {
 	private CommonI18NService commonI18NService;
 
 	@Override
-	public void populate(AddressData addressData,TemproryAddressModel temproryAddressModel)
+	public void populate(AddressData addressData,AddressModel addressModel)
 			throws ConversionException
 	{
 		Assert.notNull(addressData, "Parameter addressData cannot be null.");
-		Assert.notNull(temproryAddressModel, "Parameter addressModel cannot be null.");
-
-		temproryAddressModel.setFirstname(addressData.getFirstName());
-		temproryAddressModel.setLastname(addressData.getLastName());
-		temproryAddressModel.setAddressType(addressData.getAddressType());
-		temproryAddressModel.setStreetname(addressData.getLine1());
-		temproryAddressModel.setStreetnumber(addressData.getLine2());
-		temproryAddressModel.setAddressLine3(addressData.getLine3());
-		temproryAddressModel.setTown(addressData.getTown());
-		temproryAddressModel.setLandmark(addressData.getLandmark());
-		temproryAddressModel.setPostalcode(addressData.getPostalCode());
-		temproryAddressModel.setPhone1(addressData.getPhone());
-		temproryAddressModel.setState(addressData.getState());
-		temproryAddressModel.setDistrict(addressData.getState());
-		temproryAddressModel.setCity(addressData.getCity());
-		temproryAddressModel.setBillingAddress(Boolean.valueOf(addressData.isBillingAddress()));
-		temproryAddressModel.setShippingAddress(Boolean.valueOf(addressData.isShippingAddress()));
+		Assert.notNull(addressModel, "Parameter addressModel cannot be null.");
+		addressModel.setFirstname(addressData.getFirstName());
+		addressModel.setLastname(addressData.getLastName());
+		addressModel.setAddressType(addressData.getAddressType());
+		addressModel.setStreetname(addressData.getLine1());
+		addressModel.setStreetnumber(addressData.getLine2());
+		addressModel.setAddressLine3(addressData.getLine3());
+		addressModel.setTown(addressData.getTown());
+		addressModel.setLandmark(addressData.getLandmark());
+		addressModel.setPostalcode(addressData.getPostalCode());
+		addressModel.setPhone1(addressData.getPhone());
+		addressModel.setState(addressData.getState());
+		addressModel.setDistrict(addressData.getState());
+		addressModel.setCity(addressData.getCity());
+		addressModel.setBillingAddress(Boolean.valueOf(addressData.isBillingAddress()));
+		addressModel.setShippingAddress(Boolean.valueOf(addressData.isShippingAddress()));
 		if (addressData.getCountry() != null)
 		{
 			final String isocode = addressData.getCountry().getIsocode();
 			try
 			{
 				final CountryModel countryModel = getCommonI18NService().getCountry(isocode);
-				temproryAddressModel.setCountry(countryModel);
+				addressModel.setCountry(countryModel);
 			}
 			catch (final UnknownIdentifierException e)
 			{
@@ -73,7 +72,7 @@ public class TemporaryAddressReversePopulator implements Populator<AddressData, 
 			{
 				 RegionModel regionModel = getCommonI18NService().getRegion(
 						getCommonI18NService().getCountry(addressData.getCountry().getIsocode()), isocode);
-				temproryAddressModel.setRegion(regionModel);
+				addressModel.setRegion(regionModel);
 			}
 			catch (final UnknownIdentifierException e)
 			{

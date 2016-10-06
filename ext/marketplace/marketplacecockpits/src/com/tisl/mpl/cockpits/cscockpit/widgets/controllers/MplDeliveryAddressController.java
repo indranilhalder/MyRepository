@@ -6,10 +6,7 @@ package com.tisl.mpl.cockpits.cscockpit.widgets.controllers;
  */
 import java.util.List;
 
-import com.hybris.oms.domain.changedeliveryaddress.ChangeDeliveryAddressResponseDto;
-import com.hybris.oms.domain.changedeliveryaddress.TransactionEddDto;
 import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
-import com.tisl.mpl.core.model.TemproryAddressModel;
 import com.tisl.mpl.facades.data.PincodeData;
 
 import de.hybris.platform.cockpit.model.meta.TypedObject;
@@ -51,14 +48,6 @@ public interface MplDeliveryAddressController {
 	public abstract String changeDeliveryAddressCallToOMS(String code,
 			AddressModel newDeliveryAddress, String interfaceType,List<TransactionSDDto> transactionSDDtos);
 
-	/**
-	 * This Method is used to Get the temprory Address
-	 * 
-	 * @author Techouts
-	 * @param orderId
-	 * @return TemproryAddressModel
-	 */
-	public TemproryAddressModel getTempororyAddress(String orderId);
 
 	/**
 	 * This method is used to save the delivery address and customer Addresses
@@ -69,7 +58,7 @@ public interface MplDeliveryAddressController {
 	 * @param address
 	 * @return void
 	 */
-	public void saveDeliveryAddress(String orderid);
+	public void saveDeliveryAddress(OrderModel orderModel,AddressModel address);
 
 	/**
 	 * This method is used to get The PincodeData for a particular pincode
@@ -87,5 +76,8 @@ public interface MplDeliveryAddressController {
 	 */
 	public abstract boolean checkScheduledDeliveryForOrder(
 			OrderModel parentReference);
+
+	
+	public  void saveChangeDeliveryRequests(String orderId , String status);
 
 }

@@ -1609,6 +1609,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ORDERTAG_TYPE_PREPAID = "PREPAIDRRF";
 	public static final String ORDERTAG_TYPE_POSTPAID = "POSTPAIDRRF";
 
+	public static final String FAILED = "failed";
 	public static final String TO = "TO".intern();
 	public static final String AND = " AND ";
 	public final static String RESERVATION_DATA_TO_SESSION = "reservationData";
@@ -1625,4 +1626,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9108 = "B9108";
 
 	// implement here constants used by this extension
+	public static final String CHANGE_DELIVERY_ADDRESS = "changeDeliveryAddressData";
+	public static final String RESCHEDULE_DATA_SESSION_KEY="rescheduleDataList";
 }

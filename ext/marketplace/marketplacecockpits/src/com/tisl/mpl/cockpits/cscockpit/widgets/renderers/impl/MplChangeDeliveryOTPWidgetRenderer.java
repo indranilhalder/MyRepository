@@ -48,7 +48,6 @@ import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceCallContex
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MplDeliveryAddressController;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.OTPModel;
-import com.tisl.mpl.core.model.TemproryAddressModel;
 import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.enums.OTPTypeEnum;
@@ -58,6 +57,8 @@ import com.tisl.mpl.sms.facades.SendSMSFacade;
 
 import de.hybris.platform.cockpit.model.meta.TypedObject;
 import de.hybris.platform.cockpit.widgets.Widget;
+import de.hybris.platform.commercefacades.user.data.AddressData;
+import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
@@ -74,6 +75,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelRemovalException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.session.SessionService;
 
 public class MplChangeDeliveryOTPWidgetRenderer
 		extends
@@ -103,6 +105,10 @@ public class MplChangeDeliveryOTPWidgetRenderer
 	private MplDeliveryAddressFacade mplDeliveryAddressFacade;
 	@Autowired
 	private MplConfigFacade mplConfigFacade;
+	@Autowired
+	private SessionService sessionService;
+	@Autowired
+	private Populator<AddressData, AddressModel> addressReversePopulator;
 	private WidgetDetailRenderer<TypedObject, Widget> detailRenderer;
 
 	protected WidgetDetailRenderer<TypedObject, Widget> getDetailRenderer() {
@@ -133,21 +139,20 @@ public class MplChangeDeliveryOTPWidgetRenderer
 
 	protected HtmlBasedComponent createContentInternal(
 			final Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,
-			HtmlBasedComponent rootContainer) {
-		
-		Div content = new Div();
-		
+			HtmlBasedComponent rootContainer) {	
+		Div content = new Div();	
 		final Div SDAreaDiv = new Div();
 		content.appendChild(SDAreaDiv);
 		OrderModel  orderModel = (OrderModel) getOrder().getObject();
-		TemproryAddressModel tempAddress = new TemproryAddressModel();
-		tempAddress.setOrderId(orderModel.getParentReference().getCode());
-		tempAddress = mplDeliveryAddressController.getTempororyAddress(orderModel.getParentReference().getCode());
-		boolean isScheduleDeliveryPossible = isScheduledeliveryPossible(tempAddress,orderModel);
+		AddressData AddressData;
+		AddressData=sessionService.getAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS); 
+		AddressModel addressModel = modelService.create(AddressModel.class);
+		addressReversePopulator.populate(AddressData, addressModel);
+		boolean isScheduleDeliveryPossible = isScheduledeliveryPossible(addressModel,orderModel);
 	
 		if(isScheduleDeliveryPossible) {
 			try {
-				createScheduledDeliveryArea(widget,content,tempAddress.getPostalcode());
+				createScheduledDeliveryArea(widget,content,addressModel.getPostalcode());
 			}catch(Exception e) {
 				LOG.error("Exception while creating delivery timings "+e.getMessage());
 			}
@@ -223,10 +228,9 @@ public class MplChangeDeliveryOTPWidgetRenderer
 		final Div otpAreaDiv = new Div();
 		content.appendChild(otpAreaDiv);
 		final OrderModel  orderModel = (OrderModel) getOrder().getObject();
-
-		TemproryAddressModel tempAddress = new TemproryAddressModel();
-		tempAddress.setOrderId(orderModel.getParentReference().getCode());
-		tempAddress = mplDeliveryAddressController.getTempororyAddress(orderModel.getParentReference().getCode());
+AddressData changeDeliveryAddressData  = sessionService.getAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS);
+		AddressModel changeDeliveryAddress = new AddressModel();
+		addressReversePopulator.populate(changeDeliveryAddressData, changeDeliveryAddress);
 		try {
 			sendSmsToCustomer(orderModel);
 		} catch (InvalidKeyException | NoSuchAlgorithmException e) {
@@ -259,7 +263,7 @@ public class MplChangeDeliveryOTPWidgetRenderer
 		validateOTP.addEventListener(
 				Events.ON_CLICK,
 				createValidateOTPEventListener(widget, OTPTextBox, orderModel,
-						tempAddress,ScheduledeliveryDtoList));
+						changeDeliveryAddress,ScheduledeliveryDtoList));
 		
 	}
 
@@ -272,16 +276,14 @@ public class MplChangeDeliveryOTPWidgetRenderer
          renderScheduledDeliveryHeaders(widget, listHead);
 
 	           listHead.setParent(listBox);
-	           OrderModel order = (OrderModel) getOrder().getObject();
-	           
+	           OrderModel order = (OrderModel) getOrder().getObject();	           
 	           //  Displaying Schedule delivery Timings 
 	           for (TransactionEddDto transactionEdDto : transactionEddDto) {
 	        	   Listitem row = new Listitem();
 		           row.setSclass("listbox-row-item");
 		           row.setParent(listBox);
 	        	   renderDeliverySlots(widget, row,transactionEdDto,SdDtoList);
-	           }
-	          
+	           }          
      }
 
 	private void renderDeliverySlots(
@@ -461,7 +463,7 @@ public class MplChangeDeliveryOTPWidgetRenderer
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
 		String  deteWithOutTIme=dateUtilHelper.getDateFromat(estDeliveryDateAndTime,format);
 		String timeWithOutDate=dateUtilHelper.getTimeFromat(estDeliveryDateAndTime);
-		List<String>   calculatedDateList=dateUtilHelper.getDeteList(deteWithOutTIme,format,2);
+		List<String>   calculatedDateList=dateUtilHelper.getDeteList(deteWithOutTIme,format,1);
 		List<MplTimeSlotsModel> modelList=null;
 		if(timeSlotType.equalsIgnoreCase(MarketplaceCockpitsConstants.SD)){
 			modelList=mplConfigFacade.getDeliveryTimeSlotByKey(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD);
@@ -549,10 +551,10 @@ public class MplChangeDeliveryOTPWidgetRenderer
 		
 	}
  
-	private boolean isScheduledeliveryPossible(TemproryAddressModel tempAddress,
+	private boolean isScheduledeliveryPossible(AddressModel changeDeliveryAddress,
 			OrderModel order) {
 		boolean scheduleDeliveryPossible = false;
-				if(!tempAddress.getPostalcode().trim().equalsIgnoreCase(order.getDeliveryAddress().getPostalcode().trim())) {
+				if(!changeDeliveryAddress.getPostalcode().trim().equalsIgnoreCase(order.getDeliveryAddress().getPostalcode().trim())) {
 					scheduleDeliveryPossible = mplDeliveryAddressController.checkScheduledDeliveryForOrder(order.getParentReference());
 					return scheduleDeliveryPossible;
 				}
@@ -608,9 +610,9 @@ public class MplChangeDeliveryOTPWidgetRenderer
 	public EventListener createValidateOTPEventListener(
 			Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,
 			Textbox oTPTextBox, OrderModel ordermodel,
-			TemproryAddressModel newDeliveryAddress,final List<TransactionSDDto>  ScheduledeliveryDtoList) {
+			AddressModel changeDeliveryAddress,final List<TransactionSDDto>  ScheduledeliveryDtoList) {
 		return new ValidateOTPEventListener(widget, oTPTextBox, ordermodel,
-				newDeliveryAddress,ScheduledeliveryDtoList);
+				changeDeliveryAddress,ScheduledeliveryDtoList);
 	}
 
 	// Validate OTP
@@ -619,17 +621,17 @@ public class MplChangeDeliveryOTPWidgetRenderer
 		private Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget;
 		private Textbox oTPTextBox;
 		private OrderModel orderModel;
-		private TemproryAddressModel newDeliveryAddress;
+		private AddressModel changeDeliveryAddress;
 		private List<TransactionSDDto>  ScheduledeliveryDtoList;
 		public ValidateOTPEventListener(
 				Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,
 				Textbox oTPTextBox, OrderModel orderModel,
-				TemproryAddressModel newDeliveryAddress,List<TransactionSDDto>  ScheduledeliveryDtoList) {
+				AddressModel changeDeliveryAddress,List<TransactionSDDto>  ScheduledeliveryDtoList) {
 			super();
 			this.widget = widget;
 			this.oTPTextBox = oTPTextBox;
 			this.orderModel = orderModel;
-			this.newDeliveryAddress = newDeliveryAddress;
+			this.changeDeliveryAddress = changeDeliveryAddress;
 			this.ScheduledeliveryDtoList = ScheduledeliveryDtoList;
 		}
 
@@ -637,7 +639,7 @@ public class MplChangeDeliveryOTPWidgetRenderer
 		public void onEvent(Event event) throws InterruptedException {
 			if (!oTPTextBox.getText().isEmpty()) {
 				handleValidateOTPEvent(widget, oTPTextBox, event, orderModel,
-						newDeliveryAddress,ScheduledeliveryDtoList);
+						changeDeliveryAddress,ScheduledeliveryDtoList);
 			} else {
 				Messagebox
 						.show(LabelUtils.getLabel(widget, "ENTER_OTP",
@@ -649,7 +651,7 @@ public class MplChangeDeliveryOTPWidgetRenderer
 		private void handleValidateOTPEvent(
 				Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,
 				Textbox oTPTextBox, Event event, OrderModel orderModel,
-				TemproryAddressModel newDeliveryAddress, List<TransactionSDDto>  ScheduledeliveryDtoList)
+				AddressModel changeDeliveryAddress, List<TransactionSDDto>  ScheduledeliveryDtoList)
 				throws InterruptedException {
 			long time = 0l;
 			try {
@@ -672,19 +674,20 @@ public class MplChangeDeliveryOTPWidgetRenderer
 					CustomerModel customermodel = (CustomerModel) customer
 							.getObject();
 					String customerId = customermodel.getUid();
-					AddressModel address = new AddressModel();
-					address = setNewDeliveryAddress(newDeliveryAddress);
-					address.setOwner(customermodel);
-					String interfaceType = getChangeDeliveryInterfacetype(newDeliveryAddress,orderModel.getDeliveryAddress());
+					
+					changeDeliveryAddress.setOwner(customermodel);
+					String interfaceType = getChangeDeliveryInterfacetype(changeDeliveryAddress,orderModel.getDeliveryAddress());
 					LOG.debug("interface type :"+interfaceType);
 					omsStatus = mplDeliveryAddressController
 							.changeDeliveryAddressCallToOMS(orderModel
-									.getParentReference().getCode(), address,interfaceType,ScheduledeliveryDtoList);
+									.getParentReference().getCode(), changeDeliveryAddress,interfaceType,ScheduledeliveryDtoList);
 					if (omsStatus.equalsIgnoreCase(MarketplaceCockpitsConstants.SUCCESS)) {
 						try {
                             saveDeliveryDates (orderModel,ScheduledeliveryDtoList);
 							mplDeliveryAddressController
-									.saveDeliveryAddress(orderModel.getParentReference().getCode());
+									.saveDeliveryAddress(orderModel,changeDeliveryAddress);
+							// Saving no_of Total requests and rejects 
+							mplDeliveryAddressController.saveChangeDeliveryRequests(orderModel.getParentReference().getCode(), MarketplaceCockpitsConstants.SUCCESS);
 							LOG.debug("Delivery Address Changed Successfully");
 						} catch (ModelSavingException e) {
 							LOG.debug("Model saving Exception" + e.getMessage());
@@ -705,7 +708,9 @@ public class MplChangeDeliveryOTPWidgetRenderer
 
 					} else if (omsStatus.equalsIgnoreCase(MarketplaceCockpitsConstants.FAILED)) {
 						try {
-							removeTempororyAddress(newDeliveryAddress);
+							
+							// Saving no_of Total requests and rejects 
+							mplDeliveryAddressController.saveChangeDeliveryRequests(orderModel.getParentReference().getCode(), MarketplaceCockpitsConstants.FAILED);
 							Messagebox.show(LabelUtils.getLabel(widget,
 									FAILED_AT_OMS, new Object[0]), INFO,
 									Messagebox.OK, Messagebox.ERROR);
@@ -717,15 +722,14 @@ public class MplChangeDeliveryOTPWidgetRenderer
 							LOG.error("Exception occurred " + e.getMessage());
 						}
 					} else {
-						removeTempororyAddress(newDeliveryAddress);
+						// Saving no_of Total requests and rejects 
+						mplDeliveryAddressController.saveChangeDeliveryRequests(orderModel.getParentReference().getCode(), MarketplaceCockpitsConstants.FAILED);
 						closePopUp();
 						Messagebox.show(LabelUtils.getLabel(widget,
 								AN_ERROR_OCCURRED, new Object[0]), INFO,
 								Messagebox.OK, Messagebox.ERROR);
 					}
-				} catch (ModelRemovalException e) {
-					LOG.error("ModelRemovalException " + e.getMessage());
-				} catch (Exception e) {
+				}catch (Exception e) {
 					LOG.error("Exception in changeDeliveryAddressCallToOMS"
 							+ e.getMessage());
 				}
@@ -738,31 +742,31 @@ public class MplChangeDeliveryOTPWidgetRenderer
 		
 
 		private String getChangeDeliveryInterfacetype(
-				TemproryAddressModel tempAddress,
+				AddressModel changeDeliveryAddress,
 				AddressModel deliveryAddress) {
 			String interfacetype = MarketplaceCockpitsConstants.CU;
-			if(tempAddress.getPostalcode().equalsIgnoreCase(deliveryAddress.getPostalcode())) {
+			if(changeDeliveryAddress.getPostalcode().equalsIgnoreCase(deliveryAddress.getPostalcode())) {
 				interfacetype = MarketplaceCockpitsConstants.CA;
 				return interfacetype;
-			} else if (tempAddress.getLine1().trim().equalsIgnoreCase(deliveryAddress.getLine1().trim())) {
+			} else if (changeDeliveryAddress.getLine1().trim().equalsIgnoreCase(deliveryAddress.getLine1().trim())) {
 				interfacetype = MarketplaceCockpitsConstants.CA;
 				return interfacetype;
-			} else if (tempAddress.getLine2().trim().equalsIgnoreCase(deliveryAddress.getLine2().trim())){
+			} else if (changeDeliveryAddress.getLine2().trim().equalsIgnoreCase(deliveryAddress.getLine2().trim())){
 				interfacetype = MarketplaceCockpitsConstants.CA;
 				return interfacetype;
-			}else if (tempAddress.getAddressLine3().trim().equalsIgnoreCase(deliveryAddress.getAddressLine3().trim())){
+			}else if (changeDeliveryAddress.getAddressLine3().trim().equalsIgnoreCase(deliveryAddress.getAddressLine3().trim())){
 				interfacetype = MarketplaceCockpitsConstants.CA;
 				return interfacetype;
-			}else if (tempAddress.getLandmark().trim().equalsIgnoreCase(deliveryAddress.getLandmark().trim())){
+			}else if (changeDeliveryAddress.getLandmark().trim().equalsIgnoreCase(deliveryAddress.getLandmark().trim())){
 				interfacetype = MarketplaceCockpitsConstants.CA;
 				return interfacetype;
-			}else if (tempAddress.getCity().trim().equalsIgnoreCase(deliveryAddress.getCity().trim())){
+			}else if (changeDeliveryAddress.getCity().trim().equalsIgnoreCase(deliveryAddress.getCity().trim())){
 				interfacetype = MarketplaceCockpitsConstants.CA;
 				return interfacetype;
-			}else if (tempAddress.getState().trim().equalsIgnoreCase(deliveryAddress.getState().trim())){
+			}else if (changeDeliveryAddress.getState().trim().equalsIgnoreCase(deliveryAddress.getState().trim())){
 				interfacetype = MarketplaceCockpitsConstants.CA;
 				return interfacetype;
-			}else if (tempAddress.getCountry().getName().trim().equalsIgnoreCase(deliveryAddress.getCountry().getName().trim())){
+			}else if (changeDeliveryAddress.getCountry().getName().trim().equalsIgnoreCase(deliveryAddress.getCountry().getName().trim())){
 				interfacetype = MarketplaceCockpitsConstants.CA;
 				return interfacetype;
 			}
@@ -800,54 +804,6 @@ public class MplChangeDeliveryOTPWidgetRenderer
 		}
 	}
 
-	private void removeTempororyAddress(TemproryAddressModel newDeliveryAddrfess) {
-		modelService.remove(newDeliveryAddrfess);
-
-	}
-
-	private AddressModel setNewDeliveryAddress(
-			TemproryAddressModel newDeliveryAddress) {
-		AddressModel deliveryAddress = new AddressModel();
-		deliveryAddress.setCreationtime(new Date());
-		if (null != newDeliveryAddress.getFirstname()) {
-			deliveryAddress.setFirstname(newDeliveryAddress.getFirstname());
-		}
-		if (null != newDeliveryAddress.getLastname()) {
-			deliveryAddress.setLastname(newDeliveryAddress.getLastname());
-		}
-		if (null != newDeliveryAddress.getLine1()) {
-			deliveryAddress.setLine1(newDeliveryAddress.getLine1());
-		}
-		if (null != newDeliveryAddress.getLine2()) {
-			deliveryAddress.setLine2(newDeliveryAddress.getLine2());
-		}
-		if (null != newDeliveryAddress.getAddressLine3()) {
-			deliveryAddress.setAddressLine3(newDeliveryAddress
-					.getAddressLine3());
-		}
-		if (null != newDeliveryAddress.getEmail()) {
-			deliveryAddress.setEmail(newDeliveryAddress.getEmail());
-		}
-		if (null != newDeliveryAddress.getPostalcode()) {
-			deliveryAddress.setPostalcode(newDeliveryAddress.getPostalcode());
-		}
-		if (null != newDeliveryAddress.getCountry()) {
-			deliveryAddress.setCountry(newDeliveryAddress.getCountry());
-		}
-		if (null != newDeliveryAddress.getCity()) {
-			deliveryAddress.setCity(newDeliveryAddress.getCity());
-		}
-		if (null != newDeliveryAddress.getState()) {
-			deliveryAddress.setState(newDeliveryAddress.getState());
-		}
-		if (null != newDeliveryAddress.getLandmark()) {
-			deliveryAddress.setLandmark(newDeliveryAddress.getLandmark());
-		}
-		if (null != newDeliveryAddress.getPhone1()) {
-			deliveryAddress.setPhone1(newDeliveryAddress.getPhone1());
-		}
-		return deliveryAddress;
-	}
 
 	private Hbox createHbox(
 			Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,

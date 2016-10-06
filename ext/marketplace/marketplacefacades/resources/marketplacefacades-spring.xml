@@ -1579,9 +1579,9 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		</property>
 	</bean> 
 	
-	<alias name="defaultTempAddressReverseConverter" alias="tempAddressReverseConverter"/>
-	<bean id="defaultTempAddressReverseConverter" parent="abstractPopulatingConverter">
-		<property name="targetClass" value="com.tisl.mpl.core.model.TemproryAddressModel"/>
+	<alias name="mplDeliveryAddressReverseConverter" alias="tempAddressReverseConverter"/>
+	<bean id="mplDeliveryAddressReverseConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="de.hybris.platform.core.model.user.AddressModel"/>
 		<property name="populators">
 			<list>
 				<ref bean="temporaryAddressReversePopulator"/>
@@ -1590,12 +1590,12 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	</bean>
 	
 	<bean id="temporaryAddressReversePopulator"
-			class="com.tisl.mpl.facades.populators.TemporaryAddressReversePopulator">
+			class="com.tisl.mpl.facades.populators.AdressDtoToModelPopulator">
 		<property name="commonI18NService" ref="commonI18NService"/> 
 	</bean>
 	
-	<bean id="mplAddressValidatorImpl"
-		class="com.tis.mpl.facade.address.validator.MplAddressValidatorImpl">
+	<bean id="MplDeliveryAddressComparator"
+		class="com.tis.mpl.facade.address.validator.MplDeliveryAddressComparatorImpl">
     </bean>
 		<bean id="mplCODReturnPaymentInfoReversePopulator" class="com.tisl.mpl.facade.codpayment.populator.MplCODReturnPaymentInfoReversePopulator">
 	</bean>

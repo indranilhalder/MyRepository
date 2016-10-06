@@ -78,24 +78,17 @@ function generateOTP(orderId){
 			url : ACC.config.encodedContextPath + "/my-account/validationOTP",
 			data : "orderId=" + orderId + "&otpNumber="+$("#OTP").val(),
 			success : function(response) {
-				if(response=="Pincode not Serviceable"){
-					$("#changeAddressPopup").show();
-					$("#otpPopup").hide();
-					$(".wrapBG").show();
-					var height = $(window).height();
-					$(".wrapBG").css("height", height);
-					$("#changeAddressPopup").css("z-index", "999999");
-					$(".pincodeNoError").show();
-					$(".pincodeNoError").text("Pincode not Serviceable");
-				}
-				else if(response=="INVALID"){	
 					$(".otpError").show();
+				if(response=="INVALID"){	
 					$(".otpError").text("Invalid OTP, Please Re-enter.");		
 				}else if(response=="Internal Server Error, Please try again later"){
 					$(".otpError").show();
 					$(".otpError").text(response);
 					
-				}else{
+				}else if(response == null){
+					$(".otpError").text("Invalid OTP, Please Re-enter.");
+				}
+				else{
 					window.location.href=ACC.config.encodedContextPath+"/my-account/order/?orderCode="+orderId+"&isServiceable="+true;
 				} 
 			},

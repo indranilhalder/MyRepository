@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MplDeliveryAddressController;
-import com.tisl.mpl.core.model.TemproryAddressModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
@@ -25,13 +24,15 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryAddressServic
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 
 import de.hybris.platform.cockpit.model.meta.TypedObject;
+import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.cscockpit.widgets.controllers.impl.DefaultOrderManagementActionsWidgetController;
 import de.hybris.platform.jalo.flexiblesearch.FlexibleSearchException;
-import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
+import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.session.SessionService;
 
 public class MplDeliveryAddressControllerImpl extends
 		DefaultOrderManagementActionsWidgetController implements
@@ -52,6 +53,12 @@ public class MplDeliveryAddressControllerImpl extends
     private MplCheckoutFacade mplCheckoutFacade;
 	@Resource
     private PincodeServiceFacade pincodeServiceFacade;
+	
+	@Autowired
+	private SessionService sessionService;
+	
+	@Resource(name = "tempAddressReverseConverter")
+	private Converter<AddressData, AddressModel> tempAddressReverseConverter;
 	
 	
 	/**
@@ -125,27 +132,7 @@ public class MplDeliveryAddressControllerImpl extends
 
 	}
 	
-	/**
-	 * This Method is used to Get the temprory Address
-	 * 
-	 * @author Techouts
-	 * @param orderId
-	 * @return TemproryAddressModel
-	 */
-	@Override
-	public TemproryAddressModel getTempororyAddress(String orderId) throws ModelNotFoundException{
-		TemproryAddressModel tempAddress = modelService
-				.create(TemproryAddressModel.class);
-		try {
-			tempAddress = mplDeliveryAddressDao.getTemporaryAddressModel(orderId);
-		} catch (ModelNotFoundException e) {
-			LOG.error("Model Not Found Exception while getting temprory Address for order Id " + orderId);
-			throw new ModelNotFoundException(e);
-		} catch (Exception e) {
-			LOG.error("Exception occurred  while getting the temprory Address for the order id" + orderId);
-		}
-		return tempAddress;
-	}
+	
 
 	/**
 	 * This method is used to save the delivery address and customer Addresses
@@ -158,10 +145,10 @@ public class MplDeliveryAddressControllerImpl extends
 	 * 
 	 */
 	@Override
-	public void saveDeliveryAddress(String orderId)
+	public void saveDeliveryAddress(OrderModel orderModel,AddressModel address)
 			throws ModelSavingException {
 		try {
-			mplDeliveryAddressService.saveDeliveryAddress(orderId);
+			mplDeliveryAddressService.saveDeliveryAddress(address,orderModel);
 		} catch (ModelSavingException e) {
 			LOG.error("ModelSavingException  while saving the Changed delivery Address " + e.getMessage());
 			throw new ModelSavingException(e.getMessage());
@@ -195,6 +182,13 @@ public class MplDeliveryAddressControllerImpl extends
 	@Override
 	public boolean checkScheduledDeliveryForOrder(OrderModel orderModel) {
 		return mplDeliveryAddressFacade.checkScheduledDeliveryForOrder(orderModel);
+	}
+
+
+	@Override
+	public void saveChangeDeliveryRequests(String orderId, String status) {
+		mplDeliveryAddressFacade.saveChangeDeliveryRequests(orderId,status);
+		
 	}
 
 }

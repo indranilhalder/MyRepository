@@ -4,9 +4,13 @@
  */
 package com.tis.mpl.facade.changedelivery.Impl;
 
+import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.commercefacades.order.data.OrderEntryData;
+import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -41,10 +45,10 @@ import com.hybris.oms.domain.changedeliveryaddress.ChangeDeliveryAddressResponse
 import com.hybris.oms.domain.changedeliveryaddress.TransactionEddDto;
 import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.hybris.oms.tata.model.MplTimeSlotsModel;
-import com.tis.mpl.facade.address.validator.MplAddressValidator;
+import com.tis.mpl.facade.address.validator.MplDeliveryAddressComparator;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.core.model.TemproryAddressModel;
+import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.data.ReturnAddressInfo;
@@ -53,6 +57,7 @@ import com.tisl.mpl.data.SendTicketRequestData;
 import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.config.MplConfigFacade;
+import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.MplDeliveryAddressReportData;
 import com.tisl.mpl.facades.data.RescheduleData;
@@ -62,6 +67,7 @@ import com.tisl.mpl.integration.oms.order.service.impl.CustomOmsOrderService;
 import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryAddressService;
 import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
+import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.service.TicketCreationCRMservice;
 
 
@@ -84,19 +90,22 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	@Autowired
 	private CustomOmsOrderService customOmsOrderService;
 	@Resource(name = "tempAddressReverseConverter")
-	private Converter<AddressData, TemproryAddressModel> tempAddressReverseConverter;
+	private Converter<AddressData, AddressModel> tempAddressReverseConverter;
 
 	@Autowired
 	OrderModelDao orderModelDao;
 
 	@Autowired
-	MplAddressValidator mplAddressValidator;
+	MplDeliveryAddressComparator mplDeliveryAddressComparator;
 
 	@Autowired
 	SessionService sessionService;
 
 	@Autowired
 	MplConfigFacade mplConfigFacade;
+	
+	@Autowired
+	private MplOrderFacade mplOrderFacade;
 
 	private static final Logger LOG = Logger.getLogger(MplDeliveryAddressFacadeImpl.class);
 
@@ -399,86 +408,55 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	}
 
 
-		@Override
-	public ScheduledDeliveryData saveAsTemporaryAddressForCustomer(String orderCode, AddressData addressData)
+	/**
+	 * Checking order are for Eligible Re ScheduledDelivery date 
+	 * if not Eligible then return null value
+	 * @param orderCode
+	 * @return ScheduledDeliveryData
+	 * @throws EtailNonBusinessExceptions
+	 */
+	@Override
+	public ScheduledDeliveryData scheduledDeliveryData(String orderCode, AddressData addressData)
 	{
 		ScheduledDeliveryData scheduledDeliveryData = new ScheduledDeliveryData();
 		try
 		{
-			TemproryAddressModel temproryAddressModel = tempAddressReverseConverter.convert(addressData);
 			OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
 			CustomerModel customer = (CustomerModel) orderModel.getUser();
-			temproryAddressModel.setEmail(customer.getOriginalUid());
-			String customerId = customer.getUid();
-			AddressModel deliveryAddressModel = orderModel.getDeliveryAddress();
-
-			boolean isDifferentAddress = mplAddressValidator.compareAddress(deliveryAddressModel, temproryAddressModel);
-			boolean isDiffrentContact = mplAddressValidator.compareContactDetails(deliveryAddressModel, temproryAddressModel);
-
-			if (isDifferentAddress || isDiffrentContact)
+			AddressModel newDeliveryAddress = tempAddressReverseConverter.convert(addressData);
+			if (newDeliveryAddress != null)
 			{
-				mplDeliveryAddressService.saveTemporaryAddress(orderModel, temproryAddressModel);
-				if (!temproryAddressModel.getPostalcode().equalsIgnoreCase(deliveryAddressModel.getPostalcode()))
+				ServicesUtil.validateParameterNotNull(customer.getOriginalUid(), "OriginalUid must not be null");
+				newDeliveryAddress.setEmail(customer.getOriginalUid());
+				//check order Eligible for ReScheduledDelivery
+				boolean isEligibleScheduledDelivery = mplDeliveryAddressService.checkScheduledDeliveryForOrder(orderModel);
+				if (isEligibleScheduledDelivery)
 				{
-					boolean isEligibleScheduledDelivery = checkScheduledDeliveryForOrder(orderModel);
-					if (isEligibleScheduledDelivery)
+					List<TransactionEddDto> transactionEddDtoList = new ArrayList<TransactionEddDto>();
+					transactionEddDtoList = getScheduledDeliveryDate(orderModel, newDeliveryAddress.getPostalcode());
+					if (CollectionUtils.isNotEmpty(transactionEddDtoList))
 					{
-						List<TransactionEddDto> transactionEddDtoList =new ArrayList<TransactionEddDto>();
-					  transactionEddDtoList = getScheduledDeliveryDate(orderModel, temproryAddressModel.getPostalcode());
-						
-						if (CollectionUtils.isNotEmpty(transactionEddDtoList))
-						{
-							Map<String, Object> scheduledDeliveryDate = null;
-							scheduledDeliveryDate = getDeliveryDate(transactionEddDtoList, orderModel);
-							scheduledDeliveryData.setEntries(scheduledDeliveryDate);
-							scheduledDeliveryData.setIsActive(Boolean.TRUE);
-							scheduledDeliveryData.setIsPincodeServiceable(Boolean.TRUE);
-						}
-						else
-						{
-							mplDeliveryAddressService.setStatusForTemporaryAddress(orderCode, false);
-							scheduledDeliveryData.setIsActive(Boolean.TRUE);
-							scheduledDeliveryData.setIsPincodeServiceable(Boolean.FALSE);
-						}
-
+						//Updated address save into session for Temporary Purpose and remove existing data
+						sessionService.removeAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS);
+						sessionService.setAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS, addressData);
+						Map<String, Object> scheduledDeliveryDate = null;
+						scheduledDeliveryDate = getDeliveryDate(transactionEddDtoList, orderModel);
+						scheduledDeliveryData.setEntries(scheduledDeliveryDate);
+						scheduledDeliveryData.setIsActive(Boolean.TRUE);
+						scheduledDeliveryData.setIsPincodeServiceable(Boolean.TRUE);
 					}
 					else
 					{
-						// Pincode Serviceable Check 
-						String pincodeServiceableCheck = changeDeliveryRequestCallToOMS(orderCode, temproryAddressModel,
-								MarketplaceFacadesConstants.CDP, null);
-						if (StringUtils.isNotEmpty(pincodeServiceableCheck))
-						{
-							if (pincodeServiceableCheck.equalsIgnoreCase(MarketplaceFacadesConstants.SUCCESS))
-							{
-								if (StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getPhone1()))
-								{
-									generateOTP(customerId, orderModel.getDeliveryAddress().getPhone1());
-								}
-								scheduledDeliveryData.setIsActive(Boolean.FALSE);
-							}
-							else
-							{
-								mplDeliveryAddressService.setStatusForTemporaryAddress(orderCode, false);
-								scheduledDeliveryData.setIsActive(Boolean.TRUE);
-								scheduledDeliveryData.setIsPincodeServiceable(Boolean.FALSE);
-							}
-						}
+						mplDeliveryAddressService.deliveryAddressFailureRequest(orderModel);
+						scheduledDeliveryData.setIsActive(Boolean.TRUE);
+						scheduledDeliveryData.setIsPincodeServiceable(Boolean.FALSE);
 					}
+
 				}
 				else
 				{
-					if (StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getPhone1()))
-					{
-						generateOTP(customerId, orderModel.getDeliveryAddress().getPhone1());
-					}
-					scheduledDeliveryData.setIsActive(Boolean.FALSE);
+					return null;
 				}
-
-			}
-			else
-			{
-				return null;
 			}
 		}
 		catch (final NullPointerException e)
@@ -487,13 +465,74 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		}
 		catch (final Exception exp)
 		{
-			exp.printStackTrace();
+			LOG.error("MplDeliveryAddressFacadeImpl:Exception occurs during whille checking ReScheduledDeliveryData "
+					+ exp.getMessage());
 		}
 
 		return scheduledDeliveryData;
 	}
 
 
+
+	/**
+	 * Customer changed pincode for delivery address 
+	 * Pincode Serviceable Checking for Order
+	 * 
+	 *  
+	 */
+	@Override
+	public boolean pincodeServiceableCheck(AddressData addressData, String orderCode)
+	{
+		
+		boolean isServiceable=false;
+		try{
+		// Pincode Serviceable Check for Order
+		ServicesUtil.validateParameterNotNull(addressData.getPostalCode(), "Pincode must not be null");
+		AddressModel newDeliveryAddress = new AddressModel();
+		newDeliveryAddress.setPostalcode(addressData.getPostalCode());
+		
+   	String pincodeServiceableCheck = changeDeliveryRequestCallToOMS(orderCode, newDeliveryAddress,
+				MarketplaceFacadesConstants.CDP, null);
+		if (StringUtils.isNotEmpty(pincodeServiceableCheck))
+		{
+			 OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
+			if (pincodeServiceableCheck.equalsIgnoreCase(MarketplaceFacadesConstants.SUCCESS))
+			{
+				 CustomerModel customer = (CustomerModel) orderModel.getUser();
+				 ServicesUtil.validateParameterNotNull(customer.getOriginalUid(), "OriginalUid must not be null");
+				 newDeliveryAddress.setEmail(customer.getOriginalUid());
+				//Updated address save into session for Temporary Purpose 
+				sessionService.removeAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS);
+				sessionService.setAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS, addressData);
+				if (StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getPhone1()))
+				{
+					try
+					{
+						generateOTP(customer.getUid(), orderModel.getDeliveryAddress().getPhone1());
+					}
+					catch (final InvalidKeyException excption)
+					{
+						LOG.error("MplDeliveryAddressFacadeImpl:Exception occurs during otp generate"+excption.getMessage());
+					}
+					catch (final NoSuchAlgorithmException excption)
+					{
+						LOG.error("MplDeliveryAddressFacadeImpl:Exception occurs during otp generate"+excption.getMessage());
+					}
+				}
+				isServiceable=true;
+			}
+			else
+			{
+				mplDeliveryAddressService.deliveryAddressFailureRequest(orderModel);
+			}
+		}
+		}catch(Exception exp){
+		LOG.error("MplDeliveryAddressFacadeImpl:Exception occurs during whille checking pincode Serviceable"
+				+ exp.getMessage());
+		}
+		return isServiceable;
+	}
+ 
 	/**
 	 * This method is used to generate the OTP
 	 *
@@ -511,105 +550,111 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 
 
 
+	
+	
+	/***
+	 * Checking OTP Validation
+	 *  @return OTPResponseData
+	 */
+	@Override
+	public OTPResponseData validteOTP(String customerID, String enteredOTPNumber){
+		OTPResponseData otpResponse = otpGenericService.validateOTP(customerID, null, enteredOTPNumber, OTPTypeEnum.CDA,
+				Long.parseLong(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.TIMEFOROTP)));
+		return otpResponse;
+	}
+	
+	
 	/**
-	 * First Check OTP If OTP Validate then Call To OMS
-	 *
+	 * Changed Address Save in data base and call to OMS And CRM
+	 * 
 	 * @param customerID
 	 * @param enteredOTPNumber
 	 * @param orderCode
 	 * @return Validation flag Value
 	 */
-	@SuppressWarnings("deprecation")
 	@Override
-	public String submitChangeDeliveryAddress(String customerID, String enteredOTPNumber, String orderCode)
+	public String submitChangeDeliveryAddress(String customerID, String orderCode)
 	{
 		String valditionMsg = null;
-
-		OTPResponseData otpResponse = otpGenericService.validateOTP(customerID, null, enteredOTPNumber, OTPTypeEnum.CDA,
-				Long.parseLong(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.TIMEFOROTP)));
-		if (otpResponse.getOTPValid().booleanValue())
+		OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
+		try
 		{
-			TemproryAddressModel temproryAddressModel = mplDeliveryAddressService.getTemporaryAddressModel(orderCode);
-			OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
-			try
+			AddressData newDeliveryAddressData = sessionService
+					.getAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS);
+			AddressModel newDeliveryAddressModel = tempAddressReverseConverter.convert(newDeliveryAddressData);
+			boolean isDiffrentAddress = false;
+			//Address Related filed is changed  then send to OMS  Request CA Type
+			isDiffrentAddress = mplDeliveryAddressComparator.compareAddressModel(orderModel.getDeliveryAddress(),
+					newDeliveryAddressModel);
+			if (newDeliveryAddressModel != null)
 			{
-				boolean isDiffrentAddress = false;
-				isDiffrentAddress = mplAddressValidator.compareAddress(orderModel.getDeliveryAddress(), temproryAddressModel);
 				if (isDiffrentAddress)
 				{
-					
-					List<TransactionSDDto> transactionEddDtoList=null;
-					boolean isEligibleScheduledDelivery =checkScheduledDeliveryForOrder(orderModel);
-					 if(isEligibleScheduledDelivery){
-						 RescheduleDataList rescheduleDataList= sessionService.getAttribute("rescheduleDataList");
-
+					List<TransactionSDDto> transactionSDDtoList = null;
+					boolean isEligibleScheduledDelivery = mplDeliveryAddressService.checkScheduledDeliveryForOrder(orderModel);
+					//checking  order Eligible for ReScheduledDelivery 
+					if (isEligibleScheduledDelivery)
+					{
+						RescheduleDataList rescheduleDataList = sessionService.getAttribute(MarketplacecommerceservicesConstants.RESCHEDULE_DATA_SESSION_KEY);
 						if (CollectionUtils.isNotEmpty(rescheduleDataList.getRescheduleDataList()))
 						{
-							transactionEddDtoList = reScheduleddeliveryDate(orderModel, rescheduleDataList);
+							transactionSDDtoList = reScheduleddeliveryDate(orderModel, rescheduleDataList);
+							sessionService.removeAttribute(MarketplacecommerceservicesConstants.RESCHEDULE_DATA_SESSION_KEY);
 						}
 					}
-					
-					valditionMsg = changeDeliveryRequestCallToOMS(orderCode, temproryAddressModel, MarketplaceFacadesConstants.CA,
-							transactionEddDtoList);
-					if (valditionMsg != null)
+					//save Address in commerce DB 
+					if (isEligibleScheduledDelivery)
 					{
-						if (valditionMsg.equalsIgnoreCase(MarketplaceFacadesConstants.SUCCESS))
-						{
-							LOG.debug("change delivery address:MplChangeDeliveryAddressFacadeImpl");
-							boolean isAddressSaved = mplDeliveryAddressService.saveDeliveryAddress(orderCode);
-							valditionMsg = MarketplaceFacadesConstants.SUCCESS;
-							try
-							{
-								if (isAddressSaved)
-								{
-									LOG.debug("Change Delivery Address updated into commerce then Call to CRM");
-									createcrmTicketForChangeDeliveryAddress(orderModel, customerID,
-											MarketplacecommerceservicesConstants.SOURCE);
-								}
-							}
-							catch (final Exception e)
-							{
-								LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + e.getMessage());
-							}
-						}
-
+						///Save date for delivery
 					}
-					else
+					  mplDeliveryAddressService.saveDeliveryAddress(newDeliveryAddressModel,orderModel);
+					  valditionMsg = MarketplaceFacadesConstants.SUCCESS;
+				
+					if (LOG.isDebugEnabled())
 					{
-						valditionMsg = MarketplaceFacadesConstants.SERVER_EXCEPTION;
+						LOG.debug("Change Delivery Address updated into commerce  then Call to OMS And CRM");
 					}
-
+					try
+					{
+						//OMS call
+						changeDeliveryRequestCallToOMS(orderCode, newDeliveryAddressModel,
+								MarketplaceFacadesConstants.CA, transactionSDDtoList);
+						//CRM call
+						createcrmTicketForChangeDeliveryAddress(orderModel, customerID, MarketplacecommerceservicesConstants.SOURCE);
+					}
+					catch (final Exception e)
+					{
+						LOG.debug("MplDeliveryAddressFacadesImpl:::Excepton raising while OMS  and CRM Call  >>>>>" + e.getMessage());
+					}
 				}
 				else
 				{
-					valditionMsg = changeDeliveryRequestCallToOMS(orderCode, temproryAddressModel, MarketplaceFacadesConstants.CU,
-							null);
-					if (valditionMsg != null)
+					mplDeliveryAddressService.saveDeliveryAddress(newDeliveryAddressModel, orderModel);
+					valditionMsg = MarketplaceFacadesConstants.SUCCESS;
+					//customer changed only first name Last name and mobile number then OMS Call CU
+					if (LOG.isDebugEnabled())
 					{
-						boolean isContactUpdated = false;
-						isContactUpdated = mplDeliveryAddressService.updateContactDetails(temproryAddressModel, orderModel);
-						valditionMsg = MarketplaceFacadesConstants.SUCCESS;
-						if (isContactUpdated)
-						{
-							createcrmTicketForChangeDeliveryAddress(orderModel, customerID, MarketplacecommerceservicesConstants.SOURCE);
-						}
+						LOG.debug("Updated Contact Related filed  into commerce  then Call to OMS And CRM with CU interface");
 					}
-					else
+					try
 					{
-						valditionMsg = MarketplaceFacadesConstants.SERVER_EXCEPTION;
+						//OMS call
+						changeDeliveryRequestCallToOMS(orderCode, newDeliveryAddressModel,
+								MarketplaceFacadesConstants.CU, null);
+		             //CRM Call     
+						createcrmTicketForChangeDeliveryAddress(orderModel, customerID, MarketplacecommerceservicesConstants.SOURCE);
+					}
+					catch (final Exception e)
+					{
+						LOG.debug("MplDeliveryAddressFacadesImpl:::Excepton raising while OMS  and CRM Call  >>>>>" + e.getMessage());
 					}
 				}
-
-			}
-			catch (final Exception e)
-			{
-				LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + e.getMessage());
-
 			}
 		}
-		else
+		catch (final Exception e)
 		{
-			valditionMsg = otpResponse.getInvalidErrorMessage();
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + e.getMessage());
+			return MarketplaceFacadesConstants.STATUS_FAILURE;
 		}
 		return valditionMsg;
 	}
@@ -676,48 +721,6 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		return result;
 
 	}
-
-
-	/**
-	 * This method is used to check whether order has Schedule delivery items or not
-	 *
-	 * @param orderModel
-	 * @return boolean
-	 */
-	@Override
-	public boolean checkScheduledDeliveryForOrder(OrderModel orderModel)
-	{
-		boolean isEligibleScheduledDelivery = false;
-	   List<OrderModel> chaidOrderList = orderModel.getChildOrders();
-		for (OrderModel subOrder : chaidOrderList)
-		{
-			for (AbstractOrderEntryModel abstractOrderEntry : subOrder.getEntries())
-			{
-				if (!abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getCode()
-						.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
-				{
-					if (abstractOrderEntry.getEdScheduledDate() != null)
-					{
-						isEligibleScheduledDelivery = true;
-						break;
-					}
-				}
-			}
-			if (isEligibleScheduledDelivery)
-			{
-				break;
-			}
-		}
-		return isEligibleScheduledDelivery;
-	}
-
-
-
-	/**
-	 *
-	 * ReScheduleding DeliveryDate for Order return list
-	 */
-
 
 
 	/**
@@ -831,6 +834,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
    /***
 	 * 
 	 * Setting Delivery  date and time Slots for product 
+	 * @return Map
 	 */
 	@Override
 	public Map<String, Object> getDeliveryDate(List<TransactionEddDto> transactionEddDtoList, OrderModel orderModel)
@@ -870,8 +874,12 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 					timeSlotType = MarketplacecommerceservicesConstants.ED;
 				}
 				ServicesUtil.validateParameterNotNull(timeSlotType, "timeSlotType must not be null");
-				LOG.info("send timeSlotType and date  get List of Date and Time Slot for transactionId::::::::");
+				if (LOG.isDebugEnabled())
+				{
+					LOG.info("send timeSlotType and date  get List of Date and Time Slot for transactionId::::::::");
+				}
 				scheduledDeliveryTime = getDateAndTimeMap(timeSlotType, transactionEddDto.getEDD());
+				
 				if (scheduledDeliveryTime != null && StringUtils.isNotEmpty(transactionEddDto.getEDD()))
 				{
 					scheduledDeliveryDate.put(key.getKey(), scheduledDeliveryTime);
@@ -880,7 +888,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		}
 		catch (Exception parseException)
 		{
-			LOG.info("parseException raing converrting time" + parseException.getMessage());
+			LOG.info("parseException raising converrting time" + parseException.getMessage());
 		}
 		return scheduledDeliveryDate;
 	}
@@ -892,43 +900,23 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 * Argument dateFrom and dateTo Changed Delivery Address Report Method return List<MplDeliveryAddressReportData>
 	 */
 	@Override
-	public List<MplDeliveryAddressReportData> getDeliveryAddressRepot(String dateFrom,String dateTo)
+	public List<MplDeliveryAddressReportData> getDeliveryAddressRepot(final String dateFrom, final String dateTo)
 	{
-		 List<TemproryAddressModel> temproryAddressModelList = mplDeliveryAddressService.getTemporaryAddressModelList(
-				dateFrom, dateTo);
-		 Map<String, MplDeliveryAddressReportData> orderIDList = new HashMap<String, MplDeliveryAddressReportData>();
-
-		if (CollectionUtils.isNotEmpty(temproryAddressModelList))
-		{
-			for (TemproryAddressModel temproryAddressModel : temproryAddressModelList)
-			{
-				MplDeliveryAddressReportData mplDeliveryAddressReportData = null;
-				if (orderIDList.containsKey(temproryAddressModel.getOrderId()))
-				{
-					mplDeliveryAddressReportData = orderIDList.get(temproryAddressModel.getOrderId());
-				}
-				else
-				{
-					mplDeliveryAddressReportData = new MplDeliveryAddressReportData();
-					mplDeliveryAddressReportData.setOrderId(temproryAddressModel.getOrderId());
-
-					orderIDList.put(temproryAddressModel.getOrderId(), mplDeliveryAddressReportData);
-				}
-				if (!temproryAddressModel.getIsProcessed().booleanValue())
-				{
-					mplDeliveryAddressReportData.setFailureRequsetCount(mplDeliveryAddressReportData.getFailureRequsetCount() + 1);
-				}
-				mplDeliveryAddressReportData.setTotalRequestCount(mplDeliveryAddressReportData.getTotalRequestCount() + 1);
-			}
-		}
-		List<MplDeliveryAddressReportData> list = new ArrayList<MplDeliveryAddressReportData>(orderIDList.values());
-		return list;
+        List<OrderModel> orderModelList=new ArrayList<OrderModel>();
+        List<MplDeliveryAddressReportData> mplDeliveryAddressReportDataList=new  ArrayList<MplDeliveryAddressReportData>();
+       for(OrderModel orderModel:orderModelList){
+      	 MplDeliveryAddressReportData mplDeliveryAddressReportData=new MplDeliveryAddressReportData();
+      	 mplDeliveryAddressReportData.setOrderId(orderModel.getCode());
+      	 mplDeliveryAddressReportData.setTotalRequestCount(orderModel.getChangeDeliveryTotalRequests().intValue());
+      	 mplDeliveryAddressReportData.setFailureRequsetCount(orderModel.getChangeDeliveryRejectsCount().intValue());
+       }
+		return mplDeliveryAddressReportDataList;
 	}
 
 	/**
-	 * get Delievry Date And time sloat
+	 * get Delivery Date And time slot
 	 * @param edd
-	 * @return
+	 * @return Map
 	 * @throws java.text.ParseException
 	 */
 	private Map<String, List<String>> getDateAndTimeMap(String timeSlotType, String edd) throws java.text.ParseException
@@ -1015,9 +1003,10 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 
 	/***
 	 * Preparing product EligibleEntry for  reScheduleddeliveryDate
+	 * which product are Eligible for reScheduleddeliveryDate
 	 * @param orderModel
 	 * @param transactionEddDtoList
-	 * @return
+	 * @return Map
 	 * @throws ParseException
 	 */
 	public Map<String, TransactionEddDto> getEligibleEntry(OrderModel orderModel, List<TransactionEddDto> transactionEddDtoList)
@@ -1065,33 +1054,121 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	}
 	
  /***
-  *   Preparing  TransactionSDDto data related to customer selected date and time
+  * Preparing  TransactionSDDto data related 
+  * to customer selected date and time  
+  *   
   */
 	@Override
-	public List<TransactionSDDto> reScheduleddeliveryDate(OrderModel orderModel,RescheduleDataList rescheduleDataListDto){
-			 List<TransactionSDDto>  transactionSDDtoList=new  ArrayList<TransactionSDDto>();
-		 List<RescheduleData> rescheduleDataList=rescheduleDataListDto.getRescheduleDataList();
-		 for(OrderModel subModel:orderModel.getChildOrders()){ 
-			 for(AbstractOrderEntryModel abstractOrderEntryModel:subModel.getEntries()){	 
-				for(RescheduleData rescheduleData:rescheduleDataList){
-					if(StringUtils.isNotEmpty(rescheduleData.getProductCode())){
-						if(abstractOrderEntryModel.getProduct().getCode().equalsIgnoreCase(rescheduleData.getProductCode())){
-							TransactionSDDto transactionSDDto=new TransactionSDDto();
+	public List<TransactionSDDto> reScheduleddeliveryDate(OrderModel orderModel, RescheduleDataList rescheduleDataListDto)
+	{
+		List<TransactionSDDto> transactionSDDtoList = new ArrayList<TransactionSDDto>();
+		List<RescheduleData> rescheduleDataList = rescheduleDataListDto.getRescheduleDataList();
+		for (OrderModel subModel : orderModel.getChildOrders())
+		{
+			for (AbstractOrderEntryModel abstractOrderEntryModel : subModel.getEntries())
+			{
+				for (RescheduleData rescheduleData : rescheduleDataList)
+				{
+					if (StringUtils.isNotEmpty(rescheduleData.getProductCode()))
+					{
+						if (abstractOrderEntryModel.getProduct().getCode().equalsIgnoreCase(rescheduleData.getProductCode()))
+						{
+							TransactionSDDto transactionSDDto = new TransactionSDDto();
 							transactionSDDto.setTransactionID(abstractOrderEntryModel.getTransactionID());
 							transactionSDDto.setPickupDate(rescheduleData.getDate());
-							String timeFromTo=rescheduleData.getTime();
+							String timeFromTo = rescheduleData.getTime();
 							if (StringUtils.isNotEmpty(timeFromTo))
 							{
 								transactionSDDto.setTimeSlotFrom(timeFromTo.substring(0, timeFromTo.indexOf("TO") - 1));
 								transactionSDDto.setTimeSlotTo(timeFromTo.substring(timeFromTo.indexOf("TO") + 3, timeFromTo.length()));
+								abstractOrderEntryModel.setEdScheduledDate(rescheduleData.getDate());
 							}
 							transactionSDDtoList.add(transactionSDDto);
 							break;
 						}
 					}
 				}
-			 }
-		 }
+			}
+		}
 		return transactionSDDtoList;
 	}
+
+	
+	@Override
+	public void saveChangeDeliveryRequests(final String orderId, final String status)
+	{
+		mplDeliveryAddressService.saveChangeDeliveryRequests(orderId, status);
+
+	}
+
+
+
+	/***
+	 * his method is used to check whether order has Schedule delivery items or not
+	 * 
+	 */
+	@Override
+	public boolean checkScheduledDeliveryForOrder(OrderModel orderModel)
+	{
+		return mplDeliveryAddressService.checkScheduledDeliveryForOrder(orderModel);
+	}
+	
+	
+	/***
+	 * Preparing Re Scheduled Delivery Page Data
+	 * @return OrderData
+	 */
+	@Override
+	public OrderData reScheduledDeliveryPageData(OrderData orderData){
+		
+		for (final OrderEntryData orderEntry : orderData.getEntries())
+		{
+			//getting the product code
+			ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntry.getProduct().getCode());
+			if (CollectionUtils.isNotEmpty(productModel.getBrands()))
+			{
+				for (final BrandModel brand : productModel.getBrands())
+				{
+					orderEntry.setBrandName(brand.getName());
+					break;
+				}
+			}
+			List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
+					.getSellerInformationRelator();
+			for (final SellerInformationModel sellerInformationModel : sellerInfo)
+			{
+				if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid()))
+				{
+					final SellerInformationData sellerInfoData = new SellerInformationData();
+					sellerInfoData.setSellername(sellerInformationModel.getSellerName());
+					sellerInfoData.setUssid(sellerInformationModel.getSellerArticleSKU());
+					sellerInfoData.setSellerID(sellerInformationModel.getSellerID());
+					orderEntry.setSelectedSellerInformation(sellerInfoData);
+				}
+			}
+		}
+		return orderData;
+		
+	}
+	
+	
+	/**
+	 * @return the mplOrderFacade
+	 */
+	public MplOrderFacade getMplOrderFacade()
+	{
+		return mplOrderFacade;
+	}
+
+	/**
+	 * @param mplOrderFacade
+	 *           the mplOrderFacade to set
+	 */
+	public void setMplOrderFacade(final MplOrderFacade mplOrderFacade)
+	{
+		this.mplOrderFacade = mplOrderFacade;
+	}
+
+
 }
+	

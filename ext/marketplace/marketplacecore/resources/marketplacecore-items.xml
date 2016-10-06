@@ -4966,6 +4966,16 @@
 						<modifiers optional="true" />
 						<persistence type="property" />
 					</attribute>
+					<attribute qualifier="changeDeliveryTotalRequests" type="java.lang.Integer">
+	                   <modifiers optional="true" />
+	                   <defaultvalue>Integer.valueOf(0)</defaultvalue>
+	                     <persistence type="property" />
+                    </attribute>
+                     <attribute qualifier="changeDeliveryRejectsCount" type="java.lang.Integer">
+		                 <modifiers optional="true" />
+		                 <defaultvalue>Integer.valueOf(0)</defaultvalue>
+		                 <persistence type="property" />
+	                 </attribute>
 				</attributes>
 			</itemtype>
 
@@ -8571,30 +8581,7 @@
 				</attributes>
 			</itemtype>
 		</typegroup>
-	
-		<!-- close -->
-   <!-- R2.3 changesDeliveryAddress for  TemproryAddress Model-->
-	  <typegroup name="TemproryAddress">
-			<itemtype code="TemproryAddress" autocreate="true"  extends="Address" generate="true">
-				<deployment table="TempAddress" typecode="15010" />
-				<attributes>
-					<attribute autocreate="true" qualifier="orderId" type="java.lang.String"
-						generate="true">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="false" unique="false" />
-					</attribute>
 
-					<attribute autocreate="true" qualifier="isProcessed"
-						type="java.lang.Boolean" generate="true">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" unique="false" />
-					</attribute>
-				</attributes>
-			</itemtype>
-	 </typegroup>
-	<!-- END  -->
 	
 	<typegroup name="OrderShortUrlInfo">
 		<itemtype code="OrderShortUrlInfo" autocreate="true"  generate="true">

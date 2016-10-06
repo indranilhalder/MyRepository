@@ -3,6 +3,7 @@
  */
 package com.tis.mpl.facade.changedelivery;
 
+import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
@@ -14,12 +15,13 @@ import java.util.Map;
 import com.hybris.oms.domain.changedeliveryaddress.ChangeDeliveryAddressResponseDto;
 import com.hybris.oms.domain.changedeliveryaddress.TransactionEddDto;
 import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
+import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.facades.data.MplDeliveryAddressReportData;
 import com.tisl.mpl.facades.data.RescheduleDataList;
 import com.tisl.mpl.facades.data.ScheduledDeliveryData;
 
 
-/** 
+/**
  * @author Techouts
  *
  */
@@ -60,7 +62,7 @@ public interface MplDeliveryAddressFacade
 	 * @param addressData
 	 * @return String Status Msg Failure, success
 	 */
-	public ScheduledDeliveryData saveAsTemporaryAddressForCustomer(String orderCode, AddressData addressData);
+	public ScheduledDeliveryData scheduledDeliveryData(String orderCode, AddressData addressData);
 
 	/**
 	 *
@@ -68,26 +70,40 @@ public interface MplDeliveryAddressFacade
 	 * @param enteredOTPNumber
 	 * @return String msg Valid or not
 	 */
-	public String submitChangeDeliveryAddress(String customerId, String enteredOTPNumber, String orderCode);
+	public String submitChangeDeliveryAddress(String customerID, String orderCode);
 
 	//Generate new OTP
 	public boolean generateNewOTP(String orderCode);
 
 	public String getPartialEncryptValue(String encryptSymbol, int encryptLength, String source);
 
-	List<TransactionSDDto> reScheduleddeliveryDate(OrderModel orderModel,RescheduleDataList rescheduleDataListDto);
+	public List<TransactionSDDto> reScheduleddeliveryDate(OrderModel orderModel,RescheduleDataList rescheduleDataListDto);
 
-	public Map<String, Object> getDeliveryDate(List<TransactionEddDto> transactionEddDtoList,OrderModel orderModel);
+	public Map<String, Object> getDeliveryDate(List<TransactionEddDto> transactionEddDtoList, OrderModel orderModel);
 
 	public List<TransactionEddDto> getScheduledDeliveryDate(OrderModel orderModel, String newPincode);
 
 	public ChangeDeliveryAddressResponseDto scheduledDeliveryDateRequestToOMS(OrderModel orderModel, String newPincode);
 
 	public Collection<MplDeliveryAddressReportData> getDeliveryAddressRepot(String dateFrom, String toDate);
-
-
-	/**
-	 * @param orderModel
+	
+	public OTPResponseData validteOTP(String customerID, String enteredOTPNumber);
+    
+    /**
+	 * @param orderId
+	 * @param status
 	 */
-	public boolean checkScheduledDeliveryForOrder(OrderModel orderModel);
+	public void saveChangeDeliveryRequests(String orderId, String status);
+
+
+/**
+ * @param orderModel
+ * @return
+ */
+public boolean checkScheduledDeliveryForOrder(OrderModel orderModel);
+
+public boolean pincodeServiceableCheck(AddressData addressData, String orderCode);
+
+public OrderData reScheduledDeliveryPageData(OrderData orderData);
+	
 }
