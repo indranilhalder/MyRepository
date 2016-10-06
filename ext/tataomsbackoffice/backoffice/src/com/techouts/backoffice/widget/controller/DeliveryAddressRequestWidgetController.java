@@ -3,7 +3,7 @@
  */
 package com.techouts.backoffice.widget.controller;
 
-import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
@@ -19,6 +19,7 @@ import org.zkoss.zul.Listbox;
 
 import com.hybris.cockpitng.annotations.SocketEvent;
 import com.hybris.cockpitng.util.DefaultWidgetController;
+import com.hybris.oms.domain.buc.reports.dto.ReportRequest;
 import com.hybris.oms.tata.renderer.DeliveryAdressReportItemRenderer;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.facades.data.MplDeliveryAddressReportData;
@@ -47,7 +48,7 @@ public class DeliveryAddressRequestWidgetController extends DefaultWidgetControl
 	@WireVariable(value = "deliveryAddressFacade")
 	private MplDeliveryAddressFacade mplDeliveryAddressFacade;
 
-	DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+	final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
 	@Override
 	public void initialize(final Component comp)
@@ -57,8 +58,7 @@ public class DeliveryAddressRequestWidgetController extends DefaultWidgetControl
 		super.initialize(comp);
 		LOG.info("inside initialize method" + "Start Date " + cal.getTime() + "******* End Date " + new Date());
 
-
-		getDeliveryAddressRequestInfo(dateFormat.format(cal.getTime()), dateFormat.format(new Date()));
+		getDeliveryAddressRequestInfo(cal.getTime(), new Date());
 
 	}
 
@@ -68,21 +68,31 @@ public class DeliveryAddressRequestWidgetController extends DefaultWidgetControl
 	 *
 	 */
 	@SocketEvent(socketId = "startendDates")
-	public void getTshipVSshipReportBySocketEvent(final String startendDates)
+	public void getDeliveryAddressRequestByDate(final String startendDates)
 	{
+
 		final String[] startEndArray = startendDates.trim().split(",");
 		startDate = startEndArray[0];
 		endDate = startEndArray[1];
 
-
-
 		LOG.info(" inside sockent Start Date " + startDate + "******* End Date " + endDate);
+		final ReportRequest reportRequest = new ReportRequest();
+		try
+		{
+			getDeliveryAddressRequestInfo(dateFormat.parse(startDate), dateFormat.parse(endDate));
+		}
+		catch (final ParseException e)
+		{
 
-		getDeliveryAddressRequestInfo(startDate, endDate);
+			e.printStackTrace();
+		}
+
+
+
 
 	}
 
-	private void getDeliveryAddressRequestInfo(final String dateFrom, final String toDate)
+	private void getDeliveryAddressRequestInfo(final Date dateFrom, final Date toDate)
 	{
 		final Collection<MplDeliveryAddressReportData> deliveryAddressData = mplDeliveryAddressFacade
 				.getDeliveryAddressRepot(dateFrom, toDate);

@@ -73,17 +73,11 @@ public class ShortUrlMappingWidgetController extends DefaultWidgetController
 	public void getStartdpic()
 	{
 
-		if (startdpic.getValue() == null || enddpic.getValue() == null)
+		if (startdpic.getValue().after(enddpic.getValue())) //this kind of comparison ,it will check date along with time sec
 		{
+			msgBox("Start date must be less than End date");
 			return;
 		}
-
-		if (dateFormat.format(startdpic.getValue()).compareTo(dateFormat.format(enddpic.getValue())) > 0)
-		{
-			msgBox("Start date must be less than or equal to End date");
-			return;
-		}
-
 		LOG.info("Start date " + startdpic.getValue() + "end date " + enddpic.getValue() + "output socket sended");
 		getShortUrlMappingInfo(startdpic.getValue(), enddpic.getValue());
 
@@ -95,19 +89,9 @@ public class ShortUrlMappingWidgetController extends DefaultWidgetController
 	@ViewEvent(componentID = "enddpic", eventName = Events.ON_CHANGE)
 	public void getEnddpic()
 	{
-		if (startdpic.getValue() == null)
+		if (enddpic.getValue().before(startdpic.getValue()))
 		{
-			msgBox("Please choose the Start Date");
-			return;
-		}
-		if (enddpic.getValue() == null)
-		{
-			msgBox("Please choose the End Date");
-			return;
-		}
-		if (dateFormat.format(startdpic.getValue()).compareTo(dateFormat.format(enddpic.getValue())) > 0)
-		{
-			msgBox("End date must be greater than or equal to Start date");
+			msgBox("End date must be greater than  Start date");
 			return;
 		}
 

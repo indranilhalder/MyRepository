@@ -59,14 +59,6 @@ public class PincodeLogisticsDateController extends DefaultWidgetController
 	@ViewEvent(componentID = "startdpic", eventName = Events.ON_CHANGE)
 	public void getStartdpic()
 	{
-
-
-		if (enddpic.getValue() == null)
-		{
-			msgBox("Please choose the End Date");
-			return;
-		}
-
 		if (startdpic.getValue().after(enddpic.getValue())) //this kind of comparison ,it will check date along with time sec
 		{
 			msgBox("Start date must be less than End date");
@@ -86,11 +78,6 @@ public class PincodeLogisticsDateController extends DefaultWidgetController
 	@ViewEvent(componentID = "enddpic", eventName = Events.ON_CHANGE)
 	public void getEnddpic()
 	{
-		if (startdpic.getValue() == null)
-		{
-			msgBox("Please choose the Start Date");
-			return;
-		}
 		if (enddpic.getValue().before(startdpic.getValue()))
 		{
 			msgBox("End date must be greater than  Start date");

@@ -33,7 +33,8 @@ public class DeliveryAddressDatePicController extends DefaultWidgetController
 
 
 	private static final Logger LOG = LoggerFactory.getLogger(DeliveryAddressDatePicController.class);
-	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
+	final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
 
 	@Override
@@ -44,8 +45,6 @@ public class DeliveryAddressDatePicController extends DefaultWidgetController
 		startdpic.setValue(cal.getTime());
 		enddpic.setValue(new Date());
 		super.initialize(comp);
-
-
 	}
 
 
@@ -56,15 +55,9 @@ public class DeliveryAddressDatePicController extends DefaultWidgetController
 	public void getStartdpic()
 	{
 
-
-		if (startdpic.getValue() == null || enddpic.getValue() == null)
+		if (startdpic.getValue().after(enddpic.getValue())) //this kind of comparison ,it will check date along with time sec
 		{
-			return;
-		}
-
-		if (dateFormat.format(startdpic.getValue()).compareTo(dateFormat.format(enddpic.getValue())) > 0)
-		{
-			msgBox("Start date must be less than or equal to End date");
+			msgBox("Start date must be less than End date");
 			return;
 		}
 
@@ -72,6 +65,7 @@ public class DeliveryAddressDatePicController extends DefaultWidgetController
 		sendOutput("startendDates", dateFormat.format(startdpic.getValue()) + "," + dateFormat.format(enddpic.getValue()));
 		LOG.info(
 				"Start date " + startdpic.getValue() + "end date " + dateFormat.format(enddpic.getValue()) + "output socket sended");
+
 
 	}
 
@@ -81,19 +75,9 @@ public class DeliveryAddressDatePicController extends DefaultWidgetController
 	@ViewEvent(componentID = "enddpic", eventName = Events.ON_CHANGE)
 	public void getEnddpic()
 	{
-		if (startdpic.getValue() == null)
+		if (enddpic.getValue().before(startdpic.getValue()))
 		{
-			msgBox("Please choose the Start Date");
-			return;
-		}
-		if (enddpic.getValue() == null)
-		{
-			msgBox("Please choose the End Date");
-			return;
-		}
-		if (dateFormat.format(startdpic.getValue()).compareTo(dateFormat.format(enddpic.getValue())) > 0)
-		{
-			msgBox("End date must be greater than or equal to Start date");
+			msgBox("End date must be greater than  Start date");
 			return;
 		}
 
