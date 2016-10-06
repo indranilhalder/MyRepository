@@ -665,6 +665,9 @@
 			<property name="rootCategory" type="String" />
 			<property name="productLevelDiscount" type="java.lang.Double" />
 			<property name="productCategoryId" type="String" />
+			<!--  Added for luxury -->
+			<property name="isLuxury" type="String" /> 
+			
 			
 			<!-- 	-->	
 			<property name="discountPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
@@ -804,7 +807,8 @@
 		<property name="delistedMessage" type="String" />
 		<property name="pickupPersonName" type="String" />
 		<property name="pickupPersonMobile" type="String" />
-		
+		<!-- Added for luxury -->
+			<property name="isLuxury" type="String" />	
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.CartProductsDeliveryDetailsWsDTO">
 		<property name="data" type="String" />
@@ -2422,10 +2426,11 @@
     	<property name="productUrl" type="String" />
     	<property name="productImageUrl" type="String" /> 
     	<property name="productTitle" type="String" /> 
-    	<property name="productPrice" type="String"/>
+    	<property name="productMRP" type="String"/>
     	<property name="productMOP" type="String"/>
     	<property name="productSpecialPrice" type="String"/>
     	<property name="productBrand" type="String"/>
+    	<property name="position" type="Integer"/>
     			
     </bean>
     <bean class="com.tisl.mpl.wsdto.LuxShopYourFavListWsDTO">
@@ -2527,7 +2532,7 @@
     	<!-- For spring_component -->
     	<property name="spring_component" type="com.tisl.mpl.wsdto.LuxSpringCollectionComponentWsDTO"/>
     	<!-- For Featured Products -->
-    	<property name="featured_component" type="com.tisl.mpl.wsdto.LuxFeaturedCollectionComponentWsDTO"/>
+    	<property name="featured_component" type="com.tisl.mpl.wsdto.LuxSpringCollectionComponentWsDTO"/>
     	<!-- For VideoComponent -->
     	<property name="videocomponent" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxVideocomponentWsDTO>"/>
     	<!-- For Why Out Products, MplShowcaseComponent -->
@@ -2559,14 +2564,14 @@
     <bean class="com.tisl.mpl.wsdto.LuxSpringCollectionComponentWsDTO">
     	<property name="text_heading" type="String" />
     	<property name="text" type="String" />
-    	<property name="carousal_images" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxCollectionListWsDTO>" />
+    	<property name="image" type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO" />
     </bean>
     
-<bean class="com.tisl.mpl.wsdto.LuxFeaturedCollectionComponentWsDTO">
+<!-- <bean class="com.tisl.mpl.wsdto.LuxFeaturedCollectionComponentWsDTO">
     	<property name="heading" type="String" />
     	<property name="text" type="String" />
     	<property name="carousal_images" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxCollectionListWsDTO>" />
-    </bean>
+    </bean> -->
     <bean class="com.tisl.mpl.wsdto.LuxCollectionListWsDTO">
     	<property name="is_default" type="boolean" />
     	<property name="image" type="String" />
@@ -2620,5 +2625,10 @@
     
     <!-- Mega navigation DTO struture ends -->
     
+ 	<!-- Newsletter DTO struture starts -->
+    <bean class="com.tisl.mpl.wsdto.NewsletterWsDTO">
+    	<property name="success" type="String"/>
+    </bean>
+    <!-- Newsletter DTO struture ends -->
 
 </beans>

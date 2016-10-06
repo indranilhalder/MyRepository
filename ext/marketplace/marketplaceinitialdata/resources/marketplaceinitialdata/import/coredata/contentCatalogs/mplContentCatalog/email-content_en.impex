@@ -41,7 +41,7 @@ UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript
  ;mpl_Email_Order_Refund_Subject;"Order Refund Email Subject";$emailResource/email-orderRefundSubject.vm
  ;mpl_Email_Ready_For_Pickup_Body;"Ready For Pickup Email Body";$emailResource/email-readyForPickupBody.vm
  ;mpl_Email_Ready_For_Pickup_Subject;"Ready For Pickup Email Subject";$emailResource/email-readyForPickupSubject.vm
-  ;mpl_Email_FriendsInvite_Body;"Friends Invite Email Body";$emailResource/email-friendsInviteBody.vm
+ ;mpl_Email_FriendsInvite_Body;"Friends Invite Email Body";$emailResource/email-friendsInviteBody.vm
  ;mpl_Email_FriendsInvite_Subject;"Friends Invite Email Subject";$emailResource/email-friendsInviteSubject.vm
  ;mpl_Email_SendInvoice_Body;"Send Invoice Email Body";$emailResource/email-sendInvoiceBody.vm
  ;mpl_Email_SendInvoice_Subject;"Send Invoice Email Subject";$emailResource/email-sendInvoiceSubject.vm
@@ -56,6 +56,8 @@ UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript
  ;mpl_Email_ChangePassword_Body;"Change Password Email Body";$emailResource/email-changePasswordBody.vm
  ;mpl_Email_SubmitRequest_Subject;"Contact us request subject";$emailResource/email-submitRequestSubject.vm
  ;mpl_Email_SubmitRequest_Body;"Contact us request  Body";$emailResource/email-submitRequestBody.vm
+ ;mpl_Email_LuxuryPdpQuestion_Subject;"Contact us Luxury Pdp Question subject";$emailResource/email-luxuryPDPQuestionSubject.vm
+ ;mpl_Email_LuxuryPdpQuestion_Body;"Contact us Luxury Pdp Question  Body";$emailResource/email-luxuryPDPQuestionBody.vm
  ;mpl_Email_OrderPlacedFeedback_Subject;"Order Placed Feedback subject";$emailResource/email-orderPlacedFeedbackSubject.vm
  ;mpl_Email_OrderPlacedFeedback_Body;"Order Placed Feedback Body";$emailResource/email-orderPlacedFeedbackBody.vm
  #Shipping Confirmation Event
