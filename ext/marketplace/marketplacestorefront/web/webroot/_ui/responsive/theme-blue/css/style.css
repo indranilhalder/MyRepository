@@ -35288,14 +35288,13 @@ display: block !important;
 padding-top:15px !important;
 }
 .listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile select {
-    margin-left: 3px !important;
-    padding-left: 38px !important;
+    margin-left: 35px !important;
 }
 .listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile .sortByMobile {
     text-align: left;
     left: 0;
     padding-right: 10px;
-    padding-left: 50px;
+    padding-left: 44px;
 }
 	.listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile select option {
     background: #f5f5f5;
