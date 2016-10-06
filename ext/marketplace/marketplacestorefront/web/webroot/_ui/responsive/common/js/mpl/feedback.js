@@ -2404,6 +2404,9 @@ $(document).ready(function(){
 				$("body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header").css("margin-top","0px");
 			}
      }, 100);
+	 $(document).on("click",".smartbanner-close",function(){
+		$("body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header").css("margin-top","0px");
+	 });
 	
 });
 /* TPR-1601 checkout progress bar end  */
