@@ -170,7 +170,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 *
+	 * 
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -628,23 +628,30 @@ public class SearchSuggestUtilityMethods
 				/*
 				 * final ProductModel productModel = productService.getProductForCode(defaultPromotionManager.catalogData(),
 				 * productData.getCode());
-				 *
+				 * 
 				 * ProductData productData1 = null; if (null != productModel) { productData1 =
 				 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.GALLERY)); } else { throw
 				 * new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9037); }
-				 *
-				 *
+				 * 
+				 * 
 				 * if (null != productData1) { final List<GalleryImageData> gallaryImages =
 				 * mplProductWebService.getGalleryImages(productData1);
-				 *
+				 * 
 				 * if (!gallaryImages.isEmpty()) { sellingItemDetail.setGalleryImagesList(gallaryImages); }
-				 *
+				 * 
 				 * }
 				 */
-				productDataImage = productFacade.getProductForCodeAndOptions(productData.getCode(),
-						Arrays.asList(ProductOption.GALLERY));
-
-				galleryImages = productDetailsHelper.getGalleryImagesMobile(productDataImage);
+				try
+				{
+					productDataImage = productFacade.getProductForCodeAndOptions(productData.getCode(),
+							Arrays.asList(ProductOption.GALLERY));
+					galleryImages = productDetailsHelper.getGalleryImagesMobile(productDataImage);
+				}
+				catch (final Exception e)
+				{
+					LOG.error("SERPSEARCH ProductError:" + productData.getCode());
+					continue;
+				}
 				if (CollectionUtils.isNotEmpty(galleryImages))
 				{
 					sellingItemDetail.setGalleryImagesList(galleryImages);
