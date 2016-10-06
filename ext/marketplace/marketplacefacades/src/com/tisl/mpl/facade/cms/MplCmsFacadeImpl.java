@@ -2363,11 +2363,12 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				luxStlComponentObj.setCta(promobannerComponent.getMinorPromo2Text());
 			}
 
-			if (null != promobannerComponent.getMedia() && null != promobannerComponent.getMedia().getURL())
+			if (null != promobannerComponent.getMedia() && null != promobannerComponent.getMedia().getURL2())
 			{
-				luxStlComponentObj.setImage(promobannerComponent.getMedia().getURL());
+				luxStlComponentObj.setImage(promobannerComponent.getMedia().getURL2());
 			}
 
+			luxStlComponentObj.setDestination(promobannerComponent.getUrlLink());
 		}
 		if (null != luxShopTheLookWsDTO)
 		{
