@@ -125,6 +125,7 @@ import com.tisl.mpl.wsdto.LuxSignatureWsDTO;
 import com.tisl.mpl.wsdto.LuxSocialFeedComponentWsDTO;
 import com.tisl.mpl.wsdto.LuxSpringCollectionComponentWsDTO;
 import com.tisl.mpl.wsdto.LuxVideocomponentWsDTO;
+import com.tisl.mpl.wsdto.TextComponentWsDTO;
 
 
 /**
@@ -544,11 +545,6 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					componentListForASlot.add(luxuryComponent);
 				}
 				// Social Feed Component added
-				/*
-				 * else if (typecode.equalsIgnoreCase("CMSParagraphComponent")) { final CMSParagraphComponentModel
-				 * socialFeedComponent = (CMSParagraphComponentModel) abstractCMSComponentModel; luxuryComponent =
-				 * getLuxSocialFeedcomponentWsDTO(socialFeedComponent); componentListForASlot.add(luxuryComponent); }
-				 */
 
 				else if (typecode.equalsIgnoreCase("ImageCarouselComponent")
 						&& contentSlot.getUid().equalsIgnoreCase("Section8-socialFeed"))
@@ -580,9 +576,21 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					count++;
 					if (contentSlot.getCmsComponents().size() == count)
 					{
+						luxComponentObj.setSectionid(contentSlot.getUid());
 						componentListForASlot.add(luxComponentObj);
 					}
 				}
+
+
+				else if (typecode.equalsIgnoreCase("CMSParagraphComponent")
+						&& contentSlot.getUid().equalsIgnoreCase("Section9-socialFeedHeaderSection"))
+				{
+					final CMSParagraphComponentModel socialFeedComponent = (CMSParagraphComponentModel) abstractCMSComponentModel;
+					luxuryComponent = getLuxSocialFeedHeaderWsDTO(socialFeedComponent);
+					componentListForASlot.add(luxuryComponent);
+				}
+
+
 				LOG.debug("Adding component" + abstractCMSComponentModel.getUid() + "for section" + contentSlot.getUid());
 				luxuryComponent.setSectionid(contentSlot.getUid());
 				//		componentListForASlot.add(luxuryComponent);
@@ -1033,13 +1041,24 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	/**
 	 * @param socialFeedComponent
 	 */
-	/*
-	 * private LuxComponentsListWsDTO getLuxSocialFeedcomponentWsDTO(final CMSParagraphComponentModel
-	 * socialFeedComponent) { final TextComponentWsDTO text = new TextComponentWsDTO(); final LuxComponentsListWsDTO
-	 * luxComponent = new LuxComponentsListWsDTO(); if (null != socialFeedComponent) { if (null !=
-	 * socialFeedComponent.getContent()) { text.setText(socialFeedComponent.getContent()); } }
-	 * luxComponent.setSocialfeedcomponent(text); return luxComponent; }
-	 */
+
+
+	private LuxComponentsListWsDTO getLuxSocialFeedHeaderWsDTO(final CMSParagraphComponentModel socialFeedComponent)
+	{
+		final TextComponentWsDTO text = new TextComponentWsDTO();
+		final LuxComponentsListWsDTO luxComponent = new LuxComponentsListWsDTO();
+		if (null != socialFeedComponent)
+		{
+			if (null != socialFeedComponent.getContent())
+			{
+				text.setText(socialFeedComponent.getContent());
+			}
+		}
+		luxComponent.setSocialfeedHeadercomponent(text);
+		return luxComponent;
+	}
+
+
 
 	/**
 	 * @param luxuryVideoComponent
