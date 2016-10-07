@@ -665,8 +665,8 @@
 			<property name="rootCategory" type="String" />
 			<property name="productLevelDiscount" type="java.lang.Double" />
 			<property name="productCategoryId" type="String" />
-			<!--  Added for luxury 
-			<property name="isLuxury" type="String" /> -->
+			<!--  Added for luxury -->
+			<property name="isLuxury" type="String" /> 
 			
 			
 			<!-- 	-->	
@@ -807,8 +807,6 @@
 		<property name="delistedMessage" type="String" />
 		<property name="pickupPersonName" type="String" />
 		<property name="pickupPersonMobile" type="String" />
-		<!-- Added for luxury -->
-			<property name="isLuxury" type="String" />	
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.CartProductsDeliveryDetailsWsDTO">
 		<property name="data" type="String" />
