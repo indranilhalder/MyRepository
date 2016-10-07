@@ -449,13 +449,21 @@ public class CustomerXMLUtlity
 				}
 				if (StringUtils.isNotEmpty(addressModel.getPostalcode()))
 				{
+					//fix for TISPRD-6438
 					try
 					{
-						customerAddress.setPincode(Long.valueOf(addressModel.getPostalcode()));
+						if (addressModel.getPostalcode().length() == MarketplacecommerceservicesConstants.PIN_CODE_LENGTH)
+						{
+							customerAddress.setPincode(Long.valueOf(addressModel.getPostalcode()));
+						}
+						else
+						{
+							LOG.debug("*****address pincode error skip pincode********");
+						}
 					}
 					catch (final Exception e)
 					{
-						LOG.debug("*****address state error skip pincode********");
+						LOG.debug("*****address pincode error skip pincode********");
 						//continue;
 					}
 
@@ -482,9 +490,14 @@ public class CustomerXMLUtlity
 					customerAddress.setCity(addressModel.getTown());
 				}
 
+				//fix for TISPRD-4752
 				if (null != addressModel.getCountry() && StringUtils.isNotEmpty(addressModel.getCountry().getIsocode()))
 				{
 					customerAddress.setCountry(addressModel.getCountry().getIsocode());
+				}
+				else
+				{
+					customerAddress.setCountry(MarketplacecommerceservicesConstants.DEFAULT_COUNTRY_CODE);
 				}
 				if (null != customerModel.getDefaultShipmentAddress()
 						&& customerModel.getDefaultShipmentAddress().equals(addressModel))
@@ -496,7 +509,15 @@ public class CustomerXMLUtlity
 				{
 					customerAddress.setAddressType(addressModel.getAddressType());
 				}
-				customerAddressList.add(customerAddress);
+				if (null != customerAddress.getDefaultFlag()
+						&& customerAddress.getDefaultFlag().equals(MarketplacecclientservicesConstants.X))
+				{
+					customerAddressList.add(0, customerAddress);
+				}
+				else
+				{
+					customerAddressList.add(customerAddress);
+				}
 				LOG.debug("added to customer list");
 			}
 		} //End of address loop
