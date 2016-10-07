@@ -190,6 +190,7 @@ function refresh(){
 function displayNetbankingForm(){
 	refresh();
 	$("#paymentMode").val("Netbanking");
+	$("#paymentModeValue").val("Netbanking");
 	
 	$.ajax({
 		url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/setupMplNetbankingForm",
@@ -226,6 +227,7 @@ function displayEMIForm(){
 	}
 	$("#bankNameForEMI option").remove();
 	$("#paymentMode").val("EMI");
+	$("#paymentModeValue").val("EMI");
 	$('input:password').val("");
 	$(".name_on_card").val("");	
 	applyPromotion(null);
@@ -360,6 +362,7 @@ function displayCODForm()
 	//TISPRD-2138
 	//applyPromotion(null);
 	$("#paymentMode").val("COD");
+	$("#paymentModeValue").val("COD");
 	var paymentMode=$("#paymentMode").val();
 	var cartValue=$("#cartValue").val();
 	var httpRequest=$("#httpRequest").val();
@@ -491,6 +494,7 @@ function displayCODForm()
 function displayDebitCardForm(){
 	refresh();
 	$("#paymentMode").val("Debit Card");
+	$("#paymentModeValue").val("Debit Card");
 	//resetConvCharge();	TISPT-29
 	$('input:password').val("");
 	$(".name_on_card").val("");	
@@ -574,6 +578,7 @@ function displayDCForm(){
 function displayCreditCardForm(){		
 	refresh();
 	$("#paymentMode").val("Credit Card");
+	$("#paymentModeValue").val("Credit Card");
 	$("#is_emi").val("false");
 	$("#card, #ccHeader").css("display","block");
 	$("#dcHeader").css("display","none");	
