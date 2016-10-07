@@ -6,7 +6,11 @@ package com.tisl.mpl.marketplacecommerceservices.daos;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
+import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
 import de.hybris.platform.cms2.servicelayer.daos.CMSPageDao;
+import de.hybris.platform.commerceservices.search.pagedata.PageableData;
+import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
+import de.hybris.platform.core.model.product.ProductModel;
 
 import com.tisl.mpl.core.enums.CMSChannel;
 import com.tisl.mpl.core.model.MplShopByLookModel;
@@ -39,10 +43,14 @@ public interface MplCmsPageDao extends CMSPageDao
 	 * @return ContentPageModel
 	 */
 	ContentPageModel getHomePageForMobile(CMSChannel cms, String pageUid);
-	
+
 	/**
 	 * @param pageUid
 	 * @return ContentPageModel
 	 */
 	ContentPageModel getPageForAppById(String pageUid);
+
+	SearchPageData<ContentSlotForPageModel> getContentSlotsForAppById(String pageUid, PageableData pageableData);
+
+	ContentPageModel getContentPageForProduct(ProductModel product);
 }
