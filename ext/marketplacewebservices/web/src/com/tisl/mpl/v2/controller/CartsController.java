@@ -3718,6 +3718,10 @@ public class CartsController extends BaseCommerceController
 			{
 				cartDataDetails.setError(e.getErrorMessage());
 			}
+			if (null != e.getErrorCode())
+			{
+				cartDataDetails.setError(e.getErrorCode());
+			}
 			cartDataDetails.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		catch (final EtailBusinessExceptions e)
@@ -3734,6 +3738,10 @@ public class CartsController extends BaseCommerceController
 			if (null != e.getErrorMessage())
 			{
 				cartDataDetails.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				cartDataDetails.setError(e.getErrorCode());
 			}
 		}
 		//TPR-799
