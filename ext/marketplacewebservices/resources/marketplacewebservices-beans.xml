@@ -2331,4 +2331,12 @@
 		<property name="code" type="String" />
 	</bean>
 
+<bean class="com.tisl.mpl.wsdto.ProductContentWsData" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="contentList" type="String" />
+		<property name="imageList" type="String" />
+		<property name="videoList" type="String" />
+		<property name="section" type="String" />
+	</bean>
+
+   
 </beans>
