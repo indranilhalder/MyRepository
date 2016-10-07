@@ -20,9 +20,10 @@
 	</c:if>
 
 	<c:if test="${component.imageSize eq 'THUMBNAIL'}">
-		<div
+		<!-- <div
 			class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference"
-			id="mplAdvancedCategoryCarousel">
+			id="mplAdvancedCategoryCarousel"> -->
+			<div class="carousel" id="mplAdvancedCategoryCarousel"> 
 			<c:forEach items="${component.categories}" var="category">
 				<cms:component component="${category}" evaluateRestriction="true"
 					element="div" class="item slide" />
