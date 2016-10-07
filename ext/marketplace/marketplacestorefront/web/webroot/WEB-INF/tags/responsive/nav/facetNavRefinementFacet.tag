@@ -65,6 +65,9 @@ function navigateToPage(queryString,textString)
 				<h4 class="${facetData.genericFilter}">${facetData.name}</h4>
 			</c:if>		 
 			</c:when> 
+			<c:when test="${facetData.code eq 'strapcolor'}">
+				<h4 class="true">Strap Colour</h4>
+			</c:when>
 			<%-- <c:when test="${facetData.code == 'price'}">
 				<h4 class="true">${facetData.name}</h4>
 			</c:when> --%>
@@ -85,7 +88,7 @@ function navigateToPage(queryString,textString)
 						<c:url value="${facetValue.query.url}" var="facetValueQueryUrl"/>
 						<c:choose>
 						
-						<c:when test="${(facetData.code eq 'colour' || facetData.code  eq 'strapcolor' || facetData.code  eq 'dialColourWatches')&& not empty facetValue.name}">
+						<c:when test="${(facetData.code eq 'colour'  || facetData.code  eq 'dialColourWatches')&& not empty facetValue.name}">
 							<c:set var="colorAry" value="${fn:split(facetValue.code, '_')}" />
 							<c:choose>
 								<c:when test="${colorAry[0]=='Multi' || colorAry[0]=='multi'}">
@@ -193,7 +196,7 @@ function navigateToPage(queryString,textString)
 					<li class="filter-${facetData.code}">
 
 					<c:choose>
-						<c:when test="${(facetData.code eq 'colour'|| facetData.code  eq 'strapcolor' || facetData.code  eq 'dialColourWatches') && not empty facetValue.name }">						
+						<c:when test="${(facetData.code eq 'colour' || facetData.code  eq 'dialColourWatches') && not empty facetValue.name }">						
 							<c:set var="colorAry" value="${fn:split(facetValue.code, '_')}" />
 							<c:choose>
 								<c:when test="${colorAry[0]=='Multi' || colorAry[0]=='multi'}">
@@ -267,6 +270,9 @@ function navigateToPage(queryString,textString)
 							</c:choose>
 						</c:when>
 						<%-- <c:when test="${facetData.name eq 'size'}"> --%>	
+						
+						
+						
 						<c:when test="${facetData.code eq 'size' && not empty facetValue.name}">					
 							  <form action="${url}" method="get"> 
 								<input type="hidden" name="offer" value="${offer}"/>
@@ -393,7 +399,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
 								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 								<input type="hidden" name="facetValue" value="${facetValue.code}"/>
-								<input type="hidden" name="isFacet" value="true"/>
+								<input type="hidden" name="isFacet" value="true"/>ddddd
 								<input type="submit" value="${facetValue.name}"  />
 								</form>	
 							<%-- <a href="#">${facetValue.name}</a>	 --%>					
@@ -444,7 +450,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
 								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
-								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
+								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>sss
 								<input type="hidden" name="facetValue" value="${facetValue.code}"/>
 								<input type="hidden" name="isFacet" value="true"/>
 								<input type="submit" value="<spring:theme code="search.nav.facetShowLess_${facetData.code}" text="less..."/>" class="js-less-facet-values-link"  />

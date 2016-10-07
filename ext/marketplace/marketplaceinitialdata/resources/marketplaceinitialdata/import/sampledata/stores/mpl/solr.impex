@@ -366,7 +366,6 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 								 ;$solrIndexedType                        ;patternWatches					;string		;		true;			; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;patternfashiona:10015
 								 ;$solrIndexedType                        ;gender							;string		;		true;			; 					;true						;false   				;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;genderfashiona:10014,genderwatches:20002
 								 ;$solrIndexedType                        ;dialColour						;string		;		true;			; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;dialcolor:activitytrackergf,dialcolor:watchesgf
-								 ;$solrIndexedType                        ;dialColourWatches				;string		;		true;			; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationColourCodeValueProvider;						;				;							;dialcolorwatches:20003
 								 ;$solrIndexedType                        ;multipack						;string		;		true;			; 					;true						;false   				;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;multipackfashiona:10001
 								 ;$solrIndexedType                        ;materialType						;string	    ;		true;			; 					;true						;false   				;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;materialtypefashiona:10001
 								 ;$solrIndexedType                        ;bagType							;string	    ;		true;			; 					;true						;   					;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;bagtypefashiona:10003
@@ -387,9 +386,15 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
  								 ;$solrIndexedType                        ;dailshape   						;string		;		true;			; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;dialshapewatches:20004
 # 								 ;$solrIndexedType                        ;dailshapecolor					;string		;		true;			; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;dialcolorwatches:20003
  								 ;$solrIndexedType                        ;strapmaterial					;string		;		true;			; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;straptypewatches:20010
- 								 ;$solrIndexedType                        ;strapcolor						;string		;		true;			; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationColourCodeValueProvider	;					;				;							;strapcolorwatches:20010
+ 								 ;$solrIndexedType                        ;strapcolor						;string		;		true;			; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;					;				;							;strapcolorwatches:20010
  								 ;$solrIndexedType                        ;features			   				;string		;		true;			; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;specialfeatureswatches:20003,waterresistancewatches:20002
 # 								 ;$solrIndexedType                        ;collectionname   				;string		;		true;			; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;collectionnamewatches:20002
+
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);genericFacet[default=false];sortableType(code);currency[default=false];localized[default=false];multiValue[default=true];facet[default=false];facetType(code);facetSort(code);priority;visible;fieldValueProvider	;facetDisplayNameProvider						;customFacetSortProvider;rangeSets(name);$classAttributeAssignment	;$classificationAttributeAssignments;
+								 ;$solrIndexedType                        ;dialColourWatches				;string		;		true;			; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationColourCodeValueProvider;mplColorFacetDisplayNameProvider		;				;				;							;dialcolorwatches:20003
+
+
+
  ########Added Classification for Watches   :::: END ###############
   
 #For Exclude OutofStock facet

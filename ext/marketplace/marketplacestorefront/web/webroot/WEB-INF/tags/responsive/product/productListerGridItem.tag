@@ -378,7 +378,7 @@
 			</div>
 		</div> --%>
 			<c:if
-				test="${not empty product.productCategoryType && product.productCategoryType eq 'Electronics'}">
+				test="${not empty product.productCategoryType && (product.productCategoryType eq 'Electronics' || product.productCategoryType eq 'Watches')}">
 				<div class="compare">
 					<input type="checkbox" id="${product.leastSizeProduct}"> <label
 						for="${product.leastSizeProduct}"></label>
