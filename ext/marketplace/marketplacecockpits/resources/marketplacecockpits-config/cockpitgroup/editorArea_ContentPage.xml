@@ -13,6 +13,7 @@
 		<property qualifier="contentpage.keywords"/>
 		<property qualifier="contentpage.associatedSeller"/>
 		<property qualifier="contentPage.categoryAssociated"/>
+		<property qualifier="contentpage.associatedProducts"/>
 	</group>
 	
 	<group qualifier="visibility" visible="true" initially-opened="false">
