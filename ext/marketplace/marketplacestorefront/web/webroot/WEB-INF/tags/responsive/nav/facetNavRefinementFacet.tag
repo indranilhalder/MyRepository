@@ -399,7 +399,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
 								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 								<input type="hidden" name="facetValue" value="${facetValue.code}"/>
-								<input type="hidden" name="isFacet" value="true"/>ddddd
+								<input type="hidden" name="isFacet" value="true"/>
 								<input type="submit" value="${facetValue.name}"  />
 								</form>	
 							<%-- <a href="#">${facetValue.name}</a>	 --%>					
@@ -450,7 +450,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
 								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
-								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>sss
+								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 								<input type="hidden" name="facetValue" value="${facetValue.code}"/>
 								<input type="hidden" name="isFacet" value="true"/>
 								<input type="submit" value="<spring:theme code="search.nav.facetShowLess_${facetData.code}" text="less..."/>" class="js-less-facet-values-link"  />

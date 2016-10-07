@@ -377,8 +377,10 @@
 				<action:actions element="div" parentComponent="${component}"/>
 			</div>
 		</div> --%>
+			<%-- <c:if
+				test="${not empty product.productCategoryType && (product.productCategoryType eq 'Electronics' || product.productCategoryType eq 'Watches')}"> --%>
 			<c:if
-				test="${not empty product.productCategoryType && (product.productCategoryType eq 'Electronics' || product.productCategoryType eq 'Watches')}">
+				test="${not empty product.productCategoryType && product.productCategoryType eq 'Electronics' }">
 				<div class="compare">
 					<input type="checkbox" id="${product.leastSizeProduct}"> <label
 						for="${product.leastSizeProduct}"></label>

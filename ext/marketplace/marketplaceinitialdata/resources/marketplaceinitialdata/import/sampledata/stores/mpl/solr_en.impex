@@ -148,7 +148,7 @@ UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=
  ;$solrIndexedType		   ;straptype						   ;"Strap Type"
  ;$solrIndexedType		   ;features						   ;"Features"
  ;$solrIndexedType		   ;dailshape						   ;"Dial Shape"
- ;$solrIndexedType		   ;strapcolor						   ;"Strap Colour"
+ ;$solrIndexedType		   ;strapcolor						   ;"Strap Color"
  ;$solrIndexedType		   ;beltSize						   ;"Belt Size"
  ;$solrIndexedType         ;patternWatches	         	       ;"Pattern"
  ;$solrIndexedType         ;dialColourWatches	         	   ;"Dial Colour"
