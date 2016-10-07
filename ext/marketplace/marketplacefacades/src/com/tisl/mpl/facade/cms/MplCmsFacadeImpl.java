@@ -65,6 +65,7 @@ import com.tisl.mpl.core.model.OurJourneyComponentModel;
 import com.tisl.mpl.core.model.SignColComponentModel;
 import com.tisl.mpl.core.model.SignColItemComponentModel;
 import com.tisl.mpl.core.model.VideoComponentModel;
+import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.facades.cms.data.BannerComponentData;
 import com.tisl.mpl.facades.cms.data.CollectionComponentData;
 import com.tisl.mpl.facades.cms.data.CollectionHeroComponentData;
@@ -125,6 +126,7 @@ import com.tisl.mpl.wsdto.LuxSignatureWsDTO;
 import com.tisl.mpl.wsdto.LuxSocialFeedComponentWsDTO;
 import com.tisl.mpl.wsdto.LuxSpringCollectionComponentWsDTO;
 import com.tisl.mpl.wsdto.LuxVideocomponentWsDTO;
+import com.tisl.mpl.wsdto.TextComponentWsDTO;
 
 
 /**
@@ -544,11 +546,6 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					componentListForASlot.add(luxuryComponent);
 				}
 				// Social Feed Component added
-				/*
-				 * else if (typecode.equalsIgnoreCase("CMSParagraphComponent")) { final CMSParagraphComponentModel
-				 * socialFeedComponent = (CMSParagraphComponentModel) abstractCMSComponentModel; luxuryComponent =
-				 * getLuxSocialFeedcomponentWsDTO(socialFeedComponent); componentListForASlot.add(luxuryComponent); }
-				 */
 
 				else if (typecode.equalsIgnoreCase("ImageCarouselComponent")
 						&& contentSlot.getUid().equalsIgnoreCase("Section8-socialFeed"))
@@ -580,9 +577,21 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					count++;
 					if (contentSlot.getCmsComponents().size() == count)
 					{
+						luxComponentObj.setSectionid(contentSlot.getUid());
 						componentListForASlot.add(luxComponentObj);
 					}
 				}
+
+
+				else if (typecode.equalsIgnoreCase("CMSParagraphComponent")
+						&& contentSlot.getUid().equalsIgnoreCase("Section9-socialFeedHeaderSection"))
+				{
+					final CMSParagraphComponentModel socialFeedComponent = (CMSParagraphComponentModel) abstractCMSComponentModel;
+					luxuryComponent = getLuxSocialFeedHeaderWsDTO(socialFeedComponent);
+					componentListForASlot.add(luxuryComponent);
+				}
+
+
 				LOG.debug("Adding component" + abstractCMSComponentModel.getUid() + "for section" + contentSlot.getUid());
 				luxuryComponent.setSectionid(contentSlot.getUid());
 				//		componentListForASlot.add(luxuryComponent);
@@ -1033,13 +1042,24 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	/**
 	 * @param socialFeedComponent
 	 */
-	/*
-	 * private LuxComponentsListWsDTO getLuxSocialFeedcomponentWsDTO(final CMSParagraphComponentModel
-	 * socialFeedComponent) { final TextComponentWsDTO text = new TextComponentWsDTO(); final LuxComponentsListWsDTO
-	 * luxComponent = new LuxComponentsListWsDTO(); if (null != socialFeedComponent) { if (null !=
-	 * socialFeedComponent.getContent()) { text.setText(socialFeedComponent.getContent()); } }
-	 * luxComponent.setSocialfeedcomponent(text); return luxComponent; }
-	 */
+
+
+	private LuxComponentsListWsDTO getLuxSocialFeedHeaderWsDTO(final CMSParagraphComponentModel socialFeedComponent)
+	{
+		final TextComponentWsDTO text = new TextComponentWsDTO();
+		final LuxComponentsListWsDTO luxComponent = new LuxComponentsListWsDTO();
+		if (null != socialFeedComponent)
+		{
+			if (null != socialFeedComponent.getContent())
+			{
+				text.setText(socialFeedComponent.getContent());
+			}
+		}
+		luxComponent.setSocialfeedHeadercomponent(text);
+		return luxComponent;
+	}
+
+
 
 	/**
 	 * @param luxuryVideoComponent
@@ -2021,29 +2041,57 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getlandingForBrand()
 	 */
 	@Override
-	public LuxBlpCompWsDTO getlandingForBrand() throws CMSItemNotFoundException
+	public LuxBlpCompWsDTO getlandingForBrand(final String brandCode) throws CMSItemNotFoundException
 	{
 		// YTODO Auto-generated method stub
-		final ContentPageModel contentPage = getMplCMSPageService().getPageByLabelOrId("luxurybrandlandingpage");
 		final LuxBlpCompWsDTO luxBlpPageDto = new LuxBlpCompWsDTO();
-
-		if (contentPage != null)
+		try
 		{
+			final CategoryModel category = getCategoryService().getCategoryForCode(brandCode);
 
-			final ArrayList<LuxBlpCompListWsDTO> listComp = new ArrayList<LuxBlpCompListWsDTO>();
-			for (final ContentSlotForPageModel contentSlotForPage : contentPage.getContentSlots())
+			final ContentPageModel contentPage = getLandingPageForCategory(category);
+
+
+			if (contentPage != null)
 			{
-				final ContentSlotModel contentSlot = contentSlotForPage.getContentSlot();
-				final List<LuxBlpCompListWsDTO> luxuryComponentsForASlot = getComponentDtoforASlot(contentSlot);
-				listComp.addAll(luxuryComponentsForASlot);
-			}
 
-			luxBlpPageDto.setComponents(listComp);
-			luxBlpPageDto.setPageTitle(contentPage.getTitle());
-			luxBlpPageDto.setMetaDescription(contentPage.getDescription());
-			luxBlpPageDto.setMetaKeywords(contentPage.getKeywords());
+				final ArrayList<LuxBlpCompListWsDTO> listComp = new ArrayList<LuxBlpCompListWsDTO>();
+				for (final ContentSlotForPageModel contentSlotForPage : contentPage.getContentSlots())
+				{
+					final ContentSlotModel contentSlot = contentSlotForPage.getContentSlot();
+					final List<LuxBlpCompListWsDTO> luxuryComponentsForASlot = getComponentDtoforASlot(contentSlot);
+					listComp.addAll(luxuryComponentsForASlot);
+				}
+
+				luxBlpPageDto.setComponents(listComp);
+				luxBlpPageDto.setPageTitle(contentPage.getTitle());
+				luxBlpPageDto.setMetaDescription(contentPage.getDescription());
+				luxBlpPageDto.setMetaKeywords(contentPage.getKeywords());
+			}
+		}
+		catch (final CMSItemNotFoundException ex)
+		{
+			throw new CMSItemNotFoundException("Could not find a landing page for the category");
+		}
+		catch (final Exception ex)
+		{
+			throw new EtailBusinessExceptions("Exception occured while populating data:::");
 		}
 		return luxBlpPageDto;
+
+	}
+
+	private ContentPageModel getLandingPageForCategory(final CategoryModel category) throws CMSItemNotFoundException
+	{
+
+		final ContentPageModel landingPage = getMplCMSPageService().getLandingPageForCategory(category);
+
+		if (landingPage == null)
+		{
+			throw new CMSItemNotFoundException("Could not find a landing page for the category  " + category.getCode());
+		}
+
+		return landingPage;
 
 	}
 

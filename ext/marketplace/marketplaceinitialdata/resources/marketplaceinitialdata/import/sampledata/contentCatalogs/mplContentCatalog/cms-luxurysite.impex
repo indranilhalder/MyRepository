@@ -68,7 +68,8 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Section5;;MplBigPromoBannerComponent;
 ;Section6;;ProductCarouselComponent;
 ;Section7;;ImageCarouselComponent;
-;Section8;;CMSParagraphComponent;
+;Section8;;ImageCarouselComponent;
+;Section9;;CMSParagraphComponent;
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;BreadcrumbComponent
@@ -327,21 +328,75 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 
 ############################### SECTION 7 END ####################################
 
-############################### SECTION 8 START ####################################
+
+############################### SECTION 8 Start ####################################
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/png'];$contentCV[unique=true];folder(qualifier)[default=images];
+;;ascot.png;$siteResource/images/logo/ascot.png;ascot.png;"ascot";
+;;Burberrylogo.png;$siteResource/images/logo/Burberrylogo.png;Burberrylogo.png;"Burberrylogo";
+;;Coachlogo.png;$siteResource/images/logo/Coachlogo.png;Coachlogo.png;"Coachlogo";
+;;croma.png;$siteResource/images/logo/croma.png;croma.png;"croma";
+
+
+
+INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];name;content;$picture;url;&componentRef
+;;facebookImage1;;;ascot.png;/;facebookImage1
+;;facebookImage2;;;Burberrylogo.png;/;facebookImage2
+;;facebookImage3;;;Coachlogo.png;/;facebookImage3
+;;facebookImage4;;;croma.png;/;facebookImage4
+
+INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];name;content;$picture;url;&componentRef
+;;twitterImage1;;;ascot.png;/;twitterImage1
+;;twitterImage2;;;Burberrylogo.png;/;twitterImage2
+;;twitterImage3;;;Coachlogo.png;/;twitterImage3
+;;twitterImage4;;;croma.png;/;twitterImage4
+
+
+INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];name;content;$picture;url;&componentRef
+;;googlePlusImage1;;;ascot.png;/;googlePlusImage1
+;;googlePlusImage2;;;Burberrylogo.png;/;googlePlusImage2
+;;googlePlusImage3;;;Coachlogo.png;/;googlePlusImage3
+;;googlePlusImage4;;;croma.png;/;googlePlusImage4
+
+
+INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];name;content;$picture;url;&componentRef
+;;instaImage1;;;ascot.png;/;instaImage1
+;;instaImage2;;;Burberrylogo.png;/;instaImage2
+;;instaImage3;;;Coachlogo.png;/;instaImage3
+;;instaImage4;;;croma.png;/;instaImage4
+
+
+#BestPicksCarouselComponent
+INSERT_UPDATE ImageCarouselComponent;$contentCV[unique=true];uid[unique=true];name;title;&componentRef;collectionItems(&componentRef)
+;;LuxSocialFeedFacebook;Social Feed Facebook;;LuxSocialFeedFacebook;facebookImage1,facebookImage2,facebookImage3,facebookImage4
+;;LuxSocialFeedTwitter;Social Feed Twitter;;LuxSocialFeedTwitter;twitterImage1,twitterImage1,twitterImage3,twitterImage4
+;;LuxSocialFeedGooglePlus;Social Feed Google+;;LuxSocialFeedGooglePlus;googlePlusImage1,googlePlusImage2,googlePlusImage3,googlePlusImage4
+;;LuxSocialFeedInstagram;Social Feed Instagram;;LuxSocialFeedInstagram;instaImage1,instaImage2,instaImage3,instaImage4
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+;;Section8-socialFeed;true;Social Feed ;LuxSocialFeedFacebook,LuxSocialFeedTwitter,LuxSocialFeedGooglePlus,LuxSocialFeedInstagram
+
+# ContentSlotForPage 
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxuryhomepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section8-luxuryHomepage;Section8;;Section8-socialFeed;;;
+
+############################### SECTION 8 END ####################################
+
+############################### SECTION 9 START ####################################
 
 INSERT_UPDATE  CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;content[lang=$lang];&componentRef;;;;
-;;LuxuryParagraphComponent;Luxury social feed Paragraph Component;"#TataCliQ Luxury Homepage";LuxuryParagraphComponent;;;;
+;;LuxuryParagraphComponent;Luxury social feed Header Component;"#TataCliQ Luxury Homepage";LuxuryParagraphComponent;;;;
 
 
 #### create content slot
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
-;;Section8-socialFeedSection;true;luxury social feed Paragraph Slot;LuxuryParagraphComponent
+;;Section9-socialFeedHeaderSection;true;Luxury social feed Header slot;LuxuryParagraphComponent
 
 # ContentSlotForPage 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxuryhomepage'];contentSlot(uid,$contentCV)[unique=true];;;
-;;section8-luxuryHomepage;Section8;;Section8-socialFeedSection;;; 
+;;section9-luxuryHomepage;Section9;;Section9-socialFeedHeaderSection;;; 
 
-############################### SECTION 8 END ####################################
+############################### SECTION 9 END ####################################
 
 ############################### SEARCHBOX START ####################################
 INSERT_UPDATE MplEnhancedSearchBoxComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;maxProducts;maxSuggestions;minCharactersBeforeRequest;searchBoxCategories(code, $productCV)
