@@ -391,7 +391,7 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 # 								 ;$solrIndexedType                        ;collectionname   				;string		;		true;			; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;collectionnamewatches:20002
 
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);genericFacet[default=false];sortableType(code);currency[default=false];localized[default=false];multiValue[default=true];facet[default=false];facetType(code);facetSort(code);priority;visible;fieldValueProvider	;facetDisplayNameProvider						;customFacetSortProvider;rangeSets(name);$classAttributeAssignment	;$classificationAttributeAssignments;
-								 ;$solrIndexedType                        ;dialColourWatches				;string		;		true;			; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationColourCodeValueProvider;mplColorFacetDisplayNameProvider		;				;				;							;dialcolorwatches:20003
+								 ;$solrIndexedType                        ;dialColourWatches				;string		;		true;			; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationColourCodeValueProvider;mplWchFAColorFacetDisplayNameProvider		;				;				;							;dialcolorwatches:20003
 
 
 
