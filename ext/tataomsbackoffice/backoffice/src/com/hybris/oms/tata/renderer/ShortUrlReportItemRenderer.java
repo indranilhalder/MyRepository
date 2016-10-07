@@ -8,7 +8,7 @@ import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
 
-import com.techouts.backoffice.ShortUrlReportData;
+import com.tis.mpl.facade.shorturl.ShortUrlReportData;
 
 
 /**
