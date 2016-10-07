@@ -46496,6 +46496,9 @@ float: right;
     padding-bottom: 10px;
     display: block;
 }
+.product-info .product-detail .Cta .addtocart-component span#outOfStockId.out_of_stock {
+	left: 0;
+}
 .product-info .product-detail .Cta .addtocart-component span#outOfStockId {
 	top: 0px;
 	}
