@@ -60,7 +60,7 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService#getLandingPageForCategory(de.hybris.platform
 	 * .category.model.CategoryModel)
@@ -106,7 +106,7 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService#getHomePageForMobile()
 	 */
 	@Override
@@ -127,7 +127,7 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService#getLandingPageForCategory(de.hybris.platform
 	 * .category.model.CategoryModel)
@@ -201,7 +201,7 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService#getContentSlotByUidForPage(java.lang.String,
 	 * java.lang.String, java.lang.String)

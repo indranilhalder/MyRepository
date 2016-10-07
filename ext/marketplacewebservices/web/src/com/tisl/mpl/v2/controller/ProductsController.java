@@ -14,10 +14,12 @@
 package com.tisl.mpl.v2.controller;
 
 import de.hybris.platform.catalog.enums.ProductReferenceTypeEnum;
+import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
 import de.hybris.platform.commercefacades.catalog.CatalogFacade;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
+import de.hybris.platform.commercefacades.product.data.ProductContentData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.ProductReferenceData;
 import de.hybris.platform.commercefacades.product.data.ProductReferencesData;
@@ -51,6 +53,7 @@ import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
 import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
 import de.hybris.platform.converters.Populator;
+import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.i18n.I18NService;
 import de.hybris.platform.util.localization.Localization;
 
@@ -59,6 +62,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -79,6 +83,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -113,6 +118,7 @@ import com.tisl.mpl.v2.helper.ProductsHelper;
 import com.tisl.mpl.validator.PointOfServiceValidator;
 import com.tisl.mpl.wsdto.DepartmentHierarchyWs;
 import com.tisl.mpl.wsdto.ProductCompareWsDTO;
+import com.tisl.mpl.wsdto.ProductContentWsData;
 import com.tisl.mpl.wsdto.ProductDetailMobileWsData;
 import com.tisl.mpl.wsdto.ProductSearchPageWsDto;
 import com.tisl.mpl.wsdto.ProductSearchPagefacateWsDTO;
@@ -138,6 +144,8 @@ public class ProductsController extends BaseController
 	private static final Logger LOG = Logger.getLogger(ProductsController.class);
 	private static final String DROPDOWN_BRAND = "MBH";
 	private static final String DROPDOWN_CATEGORY = "MSH";
+
+	private static final String PRODUCT_OLD_URL_PATTERN = "/**/p";
 
 	private static String PRODUCT_OPTIONS = "";
 	@Resource(name = "storeFinderStockFacade")
@@ -184,6 +192,12 @@ public class ProductsController extends BaseController
 	private DefaultMplProductSearchFacade searchFacade;
 	@Resource
 	private SearchSuggestUtilityMethods searchSuggestUtilityMethods;
+
+	@Resource(name = "contentSlotForPageModel")
+	private ContentSlotForPageModel contentSlotForPageModel;
+	@Resource(name = "productService")
+	private ProductService productService;
+
 	//	@Autowired
 	//	private ConfigurationService configurationService;
 
@@ -369,6 +383,12 @@ public class ProductsController extends BaseController
 		final StockWsDTO dto = dataMapper.map(stockData, StockWsDTO.class, fields);
 		return dto;
 	}
+
+
+
+
+
+
 
 	/**
 	 * Returns product's stock levels sorted by distance from specific location passed by free-text parameter or
@@ -1376,4 +1396,45 @@ public class ProductsController extends BaseController
 		return null;
 	}
 
+	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-fetchPageContents", method = RequestMethod.GET)
+	//public JSONObject fetchPageContents(@RequestParam(value = "productCode") String productCode, final Model model)
+	public Map<String, ProductContentWsData> fetchPageContents(@RequestParam(value = "productCode") String productCode,
+			final Model model, final String fields, final HttpServletRequest request) throws com.granule.json.JSONException
+	{
+		//	final Map<String, ProductContentData> productContentDataMap = new HashMap<String, ProductContentData>();
+
+
+		if (null != productCode)
+		{
+			productCode = productCode.toUpperCase();
+
+
+		}
+
+
+		Map<String, ProductContentData> productContentDataMap = new HashMap<String, ProductContentData>();
+		Map<String, ProductContentWsData> productContentWsDataMap = new HashMap<String, ProductContentWsData>();
+
+		final ProductContentData productContentData = new ProductContentData();
+
+		productContentData.setSection(contentSlotForPageModel.getPosition());
+
+		productContentDataMap.put(contentSlotForPageModel.getPosition(), productContentData);
+
+		final FieldSetBuilderContext context = new FieldSetBuilderContext();
+		final Set<String> fieldSet = fieldSetBuilder.createFieldSet(ProductContentData.class, DataMapper.FIELD_PREFIX, fields,
+				context);
+
+
+		productContentDataMap = mplProductWebService.getProductcontentForProductCode(productCode, productContentData);
+
+		if (null != productContentDataMap && null != fieldSet)
+		{
+			productContentWsDataMap = (Map<String, ProductContentWsData>) dataMapper.map(productContentDataMap,
+					ProductContentWsData.class, fieldSet);
+		}
+
+		return productContentWsDataMap;
+
+	}
 }
