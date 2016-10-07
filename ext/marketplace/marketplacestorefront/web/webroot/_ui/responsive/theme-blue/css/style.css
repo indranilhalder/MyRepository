@@ -53601,4 +53601,6 @@ div.radio.creditDebitLabelRadio{
 }
 }
 
-
+.confirmation .right-block .block .totals li:nth-child(2) .amt,.confirmation .right-block .block .totals li:nth-child(3) .amt{
+	color:red;
+}
