@@ -1037,25 +1037,29 @@ public class ProductsController extends BaseController
 		}
 		catch (final EtailBusinessExceptions e)
 		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
-			//e.printStackTrace();
-			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-			productSearchPage.setError(MarketplacecommerceservicesConstants.EXCEPTION_IS + e);
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				productSearchPage.setError(e.getErrorMessage());
+			}
 			if (null != e.getErrorCode())
 			{
 				productSearchPage.setErrorCode(e.getErrorCode());
 			}
+			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
-			//e.printStackTrace();
-			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-			productSearchPage.setError(MarketplacecommerceservicesConstants.EXCEPTION_IS + ":" + e);
+			if (null != e.getErrorMessage())
+			{
+				productSearchPage.setError(e.getErrorMessage());
+			}
 			if (null != e.getErrorCode())
 			{
 				productSearchPage.setErrorCode(e.getErrorCode());
 			}
+			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		catch (final Exception e)
 		{
