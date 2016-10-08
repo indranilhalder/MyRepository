@@ -13,26 +13,18 @@
  */
 package com.tisl.mpl.core.search.solrfacetsearch.provider.impl;
 
-import de.hybris.platform.enumeration.EnumerationService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
-import de.hybris.platform.servicelayer.i18n.CommonI18NService;
-import de.hybris.platform.servicelayer.i18n.I18NService;
 import de.hybris.platform.solrfacetsearch.config.IndexedProperty;
 import de.hybris.platform.solrfacetsearch.provider.impl.AbstractFacetValueDisplayNameProvider;
 import de.hybris.platform.solrfacetsearch.search.SearchQuery;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Required;
 
 
 public class MplWchFAColorFacetDisplayNameProvider extends AbstractFacetValueDisplayNameProvider
 {
 
 	private static final Logger LOG = Logger.getLogger(MplWchFAColorFacetDisplayNameProvider.class);
-
-	private EnumerationService enumerationService;
-	private I18NService i18nService;
-	private CommonI18NService commonI18NService;
 
 	@Override
 	public String getDisplayName(final SearchQuery query, final IndexedProperty property, final String facetValue)
@@ -67,38 +59,5 @@ public class MplWchFAColorFacetDisplayNameProvider extends AbstractFacetValueDis
 			LOG.error("Unable to resolve Enum for the specified colour" + exception);
 		}
 		return "";
-	}
-
-	protected EnumerationService getEnumerationService()
-	{
-		return enumerationService;
-	}
-
-	@Required
-	public void setEnumerationService(final EnumerationService enumerationService)
-	{
-		this.enumerationService = enumerationService;
-	}
-
-	protected I18NService getI18nService()
-	{
-		return i18nService;
-	}
-
-	@Required
-	public void setI18nService(final I18NService i18nService)
-	{
-		this.i18nService = i18nService;
-	}
-
-	protected CommonI18NService getCommonI18NService()
-	{
-		return commonI18NService;
-	}
-
-	@Required
-	public void setCommonI18NService(final CommonI18NService commonI18NService)
-	{
-		this.commonI18NService = commonI18NService;
 	}
 }
