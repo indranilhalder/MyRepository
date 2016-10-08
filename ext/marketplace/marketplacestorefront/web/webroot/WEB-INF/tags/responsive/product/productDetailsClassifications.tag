@@ -1,7 +1,6 @@
 <%@ tag body-content="empty" trimDirectiveWhitespaces="true"%>
 <%@ attribute name="product" required="true"
 	type="de.hybris.platform.commercefacades.product.data.ProductData"%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <style>
@@ -44,9 +43,6 @@
 <c:if test="${not empty product.classifications}">
 	<div class="view-button">Check The Specs</div>
 </c:if>
-<c:set var="electronics">
-	<spring:theme code='product.electronics' />
-</c:set>
 <!-- <div class="hide-button" style="display:none;">Hide Specifications</div> -->
 <div class="product-classifications wrapper">
 	<c:if test="${not empty product.classifications}">
