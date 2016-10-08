@@ -309,7 +309,7 @@ INSERT_UPDATE ClassAttributeAssignment;$attribute;$unit;attributeType(code[defau
 ;dialcolorwatches;;enum;20003;beige,black,brown,blue,charcoal,green,gold,grey,khaki,metallic,navy,nude,olive,orange,pink,purple,red,silver,tan,white,yellow,multi,indigo;false;true;30
 ;dialcolorbrandwatches;;string;20002;;false;false;30
 ;dialsizewatches;;enum;20004;small,medium,big,oversized;false;false;15
-;dialtypewatches;;enum;20003;europeannumbers,stick,roman,europeannumbersandstick,romanandstick,california;false;false;20
+;dialtypewatches;;enum;20003;europeannumbers,stick,roman,europeannumbersandstick,romanandstick,california;false;false;30
 ;dialdiameterwatches;103;number;20004;;false;false;6
 ;bezelfunctionwatches;;enum;20002;24hourtimedisplay,bidirectional,calendar,diving,sliderule,tachometer,unidirectional;false;false;30
 ;bezelcoatingwatches;;enum;20002;silver,gold,chrome,gunmetal,rosegold;false;false;30
