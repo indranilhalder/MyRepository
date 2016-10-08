@@ -1271,10 +1271,48 @@ public class ProductPageController extends AbstractPageController
 			model.addAttribute(PRODUCT_SIZE_TYPE, productDetailsHelper.getSizeType(productModel));
 			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
 			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
+			boolean showSizeGuideForFA = true;
 			//AKAMAI fix
 			if (productModel instanceof PcmProductVariantModel)
 			{
 				final PcmProductVariantModel variantProductModel = (PcmProductVariantModel) productModel;
+				/**
+				 * Add Filter for FA START :::::
+				 */
+				
+				if (ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(variantProductModel.getProductCategoryType()))
+				{
+					final Collection<CategoryModel> superCategories = variantProductModel.getSupercategories();
+					final String configurationFA = configurationService.getConfiguration().getString(
+							"accessories.sideguide.category.showlist");
+					final String[] configurationFAs = configurationFA.split(",");
+					for (final CategoryModel supercategory : superCategories)
+					{
+						if (supercategory.getCode().startsWith("MPH"))
+						{
+							int num=0;
+							for (final String fashow : configurationFAs)
+							{
+								if (!supercategory.getCode().startsWith(fashow))
+								{
+									num++;
+									if(num==configurationFAs.length){
+										showSizeGuideForFA=false;
+										break;
+									}
+								}
+							}
+
+							break;
+						}
+					}
+
+
+				}
+				model.addAttribute("showSizeGuideForFA", showSizeGuideForFA);
+				/**
+				 * Add Filter for FA END :::::
+				 */
 				model.addAttribute("productSizeQuick", variantProductModel.getSize());
 			}
 			if (CollectionUtils.isNotEmpty(productData.getAllVariantsId()))
