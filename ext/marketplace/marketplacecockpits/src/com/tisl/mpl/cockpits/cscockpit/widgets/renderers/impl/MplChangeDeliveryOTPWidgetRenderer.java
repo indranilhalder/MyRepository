@@ -687,7 +687,7 @@ AddressData changeDeliveryAddressData  = sessionService.getAttribute(Marketplace
 							mplDeliveryAddressController
 									.saveDeliveryAddress(orderModel,changeDeliveryAddress);
 							// Saving no_of Total requests and rejects 
-							mplDeliveryAddressController.saveChangeDeliveryRequests(orderModel.getParentReference().getCode(), MarketplaceCockpitsConstants.SUCCESS);
+							mplDeliveryAddressController.saveChangeDeliveryRequests(orderModel.getParentReference());
 							LOG.debug("Delivery Address Changed Successfully");
 						} catch (ModelSavingException e) {
 							LOG.debug("Model saving Exception" + e.getMessage());
@@ -710,7 +710,7 @@ AddressData changeDeliveryAddressData  = sessionService.getAttribute(Marketplace
 						try {
 							
 							// Saving no_of Total requests and rejects 
-							mplDeliveryAddressController.saveChangeDeliveryRequests(orderModel.getParentReference().getCode(), MarketplaceCockpitsConstants.FAILED);
+							mplDeliveryAddressController.saveChangeDeliveryRequests(orderModel.getParentReference());
 							Messagebox.show(LabelUtils.getLabel(widget,
 									FAILED_AT_OMS, new Object[0]), INFO,
 									Messagebox.OK, Messagebox.ERROR);
@@ -723,7 +723,7 @@ AddressData changeDeliveryAddressData  = sessionService.getAttribute(Marketplace
 						}
 					} else {
 						// Saving no_of Total requests and rejects 
-						mplDeliveryAddressController.saveChangeDeliveryRequests(orderModel.getParentReference().getCode(), MarketplaceCockpitsConstants.FAILED);
+						mplDeliveryAddressController.saveChangeDeliveryRequests(orderModel.getParentReference());
 						closePopUp();
 						Messagebox.show(LabelUtils.getLabel(widget,
 								AN_ERROR_OCCURRED, new Object[0]), INFO,
