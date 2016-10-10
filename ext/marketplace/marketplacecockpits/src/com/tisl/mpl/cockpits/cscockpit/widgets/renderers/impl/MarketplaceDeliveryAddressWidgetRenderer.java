@@ -1072,7 +1072,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 							} else {
 								
 								// Saving no_of Total requests and rejects for changeDelivery
-								mplDeliveryAddressController.saveChangeDeliveryRequests(orderModel.getParentReference().getCode(),MarketplaceCockpitsConstants.FAILED);
+								mplDeliveryAddressController.saveChangeDeliveryRequests(orderModel.getParentReference());;
 								popupMessage(
 										widget,
 										"Pincode "
@@ -1081,7 +1081,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 							}
 						} else {
 							// Saving no_of Total requests and rejects for changeDelivery
-							mplDeliveryAddressController.saveChangeDeliveryRequests(orderModel.getParentReference().getCode(),MarketplaceCockpitsConstants.FAILED);
+							mplDeliveryAddressController.saveChangeDeliveryRequests(orderModel.getParentReference());
 							popupMessage(widget, NO_RESPONCE_FROM_SERVER);
 						}
 					} else {

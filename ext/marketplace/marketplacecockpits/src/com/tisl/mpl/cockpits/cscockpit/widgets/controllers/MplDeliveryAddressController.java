@@ -78,6 +78,6 @@ public interface MplDeliveryAddressController {
 			OrderModel parentReference);
 
 	
-	public  void saveChangeDeliveryRequests(String orderId , String status);
+	public  void saveChangeDeliveryRequests(OrderModel orderModel);
 
 }

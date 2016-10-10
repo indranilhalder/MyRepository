@@ -47,7 +47,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 
 	@Autowired
 	private MplDeliveryAddressDao mplDeliveryAddressDao;
-	
+
 	@Autowired
 	private ModelService modelService;
 
@@ -147,40 +147,16 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 		LOG.debug("Delivery Address changable : " + isAddressChangable);
 		return isAddressChangable;
 	}
-@Override
-	public void saveChangeDeliveryRequests(final String orderId, final String status)
-	{
-		final OrderModel order = orderModelDao.getOrder(orderId);
-		try
-		{
-			if (null != order.getChangeDeliveryTotalRequests())
-			{
-				final int previousRequests = order.getChangeDeliveryTotalRequests().intValue();
-				order.setChangeDeliveryTotalRequests(Integer.valueOf(previousRequests + 1));
-			}
-			else
-			{
-				order.setChangeDeliveryTotalRequests(Integer.valueOf(1));
-			}
-			if (status.equalsIgnoreCase(MarketplacecommerceservicesConstants.FAILED))
-			{
-				final int previousRejects = order.getChangeDeliveryTotalRequests().intValue();
-				order.setChangeDeliveryTotalRequests(Integer.valueOf(previousRejects + 1));
-			}
-			modelService.save(order);
-		}
-		catch (final ModelSavingException e)
-		{
-			LOG.error("Model saving Exception while saveing change delivery requests for the order id :" + order.getCode());
-		}
-		catch (final Exception e)
-		{
-			LOG.error("Exception while saveing change delivery requests for the order id :" + order.getCode());
-		}
-	}
+
+	/**
+	 *  This method is used to save the changed delivery Address
+	 * @param newAddressModel 
+	 * @param orderModel
+	 * @return boolean
+	 */
 
 	@Override
-	public boolean saveDeliveryAddress(AddressModel newAddressModel, OrderModel orderModel)
+	public boolean saveDeliveryAddress(final AddressModel newAddressModel, final OrderModel orderModel)
 	{
 		LOG.info("Inside saveDeliveryAddress Method");
 		boolean isDeliveryAddressChanged = false;
@@ -191,13 +167,11 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 			{
 				if (orderModel != null)
 				{
-					UserModel user = orderModel.getUser();
-					List<AddressModel> deliveryAddressesList = new ArrayList<AddressModel>();
-					Collection<AddressModel> customerAddressesList = new ArrayList<AddressModel>();
-					Collection<AddressModel> deliveryAddresses = orderModel.getDeliveryAddresses();
-					AddressModel deliveryAddress = orderModel.getDeliveryAddress();
-					boolean isEligibleScheduledDelivery = checkScheduledDeliveryForOrder(orderModel);
-					deliveryAddress = changedDeliveryAddress(deliveryAddress, newAddressModel);
+					 UserModel user = orderModel.getUser();
+					 List<AddressModel> deliveryAddressesList = new ArrayList<AddressModel>();
+					 Collection<AddressModel> customerAddressesList = new ArrayList<AddressModel>();
+					 Collection<AddressModel> deliveryAddresses = orderModel.getDeliveryAddresses();
+					newAddressModel.setOwner(orderModel.getDeliveryAddress().getOwner());
 					if (null != deliveryAddresses && !deliveryAddresses.isEmpty())
 					{
 						deliveryAddressesList.addAll(deliveryAddresses);
@@ -206,33 +180,28 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 					{
 						customerAddressesList.addAll(user.getAddresses());
 					}
-					deliveryAddressesList.add(deliveryAddress);
-					customerAddressesList.add(deliveryAddress);
-					orderModel.setDeliveryAddress(deliveryAddress);
-					for (OrderModel childOrder : orderModel.getChildOrders())
+					deliveryAddressesList.add(newAddressModel);
+					customerAddressesList.add(newAddressModel);
+					orderModel.setDeliveryAddress(newAddressModel);
+					orderModel.setDeliveryAddresses(deliveryAddressesList);
+					modelService.save(orderModel);
+					for (final OrderModel childOrder : orderModel.getChildOrders())
 					{
-						childOrder.setDeliveryAddress(deliveryAddress);
+						childOrder.setDeliveryAddress(newAddressModel);
 						childOrder.setDeliveryAddresses(deliveryAddressesList);
-						if (isEligibleScheduledDelivery)
-						{
-							for (AbstractOrderEntryModel abstractOrderEntryModel : childOrder.getEntries())
-							{
-								modelService.save(abstractOrderEntryModel);
-							}
-						}
 						modelService.save(childOrder);
 					}
 					if (null != orderModel.getChangeDeliveryTotalRequests())
 					{
-					 orderModel.setChangeDeliveryTotalRequests(new Integer(orderModel.getChangeDeliveryTotalRequests().intValue() + 1));
+						orderModel.setChangeDeliveryTotalRequests(new Integer(
+								orderModel.getChangeDeliveryTotalRequests().intValue() + 1));
 					}
 					else
 					{
 						orderModel.setChangeDeliveryTotalRequests(Integer.valueOf(1));
 					}
 					user.setAddresses(customerAddressesList);
-					orderModel.setDeliveryAddresses(deliveryAddressesList);
-					modelService.save(orderModel);
+
 					modelService.save(user);
 					sessionService.removeAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS);
 					isDeliveryAddressChanged = true;
@@ -246,13 +215,18 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 		return isDeliveryAddressChanged;
 	}
 
+	
+	/**
+	 * This method is used to save the failure requests of change delivery address
+	 * @param orderModel
+	 */
 
 	@Override
-	public void deliveryAddressFailureRequest(OrderModel orderModel)
+	public void deliveryAddressFailureRequest(final OrderModel orderModel)
 	{
 		try
 		{
-			
+
 			if (null != orderModel.getChangeDeliveryTotalRequests())
 			{
 				orderModel.setChangeDeliveryTotalRequests(new Integer(orderModel.getChangeDeliveryTotalRequests().intValue() + 1));
@@ -278,25 +252,28 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 		{
 			LOG.error("ModelSavingException while setting status for TemporaryAddress" + e.getMessage());
 		}
-		catch (NullPointerException nullPointerException)
+		catch (final NullPointerException nullPointerException)
 		{
 			LOG.error("Exception occure while setting totalRequest" + nullPointerException.getMessage());
 		}
 	}
 
-	
-   	@Override
-	public boolean checkScheduledDeliveryForOrder(OrderModel orderModel)
+
+	/**
+	 * This method is used for , ehether the order is eligible for reScheduling Dates or not
+	 */
+	@Override
+	public boolean checkScheduledDeliveryForOrder(final OrderModel orderModel)
 	{
 		if (LOG.isDebugEnabled())
 		{
 			LOG.debug("MplDeliveryAddressservicesImpl::Chekcing Order are  Eligible for ReScheduledDelivery Date");
 		}
 		boolean isEligibleScheduledDelivery = false;
-		List<OrderModel> chaidOrderList = orderModel.getChildOrders();
-		for (OrderModel subOrder : chaidOrderList)
+		final List<OrderModel> chaidOrderList = orderModel.getChildOrders();
+		for (final OrderModel subOrder : chaidOrderList)
 		{
-			for (AbstractOrderEntryModel abstractOrderEntry : subOrder.getEntries())
+			for (final AbstractOrderEntryModel abstractOrderEntry : subOrder.getEntries())
 			{
 				if (!abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getCode()
 						.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
@@ -316,68 +293,12 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 		return isEligibleScheduledDelivery;
 	}
 
-	public AddressModel changedDeliveryAddress(AddressModel oldAddress, AddressModel newDeliveryAddress)
-	{
-		if (newDeliveryAddress != null)
-		{
-			if (newDeliveryAddress.getFirstname() != null)
-			{
-				oldAddress.setFirstname(newDeliveryAddress.getFirstname());
-			}
-			if (newDeliveryAddress.getLastname() != null)
-			{
-				oldAddress.setLastname(newDeliveryAddress.getLastname());
-			}
-			if (newDeliveryAddress.getStreetname() != null)
-			{
-				oldAddress.setStreetname(newDeliveryAddress.getStreetname());
-			}
-			if (newDeliveryAddress.getStreetnumber() != null)
-			{
-				oldAddress.setStreetnumber(newDeliveryAddress.getStreetnumber());
-			}
-			if (newDeliveryAddress.getAddressLine3() != null)
-			{
-				oldAddress.setAddressLine3(newDeliveryAddress.getAddressLine3());
-			}
-			if (newDeliveryAddress.getLandmark() != null)
-			{
-				oldAddress.setLandmark(newDeliveryAddress.getLandmark());
-			}
-			if (newDeliveryAddress.getFirstname() != null)
-			{
-				oldAddress.setFirstname(newDeliveryAddress.getFirstname());
-			}
-			if (newDeliveryAddress.getState() != null)
-			{
-				oldAddress.setState(newDeliveryAddress.getState());
-			}
-			if (newDeliveryAddress.getDistrict() != null)
-			{
-				oldAddress.setDistrict(newDeliveryAddress.getDistrict());
-			}
-			if (newDeliveryAddress.getPostalcode() != null)
-			{
-				oldAddress.setPostalcode(newDeliveryAddress.getPostalcode());
-			}
-			if (newDeliveryAddress.getCity() != null)
-			{
-				oldAddress.setCity(newDeliveryAddress.getCity());
-			}
-			if (newDeliveryAddress.getPhone1() != null)
-			{
-				oldAddress.setPhone1(newDeliveryAddress.getPhone1());
-			}
-		}
-		return oldAddress;
-	}
 
-	
 	/**
 	 * Give List Of OrderModel Based one Mode
 	 */
 	@Override
-	public List<OrderModel> getOrderModelList(Date fromDate, Date toDate)
+	public List<OrderModel> getOrderModelList(final Date fromDate, final Date toDate)
 	{
 		return mplDeliveryAddressDao.getOrderModelList(fromDate, toDate);
 	}

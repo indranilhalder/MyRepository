@@ -1121,9 +1121,9 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 
 	
 	@Override
-	public void saveChangeDeliveryRequests(final String orderId, final String status)
+	public void saveChangeDeliveryRequests(OrderModel orderModel)
 	{
-		mplDeliveryAddressService.saveChangeDeliveryRequests(orderId, status);
+		mplDeliveryAddressService.deliveryAddressFailureRequest(orderModel);
 
 	}
 

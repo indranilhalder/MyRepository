@@ -41,11 +41,7 @@ public interface MplDeliveryAddressService
 	 * @param  orderModel
 	 */
 	public boolean checkScheduledDeliveryForOrder(OrderModel orderModel);
-   /**
-	 * @param orderId
-	 * @param status
-	 */
-	public void saveChangeDeliveryRequests(String orderId, String status);
+
 	
 	public List<OrderModel> getOrderModelList(Date fromDate, final Date toDate);
 

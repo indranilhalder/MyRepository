@@ -186,8 +186,8 @@ public class MplDeliveryAddressControllerImpl extends
 
 
 	@Override
-	public void saveChangeDeliveryRequests(String orderId, String status) {
-		mplDeliveryAddressFacade.saveChangeDeliveryRequests(orderId,status);
+	public void saveChangeDeliveryRequests(OrderModel orderModel) {
+		mplDeliveryAddressFacade.saveChangeDeliveryRequests(orderModel);
 		
 	}
 

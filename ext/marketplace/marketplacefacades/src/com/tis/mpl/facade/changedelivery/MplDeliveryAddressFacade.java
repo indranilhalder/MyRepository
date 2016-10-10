@@ -94,7 +94,7 @@ public interface MplDeliveryAddressFacade
 	 * @param orderId
 	 * @param status
 	 */
-	public void saveChangeDeliveryRequests(String orderId, String status);
+	public void saveChangeDeliveryRequests(OrderModel orderModel);
 
 
 /**
