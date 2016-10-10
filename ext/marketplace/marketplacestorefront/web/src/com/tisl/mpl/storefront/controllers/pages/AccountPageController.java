@@ -7195,7 +7195,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 						if (isServiceable)
 						{
 							//preparing  OTP jsp Page Data when only change Contact Details Updated
-							mplDeliveryAddressFacade.generateNewOTP(orderCode);
 							String phoneNumber = orderData.getDeliveryAddress().getPhone();
 							phoneNumber = mplDeliveryAddressFacade.getPartialEncryptValue("*", 6, phoneNumber);
 							model.addAttribute(ModelAttributetConstants.PHONE_NUMBER, phoneNumber);
