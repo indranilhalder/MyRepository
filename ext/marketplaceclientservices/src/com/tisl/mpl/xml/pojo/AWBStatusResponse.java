@@ -192,7 +192,7 @@ public class AWBStatusResponse implements java.io.Serializable
 	 */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "", propOrder =
-	{ "awbNumber", "shipmentStatus","ShipmentSecondaryStatus", "responseCode", "statusRecords" })
+	{ "awbNumber", "shipmentStatus","shipmentSecondaryStatus", "responseCode", "statusRecords" })
 	public static class AWBResponseInfo
 	{
 
@@ -204,6 +204,9 @@ public class AWBStatusResponse implements java.io.Serializable
 		private String responseCode;
 		@XmlElement(name = "StatusRecords")
 		private List<AWBStatusResponse.AWBResponseInfo.StatusRecords> statusRecords;
+		@XmlElement(name = "ShipmentSecondaryStatus")
+		private String shipmentSecondaryStatus;
+		
 
 		/**
 		 * Gets the value of the awbNumber property.
@@ -305,6 +308,21 @@ public class AWBStatusResponse implements java.io.Serializable
 			return this.statusRecords;
 		}
 
+		/**
+		 * @return the shipmentSecondaryStatus
+		 */
+		public String getShipmentSecondaryStatus()
+		{
+			return shipmentSecondaryStatus;
+		}
+
+		/**
+		 * @param shipmentSecondaryStatus the shipmentSecondaryStatus to set
+		 */
+		public void setShipmentSecondaryStatus(String shipmentSecondaryStatus)
+		{
+			this.shipmentSecondaryStatus = shipmentSecondaryStatus;
+		}
 
 		/**
 		 * <p>
@@ -347,8 +365,7 @@ public class AWBStatusResponse implements java.io.Serializable
 			@XmlElement(name = "StatusDescription")
 			private String statusDescription;
 			
-			@XmlElement(name = "ShipmentSecondaryStatus")
-			private String shipmentSecondaryStatus;
+		
 
 			/**
 			 * Gets the value of the date property.
@@ -440,21 +457,6 @@ public class AWBStatusResponse implements java.io.Serializable
 			public void setStatusDescription(final String value)
 			{
 				this.statusDescription = value;
-			}
-			/**
-			 * @return the shipmentSecondaryStatus
-			 */
-			public String getShipmentSecondaryStatus()
-			{
-				return shipmentSecondaryStatus;
-			}
-
-			/**
-			 * @param shipmentSecondaryStatus the shipmentSecondaryStatus to set
-			 */
-			public void setShipmentSecondaryStatus(String shipmentSecondaryStatus)
-			{
-				this.shipmentSecondaryStatus = shipmentSecondaryStatus;
 			}
 
 		}
