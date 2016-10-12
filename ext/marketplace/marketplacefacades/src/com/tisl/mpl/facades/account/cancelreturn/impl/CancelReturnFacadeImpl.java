@@ -1989,9 +1989,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						}
 					}
 					
-					if (StringUtils.isNotEmpty(returnFulfillmentType))
+					if (StringUtils.isNotEmpty(returnFulfillmentType.toUpperCase()))
 					{
-						returnLogistics.setReturnFulfillmentType(returnFulfillmentType);
+						returnLogistics.setReturnFulfillmentType(returnFulfillmentType.toUpperCase());
 					}
 					if(StringUtils.isNotEmpty(returnFulfillmentByP1))
 					{
@@ -2366,17 +2366,14 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		final int returnWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(consignmentModel.getDeliveryDate(),
 				currentDate);
 		final int actualReturnWindow = Integer.parseInt(richAttributeModel.get(0).getReturnWindow());
-	
-		
+		DateTimeFormatter dtfOut = DateTimeFormat.forPattern("dd-MM-yyyy");
 		if(actualReturnWindow>=returnWindow)
 		{
 			DateTime today = new DateTime().withTimeAtStartOfDay();
 			if((actualReturnWindow-returnWindow)>3)
 			{
 				for(int i=0; i<3; i++)
-				{
-				
-					DateTimeFormatter dtfOut = DateTimeFormat.forPattern("MMM dd");
+				{	
 					returnableDates.add(dtfOut.print( today.plusDays( i ).withTimeAtStartOfDay()));		   
 				}
 			}
@@ -2384,7 +2381,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			{
 				for(int i=0; i<2; i++)
 				{
-					DateTimeFormatter dtfOut = DateTimeFormat.forPattern("MMM dd ");
+				//	DateTimeFormatter dtfOut = DateTimeFormat.forPattern("MMM dd ");
 					returnableDates.add(dtfOut.print( today.plusDays( i ).withTimeAtStartOfDay()));		   
 				}
 			}
@@ -2392,14 +2389,14 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			{
 				for(int i=0; i<1; i++)
 				{
-					DateTimeFormatter dtfOut = DateTimeFormat.forPattern("MMM dd ");
+					//DateTimeFormatter dtfOut = DateTimeFormat.forPattern("MMM dd ");
 					returnableDates.add(dtfOut.print( today.plusDays( i ).withTimeAtStartOfDay()));		   
 				}
 			}
 			else if((actualReturnWindow-returnWindow)==0)
 			{
 				
-					DateTimeFormatter dtfOut = DateTimeFormat.forPattern("MMM dd ");
+					//DateTimeFormatter dtfOut = DateTimeFormat.forPattern("MMM dd ");
 					returnableDates.add(dtfOut.print( today.plusDays(0).withTimeAtStartOfDay()));		   
 			}
 	

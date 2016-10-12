@@ -18,8 +18,10 @@ import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.servicelayer.session.SessionService;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +43,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.CODSelfShipData;
 import com.tisl.mpl.data.RTSAndRSSReturnInfoRequestData;
 import com.tisl.mpl.data.CODSelfShipResponseData;
@@ -114,6 +117,9 @@ public class ReturnPageController extends AbstractMplSearchPageController
 	private MplCheckoutFacadeImpl mplCheckoutFacadeImpl;
 	@Resource(name = "frontEndErrorHelper")
 	private FrontEndErrorHelper frontEndErrorHelper;
+	
+	@Autowired
+	private DateUtilHelper dateUtilHelper;
 
 	private static final String RETURN_SUCCESS = "returnSuccess";
 	private static final String RETURN_SUBMIT = "returnSubmit";
@@ -312,11 +318,15 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		
 		String returnPickupDate=returnForm.getScheduleReturnDate();
 		returnData.setReasonCode(returnForm.getReturnReason());
-		returnData.setRefundType(returnForm.getRefundType());
-		returnData.setReturnPickupDate(returnPickupDate);
+		if(returnForm.getIsCODorder().equalsIgnoreCase("Y")){
+			returnData.setRefundType("N");
+		}else{
+			returnData.setRefundType("S");
+		}
+		returnData.setReturnPickupDate(dateUtilHelper.convertDateWithFormat(returnPickupDate));
 		returnData.setTicketTypeCode(MarketplacecommerceservicesConstants.RETURN_TYPE);
-		returnData.setTimeSlotFrom(timeSlotFrom);
-		returnData.setTimeSlotTo(timeSlotto);
+		returnData.setTimeSlotFrom(dateUtilHelper.convertTo24HourWithSecodnds(timeSlotFrom));
+		returnData.setTimeSlotTo(dateUtilHelper.convertTo24HourWithSecodnds(timeSlotto));
 		returnData.setUssid(returnForm.getUssid());
 		returnData.setReturnMethod(returnForm.getReturnMethod());
 		returnData.setReturnFulfillmentMode(returnFulfillmentType);

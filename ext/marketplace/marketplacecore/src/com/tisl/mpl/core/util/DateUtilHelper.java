@@ -233,4 +233,34 @@ public class DateUtilHelper
 		    str = str.substring(1);
 		  return str;
 		}
+	
+	
+   public  String convertTo24HourWithSecodnds(String Time) {
+	    DateFormat f1 = new SimpleDateFormat("hh:mm a"); //11:00 pm
+	    Date d = null;
+	    try {
+	        d = f1.parse(Time);
+	    } catch (ParseException e) {
+	   	 LOG.error("Time Formater ********:"+e.getMessage());
+	    }
+	    DateFormat f2 = new SimpleDateFormat("HHmmss");
+	    String formatedTime = f2.format(d); // "23:00"
+	    return formatedTime;
+	}
+   
+   public  String convertDateWithFormat(String sourceDate) {
+   	 
+		 SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+ 		Date myDate = null;
+		try {
+			myDate = format.parse(sourceDate);
+		} catch (ParseException e) {
+			 LOG.error("Date Formater ********:"+e.getMessage());
+		}
+ 	    DateTime today =new DateTime(myDate);
+ 	    DateTimeFormatter formatter = DateTimeFormat.forPattern( "yyyyMMdd" ); 
+	return formatter.print(today);
+	 
+ }
+    
 }

@@ -4,6 +4,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="return" tagdir="/WEB-INF/tags/responsive/returns"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!-- Accordtion Panel 3 For Select Return Method -->
 
 
@@ -144,7 +145,10 @@
 						<form:radiobutton class="radioButton selectRadioDate${i.index}" value="${returnDate}"
 							name="selectDate" path="scheduleReturnDate" /> <br />
 						<p style="clear: both"></p>
-						<div>${returnDate}</div>
+						<fmt:parseDate value="${returnDate}" var="scheduleReturnDate" pattern="dd-MM-yyyy" />
+						<div><fmt:formatDate value="${scheduleReturnDate}" pattern="MMM dd"/></div> 
+						<%-- <div>${returnDate}</div> --%>
+						
 					</div>
 					</c:forEach>
 					<br /> <br /> <br />

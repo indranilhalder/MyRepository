@@ -55,6 +55,22 @@
 										placeholder="Last Name"/>
 								</div>
 							</div>
+							
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label for="pincode"><spring:theme code="text.order.returns.pincode"/></label> <form:input path="postcode"
+											class="form-control textInputChangeAddress address_postcode" id="pincode"
+											placeholder="Pincode" maxlength="6"/>
+									</div>
+								</div>
+								<div class="col-md-6 form-group">
+									<label for="phonenumber"><spring:theme code="text.order.returns.phonenumber"/></label> <form:input path="mobileNo" class="form-control textInputChangeAddress"
+										id="mobileNo" placeholder="9876543210" maxlength="10"/>
+								</div>
+							</div>
+							
+							
 							<div class="row">
 								<div class="col-md-12 form-group">
 									<label for="addressLine1"><spring:theme code="text.order.returns.addressline1"/></label> <form:input path="line1" class="form-control textInputChangeAddress"
@@ -73,19 +89,7 @@
 										id="addressLine2" placeholder="Address Line 3"/>
 								</div>
 							</div>
-							<div class="row">
-								<div class="col-md-6">
-									<div class="form-group">
-										<label for="pincode"><spring:theme code="text.order.returns.pincode"/></label> <form:input path="postcode"
-											class="form-control textInputChangeAddress address_postcode" id="pincode"
-											placeholder="Pincode" maxlength="6"/>
-									</div>
-								</div>
-								<div class="col-md-6 form-group">
-									<label for="phonenumber"><spring:theme code="text.order.returns.phonenumber"/></label> <form:input path="mobileNo" class="form-control textInputChangeAddress"
-										id="mobileNo" placeholder="9876543210" maxlength="10"/>
-								</div>
-							</div>
+							
 							
 							<div class="row">
 								<div class="col-md-12 optionsLandmark">
@@ -96,9 +100,9 @@
 								<div class="col-md-12 address_landmarkOtherDiv">
 									<label for="landmark">
                           <spring:theme code="text.order.returns.landmarkother"/></label>
-									<div class="input-group-addon">
-										<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-									</div>
+									<!-- <div class="input-group-addon">
+										<span class="glyphicon glyphicon-search" aria-hidden="true"> </span>
+									</div> -->
 									<form:input path="otherLandmark" class="form-control textInputChangeAddress address_landmarkOther"
 										id="otherLandmark" placeholder="Enter your nearest landmark"/>
 								</div>
