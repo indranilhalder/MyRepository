@@ -97,6 +97,8 @@ public class SearchSuggestUtilityMethods
 	/*
 	 * @Resource(name = "accProductFacade") private ProductFacade productFacade;
 	 */
+	@Resource(name = "accProductFacade")
+	private ProductFacade productFacade;
 	//@Resource(name = "defaultMplProductSearchFacade")
 	//private DefaultMplProductSearchFacade searchFacade;
 	@Resource(name = "productDetailsHelper")
