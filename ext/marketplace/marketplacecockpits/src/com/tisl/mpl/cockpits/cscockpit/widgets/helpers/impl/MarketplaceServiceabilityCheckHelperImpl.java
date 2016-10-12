@@ -273,10 +273,8 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 					final List<Integer> stockCount = new ArrayList<Integer>();
 					List<DeliveryDetailsData> deliveryDataList = null;
 					responseData = new PinCodeResponseData();
-
+					//responseData.set
 					responseData.setTransportMode(deliveryModeResponse.getTransportMode());
-					responseData.setFulfilmentType(deliveryModeResponse.getFulfilmentType());
-
 					if (null != deliveryModeResponse.getDeliveryMode())
 					{
 						deliveryDataList = new ArrayList<DeliveryDetailsData>();
@@ -309,6 +307,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 							data.setIsPrepaidEligible(deliveryMode.getIsPrepaidEligible().equals(MarketplaceCockpitsConstants.YES) ? true
 									: false);
 							responseData.setIsPrepaidEligible(deliveryMode.getIsPrepaidEligible());// set payment mode
+							data.setFulfilmentType(deliveryMode.getFulfillmentType());
 							if (null != deliveryMode.getServiceableSlaves() && deliveryMode.getServiceableSlaves().size() > 0)
 							{
 								data.setServiceableSlaves(populatePincodeServiceableData(deliveryMode.getServiceableSlaves()));
@@ -494,6 +493,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 								data.setMopPrice(formPriceData(buybox.getPrice()));
 								data.setIsFragile(sd.getIsFragile());
 								data.setIsPrecious(sd.getIsPrecious());
+								//data.set
 								if(null != cartId) {
 									data.setCartId(cartId);
 								}

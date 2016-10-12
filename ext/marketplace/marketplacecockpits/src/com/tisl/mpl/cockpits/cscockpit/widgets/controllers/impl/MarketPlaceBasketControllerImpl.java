@@ -397,20 +397,35 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 												if (null != DeliveryData.getFulfilmentType())
 												{
 													cartSoftReservationRequestData.setFulfillmentType(DeliveryData.getFulfilmentType());
-
-												}
 											}
 										}
+										Collection<RichAttributeModel> rich=cartEntry.getProduct().getRichAttribute();
+										rich.iterator().next().getShippingModes().toString();
+										if(null !=rich && null != rich.iterator().next().getShippingModes()) {
+										cartSoftReservationRequestData.setTransportMode(rich.iterator().next().getShippingModes().getCode());
+										}
+										if(null != DeliveryData.getFulfilmentType()) {
+											cartEntry.setFulfillmentMode(DeliveryData.getFulfilmentType());
+											cartEntry.setFulfillmentType(DeliveryData.getFulfilmentType());
+										}
+										if(null !=rich && null != rich.iterator().next().getDeliveryFulfillModeByP1()) {
+										  cartEntry.setFulfillmentTypeP1(rich.iterator().next().getDeliveryFulfillModeByP1().getCode());
+										}
+										cartdatalist.add(cartSoftReservationRequestData);
+										}
+										
 									}
 								}
 							}
 						}
-						
-						Collection<RichAttributeModel> rich=cartEntry.getProduct().getRichAttribute();
-						rich.iterator().next().getShippingModes().toString();
-						
-						cartSoftReservationRequestData.setTransportMode(rich.iterator().next().getShippingModes().getCode());
-						cartdatalist.add(cartSoftReservationRequestData);
+						modelService.save(cartEntry);
+//						Collection<RichAttributeModel> rich=cartEntry.getProduct().getRichAttribute();
+//						rich.iterator().next().getShippingModes().toString();
+//						
+//						cartSoftReservationRequestData.setTransportMode(rich.iterator().next().getShippingModes().getCode());
+//						cartdatalist.add(cartSoftReservationRequestData);
+//						cartEntry.setFulfillmentTypeP1(DeliveryData.get);
+//						cartEntry.setFulfillmentType(rich.iterator().next().getDeliveryFulfillModes().getCode());
 					}
 					
 					// 	Added inventory request type to set the duration type for cart only

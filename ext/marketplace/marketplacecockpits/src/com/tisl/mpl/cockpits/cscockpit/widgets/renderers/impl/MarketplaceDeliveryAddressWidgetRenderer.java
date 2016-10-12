@@ -356,6 +356,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 			final Listitem listItem = new Listitem(value);
 			listItem.setParent(AddressTypeListbox);
 		}
+		AddressTypeListbox.setSelectedIndex(1);
 		AddressTypeListbox.setParent(addressTypeDiv);
 
 		// Creates Mobile Number field
