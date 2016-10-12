@@ -53631,3 +53631,8 @@ background: #fff;
     z-index: 999;
 	}
 	}
+	
+.confirmation .right-block .block .totals #cartPromotionAppliedthanks .amt,
+.confirmation .right-block .block .totals #couponAppliedthanks .amt{
+	color: #a9143c;
+}
