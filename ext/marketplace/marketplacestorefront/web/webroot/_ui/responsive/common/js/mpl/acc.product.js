@@ -1054,13 +1054,20 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 					+ "/cart/showTransientCart",
 			data:dataString,
 			success : function(response) {
+				
+				
+				
 				$('.mini-transient-bag').remove();
 				var transientCartHtml="<div class='mini-transient-bag' ><span class='mini-cart-close'>+</span><ul class='my-bag-ul'><li class='item'><ul><li><div class='product-img'><a href='"+ACC.config.encodedContextPath+response.productUrl+"'><img class='picZoomer-pic' src='"+response.productImageUrl+"'></a></div><div class='product'><p class='company'></p><h3 class='product-name'><a href='"+ACC.config.encodedContextPath+response.productUrl+"'>"+response.productTitle+"</a></h3><span class='addedText'>has been added to your cart</span>";
 				
 				if(typeof response.offer!=='undefined'){
 					transientCartHtml+="<div class='transient-offer'>"+response.offer+"</div>";
 				}
-				
+				/*LW-216*/
+				if(typeof response.productType!=='undefined'){
+					transientCartHtml+="<div>"+response.productType+"</div>";
+				}
+				/*LW-216*/
 				transientCartHtml+="</div></li></ul><li class='view-bag-li'><a href='"+ACC.config.encodedContextPath+"/cart' class='go-to-bag mini-cart-checkout-button'>View Bag</a></li></ul></div>";
 				$('.transient-mini-bag').append(transientCartHtml);
 				

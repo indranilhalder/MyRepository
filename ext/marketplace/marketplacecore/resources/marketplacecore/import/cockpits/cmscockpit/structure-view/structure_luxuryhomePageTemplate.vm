@@ -69,6 +69,11 @@
 				</td>
 			</tr>
 			<tr>
+				<td colspan="5" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Section9" />
+				</td>
+			</tr>
+			<tr>
 				<td height="270px" colspan="5" class="structureViewSection">
 					<cockpit code="Footer" />
 				</td>

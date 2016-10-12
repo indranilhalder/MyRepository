@@ -1097,7 +1097,8 @@ public class MiscsController extends BaseController
 	@RequestMapping(value = "/{baseSiteId}/searchAndSuggest", method = RequestMethod.POST)
 	@ResponseBody
 	public MplAutoCompleteResultWsData getAutoCompleteSuggestions(@RequestParam final String searchString, final String category,
-			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields,
+			@RequestParam(required = false) final boolean isFromLuxaryWeb)
 	{
 		MplAutoCompleteResultWsData resultData = new MplAutoCompleteResultWsData();
 		final AutoCompleteResultWsData wsData = new AutoCompleteResultWsData();
@@ -1157,6 +1158,14 @@ public class MiscsController extends BaseController
 			//searchQueryData.setValue(resultData.getSuggestions().size() > 0 ? resultData.getSuggestions().get(0).getTerm() : term);
 			searchState.setQuery(searchQueryData);
 			searchState.setSns(true);
+			if (isFromLuxaryWeb)
+			{
+				searchState.setLuxarySiteFrom(MarketplacecommerceservicesConstants.CHANNEL_WEB);
+			}
+			else
+			{
+				searchState.setLuxarySiteFrom(MarketplacecommerceservicesConstants.CHANNEL_APP);
+			}
 
 			ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
 			if (CollectionUtils.isNotEmpty(wsData.getSuggestions()))

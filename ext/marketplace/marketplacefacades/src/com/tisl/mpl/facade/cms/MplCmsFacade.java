@@ -77,7 +77,7 @@ public interface MplCmsFacade
 	/**
 	 * @return
 	 */
-	LuxBlpCompWsDTO getlandingForBrand() throws CMSItemNotFoundException;
+	LuxBlpCompWsDTO getlandingForBrand(String brandCode) throws CMSItemNotFoundException;
 
 	/**
 	 * @return
