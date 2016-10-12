@@ -2490,14 +2490,14 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 			for (final SimpleBannerComponentModel banner : seeOurJourneyComponent.getFooterImageList())
 			{
 				final LuxJourneyTimeLineListWsDTO seeOurJourneyDto = new LuxJourneyTimeLineListWsDTO();
-				if (null != banner.getMedia() && null != banner.getMedia().getUrl2())
+				if (null != banner.getMedia() && null != banner.getMedia().getURL())
 				{
-					seeOurJourneyDto.setImage(banner.getMedia().getUrl2());
+					seeOurJourneyDto.setImage(banner.getMedia().getURL());
 				}
 
 				if (null != banner.getMedia() && null != banner.getMedia().getAltText())
 				{
-					seeOurJourneyDto.setImage(banner.getMedia().getAltText());
+					seeOurJourneyDto.setImg_alt(banner.getMedia().getAltText());
 				}
 
 				if (null != banner.getTitle())
@@ -2507,7 +2507,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 				if (null != banner.getDescription())
 				{
-					seeOurJourneyDto.setYear(banner.getDescription());
+					seeOurJourneyDto.setText(banner.getDescription());
 				}
 				ourJourneyComponentDtoList.add(seeOurJourneyDto);
 			}
