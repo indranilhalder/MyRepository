@@ -232,6 +232,27 @@ public class CartPageController extends AbstractPageController
 				{
 					LOG.debug("CartPageController : product quanity is empty");
 				}
+				// LW-230 Start
+				boolean luxFlag = false;
+				if (null != cartData.getEntries())
+				{
+					for (final OrderEntryData entry : cartData.getEntries())
+					{
+						if (null != entry.getProduct())
+						{
+							if (entry.getProduct().getLuxIndicator() != null
+									&& entry.getProduct().getLuxIndicator()
+											.equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
+							{
+								luxFlag = true; //Setting true if at least one luxury product found
+								break;
+							}
+						}
+					}
+				}
+				model.addAttribute(ModelAttributetConstants.IS_LUXURY, luxFlag);
+				// LW-230 End
+
 				cartDataOnLoad = cartData;
 				prepareDataForPage(model, cartDataOnLoad);
 			}
