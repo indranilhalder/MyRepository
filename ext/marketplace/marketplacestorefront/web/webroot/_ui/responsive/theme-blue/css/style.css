@@ -53623,3 +53623,11 @@ height: 555px;
 background: #fff;
 }
 /*TPR-1983 fix end*/
+@media (min-width:768px) and (max-width:790px){
+	body.page-multiStepCheckoutSummaryPage footer .banner{
+	position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 999;
+	}
+	}
