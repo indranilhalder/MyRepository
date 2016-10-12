@@ -53604,3 +53604,22 @@ div.radio.creditDebitLabelRadio{
 }
 }
 
+/*TPR-1983 fix start*/
+#colorbox, #cboxWrapper{
+max-height: 695px;
+overflow:visible;
+}
+#cboxContent{
+max-height: 555px;
+overflow:visible;
+}
+#cboxContent #cboxLoadedContent{
+width: 899px !important;
+padding: 30px 0;
+}
+#cboxContent #cboxLoadedContent .quickview.active{
+padding: 0 30px;
+height: 555px;
+background: #fff;
+}
+/*TPR-1983 fix end*/
