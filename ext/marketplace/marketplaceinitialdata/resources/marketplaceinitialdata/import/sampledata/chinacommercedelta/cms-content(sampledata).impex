@@ -26,4 +26,4 @@ $storefrontContextRoot=$config-storefrontContextRoot
 
 #Shop by Department Components
 INSERT_UPDATE DepartmentCollectionComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;departmentCollection(code,$productCV)
-;;ShopByDepartmentComponent;Shop By Department;ShopByDepartmentComponent;MSH10,MSH11,MSH12,MSH13,MSH20,MSH16
+;;ShopByDepartmentComponent;Shop By Department;ShopByDepartmentComponent;MSH10,MSH11,MSH12,MSH13,MSH20,MSH16,MSH17,MSH18,MSH19
