@@ -52,7 +52,9 @@ if(loginStatus){
 <%-- bootstrap --%>
 <script type="text/javascript"
 	src="${commonResourcePath}/bootstrap/dist/js/bootstrap.min.js"></script>
-
+<c:if test="${param.isLux ne null and param.isLux eq true }">
+	<script type="text/javascript" src="http://luxury.ia.tatacliq.com/header-widget.js"></script>
+</c:if>
 
 <c:choose>
 	<c:when test="${isMinificationEnabled}">
