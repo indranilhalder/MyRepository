@@ -9,6 +9,7 @@
 
 	<group qualifier="editorial" visible="true" initially-opened="false">
 		<label key="config.general.editorial" />
+		<property qualifier="SimpleBannerComponent.title"/>
 		<property qualifier="AbstractBannerComponent.urlLink"/>
 		<property qualifier="AbstractBannerComponent.external"/>
 		<property qualifier="SimpleCMSComponent.deeplinkType" />
