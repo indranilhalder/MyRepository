@@ -21,7 +21,8 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
 } 
 img {
     vertical-align: middle;
-    width:100%;
+    /* width:100%; */
+    max-width: 100%;
 }
 html {
     -webkit-font-smoothing: subpixel-antialiased;
@@ -53503,7 +53504,30 @@ header > .content .top.header_fix {position:fixed;}
 /* TPR-1745 end*/
 
 
-/* pdp-v4-temp template1 starts */
+/* TPR-978 starts */
+
+/* Common Starts */
+.Manufacturer h3 {
+    font-size: 24px;
+    font-weight: bold;
+    padding-bottom: 10px;
+    margin: 0 0 17px;
+    position: relative;
+    display: inline-block;
+}
+.Manufacturer h3:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    margin-bottom: 10px;
+    width: 78px;
+    border-bottom: 2px solid #a9143c;
+}
+/* Common Ends */
+
+/* pdp-v4-temp template2 starts */
 
 .Manufacturer.Temp03{
 	clear: both;
@@ -53571,4 +53595,92 @@ header > .content .top.header_fix {position:fixed;}
     	margin: 0 0 55px;
 	}
 }
+/* pdp-v4-temp template2 ends */
+
+/* pdp-v4-temp template1 starts */
+
+.Manufacturer.Temp02{
+	clear: both;
+}
+.Manufacturer.temp02 li{
+	clear: both;
+    overflow: hidden;
+}
+.Manufacturer.Temp02 .Padd ul.temp2-fst li .media{
+	float: left;
+    width: 69%;
+}
+.Manufacturer.Temp02 .Padd ul.temp2-fst li .media-content{
+	float: right;
+    width: 30%;
+}
+.Manufacturer.Temp02 .Padd ul.temp2-fst li:nth-child(n+0) .media-content {
+    padding: 4.3% 2.1%;
+}
+.Manufacturer.Temp02 .Padd p {
+    font-size: 14px;
+    margin: 0 0 10px;
+    line-height: 20px;
+}
+.Manufacturer.Temp02 .Padd ul.temp2-fst li:nth-child(2n+0) .media {
+    float: right;
+    width: 30%;
+}
+.Manufacturer.Temp02 .Padd ul.temp2-fst li:nth-child(2n+0) .media-content{
+    padding: 9.2% 9.2% 0 0;
+    width: 69%;
+    float: left;
+}
+.temp2-center {
+    padding: 48px 0;
+    text-align: center;
+    width: 49%;
+    margin: 0 auto;
+}
+.row-brdr {
+    border-bottom: 1px solid #f2f2f2;
+}
+.Manufacturer.temp02 li {
+    clear: both;
+    overflow: hidden;
+}
+.Manufacturer.Temp02 ul.pdpFeatures li {
+    display: inline-block;
+    width: 32.8%;
+    margin-right: 5px;
+    padding-bottom: 38px;
+    vertical-align: top;
+}
+.Manufacturer.Temp02 ul.pdpFeatures li .media-content {
+    padding: 30px 40px 0 0;
+}
+.Manufacturer.Temp02 ul.pdpFeatures li h4 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+.Manufacturer.Temp02 ul.pdpFeatures li p {
+    font-size: 13px;
+}
+.Manufacturer.Temp02 ul.pdpFeatures li:last-child {
+    margin-right: 0;
+}
+.Manufacturer.Temp02 li {
+    clear: both;
+    overflow: hidden;
+}
+@media (min-width: 1025px){
+	.Manufacturer{
+		margin: 70px 0 0;
+	}
+	.Manufacturer .Padd h2{
+		font-size: 28px;
+    	font-weight: bold;
+    	text-align: center;
+    	margin: 0 0 55px;
+	}
+}
+
 /* pdp-v4-temp template1 ends */
+
+/* TPR-978 ends */
