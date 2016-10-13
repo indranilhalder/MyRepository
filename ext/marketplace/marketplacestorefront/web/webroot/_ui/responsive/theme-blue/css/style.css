@@ -53475,11 +53475,38 @@ div.radio.creditDebitLabelRadio{
  header .content nav > ul > li > ul > li > ul > li.long.words .toggle {
                font-weight: normal;
     }
+<<<<<<< HEAD
 /* TPR-791 Start */
 .product-info .product-detail .other-sellers#otherSellerInfoId{margin-top:0px;}
 .product-info .SoldWrap>div.fullfilled-by{padding-right:0px;/* width:43%; */}
 /* .product-info .SoldWrap>div.seller{width:57%;}
 .product-info .SoldWrap>div.seller .seller-details, .product-info .SoldWrap>div.seller form#sellerForm{float:left;}
 .product-info .SoldWrap>div{max-width:inherit;} */
+=======
+/* TPR-1745 start */
+@media(max-width:790px){
+  body.page-productDetails header .content .bottom.active,body.page-viewSellers header .content .bottom.active {
+        z-index: 10001;
+    }
+    header > .content .top{z-index:10002;}
+    header > .content .bottom {
+    background-color: #fff;
+}
+    header .content .bottom.active{
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 200;
+    width: 100%;
+    padding: 0 10px 10px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    -webkit-transition: position .3s;
+    -moz-transition: position .3s;
+    transition: position .3s;
+}
+header > .content .top.header_fix {position:fixed;}
+}
+/* TPR-1745 end */
+>>>>>>> refs/remotes/origin/SPRINT7
 
 /* TPR-791 End */

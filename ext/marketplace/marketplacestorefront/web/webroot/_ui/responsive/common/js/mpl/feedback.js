@@ -208,12 +208,13 @@ $(document).ready(function(){
 				   if(!($('body').hasClass("page-multiStepCheckoutSummaryPage") || $('body').hasClass("page-checkout-login"))){
 						 if( $(window).scrollTop() > $('.bottom').offset().top && !($('.bottom').hasClass('active'))){
 				      $('.bottom').addClass('active');
+				      $('header > .content .top').addClass('header_fix');
 				    } else if ($(window).scrollTop() == 0){
 				      $('.bottom').removeClass('active');
+				   $('header > .content .top').removeClass('header_fix');
 				    }
 					  }
 				  }); 
-			   
 	 /*----END of Sticky Bag --------*/
 	
 	/*----------start of changes to get search-text and category and assign to hidden fields-----------*/
