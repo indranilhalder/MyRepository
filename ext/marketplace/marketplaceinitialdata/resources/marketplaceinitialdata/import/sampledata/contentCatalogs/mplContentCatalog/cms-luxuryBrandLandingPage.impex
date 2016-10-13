@@ -90,11 +90,11 @@ INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];$pi
 
 ### Content Slot
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
-;;BottomHeaderSlot-luxurybrandlandingpage;true;Luxury BLP Logo Slot;luxuryBLPLogoComponent
+;;Section0-luxurybrandlandingpage;true;Luxury BLP Logo Slot;luxuryBLPLogoComponent
 
 ## Content Slot for page
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxurybrandlandingpage'];contentSlot(uid,$contentCV)[unique=true];;;
-;;BottomHeaderSlot-luxurybrandlandingpage;BottomHeaderSlot;;BottomHeaderSlot-luxurybrandlandingpage;;;
+;;BottomHeaderSlot-luxurybrandlandingpage;BottomHeaderSlot;;Section0-luxurybrandlandingpage;;;
 
 ################################### Section 6 End ############################################
 
