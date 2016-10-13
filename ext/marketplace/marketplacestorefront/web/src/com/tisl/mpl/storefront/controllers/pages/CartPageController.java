@@ -234,7 +234,7 @@ public class CartPageController extends AbstractPageController
 				}
 				// LW-230 Start
 				boolean luxFlag = false;
-				if (null != cartData.getEntries())
+				if (null != cartData.getEntries() && cartData.getEntries().size() != 0)
 				{
 					for (final OrderEntryData entry : cartData.getEntries())
 					{
@@ -249,8 +249,12 @@ public class CartPageController extends AbstractPageController
 							}
 						}
 					}
+					model.addAttribute(ModelAttributetConstants.IS_LUXURY, luxFlag);
 				}
-				model.addAttribute(ModelAttributetConstants.IS_LUXURY, luxFlag);
+				else
+				{
+					model.addAttribute(ModelAttributetConstants.IS_LUXURY, ControllerConstants.Views.Pages.Cart.EMPTY_CART);
+				}
 				// LW-230 End
 
 				cartDataOnLoad = cartData;
