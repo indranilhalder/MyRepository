@@ -207,11 +207,12 @@ public class LpoverrideWidgetController
 				if (orderStatus.equalsIgnoreCase("SCANNED") || orderStatus.equalsIgnoreCase("HOTCOURI")
 						|| orderStatus.equalsIgnoreCase("REVERSEAWB"))
 				{
-					transaction.setAwbEditable(Boolean.FALSE);
+					transaction.setAwbReadOnly(Boolean.FALSE);
 				}
 				else
 				{
-					transaction.setAwbEditable(Boolean.TRUE); //this step is removed once awbEditable default value== false at dto level
+					transaction.setAwbReadOnly(Boolean.TRUE);
+					//this step is removed once awbEditable default value== false at dto level
 				}
 			}
 			listOfTransactions = transactionsList;
