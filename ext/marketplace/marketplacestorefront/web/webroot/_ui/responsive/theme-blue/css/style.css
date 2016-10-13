@@ -45681,4 +45681,10 @@ body.no-scroll {
     line-height: 15px;
     text-align: center;
 }  
+.luxury_ribbon{
+	height:36px;
+}
+.luxury_ribbon.picZoomer-pic{
+	height:36px !important;
+}
 /*--------------Added for luxury site ends-----------*/
