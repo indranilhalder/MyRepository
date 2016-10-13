@@ -53525,6 +53525,20 @@ header > .content .top.header_fix {position:fixed;}
     width: 78px;
     border-bottom: 2px solid #a9143c;
 }
+
+/* Mobile & Tablet starts*/
+
+@media (max-width: 1024px){
+.Manufacturer .Padd h2 {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin: 0 0 40px;
+}
+}
+
+/* Mobile & Tablet ends*/
+
 /* Common Ends */
 
 /* pdp-v4-temp template2 starts */
@@ -53595,6 +53609,13 @@ header > .content .top.header_fix {position:fixed;}
     	margin: 0 0 55px;
 	}
 }
+
+/* Mobile & Tablet starts*/
+
+
+/* Mobile & Tablet ends*/
+
+
 /* pdp-v4-temp template2 ends */
 
 /* pdp-v4-temp template1 starts */
@@ -53680,6 +53701,7 @@ header > .content .top.header_fix {position:fixed;}
     	margin: 0 0 55px;
 	}
 }
+
 
 /* pdp-v4-temp template1 ends */
 
@@ -54156,5 +54178,204 @@ header > .content .top.header_fix {position:fixed;}
 }
 
 /* pdp-v4-temp template6 ends */
+
+/* Mobile & Tablet starts*/
+
+
+@media (max-width: 1280px) and (min-width: 791px){
+	
+	/* pdp-v4-temp template1 tablet starts */
+	
+.Manufacturer.Temp02 .Padd ul.temp2-fst li .media, .Manufacturer.Temp02 .Padd ul.temp2-fst li:last-child .media {
+    width: 60%;
+}
+.Manufacturer.Temp02 .Padd ul.temp2-fst li:nth-child(n+0) .media-content, .Manufacturer.Temp02 .Padd ul.temp2-fst li:last-child .media-content {
+    padding: 2%;
+    width: 40%;
+}
+.Manufacturer.Temp02 h3 {
+    font-size: 18px;
+}
+.Manufacturer.Temp02 .Padd p {
+    font-size: 12px;
+}
+.Manufacturer.Temp02 .Padd ul.temp2-fst li:nth-child(2n+0) .media-content {
+    padding: 5% 5% 5% 0;
+    width: 60%;
+}
+.Manufacturer.Temp02 .Padd ul.temp2-fst li:last-child .media-content {
+    padding: 4% 1.43% 3% 2.8%;
+}
+.Manufacturer.Temp02 .Padd ul.pdpFeatures li {
+    width: 32.6%;
+}
+.Manufacturer.Temp02 ul.pdpFeatures li h4 {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+.Manufacturer.Temp02 ul.pdpFeatures li p {
+    font-size: 12px;
+}
+/* pdp-v4-temp template1 tablet ends */
+
+/* pdp-v4-temp template2 tablet starts */
+
+.Manufacturer.Temp03 .media-content {
+    padding-bottom: 2%;
+}
+.Manufacturer.Temp03 .media-content, .Manufacturer.Temp03 .padd ul li:nth-child(2n) .media-content {
+    padding-bottom: 2%;
+}
+.Manufacturer.Temp03 h3 {
+    font-size: 16px;
+}
+.Manufacturer.Temp03 p {
+    font-size: 12px;
+}
+.Manufacturer.Temp03 .media-content, .Manufacturer.Temp03 .padd ul li:nth-child(2n) .media-content {
+    padding-bottom: 2%;
+}
+/* pdp-v4-temp template2 tablet ends */
+}
+
+@media (max-width: 1024px){
+.Manufacturer {
+    margin: 50px 25px 35px;
+}
+}
+
+@media (max-width: 790px){
+	
+	/* pdp-v4-temp template1 mobile starts */
+.Manufacturer.Temp02 .Padd ul.temp2-fst li .media, .Manufacturer.Temp02 .Padd ul.temp2-fst li .media-content, .Manufacturer.Temp02 .Padd ul.temp2-fst li:last-child .media, .Manufacturer.Temp02 .Padd ul.temp2-fst li:last-child .media-content, .Manufacturer.Temp02 .Padd ul.temp2-fst li .media-content, .Manufacturer.Temp02 .Padd ul.temp2-fst li:nth-child(2n) .media, .Manufacturer.Temp02 .Padd ul.temp2-fst li:nth-child(2n) .media-content {
+    width: 100%;
+    text-align: center;
+}
+.Manufacturer.Temp02 h3::after {
+    margin: 0 auto;
+}
+.Manufacturer.Temp02 .Padd ul.temp2-fst li:nth-child(2n) .media-content {
+    padding-bottom: 2%;
+}
+.Manufacturer.Temp02 h3::after {
+    margin: 0 auto;
+}
+.temp2-center {
+    width: 100%;
+}
+.Manufacturer.Temp02 .Padd ul.pdpFeatures li, .conT-video {
+    width: 100%;
+    text-align: center;
+}
+
+	/* pdp-v4-temp template1 mobile ends */	
+	
+	/* pdp-v4-temp template2 mobile starts */
+	
+	.Manufacturer.Temp03 .media {
+    width: 100%;
+    padding: 3% 2%;
+    text-align: center;
+	}
+	.Manufacturer.Temp03 .media-content {
+    width: 100%;
+    padding: 3% 2%;
+    text-align: left;
+	}
+	.Manufacturer.Temp03 h3 {
+    font-size: 14px;
+    margin-bottom: 0;
+	}
+	.Manufacturer.Temp03 p {
+    font-size: 12px;
+	}
+	.Manufacturer.Temp03 .media {
+    width: 100%;
+    padding: 3% 2%;
+    text-align: center;
+	}
+	.Manufacturer.Temp03 .media-content {
+    width: 100%;
+    padding: 3% 2%;
+    text-align: left;
+	}
+	.Manufacturer.Temp03 .padd ul li:nth-child(2n) .media-content {
+    text-align: left;
+    padding: 2%;
+	}
+	
+	
+	/* pdp-v4-temp template2 mobile ends */
+	
+}
+
+@media (max-width: 767px){
+	
+	/* pdp-v4-temp template1 smaller mobile starts */
+	.Manufacturer {
+    margin: 35px 15px;
+	}
+	.Manufacturer .Padd {
+    padding: 0 20px;
+	}
+	.Manufacturer .Padd h2 {
+    font-size: 20px;
+    margin: 0 0 20px;
+	}
+	.Manufacturer.Temp02 .Padd ul.temp2-fst li:last-child .media-content, .Manufacturer.Temp02 .Padd ul.temp2-fst li:nth-child(2n) .media-content, .Manufacturer.Temp02 .Padd ul.temp2-fst li .media-content {
+    text-align: left;
+	}
+	.Manufacturer.Temp02 h3, .Manufacturer.Temp02 ul.pdpFeatures li h4 {
+    font-size: 14px;
+	}
+	.Manufacturer.Temp02 h3::after {
+    margin: 0;
+	}
+	.Manufacturer.Temp02 .Padd p {
+    font-size: 12px;
+	}
+	.Manufacturer.Temp02 .Padd li p, .Manufacturer.Temp02 ul.pdpFeatures li p {
+    font-size: 12px;
+	}
+	.Manufacturer.Temp02 .Padd ul.temp2-fst li:nth-child(2n+0) .media-content {
+    padding: 9.2% 2%;
+	}
+	.temp2-center {
+    padding: 10px 0;
+	}
+	.Manufacturer.Temp02 .temp2-center h3::after {
+    margin: 0 auto;
+	}
+	.Manufacturer.Temp02 .Padd ul.pdpFeatures li .media-content {
+    padding: 10px 10px 0 0;
+	}
+	.Manufacturer.Temp02 ul.pdpFeatures li h4 {
+    margin-bottom: 10px;
+    margin-top: 5px;
+	}
+	.Manufacturer.Temp02 .contVideo h3 {
+    font-size: 16px;
+	}
+	.Manufacturer.Temp02 .temp2-center h3::after {
+    margin: 0 auto;
+	}
+	.contVideo li {
+    width: 100%;
+    text-align: center;
+	}
+	.contVideo li h4 {
+    padding: 10px 0 20px;
+    font-size: 14px;
+	}
+	/* pdp-v4-temp template1 smaller mobile ends */	
+	
+	/* pdp-v4-temp template2 smaller mobile starts */
+	
+	
+	/* pdp-v4-temp template2 smaller mobile ends */	
+	
+}
+
+/* Mobile & Tablet ends*/
 
 /* TPR-978 ends */
