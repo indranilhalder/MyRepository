@@ -5,6 +5,7 @@
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <%@ taglib prefix="cart" tagdir="/WEB-INF/tags/responsive/cart" %>
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/responsive/common" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <template:page pageTitle="${pageTitle}">
 	<cart:tealiumCartParameters/>
 	<cart:cartValidation/>
@@ -53,9 +54,16 @@
 				
 		 <c:if test="${empty cartData.entries}">
 		 <div class="emptyCart-mobile">
+		 <sec:authorize ifNotGranted="ROLE_ANONYMOUS">
 			<cms:pageSlot position="EmptyCartMiddleContent" var="feature" element="div"  >
 				<cms:component component="${feature}"/>
 			</cms:pageSlot>
+			</sec:authorize>
+			<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
+					<cms:pageSlot position="EmptyCartSignIn" var="feature" element="div"  >
+				<cms:component component="${feature}"/>
+			</cms:pageSlot>
+			</sec:authorize>
 				<span id="removeFromCart_Cart" style="display:none;color:#60A119;"><!-- And it's out!</span> --><spring:theme code="remove.product.cartmsg"/></span>
 			</div>
 		</c:if>
