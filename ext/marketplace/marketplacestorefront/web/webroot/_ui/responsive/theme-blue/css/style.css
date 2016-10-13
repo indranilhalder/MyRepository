@@ -53627,9 +53627,16 @@ header > .content .top.header_fix {position:fixed;}
 	clear: both;
     overflow: hidden;
 }
+.Manufacturer.Temp02 .Padd ul.temp2-fst li:last-child {
+    background: #f2f2f2;
+}
 .Manufacturer.Temp02 .Padd ul.temp2-fst li .media{
 	float: left;
     width: 69%;
+}
+.Manufacturer.Temp02 .Padd ul.temp2-fst li:last-child .media, .Manufacturer.Temp02 .Padd ul.temp2-fst li:last-child .media-content {
+    width: 50%;
+    float: left;
 }
 .Manufacturer.Temp02 .Padd ul.temp2-fst li .media-content{
 	float: right;
@@ -53637,6 +53644,12 @@ header > .content .top.header_fix {position:fixed;}
 }
 .Manufacturer.Temp02 .Padd ul.temp2-fst li:nth-child(n+0) .media-content {
     padding: 4.3% 2.1%;
+}
+.Manufacturer.Temp02 .Padd ul.temp2-fst li:last-child .media-content {
+    padding: 5.7% 1.43% 5.7% 2.8%;
+}
+.Manufacturer .temp2-center h3:after {
+    margin: 0 auto 10px;
 }
 .Manufacturer.Temp02 .Padd p {
     font-size: 14px;
