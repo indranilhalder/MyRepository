@@ -175,7 +175,8 @@ public class CartPageController extends AbstractPageController
 	{ MarketplacecommerceservicesConstants.BOXING, "deprecation" })
 	@RequestMapping(method = RequestMethod.GET)
 	public String showCart(final Model model, @RequestParam(value = "ussid", required = false) final String ussid,
-			@RequestParam(value = "pincode", required = false) final String pinCode) throws CMSItemNotFoundException,
+			@RequestParam(value = "pincode", required = false) final String pinCode,
+			@RequestParam(value = "isLux", required = false) final boolean isLux) throws CMSItemNotFoundException,
 			CommerceCartModificationException, CalculationException
 	{
 		LOG.debug("Entering into showCart" + "Class Nameshowcart :" + className + "pinCode " + pinCode);
@@ -232,29 +233,25 @@ public class CartPageController extends AbstractPageController
 				{
 					LOG.debug("CartPageController : product quanity is empty");
 				}
-				// LW-230 Start
+
+				//LUX-225,230
+				final int luxuryProducts = countLuxuryProductsInCart(cartData);
+				int marketplaceProducts = 0;
 				boolean luxFlag = false;
-				if (null != cartData.getEntries() && cartData.getEntries().size() != 0)
+				boolean marketplaceFlag = false;
+				if (CollectionUtils.isNotEmpty(cartData.getEntries()))
 				{
-					for (final OrderEntryData entry : cartData.getEntries())
-					{
-						if (null != entry.getProduct())
-						{
-							if (entry.getProduct().getLuxIndicator() != null
-									&& entry.getProduct().getLuxIndicator()
-											.equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
-							{
-								luxFlag = true; //Setting true if at least one luxury product found
-								break;
-							}
-						}
-					}
+					marketplaceProducts = cartData.getEntries().size() - luxuryProducts;
+					luxFlag = luxuryProducts > 0 ? true : false;
+					marketplaceFlag = marketplaceProducts > 0 ? true : false;
 					model.addAttribute(ModelAttributetConstants.IS_LUXURY, luxFlag);
 				}
 				else
 				{
 					model.addAttribute(ModelAttributetConstants.IS_LUXURY, ControllerConstants.Views.Pages.Cart.EMPTY_CART);
 				}
+
+				showMessageToUser(luxFlag, marketplaceFlag, isLux, model);
 				// LW-230 End
 
 				cartDataOnLoad = cartData;
@@ -295,7 +292,6 @@ public class CartPageController extends AbstractPageController
 		return returnPage;
 	}
 
-
 	/**
 	 * @param serviceCart
 	 */
@@ -306,6 +302,64 @@ public class CartPageController extends AbstractPageController
 	 * 
 	 * }
 	 */
+
+	/**
+	 * @param luxFlag
+	 * @param isLux
+	 * @param isLux2
+	 */
+	private void showMessageToUser(final boolean luxFlag, final boolean marketplaceFlag, final boolean isLux, final Model model)
+	{
+		if (!isLux)
+		{
+			if (luxFlag && !marketplaceFlag)//If source is Not Luxury and cart contains luxury product
+			{
+				GlobalMessages.addInfoMessage(model, "cart.merge.mpl.onlyLuxury");
+			}
+			else if (luxFlag && marketplaceFlag)//If source is Not Luxury and cart contains both luxury product and mpl product
+			{
+				GlobalMessages.addInfoMessage(model, "cart.merge.mpl.both");
+			}
+		}
+		else
+		{
+			if (!luxFlag && marketplaceFlag)//If source is Luxury and cart contains mpl product
+			{
+				GlobalMessages.addInfoMessage(model, "cart.merge.lux.onlyMpl");
+			}
+			else if (luxFlag && marketplaceFlag)//If source is Luxury and cart contains both luxury product and mpl product
+			{
+				GlobalMessages.addInfoMessage(model, "cart.merge.lux.both");
+			}
+		}
+
+	}
+
+	/**
+	 * @param cartData
+	 * @return
+	 */
+	private int countLuxuryProductsInCart(final CartData cartData)
+	{
+		int luxCount = 0;
+		if (null != cartData.getEntries())
+		{
+			for (final OrderEntryData entry : cartData.getEntries())
+			{
+				if (null != entry.getProduct())
+				{
+					if (entry.getProduct().getLuxIndicator() != null
+							&& entry.getProduct().getLuxIndicator().equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
+					{
+						luxCount++; //Setting true if at least one luxury product found
+
+					}
+				}
+			}
+		}
+		return luxCount;
+	}
+
 
 	/**
 	 *
