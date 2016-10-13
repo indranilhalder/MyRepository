@@ -104,6 +104,7 @@ import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.LuxBlpCompListWsDTO;
 import com.tisl.mpl.wsdto.LuxBlpCompWsDTO;
+import com.tisl.mpl.wsdto.LuxBlpStripWsDTO;
 import com.tisl.mpl.wsdto.LuxBrandProductsListWsDTO;
 import com.tisl.mpl.wsdto.LuxComponentsListWsDTO;
 import com.tisl.mpl.wsdto.LuxEngagementcomponentWsDTO;
@@ -382,7 +383,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getLandingPageForCategory(java.lang.String)
 	 */
 	@Override
@@ -407,7 +408,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getHomePageForMobile()
 	 */
 	@Override
@@ -855,13 +856,20 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 		if (StringUtils.isNotEmpty(product.getCode()))
 		{
-			final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(product.getCode());
-			if (null != buyboxdata && null != buyboxdata.getMrp())
+			try
 			{
-				productDto.setProductMRP(buyboxdata.getMrp().getFormattedValue());
+				final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(product.getCode());
+				if (null != buyboxdata && null != buyboxdata.getMrp())
+				{
+					productDto.setProductMRP(buyboxdata.getMrp().getFormattedValue());
+				}
+			}
+			catch (final Exception ex)
+
+			{
+				LOG.error("buybox data null " + ex);
 			}
 		}
-
 		return productDto;
 
 	}
@@ -937,23 +945,29 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				}
 				if (StringUtils.isNotEmpty(productCode))
 				{
-					final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productCode);
-					if (null != buyboxdata)
+					try
 					{
-						if (buyboxdata.getPrice() != null)
+						final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productCode);
+						if (null != buyboxdata)
 						{
-							productDto.setProductMOP(buyboxdata.getPrice().getFormattedValue());
-						}
-						if (buyboxdata.getSpecialPrice() != null)
-						{
-							productDto.setProductSpecialPrice(buyboxdata.getSpecialPrice().getFormattedValue());
-						}
-						if (buyboxdata.getMrp() != null)
-						{
-							productDto.setProductMRP(buyboxdata.getMrp().getFormattedValue());
+							if (buyboxdata.getPrice() != null)
+							{
+								productDto.setProductMOP(buyboxdata.getPrice().getFormattedValue());
+							}
+							if (buyboxdata.getSpecialPrice() != null)
+							{
+								productDto.setProductSpecialPrice(buyboxdata.getSpecialPrice().getFormattedValue());
+							}
+							if (buyboxdata.getMrp() != null)
+							{
+								productDto.setProductMRP(buyboxdata.getMrp().getFormattedValue());
+							}
 						}
 					}
-
+					catch (final Exception ex)
+					{
+						LOG.error("Buybox data not available" + ex);
+					}
 				}
 				if (StringUtils.isNotEmpty(defaultProductModelUrlResolver.resolveInternal(product)))
 				{
@@ -1493,7 +1507,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateCategoryLandingPageForMobile()
 	 */
 	@Override
@@ -1609,7 +1623,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.facade.cms.MplCmsFacade#populateSubBrandLandingPageForMobile(de.hybris.platform.cms2.model.pages.
 	 * ContentPageModel, java.lang.String)
@@ -1660,7 +1674,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populatePageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -1807,7 +1821,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getCategoryNameForCode(java.lang.String)
 	 */
 	@Override
@@ -1819,7 +1833,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getHeroProducts(java.lang.String)
 	 */
 	@Override
@@ -1893,7 +1907,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateSellerLandingPageForMobile()
 	 */
 	@Override
@@ -1934,7 +1948,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				 * (SmallBrandMobileAppComponentModel) abstractCMSComponentModel; final ComponentData componentData =
 				 * getMobileCategoryComponentConverter().convert(smallBrandMobileComponentModel);
 				 * componentDatas.add(componentData);
-				 * 
+				 *
 				 * }
 				 */
 				else if (abstractCMSComponentModel instanceof PromotionalProductsComponentModel)
@@ -1992,7 +2006,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getSellerMasterName(java.lang.String)
 	 */
 	@Override
@@ -2004,7 +2018,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateSellerPageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -2020,7 +2034,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateOfferPageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -2037,7 +2051,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getlandingForBrand()
 	 */
 	@Override
@@ -2118,6 +2132,14 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					blpComponent = getForHimHerBannerWsDTO(luxuryBannerComponent);
 					componentListForASlot.add(blpComponent);
 				}
+				if (typecode.equalsIgnoreCase("SimpleBannerComponent")
+						&& contentSlot.getUid().equalsIgnoreCase("BottomHeaderSlot-luxurybrandlandingpage"))
+				{
+					final SimpleBannerComponentModel headerslot = (SimpleBannerComponentModel) abstractCMSComponentModel;
+					blpComponent = getHeaderComponent(headerslot);
+					componentListForASlot.add(blpComponent);
+				}
+
 				if (typecode.equalsIgnoreCase("RotatingImagesComponent")
 						&& contentSlot.getUid().equalsIgnoreCase("Section1-heroBannerComponent"))
 				{
@@ -2228,7 +2250,25 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	}
 
+	/**
+	 * @param headerslot
+	 * @return
+	 */
+	private LuxBlpCompListWsDTO getHeaderComponent(final SimpleBannerComponentModel headerslot)
+	{
+		// YTODO Auto-generated method stub
+		final LuxBlpCompListWsDTO luxComponent = new LuxBlpCompListWsDTO();
+		final LuxBlpStripWsDTO luxblpStrip = new LuxBlpStripWsDTO();
 
+		if (null != headerslot.getMedia())
+		{
+			luxblpStrip.setUrl(headerslot.getMedia().getURL());
+
+		}
+		luxComponent.setBanner_strip_component(luxblpStrip);
+		return luxComponent;
+
+	}
 
 	/**
 	 * @param springComponent
@@ -2321,21 +2361,28 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				}
 				if (StringUtils.isNotEmpty(productCode))
 				{
-					final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productCode);
-					if (null != buyboxdata)
+					try
 					{
-						if (buyboxdata.getPrice() != null)
+						final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productCode);
+						if (null != buyboxdata)
 						{
-							productDto.setProductMOP(buyboxdata.getPrice().getFormattedValue());
+							if (buyboxdata.getPrice() != null)
+							{
+								productDto.setProductMOP(buyboxdata.getPrice().getFormattedValue());
+							}
+							if (buyboxdata.getSpecialPrice() != null)
+							{
+								productDto.setProductSpecialPrice(buyboxdata.getSpecialPrice().getFormattedValue());
+							}
+							if (buyboxdata.getMrp() != null)
+							{
+								productDto.setProductMRP(buyboxdata.getMrp().getFormattedValue());
+							}
 						}
-						if (buyboxdata.getSpecialPrice() != null)
-						{
-							productDto.setProductSpecialPrice(buyboxdata.getSpecialPrice().getFormattedValue());
-						}
-						if (buyboxdata.getMrp() != null)
-						{
-							productDto.setProductMRP(buyboxdata.getMrp().getFormattedValue());
-						}
+					}
+					catch (final Exception ex)
+					{
+						LOG.error("Buybox data not available" + ex);
 					}
 				}
 				if (StringUtils.isNotEmpty(defaultProductModelUrlResolver.resolveInternal(product)))
@@ -2803,7 +2850,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getMegaNavigation()
 	 */
 	@Override
