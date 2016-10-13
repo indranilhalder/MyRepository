@@ -69,8 +69,10 @@ import com.tisl.mpl.core.keygenerator.MplPrefixablePersistentKeyGenerator;
 import com.tisl.mpl.core.model.BankDetailsInfoToFICOHistoryModel;
 import com.tisl.mpl.core.model.CancellationReasonModel;
 import com.tisl.mpl.core.model.MplCustomerBankAccountDetailsModel;
+import com.tisl.mpl.core.model.MplLPHolidaysModel;
 import com.tisl.mpl.core.model.RefundTransactionMappingModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.CODSelfShipData;
 import com.tisl.mpl.data.CODSelfShipResponseData;
 import com.tisl.mpl.data.CRMTicketUpdateData;
@@ -85,6 +87,7 @@ import com.tisl.mpl.data.SendTicketRequestData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
+import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
@@ -186,6 +189,12 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	
 	@Autowired
 	private MplPrefixablePersistentKeyGenerator prefixableKeyGenerator;
+	
+	@Autowired
+	private MplConfigFacade mplConfigFacade;
+	
+	@Autowired
+	private DateUtilHelper dateUtilHelper;
 	
 	protected static final Logger LOG = Logger.getLogger(CancelReturnFacadeImpl.class);
 
@@ -2254,7 +2263,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	{
 		if(LOG.isDebugEnabled())
 		{
-		LOG.debug("Sending Returninfo to OMS  ");
+		LOG.debug("Sending Returninfo to FICO  ");
 		}
 		
 		CODSelfShipmentRequest requestData=new CODSelfShipmentRequest();
@@ -2360,47 +2369,61 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		Date currentDate=new Date();
 		ConsignmentModel consignmentModel=mplOrderService.fetchConsignment(orderEntryData.getConsignment().getCode());
 		
-		List<String> returnableDates=new ArrayList<>();
+		List<String> returnableDates=new ArrayList<String>();
 		if(null != consignmentModel )
 		{
 		final int returnWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(consignmentModel.getDeliveryDate(),
 				currentDate);
 		final int actualReturnWindow = Integer.parseInt(richAttributeModel.get(0).getReturnWindow());
 		DateTimeFormatter dtfOut = DateTimeFormat.forPattern("dd-MM-yyyy");
+		final MplLPHolidaysModel mplLPHolidaysModel = mplConfigFacade.getMplLPHolidays(MarketplacecommerceservicesConstants.CAMPAIGN_URL_ALL);
 		if(actualReturnWindow>=returnWindow)
 		{
 			DateTime today = new DateTime().withTimeAtStartOfDay();
 			if((actualReturnWindow-returnWindow)>3)
 			{
-				for(int i=0; i<3; i++)
-				{	
-					returnableDates.add(dtfOut.print( today.plusDays( i ).withTimeAtStartOfDay()));		   
+				if(mplLPHolidaysModel.getWorkingDays().contains("0")){
+					returnableDates = dateUtilHelper.calculatedLpHolidays(dtfOut.print(today),3);
+				}else{
+					for(int i=0; i<3; i++)
+					{	
+						returnableDates.add(dtfOut.print( today.plusDays( i ).withTimeAtStartOfDay()));		   
+					}
 				}
 			}
 			else if((actualReturnWindow-returnWindow)==2)
 			{
+				if(mplLPHolidaysModel.getWorkingDays().contains("0")){
+					returnableDates = dateUtilHelper.calculatedLpHolidays(dtfOut.print(today),2);
+				}else{
 				for(int i=0; i<2; i++)
 				{
-				//	DateTimeFormatter dtfOut = DateTimeFormat.forPattern("MMM dd ");
 					returnableDates.add(dtfOut.print( today.plusDays( i ).withTimeAtStartOfDay()));		   
+				}
 				}
 			}
 			else if((actualReturnWindow-returnWindow)==1)
 			{
+				if(mplLPHolidaysModel.getWorkingDays().contains("0")){
+				returnableDates = dateUtilHelper.calculatedLpHolidays(dtfOut.print(today),1);
+			}else{
 				for(int i=0; i<1; i++)
 				{
-					//DateTimeFormatter dtfOut = DateTimeFormat.forPattern("MMM dd ");
 					returnableDates.add(dtfOut.print( today.plusDays( i ).withTimeAtStartOfDay()));		   
 				}
 			}
+			}
 			else if((actualReturnWindow-returnWindow)==0)
 			{
-				
-					//DateTimeFormatter dtfOut = DateTimeFormat.forPattern("MMM dd ");
-					returnableDates.add(dtfOut.print( today.plusDays(0).withTimeAtStartOfDay()));		   
+				if(mplLPHolidaysModel.getWorkingDays().contains("0")){
+					returnableDates = dateUtilHelper.calculatedLpHolidays(dtfOut.print(today),0);
+				}else{
+					returnableDates.add(dtfOut.print( today.plusDays(0).withTimeAtStartOfDay()));	
+				}
 			}
 	
 		}
+
 		}
 		
 		return returnableDates;
