@@ -5,6 +5,9 @@
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <%@ taglib prefix="cart" tagdir="/WEB-INF/tags/responsive/cart" %>
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/responsive/common" %>
+<!-- LW-230 -->
+<input type="hidden" id="isLuxury" value="${isLuxury}"/>
+
 <template:page pageTitle="${pageTitle}">
 	<cart:tealiumCartParameters/>
 	<cart:cartValidation/>
