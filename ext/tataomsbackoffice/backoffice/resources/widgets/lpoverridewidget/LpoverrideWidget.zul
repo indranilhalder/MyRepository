@@ -191,7 +191,7 @@
 								</listcell>
 								<listcell>
 									<textbox
-										readonly="@bind(each.awbEditable)"
+										readonly="@bind(each.awbReadOnly)"
 										onChange="@command('onChangeTransactionInfo',transaction=each)"
 										value="@bind(each.awbNumber)">
 									</textbox>
