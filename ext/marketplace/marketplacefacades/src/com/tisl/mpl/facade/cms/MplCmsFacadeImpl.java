@@ -661,11 +661,11 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 			}
 			if (luxurySocialFeedBannerComponent.getUid().equalsIgnoreCase("LuxSocialFeedGooglePlus"))
 			{
-				socialFeedComponentDto.setLuxSocialFeedInstagram(socialFeedComponentDtoList);
+				socialFeedComponentDto.setLuxSocialFeedGooglePlus(socialFeedComponentDtoList);
 			}
 			if (luxurySocialFeedBannerComponent.getUid().equalsIgnoreCase("LuxSocialFeedInstagram"))
 			{
-				socialFeedComponentDto.setLuxSocialFeedGooglePlus(socialFeedComponentDtoList);
+				socialFeedComponentDto.setLuxSocialFeedInstagram(socialFeedComponentDtoList);
 			}
 
 		}
@@ -699,11 +699,11 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 			}
 			if (luxurySocialFeedBannerComponent.getUid().equalsIgnoreCase("LuxSocialFeedGooglePlus"))
 			{
-				socialFeedComponentDto.setLuxSocialFeedInstagram(socialFeedComponentDtoList);
+				socialFeedComponentDto.setLuxSocialFeedGooglePlus(socialFeedComponentDtoList);
 			}
 			if (luxurySocialFeedBannerComponent.getUid().equalsIgnoreCase("LuxSocialFeedInstagram"))
 			{
-				socialFeedComponentDto.setLuxSocialFeedGooglePlus(socialFeedComponentDtoList);
+				socialFeedComponentDto.setLuxSocialFeedInstagram(socialFeedComponentDtoList);
 			}
 		}
 		luxComponent.setSocialfeedcomponent(socialFeedComponentDto);
