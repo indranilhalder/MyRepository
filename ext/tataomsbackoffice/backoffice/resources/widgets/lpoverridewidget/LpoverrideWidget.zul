@@ -6,12 +6,51 @@
 	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
 	height="100%" apply="org.zkoss.bind.BindComposer"
 	viewModel="@id('vm') @init('com.techouts.backoffice.widget.controller.LpoverrideWidgetController')">
+	<style>
+		.popuped{ position: absolute; top: 0%; left: 0%; width: 100%;
+		height: 100%; background-color: black; z-index:1001;
+		-moz-opacity: 0.8; opacity:0.9; filter: alpha(opacity=80);
+		padding: 15%;} .popuped .content{ padding: 10%;
+		background-color: white; } .popuped .close{ float:right;
+		background-color: white; border:0px;
+
+		} .lheading{ float:left; color:black; font-size: 13px; }
+		.headingpopup{ padding:10px; float:left; color:black; font-size:
+		13px; } .error_class{font-size:13px;color:red;}
+		.success_class{font-size:13px;color:green;width:40}
+	</style>
+	<div class="popuped" id="displayPopup"
+		visible="@load(vm.displayPopup)"
+		action="show: slideDown;hide: slideUp">
+		<button class="close" onClick="displayPopup.setVisible(false)"  image="${wr}/images/close-button.gif"/>
+		<div class="content">
+			<div style="border:#555 1px solid;padding:20px">
+						<grid hflex="1" height="400px"
+							model="@load(vm.orderlineRespone)">
+							<columns>
+								<column hflex="1" label="TransactionId" />
+								<column hflex="1" label="Status" />
+							</columns>
+							<template name="model">
+								<row>
+									<label
+										value="@load(each.transactionId)" />
+									<label value="@load(each.status)" />
+								</row>
+							</template>
+						</grid>
+						<button label="OK"
+							onClick="displayPopup.setVisible(false)" />
+			</div>
+
+		</div>
+	</div>
 	<columnlayout width="100%" height="100%">
 		<columnchildren width="100%">
-		<panel
+			<panel
 				style="height:20%;font-size:14px;border-bottom:3px solid #27394f;border:none">
 				<panelchildren style="border:none">
-					<vlayout style="width:100%;height:100px">
+					<vlayout style="width:100%;height:120px">
 						<hlayout>
 							<vlayout width="100px">
 								<label value="OrderId" hflex="1" />
@@ -21,7 +60,7 @@
 									value="@bind(vm.txtOrderId)" style="width:200px;height:10px">
 								</textbox>
 							</vlayout>
-                         <vlayout width="100px">
+							<vlayout width="100px">
 								<label></label>
 							</vlayout>
 							<vlayout width="100px">
@@ -30,7 +69,7 @@
 							<vlayout width="200px">
 								<textbox hflex="1"
 									value="@bind(vm.txtTransactionId)"
-									style="width:200px;height:10px" >
+									style="width:200px;height:10px">
 								</textbox>
 							</vlayout>
 
@@ -44,7 +83,7 @@
 									value="@bind(vm.txtSlaveId)" style="width:200px;height:10px">
 								</textbox>
 							</vlayout>
-							 <vlayout width="100px">
+							<vlayout width="100px">
 								<label></label>
 							</vlayout>
 							<vlayout width="100px">
@@ -62,26 +101,29 @@
 								<label value="Order Status" hflex="1" />
 							</vlayout>
 							<vlayout width="200px">
-								<listbox model="@bind(vm.ordersStatus)" itemRenderer="@load(vm.listItemRenderer)"
-									mold="select" selectedItem="@bind(vm.selectionOrderStatus)" style="width:200px;">
+								<listbox model="@bind(vm.ordersStatus)"
+									itemRenderer="@load(vm.listItemRenderer)" mold="select"
+									selectedItem="@bind(vm.selectionOrderStatus)"
+									style="width:200px;">
 								</listbox>
 							</vlayout>
-							 <vlayout width="100px">
+							<vlayout width="100px">
 								<label></label>
 							</vlayout>
 							<vlayout width="100px">
 								<label value="LP Name" hflex="1" />
 							</vlayout>
 							<vlayout width="200px">
-								<listbox   model="@bind(vm.lpList)" mold="select"  itemRenderer="@load(vm.listItemRenderer)"  selectedItem="@save(vm.selectionLpName)"
-									style="width:200px">
+								<listbox model="@bind(vm.activelpList)"
+									mold="select" itemRenderer="@load(vm.listItemRenderer)"
+									selectedItem="@save(vm.selectionLpName)" style="width:200px">
 								</listbox>
 							</vlayout>
 							<vlayout width="100px">
 								<label></label>
 							</vlayout>
 							<vlayout>
-								<checkbox  label="Is Return"
+								<checkbox label="Is Return"
 									onCheck="@command('isReturnCheck',checkedValue=self.checked)">
 								</checkbox>
 							</vlayout>
@@ -91,17 +133,19 @@
 									label="SEARCH" onClick="@command('lpSearch')" />
 							</vlayout>
 						</hlayout>
-						
+
 					</vlayout>
 				</panelchildren>
 			</panel>
-		<panel>
+			<panel>
 				<panelchildren>
-             		<listbox model="@bind(vm.listOfTransactions)"
-						id="listBoxData" mold="paging" pageSize="8" pagingPosition="top"
+					<listbox model="@load(vm.listOfTransactions)" 
+						selectedItems="@bind(vm.selectedEntities)" id="listBoxData" 
+						mold="paging" pageSize="10" checkmark="true" multiple="true"
+						pagingPosition="top"
 						emptyMessage="No result found in the result">
 
-						<listhead >
+						<listhead>
 							<listheader style="text-align:left"
 								label="Order Id">
 							</listheader>
@@ -117,39 +161,39 @@
 							<listheader style="text-align:left"
 								label="Seller Id">
 							</listheader>
-							<listheader width="100px"
+							<listheader width="110"
 								style="text-align:left" label="LP Name">
-							</listheader>
-							<listheader width="150px"
-								style="text-align:left" label="next Lp Name">
 							</listheader>
 							<listheader style="text-align:left"
 								label="Awb Number">
 							</listheader>
 						</listhead>
-						<template name="model" var="item">
+						<template name="model">
 							<listitem>
-								<listcell label="@load(item.orderId)" />
+								<listcell label="@load(each.orderId)" />
 								<listcell
-									label="@load(item.orderStatus)" />
+									label="@load(each.orderStatus)" />
 								<listcell
-									label="@load(item.transactionId)" />
-								<listcell label="@load(item.slaveId)" />
-								<listcell label="@load(item.sellerId)" />
-								<listcell label="@load(item.logisticName)" />
+									label="@load(each.transactionId)" />
+								<listcell label="@load(each.slaveId)" />
+								<listcell label="@load(each.sellerId)" />
 								<listcell>
-									<listbox
-										selectedItem="@save(item.logisticName)" onSelect="@command('onChangeTransactionInfo',transaction=item)"
-										mold="select" model="@load(vm.lpList)">
+									<combobox inplace="true"
+										model="@load(vm.activelpList)"
+										selectedItem="@bind(each.logisticName)"
+										onSelect="@command('onChangeTransactionInfo',transaction=each)"
+										hflex="1">
 										<template name="model">
-											<listitem label="${each}" />
+											<comboitem
+												label="@load(each)" />
 										</template>
-									</listbox>
+									</combobox>
 								</listcell>
 								<listcell>
-									<textbox inplace="true"
-										onChange="@command('onChangeTransactionInfo',transaction=item)"
-										value="@bind(item.awbNumber)">
+									<textbox
+										readonly="@bind(each.awbEditable)"
+										onChange="@command('onChangeTransactionInfo',transaction=each)"
+										value="@bind(each.awbNumber)">
 									</textbox>
 								</listcell>
 							</listitem>
@@ -162,9 +206,13 @@
 					style="border:none;padding:0px;max-height:100%;">
 					<vlayout style="width:100%;height:100px">
 						<hlayout>
-							<vlayout width="700px">
+							<vlayout width="400px">
 								<button style="float:right"
-									onClick="@command('saveAllTransactions')" label="Save" />
+									onClick="@command('nextLpSave')" label="Next Lp "  disabled="@load(empty vm.selectedEntities)"/>
+							</vlayout>
+							<vlayout width="200px">
+								<button
+									onClick="@command('lpOverrideSave')" label="Lp Override"  disabled="@load(empty vm.selectedEntities)"/>
 							</vlayout>
 						</hlayout>
 					</vlayout>

@@ -5,7 +5,6 @@ package com.techouts.backoffice.widget.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,7 +21,9 @@ import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.select.Selectors;
+import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
+import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.Messagebox;
@@ -56,11 +57,13 @@ public class LpoverrideWidgetController
 	private String txtsellerId;
 	private String selectionOrderStatus;
 	private String selectionLpName;
+	private Set<TransactionInfo> selectedEntities;
 	private Boolean isReturn = Boolean.FALSE;
+	private Boolean lpOverrideEnabled = Boolean.FALSE;
 	private final String transactionType = "LP";
 	private List<TransactionInfo> listOfTransactions; //incoming transactions
-	private Set<String> lpList; //active logistcs Partners
-	private List<OrderLineInfo> listOfOrderLineInfo; //outgoing transactions
+	private List<OrderLineResponse> orderlineRespone;
+	private List<String> activelpList; //active logistcs Partners
 	private Map<String, TransactionInfo> map;//modifed transaction
 	private List<String> ordersStatus;// orders statuses
 	@WireVariable("orderLogisticsRestClient")
@@ -72,6 +75,9 @@ public class LpoverrideWidgetController
 	@WireVariable
 	private transient AuthorityGroupService authorityGroupService;
 	private transient AuthorityGroup activeUserRole;
+	private Boolean displayPopup = Boolean.FALSE;
+	@Wire("#listBoxData")
+	private Listbox listBoxData;
 
 	@Init
 	@NotifyChange(
@@ -80,30 +86,18 @@ public class LpoverrideWidgetController
 	{
 		LOG.info("inside init");
 		ordersStatus = getOrderStatuses(isReturn);
-		lpList = getLpSet();
+		activelpList = getLpSet();
 		if (map == null)
 		{
 			map = new HashMap<String, TransactionInfo>();
 		}
-		if (listOfTransactions == null)
-		{
-			listOfTransactions = new ArrayList<TransactionInfo>();
-		}
 	}
 
-	@AfterCompose
-	public void afterCompose(@ContextParam(ContextType.VIEW) final Component view)
-	{
-		Selectors.wireComponents(view, this, false);
-	}
-
-	private Set<String> getLpSet()
+	private List<String> getLpSet()
 	{
 		final List<Logistics> list = (List<Logistics>) logisticsFacade.getAll();
-		if (lpList == null)
-		{
-			lpList = new HashSet<String>();
-		}
+
+		final List<String> lpList = new ArrayList<>();
 		for (final Logistics logistics : list)
 		{
 			if (logistics.getActive())
@@ -114,25 +108,31 @@ public class LpoverrideWidgetController
 		}
 		return lpList;
 	}
+
 	/*
-	 * this method is used for when order statuses changed to return order statuses when he checked is return checkbox
+	 * this method is used for active order statuses
+	 *
+	 * @return active order staueses
 	 */
-
-	/**
-	 * @return the ordersStatus
-	 */
-	public List<String> getOrdersStatus()
+	private List<String> getOrderStatuses(final Boolean isReturn)
 	{
+		final List<String> ordersStatus = new ArrayList<String>();
+
+		if (isReturn)
+		{
+			ordersStatus.add("REVERSEAWB");
+			ordersStatus.add("RETURINIT");
+		}
+		else
+		{
+			ordersStatus.add("ODREALOC");
+			ordersStatus.add("ORDREJEC");
+			ordersStatus.add("PILIGENE");
+			ordersStatus.add("PICKCONF");
+			ordersStatus.add("HOTCOURI");
+			ordersStatus.add("SCANNED");
+		}
 		return ordersStatus;
-	}
-
-	/**
-	 * @param ordersStatus
-	 *           the ordersStatus to set
-	 */
-	public void setOrdersStatus(final List<String> ordersStatus)
-	{
-		this.ordersStatus = ordersStatus;
 	}
 
 
@@ -144,36 +144,6 @@ public class LpoverrideWidgetController
 		LOG.info("is Return Checked Value" + isReturnCheckdValue);
 		this.isReturn = isReturnCheckdValue;
 		this.ordersStatus = getOrderStatuses(this.isReturn);
-	}
-
-	/*
-	 * this method is used for active order statuses
-	 *
-	 * @return active order staueses
-	 */
-	private List<String> getOrderStatuses(final Boolean isReturn)
-	{
-		if (ordersStatus == null)
-		{
-			ordersStatus = new ArrayList<String>();
-		}
-		if (isReturn)
-		{
-			ordersStatus.clear();
-			ordersStatus.add("REVERSEAWB");
-			ordersStatus.add("RETURINIT");
-		}
-		else
-		{
-			ordersStatus.clear();
-			ordersStatus.add("ODREALOC");
-			ordersStatus.add("ORDREJEC");
-			ordersStatus.add("PILIGENE");
-			ordersStatus.add("PICKCONF");
-			ordersStatus.add("HOTCOURI");
-			ordersStatus.add("SCANNED");
-		}
-		return ordersStatus;
 	}
 
 	/*
@@ -216,7 +186,6 @@ public class LpoverrideWidgetController
 			{
 				LOG.info("transaction id : =" + txtTransactionId);
 				lpAwbSearch.setTransactionId(txtTransactionId);
-
 			}
 			if (StringUtils.isNotEmpty(txtsellerId)) //seller id
 			{
@@ -230,10 +199,22 @@ public class LpoverrideWidgetController
 			}
 			lpAwbSearch.setTransactionType(transactionType);
 			lpAwbSearch.setIsReturn(isReturn);
-
-			//before doing next line get the response and check if response equals 50 then say the message user user search params records exceeds to more
-			listOfTransactions = orderLogisticsUpdateFacade.getOrderLogisticsInfo(lpAwbSearch).getTransactionInfo(); //if response
-
+			final List<TransactionInfo> transactionsList = orderLogisticsUpdateFacade.getOrderLogisticsInfo(lpAwbSearch)
+					.getTransactionInfo(); //if response
+			for (final TransactionInfo transaction : transactionsList)
+			{
+				final String orderStatus = transaction.getOrderStatus();
+				if (orderStatus.equalsIgnoreCase("SCANNED") || orderStatus.equalsIgnoreCase("HOTCOURI")
+						|| orderStatus.equalsIgnoreCase("REVERSEAWB"))
+				{
+					transaction.setAwbEditable(Boolean.FALSE);
+				}
+				else
+				{
+					transaction.setAwbEditable(Boolean.TRUE); //this step is removed once awbEditable default value== false at dto level
+				}
+			}
+			listOfTransactions = transactionsList;
 		}
 		catch (final InvalidLpOverrideSearchParams exception)
 		{
@@ -245,25 +226,44 @@ public class LpoverrideWidgetController
 	 * this method is used for capture the changed transaction
 	 */
 	@Command("onChangeTransactionInfo")
+	@NotifyChange(
+	{ "lpOverrideEnabled" })
 	public void onChangeTransactionInfo(@BindingParam("transaction") final TransactionInfo selectedTransaction)
 	{
 		LOG.info("inside onchange");
+
+		lpOverrideEnabled = Boolean.TRUE;
 		map.put(selectedTransaction.getTransactionId(), selectedTransaction); //if required lp flag then send as bind prarm attribute
 		LOG.info("the final map " + map.toString());
+	}
+
+	/**
+	 * @return the lpOverrideEnabled
+	 */
+	public Boolean getLpOverrideEnabled()
+	{
+		return lpOverrideEnabled;
 	}
 
 	/*
 	 * this method is used to persist the modified transactions
 	 */
-	@Command("saveAllTransactions")
+	@Command("lpOverrideSave")
+	@NotifyChange(
+	{ "orderlineRespone", "displayPopup" })
+
 	public void saveAllTransactions()
 	{
-		LOG.info("inside save all transaction");
+		LOG.info("in side lp override");
 
-		if (listOfOrderLineInfo == null)
+		final List<OrderLineInfo> listOfOrderLineInfo = new ArrayList<OrderLineInfo>();
+		if (CollectionUtils.sizeIsEmpty(map))
 		{
-			listOfOrderLineInfo = new ArrayList<OrderLineInfo>();
+			Messagebox.show("No Changes Found ");
+			displayPopup = Boolean.FALSE;
+			return;
 		}
+
 		for (final TransactionInfo transaction : map.values())
 		{
 			final OrderLineInfo orderLineInfo = new OrderLineInfo();
@@ -271,17 +271,12 @@ public class LpoverrideWidgetController
 			orderLineInfo.setTransactionId(transaction.getTransactionId());
 			orderLineInfo.setLogisticName(transaction.getLogisticName());
 			orderLineInfo.setAwbNumber(transaction.getAwbNumber());
-			orderLineInfo.setLpOverride(Boolean.FALSE); //this will get from check box button
+			orderLineInfo.setLpOverride(Boolean.TRUE); //this will get from check box button
 			orderLineInfo.setNextLP(Boolean.FALSE);//this will get from checkbox button
 			listOfOrderLineInfo.add(orderLineInfo);
 		}
-		LOG.info("list of orders" + listOfOrderLineInfo.toString());
+		LOG.info("No Of Transactions For LpOverride Lp " + listOfOrderLineInfo.size());
 		final LPOverrideAWBEdit lpOverrideEdit = new LPOverrideAWBEdit();
-		if (CollectionUtils.isEmpty(listOfOrderLineInfo))
-		{
-			Messagebox.show("No Changes Found ");
-			return;
-		}
 		lpOverrideEdit.setOrderLineInfo(listOfOrderLineInfo);
 		lpOverrideEdit.setIsReturn(isReturn);
 		final String userId = cockpitUserService.getCurrentUser();
@@ -298,58 +293,156 @@ public class LpoverrideWidgetController
 		lpOverrideEdit.setTransactionType(transactionType);
 		final LPOverrideAWBEditResponse lpOverrideAwbEditResponse = orderLogisticsUpdateFacade
 				.updateOrderLogisticOrAwbNumber(lpOverrideEdit);
-		final List<OrderLineResponse> orderLineResponse = lpOverrideAwbEditResponse.getOrderLineResponse();
-
-		final StringBuilder message = new StringBuilder();
-
-		for (final OrderLineResponse orderResponse : orderLineResponse)
+		orderlineRespone = lpOverrideAwbEditResponse.getOrderLineResponse();
+		listBoxData.clearSelection();
+		selectedEntities.clear();
+		if (CollectionUtils.isNotEmpty(orderlineRespone))
 		{
+			displayPopup = Boolean.TRUE;
+		}
+		map.clear();
 
-			message.append(orderResponse.getTransactionId() + " \t " + orderResponse.getStatus());
+	}
+
+	@Command("nextLpSave")
+	@NotifyChange(
+	{ "orderlineRespone", "displayPopup", "selectedEntities" })
+	public void nextLpSaveTransaction()
+	{
+		LOG.info("inside nextLp");
+		final List<OrderLineInfo> listOfOrderLineInfo = new ArrayList<OrderLineInfo>();
+		if (CollectionUtils.isEmpty(selectedEntities))
+		{
+			displayPopup = Boolean.FALSE;
+			Messagebox.show("No Changes Found ");
+			return;
 		}
 
-		Messagebox.show(message.toString());
-		map.clear();
-		listOfOrderLineInfo.clear();
-		message.setLength(0);
+		if (this.selectedEntities != null)
+		{
+			for (final TransactionInfo transaction : selectedEntities)
+			{
+				final OrderLineInfo orderLineInfo = new OrderLineInfo();
+				orderLineInfo.setOrderId(transaction.getOrderId());
+				orderLineInfo.setTransactionId(transaction.getTransactionId());
+				orderLineInfo.setLogisticName(transaction.getLogisticName());
+				orderLineInfo.setAwbNumber(transaction.getAwbNumber());
+				orderLineInfo.setLpOverride(Boolean.FALSE); //this will get from check box button
+				orderLineInfo.setNextLP(Boolean.TRUE);//this will get from checkbox button
+				listOfOrderLineInfo.add(orderLineInfo);
+			}
+			LOG.info("No Of Transactions For Next Lp " + listOfOrderLineInfo.size());
+			final LPOverrideAWBEdit lpOverrideEdit = new LPOverrideAWBEdit();
+			lpOverrideEdit.setOrderLineInfo(listOfOrderLineInfo);
+			lpOverrideEdit.setIsReturn(isReturn);
+			final String userId = cockpitUserService.getCurrentUser();
+			lpOverrideEdit.setUserId(userId);
+			activeUserRole = authorityGroupService.getActiveAuthorityGroupForUser(userId);
+			if (activeUserRole != null)
+			{
+				lpOverrideEdit.setRoleId(activeUserRole.getCode());
+			}
+			else
+			{
+				lpOverrideEdit.setRoleId("none");
+			}
+			lpOverrideEdit.setTransactionType(transactionType);
+			final LPOverrideAWBEditResponse lpOverrideAwbEditResponse = orderLogisticsUpdateFacade
+					.updateOrderLogisticOrAwbNumber(lpOverrideEdit);
+			orderlineRespone = lpOverrideAwbEditResponse.getOrderLineResponse();
+			listBoxData.clearSelection();
+			selectedEntities.clear();
+			if (CollectionUtils.isNotEmpty(orderlineRespone))
+			{
+				displayPopup = Boolean.TRUE;
+			}
+		}
 
 	}
 
+
+	@AfterCompose
+	public void afterCompose(@ContextParam(ContextType.VIEW) final Component view)
+	{
+		Selectors.wireComponents(view, this, false);
+	}
+
+	/**
+	 * List box item renderer
+	 *
+	 * @return ListitemRenderer
+	 */
+	public ListitemRenderer<String> getListItemRenderer()
+	{
+		ListitemRenderer<String> _rowRenderer = null;
+		if (_rowRenderer == null)
+		{
+			_rowRenderer = new ListitemRenderer<String>()
+			{
+				public void render(final Listitem item, final String value,
+
+						final int index) throws Exception
+				{
+					item.setLabel(value);
+				}
+			};
+		}
+		return _rowRenderer;
+	}
+
+	/**
+	 * @return the activelpList
+	 */
+	public List<String> getActivelpList()
+	{
+		return activelpList;
+	}
 
 
 	/**
-	 * @return the listOfOrderLineInfo
+	 * @return the displayPopup
 	 */
-	public List<OrderLineInfo> getListOfOrderLineInfo()
+	public Boolean getDisplayPopup()
 	{
-		return listOfOrderLineInfo;
+		return displayPopup;
+	}
+
+
+	/**
+	 * @return the orderlineRespone
+	 */
+	public List<OrderLineResponse> getOrderlineRespone()
+	{
+		return orderlineRespone;
 	}
 
 	/**
-	 * @param listOfOrderLineInfo
-	 *           the listOfOrderLineInfo to set
+	 * @return the ordersStatus
 	 */
-	public void setListOfOrderLineInfo(final List<OrderLineInfo> listOfOrderLineInfo)
+	public List<String> getOrdersStatus()
 	{
-		this.listOfOrderLineInfo = listOfOrderLineInfo;
+		return ordersStatus;
 	}
 
-	/**
-	 * @return the lpList
-	 */
-	public Set<String> getLpList()
+
+
+
+	@NotifyChange
+	public void setSelectedEntities(final Set<TransactionInfo> entities)
 	{
-		return lpList;
+		if (CollectionUtils.isNotEmpty(this.selectedEntities))
+		{
+			this.selectedEntities.clear();
+		}
+		this.selectedEntities = entities;
 	}
 
-	/**
-	 * @param lpList
-	 *           the lpList to set
-	 */
-	public void setLpList(final Set<String> lpList)
+	public Set<TransactionInfo> getSelectedEntities()
 	{
-		this.lpList = lpList;
+		return selectedEntities;
 	}
+
+
 
 	/**
 	 * @return the listOfTransactions
@@ -374,15 +467,6 @@ public class LpoverrideWidgetController
 	public void setIsReturn(final Boolean isReturn)
 	{
 		this.isReturn = isReturn;
-	}
-
-	/**
-	 * @param listOfTransactions
-	 *           the listOfTransactions to set
-	 */
-	public void setListOfTransactions(final List<TransactionInfo> listOfTransactions)
-	{
-		this.listOfTransactions = listOfTransactions;
 	}
 
 	/**
@@ -494,30 +578,6 @@ public class LpoverrideWidgetController
 		this.selectionLpName = selectionLpName;
 	}
 
-	/**
-	 * @return the transactionType
-	 */
-	public String getTransactionType()
-	{
-		return transactionType;
-	}
 
-	public ListitemRenderer<String> getListItemRenderer()
-	{
-		ListitemRenderer<String> _rowRenderer = null;
-		if (_rowRenderer == null)
-		{
-			_rowRenderer = new ListitemRenderer<String>()
-			{
-				public void render(final Listitem item, final String value,
-
-						final int index) throws Exception
-				{
-					item.setLabel(value);
-				}
-			};
-		}
-		return _rowRenderer;
-	}
 
 }

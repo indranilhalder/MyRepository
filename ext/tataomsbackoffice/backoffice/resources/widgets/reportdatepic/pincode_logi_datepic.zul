@@ -22,7 +22,7 @@
 				<datebox id="startdpic" cols="12"
 					constraint="no empty, no future: NOT EMPTY or NO FUTURE"
 					format="short" width="230px" />
-				<label style="margin-top: 10px;font-size:12px;"
+				<label style="margin-top: 7px;font-size:12px;display:block;"
 					value="(mm/dd/yy)">
 				</label>
 			</hlayout>
@@ -36,7 +36,7 @@
 				<datebox id="enddpic" cols="12"
 					constraint="no empty, no future: NOT EMPTY or NO FUTURE"
 					format="short" width="230px" />
-				<label style="margin-top: 10px;font-size:12px;"
+				<label style="margin-top: 7px;font-size:12px;display:block;"
 					value="(mm/dd/yy)">
 				</label>
 			</hlayout>

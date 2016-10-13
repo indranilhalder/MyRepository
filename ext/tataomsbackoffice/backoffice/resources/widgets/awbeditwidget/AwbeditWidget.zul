@@ -10,7 +10,7 @@
 			<panel
 				style="height:20%;font-size:14px;border-bottom:3px solid #27394f;border:none">
 				<panelchildren style="border:none">
-					<vlayout style="width:100%;height:100px">
+					<vlayout style="width:100%;height:120px">
 						<hlayout>
 							<vlayout width="100px">
 								<label value="OrderId" hflex="1" />
