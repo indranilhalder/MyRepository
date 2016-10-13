@@ -2161,7 +2161,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					{
 						blppromoComponent = getBlpShopThelookComponentMedia(promobannerComponent,
 								blpComponent.getShop_the_look_component());
-
+						blppromoComponent.setSectionid(contentSlot.getUid());
 						componentListForASlot.add(blppromoComponent);
 					}
 					else
@@ -2179,6 +2179,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					{
 						blpproductComponent = getBlpShopThelookComponent(productCarouselComponent,
 								blpComponent.getShop_the_look_component());
+						blpproductComponent.setSectionid(contentSlot.getUid());
 						componentListForASlot.add(blpproductComponent);
 					}
 					else
@@ -2377,6 +2378,10 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 			{
 				stlProductList.setImage(luxShopTheLookWsDTO.getImage());
 			}
+			if (null != luxShopTheLookWsDTO.getDestination())
+			{
+				stlProductList.setDestination(luxShopTheLookWsDTO.getDestination());
+			}
 
 		}
 		stlProductList.setProductlisting(productList);
@@ -2411,9 +2416,9 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				luxStlComponentObj.setCta(promobannerComponent.getMinorPromo2Text());
 			}
 
-			if (null != promobannerComponent.getMedia() && null != promobannerComponent.getMedia().getURL2())
+			if (null != promobannerComponent.getBannerImage() && null != promobannerComponent.getBannerImage().getURL())
 			{
-				luxStlComponentObj.setImage(promobannerComponent.getMedia().getURL2());
+				luxStlComponentObj.setImage(promobannerComponent.getBannerImage().getURL());
 			}
 
 			luxStlComponentObj.setDestination(promobannerComponent.getUrlLink());
@@ -2490,14 +2495,14 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 			for (final SimpleBannerComponentModel banner : seeOurJourneyComponent.getFooterImageList())
 			{
 				final LuxJourneyTimeLineListWsDTO seeOurJourneyDto = new LuxJourneyTimeLineListWsDTO();
-				if (null != banner.getMedia() && null != banner.getMedia().getUrl2())
+				if (null != banner.getMedia() && null != banner.getMedia().getURL())
 				{
-					seeOurJourneyDto.setImage(banner.getMedia().getUrl2());
+					seeOurJourneyDto.setImage(banner.getMedia().getURL());
 				}
 
 				if (null != banner.getMedia() && null != banner.getMedia().getAltText())
 				{
-					seeOurJourneyDto.setImage(banner.getMedia().getAltText());
+					seeOurJourneyDto.setImg_alt(banner.getMedia().getAltText());
 				}
 
 				if (null != banner.getTitle())
@@ -2507,7 +2512,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 				if (null != banner.getDescription())
 				{
-					seeOurJourneyDto.setYear(banner.getDescription());
+					seeOurJourneyDto.setText(banner.getDescription());
 				}
 				ourJourneyComponentDtoList.add(seeOurJourneyDto);
 			}
