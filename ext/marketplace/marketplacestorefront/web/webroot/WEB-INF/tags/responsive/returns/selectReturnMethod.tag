@@ -6,8 +6,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!-- Accordtion Panel 3 For Select Return Method -->
-
-
+	
 <div class="accordtionTataCliq thirdTataCliq col-md-12">
 	<div class="accHeading"><spring:theme code="text.order.returns.selectreturnmethod"/></div>
 	<div class="accContents returnMethod col-md-12">
@@ -89,6 +88,7 @@
 				</c:forEach> --%>
 				
 				</div>
+				<span>Pincode :</span><input id="pin" type="text" placeholder="Enter Pincode" maxlength="6" onkeypress="return isNum(event)"/>
 			</div>
 			<div class="col-md-8 col-sm-12 mapArea">
 				<div id="map-canvas"></div>
@@ -237,5 +237,12 @@
 	</c:choose>
 
 </div>
-
-
+<style>
+.firstTataCliq span{
+	margin-bottom: -4px !important;
+    display: block !important;
+}
+.secondTataCliq select{
+	width: 100%;
+}
+</style>

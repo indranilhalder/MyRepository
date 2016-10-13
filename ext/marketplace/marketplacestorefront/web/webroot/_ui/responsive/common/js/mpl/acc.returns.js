@@ -25,6 +25,10 @@
 		}
 		
 		function goBackToFirstTataCliq () {
+			$('.slectionRefund').find('input:text').val('');
+			$(".secondTataCliq .reasonType .selectRefund").removeClass("errorText");
+			$(".secondTataCliq .reenteraccountnumber .errorTextAN").remove();
+			$(".secondTataCliq .ifsccode .errorTextifsc").remove();
 			$(".thirdTataCliq").addClass("removeMargin");
 			$(".secondTataCliq").removeClass("removeMargin");
 			$(".firstTataCliq .selectReason").show();
@@ -66,7 +70,108 @@
 			} 
 		}
 		
-		function checkCODValidations() {
+		/*Select Return Type validations*/
+		$(document).ready(function(){
+			$(".slectionRefund #accountNumber").change(function() {
+				checkACCValidat();
+			});
+			$(".slectionRefund #reEnterAccountNumber").change(function() {
+				checkREACCValidat();
+			});
+			$(".slectionRefund #iFSCCode").change(function() {
+				checkIFSCValidat();
+			});
+		});
+
+				function checkACCValidat(){
+					var validate = true;
+					if($(".slectionRefund #accountNumber").val().length < 4 || $(".slectionRefund #accountNumber").val().length > 24) {
+						//Please Enter 16 Digit Account Number
+						$(".secondTataCliq .accountnumber").append("<div class='errorText'>Please Enter Valid Account Number.</div>");
+						validate = false;
+					}else{
+						  $('.slectionRefund .accountnumber .errorText').remove();
+					}
+					return validate;
+				}
+				function checkREACCValidat(){
+					var validate = true;
+					if($(".slectionRefund #reEnterAccountNumber").val().length < 4 || $(".slectionRefund #reEnterAccountNumber").val().length > 24) {
+						//Please Enter 16 Digit Account Number
+						$(".secondTataCliq .reenteraccountnumber").append("<div class='errorText'>Please Enter Valid Account Number.</div>");
+						validate = false;
+					}else{
+						$('.slectionRefund .reenteraccountnumber .errorText').remove();
+					}
+					if ($(".slectionRefund #accountNumber").val() != $(".slectionRefund #reEnterAccountNumber").val()) {
+						//Account Number and Re-Account Number are not same
+						$('.errorTextAN').remove();
+						$(".secondTataCliq .reenteraccountnumber").append("<div class='errorTextAN' style='color:red;'>Account Numbers do not match.</div>");
+						validate = false;
+					}else{
+						$('.errorTextAN').remove();
+					} 
+					return validate;
+				}
+				function checkIFSCValidat(){
+					var ifscregEx = /[A-Z|a-z]{4}[0][\d]{6}$/;
+					var validate = true;
+					 if($(".slectionRefund #iFSCCode").val().length < 11 || !ifscregEx.test($(".slectionRefund #iFSCCode").val()) == true) {
+							//Please Enter Valid IFSC Code.
+						 $('.errorTextifsc').remove();
+						 $(".secondTataCliq .ifsccode").append("<div class='errorTextifsc' style='color:red;'>Please Enter Valid 11 character IFSC Code. </div>");
+							validate = false;
+							console.log('validate:'+ validate);
+						} else{
+							$('.errorTextifsc').remove();
+						}
+					 return validate;
+				}
+				
+				function checkCODValidations() {
+						var validate = true;
+						
+						checkACCValidat();
+						checkREACCValidat();
+						checkIFSCValidat();
+						
+						$(".secondTataCliq .accContents .errorText").remove();
+						if($(".slectionRefund #accountNumber").val().length < 4 || $(".slectionRefund #accountNumber").val().length > 24) {
+							//Please Enter 16 Digit Account Number
+							$(".secondTataCliq .accountnumber").append("<div class='errorText'>Please Enter Valid Account Number.</div>");
+							validate = false;
+						}
+						if($(".slectionRefund #reEnterAccountNumber").val().length < 4 || $(".slectionRefund #reEnterAccountNumber").val().length > 24) {
+							//Please Enter 16 Digit Account Number
+							$(".secondTataCliq .reenteraccountnumber").append("<div class='errorText'>Please Enter Valid Account Number.</div>");
+							validate = false;
+						}
+						if($(".slectionRefund #iFSCCode").val().length < 11) {
+							//Please Enter Valid IFSC Code.
+						 $('.errorTextifsc').remove();
+						 $(".secondTataCliq .ifsccode").append("<div class='errorTextifsc' style='color:red;'>Please Enter Valid 11 character IFSC Code. </div>");
+							validate = false;
+							console.log('validate:'+ validate);
+						}
+						if($(".slectionRefund #accountHolderName").val().length < 4 || $(".slectionRefund #accountHolderName").val().trim() == '') {
+							//Please Enter Valid Account Holder Name.
+							$(".secondTataCliq .accountholdername").append("<div class='errorText'>Please Enter Valid Account Holder Name. Mininum  4 charactor required</div>");
+							validate = false;
+						}  if($(".slectionRefund #bankName").val().length < 3 || $(".slectionRefund #bankName").val().trim() == '') {
+							//Please Enter Valid Bank Name.
+							$(".secondTataCliq .bankname").append("<div class='errorText'>Please Enter Valid Bank Name. Mininum  3 character required</div>");
+							validate = false;
+						}  if(validate == true && checkACCValidat()== true && checkREACCValidat()==true && checkIFSCValidat()==true){
+							return true;
+						}else{
+							return false;
+						}
+						//return true;
+				}
+				
+				/*End of Select Return Type validations*/
+		
+		/*function checkCODValidations() {
 			$(".secondTataCliq .accContents .errorText").remove();
 			if($(".slectionRefund #accountNumber").val().length < 16) {
 				//Please Enter 16 Digit Account Number
@@ -92,7 +197,7 @@
 				return true;
 			}
 			//return true;
-		}
+		}*/
 		
 		function checkSecondTataCliq(returnMethod) {
 			//alert("Hi");
@@ -108,6 +213,7 @@
 				console.log(returnMethod);
 				if(returnMethod == "COD")  {
 					checkCODValidations();
+					if(checkCODValidations() == true){
 					$(".secondTataCliq .reasonType .slectionRefund input").each(function(i){
 						//console.log($(this).val()+"gfdgdgd");
 						if($(this).val().length <= "1") {
@@ -136,6 +242,7 @@
 							}
 						}
 					});
+					}
 				
 				
 						
@@ -563,16 +670,16 @@
 				  type: "POST",
 				  data : $("#addAddressForm").serialize(),
 				  success: function(data) {
-					  alert("New Address");
+					  alert("New Address Saved Successfully");
 				  
 				  },
 				  error:function(data){
-					  alert("Error");
+					  console.log("Error");
 				  }
 			  });
 			  
 			  if(checkPopupValidations()) {
-				  $(".scheduledPickupArea").append("<div class='address"+count+" col-md-12 col-sm-12 col-xs-12 greyColor selectScheduledPickup'><div class='col-md-2 col-sm-2 col-xs-2 selectRadio'><input class=radioButton name=selectScheduledPickup onclick='showPickupTimeDate(\"address"+count+"\")' type='radio' value='schedule'></div><div class='col-md-6 col-sm-6 col-xs-6 updateaddress"+count+"'><ul><li><span class=firstName>Balagangadhar</span>Â <span class=lastName>Ganga</span><li><span class=addressline1>Plot no 500 AyyaappaSocity</span><li><span class=addressline2>Madhapur</span><li><span class=addressTown>Hyderabad</span><li><span class=state>Telangana</span><li><span class=postalCode>500041</span><li><span class=country>India</span><li><span class=phoneNumber>2583691409</span><li id=addressUniqueId style=display:none>8796781182999</ul></div><div class='col-md-4 col-sm-4 col-xs-4 editAddress'><a class=changeAddressLink onclick='showAddressPopup(\"address"+count+"\")' data-class=address"+count+" href=#>Edit Address</a></div></div>");
+				  $(".scheduledPickupArea").append("<div class='address"+count+" col-md-12 col-sm-12 col-xs-12 greyColor selectScheduledPickup'><div class='col-md-2 col-sm-2 col-xs-2 selectRadio'><input class=radioButton name=selectScheduledPickup onclick='showPickupTimeDate(\"address"+count+"\")' type='radio' value='schedule'></div><div class='col-md-6 col-sm-6 col-xs-6 updateaddress"+count+"'><ul><li><span class=firstName>Balagangadhar</span>Ã‚Â <span class=lastName>Ganga</span><li><span class=addressline1>Plot no 500 AyyaappaSocity</span><li><span class=addressline2>Madhapur</span><li><span class=addressTown>Hyderabad</span><li><span class=state>Telangana</span><li><span class=postalCode>500041</span><li><span class=country>India</span><li><span class=phoneNumber>2583691409</span><li id=addressUniqueId style=display:none>8796781182999</ul></div><div class='col-md-4 col-sm-4 col-xs-4 editAddress'><a class=changeAddressLink onclick='showAddressPopup(\"address"+count+"\")' data-class=address"+count+" href=#>Edit Address</a></div></div>");
 				  showPickupTimeDate("address"+count);
 				  $(".address"+count+" input").prop("checked", true);
 				  $("#changeAddressPopup, .wrapBG").fadeOut(300);

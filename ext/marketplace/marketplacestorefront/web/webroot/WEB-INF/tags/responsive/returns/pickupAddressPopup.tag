@@ -182,3 +182,11 @@
 
 <div class="wrapBG"
 	style="background-color: rgba(0, 0, 0, 0.5); width: 100%; height: 600px; position: fixed; top: 0px; left: 0px; display: none;"></div>
+<style>
+.modal-body {
+    position: relative;
+    padding: 15px;
+    max-height: calc(100vh - 210px);
+    overflow-y: auto;
+}	
+</style>
