@@ -53636,3 +53636,7 @@ background: #fff;
 .confirmation .right-block .block .totals #couponAppliedthanks .amt{
 	color: #a9143c;
 }
+
+body.template-pages-account-accountOrderDetailPage .product-block.order-details .totals{
+	text-transform:none;
+}
