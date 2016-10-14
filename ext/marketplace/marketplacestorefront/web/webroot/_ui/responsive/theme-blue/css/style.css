@@ -54212,6 +54212,52 @@ header > .content .top.header_fix {position:fixed;}
 
 /* Mobile & Tablet starts*/
 
+@media (max-width: 1024px){
+	/* pdp-v4-temp template4 bigger tablet starts */
+	.Manufacturer.Temp01 .Padd > div {
+    	float: left;
+    	width: 100%;
+    	margin: 0 0 40px;
+	}
+	.Manufacturer.Temp01 .Padd > div.TLeft img {
+    	float: left;
+    	margin: 0 4% 0 0;
+	}
+	.Manufacturer.Temp01 .Padd > div.TRight img {
+    	float: right;
+    	margin: 0 0 0 4%;
+	}
+	.Manufacturer.Temp01 .Padd > div.DLeft img, .Manufacturer.Temp01 .Padd > div.DRight img {
+    	width: auto;
+	}
+	.Manufacturer.Temp01 .Padd > div.TLeft > div {
+    	float: left;
+    	width: 59%;
+	}
+	.Manufacturer.Temp01 .Padd > div h3 {
+    	font-size: 14px;
+    	font-weight: bold;
+    	margin: 0 0 10px;
+	}
+	.Manufacturer.Temp01 .Padd > div p {
+    	font-size: 14px;
+    	line-height: 25px;
+	}
+	.Manufacturer.Temp01 .Padd div.LImage {
+    	width: 35.8%;
+    	float: left;
+	}
+	.Manufacturer.Temp01 .Padd div.RImage {
+    	width: 63.3%;
+    	float: right;
+	}
+	.Manufacturer.Temp01 .Padd div.RImage img, .Manufacturer.Temp01 .Padd div.LImage img {
+    	width: 100%;
+	}
+	
+	
+	/* pdp-v4-temp template4 bigger tablet ends */
+}
 
 @media (max-width: 1280px) and (min-width: 791px){
 	
@@ -54400,11 +54446,34 @@ header > .content .top.header_fix {position:fixed;}
 	}
 	/* pdp-v4-temp template1 smaller mobile ends */	
 	
-	/* pdp-v4-temp template2 smaller mobile starts */
+	/* pdp-v4-temp template4 smaller mobile starts */
 	
+	.Manufacturer.Temp01 .Padd > div {
+    text-align: center;
+    margin: 0 0 30px;
+	}
+	.Manufacturer.Temp01 .Padd > div.DLeft img, .Manufacturer.Temp01 .Padd > div.DRight img {
+    float: none;
+    margin: 0;
+	}
+	.Manufacturer.Temp01 .Padd > div.TLeft > div, .Manufacturer.Temp01 .Padd > div > div {
+    width: 100%;
+    text-align: left;
+	}
+	.Manufacturer.Temp01 .Padd > div h3 {
+    margin: 15px 0 10px;
+	}
+	.Manufacturer.Temp01 .Padd > div p {
+    font-size: 12px;
+	}
+	.Manufacturer.Temp01 .Padd div.LImage, .Manufacturer.Temp01 .Padd div.RImage {
+    width: 100%;
+	}
+	.Manufacturer.Temp01 .Padd div.RImage img, .Manufacturer.Temp01 .Padd div.LImage img {
+    width: auto;
+	}
 	
-	/* pdp-v4-temp template2 smaller mobile ends */	
-	
+	/* pdp-v4-temp template4 smaller mobile ends */
 }
 
 /* Mobile & Tablet ends*/
