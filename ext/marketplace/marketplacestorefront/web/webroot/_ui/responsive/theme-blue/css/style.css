@@ -54289,14 +54289,22 @@ header > .content .top.header_fix {position:fixed;}
 /* pdp-v4-temp template2 tablet ends */
 
 /* pdp-v4-temp template5 tablet starts */
-
-/* pdp-v4-temp template5 tablet ends */
 .temp-five .Padd h2 {
     font-size: 18px !important;
 }
 .temp-five .Padd .top-features ul {
     width: 93%;
 }
+/* pdp-v4-temp template5 tablet ends */
+
+/* pdp-v4-temp template6 tablet starts */
+.temp-six .Padd ul li .media-content {
+    padding: 2% 2% 0;
+}
+.temp-six .Padd ul li:nth-child(2n) .media-content {
+    padding: 2% 3% 0;
+}
+/* pdp-v4-temp template6 tablet ends */
 }
 
 @media (max-width: 1024px){
@@ -54374,6 +54382,17 @@ header > .content .top.header_fix {position:fixed;}
     	width: 70%;
 	}
 	/* pdp-v4-temp template5 bigger tablet ends */
+	
+	/* pdp-v4-temp template6 bigger tablet starts */
+	.temp-six .Padd .first-content .media-content, .temp-six .Padd ul li .media-content, .temp-six .Padd ul li:nth-child(2n+0) .media-content {
+    	font-size: 12px;
+	}
+	.temp-six .Padd .first-content .media-content h2, .temp-six .Padd ul li .media-content h2 {
+    	font-size: 18px;
+    	line-height: 22px;
+	}
+	
+	/* pdp-v4-temp template6 bigger tablet ends */
 }
 
 @media (max-width: 790px){
@@ -54575,6 +54594,32 @@ header > .content .top.header_fix {position:fixed;}
     width: 92%;
 	}
 	/* pdp-v4-temp template5 smaller mobile ends */
+	
+	/* pdp-v4-temp template6 smaller mobile starts */
+	.temp-six .Padd h2 span:before, .temp-six .Padd h2 span:after {
+    border: none;
+	}
+	.temp-six .Padd .first-content .media, .temp-six .Padd .first-content .media-content, .temp-six .Padd ul li .media-content, .temp-six .Padd ul li .media {
+    width: 100%;
+	}
+	.temp-six .Padd .first-content .media-content, .temp-six .Padd ul li .media-content {
+    font-size: 12px;
+	}
+	.temp-six .Padd .first-content .media-content {
+    padding-top: 5%;
+	}
+	.temp-six .Padd .first-content .media-content h2, .temp-six .Padd ul li .media-content h2 {
+    font-size: 18px;
+	}
+	.temp-six .Padd ul li .media-content, .temp-six .Padd ul li:nth-child(2n+0) .media-content {
+    padding: 2% 0;
+    text-align: left;
+    font-size: 12px;
+	}
+	.temp-six .Padd ul li:nth-child(2n+0) .media-content h2 {
+    text-align: left;
+	}
+	/* pdp-v4-temp template6 smaller mobile ends */
 }
 
 /* Mobile & Tablet ends*/
