@@ -2974,7 +2974,7 @@ function calculateDeliveryCost(radioId,deliveryCode)
 	        	totalDeliveryCharge +=  parseFloat(delCost);
 	           }
 	    });
-	 
+	 $('#deliveryradioul input[type="radio"]').attr("disabled","disabled");
 	 $.ajax({
 	 		url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/calculateDeliveryCost/"+totalDeliveryCharge,
 	 		type: "POST",
@@ -3008,6 +3008,9 @@ function calculateDeliveryCost(radioId,deliveryCode)
 	 			
 	 			handleExceptionOnServerSide(errorDetails);
 
+	 		},
+	 		complete: function() {
+	 			$('#deliveryradioul input[type="radio"]').removeAttr("disabled");
 	 		}
 	 	});	 
 }
