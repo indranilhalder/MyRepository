@@ -53566,6 +53566,10 @@ header > .content .top.header_fix {position:fixed;}
     float: left;
     padding: 5.8% 7% 0 2.2%;
 }
+.Manufacturer.Temp03 .Padd ul li:nth-child(2n+0) .media-content {
+    text-align: right;
+    padding: 5.8% 2.2% 0 7%;
+}
 .Manufacturer h3{
 	font-size: 24px;
     font-weight: bold;
@@ -53577,6 +53581,20 @@ header > .content .top.header_fix {position:fixed;}
 .Manufacturer.Temp03  h3{
 	font-size: 20px;
     margin-bottom: 0;
+}
+.Manufacturer.Temp03 h3:after{
+	content:initial;
+}
+.Manufacturer.Temp03 .Padd h2:after {
+    content: '';
+    margin: 0 auto 10px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    width: 78px;
+    border-bottom: 2px solid #a9143c;
+    padding-bottom: 8px;
 }
 .Manufacturer.Temp03 p{
 	font-size: 14px;
@@ -54312,7 +54330,7 @@ header > .content .top.header_fix {position:fixed;}
     padding: 3% 2%;
     text-align: left;
 	}
-	.Manufacturer.Temp03 .padd ul li:nth-child(2n) .media-content {
+	.Manufacturer.Temp03 .Padd ul li:nth-child(2n) .media-content {
     text-align: left;
     padding: 2%;
 	}
