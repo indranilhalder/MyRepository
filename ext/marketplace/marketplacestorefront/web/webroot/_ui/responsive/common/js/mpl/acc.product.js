@@ -1063,14 +1063,15 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 				if(typeof response.offer!=='undefined'){
 					transientCartHtml+="<div class='transient-offer'>"+response.offer+"</div>";
 				}
-				/*LW-216*/
-				if(typeof response.productType!=='undefined'){
-					transientCartHtml+="<div>"+response.productType+"</div>";
-				}
-				/*LW-216*/
+				
+			
 				transientCartHtml+="</div></li></ul><li class='view-bag-li'><a href='"+ACC.config.encodedContextPath+"/cart' class='go-to-bag mini-cart-checkout-button'>View Bag</a></li></ul></div>";
 				$('.transient-mini-bag').append(transientCartHtml);
-				
+				/*LW-216*/
+				if(typeof response.productType!=='undefined' & response.productType.toLowerCase() === "luxury"){
+					$('.mini-transient-bag .product-img').append("<img class='luxury_ribbon' src='/_ui/responsive/common/images/Ribbon.png'>");
+				}
+				/*LW-216*/
 				if ($("header .content .bottom").hasClass("active")){
 					$("header .content .right>ul>li.transient-mini-bag .mini-transient-bag").css({
 						"position": "fixed",
@@ -1152,28 +1153,6 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 						// Iterate and get all checked brand values
 						var Price = "₹" + minPriceSearchTxt + "-" + "₹"
 								+ maxPriceSearchTxt;
-						
-
-
-
-
-
-
-
-
-
-
-
-
-						
-
-
-
-
-
-
-
-
 
 
 						for (var i = 0; i < queryParamsAry.length; i = i + 2) {					
