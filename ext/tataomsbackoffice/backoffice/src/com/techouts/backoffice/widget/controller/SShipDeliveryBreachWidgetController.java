@@ -249,7 +249,7 @@ public class SShipDeliveryBreachWidgetController extends DefaultWidgetController
 									cancelOrderLine.setTransactionId(sshipTxnOrder.getOrderLineId());
 									cancelOrderLine.setReturnCancelFlag("C");
 									cancelOrderLine.setReasonCode("05");
-									cancelOrderLine.setReturnCancelRemarks("admin cancled the breached order");
+									cancelOrderLine.setReturnCancelRemarks("admin canceled the breached order");
 									cancelOrderLine.setRequestId(sshipTxnOrder.getOrderLineId());
 									cancelOrderList.add(cancelOrderLine);
 								}
