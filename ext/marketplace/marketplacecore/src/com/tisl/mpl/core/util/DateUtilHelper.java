@@ -140,7 +140,7 @@ public class DateUtilHelper
 	           timeFormat =removeLeadingZeros(twelveHoursSDF.format(twentyFourHoursSDF.parse(mm.getFromTime()))) +" TO "+removeLeadingZeros(twelveHoursSDF.format(twentyFourHoursSDF.parse(mm.getToTime())));
 	           LOG.debug("^^^^^^TimeSlots Is :********:"+timeFormat);
 	           LOG.debug("^^^^^^TimeSlots Is :********:"+timeFormat.replaceAll(":00", ""));
-	           timeSlotsList.add(timeFormat.replaceAll(":00", ""));
+	           timeSlotsList.add(timeFormat);
 			} catch (Exception e) {
 				LOG.error("Time Formater ********:"+e.getMessage());
 	      }
