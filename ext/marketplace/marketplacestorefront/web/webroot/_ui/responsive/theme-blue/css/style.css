@@ -45692,5 +45692,47 @@ body.no-scroll {
 	width:100%;
 	float:none;
 	}
-	
+header .content .top{
+	background:#a9143c;
+}
+header>.content .bottom .marketplace{
+	margin-top:0px;
+}
+header .content .right li a{
+	color:#fff;
+}
+header .content .right li.download-app:hover a, header .content .right li.store-locator-header:hover a
+{
+	color:#a9143c;
+}header .content .right li:hover{
+	    background: #fafafa;
+	    color:#a9143c;
+}
+header .content .right > ul > li.bag{
+	border-left:none;
+}
+header .content .right > ul > li.bag:after{
+	height:0px;
+}
+.bell-icon:after, li.store-locator-header a:before, li.download-app a:before, span.material-icons,header .content .right > ul > li.wishlist > a:before{
+	color:#fff;
+}
+header .content .right li.track.trackOrder:hover .bell-icon:after, li.store-locator-header:hover a:before, li.download-app:hover a:before,header .content .right .sign-in-dropdown:hover span.material-icons
+header .content .right > ul > li.wishlist:hover > a:before, header .content .right > ul > li.bag:hover > a:before {
+	color:#a9143c;
+}
+header .content .right > ul > li.bag > a:before {
+    font-family: 'icomoon';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 100;
+    content: "\e605";
+    font-size: 18px;
+    color: #fff;
+    line-height: 18px;
+    margin-right: 5px;
+    top: 3px;
+    position: relative;
+    font-weight: bold;
+} 
 /*--------------Added for luxury site ends-----------*/
