@@ -1969,7 +1969,7 @@ $(document).ready(function(){
 	});
 
 	//TISPRD-4587
-	$(document).ajaxComplete(function(){
+	/*$(document).ajaxComplete(function(){
 		$("div#appendedAtoZBrands").eq(1).children("div#A-E").show();
 		$(".lazy-brands>div.toggle.A-ZBrands,div#appendedAtoZBrands>div#A-E").mouseenter(function(){
 			$("div#appendedAtoZBrands").eq(1).children("div#A-E").show();
@@ -1987,7 +1987,8 @@ $(document).ready(function(){
 			$("div#appendedAtoZBrands").eq(1).siblings("div#groups").children("div#group").children("a.brandGroupLink").css({"border-bottom-style": "none","font-weight": "400"});
 			$(this).children("a.brandGroupLink").css({"border-bottom-width": "3px","border-bottom-style": "solid","font-weight":"bold"}); 
 		});
-	}); 
+	}); */
+
 	$(document).on("click","div.brandClass + span#mobile-menu-toggle",function(){
 		if($(this).siblings("ul.images").children().length == 0){
 			$(this).siblings("div.brandClass").mouseover();
@@ -2021,3 +2022,47 @@ $(document).ready(function(){
 	    });  
 	}); 
 	//Added for luxury site ends
+
+	
+   //  Change for TISPRD-4587 
+	$(document).on("mouseenter",".A-ZBrands",function(){
+		
+		if($("#A-E").css("display") == "block"){
+			
+			$("#A-E").css("display","block");
+		}
+	});
+		
+		
+		$("div.azWrapper").eq(1).children("div#A-E").show();
+		$(document).on("mouseenter","div.toggle",function(){
+			$("div.azWrapper").eq(1).children("div").hide();
+			if($("div.azWrapper").parents("li.lazy-brands").index() === 0){
+			$("div.azWrapper").eq(1).children("div#A-E").show();
+			}
+		});
+		$(document).on("mouseenter",".lazy-brands>div.toggle.A-ZBrands,div.azWrapper>div#A-E",function(){
+			$("div.azWrapper").eq(1).children("div#A-E").show();
+		});
+		
+		
+		$(document).on("mouseenter",".a-z:last div#groups div#group",function(){
+			var index = $(this).index();
+			$("div.azWrapper").eq(1).children("div").removeClass("showAZBrandsImportant");
+			$("div.azWrapper").eq(1).children("div").hide();
+			$("div.azWrapper").eq(1).children("div").eq(index).addClass("showAZBrandsImportant");
+			$("div.azWrapper").eq(1).siblings("div#groups").children("div#group").children("a.brandGroupLink").removeClass("present").css({"border-bottom-style": "none","font-weight": "400"});
+			$(this).children("a.brandGroupLink").addClass("present").css({"border-bottom-width": "3px","border-bottom-style": "solid","font-weight":"bold"}); 
+		});
+		$(document).on("mouseleave",".a-z:last",function(){
+			$("div.azWrapper").eq(1).children("div").removeClass("showAZBrandsImportant");
+		})
+		$(document).on("mouseenter mousemove","ul.a-z:last",function(){
+			if($('.a-z:last div#groups div#group:first a').css("border-bottom-style") == "solid") {
+				$(".azWrapper").eq(1).children("#A-E").addClass("importantDisplay")
+			} else {
+				$(".azWrapper").eq(1).children("#A-E").removeClass("importantDisplay");
+			}
+		});
+
+

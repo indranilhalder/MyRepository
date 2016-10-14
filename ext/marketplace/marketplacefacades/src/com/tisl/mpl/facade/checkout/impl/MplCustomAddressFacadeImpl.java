@@ -652,4 +652,93 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 	{
 		this.mplSellerInformationService = mplSellerInformationService;
 	}
+
+
+
+
+	/**
+	 * This method populates delivery method for web cart TISPT-400
+	 *
+	 * @param deliveryCode
+	 * @param sellerArticleSKU
+	 * @param cartModel
+	 * @return Double
+	 *
+	 */
+	@Override
+	public Double populateDeliveryMethodData(final String deliveryCode, final String sellerArticleSKU, final CartModel cartModel)
+	{
+		ServicesUtil.validateParameterNotNull(deliveryCode, "deliveryCode cannot be null");
+		ServicesUtil.validateParameterNotNull(sellerArticleSKU, "sellerArticleSKU cannot be null");
+
+		Double deliveryCost = Double.valueOf(0.0);
+		String fulfillmentType = "";
+		String tshipThresholdValue = configurationService.getConfiguration().getString(
+				MarketplaceFacadesConstants.TSHIPTHRESHOLDVALUE);
+		tshipThresholdValue = (tshipThresholdValue != null && !tshipThresholdValue.isEmpty()) ? tshipThresholdValue : Integer
+				.toString(0);
+
+		if (cartModel != null)
+		{
+			for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+			{
+				if (sellerArticleSKU.equals(entry.getSelectedUSSID()) && !entry.getGiveAway().booleanValue())
+				{
+					//Retrieve delivery modes and delivery charges for a USSID and saving them in cart entry.This will be taken forward to Order entry
+					final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplDeliveryCostService.getDeliveryCost(
+							deliveryCode, MarketplacecommerceservicesConstants.INR, sellerArticleSKU);
+
+					//TISEE-289
+					final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(sellerArticleSKU);
+					if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null
+							&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
+					{
+						fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
+								.getDeliveryFulfillModes().getCode();
+
+						// For Release 1 , TShip delivery cost will always be zero . Hence , commenting the below code which check configuration from HAC
+						if (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE)
+								&& entry.getTotalPrice().doubleValue() > Double.parseDouble(tshipThresholdValue))
+
+						{
+							mplZoneDeliveryModeValueModel.setValue(Double.valueOf(0.0));
+						}
+					}
+
+					entry.setMplDeliveryMode(mplZoneDeliveryModeValueModel);
+					if (mplZoneDeliveryModeValueModel.getValue() != null)
+					{
+						if (entry.getIsBOGOapplied().booleanValue())
+						{
+							deliveryCost = Double.valueOf(entry.getQualifyingCount().doubleValue()
+									* mplZoneDeliveryModeValueModel.getValue().doubleValue());
+
+						}
+						else
+						{
+							deliveryCost = Double.valueOf(entry.getQuantity().doubleValue()
+									* mplZoneDeliveryModeValueModel.getValue().doubleValue());
+						}
+
+					}
+
+					entry.setCurrDelCharge(deliveryCost);
+					LOG.debug(" >>> Delivery cost for ussid  " + sellerArticleSKU + " of fulfilment type " + fulfillmentType + " is "
+							+ deliveryCost);
+
+					//if delivery mode is changed from  c-n-c to other and if it contains POS then we need to remove the POS from that entry
+					if (null != entry.getMplDeliveryMode() && null != entry.getMplDeliveryMode().getDeliveryMode()
+							&& !entry.getMplDeliveryMode().getDeliveryMode().getCode().equals(MarketplaceFacadesConstants.C_C)
+							&& null != entry.getDeliveryPointOfService())
+					{
+						entry.setDeliveryPointOfService(null);
+					}
+
+					getModelService().save(entry);
+					break;
+				}
+			}
+		}
+		return deliveryCost;
+	}
 }

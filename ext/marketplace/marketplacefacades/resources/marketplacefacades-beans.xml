@@ -157,6 +157,7 @@
 		<property name="capacity" type="java.util.List&lt;java.lang.String>"></property>
 		<property name="seoMetaTitle" type="String"/>
 		<property name="seoMetaDescription" type="String"/>
+		<property name="seoMetaKeyword" type="String"/>
 		<property name="inStockFlag" type="Boolean"/>
 		<property name="isVariant" type="Boolean"/>
 		<property name="mobileBrandName" type="String"/>
@@ -172,6 +173,8 @@
 		<!-- LW-216 -->
 		<property name="luxIndicator" type="String" />
 		
+
+		<property name="stockValue" type="boolean" />
 		<!-- pdp changes ends -->
 
 		<property name="freebieProducts" type="java.util.List&lt;com.tisl.mpl.facades.data.FreebieProduct>"/>

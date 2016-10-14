@@ -363,14 +363,30 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	public String doSelectDeliveryMode(@ModelAttribute("deliveryMethodForm") DeliveryMethodForm deliveryMethodForm,
 			final BindingResult bindingResult, final Model model, final HttpServletRequest request) throws CMSItemNotFoundException
 	{
-		Double finalDeliveryCost = Double.valueOf(0.0);
+		//TISPT-400
+		if (getUserFacade().isAnonymousUser())
+		{
+			return getCheckoutStep().previousStep();
+		}
 
 		String returnPage = MarketplacecommerceservicesConstants.EMPTY;
-		//int count = 0;
-		Boolean selectPickupDetails = Boolean.FALSE;
 		try
 		{
 			final CartModel cartModel = getCartService().getSessionCart();
+			//TISST-13012
+			final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(cartModel);
+			//final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(getCartService().getSessionCart());
+			if (cartItemDelistedStatus)
+			{
+				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+			}
+			//TISPT-400 ends
+
+			Double finalDeliveryCost = Double.valueOf(0.0);
+
+			//int count = 0;
+			Boolean selectPickupDetails = Boolean.FALSE;
+
 			if (deliveryMethodForm.getDeliveryMethodEntry() == null)
 			{
 				//if cart contains cnc and home/express delivery modes
@@ -396,23 +412,26 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			else
 			{
 				//populate mplZone delivery mode
-				finalDeliveryCost = populateMplZoneDeliveryMode(deliveryMethodForm);
+				//finalDeliveryCost = populateMplZoneDeliveryMode(deliveryMethodForm);
+				//TISPT-400
+				finalDeliveryCost = populateMplZoneDeliveryMode(deliveryMethodForm, cartModel);
 				final Map<String, Map<String, Double>> deliveryChargePromotionMap = null;
 				//final boolean calculationStatus =
 				getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap); //TIS 400
 
 			}
-			if (getUserFacade().isAnonymousUser())
-			{
-				return getCheckoutStep().previousStep();
-			}
-
-			//TISST-13012
-			final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(getCartService().getSessionCart());
-			if (cartItemDelistedStatus)
-			{
-				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
-			}
+			//TISPT-400
+			//			if (getUserFacade().isAnonymousUser())
+			//			{
+			//				return getCheckoutStep().previousStep();
+			//			}
+			//
+			//			//TISST-13012
+			//			final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(getCartService().getSessionCart());
+			//			if (cartItemDelistedStatus)
+			//			{
+			//				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+			//			}
 			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
 			final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
 
@@ -481,13 +500,17 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 			deliveryAddress = (deliveryAddress == null || deliveryAddress.isEmpty()) ? accountAddressFacade.getAddressBook()
 					: deliveryAddress;
-			deliveryAddress = getMplCheckoutFacade().rePopulateDeliveryAddress(deliveryAddress);
+			//			deliveryAddress = getMplCheckoutFacade().rePopulateDeliveryAddress(deliveryAddress);
 
 			//TISST-7473
 			if (deliveryAddress == null || deliveryAddress.isEmpty())
 			{
 				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.NEWADDRESSLINK;
 			}
+
+			//TISPT-400
+			deliveryAddress = getMplCheckoutFacade().rePopulateDeliveryAddress(deliveryAddress);
+
 			LOG.debug("Before final model attribute level set ");
 
 			final List<StateData> stateDataList = accountAddressFacade.getStates();
@@ -574,6 +597,30 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		{
 			LOG.debug("from doFindDelivaryMode methodin Controller");
 		}
+		//TISPT-400
+		final CartModel cartModel = getCartService().getSessionCart();
+
+		try
+		{
+			final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(cartModel);
+			if (cartItemDelistedStatus)
+			{
+				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
+		}
+
+
 		List<StoreLocationResponseData> response = null;
 		redirectAttributes.addFlashAttribute("deliveryMethodForm", deliveryMethodForm);
 		//create session object for deliveryMethodForm which will be used if cart contains both cnc and home delivery.
@@ -583,7 +630,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
 		this.prepareDataForPage(model);
 
-		final CartModel cartModel = getCartService().getSessionCart();
+		//		final CartModel cartModel = getCartService().getSessionCart();			//TISPT-400
 
 		//handle freebie
 		final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
@@ -707,7 +754,9 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 						if (StringUtils.isNotEmpty(deliveryCode)
 								&& deliveryCode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CLICK_N_COLLECT)) // Code optimized as part of performance fix TISPT-104
 						{
-							getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode, deliveryEntry.getSellerArticleSKU());
+							//getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode, deliveryEntry.getSellerArticleSKU());
+							getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode, deliveryEntry.getSellerArticleSKU(),
+									cartModel); //TISPT-400
 						}
 
 						/*
@@ -732,7 +781,9 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				{
 					Double finalDeliveryCost = Double.valueOf(0.0);
 					//populate mplzone delivery mode
-					finalDeliveryCost = populateMplZoneDeliveryMode(deliveryMethodForm);
+					//finalDeliveryCost = populateMplZoneDeliveryMode(deliveryMethodForm);
+					//TISPT-400
+					finalDeliveryCost = populateMplZoneDeliveryMode(deliveryMethodForm, cartModel);
 					final Map<String, Map<String, Double>> deliveryChargePromotionMap = null;
 					//final boolean calculationStatus = getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost,deliveryChargePromotionMap); //TIS 400
 					getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap);
@@ -759,12 +810,13 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					//TISST-13012
 					try
 					{
-						//final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(getCartService().getSessionCart()); TISPT-169
-						final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(cartModel);
-						if (cartItemDelistedStatus)
-						{
-							return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
-						}
+						//TISPT-400
+						//						//final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(getCartService().getSessionCart()); TISPT-169
+						//						final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(cartModel);
+						//						if (cartItemDelistedStatus)
+						//						{
+						//							return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+						//						}
 						applyPromotions();
 
 						//populate freebie data
@@ -2264,7 +2316,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	 * @param deliveryMethodForm
 	 * @return finalDeliveryCost
 	 */
-	private Double populateMplZoneDeliveryMode(final DeliveryMethodForm deliveryMethodForm)
+	private Double populateMplZoneDeliveryMode(final DeliveryMethodForm deliveryMethodForm, final CartModel cartModel)
 	{
 		if (LOG.isDebugEnabled())
 		{
@@ -2284,14 +2336,18 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 					if (deliveryCode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CLICK_N_COLLECT))
 					{
+						//						deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
+						//								deliveryEntry.getSellerArticleSKU());
 						deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
-								deliveryEntry.getSellerArticleSKU());
+								deliveryEntry.getSellerArticleSKU(), cartModel); //TISPT-400
 						deliveryCost = Double.valueOf(0.00D); // Code optimized as part of performance fix TISPT-104
 					}
 					else
 					{
+						//deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
+						//		deliveryEntry.getSellerArticleSKU());
 						deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
-								deliveryEntry.getSellerArticleSKU());
+								deliveryEntry.getSellerArticleSKU(), cartModel); //TISPT-400
 					}
 					finalDeliveryCost = Double.valueOf(finalDeliveryCost.doubleValue() + deliveryCost.doubleValue());
 				}
