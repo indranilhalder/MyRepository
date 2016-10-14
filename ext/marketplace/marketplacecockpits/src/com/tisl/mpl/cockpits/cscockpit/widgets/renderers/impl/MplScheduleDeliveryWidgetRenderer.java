@@ -50,7 +50,7 @@ import de.hybris.platform.cscockpit.utils.CssUtils;
 import de.hybris.platform.cscockpit.utils.LabelUtils;
 import de.hybris.platform.cscockpit.widgets.controllers.CheckoutController;
 import de.hybris.platform.cscockpit.widgets.renderers.impl.AbstractCsWidgetRenderer;
-import de.hybris.platform.servicelayer.exceptions.ModelRemovalException;
+import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 public class MplScheduleDeliveryWidgetRenderer extends AbstractCsWidgetRenderer<DefaultListboxWidget<DefaultListWidgetModel, CheckoutController>>{
@@ -128,11 +128,24 @@ public class MplScheduleDeliveryWidgetRenderer extends AbstractCsWidgetRenderer<
 		InvReserForDeliverySlotsResponseData deliverySlotsResponseData=((MarketplaceCheckoutController) widget.getWidgetController()).deliverySlotsRequestDataCallToOms(deliverySlotsRequestData);
 		if(null != deliverySlotsResponseData && null != deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData()) {
 			populateScheduledDeliveryHeaders(widget, listHead);
-			for ( InvReserForDeliverySlotsItemEDDInfoData deliverySlotsItemEDDInfo :deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData() ) {
+//			for ( InvReserForDeliverySlotsItemEDDInfoData deliverySlotsItemEDDInfo :deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData() ) {
+//				Listitem row = new Listitem();
+//				row.setSclass("listbox-row-item");
+//				row.setParent(listBox);
+//				renderDeliverySlots(widget,cart,deliverySlotsItemEDDInfo, row);
+//			}
+			
+			for(AbstractOrderEntryModel orderEntry: cart.getEntries()) {
 				Listitem row = new Listitem();
 				row.setSclass("listbox-row-item");
 				row.setParent(listBox);
-				renderDeliverySlots(widget,cart,deliverySlotsItemEDDInfo, row);
+				for( InvReserForDeliverySlotsItemEDDInfoData deliverySlotsItemEDDInfo :deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData() ) {
+					if(deliverySlotsItemEDDInfo.getUssId().trim().equalsIgnoreCase(orderEntry.getSelectedUSSID().trim())) {
+						renderDeliverySlots(widget,orderEntry,deliverySlotsItemEDDInfo, row);
+						break;
+					}
+				}
+				
 			}
 		}
 		else {
@@ -143,7 +156,67 @@ public class MplScheduleDeliveryWidgetRenderer extends AbstractCsWidgetRenderer<
 		}
 	}
 	
-	
+	private void renderDeliverySlots(DefaultListboxWidget<DefaultListWidgetModel, CheckoutController> widget,AbstractOrderEntryModel orderEntry, InvReserForDeliverySlotsItemEDDInfoData deliverySlotsItemEDDInfo,Listitem parent) {
+		//AbstractOrderEntryModel orderEntry = modelService.create(AbstractOrderEntryModel.class);
+//		for (AbstractOrderEntryModel entryModel : cart.getEntries()) {
+//			if(entryModel.getSelectedUSSID().equalsIgnoreCase(deliverySlotsItemEDDInfo.getUssId()))
+//			{
+//				orderEntry = entryModel;
+//			}
+//		}
+		// Entry number 
+		Listcell entryNoCell = new Listcell();
+		entryNoCell.setParent(parent);
+		Div entryNoDiv = new Div();
+		entryNoDiv.setParent(entryNoCell);
+		entryNoDiv.setSclass("editorWidgetEditor");
+		Label entryNoLabel = new Label(String.valueOf(orderEntry.getEntryNumber()));
+		entryNoLabel.setParent(entryNoDiv);
+
+		// Transaction Id 
+		Listcell UssIdCell = new Listcell();
+		UssIdCell.setParent(parent);
+		Div ussIdDiv = new Div();
+		ussIdDiv.setParent(UssIdCell);
+		ussIdDiv.setSclass("editorWidgetEditor");
+		Label transactionIdLabel = new Label(String.valueOf(deliverySlotsItemEDDInfo.getUssId()));
+		transactionIdLabel.setParent(ussIdDiv);
+
+		// Product Name 
+		Listcell productCell = new Listcell();
+		productCell.setParent(parent);
+		Div productDiv = new Div();
+		productDiv.setParent(productCell);
+		productDiv.setSclass("editorWidgetEditor");
+		Label productLabel = new Label(String.valueOf(orderEntry.getProduct().getArticleDescription()));
+		productLabel.setParent(productDiv);
+		Map<String, List<String>> dateTimeslotMapList = null ;
+		String Edd = null;
+		if(null != deliverySlotsItemEDDInfo.getEDD()) {
+			Edd = deliverySlotsItemEDDInfo.getEDD();
+		}
+		else if(null != deliverySlotsItemEDDInfo.getNextEDD()){
+			Edd = deliverySlotsItemEDDInfo.getNextEDD();
+		}
+		if(orderEntry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceCockpitsConstants.HOME_DELIVERY)) {
+			if(null != deliverySlotsItemEDDInfo.getEDD()) {
+				try {
+					dateTimeslotMapList = getDateAndTimeMap("SD",Edd);
+				} catch (java.text.ParseException e) {
+					LOG.error("ParseException While getting the time slots "+e.getMessage());
+				}
+			}
+		}
+		else if (orderEntry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceCockpitsConstants.EXPRESS_DELIVERY)) {
+			try {
+				dateTimeslotMapList = getDateAndTimeMap("SD",Edd);
+			} catch (java.text.ParseException e) {
+				LOG.error("ParseException While getting the time slots "+e.getMessage() );
+			}
+		}
+		createRadiobuttonForDateAndTime(widget,orderEntry,dateTimeslotMapList,parent);
+
+	}
 	private void populateScheduledDeliveryHeaders(
 			DefaultListboxWidget<DefaultListWidgetModel, CheckoutController> widget,
 			Listhead parent) {
@@ -182,67 +255,7 @@ public class MplScheduleDeliveryWidgetRenderer extends AbstractCsWidgetRenderer<
 
 	}
 
-	private void renderDeliverySlots(DefaultListboxWidget<DefaultListWidgetModel, CheckoutController> widget, CartModel cart, InvReserForDeliverySlotsItemEDDInfoData deliverySlotsItemEDDInfo,Listitem parent) {
-		AbstractOrderEntryModel orderEntry = modelService.create(AbstractOrderEntryModel.class);
-		for (AbstractOrderEntryModel entryModel : cart.getEntries()) {
-			if(entryModel.getSelectedUSSID().equalsIgnoreCase(deliverySlotsItemEDDInfo.getUssId()))
-			{
-				orderEntry = entryModel;
-			}
-		}
-		// Entry number 
-		Listcell entryNoCell = new Listcell();
-		entryNoCell.setParent(parent);
-		Div entryNoDiv = new Div();
-		entryNoDiv.setParent(entryNoCell);
-		entryNoDiv.setSclass("editorWidgetEditor");
-		Label entryNoLabel = new Label(String.valueOf(orderEntry.getEntryNumber()));
-		entryNoLabel.setParent(entryNoDiv);
-
-		// Transaction Id 
-		Listcell UssIdCell = new Listcell();
-		UssIdCell.setParent(parent);
-		Div ussIdDiv = new Div();
-		ussIdDiv.setParent(UssIdCell);
-		ussIdDiv.setSclass("editorWidgetEditor");
-		Label transactionIdLabel = new Label(String.valueOf(deliverySlotsItemEDDInfo.getUssId()));
-		transactionIdLabel.setParent(ussIdDiv);
-
-		// Product Name 
-		Listcell productCell = new Listcell();
-		productCell.setParent(parent);
-		Div productDiv = new Div();
-		productDiv.setParent(productCell);
-		productDiv.setSclass("editorWidgetEditor");
-		Label productLabel = new Label(String.valueOf(orderEntry.getInfo()));
-		productLabel.setParent(productDiv);
-		Map<String, List<String>> dateTimeslotMapList = null ;
-		String Edd = null;
-		if(null != deliverySlotsItemEDDInfo.getEDD()) {
-			Edd = deliverySlotsItemEDDInfo.getEDD();
-		}
-		else if(null != deliverySlotsItemEDDInfo.getNextEDD()){
-			Edd = deliverySlotsItemEDDInfo.getNextEDD();
-		}
-		if(orderEntry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceCockpitsConstants.HOME_DELIVERY)) {
-			if(null != deliverySlotsItemEDDInfo.getEDD()) {
-				try {
-					dateTimeslotMapList = getDateAndTimeMap("SD",Edd);
-				} catch (java.text.ParseException e) {
-					LOG.error("ParseException While getting the time slots "+e.getMessage());
-				}
-			}
-		}
-		else if (orderEntry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceCockpitsConstants.EXPRESS_DELIVERY)) {
-			try {
-				dateTimeslotMapList = getDateAndTimeMap("SD",Edd);
-			} catch (java.text.ParseException e) {
-				LOG.error("ParseException While getting the time slots "+e.getMessage() );
-			}
-		}
-		createRadiobuttonForDateAndTime(widget,orderEntry,dateTimeslotMapList,parent);
-
-	}
+	
 
 	private void createRadiobuttonForDateAndTime(
 			final DefaultListboxWidget<DefaultListWidgetModel, CheckoutController> widget, final AbstractOrderEntryModel orderEntry,
@@ -264,24 +277,27 @@ public class MplScheduleDeliveryWidgetRenderer extends AbstractCsWidgetRenderer<
 				Radio.setParent(DateDiv);
 				dateGroup.appendChild(Radio);
 			}
-			dateGroup.setSelectedIndex(0);
+		//	dateGroup.setSelectedIndex(0);
 			// Time cell
 			final Listcell timeCell = new Listcell();
 			Div div1 = new Div();
 			div1.setParent(datecell);
 			timeCell.setParent(parent);
 			final Radiogroup radioTimeGroup = new Radiogroup();
-			List<String> timeList = dateTimeslotMapList.get(dateGroup.getSelectedItem().getLabel());
+			List<String> timeList= new ArrayList<String>();
+			if(null != dateGroup.getSelectedItem()) {
+				 timeList = dateTimeslotMapList.get(dateGroup.getSelectedItem().getLabel());
+			}
 			for (String time : timeList) {
 				Div timeDiv1 = new Div();
 				timeDiv1.appendChild(radioTimeGroup);
 				timeDiv1.setParent(timeCell);
 				Radio radio = new Radio();
-				radio.setLabel(time);
+				radio.setLabel(time.trim());
 				radio.setParent(timeDiv1);
 				radioTimeGroup.appendChild(radio);
 			}
-			radioTimeGroup.setSelectedIndex(0);
+		//	radioTimeGroup.setSelectedIndex(0);
 			
 			Listcell cell = new Listcell();
 			Div resetDiv = new Div();
@@ -329,36 +345,30 @@ public class MplScheduleDeliveryWidgetRenderer extends AbstractCsWidgetRenderer<
 	protected void createResetbuttonClickEventListener(Radiogroup dateGroup,
 			Radiogroup radioTimeGroup, AbstractOrderEntryModel orderEntry) {
 		if(null != dateGroup.getSelectedItem() || null != radioTimeGroup.getSelectedItem()) {
-			if(null != dateGroup.getSelectedItem()) {
-				dateGroup.getSelectedItem().setChecked(false);
-				if(null != orderEntry.getEdScheduledDate()) {
-					try {
+
+			try {
+				if(null != dateGroup.getSelectedItem()) {
+					dateGroup.getSelectedItem().setChecked(false);
+					if(null != orderEntry.getEdScheduledDate()) {
 						orderEntry.setEdScheduledDate(null);
-						modelService.save(orderEntry);
-					}catch(ModelRemovalException e) {
-						LOG.error("Exception while removing EdScheduledDate"+e.getMessage());
-					}catch (Exception e) {
-						LOG.error("Exception while removing EdScheduledDate"+e.getMessage());
 					}
-				}
-			} 
-			if(null != radioTimeGroup.getSelectedItem()) {
-				radioTimeGroup.getSelectedItem().setChecked(false);
-				if(null != orderEntry.getTimeSlotFrom() && null != orderEntry.getTimeSlotTo()) {
-					try {
+				} 
+				if(null != radioTimeGroup.getSelectedItem()) {
+					radioTimeGroup.getSelectedItem().setChecked(false);
+					if(null != orderEntry.getTimeSlotFrom() && null != orderEntry.getTimeSlotTo()) {
 						if(null !=orderEntry.getTimeSlotFrom()) {
 							orderEntry.setTimeSlotFrom(null);
-							modelService.save(orderEntry);
 						} 
 						if(null != orderEntry.getTimeSlotTo()) {
-							modelService.remove(orderEntry.getTimeSlotTo());
+							orderEntry.setTimeSlotTo(null);
 						}
-					}catch(ModelRemovalException e) {
-						LOG.error("Exception while removing the date and tme"+e.getMessage());
-					}catch (Exception e) {
-						LOG.error("Exception while removing EdScheduledDate"+e.getMessage());
 					}
 				}
+				modelService.save(orderEntry);
+			}catch(ModelSavingException e) {
+				LOG.error("Exception while saving the date and tme"+e.getMessage());
+			}catch (Exception e) {
+				LOG.error("Exception while saving EdScheduledDate"+e.getMessage());
 			}
 		}
 	}
@@ -371,7 +381,7 @@ public class MplScheduleDeliveryWidgetRenderer extends AbstractCsWidgetRenderer<
 			resetButton.setDisabled(false);
 			LOG.debug("Selected time = "+radioTimeGroup.getSelectedItem().getLabel());
 			String selectedTime = radioTimeGroup.getSelectedItem().getLabel();
-			String[] fromAndToTime =  selectedTime.split("-");
+			String[] fromAndToTime =  selectedTime.split("TO");
 			DateUtilHelper dateUtilhelper = new DateUtilHelper();
 			String fromTime=dateUtilhelper.convertTo24Hour(fromAndToTime[0]);
 			String toTime=dateUtilhelper.convertTo24Hour(fromAndToTime[1]);
@@ -394,13 +404,7 @@ public class MplScheduleDeliveryWidgetRenderer extends AbstractCsWidgetRenderer<
 		List<String> timeList = dateTimeslotMapList.get(dateGroup.getSelectedItem().getLabel());
 		LOG.debug("Selected date :"+dateGroup.getSelectedItem().getLabel());
 		String date = dateGroup.getSelectedItem().getLabel();
-		DateUtilHelper dateUtilHelper = new DateUtilHelper();
 		orderEntry.setEdScheduledDate(date);
-		try {
-			modelService.save(orderEntry);
-		}catch(Exception e) {
-			LOG.error("Exception occurred ");
-		}
 		int size = radioTimeGroup.getItemCount();
 		if(null !=timecell && null != timecell.getChildren()) {
 			timecell.getChildren().clear();
@@ -417,11 +421,23 @@ public class MplScheduleDeliveryWidgetRenderer extends AbstractCsWidgetRenderer<
 			timeDiv1.appendChild(radioTimeGroup);
 			timeDiv1.setParent(timecell);
 			Radio radio = new Radio();
-			radio.setLabel(time);
+			radio.setLabel(time.trim());
 			radio.setParent(timeDiv1);
 			radioTimeGroup.appendChild(radio);
 		}
 		radioTimeGroup.setSelectedIndex(0);
+		String selectedTime = radioTimeGroup.getSelectedItem().getLabel();
+		String[] fromAndToTime =  selectedTime.split("TO");
+		DateUtilHelper dateUtilhelper = new DateUtilHelper();
+		String fromTime=dateUtilhelper.convertTo24Hour(fromAndToTime[0]);
+		String toTime=dateUtilhelper.convertTo24Hour(fromAndToTime[1]);
+		orderEntry.setTimeSlotFrom(fromTime);
+		orderEntry.setTimeSlotTo(toTime);
+		try {
+			modelService.save(orderEntry);
+		}catch(Exception e) {
+			LOG.error("Exception occurred ");
+		}
 	}
 
 	private Map<String, List<String>> getDateAndTimeMap(String timeSlotType,
