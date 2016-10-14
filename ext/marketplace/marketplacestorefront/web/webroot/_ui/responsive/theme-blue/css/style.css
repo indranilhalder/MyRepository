@@ -54100,6 +54100,20 @@ header > .content .top.header_fix {position:fixed;}
 .temp-five .Padd .world-possibilities .media-content .learn-more {
     margin-top: 24px;
 }
+.Manufacturer.temp-five .every-scene .media-content .content {
+    width: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    text-align: inherit;
+    margin: inherit;
+}
+.Manufacturer.temp-five .every-scene>div>.content {
+    font-size: inherit;
+    line-height: inherit;
+    text-align: inherit;
+    margin: inherit;
+    width: inherit;
+}
 
 /* pdp-v4-temp template5 ends */
 
