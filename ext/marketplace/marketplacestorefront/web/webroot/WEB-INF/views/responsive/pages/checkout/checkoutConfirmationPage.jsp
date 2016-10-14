@@ -11,6 +11,10 @@
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user"%>
  <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+ <!-- LW-230 -->
+<input type="hidden" id="isLuxury" value="${isLuxury}"/>
+
  <script>
 	sessionStorage.setItem("confirmationPageVisited", "True");
 </script>
