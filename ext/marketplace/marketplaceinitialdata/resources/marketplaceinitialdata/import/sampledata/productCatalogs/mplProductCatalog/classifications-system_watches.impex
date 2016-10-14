@@ -96,6 +96,26 @@ INSERT_UPDATE classificationAttributeValue;code[unique=true];name[lang=en];syste
 ;450;450
 ;475;475
 ;500;500
+;25m;25 m
+;50m;50 m
+;75m;75 m
+;100m;100 m
+;125m;125 m
+;150m;150 m
+;175m;175 m
+;200m;200 m
+;225m;225 m
+;250m;250 m
+;275m;275 m
+;300m;300 m
+;325m;325 m
+;350m;350 m
+;375m;375 m
+;400m;400 m
+;425m;425 m
+;450m;450 m
+;475m;475 m
+;500m;500 m
 ;round;Round
 ;oval;Oval
 ;rectangular;Rectangular
@@ -304,7 +324,7 @@ INSERT_UPDATE ClassAttributeAssignment;$attribute;$unit;attributeType(code[defau
 ;occasionwatches;;enum;20002;formal,casual,dressy,sport,fashion,functional,basic;true;true;30
 ;pairwatcheswatches;;enum;20005;yes,no;false;true;5
 ;watchcombowatches;;string;20003;;false;false;200
-;waterresistancewatches;102;enum;20002;25,50,75,100,125,150,175,200,225,250,275,300,325,350,375,400,425,450,475,500;false;true;10
+;waterresistancewatches;;enum;20002;25m,50m,75m,100m,125m,150m,175m,200m,225m,250m,275m,300m,325m,350m,375m,400m,425m,450m,475m,500m;false;true;10
 ;dialshapewatches;;enum;20004;round,square,oval,rectangular,square,tonneau,carre,carage,assymetrical,heart,triangle,hexagon,polygonal,diamond;false;true;30
 ;dialcolorwatches;;enum;20003;beige,black,brown,blue,charcoal,green,gold,grey,khaki,metallic,navy,nude,olive,orange,pink,purple,red,silver,tan,white,yellow,multi,indigo;false;true;30
 ;dialcolorbrandwatches;;string;20002;;false;false;30
