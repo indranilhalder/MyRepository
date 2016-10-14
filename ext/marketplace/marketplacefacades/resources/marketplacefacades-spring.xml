@@ -1566,4 +1566,9 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="solrCoreNameResolver" ref="solrCoreNameResolver" />		
 	</bean> -->
 	
+	
+	<!-- Added for displaying offer messages other than promotion, TPR-589 -->
+	<bean id="prodOfferDetFacade"
+		class="com.tisl.mpl.seller.product.facades.impl.ProductOfferDetailFacadeImpl">		
+	</bean>	
 </beans>

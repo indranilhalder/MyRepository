@@ -88,38 +88,27 @@ var productSizeVar = '${productSize}';
 						<li><c:url value="${variantOption.defaultUrl}"
 								var="variantUrl" />
 								
-								 <a href="${variantUrl}">
-								<%-- <c:choose><c:when test="${empty selectedSize}">
-													 <a href="${variantUrl}">
-												</c:when>
-												<c:otherwise>
-													<a href="${variantUrl}?selectedSize=true">
-												</c:otherwise>
-											</c:choose> --%>
-								
-								 <%-- <a href="${variantUrl}?selectedSize=true">
-								<a href="${variantUrl}?selectedSize=true"> --%>
+								 <a href="${variantUrl}">								
 								 <c:forEach
 									items="${variantOption.colourCode}" var="color">
 									<c:choose>
 								<c:when test="${fn:startsWith(color, 'multi')}">
 						     	<img src="${commonResourcePath}/images/multi.jpg" height="20" width="20" title="${variantOption.colour}" />
 								</c:when>
+								
+								<c:when test="${empty variantOption.image}">
+						     	<span style="background-color: ${color};border: 1px solid rgb(204, 211, 217); width:50px; height:73px" title="${variantOption.colour}"></span>
+								</c:when>							
 								<c:otherwise>
-									<span
-										style="background-color: ${color};border: 1px solid rgb(204, 211, 217);"
-										title="${variantOption.colour}"></span>
+								
+								<c:set var="imageData" value="${variantOption.image}" />
+										<img src="${imageData.url}" title="${variantOption.colour}" alt="${styleValue}" style="display: inline-block;width: 50px;"/>								
                                </c:otherwise>
                                </c:choose>
-									
-								<%-- 	<span
-										style="background-color: ${color};border: 1px solid rgb(204, 211, 217);"
-										title="${variantOption.colour}"></span> --%>
-
-									<c:if test="${variantOption.code eq product.code}">
+								<c:if test="${variantOption.code eq product.code}">
 										<c:set var="currentColor" value="${color}" />
 										<!--  set current selected color -->
-									</c:if>
+								</c:if>
 
 								</c:forEach>
 						</a></li>

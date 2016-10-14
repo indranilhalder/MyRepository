@@ -21,8 +21,8 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
-
-
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 /**
  * This class populates data into product data from solr search results
  *
@@ -37,7 +37,8 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 
 	@Autowired
 	private SizeAttributeComparator sizeAttributeComparator;
-
+        private static final String DELIMETER = ":";
+        private static final String STOCK = "STOCK";
 	@Override
 	public void populate(final SearchResultValueData source, final ProductData target)
 	{
@@ -53,9 +54,9 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 
 			if (getValue(source, "displaySize") != null)
 			{
-				final List<String> displaySize = (List<String>) getValue(source, "displaySize");
-				Collections.sort(displaySize, sizeAttributeComparator);
-				target.setDisplaySize((List<String>) getValue(source, "displaySize"));
+				//TPR-249 changes,method revised for adding products with only stock
+				populateDisplaySizes(source, target);
+
 			}
 
 			if (getValue(source, "mplAvgRating") != null)
@@ -277,6 +278,60 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 	public void setCategoryManager(final SolrFirstVariantCategoryManager categoryManager)
 	{
 		this.categoryManager = categoryManager;
+	}
+        /**
+	 * changes for TPR-249,populating stock details
+	 *
+	 * @param source
+	 * @param target
+	 */
+	private void populateDisplaySizes(final SearchResultValueData source, final ProductData target)
+	{
+		final List<String> displaySizes = (List<String>) getValue(source, "displaySize");
+		final String displaySize = String.join(", ", displaySizes);
+		final List<String> sizeList = new ArrayList<String>();
+		final List<String> oosSizeList = new ArrayList<String>();
+		final String[] pairs = displaySize.split(",");
+		for (int i = 0; i < pairs.length; i++)
+		{
+			final String pair = pairs[i];
+			if (pair.contains(DELIMETER))
+			{
+				final String[] keyValue = pair.split(DELIMETER);
+				if (keyValue[0].trim().equals(STOCK))
+				{
+					sizeList.add(keyValue[1]);
+				}
+				else
+				{
+					oosSizeList.add(keyValue[1]);
+				}
+			}
+		}
+		boolean isNotStockFlag = false;
+		if (CollectionUtils.isNotEmpty(sizeList))
+		{
+			Collections.sort(sizeList, sizeAttributeComparator);
+			isNotStockFlag = true;
+			target.setDisplaySizes(sizeList);
+		}
+		if (CollectionUtils.isNotEmpty(oosSizeList) && isNotStockFlag)
+		{
+			oosSizeList.addAll(sizeList);
+			target.setDisplaySize(oosSizeList);
+			Collections.sort(oosSizeList, sizeAttributeComparator);
+		}
+		if (CollectionUtils.isNotEmpty(oosSizeList) && !isNotStockFlag)
+		{
+			Collections.sort(oosSizeList, sizeAttributeComparator);
+			target.setDisplaySize(oosSizeList);
+		}
+		if (CollectionUtils.isEmpty(oosSizeList) && CollectionUtils.isEmpty(sizeList))
+		{
+			target.setDisplaySizes(displaySizes);
+			target.setDisplaySize(displaySizes);
+		}
+
 	}
 
 }

@@ -20,8 +20,9 @@
 	src="${commonResourcePath}/js/acc.productDetail.js"></script> --%>
 <%-- <script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/acc.sellerDetails.js"></script> --%>
-	<product:sellerForm></product:sellerForm>
 	<!-- Tealium -->
+<%--  <product:sellerForm></product:sellerForm> --%> 
+<input type="hidden" value="" id="testing"/>
 <input type="hidden" id="product_unit_price" value="${product_unit_price}" />
 <input type="hidden" id="site_section" value="${site_section}" />
 <input type="hidden" id="product_list_price" value="${product_list_price}" />
@@ -471,9 +472,6 @@ var allSellers='${allsellers}';
 			<!-- EMI section -->
 			<product:emiDetail product="${product}" />
 			<product:productMainVariant />
-			<cms:pageSlot position="AddToCart" var="component">
-				<cms:component component="${component}" />
-			</cms:pageSlot>
 			<div class="SoldWrap">
 				<ycommerce:testId
 					code="productDetails_productNamePrice_label_${product.code}">
@@ -497,9 +495,9 @@ var allSellers='${allsellers}';
 
 
 
-			<%-- <cms:pageSlot position="AddToCart" var="component">
+			<cms:pageSlot position="AddToCart" var="component">
 				<cms:component component="${component}" />
-			</cms:pageSlot> --%>
+			</cms:pageSlot>
 			
 		</div>
 		</div>

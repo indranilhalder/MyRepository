@@ -186,9 +186,9 @@
 				<form id="pageSize_form${top ? '1' : '2'}" name="pageSize_form${top ? '1' : '2'}" method="get" action="#" class="pageSizeForm">
 					<label for="pageSizeOptions${top ? '1' : '2'}"><spring:theme code="${themeMsgKey}.display"/></label>
 						<select class="black-arrow" id="pageSizeOptions${top ? '1' : '2'}" name="pageSize" class="pageSizeOptions" onchange="viewByFilterResult(${top ? '1' : '2'})">
-							<option value="24" ${not empty searchPageData.pagination.pageSize and searchPageData.pagination.pageSize eq 24 ? 'selected="selected"' : ''}>24</option>
-							<option value="48" ${not empty searchPageData.pagination.pageSize and searchPageData.pagination.pageSize eq 48 ? 'selected="selected"' : ''}>48</option>
 							<option value="72" ${not empty searchPageData.pagination.pageSize and searchPageData.pagination.pageSize eq 72 ? 'selected="selected"' : ''}>72</option>
+							<option value="48" ${not empty searchPageData.pagination.pageSize and searchPageData.pagination.pageSize eq 48 ? 'selected="selected"' : ''}>48</option>
+							<option value="24" ${not empty searchPageData.pagination.pageSize and searchPageData.pagination.pageSize eq 24 ? 'selected="selected"' : ''}>24</option>
 						</select>
 				
 					<c:catch var="errorException">

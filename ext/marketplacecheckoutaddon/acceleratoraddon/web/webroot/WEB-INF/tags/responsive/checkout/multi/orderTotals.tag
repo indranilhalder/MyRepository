@@ -48,7 +48,23 @@
 		<span id="convChargeField" style="float: right">
 		</span>
 	</li>
-   
+    <%-- Commented due to making confusion in the Payment page calculation --%>
+	<!-- Tag used for Delivery Mode and Delivery Address Page promotion display TISBOX-1618-->
+	<%-- <c:if test="${cartData.totalDiscounts.value > 0}">
+	<li id="cartPromotionApplied">
+		<spring:theme code="basket.page.totals.savings"/>
+		<span id="cartPromotion" style="float: right"> - <format:price priceData="${cartData.totalDiscounts}"/> 	</span>
+
+	</li> 
+    </c:if>  
+	<!-- Tag used for Payment Page promotion display-->
+	<li id="promotionApplied" >
+		<spring:theme code="basket.page.totals.savings"/>
+		<span id="promotion" style="float: right"> - <format:price priceData="${cartData.totalDiscounts}"/> 	</span>
+
+	</li> --%>
+	
+     
     <li id="couponApplied" >
 	<button class="remove-coupon-button"></button>
 		<span class="couponSpan"><spring:theme code="basket.page.totals.coupons"/></span>
@@ -59,8 +75,9 @@
     
 	<li class="total" id="total">
 		<div id="totalPriceConvChargeId">
-			<span class="totalsSpan"><spring:theme code="basket.page.totals.total"/> </span>
-			<span id="totalWithConvField" style="float: right"><format:price priceData="${cartData.totalPrice}"/></span>
+			<spring:theme code="basket.page.totals.total"/> 
+			
+			<span id="totalWithConvFields" style="float: right"><format:price priceData="${cartData.totalPrice}"/></span>
 		</div>
 	</li>
 	

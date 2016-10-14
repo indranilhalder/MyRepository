@@ -972,9 +972,16 @@
 		<property name="sellerAssociationstatus" type="String" />
 		<!-- TPR-797 changed as per mail-->
 		<property name="discount" type="String" />
+		<property name="productOfferMsg"  type="com.tisl.mpl.wsdto.ProductOfferMsgDTO" />	
 		<property name="allOOStock" type="Boolean" />
 	</bean>
-
+	<!-- 		Added for OfferDetail of  a product TPR-TPR-1299 -->
+	<bean class="com.tisl.mpl.wsdto.ProductOfferMsgDTO">
+	<property name="messageDetails" type="String" />
+	<property name="messageID" type="String" />
+	<property name="startDate" type="String" />
+	<property name="endDate" type="String" /></bean>
+	
 	<bean class="com.tisl.mpl.wsdto.KnowMoreDTO">
 		<property name="knowMoreItem" type="java.lang.String"></property>
 	</bean>

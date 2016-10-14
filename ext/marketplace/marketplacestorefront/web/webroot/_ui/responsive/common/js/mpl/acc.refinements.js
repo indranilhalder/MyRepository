@@ -388,7 +388,25 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 				
 				//Re-write URL after ajax
 				window.history.replaceState(response,"",pageURL);
-			}	
+			}		
+			//TPR-158 and TPR-413 starts here
+			
+			$("#displayAll").show();
+			$("#clickToMore").hide();
+			donotShowAll();
+			
+			$("#displayAll").on("click",function(e){
+				showAll();		
+				$("#displayAll").hide();
+				$("#clickToMore").show();
+			});
+			
+			$("#clickToMore").click(function(e){
+				donotShowAll();		
+				$("#displayAll").show();
+				$("#clickToMore").hide();
+				});	
+			//TPR-158 and TPR-413 ends here			
 		},
 		error : function(xhr, status, error) {
 			$('#wrongPin,#unsevisablePin,#emptyPin')

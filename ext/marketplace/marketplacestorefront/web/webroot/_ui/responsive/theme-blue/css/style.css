@@ -33093,14 +33093,22 @@ display:none;
 	width:100%;
 	text-align:left;
 }
-.pdp-promo-block.promo-block a.details {
+/* TPR-589 */
+/* .pdp-promo-block.promo-block a.details {
 	margin-top: 5px;
     display: block;
     color:#a9143c;
     font-size: 12px;
+} */
+
+.pdp-promo-title-link {
+    margin-top: 5px;
+    display: block;
+    color:#a9143c;
+    font-size: 12px;
+    margin-bottom: 20px;
+    text-decoration: underline;
 }
-
-
 
 /*Mybag css changes starts*/
 body.page-cartPage .cart.wrapper{
@@ -45214,7 +45222,8 @@ float: right;
 	font-weight: bold;
 }
 
-.pdp-promo-title {
+/* TPR 589 */
+.pdp-promo-title, .pdp-offer-title{
 	padding: 10px 20px;
 	border: 1px solid #ccc;
 	font-size: 14px;
@@ -46327,7 +46336,9 @@ float: right;
 	.product-info .product-detail .price {		
 		margin: 0 0 5px;		
 	}		
-	.pdp-promo-title {		
+	/* TPR 589 */
+	
+	.pdp-promo-title, .pdp-offer-title {	
 		margin: 0 0 20px;		
 	}		
 	.product-info .product-detail .star-review, .product-info .product-detail .fullfilled-by		
@@ -46651,10 +46662,16 @@ body.page-productDetails .breadcrumbs.wrapper {
  	.product-info .product-detail .Cta .addtocart-component #addToCartButtonId {
  		padding: 0;
  	}
- 	.pdp-promo-block.promo-block a.details{
+ 	/* TPR-589 */
+ 	/* .pdp-promo-block.promo-block a.details{
  	    display: inline-block;
  	    margin-left: 3px;
- 	}
+ 	} */
+ 	
+ 	 .pdp-promo-title-link {
+        display: inline-block;
+        margin-left: 3px;
+    }
  	
  }
   @media (max-width: 1024px) {
@@ -47429,8 +47446,16 @@ padding:0 40px;	}
 #OfferWrap {
     padding-bottom: 1px;
 }
+/* TPR-589
 #OfferWrap .Inner .right {
     padding: 30px 5px;
+    width: 100%;
+} */
+
+#OfferWrap .Inner .right {
+	margin-left: 5px;
+	margin-right: 5px;
+    padding: 30px 0;
     width: 100%;
 }
 #OfferWrap .Inner .Left + .right {
@@ -56533,4 +56558,52 @@ div.radio.creditDebitLabelRadio{
 }
 .acc_head.newAddressCenter{
 	text-align: center;
+}
+
+/* TPR-970 changes starts */
+  span.priceFormat.priceFormatOnUpdate{
+  	font-size: 12px;
+    color: #ff2c43;
+    margin-bottom: 6px;
+    display: inline-block;
+  }
+  span.priceFormat.priceFormatOnUpdate>span>span{
+  	margin-left: 5px;
+  }
+  .ItemAmtofferDisplayPrFm{
+  	margin-top: -2px;
+    display: inline-block;
+  }
+  span.delSeat{
+  	margin-bottom: 5px;
+    display: inline-block;
+  }
+  span.delSeat.delAction{
+  	text-decoration: line-through;
+    color: #b9b9b9;
+  }
+   li.totalValue{
+	   font-size: 28px;
+	   font-weight:bold;
+    padding: 20px 0px;
+    border-top: 1px solid #e8e8e8;
+    border-bottom: 1px solid #e8e8e8;
+}
+  
+/* TPR-970 changes ends */
+    
+/* For TPR-413 */
+#displayAll, #clickToMore{
+	color: #4a4a4a;
+    font-size: 11px;
+    margin: 5px 0;
+    font-weight: 400;
+    letter-spacing: -1px;
+        padding: 10px;
+        cursor:pointer;
+}
+
+ /*  TPR-589 */
+.show-offerdate{
+	text-align: left;
 }
