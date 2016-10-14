@@ -45682,9 +45682,15 @@ body.no-scroll {
     text-align: center;
 }  
 .luxury_ribbon{
-	height:36px;
+	max-height:36px;
 }
-.luxury_ribbon.picZoomer-pic{
-	height:36px !important;
-}
+.wishlist-content .products>ul>li div.product-info > a{
+	width:20%;
+	float:left;
+	}
+.wishlist-content .products>ul>li div.product-info > a img{
+	width:100%;
+	float:none;
+	}
+	
 /*--------------Added for luxury site ends-----------*/
