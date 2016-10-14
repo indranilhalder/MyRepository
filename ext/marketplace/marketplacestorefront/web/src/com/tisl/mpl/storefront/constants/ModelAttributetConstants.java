@@ -769,7 +769,8 @@ public final class ModelAttributetConstants
 	public static final String META_VARIABLE_FIVE = "{5}";
 	public static final String META_VARIABLE_SIX = "{6}";
 
-
+	//Add  for TPR-1996
+	public static final String DESC_PDP_PROPERTIES = "pdp.desc.tab.";
 
 	public static final String CATEGORY_PAGE_META_DESCRIPTION = "Buy {0} Online at best price in India. Shop from wide range of {1} online from popular brands and get 100% Genuine Products!";
 	public static final String CATEGORY_PAGE_META_KEYWORDS = "Buy {0}, buy {1} online, buy {2} online India, buy {3} online in India, {4} price";

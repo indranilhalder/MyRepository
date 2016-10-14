@@ -214,6 +214,37 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 						{
 							sizeGuideWsDataValue.setFootlength(sizeGuideValue.getDimension());
 						}
+						/**
+						 * Add for Accessories Belt Product START By SAP START::::
+						 */
+						if (productData.getRootCategory().equalsIgnoreCase(ACCESSORIES))
+						{
+							if (StringUtils.isNotEmpty(sizeGuideValue.getCmsBeltSize()))
+							{
+								sizeGuideWsDataValue.setCmsBeltSize(sizeGuideValue.getCmsBeltSize());
+							}
+							if (StringUtils.isNotEmpty(sizeGuideValue.getCmsWaistSize()))
+							{
+								sizeGuideWsDataValue.setCmsWaistSize(sizeGuideValue.getCmsWaistSize());
+							}
+							if (StringUtils.isNotEmpty(sizeGuideValue.getInchesBeltLength()))
+							{
+								sizeGuideWsDataValue.setInchesBeltLength(sizeGuideValue.getInchesBeltLength());
+							}
+							if (StringUtils.isNotEmpty(sizeGuideValue.getInchesBeltSize()))
+							{
+								sizeGuideWsDataValue.setInchesBeltSize(sizeGuideValue.getInchesBeltSize());
+							}
+							if (StringUtils.isNotEmpty(sizeGuideValue.getInchesWaistSize()))
+							{
+								sizeGuideWsDataValue.setInchesWaistSize(sizeGuideValue.getInchesWaistSize());
+							}
+						}
+
+
+						/**
+						 * Add for Accessories Belt Product START By SAP END::::
+						 */
 						//single image is needed to show per product
 						ImageURL = sizeGuideValue.getImageURL();
 						sizeGuideDataValueList.add(sizeGuideWsDataValue);
@@ -316,7 +347,7 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.product.SizeGuideFacade#getWSProductSizeguide(java.lang.String)
 	 */
 

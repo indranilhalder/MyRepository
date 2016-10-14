@@ -1139,7 +1139,10 @@ public class ProductPageController extends AbstractPageController
 				final PcmProductVariantModel variantProductModel = (PcmProductVariantModel) productModel;
 				model.addAttribute("productSize", variantProductModel.getSize());
 			}
-
+			//Fix  TISUATMS-831 from SAP 
+			showSizeGuideForFA(productModel,model);
+			
+			//Fix  TISUATMS-831 from SAP end
 			if (CollectionUtils.isNotEmpty(productData.getAllVariantsId()))
 			{
 				//get left over variants
@@ -1271,50 +1274,14 @@ public class ProductPageController extends AbstractPageController
 			model.addAttribute(PRODUCT_SIZE_TYPE, productDetailsHelper.getSizeType(productModel));
 			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
 			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
-			boolean showSizeGuideForFA = true;
+			
 			//AKAMAI fix
 			if (productModel instanceof PcmProductVariantModel)
 			{
 				final PcmProductVariantModel variantProductModel = (PcmProductVariantModel) productModel;
-				/**
-				 * Add Filter for FA START :::::
-				 */
-				
-				if (ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(variantProductModel.getProductCategoryType()))
-				{
-					final Collection<CategoryModel> superCategories = variantProductModel.getSupercategories();
-					final String configurationFA = configurationService.getConfiguration().getString(
-							"accessories.sideguide.category.showlist");
-					final String[] configurationFAs = configurationFA.split(",");
-					for (final CategoryModel supercategory : superCategories)
-					{
-						if (supercategory.getCode().startsWith("MPH"))
-						{
-							int num=0;
-							for (final String fashow : configurationFAs)
-							{
-								if (!supercategory.getCode().startsWith(fashow))
-								{
-									num++;
-									if(num==configurationFAs.length){
-										showSizeGuideForFA=false;
-										break;
-									}
-								}
-							}
-
-							break;
-						}
-					}
-
-
-				}
-				model.addAttribute("showSizeGuideForFA", showSizeGuideForFA);
-				/**
-				 * Add Filter for FA END :::::
-				 */
 				model.addAttribute("productSizeQuick", variantProductModel.getSize());
 			}
+			showSizeGuideForFA(productModel,model);
 			if (CollectionUtils.isNotEmpty(productData.getAllVariantsId()))
 			{
 				//get left over variants
@@ -1723,6 +1690,8 @@ public class ProductPageController extends AbstractPageController
 						{
 							final String properitsValue = configurationService.getConfiguration().getString(
 									ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
+							final String descValues=configurationService.getConfiguration().getString(
+									ModelAttributetConstants.DESC_PDP_PROPERTIES + productData.getRootCategory());
 							//apparel
 							final FeatureValueData featureValueData = featureValueList.get(0);
 							if ((ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory()))
@@ -1762,6 +1731,18 @@ public class ProductPageController extends AbstractPageController
 										}
 									}
 								}
+								if(descValues!=null && StringUtils.isNotBlank(descValues)){
+									String[] descValue=descValues.split(",");
+									if(descValue!=null && descValue.length>0){
+										for(String value: descValue){
+											if(value.equalsIgnoreCase(featureData.getName())){
+												mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
+											}
+										}
+									}
+									
+								}
+								
 								if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.WARRANTY.toLowerCase()))
 								{
 									warrentyList.add(featureValueData.getValue());
@@ -1788,10 +1769,14 @@ public class ProductPageController extends AbstractPageController
 			}
 			//model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE, mapConfigurableAttribute);
 			if (ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory())
-					|| ModelAttributetConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory())
-					|| ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productData.getRootCategory()) || ModelAttributetConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory()))
+					|| ModelAttributetConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory()))
 			{
 				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTES, mapConfigurableAttributes);
+				
+			}else if(ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productData.getRootCategory()) || ModelAttributetConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory())){
+				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTES, mapConfigurableAttributes);
+				final Map<String, String> treeMapConfigurableAttribute = new TreeMap<String, String>(mapConfigurableAttribute);
+				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE, treeMapConfigurableAttribute);
 			}
 			else
 			{
@@ -2431,5 +2416,51 @@ public class ProductPageController extends AbstractPageController
 
 		return existUssid;
 
+	}
+	/**
+	 * This is used to verify the configured MPH category product can get SizeGuide & choose size
+	 * @param productModel
+	 */
+	
+	public void showSizeGuideForFA(ProductModel productModel,final Model model){
+		boolean showSizeGuideForFA = true;
+		//AKAMAI fix
+		if (productModel instanceof PcmProductVariantModel)
+		{
+			final PcmProductVariantModel variantProductModel = (PcmProductVariantModel) productModel;
+		
+			
+			if (ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(variantProductModel.getProductCategoryType()))
+			{
+				final Collection<CategoryModel> superCategories = variantProductModel.getSupercategories();
+				final String configurationFA = configurationService.getConfiguration().getString(
+						"accessories.sideguide.category.showlist");
+				final String[] configurationFAs = configurationFA.split(",");
+				for (final CategoryModel supercategory : superCategories)
+				{
+					if (supercategory.getCode().startsWith("MPH"))
+					{
+						int num=0;
+						for (final String fashow : configurationFAs)
+						{
+							if (!supercategory.getCode().startsWith(fashow))
+							{
+								num++;
+								if(num==configurationFAs.length){
+									showSizeGuideForFA=false;
+									break;
+								}
+							}
+						}
+
+						break;
+					}
+				}
+
+
+			}
+			model.addAttribute("showSizeGuideForFA", showSizeGuideForFA);
+
+		}
 	}
 }

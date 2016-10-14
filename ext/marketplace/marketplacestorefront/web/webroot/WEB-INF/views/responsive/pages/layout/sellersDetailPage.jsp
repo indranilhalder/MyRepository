@@ -587,7 +587,9 @@ var allSellers='${allsellers}';
 	      <p>Delivery Information </p>
 	      <p>Buying Option </p>
 	    </div>
-	    <ul class="InfoWrap" id="sellerDetailTbdy"></ul>
+	    <ul class="InfoWrap" id="sellerDetailTbdy">
+	    	<input type="hidden" id="showSize" name="showSize" value="${showSizeGuideForFA}" />
+	    </ul>
 		<%--  <table id ="sellerTable" class="other-sellers-table">
 			<thead>
 				<tr >
