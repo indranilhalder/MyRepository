@@ -26,6 +26,8 @@
 <spring:url value="/my-account/friendsInvite" var="friendsInviteUrl" />
 <spring:url value="/my-account/order/" var="orderDetailsUrl" />
 
+<!-- LW-230 -->
+<input type="hidden" id="isLuxury" value="${isLuxury}"/>
 
 <template:page pageTitle="${pageTitle}">
 	<div class="account">

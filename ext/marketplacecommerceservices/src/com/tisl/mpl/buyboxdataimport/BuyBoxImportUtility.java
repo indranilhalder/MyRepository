@@ -6,6 +6,7 @@ package com.tisl.mpl.buyboxdataimport;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.jdbcwrapper.HybrisDataSource;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.util.CSVWriter;
 import de.hybris.platform.virtualjdbc.db.VjdbcDataSourceImplFactory;
 
@@ -26,12 +27,16 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
-//import javax.sql.DataSource;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+
+
+//import javax.sql.DataSource;
 
 
 /**
@@ -47,20 +52,22 @@ public class BuyBoxImportUtility
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
 
+	@Resource
+	private ModelService modelService;
 
 	//@Resource
 	//private DataSource buyBoxDataSource;
-	
+
 	Connection vjdbcConnection = null;
 	Connection connection = null;
-	Statement vjdbcStmt = null;
+	Statement vjdbcStmt = null;  
 	PreparedStatement pst = null;
 
 	public static final String COMMA = ",";
 
 	public void executeExtraction()
 	{
-		HybrisDataSource currentDataSource = null;
+		 HybrisDataSource currentDataSource = null;
 		final String productExportQuery = getDataExportQuery();
 		LOG.debug("Buybox Export query :" + productExportQuery);
 		Connection vjdbcConnection = null;
@@ -74,7 +81,7 @@ public class BuyBoxImportUtility
 			//Please Comment the above two lines in case of local and uncomment the below line
 			//vjdbcConnection = buyBoxDataSource.getConnection();
 			pst = vjdbcConnection.prepareStatement(productExportQuery);
-			
+
 			//set last Run time from MplConfig Table
 			pst.setTimestamp(1, getLastRunTime());
 
@@ -150,7 +157,7 @@ public class BuyBoxImportUtility
 			// getting database connection from vjdbc
 			currentDataSource = Registry.getCurrentTenantNoFallback().getDataSource(VjdbcDataSourceImplFactory.class.getName());
 			vjdbcConnection = currentDataSource.getConnection();
-			
+
 			vjdbcStmt = vjdbcConnection.createStatement();
 			//Fetching Result
 
@@ -168,7 +175,7 @@ public class BuyBoxImportUtility
 
 		catch (final Exception e)
 		{
-			LOG.warn("Error occurred while getting data from database in Data Analytics export job" + e.getMessage());
+			LOG.warn("Error occurred while fetching Last Run Time" + e.getMessage());
 			e.printStackTrace();
 		}
 		finally
@@ -191,7 +198,7 @@ public class BuyBoxImportUtility
 			}
 			catch (final Exception e)
 			{
-				LOG.warn("Error occurred while closing the database connection in IA Feed export job" + e.getMessage());
+				LOG.warn("Error occurred while fetching Last Run Time" + e.getMessage());
 			}
 		}
 
@@ -220,11 +227,13 @@ public class BuyBoxImportUtility
 	{
 
 
+		String tempexportFileName = null;
 		String exportFileName = null;
 		final Date date = new Date();
 		//	final SimpleDateFormat ft = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_S");
 		final SimpleDateFormat ft = new SimpleDateFormat("-yyMMddHHmmssSSS");
 
+		//D:\\hot-folder\\master\\marketplace-buybox
 		final String exportFilePath = configurationService.getConfiguration().getString(
 				MarketplacecommerceservicesConstants.BUYBOX + MarketplacecommerceservicesConstants.HOTFOLDERLOCATION)
 				+ MarketplacecommerceservicesConstants.FRONTSLASH;
@@ -234,16 +243,29 @@ public class BuyBoxImportUtility
 		{
 			exportDir.mkdir();
 		}
-		exportFileName = exportFilePath
-
-				+ configurationService.getConfiguration().getString(
-						MarketplacecommerceservicesConstants.BUYBOX + MarketplacecommerceservicesConstants.BUYBOX_FILE_NAME)
+		
+		//Check if Folder Exist
+		File newTempFolder=new File(exportFilePath+ configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.BUYBOX + MarketplacecommerceservicesConstants.BUYBOX_FILE_NAME_TEMP));
+		isFolderExist(newTempFolder);
+		
+		//Changes for file Renaming
+		try
+		{
+		tempexportFileName = newTempFolder.getCanonicalPath()+MarketplacecommerceservicesConstants.FRONTSLASH +configurationService.getConfiguration().getString(
+								MarketplacecommerceservicesConstants.BUYBOX+MarketplacecommerceservicesConstants.BUYBOX_FILE_NAME)+MarketplacecommerceservicesConstants.HYPHEN
 				+ ft.format(date) + MarketplacecommerceservicesConstants.DOT
 				+ MarketplacecommerceservicesConstants.BUYBOX_FILE_EXTENSION;
-
-		if (StringUtils.isNotEmpty(exportFileName))
+		}
+		catch (final IOException e)
 		{
-			final File exportFile = new File(exportFileName);
+			LOG.error("error occurred while creating the export file" + e.getMessage());
+		}
+
+
+		if (StringUtils.isNotEmpty(tempexportFileName))
+		{
+			final File exportFile = new File(tempexportFileName);
 			if (!exportFile.exists())
 			{
 				try
@@ -264,17 +286,27 @@ public class BuyBoxImportUtility
 				DataImpexScriptWriter.setCommentchar('#');
 				DataImpexScriptWriter.setLinebreak("\r\n");
 
-
-				if (listOfMaps != null && listOfMaps.size() > 0)
+				//DataImpexScriptWriter
+				//	.writeSrcLine("INSERT_UPDATE BuyBox;product;price;mrp;sellerArticleSKU[unique=true];specialPrice;available;weightage;sellerId;sellerName;sellerType;delisted;sellerStartDate[dateformat=yyyyMMddHHmmss];sellerEndDate[dateformat=yyyyMMddHHmmss]");
+				if (CollectionUtils.isNotEmpty(listOfMaps))
 				{
 					for (final Map<Integer, String> dataMap : listOfMaps)
 					{
-
 						DataImpexScriptWriter.write(dataMap);
 					}
-					DataImpexScriptWriter.close();
 
 				}
+				//Closing the DataImpexScriptWriter
+				DataImpexScriptWriter.closeQuietly();
+
+				//Changes for file Renaming Start
+				final File oldfile = new File(tempexportFileName);
+				final File newfile = new File(exportFilePath);
+
+
+				FileUtils.moveFileToDirectory(oldfile, newfile, true);
+
+				//Changes for file Renaming End
 			}
 
 			catch (UnsupportedEncodingException | FileNotFoundException e)
@@ -288,7 +320,21 @@ public class BuyBoxImportUtility
 
 		}
 	}
-
+	
+	/**
+	 	 * // * @Description : Generate Folder if not present // * @param file //
+	 	 */
+	 	private void isFolderExist(final File file)
+	 	{
+	 		if (null != file)
+	 		{
+	 		if (!file.exists())
+	 			{
+	 				file.mkdir();
+	 				LOG.debug("Generated Folder:" + file.getName());
+	 			}
+	 		}
+	 	}
 
 
 

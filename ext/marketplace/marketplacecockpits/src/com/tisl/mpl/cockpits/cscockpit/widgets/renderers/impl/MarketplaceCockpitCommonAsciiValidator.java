@@ -1,10 +1,10 @@
-package com.tisl.mpl.storefront.businessvalidator;
+package com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl;
 
 /**
  * @author TCS
  *
  */
-public class CommonAsciiValidator
+public class MarketplaceCockpitCommonAsciiValidator
 {
 	//	ASCII Code		Characters
 

@@ -470,6 +470,10 @@ var allSellers='${allsellers}';
 				value="${emiCuttOffAmount}" />
 			<!-- EMI section -->
 			<product:emiDetail product="${product}" />
+			<!-- TISPRD-5467 starts  -->
+			<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('freebiePriceThreshold')" var="freebiePriceThreshVal"/>
+			<input type="hidden" id="freebiePriceThreshId" value="${freebiePriceThreshVal}">
+			<!-- TISPRD-5467 end  -->
 			<product:productMainVariant />
 			<cms:pageSlot position="AddToCart" var="component">
 				<cms:component component="${component}" />
