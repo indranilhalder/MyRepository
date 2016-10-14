@@ -4499,6 +4499,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final List<ProductData> datas = new ArrayList<ProductData>();
 			final List<WishlistProductData> wpDataList = new ArrayList<WishlistProductData>();
 			Boolean isDelisted = Boolean.FALSE;
+			boolean luxProduct = false;
 			if (null != particularWishlist && null != particularWishlist.getEntries() && !particularWishlist.getEntries().isEmpty())
 			{
 				final List<Wishlist2EntryModel> entryModels = particularWishlist.getEntries();
@@ -4526,6 +4527,14 @@ public class AccountPageController extends AbstractMplSearchPageController
 								}
 							}
 						}
+						// LW-225,230 start
+						if (productModel.getLuxIndicator() != null
+								&& productModel.getLuxIndicator().getCode()
+										.equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
+						{
+							luxProduct = true; //Setting true if at least one luxury product found
+						}
+						// LW-225,230 end
 					}
 
 					final boolean isWishlistEntryValid = mplCartFacade.isWishlistEntryValid(entry);
@@ -4536,6 +4545,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 					}
 
 				}
+				// LW-225,230
+				model.addAttribute(ModelAttributetConstants.IS_LUXURY, luxProduct);
 
 				//refreshing Wishlist2Model
 				modelService.refresh(particularWishlist);
@@ -4621,6 +4632,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 					}
 				}
+			}
+			else
+			{
+				model.addAttribute(ModelAttributetConstants.IS_LUXURY, ControllerConstants.Views.Fragments.Account.EMPTY_WISHLIST);
 			}
 			sessionService.setAttribute(ModelAttributetConstants.MY_WISHLIST_FLAG, ModelAttributetConstants.Y_CAPS_VAL);
 
