@@ -47,14 +47,14 @@
 	<div class="row header-row"></div>
 	<c:choose>
 		<c:when test="${empty showOnlySiteLogo }">
-			<div class="banner">
-			<div class="content" id="latestOffersContent"></div>
+			<%--<div class="banner">
+			 <div class="content" id="latestOffersContent"></div>
 				<span class="toggle desktop helpmeshopbanner latestOffersBanner"><p>${headerConciergeTitle}</p></span> 
 				
-				<%-- <cms:pageSlot position="HeaderLinks" var="link">
-					<cms:component component="${link}" element="" />
-				</cms:pageSlot> --%>
-			</div>
+				<!-- <cms:pageSlot position="HeaderLinks" var="link"> -->
+					<!--	<cms:component component="${link}" element="" />-->
+				<!--	</cms:pageSlot> -->
+			</div> --%>
 		</c:when>
 		<c:otherwise>
 			<c:if test="${empty hideSecureTransaction}">

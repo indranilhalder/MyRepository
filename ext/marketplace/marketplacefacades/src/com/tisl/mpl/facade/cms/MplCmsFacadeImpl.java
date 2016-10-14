@@ -907,7 +907,12 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 			}
 			//shopByListComponentDtoList.add(shopByList);
 		}
-		luxComponent.setTitle("Shop by");
+		/*
+		 * luxComponent.setTitle("Shop by");
+		 */if (null != luxuryShopByComponent.getTitle())
+		{
+			luxComponent.setTitle(luxuryShopByComponent.getTitle());
+		}
 		luxComponent.setShopbycomponents(shopByListComponentDtoList);
 		return luxComponent;
 	}

@@ -397,6 +397,14 @@ addToBagFromWl: function(ussid, addedToCart) {
 
 
 sendAddToBag : function(formId, isBuyNow) {
+	
+	 //For TISPRD-4631
+	$('.js-add-to-cart').attr("disabled", "disabled");
+	
+	var staticHost=$('#staticHost').val();
+	$("body").append("<div id='bag-clickSpin' style='opacity:0.15; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="bagspinner" style="position: fixed; left: 45%;top:45%; height: 30px;">'); 
+	
 	var input_name = "qty";
 	var stock_id = "stock";
 	var ussid="ussid";
@@ -432,6 +440,7 @@ sendAddToBag : function(formId, isBuyNow) {
 						$('#ajax-loader').show();
 					},
 					success : function(data) {
+						$('.js-add-to-cart').removeAttr("disabled");//For TISPRD-4631
 						if (data.indexOf("cnt:") >= 0) {
 							(isBuyNow == true) ? isSuccess = true
 									: isSuccess = false;
@@ -539,12 +548,18 @@ sendAddToBag : function(formId, isBuyNow) {
 									+ "/cart";
 							location.href = cartUrl;
 						}
+						
+						$("#bag-clickSpin,.bagspinner").remove();			
 					},
 					complete : function() {
 						$('#ajax-loader').hide();
 						forceUpdateHeader();
+						$("#bag-clickSpin,.bagspinner").remove();
+						$('.js-add-to-cart').removeAttr("disabled");//For TISPRD-4631
 					},
 					error : function(resp) {
+						$("#bag-clickSpin,.bagspinner").remove();
+						$('.js-add-to-cart').removeAttr("disabled");//For TISPRD-4631
 						// alert("Add to Bag unsuccessful");
 					}
 				});
@@ -1206,7 +1221,7 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 						
 						// generating postAjaxURL
 						var browserURL = window.location.href.split('?');
-						var pageURL = browserURL[0]+'?'+nonEmptyDataString.replace(/:/g,"%3A");
+						var pageURL = browserURL[0]+'?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
 						
 						
 						// generating request mapping URL

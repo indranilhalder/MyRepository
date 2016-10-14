@@ -61,15 +61,13 @@ if(loginStatus){
 		<script type="text/javascript" src="http://luxury.ia.tatacliq.com/header-widget.js"></script>
 	</c:if>
 
-<c:if test="${(param.isLux ne null and param.isLux eq true) and (not empty isLuxury and isLuxury != 'false') }">
+<c:if test="${(param.isLux ne null and param.isLux eq true) and ((not empty isLuxury and isLuxury != 'false') or (empty isLuxury))}">
 	<script type="text/javascript" src="http://luxury.ia.tatacliq.com/header-widget.js"></script>
 </c:if>
 <c:if test="${not empty isLuxury and isLuxury == 'true'}">
 	<script type="text/javascript" src="http://luxury.ia.tatacliq.com/header-widget.js"></script>
 </c:if>
-<%-- <c:if test="${isLuxury ne 'false'}">
-	<script type="text/javascript" src="http://luxury.ia.tatacliq.com/header-widget.js"></script>
-</c:if> --%>
+
 
 <!-- LW-230 End -->
 <c:choose>

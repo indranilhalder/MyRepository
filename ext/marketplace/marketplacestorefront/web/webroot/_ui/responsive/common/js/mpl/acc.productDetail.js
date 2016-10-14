@@ -619,7 +619,8 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 	var dataString = 'wish=' + wishName + '&product=' + productCodePost
 			+ '&ussid=' + ussidValue+'&sizeSelected=' + sizeSelected;
 
-	if(loggedIn == 'false') {
+//	if(loggedIn == 'false') {
+	if(!headerLoggedinStatus) {
 		$(".wishAddLogin").addClass("active");
 		setTimeout(function(){
 			$(".wishAddLogin").removeClass("active")

@@ -15,8 +15,9 @@ $(document).ready(function () {
 	var pageLabel = '${cmsPage.label}';
 		var siteName = '${cmsSite.uid}';
 	var lastSegment = pageLabel.split('/').pop();
+		
 	    var url='/m/fetchSellerSalesHierarchyCategories/'+lastSegment;
-	        
+	      if(lastSegment != ''){  
 	        $.ajax({
 	        	type: 'GET',
 	        	url: url,
@@ -66,6 +67,7 @@ $(document).ready(function () {
 				 }
 			 
 			 });
+	      }
 	        
 	       /*  $("#shopMicrositeSeller").on("click",".toggle", function(e){
 	        	  var p = $(e.currentTarget).parent();
