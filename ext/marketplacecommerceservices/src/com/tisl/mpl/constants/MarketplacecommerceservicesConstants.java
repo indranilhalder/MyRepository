@@ -849,6 +849,13 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9103 = "B9103";
 
 	public static final String B9320 = "B9320";
+
+	// Auto populating pincode details Error Codes   Start
+	public static final String B9351 = "B9351";
+	public static final String B9352 = "B9352";
+	// Auto popuklating pincode details Error Codes End
+
+
 	//Mobile web service error codes ends
 
 	//Payment Error Codes
