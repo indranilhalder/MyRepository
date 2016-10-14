@@ -60,7 +60,8 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;LuxuryNavigationBar;;NavigationBarCollectionComponent;
 ;BottomHeaderSlot;;SimpleBannerComponent;
 ;Section1;;RotatingImagesComponent;
-;Section2;;RotatingImagesComponent,MplAdvancedCategoryCarouselComponent;
+;Section2;;RotatingImagesComponent;
+;Section2.1;;MplAdvancedCategoryCarouselComponent;
 ;Section3;;OurJourneyComponent;
 ;Section4;;OurJourneyComponent;
 ;Section5;;VideoComponent;
@@ -140,7 +141,17 @@ INSERT_UPDATE BannerComponent;$contentCV[unique=true];uid[unique=true];name;&com
 INSERT_UPDATE RotatingImagesComponent;$contentCV[unique=true];uid[unique=true];name;banners(&componentRef);&componentRef;
 ;;luxuryBLPForHimHerBannerComponent;Luxury BLP Him Her Banner Component;luxBLPForHimBannerComponent,luxBLPForHerBannerComponent;luxuryBLPForHimHerBannerComponent;
 
+### Content Slot
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+;;Section2-luxurybrandlandingpage;true;Him Her Slot;luxuryBLPForHimHerBannerComponent
 
+## Content Slot for page
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxurybrandlandingpage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section2-luxurybrandlandingpage;Section2;;Section2-luxurybrandlandingpage;;;
+
+################################### Section 2 End ############################################
+
+################################### Section 2.1 Gender Category Section ############################################
 ##### For category Section
 
 
@@ -157,13 +168,13 @@ INSERT_UPDATE MplAdvancedCategoryCarouselComponent;$contentCV[unique=true];uid[u
 
 ### Content Slot
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
-;;Section2-luxurybrandlandingpage;true;Him Her Slot;luxuryBLPForHimHerBannerComponent,categoriesAdvancedComponent
+;;Section2.1-luxurybrandlandingpage;true;Gender Category Slot;categoriesAdvancedComponent
 
 ## Content Slot for page
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxurybrandlandingpage'];contentSlot(uid,$contentCV)[unique=true];;;
-;;Section2-luxurybrandlandingpage;Section2;;Section2-luxurybrandlandingpage;;;
+;;Section2.1-luxurybrandlandingpage;Section2.1;;Section2.1-luxurybrandlandingpage;;;
 
-################################### Section 2 End ############################################
+################################### Section 2.1 End ############################################
 
 ##############################Section 3  Start ##########################################
 
