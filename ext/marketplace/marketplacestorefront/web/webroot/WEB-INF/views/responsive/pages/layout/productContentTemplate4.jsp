@@ -8,7 +8,7 @@
     <div class="DLeft TLeft"> 
     		<cms:pageSlot position="Section1A" var="feature">
 				<img src="${feature.urlLink }"/>
-				<cms:component component="${feature}" element="div" class="" />
+				<%-- <cms:component component="${feature}" element="div" class="" /> --%>
 			</cms:pageSlot>
       <div>
         <cms:pageSlot position="Section1B" var="feature">
@@ -19,7 +19,7 @@
     <div class="DLeft TRight">
     	<cms:pageSlot position="Section1C" var="feature">
 			<img src="${feature.urlLink }"/>
-			<cms:component component="${feature}" element="div" class="" />
+			<%-- <cms:component component="${feature}" element="div" class="" /> --%>
 		</cms:pageSlot>
       <div>
         <cms:pageSlot position="Section1D" var="feature">
@@ -31,34 +31,34 @@
     <div class="LImage">
     	<cms:pageSlot position="Section2A" var="feature">
 			<img src="${feature.urlLink }"/>
-			<cms:component component="${feature}" element="div" class="" />
+			<%-- <cms:component component="${feature}" element="div" class="" /> --%>
 		</cms:pageSlot>
     </div>
     <div class="RImage">
     	<cms:pageSlot position="Section2B" var="feature">
 			<img src="${feature.urlLink }"/>
-			<cms:component component="${feature}" element="div" class="" />
+			<%-- <cms:component component="${feature}" element="div" class="" /> --%>
 		</cms:pageSlot>
     </div>
    </div>
     <div class="DRight TLeft">
-    	<cms:pageSlot position="Section3A" var="feature">
+    	<cms:pageSlot position="Section3B" var="feature">
 			<img src="${feature.urlLink }"/>
-			<cms:component component="${feature}" element="div" class="" />
+			<%-- <cms:component component="${feature}" element="div" class="" /> --%>
 		</cms:pageSlot>
       <div>
-        <cms:pageSlot position="Section3B" var="feature">
+        <cms:pageSlot position="Section3A" var="feature">
 			<cms:component component="${feature}" element="div" class="" />
 		</cms:pageSlot>
       </div>
     </div>
     <div class="DRight TRight">
-    	<cms:pageSlot position="Section3C" var="feature">
+    	<cms:pageSlot position="Section3D" var="feature">
 			<img src="${feature.urlLink }"/>
-			<cms:component component="${feature}" element="div" class="" />
+			<%-- <cms:component component="${feature}" element="div" class="" /> --%>
 		</cms:pageSlot>
       <div>
-        <cms:pageSlot position="Section3D" var="feature">
+        <cms:pageSlot position="Section3C" var="feature">
 			<cms:component component="${feature}" element="div" class="" />
 		</cms:pageSlot>
       </div>
