@@ -45681,4 +45681,16 @@ body.no-scroll {
     line-height: 15px;
     text-align: center;
 }  
+.luxury_ribbon{
+	max-height:36px;
+}
+.wishlist-content .products>ul>li div.product-info > a{
+	width:20%;
+	float:left;
+	}
+.wishlist-content .products>ul>li div.product-info > a img{
+	width:100%;
+	float:none;
+	}
+	
 /*--------------Added for luxury site ends-----------*/

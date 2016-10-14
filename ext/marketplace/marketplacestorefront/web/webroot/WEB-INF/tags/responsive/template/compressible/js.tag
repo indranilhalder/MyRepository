@@ -53,6 +53,14 @@ if(loginStatus){
 <script type="text/javascript"
 	src="${commonResourcePath}/bootstrap/dist/js/bootstrap.min.js"></script>
 <!-- LW-230 Start -->
+
+<c:if test="${param.isLux ne null and isLuxury != 'false'}">
+	<script type="text/javascript" src="http://luxury.ia.tatacliq.com/header-widget.js"></script>
+</c:if>
+<c:if test="${param.isLux ne null and param.isLux eq true }">
+		<script type="text/javascript" src="http://luxury.ia.tatacliq.com/header-widget.js"></script>
+	</c:if>
+
 <c:if test="${(param.isLux ne null and param.isLux eq true) and (not empty isLuxury and isLuxury != 'false') }">
 	<script type="text/javascript" src="http://luxury.ia.tatacliq.com/header-widget.js"></script>
 </c:if>
@@ -62,6 +70,7 @@ if(loginStatus){
 <%-- <c:if test="${isLuxury ne 'false'}">
 	<script type="text/javascript" src="http://luxury.ia.tatacliq.com/header-widget.js"></script>
 </c:if> --%>
+>>>>>>> refs/remotes/origin/LUXURY_SPRINT1
 <!-- LW-230 End -->
 <c:choose>
 	<c:when test="${isMinificationEnabled}">
