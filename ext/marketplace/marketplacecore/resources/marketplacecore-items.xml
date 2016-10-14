@@ -762,6 +762,8 @@
 		<!-- For Luxury Products -->
 
         <enumtype code="luxIndicatorEnum" autocreate="true" generate="true" dynamic="true">
+            <value code="marketplace" />
+			<value code="luxury" />
 		</enumtype>
 
 	</enumtypes>

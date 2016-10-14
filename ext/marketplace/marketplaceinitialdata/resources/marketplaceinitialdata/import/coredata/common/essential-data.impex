@@ -585,4 +585,8 @@ INSERT_UPDATE MplConfiguration;mplConfigCode[unique=true];mplConfigVal;mplConfig
 INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
 ;campaignPromoDataCronJob;0 0 18 * * ?
 
+INSERT_UPDATE luxIndicatorEnum;code[unique=true];name[lang=en]
+;marketplace;Marketplace
+;luxury;Luxury;
+
 

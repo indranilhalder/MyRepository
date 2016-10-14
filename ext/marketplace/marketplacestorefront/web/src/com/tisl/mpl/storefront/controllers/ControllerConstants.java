@@ -216,6 +216,7 @@ public interface ControllerConstants
 			{
 				String CartPage = "pages/cart/cartPage";
 				String LUX_INDICATOR = "luxury";
+				String EMPTY_CART = "emptyCart";
 			}
 
 			interface StoreFinder
