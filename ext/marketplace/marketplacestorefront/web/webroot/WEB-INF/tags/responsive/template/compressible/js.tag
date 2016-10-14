@@ -70,7 +70,7 @@ if(loginStatus){
 <%-- <c:if test="${isLuxury ne 'false'}">
 	<script type="text/javascript" src="http://luxury.ia.tatacliq.com/header-widget.js"></script>
 </c:if> --%>
->>>>>>> refs/remotes/origin/LUXURY_SPRINT1
+
 <!-- LW-230 End -->
 <c:choose>
 	<c:when test="${isMinificationEnabled}">
