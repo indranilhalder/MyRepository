@@ -51,6 +51,7 @@ import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
 import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
 import de.hybris.platform.converters.Populator;
+import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.i18n.I18NService;
 import de.hybris.platform.util.localization.Localization;
 
@@ -112,6 +113,7 @@ import com.tisl.mpl.utility.SearchSuggestUtilityMethods;
 import com.tisl.mpl.v2.helper.ProductsHelper;
 import com.tisl.mpl.validator.PointOfServiceValidator;
 import com.tisl.mpl.wsdto.DepartmentHierarchyWs;
+import com.tisl.mpl.wsdto.ProductAPlusWsData;
 import com.tisl.mpl.wsdto.ProductCompareWsDTO;
 import com.tisl.mpl.wsdto.ProductDetailMobileWsData;
 import com.tisl.mpl.wsdto.ProductSearchPageWsDto;
@@ -138,6 +140,8 @@ public class ProductsController extends BaseController
 	private static final Logger LOG = Logger.getLogger(ProductsController.class);
 	private static final String DROPDOWN_BRAND = "MBH";
 	private static final String DROPDOWN_CATEGORY = "MSH";
+
+	private static final String PRODUCT_OLD_URL_PATTERN = "/**/p";
 
 	private static String PRODUCT_OPTIONS = "";
 	@Resource(name = "storeFinderStockFacade")
@@ -184,6 +188,9 @@ public class ProductsController extends BaseController
 	private DefaultMplProductSearchFacade searchFacade;
 	@Resource
 	private SearchSuggestUtilityMethods searchSuggestUtilityMethods;
+	@Resource(name = "productService")
+	private ProductService productService;
+
 	//	@Autowired
 	//	private ConfigurationService configurationService;
 
@@ -312,6 +319,9 @@ public class ProductsController extends BaseController
 				}
 			}
 			product = mplProductWebService.getProductdetailsForProductCode(productCode, baseUrl);
+			//TPR-978
+			final ProductAPlusWsData aPlusProductData = mplProductWebService.getAPluscontentForProductCode(productCode);
+			product.setAPlusContent(aPlusProductData);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -369,6 +379,12 @@ public class ProductsController extends BaseController
 		final StockWsDTO dto = dataMapper.map(stockData, StockWsDTO.class, fields);
 		return dto;
 	}
+
+
+
+
+
+
 
 	/**
 	 * Returns product's stock levels sorted by distance from specific location passed by free-text parameter or
@@ -1375,5 +1391,4 @@ public class ProductsController extends BaseController
 		}
 		return null;
 	}
-
 }

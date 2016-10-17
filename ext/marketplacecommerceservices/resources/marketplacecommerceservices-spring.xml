@@ -1800,5 +1800,24 @@
 		<property name="interceptor" ref="exSellerBulkLoadInterceptor" />
 		<property name="typeCode" value="EtailExcludeSellerSpecificRestriction" />
 	</bean>
+	
+	<!-- A+ Content TPR-978 -->
+	<bean id="businessContentImportJob" class="com.tisl.mpl.businesscontentimport.BusinessContentImportJob"
+		parent="abstractJobPerformable">
+			<property name="modelService" ref="modelService" />
+			</bean>
+			
+	<bean id="businessContentImportUtil" class="com.tisl.mpl.businesscontentimport.BusinessContentImportUtility" >
+	<property name="businessContentImportService" ref="businessContentImportService" />
+	</bean>
+
+	<bean id="businessContentImportService"
+		class="com.tisl.mpl.businesscontentimport.BusinessContentImportServiceImpl">
+		<property name="modelService" ref="modelService" />
+		<property name="businessContentImportDao" ref="businessContentImportDao" />
+		</bean>
+		 
+	<bean id="businessContentImportDao" class="com.tisl.mpl.businesscontentimport.BulkContentCreationDaoImpl" >
+		</bean>
 </beans>
 

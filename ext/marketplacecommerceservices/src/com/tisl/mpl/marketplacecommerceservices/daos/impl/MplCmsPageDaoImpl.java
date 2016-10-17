@@ -3,20 +3,29 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
+import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
 import de.hybris.platform.cms2.servicelayer.daos.impl.DefaultCMSPageDao;
+import de.hybris.platform.commerceservices.search.flexiblesearch.PagedFlexibleSearchService;
+import de.hybris.platform.commerceservices.search.pagedata.PageableData;
+import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
+import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.CMSChannel;
@@ -131,7 +140,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplCmsPageDao#getHomePageForMobile()
 	 */
 	@Override
@@ -202,7 +211,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 		return null;
 	}
-	
+
 	@Override
 	public ContentPageModel getCollectionLandingPageForMobile(final CMSChannel cms, final MplShopByLookModel shopByLook)
 	{
@@ -291,5 +300,91 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 		}
 
 		return null;
+	}
+
+	@Resource
+	private PagedFlexibleSearchService pagedFlexibleSearchService;
+
+
+
+	/**
+	 * @return the pagedFlexibleSearchService
+	 */
+	public PagedFlexibleSearchService getPagedFlexibleSearchService()
+	{
+		return pagedFlexibleSearchService;
+	}
+
+	/**
+	 * @param pagedFlexibleSearchService
+	 *           the pagedFlexibleSearchService to set
+	 */
+	public void setPagedFlexibleSearchService(final PagedFlexibleSearchService pagedFlexibleSearchService)
+	{
+		this.pagedFlexibleSearchService = pagedFlexibleSearchService;
+	}
+
+	@Autowired
+	private CatalogVersionService catalogversionservice;
+
+	@Autowired
+	private ConfigurationService configurationService;
+
+	@Override
+	public SearchPageData<ContentSlotForPageModel> getContentSlotsForAppById(final String pageUid, final PageableData pageableData)
+	{
+
+		final CatalogVersionModel catalogmodel = catalogversionservice.getCatalogVersion(configurationService.getConfiguration()
+				.getString("internal.campaign.catelog"),
+				configurationService.getConfiguration().getString("internal.campaign.catalogVersionName"));
+
+		final Map params = new HashMap();
+		params.put("uid", pageUid);
+		params.put("version", catalogmodel);
+
+		final String query = "Select {CSP.pk} From {ContentSlotForPage AS CSP JOIN ContentPage as CP ON {CSP.page}={CP.pk}} where {CP.uid} = ?uid and {CSP.catalogVersion}=?version";
+
+		return getPagedFlexibleSearchService().search(query, params, pageableData);
+
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplCmsPageDao#getContentPageForProduct(java.lang.String)
+	 */
+	@Override
+	public ContentPageModel getContentPageForProduct(final ProductModel product)
+	{
+
+		final StringBuilder queryString = getProductContentQuery();
+
+		queryString.append(" where ({cm.code} = ?channel or {cp.channel} is null)").append(
+				" and {cp.associatedProducts} like '%" + product.getPk().toString() + "%'");
+
+		System.out.println("Query:::::::::::::" + queryString.toString());
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString.toString());
+		//query.addQueryParameter("category", category);
+		query.addQueryParameter(MarketplacecommerceservicesConstants.CHANNEL, CMSChannel.DESKTOP.getCode());
+
+
+		final List<ContentPageModel> contentPages = flexibleSearchService.<ContentPageModel> search(query).getResult();
+		//if (contentPages != null && contentPages.size() > 0)
+		if (CollectionUtils.isNotEmpty(contentPages))
+		{
+			return contentPages.get(0);
+		}
+
+		return null;
+	}
+
+	public StringBuilder getProductContentQuery()
+	{
+		final StringBuilder queryString = new StringBuilder(SELECT_CLASS).append(ContentPageModel.PK).append(FROM_CLASS)
+				.append(ContentPageModel._TYPECODE).append(" as cp left join ").append(CMSChannel._TYPECODE)
+				.append(" as cm ON {cp.channel} = {cm.pk}} ");
+
+		return queryString;
 	}
 }

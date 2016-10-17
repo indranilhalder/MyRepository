@@ -7,11 +7,15 @@ import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
+import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.servicelayer.services.impl.DefaultCMSPageService;
+import de.hybris.platform.core.model.product.ProductModel;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Required;
 
@@ -56,7 +60,7 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService#getLandingPageForCategory(de.hybris.platform
 	 * .category.model.CategoryModel)
@@ -102,7 +106,7 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService#getHomePageForMobile()
 	 */
 	@Override
@@ -120,9 +124,10 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 		return mplCmsPageDao.getPageForAppById(pageUid);
 
 	}
+
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService#getLandingPageForCategory(de.hybris.platform
 	 * .category.model.CategoryModel)
@@ -196,7 +201,7 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService#getContentSlotByUidForPage(java.lang.String,
 	 * java.lang.String, java.lang.String)
@@ -208,6 +213,23 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 		return contentSlot;
 	}
 
+	@Override
+	public ContentPageModel getContentPageForProduct(final ProductModel product) throws CMSItemNotFoundException
+	{
+		final ContentPageModel contentPage = mplCmsPageDao.getContentPageForProduct(product);
+		return contentPage;
+	}
 
+	@Override
+	public AbstractPageModel getPageForIdandCatalogVersion(final String id, final CatalogVersionModel cv)
+			throws CMSItemNotFoundException
+	{
+		final List pages = this.cmsPageDao.findPagesById(id, Collections.singletonList(cv));
+		if (pages.isEmpty())
+		{
+			throw new CMSItemNotFoundException("No page with id [" + id + "] found.");
+		}
+		return ((AbstractPageModel) pages.iterator().next());
+	}
 
 }

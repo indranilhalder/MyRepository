@@ -7,8 +7,10 @@ import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
+import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSPageService;
+import de.hybris.platform.core.model.product.ProductModel;
 
 import java.util.Collection;
 
@@ -37,16 +39,21 @@ public interface MplCmsPageService extends CMSPageService
 	Collection<ContentPageModel> getAllContentPages(final Collection<CatalogVersionModel> catalogmodel);
 
 	ContentSlotModel getContentSlotByUidForPage(final String pageId, final String contentSlotId, final String catalogVersion);
+
 	/**
 	 * @param pageUid
 	 * @return
 	 */
 	ContentPageModel getHomePageForMobile(String pageUid);
-	
+
 	/**
 	 * @param pageUid
 	 * @return ContentPageModel
 	 */
 	ContentPageModel getPageForAppById(String pageUid);
-}
 
+	ContentPageModel getContentPageForProduct(ProductModel product) throws CMSItemNotFoundException;
+
+	public AbstractPageModel getPageForIdandCatalogVersion(final String id, final CatalogVersionModel cv)
+			throws CMSItemNotFoundException;
+}

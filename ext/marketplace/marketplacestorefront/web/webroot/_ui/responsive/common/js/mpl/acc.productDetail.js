@@ -2852,4 +2852,67 @@ function loadDefaultWishListName_SizeGuide() {
 		
 		
 	}
+	function getProductContents() {
+		
+		var requiredUrl = ACC.config.encodedContextPath + "/p"
+				+ "-fetchPageContents";
+		var dataString = 'productCode=' + productCode;
+		var renderHtml = "";
+		$.ajax({
+			//contentType : "application/json; charset=utf-8",
+			url : requiredUrl,
+			data : dataString,
+			//dataType : "json",
+			success : function(data) {
+				//alert(">>>>>>>>>"+ JSON.stringify(data));
+				
+				/* $.each(data.subComponents, function(k, v) {
+					 renderHtml +="<span style='clear: both;overflow: hidden; display: block;margin: 10px;'>";
+					 
+					 if(v.image!=null)
+						 {
+						 renderHtml +="<img src='" + v.image +
+                         "' height='' width='' style='float:right' '></img> <br>";
+						 }
+					 
+					 if(v.text!=null)
+						 {
+						 renderHtml += v.text;
+						 }                                            
+                     
+                     renderHtml +="</span>";
+	                });*/
+				 
+				 //alert(data);
+				 $('#productContentDivId').html(data);
+				 
+			},
+			error : function(xhr, status, error) {
+				
+			}
+		});
+	
+		
+	}
+	
+	function lazyLoadProductContents(){
+		if ($(window).scrollTop() + $(window).height() >= $('#productContentDivId').offset().top) {
+	        if(!$('#productContentDivId').attr('loaded')) {
+	            //not in ajax.success due to multiple sroll events
+	            $('#productContentDivId').attr('loaded', true);
 
+	            //ajax goes here
+	            //by theory, this code still may be called several times
+	            if ($('#productContentDivId').children().length == 0) {
+	            	getProductContents();
+	        }
+	        }
+	}
+	}
+	
+	if($('#pageTemplateId').val() == 'ProductDetailsPageTemplate'){
+		$(window).on('scroll load',function() {
+		lazyLoadProductContents();
+		});
+		
+	}
