@@ -1576,6 +1576,15 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String CATEGORY_PATH_EMPTY = "/{category-path}".intern();
 
+
+	//IA Feed For Luxury
+	public static final String IAFEED_QUERY_LUXURY = "mpl.ia.luxury.query.";
+	public static final String IA_CATEGORYEXPORT_LUXURYFOLDER = "ia.path.luxury.catexport";
+	public static final String IA_BRANDEXPORT_LUXURYFOLDER = "ia.path.luxury.brandexport";
+	public static final String IA_PRICE_INVENTORYEXPORT_LUXURYFOLDER = "ia.path.luxury.priceinventoryexport";
+	//	public static final String IA_SELLERPRICEDETAILSEXPORT_LUXURYFOLDER = "ia.path.luxury.sellerpricedetails";
+	//	public static final String IA_PRICEINVENTORYCONTROL_LUXURYFOLDER = "ia.path.luxury.priceinventorycontrol";
+
 	//TISCR-421
 	public static final String EBS_SESSION_ID_KEY = "payment.juspay.sessionId.length";
 	public static final String JUSPAY_ENCODING_TYPE = "payment.juspay.encoding.type";

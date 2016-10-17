@@ -1726,7 +1726,8 @@
 	</bean>
 <!-- IA STAGED DATA SOURCE -->
 
- <!--<bean id="iaDataSource"
+
+  <!-- <bean id="iaDataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
 		<property name="url" value="jdbc:oracle:thin:@10.10.64.34:1621/MPLDEVDB" />
@@ -1734,7 +1735,7 @@
 		<property name="password" value="mpldev2com123" />
 	</bean>  -->
 	
-	<bean id="iaDataSource"
+	 <bean id="iaDataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
 		<property name="url" value="${jdbc.iastg.url}" />
@@ -1782,5 +1783,23 @@
 		<property name="typeCode" value="Sizesystem" />
 	</bean>
 	<!-- Bean for POC Search ends-->
+	
+	<!-- LW-245 -->
+	<bean id="brandProductLuxuryExportJob" class="com.tisl.mpl.integration.job.BrandProductLuxuryExportJob"
+		parent="abstractJobPerformable"
+			autowire="byName">
+		<property name="modelService" ref="modelService" />
+	</bean>
+	<bean id="catProdLuxuryExportJob" class="com.tisl.mpl.integration.job.CategoryProductLuxuryExtractJob"
+		parent="abstractJobPerformable"
+			autowire="byName">
+		<property name="modelService" ref="modelService" />
+	</bean>
+	<bean id="priceInventoryLuxuryExportJob" class="com.tisl.mpl.integration.job.PriceInventoryLuxuryExportJob"
+		parent="abstractJobPerformable"
+			autowire="byName">
+		<property name="modelService" ref="modelService" />
+	</bean>
+	
 </beans>
 
