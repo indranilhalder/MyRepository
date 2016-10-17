@@ -7,6 +7,7 @@ import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationExc
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestParameterException;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.WebserviceValidationException;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.jalo.security.JaloSecurityException;
@@ -14,9 +15,13 @@ import de.hybris.platform.order.exceptions.CalculationException;
 
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.annotation.Resource;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
@@ -42,14 +47,12 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 {
 	private static final Logger LOG = Logger.getLogger(MplCouponWebFacadeImpl.class);
 
-	@Autowired
-	MplCouponWebService mplCouponWebService;
-
-	@Autowired
-	private MplCouponFacade mplCouponFacade;
-
-	@Autowired
+	@Resource(name = "mplCouponWebService")
+	private MplCouponWebService mplCouponWebService;
+	@Resource(name = "mplCheckoutFacade")
 	private MplCheckoutFacade mplCheckoutFacade;
+	@Resource(name = "mplCouponFacade")
+	private MplCouponFacade mplCouponFacade;
 
 	/**
 	 * @Description : For getting the details of all the Coupons available for the User
@@ -65,37 +68,98 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 
 
 	@Override
-	public ApplyCouponsDTO applyVoucher(final String couponCode, final CartModel cartModel)
-			throws VoucherOperationException, CalculationException, NumberFormatException, JaloInvalidParameterException,
-			JaloSecurityException, EtailBusinessExceptions, EtailNonBusinessExceptions
+	public ApplyCouponsDTO applyVoucher(final String couponCode, final CartModel cartModel, final OrderModel orderModel,
+			final String paymentMode) throws VoucherOperationException, CalculationException, NumberFormatException,
+			JaloInvalidParameterException, JaloSecurityException, EtailBusinessExceptions, EtailNonBusinessExceptions
 	{
 		final ApplyCouponsDTO applycouponDto = new ApplyCouponsDTO();
-		boolean applycouponDtoflag = false;
+		final boolean redeem = true;
+		boolean couponRedStatus = false;
+		VoucherDiscountData data = new VoucherDiscountData();
+		Map<String, Double> paymentInfo = null;
 		try
 		{
-			applycouponDtoflag = mplCouponFacade.applyVoucher(couponCode, cartModel);
-			if (applycouponDtoflag)
+			//Redeem coupon for cartModel
+			if (orderModel == null)
 			{
-				VoucherDiscountData data = new VoucherDiscountData();
-
-				data = mplCouponFacade.calculateValues(cartModel, applycouponDtoflag, true);
-
-				if (null != data.getCouponDiscount() && null != data.getCouponDiscount().getValue())
+				//				Commented-----to be implemented in R2 later
+				//		final Collection<BankModel> bankList = getBaseStoreService().getCurrentBaseStore().getBanks();
+				//		if (StringUtils.isEmpty(bankNameSelected))
+				//		{
+				//			getSessionService().setAttribute("bank", bankNameSelected);
+				//		}
+				//		else
+				//		{
+				//			for (final BankModel bank : bankList)
+				//			{
+				//				if (bank.getBankName().equalsIgnoreCase(bankNameSelected))
+				//				{
+				//					//setting the bank in session to be used for Promotion
+				//					getSessionService().setAttribute("bank", bank);
+				//					break;
+				//				}
+				//			}
+				//		}
+				if (cartModel != null && StringUtils.isNotEmpty(paymentMode))
 				{
-					//Price data new calculation for 2 decimal values
-					applycouponDto.setCouponDiscount(
-							String.valueOf(data.getCouponDiscount().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+					//Apply the voucher
+					couponRedStatus = mplCouponFacade.applyVoucher(couponCode, cartModel, null);
+
+					LOG.debug("Step 20:::Coupon Redemption Status is:::" + couponRedStatus);
+
+					//Calculate and set data attributes
+					data = mplCouponFacade.calculateValues(null, cartModel, couponRedStatus, redeem);
+
+					paymentInfo = new HashMap<String, Double>();
+					paymentInfo.put(paymentMode, Double.valueOf(cartModel.getTotalPriceWithConv().doubleValue()));
+
+					//Update paymentInfo in session
+					mplCouponFacade.updatePaymentInfoSession(paymentInfo, cartModel);
+
+					//getSessionService().removeAttribute("bank");	//Do not remove---needed later
+					if (data != null && data.getCouponDiscount() != null && data.getCouponDiscount().getValue() != null)
+					{
+						applycouponDto.setCouponDiscount(data.getCouponDiscount().getValue().toPlainString());
+					}
+
+					applycouponDto.setTotal(String.valueOf(mplCheckoutFacade.createPrice(cartModel, cartModel.getTotalPriceWithConv())
+							.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+
 				}
-				if (null != data.getTotalPrice() && null != data.getTotalPrice().getValue())
+				else
 				{
-					applycouponDto.setTotal(String.valueOf(data.getTotalPrice().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9500);
 				}
 				applycouponDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
 			}
 			else
 			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9500);
+				//Apply the voucher
+				couponRedStatus = mplCouponFacade.applyVoucher(couponCode, null, orderModel);
+
+				LOG.debug("Step 20:::Coupon Redemption Status is:::" + couponRedStatus);
+
+				//Calculate and set data attributes
+				data = mplCouponFacade.calculateValues(orderModel, null, couponRedStatus, redeem);
+				if (StringUtils.isNotEmpty(paymentMode))
+				{
+					paymentInfo = new HashMap<String, Double>();
+					paymentInfo.put(paymentMode, Double.valueOf(orderModel.getTotalPriceWithConv().doubleValue()));
+				}
+				//Update paymentInfo in session
+				mplCouponFacade.updatePaymentInfoSession(paymentInfo, orderModel);
+				//getSessionService().removeAttribute("bank");	//Do not remove---needed later
+				if (data != null && data.getCouponDiscount() != null && data.getCouponDiscount().getValue() != null)
+				{
+					applycouponDto.setCouponDiscount(data.getCouponDiscount().getValue().toPlainString());
+				}
+
+				applycouponDto.setTotal(String.valueOf(mplCheckoutFacade.createPrice(orderModel, orderModel.getTotalPriceWithConv())
+						.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+
+				applycouponDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
 			}
+
 		}
 		catch (final VoucherOperationException e)
 		{
@@ -150,67 +214,96 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 	}
 
 	@Override
-	public ReleaseCouponsDTO releaseVoucher(final String couponCode, final CartModel cartModel)
-			throws RequestParameterException, WebserviceValidationException, MalformedURLException, NumberFormatException,
-			JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException,
-			JaloPriceFactoryException, EtailBusinessExceptions
+	public ReleaseCouponsDTO releaseVoucher(final String couponCode, final CartModel cartModel, final OrderModel orderModel,
+			final String paymentMode) throws RequestParameterException, WebserviceValidationException, MalformedURLException,
+			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
+			JaloSecurityException, JaloPriceFactoryException, EtailBusinessExceptions
 	{
-		boolean couponRelStatus = false;
-		final boolean redeem = false;
 		ReleaseCouponsDTO releaseCouponsDTO = new ReleaseCouponsDTO();
+		Map<String, Double> paymentInfo = null;
 		try
 		{
-			mplCouponFacade.releaseVoucher(couponCode, cartModel);
-			couponRelStatus = true;
-			mplCouponFacade.recalculateCartForCoupon(cartModel);
-			LOG.debug("Coupon Release Status is:::" + couponRelStatus);
-			VoucherDiscountData data = new VoucherDiscountData();
-			if (couponRelStatus)
+			//Release coupon for cartModel
+			if (null == orderModel)
 			{
-				data = mplCouponFacade.calculateValues(cartModel, couponRelStatus, redeem);
-				if (null != data.getTotalPrice() && null != data.getTotalPrice().getValue())
+
+				LOG.debug("Step 1:::The coupon code to be released by the customer is ::: " + couponCode);
+				if (cartModel != null && StringUtils.isNotEmpty(paymentMode))
 				{
-					releaseCouponsDTO.setTotal(String.valueOf(data.getTotalPrice().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+					//Release the coupon
+					mplCouponFacade.releaseVoucher(couponCode, cartModel, null);
+
+					//Recalculate cart after releasing coupon
+					mplCouponFacade.recalculateCartForCoupon(cartModel, null); //Handled changed method signature for TPR-629
+
+					//Update paymentInfo from model
+					paymentInfo = new HashMap<String, Double>();
+					paymentInfo.put(paymentMode, Double.valueOf(cartModel.getTotalPriceWithConv().doubleValue()));
+					mplCouponFacade.updatePaymentInfoSession(paymentInfo, cartModel);
+					releaseCouponsDTO
+							.setTotal(String.valueOf(mplCheckoutFacade.createPrice(cartModel, cartModel.getTotalPriceWithConv())
+									.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+				}
+				else
+				{
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9508);
 				}
 				releaseCouponsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
 			}
+			//Release coupon for orderModel
 			else
 			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9508);
+
+				LOG.debug("Step 1:::The coupon code to be released by the customer is ::: " + couponCode);
+
+				//Release the coupon
+				mplCouponFacade.releaseVoucher(couponCode, null, orderModel);
+
+				//Recalculate cart after releasing coupon
+				mplCouponFacade.recalculateCartForCoupon(null, orderModel); //Handled changed method signature for TPR-629
+
+				//Update paymentInfo in
+				paymentInfo = new HashMap<String, Double>();
+				paymentInfo.put(paymentMode, Double.valueOf(orderModel.getTotalPriceWithConv().doubleValue()));
+
+				mplCouponFacade.updatePaymentInfoSession(paymentInfo, orderModel);
+
+				releaseCouponsDTO.setTotal(String.valueOf(mplCheckoutFacade
+						.createPrice(orderModel, orderModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+				releaseCouponsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+
 			}
 		}
 		catch (final VoucherOperationException e)
 		{
-			LOG.error("Issue with voucher release ", e);
-			releaseCouponsDTO = setRelDataForException(releaseCouponsDTO, cartModel);
+			LOG.error(MarketplacecouponConstants.COUPONRELISSUE, e);
+			releaseCouponsDTO = setRelDataForException(releaseCouponsDTO);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			releaseCouponsDTO = setRelDataForException(releaseCouponsDTO, cartModel);
+			releaseCouponsDTO = setRelDataForException(releaseCouponsDTO);
 		}
 		catch (final Exception e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
-			releaseCouponsDTO = setRelDataForException(releaseCouponsDTO, cartModel);
+			releaseCouponsDTO = setRelDataForException(releaseCouponsDTO);
 		}
+
 
 		return releaseCouponsDTO;
 	}
-
-
 
 	/**
 	 * This method sets Release Coupon DTO for exception cases
 	 *
 	 * @param releaseCouponsDTO
-	 * @param cartModel
+	 * @param absModel
 	 * @return ReleaseCouponsDTO
 	 */
-	private ReleaseCouponsDTO setRelDataForException(final ReleaseCouponsDTO releaseCouponsDTO, final CartModel cartModel)
+	private ReleaseCouponsDTO setRelDataForException(final ReleaseCouponsDTO releaseCouponsDTO)
 	{
-		releaseCouponsDTO.setTotal(String.valueOf(mplCheckoutFacade.createPrice(cartModel, cartModel.getTotalPriceWithConv())
-				.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+
 		releaseCouponsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE);
 		releaseCouponsDTO.setErrorCode(MarketplacecommerceservicesConstants.B9508);
 		releaseCouponsDTO.setError(MarketplacewebservicesConstants.COUPONRELISSUE);

@@ -7,6 +7,7 @@ import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationExc
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestParameterException;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.WebserviceValidationException;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.jalo.security.JaloSecurityException;
@@ -37,12 +38,13 @@ public interface MplCouponWebFacade
 	//	CommonCouponsDTO getCoupons(final int currentPage, final int pageSize, final String emailId, final String usedCoupon,
 	//			final String sortCode);
 
-	CommonCouponsDTO getCoupons(final int currentPage, final String emailId, final String usedCoupon, final String sortCode);
+	CommonCouponsDTO getCoupons(int currentPage, String emailId, String usedCoupon, String sortCode);
 
 	/**
 	 * @description apply the Coupon at payment page and get discount
 	 * @param couponCode
 	 * @param cartModel
+	 * @param orderModel
 	 * @return ApplyCouponsDTO
 	 * @throws VoucherOperationException
 	 * @throws CalculationException
@@ -50,8 +52,9 @@ public interface MplCouponWebFacade
 	 * @throws JaloInvalidParameterException
 	 * @throws JaloSecurityException
 	 */
-	ApplyCouponsDTO applyVoucher(final String couponCode, final CartModel cartModel) throws VoucherOperationException,
-			CalculationException, NumberFormatException, JaloInvalidParameterException, JaloSecurityException;
+	ApplyCouponsDTO applyVoucher(String couponCode, CartModel cartModel, OrderModel orderModel, String paymentMode)
+			throws VoucherOperationException, CalculationException, NumberFormatException, JaloInvalidParameterException,
+			JaloSecurityException;
 
 
 	/**
@@ -70,7 +73,8 @@ public interface MplCouponWebFacade
 	 * @throws JaloPriceFactoryException
 	 * @throws CalculationException
 	 */
-	ReleaseCouponsDTO releaseVoucher(final String couponCode, final CartModel cartModel) throws RequestParameterException,
-			WebserviceValidationException, MalformedURLException, NumberFormatException, JaloInvalidParameterException,
-			VoucherOperationException, CalculationException, JaloSecurityException, JaloPriceFactoryException, CalculationException;
+	ReleaseCouponsDTO releaseVoucher(final String couponCode, final CartModel cartModel, final OrderModel orderModel,
+			final String paymentMode) throws RequestParameterException, WebserviceValidationException, MalformedURLException,
+			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
+			JaloSecurityException, JaloPriceFactoryException, CalculationException;
 }

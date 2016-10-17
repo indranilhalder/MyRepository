@@ -22,7 +22,6 @@ import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.promotions.model.PromotionOrderEntryConsumedModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
-import de.hybris.platform.servicelayer.event.EventService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.util.DiscountValue;
@@ -60,14 +59,12 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
-import com.tisl.mpl.core.model.JuspayEBSResponseModel;
 import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
-import com.tisl.mpl.marketplacecommerceservices.service.MplFraudModelService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotifyPaymentGroupMailService;
@@ -99,8 +96,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	private OrderService orderService;
 	@Autowired
 	private ModelService modelService;
-	@Autowired
-	private EventService eventService;
+	//@Autowired
+	//private EventService eventService;
 	@Autowired
 	private MplOrderDao mplOrderDao;
 
@@ -110,8 +107,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	@Autowired
 	private MplCommerceCartService mplCommerceCartService;
 
-	@Autowired
-	private MplFraudModelService mplFraudModelService;
+	//	@Autowired
+	//	private MplFraudModelService mplFraudModelService;
 
 	private static final String middleDigits = "000";
 	private static final String middlecharacters = "-";
@@ -152,12 +149,14 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		try
 		{
 			final OrderModel orderModel = commerceOrderResult.getOrder();
-			if (null != orderModel && StringUtils.isNotEmpty(orderModel.getGuid())
-					&& !(orderModel.getPaymentInfo() instanceof CODPaymentInfoModel))
-			{
-				updateFraudModel(orderModel);
 
-			}
+			//new flow - fraud will not be coming at this stage as payment is happening after cart to order conversion	TPR-629
+			//			if (null != orderModel && StringUtils.isNotEmpty(orderModel.getGuid())
+			//					&& !(orderModel.getPaymentInfo() instanceof CODPaymentInfoModel))
+			//			{
+			//				updateFraudModel(orderModel);
+			//
+			//			}
 
 			if (null != orderModel)
 			{
@@ -183,7 +182,35 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					getModelService().save(voucherInvalidationModel);
 				}
 
+				//Set order-id
+				final String sequenceGeneratorApplicable = getConfigurationService().getConfiguration()
+						.getString(MarketplacecclientservicesConstants.GENERATE_ORDER_SEQUENCE).trim();
+				//private method for seting Sub-order Total-TISEE-3986
+				if (StringUtils.isNotEmpty(sequenceGeneratorApplicable)
+						&& sequenceGeneratorApplicable.equalsIgnoreCase(MarketplacecclientservicesConstants.TRUE))
+				{
+					final String orderIdSequence = getMplCommerceCartService().generateOrderId();
+					orderModel.setCode(orderIdSequence);
+				}
+				else
+				{
+					final Random rand = new Random();
+					orderModel.setCode(Integer.toString((rand.nextInt(900000000) + 100000000)));
+				}
+				orderModel.setType("Parent");
+				if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
+				{
+					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+				}
+				else
+				{
 
+					final String realEbs = getConfigurationService().getConfiguration().getString("payment.ebs.chek.realtimecall");
+					if (realEbs.equalsIgnoreCase("Y"))
+					{
+						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_PENDING);
+					}
+				}
 			}
 		}
 
@@ -196,26 +223,27 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 
 
-	/**
-	 * This method updates Fraud Model
-	 *
-	 * @param orderModel
-	 */
-	private void updateFraudModel(final OrderModel orderModel)
-	{
-		final ArrayList<JuspayEBSResponseModel> riskList = new ArrayList<JuspayEBSResponseModel>();
-		final MplPaymentAuditModel mplAudit = getMplOrderDao().getAuditList(orderModel.getGuid());
-		if (null != mplAudit && null != mplAudit.getRisk() && !mplAudit.getRisk().isEmpty())
-		{
-			riskList.addAll(mplAudit.getRisk());
-
-			if (!riskList.isEmpty() && StringUtils.isNotEmpty(riskList.get(0).getEbsRiskPercentage())
-					&& !riskList.get(0).getEbsRiskPercentage().equalsIgnoreCase("-1.0"))
-			{
-				getMplFraudModelService().updateFraudModel(orderModel, mplAudit);
-			}
-		}
-	}
+	//	/**
+	//	 * This method updates Fraud Model
+	//	 *
+	//	 * @param orderModel
+	//	 */
+	//Commented as this is not needed as per new soln -- Order before payment	TPR-629
+	//	private void updateFraudModel(final OrderModel orderModel)
+	//	{
+	//		final ArrayList<JuspayEBSResponseModel> riskList = new ArrayList<JuspayEBSResponseModel>();
+	//		final MplPaymentAuditModel mplAudit = getMplOrderDao().getAuditList(orderModel.getGuid());
+	//		if (null != mplAudit && null != mplAudit.getRisk() && !mplAudit.getRisk().isEmpty())
+	//		{
+	//			riskList.addAll(mplAudit.getRisk());
+	//
+	//			if (!riskList.isEmpty() && StringUtils.isNotEmpty(riskList.get(0).getEbsRiskPercentage())
+	//					&& !riskList.get(0).getEbsRiskPercentage().equalsIgnoreCase("-1.0"))
+	//			{
+	//				getMplFraudModelService().updateFraudModel(orderModel, mplAudit);
+	//			}
+	//		}
+	//	}
 
 
 	/*
@@ -245,7 +273,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			final CommerceOrderResult paramCommerceOrderResult) throws InvalidCartException
 	{
 		final OrderModel orderModel = paramCommerceOrderResult.getOrder();
-		orderModel.setType("Parent");
+		//orderModel.setType("Parent");
 		final List<OrderModel> orderList = getSubOrders(orderModel);
 
 		//TISPRO-249
@@ -253,57 +281,62 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		//TISUTO-128
 		setFreebieParentTransactionId(orderList);
 		setBOGOParentTransactionId(orderList);
-		final String sequenceGeneratorApplicable = getConfigurationService().getConfiguration()
-				.getString(MarketplacecclientservicesConstants.GENERATE_ORDER_SEQUENCE).trim();
-		//private method for seting Sub-order Total-TISEE-3986
 
-
-
-		if (StringUtils.isNotEmpty(sequenceGeneratorApplicable)
-				&& sequenceGeneratorApplicable.equalsIgnoreCase(MarketplacecclientservicesConstants.TRUE))
-		{
-			final String orderIdSequence = getMplCommerceCartService().generateOrderId();
-			orderModel.setCode(orderIdSequence);
-		}
-		else
-		{
-			final Random rand = new Random();
-			orderModel.setCode(Integer.toString((rand.nextInt(900000000) + 100000000)));
-		}
+		//Commented as ordercode creation is handled earlier for TPR-629
+		//		final String sequenceGeneratorApplicable = getConfigurationService().getConfiguration()
+		//				.getString(MarketplacecclientservicesConstants.GENERATE_ORDER_SEQUENCE).trim();
+		//		//private method for seting Sub-order Total-TISEE-3986
+		//
+		//
+		//
+		//		if (StringUtils.isNotEmpty(sequenceGeneratorApplicable)
+		//				&& sequenceGeneratorApplicable.equalsIgnoreCase(MarketplacecclientservicesConstants.TRUE))
+		//		{
+		//			final String orderIdSequence = getMplCommerceCartService().generateOrderId();
+		//			orderModel.setCode(orderIdSequence);
+		//		}
+		//		else
+		//		{
+		//			final Random rand = new Random();
+		//			orderModel.setCode(Integer.toString((rand.nextInt(900000000) + 100000000)));
+		//		}
 		setSuborderTotalAfterOrderSplitting(orderList);
 
 		orderModel.setChildOrders(orderList);
 		getModelService().save(orderModel);
-
-		final String realEbs = getConfigurationService().getConfiguration().getString("payment.ebs.chek.realtimecall");
-		if (realEbs.equalsIgnoreCase("Y"))
-		{
-
-			if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
-			{
-				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
-			}
-			else
-			{
-				if (StringUtils.isNotEmpty(orderModel.getGuid()))
-				{
-					final MplPaymentAuditModel mplAudit = getMplOrderDao().getAuditList(orderModel.getGuid());
-					if (null != mplAudit)
-					{
-						final List<MplPaymentAuditEntryModel> mplAuditEntryList = mplAudit.getAuditEntries();
-						if (null != mplAuditEntryList && !mplAuditEntryList.isEmpty())
-						{
-							updateOrderStatus(mplAuditEntryList, orderModel);
-						}
-					}
-				}
-			}
-		}
-		else
+		if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
 		{
 			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
 		}
+		else
+		{
+
+			final String realEbs = getConfigurationService().getConfiguration().getString("payment.ebs.chek.realtimecall");
+			if (realEbs.equalsIgnoreCase("Y") && StringUtils.isNotEmpty(orderModel.getGuid()))
+			{
+				//				if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
+				//				{
+				//					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+				//				}
+				//				else
+				//				{
+				//if (StringUtils.isNotEmpty(orderModel.getGuid()))
+				//{
+				final MplPaymentAuditModel mplAudit = getMplOrderDao().getAuditList(orderModel.getGuid());
+				if (null != mplAudit)
+				{
+					final List<MplPaymentAuditEntryModel> mplAuditEntryList = mplAudit.getAuditEntries();
+					if (null != mplAuditEntryList && !mplAuditEntryList.isEmpty())
+					{
+						updateOrderStatus(mplAuditEntryList, orderModel);
+					}
+				}
+				//}
+			}
+		}
 	}
+
+	//}
 
 	/*
 	 * @Desc : Used to set parent transaction id and transaction id mapping Buy A B Get C TISPRO-249
@@ -416,6 +449,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		for (final OrderModel sellerOrderList : orderList)
 		{
 			BigDecimal totalPrice = BigDecimal.valueOf(0);
+			BigDecimal totalPriceWithConv = BigDecimal.valueOf(0);
 			double totalDeliveryPrice = 0D;
 			double totalCartLevelDiscount = 0D;
 			double totalDeliveryDiscount = 0D;
@@ -490,19 +524,30 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			sellerOrderList.setDeliveryCost(Double.valueOf(totalDeliveryPrice));
 			//totalPrice = totalPriceForSubTotal + totalConvChargeForCOD + totalDeliveryPrice
 			//		- (totalDeliveryDiscount + totalCartLevelDiscount + totalProductDiscount + totalCouponDiscount);
-			totalPrice = BigDecimal.valueOf(totalPriceForSubTotal).add(BigDecimal.valueOf(totalConvChargeForCOD))
+			//			totalPrice = BigDecimal.valueOf(totalPriceForSubTotal).add(BigDecimal.valueOf(totalConvChargeForCOD))
+			//					.add(BigDecimal.valueOf(totalDeliveryPrice)).subtract(BigDecimal.valueOf(totalDeliveryDiscount))
+			//					.subtract(BigDecimal.valueOf(totalCartLevelDiscount)).subtract(BigDecimal.valueOf(totalProductDiscount))
+			//					.subtract(BigDecimal.valueOf(totalCouponDiscount));
+
+			totalPrice = BigDecimal.valueOf(totalPriceForSubTotal)/*.add(BigDecimal.valueOf(totalConvChargeForCOD)) */
 					.add(BigDecimal.valueOf(totalDeliveryPrice))/* .subtract(BigDecimal.valueOf(totalDeliveryDiscount)) */
 					.subtract(BigDecimal.valueOf(totalCartLevelDiscount)).subtract(BigDecimal.valueOf(totalProductDiscount))
 					.subtract(BigDecimal.valueOf(totalCouponDiscount));
+			totalPriceWithConv = totalPrice.add(BigDecimal.valueOf(totalConvChargeForCOD));
+			
 			final DecimalFormat decimalFormat = new DecimalFormat("#.00");
 			totalPrice = totalPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+			totalPriceWithConv = totalPriceWithConv.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+
 			//				totalPrice = Double.valueOf(decimalFormat.format(totalPrice)).doubleValue();
 			//				totalConvChargeForCOD = Double.valueOf(decimalFormat.format(totalConvChargeForCOD)).doubleValue();
 			//changed for SONAR fix
 			//totalPrice = Double.parseDouble(decimalFormat.format(totalPrice));
 			totalConvChargeForCOD = Double.parseDouble(decimalFormat.format(totalConvChargeForCOD));
 			sellerOrderList.setTotalPrice(Double.valueOf(totalPrice.doubleValue()));
-			sellerOrderList.setTotalPriceWithConv(Double.valueOf(totalPrice.doubleValue()));
+			//			sellerOrderList.setTotalPriceWithConv(Double.valueOf(totalPrice.doubleValue()));
+
+			sellerOrderList.setTotalPriceWithConv(Double.valueOf(totalPriceWithConv.doubleValue()));
 			sellerOrderList.setConvenienceCharges(Double.valueOf(totalConvChargeForCOD));
 			modelService.save(sellerOrderList);
 		}
@@ -543,7 +588,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					try
 					{
 						//send Notification
-						getRMSVerificationNotificationService().sendRMSNotification(orderModel);
+						getrMSVerificationNotificationService().sendRMSNotification(orderModel);
 					}
 					catch (final Exception e1)
 					{
@@ -1717,39 +1762,39 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		this.modelService = modelService;
 	}
 
-	/**
-	 * @return the eventService
-	 */
-	public EventService getEventService()
-	{
-		return eventService;
-	}
+	//	/**
+	//	 * @return the eventService
+	//	 */
+	//	public EventService getEventService()
+	//	{
+	//		return eventService;
+	//	}
+	//
+	//	/**
+	//	 * @param eventService
+	//	 *           the eventService to set
+	//	 */
+	//	public void setEventService(final EventService eventService)
+	//	{
+	//		this.eventService = eventService;
+	//	}
 
-	/**
-	 * @param eventService
-	 *           the eventService to set
-	 */
-	public void setEventService(final EventService eventService)
-	{
-		this.eventService = eventService;
-	}
-
-	/**
-	 * @return the mplOrderDao
-	 */
-	public MplOrderDao getMplOrderDao()
-	{
-		return mplOrderDao;
-	}
-
-	/**
-	 * @param mplOrderDao
-	 *           the mplOrderDao to set
-	 */
-	public void setMplOrderDao(final MplOrderDao mplOrderDao)
-	{
-		this.mplOrderDao = mplOrderDao;
-	}
+	//	/**
+	//	 * @return the mplOrderDao
+	//	 */
+	//	public MplOrderDao getMplOrderDao()
+	//	{
+	//		return mplOrderDao;
+	//	}
+	//
+	//	/**
+	//	 * @param mplOrderDao
+	//	 *           the mplOrderDao to set
+	//	 */
+	//	public void setMplOrderDao(final MplOrderDao mplOrderDao)
+	//	{
+	//		this.mplOrderDao = mplOrderDao;
+	//	}
 
 	/**
 	 * @return the configurationService
@@ -1785,22 +1830,22 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		this.mplCommerceCartService = mplCommerceCartService;
 	}
 
-	/**
-	 * @return the mplFraudModelService
-	 */
-	public MplFraudModelService getMplFraudModelService()
-	{
-		return mplFraudModelService;
-	}
-
-	/**
-	 * @param mplFraudModelService
-	 *           the mplFraudModelService to set
-	 */
-	public void setMplFraudModelService(final MplFraudModelService mplFraudModelService)
-	{
-		this.mplFraudModelService = mplFraudModelService;
-	}
+	//	/**
+	//	 * @return the mplFraudModelService
+	//	 */
+	//	public MplFraudModelService getMplFraudModelService()
+	//	{
+	//		return mplFraudModelService;
+	//	}
+	//
+	//	/**
+	//	 * @param mplFraudModelService
+	//	 *           the mplFraudModelService to set
+	//	 */
+	//	public void setMplFraudModelService(final MplFraudModelService mplFraudModelService)
+	//	{
+	//		this.mplFraudModelService = mplFraudModelService;
+	//	}
 
 	/**
 	 * @return the buyBoxService
@@ -1824,30 +1869,30 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		this.orderStatusSpecifier = orderStatusSpecifier;
 	}
 
-	/**
-	 * @return the notifyPaymentGroupMailService
-	 */
-	public NotifyPaymentGroupMailService getNotifyPaymentGroupMailService()
-	{
-		return notifyPaymentGroupMailService;
-	}
+	//	/**
+	//	 * @return the notifyPaymentGroupMailService
+	//	 */
+	//	public NotifyPaymentGroupMailService getNotifyPaymentGroupMailService()
+	//	{
+	//		return notifyPaymentGroupMailService;
+	//	}
+	//
+	//	/**
+	//	 * @param notifyPaymentGroupMailService
+	//	 *           the notifyPaymentGroupMailService to set
+	//	 */
+	//	public void setNotifyPaymentGroupMailService(final NotifyPaymentGroupMailService notifyPaymentGroupMailService)
+	//	{
+	//		this.notifyPaymentGroupMailService = notifyPaymentGroupMailService;
+	//	}
 
-	/**
-	 * @param notifyPaymentGroupMailService
-	 *           the notifyPaymentGroupMailService to set
-	 */
-	public void setNotifyPaymentGroupMailService(final NotifyPaymentGroupMailService notifyPaymentGroupMailService)
-	{
-		this.notifyPaymentGroupMailService = notifyPaymentGroupMailService;
-	}
-
-	/**
-	 * @return the notifyPaymentGroupMailService
-	 */
-	public RMSVerificationNotificationService getRMSVerificationNotificationService()
-	{
-		return rMSVerificationNotificationService;
-	}
+	//	/**
+	//	 * @return the notifyPaymentGroupMailService
+	//	 */
+	//	public RMSVerificationNotificationService getRMSVerificationNotificationService()
+	//	{
+	//		return rMSVerificationNotificationService;
+	//	}
 
 
 
@@ -1889,6 +1934,69 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	public void setVoucherService(final VoucherService voucherService)
 	{
 		this.voucherService = voucherService;
+	}
+
+
+
+	/**
+	 * @return the mplOrderDao
+	 */
+	public MplOrderDao getMplOrderDao()
+	{
+		return mplOrderDao;
+	}
+
+
+
+	/**
+	 * @param mplOrderDao
+	 *           the mplOrderDao to set
+	 */
+	public void setMplOrderDao(final MplOrderDao mplOrderDao)
+	{
+		this.mplOrderDao = mplOrderDao;
+	}
+
+
+
+	/**
+	 * @return the notifyPaymentGroupMailService
+	 */
+	public NotifyPaymentGroupMailService getNotifyPaymentGroupMailService()
+	{
+		return notifyPaymentGroupMailService;
+	}
+
+
+
+	/**
+	 * @param notifyPaymentGroupMailService
+	 *           the notifyPaymentGroupMailService to set
+	 */
+	public void setNotifyPaymentGroupMailService(final NotifyPaymentGroupMailService notifyPaymentGroupMailService)
+	{
+		this.notifyPaymentGroupMailService = notifyPaymentGroupMailService;
+	}
+
+
+
+	/**
+	 * @return the rMSVerificationNotificationService
+	 */
+	public RMSVerificationNotificationService getrMSVerificationNotificationService()
+	{
+		return rMSVerificationNotificationService;
+	}
+
+
+
+	/**
+	 * @param rMSVerificationNotificationService
+	 *           the rMSVerificationNotificationService to set
+	 */
+	public void setrMSVerificationNotificationService(final RMSVerificationNotificationService rMSVerificationNotificationService)
+	{
+		this.rMSVerificationNotificationService = rMSVerificationNotificationService;
 	}
 
 

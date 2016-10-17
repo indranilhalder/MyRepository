@@ -15,6 +15,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/marketplaceclientservices"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/marketplaceJuspayServices"/>
 	<classpathentry kind="lib" path="/marketplaceJuspayServices/lib/json-simple-1.1.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/json-simple-1.1.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/acceleratorcms"/>
 	<classpathentry kind="output" path="eclipsebin/notused"/>

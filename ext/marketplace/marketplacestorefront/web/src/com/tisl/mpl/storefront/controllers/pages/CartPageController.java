@@ -931,6 +931,10 @@ public class CartPageController extends AbstractPageController
 			final String cartInvalidCheck = getSessionService().getAttribute(
 					MarketplacecheckoutaddonConstants.CART_DELIVERYMODE_ADDRESS_INVALID);
 
+			// TISUTO-12 TISUTO-11
+			final String orderInventoryReservationCheck = getSessionService().getAttribute(
+					MarketplacecclientservicesConstants.OMS_ORDER_INVENTORY_RESV_SESSION_ID);
+
 			//TISEE-3676
 			if (StringUtils.isNotEmpty(cartItemDelisted)
 					&& cartItemDelisted.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE))
@@ -987,6 +991,12 @@ public class CartPageController extends AbstractPageController
 			{
 				getSessionService().removeAttribute(MarketplacecheckoutaddonConstants.CART_DELIVERYMODE_ADDRESS_INVALID);
 				GlobalMessages.addErrorMessage(model, MarketplacecheckoutaddonConstants.CART_DELIVERYMODE_ADDRESS_INVALID_MSG);
+			}
+			else if (StringUtils.isNotEmpty(orderInventoryReservationCheck)
+					&& orderInventoryReservationCheck.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE))
+			{
+				getSessionService().removeAttribute(MarketplacecclientservicesConstants.OMS_ORDER_INVENTORY_RESV_SESSION_ID);
+				GlobalMessages.addErrorMessage(model, MarketplacecclientservicesConstants.ORDER_INV_FAIL_MSG);
 			}
 
 		}

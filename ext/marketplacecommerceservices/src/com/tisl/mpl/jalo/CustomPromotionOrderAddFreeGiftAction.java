@@ -97,7 +97,7 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 				//final Product product = getFreeProduct(ctx);
 				final Unit unit = product.getUnit(ctx);
 				//Adding free gift to order
-				final AbstractOrderEntry orderEntry = order.addNewEntry(product, freeGiftQuantity, unit, false);
+				final AbstractOrderEntry orderEntry = order.addNewEntry(product, freeGiftQuantity, unit, false); //Changed to abstractOrderEntry for TPR-629
 				if (log.isDebugEnabled())
 				{
 					log.debug("(" + getPK() + ") apply: Adding " + 1L + " free gift to Cart with " + order.getAllEntries().size()
@@ -196,7 +196,7 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 			{//This is for Cart Level Freebie Promotion
 				for (final AbstractOrderEntry entry : order.getEntries())
 				{
-					final CartEntry cartEntry = (CartEntry) entry;
+					final AbstractOrderEntry cartEntry = entry;
 					//final Product entryProduct = cartEntry.getProduct();
 					final double lineItemLevelPrice = cartEntry.getTotalPriceAsPrimitive();
 					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.DESCRIPTION, entry.getProduct().getDescription());

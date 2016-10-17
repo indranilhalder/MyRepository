@@ -41,7 +41,10 @@ import com.tisl.mpl.data.NotificationData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.NotificationDao;
+import com.tisl.mpl.marketplacecommerceservices.event.InventoryReservationFailedEvent;
 import com.tisl.mpl.marketplacecommerceservices.event.OrderPlacedEvent;
+import com.tisl.mpl.marketplacecommerceservices.event.PaymentPendingEvent;
+import com.tisl.mpl.marketplacecommerceservices.event.PaymentTimeoutEvent;
 import com.tisl.mpl.marketplacecommerceservices.service.CouponRestrictionService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
 import com.tisl.mpl.sns.push.service.MplSNSMobilePushService;
@@ -204,6 +207,97 @@ public class NotificationServiceImpl implements NotificationService
 			return notificationList;
 		}
 		return notificationList;
+	}
+
+	@Override
+	public boolean triggerEmailAndSmsOnPaymentPending(final OrderModel orderDetails, final String trackorderurl)
+			throws JAXBException
+	{
+		boolean flag = false;
+		if (orderDetails.getStatus().equals(OrderStatus.PAYMENT_PENDING))
+		{
+			final OrderProcessModel orderProcessModel = new OrderProcessModel();
+			orderProcessModel.setOrder(orderDetails);
+			orderProcessModel.setOrderTrackUrl(trackorderurl);
+			final PaymentPendingEvent paymentPendingEvent = new PaymentPendingEvent(orderProcessModel);
+			try
+			{
+				eventService.publishEvent(paymentPendingEvent);
+				flag = true;
+			}
+			catch (final Exception e1)
+			{
+				LOG.error("Exception during sending mail or SMS from PaymentPending>> " + e1.getMessage());
+			}
+		}
+		return flag;
+	}
+
+	@Override
+	public void triggerEmailAndSmsOnPaymentFailed(final OrderModel orderDetails, final String trackorderurl) throws JAXBException
+	{
+		if (orderDetails.getStatus().equals(OrderStatus.PAYMENT_FAILED))
+		{
+			final OrderProcessModel orderProcessModel = new OrderProcessModel();
+			orderProcessModel.setOrder(orderDetails);
+			orderProcessModel.setOrderTrackUrl(trackorderurl);
+			final PaymentTimeoutEvent paymentFailedEvent = new PaymentTimeoutEvent(orderProcessModel);
+			try
+			{
+				eventService.publishEvent(paymentFailedEvent);
+			}
+			catch (final Exception e1)
+			{
+				LOG.error("Exception during sending mail or SMS >> " + e1.getMessage());
+			}
+		}
+	}
+
+	@Override
+	public void triggerEmailAndSmsOnPaymentTimeout(final OrderModel orderDetails, final String trackorderurl) throws JAXBException
+	{
+		if (orderDetails.getStatus().equals(OrderStatus.PAYMENT_TIMEOUT))
+		{
+			final OrderProcessModel orderProcessModel = new OrderProcessModel();
+			orderProcessModel.setOrder(orderDetails);
+			orderProcessModel.setOrderTrackUrl(trackorderurl);
+			final PaymentTimeoutEvent paymentTimeoutEvent = new PaymentTimeoutEvent(orderProcessModel);
+			try
+			{
+				eventService.publishEvent(paymentTimeoutEvent);
+			}
+			catch (final Exception e1)
+			{
+				LOG.error("Exception during sending mail or SMS >> " + e1.getMessage());
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#triggerEmailAndSmsOnInventoryFail(de.hybris
+	 * .platform.core.model.order.OrderModel)
+	 */
+	@Override
+	public void triggerEmailAndSmsOnInventoryFail(final OrderModel orderDetails, final String trackorderurl) throws JAXBException
+	{
+		if (orderDetails.getStatus().equals(OrderStatus.PAYMENT_PENDING))
+		{
+			final OrderProcessModel orderProcessModel = new OrderProcessModel();
+			orderProcessModel.setOrder(orderDetails);
+			orderProcessModel.setOrderTrackUrl(trackorderurl);
+			final InventoryReservationFailedEvent invReservationFailedEvent = new InventoryReservationFailedEvent(orderProcessModel);
+			try
+			{
+				eventService.publishEvent(invReservationFailedEvent);
+			}
+			catch (final Exception e1)
+			{
+				LOG.error("Exception during sending mail or SMS from PaymentPending>> " + e1.getMessage());
+			}
+		}
 	}
 
 	/*
@@ -693,4 +787,6 @@ public class NotificationServiceImpl implements NotificationService
 	{
 		this.modelService = modelService;
 	}
+
+
 }

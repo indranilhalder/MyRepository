@@ -3,6 +3,7 @@ package com.tisl.mpl.service;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
@@ -17,6 +18,7 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.services.BaseStoreService;
+import de.hybris.platform.util.localization.Localization;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -52,6 +54,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationServ
 import com.tisl.mpl.model.PaymentModeSpecificPromotionRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.BillingAddressWsData;
 import com.tisl.mpl.wsdto.MplUserResultWsDto;
 import com.tisl.mpl.wsdto.PaymentServiceWsData;
@@ -98,20 +101,21 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 	/**
 	 * To Check COD Eligibility for Cart Items
 	 *
-	 * @param cartID
+	 * @param abstractOrder
 	 * @param customerID
 	 * @return PaymentServiceWsData
 	 */
 	@Override
-	public PaymentServiceWsData getCODDetails(final String cartID, final String customerID) throws EtailNonBusinessExceptions
+	public PaymentServiceWsData getCODDetails(final AbstractOrderModel abstractOrder, final String customerID)
+			throws EtailNonBusinessExceptions
 	{
 		PaymentServiceWsData paymentServiceData = new PaymentServiceWsData();
 		try
 		{
 			//getting cartmodel using cart id
-			final CartModel cartModel = getMplPaymentWebDAO().findCartValues(cartID);
+			//final CartModel cartModel = getMplPaymentWebDAO().findCartValues(cartID);
 
-			if (null != cartModel)
+			if (null != abstractOrder)
 			{
 				//item eligible for COD or not
 				//final List<String> paymentTypeList = new ArrayList<String>();
@@ -120,12 +124,12 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 				//final List<String> fulfillmentDataList = new ArrayList<String>();
 
 				//iterating over all the cart entries
-				LOG.debug(" getCODDetails ServiceImpl : cartModel.getEntries() : " + cartModel.getEntries());
+				LOG.debug(" getCODDetails ServiceImpl : cartModel.getEntries() : " + abstractOrder.getEntries());
 
 				/*
 				 * for (final AbstractOrderEntryModel entry : cartModel.getEntries()) { //getting the product code
 				 * LOG.debug(" getCODDetails ServiceImpl : entry.getProduct().getCode() : " + entry.getProduct().getCode());
-				 * 
+				 *
 				 * if (entry.getSelectedUSSID() != null) { final SellerInformationModel sellerInfoModel =
 				 * getMplSellerInformationService().getSellerDetail( entry.getSelectedUSSID()); List<RichAttributeModel>
 				 * richAttributeModel = null; if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null) {
@@ -134,7 +138,7 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 				 * String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
 				 * LOG.debug(" getCODDetails ServiceImpl : fulfillmentType : " + fulfillmentType);
 				 * fulfillmentDataList.add(fulfillmentType.toUpperCase()); }
-				 * 
+				 *
 				 * if (richAttributeModel != null && richAttributeModel.get(0).getPaymentModes() != null) { final String
 				 * paymentMode = richAttributeModel.get(0).getPaymentModes().toString(); if
 				 * (StringUtils.isNotEmpty(paymentMode)) { //setting the payment mode in a list
@@ -146,7 +150,7 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 				 * EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9052); } }
 				 */
 				//paymentServiceData = checkCODEligibility(cartModel);
-				for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+				for (final AbstractOrderEntryModel entry : abstractOrder.getEntries())
 				{
 					if (entry != null && entry.getSelectedUSSID() != null)
 					{
@@ -169,7 +173,7 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 								{
 									//TPR-627, TPR-622 Separate method the check COD Eligibility to avoid redundant code
 									final Tuple2<PaymentServiceWsData, Boolean> returnFlag = paymentModecheckForCOD(richAttributeModel,
-											cartModel, paymentServiceData);
+											abstractOrder, paymentServiceData);
 									paymentServiceData = returnFlag.getFirst();
 									if (!returnFlag.getSecond().booleanValue())
 									{
@@ -190,7 +194,7 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 									{
 										//TPR-627,TPR-622 Separate method the check COD Eligibility to avoid redundant code
 										final Tuple2<PaymentServiceWsData, Boolean> returnFlag = paymentModecheckForCOD(richAttributeModel,
-												cartModel, paymentServiceData);
+												abstractOrder, paymentServiceData);
 										paymentServiceData = returnFlag.getFirst();
 										if (!returnFlag.getSecond().booleanValue())
 										{
@@ -216,14 +220,40 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
 			}
 		}
-		catch (final EtailBusinessExceptions | EtailNonBusinessExceptions e)
+		catch (final EtailNonBusinessExceptions e)
 		{
-			throw e;
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				paymentServiceData.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				paymentServiceData.setErrorCode(e.getErrorCode());
+			}
+			paymentServiceData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				paymentServiceData.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				paymentServiceData.setErrorCode(e.getErrorCode());
+			}
+			paymentServiceData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		catch (final Exception e)
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			paymentServiceData.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			paymentServiceData.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			paymentServiceData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
+
 		return paymentServiceData;
 	}
 
@@ -322,13 +352,13 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 	 * TPR-627, TPR-622 Separate method the check COD Eligibility to avoid redundant code
 	 *
 	 * @param richAttributeModel
-	 * @param cart
-	 * @param model
+	 * @param abstractOrderModel
+	 * @param paymentServiceData
 	 * @return
 	 * @return boolean
 	 */
 	private Tuple2<PaymentServiceWsData, Boolean> paymentModecheckForCOD(final List<RichAttributeModel> richAttributeModel,
-			final CartModel cartModel, final PaymentServiceWsData paymentServiceData)
+			final AbstractOrderModel abstractOrderModel, final PaymentServiceWsData paymentServiceData)
 	{
 		Boolean breakFlag = Boolean.TRUE;
 		//Start TISPT-204 Point No 1
@@ -341,8 +371,8 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 				if (PaymentModesEnum.COD.equals(paymentMode) || PaymentModesEnum.BOTH.equals(paymentMode))
 				{
 
-					LOG.debug("Cart Model IsCODEligible ******************* " + cartModel.getIsCODEligible());
-					if (null != cartModel.getIsCODEligible() && cartModel.getIsCODEligible().equals(Boolean.FALSE))
+					LOG.debug("Cart Model IsCODEligible ******************* " + abstractOrderModel.getIsCODEligible());
+					if (null != abstractOrderModel.getIsCODEligible() && abstractOrderModel.getIsCODEligible().equals(Boolean.FALSE))
 					{
 						//if Item is COD Eligible no nf items eligible for COD dispaly respective message
 						paymentServiceData.setError(MarketplacewebservicesConstants.ITEM_ELIGIBLE);
@@ -356,10 +386,10 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 						{
 							convenienceCharge = Long.valueOf(0);
 						}
-						cartModel.setConvenienceCharges(Double.valueOf(convenienceCharge.doubleValue()));
-						modelService.save(cartModel);
+						abstractOrderModel.setConvenienceCharges(Double.valueOf(convenienceCharge.doubleValue()));
+						modelService.save(abstractOrderModel);
 						paymentServiceData.setConvenienceCharge(convenienceCharge.toString());
-						paymentServiceData.setTotalPrice(cartModel.getTotalPrice().toString());
+						paymentServiceData.setTotalPrice(abstractOrderModel.getTotalPrice().toString());
 					}
 				}
 				else
@@ -397,9 +427,9 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 	 * "getPaymentMode : paymentMode  JSON Response : " + paymentMode); // Payment Mode Map final Map<String, Double>
 	 * paymentModeMap = new HashMap<String, Double>(); try { final JSONObject rec_paymode = (JSONObject)
 	 * JSONValue.parse(paymentMode);
-	 * 
+	 *
 	 * LOG.debug("getPaymentMode : rec_paymode  JSON Response : " + rec_paymode);
-	 * 
+	 *
 	 * // Fetch Details from Json final String debit = rec_paymode.get(MarketplacewebservicesConstants.DEBIT) != null ?
 	 * rec_paymode.get( MarketplacewebservicesConstants.DEBIT).toString() :
 	 * MarketplacewebservicesConstants.DECIMALULLCHK; final String credit =
@@ -409,10 +439,10 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 	 * MarketplacewebservicesConstants.EMI).toString() : MarketplacewebservicesConstants.DECIMALULLCHK; final String
 	 * netBanking = rec_paymode.get(MarketplacewebservicesConstants.NETBANKING) != null ? rec_paymode.get(
 	 * MarketplacewebservicesConstants.NETBANKING).toString() : MarketplacewebservicesConstants.DECIMALULLCHK;
-	 * 
+	 *
 	 * // Get data in Double value final Double debit_amt = new Double(debit); final Double credit_amt = new
 	 * Double(credit); final Double emi_amt = new Double(emi); final Double net_amt = new Double(netBanking);
-	 * 
+	 *
 	 * // Validate Payment Mode Value and set value into map if (debit != MarketplacewebservicesConstants.DECIMALULLCHK)
 	 * { paymentModeMap.put(MarketplacewebservicesConstants.DEBIT, debit_amt); } if (credit !=
 	 * MarketplacewebservicesConstants.DECIMALULLCHK) { paymentModeMap.put(MarketplacewebservicesConstants.CREDIT,
@@ -420,7 +450,7 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 	 * paymentModeMap.put(MarketplacewebservicesConstants.EMI, emi_amt); } if (netBanking !=
 	 * MarketplacewebservicesConstants.DECIMALULLCHK) { paymentModeMap.put(MarketplacewebservicesConstants.NETBANKING,
 	 * net_amt); }
-	 * 
+	 *
 	 * LOG.debug("getPaymentMode : rec_paymode  JSON Response paymentModeMap : " + paymentModeMap); } catch (final
 	 * EtailBusinessExceptions | EtailNonBusinessExceptions e) { throw e; } catch (final Exception e) { throw new
 	 * EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } // returns a Map return
@@ -1083,47 +1113,26 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 	/**
 	 * This method returns potential promotion on paymeny mode
 	 *
-	 * @param cartId
 	 * @return PaymentServiceWsData
 	 *
 	 */
 	@Override
-	public PaymentServiceWsData potentialPromotionOnPaymentMode(final String userId, final String cartId)
+	public PaymentServiceWsData potentialPromotionOnPaymentMode(final AbstractOrderModel cartModel)
 	{
 		PaymentServiceWsData promoData = new PaymentServiceWsData();
 		try
 		{
-			//fetch usermodel against customer
-			final UserModel user = getExtendedUserService().getUserForOriginalUid(userId);
-			// Check userModel null
-			if (null != user)
+			// Validate Cart Model is not null
+			if (null != cartModel)
 			{
-				// Type Cast User Model to Address Model
-
-				LOG.debug(String.format("potentialPromotionOnPaymentMode: | userId: %s | cartId : %s  ", userId, cartId));
-
-				//getting cartmodel using cart id and user
-				final CartModel cartModel = getCommerceCartService().getCartForCodeAndUser(cartId, user);
-				// Validate Cart Model is not null
-				if (null != cartModel)
-				{
-					LOG.debug(String.format("potentialPromotionOnPaymentMode: | cartModel.getCode().: %s  ", cartModel.getCode()));
-
-					promoData = promotionsInPaymentMode(cartModel);
-
-				}
-				else
-				{
-					//If  Cart Model is null display error message
-					promoData.setError(MarketplacewebservicesConstants.CARTMODELEMPTY);
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
-				}
+				LOG.debug(String.format("potentialPromotionOnPaymentMode: | cartModel.getCode().: %s  ", cartModel.getCode()));
+				promoData = promotionsInPaymentMode(cartModel);
 			}
 			else
 			{
-				//If  User Model is null display error message
-				promoData.setError(MarketplacewebservicesConstants.USEREMPTY);
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9055);
+				//If  Cart Model is null display error message
+				promoData.setError(MarketplacewebservicesConstants.CARTMODELEMPTY);
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
 			}
 		}
 		catch (final EtailBusinessExceptions | EtailNonBusinessExceptions e)
@@ -1144,7 +1153,7 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 	 * @return PaymentServiceWsData
 	 */
 
-	private PaymentServiceWsData promotionsInPaymentMode(final CartModel cartModel)
+	private PaymentServiceWsData promotionsInPaymentMode(final AbstractOrderModel cartModel)
 	{
 		final PaymentServiceWsData promoData = new PaymentServiceWsData();
 		final List<PotentialRestrictionData> potentialRestrictionDataList = new ArrayList<PotentialRestrictionData>();

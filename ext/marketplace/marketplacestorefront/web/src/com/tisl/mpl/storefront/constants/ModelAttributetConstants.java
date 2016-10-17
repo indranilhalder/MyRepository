@@ -559,6 +559,7 @@ public final class ModelAttributetConstants
 	public static final String ORDER_STATUS_MSG = "orderStatusMsg";
 
 	public static final String TRACK_STATUS = "trackStatusMap";
+	public static final String PAYMENT_STATUS = "paymentStatusMap";
 	public static final String CANCEL_PRODUCT_MAP = "cancelProductMap";
 	public static final String CURRENT_STATUS = "currentStatusMap";
 	public static final String ORDER_DELIVERY_DATE = "orderDeliveryDateMap";

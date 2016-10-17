@@ -67,12 +67,12 @@ import de.hybris.platform.core.PK.PKException;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.enumeration.EnumerationValueModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.CartService;
-import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.payment.AdapterException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
@@ -286,13 +286,13 @@ public class UsersController extends BaseCommerceController
 	@Resource(name = "passwordStrengthValidator")
 	private Validator passwordStrengthValidator;
 
-	@Autowired
+	@Resource
 	private MplCheckoutFacade mplCheckoutFacade;
 	//	@Autowired Critical Sonar fixes Unused private Field
 	//	private RegisterCustomerFacade registerCustomerFacade;
-	@Autowired
+	@Resource
 	private Populator<AddressData, AddressModel> addressReversePopulator;
-	@Autowired
+	@Resource
 	private Wishlist2Service wishlistService;
 
 	@Resource(name = "accProductFacade")
@@ -303,25 +303,25 @@ public class UsersController extends BaseCommerceController
 
 	protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
 	//
-	@Autowired
+	@Resource
 	private MplPreferenceFacade mplPreferenceFacade;
-	@Autowired
+	@Resource
 	private ExtendedUserService extUserService;
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
-	@Autowired
+	@Resource
 	private MplMobileUserService mobileUserService;
-	@Autowired
+	@Resource
 	private MplCustomerProfileService mplCustomerProfileService;
-	@Autowired
+	@Resource
 	private UserService userService;
-	@Autowired
+	@Resource
 	private FriendsInviteService friendsInviteService;
-	@Autowired
+	@Resource
 	private CustomerAccountService customerAccountService;
-	@Autowired
+	@Resource
 	private WishlistFacade wishlistFacade;
-	@Autowired
+	@Resource
 	private FriendsInviteFacade friendsInviteFacade;
 	//	@Autowired Critical Sonar fixes Unused private Field
 	//	private HybrisOAuthTokenStore hybrisOAuthTokenStore;
@@ -331,35 +331,35 @@ public class UsersController extends BaseCommerceController
 	private MplPaymentFacade mplPaymentFacade;
 	@Resource(name = "mplPaymentService")
 	private MplPaymentService mplPaymentService;
-	@Autowired
+	@Resource
 	private AccountAddressFacade accountAddressFacade;
-	@Autowired
+	@Resource
 	private UpdateFeedbackFacade updateFeedbackFacade;
 	//	@Autowired Critical Sonar fixes Unused private Field
 	//	private EnumerationService enumerationService;
 	//	@Autowired
 	//	private ExtendedUserService extendedUserService;
-	@Autowired
+	@Resource
 	private CommerceCartService commerceCartService;
 
-	@Autowired
+	@Resource
 	private MplCartFacade mplCartFacade;
 
-	@Autowired
+	@Resource
 	private MplEnumerationHelper mplEnumerationHelper;
-	@Autowired
+	@Resource
 	private BaseSiteService baseSiteService;
 
-	@Autowired
+	@Resource
 	private NotificationFacade notificationFacade;
 
-	@Autowired
+	@Resource
 	private CancelReturnFacade cancelReturnFacade;
 
-	@Autowired
+	@Resource
 	private MplOrderFacade mplOrderFacade;
 
-	@Autowired
+	@Resource
 	private MplMyFavBrandCategoryFacade mplMyFavBrandCategoryFacade;
 
 	@Autowired
@@ -384,6 +384,8 @@ public class UsersController extends BaseCommerceController
 	private MplCouponWebFacade mplCouponWebFacade;
 	@Autowired
 	private GigyaFacade gigyaFacade;
+	@Autowired
+	private ExtendedUserService extendedUserService;
 
 
 	//@Autowired
@@ -426,10 +428,11 @@ public class UsersController extends BaseCommerceController
 	private static final String SERVICE_MESSAGE = "Service Authentication error occured. Please contact administrator";
 	private static final String AUTHENTICATION_MESSAGE = "Authentication error occured. Please contact administrator";
 	private static final String ERROR_MESSAGE = "some error occured. Please contact administrator";
+	private static final String UTF = "UTF-8";
 
 	/**
 	 * TPR-1372
-	 * 
+	 *
 	 * @param emailId
 	 * @param password
 	 * @return MplUserResultWsDto
@@ -6434,115 +6437,248 @@ public class UsersController extends BaseCommerceController
 
 	/**
 	 * @Description : For Juspay Order Creation. It returns juspayMerchantKey, juspayMerchantId,
-	 *              juspayReturnUrl,juspayOrderId
+	 *              juspayReturnUrl,juspayOrderId --TPR-629
 	 * @return OrderCreateInJusPayWsDto
-	 * @throws InvalidCartException
 	 */
 	@Secured(
 	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
-	@RequestMapping(value = "/{userId}/createJuspayOrder", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@RequestMapping(value = MarketplacewebservicesConstants.CREATEJUSPAYORDER, method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public OrderCreateInJusPayWsDto createJuspayOrder(@RequestParam final String firstName, @RequestParam final String lastName,
 			@RequestParam final String addressLine1, @RequestParam final String addressLine2,
 			@RequestParam final String addressLine3, @RequestParam final String country, @RequestParam final String city,
-			@RequestParam final String state, @RequestParam final String pincode, @RequestParam final String cartID,
-			@RequestParam final String cardSaved, @RequestParam final String sameAsShipping, @PathVariable final String userId)
-			throws EtailNonBusinessExceptions
+			@RequestParam final String state, @RequestParam final String pincode, @RequestParam final String cardSaved,
+			@RequestParam final String sameAsShipping, @PathVariable final String userId, @RequestParam final String cartGuid,
+			@RequestParam(required = false) final String platform) throws EtailNonBusinessExceptions
 	{
 		final OrderCreateInJusPayWsDto orderCreateInJusPayWsDto = new OrderCreateInJusPayWsDto();
-		final UserModel user = userService.getCurrentUser();
-		LOG.debug("********* Creating juspay Order mobile web service" + userId);
-		if (null == user)
+		String uid = "";
+		String failErrorCode = "";
+		boolean failFlag = false;
+		String juspayOrderId = "";
+		OrderModel orderModel = null;
+		OrderData orderData = null;
+		CustomerModel customer = null;
+		CartModel cart = null;
+		String juspayMerchantId = "";
+		String juspayReturnUrl = "";
+		final StringBuilder returnUrlBuilder = new StringBuilder();
+		if (LOG.isDebugEnabled())
 		{
-			orderCreateInJusPayWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-			orderCreateInJusPayWsDto.setError(MarketplacecommerceservicesConstants.USER_NOT_FOUND);
-			return orderCreateInJusPayWsDto;
+			LOG.debug("********* Creating juspay Order mobile web service" + userId);
 		}
-		else
+		try
 		{
-			try
+			final String paymentAddressLine1 = java.net.URLDecoder.decode(addressLine1, UTF);
+			final String paymentAddressLine2 = java.net.URLDecoder.decode(addressLine2, UTF);
+			final String paymentAddressLine3 = java.net.URLDecoder.decode(addressLine3, UTF);
+
+			customer = extendedUserService.getUserForOriginalUid(userId);
+			if (null != customer)
 			{
-				final CartModel cart = mplPaymentWebFacade.findCartValues(cartID);
-				if (null != cart)
+				uid = customer.getUid();
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B0006);
+			}
+			// For Mobile
+			juspayMerchantId = !getConfigurationService().getConfiguration()
+					.getString(MarketplacecommerceservicesConstants.MARCHANTID).isEmpty() ? getConfigurationService()
+					.getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID)
+					: "No juspayMerchantKey is defined in local properties";
+			juspayReturnUrl = !getConfigurationService().getConfiguration()
+					.getString(MarketplacecommerceservicesConstants.RETURNURL).isEmpty() ? getConfigurationService()
+					.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURL)
+					: "No juspayReturnUrl is defined in local properties";
+
+			returnUrlBuilder.append(juspayReturnUrl);
+			//To avoid backward- incompatibility,
+			if (StringUtils.isNotEmpty(cartGuid))
+			{
+				returnUrlBuilder.append("?value=").append(cartGuid);
+			}
+			//Payment Soln changes
+			orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
+			//If cart is present
+			if (orderModel == null)
+			{
+
+				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+				if (!failFlag && !mplCheckoutFacade.isPromotionValid(cart))
 				{
-					final CustomerModel customerModel = mplPaymentWebFacade.getCustomer(userId);
+					failFlag = true;
+					failErrorCode = MarketplacecommerceservicesConstants.B9075;
+				}
+				if (!failFlag && mplCartFacade.isCartEntryDelistedMobile(cart))
+				{
+					failFlag = true;
+					failErrorCode = MarketplacecommerceservicesConstants.B9325;
+				}
+				//TISUTO-12 , TISUTO-11
+				//TODO Soft reservation calls already made
+				if (!failFlag
+						&& !mplCartFacade.isInventoryReservedMobile(
+								MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cart, pincode))
+				{
+					//getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID,"TRUE");
+					//getMplCartFacade().recalculate(cart);
+					failFlag = true;
+					failErrorCode = MarketplacecommerceservicesConstants.B9047;
+				}
 
-					final String juspayMerchantId = !getConfigurationService().getConfiguration()
-							.getString(MarketplacecommerceservicesConstants.MARCHANTID).isEmpty() ? getConfigurationService()
-							.getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID)
-							: "No juspayMerchantKey is defined in local properties";
-					final String juspayReturnUrl = !getConfigurationService().getConfiguration()
-							.getString(MarketplacecommerceservicesConstants.RETURNURL).isEmpty() ? getConfigurationService()
-							.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURL)
-							: "No juspayReturnUrl is defined in local properties";
-
-					String juspayOrderId;
-					juspayOrderId = mplPaymentFacade.createJuspayOrder(cart, firstName, lastName, addressLine1, addressLine2,
-							addressLine3, country, state, city, pincode, cardSaved + MarketplacewebservicesConstants.STRINGSEPARATOR
-									+ sameAsShipping, juspayReturnUrl, customerModel.getUid(),
-							MarketplacewebservicesConstants.CHANNEL_MOBILE);
-					LOG.debug("********* Created juspay Order mobile web service *************" + juspayOrderId);
-
-					orderCreateInJusPayWsDto.setJuspayMerchantId(juspayMerchantId);
-					orderCreateInJusPayWsDto.setJuspayReturnUrl(juspayReturnUrl);
-					orderCreateInJusPayWsDto.setJuspayOrderId(juspayOrderId);
-					//final CartModel cartModel = mplPaymentWebDAO.findCartValues(cartID);
-					try
+				if (!failFlag)
+				{
+					final Double cartTotal = cart.getTotalPrice();
+					final Double cartTotalWithConvCharge = cart.getTotalPriceWithConv();
+					if (cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0)
 					{
-						boolean isAuditCreated = false;
-						isAuditCreated = getMplPaymentService().createEntryInAudit(juspayOrderId,
-								MarketplacewebservicesConstants.CHANNEL_MOBILE, cart.getGuid());
-						LOG.debug("********* Juspay audit created mobile web service *************" + isAuditCreated);
+						//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CARTAMOUNTINVALID, "TRUE");
+						failFlag = true;
+						failErrorCode = MarketplacecommerceservicesConstants.B9509;
 					}
-					catch (final Exception ex)
-					{
-						LOG.error("Audit Entry: " + ex);
-					}
+				}
+				//TISPRO-578
+				if (!failFlag && !mplPaymentFacade.isValidCart(cart))
+				{
+					//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CART_DELIVERYMODE_ADDRESS_INVALID, "TRUE");
+					failFlag = true;
+					failErrorCode = MarketplacecommerceservicesConstants.B9064;
+				}
 
+				if (failFlag)
+				{
+					throw new EtailBusinessExceptions(failErrorCode);
 				}
 				else
 				{
-					orderCreateInJusPayWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-					orderCreateInJusPayWsDto.setError(MarketplacecommerceservicesConstants.CART_NOT_FOUND);
-					return orderCreateInJusPayWsDto;
+					juspayOrderId = getMplPaymentFacade().createJuspayOrder(cart, null, firstName, lastName, paymentAddressLine1,
+							paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
+							cardSaved + MarketplacecommerceservicesConstants.STRINGSEPARATOR + sameAsShipping,
+							returnUrlBuilder.toString(), uid, MarketplacecommerceservicesConstants.CHANNEL_MOBILE);
+					//create order here
+					//Mandatory checks agains cart
+					final boolean isValidCart = getMplPaymentFacade().checkCart(cart);
+
+					//getSessionService().setAttribute("guid", cart.getGuid());
+					if (isValidCart)
+					{
+						orderData = mplCheckoutFacade.placeOrderByCartId(cartGuid);
+						if (orderData == null)
+						{
+							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9321);
+						}
+
+					}
+					else
+					{
+						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
+					}
+
 				}
 
 			}
-			catch (final AdapterException ex)
+			else
 			{
-				LOG.error(UsersController.LOG, ex);
-				orderCreateInJusPayWsDto.setError(MarketplacewebservicesConstants.JUSPAY_CONN_ERROR);
-			}
-			catch (final EtailNonBusinessExceptions ex)
-			{
-				// Error message for All Exceptions
-				ExceptionUtil.etailNonBusinessExceptionHandler(ex);
-				if (null != ex.getErrorMessage())
+				if (!getMplCheckoutFacade().isPromotionValid(orderModel))
 				{
-					orderCreateInJusPayWsDto.setError(ex.getErrorMessage());
-					orderCreateInJusPayWsDto.setErrorCode(ex.getErrorCode());
+
+					//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED, "TRUE");
+					mplCartFacade.recalculateOrder(orderModel);
+					failFlag = true;
+					failErrorCode = MarketplacecommerceservicesConstants.B9075;
 				}
-			}
-			catch (final EtailBusinessExceptions ex)
-			{
-				// Error message for All Exceptions
-				ExceptionUtil.etailBusinessExceptionHandler(ex, null);
-				if (null != ex.getErrorMessage())
+				//Soft reservation calls already made
+
+				if (!failFlag
+						&& !mplCartFacade.isInventoryReservedMobile(
+								MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel, pincode))
 				{
-					orderCreateInJusPayWsDto.setError(ex.getErrorMessage());
-					orderCreateInJusPayWsDto.setErrorCode(ex.getErrorCode());
+					//getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID,"TRUE");
+					getMplCartFacade().recalculateOrder(orderModel);
+					failFlag = true;
+					failErrorCode = MarketplacecommerceservicesConstants.B9047;
+					//notify EMAil SMS TPR-815
+					mplCartFacade.notifyEmailAndSmsOnInventoryFail(orderModel);
 				}
-			}
-			catch (final Exception ex)
-			{
-				// Error message for All Exceptions
-				if (null != ((EtailNonBusinessExceptions) ex).getErrorMessage())
+
+				if (failFlag)
 				{
-					orderCreateInJusPayWsDto.setError(((EtailNonBusinessExceptions) ex).getErrorMessage());
-					orderCreateInJusPayWsDto.setErrorCode(((EtailNonBusinessExceptions) ex).getErrorCode());
+					throw new EtailBusinessExceptions(failErrorCode);
 				}
+				else
+				{
+					juspayOrderId = getMplPaymentFacade().createJuspayOrder(null, orderModel, firstName, lastName,
+							paymentAddressLine1, paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
+							cardSaved + MarketplacecommerceservicesConstants.STRINGSEPARATOR + sameAsShipping,
+							returnUrlBuilder.toString(), uid, MarketplacecommerceservicesConstants.CHANNEL_MOBILE);
+					orderData = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
+				}
+
+			}
+			if (StringUtils.isNotEmpty(juspayMerchantId))
+			{
+				orderCreateInJusPayWsDto.setJuspayMerchantId(juspayMerchantId);
+			}
+			if (StringUtils.isNotEmpty(juspayReturnUrl))
+			{
+				orderCreateInJusPayWsDto.setJuspayReturnUrl(juspayReturnUrl);
+			}
+			if (StringUtils.isNotEmpty(juspayOrderId))
+			{
+				orderCreateInJusPayWsDto.setJuspayOrderId(juspayOrderId);
+			}
+			if (StringUtils.isNotEmpty(cartGuid))
+			{
+				orderCreateInJusPayWsDto.setCartGuid(cartGuid);
+			}
+			if (orderData != null && StringUtils.isNotEmpty(orderData.getCode()))
+			{
+				orderCreateInJusPayWsDto.setOrderId(orderData.getCode());
+			}
+
+			orderCreateInJusPayWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+
+		}
+		catch (final AdapterException e)
+		{
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9327);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			orderCreateInJusPayWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			// Error message for All Exceptions
+			if (null != e.getErrorMessage())
+			{
+				orderCreateInJusPayWsDto.setError(e.getErrorMessage());
+				orderCreateInJusPayWsDto.setErrorCode(e.getErrorCode());
 			}
 		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			orderCreateInJusPayWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			// Error message for All Exceptions
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				orderCreateInJusPayWsDto.setError(e.getErrorMessage());
+				orderCreateInJusPayWsDto.setErrorCode(e.getErrorCode());
+			}
+
+		}
+		catch (final Exception e)
+		{
+			LOG.error(MarketplacewebservicesConstants.CREATEJUSPAYORDER, e);
+			// Error message for All Exceptions
+			if (null != e.getMessage())
+			{
+				orderCreateInJusPayWsDto.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9004));
+				orderCreateInJusPayWsDto.setErrorCode(MarketplacecommerceservicesConstants.B9004);
+			}
+			orderCreateInJusPayWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
 		return orderCreateInJusPayWsDto;
 	}
 
