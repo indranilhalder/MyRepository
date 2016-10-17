@@ -168,6 +168,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	//@Autowired
 	//private ExtendedUserService extendedUserService;
+	private static final String ERROR_PAYMENT = "Payment_Timeout order status for orderCode>>>";
 
 
 	/**
@@ -484,7 +485,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 							}
 							else
 							{
-								LOG.error("Payment_Timeout order status for orderCode>>>" + order.getCode());
+								LOG.error(ERROR_PAYMENT + order.getCode());
 							}
 
 						}
@@ -529,7 +530,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 			else
 			{
-				LOG.error("Payment_Timeout order status for orderCode>>>" + order.getCode());
+				LOG.error(ERROR_PAYMENT + order.getCode());
 			}
 
 		}
@@ -642,7 +643,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 			else
 			{
-				LOG.error("Payment_Timeout order status for orderCode>>>" + abstractOrderModel.getCode());
+				LOG.error(ERROR_PAYMENT + abstractOrderModel.getCode());
 			}
 
 		}
@@ -776,7 +777,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 			else
 			{
-				LOG.error("Payment_Timeout order status for orderCode>>>" + cart.getCode());
+				LOG.error(ERROR_PAYMENT + cart.getCode());
 			}
 
 			//}
@@ -1003,7 +1004,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 			else
 			{
-				LOG.error("Payment_Timeout order status for orderCode>>>" + cart.getCode());
+				LOG.error(ERROR_PAYMENT + cart.getCode());
 			}
 		}
 		catch (final ModelSavingException e)
@@ -1235,7 +1236,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 			else
 			{
-				LOG.error("Payment_Timeout order status for orderCode>>>" + cart.getCode());
+				LOG.error(ERROR_PAYMENT + cart.getCode());
 			}
 
 		}
@@ -1333,7 +1334,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 			else
 			{
-				LOG.error("Payment_Timeout order status for orderCode>>>" + cart.getCode());
+				LOG.error(ERROR_PAYMENT + cart.getCode());
 			}
 
 		}
@@ -1492,7 +1493,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		}
 		else
 		{
-			LOG.error("Payment_Timeout order status for orderCode>>>" + abstractOrderModel.getCode());
+			LOG.error(ERROR_PAYMENT + abstractOrderModel.getCode());
 		}
 	}
 
@@ -3019,11 +3020,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 *
+	 * 
 	 * @param : bankName
-	 *
+	 * 
 	 * @return : BankModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3035,9 +3036,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override

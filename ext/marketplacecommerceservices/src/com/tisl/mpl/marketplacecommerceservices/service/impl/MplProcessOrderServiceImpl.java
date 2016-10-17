@@ -90,6 +90,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	private MplVoucherService mplVoucherService;
 	@Resource(name = "mplVoucherDao")
 	private MplVoucherDao mplVoucherDao;
+	private static final String ERROR_NOTIF = "Error while sending notifications>>>>>>";
 
 	/**
 	 * This method processes pending orders
@@ -220,11 +221,11 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 							}
 							catch (final JAXBException e)
 							{
-								LOG.error("Error while sending notifications>>>>>>", e);
+								LOG.error(ERROR_NOTIF, e);
 							}
 							catch (final Exception ex)
 							{
-								LOG.error("Error while sending notifications>>>>>>", ex);
+								LOG.error(ERROR_NOTIF, ex);
 							}
 
 						}
@@ -253,11 +254,11 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 								}
 								catch (final JAXBException e)
 								{
-									LOG.error("Error while sending notifications>>>>>>", e);
+									LOG.error(ERROR_NOTIF, e);
 								}
 								catch (final Exception ex)
 								{
-									LOG.error("Error while sending notifications>>>>>>", ex);
+									LOG.error(ERROR_NOTIF, ex);
 								}
 
 								orderModel.setIsPendingNotSent(Boolean.valueOf(flag));
@@ -367,7 +368,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 				}
 				catch (final Exception ex)
 				{
-					LOG.error("Error while sending notifications>>>>>>", ex);
+					LOG.error(ERROR_NOTIF, ex);
 				}
 			}
 
@@ -407,7 +408,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 				}
 				catch (final Exception ex)
 				{
-					LOG.error("Error while sending notifications>>>>>>", ex);
+					LOG.error(ERROR_NOTIF, ex);
 				}
 			}
 
