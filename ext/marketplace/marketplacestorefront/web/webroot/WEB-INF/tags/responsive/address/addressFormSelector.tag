@@ -65,7 +65,7 @@
 						labelKey="checkout.summary.deliveryAddress.saveAddressInMyAddressBook" 
 						path="saveInAddressBook" 
 						labelCSS="add-address-left-label" mandatory="false"/> --%>
-						<input type="checkbox" id="saveAddressInMyAddressBook" name="saveInAddressBook" value="true"/>
+						<input type="checkbox" id="saveAddressInMyAddressBook" checked="checked" name="saveInAddressBook" value="true"/>
 												<label for="saveAddressInMyAddressBook">SAVE THIS ADDRESS FOR LATER</label>
 			</c:when>
 			<c:when test="${not addressBookEmpty && not isDefaultAddress}">

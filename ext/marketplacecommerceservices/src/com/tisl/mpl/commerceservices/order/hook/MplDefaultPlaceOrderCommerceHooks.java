@@ -474,6 +474,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				{
 					totalDeliveryDiscount += entryModelList.getPrevDelCharge().doubleValue()
 							- entryModelList.getCurrDelCharge().doubleValue();
+					LOG.debug("totalDeliveryDiscount:" + totalDeliveryDiscount);
 				}
 				else
 				{
@@ -528,11 +529,12 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			//					.subtract(BigDecimal.valueOf(totalCartLevelDiscount)).subtract(BigDecimal.valueOf(totalProductDiscount))
 			//					.subtract(BigDecimal.valueOf(totalCouponDiscount));
 
-
-			totalPrice = BigDecimal.valueOf(totalPriceForSubTotal).add(BigDecimal.valueOf(totalDeliveryPrice))
-					.subtract(BigDecimal.valueOf(totalDeliveryDiscount)).subtract(BigDecimal.valueOf(totalCartLevelDiscount))
-					.subtract(BigDecimal.valueOf(totalProductDiscount)).subtract(BigDecimal.valueOf(totalCouponDiscount));
+			totalPrice = BigDecimal.valueOf(totalPriceForSubTotal)/*.add(BigDecimal.valueOf(totalConvChargeForCOD)) */
+					.add(BigDecimal.valueOf(totalDeliveryPrice))/* .subtract(BigDecimal.valueOf(totalDeliveryDiscount)) */
+					.subtract(BigDecimal.valueOf(totalCartLevelDiscount)).subtract(BigDecimal.valueOf(totalProductDiscount))
+					.subtract(BigDecimal.valueOf(totalCouponDiscount));
 			totalPriceWithConv = totalPrice.add(BigDecimal.valueOf(totalConvChargeForCOD));
+			
 			final DecimalFormat decimalFormat = new DecimalFormat("#.00");
 			totalPrice = totalPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 			totalPriceWithConv = totalPriceWithConv.setScale(2, BigDecimal.ROUND_HALF_EVEN);

@@ -634,7 +634,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 
 				//Logic when Payment mode is COD
-				if (null != cartData && MarketplacecheckoutaddonConstants.PAYMENTCOD.equalsIgnoreCase(paymentForm.getPaymentMode()))
+				if (null != cartData && MarketplacecheckoutaddonConstants.PAYMENTCOD.equalsIgnoreCase(paymentForm.getPaymentModeValue()))
 				{
 					//Adding cartdata into model
 					model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
