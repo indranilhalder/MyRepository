@@ -613,11 +613,12 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 					{
 						totalPrice = totalPrice + entry.getTotalPrice().doubleValue();
 					}
-					else if ((null != entry.getAttribute(arg0, "isBOGOapplied")
-							&& BooleanUtils.toBoolean(entry.getAttribute(arg0, "isBOGOapplied").toString()) && null != entry
-								.getAttribute(arg0, "bogoFreeItmCount")))
+					else if ((null != entry.getAttribute(arg0, MarketplacecommerceservicesConstants.IS_BOGO_APPLIED)
+							&& BooleanUtils.toBoolean(entry.getAttribute(arg0, MarketplacecommerceservicesConstants.IS_BOGO_APPLIED)
+									.toString()) && null != entry.getAttribute(arg0, MarketplacecommerceservicesConstants.BOGO_ITEM_COUNT)))
 					{
-						final double freecount = Double.parseDouble(entry.getAttribute(arg0, "bogoFreeItmCount").toString());
+						final double freecount = Double.parseDouble(entry.getAttribute(arg0,
+								MarketplacecommerceservicesConstants.BOGO_ITEM_COUNT).toString());
 						totalPrice = totalPrice + (freecount * 0.01);
 					}
 				}
@@ -668,12 +669,13 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 						totalPrice = totalPrice + (mapentry.getValue().getTotalPrice().doubleValue());
 					}
 
-					if ((null != mapentry.getValue().getAttribute(arg0, "isBOGOapplied")
-							&& BooleanUtils.toBoolean(mapentry.getValue().getAttribute(arg0, "isBOGOapplied").toString()) && null != mapentry
-							.getValue().getAttribute(arg0, "bogoFreeItmCount")))
+					if ((null != mapentry.getValue().getAttribute(arg0, MarketplacecommerceservicesConstants.IS_BOGO_APPLIED)
+							&& BooleanUtils.toBoolean(mapentry.getValue()
+									.getAttribute(arg0, MarketplacecommerceservicesConstants.IS_BOGO_APPLIED).toString()) && null != mapentry
+							.getValue().getAttribute(arg0, MarketplacecommerceservicesConstants.BOGO_ITEM_COUNT)))
 					{
-						final double freecount = Double.parseDouble(mapentry.getValue().getAttribute(arg0, "bogoFreeItmCount")
-								.toString());
+						final double freecount = Double.parseDouble(mapentry.getValue()
+								.getAttribute(arg0, MarketplacecommerceservicesConstants.BOGO_ITEM_COUNT).toString());
 						bogoFreePrice = bogoFreePrice + (freecount * 0.01);
 					}
 				}

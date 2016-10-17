@@ -9,9 +9,10 @@ import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
-import de.hybris.platform.commercefacades.search.converters.populator.SearchResultVariantProductPopulator;
 import de.hybris.platform.commerceservices.search.resultdata.SearchResultValueData;
 import de.hybris.platform.commerceservices.search.solrfacetsearch.provider.impl.SolrFirstVariantCategoryManager;
+import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ import org.apache.commons.lang.StringUtils;
  * @author 360641
  *
  */
-public class MplSearchResultProductPopulator extends SearchResultVariantProductPopulator
+public class MplSearchResultProductPopulator extends MplSearchResultVariantProductPopulator
 {
 
 	@SuppressWarnings("unused")
@@ -43,6 +44,8 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 	public void populate(final SearchResultValueData source, final ProductData target)
 	{
 		super.populate(source, target);
+		//System.out.println("testing...........###############");
+		populateStockDetails(source, target);
 		if (source.getValues() != null)
 		{
 			populatePrices(source, target);
@@ -190,8 +193,10 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 				 * if( { target.setLeastSizeProduct(this.<String> getValue(source, "allPromotions")); }
 				 */
 			}
+
 		}
 	}
+
 
 
 	@Override
@@ -238,6 +243,37 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 
 	}
 
+	//@Override
+	protected void populateStockDetails(final SearchResultValueData source, final ProductData target)
+	{
+		if (getValue(source, "stockLevelStatus") != null)
+		{
+
+			final boolean stockLevelStatus = Boolean.parseBoolean(getValue(source, "stockLevelStatus").toString());
+
+			try
+			{
+				// In case of low stock then make a call to the stock service to determine if in or out of stock.
+				// In this case (low stock) it is ok to load the product from the DB and do the real stock check
+				final ProductModel productModel = getProductService().getProductForCode(target.getCode());
+				if (productModel != null)
+				{
+					target.setStockValue(stockLevelStatus);
+				}
+			}
+			catch (final UnknownIdentifierException ex)
+			{
+				// If the product is no longer visible to the customergroup then this exception can be thrown
+
+				// We can't remove the product from the results, but we can mark it as out of stock
+				target.setStockValue(stockLevelStatus);
+			}
+		}
+
+	}
+
+
+
 
 	@Override
 	protected List<ImageData> createImageData(final SearchResultValueData source)
@@ -256,20 +292,20 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 	/*
 	 * @Override protected void addImageData(final SearchResultValueData source, final String imageFormat, final String
 	 * mediaFormatQualifier, final ImageDataType type, final List<ImageData> images) {
-	 *
+	 * 
 	 * final Object imgObj = getValue(source, "img-" + mediaFormatQualifier); List<String> imgList = new ArrayList(); if
 	 * (imgObj instanceof ArrayList) { imgList = (List) imgObj; } else { final String imgStr = (String) imgObj;
 	 * imgList.add(imgStr); }
-	 *
-	 *
+	 * 
+	 * 
 	 * if (!imgList.isEmpty()) { for (int i = 0; i < imgList.size(); i++) { final ImageData imageSearchData =
 	 * createImageData(); imageSearchData.setImageType(type); imageSearchData.setFormat(imageFormat);
 	 * imageSearchData.setUrl(imgList.get(i)); images.add(imageSearchData);
-	 *
-	 *
+	 * 
+	 * 
 	 * }
-	 *
-	 *
+	 * 
+	 * 
 	 * } }
 	 */
 

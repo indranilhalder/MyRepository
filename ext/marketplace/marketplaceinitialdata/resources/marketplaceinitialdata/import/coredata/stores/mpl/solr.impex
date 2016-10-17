@@ -104,7 +104,7 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 ;$solrIndexedType; summary                ;text   ;            ;    ;true;    ;    ;    ;;
 ;$solrIndexedType; keywords               ;text   ;            ;    ;true;    ;true;    ;productKeywordsValueProvider;;
 ;$solrIndexedType; url                    ;string ;            ;    ;true;    ;    ;    ;mplProductUrlValueProvider;
-;$solrIndexedType; stockLevelStatus       ;string ;            ;    ;    ;    ;    ;    ;mplStockLevelStatusValueProvider;
+;$solrIndexedType; stockLevelStatus       ;boolean ;            ;    ;    ;    ;    ;    ;mplStockLevelStatusValueProvider;
 ;$solrIndexedType; baseProductColourGroup ;string ;            ;    ;    ;    ;    ;    ;mplProductColourGroupValueProvider;
 ;$solrIndexedType; priceValue             ;double ;            ;true;    ;    ;    ;    ;mplPriceValueProvider;
 ;$solrIndexedType; swatchColor    		  ;string ;            ;	;    ;true;    ;    ;mplSwatchColorValueProvider;
@@ -220,19 +220,19 @@ INSERT_UPDATE SolrSort;&sortRefID;indexedType(identifier)[unique=true];code[uniq
 
 # Define the sort fields
 INSERT_UPDATE SolrSortField;sort(indexedType(identifier),code)[unique=true];fieldName[unique=true];ascending[unique=true];sortpos
-;$solrIndexedType:relevance;inStockFlag;false;0
+;$solrIndexedType:relevance;stockLevelStatus;false;0
 ;$solrIndexedType:relevance;score;false;1
-;$solrIndexedType:name-asc;inStockFlag;false;0
+;$solrIndexedType:name-asc;stockLevelStatus;false;0
 ;$solrIndexedType:name-asc;name;true;1
-;$solrIndexedType:name-desc;inStockFlag;false;0
+;$solrIndexedType:name-desc;stockLevelStatus;false;0
 ;$solrIndexedType:name-desc;name;false;1
-;$solrIndexedType:price-asc;inStockFlag;false;0
+;$solrIndexedType:price-asc;stockLevelStatus;false;0
 ;$solrIndexedType:price-asc;priceValue;true;1
-;$solrIndexedType:price-desc;inStockFlag;false;0
+;$solrIndexedType:price-desc;stockLevelStatus;false;0
 ;$solrIndexedType:price-desc;priceValue;false;1
-;$solrIndexedType:isDiscountedPrice;inStockFlag;false;0
+;$solrIndexedType:isDiscountedPrice;stockLevelStatus;false;0
 ;$solrIndexedType:isDiscountedPrice;isDiscountedPrice;false;1
-;$solrIndexedType:isProductNew;inStockFlag;false;0
+;$solrIndexedType:isProductNew;stockLevelStatus;false;0
 ;$solrIndexedType:isProductNew;isProductNew;false;1
 ;$solrIndexedType:promotedpriority-asc;promotedProductPriority;true;0
 

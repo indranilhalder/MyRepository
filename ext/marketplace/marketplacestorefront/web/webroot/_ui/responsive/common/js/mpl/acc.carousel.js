@@ -114,7 +114,8 @@ ACC.carousel = {
 	myFun: function(){
 		$(".electronic-rotatingImage").owlCarousel({
 			items:1,
-    		loop: true,
+    		//loop: true,
+			loop: $("#rotatingImage img").length == 1 ? false : true,
     		nav:true,
     		dots:false,
     		navText:[]
@@ -685,12 +686,12 @@ ACC.carousel = {
 	},
 	
 	advancedCategoryCarousel: function(){
-		setTimeout(function() {
+		//setTimeout(function() {
 			console.log("inside timeout");
 		$("#mplAdvancedCategoryCarousel").owlCarousel({
 					items:4,
             		loop: true,
-            		nav:true,
+            		nav:false,
             		dots:false,
             		navText:[],
             		responsive : {
@@ -723,7 +724,7 @@ ACC.carousel = {
 			rewindNav: false,
 			lazyLoad:true*/
 		});
-		},7000);
+		//},7000);
 		console.log("outside timeout");
 	},
 	

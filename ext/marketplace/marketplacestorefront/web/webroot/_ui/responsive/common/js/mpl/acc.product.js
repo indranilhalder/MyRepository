@@ -1301,7 +1301,7 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 						
 						// generating postAjaxURL
 						var browserURL = window.location.href.split('?');
-						var pageURL = browserURL[0]+'?'+nonEmptyDataString.replace(/:/g,"%3A");
+						var pageURL = browserURL[0]+'?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
 						
 						
 						// generating request mapping URL
@@ -1423,5 +1423,3 @@ function loadPriceRange(){
 }
 
 //Code changes end for TPR -168//
-
-

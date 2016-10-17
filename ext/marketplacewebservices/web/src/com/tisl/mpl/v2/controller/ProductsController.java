@@ -213,7 +213,8 @@ public class ProductsController extends BaseController
 	 * Returns a list of products and additional data such as: available facets, available sorting and pagination
 	 * options. It can include spelling suggestions.To make spelling suggestions work you need to:
 	 * <ul>
-	 * <li>Make sure enableSpellCheck on the SearchQuery is set to true. By default it should be already set to true.</li>
+	 * <li>Make sure enableSpellCheck on the SearchQuery is set to true. By default it should be already set to true.
+	 * </li>
 	 * <li>Have indexed properties configured to be used for spellchecking.</li>
 	 * </ul>
 	 *
@@ -320,6 +321,10 @@ public class ProductsController extends BaseController
 			{
 				product.setError(e.getErrorMessage());
 			}
+			if (null != e.getErrorCode())
+			{
+				product.setErrorCode(e.getErrorCode());
+			}
 			product.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		catch (final EtailBusinessExceptions e)
@@ -328,6 +333,10 @@ public class ProductsController extends BaseController
 			if (null != e.getErrorMessage())
 			{
 				product.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				product.setErrorCode(e.getErrorCode());
 			}
 			product.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
@@ -536,8 +545,8 @@ public class ProductsController extends BaseController
 	@RequestMapping(value = "/{productCode}/references", method = RequestMethod.GET)
 	@ResponseBody
 	public ProductReferenceListWsDTO exportProductReferences(@PathVariable final String productCode,
-			@RequestParam(required = false, defaultValue = MAX_INTEGER) final int pageSize,
-			@RequestParam final String referenceType, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+			@RequestParam(required = false, defaultValue = MAX_INTEGER) final int pageSize, @RequestParam final String referenceType,
+			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
 		final List<ProductOption> opts = Lists.newArrayList(OPTIONS);
 		final ProductReferenceTypeEnum referenceTypeEnum = ProductReferenceTypeEnum.valueOf(referenceType);
@@ -1028,17 +1037,29 @@ public class ProductsController extends BaseController
 		}
 		catch (final EtailBusinessExceptions e)
 		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
-			//e.printStackTrace();
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				productSearchPage.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				productSearchPage.setErrorCode(e.getErrorCode());
+			}
 			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-			productSearchPage.setError(MarketplacecommerceservicesConstants.EXCEPTION_IS + e);
+
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
-			//e.printStackTrace();
+			if (null != e.getErrorMessage())
+			{
+				productSearchPage.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				productSearchPage.setErrorCode(e.getErrorCode());
+			}
 			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-			productSearchPage.setError(MarketplacecommerceservicesConstants.EXCEPTION_IS + ":" + e);
 		}
 		catch (final Exception e)
 		{
@@ -1354,8 +1375,8 @@ public class ProductsController extends BaseController
 				else
 				{
 
-					searchPageData = searchFacade
-							.dropDownSearch(searchState, typeID, MarketplaceCoreConstants.SELLER_ID, pageableData);
+					searchPageData = searchFacade.dropDownSearch(searchState, typeID, MarketplaceCoreConstants.SELLER_ID,
+							pageableData);
 				}
 			}
 			//final List<String> filter = new ArrayList<String>();

@@ -803,7 +803,8 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		final SolrSearchQueryTermData solrSearchQueryTermDataCategory = new SolrSearchQueryTermData();
 
 		//TISPRD-3816 starts
-		if (StringUtils.isNotEmpty(categoryCode)
+		if (null == searchState.getQuery().getValue() //TISPRD-6488
+				&& StringUtils.isNotEmpty(categoryCode)
 				&& !searchState.isSns()
 				&& (categoryCode.startsWith(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX) || categoryCode
 						.startsWith(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX_LOWER)))

@@ -7,6 +7,7 @@ import de.hybris.platform.catalog.model.classification.ClassificationClassModel;
 import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commercefacades.product.ProductFacade;
+import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ImageDataType;
@@ -19,6 +20,7 @@ import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearc
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -92,6 +94,9 @@ public class SearchSuggestUtilityMethods
 	//@Resource(name = "defaultPromotionManager")
 	//private DefaultPromotionManager defaultPromotionManager;
 
+	/*
+	 * @Resource(name = "accProductFacade") private ProductFacade productFacade;
+	 */
 	@Resource(name = "accProductFacade")
 	private ProductFacade productFacade;
 	//@Resource(name = "defaultMplProductSearchFacade")
@@ -653,6 +658,7 @@ public class SearchSuggestUtilityMethods
 		final List<SellingItemDetailWsDto> searchProductDTOList = new ArrayList<>();
 		final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
 		List<GalleryImageData> galleryImages = null;
+		ProductData productDataImage = null;
 		for (final ProductData productData : searchPageData.getResults())
 		{
 
@@ -661,20 +667,44 @@ public class SearchSuggestUtilityMethods
 
 			if (null != productData && null != productData.getCode())
 			{
-
 				//productDataImage = productFacade.getProductForCodeAndOptions(productData.getCode(),
 				//	Arrays.asList(ProductOption.GALLERY));
 				//TPR-796
-				galleryImages = productDetailsHelper.getPrimaryGalleryImagesMobile(productData);
-
+				//galleryImages = productDetailsHelper.getPrimaryGalleryImagesMobile(productData);
+				/*
+				 * final ProductModel productModel = productService.getProductForCode(defaultPromotionManager.catalogData(),
+				 * productData.getCode());
+				 * 
+				 * ProductData productData1 = null; if (null != productModel) { productData1 =
+				 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.GALLERY)); } else { throw
+				 * new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9037); }
+				 * 
+				 * 
+				 * if (null != productData1) { final List<GalleryImageData> gallaryImages =
+				 * mplProductWebService.getGalleryImages(productData1);
+				 * 
+				 * if (!gallaryImages.isEmpty()) { sellingItemDetail.setGalleryImagesList(gallaryImages); }
+				 * 
+				 * }
+				 */
+				try
+				{
+					productDataImage = productFacade.getProductForCodeAndOptions(productData.getCode(),
+							Arrays.asList(ProductOption.GALLERY));
+					galleryImages = productDetailsHelper.getGalleryImagesMobile(productDataImage);
+				}
+				catch (final Exception e)
+				{
+					LOG.error("SERPSEARCH ProductError:" + productData.getCode());
+					continue;
+				}
 				if (CollectionUtils.isNotEmpty(galleryImages))
 				{
 					sellingItemDetail.setGalleryImagesList(galleryImages);
 				}
-				if (null != (productData.getSavingsOnProduct()))
+				if (null != productData.getSavingsOnProduct() && null != productData.getSavingsOnProduct().getValue())
 				{
-					sellingItemDetail.setDiscountPercent(Integer.valueOf(
-							String.valueOf(productData.getSavingsOnProduct().getValue().toString())).toString());
+					sellingItemDetail.setDiscountPercent(String.valueOf(productData.getSavingsOnProduct().getValue().intValue()));
 				}
 				if (null != productData.getName())
 				{
@@ -1312,12 +1342,12 @@ public class SearchSuggestUtilityMethods
 		final List<FacetDataWsDTO> searchfacetDTOList = new ArrayList<>();
 		DepartmentHierarchyWs categoryHierarchy = new DepartmentHierarchyWs();
 		List<FacetValueDataWsDTO> facetValueWsDTOList = null;
-
-		if (null != searchPageData.getFacets())
+		if (CollectionUtils.isNotEmpty(searchPageData.getFacets()))
 		{
 			for (final FacetData<SearchStateData> facate : searchPageData.getFacets())
 			{
-				if (facate.isVisible() && !facate.getCode().equalsIgnoreCase("snsCategory")
+				if (facate.isVisible() && StringUtils.isNotEmpty(facate.getCode())
+						&& !facate.getCode().equalsIgnoreCase("snsCategory")
 						&& !facate.getCode().equalsIgnoreCase(MarketplacewebservicesConstants.CATEGORY)
 						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
 						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory"))
@@ -1329,7 +1359,7 @@ public class SearchSuggestUtilityMethods
 
 					//	facetWsDTO.setCategory(facate.getCode());
 					facetWsDTO.setMultiSelect(Boolean.valueOf((facate.isCategory())));
-					if (null != facate.getName())
+					if (StringUtils.isNotEmpty(facate.getName()))
 					{
 						facetWsDTO.setName(StringUtils.capitalize(facate.getName()));
 					}
@@ -1373,10 +1403,12 @@ public class SearchSuggestUtilityMethods
 								currentFacet = values.getQuery().getQuery().getValue().toString();
 								facetValueWsDTO.setQuery(currentFacet);
 								//facetValueWsDTO.setValue(currentFacet.substring((currentFacet.lastIndexOf(":") + 1)));
-
-								facetValueWsDTO.setValue(values.getCode());
+								if (StringUtils.isNotEmpty(values.getCode()))
+								{
+									facetValueWsDTO.setValue(values.getCode());
+								}
 							}
-							if (null != values.getQuery().getUrl())
+							if (StringUtils.isNotEmpty(values.getQuery().getUrl()))
 							{
 								facetValueWsDTO.setUrl(values.getQuery().getUrl().toString());
 							}
@@ -1384,7 +1416,8 @@ public class SearchSuggestUtilityMethods
 							facetValueWsDTO.setCount(Long.valueOf(values.getCount()));
 
 							//If facet name is "Include out of stock"  value will be false
-							if (!(null != values.getCode() && values.getCode().equalsIgnoreCase("false")))
+							if (!(null != values.getCode() && StringUtils.isNotEmpty(values.getCode()) && values.getCode()
+									.equalsIgnoreCase("false")))
 							{
 								facetValueWsDTOList.add(facetValueWsDTO);
 							}
@@ -1399,7 +1432,8 @@ public class SearchSuggestUtilityMethods
 					}
 					//searchfacetDTOList.add(facetWsDTO);
 				}
-				else if (facate.isVisible() && facate.getCode().equalsIgnoreCase(MarketplacewebservicesConstants.CATEGORY))
+				else if (facate.isVisible() && StringUtils.isNotEmpty(facate.getCode())
+						&& facate.getCode().equalsIgnoreCase(MarketplacewebservicesConstants.CATEGORY))
 				{
 					if (null != searchPageData.getDepartmentHierarchyData()
 							&& CollectionUtils.isNotEmpty(searchPageData.getDepartmentHierarchyData().getHierarchyList()))
@@ -1408,7 +1442,7 @@ public class SearchSuggestUtilityMethods
 								facate.getValues());
 					}
 					categoryHierarchy.setMultiSelect(Boolean.valueOf((facate.isCategory())));
-					if (null != facate.getName())
+					if (StringUtils.isNotEmpty(facate.getName()))
 					{
 						categoryHierarchy.setName(StringUtils.capitalize(facate.getName()));
 					}
@@ -1417,7 +1451,8 @@ public class SearchSuggestUtilityMethods
 					categoryHierarchy.setKey(facate.getCode());
 
 					//Generic filter condition
-					if (searchPageData.getDeptType().equalsIgnoreCase(MarketplacewebservicesConstants.GENERIC))
+					if (StringUtils.isNotEmpty(searchPageData.getDeptType())
+							&& searchPageData.getDeptType().equalsIgnoreCase(MarketplacewebservicesConstants.GENERIC))
 					{
 
 						if (facate.isGenericFilter())
@@ -1540,7 +1575,8 @@ public class SearchSuggestUtilityMethods
 							//FOr select if facet is selected
 							for (final FacetValueData<SearchStateData> value : facetValues)
 							{
-								if (value != null && value.getCode().equalsIgnoreCase(l4Depart.getCategoryCode()))
+								if (value != null && StringUtils.isNotEmpty(value.getCode())
+										&& value.getCode().equalsIgnoreCase(l4Depart.getCategoryCode()))
 								{
 									l4Depart.setSelected(Boolean.valueOf(value.isSelected()));
 									//TPR-796
@@ -1573,7 +1609,8 @@ public class SearchSuggestUtilityMethods
 						//FOr select if facet is selected
 						for (final FacetValueData<SearchStateData> value : facetValues)
 						{
-							if (value != null && value.getCode().equalsIgnoreCase(l3Depart.getCategoryCode()))
+							if (value != null && StringUtils.isNotEmpty(value.getCode())
+									&& value.getCode().equalsIgnoreCase(l3Depart.getCategoryCode()))
 							{
 								l3Depart.setSelected(Boolean.valueOf(value.isSelected()));
 								//TPR-796
@@ -1585,7 +1622,8 @@ public class SearchSuggestUtilityMethods
 								break;
 							}
 						}
-						if (l3Depart.getCategoryCode().contains(l2Depart.getCategoryCode()))
+						if (StringUtils.isNotEmpty(l3Depart.getCategoryCode())
+								&& l3Depart.getCategoryCode().contains(l2Depart.getCategoryCode()))
 						{
 							if (CollectionUtils.isNotEmpty(l2Depart.getChildFilters()))
 							{
@@ -1606,7 +1644,8 @@ public class SearchSuggestUtilityMethods
 					//FOr select if facet is selected
 					for (final FacetValueData<SearchStateData> value : facetValues)
 					{
-						if (value != null && value.getCode().equalsIgnoreCase(l2Depart.getCategoryCode()))
+						if (value != null && StringUtils.isNotEmpty(value.getCode())
+								&& value.getCode().equalsIgnoreCase(l2Depart.getCategoryCode()))
 						{
 							l2Depart.setSelected(Boolean.valueOf(value.isSelected()));
 							//TPR-796
@@ -1618,7 +1657,8 @@ public class SearchSuggestUtilityMethods
 							break;
 						}
 					}
-					if (l2Depart.getCategoryCode().contains(l1Depart.getCategoryCode()))
+					if (StringUtils.isNotEmpty(l2Depart.getCategoryCode())
+							&& l2Depart.getCategoryCode().contains(l1Depart.getCategoryCode()))
 					{
 						if (CollectionUtils.isNotEmpty(l1Depart.getChildFilters()))
 						{
@@ -1637,7 +1677,8 @@ public class SearchSuggestUtilityMethods
 				//FOr select if facet is selected
 				for (final FacetValueData<SearchStateData> value : facetValues)
 				{
-					if (value != null && value.getCode().equalsIgnoreCase(l1Depart.getCategoryCode()))
+					if (value != null && StringUtils.isNotEmpty(value.getCode())
+							&& value.getCode().equalsIgnoreCase(l1Depart.getCategoryCode()))
 					{
 						l1Depart.setSelected(Boolean.valueOf(value.isSelected()));
 						//TPR-796
@@ -1677,40 +1718,50 @@ public class SearchSuggestUtilityMethods
 
 
 		l1Map = new TreeMap<String, DepartmentFilterWsDto>();
-		for (final DepartmentFilterWsDto l1 : departmentHierarchy.getFilters())
+		if (CollectionUtils.isNotEmpty(departmentHierarchy.getFilters()))
 		{
-			l2Map = new TreeMap<String, DepartmentFilterWsDto>();
-			for (final DepartmentFilterWsDto l2 : l1.getChildFilters())
+			for (final DepartmentFilterWsDto l1 : departmentHierarchy.getFilters())
 			{
-				l3Map = new TreeMap<String, DepartmentFilterWsDto>();
-				for (final DepartmentFilterWsDto l3 : l2.getChildFilters())
+				l2Map = new TreeMap<String, DepartmentFilterWsDto>();
+				if (CollectionUtils.isNotEmpty(l1.getChildFilters()))
 				{
-					if (CollectionUtils.isNotEmpty(l3.getChildFilters()))
+					for (final DepartmentFilterWsDto l2 : l1.getChildFilters())
 					{
-						l4Map = new TreeMap<String, DepartmentFilterWsDto>();
-						for (final DepartmentFilterWsDto l4 : l3.getChildFilters())
+						l3Map = new TreeMap<String, DepartmentFilterWsDto>();
+						if (CollectionUtils.isNotEmpty(l2.getChildFilters()))
 						{
-							l4Map.put(l4.getCategoryCode(), l4);
-						}
-						lSortedFinalList = new ArrayList<DepartmentFilterWsDto>(l4Map.values());
-						l3.setChildFilters(lSortedFinalList);
-					}
-					l3Map.put(l3.getCategoryCode(), l3);
+							for (final DepartmentFilterWsDto l3 : l2.getChildFilters())
+							{
+								if (CollectionUtils.isNotEmpty(l3.getChildFilters()))
+								{
+									l4Map = new TreeMap<String, DepartmentFilterWsDto>();
 
+									for (final DepartmentFilterWsDto l4 : l3.getChildFilters())
+									{
+										l4Map.put(l4.getCategoryCode(), l4);
+									}
+									lSortedFinalList = new ArrayList<DepartmentFilterWsDto>(l4Map.values());
+									l3.setChildFilters(lSortedFinalList);
+								}
+								l3Map.put(l3.getCategoryCode(), l3);
+
+							}
+						}
+						if (MapUtils.isNotEmpty(l3Map))
+						{
+							lSortedFinalList = new ArrayList<DepartmentFilterWsDto>(l3Map.values());
+							l2.setChildFilters(lSortedFinalList);
+						}
+						l2Map.put(l2.getCategoryCode(), l2);
+					}
 				}
-				if (MapUtils.isNotEmpty(l3Map))
+				if (MapUtils.isNotEmpty(l2Map))
 				{
-					lSortedFinalList = new ArrayList<DepartmentFilterWsDto>(l3Map.values());
-					l2.setChildFilters(lSortedFinalList);
+					lSortedFinalList = new ArrayList<DepartmentFilterWsDto>(l2Map.values());
+					l1.setChildFilters(lSortedFinalList);
 				}
-				l2Map.put(l2.getCategoryCode(), l2);
+				l1Map.put(l1.getCategoryCode(), l1);
 			}
-			if (MapUtils.isNotEmpty(l2Map))
-			{
-				lSortedFinalList = new ArrayList<DepartmentFilterWsDto>(l2Map.values());
-				l1.setChildFilters(lSortedFinalList);
-			}
-			l1Map.put(l1.getCategoryCode(), l1);
 		}
 		if (MapUtils.isNotEmpty(l1Map))
 		{

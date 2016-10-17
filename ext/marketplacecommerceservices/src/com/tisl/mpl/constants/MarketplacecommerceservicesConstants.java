@@ -56,6 +56,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String Already_Have_Wishlists = "You already have the following whishlists:";
 	public static final String PRODUCT_PRIORITY = "7";
 	public static final String CART_DELISTED_STATUS = "Cart Delisted Status :";
+	public static final String IS_BOGO_APPLIED = "isBOGOapplied";
+	public static final String BOGO_ITEM_COUNT = "bogoFreeItmCount";
 
 	//SONAR FIX
 	public static final String CONSIGNMENT_STATUS = " Consignment status :";
@@ -1396,6 +1398,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String TICKET_SUB_TYPE = "AC";
 	//CRM Ticket Source From Commerce
 	public static final String SOURCE = "commerce";
+	public static final String DEFAULT_COUNTRY_CODE = "IN";
+	public static final int PIN_CODE_LENGTH = 6;
 
 	//Coupon
 	public static final String ZEROPOINTZEROONE = "0.01".intern();

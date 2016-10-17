@@ -3715,6 +3715,18 @@ public class CartsController extends BaseCommerceController
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorCode() && e.getErrorCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.B9038))
+			{
+				cartDataDetails.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+			else
+			{
+				cartDataDetails.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+			if (null != e.getErrorCode())
+			{
+				cartDataDetails.setErrorCode(e.getErrorCode());
+			}
 			if (null != e.getErrorMessage())
 			{
 				cartDataDetails.setError(e.getErrorMessage());
@@ -3732,10 +3744,15 @@ public class CartsController extends BaseCommerceController
 			{
 				cartDataDetails.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 			}
+			if (null != e.getErrorCode())
+			{
+				cartDataDetails.setErrorCode(e.getErrorCode());
+			}
 			if (null != e.getErrorMessage())
 			{
 				cartDataDetails.setError(e.getErrorMessage());
 			}
+			cartDataDetails.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		//TPR-799
 		catch (final Exception e)

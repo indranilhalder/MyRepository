@@ -1141,7 +1141,7 @@ tr.d0 td {
             <li id="total_Value" class="totalValue" style="display:none"><spring:theme code="basket.page.totals.total"/><span class="amt"><span id="totalValue"></span></span></li>
          <c:if test="${cartData.totalDiscounts.value > 0}">
         <li id="discount"><spring:theme code="basket.page.totals.savings"/><span class="amt">
-        -<ycommerce:testId code="Order_Totals_Savings"><format:price priceData="${cartData.totalDiscounts}"/></ycommerce:testId>
+        <ycommerce:testId code="Order_Totals_Savings"><format:price priceData="${cartData.totalDiscounts}"/></ycommerce:testId>
        <spring:theme code="text.parenthesis.open"/>  <c:out value="${cartData.discountPercentage}"></c:out><spring:theme code="text.percentage"/><spring:theme code="text.parenthesis.close"/>
         </c:if> 
         
@@ -1159,6 +1159,7 @@ tr.d0 td {
             </ycommerce:testId></span></li>
           </ul>
           
+
           </div>
 </div>
 <ul class="totals outstanding-total">

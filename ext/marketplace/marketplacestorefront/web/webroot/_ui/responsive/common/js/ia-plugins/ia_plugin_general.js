@@ -350,13 +350,17 @@ function callRecApi(params, requestURL) {
     contentType: 'text/javascript; charset=utf-8',
     data: params,
     success: function(response, textStatus, jXHR) {
-      requestURL = requestURL.substr(requestURL.indexOf("recommendations/")+"recommendations/".length)
-      requestURL = requestURL.substr(0, requestURL.indexOf("/jsonp"));
-      if(requestURL.indexOf("products/") > -1) {
-        requestURL = requestURL.substr(requestURL.indexOf("products/")+"products/".length)
-      }
-      if(requestURL === "products") {
-        requestURL = "normal";
+      if(requestURL.indexOf('recommendations/') > -1) {
+        requestURL = requestURL.substr(requestURL.indexOf("recommendations/")+"recommendations/".length);
+        if(requestURL.indexOf('/jsonp') > -1) {
+          requestURL = requestURL.substr(0, requestURL.indexOf("/jsonp"));
+        }
+        if(requestURL.indexOf("products/") > -1) {
+          requestURL = requestURL.substr(requestURL.indexOf("products/")+"products/".length);
+        }
+        if(requestURL === "products") {
+          requestURL = "normal";
+        }
       }
       updatePage(response, requestURL);
     }, error: function(jqXHR, textStatus, errorThrown) {
