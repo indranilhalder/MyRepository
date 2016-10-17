@@ -51,7 +51,6 @@ import com.tisl.mpl.jalo.ExcludeManufacturesRestriction;
 import com.tisl.mpl.jalo.ManufacturesRestriction;
 import com.tisl.mpl.jalo.SellerMaster;
 import com.tisl.mpl.model.SellerInformationModel;
-import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.BillingAddressWsDTO;
 import com.tisl.mpl.wsdto.OrderConfirmationWsDTO;
 
@@ -719,11 +718,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 *
+	 * 
 	 * @param orderDetail
-	 *
+	 * 
 	 * @param type (1-Billing, 2-Shipping)
-	 *
+	 * 
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -1094,7 +1093,7 @@ public class GenericUtilityMethods
 						{
 							if (categoryModel.getCode().contains(MarketplacecommerceservicesConstants.SELLER_NAME_PREFIX))
 							{
-								categoryName.append(categoryModel.getName()).append(":");
+								categoryName.append(categoryModel.getName()).append(':');
 								getCategoryLevel(categoryModel, 1, categoryName);
 							}
 
@@ -1309,7 +1308,7 @@ public class GenericUtilityMethods
 			{
 				for (final CategoryModel superCategory : categoryId.getSupercategories())
 				{
-					categoryName.append(superCategory.getName()).append(":");
+					categoryName.append(superCategory.getName()).append(':');
 					count++;
 					if (count == finalCount)
 					{
