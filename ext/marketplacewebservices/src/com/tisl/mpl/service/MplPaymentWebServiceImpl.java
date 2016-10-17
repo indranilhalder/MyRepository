@@ -204,8 +204,7 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 									else
 									{
 										//if item is not eligible for TSHIP countTshipNo display respective message
-										paymentServiceData.setError(MarketplacewebservicesConstants.SSHIP_ELIGIBLE);
-										break;
+										throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9202);
 									}
 
 								}
@@ -216,7 +215,6 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 			}
 			else
 			{
-				paymentServiceData.setError(MarketplacewebservicesConstants.CARTMODELEMPTY);
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
 			}
 		}

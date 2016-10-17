@@ -149,18 +149,17 @@ public class PaymentServicesController extends BaseController
 					{
 						//Getting COD details
 						codCheck = getMplPaymentWebFacade().getCODDetails(cart, customer.getUid());
+						codCheck.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 					}
 					else
 					{
 						//Message to display Customer is Black list Consumer
-						codCheck.setError(MarketplacewebservicesConstants.BLACKLIST);
+						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9301);
 					}
 
-					if (codCheck != null)
-					{
-						//Putting data into DTOs
-						codCheckDTO = dataMapper.map(codCheck, PaymentServiceWsDTO.class, fields);
-					}
+					//Putting data into DTOs
+					codCheckDTO = dataMapper.map(codCheck, PaymentServiceWsDTO.class, fields);
+
 				}
 				else
 				{
@@ -175,18 +174,16 @@ public class PaymentServicesController extends BaseController
 				{
 					//Getting COD details
 					codCheck = getMplPaymentWebFacade().getCODDetails(orderModel, customer.getUid());
+					codCheck.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 				}
 				else
 				{
 					//Message to display Customer is Black list Consumer
-					codCheck.setError(MarketplacewebservicesConstants.BLACKLIST);
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9301);
 				}
+				//Putting data into DTOs
+				codCheckDTO = dataMapper.map(codCheck, PaymentServiceWsDTO.class, fields);
 
-				if (codCheck != null)
-				{
-					//Putting data into DTOs
-					codCheckDTO = dataMapper.map(codCheck, PaymentServiceWsDTO.class, fields);
-				}
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
