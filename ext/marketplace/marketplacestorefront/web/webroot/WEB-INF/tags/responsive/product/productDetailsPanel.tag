@@ -67,12 +67,21 @@ tr.d0 td {
 <input type="hidden" id="page_name" value="${page_name}" />
 <input type="hidden" id="product_id" value="${product_id}" />
 <input type="hidden" id="page_subcategory_name" value="${page_subcategory_name}" />
-<input type="hidden" id="page_subcategory_name_L3" value="${page_subcategory_name_L3}" />
+<input type="hidden" id="page_subcategory_name_l3" value="${page_subcategory_name_l3}" />
 <input type="hidden" id="product_brand" value="${product_brand}" />
 <input type="hidden" id="site_section_detail" value="${site_section_detail}" />
 <input type="hidden" id="product_category" value="${product_category}" />
-
+<!-- TPR-672 START -->
+<input type="hidden" id="product_applied_promotion_title" value="${product_applied_promotion_title}" />
+<input type="hidden" id="product_applied_promotion_code" value="${product_applied_promotion_code}" />
+<!-- TPR-672 END -->
+<!-- TPR-429 START-->
+<input type="hidden" id="pdpSellerIDs" value='${pdpSellerIDs}'/>
+<input type="hidden" id="pdpBuyboxWinnerSellerID" value=''/>
+<input type="hidden" id="pdpOtherSellerIDs" value=''/>
+<!-- TPR-429 END-->
 <!-- End Tealium -->
+
 <!-- TISPRM-56 -->
 <input type="hidden" id="product_allVariantsListingId" value="${allVariantsString}"/>
 

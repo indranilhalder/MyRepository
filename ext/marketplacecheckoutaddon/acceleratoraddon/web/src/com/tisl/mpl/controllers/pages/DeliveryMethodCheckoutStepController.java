@@ -21,6 +21,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMe
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.commercefacades.order.CheckoutFacade;
 import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
@@ -255,6 +256,12 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					&& (cartData != null && cartData.getEntries() != null && !cartData.getEntries().isEmpty()))
 			{
 				responseData = getMplCartFacade().getOMSPincodeResponseData(defaultPinCodeId, cartData);
+				// TPR-429 START
+				final String cartLevelSellerID = GenericUtilityMethods.populateCheckoutSellers(cartData);
+
+				model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, cartLevelSellerID);
+				// TPR-429 END
+
 				//  TISPRD-1951  START //
 
 				// Checking whether inventory is availbale or not
@@ -307,7 +314,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 								MarketplacecheckoutaddonConstants.CHECKOUT_MULTI_DELIVERYMETHOD_BREADCRUMB));
 				model.addAttribute("metaRobots", "noindex,nofollow");
 				setCheckoutStepLinksForModel(model, getCheckoutStep());
-				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
+				//GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
+				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartModel);
 				model.addAttribute("checkoutPageName", checkoutPageName);
 				model.addAttribute(MarketplacecheckoutaddonConstants.ISCART, Boolean.TRUE); //TPR-629
 				model.addAttribute("progressBarClass", "choosePage");
@@ -464,6 +472,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
 			List<PinCodeResponseData> responseData = null;
 			final CartData cartUssidData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+
 			final String defaultPinCodeId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
 
 
@@ -480,6 +489,12 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			}
 
 			LOG.debug(">>>>>>>>>>  Step 5:  Cod status setting done  ");
+
+			// TPR-429 START
+			final String checkoutSellerID = GenericUtilityMethods.populateCheckoutSellers(cartUssidData);
+
+			model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, checkoutSellerID);
+			// TPR-429 END
 
 			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 			List<AddressData> deliveryAddress = null;
@@ -542,7 +557,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					getResourceBreadcrumbBuilder().getBreadcrumbs(
 							MarketplacecheckoutaddonConstants.CHECKOUT_MULTI_DELIVERYMETHOD_BREADCRUMB));
 			model.addAttribute("metaRobots", "noindex,nofollow");
-			GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
+			//GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
+			GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartModel);
 			model.addAttribute("checkoutPageName", selectAddress);
 			setCheckoutStepLinksForModel(model, getCheckoutStep());
 			model.addAttribute("progressBarClass", "selectPage");
@@ -579,7 +595,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		return returnPage;
 	}
 
-	/**
+		/**
 	 * @author TECH This method first checks the delivery modes if it has only home or express then it forwards to
 	 *         doSelectDeliveryMode method and if it contains all the modes then first process cnc mode and then at jsp
 	 *         level using continue link forward to doSelectDeliveryMode method.
@@ -1473,7 +1489,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 							MarketplacecheckoutaddonConstants.CHECKOUT_MULTI_DELIVERYMETHOD_BREADCRUMB));
 			model.addAttribute("metaRobots", "noindex,nofollow");
 			setCheckoutStepLinksForModel(model, getCheckoutStep());
-			GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
+			//GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
+			GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartModel);
 
 		}
 		catch (final EtailBusinessExceptions e)

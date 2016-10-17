@@ -418,6 +418,14 @@ $(".product-image-container .productImageGallery.pdp-gallery .imageList img").cl
 				    zoomWindowFadeIn: 500,
 				    zoomWindowFadeOut: 750
 				       });
+			
+				/*TPR-643 starts*/
+				utag.link({
+					link_obj: this, 
+					link_text: 'pdp_image_click' , 
+					event_type : 'pdp_image_click' 
+				});
+				/*TPR-643 ends*/
 			}
 		    }else{
 		    	var url = $(this).attr("data-videosrc");
@@ -685,7 +693,15 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 					}
 					//End MSD
 					
-					
+					/*TPR-656*/
+					utag.link({
+						link_obj: this, 
+						link_text: 'add_to_wishlist' , 
+						event_type : 'add_to_wishlist', 
+						product_sku_wishlist : productCodePost
+					});
+				/*TPR-656 Ends*/
+				
 					
 					//openPop(ussidValue);
 				//	$('#myModal').modal('hide');
@@ -1104,6 +1120,18 @@ $(function() {
 												$('#buyNowButton').attr("disabled",true);
 												//TPR-794
 												$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
+												
+												/*TPR-642 & 640*/
+												utag.link({
+													link_obj: this, 
+													link_text: 'pdp_pincode_check_failure' , 
+													event_type : 'pdp_pincode_check' , 
+													pdp_pin_sku : productCode, 
+													pdp_pin_status : 'not_servicable', 
+													pdp_pin_value : pin, 
+													pdp_pin_delivery : 'error'
+												});
+											/*TPR-642 & 640 ends*/
 												return false;
 											}
 											// check if oms service is down
@@ -1117,11 +1145,24 @@ $(function() {
 												$("#codId").show();
 												//TPR-794
 												$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
+												
+												/*TPR-642 & 640*/
+												utag.link({
+													link_obj: this, 
+													link_text: 'pdp_pincode_check_failure' , 
+													event_type : 'pdp_pincode_check' , 
+													pdp_pin_sku : productCode, 
+													pdp_pin_status : 'not_servicable', 
+													pdp_pin_value : pin, 
+													pdp_pin_delivery : 'error'
+												});
+											/*TPR-642 & 640 ends*/
 												return false;
 											} else {
 												// refreshing seller list after
 												// getting pincode response
 												refreshSellers(data, buyboxSeller);
+												deliverModeTealium = new Array();
 												for ( var i in data) {
 													var pincodedata = data[i];
 													ussid = pincodedata['ussid'];
@@ -1191,6 +1232,7 @@ $(function() {
 															if (home == true) {
 																$("#home").show();
 																$("#homeli").show();
+																deliverModeTealium.push("home");
 															} else {
 																$("#home").hide();
 																$("#homeli").hide();
@@ -1200,6 +1242,7 @@ $(function() {
 																$("#express").show();
 
 																$("#expressli").show();
+																deliverModeTealium.push("express");
 															} else {
 																$("#express").hide();
 																$("#expressli").hide();
@@ -1207,13 +1250,25 @@ $(function() {
 															}if (click == true) {
 																$("#collect").show();
 																$("#collectli").show();
+																deliverModeTealium.push("clickandcollect");
 															} else {
 
 																$("#collect").hide();
 																$("#collectli").hide();
 															}
 															// }
-
+															
+															/*TPR- 642 & 640*/
+																utag.link({
+																	link_obj: this, 
+																	link_text: 'pdp_pincode_check_success' , 
+																	event_type : 'pdp_pincode_check' , 
+																	pdp_pin_sku : productCode, 
+																	pdp_pin_status : 'servicable', 
+																	pdp_pin_value : pin, 
+																	pdp_pin_delivery : deliverModeTealium.join("_")
+																});
+															/*TPR-642 & 640 ends*/
 
 														} else {
 															$("#home").hide();
@@ -1236,6 +1291,18 @@ $(function() {
 															}
 															$('#addToCartButton').hide();
 															$('#unsevisablePin').show();
+															
+															/*TPR-642 & 640 */
+															utag.link({
+																link_obj: this, 
+																link_text: 'pdp_pincode_check_failure' , 
+																event_type : 'pdp_pincode_check' , 
+																pdp_pin_sku : productCode, 
+																pdp_pin_status : 'not_servicable', 
+																pdp_pin_value : pin, 
+																pdp_pin_delivery : 'error'
+															});
+														/*TPR-642 & 640 ends*/
 														}
 													}
 												}
@@ -1261,6 +1328,7 @@ $(function() {
 													$('#unsevisablePin').show();
 													$('#pdpPinCodeAvailable').hide();
 												}
+												
 											}
 											$("#pinCodeChecked")
 													.val(pinCodeChecked);
@@ -1550,7 +1618,13 @@ $( document ).ready(function() {
 				 $("#pdpPincodeCheckDList").show();
 				 $("#buyNowButton").attr("disabled",true);
 			}
+		},
+		// For buybox seller and other seller in PDP
+		//TPR-429
+		complete: function() {
+			differentiateSeller();
 		}
+		
 	});
 //}
 	$(".size-guide").click(function(){
@@ -1854,6 +1928,12 @@ function openPopForBankEMI() {
 						+ "</option>";
 			}
 			$("#bankNameForEMI").html(optionData);
+			/*TPR-641*/
+			utag.link({
+				link_obj: this,
+				link_text: 'emi_more_information' ,
+				event_type : 'emi_more_information'
+			});
 
 		},
 		error : function(xhr, status, error) {
@@ -1872,6 +1952,16 @@ function populateEMIDetailsForPDP(){
 		var selectedBank = $('#bankNameForEMI :selected').text();
 		var contentData = '';
 		if (selectedBank != "select") {
+			
+			/*TPR-641 starts*/
+			emiBankSelectedTealium = "emi_option_" + selectedBank.replace(/ /g, "").toLowerCase();
+			utag.link({
+				link_obj: this, 
+				link_text: emiBankSelectedTealium , 
+				event_type : 'emi_option_selected'
+			});
+			/*TPR-641 ends*/
+			
 			var dataString = 'selectedEMIBank=' + selectedBank + '&productVal=' + productVal;
 			$.ajax({
 				url : ACC.config.encodedContextPath + "/p-getTerms",

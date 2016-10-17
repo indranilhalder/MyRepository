@@ -8,7 +8,10 @@ import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
+import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSPageService;
+import de.hybris.platform.commerceservices.search.pagedata.PageableData;
+import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 
 import java.util.Collection;
 
@@ -17,7 +20,7 @@ import com.tisl.mpl.model.SellerMasterModel;
 
 
 /**
- * @author 765463
+ * @author TCS
  *
  */
 public interface MplCmsPageService extends CMSPageService
@@ -37,16 +40,19 @@ public interface MplCmsPageService extends CMSPageService
 	Collection<ContentPageModel> getAllContentPages(final Collection<CatalogVersionModel> catalogmodel);
 
 	ContentSlotModel getContentSlotByUidForPage(final String pageId, final String contentSlotId, final String catalogVersion);
+
 	/**
 	 * @param pageUid
 	 * @return
 	 */
 	ContentPageModel getHomePageForMobile(String pageUid);
-	
+
 	/**
 	 * @param pageUid
 	 * @return ContentPageModel
 	 */
 	ContentPageModel getPageForAppById(String pageUid);
-}
 
+	//Added for TPR-798
+	public SearchPageData<ContentSlotForPageModel> getContentSlotsForAppById(final String pageUid, final PageableData pageableData);
+}
