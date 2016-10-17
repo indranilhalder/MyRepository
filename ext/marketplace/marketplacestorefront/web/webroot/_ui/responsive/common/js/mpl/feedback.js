@@ -1804,15 +1804,20 @@ $(document).on('click','.facet.js-facet.Size .js-facet-name h4',function(){
 		}
 	},80)
 });
-//$(document).on('click','.left-block .toggle-filterSerp',function(){
-function toggleFilter(){
-		colorSwatch();
-		sizeSwatch();
-		//Mobile view filter ajax
-		$(".product-facet.js-product-facet.listing-leftmenu").slideToggle();
-		$(".toggle-filterSerp").toggleClass("active");
-}
-//});
+
+//changes for TISPRO-796
+$(document).on('click','.left-block .toggle-filterSerp',function(){
+	toggleFilter();
+	});
+	function toggleFilter(){
+			colorSwatch();
+			sizeSwatch();
+			//Mobile view filter ajax
+			$(".product-facet.js-product-facet.listing-leftmenu").slideToggle();
+			$(".toggle-filterSerp").toggleClass("active");
+	}
+//end of changes for TISPRO-796
+
 
 function colorSwatch() {
 	var row = 0, start = 0, count = 0, end = 0, back = true;
@@ -2022,4 +2027,10 @@ $(window).scroll(function(){
 		var a = $(".pdp .trending#ia_products .image").height()/2 + 20;
 		$(".pdp .trending#ia_products .owl-controls").css("top",a);
 	}
-})
+});
+
+/*
+$(document).on("click",".toggle-filterSerp",function(){
+$(".product-facet.js-product-facet.listing-leftmenu").slideToggle();
+$(this).toggleClass("active");
+});
