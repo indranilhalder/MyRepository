@@ -132,6 +132,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	private MplCustomAddressFacade mplCustomAddressFacade;
 
 	private static final Logger LOG = Logger.getLogger(MplPaymentFacadeImpl.class);
+	private static final String ERROR_FRREBIE = "Populating deliveryPointOfService for freebie from parent, parent ussid ";
 
 	/**
 	 * This method returns the map of all active Payment modes(eg. Credit Card, Debit Card, COD, etc.) and their
@@ -1579,11 +1580,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1634,9 +1635,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Override
@@ -2253,7 +2254,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 									.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
 
 			//LOG to check address details submitted by customer TISPRD-3025
-			final StringBuilder sb = new StringBuilder();
+			final StringBuilder sb = new StringBuilder(180);
 			sb.append("firstName:::").append(firstName).append("|lastName:::").append(lastName).append("|addressLine1:::")
 					.append(addressLine1).append("|addressLine2:::").append(addressLine2).append("|addressLine3:::")
 					.append(addressLine3).append("|country:::").append(country).append("|state:::").append(state).append("|city:::")
@@ -2475,8 +2476,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 									{
 										if (LOG.isDebugEnabled())
 										{
-											LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid "
-													+ abstractOrderEntryModel.getAssociatedItems().get(0));
+											LOG.debug(ERROR_FRREBIE + abstractOrderEntryModel.getAssociatedItems().get(0));
 										}
 										posModel = cEntry.getDeliveryPointOfService();
 									}
@@ -2491,8 +2491,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 									{
 										if (LOG.isDebugEnabled())
 										{
-											LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid "
-													+ parentUssId);
+											LOG.debug(ERROR_FRREBIE + parentUssId);
 										}
 										posModel = cEntry.getDeliveryPointOfService();
 									}
@@ -2561,8 +2560,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 								{
 									if (LOG.isDebugEnabled())
 									{
-										LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid "
-												+ cartEntryModel.getAssociatedItems().get(0));
+										LOG.debug(ERROR_FRREBIE + cartEntryModel.getAssociatedItems().get(0));
 									}
 									posModel = cEntry.getDeliveryPointOfService();
 								}
@@ -2577,7 +2575,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 								{
 									if (LOG.isDebugEnabled())
 									{
-										LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid " + parentUssId);
+										LOG.debug(ERROR_FRREBIE + parentUssId);
 									}
 									posModel = cEntry.getDeliveryPointOfService();
 								}

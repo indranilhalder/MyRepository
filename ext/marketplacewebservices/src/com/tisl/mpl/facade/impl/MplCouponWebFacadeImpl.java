@@ -12,7 +12,6 @@ import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.exceptions.CalculationException;
-import de.hybris.platform.servicelayer.session.SessionService;
 
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
@@ -33,7 +32,6 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.MplCouponWebFacade;
-import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.service.MplCouponWebService;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.ApplyCouponsDTO;
@@ -51,10 +49,6 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 
 	@Resource(name = "mplCouponWebService")
 	private MplCouponWebService mplCouponWebService;
-	@Resource(name = "sessionService")
-	private SessionService sessionService;
-	@Resource(name = "mplPaymentFacade")
-	private MplPaymentFacade mplPaymentFacade;
 	@Resource(name = "mplCheckoutFacade")
 	private MplCheckoutFacade mplCheckoutFacade;
 	@Resource(name = "mplCouponFacade")

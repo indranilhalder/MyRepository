@@ -37,6 +37,7 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 	private static final String PROMO = "{promo.";
 	private static final String APM = "{apm.";
 	private static final String QUERY_FROM = "FROM {";
+	private static final String CODE = "code";
 
 
 	@Autowired
@@ -58,7 +59,7 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 				+ "} = ?code and " + P + SellerInformationModel.CATALOGVERSION + "} = ?oModel";
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("code", code);
+		query.addQueryParameter(CODE, code);
 		query.addQueryParameter("oModel", oModel);
 		return flexibleSearchService.<SellerInformationModel> search(query).getResult();
 	}
@@ -79,7 +80,7 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 				+ PRM + PriceRowModel.CATALOGVERSION + "} = ?oModel";
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("code", code);
+		query.addQueryParameter(CODE, code);
 		query.addQueryParameter("oModel", oModel);
 		return flexibleSearchService.<PriceRowModel> search(query).getResult();
 	}
@@ -100,7 +101,7 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 				+ "} = ?code";
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("code", code);
+		query.addQueryParameter(CODE, code);
 		return flexibleSearchService.<AbstractPromotionModel> search(query).getResult();
 	}
 
@@ -147,7 +148,7 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 					+ "} = ?code and " + APM + AbstractPromotionModel.ENABLED + "} = ?true";
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-			query.addQueryParameter("code", promoCode);
+			query.addQueryParameter(CODE, promoCode);
 			query.addQueryParameter("true", Boolean.TRUE);
 			final List<AbstractPromotionModel> promoResult = flexibleSearchService.<AbstractPromotionModel> search(query)
 					.getResult();
