@@ -29,11 +29,11 @@ public interface MplPaymentWebFacade
 	/**
 	 * To get the COD Eligibility for Items in the Cart
 	 *
-	 * @param cartID
+	 * @param abstractOrder
 	 * @param customerID
 	 * @return PaymentServiceWsData
 	 */
-	public PaymentServiceWsData getCODDetails(final String cartID, final String customerID);
+	public PaymentServiceWsData getCODDetails(final AbstractOrderModel abstractOrder, final String customerID);
 
 	/**
 	 * Update CARD Transactions and Save Payment Ibnfo and Address details

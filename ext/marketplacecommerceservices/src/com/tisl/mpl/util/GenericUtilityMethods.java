@@ -39,6 +39,7 @@ import org.apache.log4j.Logger;
 import org.springframework.ui.Model;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.data.MplPaymentInfoData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
@@ -49,6 +50,7 @@ import com.tisl.mpl.jalo.ManufacturesRestriction;
 import com.tisl.mpl.jalo.SellerMaster;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.wsdto.BillingAddressWsDTO;
+import com.tisl.mpl.wsdto.OrderConfirmationWsDTO;
 
 
 /**
@@ -89,8 +91,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: Sends the year from Date
-	 * @param :
-	 *           date
+	 * @param : date
 	 * @return year
 	 */
 	public static String redirectYear(final Date date)
@@ -115,8 +116,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: Modifies Date with the required Year
-	 * @param :
-	 *           date,yeartoModify
+	 * @param : date,yeartoModify
 	 * @return modifedDate
 	 */
 	public static Date modifiedBDate(final Date date, final String yeartoModify)
@@ -209,8 +209,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: Compares with System Date
-	 * @param :
-	 *           date
+	 * @param : date
 	 * @return flag
 	 */
 	public static boolean compareDateWithSysDate(final Date date)
@@ -249,8 +248,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: @Promtion: Checks Excluded Manufacturer Restriction
-	 * @param :
-	 *           List<AbstractPromotionRestriction> restrictionLists
+	 * @param : List<AbstractPromotionRestriction> restrictionLists
 	 * @param restrictionList
 	 * @return manufactureList
 	 */
@@ -636,8 +634,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description : Populate the Excluded Product and Manufacture Data in separate Lists
-	 * @param :
-	 *           SessionContext arg0,PromotionEvaluationContext arg1
+	 * @param : SessionContext arg0,PromotionEvaluationContext arg1
 	 */
 	public static void populateExcludedProductManufacturerList(final SessionContext arg0, final PromotionEvaluationContext arg1,
 			final List<Product> excludedProductList, final List<String> excludeManufactureList,
@@ -648,8 +645,8 @@ public class GenericUtilityMethods
 			if (productPromotion.getProperty(arg0, MarketplacecommerceservicesConstants.EXCLUDEDPRODUCTS) != null
 					&& excludedProductList != null)
 			{
-				excludedProductList.addAll(
-						(List<Product>) productPromotion.getProperty(arg0, MarketplacecommerceservicesConstants.EXCLUDEDPRODUCTS));
+				excludedProductList.addAll((List<Product>) productPromotion.getProperty(arg0,
+						MarketplacecommerceservicesConstants.EXCLUDEDPRODUCTS));
 			}
 			if (excludeManufactureList != null)
 			{
@@ -684,8 +681,8 @@ public class GenericUtilityMethods
 			final SessionContext ctx, final PromotionEvaluationContext promoEvalCtx, final ProductPromotion productPromotion,
 			final List<AbstractPromotionRestriction> restrictionList)
 	{
-		return (getDefaultPromotionsManager().checkMinimumCategoryValue(validProductUssidMap, ctx, productPromotion)
-				&& getDefaultPromotionsManager().checkMinimumBrandAmount(ctx, promoEvalCtx, validProductUssidMap, restrictionList));
+		return (getDefaultPromotionsManager().checkMinimumCategoryValue(validProductUssidMap, ctx, productPromotion) && getDefaultPromotionsManager()
+				.checkMinimumBrandAmount(ctx, promoEvalCtx, validProductUssidMap, restrictionList));
 
 	}
 
@@ -719,11 +716,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 *
+	 * 
 	 * @param orderDetail
-	 *
+	 * 
 	 * @param type (1-Billing, 2-Shipping)
-	 *
+	 * 
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -793,6 +790,8 @@ public class GenericUtilityMethods
 		return billingAddress;
 
 	}
+
+
 
 	/**
 	 * @Description : Generate Folder if not present
@@ -995,8 +994,8 @@ public class GenericUtilityMethods
 	public static String getMissingImageUrl()
 
 	{
-		final ConfigurationService configService = (ConfigurationService) Registry.getApplicationContext()
-				.getBean("configurationService");
+		final ConfigurationService configService = (ConfigurationService) Registry.getApplicationContext().getBean(
+				"configurationService");
 		String missingImageUrl = MISSING_IMAGE_URL;
 		String staticHost = null;
 		if (null != configService)
@@ -1163,6 +1162,126 @@ public class GenericUtilityMethods
 		catch (final Exception te)
 		{
 			LOG.error("Error while populating tealium data in cart page:::::" + te.getMessage());
+		}
+	}
+
+	/* Checking payment type and then setting payment info */
+	public static void setPaymentInfo(final OrderData orderDetail, final OrderConfirmationWsDTO orderWsDTO)
+	{
+		MplPaymentInfoData paymentInfo = null;
+
+		if (null != orderDetail.getMplPaymentInfo())
+		{
+			paymentInfo = orderDetail.getMplPaymentInfo();
+
+			if (null != paymentInfo.getPaymentOption())
+			{
+				orderWsDTO.setPaymentMethod(paymentInfo.getPaymentOption());
+			}
+			if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.CREDIT))
+			{
+				if (StringUtils.isNotEmpty(paymentInfo.getCardAccountHolderName()))
+				{
+					orderWsDTO.setCardholdername(paymentInfo.getCardAccountHolderName());
+				}
+
+				if (StringUtils.isNotEmpty(paymentInfo.getCardIssueNumber()))
+				{
+					orderWsDTO.setPaymentCardDigit(paymentInfo.getCardIssueNumber());
+				}
+				if (StringUtils.isNotEmpty(paymentInfo.getCardCardType()))
+				{
+					orderWsDTO.setPaymentCard(paymentInfo.getCardCardType());
+				}
+				if (StringUtils.isNotEmpty(paymentInfo.getCardExpirationMonth().toString())
+						&& StringUtils.isNotEmpty(paymentInfo.getCardExpirationYear().toString()))
+				{
+					orderWsDTO.setPaymentCardExpire(paymentInfo.getCardExpirationMonth() + "/" + paymentInfo.getCardExpirationYear());
+				}
+			}
+
+			else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.EMI))
+			{
+				if (StringUtils.isNotEmpty(paymentInfo.getCardAccountHolderName()))
+				{
+					orderWsDTO.setCardholdername(paymentInfo.getCardAccountHolderName());
+				}
+				if (StringUtils.isNotEmpty(paymentInfo.getCardIssueNumber()))
+				{
+					orderWsDTO.setPaymentCardDigit(paymentInfo.getCardIssueNumber());
+				}
+				if (StringUtils.isNotEmpty(paymentInfo.getCardCardType()))
+				{
+					orderWsDTO.setPaymentCard(paymentInfo.getCardCardType());
+				}
+				if (StringUtils.isNotEmpty(paymentInfo.getCardExpirationMonth().toString())
+						&& StringUtils.isNotEmpty(paymentInfo.getCardExpirationYear().toString()))
+				{
+					orderWsDTO.setPaymentCardExpire(paymentInfo.getCardExpirationMonth() + "/" + paymentInfo.getCardExpirationYear());
+				}
+			}
+			else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.NETBANKING))
+			{
+				if (StringUtils.isNotEmpty(paymentInfo.getCardAccountHolderName()))
+				{
+					orderWsDTO.setCardholdername(paymentInfo.getCardAccountHolderName());
+				}
+				if (StringUtils.isNotEmpty(paymentInfo.getBank()))
+				{
+					orderWsDTO.setPaymentCardDigit(paymentInfo.getBank());
+				}
+				if (StringUtils.isNotEmpty(paymentInfo.getCardCardType()))
+				{
+					orderWsDTO.setPaymentCard(paymentInfo.getCardCardType());
+				}
+
+				orderWsDTO.setPaymentCardExpire(MarketplacecommerceservicesConstants.NA);
+			}
+			else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.DEBIT))
+			{
+				if (StringUtils.isNotEmpty(paymentInfo.getCardAccountHolderName()))
+				{
+					orderWsDTO.setCardholdername(paymentInfo.getCardAccountHolderName());
+				}
+				if (StringUtils.isNotEmpty(paymentInfo.getCardIssueNumber()))
+				{
+					orderWsDTO.setPaymentCardDigit(paymentInfo.getCardIssueNumber());
+				}
+				if (StringUtils.isNotEmpty(paymentInfo.getCardCardType()))
+				{
+					orderWsDTO.setPaymentCard(paymentInfo.getCardCardType());
+				}
+				if (StringUtils.isNotEmpty(paymentInfo.getCardExpirationMonth().toString())
+						&& StringUtils.isNotEmpty(paymentInfo.getCardExpirationYear().toString()))
+				{
+					orderWsDTO.setPaymentCardExpire(paymentInfo.getCardExpirationMonth() + "/" + paymentInfo.getCardExpirationYear());
+				}
+			}
+			else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.COD))
+			{
+				if (StringUtils.isNotEmpty(paymentInfo.getCardAccountHolderName()))
+				{
+					orderWsDTO.setCardholdername(paymentInfo.getCardAccountHolderName());
+				}
+
+			}
+			else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.WALLET))
+			{
+				if (StringUtils.isNotEmpty(paymentInfo.getCardAccountHolderName()))
+				{
+					orderWsDTO.setCardholdername(paymentInfo.getCardAccountHolderName());
+				}
+				orderWsDTO.setPaymentCardDigit(MarketplacecommerceservicesConstants.NA);
+				orderWsDTO.setPaymentCardExpire(MarketplacecommerceservicesConstants.NA);
+			}
+		}
+		else
+		{
+
+			orderWsDTO.setPaymentCard(MarketplacecommerceservicesConstants.NA);
+			orderWsDTO.setPaymentCardDigit(MarketplacecommerceservicesConstants.NA);
+			orderWsDTO.setPaymentCardExpire(MarketplacecommerceservicesConstants.NA);
+			orderWsDTO.setCardholdername(MarketplacecommerceservicesConstants.NA);
 		}
 	}
 

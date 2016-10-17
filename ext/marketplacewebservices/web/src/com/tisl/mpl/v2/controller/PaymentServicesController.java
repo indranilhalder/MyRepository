@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -115,33 +116,39 @@ public class PaymentServicesController extends BaseController
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
 	@RequestMapping(value = MarketplacewebservicesConstants.CODELIGIBILITYURL, method = RequestMethod.POST, produces = MarketplacewebservicesConstants.APPLICATIONPRODUCES)
 	@ResponseBody
-	public PaymentServiceWsDTO getCODEligibility(@RequestParam final String cartID, @PathVariable final String userId,
-			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+	public PaymentServiceWsDTO getCODEligibility(@RequestParam final String cartGuid, @PathVariable final String userId,
+			final HttpServletRequest request, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
 		PaymentServiceWsData codCheck = new PaymentServiceWsData();
 		PaymentServiceWsDTO codCheckDTO = new PaymentServiceWsDTO();
-		LOG.debug(String.format("getCODEligibility : cartID:  %s | userId : %s ", cartID, userId));
+		CustomerModel customer = null;
+		LOG.debug(String.format("getCODEligibility : cartGuid:  %s | userId : %s ", cartGuid, userId));
 		try
 		{
-			if (StringUtils.isEmpty(cartID))
+			//COD form handled for both cart and order
+			OrderModel orderModel = null;
+			if (StringUtils.isNotEmpty(cartGuid))
 			{
-				codCheck.setError(MarketplacewebservicesConstants.CARTIDNULL);
+				//final String orderGuid = decryptKey(guid);
+				orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
 			}
-			else
+
+			//final String ip = getBlacklistByIPStatus(); TISPT-204 Point No 2
+			final String ip = getMplPaymentFacade().getBlacklistByIPStatus(request);
+			LOG.debug("The ip of the system is::::::::::::::::::::::::" + ip);
+			customer = getMplPaymentWebFacade().getCustomer(userId);
+
+			if (null == orderModel)
 			{
-				final CartModel cart = getMplPaymentWebFacade().findCartValues(cartID);
+				final CartModel cart = getMplPaymentWebFacade().findCartAnonymousValues(cartGuid);
 				if (null != cart)
 				{
-					CustomerModel customer = modelService.create(CustomerModel.class);
-
-					customer = getMplPaymentWebFacade().getCustomer(userId);
-
-					final boolean mplCustomerIsBlackListed = getMplPaymentFacade().isBlackListed(customer.getUid(), cart);
+					final boolean mplCustomerIsBlackListed = null != customer ? getMplPaymentFacade().isBlackListed(ip, cart) : true;
 					//To check if the customer is a black listed customer
 					if (!mplCustomerIsBlackListed)
 					{
 						//Getting COD details
-						codCheck = getMplPaymentWebFacade().getCODDetails(cartID, customer.getUid());
+						codCheck = getMplPaymentWebFacade().getCODDetails(cart, customer.getUid());
 					}
 					else
 					{
@@ -158,6 +165,27 @@ public class PaymentServicesController extends BaseController
 				else
 				{
 					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9064);
+				}
+			}
+			else
+			{
+				final boolean mplCustomerIsBlackListed = getMplPaymentFacade().isBlackListed(ip, orderModel);
+				//To check if the customer is a black listed customer
+				if (!mplCustomerIsBlackListed)
+				{
+					//Getting COD details
+					codCheck = getMplPaymentWebFacade().getCODDetails(orderModel, customer.getUid());
+				}
+				else
+				{
+					//Message to display Customer is Black list Consumer
+					codCheck.setError(MarketplacewebservicesConstants.BLACKLIST);
+				}
+
+				if (codCheck != null)
+				{
+					//Putting data into DTOs
+					codCheckDTO = dataMapper.map(codCheck, PaymentServiceWsDTO.class, fields);
 				}
 			}
 		}

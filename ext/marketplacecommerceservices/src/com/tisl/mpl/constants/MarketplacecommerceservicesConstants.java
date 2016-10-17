@@ -933,6 +933,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9329 = "B9329";
 	public static final String B9330 = "B9330";
 	public static final String B9331 = "B9331";
+	public static final String B9300 = "B9300";
 
 
 	//Search error codes ends

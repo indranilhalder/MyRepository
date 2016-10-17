@@ -26,11 +26,12 @@ public interface MplPaymentWebService
 	/**
 	 * To get the COD Eligiblity for Items in the Cart
 	 *
-	 * @param cartID
-	 * @param customer_ID
+	 * @param abstractOrder
+	 * @param customerID
 	 * @return
 	 */
-	public PaymentServiceWsData getCODDetails(final String cartID, final String customerID) throws EtailNonBusinessExceptions;
+	public PaymentServiceWsData getCODDetails(final AbstractOrderModel abstractOrder, final String customerID)
+			throws EtailNonBusinessExceptions;
 
 	/**
 	 * Update CARD Transactions and Save Payment Ibnfo and Address details

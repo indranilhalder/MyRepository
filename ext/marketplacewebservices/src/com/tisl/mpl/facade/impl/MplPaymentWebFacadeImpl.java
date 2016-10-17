@@ -98,16 +98,16 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 	/**
 	 * To Check COD Eligibility for Cart Items
 	 *
-	 * @param cartID
+	 * @param abstractOrder
 	 * @param customerID
 	 * @return PaymentServiceWsData
 	 */
 	@Override
-	public PaymentServiceWsData getCODDetails(final String cartID, final String customerID)
+	public PaymentServiceWsData getCODDetails(final AbstractOrderModel abstractOrder, final String customerID)
 	{
 		//final PaymentServiceWsData PaymentServiceData = getMplPaymentWebService().getCODDetails(cartID, customerID);		//SONAR Fix
 		//return PaymentServiceData;		//SONAR Fix
-		return getMplPaymentWebService().getCODDetails(cartID, customerID);
+		return getMplPaymentWebService().getCODDetails(abstractOrder, customerID);
 	}
 
 	/**
