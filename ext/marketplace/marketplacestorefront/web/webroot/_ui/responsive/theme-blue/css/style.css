@@ -45751,6 +45751,7 @@ header .content .right > ul > li.bag:after{
 	color:#fff;
 }
 header .content .right li.track.trackOrder:hover .bell-icon:after, li.store-locator-header:hover a:before, li.download-app:hover a:before,header .content .right .sign-in-dropdown:hover span.material-icons,
+.logged_in.dropdown:hover span.material-icons,
 header .content .right > ul > li.wishlist:hover > a:before, header .content .right > ul > li.bag:hover > a:before {
 	color:#a9143c;
 }
@@ -45781,7 +45782,7 @@ header .content .right > ul > li.bag > a:before {
     position: relative;
     font-weight: bold;
 } 
-header .content .right ul.loggedIn-flyout li a{
+header .content .right ul.loggedIn-flyout li a, header .content .right ul.loggedIn-flyout li{
 	color:#000;
 }
 /*--------------Added for luxury site ends-----------*/
