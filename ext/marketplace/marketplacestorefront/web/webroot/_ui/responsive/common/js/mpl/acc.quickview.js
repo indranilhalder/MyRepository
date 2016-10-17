@@ -30,6 +30,16 @@ ACC.quickview = {
 			maxWidth:"100%",
 			onComplete: function ()
 			{
+				/*TPR-690*/
+				var productCode = productCodeQuickView;
+				utag.link({
+					link_obj: this, 
+					link_text: 'quick_view_click' ,
+					event_type : 'quick_view_click', 
+					product_sku_quick_view : productCode
+				});
+				
+				/*TPR-690 ends*/
 				quickviewGallery();
 				ACC.quickview.refreshScreenReaderBuffer();
 				ACC.quickview.initQuickviewLightbox();
@@ -71,6 +81,17 @@ function quickviewGallery() {
 				  $(this).next("ul").toggleClass("select_height_toggle");
 			  });
 			}
+	 	
+	 	$(".productImageGallery img").click(function(e) {
+			/*TPR-643 starts*/
+				utag.link({
+					link_obj: this, 
+					link_text: 'pdp_image_click' , 
+					event_type : 'pdp_image_click' 
+				});
+				/*TPR-643 ends*/
+		});
+	 	
 	 });
 	
 	
@@ -424,6 +445,15 @@ function addToWishlist_quick(alreadyAddedWlName_quick) {
 					 					  
 					}, 1500);
 				populateMyWishlistFlyOut(wishName);
+				
+				/*TPR-656*/
+					utag.link({
+						link_obj: this, 
+						link_text: 'add_to_wishlist' , 
+						event_type : 'add_to_wishlist', 
+						product_sku_wishlist : productCodePost
+					});
+				/*TPR-656 Ends*/
 				
 				
 				//For MSD

@@ -194,5 +194,11 @@ public final class MessageConstants
 	public static final String FEEDBACK_SURVEY_URL = "mpl.feedback.survey";
 	// TPR-174
 	public static final String WELCOME_BACK_MESSAGE = "Your previous products have been added to cart . Do you want to retain them ??";
-
+	// Tealium
+	// TPR-668
+	public static final String GUESTUSER = "guest_user";
+	public static final String EMAILUSER = "email";
+	public static final String GOOGLE_LOGIN = "GOOGLE_LOGIN";
+	public static final String GOOGLEUSER = "google";
+	public static final String USER_LOGIN_TYPE = "userLoginType";
 }

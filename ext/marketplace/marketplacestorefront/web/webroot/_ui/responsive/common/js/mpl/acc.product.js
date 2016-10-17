@@ -130,6 +130,17 @@ ACC.product = {
 			 $("#qty1").val($("#quantity").val());
 			 
 				if($("#sizeSelected").val()!='no'){
+				
+					/*TPR-681*/
+					var productCodePost = $("#productCodePost").val();
+					utag.link({
+						link_obj: this, 
+						link_text: 'quick_view_addto_bag' , 
+						event_type : 'quick_view_addto_bag', 
+						product_sku_quick_view : productCodePost
+					});
+					/*TPR-681 Ends*/
+				
 				ACC.product.sendAddToBagQuick("addToCartFormQuick");
 				
 				}else{
@@ -1395,6 +1406,12 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 						$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
 						
 						filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
+						//TPR-645 start
+						var filterValue = (minPriceSearchTxt+"-"+maxPriceSearchTxt).replace(/,/g,"");
+						var filterName = $(this).parents('li.facet.js-facet').find('div.facet-name.js-facet-name h4').text().trim();
+						onFilterClickAnalytics(filterName,filterValue);
+						//TPR-645 end
+						
 					}
 					
 				});

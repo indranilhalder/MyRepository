@@ -154,6 +154,11 @@ ACC.refinements = {
 			
 			// AJAX call
 			filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
+			//TPR-645 Start
+			var filterValue = $(this).parent().find('span.facet-text').text().trim();
+			var filterName = $(this).parents('li.facet.js-facet').find('div.facet-name.js-facet-name h4').text().trim();
+			onFilterClickAnalytics(filterName,filterValue);
+			//TPR-645 End
 		})
 		
 		//TPR-845
@@ -230,6 +235,18 @@ ACC.refinements = {
 			}
 			// AJAX call
 			filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
+			//TPR-645 Start
+			var filterValue = '';
+			var filterName = $(this).parents('li.facet.js-facet').find('div.facet-name.js-facet-name h4').text().trim();
+			if($(this).attr('class').indexOf('size') > -1){
+				filterValue = $(this).attr('value');
+			}
+			else{
+				//console.log($(this).attr('class').text());
+				filterValue = $(this).parent().find('span > span').text();
+			}
+			onFilterClickAnalytics(filterName,filterValue);
+			//TPR-645 End
 		})
 		
 		//TPR-845
@@ -251,7 +268,6 @@ ACC.refinements = {
 				}			
 			}
 			console.log("updatedsearchQuery : "+updatedsearchQuery);
-			
 		})
 		
 		// AJAX for removal of filters
@@ -553,3 +569,13 @@ $(document).off('change', '.facet_mobile .facet.js-facet').on('change', '.facet_
 		}
 	});
 });
+//TPR-645
+function onFilterClickAnalytics(filterName,filterValue){
+	var msg = (filterName+"_"+filterValue).toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	utag.link({
+		link_obj: this,
+		link_text: msg ,
+		event_type : 'search_filter_usage',
+		search_filter : msg
+	});
+}

@@ -249,7 +249,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		{
 			return getCheckoutStep().previousStep();
 		}
-
 		try
 		{
 			boolean selectPickupDetails = false;
@@ -269,6 +268,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				//Existing code
 				final CartModel cartModel = getCartService().getSessionCart();
+
+				// TPR-429 START
+				final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+				final String checkoutSellerID = GenericUtilityMethods.populateCheckoutSellers(cartData);
+				model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, checkoutSellerID);
+				// TPR-429 END
+
 				if (cartModel != null)
 				{
 					cartModel.setIsExpressCheckoutSelected(Boolean.valueOf(true));
@@ -315,11 +321,17 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//Cart guid added to propagate to further methods via jsp
 				model.addAttribute(MarketplacecheckoutaddonConstants.GUID, cartModel.getGuid());
 
+				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartModel);
+
 			}
 			//TPR-629 --- based on orderModel
 			else
 			{
 				orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderModel);
+				// TPR-429 START
+				final String checkoutSellerID = GenericUtilityMethods.populateCheckoutSellers(orderData);
+				model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, checkoutSellerID);
+				// TPR-429 END
 				//Getting Payment modes
 				paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, orderData);
 
@@ -409,13 +421,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		//return values
 		model.addAttribute("checkoutPageName", checkoutPageName);
-		GenericUtilityMethods.populateTealiumDataForCartCheckout(model, getMplCustomAddressFacade().getCheckoutCart());
 		return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.AddPaymentMethodPage;
 	}
-
-
-
-
 
 	/**
 	 * This method sets timeout
@@ -634,7 +641,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 
 				//Logic when Payment mode is COD
-				if (null != cartData && MarketplacecheckoutaddonConstants.PAYMENTCOD.equalsIgnoreCase(paymentForm.getPaymentModeValue()))
+				if (null != cartData
+						&& MarketplacecheckoutaddonConstants.PAYMENTCOD.equalsIgnoreCase(paymentForm.getPaymentModeValue()))
 				{
 					//Adding cartdata into model
 					model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
@@ -4119,7 +4127,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */

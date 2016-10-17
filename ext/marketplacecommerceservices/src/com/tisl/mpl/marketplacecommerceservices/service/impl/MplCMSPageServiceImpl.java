@@ -8,7 +8,10 @@ import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
+import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
 import de.hybris.platform.cms2.servicelayer.services.impl.DefaultCMSPageService;
+import de.hybris.platform.commerceservices.search.pagedata.PageableData;
+import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 
 import java.util.Collection;
 import java.util.Date;
@@ -120,6 +123,7 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 		return mplCmsPageDao.getPageForAppById(pageUid);
 
 	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -206,6 +210,22 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 	{
 		final ContentSlotModel contentSlot = mplCmsPageDao.getContentSlotByUidForPage(pageId, contentSlotId, catalogVersion);
 		return contentSlot;
+	}
+
+
+	/**
+	 * Method added for TPR-798
+	 * 
+	 * @param pageUid
+	 * @param pageableData
+	 * @return SearchPageData<ContentSlotForPageModel>
+	 */
+	@Override
+	public SearchPageData<ContentSlotForPageModel> getContentSlotsForAppById(final String pageUid, final PageableData pageableData)
+	{
+		// YTODO Auto-generated method stub
+		return mplCmsPageDao.getContentSlotsForAppById(pageUid, pageableData);
+
 	}
 
 

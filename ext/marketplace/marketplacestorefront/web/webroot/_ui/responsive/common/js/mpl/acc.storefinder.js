@@ -206,6 +206,13 @@ ACC.storefinder = {
 
 		$(document).on("submit",'#storeFinderForm', function(e){
 			e.preventDefault();
+			// TPR-647 start
+			utag.link({
+				link_obj: this,
+				link_text:'find_a_store:'+$('#storelocator-query').val().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"") ,
+				event_type:'find_a_store'
+			});
+			//TPR-647 end
 			var q = $(".js-store-finder-search-input").val();
 
 			if(q.length>0){
@@ -237,6 +244,13 @@ ACC.storefinder = {
 
 		//$(".js-store-finder").hide();
 		$(document).on("click",'#findStoresNearMe', function(e){
+			// TPR-647 Start
+			utag.link({
+				link_obj: this,
+				link_text: 'auto_detect_location' ,
+				event_type : 'auto_detect_location'
+			});
+			//TPR-647 End
 			e.preventDefault();
 			$("#storesnear").show();
 			$('#storeSearchTextValue').text('Your Location');
