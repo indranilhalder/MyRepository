@@ -849,7 +849,7 @@ h2 {
     clear: both;
     margin-bottom: 0; }
     header .content .top{
-    min-height:50px;
+   /*  min-height:50px; */
     }
     header .content .top::after, header .content .bottom::after {
       clear: both;
@@ -857,8 +857,9 @@ h2 {
       display: table; }
   header .content .left, header .content .right {
     display: inline-block;
-    line-height: 50px;
-    vertical-align: middle; }
+    line-height: 41px;
+    vertical-align: middle; 
+      height: 41px;}
     header .content .left a, header .content .right a {
       font-weight: 500; }
   header .content .left {
@@ -907,7 +908,7 @@ h2 {
             background-color: #fff; }
           header .content .right > ul > li.bag > a:before {
                content: "";
-    background: url("../images/sprite.svg") no-repeat scroll -92px 0;
+   /*  background: url("../images/sprite.svg") no-repeat scroll -92px 0; */
     top: 7px;
     width: 20px;
     height: 25px;
@@ -1019,7 +1020,7 @@ h2 {
                     -moz-transition: color 0.15s, background 0.15s;
                     transition: color 0.15s, background 0.15s; }
           header .content .right > ul > li.bag:hover{
-            border-left: 2px solid #f0f4f5;
+           /*  border-left: 2px solid #f0f4f5; */
             z-index: 4;
             -webkit-transition: z-index 0s, border 0.3s;
             -moz-transition: z-index 0s, border 0.3s;
@@ -1094,7 +1095,7 @@ h2 {
     }
      @media (min-width:791px) {
         header .content .right > ul > li.wishlist:hover {
-          background: #fafafa; }
+         /*  background: #fafafa;  */}
           header .content .right > ul > li.wishlist:hover .wishlist-info {
             z-index: 10;
             max-height: 1000px;
@@ -1208,7 +1209,7 @@ h2 {
 			 }
 			  @media (min-width:791px) {
         header .content .right > ul > li.sign-in:hover {
-          background-color: #fafafa;
+         /*  background-color: #fafafa; */
           -webkit-transition: background 0.15s;
           -moz-transition: background 0.15s;
           transition: background 0.15s; }
@@ -24767,7 +24768,7 @@ button#buyNowButton[disabled="disabled"] {
     opacity: 0.5;
 } 
 .account-userTitle-custom{
-	line-height:50px;
+	/* line-height:50px; */
     white-space: nowrap;
 }
 
@@ -28754,8 +28755,8 @@ min-width: 150px;
    content:"\f0a2";
     font-size: 13px;
     color: #A9143C;
-    line-height: 46px;
-    height:46px;
+    line-height: 41px;
+    height:41px;
     top: 0px;
     position: relative;
     font-weight: bold;
@@ -45667,7 +45668,7 @@ body.no-scroll {
     position:relative;  
 }  
 #flip-navigation{  
-    margin:0 0 10px; padding:0;   
+   /*  margin:0 0 10px; */ padding:0;   
     list-style:none;  
 }  
 #flip-navigation li{   
@@ -45691,8 +45692,8 @@ body.no-scroll {
     text-transform: uppercase;
     width: 100%;
     display: block;
-    height: 35px;
-    line-height: 15px;
+    height: 41px;
+    line-height: 22px;
     text-align: center;
 }  
 #flip-navigation li a:hover{  
@@ -45707,8 +45708,8 @@ body.no-scroll {
     letter-spacing: 1.5px;
     width: 100%;
     display: block;
-    height: 35px;
-    line-height: 15px;
+    height: 41px;
+    line-height: 22px;
     text-align: center;
 }  
 .luxury_ribbon{
@@ -45722,6 +45723,7 @@ body.no-scroll {
 	width:100%;
 	float:none;
 	}
+@media (min-width:791px){
 header .content .top{
 	background:#a9143c;
 }
@@ -45734,8 +45736,9 @@ header .content .right li a{
 header .content .right li.download-app:hover a, header .content .right li.store-locator-header:hover a
 {
 	color:#a9143c;
-}header .content .right li:hover{
-	    background: #fafafa;
+}
+header .content .right li:hover,header .content .right li.dropdown.sign-in-dropdown.sign-in.ajaxloginhi:hover{
+	    background: #f7bbcb;
 	    color:#a9143c;
 }
 header .content .right > ul > li.bag{
@@ -45747,9 +45750,22 @@ header .content .right > ul > li.bag:after{
 .bell-icon:after, li.store-locator-header a:before, li.download-app a:before, span.material-icons,header .content .right > ul > li.wishlist > a:before{
 	color:#fff;
 }
-header .content .right li.track.trackOrder:hover .bell-icon:after, li.store-locator-header:hover a:before, li.download-app:hover a:before,header .content .right .sign-in-dropdown:hover span.material-icons
+header .content .right li.track.trackOrder:hover .bell-icon:after, li.store-locator-header:hover a:before, li.download-app:hover a:before,header .content .right .sign-in-dropdown:hover span.material-icons,
 header .content .right > ul > li.wishlist:hover > a:before, header .content .right > ul > li.bag:hover > a:before {
 	color:#a9143c;
+}
+header .content .right li ul li:hover{
+	background-color:#fff;
+}
+}
+@media (max-width:790px){
+	#flip-navigation,#flip-tabs{
+	width:100%;
+	  overflow: hidden;}
+	#flip-navigation li{
+	width:50%;
+	float:left;
+	}
 }
 header .content .right > ul > li.bag > a:before {
     font-family: 'icomoon';
@@ -45765,4 +45781,7 @@ header .content .right > ul > li.bag > a:before {
     position: relative;
     font-weight: bold;
 } 
+header .content .right ul.loggedIn-flyout li a{
+	color:#000;
+}
 /*--------------Added for luxury site ends-----------*/
