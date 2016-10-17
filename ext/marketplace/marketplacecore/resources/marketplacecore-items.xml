@@ -4893,6 +4893,13 @@
 							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
 					</attribute>
+					<attribute qualifier="isSdb" autocreate="true"
+						type="java.lang.Boolean">
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+							<defaultvalue>Boolean.FALSE</defaultvalue>
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 			<!-- Tata Etail change - Apportioned value capturing ends -->

@@ -735,6 +735,10 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				refundEntryModel.setExpectedQuantity(orderEntry.getQuantity());//Single line quantity
 				refundEntryModel.setReceivedQuantity(orderEntry.getQuantity());//Single line quantity
 				refundEntryModel.setRefundedDate(new Date());
+				if(isSDBCheck.booleanValue()) {
+					orderEntry.setIsSdb(Boolean.TRUE);
+					modelService.save(orderEntry);
+				}
 				final List<PaymentTransactionModel> tranactions = orderModel.getPaymentTransactions();
 				if (CollectionUtils.isNotEmpty(tranactions))
 				{
