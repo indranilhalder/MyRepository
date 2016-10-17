@@ -1653,4 +1653,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// Sonar Fix
 	public static final String ALLVARIANTSSTRING = "allVariantsString";
+
+	//TPR-978
+	public static final String DEFAULT_IMPORT_CONTENT_CATALOG_ID = "mplContentCatalog";
+	public static final String DEFAULT_IMPORT_CONTENT_CATALOG_VERSION = "Staged";
 }
