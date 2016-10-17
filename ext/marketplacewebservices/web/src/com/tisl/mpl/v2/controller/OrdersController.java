@@ -1027,6 +1027,7 @@ public class OrdersController extends BaseCommerceController
 		final GetOrderHistoryListWsDTO getOrderHistoryListWsDTO = new GetOrderHistoryListWsDTO();
 		final List<OrderDataWsDTO> orderTrackingListWsDTO = new ArrayList<OrderDataWsDTO>();
 		int orderCount = 0, start = 0, end = 0;
+		OrderData orderDetails = null;
 		try
 		{
 			//			final SearchPageData<OrderData> searchPageDataParentOrder = ordersHelper.getParentOrders(currentPage, pageSize, sort,
@@ -1043,7 +1044,13 @@ public class OrdersController extends BaseCommerceController
 				//LOG.info("Number of Orders " + orderCount);
 				for (final OrderHistoryData orderData : searchPageDataParentOrder.getResults())
 				{
-					final OrderDataWsDTO order = getOrderDetailsFacade.getOrderdetails(orderData.getCode());
+					orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderData.getCode());
+					//this scenario will occour only when product is missing in order entries.
+					if (null == orderDetails)
+					{
+						continue;
+					}
+					final OrderDataWsDTO order = getOrderDetailsFacade.getOrderdetails(orderDetails);
 					if (null != order)
 					{
 						orderTrackingListWsDTO.add(order);
