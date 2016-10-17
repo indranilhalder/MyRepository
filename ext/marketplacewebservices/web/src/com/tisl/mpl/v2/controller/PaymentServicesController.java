@@ -161,40 +161,39 @@ public class PaymentServicesController extends BaseController
 				}
 			}
 		}
-		catch (final EtailNonBusinessExceptions ex)
+		catch (final EtailNonBusinessExceptions e)
 		{
-			// Error message for EtailNonBusinessExceptions Exceptions
-			ExceptionUtil.etailNonBusinessExceptionHandler(ex);
-			if (null != ex.getErrorMessage())
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
 			{
-				codCheckDTO.setError(ex.getErrorMessage());
-				codCheckDTO.setErrorCode(ex.getErrorCode());
+				codCheckDTO.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				codCheckDTO.setErrorCode(e.getErrorCode());
 			}
 			codCheckDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
-		catch (final EtailBusinessExceptions ex)
+		catch (final EtailBusinessExceptions e)
 		{
-			// Error message for EtailBusinessExceptions Exceptions
-			ExceptionUtil.etailBusinessExceptionHandler(ex, null);
-			if (null != ex.getErrorMessage())
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
 			{
-				codCheckDTO.setError(ex.getErrorMessage());
-				codCheckDTO.setErrorCode(ex.getErrorCode());
+				codCheckDTO.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				codCheckDTO.setErrorCode(e.getErrorCode());
 			}
 			codCheckDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
-		catch (final Exception ex)
+		catch (final Exception e)
 		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			// Error message for All Exceptions
-			if (null != ex.getMessage())
-			{
-				codCheckDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9004));
-				codCheckDTO.setErrorCode(MarketplacecommerceservicesConstants.B9004);
-			}
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			codCheckDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9004));
+			codCheckDTO.setErrorCode(MarketplacecommerceservicesConstants.B9004);
 			codCheckDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
-
 		return codCheckDTO;
 	}
 

@@ -18,6 +18,7 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.services.BaseStoreService;
+import de.hybris.platform.util.localization.Localization;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -53,6 +54,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationServ
 import com.tisl.mpl.model.PaymentModeSpecificPromotionRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.BillingAddressWsData;
 import com.tisl.mpl.wsdto.MplUserResultWsDto;
 import com.tisl.mpl.wsdto.PaymentServiceWsData;
@@ -217,14 +219,40 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
 			}
 		}
-		catch (final EtailBusinessExceptions | EtailNonBusinessExceptions e)
+		catch (final EtailNonBusinessExceptions e)
 		{
-			throw e;
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				paymentServiceData.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				paymentServiceData.setErrorCode(e.getErrorCode());
+			}
+			paymentServiceData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				paymentServiceData.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				paymentServiceData.setErrorCode(e.getErrorCode());
+			}
+			paymentServiceData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		catch (final Exception e)
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			paymentServiceData.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			paymentServiceData.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			paymentServiceData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
+
 		return paymentServiceData;
 	}
 
