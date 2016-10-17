@@ -42713,6 +42713,7 @@ float: right;
 
 .product-info .size span+a {
 	position: relative;
+	color: #a9143c; /* TISPRD-7672 & TISPRD-7593 */
 }
 
 .product-info .size span+a:after {
