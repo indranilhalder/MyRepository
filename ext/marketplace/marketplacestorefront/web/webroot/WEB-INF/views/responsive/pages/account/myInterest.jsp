@@ -29,7 +29,7 @@
 					<h2><spring:theme code="text.questionnaire.lets.get.personal.description"/></h2>
 				</div>
 				<div class="question">
-					<h3>What's your gender?</h3>
+					<h2>What's your gender?</h2>
 					<c:forEach items="${genderList}" var="gender" varStatus="status">
 						<input type="radio" name="question-0"
 							id="question-0-${status.index}" value="${gender}">

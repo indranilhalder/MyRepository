@@ -43,13 +43,13 @@
 								value="${searchPageData.pagination.currentPage - 1}" />
 						</spring:url> <ycommerce:testId code="searchResults_previousPage_link">
 							<!-- TISPRD-2315 -->
-							<a href="${newPaginationUrlPrev}" class="pagination_a_link" rel="prev"><span><spring:theme code="text.previous.page"/></span></a>
+							<a href="${newPaginationUrlPrev}" class="pagination_a_link" rel="prev"><span class="anglelft"></span></a>
 						</ycommerce:testId>
 					</li>
 				</c:if>
 
-				<c:if test="!${hasPreviousPage}">
-					<li class="disabled"><span><spring:theme code="text.previous.page"/></span></li>
+				<c:if test="${!hasPreviousPage}">
+					<li class="prev disabled"><span class="anglelft"></span></li>
 				</c:if>
 
 
@@ -166,13 +166,13 @@
 						</spring:url> <ycommerce:testId code="searchResults_nextPage_link">
 							<!-- TISPRD-2315 -->
 
-							<a href="${newPaginationUrlNext}" class="pagination_a_link" rel="next"><span><spring:theme code="text.next.page"/></span></a>
+							<a href="${newPaginationUrlNext}" class="pagination_a_link" rel="next"><span class="anglerght"></span></a>
 						
 						</ycommerce:testId></li>
 				</c:if>
 
-				<c:if test="!${hasNextPage}">
-					<li class="disabled"><span>&raquo;<spring:theme code="text.next.page"/></span></li>
+				<c:if test="${!hasNextPage}">
+					<li class="next disabled"><span class="anglerght"></span></li>
 				</c:if>
 
 
@@ -209,13 +209,13 @@
 								value="${searchPageData.pagination.currentPage - 1}" />
 						</spring:url> <ycommerce:testId code="searchResults_previousPage_link">
 							<!-- TISPRD-2315 -->
-							<a href="${newPaginationUrlPrev}" class="pagination_a_link" rel="prev"><span><spring:theme code="text.previous.page"/></span></a>
+							<a href="${newPaginationUrlPrev}" class="pagination_a_link" rel="prev"><span class="anglelft"></span></a>
 						</ycommerce:testId>
 					</li>
 				</c:if>
 
-				<c:if test="!${hasPreviousPage}">
-					<li class="disabled"><span><spring:theme code="text.previous.page"/></span></li>
+				<c:if test="${!hasPreviousPage}">
+					<li class="prev disabled"><span class="anglelft"></span></li>
 				</c:if>
 
 
@@ -330,13 +330,13 @@
 								value="${searchPageData.pagination.currentPage + 1}" />
 						</spring:url> <ycommerce:testId code="searchResults_nextPage_link">
 							<!-- TISPRD-2315 -->
-							<a href="${newPaginationUrlNext}" class="pagination_a_link" rel="next"><span><spring:theme code="text.next.page"/></span></a>
+							<a href="${newPaginationUrlNext}" class="pagination_a_link" rel="next"><span class="anglerght"></span></a>
 						
 						</ycommerce:testId></li>
 				</c:if>
 
-				<c:if test="!${hasNextPage}">
-					<li class="disabled"><span>&raquo;<spring:theme code="text.next.page"/></span></li>
+				<c:if test="${!hasNextPage}">
+					<li class="next disabled"><span class="anglerght"></span></li>
 				</c:if>
 
 

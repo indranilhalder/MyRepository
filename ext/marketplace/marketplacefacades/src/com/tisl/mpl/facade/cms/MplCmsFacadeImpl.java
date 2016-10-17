@@ -487,6 +487,11 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 							{
 								banner.setImageDiscription(bannerComponent.getMedia().getDescription());
 							}
+							// TPR-472
+							if (bannerComponent.getPk() != null)
+							{
+								banner.setIcid(bannerComponent.getPk().getLongValueAsString());
+							}
 							if (bannerComponent.getMedia().getUrl2() != null)
 							{
 								banner.setUrl(bannerComponent.getMedia().getUrl2());
@@ -530,6 +535,11 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 								if (cmsMediaPara.getMedia().getDescription() != null)
 								{
 									banner.setImageDiscription(cmsMediaPara.getMedia().getDescription());
+								}
+								// TPR-472
+								if (cmsMediaPara.getPk() != null)
+								{
+									banner.setIcid(cmsMediaPara.getPk().getLongValueAsString());
 								}
 								if (cmsMediaPara.getMedia().getUrl2() != null)
 								{

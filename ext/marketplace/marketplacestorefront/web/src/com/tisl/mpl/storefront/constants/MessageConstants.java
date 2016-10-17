@@ -192,7 +192,8 @@ public final class MessageConstants
 	public static final String ORDER_CAROUSEL_SIZE = "mpl.account.review.orderCarousel.size";
 	//feebback survey
 	public static final String FEEDBACK_SURVEY_URL = "mpl.feedback.survey";
-
+	// TPR-174
+	public static final String WELCOME_BACK_MESSAGE = "Your previous products have been added to cart . Do you want to retain them ??";
 	// Tealium
 	// TPR-668
 	public static final String GUESTUSER = "guest_user";

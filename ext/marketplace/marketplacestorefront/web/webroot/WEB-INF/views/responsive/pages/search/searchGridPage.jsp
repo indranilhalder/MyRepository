@@ -27,7 +27,7 @@
 	<!-- For TPR-666 -->
 <!-- End -->
 <template:page pageTitle="${pageTitle}">
-	<div id="facetSearchAjaxData" class="listing wrapper"> <!-- Div to be overridden by AJAX response : TPR-198 -->
+	<div id="facetSearchAjaxData"> <!-- Div to be overridden by AJAX response : TPR-198 -->
 		<nav:searchFacetFilterData/>
 	</div>
 

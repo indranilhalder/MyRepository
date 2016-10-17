@@ -38,15 +38,23 @@
 			</ul>
 </c:if> --%>
 <div class="Cta">
+	<span id="dListedErrorMsg" style="display: none"  class="dlist_message prod-dlisted-msg">
+		<spring:theme code="pdp.delisted.message" />
+	</span>
+	<div id="addToCartFormTitle" class="addToCartTitle prod-dlisted-msg">
+	<%-- <spring:theme code="basket.added.to.basket" /> --%>
+	<spring:theme code="product.addtocart.success" />
+</div>
+	<div class="buy-btn-holder clearfix">
 	<div id="buyNow">
 	        <button style="display: block" id="buyNowButton" type="button" class="btn-block js-add-to-cart">
 				<spring:theme code="buyNow.button.pdp" />
 			</button>
 	        </div>
 	<!-- changes for buy now button: end  -->
-	
+
 	<!-- <div class="size-guide">Size Guide</div> -->
-<div class="addtocart-component">
+	<div class="addtocart-component">
 
 		<%-- <div class="row addtocart-button">
 			<action:actions element="div"  parentComponent="${component}"/>
@@ -61,10 +69,10 @@
 				<button class="btn btn-primary js-qty-selector-plus" type="button">+</button>
 			</span>
 		</div> --%>
-		
+
 		</c:if>
 		<c:if test="${product.stock.stockLevel gt 0}">
-			<c:set var="productStockLevel">${product.stock.stockLevel}&nbsp;
+			<c:set var="productStockLevel">${product.stock.stockLevel} 
 				<spring:theme code="product.variants.in.stock"/>
 			</c:set>
 		</c:if>
@@ -84,5 +92,6 @@
 		<div class="row addtocart-button">
 			<action:actions element="div"  parentComponent="${component}"/>
 		</div>
-</div>
-</div>
+		</div>
+	</div>
+</div>   

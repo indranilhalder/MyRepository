@@ -20,8 +20,11 @@ import de.hybris.platform.util.localization.Localization;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.log4j.Logger;
 
@@ -32,24 +35,23 @@ import com.tisl.mpl.promotion.helper.MplPromotionHelper;
 import com.tisl.mpl.util.ExceptionUtil;
 
 
+@SuppressWarnings("deprecation")
 public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThresholdDiscountPromotion
 {
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(CartOrderThresholdDiscountPromotion.class.getName());
 
 	private double adjustedDiscounts = 0.0d;
+	private double sellersubTotalValue = 0.0D;
 
 	//private boolean flagForDeliveryModeRestrEval;
 
 	/**
 	 * @Description : This method is for creating item type
-	 * @param :
-	 *           ctx
-	 * @param :
-	 *           type
-	 * @param :
-	 *           allAttributes
-	 * @return : item
+	 * @param: ctx
+	 * @param: type
+	 * @param: allAttributes
+	 * @return: item
 	 */
 	@Override
 	protected Item createItem(final SessionContext ctx, final ComposedType type, final ItemAttributeMap allAttributes)
@@ -65,8 +67,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 
 	/**
 	 * @Description : Order Threshold Percentage or Amount Discount Cashback
-	 * @param :
-	 *           SessionContext paramSessionContext ,PromotionEvaluationContext paramPromotionEvaluationContext
+	 * @param: SessionContext paramSessionContext ,PromotionEvaluationContext paramPromotionEvaluationContext
 	 * @return : List<PromotionResult> promotionResults
 	 */
 	@Override
@@ -77,6 +78,9 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 
 		final List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
 		boolean checkChannelFlag = false;
+
+		//CR Changes : TPR-715
+		Map<String, AbstractOrderEntry> validProductUssidMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
 
 		try
 		{
@@ -108,7 +112,30 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 							MarketplacecommerceservicesConstants.THRESHOLD_TOTALS);
 					if (threshold != null)
 					{
-						final double orderSubtotalAfterDiscounts = getSubtotalAfterDiscount(arg0, order);
+
+						//CR Changes : TPR-715
+						double orderSubtotalAfterDiscounts = 0.0D;
+						arg0.setAttribute(MarketplacecommerceservicesConstants.VALIDATE_SELLER, Boolean.FALSE);
+						arg0.setAttribute(MarketplacecommerceservicesConstants.CART_SELLER_PRODUCTS, validProductUssidMap);
+						if (getDefaultPromotionsManager().isSellerRestrExists(restrictionList))
+						{
+							validProductUssidMap = getMplPromotionHelper().getCartSellerEligibleProducts(arg0, order, restrictionList);
+							arg0.setAttribute(MarketplacecommerceservicesConstants.VALIDATE_SELLER, Boolean.TRUE);
+							orderSubtotalAfterDiscounts = getSellerSpecificSubtotal(arg0, validProductUssidMap);
+							setSellersubTotalValue(orderSubtotalAfterDiscounts);
+						}
+						else if (getDefaultPromotionsManager().isExSellerRestrExists(restrictionList))
+						{
+							validProductUssidMap = getMplPromotionHelper().getCartSellerInEligibleProducts(arg0, order, restrictionList);
+							arg0.setAttribute(MarketplacecommerceservicesConstants.VALIDATE_SELLER, Boolean.TRUE);
+							orderSubtotalAfterDiscounts = getSellerSpecificSubtotal(arg0, validProductUssidMap);
+							setSellersubTotalValue(orderSubtotalAfterDiscounts);
+						}
+						else
+						{
+							orderSubtotalAfterDiscounts = getSubtotalAfterDiscount(arg0, order);
+						}
+						//CR Changes : TPR-715 ends
 
 						if (orderSubtotalAfterDiscounts >= threshold.doubleValue())
 						{
@@ -144,29 +171,26 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 								arg0.setAttribute(MarketplacecommerceservicesConstants.ISPERCENTAGEDISC,
 										Boolean.valueOf(isPercentageDisc));
 
+								//CR Changes : TPR-715
+								if (MapUtils.isNotEmpty(validProductUssidMap))
+								{
+									arg0.setAttribute(MarketplacecommerceservicesConstants.CART_SELLER_PRODUCTS, validProductUssidMap);
+								}
+								//CR Changes : TPR-715 ends
+
 								//adjustedDiscounts = (percentageDiscount * orderSubtotalAfterDiscounts) / 100;
 								setAdjustedDiscounts((percentageDiscount * orderSubtotalAfterDiscounts) / 100);
 								final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(arg0, this,
 										arg1.getOrder(), 1.0F);
-								result.addAction(arg0, getDefaultPromotionsManager().createCustomPromotionOrderAdjustTotalAction(arg0,
-										-getAdjustedDiscounts()));
+								result.addAction(
+										arg0,
+										getDefaultPromotionsManager().createCustomPromotionOrderAdjustTotalAction(arg0,
+												-getAdjustedDiscounts()));
 								promotionResults.add(result);
 							}
 						}
-						else
+						else if (orderSubtotalAfterDiscounts > 0.0D)
 						{
-							if (LOG.isDebugEnabled())
-							{
-								LOG.debug(
-										"(" + getPK() + ")"
-												+ Localization
-														.getLocalizedString("promotion.orderLevelPromotion.cartAmtLessThanThreshold.msg1")
-												+ orderSubtotalAfterDiscounts
-												+ Localization.getLocalizedString(
-														"promotion.orderLevelPromotion.cartAmtLessThanThreshold.msg2")
-												+ threshold + Localization
-														.getLocalizedString("promotion.orderLevelPromotion.cartAmtLessThanThreshold.msg3"));
-							}
 							final float certainty = (float) (orderSubtotalAfterDiscounts / threshold.doubleValue());
 							final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(arg0, this,
 									arg1.getOrder(), certainty);
@@ -184,14 +208,14 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 		catch (final EtailNonBusinessExceptions e) //Added for TISPT-195
 		{
 			LOG.error(e.getMessage());
-			ExceptionUtil
-					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
 		}
 		catch (final Exception e)
 		{
 			LOG.error(e.getMessage());
-			ExceptionUtil
-					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
 		}
 		return promotionResults;
 	}
@@ -199,12 +223,9 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 	/**
 	 * This method is used for Localization Purpose
 	 *
-	 * @param :
-	 *           ctx
-	 * @param :
-	 *           result
-	 * @param :
-	 *           locale
+	 * @param: ctx
+	 * @param: result
+	 * @param: locale
 	 */
 	@Override
 	public String getResultDescription(final SessionContext ctx, final PromotionResult result, final Locale locale)
@@ -239,7 +260,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 				}
 				else if (result.getCouldFire(ctx))
 				{
-					final double orderSubtotalAfterDiscounts = getMplPromotionHelper().getTotalPrice(order);
+					final double orderSubtotalAfterDiscounts = getEligibleSubtotal(order);
 					final double amountRequired = threshold.doubleValue() - orderSubtotalAfterDiscounts;
 
 					final Object[] args =
@@ -254,6 +275,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 		return MarketplacecommerceservicesConstants.EMPTYSTRING;
 
 	}
+
 
 	/****
 	 *
@@ -355,11 +377,12 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 					{
 						totalPrice = totalPrice + entry.getTotalPrice().doubleValue();
 					}
-					else if ((null != entry.getAttribute(arg0, "isBOGOapplied")
-							&& BooleanUtils.toBoolean(entry.getAttribute(arg0, "isBOGOapplied").toString())
-							&& null != entry.getAttribute(arg0, "bogoFreeItmCount")))
+					else if ((null != entry.getAttribute(arg0, MarketplacecommerceservicesConstants.IS_BOGO_APPLIED)
+							&& BooleanUtils.toBoolean(entry.getAttribute(arg0, MarketplacecommerceservicesConstants.IS_BOGO_APPLIED)
+									.toString()) && null != entry.getAttribute(arg0, MarketplacecommerceservicesConstants.BOGO_ITEM_COUNT)))
 					{
-						final double freecount = Double.parseDouble(entry.getAttribute(arg0, "bogoFreeItmCount").toString());
+						final double freecount = Double.parseDouble(entry.getAttribute(arg0,
+								MarketplacecommerceservicesConstants.BOGO_ITEM_COUNT).toString());
 						totalPrice = totalPrice + (freecount * 0.01);
 					}
 				}
@@ -383,4 +406,100 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 		return orderSubtotalAfterDiscounts;
 	}
 
+
+	/**
+	 * The Method returns the total entry price post product discount
+	 *
+	 * CR Changes : TPR-715
+	 *
+	 * @param arg0
+	 * @param validProductUssidMap
+	 * @return orderSubtotalAfterDiscounts
+	 */
+	private double getSellerSpecificSubtotal(final SessionContext arg0, final Map<String, AbstractOrderEntry> validProductUssidMap)
+	{
+		double orderSubtotalAfterDiscounts = 0.0D;
+		try
+		{
+			if (MapUtils.isNotEmpty(validProductUssidMap))
+			{
+				double bogoFreePrice = 0.0D;
+				double totalPrice = 0.0D;
+
+				for (final Map.Entry<String, AbstractOrderEntry> mapentry : validProductUssidMap.entrySet())
+				{
+					if (null != mapentry && null != mapentry.getValue() && null != mapentry.getValue().getTotalPrice())
+					{
+						totalPrice = totalPrice + (mapentry.getValue().getTotalPrice().doubleValue());
+					}
+
+					if ((null != mapentry.getValue().getAttribute(arg0, MarketplacecommerceservicesConstants.IS_BOGO_APPLIED)
+							&& BooleanUtils.toBoolean(mapentry.getValue()
+									.getAttribute(arg0, MarketplacecommerceservicesConstants.IS_BOGO_APPLIED).toString()) && null != mapentry
+							.getValue().getAttribute(arg0, MarketplacecommerceservicesConstants.BOGO_ITEM_COUNT)))
+					{
+						final double freecount = Double.parseDouble(mapentry.getValue()
+								.getAttribute(arg0, MarketplacecommerceservicesConstants.BOGO_ITEM_COUNT).toString());
+						bogoFreePrice = bogoFreePrice + (freecount * 0.01);
+					}
+				}
+
+				if (totalPrice != 0.0D)
+				{
+					orderSubtotalAfterDiscounts = totalPrice - bogoFreePrice;
+				}
+			}
+		}
+		catch (final Exception exception)
+		{
+			LOG.error(exception.getMessage());
+		}
+
+		return orderSubtotalAfterDiscounts;
+	}
+
+	/**
+	 * The Method Calculates Data for Message
+	 *
+	 * CR Changes : TPR-715
+	 *
+	 * @param order
+	 *
+	 * @return subtotalVal
+	 */
+	private double getEligibleSubtotal(final AbstractOrder order)
+	{
+		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());
+		double subtotalVal = 0.0D;
+		if (getDefaultPromotionsManager().isSellerRestrExists(restrictionList))
+		{
+			subtotalVal = getSellersubTotalValue();
+		}
+		else if (getDefaultPromotionsManager().isExSellerRestrExists(restrictionList))
+		{
+			subtotalVal = getSellersubTotalValue();
+		}
+		else
+		{
+			subtotalVal = getMplPromotionHelper().getTotalPrice(order);
+		}
+		return subtotalVal;
+	}
+
+	/**
+	 * @return the sellersubTotalValue
+	 */
+	public double getSellersubTotalValue()
+	{
+		return sellersubTotalValue;
+	}
+
+	/**
+	 * @param sellersubTotalValue
+	 *           the sellersubTotalValue to set
+	 */
+	public void setSellersubTotalValue(final double sellersubTotalValue)
+	{
+		this.sellersubTotalValue = sellersubTotalValue;
+	}
 }

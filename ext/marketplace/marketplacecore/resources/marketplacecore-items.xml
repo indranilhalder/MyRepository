@@ -749,6 +749,8 @@
 			dynamic="true">
 			<value code="yes" />
 			<value code="no" />
+			<value code="true" />
+			<value code="false" />
 		</enumtype>
 
 
@@ -801,6 +803,17 @@
 			<targetElement type="SeoContent" cardinality="many"
 				qualifier="seoContents"></targetElement>
 		</relation>
+		
+		<!-- for category -->
+		
+		
+			<relation localized="false" code="SeoContentCategoryRelation">
+			<sourceElement type="Category" cardinality="one"
+			qualifier="categorySource"></sourceElement>
+			<targetElement type="SeoContent" cardinality="many"
+			qualifier="seoContents"></targetElement>
+		    </relation>
+		
 		<relation localized="false" code="BrandRelation">
 			<sourceElement type="Product" cardinality="one"
 				qualifier="productSource"></sourceElement>
@@ -1533,7 +1546,7 @@
 							unique="false" />
 						<persistence type="property">
 							<columntype database='oracle'>
-								<value>VARCHAR2(100)</value>
+								<value>VARCHAR2(255)</value>
 							</columntype>
 						</persistence>
 					</attribute>
@@ -1560,7 +1573,7 @@
 							<attribute qualifier='categoryId' type="java.lang.String">
 						<description>Seo Content unique Id</description>
 						<modifiers read="true" write="true" optional="true"
-							unique="true" />
+							unique="false" />
 						<persistence type="property">
 									</persistence>
 					</attribute>
@@ -5993,6 +6006,11 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- TISPRO-540 - Payment Type -->
+					<!-- TPR-174 - Welcome back status message -->
+					<attribute qualifier="merged" type="java.lang.Boolean">
+						<modifiers optional="true" read="true" write="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 		</typegroup>

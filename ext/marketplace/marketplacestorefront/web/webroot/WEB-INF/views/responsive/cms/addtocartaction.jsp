@@ -85,10 +85,10 @@ $(document).ready(function(){
 <%-- <c:url value="${url}" var="addToCartUrl" /> --%>
 <c:url value="/cart/addBag" var="addToCartUrl" />
 
-<div id="addToCartFormTitle" class="addToCartTitle">
-	<%-- <spring:theme code="basket.added.to.basket" /> --%>
+<%-- <div id="addToCartFormTitle" class="addToCartTitle">
+	<spring:theme code="basket.added.to.basket" />
 	<spring:theme code="product.addtocart.success" />
-</div>
+</div> --%>
 <span id="addtobag" style="display:none"><spring:theme code="product.addtocart.success"/></span>
 <span id="addtobagerror" style="display:none"><spring:theme code="product.wishlist.outOfStock"/></span>
 <span id="bagtofull" style="display:none"><spring:theme code="product.addtocart.aboutfull"/></span>
@@ -124,9 +124,9 @@ $(document).ready(function(){
 			<font color="#ff1c47">Please decrease the quantity</font>
 		</p></span>
 	 <!-- TISST-13959 fix  -->
-	<span id="dListedErrorMsg" style="display: none"  class="dlist_message">
+<%-- 	<span id="dListedErrorMsg" style="display: none"  class="dlist_message">
 		<spring:theme code="pdp.delisted.message" />
-	</span>
+	</span> --%>
 	<span id="outOfStockId" style="display: none"  class="out_of_stock">
 <%-- 		<spring:theme code="product.product.outOfStock" /> --%>
 		<%-- <input type="button" id="add_to_wishlist" onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/> --%>

@@ -148,7 +148,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 		boolean cancelOrRetrnanable = true;
 		boolean omsCancellationStatus = false;
-		boolean returnLogisticsCheck = false;
+		//fix for TISPRD-5958
+		boolean returnLogisticsCheck = true;
 		List<OrderModel> subOrderModels = null;
 		OrderModel subOrderModel = null;
 		OrderModel subOrderModelVersioned = null;

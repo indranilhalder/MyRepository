@@ -519,6 +519,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		storeCmsPageInModel(model, contentPage);
 		setUpMetaDataForContentPage(model, contentPage);
 		setCheckoutStepLinksForModel(model, getCheckoutStep());
+		model.addAttribute("paymentPage", "paymentPage");
 	}
 
 
@@ -592,7 +593,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 
 			//Logic when Payment mode is COD
-			if (null != cartData && MarketplacecheckoutaddonConstants.PAYMENTCOD.equalsIgnoreCase(paymentForm.getPaymentMode()))
+			if (null != cartData && MarketplacecheckoutaddonConstants.PAYMENTCOD.equalsIgnoreCase(paymentForm.getPaymentModeValue()))
 			{
 				//Adding cartdata into model
 				model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
@@ -1507,12 +1508,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								else
 								{
 									//TPR-627, TPR-622
+									//Changes to TRUE & FALSE
 									final String isSshipCodEligble = (richAttributeModel.get(0).getIsSshipCodEligible() != null ? richAttributeModel
 											.get(0).getIsSshipCodEligible().getCode()
-											: MarketplacecheckoutaddonConstants.NO);
+											: MarketplacecheckoutaddonConstants.FALSE);
 									// isSshipCodEligble to enable disable COD Eligible for SSHIP Products
+									//Changes to TRUE & FALSE
 									if (StringUtils.isNotEmpty(isSshipCodEligble)
-											&& isSshipCodEligble.equalsIgnoreCase(MarketplacecheckoutaddonConstants.YES))
+											&& isSshipCodEligble.equalsIgnoreCase(MarketplacecheckoutaddonConstants.TRUE))
 									{
 										//TPR-627,TPR-622 Separate method the check COD Eligibility to avoid redundant code
 										final boolean returnFlag = paymentModecheckForCOD(richAttributeModel, cart, model);

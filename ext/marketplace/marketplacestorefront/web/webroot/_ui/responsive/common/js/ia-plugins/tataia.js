@@ -11,7 +11,7 @@ rootEP = $('#rootEPForHttp').val();
 if(location.protocol === "https:") {
   rootEP = $('#rootEPForHttps').val();
 }
-recEndPoint = rootEP + '/SocialGenomix/recommendations/products/jsonp';
+recEndPoint = rootEP + '/SocialGenomix/recommendations/products';
 
 //******************************************************************************* Populating Dynamic Parameter Values For IA
 var allsizes = ["XXS", "XS", "S", "M", "L", "XL", "XXL"];
@@ -85,11 +85,12 @@ if (searchCategory_id){
 			if(currentPageURL.indexOf("/c-msh") > -1 || currentPageURL.indexOf("/c-ssh") > -1)
 			{
 			  site_page_type = 'category_landing_page';
-			  category_id = currentPageURL.split('-').pop().toUpperCase();
-			 			  
-			  if(category_id.indexOf('?') > 0) {
-				 category_id = category_id.substr(0, category_id.indexOf('?'));
-			  }
+			  category_id = $('#ia_category_code').val();
+
+
+
+
+
 			}
 			if(currentPageURL.indexOf("/s/") > -1){
 			  site_page_type = 'seller';
@@ -100,10 +101,11 @@ if (searchCategory_id){
 			}
 			if(currentPageURL.indexOf("/c-mbh") > -1){
 			  site_page_type = 'brand';
-			  brand_id = currentPageURL.split('-').pop().toUpperCase();  
-			    if(brand_id.indexOf('?') > 0) {
-			    brand_id = brand_id.substr(0, brand_id.indexOf('?'));
-			  }
+			  brand_id = $('#ia_category_code').val();
+
+
+
+
 			}
 			//changes end
 			if(currentPageURL.indexOf("/m/") > -1){
@@ -241,14 +243,11 @@ if (searchCategory_id){
 			  /*Check against all product widget elements*/
 			  for (var i=0; i<productWidgetElement.length; i++) {
 			    if(document.getElementById(productWidgetElement[i]) !== null) {
-			      var endpoint = '/SocialGenomix/recommendations/products/';
-			      if(productWidget[i] === "normal") { /*Normal is formatted sligtly differently*/
-			        endpoint += 'jsonp';
-			      } else {
-			        endpoint += productWidget[i] + '/jsonp';
-			      }
-
-
+			      var endpoint = '/SocialGenomix/recommendations/products';
+			      if(productWidget[i] !== "normal") {
+			        endpoint += '/' + productWidget[i];
+				  
+				  }
 			      if (productWidget[i].indexOf("hot") === 0 && 
 			          site_page_type === "viewAllTrending") {
 			        params.count = '100';
@@ -270,7 +269,7 @@ if (searchCategory_id){
 			  for (var i=0; i<brandWidgetElement.length; i++) {
 			    if(document.getElementById(brandWidgetElement[i]) !== null) {
 			      var endpoint = '/SocialGenomix/recommendations/';
-			      endpoint += brandWidget[i] + '/jsonp';
+			      endpoint += brandWidget[i];
 
 			      params.count = '9';
 			      params.htmlElement = brandWidgetElement[i];
@@ -282,7 +281,7 @@ if (searchCategory_id){
 			  for (var i=0; i<categoryWidgetElement.length; i++) {
 			    if(document.getElementById(categoryWidgetElement[i]) !== null) {
 			      var endpoint = '/SocialGenomix/recommendations/';
-			      endpoint += categoryWidget[i] + '/jsonp';
+			      endpoint += categoryWidget[i];
 
 			      params.count = '8';
 			      if(categoryWidgetElement[i].indexOf('ia_categories_recent') > -1) {
@@ -297,7 +296,7 @@ if (searchCategory_id){
 			  for (var i=0; i<collectionWidgetElement.length; i++) {
 			    if(document.getElementById(collectionWidgetElement[i]) !== null) {
 			      var endpoint = '/SocialGenomix/recommendations/';
-			      endpoint += collectionWidget[i] + '/jsonp';
+			      endpoint += collectionWidget[i];
 
 			      params.count = '3';
 			      params.htmlElement = collectionWidgetElement[i];
@@ -494,7 +493,7 @@ if (searchCategory_id){
 				    	params.referring_request_id = iaref;
 				    }
 				    params = buildParams(params);
-				    callRecApi(params, rootEP + '/SocialGenomix/recommendations/products/jsonp');
+				    callRecApi(params, rootEP + '/SocialGenomix/recommendations/products');
 				    callEventApi('add_to_cart', { "pname" : ['site_product_id','quantity'],
 				                                "pvalue" : [spid, '1'] });
 			  } else {
@@ -510,6 +509,12 @@ if (searchCategory_id){
 			  var qv = productElement.getElementsByClassName("IAQuickView")[0];
 			  qv.style.zIndex = 11;
 			  qv.style.visibility = "visible";
+			// Added as part of TPR-859 (size on hover)
+				var size_bottom = $(productElement).find(".short-info").height() + 31;
+				$(productElement).find(".sizesAvailable").css("bottom",size_bottom + "px");
+				if($(productElement).find(".sizesAvailable").length > 0){
+					$(productElement).find(".IAQuickView").addClass("size_on_hover");
+				}
 			}
 			/*Make quickview and Add to cart visible and on top*/
 			function showBoth(productElement) {
@@ -547,7 +552,7 @@ if (searchCategory_id){
 			});
 				  params = {'count' : '0', 'site_product_id': productId};
 				  params = buildParams(params);
-				  callRecApi(params, rootEP + '/SocialGenomix/recommendations/products/jsonp');
+				  callRecApi(params, rootEP + '/SocialGenomix/recommendations/products');
 			}
 			
 			function ia_quickviewGallery() {
@@ -624,6 +629,10 @@ if (searchCategory_id){
 			  }
 			  
 			  if(obj.colors!= undefined){
+			  		if (typeof obj.colors === "string") { //arrays always
+			  			obj.colors = [obj.colors];
+			  		}
+
 					jQuery.each(obj.colors, function (icount, itemColor) {	
 						if(itemColor == 'Pewter'){
 							obj.colors[icount] = '#8E9294';
@@ -666,7 +675,7 @@ if (searchCategory_id){
 						  }
 						 /* TISPRD-2119 Changes for Quick View position*/
 						 if((obj.colors != null && obj.colors.length < 2) && (obj.sizes != null && obj.sizes.length < 2)&& (obj.type == 'Electronics')){ 
-							 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0;left: 0px; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block; width: 50%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height:70px;font-size:12px;"><span>Quick View</span></div><div onclick=submitAddToCart("'+obj.site_product_id+'","'+obj.site_uss_id+'") class="iaAddToCartButton" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block;right:0; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;width: 50%;font-size:12px;"><span>Add To Bag</span></div>';
+							 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView ia_both" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0;left: 0px; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block; width: 50%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height:70px;font-size:12px;"><span>Quick View</span></div><div onclick=submitAddToCart("'+obj.site_product_id+'","'+obj.site_uss_id+'") class="iaAddToCartButton ia_both" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block;right:0; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;width: 50%;font-size:12px;"><span>Add To Bag</span></div>';
 							
 						 }else{
 							 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0; z-index: -1; visibility: hidden; color: #00cbe9;display: block; width: 100%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;font-size:12px;"><span>Quick View</span></div>';
@@ -686,7 +695,7 @@ if (searchCategory_id){
 						  }
 						  /* TISPRD-2119 Changes for Quick View position*/
 							 if((obj.colors != null && obj.colors.length < 2) && (obj.sizes != null && obj.sizes.length < 2)&& (obj.type == 'Electronics')){ 
-								 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0;left: 0px; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block; width: 50%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height:70px;font-size:12px;"><span>Quick View</span></div><div onclick=submitAddToCart("'+obj.site_product_id+'","'+obj.site_uss_id+'") class="iaAddToCartButton" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block;right:0; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;width: 50%;font-size:12px;"><span>Add To Bag</span></div>';
+								 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView ia_both" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0;left: 0px; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block; width: 50%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height:70px;font-size:12px;"><span>Quick View</span></div><div onclick=submitAddToCart("'+obj.site_product_id+'","'+obj.site_uss_id+'") class="iaAddToCartButton ia_both" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block;right:0; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;width: 50%;font-size:12px;"><span>Add To Bag</span></div>';
 								
 							 }else{
 								 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0; z-index: -1; visibility: hidden; color: #00cbe9;display: block; width: 100%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;font-size:12px;"><span>Quick View</span></div>';
@@ -775,7 +784,7 @@ if (searchCategory_id){
 					  } else {
 					  obj.sizes.sort() /*Not a string-based size array, sort normally*/
 					  }
-					   	html += '</div><span style="padding-bottom: 0;line-height:2;" class="sizesAvailable">Size : ['+obj.sizes+'] </span>';
+					   	html += '</div><span class="sizesAvailable">Size : <span class="size-col">['+obj.sizes+'] </span></span>';
 					  }
 					  } 
 				  html += '</div></a>';
@@ -818,7 +827,13 @@ if (searchCategory_id){
 			          jQuery.extend(params, {'referring_site_product_id': referring_site_product_id});
 			        }
 			      }
-
+				  if(document.getElementById('outOfStockId')) {
+            		if(document.getElementById('outOfStockId').style.display.indexOf("none") === -1) {
+                		params.out_of_stock = "true";
+            		} else {
+                		params.out_of_stock = "false";
+            		}
+        		  }
 			      callForEachElement(buildParams(params));
 			    } else if (site_page_type === "marketplace") {
 			      /*We will be doing something else here soon*/
@@ -878,12 +893,6 @@ if (searchCategory_id){
 				  }
 			  /*Product Widgets*/
 			  if(jQuery.inArray(widgetMode, productWidget) > -1) {
-			    /*So we can replace the same widget if we're narrowing down*/
-			    if(site_page_type !== 'category_landing_page' && widgetMode === "hot_in_category") {
-			      widgetMode = "hot";
-			    } else if(site_page_type !== 'category_landing_page' && widgetMode === "hot_in_category"){
-			    	widgetMode = "hot";
-			    }
 			    /*If it doesn't exist, we can stop*/
 			    widgetElement = productWidgetElement[jQuery.inArray(widgetMode, productWidget)];
 			    if (!document.getElementById(widgetElement)) {
@@ -921,12 +930,14 @@ if (searchCategory_id){
 			    /* Category code for Dropdown Filter in hot and search widgets */
 			    var categoryCodeForFilters = [] ;
 			    $.each($('input#for_ia_hot_dropdown_name'),function(i,val){  
-			    	categoryFilters.push(val.value);
+			    	categoryFilters.push(val.value.split("||")[0]);
 				});
 			    $.each($('input#for_ia_hot_dropdown_code'),function(i,val){  
 			    	categoryCodeForFilters.push(val.value);
 				});
-			    
+			    /*Removing duplicate categories*/
+			    categoryFilters = jQuery.unique(categoryFilters);
+			    categoryCodeForFilters = jQuery.unique(categoryCodeForFilters);
 			    /*SortBY dropdown*/
 			    var sortHtml = '<div class="select-view ia_select-view-sort">';
 			    	sortHtml += '<div class="select-list ia_select-list-sort"><span class="selected sortSelected">Sort by: '+sortDropdownselected+'</span><ul id="ia_category_select" style="width: auto;">';
@@ -1065,7 +1076,7 @@ if (searchCategory_id){
 			        } 
 			        
 			        //params.category = category_id;
-			        var endpoint = '/SocialGenomix/recommendations/products/hot_in_category/jsonp';
+			        var endpoint = '/SocialGenomix/recommendations/products/hot';
 			        //$( ".owl-item" ).css( "display", "none" );
 			        callRecApi(buildParams(params), rootEP + endpoint);
 			      });
@@ -1119,28 +1130,26 @@ if (searchCategory_id){
 			            		nav:true,
 			            		dots:false,
 			            		navText:[],
-			            		slideBy:'page',
-			            		responsive : {
-			            			// breakpoint from 0 up
-			            			0 : {
-			            				items:1,
-			            				stagePadding: 50,
-			            			},	
-			            			480 : {
-			            				items:2,
-			            				stagePadding: 50,
-			            			},
-			            			768 : {
-			            				items:2,
-			            			},
-			            			980 : {
-			            				items:3,
-			            			},		
-			            			// breakpoint from 650 up
-			            			1200 : {
-			            				items:4,
-			            			}			
-			            		}	
+			            		responsive: {
+			                        // breakpoint from 0 up
+			                        0: {
+			                            items: 1,
+			                            stagePadding: 50,
+			                        },
+			                        // breakpoint from 480 up
+			                        480: {
+			                            items: 2,
+			                            stagePadding: 50,
+			                        },
+			                        // breakpoint from 768 up
+			                        768: {
+			                            items: 3,
+			                        },
+			                        // breakpoint from 768 up
+			                        1280: {
+			                            items: 5,
+			                        }
+			                    }
 
 						    	    	  /*items : 4,
 
@@ -1173,28 +1182,26 @@ if (searchCategory_id){
 	            		nav:true,
 	            		dots:false,
 	            		navText:[],
-	            		slideBy:'page',
-	            		responsive : {
-	            			// breakpoint from 0 up
-	            			0 : {
-	            				items:1,
-	            				stagePadding: 50,
-	            			},	
-	            			480 : {
-	            				items:2,
-	            				stagePadding: 50,
-	            			},
-	            			768 : {
-	            				items:3,
-	            			},
-	            			980 : {
-	            				items:4,
-	            			},		
-	            			// breakpoint from 650 up
-	            			1200 : {
-	            				items:5,
-	            			}			
-	            		}	
+	            		responsive: {
+	                        // breakpoint from 0 up
+	                        0: {
+	                            items: 1,
+	                            stagePadding: 50,
+	                        },
+	                        // breakpoint from 480 up
+	                        480: {
+	                            items: 2,
+	                            stagePadding: 50,
+	                        },
+	                        // breakpoint from 768 up
+	                        768: {
+	                            items: 3,
+	                        },
+	                        // breakpoint from 768 up
+	                        1280: {
+	                            items: 5,
+	                        }
+	                    }
 
 			        /*items : 5,
 
@@ -1414,28 +1421,26 @@ if (searchCategory_id){
 	            		nav:true,
 	            		dots:false,
 	            		navText:[],
-	            		slideBy:'page',
-	            		responsive : {
-	            			// breakpoint from 0 up
-	            			0 : {
-	            				items:1,
-	            				stagePadding: 50,
-	            			},	
-	            			480 : {
-	            				items:2,
-	            				stagePadding: 50,
-	            			},
-	            			768 : {
-	            				items:2,
-	            			},
-	            			980 : {
-	            				items:3,
-	            			},		
-	            			// breakpoint from 650 up
-	            			1200 : {
-	            				items:4,
-	            			}			
-	            		}	
+	            		responsive: {
+	                        // breakpoint from 0 up
+	                        0: {
+	                            items: 1,
+	                            stagePadding: 50,
+	                        },
+	                        // breakpoint from 480 up
+	                        480: {
+	                            items: 2,
+	                            stagePadding: 50,
+	                        },
+	                        // breakpoint from 768 up
+	                        768: {
+	                            items: 3,
+	                        },
+	                        // breakpoint from 768 up
+	                        1280: {
+	                            items: 5,
+	                        }
+	                    }
 					    	/*items : 4,
 
 							navigation:true,

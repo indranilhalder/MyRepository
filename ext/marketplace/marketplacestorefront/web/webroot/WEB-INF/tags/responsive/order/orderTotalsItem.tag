@@ -16,30 +16,30 @@
 	<h2 class="order-summary"><spring:theme code="text.account.order.orderTotals" text="Order Summary"/></h2>
 	<ul class="totals">
 	
-		<li>
+		<li class="subtotalthanks">
 			<spring:theme code="text.account.order.subtotal" text="Subtotal"/>
 			<span class="amt"><format:price priceData="${order.subTotal}"/></span>
 		</li>
 		<c:if test="${order.totalDiscounts.value > 0}">
-			<li>
+			<li id="cartPromotionAppliedthanks">
 				<spring:theme code="text.account.order.savings" text="Discount"/>
-				<span class="amt"> -<format:price priceData="${order.totalDiscounts}"/></span>
+				<span class="amt"> <format:price priceData="${order.totalDiscounts}"/></span>
 			</li>
 		</c:if>
 		
 		<c:if test="${order.couponDiscount.value > 0}">
-			<li>
+			<li id="couponAppliedthanks">
 				<spring:theme code="text.account.order.couponSavings" text="Coupon"/>
-				<span class="amt"> -<format:price priceData="${order.couponDiscount}"/></span>
+				<span class="amt"> <format:price priceData="${order.couponDiscount}"/></span>
 			</li>
 		</c:if>
 		
-		<li>
+		<li class="shippingthanks">
 			<spring:theme code="text.account.order.delivery" text="Delivery"/>
 			<span class="amt"><format:price priceData="${order.deliveryCost}" displayFreeForZero="true"/></span>
 		</li>
 		<!-- TISBOX-1417 Displaying COD related Information-->
-		<li>
+		<li id="convChargeFieldIdthanks">
 			<c:if test="${order.convenienceChargeForCOD.value > 0}">
 			<spring:theme code="text.account.order.convenience" text="Convenience Charge"/>
 			<span class="amt"><format:price priceData="${order.convenienceChargeForCOD}" displayFreeForZero="true"/></span>

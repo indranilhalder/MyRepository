@@ -281,9 +281,9 @@ public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStra
 
 	/*
 	 * @Desc To identify if already a order model exists with same cart guid //TISPRD-181
-	 *
+	 * 
 	 * @param cartModel
-	 *
+	 * 
 	 * @return boolean
 	 */
 	private OrderModel isOrderAlreadyExists(final CartModel cartModel)
@@ -296,12 +296,47 @@ public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStra
 
 	private Double fetchTotalPriceForDelvCostPromo(final OrderModel orderModel)
 	{
-		final OrderData orderData = getOrderConverter().convert(orderModel);
+		Double totalPrice = Double.valueOf(0);
+		//final OrderData orderData = getOrderConverter().convert(orderModel);
 		final Double subtotal = orderModel.getSubtotal();
 		final Double deliveryCost = orderModel.getDeliveryCost();
-		final Double discount = Double.valueOf(orderData.getTotalDiscounts().getValue().doubleValue());
-		final Double totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
+
+		//		final Double discount = Double.valueOf(orderData.getTotalDiscounts().getValue().doubleValue());
+		//		final Double totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
+
+		final Double discount = getTotalDiscount(orderModel.getEntries());
+
+		totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
 		return totalPrice;
+	}
+
+
+	private Double getTotalDiscount(final List<AbstractOrderEntryModel> entries)
+	{
+		Double discount = Double.valueOf(0);
+
+		double deliveryCost = 0.0D;
+		double promoDiscount = 0.0D;
+		double couponDiscount = 0.0D;
+
+		if (CollectionUtils.isNotEmpty(entries))
+		{
+			for (final AbstractOrderEntryModel oModel : entries)
+			{
+				if (null != oModel && !oModel.getGiveAway().booleanValue())
+				{
+					deliveryCost += (oModel.getCurrDelCharge().doubleValue() - oModel.getPrevDelCharge().doubleValue()) < 0 ? (-1)
+							* (oModel.getCurrDelCharge().doubleValue() - oModel.getPrevDelCharge().doubleValue()) : (oModel
+							.getCurrDelCharge().doubleValue() - oModel.getPrevDelCharge().doubleValue());
+					couponDiscount += (null == oModel.getCouponValue() ? 0.0d : oModel.getCouponValue().doubleValue());
+					promoDiscount += (null == oModel.getTotalProductLevelDisc() ? 0.0d : oModel.getTotalProductLevelDisc()
+							.doubleValue()) + (null == oModel.getCartLevelDisc() ? 0.0d : oModel.getCartLevelDisc().doubleValue());
+				}
+			}
+
+			discount = Double.valueOf(deliveryCost + couponDiscount + promoDiscount);
+		}
+		return discount;
 	}
 
 	private boolean isDeliveryCostPromotionApplied(final AbstractOrderModel orderModel)

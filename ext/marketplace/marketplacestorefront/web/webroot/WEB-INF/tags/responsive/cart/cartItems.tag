@@ -392,7 +392,11 @@ tr.d0 td {
 						<c:otherwise>
 							<li id ="${entry.selectedSellerInformation.ussid}_li" class="delivery">
 							<p class="mobile-delivery"><spring:theme code="basket.delivery.options"/></p>
-								<ul id="${entry.selectedSellerInformation.ussid}">
+							<!-- TPR-1458-->
+							<!-- <span class='pincodeServiceError'></span> -->
+							<!-- 1341 -->
+							<p class="cartItemBlankPincode"><spring:theme code="cart.pincode.blank"/></p>	
+							<ul id="${entry.selectedSellerInformation.ussid}">
 						</c:otherwise>
 					</c:choose>	
 	             	 
@@ -401,7 +405,8 @@ tr.d0 td {
 								</c:when>
 								
 								<c:when test="${empty selectedPincode ||  fn:length(selectedPincode) == 0  }"> 
-									<spring:theme code="cart.pincode.blank"/>
+									<!-- TPR-1341 -->
+									<%-- <p id="cartItemBlankPincode"><spring:theme code="cart.pincode.blank"/></p> --%>
 								</c:when>
 								
 		            			<%-- Commented as part of performance fix TISPT-104
@@ -1028,19 +1033,6 @@ tr.d0 td {
  
  
  
- <div class="wishlist-banner" id="wishlistBanner" style="display:none">
-		<h2>
-			<spring:theme code="Treat Yourself" />
-			<span><spring:theme code="mpl.gift.Yourself" /></span>
-		</h2>
-	</div>
-	<ul class="product-block wishlist" id="giftYourselfProducts">
-		
-	</ul>
- 
- 
- 
- 
 <div class="cart-bottom-block">
 <%-- <div class="coupon block" style="width: 40%;display: inline-block;">
 <h2>Have a promo code?</h2>
@@ -1083,7 +1075,7 @@ tr.d0 td {
         
         
         
-        -<ycommerce:testId code="Order_Totals_Savings"><format:price priceData="${cartData.totalDiscounts}"/></ycommerce:testId>
+        <ycommerce:testId code="Order_Totals_Savings"><format:price priceData="${cartData.totalDiscounts}"/></ycommerce:testId>
         
          </c:if> 
         </span></li>
@@ -1114,5 +1106,17 @@ tr.d0 td {
                 </c:choose>
             </ycommerce:testId></span></li>
           </ul>
+      <!--    As part of improvement TPR-1468 -->
+         <div class="wishlist-banner" id="wishlistBanner" style="display:none">
+		<h2>
+			<spring:theme code="Treat Yourself" />
+			<span><spring:theme code="mpl.gift.Yourself" /></span>
+		</h2>
+	</div>
+	<ul class="product-block wishlist" id="giftYourselfProducts">
+		
+	</ul>
+         
+         
 <storepickup:pickupStorePopup />
 

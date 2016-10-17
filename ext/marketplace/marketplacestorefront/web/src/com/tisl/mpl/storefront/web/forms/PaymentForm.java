@@ -18,7 +18,24 @@ public class PaymentForm extends SopPaymentDetailsForm
 	private String termRate;
 	private String selectedTerm;
 	private String juspayOrderId;
+	private String paymentModeValue;
 
+	/**
+	 * @return the paymentModeValue
+	 */
+	public String getPaymentModeValue()
+	{
+		return paymentModeValue;
+	}
+
+	/**
+	 * @param paymentModeValue
+	 *           the paymentModeValue to set
+	 */
+	public void setPaymentModeValue(final String paymentModeValue)
+	{
+		this.paymentModeValue = paymentModeValue;
+	}
 
 	/**
 	 * @return the eMIBankCode

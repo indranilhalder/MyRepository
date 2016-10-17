@@ -463,7 +463,7 @@
 									</span>	
 								</c:if>
 								</li>
-								<li class="delivery header4 deliveryWidth"><button style="font-size: 14px !important;" class="changeDeliveryMethod"><spring:theme code="checkout.multi.cnc.store.change.delivery.mode"/></button></li>
+								<li class="delivery header4 deliveryWidth"><button class="changeDeliveryMethod"><spring:theme code="checkout.multi.cnc.store.change.delivery.mode"/></button></li>
 								
 								<%-- <li class="delivery header4"><a class="cd-popup-trigger${status1.index}"
 														style="color: #00cbe9 !important;" data-toggle="modal" data-target="#myModal">Change Delivery Mode</a></li>
@@ -633,7 +633,7 @@
 									<div class="error_txt pincodeServicable${status1.index}" style="width: 200px;font-size: 12px;"></div>
 									<ul class="delivered scrollThis delivered${status1.index}">
 							<c:forEach items="${poses.pointOfServices}" var="pos" varStatus="status">
-										<li style="width: 240px !important;" class="removeColor${status1.index}">
+										<li class="removeColor${status1.index}">
 											<%-- <input class="radio_btn" type="radio" name="address" id="address${status.index}" value="address${status.index}"> --%>
 											<input class="radio_btn radio_btn${status1.index}" type="radio" name="address${status1.index}" id="address${status1.index}${status.index}" value="address${status.index}">
 												<div class='pin bounce'>
@@ -756,14 +756,14 @@
 							</ul>
 								</li>
 							
-							<li>
-													<ul class="mapWidth" id="map${status1.index}" style="width: 300px; height: 200px; position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);"></ul>
+							<li class="mapConatinerParent">
+													<ul class="mapWidth" id="map${status1.index}" style="width: 324px; height: 200px; position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);"></ul>
 													<ul id="maphide${status1.index}" style="display: none; width: 300px; height: 200px; position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);padding: 10px; font-weight: 600">Unable to find Stores</ul>
 													<div class="change_pincode_block block${status1.index}">
 														<span class="change_txt txt${status1.index}">Change Pincode?</span>
 														<div class="input${status1.index} row" style="width: 111%">
-															<div class="col-md-8 col-sm-4 col-xs-4">
-																<input type="text" name="changepin${status1.index}" class="changepin${status1.index}" maxlength="6" placeholder="Enter Pincode to Change.">
+															<div class="col-md-8 col-sm-4 col-xs-4" style="padding:0px;">
+																<input style="width: 100%" type="text" name="changepin${status1.index}" class="changepin${status1.index}" maxlength="6" placeholder="Enter Pincode to Change.">
 															</div>
 															<div class="col-md-4 col-sm-2 col-xs-2">
 																<button class="submitPincode submitPincode${status1.index}" style="height: 40px !important; background: #A9143C !important; border: none !important; color: #fff !important;" name="submitPincode${status1.index}">Submit</button>
@@ -1111,28 +1111,37 @@
 				<div class="panel">
 					<div class="pickUpPersonAjax"></div>
    			 	</div>
-       			<div class="panel panel-default pickuppersonWidth" style="height: auto !important; width: 100%!important;">
-     			 	<div class="panel panel-body" style="margin-top: 14px;">
-     			 		<div class="col-md-12 pickupDetails error_txt">
+       			<div class="panel panel-default pickuppersonWidth">
+       				<h2 class="panel-defaultHeading">Collect in store: Personal Info</h2>
+       				<p class="retail-bag"></p>
+       				<div class="retail-detail">
+       					Please provide us with your name and phone number so we can assist you quickly and easily
+       				</div>
+     			 	<div class="panel panel-body">
+     			 		<div class="pickupDetails error_txt">
      			 		<spring:theme code="checkout.multi.cnc.pickup.details.validation.msg"/>
      			 		</div>
 	     			 	<form name="pickupPersonDetails" action="#">
-	     				 <div class="col-md-3">
+	     				 <div style="display:none;">
 	      					 <span class="pickupperson"><h5 id="pickup"><spring:theme code="checkout.multi.cnc.pickup.person.name"/></h5></span></div>
-	       					 <div class="col-md-3 col-sm-12 col-xs-12">
-	        					<input type="text" id="pickupPersonName" name="pickupPersonName"  maxlength="30" class="inputname" placeholder="Enter Full Name"  value="${pickupPersonName}"/><br/>
+	       					 <div class="nameFullSubPanel">
+	        					<input type="text" id="pickupPersonName" name="pickupPersonName"  maxlength="30" class="inputname" placeholder="Enter Full Name*"  value="${pickupPersonName}"/>
 	        					<div class="error_txt pickupPersonNameError"></div>
 	            			</div>
-	            			<div class="col-md-3 col-sm-12 col-xs-12">
-								<input type="text" id="pickupPersonMobile" class="inputmobile" maxlength="10" placeholder="Enter Mobile Number" value="${pickUpPersonMobile}"/><br/>
+	            			 <div class="nameBlankSubPanel">
+	        					<input type="text" name="pickupPersonName"  maxlength="30" class="inputname"/>
+	        					<div class="error_txt pickupPersonNameError"></div>
+	            			</div>
+	            			<div class="mobileSubPanel">
+								<input type="text" id="pickupPersonMobile" class="inputmobile" maxlength="10" placeholder="Enter Mobile Number*" value="${pickUpPersonMobile}"/><br/>
 								<div class="error_txt pickupPersonMobileError"></div>
 	        			    </div>
-				             <div class="col-md-3 col-sm-12 col-xs-12">
-				             <button type="button"  class="savenewid" id="savePickupPersondDetails" style="height: 40px !important"><spring:theme code="checkout.multi.cnc.pickup.details.submit"/></button>
+				             <div class="submitSubPanel">
+				             <button type="button"  class="savenewid" id="savePickupPersondDetails"><spring:theme code="checkout.multi.cnc.pickup.details.submit"/></button>
 				          <div id="pickupPersonSubmit"></div>
 				          <div class="error_txt pickupPersonSubmitError"></div>
 				            </div>
-				            <div class="col-md-12" id="pickUpDetailsMsg" style="padding-top: 10px;"><spring:theme code="checkout.multi.cnc.pickup.details.below.msg"/></div>
+				            <div id="pickUpDetailsMsg" style="padding-top: 10px;display: none;"><spring:theme code="checkout.multi.cnc.pickup.details.below.msg"/></div>
 				            <p style="clear:both;"></p>&nbsp;
 				           </form>
 			            
@@ -1141,7 +1150,7 @@
 		</div>
 		</div>
 		
-		<div class="right-block shipping right-block-width" style="margin-top: 74px;">
+		<div class="right-block shipping right-block-width">
 				<c:choose>
 					<c:when test="${expCheckout gt 0}">
 						<a class="continue_btn" href="${request.contextPath}/checkout/multi/delivery-method/invReservation" type="button">	
@@ -1182,7 +1191,7 @@
 				<c:when test="${delModeCount gt 0}">
 				
 				<form:form id="selectDeliveryMethodForm1" action="${request.contextPath}/checkout/multi/delivery-method/select" method="post" commandName="deliveryMethodForm">
-								<button class="continue_btn" id="deliveryMethodSubmit1" type="submit" class="checkout-next" style="border: none;"><spring:theme code="checkout.multi.deliveryMethod.continue" text="Next"/></button>
+								<button class="continue_btn" id="deliveryMethodSubmit1" type="submit" class="checkout-next" style="border: none;display: none;"><spring:theme code="checkout.multi.deliveryMethod.continue" text="Next"/></button>
 				</form:form>
 				</c:when>
 				

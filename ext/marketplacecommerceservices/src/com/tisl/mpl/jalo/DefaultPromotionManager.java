@@ -81,6 +81,7 @@ import com.tisl.mpl.util.ValueComparator;
  * @author TCS
  *
  */
+@SuppressWarnings("deprecation")
 public class DefaultPromotionManager extends PromotionsManager
 {
 	private final static Logger LOG = Logger.getLogger(DefaultPromotionManager.class.getName());
@@ -284,7 +285,6 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * //Code Modified for TISPT-148
 	 *
 	 * @param promotionManufacturerList
-	 * @param brand
 	 * @return isValid
 	 */
 	private boolean isEligibleManufacturer(final List<String> promotionManufacturerList, final String brandName)
@@ -526,8 +526,6 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param ctx
 	 * @param promoContext
 	 * @param promo
-	 * @param excludedProductList
-	 * @param excludeManufactureList
 	 * @return noOfProducts
 	 */
 	public int noOfEligibleProducts(final SessionContext ctx, final PromotionEvaluationContext promoContext,
@@ -858,15 +856,16 @@ public class DefaultPromotionManager extends PromotionsManager
 			final List<AbstractPromotionRestriction> restrictionList, final AbstractOrderEntry entry)
 	{
 		boolean flag = false;
-		String ussid = MarketplacecommerceservicesConstants.EMPTY;
-		List<SellerInformationModel> productSellerData = null;
+
 		try
 		{
 			if (null != entry && null != entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID))
 			{
-				ussid = entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID).toString();
+				final String ussid = entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID)
+						.toString();
 				final CatalogVersionModel oModel = catalogData();
-				productSellerData = getSellerBasedPromotionService().fetchSellerInformation(ussid, oModel);
+				final List<SellerInformationModel> productSellerData = getSellerBasedPromotionService().fetchSellerInformation(ussid,
+						oModel);
 				flag = GenericUtilityMethods.checkSellerData(restrictionList, productSellerData);
 			}
 		}
@@ -1561,20 +1560,22 @@ public class DefaultPromotionManager extends PromotionsManager
 		final CartModel cartModel = cartService.getSessionCart();
 		for (final AbstractOrderEntryModel entry : cartModel.getEntries())
 		{
-			final ProductModel entryProduct = entry.getProduct();
-			final String selectedUSSID = entry.getSelectedUSSID();
-			if (qCount.containsKey(selectedUSSID))
+			if (null != entry && !entry.getGiveAway().booleanValue()) // Added for TPR-1702 : Sprint1.0
 			{
-				for (final SellerInformationModel seller : entryProduct.getSellerInformationRelator())
+				final ProductModel entryProduct = entry.getProduct();
+				final String selectedUSSID = entry.getSelectedUSSID();
+				if (qCount.containsKey(selectedUSSID))
 				{
-					for (final RichAttributeModel rm : seller.getRichAttribute())
+					for (final SellerInformationModel seller : entryProduct.getSellerInformationRelator())
 					{
-						if (null != seller.getSellerArticleSKU() && seller.getSellerArticleSKU().equalsIgnoreCase(selectedUSSID))
+						for (final RichAttributeModel rm : seller.getRichAttribute())
 						{
-							productfullfillmentTypeMap.put(selectedUSSID, rm.getDeliveryFulfillModes().getCode());
+							if (null != seller.getSellerArticleSKU() && seller.getSellerArticleSKU().equalsIgnoreCase(selectedUSSID))
+							{
+								productfullfillmentTypeMap.put(selectedUSSID, rm.getDeliveryFulfillModes().getCode());
 
+							}
 						}
-
 					}
 				}
 			}
@@ -1588,7 +1589,6 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param isPercentageFlag
 	 * @param adjustedDeliveryCharge
 	 * @param fetchProductRichAttribute
-	 * @param validProductList
 	 * @return Map<Product, Double>
 	 */
 	public Map<String, Map<String, Double>> updateDeliveryCharges(final boolean isDeliveryFreeFlag,
@@ -1603,7 +1603,7 @@ public class DefaultPromotionManager extends PromotionsManager
 		for (final AbstractOrderEntryModel entry : cartModel.getEntries())
 		{
 			final String selectedUSSID = entry.getSelectedUSSID();
-			if (qCount.containsKey(selectedUSSID) && null != entry.getMplDeliveryMode())
+			if (qCount.containsKey(selectedUSSID) && null != entry.getMplDeliveryMode() && !entry.getGiveAway().booleanValue())
 			{
 				final String selectedDeliveryModeCode = entry.getMplDeliveryMode().getDeliveryMode().getCode();
 				final String currencyIsoCode = MarketplacecommerceservicesConstants.INR;
@@ -1646,8 +1646,14 @@ public class DefaultPromotionManager extends PromotionsManager
 			}
 			else
 			{
-				final double deliveryChargeForEntry = prodMplZoneDeliveryModeValueModel.getValue().doubleValue()
-						* entry.getQuantity().intValue();
+				//Blocked for TISSTRT-1418
+				//				final double deliveryChargeForEntry = prodMplZoneDeliveryModeValueModel.getValue().doubleValue()
+				//						* entry.getQuantity().intValue();
+
+				final double deliveryChargeForEntry = getMplPromotionHelper().getDeliveryEntryCharge(
+						prodMplZoneDeliveryModeValueModel.getValue().doubleValue(), entry);
+				//Modification for TISSTRT-1418 ends
+
 				double amtTobeDeduced = 0.00D;
 				double deliveryChargeAfterPromotion = 0.00D;
 
@@ -1818,16 +1824,17 @@ public class DefaultPromotionManager extends PromotionsManager
 			final List<AbstractPromotionRestriction> restrictionList, final AbstractOrderEntry entry)
 	{
 		boolean flag = false;
-		String ussid = MarketplacecommerceservicesConstants.EMPTY;
-		List<SellerInformationModel> productSellerData = null;
+
 		try
 		{
 			if (null != entry && null != entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID)
 					&& isExSellerRestrExists(restrictionList))
 			{
-				ussid = entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID).toString();
+				final String ussid = entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID)
+						.toString();
 				final CatalogVersionModel oModel = catalogData();
-				productSellerData = getSellerBasedPromotionService().fetchSellerInformation(ussid, oModel);
+				final List<SellerInformationModel> productSellerData = getSellerBasedPromotionService().fetchSellerInformation(ussid,
+						oModel);
 				flag = GenericUtilityMethods.checkExcludeSellerData(restrictionList, productSellerData);
 			}
 		}
@@ -1852,18 +1859,13 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param restrictionList
 	 * @return flag
 	 */
-	private boolean isExSellerRestrExists(final List<AbstractPromotionRestriction> restrictionList)
+	public boolean isExSellerRestrExists(final List<AbstractPromotionRestriction> restrictionList)
 	{
-		boolean flag = true;
-		if (CollectionUtils.isEmpty(restrictionList))
-		{
-			flag = false;
-		}
-		else
+		boolean flag = false;
+		if (CollectionUtils.isNotEmpty(restrictionList))
 		{
 			for (final AbstractPromotionRestriction restriction : restrictionList)
 			{
-				flag = false;
 				if (restriction instanceof EtailExcludeSellerSpecificRestriction)
 				{
 					flag = true;
@@ -2068,7 +2070,7 @@ public class DefaultPromotionManager extends PromotionsManager
 	public boolean isSellerRestrExists(final List<AbstractPromotionRestriction> restrictionList)
 	{
 		boolean isSellerRestr = false;
-		if (restrictionList != null && !restrictionList.isEmpty())
+		if (CollectionUtils.isNotEmpty(restrictionList))
 		{
 			for (final AbstractPromotionRestriction restriction : restrictionList)
 			{
@@ -2098,17 +2100,25 @@ public class DefaultPromotionManager extends PromotionsManager
 		final Map<String, Integer> validProdQCountMap = new HashMap<String, Integer>();
 		final CartModel cartModel = cartService.getSessionCart();
 
-		for (final AbstractOrderEntryModel entryModel : cartModel.getEntries())
+		if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
 		{
-			if (entryModel.getMplDeliveryMode() != null)
+			for (final AbstractOrderEntryModel entryModel : cartModel.getEntries())
 			{
-				final String selectedDeliveryMode = entryModel.getMplDeliveryMode().getDeliveryMode().getCode();
-				if (deliveryModeCodeList.contains(selectedDeliveryMode))
+				if (null != entryModel && !entryModel.getGiveAway().booleanValue()) // Added for TPR-1702 : Sprint 1.0
 				{
-					validProdQCountMap.put(entryModel.getSelectedUSSID(), Integer.valueOf(entryModel.getQuantity().intValue()));
+					if (null != entryModel.getMplDeliveryMode() && null != entryModel.getMplDeliveryMode().getDeliveryMode()
+							&& null != entryModel.getMplDeliveryMode().getDeliveryMode().getCode())
+					{
+						final String selectedDeliveryMode = entryModel.getMplDeliveryMode().getDeliveryMode().getCode();
+						if (deliveryModeCodeList.contains(selectedDeliveryMode))
+						{
+							validProdQCountMap.put(entryModel.getSelectedUSSID(), Integer.valueOf(entryModel.getQuantity().intValue()));
+						}
+					}
 				}
 			}
 		}
+
 
 		return validProdQCountMap;
 	}

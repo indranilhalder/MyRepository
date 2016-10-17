@@ -440,6 +440,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				{
 					totalDeliveryDiscount += entryModelList.getPrevDelCharge().doubleValue()
 							- entryModelList.getCurrDelCharge().doubleValue();
+					LOG.debug("totalDeliveryDiscount:" + totalDeliveryDiscount);
 				}
 				else
 				{
@@ -490,7 +491,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			//totalPrice = totalPriceForSubTotal + totalConvChargeForCOD + totalDeliveryPrice
 			//		- (totalDeliveryDiscount + totalCartLevelDiscount + totalProductDiscount + totalCouponDiscount);
 			totalPrice = BigDecimal.valueOf(totalPriceForSubTotal).add(BigDecimal.valueOf(totalConvChargeForCOD))
-					.add(BigDecimal.valueOf(totalDeliveryPrice)).subtract(BigDecimal.valueOf(totalDeliveryDiscount))
+					.add(BigDecimal.valueOf(totalDeliveryPrice))/* .subtract(BigDecimal.valueOf(totalDeliveryDiscount)) */
 					.subtract(BigDecimal.valueOf(totalCartLevelDiscount)).subtract(BigDecimal.valueOf(totalProductDiscount))
 					.subtract(BigDecimal.valueOf(totalCouponDiscount));
 			final DecimalFormat decimalFormat = new DecimalFormat("#.00");

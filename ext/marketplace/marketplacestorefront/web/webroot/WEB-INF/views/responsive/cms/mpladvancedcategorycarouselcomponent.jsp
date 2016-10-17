@@ -9,7 +9,7 @@
 
 <div class="feature-categories">
 	<c:if test="${not empty component.title}">
-		<h1>${component.title}</h1>
+		<h2>${component.title}</h2> 
 	</c:if>
 	<c:if test="${component.imageSize eq 'LARGE'}">
 		<ul class="categories count-3">
@@ -20,9 +20,10 @@
 	</c:if>
 
 	<c:if test="${component.imageSize eq 'THUMBNAIL'}">
-		<div
+		<!-- <div
 			class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference"
-			id="mplAdvancedCategoryCarousel">
+			id="mplAdvancedCategoryCarousel"> -->
+			<div class="carousel" id="mplAdvancedCategoryCarousel"> 
 			<c:forEach items="${component.categories}" var="category">
 				<cms:component component="${category}" evaluateRestriction="true"
 					element="div" class="item slide" />

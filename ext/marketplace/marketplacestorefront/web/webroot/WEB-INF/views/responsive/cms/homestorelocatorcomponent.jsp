@@ -325,7 +325,7 @@ background: transparent;
 	<div class="row">
 	 <div class="col-md-12 col-sm-12 col-lg-6">
 	       <div id="overLayStoreFinderText123" class="overLayStoreFinderText">
-		   <h1><spring:theme code="storelocator.home.beinspired.text1" text="Be inspired online, or at one of our partner stores."/></h1>
+		   <h2><spring:theme code="storelocator.home.beinspired.text1" text="Be inspired online, or at one of our partner stores."/></h2>
 			<span><spring:theme code="storelocator.home.beinspired.text2" text="Our seamless online and in-store experiences allow
 				you to shop, make returns, and earn rewards on all your purchases
 				across brands online or in-store."/>

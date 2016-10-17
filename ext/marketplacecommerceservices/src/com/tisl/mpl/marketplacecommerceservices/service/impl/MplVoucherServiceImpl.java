@@ -12,6 +12,7 @@ import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.order.exceptions.CalculationException;
+import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.util.DiscountValue;
@@ -28,6 +29,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -42,6 +44,9 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
+import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
+import com.tisl.mpl.model.BuyAandBGetPromotionOnShippingChargesModel;
+import com.tisl.mpl.model.BuyAboveXGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.order.impl.MplDefaultCalculationService;
 import com.tisl.mpl.util.DiscountUtility;
 
@@ -99,15 +104,28 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 			//recalculating cart
 			final Double deliveryCost = cartModel.getDeliveryCost();
+			Double modDeliveryCost = Double.valueOf(0);
 
 			final CommerceCartParameter parameter = new CommerceCartParameter();
 			parameter.setEnableHooks(true);
 			parameter.setCart(cartModel);
 			getMplCommerceCartCalculationStrategy().recalculateCart(parameter);
 
+
+			//Code for Shipping Promotion & Voucher Integration
+			//TPR-1702
+			if (validateForShippingPromo(cartModel.getAllPromotionResults()))
+			{
+				modDeliveryCost = Double.valueOf(deliveryCost.doubleValue() - getModifiedDeliveryCost(cartModel.getEntries()));
+			}
+			//TPR-1702 : Changes Ends
+
 			cartModel.setDeliveryCost(deliveryCost);
+
+			//TPR-1702 : Changes for Shipping + Coupon
 			cartModel.setTotalPrice(Double.valueOf((null == cartModel.getTotalPrice() ? 0.0d : cartModel.getTotalPrice()
-					.doubleValue()) + (null == deliveryCost ? 0.0d : deliveryCost.doubleValue())));
+					.doubleValue()) + (null == deliveryCost ? 0.0d : deliveryCost.doubleValue()) - modDeliveryCost.doubleValue()));
+			//TPR-1702 : Changes for Shipping + Coupon
 
 			// Freebie item changes
 			getMplCommerceCartService().saveDeliveryMethForFreebie(cartModel, freebieModelMap, freebieParentQtyMap);
@@ -125,6 +143,60 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
 		}
 
+	}
+
+
+	/**
+	 * Provide the Modified Delivery Cost for Shipping Promotions
+	 *
+	 * @param entries
+	 * @return deliveryCost
+	 */
+	private double getModifiedDeliveryCost(final List<AbstractOrderEntryModel> entries)
+	{
+		double deliveryCost = 0.0D;
+		if (CollectionUtils.isNotEmpty(entries))
+		{
+			for (final AbstractOrderEntryModel entry : entries)
+			{
+				if (null != entry && !entry.getGiveAway().booleanValue() && null != entry.getCurrDelCharge()
+						&& entry.getCurrDelCharge().doubleValue() > 0)
+				{
+					deliveryCost += entry.getCurrDelCharge().doubleValue();
+				}
+			}
+		}
+		return deliveryCost;
+	}
+
+
+
+
+	/**
+	 * Validate Cart for Shipping Promotion
+	 *
+	 * @param allPromotionResults
+	 * @return flag
+	 */
+	private boolean validateForShippingPromo(final Set<PromotionResultModel> allPromotionResults)
+	{
+		boolean flag = false;
+		if (CollectionUtils.isNotEmpty(allPromotionResults))
+		{
+			final List<PromotionResultModel> promotionList = new ArrayList<PromotionResultModel>(allPromotionResults);
+			for (final PromotionResultModel oModel : promotionList)
+			{
+				if (oModel.getCertainty().floatValue() == 1.0F
+						&& null != oModel.getPromotion()
+						&& (oModel.getPromotion() instanceof BuyAboveXGetPromotionOnShippingChargesModel
+								|| oModel.getPromotion() instanceof BuyAGetPromotionOnShippingChargesModel || oModel.getPromotion() instanceof BuyAandBGetPromotionOnShippingChargesModel))
+				{
+					flag = true;
+					break;
+				}
+			}
+		}
+		return flag;
 	}
 
 
