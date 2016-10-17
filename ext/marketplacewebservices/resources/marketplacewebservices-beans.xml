@@ -973,6 +973,7 @@
 		<!-- TPR-797 changed as per mail-->
 		<property name="discount" type="String" />
 		<property name="allOOStock" type="Boolean" />
+		<property name="aPlusContent" type="com.tisl.mpl.wsdto.ProductAPlusWsData"/>
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.KnowMoreDTO">
@@ -2332,11 +2333,15 @@
 	</bean>
 
 <bean class="com.tisl.mpl.wsdto.ProductContentWsData" extends="com.tisl.mpl.wsdto.ErrorDTO">
-		<property name="contentList" type="String" />
-		<property name="imageList" type="String" />
-		<property name="videoList" type="String" />
-		<property name="section" type="String" />
+		<property name="section" type="String" />		
+		<property name="textList" type="java.util.List&lt;java.lang.String>"></property>
+		<property name="imageList" type="java.util.List&lt;java.lang.String>"></property>
+		<property name="videoList" type="java.util.List&lt;java.lang.String>"></property>
 	</bean>
 
+<bean class="com.tisl.mpl.wsdto.ProductAPlusWsData" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="temlateName" type="String" />
+		<property name="productContent" type="java.util.HashMap&lt;String, com.tisl.mpl.wsdto.ProductContentWsData>" />
+	</bean>
    
 </beans>

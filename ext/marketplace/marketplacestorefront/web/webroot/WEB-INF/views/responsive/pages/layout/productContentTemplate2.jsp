@@ -10,7 +10,6 @@
 			<li>     
 		        <div class="media">
 		           <cms:pageSlot position="Section1A" var="feature">
-						<cms:component component="${feature}" element="div" class="" />
 						<img src="${feature.urlLink }"/>
 					</cms:pageSlot>
 		         </div>
@@ -23,7 +22,6 @@
 			 <li>     
 		        <div class="media">
 		           <cms:pageSlot position="Section2B" var="feature">
-						<cms:component component="${feature}" element="div" class="" />
 						<img src="${feature.urlLink }"/>
 					</cms:pageSlot>
 		         </div>
@@ -36,7 +34,6 @@
 		     <li>     
 		        <div class="media">
 		           <cms:pageSlot position="Section3A" var="feature">
-						<cms:component component="${feature}" element="div" class="" />
 						<img src="${feature.urlLink }"/>
 					</cms:pageSlot>
 		         </div>
@@ -49,7 +46,6 @@
 		     <li>     
 		        <div class="media">
 		           <cms:pageSlot position="Section4B" var="feature">
-						<cms:component component="${feature}" element="div" class="" />
 						<img src="${feature.urlLink }"/>
 					</cms:pageSlot>
 		         </div>

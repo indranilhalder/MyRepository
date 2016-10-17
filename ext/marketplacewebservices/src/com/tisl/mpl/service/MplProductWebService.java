@@ -3,14 +3,14 @@
  */
 package com.tisl.mpl.service;
 
-import de.hybris.platform.commercefacades.product.data.ProductContentData;
+import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 
 import java.util.List;
-import java.util.Map;
 
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.wsdto.GalleryImageData;
+import com.tisl.mpl.wsdto.ProductAPlusWsData;
 import com.tisl.mpl.wsdto.ProductDetailMobileWsData;
 
 
@@ -30,8 +30,8 @@ public interface MplProductWebService
 
 
 
-	public Map<String, ProductContentData> getProductcontentForProductCode(String productCode,
-			ProductContentData productContentData) throws EtailNonBusinessExceptions;
+	public ProductAPlusWsData getAPluscontentForProductCode(String productCode) throws EtailNonBusinessExceptions,
+			CMSItemNotFoundException;
 
 
 }

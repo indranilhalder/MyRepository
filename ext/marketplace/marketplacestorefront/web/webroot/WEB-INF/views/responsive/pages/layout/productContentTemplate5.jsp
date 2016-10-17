@@ -12,49 +12,41 @@
       <ul>
          <li><a href="">
          	<cms:pageSlot position="Section2A" var="feature">
-				<cms:component component="${feature}" element="div" class="" />
 				<img src="${feature.urlLink }"/>
 			</cms:pageSlot></a>
 		 </li>
          <li><a href="">
          	<cms:pageSlot position="Section2B" var="feature">
-				<cms:component component="${feature}" element="div" class="" />
 				<img src="${feature.urlLink }"/>
 			</cms:pageSlot></a>
 		 </li>
 		 <li><a href="">
          	<cms:pageSlot position="Section2C" var="feature">
-				<cms:component component="${feature}" element="div" class="" />
 				<img src="${feature.urlLink }"/>
 			</cms:pageSlot></a>
 		 </li>
 		 <li><a href="">
          	<cms:pageSlot position="Section2D" var="feature">
-				<cms:component component="${feature}" element="div" class="" />
 				<img src="${feature.urlLink }"/>
 			</cms:pageSlot></a>
 		 </li>
 		 <li><a href="">
          	<cms:pageSlot position="Section2E" var="feature">
-				<cms:component component="${feature}" element="div" class="" />
 				<img src="${feature.urlLink }"/>
 			</cms:pageSlot></a>
 		 </li>
 		 <li><a href="">
          	<cms:pageSlot position="Section2F" var="feature">
-				<cms:component component="${feature}" element="div" class="" />
 				<img src="${feature.urlLink }"/>
 			</cms:pageSlot></a>
 		 </li>
 		 <li><a href="">
          	<cms:pageSlot position="Section2G" var="feature">
-				<cms:component component="${feature}" element="div" class="" />
 				<img src="${feature.urlLink }"/>
 			</cms:pageSlot></a>
 		 </li>
 		 <li><a href="">
          	<cms:pageSlot position="Section2H" var="feature">
-				<cms:component component="${feature}" element="div" class="" />
 				<img src="${feature.urlLink }"/>
 			</cms:pageSlot></a>
 		 </li>
@@ -81,7 +73,6 @@
          <li>
             <div class="media">
 	            <cms:pageSlot position="Section5A" var="feature">
-				<cms:component component="${feature}" element="div" class="" />
 					<img src="${feature.urlLink }"/>
 				</cms:pageSlot>
             </div>
@@ -94,7 +85,6 @@
          <li>
             <div class="media">
             	<cms:pageSlot position="Section5B" var="feature">
-				<cms:component component="${feature}" element="div" class="" />
 					<img src="${feature.urlLink }"/>
 				</cms:pageSlot>
             </div>
@@ -107,7 +97,6 @@
          <li>
             <div class="media">
             	<cms:pageSlot position="Section5C" var="feature">
-				<cms:component component="${feature}" element="div" class="" />
 					<img src="${feature.urlLink }"/>
 				</cms:pageSlot>
             </div>
@@ -122,7 +111,6 @@
    <div class="world-possibilities">
       <div class="media">
       	<cms:pageSlot position="Section7A" var="feature">
-			<cms:component component="${feature}" element="div" class="" />
 				<img src="${feature.urlLink }"/>
 		</cms:pageSlot>
       </div>

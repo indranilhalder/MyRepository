@@ -8,7 +8,6 @@
       <div class="first-content">
          <div class="media">
             <cms:pageSlot position="Section1B" var="feature">
-				<cms:component component="${feature}" element="div" class="" />
 				<img src="${feature.urlLink }"/>
 			</cms:pageSlot>
          </div>
@@ -22,7 +21,6 @@
          <li>
             <div class="media">
 	            <cms:pageSlot position="Section2A" var="feature">
-					<cms:component component="${feature}" element="div" class="" />
 					<img src="${feature.urlLink }"/>
 				</cms:pageSlot>
             </div>
@@ -35,7 +33,6 @@
          <li>
             <div class="media">
             <cms:pageSlot position="Section3B" var="feature">
-				<cms:component component="${feature}" element="div" class="" />
 				<img src="${feature.urlLink }"/>
 			</cms:pageSlot>
             </div>
@@ -48,7 +45,6 @@
          <li>
             <div class="media">
             	<cms:pageSlot position="Section4A" var="feature">
-					<cms:component component="${feature}" element="div" class="" />
 					<img src="${feature.urlLink }"/>
 				</cms:pageSlot>
             </div>
@@ -61,7 +57,6 @@
          <li>
             <div class="media">
             <cms:pageSlot position="Section5B" var="feature">
-				<cms:component component="${feature}" element="div" class="" />
 				<img src="${feature.urlLink }"/>
 			</cms:pageSlot>
             </div>
@@ -74,7 +69,6 @@
          <li>
             <div class="media">
             <cms:pageSlot position="Section6A" var="feature">
-				<cms:component component="${feature}" element="div" class="" />
 				<img src="${feature.urlLink }"/>
 			</cms:pageSlot>
             </div>
@@ -87,7 +81,6 @@
          <li>
             <div class="media">
             <cms:pageSlot position="Section7B" var="feature">
-				<cms:component component="${feature}" element="div" class="" />
 				<img src="${feature.urlLink }"/>
 			</cms:pageSlot>
             </div>
@@ -100,7 +93,6 @@
          <li>
             <div class="media">
             <cms:pageSlot position="Section8A" var="feature">
-				<cms:component component="${feature}" element="div" class="" />
 				<img src="${feature.urlLink }"/>
 			</cms:pageSlot>
             </div>

@@ -19,7 +19,6 @@ import de.hybris.platform.commercefacades.product.data.FeatureData;
 import de.hybris.platform.commercefacades.product.data.FeatureValueData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ImageDataType;
-import de.hybris.platform.commercefacades.product.data.ProductContentData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.PromotionData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
@@ -83,6 +82,8 @@ import com.tisl.mpl.wsdto.DeliveryModeData;
 import com.tisl.mpl.wsdto.GalleryImageData;
 import com.tisl.mpl.wsdto.GiftProductMobileData;
 import com.tisl.mpl.wsdto.KnowMoreDTO;
+import com.tisl.mpl.wsdto.ProductAPlusWsData;
+import com.tisl.mpl.wsdto.ProductContentWsData;
 import com.tisl.mpl.wsdto.ProductDetailMobileWsData;
 import com.tisl.mpl.wsdto.PromotionMobileData;
 import com.tisl.mpl.wsdto.SellerInformationMobileData;
@@ -133,22 +134,25 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	private static final Logger LOG = Logger.getLogger(MplProductWebServiceImpl.class);
 
 
-
+	/**
+	 * @throws CMSItemNotFoundException
+	 * @desc This service fetches all the details of A+ content based on product code
+	 */
 	@Override
-	public HashMap<String, ProductContentData> getProductcontentForProductCode(String productCode,
-			final ProductContentData productContentData) throws EtailNonBusinessExceptions
+	public ProductAPlusWsData getAPluscontentForProductCode(String productCode) throws EtailNonBusinessExceptions,
+			CMSItemNotFoundException
 	{
 
 		if (null != productCode)
 		{
 			productCode = productCode.toUpperCase();
 		}
-		System.out.println("**************************************fetchPageContents*************" + productCode);
 		ContentPageModel contentPage = null;
 		List<String> contentList = null;
 		List<String> imageList = null;
 		List<String> videoList = null;
-		final HashMap<String, ProductContentData> productContentDataMap = new HashMap<String, ProductContentData>();
+		final ProductAPlusWsData productAPlus = new ProductAPlusWsData();
+		final HashMap<String, ProductContentWsData> productContentDataMap = new HashMap<String, ProductContentWsData>();
 		final ProductModel productModel = productService.getProductForCode(productCode);
 		try
 		{
@@ -159,12 +163,11 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 				for (final ContentSlotForPageModel contentSlotForPageModel : contentPage.getContentSlots())
 				{
-					//		final ProductContentData productContentData = new ProductContentData();
-					productContentData.setSection(contentSlotForPageModel.getPosition());
-
+					final ProductContentWsData productContentData = new ProductContentWsData();
 					contentList = new ArrayList<String>();
 					imageList = new ArrayList<String>();
 					videoList = new ArrayList<String>();
+
 
 					for (final AbstractCMSComponentModel abstractCMSComponentModel : contentSlotForPageModel.getContentSlot()
 							.getCmsComponents())
@@ -215,52 +218,37 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					productContentDataMap.put(contentSlotForPageModel.getPosition(), productContentData);
 
 				}
-
-				//	model.addAttribute("productContentDataMap", productContentDataMap);
-
 			}//final end of if
-
-
-
+			productAPlus.setTemlateName(contentPage.getLabelOrId());
+			productAPlus.setProductContent(productContentDataMap);
 		}
-
 		catch (final CMSItemNotFoundException e)
 		{
-			e.printStackTrace();
+			throw e;
 		}
-		return productContentDataMap;
-
-		//	if ("ProductContentPageTemplateTrial4".equalsIgnoreCase(contentPage.getMasterTemplate().getUid()))
-		//{
-		//	return "fragments/product/productContentTemplate1";
-		//	}
-		//	else
-		//	{
-		//		return "fragments/product/productContentTemplate2";
-		//	}
-
-		//return "fragments/product/productContentTemplate1";
-		//return productContentJson;
+		return productAPlus;
 	}
 
+	/**
+	 * @desc get the content page for the provded product code
+	 * @param product
+	 * @return ContentPageModel
+	 * @throws CMSItemNotFoundException
+	 */
 	private ContentPageModel getContentPageForProduct(final ProductModel product) throws CMSItemNotFoundException
 	{
-
 		final ContentPageModel productContentPage = mplCmsPageService.getContentPageForProduct(product);
-
 		if (productContentPage == null)
 		{
 			throw new CMSItemNotFoundException("Could not find a product content for the product" + product.getName());
 		}
-
 		return productContentPage;
-
 	}
 
 
 	/*
 	 * To get product details for a product code
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -690,6 +678,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					+ Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_POST);
 			productDetailMobile.setSharedText(sharedText);
 			LOG.debug("******************** PDP mobile web service  fetching done *****************");
+
+			//TPR-978
+
 
 		}
 
