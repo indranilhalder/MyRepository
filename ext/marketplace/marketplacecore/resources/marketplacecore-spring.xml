@@ -7,25 +7,17 @@
 
           
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
 http://www.springframework.org/schema/beans/spring-beans.xsd
 http://www.springframework.org/schema/context
 http://www.springframework.org/schema/context/spring-context.xsd
 http://www.springframework.org/schema/aop
-http://www.springframework.org/schema/aop/spring-aop.xsd
-http://www.springframework.org/schema/util
-http://www.springframework.org/schema/util/spring-util.xsd" >
+http://www.springframework.org/schema/aop/spring-aop.xsd">
 
+	<context:annotation-config />
 
-
-
-
-	<context:annotation-config />	
-	
 	<!-- Spring Integration -->
 	
 	
@@ -384,6 +376,35 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 		<property name="modelService" ref="modelService" />
 		<property name="businessProcessService" ref="businessProcessService" />
 	</bean>
+	
+	<!-- TPR-815 -->
+	<bean id="paymentPendingEventListener" class="com.tisl.mpl.core.event.PaymentPendingEventListener"
+		parent="abstractSiteEventListener">
+		<property name="modelService" ref="modelService" />
+		<property name="businessProcessService" ref="businessProcessService" />
+	</bean>
+	
+	<bean id="paymentFailedEventListener" class="com.tisl.mpl.core.event.PaymentFailedEventListener"
+		parent="abstractSiteEventListener">
+		<property name="modelService" ref="modelService" />
+		<property name="businessProcessService" ref="businessProcessService" />
+	</bean>
+	
+	<bean id="paymentTimeoutEventListener" class="com.tisl.mpl.core.event.PaymentTimeoutEventListener"
+		parent="abstractSiteEventListener">
+		<property name="modelService" ref="modelService" />
+		<property name="businessProcessService" ref="businessProcessService" />
+	</bean>
+	
+	<bean id="inventoryReservationFailedEventListener" class="com.tisl.mpl.core.event.InventoryReservationFailedEventListener"
+		parent="abstractSiteEventListener">
+		<property name="modelService" ref="modelService" />
+		<property name="businessProcessService" ref="businessProcessService" />
+	</bean>
+	
+	<!-- TPR-815 End -->
+	
+	
 	<bean id="submitOrderEventListener" class="com.tisl.mpl.core.event.SubmitOrderEventListener"
 		parent="abstractSiteEventListener">
 		<property name="businessProcessService" ref="businessProcessService" />
@@ -486,24 +507,6 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 	</bean>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	<bean id="sendNotificationEventListener"
 		class="com.tisl.mpl.marketplaceomsservices.event.SendNotificationEventListener"
 		parent="abstractSiteEventListener">
@@ -542,6 +545,27 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 		<property name="resource"
 			value="classpath:/marketplacecore/processes/orderConfirmationEmailProcess.xml" />
 	</bean>
+	<!-- TPR-815 -->
+	<bean id="paymentPendingEmailProcessDefinitionResource"
+		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
+		<property name="resource"
+			value="classpath:/marketplacecore/processes/paymentPendingEmailProcess.xml" />
+	</bean>
+	
+	<bean id="paymentFailedEmailProcessDefinitionResource"
+		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
+		<property name="resource"
+			value="classpath:/marketplacecore/processes/paymentFailedEmailProcess.xml" />
+	</bean>
+	
+		
+	<bean id="paymentTimeoutEmailProcessDefinitionResource"
+		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
+		<property name="resource"
+			value="classpath:/marketplacecore/processes/paymentTimeoutEmailProcess.xml" />
+	</bean>
+	
+	<!-- TPR-815 -->
 	<bean id="sendDeliveryEmailProcessDefinitionResource"
 		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
 		<property name="resource"
@@ -690,7 +714,19 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 	<bean id="generateOrderConfirmationEmail" parent="abstractGenerateEmailAction">
 		<property name="frontendTemplateName" value="OrderConfirmationEmailTemplate" />
 	</bean>
-
+	<!-- TPR-815 -->
+	<bean id="generatePaymentPendingEmail" parent="abstractGenerateEmailAction">
+		<property name="frontendTemplateName" value="PaymentPendingEmailTemplate" />
+	</bean>
+	
+	<bean id="generatePaymentFailedEmail" parent="abstractGenerateEmailAction">
+		<property name="frontendTemplateName" value="PaymentFailedEmailTemplate" />
+	</bean>
+	
+	<bean id="generatePaymentTimeoutEmail" parent="abstractGenerateEmailAction">
+		<property name="frontendTemplateName" value="PaymentTimeoutEmailTemplate" />
+	</bean>
+	<!-- TPR-815 -->
 	<bean id="generateDeliverySentEmail" parent="abstractGenerateEmailAction">
 		<property name="frontendTemplateName" value="DeliverySentEmailTemplate" />
 	</bean>
@@ -1335,7 +1371,7 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 	<!-- For Payment  -->
 	<bean id="juspayWebHookJob"
 		class="com.tisl.mpl.core.payment.cronjob.JuspayWebHookJob"
-		autowire="byName" >
+		autowire="byName" > 
 	</bean>
 	
 
@@ -1344,7 +1380,10 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 		autowire="byName" />
 	<!-- For Payment  -->
 	
-		
+	<!-- Job to Process a Payment Pending Order -->	
+	<bean id="mplProcessOrderJob"
+		class="com.tisl.mpl.core.payment.cronjob.MplProcessOrderJob"
+		autowire="byName" />
 
 
 	<alias name="defaultSolrAutoSuggestService" alias="solrAutoSuggestService" />
@@ -1655,9 +1694,6 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
      	<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
 	</bean>
-	
-	<bean id="enableMplIndexingCompositeJob" class="com.tisl.mpl.core.cronjob.search.indexing.jobs.EnableMplIndexingCompositeJob" autowire="byName"/>
-	<bean id="disableMplIndexingCompositeJob" class="com.tisl.mpl.core.cronjob.search.indexing.jobs.DisableMplIndexingCompositeJob" autowire="byName"/>
 	
 	<!-- TISPRD-4666 -->
 	<bean id="facetDisplayNameComparator" class="com.tisl.mpl.core.comparator.DisplayFacetNameComparator" />	

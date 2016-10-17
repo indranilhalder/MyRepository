@@ -428,6 +428,11 @@ public class PaymentService
 		orderStatusResponse.setAmountRefunded(getDoubleValue(jsonResponse.get("amount_refunded")));
 		orderStatusResponse.setRefunded((Boolean) jsonResponse.get("refunded"));
 
+		orderStatusResponse.setPaymentMethod((String) jsonResponse.get("payment_method") == null ? "" : (String) jsonResponse
+				.get("payment_method"));
+		orderStatusResponse.setPaymentMethodType((String) jsonResponse.get("payment_method_type") == null ? ""
+				: (String) jsonResponse.get("payment_method_type"));
+
 		//TIPRO-572
 		orderStatusResponse.setBankEmi((String) jsonResponse.get("emi_bank") == null ? "" : (String) jsonResponse.get("emi_bank"));
 		//orderStatusResponse.setBankTenure((String) jsonResponse.get("emi_tenure") == null ? "" : (String) jsonResponse.get("emi_tenure"));

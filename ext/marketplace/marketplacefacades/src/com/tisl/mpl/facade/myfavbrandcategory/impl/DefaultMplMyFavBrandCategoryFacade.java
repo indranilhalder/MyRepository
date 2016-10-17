@@ -167,7 +167,7 @@ public class DefaultMplMyFavBrandCategoryFacade implements MplMyFavBrandCategory
 		catch (final Exception ex)
 		{
 			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9325);
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9329);
 		}
 	}
 
@@ -183,7 +183,7 @@ public class DefaultMplMyFavBrandCategoryFacade implements MplMyFavBrandCategory
 		catch (final Exception ex)
 		{
 			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9325);
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9329);
 		}
 	}
 
@@ -199,7 +199,7 @@ public class DefaultMplMyFavBrandCategoryFacade implements MplMyFavBrandCategory
 		catch (final Exception ex)
 		{
 			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9325);
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9329);
 		}
 	}
 
@@ -215,7 +215,7 @@ public class DefaultMplMyFavBrandCategoryFacade implements MplMyFavBrandCategory
 		catch (final Exception ex)
 		{
 			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9325);
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9329);
 		}
 	}
 
@@ -231,7 +231,7 @@ public class DefaultMplMyFavBrandCategoryFacade implements MplMyFavBrandCategory
 		catch (final Exception ex)
 		{
 			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9326);
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9330);
 		}
 	}
 
@@ -247,13 +247,13 @@ public class DefaultMplMyFavBrandCategoryFacade implements MplMyFavBrandCategory
 		catch (final Exception ex)
 		{
 			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9326);
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9330);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.myfavbrandcategory.MplMyFavBrandCategoryFacade#fetchFavCategories(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -268,13 +268,13 @@ public class DefaultMplMyFavBrandCategoryFacade implements MplMyFavBrandCategory
 		catch (final Exception ex)
 		{
 			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9327);
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9331);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.myfavbrandcategory.MplMyFavBrandCategoryFacade#fetchFavBrands(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -289,7 +289,7 @@ public class DefaultMplMyFavBrandCategoryFacade implements MplMyFavBrandCategory
 		catch (final Exception ex)
 		{
 			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9327);
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9331);
 		}
 	}
 

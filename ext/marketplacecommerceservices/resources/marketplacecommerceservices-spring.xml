@@ -612,9 +612,11 @@
 
 	</bean>
 
-	<!-- <alias name="mplCommerceCheckoutService" alias="commerceCheckoutService" 
-		/> <bean id="mplCommerceCheckoutService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplDefaultCommerceCheckoutService" 
-		parent="defaultCommerceCheckoutService"> </bean> -->
+	<alias name="mplCommerceCheckoutService" alias="commerceCheckoutService" /> 
+	<bean id="mplCommerceCheckoutService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplDefaultCommerceCheckoutService" 
+		parent="defaultCommerceCheckoutService">
+	</bean>
+	
 	<bean id="userLoginService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.UserLoginServiceImpl">
 		<property name="userDetailsService" ref="extendedUserDetailsService" />
@@ -658,7 +660,7 @@
 	<bean id="CartSaveInterceptorMapping"
 		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
 		<property name="interceptor" ref="CartSaveInterceptor" />
-		<property name="typeCode" value="Cart" />
+		<property name="typeCode" value="AbstractOrder" />		<!-- Changed for TPR-629 -->
 	</bean>
 	<!-- CartModelSave Interceptor ends -->
 
@@ -803,12 +805,6 @@
 		<property name="fetchMerchantMasterDao" ref="fetchMerchantMasterDao" />
 	</bean>
 	<bean id="merchantMasterXMLUtility" class="com.tisl.mpl.integration.job.MerchantMasterXMLUtility" />
-
-	<alias name="defaultCommerceSearchTextPopulator" alias="commerceSearchTextPopulator" />
-	<bean id="defaultCommerceSearchTextPopulator"
-		class="com.tisl.mpl.search.converters.populator.MplSolrTextPopulator">
-		<property name="solrFieldNameProvider" ref="solrFieldNameProvider" />
-	</bean>
 
 	<alias alias="cmsPageService" name="mplCMSPageService" />
 	<bean id="mplCMSPageService"
@@ -1759,9 +1755,37 @@
 			<property name="modelService" ref="modelService" />
 			</bean>
 	<!-- New Buy Box Implementation End -->
+	
+	<bean id="juspayOrderResponseConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.tisl.mpl.juspay.response.GetOrderStatusResponse"/>
+        <property name="populators">
+            <list merge="true">
+				<ref bean="juspayOrderResponsePopulator"/>
+            </list>
+        </property>
+    </bean>
+    
+	<bean id="juspayOrderResponsePopulator"
+			class="com.tisl.mpl.converter.populator.JuspayOrderResponsePopulator" >
+	</bean>
+	
 	<!-- New Keyword Redirection Implementation End -->
 	<bean id="mplKeywordRedirectDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplKeywordRedirectDaoImpl">
 	</bean>
+
+	<!-- New Payment Solution Starts TPR-629-->	
+	<bean id="mplProcessOrderService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplProcessOrderServiceImpl">
+		<property name="orderService" ref="orderService" />
+		<property name="juspayOrderResponseConverter" ref="juspayOrderResponseConverter" />
+	</bean>
+	
+	<bean id="mplProcessOrderDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplProcessOrderDaoImpl" />
+
+	<bean id="mplVoucherDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplVoucherDaoImpl" />
+	<!-- TPR-629 ends -->
 	
 	<!-- Bean for POC Search starts-->
 

@@ -28,10 +28,11 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.CustomerModel;
-import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.jalo.user.User;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.InvalidCartException;
+import de.hybris.platform.order.OrderService;
+import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -41,6 +42,7 @@ import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
+import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.jalo.PromotionVoucher;
@@ -67,6 +69,7 @@ import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.AddressType;
@@ -86,9 +89,11 @@ import com.tisl.mpl.helper.MplEnumerationHelper;
 import com.tisl.mpl.marketplacecommerceservices.event.OrderPlacedEvent;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCheckoutService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.promotion.service.SellerBasedPromotionService;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.sns.push.service.impl.MplSNSMobilePushServiceImpl;
 import com.tisl.mpl.wsdto.PushNotificationData;
@@ -159,6 +164,18 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	@Resource(name = "mplCustomAddressFacade")
 	private MplCustomAddressFacade mplCustomAddressFacade;
+
+	@Autowired
+	private MplCommerceCheckoutService mplCommerceCheckoutService;
+
+	private OrderService orderService;
+
+	@Resource(name = "sellerBasedPromotionService")
+	private SellerBasedPromotionService sellerBasedPromotionService;
+
+	@Autowired
+	private BaseSiteService baseService;
+
 
 	//TISPT-400
 	@Autowired
@@ -842,19 +859,22 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public boolean isPromotionValid(final CartModel cart) throws EtailNonBusinessExceptions
+	public boolean isPromotionValid(final AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions //Parameter changed to abstractOrderModel for TPR-629
 	{
 		boolean result = true;
-		if (cart != null)
+		if (abstractOrderModel != null)
 		{
-			final Set<PromotionResultModel> promotion = cart.getAllPromotionResults();
-			if (null != promotion && !promotion.isEmpty())
+			final Set<PromotionResultModel> promotion = abstractOrderModel.getAllPromotionResults();
+			//IQA changes
+			if (CollectionUtils.isNotEmpty(promotion))
 			{
 				for (final PromotionResultModel promo : promotion)
 				{
 					if (promo.getCertainty().floatValue() == 1.0F)
 					{
-						if (promo.getPromotion() != null && promo.getPromotion().getEnabled().booleanValue())
+						//Changed to handle promotion for both cart and order
+						if (promo.getPromotion() != null && (promo.getPromotion().getEnabled().booleanValue())
+								|| getSellerBasedPromotionService().getPromoDetails(promo.getPromotion().getCode()))
 						{
 							final java.util.Date endDate = promo.getPromotion().getEndDate();
 							if (endDate.before(new Date()))
@@ -950,59 +970,51 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	 * @see com.tisl.mpl.facade.checkout.MplCheckoutFacade#placeOrder(java.lang.String)
 	 */
 	@Override
-	public OrderData placeOrderByCartId(final String cartID, final String userId) throws EtailNonBusinessExceptions
+	public OrderData placeOrderByCartId(final String cartID) throws EtailNonBusinessExceptions
 	{
-		final UserModel user = getExtendedUserService().getUserForOriginalUid(userId);
-
-		if (null != user)
+		OrderData orderData = null;
+		try
 		{
-			try
+			//final CartModel cartModel = getCommerceCartService().getCartForCodeAndUser(cartID, user);
+			//now guid
+			final CartModel cartModel = getCommerceCartService().getCartForGuidAndSite(cartID, baseService.getCurrentBaseSite());
+			/*
+			 * CartModel cartModel = modelService.create(CartModel.class); cartModel.setCode(cartCode); cartModel =
+			 * flexibleSearchService.getModelByExample(cartModel);
+			 */
+			if (null != cartModel && !getUserService().isAnonymousUser(cartModel.getUser()))
 			{
+				//For mobile
+				cartModel.setChannel(SalesApplication.MOBILE);
+				getModelService().save(cartModel);
+				beforePlaceOrder(cartModel);
 
-				final CartModel cartModel = getCommerceCartService().getCartForCodeAndUser(cartID, user);
-				/*
-				 * CartModel cartModel = modelService.create(CartModel.class); cartModel.setCode(cartCode); cartModel =
-				 * flexibleSearchService.getModelByExample(cartModel);
-				 */
+				final OrderModel orderModel = placeOrderWS(cartModel);
 
+				//TISUT-1810
+				afterPlaceOrderWS(cartModel, orderModel);
 
-				if (null != cartModel && !getUserService().isAnonymousUser(cartModel.getUser()))
+				// Convert the order to an order data
+				if (orderModel != null)
 				{
-					//For mobile
-					cartModel.setChannel(SalesApplication.MOBILE);
-					getModelService().save(cartModel);
-					beforePlaceOrder(cartModel);
-
-					final OrderModel orderModel = placeOrderWS(cartModel);
-
-					//TISUT-1810
-					afterPlaceOrderWS(cartModel, orderModel);
-
-
-					// Convert the order to an order data
-					if (orderModel != null)
-					{
-						return getOrderConverter().convert(orderModel);
-					}
+					orderData = getOrderConverter().convert(orderModel);
 				}
 			}
-			catch (final InvalidCartException e)
-			{
-				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-			}
-			catch (final EtailBusinessExceptions | EtailNonBusinessExceptions e)
-			{
-				throw e;
-			}
-			catch (final Exception ex)
-			{
-				// Error message for All Exceptions
-				throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
-			}
-
 		}
-		return null;
-
+		catch (final InvalidCartException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		catch (final EtailBusinessExceptions | EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception ex)
+		{
+			// Error message for All Exceptions
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+		return orderData;
 	}
 
 	//TISUT-1810
@@ -1202,11 +1214,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public void saveDeliveryMethForFreebie(final CartModel cartModel,
+	public void saveDeliveryMethForFreebie(final AbstractOrderModel abstractOrderModel,
 			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, final Map<String, Long> freebieParentQtyMap)
-			throws EtailNonBusinessExceptions
+			throws EtailNonBusinessExceptions //Changed to abstractOrderModel for TPR-629
 	{
-		getMplCommerceCartService().saveDeliveryMethForFreebie(cartModel, freebieModelMap, freebieParentQtyMap);
+		getMplCommerceCartService().saveDeliveryMethForFreebie(abstractOrderModel, freebieModelMap, freebieParentQtyMap);
 	}
 
 	/*
@@ -1219,17 +1231,17 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public boolean isCouponValid(final CartModel cart) throws EtailNonBusinessExceptions
+	public boolean isCouponValid(final AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions //Changed to abstractOrderModel for TPR-629
 	{
 		boolean result = false;
 
-		final List<DiscountModel> voucherList = cart.getDiscounts();
+		final List<DiscountModel> voucherList = abstractOrderModel.getDiscounts();
 		if (CollectionUtils.isNotEmpty(voucherList))
 		{
 			final PromotionVoucherModel voucher = (PromotionVoucherModel) voucherList.get(0);//Only one coupon would be applied in one order
-			if (getVoucherModelService().isApplicable(voucher, cart)
+			if (getVoucherModelService().isApplicable(voucher, abstractOrderModel)
 					&& ((PromotionVoucher) getModelService().getSource(voucher)).isReservable(voucher.getVoucherCode(),
-							(User) getModelService().getSource(cart.getUser())))
+							(User) getModelService().getSource(abstractOrderModel.getUser())))
 			{
 				result = true;
 			}
@@ -1322,10 +1334,10 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		{
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
-		catch (final NullPointerException ex)
-		{
-			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
-		}
+		//		catch (final NullPointerException ex)
+		//		{
+		//			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);		//Nullpointer exception not to be handled
+		//		}
 		catch (final UnknownIdentifierException ex)
 		{
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
@@ -1334,6 +1346,38 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		{
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
+	}
+
+
+
+
+	/**
+	 * This mrtjod triggers before submit order of hooks, ie. for order splitting TPR-629
+	 */
+	@Override
+	public void beforeSubmitOrder(final OrderModel orderModel) throws InvalidCartException, CalculationException
+	{
+		final CommerceCheckoutParameter parameter = new CommerceCheckoutParameter();
+		parameter.setEnableHooks(true);
+		parameter.setSalesApplication(SalesApplication.WEB);
+
+		final CommerceOrderResult result = new CommerceOrderResult();
+		result.setOrder(orderModel);
+
+		mplCommerceCheckoutService.beforeSubmitOrder(parameter, result);
+	}
+
+
+
+	/**
+	 * This method submits the order - ie. initiates the order fulfilment process TPR-629
+	 *
+	 * @param orderModel
+	 */
+	@Override
+	public void submitOrder(final OrderModel orderModel)
+	{
+		getOrderService().submitOrder(orderModel);
 	}
 
 
@@ -1648,6 +1692,49 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	public void setMplCustomAddressFacade(final MplCustomAddressFacade mplCustomAddressFacade)
 	{
 		this.mplCustomAddressFacade = mplCustomAddressFacade;
+	}
+
+
+
+	/**
+	 * @return the orderService
+	 */
+	public OrderService getOrderService()
+	{
+		return orderService;
+	}
+
+
+
+	/**
+	 * @param orderService
+	 *           the orderService to set
+	 */
+	@Required
+	public void setOrderService(final OrderService orderService)
+	{
+		this.orderService = orderService;
+	}
+
+
+
+	/**
+	 * @return the sellerBasedPromotionService
+	 */
+	public SellerBasedPromotionService getSellerBasedPromotionService()
+	{
+		return sellerBasedPromotionService;
+	}
+
+
+
+	/**
+	 * @param sellerBasedPromotionService
+	 *           the sellerBasedPromotionService to set
+	 */
+	public void setSellerBasedPromotionService(final SellerBasedPromotionService sellerBasedPromotionService)
+	{
+		this.sellerBasedPromotionService = sellerBasedPromotionService;
 	}
 
 

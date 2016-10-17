@@ -12,7 +12,9 @@ import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.converters.Converters;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
@@ -34,6 +36,7 @@ import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,6 +92,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 	@Resource(name = "voucherTransactionConverter")
 	private Converter<VoucherInvalidationModel, CouponHistoryData> voucherTransactionConverter;
+	@Resource(name = "voucherConverter")
+	private Converter<VoucherModel, VoucherData> voucherConverter;
 
 
 	/**
@@ -98,9 +103,9 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 *
 	 */
 	@Override
-	public void recalculateCartForCoupon(final CartModel cartModel) throws EtailNonBusinessExceptions
+	public void recalculateCartForCoupon(final CartModel cartModel, final OrderModel orderModel) throws EtailNonBusinessExceptions
 	{
-		getMplVoucherService().recalculateCartForCoupon(cartModel);
+		getMplVoucherService().recalculateCartForCoupon(cartModel, orderModel); //OrderModel added for TPR-629
 	}
 
 
@@ -108,44 +113,80 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	/**
 	 * This method calculates the cart Values after redeeming or releasing the voucher
 	 *
+	 * @param orderModel
 	 * @param cartModel
 	 * @param couponStatus
 	 * @param reddemIdentifier
 	 * @return VoucherDiscountData
+	 * @throws VoucherOperationException
 	 *
 	 */
 	@Override
-	public VoucherDiscountData calculateValues(final CartModel cartModel, final boolean couponStatus,
-			final boolean reddemIdentifier)
+	public VoucherDiscountData calculateValues(final OrderModel orderModel, final CartModel cartModel, final boolean couponStatus,
+			final boolean reddemIdentifier) throws VoucherOperationException //OrderModel added for TPR-629
 	{
 		LOG.debug("Calculating discounts after applying/releasing coupons based on redeemIdentifier=" + reddemIdentifier);
 		double totalDiscount = 0.0d;
 
-		//Find out all the vouchers for the selected cart
-		final List<VoucherData> voucherDataList = getVoucherFacade().getVouchersForCart();
-
-		for (final VoucherData voucher : voucherDataList)
-		{
-			//Check the global discount applied against the cart
-			final List<DiscountValue> discount = cartModel.getGlobalDiscountValues();
-			for (final DiscountValue dis : discount)
-			{
-				if (null != dis.getCode() && null != voucher.getCode() && dis.getCode().equalsIgnoreCase(voucher.getCode()))
-				{
-					totalDiscount += dis.getAppliedValue();//totalDiscount is discount value for the applied voucher
-					break;
-				}
-			}
-
-		}
-
-		LOG.debug("Total discount for voucher is :::: " + totalDiscount);
-
 		//Set voucher details in VoucherDiscountData and return the data
 		final VoucherDiscountData data = new VoucherDiscountData();
-		data.setVoucher(voucherDataList);
-		data.setCouponDiscount(getMplCheckoutFacade().createPrice(cartModel, Double.valueOf(totalDiscount)));
-		data.setTotalPrice(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv()));
+
+		//Calculate when cartModel is present
+		if (null != cartModel)
+		{
+			//Find out all the vouchers for the selected cart
+			final List<VoucherData> voucherDataList = getVouchersForAbstractOrder(null, cartModel);
+
+			for (final VoucherData voucher : voucherDataList)
+			{
+				//Check the global discount applied against the cart
+				final List<DiscountValue> discount = cartModel.getGlobalDiscountValues();
+				for (final DiscountValue dis : discount)
+				{
+					if (null != dis.getCode() && null != voucher.getCode() && dis.getCode().equalsIgnoreCase(voucher.getCode()))
+					{
+						totalDiscount += dis.getAppliedValue();//totalDiscount is discount value for the applied voucher
+						break;
+					}
+				}
+
+			}
+
+			LOG.debug("Total discount for voucher is :::: " + totalDiscount);
+
+			data.setVoucher(voucherDataList);
+			data.setCouponDiscount(getMplCheckoutFacade().createPrice(cartModel, Double.valueOf(totalDiscount)));
+			data.setTotalPrice(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv()));
+
+		}
+		//Calculate when orderModel is present
+		else if (null != orderModel)
+		{
+			//Find out all the vouchers for the selected cart
+			final List<VoucherData> voucherDataList = getVouchersForAbstractOrder(orderModel, null);
+
+			for (final VoucherData voucher : voucherDataList)
+			{
+				//Check the global discount applied against the cart
+				final List<DiscountValue> discount = orderModel.getGlobalDiscountValues();
+				for (final DiscountValue dis : discount)
+				{
+					if (null != dis.getCode() && null != voucher.getCode() && dis.getCode().equalsIgnoreCase(voucher.getCode()))
+					{
+						totalDiscount += dis.getAppliedValue();//totalDiscount is discount value for the applied voucher
+						break;
+					}
+				}
+
+			}
+
+			LOG.debug("Total discount for voucher is :::: " + totalDiscount);
+
+			data.setVoucher(voucherDataList);
+			data.setCouponDiscount(getMplCheckoutFacade().createPrice(orderModel, Double.valueOf(totalDiscount)));
+			data.setTotalPrice(getMplCheckoutFacade().createPrice(orderModel, orderModel.getTotalPriceWithConv()));
+		}
+
 		if (reddemIdentifier)
 		{
 			data.setCouponRedeemed(couponStatus);
@@ -158,6 +199,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		{
 			data.setRedeemErrorMsg(MarketplacecommerceservicesConstants.COUPONREDEEMERROR);
 		}
+
 		return data;
 	}
 
@@ -283,80 +325,164 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 *
 	 * @param voucherCode
 	 * @param cartModel
+	 * @param orderModel
 	 * @return boolean
 	 * @throws VoucherOperationException
 	 * @throws JaloInvalidParameterException
 	 * @throws NumberFormatException
 	 */
 	@Override
-	public boolean applyVoucher(final String voucherCode, final CartModel cartModel) throws VoucherOperationException,
-			EtailNonBusinessExceptions
+	public boolean applyVoucher(final String voucherCode, final CartModel cartModel, final OrderModel orderModel)
+			throws VoucherOperationException, EtailNonBusinessExceptions //Added orderModel for TPR-629
 	{
 		boolean checkFlag = false;
 		try
 		{
-			if (CollectionUtils.isEmpty(cartModel.getDiscounts()))
+			//Apply voucher for cartModel
+			if (null != cartModel)
 			{
-				LOG.debug("Step 2:::No voucher is applied to cart");
-
-				//Checks if voucherCode is valid
-				validateVoucherCodeParameter(voucherCode);
-				if (!isVoucherCodeValid(voucherCode))
+				if (CollectionUtils.isEmpty(cartModel.getDiscounts()))
 				{
-					throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTFOUND + voucherCode);
-				}
-				LOG.debug("Step 3:::Voucher Code is valid");
+					LOG.debug("Step 2:::No voucher is applied to cart");
 
-				//Finds voucherModel for the code and checks whether it is null or voucher discount value is less than 0
-				final VoucherModel voucher = getVoucherService().getVoucher(voucherCode);
-				if (voucher == null || (null != voucher.getValue() && voucher.getValue().doubleValue() <= 0))
-				{
-					throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTFOUND + voucherCode);
-				}
-
-				LOG.debug("Step 4:::Voucher is present and value is not negative");
-				if (!checkVoucherIsApplicable(voucher, voucherCode, cartModel)) //Checks whether voucher is applicable
-				{
-					LOG.debug("Step 5:::Voucher is not applicable");
-					final String error = checkViolatedRestrictions(voucher, cartModel);
-					if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.DATE))
+					//Checks if voucherCode is valid
+					validateVoucherCodeParameter(voucherCode);
+					if (!isVoucherCodeValid(voucherCode))
 					{
-						throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTREDEEMABLE + voucherCode);
+						throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTFOUND + voucherCode);
 					}
-					else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.USER))
+					LOG.debug("Step 3:::Voucher Code is valid");
+
+					//Finds voucherModel for the code and checks whether it is null or voucher discount value is less than 0
+					final VoucherModel voucher = getVoucherService().getVoucher(voucherCode);
+					if (voucher == null || (null != voucher.getValue() && voucher.getValue().doubleValue() <= 0))
 					{
-						throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINVALIDUSER + voucherCode);
+						throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTFOUND + voucherCode);
 					}
+
+					LOG.debug("Step 4:::Voucher is present and value is not negative");
+					if (!checkVoucherIsApplicable(voucher, voucherCode, cartModel)) //Checks whether voucher is applicable
+					{
+						LOG.debug("Step 5:::Voucher is not applicable");
+						final String error = checkViolatedRestrictions(voucher, cartModel);
+						if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.DATE))
+						{
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTREDEEMABLE + voucherCode);
+						}
+						else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.USER))
+						{
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINVALIDUSER + voucherCode);
+						}
+						else
+						{
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINAPPLICABLE + voucherCode);
+						}
+					}
+
+					else if (!checkVoucherIsReservable(voucher, voucherCode, cartModel)) //Checks whether voucher is reservable
+					{
+						LOG.debug("Step 6:::Voucher is not reservable");
+						throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTRESERVABLE + voucherCode);
+					}
+
 					else
 					{
-						throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINAPPLICABLE + voucherCode);
+						LOG.debug("Step 7:::Voucher can be redeemed");
+						if (!getVoucherService().redeemVoucher(voucherCode, cartModel))
+						{
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.ERRORAPPLYVOUCHER + voucherCode);
+						}
+
+						recalculateCartForCoupon(cartModel, null); //Recalculates cart after applying voucher
+
+						final List<AbstractOrderEntryModel> applicableOrderEntryList = getOrderEntryModelFromVouEntries(voucher,
+								cartModel); //Finds applicable order entries
+
+						//Important! Checking cart, if total amount <0, release this voucher
+						checkVoucherApplicability(voucherCode, voucher, cartModel, null, applicableOrderEntryList);
+
+						//apportioning
+						setApportionedValueForVoucher(voucher, cartModel, voucherCode, applicableOrderEntryList);
+						checkFlag = true;
 					}
 				}
-
-				else if (!checkVoucherIsReservable(voucher, voucherCode, cartModel)) //Checks whether voucher is reservable
+			}
+			//Apply voucher for orderModel
+			else if (null != orderModel)
+			{
+				if (CollectionUtils.isEmpty(orderModel.getDiscounts()))
 				{
-					LOG.debug("Step 6:::Voucher is not reservable");
-					throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTRESERVABLE + voucherCode);
-				}
+					LOG.debug("Step 2:::No voucher is applied to cart");
 
-				else
-				{
-					LOG.debug("Step 7:::Voucher can be redeemed");
-					if (!getVoucherService().redeemVoucher(voucherCode, cartModel))
+					//Checks if voucherCode is valid
+					validateVoucherCodeParameter(voucherCode);
+					if (!isVoucherCodeValid(voucherCode))
 					{
-						throw new VoucherOperationException(MarketplacecommerceservicesConstants.ERRORAPPLYVOUCHER + voucherCode);
+						throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTFOUND + voucherCode);
+					}
+					LOG.debug("Step 3:::Voucher Code is valid");
+
+					//Finds voucherModel for the code and checks whether it is null or voucher discount value is less than 0
+					final VoucherModel voucher = getVoucherService().getVoucher(voucherCode);
+					if (voucher == null || (null != voucher.getValue() && voucher.getValue().doubleValue() <= 0))
+					{
+						throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTFOUND + voucherCode);
 					}
 
-					recalculateCartForCoupon(cartModel); //Recalculates cart after applying voucher
+					LOG.debug("Step 4:::Voucher is present and value is not negative");
+					if (!checkVoucherIsApplicable(voucher, voucherCode, orderModel)) //Checks whether voucher is applicable
+					{
+						LOG.debug("Step 5:::Voucher is not applicable");
+						final String error = checkViolatedRestrictions(voucher, orderModel);
+						if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.DATE))
+						{
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTREDEEMABLE + voucherCode);
+						}
+						else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.USER))
+						{
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINVALIDUSER + voucherCode);
+						}
+						else
+						{
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINAPPLICABLE + voucherCode);
+						}
+					}
 
-					final List<AbstractOrderEntryModel> applicableOrderEntryList = getOrderEntryModelFromVouEntries(voucher, cartModel); //Finds applicable order entries
+					else if (!checkVoucherIsReservable(voucher, voucherCode, orderModel)) //Checks whether voucher is reservable
+					{
+						LOG.debug("Step 6:::Voucher is not reservable");
+						throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTRESERVABLE + voucherCode);
+					}
 
-					//Important! Checking cart, if total amount <0, release this voucher
-					checkVoucherApplicability(voucherCode, voucher, cartModel, applicableOrderEntryList);
+					else
+					{
+						LOG.debug("Step 7:::Voucher can be redeemed");
+						final VoucherInvalidationModel voucherInvalidationModel = getVoucherService().redeemVoucher(voucherCode,
+								orderModel);
+						if (null == voucherInvalidationModel)
+						{
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.ERRORAPPLYVOUCHER + voucherCode);
+						}
 
-					//apportioning
-					setApportionedValueForVoucher(voucher, cartModel, voucherCode, applicableOrderEntryList);
-					checkFlag = true;
+						recalculateCartForCoupon(null, orderModel); //Recalculates cart after applying voucher
+
+						final List<AbstractOrderEntryModel> applicableOrderEntryList = getOrderEntryModelFromVouEntries(voucher,
+								orderModel); //Finds applicable order entries
+
+						//Important! Checking cart, if total amount <0, release this voucher
+						final VoucherDiscountData discountData = checkVoucherApplicability(voucherCode, voucher, null, orderModel,
+								applicableOrderEntryList);
+						if (null != discountData)
+						{
+							voucherInvalidationModel.setSavedAmount(null != discountData.getCouponDiscount() ? discountData
+									.getCouponDiscount().getDoubleValue() : Double.valueOf(0.0D));
+							getModelService().save(voucherInvalidationModel);
+						}
+
+						//apportioning
+						setApportionedValueForVoucher(voucher, orderModel, voucherCode, applicableOrderEntryList);
+						checkFlag = true;
+					}
 				}
 			}
 		}
@@ -377,6 +503,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @param voucherCode
 	 * @param lastVoucher
 	 * @param cartModel
+	 * @param orderModel
 	 * @param applicableOrderEntryList
 	 * @throws EtailNonBusinessExceptions
 	 * @throws ModelSavingException
@@ -384,11 +511,12 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @throws JaloInvalidParameterException
 	 * @throws VoucherOperationException
 	 */
-	protected void checkVoucherApplicability(final String voucherCode, final VoucherModel lastVoucher, final CartModel cartModel,
-			final List<AbstractOrderEntryModel> applicableOrderEntryList) throws VoucherOperationException,
-			EtailNonBusinessExceptions
+	protected VoucherDiscountData checkVoucherApplicability(final String voucherCode, final VoucherModel lastVoucher,
+			final CartModel cartModel, final OrderModel orderModel, final List<AbstractOrderEntryModel> applicableOrderEntryList)
+			throws VoucherOperationException, EtailNonBusinessExceptions
+	//Return changed and orderModel added as parameter to handle discountValue for TPR-629
 	{
-		final VoucherDiscountData data = getMplVoucherService().checkCartAfterApply(lastVoucher, cartModel,
+		final VoucherDiscountData data = getMplVoucherService().checkCartAfterApply(lastVoucher, cartModel, orderModel,
 				applicableOrderEntryList);
 		if (null != data && StringUtils.isNotEmpty(data.getRedeemErrorMsg()))
 		{
@@ -407,6 +535,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINAPPLICABLE + voucherCode);
 			}
 		}
+		return data;
 	}
 
 
@@ -456,12 +585,13 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 *
 	 * @param voucher
 	 * @param voucherCode
-	 * @param cartModel
+	 * @param abstractOrderModel
 	 * @return boolean
 	 */
-	protected boolean checkVoucherIsApplicable(final VoucherModel voucher, final String voucherCode, final CartModel cartModel)
+	protected boolean checkVoucherIsApplicable(final VoucherModel voucher, final String voucherCode,
+			final AbstractOrderModel abstractOrderModel)
 	{
-		return getVoucherModelService().isApplicable(voucher, cartModel);
+		return getVoucherModelService().isApplicable(voucher, abstractOrderModel);
 	}
 
 
@@ -470,12 +600,13 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 *
 	 * @param voucher
 	 * @param voucherCode
-	 * @param cartModel
+	 * @param abstractOrderModel
 	 * @return boolean
 	 */
-	protected boolean checkVoucherIsReservable(final VoucherModel voucher, final String voucherCode, final CartModel cartModel)
+	protected boolean checkVoucherIsReservable(final VoucherModel voucher, final String voucherCode,
+			final AbstractOrderModel abstractOrderModel)
 	{
-		return getVoucherModelService().isReservable(voucher, voucherCode, cartModel);
+		return getVoucherModelService().isReservable(voucher, voucherCode, abstractOrderModel);
 	}
 
 
@@ -484,12 +615,13 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * This method returns whether date or user restriction is violated
 	 *
 	 * @param voucher
-	 * @param cartModel
+	 * @param abstractOrderModel
 	 * @return the violated restriction
 	 */
-	protected String checkViolatedRestrictions(final VoucherModel voucher, final CartModel cartModel)
+	protected String checkViolatedRestrictions(final VoucherModel voucher, final AbstractOrderModel abstractOrderModel)
 	{
-		final List<RestrictionModel> getViolatedRestrictions = getVoucherModelService().getViolatedRestrictions(voucher, cartModel);
+		final List<RestrictionModel> getViolatedRestrictions = getVoucherModelService().getViolatedRestrictions(voucher,
+				abstractOrderModel);
 		String error = null;
 		for (final RestrictionModel restriction : getViolatedRestrictions)
 		{
@@ -596,14 +728,14 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	/**
 	 * @Description: For Apportioning of vouchers
 	 * @param voucher
-	 * @param cartModel
+	 * @param abstractOrderModel
 	 * @param voucherCode
 	 */
 	@Override
-	public void setApportionedValueForVoucher(final VoucherModel voucher, final CartModel cartModel, final String voucherCode,
-			final List<AbstractOrderEntryModel> applicableOrderEntryList)
+	public void setApportionedValueForVoucher(final VoucherModel voucher, final AbstractOrderModel abstractOrderModel,
+			final String voucherCode, final List<AbstractOrderEntryModel> applicableOrderEntryList)
 	{
-		getMplVoucherService().setApportionedValueForVoucher(voucher, cartModel, voucherCode, applicableOrderEntryList);
+		getMplVoucherService().setApportionedValueForVoucher(voucher, abstractOrderModel, voucherCode, applicableOrderEntryList);
 
 	}
 
@@ -625,13 +757,13 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	/**
 	 * @Description: This method returns the order entries which are applicable for the voucher
 	 * @param voucherModel
-	 * @param cartModel
+	 * @param abstractOrderModel
 	 * @return List<AbstractOrderEntryModel>
 	 */
 	private List<AbstractOrderEntryModel> getOrderEntryModelFromVouEntries(final VoucherModel voucherModel,
-			final CartModel cartModel)
+			final AbstractOrderModel abstractOrderModel)
 	{
-		return getMplVoucherService().getOrderEntryModelFromVouEntries(voucherModel, cartModel);
+		return getMplVoucherService().getOrderEntryModelFromVouEntries(voucherModel, abstractOrderModel);
 	}
 
 
@@ -642,9 +774,10 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @throws VoucherOperationException
 	 */
 	@Override
-	public void releaseVoucher(final String voucherCode, final CartModel cartModel) throws VoucherOperationException
+	public void releaseVoucher(final String voucherCode, final CartModel cartModel, final OrderModel orderModel)
+			throws VoucherOperationException
 	{
-		getMplVoucherService().releaseVoucher(voucherCode, cartModel);
+		getMplVoucherService().releaseVoucher(voucherCode, cartModel, orderModel);
 	}
 
 
@@ -710,10 +843,10 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * This method updates the paymentInfo set in session based on coupon calculation
 	 *
 	 * @param paymentInfo
-	 * @param cartModel
+	 * @param abstractOrderModel
 	 */
 	@Override
-	public void updatePaymentInfoSession(final Map<String, Double> paymentInfo, final CartModel cartModel)
+	public void updatePaymentInfoSession(final Map<String, Double> paymentInfo, final AbstractOrderModel abstractOrderModel)
 	{
 		final Map<String, Double> updatedPaymentInfo = new HashMap<String, Double>();
 		if (null != paymentInfo)
@@ -722,12 +855,64 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			{
 				if (null != entry.getKey() && !(MarketplacecommerceservicesConstants.WALLET.equalsIgnoreCase(entry.getKey())))
 				{
-					updatedPaymentInfo.put(entry.getKey(), cartModel.getTotalPriceWithConv());
+					updatedPaymentInfo.put(entry.getKey(), abstractOrderModel.getTotalPriceWithConv());
 					getSessionService().setAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE, updatedPaymentInfo);
 				}
 			}
 		}
 	}
+
+
+
+
+
+	/**
+	 * Returns list of Voucher Data corresponding to abstractOrderModel. Added for TPR-629
+	 *
+	 * @param orderModel
+	 * @param cartModel
+	 * @return List<VoucherData>
+	 * @throws VoucherOperationException
+	 */
+	private List<VoucherData> getVouchersForAbstractOrder(final OrderModel orderModel, final CartModel cartModel)
+			throws VoucherOperationException
+	{
+		final List<VoucherData> vouchersData = new ArrayList<VoucherData>();
+		Collection<String> voucherCodes = new ArrayList<String>();
+		if (cartModel != null)
+		{
+			voucherCodes = getVoucherService().getAppliedVoucherCodes(cartModel);
+
+		}
+		else if (null != orderModel)
+		{
+			voucherCodes = getVoucherService().getAppliedVoucherCodes(orderModel);
+		}
+
+		for (final String code : voucherCodes)
+		{
+			vouchersData.add(getSingleVouchersByCode(code));
+		}
+		return vouchersData;
+
+	}
+
+
+
+	/**
+	 * This method returns voucher data based on voucherCode for TPR-629
+	 *
+	 * @param voucherCode
+	 * @return VoucherData
+	 * @throws VoucherOperationException
+	 */
+	protected VoucherData getSingleVouchersByCode(final String voucherCode) throws VoucherOperationException
+	{
+		final VoucherModel voucherModel = getVoucherService().getVoucher(voucherCode);
+		final VoucherData voucherData = getVoucherConverter().convert(voucherModel);
+		return voucherData;
+	}
+
 
 
 
@@ -900,6 +1085,27 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	public void setModelService(final ModelService modelService)
 	{
 		this.modelService = modelService;
+	}
+
+
+
+	/**
+	 * @return the voucherConverter
+	 */
+	public Converter<VoucherModel, VoucherData> getVoucherConverter()
+	{
+		return voucherConverter;
+	}
+
+
+
+	/**
+	 * @param voucherConverter
+	 *           the voucherConverter to set
+	 */
+	public void setVoucherConverter(final Converter<VoucherModel, VoucherData> voucherConverter)
+	{
+		this.voucherConverter = voucherConverter;
 	}
 
 

@@ -24,6 +24,9 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public final static String PAYMENT_METHOD = "payment-method";
 	public final static String MPLSTORE = "mpl";
 	public final static String ADDVALUE = "/add";
+	public final static String PAYVALUE = "/pay";
+	public final static String VALUE = "?value=";
+	public final static String ISCART = "isCart";
 	public final static String CHOOSEVALUE = "/choose";
 	public final static String BACKVALUE = "/back";
 	public final static String NEXTVALUE = "/next";
@@ -35,6 +38,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public final static String MARKREAD = "/markAsRead";
 	public final static String VIEWVALUE = "/view";
 	public final static String CARTDATA = "cartData";
+	public final static String ORDERDATA = "orderData";
 	public final static String CHECKOUTRESPONSEURL = "/checkout/multi/sop/response";
 	public final static String CHECKOUTCALLBACKURL = "/integration/merchant_callback";
 	public final static String SOPPAGEDATA = "silentOrderPageData";
@@ -99,7 +103,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String SELECTEDPAYMENTMETHODID = "selectedPaymentMethodId";
 	public static final String HASNOPAYMENTINFO = "hasNoPaymentInfo";
 	public static final String ORDERPLACEFAIL = "Failed to place Order";
-	public static final String CARDPAYMENT = "/cardPayment";
+	public static final String CARDPAYMENT = "/cardPayment/{guid:.*}";
 	public static final String CHARGED = "CHARGED";
 	public static final String REDIRECT = "redirect:";
 	public static final String CREATEDEBITCARDORDER = "/createDebitCardOrder";
@@ -282,6 +286,12 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 
 	//TPR-1215
 	public static final String LINK_SET_DEFAUT_ADDRESS = "/set-default-address/";
+
+	//TPR-629
+	public static final String GUID = "guid";
+	public static final String REDIRECTSTRING = "redirect";
+	public static final String REDIRECTTOPAYMENT = "redirect_to_payment";
+	public final static String PAYMENTIMEOUTRRORMSG = "checkout.multi.paymentMethod.addPaymentDetails.PaymentTimeoutError";
 
 	private MarketplacecheckoutaddonConstants()
 	{

@@ -578,6 +578,7 @@
     	<property name="convCharge" type="de.hybris.platform.commercefacades.product.data.PriceData" />
     	<property name="deliveryCost" type="de.hybris.platform.commercefacades.product.data.PriceData" />
     	<property name="voucherDiscount" type="com.tisl.mpl.data.VoucherDiscountData" />
+    	<property name="promoExpiryMsg" type="String" />		<!-- TPR-629 -->
     </bean> 
 	
 	<!-- Data class for Payment Specific Promotions Ends-->
@@ -665,6 +666,12 @@
 	
 	<bean class="de.hybris.platform.solrfacetsearch.config.IndexedType">
 		<property name="pageTypeFacets" type="java.util.Set&lt;String>" />
+	</bean>
+	
+	<bean class="de.hybris.platform.commerceservices.service.data.CommerceCartParameter">
+		<property name="order" type="de.hybris.platform.core.model.order.OrderModel">	<!-- TPR-629 -->
+			<description>The OrderModel</description>
+		</property>
 	</bean>
 	
 </beans>

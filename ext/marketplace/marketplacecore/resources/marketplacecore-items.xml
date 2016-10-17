@@ -180,7 +180,7 @@
 			dynamic="true">
 			<value code="ORDER_CANCELLED" />
 			<value code="PAYMENT_SUCCESSFUL" />
-			<value code="PAYMENT_FAILED" />
+			<value code="PAYMENT_FAILED" />	<!-- TPR-629 -->
 			<value code="RMS_VERIFICATION_PENDING" />
 			<value code="RMS_VERIFICATION_FAILED" />
 			<value code="PARTIALLY_ALLOCATED" />
@@ -271,7 +271,8 @@
 			<value code="PARTIALLY_ORDER_COLLECTED" />
 			<value code="PARTIALLY_ORDER_UNCOLLECTED" />
 			<value code="PARTIALLY_RETURNINITIATED_BY_RTO" />
-
+			<value code="PAYMENT_PENDING" />	<!-- TPR-629 -->
+			<value code="PAYMENT_TIMEOUT" />	<!-- TPR-629 -->
 		</enumtype>
 
 		<!-- pcm changes! -->
@@ -2106,6 +2107,13 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- End OMS Fallback code -->
+					<!-- TAT for New Payment Solution Process Order Job -->
+					<attribute type="java.lang.Double" qualifier="juspayWebhookRetryTAT">
+						<defaultvalue>Double.valueOf(0.0D)</defaultvalue>
+						<description>Time for which webhook posting is expected</description>
+						<modifiers read="true" write="true" initial="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 
@@ -2302,7 +2310,14 @@
 					</attribute>
 					<!-- End : Attribute added to store reuqest and response xml for audit 
 						purpose -->
-
+					<!-- TRP-629 Attribute for pending payment mail -->
+					<attribute autocreate="true" qualifier="isPendingNotSent"
+						type="java.lang.Boolean">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<defaultvalue>false</defaultvalue>
+					</attribute>
 				</attributes>
 			</itemtype>
 
@@ -4917,6 +4932,10 @@
 						<modifiers optional="true" />
 						<persistence type="property" />
 					</attribute>
+					<attribute qualifier="modeOfOrderPayment" type="java.lang.String">
+						<modifiers optional="true" read="true" write="true" />
+						<persistence type="property" />
+					</attribute>	<!-- TPR-629 -->
 				</attributes>
 			</itemtype>
 

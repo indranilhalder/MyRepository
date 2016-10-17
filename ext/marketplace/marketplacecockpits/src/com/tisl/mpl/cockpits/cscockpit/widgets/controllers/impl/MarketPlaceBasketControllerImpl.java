@@ -875,12 +875,12 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 				//((EziBuyCommerceCartService) getCommerceCartService()).setAppliedVoucherCode(cartModel, voucherCode);
 				//getCommerceCartService().recalculateCart(cartModel);
 				
-				getMplVoucherService().recalculateCartForCoupon(cartModel);
+				getMplVoucherService().recalculateCartForCoupon(cartModel, null);	//Handled changed method for TPR-629
 				
 				final List<AbstractOrderEntryModel> applicableOrderEntryList = getMplVoucherService().getOrderEntryModelFromVouEntries(voucher,
 						cartModel);
 				
-				final VoucherDiscountData data=getMplVoucherService().checkCartAfterApply(voucher, cartModel, applicableOrderEntryList);
+				final VoucherDiscountData data=getMplVoucherService().checkCartAfterApply(voucher, cartModel, null, applicableOrderEntryList);	//Handled changed method for TPR-629
 				if (null != data && StringUtils.isNotEmpty(data.getRedeemErrorMsg()))
 				{
 					if (data.getRedeemErrorMsg().equalsIgnoreCase("freebie"))
@@ -979,7 +979,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 			}
 			try {
 				//getCommerceCartService().recalculateCart(cartModel);
-				getMplVoucherService().recalculateCartForCoupon(cartModel);
+				getMplVoucherService().recalculateCartForCoupon(cartModel, null);
 				message="release_voucher";
 			} catch (EtailNonBusinessExceptions e) {
 				LOG.error("Recalculation of Cart Failed ");
