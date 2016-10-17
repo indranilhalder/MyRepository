@@ -39,6 +39,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -732,8 +733,16 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			return errorAddress;
 		}
 	}
-	
-	
+	//LINK_PINCODE_CHECK="/pincodeServiceCheck"
+	@ResponseBody
+	@RequestMapping(value = RequestMappingUrlConstants.LINK_PINCODE_CHECK, method = RequestMethod.GET)
+	public List<PointOfServiceData> getReturnPincodeServiceForQuikDrop(@RequestParam(value = "pin") final String pin, @RequestParam(value = "ussid") final String ussid) 
+	{
+		List<PointOfServiceData> returnableStores = new ArrayList<PointOfServiceData>();
+		returnableStores = pincodeServiceFacade.getAllReturnableStores(pin,
+				StringUtils.substring(ussid, 0, 6));
+		return returnableStores;
+	}
 	
 	/**
 	 * @return List<String>

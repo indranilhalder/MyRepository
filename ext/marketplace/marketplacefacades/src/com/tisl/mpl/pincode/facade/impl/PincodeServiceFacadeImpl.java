@@ -511,39 +511,44 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 	public List<PointOfServiceData> getAllReturnableStores(String pincode,String sellerId)
 	{
 		PincodeModel pincodeModel=pincodeService.getLatAndLongForPincode(pincode);
-	
-			final LocationDTO dto = new LocationDTO();
-			dto.setLongitude(pincodeModel.getLongitude().toString());
-			dto.setLatitude(pincodeModel.getLatitude().toString());
-			final Location myLocation = new LocationDtoWrapper(dto);
-	
-			final String configRadius = mplConfigService.getConfigValueById(MarketplaceFacadesConstants.CONFIGURABLE_RADIUS);
-			final double configurableRadius = Double.parseDouble(configRadius);
-			LOG.debug("**********configrableRadius:" + configurableRadius);
-			List<PointOfServiceData> posData = new ArrayList<PointOfServiceData>();
-			try
-			{
-			Collection<PointOfServiceModel> pointOfServiceModels=pincodeService.getAllReturnableStores(myLocation.getGPS(), configurableRadius, sellerId);
-			
-			if (CollectionUtils.isNotEmpty(pointOfServiceModels))
-			{
-				//convert model to data
-				posData = converters.convertAll(pointOfServiceModels, pointOfServiceConverter);
-				if (CollectionUtils.isNotEmpty(posData))
-				{
-					return posData;
-				}
+		List<PointOfServiceData> posData =null;
+			if(null!=pincodeModel){
+      			final LocationDTO dto = new LocationDTO();
+      			dto.setLongitude(pincodeModel.getLongitude().toString());
+      			dto.setLatitude(pincodeModel.getLatitude().toString());
+      			final Location myLocation = new LocationDtoWrapper(dto);
+      	
+      			final String configRadius = mplConfigService.getConfigValueById(MarketplaceFacadesConstants.CONFIGURABLE_RADIUS);
+      			final double configurableRadius = Double.parseDouble(configRadius);
+      			LOG.debug("**********configrableRadius:" + configurableRadius);
+      			posData = new ArrayList<PointOfServiceData>();
+      			try
+      			{
+      			Collection<PointOfServiceModel> pointOfServiceModels=pincodeService.getAllReturnableStores(myLocation.getGPS(), configurableRadius, sellerId);
+      			
+      			if (CollectionUtils.isNotEmpty(pointOfServiceModels))
+      			{
+      				//convert model to data
+      				posData = converters.convertAll(pointOfServiceModels, pointOfServiceConverter);
+      				if (CollectionUtils.isNotEmpty(posData))
+      				{
+      					return posData;
+      				}
+      			}
+      			}
+      			catch(LocationServiceException e)
+      			{
+      				throw new EtailNonBusinessExceptions(e);
+      			}
+      			catch (Exception e) {
+      				throw new EtailNonBusinessExceptions(e);
+      			}
+      		
+      			return posData;
+			}else{
+				LOG.debug("Stores not Avalable...");
+				return	posData;
 			}
-			}
-			catch(LocationServiceException e)
-			{
-				throw new EtailNonBusinessExceptions(e);
-			}
-			catch (Exception e) {
-				throw new EtailNonBusinessExceptions(e);
-			}
-		
-		return posData;
 	}
 
 	/**

@@ -53,7 +53,7 @@
 			<div class="col-md-4 col-sm-6">
 				<b><spring:theme code="text.order.returns.quickdrop"/> : </b> <br /> <span><spring:theme code="text.order.returns.listofstores"/></span>
 				<div class="quickDropArea" data-loaded="false">
-				
+
 					 <c:forEach var="returnableStore" varStatus="i" items="${returnableSlaves}">
 					 
 				<div class="selectquickDrop quickDropRadio${i.index} col-md-12">
@@ -88,7 +88,39 @@
 				</c:forEach> --%>
 				
 				</div>
-				<span>Pincode :</span><input id="pin" type="text" placeholder="Enter Pincode" maxlength="6" onkeypress="return isNum(event)"/>
+					<div class="quickDropAreaPincode">
+					<c:choose>
+					
+					<c:when test="${subOrderEntry.mplDeliveryMode.code eq 'click-and-collect'}">
+					<div class="row clearfix">
+						<div class="col-md-6 col-sm-6 col-xs-6">
+							<div class="form-group">
+								 <input type="text" class="form-control" id="pin" placeholder="Enter Pincode" value="${subOrderEntry.deliveryPointOfService.address.postalCode}">
+							</div>
+						</div>
+						<div class="col-md-6 col-sm-6 col-xs-6">
+							<button id="subOrderEntry" type="button" class="btn btn-primary pincodeSubmit">Submit</button>
+						</div>
+					</div>
+					<%-- <span>Pincode :</span><input id="pin" type="text" value="${subOrderEntry.deliveryPointOfService.address.postalCode}" placeholder="Enter Pincode" maxlength="6" onkeypress="return isNum(event)"/>
+					<span><button type="button" class="light-blue" value="SUBMIT" id="mplDeliveryMode"></button></span> --%>
+					</c:when>
+					<c:otherwise>
+					<div class="row clearfix">
+						<div class="col-md-6 col-sm-6 col-xs-6">
+							<div class="form-group">
+								 <input type="text" class="form-control" id="pin" placeholder="Enter Pincode" value="${subOrder.deliveryAddress.postalCode }">
+							</div>
+						</div>
+						<div class="col-md-6 col-sm-6 col-xs-6">
+							<button id="subOrder" type="button" class="btn btn-primary pincodeSubmit">Submit</button>
+						</div>
+					</div>
+					</c:otherwise>
+					
+					</c:choose>
+							
+					</div>
 			</div>
 			<div class="col-md-8 col-sm-12 mapArea">
 				<div id="map-canvas"></div>
@@ -244,5 +276,55 @@
 }
 .secondTataCliq select{
 	width: 100%;
+}
+</style>
+
+
+
+
+<script>
+$(document).ready(function(){
+	$("#subOrder").click(function() {
+		var pincode=$("#pin").val();
+	    var ussid=$("#ussid").val();
+	    var dataString = 'pin=' + pincode + '&ussid=' + ussid;
+		  $.ajax({
+			  url: ACC.config.encodedContextPath+"/my-account/returns/pincodeServiceCheck",
+			  data : dataString,
+			  contentType : "application/json; charset=utf-8",
+			  success: function(data) {
+				  if (data == "" || data == []
+					|| data == null) {
+					  $('.quickDropArea').html("<div>Stores Not Avalible</div>");
+				  }else{
+					 // alert("Stores are :"+data); 
+					  $('.quickDropArea').empty();
+					  for(var i=0; i<data.length; i++){
+						 
+						  var tempHtml = "<div class='selectquickDrop quickDropRadio"+i+" col-md-12'>"
+						  +"<div class='selectRadio col-md-2 col-sm-2 col-xs-2'>"	
+						  +"<input id='storeIds"+i+"' name='storeIds' onclick='updatePointersNew('quickDropRadio"+i+"','"+ data[i].geoPoint.latitude+"','"+ data[i].geoPoint.longitude+"','"+ data[i].displayName+","+data[i].address.town+","+ data[i].address.postalCode+"')' class='checkButton' type='checkbox' value = '"+data[i].slaveId+"' /></div>"
+								+"<div class='col-md-10 col-sm-10 col-xs-10'>"
+							+"<b>"+data[i].displayName+"</b> <br /> <span>"+ data[i].address.line1+","+ data[i].address.line2+","+ data[i].address.line3+"," 
+								 +data[i].address.town+","+data[i].address.postalCode+"</span></div></div>";
+								// console.log(tempHtml);
+						  $('.quickDropArea').append(tempHtml);
+						  }
+				  }
+			  
+			  },
+			  error:function(data){
+				  $('.quickDropArea').html("<div>Oops Some thing wrong.Please try other pincode</div>");
+			  }
+		  });
+	});
+});
+</script>
+<style>
+.pincodeSubmit, .pincodeSubmit:hover, .pincodeSubmit:active, .pincodeSubmit:visited, .pincodeSubmit:focus {
+	background: #a9143c;
+	color: #fff;
+	font-weight: bold;
+	height: 40px;
 }
 </style>

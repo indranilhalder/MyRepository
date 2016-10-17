@@ -660,7 +660,7 @@
 		  var addressType = $(this).attr("data-value");
 		  
 		  if(addressType == "newAddress") {
-			  alert("Saving New Address");
+			//  alert("Saving New Address");
 			  var count = $(".scheduledPickupArea .selectScheduledPickup").length;
 			  count = parseInt(count) + 1;
 			 // alert(count);
@@ -670,7 +670,7 @@
 				  type: "POST",
 				  data : $("#addAddressForm").serialize(),
 				  success: function(data) {
-					  alert("New Address Saved Successfully");
+					//  alert("New Address Saved Successfully");
 				  
 				  },
 				  error:function(data){

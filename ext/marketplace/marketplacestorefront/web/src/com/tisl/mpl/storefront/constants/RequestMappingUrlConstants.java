@@ -170,5 +170,6 @@ public final class RequestMappingUrlConstants
 	public static final String LINK_TICKET_UPDATE = "/updateTicket";
 	public static final String LINK_EDIT_RETURN_ADDRESS = "/editReturnAddress";
 	public static final String LINK_ADD_RETURN_ADDRESS = "/addNewReturnAddress";
+	public static final String LINK_PINCODE_CHECK="/pincodeServiceCheck";
 
 }
