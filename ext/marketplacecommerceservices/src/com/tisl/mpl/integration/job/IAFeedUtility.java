@@ -3,9 +3,11 @@
  */
 package com.tisl.mpl.integration.job;
 
+import de.hybris.platform.core.Registry;
 import de.hybris.platform.jdbcwrapper.HybrisDataSource;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.util.CSVWriter;
+import de.hybris.platform.virtualjdbc.db.VjdbcDataSourceImplFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -56,7 +58,7 @@ public class IAFeedUtility
 
 	public void executeExport(final String dataExportQuery)
 	{
-		final HybrisDataSource currentDataSource = null;
+		HybrisDataSource currentDataSource = null;
 		LOG.info("Current export query key: " + dataExportQuery);
 		final String productExportQuery = getDataExportQuery(dataExportQuery);
 		LOG.info("Analytics - Product Export query :" + productExportQuery);
@@ -66,8 +68,8 @@ public class IAFeedUtility
 		try
 		{
 			// getting database connection from vjdbc
-			//			currentDataSource = Registry.getCurrentTenantNoFallback().getDataSource(VjdbcDataSourceImplFactory.class.getName());
-			vjdbcConnection = iaDataSource.getConnection();
+			currentDataSource = Registry.getCurrentTenantNoFallback().getDataSource(VjdbcDataSourceImplFactory.class.getName());
+			vjdbcConnection = currentDataSource.getConnection();
 			vjdbcStmt = vjdbcConnection.createStatement();
 			analyticsResult = vjdbcStmt.executeQuery(productExportQuery);
 
@@ -466,7 +468,7 @@ public class IAFeedUtility
 	public void executeExportForLuxury(final String dataExportQuery)
 	{
 
-		final HybrisDataSource currentDataSource = null;
+		HybrisDataSource currentDataSource = null;
 		LOG.info("Current export query key: " + dataExportQuery);
 		final String productExportQuery = getDataExportQueryForLuxury(dataExportQuery);
 		LOG.info("Analytics - Product Export query :" + productExportQuery);
@@ -476,8 +478,8 @@ public class IAFeedUtility
 		try
 		{
 			// getting database connection from vjdbc
-			//			currentDataSource = Registry.getCurrentTenantNoFallback().getDataSource(VjdbcDataSourceImplFactory.class.getName());
-			vjdbcConnection = iaDataSource.getConnection();
+			currentDataSource = Registry.getCurrentTenantNoFallback().getDataSource(VjdbcDataSourceImplFactory.class.getName());
+			vjdbcConnection = currentDataSource.getConnection();
 			vjdbcStmt = vjdbcConnection.createStatement();
 			analyticsResult = vjdbcStmt.executeQuery(productExportQuery);
 
