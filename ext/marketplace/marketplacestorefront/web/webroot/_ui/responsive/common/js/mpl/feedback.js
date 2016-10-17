@@ -215,8 +215,6 @@ $(document).ready(function(){
 				    }
 					  }
 				  }); 
-				  
-			   
 	 /*----END of Sticky Bag --------*/
 	
 	/*----------start of changes to get search-text and category and assign to hidden fields-----------*/

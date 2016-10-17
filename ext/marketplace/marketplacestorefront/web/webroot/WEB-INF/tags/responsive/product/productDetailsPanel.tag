@@ -192,10 +192,16 @@ tr.d0 td {
 					<cms:component component="${component}" />
 				</cms:pageSlot>
 			<div class="SoldWrap">
-				<ycommerce:testId
+				<%-- <ycommerce:testId
 					code="productDetails_productNamePrice_label_${product.code}">
 					<div class="seller">Sold by <span id="sellerNameId"></span></div>
-				</ycommerce:testId>
+				</ycommerce:testId> --%>
+				<div class="seller">
+					<ycommerce:testId code="productDetails_productNamePrice_label_${product.code}">
+						<span class="seller-details"><span>Sold by <span id="sellerNameId"></span>&nbsp;&</span><product:sellerInfoDetailsSection /></span>
+					</ycommerce:testId>
+					
+				</div>
 				<div class="fullfilled-by">
 				<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;<span id="fulFilledByTship" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
 				<span id="fulFilledBySship"  style="display:none;"></span>
@@ -230,9 +236,9 @@ tr.d0 td {
 		
 			
 			<!-- seller information section  -->
-			<div class="seller-details">
+			<%-- <div class="seller-details">
 			<product:sellerInfoDetailsSection/>
-			</div>
+			</div> --%>
 
 			
 

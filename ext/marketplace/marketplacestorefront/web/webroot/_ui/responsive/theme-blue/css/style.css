@@ -53477,7 +53477,15 @@ div.radio.creditDebitLabelRadio{
  header .content nav > ul > li > ul > li > ul > li.long.words .toggle {
                font-weight: normal;
     }
-/* TPR-1745 start*/
+/* TPR-791 Start */
+.product-info .product-detail .other-sellers#otherSellerInfoId{margin-top:0px;}
+.product-info .SoldWrap>div.fullfilled-by{padding-right:0px;/* width:43%; */}
+/* .product-info .SoldWrap>div.seller{width:57%;}
+.product-info .SoldWrap>div.seller .seller-details, .product-info .SoldWrap>div.seller form#sellerForm{float:left;}
+.product-info .SoldWrap>div{max-width:inherit;} */
+/* TPR-791 End */
+
+/* TPR-1745 start */
 @media(max-width:790px){
   body.page-productDetails header .content .bottom.active,body.page-viewSellers header .content .bottom.active {
         z-index: 10001;
@@ -53500,8 +53508,7 @@ div.radio.creditDebitLabelRadio{
 }
 header > .content .top.header_fix {position:fixed;}
 }
-
-/* TPR-1745 end*/
+/* TPR-1745 end */
 
 
 /* TPR-978 starts */
@@ -54761,3 +54768,4 @@ header > .content .top.header_fix {position:fixed;}
 /* Mobile & Tablet ends*/
 
 /* TPR-978 ends */
+
