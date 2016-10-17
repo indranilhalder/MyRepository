@@ -1653,4 +1653,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// Sonar Fix
 	public static final String ALLVARIANTSSTRING = "allVariantsString";
+
+	//Added for TPR-798
+	public static final String MPLCATELOG = "internal.campaign.catelog";
+	public static final String MPLCATALOGNNAME = "internal.campaign.catalogVersionName";
+	public static final String WCMSPAGINATIONQUERY = "Select {CSP.pk} From {ContentSlotForPage AS CSP JOIN ContentPage as CP ON {CSP.page}={CP.pk}} "
+			+ "where {CP.uid} = ?uid and {CSP.catalogVersion}=?version";
+
+
 }

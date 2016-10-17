@@ -232,6 +232,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
 		final CartModel cartModel = getCartService().getSessionCart();
 
+		// TPR-429 START
+		final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+		final String checkoutSellerID = GenericUtilityMethods.populateCheckoutSellers(cartData);
+
+		model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, checkoutSellerID);
+		// TPR-429 END
+
 		if (cartModel != null)
 		{
 
@@ -401,10 +408,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		//return values
 		model.addAttribute("checkoutPageName", checkoutPageName);
-		GenericUtilityMethods.populateTealiumDataForCartCheckout(model, getMplCustomAddressFacade().getCheckoutCart());
+		//GenericUtilityMethods.populateTealiumDataForCartCheckout(model, getMplCustomAddressFacade().getCheckoutCart());
+		GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartModel);
 		return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.AddPaymentMethodPage;
 	}
 
+	
 	/**
 	 * This method sets timeout
 	 *
