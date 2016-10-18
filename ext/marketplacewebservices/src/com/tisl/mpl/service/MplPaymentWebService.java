@@ -85,7 +85,7 @@ public interface MplPaymentWebService
 	 * @param binNo
 	 * @param bankName
 	 * @param paymentMode
-	 * @param cartID
+	 * @param userId
 	 * @return MplPromotionDTO
 	 * @throws EtailNonBusinessExceptions
 	 */
