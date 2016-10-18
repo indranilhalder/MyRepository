@@ -67,7 +67,7 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.promotions.jalo.AbstractPromotion#evaluate(de.hybris.platform.jalo.SessionContext,
 	 * de.hybris.platform.promotions.result.PromotionEvaluationContext)
 	 */
@@ -166,7 +166,7 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.promotions.jalo.AbstractPromotion#getResultDescription(de.hybris.platform.jalo.SessionContext,
 	 * de.hybris.platform.promotions.jalo.PromotionResult, java.util.Locale)
@@ -209,7 +209,6 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 	 * @param ctx
 	 * @return validProductList
 	 */
-	@SuppressWarnings("deprecation")
 	private Map<String, AbstractOrderEntry> getValidProductList(final AbstractOrder cart, final SessionContext ctx)
 	{
 		//final Map<String, Integer> validUssidList = new HashMap<String, Integer>();
@@ -382,7 +381,7 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 			}
 
 			//getting eligible Product List from ussid map
-			@SuppressWarnings("deprecation")
+
 			final List<Product> eligibleProductList = new ArrayList<Product>();
 			for (final AbstractOrderEntry orderEntry : validProductUssidMap.values())
 			{
@@ -473,7 +472,6 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 	 * @param ctx
 	 * @return currency
 	 */
-	@SuppressWarnings("unused")
 	private String getCurrency(final SessionContext ctx)
 	{
 		String currency = MarketplacecommerceservicesConstants.EMPTYSPACE;
@@ -493,7 +491,6 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 	 * @Description: Message Localization
 	 * @return: String
 	 */
-	@SuppressWarnings("unused")
 	private String messageData()
 	{
 		String data = MarketplacecommerceservicesConstants.EMPTYSPACE;
@@ -502,8 +499,7 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 
 		if (productFlag && null != getProducts() && !getProducts().isEmpty() && getProducts().size() > 0)
 		{
-			for (@SuppressWarnings("deprecation")
-			final Product product : getProducts())
+			for (final Product product : getProducts())
 			{
 				messageData.append(product.getName());
 				messageData.append(',');

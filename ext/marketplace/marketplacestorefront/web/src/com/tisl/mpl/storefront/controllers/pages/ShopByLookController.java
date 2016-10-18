@@ -88,6 +88,7 @@ public class ShopByLookController extends AbstractSearchPageController
 	private static final String DROPDOWN_CATEGORY = "MSH";
 	private static final String NO_RESULTS_CMS_PAGE_ID = "searchEmpty";
 	private static final String SEARCH_CMS_PAGE_ID = "search";
+	private static final String LOOK_ID = "{look-id}";
 
 	/**
 	 * @desc this method fetches the shop by collection based on look-id provided.
@@ -97,7 +98,7 @@ public class ShopByLookController extends AbstractSearchPageController
 	 * @throws CMSItemNotFoundException
 	 */
 	@SuppressWarnings("boxing")
-	@RequestMapping(method = RequestMethod.GET, value = "{look-id}")
+	@RequestMapping(method = RequestMethod.GET, value = LOOK_ID)
 	public String loadShopTheLooks(@PathVariable("look-id") final String lookId,
 			@RequestParam(value = "q", required = false) final String searchQuery,
 			@RequestParam(value = "sort", required = false) final String sortCode,
@@ -184,7 +185,7 @@ public class ShopByLookController extends AbstractSearchPageController
 			}
 
 
-			model.addAttribute("shopbylook", "shopbylook");
+			model.addAttribute(ModelAttributetConstants.SHOP_BY_LOOK, "shopbylook");
 		}
 		/*
 		 * common page model loading
@@ -366,7 +367,7 @@ public class ShopByLookController extends AbstractSearchPageController
 	 * @throws CMSItemNotFoundException
 	 */
 	@RequestMapping(method = RequestMethod.GET, params = "q", value =
-	{ "{look-id}" + REFINE_FACET_SEARCH_URL_PATTERN_1, "{look-id}" + REFINE_FACET_SEARCH_URL_PATTERN_2 })
+	{ LOOK_ID + REFINE_FACET_SEARCH_URL_PATTERN_1, LOOK_ID + REFINE_FACET_SEARCH_URL_PATTERN_2 })
 	public String refineFacetSearch(@PathVariable("look-id") final String lookId, @RequestParam("q") final String searchQuery,
 			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = "0") final int page,
 			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
@@ -457,7 +458,7 @@ public class ShopByLookController extends AbstractSearchPageController
 			}
 
 		}
-		model.addAttribute("shopbylook", "shopbylook");
+		model.addAttribute(ModelAttributetConstants.SHOP_BY_LOOK, "shopbylook");
 		populateModel(model, searchPageData, showMode);
 		model.addAttribute(MarketplaceCoreConstants.USER_LOCATION, customerLocationService.getUserLocation());
 
@@ -543,7 +544,7 @@ public class ShopByLookController extends AbstractSearchPageController
 	 * @throws CMSItemNotFoundException
 	 */
 	@RequestMapping(method = RequestMethod.GET, params = "q", value =
-	{ "{look-id}" + REFINE_SEARCH_URL_PATTERN, "{look-id}" + BLANKSTRING })
+	{ LOOK_ID + REFINE_SEARCH_URL_PATTERN, LOOK_ID + BLANKSTRING })
 	public String refineSearch(@PathVariable("look-id") final String lookId, @RequestParam("q") final String searchQuery,
 			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = "0") final int page,
 			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
