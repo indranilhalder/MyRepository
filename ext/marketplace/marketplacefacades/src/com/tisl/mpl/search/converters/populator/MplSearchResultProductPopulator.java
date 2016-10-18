@@ -19,11 +19,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
+
+
 /**
  * This class populates data into product data from solr search results
  *
@@ -38,8 +39,9 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 
 	@Autowired
 	private SizeAttributeComparator sizeAttributeComparator;
-        private static final String DELIMETER = ":";
-        private static final String STOCK = "STOCK";
+	private static final String DELIMETER = ":";
+	private static final String STOCK = "STOCK";
+
 	@Override
 	public void populate(final SearchResultValueData source, final ProductData target)
 	{
@@ -292,20 +294,20 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 	/*
 	 * @Override protected void addImageData(final SearchResultValueData source, final String imageFormat, final String
 	 * mediaFormatQualifier, final ImageDataType type, final List<ImageData> images) {
-	 * 
+	 *
 	 * final Object imgObj = getValue(source, "img-" + mediaFormatQualifier); List<String> imgList = new ArrayList(); if
 	 * (imgObj instanceof ArrayList) { imgList = (List) imgObj; } else { final String imgStr = (String) imgObj;
 	 * imgList.add(imgStr); }
-	 * 
-	 * 
+	 *
+	 *
 	 * if (!imgList.isEmpty()) { for (int i = 0; i < imgList.size(); i++) { final ImageData imageSearchData =
 	 * createImageData(); imageSearchData.setImageType(type); imageSearchData.setFormat(imageFormat);
 	 * imageSearchData.setUrl(imgList.get(i)); images.add(imageSearchData);
-	 * 
-	 * 
+	 *
+	 *
 	 * }
-	 * 
-	 * 
+	 *
+	 *
 	 * } }
 	 */
 
@@ -315,7 +317,8 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 	{
 		this.categoryManager = categoryManager;
 	}
-        /**
+
+	/**
 	 * changes for TPR-249,populating stock details
 	 *
 	 * @param source

@@ -104,6 +104,8 @@ public class CustomSkuComponentController extends AbstractCMSComponentController
 	public static final int MAX_PAGE_LIMIT = 100; // should be configured
 	private static final String PAGINATION_NUMBER_OF_RESULTS_COUNT = "pagination.number.results.count";
 
+	public static final String LOOK_ID = "{look-id}";
+
 	//private String lookId = "";// Blocked for SONAR
 
 	public static enum ShowMode
@@ -287,7 +289,7 @@ public class CustomSkuComponentController extends AbstractCMSComponentController
 	 * @throws CMSItemNotFoundException
 	 */
 	@RequestMapping(method = RequestMethod.GET, params = "q", value =
-	{ "{look-id}" + REFINE_FACET_SEARCH_URL_PATTERN_1, "{look-id}" + REFINE_FACET_SEARCH_URL_PATTERN_2 })
+	{ LOOK_ID + REFINE_FACET_SEARCH_URL_PATTERN_1, LOOK_ID + REFINE_FACET_SEARCH_URL_PATTERN_2 })
 	public String refineFacetSearch(@PathVariable("look-id") final String lookId, @RequestParam("q") final String searchQuery,
 			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = "0") final int page,
 			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
@@ -479,7 +481,7 @@ public class CustomSkuComponentController extends AbstractCMSComponentController
 	 * @throws CMSItemNotFoundException
 	 */
 	@RequestMapping(method = RequestMethod.GET, params = "q", value =
-	{ "{look-id}" + REFINE_SEARCH_URL_PATTERN, "{look-id}" + BLANKSTRING })
+	{ LOOK_ID + REFINE_SEARCH_URL_PATTERN, LOOK_ID + BLANKSTRING })
 	public String refineSearch(@PathVariable("look-id") final String lookId, @RequestParam("q") final String searchQuery,
 			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = "0") final int page,
 			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
