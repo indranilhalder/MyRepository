@@ -25,10 +25,12 @@ import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.data.CODSelfShipData;
 import com.tisl.mpl.data.CODSelfShipResponseData;
 import com.tisl.mpl.data.RTSAndRSSReturnInfoRequestData;
+import com.tisl.mpl.data.ReturnInfoData;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
+import com.tisl.mpl.facades.data.ReturnItemAddressData;
 import com.tisl.mpl.marketplacecommerceservices.service.MPLReturnService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
@@ -47,10 +49,14 @@ import de.hybris.platform.cockpit.model.meta.TypedObject;
 import de.hybris.platform.cockpit.services.values.ObjectValueContainer;
 import de.hybris.platform.cockpit.widgets.InputWidget;
 import de.hybris.platform.cockpit.widgets.models.impl.DefaultListWidgetModel;
+import de.hybris.platform.commercefacades.order.converters.populator.AbstractOrderPopulator;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
+import de.hybris.platform.commercefacades.user.data.AddressData;
+import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
+import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
@@ -76,33 +82,43 @@ public class MarketPlaceDefaultReturnsController extends
 
 	@Autowired
 	private MPLReturnService mplreturnService;
-
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
-
 	@Autowired
 	private ReturnLogisticsService returnLogisticsService;
-
 	@Autowired
 	private ConfigurationService configurationService;
-
 	@Autowired
 	private MplOrderCancelClientService mplOrderCancelClientService;
-
 	@Autowired
 	private MplConfigFacade mplConfigFacade;
-
 	@Autowired
 	private MplCheckoutFacade mplCheckoutFacade;
-
 	@Autowired
 	private CancelReturnFacade cancelReturnFacade;
-
 	@Autowired
 	private PincodeServiceFacade pincodeServiceFacade;
-
 	@Autowired
 	private MplOrderFacade mplOrderFacade;
+//	@Autowired
+//	private Populator<AddressData, ReturnItemAddressData>  ReturnItemAddressDataPopulator;
+	@Autowired
+	private AbstractOrderPopulator<OrderModel, OrderData> orderPopulator;
+	@Autowired
+	private Populator<AbstractOrderEntryModel, OrderEntryData> orderEntryPopulator;
+	@Autowired
+	private Populator<CustomerModel, CustomerData> customerPopulator;
+//	private CallContextController callContextController;
+//
+//	protected CallContextController getCallContextController() {
+//		return callContextController;
+//	}
+//
+//	@Required
+//	public void setCallContextController(
+//			CallContextController callContextController) {
+//		this.callContextController = callContextController;
+//	}
 
 	private static final String OMS_BYPASS_KEY = "cscockpit.oms.serviceability.check.bypass";
 
@@ -523,6 +539,8 @@ public class MarketPlaceDefaultReturnsController extends
 							if (null != pinCode || !pinCode.isEmpty()) {
 								orderLine.setPinCode(pinCode);
 							}
+							
+							ReturnItem(returnEntry.getOrderEntry(),orderLine,returnRequest);
 						}
 
 					} else {
@@ -578,21 +596,84 @@ public class MarketPlaceDefaultReturnsController extends
 									}
 								}
 							}
+							
+							
+							// OMS Status and Craing crm Ticket for return
+							ReturnItem(orderEntryModel,orderLine,returnRequest);
+							
 						}
+						
+				
 					}
 
-					MplOrderIsCancellableResponse response = mplOrderCancelClientService
-							.orderCancelDataToOMS(request);
-					if (null == response) {
-					getModelService().remove(returnRequest);//Remove if created any 
-						throw new OrderReturnException(orderModel.getCode(),
-								"Item is not returnable at OMS.");
-					}
+				  	MplOrderIsCancellableResponse response = mplOrderCancelClientService.orderCancelDataToOMS(request);
+					
+//					for ( OrderLine CancelOrderRequest : request.getOrderLine() ) {
+//						OrderData subOrderDetails = new OrderData();
+//						
+//							Boolean omsResponce= cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry, returnData, customerData, salesApplication, returnAddress);
+//					}
+//					
+//					Boolean omsResponce= cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry, returnData, customerData, salesApplication, returnAddress);
+//					
+					
+//					
+//					if (null == omsResponce) {
+//					getModelService().remove(returnRequest);//Remove if created any 
+//						throw new OrderReturnException(orderModel.getCode(),
+//								"Item is not returnable at OMS.");
+//					}
 				}
 			}
 		} catch (Exception ex) {
 			throw new OrderReturnException("Failed", "OMS is not responding");
 		}
+	}
+
+	private void ReturnItem(AbstractOrderEntryModel orderEntryModel, OrderLine orderLine, ReturnRequestModel returnRequest) throws OrderReturnException {
+		OrderModel  subOrderModel = (OrderModel) orderEntryModel.getOrder();
+		OrderData subOrderDetails = new OrderData();
+		orderPopulator.populate(subOrderModel, subOrderDetails);
+		OrderEntryData orderEntryData = new OrderEntryData();
+		
+		orderEntryPopulator.populate(orderEntryModel, orderEntryData);
+	//	TypedObject customer = getCallContextController().getCurrentCustomer();
+		//CustomerModel customermodel = (CustomerModel) customer
+		//		.getObject();
+		CustomerData customerData = new CustomerData();
+		//customerPopulator.populate(customermodel, customerData);
+		ReturnInfoData returnInfoData = new ReturnInfoData();
+		returnInfoData=PopulateReturnInfoData(orderLine);
+		Session session = Executions.getCurrent().getDesktop().getSession();
+		final AddressData AddressData = (AddressData) session.getAttribute("returnAddress");
+		ReturnItemAddressData returnItemAddressData = new ReturnItemAddressData();
+		//ReturnItemAddressDataPopulator.populate(AddressData, returnItemAddressData);
+		Boolean omsResponce= cancelReturnFacade.implementReturnItem(subOrderDetails, orderEntryData, returnInfoData, customerData, SalesApplication.CALLCENTER, returnItemAddressData);
+
+		if (null == omsResponce) {
+		getModelService().remove(returnRequest);//Remove if created any 
+			throw new OrderReturnException(orderEntryModel.getOrder().getCode(),
+					"Item is not returnable at OMS.");
+		}
+		
+	}
+
+	private ReturnInfoData PopulateReturnInfoData(OrderLine orderLine) {
+
+		ReturnInfoData returnInfoData = new ReturnInfoData();
+		returnInfoData.setIsReturn("Y");
+		returnInfoData.setReasonCode(orderLine.getReasonCode());
+		returnInfoData.setTicketTypeCode("R");
+		returnInfoData.setUssid(orderLine.getTransactionId());
+		returnInfoData.setReturnFulfillmentMode(orderLine.getReturnFulfillmentMode());
+		returnInfoData.setReturnMethod("SchedulePichup");
+		returnInfoData.setReturnPickupDate("11-12-2016");
+		returnInfoData.setTimeSlotFrom("11 AM");
+		returnInfoData.setTimeSlotTo("1 PM");
+	
+		return returnInfoData;
+		
+		
 	}
 
 	@Override
@@ -718,6 +799,22 @@ public class MarketPlaceDefaultReturnsController extends
 				.setReturnType(MarketplacecommerceservicesConstants.RETURN_TYPE_RTS);
 		cancelReturnFacade.retrunInfoCallToOMS(infoRequestData);
 
+	} 
+/**
+ * This method is used for ticket creation for crm 
+ */
+	@Override
+	public boolean createTicketInCRM(OrderData subOrderDetails,
+			OrderEntryData subOrderEntry, String ticketTypeCode,
+			String reasonCode, String refundType, String ussid,
+			CustomerData customerData, OrderModel subOrderModel,
+			ReturnItemAddressData returnAddress, ReturnInfoData returnInfoData) {
+		try {
+			cancelReturnFacade.createTicketInCRM(subOrderDetails, subOrderEntry, ticketTypeCode, reasonCode, refundType, ussid, customerData, subOrderModel, returnAddress, returnInfoData);
+		}catch(Exception e) {
+			LOG.error("Exception while creating crm ticket for return "+e.getMessage());
+		}
+		return false;
 	}
 
 }
