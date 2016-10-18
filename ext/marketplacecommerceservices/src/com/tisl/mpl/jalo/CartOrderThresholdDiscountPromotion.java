@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
@@ -79,6 +80,9 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 		final List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
 		//boolean checkChannelFlag = false;						//Commented as defined later TPR-969
 
+		//CR Changes : TPR-715
+		Map<String, AbstractOrderEntry> validProductUssidMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
+
 		try
 		{
 			final boolean promotionAlreadyFired = getDefaultPromotionsManager().cartPromotionAlreadyFired(ctx, evalCtx.getOrder());
@@ -131,7 +135,30 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 						orderEntryCount += entry.getQuantity(ctx).doubleValue();
 					}
 
-					final double orderSubtotalAfterDiscounts = getSubtotalAfterDiscount(ctx, order);
+					//CR Changes : TPR-715
+					double orderSubtotalAfterDiscounts = 0.0D;
+					ctx.setAttribute(MarketplacecommerceservicesConstants.VALIDATE_SELLER, Boolean.FALSE);
+					ctx.setAttribute(MarketplacecommerceservicesConstants.CART_SELLER_PRODUCTS, validProductUssidMap);
+					if (getDefaultPromotionsManager().isSellerRestrExists(restrictionList))
+					{
+						validProductUssidMap = getMplPromotionHelper().getCartSellerEligibleProducts(ctx, order, restrictionList);
+						ctx.setAttribute(MarketplacecommerceservicesConstants.VALIDATE_SELLER, Boolean.TRUE);
+						orderSubtotalAfterDiscounts = getSellerSpecificSubtotal(ctx, validProductUssidMap);
+						setSellersubTotalValue(orderSubtotalAfterDiscounts);
+					}
+					else if (getDefaultPromotionsManager().isExSellerRestrExists(restrictionList))
+					{
+						validProductUssidMap = getMplPromotionHelper().getCartSellerInEligibleProducts(ctx, order, restrictionList);
+						ctx.setAttribute(MarketplacecommerceservicesConstants.VALIDATE_SELLER, Boolean.TRUE);
+						orderSubtotalAfterDiscounts = getSellerSpecificSubtotal(ctx, validProductUssidMap);
+						setSellersubTotalValue(orderSubtotalAfterDiscounts);
+					}
+					else
+					{
+						orderSubtotalAfterDiscounts = getSubtotalAfterDiscount(ctx, order);
+					}
+					//CR Changes : TPR-715
+
 					if (threshold != null)
 					{
 						//final double orderSubtotalAfterDiscounts = getSubtotalAfterDiscount(arg0, order);
@@ -202,7 +229,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 						{
 							LOG.debug("Ordersubtotal greater than threshold");
 							applyPromoForQualCount(entryQualifyingCount, orderEntryCount, ctx, evalCtx, order, isPercentageDisc,
-									percentageDiscount, maxDiscount, promotionResults, orderSubtotalAfterDiscounts);
+									percentageDiscount, maxDiscount, promotionResults, orderSubtotalAfterDiscounts, validProductUssidMap);
 						}
 						else if (orderSubtotalAfterDiscounts > 0.0D)
 						{
@@ -216,7 +243,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 					else
 					{
 						applyPromoForQualCount(entryQualifyingCount, orderEntryCount, ctx, evalCtx, order, isPercentageDisc,
-								percentageDiscount, maxDiscount, promotionResults, orderSubtotalAfterDiscounts);
+								percentageDiscount, maxDiscount, promotionResults, orderSubtotalAfterDiscounts, validProductUssidMap);
 					}
 				}
 			}
@@ -253,11 +280,13 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 	 * @param percentageDiscount
 	 * @param maxDiscount
 	 * @param promotionResults
+	 * @param validProductUssidMap
 	 * @return List<PromotionResult>
 	 */
 	private List<PromotionResult> evaluatePromotion(final SessionContext ctx, final PromotionEvaluationContext evalCtx,
 			final AbstractOrder order, boolean isPercentageDisc, double percentageDiscount, final double maxDiscount,
-			final List<PromotionResult> promotionResults, final double orderSubtotalAfterDiscounts)
+			final List<PromotionResult> promotionResults, final double orderSubtotalAfterDiscounts,
+			final Map<String, AbstractOrderEntry> validProductUssidMap)
 	{
 		if (isPercentageOrAmount().booleanValue())
 		{
@@ -289,6 +318,14 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 			ctx.setAttribute(MarketplacecommerceservicesConstants.PROMOCODE, String.valueOf(this.getCode()));
 			ctx.setAttribute(MarketplacecommerceservicesConstants.ISPERCENTAGEDISC, Boolean.valueOf(isPercentageDisc));
 
+
+			//CR Changes : TPR-715
+			if (MapUtils.isNotEmpty(validProductUssidMap))
+			{
+				ctx.setAttribute(MarketplacecommerceservicesConstants.CART_SELLER_PRODUCTS, validProductUssidMap);
+			}
+			//CR Changes : TPR-715 ends
+
 			//adjustedDiscounts = (percentageDiscount * orderSubtotalAfterDiscounts) / 100;
 			setAdjustedDiscounts((percentageDiscount * orderSubtotalAfterDiscounts) / 100);
 			final PromotionResult result = PromotionsManager.getInstance()
@@ -319,12 +356,14 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 	 * @param maxDiscount
 	 * @param promotionResults
 	 * @param orderSubtotalAfterDiscounts
+	 * @param validProductUssidMap
 	 * @return List<PromotionResult>
 	 */
 	private List<PromotionResult> applyPromoForQualCount(final Double entryQualifyingCount, final double orderEntryCount,
 			final SessionContext ctx, final PromotionEvaluationContext evalCtx, final AbstractOrder order,
 			final boolean isPercentageDisc, final double percentageDiscount, final double maxDiscount,
-			List<PromotionResult> promotionResults, final double orderSubtotalAfterDiscounts)
+			List<PromotionResult> promotionResults, final double orderSubtotalAfterDiscounts,
+			final Map<String, AbstractOrderEntry> validProductUssidMap)
 	{
 		if (null != entryQualifyingCount)
 		{
@@ -332,7 +371,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 			if (Double.valueOf(orderEntryCount).intValue() >= entryQualifyingCount.intValue())
 			{
 				promotionResults = evaluatePromotion(ctx, evalCtx, order, isPercentageDisc, percentageDiscount, maxDiscount,
-						promotionResults, orderSubtotalAfterDiscounts);
+						promotionResults, orderSubtotalAfterDiscounts, validProductUssidMap);
 			}
 			else
 			{
@@ -346,7 +385,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 		{
 			LOG.debug("Inside entry qualifying count null");
 			promotionResults = evaluatePromotion(ctx, evalCtx, order, isPercentageDisc, percentageDiscount, maxDiscount,
-					promotionResults, orderSubtotalAfterDiscounts);
+					promotionResults, orderSubtotalAfterDiscounts, validProductUssidMap);
 		}
 
 		return promotionResults;
