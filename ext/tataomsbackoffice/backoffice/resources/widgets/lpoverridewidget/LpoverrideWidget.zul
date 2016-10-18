@@ -206,13 +206,17 @@
 					style="border:none;padding:0px;max-height:100%;">
 					<vlayout style="width:100%;height:100px">
 						<hlayout>
-							<vlayout width="400px">
+							<vlayout width="200px">
 								<button style="float:right"
-									onClick="@command('nextLpSave')" label="Next Lp "  disabled="@load(empty vm.selectedEntities)"/>
+									onClick="@command('nextLpSave')" label="Next Lp "  />
+							</vlayout>
+							<vlayout width="100px">
+								<button  style="float:right"
+									onClick="@command('lpOverrideSave',lpOverride=true)" label="Lp Override"/>
 							</vlayout>
 							<vlayout width="200px">
 								<button
-									onClick="@command('lpOverrideSave')" label="Lp Override"  disabled="@load(empty vm.selectedEntities)"/>
+									onClick="@command('lpOverrideSave',lpOverride=false)" label="Serviceable"/>
 							</vlayout>
 						</hlayout>
 					</vlayout>

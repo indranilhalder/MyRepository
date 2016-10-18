@@ -206,7 +206,7 @@
      <explorer-tree:navigation-node id="express_delivery_tracking_collapseble"></explorer-tree:navigation-node>
      <explorer-tree:navigation-node id="short_url_tracking_collapseble"></explorer-tree:navigation-node>
        <explorer-tree:navigation-node id="delivery_date_against_promisddate_collapseble"></explorer-tree:navigation-node>
-    
+     <explorer-tree:navigation-node id="pickup_address_change_request_collapseble"></explorer-tree:navigation-node>
 	</explorer-tree:explorer-tree>
 </context>
 

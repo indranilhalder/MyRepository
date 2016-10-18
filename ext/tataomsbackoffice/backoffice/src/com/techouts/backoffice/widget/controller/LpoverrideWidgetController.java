@@ -247,15 +247,15 @@ public class LpoverrideWidgetController
 	}
 
 	/*
-	 * this method is used to persist the modified transactions
+	 * this method is used to persist the modified Lp override and Servicable Transactions
 	 */
 	@Command("lpOverrideSave")
 	@NotifyChange(
 	{ "orderlineRespone", "displayPopup" })
 
-	public void saveAllTransactions()
+	public void saveAllTransactions(@BindingParam("lpOverride") final Boolean lpOverride)
 	{
-		LOG.info("in side lp override");
+		LOG.info("in side lp override and servicable" + lpOverride);
 
 		final List<OrderLineInfo> listOfOrderLineInfo = new ArrayList<OrderLineInfo>();
 		if (CollectionUtils.sizeIsEmpty(map))
@@ -272,7 +272,7 @@ public class LpoverrideWidgetController
 			orderLineInfo.setTransactionId(transaction.getTransactionId());
 			orderLineInfo.setLogisticName(transaction.getLogisticName());
 			orderLineInfo.setAwbNumber(transaction.getAwbNumber());
-			orderLineInfo.setLpOverride(Boolean.TRUE); //this will get from check box button
+			orderLineInfo.setLpOverride(lpOverride); //this will get from check box button
 			orderLineInfo.setNextLP(Boolean.FALSE);//this will get from checkbox button
 			listOfOrderLineInfo.add(orderLineInfo);
 		}
@@ -295,8 +295,6 @@ public class LpoverrideWidgetController
 		final LPOverrideAWBEditResponse lpOverrideAwbEditResponse = orderLogisticsUpdateFacade
 				.updateOrderLogisticOrAwbNumber(lpOverrideEdit);
 		orderlineRespone = lpOverrideAwbEditResponse.getOrderLineResponse();
-		listBoxData.clearSelection();
-		selectedEntities.clear();
 		if (CollectionUtils.isNotEmpty(orderlineRespone))
 		{
 			displayPopup = Boolean.TRUE;
@@ -304,6 +302,9 @@ public class LpoverrideWidgetController
 		map.clear();
 
 	}
+
+
+
 
 	@Command("nextLpSave")
 	@NotifyChange(
@@ -315,7 +316,7 @@ public class LpoverrideWidgetController
 		if (CollectionUtils.isEmpty(selectedEntities))
 		{
 			displayPopup = Boolean.FALSE;
-			Messagebox.show("No Changes Found ");
+			Messagebox.show("Please Select  List Item");
 			return;
 		}
 
@@ -360,7 +361,6 @@ public class LpoverrideWidgetController
 		}
 
 	}
-
 
 	@AfterCompose
 	public void afterCompose(@ContextParam(ContextType.VIEW) final Component view)

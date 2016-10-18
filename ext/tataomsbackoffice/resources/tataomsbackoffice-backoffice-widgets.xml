@@ -557,6 +557,43 @@
 					<setting key="allowLockingTopPanel" type="Boolean">true</setting>
 					<virtual-sockets />
 				</widget>
+				<!-- pick up address change request report -->
+				<widget id="pickup_address_change_request_collapseble" title="Pick Up Address Change collapsable Container"
+					widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
+					slotId="perspectives" template="true">
+					<widget id="pickup_address_request_datepic" title="PickUp Address request date pic "
+						widgetDefinitionId="com.techouts.widgets.deliveryaddressdatepic"
+						slotId="center" template="false">
+					</widget>
+					<widget id="pickup_address_request_widget_report"
+						widgetDefinitionId="com.techouts.widgets.pickupaddresschangerequest"
+						slotId="bottom" title="pickup Address Request report" template="false">
+						<virtual-sockets />
+
+					</widget>
+					<setting key="widgetStyleAttribute" type="String"></setting>
+					<setting key="allowLockingCenterPanel" type="Boolean">true</setting>
+					<setting key="bottomPanelCollapsed" type="Boolean">false</setting>
+					<setting key="topHeight" type="String">14%</setting>
+					<setting key="centerCaption" type="String">Editor</setting>
+					<setting key="bottomPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="centerHeight" type="String">14%</setting>
+					<setting key="topPanelInitiallyLocked" type="Boolean">false</setting>
+					<setting key="thirdSectionDisabled" type="Boolean">true</setting>
+					<setting key="allowLockingBottomPanel" type="Boolean">true</setting>
+					<setting key="bottomCaption" type="String"></setting>
+					<setting key="centerPanelCollapsed" type="Boolean">false</setting>
+					<setting key="widgetStyleClass" type="String"></setting>
+					<setting key="topCaption" type="String">PickUp Address Change Requests
+						Report
+					</setting>
+					<setting key="centerPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="topPanelCollapsed" type="Boolean">true</setting>
+					<setting key="allowLockingTopPanel" type="Boolean">true</setting>
+					<virtual-sockets />
+				</widget>
 
 				<virtual-sockets />
 			</widget>
@@ -684,5 +721,7 @@
 		sourceWidgetId="deliverydate_against_promiseddate_datepic" />
 	<widget-connection sourceWidgetId="sship_delivery_breach_datepic"
 		outputId="startendDates" targetWidgetId="sship_breach_widget" inputId="startendDates" />
+	<widget-connection targetWidgetId="pickup_address_request_widget_report"
+		outputId="startendDates" inputId="startendDates" sourceWidgetId="pickup_address_request_datepic" />
 </widgets>
  

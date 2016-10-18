@@ -233,7 +233,24 @@ public class AwbEditWidgetController
 			}
 			lpAwbSearch.setTransactionType(transactionType);
 			lpAwbSearch.setIsReturn(isReturn);
-			listOfTransactions = orderLogisticsUpdateFacade.getOrderLogisticsInfo(lpAwbSearch).getTransactionInfo(); //if response
+			final List<TransactionInfo> transactionsList = orderLogisticsUpdateFacade.getOrderLogisticsInfo(lpAwbSearch)
+					.getTransactionInfo(); //if response
+			for (final TransactionInfo transaction : transactionsList)
+			{
+				final String orderStatus = transaction.getOrderStatus();
+				if (orderStatus.equalsIgnoreCase("SCANNED") || orderStatus.equalsIgnoreCase("HOTCOURI")
+						|| orderStatus.equalsIgnoreCase("REVERSEAWB"))
+				{
+					transaction.setAwbReadOnly(Boolean.FALSE);
+				}
+				else
+				{
+					transaction.setAwbReadOnly(Boolean.TRUE);
+					//this step is removed once awbEditable default value== false at dto level
+				}
+			}
+			listOfTransactions = transactionsList;
+
 		}
 		catch (final InvalidLpOverrideSearchParams exception)
 		{
