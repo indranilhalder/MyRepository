@@ -387,7 +387,7 @@
 													</c:when>
 
 													<c:otherwise>
-													<c:if test="${(not empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing')||(not empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Footwear') ||(not empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Accessories')}">
+													<c:if test="${(not empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing')||(not empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Footwear') ||(showSizeGuideForFA ne 'true' && wpproduct.productCategory eq 'Accessories')}">
 														<span>
 															<button id="addToCartButtonwl" type="${buttonType}"
 																class="blue button js-add-to-cart_wl">
@@ -404,7 +404,7 @@
 															</button>
 														</span>
 														</c:if>
-														<c:if test="${(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing')||(empty wpproduct.wishlistProductSize &&wpproduct.productCategory eq 'Footwear')||(empty wpproduct.wishlistProductSize &&wpproduct.productCategory eq 'Accessories')}">
+														<c:if test="${(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing')||(empty wpproduct.wishlistProductSize &&wpproduct.productCategory eq 'Footwear')||(showSizeGuideForFA eq 'true' &&wpproduct.productCategory eq 'Accessories')}">
 														<span id="addToCartButtonId" style="display: none">
 															<button type="button" id="addToCartButtonwl" 
 																class="blue button sizeNotSpecified_wl" data-toggle="modal"

@@ -138,6 +138,7 @@ import com.tisl.mpl.core.model.CancellationReasonModel;
 import com.tisl.mpl.core.model.MarketplacePreferenceModel;
 import com.tisl.mpl.core.model.MyRecommendationsBrandsModel;
 import com.tisl.mpl.core.model.MyRecommendationsConfigurationModel;
+import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.AddressTypeData;
@@ -4616,6 +4617,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 									wishlistProductData.setWishlistProductSize(productData1.getSize());
 								}
 							}
+							showSizeGuideForFA(entryModel.getProduct(), model);
 							wpDataList.add(wishlistProductData);
 						}
 
@@ -7026,5 +7028,48 @@ public class AccountPageController extends AbstractMplSearchPageController
 		model.addAttribute(ModelAttributetConstants.COMMENTS, commentsWithProductDataModified);
 	}
 
+	public void showSizeGuideForFA(final ProductModel productModel, final Model model)
+	{
+		boolean showSizeGuideForFA = true;
+		//AKAMAI fix
+		if (productModel instanceof PcmProductVariantModel)
+		{
+			final PcmProductVariantModel variantProductModel = (PcmProductVariantModel) productModel;
+
+
+			if (ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(variantProductModel.getProductCategoryType()))
+			{
+				final Collection<CategoryModel> superCategories = variantProductModel.getSupercategories();
+				final String configurationFA = configurationService.getConfiguration().getString(
+						"accessories.sideguide.category.showlist");
+				final String[] configurationFAs = configurationFA.split(",");
+				for (final CategoryModel supercategory : superCategories)
+				{
+					if (supercategory.getCode().startsWith("MPH"))
+					{
+						int num = 0;
+						for (final String fashow : configurationFAs)
+						{
+							if (!supercategory.getCode().startsWith(fashow))
+							{
+								num++;
+								if (num == configurationFAs.length)
+								{
+									showSizeGuideForFA = false;
+									break;
+								}
+							}
+						}
+
+						break;
+					}
+				}
+
+
+			}
+			model.addAttribute("showSizeGuideForFA", showSizeGuideForFA);
+
+		}
+	}
 
 }
