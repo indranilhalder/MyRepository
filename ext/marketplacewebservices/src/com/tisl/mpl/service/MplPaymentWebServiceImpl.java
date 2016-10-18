@@ -980,7 +980,8 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public MplPromoPriceWsDTO validateBinNumber(final String binNo, final String paymentMode, final String bankName)
+	public MplPromoPriceWsDTO validateBinNumber(final String binNo, final String paymentMode, final String bankName,
+			final String userId)
 	{
 		final MplPromoPriceWsDTO promoPriceData = new MplPromoPriceWsDTO(); //The New Returning DTO
 		boolean toProceedFlag = false;
@@ -998,7 +999,8 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 					&& !paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
 			{
 				//calling facade method to perform BIN check
-				bin = getBinService().checkBin(binNo);
+				//Added For TPR-1035
+				bin = getBinService().checkBin(binNo, paymentMode, userId, true);
 				// EBS DownTime Y
 				if (StringUtils.isNotEmpty(ebsDowntime) && ebsDowntime.equalsIgnoreCase("Y"))
 				{

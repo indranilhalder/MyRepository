@@ -490,7 +490,8 @@ public class DefaultPromotionManager extends PromotionsManager
 	{
 		boolean flag = true; //TODO: When Web Journey is ready flag must be by default false
 		boolean dataFlag = false;
-		if (null != channel && null != listOfChannel && !listOfChannel.isEmpty())
+		//if (null != channel && null != listOfChannel && !listOfChannel.isEmpty())	//TPR-969
+		if (null != channel && CollectionUtils.isNotEmpty(listOfChannel))
 		{
 			for (final EnumerationValue enumVal : listOfChannel)
 			{
@@ -510,7 +511,6 @@ public class DefaultPromotionManager extends PromotionsManager
 			}
 
 		}
-		// YTODO Auto-generated method stub
 		return flag;
 	}
 
@@ -1303,6 +1303,54 @@ public class DefaultPromotionManager extends PromotionsManager
 	}
 
 	/**
+	 * @Description: For Promotion apportioned Promotion Price
+	 * @param ctx
+	 * @param totalAdjustment
+	 * @return CustomPromotionOrderEntryAdjustAction
+	 */
+	//TPR-961
+	public CustomBuyAgetPercentageDiscountOnBAdjustAction createCustomBuyAgetPercentageDiscountOnBAdjustAction(
+			final SessionContext ctx, final AbstractOrderEntry entry, final long quantity, final double adjustment)
+	{
+		final Map parameters = new HashMap();
+		parameters.put(MarketplacecommerceservicesConstants.GUID, makeActionGUID());
+		parameters.put(MarketplacecommerceservicesConstants.AMOUNT, Double.valueOf(adjustment));
+		parameters.put(MarketplacecommerceservicesConstants.ORDERENTRY_PRODUCT, entry.getProduct(ctx));
+		parameters.put(MarketplacecommerceservicesConstants.ORDERENTRY_NUMBER, entry.getEntryNumber());
+		parameters.put(MarketplacecommerceservicesConstants.ORDERENTRY_QUANTITY, Long.valueOf(quantity));
+		return createCustomBuyAgetPercentageDiscountOnBAdjustAction(ctx, parameters);
+	}
+
+
+	/**
+	 * @param ctx
+	 * @param parameters
+	 * @return
+	 */
+	private CustomBuyAgetPercentageDiscountOnBAdjustAction createCustomBuyAgetPercentageDiscountOnBAdjustAction(
+			final SessionContext ctx, final Map attributeValues)
+
+	{
+		try
+		{
+			@SuppressWarnings("deprecation")
+			final ComposedType type = getTenant().getJaloConnection().getTypeManager()
+					.getComposedType("CustomBuyAgetPercentageDiscountOnBAdjustAction");
+			return ((CustomBuyAgetPercentageDiscountOnBAdjustAction) type.newInstance(ctx, attributeValues));
+		}
+		catch (final JaloGenericCreationException e)
+		{
+			final Throwable cause = e.getCause();
+			throw new JaloSystemException(cause, cause.getMessage(), e.getErrorCode());
+		}
+		catch (final JaloBusinessException e)
+		{
+			throw new JaloSystemException(e, "error creating CustomPromotionOrderEntryAdjustAction : " + e.getMessage(), 0);
+		}
+
+	}
+
+	/**
 	 * @Description: For Promotion apportioned Promotion Price BOGO
 	 * @param ctx
 	 * @param totalAdjustment
@@ -1508,7 +1556,7 @@ public class DefaultPromotionManager extends PromotionsManager
 		{
 			for (final AbstractPromotionRestriction restriction : restrictionList)
 			{
-				flag = false;
+				//flag = false;	//Unwanted - TPR-969
 				if (restriction instanceof DeliveryModePromotionRestriction)
 				{
 					final List<ProductModel> prodSatisfiesDelModeList = new ArrayList<ProductModel>();
@@ -1893,7 +1941,7 @@ public class DefaultPromotionManager extends PromotionsManager
 		{
 			for (final AbstractPromotionRestriction restriction : restrictionList)
 			{
-				flag = false;
+				//flag = false;	//Unwanted - TPR-969
 				if (restriction instanceof PaymentModeSpecificPromotionRestriction)
 				{
 					String paymentMode = null;
@@ -3272,6 +3320,137 @@ public class DefaultPromotionManager extends PromotionsManager
 		//				+ (endTime - startTime));
 
 		return isExcludeBrand;
+
+	}
+
+	/**
+	 *
+	 * TPR-970 changes
+	 *
+	 * @Description: This is for validating pincode specific restriction against order level
+	 * @param restrictionList
+	 * @param order
+	 * @return true
+	 */
+
+	public boolean checkPincodeSpecificRestriction(final List<AbstractPromotionRestriction> restrictionList)
+	{
+		boolean flag = false;
+		boolean isPinCodeRestrictionPresent = false;
+		final CartModel cartModel = cartService.getSessionCart();
+		if (null != cartModel.getPincodeNumber())
+		{
+			if (null == restrictionList || restrictionList.isEmpty())
+			{
+				flag = true;
+			}
+			else
+			{
+				for (final AbstractPromotionRestriction restriction : restrictionList)
+				{
+					if (restriction instanceof MplPincodeSpecificRestriction)
+					{
+						isPinCodeRestrictionPresent = true;
+						final List<State> includedStates = ((MplPincodeSpecificRestriction) restriction).getStates();
+						final List<City> excudedCity = ((MplPincodeSpecificRestriction) restriction).getCities();
+						if (includedStates.isEmpty() && excudedCity.isEmpty())
+						{
+							flag = true;
+						}
+						else if (excudedCity.isEmpty())
+						{
+							flag = isAppliedPinCodeStatesIncludes(includedStates, cartModel.getStateForPincode());
+						}
+						else
+						{
+							final boolean isValid = ((MplPincodeSpecificRestriction) restriction).isIncludeCities().booleanValue();
+							flag = checkForCityRestriction(isValid, excudedCity, includedStates, cartModel.getCityForPincode(),
+									cartModel.getStateForPincode());
+						}
+
+					}
+				}
+				if (!isPinCodeRestrictionPresent)
+				{
+					flag = true;
+				}
+			}
+
+		}
+		else
+		{
+			flag = true;
+		}
+		return flag;
+	}
+
+	/**
+	 * TPR-970 changes check for city restriction against a particular pincode
+	 *
+	 * @param isValid
+	 * @param includedStates
+	 * @param cityName
+	 * @param state
+	 * @param isCityIncluded
+	 *
+	 */
+	private boolean checkForCityRestriction(final boolean isValid, final List<City> excudedCity, final List<State> includedStates,
+			final String cityName, final String state)
+	{
+		boolean isCityIncluded = false;
+		//boolean flag = false;
+		for (final City city : excudedCity)
+		{
+			if (isValid)
+			{
+				if (city.getCityName().equalsIgnoreCase(cityName))
+				{
+					isCityIncluded = true;
+					break;
+				}
+			}
+			else
+			{
+				if (city.getCityName() != cityName)
+				{
+					isCityIncluded = true;
+					break;
+				}
+			}
+
+		}
+		return isCityIncluded;
+
+	}
+
+
+
+
+
+	/**
+	 * TPR-970 changes checking whether a particular state exits against a pincode or not
+	 *
+	 * @param includedStates
+	 * @param string
+	 *
+	 */
+	private boolean isAppliedPinCodeStatesIncludes(final List<State> includedStates, final String pinCode)
+	{
+		boolean flag = false;
+		if (CollectionUtils.isEmpty(includedStates))
+		{
+			flag = true;
+		}
+		for (final State state : includedStates)
+		{
+			if (state.getCountrykey().equalsIgnoreCase(pinCode))
+			{
+				flag = true;
+				break;
+			}
+
+		}
+		return flag;
 
 	}
 }

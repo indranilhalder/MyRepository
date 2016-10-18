@@ -160,6 +160,12 @@ public class MplCouponController
 				{
 					data.setRedeemErrorMsg(MarketplacecouponConstants.USERINVALID);
 				}
+				/* TPR-1075 Changes Start */
+				else if (e.getMessage().contains(MarketplacecouponConstants.EXCFIRSTPURUSERINVALID))
+				{
+					data.setRedeemErrorMsg(MarketplacecouponConstants.FIRSTPURUSERINVALID);
+				}
+				/* TPR-1075 Changes End */
 			}
 			catch (final EtailNonBusinessExceptions e)
 			{
@@ -175,6 +181,7 @@ public class MplCouponController
 				data = setRedDataForException(data, cartModel);
 				data.setRedeemErrorMsg(MarketplacecouponConstants.ISSUE);
 			}
+
 		}
 		//Redeem coupon for orderModel
 		else

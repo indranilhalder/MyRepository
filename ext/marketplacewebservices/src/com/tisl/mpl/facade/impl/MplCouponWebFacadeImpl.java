@@ -119,7 +119,9 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 					//getSessionService().removeAttribute("bank");	//Do not remove---needed later
 					if (data != null && data.getCouponDiscount() != null && data.getCouponDiscount().getValue() != null)
 					{
-						applycouponDto.setCouponDiscount(data.getCouponDiscount().getValue().toPlainString());
+						//Price data new calculation for 2 decimal values
+						applycouponDto.setCouponDiscount(String.valueOf(data.getCouponDiscount().getValue()
+								.setScale(2, BigDecimal.ROUND_HALF_UP)));
 					}
 
 					applycouponDto.setTotal(String.valueOf(mplCheckoutFacade.createPrice(cartModel, cartModel.getTotalPriceWithConv())
@@ -196,6 +198,11 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 			else if (e.getMessage().contains(MarketplacecouponConstants.EXCUSERINVALID))
 			{
 				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9512);
+			}
+			/* Added for TPR-1290 */
+			else if (e.getMessage().contains(MarketplacecouponConstants.EXCFIRSTPURUSERINVALID))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9330);
 			}
 		}
 		catch (final EtailBusinessExceptions e)

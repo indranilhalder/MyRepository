@@ -2628,6 +2628,8 @@ public class CartsController extends BaseCommerceController
 				LOG.debug("************ Logged-in cart mobile checking validity of promotion **************" + cartGuid);
 				if (!mplCheckoutFacade.isPromotionValid(cart))
 				{
+					//Added For TPR-1035
+					//bin = getBinService().checkBin(binNo, paymentMode, null, false);
 					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9075);
 				}
 				LOG.debug("************ Logged-in cart mobile promotion is valid **************" + cartGuid);

@@ -358,10 +358,9 @@
 			sizeSpan.text(": " + currentSize);
 		}
 
-	}
-
+	},
 };
-
+	
 /**
  * displaying thumb nails details
  */
@@ -886,6 +885,7 @@ function setSeller(index) {
 /* refeshing seller data after getting response from pincode service */
 /* refeshing seller data after getting response from pincode service */
 function refreshSellers(dataArray, ussid) {
+	console.log("dataArray"+dataArray+"ussid"+ussid);
 	var stockArray = [];
 
 	var nonservicableussids = [];
@@ -918,17 +918,12 @@ function refreshSellers(dataArray, ussid) {
 				}
 				usidList[i] = "'" + dataArray[i]['ussid'] + "'";
 				count = count + 1;
-				/*
-				 * if (dataArray[i]['validDeliveryModes'] == "" ||
-				 * dataArray[i]['validDeliveryModes'] == null) {
-				 */
 				if (dataArray[i]['stockCount'] == 0) {
+					console.log("ussid"+dataArray[i]['ussid']);
 					ussidListWithNoStock[++n] = "'" + dataArray[i]['ussid']
 							+ "'";// setting all the skuIds without stock
 
 				}
-				// else{
-               
 				var deliveryModes = dataArray[i]['validDeliveryModes'];
 				for ( var j in deliveryModes) {
 					var mode = deliveryModes[j]['type'];
@@ -941,24 +936,19 @@ function refreshSellers(dataArray, ussid) {
 					if (mode == 'CNC') {
 						skuIdForCNC[++indx] = "'" + dataArray[i]['ussid'] + "'";
 					}
-					// var stockDataArray=new Object();
 					var stockDataArray = {}
 					stockDataArray.ussid = dataArray[i]['ussid'];
 					stockDataArray.stock = dataArray[i]['stockCount'];
 					stockDataArrayList[++stockIndx] = stockDataArray;
 					$("#stockDataArray")
 							.val(JSON.stringify(stockDataArrayList));
-
 				}
-
-				// }
 			} else {
 				nonservicableussids[++m] = dataArray[i]['ussid'];
 			}
 
 		}
 	}
-
 	// refreshing seller list after getting response from pincode
 	if (count == 0) {
 		$("#otherSellerInfoId").hide();
@@ -971,20 +961,30 @@ function refreshSellers(dataArray, ussid) {
 	$("#otherSellersCount").html(count);
 	var usidList = usidList.join(",");
 	var ussidListWithNoStock = ussidListWithNoStock.join(",");
-
-	$("#sellersSkuListId").val(nonservicableussids);
-	$("#skuIdForED").val(skuIdsForED);
-	$("#skuIdForHD").val(skuIdsForHD);
-	$("#skuIdForCNC").val(skuIdForCNC);
-	$("#skuIdForCod").val(skuForCodList);
-	$("#skuIdsWithNoStock").val(ussidListWithNoStock);
-	$("#isPinCodeChecked").val("true");
-	$("#sellerListId").html(contentData);
+	sessionStorage.setItem("notServicables",nonservicableussids);
+	sessionStorage.setItem("skuIdsForED",skuIdsForED);
+	sessionStorage.setItem("skuIdsForHD",skuIdsForHD);
+	sessionStorage.setItem("skuIdForCNC",skuIdForCNC);
+	sessionStorage.setItem("skuIdForCod",skuIdForCNC);
+	sessionStorage.setItem("skuIdForCNC",skuIdForCNC);
+	sessionStorage.setItem("skuIdsWithNoStock",ussidListWithNoStock);
+	sessionStorage.setItem("pincodeChecked","true");
+	sessionStorage.setItem("stockDataArrayList",stockDataArrayList);
+	sessionStorage.setItem("pincodeChecked","true");
+//	$("#sellersSkuListId").val(nonservicableussids);
+//	$("#skuIdForED").val(skuIdsForED);
+//	$("#skuIdForHD").val(skuIdsForHD);
+//	$("#skuIdForCNC").val(skuIdForCNC);
+//	$("#skuIdForCod").val(skuForCodList);
+//	$("#skuIdsWithNoStock").val(ussidListWithNoStock);
+//	$("#isPinCodeChecked").val("true");
+//	$("#sellerListId").html(contentData);
 	if (isproductPage == 'false') {
 		$("#sellerTable").show();
 		$("#other-sellers-id").show();
 		if (count > 0) {
-			fetchAllSellers(stockDataArrayList);
+			fetchAllSellers();
+		//	repopulateSellers(stockDataArrayList,nonservicableussids,skuIdsForED,skuIdsForHD,skuIdForCNC,skuForCodList,ussidListWithNoStock);
 		} else {
 			$("#sellerTable").hide();
 			$("#other-sellers-id").hide();
@@ -1043,7 +1043,6 @@ $(function() {
 						//TPR900
 						if($("#pdpPincodeCheck").text() == 'Check Availability')
 						{
-							//alert($("#pdpPincodeCheck").text());
 							pinCodeChecked = true;
 							$("#home").hide();
 							$("#homeli").hide();
@@ -1159,8 +1158,12 @@ $(function() {
 											/*TPR-642 & 640 ends*/
 												return false;
 											} else {
+												// TPR-1375
+												//populating  buybox details agian after checking pincode response
+												repopulateBuyBoxDetails(data,buyBoxList);
+												var buyboxSeller = $("#ussid").val();
+												//alert("buyboxseller"+buyboxSeller);
 												// refreshing seller list after
-												// getting pincode response
 												refreshSellers(data, buyboxSeller);
 												deliverModeTealium = new Array();
 												for ( var i in data) {
@@ -1380,7 +1383,8 @@ function isOOS(){
 /**
  * This method is used to display delivery modes against a sku id
  */
- var availibility = null;
+var availibility = null;
+var buyBoxList=[];
 $( document ).ready(function() {
 //function fetchPrice() {
 	//$("#outOfStockPinCodeMsg").hide();
@@ -1389,21 +1393,17 @@ $( document ).ready(function() {
 	if ($("#variant,#sizevariant option:selected").val() != "#") {
 		selectedSize = true;
 	}
+	
 	var isproductPage = $("#isproductPage").val();
 	$("#addToCartButton").show();
 	$("#outOfStockId").hide();
 	var productCode = $("#product").val();
 	var variantCodes = $("#product_allVariantsListingId").val();
-	//alert(variantCodes);
 	var variantCodesJson = "";
 	if(typeof(variantCodes)!= 'undefined' && variantCodes!= ""){
 		variantCodes = variantCodes.split(",");
 		variantCodesJson = JSON.stringify(variantCodes);
 	}
-	//alert(variantCodesJson);
-	//var code = productCode+","+variantCodes;
-	//alert("----"+productCode);
-	
 	//changes done to restrict buybox AJAX call from every page.
 	if(typeof productCode === 'undefined' || $('#pageType').val()=='cart')
 		{
@@ -1421,6 +1421,13 @@ $( document ).ready(function() {
 		cache : false,//added to resolve browser specific the OOS issue
 		dataType : "json",
 		success : function(data) {
+			//TPR-1375
+			for(var i in data['buyboxList'] ){
+				buyBoxList.push(data['buyboxList'][i]);
+			}
+			if($("#isProductPage").val()=='true'){
+			sessionStorage.setItem('servicableList',"");
+			}
 			//TISPRM-56
 			var stockInfo = data['availibility'];
 			availibility = stockInfo;
@@ -1581,7 +1588,6 @@ $( document ).ready(function() {
 					var mrpPrice = data['mrp'];
 					var mop = data['price'];
 					var savingsOnProduct= data['savingsOnProduct'];
-					/*alert(savingsOnProduct);*/
 					$("#stock").val(data['availablestock']);
 					$(".selectQty").change(function() {
 						$("#qty").val($(".selectQty :selected").val());
@@ -1599,7 +1605,10 @@ $( document ).ready(function() {
 						fetchAllSellers();
 						$("#minPrice").html(data['minPrice'].formattedValue);
 					}
-				}
+					//Added for displaying offer messages other than promotion, TPR-589	
+				//	ACC.productDetail.
+					populateOfferMsgWrapper(productCode, sellerID, null);
+				}	
 
 			} 
 				else {
@@ -1709,8 +1718,6 @@ function displayDeliveryDetails(sellerName) {
 				} else {
 					var start=$("#expressStartId").val();
 					var end=$("#expressEndId").val();
-					
-					//alert(pretext);
 					$("#expressDate").html(pretext+start+"-"+end+posttext);
 					$("#express").show();
 					$("#expressli").show();
@@ -1769,16 +1776,20 @@ function displayDeliveryDetails(sellerName) {
 function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 	//alert("mrp "+ mrp.formattedValue +"mop "+mop.formattedValue +"spPrice "+spPrice.formattedValue +"savingsOnProduct "+ savingsOnProduct.formattedValue);
 	if(null!= mrp){
+		$("#mrpPriceId").html("");
 		$("#mrpPriceId").append(mrp.formattedValue);
 	}
 	if(null!= mop){
+		$("#mopPriceId").html("");
 		$("#mopPriceId").append(mop.formattedValue);
 	}
 	if(null!= spPrice){
+		$("#spPriceId").html("");
 		$("#spPriceId").append(spPrice.formattedValue);
 	} 
 	////TISPRM-33 , TPR-140
 	if(null!= savingsOnProduct){
+		$("#savingsOnProductId").html("");
 		$("#savingsOnProductId").append("(-"+savingsOnProduct+" %)");
 	} 
 
@@ -1907,7 +1918,6 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 	// EMI change ends
 
 }
-
 
 function openPopForBankEMI() {
 	var productVal = $("#prodPrice").val();
@@ -2360,7 +2370,6 @@ function dispPriceForSizeGuide(mrp, mop, spPrice, savingsOnProduct) {
 			$("#sizemrpPriceId").show();
 			$("#sizespPriceId").show();
 		} else {
-			//alert("mop!=mrp sp");
 			$('#sizemrpPriceId').css('text-decoration', 'line-through');
 			$("#sizemrpPriceId").show();
 			$("#sizespPriceId").show();
@@ -2372,7 +2381,6 @@ function dispPriceForSizeGuide(mrp, mop, spPrice, savingsOnProduct) {
 				$("#sizemrpPriceId").removeClass("old").addClass("sale");
 				$("#sizemrpPriceId").show();
 			} else {
-				//alert("mop!=mrp");
 				$('#sizemrpPriceId').css('text-decoration', 'line-through');
 				$("#sizemrpPriceId").show();
 				$("#sizemopPriceId").show();
@@ -2535,7 +2543,6 @@ function openPop_SizeGuide() {
 			}
 
 			else if (data == "" || data == []) {
-				//alert("fasle");
 				loadDefaultWishListName_SizeGuide();
 
 			} else {
@@ -2624,7 +2631,6 @@ function loadDefaultWishListName_SizeGuide() {
 			+ "<tr><td><input type='text' id='defaultWishName_sizeGuide' value='"
 			+ wishName + "'/></td></td></tr>";
 	$("#wishlistTbodyId_sizeGuide").html(wishListContent);
-	//alert(wishListContent+" wishListContent");
 
 	}
 	function selectWishlist_SizeGuide(i) {
@@ -2652,11 +2658,9 @@ function loadDefaultWishListName_SizeGuide() {
 		var msg=$('#wishlistnotblank_sizeGuide').text();
 		$('#addedMessage_sizeGuide').show();
 		$('#addedMessage_sizeGuide').html(msg);
-		//alert("1");
 		return false;
 	}
 	if(wishName==undefined||wishName==null){
-		//alert("2");
 		return false;
 	}
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
@@ -2831,7 +2835,7 @@ function loadDefaultWishListName_SizeGuide() {
 			}
 		})
 		
-		$(document).on("click",".product-detail .promo-block .pdp-promo-title",function(e){
+		$(document).on("click",".product-detail .promo-block .pdp-promo-title, .pdp-promo-title-link",function(e){
 			e.preventDefault();
 			offerPopup($("#promotionDetailsId").html());
 		});
@@ -2874,6 +2878,43 @@ function loadDefaultWishListName_SizeGuide() {
 				$("#wishlistErrorId_pdp").html("Could not add the product in your wishlist");
 			}
 		});
+	}
+	
+	
+	/*TPR-1375*/
+
+	 //TPR-1375 populating the buybox details after chceking servicable seller list
+	function repopulateBuyBoxDetails(data,buyBoxList){
+		var isproductPage = $("#isproductPage").val();
+		var servicableUssids=[];
+		var servicableList=[];
+		var sellerList=[];
+		var nonServicableList=[];
+		for (var i = 0; i < data.length; i++) {
+				if (data[i]['isServicable'] == 'Y') {
+					servicableUssids.push(data[i]['ussid']);
+				}
+	      }
+		var allOosFlag=true;
+		for(var i in buyBoxList){
+			if(buyBoxList[i]['available']>0){
+				allOosFlag=false;
+			}
+			//alert(servicableUssids+"###"+buyBoxList[i]['sellerArticleSKU']+"$$$"+servicableUssids.indexOf(buyBoxList[i]['sellerArticleSKU']));
+			if(servicableUssids!="" && servicableUssids.indexOf(buyBoxList[i]['sellerArticleSKU'])!=-1){
+			servicableList.push(buyBoxList[i]);
+			}
+			if(servicableUssids!="" && servicableUssids.indexOf(buyBoxList[0]['sellerArticleSKU'])==-1){
+				    nonServicableList.push(buyBoxList[i]);
+			}
+		}
+		sessionStorage.setItem('servicableList', JSON.stringify(servicableList[0]));
+		sessionStorage.setItem('isproductPage', isproductPage);
+		sessionStorage.setItem('allOosFlag', allOosFlag);
+		sessionStorage.setItem('otherSellerCount', servicableList.length-1);
+		sessionStorage.setItem('pincodeChecked', 'Y');
+		//TPR-1375 populating buybox details so that buybox seller should be servicable
+		populateBuyBoxData(JSON.parse(sessionStorage.getItem("servicableList")),servicableList.length-1,isproductPage,allOosFlag);
 	}
 	
 	/*Offer popup*/

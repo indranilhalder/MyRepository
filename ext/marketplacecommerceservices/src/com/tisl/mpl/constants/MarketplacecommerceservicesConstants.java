@@ -97,12 +97,14 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String LINK_PASSWORD_CHANGE = "/login/pw/change";
 
 	//For Promotion Intercepter
+
 	public static final String PROMOCODE = "Promotion Identifier :".intern();
 	public static final String PROMOPRODUCT = "Promotion Product :".intern();
 	public static final String PROMOCATEGORY = "Promotion Category :".intern();
 	public static final String PROMOPRIORITY = "Promotion Priority :".intern();
 	public static final String PRODUCT_PRICE_COLUMN = "price".intern();
 	public static final String PRESENT_CATEGORY = "Present Category :".intern();
+	public static final String PROMO_ERROR_MESSAGE = "Cannot exceed 25 characters.".intern();
 
 	//For SuperCategoryDecorator
 	public static final String CONFIGURATION_SER = "configurationService";
@@ -869,6 +871,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9325 = "B9325";
 	public static final String B9326 = "B9326";
 	public static final String B9327 = "B9327";
+	// Added for TPR-1290
+	//public static final String B9330 = "B9330";
 	public static final String B9328 = "B9328";
 	//Mobile web service error codes ends
 
@@ -1503,6 +1507,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String USER = "User".intern();
 	public static final String DATE = "Date".intern();
+	//TPR-1075
+	public static final String NEWCUSTOMER = "NewCustomer".intern();
+	public static final String NEWUSERRESTVIOLATION = "Voucher for New Customer is violated".intern();
+	public static final String VOUCHERINVALIDNEWCUST = "Voucher for New Customer : ".intern();
 	public static final String VOUCHERNOTFOUND = "Voucher not found: ".intern();
 	public static final String VOUCHERNOTREDEEMABLE = "Voucher cannot be redeemed: ".intern();
 	public static final String VOUCHERINVALIDUSER = "User not valid for : ".intern();
@@ -1688,6 +1696,28 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	// Sonar Fix
 	public static final String ALLVARIANTSSTRING = "allVariantsString";
 
+	//	public static final String PRODUCTOFFERDETMSGQUERY = "SELECT {prodOffrDet.sellerId},{offerDet.message},{offerDet.messageDet},{prodOffrDet.startDate},{prodOffrDet.endDate} FROM {OfferDetail as offerDet}, {ProductOfferDetail as  prodOffrDet} "
+	//			+ "WHERE {prodOffrDet.productId}= ?productId " + "AND {prodOffrDet.offer} = {offerDet.pk} "
+	//			+ "AND {prodOffrDet.startDate} <= ?sysdate AND {prodOffrDet.endDate} >= ?sysdate".intern();
+
+	//Added for displaying Non HMC configurable offer messages , TPR-589
+	public static final String PRODUCTOFFERDETMSGQUERY = "SELECT {prodOffrDet.sellerId},{offerDet.message},{offerDet.messageDet},{prodOffrDet.startDate},{prodOffrDet.endDate} FROM {OfferDetail as offerDet}, {ProductOfferDetail as  prodOffrDet} WHERE {prodOffrDet.productId}= ?productId AND {prodOffrDet.offer} = {offerDet.pk} AND {prodOffrDet.startDate} <= ?sysdate AND {prodOffrDet.endDate} >= ?sysdate"
+			.intern();
+
+
+
+	public static final String OFFERPRODUCTID = "productId".intern();
+
+	public static final String MESSAGE = "message".intern();
+	public static final String MESSAGEDET = "messageDet".intern();
+	public static final String MESSAGESTARTDATE = "startDate".intern();
+	public static final String MESSAGEENDDATE = "endDate".intern();
+
+	//Added For TPR-1035
+	public static final String BIN_ERROR_HEADER = "BIN,CUSTOMER_ID,PAYMENTMODE,DATE,TYPE_OF_ERROR".intern();
+	public static final String BIN_ERROR_FILE_LOCATION = "bin.errorreport.csv.path".intern();
+	public static final String BIN_ERROR_FILE_PATH = "${HYBRIS_DATA_DIR}/feed/report".intern();
+	public static final String BIN_ERROR_FILE_NAME = "binErrorReport".intern();
 	//Added for TPR-798
 	public static final String MPLCATELOG = "internal.campaign.catelog";
 	public static final String MPLCATALOGNNAME = "internal.campaign.catalogVersionName";

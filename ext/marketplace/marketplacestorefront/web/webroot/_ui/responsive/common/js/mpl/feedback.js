@@ -123,7 +123,14 @@
 	
 	
 $(document).ready(function(){
+	/*alert("fhgfhfgh");
+	$(".shopstyle-indicator li").on("click", function(){
 
+
+	    $("#rotatingImageTimeout").trigger("to.owl.carousel", [toIndex, $(this).index , true]);
+
+
+	});*/
 
 	//TISEEII-640 issue fix -- Start
 	$(".facet.js-facet .js-facet-name").each(function(){
@@ -1859,6 +1866,60 @@ $(document).ready(function() {
 	sizeSwatch();
 	
 	
+	/*CLP section js starts*/
+	
+	//Top Categories section
+	$(".top_categories .top_categories_section:not(:first-child)").wrapAll("<div class='top_categories_wrapper'></div>");
+	$(".top_categories").find(".top_categories_wrapper>.top_categories_section:nth-child(3n + 1)").each(function(){
+		$(this).nextAll().slice(0, 2).wrapAll("<div class='top_categories_section sub_categories'>");
+		});
+	//Style Edit section
+		$(".style_edit > div").slice(0,2).wrapAll("<div class='style_edit_left'>");
+	//Top Brands section
+		$(".top_brands > div").slice(1).wrapAll("<div class='clp_top_brands'>");
+	//Best Seller section
+		$(".best_seller .best_seller_section:first-child").after("<div class='Menu'><div class='mobile selectmenu'></div><ul></ul></div>");
+		$(".best_seller .best_seller_section").each(function(){
+		var li_text= $(this).children("h1").text();
+		if(li_text != ""){
+		$(".best_seller .Menu ul").append("<li>"+li_text+"</li>");
+		}
+		});
+		$(".best_seller .Menu ul li:nth-child(3)").addClass("active");
+		$(".best_seller .best_seller_section:nth-of-type(4)").addClass("show_clplist");
+		$(".best_seller .Menu .mobile.selectmenu").text($(".best_seller .Menu ul li.active").text());
+		$(".best_seller .Menu ul li").off("click").on("click", function(){
+			$(".best_seller .Menu ul li").removeClass("active");
+			$(this).addClass("active");
+			var active_text = $(this).text();
+		$(".best_seller .best_seller_section").each(function(){
+		var li_text= $(this).children("h1").text();
+		if(li_text == active_text){
+		$(".best_seller .best_seller_section").removeClass("show_clplist").addClass("hide_clplist");
+		$(this).removeClass("hide_clplist").addClass("show_clplist");
+		}
+		});
+		$(".best_seller .Menu .mobile.selectmenu").text(active_text);
+		$('.best_seller .Menu ul').slideUp();
+		});
+		$(".best_seller .Menu .selectmenu").off("click").on("click", function() {
+            $(this).next().slideToggle();
+        });
+		//Winter Launch section
+		$(".winter_launch  > .winter_launch_section").slice(-4).wrapAll("<div class='clp_winter_launch_wrapper'>");
+		//Top deal blog section
+		$(".top_deal  > a").nextAll().wrapAll("<div class='blog_container'>");
+		var clp_blog_count = $(".top_deal  > .blog_container").children().length;
+		$(".top_deal  > .blog_container").children().slice(0,clp_blog_count/2).wrapAll("<div class='blog_feature'>");
+		$(".top_deal  > .blog_container").children().slice(1,clp_blog_count - 1).wrapAll("<div class='blog_feature'>");
+		$(".top_deal  > .blog_container > .blog_feature").each(function(){
+			$(this).children().last().prevAll().wrapAll("<div class='blog_content'>");
+		});
+		//Shop For section
+		$(".shop_for .shop_for_component:not(:first-child)").slice(0,3).wrapAll("<div class='shop_for_left_wrapper'></div>");
+		$(".shop_for > .shop_for_left_wrapper").nextAll().slice(0,4).wrapAll("<div class='shop_for_links'>");
+		
+		/*CLP section js ends*/
 });
 $(window).resize(function() {
 
@@ -2151,17 +2212,83 @@ function callGigyaWhenNotMinified(){
 
 /*TPR-198 : Page reload on SortBy and ViewBy*/
 //Sort by filter
+//TPR- 565 custom sku addded functionality
 function sortByFilterResult(top){
-	 $("#hidden-option-width").html($(".sort-refine-bar select").find('option:selected').text());
-	 var option_width=$("#hidden-option-width").width() + 22;
-	$(".sort-refine-bar select.black-arrow-left").css("background-position-x",option_width);
 	
-	$('#sortForm'+top).submit();
+	if($("input[name=customSku]").length > 0){
+		var pageNo = 1;
+		if ($("#paginationFormBottom .pagination.mobile li.active span").length) {
+			pageNo = $("#paginationFormBottom .pagination.mobile li.active span").text();
+			if (typeof(pageNo) === "undefined"){
+				pageNo = 1;
+			}
+		}  
+		var requiredUrl = '/CustomSkuCollection/' + $("input[name=customSkuCollectionId]").val() + '/page-' + pageNo;
+		var dataString = $('#sortForm' + top).serialize() + "&pageSize=" + $("select[name=pageSize]").val();
+		$.ajax({
+			contentType : "application/json; charset=utf-8",
+			url : requiredUrl,
+			data : dataString,
+			success : function(response) {
+				console.log(response);
+				// putting AJAX respons to view
+				$('#facetSearchAjaxData .right-block, #facetSearchAjaxData .bottom-pagination, #facetSearchAjaxData .facet-list.filter-opt').remove();
+				$('#facetSearchAjaxData .left-block').after(response);
+			},
+			error : function(xhr, status, error) {				
+				console.log("Error >>>>>> " + error);
+			},
+			complete: function() {
+				// AJAX changes for custom price filter
+				
+			}
+		});
+		
+	}else{
+		$("#hidden-option-width").html($(".sort-refine-bar select").find('option:selected').text());
+		 var option_width=$("#hidden-option-width").width() + 22;
+		$(".sort-refine-bar select.black-arrow-left").css("background-position-x",option_width);
+		
+		$('#sortForm'+top).submit();
+	}
+	
 }
 
 //View by filter
+//TPR- 565 custom sku addded functionality
 function viewByFilterResult(top){
-	$('#pageSize_form'+top).submit();
+	if($("input[name=customSku]").length > 0){
+		var pageNo = 1;
+		if ($("#paginationFormBottom .pagination.mobile li.active span").length) {
+			pageNo = $("#paginationFormBottom .pagination.mobile li.active span").text();
+			if (typeof(pageNo) === "undefined"){
+				pageNo = 1;
+			}
+		}		   
+		var requiredUrl = '/CustomSkuCollection/' + $("input[name=customSkuCollectionId]").val() + '/page-' + pageNo;
+		var dataString = $('#pageSize_form' + top).serialize();
+		$.ajax({
+			contentType : "application/json; charset=utf-8",
+			url : requiredUrl,
+			data : dataString,
+			success : function(response) {
+				console.log(response);
+				// putting AJAX respons to view
+				$('#facetSearchAjaxData .right-block, #facetSearchAjaxData .bottom-pagination, #facetSearchAjaxData .facet-list.filter-opt').remove();
+				$('#facetSearchAjaxData .left-block').after(response);
+			},
+			error : function(xhr, status, error) {				
+				console.log("Error >>>>>> " + error);
+			},
+			complete: function() {
+				// AJAX changes for custom price filter
+				
+			}
+		});
+		
+	}else{
+		$('#pageSize_form'+top).submit();
+	}	
 }
 /*Filter scroll changes start*/
 $(window).on("scroll",function(){
@@ -2222,6 +2349,30 @@ $(document).ajaxComplete(function(){
 		$("body").find(".content-block-slider.electronic-brand-slider").removeClass("timeout-slider");
 	}
 });
+
+/*TPR-179(Shop The Style start)*/
+$(document).ready(function(){
+	
+	$(".timeout-slider").find(".owl-item.active").find(".item.slide").click(function(){
+		var link = $(this).find("a").attr("href");
+		console.log(link);
+	});
+	
+	$(".item.slide").find("a").click(function(){
+		  var link= $(this).attr("href"); //$(".item.slide").find("a").attr("href"); 
+		  var sublink=link.substr(0, link.indexOf('?')); 
+		  var id = "#"+sublink.split("#")[1];
+		  console.log(id);
+		  $('html, body').animate({
+		        scrollTop: $(id).offset().top -100
+		    }, 1000);
+	});
+});
+
+
+
+/*END TPR-179(Shop The Style start)*/
+
 /*checkout login error start*/
 $(document).ready(function() {
 	 $(window).on('load resize',function(){	
@@ -2267,24 +2418,6 @@ $(document).ready(function(){
 	});
 	
 });
-
-/*checkout login error start*/
-$(document).ready(function() {
-	 $(window).on('load resize',function(){	
-		 header_ht = $("header").outerHeight();
-$("body:not(.page-checkout-login) .top.checkout-top .content").css("margin-top",header_ht);
-if ($("body.page-checkout-login .global-alerts").length > 0){
-	$(".top.checkout-top .content").css("margin-top","0px");
-	$(".global-alerts").css("margin-top",header_ht+"px");
-}
-$(document).click(".global-alerts .close", function(){
-	$(".global-alerts").css("margin-top","0px");
-	$(".top.checkout-top .content").css("margin-top",header_ht+"px");
-});
-	 });
-});
-/*checkout login error end */
-
 
 var ia_prod;
 $(window).resize(function(){
@@ -2410,4 +2543,48 @@ $(document).ready(function(){
 	
 });
 /* TPR-1601 checkout progress bar end  */
-	
+
+//----BLP------//
+//--top category section---//
+/*$(".top_categories_blp").first().find("ul.categories.count-3>li:nth-child(3n + 1)").each(function(){
+		$(this).nextAll().slice(0, 2).wrapAll("<li class='sub_li_blp'><ul class='sub_ul_blp'>");
+		});*/
+
+
+$(".top_categories_blp .top_categories_section_blp:not(:first-child)").wrapAll("<div class='top_categories_wrapper_blp'></div>");
+$(".top_categories_blp").find(".top_categories_wrapper_blp>.top_categories_section_blp:nth-child(3n + 1)").each(function(){
+	$(this).nextAll().slice(0, 2).wrapAll("<div class='top_categories_section_blp sub_categories_blp'>");
+	});
+//--top category section end---//
+//--top brands section----//
+$(".blp_top_brands > div").slice(1).wrapAll("<div class='top_brands_blp'>");
+//--top brands section end----//
+//---style edit section start---//
+$(".style_edit_blp > div").slice(0,3).wrapAll("<div class='style_edit_left_blp'>");
+//---style edit section end-----//
+//---feature collection section start---//
+$(".featured_collection  > .featured_collection_section").slice(-4).wrapAll("<div class='blp_featured_collection_wrapper'>");
+//----feature collection section end-----//
+//--shop for section----//
+/*$(".shop_for_blp > a").slice(0,4).wrapAll("<div class='shop_for_links_blp'>");*/
+
+$(".shop_for_blp .shop_for_component_blp:not(:first-child)").slice(0,3).wrapAll("<div class='shop_for_left_wrapper_blp'></div>");
+$(".shop_for_blp > .shop_for_left_wrapper_blp").nextAll().slice(0,4).wrapAll("<div class='shop_for_links_blp'>");
+//--shop for section end----//
+//---shop the look section start----//
+$(".shop_the_look > div").slice(2,4).wrapAll("<div class='shop_the_look_left'>");
+//----shop the look section end-----//
+//----blog section start------//
+$(".top_deal_blp  > a").nextAll().wrapAll("<div class='blog_container_blp'>");
+var blp_blog_count = $(".top_deal_blp  > .blog_container_blp").children().length;
+$(".top_deal_blp  > .blog_container_blp").children().slice(0,blp_blog_count/2).wrapAll("<div class='blog_feature_blp'>");
+$(".top_deal_blp  > .blog_container_blp").children().slice(1,blp_blog_count - 1).wrapAll("<div class='blog_feature_blp'>");
+$(".top_deal_blp  > .blog_container_blp > .blog_feature_blp").each(function(){
+	$(this).children().last().prevAll().wrapAll("<div class='blog_content_blp'>");
+});
+//-----blog section end------//
+//-----Logo slot start------//
+$(".common_logo_slot > div").slice(0,2).wrapAll("<div class='common_logo_slot_wrapper'>");
+//-----Logo slot end------//
+
+//-----BLP------//

@@ -29,6 +29,7 @@ import de.hybris.platform.util.DiscountValue;
 import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.VoucherService;
 import de.hybris.platform.voucher.model.DateRestrictionModel;
+import de.hybris.platform.voucher.model.NewCustomerRestrictionModel;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.voucher.model.RestrictionModel;
 import de.hybris.platform.voucher.model.UserRestrictionModel;
@@ -56,6 +57,7 @@ import com.tisl.mpl.data.VoucherDisplayData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
+import com.tisl.mpl.model.UnregisteredUserRestrictionModel;
 
 
 /**
@@ -359,7 +361,6 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 					{
 						throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTFOUND + voucherCode);
 					}
-
 					LOG.debug("Step 4:::Voucher is present and value is not negative");
 					if (!checkVoucherIsApplicable(voucher, voucherCode, cartModel)) //Checks whether voucher is applicable
 					{
@@ -373,6 +374,12 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 						{
 							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINVALIDUSER + voucherCode);
 						}
+						/* TPR-1075 Changes Start */
+						else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.NEWCUSTOMER))
+						{
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINVALIDNEWCUST + voucherCode);
+						}
+						/* TPR-1075 Changes End */
 						else
 						{
 							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINAPPLICABLE + voucherCode);
@@ -631,12 +638,21 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				error = MarketplacecommerceservicesConstants.DATE;
 				break;
 			}
-			else if (restriction instanceof UserRestrictionModel)
+			//Unregisterd Users Restriction [TPR-1076]
+			else if (restriction instanceof UserRestrictionModel || restriction instanceof UnregisteredUserRestrictionModel)
 			{
 				LOG.error(MarketplacecommerceservicesConstants.USERRESTVIOLATION);
 				error = MarketplacecommerceservicesConstants.USER;
 				break;
 			}
+			/* TPR-1075 Changes Start */
+			else if (restriction instanceof NewCustomerRestrictionModel)
+			{
+				LOG.error(MarketplacecommerceservicesConstants.NEWUSERRESTVIOLATION);
+				error = MarketplacecommerceservicesConstants.NEWCUSTOMER;
+				break;
+			}
+			/* TPR-1075 Changes End */
 			else
 			{
 				continue;

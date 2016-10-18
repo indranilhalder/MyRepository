@@ -972,9 +972,16 @@
 		<property name="sellerAssociationstatus" type="String" />
 		<!-- TPR-797 changed as per mail-->
 		<property name="discount" type="String" />
+		<property name="productOfferMsg"  type="com.tisl.mpl.wsdto.ProductOfferMsgDTO" />	
 		<property name="allOOStock" type="Boolean" />
 	</bean>
-
+	<!-- 		Added for OfferDetail of  a product TPR-TPR-1299 -->
+	<bean class="com.tisl.mpl.wsdto.ProductOfferMsgDTO">
+	<property name="messageDetails" type="String" />
+	<property name="messageID" type="String" />
+	<property name="startDate" type="String" />
+	<property name="endDate" type="String" /></bean>
+	
 	<bean class="com.tisl.mpl.wsdto.KnowMoreDTO">
 		<property name="knowMoreItem" type="java.lang.String"></property>
 	</bean>
@@ -1665,6 +1672,11 @@
 		<property name="componentType" type="String" />
 	</bean>
 
+    <bean class="com.tisl.mpl.wsdto.ProductComponentWsDTO">
+    	<property name="productList" type="java.util.List&lt;com.tisl.mpl.wsdto.ProductListComponentWsDTO>"/>
+       	<property name="componentType" type="String" />
+    </bean> 
+
 	<bean class="com.tisl.mpl.wsdto.MplPageWsDTO">
 		<property name="sectionId" type="String" />
 		<property name="textComponents"
@@ -1673,6 +1685,7 @@
 			type="java.util.List&lt;com.tisl.mpl.wsdto.BannerComponentWsDTO>" />
 		<property name="productComponents"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.ProductListComponentWsDTO>" />
+			<property name="productSliderComponents" type="java.util.List&lt;com.tisl.mpl.wsdto.ProductComponentWsDTO>"/>
 		<property name="bannerslistComponents"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.ImageListComponentWsDTO>" />
 		<property name="sectionName" type="String" />

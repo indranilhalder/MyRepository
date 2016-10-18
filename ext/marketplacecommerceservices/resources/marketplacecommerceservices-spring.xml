@@ -1807,6 +1807,43 @@
 	</bean>
 	<!-- Bean for POC Search ends-->
 	
+
+	<!-- TPR-565 -->
+	<bean id="mplShopByLookSaveInterceptor" class="com.tisl.mpl.interceptor.MplShopByLookInterceptor" />
+
+	<bean id="mplShopByLookSaveInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="mplShopByLookSaveInterceptor" />
+		<property name="typeCode" value="MplShopByLook" />
+	</bean>
+	
+
+	<!-- Added for displaying offer messages other than promotion, TPR-589-->
+	<bean id="prodOfferDetService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.ProductOfferDetailServiceImpl">		
+	</bean>
+	<bean id="prodOfferDetDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.ProductOfferDetailDaoImpl">
+		<property name="flexibleSearchService" ref="flexibleSearchService" />
+		<property name="modelService" ref="modelService" />		
+	</bean>
+	
+	<!-- Bundle Promotion Helper Class -->
+	<bean id="mplBundlePromotionHelper" class="com.tisl.mpl.promotion.helper.MplBundlePromotionHelper" />
+	
+	
+	<!-- Added for TPR-1035-->
+ 	
+ 	<bean id="mplBinErrorService"
+ 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplBinErrorService">
+ 		<property name="modelService" ref="modelService" />
+ 		<property name="mplBinErrorDao" ref="mplBinErrorDao" />
+ 	</bean>
+ 	
+ 	<bean id="mplBinErrorDao" class="com.tisl.mpl.promotion.dao.impl.MplBinErrorDaoImpl" />
+ 	
+ 	<bean id="mplBinErrorData" class="com.tisl.mpl.pojo.MplBinErrorData" />
+ 	
 	 <!-- For Bulk Seller  Upload on HMC Configuration Screen  TPR -715-->
 	<bean id="sellerBulkLoadInterceptor" class="com.tisl.mpl.interceptor.SellerBulkLoadInterceptor" />
 	

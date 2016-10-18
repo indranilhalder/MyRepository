@@ -31,6 +31,8 @@ INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;fronten
 ;;LandingPage5Template;Landing Page 5 Template;layout/landingLayout5Page;CategoryPage,ContentPage
 ;;LandingPage6Template;Landing Page 6 Template;layout/landingLayout6Page;CategoryPage,ContentPage
 ;;ShopTheCollectionTemplate;Shop The Collection Template;layout/shopTheCollectionTemplate;ContentPage
+#Shop The Style Page
+;;ShopTheStylePageTemplate;Shop The Style Page Template;layout/shopTheStylePageTemplate;ContentPage
 #Help and Service Page
 ;;HelpandServicePageTemplate; Help and Service Page Template;layout/helpandServiceLayoutPage;ContentPage
 
@@ -78,6 +80,8 @@ INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;fronten
 ;;CheckoutLoginPageTemplate;Checkout Login Page Template;;ContentPage;false;
 ;;MultiStepCheckoutSummaryPageTemplate;Multi Step Checkout Summary Page Template;;ContentPage;false;
 ;;OrderConfirmationPageTemplate;Order Confirmation Page Template;;ContentPage;false;
+
+
 
 
 # Add Velocity templates that are in the CMS Cockpit. These give a better layout for editing pages
@@ -134,6 +138,8 @@ UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[tr
 ;;ElectronicsMicrositePageTemplate;$jarResourceCms/structure-view/structure_micrositeHomePage1Template.vm
 #########View other sellers page
 ;;ViewSellerPageTemplate      ;$jarResourceCms/structure-view/structure_viewSellerPageTemplate.vm
+#Shop The Style Page
+;;ShopTheStylePageTemplate;$jarResourceCms/structure-view/structure_shopTheStylePageTemplate.vm
 
 
 
@@ -548,7 +554,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Section2B;;SimpleBannerComponent,CMSParagraphComponent,VideoComponent;
 ;Section2C;;SimpleBannerComponent
 ;Section3;;SimpleBannerComponent,VideoComponent;
-;Section4A;;RefinementFacetComponent;
+;Section4A;;ProductRefinementComponent;
 ;Section4B;;ProductGridComponent;
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide
@@ -574,7 +580,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Section5;;CMSParagraphComponent;
 ;Section5A1;;MplFootwearComponent,SimpleBannerComponent;
 ;Section6A;;MplCategoryCarouselComponent,MplAdvancedCategoryCarouselComponent;
-;Section7A;;RefinementFacetComponent;
+;Section7A;;ProductRefinementComponent;
 ;Section7B;;ProductGridComponent;
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide
@@ -594,7 +600,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Section2B;;CMSParagraphComponent,SimpleBannerComponent,VideoComponent;
 ;Section2C;;SimpleBannerComponent
 ;Section3;;SimpleBannerComponent,VideoComponent;
-;Section4A;;RefinementFacetComponent
+;Section4A;;ProductRefinementComponent
 ;Section4B;;ProductGridComponent
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide
@@ -860,6 +866,34 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;PlaceholderContentSlot;;;
 ;MplFootwearComponent;;;
 
+#Shop The Style Page ::::  Creating ContentSlotName For Shop The Style Page template
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ShopTheStylePageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;SiteLogo;;;logo
+;HeaderLinks;;;headerlinks
+;SearchBox;;;searchbox
+;MiniCart;;CMSLinkComponent,TrackOrderHeaderComponent,MyWishListInHeaderComponent,SignInFlyOutComponent;minicart
+;NavigationBar;;;navigation
+;Section1;;RotatingImagesComponent;
+;Section2A;;CMSLinkComponent;
+;Section2B;;CMSLinkComponent;
+;Section2C;;CMSLinkComponent;
+;Section2D;;CMSLinkComponent;
+;Section3A;;CMSParagraphComponent;
+;Section3B;;SimpleBannerComponent;
+;Section3C;;MplShopByLookProductCarouselComponent;
+;Section4A;;CMSParagraphComponent;
+;Section4B;;MplShopByLookProductCarouselComponent;
+;Section4C;;SimpleBannerComponent;
+;Section5A;;CMSParagraphComponent;
+;Section5B;;SimpleBannerComponent;
+;Section5C;;MplShopByLookProductCarouselComponent;
+;Section6A;;CMSParagraphComponent;
+;Section6B;;MplShopByLookProductCarouselComponent;
+;Section6C;;SimpleBannerComponent;
+;Footer;;;footer
+;TopHeaderSlot;;;wide
+;BottomHeaderSlot;;BreadcrumbComponent
+;PlaceholderContentSlot;;;
 
 # Create Content Slots
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
@@ -1666,6 +1700,9 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
 ;;chef;Gift For The Chef;ShopTheCollectionTemplate;/gift-for-chef;
 
+#Shop The Style Page
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;shopTheStyle;Shop The Style;ShopTheStylePageTemplate;/shopTheStyle;
 
 ##review #####
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
@@ -1691,3 +1728,64 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;TopHeaderSlot-ShopTheCollectionTemplate;TopHeaderSlot;;TopHeaderSlot;true
 ;;BottomHeaderSlot-ShopTheCollectionTemplate;BottomHeaderSlot;;BottomHeaderSlot;true
 ;;PlaceholderContentSlot-ShopTheCollectionTemplate;PlaceholderContentSlot;;PlaceholderContentSlot;true
+
+#Shop The Style Page Content Slot Update
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ShopTheStylePageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-ShopTheStylePageTemplate;SiteLogo;;SiteLogoSlot;true
+;;HomepageLink-ShopTheStylePageTemplate;HomepageNavLink;;HomepageNavLinkSlot;true
+;;NavigationBar-ShopTheStylePageTemplate;NavigationBar;;NavigationBarSlot;true
+;;MiniCart-ShopTheStylePageTemplate;MiniCart;;MiniCartSlot;true
+;;Footer-ShopTheStylePageTemplate;Footer;;FooterSlot;true
+;;HeaderLinks-ShopTheStylePageTemplate;HeaderLinks;;HeaderLinksSlot;true
+;;SearchBox-ShopTheStylePageTemplate;SearchBox;;SearchBoxSlot;true
+;;TopHeaderSlot-ShopTheStylePageTemplate;TopHeaderSlot;;TopHeaderSlot;true
+;;BottomHeaderSlot-ShopTheStylePageTemplate;BottomHeaderSlot;;BottomHeaderSlot;true
+;;PlaceholderContentSlot-ShopTheStylePageTemplate;PlaceholderContentSlot;;PlaceholderContentSlot;true
+
+
+### Category Landing Page V1#########
+
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
+;;ApparelCategoryLandingPageTemplateV1;Apparel Category Landing Page Template V1;layout/apparelCategoryLandingPageV1;CategoryPage,ContentPage
+
+
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;ApparelCategoryLandingPageTemplateV1      ;$jarResourceCms/structure-view/structure_ApparelCategoryLandingPageTemplateV1.vm
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ApparelCategoryLandingPageTemplateV1'];validComponentTypes(code);compTypeGroup(code)
+;SiteLogo;;;logo
+;HeaderLinks;;;headerlinks
+;SearchBox;;;searchbox
+;MiniCart;;CMSLinkComponent,TrackOrderHeaderComponent,MyWishListInHeaderComponent,SignInFlyOutComponent;minicart
+;NavigationBar;;;navigation
+;Section1;;SimpleResponsiveBannerComponent,MplBigPromoBannerComponent,MplBigFourPromoBannerComponent,SimpleBannerComponent,CMSParagraphComponent;
+;Section2A;;SimpleBannerComponent,CMSParagraphComponent,MplAdvancedCategoryCarouselComponent,CMSLinkComponent;
+;Section2B;;CMSParagraphComponent,CMSLinkComponent,SimpleBannerComponent;
+;Section2C;;RotatingImagesComponent,CMSParagraphComponent,VideoComponent
+;Section3;;SimpleBannerComponent,CMSParagraphComponent,CMSLinkComponent;
+;Section3A;;CMSLinkComponent,MplAdvancedCategoryCarouselComponent;
+;Section4A;;ProductRefinementComponent;
+;Section4B;;ProductGridComponent;
+;Footer;;;footer
+;TopHeaderSlot;;;wide
+;BottomHeaderSlot;;BreadcrumbComponent
+;PlaceholderContentSlot;;;
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ApparelCategoryLandingPageTemplateV1'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-ApparelCategoryLandingPageV1;SiteLogo;;SiteLogoSlot;true
+;;HomepageLink-ApparelCategoryLandingPageV1;HomepageNavLink;;HomepageNavLinkSlot;true
+;;NavigationBar-ApparelCategoryLandingPageV1;NavigationBar;;NavigationBarSlot;true
+;;MiniCart-ApparelCategoryLandingPageV1;MiniCart;;MiniCartSlot;true
+;;Footer-ApparelCategoryLandingPageV1;Footer;;FooterSlot;true
+;;HeaderLinks-ApparelCategoryLandingPageV1;HeaderLinks;;HeaderLinksSlot;true
+;;SearchBox-ApparelCategoryLandingPageV1;SearchBox;;SearchBoxSlot;true
+;;TopHeaderSlot-ApparelCategoryLandingPageV1;TopHeaderSlot;;TopHeaderSlot;true
+;;BottomHeaderSlot-ApparelCategoryLandingPageV1;BottomHeaderSlot;;BottomHeaderSlot;true
+;;PlaceholderContentSlot-ApparelCategoryLandingPageV1;PlaceholderContentSlot;;PlaceholderContentSlot;true
+
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;categoryAssociated(code,$productCV);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;WomenV1;Women's Category Landing Page;ApparelCategoryLandingPageTemplateV1;WomenV1;MSH10
+### Category Landing Page V1#########
+

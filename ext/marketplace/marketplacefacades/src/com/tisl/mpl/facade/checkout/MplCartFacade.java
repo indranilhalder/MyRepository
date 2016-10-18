@@ -434,6 +434,16 @@ public interface MplCartFacade extends CartFacade
 	CartData getSessionCartWithEntryOrderingMobile(final CartModel cart, final boolean recentlyAddedFirst)
 			throws EtailNonBusinessExceptions;
 
+	/* TPR-970 changes ,populate city and stae details in cart */
+	public void populatePinCodeData(final CartModel cartmodel, final String pincode);
+
+	/**
+	 * TPR-774
+	 *
+	 * @doc To calculate discount percentage amount for display purpose
+	 * @param cartModel
+	 */
+	public void totalMrpCal(final CartModel cartModel) throws EtailNonBusinessExceptions;
 	/**
 	 * @param orderModel
 	 */

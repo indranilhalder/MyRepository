@@ -50,6 +50,7 @@ import de.hybris.platform.storelocator.model.PointOfServiceModel;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -92,6 +93,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
+import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
 
 
@@ -138,6 +140,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	@Resource(name = "pincodeService")
 	private PincodeService pincodeService;
 
+	@Resource(name = "pincodeServiceFacade")
+	private PincodeServiceFacade pincodeServiceFacade;
 	@Resource(name = "notificationService")
 	private NotificationService notificationService;
 
@@ -416,9 +420,10 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * @throws CommerceCartModificationException
 	 */
 
+	//mrpEntryPrice added to pass the MRP - TPR-774
 	@Override
 	public CartModificationData addToCart(final String code, final long quantity, final String ussid)
-			throws CommerceCartModificationException
+			throws CommerceCartModificationException//final Double mrpEntryPrice
 	{
 		final ProductModel product = getProductService().getProductForCode(code);
 		final CartModel cartModel = getCartService().getSessionCart();
@@ -442,6 +447,11 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		parameter.setQuantity(quantity);
 		parameter.setUnit(product.getUnit());
 		parameter.setUssid(ussid);
+		// passing the MRP to cart- TPR-774
+		//		if (null != mrpEntryPrice)
+		//		{
+		//			parameter.setEntryMrp(mrpEntryPrice);
+		//		}
 
 		final CommerceCartModification modification = getMplCommerceCartService().addToCartWithUSSID(parameter);
 
@@ -984,6 +994,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 					{
 						pincodeServiceData.setPrice(new Double(sellerData.getMopPrice().getValue().doubleValue()));
 					}
+					//TPR-774
 					else if (sellerData.getMrpPrice() != null
 							&& StringUtils.isNotEmpty(sellerData.getMrpPrice().getValue().toString()))
 					{
@@ -2394,6 +2405,67 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		return cartModel;
 	}
 
+	/**
+	 * TPR-774
+	 *
+	 * @doc To calculate discount percentage amount for display purpose
+	 * @param cartModel
+	 */
+	@Override
+	public void totalMrpCal(final CartModel cartModel) throws EtailNonBusinessExceptions
+	{
+		try
+
+		{
+			if (null != cartModel && CollectionUtils.isNotEmpty(cartModel.getEntries()))
+			{
+				for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
+				{
+					// For Not a freebie product Percentage calculation
+					if (null != cartEntryModel && !cartEntryModel.getGiveAway().booleanValue())
+					{
+						double prodDisCal = 0.0;
+						double prodDisCalPer = 0.0;
+						//final double percentVal = 0.0;
+						BigDecimal totMrp = new BigDecimal(0.0);
+
+						// Total MRP
+						totMrp = BigDecimal.valueOf((null != cartEntryModel.getMrp() ? Double.valueOf((cartEntryModel.getMrp()
+								.doubleValue() * cartEntryModel.getQuantity().doubleValue())) : totMrp).doubleValue());
+
+						cartEntryModel.setTotalMrp(Double.valueOf(totMrp.doubleValue()));
+
+						if (null != cartEntryModel.getNetSellingPrice()
+								&& cartEntryModel.getNetSellingPrice().doubleValue() > 0.0
+								&& cartEntryModel.getNetSellingPrice().doubleValue() != totMrp.doubleValue()
+								&& (cartEntryModel.getNetSellingPrice().doubleValue() < cartEntryModel.getBasePrice().doubleValue()
+										* cartEntryModel.getQuantity().doubleValue()))
+						{
+							prodDisCal = totMrp.doubleValue() - (cartEntryModel.getNetSellingPrice().doubleValue());
+							prodDisCalPer = Math.round((prodDisCal / totMrp.doubleValue()) * 100);
+							//percentVal = Math.round((prodDisCalPer * 100.0));
+							cartEntryModel.setProductPerDiscDisplay(Double.valueOf(prodDisCalPer));
+						}
+						else if (null != cartEntryModel.getMrp())
+						{
+							prodDisCal = cartEntryModel.getMrp().doubleValue() - cartEntryModel.getBasePrice().doubleValue();
+							prodDisCalPer = Math.round((prodDisCal / cartEntryModel.getMrp().doubleValue()) * 100);
+							//percentVal = Math.round((prodDisCalPer * 100.0));
+							cartEntryModel.setProductPerDiscDisplay(Double.valueOf(prodDisCalPer));
+						}
+					}
+				}
+				modelService.saveAll(cartModel.getEntries());
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.debug("Error while calculating percentage discount for display");
+			throw e;
+		}
+
+	}
+
 	/*
 	 * private void setChannelForCart(final CartModel model) { if (!model.getChannel().equals(SalesApplication.WEB)) {
 	 * model.setChannel(SalesApplication.WEB); getModelService().save(model); } }
@@ -2484,6 +2556,18 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		this.mplExtendedPromoCartConverter = mplExtendedPromoCartConverter;
 	}
 
+	/* TPR-970 changes ,populate city and stae details in cart */
+	@Override
+	public void populatePinCodeData(final CartModel cartModel, final String pincode)
+	{
+		final PincodeModel pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(pincode);
+		if (null != pinCodeModelObj)
+		{
+			cartModel.setStateForPincode(pinCodeModelObj.getState() == null ? "" : pinCodeModelObj.getState().getCountrykey());
+			cartModel.setCityForPincode(pinCodeModelObj.getCity() == null ? "" : pinCodeModelObj.getCity().getCityName());
+			cartModel.setPincodeNumber(pincode);
+		}
+	}
 
 	/*
 	 * (non-Javadoc)

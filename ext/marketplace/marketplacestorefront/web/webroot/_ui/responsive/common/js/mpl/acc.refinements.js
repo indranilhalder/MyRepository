@@ -97,8 +97,7 @@ ACC.refinements = {
 		
 		/*TPR-198 : AJAX Call in SERP and PDP START*/
 		
-		var browserURL = window.location.href.split('?');
-
+		var browserURL = window.location.href.split('?');		
 		// AJAX for checkbox
 		$(document).on("change",".js-product-facet .facet_desktop .js-facet-checkbox",function(){
 			var staticHost=$('#staticHost').val();
@@ -140,8 +139,12 @@ ACC.refinements = {
 				requiredUrl += "/getFacetData";
 			} else {
 				if(action.indexOf("/getFacetData") == -1){
-					if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1){
+					if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1) {
 						requiredUrl = action.concat("/getFacetData");
+					}
+					else if ($("input[name=customSku]").val()) {
+						var collectionId = $("input[name=customSkuCollectionId]").val();
+						requiredUrl = '/CustomSkuCollection/'+collectionId+'/getFacetData';
 					}
 					else{
 						requiredUrl = action.concat("getFacetData");
@@ -225,6 +228,10 @@ ACC.refinements = {
 					if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1){
 						requiredUrl = action.concat("/getFacetData");
 					}
+					else if ($("input[name=customSku]").val()) {
+						var collectionId = $("input[name=customSkuCollectionId]").val();
+						requiredUrl = '/CustomSkuCollection/'+collectionId+'/getFacetData';
+					}
 					else{
 						requiredUrl = action.concat("getFacetData");
 					}
@@ -297,7 +304,8 @@ ACC.refinements = {
 				action = action[1].split('/');
 				requiredUrl = "/c-"+action[0];
 				requiredUrl += "/getFacetData";
-			} else {
+			}			
+			else {
 				requiredUrl = action[0].concat("/getFacetData");
 			}
 			
@@ -337,12 +345,18 @@ ACC.refinements = {
 
 // function implements AJAX : TPR-198
 function filterDataAjax(requiredUrl,dataString,pageURL){
+	console.log(requiredUrl);
+	console.log(pageURL);
+	if ($("input[name=customSku]").val()) {
+		dataString = dataString + "&sort=" + $("select[name=sort]").val() + "&pageSize=" + $("select[name=pageSize]").val(); 
+	}
+	
 	$.ajax({
 		contentType : "application/json; charset=utf-8",
 		url : requiredUrl,
 		data : dataString,
 		success : function(response) {
-			
+			//console.log(response);
 			// putting AJAX respons to view
 			if($("#isCategoryPage").val() == 'true'){
 				$("#productGrid").html(response);
@@ -383,11 +397,32 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 			/*var filter_height=$(".facet-list.filter-opt").height() + 55;
 			$(".listing.wrapper .left-block").css("margin-top",filter_height+"px");*/
 			
+			//TPR - 565
+			if (!$("input[name=customSku]").val()) {
 			// Scroll up to the top
-			$("body,html").animate({scrollTop:0},500);
+				$("body,html").animate({scrollTop:0},500);
+				
+				//Re-write URL after ajax
+				window.history.replaceState(response,"",pageURL);
+			}		
+			//TPR-158 and TPR-413 starts here
 			
-			//Re-write URL after ajax
-			window.history.replaceState(response,"",pageURL);
+			$("#displayAll").show();
+			$("#clickToMore").hide();
+			donotShowAll();
+			
+			$("#displayAll").on("click",function(e){
+				showAll();		
+				$("#displayAll").hide();
+				$("#clickToMore").show();
+			});
+			
+			$("#clickToMore").click(function(e){
+				donotShowAll();		
+				$("#displayAll").show();
+				$("#clickToMore").hide();
+				});	
+			//TPR-158 and TPR-413 ends here			
 		},
 		error : function(xhr, status, error) {
 			$('#wrongPin,#unsevisablePin,#emptyPin')
@@ -403,6 +438,12 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 	});
 	
 }
+
+/*$("#paginationForm .pagination.mobile li a").click(function(e){
+	
+	e.prevent
+	alert($(this).attr('href'));
+});*/
 
 //TPR-845
 function createSearchQuery(filterMobileQuery){
@@ -477,6 +518,10 @@ $(document).on("click",".filter-apply",function(e){
 			if(action.indexOf("/getFacetData") == -1){
 				if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1){
 					requiredUrl = action.concat("/getFacetData");
+				}
+				else if ($("input[name=customSku]").val()) {
+					var collectionId = $("input[name=customSkuCollectionId]").val();
+					requiredUrl = '/CustomSkuCollection/'+collectionId+'/getFacetData';
 				}
 				else{
 					requiredUrl = action.concat("getFacetData");
@@ -569,6 +614,36 @@ $(document).off('change', '.facet_mobile .facet.js-facet').on('change', '.facet_
 		}
 	});
 });
+
+$(document).on("click",".pagination.mobile li a",function(e){
+		if ($("input[name=customSku]").val()) {			
+			// for pagination ajax call
+			e.preventDefault();
+			var requiredUrl = $(this).attr('href');
+			var dataString = '';
+			$.ajax({
+				contentType : "application/json; charset=utf-8",
+				url : requiredUrl,
+				data : dataString,
+				success : function(response) {
+					//console.log(response);
+					// putting AJAX respons to view
+					$('#facetSearchAjaxData .right-block, #facetSearchAjaxData .bottom-pagination, #facetSearchAjaxData .facet-list.filter-opt').remove();
+					$('#facetSearchAjaxData .left-block').after(response);
+				},
+				error : function(xhr, status, error) {				
+					console.log("Error >>>>>> " + error);
+				},
+				complete: function() {
+					// AJAX changes for custom price filter
+					
+				}
+			});
+			return false;
+		}
+		
+});
+
 //TPR-645
 function onFilterClickAnalytics(filterName,filterValue){
 	var msg = (filterName+"_"+filterValue).toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
