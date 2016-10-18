@@ -1143,7 +1143,3 @@ fashionaccessories.sizeguide.header.inchesbeltsize=Belt Size (inch)
 fashionaccessories.sizeguide.header.cmswaistsize=Waist (cm)
 fashionaccessories.sizeguide.header.incheswaistsize=Waist Size (inch)
 fashionaccessories.sizeguide.header.inchesbeltlength=Belt Length (inch)
-
-#### Added for TPR-1996 starts
-pdp.desc.tab.Watches=Functionality,Movement,Special Features,Warranty Details
-#### Added for TPR-1996 end
