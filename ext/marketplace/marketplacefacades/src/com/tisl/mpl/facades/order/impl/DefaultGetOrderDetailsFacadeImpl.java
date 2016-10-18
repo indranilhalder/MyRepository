@@ -101,7 +101,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	 * @return OrderTrackingWsDTO
 	 */
 	@Override
-	public OrderDataWsDTO getOrderdetails(final String orderCode)
+	public OrderDataWsDTO getOrderdetails(final OrderData orderDetails)
 	{
 
 		OrderDataWsDTO orderTrackingWsDTO = null;
@@ -109,7 +109,6 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 		List<Ordershipmentdetailstdto> ordershipmentdetailstdtos = null;
 		OrderProductWsDTO orderproductdto = null;
 		OrderModel orderModel = null;
-		OrderData orderDetails = null;
 		String isGiveAway = "N";
 		String consignmentStatus = MarketplacecommerceservicesConstants.NA;
 		ConsignmentModel consignmentModel = null;
@@ -117,494 +116,895 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 		String formattedActualProductDate = MarketplacecommerceservicesConstants.EMPTY;
 		try
 		{
-			if (null != orderCode)
+			if (null != orderDetails && StringUtils.isNotEmpty(orderDetails.getType())
+					&& orderDetails.getType().equalsIgnoreCase("Parent"))
 			{
-
-				orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
-
-				if (null != orderDetails && StringUtils.isNotEmpty(orderDetails.getType())
-						&& orderDetails.getType().equalsIgnoreCase("Parent"))
+				orderTrackingWsDTO = new OrderDataWsDTO();
+				//moved to generic utility
+				orderTrackingWsDTO.setBillingAddress(GenericUtilityMethods.setAddress(orderDetails, 1));
+				orderTrackingWsDTO.setDeliveryAddress(GenericUtilityMethods.setAddress(orderDetails, 2));
+				//add pickup person details
+				if (StringUtils.isNotEmpty(orderDetails.getPickupName()))
 				{
-					orderTrackingWsDTO = new OrderDataWsDTO();
-					//moved to generic utility
-					orderTrackingWsDTO.setBillingAddress(GenericUtilityMethods.setAddress(orderDetails, 1));
-					orderTrackingWsDTO.setDeliveryAddress(GenericUtilityMethods.setAddress(orderDetails, 2));
-					//add pickup person details
-					if (StringUtils.isNotEmpty(orderDetails.getPickupName()))
-					{
-						orderTrackingWsDTO.setPickupPersonName(orderDetails.getPickupName());
-					}
-					if (StringUtils.isNotEmpty(orderDetails.getPickupPhoneNumber()))
-					{
-						orderTrackingWsDTO.setPickupPersonMobile(orderDetails.getPickupPhoneNumber());
-					}
-					if (null != orderDetails.getCreated())
-					{
-						orderTrackingWsDTO.setOrderDate(orderDetails.getCreated());
-					}
-					if (StringUtils.isNotEmpty(orderDetails.getCode()))
-					{
-						orderTrackingWsDTO.setOrderId(orderDetails.getCode());
-					}
-					if (null != orderDetails.getDeliveryAddress()
-							&& StringUtils.isNotEmpty(orderDetails.getDeliveryAddress().getLastName())
-							&& StringUtils.isNotEmpty(orderDetails.getDeliveryAddress().getFirstName()))
-					{
-						final String name = orderDetails.getDeliveryAddress().getFirstName().concat(" ")
-								.concat(orderDetails.getDeliveryAddress().getLastName());
-						orderTrackingWsDTO.setRecipientname(name);
-					}
+					orderTrackingWsDTO.setPickupPersonName(orderDetails.getPickupName());
+				}
+				if (StringUtils.isNotEmpty(orderDetails.getPickupPhoneNumber()))
+				{
+					orderTrackingWsDTO.setPickupPersonMobile(orderDetails.getPickupPhoneNumber());
+				}
+				if (null != orderDetails.getCreated())
+				{
+					orderTrackingWsDTO.setOrderDate(orderDetails.getCreated());
+				}
+				if (StringUtils.isNotEmpty(orderDetails.getCode()))
+				{
+					orderTrackingWsDTO.setOrderId(orderDetails.getCode());
+				}
+				if (null != orderDetails.getDeliveryAddress()
+						&& StringUtils.isNotEmpty(orderDetails.getDeliveryAddress().getLastName())
+						&& StringUtils.isNotEmpty(orderDetails.getDeliveryAddress().getFirstName()))
+				{
+					final String name = orderDetails.getDeliveryAddress().getFirstName().concat(" ")
+							.concat(orderDetails.getDeliveryAddress().getLastName());
+					orderTrackingWsDTO.setRecipientname(name);
+				}
 
-					if (null != orderDetails.getDeliveryCost() && StringUtils.isNotEmpty(orderDetails.getDeliveryCost().toString()))
+				if (null != orderDetails.getDeliveryCost() && StringUtils.isNotEmpty(orderDetails.getDeliveryCost().toString()))
+				{
+					orderTrackingWsDTO.setDeliveryCharge(orderDetails.getDeliveryCost().getValue().toString());
+				}
+				//TISST-13769
+				//					if (null != orderDetails.getTotalPrice()
+				//							&& StringUtils.isNotEmpty(orderDetails.getTotalPrice().getValue().toString()))
+				//					{
+				//						orderTrackingWsDTO.setTotalOrderAmount(orderDetails.getTotalPrice().getValue().toString());
+				//					}
+				if (null != orderDetails.getTotalPriceWithConvCharge()
+						&& StringUtils.isNotEmpty(orderDetails.getTotalPriceWithConvCharge().getValue().toString()))
+				{
+					orderTrackingWsDTO.setTotalOrderAmount(orderDetails.getTotalPriceWithConvCharge().getValue().toString());
+				}
+				//TISEE-4660 starts
+				if (null != orderDetails.getConvenienceChargeForCOD()
+						&& StringUtils.isNotEmpty(orderDetails.getConvenienceChargeForCOD().getValue().toString()))
+				{
+					orderTrackingWsDTO.setConvenienceCharge(orderDetails.getConvenienceChargeForCOD().getValue().toString());
+				}
+				//TISEE-4660 ends
+				if (null != orderDetails.getSubTotal() && StringUtils.isNotEmpty(orderDetails.getSubTotal().getValue().toString()))
+				{
+					orderTrackingWsDTO.setSubTotal(orderDetails.getSubTotal().getValue().toString());
+				}
+				//TISST-13769
+				if (null != orderDetails.getTotalDiscounts()
+						&& StringUtils.isNotEmpty(orderDetails.getTotalDiscounts().getValue().toString()))
+				{
+					orderTrackingWsDTO.setTotalDiscounts(orderDetails.getTotalDiscounts().getValue().toString());
+				}
+				if (CollectionUtils.isNotEmpty(orderDetails.getSellerOrderList()))
+				{
+					for (final OrderData subOrder : orderDetails.getSellerOrderList())
 					{
-						orderTrackingWsDTO.setDeliveryCharge(orderDetails.getDeliveryCost().getValue().toString());
-					}
-					//TISST-13769
-					//					if (null != orderDetails.getTotalPrice()
-					//							&& StringUtils.isNotEmpty(orderDetails.getTotalPrice().getValue().toString()))
-					//					{
-					//						orderTrackingWsDTO.setTotalOrderAmount(orderDetails.getTotalPrice().getValue().toString());
-					//					}
-					if (null != orderDetails.getTotalPriceWithConvCharge()
-							&& StringUtils.isNotEmpty(orderDetails.getTotalPriceWithConvCharge().getValue().toString()))
-					{
-						orderTrackingWsDTO.setTotalOrderAmount(orderDetails.getTotalPriceWithConvCharge().getValue().toString());
-					}
-					//TISEE-4660 starts
-					if (null != orderDetails.getConvenienceChargeForCOD()
-							&& StringUtils.isNotEmpty(orderDetails.getConvenienceChargeForCOD().getValue().toString()))
-					{
-						orderTrackingWsDTO.setConvenienceCharge(orderDetails.getConvenienceChargeForCOD().getValue().toString());
-					}
-					//TISEE-4660 ends
-					if (null != orderDetails.getSubTotal() && StringUtils.isNotEmpty(orderDetails.getSubTotal().getValue().toString()))
-					{
-						orderTrackingWsDTO.setSubTotal(orderDetails.getSubTotal().getValue().toString());
-					}
-					//TISST-13769
-					if (null != orderDetails.getTotalDiscounts()
-							&& StringUtils.isNotEmpty(orderDetails.getTotalDiscounts().getValue().toString()))
-					{
-						orderTrackingWsDTO.setTotalDiscounts(orderDetails.getTotalDiscounts().getValue().toString());
-					}
-					final List<OrderData> subOrderList = orderDetails.getSellerOrderList();
-					if (orderDetails.getSellerOrderList() != null && !orderDetails.getSellerOrderList().isEmpty())
-					{
-						for (final OrderData subOrder : subOrderList)
+						orderModel = orderModelService.getOrder(subOrder.getCode());
+						for (final OrderEntryData entry : subOrder.getEntries())
 						{
-							orderModel = orderModelService.getOrder(subOrder.getCode());
-							for (final OrderEntryData entry : subOrder.getEntries())
+							List<String> parentTransactionIds = new ArrayList<>();
+							orderproductdto = new OrderProductWsDTO();
+							//seller order no
+							orderproductdto.setSellerorderno(subOrder.getCode());
+
+							if (null != entry.getDeliveryPointOfService())
 							{
-								List<String> parentTransactionIds = new ArrayList<>();
-								orderproductdto = new OrderProductWsDTO();
-								//seller order no
-								orderproductdto.setSellerorderno(subOrder.getCode());
-
-								if (null != entry.getDeliveryPointOfService())
+								orderproductdto.setStoreDetails(mplDataMapper.map(entry.getDeliveryPointOfService(),
+										PointOfServiceWsDTO.class, "DEFAULT"));
+							}
+							final ProductData product = entry.getProduct();
+							ordershipmentdetailstdtos = new ArrayList<Ordershipmentdetailstdto>();
+							if (null != product)
+							{
+								final List<ImageData> images = (List<ImageData>) product.getImages();
+								if (null != images)
 								{
-									orderproductdto.setStoreDetails(mplDataMapper.map(entry.getDeliveryPointOfService(),
-											PointOfServiceWsDTO.class, "DEFAULT"));
+
+									for (final ImageData imageData : product.getImages())
+									{
+										if (imageData.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.THUMBNAIL))
+										{
+											orderproductdto.setImageURL(imageData.getUrl());
+											break;
+										}
+
+									}
+									if (null == orderproductdto.getImageURL())
+									{
+										orderproductdto.setImageURL(images.get(0).getUrl());
+									}
 								}
-								final ProductData product = entry.getProduct();
-								ordershipmentdetailstdtos = new ArrayList<Ordershipmentdetailstdto>();
-								if (null != product)
+								if (StringUtils.isNotEmpty(entry.getAmountAfterAllDisc().toString()))
 								{
-									final List<ImageData> images = (List<ImageData>) product.getImages();
-									if (null != images)
-									{
+									orderproductdto.setPrice(entry.getAmountAfterAllDisc().getValue().toString());
+								}
+								if (null != product.getBrand() && StringUtils.isNotEmpty(product.getBrand().toString()))
+								{
 
-										for (final ImageData imageData : product.getImages())
+									orderproductdto.setProductBrand(product.getBrand().getBrandname());
+								}
+								if (null != product.getCode() && StringUtils.isNotEmpty(product.getCode()))
+								{
+
+									orderproductdto.setProductcode(product.getCode());
+								}
+								if (StringUtils.isNotEmpty(product.getName()))
+								{
+
+									orderproductdto.setProductName(product.getName());
+								}
+								if (StringUtils.isNotEmpty(product.getSize()))
+								{
+
+									orderproductdto.setProductSize(product.getSize());
+								}
+								if (StringUtils.isNotEmpty(product.getVariantType()))
+								{
+
+									orderproductdto.setVariantOptions(product.getVariantType());
+								}
+								if (StringUtils.isNotEmpty(product.getColour()))
+								{
+
+									orderproductdto.setProductColour(product.getColour());
+								}
+								if (entry.isGiveAway())
+								{
+									isGiveAway = "Y";
+								}
+								else
+								{
+									isGiveAway = "N";
+								}
+								orderproductdto.setIsGiveAway(isGiveAway);
+
+								//final List<OrderEntryData> associatedProducts = cancelReturnFacade.associatedEntriesData(orderModel,
+								//			entry.getOrderLineId());
+
+								if (null != entry.getAssociatedItems())
+								{
+									orderproductdto.setAssociatedProducts(entry.getAssociatedItems());
+								}
+
+								//final ProductModel productModel = productService.getProductForCode(entry.getProduct().getCode());
+								final ProductModel productModel = mplOrderService.findProductsByCode(product.getCode());
+								if (productModel instanceof PcmProductVariantModel)
+								{
+									final PcmProductVariantModel selectedVariantModel = (PcmProductVariantModel) productModel;
+									final String selectedCapacity = selectedVariantModel.getCapacity();
+									final ProductModel baseProduct = selectedVariantModel.getBaseProduct();
+									if (null != baseProduct.getVariants() && null != selectedCapacity)
+									{
+										for (final VariantProductModel vm : baseProduct.getVariants())
 										{
-											if (imageData.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.THUMBNAIL))
+											final PcmProductVariantModel pm = (PcmProductVariantModel) vm;
+											if (selectedCapacity.equals(pm.getCapacity()))
 											{
-												orderproductdto.setImageURL(imageData.getUrl());
-												break;
+												orderproductdto.setCapacity(pm.getCapacity());
 											}
 
 										}
-										if (null == orderproductdto.getImageURL())
-										{
-											orderproductdto.setImageURL(images.get(0).getUrl());
-										}
 									}
-									if (StringUtils.isNotEmpty(entry.getAmountAfterAllDisc().toString()))
+								}
+								/* Fulfillment type */
+								/*
+								 * final List<RichAttributeModel> richAttributeModel = (List<RichAttributeModel>) productModel
+								 * .getRichAttribute(); if (richAttributeModel != null &&
+								 * richAttributeModel.get(0).getDeliveryFulfillModes() != null) { final String fullfillmentData
+								 * = richAttributeModel.get(0).getDeliveryFulfillModes().getCode() .toUpperCase(); if
+								 * (fullfillmentData != null && !fullfillmentData.isEmpty()) {
+								 * orderproductdto.setFulfillment(fullfillmentData); } }
+								 */
+								/* Delivery date as per history */
+								if (null != entry.getMplDeliveryMode())
+								{
+									if (null != entry.getMplDeliveryMode().getDescription()
+											&& StringUtils.isNotEmpty(entry.getMplDeliveryMode().getDescription()))
 									{
-										orderproductdto.setPrice(entry.getAmountAfterAllDisc().getValue().toString());
+										orderproductdto.setDeliveryDate(entry.getMplDeliveryMode().getDescription());
 									}
-									if (null != product.getBrand() && StringUtils.isNotEmpty(product.getBrand().toString()))
-									{
+								}
 
-										orderproductdto.setProductBrand(product.getBrand().getBrandname());
-									}
-									if (null != product.getCode() && StringUtils.isNotEmpty(product.getCode()))
-									{
+								/*
+								 * if (null != orderDetails.getSellerOrderList()) { for (final OrderData childOrder :
+								 * orderDetails.getSellerOrderList()) { if (null != childOrder.getCode()) {
+								 * 
+								 * orderproductdto.setSellerorderno(childOrder.getCode()); } }
+								 * 
+								 * if (null != orderproductdto.getUSSID()) {
+								 * 
+								 * orderproductdto.setSerialno(orderproductdto.getUSSID()); } else {
+								 * orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA); }
+								 * 
+								 * }
+								 */
 
-										orderproductdto.setProductcode(product.getCode());
-									}
-									if (StringUtils.isNotEmpty(product.getName()))
-									{
 
-										orderproductdto.setProductName(product.getName());
-									}
-									if (StringUtils.isNotEmpty(product.getSize()))
-									{
-
-										orderproductdto.setProductSize(product.getSize());
-									}
-									if (StringUtils.isNotEmpty(product.getVariantType()))
-									{
-
-										orderproductdto.setVariantOptions(product.getVariantType());
-									}
-									if (StringUtils.isNotEmpty(product.getColour()))
-									{
-
-										orderproductdto.setProductColour(product.getColour());
-									}
-									if (entry.isGiveAway())
-									{
-										isGiveAway = "Y";
-									}
-									else
-									{
-										isGiveAway = "N";
-									}
-									orderproductdto.setIsGiveAway(isGiveAway);
-
-									//final List<OrderEntryData> associatedProducts = cancelReturnFacade.associatedEntriesData(orderModel,
-									//			entry.getOrderLineId());
-
-									if (null != entry.getAssociatedItems())
-									{
-										orderproductdto.setAssociatedProducts(entry.getAssociatedItems());
-									}
-
-									//final ProductModel productModel = productService.getProductForCode(entry.getProduct().getCode());
-									final ProductModel productModel = mplOrderService.findProductsByCode(product.getCode());
-									if (productModel instanceof PcmProductVariantModel)
-									{
-										final PcmProductVariantModel selectedVariantModel = (PcmProductVariantModel) productModel;
-										final String selectedCapacity = selectedVariantModel.getCapacity();
-										final ProductModel baseProduct = selectedVariantModel.getBaseProduct();
-										if (null != baseProduct.getVariants() && null != selectedCapacity)
-										{
-											for (final VariantProductModel vm : baseProduct.getVariants())
-											{
-												final PcmProductVariantModel pm = (PcmProductVariantModel) vm;
-												if (selectedCapacity.equals(pm.getCapacity()))
-												{
-													orderproductdto.setCapacity(pm.getCapacity());
-												}
-
-											}
-										}
-									}
+								SellerInformationModel sellerInfoModel = null;
+								if (StringUtils.isNotEmpty(entry.getSelectedUssid()))
+								{
+									sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
+								}
+								if (sellerInfoModel != null
+										&& sellerInfoModel.getRichAttribute() != null
+										&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
+								{
 									/* Fulfillment type */
-									/*
-									 * final List<RichAttributeModel> richAttributeModel = (List<RichAttributeModel>)
-									 * productModel .getRichAttribute(); if (richAttributeModel != null &&
-									 * richAttributeModel.get(0).getDeliveryFulfillModes() != null) { final String
-									 * fullfillmentData = richAttributeModel.get(0).getDeliveryFulfillModes().getCode()
-									 * .toUpperCase(); if (fullfillmentData != null && !fullfillmentData.isEmpty()) {
-									 * orderproductdto.setFulfillment(fullfillmentData); } }
-									 */
-									/* Delivery date as per history */
-									if (null != entry.getMplDeliveryMode())
+									final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
+											.getDeliveryFulfillModes().getCode();
+									if (StringUtils.isNotEmpty(fulfillmentType))
 									{
-										if (null != entry.getMplDeliveryMode().getDescription()
-												&& StringUtils.isNotEmpty(entry.getMplDeliveryMode().getDescription()))
-										{
-											orderproductdto.setDeliveryDate(entry.getMplDeliveryMode().getDescription());
-										}
+										orderproductdto.setFulfillment(fulfillmentType);
 									}
-
-									/*
-									 * if (null != orderDetails.getSellerOrderList()) { for (final OrderData childOrder :
-									 * orderDetails.getSellerOrderList()) { if (null != childOrder.getCode()) {
-									 * 
-									 * orderproductdto.setSellerorderno(childOrder.getCode()); } }
-									 * 
-									 * if (null != orderproductdto.getUSSID()) {
-									 * 
-									 * orderproductdto.setSerialno(orderproductdto.getUSSID()); } else {
-									 * orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA); }
-									 * 
-									 * }
-									 */
-
-
-									SellerInformationModel sellerInfoModel = null;
-									if (StringUtils.isNotEmpty(entry.getSelectedUssid()))
+									//Seller info
+									if (sellerInfoModel.getUSSID() != null
+											&& sellerInfoModel.getUSSID().equalsIgnoreCase(entry.getSelectedUssid()))
 									{
-										sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
-									}
-									if (sellerInfoModel != null
-											&& sellerInfoModel.getRichAttribute() != null
-											&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
-													.getDeliveryFulfillModes() != null)
-									{
-										/* Fulfillment type */
-										final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute())
-												.get(0).getDeliveryFulfillModes().getCode();
-										if (StringUtils.isNotEmpty(fulfillmentType))
+										if (null != sellerInfoModel.getSellerID())
 										{
-											orderproductdto.setFulfillment(fulfillmentType);
+											orderproductdto.setSellerID(sellerInfoModel.getSellerID());
 										}
-										//Seller info
-										if (sellerInfoModel.getUSSID() != null
-												&& sellerInfoModel.getUSSID().equalsIgnoreCase(entry.getSelectedUssid()))
+										else
 										{
-											if (null != sellerInfoModel.getSellerID())
-											{
-												orderproductdto.setSellerID(sellerInfoModel.getSellerID());
-											}
-											else
-											{
-												orderproductdto.setSellerID(MarketplacecommerceservicesConstants.NA);
-											}
+											orderproductdto.setSellerID(MarketplacecommerceservicesConstants.NA);
+										}
 
-											if (null != sellerInfoModel.getSellerName())
-											{
-												orderproductdto.setSellerName(sellerInfoModel.getSellerName());
-											}
-											else
-											{
-												orderproductdto.setSellerName(MarketplacecommerceservicesConstants.NA);
-											}
+										if (null != sellerInfoModel.getSellerName())
+										{
+											orderproductdto.setSellerName(sellerInfoModel.getSellerName());
+										}
+										else
+										{
+											orderproductdto.setSellerName(MarketplacecommerceservicesConstants.NA);
+										}
 
-											if (null != sellerInfoModel.getUSSID())
-											{
-												orderproductdto.setUSSID(sellerInfoModel.getUSSID());
-												//orderproductdto.setSerialno(orderproductdto.getUSSID());
-											}
-											else
-											{
-												orderproductdto.setUSSID(MarketplacecommerceservicesConstants.NA);
-												//orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA);
-											}
-											for (final RichAttributeModel rm : sellerInfoModel.getRichAttribute())
-											{
+										if (null != sellerInfoModel.getUSSID())
+										{
+											orderproductdto.setUSSID(sellerInfoModel.getUSSID());
+											//orderproductdto.setSerialno(orderproductdto.getUSSID());
+										}
+										else
+										{
+											orderproductdto.setUSSID(MarketplacecommerceservicesConstants.NA);
+											//orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA);
+										}
+										for (final RichAttributeModel rm : sellerInfoModel.getRichAttribute())
+										{
 
-												if (null == entry.getConsignment() && entry.getQuantity().doubleValue() != 0
-														&& null != subOrder.getStatus() && null != rm.getCancellationWindow())
+											if (null == entry.getConsignment() && entry.getQuantity().doubleValue() != 0
+													&& null != subOrder.getStatus() && null != rm.getCancellationWindow())
+											{
+												consignmentStatus = subOrder.getStatus().getCode();
+												final Date sysDate = new Date();
+												final int cancelWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
+														subOrder.getCreated(), sysDate);
+												final int actualCancelWindow = Integer.parseInt(rm.getCancellationWindow());
+												if (cancelWindow < actualCancelWindow
+														&& checkOrderStatus(subOrder.getStatus().getCode(),
+																MarketplacecommerceservicesConstants.CANCEL_ORDER_STATUS).booleanValue()
+														&& !entry.isGiveAway() && !entry.isIsBOGOapplied())
 												{
-													consignmentStatus = subOrder.getStatus().getCode();
-													final Date sysDate = new Date();
-													final int cancelWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
-															subOrder.getCreated(), sysDate);
-													final int actualCancelWindow = Integer.parseInt(rm.getCancellationWindow());
-													if (cancelWindow < actualCancelWindow
-															&& checkOrderStatus(subOrder.getStatus().getCode(),
-																	MarketplacecommerceservicesConstants.CANCEL_ORDER_STATUS).booleanValue()
-															&& !entry.isGiveAway() && !entry.isIsBOGOapplied())
-													{
-														orderproductdto.setCancel(Boolean.TRUE);
+													orderproductdto.setCancel(Boolean.TRUE);
 
-													}
-													else
-													{
-														orderproductdto.setCancel(Boolean.FALSE);
-													}
-
-												}
-												else if (null != entry.getConsignment() && null != entry.getConsignment().getStatus()
-														&& null != rm.getCancellationWindow())
-												{
-													consignmentStatus = entry.getConsignment().getStatus().getCode();
-													final Date sysDate = new Date();
-													final int cancelWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
-															subOrder.getCreated(), sysDate);
-													final int actualCancelWindow = Integer.parseInt(rm.getCancellationWindow());
-													if (cancelWindow < actualCancelWindow
-															&& checkOrderStatus(consignmentStatus,
-																	MarketplacecommerceservicesConstants.CANCEL_STATUS).booleanValue()
-															&& !entry.isGiveAway() && !entry.isIsBOGOapplied())
-
-													{
-														orderproductdto.setCancel(Boolean.TRUE);
-
-													}
-													else
-													{
-														orderproductdto.setCancel(Boolean.FALSE);
-													}
 												}
 												else
 												{
 													orderproductdto.setCancel(Boolean.FALSE);
 												}
 
+											}
+											else if (null != entry.getConsignment() && null != entry.getConsignment().getStatus()
+													&& null != rm.getCancellationWindow())
+											{
+												consignmentStatus = entry.getConsignment().getStatus().getCode();
+												final Date sysDate = new Date();
+												final int cancelWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
+														subOrder.getCreated(), sysDate);
+												final int actualCancelWindow = Integer.parseInt(rm.getCancellationWindow());
+												if (cancelWindow < actualCancelWindow
+														&& checkOrderStatus(consignmentStatus,
+																MarketplacecommerceservicesConstants.CANCEL_STATUS).booleanValue()
+														&& !entry.isGiveAway() && !entry.isIsBOGOapplied())
 
-												if (null != rm.getExchangeAllowedWindow())
 												{
-													orderproductdto.setExchangePolicy(rm.getExchangeAllowedWindow());
+													orderproductdto.setCancel(Boolean.TRUE);
 
 												}
-												/*
-												 * if (null != sellerEntry.getReplacement()) {
-												 * orderproductdto.setReplacement(sellerEntry.getReplacement());
-												 * 
-												 * }
-												 */
-												//for return
-												if (null != entry.getConsignment() && null != entry.getConsignment().getStatus()
-														&& null != rm.getReturnWindow())
+												else
 												{
-													consignmentStatus = entry.getConsignment().getStatus().getCode();
-													orderproductdto.setReturnPolicy(rm.getReturnWindow());
+													orderproductdto.setCancel(Boolean.FALSE);
+												}
+											}
+											else
+											{
+												orderproductdto.setCancel(Boolean.FALSE);
+											}
 
-													consignmentModel = mplOrderService.fetchConsignment(entry.getConsignment().getCode());
-													if (null != consignmentModel)
+
+											if (null != rm.getExchangeAllowedWindow())
+											{
+												orderproductdto.setExchangePolicy(rm.getExchangeAllowedWindow());
+
+											}
+											/*
+											 * if (null != sellerEntry.getReplacement()) {
+											 * orderproductdto.setReplacement(sellerEntry.getReplacement());
+											 * 
+											 * }
+											 */
+											//for return
+											if (null != entry.getConsignment() && null != entry.getConsignment().getStatus()
+													&& null != rm.getReturnWindow())
+											{
+												consignmentStatus = entry.getConsignment().getStatus().getCode();
+												orderproductdto.setReturnPolicy(rm.getReturnWindow());
+
+												consignmentModel = mplOrderService.fetchConsignment(entry.getConsignment().getCode());
+												if (null != consignmentModel)
+												{
+													final Date sDate = new Date();
+													final int returnWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
+															consignmentModel.getDeliveryDate(), sDate);
+													final int actualReturnWindow = Integer.parseInt(rm.getReturnWindow());
+													if (!entry.isGiveAway()
+															&& !entry.isIsBOGOapplied()
+															&& returnWindow < actualReturnWindow
+															&& !checkOrderStatus(consignmentStatus,
+																	MarketplacecommerceservicesConstants.VALID_RETURN).booleanValue()
+															&& consignmentStatus
+																	.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED))
+
 													{
-														final Date sDate = new Date();
-														final int returnWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
-																consignmentModel.getDeliveryDate(), sDate);
-														final int actualReturnWindow = Integer.parseInt(rm.getReturnWindow());
-														if (!entry.isGiveAway()
-																&& !entry.isIsBOGOapplied()
-																&& returnWindow < actualReturnWindow
-																&& !checkOrderStatus(consignmentStatus,
-																		MarketplacecommerceservicesConstants.VALID_RETURN).booleanValue()
-																&& consignmentStatus
-																		.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED))
-
-														{
-															//orderproductdto.setReturnPolicy(sellerEntry.getReturnPolicy());
-															orderproductdto.setIsReturned(Boolean.TRUE);
-														}
-														else
-														{
-															orderproductdto.setIsReturned(Boolean.FALSE);
-														}
+														//orderproductdto.setReturnPolicy(sellerEntry.getReturnPolicy());
+														orderproductdto.setIsReturned(Boolean.TRUE);
 													}
 													else
 													{
 														orderproductdto.setIsReturned(Boolean.FALSE);
 													}
-													//												if (null != consignmentModel.getTrackingID())
-													//												{
-													//													orderproductdto.setTrackingAWB(consignmentModel.getTrackingID());
-													//												}
-													//												if (null != consignmentModel.getReturnAWBNum())
-													//												{
-													//													orderproductdto.setReturnAWB(consignmentModel.getReturnAWBNum());
-													//												}
 												}
 												else
 												{
 													orderproductdto.setIsReturned(Boolean.FALSE);
 												}
-
-
+												//												if (null != consignmentModel.getTrackingID())
+												//												{
+												//													orderproductdto.setTrackingAWB(consignmentModel.getTrackingID());
+												//												}
+												//												if (null != consignmentModel.getReturnAWBNum())
+												//												{
+												//													orderproductdto.setReturnAWB(consignmentModel.getReturnAWBNum());
+												//												}
 											}
+											else
+											{
+												orderproductdto.setIsReturned(Boolean.FALSE);
+											}
+
+
 										}
 									}
 								}
-								//set Serial no
-								if (null != entry.getImeiDetails() && null != entry.getImeiDetails().getSerialNum())
+							}
+							//set Serial no
+							if (null != entry.getImeiDetails() && null != entry.getImeiDetails().getSerialNum())
+							{
+								orderproductdto.setSerialno(entry.getImeiDetails().getSerialNum());
+							}
+							else
+							{
+								orderproductdto.setSerialno(MarketplacecommerceservicesConstants.EMPTY);
+							}
+							//Set the transaction id
+							if (entry.getTransactionId() != null)
+							{
+								orderproductdto.setTransactionId(entry.getTransactionId());
+							}
+							else
+							{
+								orderproductdto.setTransactionId(MarketplacecommerceservicesConstants.EMPTY);
+							}
+							//Setting parent transaction ID
+							for (final AbstractOrderEntryModel orderEntry : orderModel.getEntries())
+							{
+								if (entry.getTransactionId().equalsIgnoreCase(orderEntry.getTransactionID())
+										&& null != orderEntry.getParentTransactionID())
 								{
-									orderproductdto.setSerialno(entry.getImeiDetails().getSerialNum());
+									parentTransactionIds = Arrays.asList(orderEntry.getParentTransactionID().split("\\s*,\\s*"));
+									break;
 								}
-								else
+							}
+							orderproductdto.setParentTransactionId(parentTransactionIds);
+							//Check if invoice is available
+							if (entry.getConsignment() != null)
+							{
+								if (entry.getConsignment().getStatus() != null
+										&& (entry.getConsignment().getStatus().equals(ConsignmentStatus.HOTC)
+												|| entry.getConsignment().getStatus().equals(ConsignmentStatus.OUT_FOR_DELIVERY)
+												|| entry.getConsignment().getStatus().equals(ConsignmentStatus.REACHED_NEAREST_HUB) || entry
+												.getConsignment().getStatus().equals(ConsignmentStatus.DELIVERED)))
 								{
-									orderproductdto.setSerialno(MarketplacecommerceservicesConstants.EMPTY);
-								}
-								//Set the transaction id
-								if (entry.getTransactionId() != null)
-								{
-									orderproductdto.setTransactionId(entry.getTransactionId());
-								}
-								else
-								{
-									orderproductdto.setTransactionId(MarketplacecommerceservicesConstants.EMPTY);
-								}
-								//Setting parent transaction ID
-								for (final AbstractOrderEntryModel orderEntry : orderModel.getEntries())
-								{
-									if (entry.getTransactionId().equalsIgnoreCase(orderEntry.getTransactionID())
-											&& null != orderEntry.getParentTransactionID())
-									{
-										parentTransactionIds = Arrays.asList(orderEntry.getParentTransactionID().split("\\s*,\\s*"));
-										break;
-									}
-								}
-								orderproductdto.setParentTransactionId(parentTransactionIds);
-								//Check if invoice is available
-								if (entry.getConsignment() != null)
-								{
-									if (entry.getConsignment().getStatus() != null
-											&& (entry.getConsignment().getStatus().equals(ConsignmentStatus.HOTC)
-													|| entry.getConsignment().getStatus().equals(ConsignmentStatus.OUT_FOR_DELIVERY)
-													|| entry.getConsignment().getStatus().equals(ConsignmentStatus.REACHED_NEAREST_HUB) || entry
-													.getConsignment().getStatus().equals(ConsignmentStatus.DELIVERED)))
-									{
-										orderproductdto.setIsInvoiceAvailable(Boolean.TRUE);
-									}
-									else
-									{
-										orderproductdto.setIsInvoiceAvailable(Boolean.FALSE);
-									}
+									orderproductdto.setIsInvoiceAvailable(Boolean.TRUE);
 								}
 								else
 								{
 									orderproductdto.setIsInvoiceAvailable(Boolean.FALSE);
 								}
-								//End
-								//estimated delivery date
-								if (null != consignmentModel)
+							}
+							else
+							{
+								orderproductdto.setIsInvoiceAvailable(Boolean.FALSE);
+							}
+							//End
+							//estimated delivery date
+							if (null != consignmentModel)
+							{
+								formattedProductDate = GenericUtilityMethods.getFormattedDate(consignmentModel.getEstimatedDelivery());
+								formattedActualProductDate = GenericUtilityMethods.getFormattedDate(consignmentModel.getDeliveryDate());
+								if (!formattedProductDate.equalsIgnoreCase(MarketplacecommerceservicesConstants.EMPTY))
 								{
-									formattedProductDate = GenericUtilityMethods.getFormattedDate(consignmentModel.getEstimatedDelivery());
-									formattedActualProductDate = GenericUtilityMethods
-											.getFormattedDate(consignmentModel.getDeliveryDate());
-									if (!formattedProductDate.equalsIgnoreCase(MarketplacecommerceservicesConstants.EMPTY))
+									orderproductdto.setEstimateddeliverydate(formattedProductDate);
+								}
+								//delivery date
+								if (!formattedActualProductDate.equalsIgnoreCase(MarketplacecommerceservicesConstants.EMPTY))
+								{
+									orderproductdto.setDeliveryDate(formattedActualProductDate);
+								}
+							}
+							//moved to method
+							setPaymentInfo(orderDetails, orderTrackingWsDTO); //TODO set payment Info
+
+							if (null != orderDetails.getConsignments())
+							{
+								for (final ConsignmentData shipdetails : orderDetails.getConsignments())
+								{
+									final Ordershipmentdetailstdto ordershipmentdetailstdto = new Ordershipmentdetailstdto();
+									if (null != shipdetails.getStatus() && StringUtils.isNotEmpty(shipdetails.getStatus().toString()))
 									{
-										orderproductdto.setEstimateddeliverydate(formattedProductDate);
+										ordershipmentdetailstdto.setStatus(shipdetails.getStatus().toString());
 									}
-									//delivery date
-									if (!formattedActualProductDate.equalsIgnoreCase(MarketplacecommerceservicesConstants.EMPTY))
+
+									if (null != shipdetails.getStatusDate())
 									{
-										orderproductdto.setDeliveryDate(formattedActualProductDate);
+										ordershipmentdetailstdto.setStatusDate(shipdetails.getStatusDate());
+									}
+
+									ordershipmentdetailstdtos.add(ordershipmentdetailstdto);
+								}
+								if (ordershipmentdetailstdtos.size() > 0)
+								{
+									orderproductdto.setShipmentdetails(ordershipmentdetailstdtos.get(0));
+								}
+								else
+								{
+									final Ordershipmentdetailstdto ordershipmentdetailstdto1 = new Ordershipmentdetailstdto();
+									ordershipmentdetailstdto1.setStatus(MarketplacecommerceservicesConstants.NA);
+									ordershipmentdetailstdto1.setStatusDate(new Date());
+									ordershipmentdetailstdtos.add(ordershipmentdetailstdto1);
+									orderproductdto.setShipmentdetails(ordershipmentdetailstdtos.get(0));
+								}
+							}
+							orderproductdtos.add(orderproductdto);
+
+						}
+						orderTrackingWsDTO.setProducts(orderproductdtos);
+					}
+				}
+				else
+				{
+					orderModel = orderModelService.getOrder(orderDetails.getCode());
+					for (final OrderEntryData entry : orderDetails.getEntries())
+					{
+						List<String> parentTransactionIds = new ArrayList<>();
+						orderproductdto = new OrderProductWsDTO();
+						//seller order no
+						orderproductdto.setSellerorderno(orderDetails.getCode());
+
+						if (null != entry.getDeliveryPointOfService())
+						{
+							orderproductdto.setStoreDetails(mplDataMapper.map(entry.getDeliveryPointOfService(),
+									PointOfServiceWsDTO.class, "DEFAULT"));
+						}
+						final ProductData product = entry.getProduct();
+						ordershipmentdetailstdtos = new ArrayList<Ordershipmentdetailstdto>();
+						if (null != product)
+						{
+							final List<ImageData> images = (List<ImageData>) product.getImages();
+							if (null != images)
+							{
+
+								for (final ImageData imageData : product.getImages())
+								{
+									if (imageData.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.THUMBNAIL))
+									{
+										orderproductdto.setImageURL(imageData.getUrl());
+										break;
+									}
+
+								}
+								if (null == orderproductdto.getImageURL())
+								{
+									orderproductdto.setImageURL(images.get(0).getUrl());
+								}
+							}
+							if (StringUtils.isNotEmpty(entry.getAmountAfterAllDisc().toString()))
+							{
+								orderproductdto.setPrice(entry.getAmountAfterAllDisc().getValue().toString());
+							}
+							if (null != product.getBrand() && StringUtils.isNotEmpty(product.getBrand().toString()))
+							{
+
+								orderproductdto.setProductBrand(product.getBrand().getBrandname());
+							}
+							if (null != product.getCode() && StringUtils.isNotEmpty(product.getCode()))
+							{
+
+								orderproductdto.setProductcode(product.getCode());
+							}
+							if (StringUtils.isNotEmpty(product.getName()))
+							{
+
+								orderproductdto.setProductName(product.getName());
+							}
+							if (StringUtils.isNotEmpty(product.getSize()))
+							{
+
+								orderproductdto.setProductSize(product.getSize());
+							}
+							if (StringUtils.isNotEmpty(product.getVariantType()))
+							{
+
+								orderproductdto.setVariantOptions(product.getVariantType());
+							}
+							if (StringUtils.isNotEmpty(product.getColour()))
+							{
+
+								orderproductdto.setProductColour(product.getColour());
+							}
+							if (entry.isGiveAway())
+							{
+								isGiveAway = "Y";
+							}
+							else
+							{
+								isGiveAway = "N";
+							}
+							orderproductdto.setIsGiveAway(isGiveAway);
+
+							//final List<OrderEntryData> associatedProducts = cancelReturnFacade.associatedEntriesData(orderModel,
+							//			entry.getOrderLineId());
+
+							if (null != entry.getAssociatedItems())
+							{
+								orderproductdto.setAssociatedProducts(entry.getAssociatedItems());
+							}
+
+							//final ProductModel productModel = productService.getProductForCode(entry.getProduct().getCode());
+							final ProductModel productModel = mplOrderService.findProductsByCode(product.getCode());
+							if (productModel instanceof PcmProductVariantModel)
+							{
+								final PcmProductVariantModel selectedVariantModel = (PcmProductVariantModel) productModel;
+								final String selectedCapacity = selectedVariantModel.getCapacity();
+								final ProductModel baseProduct = selectedVariantModel.getBaseProduct();
+								if (null != baseProduct.getVariants() && null != selectedCapacity)
+								{
+									for (final VariantProductModel vm : baseProduct.getVariants())
+									{
+										final PcmProductVariantModel pm = (PcmProductVariantModel) vm;
+										if (selectedCapacity.equals(pm.getCapacity()))
+										{
+											orderproductdto.setCapacity(pm.getCapacity());
+										}
+
 									}
 								}
-								//moved to method
-								setPaymentInfo(orderDetails, orderTrackingWsDTO); //TODO set payment Info
-
-								if (null != orderDetails.getConsignments())
+							}
+							/* Fulfillment type */
+							/*
+							 * final List<RichAttributeModel> richAttributeModel = (List<RichAttributeModel>) productModel
+							 * .getRichAttribute(); if (richAttributeModel != null &&
+							 * richAttributeModel.get(0).getDeliveryFulfillModes() != null) { final String fullfillmentData =
+							 * richAttributeModel.get(0).getDeliveryFulfillModes().getCode() .toUpperCase(); if
+							 * (fullfillmentData != null && !fullfillmentData.isEmpty()) {
+							 * orderproductdto.setFulfillment(fullfillmentData); } }
+							 */
+							/* Delivery date as per history */
+							if (null != entry.getMplDeliveryMode())
+							{
+								if (null != entry.getMplDeliveryMode().getDescription()
+										&& StringUtils.isNotEmpty(entry.getMplDeliveryMode().getDescription()))
 								{
-									for (final ConsignmentData shipdetails : orderDetails.getConsignments())
-									{
-										final Ordershipmentdetailstdto ordershipmentdetailstdto = new Ordershipmentdetailstdto();
-										if (null != shipdetails.getStatus() && StringUtils.isNotEmpty(shipdetails.getStatus().toString()))
-										{
-											ordershipmentdetailstdto.setStatus(shipdetails.getStatus().toString());
-										}
+									orderproductdto.setDeliveryDate(entry.getMplDeliveryMode().getDescription());
+								}
+							}
 
-										if (null != shipdetails.getStatusDate())
-										{
-											ordershipmentdetailstdto.setStatusDate(shipdetails.getStatusDate());
-										}
+							/*
+							 * if (null != orderDetails.getSellerOrderList()) { for (final OrderData childOrder :
+							 * orderDetails.getSellerOrderList()) { if (null != childOrder.getCode()) {
+							 * 
+							 * orderproductdto.setSellerorderno(childOrder.getCode()); } }
+							 * 
+							 * if (null != orderproductdto.getUSSID()) {
+							 * 
+							 * orderproductdto.setSerialno(orderproductdto.getUSSID()); } else {
+							 * orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA); }
+							 * 
+							 * }
+							 */
 
-										ordershipmentdetailstdtos.add(ordershipmentdetailstdto);
-									}
-									if (ordershipmentdetailstdtos.size() > 0)
+
+							SellerInformationModel sellerInfoModel = null;
+							if (StringUtils.isNotEmpty(entry.getSelectedUssid()))
+							{
+								sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
+							}
+							if (sellerInfoModel != null
+									&& sellerInfoModel.getRichAttribute() != null
+									&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
+							{
+								/* Fulfillment type */
+								final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
+										.getDeliveryFulfillModes().getCode();
+								if (StringUtils.isNotEmpty(fulfillmentType))
+								{
+									orderproductdto.setFulfillment(fulfillmentType);
+								}
+								//Seller info
+								if (sellerInfoModel.getUSSID() != null
+										&& sellerInfoModel.getUSSID().equalsIgnoreCase(entry.getSelectedUssid()))
+								{
+									if (null != sellerInfoModel.getSellerID())
 									{
-										orderproductdto.setShipmentdetails(ordershipmentdetailstdtos.get(0));
+										orderproductdto.setSellerID(sellerInfoModel.getSellerID());
 									}
 									else
 									{
-										final Ordershipmentdetailstdto ordershipmentdetailstdto1 = new Ordershipmentdetailstdto();
-										ordershipmentdetailstdto1.setStatus(MarketplacecommerceservicesConstants.NA);
-										ordershipmentdetailstdto1.setStatusDate(new Date());
-										ordershipmentdetailstdtos.add(ordershipmentdetailstdto1);
-										orderproductdto.setShipmentdetails(ordershipmentdetailstdtos.get(0));
+										orderproductdto.setSellerID(MarketplacecommerceservicesConstants.NA);
+									}
+
+									if (null != sellerInfoModel.getSellerName())
+									{
+										orderproductdto.setSellerName(sellerInfoModel.getSellerName());
+									}
+									else
+									{
+										orderproductdto.setSellerName(MarketplacecommerceservicesConstants.NA);
+									}
+
+									if (null != sellerInfoModel.getUSSID())
+									{
+										orderproductdto.setUSSID(sellerInfoModel.getUSSID());
+										//orderproductdto.setSerialno(orderproductdto.getUSSID());
+									}
+									else
+									{
+										orderproductdto.setUSSID(MarketplacecommerceservicesConstants.NA);
+										//orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA);
+									}
+									for (final RichAttributeModel rm : sellerInfoModel.getRichAttribute())
+									{
+
+										if (null == entry.getConsignment() && entry.getQuantity().doubleValue() != 0
+												&& null != orderDetails.getStatus() && null != rm.getCancellationWindow())
+										{
+											consignmentStatus = orderDetails.getStatus().getCode();
+											final Date sysDate = new Date();
+											final int cancelWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
+													orderDetails.getCreated(), sysDate);
+											final int actualCancelWindow = Integer.parseInt(rm.getCancellationWindow());
+											if (cancelWindow < actualCancelWindow
+													&& checkOrderStatus(orderDetails.getStatus().getCode(),
+															MarketplacecommerceservicesConstants.CANCEL_ORDER_STATUS).booleanValue()
+													&& !entry.isGiveAway() && !entry.isIsBOGOapplied())
+											{
+												orderproductdto.setCancel(Boolean.TRUE);
+
+											}
+											else
+											{
+												orderproductdto.setCancel(Boolean.FALSE);
+											}
+
+										}
+										else if (null != entry.getConsignment() && null != entry.getConsignment().getStatus()
+												&& null != rm.getCancellationWindow())
+										{
+											consignmentStatus = entry.getConsignment().getStatus().getCode();
+											final Date sysDate = new Date();
+											final int cancelWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
+													orderDetails.getCreated(), sysDate);
+											final int actualCancelWindow = Integer.parseInt(rm.getCancellationWindow());
+											if (cancelWindow < actualCancelWindow
+													&& checkOrderStatus(consignmentStatus, MarketplacecommerceservicesConstants.CANCEL_STATUS)
+															.booleanValue() && !entry.isGiveAway() && !entry.isIsBOGOapplied())
+
+											{
+												orderproductdto.setCancel(Boolean.TRUE);
+
+											}
+											else
+											{
+												orderproductdto.setCancel(Boolean.FALSE);
+											}
+										}
+										else
+										{
+											orderproductdto.setCancel(Boolean.FALSE);
+										}
+
+
+										if (null != rm.getExchangeAllowedWindow())
+										{
+											orderproductdto.setExchangePolicy(rm.getExchangeAllowedWindow());
+
+										}
+										/*
+										 * if (null != sellerEntry.getReplacement()) {
+										 * orderproductdto.setReplacement(sellerEntry.getReplacement());
+										 * 
+										 * }
+										 */
+										//for return
+										if (null != entry.getConsignment() && null != entry.getConsignment().getStatus()
+												&& null != rm.getReturnWindow())
+										{
+											consignmentStatus = entry.getConsignment().getStatus().getCode();
+											orderproductdto.setReturnPolicy(rm.getReturnWindow());
+
+											consignmentModel = mplOrderService.fetchConsignment(entry.getConsignment().getCode());
+											if (null != consignmentModel)
+											{
+												final Date sDate = new Date();
+												final int returnWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
+														consignmentModel.getDeliveryDate(), sDate);
+												final int actualReturnWindow = Integer.parseInt(rm.getReturnWindow());
+												if (!entry.isGiveAway()
+														&& !entry.isIsBOGOapplied()
+														&& returnWindow < actualReturnWindow
+														&& !checkOrderStatus(consignmentStatus,
+																MarketplacecommerceservicesConstants.VALID_RETURN).booleanValue()
+														&& consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED))
+
+												{
+													//orderproductdto.setReturnPolicy(sellerEntry.getReturnPolicy());
+													orderproductdto.setIsReturned(Boolean.TRUE);
+												}
+												else
+												{
+													orderproductdto.setIsReturned(Boolean.FALSE);
+												}
+											}
+											else
+											{
+												orderproductdto.setIsReturned(Boolean.FALSE);
+											}
+											//												if (null != consignmentModel.getTrackingID())
+											//												{
+											//													orderproductdto.setTrackingAWB(consignmentModel.getTrackingID());
+											//												}
+											//												if (null != consignmentModel.getReturnAWBNum())
+											//												{
+											//													orderproductdto.setReturnAWB(consignmentModel.getReturnAWBNum());
+											//												}
+										}
+										else
+										{
+											orderproductdto.setIsReturned(Boolean.FALSE);
+										}
+
+
 									}
 								}
-								orderproductdtos.add(orderproductdto);
-
 							}
-							orderTrackingWsDTO.setProducts(orderproductdtos);
 						}
+						//set Serial no
+						if (null != entry.getImeiDetails() && null != entry.getImeiDetails().getSerialNum())
+						{
+							orderproductdto.setSerialno(entry.getImeiDetails().getSerialNum());
+						}
+						else
+						{
+							orderproductdto.setSerialno(MarketplacecommerceservicesConstants.EMPTY);
+						}
+						//Set the transaction id
+						if (entry.getTransactionId() != null)
+						{
+							orderproductdto.setTransactionId(entry.getTransactionId());
+						}
+						else
+						{
+							orderproductdto.setTransactionId(MarketplacecommerceservicesConstants.EMPTY);
+						}
+						//Setting parent transaction ID
+						for (final AbstractOrderEntryModel orderEntry : orderModel.getEntries())
+						{
+							if (entry.getTransactionId().equalsIgnoreCase(orderEntry.getTransactionID())
+									&& null != orderEntry.getParentTransactionID())
+							{
+								parentTransactionIds = Arrays.asList(orderEntry.getParentTransactionID().split("\\s*,\\s*"));
+								break;
+							}
+						}
+						orderproductdto.setParentTransactionId(parentTransactionIds);
+						//Check if invoice is available
+						if (entry.getConsignment() != null)
+						{
+							if (entry.getConsignment().getStatus() != null
+									&& (entry.getConsignment().getStatus().equals(ConsignmentStatus.HOTC)
+											|| entry.getConsignment().getStatus().equals(ConsignmentStatus.OUT_FOR_DELIVERY)
+											|| entry.getConsignment().getStatus().equals(ConsignmentStatus.REACHED_NEAREST_HUB) || entry
+											.getConsignment().getStatus().equals(ConsignmentStatus.DELIVERED)))
+							{
+								orderproductdto.setIsInvoiceAvailable(Boolean.TRUE);
+							}
+							else
+							{
+								orderproductdto.setIsInvoiceAvailable(Boolean.FALSE);
+							}
+						}
+						else
+						{
+							orderproductdto.setIsInvoiceAvailable(Boolean.FALSE);
+						}
+						//End
+						//estimated delivery date
+						if (null != consignmentModel)
+						{
+							formattedProductDate = GenericUtilityMethods.getFormattedDate(consignmentModel.getEstimatedDelivery());
+							formattedActualProductDate = GenericUtilityMethods.getFormattedDate(consignmentModel.getDeliveryDate());
+							if (!formattedProductDate.equalsIgnoreCase(MarketplacecommerceservicesConstants.EMPTY))
+							{
+								orderproductdto.setEstimateddeliverydate(formattedProductDate);
+							}
+							//delivery date
+							if (!formattedActualProductDate.equalsIgnoreCase(MarketplacecommerceservicesConstants.EMPTY))
+							{
+								orderproductdto.setDeliveryDate(formattedActualProductDate);
+							}
+						}
+						//moved to method
+						setPaymentInfo(orderDetails, orderTrackingWsDTO); //TODO set payment Info
+
+						if (null != orderDetails.getConsignments())
+						{
+							for (final ConsignmentData shipdetails : orderDetails.getConsignments())
+							{
+								final Ordershipmentdetailstdto ordershipmentdetailstdto = new Ordershipmentdetailstdto();
+								if (null != shipdetails.getStatus() && StringUtils.isNotEmpty(shipdetails.getStatus().toString()))
+								{
+									ordershipmentdetailstdto.setStatus(shipdetails.getStatus().toString());
+								}
+
+								if (null != shipdetails.getStatusDate())
+								{
+									ordershipmentdetailstdto.setStatusDate(shipdetails.getStatusDate());
+								}
+
+								ordershipmentdetailstdtos.add(ordershipmentdetailstdto);
+							}
+							if (ordershipmentdetailstdtos.size() > 0)
+							{
+								orderproductdto.setShipmentdetails(ordershipmentdetailstdtos.get(0));
+							}
+							else
+							{
+								final Ordershipmentdetailstdto ordershipmentdetailstdto1 = new Ordershipmentdetailstdto();
+								ordershipmentdetailstdto1.setStatus(MarketplacecommerceservicesConstants.NA);
+								ordershipmentdetailstdto1.setStatusDate(new Date());
+								ordershipmentdetailstdtos.add(ordershipmentdetailstdto1);
+								orderproductdto.setShipmentdetails(ordershipmentdetailstdtos.get(0));
+							}
+						}
+						orderproductdtos.add(orderproductdto);
+
 					}
+					orderTrackingWsDTO.setProducts(orderproductdtos);
 				}
 			}
 		}
@@ -1287,7 +1687,483 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 				}
 				//TPR-815 check parent order first
 				subOrderList = orderDetail.getSellerOrderList();
-				if (CollectionUtils.isEmpty(subOrderList))
+				if (CollectionUtils.isNotEmpty(subOrderList))
+				{
+					for (final OrderData subOrder : subOrderList)
+					{
+						//TISPT-385
+						subOrderModel = orderModelService.getOrder(subOrder.getCode());
+						for (final OrderEntryData entry : subOrder.getEntries())
+						{
+							List<String> parentTransactionIds = new ArrayList<>();
+							final ProductData product = entry.getProduct();
+							//getting the product code
+							//							final ProductModel productModel = productService.getProductForCode(entry.getProduct().getCode());
+							final ProductModel productModel = mplOrderFacade.getProductForCode(entry.getProduct().getCode());
+
+
+							if (null == product)
+							{
+								throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.E9048);
+							}
+							else
+							{
+								orderproductdto = new OrderProductWsDTO();
+								ordershipmentdetailstdtos = new ArrayList<Ordershipmentdetailstdto>();
+								//								if (!entry.isGiveAway())
+								//								{
+								orderproductdto.setImageURL(setImageURL(product));
+
+								if (null != entry.getDeliveryPointOfService())
+								{
+									orderproductdto.setStoreDetails(mplDataMapper.map(entry.getDeliveryPointOfService(),
+											PointOfServiceWsDTO.class, "DEFAULT"));
+								}
+
+								if (StringUtils.isNotEmpty(entry.getAmountAfterAllDisc().toString()))
+								{
+									orderproductdto.setPrice(entry.getAmountAfterAllDisc().getValue().toString());
+								}
+								if (null != product.getBrand() && StringUtils.isNotEmpty(product.getBrand().getBrandname()))
+								{
+									orderproductdto.setProductBrand(product.getBrand().getBrandname());
+								}
+								if (null != product.getCode() && StringUtils.isNotEmpty(product.getCode()))
+								{
+									orderproductdto.setProductcode(product.getCode());
+								}
+								if (StringUtils.isNotEmpty(product.getName()))
+								{
+									orderproductdto.setProductName(product.getName());
+								}
+								if (StringUtils.isNotEmpty(product.getSize()))
+								{
+									orderproductdto.setProductSize(product.getSize());
+								}
+								if (StringUtils.isNotEmpty(product.getVariantType()))
+								{
+
+									orderproductdto.setVariantOptions(product.getVariantType());
+								}
+								if (StringUtils.isNotEmpty(product.getColour()))
+								{
+
+									orderproductdto.setProductColour(product.getColour());
+								}
+								/* Fulfillment type */
+								/*
+								 * final List<RichAttributeModel> richAttributeModel = (List<RichAttributeModel>) productModel
+								 * .getRichAttribute(); if (richAttributeModel != null &&
+								 * richAttributeModel.get(0).getDeliveryFulfillModes() != null) { final String fullfillmentData
+								 * = richAttributeModel.get(0).getDeliveryFulfillModes().getCode() .toUpperCase(); if
+								 * (fullfillmentData != null && !fullfillmentData.isEmpty()) {
+								 * orderproductdto.setFulfillment(fullfillmentData); } }
+								 */
+								if (entry.isGiveAway())
+								{
+									isGiveAway = "Y";
+								}
+								else
+								{
+									isGiveAway = "N";
+								}
+								orderproductdto.setIsGiveAway(isGiveAway);
+								if (null != entry.getAssociatedItems())
+								{
+									orderproductdto.setAssociatedProducts(entry.getAssociatedItems());
+								}
+								//Delivery date is the final delivery date
+								/*
+								 * if (null != entry.getMplDeliveryMode()) {
+								 * 
+								 * if (null != entry.getMplDeliveryMode().getDescription() &&
+								 * StringUtils.isNotEmpty(entry.getMplDeliveryMode().getDescription())) {
+								 * 
+								 * orderproductdto.setDeliveryDate(entry.getMplDeliveryMode().getDescription()); } }
+								 */
+
+								/* capacity */
+								if (productModel instanceof PcmProductVariantModel)
+								{
+									final PcmProductVariantModel selectedVariantModel = (PcmProductVariantModel) productModel;
+									final String selectedCapacity = selectedVariantModel.getCapacity();
+									final ProductModel baseProduct = selectedVariantModel.getBaseProduct();
+									if (null != baseProduct.getVariants() && null != selectedCapacity)
+									{
+										for (final VariantProductModel vm : baseProduct.getVariants())
+										{
+											final PcmProductVariantModel pm = (PcmProductVariantModel) vm;
+											if (selectedCapacity.equals(pm.getCapacity()))
+											{
+												orderproductdto.setCapacity(pm.getCapacity());
+											}
+
+										}
+									}
+								}
+								/*
+								 * if (null != orderDetail.getSellerOrderList()) { for (final OrderData childOrder :
+								 * orderDetail.getSellerOrderList()) {
+								 */
+								if (null != subOrder.getCode())
+								{
+									orderproductdto.setSellerorderno(subOrder.getCode());
+								}
+								//}
+
+								/*
+								 * if (null != orderproductdto.getUSSID()) {
+								 * 
+								 * orderproductdto.setSerialno(orderproductdto.getUSSID()); } else {
+								 * orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA); }
+								 */
+
+								//}
+								if (StringUtils.isNotEmpty(entry.getSelectedUssid()))
+								{
+									sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
+								}
+								if (sellerInfoModel != null
+										&& sellerInfoModel.getRichAttribute() != null
+										&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
+								{
+									/* Fulfillment type */
+									final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
+											.getDeliveryFulfillModes().getCode();
+									if (StringUtils.isNotEmpty(fulfillmentType))
+									{
+										orderproductdto.setFulfillment(fulfillmentType);
+									}
+									//Seller info
+									if (sellerInfoModel.getUSSID() != null
+											&& sellerInfoModel.getUSSID().equalsIgnoreCase(entry.getSelectedUssid()))
+									{
+										if (null != sellerInfoModel.getSellerID())
+										{
+											orderproductdto.setSellerID(sellerInfoModel.getSellerID());
+										}
+										else
+										{
+											orderproductdto.setSellerID(MarketplacecommerceservicesConstants.NA);
+										}
+
+										if (null != sellerInfoModel.getSellerName())
+										{
+											orderproductdto.setSellerName(sellerInfoModel.getSellerName());
+										}
+										else
+										{
+											orderproductdto.setSellerName(MarketplacecommerceservicesConstants.NA);
+										}
+
+										if (null != sellerInfoModel.getUSSID())
+										{
+											orderproductdto.setUSSID(sellerInfoModel.getUSSID());
+											//orderproductdto.setSerialno(orderproductdto.getUSSID());
+										}
+										else
+										{
+											orderproductdto.setUSSID(MarketplacecommerceservicesConstants.NA);
+											//orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA);
+										}
+										for (final RichAttributeModel rm : sellerInfoModel.getRichAttribute())
+										{
+											if (!mplOrderFacade.isChildCancelleable(subOrder, entry.getTransactionId()))
+											{
+												orderproductdto.setCancel(Boolean.FALSE);
+											}
+											if (null == entry.getConsignment() && entry.getQuantity().doubleValue() != 0
+													&& null != subOrder.getStatus())
+											{
+												consignmentStatus = subOrder.getStatus().getCode();
+												//cancellation window not required
+												/*
+												 * if (null != rm.getCancellationWindow()) { final Date sysDate = new Date(); final
+												 * int cancelWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
+												 * subOrder.getCreated(), sysDate); final int actualCancelWindow =
+												 * Integer.parseInt(rm.getCancellationWindow()); if (cancelWindow <
+												 * actualCancelWindow && checkOrderStatus(subOrder.getStatus().getCode(),
+												 * MarketplacecommerceservicesConstants.CANCEL_ORDER_STATUS).booleanValue() &&
+												 * !entry.isGiveAway() && !entry.isIsBOGOapplied()) {
+												 * orderproductdto.setCancel(Boolean.TRUE);
+												 * 
+												 * } else { orderproductdto.setCancel(Boolean.FALSE); } } else {
+												 * orderproductdto.setCancel(Boolean.FALSE); }
+												 */
+												if (checkOrderStatus(subOrder.getStatus().getCode(),
+														MarketplacecommerceservicesConstants.CANCEL_ORDER_STATUS).booleanValue()
+														&& !entry.isGiveAway() && !entry.isIsBOGOapplied())
+												{
+													orderproductdto.setCancel(Boolean.TRUE);
+
+												}
+												else
+												{
+													orderproductdto.setCancel(Boolean.FALSE);
+												}
+											}
+											else if (null != entry.getConsignment() && null != entry.getConsignment().getStatus())
+											{
+												consignmentStatus = entry.getConsignment().getStatus().getCode();
+												//cancellation window not required
+												/*
+												 * if (null != rm.getCancellationWindow()) { final Date sysDate = new Date(); final
+												 * int cancelWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
+												 * subOrder.getCreated(), sysDate); final int actualCancelWindow =
+												 * Integer.parseInt(rm.getCancellationWindow()); if (cancelWindow <
+												 * actualCancelWindow && checkOrderStatus(consignmentStatus,
+												 * MarketplacecommerceservicesConstants.CANCEL_STATUS).booleanValue() &&
+												 * !entry.isGiveAway() && !entry.isIsBOGOapplied())
+												 * 
+												 * { orderproductdto.setCancel(Boolean.TRUE);
+												 * 
+												 * } else { orderproductdto.setCancel(Boolean.FALSE); } } else {
+												 * orderproductdto.setCancel(Boolean.FALSE); }
+												 */
+												if (checkOrderStatus(consignmentStatus, MarketplacecommerceservicesConstants.CANCEL_STATUS)
+														.booleanValue() && !entry.isGiveAway() && !entry.isIsBOGOapplied())
+
+												{
+													orderproductdto.setCancel(Boolean.TRUE);
+												}
+												else
+												{
+													orderproductdto.setCancel(Boolean.FALSE);
+												}
+											}
+											else
+											{
+												orderproductdto.setCancel(Boolean.FALSE);
+											}
+
+											if (null != rm.getExchangeAllowedWindow())
+											{
+												orderproductdto.setExchangePolicy(rm.getExchangeAllowedWindow());
+
+											}
+											/*
+											 * if (null != sellerEntry.getReplacement()) {
+											 * orderproductdto.setReplacement(sellerEntry.getReplacement());
+											 * 
+											 * }
+											 */
+											//for return
+											if (null != entry.getConsignment() && null != entry.getConsignment().getStatus())
+											{
+												consignmentStatus = entry.getConsignment().getStatus().getCode();
+												consignmentModel = mplOrderService.fetchConsignment(entry.getConsignment().getCode());
+
+												if (null != consignmentModel && rm.getReturnWindow() != null)
+												{
+													final Date sDate = new Date();
+													final int returnWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
+															consignmentModel.getDeliveryDate(), sDate);
+													final int actualReturnWindow = Integer.parseInt(rm.getReturnWindow());
+													if (!entry.isGiveAway()
+															&& !entry.isIsBOGOapplied()
+															&& returnWindow < actualReturnWindow
+															&& !checkOrderStatus(consignmentStatus,
+																	MarketplacecommerceservicesConstants.VALID_RETURN).booleanValue()
+															&& (consignmentStatus
+																	.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED) || consignmentStatus
+																	.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED)))
+
+													{
+														//orderproductdto.setReturnPolicy(sellerEntry.getReturnPolicy());
+														orderproductdto.setIsReturned(Boolean.TRUE);
+													}
+													else
+													{
+														orderproductdto.setIsReturned(Boolean.FALSE);
+													}
+												}
+												else
+												{
+													orderproductdto.setIsReturned(Boolean.FALSE);
+												}
+												// set window
+												if (rm.getReturnWindow() != null)
+												{
+													orderproductdto.setReturnPolicy(rm.getReturnWindow());
+												}
+											}
+											else
+											{
+												orderproductdto.setIsReturned(Boolean.FALSE);
+											}
+										}
+									}
+								}
+
+								// display order tracking messages
+								if (null != consignmentModel)
+								{
+									formattedProductDate = GenericUtilityMethods.getFormattedDate(consignmentModel.getEstimatedDelivery());
+									formattedActualProductDate = GenericUtilityMethods
+											.getFormattedDate(consignmentModel.getDeliveryDate());
+									if (null != consignmentModel.getTrackingID())
+									{
+										orderproductdto.setTrackingAWB(consignmentModel.getTrackingID());
+									}
+									if (null != consignmentModel.getReturnAWBNum())
+									{
+										orderproductdto.setReturnAWB(consignmentModel.getReturnAWBNum());
+									}
+									if (null != consignmentModel.getCarrier())
+									{
+										orderproductdto.setLogisticName(consignmentModel.getCarrier());
+									}
+									if (null != consignmentModel.getReturnCarrier())
+									{
+										orderproductdto.setReverseLogisticName(consignmentModel.getReturnCarrier());
+									}
+								}
+
+								//Showing Delivery date for freebies and give aways TISEE-5520
+								/*
+								 * if (null != entry.getConsignment() && (entry.isGiveAway() || entry.isIsBOGOapplied())) {
+								 * consignmentModel = mplOrderService.fetchConsignment(entry.getConsignment().getCode());
+								 * formattedProductDate =
+								 * GenericUtilityMethods.getFormattedDate(consignmentModel.getEstimatedDelivery());
+								 * formattedActualProductDate = GenericUtilityMethods
+								 * .getFormattedDate(consignmentModel.getDeliveryDate()); if (null !=
+								 * consignmentModel.getTrackingID()) {
+								 * orderproductdto.setTrackingAWB(consignmentModel.getTrackingID()); } if (null !=
+								 * consignmentModel.getReturnAWBNum()) {
+								 * orderproductdto.setReturnAWB(consignmentModel.getReturnAWBNum()); } if (null !=
+								 * consignmentModel.getCarrier()) {
+								 * orderproductdto.setLogisticName(consignmentModel.getCarrier()); } if (null !=
+								 * consignmentModel.getReturnCarrier()) {
+								 * orderproductdto.setReverseLogisticName(consignmentModel.getReturnCarrier()); }
+								 * 
+								 * }
+								 */
+								//End
+								final Map<String, List<AWBResponseData>> returnMap = getOrderStatusTrack(entry, subOrder, subOrderModel);
+								orderproductdto.setStatusDisplayMsg(setStatusDisplayMessage(returnMap, consignmentModel));
+								//setting current product status Display
+								if ((consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_INITIATED) || consignmentStatus
+										.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_IN_PROGRESS))
+										&& returnMap.get(MarketplaceFacadesConstants.CANCEL) != null
+										&& returnMap.get(MarketplaceFacadesConstants.CANCEL).size() > 0)
+								{
+									orderproductdto.setStatusDisplay(MarketplaceFacadesConstants.CANCEL);
+								}
+								else if ((consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_INITIATED) || consignmentStatus
+										.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_IN_PROGRESS))
+										&& returnMap.get(MarketplaceFacadesConstants.RETURN) != null
+										&& returnMap.get(MarketplaceFacadesConstants.RETURN).size() > 0)
+								{
+									orderproductdto.setStatusDisplay(MarketplaceFacadesConstants.RETURN);
+								}
+								else
+								{
+									customerStatusModel = orderModelService.getOrderStausCodeMaster(consignmentStatus);
+									if (customerStatusModel != null)
+									{
+										orderproductdto.setStatusDisplay(customerStatusModel.getStage());
+									}
+									else
+									{
+										orderproductdto.setStatusDisplay(MarketplacecommerceservicesConstants.NA);
+									}
+								}
+								//set Serial no
+								if (null != entry.getImeiDetails() && null != entry.getImeiDetails().getSerialNum())
+								{
+									orderproductdto.setSerialno(entry.getImeiDetails().getSerialNum());
+								}
+								else
+								{
+									orderproductdto.setSerialno(MarketplacecommerceservicesConstants.EMPTY);
+								}
+								//Set the transaction id
+								if (entry.getTransactionId() != null)
+								{
+									orderproductdto.setTransactionId(entry.getTransactionId());
+								}
+								else
+								{
+									orderproductdto.setTransactionId(MarketplacecommerceservicesConstants.EMPTY);
+								}
+								//Setting parent transaction ID ---TISPT-385
+								if (StringUtils.isNotEmpty(entry.getParentTransactionID()))
+								{
+									parentTransactionIds = Arrays.asList(entry.getParentTransactionID().split("\\s*,\\s*"));
+								}
+								orderproductdto.setParentTransactionId(parentTransactionIds);
+								//Check if invoice is available
+								if (entry.getConsignment() != null)
+								{
+									if (entry.getConsignment().getStatus() != null
+											&& (entry.getConsignment().getStatus().equals(ConsignmentStatus.HOTC)
+													|| entry.getConsignment().getStatus().equals(ConsignmentStatus.OUT_FOR_DELIVERY)
+													|| entry.getConsignment().getStatus().equals(ConsignmentStatus.REACHED_NEAREST_HUB) || entry
+													.getConsignment().getStatus().equals(ConsignmentStatus.DELIVERED)))
+									{
+										orderproductdto.setIsInvoiceAvailable(Boolean.TRUE);
+									}
+									else
+									{
+										orderproductdto.setIsInvoiceAvailable(Boolean.FALSE);
+									}
+								}
+								else
+								{
+									orderproductdto.setIsInvoiceAvailable(Boolean.FALSE);
+								}
+								//End
+								//estimated delivery date
+								if (!formattedProductDate.equalsIgnoreCase(MarketplacecommerceservicesConstants.EMPTY))
+								{
+									orderproductdto.setEstimateddeliverydate(formattedProductDate);
+								}
+								//delivery date
+								if (!formattedActualProductDate.equalsIgnoreCase(MarketplacecommerceservicesConstants.EMPTY))
+								{
+									orderproductdto.setDeliveryDate(formattedActualProductDate);
+								}
+
+								if (null != orderDetail.getConsignments())
+								{
+									for (final ConsignmentData shipdetails : orderDetail.getConsignments())
+									{
+										final Ordershipmentdetailstdto ordershipmentdetailstdto = new Ordershipmentdetailstdto();
+										if (null != shipdetails.getStatus() && StringUtils.isNotEmpty(shipdetails.getStatus().toString()))
+										{
+											ordershipmentdetailstdto.setStatus(shipdetails.getStatus().toString());
+										}
+
+										if (null != shipdetails.getStatusDate())
+										{
+											ordershipmentdetailstdto.setStatusDate(shipdetails.getStatusDate());
+										}
+
+										ordershipmentdetailstdtos.add(ordershipmentdetailstdto);
+									}
+									if (ordershipmentdetailstdtos.size() > 0)
+									{
+										orderproductdto.setShipmentdetails(ordershipmentdetailstdtos.get(0));
+									}
+									else
+									{
+										final Ordershipmentdetailstdto ordershipmentdetailstdto1 = new Ordershipmentdetailstdto();
+										ordershipmentdetailstdto1.setStatus(MarketplacecommerceservicesConstants.NA);
+										ordershipmentdetailstdto1.setStatusDate(new Date());
+										ordershipmentdetailstdtos.add(ordershipmentdetailstdto1);
+										orderproductdto.setShipmentdetails(ordershipmentdetailstdtos.get(0));
+									}
+								}
+								orderproductdtos.add(orderproductdto);
+							}
+						}
+					}
+					orderTrackingWsDTO.setProducts(orderproductdtos);
+					orderTrackingWsDTO.setIsPickupUpdatable(isPickUpButtonEditable(orderDetail));
+					orderTrackingWsDTO.setStatusDisplay(orderDetail.getStatusDisplay());
+					orderTrackingWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+				}
+				else
 				{
 					for (final OrderEntryData orderEntry : orderDetail.getEntries())
 					{
@@ -1497,482 +2373,6 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 							orderproductdto.setShipmentdetails(ordershipmentdetailstdtos.get(0));
 
 							orderproductdtos.add(orderproductdto);
-						}
-					}
-					orderTrackingWsDTO.setProducts(orderproductdtos);
-					orderTrackingWsDTO.setIsPickupUpdatable(isPickUpButtonEditable(orderDetail));
-					orderTrackingWsDTO.setStatusDisplay(orderDetail.getStatusDisplay());
-					orderTrackingWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-				}
-				else if (CollectionUtils.isNotEmpty(subOrderList))
-				{
-					for (final OrderData subOrder : subOrderList)
-					{
-						//TISPT-385
-						subOrderModel = orderModelService.getOrder(subOrder.getCode());
-						for (final OrderEntryData entry : subOrder.getEntries())
-						{
-							List<String> parentTransactionIds = new ArrayList<>();
-							final ProductData product = entry.getProduct();
-							//getting the product code
-							//							final ProductModel productModel = productService.getProductForCode(entry.getProduct().getCode());
-							final ProductModel productModel = mplOrderFacade.getProductForCode(entry.getProduct().getCode());
-
-
-							if (null == product)
-							{
-								throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.E9048);
-							}
-							else
-							{
-								orderproductdto = new OrderProductWsDTO();
-								ordershipmentdetailstdtos = new ArrayList<Ordershipmentdetailstdto>();
-								//								if (!entry.isGiveAway())
-								//								{
-								orderproductdto.setImageURL(setImageURL(product));
-
-								if (null != entry.getDeliveryPointOfService())
-								{
-									orderproductdto.setStoreDetails(mplDataMapper.map(entry.getDeliveryPointOfService(),
-											PointOfServiceWsDTO.class, "DEFAULT"));
-								}
-
-								if (StringUtils.isNotEmpty(entry.getAmountAfterAllDisc().toString()))
-								{
-									orderproductdto.setPrice(entry.getAmountAfterAllDisc().getValue().toString());
-								}
-								if (null != product.getBrand() && StringUtils.isNotEmpty(product.getBrand().getBrandname()))
-								{
-									orderproductdto.setProductBrand(product.getBrand().getBrandname());
-								}
-								if (null != product.getCode() && StringUtils.isNotEmpty(product.getCode()))
-								{
-									orderproductdto.setProductcode(product.getCode());
-								}
-								if (StringUtils.isNotEmpty(product.getName()))
-								{
-									orderproductdto.setProductName(product.getName());
-								}
-								if (StringUtils.isNotEmpty(product.getSize()))
-								{
-									orderproductdto.setProductSize(product.getSize());
-								}
-								if (StringUtils.isNotEmpty(product.getVariantType()))
-								{
-
-									orderproductdto.setVariantOptions(product.getVariantType());
-								}
-								if (StringUtils.isNotEmpty(product.getColour()))
-								{
-
-									orderproductdto.setProductColour(product.getColour());
-								}
-								/* Fulfillment type */
-								/*
-								 * final List<RichAttributeModel> richAttributeModel = (List<RichAttributeModel>) productModel
-								 * .getRichAttribute(); if (richAttributeModel != null &&
-								 * richAttributeModel.get(0).getDeliveryFulfillModes() != null) { final String fullfillmentData
-								 * = richAttributeModel.get(0).getDeliveryFulfillModes().getCode() .toUpperCase(); if
-								 * (fullfillmentData != null && !fullfillmentData.isEmpty()) {
-								 * orderproductdto.setFulfillment(fullfillmentData); } }
-								 */
-								if (entry.isGiveAway())
-								{
-									isGiveAway = "Y";
-								}
-								else
-								{
-									isGiveAway = "N";
-								}
-								orderproductdto.setIsGiveAway(isGiveAway);
-								if (null != entry.getAssociatedItems())
-								{
-									orderproductdto.setAssociatedProducts(entry.getAssociatedItems());
-								}
-								//Delivery date is the final delivery date
-								/*
-								 * if (null != entry.getMplDeliveryMode()) {
-								 *
-								 * if (null != entry.getMplDeliveryMode().getDescription() &&
-								 * StringUtils.isNotEmpty(entry.getMplDeliveryMode().getDescription())) {
-								 *
-								 * orderproductdto.setDeliveryDate(entry.getMplDeliveryMode().getDescription()); } }
-								 */
-
-								/* capacity */
-								if (productModel instanceof PcmProductVariantModel)
-								{
-									final PcmProductVariantModel selectedVariantModel = (PcmProductVariantModel) productModel;
-									final String selectedCapacity = selectedVariantModel.getCapacity();
-									final ProductModel baseProduct = selectedVariantModel.getBaseProduct();
-									if (null != baseProduct.getVariants() && null != selectedCapacity)
-									{
-										for (final VariantProductModel vm : baseProduct.getVariants())
-										{
-											final PcmProductVariantModel pm = (PcmProductVariantModel) vm;
-											if (selectedCapacity.equals(pm.getCapacity()))
-											{
-												orderproductdto.setCapacity(pm.getCapacity());
-											}
-
-										}
-									}
-								}
-								/*
-								 * if (null != orderDetail.getSellerOrderList()) { for (final OrderData childOrder :
-								 * orderDetail.getSellerOrderList()) {
-								 */
-								if (null != subOrder.getCode())
-								{
-									orderproductdto.setSellerorderno(subOrder.getCode());
-								}
-								//}
-
-								/*
-								 * if (null != orderproductdto.getUSSID()) {
-								 *
-								 * orderproductdto.setSerialno(orderproductdto.getUSSID()); } else {
-								 * orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA); }
-								 */
-
-								//}
-								if (StringUtils.isNotEmpty(entry.getSelectedUssid()))
-								{
-									sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
-								}
-								if (sellerInfoModel != null
-										&& sellerInfoModel.getRichAttribute() != null
-										&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
-								{
-									/* Fulfillment type */
-									final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
-											.getDeliveryFulfillModes().getCode();
-									if (StringUtils.isNotEmpty(fulfillmentType))
-									{
-										orderproductdto.setFulfillment(fulfillmentType);
-									}
-									//Seller info
-									if (sellerInfoModel.getUSSID() != null
-											&& sellerInfoModel.getUSSID().equalsIgnoreCase(entry.getSelectedUssid()))
-									{
-										if (null != sellerInfoModel.getSellerID())
-										{
-											orderproductdto.setSellerID(sellerInfoModel.getSellerID());
-										}
-										else
-										{
-											orderproductdto.setSellerID(MarketplacecommerceservicesConstants.NA);
-										}
-
-										if (null != sellerInfoModel.getSellerName())
-										{
-											orderproductdto.setSellerName(sellerInfoModel.getSellerName());
-										}
-										else
-										{
-											orderproductdto.setSellerName(MarketplacecommerceservicesConstants.NA);
-										}
-
-										if (null != sellerInfoModel.getUSSID())
-										{
-											orderproductdto.setUSSID(sellerInfoModel.getUSSID());
-											//orderproductdto.setSerialno(orderproductdto.getUSSID());
-										}
-										else
-										{
-											orderproductdto.setUSSID(MarketplacecommerceservicesConstants.NA);
-											//orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA);
-										}
-										for (final RichAttributeModel rm : sellerInfoModel.getRichAttribute())
-										{
-											if (!mplOrderFacade.isChildCancelleable(subOrder, entry.getTransactionId()))
-											{
-												orderproductdto.setCancel(Boolean.FALSE);
-											}
-											if (null == entry.getConsignment() && entry.getQuantity().doubleValue() != 0
-													&& null != subOrder.getStatus())
-											{
-												consignmentStatus = subOrder.getStatus().getCode();
-												//cancellation window not required
-												/*
-												 * if (null != rm.getCancellationWindow()) { final Date sysDate = new Date(); final
-												 * int cancelWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
-												 * subOrder.getCreated(), sysDate); final int actualCancelWindow =
-												 * Integer.parseInt(rm.getCancellationWindow()); if (cancelWindow <
-												 * actualCancelWindow && checkOrderStatus(subOrder.getStatus().getCode(),
-												 * MarketplacecommerceservicesConstants.CANCEL_ORDER_STATUS).booleanValue() &&
-												 * !entry.isGiveAway() && !entry.isIsBOGOapplied()) {
-												 * orderproductdto.setCancel(Boolean.TRUE);
-												 *
-												 * } else { orderproductdto.setCancel(Boolean.FALSE); } } else {
-												 * orderproductdto.setCancel(Boolean.FALSE); }
-												 */
-												if (checkOrderStatus(subOrder.getStatus().getCode(),
-														MarketplacecommerceservicesConstants.CANCEL_ORDER_STATUS).booleanValue()
-														&& !entry.isGiveAway() && !entry.isIsBOGOapplied())
-												{
-													orderproductdto.setCancel(Boolean.TRUE);
-
-												}
-												else
-												{
-													orderproductdto.setCancel(Boolean.FALSE);
-												}
-											}
-											else if (null != entry.getConsignment() && null != entry.getConsignment().getStatus())
-											{
-												consignmentStatus = entry.getConsignment().getStatus().getCode();
-												//cancellation window not required
-												/*
-												 * if (null != rm.getCancellationWindow()) { final Date sysDate = new Date(); final
-												 * int cancelWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
-												 * subOrder.getCreated(), sysDate); final int actualCancelWindow =
-												 * Integer.parseInt(rm.getCancellationWindow()); if (cancelWindow <
-												 * actualCancelWindow && checkOrderStatus(consignmentStatus,
-												 * MarketplacecommerceservicesConstants.CANCEL_STATUS).booleanValue() &&
-												 * !entry.isGiveAway() && !entry.isIsBOGOapplied())
-												 *
-												 * { orderproductdto.setCancel(Boolean.TRUE);
-												 *
-												 * } else { orderproductdto.setCancel(Boolean.FALSE); } } else {
-												 * orderproductdto.setCancel(Boolean.FALSE); }
-												 */
-												if (checkOrderStatus(consignmentStatus, MarketplacecommerceservicesConstants.CANCEL_STATUS)
-														.booleanValue() && !entry.isGiveAway() && !entry.isIsBOGOapplied())
-
-												{
-													orderproductdto.setCancel(Boolean.TRUE);
-												}
-												else
-												{
-													orderproductdto.setCancel(Boolean.FALSE);
-												}
-											}
-											else
-											{
-												orderproductdto.setCancel(Boolean.FALSE);
-											}
-
-											if (null != rm.getExchangeAllowedWindow())
-											{
-												orderproductdto.setExchangePolicy(rm.getExchangeAllowedWindow());
-
-											}
-											/*
-											 * if (null != sellerEntry.getReplacement()) {
-											 * orderproductdto.setReplacement(sellerEntry.getReplacement());
-											 *
-											 * }
-											 */
-											//for return
-											if (null != entry.getConsignment() && null != entry.getConsignment().getStatus())
-											{
-												consignmentStatus = entry.getConsignment().getStatus().getCode();
-												consignmentModel = mplOrderService.fetchConsignment(entry.getConsignment().getCode());
-
-												if (null != consignmentModel && rm.getReturnWindow() != null)
-												{
-													final Date sDate = new Date();
-													final int returnWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
-															consignmentModel.getDeliveryDate(), sDate);
-													final int actualReturnWindow = Integer.parseInt(rm.getReturnWindow());
-													if (!entry.isGiveAway()
-															&& !entry.isIsBOGOapplied()
-															&& returnWindow < actualReturnWindow
-															&& !checkOrderStatus(consignmentStatus,
-																	MarketplacecommerceservicesConstants.VALID_RETURN).booleanValue()
-															&& (consignmentStatus
-																	.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED) || consignmentStatus
-																	.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED)))
-
-													{
-														//orderproductdto.setReturnPolicy(sellerEntry.getReturnPolicy());
-														orderproductdto.setIsReturned(Boolean.TRUE);
-													}
-													else
-													{
-														orderproductdto.setIsReturned(Boolean.FALSE);
-													}
-												}
-												else
-												{
-													orderproductdto.setIsReturned(Boolean.FALSE);
-												}
-												// set window
-												if (rm.getReturnWindow() != null)
-												{
-													orderproductdto.setReturnPolicy(rm.getReturnWindow());
-												}
-											}
-											else
-											{
-												orderproductdto.setIsReturned(Boolean.FALSE);
-											}
-										}
-									}
-								}
-
-								// display order tracking messages
-								if (null != consignmentModel)
-								{
-									formattedProductDate = GenericUtilityMethods.getFormattedDate(consignmentModel.getEstimatedDelivery());
-									formattedActualProductDate = GenericUtilityMethods
-											.getFormattedDate(consignmentModel.getDeliveryDate());
-									if (null != consignmentModel.getTrackingID())
-									{
-										orderproductdto.setTrackingAWB(consignmentModel.getTrackingID());
-									}
-									if (null != consignmentModel.getReturnAWBNum())
-									{
-										orderproductdto.setReturnAWB(consignmentModel.getReturnAWBNum());
-									}
-									if (null != consignmentModel.getCarrier())
-									{
-										orderproductdto.setLogisticName(consignmentModel.getCarrier());
-									}
-									if (null != consignmentModel.getReturnCarrier())
-									{
-										orderproductdto.setReverseLogisticName(consignmentModel.getReturnCarrier());
-									}
-								}
-
-								//Showing Delivery date for freebies and give aways TISEE-5520
-								/*
-								 * if (null != entry.getConsignment() && (entry.isGiveAway() || entry.isIsBOGOapplied())) {
-								 * consignmentModel = mplOrderService.fetchConsignment(entry.getConsignment().getCode());
-								 * formattedProductDate =
-								 * GenericUtilityMethods.getFormattedDate(consignmentModel.getEstimatedDelivery());
-								 * formattedActualProductDate = GenericUtilityMethods
-								 * .getFormattedDate(consignmentModel.getDeliveryDate()); if (null !=
-								 * consignmentModel.getTrackingID()) {
-								 * orderproductdto.setTrackingAWB(consignmentModel.getTrackingID()); } if (null !=
-								 * consignmentModel.getReturnAWBNum()) {
-								 * orderproductdto.setReturnAWB(consignmentModel.getReturnAWBNum()); } if (null !=
-								 * consignmentModel.getCarrier()) {
-								 * orderproductdto.setLogisticName(consignmentModel.getCarrier()); } if (null !=
-								 * consignmentModel.getReturnCarrier()) {
-								 * orderproductdto.setReverseLogisticName(consignmentModel.getReturnCarrier()); }
-								 *
-								 * }
-								 */
-								//End
-								final Map<String, List<AWBResponseData>> returnMap = getOrderStatusTrack(entry, subOrder, subOrderModel);
-								orderproductdto.setStatusDisplayMsg(setStatusDisplayMessage(returnMap, consignmentModel));
-								//setting current product status Display
-								if ((consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_INITIATED) || consignmentStatus
-										.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_IN_PROGRESS))
-										&& returnMap.get(MarketplaceFacadesConstants.CANCEL) != null
-										&& returnMap.get(MarketplaceFacadesConstants.CANCEL).size() > 0)
-								{
-									orderproductdto.setStatusDisplay(MarketplaceFacadesConstants.CANCEL);
-								}
-								else if ((consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_INITIATED) || consignmentStatus
-										.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_IN_PROGRESS))
-										&& returnMap.get(MarketplaceFacadesConstants.RETURN) != null
-										&& returnMap.get(MarketplaceFacadesConstants.RETURN).size() > 0)
-								{
-									orderproductdto.setStatusDisplay(MarketplaceFacadesConstants.RETURN);
-								}
-								else
-								{
-									customerStatusModel = orderModelService.getOrderStausCodeMaster(consignmentStatus);
-									if (customerStatusModel != null)
-									{
-										orderproductdto.setStatusDisplay(customerStatusModel.getStage());
-									}
-									else
-									{
-										orderproductdto.setStatusDisplay(MarketplacecommerceservicesConstants.NA);
-									}
-								}
-								//set Serial no
-								if (null != entry.getImeiDetails() && null != entry.getImeiDetails().getSerialNum())
-								{
-									orderproductdto.setSerialno(entry.getImeiDetails().getSerialNum());
-								}
-								else
-								{
-									orderproductdto.setSerialno(MarketplacecommerceservicesConstants.EMPTY);
-								}
-								//Set the transaction id
-								if (entry.getTransactionId() != null)
-								{
-									orderproductdto.setTransactionId(entry.getTransactionId());
-								}
-								else
-								{
-									orderproductdto.setTransactionId(MarketplacecommerceservicesConstants.EMPTY);
-								}
-								//Setting parent transaction ID ---TISPT-385
-								if (StringUtils.isNotEmpty(entry.getParentTransactionID()))
-								{
-									parentTransactionIds = Arrays.asList(entry.getParentTransactionID().split("\\s*,\\s*"));
-								}
-								orderproductdto.setParentTransactionId(parentTransactionIds);
-								//Check if invoice is available
-								if (entry.getConsignment() != null)
-								{
-									if (entry.getConsignment().getStatus() != null
-											&& (entry.getConsignment().getStatus().equals(ConsignmentStatus.HOTC)
-													|| entry.getConsignment().getStatus().equals(ConsignmentStatus.OUT_FOR_DELIVERY)
-													|| entry.getConsignment().getStatus().equals(ConsignmentStatus.REACHED_NEAREST_HUB) || entry
-													.getConsignment().getStatus().equals(ConsignmentStatus.DELIVERED)))
-									{
-										orderproductdto.setIsInvoiceAvailable(Boolean.TRUE);
-									}
-									else
-									{
-										orderproductdto.setIsInvoiceAvailable(Boolean.FALSE);
-									}
-								}
-								else
-								{
-									orderproductdto.setIsInvoiceAvailable(Boolean.FALSE);
-								}
-								//End
-								//estimated delivery date
-								if (!formattedProductDate.equalsIgnoreCase(MarketplacecommerceservicesConstants.EMPTY))
-								{
-									orderproductdto.setEstimateddeliverydate(formattedProductDate);
-								}
-								//delivery date
-								if (!formattedActualProductDate.equalsIgnoreCase(MarketplacecommerceservicesConstants.EMPTY))
-								{
-									orderproductdto.setDeliveryDate(formattedActualProductDate);
-								}
-
-								if (null != orderDetail.getConsignments())
-								{
-									for (final ConsignmentData shipdetails : orderDetail.getConsignments())
-									{
-										final Ordershipmentdetailstdto ordershipmentdetailstdto = new Ordershipmentdetailstdto();
-										if (null != shipdetails.getStatus() && StringUtils.isNotEmpty(shipdetails.getStatus().toString()))
-										{
-											ordershipmentdetailstdto.setStatus(shipdetails.getStatus().toString());
-										}
-
-										if (null != shipdetails.getStatusDate())
-										{
-											ordershipmentdetailstdto.setStatusDate(shipdetails.getStatusDate());
-										}
-
-										ordershipmentdetailstdtos.add(ordershipmentdetailstdto);
-									}
-									if (ordershipmentdetailstdtos.size() > 0)
-									{
-										orderproductdto.setShipmentdetails(ordershipmentdetailstdtos.get(0));
-									}
-									else
-									{
-										final Ordershipmentdetailstdto ordershipmentdetailstdto1 = new Ordershipmentdetailstdto();
-										ordershipmentdetailstdto1.setStatus(MarketplacecommerceservicesConstants.NA);
-										ordershipmentdetailstdto1.setStatusDate(new Date());
-										ordershipmentdetailstdtos.add(ordershipmentdetailstdto1);
-										orderproductdto.setShipmentdetails(ordershipmentdetailstdtos.get(0));
-									}
-								}
-								orderproductdtos.add(orderproductdto);
-							}
 						}
 					}
 					orderTrackingWsDTO.setProducts(orderproductdtos);

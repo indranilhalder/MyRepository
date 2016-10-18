@@ -23,10 +23,10 @@ import com.tisl.mpl.wsdto.OrderTrackingWsDTO;
 public interface GetOrderDetailsFacade
 {
 	/**
-	 * @param orderCode
+	 * @param orderDetails
 	 * @return
 	 */
-	public OrderDataWsDTO getOrderdetails(String orderCode);
+	public OrderDataWsDTO getOrderdetails(final OrderData orderDetails);
 
 	/**
 	 * @param orderCode

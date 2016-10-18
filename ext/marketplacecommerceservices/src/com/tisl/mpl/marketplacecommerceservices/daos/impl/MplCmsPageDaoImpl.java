@@ -59,6 +59,8 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 	private static final Object ONLINE_CATALOG_VERSION = "Online";
 
+	private static final String UID = "uid";
+
 
 
 
@@ -149,7 +151,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplCmsPageDao#getHomePageForMobile()
 	 */
 	@Override
@@ -164,7 +166,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 				.append("} = ?version");
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString.toString());
-		query.addQueryParameter("uid", pageUid);
+		query.addQueryParameter(UID, pageUid);
 		query.addQueryParameter("version", ONLINE_CATALOG_VERSION);
 		query.addQueryParameter(MarketplacecommerceservicesConstants.CHANNEL, cms);
 
@@ -208,7 +210,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 				.append(CatalogVersionModel.VERSION).append("} = ?version");
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString.toString());
-		query.addQueryParameter("uid", pageUid);
+		query.addQueryParameter(UID, pageUid);
 		query.addQueryParameter("version", ONLINE_CATALOG_VERSION);
 
 		final List<ContentPageModel> contentPages = flexibleSearchService.<ContentPageModel> search(query).getResult();
@@ -297,7 +299,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 				+ "}=?uid and {cs." + ContentSlotModel.UID + "}=?contentUid and {cv." + CatalogVersionModel.VERSION + "}=?catVersion";
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("uid", pageId);
+		query.addQueryParameter(UID, pageId);
 		query.addQueryParameter("contentUid", contentSlotId);
 		query.addQueryParameter("catVersion", catalogVersion);
 
@@ -333,7 +335,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 				+ ContentSlotForPageModel.CATALOGVERSION + "}=?version";
 
 		final Map<String, Object> params = new HashMap<String, Object>();
-		params.put("uid", pageUid);
+		params.put(UID, pageUid);
 		params.put("version", catalogmodel);
 
 		return pagedFlexibleSearchService.search(queryStr, params, pageableData);

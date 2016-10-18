@@ -1067,7 +1067,7 @@
 	<!-- Bin Number Details -->
 
 	<!-- COD Details -->
-	<bean class="com.tisl.mpl.wsdto.PaymentServiceWsData" extends="com.tisl.mpl.wsdto.ErrorDTO">
+	<bean class="com.tisl.mpl.wsdto.PaymentServiceWsData">
 		<property name="bankName" type="String"></property>
 		<property name="bankCode" type="String"></property>
 		<property name="basestore" type="String"></property>
@@ -1078,6 +1078,9 @@
 		<property name="paymentModes" type="java.util.Map&lt;String,Boolean>" />
 		<property name="listofPotentialRestriction"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.PotentialRestrictionData>" />
+		<property name="status" type="String" />
+		<property name="error" type="String" />
+		<property name="errorCode" type="String" />	
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.PotentialRestrictionData">
@@ -1085,13 +1088,16 @@
 		<property name="paymentModePromotion" type="java.util.List&lt;String>" />
 	</bean>
 
-	<bean class="com.tisl.mpl.wsdto.PaymentServiceWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+	<bean class="com.tisl.mpl.wsdto.PaymentServiceWsDTO" >
 		<property name="bankName" type="String"></property>
 		<property name="bankCode" type="String"></property>
 		<property name="basestore" type="String"></property>
 		<property name="convenienceCharge" type="String" />
 		<property name="totalPrice" type="String" />
 		<property name="paymentModes" type="java.util.Map&lt;String,Boolean>" />
+		<property name="status" type="String" />
+		<property name="error" type="String" />
+		<property name="errorCode" type="String" />	
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.PaymentResultWsData" extends="com.tisl.mpl.wsdto.ErrorDTO">

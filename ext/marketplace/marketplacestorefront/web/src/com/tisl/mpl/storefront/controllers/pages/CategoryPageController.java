@@ -137,6 +137,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 	//TPR_1282
 	private static final String CATEGORY_FOOTER_TEXT = "categoryFooterTxt";
+	private static final String SPECIAL_CHARACTERS = "[^\\w\\s]";
 	private int pageSiseCount;
 
 	/**
@@ -456,8 +457,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 				}
 
 				setUpMetaDataForContentPage(model, categoryLandingPage);
-				model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY,
-						categoryName.replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
+				model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY, categoryName.replaceAll(SPECIAL_CHARACTERS, "")
+						.replaceAll(" ", "_").toLowerCase());
 				model.addAttribute(WebConstants.BREADCRUMBS_KEY,
 						getSearchBreadcrumbBuilder().getBreadcrumbs(categoryCode, categoryName, false));
 				populateModel(model, searchPageData, ShowMode.Page);
@@ -553,18 +554,18 @@ public class CategoryPageController extends AbstractCategoryPageController
 		//TPR-430
 		if (breadcrumbs.size() > 0)
 		{
-			model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY, breadcrumbs.get(0).getName().replaceAll("[^\\w\\s]", "")
-					.replaceAll(" ", "_").toLowerCase());
+			model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY,
+					breadcrumbs.get(0).getName().replaceAll(SPECIAL_CHARACTERS, "").replaceAll(" ", "_").toLowerCase());
 		}
 		if (breadcrumbs.size() > 1)
 		{
 			model.addAttribute(ModelAttributetConstants.PAGE_SUBCATEGORY_NAME,
-					breadcrumbs.get(1).getName().replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
+					breadcrumbs.get(1).getName().replaceAll(SPECIAL_CHARACTERS, "").replaceAll(" ", "_").toLowerCase());
 		}
 		if (breadcrumbs.size() > 2)
 		{
 			model.addAttribute(ModelAttributetConstants.PAGE_SUBCATEGORY_NAME_L3,
-					breadcrumbs.get(2).getName().replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
+					breadcrumbs.get(2).getName().replaceAll(SPECIAL_CHARACTERS, "").replaceAll(" ", "_").toLowerCase());
 		}
 	}
 
@@ -960,21 +961,21 @@ public class CategoryPageController extends AbstractCategoryPageController
 	 * @param metaTitle
 	 */
 	//private void setUpMetaDataForSeo(final Model model, final String metaKeywords, final String metaDescription,
-		//	final String metaTitle)
-//	{
+	//	final String metaTitle)
+	//	{
 	//	final List<MetaElementData> metadata = new LinkedList<>();
 	//	metadata.add(createMetaElement("keywords", metaKeywords));
 	//	metadata.add(createMetaElement("description", metaDescription));
-		//metadata.add(createMetaElement("title", metaTitle));
+	//metadata.add(createMetaElement("title", metaTitle));
 	//	model.addAttribute("metatags", metadata);
 
-//	}
+	//	}
 
 	/* PageTitle in header - (TPR-243) SEO Meta Tags and Titles */
-//	private void updatePageTitle(final Model model, final String metaTitle)
-//	{
-//		model.addAttribute("metaPageTitle", metaTitle);
-//	}
+	//	private void updatePageTitle(final Model model, final String metaTitle)
+	//	{
+	//		model.addAttribute("metaPageTitle", metaTitle);
+	//	}
 
 
 
