@@ -16,6 +16,7 @@
 	</div>
 	<div class="csMainContent">
 		<div id="orderDetailOrderItemsWidget" class="orderDetailOrderItemsWidget" />
+		<div id="orderScheduleDeliverySlotWidget" class="orderDetailOrderItemsWidget" />
 		<div id="orderDetailAppliedPromotionsWidget" class="appliedPromotionsWidget"/>
 		<div id="orderCouponAppliedWidget" class="appliedPromotionsWidget"/>
 		<div id="orderConsignmentsWidget" class="orderConsignmentsWidget"/>

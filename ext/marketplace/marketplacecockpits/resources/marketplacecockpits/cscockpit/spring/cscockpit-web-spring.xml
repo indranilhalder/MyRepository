@@ -634,6 +634,13 @@
 					<property name="widgetCode" value="orderDetailOrderItemsWidget"/>
 					<property name="widgetConfig" ref="csOrderDetailOrderItemsWidgetConfig"/>
 				</bean>
+				
+				<bean class="de.hybris.platform.cscockpit.widgets.models.impl.CsWidgetBrowserModel$WidgetMapKey">
+					<property name="widgetCode" value="orderScheduleDeliverySlotWidget"/>
+					<property name="widgetConfig" ref="csOrderScheduleDeliverySlotWidgetConfig"/>
+				</bean>
+				
+				
 				<bean class="de.hybris.platform.cscockpit.widgets.models.impl.CsWidgetBrowserModel$WidgetMapKey">
 					<property name="widgetCode" value="orderDetailAppliedPromotionsWidget"/>
 					<property name="widgetConfig" ref="csOrderDetailAppliedPromotionsWidgetConfig"/>
