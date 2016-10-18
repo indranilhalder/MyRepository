@@ -138,6 +138,7 @@
        <!-- TPR-970 starts -->
 		<itemtype code="State" autocreate="true"
 					 generate="true">
+					  <deployment table="MplState" typecode="25084" /> 
 			<attributes>
 					<attribute autocreate="true" qualifier="countrykey"
 						type="java.lang.String">
