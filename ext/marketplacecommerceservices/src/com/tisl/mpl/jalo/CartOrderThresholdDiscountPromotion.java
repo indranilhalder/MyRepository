@@ -368,7 +368,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 		if (null != entryQualifyingCount)
 		{
 			LOG.debug("Inside entry qualifying count not null");
-			if (Double.valueOf(orderEntryCount).intValue() >= entryQualifyingCount.intValue())
+			if (orderEntryCount >= entryQualifyingCount.doubleValue())
 			{
 				promotionResults = evaluatePromotion(ctx, evalCtx, order, isPercentageDisc, percentageDiscount, maxDiscount,
 						promotionResults, orderSubtotalAfterDiscounts, validProductUssidMap);
@@ -535,7 +535,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 		}
 
 		final String qtyNeededMsg = quantityNeeded + " more item(s)";
-		final double orderSubtotalAfterDiscounts = getMplPromotionHelper().getTotalPrice(order);
+		final double orderSubtotalAfterDiscounts = getEligibleSubtotal(order);
 		double amountRequired = threshold.doubleValue() - orderSubtotalAfterDiscounts;
 		if (amountRequired < 0)
 		{
