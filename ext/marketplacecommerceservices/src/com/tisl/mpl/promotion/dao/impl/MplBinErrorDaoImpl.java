@@ -25,7 +25,7 @@ public class MplBinErrorDaoImpl implements MplBinErrorDao
 {
 	private static final Logger LOG = Logger.getLogger(MplBinErrorDaoImpl.class);
 
-	private static final String Err = "{err.";
+	//private static final String Err = "{err."; // Blocked for SONAR FIX
 	private static final String QUERY_FROM = "FROM {";
 
 	@Autowired

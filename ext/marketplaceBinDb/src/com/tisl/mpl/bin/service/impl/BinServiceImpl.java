@@ -67,7 +67,7 @@ public class BinServiceImpl implements BinService
 	{
 		final BinModel binmodel = getBinDao().fetchBankFromBin(bin);
 		//Added For TPR-1035
-		if (null == binmodel && isErrorCreation == true)
+		if (null == binmodel && isErrorCreation) // SONAR FIX
 		{
 			final BinErrorModel binError = getModelService().create(BinErrorModel.class);
 			binError.setBin(bin);
@@ -77,7 +77,7 @@ public class BinServiceImpl implements BinService
 			getModelService().save(binError);
 		}
 		else if (StringUtils.isNotEmpty(binmodel.getBinNo()) && !binmodel.getCardType().equalsIgnoreCase(cardType)
-				&& isErrorCreation == true)
+				&& isErrorCreation) // SONAR FIX
 		{
 			final BinErrorModel binError = getModelService().create(BinErrorModel.class);
 			binError.setBin(bin);

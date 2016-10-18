@@ -104,7 +104,7 @@ public class CustomSkuComponentController extends AbstractCMSComponentController
 	public static final int MAX_PAGE_LIMIT = 100; // should be configured
 	private static final String PAGINATION_NUMBER_OF_RESULTS_COUNT = "pagination.number.results.count";
 
-	private String lookId = "";
+	//private String lookId = "";// Blocked for SONAR
 
 	public static enum ShowMode
 	{
@@ -114,6 +114,7 @@ public class CustomSkuComponentController extends AbstractCMSComponentController
 	protected void customSku(final String searchQuery, final String sortCode, final ShowMode showMode, final Integer page,
 			final CustomSkuComponentModel sku, final Model model)
 	{
+		LOG.debug("Inside Method : customSku");
 
 		String formedPaginationUrl = null;
 
@@ -172,9 +173,9 @@ public class CustomSkuComponentController extends AbstractCMSComponentController
 		}
 		else
 		{
-			page = new Integer(0);
+			page = Integer.valueOf(0);
 		}
-		this.lookId = component.getLabelOrId();
+		//this.lookId = component.getLabelOrId(); // Blocked for SONAR
 		this.customSku(searchQuery, sortCode, ShowMode.Page, page, component, model);
 
 	}
@@ -381,17 +382,18 @@ public class CustomSkuComponentController extends AbstractCMSComponentController
 		populateModel(model, searchPageData, showMode);
 		model.addAttribute(MarketplaceCoreConstants.USER_LOCATION, customerLocationService.getUserLocation());
 
-		if (searchPageData.getPagination().getTotalNumberOfResults() == 0)
+		if (searchPageData.getPagination().getTotalNumberOfResults() != 0)
 		{
+			storeContinueUrl(request); // Sonar Fix
 			//updatePageTitle(searchPageData.getFreeTextSearch(), model);
 			//storeCmsPageInModel(model, getContentPageForLabelOrId(NO_RESULTS_CMS_PAGE_ID));
 		}
-		else
-		{
-			storeContinueUrl(request);
-			//updatePageTitle(searchPageData.getFreeTextSearch(), model);
-			//storeCmsPageInModel(model, getContentPageForLabelOrId(SEARCH_CMS_PAGE_ID));
-		}
+		//		else
+		//		{
+		//
+		//			//updatePageTitle(searchPageData.getFreeTextSearch(), model);
+		//			//storeCmsPageInModel(model, getContentPageForLabelOrId(SEARCH_CMS_PAGE_ID));
+		//		}
 		final List<Breadcrumb> breadcrumbs = searchBreadcrumbBuilder.getBreadcrumbs(null, searchPageData);
 		model.addAttribute(WebConstants.BREADCRUMBS_KEY, breadcrumbs);
 		//populateTealiumData(breadcrumbs, model);
