@@ -375,7 +375,7 @@ public class MplOrderEntryPopulator implements Populator<AbstractOrderEntryModel
 		}
 		else
 		{
-			final BigDecimal mprBigDec = new BigDecimal(0.0);
+			final BigDecimal mprBigDec = BigDecimal.valueOf(0);
 			final PriceData entryMrp = getPriceDataFactory().create(PriceDataType.BUY, mprBigDec,
 					MarketplacecommerceservicesConstants.INR);
 			entry.setMrp(entryMrp);
