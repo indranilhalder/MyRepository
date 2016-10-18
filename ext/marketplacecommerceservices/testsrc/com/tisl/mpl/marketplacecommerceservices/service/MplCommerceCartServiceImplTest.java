@@ -444,7 +444,7 @@ public class MplCommerceCartServiceImplTest
 		final ReservationItemWsDTO itemWsDto = Mockito.mock(ReservationItemWsDTO.class);
 		final CartSoftReservationData cartSoftReservationDataMock = Mockito.mock(CartSoftReservationData.class);
 		final CartData cartDataMock = Mockito.mock(CartData.class);
-		final String cartId = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter cart id
+		final CartModel cartModelMock = Mockito.mock(CartModel.class);//TODO :Please enter cart Model
 		final String pincode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter pincode
 		final ReservationListWsDTO wsDto = Mockito.mock(ReservationListWsDTO.class);
 		final List<ReservationItemWsDTO> reservationData = new ArrayList<ReservationItemWsDTO>();
@@ -473,7 +473,7 @@ public class MplCommerceCartServiceImplTest
 		cartdatalistMock.add(cartSoftReservationDataMock);
 
 		given(mplCommerceCartServiceImpl.populateDataForSoftReservation(cartDataMock)).willReturn(cartdatalistMock);
-		given(mplCommerceCartServiceImpl.getReservation(cartId, cartDataMock, pincode, type)).willReturn(wsDto);
+		given(mplCommerceCartServiceImpl.getReservation(cartModelMock, pincode, type)).willReturn(wsDto);
 	}
 
 	@Test
@@ -575,7 +575,7 @@ public class MplCommerceCartServiceImplTest
 		final MarketplaceDeliveryModeData deliveryModeData = Mockito.mock(MarketplaceDeliveryModeData.class);
 		final DeliveryDetailsData deliveryDetailsData = Mockito.mock(DeliveryDetailsData.class);
 		final PinCodeResponseData pinCodeResponseData = Mockito.mock(PinCodeResponseData.class);
-
+		final CartModel cartModelMock = Mockito.mock(CartModel.class);//TODO :Please enter cart Model
 		final List<MarketplaceDeliveryModeData> mpldeliveryModeData = new ArrayList<MarketplaceDeliveryModeData>();
 		final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
 		deliveryModeData.setName("");//TODO : Please enter name
@@ -600,7 +600,7 @@ public class MplCommerceCartServiceImplTest
 		codEligible = Boolean.FALSE;
 
 
-		Mockito.when(Boolean.valueOf(mplCommerceCartServiceImpl.addCartCodEligible(deliveryModeMap, pinCodeEntry))).thenReturn(
-				Boolean.valueOf((codEligible.booleanValue())));
+		Mockito.when(Boolean.valueOf(mplCommerceCartServiceImpl.addCartCodEligible(deliveryModeMap, pinCodeEntry, cartModelMock)))
+				.thenReturn(Boolean.valueOf((codEligible.booleanValue())));
 	}
 }

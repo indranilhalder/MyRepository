@@ -3,16 +3,23 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
+import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
 import de.hybris.platform.cms2.servicelayer.daos.impl.DefaultCMSPageDao;
+import de.hybris.platform.commerceservices.search.flexiblesearch.PagedFlexibleSearchService;
+import de.hybris.platform.commerceservices.search.pagedata.PageableData;
+import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -25,6 +32,8 @@ import com.tisl.mpl.marketplacecommerceservices.daos.MplCmsPageDao;
 import com.tisl.mpl.model.SellerMasterModel;
 
 
+
+
 /**
  * @author TCS
  *
@@ -34,6 +43,15 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 	//private final String MOBILE_UID = "MobileHomepage";	//SONAR Fix for unused private field
 	@Resource(name = "flexibleSearchService")
 	private FlexibleSearchService flexibleSearchService;
+
+	@Resource
+	private ConfigurationService configurationService;
+
+	@Resource
+	private CatalogVersionService catalogVersionService;
+
+	@Resource
+	private PagedFlexibleSearchService pagedFlexibleSearchService;
 
 	private static final String SELECT_CLASS = "Select {";
 
@@ -131,7 +149,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplCmsPageDao#getHomePageForMobile()
 	 */
 	@Override
@@ -202,7 +220,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 		return null;
 	}
-	
+
 	@Override
 	public ContentPageModel getCollectionLandingPageForMobile(final CMSChannel cms, final MplShopByLookModel shopByLook)
 	{
@@ -291,5 +309,34 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 		}
 
 		return null;
+	}
+
+	/**
+	 * Method added for TPR-798
+	 *
+	 * @param pageUid
+	 * @param pageableData
+	 * @return SearchPageData<ContentSlotForPageModel>
+	 */
+	@Override
+	public SearchPageData<ContentSlotForPageModel> getContentSlotsForAppById(final String pageUid, final PageableData pageableData)
+	{
+
+		final CatalogVersionModel catalogmodel = catalogVersionService.getCatalogVersion(configurationService.getConfiguration()
+				.getString(MarketplacecommerceservicesConstants.MPLCATELOG),
+				configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.MPLCATALOGNNAME));
+
+		//final String query = MarketplacecommerceservicesConstants.WCMSPAGINATIONQUERY;
+		final String queryStr = "Select {CSP." + ContentSlotForPageModel.PK + "} From {" + ContentSlotForPageModel._TYPECODE
+				+ " AS CSP JOIN " + ContentPageModel._TYPECODE + " AS CP ON {CSP." + ContentSlotForPageModel.PAGE + "}={CP."
+				+ ContentPageModel.PK + "}} " + "where {CP." + ContentPageModel.UID + "} = ?uid and {CSP."
+				+ ContentSlotForPageModel.CATALOGVERSION + "}=?version";
+
+		final Map<String, Object> params = new HashMap<String, Object>();
+		params.put("uid", pageUid);
+		params.put("version", catalogmodel);
+
+		return pagedFlexibleSearchService.search(queryStr, params, pageableData);
+
 	}
 }

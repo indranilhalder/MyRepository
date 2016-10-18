@@ -18,6 +18,7 @@ public class PaymentForm extends SopPaymentDetailsForm
 	private String termRate;
 	private String selectedTerm;
 	private String juspayOrderId;
+	private String guid;
 	private String paymentModeValue;
 
 	/**
@@ -137,6 +138,23 @@ public class PaymentForm extends SopPaymentDetailsForm
 	public void setJuspayOrderId(final String juspayOrderId)
 	{
 		this.juspayOrderId = juspayOrderId;
+	}
+
+	/**
+	 * @return the guid
+	 */
+	public String getGuid()
+	{
+		return guid;
+	}
+
+	/**
+	 * @param guid
+	 *           the guid to set
+	 */
+	public void setGuid(final String guid)
+	{
+		this.guid = guid;
 	}
 
 

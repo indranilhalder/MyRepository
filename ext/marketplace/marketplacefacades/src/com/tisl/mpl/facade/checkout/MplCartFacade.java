@@ -12,7 +12,9 @@ import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.InvalidCartException;
@@ -245,21 +247,19 @@ public interface MplCartFacade extends CartFacade
 
 	/*
 	 * @DESC TISST-6994,TISST-6990 adding to cart COD eligible or not with Pincode serviceabilty and sship product
-	 *
-	 *
+	 * 
 	 * @param pincodeResponseData
-	 *
-	 *
+	 * 
 	 * @param deliveryModeMap
-	 *
-	 *
+	 * 
+	 * @param cartModel
+	 * 
 	 * @return boolean
-	 *
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
-	boolean addCartCodEligible(Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap,
-			List<PinCodeResponseData> pincodeResponseData) throws EtailNonBusinessExceptions;
+	boolean addCartCodEligible(final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap,
+			final List<PinCodeResponseData> pincodeResponseData, CartModel cartModel) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @Desc checking max added quantity with store configuration
@@ -282,16 +282,25 @@ public interface MplCartFacade extends CartFacade
 	/*
 	 * @Desc used for inventory soft reservation from Commerce Checkout and Payment
 	 *
-	 *
 	 * @param requestType
-	 *
 	 *
 	 * @return boolean
 	 *
+	 * @throws EtailNonBusinessExceptions
+	 */
+	boolean isInventoryReserved(String requestType, AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
+
+	/*
+	 * @Desc used for inventory soft reservation from Commerce Checkout and Payment For Mobile
+	 *
+	 * @param requestType
+	 *
+	 * @return boolean
 	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
-	boolean isInventoryReserved(String requestType) throws EtailNonBusinessExceptions;
+	public boolean isInventoryReservedMobile(final String requestType, final AbstractOrderModel abstractOrderModel,
+			final String defaultPinCodeId) throws EtailNonBusinessExceptions;
 
 	/**
 	 * @param cart
@@ -300,7 +309,7 @@ public interface MplCartFacade extends CartFacade
 
 	CartModel removeDeliveryMode(CartModel cart);
 
-	boolean removeDeliveryMode2(CartModel cart);
+	boolean removeDeliveryMode2(final AbstractOrderModel cart);
 
 	void setDeliveryDate(final CartData cartData, final List<PinCodeResponseData> omsDeliveryResponse)
 			throws CMSItemNotFoundException, ParseException;
@@ -412,18 +421,17 @@ public interface MplCartFacade extends CartFacade
 	 * @return PinCodeResponseData
 	 * @throws EtailNonBusinessExceptions
 	 */
-	public PinCodeResponseData getVlaidDeliveryModesByInventory(PinCodeResponseData pinCodeResponseData)
+	PinCodeResponseData getVlaidDeliveryModesByInventory(PinCodeResponseData pinCodeResponseData)
 			throws EtailNonBusinessExceptions;
 
 	/**
 	 * This Method is used to get Ordered Cart entry in Mobile
 	 *
-	 * @param data
 	 * @param recentlyAddedFirst
 	 * @return CartData
 	 * @throws EtailNonBusinessExceptions
 	 */
-	public CartData getSessionCartWithEntryOrderingMobile(final CartModel cart, final boolean recentlyAddedFirst)
+	CartData getSessionCartWithEntryOrderingMobile(final CartModel cart, final boolean recentlyAddedFirst)
 			throws EtailNonBusinessExceptions;
 
 	/* TPR-970 changes ,populate city and stae details in cart */
@@ -436,5 +444,16 @@ public interface MplCartFacade extends CartFacade
 	 * @param cartModel
 	 */
 	public void totalMrpCal(final CartModel cartModel) throws EtailNonBusinessExceptions;
+	/**
+	 * @param orderModel
+	 */
+	void recalculateOrder(OrderModel orderModel);
 
+	/**
+	 * @Desc : To notify user about inventory reserve fail TPR-815
+	 * @param orderModel
+	 * @return boolean
+	 * @throws EtailNonBusinessExceptions
+	 */
+	boolean notifyEmailAndSmsOnInventoryFail(final OrderModel orderModel) throws EtailNonBusinessExceptions;
 }

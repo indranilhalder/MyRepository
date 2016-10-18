@@ -135,7 +135,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 	private static final String LOCATION = "Location";
 	private static final String PAGE_FACET_DATA = "pageFacetData";
 
-
+	//TPR_1282
+	private static final String CATEGORY_FOOTER_TEXT = "categoryFooterTxt";
 	private int pageSiseCount;
 
 	/**
@@ -275,6 +276,12 @@ public class CategoryPageController extends AbstractCategoryPageController
 				populateModel(model, searchPageData, ShowMode.Page);
 				model.addAttribute(ModelAttributetConstants.NORMAL_PRODUCTS, normalProductDatas);
 				model.addAttribute(ModelAttributetConstants.SHOW_CATEGORIES_ONLY, Boolean.FALSE);
+				// For Category Footer
+				if (null != category.getCategoryFooterText())
+				{
+					model.addAttribute(CATEGORY_FOOTER_TEXT, category.getCategoryFooterText());
+				}
+
 			}
 		}
 
@@ -448,11 +455,19 @@ public class CategoryPageController extends AbstractCategoryPageController
 					updatePageTitle(model, metaTitle);
 				}
 
+				setUpMetaDataForContentPage(model, categoryLandingPage);
+				model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY,
+						categoryName.replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
 				model.addAttribute(WebConstants.BREADCRUMBS_KEY,
 						getSearchBreadcrumbBuilder().getBreadcrumbs(categoryCode, categoryName, false));
 				populateModel(model, searchPageData, ShowMode.Page);
 				model.addAttribute(ModelAttributetConstants.NORMAL_PRODUCTS, normalProductDatas);
 				model.addAttribute(ModelAttributetConstants.SHOW_CATEGORIES_ONLY, Boolean.FALSE);
+				// For Category Footer
+				//				if (null != category.getCategoryFooterText())
+				//				{
+				//					model.addAttribute(CATEGORY_FOOTER_TEXT, category.getCategoryFooterText());
+				//				}
 				storeCmsPageInModel(model, categoryLandingPage);
 
 
@@ -536,20 +551,21 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 		model.addAttribute("page_name", "Product Grid:" + breadcrumbName);
 		//TPR-430
-		//Additional Checking Added for breadcrumbs for TISUATMS-300
-		if (CollectionUtils.isNotEmpty(breadcrumbs) && breadcrumbs.size() > 0 && null != breadcrumbs.get(1).getName())
+		if (breadcrumbs.size() > 0)
 		{
-			model.addAttribute("product_category", breadcrumbs.get(0).getName().replaceAll(" ", "_").toLowerCase());
+			model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY, breadcrumbs.get(0).getName().replaceAll("[^\\w\\s]", "")
+					.replaceAll(" ", "_").toLowerCase());
 		}
-		if (CollectionUtils.isNotEmpty(breadcrumbs) && breadcrumbs.size() > 1 && null != breadcrumbs.get(1).getName())
+		if (breadcrumbs.size() > 1)
 		{
-			model.addAttribute("page_subcategory_name", breadcrumbs.get(1).getName().replaceAll(" ", "_").toLowerCase());
+			model.addAttribute(ModelAttributetConstants.PAGE_SUBCATEGORY_NAME,
+					breadcrumbs.get(1).getName().replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
 		}
-		if (CollectionUtils.isNotEmpty(breadcrumbs) && breadcrumbs.size() > 2 && null != breadcrumbs.get(2).getName())
+		if (breadcrumbs.size() > 2)
 		{
-			model.addAttribute("page_subcategory_name_L3", breadcrumbs.get(2).getName().replaceAll(" ", "_").toLowerCase());
+			model.addAttribute(ModelAttributetConstants.PAGE_SUBCATEGORY_NAME_L3,
+					breadcrumbs.get(2).getName().replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
 		}
-
 	}
 
 	/**
@@ -855,6 +871,13 @@ public class CategoryPageController extends AbstractCategoryPageController
 		model.addAttribute("pageType", PageType.CATEGORY.name());
 		model.addAttribute("userLocation", getCustomerLocationService().getUserLocation());
 		model.addAttribute("otherProducts", true);
+		// For Category Footer
+		if (null != category.getCategoryFooterText())
+		{
+			model.addAttribute(CATEGORY_FOOTER_TEXT, category.getCategoryFooterText());
+		}
+
+
 		updatePageTitle(category, searchPageData.getBreadcrumbs(), model);
 		if (CollectionUtils.isNotEmpty(searchPageData.getResults()))
 		{

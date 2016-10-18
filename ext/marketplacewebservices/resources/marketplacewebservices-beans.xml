@@ -797,7 +797,7 @@
 		<property name="delistedMessage" type="String" />
 		<property name="pickupPersonName" type="String" />
 		<property name="pickupPersonMobile" type="String" />
-
+		<property name="cartGuid" type="String"></property>
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.CartProductsDeliveryDetailsWsDTO">
 		<property name="data" type="String" />
@@ -997,6 +997,8 @@
 		<property name="juspayMerchantId" type="String"></property>
 		<property name="juspayReturnUrl" type="String"></property>
 		<property name="juspayOrderId" type="String"></property>
+		<property name="orderId" type="String"></property>
+		<property name="cartGuid" type="String"></property>
 		<property name="status" type="String"></property>
 	</bean>
 
@@ -2063,6 +2065,7 @@
 		<property name="bankName" type="String" />
 		<property name="totalDiscount"
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="mobileNo" type="String" />
 	</bean>
 
 	<!-- Saved Card Credit/Debit DTO -->

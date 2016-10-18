@@ -106,7 +106,7 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 				while (iter.hasNext())
 				{
 					final Map.Entry mapEntry = (Map.Entry) iter.next();
-					final AbstractOrderEntry cartEntry = (AbstractOrderEntry) mapEntry.getValue();
+					final AbstractOrderEntry cartEntry = (AbstractOrderEntry) mapEntry.getValue(); //Changed to abstractOrderEntry for TPR-629
 					final String validProductUSSID = (String) mapEntry.getKey();
 					double amtTobeDeductedAtlineItemLevel = 0.00D;
 					int qualifyingCount = 0;

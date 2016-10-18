@@ -1,4 +1,3 @@
-<%@ attribute name="cartData" required="true" type="de.hybris.platform.commercefacades.order.data.CartData" %>
 <%@ attribute name="showTax" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="showTaxEstimate" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="subtotalsCssClasses" required="false" type="java.lang.String" %>
@@ -7,6 +6,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ attribute name="isCart" required="false" type="java.lang.Boolean" %>	<!-- TPR-629 -->
 	
 <div class="coupon block">
 <h2>Apply Coupon Code</h2>

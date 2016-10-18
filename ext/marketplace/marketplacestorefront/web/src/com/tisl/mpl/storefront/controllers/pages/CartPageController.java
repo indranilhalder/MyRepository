@@ -21,6 +21,7 @@ import de.hybris.platform.acceleratorservices.enums.CheckoutFlowEnum;
 import de.hybris.platform.acceleratorservices.enums.CheckoutPciOptionEnum;
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.ResourceBreadcrumbBuilder;
+import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.impl.ProductBreadcrumbBuilder;
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
@@ -46,6 +47,7 @@ import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.exceptions.CalculationException;
+import de.hybris.platform.product.ProductService;
 import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -231,6 +233,23 @@ public class CartPageController extends AbstractPageController
 				final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 				final boolean isUserAnym = getUserFacade().isAnonymousUser();
 				model.addAttribute("isUserAnym", isUserAnym);
+
+				// TPR-429
+				String cartLevelSellerID = null;
+				final List<OrderEntryData> sellerList = cartData.getEntries();
+				for (final OrderEntryData seller : sellerList)
+				{
+					final String sellerID = seller.getSelectedSellerInformation().getSellerID();
+					if (cartLevelSellerID != null)
+					{
+						cartLevelSellerID += "_" + sellerID;
+					}
+					else
+					{
+						cartLevelSellerID = sellerID;
+					}
+				}
+				model.addAttribute(ModelAttributetConstants.CHECKOUT_SELLER_IDS, cartLevelSellerID);
 
 				//TISEE-432
 				final String selectedPinCode = fetchPincode(isUserAnym);
@@ -944,6 +963,10 @@ public class CartPageController extends AbstractPageController
 			final String cartInvalidCheck = getSessionService().getAttribute(
 					MarketplacecheckoutaddonConstants.CART_DELIVERYMODE_ADDRESS_INVALID);
 
+			// TISUTO-12 TISUTO-11
+			final String orderInventoryReservationCheck = getSessionService().getAttribute(
+					MarketplacecclientservicesConstants.OMS_ORDER_INVENTORY_RESV_SESSION_ID);
+
 			//TISEE-3676
 			if (StringUtils.isNotEmpty(cartItemDelisted)
 					&& cartItemDelisted.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE))
@@ -1001,12 +1024,18 @@ public class CartPageController extends AbstractPageController
 				getSessionService().removeAttribute(MarketplacecheckoutaddonConstants.CART_DELIVERYMODE_ADDRESS_INVALID);
 				GlobalMessages.addErrorMessage(model, MarketplacecheckoutaddonConstants.CART_DELIVERYMODE_ADDRESS_INVALID_MSG);
 			}
+			else if (StringUtils.isNotEmpty(orderInventoryReservationCheck)
+					&& orderInventoryReservationCheck.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE))
+			{
+				getSessionService().removeAttribute(MarketplacecclientservicesConstants.OMS_ORDER_INVENTORY_RESV_SESSION_ID);
+				GlobalMessages.addErrorMessage(model, MarketplacecclientservicesConstants.ORDER_INV_FAIL_MSG);
+			}
 
 		}
 		//TISPT-174
 		//populateTealiumData(model, cartData);
-		GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
-
+		final CartModel cartModel = getCartService().getSessionCart();
+		GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartModel);
 	}
 
 

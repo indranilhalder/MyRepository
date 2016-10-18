@@ -55,7 +55,16 @@ public class OrderStatusSpecifier
 
 			}
 		}
-		if (flag) //flag == true
+		//TPR-1081
+		else if (CollectionUtils.isEmpty(subOrderList)
+				&& (orderStatus.equals(OrderStatus.PAYMENT_PENDING) || orderStatus.equals(OrderStatus.PAYMENT_FAILED) || orderStatus
+						.equals(OrderStatus.PAYMENT_TIMEOUT)))
+		{
+			flag = addOrderHistory(1, order, orderStatus, order.getEntries(), order, flag);
+		}
+		//if (flag || orderStatus.equals(OrderStatus.PAYMENT_PENDING)) //flag == true
+		//{
+		if (flag)
 		{
 			order.setStatus(orderStatus);
 			getModelService().save(order);

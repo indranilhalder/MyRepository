@@ -140,7 +140,7 @@
 	<bean id="defaultPaymentMethodCheckoutStep" parent="checkoutStep">
 		<property name="checkoutGroup" ref="marketplaceMultiPathCheckoutGroup"/>
 		<!-- <property name="checkoutStepValidator" ref="defaultPaymentMethodCheckoutValidator"/> Commented for checkout journey modification-->
-		<property name="checkoutStepValidator" ref="defaultResponsivePaymentMethodCheckoutValidator"/>
+		<!-- <property name="checkoutStepValidator" ref="defaultResponsivePaymentMethodCheckoutValidator"/> --> <!-- TPR-629 -->
 		<property name="transitions">
 			<map merge="true">
 				<entry key="previous" value-ref="REDIRECT_TO_DELIVERY_METHOD"/>
@@ -215,7 +215,7 @@
 	<alias name="defaultResponsivePaymentMethodCheckoutStep" alias="responsivePaymentMethodCheckoutStep" />
 	<bean id="defaultResponsivePaymentMethodCheckoutStep" parent="checkoutStep">
 		<property name="checkoutGroup" ref="responsiveCheckoutGroup"/>
-		<property name="checkoutStepValidator" ref="defaultResponsivePaymentMethodCheckoutValidator"/>
+		<!-- <property name="checkoutStepValidator" ref="defaultResponsivePaymentMethodCheckoutValidator"/> -->  <!-- TPR-629 -->
 		<property name="transitions">
 			<map merge="true">
 				<entry key="previous" value-ref="REDIRECT_TO_DELIVERY_METHOD"/>
@@ -411,8 +411,9 @@
 		<constructor-arg value="redirect:/checkout/multi/pickup-location/choose"/>
 	</bean>
 
+	<!-- TPR-629 -->
 	<bean id="REDIRECT_TO_PAYMENT_METHOD" class="java.lang.String">
-		<constructor-arg value="redirect:/checkout/multi/payment-method/add"/>
+		<constructor-arg value="redirect:/checkout/multi/payment-method/pay"/>
 	</bean>
 
 	<bean id="REDIRECT_TO_SUMMARY" class="java.lang.String">

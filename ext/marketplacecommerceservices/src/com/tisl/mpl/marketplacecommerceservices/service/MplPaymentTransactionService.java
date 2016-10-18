@@ -3,7 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service;
 
-import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 
@@ -27,8 +27,8 @@ public interface MplPaymentTransactionService
 	 * @param paymentTransactionEntryList
 	 * @return List<PaymentTransactionEntryModel>
 	 */
-	List<PaymentTransactionEntryModel> createPaymentTranEntry(GetOrderStatusResponse getOrderStatusResponse, CartModel cart,
-			Entry<String, Double> entry, List<PaymentTransactionEntryModel> paymentTransactionEntryList);
+	List<PaymentTransactionEntryModel> createPaymentTranEntry(GetOrderStatusResponse getOrderStatusResponse,
+			AbstractOrderModel cart, Entry<String, Double> entry, List<PaymentTransactionEntryModel> paymentTransactionEntryList);
 
 	/**
 	 * @param cart
@@ -37,7 +37,16 @@ public interface MplPaymentTransactionService
 	 * @param paymentTransactionList
 	 * @return List<PaymentTransactionModel>
 	 */
-	List<PaymentTransactionModel> createPaymentTransaction(CartModel cart, GetOrderStatusResponse orderStatusResponse,
-			List<PaymentTransactionEntryModel> paymentTransactionEntryList, List<PaymentTransactionModel> paymentTransactionList);
+	//List<PaymentTransactionModel> createPaymentTransaction(AbstractOrderModel cart, GetOrderStatusResponse orderStatusResponse,
+	//		List<PaymentTransactionEntryModel> paymentTransactionEntryList, List<PaymentTransactionModel> paymentTransactionList);
+
+	/**
+	 * @param cart
+	 * @param orderStatusResponse
+	 * @param paymentTransactionEntryList
+	 * @return PaymentTransactionModel
+	 */
+	PaymentTransactionModel createPaymentTransaction(AbstractOrderModel cart, GetOrderStatusResponse orderStatusResponse,
+			List<PaymentTransactionEntryModel> paymentTransactionEntryList);
 
 }

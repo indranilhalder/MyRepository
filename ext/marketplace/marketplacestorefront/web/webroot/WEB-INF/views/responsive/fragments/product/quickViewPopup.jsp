@@ -676,10 +676,11 @@ display:none;
 							<%-- <span><spring:theme code="product.socialmedia.share"/></span> --%>
 							<ul style="width: 100%;">
 								<li>
-							<a class="tw" onclick="return openPopup('https://twitter.com/intent/tweet?text='+ $('#sharepretext').text() + ' ' +window.location.host+ $('#productUrl').text() + ' ' + $('#shareposttext').text())"></a>
+							<!-- TPR-674 -->
+							<a class="tw" onclick="return openPopup('https://twitter.com/intent/tweet?text='+ $('#sharepretext').text() + ' ' +window.location.host+ $('#productUrl').text() + ' ' + $('#shareposttext').text(), 'share_twitter')"></a>
 							</li>
 							<li>
-							<a class="fb" onclick="return openPopup('https://www.facebook.com/dialog/feed?link=' + window.location.host+ $('#productUrl').text() + '&amp;app_id=' + $('#facebookAppid').text() + '&amp;description='+$('#sharepretext').text()+' '+$('#shareposttext').text()+' &amp;redirect_uri=http://www.facebook.com/')"></a> 
+							<a class="fb" onclick="return openPopup('https://www.facebook.com/dialog/feed?link=' + window.location.host+ $('#productUrl').text() + '&amp;app_id=' + $('#facebookAppid').text() + '&amp;description='+$('#sharepretext').text()+' '+$('#shareposttext').text()+' &amp;redirect_uri=http://www.facebook.com/', 'share_facebook')"></a> 
 							 <!-- <a class="fb" onclick="return openPopup('https://www.facebook.com/dialog/feed?link=' + window.location + '&amp;app_id=145634995501895&amp;description='+$('#sharepretext').text()+' '+$('#shareposttext').text()+' &amp;redirect_uri=https://developers.facebook.com/tools/explorer')"></a>  -->				
 							
 							</li>
@@ -716,7 +717,9 @@ display:none;
 			var popUpHeight=450;
 				 var PopUpLeftPosition = screen.width/2 - popUpWidth/2;
 				    var PopUpTopPosition= screen.height/2 - popUpHeight/2;
-			function openPopup(url) {
+				  //TPR-674
+			function openPopup(url, buttontype) {
+				utag.link({link_obj: this, link_text: buttontype , event_type : 'share_button_click' });
 				    window.open(url, 'popup_id','scrollbars,resizable,height='+popUpHeight+',width='+ popUpWidth +',left='+ PopUpLeftPosition +',top='+ PopUpTopPosition);
 			      return false;
 			    }
@@ -726,6 +729,12 @@ display:none;
 				 /*  $("#cboxLoadedContent").animate({ scrollTop: $('#cboxLoadedContent')[0].scrollHeight }, "slow");
 				 return false; */
 				};
+				$(document).on('click','#mailQuick',function(){
+						utag.link({link_obj: this, link_text: 'share_email' , event_type : 'share_button_click' });
+					})
+					$(document).on('click','.g-interactivepost',function(){
+				utag.link({link_obj: this, link_text: 'share_googleplus' , event_type : 'share_button_click' });
+					})
 			
   </script>
 

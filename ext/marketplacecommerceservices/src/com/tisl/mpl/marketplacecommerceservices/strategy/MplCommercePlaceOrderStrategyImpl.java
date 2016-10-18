@@ -4,7 +4,6 @@ package com.tisl.mpl.marketplacecommerceservices.strategy;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commerceservices.delivery.DeliveryService;
 import de.hybris.platform.commerceservices.externaltax.ExternalTaxesService;
-import de.hybris.platform.commerceservices.order.CommercePlaceOrderStrategy;
 import de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook;
 import de.hybris.platform.commerceservices.service.data.CommerceCheckoutParameter;
 import de.hybris.platform.commerceservices.service.data.CommerceOrderResult;
@@ -50,7 +49,7 @@ import com.tisl.mpl.model.BuyAandBGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.BuyAboveXGetPromotionOnShippingChargesModel;
 
 
-public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStrategy
+public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderStrategy
 {
 	private static final Logger LOG = Logger.getLogger(MplCommercePlaceOrderStrategyImpl.class);
 	private ModelService modelService;
@@ -81,6 +80,7 @@ public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStra
 		final CommerceOrderResult result = new CommerceOrderResult();
 		try
 		{
+			final String modeOfPayment = cartModel.getModeOfPayment();
 			beforePlaceOrder(parameter);
 			if (this.calculationService.requiresCalculation(cartModel))
 			{
@@ -170,33 +170,52 @@ public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStra
 				{
 					orderModel.setTotalPrice(totalPrice);
 				}
+				orderModel.setModeOfOrderPayment(modeOfPayment);
 
 				getModelService().save(orderModel);
 
 				result.setOrder(orderModel);
 
-				beforeSubmitOrder(parameter, result);
+				if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment())
+						&& orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD"))
+				{
+					//Order splitting and order fulfilment process will only be triggered for COD orders from here - TPR-629
+					try
+					{
+						beforeSubmitOrder(parameter, result);
+					}
+					catch (final CalculationException e)
+					{
+						LOG.error("Error while submit order", e);
+					}
 
-				getOrderService().submitOrder(orderModel);
+					getOrderService().submitOrder(orderModel);
+				}
+
 				getExternalTaxesService().clearSessionTaxDocument();
 
 				afterPlaceOrder(parameter, result);
-				//Added to trigger notification
-				final String trackOrderUrl = configurationService.getConfiguration().getString(
-						MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
-						+ orderModel.getCode();
-				try
+
+				if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment())
+						&& orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD"))
 				{
-					notificationService.triggerEmailAndSmsOnOrderConfirmation(orderModel, trackOrderUrl);
-					//notificationService.sendMobileNotifications(orderModel);
-				}
-				catch (final JAXBException e)
-				{
-					LOG.error("Error while sending notifications>>>>>>", e);
-				}
-				catch (final Exception ex)
-				{
-					LOG.error("Error while sending notifications>>>>>>", ex);
+					//Added to trigger notification for only COD orders TPR-629
+					final String trackOrderUrl = configurationService.getConfiguration().getString(
+							MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
+							+ orderModel.getCode();
+					try
+					{
+						notificationService.triggerEmailAndSmsOnOrderConfirmation(orderModel, trackOrderUrl);
+						//notificationService.sendMobileNotifications(orderModel);
+					}
+					catch (final JAXBException e)
+					{
+						LOG.error("Error while sending notifications>>>>>>", e);
+					}
+					catch (final Exception ex)
+					{
+						LOG.error("Error while sending notifications>>>>>>", ex);
+					}
 				}
 
 				return result;
@@ -220,10 +239,10 @@ public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStra
 		{
 			status = false;
 		}
-		else if (order.getPaymentInfo() == null)
-		{
-			status = false;
-		}
+		//		else if (order.getPaymentInfo() == null)
+		//		{
+		//			status = false;
+		//		}
 		else if (order.getTotalPrice().doubleValue() <= 0.0 || order.getTotalPriceWithConv().doubleValue() <= 0.0)
 		{
 			status = false;
@@ -363,9 +382,22 @@ public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStra
 		return isShippingPromoApplied;
 	}
 
-	protected void beforeSubmitOrder(final CommerceCheckoutParameter parameter, final CommerceOrderResult result)
-			throws InvalidCartException
+	/**
+	 * This method calls before submit order of hooks. This method is changed to public so that it can be accessed from
+	 * elsewhere in case of prepaid orders TPR-629
+	 *
+	 * @param parameter
+	 * @param result
+	 * @throws CalculationException
+	 * @throws InvalidCartException
+	 *
+	 */
+	@Override
+	public void beforeSubmitOrder(final CommerceCheckoutParameter parameter, final CommerceOrderResult result)
+			throws InvalidCartException, CalculationException
 	{
+		getCalculationService().calculateTotals(result.getOrder(), false);
+
 		if ((getCommercePlaceOrderMethodHooks() == null) || (!(parameter.isEnableHooks())) || (!(getConfigurationService()
 
 		.getConfiguration().getBoolean("commerceservices.commerceplaceordermethodhook.enabled", true))))
