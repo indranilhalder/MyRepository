@@ -211,7 +211,7 @@
 					<c:if test="${isMSDEnabled}">
 					<input type="hidden" value="${isMSDEnabled}" name="isMSDEnabled" />
 						<c:forEach items="${WishlistProductDataList}" var="wishListMSD">
-							<c:if test="${wishListMSD.productData.rootCategory eq 'Clothing'||wishListMSD.productData.rootCategory eq 'Footwear'}">
+							<c:if test="${wishListMSD.productData.rootCategory eq 'Clothing'||wishListMSD.productData.rootCategory eq 'Footwear' || wishListMSD.productData.rootCategory eq 'Accessories'}">
 							        <c:set var="includeMSDJS" scope="request" value="true"/>
 							        <input type="hidden" value="true" name="isApparelExist"/>
 							</c:if>
@@ -387,7 +387,7 @@
 													</c:when>
 
 													<c:otherwise>
-													<c:if test="${(not empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing')||(not empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Footwear')}">
+													<c:if test="${(not empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing')||(not empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Footwear') ||(not empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Accessories')}">
 														<span>
 															<button id="addToCartButtonwl" type="${buttonType}"
 																class="blue button js-add-to-cart_wl">
@@ -396,7 +396,7 @@
 														</span>
 													</c:if>
                                                     
-													<c:if test="${empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Electronics'}">
+													<c:if test="${(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Electronics')||(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Watches')}">
 														<span>
 															<button id="addToCartButtonwl" type="${buttonType}"
 																class="blue button js-add-to-cart_wl">
@@ -404,7 +404,7 @@
 															</button>
 														</span>
 														</c:if>
-														<c:if test="${(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing')||(empty wpproduct.wishlistProductSize &&wpproduct.productCategory eq 'Footwear')}">
+														<c:if test="${(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing')||(empty wpproduct.wishlistProductSize &&wpproduct.productCategory eq 'Footwear')||(empty wpproduct.wishlistProductSize &&wpproduct.productCategory eq 'Accessories')}">
 														<span id="addToCartButtonId" style="display: none">
 															<button type="button" id="addToCartButtonwl" 
 																class="blue button sizeNotSpecified_wl" data-toggle="modal"
@@ -422,7 +422,7 @@
 												<c:if test="${isMSDEnabled}">
 													<input type="hidden" value="${isMSDEnabled}" id="isMSDEnabled_wl_AddToBag" />
 													<c:forEach items="${WishlistProductDataList}" var="wishListMSD">
-														<c:if test="${wishListMSD.productData.rootCategory eq 'Clothing'||wishListMSD.productData.rootCategory eq 'Footwear'}">
+														<c:if test="${wishListMSD.productData.rootCategory eq 'Clothing'||wishListMSD.productData.rootCategory eq 'Footwear' || wishListMSD.productData.rootCategory eq 'Accessories'}">
 														        <c:set var="includeMSDJS" scope="request" value="true"/>
 														        <input type="hidden" value="true" id="isApparelExist_wl_AddToBag"/>
 														</c:if>
@@ -468,7 +468,7 @@
 												<c:if test="${isMSDEnabled}">
 													<input type="hidden" value="${isMSDEnabled}" id="isMSDEnabled_wl" />
 													<c:forEach items="${WishlistProductDataList}" var="wishListMSD">
-														<c:if test="${wishListMSD.productData.rootCategory eq 'Clothing'||wishListMSD.productData.rootCategory eq 'Footwear'}">
+														<c:if test="${wishListMSD.productData.rootCategory eq 'Clothing'||wishListMSD.productData.rootCategory eq 'Footwear'  || wishListMSD.productData.rootCategory eq 'Accessories'}">
 														        <c:set var="includeMSDJS" scope="request" value="true"/>
 														        <input type="hidden" value="true" id="isApparelExist_wl"/>
 														</c:if>
