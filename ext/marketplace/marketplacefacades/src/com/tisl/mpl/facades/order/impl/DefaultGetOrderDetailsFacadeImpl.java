@@ -97,7 +97,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 
 	/**
 	 * @description method is called to fetch the details of a particular orders for the user
-	 * @param orderCode
+	 * @param orderDetails
 	 * @return OrderTrackingWsDTO
 	 */
 	@Override
@@ -1010,16 +1010,15 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 		}
 		catch (final EtailBusinessExceptions e)
 		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + e);
-
+			ExceptionUtil.getCustomizedExceptionTrace(e);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + e);
+			ExceptionUtil.getCustomizedExceptionTrace(e);
 		}
 		catch (final Exception e)
 		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + e);
+			ExceptionUtil.getCustomizedExceptionTrace(e);
 		}
 		return orderTrackingWsDTO;
 
@@ -2382,10 +2381,20 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 				}
 			}
 		}
-		catch (final Exception ex)
+		catch (final EtailBusinessExceptions e)
 		{
-			ExceptionUtil.getCustomizedExceptionTrace(ex);
-			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.B9300);
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9300);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9300);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9300);
 		}
 
 		return orderTrackingWsDTO;
@@ -2548,15 +2557,17 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 				}
 			}
 		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.debug("----------AWB Serivce Error-----------------");
-			return displayMsg;
+			ExceptionUtil.getCustomizedExceptionTrace(e);
 		}
 		catch (final Exception e)
 		{
-			LOG.debug("----------Conversion Error-----------------");
-			return displayMsg;
+			ExceptionUtil.getCustomizedExceptionTrace(e);
 		}
 
 		return displayMsg;
