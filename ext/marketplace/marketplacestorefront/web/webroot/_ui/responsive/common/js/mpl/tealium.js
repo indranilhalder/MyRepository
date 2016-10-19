@@ -809,3 +809,16 @@ $(document).on("click", ".home-brands-you-love-carousel-brands", function() {
 				  }
 				});
 			/*TPR-675 ends 2nd part*/ 
+			
+			
+			/*TPR-561 starts*/
+			$('.long.words .toogle a').click(function(){				
+				var msg="top navigation click";
+				var l3 = $(this).text();
+				var l2 = $(this).prev().find(".short.words").text();
+				var l1 = $(this).parents().find(".toggle.departmenthover").text();
+				utag.link({"link_obj": this, "link_text": l3 + l2 + l1, "event_type" : msg
+						});
+					
+			});
+			/*TPR-561 ends*/
