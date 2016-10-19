@@ -19,7 +19,6 @@ import org.zkoss.zul.Textbox;
 import com.hybris.cockpitng.annotations.SocketEvent;
 import com.hybris.cockpitng.annotations.ViewEvent;
 import com.hybris.cockpitng.util.DefaultWidgetController;
-import com.tis.mpl.facade.data.PickUpAddressReportsSearchData;
 
 
 /**
@@ -68,23 +67,23 @@ public class PickUpAddressChangeRequestWidgetController extends DefaultWidgetCon
 	@ViewEvent(componentID = "btnPickUpAddressSearch", eventName = Events.ON_CLICK)
 	public void getPickUpAddressRequestData()
 	{
-		final PickUpAddressReportsSearchData pickUpAddressSearchDate = new PickUpAddressReportsSearchData();
+		//	final PickUpAddressReportsSearchData pickUpAddressSearchDate = new PickUpAddressReportsSearchData();
 
 		if (txtOrderId != null && StringUtils.isNotEmpty(txtOrderId.getValue()) && StringUtils.isNotBlank(txtOrderId.getValue()))
 		{
-			pickUpAddressSearchDate.setOrderId(txtOrderId.getValue());
+			//		pickUpAddressSearchDate.setOrderId(txtOrderId.getValue());
 		}
 		if (txtCustomerID != null && StringUtils.isNotEmpty(txtCustomerID.getValue())
 				&& StringUtils.isNotBlank(txtCustomerID.getValue()))
 		{
-			pickUpAddressSearchDate.setCustomerId(txtCustomerID.getValue());
+			//		pickUpAddressSearchDate.setCustomerId(txtCustomerID.getValue());
 		}
 		if (intPincode != null)
 		{
 			final String pincode = String.valueOf(intPincode.getValue());
 			if (pincode.matches(PIN_REGEX))
 			{
-				pickUpAddressSearchDate.setPinCode(pincode);
+				//			pickUpAddressSearchDate.setPinCode(pincode);
 			}
 			else
 			{
