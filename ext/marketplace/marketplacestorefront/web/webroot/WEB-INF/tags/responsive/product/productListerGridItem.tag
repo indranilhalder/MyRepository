@@ -93,7 +93,6 @@
 								code="pickup.out.of.stock" text="Out Of Stock" /></span>
 					</a>
 				</c:if> --%>
-				
 				<c:choose>
 				 <c:when test="${product.stockValue eq false}">
 				  <input type="hidden" id="stockStatusId" value="true"/>
@@ -187,7 +186,7 @@
 
 
 							<%-- <li class="product-size-list"><span class="product-size">Size : ${fn:toUpperCase(product.displaySize)} </span></li> --%>
-							<li class="product-size-list"><span class="product-size">Size: <span class="size-col">${product.displaySize}</span><%-- Price : ${product.displayPrice}### ${product.displayUrl} --%>
+							<li class="product-size-list"><span class="product-size">Size: <span class="size-col">${product.displaySizes}</span><%-- Price : ${product.displayPrice}### ${product.displayUrl} --%>
 							</span></li>
 						</c:if>
 						<%-- <li>Color: ${product.swatchColor}</li> --%>
@@ -375,9 +374,10 @@
 							                          || product.productCategoryType eq 'Footwear') }">
 
 
-							<%-- <li class="product-size-list"><span class="product-size">Size : ${fn:toUpperCase(product.displaySize)} </span></li> --%>
-							<li class="product-size-list"><span class="product-size">Size:${product.displaySizes}<%-- Price : ${product.displayPrice}### ${product.displayUrl} --%>
+							<li class="product-size-list"><span class="product-size">Size : ${fn:toUpperCase(product.displaySize)} </span></li>
+							<li class="product-size-list"><span class="product-size">Size:${product.displaySize}Price : ${product.displayPrice}### ${product.displayUrl}
 							</span></li>
+						</c:if>
 						<li>Color: ${product.swatchColor}</li>
 						<c:if
 							test="${not empty product.productCategoryType && product.isVariant &&  product.productCategoryType eq 'Electronics'}">
@@ -387,7 +387,7 @@
 							<li>Rating Count : ${product.ratingCount}</li>
 						</c:if>
 					</ul>
-				</div> 
+				</div> --%>
 				<%-- </c:if> --%>
 
 			</div>
