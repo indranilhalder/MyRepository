@@ -304,7 +304,7 @@ share mobile -->
 												<c:url value="${entry.key}" var="link" />
 												<c:choose>
 													<c:when test="${(variantOption.code eq product.code)}">
-														<li><a href="${link}?selectedSize=true">${entry.value}</a></li>
+														<li class="selected"><a href="${link}?selectedSize=true">${entry.value}</a></li>
 													</c:when>
 													<c:otherwise>
 														<li><a href="${link}?selectedSize=true">${entry.value}</a></li>
