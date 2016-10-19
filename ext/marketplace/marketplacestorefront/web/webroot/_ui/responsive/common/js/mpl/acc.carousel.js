@@ -294,8 +294,14 @@ ACC.carousel = {
 			
 		});
 	},
-	shopTheStyleHomeCarousel: function(){	
-	var timeout = parseInt(homePageBannerTimeout) * 1000 ;
+	shopTheStyleHomeCarousel: function(){
+		if(typeof homePageBannerTimeout!== "undefined"){
+			var timeout = parseInt(homePageBannerTimeout) * 1000 ;
+		}
+		else{
+			var timeout = 5000 ;
+		}
+	//var timeout = parseInt(homePageBannerTimeout) * 1000 ;
 	var owl1 = $("body.page-shopTheStyle .home-rotatingImage#rotatingImageTimeout"); 
 	owl1.owlCarousel({
 			items:1,
