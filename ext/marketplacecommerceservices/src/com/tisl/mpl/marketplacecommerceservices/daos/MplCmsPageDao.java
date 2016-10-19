@@ -10,6 +10,7 @@ import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
 import de.hybris.platform.cms2.servicelayer.daos.CMSPageDao;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
+import de.hybris.platform.core.model.product.ProductModel;
 
 import com.tisl.mpl.core.enums.CMSChannel;
 import com.tisl.mpl.core.model.MplShopByLookModel;
@@ -51,4 +52,7 @@ public interface MplCmsPageDao extends CMSPageDao
 
 	//Added for TPR-798
 	public SearchPageData<ContentSlotForPageModel> getContentSlotsForAppById(final String pageUid, final PageableData pageableData);
+
+	//Added for TPR-978
+	ContentPageModel getContentPageForProduct(ProductModel product);
 }

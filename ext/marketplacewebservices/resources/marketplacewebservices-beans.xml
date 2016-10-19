@@ -2352,5 +2352,18 @@
 		<property name="type" type="String" />
 		<property name="code" type="String" />
 	</bean>
+	
+	<!-- TPR-978 -->
+	<bean class="com.tisl.mpl.wsdto.ProductContentWsData" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="section" type="String" />		
+		<property name="textList" type="java.util.List&lt;java.lang.String>"></property>
+		<property name="imageList" type="java.util.List&lt;java.lang.String>"></property>
+		<property name="videoList" type="java.util.List&lt;java.lang.String>"></property>
+	</bean>
+
+<bean class="com.tisl.mpl.wsdto.ProductAPlusWsData" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="temlateName" type="String" />
+		<property name="productContent" type="java.util.HashMap&lt;String, com.tisl.mpl.wsdto.ProductContentWsData>" />
+	</bean>
 
 </beans>

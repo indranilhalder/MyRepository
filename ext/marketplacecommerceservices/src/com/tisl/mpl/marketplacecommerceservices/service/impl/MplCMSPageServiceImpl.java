@@ -7,14 +7,18 @@ import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
+import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
 import de.hybris.platform.cms2.servicelayer.services.impl.DefaultCMSPageService;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
+import de.hybris.platform.core.model.product.ProductModel;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Required;
 
@@ -215,7 +219,7 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 
 	/**
 	 * Method added for TPR-798
-	 * 
+	 *
 	 * @param pageUid
 	 * @param pageableData
 	 * @return SearchPageData<ContentSlotForPageModel>
@@ -228,6 +232,24 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 
 	}
 
+	//TPR-978
+	@Override
+	public ContentPageModel getContentPageForProduct(final ProductModel product) throws CMSItemNotFoundException
+	{
+		final ContentPageModel contentPage = mplCmsPageDao.getContentPageForProduct(product);
+		return contentPage;
+	}
 
+	@Override
+	public AbstractPageModel getPageForIdandCatalogVersion(final String id, final CatalogVersionModel cv)
+			throws CMSItemNotFoundException
+	{
+		final List pages = this.cmsPageDao.findPagesById(id, Collections.singletonList(cv));
+		if (pages.isEmpty())
+		{
+			throw new CMSItemNotFoundException("No page with id [" + id + "] found.");
+		}
+		return ((AbstractPageModel) pages.iterator().next());
+	}
 
 }

@@ -923,4 +923,11 @@
 	</bean>
 	<!-- TPR-774 -->
 	
+		<!-- TPR-978 -->
+	<bean class="de.hybris.platform.commercefacades.product.data.ProductContentData">
+		<property name="section" type="String" />		
+		<property name="textList" type="java.util.List&lt;java.lang.String>"></property>
+		<property name="imageList" type="java.util.List&lt;java.lang.String>"></property>
+		<property name="videoList" type="java.util.List&lt;java.lang.String>"></property>
+	</bean>
 </beans>

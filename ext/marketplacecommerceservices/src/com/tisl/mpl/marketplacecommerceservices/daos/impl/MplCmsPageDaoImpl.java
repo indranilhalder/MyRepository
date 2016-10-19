@@ -13,6 +13,7 @@ import de.hybris.platform.cms2.servicelayer.daos.impl.DefaultCMSPageDao;
 import de.hybris.platform.commerceservices.search.flexiblesearch.PagedFlexibleSearchService;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
@@ -151,7 +152,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplCmsPageDao#getHomePageForMobile()
 	 */
 	@Override
@@ -340,5 +341,48 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 		return pagedFlexibleSearchService.search(queryStr, params, pageableData);
 
+	}
+
+	/**
+	 * @Description get the content page for product
+	 * @param product
+	 * @return ContentPageModel
+	 */
+	@Override
+	public ContentPageModel getContentPageForProduct(final ProductModel product)
+	{
+
+		final StringBuilder queryString = getProductContentQuery();
+
+		queryString.append(" where ({cm.code} = ?channel or {cp.channel} is null)").append(
+				" and {cp.associatedProducts} like '%" + product.getPk().toString() + "%'");
+
+		System.out.println("Query:::::::::::::" + queryString.toString());
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString.toString());
+		//query.addQueryParameter("category", category);
+		query.addQueryParameter(MarketplacecommerceservicesConstants.CHANNEL, CMSChannel.DESKTOP.getCode());
+
+
+		final List<ContentPageModel> contentPages = flexibleSearchService.<ContentPageModel> search(query).getResult();
+		//if (contentPages != null && contentPages.size() > 0)
+		if (CollectionUtils.isNotEmpty(contentPages))
+		{
+			return contentPages.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * @Description get the product query
+	 * @return StringBuilder
+	 */
+	public StringBuilder getProductContentQuery()
+	{
+		final StringBuilder queryString = new StringBuilder(SELECT_CLASS).append(ContentPageModel.PK).append(FROM_CLASS)
+				.append(ContentPageModel._TYPECODE).append(" as cp left join ").append(CMSChannel._TYPECODE)
+				.append(" as cm ON {cp.channel} = {cm.pk}} ");
+
+		return queryString;
 	}
 }

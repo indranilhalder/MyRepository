@@ -13,6 +13,7 @@
  */
 package com.tisl.mpl.storefront.controllers.pages;
 
+import de.hybris.platform.acceleratorcms.model.components.SimpleBannerComponentModel;
 import de.hybris.platform.acceleratorservices.controllers.page.PageType;
 import de.hybris.platform.acceleratorservices.storefront.data.MetaElementData;
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
@@ -27,7 +28,12 @@ import de.hybris.platform.acceleratorstorefrontcommons.util.MetaSanitizerUtil;
 import de.hybris.platform.acceleratorstorefrontcommons.util.XSSFilterUtil;
 import de.hybris.platform.acceleratorstorefrontcommons.variants.VariantSortStrategy;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
+import de.hybris.platform.cms2.model.contents.components.CMSImageComponentModel;
+import de.hybris.platform.cms2.model.contents.components.CMSParagraphComponentModel;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
+import de.hybris.platform.cms2.model.pages.ContentPageModel;
+import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSPageService;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
@@ -39,6 +45,7 @@ import de.hybris.platform.commercefacades.product.data.FeatureValueData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commercefacades.product.data.ProductContentData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.PromotionData;
 import de.hybris.platform.commercefacades.product.data.ReviewData;
@@ -101,6 +108,7 @@ import com.granule.json.JSONObject;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants.USER;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
+import com.tisl.mpl.core.model.VideoComponentModel;
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.WishlistData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -112,6 +120,7 @@ import com.tisl.mpl.facades.product.RichAttributeData;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.facades.product.data.SizeGuideData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
+import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.marketplacecommerceservices.service.PDPEmailNotificationService;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
@@ -248,6 +257,10 @@ public class ProductPageController extends AbstractPageController
 
 	@Resource(name = "prodOfferDetFacade")
 	private ProductOfferDetailFacade prodOfferDetFacade;
+
+	//TPR-978
+	@Resource(name = "cmsPageService")
+	private MplCmsPageService mplCmsPageService;
 
 	/**
 	 * @param buyBoxFacade
@@ -2334,5 +2347,110 @@ public class ProductPageController extends AbstractPageController
 			}
 		}
 		return buyboxJson;
+	}
+
+	//TPR-978
+	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-fetchPageContents", method = RequestMethod.GET)
+	public String fetchPageContents(@RequestParam(value = "productCode") String productCode, final Model model)
+			throws com.granule.json.JSONException
+	{
+
+		if (null != productCode)
+		{
+			productCode = productCode.toUpperCase();
+		}
+		System.out.println("**************************************fetchPageContents*************" + productCode);
+		final ProductModel productModel = productService.getProductForCode(productCode);
+		ContentPageModel contentPage = null;
+		List<String> contentList = null;
+		List<String> imageList = null;
+		List<String> videoList = null;
+		final Map<String, ProductContentData> productContentDataMap = new HashMap<String, ProductContentData>();
+		try
+		{
+			contentPage = getContentPageForProduct(productModel);
+			if (null != contentPage)
+			{
+
+				for (final ContentSlotForPageModel contentSlotForPageModel : contentPage.getContentSlots())
+				{
+					final ProductContentData productContentData = new ProductContentData();
+					productContentData.setSection(contentSlotForPageModel.getPosition());
+
+					contentList = new ArrayList<String>();
+					imageList = new ArrayList<String>();
+					videoList = new ArrayList<String>();
+
+					for (final AbstractCMSComponentModel abstractCMSComponentModel : contentSlotForPageModel.getContentSlot()
+							.getCmsComponents())
+					{
+
+						if (abstractCMSComponentModel instanceof CMSParagraphComponentModel)
+						{
+							final CMSParagraphComponentModel paragraphComponent = (CMSParagraphComponentModel) abstractCMSComponentModel;
+							contentList.add(paragraphComponent.getContent());
+						}
+
+						if (abstractCMSComponentModel instanceof CMSImageComponentModel)
+						{
+							final CMSImageComponentModel cmsImageComponent = (CMSImageComponentModel) abstractCMSComponentModel;
+							imageList.add(cmsImageComponent.getMedia().getUrl2());
+						}
+
+						if (abstractCMSComponentModel instanceof SimpleBannerComponentModel)
+						{
+							final SimpleBannerComponentModel bannerComponent = (SimpleBannerComponentModel) abstractCMSComponentModel;
+							if (bannerComponent.getMedia() != null && StringUtils.isNotEmpty(bannerComponent.getMedia().getUrl2()))
+							{
+								imageList.add(bannerComponent.getMedia().getUrl2());
+							}
+							else if (StringUtils.isNotEmpty(bannerComponent.getUrlLink()))
+							{
+								imageList.add(bannerComponent.getUrlLink());
+
+							}
+						}
+
+						if (abstractCMSComponentModel instanceof VideoComponentModel)
+						{
+							final VideoComponentModel bannerComponent = (VideoComponentModel) abstractCMSComponentModel;
+							videoList.add(bannerComponent.getVideoUrl());
+						}
+
+					}
+
+					productContentData.setTextList(contentList);
+					productContentData.setImageList(imageList);
+					productContentData.setVideoList(videoList);
+					productContentDataMap.put(contentSlotForPageModel.getPosition(), productContentData);
+
+				}
+
+				model.addAttribute("productContentDataMap", productContentDataMap);
+
+			}//final end of if
+			storeCmsPageInModel(model, getContentPageForLabelOrId(contentPage.getUid()));
+		}
+		catch (final CMSItemNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+
+		return "/pages/" + contentPage.getMasterTemplate().getFrontendTemplateName();
+
+	}
+
+	private ContentPageModel getContentPageForProduct(final ProductModel product) throws CMSItemNotFoundException
+	{
+
+		final ContentPageModel productContentPage = mplCmsPageService.getContentPageForProduct(product);
+
+		if (productContentPage == null)
+		{
+			throw new CMSItemNotFoundException("Could not find a product content for the product" + product.getName());
+		}
+
+		return productContentPage;
+
 	}
 }
