@@ -620,7 +620,7 @@ $language=language(isocode)[default='en'][unique=true];
     			$lang=en
     		      
 				
-				INSERT_UPDATE Product;code[unique=true];name[lang=$lang];title;articleMiniDescription;articleDescription;createdOn[dateformat=yyyyMMddHHmmss];reviews;mrp;$supercategories;deliveryModes(code);variantType(code);sequenceId[translator=de.hybris.platform.acceleratorservices.dataimport.batch.converter.SequenceIdTranslator];$catalogversion;$approved;$unit;luxIndicator 
+				INSERT_UPDATE Product;code[unique=true];name[lang=$lang];title;articleMiniDescription;articleDescription;createdOn[dateformat=yyyyMMddHHmmss];reviews;mrp;$supercategories;deliveryModes(code);variantType(code);sequenceId[translator=de.hybris.platform.acceleratorservices.dataimport.batch.converter.SequenceIdTranslator];$catalogversion;$approved;$unit;luxIndicator(code)[default='marketplace']
             </value>
         </property>
         <property name="impexRow">
@@ -642,7 +642,7 @@ $language=language(isocode)[default='en'][unique=true];
 				$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
 				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Staged'])[unique=true,default=mplProductCatalog:Staged]
 				          
-				INSERT_UPDATE PcmProductVariant;code[unique=true,alias=PIMID];name[lang=$lang];title;articleMiniDescription;articleDescription;createdOn[dateformat=yyyyMMddHHmmss];size;colour;baseProduct(code,$catalogVersion);reviews;mrp;$supercategories;deliveryModes(code);capacity;$catalogversion;$approved;$unit;luxIndicator
+				INSERT_UPDATE PcmProductVariant;code[unique=true,alias=PIMID];name[lang=$lang];title;articleMiniDescription;articleDescription;createdOn[dateformat=yyyyMMddHHmmss];size;colour;baseProduct(code,$catalogVersion);reviews;mrp;$supercategories;deliveryModes(code);capacity;$catalogversion;$approved;$unit;luxIndicator(code)[default='marketplace']
             </value>
         </property>
         <property name="impexRow">
