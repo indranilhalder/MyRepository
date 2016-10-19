@@ -71,6 +71,7 @@ import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplKeywordRedirectDao;
+import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.seller.product.facades.ProductOfferDetailFacade;
@@ -86,6 +87,7 @@ import com.tisl.mpl.wsdto.KnowMoreDTO;
 import com.tisl.mpl.wsdto.ProductAPlusWsData;
 import com.tisl.mpl.wsdto.ProductContentWsData;
 import com.tisl.mpl.wsdto.ProductDetailMobileWsData;
+import com.tisl.mpl.wsdto.ProductOfferMsgDTO;
 import com.tisl.mpl.wsdto.PromotionMobileData;
 import com.tisl.mpl.wsdto.SellerInformationMobileData;
 import com.tisl.mpl.wsdto.SizeLinkData;
@@ -133,6 +135,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	@Resource(name = "prodOfferDetFacade")
 	private ProductOfferDetailFacade prodOfferDetFacade;
 
+	@Resource(name = "cmsPageService")
+	private MplCmsPageService mplCmsPageService;
 
 	/**
 	 * @throws CMSItemNotFoundException
@@ -227,6 +231,22 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			throw e;
 		}
 		return productAPlus;
+	}
+
+	/**
+	 * @desc get the content page for the provded product code
+	 * @param product
+	 * @return ContentPageModel
+	 * @throws CMSItemNotFoundException
+	 */
+	private ContentPageModel getContentPageForProduct(final ProductModel product) throws CMSItemNotFoundException
+	{
+		final ContentPageModel productContentPage = mplCmsPageService.getContentPageForProduct(product);
+		if (productContentPage == null)
+		{
+			throw new CMSItemNotFoundException("Could not find a product content for the product" + product.getName());
+		}
+		return productContentPage;
 	}
 
 	/*
