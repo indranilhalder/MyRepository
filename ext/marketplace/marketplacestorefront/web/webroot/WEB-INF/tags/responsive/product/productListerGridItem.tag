@@ -378,7 +378,6 @@
 							<%-- <li class="product-size-list"><span class="product-size">Size : ${fn:toUpperCase(product.displaySize)} </span></li> --%>
 							<li class="product-size-list"><span class="product-size">Size:${product.displaySizes}<%-- Price : ${product.displayPrice}### ${product.displayUrl} --%>
 							</span></li>
-						</c:if>
 						<li>Color: ${product.swatchColor}</li>
 						<c:if
 							test="${not empty product.productCategoryType && product.isVariant &&  product.productCategoryType eq 'Electronics'}">
@@ -388,7 +387,7 @@
 							<li>Rating Count : ${product.ratingCount}</li>
 						</c:if>
 					</ul>
-				</div> --%>
+				</div> 
 				<%-- </c:if> --%>
 
 			</div>
