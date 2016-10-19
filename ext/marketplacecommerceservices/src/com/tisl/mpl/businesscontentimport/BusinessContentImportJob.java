@@ -102,7 +102,7 @@ public class BusinessContentImportJob extends AbstractJobPerformable<CronJobMode
 		isFolderExist(rootFolder1);
 		isFolderExist(errorFolder);
 		isFolderExist(archiveFolder);
-		isFolderExist(archiveFolder);
+		//isFolderExist(archiveFolder);
 		boolean flag = false;
 		if (rootFolder1.exists())
 		{
@@ -122,8 +122,10 @@ public class BusinessContentImportJob extends AbstractJobPerformable<CronJobMode
 						final FileInputStream input = new FileInputStream(inputFile);
 						final OutputStream output = new BufferedOutputStream(new FileOutputStream(errorFile));
 						LOG.debug(FILE + inputFile.getAbsolutePath() + " is being processed. " + "\n");
-						flag = true;
-
+						if (inputFile.getName().equals("content"))
+						{
+							flag = true;
+						}
 						businessContentImportUtil.processFile(input, output, flag);
 						LOG.debug(FILE + inputFile.getAbsolutePath() + " is processed. " + "\n");
 						input.close();
@@ -131,16 +133,17 @@ public class BusinessContentImportJob extends AbstractJobPerformable<CronJobMode
 						if (errorFile.exists() && errorFile.length() == 0)
 						{
 							errorFile.delete();
+
 						}
 						else
 						{
-							final File processedFile = new File(archiveFolder, PROCESSED_PREFIX + datePrefix + inputFile.getName());
-							FileUtils.moveFileToDirectory(inputFile, processedFile, true);
-
 							final File testFile = new File(errorFolder, ERROR_PREFIX + datePrefix + inputFile.getName());
 							FileUtils.moveFileToDirectory(errorFile, testFile, true);
 
 						}
+
+						final File processedFile = new File(archiveFolder, PROCESSED_PREFIX + datePrefix + inputFile.getName());
+						FileUtils.moveFileToDirectory(inputFile, processedFile, true);
 					}
 					catch (final FileNotFoundException e)
 					{

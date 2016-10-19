@@ -198,7 +198,7 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 					{
 						try
 						{
-							writeErrorData(writer, invalidColumns.toString(), line, "MISSING VALUES");
+							writeErrorData(writer, invalidColumns.toString(), line, "MISSING_VALUES");
 						}
 						catch (final IOException e)
 						{
@@ -212,7 +212,7 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 			{
 				try
 				{
-					writeErrorData(writer, invalidColumns.toString(), line, "MISSING VALUES");
+					writeErrorData(writer, invalidColumns.toString(), line, "MISSING_VALUES");
 				}
 				catch (final IOException e)
 				{
@@ -404,25 +404,20 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		final List<Integer> errorColumnList = errorListData(false);
 		final String uid = makeUid(line.get(Integer.valueOf(PRODUCTCODE)), line.get(Integer.valueOf(TEMPLATE)), attributeName);
 		SimpleBannerComponentModel sm = null;
-		//final MediaModel mm = null;
 		try
 		{
 			if (!isUpdatefeed)
 			{
 				sm = new SimpleBannerComponentModel();
-				//mm = new MediaModel();
-				//mm.setURL2(imageUrl);
 				sm.setUid(uid);
 				sm.setName(uid);
 				sm.setUrlLink(imageUrl);
 				sm.setCatalogVersion(getCatalogVersion());
-				//sm.setMedia(mm);
 				modelService.save(sm);
 			}
 			else
 			{
 				sm = businessContentImportDao.getSimpleBannerComponentforUid(uid);
-				sm.getMedia().setUrl2(imageUrl);
 				sm.setUrlLink(imageUrl);
 				modelService.save(sm);
 			}
@@ -685,7 +680,9 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 	public void writeErrorData(final CSVWriter writer, final String errorColumn, final Map<Integer, String> line,
 			final String errorMessage) throws IOException
 	{
-		writer.writeComment(errorColumn + "errorMessage ," + errorMessage);
+		line.put(Integer.valueOf(0), errorColumn);
+		line.put(Integer.valueOf(1), errorMessage);
+		writer.writeComment("columnName," + "errorMessage ," + "Line");
 		writer.write(line);
 	}
 
@@ -707,8 +704,8 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 			}
 			else
 			{
+				invalidColumns.append('-');
 				invalidColumns.append(columnName);
-				invalidColumns.append(',');
 			}
 		}
 	}
