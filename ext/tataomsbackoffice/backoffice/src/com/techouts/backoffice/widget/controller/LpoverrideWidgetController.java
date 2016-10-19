@@ -81,7 +81,7 @@ public class LpoverrideWidgetController
 
 	@Init
 	@NotifyChange(
-	{ "ordersStatus", "lpList" })
+	{ "ordersStatus" })
 	public void init()
 	{
 		LOG.info("inside init");

@@ -5,10 +5,8 @@ package com.techouts.backoffice.widget.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -59,7 +57,7 @@ public class AwbEditWidgetController
 	private Boolean isReturn = Boolean.FALSE;
 	private final String transactionType = "AWB";
 	private List<TransactionInfo> listOfTransactions; //incoming transactions
-	private Set<String> lpList; //active logistcs Partners
+	private List<String> activelpList;//active logistcs Partners
 	private List<OrderLineInfo> listOfOrderLineInfo;
 	private Map<String, TransactionInfo> map;
 	private List<String> ordersStatus;// orders statuses
@@ -76,36 +74,24 @@ public class AwbEditWidgetController
 
 	@Init
 	@NotifyChange(
-	{ "ordersStatus", "lpList" })
+	{ "ordersStatus" })
 	public void init()
 	{
 		LOG.info("inside init");
 		ordersStatus = getOrderStatuses(isReturn);
-		lpList = getLpSet();
+		activelpList = getLpSet();
 		if (map == null)
 		{
 			map = new HashMap<String, TransactionInfo>();
 		}
-		if (listOfTransactions == null)
-		{
-			listOfTransactions = new ArrayList<TransactionInfo>();
-		}
 	}
 
 
-	@AfterCompose
-	public void afterCompose(@ContextParam(ContextType.VIEW) final Component view)
-	{
-		Selectors.wireComponents(view, this, false);
-	}
-
-	private Set<String> getLpSet()
+	private List<String> getLpSet()
 	{
 		final List<Logistics> list = (List<Logistics>) logisticsFacade.getAll();
-		if (lpList == null)
-		{
-			lpList = new HashSet<String>();
-		}
+
+		final List<String> lpList = new ArrayList<>();
 		for (final Logistics logistics : list)
 		{
 			if (logistics.getActive())
@@ -115,6 +101,12 @@ public class AwbEditWidgetController
 			}
 		}
 		return lpList;
+	}
+
+	@AfterCompose
+	public void afterCompose(@ContextParam(ContextType.VIEW) final Component view)
+	{
+		Selectors.wireComponents(view, this, false);
 	}
 
 	/*
@@ -127,15 +119,6 @@ public class AwbEditWidgetController
 	public List<String> getOrdersStatus()
 	{
 		return ordersStatus;
-	}
-
-	/**
-	 * @param ordersStatus
-	 *           the ordersStatus to set
-	 */
-	public void setOrdersStatus(final List<String> ordersStatus)
-	{
-		this.ordersStatus = ordersStatus;
 	}
 
 	@Command("isReturnCheck")
@@ -155,28 +138,22 @@ public class AwbEditWidgetController
 	 */
 	private List<String> getOrderStatuses(final Boolean isReturn)
 	{
-		if (ordersStatus == null)
-		{
-			ordersStatus = new ArrayList<String>();
-		}
+		final List<String> ordersStatus = new ArrayList<String>();
+
 		if (isReturn)
 		{
-			ordersStatus.clear();
 			ordersStatus.add("REVERSEAWB");
 			ordersStatus.add("RETURINIT");
 		}
 		else
 		{
-			ordersStatus.clear();
-			ordersStatus.add("ODREALOC");
-			ordersStatus.add("ORDREJEC");
-			ordersStatus.add("PILIGENE");
-			ordersStatus.add("PICKCONF");
 			ordersStatus.add("HOTCOURI");
 			ordersStatus.add("SCANNED");
 		}
 		return ordersStatus;
 	}
+
+
 
 
 	/*
@@ -235,20 +212,7 @@ public class AwbEditWidgetController
 			lpAwbSearch.setIsReturn(isReturn);
 			final List<TransactionInfo> transactionsList = orderLogisticsUpdateFacade.getOrderLogisticsInfo(lpAwbSearch)
 					.getTransactionInfo(); //if response
-			for (final TransactionInfo transaction : transactionsList)
-			{
-				final String orderStatus = transaction.getOrderStatus();
-				if (orderStatus.equalsIgnoreCase("SCANNED") || orderStatus.equalsIgnoreCase("HOTCOURI")
-						|| orderStatus.equalsIgnoreCase("REVERSEAWB"))
-				{
-					transaction.setAwbReadOnly(Boolean.FALSE);
-				}
-				else
-				{
-					transaction.setAwbReadOnly(Boolean.TRUE);
-					//this step is removed once awbEditable default value== false at dto level
-				}
-			}
+
 			listOfTransactions = transactionsList;
 
 		}
@@ -345,21 +309,13 @@ public class AwbEditWidgetController
 		this.listOfOrderLineInfo = listOfOrderLineInfo;
 	}
 
-	/**
-	 * @return the lpList
-	 */
-	public Set<String> getLpList()
-	{
-		return lpList;
-	}
 
 	/**
-	 * @param lpList
-	 *           the lpList to set
+	 * @return the activelpList
 	 */
-	public void setLpList(final Set<String> lpList)
+	public List<String> getActivelpList()
 	{
-		this.lpList = lpList;
+		return activelpList;
 	}
 
 	/**
