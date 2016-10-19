@@ -387,6 +387,7 @@
 													</c:when>
 
 													<c:otherwise>
+													 <c:set var="showSizeGuideForFA" value="${showSizeMap[product.code]}" />
 													<c:if test="${(not empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing')||(not empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Footwear') ||(showSizeGuideForFA ne 'true' && wpproduct.productCategory eq 'Accessories')}">
 														<span>
 															<button id="addToCartButtonwl" type="${buttonType}"
