@@ -379,8 +379,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		boolean omsCancellationStatus = false;
 		String pincode = null;
 
-		final OrderModel subOrderModel = customerAccountService.getOrderForCode((CustomerModel) userService.getCurrentUser(),
-				subOrderDetails.getCode(), baseStoreService.getCurrentBaseStore());
+		final OrderModel subOrderModel = orderModelService.getOrder(subOrderDetails.getCode());
 		boolean bogoOrFreeBie = false;
 		try
 		{
@@ -402,10 +401,14 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 				orderLineRequest = populateOrderLineData(subOrderEntry, ticketTypeCode, subOrderModel, reasonCode, pincode);
 
+
+
 				if (CollectionUtils.isNotEmpty(orderLineRequest.getOrderLine()))
 				{
 					cancelOrRetrnanable = cancelOrderInOMS(orderLineRequest, cancelOrRetrnanable, isReturn);
 				}
+
+
 			}
 			if (ticketTypeCode.equalsIgnoreCase("R") && bogoOrFreeBie) //TISEE-933
 			{
@@ -466,7 +469,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
 					{
 						final boolean returnReqSuccess = createRefund(subOrderModel, abstractOrderEntryModel, reasonCode,
-								salesApplication, returnAddress.getPincode());
+								salesApplication, returnAddress.getPincode(), subOrderDetails);
 
 						LOG.debug("**********************************Return request successful :" + returnReqSuccess);
 					}
@@ -518,7 +521,6 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 		return omsCancellationStatus;
 	}
-
 
 	private void updateConsignmentStatus(final AbstractOrderEntryModel orderEntryModel, final ConsignmentStatus consignmentStatus)
 	{
@@ -741,10 +743,11 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	 * @param reasonCode
 	 * @param salesApplication
 	 * @param pinCode
+	 * @param subOrderDetails2
 	 * @return boolean
 	 */
 	private boolean createRefund(final OrderModel subOrderModel, final AbstractOrderEntryModel abstractOrderEntryModel,
-			final String reasonCode, final SalesApplication salesApplication, final String pinCode)
+			final String reasonCode, final SalesApplication salesApplication, final String pinCode, final OrderData subOrderDetails)
 	{
 
 		boolean returnReqCreated = false;
@@ -754,7 +757,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			final ReturnRequestModel returnRequestModel = returnService.createReturnRequest(subOrderModel);
 			returnRequestModel.setRMA(returnService.createRMA(returnRequestModel));
 			//TISEE-5471
-			final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(subOrderModel.getCode());
+			//final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(subOrderModel.getCode()); //Changes for Bulk Return Initiation
 			final List<ReturnLogisticsResponseData> returnLogisticsRespList = checkReturnLogistics(subOrderDetails, pinCode);
 			if (CollectionUtils.isNotEmpty(returnLogisticsRespList))
 			{
@@ -1317,8 +1320,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		{
 
 			LOG.debug("Step 3:*********************************** Calling OMS for return?" + isReturn);
-			final MplOrderIsCancellableResponse response = mplOrderCancelClientService.orderCancelDataToOMS(orderLineRequest);
 
+			final MplOrderIsCancellableResponse response = mplOrderCancelClientService.orderCancelDataToOMS(orderLineRequest);
 			//			if (isReturn) //for return do not need to execute the below code
 			//			{
 			//				return cancelOrRetrnanable;
