@@ -269,7 +269,7 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		catch (final ModelSavingException | ModelNotFoundException | NumberFormatException exception)
 		{
 			final List<Integer> errorColumnList = errorListData(isIncorrectCode);
-			LOG.error(exception.getMessage());
+			LOG.error("Exception in processing processData" + exception.getMessage());
 			populateErrorEntry(line, writer, errorColumnList);
 		}
 	}
@@ -346,12 +346,12 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		}
 		catch (final ModelSavingException | ModelNotFoundException exception)
 		{
-			LOG.error("Problem while Making ContentPage" + exception.getMessage());
+			LOG.error("Problem while Making ContentPage in makeContentPageforProduct " + exception.getMessage());
 			populateErrorEntry(line, writer, errorColumnList);
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Problem while Making ContentPage" + e.getMessage());
+			LOG.error("Problem while Making ContentPage in makeContentPageforProduct " + e.getMessage());
 			populateErrorEntry(line, writer, errorColumnList);
 		}
 
@@ -359,7 +359,14 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 
 	}
 
-
+	/**
+	 * @Description This method creates the components as recieved from contentMap
+	 * @param contentMap
+	 * @param line
+	 * @param writer
+	 * @param isUpdatefeed
+	 * @return List<AbstractCMSComponentModel>
+	 */
 	List<AbstractCMSComponentModel> makeComponents(final Map<String, String> contentMap, final Map<Integer, String> line,
 			final CSVWriter writer, final boolean isUpdatefeed)
 	{
@@ -431,6 +438,15 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 
 	}
 
+	/**
+	 * @Description Make a video banner component model
+	 * @param videoUrl
+	 * @param attributeName
+	 * @param line
+	 * @param writer
+	 * @param isUpdatefeed
+	 * @return VideoComponentModel
+	 */
 	VideoComponentModel makeVideoComponent(final String videoUrl, final String attributeName, final Map<Integer, String> line,
 			final CSVWriter writer, final boolean isUpdatefeed)
 	{
@@ -602,7 +618,7 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 	}
 
 	/**
-	 * @Description Populating error entries
+	 * @Description Populating error entries for logging into error csv
 	 * @param line
 	 * @param writer
 	 * @param errorColumnList
@@ -615,7 +631,7 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		}
 		catch (final IOException e)
 		{
-			LOG.error(e.getMessage());
+			LOG.error("IO exception occured in populateErrorEntry " + e.getMessage());
 		}
 	}
 

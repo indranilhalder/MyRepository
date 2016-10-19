@@ -28,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.model.BulkPromotionCreationJobModel;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 
@@ -71,13 +70,13 @@ public class BusinessContentImportJob extends AbstractJobPerformable<CronJobMode
 		}
 		catch (final EtailBusinessExceptions exception)
 		{
-			LOG.error(exception.getMessage());
+			LOG.error("Exception in BusinessContentImportJob " + exception.getMessage());
 			ExceptionUtil.etailBusinessExceptionHandler(exception, null);
 			return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
 		}
 		catch (final EtailNonBusinessExceptions exception)
 		{
-			LOG.error(exception.getMessage());
+			LOG.error("Exception in BusinessContentImportJob " + exception.getMessage());
 			ExceptionUtil.etailNonBusinessExceptionHandler(exception);
 			return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
 		}
@@ -158,77 +157,6 @@ public class BusinessContentImportJob extends AbstractJobPerformable<CronJobMode
 		}
 	}
 
-
-	/**
-	 * @Description: Read uploaded .csv File to create Promotion Restriction
-	 * @param cronJobModel
-	 */
-	private void uploadProduct(final BulkPromotionCreationJobModel cronJobModel)
-	{
-		final File rootFolder1 = new File(configurationService.getConfiguration().getString("businessConetnt.rootFolderLocation",
-				""));
-		final File errorFolder = new File(configurationService.getConfiguration().getString("businessConetnt.errorFolderLocation",
-				""));
-		final File archiveFolder = new File(configurationService.getConfiguration().getString(
-				"businessConetnt.archiveFolderLocation", ""));
-		final String fileNamePrefix = configurationService.getConfiguration().getString(
-				"businessConetnt.fileNamePrefix.ProductUpload", "content");
-		final String fileExtension = configurationService.getConfiguration().getString("businessConetnt.fileExtension", "csv");
-		isFolderExist(rootFolder1);
-		isFolderExist(errorFolder);
-		isFolderExist(archiveFolder);
-		isFolderExist(archiveFolder);
-		boolean flag = false;
-		if (rootFolder1.exists())
-		{
-			for (final File inputFile : rootFolder1.listFiles())
-			{
-				if (inputFile.getName().startsWith(fileNamePrefix) && inputFile.getName().endsWith(fileExtension))
-				{
-					String datePrefix = MarketplacecommerceservicesConstants.EMPTYSPACE;
-					if (null != GenericUtilityMethods.convertSysDateToString(new Date()))
-					{
-						datePrefix = GenericUtilityMethods.convertSysDateToString(new Date());
-					}
-					final File errorFile = new File(rootFolder1, ERROR_PREFIX + inputFile.getName());
-					try
-					{
-						final FileInputStream input = new FileInputStream(inputFile);
-						final OutputStream output = new BufferedOutputStream(new FileOutputStream(errorFile));
-						LOG.debug(FILE + inputFile.getAbsolutePath() + " is being processed. " + "\n");
-						flag = false;
-						businessContentImportUtil.processFile(input, output, flag);
-						LOG.debug(FILE + inputFile.getAbsolutePath() + " is processed. " + "\n");
-						input.close();
-						output.close();
-						if (errorFile.exists() && errorFile.length() == 0)
-						{
-							errorFile.delete();
-							final File processedFile = new File(archiveFolder, PROCESSED_PREFIX + datePrefix + inputFile.getName());
-							inputFile.renameTo(processedFile);
-						}
-						else
-						{
-							final File processedFile = new File(archiveFolder, PROCESSED_PREFIX + datePrefix + inputFile.getName());
-							FileUtils.moveFileToDirectory(inputFile, processedFile, true);
-
-							final File testFile = new File(errorFolder, ERROR_PREFIX + datePrefix + inputFile.getName());
-							FileUtils.moveFileToDirectory(errorFile, testFile, true);
-
-						}
-					}
-					catch (final FileNotFoundException e)
-					{
-						LOG.error("Cannot find file for batch update. " + e.getLocalizedMessage());
-					}
-					catch (final IOException e)
-					{
-						LOG.error("Exception closing file handle. " + e.getLocalizedMessage());
-					}
-				}
-			}
-		}
-	}
 
 	/**
 	 * @Description : Generate Folder if not present
