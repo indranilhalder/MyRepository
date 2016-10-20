@@ -1406,7 +1406,7 @@ $("#otpMobileNUMField").focus(function(){
 			var convCharge=values[1];
 			$("#convChargeFieldId, #convChargeField").css("display","none");
 			document.getElementById("convChargeField").innerHTML=convCharge;
-			document.getElementById("totalWithConvFields").innerHTML=totalPrice;
+			document.getElementById("totalWithConvField").innerHTML=totalPrice;
  			isCodSet = false;
  			if(paymentMode!=null){
  				applyPromotion(null,"none","none");
@@ -4325,7 +4325,7 @@ function applyPromotion(bankName,binValue,formSubmit)
 				var orderDiscount="";
 				$("#promotionMessage").empty();
 				var total=response.totalPrice.formattedValue;
-				document.getElementById("totalWithConvFields").innerHTML=response.totalPrice.formattedValue;
+				document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
 				document.getElementById("outstanding-amount").innerHTML=response.totalPrice.formattedValue;
 				document.getElementById("outstanding-amount-mobile").innerHTML=response.totalPrice.formattedValue;
 				$("#cartPromotionApplied").css("display","none");
@@ -4751,7 +4751,7 @@ function calculateDeliveryCost(radioId,deliveryCode)
 	 				document.getElementById("deliveryCostSpanId").innerHTML="Free";
 		 		}
 	 			
-	 			document.getElementById("totalWithConvFields").innerHTML=currency+totalPrice;
+	 			document.getElementById("totalWithConvField").innerHTML=currency+totalPrice;
 	 			isCodSet = false;
 	 		},
 	 		error : function(resp) {
@@ -6489,7 +6489,7 @@ $("#couponSubmitButton").click(function(){
 	 		cache: false,
 	 		data: { 'couponCode' : couponCode , 'paymentMode' : paymentMode , 'bankNameSelected' : bankNameSelected , 'guid' : guid},
 	 		success : function(response) {
-	 			document.getElementById("totalWithConvFields").innerHTML=response.totalPrice.formattedValue;
+	 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
 	 			$("#codAmount").text(response.totalPrice.formattedValue);
 	 			if(response.redeemErrorMsg!=null){
 	 				if(response.redeemErrorMsg=="Price_exceeded")
@@ -6600,7 +6600,7 @@ $(".remove-coupon-button").click(function(){
  		cache: false,
  		data: { 'couponCode' : couponCode , 'guid' : guid},
  		success : function(response) {
- 			document.getElementById("totalWithConvFields").innerHTML=response.totalPrice.formattedValue;
+ 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
  			$("#codAmount").text(response.totalPrice.formattedValue);
  			// alert(response.totalPrice.formattedValue);
  			if(response.couponReleased==true){
@@ -6619,6 +6619,9 @@ $(".remove-coupon-button").click(function(){
  				$('#couponMessage').show();
  				$('#couponMessage').delay(2000).fadeOut('slow');
  				setTimeout(function(){ $("#couponMessage").html(""); }, 2500); 			}
+ 			
+ 				$("#couponSubmitButton").prop('disabled', false);
+ 				$("#couponSubmitButton").css("opacity","1");
  		},
  		error : function(resp) {
  		}

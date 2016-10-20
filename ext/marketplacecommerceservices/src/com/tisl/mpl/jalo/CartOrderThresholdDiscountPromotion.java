@@ -127,14 +127,6 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 						}
 					}
 
-					//TPR-969 - Code to identify count of products present in cart
-					double orderEntryCount = 0;
-					final List<AbstractOrderEntry> entryList = order.getEntries();
-					for (final AbstractOrderEntry entry : entryList)
-					{
-						orderEntryCount += entry.getQuantity(ctx).doubleValue();
-					}
-
 					//CR Changes : TPR-715
 					double orderSubtotalAfterDiscounts = 0.0D;
 					ctx.setAttribute(MarketplacecommerceservicesConstants.VALIDATE_SELLER, Boolean.FALSE);
@@ -157,7 +149,11 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 					{
 						orderSubtotalAfterDiscounts = getSubtotalAfterDiscount(ctx, order);
 					}
+
 					//CR Changes : TPR-715
+
+					//TPR-969 - Code to identify count of products present in cart
+					final int orderEntryCount = getOrderEntryCount(validProductUssidMap, ctx, order);
 
 					if (threshold != null)
 					{
@@ -359,7 +355,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 	 * @param validProductUssidMap
 	 * @return List<PromotionResult>
 	 */
-	private List<PromotionResult> applyPromoForQualCount(final Double entryQualifyingCount, final double orderEntryCount,
+	private List<PromotionResult> applyPromoForQualCount(final Double entryQualifyingCount, final int orderEntryCount,
 			final SessionContext ctx, final PromotionEvaluationContext evalCtx, final AbstractOrder order,
 			final boolean isPercentageDisc, final double percentageDiscount, final double maxDiscount,
 			List<PromotionResult> promotionResults, final double orderSubtotalAfterDiscounts,
@@ -368,7 +364,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 		if (null != entryQualifyingCount)
 		{
 			LOG.debug("Inside entry qualifying count not null");
-			if (orderEntryCount >= entryQualifyingCount.doubleValue())
+			if (orderEntryCount >= entryQualifyingCount.intValue())
 			{
 				promotionResults = evaluatePromotion(ctx, evalCtx, order, isPercentageDisc, percentageDiscount, maxDiscount,
 						promotionResults, orderSubtotalAfterDiscounts, validProductUssidMap);
@@ -425,6 +421,16 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 				}
 			}
 
+			Map<String, AbstractOrderEntry> validProductUssidMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
+			if (getDefaultPromotionsManager().isSellerRestrExists(restrictionList))
+			{
+				validProductUssidMap = getMplPromotionHelper().getCartSellerEligibleProducts(ctx, order, restrictionList);
+			}
+			else if (getDefaultPromotionsManager().isExSellerRestrExists(restrictionList))
+			{
+				validProductUssidMap = getMplPromotionHelper().getCartSellerInEligibleProducts(ctx, order, restrictionList);
+			}
+
 			if (threshold != null)
 			{
 				Double discountPriceValue = getPriceForOrder(ctx, getDiscountPrices(ctx), order,
@@ -459,18 +465,23 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 					//TPR-969 - When no entry count restriction is added
 					if (null == entryQualifyingCount)
 					{
-						return formatMsg(entryQualifyingCount, 0, threshold, order, ctx, locale, orderCurrency, discountPriceValue);
+						//return formatMsg(entryQualifyingCount, 0, threshold, order, ctx, locale, orderCurrency, discountPriceValue);
+						final double orderSubtotalAfterDiscounts = getEligibleSubtotal(order);
+						final double amountRequired = threshold.doubleValue() - orderSubtotalAfterDiscounts;
+
+						final Object[] args =
+						{ threshold, Helper.formatCurrencyAmount(ctx, locale, orderCurrency, threshold.doubleValue()),
+								discountPriceValue,
+								Helper.formatCurrencyAmount(ctx, locale, orderCurrency, discountPriceValue.doubleValue()),
+								Double.valueOf(amountRequired), Helper.formatCurrencyAmount(ctx, locale, orderCurrency, amountRequired),
+								null };
+						return formatMessage(getMessageCouldHaveFired(ctx), args, locale);
 					}
 					//TPR-969 When entry count restriction is present in promotion
 					else
 					{
-						int orderEntryCount = 0;
-
-						final List<AbstractOrderEntry> entryList = order.getEntries();
-						for (final AbstractOrderEntry entry : entryList)
-						{
-							orderEntryCount += entry.getQuantity().intValue();
-						}
+						//TPR-969 - Code to identify count of products present in cart
+						final int orderEntryCount = getOrderEntryCount(validProductUssidMap, ctx, order);
 						return formatMsg(entryQualifyingCount, orderEntryCount, threshold, order, ctx, locale, orderCurrency,
 								discountPriceValue);
 					}
@@ -479,12 +490,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 			//TPR-969 display message without any threshold value
 			else
 			{
-				int orderEntryCount = 0;
-				final List<AbstractOrderEntry> entryList = order.getEntries();
-				for (final AbstractOrderEntry entry : entryList)
-				{
-					orderEntryCount += entry.getQuantity().intValue();
-				}
+				final int orderEntryCount = getOrderEntryCount(validProductUssidMap, ctx, order);
 				int quantityNeeded = entryQualifyingCount.intValue() - orderEntryCount;
 				if (quantityNeeded < 0)
 				{
@@ -506,8 +512,45 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 
 
 
+
 	/**
-	 * This method formats message for the promotion when threshold is present
+	 * This method returns valid order entry count for TPR-969
+	 *
+	 * @param validProductUssidMap
+	 * @param ctx
+	 * @param order
+	 * @return int
+	 */
+	private int getOrderEntryCount(final Map<String, AbstractOrderEntry> validProductUssidMap, final SessionContext ctx,
+			final AbstractOrder order)
+	{
+		//TPR-969 - Code to identify count of products present in cart
+		int orderEntryCount = 0;
+		//When seller restriction is present
+		if (MapUtils.isNotEmpty(validProductUssidMap))
+		{
+			for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
+			{
+				final AbstractOrderEntry entry = mapEntry.getValue();
+				orderEntryCount += entry.getQuantity(ctx).doubleValue();
+			}
+		}
+		//When seller restriction is not present
+		else
+		{
+			final List<AbstractOrderEntry> entryList = order.getEntries();
+			for (final AbstractOrderEntry entry : entryList)
+			{
+				orderEntryCount += entry.getQuantity(ctx).doubleValue();
+			}
+		}
+		return orderEntryCount;
+	}
+
+
+
+	/**
+	 * This method formats message for the promotion when threshold is present For TPR-969
 	 *
 	 * @param entryQualifyingCount
 	 * @param orderEntryCount
