@@ -62,9 +62,6 @@ public class BusinessContentImportUtility
 		final CSVReader reader = new CSVReader(input, "UTF-8");
 		reader.setFieldSeparator(new char[]
 		{ MarketplacecommerceservicesConstants.FIELD_SEPARATOR });
-
-
-
 		final Map<Integer, String> map = new HashMap<Integer, String>();
 		final boolean headerRowIncluded = false;
 		final Integer errorPosition = Integer.valueOf(0);
@@ -78,7 +75,7 @@ public class BusinessContentImportUtility
 		{
 			//To-Do
 			//Create Product Upload
-
+			businessContentImportService.processUpdateForProductMappingImport(reader, writer, map, errorPosition, headerRowIncluded);
 		}
 
 		writer.close();
@@ -95,9 +92,4 @@ public class BusinessContentImportUtility
 		csvWriter.setFieldseparator(MarketplacecommerceservicesConstants.FIELD_SEPARATOR);
 		return csvWriter;
 	}
-
-
-
-
-
 }

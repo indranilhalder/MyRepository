@@ -349,10 +349,10 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplCmsPageDao#getContentPageForProduct(java.lang.String)
+	/**
+	 * @Description get the content page for product
+	 * @param product
+	 * @return ContentPageModel
 	 */
 	@Override
 	public ContentPageModel getContentPageForProduct(final ProductModel product)
@@ -379,6 +379,10 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 		return null;
 	}
 
+	/**
+	 * @Description get the product query
+	 * @return StringBuilder
+	 */
 	public StringBuilder getProductContentQuery()
 	{
 		final StringBuilder queryString = new StringBuilder(SELECT_CLASS).append(ContentPageModel.PK).append(FROM_CLASS)
