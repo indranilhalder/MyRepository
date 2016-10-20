@@ -173,7 +173,11 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 										FieldValue newValue = null;
 										for (final FieldValue fieldValue : temp)
 										{
-											final String valueStr = (String) fieldValue.getValue();
+											String valueStr = (String) fieldValue.getValue();
+											if (StringUtils.isNotEmpty(valueStr) && (valueStr.contains("m")) && valueStr.length() >= 2)
+											{
+												valueStr = valueStr.substring(0, valueStr.length() - 2);
+											}
 											final long value = Long.parseLong(valueStr);
 											if (Long.compare(value, 50) > 0)
 											{
