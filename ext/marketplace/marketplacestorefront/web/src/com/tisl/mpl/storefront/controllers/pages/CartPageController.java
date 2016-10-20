@@ -87,6 +87,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
 import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -1544,14 +1545,16 @@ public class CartPageController extends AbstractPageController
 	 *
 	 * @return String
 	 * @throws EtailNonBusinessExceptions
+	 * @throws JSONException
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.CHECKEXPRESSCHECKOUTPINOCDESERVICEABILITY, method = RequestMethod.GET)
 	//@RequireHardLogIn
-	public @ResponseBody String checkExpressCheckoutPincodeServiceability(
+	public @ResponseBody JSONObject checkExpressCheckoutPincodeServiceability(
 			@PathVariable(MarketplacecheckoutaddonConstants.SELECTEDADDRESSID) final String selectedAddressId)
-			throws EtailNonBusinessExceptions
+			throws EtailNonBusinessExceptions, JSONException
 	{
 		LOG.debug("selectedAddressId " + selectedAddressId);
+		final JSONObject jsonObject = new JSONObject();
 		ServicesUtil.validateParameterNotNull(selectedAddressId, "Address Id cannot be null");
 		String isServicable = MarketplacecommerceservicesConstants.Y;
 		List<PinCodeResponseData> responseData = null;
@@ -1576,7 +1579,7 @@ public class CartPageController extends AbstractPageController
 				getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
 			}
 
-			final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+			CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 			if ((cartData.getEntries() != null && !cartData.getEntries().isEmpty()))
 			{
 				if (StringUtil.isNotEmpty(selectedPincode))
@@ -1618,7 +1621,17 @@ public class CartPageController extends AbstractPageController
 
 				{
 					isServicable = MarketplacecommerceservicesConstants.N;
+					//		returnStatement = isServicable;
 				}
+
+				if (isServicable.equals(MarketplacecommerceservicesConstants.Y))
+				{
+					getMplCartFacade().getCalculatedCart();
+					cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+					jsonObject.put("cartData", cartData);
+					jsonObject.put("cartEntries", cartData.getEntries());
+				}
+
 			}
 			final ObjectMapper objectMapper = new ObjectMapper();
 			jsonResponse = objectMapper.writeValueAsString(responseData);
@@ -1633,9 +1646,10 @@ public class CartPageController extends AbstractPageController
 		{
 			LOG.error("Exception while checking pincode serviceabilty ", ex);
 		}
-
-		return isServicable + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + selectedPincode
+		final String returnStatement = isServicable + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + selectedPincode
 				+ MarketplacecheckoutaddonConstants.STRINGSEPARATOR + jsonResponse;
+		jsonObject.put("pincodeData", returnStatement);
+		return jsonObject;
 
 	}
 
