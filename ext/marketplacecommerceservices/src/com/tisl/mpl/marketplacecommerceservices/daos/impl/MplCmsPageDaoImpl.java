@@ -62,7 +62,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 	private static final String UID = "uid";
 
-	private static final String LEFT_JOIN = "as cp left join";
+	private static final String LEFT_JOIN = " as cp left join ";
 
 
 
@@ -153,7 +153,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplCmsPageDao#getHomePageForMobile()
 	 */
 	@Override
