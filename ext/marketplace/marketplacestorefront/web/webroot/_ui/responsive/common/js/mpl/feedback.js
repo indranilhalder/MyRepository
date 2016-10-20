@@ -2033,4 +2033,5 @@ $(window).scroll(function(){
 $(document).on("click",".toggle-filterSerp",function(){
 $(".product-facet.js-product-facet.listing-leftmenu").slideToggle();
 $(this).toggleClass("active");
-});
+});*/
+
