@@ -328,10 +328,11 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 			final String template = line.get(Integer.valueOf(TEMPLATE));
 			final String uid = makeUid(product.getCode(), title, template);
 			List<AbstractCMSComponentModel> componentlist;
-			ContentPageModel cm2 = null;
 			try
 			{
-				cm2 = (ContentPageModel) getCmsPageService().getPageForIdandCatalogVersion(uid, getCatalogVersion());
+				final ContentPageModel cmodel = (ContentPageModel) getCmsPageService().getPageForIdandCatalogVersion(uid,
+						getCatalogVersion());
+				LOG.debug(cmodel);
 				componentlist = makeComponents(contentMap, line, writer, true);
 			}
 			catch (final CMSItemNotFoundException e)
