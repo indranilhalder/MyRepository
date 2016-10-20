@@ -201,7 +201,7 @@ public class MplScheduleDeliveryWidgetRenderer extends AbstractCsWidgetRenderer<
 		if(orderEntry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceCockpitsConstants.HOME_DELIVERY)) {
 			if(null != deliverySlotsItemEDDInfo.getEDD()) {
 				try {
-					dateTimeslotMapList = getDateAndTimeMap("SD",Edd);
+					dateTimeslotMapList = getDateAndTimeMap(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD,Edd);
 				} catch (java.text.ParseException e) {
 					LOG.error("ParseException While getting the time slots "+e.getMessage());
 				}
@@ -209,7 +209,7 @@ public class MplScheduleDeliveryWidgetRenderer extends AbstractCsWidgetRenderer<
 		}
 		else if (orderEntry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceCockpitsConstants.EXPRESS_DELIVERY)) {
 			try {
-				dateTimeslotMapList = getDateAndTimeMap("SD",Edd);
+				dateTimeslotMapList = getDateAndTimeMap(MarketplacecommerceservicesConstants.DELIVERY_MODE_ED,Edd);
 			} catch (java.text.ParseException e) {
 				LOG.error("ParseException While getting the time slots "+e.getMessage() );
 			}
@@ -448,14 +448,16 @@ public class MplScheduleDeliveryWidgetRenderer extends AbstractCsWidgetRenderer<
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
 		String  deteWithOutTIme=dateUtilHelper.getDateFromat(estDeliveryDateAndTime,format);
 		String timeWithOutDate=dateUtilHelper.getTimeFromat(estDeliveryDateAndTime);
-		List<String>   calculatedDateList=dateUtilHelper.getDeteList(deteWithOutTIme,format,2);
+		List<String>   calculatedDateList=new ArrayList<String>();
 		List<MplTimeSlotsModel> modelList=null;
-		if(timeSlotType.equalsIgnoreCase(MarketplaceCockpitsConstants.SD)){
+		if(timeSlotType.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD)){
 			modelList=mplConfigFacade.getDeliveryTimeSlotByKey(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD);
 			LOG.debug("********* Delivery Mode :" + MarketplacecommerceservicesConstants.DELIVERY_MODE_SD);
-		}else if (timeSlotType.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)){
-			modelList=mplConfigFacade.getDeliveryTimeSlotByKey(MarketplacecommerceservicesConstants.ED);
-			LOG.debug("********* Delivery Mode :" + MarketplacecommerceservicesConstants.ED);
+			calculatedDateList=dateUtilHelper.getDeteList(deteWithOutTIme,format,3);
+		}else if (timeSlotType.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERY_MODE_ED)){
+			modelList=mplConfigFacade.getDeliveryTimeSlotByKey(MarketplacecommerceservicesConstants.DELIVERY_MODE_ED);
+			LOG.debug("********* Delivery Mode :" + MarketplacecommerceservicesConstants.DELIVERY_MODE_ED);
+			calculatedDateList=dateUtilHelper.getDeteList(deteWithOutTIme,format,2);
 		}
 		if(null!= modelList){
 			Date startTime =null;
@@ -483,7 +485,13 @@ public class MplScheduleDeliveryWidgetRenderer extends AbstractCsWidgetRenderer<
 			LOG.debug("timeList.size()**************"+timeList.size());
 			if(timeList.size()==0){
 				String nextDate= dateUtilHelper.getNextDete(deteWithOutTIme,format);
-				calculatedDateList=dateUtilHelper.getDeteList(nextDate,format,2);
+				//calculatedDateList=dateUtilHelper.getDeteList(nextDate,format,2);
+				if(timeSlotType.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD)) {
+					calculatedDateList=dateUtilHelper.getDeteList(deteWithOutTIme,format,3);
+				}else if(timeSlotType.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERY_MODE_ED)) {
+					calculatedDateList=dateUtilHelper.getDeteList(deteWithOutTIme,format,2);
+				}
+				
 				timeList.addAll(modelList);
 			}
 			List<String> finalTimeSlotList=null;

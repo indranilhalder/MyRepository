@@ -52,13 +52,13 @@ import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.facade.config.MplConfigFacade;
+import com.tisl.mpl.facades.populators.CustomAddressReversePopulator;
 import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
 
 import de.hybris.platform.cockpit.model.meta.TypedObject;
 import de.hybris.platform.cockpit.widgets.Widget;
 import de.hybris.platform.commercefacades.user.data.AddressData;
-import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
@@ -108,7 +108,7 @@ public class MplChangeDeliveryOTPWidgetRenderer
 	@Autowired
 	private SessionService sessionService;
 	@Autowired
-	private Populator<AddressData, AddressModel> addressReversePopulator;
+	private CustomAddressReversePopulator addressReversePopulator;
 	private WidgetDetailRenderer<TypedObject, Widget> detailRenderer;
 
 	protected WidgetDetailRenderer<TypedObject, Widget> getDetailRenderer() {
@@ -144,27 +144,28 @@ public class MplChangeDeliveryOTPWidgetRenderer
 		final Div SDAreaDiv = new Div();
 		content.appendChild(SDAreaDiv);
 		OrderModel  orderModel = (OrderModel) getOrder().getObject();
-		AddressData AddressData;
-		AddressData=sessionService.getAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS); 
-		AddressModel addressModel = modelService.create(AddressModel.class);
-		addressReversePopulator.populate(AddressData, addressModel);
-		boolean isScheduleDeliveryPossible = isScheduledeliveryPossible(addressModel,orderModel);
+		AddressData addressData;
+		addressData=sessionService.getAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS); 
+
+		AddressModel deliveryAddress = modelService.create(AddressModel.class);
+		addressReversePopulator.populate(addressData, deliveryAddress);
+		boolean isScheduleDeliveryPossible = isScheduledeliveryPossible(deliveryAddress,orderModel);
 	
 		if(isScheduleDeliveryPossible) {
 			try {
-				createScheduledDeliveryArea(widget,content,addressModel.getPostalcode());
+				createScheduledDeliveryArea(widget,deliveryAddress,content,deliveryAddress.getPostalcode());
 			}catch(Exception e) {
 				LOG.error("Exception while creating delivery timings "+e.getMessage());
 			}
 
 		} else {
-			createOtpArea(widget,content,null);
+			createOtpArea(widget,deliveryAddress,content,null);
 		}
 		return content;
 	}
 
 	private void createScheduledDeliveryArea(
-			final Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,
+			final Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,final AddressModel deliveryAddress,
 			final Div content,String pinCode) {
 		LOG.info("Inside createScheduledDeliveryArea method ");
 		final Div SDAreaDiv = new Div();
@@ -212,25 +213,22 @@ public class MplChangeDeliveryOTPWidgetRenderer
 			 SdConfirmbutton.addEventListener(Events.ON_CLICK, new EventListener() {
 		   			@Override
 		   			public void onEvent(Event arg0) throws Exception {
-		   				handleSdbuttonButtonClickEvent(widget,content,SDAreaDiv,ScheduleDeliverydDtoList);
+		   				handleSdbuttonButtonClickEvent(widget,deliveryAddress, content,SDAreaDiv,ScheduleDeliverydDtoList);
 		   			}
 		   		});
 	}
 
-	protected void handleSdbuttonButtonClickEvent(Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget, Div content,Div sDAreaDiv,
+	protected void handleSdbuttonButtonClickEvent(Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,AddressModel  deliveryAddress ,Div content,Div sDAreaDiv,
 			List<TransactionSDDto>  ScheduledeliveryDtoList) {
 		sDAreaDiv.setVisible(false);
-		createOtpArea(widget, content,ScheduledeliveryDtoList);
+		createOtpArea(widget, deliveryAddress,content,ScheduledeliveryDtoList);
 		
 	}
 
-	private void createOtpArea(Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget, Div content,final List<TransactionSDDto>  ScheduledeliveryDtoList) {
+	private void createOtpArea(Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,AddressModel deliveryAddress, Div content,final List<TransactionSDDto>  ScheduledeliveryDtoList) {
 		final Div otpAreaDiv = new Div();
 		content.appendChild(otpAreaDiv);
 		final OrderModel  orderModel = (OrderModel) getOrder().getObject();
-AddressData changeDeliveryAddressData  = sessionService.getAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS);
-		AddressModel changeDeliveryAddress = new AddressModel();
-		addressReversePopulator.populate(changeDeliveryAddressData, changeDeliveryAddress);
 		try {
 			sendSmsToCustomer(orderModel);
 		} catch (InvalidKeyException | NoSuchAlgorithmException e) {
@@ -263,7 +261,7 @@ AddressData changeDeliveryAddressData  = sessionService.getAttribute(Marketplace
 		validateOTP.addEventListener(
 				Events.ON_CLICK,
 				createValidateOTPEventListener(widget, OTPTextBox, orderModel,
-						changeDeliveryAddress,ScheduledeliveryDtoList));
+						deliveryAddress,ScheduledeliveryDtoList));
 		
 	}
 
@@ -323,10 +321,31 @@ AddressData changeDeliveryAddressData  = sessionService.getAttribute(Marketplace
 		Div productDiv = new Div();
 		productDiv.setParent(productCell);
 		productDiv.setSclass("editorWidgetEditor");
-		Label productLabel = new Label(String.valueOf(orderEntry.getInfo()));
+		Label productLabel = new Label(String.valueOf(orderEntry.getProduct().getArticleDescription()));
 		productLabel.setParent(productDiv);
 		
-		final Map<String, List<String>> dateTimeslotMapList=getDateAndTimeMap("SD",transactionEddDto.getEDD());
+		
+		 final Map<String, List<String>> dateTimeslotMapList = getDateAndTimeMap(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD,transactionEddDto.getEDD());
+//		if(orderEntry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceCockpitsConstants.HOME_DELIVERY)) {
+//			if(null != transactionEddDto.getEDD()) {
+//				try {
+//			//		dateTimeslotMapList = getDateAndTimeMap(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD,transactionEddDto.getEDD());
+//				} catch (java.text.ParseException e) {
+//					LOG.error("ParseException While getting the time slots "+e.getMessage());
+//				}
+//			}
+//		}
+//		else if (orderEntry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceCockpitsConstants.EXPRESS_DELIVERY)) {
+//			if(null != transactionEddDto.getEDD()) {
+//			try {
+//			//	dateTimeslotMapList = getDateAndTimeMap(MarketplacecommerceservicesConstants.DELIVERY_MODE_ED,transactionEddDto.getEDD());
+//			} catch (java.text.ParseException e) {
+//				LOG.error("ParseException While getting the time slots "+e.getMessage() );
+//			}
+//			}
+//		}
+		
+		
 
 		// Date Cell 
 		try {
@@ -463,14 +482,16 @@ AddressData changeDeliveryAddressData  = sessionService.getAttribute(Marketplace
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
 		String  deteWithOutTIme=dateUtilHelper.getDateFromat(estDeliveryDateAndTime,format);
 		String timeWithOutDate=dateUtilHelper.getTimeFromat(estDeliveryDateAndTime);
-		List<String>   calculatedDateList=dateUtilHelper.getDeteList(deteWithOutTIme,format,1);
+		List<String>   calculatedDateList=new ArrayList<String>();
 		List<MplTimeSlotsModel> modelList=null;
 		if(timeSlotType.equalsIgnoreCase(MarketplaceCockpitsConstants.SD)){
 			modelList=mplConfigFacade.getDeliveryTimeSlotByKey(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD);
 			LOG.debug("********* Delivery Mode :" + MarketplacecommerceservicesConstants.DELIVERY_MODE_SD);
+			calculatedDateList=dateUtilHelper.getDeteList(deteWithOutTIme,format,3);
 		}else if (timeSlotType.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)){
 			modelList=mplConfigFacade.getDeliveryTimeSlotByKey(MarketplacecommerceservicesConstants.ED);
 			LOG.debug("********* Delivery Mode :" + MarketplacecommerceservicesConstants.ED);
+			calculatedDateList=dateUtilHelper.getDeteList(deteWithOutTIme,format,2);
 		}
 		if(null!= modelList){
 			Date startTime =null;
@@ -661,6 +682,8 @@ AddressData changeDeliveryAddressData  = sessionService.getAttribute(Marketplace
 			} catch (NumberFormatException exp) {
 				LOG.error("on Time limit defined");
 			}
+			
+	
 			OTPResponseData otpResponse = oTPGenericService.validateOTP(
 					orderModel.getUser().getUid(), orderModel
 							.getDeliveryAddress().getPhone1(), oTPTextBox
@@ -683,9 +706,15 @@ AddressData changeDeliveryAddressData  = sessionService.getAttribute(Marketplace
 									.getParentReference().getCode(), changeDeliveryAddress,interfaceType,ScheduledeliveryDtoList);
 					if (omsStatus.equalsIgnoreCase(MarketplaceCockpitsConstants.SUCCESS)) {
 						try {
-                            saveDeliveryDates (orderModel,ScheduledeliveryDtoList);
+							if(null !=ScheduledeliveryDtoList) {
+								try {
+									saveDeliveryDates (orderModel,ScheduledeliveryDtoList);
+								}catch(Exception e) {
+									LOG.error("Exception while saving schedule delivery dates");
+								}
+							}
 							mplDeliveryAddressController
-									.saveDeliveryAddress(orderModel,changeDeliveryAddress);
+									.saveDeliveryAddress(orderModel.getParentReference(),changeDeliveryAddress);
 							// Saving no_of Total requests and rejects 
 							mplDeliveryAddressController.saveChangeDeliveryRequests(orderModel.getParentReference());
 							LOG.debug("Delivery Address Changed Successfully");
@@ -745,28 +774,28 @@ AddressData changeDeliveryAddressData  = sessionService.getAttribute(Marketplace
 				AddressModel changeDeliveryAddress,
 				AddressModel deliveryAddress) {
 			String interfacetype = MarketplaceCockpitsConstants.CU;
-			if(changeDeliveryAddress.getPostalcode().equalsIgnoreCase(deliveryAddress.getPostalcode())) {
+			if(!changeDeliveryAddress.getPostalcode().equalsIgnoreCase(deliveryAddress.getPostalcode())) {
 				interfacetype = MarketplaceCockpitsConstants.CA;
 				return interfacetype;
-			} else if (changeDeliveryAddress.getLine1().trim().equalsIgnoreCase(deliveryAddress.getLine1().trim())) {
+			} else if (!changeDeliveryAddress.getLine1().trim().equalsIgnoreCase(deliveryAddress.getLine1().trim())) {
 				interfacetype = MarketplaceCockpitsConstants.CA;
 				return interfacetype;
-			} else if (changeDeliveryAddress.getLine2().trim().equalsIgnoreCase(deliveryAddress.getLine2().trim())){
+			} else if (!changeDeliveryAddress.getLine2().trim().equalsIgnoreCase(deliveryAddress.getLine2().trim())){
 				interfacetype = MarketplaceCockpitsConstants.CA;
 				return interfacetype;
-			}else if (changeDeliveryAddress.getAddressLine3().trim().equalsIgnoreCase(deliveryAddress.getAddressLine3().trim())){
+			}else if (!changeDeliveryAddress.getAddressLine3().trim().equalsIgnoreCase(deliveryAddress.getAddressLine3().trim())){
 				interfacetype = MarketplaceCockpitsConstants.CA;
 				return interfacetype;
-			}else if (changeDeliveryAddress.getLandmark().trim().equalsIgnoreCase(deliveryAddress.getLandmark().trim())){
+			}else if (!changeDeliveryAddress.getLandmark().trim().equalsIgnoreCase(deliveryAddress.getLandmark().trim())){
 				interfacetype = MarketplaceCockpitsConstants.CA;
 				return interfacetype;
-			}else if (changeDeliveryAddress.getCity().trim().equalsIgnoreCase(deliveryAddress.getCity().trim())){
+			}else if (!changeDeliveryAddress.getCity().trim().equalsIgnoreCase(deliveryAddress.getCity().trim())){
 				interfacetype = MarketplaceCockpitsConstants.CA;
 				return interfacetype;
-			}else if (changeDeliveryAddress.getState().trim().equalsIgnoreCase(deliveryAddress.getState().trim())){
+			}else if (!changeDeliveryAddress.getState().trim().equalsIgnoreCase(deliveryAddress.getState().trim())){
 				interfacetype = MarketplaceCockpitsConstants.CA;
 				return interfacetype;
-			}else if (changeDeliveryAddress.getCountry().getName().trim().equalsIgnoreCase(deliveryAddress.getCountry().getName().trim())){
+			}else if (!changeDeliveryAddress.getCountry().getName().trim().equalsIgnoreCase(deliveryAddress.getCountry().getName().trim())){
 				interfacetype = MarketplaceCockpitsConstants.CA;
 				return interfacetype;
 			}

@@ -34,6 +34,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.facade.data.LandMarksData;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.data.PincodeData;
+import com.tisl.mpl.facades.populators.CustomAddressPopulator;
 import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
 
@@ -98,6 +99,8 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 	private AccountAddressFacade accountAddressFacade;
 	@Autowired
 	private Populator<AddressModel, AddressData> addressPopulator ;
+	@Autowired
+	private CustomAddressPopulator customAddressPopulator;
 	@Autowired
 	OrderModelDao orderModelDao;
 
@@ -389,7 +392,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 					address1Field.setValue(deliveryAddress.getLine1());
 					address2Field.setValue(deliveryAddress.getLine2());
 					address3Field.setValue(deliveryAddress.getAddressLine3());
-					if (null != deliveryAddress.getLandmark()) {
+					if (StringUtils.isNotBlank(deliveryAddress.getLandmark())) {
 						landMarkField.setValue(deliveryAddress.getLandmark());
 						landMarkField.setVisible(true);
 					}
@@ -397,7 +400,6 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 							&& null != pincodeData.getLandMarks()) {
 						createlandMarkDropDown(widget,
 								pincodeData.getLandMarks(), landMarkListbox);
-						landMarkField.setVisible(false);
 					} else {
 						Listitem listItem = new Listitem(
 								MarketplaceCockpitsConstants.NO_LANDMARKS_FOUND);
@@ -1018,6 +1020,8 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 					.getWidgetController().getCurrentCustomer().getObject();
 			final AddressModel deliveryAddress = modelService
 					.create(AddressModel.class);
+			LOG.debug(" Address : "+firstName+" "+lastName+" "+addressLine1+" "+addressLine2+" "+
+					addressLine3+" "+LandMark+" "+city+" "+postalCode+" "+state+" "+mobileNumber+" "+addressType+" "+country+" ");
 			TypedObject order = getOrder();
 			OrderModel orderModel = (OrderModel) order.getObject();
 			deliveryAddress.setOwner(customerModel);
@@ -1046,7 +1050,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 				if (isChangeDeliveryAddress) {
 					// Storing Delivery Address in a session
 					AddressData changeDeliveryAddressData = new AddressData();
-					addressPopulator.populate(deliveryAddress, changeDeliveryAddressData);
+					customAddressPopulator.populate(deliveryAddress, changeDeliveryAddressData);
 					sessionService.setAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS, changeDeliveryAddressData);
 					String omsStatus = null;
 					// pincode Servicibility call To OMS  , only if pincode change
@@ -1076,7 +1080,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 								mplDeliveryAddressController.saveChangeDeliveryRequests(orderModel.getParentReference());;
 								popupMessage(
 										widget,
-										"Pincode "
+										deliveryAddress.getPostalcode()
 												+ PINCODE_NOT_SERVICIBLE);
 								return;
 							}
@@ -1103,9 +1107,9 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 
 	private void proceedToChangeAddress(
 			InputWidget<DefaultMasterDetailListWidgetModel<TypedObject>, CustomerController> widget,
-		AddressModel tempororyAddress) {
+		AddressModel deliveryAddress) {
 		createOTPPopupWindow(widget, popupWidgetHelper.getCurrentPopup()
-				.getParent(), tempororyAddress);
+				.getParent(), deliveryAddress);
 	}
 
 	protected Widget createPopupWidget(WidgetContainer<Widget> widgetContainer,
@@ -1120,7 +1124,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 	private Window createOTPPopupWindow(
 			final InputWidget<DefaultMasterDetailListWidgetModel<TypedObject>, CustomerController> parentWidget,
 			final Component parentWindow,
-			final AddressModel tempororyAddress) {
+			final AddressModel deliveryAddress) {
 		try {
 			LOG.info("Inside createOTPPopupWindow method");
 			final WidgetContainer<Widget> widgetContainer = new DefaultWidgetContainer(
@@ -1132,7 +1136,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 			popup.appendChild(popupWidget);
 			popup.addEventListener("onClose", new EventListener() {
 				public void onEvent(Event event) {
-					handleOTPPopupCloseEvent(tempororyAddress, parentWidget,
+					handleOTPPopupCloseEvent(deliveryAddress, parentWidget,
 							parentWindow, widgetContainer, popup);
 				}
 

@@ -1596,6 +1596,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public final static String ADDRESS_TYPE_HOME = "Home";
 	public final static String ADDRESS_TYPE_WORK = "Work";
 	public final static String DELIVERY_MODE_SD = "SD";
+	public final static String DELIVERY_MODE_ED = "ED";
 	public final static String PINCODE_RESPONSE_DATA_TO_SESSION = "PincodeResponseDataForCart";
 	public final static String INTERFACE_TYPE_CA = "CA";
 	public final static String INTERFACE_TYPE_CU = "CU";
@@ -1620,6 +1621,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String TO = "TO".intern();
 	public static final String AND = " AND ";
 	public final static String RESERVATION_DATA_TO_SESSION = "reservationData";
+
 	private MarketplacecommerceservicesConstants()
 	{
 		//empty to avoid instantiating this constant class
@@ -1634,5 +1636,5 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// implement here constants used by this extension
 	public static final String CHANGE_DELIVERY_ADDRESS = "changeDeliveryAddressData";
-	public static final String RESCHEDULE_DATA_SESSION_KEY="rescheduleDataList";
+	public static final String RESCHEDULE_DATA_SESSION_KEY = "rescheduleDataList";
 }

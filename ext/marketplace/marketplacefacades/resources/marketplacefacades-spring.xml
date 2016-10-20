@@ -814,6 +814,23 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="userFacade" ref="userFacade"/>
 	</bean>
 	
+	
+	
+	<alias name="customAddressReverseConverter" alias="customAddressReverseConverter"/>
+	<bean id="customAddressReverseConverter" parent="defaultAddressReverseConverter">
+		<property name="targetClass" value="de.hybris.platform.core.model.user.AddressModel"/>
+		<property name="populators">
+			<list>
+				<ref bean="customAddressReversePopulator"/>
+			</list>
+		</property>
+	</bean>
+	
+	
+	<alias name="customAddressReversePopulator" alias="customAddressReversePopulator" />
+	<bean id="customAddressReversePopulator" parent="defaultAddressReversePopulator" class="com.tisl.mpl.facades.populators.CustomAddressReversePopulator">
+	</bean>
+	
 	<!--End : Added for Adreess state field additon  -->
 	
 	<bean id="mplSendTicketFacade"

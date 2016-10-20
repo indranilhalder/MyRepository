@@ -131,7 +131,7 @@ public class MplScheduleDeliverySlotsWidgetRenderer
 			Listitem row) {
 
 		// Product Name 
-		String productName = entry.getInfo();
+		String productName = entry.getProduct().getArticleDescription();
 		Listcell productNameCell = new Listcell(productName);
 		productNameCell.setParent(row);
 
