@@ -2973,7 +2973,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 								{
 									final CategoryModel categoryL2 = getCategoryService().getCategoryForCode(
 											levelTwoComp.getLinks().get(0).getCategoryCode());
-									cmsChildNavDto.setDestination(defaultCategoryModelUrlResolver.resolve(categoryL2));
+									level2Dto.setDestination(defaultCategoryModelUrlResolver.resolve(categoryL2));
 								}
 								else if (null != levelTwoComp.getLinks().get(0).getCategory())
 								{
@@ -3050,7 +3050,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 											{
 												final CategoryModel categoryL4 = getCategoryService().getCategoryForCode(
 														levelFourLink.getCategoryCode());
-												cmsChildNavDto.setDestination(defaultCategoryModelUrlResolver.resolve(categoryL4));
+												level4Dto.setDestination(defaultCategoryModelUrlResolver.resolve(categoryL4));
 											}
 											else if (null != levelFourLink.getCategory())
 											{
