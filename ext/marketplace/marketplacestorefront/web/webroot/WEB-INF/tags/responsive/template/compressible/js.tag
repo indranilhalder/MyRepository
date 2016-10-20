@@ -3,6 +3,7 @@
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="compressible" tagdir="/WEB-INF/tags/responsive/template/compressible" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <template:javaScriptVariables />
 
@@ -53,21 +54,14 @@ if(loginStatus){
 <script type="text/javascript"
 	src="${commonResourcePath}/bootstrap/dist/js/bootstrap.min.js"></script>
 <!-- LW-230 Start -->
-
-<c:if test="${param.isLux ne null and isLuxury != 'false'}">
-	<script type="text/javascript" src="http://luxury.ia.tatacliq.com/header-widget.js"></script>
-</c:if>
-<c:if test="${param.isLux ne null and param.isLux eq true }">
-		<script type="text/javascript" src="http://luxury.ia.tatacliq.com/header-widget.js"></script>
-	</c:if>
-
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.resource.host')" var="luxuryHost"/>
+<c:set var="headerWidgetJsSource" value="${luxuryHost}/header-widget.js"/>
 <c:if test="${(param.isLux ne null and param.isLux eq true) and ((not empty isLuxury and isLuxury != 'false') or (empty isLuxury))}">
-	<script type="text/javascript" src="http://luxury.ia.tatacliq.com/header-widget.js"></script>
+	<script type="text/javascript" src="${headerWidgetJsSource}"></script>
 </c:if>
 <c:if test="${not empty isLuxury and isLuxury == 'true'}">
-	<script type="text/javascript" src="http://luxury.ia.tatacliq.com/header-widget.js"></script>
+	<script type="text/javascript" src="${headerWidgetJsSource}"></script>
 </c:if>
-
 
 <!-- LW-230 End -->
 <c:choose>

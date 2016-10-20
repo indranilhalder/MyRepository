@@ -86,8 +86,8 @@
 					    </div>
 				        <!-- Luxury tab	 ends-->
 						<ul>
-							<li><a href="<c:url value="/helpservices"/>"><spring:theme
-										code="header.help&Services" /></a></li>
+							<%-- <li><a href="<c:url value="/helpservices"/>"><spring:theme
+										code="header.help&Services" /></a></li> --%>
 						</ul>
 						
 				   </div>      

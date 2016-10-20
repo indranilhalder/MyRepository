@@ -905,6 +905,7 @@
 	<bean class="com.tisl.mpl.wsdto.SizeLinkData">
 		<property name="size" type="String" />
 		<property name="url" type="String" />
+		<property name="isAvailable" type="boolean" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.CapacityLinkData">
 		<property name="capacity" type="String" />

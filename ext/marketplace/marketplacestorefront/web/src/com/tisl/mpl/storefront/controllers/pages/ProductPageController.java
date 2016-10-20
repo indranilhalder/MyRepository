@@ -282,6 +282,16 @@ public class ProductPageController extends AbstractPageController
 			LOG.debug("**************************************opening pdp for*************" + productCode);
 			final ProductModel productModel = productService.getProductForCode(productCode);
 
+			if (productModel.getLuxIndicator() != null
+					&& productModel.getLuxIndicator().getCode().equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
+			{
+				LOG.debug("**********The product is a luxury product.Hence redirecting to luxury website***********" + productCode);
+				final String luxuryHost = configurationService.getConfiguration().getString("luxury.resource.host");
+				final String luxuryProductUrl = luxuryHost + "/p-" + productCode;
+				LOG.debug("Redirecting to ::::::" + luxuryProductUrl);
+				response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+				response.setHeader("Location", luxuryProductUrl);
+			}
 			final String redirection = checkRequestUrl(request, response, productModelUrlResolver.resolve(productModel));
 
 			if (StringUtils.isNotEmpty(redirection))
