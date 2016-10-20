@@ -77,7 +77,7 @@
        		</value>
         </property>
         <property name="impexRow">
-            <value>;{+0};{+1};{+2};{+3};{+4}</value>
+            <value>;{+0};{+1};{+2};{3};{4}</value>
         </property>
         </bean>
 </beans>
