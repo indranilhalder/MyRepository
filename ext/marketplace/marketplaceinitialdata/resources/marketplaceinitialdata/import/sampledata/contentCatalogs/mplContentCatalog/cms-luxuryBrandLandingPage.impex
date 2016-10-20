@@ -35,8 +35,8 @@ $storefrontContextRoot=$config-storefrontContextRoot
 # These define the layout for pages
 # "FrontendTemplateName" is used to define the JSP that should be used to render the page for pages with multiple possible layouts.
 # "RestrictedPageTypes" is used to restrict templates to page types
-#INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
-#;;luxuryHomePageTemplate;Luxury HomePage;;CategoryPage,ContentPage;
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
+;;luxuryBLPTemplate;Luxury BLP Template;;ContentPage;
 
 
 # Add Velocity templates that are in the CMS Cockpit. These give a better layout for editing pages
