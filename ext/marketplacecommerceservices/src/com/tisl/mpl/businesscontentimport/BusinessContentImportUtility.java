@@ -75,7 +75,7 @@ public class BusinessContentImportUtility
 		{
 			//To-Do
 			//Create Product Upload
-
+			businessContentImportService.processUpdateForProductMappingImport(reader, writer, map, errorPosition, headerRowIncluded);
 		}
 
 		writer.close();

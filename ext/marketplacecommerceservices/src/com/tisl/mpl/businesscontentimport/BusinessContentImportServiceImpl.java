@@ -224,6 +224,89 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 	}
 
 	/**
+	 * @Description: For mapping products against content template in bulk,checks for the basic coloumns
+	 * @param reader
+	 * @param writer
+	 * @param map
+	 * @param errorPosition
+	 * @param headerRowIncluded
+	 */
+	@Override
+	public void processUpdateForProductMappingImport(final CSVReader reader, final CSVWriter writer,
+			final Map<Integer, String> map, final Integer errorPosition, final boolean headerRowIncluded)
+	{
+		LOG.debug("Mapping to product starts");
+		while (reader.readNextLine())
+		{
+			final Map<Integer, String> line = reader.getLine();
+			final StringBuilder invalidColumns = new StringBuilder();
+
+			final String productCode = line.get(Integer.valueOf(PRODUCTCODE));
+			addInvalidColumnName(invalidColumns, "PRODUCTCODE", productCode);
+
+			final String templateCode = line.get(Integer.valueOf(TEMPLATE));
+			addInvalidColumnName(invalidColumns, "TEMPLATEPRODUCTCODE", templateCode);
+
+			final String action = line.get(Integer.valueOf(2));
+			addInvalidColumnName(invalidColumns, "ACTION", action);
+
+
+			//if invalid columns are empty get inside
+			if (StringUtils.isEmpty(invalidColumns.toString()))
+			{
+				ContentPageModel cm = null;
+				final ProductModel product = businessContentImportDao.fetchProductforCode(productCode);
+				try
+				{
+					cm = (ContentPageModel) getCmsPageService().getPageForIdandCatalogVersion(templateCode, getCatalogVersion());
+					final List<ProductModel> productList = cm.getAssociatedProducts();
+					final List<ProductModel> updateProductList = new ArrayList();
+					// Deletion of product mapping
+					if (action.equalsIgnoreCase("delete"))
+					{
+
+						if (productList.contains(product))
+						{
+							updateProductList.addAll(productList);
+							updateProductList.remove(product);
+						}
+					}
+					//addition of product mapping
+					if (action.equalsIgnoreCase("add"))
+					{
+						if (!productList.contains(product))
+						{
+							updateProductList.add(product);
+							updateProductList.addAll(productList);
+						}
+					}
+					if (CollectionUtils.isNotEmpty(updateProductList))
+					{
+						cm.setAssociatedProducts(updateProductList);
+						modelService.save(cm);
+					}
+				}
+				catch (final Exception e)
+				{
+					LOG.error("No page exist with Uid:" + templateCode + ". Error is " + e.getMessage());
+				}
+				continue;
+			}
+			else
+			{
+				try
+				{
+					writeErrorData(writer, invalidColumns.toString(), line, "MISSING_VALUES");
+				}
+				catch (final IOException e)
+				{
+					LOG.error("IOException Occured " + e.getMessage());
+				}
+			}
+		}
+	}
+
+	/**
 	 * @Description: To process data for Content
 	 * @param line
 	 * @param writer
