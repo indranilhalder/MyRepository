@@ -974,6 +974,7 @@
 		<property name="discount" type="String" />
 		<property name="productOfferMsg"  type="com.tisl.mpl.wsdto.ProductOfferMsgDTO" />	
 		<property name="allOOStock" type="Boolean" />
+		<property name="aPlusContent" type="com.tisl.mpl.wsdto.ProductAPlusWsData"/>
 	</bean>
 	<!-- 		Added for OfferDetail of  a product TPR-TPR-1299 -->
 	<bean class="com.tisl.mpl.wsdto.ProductOfferMsgDTO">
