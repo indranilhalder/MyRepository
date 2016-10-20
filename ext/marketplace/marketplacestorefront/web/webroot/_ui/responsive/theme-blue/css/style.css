@@ -21,8 +21,6 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
 } 
 img {
     vertical-align: middle;
-    /* width:100%; */
-    max-width: 100%;
 }
 html {
     -webkit-font-smoothing: subpixel-antialiased;
@@ -53514,6 +53512,10 @@ header > .content .top.header_fix {position:fixed;}
 /* TPR-978 starts */
 
 /* Common Starts */
+
+.Manufacturer.Temp01 img,.Manufacturer.Temp02 img,.Manufacturer.Temp03 img,.Manufacturer.Temp04 img,.Manufacturer.Temp07 img,.Manufacturer.temp-five img,.Manufacturer.temp-six img{
+	max-width:100%;
+}
 .Manufacturer h3 {
     font-size: 24px;
     font-weight: bold;
