@@ -679,7 +679,7 @@ h2 {
         -webkit-transition: margin 0.3s;		
         -moz-transition: margin 0.3s;		
         transition: margin 0.3s;
-        margin-bottom: 20px;	
+      /*   margin-bottom: 20px;	 */
     }
   header .banner {
     position: relative;
@@ -45665,7 +45665,9 @@ body.no-scroll {
  /*--------------Added for luxury site starts-----------*/
 #flip-tabs{  
     width:300px;  
-    position:relative;  
+    /* position:relative; */
+    position:absolute;
+    z-index:1;  
 }  
 #flip-navigation{  
    /*  margin:0 0 10px; */ padding:0;   
@@ -45676,6 +45678,7 @@ body.no-scroll {
     width: 150px;
     margin: 0;
     vertical-align: top;
+    float:left;
 }  
 #flip-navigation li a{  
     text-decoration: none;
@@ -45730,16 +45733,16 @@ header .content .top{
 header>.content .bottom .marketplace{
 	margin-top:0px;
 }
-header .content .right li a{
+header .content .right > ul > li > a{
 	color:#fff;
 }
 header .content .right li.download-app:hover a, header .content .right li.store-locator-header:hover a
 {
 	color:#a9143c;
 }
-header .content .right li:hover,header .content .right li.dropdown.sign-in-dropdown.sign-in.ajaxloginhi:hover{
+header .content .right > ul > li:hover,header .content .right li.dropdown.sign-in-dropdown.sign-in.ajaxloginhi:hover{
 	    background: #f7bbcb;
-	    color:#a9143c;
+	  /*   color:#a9143c; */
 }
 header .content .right > ul > li.bag{
 	border-left:none;
@@ -45755,18 +45758,30 @@ header .content .right li.track.trackOrder:hover .bell-icon:after, li.store-loca
 header .content .right > ul > li.wishlist:hover > a:before, header .content .right > ul > li.bag:hover > a:before {
 	color:#a9143c;
 }
-header .content .right li ul li:hover{
-	background-color:#fff;
-}
+/* header .content .right li ul > li:hover{
+	background-color:#fff; 
+} */
 }
 @media (max-width:790px){
+	header > .content .top .toggle {
+  margin-top: 40px;
+}
+header > .content .top.active .toggle{
+	margin-top:0px;
+}
 	#flip-navigation,#flip-tabs{
-	width:100%;
-	  overflow: hidden;}
+  width: calc(100% - -24px);
+  overflow: hidden;
+  left: -12px;
+  position:relative;}
 	#flip-navigation li{
 	width:50%;
 	float:left;
 	}
+}
+@media (max-width:1050px){
+	header .content .right{
+	clear:left;}
 }
 header .content .right > ul > li.bag > a:before {
     font-family: 'icomoon';
@@ -45784,5 +45799,15 @@ header .content .right > ul > li.bag > a:before {
 } 
 header .content .right ul.loggedIn-flyout li a, header .content .right ul.loggedIn-flyout li{
 	color:#000;
+}
+#flip-navigation li:first-child a{
+	background:#fff;
+	color:#a9143c;
+}
+#flip-navigation li:hover a{
+	text-decoration:underline;
+}
+header>.content .bottom .marketplace .simple-banner-component img{
+	max-height:37px;
 }
 /*--------------Added for luxury site ends-----------*/
