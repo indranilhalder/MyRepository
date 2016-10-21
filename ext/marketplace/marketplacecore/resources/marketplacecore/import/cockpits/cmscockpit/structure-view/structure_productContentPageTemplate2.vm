@@ -1,0 +1,47 @@
+<div>
+	<table width="100%" cellspacing="0" style="margin:0;padding:0;table-layout:auto;border:1px solid #1E4EBF;">
+		<tbody>			
+			<tr>
+				<td width="50%" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Section1A" />
+				</td>
+				<td width="50%" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Section1B" />
+				</td>
+			</tr>
+			<tr>
+				<td width="50%" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Section2A" />
+				</td>
+				<td width="50%" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Section2B" />
+				</td>
+			</tr>
+			<tr>
+				<td width="50%" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Section3A" />
+				</td>
+				<td width="50%" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Section3B" />
+				</td>
+			</tr>
+			<tr>
+				<td width="50%" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Section4A" />
+				</td>
+				<td width="50%" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Section4B" />
+				</td>				
+			</tr>
+			<tr>
+				<td width="100%" style="vertical-align:top;" class="structureViewSection" colspan="2">
+					<cockpit code="Section5A" />
+				</td>
+				
+			</tr>
+		</tbody>
+	</table>
+	<div style="width:100%; border-top: 2px solid #bbb" class="cmsContentEditor">
+		<cockpit code="editor" />
+	</div>
+</div>

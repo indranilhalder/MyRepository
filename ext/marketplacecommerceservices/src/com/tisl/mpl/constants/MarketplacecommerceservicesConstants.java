@@ -1723,6 +1723,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String MPLCATALOGNNAME = "internal.campaign.catalogVersionName";
 	public static final String WCMSPAGINATIONQUERY = "Select {CSP.pk} From {ContentSlotForPage AS CSP JOIN ContentPage as CP ON {CSP.page}={CP.pk}} "
 			+ "where {CP.uid} = ?uid and {CSP.catalogVersion}=?version";
-
+	//TPR-978
+	public static final String DEFAULT_IMPORT_CONTENT_CATALOG_ID = "mplContentCatalog";
+	public static final String DEFAULT_IMPORT_CONTENT_CATALOG_VERSION = "Staged";
 
 }

@@ -2586,5 +2586,17 @@ $(".top_deal_blp  > .blog_container_blp > .blog_feature_blp").each(function(){
 //-----Logo slot start------//
 $(".common_logo_slot > div").slice(0,2).wrapAll("<div class='common_logo_slot_wrapper'>");
 //-----Logo slot end------//
+if($(".body-Content").find(".style_edit_blp").children().length==0){
+	$(".style_edit_blp").css("border-bottom","none");
+}
+if($(".body-Content").find(".shop_the_look").children().length==0){
+	$(".shop_the_look").css("border-bottom","none");
+}
+if($(".body-Content").find(".top_deal_blp").children().length==0){
+	$(".top_deal_blp").css("border-bottom","none");
+}
+if($(".body-Content").find(".shop_for_blp").children().length==0){
+	$(".shop_for_blp").css("border-bottom","none");
+}
 
 //-----BLP------//

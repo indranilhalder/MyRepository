@@ -13,6 +13,7 @@ import de.hybris.platform.cms2.servicelayer.daos.impl.DefaultCMSPageDao;
 import de.hybris.platform.commerceservices.search.flexiblesearch.PagedFlexibleSearchService;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
@@ -61,6 +62,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 	private static final String UID = "uid";
 
+	private static final String LEFT_JOIN = " as cp left join ";
 
 
 
@@ -143,7 +145,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 	public StringBuilder getQuery()
 	{
 		final StringBuilder queryString = new StringBuilder(SELECT_CLASS).append(ContentPageModel.PK).append(FROM_CLASS)
-				.append(ContentPageModel._TYPECODE).append(" as cp left join ").append(CMSChannel._TYPECODE)
+				.append(ContentPageModel._TYPECODE).append(LEFT_JOIN).append(CMSChannel._TYPECODE)
 				.append(" as cm ON {cp.channel} = {cm.pk}}").append(" Where {cp.categoryAssociated} = ?category ");
 
 		return queryString;
@@ -251,7 +253,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 	public StringBuilder getCollectionQuery()
 	{
 		final StringBuilder queryString = new StringBuilder(SELECT_CLASS).append(ContentPageModel.PK).append(FROM_CLASS)
-				.append(ContentPageModel._TYPECODE).append(" as cp left join ").append(CMSChannel._TYPECODE)
+				.append(ContentPageModel._TYPECODE).append(LEFT_JOIN).append(CMSChannel._TYPECODE)
 				.append(" as cm ON {cp.channel} = {cm.pk}}").append(" Where {cp.collectionAssociated} = ?collection ");
 
 		return queryString;
@@ -281,7 +283,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 	public StringBuilder getSellerQuery()
 	{
 		final StringBuilder queryString = new StringBuilder(SELECT_CLASS).append(ContentPageModel.PK).append(FROM_CLASS)
-				.append(ContentPageModel._TYPECODE).append(" as cp left join ").append(CMSChannel._TYPECODE)
+				.append(ContentPageModel._TYPECODE).append(LEFT_JOIN).append(CMSChannel._TYPECODE)
 				.append(" as cm ON {cp.channel} = {cm.pk}}")
 				.append(" Where {cp." + ContentPageModel.ASSOCIATEDSELLER + "} = ?sellerMaster ");
 		return queryString;
@@ -340,5 +342,48 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 		return pagedFlexibleSearchService.search(queryStr, params, pageableData);
 
+	}
+
+	/**
+	 * @Description get the content page for product
+	 * @param product
+	 * @return ContentPageModel
+	 */
+	@Override
+	public ContentPageModel getContentPageForProduct(final ProductModel product)
+	{
+
+		final StringBuilder queryString = getProductContentQuery();
+
+		queryString.append(" where ({cm.code} = ?channel or {cp.channel} is null)").append(
+				" and {cp.associatedProducts} like '%" + product.getPk().toString() + "%'");
+
+		System.out.println("Query:::::::::::::" + queryString.toString());
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString.toString());
+		//query.addQueryParameter("category", category);
+		query.addQueryParameter(MarketplacecommerceservicesConstants.CHANNEL, CMSChannel.DESKTOP.getCode());
+
+
+		final List<ContentPageModel> contentPages = flexibleSearchService.<ContentPageModel> search(query).getResult();
+		//if (contentPages != null && contentPages.size() > 0)
+		if (CollectionUtils.isNotEmpty(contentPages))
+		{
+			return contentPages.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * @Description get the product query
+	 * @return StringBuilder
+	 */
+	public StringBuilder getProductContentQuery()
+	{
+		final StringBuilder queryString = new StringBuilder(SELECT_CLASS).append(ContentPageModel.PK).append(FROM_CLASS)
+				.append(ContentPageModel._TYPECODE).append(LEFT_JOIN).append(CMSChannel._TYPECODE)
+				.append(" as cm ON {cp.channel} = {cm.pk}} ");
+
+		return queryString;
 	}
 }

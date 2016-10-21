@@ -2983,4 +2983,46 @@ function loadDefaultWishListName_SizeGuide() {
 		
 		
 	}
+	//TPR-978
+function getProductContents() {
+		
+		var requiredUrl = ACC.config.encodedContextPath + "/p"
+				+ "-fetchPageContents";
+		var dataString = 'productCode=' + productCode;
+		var renderHtml = "";
+		$.ajax({
+			url : requiredUrl,
+			data : dataString,
+			success : function(data) {
+				 $('#productContentDivId').html(data);
+				 
+			},
+			error : function(xhr, status, error) {
+				
+			}
+		});
+	
+		
+	}
 
+	function lazyLoadProductContents(){
+		if ($(window).scrollTop() + $(window).height() >= $('#productContentDivId').offset().top) {
+	        if(!$('#productContentDivId').attr('loaded')) {
+	            //not in ajax.success due to multiple sroll events
+	            $('#productContentDivId').attr('loaded', true);
+
+	            //ajax goes here
+	            //by theory, this code still may be called several times
+	            if ($('#productContentDivId').children().length == 0) {
+	            	getProductContents();
+	        }
+	        }
+	}
+	}
+	
+	if($('#pageTemplateId').val() == 'ProductDetailsPageTemplate'){
+		$(window).on('scroll load',function() {
+		lazyLoadProductContents();
+		});
+		
+	}
