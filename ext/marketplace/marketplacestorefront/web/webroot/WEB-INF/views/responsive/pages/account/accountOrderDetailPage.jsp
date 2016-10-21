@@ -390,13 +390,12 @@
 											<spring:message code="mpl.myBag.fulfillment"></spring:message>
 											<!-- TISEE-6290 -->
 											<c:forEach items="${fullfillmentData}" var="fullfillmentData">
-											
-												<c:if test="${fullfillmentData.key == entry.transactionId}">
+												<c:if test="${fullfillmentData.key == entry.entryNumber}">
 													<c:set var="fulfilmentValue" value="${fn:toLowerCase(fullfillmentData.value)}"> </c:set>
 													<%-- <c:if test="${not paymentError}"> --%>
 													<c:choose>
 														<c:when test="${fulfilmentValue eq 'tship'}">
-															<span><spring:theme code="product.default.fulfillmentType"/> </span>
+															<span><spring:theme code="product.default.fulfillmentType"/> </span> 
 														</c:when>
 														<c:otherwise>
 															<span>${entry.selectedSellerInformation.sellername}</span> 

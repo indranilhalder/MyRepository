@@ -466,7 +466,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 				{
 					final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
 							.getDeliveryFulfillModes().getCode();
-					fullfillmentDataMap.put(orderEntryData.getTransactionId(), fulfillmentType.toLowerCase());
+					fullfillmentDataMap.put(orderEntryData.getEntryNumber().toString(), fulfillmentType.toLowerCase());
 				}
 			}
 		}

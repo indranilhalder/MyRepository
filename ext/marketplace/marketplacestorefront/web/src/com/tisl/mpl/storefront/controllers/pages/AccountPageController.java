@@ -911,6 +911,24 @@ public class AccountPageController extends AbstractMplSearchPageController
 								consignmentStatus = orderDetail.getStatus().getCode();
 							}
 						}
+
+						final ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntry.getProduct().getCode());
+						final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
+								.getSellerInformationRelator();
+
+						// TO-DO
+						for (final SellerInformationModel sellerInformationModel : sellerInfo)
+						{
+							if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid()))
+							{
+								final SellerInformationData sellerInfoData = new SellerInformationData();
+								sellerInfoData.setSellername(sellerInformationModel.getSellerName());
+								sellerInfoData.setUssid(sellerInformationModel.getSellerArticleSKU());
+								orderEntry.setSelectedSellerInformation(sellerInfoData);
+								break;
+							}
+						}
+
 						trackStatusMap.put(orderDetail.getCode() + orderEntry.getEntryNumber(), statusTrackMap);
 						currentStatusMap.put(orderDetail.getCode() + orderEntry.getEntryNumber(), consignmentStatus);
 					}
