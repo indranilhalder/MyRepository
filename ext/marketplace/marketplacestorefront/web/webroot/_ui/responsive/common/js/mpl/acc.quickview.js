@@ -859,11 +859,13 @@ $(document).on("click",".quickview #emiStickerId p",function(e){
 	e.stopPropagation();
 	$(this).addClass("active")
 	openPopForBankEMI_quick();
+	$(".quickview #emiTableDiv #EMITermTable").hide();
 		
 	});
 $(document).on("click",".quickview .Emi .modal-content .Close",function(e){
 	$(".quickview .Emi > p").removeClass("active mobile");
 	e.stopPropagation();
+	
 	
 });
 $(document).on("click", function(e){
@@ -871,12 +873,14 @@ $(document).on("click", function(e){
 	if(!$(e.currentTarget).parents(".Emi").hasClass("Emi_wrapper")) {
 		$(".quickview .Emi > p").removeClass("active")
 	} else {
-		$(".quickview .Emi > p").addClass("active")
+		$(".quickview .Emi > p").addClass("active");
+		
 	}
 });
 $(document).on("click",".quickview .Emi > #EMImodal-content",function(e){
 	e.stopPropagation();
-		$(".quickview .Emi > p").addClass("active")
+		$(".quickview .Emi > p").addClass("active");
+
 });
 
 $(document).on('click','#buyNowQv .js-add-to-cart-qv',function(event){
