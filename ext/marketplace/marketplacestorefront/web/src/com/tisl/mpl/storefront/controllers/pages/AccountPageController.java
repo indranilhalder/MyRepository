@@ -4772,8 +4772,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @throws CMSItemNotFoundException
 	 */
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_WISHLIST_HOME_PAGE, method = RequestMethod.GET)
-	public String wishlistHomePage(final Model model, final RedirectAttributes redirectAttributes,
-			@RequestParam(value = "isLux", defaultValue = "false") final String luxury) throws CMSItemNotFoundException
+	public String wishlistHomePage(final Model model, final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException
 	{
 		try
 		{
@@ -4782,14 +4781,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 			{
 				final String nameWL = allWishlists.get(0).getName();
 				return REDIRECT_PREFIX + RequestMappingUrlConstants.LINK_MY_ACCOUNT
-						+ RequestMappingUrlConstants.LINK_VIEW_PARTICULAR_WISHLIST + "?particularWishlist=" + nameWL + "&isLux="
-						+ luxury;
+						+ RequestMappingUrlConstants.LINK_VIEW_PARTICULAR_WISHLIST + "?particularWishlist=" + nameWL;
 			}
 			else
 			{
-				//TISLUX-21
-				return REDIRECT_PREFIX + RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_WISHLIST_PAGE
-						+ "?isLux=" + luxury;
+				return REDIRECT_PREFIX + RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_WISHLIST_PAGE;
 			}
 		}
 		catch (final EtailBusinessExceptions e)
