@@ -379,6 +379,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		boolean omsCancellationStatus = false;
 		String pincode = null;
 
+		final String transactionId = subOrderEntry.getTransactionId();
+
 		final OrderModel subOrderModel = orderModelService.getOrder(subOrderDetails.getCode());
 		boolean bogoOrFreeBie = false;
 		try
@@ -400,6 +402,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			{
 
 				orderLineRequest = populateOrderLineData(subOrderEntry, ticketTypeCode, subOrderModel, reasonCode, pincode);
+
 
 
 
@@ -469,7 +472,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
 					{
 						final boolean returnReqSuccess = createRefund(subOrderModel, abstractOrderEntryModel, reasonCode,
-								salesApplication, returnAddress.getPincode(), subOrderDetails);
+								salesApplication, returnAddress.getPincode(), subOrderDetails, transactionId);
 
 						LOG.debug("**********************************Return request successful :" + returnReqSuccess);
 					}
@@ -747,18 +750,21 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	 * @return boolean
 	 */
 	private boolean createRefund(final OrderModel subOrderModel, final AbstractOrderEntryModel abstractOrderEntryModel,
-			final String reasonCode, final SalesApplication salesApplication, final String pinCode, final OrderData subOrderDetails)
+			final String reasonCode, final SalesApplication salesApplication, final String pinCode, final OrderData subOrderDetails,
+			final String transactionId)
 	{
 
 		boolean returnReqCreated = false;
 		boolean returnLogisticsCheck = true;
 		try
 		{
+
 			final ReturnRequestModel returnRequestModel = returnService.createReturnRequest(subOrderModel);
 			returnRequestModel.setRMA(returnService.createRMA(returnRequestModel));
 			//TISEE-5471
 			//final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(subOrderModel.getCode()); //Changes for Bulk Return Initiation
-			final List<ReturnLogisticsResponseData> returnLogisticsRespList = checkReturnLogistics(subOrderDetails, pinCode);
+			final List<ReturnLogisticsResponseData> returnLogisticsRespList = checkReturnLogistics(subOrderDetails, pinCode,
+					transactionId);
 			if (CollectionUtils.isNotEmpty(returnLogisticsRespList))
 			{
 				for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
@@ -1061,6 +1067,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 		try
 		{
+			final String transactionId = subOrderEntry.getTransactionId();
 			final List<SendTicketLineItemData> lineItemDataList = new ArrayList<SendTicketLineItemData>();
 			final SendTicketRequestData sendTicketRequestData = new SendTicketRequestData();
 			final ReturnAddressInfo addressInfo = new ReturnAddressInfo();
@@ -1079,7 +1086,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 					boolean returnLogisticsCheck = true; //Start
 
-					final List<ReturnLogisticsResponseData> returnLogisticsRespList = checkReturnLogistics(subOrderDetails, pinCode);
+					final List<ReturnLogisticsResponseData> returnLogisticsRespList = checkReturnLogistics(subOrderDetails, pinCode,
+							transactionId);
 					if (CollectionUtils.isNotEmpty(returnLogisticsRespList))
 					{
 						for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
@@ -1844,7 +1852,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	 * @return List
 	 */
 	@Override
-	public List<ReturnLogisticsResponseData> checkReturnLogistics(final OrderData orderDetails, final String pincode)
+	public List<ReturnLogisticsResponseData> checkReturnLogistics(final OrderData orderDetails, final String pincode,
+			final String transId)
 	{
 		try
 		{
@@ -1852,7 +1861,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			final OrderModel orderModel = orderModelService.getOrder(orderDetails.getCode());
 			final List<ReturnLogistics> returnLogisticsList = new ArrayList<ReturnLogistics>();
 			String returningTransactionId;
-			returningTransactionId = sessionService.getAttribute("transactionId");
+			//returningTransactionId = sessionService.getAttribute("transactionId"); // Commented for Bulk Return Initiation
+			returningTransactionId = transId;
 			String transactionId = "";
 			for (final OrderEntryData eachEntry : entries)
 			{

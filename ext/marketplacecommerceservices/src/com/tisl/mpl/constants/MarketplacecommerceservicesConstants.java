@@ -13,6 +13,7 @@
  */
 package com.tisl.mpl.constants;
 
+import de.hybris.platform.core.model.BulkReturnProcessModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.ordercancel.model.OrderCancelRecordEntryModel;
 import de.hybris.platform.returns.model.RefundEntryModel;
@@ -101,6 +102,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PROMOPRIORITY = "Promotion Priority :".intern();
 	public static final String PRODUCT_PRICE_COLUMN = "price".intern();
 	public static final String PRESENT_CATEGORY = "Present Category :".intern();
+
+	//For Bulk Orders Return Initiation
+	public static final String COMMA_DELIMITER = ",";
+	public static final String TICKETTYPECODE = "R";
+	public static final String REFUNDTYPE = "S";
+	public static final String REASONCODE = "03"; // Hard coded value -- I'm not happy with the product quality
 
 	//For SuperCategoryDecorator
 	public static final String CONFIGURATION_SER = "configurationService";
@@ -951,6 +958,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SALES_REPORT_QUERY_START_END = "SELECT {" + OrderModel.PK + "} FROM {" + OrderModel._TYPECODE
 			+ "} WHERE {" + OrderModel.CREATIONTIME + "} >= ?startDate AND {" + OrderModel.CREATIONTIME + "} <=?endDate AND {"
 			+ OrderModel.TYPE + "}=?type order by {" + OrderModel.CODE + "} desc";
+
+	//Bulk Return Initiation
+
+	public static final String BULK_RETURN_DATA_QUERY_START = "SELECT {" + BulkReturnProcessModel.PK + "} FROM {"
+			+ BulkReturnProcessModel._TYPECODE + "}";
 
 
 	public static final String NOEMIBANKLIST = "EMI Bank list is not available , Please Enter the correct data";

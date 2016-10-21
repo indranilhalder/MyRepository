@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service;
 
+import de.hybris.platform.core.model.BulkReturnProcessModel;
 import de.hybris.platform.core.model.order.OrderModel;
 
 import java.util.Date;
@@ -110,6 +111,15 @@ public interface OrderModelService
 	 */
 
 	OrderModel getParentOrder(final String code);
+
+
+	/**
+	 * @return : List<BulkReturnProcessModel>
+	 */
+	List<BulkReturnProcessModel> getBulkReturnData();
+
+
+
 
 
 }

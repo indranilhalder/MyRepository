@@ -8557,7 +8557,6 @@
 			</itemtype>
 		</typegroup>
 		
-		
 		<!-- Search POC start-->
 		<typegroup name="DataConversion">
 			<itemtype code="Sizesystem" autocreate="true" generate="true">
@@ -8592,6 +8591,41 @@
 			</itemtype>
 		</typegroup>
 		<!-- Search POC ends-->
+ 
+		<typegroup name="BulkReturnProcessForOrder">
+			<itemtype code="BulkReturnProcess" extends="GenericItem" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.BulkReturnProcess">
+				<deployment table="MplBulkReturnProcess" typecode="15804" />
+				<attributes>
+					<attribute qualifier="parentOrderNo"  autocreate="true" type="java.lang.String"
+						generate="true">
+						<description>Parent Order Number</description>
+						<modifiers optional="false" read="true" write="true"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="transactionId"  autocreate="true" type="java.lang.String"
+						generate="true">
+						<description>Transaction Id</description>
+						<modifiers optional="false" read="true" write="true"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="loadStatus"  autocreate="true" type="java.lang.String"
+						generate="true">
+						<description>Load Status</description>
+						<modifiers optional="false" read="true" write="true"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="errorDescription"  autocreate="true" type="java.lang.String"
+						generate="true">
+						<description>Error Description</description>
+						<modifiers optional="true" read="true" write="true"/>
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			</typegroup>
+		
+    
+     
 	</itemtypes>
 	
 </items>

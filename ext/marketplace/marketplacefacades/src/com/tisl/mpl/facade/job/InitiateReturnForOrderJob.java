@@ -7,6 +7,7 @@ import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
+import de.hybris.platform.core.model.BulkReturnProcessModel;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
@@ -22,19 +23,8 @@ import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.store.services.BaseStoreService;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -81,7 +71,7 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 	private PriceDataFactory priceDataFactory;
 
 
-	private static final String COMMA_DELIMITER = ",";
+
 
 
 	/*
@@ -95,12 +85,12 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 	public PerformResult perform(final CronJobModel arg0)
 	{
 
-
+		//Reading CSV file
 
 		//String fileName = System.getProperty("user.home") + "/csv_files/return.csv";
 
-		final String fileName = "D:/Nazia/csv_files/return.csv";
-		BufferedReader fileReader = null;
+		//final String fileName = "D:/Nazia/csv_files/return.csv";
+		//BufferedReader fileReader = null;
 
 
 		try
@@ -109,163 +99,175 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 
 			String orderCode = null; // TODO to fetch from given CSV66
 			String transactionId = null; // TODO to fetch from given CSV66
+			String ussid = null;
+			final String ticketTypeCode = MarketplacecommerceservicesConstants.TICKETTYPECODE;
+			final String refundType = MarketplacecommerceservicesConstants.REFUNDTYPE;
+			final String reasonCode = MarketplacecommerceservicesConstants.REASONCODE;
+			String orderStatus = null;
+			CustomerData customerData = null;
+			OrderData subOrderDetails = null;
 
-			String line = "";
-			fileReader = new BufferedReader(new FileReader(fileName));
+			boolean returnStatus = false;
+			/*
+			 * String line = ""; fileReader = new BufferedReader(new FileReader(fileName));
+			 */
 
-			while ((line = fileReader.readLine()) != null)
+			final List<BulkReturnProcessModel> bulkList = orderModelService.getBulkReturnData();
+
+			for (final BulkReturnProcessModel bulkModel : bulkList)
 			{
-
-				final String[] tokens = line.split(COMMA_DELIMITER);
-
-
-				orderCode = tokens[0];
-				transactionId = tokens[1];
-
-				System.out.println("RETURN [orderCode= " + tokens[0] + " , transactionId=" + tokens[1] + "]");
-
-				String ussid = null;
-				final String ticketTypeCode = "R";
-				final String refundType = "S";
-				final String reasonCode = "03"; // Hard coded value -- I'm not happy with the product quality
-				String orderStatus = null;
-				CustomerData customerData = null;
-				OrderData subOrderDetails = null;
-
-				final ReturnItemAddressData returnAddrData = new ReturnItemAddressData();
-
-				OrderEntryData subOrderEntry = new OrderEntryData();
-
-				final OrderModel orderModel = orderModelService.getParentOrder(orderCode);
-
-				final AddressModel addrModel = orderModel.getDeliveryAddress();
-
-				returnAddrData.setPincode(addrModel.getPostalcode());
-				returnAddrData.setFirstName(addrModel.getFirstname());
-				returnAddrData.setLastName(addrModel.getLastname());
-				returnAddrData.setCity(addrModel.getCity());
-				returnAddrData.setMobileNo(addrModel.getCellphone());
-				returnAddrData.setState(addrModel.getState());
-
-
-				for (final OrderModel subOrder : orderModel.getChildOrders())
+				if (null != bulkModel && null != bulkModel.getParentOrderNo() && null != bulkModel.getTransactionId())
 				{
-					try
+					orderCode = bulkModel.getParentOrderNo();
+					transactionId = bulkModel.getTransactionId();
+
+
+					LOG.info("orderCode is" + bulkModel.getParentOrderNo() + "&&" + "transactionId is" + bulkModel.getTransactionId());
+
+
+					/*
+					 * while ((line = fileReader.readLine()) != null) {
+					 * 
+					 * final String[] tokens = line.split(MarketplacecommerceservicesConstants.COMMA_DELIMITER);
+					 * 
+					 * 
+					 * orderCode = tokens[0]; transactionId = tokens[1];
+					 * 
+					 * System.out.println("RETURN [orderCode= " + tokens[0] + " , transactionId=" + tokens[1] + "]");
+					 */
+
+
+
+					final ReturnItemAddressData returnAddrData = new ReturnItemAddressData();
+					OrderEntryData subOrderEntry = new OrderEntryData();
+					final OrderModel orderModel = orderModelService.getParentOrder(orderCode);
+					final AddressModel addrModel = orderModel.getDeliveryAddress();
+
+					returnAddrData.setPincode(addrModel.getPostalcode());
+					returnAddrData.setFirstName(addrModel.getFirstname());
+					returnAddrData.setLastName(addrModel.getLastname());
+					returnAddrData.setCity(addrModel.getCity());
+					returnAddrData.setMobileNo(addrModel.getCellphone());
+					returnAddrData.setState(addrModel.getState());
+
+					for (final OrderModel subOrder : orderModel.getChildOrders())
 					{
-
-						subOrderDetails = convertToData(subOrder);
-						customerData = subOrderDetails.getCustomerData();
+						try
+						{
+							subOrderDetails = convertToData(subOrder);
+							customerData = subOrderDetails.getCustomerData();
+						}
+						catch (final Exception e)
+						{
+							LOG.info("-----------Order Data Conversion Exception and skipping----" + orderModel.getCode());
+							continue;
+						}
 					}
-					catch (final Exception e)
+					final List<OrderEntryData> subOrderEntries = subOrderDetails.getEntries();
+
+					for (final OrderEntryData entry : subOrderEntries)
 					{
-						LOG.info("-----------Order Data Conversion Exception and skipping----" + orderModel.getCode());
+						if (entry.getTransactionId().equalsIgnoreCase(transactionId))
+						{
+							subOrderEntry = entry;
+							ussid = entry.getSelectedUssid();
+							orderStatus = entry.getConsignment().getStatus().getCode();
 
-						continue;
+							break;
+						}
+						// TODO To read csv for getting order ids,ussid and transcation id
 					}
-				}
 
-				final List<OrderEntryData> subOrderEntries = subOrderDetails.getEntries();
 
-				for (final OrderEntryData entry : subOrderEntries)
-				{
-					if (entry.getTransactionId().equalsIgnoreCase(transactionId))
+					if (ticketTypeCode.equalsIgnoreCase("R") && orderStatus != null
+							&& orderStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED))
 					{
-						subOrderEntry = entry;
-						ussid = entry.getSelectedUssid();
-						orderStatus = entry.getConsignment().getStatus().getCode();
-
-						break;
+						returnStatus = cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry, reasonCode, ussid,
+								ticketTypeCode, customerData, refundType, true, SalesApplication.WEB, returnAddrData);
 					}
-					// TODO To read csv for getting order ids,ussid and transcation id
+					else
+					{
+						LOG.info("-----------Unable to initiate return----" + "Order Id " + orderModel.getCode() + "Order Status "
+								+ orderStatus);
+					}
+
+					if (returnStatus)
+					{
+						bulkModel.setLoadStatus("1");
+						bulkModel.setErrorDescription(MarketplacecommerceservicesConstants.SUCCESS);
+					}
+					else
+					{
+						bulkModel.setLoadStatus("-1");
+						bulkModel.setErrorDescription(MarketplacecommerceservicesConstants.FAILURE);
+					}
+					modelService.save(bulkModel);
+					LOG.info("Update Load Status with success");
 				}
-
-
-
-
-				if (ticketTypeCode.equalsIgnoreCase("R") && orderStatus != null
-						&& orderStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED))
-				{
-					cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry, reasonCode, ussid, ticketTypeCode,
-							customerData, refundType, true, SalesApplication.WEB, returnAddrData);
-				}
-
 				else
 				{
-					LOG.info("-----------Unable to initiate return----" + orderModel.getCode());
+					bulkModel.setLoadStatus("-1");
+					bulkModel.setErrorDescription(MarketplacecommerceservicesConstants.FAILURE);
+					modelService.save(bulkModel);
+					LOG.info("Update Load Status with failure");
 				}
-
-				/*
-				 * else { cancelReturnFacade.implementCancelOrReturn(subOrderDetails, subOrderEntry, reasonCode, ussid,
-				 * ticketTypeCode, customerData, refundType, true, SalesApplication.WEB); }
-				 */
 			}
+			/*
+			 * else { cancelReturnFacade.implementCancelOrReturn(subOrderDetails, subOrderEntry, reasonCode, ussid,
+			 * ticketTypeCode, customerData, refundType, true, SalesApplication.WEB); }
+			 */
+			//}
 
-
-			try
-			{
-				fileReader.close();
-			}
-			catch (final IOException e)
-			{
-				System.out.println("Error while closing fileReader !!!");
-				e.printStackTrace();
-			}
-
-
-
-			//Start Archiving
-
-
-			InputStream inStream = null;
-			OutputStream outStream = null;
-
-
-			String dateTime = null;
-			final DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-			final Calendar cal = Calendar.getInstance();
-			dateTime = dateFormat.format(cal.getTime());
-			System.out.println(dateFormat.format(cal.getTime()));
-
-
-			final File afile = new File("D:\\Nazia\\csv_files\\return.csv");
-			final File bfile = new File("D:\\Nazia\\Archive\\return_" + dateTime + ".csv");
-
-
-			boolean blnCreated = false;
-
-			blnCreated = bfile.createNewFile();
-
-			System.out.println("Was file " + bfile.getPath() + " created ? : " + blnCreated);
-
-			inStream = new FileInputStream(afile);
-			outStream = new FileOutputStream(bfile);
+			/*
+			 * try { fileReader.close(); } catch (final IOException e) {
+			 * System.out.println("Error while closing fileReader !!!"); e.printStackTrace(); }
+			 */
 
 
 
-			final byte[] buffer = new byte[1024];
+			/*
+			 * //Start Archiving
+			 * 
+			 * 
+			 * InputStream inStream = null; OutputStream outStream = null;
+			 * 
+			 * 
+			 * String dateTime = null; final DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss"); final Calendar
+			 * cal = Calendar.getInstance(); dateTime = dateFormat.format(cal.getTime());
+			 * System.out.println(dateFormat.format(cal.getTime()));
+			 * 
+			 * 
+			 * final File afile = new File("D:\\Nazia\\csv_files\\return.csv"); final File bfile = new
+			 * File("D:\\Nazia\\Archive\\return_" + dateTime + ".csv");
+			 * 
+			 * 
+			 * boolean blnCreated = false;
+			 * 
+			 * blnCreated = bfile.createNewFile();
+			 * 
+			 * System.out.println("Was file " + bfile.getPath() + " created ? : " + blnCreated);
+			 * 
+			 * inStream = new FileInputStream(afile); outStream = new FileOutputStream(bfile);
+			 * 
+			 * 
+			 * 
+			 * final byte[] buffer = new byte[1024];
+			 * 
+			 * 
+			 * int length; //copy the file content in bytes while ((length = inStream.read(buffer)) > 0) {
+			 * 
+			 * outStream.write(buffer, 0, length);
+			 * 
+			 * //afile.renameTo((new File(afile.getName() + dateTime))); }
+			 * 
+			 * inStream.close(); outStream.close();
+			 * 
+			 * //delete the original file afile.delete();
+			 * 
+			 * System.out.println("File is copied successful!");
+			 */
 
 
-			int length;
-			//copy the file content in bytes
-			while ((length = inStream.read(buffer)) > 0)
-			{
-
-				outStream.write(buffer, 0, length);
-
-				//afile.renameTo((new File(afile.getName() + dateTime)));
-			}
-
-			inStream.close();
-			outStream.close();
-
-			//delete the original file
-			afile.delete();
-
-			System.out.println("File is copied successful!");
-
-
-
-			//moveToNewFolder(source, destination);
 
 
 		}
@@ -285,7 +287,7 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 
 		catch (final Exception e)
 		{
-			System.out.println("Error in CsvFileReader !!!");
+			System.out.println("Error in Processing !!!");
 			e.printStackTrace();
 		}
 
@@ -437,26 +439,6 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 	}
 
 
-	/*
-	 * private void moveToNewFolder(final String source, final String destination) throws IOException {
-	 *
-	 * String dateTime = null; final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"); final Calendar
-	 * cal = Calendar.getInstance(); dateTime = dateFormat.format(cal.getTime());
-	 * System.out.println(dateFormat.format(cal.getTime()));
-	 *
-	 *
-	 * for (final File files : source.listFiles()) { System.out.println("File Name:" + files);
-	 * System.out.println("Renamed:" + files.renameTo(new File(destination, files.getName() + dateTime)));
-	 *
-	 * }
-	 *
-	 *
-	 *
-	 * final File afile = new File(source);
-	 *
-	 * if (afile.renameTo(new File(destination + afile.getName()))) { System.out.println("File is moved successful!"); }
-	 * else { System.out.println("File is failed to move!"); } }
-	 */
 
 	/**
 	 * @return the sessionService
