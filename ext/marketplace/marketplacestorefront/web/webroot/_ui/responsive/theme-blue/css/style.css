@@ -857,9 +857,9 @@ h2 {
       display: table; }
   header .content .left, header .content .right {
     display: inline-block;
-    line-height: 41px;
+    line-height: 42px;
     vertical-align: middle; 
-      height: 41px;}
+      height: 42px;}
     header .content .left a, header .content .right a {
       font-weight: 500; }
   header .content .left {
@@ -45664,7 +45664,7 @@ body.no-scroll {
  
  /*--------------Added for luxury site starts-----------*/
 #flip-tabs{  
-    width:300px;  
+    width:340px;  
     /* position:relative; */
     position:absolute;
     z-index:1;  
@@ -45675,17 +45675,17 @@ body.no-scroll {
 }  
 #flip-navigation li{   
     display: inline-block;
-    width: 150px;
+    width: 170px;
     margin: 0;
     vertical-align: top;
     float:left;
+      background: #000;
 }  
 #flip-navigation li a{  
     text-decoration: none;
-    padding: 10px;
+   padding: 11px 20px;
     margin-right: 0;
-    background: #000;
-    width: 130px;
+  /*   background: #000; */
     color: #fff;
     font-weight: bold;
     font-family: montserrat;
@@ -45695,8 +45695,8 @@ body.no-scroll {
     text-transform: uppercase;
     width: 100%;
     display: block;
-    height: 41px;
-    line-height: 22px;
+    /* height: 41px; */
+    line-height: 20px;
     text-align: center;
 }  
 #flip-navigation li a:hover{  
@@ -45704,15 +45704,15 @@ body.no-scroll {
     color:#f0f0f0;  
 }  
 #flip-navigation li.selected a{  
-    background: #a9143c;
+    /* background: #a9143c; */
     color: #fff;
     font-weight: bold;
     font-family: montserrat;
     letter-spacing: 1.5px;
-    width: 100%;
+   /*  width: auto; */
     display: block;
-    height: 41px;
-    line-height: 22px;
+   /*  height: 41px; */
+   /*  line-height: 22px; */
     text-align: center;
 }  
 .luxury_ribbon{
@@ -45726,6 +45726,14 @@ body.no-scroll {
 	width:100%;
 	float:none;
 	}
+@media (max-width: 991px){
+	#flip-navigation li a{
+  padding: 9px 10px;
+  font-size: 11px;
+  width: 120px;}
+  #flip-navigation li{
+  width:120px;}
+}
 @media (min-width:791px){
 header .content .top{
 	background:#a9143c;
@@ -45764,22 +45772,25 @@ header .content .right > ul > li.wishlist:hover > a:before, header .content .rig
 }
 @media (max-width:790px){
 	header > .content .top .toggle {
-  margin-top: 40px;
+  margin-top: 32px;
 }
 header > .content .top.active .toggle{
 	margin-top:0px;
 }
 	#flip-navigation,#flip-tabs{
-  width: calc(100% - -24px);
+    width: calc(100% - -46px);
   overflow: hidden;
-  left: -12px;
-  position:relative;}
+  left: -23px;
+  position: relative;}
 	#flip-navigation li{
 	width:50%;
 	float:left;
 	}
+	#flip-navigation li a{
+	width:100%;
+	line-height:15px;}
 }
-@media (max-width:1050px){
+@media (max-width:1140px){
 	header .content .right{
 	clear:left;}
 }
