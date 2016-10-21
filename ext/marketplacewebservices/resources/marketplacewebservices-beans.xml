@@ -2330,5 +2330,8 @@
 		<property name="type" type="String" />
 		<property name="code" type="String" />
 	</bean>
-
+	<!-- TPR-1727 -->
+	<bean class="com.tisl.mpl.wsdto.ProductInfoWSDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="results" type="java.util.List&lt;com.tisl.mpl.wsdto.ProductDetailMobileWsData>" />
+	</bean>
 </beans>
