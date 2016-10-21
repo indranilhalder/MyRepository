@@ -45833,4 +45833,8 @@ header .content .right ul.loggedIn-flyout li a, header .content .right ul.logged
 header>.content .bottom .marketplace .simple-banner-component img{
 	max-height:37px;
 }
+/*------- TIS_JIRA:358 for luxury --------*/
+body.page-wishlist .body-Content .wrapper{
+	    padding: 0 30px;
+} 
 /*--------------Added for luxury site ends-----------*/
