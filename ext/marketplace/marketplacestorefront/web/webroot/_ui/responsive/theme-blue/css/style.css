@@ -45785,4 +45785,10 @@ header .content .right > ul > li.bag > a:before {
 header .content .right ul.loggedIn-flyout li a, header .content .right ul.loggedIn-flyout li{
 	color:#000;
 }
+/*------- TIS_JIRA:358 for luxury --------*/
+body.page-wishlist .body-Content .wrapper{
+	    padding: 0 30px;
+} 
+
+
 /*--------------Added for luxury site ends-----------*/
