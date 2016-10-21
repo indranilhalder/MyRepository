@@ -73,7 +73,7 @@
                 $catalog=$CATALOG$
                 $catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
                 #% impex.setLocale(Locale.ENGLISH);
-				INSERT_UPDATE Pincode;pincode[unique=true];latitude;longitude;State(countrykey);City(cityName)  
+				INSERT_UPDATE Pincode;pincode[unique=true];latitude;longitude;State(region);City(cityName)  
        		</value>
         </property>
         <property name="impexRow">
