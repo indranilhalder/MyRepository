@@ -679,7 +679,7 @@ h2 {
         -webkit-transition: margin 0.3s;		
         -moz-transition: margin 0.3s;		
         transition: margin 0.3s;
-        margin-bottom: 20px;	
+      /*   margin-bottom: 20px;	 */
     }
   header .banner {
     position: relative;
@@ -857,9 +857,9 @@ h2 {
       display: table; }
   header .content .left, header .content .right {
     display: inline-block;
-    line-height: 41px;
+    line-height: 42px;
     vertical-align: middle; 
-      height: 41px;}
+      height: 42px;}
     header .content .left a, header .content .right a {
       font-weight: 500; }
   header .content .left {
@@ -45664,8 +45664,10 @@ body.no-scroll {
  
  /*--------------Added for luxury site starts-----------*/
 #flip-tabs{  
-    width:300px;  
-    position:relative;  
+    width:340px;  
+    /* position:relative; */
+    position:absolute;
+    z-index:1;  
 }  
 #flip-navigation{  
    /*  margin:0 0 10px; */ padding:0;   
@@ -45673,16 +45675,17 @@ body.no-scroll {
 }  
 #flip-navigation li{   
     display: inline-block;
-    width: 150px;
+    width: 170px;
     margin: 0;
     vertical-align: top;
+    float:left;
+      background: #000;
 }  
 #flip-navigation li a{  
     text-decoration: none;
-    padding: 10px;
+   padding: 11px 20px;
     margin-right: 0;
-    background: #000;
-    width: 130px;
+  /*   background: #000; */
     color: #fff;
     font-weight: bold;
     font-family: montserrat;
@@ -45692,8 +45695,8 @@ body.no-scroll {
     text-transform: uppercase;
     width: 100%;
     display: block;
-    height: 41px;
-    line-height: 22px;
+    /* height: 41px; */
+    line-height: 20px;
     text-align: center;
 }  
 #flip-navigation li a:hover{  
@@ -45701,15 +45704,15 @@ body.no-scroll {
     color:#f0f0f0;  
 }  
 #flip-navigation li.selected a{  
-    background: #a9143c;
+    /* background: #a9143c; */
     color: #fff;
     font-weight: bold;
     font-family: montserrat;
     letter-spacing: 1.5px;
-    width: 100%;
+   /*  width: auto; */
     display: block;
-    height: 41px;
-    line-height: 22px;
+   /*  height: 41px; */
+   /*  line-height: 22px; */
     text-align: center;
 }  
 .luxury_ribbon{
@@ -45723,6 +45726,14 @@ body.no-scroll {
 	width:100%;
 	float:none;
 	}
+@media (max-width: 991px){
+	#flip-navigation li a{
+  padding: 9px 10px;
+  font-size: 11px;
+  width: 120px;}
+  #flip-navigation li{
+  width:120px;}
+}
 @media (min-width:791px){
 header .content .top{
 	background:#a9143c;
@@ -45730,16 +45741,16 @@ header .content .top{
 header>.content .bottom .marketplace{
 	margin-top:0px;
 }
-header .content .right li a{
+header .content .right > ul > li > a{
 	color:#fff;
 }
 header .content .right li.download-app:hover a, header .content .right li.store-locator-header:hover a
 {
 	color:#a9143c;
 }
-header .content .right li:hover,header .content .right li.dropdown.sign-in-dropdown.sign-in.ajaxloginhi:hover{
+header .content .right > ul > li:hover,header .content .right li.dropdown.sign-in-dropdown.sign-in.ajaxloginhi:hover{
 	    background: #f7bbcb;
-	    color:#a9143c;
+	  /*   color:#a9143c; */
 }
 header .content .right > ul > li.bag{
 	border-left:none;
@@ -45755,18 +45766,45 @@ header .content .right li.track.trackOrder:hover .bell-icon:after, li.store-loca
 header .content .right > ul > li.wishlist:hover > a:before, header .content .right > ul > li.bag:hover > a:before {
 	color:#a9143c;
 }
-header .content .right li ul li:hover{
-	background-color:#fff;
+/* header .content .right li ul > li:hover{
+	background-color:#fff; 
+} */
+header.compact .content .top {
+  margin-top: -37px;
+}
+header .content .marketplace.compact a img{
+	margin-top:24px;
 }
 }
 @media (max-width:790px){
-	#flip-navigation,#flip-tabs{
-	width:100%;
-	  overflow: hidden;}
+	header > .content .top .toggle {
+  margin-top: 32px;
+}
+header > .content .top.active .toggle{
+	margin-top:0px;
+}
+	#flip-tabs{
+    width: calc(100% - -46px);
+  overflow: hidden;
+  left: -23px;
+  position: relative;}
 	#flip-navigation li{
 	width:50%;
 	float:left;
 	}
+	#flip-navigation li a{
+	width:100%;
+	line-height:15px;}
+}
+@media(max-width:767px){
+	#flip-tabs{
+    width: calc(100% - -24px);
+  left: -12px;
+		}
+}
+@media (max-width:1140px){
+	header .content .right{
+	clear:left;}
 }
 header .content .right > ul > li.bag > a:before {
     font-family: 'icomoon';
@@ -45785,4 +45823,18 @@ header .content .right > ul > li.bag > a:before {
 header .content .right ul.loggedIn-flyout li a, header .content .right ul.loggedIn-flyout li{
 	color:#000;
 }
+#flip-navigation li:first-child a{
+	background:#fff;
+	color:#a9143c;
+}
+#flip-navigation li:hover a{
+	text-decoration:underline;
+}
+header>.content .bottom .marketplace .simple-banner-component img{
+	max-height:37px;
+}
+/*------- TIS_JIRA:358 for luxury --------*/
+body.page-wishlist .body-Content .wrapper{
+	    padding: 0 30px;
+} 
 /*--------------Added for luxury site ends-----------*/
