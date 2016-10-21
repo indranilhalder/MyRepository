@@ -143,10 +143,11 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 		final List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
 		boolean flagForDeliveryModeRestrEval = false;
 
-		final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList);
+		final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList,
+				order);
 		//for delivery mode restriction check
 		flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForABPromo(restrictionList,
-				validProductUssidMap);
+				validProductUssidMap, order);
 
 		final Map<String, Integer> tcMapForValidEntries = new HashMap<String, Integer>();
 		for (final Map.Entry<String, AbstractOrderEntry> mapEntry : allValidProductUssidMap.entrySet())

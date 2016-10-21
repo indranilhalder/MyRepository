@@ -185,7 +185,7 @@ public class MplProductSteppedMultiBuyPromotion extends GeneratedMplProductStepp
 				LOG.debug("Validated Steps for Bundle Promotions");
 				LOG.debug("Checking Delivery Mode Restriction ");
 				flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForAPromo(restrictionList,
-						validProductUssidMap);
+						validProductUssidMap, cart);
 				LOG.debug("Checking Payment Mode Restriction ");
 				flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList,
 						paramSessionContext);

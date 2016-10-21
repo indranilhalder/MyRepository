@@ -102,12 +102,12 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 						getRestrictions());//Adding restrictions to List
 				//for delivery mode restriction check
 				final boolean flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForOrderPromo(
-						restrictionList);
+						restrictionList, order);
 				//for payment mode restriction check
 				final boolean flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList,
 						ctx);
 				final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(
-						restrictionList);
+						restrictionList, order);
 				if (checkRestrictions(ctx, evalCtx) && checkChannelFlag && flagForDeliveryModeRestrEval
 						&& flagForPaymentModeRestrEval && flagForPincodeRestriction)
 				{

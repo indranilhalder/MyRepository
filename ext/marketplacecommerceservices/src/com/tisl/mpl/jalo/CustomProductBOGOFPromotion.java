@@ -109,7 +109,8 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 			final AbstractOrder cart = promoContext.getOrder();
 
 			checkChannelFlag = getDefaultPromotionsManager().checkChannelData(listOfChannel, cart);
-			final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList);
+			final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList,
+					order);
 			//changes end for omni cart fix @atmaram
 
 			if ((restrictResult.isAllowedToContinue()) && (!(restrictResult.getAllowedProducts().isEmpty())) && checkChannelFlag
@@ -122,7 +123,7 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 
 				if (!getDefaultPromotionsManager().promotionAlreadyFired(ctx, validProductUssidMap))
 				{
-					promotionResults = promotionEvaluation(ctx, promoContext, validProductUssidMap, restrictionList);
+					promotionResults = promotionEvaluation(ctx, promoContext, validProductUssidMap, restrictionList, order);
 				}
 
 			}
@@ -461,11 +462,13 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 	 * @param paramSessionContext
 	 * @param paramPromotionEvaluationContext
 	 * @param validProductUssidMap
+	 * @param order
 	 * @return promotionResults
 	 */
 	private List<PromotionResult> promotionEvaluation(final SessionContext paramSessionContext,
 			final PromotionEvaluationContext paramPromotionEvaluationContext,
-			final Map<String, AbstractOrderEntry> validProductUssidMap, final List<AbstractPromotionRestriction> restrictionList)
+			final Map<String, AbstractOrderEntry> validProductUssidMap, final List<AbstractPromotionRestriction> restrictionList,
+			final AbstractOrder order)
 	{
 		final List<PromotionResult> results = new ArrayList<PromotionResult>();
 		boolean flagForDeliveryModeRestrEval = false;
@@ -510,7 +513,7 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 							validProductUssidMap, totalQty, qualifyingCount, paramSessionContext, restrictionList);
 
 					flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForABPromo(restrictionList,
-							validProductUssidMap);
+							validProductUssidMap, order);
 					//for payment mode restriction check
 					flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList,
 							paramSessionContext);
