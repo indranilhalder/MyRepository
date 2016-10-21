@@ -4,8 +4,9 @@
 	xmlns:w="http://www.zkoss.org/2005/zk/client"
 	xmlns:zk="http://www.zkoss.org/2005/zk"
 	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
-	height="100%">
-	<columnlayout width="100%" height="100%" apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('com.techouts.backoffice.widget.controller.AwbEditWidgetController')">
+	height="100%"  apply="org.zkoss.bind.BindComposer"
+	viewModel="@id('vm') @init('com.techouts.backoffice.widget.controller.AwbEditWidgetController')">
+	<columnlayout width="100%" height="100%" >
 		<columnchildren width="100%">
 			<panel
 				style="height:20%;font-size:14px;border-bottom:3px solid #27394f;border:none">
@@ -16,8 +17,8 @@
 								<label value="OrderId" hflex="1" />
 							</vlayout>
 							<vlayout width="200px">
-								<textbox hflex="1"
-									value="@bind(vm.txtOrderId)" style="width:200px;height:10px">
+								<textbox hflex="1" 
+									value="@save(vm.txtOrderId)" style="width:200px;height:10px">
 								</textbox>
 							</vlayout>
                          <vlayout width="100px">
@@ -28,7 +29,7 @@
 							</vlayout>
 							<vlayout width="200px">
 								<textbox hflex="1"
-									value="@bind(vm.txtTransactionId)"
+									value="@save(vm.txtTransactionId)"
 									style="width:200px;height:10px" >
 								</textbox>
 							</vlayout>
@@ -40,7 +41,7 @@
 							</vlayout>
 							<vlayout width="200px">
 								<textbox hflex="1"
-									value="@bind(vm.txtSlaveId)" style="width:200px;height:10px">
+									value="@save(vm.txtSlaveId)" style="width:200px;height:10px">
 								</textbox>
 							</vlayout>
 							 <vlayout width="100px">
@@ -50,8 +51,8 @@
 								<label value="Seller ID" hflex="1" />
 							</vlayout>
 							<vlayout width="200px">
-								<textbox hflex="1"
-									value="@bind(vm.txtsellerId)"
+								<textbox hflex="1" 
+									value="@save(vm.txtsellerId)"
 									style="width:200px;height:10px">
 								</textbox>
 							</vlayout>
@@ -72,7 +73,7 @@
 								<label value="LP Name" hflex="1" />
 							</vlayout>
 							<vlayout width="200px">
-								<listbox   model="@load(vm.activelpList)" mold="select"  itemRenderer="@load(vm.listItemRenderer)"  selectedItem="@save(vm.selectionLpName)"
+								<listbox   model="@load(vm.activelpList)" mold="select"  itemRenderer="@load(vm.listItemRenderer)"  selectedItem="@save(vm.selectionLpName)" 
 									style="width:200px">
 								</listbox>
 							</vlayout>
@@ -129,7 +130,7 @@
 								<listcell label="@bind(item.sellerId)" />
 								<listcell label="@bind(item.orderStatus)" />
 								<listcell>
-									<textbox  readonly="@bind(item.awbReadOnly)"
+									<textbox  
 										onChange="@command('onChangeTransactionInfo',transaction=item)"
 										value="@bind(item.awbNumber)">
 									</textbox>

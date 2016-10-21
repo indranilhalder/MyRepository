@@ -40,7 +40,7 @@ import com.hybris.oms.domain.lpawb.dto.LPOverrideAWBEditResponse;
 import com.hybris.oms.domain.lpawb.dto.OrderLineInfo;
 import com.hybris.oms.domain.lpawb.dto.OrderLineResponse;
 import com.hybris.oms.domain.lpawb.dto.TransactionInfo;
-import com.techouts.backoffice.exception.InvalidLpOverrideSearchParams;
+import com.hybris.oms.tata.constants.TataomsbackofficeConstants;
 
 
 /**
@@ -51,6 +51,7 @@ import com.techouts.backoffice.exception.InvalidLpOverrideSearchParams;
 public class LpoverrideWidgetController
 {
 	private static final Logger LOG = Logger.getLogger(LpoverrideWidgetController.class);
+
 	private String txtOrderId;
 	private String txtTransactionId;
 	private String txtSlaveId;
@@ -59,7 +60,6 @@ public class LpoverrideWidgetController
 	private String selectionLpName;
 	private Set<TransactionInfo> selectedEntities;
 	private Boolean isReturn = Boolean.FALSE;
-	private Boolean lpOverrideEnabled = Boolean.FALSE;
 	private final String transactionType = "LP";
 	private List<TransactionInfo> listOfTransactions; //incoming transactions
 	private List<OrderLineResponse> orderlineRespone;
@@ -106,6 +106,7 @@ public class LpoverrideWidgetController
 				lpList.add(logistics.getLogisticname());
 			}
 		}
+		lpList.add(TataomsbackofficeConstants.LPNAME_NONE);
 		return lpList;
 	}
 
@@ -120,17 +121,21 @@ public class LpoverrideWidgetController
 
 		if (isReturn)
 		{
-			ordersStatus.add("REVERSEAWB");
-			ordersStatus.add("RETURINIT");
+			ordersStatus.add(TataomsbackofficeConstants.REVERSE_ORDERSTATUS_REVERSEAWB);
+			ordersStatus.add(TataomsbackofficeConstants.REVERSE_ORDERSTATUS_RETURINIT);
+			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_NONE);
+
 		}
 		else
 		{
-			ordersStatus.add("ODREALOC");
-			ordersStatus.add("ORDREJEC");
-			ordersStatus.add("PILIGENE");
-			ordersStatus.add("PICKCONF");
-			ordersStatus.add("HOTCOURI");
-			ordersStatus.add("SCANNED");
+			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_HOTCOURI);
+			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_ORDALLOC);
+			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_ORDREJEC);
+			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_ODREALOC);
+			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_PILIGENE);
+			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_PICKCONF);
+			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_SCANNED);
+			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_NONE);
 		}
 		return ordersStatus;
 	}
@@ -154,49 +159,50 @@ public class LpoverrideWidgetController
 	{ "listOfTransactions" })
 	public void lpSearch()
 	{
-		LOG.info("inside lpawb search");
+		LOG.info("inside lp search");
 		final LPAWBSearch lpAwbSearch = new LPAWBSearch();
-		try
+		int count = 0;
+
+		if (txtOrderId != null && StringUtils.isNotEmpty(txtOrderId))//orderid
 		{
-			if (StringUtils.isNotEmpty(selectionOrderStatus))
+			++count;
+			lpAwbSearch.setOrderId(txtOrderId);
+		}
+		if (txtTransactionId != null && StringUtils.isNotEmpty(txtTransactionId)) //transacion id
+		{
+			++count;
+			lpAwbSearch.setTransactionId(txtTransactionId);
+		}
+		if (txtsellerId != null && StringUtils.isNotEmpty(txtsellerId)) //seller id
+		{
+			++count;
+			lpAwbSearch.setSellerId(txtsellerId);
+		}
+		if (txtSlaveId != null && StringUtils.isNotEmpty(txtSlaveId)) //slave id
+		{
+			++count;
+			lpAwbSearch.setSlaveId(txtSlaveId);
+		}
+
+		if (selectionOrderStatus != null && StringUtils.isNotEmpty(selectionOrderStatus))
+		{
+			if (!selectionOrderStatus.equalsIgnoreCase(TataomsbackofficeConstants.ORDERSTATUS_NONE))
 			{
-				LOG.info("in side selection order status" + selectionOrderStatus);
-				if (StringUtils.isEmpty(txtSlaveId))
-				{
-					throw new InvalidLpOverrideSearchParams("slave id is required ");
-				}
+				++count;
 				lpAwbSearch.setOrderStatus(selectionOrderStatus);
 			}
-			if (StringUtils.isNotEmpty(selectionLpName))
+		}
+		if (selectionLpName != null && StringUtils.isNotEmpty(selectionLpName))
+		{
+			if (!selectionLpName.equalsIgnoreCase(TataomsbackofficeConstants.LPNAME_NONE))
 			{
-				LOG.info("second time lp checking Checking and slave id");
-
-				if (StringUtils.isEmpty(txtSlaveId))
-				{
-					throw new InvalidLpOverrideSearchParams("slave id is required ");
-				}
+				++count;
 				lpAwbSearch.setLogisticName(selectionLpName);
 			}
-			if (StringUtils.isNotEmpty(txtOrderId))//orderid
-			{
-				LOG.info("order id : =" + txtOrderId);
-				lpAwbSearch.setOrderId(txtOrderId);
-			}
-			if (StringUtils.isNotEmpty(txtTransactionId)) //transacion id
-			{
-				LOG.info("transaction id : =" + txtTransactionId);
-				lpAwbSearch.setTransactionId(txtTransactionId);
-			}
-			if (StringUtils.isNotEmpty(txtsellerId)) //seller id
-			{
-				LOG.info("seller id : =" + txtsellerId);
-				lpAwbSearch.setSellerId(txtsellerId);
-			}
-			if (StringUtils.isNotEmpty(txtSlaveId)) //slave id
-			{
-				LOG.info("slave id : =" + txtSlaveId);
-				lpAwbSearch.setSlaveId(txtSlaveId);
-			}
+		}
+
+		if (count > 0)
+		{
 			lpAwbSearch.setTransactionType(transactionType);
 			lpAwbSearch.setIsReturn(isReturn);
 			final List<TransactionInfo> transactionsList = orderLogisticsUpdateFacade.getOrderLogisticsInfo(lpAwbSearch)
@@ -204,8 +210,9 @@ public class LpoverrideWidgetController
 			for (final TransactionInfo transaction : transactionsList)
 			{
 				final String orderStatus = transaction.getOrderStatus();
-				if (orderStatus.equalsIgnoreCase("SCANNED") || orderStatus.equalsIgnoreCase("HOTCOURI")
-						|| orderStatus.equalsIgnoreCase("REVERSEAWB"))
+				if (orderStatus.equalsIgnoreCase(TataomsbackofficeConstants.ORDERSTATUS_SCANNED)
+						|| orderStatus.equalsIgnoreCase(TataomsbackofficeConstants.ORDERSTATUS_HOTCOURI)
+						|| orderStatus.equalsIgnoreCase(TataomsbackofficeConstants.REVERSE_ORDERSTATUS_REVERSEAWB))
 				{
 					transaction.setAwbReadOnly(Boolean.FALSE);
 				}
@@ -215,12 +222,13 @@ public class LpoverrideWidgetController
 					//this step is removed once awbEditable default value== false at dto level
 				}
 			}
-			listOfTransactions = transactionsList;
+			this.listOfTransactions = transactionsList;
 		}
-		catch (final InvalidLpOverrideSearchParams exception)
+		else
 		{
-			Messagebox.show(exception.getMessage());
+			Messagebox.show("Atleast one field is mandatory");
 		}
+
 	}
 
 	/*
@@ -232,18 +240,8 @@ public class LpoverrideWidgetController
 	public void onChangeTransactionInfo(@BindingParam("transaction") final TransactionInfo selectedTransaction)
 	{
 		LOG.info("inside onchange");
-
-		lpOverrideEnabled = Boolean.TRUE;
 		map.put(selectedTransaction.getTransactionId(), selectedTransaction); //if required lp flag then send as bind prarm attribute
 		LOG.info("the final map " + map.toString());
-	}
-
-	/**
-	 * @return the lpOverrideEnabled
-	 */
-	public Boolean getLpOverrideEnabled()
-	{
-		return lpOverrideEnabled;
 	}
 
 	/*
@@ -479,16 +477,6 @@ public class LpoverrideWidgetController
 	}
 
 	/**
-	 * @param txtOrderId
-	 *           the txtOrderId to set
-	 */
-	@NotifyChange
-	public void setTxtOrderId(final String txtOrderId)
-	{
-		this.txtOrderId = txtOrderId;
-	}
-
-	/**
 	 * @return the txtTransactionId
 	 */
 	public String getTxtTransactionId()
@@ -504,6 +492,15 @@ public class LpoverrideWidgetController
 	public void setTxtTransactionId(final String txtTransactionId)
 	{
 		this.txtTransactionId = txtTransactionId;
+	}
+
+	/**
+	 * @param txtOrderId
+	 *           the txtOrderId to set
+	 */
+	public void setTxtOrderId(final String txtOrderId)
+	{
+		this.txtOrderId = txtOrderId;
 	}
 
 	/**
@@ -578,7 +575,4 @@ public class LpoverrideWidgetController
 	{
 		this.selectionLpName = selectionLpName;
 	}
-
-
-
 }

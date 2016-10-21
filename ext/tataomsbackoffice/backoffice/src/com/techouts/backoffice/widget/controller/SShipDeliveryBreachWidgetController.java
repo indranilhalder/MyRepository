@@ -139,7 +139,7 @@ public class SShipDeliveryBreachWidgetController extends DefaultWidgetController
 		}
 		else
 		{
-			Messagebox.show("Empty Search fields Please Provide at least one value");
+			Messagebox.show("Atleast one field is mandatory");
 		}
 
 	}
@@ -187,7 +187,7 @@ public class SShipDeliveryBreachWidgetController extends DefaultWidgetController
 			final OrderCancelRequest orderCancelRequest = new OrderCancelRequest();
 			if (listBoxData.getSelectedItem() == null || listBoxData.getSelectedItem().equals(""))
 			{
-				Messagebox.show("Please Select One List Item", "OrderCancel Dialog", Messagebox.OK, Messagebox.INFORMATION);
+				Messagebox.show("Please Select at least One List Item", "OrderCancel Dialog", Messagebox.OK, Messagebox.INFORMATION);
 				return;
 			}
 			final Set<Listitem> setOfListBox = listBoxData.getSelectedItems();
@@ -202,7 +202,7 @@ public class SShipDeliveryBreachWidgetController extends DefaultWidgetController
 						&& sshipTxnOrder.getOrderLineStatus().equalsIgnoreCase(ORDERSTATUSONE)
 						|| sshipTxnOrder.getOrderLineStatus().equalsIgnoreCase(ORDERSTATUSTWO))
 				{
-					throw new InvalideOrderCancelException("This order is already cancelled ");
+					throw new InvalideOrderCancelException("Some of the Orders that are selected were already cancelled.");
 				}
 				orderCancelCheckRequest.setOrderId(sshipTxnOrder.getOrderId());
 				orderCancelCheckRequest.setTransactionId(sshipTxnOrder.getOrderLineId());
@@ -225,8 +225,8 @@ public class SShipDeliveryBreachWidgetController extends DefaultWidgetController
 				}
 				++index;
 			}
-			Messagebox.show("Are you sure to remove?", "Order Cancel Dialog", Messagebox.OK | Messagebox.CANCEL, Messagebox.QUESTION,
-					new org.zkoss.zk.ui.event.EventListener()
+			Messagebox.show("Are you sure to cancel the order?", "Order Cancel Dialog", Messagebox.OK | Messagebox.CANCEL,
+					Messagebox.QUESTION, new org.zkoss.zk.ui.event.EventListener()
 					{
 						public void onEvent(final Event evt) throws InterruptedException, InvalideOrderCancelException
 						{
@@ -249,8 +249,9 @@ public class SShipDeliveryBreachWidgetController extends DefaultWidgetController
 									cancelOrderLine.setTransactionId(sshipTxnOrder.getOrderLineId());
 									cancelOrderLine.setReturnCancelFlag("C");
 									cancelOrderLine.setReasonCode("05");
-									cancelOrderLine.setReturnCancelRemarks("admin canceled the breached order");
-									cancelOrderLine.setRequestId(sshipTxnOrder.getOrderLineId());
+									cancelOrderLine.setReturnCancelRemarks("Admin Cancelled due to seller Turn around time breach");
+									cancelOrderLine.setRequestId(
+											sshipTxnOrder.getSellerId() + sshipTxnOrder.getOrderId() + sshipTxnOrder.getOrderLineId());
 									cancelOrderList.add(cancelOrderLine);
 								}
 

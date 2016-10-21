@@ -154,7 +154,7 @@ public class DeliveryDateAgainstPromisedDateController extends DefaultWidgetCont
 		}
 		else
 		{
-			Messagebox.show("Empty Search fields Please Provide at least one value");
+			Messagebox.show("Atleast one field is mandatory");
 		}
 	}
 

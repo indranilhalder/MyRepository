@@ -37,7 +37,7 @@ import com.hybris.oms.domain.lpawb.dto.LPOverrideAWBEditResponse;
 import com.hybris.oms.domain.lpawb.dto.OrderLineInfo;
 import com.hybris.oms.domain.lpawb.dto.OrderLineResponse;
 import com.hybris.oms.domain.lpawb.dto.TransactionInfo;
-import com.techouts.backoffice.exception.InvalidLpOverrideSearchParams;
+import com.hybris.oms.tata.constants.TataomsbackofficeConstants;
 
 
 /**
@@ -100,6 +100,7 @@ public class AwbEditWidgetController
 				lpList.add(logistics.getLogisticname());
 			}
 		}
+		lpList.add(TataomsbackofficeConstants.LPNAME_NONE);
 		return lpList;
 	}
 
@@ -142,13 +143,15 @@ public class AwbEditWidgetController
 
 		if (isReturn)
 		{
-			ordersStatus.add("REVERSEAWB");
-			ordersStatus.add("RETURINIT");
+			ordersStatus.add(TataomsbackofficeConstants.REVERSE_ORDERSTATUS_REVERSEAWB);
+			ordersStatus.add(TataomsbackofficeConstants.REVERSE_ORDERSTATUS_RETURINIT);
+			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_NONE);
 		}
 		else
 		{
-			ordersStatus.add("HOTCOURI");
-			ordersStatus.add("SCANNED");
+			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_HOTCOURI);
+			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_SCANNED);
+			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_NONE);
 		}
 		return ordersStatus;
 	}
@@ -164,62 +167,62 @@ public class AwbEditWidgetController
 	{ "listOfTransactions" })
 	public void awbSearch()
 	{
-		LOG.info("inside lpawb search");
+		LOG.info("inside awb search");
 		final LPAWBSearch lpAwbSearch = new LPAWBSearch();
-		try
+		int count = 0;
+
+		if (txtOrderId != null && StringUtils.isNotEmpty(txtOrderId))//orderid
 		{
-			if (StringUtils.isNotEmpty(selectionOrderStatus))
+			++count;
+			lpAwbSearch.setOrderId(txtOrderId);
+		}
+		if (txtTransactionId != null && StringUtils.isNotEmpty(txtTransactionId)) //transacion id
+		{
+			++count;
+			lpAwbSearch.setTransactionId(txtTransactionId);
+		}
+		if (txtsellerId != null && StringUtils.isNotEmpty(txtsellerId)) //seller id
+		{
+			++count;
+			lpAwbSearch.setSellerId(txtsellerId);
+		}
+		if (txtSlaveId != null && StringUtils.isNotEmpty(txtSlaveId)) //slave id
+		{
+			++count;
+			lpAwbSearch.setSlaveId(txtSlaveId);
+		}
+
+		if (selectionOrderStatus != null && StringUtils.isNotEmpty(selectionOrderStatus))
+		{
+			if (!selectionOrderStatus.equalsIgnoreCase(TataomsbackofficeConstants.ORDERSTATUS_NONE))
 			{
-				LOG.info("in side selection order status" + selectionOrderStatus);
-				if (StringUtils.isEmpty(txtSlaveId))
-				{
-					throw new InvalidLpOverrideSearchParams("slave id is required ");
-				}
+				++count;
 				lpAwbSearch.setOrderStatus(selectionOrderStatus);
 			}
-			if (StringUtils.isNotEmpty(selectionLpName))
+		}
+		if (selectionLpName != null && StringUtils.isNotEmpty(selectionLpName))
+		{
+			if (!selectionLpName.equalsIgnoreCase(TataomsbackofficeConstants.LPNAME_NONE))
 			{
-				LOG.info("second time lp checking Checking and slave id");
-
-				if (StringUtils.isEmpty(txtSlaveId))
-				{
-					throw new InvalidLpOverrideSearchParams("slave id is required ");
-				}
+				++count;
 				lpAwbSearch.setLogisticName(selectionLpName);
 			}
-			if (StringUtils.isNotEmpty(txtOrderId))//orderid
-			{
-				LOG.info("order id : =" + txtOrderId);
-				lpAwbSearch.setOrderId(txtOrderId);
-			}
-			if (StringUtils.isNotEmpty(txtTransactionId)) //transacion id
-			{
-				LOG.info("transaction id : =" + txtTransactionId);
-				lpAwbSearch.setTransactionId(txtTransactionId);
+		}
 
-			}
-			if (StringUtils.isNotEmpty(txtsellerId)) //seller id
-			{
-				LOG.info("seller id : =" + txtsellerId);
-				lpAwbSearch.setSellerId(txtsellerId);
-			}
-			if (StringUtils.isNotEmpty(txtSlaveId)) //slave id
-			{
-				LOG.info("slave id : =" + txtSlaveId);
-				lpAwbSearch.setSlaveId(txtSlaveId);
-			}
+		if (count > 0)
+		{
 			lpAwbSearch.setTransactionType(transactionType);
 			lpAwbSearch.setIsReturn(isReturn);
 			final List<TransactionInfo> transactionsList = orderLogisticsUpdateFacade.getOrderLogisticsInfo(lpAwbSearch)
-					.getTransactionInfo(); //if response
+					.getTransactionInfo();
 
-			listOfTransactions = transactionsList;
-
+			this.listOfTransactions = transactionsList;
 		}
-		catch (final InvalidLpOverrideSearchParams exception)
+		else
 		{
-			Messagebox.show(exception.getMessage());
+			Messagebox.show("Atleast one field is mandatory");
 		}
+
 	}
 
 	/*

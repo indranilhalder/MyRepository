@@ -56,8 +56,8 @@
 								<label value="OrderId" hflex="1" />
 							</vlayout>
 							<vlayout width="200px">
-								<textbox hflex="1"
-									value="@bind(vm.txtOrderId)" style="width:200px;height:10px">
+								<textbox hflex="1" 
+									value="@save(vm.txtOrderId)" style="width:200px;height:10px">
 								</textbox>
 							</vlayout>
 							<vlayout width="100px">
@@ -67,8 +67,8 @@
 								<label value="TransactionId" hflex="1" />
 							</vlayout>
 							<vlayout width="200px">
-								<textbox hflex="1"
-									value="@bind(vm.txtTransactionId)"
+								<textbox hflex="1" 
+									value="@save(vm.txtTransactionId)"
 									style="width:200px;height:10px">
 								</textbox>
 							</vlayout>
@@ -79,8 +79,8 @@
 								<label value="Slave ID" hflex="1" />
 							</vlayout>
 							<vlayout width="200px">
-								<textbox hflex="1"
-									value="@bind(vm.txtSlaveId)" style="width:200px;height:10px">
+								<textbox hflex="1" 
+									value="@save(vm.txtSlaveId)" style="width:200px;height:10px">
 								</textbox>
 							</vlayout>
 							<vlayout width="100px">
@@ -90,8 +90,8 @@
 								<label value="Seller ID" hflex="1" />
 							</vlayout>
 							<vlayout width="200px">
-								<textbox hflex="1"
-									value="@bind(vm.txtsellerId)"
+								<textbox hflex="1" 
+									value="@save(vm.txtsellerId)"
 									style="width:200px;height:10px">
 								</textbox>
 							</vlayout>
@@ -101,10 +101,10 @@
 								<label value="Order Status" hflex="1" />
 							</vlayout>
 							<vlayout width="200px">
-								<listbox model="@bind(vm.ordersStatus)"
-									itemRenderer="@load(vm.listItemRenderer)" mold="select"
+								<listbox model="@bind(vm.ordersStatus)"  
+									itemRenderer="@load(vm.listItemRenderer)" mold="select"  
 									selectedItem="@bind(vm.selectionOrderStatus)"
-									style="width:200px;">
+									style="width:200px;">							
 								</listbox>
 							</vlayout>
 							<vlayout width="100px">
@@ -114,9 +114,9 @@
 								<label value="LP Name" hflex="1" />
 							</vlayout>
 							<vlayout width="200px">
-								<listbox model="@bind(vm.activelpList)"
+								<listbox model="@load(vm.activelpList)" 
 									mold="select" itemRenderer="@load(vm.listItemRenderer)"
-									selectedItem="@save(vm.selectionLpName)" style="width:200px">
+									selectedItem="@bind(vm.selectionLpName)" style="width:200px">
 								</listbox>
 							</vlayout>
 							<vlayout width="100px">
@@ -127,7 +127,7 @@
 									onCheck="@command('isReturnCheck',checkedValue=self.checked)">
 								</checkbox>
 							</vlayout>
-							<vlayout
+							<vlayout 
 								style="width:100px;margin-left:10px">
 								<button style="float:right"
 									label="SEARCH" onClick="@command('lpSearch')" />
@@ -180,8 +180,8 @@
 								<listcell>
 									<combobox inplace="true"
 										model="@load(vm.activelpList)"
-										selectedItem="@bind(each.logisticName)"
-										onSelect="@command('onChangeTransactionInfo',transaction=each)"
+										selectedItem="@bind(each.logisticName)" onChange="searchForcefitButton.disabled=false;searchLpovverrideButton.disabled=false"
+										onSelect="@command('onChangeTransactionInfo',transaction=each)" 
 										hflex="1">
 										<template name="model">
 											<comboitem
@@ -208,15 +208,15 @@
 						<hlayout>
 							<vlayout width="200px">
 								<button style="float:right"
-									onClick="@command('nextLpSave')" label="Next Lp "  />
+									onClick="@command('nextLpSave')" label="Next LP" />
 							</vlayout>
 							<vlayout width="100px">
-								<button  style="float:right"
-									onClick="@command('lpOverrideSave',lpOverride=true)" label="Lp Override"/>
+								<button  style="float:right" id="searchForcefitButton" disabled="true"
+									onClick="@command('lpOverrideSave',lpOverride=false)" label="LP override"/>
 							</vlayout>
 							<vlayout width="200px">
-								<button
-									onClick="@command('lpOverrideSave',lpOverride=false)" label="Serviceable"/>
+								<button  id="searchLpovverrideButton"  disabled="true"
+									onClick="@command('lpOverrideSave',lpOverride=true)" label="Forcefit LP"/>
 							</vlayout>
 						</hlayout>
 					</vlayout>
