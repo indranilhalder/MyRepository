@@ -24055,7 +24055,7 @@ h5.questions a:hover {
 		margin-bottom:20px;
 	}
 	.quickview .product-info .product-content ul.wish-share{
-		margin-top:40px;
+		margin-top:20px;
 		margin-bottom:20px;
 	    display: inline-block;
     	width: 50%;
@@ -24836,7 +24836,7 @@ header .banner.active span.toggle.mobile::before,header .banner.active span.togg
 }
 
 #cboxLoadedContent div.popover.fade.bottom.in{
-	margin-bottom:20px;
+	/* margin-bottom:20px; */
 }
 
 @media (max-width: 790px)
@@ -48549,7 +48549,7 @@ border-right: 2px solid #9b9b9b;
 	display: inline-block;
 	width: 49%;
 	vertical-align: top;
-    margin-top: 40px;
+    margin-top: 20px;
 
     margin-bottom: 20px;
     float: right;
@@ -56751,7 +56751,7 @@ max-height: 695px;
 overflow:visible;
 }
 #cboxContent{
-max-height: 555px;
+max-height: 565px;
 overflow:visible;
 }
 #cboxContent #cboxLoadedContent{
@@ -56760,8 +56760,9 @@ padding: 30px 0;
 }
 #cboxContent #cboxLoadedContent .quickview.active{
 padding: 0 30px;
-height: 555px;
+height: 565px;
 background: #fff;
+overflow: hidden;
 }
 /*TPR-1983 fix end*/
 @media (min-width:768px) and (max-width:790px){
@@ -56777,6 +56778,7 @@ background: #fff;
 .confirmation .right-block .block .totals #couponAppliedthanks .amt{
 	color: #a9143c;
 }
+
 
 body.template-pages-account-accountOrderDetailPage .product-block.order-details .totals{
 	text-transform:none;
