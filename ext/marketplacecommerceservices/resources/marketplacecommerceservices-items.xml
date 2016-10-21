@@ -2387,6 +2387,11 @@
 					<modifiers read="true" write="true" search="true"
 						optional="true" />
 				</attribute>
+				<attribute autocreate="true" qualifier="isLPAWBEdit" type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
 			</attributes>
 		</itemtype>
 	</itemtypes>
