@@ -284,7 +284,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.solrfacet.search.MplProductSearchFacade#mplProductSearch(de.hybris.platform.commercefacades.search.
 	 * data.SearchStateData, de.hybris.platform.commerceservices.search.pagedata.PageableData, java.lang.String)
@@ -806,7 +806,8 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		final SolrSearchQueryTermData solrSearchQueryTermDataCategory = new SolrSearchQueryTermData();
 
 		//TISPRD-3816 starts
-		if (StringUtils.isNotEmpty(categoryCode)
+		if (null == searchState.getQuery().getValue() //TISPRD-6488
+				&& StringUtils.isNotEmpty(categoryCode)
 				&& !searchState.isSns()
 				&& (categoryCode.startsWith(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX) || categoryCode
 						.startsWith(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX_LOWER)))
@@ -1113,7 +1114,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.solrfacet.search.MplProductSearchFacade#populateSearchState(de.hybris.platform.commercefacades.search
 	 * .data.SearchStateData)
@@ -1124,12 +1125,12 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 		final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
 
-		if (null == searchState.getLuxarySiteFrom())//For Marketplace Web
+		if (null == searchState.getLuxurySiteFrom())//For Marketplace Web
 		{
 			solrSearchQueryTermData.setKey("isLuxuryProduct");
 			solrSearchQueryTermData.setValue(Boolean.FALSE.toString());
 		}
-		else if (searchState.getLuxarySiteFrom().equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_WEB))//From Luxury Web
+		else if (searchState.getLuxurySiteFrom().equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_WEB))//From Luxury Web
 		{
 			solrSearchQueryTermData.setKey("isLuxuryProduct");
 			solrSearchQueryTermData.setValue(Boolean.TRUE.toString());

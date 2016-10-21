@@ -46,6 +46,7 @@ import java.util.TreeMap;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -136,6 +137,12 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		ProductModel productModel = null;
 		List<SellerInformationMobileData> framedOtherSellerDataList = null;
 		List<SellerInformationData> otherSellerDataList = null;
+		List<VariantOptionMobileData> variantDataList = new ArrayList<VariantOptionMobileData>();
+		final StringBuilder allVariants = new StringBuilder();
+		String variantCodes = "";
+		String variantsString = "";
+
+		final Map<String, Integer> stockAvailibilty = new TreeMap<String, Integer>();
 		try
 		{
 
@@ -165,7 +172,37 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			{
 				try
 				{
-					buyBoxData = buyBoxFacade.buyboxPrice(productCode);
+					//TPR-797---TISSTRT-1403 TISPRM-56
+					if (CollectionUtils.isNotEmpty(productData.getAllVariantsId()))
+					{
+						//get left over variants
+						if (productData.getAllVariantsId().size() > 1)
+						{
+							productData.getAllVariantsId().remove(productData.getCode());
+							for (final String variants : productData.getAllVariantsId())
+							{
+								allVariants.append(variants).append(',');
+							}
+							final int length = allVariants.length();
+							variantCodes = allVariants.substring(0, length - 1);
+						}
+					}
+					if (StringUtils.isNotEmpty(productData.getCode()))
+					{
+						variantsString = productData.getCode() + "," + variantCodes;
+					}
+					final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(variantsString);
+					if (MapUtils.isNotEmpty(buydata))
+					{
+						final List<String> noStockPCodes = (List<String>) buydata.get("no_stock_p_codes");
+						for (final String pCode : noStockPCodes)
+						{
+							stockAvailibilty.put(pCode, Integer.valueOf(0));
+						}
+						buyBoxData = (BuyBoxData) buydata.get("pdp_buy_box");
+					}
+					//Commented for TPR-797
+					//buyBoxData = buyBoxFacade.buyboxPrice(productCode);
 					if (null == buyBoxData)
 					{
 						productDetailMobile.setSellerAssociationstatus(MarketplacecommerceservicesConstants.N);
@@ -235,7 +272,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				{
 					productDetailMobile.setIsCOD(isProductCOD);
 				}
-				if (null != buyboxdataCheck && null != getEligibleDeliveryModes(buyboxdataCheck))
+				if (null != buyboxdataCheck)
 				{
 					productDetailMobile.setEligibleDeliveryModes(getEligibleDeliveryModes(buyboxdataCheck));
 				}
@@ -260,9 +297,6 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				if (null != productData.getRootCategory())
 				{
 					productDetailMobile.setRootCategory(productData.getRootCategory());
-
-					LOG.debug("*************** Mobile web service product root category ****************"
-							+ productData.getRootCategory());
 				}
 				if (CollectionUtils.isNotEmpty(productData.getImages()))
 				{
@@ -452,9 +486,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				{
 					productDetailMobile.setBrandName(productData.getBrand().getBrandname());
 				}
-				List<VariantOptionMobileData> variantDataList = new ArrayList<VariantOptionMobileData>();
 
-				variantDataList = getVariantDetailsForProduct(productData);
+				variantDataList = getVariantDetailsForProduct(productData, stockAvailibilty);
 
 				if (null != variantDataList && !variantDataList.isEmpty())
 				{
@@ -1543,63 +1576,91 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	 * @param productData
 	 * @return List<VariantOptionMobileData>
 	 */
-	private List<VariantOptionMobileData> getVariantDetailsForProduct(final ProductData productData)
+	private List<VariantOptionMobileData> getVariantDetailsForProduct(final ProductData productData,
+			final Map<String, Integer> stockAvailibilty)
 	{
 		final List<VariantOptionMobileData> variantDataList = new ArrayList<VariantOptionMobileData>();
+		SizeLinkData sizeLinkData = null;
+		CapacityLinkData capacityLinkData = null;
+		ColorLinkData colorLinkData = null;
+		String variantSizePCode = "";
+
 		try
 		{
-			if (null != productData.getVariantOptions())
+
+			if (CollectionUtils.isNotEmpty(productData.getVariantOptions()))
 			{
 				for (final VariantOptionData variantData : productData.getVariantOptions())
 				{
 					final VariantOptionMobileData variantMobileData = new VariantOptionMobileData();
-					final ColorLinkData colorLinkData = new ColorLinkData();
-					SizeLinkData sizeLinkData = null;
-					CapacityLinkData capacityLinkData = null;
-					if (null != variantData.getColour())
+					colorLinkData = new ColorLinkData();
+					sizeLinkData = new SizeLinkData();
+					capacityLinkData = new CapacityLinkData();
+					// For Color
+					if (StringUtils.isNotEmpty(variantData.getColour()))
 					{
 						colorLinkData.setColor(variantData.getColour());
 					}
 					//checking for colour hex code
-					if (null != variantData.getColourCode())
+					if (StringUtils.isNotEmpty(variantData.getColourCode()))
 					{
 						colorLinkData.setColorHexCode(variantData.getColourCode());
 					}
-					if (null != variantData.getUrl())
+					if (StringUtils.isNotEmpty(variantData.getUrl()))
 					{
 						colorLinkData.setColorurl(variantData.getUrl());
 					}
-					if (null != variantData.getSizeLink() && !variantData.getSizeLink().isEmpty())
+					variantMobileData.setColorlink(colorLinkData);
+
+					//For Size
+					if (MapUtils.isNotEmpty(variantData.getSizeLink()))
 					{
 						for (final Map.Entry<String, String> sizeEntry : variantData.getSizeLink().entrySet())
 						{
-							sizeLinkData = new SizeLinkData();
-							if (null != sizeEntry.getValue())
+							variantSizePCode = "";
+							if (StringUtils.isNotEmpty(sizeEntry.getValue()))
 							{
 								sizeLinkData.setSize(sizeEntry.getValue());
 							}
-							if (null != sizeEntry.getKey())
+							if (StringUtils.isNotEmpty(sizeEntry.getKey()))
 							{
 								sizeLinkData.setUrl(sizeEntry.getKey());
+								//setting Variant codes TISSTRT-1411
+								final String[] url = sizeEntry.getKey().split("-");
+								variantSizePCode = url[url.length - 1];
+								variantSizePCode = variantSizePCode.toUpperCase();
+								LOG.debug("variant_Size" + variantSizePCode);
 							}
-						}
-					}
-					if (null != variantData.getCapacity())
-					{
-						capacityLinkData = new CapacityLinkData();
-						capacityLinkData.setCapacity(variantData.getCapacity());
-						if (null != variantData.getUrl())
-						{
-							capacityLinkData.setUrl(variantData.getUrl());
-						}
+							//TISSTRT-1411
+							//by default its available
+							sizeLinkData.setIsAvailable(true);
+							//check teh stock availability
+							if (MapUtils.isNotEmpty(stockAvailibilty) && stockAvailibilty.containsKey(variantSizePCode))
+							{
+								if (stockAvailibilty.get(variantSizePCode).intValue() == 0)
+								{
+									sizeLinkData.setIsAvailable(false);
+								}
+							}
 
+						}
 					}
-					variantMobileData.setColorlink(colorLinkData);
-					if (null != sizeLinkData)
+
+					if (StringUtils.isNotEmpty(sizeLinkData.getUrl()))
 					{
 						variantMobileData.setSizelink(sizeLinkData);
 					}
-					if (null != capacityLinkData)
+
+					//For Electronics Capacity
+					if (StringUtils.isNotEmpty(variantData.getCapacity()))
+					{
+						capacityLinkData.setCapacity(variantData.getCapacity());
+					}
+					if (StringUtils.isNotEmpty(variantData.getUrl()))
+					{
+						capacityLinkData.setUrl(variantData.getUrl());
+					}
+					if (StringUtils.isNotEmpty(capacityLinkData.getCapacity()))
 					{
 						variantMobileData.setCapacityLink(capacityLinkData);
 					}

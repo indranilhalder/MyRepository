@@ -21,6 +21,10 @@
 <spring:url value="/my-account/orders" var="ordersUrl" />
 <spring:url value="/my-account/default/wishList" var="wishlistUrl" />
 <spring:url value="/my-account/friendsInvite" var="friendsInviteUrl" />
+
+<!-- LW-230 -->
+<input type="hidden" id="isLuxury" value="${isLuxury}"/>
+
 <script>
 	//jquery added to prevent stored Cross Site Scripting /TISSIT-1704/added for creating wishlist and renaming wishlist
 

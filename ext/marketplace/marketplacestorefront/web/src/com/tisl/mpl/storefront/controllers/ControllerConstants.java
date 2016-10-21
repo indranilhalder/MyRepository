@@ -291,7 +291,7 @@ public interface ControllerConstants
 				String WishlistName = "wishlistName";
 				String WishlistSize = "wishlistSize";
 				String WishlistUrl = "wishlistUrl";
-
+				String EMPTY_WISHLIST = "emptyWishlist";
 			}
 
 			interface Checkout

@@ -263,7 +263,7 @@ public class DefaultMplFindDeliveryCostStrategy extends AbstractBusinessService 
 			else
 			{
 				if (null != richAttribute.getIsSshipCodEligible()
-						&& richAttribute.getIsSshipCodEligible().getCode().equalsIgnoreCase("yes"))
+						&& richAttribute.getIsSshipCodEligible().getCode().equalsIgnoreCase("true"))
 				{
 					tShip = true;
 				}

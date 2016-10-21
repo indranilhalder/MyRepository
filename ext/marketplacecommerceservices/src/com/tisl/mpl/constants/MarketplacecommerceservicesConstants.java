@@ -1392,6 +1392,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String TICKET_SUB_TYPE = "AC";
 	//CRM Ticket Source From Commerce
 	public static final String SOURCE = "commerce";
+	public static final String DEFAULT_COUNTRY_CODE = "IN";
+	public static final int PIN_CODE_LENGTH = 6;
 
 	//Coupon
 	public static final String ZEROPOINTZEROONE = "0.01".intern();
@@ -1574,6 +1576,15 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String CATEGORY_PATH_EMPTY = "/{category-path}".intern();
 
+
+	//IA Feed For Luxury
+	public static final String IAFEED_QUERY_LUXURY = "mpl.ia.luxury.query.";
+	public static final String IA_CATEGORYEXPORT_LUXURYFOLDER = "ia.path.luxury.catexport";
+	public static final String IA_BRANDEXPORT_LUXURYFOLDER = "ia.path.luxury.brandexport";
+	public static final String IA_PRICE_INVENTORYEXPORT_LUXURYFOLDER = "ia.path.luxury.priceinventoryexport";
+	//	public static final String IA_SELLERPRICEDETAILSEXPORT_LUXURYFOLDER = "ia.path.luxury.sellerpricedetails";
+	//	public static final String IA_PRICEINVENTORYCONTROL_LUXURYFOLDER = "ia.path.luxury.priceinventorycontrol";
+
 	//TISCR-421
 	public static final String EBS_SESSION_ID_KEY = "payment.juspay.sessionId.length";
 	public static final String JUSPAY_ENCODING_TYPE = "payment.juspay.encoding.type";
@@ -1613,6 +1624,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public final static String HOTFOLDERLOCATION = "hotFolderLocation";
 	public static final String BUYBOX_FILE_NAME = "filename";
 	public static final String BUYBOX_FILE_EXTENSION = "csv";
+	public static final String BUYBOX_FILE_NAME_TEMP = "filename.temp";
 
 
 	public static final String CURRENT = "current".intern();
