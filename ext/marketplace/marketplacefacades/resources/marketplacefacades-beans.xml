@@ -850,7 +850,7 @@
 	<bean class="de.hybris.platform.commercefacades.search.data.SearchStateData">
 		<property name="sns" type="boolean"/>
 		<!-- Added for Luxury -->
-		<property name="luxarySiteFrom" type="String"/>
+		<property name="luxurySiteFrom" type="String"/>
 	</bean>
 
 	<!-- Return Item Address Data -->
