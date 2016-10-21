@@ -45769,6 +45769,12 @@ header .content .right > ul > li.wishlist:hover > a:before, header .content .rig
 /* header .content .right li ul > li:hover{
 	background-color:#fff; 
 } */
+header.compact .content .top {
+  margin-top: -37px;
+}
+header .content .marketplace.compact a img{
+	margin-top:24px;
+}
 }
 @media (max-width:790px){
 	header > .content .top .toggle {
@@ -45777,7 +45783,7 @@ header .content .right > ul > li.wishlist:hover > a:before, header .content .rig
 header > .content .top.active .toggle{
 	margin-top:0px;
 }
-	#flip-navigation,#flip-tabs{
+	#flip-tabs{
     width: calc(100% - -46px);
   overflow: hidden;
   left: -23px;
@@ -45789,6 +45795,12 @@ header > .content .top.active .toggle{
 	#flip-navigation li a{
 	width:100%;
 	line-height:15px;}
+}
+@media(max-width:767px){
+	#flip-tabs{
+    width: calc(100% - -24px);
+  left: -12px;
+		}
 }
 @media (max-width:1140px){
 	header .content .right{

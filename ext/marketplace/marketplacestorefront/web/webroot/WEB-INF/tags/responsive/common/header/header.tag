@@ -71,7 +71,7 @@
 						<div id="flip-tabs" >				
 							<ul id="flip-navigation" >  
 					            <li class="selected"><a href="/" id="tab-1" >MARKETPLACE</a></li>
-					            <li><a href="${luxuryHost}" id="tab-2" >LUXURY</a></li>  
+					            <li><a href="${luxuryHost}" id="tab-2" target="_blank">LUXURY</a></li>  
 					        </ul> 
 					    </div>
 	 <!-- Luxury tab	 ends-->
