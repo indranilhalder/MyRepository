@@ -98,12 +98,12 @@ INSERT_UPDATE RotatingImagesComponent;$contentCV[unique=true];uid[unique=true];n
 
 ####New Homepage change
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
-;;Section1-heroBannerComponent;true;luxury Homepage Banner Slot;luxuryHomepageCarouselBannerComponent
+;;Section1-HomepageHeroBannerComponent;true;luxury Homepage Banner Slot;luxuryHomepageCarouselBannerComponent
 
 
 # ContentSlotForPage 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxuryhomepage'];contentSlot(uid,$contentCV)[unique=true];;;
-;;Section1-luxuryHomepage;Section1;;Section1-heroBannerComponent;;; 
+;;Section1-luxuryHomepage;Section1;;Section1-HomepageHeroBannerComponent;;; 
 
 ############################### SECTION 1 END ####################################
 
