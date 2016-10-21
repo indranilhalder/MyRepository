@@ -47132,11 +47132,13 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
 	cursor: pointer;
 } */
 
-.pageLabel-homepage .major-promo-header-italic,.template-pages-layout-micrositePage1 .major-promo-header-italic{
+.pageLabel-homepage .major-promo-header-italic,.template-pages-layout-micrositePage1 .major-promo-header-italic,
+.template-pages-layout-newBrandLandingPageTemplate .major-promo-header-italic{
 	 font-size: 18px;
     margin: 0 0 20px;
 }
-.pageLabel-homepage .hero .major-promos span.major-promo-description,.template-pages-layout-micrositePage1 .hero .major-promos span.major-promo-description{
+.pageLabel-homepage .hero .major-promos span.major-promo-description,.template-pages-layout-micrositePage1 .hero .major-promos span.major-promo-description,
+.template-pages-layout-newBrandLandingPageTemplate .hero .major-promos span.major-promo-description{
 	padding: 0;
     margin-top: 0;
 	font-size: 38px;
@@ -47144,7 +47146,9 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
     font-weight: 600;
     text-transform: uppercase;
 }
-.pageLabel-homepage .timeout-slider .carousel .item span.major-promo-description+a,.template-pages-layout-micrositePage1 .timeout-slider .carousel .item span.major-promo-description+a{
+.pageLabel-homepage .timeout-slider .carousel .item span.major-promo-description+a,
+.template-pages-layout-micrositePage1 .timeout-slider .carousel .item span.major-promo-description+a,
+.template-pages-layout-newBrandLandingPageTemplate .timeout-slider .carousel .item span.major-promo-description+a{
 	background: #a7183e none repeat scroll 0 0;
     border: 1px solid #a7183e;
     color: #fff;
@@ -47164,12 +47168,15 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
     -webkit-transition: color .3s ease 0,border-color .3s ease 0,background .3s ease 0;
     transition: color .3s ease 0,border-color .3s ease 0,background .3s ease 0;
 }
-.pageLabel-homepage span.major-promo-description+a:hover,.template-pages-layout-micrositePage1 span.major-promo-description+a:hover{
+.pageLabel-homepage span.major-promo-description+a:hover,
+.template-pages-layout-micrositePage1 span.major-promo-description+a:hover,
+.template-pages-layout-newBrandLandingPageTemplate span.major-promo-description+a:hover{
 	background: transparent;
     border: 1px solid #fff;
     color: #fff;
 }
-.pageLabel-homepage .hero.icid ul.major-promos,.template-pages-layout-micrositePage1 .hero.icid ul.major-promos{
+.pageLabel-homepage .hero.icid ul.major-promos,.template-pages-layout-micrositePage1 .hero.icid ul.major-promos
+{
 	top: calc(33% - -124px);
     left: 5%;
     position: absolute;
@@ -47179,7 +47186,18 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
     text-transform: uppercase;
     width: 500px;
 }
-.pageLabel-homepage .hero .major-promos li,.template-pages-layout-micrositePage1 .hero .major-promos li{
+.template-pages-layout-newBrandLandingPageTemplate .hero.icid ul.major-promos {
+	top: calc(33% - -21px);
+    left: 3%;
+    position: absolute;
+    color: #fff;
+    text-align: left;
+    z-index: 1;
+    text-transform: uppercase;
+    width: 500px;
+}
+.pageLabel-homepage .hero .major-promos li,.template-pages-layout-micrositePage1 .hero .major-promos li,
+.template-pages-layout-newBrandLandingPageTemplate .hero.icid ul.major-promos li {
 	padding: 0;
 }
 
@@ -47221,62 +47239,79 @@ padding:0 40px;	}
 } */
 
 @media (max-width: 790px){
-	.pageLabel-homepage .hero.icid ul.major-promos, .template-pages-layout-micrositePage1 .hero.icid ul.major-promos{
+	.pageLabel-homepage .hero.icid ul.major-promos, .template-pages-layout-micrositePage1 .hero.icid ul.major-promos,
+	.template-pages-layout-newBrandLandingPageTemplate .hero.icid ul.major-promos{
 		bottom: 15%;
     	left: 5%;
 	}
 }
 
 @media (min-width: 791px){
-	.pageLabel-homepage .hero .major-promos,.template-pages-layout-micrositePage1 .hero .major-promos{
+	.pageLabel-homepage .hero .major-promos,.template-pages-layout-micrositePage1 .hero .major-promos,
+	.template-pages-layout-newBrandLandingPageTemplate .homebanner_.hero .major-promos{
 		width:500px;
 	}
 }
 
 @media (max-width: 600px) and (min-width: 315px){
-	.pageLabel-homepage .hero.icid ul.major-promos, .template-pages-layout-micrositePage1 .hero.icid ul.major-promos{
+	.pageLabel-homepage .hero.icid ul.major-promos, .template-pages-layout-micrositePage1 .hero.icid ul.major-promos,
+	.template-pages-layout-newBrandLandingPageTemplate .hero.icid ul.major-promos{
 		bottom: 60px;
     	left: 20px;
     	width: 70%;
 	}
-	.pageLabel-homepage .major-promo-header-italic,.template-pages-layout-micrositePage1 .major-promo-header-italic{
+	.pageLabel-homepage .major-promo-header-italic,
+	.template-pages-layout-micrositePage1 .major-promo-header-italic,
+	.template-pages-layout-newBrandLandingPageTemplate .major-promo-header-italic{
 		font-size: 12px;
    		margin: 0 0 10px;
 	}
-	.pageLabel-homepage span.major-promo-description,.template-pages-layout-micrositePage1 span.major-promo-description{
+	.pageLabel-homepage span.major-promo-description,
+	.template-pages-layout-micrositePage1 span.major-promo-description,
+	.template-pages-layout-newBrandLandingPageTemplate span.major-promo-description
+	{
 		font-size: 22px;
 	}
-	.pageLabel-homepage span.major-promo-description+a,.template-pages-layout-micrositePage1 span.major-promo-description+a{
+	.pageLabel-homepage span.major-promo-description+a,.template-pages-layout-micrositePage1 span.major-promo-description+a,
+	.template-pages-layout-newBrandLandingPageTemplate span.major-promo-description+a{
 		font-size: 10px;
     	height: 30px;
     	letter-spacing: 2px;
     	line-height: 28px;
    	 	width: 110px;
 	}
-	.pageLabel-homepage div.content-block-slider.electronic-brand-slider,.template-pages-layout-micrositePage1 div.content-block-slider.electronic-brand-slider{
+	.pageLabel-homepage div.content-block-slider.electronic-brand-slider,.template-pages-layout-micrositePage1 div.content-block-slider.electronic-brand-slider
+	{
 		margin:0;
 	}
-	.pageLabel-homepage .hero.icid ul.major-promos,.template-pages-layout-micrositePage1 .hero.icid ul.major-promos{
+	.pageLabel-homepage .hero.icid ul.major-promos,.template-pages-layout-micrositePage1 .hero.icid ul.major-promos,
+	.template-pages-layout-newBrandLandingPageTemplate .hero.icid ul.major-promos
+	{
 		position: absolute;
 		color: #fff;
 	}
 }
 @media (max-width:767px){
-	.pageLabel-homepage .hero.icid ul.major-promos,.template-pages-layout-micrositePage1 .hero.icid ul.major-promos{
+	.pageLabel-homepage .hero.icid ul.major-promos,.template-pages-layout-micrositePage1 .hero.icid ul.major-promos,
+	.template-pages-layout-newBrandLandingPageTemplate .hero.icid ul.major-promos{
 		position: absolute;
 		color: #fff;
 		bottom: 15%;
     	left: 20px;
     	width: 70%;
 	}
-	.pageLabel-homepage .major-promo-header-italic, .template-pages-layout-micrositePage1 .major-promo-header-italic{
+	.pageLabel-homepage .major-promo-header-italic, .template-pages-layout-micrositePage1 .major-promo-header-italic,
+	.template-pages-layout-newBrandLandingPageTemplate .major-promo-header-italic{
 		font-size: 12px;
     	margin: 0 0 10px;
 	}
-	.pageLabel-homepage .hero .major-promos span.major-promo-description, .template-pages-layout-micrositePage1 .hero .major-promos span.major-promo-description{
+	.pageLabel-homepage .hero .major-promos span.major-promo-description, .template-pages-layout-micrositePage1 .hero .major-promos span.major-promo-description,
+	.template-pages-layout-newBrandLandingPageTemplate .hero .major-promos span.major-promo-description {
 		font-size: 22px;
 	}
-	.pageLabel-homepage .timeout-slider .carousel .item span.major-promo-description+a, .template-pages-layout-micrositePage1 .timeout-slider .carousel .item span.major-promo-description+a{
+	.pageLabel-homepage .timeout-slider .carousel .item span.major-promo-description+a,
+	 .template-pages-layout-micrositePage1 .timeout-slider .carousel .item span.major-promo-description+a,
+	 .template-pages-layout-newBrandLandingPageTemplate .timeout-slider .carousel .item span.major-promo-description+a{
 		font-size: 10px;
     	height: 30px;
     	letter-spacing: 2px;
