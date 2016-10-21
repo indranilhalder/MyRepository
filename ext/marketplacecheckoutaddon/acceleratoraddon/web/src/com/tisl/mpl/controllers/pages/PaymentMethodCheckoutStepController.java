@@ -270,8 +270,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				final CartModel cartModel = getCartService().getSessionCart();
 
 				// TPR-429 START
-				final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
-				final String checkoutSellerID = GenericUtilityMethods.populateCheckoutSellers(cartData);
+				final String checkoutSellerID = GenericUtilityMethods.populateCheckoutSellers(cartModel);
 				model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, checkoutSellerID);
 				// TPR-429 END
 
@@ -329,23 +328,21 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderModel);
 				// TPR-429 START
-				final String checkoutSellerID = GenericUtilityMethods.populateCheckoutSellers(orderData);
+				final String checkoutSellerID = GenericUtilityMethods.populateCheckoutSellers(orderModel);
 				model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, checkoutSellerID);
 				// TPR-429 END
 				//Getting Payment modes
 				paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, orderData);
 
 				model.addAttribute(MarketplacecheckoutaddonConstants.GUID, orderModel.getGuid());
+
+				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, orderModel);
 			}
 
 			//creating new Payment Form
 			final PaymentForm paymentForm = new PaymentForm();
-			//try
-			//{
-			//set up payment page
 			setupAddPaymentPage(model);
 
-			//if (!paymentModeMap.isEmpty())
 			if (MapUtils.isNotEmpty(paymentModeMap)) // Code optimization for performance fix TISPT-169
 			{
 				//Adding payment modes in model to be accessed from jsp
