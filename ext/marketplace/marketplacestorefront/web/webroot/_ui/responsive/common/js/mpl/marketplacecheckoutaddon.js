@@ -1241,7 +1241,13 @@ function mobileBlacklist(){
 	if(isSessionActive()){
 	// store url change
 	var staticHost=$('#staticHost').val();
-	$("#sendOTPButton").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 10%;bottom: 0px; height: 30px;">');
+	
+	/*TPR-3446 COD starts*/
+	//$("#sendOTPButton").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 10%;bottom: 0px; height: 30px;">');
+	$("body").append("<div id='no-clickCOD' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+	/*TPR-3446 COD ends*/
+	
 	if($("#sendOTPButton #resendOTPMessage").css("display") == 'block') {
 		$("#sendOTPButton .spinner").css("bottom","33px")
 	}
@@ -1786,12 +1792,15 @@ $("#otpMobileNUMField").focus(function(){
 		$(".pay button, #make_cc_payment_up").prop("disabled",true);
 		$(".pay button, #make_cc_payment_up").css("opacity","0.5");
 		// store url change
+		
+		/*TPR-3446 credit card starts*/
 		/*$(".pay").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 92px; height: 30px;">');
 		$(".pay .spinner").css("left",(($(".pay.newCardPayment").width()+$(".pay.newCardPayment button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");*/
 		
-		$("body").append("<div id='no-clickJuspay1' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+		$("body").append("<div id='no-clickJuspayCredit' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 		$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+		/*TPR-3446 credit card ends*/
 		
 		// TISPRO-153
 		sendTealiumData();
@@ -4569,9 +4578,17 @@ function submitNBForm(){
 		$(".pay button, .make_payment_top_nb").prop("disabled",true);
 		$(".pay button, .make_payment_top_nb").css("opacity","0.5");
 		// store url change
-		$(".pay").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 92px; height: 30px;">');
+		
+		/*TPR-3446 net banking starts*/
+		
+		/*$(".pay").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 92px; height: 30px;">');
 		$(".pay .spinner").css("left",(($(".pay.top-padding").width()+$(".pay.top-padding button").width())/2)+10);
-		$("body").append("<div id='no-click' style='opacity:0.00; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+		$("body").append("<div id='no-click' style='opacity:0.00; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");*/
+		
+		$("body").append("<div id='no-clickNetBank' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+		$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+		
+		/*TPR-3446 net banking ends*/
 		
 		$("#netbankingError").css("display","none");
 		var firstName=selectedValue;
