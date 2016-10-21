@@ -11,8 +11,9 @@ var bankNameSelected=null;
 $("#viewPaymentCredit").click(function(){
 	
 	/*TPR-3446 new starts*/
+	var staticHost = $('#staticHost').val();
 	//$("body").append("<div id='no-click' style='opacity:0.40; background:transparent; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-	$("body").append("<div style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 	$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
 	/*TPR-3446 new ends*/
 	
@@ -44,8 +45,9 @@ $("#viewPaymentCredit").click(function(){
 
 $("#viewPaymentDebit").click(function(){
 	/*TPR-3446 new starts*/
+	var staticHost = $('#staticHost').val();
 	//$("body").append("<div id='no-click' style='opacity:0.40; background:transparent; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-	$("body").append("<div style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 	$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
 	/*TPR-3446 new ends*/
 	// Display Debit Card form only if the session is active
@@ -75,8 +77,9 @@ $("#viewPaymentDebit").click(function(){
 
 $("#viewPaymentNetbanking").click(function(){
 	/*TPR-3446 new starts*/
+	var staticHost = $('#staticHost').val();
 	//$("body").append("<div id='no-click' style='opacity:0.40; background:transparent; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-	$("body").append("<div style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 	$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
 	/*TPR-3446 new ends*/
 	// Display NET BANKING form only if the session is active
@@ -100,8 +103,9 @@ $("#viewPaymentCOD").click(function(){
 		$(".totals.outstanding-totalss").css("bottom","40px");
 	}
 	/*TPR-3446 new starts*/
+	var staticHost = $('#staticHost').val();
 	//$("body").append("<div id='no-click' style='opacity:0.40; background:transparent; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-	$("body").append("<div style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 	$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
 	/*TPR-3446 new ends*/
 	// Display COD form only if the session is active
@@ -119,8 +123,9 @@ $("#viewPaymentCOD").click(function(){
 
 $("#viewPaymentEMI").click(function(){
 	/*TPR-3446 new starts*/
+	var staticHost = $('#staticHost').val();
 	//$("body").append("<div id='no-click' style='opacity:0.40; background:transparent; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-	$("body").append("<div style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 	$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
 	/*TPR-3446 new ends*/
 	// Display EMI form only if the session is active
@@ -249,7 +254,7 @@ function displayNetbankingForm(){
 		error : function(resp) {
 			$(".nbButton").css("display","none");
 			$(".nbAjaxError").css("display","block");
-			$("#no-click").remove();
+			$("#no-click,.spinner").remove();
 			$(".make_payment").removeAttr('disabled');
 		}
 	});
@@ -490,13 +495,13 @@ function displayCODForm()
 							$("#paymentDetails").css("display","block");
 							$("#otpSentMessage").css("display","none");
 							$("#codErrorMessage").css("display","block");
-							$("#no-click").remove();
+							$("#no-click,.spinner").remove();
 						}
 					});
 				}
 				else{
 					$("#convChargeFieldId, #convChargeField").css("display","block");
-					$("#no-click").remove();
+					$("#no-click,.spinner").remove();
 				}
 			}
 		},
@@ -505,7 +510,7 @@ function displayCODForm()
 			$("#paymentDetails").css("display","block");
 			$("#otpSentMessage").css("display","none");
 			$("#codErrorMessage").css("display","block");
-			$("#no-click").remove();
+			$("#no-click,.spinner").remove();
 			// $(".make_payment").removeAttr('disabled');
 		}
 	});
@@ -715,7 +720,7 @@ function submitForm(){
 							/*$(".pay").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 100px; height: 30px;">');
 							$(".pay .spinner").css("left",(($(".pay#paymentFormButton").width()+$(".pay#paymentFormButton .payment-button").width())/2)+10);
 							$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");*/
-							$("body").append("<div style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+							$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 							$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
 							/*TPR-3446 COD After OTP Entered ends*/
 							$("#silentOrderPostForm").submit();
@@ -732,7 +737,7 @@ function submitForm(){
 						$(".pay button,.cod_payment_button_top").prop("disabled",false);
 						$(".pay button,.cod_payment_button_top").css("opacity","1");
 						$(".pay .spinner").remove();
-						$("#no-click").remove();
+						$("#no-click,.spinner").remove();
 						$('#paymentButtonId').prop('disabled', false); // TISPRD-958
 					}
 				}
@@ -747,7 +752,7 @@ function submitForm(){
 				$(".pay button,.cod_payment_button_top").prop("disabled",false);
 				$(".pay button,.cod_payment_button_top").css("opacity","1");
 				$(".pay .spinner").remove();
-				$("#no-click").remove();
+				$("#no-click,.spinner").remove();
 				
 			}
 		});
@@ -1270,7 +1275,7 @@ function mobileBlacklist(){
 	
 	/*TPR-3446 COD starts*/
 	//$("#sendOTPButton").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 10%;bottom: 0px; height: 30px;">');
-	$("body").append("<div id='no-clickCOD' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 	$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
 	/*TPR-3446 COD ends*/
 	
@@ -1618,8 +1623,8 @@ $("#otpMobileNUMField").focus(function(){
 		/*$(".pay").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 92px; height: 30px;">');
 		$(".pay .spinner").css("left",(($(".pay.saved-card-button").width()+$(".pay.saved-card-button button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");*/
-		
-		$("body").append("<div style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+		var staticHost = $('#staticHost').val();
+		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 		$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
 		
 		/*TPR-3446 new ends*/
@@ -1657,7 +1662,7 @@ $("#otpMobileNUMField").focus(function(){
 					$(".pay button, #make_saved_cc_payment_up").prop("disabled",false);
 					$(".pay button, #make_saved_cc_payment_up").css("opacity","1");
 					$(".pay .spinner").remove();
-					$("#no-click").remove();
+					$("#no-click,.spinner").remove();
 					//$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add");
 				}
 				else if(response=='redirect_with_details'){
@@ -1713,7 +1718,7 @@ $("#otpMobileNUMField").focus(function(){
 				$(".pay button, #make_saved_cc_payment_up").prop("disabled",false);
 				$(".pay button, #make_saved_cc_payment_up").css("opacity","1");
 				$(".pay .spinner").remove();
-				$("#no-click").remove();
+				$("#no-click,.spinner").remove();
 			}
 		});		
 	}
@@ -1725,10 +1730,11 @@ $("#otpMobileNUMField").focus(function(){
 		$(".pay button, #make_saved_dc_payment_up").css("opacity","0.5");
 		//store url change
 		/*TPR-3446 new starts*/
+		var staticHost = $('#staticHost').val();
 		/*$(".pay").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 92px; height: 30px;">');
 		$(".pay .spinner").css("left",(($(".pay.saved-card-button").width()+$(".pay.saved-card-button button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");*/
-		$("body").append("<div style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 		$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
 		/*TPR-3446 new ends*/
 		// TISPRO-153		
@@ -1768,7 +1774,7 @@ $("#otpMobileNUMField").focus(function(){
 					$(".pay button, #make_saved_dc_payment_up").prop("disabled",false);
 					$(".pay button, #make_saved_dc_payment_up").css("opacity","1");
 					$(".pay .spinner").remove();
-					$("#no-click").remove();
+					$("#no-click,.spinner").remove();
 					//$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add");
 				}else{
 
@@ -1817,7 +1823,7 @@ $("#otpMobileNUMField").focus(function(){
 				$(".pay button, #make_saved_cc_payment_up").prop("disabled",false);
 				$(".pay button, #make_saved_cc_payment_up").css("opacity","1");
 				$(".pay .spinner").remove();
-				$("#no-click").remove();
+				$("#no-click,.spinner").remove();
 			}
 		});		
 	}
@@ -1829,13 +1835,13 @@ $("#otpMobileNUMField").focus(function(){
 		$(".pay button, #make_cc_payment_up").prop("disabled",true);
 		$(".pay button, #make_cc_payment_up").css("opacity","0.5");
 		// store url change
-		
+		var staticHost = $('#staticHost').val();
 		/*TPR-3446 credit card starts*/
 		/*$(".pay").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 92px; height: 30px;">');
 		$(".pay .spinner").css("left",(($(".pay.newCardPayment").width()+$(".pay.newCardPayment button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");*/
 		
-		$("body").append("<div id='no-clickJuspayCredit' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 		$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
 		/*TPR-3446 credit card ends*/
 		
@@ -1902,7 +1908,7 @@ $("#otpMobileNUMField").focus(function(){
 					$(".pay button, #make_cc_payment_up").prop("disabled",false);
 					$(".pay button, #make_cc_payment_up").css("opacity","1");
 					$(".pay .spinner").remove();
-					$("#no-click").remove();
+					$("#no-click,.spinner").remove();
 					//$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add");
 				}else{	
 					//TISSTRT-1391
@@ -1925,7 +1931,7 @@ $("#otpMobileNUMField").focus(function(){
 					 }, 1000);
 			
 				}
-				$("#no-click").remove();
+				$("#no-click,.spinner").remove();
 			},
 			error : function(resp) {
 				if($(".redirect").val()=="false"){
@@ -1934,7 +1940,7 @@ $("#otpMobileNUMField").focus(function(){
 				$(".pay button, #make_cc_payment_up").prop("disabled",false);
 				$(".pay button, #make_cc_payment_up").css("opacity","1");
 				$(".pay .spinner").remove();
-				$("#no-click").remove();
+				$("#no-click,.spinner").remove();
 			}
 		});		
 	}
@@ -1946,10 +1952,11 @@ $("#otpMobileNUMField").focus(function(){
 		$(".pay button, #make_emi_payment_up").css("opacity","0.5");
 		//store url change
 		/*TPR-3446 new starts*/
+		var staticHost = $('#staticHost').val();
 		/*$(".pay").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 92px; height: 30px;">');
 		$(".pay .spinner").css("left",(($(".pay.newCardPayment").width()+$(".pay.newCardPayment button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");*/
-		$("body").append("<div style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 		$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
 		/*TPR-3446 new ends*/
 		// TISPRO-153
@@ -2004,7 +2011,7 @@ $("#otpMobileNUMField").focus(function(){
 					$(".pay button, #make_emi_payment_up").prop("disabled",false);
 					$(".pay button, #make_emi_payment_up").css("opacity","1");
 					$(".pay .spinner").remove();
-					$("#no-click").remove();
+					$("#no-click,.spinner").remove();
 					//$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add");
 				}else{		
 					 //TISPRO-313
@@ -2028,7 +2035,7 @@ $("#otpMobileNUMField").focus(function(){
 				$(".pay button, #make_cc_payment_up").prop("disabled",false);
 				$(".pay button, #make_cc_payment_up").css("opacity","1");
 				$(".pay .spinner").remove();
-				$("#no-click").remove();
+				$("#no-click,.spinner").remove();
 			}
 		});		
 	}
@@ -4452,7 +4459,7 @@ function applyPromotion(bankName,binValue,formSubmit)
 						$("#"+ussid+"_productPriceId").html(ussidPrice);
 					}
 				}
-				$("#no-click").remove();
+				$("#no-click,.spinner").remove();
 				$(".make_payment, #make_saved_cc_payment_up, #make_cc_payment_up, #make_nb_payment_up, #paymentButtonId_up").removeAttr('disabled');
 				//TISPT-29
 				if(paymentMode=='EMI' || paymentMode=='Credit Card' || paymentMode=='Debit card' || paymentMode=='Netbanking')
@@ -4589,14 +4596,15 @@ function applyPromotion(bankName,binValue,formSubmit)
 				//$("#no-click").remove();
 				//$(".make_payment").removeAttr('disabled');
 			}
-			$("#no-click1,.spinner1").remove();			
+			$("#no-click1,.spinner1").remove();
+			$("#no-click,.spinner").remove();
 			//if(isNewCard){//if this variable is true resetting the opacity
 			//$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 			//isNewCard = false;
 		//}
 		},
 		error : function(resp) {
-			$("#no-click").remove();
+			$("#no-click,.spinner").remove();
 			$(".make_payment").removeAttr('disabled');
 			$("#no-click1,.spinner1").remove();
 		}
@@ -4626,7 +4634,7 @@ function submitNBForm(){
 		$(".pay .spinner").css("left",(($(".pay.top-padding").width()+$(".pay.top-padding button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.00; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");*/
 		
-		$("body").append("<div id='no-clickNetBank' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;">');
 		$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
 		
 		/*TPR-3446 net banking ends*/
@@ -4659,7 +4667,7 @@ function submitNBForm(){
 					$(".pay button, .make_payment_top_nb").prop("disabled",false);
 					$(".pay button, .make_payment_top_nb").css("opacity","1");
 					$(".pay .spinner").remove();
-					$("#no-click").remove();
+					$("#no-click,.spinner").remove();
 				}
 				else if(response=='redirect_with_details'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TIS 404
@@ -4686,7 +4694,7 @@ function submitNBForm(){
 									$(".pay button, .make_payment_top_nb").prop("disabled",false);
 									$(".pay button, .make_payment_top_nb").css("opacity","1");
 									$(".pay .spinner").remove();
-									$("#no-click").remove();
+									$("#no-click,.spinner").remove();
 								}
 
 								else{
@@ -4747,7 +4755,7 @@ function submitNBForm(){
 							$(".pay button, .make_payment_top_nb").prop("disabled",false);
 							$(".pay button, .make_payment_top_nb").css("opacity","1");
 							$(".pay .spinner").remove();
-							$("#no-click").remove();
+							$("#no-click,.spinner").remove();
 						}
 					});		
 				}
@@ -5156,7 +5164,8 @@ function checkPincodeServiceability(buttonType,el)
 	// .spinner").css("left",(($("#pinCodeDispalyDiv").width()+$("#pinCodeDispalyDiv").width())/2)+10);
 	/*TPR-3446 new starts*/
 	//$("body").append("<div id='no-click' style='opacity:0.6; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-	$("body").append("<div style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	var staticHost = $('#staticHost').val();
+	$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 	$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
 	/*TPR-3446 new ends*/
 	var selectedPincode=$('#defaultPinCodeIds').val();
@@ -5179,7 +5188,7 @@ function checkPincodeServiceability(buttonType,el)
 		 $(".pincodeServiceError").hide();
 		 $(".delivery ul.success_msg").hide();
 		$("#pinCodeDispalyDiv .spinner").remove();
-		$("#no-click").remove();
+		$("#no-click,.spinner").remove();
 		// },500);
 
 		return false;
@@ -5204,7 +5213,7 @@ function checkPincodeServiceability(buttonType,el)
 			});
 		// setTimeout(function(){
 		$("#pinCodeDispalyDiv .spinner").remove();
-		$("#no-click").remove();
+		$("#no-click,.spinner").remove();
 		// },500);
         return false;  
     }
@@ -5222,7 +5231,7 @@ function checkPincodeServiceability(buttonType,el)
 		$("#pinCodeDispalyDiv .spinner").remove();
 		$("#emptyId").hide();
 		$("#error-Id").hide();
-		$("#no-click").remove();
+		$("#no-click,.spinner").remove();
 		$(".delivery ul.success_msg").hide();//TPR-1341
 		return false; 
 		// TPR-1055 ends
@@ -5287,7 +5296,7 @@ function checkPincodeServiceability(buttonType,el)
  	 			// setTimeout(function(){
  	 		
  	 				$("#pinCodeDispalyDiv .spinner").remove();
- 	 				$("#no-click").remove();
+ 	 				$("#no-click,.spinner").remove();
  	 			// },500);
  	 				// TPR-1055
  	 				$('#defaultPinCodeIds').blur();
@@ -5322,7 +5331,7 @@ function checkPincodeServiceability(buttonType,el)
  			console.log('Some issue occured in checkPincodeServiceability');
  			// setTimeout(function(){
  	 			$("#pinCodeDispalyDiv .spinner").remove();
- 	 			$("#no-click").remove();
+ 	 			$("#no-click,.spinner").remove();
  	 		// },500);
  		}
  	});
@@ -5965,7 +5974,7 @@ function checkExpressCheckoutPincodeService(buttonType){
 	 			$("#defaultPinCodeIdsq").val($("#defaultPinCodeIds").val());
 	 			// setTimeout(function(){
 	 			$("#pinCodeDispalyDiv .spinner").remove();
-	 			$("#no-click").remove();
+	 			$("#no-click,.spinner").remove();
 	 			// },500);
 		 		// $("#changePinDiv").hide();
 		 		// $("#defaultPinDiv").show();
@@ -5992,7 +6001,7 @@ function checkExpressCheckoutPincodeService(buttonType){
 	 			$("#defaultPinCodeIdsq").val($("#defaultPinCodeIds").val());
 	 			// setTimeout(function(){
 	 			$("#pinCodeDispalyDiv .spinner").remove();
-	 			$("#no-click").remove();
+	 			$("#no-click,.spinner").remove();
 	 			// },500);
 		 		// $("#changePinDiv").hide();
 		 		// $("#defaultPinDiv").show();
@@ -6517,7 +6526,7 @@ function hideError(){
 
 function clearDisable()
 {
-	$("#no-click").remove();
+	$("#no-click,.spinner").remove();
 	$(".make_payment").removeAttr('disabled');
 
 }
