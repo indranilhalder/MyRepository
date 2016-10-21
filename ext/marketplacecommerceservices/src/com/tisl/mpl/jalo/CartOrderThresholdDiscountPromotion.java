@@ -491,11 +491,16 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 			else
 			{
 				final int orderEntryCount = getOrderEntryCount(validProductUssidMap, ctx, order);
-				int quantityNeeded = entryQualifyingCount.intValue() - orderEntryCount;
-				if (quantityNeeded < 0)
+				int quantityNeeded = 0;
+				if (null != entryQualifyingCount)
 				{
-					quantityNeeded = 0;
+					quantityNeeded = entryQualifyingCount.intValue() - orderEntryCount;
+					if (quantityNeeded < 0)
+					{
+						quantityNeeded = 0;
+					}
 				}
+
 				final String qtyNeededMsg = quantityNeeded + " more item(s)";
 
 				final Object[] args =

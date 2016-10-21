@@ -723,5 +723,20 @@ public class MarketplaceCheckoutControllerImpl extends
 	
 	
 	
+	/**
+	 * Setting mode of payment against cart TPR-3471
+	 * @param cartModel
+	 * 
+	 */
+	@Override
+	public void setCODPaymentMode(final CartModel cartModel)
+	{
+		cartModel.setModeOfPayment("COD");
+		getModelService().save(cartModel);
+	}
+	
+	
+	
+	
 
 }
