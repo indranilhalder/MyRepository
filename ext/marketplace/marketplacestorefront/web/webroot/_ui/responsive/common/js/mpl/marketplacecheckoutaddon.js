@@ -4352,8 +4352,8 @@ function setBankForSavedCard(bankName){
 function applyPromotion(bankName,binValue,formSubmit)
 {
 	var staticHost=$('#staticHost').val();
-	$("body").append("<div id='no-click1' style='opacity:0.15; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-	$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner1" style="position: fixed; left: 50%;top:50%; height: 30px; z-index: 99999;">'); 
+	$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top:50%; height: 30px; z-index: 99999;">'); 
 
 	$(".make_payment, #make_saved_cc_payment_up, #make_cc_payment_up, #make_nb_payment_up, #paymentButtonId_up").attr('disabled','true');
 	var paymentMode=$("#paymentMode").val();
@@ -4596,7 +4596,6 @@ function applyPromotion(bankName,binValue,formSubmit)
 				//$("#no-click").remove();
 				//$(".make_payment").removeAttr('disabled');
 			}
-			$("#no-click1,.spinner1").remove();
 			$("#no-click,.spinner").remove();
 			//if(isNewCard){//if this variable is true resetting the opacity
 			//$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
