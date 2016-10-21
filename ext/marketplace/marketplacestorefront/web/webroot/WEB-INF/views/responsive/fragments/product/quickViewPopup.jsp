@@ -986,6 +986,7 @@ wishQv = setInterval(function(){
 			"left":$(".quickview .main-image").width() - 50,
 			"display":"block"
 			});
+		$(".zoomContainer .wishlist-icon-qv.zoom-qv").hide();
 	} else {
 		clearInterval(wishQv);
 	}
@@ -993,7 +994,7 @@ wishQv = setInterval(function(){
 },50);
 $(document).on("mouseover",".zoomContainer",function(e) {
 	if($(".zoomContainer .wishlist-icon-qv.zoom-qv").length == 0) {
-		$(".zoomContainer").append($(".wishlist-icon-qv.zoom-qv").clone());
+	    $(".zoomContainer").append($(".wishlist-icon-qv.zoom-qv").clone());
 		$(".zoomContainer .wishlist-icon-qv.zoom-qv").css({
 			"left":$(".quickview .main-image").width() - 50,
 			"display":"block"
