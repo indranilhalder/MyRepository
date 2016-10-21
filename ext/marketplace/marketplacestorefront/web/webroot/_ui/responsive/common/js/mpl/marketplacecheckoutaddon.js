@@ -159,6 +159,7 @@ function refresh(){
 	$(".pay button, #make_cc_payment_up, #make_saved_cc_payment_up, .cod_payment_button_top").prop("disabled",false);
 	$(".pay button, #make_cc_payment_up, #make_saved_cc_payment_up, .cod_payment_button_top").css("opacity","1");
 	$(".pay .spinner").remove();
+	$("#no-click,.spinner").remove();
 	// $(".checkout-content.checkout-payment
 	// .left-block").css("margin-top","0px");
 	
@@ -1300,10 +1301,12 @@ function mobileBlacklist(){
 				$("#enterOTP, #paymentFormButton, #resendOTPMessage").css("display","none");
 				$("#customerBlackListMessage").css("display","block");
 				$("#sendOTPButton .spinner").remove();
+				$("#no-click,.spinner").remove();
 			}
 		},
 		error : function(resp) {
 			$("#sendOTPButton .spinner").remove();
+			$("#no-click,.spinner").remove();
 		}
 	});
 	}
@@ -1363,9 +1366,11 @@ function generateOTP(){
 			}
 			
 			$("#sendOTPButton .spinner").remove();
+			$("#no-click,.spinner").remove();
 		},
 		error : function(resp) {
 			$("#sendOTPButton .spinner").remove();
+			$("#no-click,.spinner").remove();
 			alert("OTP cannot be generated at this time due to technical errors. Please select another payment mode and proceed");
 		}
 	});
