@@ -124,19 +124,7 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 		{
 			final PcmProductVariantModel selectedVariantModel = (PcmProductVariantModel) productModel;
 			//TISPRM-56
-			//Added For TPR-210
-			final VariantOptionData selectedVariantOptionData = getVariantOptionDataConverter().convert(selectedVariantModel);
-
-			//Added For TPR-210
-			if (null != selectedVariantOptionData.getImage())
-			{
-				selectedSize = selectedVariantOptionData.getImage().getUrl();
-
-			}
-			else
-			{
-				selectedSize = selectedVariantModel.getSize();
-			}
+			selectedSize = selectedVariantModel.getSize();
 			final String selectedCapacity = selectedVariantModel.getCapacity();
 			final ProductModel baseProduct = selectedVariantModel.getBaseProduct();
 			final Map<String, String> defaultColorMap = new HashMap<String, String>();
@@ -165,13 +153,20 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 							//TISPRO-50 - null check added
 							//if (null != selectedSize && selectedSize.equals(pm.getSize()))
 							//Added For TPR-210
-							if (selectedSize.equals(variantOptionData.getImage().getUrl())
-									&& !(defaultColorMap.containsKey(variantOptionData.getImage().getUrl())))
+							/*
+							 * if (selectedSize.equals(variantOptionData.getImage().getUrl()) &&
+							 * !(defaultColorMap.containsKey(variantOptionData.getImage().getUrl())))
+							 */
+							if (selectedSize.equals(pm.getSize()) && null != variantOptionData.getImage())
 							{
 								isSizeVariantPresent = true;
+								defaultColorMap.put(variantOptionData.getImage().getUrl(), Y);
+							}
+							else
+							{
 								final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode()) ? pm
 										.getColourHexCode() : pm.getColour().toLowerCase());
-								defaultColorMap.put(variantOptionData.getImage().getUrl(), Y);
+								defaultColorMap.put(color, Y);
 							}
 							//checking for colour variant
 							if (null != pm.getColour())
@@ -183,12 +178,8 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 							}
 							//checking for colour hex code
 							//changes for unique size
-							//Added For TPR-210
-							if (selectedSize.equals(variantOptionData.getImage().getUrl()))
-							{
-								sizeLink.put(variantOptionData.getUrl(), pm.getSize());
-								variantOptionData.setSizeLink(sizeLink);
-							}
+							sizeLink.put(variantOptionData.getUrl(), pm.getSize());
+							variantOptionData.setSizeLink(sizeLink);
 						}
 
 						//chceking capacity variant exists or not
