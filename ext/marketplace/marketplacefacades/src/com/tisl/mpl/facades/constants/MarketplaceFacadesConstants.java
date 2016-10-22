@@ -137,6 +137,8 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 	public static final String UNKNOWN = "unknown".intern();
 	public static final String DEFAULT_WISHLIST_NAME = "My Wishlist";
 
+	public static final String LUXURY_STYLE_SWATCH = "luxuryStyleSwatch";
+
 	private MarketplaceFacadesConstants()
 	{
 		//empty
