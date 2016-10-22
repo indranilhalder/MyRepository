@@ -406,10 +406,10 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 
 
-				//if (CollectionUtils.isNotEmpty(orderLineRequest.getOrderLine()))
-				//{
-					//cancelOrRetrnanable = cancelOrderInOMS(orderLineRequest, cancelOrRetrnanable, isReturn);
-				//}
+				if (CollectionUtils.isNotEmpty(orderLineRequest.getOrderLine()))
+				{
+					cancelOrRetrnanable = cancelOrderInOMS(orderLineRequest, cancelOrRetrnanable, isReturn);
+				}
 
 
 			}
