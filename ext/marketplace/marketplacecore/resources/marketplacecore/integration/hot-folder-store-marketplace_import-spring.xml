@@ -845,7 +845,7 @@ $language=language(isocode)[default='en'][unique=true];
        <bean id="batchBulkReturnInitiationConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
              <value>
-				INSERT_UPDATE BulkReturnProcess;parentOrderNo[unique=true];transactionId(code);loadStatus(code);errorDescription(code);
+				INSERT_UPDATE BulkReturnProcess;parentOrderNo(code);transactionId(code);loadStatus(code);errorDescription(code);
 			</value>
         </property>
         <property name="impexRow">
