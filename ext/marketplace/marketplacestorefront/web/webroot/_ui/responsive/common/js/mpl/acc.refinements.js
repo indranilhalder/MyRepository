@@ -202,7 +202,6 @@ ACC.refinements = {
 			
 			//console.log("Mobile View : updatedsearchQuery : "+updatedsearchQuery);	
 			// hiding
-			$(".js-facet-list").hide();  
 			loadMobilePriceRange();
 			
 		});
@@ -708,8 +707,7 @@ function loadMobilePriceRange(){
 			priceRange = priceRange.substring(0, priceRange.indexOf(':'));
 		}		
 		var prices = splitPrice(priceRange);
-		// console.log("priceRange"+priceRange+"prices[0]"
-		// +prices[0]+"prices[1]" +prices[1]);
+		console.log("priceRange"+priceRange+"prices[0]"+prices[0]+"prices[1]" +prices[1]);
 		$('.minPriceSearchTxt').val(prices[0]);
 		$('.maxPriceSearchTxt').val(prices[1]);		
 		/* $('li.price').find('div.facet-name').hide(); */
@@ -722,22 +720,15 @@ function removeMobilePriceRange(){
 	var q = updatedsearchQuery;
 	var priceRange = '';
 	var pvStr = ':price:';	
-	if (q.indexOf(pvStr) > -1) {		
-		priceRange = q.substring(q.indexOf(pvStr) + pvStr.length);
-		if (priceRange.indexOf(':') > -1) {
-			priceRange = priceRange.substring(0, priceRange.indexOf(':'));
-		}		
-		var prices = splitPrice(priceRange);
-		// console.log("priceRange"+priceRange+"prices[0]"
-		// +prices[0]+"prices[1]" +prices[1]);
-		$('.minPriceSearchTxt').removeAttr("value");  
-		$('.maxPriceSearchTxt').removeAttr("value");  
-		$('li.price').find('div.facet-values .facet-list.js-facet-list').show();
-		$('.priceBucketExpand').hide();
-		$(".js-facet-checkbox-price").each(function(){
-				$(this).attr("checked",false);
-			});
-		}
+	console.log("removing mobile"+updatedsearchQuery);
+	$('.minPriceSearchTxt').val('');  
+	$('.maxPriceSearchTxt').val('');  
+	$('li.price').find('div.facet-values .facet-list.js-facet-list').show();
+	$('.priceBucketExpand').hide();
+	$(".js-facet-checkbox-price").each(function(){
+		$(this).attr("checked",false);
+	});
+	
 }
 
 
