@@ -56798,6 +56798,7 @@ padding: 0 30px;
 height: 565px;
 background: #fff;
 overflow: hidden;
+transition: height 0.2s ease;
 }
 /*TPR-1983 fix end*/
 @media (min-width:768px) and (max-width:790px){
@@ -58083,4 +58084,10 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 
 .page-productDetails .trending{
 	width:100%;
+}
+.click2chat-container.send-email-container h1{
+	margin-bottom: 5px;
+}
+.click2chat-container.send-email-container label[for="forgotPassword_email"]{
+	margin-bottom: 10px;
 }

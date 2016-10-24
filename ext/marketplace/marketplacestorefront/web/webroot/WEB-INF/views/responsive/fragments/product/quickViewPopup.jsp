@@ -731,6 +731,10 @@ display:none;
 				};
 				$(document).on('click','#mailQuick',function(){
 						utag.link({link_obj: this, link_text: 'share_email' , event_type : 'share_button_click' });
+						if($("#cboxContent #cboxLoadedContent .quickview.active")[0].offsetHeight < $("#cboxContent #cboxLoadedContent .quickview.active")[0].scrollHeight){
+							$("#cboxContent #cboxLoadedContent .quickview.active").css("height",$("#cboxContent #cboxLoadedContent .quickview.active")[0].scrollHeight + 10);
+							$("#cboxContent").css("max-height",$("#cboxContent #cboxLoadedContent .quickview.active")[0].scrollHeight + 10);
+						}
 					})
 					$(document).on('click','.g-interactivepost',function(){
 				utag.link({link_obj: this, link_text: 'share_googleplus' , event_type : 'share_button_click' });
@@ -899,6 +903,8 @@ display:none;
 
 $('ul.wish-share div.share').mouseleave(function(){
  $(this).find('[data-toggle="popover"]').popover('hide');
+ $("#cboxContent #cboxLoadedContent .quickview.active").css("height","565px");
+	$("#cboxContent").css("max-height","565px");
 });
 function sendmail_quick(){
 	$('#emailSuccess_quick,#emailUnSuccess_quick,#emailError_quick,#validateemail_quick,#emailEmpty_quick').hide();
