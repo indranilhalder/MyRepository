@@ -5164,7 +5164,9 @@ function checkPincodeServiceability(buttonType,el)
 		{"link_text": "mybag_checkout" , "event_type" : "mybag_checkout"}
 		);
 	}
-	$("#pinCodeDispalyDiv").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right:0;bottom:0; left:0; top:0; margin:auto; height: 30px;">');
+	/*spinner commented starts*/
+	//$("#pinCodeDispalyDiv").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right:0;bottom:0; left:0; top:0; margin:auto; height: 30px;">');
+	/*spinner commented ends*/
 	// $("#pinCodeDispalyDiv
 	// .spinner").css("left",(($("#pinCodeDispalyDiv").width()+$("#pinCodeDispalyDiv").width())/2)+10);
 	/*TPR-3446 new starts*/
