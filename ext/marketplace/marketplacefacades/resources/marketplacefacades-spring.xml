@@ -1003,6 +1003,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<property name="categoryService" ref="categoryService" />
 	<property name="configurationService" ref="configurationService"/>
 	<property name="mplSellerInformationService" ref="mplSellerInformationService"/>
+	<property name="productService" ref="productService" />
 	</bean>
 	<!-- For Microsite End-->
 	
