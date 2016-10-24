@@ -9,7 +9,7 @@
  * Information and shall use it only in accordance with the terms of the
  * license agreement you entered into with hybris.
  *
- *  
+ *
  */
 package com.tisl.mpl.initialdata.setup;
 
@@ -38,7 +38,7 @@ import com.tisl.mpl.initialdata.constants.MarketplaceInitialDataConstants;
 
 /**
  * This class provides hooks into the system's initialization and update processes.
- * 
+ *
  * @see "https://wiki.hybris.com/display/release4/Hooks+for+Initialization+and+Update+Process"
  */
 @SystemSetup(extension = MarketplaceInitialDataConstants.EXTENSIONNAME)
@@ -52,7 +52,7 @@ public class InitialDataSystemSetup extends AbstractSystemSetup
 	private static final String ACTIVATE_SOLR_CRON_JOBS = "activateSolrCronJobs";
 	private static final String MARKETPLACE = "mpl";
 
-
+	private static final String EXTENSIONNAME = "marketplaceinitialdata";
 	private CoreDataImportService coreDataImportService;
 	private SampleDataImportService sampleDataImportService;
 
@@ -76,7 +76,7 @@ public class InitialDataSystemSetup extends AbstractSystemSetup
 	/**
 	 * Implement this method to create initial objects. This method will be called by system creator during
 	 * initialization and system update. Be sure that this method can be called repeatedly.
-	 * 
+	 *
 	 * @param context
 	 *           the context provides the selected parameters and values
 	 */
@@ -89,7 +89,7 @@ public class InitialDataSystemSetup extends AbstractSystemSetup
 	/**
 	 * Implement this method to create data that is used in your project. This method will be called during the system
 	 * initialization.
-	 * 
+	 *
 	 * @param context
 	 *           the context provides the selected parameters and values
 	 */
@@ -108,8 +108,34 @@ public class InitialDataSystemSetup extends AbstractSystemSetup
 		getCoreDataImportService().execute(this, context, importData);
 		getEventService().publishEvent(new CoreDataImportedEvent(context, importData));
 
+		importImpexFile(context,
+				String.format("/%s/import/sampledata/productCatalogs/%sProductCatalog/categories_fa.impex", new Object[]
+				{ EXTENSIONNAME, MARKETPLACE }), false);
+		importImpexFile(context,
+				String.format("/%s/import/sampledata/productCatalogs/%sProductCatalog/categories_watches.impex", new Object[]
+				{ EXTENSIONNAME, MARKETPLACE }), false);
+
+		importImpexFile(context, String.format(
+				"/%s/import/sampledata/productCatalogs/%sProductCatalog/classifications-hierarchy_watches_fa.impex", new Object[]
+				{ EXTENSIONNAME, MARKETPLACE }), false);
+
+		importImpexFile(context, String.format(
+				"/%s/import/sampledata/productCatalogs/%sProductCatalog/classifications-units_watches_fa.impex", new Object[]
+				{ EXTENSIONNAME, MARKETPLACE }), false);
+
+		importImpexFile(context,
+				String.format("/%s/import/sampledata/productCatalogs/%sProductCatalog/classifications-system_fa.impex", new Object[]
+				{ EXTENSIONNAME, MARKETPLACE }), false);
+
+		importImpexFile(context, String.format(
+				"/%s/import/sampledata/productCatalogs/%sProductCatalog/classifications-system_watches.impex", new Object[]
+				{ EXTENSIONNAME, MARKETPLACE }), false);
 		getSampleDataImportService().execute(this, context, importData);
 		getEventService().publishEvent(new SampleDataImportedEvent(context, importData));
+
+
+
+
 	}
 
 	public CoreDataImportService getCoreDataImportService()

@@ -384,7 +384,7 @@ function focusOnElement() {
 		
 		$(document).on('click','#addToCartFormId'+index+' .js-add-to-cart',function(){
 			
-        if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'){
+        if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches'&& $("#showSize").val()=='true'){
 		  		
 		   		$("#addToCartFormIdOthersel"+index).html($('#selectSizeId').text());
 				$("#addToCartFormIdOthersel"+index).show();

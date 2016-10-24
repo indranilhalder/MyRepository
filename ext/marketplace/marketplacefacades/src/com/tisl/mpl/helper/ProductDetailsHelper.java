@@ -95,6 +95,16 @@ public class ProductDetailsHelper
 	 *
 	 */
 	private static final String CLASSIFICATION_ATTRIBUTES_ELECTRONICS_GROUPNAME = "classification.attributes.electronics.groupname";
+
+	/*
+	 * Added by I313024 for TATAUNISTORE-15 START :::
+	 */
+
+	private static final String CLASSIFICATION_ATTRIBUTES_WATCHES_GROUPNAME = "classification.attributes.watches.groupname";
+	/*
+	 * Added by I313024 for TATAUNISTORE-15 END :::
+	 */
+
 	/**
 	 *
 	 */
@@ -187,8 +197,8 @@ public class ProductDetailsHelper
 
 	/*
 	 * @Resource(name = "GigyaService") private GigyaService gigyaservice;
-	 *
-	 *
+	 * 
+	 * 
 	 * @Autowired private ExtendedUserServiceImpl userexService;
 	 *//**
 	 * @return the gigyaservice
@@ -324,8 +334,9 @@ public class ProductDetailsHelper
 			{
 				if (classicationDataList.isEmpty()
 						&& !(classData.getName().equalsIgnoreCase(N_A))
-						&& configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_ELECTRONICS_GROUPNAME)
-								.contains(classData.getName()))
+						&& (configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_ELECTRONICS_GROUPNAME)
+								.contains(classData.getName()) || configurationService.getConfiguration()
+								.getString(CLASSIFICATION_ATTRIBUTES_WATCHES_GROUPNAME).contains(classData.getName())))
 				{
 					classicationDataList.add(classData);
 				}
@@ -342,8 +353,9 @@ public class ProductDetailsHelper
 					else
 					{
 						if (!(classData.getName().equalsIgnoreCase(N_A))
-								&& configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_ELECTRONICS_GROUPNAME)
-										.contains(classData.getName()))
+								&& (configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_ELECTRONICS_GROUPNAME)
+										.contains(classData.getName()) || configurationService.getConfiguration()
+										.getString(CLASSIFICATION_ATTRIBUTES_WATCHES_GROUPNAME).contains(classData.getName())))
 						{
 							classicationDataList.add(classData);
 						}
@@ -852,15 +864,15 @@ public class ProductDetailsHelper
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 *
+	 * 
 	 * @param deliveryCode
-	 *
+	 * 
 	 * @param currencyIsoCode
-	 *
+	 * 
 	 * @param sellerArticleSKU
-	 *
+	 * 
 	 * @return MplZoneDeliveryModeValueModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private MplZoneDeliveryModeValueModel populateDeliveryCostForUSSIDAndDeliveryMode(final String deliveryCode,
