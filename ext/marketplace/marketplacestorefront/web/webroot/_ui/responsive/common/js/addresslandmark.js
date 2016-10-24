@@ -153,6 +153,7 @@ function checkPopupDataOrderHistory() {
 					$(".cityError").hide();
 					$(".pincodeNoError").hide();
 					$(".stateError").hide();
+					$(".otherLandMarkError").hide();
 				      
 				      var fname=$("#firstName").val();
 				      var lname=$("#lastName").val();
@@ -166,6 +167,19 @@ function checkPopupDataOrderHistory() {
 				      var hasString = isNaN(pincode);
 				      var city=$("#city").val();
 				      var letters = new RegExp(/^[A-z]*$/);
+				      var otherLandMark=$(".otherLandMark").val();
+				      
+				      if(otherLandMark != null){
+				    	  if(otherLandMark.trim() == ''){
+				    	    $(".otherLandMarkError").show();
+					  		$(".otherLandMarkError").text("Other LandMark cannot be allow  space");
+					  		validate = false;
+				    	  }else if(/[^a-zA-Z0-9]/.test(otherLandMark)){
+				    		  $(".otherLandMarkError").show();
+						  	  $(".otherLandMarkError").text("Other LandMark cannot be allow special characters");
+						  	 validate = false;
+				    	  }
+				      }
 				      
 				     if(fname == null || fname.trim() == '' ){
 				  			$(".firstNameError").show();
@@ -250,7 +264,7 @@ function checkPopupDataOrderHistory() {
 									$(".pincodeNoError").show();
 									$(".pincodeNoError").text(result);
 								}else if(result =='Updated'){
-									window.location.href=ACC.config.encodedContextPath+"/my-account/order/?orderCode="+orderCode+"&isServiceable="+true;
+									window.location.href=ACC.config.encodedContextPath+"/my-account/order/?orderCode="+orderCode;
 								}else{
 									$("#changeAddressPopup").hide();
 									$("#otpPopup").html(result).show();
