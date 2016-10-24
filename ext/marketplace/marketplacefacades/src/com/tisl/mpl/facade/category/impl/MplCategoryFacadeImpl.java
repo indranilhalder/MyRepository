@@ -320,7 +320,7 @@ public class MplCategoryFacadeImpl extends DefaultCatalogFacade implements MplCa
 		final BreadcrumbResponseWsDTO breadcrumbResponse = new BreadcrumbResponseWsDTO();
 		final List<BreadcrumbListWsDTO> breadcrumbList = new ArrayList<BreadcrumbListWsDTO>();
 		final List<CategoryModel> categoryHierarchy = getCategoryPathForProduct(product,
-				configurationService.getConfiguration().getString("luxury.mplcatalog.salescategory.code"), CategoryModel.class);
+				configurationService.getConfiguration().getString("luxury.salescategory.code"), CategoryModel.class);
 
 		if (!CollectionUtils.isEmpty(categoryHierarchy) && categoryHierarchy.size() > 1)
 		{
