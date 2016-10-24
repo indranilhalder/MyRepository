@@ -2120,7 +2120,7 @@ $("#otpMobileNUMField").focus(function(){
 			}
  }); 
  
- $("#make_emi_payment,#make_emi_payment_up").click(function(){
+ $(document).on('click','#make_emi_payment,#make_emi_payment_up',function(){
 	  if(isSessionActive()==false){
 			 redirectToCheckoutLogin();
 			}
@@ -2147,28 +2147,26 @@ $("#otpMobileNUMField").focus(function(){
 
 
  function dopayment(bin_current_status){
-	 var name = validateName();
-	 if(bin_current_status==true){
-		 var cardNo=true;
-	 }
-	 else{
-		 if(document.getElementById("cardNoError").innerHTML.length==0){
-			 document.getElementById("cardNoError").innerHTML="Please enter a valid card number ";
+	 if($("#paymentMode").val()=="Credit Card"){
+		 var name = validateName();
+		 if(bin_current_status==true){
+			 var cardNo=true;
 		 }
-		 var cardNo = false;
-	 }
-	 var firstName=validateNameOnAddress($("#firstName").val(), document.getElementById("firstNameError"), "firstName");
-	 var lastName=validateNameOnAddress($("#lastName").val(), document.getElementById("lastNameError"), "lastName");
-	 var addressLine1=validateAddressLine1($("#address1").val(), document.getElementById("address1Error"));
-	 //var addressLine2=validateAddressLine2($("#address2").val(), document.getElementById("address2Error"));
-	 //var addressLine3=validateLandmark($("#address3").val(), document.getElementById("address3Error"));
-	 var addressLine2=$("#address2").val();
-	 var addressLine3=$("#address3").val();
-	 var pin = validatePin();
-	 var city=validateCity();
-	 var state=validateState();
-	 var cardType=$("#cardType").val();
-	 if($("#paymentMode").val()=="Credit Card" || $("#paymentMode").val()=="EMI"){
+		 else{
+			 if(document.getElementById("cardNoError").innerHTML.length==0){
+				 document.getElementById("cardNoError").innerHTML="Please enter a valid card number ";
+			 }
+			 var cardNo = false;
+		 }
+		 var firstName=validateNameOnAddress($("#firstName").val(), document.getElementById("firstNameError"), "firstName");
+		 var lastName=validateNameOnAddress($("#lastName").val(), document.getElementById("lastNameError"), "lastName");
+		 var addressLine1=validateAddressLine1($("#address1").val(), document.getElementById("address1Error"));
+		 var addressLine2=$("#address2").val();
+		 var addressLine3=$("#address3").val();
+		 var pin = validatePin();
+		 var city=validateCity();
+		 var state=validateState();
+		 var cardType=$("#cardType").val();
 		 if(cardType=="MAESTRO"){
 			 //if (name && cardNo && pin && firstName && lastName && addressLine1 && addressLine2 && addressLine3 && city && state){
 			if (name && cardNo && pin && firstName && lastName && addressLine1 && city && state){
@@ -2190,58 +2188,21 @@ $("#otpMobileNUMField").focus(function(){
 				 return false;
 			 }
 		 }
-			 
+				 
 	 }
 	 else if($("#paymentMode").val()=="Debit Card"){
-		 if(cardType=='MAESTRO'){
-			 if (name && cardNo){
-				 createJuspayOrderForNewCard();		 
-			 }
-			 
-			 else{
-				 return false;
-			 }
+		 var name = validateNameDc();
+		 if(bin_current_status==true){
+			 var cardNo=true;
 		 }
 		 else{
-			 var cvv = validateCVV();
-			 var expMM = validateExpMM();
-			 var expYY = validateExpYY();
-			 if (cvv && expYY && name && expMM && cardNo){
-				 createJuspayOrderForNewCard();		 
+			 if(document.getElementById("cardNoErrorDc").innerHTML.length==0){
+				 document.getElementById("cardNoErrorDc").innerHTML="Please enter a valid card number ";
 			 }
-			 else{
-				 return false;
-			 }
+			 var cardNo = false;
 		 }
-	 }
-
- }
- 
-
- function dopaymentDc(bin_current_status){
-	 var name = validateNameDc();
-	 if(bin_current_status==true){
-		 var cardNo=true;
-	 }
-	 else{
-		 if(document.getElementById("cardNoErrorDc").innerHTML.length==0){
-			 document.getElementById("cardNoErrorDc").innerHTML="Please enter a valid card number ";
-		 }
-		 var cardNo = false;
-	 }
-	 var firstName = validateNameOnAddress($("#firstName").val(), document.getElementById("firstNameError"), "firstName");
-	 var lastName = validateNameOnAddress($("#lastName").val(), document.getElementById("lastNameError"), "lastName");
-	 var addressLine1 = validateAddressLine1($("#address1").val(), document.getElementById("address1Error"));
-	 //var addressLine2=validateAddressLine2($("#address2").val(), document.getElementById("address2Error"));
-	 //var addressLine3=validateLandmark($("#address3").val(), document.getElementById("address3Error"));
-	 var addressLine2 = $("#address2").val();
-	 var addressLine3 = $("#address3").val();
-	 var pin = validatePin();
-	 var city = validateCity();
-	 var state = validateState();
-	 var cardType = $("#cardTypeDc").val();
-	 
-	 if($("#paymentMode").val()=="Debit Card"){
+		 var cardType = $("#cardTypeDc").val();
+		 
 		 if(cardType=='MAESTRO'){
 			 if (name && cardNo){
 				 createJuspayOrderForNewCard();		 
@@ -2264,31 +2225,28 @@ $("#otpMobileNUMField").focus(function(){
 			 }
 		 }
 	 }
- }
- 
- function dopaymentEmi(bin_current_status){
-	 var name = validateNameEmi();
-	 if(bin_current_status==true){
-		 var cardNo=true;
-	 }
-	 else{
-		 if(document.getElementById("cardNoErrorEmi").innerHTML.length==0){
-			 document.getElementById("cardNoErrorEmi").innerHTML="Please enter a valid card number ";
+	 else if($("#paymentMode").val()=="EMI"){
+		 var name = validateNameEmi();
+		 if(bin_current_status==true){
+			 var cardNo=true;
 		 }
-		 var cardNo = false;
-	 }
-	 var firstName = validateNameOnAddress($("#firstNameEmi").val(), document.getElementById("firstNameErrorEmi"), "firstNameEmi");
-	 var lastName = validateNameOnAddress($("#lastNameEmi").val(), document.getElementById("lastNameErrorEmi"), "lastNameEmi");
-	 var addressLine1 = validateAddressLine1($("#address1Emi").val(), document.getElementById("address1ErrorEmi"));
-	 var addressLine2 = $("#address2Emi").val();
-	 var addressLine3 = $("#address3Emi").val();
-	 var pin = validatePinEmi();
-	 var city = validateCityEmi();
-	 var state = validateStateEmi();
-	 
-	 var cardType = $("#cardTypeEmi").val();
-	 
-	 if($("#paymentMode").val()=="Credit Card" || $("#paymentMode").val()=="EMI"){
+		 else{
+			 if(document.getElementById("cardNoErrorEmi").innerHTML.length==0){
+				 document.getElementById("cardNoErrorEmi").innerHTML="Please enter a valid card number ";
+			 }
+			 var cardNo = false;
+		 }
+		 var firstName = validateNameOnAddress($("#firstNameEmi").val(), document.getElementById("firstNameErrorEmi"), "firstNameEmi");
+		 var lastName = validateNameOnAddress($("#lastNameEmi").val(), document.getElementById("lastNameErrorEmi"), "lastNameEmi");
+		 var addressLine1 = validateAddressLine1($("#address1Emi").val(), document.getElementById("address1ErrorEmi"));
+		 var addressLine2 = $("#address2Emi").val();
+		 var addressLine3 = $("#address3Emi").val();
+		 var pin = validatePinEmi();
+		 var city = validateCityEmi();
+		 var state = validateStateEmi();
+		 
+		 var cardType = $("#cardTypeEmi").val();
+		 
 		 if(cardType=="MAESTRO"){
 			 //if (name && cardNo && pin && firstName && lastName && addressLine1 && addressLine2 && addressLine3 && city && state){
 			if (name && cardNo && pin && firstName && lastName && addressLine1 && city && state){
@@ -2310,9 +2268,105 @@ $("#otpMobileNUMField").focus(function(){
 				 return false;
 			 }
 		 }
-			 
 	 }
  }
+ 
+
+// function dopaymentDc(bin_current_status){
+//	 var name = validateNameDc();
+//	 if(bin_current_status==true){
+//		 var cardNo=true;
+//	 }
+//	 else{
+//		 if(document.getElementById("cardNoErrorDc").innerHTML.length==0){
+//			 document.getElementById("cardNoErrorDc").innerHTML="Please enter a valid card number ";
+//		 }
+//		 var cardNo = false;
+//	 }
+//	 var firstName = validateNameOnAddress($("#firstName").val(), document.getElementById("firstNameError"), "firstName");
+//	 var lastName = validateNameOnAddress($("#lastName").val(), document.getElementById("lastNameError"), "lastName");
+//	 var addressLine1 = validateAddressLine1($("#address1").val(), document.getElementById("address1Error"));
+//	 //var addressLine2=validateAddressLine2($("#address2").val(), document.getElementById("address2Error"));
+//	 //var addressLine3=validateLandmark($("#address3").val(), document.getElementById("address3Error"));
+//	 var addressLine2 = $("#address2").val();
+//	 var addressLine3 = $("#address3").val();
+//	 var pin = validatePin();
+//	 var city = validateCity();
+//	 var state = validateState();
+//	 var cardType = $("#cardTypeDc").val();
+//	 
+//	 if($("#paymentMode").val()=="Debit Card"){
+//		 if(cardType=='MAESTRO'){
+//			 if (name && cardNo){
+//				 createJuspayOrderForNewCard();		 
+//			 }
+//			 
+//			 else{
+//				 return false;
+//			 }
+//		 }
+//		 else{
+//			 var cvv = validateCVVDc();
+//			 var expMM = validateExpMMDc();
+//			 var expYY = validateExpYYDc();
+//			 var isDebit = true;
+//			 if (cvv && expYY && name && expMM && cardNo){
+//				 createJuspayOrderForNewCard(isDebit);		 
+//			 }
+//			 else{
+//				 return false;
+//			 }
+//		 }
+//	 }
+// }
+// 
+// function dopaymentEmi(bin_current_status){
+//	 var name = validateNameEmi();
+//	 if(bin_current_status==true){
+//		 var cardNo=true;
+//	 }
+//	 else{
+//		 if(document.getElementById("cardNoErrorEmi").innerHTML.length==0){
+//			 document.getElementById("cardNoErrorEmi").innerHTML="Please enter a valid card number ";
+//		 }
+//		 var cardNo = false;
+//	 }
+//	 var firstName = validateNameOnAddress($("#firstNameEmi").val(), document.getElementById("firstNameErrorEmi"), "firstNameEmi");
+//	 var lastName = validateNameOnAddress($("#lastNameEmi").val(), document.getElementById("lastNameErrorEmi"), "lastNameEmi");
+//	 var addressLine1 = validateAddressLine1($("#address1Emi").val(), document.getElementById("address1ErrorEmi"));
+//	 var addressLine2 = $("#address2Emi").val();
+//	 var addressLine3 = $("#address3Emi").val();
+//	 var pin = validatePinEmi();
+//	 var city = validateCityEmi();
+//	 var state = validateStateEmi();
+//	 
+//	 var cardType = $("#cardTypeEmi").val();
+//	 
+//	 if($("#paymentMode").val()=="Credit Card" || $("#paymentMode").val()=="EMI"){
+//		 if(cardType=="MAESTRO"){
+//			 //if (name && cardNo && pin && firstName && lastName && addressLine1 && addressLine2 && addressLine3 && city && state){
+//			if (name && cardNo && pin && firstName && lastName && addressLine1 && city && state){
+//				createJuspayOrderForNewCardEmi();
+//			 }
+//			 else{
+//				 return false;
+//			 }
+//		 }
+//		 else{
+//			 var cvv = validateCVVEmi();
+//			 var expMM = validateExpMMEmi();
+//			 var expYY = validateExpYYEmi();
+//			// if (cvv && expYY && name && expMM && cardNo && pin && firstName && lastName && addressLine1 && addressLine2 && addressLine3 && city && state){
+//			 if (cvv && expYY && name && expMM && cardNo && pin && firstName && lastName && addressLine1 && city && state){
+//				 createJuspayOrderForNewCardEmi();
+//			 }
+//			 else{
+//				 return false;
+//			 }
+//		 }
+//			 
+//	 }
+// }
 
  function submitCardForm(value){
 	 var baseUrl=window.location.origin;
@@ -4478,6 +4532,7 @@ function applyPromotion(bankName,binValue,formSubmit)
 				{
 					document.getElementById("juspayErrorMsg").innerHTML="Existing Promotion has expired";
 					$("#juspayconnErrorDiv").css("display","block");
+					$("#no-click,.spinner").remove();
 				}
 				else if(paymentMode=='EMI')
 				{
@@ -4591,18 +4646,19 @@ function applyPromotion(bankName,binValue,formSubmit)
 							}
 						});
 					}
+					$("#no-click,.spinner").remove();
 				}
-				else if(paymentMode=='Credit Card' || paymentMode=='Debit card')
+				else if(paymentMode=='Credit Card' || paymentMode=='Debit Card')
 				{
 					if(formSubmit=="formSubmit")
 					{
 						dopayment(binValue);
 					}
+					$("#no-click,.spinner").remove();
 				}
 				//$("#no-click").remove();
 				//$(".make_payment").removeAttr('disabled');
 			}
-			$("#no-click,.spinner").remove();
 			//if(isNewCard){//if this variable is true resetting the opacity
 			//$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 			//isNewCard = false;
