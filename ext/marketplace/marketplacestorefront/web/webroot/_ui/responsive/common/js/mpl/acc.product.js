@@ -1420,6 +1420,7 @@ $(document).ready(function() {
 
 
 function loadPriceRange(){
+	//console.log("Pricing")
 	var q = queryParam('q');
 	var priceRange = '';
 	var pvStr = ':price:';	
@@ -1430,8 +1431,8 @@ function loadPriceRange(){
 			priceRange = priceRange.substring(0, priceRange.indexOf(':'));
 		}		
 		var prices = splitPrice(priceRange);		
-		$('#customMinPrice').val(prices[0]);
-		$('#customMaxPrice').val(prices[1]);		
+		$('.minPriceSearchTxt').val(prices[0]);
+		$('.maxPriceSearchTxt').val(prices[1]);		
 		/*$('li.price').find('div.facet-name').hide();*/
 		$('li.price').find('div.facet-values .facet-list.js-facet-list').hide();
 		$('.priceBucketExpand').show();
