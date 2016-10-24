@@ -270,6 +270,7 @@ public class CheckoutController extends AbstractCheckoutController
 		return REDIRECT_PREFIX + "/cart";
 	}
 
+	@SuppressWarnings("boxing")
 	@RequestMapping(value = "/orderConfirmation/" + ORDER_CODE_PATH_VARIABLE_PATTERN, method = RequestMethod.GET)
 	@RequireHardLogIn
 	public String orderConfirmation(@PathVariable("orderCode") final String orderCode, final HttpServletRequest request,
@@ -290,6 +291,25 @@ public class CheckoutController extends AbstractCheckoutController
 			model.addAttribute(ModelAttributetConstants.MSD_JS_URL, msdjsURL);
 			model.addAttribute(ModelAttributetConstants.IS_MSD_ENABLED, isMSDEnabled);
 			//End MSD
+			//LW-225,230 start
+			boolean luxFlag = false;
+			if (null != orderDetails && null != orderDetails.getEntries() && !orderDetails.getEntries().isEmpty())
+			{
+				for (final OrderEntryData entry : orderDetails.getEntries())
+				{
+					if (null != entry.getProduct())
+					{
+						if (null != entry.getProduct().getLuxIndicator()
+								&& entry.getProduct().getLuxIndicator()
+										.equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
+						{
+							luxFlag = true;
+						}
+					}
+				}
+				model.addAttribute(ModelAttributetConstants.IS_LUXURY, luxFlag);
+			}
+			// LW-225,230 end
 		}
 		catch (final UnknownIdentifierException e)
 		{
@@ -389,11 +409,11 @@ public class CheckoutController extends AbstractCheckoutController
 	 * private void callNonBusinessError(final Model model, final String messageKey) throws CMSItemNotFoundException {
 	 * storeCmsPageInModel(model, getContentPageForLabelOrId(NBZ_ERROR_CMS_PAGE)); setUpMetaDataForContentPage(model,
 	 * getContentPageForLabelOrId(NBZ_ERROR_CMS_PAGE));
-	 *
+	 * 
 	 * model.addAttribute(WebConstants.MODEL_KEY_ADDITIONAL_BREADCRUMB,
 	 * resourceBreadcrumbBuilder.getBreadcrumbs(MessageConstants.BREADCRUMB_NOT_FOUND));
 	 * GlobalMessages.addErrorMessage(model, messageKey);
-	 *
+	 * 
 	 * storeContentPageTitleInModel(model, MessageConstants.NON_BUSINESS_ERROR); }
 	 */
 
@@ -418,8 +438,9 @@ public class CheckoutController extends AbstractCheckoutController
 			if (orderDetails != null)
 			{
 				//final List<OrderEntryData> orderEntryList = orderDetails.getEntries();	//TISPT-175 : check it below return
-				if (orderDetails.isGuestCustomer() && !StringUtils.substringBefore(orderDetails.getUser().getUid(), "|")
-						.equals(getSessionService().getAttribute(WebConstants.ANONYMOUS_CHECKOUT_GUID)))
+				if (orderDetails.isGuestCustomer()
+						&& !StringUtils.substringBefore(orderDetails.getUser().getUid(), "|").equals(
+								getSessionService().getAttribute(WebConstants.ANONYMOUS_CHECKOUT_GUID)))
 				{
 					return getCheckoutRedirectUrl();
 				}
@@ -507,13 +528,13 @@ public class CheckoutController extends AbstractCheckoutController
 				{
 					if (orderModel.getStatus().equals(OrderStatus.RMS_VERIFICATION_PENDING))
 					{
-						model.addAttribute(ModelAttributetConstants.ORDER_STATUS_MSG,
-								getConfigurationService().getConfiguration().getString(ModelAttributetConstants.ORDER_CONF_HELD));
+						model.addAttribute(ModelAttributetConstants.ORDER_STATUS_MSG, getConfigurationService().getConfiguration()
+								.getString(ModelAttributetConstants.ORDER_CONF_HELD));
 					}
 					else if (orderModel.getStatus().equals(OrderStatus.PAYMENT_SUCCESSFUL))
 					{
-						model.addAttribute(ModelAttributetConstants.ORDER_STATUS_MSG,
-								getConfigurationService().getConfiguration().getString(ModelAttributetConstants.ORDER_CONF_SUCCESS));
+						model.addAttribute(ModelAttributetConstants.ORDER_STATUS_MSG, getConfigurationService().getConfiguration()
+								.getString(ModelAttributetConstants.ORDER_CONF_SUCCESS));
 					}
 				}
 
@@ -596,8 +617,8 @@ public class CheckoutController extends AbstractCheckoutController
 			final String selectedDeliveryMode = entry.getMplDeliveryMode().getDeliveryMode().getCode();
 			final MplZoneDeliveryModeValueModel deliveryModel = mplDeliveryCostService.getDeliveryCost(selectedDeliveryMode,
 					MarketplacecommerceservicesConstants.INR, selectedUSSID);
-			String startValue = deliveryModel.getDeliveryMode().getStart() != null
-					? deliveryModel.getDeliveryMode().getStart().toString() : MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
+			String startValue = deliveryModel.getDeliveryMode().getStart() != null ? deliveryModel.getDeliveryMode().getStart()
+					.toString() : MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
 			String endValue = deliveryModel.getDeliveryMode().getEnd() != null ? deliveryModel.getDeliveryMode().getEnd().toString()
 					: MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
 			List<RichAttributeModel> richAttributeModel = new ArrayList<RichAttributeModel>();
@@ -608,8 +629,8 @@ public class CheckoutController extends AbstractCheckoutController
 				richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
 				if (CollectionUtils.isNotEmpty(richAttributeModel))
 				{
-					leadTime = richAttributeModel.get(0).getLeadTimeForHomeDelivery() != null
-							? richAttributeModel.get(0).getLeadTimeForHomeDelivery() : Integer.valueOf(0);
+					leadTime = richAttributeModel.get(0).getLeadTimeForHomeDelivery() != null ? richAttributeModel.get(0)
+							.getLeadTimeForHomeDelivery() : Integer.valueOf(0);
 				}
 				LOG.debug(" >> Lead time for Home delivery  " + leadTime);
 			}

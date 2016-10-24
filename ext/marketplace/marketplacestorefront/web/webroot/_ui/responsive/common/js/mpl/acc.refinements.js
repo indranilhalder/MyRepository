@@ -125,7 +125,7 @@ ACC.refinements = {
 			})
 			
 			// generating postAjaxURL
-			var pageURL = browserURL[0]+'?'+nonEmptyDataString.replace(/:/g,"%3A");
+			var pageURL = browserURL[0]+'?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
 			var requiredUrl="";
 			var action = $(this).parents("form").attr('action');
 			
@@ -183,7 +183,7 @@ ACC.refinements = {
 			})
 			
 			// generating postAjaxURL
-			var pageURL = browserURL[0]+'?'+nonEmptyDataString.replace(/:/g,"%3A");
+			var pageURL = browserURL[0]+'?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
 			var requiredUrl="";
 			var action = $(this).parents("form").attr('action');
 			

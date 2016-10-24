@@ -85,7 +85,7 @@
 					</a>
 				</c:if> --%>
 				<c:choose>
-				 <c:when test="${product.stock.stockLevelStatus eq 'outOfStock'}">
+				 <c:when test="${product.stockValue eq false}">
 				  <input type="hidden" id="stockStatusId" value="true"/>
 					<a id="stockIdDefault_${product.name}" class="stockLevelStatus"
 						href="${productUrl}" title="${product.name}"> <spring:theme
@@ -377,8 +377,10 @@
 				<action:actions element="div" parentComponent="${component}"/>
 			</div>
 		</div> --%>
+			<%-- <c:if
+				test="${not empty product.productCategoryType && (product.productCategoryType eq 'Electronics' || product.productCategoryType eq 'Watches')}"> --%>
 			<c:if
-				test="${not empty product.productCategoryType && product.productCategoryType eq 'Electronics'}">
+				test="${not empty product.productCategoryType && product.productCategoryType eq 'Electronics' }">
 				<div class="compare">
 					<input type="checkbox" id="${product.leastSizeProduct}"> <label
 						for="${product.leastSizeProduct}"></label>

@@ -470,6 +470,10 @@ var allSellers='${allsellers}';
 				value="${emiCuttOffAmount}" />
 			<!-- EMI section -->
 			<product:emiDetail product="${product}" />
+			<!-- TISPRD-5467 starts  -->
+			<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('freebiePriceThreshold')" var="freebiePriceThreshVal"/>
+			<input type="hidden" id="freebiePriceThreshId" value="${freebiePriceThreshVal}">
+			<!-- TISPRD-5467 end  -->
 			<product:productMainVariant />
 			<cms:pageSlot position="AddToCart" var="component">
 				<cms:component component="${component}" />
@@ -583,7 +587,9 @@ var allSellers='${allsellers}';
 	      <p>Delivery Information </p>
 	      <p>Buying Option </p>
 	    </div>
-	    <ul class="InfoWrap" id="sellerDetailTbdy"></ul>
+	    <ul class="InfoWrap" id="sellerDetailTbdy">
+	    	<input type="hidden" id="showSize" name="showSize" value="${showSizeGuideForFA}" />
+	    </ul>
 		<%--  <table id ="sellerTable" class="other-sellers-table">
 			<thead>
 				<tr >

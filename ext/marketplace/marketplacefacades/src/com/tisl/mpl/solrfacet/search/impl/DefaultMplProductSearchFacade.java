@@ -104,7 +104,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	protected SolrSearchQueryData decodeState(final SearchStateData searchState)
 	{
 		final SolrSearchQueryData searchQueryData = (SolrSearchQueryData) getSearchQueryDecoder().convert(searchState.getQuery());
-
+		populateSolrSearchQueryData(searchState, searchQueryData);
 		return searchQueryData;
 	}
 
@@ -183,6 +183,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 			searchQueryData.setFilterTerms(filterTerms);
 			searchQueryData.setSns(searchState.isSns());
 		}
+		populateSolrSearchQueryData(searchState, searchQueryData);
 		return searchQueryData;
 	}
 
@@ -283,7 +284,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.solrfacet.search.MplProductSearchFacade#mplProductSearch(de.hybris.platform.commercefacades.search.
 	 * data.SearchStateData, de.hybris.platform.commerceservices.search.pagedata.PageableData, java.lang.String)
@@ -362,7 +363,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 			searchQueryData.setSellerID(sellerId);
 			searchQueryData.setSns(searchState.isSns());
 		}
-
+		populateSolrSearchQueryData(searchState, searchQueryData);
 
 		return searchQueryData;
 	}
@@ -453,6 +454,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 			searchQueryData.setOfferCategoryID(categoryCode);
 
 		}
+		populateSolrSearchQueryData(searchState, searchQueryData);
 		searchQueryData.setFilterTerms(terms);
 
 		return searchQueryData;
@@ -494,6 +496,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 		searchQueryData.setFilterTerms(terms);
 		searchQueryData.setSns(searchState.isSns());
+		populateSolrSearchQueryData(searchState, searchQueryData);
 		return searchQueryData;
 	}
 
@@ -531,6 +534,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 			solrSearchQueryTermData.setValue(collectionId);
 			searchQueryData.setFilterTerms(Collections.singletonList(solrSearchQueryTermData));
 		}
+		populateSolrSearchQueryData(searchState, searchQueryData);
 		return searchQueryData;
 	}
 
@@ -594,6 +598,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 			solrSearchQueryTermData.setValue(reasonOrEvent);
 			searchQueryData.setFilterTerms(Collections.singletonList(solrSearchQueryTermData));
 		}
+		populateSolrSearchQueryData(searchState, searchQueryData);
 		return searchQueryData;
 	}
 
@@ -690,6 +695,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 			searchQueryData.setOfferCategoryID(categoryCode);
 		}
+		populateSolrSearchQueryData(searchState, searchQueryData);
 		return searchQueryData;
 	}
 
@@ -752,6 +758,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 
 		}
+		populateSolrSearchQueryData(searchState, searchQueryData);
 		return searchQueryData;
 	}
 
@@ -799,7 +806,8 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		final SolrSearchQueryTermData solrSearchQueryTermDataCategory = new SolrSearchQueryTermData();
 
 		//TISPRD-3816 starts
-		if (StringUtils.isNotEmpty(categoryCode)
+		if (null == searchState.getQuery().getValue() //TISPRD-6488
+				&& StringUtils.isNotEmpty(categoryCode)
 				&& !searchState.isSns()
 				&& (categoryCode.startsWith(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX) || categoryCode
 						.startsWith(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX_LOWER)))
@@ -811,6 +819,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		}
 		//TISPRD-3816 ends
 		searchQueryData.setSns(searchState.isSns());
+		populateSolrSearchQueryData(searchState, searchQueryData);
 		return searchQueryData;
 	}
 
@@ -913,6 +922,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	protected final SolrSearchQueryData decodeCouponListingStateDropDown(final SearchStateData searchState, final String couponId)
 	{
 		final SolrSearchQueryData searchQueryData = (SolrSearchQueryData) getSearchQueryDecoder().convert(searchState.getQuery());
+		populateSolrSearchQueryData(searchState, searchQueryData);
 		return searchQueryData;
 	}
 
@@ -954,7 +964,6 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	protected SolrSearchQueryData mplOnlineAndNewProductFind(final SearchStateData searchState)
 	{
 		final SolrSearchQueryData searchQueryData = (SolrSearchQueryData) getSearchQueryDecoder().convert(searchState.getQuery());
-
 		final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
 
 		if (searchQueryData.getFilterTerms() == null)
@@ -971,6 +980,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 			solrSearchQueryTerm.setValue(Boolean.TRUE.toString());
 			searchQueryData.getFilterTerms().add(solrSearchQueryTerm);
 		}
+		populateSolrSearchQueryData(searchState, searchQueryData);
 		return searchQueryData;
 	}
 
@@ -1014,6 +1024,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 			solrSearchQueryTerm.setValue(Boolean.TRUE.toString());
 			searchQueryData.getFilterTerms().add(solrSearchQueryTerm);
 		}
+		populateSolrSearchQueryData(searchState, searchQueryData);
 		return searchQueryData;
 	}
 
@@ -1097,7 +1108,45 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 			searchQueryData.setFilterTerms(Collections.singletonList(solrSearchQueryTermData));
 			searchQueryData.setSns(searchState.isSns());
 		}
+		populateSolrSearchQueryData(searchState, searchQueryData);
 		return searchQueryData;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.tisl.mpl.solrfacet.search.MplProductSearchFacade#populateSearchState(de.hybris.platform.commercefacades.search
+	 * .data.SearchStateData)
+	 */
+	@Override
+	public void populateSolrSearchQueryData(final SearchStateData searchState, final SolrSearchQueryData searchQueryData)
+	{
+
+		final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
+
+		if (null == searchState.getLuxurySiteFrom())//For Marketplace Web
+		{
+			solrSearchQueryTermData.setKey("isLuxuryProduct");
+			solrSearchQueryTermData.setValue(Boolean.FALSE.toString());
+		}
+		else if (searchState.getLuxurySiteFrom().equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_WEB))//From Luxury Web
+		{
+			solrSearchQueryTermData.setKey("isLuxuryProduct");
+			solrSearchQueryTermData.setValue(Boolean.TRUE.toString());
+		}
+		else
+		{
+			return;
+		}
+
+		if (null == searchQueryData.getFilterTerms())
+		{
+			searchQueryData.setFilterTerms(Collections.singletonList(solrSearchQueryTermData));
+		}
+		else
+		{
+			searchQueryData.getFilterTerms().add(solrSearchQueryTermData);
+		}
+	}
 }

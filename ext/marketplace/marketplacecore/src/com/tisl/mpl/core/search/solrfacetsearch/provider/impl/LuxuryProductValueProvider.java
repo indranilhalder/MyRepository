@@ -22,7 +22,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
-import com.tisl.mpl.core.model.PcmProductVariantModel;
 
 
 /**
@@ -38,9 +37,9 @@ public class LuxuryProductValueProvider extends AbstractPropertyFieldValueProvid
 			final Object model) throws FieldValueProviderException
 	{
 
-		if (model instanceof PcmProductVariantModel)
+		if (model instanceof ProductModel)
 		{
-			final PcmProductVariantModel product = (PcmProductVariantModel) model;
+			final ProductModel product = (ProductModel) model;
 
 			final Collection fieldValues = new ArrayList();
 

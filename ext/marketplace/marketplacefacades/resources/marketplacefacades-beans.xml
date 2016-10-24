@@ -157,6 +157,7 @@
 		<property name="capacity" type="java.util.List&lt;java.lang.String>"></property>
 		<property name="seoMetaTitle" type="String"/>
 		<property name="seoMetaDescription" type="String"/>
+		<property name="seoMetaKeyword" type="String"/>
 		<property name="inStockFlag" type="Boolean"/>
 		<property name="isVariant" type="Boolean"/>
 		<property name="mobileBrandName" type="String"/>
@@ -172,6 +173,8 @@
 		<!-- LW-216 -->
 		<property name="luxIndicator" type="String" />
 		
+
+		<property name="stockValue" type="boolean" />
 		<!-- pdp changes ends -->
 
 		<property name="freebieProducts" type="java.util.List&lt;com.tisl.mpl.facades.data.FreebieProduct>"/>
@@ -462,6 +465,11 @@
 		<property name="euroSize" type="String"/>
 		<property name="usSize" type="String"/>
 		<property name="age" type="String"/>
+		<property name="cmsBeltSize" type="String" />
+		<property name="inchesBeltSize" type="String" />
+		<property name="cmsWaistSize" type="String" />
+		<property name="inchesWaistSize" type="String" />
+		<property name="inchesBeltLength" type="String" />
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData">
@@ -840,10 +848,14 @@
 	
 	<bean class="de.hybris.platform.commerceservices.search.solrfacetsearch.data.SolrSearchQueryData">
 		<property name="sns" type="boolean"/>
+		<!-- Added for Luxury -->
+		<!-- <property name="luxarySite" type="boolean"/> -->
 	</bean>
 
 	<bean class="de.hybris.platform.commercefacades.search.data.SearchStateData">
 		<property name="sns" type="boolean"/>
+		<!-- Added for Luxury -->
+		<property name="luxurySiteFrom" type="String"/>
 	</bean>
 
 	<!-- Return Item Address Data -->
@@ -903,6 +915,5 @@
 		<property name="categoryData" type="java.util.List&lt;com.tisl.mpl.facades.data.EnhancedSearchCategoryData>"></property>
 		<property name="brandData" type="java.util.List&lt;com.tisl.mpl.facades.data.EnhancedSearchBrandData>"></property>
 		<property name="sellerData" type="java.util.List&lt;com.tisl.mpl.facades.data.EnhancedSearchSellerData>"></property>
-	</bean>
-	
+	</bean>	
 </beans>

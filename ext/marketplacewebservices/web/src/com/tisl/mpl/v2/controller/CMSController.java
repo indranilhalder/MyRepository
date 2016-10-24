@@ -627,22 +627,25 @@ public class CMSController extends BaseController
 	@RequestMapping(value = "/luxuryBLP", method = RequestMethod.GET)
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
 	@ResponseBody
-	public LuxBlpCompWsDTO getLuxuryBLP(@RequestParam(defaultValue = DEFAULT) final String fields)
+	public LuxBlpCompWsDTO getLuxuryBLP(@RequestParam(defaultValue = DEFAULT) final String fields,
+			@RequestParam(value = "brandCode") final String brandCode)
 	{
-
+		LuxBlpCompWsDTO blpcomponentdto = new LuxBlpCompWsDTO();
 		try
 		{
-			final LuxBlpCompWsDTO blpcomponentdto = mplCmsFacade.getlandingForBrand();
+			blpcomponentdto = mplCmsFacade.getlandingForBrand(brandCode);
 
-			return blpcomponentdto;
 		}
 		catch (final CMSItemNotFoundException e)
 		{
-			// YTODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error("Could not find landing page for the brand" + e.getMessage());
+		}
+		catch (final Exception ex)
+		{
+			LOG.error("Exception occured while populating data" + ex.getMessage());
 		}
 
-		return null;
+		return blpcomponentdto;
 	}
 
 	/*

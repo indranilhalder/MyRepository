@@ -47,14 +47,14 @@
 	<div class="row header-row"></div>
 	<c:choose>
 		<c:when test="${empty showOnlySiteLogo }">
-			<div class="banner">
-			<div class="content" id="latestOffersContent"></div>
+			<%--<div class="banner">
+			 <div class="content" id="latestOffersContent"></div>
 				<span class="toggle desktop helpmeshopbanner latestOffersBanner"><p>${headerConciergeTitle}</p></span> 
 				
-				<%-- <cms:pageSlot position="HeaderLinks" var="link">
-					<cms:component component="${link}" element="" />
-				</cms:pageSlot> --%>
-			</div>
+				<!-- <cms:pageSlot position="HeaderLinks" var="link"> -->
+					<!--	<cms:component component="${link}" element="" />-->
+				<!--	</cms:pageSlot> -->
+			</div> --%>
 		</c:when>
 		<c:otherwise>
 			<c:if test="${empty hideSecureTransaction}">
@@ -67,7 +67,14 @@
 
 
 	<div class="content">
-
+	<!-- Luxury tab	 starts-->
+						<div id="flip-tabs" >				
+							<ul id="flip-navigation" >  
+					            <li class="selected"><a href="/" id="tab-1" >MARKETPLACE</a></li>
+					            <li><a href="${luxuryHost}" id="tab-2" target="_blank">LUXURY</a></li>  
+					        </ul> 
+					    </div>
+	 <!-- Luxury tab	 ends-->
 		<div class="top">
 			<c:if test="${empty showOnlySiteLogo }">
 				<div class="toggle">
@@ -78,16 +85,16 @@
 				<c:if test="${empty showOnlySiteLogo }">
 					<div class="left">
 						<!-- Luxury tab	 starts-->
-						<div id="flip-tabs" >				
+						<%-- <div id="flip-tabs" >				
 							<ul id="flip-navigation" >  
 					            <li class="selected"><a href="/" id="tab-1" >MARKETPLACE</a></li>
 					            <li><a href="${luxuryHost}" id="tab-2" >LUXURY</a></li>  
 					        </ul> 
-					    </div>
+					    </div> --%>
 				        <!-- Luxury tab	 ends-->
 						<ul>
-							<li><a href="<c:url value="/helpservices"/>"><spring:theme
-										code="header.help&Services" /></a></li>
+							<%-- <li><a href="<c:url value="/helpservices"/>"><spring:theme
+										code="header.help&Services" /></a></li> --%>
 						</ul>
 						
 				   </div>      

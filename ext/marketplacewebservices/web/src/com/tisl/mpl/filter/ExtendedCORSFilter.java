@@ -3,6 +3,9 @@
  */
 package com.tisl.mpl.filter;
 
+import de.hybris.platform.core.Registry;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -37,6 +40,7 @@ public class ExtendedCORSFilter extends CORSFilter
 
 	private CORSRequestHandler handler;
 	private CORSConfiguration config;
+
 
 	@Override
 	public CORSConfiguration getConfiguration()
@@ -76,19 +80,24 @@ public class ExtendedCORSFilter extends CORSFilter
 			else if (type.equals(CORSRequestType.PREFLIGHT))
 			{ //Added
 				this.handler.handlePreflightRequest(request, response);
-				if (request.getMethod().equalsIgnoreCase("OPTIONS"))
+				if (getConfigurationService().getConfiguration() != null
+						&& getConfigurationService().getConfiguration().getString("allow.preflight.request").equalsIgnoreCase("true"))
 				{
-					try
+					if (request.getMethod().equalsIgnoreCase("OPTIONS"))
 					{
-						response.getWriter().print("OK");
-						response.getWriter().flush();
+						try
+						{
+							response.getWriter().print("OK");
+							response.getWriter().flush();
+						}
+						catch (final IOException e)
+						{
+							e.printStackTrace();
+						}
 					}
-					catch (final IOException e)
-					{
-						e.printStackTrace();
-					}
+					//End
 				}
-				//End
+
 			}
 			else if (this.config.allowGenericHttpRequests)
 			{
@@ -164,4 +173,10 @@ public class ExtendedCORSFilter extends CORSFilter
 			throw new ServletException("Cannot filter non-HTTP requests/responses");
 		}
 	}
+
+	protected ConfigurationService getConfigurationService()
+	{
+		return Registry.getApplicationContext().getBean("configurationService", ConfigurationService.class);
+	}
+
 }

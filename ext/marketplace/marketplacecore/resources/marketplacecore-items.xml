@@ -391,6 +391,9 @@
 			generate="true" dynamic="true">
 			<value code="tship" />
 			<value code="sship" />
+			<!-- us-10: added by i324321 start -->
+ 			<value code="both" />
+ 			<!-- added by i324321 end -->
 		</enumtype>
 
 		<enumtype generate="true" code="SwatchColorEnum" autocreate="true"
@@ -748,6 +751,7 @@
 			<value code="ERROR"></value>
 		</enumtype>
 
+
 		<!-- Product Feature Enum Ends -->
 
 		<!-- TPR-627 , TPR-622 ENUM added --> 
@@ -758,16 +762,64 @@
 			<value code="true" />
 			<value code="false" />
 		</enumtype>
-		
+				
 		<!-- For Luxury Products -->
-
         <enumtype code="luxIndicatorEnum" autocreate="true" generate="true" dynamic="true">
+            <value code="marketplace" />
+			<value code="luxury" />
 		</enumtype>
 
+
+<!-- us-10: added by i324321 start -->
+ 		<enumtype code="deliveryFulfillModeByP1Enum" autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="tship" />
+ 			<value code="sship" />
+ 		</enumtype>
+ 		<enumtype code="returnFulfillModeEnum"       autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="tship" />
+ 			<value code="sship" />
+ 			<value code="both" />
+ 		</enumtype>
+ 		<enumtype code="returnFulfillModeByP1Enum"   autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="tship" />
+ 			<value code="sship" />
+ 		</enumtype>
+ 		<enumtype code="giftWrappableEnum"           autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="yes" />
+ 			<value code="no" />
+ 		</enumtype>
+ 		<enumtype code="returnAtStoreEligibleEnum"   autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="yes" />
+ 			<value code="no" />
+ 		</enumtype>
+ 		<enumtype code="isFragileEnum"               autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="yes" />
+ 			<value code="no" />
+ 		</enumtype>
+ 		<enumtype code="isPreciousEnum"              autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="yes" />
+ 			<value code="no" />
+ 		</enumtype>
+ 		<enumtype code="mediationRequiredEnum"       autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="yes" />
+ 			<value code="no" />
+ 		</enumtype>
+ 		<enumtype code="scheduledDeliveryEnum"       autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="yes" />
+ 			<value code="no" />
+ 		</enumtype>
+ 		<!-- added by i324321 end -->
 	</enumtypes>
-
-
-
+		<!-- Product Feature Enum Ends -->
 
 
 
@@ -1590,7 +1642,7 @@
 							<attribute qualifier='categoryId' type="java.lang.String">
 						<description>Seo Content unique Id</description>
 						<modifiers read="true" write="true" optional="true"
-							unique="true" />
+							unique="false" />
 						<persistence type="property">
 									</persistence>
 					</attribute>
@@ -1824,6 +1876,28 @@
 							unique="false" />
 						<persistence type="property"></persistence>
 					</attribute>
+					<!-- Add Size Guide Columns for Fashion Accessories START:::: -->
+					<attribute qualifier="cmsBeltSize" type="java.lang.String">
+						<description>Belt Size (cms)</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="inchesBeltSize" type="java.lang.String">
+						<description>Belt Size (inches)</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="cmsWaistSize" type="java.lang.String">
+						<description>Waist size (cms)</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="inchesWaistSize" type="java.lang.String">
+						<description>Waist size (in inches)</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="inchesBeltLength" type="java.lang.String">
+						<description>Belt Length (inches)</description>
+						<persistence type="property" />
+					</attribute>
+					<!-- Add Size Guide Columns for Fashion Accessories END:::: -->
 				</attributes>
 			</itemtype>
 
@@ -1947,6 +2021,58 @@
 							unique="false" />
 						<persistence type='property' />
 					</attribute>
+					<!-- added by i324321 start -->
+ 					<attribute type="deliveryFulfillModeByP1Enum" qualifier="deliveryFulfillModeByP1">
+ 						<description>Rich Attribute:- deliveryModes/FulfilledBy Priority 1</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type="property"/>
+ 					</attribute>
+ 					<attribute type="returnFulfillModeEnum" qualifier="returnFulfillMode">
+ 						<description>Rich Attribute:- return Modes/ Fulfilled by</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type="property"/>
+ 					</attribute>
+ 					<attribute type="returnFulfillModeByP1Enum" qualifier="returnFulfillModeByP1">
+ 						<description>Rich Attribute:- return Modes/FulfilledBy Priority 1</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type="property" />
+ 					</attribute>
+ 					<attribute type="java.lang.Integer" qualifier="sellerHandlingTime">
+ 						<description>Rich Attribute:- Seller Handling Time</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type="property" />
+ 					</attribute>
+ 					<attribute type="giftWrappableEnum" qualifier="giftWrappable">
+ 						<description>Rich Attribute:- Gift Wrappable</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type='property' />
+ 					</attribute>
+ 					<attribute type="returnAtStoreEligibleEnum" qualifier="returnAtStoreEligible">
+ 						<description>Rich Attribute:- Return at Store Eligible</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type='property' />
+ 					</attribute>
+ 					<attribute type="isFragileEnum" qualifier="isFragile">
+ 						<description>Rich Attribute:- Fragile</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type='property' />
+ 					</attribute>
+ 					<attribute type="isPreciousEnum" qualifier="isPrecious">
+ 						<description>Rich Attribute:- Precious</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type='property' />
+ 					</attribute>
+ 					<attribute type="mediationRequiredEnum" qualifier="mediationRequired">
+ 						<description>Rich Attribute:- Mediation Required</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type='property' />
+ 					</attribute>
+ 					<attribute type="scheduledDeliveryEnum" qualifier="scheduledDelivery">
+ 						<description>Rich Attribute:- is scheduled delivery eligible</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type='property' />
+ 					</attribute>			
+ 					<!-- added by i324321 end -->	
 					<attribute type="typeOfItem1Enum" qualifier="typeOfItem1">
 						<description>Rich Attribute:- typeOfItem1</description>
 						<modifiers read="true" write="true" optional="true"
@@ -3995,6 +4121,13 @@
 						<persistence type="property" />
 					</attribute>
 					
+					<attribute type="java.lang.String" qualifier="videoSectionHeading">
+						<modifiers read="true" write="true" search="true"
+							unique="true" optional="true" />
+						<description>Section heading of the video to be shown on Luxury Homepage</description>
+						<persistence type="property" />
+					</attribute>
+					
 				</attributes>
 			</itemtype>
 			
@@ -4554,6 +4687,52 @@
 
 
 			</itemtype>
+			
+<!-- 			luxury pdp question -->
+                  <itemtype code="LuxuryPdpQuestionProcess" extends="StoreFrontCustomerProcess"
+				autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.core.jalo.LuxuryPdpQuestionProcess">
+				<description>Represents process that is used for "Question about this item in luxury PDP page" in the contact us page</description>
+				<attributes>
+					<attribute qualifier="message" type="java.lang.String">
+						<persistence type="property" />
+						<description>Message given by the customer</description>
+					</attribute>
+					<attribute qualifier="productCode" type="java.lang.String">
+						<persistence type="property" />
+						<description>product code given by the customer</description>
+					</attribute>
+		
+					<attribute qualifier="attachedFileName" type="java.lang.String">
+						<persistence type="property" />
+						<description>Email attachment name</description>
+					</attribute>
+
+					<attribute qualifier="issueDetails" type="java.lang.String">
+						<persistence type="property" />
+						<description>Email attachment name</description>
+					</attribute>
+
+					<attribute qualifier="customerEmailId" type="java.lang.String">
+						<persistence type="property" />
+						<description>Customer Email Id</description>
+					</attribute>
+					<attribute qualifier="issueType" type="java.lang.String">
+						<persistence type="property" />
+						<description>Issue Type</description>
+					</attribute>
+					<attribute qualifier="emailTo" type="java.lang.String">
+						<persistence type="property" />
+						<description>Our Email Id</description>
+					</attribute>
+
+				</attributes>
+
+
+
+			</itemtype>
+
+
 
 
 			<itemtype code="OrderPlacedFeedbackProcess" extends="StoreFrontCustomerProcess"
@@ -8526,7 +8705,7 @@
 						<key attribute="fulfillmentType" />
 						<key attribute="transportMode" />
 					</index>
-				</indexes>
+				</indexes> 
 			</itemtype>
 
 
