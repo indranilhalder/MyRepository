@@ -1295,6 +1295,10 @@
 					<index name="MEDIASIDIDX">
 						<key attribute="owner" />
 					</index>
+					<index name="IDX_MEDIAS_CT">
+						<key attribute="catalogVersion" />
+						<key attribute="itemtype" />
+					</index>
 				</indexes>
 			</itemtype>
 
@@ -2843,6 +2847,13 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
+				<indexes>
+					<index name="IDX_PRODUCTS_CTA">
+						<key attribute="catalogVersion" />
+						<key attribute="approvalStatus" />
+						<key attribute="itemtype" />
+					</index> 
+				</indexes>
 			</itemtype>
 			<itemtype code="Customer" generate="false" autocreate="false">
 				<attributes>
@@ -4599,6 +4610,13 @@
 						<persistence type='property' />
 					</attribute>
 				</attributes>
+				<indexes>
+					<index name="IDEX_PROCESSES_AST">
+							<key attribute="awbNumber" />
+							<key attribute="shipmentStatus" />
+							<key attribute="itemtype" />	
+					</index>
+				</indexes>
 			</itemtype>
 			<itemtype code="OrderRefundProcess" extends="OrderProcess"
 				autocreate="true" generate="true"
@@ -5465,7 +5483,15 @@
 					</index>
 					<index name="BuyBox_USSID_IDX">
 						<key attribute="sellerArticleSKU" />
-					</index> 
+					</index>
+					<index name="IDX_MPLBUYBOX_PDA">
+						<key attribute="product" />
+						<key attribute="delisted" />
+						<key attribute="available" />
+						<key attribute="sellerStartDate" />
+						<key attribute="price" />
+						<key attribute="itemtype" />
+					</index>  
 				</indexes>
 			</itemtype>
 
@@ -6210,6 +6236,10 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
+				<indexes><index name="IDX_ORDERHISTORY_LINEID">
+						<key attribute="lineId" />
+					</index>
+				</indexes>
 			</itemtype>
 		</typegroup>
 
@@ -7190,6 +7220,11 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
+				<indexes>
+					<index name="MPLJUSPAYEBS_IDX" unique="false">
+						<key attribute="itemtype" />
+					</index>
+				</indexes>
 			</itemtype>
 			<itemtype code="FraudReport" autocreate="false" generate="true">
 				<attributes>
@@ -8624,7 +8659,19 @@
 			</itemtype>
 			</typegroup>
 		
-    
+		    <typegroup name="ItemSyncTimestampGroup">
+					<itemtype code="ItemSyncTimestamp" autocreate="false"
+						generate="false">
+						<indexes>
+							<index name="IDX_ITEMSYNCTIMESTAMPS_CPKC">
+								<key attribute="syncJob" />
+								<key attribute="targetVersion" />
+								<key attribute="sourceItem" />
+								<key attribute="itemtype" />
+							</index>
+						</indexes>
+					</itemtype>
+				</typegroup>
      
 	</itemtypes>
 	
