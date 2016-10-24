@@ -1885,5 +1885,16 @@
 		 
 	<bean id="businessContentImportDao" class="com.tisl.mpl.businesscontentimport.BulkContentCreationDaoImpl" >
 		</bean>
+	<!-- TPR-3487 -->	
+	<bean id="DeliveryCostInterceptor" class="com.tisl.mpl.interceptor.SaveDeliveryCostInterceptor" />
+
+	<bean id="SaveDeliveryCostInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="DeliveryCostInterceptor" />
+		<property name="typeCode" value="AbstractOrder" />	
+	</bean>	
+	<!-- TPR-3487 -->		
+		
+		
 </beans>
 
