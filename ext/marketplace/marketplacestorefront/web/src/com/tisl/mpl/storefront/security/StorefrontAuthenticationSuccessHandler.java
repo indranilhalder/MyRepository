@@ -347,7 +347,9 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 		final UserModel currentUser = extUserService.getCurrentUser();
 		final CustomerModel currCust = (CustomerModel) extUserService.getCurrentUser();
 
-		if (request.getCookies() != null)
+		//TISLUX-1352
+		if (request.getCookies() != null && null != getUserCookieGenerator() && null != getUserCookieGenerator().getCookieName()
+				&& null != getUserTypeCookieGenerator() && null != getUserTypeCookieGenerator().getCookieName())
 		{
 			final String userCookieName = getUserCookieGenerator().getCookieName();
 			final String userTypeCookieName = getUserTypeCookieGenerator().getCookieName();
@@ -394,7 +396,11 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 		if (!userTypeCookieSet && !userCookieSet)
 		{
 			LOG.info("generating new Cookies");
-			getUserCookieGenerator().addCookie(response, currentUser.getUid());
+			//TISLUX-1352
+			if (null != getUserCookieGenerator())
+			{
+				getUserCookieGenerator().addCookie(response, currentUser.getUid());
+			}
 			if (extUserService.isAnonymousUser(currentUser))
 			{
 				userType = ANONYMOUS;
@@ -403,7 +409,11 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 			{
 				userType = REGISTERED;
 			}
-			getUserTypeCookieGenerator().addCookie(response, userType);
+			//TISLUX-1352
+			if (null != getUserCookieGenerator())
+			{
+				getUserTypeCookieGenerator().addCookie(response, userType);
+			}
 		}
 
 	}
