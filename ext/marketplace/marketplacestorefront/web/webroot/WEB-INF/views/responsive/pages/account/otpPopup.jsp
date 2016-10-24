@@ -3,63 +3,60 @@
 <c:if test="${not empty stringMessage}">
 ${stringMessage}
 </c:if>
-<c:if
-	test="${empty stringMessage}">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<form class="form-horizontal otpForm">
-				<div class="modal-body">
-					<button type="button" class="close" data-dismiss="modal"
-						aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<h2>
-						<spring:theme code="text.accountOrderDetails.otp.lable" />
-					</h2>
-					
-					<div class="row messageSpace">
-					<spring:theme code="text.accountOrderDetails.otpPopup.message"
-						arguments="${phoneNumber}"/>
-					</div>
-					<div class="row">
-						<div class="col-md-6 col-sm-6">
-							<label for="otp" class="lableSpace"><spring:theme
-									code="text.accountOrderDetails.otp.lable" />*</label> <input
-								type="text" class="form-control textOTP" id="OTP"
-								placeholder="******">
-							<div class="error_text otpError"></div>
-							<div class="error_text"></div>
-						</div>
-						<div class="col-md-6 col-sm-6 otpMessage">
-							<span style="font-size: 11px"> <spring:theme
-									code="text.accountOrderDetails.otpPopup.newOTPMsgBefore" /> <a
-								href="#" onclick="newOTPGenerate('${orderCode}')"
-								style="color: #C9C923;font-size: 14px;">here</a> <spring:theme
-									code="text.accountOrderDetails.otpPopup.newOTPMsg" />
-							</span>
-						</div>
-					</div>
-				</div>
-				<p style="clear: both"></p>
+<c:if test="${empty stringMessage}">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form class="form-horizontal otpForm">
+					<div class="modal-body">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h2 style="font-size: 23px;">
+							<spring:theme code="text.accountOrderDetails.otp.lable" />
+						</h2>
 
-				<p style="clear: both;"></p>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-primary blue"
-						onclick="generateOTP('${orderCode}')">SUBMIT</button>
-				</div>
-			</form>
+						<div class="row messageSpace">
+							<spring:theme code="text.accountOrderDetails.otpPopup.message"
+								arguments="${phoneNumber}" />
+						</div>
+						<div class="row clearfix">
+							<div class="col-md-6 col-sm-6">
+								<label for="otp" class="lableSpace"><spring:theme
+										code="text.accountOrderDetails.otp.lable" />*</label> <input
+									type="text" class="form-control textOTP" id="OTP"
+									placeholder="******">
+								<div class="error_text otpError"></div>
+								<div class="error_text"></div>
+							</div>
+							<div class="col-md-6 col-sm-6 otpMessage">
+								<span style="font-size: 9px"> <spring:theme
+										code="text.accountOrderDetails.otpPopup.newOTPMsgBefore" /> <a
+									href="#" onclick="newOTPGenerate('${orderCode}')"
+									style="color: #ff9900; font-size: 11px;text-decoration: underline;">here</a> <spring:theme
+										code="text.accountOrderDetails.otpPopup.newOTPMsg" />
+								</span>
+							</div>
+						</div>
+						<div class="col-md-12 clearfix">
+							<button type="button" class="btn btn-primary submitOrange"
+								onclick="submitOTP('${orderCode}')">SUBMIT</button>
+						</div>
+					</div>
+					<p style="clear: both;"></p>
+
+				</form>
+			</div>
 		</div>
-	</div>
 	<script>
 $(document).ready(function(){
-
 	$(".close,.wrapBG").click(function() {
-		$("#changeAddressPopup,#otpPopup").hide();
+		$("#changeAddressPopup, #otpPopup").hide();
 		$(".wrapBG").hide();
 	});
 		
 });
-function generateOTP(orderId){
+function submitOTP((orderCode){
 	 $(".otpError").hide();
     $(".serverError").hide();
     
@@ -76,7 +73,7 @@ function generateOTP(orderId){
 		$.ajax({
 			type : "GET",
 			url : ACC.config.encodedContextPath + "/my-account/validationOTP",
-			data : "orderId=" + orderId + "&otpNumber="+$("#OTP").val(),
+			data : "orderCode=" + orderCode + "&otpNumber="+$("#OTP").val(),
 			success : function(response) {
 					$(".otpError").show();
 				if(response=="INVALID"){	
@@ -105,23 +102,41 @@ function generateOTP(orderId){
 
 </script>
 
-<style>
-.otpForm .messageSpace{
-550065
-	padding: 10px;
+	<style>
+.otpForm .messageSpace {
+	padding: 20px 5px;
+	font-size: 10px;
+	font-weight: 100;
+	line-height: 20px;
 }
-.otpForm .lableSpace{
+
+.otpForm .lableSpace {
 	padding-bottom: 4px;
 }
-.otpForm input[type="text"]{
+
+.otpForm input[type="text"] {
 	width: 100%;
 }
-.otpForm .otpMessage{
-	padding: 18px;
+
+.otpForm .otpMessage {
+	font-size: 10px;
+	line-height: 13px;
+	padding: 14px 0px;
 }
+
 .otpForm button.blue:hover {
-    color: #fff;
-    background-color: #a9143c;
+	color: #fff;
+	background-color: #a9143c;
+}
+
+.otpForm .submitOrange {
+	background: #A9143C;
+	color: #fff;
+	height: 35px;
+}
+
+#otpPopup .modal-dialog {
+	padding: 20px 20px 30px 20px; 
 }
 </style>
 </c:if>
