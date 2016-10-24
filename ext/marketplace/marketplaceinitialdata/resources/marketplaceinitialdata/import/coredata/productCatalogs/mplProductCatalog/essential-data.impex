@@ -116,6 +116,12 @@ INSERT_UPDATE MediaFormat;qualifier[unique=true];name
 ;288Wx288H;666Wx607H
 ;340Wx160H;340Wx160H
 ;160Wx46H;160Wx46H
+;1316Wx1468H;1316Wx1468H
+;320Wx357H;320Wx357H
+;432Wx482H;432Wx482H
+;58Wx65H;58Wx65H
+;658Wx734H;658Wx734H
+;97Wx108H;97Wx108H
 
 INSERT_UPDATE ProductTaxGroup;code[unique=true]
 ;jp-vat-full
@@ -292,3 +298,42 @@ INSERT_UPDATE globalIdentifierType;code[unique=true];name[lang=en]
 ;apn;APN
 ;alternateEAN;AlternateEAN
 ;internalWMPID;InternalWMPID
+
+# us-10: added by i324321 start #
+ INSERT_UPDATE deliveryFulfillModeByP1Enum;code[unique=true];name[lang=en]
+ ;tship;TShip;
+ ;sship;SShip;
+ 
+ INSERT_UPDATE returnFulfillModeEnum;code[unique=true];name[lang=en]
+ ;tship;TShip;
+ ;sship;SShip;
+ ;both;Both;
+ 
+ INSERT_UPDATE returnFulfillModeByP1Enum;code[unique=true];name[lang=en]
+ ;tship;TShip;
+ ;sship;SShip;
+ 
+ INSERT_UPDATE giftWrappableEnum;code[unique=true];name[lang=en]
+ ;yes;Yes;
+ ;no;No;
+ 
+ INSERT_UPDATE returnAtStoreEligibleEnum;code[unique=true];name[lang=en]
+ ;yes;Yes;
+ ;no;No;
+ 
+ INSERT_UPDATE isFragileEnum;code[unique=true];name[lang=en]
+ ;yes;Yes;
+ ;no;No;
+ 
+ INSERT_UPDATE isPreciousEnum;code[unique=true];name[lang=en]
+ ;yes;Yes;
+ ;no;No;
+ 
+ INSERT_UPDATE mediationRequiredEnum;code[unique=true];name[lang=en]
+ ;yes;Yes;
+ ;no;No;
+ 
+ INSERT_UPDATE scheduledDeliveryEnum;code[unique=true];name[lang=en]
+ ;yes;Yes;
+ ;no;No;
+ # added by i324321 end # 
