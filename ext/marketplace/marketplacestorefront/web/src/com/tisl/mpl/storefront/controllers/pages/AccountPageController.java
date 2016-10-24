@@ -758,7 +758,15 @@ public class AccountPageController extends AbstractMplSearchPageController
 			model.addAttribute(ModelAttributetConstants.PAGE_SIZE, pageSize);
 
 			// LW-225,230
-			model.addAttribute(ModelAttributetConstants.IS_LUXURY, luxFlag);
+			if (CollectionUtils.isEmpty(orderHistoryList))
+			{
+				model.addAttribute(ModelAttributetConstants.EMPTY, luxFlag);
+			}
+			else
+			{
+				model.addAttribute(ModelAttributetConstants.IS_LUXURY, luxFlag);
+			}
+
 
 		}
 		catch (
@@ -4649,7 +4657,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 					}
 				}
-				
+
 				model.addAttribute("showSizeMap", map);
 			}
 			else
