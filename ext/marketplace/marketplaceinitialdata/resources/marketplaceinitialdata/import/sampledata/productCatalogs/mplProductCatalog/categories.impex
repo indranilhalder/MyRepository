@@ -798,7 +798,6 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalog
 #;MSH1221101;Software;MSH1221;mplProductCatalog:Staged;$uidGroup
 #;MSH1221102;Accessories;MSH1221;mplProductCatalog:Staged;$uidGroup
 
-
 ####### Categories only For Microsite :::: SART
 INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalogVersion;allowedPrincipals(uid)
 ;SSH1;SSH1;;mplProductCatalog:Staged;$uidGroup 

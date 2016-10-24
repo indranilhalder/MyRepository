@@ -464,6 +464,11 @@
 		<property name="euroSize" type="String"/>
 		<property name="usSize" type="String"/>
 		<property name="age" type="String"/>
+		<property name="cmsBeltSize" type="String" />
+		<property name="inchesBeltSize" type="String" />
+		<property name="cmsWaistSize" type="String" />
+		<property name="inchesWaistSize" type="String" />
+		<property name="inchesBeltLength" type="String" />
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData">

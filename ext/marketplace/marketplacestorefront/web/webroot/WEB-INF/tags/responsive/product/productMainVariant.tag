@@ -116,7 +116,7 @@ var productSizeVar = '${productSize}';
 					</c:otherwise>
 				</c:choose>
 
-				<c:if test="${product.rootCategory=='Electronics'}">
+				<c:if test="${product.rootCategory=='Electronics' || product.rootCategory=='Watches'}">
 					<c:set var="notApparel" value="true" />
 				</c:if>
 				<c:if test="${not empty notApparel}">
@@ -233,6 +233,7 @@ share mobile -->
 <!-- currentcolor refers to the variable where the current color of the selected variant is stored -->
 <!-- currentcolor is populated on selecting color swatch -->
 <c:if test="${noVariant!=true&&notApparel!=true}">
+<c:if test="${showSizeGuideForFA eq true}">
 <div class="size" style="font-size: 12px;">
 
 
@@ -316,13 +317,13 @@ share mobile -->
 						</c:otherwise>
 					</c:choose>
 				</c:forEach>
-			</c:forEach>
+			</c:forEach>			
+		
 		</ul>
-		
-		
+		<!-- Size guide Pop-up -->
 		<!-- <span id="selectSizeId" style="display: none;color: red">Please select a size!</span> -->
 		<!-- End Size guide Pop-up -->
-	</div>
+	</div></c:if> 
 	</c:if>
 
 <div id="allVariantOutOfStock" style="display: none;">
