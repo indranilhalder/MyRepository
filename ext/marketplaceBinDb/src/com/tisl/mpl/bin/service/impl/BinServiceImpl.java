@@ -76,8 +76,8 @@ public class BinServiceImpl implements BinService
 			binError.setCustomerId(mplCustomerID);
 			getModelService().save(binError);
 		}
-		else if (StringUtils.isNotEmpty(binmodel.getBinNo()) && !binmodel.getCardType().equalsIgnoreCase(cardType)
-				&& isErrorCreation) // SONAR FIX
+		else if (null != binmodel && StringUtils.isNotEmpty(binmodel.getBinNo())
+				&& !binmodel.getCardType().equalsIgnoreCase(cardType) && isErrorCreation) // SONAR FIX
 		{
 			final BinErrorModel binError = getModelService().create(BinErrorModel.class);
 			binError.setBin(bin);

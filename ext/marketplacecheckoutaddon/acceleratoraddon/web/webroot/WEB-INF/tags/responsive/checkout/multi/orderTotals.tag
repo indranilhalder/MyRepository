@@ -31,7 +31,7 @@
 
 	</li> 
     </c:if>
-    	<li id="promotionApplied" >
+    <li id="promotionApplied" >
 		<span><spring:theme code="basket.page.totals.savings"/></span>
 		<span id="promotion" style="float: right"><format:price priceData="${cartData.totalDiscounts}"/> 	</span>
 
@@ -74,14 +74,13 @@
 	<button class="remove-coupon-button"></button>
 		<span class="couponSpan"><spring:theme code="basket.page.totals.coupons"/></span>
 		<span id="couponValue" style="float: right"> </span>
-<input type="hidden" id="couponRelContent" value="<spring:theme code="coupon.release.content"/>">
+		<input type="hidden" id="couponRelContent" value="<spring:theme code="coupon.release.content"/>">
 	</li>
     
     
 	<li class="total" id="total">
 		<div id="totalPriceConvChargeId">
 			<spring:theme code="basket.page.totals.total"/> 
-			
 			<span id="totalWithConvField" style="float: right"><format:price priceData="${cartData.totalPrice}"/></span>
 		</div>
 	</li>
@@ -111,16 +110,31 @@
 	<h2><spring:theme code="order.order.totals"/></h2>
 <ul class="totals">
 	<li class="subtotal">
-		<spring:theme code="basket.page.totals.subtotal"/> 
+		<span class="subTotalSpan"><spring:theme code="basket.page.totals.subtotal"/> </span>
 		<span class="amt">
 			<ycommerce:testId code="Order_Totals_Subtotal">
 				<format:price priceData="${orderData.subTotal}"/>
 			</ycommerce:testId>
 		</span>
 	</li>
+	<%-- Commented due to making confusion in the Payment page calculation --%>
+	<!-- Tag used for Delivery Mode and Delivery Address Page promotion display TISBOX-1618-->
+	<c:if test="${orderData.totalDiscounts.value > 0}">
+	<li id="cartPromotionApplied">
+		<span class="cartpromotionSpan"><spring:theme code="basket.page.totals.savings"/></span>
+		<span id="cartPromotion" style="float: right"> - <format:price priceData="${orderData.totalDiscounts}"/> 	</span>
+
+	</li> 
+    </c:if> 
+	<!-- Tag used for Payment Page promotion display-->
+	<li id="promotionApplied" >
+		<span><spring:theme code="basket.page.totals.savings"/></span>
+		<span id="promotion" style="float: right"> - <format:price priceData="${orderData.totalDiscounts}"/> 	</span>
+
+	</li> 
 	<c:if test="${not empty orderData.deliveryCost}">
 		<li class="shipping">
-			<spring:theme code="basket.page.totals.delivery"/>
+			<span class="shippingSpan"><spring:theme code="basket.page.totals.delivery"/></span>
 			<span id="deliveryCostSpanId">
 				<ycommerce:testId code="Order_Totals_Delivery">
 					<format:price priceData="${orderData.deliveryCost}" displayFreeForZero="TRUE"/>
@@ -130,31 +144,15 @@
 	</c:if>
 	
 	<li id="convChargeFieldId">
-		<spring:theme code="basket.page.totals.convenience"/>
+		<span><spring:theme code="basket.page.totals.convenience"/></span>
 		<span id="convChargeField" style="float: right">
 		</span>
 	</li>
-    <%-- Commented due to making confusion in the Payment page calculation --%>
-	<!-- Tag used for Delivery Mode and Delivery Address Page promotion display TISBOX-1618-->
-	<c:if test="${orderData.totalDiscounts.value > 0}">
-	<li id="cartPromotionApplied">
-		<spring:theme code="basket.page.totals.savings"/>
-		<span id="cartPromotion" style="float: right"> - <format:price priceData="${orderData.totalDiscounts}"/> 	</span>
-
-	</li> 
-    </c:if> 
-	<!-- Tag used for Payment Page promotion display-->
-	<li id="promotionApplied" >
-		<spring:theme code="basket.page.totals.savings"/>
-		<span id="promotion" style="float: right"> - <format:price priceData="${orderData.totalDiscounts}"/> 	</span>
-
-	</li> 
-     
     <li id="couponApplied" >
 	<button class="remove-coupon-button"></button>
-		<spring:theme code="basket.page.totals.coupons"/>
+		<span class="couponSpan"><spring:theme code="basket.page.totals.coupons"/></span>
 		<span id="couponValue" style="float: right"> </span>
-	<input type="hidden" id="couponRelContent" value="<spring:theme code="coupon.release.content"/>">
+		<input type="hidden" id="couponRelContent" value="<spring:theme code="coupon.release.content"/>">
 	</li>
     
     
@@ -167,7 +165,7 @@
 	
 	<c:if test="${orderData.net && orderData.totalTax.value > 0 && showTax}">
 		<li class="tax">
-			<spring:theme code="basket.page.totals.netTax"/>
+			<span><spring:theme code="basket.page.totals.netTax"/></span>
 			<span>
 				<format:price priceData="${orderData.totalTax}"/>
 			</span>

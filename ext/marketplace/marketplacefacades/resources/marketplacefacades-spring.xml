@@ -1518,6 +1518,12 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		class="com.tisl.mpl.facade.config.MplConfigFacadeImpl">
 	</bean>
 	
+	<!-- Added By SAP for prodcut related facade START-->
+ 	<alias name="mplProductFacade" alias="mplProductFacade"/>
+ 	<bean id="mplProductFacade"  class="com.tisl.mpl.facade.product.impl.MplProductFacadeImpl">
+ 		<property name="mplProductService" ref="mplProductService"></property>
+ 	</bean>
+ 	<!-- Added By SAP for prodcut related facade END-->
 	
 	<bean id="latestOffersFacade"
 		class="com.tisl.mpl.facade.latestoffers.impl.LatestOffersFacadeImpl">

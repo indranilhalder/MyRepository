@@ -73,17 +73,17 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 				if (target != null && target.getOrderDiscounts().getDoubleValue().doubleValue() > 0.0)
 				{
 
-					final String formate = formatter.format(100 * (target.getTotalDiscounts().getDoubleValue().doubleValue() / (target
-							.getSubTotal().getDoubleValue().doubleValue() - target.getTotalDiscounts().getDoubleValue().doubleValue())));
-					target.setDiscountPercentage(formate);
-				}
-				else if (target != null)
-				{
-
-					final String formate = formatter.format(100 * (target.getTotalDiscounts().getDoubleValue().doubleValue() / (target
+					final String formate = formatter.format(100 * (target.getOrderDiscounts().getDoubleValue().doubleValue() / (target
 							.getSubTotal().getDoubleValue().doubleValue())));
 					target.setDiscountPercentage(formate);
+
 				}
+				/*
+				 * else if (target != null) {
+				 *
+				 * final String formate = formatter.format(100 * (target.getTotalDiscounts().getDoubleValue().doubleValue()
+				 * / (target .getSubTotal().getDoubleValue().doubleValue()))); target.setDiscountPercentage(formate); }
+				 */
 
 				/* TPR-928 */
 				if (deliveryCost != null)
@@ -101,8 +101,7 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 
 						if (promotionResultModel.getCertainty().floatValue() == 1.0F
 								&& (promotion instanceof BuyAGetPromotionOnShippingChargesModel
-										|| promotion instanceof BuyAandBGetPromotionOnShippingChargesModel
-										|| promotion instanceof BuyAboveXGetPromotionOnShippingChargesModel))
+										|| promotion instanceof BuyAandBGetPromotionOnShippingChargesModel || promotion instanceof BuyAboveXGetPromotionOnShippingChargesModel))
 						{
 							isShippingPromoApplied = true;
 							break;

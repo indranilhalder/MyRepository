@@ -14,10 +14,41 @@
 <div class="tab-details">
 	<ycommerce:testId code="productDetails_content_label">
 		<ul>
-  			<%-- <li>${product.brand.brandname}</li> --%>
-  			<c:forEach var="classification" items="${mapConfigurableAttribute}">
-				   <li>${classification.key} - ${classification.value}</li>
-			</c:forEach>
+  			<input type="hidden" value="${productCategoryType}" id="productCategoryType"/>
+  			<c:choose>
+  				<c:when test="${'Clothing' eq product.rootCategory || 'Footwear' eq product.rootCategory || 'Accessories' eq product.rootCategory}">
+  					<c:forEach var="classification" items="${mapConfigurableAttributes}">
+				   		<c:choose>
+   							<c:when test="${not empty classification.value }">
+   						 		<li> ${classification.key} -
+   						 		<c:forEach var="classValue" items="${classification.value }">
+   						 			${classValue.key} &nbsp;&nbsp;${classValue.value}</li>
+   						 		 </c:forEach>
+   							</c:when>
+   						<c:otherwise>
+   						<li> ${classification.key}</li>
+   						</c:otherwise>	
+   						</c:choose>
+					</c:forEach>
+  				</c:when>
+  				<c:otherwise>
+  					<c:forEach var="classification" items="${mapConfigurableAttribute}">
+				   		<li>${classification.key} - ${classification.value}</li>
+					</c:forEach>
+  				</c:otherwise>
+  			</c:choose>
+  				
+  			
+  			<%-- <c:forEach var="classification" items="${mapConfigurableAttribute}">
+				   <c:choose>
+   					<c:when test="${not empty classification.value }">
+   						 <li> ${classification.key} - ${classification.value.key} ${classification.value.value}</li>
+   					</c:when>
+   					<c:otherwise>
+   						 <li> ${classification.key}</li>
+   					</c:otherwise>	
+   				</c:choose>
+			</c:forEach> --%>
   				<li><spring:theme code="product.listing.id"></spring:theme>${product.code}</li>
   		</ul>
 	</ycommerce:testId>

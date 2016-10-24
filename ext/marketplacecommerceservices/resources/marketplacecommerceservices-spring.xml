@@ -376,6 +376,13 @@
 		<!-- <property name="modelService" ref="modelService" /> -->
 	</bean>
 
+	<!-- Prodcut Service Implementation -->
+ 	<alias name="mplProductService" alias="mplProductService" />
+ 	<bean id="mplProductService"
+ 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplProductServiceImpl">
+ 		<property name="productDao" ref="productDao" />
+ 	</bean>
+
 	<!-- ============== Update Profile Service & DAO ============== -->
 	<bean id="mplCustomerProfileDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplCustomerProfileDaoImpl">
@@ -1885,5 +1892,16 @@
 		 
 	<bean id="businessContentImportDao" class="com.tisl.mpl.businesscontentimport.BulkContentCreationDaoImpl" >
 		</bean>
+	<!-- TPR-3487 -->	
+	<bean id="DeliveryCostInterceptor" class="com.tisl.mpl.interceptor.SaveDeliveryCostInterceptor" />
+
+	<bean id="SaveDeliveryCostInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="DeliveryCostInterceptor" />
+		<property name="typeCode" value="AbstractOrder" />	
+	</bean>	
+	<!-- TPR-3487 -->		
+		
+		
 </beans>
 

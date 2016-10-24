@@ -1580,11 +1580,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 *
+	 * 
 	 * @param bankName
-	 *
+	 * 
 	 * @return Boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1635,9 +1635,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Override
@@ -1801,7 +1801,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				{
 					final String bin = juspayCard.getCardIsin() != null ? juspayCard.getCardIsin()
 							: MarketplacecommerceservicesConstants.EMPTY;
-					BinModel binModel = getModelService().create(BinModel.class);
+					BinModel binModel = null;
 					try
 					{
 						//Added For TPR-1035

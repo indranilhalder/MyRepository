@@ -31798,6 +31798,24 @@ body.page-homepage .feature-collections{
     border-radius: 0;
     border: 1px solid #fff !important;
 }
+
+.product-facet .filter-strapcolor input.js-facet-colourbutton {
+    margin-left: 0;
+    margin-right: 0;
+    width: 25px !important;
+    height: 25px !important;
+    padding: 0 !important;
+    border-radius: 50%;
+}
+
+.product-facet .filter-dialColourWatches input.js-facet-colourbutton {
+    margin-left: 0;
+    margin-right: 0;
+    width: 25px !important;
+    height: 25px !important;
+    padding: 0 !important;
+    border-radius: 50%;
+}
 @media(max-width:650px){
 	.cart.wrapper .product-block li.item, .confirmation .product-block li.item{
 	padding: 10px 0;
@@ -49895,11 +49913,11 @@ width: auto;
     width: 29%;
   }
   .shop_the_look .shop_the_look_left .shop_the_look_section .carousel-component .owl-controls .owl-nav .owl-prev:after{
-  left: 62px;
+  left: 17px;
   font-size: 30px;
   }
   .shop_the_look .shop_the_look_left .shop_the_look_section .carousel-component .owl-controls .owl-nav .owl-next:after{
-  left: -88px;
+  left: 0px;
   font-size: 30px;
   }
   .shop_the_look .shop_the_look_left .shop_the_look_section .carousel-component .owl-controls{
@@ -49968,7 +49986,14 @@ width: auto;
 }
 .shop_the_look .shop_the_look_left .shop_the_look_section .carousel-component .owl-controls .owl-nav .owl-prev:after,
 .shop_the_look .shop_the_look_left .shop_the_look_section .carousel-component .owl-controls .owl-nav .owl-next:after{
-	    top: -18px;
+	    top: 0px;
+}
+.shop_the_look .shop_the_look_left .shop_the_look_section .carousel-component .product-tile{
+padding-left:0px;
+padding-right:0px;
+}
+body.template-pages-layout-newBrandLandingPageTemplate .owl-carousel, .feature-categories .carousel{
+	padding:0px;
 }
  /*  shop the look section end */
 /*  blog section start */
@@ -50990,6 +51015,7 @@ padding: 0 24px;
     margin: 0 0px 0px;
     order: -1;
     width: 100% !important;
+    margin-bottom:20px;
 }
 .shop_the_look .shop_the_look_left{
 	width:100%;
@@ -51057,7 +51083,8 @@ padding: 0 24px;
 @media (max-width: 600px){
 	.shop_the_look div.shop_the_look_section:nth-child(2){
 	margin: 0 40px 20px 50px;
-	    width: 100% !important;
+	   width: calc(100% - 90px) !important;
+    text-align: center;
 	}
 	.shop_the_look .shop_the_look_left  div.shop_the_look_section:nth-child(2){
 	margin:0;
@@ -51069,9 +51096,9 @@ padding: 0 24px;
 	    left: -4px;
     top: -86px;
 	}
-	.shop_the_look .shop_the_look_section .simple-banner-component {
+	/* .shop_the_look .shop_the_look_section .simple-banner-component {
 	padding-left: 14px;
-	}
+	} */
 }
 @media (max-width: 600px) and (min-width: 481px){
 .featured_collection .blp_featured_collection_wrapper .featured_collection_section .top-promos li{
@@ -51090,6 +51117,7 @@ padding: 0 24px;
 }
 .shop_the_look div.shop_the_look_section:nth-child(2){
 	margin: 0 40px 20px 0px;
+	width: 100% !important;
 }
 .shop_the_look .shop_the_look_section .simple-banner-component{
 	margin: 0 40px 20px;

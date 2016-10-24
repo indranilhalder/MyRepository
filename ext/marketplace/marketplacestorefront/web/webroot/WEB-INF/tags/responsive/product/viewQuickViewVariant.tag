@@ -165,6 +165,7 @@
 <!-- if no sizes are variant -->
 	
 <c:if test="${noVariant!=true&&notApparel!=true}"> 
+<c:if test="${showSizeGuideForFA eq true}">
 <c:choose>
 
 <c:when test="${selectedSize==null}"> 
@@ -273,7 +274,7 @@
 			
 		</div>
 	</form:form>
-	
+	</c:if>
 	
 </c:if>
 <input type="hidden" maxlength="10" size="1" id="sellerSelId" name="sellerId" value="${sellerID}" />
