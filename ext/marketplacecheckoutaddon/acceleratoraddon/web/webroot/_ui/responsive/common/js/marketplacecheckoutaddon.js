@@ -2352,6 +2352,7 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 	var zipcode = document.getElementsByName("postcode")[0].value;
 	var txtMobile = document.getElementsByName("MobileNo")[0].value;
 	var result=firstName.value;
+	$(".otherLandMarkError").hide();
 	 
 	if(result == null || result == "" )
 	{	
@@ -2370,8 +2371,21 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 	{
 		$("#firstnameError").hide();
 	}
-			
-	 result=lastName.value;
+	
+	result=$("#otherLandmark").val();
+	if(result != null){
+	   if(result.trim() == ''){
+  	        $(".otherLandMarkError").show();
+	  		$(".otherLandMarkError").text("Other LandMark cannot be allow  space");
+	  	    validate = false;
+  	     }else if(/[^a-zA-Z0-9]/.test(result)){
+  		      $(".otherLandMarkError").show();
+		  	  $(".otherLandMarkError").text("Other LandMark cannot be allow special characters");
+		  	 validate = false;
+  	  }
+    }
+	
+	   result=lastName.value;
 	if(result == null || result == "")
 	{	
 		$("#lastnameError").show();
