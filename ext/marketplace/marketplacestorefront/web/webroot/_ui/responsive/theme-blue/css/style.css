@@ -49915,6 +49915,8 @@ width: auto;
     line-height: 20px;
     color:#000;
     font-weight:normal;
+    padding-left: 20px;
+    padding-right: 20px;
  }
  .shop_the_look .shop_the_look_left .shop_the_look_section .carousel-component .owl-stage-outer .product-tile .details.short-info .brand{
  text-align:center;
@@ -49924,6 +49926,10 @@ width: auto;
     color:#000;
     font-weight:normal;
     margin:0;
+    line-height: 20px;
+ }
+ .shop_the_look .shop_the_look_left .shop_the_look_section .carousel-component .owl-stage-outer .product-tile .short-info{
+ margin-top: 10px;
  }
  .shop_the_look .shop_the_look_left .shop_the_look_section .carousel-component .owl-stage-outer .product-tile .short-info .color-swatch{
  display:none;
@@ -49999,7 +50005,7 @@ width: auto;
 .blog_content_blp{
 text-align:left;
 }
-.blog_content_blp .feature-collections h2{
+.blog_content_blp h2{
 	font-size: 24px;
     text-transform: uppercase;
     font-weight: bold;
@@ -50009,7 +50015,7 @@ text-align:left;
     margin:0;
     line-height:24px;
 }
-.blog_content_blp .feature-collections h3{
+.blog_content_blp h3{
 	margin: 15px 0;
     display: inline-block;
     width: 100%;
@@ -50022,13 +50028,13 @@ text-align:left;
     font-weight:normal;
     padding:0;
 }
-.blog_content_blp .feature-collections a{
+.blog_content_blp a{
 	font-size: 14px;
     padding: 0 15px 0 0;
     position: relative;
     text-transform: uppercase;
 }
-.blog_content_blp .feature-collections a::after{
+.blog_content_blp a::after{
 	content: ">";
     /* font-size: 25px;
     position: absolute;
@@ -50945,7 +50951,7 @@ padding: 0 24px;
     margin-top: 40px;
     border:none;
 }
-.blog_content_blp .feature-collections a{
+.blog_content_blp a{
 	font-size: 11px;
     padding: 0 10px 0 0;
 }
@@ -50970,12 +50976,12 @@ padding: 0 24px;
     right: inherit;
     left: 5%;
 }
-.blog_content_blp .feature-collections h2 {
+.blog_content_blp h2 {
     font-size: 16px;
     width: 60%;
     line-height: 16px;
 }
-.blog_content_blp .feature-collections h3 {
+.blog_content_blp h3 {
     font-size: 11px;
     margin: 5px 0;
 }
