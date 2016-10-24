@@ -979,7 +979,11 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="i18nService" ref="i18nService" />
 		<property name="commonI18NService" ref="commonI18NService" />
 	</bean>
-	
+	<!-- Added color related displayname for new category Watches & Fashion Accessories START::: -->
+	<bean id="mplWchFAColorFacetDisplayNameProvider"
+		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplWchFAColorFacetDisplayNameProvider">
+	</bean>
+	<!-- Added color related displayname for new category Watches & Fashion Accessories END::: -->
 		<bean id="mplCompareProductValueProvider"
                 class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplCompareProductValueProvider"
                 parent="abstractPropertyFieldValueProvider">
