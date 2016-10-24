@@ -23,6 +23,10 @@
 			action="${request.contextPath}/my-account/changeDeliveryAddress"
 			commandName="addressForm">
 			<div class="modal-body">
+				<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
 				<div class="row">
 					<div class="col-md-6">
 					<div class="error_text serverError"></div>
@@ -31,14 +35,8 @@
 					<div class="col-md-1">
 						<h4>OR</h4>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-5">
 						<h4>Change Address To </h4>
-					</div>
-					<div class="col-md-1">
-						<button type="button" class="close" data-dismiss="modal"
-							aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
 					</div>
 				</div>
 			</div>
@@ -102,14 +100,17 @@
 								<div class="error_text address3Error"></div>
 							</div>
 						</div>
+						
+						
 				
 						<div class="row">
 							<div class="optionsLandmark">
 								<div class="col-md-12">
 									<label for="landmark">Landmark</label>
+									<%-- <c:if test="${orderDetails.deliveryAddress.landmark==}"></c:if> --%>
 									<form:select path="landmark" 
-										class="form-control textInputChangeAddress address_landmarks" id="landmark"
-										placeholder="select Landmark" />
+										class="form-control textInputChangeAddress address_landmarks slected_value" id="landmark"
+										value="${orderDetails.deliveryAddress.landmark}"  />
 									<div class="error_text landMarkError"></div>
 								</div>
 							</div>
@@ -118,7 +119,8 @@
 							<div class="address_landmarkOtherDiv">
 								<div class="col-md-12">
 									<label>Landmark</label>
-										<form:input class="otherLandMark" placeholder="Other Landmark" path="otherLandmark"/>										
+										<form:input class="otherLandMark" placeholder="Other Landmark" path="otherLandmark"/>	
+										<div class="error_text otherLandMarkError"></div>									
 								</div>
 							</div>
 						</div>
@@ -189,39 +191,40 @@
 											name="select_address"/>
 									</div>
 									<div
-										class="col-md-9 addressTextChange addressSpace changeAddress${status.count}">
-										<b>Residential Address ${addressCount} - Default</b> <br /> <span
-											class="firstName">${orderDeliveryAddressList.firstName}</span><br />
-										<span class="lastName">${orderDeliveryAddressList.lastName}</span><br>
+										class="col-md-10 addressTextChange addressSpace changeAddress${status.count}">
+										<b>Residential Address ${addressCount} - Default</b> <br /> 
+										<span class="firstName addressFont">${orderDeliveryAddressList.firstName}</span>
+										<span class="lastName addressFont">${orderDeliveryAddressList.lastName}</span><br>
 										<c:if test="${not empty orderDeliveryAddressList.line2}">
-											<span class="addressLine1">${orderDeliveryAddressList.line1}</span>,&nbsp;
+											<span class="addressLine1 addressFont">${orderDeliveryAddressList.line1}</span>,&nbsp;
 									    </c:if>
 										<c:if test="${not empty orderDeliveryAddressList.line2}">
-											<span class="addressLine2">${orderDeliveryAddressList.line2}</span>,
+											<span class="addressLine2 addressFont">${orderDeliveryAddressList.line2}</span>,
 										</c:if>
 										<c:if test="${not empty orderDeliveryAddressList.line3}">
-											<span class="addressLine3">${orderDeliveryAddressList.line3}</span>
+											<span class="addressLine3 addressFont">${orderDeliveryAddressList.line3}</span>
 										</c:if>
 										<c:if test="${not empty orderDeliveryAddressList.landmark}">
-												&nbsp;  <span class="landmark">,${orderDeliveryAddressList.landmark}</span>,
+												&nbsp;  <span class="landmark addressFont">,${orderDeliveryAddressList.landmark}</span>,
 										</c:if>
 										<br>
 										<c:if test="${not empty orderDeliveryAddressList.town}">
-											<span class="town">${orderDeliveryAddresssList.town}</span>&nbsp;,
+											<span class="town addressFont">${orderDeliveryAddresssList.town}</span>&nbsp;
 									    </c:if>
 
 										<c:if test="${not empty orderDeliveryAddressList.state}">
-											<span class="state">${orderDeliveryAddressList.state}</span>,&nbsp;
+											<span class="state addressFont">${orderDeliveryAddressList.state}</span>,&nbsp;
 								        </c:if>
-										<span class="postalCode">${orderDeliveryAddressList.postalCode}</span>&nbsp;
-										<span class="isocode">${orderDeliveryAddressList.country.isocode}</span>
+										<span class="postalCode addressFont">${orderDeliveryAddressList.postalCode}</span>&nbsp;
+										<span class="isocode addressFont">${orderDeliveryAddressList.country.isocode}</span>
 										<br>
 										<c:if test="${not empty orderDeliveryAddressList.phone}">
-									     	91&nbsp;<span class="phone">${orderDeliveryAddressList.phone}</span>
+									     	91&nbsp;<span class="phone addressFont">${orderDeliveryAddressList.phone}</span>
 										</c:if>
 										<br>
 
 									</div>
+									<div class="col-md-12"><a href="#" class="addNewAdd">Add a New Address</a></div>
 								</div>
 								<p style="clear: both;"></p>
 							</c:forEach>
@@ -255,6 +258,31 @@ width: 17px;
 
 #deliveryAddressForm .addressSpace{
 	 margin-bottom: 15px;
+}
+.addressListPop {
+    overflow-y: auto;
+    height: 400px;
+}
+#changeAddressPopup .changeAdddd {
+    height: inherit;
+    overflow-y: inherit;
+}
+#changeAddressPopup .modal-dialog{
+	max-height: calc(100vh - 100px);
+	overflow: auto;
+}
+#changeAddressPopup select {
+    padding-right: 15px;
+}
+#changeAddressPopup label {
+    padding-bottom: 5px;
+}
+.addressFont{
+font-size: 10px;
+}
+.addNewAdd{
+	color: #A9143C;
+text-decoration: underline;
 }
 </style>
 <!-- /.modal-dialog -->
