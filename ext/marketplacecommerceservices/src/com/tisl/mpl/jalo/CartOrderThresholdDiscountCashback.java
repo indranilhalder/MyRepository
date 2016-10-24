@@ -40,12 +40,9 @@ public class CartOrderThresholdDiscountCashback extends GeneratedCartOrderThresh
 
 	/**
 	 * @Description : This method is for creating item type
-	 * @param :
-	 *           ctx
-	 * @param :
-	 *           type
-	 * @param :
-	 *           allAttributes
+	 * @param : ctx
+	 * @param : type
+	 * @param : allAttributes
 	 * @throws: JaloBusinessException
 	 * @return : item
 	 */
@@ -63,8 +60,7 @@ public class CartOrderThresholdDiscountCashback extends GeneratedCartOrderThresh
 
 	/**
 	 * @Description : Order Threshold Percentage or Amount Discount Cashback
-	 * @param :
-	 *           SessionContext paramSessionContext ,PromotionEvaluationContext paramPromotionEvaluationContext
+	 * @param : SessionContext paramSessionContext ,PromotionEvaluationContext paramPromotionEvaluationContext
 	 * @return : List<PromotionResult> promotionResults
 	 */
 	@Override
@@ -87,7 +83,7 @@ public class CartOrderThresholdDiscountCashback extends GeneratedCartOrderThresh
 				final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(
 						getRestrictions());//Adding restrictions to List
 				//for delivery mode restriction check
-				flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForOrderPromo(restrictionList);
+				flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForOrderPromo(restrictionList, cart);
 				//for payment mode restriction check
 				flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList,
 						paramSessionContext);
@@ -109,8 +105,8 @@ public class CartOrderThresholdDiscountCashback extends GeneratedCartOrderThresh
 						{
 							if (!isPercentageOrAmount().booleanValue())
 							{
-								final Double discountPrice = getPriceForOrder(paramSessionContext, getDiscountPrices(paramSessionContext),
-										cart, MarketplacecommerceservicesConstants.DISCOUNT_PRICES);
+								final Double discountPrice = getPriceForOrder(paramSessionContext,
+										getDiscountPrices(paramSessionContext), cart, MarketplacecommerceservicesConstants.DISCOUNT_PRICES);
 								final double discountPriceValue = (discountPrice == null) ? 0.0D : discountPrice.doubleValue();
 								adjustedDiscounts = discountPriceValue;
 							}
@@ -124,8 +120,8 @@ public class CartOrderThresholdDiscountCashback extends GeneratedCartOrderThresh
 							{
 								//For Promotion Message on Cart Screen : Promotion Fired Scenario
 								final PromotionResult result = getPromoResultData(1.0F, paramSessionContext, evaluationContext);
-								result.addAction(paramSessionContext,
-										PromotionsManager.getInstance().createPromotionOrderAdjustTotalAction(paramSessionContext, 0.0D));
+								result.addAction(paramSessionContext, PromotionsManager.getInstance()
+										.createPromotionOrderAdjustTotalAction(paramSessionContext, 0.0D));
 								promotionResults.add(result);
 							}
 							else
@@ -138,11 +134,10 @@ public class CartOrderThresholdDiscountCashback extends GeneratedCartOrderThresh
 							//For Promotion Message on Cart Screen
 							if (LOG.isDebugEnabled())
 							{
-								LOG.debug(
-										"(" + getPK() + ") " + Localization.getLocalizedString("promotion.CartCashBackPromotion.subtotal")
-												+ orderSubtotalAfterDiscounts
-												+ Localization
-														.getLocalizedString("promotion.orderLevelPromotion.cartAmtLessThanThreshold.msg2")
+								LOG.debug("(" + getPK() + ") "
+										+ Localization.getLocalizedString("promotion.CartCashBackPromotion.subtotal")
+										+ orderSubtotalAfterDiscounts
+										+ Localization.getLocalizedString("promotion.orderLevelPromotion.cartAmtLessThanThreshold.msg2")
 										+ threshold + Localization.getLocalizedString("promotion.CartCashBackPromotion.skippingDiscount"));
 							}
 							final float certainty = (float) (orderSubtotalAfterDiscounts / threshold.doubleValue());
@@ -188,8 +183,7 @@ public class CartOrderThresholdDiscountCashback extends GeneratedCartOrderThresh
 
 	/**
 	 * @Description : Verify Channel Data
-	 * @param :
-	 *           SessionContext arg0
+	 * @param : SessionContext arg0
 	 * @return : minimumCategoryValue
 	 */
 	private boolean verifyChannelData(final SessionContext arg0, final AbstractOrder cart)
@@ -202,12 +196,9 @@ public class CartOrderThresholdDiscountCashback extends GeneratedCartOrderThresh
 
 	/**
 	 * @Description : Assign Promotion Fired and Potential-Promotion Message
-	 * @param :
-	 *           SessionContext ctx
-	 * @param :
-	 *           PromotionResult result
-	 * @param:: Locale
-	 *             locale
+	 * @param : SessionContext ctx
+	 * @param : PromotionResult result
+	 * @param:: Locale locale
 	 * @return : String
 	 */
 	@Override

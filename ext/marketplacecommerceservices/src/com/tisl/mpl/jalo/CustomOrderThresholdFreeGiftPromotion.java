@@ -78,12 +78,12 @@ public class CustomOrderThresholdFreeGiftPromotion extends GeneratedCustomOrderT
 				final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(
 						getRestrictions());//Adding restrictions to List
 				//for delivery mode restriction check
-				flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForOrderPromo(restrictionList);
+				flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForOrderPromo(restrictionList, order);
 				//for payment mode restriction check
 				flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList, ctx);
 				/* TPR-970 changes */
 				final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(
-						restrictionList);
+						restrictionList, order);
 
 				if (checkRestrictions(ctx, promoContext) && checkChannelFlag && flagForDeliveryModeRestrEval
 						&& flagForPaymentModeRestrEval && flagForPincodeRestriction)

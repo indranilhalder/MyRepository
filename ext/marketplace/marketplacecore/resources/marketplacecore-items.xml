@@ -2356,6 +2356,21 @@
 							optional="true" />
 						<defaultvalue>false</defaultvalue>
 					</attribute>
+					
+					<!-- TPR-970 changes -->
+					<attribute qualifier="stateForPincode" type="java.lang.String">
+						<modifiers optional="true" read="true" write="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="cityForPincode" type="java.lang.String">
+						<modifiers optional="true" read="true" write="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="pincodeNumber" type="java.lang.String">
+						<modifiers optional="true" read="true" write="true" />
+						<persistence type="property" />
+					</attribute>
+					<!-- TPR-970 ends -->
 				</attributes>
 			</itemtype>
 
@@ -6111,20 +6126,6 @@
 						<modifiers optional="true" read="true" write="true" />
 						<persistence type="property" />
 					</attribute>
-					<!-- TPR-970 changes -->
-					<attribute qualifier="stateForPincode" type="java.lang.String">
-						<modifiers optional="true" read="true" write="true" />
-						<persistence type="property" />
-					</attribute>
-					<attribute qualifier="cityForPincode" type="java.lang.String">
-						<modifiers optional="true" read="true" write="true" />
-						<persistence type="property" />
-					</attribute>
-					<attribute qualifier="pincodeNumber" type="java.lang.String">
-						<modifiers optional="true" read="true" write="true" />
-						<persistence type="property" />
-					</attribute>
-					
 					<!-- TISPRO-540 - Payment Type -->
 					<!-- TPR-174 - Welcome back status message -->
 					<attribute qualifier="merged" type="java.lang.Boolean">

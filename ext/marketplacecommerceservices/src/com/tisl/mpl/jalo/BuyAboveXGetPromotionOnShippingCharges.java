@@ -86,7 +86,8 @@ public class BuyAboveXGetPromotionOnShippingCharges extends GeneratedBuyAboveXGe
 			final AbstractOrder order = arg1.getOrder();
 			final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());
 			//final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());//Adding restrictions to List
-			final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList);
+			final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList,
+					order);
 			if (checkRestrictions(arg0, arg1) && checkChannelFlag && flagForPincodeRestriction)
 			{
 				final Double threshold = getPriceForOrder(arg0, getThresholdTotals(arg0), arg1.getOrder(),
@@ -128,7 +129,7 @@ public class BuyAboveXGetPromotionOnShippingCharges extends GeneratedBuyAboveXGe
 						if (!sellerFlag)
 						{
 							validProdQCountMap = getDefaultPromotionsManager().getvalidProdQCForOrderShippingPromotion(
-									getDeliveryModeDetailsList());
+									getDeliveryModeDetailsList(), order);
 						}
 						else if (MapUtils.isNotEmpty(validUssidMap))
 						{
@@ -140,7 +141,7 @@ public class BuyAboveXGetPromotionOnShippingCharges extends GeneratedBuyAboveXGe
 
 						final Map<String, AbstractOrderEntry> validProductUssidMap = getValidProducts(order, arg0, validProdQCountMap);
 						final Map<String, String> fetchProductRichAttribute = getDefaultPromotionsManager().fetchProductRichAttribute(
-								validProdQCountMap);
+								validProdQCountMap, order);
 
 						//for (final Map.Entry<String, Integer> mapEntry : validProdQCountMap.entrySet())
 						for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
@@ -180,7 +181,7 @@ public class BuyAboveXGetPromotionOnShippingCharges extends GeneratedBuyAboveXGe
 
 								final Map<String, Map<String, Double>> apportionedProdDelChargeMap = getDefaultPromotionsManager()
 										.updateDeliveryCharges(isDeliveryFreeFlag, isPercentageFlag, adjustedDeliveryCharge,
-												validProdQCountMap, fetchProductRichAttribute);
+												validProdQCountMap, fetchProductRichAttribute, order);
 
 								arg0.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
 								arg0.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProdQCountMap);
@@ -243,7 +244,7 @@ public class BuyAboveXGetPromotionOnShippingCharges extends GeneratedBuyAboveXGe
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.promotions.jalo.AbstractPromotion#getResultDescription(de.hybris.platform.jalo.SessionContext,
 	 * de.hybris.platform.promotions.jalo.PromotionResult, java.util.Locale)

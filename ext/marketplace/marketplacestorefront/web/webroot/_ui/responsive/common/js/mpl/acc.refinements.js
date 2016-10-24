@@ -165,7 +165,7 @@ ACC.refinements = {
 		})
 		
 		//TPR-845
-		$(document).on("change",".js-product-facet .facet_mobile .js-facet-checkbox, .js-product-facet .facet_mobile .js-facet-checkbox-price",function(){
+		$(document).on("change",".js-product-facet .js-facet-checkbox",function(){
 			var filterMobileQuery = $(this).parents("form").find('input[name="q"]').val();
 			dummyForm = $(this).parents("form");
 			if(updatedsearchQuery==''){
@@ -180,9 +180,34 @@ ACC.refinements = {
 					updatedsearchQuery+=newFilter;
 				}
 			}
-			console.log("updatedsearchQuery : "+updatedsearchQuery);			
-		})
+			console.log("Full View: updatedsearchQuery : "+updatedsearchQuery);			
+		});
 		
+		$(document).on("change",".facet_mobile .js-facet-checkbox-price",function(){
+			var filterMobileQuery = $(this).parents("form").find('input[name="q"]').val();
+			console.log("form query:"+filterMobileQuery)
+			dummyForm = $(this).parents("form");
+			if(updatedsearchQuery==''){
+				updatedsearchQuery=filterMobileQuery;
+			}else{
+				var newFilter=createSearchQuery(filterMobileQuery);	
+				if(updatedsearchQuery.includes(newFilter))
+				{
+					updatedsearchQuery=updatedsearchQuery.replace(newFilter,"");
+				}
+				else{
+					updatedsearchQuery+=newFilter;
+				}
+			}
+			
+			console.log("Mobile View : updatedsearchQuery : "+updatedsearchQuery);	
+			//hiding
+			$(".js-facet-list").hide();  
+			loadMobilePriceRange();
+			
+		});
+		
+				
 		// AJAX for Colourbutton and sizebuttons 
 		$(document).on("click",".js-product-facet .facet_desktop .js-facet-colourbutton , .js-product-facet .facet_desktop .js-facet-sizebutton",function(){
 			
@@ -448,7 +473,10 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 //TPR-845
 function createSearchQuery(filterMobileQuery){
 	var queryString='';
-	var splited=filterMobileQuery.split(':');
+	var splited=[];
+	if(filterMobileQuery!=undefined){
+		splited=filterMobileQuery.split(":");
+	}
 	for (k = 0; k < splited.length; k++) {
 	if(splited.length-3<k){
 		queryString+=':'+splited[k];
@@ -653,4 +681,24 @@ function onFilterClickAnalytics(filterName,filterValue){
 		event_type : 'search_filter_usage',
 		search_filter : msg
 	});
+}
+
+function loadMobilePriceRange(){
+	var q = updatedsearchQuery;
+	var priceRange = '';
+	var pvStr = ':price:';	
+	if (q.indexOf(pvStr) > -1) {		
+		priceRange = q.substring(q.indexOf(pvStr) + pvStr.length);
+		if (priceRange.indexOf(':') > -1) {
+			priceRange = priceRange.substring(0, priceRange.indexOf(':'));
+		}		
+		var prices = splitPrice(priceRange);
+		console.log("priceRange"+priceRange+"prices[0]" +prices[0]+"prices[1]" +prices[1]);
+		$('.minPriceSearchTxt').val(prices[0]);
+		$('.maxPriceSearchTxt').val(prices[1]);		
+		/*$('li.price').find('div.facet-name').hide();*/
+		$('li.price').find('div.facet-values .facet-list.js-facet-list').hide();
+		$('.priceBucketExpand').show();
+	}
+
 }

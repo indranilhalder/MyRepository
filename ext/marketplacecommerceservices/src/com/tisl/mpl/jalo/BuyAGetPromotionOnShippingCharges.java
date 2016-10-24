@@ -385,10 +385,10 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 
 					//for delivery mode restriction check
 					flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForAPromo(restrictionList,
-							validProductUssidMap);
+							validProductUssidMap, order);
 
 					final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(
-							restrictionList);
+							restrictionList, order);
 
 					if (flagForDeliveryModeRestrEval && flagForPincodeRestriction) // delivery mode true and If Total no of valid Products exceeds Qualifying Count
 					{
@@ -399,7 +399,7 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 
 						//Fetching product rich attribute
 						final Map<String, String> fetchProductRichAttribute = getDefaultPromotionsManager().fetchProductRichAttribute(
-								validProductList);
+								validProductList, order);
 
 						for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
 						{
@@ -438,7 +438,7 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 								}
 								//TISEE-5339 : Fix
 								prodPrevCurrDelChargeMap = getDefaultPromotionsManager().calcDeliveryCharges(isDeliveryFreeFlag,
-										isPercentageFlag, adjustedDeliveryCharge, validProductList, validProductUSSID);
+										isPercentageFlag, adjustedDeliveryCharge, validProductList, validProductUSSID, order);
 
 								//TISEE-5339 : Fix
 								//								paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE,

@@ -92,7 +92,8 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 
 			boolean checkChannelFlag = false;
 			boolean sellerFlag = false;
-			final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList);
+			final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList,
+					order);
 			sellerFlag = getDefaultPromotionsManager().isSellerRestrExists(restrictionList);
 			//Verifying the Channel Data
 			final List<EnumerationValue> listOfChannel = (List<EnumerationValue>) getProperty(ctx,
@@ -130,7 +131,7 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 					noOfProducts = realQuantity;
 
 					flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForAPromo(restrictionList,
-							validProductUssidMap);
+							validProductUssidMap, order);
 
 					List<PromotionOrderEntryConsumed> remainingItemsFromTail = null;
 

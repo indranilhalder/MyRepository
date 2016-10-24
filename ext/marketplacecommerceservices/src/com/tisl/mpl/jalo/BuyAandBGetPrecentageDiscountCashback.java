@@ -158,12 +158,13 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 
 			//for delivery mode restriction check
 			flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForABPromo(restrictionList,
-					validProductUssidMap);
+					validProductUssidMap, order);
 			//for payment mode restriction check
 			flagForPaymentModeRestrEval = getDefaultPromotionsManager()
 					.getPaymentModeRestrEval(restrictionList, paramSessionContext);
 
-			final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList);
+			final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList,
+					order);
 
 			if (!eligibleProductList.isEmpty()) //Apply percentage/amount discount to valid products
 			{
