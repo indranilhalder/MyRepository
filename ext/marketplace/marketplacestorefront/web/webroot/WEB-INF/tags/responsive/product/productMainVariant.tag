@@ -67,8 +67,6 @@ $("#variant").change(function() {
 //AKAMAI Fix
 var productSizeVar = '${productSize}';
 </script> 
-
-
 <!-- logic for displaying color and size variant -->
 <!-- displaying colour swatches -->
 <c:choose>
@@ -304,7 +302,7 @@ share mobile -->
 												<c:url value="${entry.key}" var="link" />
 												<c:choose>
 													<c:when test="${(variantOption.code eq product.code)}">
-														<li class="selected"><a href="${link}?selectedSize=true">${entry.value}</a></li>
+														<li><a href="${link}?selectedSize=true">${entry.value}</a></li>
 													</c:when>
 													<c:otherwise>
 														<li><a href="${link}?selectedSize=true">${entry.value}</a></li>
