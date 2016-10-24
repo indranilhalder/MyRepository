@@ -2452,6 +2452,7 @@
     	<property name="videoDescription" type="String" />
     	<property name="previewUrl" type="String"/>
     	<property name="videoTitle" type="String"/>
+    	<property name="videoSectionHeading" type="String"/>
     </bean>
      <bean class="com.tisl.mpl.wsdto.LuxEngagementcomponentWsDTO">
     	<property name="bannerMedia" type="String"/>
@@ -2647,5 +2648,19 @@
     	<property name="success" type="String"/>
     </bean>
     <!-- Newsletter DTO struture ends -->
+    
+    
+    <!-- TISLUX-356 : Breadcrumbs in Response -->
+    <bean class="com.tisl.mpl.wsdto.BreadcrumbListWsDTO">
+    	<property name="code" type="String"/>
+    	<property name="name" type="String"/>
+    	<property name="url" type="String"/>
+    	<property name="level" type="Integer"/>
+    </bean>
+    <bean class="com.tisl.mpl.wsdto.BreadcrumbResponseWsDTO">
+    	<property name="rootName" type="String"/>
+    	<property name="breadcrumbList" type="java.util.List&lt;com.tisl.mpl.wsdto.BreadcrumbListWsDTO>"/>
+    </bean>
+    
 
 </beans>

@@ -136,6 +136,10 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 	public static final String SAVE_STORE_TOPORUDCT_FAIL_MSG = "no";
 	public static final String UNKNOWN = "unknown".intern();
 	public static final String DEFAULT_WISHLIST_NAME = "My Wishlist";
+	// TISLUX-356
+	public static final String CATEGORY = "category";
+	public static final String PRODUCT = "product";
+	public static final String ROOT_NAME = "Luxury";
 
 	public static final String LUXURY_STYLE_SWATCH = "luxuryStyleSwatch";
 

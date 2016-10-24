@@ -4121,6 +4121,13 @@
 						<persistence type="property" />
 					</attribute>
 					
+					<attribute type="java.lang.String" qualifier="videoSectionHeading">
+						<modifiers read="true" write="true" search="true"
+							unique="true" optional="true" />
+						<description>Section heading of the video to be shown on Luxury Homepage</description>
+						<persistence type="property" />
+					</attribute>
+					
 				</attributes>
 			</itemtype>
 			

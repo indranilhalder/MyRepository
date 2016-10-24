@@ -26,6 +26,11 @@
 					<td><div style="height:6px"/></td>
 				</tr>
 				
+				<tr>
+					<td><cockpit code="property" value="VideoComponent.videoSectionHeading"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				
 			</tbody>
 		</table>
 	]]>
