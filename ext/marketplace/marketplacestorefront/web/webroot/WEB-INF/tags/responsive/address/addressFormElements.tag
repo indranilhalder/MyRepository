@@ -247,10 +247,10 @@
 			<div class='half'>
 			
 				<div class='half address_landmarkOtherDiv' data-value="${addressForm.landmark}">
-						<formElement:formInputBox inputCSS="address_landmarkOther" idKey="address.landmarks"
+						<formElement:formInputBox inputCSS="address_landmarkOther" idKey="otherLandmark"
 							labelKey="Enter Nearest Landmark" path="otherLandmark"
 							maxLength="30" />
-							<div class="help-block has-error" id="stateError" style="display: none;"></div>
+							<div class="error_text otherLandMarkError"></div>
 				</div>
 			</div>
 			
