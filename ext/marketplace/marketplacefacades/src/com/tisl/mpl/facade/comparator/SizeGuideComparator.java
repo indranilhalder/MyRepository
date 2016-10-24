@@ -28,6 +28,8 @@ public class SizeGuideComparator implements Comparator<SizeGuideData>
 	private List<List<String>> sizeSystems;
 	private static final Logger LOG = Logger.getLogger(SizeGuideComparator.class);
 
+	private static final String ESCAPE_STRING = "\\s+";
+
 	/**
 	 * This method is responsible for sizes to be displayed in size chartok
 	 *
@@ -40,14 +42,14 @@ public class SizeGuideComparator implements Comparator<SizeGuideData>
 	public int compare(final SizeGuideData sizeData1, final SizeGuideData sizeData2)
 	{
 		final String dimension1 = StringUtils.isNotEmpty(sizeData1.getDimension()) ? sizeData1.getDimension()
-				.replaceAll("\\s+", "").toUpperCase() : "";
+				.replaceAll(ESCAPE_STRING, "").toUpperCase() : "";
 		LOG.debug("Check SizeData1 dimension value: " + dimension1);
 		final String dimension2 = StringUtils.isNotEmpty(sizeData1.getDimension()) ? sizeData2.getDimension()
-				.replaceAll("\\s+", "").toUpperCase() : "";
+				.replaceAll(ESCAPE_STRING, "").toUpperCase() : "";
 		LOG.debug("Check SizeData2 dimension value: " + dimension2);
-		final String value1 = sizeData1.getDimensionSize() != null ? sizeData1.getDimensionSize().replaceAll("\\s+", "")
+		final String value1 = sizeData1.getDimensionSize() != null ? sizeData1.getDimensionSize().replaceAll(ESCAPE_STRING, "")
 				.toUpperCase() : dimension1;
-		final String value2 = sizeData2.getDimensionSize() != null ? sizeData2.getDimensionSize().replaceAll("\\s+", "")
+		final String value2 = sizeData2.getDimensionSize() != null ? sizeData2.getDimensionSize().replaceAll(ESCAPE_STRING, "")
 				.toUpperCase() : dimension2;
 		//System.out.println("*********************sizeguide" + value1 + value2);
 		LOG.debug("*********************sizeguide" + value1 + value2);
