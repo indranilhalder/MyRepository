@@ -4269,11 +4269,6 @@
 						<description>Associated product list to the content page for product content</description>
 					</attribute>
 					<!-- TPR-978 -->
-					<attribute qualifier="associatedProducts" type="ProductCollectionType">
-						<persistence type="property" />
-						<modifiers read=" true" write="true" optional="true" />
-						<description>Associated product list to the content page for product content</description>
-					</attribute>
 				</attributes>
 			</itemtype>
 			<!-- Start of Mpl Advanced Category Carousel Component -->
