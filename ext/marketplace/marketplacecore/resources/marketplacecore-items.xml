@@ -4262,6 +4262,15 @@
 						<persistence type='property' />
 
 					</attribute>
+					
+					<attribute type="Media" qualifier="mobileImage" autocreate="true"
+						generate="true">
+						<description>This attribute is render a manually uploaded image for the category</description>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+
+					</attribute>
 
 					<attribute type="Category" qualifier="category"
 						autocreate="true" generate="true">
