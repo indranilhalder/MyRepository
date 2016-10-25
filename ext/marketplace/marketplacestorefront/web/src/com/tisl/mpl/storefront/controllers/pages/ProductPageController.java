@@ -47,6 +47,7 @@ import de.hybris.platform.commercefacades.product.data.FeatureValueData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commercefacades.product.data.ProductContentData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.PromotionData;
 import de.hybris.platform.commercefacades.product.data.ReviewData;
@@ -902,74 +903,96 @@ public class ProductPageController extends AbstractPageController
 						{
 							headerMap.put(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.age"),
 									"Y");
-							if(!headerMapData.contains(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.age"))){
-								headerMapData.add(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.age"));
+							if (!headerMapData.contains(configurationService.getConfiguration().getString(
+									"fashionaccessories.sizeguide.header.age")))
+							{
+								headerMapData.add(configurationService.getConfiguration().getString(
+										"fashionaccessories.sizeguide.header.age"));
 							}
 						}
 						if (data.getDimensionSize() != null && StringUtils.isNotBlank(data.getDimensionSize()))
 						{
 							headerMap.put(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.size"),
 									"Y");
-							if(!headerMapData.contains(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.size"))){
-								headerMapData.add(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.size"));
+							if (!headerMapData.contains(configurationService.getConfiguration().getString(
+									"fashionaccessories.sizeguide.header.size")))
+							{
+								headerMapData.add(configurationService.getConfiguration().getString(
+										"fashionaccessories.sizeguide.header.size"));
 							}
 						}
-						if (data.getCmsBeltSize()!=null && StringUtils.isNotBlank(data.getCmsBeltSize()))
+						if (data.getCmsBeltSize() != null && StringUtils.isNotBlank(data.getCmsBeltSize()))
 						{
 							headerMap.put(
 									configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.cmsbeltsize"),
 									"Y");
-							if(!headerMapData.contains(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.cmsbeltsize"))){
-								headerMapData.add(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.cmsbeltsize"));
+							if (!headerMapData.contains(configurationService.getConfiguration().getString(
+									"fashionaccessories.sizeguide.header.cmsbeltsize")))
+							{
+								headerMapData.add(configurationService.getConfiguration().getString(
+										"fashionaccessories.sizeguide.header.cmsbeltsize"));
 							}
 						}
-						if (data.getInchesBeltSize()!=null && StringUtils.isNotBlank(data.getInchesBeltSize()))
+						if (data.getInchesBeltSize() != null && StringUtils.isNotBlank(data.getInchesBeltSize()))
 						{
 							headerMap.put(
 									configurationService.getConfiguration()
 											.getString("fashionaccessories.sizeguide.header.inchesbeltsize"), "Y");
-							if(!headerMapData.contains(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.inchesbeltsize"))){
-								headerMapData.add(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.inchesbeltsize"));
+							if (!headerMapData.contains(configurationService.getConfiguration().getString(
+									"fashionaccessories.sizeguide.header.inchesbeltsize")))
+							{
+								headerMapData.add(configurationService.getConfiguration().getString(
+										"fashionaccessories.sizeguide.header.inchesbeltsize"));
 							}
 						}
-						if (data.getCmsWaistSize()!=null && StringUtils.isNotEmpty(data.getCmsWaistSize()))
+						if (data.getCmsWaistSize() != null && StringUtils.isNotEmpty(data.getCmsWaistSize()))
 						{
 							headerMap.put(
 									configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.cmswaistsize"),
 									"Y");
-							if(!headerMapData.contains(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.cmswaistsize"))){
-								headerMapData.add(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.cmswaistsize"));
+							if (!headerMapData.contains(configurationService.getConfiguration().getString(
+									"fashionaccessories.sizeguide.header.cmswaistsize")))
+							{
+								headerMapData.add(configurationService.getConfiguration().getString(
+										"fashionaccessories.sizeguide.header.cmswaistsize"));
 							}
 						}
-						if (data.getInchesWaistSize()!=null && StringUtils.isNotEmpty(data.getInchesWaistSize()))
+						if (data.getInchesWaistSize() != null && StringUtils.isNotEmpty(data.getInchesWaistSize()))
 						{
 							headerMap.put(
 									configurationService.getConfiguration().getString(
 											"fashionaccessories.sizeguide.header.incheswaistsize"), "Y");
-							if(!headerMapData.contains(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.incheswaistsize"))){
-								headerMapData.add(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.incheswaistsize"));
+							if (!headerMapData.contains(configurationService.getConfiguration().getString(
+									"fashionaccessories.sizeguide.header.incheswaistsize")))
+							{
+								headerMapData.add(configurationService.getConfiguration().getString(
+										"fashionaccessories.sizeguide.header.incheswaistsize"));
 							}
 						}
-						if (data.getInchesBeltLength()!=null && StringUtils.isNotEmpty(data.getInchesBeltLength()))
+						if (data.getInchesBeltLength() != null && StringUtils.isNotEmpty(data.getInchesBeltLength()))
 						{
 							headerMap.put(
 									configurationService.getConfiguration().getString(
 											"fashionaccessories.sizeguide.header.inchesbeltlength"), "Y");
-							if(!headerMapData.contains(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.inchesbeltlength"))){
-								headerMapData.add(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.inchesbeltlength"));
+							if (!headerMapData.contains(configurationService.getConfiguration().getString(
+									"fashionaccessories.sizeguide.header.inchesbeltlength")))
+							{
+								headerMapData.add(configurationService.getConfiguration().getString(
+										"fashionaccessories.sizeguide.header.inchesbeltlength"));
 							}
 						}
 					}
 				}
 			}
-			
-			if(!categoryType.equalsIgnoreCase(ACCESSORIES)){
-			for (final String keyData : headerMap.keySet())
+
+			if (!categoryType.equalsIgnoreCase(ACCESSORIES))
 			{
-				headerMapData.add(keyData);
-			}
-			
-			
+				for (final String keyData : headerMap.keySet())
+				{
+					headerMapData.add(keyData);
+				}
+
+
 				Collections.sort(headerMapData, sizeGuideHeaderComparator);
 			}
 		}
@@ -1181,9 +1204,9 @@ public class ProductPageController extends AbstractPageController
 				final PcmProductVariantModel variantProductModel = (PcmProductVariantModel) productModel;
 				model.addAttribute("productSize", variantProductModel.getSize());
 			}
-			//Fix  TISUATMS-831 from SAP 
-			showSizeGuideForFA(productModel,model);
-			
+			//Fix  TISUATMS-831 from SAP
+			showSizeGuideForFA(productModel, model);
+
 			//Fix  TISUATMS-831 from SAP end
 			if (CollectionUtils.isNotEmpty(productData.getAllVariantsId()))
 			{
@@ -1316,14 +1339,14 @@ public class ProductPageController extends AbstractPageController
 			model.addAttribute(PRODUCT_SIZE_TYPE, productDetailsHelper.getSizeType(productModel));
 			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
 			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
-			
+
 			//AKAMAI fix
 			if (productModel instanceof PcmProductVariantModel)
 			{
 				final PcmProductVariantModel variantProductModel = (PcmProductVariantModel) productModel;
 				model.addAttribute("productSizeQuick", variantProductModel.getSize());
 			}
-			showSizeGuideForFA(productModel,model);
+			showSizeGuideForFA(productModel, model);
 			if (CollectionUtils.isNotEmpty(productData.getAllVariantsId()))
 			{
 				//get left over variants
@@ -1627,14 +1650,15 @@ public class ProductPageController extends AbstractPageController
 				{
 					if (supercategory.getCode().startsWith("MPH"))
 					{
-						int num=0;
+						int num = 0;
 						for (final String fashow : configurationFAs)
 						{
 							if (!supercategory.getCode().startsWith(fashow))
 							{
 								num++;
-								if(num==configurationFAs.length){
-									showSizeGuideForFA=false;
+								if (num == configurationFAs.length)
+								{
+									showSizeGuideForFA = false;
 									break;
 								}
 							}
@@ -1693,9 +1717,12 @@ public class ProductPageController extends AbstractPageController
 	 */
 	private void findCanonicalProduct(final ProductData productData, final Model model)
 	{
-		final List<VariantOptionData> variants = productData.getVariantOptions();
-		final String canonicalUrl = variants.get(0).getUrl();
-		model.addAttribute(ModelAttributetConstants.CANONICAL_URL, canonicalUrl);
+		if (CollectionUtils.isNotEmpty(productData.getVariantOptions()))
+		{
+			final List<VariantOptionData> variants = productData.getVariantOptions();
+			final String canonicalUrl = variants.get(0).getUrl();
+			model.addAttribute(ModelAttributetConstants.CANONICAL_URL, canonicalUrl);
+		}
 	}
 
 	//TODO
@@ -1748,7 +1775,7 @@ public class ProductPageController extends AbstractPageController
 						{
 							final String properitsValue = configurationService.getConfiguration().getString(
 									ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
-							final String descValues=configurationService.getConfiguration().getString(
+							final String descValues = configurationService.getConfiguration().getString(
 									ModelAttributetConstants.DESC_PDP_PROPERTIES + productData.getRootCategory());
 							//apparel
 							final FeatureValueData featureValueData = featureValueList.get(0);
@@ -1771,36 +1798,45 @@ public class ProductPageController extends AbstractPageController
 								mapConfigurableAttributes.put(featureData.getName(), productFeatureMap);
 							} //end apparel
 							  //electronics
-							
-							else if ( ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productData.getRootCategory()) || ModelAttributetConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory())){
-								String[] propertiesValues=properitsValue.split(",");
-								if(propertiesValues!=null && propertiesValues.length>0){
-									for(String value: propertiesValues){
-										if(value.equalsIgnoreCase(featureData.getName())){
+
+							else if (ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productData.getRootCategory())
+									|| ModelAttributetConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory()))
+							{
+								final String[] propertiesValues = properitsValue.split(",");
+								if (propertiesValues != null && propertiesValues.length > 0)
+								{
+									for (final String value : propertiesValues)
+									{
+										if (value.equalsIgnoreCase(featureData.getName()))
+										{
 											if (productFeatureMap.size() > 0)
 											{
 												productFeatureMap.clear();
 											}
 											productFeatureMap.put(featureValueData.getValue(),
 													productFeature != null && productFeature.getUnit() != null
-															&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit().getSymbol()
-															: "");
+															&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit()
+															.getSymbol() : "");
 											mapConfigurableAttributes.put(featureData.getName(), productFeatureMap);
 										}
 									}
 								}
-								if(descValues!=null && StringUtils.isNotBlank(descValues)){
-									String[] descValue=descValues.split(",");
-									if(descValue!=null && descValue.length>0){
-										for(String value: descValue){
-											if(value.equalsIgnoreCase(featureData.getName())){
+								if (descValues != null && StringUtils.isNotBlank(descValues))
+								{
+									final String[] descValue = descValues.split(",");
+									if (descValue != null && descValue.length > 0)
+									{
+										for (final String value : descValue)
+										{
+											if (value.equalsIgnoreCase(featureData.getName()))
+											{
 												mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
 											}
 										}
 									}
-									
+
 								}
-								
+
 								if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.WARRANTY.toLowerCase()))
 								{
 									warrentyList.add(featureValueData.getValue());
@@ -1830,8 +1866,11 @@ public class ProductPageController extends AbstractPageController
 					|| ModelAttributetConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory()))
 			{
 				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTES, mapConfigurableAttributes);
-				
-			}else if(ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productData.getRootCategory()) || ModelAttributetConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory())){
+
+			}
+			else if (ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productData.getRootCategory())
+					|| ModelAttributetConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory()))
+			{
 				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTES, mapConfigurableAttributes);
 				final Map<String, String> treeMapConfigurableAttribute = new TreeMap<String, String>(mapConfigurableAttribute);
 				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE, treeMapConfigurableAttribute);
@@ -2198,11 +2237,11 @@ public class ProductPageController extends AbstractPageController
 	 */
 	/*
 	 * private MarketplaceDeliveryModeData fetchDeliveryModeDataForUSSID(final String deliveryMode, final String ussid) {
-	 *
+	 * 
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 *
+	 * 
 	 * final PriceData priceData = productDetailsHelper.formPriceData(mplZoneDeliveryModeValueModel.getValue());
 	 * deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
 	 * deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
@@ -2222,76 +2261,76 @@ public class ProductPageController extends AbstractPageController
 	 */
 	/*
 	 * private List<PincodeServiceData> populatePinCodeServiceData(final String productCode) {
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * final List<PincodeServiceData> requestData = new ArrayList<>(); PincodeServiceData data = null;
-	 *
+	 * 
 	 * MarketplaceDeliveryModeData deliveryModeData = null; try { final ProductModel productModel =
-	 *
-	 *
+	 * 
+	 * 
 	 * productService.getProductForCode(productCode); final ProductData productData =
-	 *
+	 * 
 	 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER,
 	 * ProductOption.PRICE));
-	 *
-	 *
+	 * 
+	 * 
 	 * for (final SellerInformationData seller : productData.getSeller()) { final List<MarketplaceDeliveryModeData>
-	 *
+	 * 
 	 * deliveryModeList = new ArrayList<MarketplaceDeliveryModeData>(); data = new PincodeServiceData(); if ((null !=
-	 *
+	 * 
 	 * seller.getDeliveryModes()) && !(seller.getDeliveryModes().isEmpty())) { for (final MarketplaceDeliveryModeData
-	 *
+	 * 
 	 * deliveryMode : seller.getDeliveryModes()) { deliveryModeData =
-	 *
+	 * 
 	 * fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid()); deliveryModeList.add(deliveryModeData);
-	 *
-	 *
+	 * 
+	 * 
 	 * } data.setDeliveryModes(deliveryModeList); } if (null != seller.getFullfillment() &&
-	 *
+	 * 
 	 * StringUtils.isNotEmpty(seller.getFullfillment())) {
-	 *
+	 * 
 	 * data.setFullFillmentType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getFullfillment().toUpperCase())); }
-	 *
+	 * 
 	 * if (null != seller.getShippingMode() && (StringUtils.isNotEmpty(seller.getShippingMode()))) {
-	 *
+	 * 
 	 * data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getShippingMode().toUpperCase())); } if
-	 *
+	 * 
 	 * (null != seller.getSpPrice() && !(seller.getSpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 *
+	 * 
 	 * Double(seller.getSpPrice().getValue().doubleValue())); } else if (null != seller.getMopPrice() &&
-	 *
+	 * 
 	 * !(seller.getMopPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 *
+	 * 
 	 * Double(seller.getMopPrice().getValue().doubleValue())); } else if (null != seller.getMrpPrice() &&
-	 *
+	 * 
 	 * !(seller.getMrpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 *
+	 * 
 	 * Double(seller.getMrpPrice().getValue().doubleValue())); } else {
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * LOG.info("*************** No price avaiable for seller :" + seller.getSellerID()); continue; } if (null !=
-	 *
-	 *
+	 * 
+	 * 
 	 * seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod())) { data.setIsCOD(seller.getIsCod()); }
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * data.setSellerId(seller.getSellerID()); data.setUssid(seller.getUssid());
-	 *
+	 * 
 	 * data.setIsDeliveryDateRequired(ControllerConstants.Views.Fragments.Product.N); requestData.add(data); } } catch
-	 *
-	 *
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
 	 * (final EtailBusinessExceptions e) { ExceptionUtil.etailBusinessExceptionHandler(e, null); }
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * catch (final Exception e) {
-	 *
+	 * 
 	 * throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } return requestData; }
 	 */
 
@@ -2653,22 +2692,24 @@ public class ProductPageController extends AbstractPageController
 		}
 
 		return productContentPage;
-	}	
+	}
 
 
 	/**
 	 * This is used to verify the configured MPH category product can get SizeGuide & choose size
+	 *
 	 * @param productModel
 	 */
-	
-	public void showSizeGuideForFA(ProductModel productModel,final Model model){
+
+	public void showSizeGuideForFA(final ProductModel productModel, final Model model)
+	{
 		boolean showSizeGuideForFA = true;
 		//AKAMAI fix
 		if (productModel instanceof PcmProductVariantModel)
 		{
 			final PcmProductVariantModel variantProductModel = (PcmProductVariantModel) productModel;
-		
-			
+
+
 			if (ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(variantProductModel.getProductCategoryType()))
 			{
 				final Collection<CategoryModel> superCategories = variantProductModel.getSupercategories();
@@ -2679,14 +2720,15 @@ public class ProductPageController extends AbstractPageController
 				{
 					if (supercategory.getCode().startsWith("MPH"))
 					{
-						int num=0;
+						int num = 0;
 						for (final String fashow : configurationFAs)
 						{
 							if (!supercategory.getCode().startsWith(fashow))
 							{
 								num++;
-								if(num==configurationFAs.length){
-									showSizeGuideForFA=false;
+								if (num == configurationFAs.length)
+								{
+									showSizeGuideForFA = false;
 									break;
 								}
 							}
