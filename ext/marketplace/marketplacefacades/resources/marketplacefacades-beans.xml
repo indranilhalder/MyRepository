@@ -538,6 +538,8 @@
 			<property name="selectedDeliverySlotDate" type="String"></property>
 			<property name="selectedDeliverySlotTimeFrom" type="String"></property>
 			<property name="selectedDeliverySlotTimeTo" type="String"></property>
+			
+			<property name="returnMethodType" type="String"></property>
 	</bean>
 	
 	<bean class="de.hybris.platform.commercefacades.order.data.ImeiDetailData">

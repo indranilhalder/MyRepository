@@ -33,5 +33,8 @@ public interface MPLReturnService extends ReturnService
 	 * @return MplCustomerBankAccountDetailsModel
 	 */
 	public  MplCustomerBankAccountDetailsModel getCustomerBakDetailsById(String customerId);
+	
+	
+	 public List<ReturnRequestModel> getListOfReturnRequest(String orlderId);
 
 }

@@ -4,6 +4,7 @@
 package com.tisl.mpl.returns.dao.impl;
 
 import de.hybris.platform.jalo.flexiblesearch.FlexibleSearchException;
+import de.hybris.platform.returns.model.ReturnRequestModel;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
@@ -31,6 +32,9 @@ public class MplReturnDaoImpl implements MplReturnsDao
 	private static final Logger LOG = Logger.getLogger(MplReturnDaoImpl.class);
 	public static final String CUSTOMER_BANKDETAILS_QUERY = "select {pk} from {MplCustomerBankAccountDetails} where {customerid}=?customerid";
 	public static final String CUSTOMER_BANKDETAILS_KEY ="customerid";
+	
+	public static final String RETURN_REQUEST_QUERY = "select * from {ReturnRequest} where {order}=?orderid";
+	public static final String RETURN_REQUEST_KEY ="orderid";
 	
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
@@ -75,6 +79,45 @@ public class MplReturnDaoImpl implements MplReturnsDao
       }
       catch (Exception e) {
       	LOG.error("Exception occured during fetching customer Bank account details with custmer Id :"+customerId+ "Error Trace:" +e);
+      	throw new EtailNonBusinessExceptions(e);
+		}
+	}
+
+	
+	@Override
+	public List<ReturnRequestModel> getListOfReturnRequest(String orderId)
+	{
+		
+		ServicesUtil.validateParameterNotNull(orderId, "Id must not be null");
+		final Map queryParams = new HashMap();
+		final String query = RETURN_REQUEST_QUERY;
+		queryParams.put(RETURN_REQUEST_KEY, orderId);
+		final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(query);
+		fQuery.addQueryParameters(queryParams);
+      try
+      {
+      	if(LOG.isDebugEnabled())
+      	{
+      	LOG.debug("Query to fetch Customer bank account details with Order ID :"+orderId +" Query : "+fQuery);
+      	}
+		final List<ReturnRequestModel> returnRequestModelList = flexibleSearchService.<ReturnRequestModel> search(fQuery).getResult();
+
+		if (CollectionUtils.isNotEmpty(returnRequestModelList))
+		{
+			return returnRequestModelList;
+		}
+		else
+		{
+			return null;
+		}
+      }
+      catch(FlexibleSearchException e)
+      {
+      	LOG.error("Flexible search Exception"+e);
+      	throw new EtailNonBusinessExceptions(e,"Flexible search Exception");
+      }
+      catch (Exception e) {
+      	LOG.error("Exception occured during fetching customer Bank account details with custmer Id :"+orderId+ "Error Trace:" +e);
       	throw new EtailNonBusinessExceptions(e);
 		}
 	}

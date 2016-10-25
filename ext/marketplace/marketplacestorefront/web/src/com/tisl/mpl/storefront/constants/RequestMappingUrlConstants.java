@@ -171,5 +171,12 @@ public final class RequestMappingUrlConstants
 	public static final String LINK_EDIT_RETURN_ADDRESS = "/editReturnAddress";
 	public static final String LINK_ADD_RETURN_ADDRESS = "/addNewReturnAddress";
 	public static final String LINK_PINCODE_CHECK="/pincodeServiceCheck";
+	
+	public static final String FILE_UPLOAD_PATH="return.fileupload.path";
+	public static final String SHIPMENT_CHARGE_AMOUNT="return.shipmentcharge";
+	public static final String RSS="RSS";
+	public static final String RETURN_TYPE="02";
+	public static final String COD="COD";
+	
 
 }

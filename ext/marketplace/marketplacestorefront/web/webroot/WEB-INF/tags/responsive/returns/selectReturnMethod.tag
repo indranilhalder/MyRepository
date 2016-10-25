@@ -95,7 +95,7 @@
 					<div class="row clearfix">
 						<div class="col-md-6 col-sm-6 col-xs-6">
 							<div class="form-group">
-								 <input type="text" class="form-control" id="pin" placeholder="Enter Pincode" value="${subOrderEntry.deliveryPointOfService.address.postalCode}">
+								 <input type="text" class="form-control" id="pin" maxlength="6" placeholder="Enter Pincode" value="${subOrderEntry.deliveryPointOfService.address.postalCode}" onkeypress="return isNum(event)" />
 							</div>
 						</div>
 						<div class="col-md-6 col-sm-6 col-xs-6">
@@ -109,7 +109,7 @@
 					<div class="row clearfix">
 						<div class="col-md-6 col-sm-6 col-xs-6">
 							<div class="form-group">
-								 <input type="text" class="form-control" id="pin" placeholder="Enter Pincode" value="${subOrder.deliveryAddress.postalCode }">
+								 <input type="text" class="form-control" id="pin" maxlength="6" placeholder="Enter Pincode" value="${subOrder.deliveryAddress.postalCode } " onkeypress="return isNum(event)" />
 							</div>
 						</div>
 						<div class="col-md-6 col-sm-6 col-xs-6">
@@ -219,7 +219,9 @@
 					<span class="fa-angle-right"></span>
 				</div>
 				<div class="col-md-2 col-xs-12 col-sm-2">
-					<b><spring:theme code="text.order.returns.step2"/></b> <br /><spring:theme code="text.order.returns.downloaddocuments"/> <br /> <a href=""><spring:theme code="text.order.returns.document1"/></a><br />
+					<b><spring:theme code="text.order.returns.step2"/></b> <br /><spring:theme code="text.order.returns.downloaddocuments"/> <br /> 
+					
+					<a href=""><spring:theme code="text.order.returns.document1"/></a><br />
 					<a href=""><spring:theme code="text.order.returns.document2"/></a>
 				</div>
 				<div class="col-md-1 col-xs-1 hidden-xs col-sm-1">

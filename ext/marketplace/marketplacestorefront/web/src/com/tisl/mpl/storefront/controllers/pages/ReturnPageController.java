@@ -16,8 +16,12 @@ import de.hybris.platform.commercefacades.user.UserFacade;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.session.SessionService;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,6 +45,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -70,6 +75,7 @@ import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.storefront.web.forms.AccountAddressForm;
 import com.tisl.mpl.storefront.web.forms.MplCRMTicketUpdateForm;
+import com.tisl.mpl.storefront.web.forms.MplReturnInfoForm;
 import com.tisl.mpl.storefront.web.forms.MplReturnsForm;
 import com.tisl.mpl.storefront.web.forms.validator.MplAddressValidator;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -121,6 +127,9 @@ public class ReturnPageController extends AbstractMplSearchPageController
 	
 	@Autowired
 	private DateUtilHelper dateUtilHelper;
+	
+	@Autowired
+	private ConfigurationService configurationService;
 
 	private static final String RETURN_SUCCESS = "returnSuccess";
 	private static final String RETURN_SUBMIT = "returnSubmit";
@@ -140,8 +149,10 @@ public class ReturnPageController extends AbstractMplSearchPageController
 	public String initiateReturn(final MplReturnsForm returnForm, final Model model,
 			final HttpServletRequest request,final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException, Exception
 	{
-		final boolean cancellationStatus;
+		boolean cancellationStatus;
 		LOG.info(returnForm);
+		ReturnInfoData returnData=new ReturnInfoData();
+		final ReturnItemAddressData returnAddrData = new ReturnItemAddressData();
 		try{
 		OrderEntryData subOrderEntry = new OrderEntryData();
 	//	final HttpSession session = request.getSession();
@@ -319,10 +330,10 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		
 		String returnPickupDate=returnForm.getScheduleReturnDate();
 		returnData.setReasonCode(returnForm.getReturnReason());
-		if(returnForm.getIsCODorder().equalsIgnoreCase("Y")){
-			returnData.setRefundType("N");
+		if(returnForm.getIsCODorder().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y)){
+			returnData.setRefundType(MarketplacecommerceservicesConstants.N);
 		}else{
-			returnData.setRefundType("S");
+			returnData.setRefundType(MarketplacecommerceservicesConstants.S);
 		}
 		returnData.setReturnPickupDate(dateUtilHelper.convertDateWithFormat(returnPickupDate));
 		returnData.setTicketTypeCode(MarketplacecommerceservicesConstants.RETURN_TYPE);
@@ -405,14 +416,14 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				{
 					//inser or update Customer Bank Details
 					cancelReturnFacade.insertUpdateCustomerBankDetails(selfShipData);
-					CODSelfShipResponseData responseData=cancelReturnFacade.codPaymentInfoToFICO(selfShipData);
+					/*CODSelfShipResponseData responseData=cancelReturnFacade.codPaymentInfoToFICO(selfShipData);
 					
 					if(responseData.getSuccess() == null || !responseData.getSuccess().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS) )
 					{
 						//saving bank details failed payment details in commerce 
 						cancelReturnFacade.saveCODReturnsBankDetails(selfShipData);	
 						LOG.debug("Failed to post COD return paymnet details to FICO Order No:"+orderCode);
-					}
+					}*/
 				}
 				catch (EtailNonBusinessExceptions e)
 				{
@@ -427,6 +438,28 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		
 		
 		}
+		
+		//for self Courier
+				if(returnForm.getReturnMethod().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_SELF))
+				{
+					LOG.debug(" returnForm>>>>>>>>>>>>>>>>>>>>>>>>>>>>: " +returnForm.toString());
+					ReturnInfoData returnInfoDataObj=new ReturnInfoData(); 
+					returnInfoDataObj.setTicketTypeCode(MarketplacecommerceservicesConstants.RETURN_TYPE);
+					returnInfoDataObj.setReasonCode(returnForm.getReturnReason());
+					returnInfoDataObj.setUssid(returnForm.getUssid());
+					returnInfoDataObj.setReturnMethod(returnForm.getReturnMethod());
+					boolean cancellationStatusForSelfShip = cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry,returnInfoDataObj, customerData, SalesApplication.WEB, returnAddrData);
+					if (!cancellationStatusForSelfShip)
+					{
+						GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+								ModelAttributetConstants.RETURN_ERRORMSG);
+						return REDIRECT_MY_ACCOUNT + RequestMappingUrlConstants.LINK_ORDERS;
+					}else{
+						//RETURN_METHOD = "returnMethod";
+						model.addAttribute(ModelAttributetConstants.RETURN_METHOD, returnForm.getReturnMethod());	
+					}
+					
+				}
 		
 		storeCmsPageInModel(model, getContentPageForLabelOrId(RETURN_SUCCESS));
 		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(RETURN_SUCCESS));
@@ -453,17 +486,116 @@ public class ReturnPageController extends AbstractMplSearchPageController
 	
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_UPDATE_RETURNINFO, method = RequestMethod.POST)
 	@RequireHardLogIn
-	public String updateReturnInfo(final MplReturnsForm returnForm, final Model model,
+	public String updateReturnInfo(final MplReturnInfoForm mplReturnInfoForm, final Model model,
 			final HttpServletRequest request,final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException, Exception
 	{
 	
 		//to DO Implementeation 
-		
+      MultipartFile filename=mplReturnInfoForm.getDispatchProof();  
+      LOG.debug("***************:"+filename.getOriginalFilename()); 
+      String fileUploadLocation=null;
+      String shipmentCharge=null;
+      Double configShippingCharge=null;
+      if(null!=configurationService){
+      	fileUploadLocation=configurationService.getConfiguration().getString(RequestMappingUrlConstants.FILE_UPLOAD_PATH);
+      	shipmentCharge=configurationService.getConfiguration().getString(RequestMappingUrlConstants.SHIPMENT_CHARGE_AMOUNT);
+      	if(null !=shipmentCharge && !shipmentCharge.isEmpty()){
+      		configShippingCharge=Double.parseDouble(shipmentCharge);
+      	}
+      	
+      	 if(null!=fileUploadLocation && !fileUploadLocation.isEmpty()){
+      		 try{  
+      	        byte barr[]=filename.getBytes();  
+      	        BufferedOutputStream bout=new BufferedOutputStream(  
+      	                 new FileOutputStream(fileUploadLocation+File.separator+filename.getOriginalFilename()));  
+      	        bout.write(barr);  
+      	        bout.flush();  
+      	        bout.close();  
+      	        LOG.debug("FileUploadLocation   :"+fileUploadLocation);   
+      	        }catch(Exception e){
+      	      	  LOG.error("Exception is:"+e);   
+      	        }  
+      	 }
+	   }
 		RTSAndRSSReturnInfoRequestData  returnInfoRequestData=new RTSAndRSSReturnInfoRequestData();
+		returnInfoRequestData.setAWBNum(mplReturnInfoForm.getAwbNumber());
+		returnInfoRequestData.setLPNameOther(mplReturnInfoForm.getLpname());
+		returnInfoRequestData.setOrderId(mplReturnInfoForm.getOrderId());
+		returnInfoRequestData.setTransactionId(mplReturnInfoForm.getTransactionId());
+		if(mplReturnInfoForm.getAmount() != null && !mplReturnInfoForm.getAmount().isEmpty()){
+			Double enterdShppingCharge=Double.parseDouble(mplReturnInfoForm.getAmount());
+			if(enterdShppingCharge.doubleValue()<configShippingCharge.doubleValue()){
+				returnInfoRequestData.setShipmentCharge(mplReturnInfoForm.getAmount());
+			}else{
+				returnInfoRequestData.setShipmentCharge(String.valueOf(configShippingCharge));
+			}
+		}
+		returnInfoRequestData.setShipmentProofURL(fileUploadLocation+File.separator+filename.getOriginalFilename());
+		returnInfoRequestData.setLogisticsID(mplReturnInfoForm.getLpNameOther());
+		returnInfoRequestData.setReturnType(RequestMappingUrlConstants.RSS);
 		
 		cancelReturnFacade.retrunInfoCallToOMS(returnInfoRequestData);
-
-		return "String";
+		
+		final CustomerData customerData = customerFacade.getCurrentCustomer();
+		 CODSelfShipData codSelfShipData = null;
+		 try{
+			
+			 if(null!=customerData){
+			  codSelfShipData = cancelReturnFacade.getCustomerBankDetailsByCustomerId(customerData.getUid());
+			 }
+			}
+			catch(EtailNonBusinessExceptions e)
+			{
+				LOG.error("Exception occured for fecting CUstomer Bank details for customer ID :"+customerData.getUid()+" Actual Stack trace "+e);
+			}
+		 try
+			{
+			 final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(mplReturnInfoForm.getOrderId());
+			 
+			 CODSelfShipData finalCODSelfShipData=new CODSelfShipData();
+			 
+			 finalCODSelfShipData.setTitle(codSelfShipData.getTitle());
+			 finalCODSelfShipData.setName(codSelfShipData.getName());
+			 finalCODSelfShipData.setBankKey(codSelfShipData.getBankKey());
+			 finalCODSelfShipData.setBankName(codSelfShipData.getBankName());
+			 finalCODSelfShipData.setBankAccount(codSelfShipData.getBankAccount());
+			 if(subOrderDetails.getMplPaymentInfo().getPaymentOption().equalsIgnoreCase(RequestMappingUrlConstants.COD)){
+				 finalCODSelfShipData.setOrderTag(MarketplacecommerceservicesConstants.ORDERTAG_TYPE_POSTPAID); 
+			 }else{
+				 finalCODSelfShipData.setOrderTag(MarketplacecommerceservicesConstants.ORDERTAG_TYPE_PREPAID); 
+			 }
+			 
+			 SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+			 finalCODSelfShipData.setAmount(returnInfoRequestData.getShipmentCharge());
+			 finalCODSelfShipData.setOrderNo(mplReturnInfoForm.getOrderId());
+			 finalCODSelfShipData.setOrderDate(dateUtilHelper.convertDateWithFormat(formatter.format(subOrderDetails.getCreated())));
+			 finalCODSelfShipData.setTransactionDate(dateUtilHelper.convertDateWithFormat(formatter.format(subOrderDetails.getCreated())));
+			 finalCODSelfShipData.setTransactionID(mplReturnInfoForm.getTransactionId());
+			 finalCODSelfShipData.setTransactionType(RequestMappingUrlConstants.RETURN_TYPE);
+			 finalCODSelfShipData.setOrderRefNo(mplReturnInfoForm.getTransactionId());
+			 finalCODSelfShipData.setPaymentMode(codSelfShipData.getPaymentMode());
+			 finalCODSelfShipData.setCustomerNumber(codSelfShipData.getCustomerNumber());
+				CODSelfShipResponseData responseData=cancelReturnFacade.codPaymentInfoToFICO(finalCODSelfShipData);
+				
+				if(responseData.getSuccess() == null || !responseData.getSuccess().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS) )
+				{
+					//saving bank details failed payment details in commerce 
+					cancelReturnFacade.saveCODReturnsBankDetails(finalCODSelfShipData);	
+					LOG.debug("Failed to post COD return paymnet details to FICO Order No:"+mplReturnInfoForm.getOrderId());
+				}
+			}
+			catch (EtailNonBusinessExceptions e)
+			{
+				LOG.error("Exception Occured during saving Customer BankDetails for COD order : " + mplReturnInfoForm.getOrderId()
+						+ " Exception cause :" + e);
+			}
+			catch (Exception e)
+			{
+				LOG.error("Exception Occured during saving Customer BankDetails for COD order : " + mplReturnInfoForm.getOrderId()
+						+ " Exception cause :" + e);
+			}
+  
+		return REDIRECT_PREFIX + RequestMappingUrlConstants.LOGIN_TRACKING_PAGE_URL + mplReturnInfoForm.getOrderId();
 	}
 	
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_TICKET_UPDATE, method = RequestMethod.POST)

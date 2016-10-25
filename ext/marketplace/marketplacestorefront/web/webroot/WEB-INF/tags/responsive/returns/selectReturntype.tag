@@ -81,11 +81,11 @@
 								<div class="col-md-4 col-sm-4 accountnumber">
 
 									<b><spring:theme code="text.order.returns.accountnumber"/></b> <br/>
-									<form:password onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="16" minlength="16" path="accountNumber" name="accountNumber" placeholder="Account Number" value="${customerBankDetails.bankAccount}" />
+									<form:password onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="24" minlength="16" path="accountNumber" name="accountNumber" placeholder="Account Number" value="${customerBankDetails.bankAccount}" />
 								</div>
 								<div class="col-md-4 col-sm-4 reenteraccountnumber">
 									<b><spring:theme code="text.order.returns.reenteraccountnumber"/></b> <br/>
-									<form:input onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="16" minlength="16" type="text" path="reEnterAccountNumber" name="reaccountNumber" placeholder="Re-Account Number" value="${customerBankDetails.bankAccount}" />
+									<form:input onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="24" minlength="16" type="text" path="reEnterAccountNumber" name="reaccountNumber" placeholder="Re-Account Number" value="${customerBankDetails.bankAccount}" />
 								</div>
 								<div class="col-md-4 col-sm-4 suggestionText">
 									<span><spring:theme code="text.order.returns.safetyinformationlable1"/></span><br/>

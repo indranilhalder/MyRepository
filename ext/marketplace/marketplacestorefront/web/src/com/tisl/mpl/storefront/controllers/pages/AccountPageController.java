@@ -61,12 +61,14 @@ import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.enums.Gender;
 import de.hybris.platform.core.model.enumeration.EnumerationValueModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
+import de.hybris.platform.returns.model.ReturnRequestModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
@@ -215,6 +217,7 @@ import com.tisl.mpl.storefront.util.AllWishListCompareByDate;
 import com.tisl.mpl.storefront.web.forms.AccountAddressForm;
 import com.tisl.mpl.storefront.web.forms.FriendsInviteForm;
 import com.tisl.mpl.storefront.web.forms.MplCustomerProfileForm;
+import com.tisl.mpl.storefront.web.forms.MplReturnInfoForm;
 import com.tisl.mpl.storefront.web.forms.MplReturnsForm;
 import com.tisl.mpl.storefront.web.forms.ReturnPincodeCheckForm;
 import com.tisl.mpl.storefront.web.forms.ReturnRequestForm;
@@ -883,6 +886,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			return REDIRECT_PREFIX + RequestMappingUrlConstants.LINK_404;
 		}
 		final ReturnRequestForm returnRequestForm = new ReturnRequestForm();
+		final MplReturnInfoForm mplReturnInfoForm = new MplReturnInfoForm();
 		final Map<String, Map<String, List<AWBResponseData>>> trackStatusMap = new HashMap<>();
 		final Map<String, String> currentStatusMap = new HashMap<>();
 		String consignmentStatus = ModelAttributetConstants.EMPTY, formattedProductDate = ModelAttributetConstants.EMPTY, formattedActualProductDate = ModelAttributetConstants.EMPTY;
@@ -1125,6 +1129,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			model.addAttribute(ModelAttributetConstants.FILTER_DELIVERYMODE, getMplOrderFacade().filterDeliveryMode());
 			model.addAttribute(ModelAttributetConstants.ORDER_DATE_FORMATED, finalOrderDate);
 			model.addAttribute(ModelAttributetConstants.RETURN_REQUEST_FORM, returnRequestForm);
+			model.addAttribute(ModelAttributetConstants.MPL_RETURN_INFO_FORM,mplReturnInfoForm);
 			model.addAttribute(ModelAttributetConstants.CANCELLATION_REASON, cancellationReason);
 
 			model.addAttribute(ModelAttributetConstants.AWBNUM, trackStatusAWBMap);

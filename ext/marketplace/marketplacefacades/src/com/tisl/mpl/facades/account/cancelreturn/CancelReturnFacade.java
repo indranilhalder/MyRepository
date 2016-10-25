@@ -8,6 +8,7 @@ import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.returns.model.ReturnRequestModel;
 
 import java.util.List;
 
@@ -161,6 +162,9 @@ public interface CancelReturnFacade
 	 * @param customerId
 	 */
 	public CODSelfShipData getCustomerBankDetailsByCustomerId(String customerId);
+	
+	
+	public List<ReturnRequestModel> getListOfReturnRequest(String orderId);
 
 
 }

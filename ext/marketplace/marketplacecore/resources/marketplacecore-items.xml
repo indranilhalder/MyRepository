@@ -8626,6 +8626,7 @@
 			<itemtype code="BankDetailsInfoToFICOHistory" autocreate="true"
 				generate="true" jaloclass="com.tisl.mpl.core.jalo.BankDetailsInfoToFICOHistory">
 				<description>Comm to FICO COD</description>
+				<deployment table="BankDetailsInfoToFICOHistory" typecode="17981" />
 			<attributes>
 			
 				<attribute type="java.lang.String" qualifier="transactionType">
@@ -8725,6 +8726,7 @@
 			<itemtype code="MplCustomerBankAccountDetails" autocreate="true"
 				generate="true" jaloclass="com.tisl.mpl.core.jalo.MplCustomerBankAccountDetails">
 				<description>Captured bank details for COD returns Payment </description>
+				<deployment table="MplCustomerBankAccountDetails" typecode="17982" />
 				<attributes>
 				<attribute type="java.lang.String" qualifier="customerId"  >
 			    <description>Customer Id</description>	
@@ -8766,11 +8768,16 @@
 			    <description>Refund payment Mode </description>	
 			    <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
 			    </attribute>
+			    	<attribute type="java.lang.String" qualifier="orderTag">
+						<modifiers read="true" write="true" optional="false" search="true" />
+						<persistence type="property" />
+				</attribute>
 				</attributes>
 			</itemtype>
 			<itemtype code="MplLPHolidays" autocreate="true"
 				generate="true" jaloclass="com.tisl.mpl.core.jalo.MplLPHolidays">
 				<description>Logistics holidays</description>
+				<deployment table="MplLPHolidays" typecode="17983" />
 				<attributes>
 				<attribute type="java.lang.String" qualifier="lpname">
 				 <persistence type="property" />

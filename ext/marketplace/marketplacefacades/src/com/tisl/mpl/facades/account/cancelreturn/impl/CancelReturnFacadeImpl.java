@@ -1131,7 +1131,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					sendTicketRequestData.setRefundType(refundType);
 
 
-
+              if(!(returnInfoData.getReturnMethod().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_SELF))){
 					boolean returnLogisticsCheck = true; //Start
 
 					final List<ReturnLogisticsResponseData> returnLogisticsRespList = checkReturnLogistics(subOrderDetails, pinCode);
@@ -1152,18 +1152,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						returnLogisticsCheck = false;
 					}
 					LOG.info(">>createTicketInCRM >> Setting Type of Return :" + returnLogisticsCheck);
-					
-					if(returnInfoData.getReturnMethod() != null)
-					{
-					if( returnInfoData.getReturnMethod().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_METHOD_SELFSHIP))
-					{
-						sendTicketRequestData.setTicketSubType(MarketplacecommerceservicesConstants.RETURN_TYPE_RSS);
-					}
-					else if(returnInfoData.getReturnMethod().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_METHOD_QUICKDROP))
-					{
-						sendTicketRequestData.setTicketSubType(MarketplacecommerceservicesConstants.RETURN_TYPE_RTS);
-					}
-					else if(returnInfoData.getReturnMethod().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_SCHEDULE))
+					if(returnInfoData.getReturnMethod().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_SCHEDULE))
 					{
 				   if (returnLogisticsCheck)
 					{
@@ -1172,6 +1161,27 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					}
 					
 					}
+              }
+					
+					if(returnInfoData.getReturnMethod() != null)
+					{
+					if( returnInfoData.getReturnMethod().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_SELF))
+					{
+						sendTicketRequestData.setTicketSubType(MarketplacecommerceservicesConstants.RETURN_TYPE_RSS);
+					}
+					else if(returnInfoData.getReturnMethod().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_METHOD_QUICKDROP))
+					{
+						sendTicketRequestData.setTicketSubType(MarketplacecommerceservicesConstants.RETURN_TYPE_RTS);
+					}
+					/*else if(returnInfoData.getReturnMethod().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_SCHEDULE))
+					{
+				   if (returnLogisticsCheck)
+					{
+						//LOG.info("Setting Type of Return::::::" + returnLogisticsCheck);
+						sendTicketRequestData.setTicketSubType(MarketplacecommerceservicesConstants.RETURN_TYPE_RSP);
+					}
+					
+					}*/
 					}
 				}
 
@@ -2194,7 +2204,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		returnInfoRequest.setAwbNum(returnInfoRequestData.getAWBNum());
 		returnInfoRequest.setLogisticsID(returnInfoRequestData.getLogisticsID());
 	    returnInfoRequest.setLpNameOther(returnInfoRequestData.getLPNameOther());
+	   if(null!=returnInfoRequestData.getRTSStore() && returnInfoRequestData.getRTSStore().size()>0){
 		returnInfoRequest.setRtsStore(returnInfoRequestData.getRTSStore());
+	   }
 		returnInfoRequest.setShipmentCharge(returnInfoRequestData.getShipmentCharge());
 		returnInfoRequest.setReturnType(returnInfoRequestData.getReturnType());
 		returnInfoRequest.setTransactionId(returnInfoRequestData.getTransactionId());
@@ -2272,12 +2284,17 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		requestData.setBankKey(codSelfShipData.getBankKey());
 		requestData.setTransactionID(codSelfShipData.getTransactionID());
 		requestData.setOrderDate(codSelfShipData.getOrderDate());
-		requestData.setTitle(codSelfShipData.getTitle());
+		requestData.setTitle(codSelfShipData.getTitle().toUpperCase());
 		requestData.setPaymentMode(codSelfShipData.getPaymentMode());
 		requestData.setBankName(codSelfShipData.getBankName());
 		requestData.setName(codSelfShipData.getName());
 		requestData.setOrderTag(codSelfShipData.getOrderTag());
-		
+		requestData.setTransactionDate(codSelfShipData.getTransactionDate());
+		requestData.setOrderNo(codSelfShipData.getOrderNo());
+		requestData.setCustomerNumber(codSelfShipData.getCustomerNumber());
+		requestData.setOrderRefNo(codSelfShipData.getOrderRefNo());
+		requestData.setTransactionType(codSelfShipData.getTransactionType());
+		requestData.setCustomerNumber(codSelfShipData.getCustomerNumber());
 		CODSelfShipResponseData codSelfShipResponseData=new CODSelfShipResponseData();
 		try
 		{
@@ -2510,7 +2527,10 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		
 	}
 
-
+	 @Override
+	 public List<ReturnRequestModel> getListOfReturnRequest(String orlderId){
+		return  mplReturnService.getListOfReturnRequest(orlderId);
+	 }
 	/**
 	 * @return the mplSNSMobilePushService
 	 */

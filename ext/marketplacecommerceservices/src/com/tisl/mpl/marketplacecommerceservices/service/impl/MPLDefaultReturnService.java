@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import com.tisl.mpl.core.model.MplCustomerBankAccountDetailsModel;
 import com.tisl.mpl.marketplacecommerceservices.service.MPLReturnService;
 import com.tisl.mpl.returns.dao.MplReturnsDao;
@@ -127,7 +128,10 @@ public class MPLDefaultReturnService extends DefaultReturnService implements MPL
 		return mplReturnsDao.getCustomerBankDetailsById(customerId);
 	}
 
-
+  @Override
+  public List<ReturnRequestModel> getListOfReturnRequest(String orlderId){
+	  return mplReturnsDao.getListOfReturnRequest(orlderId);
+  }
 
 
 }

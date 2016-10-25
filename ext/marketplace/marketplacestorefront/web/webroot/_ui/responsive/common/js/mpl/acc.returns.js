@@ -85,8 +85,10 @@
 
 				function checkACCValidat(){
 					var validate = true;
-					if($(".slectionRefund #accountNumber").val().length < 4 || $(".slectionRefund #accountNumber").val().length > 24) {
+					var accNum = $(".slectionRefund #accountNumber").val();
+					if(accNum.length < 4 || accNum.length > 24 || accNum.trim() == '') {
 						//Please Enter 16 Digit Account Number
+						$('.slectionRefund .accountnumber .errorText').remove();
 						$(".secondTataCliq .accountnumber").append("<div class='errorText'>Please Enter Valid Account Number.</div>");
 						validate = false;
 					}else{
@@ -96,8 +98,10 @@
 				}
 				function checkREACCValidat(){
 					var validate = true;
-					if($(".slectionRefund #reEnterAccountNumber").val().length < 4 || $(".slectionRefund #reEnterAccountNumber").val().length > 24) {
+					reAccNum = $(".slectionRefund #reEnterAccountNumber").val();
+					if(reAccNum.length < 4 || reAccNum.length > 24 || reAccNum.trim() == '') {
 						//Please Enter 16 Digit Account Number
+						$('.slectionRefund .reenteraccountnumber .errorText').remove();
 						$(".secondTataCliq .reenteraccountnumber").append("<div class='errorText'>Please Enter Valid Account Number.</div>");
 						validate = false;
 					}else{

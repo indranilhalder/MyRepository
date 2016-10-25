@@ -33,7 +33,7 @@ public class MplCustomerBankDetailsReversePopulator implements Populator<CODSelf
 		target.setIfscCode(source.getBankKey());
 		target.setPaymentMode(source.getPaymentMode());
 		target.setTitle(source.getTitle());
-		
+		target.setOrderTag(source.getOrderTag());
 	}
 
 }
