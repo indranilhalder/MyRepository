@@ -122,7 +122,7 @@
 		<property name="cookieSecure" value="false"/>
 		<property name="cookieMaxAge" value="#{configurationService.configuration.getProperty('default.session.timeout')}"/>
 		<property name="useDefaultPath" value="false"/>
-		<!-- <property name="cookieDomain" value="#{configurationService.configuration.getProperty('shared.cookies.domain')}"/> -->
+		<property name="cookieDomain" value="#{configurationService.configuration.getProperty('shared.cookies.domain')}"/>
 	</bean>
 	<!-- POC End -->
 	
