@@ -45857,4 +45857,6 @@ background: transparent;}
 body.page-wishlist .body-Content .wrapper{
 	    padding: 0 30px;
 } 
+.cart.wrapper .product-block li.item ul .item-edit-details li .popover.bottom{
+z-index:11;}
 /*--------------Added for luxury site ends-----------*/
