@@ -2738,6 +2738,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				if (null != catCompObj.getImage() && StringUtils.isNotEmpty(catCompObj.getImage().getURL()))
 				{
 					luxshopYourFav.setCategoryImageUrl(catCompObj.getImage().getURL());
+					luxshopYourFav.setMobileCategoryImageUrl(catCompObj.getMobileImage().getURL());
 				}
 			}
 
@@ -2832,6 +2833,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 			String bannerMediaUrl = null;
 			String altText = null;
+			String resolution = null;
 			if (banner instanceof MplBigPromoBannerComponentModel)
 			{
 				promotionalBanner = (MplBigPromoBannerComponentModel) banner;
@@ -2840,6 +2842,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				{
 					bannerMediaUrl = promotionalBanner.getBannerImage().getURL();
 					altText = promotionalBanner.getBannerImage().getAltText();
+					resolution = promotionalBanner.getBannerView().getCode().toString();
 
 				}
 			}
@@ -2849,12 +2852,14 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				{
 					bannerMediaUrl = banner.getMedia().getURL();
 					altText = banner.getMedia().getAltText();
+					resolution = banner.getBannerView().getCode().toString();
 				}
 			}
 			heroBanner.setBannerNumber(sequenceno);
 			heroBanner.setBannerMedia(bannerMediaUrl);
 			heroBanner.setAltText(altText);
 			heroBanner.setBannerUrl(banner.getUrlLink());
+			heroBanner.setResolution(resolution);
 			sequenceno++;
 
 			genderlist.add(heroBanner);
