@@ -19,6 +19,8 @@ public interface MplProductWebService
 {
 	public ProductDetailMobileWsData getProductdetailsForProductCode(final String productCode, String baseUrl);
 
+	public ProductDetailMobileWsData getProductInfoForProductCode(final String productCode, String baseUrl);
+
 	public String getCategoryCodeOfProduct(final ProductData productData);
 
 	public List<GalleryImageData> getGalleryImages(final ProductData productData);

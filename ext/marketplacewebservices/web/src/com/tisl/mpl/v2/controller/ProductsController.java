@@ -69,8 +69,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.ehcache.util.ProductInfo;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
@@ -1275,22 +1273,30 @@ public class ProductsController extends BaseController
 	 * @return product's review list
 	 */
 	@RequestMapping(value = "/productInfo", method = RequestMethod.GET)
-	@CacheControl(directive = CacheControlDirective.PRIVATE, maxAge = 120)
-	@Cacheable(value = "productCache", key = "T(de.hybris.platform.commercewebservicescommons.cache.CommerceCacheKeyGenerator).generateKey(true,true,#productCode,#fields)")
+	//@CacheControl(directive = CacheControlDirective.PRIVATE, maxAge = 120)
+	//@Cacheable(value = "productCache", key = "T(de.hybris.platform.commercewebservicescommons.cache.CommerceCacheKeyGenerator).generateKey(true,true,#productCode,#fields)")
 	@ResponseBody
-	public String getProductInfo(@RequestParam(required = true) final String productCodes,
+	public ProductInfoWSDTO getProductInfo(@RequestParam(required = true) final String productCodes,
 			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields, final HttpServletRequest request)
 	{
 		final List<String> productCodeList = new ArrayList<String>();
-		final ProductDetailMobileWsData productWSData = new ProductDetailMobileWsData();
+		ProductDetailMobileWsData productWSData = new ProductDetailMobileWsData();
 		final List<ProductDetailMobileWsData> productWSDataList = new ArrayList<ProductDetailMobileWsData>();
 		final ProductInfoWSDTO productDTOList = new ProductInfoWSDTO();
+		String productCode = "";
 
-		if (productCodes.indexOf(",")>=-1)
+		if (productCodes.indexOf(",") != -1)
 		{
-			productCode = productCode.toUpperCase();
-
-			final productCodeList
+			productCode = productCodes.toUpperCase();
+			for (final String prdStr : productCode.split(","))
+			{
+				productCodeList.add(prdStr);
+			}
+		}
+		else
+		{
+			productCode = productCodes.toUpperCase();
+			productCodeList.add(productCode);
 		}
 
 		try
@@ -1316,36 +1322,41 @@ public class ProductsController extends BaseController
 					//+ MarketplacewebservicesConstants.FORGOTPASSWORD_URL;
 				}
 			}
-			for(final String productCode : productCodeList){
-				productWSData = mplProductWebService.getProductdetailsForProductCode(productCode, baseUrl);
+			for (final String productCodeRef : productCodeList)
+			{
+				productWSData = mplProductWebService.getProductInfoForProductCode(productCodeRef, baseUrl);
+				productWSDataList.add(productWSData);
 			}
+			productDTOList.setResults(productWSDataList);
+			productDTOList.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			if (null != e.getErrorMessage())
 			{
-				product.setError(e.getErrorMessage());
+				productDTOList.setError(e.getErrorMessage());
 			}
-			product.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			productDTOList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			if (null != e.getErrorMessage())
 			{
-				product.setError(e.getErrorMessage());
+				productDTOList.setError(e.getErrorMessage());
 			}
-			product.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			productDTOList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		//TPR-799
 		catch (final Exception e)
 		{
 			ExceptionUtil.getCustomizedExceptionTrace(e);
-			product.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
-			product.setErrorCode(MarketplacecommerceservicesConstants.E0000);
-			product.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			productDTOList.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			productDTOList.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			productDTOList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
+		return productDTOList;
 	}
 
 	/**
