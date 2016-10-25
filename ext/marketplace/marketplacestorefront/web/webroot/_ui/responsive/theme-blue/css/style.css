@@ -49947,8 +49947,8 @@ width: auto;
     line-height: 20px;
     color:#000;
     font-weight:normal;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 30px;
+    padding-right: 30px;
  }
  .shop_the_look .shop_the_look_left .shop_the_look_section .carousel-component .owl-stage-outer .product-tile .details.short-info .brand{
  text-align:center;
@@ -50006,7 +50006,7 @@ width: auto;
 padding-left:0px;
 padding-right:0px;
 }
-body.template-pages-layout-newBrandLandingPageTemplate .owl-carousel, .feature-categories .carousel{
+body.template-pages-layout-newBrandLandingPageTemplate .shopByLookCarousel{
 	padding:0px;
 }
  /*  shop the look section end */
