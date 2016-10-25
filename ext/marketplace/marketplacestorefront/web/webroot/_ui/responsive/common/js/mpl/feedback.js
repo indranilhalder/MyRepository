@@ -378,7 +378,7 @@ $(document).ready(function(){
 	$(".facet-list.filter-opt li").each(function(){
 		if($(this).find("input.colour").length > 0){
 			var selected_colour = $(this).find("input.applied-color").val();
-			$(".left-block .product-facet .facet.colour .facet-list li.filter-colour").each(function(){
+			$(".left-block .product-facet .facet.Colour .facet-list li.filter-colour").each(function(){
 			var colour_name = $(this).find("input[name=facetValue]").val().split("_", 1);
 			if(colour_name == selected_colour){
 				$(this).addClass("selected-colour");
@@ -392,7 +392,7 @@ $(document).ready(function(){
 		}
 		if($(this).find("input.size").length > 0){
 			var selected_size = $(this).find("input.applied-color").val();
-			$(".left-block .product-facet .facet.size .facet-list li.filter-size").each(function(){
+			$(".left-block .product-facet .facet.Size .facet-list li.filter-size").each(function(){
 				var size_val = $(this).find(".js-facet-sizebutton").val();
 				if(size_val == selected_size){
 					$(this).addClass("selected-size");
@@ -1778,7 +1778,7 @@ $(document).ready(function(){
 			$(".facet-list.filter-opt li").each(function(){
 				if($(this).find("input.colour").length > 0){
 					var selected_colour = $(this).find("input.applied-color").val();
-					$(".left-block .product-facet .facet.colour .facet-list li.filter-colour").each(function(){
+					$(".left-block .product-facet .facet.Colour .facet-list li.filter-colour").each(function(){
 					var colour_name = $(this).find("input[name=facetValue]").val().split("_", 1);
 					if(colour_name == selected_colour){
 						$(this).addClass("selected-colour");
@@ -1792,7 +1792,7 @@ $(document).ready(function(){
 				}
 				if($(this).find("input.size").length > 0){
 			var selected_size = $(this).find("input.applied-color").val();
-			$(".left-block .product-facet .facet.size .facet-list li.filter-size").each(function(){
+			$(".left-block .product-facet .facet.Size .facet-list li.filter-size").each(function(){
 				var size_val = $(this).find(".js-facet-sizebutton").val();
 				if(size_val == selected_size){
 					$(this).addClass("selected-size");
@@ -1810,6 +1810,34 @@ $(document).ready(function(){
 					$(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("top",sort_top+"px")
 				}
 			}
+			
+if($(".facet.js-facet.Colour .js-facet-values.js-facet-form .more-lessFacetLinks").length == 0){	
+var colorMoreLess = '<div class="more-lessFacetLinks" style="display:none;">'
+				+'<div class="more checkbox-menu" style="display: block;">'
+				+'<a href="#" class="more">+&nbsp;<span class="colourNumber">0</span>&nbsp;more&nbsp;<span class="colourText">colours</span></a>'
+				+'</div><div class="less checkbox-menu" style="display: none;">'
+				+'<a href="#" class="less"> - less colours</a>'
+				+'</div></div>';
+
+$(".facet.js-facet.Colour .js-facet-values.js-facet-form").append(colorMoreLess);
+}
+if($(".facet.js-facet.Size .js-facet-values.js-facet-form .more-lessFacetLinks").length == 0){	
+var sizeMoreLess = '<div class="more-lessFacetLinks" style="display:none;">'
+				+'<div class="more checkbox-menu" style="display: block;">'
+				+'<a href="#" class="more">+&nbsp;<span class="sizeNumber">0</span>&nbsp;more&nbsp;<span class="sizeText">sizes</span></a>'
+				+'</div><div class="less checkbox-menu" style="display: none;">'
+				+'<a href="#" class="less"> - less sizes</a>'
+				+'</div></div>'; 
+
+$(".facet.js-facet.Size .js-facet-values.js-facet-form").append(sizeMoreLess);
+}
+if($(".facet.js-facet.Colour").length > 0){
+	colorSwatch();
+}
+if($(".facet.js-facet.Size").length > 0){
+	sizeSwatch();
+}
+			
 		});
 		$(window).on("load resize", function() {
 		if($(".listing.wrapper").length > 0){
@@ -2104,6 +2132,7 @@ function colorSwatch() {
 
 
 function sizeSwatch() {
+	//alert();
 	var row = 0, start = 0, count_mobile = 0, end_mobile = 0,count_desktop = 0, end_desktop = 0, back = true;
 	$(".facet_mobile li.filter-size, .facet_desktop li.filter-size").removeClass("deactivate");
 
@@ -2145,18 +2174,26 @@ function sizeSwatch() {
 	} else if (count_mobile == 1) {
 		$('.facet_mobile .facet.js-facet.Size .more-lessFacetLinks .more .sizeText').text("size");
 		$('.facet_mobile .facet.js-facet.Size .more-lessFacetLinks').show();
+		$('.facet_mobile .facet.js-facet.Size .more-lessFacetLinks .more').show();
+		$('.facet_mobile .facet.js-facet.Size .more-lessFacetLinks .less').hide();
 	} else {
 		$('.facet_mobile .facet.js-facet.Size .more-lessFacetLinks .more .sizeText').text("sizes");
 		$('.facet_mobile .facet.js-facet.Size .more-lessFacetLinks').show();
+		$('.facet_mobile .facet.js-facet.Size .more-lessFacetLinks .more').show();
+		$('.facet_mobile .facet.js-facet.Size .more-lessFacetLinks .less').hide();
 	}
 	if(count_desktop == 0) {
 		$('.facet_desktop .facet.js-facet.Size .more-lessFacetLinks').hide();
 	} else if (count_desktop == 1) {
 		$('.facet_desktop .facet.js-facet.Size .more-lessFacetLinks .more .sizeText').text("size");
 		$('.facet_desktop .facet.js-facet.Size .more-lessFacetLinks').show();
+		$('.facet_desktop .facet.js-facet.Size .more-lessFacetLinks .more').show();
+		$('.facet_desktop .facet.js-facet.Size .more-lessFacetLinks .less').hide();
 	} else {
 		$('.facet_desktop .facet.js-facet.Size .more-lessFacetLinks .more .sizeText').text("sizes");
 		$('.facet_desktop .facet.js-facet.Size .more-lessFacetLinks').show();
+		$('.facet_desktop .facet.js-facet.Size .more-lessFacetLinks .more').show();
+		$('.facet_desktop .facet.js-facet.Size .more-lessFacetLinks .less').hide();
 	}
 
 }
