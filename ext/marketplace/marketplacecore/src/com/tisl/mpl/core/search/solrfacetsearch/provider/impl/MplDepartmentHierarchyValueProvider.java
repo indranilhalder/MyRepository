@@ -26,14 +26,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MplConstants;
 
 
-public class MplDepartmentHierarchyValueProvider extends AbstractPropertyFieldValueProvider
-		implements FieldValueProvider, Serializable
+public class MplDepartmentHierarchyValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider,
+		Serializable
 {
+	/**
+	 * 
+	 */
+	private static final String LSH1 = "LSH1";
 	private CategorySource categorySource;
 	private FieldNameProvider fieldNameProvider;
 	private CategoryService categoryService;
@@ -118,7 +123,8 @@ public class MplDepartmentHierarchyValueProvider extends AbstractPropertyFieldVa
 			for (final List categoryPath : pathsForCategory)
 			{
 				if (categoryPath != null && categoryPath.size() > 0
-						&& ((CategoryModel) categoryPath.get(0)).getCode().contains(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE))
+						&& (((CategoryModel) categoryPath.get(0)).getCode().contains(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE))
+						|| ((CategoryModel) categoryPath.get(0)).getCode().contains(LSH1))
 				{
 					accumulateCategoryPaths(categoryPath, allPaths);
 				}
@@ -132,9 +138,18 @@ public class MplDepartmentHierarchyValueProvider extends AbstractPropertyFieldVa
 	@SuppressWarnings("boxing")
 	protected void accumulateCategoryPaths(final List<CategoryModel> categoryPath, final Set<String> output)
 	{
+		List<CategoryModel> categoryList = new ArrayList<CategoryModel>();
 		final StringBuilder accumulator = new StringBuilder();
 		int level = 0;
-		for (final CategoryModel category : categoryPath)
+		if (CollectionUtils.isNotEmpty(getLuxuaryCategories(categoryPath)))
+		{
+			categoryList = getLuxuaryCategories(categoryPath);
+		}
+		else
+		{
+			categoryList = categoryPath;
+		}
+		for (final CategoryModel category : categoryList)
 		{
 			if (category instanceof ClassificationClassModel)
 			{
@@ -153,5 +168,18 @@ public class MplDepartmentHierarchyValueProvider extends AbstractPropertyFieldVa
 			output.add(accumulator.toString());
 			level = level + 1;
 		}
+	}
+
+	public List<CategoryModel> getLuxuaryCategories(final List<CategoryModel> categoryPath)
+	{
+		final List<CategoryModel> categoryModel = new ArrayList<CategoryModel>();
+		for (final CategoryModel catModel : categoryPath)
+		{
+			if (catModel.getCode().startsWith("LSH"))
+			{
+				categoryModel.add(catModel);
+			}
+		}
+		return categoryModel;
 	}
 }
