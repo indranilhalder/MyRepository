@@ -2373,7 +2373,7 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 	}
 	
 	result=$("#otherLandmark").val();
-	if(result != null){
+	if(result != null && ! result == ''){
 	   if(result.trim() == ''){
   	        $(".otherLandMarkError").show();
 	  		$(".otherLandMarkError").text("Other LandMark cannot be allow  space");
