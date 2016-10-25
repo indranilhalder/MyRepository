@@ -52,6 +52,7 @@ import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
+import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.enums.OnlineExclusiveEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -120,7 +121,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -539,6 +540,12 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				else if (null != productData.getUrl())
 				{
 					sharedText += productData.getUrl();
+				}
+
+				if (productData.getLuxIndicator() != null
+						&& productData.getLuxIndicator().equalsIgnoreCase(MarketplaceCoreConstants.LUXURY))
+				{
+					productDetailMobile.setLuxIndicator(MarketplaceCoreConstants.LUXURY);
 				}
 
 			}
