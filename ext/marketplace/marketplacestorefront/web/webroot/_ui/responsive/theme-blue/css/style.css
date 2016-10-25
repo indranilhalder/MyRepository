@@ -26909,10 +26909,10 @@ top: 14px;
     transition: border-color 0.3s; */
 }
 
-.listing-leftmenu .Size .facet-list .filter-Size .facet-mark {
+.listing-leftmenu .Size .facet-list .filter-size .facet-mark {
 	display:none !important;
 }
-.listing-leftmenu .Size .facet-list .filter-Size .facet-text {
+.listing-leftmenu .Size .facet-list .filter-size .facet-text {
 	display: table-cell;
     float: none;
     vertical-align: middle;
@@ -26924,7 +26924,7 @@ top: 14px;
     color: #b9b9b9;
     font-size: 12px;
 }
-.listing-leftmenu .Size .facet-list .filter-Size form input[type="button"] {
+.listing-leftmenu .Size .facet-list .filter-size form input[type="button"] {
     display: table-cell;
     vertical-align: middle;
     width: 60px;
@@ -26938,14 +26938,14 @@ top: 14px;
     padding: 0;
     white-space: normal;
 }
-.listing-leftmenu .Size .facet-list .filter-Size form input[type="button"]:hover{
+.listing-leftmenu .Size .facet-list .filter-size form input[type="button"]:hover{
 	border-color: #000;
     -webkit-transition: border-color .5s;
     -moz-transition: border-color .5s;
     transition: border-color .5s;
     color: #000 !important;
 }
-.product-facet .facet.size .facet-list li.filter-size {
+.product-facet .facet.Size .facet-list li.filter-size {
     padding: 0 8px 0 0;
     width: auto;
     height: 42px;
@@ -26954,10 +26954,10 @@ top: 14px;
     margin-left: -4px;
     display: inline-block;
 } 
-.listing-leftmenu .Size .facet-list .filter-Size form {
+.listing-leftmenu .Size .facet-list .filter-size form {
     display: table;
 }
-.listing-leftmenu .Size .facet-list .filter-Size .facet-text:hover { 
+.listing-leftmenu .Size .facet-list .filter-size .facet-text:hover { 
 	 border-color: #000;
     -webkit-transition: border-color 0.5s;
     -moz-transition: border-color 0.5s;
@@ -31795,7 +31795,7 @@ body.page-homepage .feature-collections{
     width: 26px !important;
     height: 26px !important;
     padding: 0 !important;
-    border-radius: 0;
+    border-radius: 0 !important;
     border: 1px solid #fff !important;
 }
 
@@ -43882,7 +43882,7 @@ div#defaultPinDiv p{
     position: relative;
 } */
 /**/
-li.filter-colour.deactivate,li.filter-Size.deactivate{
+li.filter-colour.deactivate,li.filter-size.deactivate{
 	display:none !important;
 }
 p.savings {
@@ -44283,9 +44283,9 @@ bottom:35px;
 /* Category Ends */
 
 /* SERP facets Starts */
-.pageType-CategoryPage .listing-leftmenu h3{
+/* .pageType-CategoryPage .listing-leftmenu h3{
 	display: block !important;
-}
+} */
 .listing-leftmenu h3{
 	font-size: 14px;
     font-weight: 400;

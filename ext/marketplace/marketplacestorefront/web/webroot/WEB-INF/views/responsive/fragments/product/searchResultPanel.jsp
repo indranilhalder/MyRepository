@@ -24,7 +24,7 @@
 			<input type="hidden" name="isConceirge" id="isConceirge" value="${isConceirge}" />
 			<input type="hidden" name="isCategoryPage" id="isCategoryPage" value="${isCategoryPage}" />
 		
-			<span class="toggle-filterSerp">Filter</span>
+			<span class="toggle-filterSerp"  onclick="toggleFilter()">Filter</span>
 			<div class="mob-filter-wrapper">
 	<div class="filter-title">Filter <a href="#nogo" class="filter-close"></a> </div>
 		<ul id="product-facet " class="product-facet js-product-facet listing-leftmenu">
