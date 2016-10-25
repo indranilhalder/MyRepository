@@ -146,7 +146,8 @@ $(document).ready(function(){
 			
 			var style = null ;
 			var marketplaceHeader = !($("header").children().hasClass("header-inner"));
-			if(!($('body').hasClass("page-multiStepCheckoutSummaryPage") || $('body').hasClass("page-checkout-login")) && marketplaceHeader)
+			if(marketplaceHeader){
+			if(!($('body').hasClass("page-multiStepCheckoutSummaryPage") || $('body').hasClass("page-checkout-login")))
 				{
 					 if($(window).scrollTop() == 0){
 						 window.setTimeout(function(){
@@ -159,6 +160,7 @@ $(document).ready(function(){
 					
 					 style = "display:block;width: "+$('#js-site-search-input').css('width')+"; left: "+$('#js-site-search-input').offset().left+"px";
 				}
+			}
 			  $("ul#ui-id-1").attr("style",style);
 			  
 			  $("#js-site-search-input").keypress(function(){
@@ -204,14 +206,16 @@ $(document).ready(function(){
 			   
 				  
 			   $(window).scroll(function () {
+				   if(marketplaceHeader){
 					  /*--------changes for Sticky Header in MyBag--------------*/
-				   if(!($('body').hasClass("page-multiStepCheckoutSummaryPage") || $('body').hasClass("page-checkout-login")) && marketplaceHeader){
+				   if(!($('body').hasClass("page-multiStepCheckoutSummaryPage") || $('body').hasClass("page-checkout-login"))){
 						 if( $(window).scrollTop() > $('.bottom').offset().top && !($('.bottom').hasClass('active'))){
 				      $('.bottom').addClass('active');
 				    } else if ($(window).scrollTop() == 0){
 				      $('.bottom').removeClass('active');
 				    }
 					  }
+				   }
 				  }); 
 			   
 	 /*----END of Sticky Bag --------*/
