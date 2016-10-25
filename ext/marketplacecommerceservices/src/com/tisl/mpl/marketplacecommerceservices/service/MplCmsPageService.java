@@ -11,11 +11,8 @@ import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSPageService;
-<<<<<<< HEAD
-=======
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
->>>>>>> refs/remotes/origin/TCS_DEV_MASTER
 import de.hybris.platform.core.model.product.ProductModel;
 
 import java.util.Collection;

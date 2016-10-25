@@ -47,13 +47,8 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 	private FlexibleSearchService flexibleSearchService;
 
 	@Resource
-	private ConfigurationService configurationService;
-
-	@Resource
 	private CatalogVersionService catalogVersionService;
 
-	@Resource
-	private PagedFlexibleSearchService pagedFlexibleSearchService;
 
 	private static final String SELECT_CLASS = "Select {";
 
@@ -154,7 +149,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplCmsPageDao#getHomePageForMobile()
 	 */
 	@Override
@@ -315,7 +310,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 		return null;
 	}
-	
+
 	@Resource
 	private PagedFlexibleSearchService pagedFlexibleSearchService;
 
@@ -343,26 +338,28 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 	@Autowired
 	private ConfigurationService configurationService;
-	
-	/*@Override
-	public SearchPageData<ContentSlotForPageModel> getContentSlotsForAppById(final String pageUid, final PageableData pageableData)
-	{
 
-		final CatalogVersionModel catalogmodel = catalogversionservice.getCatalogVersion(configurationService.getConfiguration()
-				.getString("internal.campaign.catelog"),
-				configurationService.getConfiguration().getString("internal.campaign.catalogVersionName"));
+	/*
+	 * @Override public SearchPageData<ContentSlotForPageModel> getContentSlotsForAppById(final String pageUid, final
+	 * PageableData pageableData) {
+	 * 
+	 * final CatalogVersionModel catalogmodel =
+	 * catalogversionservice.getCatalogVersion(configurationService.getConfiguration()
+	 * .getString("internal.campaign.catelog"),
+	 * configurationService.getConfiguration().getString("internal.campaign.catalogVersionName"));
+	 * 
+	 * final Map params = new HashMap(); params.put("uid", pageUid); params.put("version", catalogmodel);
+	 * 
+	 * final String query =
+	 * "Select {CSP.pk} From {ContentSlotForPage AS CSP JOIN ContentPage as CP ON {CSP.page}={CP.pk}} where {CP.uid} = ?uid and {CSP.catalogVersion}=?version"
+	 * ;
+	 * 
+	 * return getPagedFlexibleSearchService().search(query, params, pageableData);
+	 * 
+	 * 
+	 * }
+	 */
 
-		final Map params = new HashMap();
-		params.put("uid", pageUid);
-		params.put("version", catalogmodel);
-
-		final String query = "Select {CSP.pk} From {ContentSlotForPage AS CSP JOIN ContentPage as CP ON {CSP.page}={CP.pk}} where {CP.uid} = ?uid and {CSP.catalogVersion}=?version";
-
-		return getPagedFlexibleSearchService().search(query, params, pageableData);
-
-
-	}*/
-	
 	/**
 	 * Method added for TPR-798
 	 *
@@ -391,7 +388,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 		return pagedFlexibleSearchService.search(queryStr, params, pageableData);
 
 	}
-	
+
 	/**
 	 * @Description get the content page for product
 	 * @param product

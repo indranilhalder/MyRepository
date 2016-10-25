@@ -63,7 +63,7 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService#getLandingPageForCategory(de.hybris.platform
 	 * .category.model.CategoryModel)
@@ -109,7 +109,7 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService#getHomePageForMobile()
 	 */
 	@Override
@@ -130,7 +130,7 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService#getLandingPageForCategory(de.hybris.platform
 	 * .category.model.CategoryModel)
@@ -204,7 +204,7 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService#getContentSlotByUidForPage(java.lang.String,
 	 * java.lang.String, java.lang.String)
@@ -214,13 +214,6 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 	{
 		final ContentSlotModel contentSlot = mplCmsPageDao.getContentSlotByUidForPage(pageId, contentSlotId, catalogVersion);
 		return contentSlot;
-	}
-
-	@Override
-	public ContentPageModel getContentPageForProduct(final ProductModel product) throws CMSItemNotFoundException
-	{
-		final ContentPageModel contentPage = mplCmsPageDao.getContentPageForProduct(product);
-		return contentPage;
 	}
 
 	/**
