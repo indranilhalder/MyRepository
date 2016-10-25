@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.core.search.solrfacetsearch.provider.impl;
 
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.solrfacetsearch.config.IndexConfig;
 import de.hybris.platform.solrfacetsearch.config.IndexedProperty;
 import de.hybris.platform.solrfacetsearch.config.exceptions.FieldValueProviderException;
@@ -17,6 +18,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.model.PcmProductVariantModel;
@@ -31,9 +33,12 @@ public class MplSizeFacetValueProvider extends AbstractPropertyFieldValueProvide
 {
 	private FieldNameProvider fieldNameProvider;
 
+	@Autowired
+	private ConfigurationService configurationService;
+
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.solrfacetsearch.provider.FieldValueProvider#getFieldValues(de.hybris.platform.solrfacetsearch
 	 * .config.IndexConfig, de.hybris.platform.solrfacetsearch.config.IndexedProperty, java.lang.Object)
@@ -55,6 +60,19 @@ public class MplSizeFacetValueProvider extends AbstractPropertyFieldValueProvide
 			final PcmProductVariantModel pcmColorModel = (PcmProductVariantModel) model;
 			//Get size for a product
 			final String size = pcmColorModel.getSize();
+
+			/**
+			 * This logic used to fix issue: TISREL-654 ('Size' facet shouldn't get displayed in the PLP of Belts category)
+			 */
+			if ("Accessories".equalsIgnoreCase(pcmColorModel.getProductCategoryType()))
+			{
+				return Collections.emptyList();
+			}
+
+			/**
+			 * Fix issue : TISREL-654 End
+			 */
+
 			//If size is not empty
 			if (size != null && !size.isEmpty())
 			{

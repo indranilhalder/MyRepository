@@ -91,13 +91,20 @@
 	<bean id="acceleratorMplProductPrimaryImagePopulator" parent="defaultProductPrimaryImagePopulator">
 		<property name="imageFormats">
 			<list>
-			<value>superZoom</value>
+				<value>superZoom</value>
 				<value>zoom</value>
 				<value>product</value>
 				<value>thumbnail</value>
 				<value>cartIcon</value>
 				<value>cartPage</value>
 				<value>searchPage</value>
+				<value>luxurySuperZoom</value>
+				<value>luxuryZoom</value>
+				<value>luxuryProduct</value>
+				<value>luxuryThumbnail</value>
+				<value>luxuryCartIcon</value>
+				<value>luxuryCartPage</value>
+				<value>luxurySearchPage</value>
 			</list>
 		</property>
 	</bean>
@@ -110,6 +117,10 @@
 				<value>zoom</value>
 				<value>product</value>
 				<value>thumbnail</value>
+				<value>luxurySuperZoom</value>
+				<value>luxuryZoom</value>
+				<value>luxuryProduct</value>
+				<value>luxuryThumbnail</value>
 			</list>
 		</property>
 	</bean>
@@ -129,10 +140,19 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 <entry key="video" value="97Wx140H" />
 <entry key="cartIcon" value="97Wx144H" />
 <entry key="styleSwatch" value="97Wx144H" />
+<entry key="luxurySuperZoom" value="1316Wx1468H" />
+<entry key="luxuryZoom" value="658Wx734H" />
+<entry key="luxuryStore" value="658Wx734H" />
+<entry key="luxuryProduct" value="658Wx734H" />
+<entry key="luxurySearchPage" value="320Wx357H" />
+<entry key="luxuryThumbnail" value="58Wx65H" />
+<entry key="luxuryCartPage" value="97Wx108H" />
+<entry key="luxuryVideo" value="97Wx108H" />
+<entry key="luxuryCartIcon" value="97Wx108H" />
+<entry key="luxuryStyleSwatch" value="97Wx108H" />
 </map>
 </property>
 </bean>
-	
 	
 	<bean id="customerEmailContext"
 		class="com.tisl.mpl.facades.process.email.context.CustomerEmailContext"
@@ -337,6 +357,13 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 				<value>cartIcon</value>
 				<value>cartPage</value>
 				<value>searchPage</value>
+				<value>luxurySuperZoom</value>
+				<value>luxuryZoom</value>
+				<value>luxuryProduct</value>
+				<value>luxuryThumbnail</value>
+				<value>luxuryCartIcon</value>
+				<value>luxuryCartPage</value>
+				<value>luxurySearchPage</value>
 				</list>
 		</property>
 	</bean>
@@ -349,6 +376,11 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 				<value>product</value>
 				<value>thumbnail</value>
 				<value>cartIcon</value>
+				<value>luxurySuperZoom</value>
+				<value>luxuryZoom</value>
+				<value>luxuryProduct</value>
+				<value>luxuryThumbnail</value>
+				<value>luxuryCartIcon</value>
 			</list>
 		</property>
 	</bean>
@@ -361,6 +393,10 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 				<value>zoom</value>
 				<value>product</value>
 				<value>thumbnail</value>
+				<value>luxurySuperZoom</value>
+				<value>luxuryZoom</value>
+				<value>luxuryProduct</value>
+				<value>luxuryThumbnail</value>
 			</list>
 		</property>
 	</bean>
@@ -967,6 +1003,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<property name="categoryService" ref="categoryService" />
 	<property name="configurationService" ref="configurationService"/>
 	<property name="mplSellerInformationService" ref="mplSellerInformationService"/>
+	<property name="productService" ref="productService" />
 	</bean>
 	<!-- For Microsite End-->
 	
@@ -1523,6 +1560,12 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		class="com.tisl.mpl.facade.config.MplConfigFacadeImpl">
 	</bean>
 	
+	<!-- Added By SAP for prodcut related facade START-->
+ 	<alias name="mplProductFacade" alias="mplProductFacade"/>
+ 	<bean id="mplProductFacade"  class="com.tisl.mpl.facade.product.impl.MplProductFacadeImpl">
+ 		<property name="mplProductService" ref="mplProductService"></property>
+ 	</bean>
+ 	<!-- Added By SAP for prodcut related facade END-->
 	
 	<bean id="latestOffersFacade"
 		class="com.tisl.mpl.facade.latestoffers.impl.LatestOffersFacadeImpl">

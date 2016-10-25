@@ -39,6 +39,7 @@
 </c:if> --%>
 <div class="Cta">
 	<div id="buyNow">
+		<input type="hidden" id="showSize" name="showSize" value="${showSizeGuideForFA}" />
 	        <button style="display: block" id="buyNowButton" type="button" class="btn-block js-add-to-cart">
 				<spring:theme code="buyNow.button.pdp" />
 			</button>

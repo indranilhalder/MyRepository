@@ -65,6 +65,9 @@ function navigateToPage(queryString,textString)
 				<h4 class="${facetData.genericFilter}">${facetData.name}</h4>
 			</c:if>		 
 			</c:when> 
+			<c:when test="${facetData.code eq 'strapcolor'}">
+				<h4 class="true">Strap Colour</h4>
+			</c:when>
 			<%-- <c:when test="${facetData.code == 'price'}">
 				<h4 class="true">${facetData.name}</h4>
 			</c:when> --%>
@@ -85,7 +88,7 @@ function navigateToPage(queryString,textString)
 						<c:url value="${facetValue.query.url}" var="facetValueQueryUrl"/>
 						<c:choose>
 						
-						<c:when test="${facetData.code eq 'colour' && not empty facetValue.name}">
+						<c:when test="${(facetData.code eq 'colour'  || facetData.code  eq 'dialColourWatches')&& not empty facetValue.name}">
 							<c:set var="colorAry" value="${fn:split(facetValue.code, '_')}" />
 							<c:choose>
 								<c:when test="${colorAry[0]=='Multi' || colorAry[0]=='multi'}">
@@ -193,7 +196,7 @@ function navigateToPage(queryString,textString)
 					<li class="filter-${facetData.code}">
 
 					<c:choose>
-						<c:when test="${facetData.code eq 'colour' && not empty facetValue.name}">						
+						<c:when test="${(facetData.code eq 'colour' || facetData.code  eq 'dialColourWatches') && not empty facetValue.name }">						
 							<c:set var="colorAry" value="${fn:split(facetValue.code, '_')}" />
 							<c:choose>
 								<c:when test="${colorAry[0]=='Multi' || colorAry[0]=='multi'}">
@@ -226,7 +229,9 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="facetValue" value="${facetValue.code}"/>
 								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 								<!-- <input type="submit" value="" style="background-color:${colorHexCode}; border:1px solid rgb(204, 211, 217); height: 36px;    padding: 13px 17px;"  />-->
-								<input type="button" class="js-facet-colourbutton" style="background-color:${colorHexCode}; border:1px solid rgb(204, 211, 217); height: 36px;    padding: 13px 17px;">
+								<input type="button" class="js-facet-colourbutton" style="background-color:${colorHexCode}; border:1px solid rgb(204, 211, 217); height: 36px;border-radius: 50%;    padding: 13px 17px;">
+								<%-- <input type="button" class="js-facet-colourbutton" style="background-color:${colorHexCode}; border:1px solid rgb(204, 211, 217); height: 36px;    padding: 13px 17px;"  />
+								<input type="button" class="js-facet-colourbutton" style="background-color:${colorHexCode}; border:1px solid rgb(204, 211, 217); height: 36px;    padding: 13px 17px;"> --%>
 								<span><span>${facetValue.name}</span></span>
 									<%-- <c:if test="${facetData.code == 'inStockFlag'}">
 									<c:if test="${facetValue.code == 'true' && facetStockSize=='2'}">
@@ -265,6 +270,9 @@ function navigateToPage(queryString,textString)
 							</c:choose>
 						</c:when>
 						<%-- <c:when test="${facetData.name eq 'size'}"> --%>	
+						
+						
+						
 						<c:when test="${facetData.code eq 'size' && not empty facetValue.name}">					
 							  <form action="${url}" method="get"> 
 								<input type="hidden" name="offer" value="${offer}"/>

@@ -1173,6 +1173,13 @@
 		<property name="usSize" type="String" />
 		<property name="footlength" type="String" />
 		<property name="age" type="String" />
+		<!-- This is added by SAP For Accessories START :::: -->
+		<property name="cmsBeltSize" type="String" />
+		<property name="inchesBeltSize" type="String" />
+		<property name="cmsWaistSize" type="String" />
+		<property name="inchesWaistSize" type="String" />
+		<property name="inchesBeltLength" type="String" />
+		<!-- This is added by SAP For Accessories END :::: -->
 	</bean>
 
 	<!-- About Us -->
@@ -2445,6 +2452,7 @@
     	<property name="videoDescription" type="String" />
     	<property name="previewUrl" type="String"/>
     	<property name="videoTitle" type="String"/>
+    	<property name="videoSectionHeading" type="String"/>
     </bean>
      <bean class="com.tisl.mpl.wsdto.LuxEngagementcomponentWsDTO">
     	<property name="bannerMedia" type="String"/>
@@ -2640,5 +2648,19 @@
     	<property name="success" type="String"/>
     </bean>
     <!-- Newsletter DTO struture ends -->
+    
+    
+    <!-- TISLUX-356 : Breadcrumbs in Response -->
+    <bean class="com.tisl.mpl.wsdto.BreadcrumbListWsDTO">
+    	<property name="code" type="String"/>
+    	<property name="name" type="String"/>
+    	<property name="url" type="String"/>
+    	<property name="level" type="Integer"/>
+    </bean>
+    <bean class="com.tisl.mpl.wsdto.BreadcrumbResponseWsDTO">
+    	<property name="rootName" type="String"/>
+    	<property name="breadcrumbList" type="java.util.List&lt;com.tisl.mpl.wsdto.BreadcrumbListWsDTO>"/>
+    </bean>
+    
 
 </beans>
