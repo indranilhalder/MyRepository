@@ -49599,6 +49599,9 @@ overflow: hidden;
  .top_deal_blp .carousel-component{
 	margin:0;
 }
+.top_deal_blp .feature-categories{
+	padding:0px;
+}
 .top_deal_blp .carousel-component #shopByLookCarousel{
 	margin-top:0;
 }
