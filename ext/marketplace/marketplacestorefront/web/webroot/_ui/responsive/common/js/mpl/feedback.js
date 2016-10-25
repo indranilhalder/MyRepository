@@ -145,8 +145,8 @@ $(document).ready(function(){
 	/*------------Start of SNS auto complete----------*/
 			
 			var style = null ;
-	
-			if(!($('body').hasClass("page-multiStepCheckoutSummaryPage") || $('body').hasClass("page-checkout-login")))
+			var marketplaceHeader = !($("header").children().hasClass("header-inner"));
+			if(!($('body').hasClass("page-multiStepCheckoutSummaryPage") || $('body').hasClass("page-checkout-login")) && marketplaceHeader)
 				{
 					 if($(window).scrollTop() == 0){
 						 window.setTimeout(function(){
@@ -166,7 +166,7 @@ $(document).ready(function(){
 				  $("#js-site-search-input").parents('form#search_form').next('.ui-autocomplete.ui-front.links.ui-menu').css("border","1px solid #dfd1d5");
 				});
 	
-				if($('body').hasClass("template-pages-layout-micrositePage1")){
+				if($('body').hasClass("template-pages-layout-micrositePage1") && marketplaceHeader){
 				    $(window).scroll(function () {
 					  if($(".ui-autocomplete").is(":visible")){
 					  window.setTimeout(function(){
@@ -205,7 +205,7 @@ $(document).ready(function(){
 				  
 			   $(window).scroll(function () {
 					  /*--------changes for Sticky Header in MyBag--------------*/
-				   if(!($('body').hasClass("page-multiStepCheckoutSummaryPage") || $('body').hasClass("page-checkout-login"))){
+				   if(!($('body').hasClass("page-multiStepCheckoutSummaryPage") || $('body').hasClass("page-checkout-login")) && marketplaceHeader){
 						 if( $(window).scrollTop() > $('.bottom').offset().top && !($('.bottom').hasClass('active'))){
 				      $('.bottom').addClass('active');
 				    } else if ($(window).scrollTop() == 0){
@@ -1345,7 +1345,7 @@ $(document).ready(function(){
 	});
 	$(".marketplace-checkout").parents().find('header .content .top .marketplace.compact a').hide();
 	  $(window).scroll(function () {
-		  if($(".ui-autocomplete").is(":visible")){
+		  if($(".ui-autocomplete").is(":visible") && marketplaceHeader){
 			  $("#js-site-search-input").parents('form#search_form').next('.ui-autocomplete.ui-front.links.ui-menu').css({
 				  left : $('#js-site-search-input').offset().left,
 				  width: $('#js-site-search-input').outerWidth()
