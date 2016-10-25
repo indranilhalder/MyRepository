@@ -44602,7 +44602,7 @@ padding:0 40px;	}
 /* TPR-628 ends*/
 
 /*TPR-873*/
-.product-info>div.wishAddLogin, .product-info>div.wishAddSucess, .product-info>div.wishAlreadyAdded {
+.product-info>div.wishAddLogin, .product-info>div.wishAddSucess, .product-info>div.wishAlreadyAdded,.product-info>div.wishRemoveSucess {
 	display: inline-block;
     position: fixed;
    	z-index: 100000;
@@ -44622,7 +44622,7 @@ padding:0 40px;	}
   	transition: opacity 0.25s, top 0.45s;
 }
 
-.product-info>div.wishAddLogin.active, .product-info>div.wishAddSucess.active, .product-info>div.wishAlreadyAdded.active{
+.product-info>div.wishAddLogin.active, .product-info>div.wishAddSucess.active, .product-info>div.wishAlreadyAdded.active,.product-info>div.wishRemoveSucess.active{
 	opacity: 1;
 	top: 90px;
 }
@@ -44634,11 +44634,11 @@ padding:0 40px;	}
     top:0px;
 	}
 } */
-.product-info>div.wishAddSucess>span{
+.product-info>div.wishAddSucess>span,.product-info>div.wishRemoveSucess>span{
 	margin-left: 30px;
 	    line-height: 20px;
 }
-.product-info>div.wishAddSucess{
+.product-info>div.wishAddSucess,.product-info>div.wishRemoveSucess>span{
 	color:green;
 	
 }
