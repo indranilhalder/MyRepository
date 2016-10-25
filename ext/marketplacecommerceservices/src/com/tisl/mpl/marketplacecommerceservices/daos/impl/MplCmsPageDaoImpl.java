@@ -34,6 +34,8 @@ import com.tisl.mpl.marketplacecommerceservices.daos.MplCmsPageDao;
 import com.tisl.mpl.model.SellerMasterModel;
 
 
+
+
 /**
  * @author TCS
  *
@@ -44,12 +46,24 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 	@Resource(name = "flexibleSearchService")
 	private FlexibleSearchService flexibleSearchService;
 
+	@Resource
+	private ConfigurationService configurationService;
+
+	@Resource
+	private CatalogVersionService catalogVersionService;
+
+	@Resource
+	private PagedFlexibleSearchService pagedFlexibleSearchService;
+
 	private static final String SELECT_CLASS = "Select {";
 
 	private static final String FROM_CLASS = "} From {";
 
 	private static final Object ONLINE_CATALOG_VERSION = "Online";
 
+	private static final String UID = "uid";
+
+	private static final String LEFT_JOIN = " as cp left join ";
 
 
 
@@ -132,7 +146,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 	public StringBuilder getQuery()
 	{
 		final StringBuilder queryString = new StringBuilder(SELECT_CLASS).append(ContentPageModel.PK).append(FROM_CLASS)
-				.append(ContentPageModel._TYPECODE).append(" as cp left join ").append(CMSChannel._TYPECODE)
+				.append(ContentPageModel._TYPECODE).append(LEFT_JOIN).append(CMSChannel._TYPECODE)
 				.append(" as cm ON {cp.channel} = {cm.pk}}").append(" Where {cp.categoryAssociated} = ?category ");
 
 		return queryString;
@@ -155,7 +169,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 				.append("} = ?version");
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString.toString());
-		query.addQueryParameter("uid", pageUid);
+		query.addQueryParameter(UID, pageUid);
 		query.addQueryParameter("version", ONLINE_CATALOG_VERSION);
 		query.addQueryParameter(MarketplacecommerceservicesConstants.CHANNEL, cms);
 
@@ -199,7 +213,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 				.append(CatalogVersionModel.VERSION).append("} = ?version");
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString.toString());
-		query.addQueryParameter("uid", pageUid);
+		query.addQueryParameter(UID, pageUid);
 		query.addQueryParameter("version", ONLINE_CATALOG_VERSION);
 
 		final List<ContentPageModel> contentPages = flexibleSearchService.<ContentPageModel> search(query).getResult();
@@ -240,7 +254,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 	public StringBuilder getCollectionQuery()
 	{
 		final StringBuilder queryString = new StringBuilder(SELECT_CLASS).append(ContentPageModel.PK).append(FROM_CLASS)
-				.append(ContentPageModel._TYPECODE).append(" as cp left join ").append(CMSChannel._TYPECODE)
+				.append(ContentPageModel._TYPECODE).append(LEFT_JOIN).append(CMSChannel._TYPECODE)
 				.append(" as cm ON {cp.channel} = {cm.pk}}").append(" Where {cp.collectionAssociated} = ?collection ");
 
 		return queryString;
@@ -270,7 +284,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 	public StringBuilder getSellerQuery()
 	{
 		final StringBuilder queryString = new StringBuilder(SELECT_CLASS).append(ContentPageModel.PK).append(FROM_CLASS)
-				.append(ContentPageModel._TYPECODE).append(" as cp left join ").append(CMSChannel._TYPECODE)
+				.append(ContentPageModel._TYPECODE).append(LEFT_JOIN).append(CMSChannel._TYPECODE)
 				.append(" as cm ON {cp.channel} = {cm.pk}}")
 				.append(" Where {cp." + ContentPageModel.ASSOCIATEDSELLER + "} = ?sellerMaster ");
 		return queryString;
@@ -288,7 +302,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 				+ "}=?uid and {cs." + ContentSlotModel.UID + "}=?contentUid and {cv." + CatalogVersionModel.VERSION + "}=?catVersion";
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("uid", pageId);
+		query.addQueryParameter(UID, pageId);
 		query.addQueryParameter("contentUid", contentSlotId);
 		query.addQueryParameter("catVersion", catalogVersion);
 
@@ -301,7 +315,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 		return null;
 	}
-
+	
 	@Resource
 	private PagedFlexibleSearchService pagedFlexibleSearchService;
 
@@ -329,8 +343,8 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 	@Autowired
 	private ConfigurationService configurationService;
-
-	@Override
+	
+	/*@Override
 	public SearchPageData<ContentSlotForPageModel> getContentSlotsForAppById(final String pageUid, final PageableData pageableData)
 	{
 
@@ -347,8 +361,37 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 		return getPagedFlexibleSearchService().search(query, params, pageableData);
 
 
-	}
+	}*/
+	
+	/**
+	 * Method added for TPR-798
+	 *
+	 * @param pageUid
+	 * @param pageableData
+	 * @return SearchPageData<ContentSlotForPageModel>
+	 */
+	@Override
+	public SearchPageData<ContentSlotForPageModel> getContentSlotsForAppById(final String pageUid, final PageableData pageableData)
+	{
 
+		final CatalogVersionModel catalogmodel = catalogVersionService.getCatalogVersion(configurationService.getConfiguration()
+				.getString(MarketplacecommerceservicesConstants.MPLCATELOG),
+				configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.MPLCATALOGNNAME));
+
+		//final String query = MarketplacecommerceservicesConstants.WCMSPAGINATIONQUERY;
+		final String queryStr = "Select {CSP." + ContentSlotForPageModel.PK + "} From {" + ContentSlotForPageModel._TYPECODE
+				+ " AS CSP JOIN " + ContentPageModel._TYPECODE + " AS CP ON {CSP." + ContentSlotForPageModel.PAGE + "}={CP."
+				+ ContentPageModel.PK + "}} " + "where {CP." + ContentPageModel.UID + "} = ?uid and {CSP."
+				+ ContentSlotForPageModel.CATALOGVERSION + "}=?version";
+
+		final Map<String, Object> params = new HashMap<String, Object>();
+		params.put(UID, pageUid);
+		params.put("version", catalogmodel);
+
+		return pagedFlexibleSearchService.search(queryStr, params, pageableData);
+
+	}
+	
 	/**
 	 * @Description get the content page for product
 	 * @param product
@@ -386,7 +429,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 	public StringBuilder getProductContentQuery()
 	{
 		final StringBuilder queryString = new StringBuilder(SELECT_CLASS).append(ContentPageModel.PK).append(FROM_CLASS)
-				.append(ContentPageModel._TYPECODE).append(" as cp left join ").append(CMSChannel._TYPECODE)
+				.append(ContentPageModel._TYPECODE).append(LEFT_JOIN).append(CMSChannel._TYPECODE)
 				.append(" as cm ON {cp.channel} = {cm.pk}} ");
 
 		return queryString;

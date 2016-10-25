@@ -328,6 +328,7 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 			final String template = line.get(Integer.valueOf(TEMPLATE));
 			final String uid = makeUid(product.getCode(), title, template);
 			List<AbstractCMSComponentModel> componentlist;
+
 			try
 			{
 				final ContentPageModel cmodel = (ContentPageModel) getCmsPageService().getPageForIdandCatalogVersion(uid,

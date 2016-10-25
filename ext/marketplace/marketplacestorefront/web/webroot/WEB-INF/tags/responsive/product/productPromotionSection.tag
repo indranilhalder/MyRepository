@@ -14,7 +14,11 @@
 		<div class="Inner">
 <!-- 		<h2>Offers</h2> -->
 			<ycommerce:testId code="productDetails_promotion_label">
-				<c:if test="${not empty product.potentialPromotions}">
+			
+					<c:choose>
+					<c:when test="${not empty product.potentialPromotions}"> 
+								<input type="hidden" value='${product.potentialPromotions}' id="promolist"/>
+			<%-- 	<c:if test="${not empty product.potentialPromotions}"> --%>
 					<%-- <c:choose>
 				<c:when test="${not empty product.potentialPromotions[0].couldFireMessages}">
 					<p>${product.potentialPromotions[0].couldFireMessages[0]}</p>
@@ -150,7 +154,21 @@
 					</ul>
 					<%-- </c:otherwise>
 			</c:choose> --%>
-				</c:if>
+			<%-- 	</c:if> --%>
+			<!-- //Added for displaying Non HMC configurable offer messages , TPR-589 -->
+			</c:when>
+			<c:otherwise>		
+	  			<input type="hidden" value="" id="promolist"/>		
+	  			<ul>
+					<li>
+						 <div class="offer-modal-heading">OFFER</div>
+						 <div class="offer-outer-wrapper">
+						 <div class="pdp-promoDesc pdp-promo right offer-block" style="float: none; margin: 0px auto;"></div>
+						</div>
+					</li>
+			</ul>
+            	</c:otherwise>
+            	</c:choose>
 			</ycommerce:testId>
 		</div>
 	</div>

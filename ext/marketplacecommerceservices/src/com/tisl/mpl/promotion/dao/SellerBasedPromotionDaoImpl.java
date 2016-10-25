@@ -6,15 +6,20 @@ package com.tisl.mpl.promotion.dao;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.europe1.model.PriceRowModel;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
+import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
+import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.model.SellerInformationModel;
 
 
@@ -32,6 +37,7 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 	private static final String PROMO = "{promo.";
 	private static final String APM = "{apm.";
 	private static final String QUERY_FROM = "FROM {";
+	private static final String CODE = "code";
 
 
 	@Autowired
@@ -53,7 +59,7 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 				+ "} = ?code and " + P + SellerInformationModel.CATALOGVERSION + "} = ?oModel";
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("code", code);
+		query.addQueryParameter(CODE, code);
 		query.addQueryParameter("oModel", oModel);
 		return flexibleSearchService.<SellerInformationModel> search(query).getResult();
 	}
@@ -74,7 +80,7 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 				+ PRM + PriceRowModel.CATALOGVERSION + "} = ?oModel";
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("code", code);
+		query.addQueryParameter(CODE, code);
 		query.addQueryParameter("oModel", oModel);
 		return flexibleSearchService.<PriceRowModel> search(query).getResult();
 	}
@@ -95,7 +101,7 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 				+ "} = ?code";
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("code", code);
+		query.addQueryParameter(CODE, code);
 		return flexibleSearchService.<AbstractPromotionModel> search(query).getResult();
 	}
 
@@ -115,5 +121,54 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter("true", Boolean.TRUE);
 		return flexibleSearchService.<AbstractPromotionModel> search(query).getResult();
+	}
+
+
+
+
+	/**
+	 * Fetch Promotion Details based on promotion code and also based on enabled status. This method is written for
+	 * TPR-629 //
+	 *
+	 * @param promoCode
+	 * @return boolean
+	 *
+	 */
+	@Override
+	public boolean getPromoDetails(final String promoCode)
+	{
+		boolean result = false;
+		try
+		{
+			LOG.debug("Fetching Promotion Details");
+			final String queryString = //
+			"SELECT {apm:" + AbstractPromotionModel.PK
+					+ "} "//
+					+ QUERY_FROM + AbstractPromotionModel._TYPECODE + " AS apm } where" + APM + AbstractPromotionModel.CODE
+					+ "} = ?code and " + APM + AbstractPromotionModel.ENABLED + "} = ?true";
+
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter(CODE, promoCode);
+			query.addQueryParameter("true", Boolean.TRUE);
+			final List<AbstractPromotionModel> promoResult = flexibleSearchService.<AbstractPromotionModel> search(query)
+					.getResult();
+			if (CollectionUtils.isNotEmpty(promoResult))
+			{
+				result = true;
+			}
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return result;
 	}
 }

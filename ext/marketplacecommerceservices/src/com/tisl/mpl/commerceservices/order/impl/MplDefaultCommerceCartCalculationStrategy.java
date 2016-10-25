@@ -7,7 +7,9 @@ import de.hybris.platform.commerceservices.order.hook.CommerceCartCalculationMet
 import de.hybris.platform.commerceservices.order.impl.DefaultCommerceCartCalculationStrategy;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.order.CalculationService;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.promotions.jalo.PromotionsManager;
@@ -30,8 +32,8 @@ import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculation
  *
  */
 
-public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCartCalculationStrategy
-		implements MplCommerceCartCalculationStrategy
+public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCartCalculationStrategy implements
+		MplCommerceCartCalculationStrategy
 {
 
 	/*
@@ -65,8 +67,8 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 			}
 			catch (final CalculationException calculationException)
 			{
-				throw new IllegalStateException(
-						"Cart model " + cartModel.getCode() + " was not calculated due to: " + calculationException.getMessage());
+				throw new IllegalStateException("Cart model " + cartModel.getCode() + " was not calculated due to: "
+						+ calculationException.getMessage());
 			}
 			finally
 			{
@@ -80,24 +82,48 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 
 
 
+	/**
+	 * This method recalculates cart or order. Changes incorporated for TPR-629
+	 *
+	 * @param parameter
+	 */
 	@Override
 	public boolean recalculateCart(final CommerceCartParameter parameter)
 	{
 		final CartModel cartModel = parameter.getCart();
+		//Payment Changes
+		final OrderModel orderModel = parameter.getOrder();
 		try
 		{
 			parameter.setRecalculate(true);
 			beforeCalculate(parameter);
-			resetCartModel(cartModel);
-			getCalculationService().recalculate(cartModel);
-			getPromotionsService().updatePromotions(getPromotionGroups(), cartModel, true, PromotionsManager.AutoApplyMode.APPLY_ALL,
-					PromotionsManager.AutoApplyMode.APPLY_ALL, getTimeService().getCurrentTime());
-			resetNetAmtAftrAllDisc(cartModel);
+			if (null != orderModel)
+			{
+				//Recalculation based on cartModel
+				resetCartModel(orderModel);
+				getCalculationService().recalculate(orderModel);
+				getPromotionsService().updatePromotions(getPromotionGroups(), orderModel, true,
+						PromotionsManager.AutoApplyMode.APPLY_ALL, PromotionsManager.AutoApplyMode.APPLY_ALL,
+						getTimeService().getCurrentTime());
+				resetNetAmtAftrAllDisc(orderModel);
+			}
+			else
+			{
+				//Recalculation based on orderModel
+				resetCartModel(cartModel);
+				getCalculationService().recalculate(cartModel);
+				getPromotionsService().updatePromotions(getPromotionGroups(), cartModel, true,
+						PromotionsManager.AutoApplyMode.APPLY_ALL, PromotionsManager.AutoApplyMode.APPLY_ALL,
+						getTimeService().getCurrentTime());
+				resetNetAmtAftrAllDisc(cartModel);
+			}
+
+
 		}
 		catch (final CalculationException calculationException)
 		{
 			throw new IllegalStateException(String.format("Cart model %s was not calculated due to: %s ", new Object[]
-			{ cartModel.getCode(), calculationException.getMessage() }));
+			{ null != orderModel ? orderModel.getCode() : cartModel.getCode(), calculationException.getMessage() }));
 		}
 		finally
 		{
@@ -110,8 +136,10 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 	@Override
 	protected void beforeCalculate(final CommerceCartParameter parameter)
 	{
-		if ((getCommerceCartCalculationMethodHooks() == null) || (!(parameter.isEnableHooks())) || (!(getConfigurationService()
-				.getConfiguration().getBoolean("commerceservices.commercecartcalculationmethodhook.enabled", true))))
+		if ((getCommerceCartCalculationMethodHooks() == null)
+				|| (!(parameter.isEnableHooks()))
+				|| (!(getConfigurationService().getConfiguration().getBoolean(
+						"commerceservices.commercecartcalculationmethodhook.enabled", true))))
 		{
 			return;
 		}
@@ -124,8 +152,10 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 	@Override
 	protected void afterCalculate(final CommerceCartParameter parameter)
 	{
-		if ((getCommerceCartCalculationMethodHooks() == null) || (!(parameter.isEnableHooks())) || (!(getConfigurationService()
-				.getConfiguration().getBoolean("commerceservices.commercecartcalculationmethodhook.enabled", true))))
+		if ((getCommerceCartCalculationMethodHooks() == null)
+				|| (!(parameter.isEnableHooks()))
+				|| (!(getConfigurationService().getConfiguration().getBoolean(
+						"commerceservices.commercecartcalculationmethodhook.enabled", true))))
 		{
 			return;
 		}
@@ -142,13 +172,13 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 	 *
 	 * Method Modified for Performance Fix : TISPT-148
 	 *
-	 * @param cartModel
-	 * @return cartModel
+	 * @param abstractOrderModel
+	 * @return AbstractOrderModel
 	 */
-	private CartModel resetCartModel(final CartModel cartModel)
+	private AbstractOrderModel resetCartModel(final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		final List<AbstractOrderEntryModel> cartEntryList = new ArrayList<AbstractOrderEntryModel>();
-		for (final AbstractOrderEntryModel cartEntry : cartModel.getEntries())
+		for (final AbstractOrderEntryModel cartEntry : abstractOrderModel.getEntries())
 		{
 			cartEntry.setQualifyingCount(Integer.valueOf(0));
 			cartEntry.setFreeCount(Integer.valueOf(0));
@@ -176,9 +206,9 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 			modelService.saveAll(cartEntryList);
 		}
 
-		modelService.refresh(cartModel);
-		modelService.save(cartModel);
-		return cartModel;
+		modelService.refresh(abstractOrderModel);
+		modelService.save(abstractOrderModel);
+		return abstractOrderModel;
 	}
 
 	/**
@@ -186,14 +216,14 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 	 *
 	 * Modified for TISPT-148
 	 *
-	 * @param cartModel
+	 * @param abstractOrderModel
 	 */
 
-	private void resetNetAmtAftrAllDisc(final CartModel cartModel)
+	private void resetNetAmtAftrAllDisc(final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		// Code Added for TISPT-148
 		final List<AbstractOrderEntryModel> cartEntryList = new ArrayList<AbstractOrderEntryModel>();
-		for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+		for (final AbstractOrderEntryModel entry : abstractOrderModel.getEntries())
 		{
 			if (StringUtils.isNotEmpty(entry.getCouponCode()))
 			{
@@ -203,8 +233,8 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 
 				if ((StringUtils.isNotEmpty(entry.getProductPromoCode())) || (StringUtils.isNotEmpty(entry.getCartPromoCode())))
 				{
-					final double netAmtAftrAllDisc = entry.getNetAmountAfterAllDisc() != null
-							? entry.getNetAmountAfterAllDisc().doubleValue() : 0.00D;
+					final double netAmtAftrAllDisc = entry.getNetAmountAfterAllDisc() != null ? entry.getNetAmountAfterAllDisc()
+							.doubleValue() : 0.00D;
 					currNetAmtAftrAllDisc = netAmtAftrAllDisc - couponValue;
 				}
 				else

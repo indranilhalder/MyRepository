@@ -31,11 +31,13 @@ import com.tisl.mpl.core.model.BrandCollectionComponentModel;
 import com.tisl.mpl.core.model.BrandComponentModel;
 import com.tisl.mpl.core.model.ConfigureImagesCountComponentModel;
 import com.tisl.mpl.core.model.ConfigureProductsCountComponentModel;
+import com.tisl.mpl.core.model.CustomSkuComponentModel;
 import com.tisl.mpl.core.model.DepartmentCollectionComponentModel;
 import com.tisl.mpl.core.model.MicrositeSelectBrandCollectionComponentModel;
 import com.tisl.mpl.core.model.MplBigFourPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplBrandLogoComponentModel;
+import com.tisl.mpl.core.model.MplBrandSearchBoxComponentModel;
 import com.tisl.mpl.core.model.MplEnhancedSearchBoxComponentModel;
 import com.tisl.mpl.core.model.MplMicrositeEnhancedSearchBoxComponentModel;
 import com.tisl.mpl.core.model.MplNowTrendingProductCarouselComponentModel;
@@ -97,6 +99,8 @@ public interface ControllerConstants
 			String MplEnhancedSearchBoxComponent = _Prefix + MplEnhancedSearchBoxComponentModel._TYPECODE + _Suffix;
 			String MplMicrositeEnhancedSearchBoxComponent = _Prefix + MplMicrositeEnhancedSearchBoxComponentModel._TYPECODE
 					+ _Suffix;
+			String MplBrandSearchBoxComponent = _Prefix + MplBrandSearchBoxComponentModel._TYPECODE + _Suffix;
+
 			String IMAGE_COUNT = "count";
 			String PRODUCT_COUNT = "qtycount";
 			String BrandCollectionComponent = _Prefix + BrandCollectionComponentModel._TYPECODE + _Suffix;
@@ -112,6 +116,7 @@ public interface ControllerConstants
 			String ContactUsTabComponent = _Prefix + ContactUsTabComponentModel._TYPECODE + _Suffix;
 			String MplBrandLogoComponent = _Prefix + MplBrandLogoComponentModel._TYPECODE + _Suffix;
 			String RotatingImagesComponent = _Prefix + RotatingImagesComponentModel._TYPECODE + _Suffix;
+			String CustomSkuComponent = _Prefix + CustomSkuComponentModel._TYPECODE + _Suffix;
 		}
 	}
 
@@ -357,6 +362,7 @@ public interface ControllerConstants
 				public static final String SearchResultsPanel = "fragments/product/searchResultPanel";
 				public static final String SellerResultsPage = "fragments/product/sellerResultPage";
 
+				public static final String OFFERMESSAGEMAP = "offerMessageMap";
 			}
 		}
 	}
