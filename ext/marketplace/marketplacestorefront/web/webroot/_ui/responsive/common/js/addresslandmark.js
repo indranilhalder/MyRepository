@@ -169,7 +169,7 @@ function checkPopupDataOrderHistory() {
 				      var letters = new RegExp(/^[A-z]*$/);
 				      var otherLandMark=$(".otherLandMark").val();
 				      
-				      if(otherLandMark != null){
+				      if(otherLandMark != null && ! otherLandMark == ''){
 				    	  if(otherLandMark.trim() == ''){
 				    	    $(".otherLandMarkError").show();
 					  		$(".otherLandMarkError").text("Other LandMark cannot be allow  space");
