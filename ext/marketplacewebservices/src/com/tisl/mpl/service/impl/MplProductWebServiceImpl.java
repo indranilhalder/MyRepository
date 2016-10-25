@@ -124,8 +124,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	private MplKeywordRedirectDao mplKeywordRedirectDao;
 	private Map<KeywordRedirectMatchType, KeywordRedirectHandler> redirectHandlers;
 
-	@Resource(name = "cmsPageService")
-	private MplCmsPageService mplCmsPageService;
+
 
 
 	private static final String Y = "Y";
@@ -135,119 +134,6 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	private static final String HTTPS = "https";
 
 	private static final Logger LOG = Logger.getLogger(MplProductWebServiceImpl.class);
-
-
-	/**
-	 * @throws CMSItemNotFoundException
-	 * @desc This service fetches all the details of A+ content based on product code
-	 */
-	@Override
-	public ProductAPlusWsData getAPluscontentForProductCode(String productCode) throws EtailNonBusinessExceptions,
-			CMSItemNotFoundException
-	{
-
-		if (null != productCode)
-		{
-			productCode = productCode.toUpperCase();
-		}
-		ContentPageModel contentPage = null;
-		List<String> contentList = null;
-		List<String> imageList = null;
-		List<String> videoList = null;
-		final ProductAPlusWsData productAPlus = new ProductAPlusWsData();
-		final HashMap<String, ProductContentWsData> productContentDataMap = new HashMap<String, ProductContentWsData>();
-		final ProductModel productModel = productService.getProductForCode(productCode);
-		try
-		{
-
-			contentPage = getContentPageForProduct(productModel);
-			if (null != contentPage)
-			{
-
-				for (final ContentSlotForPageModel contentSlotForPageModel : contentPage.getContentSlots())
-				{
-					final ProductContentWsData productContentData = new ProductContentWsData();
-					contentList = new ArrayList<String>();
-					imageList = new ArrayList<String>();
-					videoList = new ArrayList<String>();
-
-
-					for (final AbstractCMSComponentModel abstractCMSComponentModel : contentSlotForPageModel.getContentSlot()
-							.getCmsComponents())
-					{
-
-						if (abstractCMSComponentModel instanceof CMSParagraphComponentModel)
-						{
-							final CMSParagraphComponentModel paragraphComponent = (CMSParagraphComponentModel) abstractCMSComponentModel;
-							contentList.add(paragraphComponent.getContent());
-						}
-
-						if (abstractCMSComponentModel instanceof CMSImageComponentModel)
-						{
-							final CMSImageComponentModel cmsImageComponent = (CMSImageComponentModel) abstractCMSComponentModel;
-							imageList.add(cmsImageComponent.getMedia().getUrl2());
-						}
-
-						if (abstractCMSComponentModel instanceof SimpleBannerComponentModel)
-						{
-							final SimpleBannerComponentModel bannerComponent = (SimpleBannerComponentModel) abstractCMSComponentModel;
-							if (bannerComponent.getMedia() != null && StringUtils.isNotEmpty(bannerComponent.getMedia().getUrl2()))
-							{
-
-								imageList.add(bannerComponent.getMedia().getUrl2());
-
-
-							}
-							else if (StringUtils.isNotEmpty(bannerComponent.getUrlLink()))
-							{
-
-								imageList.add(bannerComponent.getUrlLink());
-
-
-							}
-						}
-
-						if (abstractCMSComponentModel instanceof VideoComponentModel)
-						{
-							final VideoComponentModel bannerComponent = (VideoComponentModel) abstractCMSComponentModel;
-							videoList.add(bannerComponent.getVideoUrl());
-						}
-
-					}
-
-					productContentData.setTextList(contentList);
-					productContentData.setImageList(imageList);
-					productContentData.setVideoList(videoList);
-					productContentDataMap.put(contentSlotForPageModel.getPosition(), productContentData);
-
-				}
-			}//final end of if
-			productAPlus.setTemlateName(contentPage.getLabelOrId());
-			productAPlus.setProductContent(productContentDataMap);
-		}
-		catch (final CMSItemNotFoundException e)
-		{
-			throw e;
-		}
-		return productAPlus;
-	}
-
-	/**
-	 * @desc get the content page for the provded product code
-	 * @param product
-	 * @return ContentPageModel
-	 * @throws CMSItemNotFoundException
-	 */
-	private ContentPageModel getContentPageForProduct(final ProductModel product) throws CMSItemNotFoundException
-	{
-		final ContentPageModel productContentPage = mplCmsPageService.getContentPageForProduct(product);
-		if (productContentPage == null)
-		{
-			throw new CMSItemNotFoundException("Could not find a product content for the product" + product.getName());
-		}
-		return productContentPage;
-	}
-
 
 	@Resource(name = "prodOfferDetFacade")
 	private ProductOfferDetailFacade prodOfferDetFacade;
@@ -368,7 +254,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
