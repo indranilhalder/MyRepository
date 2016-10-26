@@ -11,6 +11,7 @@ import de.hybris.platform.catalog.model.classification.ClassificationClassModel;
 import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commerceservices.search.solrfacetsearch.provider.CategorySource;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.solrfacetsearch.config.IndexConfig;
 import de.hybris.platform.solrfacetsearch.config.IndexedProperty;
 import de.hybris.platform.solrfacetsearch.config.exceptions.FieldValueProviderException;
@@ -36,7 +37,7 @@ public class MplDepartmentHierarchyValueProvider extends AbstractPropertyFieldVa
 		Serializable
 {
 	/**
-	 * 
+	 *
 	 */
 	private static final String LSH1 = "LSH1";
 	private CategorySource categorySource;
@@ -79,11 +80,20 @@ public class MplDepartmentHierarchyValueProvider extends AbstractPropertyFieldVa
 	public Collection<FieldValue> getFieldValues(final IndexConfig indexConfig, final IndexedProperty indexedProperty,
 			final Object model) throws FieldValueProviderException
 	{
+		boolean isLuxury = false;
+		if (model instanceof ProductModel)
+		{
+			final ProductModel productmodel = (ProductModel) model;
+			if (null != productmodel.getLuxIndicator() && productmodel.getLuxIndicator().getCode().equalsIgnoreCase("luxury"))
+			{
+				isLuxury = true;
+			}
+		}
 		final Collection categories = getCategorySource().getCategoriesForConfigAndProperty(indexConfig, indexedProperty, model);
 		final Collection fieldValues = new ArrayList();
 		if ((categories != null) && (!(categories.isEmpty())))
 		{
-			final Set categoryPaths = getCategoryPaths(categories);
+			final Set categoryPaths = getCategoryPaths(categories, isLuxury);
 			fieldValues.addAll(createFieldValue(categoryPaths, indexedProperty));
 		}
 		return fieldValues;
@@ -105,7 +115,7 @@ public class MplDepartmentHierarchyValueProvider extends AbstractPropertyFieldVa
 		return fieldValues;
 	}
 
-	protected Set<String> getCategoryPaths(final Collection<CategoryModel> categories)
+	protected Set<String> getCategoryPaths(final Collection<CategoryModel> categories, final boolean isLuxury)
 	{
 		final Set allPaths = new HashSet();
 
@@ -122,9 +132,13 @@ public class MplDepartmentHierarchyValueProvider extends AbstractPropertyFieldVa
 			}
 			for (final List categoryPath : pathsForCategory)
 			{
-				if (categoryPath != null && categoryPath.size() > 0
-						&& (((CategoryModel) categoryPath.get(0)).getCode().contains(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE))
-						|| ((CategoryModel) categoryPath.get(0)).getCode().contains(LSH1))
+				if (categoryPath != null && categoryPath.size() > 0 && isLuxury
+						&& ((CategoryModel) categoryPath.get(0)).getCode().contains(LSH1))
+				{
+					accumulateCategoryPaths(categoryPath, allPaths);
+				}
+				else if (categoryPath != null && categoryPath.size() > 0 && !isLuxury
+						&& ((CategoryModel) categoryPath.get(0)).getCode().contains(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE))
 				{
 					accumulateCategoryPaths(categoryPath, allPaths);
 				}
