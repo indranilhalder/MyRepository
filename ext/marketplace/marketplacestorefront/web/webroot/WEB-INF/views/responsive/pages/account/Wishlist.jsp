@@ -22,27 +22,11 @@
 <spring:url value="/my-account/default/wishList" var="wishlistUrl" />
 <spring:url value="/my-account/friendsInvite" var="friendsInviteUrl" />
 
-<!-- LW-230 -->
-<input type="hidden" id="isLuxury" value="${isLuxury}"/>
 
-<script>
-	//jquery added to prevent stored Cross Site Scripting /TISSIT-1704/added for creating wishlist and renaming wishlist
- 
-	$(document).ready(function() {
-
-		$('#newWishlistName').keyup(function() {
-			validateEnteredName("newWishlistName","errorCreate");
-		});
-		$('#newWishlistName').blur(function() {
-			validateEnteredName("newWishlistName","errorCreate");
-		});
-	});
-	
-	</script>
-
- 
 <template:page pageTitle="${pageTitle}">
-
+	<!-- LW-230 -->
+	<input type="hidden" id="isLuxury" value="${isLuxury}"/>
+	
 	<body class="wishlist" onload="readyFunction();">
 
 		<!-- START OF WRAPPER DIV SECTION -->
@@ -952,3 +936,18 @@
 		}
 	
 </script>
+
+<script>
+	//jquery added to prevent stored Cross Site Scripting /TISSIT-1704/added for creating wishlist and renaming wishlist
+ 
+	$(document).ready(function() {
+
+		$('#newWishlistName').keyup(function() {
+			validateEnteredName("newWishlistName","errorCreate");
+		});
+		$('#newWishlistName').blur(function() {
+			validateEnteredName("newWishlistName","errorCreate");
+		});
+	});
+	
+	</script>
