@@ -27,7 +27,7 @@
 
 <script>
 	//jquery added to prevent stored Cross Site Scripting /TISSIT-1704/added for creating wishlist and renaming wishlist
-
+ 
 	$(document).ready(function() {
 
 		$('#newWishlistName').keyup(function() {
@@ -256,11 +256,20 @@
 								<c:url value="${product.url}" var="productUrl" />
 								<li>
 									<div class="product-info">
-
-										<a href="${productUrl}"> <product:productPrimaryImage
+                                          
+										<%-- <a href="${productUrl}"> <product:productPrimaryImage
 												product="${product}" format="thumbnail" />
-										</a>
-
+										</a> --%>
+										<c:choose>
+    										<c:when test="${(param.isLux ne null and param.isLux eq true) and ((not empty isLuxury and isLuxury != 'false') or (empty isLuxury))}">
+        											<a href="${productUrl}"> <product:productPrimaryImage
+														product="${product}" format="luxuryThumbnail" /></a>
+    										</c:when>    
+    										<c:otherwise>
+         											<a href="${productUrl}"> <product:productPrimaryImage
+														product="${product}" format="thumbnail" /></a>
+    										</c:otherwise>
+										</c:choose>
 										<div>
 											<ul>
 												<!-- COMPANY OR BRAND NAME STATIC COMPONENT -->
@@ -947,4 +956,3 @@
 		}
 	
 </script>
-
