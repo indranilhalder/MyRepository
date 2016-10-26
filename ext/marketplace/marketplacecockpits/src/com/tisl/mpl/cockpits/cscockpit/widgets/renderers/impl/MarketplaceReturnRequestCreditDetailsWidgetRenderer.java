@@ -39,7 +39,6 @@ import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceReturnsCon
 import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.TypeofReturn;
 import com.tisl.mpl.core.enums.RefundMode;
 import com.tisl.mpl.data.CODSelfShipData;
-import com.tisl.mpl.data.ReturnInfoData;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.data.RescheduleData;
 import com.tisl.mpl.wsdto.ReturnLogistics;
@@ -150,14 +149,13 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 		 Label accNo = new Label(LabelUtils.getLabel(widget, "accNo"));
 		 accNo.setClass("AcntNumberLabel");
 		 accNo.setParent(accNoDiv);
-		// accNo.setClass(LABEL);
 		 final Textbox accNoTextbox = createTextbox(accNoDiv);      
 		 accNoTextbox.setParent(accNoDiv);
 		 accNoTextbox.setClass("accHolderNameTextbox");
 		 accNoTextbox.setMaxlength(16);
 		 String errorMsgAcntNumber = LabelUtils.getLabel(widget,
 					"error.msg.acntNumber", new Object[0]);
-		// accNoTextbox.setConstraint("/[0-9][0-9]*$/:"+errorMsgAcntNumber);
+		accNoTextbox.setConstraint("/[0-9][0-9]*$/:"+errorMsgAcntNumber);
 		// Re - Enter Account Number 
 		Label re_accNo = new Label(LabelUtils.getLabel(widget, "re_accNo"));
 		re_accNo.setParent(accNoDiv);
@@ -168,7 +166,7 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 		re_accNoTextBox.setMaxlength(16);
 		 String errorMsgReEnterAcntNumber = LabelUtils.getLabel(widget,
 					"error.msg.acntNumber", new Object[0]);
-		//re_accNoTextBox.setConstraint("/[0-9][0-9]*$/:"+errorMsgReEnterAcntNumber);
+		re_accNoTextBox.setConstraint("/[0-9][0-9]*$/:"+errorMsgReEnterAcntNumber);
 
 		// Account Holder's Name 
 		Div acntholderDiv = new Div();
@@ -184,7 +182,7 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 		accHolderNameTextbox.setClass("accHolderNameTextbox");
 		String errorMsgName = LabelUtils.getLabel(widget,
 				"error.msg.name", new Object[0]);
-		//accHolderNameTextbox.setConstraint("/[a-zA-Z ][a-zA-Z ]*$/:"+errorMsgName);
+		accHolderNameTextbox.setConstraint("/[a-zA-Z ][a-zA-Z ]*$/:"+errorMsgName);
 		
 		// RefundMode 
 		final Label refundMode = new Label(LabelUtils.getLabel(widget,"refund_mode"));
@@ -238,7 +236,7 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 		bankNameTextbox.setClass("accHolderNameTextbox");
 		String errorMsgBankName = LabelUtils.getLabel(widget,
 				"error.msg.name", new Object[0]);
-		//bankNameTextbox.setConstraint("/[a-zA-Z ][a-zA-Z ]*$/:"+errorMsgBankName);
+		bankNameTextbox.setConstraint("/[a-zA-Z ][a-zA-Z ]*$/:"+errorMsgBankName);
 		
 		// IFSC CODE Details
 		final Label ifscCode = new Label(LabelUtils.getLabel(widget, "IFCS"));
@@ -250,7 +248,7 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 		ifscTextbox.setClass("accHolderNameTextbox");
 		String errorMsgIfsc = LabelUtils.getLabel(widget,
 				"error.msg.ifsc", new Object[0]);
-		//ifscTextbox.setConstraint("/[a-zA-Z][a-zA-Z0-9]*$/:"+errorMsgIfsc);	
+		ifscTextbox.setConstraint("/[a-zA-Z][a-zA-Z0-9]*$/:"+errorMsgIfsc);	
 		final Div codButtonDiv = new Div();
 		codButtonDiv.setParent(bankDetailsDiv);
 		codButtonDiv.setClass(BUTTON);
@@ -262,44 +260,44 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 			@Override
 			public void onEvent(Event arg0) throws Exception {
 				
-//				if(accNoTextbox.getValue().isEmpty() || accNoTextbox.getValue().length()<11) {
-//					Messagebox.show(LabelUtils.getLabel(widget,
-//								"InvalidAcntNumber",
-//								Messagebox.OK, Messagebox.ERROR
-//				     	));
-//					return;
-//				} else if  (re_accNoTextBox.getValue().isEmpty() ) {
-//					Messagebox.show(LabelUtils.getLabel(widget,
-//							"InvalidAcntNumber",
-//							Messagebox.OK, Messagebox.ERROR
-//			     	));
-//					return;
-//				}  else if  (re_accNoTextBox.getValue().isEmpty() || !re_accNoTextBox.getValue().equalsIgnoreCase(accNoTextbox.getValue()) ) {
-//						Messagebox.show(LabelUtils.getLabel(widget,
-//								"AcntNumbersDoes'tMatch",
-//								Messagebox.OK, Messagebox.ERROR
-//				     	));
-//						return;
-//				} else if (accHolderNameTextbox.getValue().isEmpty() || accHolderNameTextbox.getValue().length()<3) {
-//					
-//						Messagebox.show(LabelUtils.getLabel(widget,
-//								"invalidAcntHolderName",
-//								Messagebox.OK, Messagebox.ERROR
-//				     	));
-//						return;
-//				}else if (bankNameTextbox.getValue().isEmpty() ||  bankNameTextbox.getValue().length()<3) {
-//						Messagebox.show(LabelUtils.getLabel(widget,
-//								"invalidBankName",
-//								Messagebox.OK, Messagebox.ERROR
-//				     	));
-//						return;
-//				} else if ( ifscTextbox.getValue().isEmpty() ||  ifscTextbox.getValue().length()<11) {
-//					Messagebox.show(LabelUtils.getLabel(widget,
-//							"invaliIfscCode",
-//							Messagebox.OK, Messagebox.ERROR
-//			     	));
-//					return;
-//				}
+				if(accNoTextbox.getValue().isEmpty() || accNoTextbox.getValue().length()<11) {
+					Messagebox.show(LabelUtils.getLabel(widget,
+								"InvalidAcntNumber",
+								Messagebox.OK, Messagebox.ERROR
+				     	));
+					return;
+				} else if  (re_accNoTextBox.getValue().isEmpty() ) {
+					Messagebox.show(LabelUtils.getLabel(widget,
+							"InvalidAcntNumber",
+							Messagebox.OK, Messagebox.ERROR
+			     	));
+					return;
+				}  else if  (re_accNoTextBox.getValue().isEmpty() || !re_accNoTextBox.getValue().equalsIgnoreCase(accNoTextbox.getValue()) ) {
+						Messagebox.show(LabelUtils.getLabel(widget,
+								"AcntNumbersDoes'tMatch",
+								Messagebox.OK, Messagebox.ERROR
+				     	));
+						return;
+				} else if (accHolderNameTextbox.getValue().isEmpty() || accHolderNameTextbox.getValue().length()<3) {
+					
+						Messagebox.show(LabelUtils.getLabel(widget,
+								"invalidAcntHolderName",
+								Messagebox.OK, Messagebox.ERROR
+				     	));
+						return;
+				}else if (bankNameTextbox.getValue().isEmpty() ||  bankNameTextbox.getValue().length()<3) {
+						Messagebox.show(LabelUtils.getLabel(widget,
+								"invalidBankName",
+								Messagebox.OK, Messagebox.ERROR
+				     	));
+						return;
+				} else if ( ifscTextbox.getValue().isEmpty() ||  ifscTextbox.getValue().length()<11) {
+					Messagebox.show(LabelUtils.getLabel(widget,
+							"invaliIfscCode",
+							Messagebox.OK, Messagebox.ERROR
+			     	));
+					return;
+				}
 					codUpadatesToFico(widget, entries, accNoTextbox,re_accNoTextBox,
 							accHolderNameTextbox, refundModeListbox, titleListBox,
 							bankNameTextbox, ifscTextbox);
@@ -685,14 +683,11 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 		final Listheader headerTransId = new Listheader("Transaction Id");
 		headerTransId.setWidth("23px");
 		headerTransId.setParent(listhead);
-		//headerTransId.setClass(BOLD_TEXT);
 		final Listheader headerProdName = new Listheader("Product Name");
 		headerProdName.setParent(listhead);
-		//headerProdName.setClass(BOLD_TEXT);
 		headerProdName.setWidth("260px");
 		final Listheader headerPrice = new Listheader("Total Price");
 		headerPrice.setParent(listhead);
-		//headerPrice.setClass(BOLD_TEXT);
 		headerPrice.setWidth("80px");
 		final Listheader headerReturnDate = new Listheader(
 				"Select Pick-up Date");
