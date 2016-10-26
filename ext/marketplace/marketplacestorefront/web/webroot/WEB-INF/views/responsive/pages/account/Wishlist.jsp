@@ -257,19 +257,15 @@
 								<li>
 									<div class="product-info">
                                           
-										<%-- <a href="${productUrl}"> <product:productPrimaryImage
-												product="${product}" format="thumbnail" />
-										</a> --%>
-										<c:choose>
-    										<c:when test="${(param.isLux ne null and param.isLux eq true) and ((not empty isLuxury and isLuxury != 'false') or (empty isLuxury))}">
-        											<a href="${productUrl}"> <product:productPrimaryImage
-														product="${product}" format="luxuryThumbnail" /></a>
-    										</c:when>    
-    										<c:otherwise>
-         											<a href="${productUrl}"> <product:productPrimaryImage
+										 <c:if test="${fn:toLowerCase(product.luxIndicator)=='marketplace' or empty product.luxIndicator}">
+										<a href="${productUrl}"> <product:productPrimaryImage
 														product="${product}" format="thumbnail" /></a>
-    										</c:otherwise>
-										</c:choose>
+														</c:if>
+										<c:if test="${fn:toLowerCase(product.luxIndicator)=='luxury' and not empty product.luxIndicator}">
+										<a href="${productUrl}"> <product:productPrimaryImage
+														product="${product}" format="luxuryThumbnail" /></a>
+														</c:if>
+										
 										<div>
 											<ul>
 												<!-- COMPANY OR BRAND NAME STATIC COMPONENT -->
