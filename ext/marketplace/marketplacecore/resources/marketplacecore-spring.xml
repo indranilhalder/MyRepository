@@ -1284,12 +1284,12 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 	
 
 	<bean id="mplCategorySourceForCategoryFacet" parent="abstractMplCategorySource">
-		<property name="rootCategory" value="MSH1" />
+		<property name="rootCategory" value="MSH1,LSH1" />
 		<!-- 'brands' is the root of the brands hierarchy -->
 	</bean>
 	
 
-	<bean id="mplCategoryCodeValueProviderForCategoryFacet" parent="abstractCategoryCodeValueProvider">
+	<bean id="mplCategoryCodeValueProviderForCategoryFacet" parent="mplCategoryCodeValueProvider">
 		<property name="categorySource" ref="mplCategorySourceForCategoryFacet" />
 	</bean>
 	
@@ -1305,12 +1305,12 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 	
 
 	<bean id="mplCategorySource" parent="abstractCategorySource">
-		<property name="rootCategory" value="MSH1" />
+		<property name="rootCategory" value="MSH1,LSH1" />
 	</bean>
 	
 
 	<bean id="mplCategoryBrandSource" parent="abstractMplCategorySource">
-		<property name="rootCategory" value="MSH1,MBH1,SSH1" />
+		<property name="rootCategory" value="MSH1,MBH1,SSH1,LSH1" />
 	</bean>
 	
 
