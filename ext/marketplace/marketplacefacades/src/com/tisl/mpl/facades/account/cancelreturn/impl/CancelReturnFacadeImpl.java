@@ -1119,7 +1119,11 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			final List<SendTicketLineItemData> lineItemDataList = new ArrayList<SendTicketLineItemData>();
 			final SendTicketRequestData sendTicketRequestData = new SendTicketRequestData();
 			final ReturnAddressInfo addressInfo = new ReturnAddressInfo();
-			final String pinCode = returnAddress.getPincode();
+			String pinCode = null;
+			if (null != returnAddress)
+			{
+				pinCode = returnAddress.getPincode();
+			}
 			final List<AbstractOrderEntryModel> orderEntries = associatedEntries(subOrderModel, subOrderEntry.getTransactionId());
 			for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntries)
 			{

@@ -19,7 +19,6 @@ import org.zkoss.zk.ui.Session;
 import org.zkoss.zk.ui.api.HtmlBasedComponent;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
-import org.zkoss.zkex.zul.Borderlayout;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Hbox;
@@ -99,48 +98,6 @@ public class MarketplaceReturnRequestCreateWidgetRenderer extends
 
 			if ("RefundEntry".equalsIgnoreCase(getListConfigurationType())) {
 				LOG.debug("Initiate Return  button pressed ");
-
-				Div div = new Div();
-				div.setStyle("margin-left:400px;");
-				div.setSclass("customerDetails");
-				div.setParent(content);
-				final Hbox pinCodeHbox = createHbox(widget, "Pincode", false,
-						true);
-				final Textbox pinCodeFieldTextBox = createTextbox(pinCodeHbox);
-				pinCodeHbox.setWidth("100px");
-				pinCodeHbox.setHeight("30px");
-				pinCodeFieldTextBox.setWidth("150px");
-				pinCodeFieldTextBox.setStyle(Borderlayout.CENTER);
-				
-				try {
-					OrderModel order = (OrderModel) ((ReturnsController) widget
-							.getWidgetController()).getCurrentOrder()
-							.getObject();
-
-					if (!order.getDeliveryAddress().getPostalcode().isEmpty()
-							|| order.getDeliveryAddress().getPostalcode() != null) {
-						String pincode = order.getDeliveryAddress().getPostalcode();
-						pinCodeFieldTextBox.setValue(pincode);
-					}
-				} catch (Exception e) {
-					LOG.debug("Exception" + e);
-				}
-
-				try {
-
-					pinCodeFieldTextBox.setMaxlength(6);
-					String errorMsgName = LabelUtils.getLabel(widget,
-							"error.msg.pinCode", new Object[0]);
-					pinCodeFieldTextBox.setConstraint("/[0-9]*$/:"
-							+ errorMsgName);
-					
-					pinCodeFieldTextBox.setConstraint("" + errorMsgName);
-				} catch (Exception e) {
-					LOG.debug(e);
-				}
-
-				pinCodeHbox.setParent(div);
-				pinCodeFieldTextBox.setParent(div);
 				Div requestCreationContent = new Div();
 				requestCreationContent.setSclass("csReturnRequestActions");
 				requestCreationContent.setParent(content);
@@ -150,8 +107,7 @@ public class MarketplaceReturnRequestCreateWidgetRenderer extends
 				createButton.addEventListener(
 						"onClick",
 						createReturnRequestCreateEventListener(widget,
-								returnObjectValueContainers,
-								pinCodeFieldTextBox));
+								returnObjectValueContainers));
 
 			} else if ("ReplacementEntry"
 					.equalsIgnoreCase(getListConfigurationType())) {
@@ -166,7 +122,6 @@ public class MarketplaceReturnRequestCreateWidgetRenderer extends
 						createReturnRequestCreateEventListener(widget,
 								returnObjectValueContainers));
 			}
-
 		} else {
 			Label dummyLabel = new Label(LabelUtils.getLabel(widget,
 					"cantReturn", new Object[0]));
@@ -178,31 +133,28 @@ public class MarketplaceReturnRequestCreateWidgetRenderer extends
 
 	
 	// Added  for create event
+	@Override
 	protected EventListener createReturnRequestCreateEventListener(
 			InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
-			List<ObjectValueContainer> returnObjectValueContainers,
-			final Textbox pinCodeFieldTextBox) {
+			List<ObjectValueContainer> returnObjectValueContainers) {
 		return new ReturnRequestCreateEventListener(widget,
-				returnObjectValueContainers, pinCodeFieldTextBox);
+				returnObjectValueContainers);
 	}
 
 	protected class ReturnRequestCreateEventListener implements EventListener {
 		private final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget;
 		private final List<ObjectValueContainer> returnObjectValueContainers;
-		final Textbox pinCodeFieldTextBox;
-
+		
 		public ReturnRequestCreateEventListener(
 				InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
-				List<ObjectValueContainer> returnObjectValueContainers,
-				final Textbox pinCodeFieldTextBox) {
+				List<ObjectValueContainer> returnObjectValueContainers) {
 			this.widget = widget;
 			this.returnObjectValueContainers = returnObjectValueContainers;
-			this.pinCodeFieldTextBox = pinCodeFieldTextBox;
 		}
 
 		public void onEvent(Event event) throws Exception {
 			handleReturnRequestCreateEvent(widget, event,
-					returnObjectValueContainers, pinCodeFieldTextBox);
+					returnObjectValueContainers);
 		}
 	}
 
@@ -444,15 +396,14 @@ public class MarketplaceReturnRequestCreateWidgetRenderer extends
 		label.setParent(hbox);
 		return hbox;
 
-	}// createHbox
+	}
 
 	private Textbox createTextbox(final Hbox parent) {
 		final Textbox textBox = new Textbox();
 		textBox.setWidth("50%");
 		textBox.setParent(parent);
 		return textBox;
-	}// Textbox
-		// TODO Auto-generated method stub
+	}
 
 	@Override
 	protected ObjectValueContainer buildReturnEntryValueContainer(
@@ -482,21 +433,8 @@ public class MarketplaceReturnRequestCreateWidgetRenderer extends
 			final List<ObjectValueContainer> returnObjectValueContainers)
 			throws Exception {
 		try {
-			List<ReturnLogistics> returnLogisticsList = ((MarketPlaceReturnsController) widget
-					.getWidgetController()).getReturnLogisticsList(widget,
-					returnObjectValueContainers);
-
-			final Map<Boolean, List<OrderLineDataResponse>> responseMap = ((MarketPlaceReturnsController) widget
-					.getWidgetController())
-					.validateReverseLogistics(returnLogisticsList);
 
 			if ("RefundEntry".equalsIgnoreCase(getListConfigurationType())) {
-
-				/*
-				 * if
-				 * ("RefundEntry".equalsIgnoreCase(getListConfigurationType()))
-				 * {
-				 */
 				if (((ReturnsController) widget.getWidgetController())
 						.validateCreateRefundRequest(returnObjectValueContainers)) {
 
@@ -518,14 +456,12 @@ public class MarketplaceReturnRequestCreateWidgetRenderer extends
 										} else {
 											proceedToReturn(
 													widget,
-													returnObjectValueContainers,
-													responseMap);
+													returnObjectValueContainers);
 										}
 									}
 								});
 					} else {
-						proceedToReturn(widget, returnObjectValueContainers,
-								responseMap);
+						proceedToReturn(widget, returnObjectValueContainers);
 						return;
 					}
 				}
@@ -538,6 +474,16 @@ public class MarketplaceReturnRequestCreateWidgetRenderer extends
 				return;
 			}
 			if ("ReplacementEntry".equalsIgnoreCase(getListConfigurationType())) {
+				
+				
+				List<ReturnLogistics> returnLogisticsList = ((MarketPlaceReturnsController) widget
+						.getWidgetController()).getReturnLogisticsList(widget,
+						returnObjectValueContainers);
+
+				final Map<Boolean, List<OrderLineDataResponse>> responseMap = ((MarketPlaceReturnsController) widget
+						.getWidgetController())
+						.validateReverseLogistics(returnLogisticsList);
+				
 				if (((ReturnsController) widget.getWidgetController())
 						.validateCreateReplacementRequest(returnObjectValueContainers)) {
 					if (((MarketPlaceReturnsController) widget
@@ -610,12 +556,6 @@ public class MarketplaceReturnRequestCreateWidgetRenderer extends
 			  session.setAttribute("returnEntrys",returnObjectValueContainers );
 			 
 			if ("RefundEntry".equalsIgnoreCase(getListConfigurationType())) {
-
-				/*
-				 * if
-				 * ("RefundEntry".equalsIgnoreCase(getListConfigurationType()))
-				 * {
-				 */
 				if (((ReturnsController) widget.getWidgetController())
 						.validateCreateRefundRequest(returnObjectValueContainers) && validatePinCode(widget,pinCode)) {
 					
@@ -645,14 +585,12 @@ public class MarketplaceReturnRequestCreateWidgetRenderer extends
 										} else {
 											proceedToReturn(
 													widget,
-													returnObjectValueContainers,
-													responseMap);
+													returnObjectValueContainers);
 										}
 									}
 								});
 					} else {
-						proceedToReturn(widget, returnObjectValueContainers,
-								responseMap);
+						proceedToReturn(widget, returnObjectValueContainers);
 						return;
 					}
 				}
@@ -810,124 +748,15 @@ public class MarketplaceReturnRequestCreateWidgetRenderer extends
 
 	private void proceedToReturn(
 			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
-			final List<ObjectValueContainer> returnObjectValueContainers,
-			Map<Boolean, List<OrderLineDataResponse>> responseMap)
+			final List<ObjectValueContainer> returnObjectValueContainers)
 			throws InterruptedException {
-		if (MapUtils.isNotEmpty(responseMap)) {
-			if (CollectionUtils.isEmpty(responseMap.get(Boolean.FALSE))) {
-				Messagebox.show(LabelUtils.getLabel(widget,
-						REVERSE_LOGISTICS_AVAILABLE, new Object[0]),
-						"Question", Messagebox.OK | Messagebox.CANCEL,
-						Messagebox.QUESTION,
-						new org.zkoss.zk.ui.event.EventListener() {
-							public void onEvent(Event e)
-									throws InterruptedException {
-								if (e.getName().equals("onOK")) {
-									refundTypeSelection(widget,
-											returnObjectValueContainers);
-									return;
-								} else {
-									return;
-								}
-							}
-						});
-			} else if (CollectionUtils.isEmpty(responseMap.get(Boolean.TRUE))) {
-				Messagebox.show(LabelUtils.getLabel(widget,
-						REVERSE_LOGISTICS_NOTAVAILABLE, new Object[0]),
-						"Question", Messagebox.OK | Messagebox.CANCEL,
-						Messagebox.QUESTION,
-						new org.zkoss.zk.ui.event.EventListener() {
-							public void onEvent(Event e)
-									throws InterruptedException {
-								if (e.getName().equals("onOK")) {
-									refundOK(widget,
-											returnObjectValueContainers);
-									return;
-								} else {
-									return;
-								}
-							}
-						});
-			} else {
-				String notAvailabletransactionList = null;
-				if (CollectionUtils.isNotEmpty(responseMap.get(Boolean.FALSE))) {
-					for (OrderLineDataResponse orderEntry : responseMap
-							.get(Boolean.FALSE)) {
-						if (StringUtils.isNotEmpty(notAvailabletransactionList))
-							notAvailabletransactionList = notAvailabletransactionList
-									+ System.getProperty("line.separator")
-									+ orderEntry.getTransactionId();
-						else
-							notAvailabletransactionList = orderEntry
-									.getTransactionId();
-					}
-				}
-				String availabletransactionList = null;
-				if (CollectionUtils.isNotEmpty(responseMap.get(Boolean.TRUE))) {
-					for (OrderLineDataResponse orderEntry : responseMap
-							.get(Boolean.TRUE)) {
-						if (StringUtils.isNotEmpty(availabletransactionList))
-							availabletransactionList = availabletransactionList
-									+ System.getProperty("line.separator")
-									+ orderEntry.getTransactionId();
-						else
-							availabletransactionList = orderEntry
-									.getTransactionId();
-					}
-				}
-
-				String finalMessage = LabelUtils.getLabel(widget,
-						REVERSE_LOGISTICS_PARTIALAVAILABLE);
-				if (null != availabletransactionList)
-					finalMessage = finalMessage
-							+ System.getProperty("line.separator")
-							+ "The Transaction Id's for which Reverse Logisitic is available: "
-							+ System.getProperty("line.separator")
-							+ availabletransactionList;
-				if (null != notAvailabletransactionList)
-					finalMessage = finalMessage
-							+ System.getProperty("line.separator")
-							+ "The Transaction Id's for which Reverse Logisitic is not available: "
-							+ System.getProperty("line.separator")
-							+ notAvailabletransactionList;
-
-				Messagebox.show(finalMessage, "Error", Messagebox.OK,
-						Messagebox.ERROR,
-						new org.zkoss.zk.ui.event.EventListener() {
-							public void onEvent(Event e)
-									throws InterruptedException {
-								if (e.getName().equals("onOK")) {
-									return;
-								}
-							}
-						});
-			}
-		} else {
-			Messagebox.show(LabelUtils.getLabel(widget,
-					NO_RESPONSE_FROM_SERVER, new Object[0]), "Error",
-					Messagebox.OK, Messagebox.ERROR,
-					new org.zkoss.zk.ui.event.EventListener() {
-						public void onEvent(Event e)
-								throws InterruptedException {
-							if (e.getName().equals("onOK")) {
-								return;
-							}
-						}
-					});
+		try {
+			refundTypeSelection(widget,returnObjectValueContainers);
+		}catch(Exception e) {
+			LOG.error("Exception while calling refundTypeSelection Method"+e.getMessage());
 		}
-		return;
 	}
 
-	/*
-	 * protected EventListener createReturnRequestCreateEventListener(
-	 * InputWidget widget, List returnObjectValueContainers, Textbox
-	 * pinCodeFieldTextBox) {
-	 * 
-	 * pinCode = pinCodeFieldTextBox.getValue();
-	 * 
-	 * return new ReturnRequestCreateEventListener(widget,
-	 * returnObjectValueContainers); }
-	 */
 
 	private void replacementOK(
 			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
@@ -954,18 +783,18 @@ public class MarketplaceReturnRequestCreateWidgetRenderer extends
 		return;
 	}
 
-	private void refundOK(
-			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
-			final List<ObjectValueContainer> returnObjectValueContainers) {
-		TypedObject refundOrder = ((MarketPlaceReturnsController) widget
-				.getWidgetController())
-				.createRefundOrderPreview(returnObjectValueContainers);
-		if (refundOrder == null)
-			return;
-		createRefundConfirmationPopupWindow(widget, getPopupWidgetHelper()
-				.getCurrentPopup().getParent());
-		return;
-	}
+//	private void refundOK(
+//			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
+//			final List<ObjectValueContainer> returnObjectValueContainers) {
+//		TypedObject refundOrder = ((MarketPlaceReturnsController) widget
+//				.getWidgetController())
+//				.createRefundOrderPreview(returnObjectValueContainers);
+//		if (refundOrder == null)
+//			return;
+//		createRefundConfirmationPopupWindow(widget, getPopupWidgetHelper()
+//				.getCurrentPopup().getParent());
+//		return;
+//	}
 	
 	
 	private void refundTypeSelection(final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
@@ -976,7 +805,7 @@ public class MarketplaceReturnRequestCreateWidgetRenderer extends
 				.createRefundOrderPreview(returnObjectValueContainers);
 		if (refundOrder == null)
 			return;
-		createReturnCreditDetailsPopupWindow(widget,getPopupWidgetHelper().getCurrentPopup().getParent());
+		createReturnMethodSelectionPopupWindow(widget,getPopupWidgetHelper().getCurrentPopup().getParent());
 	}
 
 	protected ObjectValueContainer.ObjectValueHolder getPropertyValue(
@@ -1002,7 +831,7 @@ public class MarketplaceReturnRequestCreateWidgetRenderer extends
 	}
 
 	
-	private Window createReturnCreditDetailsPopupWindow(InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> parentWidget,
+	private Window createReturnMethodSelectionPopupWindow(InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> parentWidget,
 			Component parentWindow) {
 		@SuppressWarnings("rawtypes")
 		WidgetContainer widgetContainer = new DefaultWidgetContainer(

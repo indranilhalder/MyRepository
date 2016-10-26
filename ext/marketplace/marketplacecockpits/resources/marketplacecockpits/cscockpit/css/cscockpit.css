@@ -3777,3 +3777,46 @@ margin-top: 15px;
 	background-color: #F2F2F2;
 	height: 23px;
 } 
+ 
+.AcntNumberLabel{
+	font-size: 15px;
+    padding-right: 40px;
+}
+.accNoTextbox{
+	width: 29%;
+    height: 15px;
+    border-color: black;
+    font-size: 15px;
+}
+.reEntrAcntnumber{
+	 font-size: 15px;
+    padding-left: 50px;
+    padding-right: 5px;
+}
+.acntHolderName{
+	    width: 10px;
+    font-size: 15px;
+}
+.accHolderNameTextbox{
+	width: 30%;
+    height: 16px;
+    border-color: black;
+    font-size: 15px;
+}
+
+.bankNameLabel{
+	font-size: 15px;
+	padding-right: 70px;
+}
+.acntHolderTitle {
+    padding-left: 20px;
+    padding-right: 5px;
+    width: 10px;
+    font-size: 15px;
+}
+.refundModedropDown{
+	width: 30%;
+    height: 16px;
+    border-color: black;
+    font-size: 12px;
+}

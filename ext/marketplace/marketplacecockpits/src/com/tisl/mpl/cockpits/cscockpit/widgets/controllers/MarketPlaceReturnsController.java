@@ -7,7 +7,6 @@ import org.zkoss.zul.Checkbox;
 
 import com.tisl.mpl.data.CODSelfShipData;
 import com.tisl.mpl.data.CODSelfShipResponseData;
-import com.tisl.mpl.data.RTSAndRSSReturnInfoResponseData;
 import com.tisl.mpl.data.ReturnInfoData;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
 import com.tisl.mpl.wsdto.ReturnLogistics;
@@ -59,10 +58,5 @@ public interface MarketPlaceReturnsController extends ReturnsController {
 			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
 			final AbstractOrderEntryModel entry, List<Checkbox> storeChecks);
 
-	boolean createTicketInCRM(OrderData subOrderDetails,
-			OrderEntryData subOrderEntry, String ticketTypeCode,
-			String reasonCode, String refundType, String ussid,
-			CustomerData customerData, OrderModel subOrderModel,
-			ReturnItemAddressData returnAddress, ReturnInfoData returnInfoData);
-
 }
+

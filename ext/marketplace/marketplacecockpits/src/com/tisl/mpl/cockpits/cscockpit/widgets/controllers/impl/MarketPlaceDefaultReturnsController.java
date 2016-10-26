@@ -30,7 +30,9 @@ import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
+import com.tisl.mpl.facades.data.RescheduleData;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
+import com.tisl.mpl.facades.populators.CustomAddressReversePopulator;
 import com.tisl.mpl.marketplacecommerceservices.service.MPLReturnService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
@@ -62,6 +64,7 @@ import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.cscockpit.utils.SafeUnbox;
 import de.hybris.platform.cscockpit.widgets.controllers.ReturnsController;
@@ -82,43 +85,41 @@ public class MarketPlaceDefaultReturnsController extends
 
 	@Autowired
 	private MPLReturnService mplreturnService;
+
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
+
 	@Autowired
 	private ReturnLogisticsService returnLogisticsService;
+
 	@Autowired
 	private ConfigurationService configurationService;
 	@Autowired
-	private MplOrderCancelClientService mplOrderCancelClientService;
+	private AbstractOrderPopulator<OrderModel, OrderData> orderPopulator;
+	
+	
 	@Autowired
 	private MplConfigFacade mplConfigFacade;
 	@Autowired
 	private MplCheckoutFacade mplCheckoutFacade;
+
+	@Autowired
+	private PincodeServiceFacade pincodeServiceFacade;
+
+	@Autowired
+	private ModelService modelService;
+	@Autowired
+	private CustomAddressReversePopulator addressRevercePopulator;
+	@Autowired
+	private MplOrderFacade mplOrderFacade;
+	@Autowired
+	private MplOrderCancelClientService mplOrderCancelClientService;
 	@Autowired
 	private CancelReturnFacade cancelReturnFacade;
 	@Autowired
-	private PincodeServiceFacade pincodeServiceFacade;
-	@Autowired
-	private MplOrderFacade mplOrderFacade;
-//	@Autowired
-//	private Populator<AddressData, ReturnItemAddressData>  ReturnItemAddressDataPopulator;
-	@Autowired
-	private AbstractOrderPopulator<OrderModel, OrderData> orderPopulator;
-	@Autowired
 	private Populator<AbstractOrderEntryModel, OrderEntryData> orderEntryPopulator;
 	@Autowired
-	private Populator<CustomerModel, CustomerData> customerPopulator;
-//	private CallContextController callContextController;
-//
-//	protected CallContextController getCallContextController() {
-//		return callContextController;
-//	}
-//
-//	@Required
-//	public void setCallContextController(
-//			CallContextController callContextController) {
-//		this.callContextController = callContextController;
-//	}
+	private Populator<AddressData, ReturnItemAddressData> returnItemAddressDatapopulator;
 
 	private static final String OMS_BYPASS_KEY = "cscockpit.oms.serviceability.check.bypass";
 
@@ -127,61 +128,8 @@ public class MarketPlaceDefaultReturnsController extends
 
 	public Map<Boolean, List<OrderLineDataResponse>> validateReverseLogistics(
 			List<ReturnLogistics> returnLogisticsList) {
-		String returnFulfillmentType = null;
-		String returnFulfillmentByP1 = null;
-		List<ReturnLogistics> returnItems = new ArrayList<ReturnLogistics>();
-		final OrderModel orderModel = getOrderModel();
-		for (AbstractOrderEntryModel entry : orderModel.getEntries()) {
-			for (ReturnLogistics seletedItems : returnLogisticsList) {
-				ReturnLogistics returnLogistics = new ReturnLogistics();
-				if (seletedItems.getTransactionId().equals(
-						entry.getTransactionID())) {
-					returnLogistics.setOrderId(seletedItems.getOrderId());
-					returnLogistics.setTransactionId(seletedItems.getTransactionId());
-					returnLogistics.setPinCode(seletedItems.getPinCode());
-					final ProductModel productModel = mplOrderFacade
-							.getProductForCode(entry.getProduct().getCode());
-					for (final SellerInformationModel sellerInfo : productModel
-							.getSellerInformationRelator()) {
-						if (entry.getSelectedUSSID().equalsIgnoreCase(
-								sellerInfo.getUSSID())) {
-							if (CollectionUtils.isNotEmpty(sellerInfo
-									.getRichAttribute())) {
-								for (RichAttributeModel richAttribute : sellerInfo
-										.getRichAttribute()) {
-									if (null != richAttribute
-											.getReturnFulfillMode()) {
-										LOG.info(richAttribute
-												.getReturnFulfillMode());
-										returnFulfillmentType = richAttribute
-												.getReturnFulfillMode()
-												.getCode();
-									}
 
-									if (null != richAttribute
-											.getReturnFulfillModeByP1()) {
-										LOG.info(richAttribute
-												.getReturnFulfillModeByP1());
-										returnFulfillmentByP1 = richAttribute
-												.getReturnFulfillModeByP1()
-												.getCode();
-									}
-								}
-							}
-							if(StringUtils.isNotEmpty(returnFulfillmentType)) {
-								returnLogistics.setReturnFulfillmentType(returnFulfillmentType);
-							}
-							if(StringUtils.isNotEmpty(returnFulfillmentByP1)) {
-								returnLogistics.setReturnFulfillmentByP1(returnFulfillmentByP1);
-							}
-							returnItems.add(returnLogistics);
-						}
-					}
-				}
-			}
-		}
-
-		final Map<Boolean, List<OrderLineDataResponse>> responseMap = new HashMap<Boolean, List<OrderLineDataResponse>>();
+		final Map<Boolean, List<OrderLineDataResponse>> responseMap = new HashMap();
 		ReturnLogisticsResponse returnLogisticsResponse = returnLogisticsService
 				.returnLogisticsCheck(returnLogisticsList);
 
@@ -228,10 +176,10 @@ public class MarketPlaceDefaultReturnsController extends
 	@Override
 	public TypedObject createReplacementRequest(
 			List<ObjectValueContainer> replacementEntriesValueContainers) {
-		List<ReturnLogistics> returnLogisticsList = new ArrayList<ReturnLogistics>();
+		List<ReturnLogistics> returnLogisticsList = new ArrayList();
 		ReturnRequestModel request = null;
 		ReplacementOrderModel replacementOrder = null;
-		List<ReplacementEntryModel> returnEntries = new ArrayList<ReplacementEntryModel>();
+		List<ReplacementEntryModel> returnEntries = new ArrayList();
 
 		ModelService modelService = getModelService();
 		Map returnableOrderEntries;
@@ -277,7 +225,7 @@ public class MarketPlaceDefaultReturnsController extends
 			boolean isOMSBypass = configurationService.getConfiguration()
 					.getBoolean(OMS_BYPASS_KEY);
 			if (!isOMSBypass) {
-				returnCalltoOMS(request, null);
+				returnCalltoOMS(request, null,null);
 			}
 			modelService.saveAll(returnEntries);
 			replacementOrder = getReturnService().createReplacementOrder(
@@ -316,61 +264,131 @@ public class MarketPlaceDefaultReturnsController extends
 	public TypedObject createRefundRequest() {
 		try {
 
-			List<ReturnLogistics> returnLogisticsList = new ArrayList<ReturnLogistics>();
+			List<ReturnLogistics> returnLogisticsList = new ArrayList();
 			ModelService modelService = getModelService();
 			OrderModel orderModel = getOrderModel();
 			ReturnRequestModel refundRequest = getReturnService()
 					.createReturnRequest(orderModel);
-
 			boolean isOMSBypass = configurationService.getConfiguration()
 					.getBoolean(OMS_BYPASS_KEY);
+			Session session = Executions.getCurrent().getDesktop().getSession();
+			String returnType = (String) session.getAttribute("typeofReturn");
+			AddressData addressData = null;		
+			String pincode = null;
 			if (!isOMSBypass) {
-				returnCalltoOMS(refundRequest, this.refundDetailsList);
+				returnCalltoOMS(refundRequest, this.refundDetailsList,pincode);
 			}
-
+			if(null != returnType && returnType.equalsIgnoreCase(TypeofReturn.SCHEDULE_PICKUP.getCode())){
+				addressData = (AddressData) session.getAttribute("returnAddress");
+				List<RescheduleData> scheduleDeliveryDates = (List<RescheduleData>) session.getAttribute("scheduleDeliveryDates");
+				saveReturnPickUpDates(refundRequest,scheduleDeliveryDates);
+				AddressModel addressModel = new AddressModel();
+				addressRevercePopulator.populate(addressData, addressModel);
+				refundRequest.setReturnAddress(addressModel);
+			}
 			String rmaString = getReturnService().createRMA(refundRequest);
 			refundRequest.setRMA(rmaString);
-
 			applyRefunds(orderModel, refundRequest, this.refundDetailsList,
-					true);
-
+					true);			
 			TypedObject refundRequestObject = getCockpitTypeService().wrapItem(
 					refundRequest);
-
-			// Added By Techouts for return pincode
-			Session session = Executions.getCurrent().getDesktop().getSession();
-			String pinCode = (String) session.getAttribute("pinCode");
-
-			for (AbstractOrderEntryModel orderEntry : orderModel.getEntries()) {
-				ReturnLogistics returnLogistics = new ReturnLogistics();
-				returnLogistics.setOrderId(orderEntry.getOrder().getCode());
-				returnLogistics.setTransactionId(orderEntry.getTransactionID());
-				returnLogistics.setPinCode(pinCode);
-				returnLogisticsList.add(returnLogistics);
-			}
-
-			Map<Boolean, List<OrderLineDataResponse>> responseMap = validateReverseLogistics(returnLogisticsList);
-
-			if (CollectionUtils.isEmpty(responseMap.get(Boolean.FALSE))) {
+			if(returnType.equalsIgnoreCase(TypeofReturn.SCHEDULE_PICKUP.getCode())) {
 				refundRequest.setTypeofreturn(TypeofReturn.REVERSE_PICKUP);
-			} else {
+			}else if(returnType.equalsIgnoreCase(TypeofReturn.SELF_COURIER.getCode())){
 				refundRequest.setTypeofreturn(TypeofReturn.SELF_COURIER);
-			}
-
-			refundRequest.setReturnRaisedFrom(SalesApplication.CALLCENTER);
-
-			modelService.save(refundRequest);
-
-			this.refundDetailsList.clear();
-			this.refundDetailsList = null;
-			deleteRefundOrderPreview();
-
-			return refundRequestObject;
-		} catch (Exception e) {
+			}else {
+				refundRequest.setTypeofreturn(TypeofReturn.QUICK_DROP);
+				refundRequest.setTypeofreturn(TypeofReturn.SELF_COURIER);
+				refundRequest.setReturnRaisedFrom(SalesApplication.CALLCENTER);		
+				modelService.save(refundRequest);
+				this.refundDetailsList.clear();
+				this.refundDetailsList = null;
+				deleteRefundOrderPreview();
+				try {
+					LOG.debug("Creating crm ticket for return for the order id :"+orderModel.getCode());
+					OrderData subOrderData = new OrderData(); ;
+					orderPopulator.populate(orderModel, subOrderData);
+					OrderEntryData subOrderEntry = new OrderEntryData();
+					CustomerData customerData = null;
+					ReturnItemAddressData returnItemAddressData = null;
+					ReturnInfoData returnInfoData = null;
+					for (ReturnEntryModel returnEntry : refundRequest.getReturnEntries()) {
+						orderEntryPopulator.populate(returnEntry.getOrderEntry(), subOrderEntry);										
+						returnInfoData = populateReturnInfoData(returnEntry);
+						if(null != addressData && returnType.equalsIgnoreCase(TypeofReturn.SCHEDULE_PICKUP.getCode())) {
+							returnItemAddressDatapopulator.populate(addressData, returnItemAddressData);
+						}
+						LOG.debug("Creating crm ticket for transaction id :"+subOrderEntry.getTransactionId());
+						cancelReturnFacade.createTicketInCRM(subOrderData, subOrderEntry, "R", ((ReplacementEntryModel) returnEntry).getReason().getCode(), 
+								returnType, returnEntry.getOrderEntry().getSelectedUSSID(), customerData, (OrderModel) returnEntry.getOrderEntry().getOrder(), 
+								returnItemAddressData, returnInfoData);
+					}
+				}catch(Exception e) {
+					LOG.error("Exception while creating crm ticket for the order ID :"+orderModel.getCode());
+				}
+				return refundRequestObject;
+			} 
+		}catch (Exception e) {
 			LOG.error("Failed to create refund request", e);
 		}
 
 		return null;
+	}
+	
+	
+
+	private ReturnInfoData populateReturnInfoData(ReturnEntryModel returnEntry) {
+		ReturnInfoData returnInfoData = new ReturnInfoData();
+		returnInfoData.setIsReturn("Y");
+		returnInfoData.setReasonCode(returnEntry.getReturnRequest().getRejectionReason());
+		
+		String returnFulfillmentType = null;
+		final ProductModel productModel = mplOrderFacade
+				.getProductForCode(returnEntry.getOrderEntry().getProduct().getCode());
+		for (final SellerInformationModel sellerInfo : productModel
+				.getSellerInformationRelator()) {
+			if (returnEntry.getOrderEntry().getSelectedUSSID().equalsIgnoreCase(sellerInfo.getUSSID())) {
+				if (CollectionUtils.isNotEmpty(sellerInfo
+						.getRichAttribute())) {
+					for (RichAttributeModel richAttribute : sellerInfo
+							.getRichAttribute()) {
+						if (null != richAttribute
+								.getReturnFulfillMode()) {
+							LOG.info(richAttribute
+									.getReturnFulfillMode());
+							returnFulfillmentType = richAttribute
+									.getReturnFulfillMode()
+									.getCode();
+						}
+					}
+				}
+			}
+		}
+		returnInfoData.setRefundType("Back to Source");
+		returnInfoData.setReturnFulfillmentMode(returnFulfillmentType);
+		returnInfoData.setReturnMethod(returnEntry.getReturnRequest().getTypeofreturn().getCode());
+		returnInfoData.setReturnPickupDate(returnEntry.getPickupDate());
+		returnInfoData.setTicketTypeCode("R");
+		returnInfoData.setTimeSlotFrom(returnEntry.getPickupTimeFrom());
+		returnInfoData.setTimeSlotTo(returnEntry.getPickUptimeTo());
+		returnInfoData.setUssid(returnEntry.getOrderEntry().getSelectedUSSID());
+		return returnInfoData;
+	}
+
+	private void saveReturnPickUpDates(ReturnRequestModel refundRequest, List<RescheduleData> scheduleDeliveryDates) {
+		
+		for (ReturnEntryModel returnEntry: refundRequest.getReturnEntries()) 
+		{
+			for (RescheduleData returnScheduleData : scheduleDeliveryDates) {
+				if(returnEntry.getOrderEntry().getProduct().getCode().equalsIgnoreCase(returnScheduleData.getProductCode())) {
+					returnEntry.setPickupDate(returnScheduleData.getDate());
+					returnEntry.setPickupTimeFrom(returnScheduleData.getTime());
+					returnEntry.setPickUptimeTo(returnScheduleData.getTime());
+				}
+			}
+		}
+		modelService.saveAll(refundRequest);
+		
 	}
 
 	@Override
@@ -395,9 +413,9 @@ public class MarketPlaceDefaultReturnsController extends
 			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
 			final List<ObjectValueContainer> returnObjectValueContainers,
 			String pinCode) {
-		Map returnableOrderEntries = widget.getWidgetController()
-				.getReturnableOrderEntries();
-		List<ReturnLogistics> returnLogisticsList = new ArrayList<ReturnLogistics>();
+		Map returnableOrderEntries = ((ReturnsController) widget
+				.getWidgetController()).getReturnableOrderEntries();
+		List<ReturnLogistics> returnLogisticsList = new ArrayList();
 		for (ObjectValueContainer ovc : returnObjectValueContainers) {
 			TypedObject orderEntry = (TypedObject) ovc.getObject();
 			AbstractOrderEntryModel entry = (OrderEntryModel) orderEntry
@@ -433,9 +451,9 @@ public class MarketPlaceDefaultReturnsController extends
 	public List<ReturnLogistics> getReturnLogisticsList(
 			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
 			final List<ObjectValueContainer> returnObjectValueContainers) {
-		Map returnableOrderEntries = widget.getWidgetController()
-				.getReturnableOrderEntries();
-		List<ReturnLogistics> returnLogisticsList = new ArrayList<ReturnLogistics>();
+		Map returnableOrderEntries = ((ReturnsController) widget
+				.getWidgetController()).getReturnableOrderEntries();
+		List<ReturnLogistics> returnLogisticsList = new ArrayList();
 		for (ObjectValueContainer ovc : returnObjectValueContainers) {
 			TypedObject orderEntry = (TypedObject) ovc.getObject();
 			AbstractOrderEntryModel entry = (OrderEntryModel) orderEntry
@@ -467,7 +485,7 @@ public class MarketPlaceDefaultReturnsController extends
 	}
 
 	private void returnCalltoOMS(ReturnRequestModel returnRequest,
-			Map<Long, RefundDetails> refundDetailsList)
+			Map<Long, de.hybris.platform.cscockpit.widgets.controllers.impl.DefaultReturnsController.RefundDetails> refundDetailsList, String pincode)
 			throws OrderReturnException {
 		try {
 			if (null != returnRequest) {
@@ -483,16 +501,14 @@ public class MarketPlaceDefaultReturnsController extends
 
 					// Added By Techouts
 
-					Session session = Executions.getCurrent().getDesktop()
-							.getSession();
-					String pinCode = (String) session.getAttribute("pinCode");
-
+//					Session session = Executions.getCurrent().getDesktop()
+//							.getSession();
+//					String pinCode = (String) session.getAttribute("pinCode");
 					List<ReturnEntryModel> returnEntries = returnRequest
 							.getReturnEntries();
 					if (CollectionUtils.isNotEmpty(returnEntries)) {
 						for (ReturnEntryModel returnEntry : returnEntries) {
 							orderLine = new OrderLine();
-							String returnFulfillmentType = null;
 							orderModel = ((OrderModel) (returnEntry
 									.getOrderEntry().getOrder()))
 									.getParentReference();
@@ -502,9 +518,10 @@ public class MarketPlaceDefaultReturnsController extends
 							orderLine.setReturnCancelFlag("R");
 							orderLine.setRequestID(returnRequest.getCode());
 							// For FullFillment Type
-							for (AbstractOrderEntryModel entry : orderModel.getEntries()) {
+						//	for (AbstractOrderEntryModel entry : orderModel.getEntries()) {
+							String returnFulfillmentType = null;
 								final ProductModel productModel = mplOrderFacade
-										.getProductForCode(entry.getProduct().getCode());
+										.getProductForCode(returnEntry.getOrderEntry().getProduct().getCode());
 								for (final SellerInformationModel sellerInfo : productModel
 										.getSellerInformationRelator()) {
 									if (returnEntry.getOrderEntry().getSelectedUSSID().equalsIgnoreCase(sellerInfo.getUSSID())) {
@@ -524,7 +541,7 @@ public class MarketPlaceDefaultReturnsController extends
 										}
 									}
 								}
-							}
+							//}
 							if(returnFulfillmentType != null) {
 								orderLine.setReturnFulfillmentMode(returnFulfillmentType);
 							}
@@ -536,11 +553,9 @@ public class MarketPlaceDefaultReturnsController extends
 							orderLine.setReasonCode(reason);
 							orderLine.setReturnCancelRemarks(notes);
 							request.getOrderLine().add(orderLine);
-							if (null != pinCode || !pinCode.isEmpty()) {
-								orderLine.setPinCode(pinCode);
+							if (null != pincode || !pincode.isEmpty()) {
+								orderLine.setPinCode(pincode);
 							}
-							
-							ReturnItem(returnEntry.getOrderEntry(),orderLine,returnRequest);
 						}
 
 					} else {
@@ -558,6 +573,32 @@ public class MarketPlaceDefaultReturnsController extends
 									.getTransactionID());
 							orderLine.setReturnCancelFlag("R");
 							orderLine.setRequestID(returnRequest.getCode());
+							
+							// For FullFillment Type
+							//	for (AbstractOrderEntryModel entry : orderModel.getEntries()) {
+								String returnFulfillmentType = null;
+									final ProductModel productModel = mplOrderFacade
+											.getProductForCode(orderEntryModel.getProduct().getCode());
+									for (final SellerInformationModel sellerInfo : productModel
+											.getSellerInformationRelator()) {
+										if (orderEntryModel.getSelectedUSSID().equalsIgnoreCase(sellerInfo.getUSSID())) {
+											if (CollectionUtils.isNotEmpty(sellerInfo
+													.getRichAttribute())) {
+												for (RichAttributeModel richAttribute : sellerInfo
+														.getRichAttribute()) {
+													if (null != richAttribute
+															.getReturnFulfillMode()) {
+														LOG.info(richAttribute
+																.getReturnFulfillMode());
+														returnFulfillmentType = richAttribute
+																.getReturnFulfillMode()
+																.getCode();
+													}
+												}
+											}
+										}
+									}
+								//}
 							reason = CodeMasterUtility
 									.getglobalCode(refundDetail.getValue()
 											.getReason().getCode());
@@ -565,115 +606,25 @@ public class MarketPlaceDefaultReturnsController extends
 							orderLine.setReasonCode(reason);
 							orderLine.setReturnCancelRemarks(notes);
 							request.getOrderLine().add(orderLine);
-							if (null != pinCode || !pinCode.isEmpty()) {
-								orderLine.setPinCode(pinCode);
+							if (null != pincode && !pincode.isEmpty()) {
+								orderLine.setPinCode(pincode);
 							}
-							
-							for (AbstractOrderEntryModel entry : orderModel.getEntries()) {
-								String returnFulfillmentType = null;
-								final ProductModel productModel = mplOrderFacade
-										.getProductForCode(entry.getProduct().getCode());
-								for (final SellerInformationModel sellerInfo : productModel
-										.getSellerInformationRelator()) {
-									if (orderEntryModel.getSelectedUSSID().equalsIgnoreCase(sellerInfo.getUSSID())) {
-										if (CollectionUtils.isNotEmpty(sellerInfo
-												.getRichAttribute())) {
-											for (RichAttributeModel richAttribute : sellerInfo
-													.getRichAttribute()) {
-												if (null != richAttribute
-														.getReturnFulfillMode()) {
-													LOG.info(richAttribute
-															.getReturnFulfillMode());
-													returnFulfillmentType = richAttribute
-															.getReturnFulfillMode()
-															.getCode();
-												}
-											}
-										}
-										if(returnFulfillmentType != null) {
-											orderLine.setReturnFulfillmentMode(returnFulfillmentType);
-										}
-									}
-								}
-							}
-							
-							
-							// OMS Status and Craing crm Ticket for return
-							ReturnItem(orderEntryModel,orderLine,returnRequest);
-							
+
 						}
-						
-				
 					}
 
-				  	MplOrderIsCancellableResponse response = mplOrderCancelClientService.orderCancelDataToOMS(request);
-					
-//					for ( OrderLine CancelOrderRequest : request.getOrderLine() ) {
-//						OrderData subOrderDetails = new OrderData();
-//						
-//							Boolean omsResponce= cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry, returnData, customerData, salesApplication, returnAddress);
-//					}
-//					
-//					Boolean omsResponce= cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry, returnData, customerData, salesApplication, returnAddress);
-//					
-					
-//					
-//					if (null == omsResponce) {
-//					getModelService().remove(returnRequest);//Remove if created any 
-//						throw new OrderReturnException(orderModel.getCode(),
-//								"Item is not returnable at OMS.");
-//					}
+					MplOrderIsCancellableResponse response = mplOrderCancelClientService
+							.orderCancelDataToOMS(request);
+					if (null == response) {
+					getModelService().remove(returnRequest);//Remove if created any 
+						throw new OrderReturnException(orderModel.getCode(),
+								"Item is not returnable at OMS.");
+					}
 				}
 			}
 		} catch (Exception ex) {
 			throw new OrderReturnException("Failed", "OMS is not responding");
 		}
-	}
-
-	private void ReturnItem(AbstractOrderEntryModel orderEntryModel, OrderLine orderLine, ReturnRequestModel returnRequest) throws OrderReturnException {
-		OrderModel  subOrderModel = (OrderModel) orderEntryModel.getOrder();
-		OrderData subOrderDetails = new OrderData();
-		orderPopulator.populate(subOrderModel, subOrderDetails);
-		OrderEntryData orderEntryData = new OrderEntryData();
-		
-		orderEntryPopulator.populate(orderEntryModel, orderEntryData);
-	//	TypedObject customer = getCallContextController().getCurrentCustomer();
-		//CustomerModel customermodel = (CustomerModel) customer
-		//		.getObject();
-		CustomerData customerData = new CustomerData();
-		//customerPopulator.populate(customermodel, customerData);
-		ReturnInfoData returnInfoData = new ReturnInfoData();
-		returnInfoData=PopulateReturnInfoData(orderLine);
-		Session session = Executions.getCurrent().getDesktop().getSession();
-		final AddressData AddressData = (AddressData) session.getAttribute("returnAddress");
-		ReturnItemAddressData returnItemAddressData = new ReturnItemAddressData();
-		//ReturnItemAddressDataPopulator.populate(AddressData, returnItemAddressData);
-		Boolean omsResponce= cancelReturnFacade.implementReturnItem(subOrderDetails, orderEntryData, returnInfoData, customerData, SalesApplication.CALLCENTER, returnItemAddressData);
-
-		if (null == omsResponce) {
-		getModelService().remove(returnRequest);//Remove if created any 
-			throw new OrderReturnException(orderEntryModel.getOrder().getCode(),
-					"Item is not returnable at OMS.");
-		}
-		
-	}
-
-	private ReturnInfoData PopulateReturnInfoData(OrderLine orderLine) {
-
-		ReturnInfoData returnInfoData = new ReturnInfoData();
-		returnInfoData.setIsReturn("Y");
-		returnInfoData.setReasonCode(orderLine.getReasonCode());
-		returnInfoData.setTicketTypeCode("R");
-		returnInfoData.setUssid(orderLine.getTransactionId());
-		returnInfoData.setReturnFulfillmentMode(orderLine.getReturnFulfillmentMode());
-		returnInfoData.setReturnMethod("SchedulePichup");
-		returnInfoData.setReturnPickupDate("11-12-2016");
-		returnInfoData.setTimeSlotFrom("11 AM");
-		returnInfoData.setTimeSlotTo("1 PM");
-	
-		return returnInfoData;
-		
-		
 	}
 
 	@Override
@@ -800,21 +751,4 @@ public class MarketPlaceDefaultReturnsController extends
 		cancelReturnFacade.retrunInfoCallToOMS(infoRequestData);
 
 	} 
-/**
- * This method is used for ticket creation for crm 
- */
-	@Override
-	public boolean createTicketInCRM(OrderData subOrderDetails,
-			OrderEntryData subOrderEntry, String ticketTypeCode,
-			String reasonCode, String refundType, String ussid,
-			CustomerData customerData, OrderModel subOrderModel,
-			ReturnItemAddressData returnAddress, ReturnInfoData returnInfoData) {
-		try {
-			cancelReturnFacade.createTicketInCRM(subOrderDetails, subOrderEntry, ticketTypeCode, reasonCode, refundType, ussid, customerData, subOrderModel, returnAddress, returnInfoData);
-		}catch(Exception e) {
-			LOG.error("Exception while creating crm ticket for return "+e.getMessage());
-		}
-		return false;
-	}
-
 }

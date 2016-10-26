@@ -1573,6 +1573,10 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	
 	<bean id="mplLandMarksPopulator" class="com.tisl.mpl.facades.populators.MplLandMarksPopulator"/>
 	
+	<bean id="returnItemAddressDataPopulator" class="com.tisl.mpl.facades.populators.ReturnItemAddressDataPopulator"/>
+	
+	
+	
 	<bean id="mplLandMarksConverter" parent="abstractPopulatingConverter">
 		<property name="targetClass" value="com.tisl.mpl.facade.data.LandMarksData"/>
 		<property name="populators">

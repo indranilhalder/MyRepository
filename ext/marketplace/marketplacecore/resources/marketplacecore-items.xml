@@ -603,6 +603,15 @@
 			dynamic="true">
 			<value code="SELF_COURIER" />
 			<value code="REVERSE_PICKUP" />
+			<value code="SCHEDULE_PICKUP" />
+			<value code="QUICK_DROP" />
+		</enumtype>
+		
+		<enumtype code="RefundMode" autocreate="true" generate="true"
+			dynamic="true">
+			<value code="NEFT" />
+			<value code="IFSC" />
+			<value code="RGFT" />
 		</enumtype>
 
 		<enumtype code="FeedbackArea" autocreate="true" generate="true"
