@@ -120,11 +120,11 @@ public class CustomSkuComponentController extends AbstractCMSComponentController
 
 		String formedPaginationUrl = null;
 
+		int count = getSearchPageSize();
+		final UserPreferencesData preferencesData = updateUserPreferences(count);
+
 		if (null != searchQuery || null != sortCode)
 		{
-			int count = getSearchPageSize();
-			final UserPreferencesData preferencesData = updateUserPreferences(count);
-
 			if (preferencesData != null && preferencesData.getPageSize() != null)
 			{
 				count = preferencesData.getPageSize().intValue();
@@ -138,22 +138,29 @@ public class CustomSkuComponentController extends AbstractCMSComponentController
 		}
 		else
 		{
-			ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
-			final SearchStateData searchState = new SearchStateData();
-			final SearchQueryData searchQueryData = new SearchQueryData();
-			final PageableData pageableData = createPageableData(page, getSearchPageSize(), null, ShowMode.Page);
-			searchState.setQuery(searchQueryData);
-			searchPageData = searchFacade.collectionSearch(sku.getLabelOrId(), searchState, pageableData);
+			/*
+			 * ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null; final
+			 * SearchStateData searchState = new SearchStateData(); final SearchQueryData searchQueryData = new
+			 * SearchQueryData(); final PageableData pageableData = createPageableData(page, getSearchPageSize(), null,
+			 * ShowMode.Page); searchState.setQuery(searchQueryData); searchPageData =
+			 * searchFacade.collectionSearch(sku.getLabelOrId(), searchState, pageableData);
+			 */
+			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
+					sku.getLabelOrId(), searchQuery, page, showMode, sortCode, count, null);
 			final String url = searchPageData.getCurrentQuery().getUrl();
 			formedPaginationUrl = url.replace("/search", "");
 			searchPageData.getCurrentQuery().setUrl(formedPaginationUrl);
+			//Checking Department Hierarchy
+			model.addAttribute("departmentHierarchyData", searchPageData.getDepartmentHierarchyData());
+			model.addAttribute("departments", searchPageData.getDepartments());
+			populateModel(model, searchPageData, showMode);
 		}
 	}
 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.storefront.controllers.cms.AbstractCMSComponentController#fillModel(javax.servlet.http.HttpServletRequest
 	 * , org.springframework.ui.Model, de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel)
@@ -416,7 +423,7 @@ public class CustomSkuComponentController extends AbstractCMSComponentController
 		 * getI18nService().getCurrentLocale()) + " " + searchText + " " +
 		 * getMessageSource().getMessage(ModelAttributetConstants.SEARCH_META_DESC_ON, null,
 		 * ModelAttributetConstants.SEARCH_META_DESC_ON, getI18nService().getCurrentLocale()) + " " + getSiteName());
-		 *
+		 * 
 		 * final String metaKeywords = MetaSanitizerUtil.sanitizeKeywords(searchText);
 		 */
 
