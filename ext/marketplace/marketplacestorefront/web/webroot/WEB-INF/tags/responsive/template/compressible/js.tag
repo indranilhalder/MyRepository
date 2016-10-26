@@ -56,12 +56,23 @@ if(loginStatus){
 <!-- LW-230 Start -->
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.resource.host')" var="luxuryHost"/>
 <c:set var="headerWidgetJsSource" value="${luxuryHost}/header-widget.js"/>
-<c:if test="${(param.isLux ne null and param.isLux eq true) and ((not empty isLuxury and isLuxury != 'false') or (empty isLuxury))}">
+<c:choose>
+<c:when test="${(param.isLux ne null and param.isLux eq true) and ((not empty isLuxury and isLuxury != 'false') or (empty isLuxury))}">
+<script type="text/javascript" src="${headerWidgetJsSource}"></script>
+</c:when>
+<c:otherwise>
+<c:if test="${not empty isLuxury and isLuxury == 'true'}">
+<script type="text/javascript" src="${headerWidgetJsSource}"></script>
+</c:if>
+</c:otherwise>
+</c:choose> 
+ <%-- <c:set var="headerWidgetJsSource" value="${luxuryHost}/header-widget.js"/> 
+ <c:if test="${(param.isLux ne null and param.isLux eq true) and ((not empty isLuxury and isLuxury != 'false') or (empty isLuxury))}">
 	<script type="text/javascript" src="${headerWidgetJsSource}"></script>
 </c:if>
 <c:if test="${not empty isLuxury and isLuxury == 'true'}">
 	<script type="text/javascript" src="${headerWidgetJsSource}"></script>
-</c:if>
+</c:if>  --%>
 
 <!-- LW-230 End -->
 <c:choose>
