@@ -47,7 +47,7 @@
 											<c:choose>
 												<c:when test="${fn:toLowerCase(entryReturn.product.luxIndicator)=='luxury'}">
 														<product:productPrimaryImage
-															product="${entryReturn.product}" format="luxuryStyleSwatch" />
+															product="${entryReturn.product}" format="luxuryCartIcon" />
 							
 												</c:when>
 												<c:otherwise>

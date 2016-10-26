@@ -55,7 +55,7 @@
 												<c:choose>
 													<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
 															<a href="${productUrl}"><product:productPrimaryImage
-																	product="${entry.product}" format="luxuryStyleSwatch" /></a>
+																	product="${entry.product}" format="luxuryCartIcon" /></a>
 													</c:when>
 													<c:otherwise>
 															<a href="${productUrl}"><product:productPrimaryImage

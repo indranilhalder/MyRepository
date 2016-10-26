@@ -197,7 +197,7 @@
 														<c:choose>
 															<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
 																	<a href="${productUrl}"> <product:productPrimaryImage
-																					product="${entry.product}" format="luxuryStyleSwatch" />
+																					product="${entry.product}" format="luxuryCartIcon" />
 																			</a>
 										
 															</c:when>
@@ -427,7 +427,7 @@
 																				<c:choose>
 																					<c:when test="${fn:toLowerCase(entryCancel.product.luxIndicator)=='luxury'}">
 																							<a href="${productUrl}"> <product:productPrimaryImage
-																																	product="${entryCancel.product}" format="luxuryStyleSwatch" />
+																																	product="${entryCancel.product}" format="luxuryCartIcon" />
 																															</a>
 																
 																					</c:when>
@@ -553,7 +553,7 @@
 																				<c:choose>
 																					<c:when test="${fn:toLowerCase(entryCancel.product.luxIndicator)=='luxury'}">
 																							<a href="${productUrl}"> <product:productPrimaryImage
-																																	product="${entryCancel.product}" format="luxuryStyleSwatch" />
+																																	product="${entryCancel.product}" format="luxuryCartIcon" />
 																															</a>
 																
 																					</c:when>
