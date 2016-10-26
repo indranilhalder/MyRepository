@@ -247,7 +247,7 @@
 														</c:if>
 										<c:if test="${fn:toLowerCase(product.luxIndicator)=='luxury' and not empty product.luxIndicator}">
 										<a href="${productUrl}"> <product:productPrimaryImage
-														product="${product}" format="luxuryThumbnail" /></a>
+														product="${product}" format="luxuryCartPage" /></a>
 														</c:if>
 										
 										<div>
