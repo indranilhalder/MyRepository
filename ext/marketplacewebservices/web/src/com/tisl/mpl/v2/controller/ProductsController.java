@@ -998,7 +998,7 @@ public class ProductsController extends BaseController
 			}
 			else if (StringUtils.isNotBlank(typeID))
 			{
-				if (typeID.startsWith(DROPDOWN_CATEGORY) || typeID.startsWith(DROPDOWN_BRAND))
+				if (typeID.startsWith(DROPDOWN_CATEGORY) || typeID.startsWith(DROPDOWN_BRAND) || typeID.startsWith(LSH))
 				{
 					searchPageData = productsHelper.searchProductsForCategory(typeID, page, pageSize, sortCode);
 				}
