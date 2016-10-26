@@ -68,6 +68,7 @@ import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
+import de.hybris.platform.returns.model.ReturnEntryModel;
 import de.hybris.platform.returns.model.ReturnRequestModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
@@ -1098,7 +1099,27 @@ public class AccountPageController extends AbstractMplSearchPageController
 					cancelProduct = cancelReturnFacade.associatedEntriesData(orderModelService.getOrder(subOrder.getCode()),
 							orderEntry.getOrderLineId());
 					currentProductMap.put(orderEntry.getOrderLineId(), cancelProduct);
-
+	
+					//
+		
+					List<ReturnRequestModel> returnRequestModelList=cancelReturnFacade.getListOfReturnRequest(subOrder.getCode());
+					
+					if(null!= returnRequestModelList && returnRequestModelList.size()>0){
+					
+						for(ReturnRequestModel mm:returnRequestModelList){
+							for(ReturnEntryModel mmmodel:mm.getReturnEntries()){
+									if(orderEntry.getTransactionId().equalsIgnoreCase(mmmodel.getOrderEntry().getTransactionID())){
+										if(mm.getTypeofreturn().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.SELF_COURIER)){
+											orderEntry.setReturnMethodType("SELF_COURIER");
+										}else{
+											orderEntry.setReturnMethodType("REVERSE_PICKUP");
+										}
+									}
+								
+							
+							}
+						}
+					}
 				}
 
 			}

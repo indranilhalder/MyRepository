@@ -33,7 +33,7 @@ public class MplReturnDaoImpl implements MplReturnsDao
 	public static final String CUSTOMER_BANKDETAILS_QUERY = "select {pk} from {MplCustomerBankAccountDetails} where {customerid}=?customerid";
 	public static final String CUSTOMER_BANKDETAILS_KEY ="customerid";
 	
-	public static final String RETURN_REQUEST_QUERY = "select * from {ReturnRequest} where {order}=?orderid";
+	public static final String RETURN_REQUEST_QUERY = "select {rr:pk} from {ReturnRequest as rr join Order as o on {o:pk}={rr:order} } where {o:code}=?orderid";
 	public static final String RETURN_REQUEST_KEY ="orderid";
 	
 	@Autowired

@@ -559,14 +559,14 @@
 												<spring:theme code="trackOrder.cancellableBefore.msg" />
 												
 											</c:if>
-											<%-- <c:if
+											 <c:if
 												test="${entry.itemReturnStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
-											 --%>	<a
+											 	<a
 													href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${sellerOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}">
 													<spring:theme code="text.account.returnReplace"
 														text="Return Item" />
 												</a>
-											<%-- </c:if> --%>
+											 </c:if>
 
 											<c:if test="${entry.showInvoiceStatus eq 'true'}">
 												<a
@@ -582,10 +582,11 @@
 											
 											</div>
 											<div class="col-md-5">
-												<div class="awsInnerClass">
-												Please provide AWB number, Logistics partner and upload POD <a href="#" id="awbNumberLink">here</a>
-											</div>	
-											
+												<c:if test="${fn:containsIgnoreCase(entry.returnMethodType , 'SELF_COURIER')}">
+													<div class="awsInnerClass">
+															Please provide AWB number, Logistics partner and upload POD <a href="#" id="awbNumberLink">here</a>
+													</div>	
+												</c:if>
 											</div>
 											
 										</div>
@@ -1323,6 +1324,7 @@
 
                                    </c:if>
                                     <return:lpDetailsUploadPopup  entry="${entry}"/>
+                                    
 								</c:forEach>
 								</c:forEach>
 							</c:forEach>
