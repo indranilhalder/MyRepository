@@ -325,14 +325,53 @@ input[type="checkbox"] + label:before, input[type="radio"] + label:before {
 input[type="checkbox"] + label, input[type="radio"] + label {
   display: inline-block; 
   }
- /* ADDED TISLUX-1440 STARTS HERE */
+/* ADDED TISLUX-1440 STARTS HERE */
 .promo-msg{
 	margin-top: -10px;
 	margin-bottom: 10px;
 }
 /* ADDED TISLUX-1440 ENDS HERE */ 
-  @media (min-width: 651px) 
-  {
+
+/* ADDED TISLUX-1407 STARTS HERE */
+.pagination-order-history pagination{
+	margin: 0;
+}
+
+.pagination-order-history .pagination>.active>a,
+.pagination-order-history .pagination>.active>a:focus,
+.pagination-order-history .pagination>.active>a:hover, 
+.pagination-order-history .pagination>.active>span,
+.pagination-order-history .pagination>.active>span:focus, 
+.pagination-order-history .pagination>.active>span:hover,
+.pagination-order-history .pagination>li>a,
+.pagination-order-history .pagination>li>span{
+	background-color: transparent;
+	border: none;
+	color: #000;
+}
+.pagination-order-history .pagination li.active span,
+.pagination-order-history .pagination li.active a{
+	border-bottom: 1px solid #000;
+    text-decoration: none;
+}
+.pagination-order-history .pagination>.active>a,
+.pagination-order-history .pagination>.active>a:focus,
+.pagination-order-history .pagination>.active>a:hover{
+	color: #a9143c;
+}
+.pagination-order-history .pagination>li>a,
+.pagination-order-history .pagination>li>span{
+    float: none;
+	padding: 0;
+	line-height: 30px;
+	margin-left: 0;
+}
+.pagination-order-history pagination{
+	border-radius: 0;
+}
+/* ADDED TISLUX-1407 ENDS HERE */ 
+
+@media (min-width: 651px){
     input[type="checkbox"] + label, input[type="radio"] + label {
       padding-left: 10px; } 
 }
