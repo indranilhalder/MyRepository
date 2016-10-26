@@ -208,8 +208,13 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 									MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
 
 							getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
-
-							removeVoucherInvalidation(orderModel);
+							//Code to remove coupon for Payment_Timeout orders
+							if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()))
+							{
+								final PromotionVoucherModel voucherModel = (PromotionVoucherModel) orderModel.getDiscounts().get(0);
+								getMplVoucherService().releaseVoucher(voucherModel.getVoucherCode(), null, orderModel);
+								getMplVoucherService().recalculateCartForCoupon(null, orderModel);
+							}
 
 							//Email and sms for Payment_Timeout
 							final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
