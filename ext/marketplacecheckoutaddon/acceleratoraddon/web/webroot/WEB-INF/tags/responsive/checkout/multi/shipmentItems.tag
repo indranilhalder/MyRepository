@@ -52,8 +52,17 @@
 									<li>
 										<div >
 											<div class="thumb product-img">
-												<a href="${productUrl}"><product:productPrimaryImage
-														product="${entry.product}" format="thumbnail" /></a>
+												<c:choose>
+													<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
+															<a href="${productUrl}"><product:productPrimaryImage
+																	product="${entry.product}" format="luxuryStyleSwatch" /></a>
+													</c:when>
+													<c:otherwise>
+															<a href="${productUrl}"><product:productPrimaryImage
+																	product="${entry.product}" format="thumbnail" /></a>
+															
+													</c:otherwise>
+												</c:choose>
 											</div>
 													   
 													   

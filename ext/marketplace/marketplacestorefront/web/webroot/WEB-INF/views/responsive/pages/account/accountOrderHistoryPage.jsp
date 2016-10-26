@@ -194,9 +194,20 @@
 												</c:forEach>
 												<li class="item">
 													<div class="image">
-														<a href="${productUrl}"> <product:productPrimaryImage
-																product="${entry.product}" format="thumbnail" />
-														</a>
+														<c:choose>
+															<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
+																	<a href="${productUrl}"> <product:productPrimaryImage
+																					product="${entry.product}" format="luxuryStyleSwatch" />
+																			</a>
+										
+															</c:when>
+															<c:otherwise>
+																	<a href="${productUrl}"> <product:productPrimaryImage
+																					product="${entry.product}" format="thumbnail" />
+																			</a>
+																	
+															</c:otherwise>
+														</c:choose>
 													</div>
 													<div class="details">
 														<h4 class="product-name">${entry.brandName}</h4>
@@ -413,9 +424,20 @@
 																		<ul class="product-info">
 																			<li>
 																			<div class="product-img">
-																				<a href="${productUrl}"> <product:productPrimaryImage
-																						product="${entryCancel.product}" format="thumbnail" />
-																				</a>
+																				<c:choose>
+																					<c:when test="${fn:toLowerCase(entryCancel.product.luxIndicator)=='luxury'}">
+																							<a href="${productUrl}"> <product:productPrimaryImage
+																																	product="${entryCancel.product}" format="luxuryStyleSwatch" />
+																															</a>
+																
+																					</c:when>
+																					<c:otherwise>
+																							<a href="${productUrl}"> <product:productPrimaryImage
+																																	product="${entryCancel.product}" format="thumbnail" />
+																															</a>
+																							
+																					</c:otherwise>
+																				</c:choose>
 																			</div>
 																			<div class="product">
 																				<!-- <p class="company">Nike</p> -->
@@ -528,9 +550,20 @@
 																		<ul class="product-info">
 																			<li>
 																			<div class="product-img">
-																				<a href="${productUrl}"> <product:productPrimaryImage
-																						product="${entryCancel.product}" format="thumbnail" />
-																				</a>
+																				<c:choose>
+																					<c:when test="${fn:toLowerCase(entryCancel.product.luxIndicator)=='luxury'}">
+																							<a href="${productUrl}"> <product:productPrimaryImage
+																																	product="${entryCancel.product}" format="luxuryStyleSwatch" />
+																															</a>
+																
+																					</c:when>
+																					<c:otherwise>
+																							<a href="${productUrl}"> <product:productPrimaryImage
+																																	product="${entryCancel.product}" format="thumbnail" />
+																															</a>
+																							
+																					</c:otherwise>
+																				</c:choose>
 																			</div>
 																			<div class="product">
 																				<!-- <p class="company">Nike</p> -->
