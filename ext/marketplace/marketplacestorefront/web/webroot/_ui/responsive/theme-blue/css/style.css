@@ -51495,6 +51495,7 @@ overflow: hidden;
 
 .top_deal .short-info {
 	margin-top: 10px;
+	word-break: break-word;
 }
 
 .top_deal {
@@ -51828,6 +51829,7 @@ overflow: hidden;
 
 .blog_content a {
 	text-transform: capitalize;
+	word-break: break-word;
 }
 
 .blog_content a:after {
