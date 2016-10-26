@@ -1947,6 +1947,18 @@ $(document).ready(function() {
 		$(".shop_for .shop_for_component:not(:first-child)").slice(0,3).wrapAll("<div class='shop_for_left_wrapper'></div>");
 		$(".shop_for > .shop_for_left_wrapper").nextAll().slice(0,4).wrapAll("<div class='shop_for_links'>");
 		
+		//For blank cms container remove bottom border
+		
+		if($("body.template-pages-layout-apparelCategoryLandingPageV1 .body-Content").find(".style_edit").children().length==0){
+			$(".style_edit").css("border-bottom","none");
+		}
+		if($("body.template-pages-layout-apparelCategoryLandingPageV1 .body-Content").find(".top_deal .blog_container").children().length==0){
+			$(".top_deal .blog_container").css("border-bottom","none");
+		}
+		if($("body.template-pages-layout-apparelCategoryLandingPageV1 .body-Content").find(".shop_for").children().length==0){
+			$(".shop_for").css("border-bottom","none");
+		}
+		
 		/*CLP section js ends*/
 });
 $(window).resize(function() {
