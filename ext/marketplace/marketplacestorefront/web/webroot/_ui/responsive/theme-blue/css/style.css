@@ -51495,6 +51495,7 @@ overflow: hidden;
 
 .top_deal .short-info {
 	margin-top: 10px;
+	word-break: break-word;
 }
 
 .top_deal {
