@@ -145,7 +145,30 @@ $(document).ready(function(){
 	/*------------Start of SNS auto complete----------*/
 			
 			var style = null ;
-			var marketplaceHeader = !($("header").children().hasClass("header-inner"));
+			
+			var getUrlParameter = function getUrlParameter(sParam) {
+			    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+			        sURLVariables = sPageURL.split('&'),
+			        sParameterName,
+			        i;
+
+			    for (i = 0; i < sURLVariables.length; i++) {
+			        sParameterName = sURLVariables[i].split('=');
+
+			        if (sParameterName[0] === sParam) {
+			            return sParameterName[1] === undefined ? true : sParameterName[1];
+			        }
+			    }
+			};
+
+			var isLux = getUrlParameter('isLux');
+			console.log("isLux"+ isLux);
+			var isLuxury = $("#isLuxury").val();
+			console.log("isLuxury"+ isLuxury);
+			
+			var marketplaceHeader = (isLux || isLuxury) ? false : true ;
+			console.log("marketplaceHeader"+ marketplaceHeader);
+			
 			if(marketplaceHeader){
 			if(!($('body').hasClass("page-multiStepCheckoutSummaryPage") || $('body').hasClass("page-checkout-login")))
 				{
