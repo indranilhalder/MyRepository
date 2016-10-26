@@ -17,6 +17,7 @@
 			<typeref type="Bin" description="payment.Bin.description" />
 			<typeref type="MplPaymentAudit" description="payment.PaymentAudit.description" />
 			<typeref type="JuspayWebhook" description="payment.PaymentWebhook.description" />
+			<typeref type="BinError" description="payment.BinError.description" />
 		</group>
 		<group name="user" expand="false" description="group.user.description">
 			<typeref type="OTP" description="typeref.otp.description" />
@@ -1126,7 +1127,119 @@
 			</editor>
 		</organizer>
 	</type>
-
+<!-- Tata Etail For Buy A and get y percentage or Amount off on B TPR-961 -->
+	<type name="BuyAGetPercentageDiscountOnB" mode="append">
+		<organizer>
+			<editor mode="append">
+				<tab name="tab.promotion.properties" mode="append">
+					<section name="section.promotion.products">
+						<listlayout>
+							<text name="text.promotion.qualifyingsecondproductscategories" />
+							<attribute name="secondProducts" labelwidth="100">
+								<referencecollectioneditor
+									autoperform="true" resortable="true" add="true" remove="true"
+									create="false">
+									<itemlayout>
+										<attribute name="code" width="274" />
+										<attribute name="name" width="274" />
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+							<text name="text.promotion.qualifyingsecondproductcodeslist" />
+							<attribute name="secondProductCodeList" />
+							<attribute name="secondCategories" labelwidth="100">
+								<referencecollectioneditor
+									autoperform="true" resortable="true" add="true" remove="true"
+									create="false">
+									<itemlayout>
+										<attribute name="code" width="274" />
+										<attribute name="name" width="274" />
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+							</listlayout>
+							<listlayout>
+							<text name="text.promotion.excludedProducts" />
+							<attribute name="excludedProducts" labelwidth="100">
+								<referencecollectioneditor
+									autoperform="true" resortable="true" add="true" remove="true"
+									create="false">
+									<itemlayout>
+										<attribute name="code" width="274" />
+										<attribute name="name" width="274" />
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
+							</listlayout>
+							<listlayout>
+							<text name="text.productpromotion.quantity" />
+							<attribute name="quantity" />
+                            </listlayout>
+							<listlayout>
+							<text name="text.productpromotion.percentageOrAmount" />
+							<attribute name="percentageOrAmount" labelwidth="100"
+								width="400">
+								<advancedbooleaneditor truename="true"
+									falsename="false" />
+							</attribute>
+							</listlayout>
+							<listlayout>
+							<text name="text.productpromotion.percentageDiscount" />
+							<attribute name="percentageDiscount" labelwidth="100" />
+							</listlayout>
+							<listlayout>
+							<text name="text.productpromotion.maxDiscount" />
+							<attribute name="maxDiscount" labelwidth="100" />
+							</listlayout>
+							<listlayout>
+                            <text name="text.productpromotion.discountPrices" />
+							<attribute name="discountPrices" labelwidth="100">
+								<referencecollectioneditor editable="true"
+									externalcreate="false" resortable="false" remove="true" create="true">
+									<itemlayout>
+										<attribute name="currency" width="60" />
+										<attribute name="price" width="60" />
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+						</listlayout>
+					</section>
+				</tab>
+				<tab name="tab.promotion.messages" mode="append">
+					<section name="section.promotion.messages" mode="append">
+						<columnlayout leftwidth="500">
+							<row>
+								<text name="text.promotion.messages.overview" />
+							</row>
+							<row>
+								<text name="text.orderthresholddiscountpromotion.messagefired" />
+							</row>
+							<row>
+								<attribute name="messageFired" labelwidth="100" width="400">
+									<textareaeditor expanded="true" rows="5" />
+								</attribute>
+								<text name="text.orderthresholddiscountpromotion.messagefiredargs" />
+							</row>
+							<row>
+								<text
+									name="text.orderthresholddiscountpromotion.messagecouldhavefired" />
+							</row>
+							<row>
+								<attribute name="messageCouldHaveFired" labelwidth="100"
+									width="400">
+									<textareaeditor expanded="true" rows="5" />
+								</attribute>
+								<text
+									name="text.orderthresholddiscountpromotion.messagecouldhavefiredargs" />
+							</row>
+						</columnlayout>
+					</section>
+				</tab>
+			</editor>
+		</organizer>
+	</type>
 <type name="ProductPromotion" mode="append">
 		<organizer>
 			<editor mode="append">
@@ -1382,7 +1495,8 @@
 						</columnlayout>
 					</section>
 				</tab>
-				<tab name="tab.promotion.messages" mode="append">
+				<!-- Unwanted code commented TPR-969 -->
+				<!-- <tab name="tab.promotion.messages" mode="append">
 					<section name="section.promotion.messages" mode="append">
 						<columnlayout leftwidth="500">
 							<row>
@@ -1411,7 +1525,7 @@
 							</row>
 						</columnlayout>
 					</section>
-				</tab>
+				</tab> -->
 			</editor>
 		</organizer>
 	</type>
@@ -1626,12 +1740,13 @@
 									<textareaeditor expanded="true" rows="5" />
 								</attribute>
 								<text
-									name="text.orderthresholddiscountpromotion.messagecouldhavefiredargs" />
+									name="text.orderthresholddiscountpromotion.messagecouldhavefiredargsspecific" />	<!-- TPR-969 -->
 							</row>
 						</columnlayout>
 					</section>
 				</tab>
-				<tab name="tab.promotion.messages" mode="append">
+				<!-- Unwanted code commented TPR-969 -->
+				<!-- <tab name="tab.promotion.messages" mode="append">
 					<section name="section.promotion.messages" mode="append">
 						<columnlayout leftwidth="500">
 							<row>
@@ -1660,7 +1775,7 @@
 							</row>
 						</columnlayout>
 					</section>
-				</tab>
+				</tab> -->
 			</editor>
 		</organizer>
 	</type>
@@ -1752,7 +1867,8 @@
 						</columnlayout>
 					</section>
 				</tab>
-				<tab name="tab.promotion.messages" mode="append">
+				<!-- Unwanted code commented TPR-969 -->
+				<!-- <tab name="tab.promotion.messages" mode="append">
 					<section name="section.promotion.messages" mode="append">
 						<columnlayout leftwidth="500">
 							<row>
@@ -1781,7 +1897,7 @@
 							</row>
 						</columnlayout>
 					</section>
-				</tab>
+				</tab> -->
 			</editor>
 		</organizer>
 	</type>
@@ -2188,6 +2304,30 @@
 			</editor>
 		</organizer>
 	</type>
+	
+	<!-- TPR-970 changes pincode specific restriction-->
+	<type name="EtailPincodeRestriction" mode="append">
+		<organizer>
+			<editor>
+				<tab name="properties">
+					<section name="section.restrictions" mode="replace"
+						position="0">
+						<listlayout>
+							<attribute name="states"></attribute>
+							<attribute name="cities"></attribute>
+							<attribute name="includeCities"  width="200"/>
+							<!-- <attribute name="includeCities" width="500">
+	                         <advancedbooleaneditor truename="pincoderestrictions.includeCities.true"
+	                                            falsename="pincoderestrictions.includeCities.false"/>
+	                  </attribute> -->
+						</listlayout>
+					</section>
+				</tab>
+				
+			</editor>
+		</organizer>
+	</type>
+	
 	<!-- Product Setup Start -->
 	<type name="Product" mode="append">
 		<organizer mode="append">
@@ -2252,6 +2392,18 @@
 							<attribute name="upSellAssociatedProducts" />
 							<attribute name="warrantyTimePeriod" />
 							<attribute name="warrantyType" />
+							<!-- us-10: added by i324321 start -->
+ 							<attribute name="deliveryFulfillModeByP1" />
+ 							<attribute name="returnFulfillMode" />
+ 							<attribute name="returnFulfillModeByP1" />
+ 							<attribute name="sellerHandlingTime" />
+ 							<attribute name="giftWrappable" />
+ 							<attribute name="returnAtStoreEligible" />
+ 							<attribute name="isFragile" />
+ 							<attribute name="isPrecious" />
+ 							<attribute name="mediationRequired" />
+ 							<attribute name="scheduledDelivery" />
+ 							<!-- added by i324321 end -->
 						</listlayout>
 					</section>
 				</tab>
@@ -2324,13 +2476,15 @@
 	</type>
 	<!-- Product Setup End -->
 
-	<!-- Shop By Look HMC config -->
+	<!-- Shop By Look HMC config updated for TPR-565-->
 	<type name="MplShopByLook" mode="append">
 
 		<organizer>
 			<search mode="append">
-				<condition attribute="collectionCategory" />
+				<!-- <condition attribute="collectionCategory" /> -->
 				<condition attribute="collectionName" />
+				<condition attribute="collectionId"></condition>
+				<condition attribute="customSku" />
 			</search>
 			<result defaultview="list">
 				<listview>
@@ -2338,8 +2492,9 @@
 						<attribute name="collectionCategory" width="300"></attribute>
 						<attribute name="collectionName" width="300"></attribute>
 						<attribute name="collectionId" width="150"></attribute>
-						<attribute name="startDate" width="150"></attribute>
-						<attribute name="endDate" width="150"></attribute>
+						<attribute name="customSku" width="300"></attribute>
+						<!-- <attribute name="startDate" width="150"></attribute>
+						<attribute name="endDate" width="150"></attribute> -->
 					</itemlayout>
 				</listview>
 				<editview mode="replace">
@@ -2348,6 +2503,7 @@
 						<attribute name="collectionName" width="300"></attribute>
 						<attribute name="collectionDescription" width="300"></attribute>
 						<attribute name="collectionId" width="150"></attribute>
+						<attribute name="customSku" width="300"></attribute>
 						<attribute name="productCollections" width="300"></attribute>
 						<attribute name="startDate" width="150"></attribute>
 						<attribute name="endDate" width="150"></attribute>
@@ -2375,6 +2531,7 @@
 						<attribute name="collectionDescription" width="300"></attribute>
 						<attribute name="collectionId" width="150"></attribute>
 						<attribute name="productCollections" width="300"></attribute>
+						<attribute name="customSku" width="300"></attribute>
 						<attribute name="startDate" width="150"></attribute>
 						<attribute name="endDate" width="150"></attribute>
 						</listlayout>
@@ -2972,6 +3129,55 @@
 			</result>
 		</organizer>
 	</type>
+	<!-- TPR-970 changes starts-->
+	<type name="State" mode="append">
+		<organizer>
+			<search mode="replace">
+				<condition attribute="countrykey" />
+				<condition attribute="description" />
+				<condition attribute="region" />
+			</search>
+			<result>
+				<listview mode="replace">
+					<itemlayout>
+						<attribute name="countrykey" />
+						<attribute name="description" />
+						<attribute name="region" />
+					</itemlayout>
+				</listview>
+			</result>
+		</organizer>
+		<defaultreference searchattribute="countrykey" mode="replace">
+			<itemlayout>
+				 <attribute name="countrykey" />
+			</itemlayout>
+		</defaultreference>
+	</type>
+	<type name="City" mode="append">
+		<organizer>
+			<search mode="replace">
+				<condition attribute="cityName" />
+				<condition attribute="description" />
+			</search>
+			<result>
+				<listview mode="replace">
+					<itemlayout>
+						<attribute name="cityName"/>
+						<attribute name="description" />
+					</itemlayout>
+				</listview>
+			</result>
+		</organizer>
+		<defaultreference searchattribute="cityName" mode="replace">
+			<itemlayout>
+				 <attribute name="cityName" />
+			</itemlayout>
+		</defaultreference>
+	</type>
+	<!-- TPR-970 changes ends-->
+	
+	
+	
 	  <!-- seller priority starts -->
   <explorertree>
 		<group name="sellerpriority" description="group.MplSellerPriority.description">
@@ -3348,6 +3554,44 @@
 	   </organizer>
 	</type>
 	
+	<!-- changes start for unregistered users  restriction  [ TPR-1076]-->
+	
+	<type name="UnregisteredUserRestriction" mode="append">
+	   <organizer>
+		   <result>
+	         <listview>
+	            <itemlayout>
+	               <attribute name="emailList" width="200"/>
+	            </itemlayout>
+	         </listview>
+	         <editview>
+	            <itemlayout>
+	               <attribute name="emailList" width="200"/>
+	            </itemlayout>
+	         </editview>
+	         <treeview>
+	            <itemlayout>
+	               <attribute name="emailList" width="200"/>
+	            </itemlayout>
+	         </treeview>
+	      </result>
+		  <editor>
+	 	  	<tab name="properties">
+	  			<section name="section.restrictions" mode="replace" position="0">
+	               <listlayout>
+	               	<attribute name="emailList"  width="500">
+	               </attribute>
+	                <attribute name="positive" width="500">
+	                     <advancedbooleaneditor truename="unreguserrestriction.positive.true"
+	                                            falsename="unreguserrestriction.positive.false"/>
+	                  </attribute>
+	               </listlayout>
+	               </section>
+	               </tab>
+	 </editor>
+	</organizer>
+	</type>
+	<!--  changes end for  unregistered user restriction  [ TPR-1076]-->
 	
 	<type name="ProductCategoryRestriction" mode="append">
 	   <organizer>
@@ -3391,6 +3635,40 @@
 	   </organizer>
 	</type>
  <!-- Voucher HMC Modification ends -->
+ 
+ <!-- TPR-969 Entry Count Promotion Restriction -->
+ 	<type name="EntryCountPromotionRestriction" mode="append">
+	   <organizer>
+	      <result>
+	         <listview>
+	            <itemlayout>
+	               <attribute name="entryQualifyingCount" width="200"/>
+	            </itemlayout>
+	         </listview>
+	         <editview>
+	            <itemlayout>
+	               <attribute name="entryQualifyingCount" width="200"/>
+	            </itemlayout>
+	         </editview>
+	         <treeview>
+	            <itemlayout>
+	               <attribute name="entryQualifyingCount" width="200"/>
+	            </itemlayout>
+	         </treeview>
+	      </result>
+	      <editor>
+	         <tab name="tab.restriction.properties" mode="append">
+	            <section name="section.restrictions.countvalue" mode="append" position="0">
+	               <listlayout>
+	                  <attribute name="entryQualifyingCount"/>
+	                  <text name="text.entryqualifyingcount.desc" />
+	               </listlayout>
+	            </section>
+	         </tab>
+	      </editor>
+	   </organizer>
+	</type>
+ <!-- TPR-969 Ends -->
  
  
   <!-- For OMS Fallback Mechanism -->
@@ -3530,4 +3808,158 @@
    
   </organizer>
  </type>
+ 
+ 
+ <!-- TPR-1294 : Item HMC structure Declaration Bundle Promotion-->
+ 
+	<type name="MplProductSteppedMultiBuyPromotion" mode="append">
+		<organizer>
+			<editor mode="append">
+				<tab name="tab.promotion.properties" mode="append">
+					<section name="section.promotion.products">
+						<listlayout>
+							<text name="text.productpromotion.qualifyingproductscategories" />
+							<attribute name="products" labelwidth="100">
+								<referencecollectioneditor
+									autoperform="true" resortable="true" add="true" remove="true"
+									create="false">
+									<itemlayout>
+										<attribute name="code" width="274" />
+										<attribute name="name" width="274" />
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+							<attribute name="categories" labelwidth="100">
+								<referencecollectioneditor
+									autoperform="true" resortable="true" add="true" remove="true"
+									create="false">
+									<itemlayout>
+										<attribute name="code" width="274" />
+										<attribute name="name" width="274" />
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+							</listlayout>
+							<listlayout>
+							<text name="text.promotion.excludedProducts" ></text>
+							<attribute name="excludedProducts" labelwidth="100">
+								<referencecollectioneditor
+									autoperform="true" resortable="true" add="true" remove="true"
+									create="false">
+									<itemlayout>
+										<attribute name="code" width="274" />
+										<attribute name="name" width="274" />
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
+							</listlayout>
+							<listlayout>
+							<text name="text.productpromotion.discountPrices" />
+							<attribute name="qualifyingCountsAndBundlePrices" labelwidth="100">
+								<referencecollectioneditor editable="true"
+									externalcreate="false" resortable="false" remove="true" create="true">
+									<itemlayout>
+										<attribute name="quantity" width="40" />
+										<attribute name="currency" width="40" />
+										<attribute name="price" width="40" />
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+							<text name="text.productmultibuypromotion.bundleprices" />
+						</listlayout>
+					</section>
+				</tab>
+				<tab name="tab.promotion.restrictions" position="1">
+					<section name="section.promotion.restrictions">
+						<listlayout>
+							<text name="text.promotion.daterange" />
+							<attribute name="startDate" labelwidth="100" width="224" />
+							<attribute name="endDate" labelwidth="100" width="224" />
+							<text name="text.promotion.restrictions" />
+							<attribute name="restrictions" labelwidth="100" width="224">
+								<referencecollectioneditor
+									presetattribute="promotion" create="true" add="true" remove="true"
+									autosave="true">
+									<itemlayout>
+										<attribute name="restrictionType" width="150" />
+										<attribute name="renderedDescription" width="250" />
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+						</listlayout>
+					</section>
+				</tab>
+				<tab name="tab.promotion.media" mode="append">
+					<section name="section.promotion.media" mode="append">
+						<columnlayout>
+							<row>
+								<attribute name="productBanner" labelwidth="100">
+									<mediaeditor />
+								</attribute>
+								<text name="text.productpromotion.productbanner" />
+							</row>
+						</columnlayout>
+					</section>
+				</tab>
+				<tab name="tab.promotion.messages" mode="append">
+					<section name="section.promotion.messages" mode="append">
+						<columnlayout leftwidth="500">
+							<row>
+								<text name="text.promotion.messages.overview" />
+							</row>
+							<row>
+								<text name="text.orderthresholddiscountpromotion.messagefired" />
+							</row>
+							<row>
+								<attribute name="messageFired" labelwidth="100" width="400">
+									<textareaeditor expanded="true" rows="5" />
+								</attribute>
+							</row>
+							<!-- <row> <text name="text.orderthresholddiscountpromotion.messagecouldhavefired" 
+								/> </row> -->
+							<row>
+								<attribute name="messageCouldHaveFired" labelwidth="100"
+									width="400">
+									<textareaeditor expanded="true" rows="5" />
+								</attribute>
+							</row>
+						</columnlayout>
+					</section>
+				</tab>
+			</editor>
+		</organizer>
+	</type>
+ 
+ <!-- TPR-1294 : Item HMC structure Declaration Bundle Promotion-->
+ 
+ <!-- TPR-1035 : Item Creation for Bin Error  -->
+ <type name="BinError" mode="append">
+		<organizer>
+			<search mode="replace">
+				<condition attribute="customerId" />
+				<condition attribute="Bin" />
+				<condition attribute="paymentMode" />
+			</search>
+			<result>
+				<listview mode="replace">
+					<itemlayout>
+						<attribute name="customerId" />
+						<attribute name="Bin" />
+						<attribute name="paymentMode" />
+					</itemlayout>
+				</listview>
+			</result>
+		</organizer>
+		<defaultreference searchattribute="id" mode="replace">
+			<itemlayout>
+				<attribute name="customerId" />
+				<attribute name="Bin" />
+				<attribute name="paymentMode" />
+			</itemlayout>
+		</defaultreference>
+	</type>
+	<!-- TPR-1035 : Item Creation for Bin Error  -->
+ 
 </configuration>

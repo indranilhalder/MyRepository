@@ -64,6 +64,39 @@ $(document).ready(function(){
 				data:$("#validateOTP").serialize(),
 				success:function(data){
 					if (data.valid_otp == "true" && data.click_to_call_response!= null) {
+						/*TPR-691*/
+						var selectedOption = $('select[name="reason"] option:selected').val();
+						if(selectedOption=="Order enquiry/ Place or cancel order")
+						  {
+							utag.link(
+								{link_obj: this,link_text: 'support_call_Order_enquiry_Place_or_cancel_order_otp_success', event_type : 'support_call_click'}
+								);
+						  }
+						else if(selectedOption=="Return  Product")
+						  {
+							utag.link(
+									{link_obj: this,link_text: 'support_call_Return_Product_otp_success', event_type : 'support_call_click'}
+									);
+						  }
+						else if(selectedOption=="Refund Enquiry")
+						  {
+							utag.link(
+									{link_obj: this,link_text: 'support_call_Refund_Enquiry_otp_success', event_type : 'support_call_click'}
+									);
+						  }
+						else if(selectedOption=="Product Information")
+						  {
+							utag.link(
+									{link_obj: this,link_text: 'support_call_Product_Information_otp_success', event_type : 'support_call_click'}
+									);
+						  }
+						else
+						  {
+							utag.link(
+									{link_obj: this,link_text: 'support_call_Other_Assitance_otp_success', event_type : 'support_call_click'}
+									);
+						  }
+						/*TPR-691*/
 						$("#validateOTP").hide();
 						$("#generateOTP").hide();
 						
@@ -77,9 +110,77 @@ $(document).ready(function(){
 						}
 					}else if(data.invalid_otp != null){
 						$("label[for=errorOTP]").text(data.invalid_otp);
+						/*TPR-691*/
+						//alert("hi"+selectedOption);
+						
+						var selectedOption = $('select[name="reason"] option:selected').val();
+						if(selectedOption=="Order enquiry/ Place or cancel order")
+						  {
+							utag.link(
+								{link_obj: this,link_text: 'support_call_Order_enquiry_Place_or_cancel_order_invalid_otp', event_type : 'support_call_click'}
+								);
+						  }
+						else if(selectedOption=="Return  Product")
+						  {
+							utag.link(
+									{link_obj: this,link_text: 'support_call_Return_Product_invalid_otp', event_type : 'support_call_click'}
+									);
+						  }
+						else if(selectedOption=="Refund Enquiry")
+						  {
+							utag.link(
+									{link_obj: this,link_text: 'support_call_Refund_Enquiry_invalid_otp', event_type : 'support_call_click'}
+									);
+						  }
+						else if(selectedOption=="Product Information")
+						  {
+							utag.link(
+									{link_obj: this,link_text: 'support_call_Product_Information_invalid_otp', event_type : 'support_call_click'}
+									);
+						  }
+						else
+						  {
+							utag.link(
+									{link_obj: this,link_text: 'support_call_Other_Assitance_invalid_otp', event_type : 'support_call_click'}
+									);
+						  }
+						/*TPR-691*/
 					}else if(data.error_otp!= null){
 						$("label[for=errorOTP]").text(data.error_otp);
-					}
+						/*TPR-691*/
+						var selectedOption = $('select[name="reason"] option:selected').val();
+						if(selectedOption=="Order enquiry/ Place or cancel order")
+						  {
+							utag.link(
+								{link_obj: this,link_text: 'support_call_Order_enquiry_Place_or_cancel_order_empty_otp', event_type : 'support_call_click'}
+								);
+						  }
+						else if(selectedOption=="Return  Product")
+						  {
+							utag.link(
+									{link_obj: this,link_text: 'support_call_Return_Product_empty_otp', event_type : 'support_call_click'}
+									);
+						  }
+						else if(selectedOption=="Refund Enquiry")
+						  {
+							utag.link(
+									{link_obj: this,link_text: 'support_call_Refund_Enquiry_empty_otp', event_type : 'support_call_click'}
+									);
+						  }
+						else if(selectedOption=="Product Information")
+						  {
+							utag.link(
+									{link_obj: this,link_text: 'support_call_Product_Information_empty_otp', event_type : 'support_call_click'}
+									);
+						  }
+						else
+						  {
+							utag.link(
+									{link_obj: this,link_text: 'support_call_Other_Assitance_empty_otp', event_type : 'support_call_click'}
+									);
+						  }
+					}/*TPR-691*/
+					
 					if(data.hasOwnProperty("click_to_call_response") && data.click_to_call_response.length == 0){
 						$(".mandetoryFieldMissing p").empty();
 						$(".mandetoryFieldMissing").show();

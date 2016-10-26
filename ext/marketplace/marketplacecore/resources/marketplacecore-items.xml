@@ -180,7 +180,7 @@
 			dynamic="true">
 			<value code="ORDER_CANCELLED" />
 			<value code="PAYMENT_SUCCESSFUL" />
-			<value code="PAYMENT_FAILED" />
+			<value code="PAYMENT_FAILED" />	<!-- TPR-629 -->
 			<value code="RMS_VERIFICATION_PENDING" />
 			<value code="RMS_VERIFICATION_FAILED" />
 			<value code="PARTIALLY_ALLOCATED" />
@@ -271,7 +271,8 @@
 			<value code="PARTIALLY_ORDER_COLLECTED" />
 			<value code="PARTIALLY_ORDER_UNCOLLECTED" />
 			<value code="PARTIALLY_RETURNINITIATED_BY_RTO" />
-
+			<value code="PAYMENT_PENDING" />	<!-- TPR-629 -->
+			<value code="PAYMENT_TIMEOUT" />	<!-- TPR-629 -->
 		</enumtype>
 
 		<!-- pcm changes! -->
@@ -385,6 +386,9 @@
 			generate="true" dynamic="true">
 			<value code="tship" />
 			<value code="sship" />
+			<!-- us-10: added by i324321 start -->
+ 			<value code="both" />
+ 			<!-- added by i324321 end -->
 		</enumtype>
 
 		<enumtype generate="true" code="SwatchColorEnum" autocreate="true"
@@ -742,6 +746,7 @@
 			<value code="ERROR"></value>
 		</enumtype>
 
+
 		<!-- Product Feature Enum Ends -->
 
 		<!-- TPR-627 , TPR-622 ENUM added --> 
@@ -754,11 +759,63 @@
 		</enumtype>
 
 
+		<!-- TPR-1035 ENUM added For BinDB   -->
+		<enumtype code="TypeOfError" autocreate="true"
+			generate="true" dynamic="true">
+			<value code="BINNOTFOUND" />
+			<value code="CARDMISMATCH" />
+		</enumtype>
 
+<!-- us-10: added by i324321 start -->
+ 		<enumtype code="deliveryFulfillModeByP1Enum" autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="tship" />
+ 			<value code="sship" />
+ 		</enumtype>
+ 		<enumtype code="returnFulfillModeEnum"       autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="tship" />
+ 			<value code="sship" />
+ 			<value code="both" />
+ 		</enumtype>
+ 		<enumtype code="returnFulfillModeByP1Enum"   autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="tship" />
+ 			<value code="sship" />
+ 		</enumtype>
+ 		<enumtype code="giftWrappableEnum"           autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="yes" />
+ 			<value code="no" />
+ 		</enumtype>
+ 		<enumtype code="returnAtStoreEligibleEnum"   autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="yes" />
+ 			<value code="no" />
+ 		</enumtype>
+ 		<enumtype code="isFragileEnum"               autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="yes" />
+ 			<value code="no" />
+ 		</enumtype>
+ 		<enumtype code="isPreciousEnum"              autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="yes" />
+ 			<value code="no" />
+ 		</enumtype>
+ 		<enumtype code="mediationRequiredEnum"       autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="yes" />
+ 			<value code="no" />
+ 		</enumtype>
+ 		<enumtype code="scheduledDeliveryEnum"       autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="yes" />
+ 			<value code="no" />
+ 		</enumtype>
+ 		<!-- added by i324321 end -->
 	</enumtypes>
-
-
-
+		<!-- Product Feature Enum Ends -->
 
 
 
@@ -1070,6 +1127,17 @@
 			<targetElement type="Product" cardinality="many"
 				qualifier="collectionProducts"></targetElement>
 		</relation>
+		
+		<!-- Added for offer Engine  TPR-589-->
+		<!-- Relationship between Offer && ProductOfferDetail-->
+		<relation code="OfferProductDetailRelation"
+			localized="false" autocreate="true">
+			<sourceElement qualifier="offer" type="OfferDetail" cardinality="one">
+			</sourceElement>
+			<targetElement qualifier="productsWithOffer" type="ProductOfferDetail" cardinality="many">
+			</targetElement>
+		</relation>
+		
 	</relations>
 	<itemtypes>
 	<!-- TPR-628 : Make changes to Banners rendering in MObile Viewports		 -->
@@ -1654,6 +1722,28 @@
 							optional="true"/>
 						<persistence type="property" />
 					</attribute>
+					<attribute qualifier="categoryFooterText" type="java.lang.String">
+						<description>Footer Content for category</description>
+						<modifiers read="true" write="true" search="true"
+							optional="true"/>
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+					</attribute>
 				</attributes>
 			</itemtype>
 
@@ -1807,6 +1897,28 @@
 							unique="false" />
 						<persistence type="property"></persistence>
 					</attribute>
+					<!-- Add Size Guide Columns for Fashion Accessories START:::: -->
+					<attribute qualifier="cmsBeltSize" type="java.lang.String">
+						<description>Belt Size (cms)</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="inchesBeltSize" type="java.lang.String">
+						<description>Belt Size (inches)</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="cmsWaistSize" type="java.lang.String">
+						<description>Waist size (cms)</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="inchesWaistSize" type="java.lang.String">
+						<description>Waist size (in inches)</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="inchesBeltLength" type="java.lang.String">
+						<description>Belt Length (inches)</description>
+						<persistence type="property" />
+					</attribute>
+					<!-- Add Size Guide Columns for Fashion Accessories END:::: -->
 				</attributes>
 			</itemtype>
 
@@ -1930,6 +2042,58 @@
 							unique="false" />
 						<persistence type='property' />
 					</attribute>
+					<!-- added by i324321 start -->
+ 					<attribute type="deliveryFulfillModeByP1Enum" qualifier="deliveryFulfillModeByP1">
+ 						<description>Rich Attribute:- deliveryModes/FulfilledBy Priority 1</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type="property"/>
+ 					</attribute>
+ 					<attribute type="returnFulfillModeEnum" qualifier="returnFulfillMode">
+ 						<description>Rich Attribute:- return Modes/ Fulfilled by</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type="property"/>
+ 					</attribute>
+ 					<attribute type="returnFulfillModeByP1Enum" qualifier="returnFulfillModeByP1">
+ 						<description>Rich Attribute:- return Modes/FulfilledBy Priority 1</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type="property" />
+ 					</attribute>
+ 					<attribute type="java.lang.Integer" qualifier="sellerHandlingTime">
+ 						<description>Rich Attribute:- Seller Handling Time</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type="property" />
+ 					</attribute>
+ 					<attribute type="giftWrappableEnum" qualifier="giftWrappable">
+ 						<description>Rich Attribute:- Gift Wrappable</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type='property' />
+ 					</attribute>
+ 					<attribute type="returnAtStoreEligibleEnum" qualifier="returnAtStoreEligible">
+ 						<description>Rich Attribute:- Return at Store Eligible</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type='property' />
+ 					</attribute>
+ 					<attribute type="isFragileEnum" qualifier="isFragile">
+ 						<description>Rich Attribute:- Fragile</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type='property' />
+ 					</attribute>
+ 					<attribute type="isPreciousEnum" qualifier="isPrecious">
+ 						<description>Rich Attribute:- Precious</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type='property' />
+ 					</attribute>
+ 					<attribute type="mediationRequiredEnum" qualifier="mediationRequired">
+ 						<description>Rich Attribute:- Mediation Required</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type='property' />
+ 					</attribute>
+ 					<attribute type="scheduledDeliveryEnum" qualifier="scheduledDelivery">
+ 						<description>Rich Attribute:- is scheduled delivery eligible</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type='property' />
+ 					</attribute>			
+ 					<!-- added by i324321 end -->	
 					<attribute type="typeOfItem1Enum" qualifier="typeOfItem1">
 						<description>Rich Attribute:- typeOfItem1</description>
 						<modifiers read="true" write="true" optional="true"
@@ -2106,6 +2270,13 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- End OMS Fallback code -->
+					<!-- TAT for New Payment Solution Process Order Job -->
+					<attribute type="java.lang.Double" qualifier="juspayWebhookRetryTAT">
+						<defaultvalue>Double.valueOf(0.0D)</defaultvalue>
+						<description>Time for which webhook posting is expected</description>
+						<modifiers read="true" write="true" initial="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 
@@ -2302,7 +2473,29 @@
 					</attribute>
 					<!-- End : Attribute added to store reuqest and response xml for audit 
 						purpose -->
-
+					<!-- TRP-629 Attribute for pending payment mail -->
+					<attribute autocreate="true" qualifier="isPendingNotSent"
+						type="java.lang.Boolean">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<defaultvalue>false</defaultvalue>
+					</attribute>
+					
+					<!-- TPR-970 changes -->
+					<attribute qualifier="stateForPincode" type="java.lang.String">
+						<modifiers optional="true" read="true" write="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="cityForPincode" type="java.lang.String">
+						<modifiers optional="true" read="true" write="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="pincodeNumber" type="java.lang.String">
+						<modifiers optional="true" read="true" write="true" />
+						<persistence type="property" />
+					</attribute>
+					<!-- TPR-970 ends -->
 				</attributes>
 			</itemtype>
 
@@ -3333,7 +3526,15 @@
 					</attribute>
 				</attributes>
 			</itemtype>
+			<!-- PRoduct Carousel Component TPR-1316-->
 
+			<itemtype code="MplProductCollectionComponent" autocreate="true"
+				generate="true" extends="ProductCarouselComponent"
+				jaloclass="com.tisl.mpl.core.jalo.MplProductCollectionComponent">
+				<description>This component is made to show the Products in a carousel</description>
+				
+			</itemtype>
+			
 			<!-- Now Trending Carousel Component -->
 			<itemtype code="MplNowTrendingProductCarouselComponent"
 				autocreate="true" generate="true" extends="ProductCarouselComponent"
@@ -3481,7 +3682,7 @@
 			<!-- Shop The Look Model Structure -->
 
 			<itemtype code="MplShopByLook" generate="true" autocreate="true"
-				jaloclass="com.tisl.mpl.core.jalo.MplShopByLook">
+				jaloclass="com.tisl.mpl.core.jalo.MplShopByLook" extends="SimpleCMSComponent">
 				<deployment table="MplShopByLook" typecode="14145" />
 				<attributes>
 					<attribute type="SNSCategoryCollection" qualifier="collectionCategory"
@@ -3567,11 +3768,44 @@
 						<persistence type="property"></persistence>
 						<modifiers optional="true" />
 					</attribute>
-
+					<!--  TPR-565  -->
+					<attribute type="java.lang.String" qualifier="customSku">
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+					</attribute>
 				</attributes>
 
 			</itemtype>
 			<!-- Shop the look -->
+			<!-- Custom SKU TPR-565 -->
+			
+			<itemtype code="CustomSkuComponent" generate="true" autocreate="true"
+				jaloclass="com.tisl.mpl.core.jalo.CustomSkuComponent" extends="SimpleCMSComponent">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="labelOrId"
+						autocreate="true" generate="true">
+						<persistence type="property"></persistence>
+						<modifiers optional="false" />
+					</attribute>
+				</attributes>
+			</itemtype>
 
 			<!-- Adding a new attribute to SimpleBannerComponent -->
 			<itemtype code="FooterComponent" generate="false"
@@ -4027,12 +4261,14 @@
 						<defaultvalue>em().getEnumerationValue("CMSChannel","Desktop")</defaultvalue>
 						<description>Page Frontend</description>
 					</attribute>
+					
 					<!-- TPR-978 -->
 					<attribute qualifier="associatedProducts" type="ProductCollectionType">
 						<persistence type="property" />
 						<modifiers read=" true" write="true" optional="true" />
 						<description>Associated product list to the content page for product content</description>
 					</attribute>
+					<!-- TPR-978 -->
 				</attributes>
 			</itemtype>
 			<!-- Start of Mpl Advanced Category Carousel Component -->
@@ -4923,6 +5159,10 @@
 						<modifiers optional="true" />
 						<persistence type="property" />
 					</attribute>
+					<attribute qualifier="modeOfOrderPayment" type="java.lang.String">
+						<modifiers optional="true" read="true" write="true" />
+						<persistence type="property" />
+					</attribute>	<!-- TPR-629 -->
 				</attributes>
 			</itemtype>
 
@@ -5679,6 +5919,29 @@
 							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
 					</attribute>
+					<!-- TPR-774 -->		
+					<attribute qualifier="mrp" autocreate="true"		
+						type="java.lang.Double">		
+						<description>Product Mrp</description>		
+						<modifiers read="true" write="true" removable="true"		
+							optional="true" initial="true" unique="true" />		
+						<persistence type="property" />		
+					</attribute>		
+					<attribute qualifier="totalMrp" autocreate="true"		
+						type="java.lang.Double">		
+						<description>Total Mrp</description>		
+						<modifiers read="true" write="true" removable="true"		
+							optional="true" initial="true" unique="true" />		
+						<persistence type="property" />		
+					</attribute>		
+					<attribute qualifier="productPerDiscDisplay" autocreate="true"		
+						type="java.lang.Double">		
+						<description>Product Percentage Discount Display</description>		
+						<modifiers read="true" write="true" removable="true"		
+							optional="true" initial="true" unique="true" />		
+						<persistence type="property" />		
+					</attribute>
+					<!-- TPR-774 -->
 				</attributes>
 			</itemtype>
 
@@ -5999,7 +6262,45 @@
 			</itemtype>
 		</typegroup>
 
+        <!-- Store localtor start here -->
+		<typegroup name="storeLocatorCmsGrp">
+			<itemtype code="HomeStoreLocatorComponent" extends="SimpleCMSComponent"
+				autocreate="true" generate="true"
+				jaloclass="de.hybris.platform.acceleratorcms.jalo.components.HomeStoreLocatorComponent">
+				<description>It represents product references component, that is the component that displays configured references to the specified product.</description>
+				<attributes>
+					<attribute qualifier="latitude" type="java.lang.Double">
+						<persistence type="property" />
+						<description>latitude value.</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
 
+					<attribute qualifier="longitude" type="java.lang.Double">
+						<persistence type="property" />
+						<description>longitude value</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+
+					<attribute qualifier="initialZoom" type="java.lang.Integer">
+						<persistence type="property" />
+						<description>Initial Zoom</description>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+
+					<attribute qualifier="markerZoom" type="java.lang.Integer">
+						<persistence type="property" />
+						<description>Zoom label on marker click</description>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+
+				</attributes>
+			</itemtype>
+		</typegroup>
+		<!-- Store Localotor end here -->
 
 
 
@@ -6013,6 +6314,11 @@
 			<itemtype code="MicrositeSelectBrandCollectionComponent"
 				generate="true" autocreate="true" extends="BrandCollectionComponent"
 				jaloclass="com.tisl.mpl.core.jalo.MicrositeSelectBrandCollectionComponent">
+			</itemtype>
+			<itemtype code="MplBrandSearchBoxComponent"
+				autocreate="true" generate="true" extends="MplEnhancedSearchBoxComponent"
+				jaloclass="com.tisl.mpl.core.jalo.MplBrandSearchBoxComponent">
+				<description>Represents Microsite Enhanced Search Box component that displays a list of categories, brands and seller as a dropdown.</description>
 			</itemtype>
 		</typegroup>
 		<!-- For Microsite -->
@@ -8193,73 +8499,7 @@
 			</itemtype>
 
 		</typegroup>
-		<!-- pincode ,latitude and longitude Model -->
-		<typegroup name="Pincode">
-			<itemtype code="Pincode" extends="GenericItem"
-				jaloclass="de.hybris.platform.jalo.product.Pincode" autocreate="true"
-				generate="true">
-				<deployment table="Pincodes" typecode="11299" />
-				<attributes>
-					<attribute autocreate="true" qualifier="pincode" type="java.lang.String"
-						generate="true">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="false" unique="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="latitude" type="java.lang.Double">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="false" />
-					</attribute>
-					<attribute autocreate="true" qualifier="longitude" type="java.lang.Double">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="false" />
-					</attribute>
-				</attributes>
-			</itemtype>
-
-		</typegroup>
-
-		<!-- Store localtor start here -->
-		<typegroup name="storeLocatorCmsGrp">
-			<itemtype code="HomeStoreLocatorComponent" extends="SimpleCMSComponent"
-				autocreate="true" generate="true"
-				jaloclass="de.hybris.platform.acceleratorcms.jalo.components.HomeStoreLocatorComponent">
-				<description>It represents product references component, that is the component that displays configured references to the specified product.</description>
-				<attributes>
-					<attribute qualifier="latitude" type="java.lang.Double">
-						<persistence type="property" />
-						<description>latitude value.</description>
-						<modifiers read="true" write="true" search="true"
-							optional="false" />
-					</attribute>
-
-					<attribute qualifier="longitude" type="java.lang.Double">
-						<persistence type="property" />
-						<description>longitude value</description>
-						<modifiers read="true" write="true" search="true"
-							optional="false" />
-					</attribute>
-
-					<attribute qualifier="initialZoom" type="java.lang.Integer">
-						<persistence type="property" />
-						<description>Initial Zoom</description>
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-
-					<attribute qualifier="markerZoom" type="java.lang.Integer">
-						<persistence type="property" />
-						<description>Zoom label on marker click</description>
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-
-				</attributes>
-			</itemtype>
-		</typegroup>
-		<!-- Store Localotor end here -->
+		
 
 		<typegroup name="User">
 			<itemtype code="PrincipalGroup" generate="false" autocreate="false">
@@ -8380,7 +8620,7 @@
 						<key attribute="fulfillmentType" />
 						<key attribute="transportMode" />
 					</index>
-				</indexes>
+				</indexes> 
 			</itemtype>
 
 
@@ -8489,6 +8729,128 @@
 			</itemtype>
 		</typegroup>
 		<!-- Search POC ends-->
+		
+		
+		<!-- Added for offer Engine, TPR-589 -->
+		
+		<typegroup name="OfferEngine">
+			<itemtype code="OfferDetail" autocreate="true" generate="true">
+				<deployment table="OfferDetail" typecode="16998" />
+				<attributes>
+					<attribute autocreate="true" qualifier="offerId" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers unique="true" optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="message" type="java.lang.String" generate="true">
+					<persistence type="property" />
+					</attribute>
+					<attribute autocreate="true" qualifier="messageDet" type="java.lang.String" generate="true">
+					<persistence type="property" />
+					</attribute>
+					<attribute autocreate="true" qualifier="column1" type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" unique="false" optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="column2" type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" unique="false" optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="column3" type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" unique="false" optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="column4" type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" unique="false" optional="true" />
+					</attribute>					
+				</attributes>
+				<indexes>
+					<index name="offerId_Index">
+						<key attribute="offerId" />
+					</index>
+				</indexes>
+			</itemtype>
+			<itemtype code="ProductOfferDetail" autocreate="true" generate="true">
+				<deployment table="ProductOfferDetail" typecode="16999" />
+				<attributes>
+					<attribute autocreate="true" qualifier="productId" type="java.lang.String" generate="true">
+					    <description>Product Id for promotion</description>
+						<persistence type="property" />
+						<modifiers unique="true" optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="sellerId" type="java.lang.String" generate="true">
+					    <description>Seller Id for promotion</description>
+						<persistence type="property" />
+						<modifiers unique="true" optional="false" />
+					</attribute>
+					<attribute qualifier='startDate' type="java.util.Date"  generate="true">
+						<description>Date on which the product promotion would start</description>
+						<modifiers read="true" write="true" optional="false"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier='endDate' type="java.util.Date"  generate="true">
+						<description>Date on which the product promotion would start</description>
+						<modifiers read="true" write="true" optional="false"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute autocreate="true" qualifier="column1" type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" unique="false" optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="column2" type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" unique="false" optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="column3" type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" unique="false" optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="column4" type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" unique="false" optional="true" />
+					</attribute>
+				</attributes>
+				<indexes>
+					<index name="productId_Index">
+						<key attribute="productId" />
+					</index>
+					<index name="sellerId_Index">
+						<key attribute="sellerId" />
+					</index>
+				</indexes>
+			</itemtype>
+			</typegroup>
+			
+			
+			<!-- TPR-1035 : Item Creation for Bin Error  -->
+		<typegroup name="BinErrorGroup">
+			<itemtype code="BinError" autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.core.jalo.BinError">
+				<deployment table="mplBinError" typecode="20001" />
+				<attributes>
+					<attribute autocreate="true" qualifier="customerId" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers unique="false" optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="Bin" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers unique="false" optional="false" />
+					</attribute>					
+					<attribute autocreate="true" qualifier="paymentMode"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers unique="false" optional="true" />
+					</attribute>
+					<attribute type="TypeOfError" qualifier="typeOfError">
+						<modifiers read="true" write="true" optional="false" />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+		</typegroup>
+	<!-- TPR-1035 : Item Creation for Bin Error ends  -->
 	</itemtypes>
-	
 </items>

@@ -115,7 +115,7 @@ public class JuspayWebHookJob extends AbstractJobPerformable<CronJobModel>
 	/**
 	 * @Description : Fetch Web Hook Data
 	 */
-	private void fetchWebHookData()
+	private void fetchWebHookData() throws EtailNonBusinessExceptions
 	{
 		getJuspayWebHookService().fetchWebHookData();
 	}

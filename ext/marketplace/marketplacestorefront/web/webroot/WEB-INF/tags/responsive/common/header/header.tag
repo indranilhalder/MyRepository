@@ -49,6 +49,7 @@
 	<input type="hidden" id="mplStaticResourceHost" value="${mplStaticResourceHost}">
 	<input type="hidden" id="previewVersion" value="${cmsPageRequestContextData.preview}">
 	<input type="hidden" id="pageTemplateId" value="${cmsPage.masterTemplate.uid}">
+	<input type="hidden" id="userLoginType" value="${userLoginType}">		<!-- TPR-668 -->
 	<!-- For Infinite Analytics End -->
 	<input type="hidden" id="pageName" value="${cmsPage.name}">
 	<!-- Static resource host -->

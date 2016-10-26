@@ -286,12 +286,14 @@ public class SearchPageController extends AbstractSearchPageController
 
 
 				}
-
-
+				//For TPR-666
+				model.addAttribute(ModelAttributetConstants.SEARCH_TYPE, "brand_search");
 			}
 
 			else
 			{
+				//For TPR-666
+				model.addAttribute(ModelAttributetConstants.SEARCH_TYPE, "main_search");
 				if (dropDownValue != null)
 				{
 
@@ -392,7 +394,7 @@ public class SearchPageController extends AbstractSearchPageController
 					final NeedHelpComponentModel need = cmsComponentService.getSimpleCMSComponent("NeedHelp");
 					model.addAttribute("contactNumber", need.getContactNumber());
 					final List<Breadcrumb> breadcrumbs = searchBreadcrumbBuilder.getEmptySearchResultBreadcrumbs(searchText);
-					populateTealiumData(breadcrumbs, model);
+					populateTealiumData(breadcrumbs, model, searchPageData);
 
 					model.addAttribute(WebConstants.BREADCRUMBS_KEY, breadcrumbs);
 					model.addAttribute("currentQuery", searchPageData.getCurrentQuery().getQuery().getValue());
@@ -402,7 +404,7 @@ public class SearchPageController extends AbstractSearchPageController
 					final List<Breadcrumb> breadcrumbs = searchBreadcrumbBuilder.getBreadcrumbs(null, searchText,
 							CollectionUtils.isEmpty(searchPageData.getBreadcrumbs()));
 					model.addAttribute(WebConstants.BREADCRUMBS_KEY, breadcrumbs);
-					populateTealiumData(breadcrumbs, model);
+					populateTealiumData(breadcrumbs, model, searchPageData);
 				}
 			}
 
@@ -643,7 +645,7 @@ public class SearchPageController extends AbstractSearchPageController
 		}
 		final List<Breadcrumb> breadcrumbs = searchBreadcrumbBuilder.getBreadcrumbs(null, searchPageData);
 		model.addAttribute(WebConstants.BREADCRUMBS_KEY, breadcrumbs);
-		populateTealiumData(breadcrumbs, model);
+		populateTealiumData(breadcrumbs, model, searchPageData);
 
 		model.addAttribute(ModelAttributetConstants.PAGE_TYPE, PageType.PRODUCTSEARCH.name());
 
@@ -672,7 +674,8 @@ public class SearchPageController extends AbstractSearchPageController
 	 * @param breadcrumbs
 	 * @param model
 	 */
-	private void populateTealiumData(final List<Breadcrumb> breadcrumbs, final Model model)
+	private void populateTealiumData(final List<Breadcrumb> breadcrumbs, final Model model,
+			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData)
 	{
 		String breadcrumbName = "";
 		int count = 1;
@@ -694,21 +697,6 @@ public class SearchPageController extends AbstractSearchPageController
 		}
 
 		model.addAttribute("page_name", "Search Results Page:" + breadcrumbName);
-		//TPR-430
-		/*if (null != breadcrumbs.get(0).getName())
-		{
-			model.addAttribute("product_category", breadcrumbs.get(0).getName().replaceAll(" ", "_").toLowerCase());
-		}
-		if (null != breadcrumbs.get(1).getName())
-		{
-			model.addAttribute("page_subcategory_name", breadcrumbs.get(1).getName().replaceAll(" ", "_").toLowerCase());
-		}
-		if (null != breadcrumbs.get(2).getName())
-		{
-			model.addAttribute("page_subcategory_name_L3", breadcrumbs.get(2).getName().replaceAll(" ", "_").toLowerCase());
-		}*/
-
-
 	}
 
 	/**

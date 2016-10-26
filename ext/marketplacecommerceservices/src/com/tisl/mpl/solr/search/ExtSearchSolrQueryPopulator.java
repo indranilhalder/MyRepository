@@ -29,7 +29,8 @@ import org.springframework.beans.factory.annotation.Required;
 
 
 
-public class ExtSearchSolrQueryPopulator<INDEXED_PROPERTY_TYPE, INDEXED_TYPE_SORT_TYPE> implements
+public class ExtSearchSolrQueryPopulator<INDEXED_PROPERTY_TYPE, INDEXED_TYPE_SORT_TYPE>
+		implements
 		Populator<SearchQueryPageableData<SolrSearchQueryData>, SolrSearchRequest<FacetSearchConfig, IndexedType, INDEXED_PROPERTY_TYPE, SearchQuery, INDEXED_TYPE_SORT_TYPE>>
 {
 	private Converter<SolrFacetSearchConfigModel, FacetSearchConfig> facetSearchConfigConverter;
@@ -84,7 +85,8 @@ public class ExtSearchSolrQueryPopulator<INDEXED_PROPERTY_TYPE, INDEXED_TYPE_SOR
 		this.catalogVersionService = catalogVersionService;
 	}
 
-	public void populate(final SearchQueryPageableData<SolrSearchQueryData> source,
+	public void populate(
+			final SearchQueryPageableData<SolrSearchQueryData> source,
 			final SolrSearchRequest<FacetSearchConfig, IndexedType, INDEXED_PROPERTY_TYPE, SearchQuery, INDEXED_TYPE_SORT_TYPE> target)
 	{
 		target.setSearchQueryData(source.getSearchQueryData());
@@ -135,6 +137,9 @@ public class ExtSearchSolrQueryPopulator<INDEXED_PROPERTY_TYPE, INDEXED_TYPE_SOR
 		{ "true" });
 		target.getSearchQuery().addSolrParams("group.limit", new String[]
 		{ "1" });
+		//changes done for TPR-1247
+		target.getSearchQuery().addSolrParams("group.facet", new String[]
+		{ "true" });
 		/*
 		 * target.getSearchQuery().addSolrParams("group.sort", new String[] { "priceValue_inr_double asc" });
 		 */

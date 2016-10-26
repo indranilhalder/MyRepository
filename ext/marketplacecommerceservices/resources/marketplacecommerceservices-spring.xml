@@ -376,6 +376,13 @@
 		<!-- <property name="modelService" ref="modelService" /> -->
 	</bean>
 
+	<!-- Prodcut Service Implementation -->
+ 	<alias name="mplProductService" alias="mplProductService" />
+ 	<bean id="mplProductService"
+ 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplProductServiceImpl">
+ 		<property name="productDao" ref="productDao" />
+ 	</bean>
+
 	<!-- ============== Update Profile Service & DAO ============== -->
 	<bean id="mplCustomerProfileDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplCustomerProfileDaoImpl">
@@ -612,9 +619,11 @@
 
 	</bean>
 
-	<!-- <alias name="mplCommerceCheckoutService" alias="commerceCheckoutService" 
-		/> <bean id="mplCommerceCheckoutService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplDefaultCommerceCheckoutService" 
-		parent="defaultCommerceCheckoutService"> </bean> -->
+	<alias name="mplCommerceCheckoutService" alias="commerceCheckoutService" /> 
+	<bean id="mplCommerceCheckoutService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplDefaultCommerceCheckoutService" 
+		parent="defaultCommerceCheckoutService">
+	</bean>
+	
 	<bean id="userLoginService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.UserLoginServiceImpl">
 		<property name="userDetailsService" ref="extendedUserDetailsService" />
@@ -658,7 +667,7 @@
 	<bean id="CartSaveInterceptorMapping"
 		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
 		<property name="interceptor" ref="CartSaveInterceptor" />
-		<property name="typeCode" value="Cart" />
+		<property name="typeCode" value="AbstractOrder" />		<!-- Changed for TPR-629 -->
 	</bean>
 	<!-- CartModelSave Interceptor ends -->
 
@@ -803,12 +812,6 @@
 		<property name="fetchMerchantMasterDao" ref="fetchMerchantMasterDao" />
 	</bean>
 	<bean id="merchantMasterXMLUtility" class="com.tisl.mpl.integration.job.MerchantMasterXMLUtility" />
-
-	<alias name="defaultCommerceSearchTextPopulator" alias="commerceSearchTextPopulator" />
-	<bean id="defaultCommerceSearchTextPopulator"
-		class="com.tisl.mpl.search.converters.populator.MplSolrTextPopulator">
-		<property name="solrFieldNameProvider" ref="solrFieldNameProvider" />
-	</bean>
 
 	<alias alias="cmsPageService" name="mplCMSPageService" />
 	<bean id="mplCMSPageService"
@@ -1759,9 +1762,37 @@
 			<property name="modelService" ref="modelService" />
 			</bean>
 	<!-- New Buy Box Implementation End -->
+	
+	<bean id="juspayOrderResponseConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.tisl.mpl.juspay.response.GetOrderStatusResponse"/>
+        <property name="populators">
+            <list merge="true">
+				<ref bean="juspayOrderResponsePopulator"/>
+            </list>
+        </property>
+    </bean>
+    
+	<bean id="juspayOrderResponsePopulator"
+			class="com.tisl.mpl.converter.populator.JuspayOrderResponsePopulator" >
+	</bean>
+	
 	<!-- New Keyword Redirection Implementation End -->
 	<bean id="mplKeywordRedirectDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplKeywordRedirectDaoImpl">
 	</bean>
+
+	<!-- New Payment Solution Starts TPR-629-->	
+	<bean id="mplProcessOrderService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplProcessOrderServiceImpl">
+		<property name="orderService" ref="orderService" />
+		<property name="juspayOrderResponseConverter" ref="juspayOrderResponseConverter" />
+	</bean>
+	
+	<bean id="mplProcessOrderDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplProcessOrderDaoImpl" />
+
+	<bean id="mplVoucherDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplVoucherDaoImpl" />
+	<!-- TPR-629 ends -->
 	
 	<!-- Bean for POC Search starts-->
 
@@ -1783,6 +1814,43 @@
 	</bean>
 	<!-- Bean for POC Search ends-->
 	
+
+	<!-- TPR-565 -->
+	<bean id="mplShopByLookSaveInterceptor" class="com.tisl.mpl.interceptor.MplShopByLookInterceptor" />
+
+	<bean id="mplShopByLookSaveInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="mplShopByLookSaveInterceptor" />
+		<property name="typeCode" value="MplShopByLook" />
+	</bean>
+	
+
+	<!-- Added for displaying offer messages other than promotion, TPR-589-->
+	<bean id="prodOfferDetService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.ProductOfferDetailServiceImpl">		
+	</bean>
+	<bean id="prodOfferDetDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.ProductOfferDetailDaoImpl">
+		<property name="flexibleSearchService" ref="flexibleSearchService" />
+		<property name="modelService" ref="modelService" />		
+	</bean>
+	
+	<!-- Bundle Promotion Helper Class -->
+	<bean id="mplBundlePromotionHelper" class="com.tisl.mpl.promotion.helper.MplBundlePromotionHelper" />
+	
+	
+	<!-- Added for TPR-1035-->
+ 	
+ 	<bean id="mplBinErrorService"
+ 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplBinErrorService">
+ 		<property name="modelService" ref="modelService" />
+ 		<property name="mplBinErrorDao" ref="mplBinErrorDao" />
+ 	</bean>
+ 	
+ 	<bean id="mplBinErrorDao" class="com.tisl.mpl.promotion.dao.impl.MplBinErrorDaoImpl" />
+ 	
+ 	<bean id="mplBinErrorData" class="com.tisl.mpl.pojo.MplBinErrorData" />
+ 	
 	 <!-- For Bulk Seller  Upload on HMC Configuration Screen  TPR -715-->
 	<bean id="sellerBulkLoadInterceptor" class="com.tisl.mpl.interceptor.SellerBulkLoadInterceptor" />
 	
@@ -1801,7 +1869,13 @@
 		<property name="typeCode" value="EtailExcludeSellerSpecificRestriction" />
 	</bean>
 	
-	<!-- A+ Content TPR-978 -->
+	<alias name="mplCmsCacheService" alias="cmsCacheService"/>
+	<bean id="mplCmsCacheService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplCmsCacheServiceImpl"
+		parent="defaultCmsCacheService">
+		
+	</bean>
+	
+		<!-- A+ Content TPR-978 -->
 	<bean id="businessContentImportJob" class="com.tisl.mpl.businesscontentimport.BusinessContentImportJob"
 		parent="abstractJobPerformable">
 			<property name="modelService" ref="modelService" />
@@ -1819,5 +1893,15 @@
 		 
 	<bean id="businessContentImportDao" class="com.tisl.mpl.businesscontentimport.BulkContentCreationDaoImpl" >
 		</bean>
+		
+	<!-- TPR-3487 -->	
+	<bean id="DeliveryCostInterceptor" class="com.tisl.mpl.interceptor.SaveDeliveryCostInterceptor" />
+
+	<bean id="SaveDeliveryCostInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="DeliveryCostInterceptor" />
+		<property name="typeCode" value="AbstractOrder" />	
+	</bean>	
+	<!-- TPR-3487 -->
 </beans>
 

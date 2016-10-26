@@ -40,6 +40,14 @@ public interface NotificationService
 
 	void triggerEmailAndSmsOnOrderConfirmation(OrderModel order, String trackorderurl) throws JAXBException;
 
+	boolean triggerEmailAndSmsOnPaymentPending(OrderModel order, String trackorderurl) throws JAXBException;
+
+	void triggerEmailAndSmsOnPaymentFailed(OrderModel order, String trackorderurl) throws JAXBException;
+
+	void triggerEmailAndSmsOnPaymentTimeout(OrderModel order, String trackorderurl) throws JAXBException;
+
+	void triggerEmailAndSmsOnInventoryFail(OrderModel orderDetails, String trackorderurl) throws JAXBException;
+
 	void sendMobileNotifications(final OrderModel orderDetails);
 
 

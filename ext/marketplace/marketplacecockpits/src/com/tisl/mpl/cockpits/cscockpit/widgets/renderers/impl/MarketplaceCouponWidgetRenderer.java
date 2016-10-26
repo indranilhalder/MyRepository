@@ -104,7 +104,9 @@ public class MarketplaceCouponWidgetRenderer extends AbstractCsWidgetRenderer<Wi
 				if(successMessage.equalsIgnoreCase(MarketplaceCockpitsConstants.COUPON_REDEEM))
 				{
 					Messagebox.show(LabelUtils.getLabel(widget, successMessage, txtbox.getValue()),LabelUtils.getLabel(widget, "voucher_info_title", new Object[0]), 1, "z-msgbox z-msgbox-information");
-				}else{
+				}
+				/* TPR-1075 Changes Ends */
+				else{
 					Messagebox.show(LabelUtils.getLabel(widget, successMessage, txtbox.getValue()),LabelUtils.getLabel(widget, "voucher_error_title", new Object[0]), 1, "z-msgbox z-msgbox-error");
 				}
 				

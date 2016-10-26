@@ -39,7 +39,7 @@ INSERT_UPDATE SolrIndexConfig;name[unique=true];batchSize;numberOfThreads;indexM
 
 # Create the faceted search configuration
 INSERT_UPDATE SolrSearchConfig;description[unique=true];pageSize
-;$searchConfigName;24
+;$searchConfigName;72
 
 #
 # Setup the indexed types, their properties, and the update queries
@@ -239,7 +239,8 @@ INSERT_UPDATE SolrSortField;sort(indexedType(identifier),code)[unique=true];fiel
 
 
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);genericFacet[default=false];sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];facet[default=true];facetType(code);facetSort(code);priority;visible;useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider			;facetDisplayNameProvider			;customFacetSortProvider;topValuesProvider		 ;rangeSets(name);$classificationAttributeAssignments;
-								 	 ;$solrIndexedType						  ;colour           				;string    ;true                ;    			    ;     				        ;     				    ;true;     				;MultiSelectOr;Alpha 		 	;2500	;true;; ;mplClassificationColourCodeValueProvider;mplColorFacetDisplayNameProvider;;;;colorfamilyapparel:apparelCC,colorfamilyfootwear:footwearCC,colorelectronics:appliancesgf,colorelectronics:audioandhometheatresystemsgf,colorelectronics:actioncamcordersgf,colorelectronics:camerasgf,colorelectronics:computersandlaptopsgf,colorelectronics:gaminggf,colorelectronics:headphonesandspeakersgf,colorelectronics:health&groominggf,colorelectronics:small&kitchenappliancesgf,colorelectronics:smartphonesgf,colorelectronics:tabletscef,colorelectronics:tvandentertainmentgf,colorelectronics:wearabletechgf
+								 	 ;$solrIndexedType						  ;colour           				;string    ;true                ;    			    ;     				        ;     				    ;true;     				;MultiSelectOr;Alpha 		 	;2500	;true;; ;mplClassificationColourCodeValueProvider;mplColorFacetDisplayNameProvider;;;;colorfamilyapparel:apparelCC,colorfamilyfootwear:footwearCC,colorelectronics:appliancesgf,colorelectronics:audioandhometheatresystemsgf,colorelectronics:actioncamcordersgf,colorelectronics:camerasgf,colorelectronics:computersandlaptopsgf,colorelectronics:gaminggf,colorelectronics:headphonesandspeakersgf,colorelectronics:health&groominggf,colorelectronics:small&kitchenappliancesgf,colorelectronics:smartphonesgf,colorelectronics:tabletscef,colorelectronics:tvandentertainmentgf,colorelectronics:wearabletechgf,colorfamilyfashiona:10001
+
 
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];facet[default=false];facetType(code);facetSort(code);priority;visible		;fieldValueProvider  ;facetDisplayNameProvider  ;customFacetSortProvider;rangeSets(name);$classAttributeAssignment;;topValuesProvider;facetTopValue
 								 ;$solrIndexedType                        ;Occasion							;string		;					; 					;true						;true 					;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyCodeValueProvider;mplOccasionDisplayNameProvider;;;occasion:apparelCC;;defaultTopValuesProvider;8

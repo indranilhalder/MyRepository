@@ -65,8 +65,7 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 
 	/**
 	 * @Description : Buy x no of Product A Get B Free
-	 * @param :
-	 *           SessionContext ctx ,PromotionEvaluationContext promoContext
+	 * @param : SessionContext ctx ,PromotionEvaluationContext promoContext
 	 * @return : List<PromotionResult> promotionResults
 	 */
 	@Override
@@ -93,6 +92,8 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 
 			boolean checkChannelFlag = false;
 			boolean sellerFlag = false;
+			final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList,
+					order);
 			sellerFlag = getDefaultPromotionsManager().isSellerRestrExists(restrictionList);
 			//Verifying the Channel Data
 			final List<EnumerationValue> listOfChannel = (List<EnumerationValue>) getProperty(ctx,
@@ -107,7 +108,7 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 
 
 			//if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag && sellerFlag) //***Blocked for TISPT-154**
-			if (checkChannelFlag && sellerFlag)
+			if (checkChannelFlag && sellerFlag && flagForPincodeRestriction)
 			{
 				final List<String> sellerIDData = new ArrayList<String>();
 				final Map<AbstractOrderEntry, String> eligibleProductMap = new HashMap<AbstractOrderEntry, String>();
@@ -130,7 +131,7 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 					noOfProducts = realQuantity;
 
 					flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForAPromo(restrictionList,
-							validProductUssidMap);
+							validProductUssidMap, order);
 
 					List<PromotionOrderEntryConsumed> remainingItemsFromTail = null;
 
@@ -153,8 +154,8 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 
 					if (realQuantity >= qualifyingCount && flagForDeliveryModeRestrEval)
 					{
-						final Map<String, Integer> validProductList = getDefaultPromotionsManager()
-								.getSortedValidProdUssidMap(validProductUssidMap, realQuantity, qualifyingCount, ctx, restrictionList);
+						final Map<String, Integer> validProductList = getDefaultPromotionsManager().getSortedValidProdUssidMap(
+								validProductUssidMap, realQuantity, qualifyingCount, ctx, restrictionList);
 
 						//Gift Products Could be multiple
 						final List<Product> productList = (List<Product>) this.getGiftProducts(ctx);
@@ -173,8 +174,8 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 
 						if (CollectionUtils.isNotEmpty(productList))
 						{
-							final Map<String, Product> giftProductDetails = getDefaultPromotionsManager()
-									.getGiftProductsUSSID(productList, sellerIDData); // Validating for Scenario: Eligible Products and Free Gift must be from the same DC
+							final Map<String, Product> giftProductDetails = getDefaultPromotionsManager().getGiftProductsUSSID(
+									productList, sellerIDData); // Validating for Scenario: Eligible Products and Free Gift must be from the same DC
 							if (MapUtils.isNotEmpty(giftProductDetails))
 							{
 								getPromotionUtilityPOJO().setPromoProductList(eligibleProductList); // Adding Eligible Products for Scenario : One Product Promotion per eligible Product
@@ -196,8 +197,10 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 								ctx.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, productAssociatedItemsMap);
 								ctx.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
 								ctx.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProductList);
-								result.addAction(ctx, getDefaultPromotionsManager().createCustomPromotionOrderAddFreeGiftAction(ctx,
-										freegiftInfoMap, result, Double.valueOf(giftCount)));
+								result.addAction(
+										ctx,
+										getDefaultPromotionsManager().createCustomPromotionOrderAddFreeGiftAction(ctx, freegiftInfoMap,
+												result, Double.valueOf(giftCount)));
 
 							}
 						}
@@ -243,14 +246,14 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 		catch (final EtailNonBusinessExceptions e) //Added for TISPT-195
 		{
 			LOG.error(e.getMessage());
-			ExceptionUtil
-					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
 		}
 		catch (final Exception e)
 		{
 			LOG.error(e.getMessage());
-			ExceptionUtil
-					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
 		}
 		return results;
 	}
@@ -291,8 +294,7 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 
 	/**
 	 * @Description : Returns Minimum Category Amount
-	 * @param :
-	 *           SessionContext arg0
+	 * @param : SessionContext arg0
 	 * @return : minimumCategoryValue
 	 */
 	private double calculateMinCategoryAmnt(final SessionContext arg0)
@@ -310,8 +312,7 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 
 	/**
 	 * @Description : Assign Promotion Fired and Potential-Promotion Message
-	 * @param :
-	 *           SessionContext ctx ,PromotionResult promotionResult ,Locale locale
+	 * @param : SessionContext ctx ,PromotionResult promotionResult ,Locale locale
 	 * @return : String
 	 */
 	@Override

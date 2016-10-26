@@ -29,8 +29,8 @@
 <spring:url value="/checkout/multi/debitTermsAndConditions" var="getDebitTermsAndConditionsUrl"/>
 <cart:tealiumCartParameters/>
 <template:page pageTitle="${pageTitle}" hideHeaderLinks="true" showOnlySiteLogo="true">
-				<div class="alert alert-danger alert-dismissable" id="juspayconnErrorDiv">
-					<button class="close" aria-hidden="true" data-dismiss="alert" type="button">&times;</button>
+				<div class="alert alert-danger alert-dismissable" id="juspayconnErrorDiv">	<!-- TPR-629 changes for error -->
+					<button class="close juspayCloseButton" type="button">&times;</button>
 					<span id="juspayErrorMsg">Some issues are there with payment</span>
 				</div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
@@ -53,7 +53,7 @@
 		<spring:theme code="checkout.multi.secure.checkout"/>
 	</div>
 	<div class="checkout-content checkout-payment cart checkout wrapper">
-		<multiCheckout:checkoutSteps checkoutSteps="${checkoutSteps}" progressBarId="${progressBarId}">
+		<multiCheckout:checkoutSteps checkoutSteps="${checkoutSteps}" progressBarId="${progressBarId}" isCart="${isCart}">
 			<jsp:body>
 				<script>
     				$(document).ready(function(){
@@ -72,34 +72,38 @@
     					{
     						if($("#CreditCard").val()=="true")
         					{
-        						displayCreditCardForm();
+        						//displayCreditCardForm();
         						$("#viewPaymentCredit").parent("li").addClass("active");
         						$(".checkout-paymentmethod").css("display","block");
         						setTimeout(function(){$('#viewPaymentCredit').click();},1000);
         					}
         					else if($("#DebitCard").val()=="true")
         					{
-        						displayDebitCardForm();
+        						//displayDebitCardForm();
         						$("#viewPaymentDebit").parent("li").addClass("active");
         						$(".checkout-paymentmethod").css("display","block");
+        						setTimeout(function(){$('#viewPaymentDebit').click();},1000);
         					}
         					else if($("#EMI").val()=="true")
         					{
-        						displayEMIForm();
+        						//displayEMIForm();
         						$("#viewPaymentEMI").parent("li").addClass("active");
-        					$(".checkout-paymentmethod").css("display","block");
+        						$(".checkout-paymentmethod").css("display","block");
+        						setTimeout(function(){$('#viewPaymentEMI').click();},1000);
         					}
         					else if($("#Netbanking").val()=="true")
         					{
-        						displayNetbankingForm();
+        						//displayNetbankingForm();
         						$("#viewPaymentNetbanking").parent("li").addClass("active");
         						$(".checkout-paymentmethod").css("display","block");
+        						setTimeout(function(){$('#viewPaymentNetbanking').click();},1000);
         					}
         					else if($("#COD").val()=="true")
         					{
-        						displayCODForm();
+        						//displayCODForm();
         						$("#viewPaymentCOD").parent("li").addClass("active");
         						$(".checkout-paymentmethod").css("display","block");
+        						setTimeout(function(){$('#viewPaymentCOD').click();},1000);
         					}	
     					}
     					});
@@ -133,6 +137,10 @@
 						});
 					});
 					
+				</script>
+				<c:if test="${isCart eq true}">
+				<script>
+					
 					var timeoutID;
     				function setup() {
     				    this.addEventListener("mousemove", resetTimer, false);
@@ -165,6 +173,7 @@
     				      startTimer();
     				}
 				</script>
+				</c:if>
 				
 				<!-- TISCR-305 starts -->					
 					<button type="button" class="button btn-block payment-button make_payment_top_savedCard proceed-button" id="make_saved_cc_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
@@ -178,14 +187,15 @@
 					<h1 class="payment-options"><spring:theme code="text.payment.options"/></h1>
 						<p class="cart-items">You have an outstanding amount of &nbsp;&nbsp;<span class="prices"  id="outstanding-amount">
 					<ycommerce:testId code="cart_totalPrice_label">
-                <c:choose>
+				<!-- Unwanted code commented -->
+               <%--  <c:choose>
                     <c:when test="${showTax}">
                         <format:price priceData="${cartData.totalPriceWithTax}"/>
                     </c:when>
                     <c:otherwise>
                         <format:price priceData="${cartData.totalPrice}"/>
                     </c:otherwise>
-                </c:choose>
+                </c:choose> --%>
             </ycommerce:testId>
 					</span></p>
 				<!-- TISCR-305 ends -->	
@@ -380,12 +390,24 @@
 												</fieldset>
 		            							<div class="controls remember" id="billingAddress">
 					                            	<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.billingAddress"/></h2>
-					                            <c:forEach var="cartItem" items="${cartData.entries}">
-					                            <c:set var="deliveryMode" value="${cartItem.mplDeliveryMode.code}"/>
-													 <c:if test="${deliveryMode ne 'click-and-collect'}"> 
-														 <c:set var="flag" value="true"/>
-													  </c:if>  
-										    	</c:forEach>
+					                             <c:choose>
+						                             <c:when test="${isCart eq true}">
+							                            <c:forEach var="cartItem" items="${cartData.entries}">
+							                            <c:set var="deliveryMode" value="${cartItem.mplDeliveryMode.code}"/>
+															 <c:if test="${deliveryMode ne 'click-and-collect'}"> 
+																 <c:set var="flag" value="true"/>
+															  </c:if>  
+												    	</c:forEach>
+												    </c:when>
+												    <c:otherwise>
+												    	<c:forEach var="orderItem" items="${orderData.entries}">
+							                            <c:set var="deliveryMode" value="${orderItem.mplDeliveryMode.code}"/>
+															 <c:if test="${deliveryMode ne 'click-and-collect'}"> 
+																 <c:set var="flag" value="true"/>
+															  </c:if>  
+												    	</c:forEach>
+												    </c:otherwise>
+											    </c:choose>
 										    	<c:if test="${flag eq true}">
 					                            	<input type="checkbox" id="sameAsShipping" name="billing-shipping" checked="checked" /><label for="sameAsShipping"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sameAsShipping"/></label>
 					                           	</c:if>   	
@@ -848,12 +870,24 @@
 												</fieldset>
 		            							<div class="controls remember" id="billingAddressEmi">
 					                            	<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.billingAddress"/></h2>
-					                            <c:forEach var="cartItem" items="${cartData.entries}">
-					                            <c:set var="deliveryMode" value="${cartItem.mplDeliveryMode.code}"/>
-													 <c:if test="${deliveryMode ne 'click-and-collect'}"> 
-														 <c:set var="flag" value="true"/>
-													  </c:if>  
-										    	</c:forEach>
+					                             <c:choose>
+						                             <c:when test="${isCart eq true}">
+							                            <c:forEach var="cartItem" items="${cartData.entries}">
+							                            <c:set var="deliveryMode" value="${cartItem.mplDeliveryMode.code}"/>
+															 <c:if test="${deliveryMode ne 'click-and-collect'}"> 
+																 <c:set var="flag" value="true"/>
+															  </c:if>  
+												    	</c:forEach>
+												    </c:when>
+												    <c:otherwise>
+												    	<c:forEach var="orderItem" items="${orderData.entries}">
+							                            <c:set var="deliveryMode" value="${orderItem.mplDeliveryMode.code}"/>
+															 <c:if test="${deliveryMode ne 'click-and-collect'}"> 
+																 <c:set var="flag" value="true"/>
+															  </c:if>  
+												    	</c:forEach>
+												    </c:otherwise>
+											    </c:choose>
 										    	<c:if test="${flag eq true}">
 					                            	<input type="checkbox" id="sameAsShippingEmi" name="billing-shipping" checked="checked" /><label for="sameAsShippingEmi"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sameAsShipping"/></label>
 					                           	</c:if>   	
@@ -948,10 +982,12 @@
 			    								<ycommerce:testId code="paymentDetailsForm">
 								
 							<form:form id="silentOrderPostForm" name="silentOrderPostForm" class="create_update_payment_form" commandName="paymentForm" action="${newPaymentFormMplUrl}" autocomplete="off" method="POST">
-								<form:hidden path="paymentMode"/>
+								<form:hidden path="paymentModeValue"/>
 								<input type="hidden" name="orderPage_receiptResponseURL" value="${silentOrderPageData.parameters['orderPage_receiptResponseURL']}"/>
 								<input type="hidden" name="orderPage_declineResponseURL" value="${silentOrderPageData.parameters['orderPage_declineResponseURL']}"/>
 								<input type="hidden" name="orderPage_cancelResponseURL" value="${silentOrderPageData.parameters['orderPage_cancelResponseURL']}"/>
+								<%-- <input type="hidden" id="guid" value="${guid}"> --%>
+								<form:hidden path="guid" id="guid" value="${guid}"/>
 								<input type="hidden" id="promoAvailable" value="${promoAvailable}"/>
 								<input type="hidden" id="bankAvailable" value="${bankAvailable}"/>
 								<c:forEach items="${sopPaymentDetailsForm.signatureParams}" var="entry" varStatus="status">
@@ -1077,6 +1113,7 @@
 									</c:if>	
 								</c:forEach>	
 							</ul>
+							<input type="hidden" id="paymentMode" name="paymentMode"/>
 							<ul class="tabs">
 							<!-- <li class="change-payment">Change Payment Method</li> -->
 						<%-- <ycommerce:testId code="paymentDetailsForm">
@@ -1517,12 +1554,24 @@
 												</fieldset>
 		            							<div class="controls" id="billingAddress">
 					                            	<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.billingAddress"/></h2>
+					                            <c:choose>
+					                            <c:when test="${isCart eq true}">
 					                            <c:forEach var="cartItem" items="${cartData.entries}">
 					                            <c:set var="deliveryMode" value="${cartItem.mplDeliveryMode.code}"/>
 													 <c:if test="${deliveryMode ne 'click-and-collect'}"> 
 														 <c:set var="flag" value="true"/>
 													  </c:if>  
 										    	</c:forEach>
+										    	</c:when>
+										    	<c:otherwise>
+										    	<c:forEach var="cartItem" items="${orderData.entries}">
+					                            <c:set var="deliveryMode" value="${cartItem.mplDeliveryMode.code}"/>
+													 <c:if test="${deliveryMode ne 'click-and-collect'}"> 
+														 <c:set var="flag" value="true"/>
+													  </c:if>  
+										    	</c:forEach>
+										    	</c:otherwise>
+										    	</c:choose>
 										    	<c:if test="${flag eq true}">
 					                            	<input type="checkbox" id="sameAsShipping" name="billing-shipping" checked="checked" /><label for="sameAsShipping"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sameAsShipping"/></label>
 					                           	</c:if>   	
@@ -1590,8 +1639,9 @@
 									
 									<button type="submit" class="make_payment button btn-block payment-button" id="make_cc_payment"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 									<p class="payment-redirect">You will be re-directed to secure payment gateway</p>
-									<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a></p>
+									<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a></p> 
 								</div>
+								
 							</li>
 						</ul>					
 					</li>	 --%>			
@@ -1601,7 +1651,7 @@
 							</div><!--  -->
 		</jsp:body>
 		</multiCheckout:checkoutSteps>	
-		<multiCheckout:checkoutOrderDetails cartData="${cartData}" showDeliveryAddress="true" showPaymentInfo="false" showTaxEstimate="false" showTax="true" />
+		<multiCheckout:checkoutOrderDetails cartData="${cartData}" showDeliveryAddress="true" showPaymentInfo="false" showTaxEstimate="false" showTax="true" isCart="${isCart}" orderData="${orderData}"/>
 	</div>	
 	
 	

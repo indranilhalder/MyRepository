@@ -1,9 +1,12 @@
 <%@ tag body-content="empty" trimDirectiveWhitespaces="true" %>
-<%@ attribute name="cartData" required="true" type="de.hybris.platform.commercefacades.order.data.CartData" %>
+<%@ attribute name="cartData" required="false" type="de.hybris.platform.commercefacades.order.data.CartData" %>
 <%@ attribute name="groupData" required="true" type="de.hybris.platform.commercefacades.order.data.OrderEntryGroupData" %>
 <%@ attribute name="index" required="true" type="java.lang.Integer" %>
 <%@ attribute name="showPotentialPromotions" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="showHead" required="false" type="java.lang.Boolean" %>
+<!-- TPR-629 orderData added to tag parameters -->
+<%@ attribute name="orderData" required="false" type="de.hybris.platform.commercefacades.order.data.OrderData" %>
+<%@ attribute name="isCart" required="false" type="java.lang.Boolean" %>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template" %>
@@ -15,6 +18,7 @@
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format" %>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product" %>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags" %>
+
 <style>
 	.cncOrderInfo{
 		list-style: none;
@@ -142,6 +146,8 @@
 	                   <p class="delivery-method-description"><c:out value="${entry.mplDeliveryMode.name}"></c:out>&nbsp;-&nbsp;<c:if test="${entry.currDelCharge.value.unscaledValue() == 0}"><c:out value="FREE"></c:out></c:if><c:if test="${entry.currDelCharge.value.unscaledValue() != 0}"><c:out value="${entry.currDelCharge.formattedValue}"></c:out></c:if></p>
 	                  <p class="delivery-method-description delivery-method-description-time"><c:out value="${entry.mplDeliveryMode.description}"></c:out></p>
 	                </div>
+	                <c:choose>
+	                <c:when test="${isCart eq true}">
 					<c:if test="${ycommerce:doesPotentialPromotionExistForOrderEntry(cartData, entry.entryNumber) && showPotentialPromotions && (entry.isBOGOapplied || entry.giveAway)}">
 						<ul>
 							<c:forEach items="${cartData.potentialProductPromotions}" var="promotion">
@@ -168,6 +174,23 @@
 							</c:forEach>
 						</ul>
 					</c:if>
+					</c:when>
+					<c:otherwise>
+					<c:if test="${ycommerce:doesAppliedPromoExistForOrderEntry(orderData, entry.entryNumber) && (entry.isBOGOapplied || entry.giveAway)}">
+						<ul>
+							<c:forEach items="${orderData.appliedProductPromotions}" var="promotion">
+								<c:set var="displayed" value="false"/>
+								<c:forEach items="${promotion.consumedEntries}" var="consumedEntry">
+									<c:if test="${not displayed && consumedEntry.orderEntryNumber == entry.entryNumber}">
+										<c:set var="displayed" value="true"/>
+										<span>${promotion.description}</span>
+									</c:if>
+								</c:forEach>
+							</c:forEach>
+						</ul>
+					</c:if>
+					</c:otherwise>
+					</c:choose>
 				</div>
 				
 			</div>
