@@ -2738,7 +2738,10 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				if (null != catCompObj.getImage() && StringUtils.isNotEmpty(catCompObj.getImage().getURL()))
 				{
 					luxshopYourFav.setCategoryImageUrl(catCompObj.getImage().getURL());
-					luxshopYourFav.setMobileCategoryImageUrl(catCompObj.getMobileImage().getURL());
+					if (null != catCompObj.getMobileImage() && StringUtils.isNotEmpty(catCompObj.getMobileImage().getURL()))
+					{
+						luxshopYourFav.setMobileCategoryImageUrl(catCompObj.getMobileImage().getURL());
+					}
 				}
 			}
 
@@ -2842,8 +2845,11 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				{
 					bannerMediaUrl = promotionalBanner.getBannerImage().getURL();
 					altText = promotionalBanner.getBannerImage().getAltText();
-					resolution = promotionalBanner.getBannerView().getCode().toString();
-
+					if (null != promotionalBanner.getBannerView() && null != promotionalBanner.getBannerView().getCode())
+					{
+						resolution = promotionalBanner.getBannerView().getCode().toString();
+					}
+					LOG.debug("added for him/her banner by MplBigPromoBannerComponentModel");
 				}
 			}
 			else
@@ -2852,7 +2858,10 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				{
 					bannerMediaUrl = banner.getMedia().getURL();
 					altText = banner.getMedia().getAltText();
-					resolution = banner.getBannerView().getCode().toString();
+					if (null != banner.getBannerView() && null != banner.getBannerView().getCode())
+					{
+						resolution = banner.getBannerView().getCode().toString();
+					}
 				}
 			}
 			heroBanner.setBannerNumber(sequenceno);

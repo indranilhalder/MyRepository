@@ -878,6 +878,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap, final boolean isPinCodeCheckRequired,
 			final boolean resetReqd) throws EtailBusinessExceptions, EtailNonBusinessExceptions
 	{
+
+		String mediaFormat = null;
 		if (LOG.isDebugEnabled())
 		{
 			LOG.debug(String.format("productDetails: |  cartId : %s | isPinCodeCheckRequired %s", cartId, Boolean.valueOf(resetReqd)));
@@ -964,12 +966,14 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						&& (MarketplaceCoreConstants.LUXURY).equalsIgnoreCase(productData.getLuxIndicator()))
 				{
 					gwlp.setIsLuxury(productData.getLuxIndicator());
+					mediaFormat = MarketplacecommerceservicesConstants.LUXURY_CARTICON;
 				}
 				else if ((null == productData.getLuxIndicator())
 						|| (null != productData.getLuxIndicator() && (MarketplaceCoreConstants.Marketplace)
 								.equalsIgnoreCase(productData.getLuxIndicator())))
 				{
 					gwlp.setIsLuxury(MarketplaceCoreConstants.Marketplace);
+					mediaFormat = MarketplacecommerceservicesConstants.THUMBNAIL;
 				}
 
 				//Luxury LW-174 Ends
@@ -1007,7 +1011,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					{
 						if (null != img && null != img.getUrl() && StringUtils.isNotEmpty(img.getFormat())
 						//&& img.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.THUMBNAIL) Sonar fix
-								&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.THUMBNAIL))
+								&& img.getFormat().equalsIgnoreCase(mediaFormat))
 						{
 							gwlp.setImageURL(img.getUrl());
 						}
