@@ -1653,4 +1653,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//Added for luxury
 	public static final String CHANNEL_APP = "APP";
 	public static final String MEGANAVNODE = "luxury.root.navigation.node.id";
+
+	public static final String LUXURY_CARTICON = "luxuryCartIcon";
 }
