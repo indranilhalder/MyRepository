@@ -383,7 +383,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getLandingPageForCategory(java.lang.String)
 	 */
 	@Override
@@ -408,7 +408,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getHomePageForMobile()
 	 */
 	@Override
@@ -1516,7 +1516,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateCategoryLandingPageForMobile()
 	 */
 	@Override
@@ -1632,7 +1632,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.facade.cms.MplCmsFacade#populateSubBrandLandingPageForMobile(de.hybris.platform.cms2.model.pages.
 	 * ContentPageModel, java.lang.String)
@@ -1683,7 +1683,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populatePageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -1830,7 +1830,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getCategoryNameForCode(java.lang.String)
 	 */
 	@Override
@@ -1842,7 +1842,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getHeroProducts(java.lang.String)
 	 */
 	@Override
@@ -1916,7 +1916,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateSellerLandingPageForMobile()
 	 */
 	@Override
@@ -1957,7 +1957,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				 * (SmallBrandMobileAppComponentModel) abstractCMSComponentModel; final ComponentData componentData =
 				 * getMobileCategoryComponentConverter().convert(smallBrandMobileComponentModel);
 				 * componentDatas.add(componentData);
-				 * 
+				 *
 				 * }
 				 */
 				else if (abstractCMSComponentModel instanceof PromotionalProductsComponentModel)
@@ -2015,7 +2015,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getSellerMasterName(java.lang.String)
 	 */
 	@Override
@@ -2027,7 +2027,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateSellerPageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -2043,7 +2043,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateOfferPageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -2060,7 +2060,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getlandingForBrand()
 	 */
 	@Override
@@ -2439,6 +2439,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				stlProductList.setDestination(luxShopTheLookWsDTO.getDestination());
 			}
 
+
 		}
 		stlProductList.setProductlisting(productList);
 		luxComponent.setShop_the_look_component(stlProductList);
@@ -2737,6 +2738,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				if (null != catCompObj.getImage() && StringUtils.isNotEmpty(catCompObj.getImage().getURL()))
 				{
 					luxshopYourFav.setCategoryImageUrl(catCompObj.getImage().getURL());
+					luxshopYourFav.setMobileCategoryImageUrl(catCompObj.getMobileImage().getURL());
 				}
 			}
 
@@ -2831,6 +2833,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 			String bannerMediaUrl = null;
 			String altText = null;
+			String resolution = null;
 			if (banner instanceof MplBigPromoBannerComponentModel)
 			{
 				promotionalBanner = (MplBigPromoBannerComponentModel) banner;
@@ -2839,6 +2842,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				{
 					bannerMediaUrl = promotionalBanner.getBannerImage().getURL();
 					altText = promotionalBanner.getBannerImage().getAltText();
+					resolution = promotionalBanner.getBannerView().getCode().toString();
 
 				}
 			}
@@ -2848,12 +2852,14 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				{
 					bannerMediaUrl = banner.getMedia().getURL();
 					altText = banner.getMedia().getAltText();
+					resolution = banner.getBannerView().getCode().toString();
 				}
 			}
 			heroBanner.setBannerNumber(sequenceno);
 			heroBanner.setBannerMedia(bannerMediaUrl);
 			heroBanner.setAltText(altText);
 			heroBanner.setBannerUrl(banner.getUrlLink());
+			heroBanner.setResolution(resolution);
 			sequenceno++;
 
 			genderlist.add(heroBanner);
@@ -2865,7 +2871,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getMegaNavigation()
 	 */
 	@Override
@@ -3014,7 +3020,12 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 										{
 											sliderDto.setDestination(luxLevelTwoSlider.getUrlLink());
 										}
-										//cta is to be decided
+										//TISLUX1491
+										if (null != luxLevelTwoSlider.getDescription())
+										{
+											sliderDto.setCta(luxLevelTwoSlider.getDescription());
+										}
+
 										levelTwoSliderListDto.add(sliderDto);
 									}
 									level2Dto.setSliders(levelTwoSliderListDto);

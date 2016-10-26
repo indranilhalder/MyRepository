@@ -985,6 +985,8 @@
 		<property name="isProductNew" type="java.lang.String"></property>
 		<property name="sellerAssociationstatus" type="String" />
 		<property name="discount" type="String" />
+		<!-- Added for luxury products -->
+		<property name="luxIndicator" type="String" />
 	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.KnowMoreDTO">
@@ -2442,6 +2444,7 @@
     <bean class="com.tisl.mpl.wsdto.LuxShopYourFavListWsDTO">
     	<property name="categoryId" type="String"/>
     	<property name="categoryImageUrl" type="String" />
+    	<property name="mobileCategoryImageUrl" type="String" />
     	<property name="categoryName" type="String"/> 
     	<property name="categoryUrl" type="String"/> 
     	<property name="altText" type="String"/> 
