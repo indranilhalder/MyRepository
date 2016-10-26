@@ -34,6 +34,10 @@ import com.tisl.mpl.constants.MplConstants;
 
 public class MplDepartmentsValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider, Serializable
 {
+	/**
+	 * 
+	 */
+	private static final String LSH1 = "LSH1";
 	private CategorySource categorySource;
 	private FieldNameProvider fieldNameProvider;
 	private CategoryService categoryService;
@@ -119,7 +123,8 @@ public class MplDepartmentsValueProvider extends AbstractPropertyFieldValueProvi
 			{
 				//if (categoryPath != null && categoryPath.size() > 0 && ((CategoryModel) categoryPath.get(0)).getCode().contains(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE))
 				if (CollectionUtils.isNotEmpty(categoryPath)
-						&& ((CategoryModel) categoryPath.get(0)).getCode().contains(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE))
+						&& (((CategoryModel) categoryPath.get(0)).getCode().contains(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE))
+						|| ((CategoryModel) categoryPath.get(0)).getCode().contains(LSH1))
 				{
 					accumulateCategoryPaths(categoryPath, allPaths);
 				}
