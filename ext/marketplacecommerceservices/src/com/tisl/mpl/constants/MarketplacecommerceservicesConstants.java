@@ -1638,4 +1638,5 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String RESCHEDULE_DATA_SESSION_KEY="rescheduleDataList";
 	
 	public static final String S="S";
+	public static final String SELF_COURIER = "SELF_COURIER";
 }
