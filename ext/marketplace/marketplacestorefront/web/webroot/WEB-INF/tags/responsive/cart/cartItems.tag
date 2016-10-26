@@ -62,7 +62,7 @@ tr.d0 td {
    <li class="moveToWishlistMsg" style="display: none;"></li>
    
    <c:if test="${not empty cartLevelDiscountModified}">
-   	<li># ${cartLevelDiscountModified}</li>
+   	<li class="promo-msg"># ${cartLevelDiscountModified}</li>
    </c:if>
    
   <c:forEach items="${cartData.entries}" var="entry">
