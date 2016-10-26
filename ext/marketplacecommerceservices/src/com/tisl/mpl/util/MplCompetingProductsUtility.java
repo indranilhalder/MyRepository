@@ -104,7 +104,7 @@ public class MplCompetingProductsUtility
 				{
 					continue;
 				}
-				else if (categoryModel.getCode().startsWith("MSH"))
+				else if (categoryModel.getCode().startsWith("MSH") || categoryModel.getCode().startsWith("LSH"))
 				{
 					return categoryModel;
 				}
@@ -197,5 +197,3 @@ public class MplCompetingProductsUtility
 	}
 
 }
-
-

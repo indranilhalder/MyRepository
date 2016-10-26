@@ -135,6 +135,10 @@ import com.tisl.mpl.wsdto.SizeGuideWsDTO;
 @RequestMapping(value = "/{baseSiteId}/products")
 public class ProductsController extends BaseController
 {
+	/**
+	 *
+	 */
+	private static final String LSH = "LSH";
 	private static final String BASIC_OPTION = "BASIC";
 	private static final Set<ProductOption> OPTIONS;
 	private static final String MAX_INTEGER = "2147483647";
@@ -223,8 +227,7 @@ public class ProductsController extends BaseController
 	 * Returns a list of products and additional data such as: available facets, available sorting and pagination
 	 * options. It can include spelling suggestions.To make spelling suggestions work you need to:
 	 * <ul>
-	 * <li>Make sure enableSpellCheck on the SearchQuery is set to true. By default it should be already set to true.
-	 * </li>
+	 * <li>Make sure enableSpellCheck on the SearchQuery is set to true. By default it should be already set to true.</li>
 	 * <li>Have indexed properties configured to be used for spellchecking.</li>
 	 * </ul>
 	 *
@@ -287,7 +290,7 @@ public class ProductsController extends BaseController
 	@ResponseBody
 	public ProductDetailMobileWsData getProductByCode(@PathVariable String productCode,
 			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields, final HttpServletRequest request)
-					throws MalformedURLException
+			throws MalformedURLException
 	{
 		ProductDetailMobileWsData product = new ProductDetailMobileWsData();
 
@@ -362,7 +365,7 @@ public class ProductsController extends BaseController
 	@ResponseBody
 	public StockWsDTO getStockData(@PathVariable final String baseSiteId, @PathVariable final String productCode,
 			@PathVariable final String storeName, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
-					throws WebserviceValidationException, StockSystemException
+			throws WebserviceValidationException, StockSystemException
 	{
 		validate(storeName, "storeName", pointOfServiceValidator);
 		if (!commerceStockFacade.isStockSystemEnabled(baseSiteId))
@@ -493,7 +496,7 @@ public class ProductsController extends BaseController
 	@ResponseBody
 	public ReviewWsDTO createReview(@PathVariable final String productCode,
 			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields, final HttpServletRequest request)
-					throws WebserviceValidationException
+			throws WebserviceValidationException
 	{
 		final ReviewData reviewData = new ReviewData();
 		httpRequestReviewDataPopulator.populate(request, reviewData);
@@ -540,8 +543,8 @@ public class ProductsController extends BaseController
 	@RequestMapping(value = "/{productCode}/references", method = RequestMethod.GET)
 	@ResponseBody
 	public ProductReferenceListWsDTO exportProductReferences(@PathVariable final String productCode,
-			@RequestParam(required = false, defaultValue = MAX_INTEGER) final int pageSize, @RequestParam final String referenceType,
-			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+			@RequestParam(required = false, defaultValue = MAX_INTEGER) final int pageSize,
+			@RequestParam final String referenceType, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
 		final List<ProductOption> opts = Lists.newArrayList(OPTIONS);
 		final ProductReferenceTypeEnum referenceTypeEnum = ProductReferenceTypeEnum.valueOf(referenceType);
@@ -931,7 +934,7 @@ public class ProductsController extends BaseController
 						searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
 								.textSearch(searchState, pageableData);
 					}
-					else if (typeID.startsWith(DROPDOWN_CATEGORY) || typeID.startsWith(DROPDOWN_BRAND))
+					else if (typeID.startsWith(DROPDOWN_CATEGORY) || typeID.startsWith(DROPDOWN_BRAND) || typeID.startsWith(LSH))
 					{
 						//searchPageData = productSearchFacade.categorySearch(typeID, searchState, pageableData);
 						searchPageData = searchFacade.searchCategorySearch(typeID, searchState, pageableData);
@@ -1373,7 +1376,7 @@ public class ProductsController extends BaseController
 							.textSearch(searchState, pageableData);
 
 				}
-				else if (typeID.startsWith("MSH") || typeID.startsWith("MBH"))
+				else if (typeID.startsWith("MSH") || typeID.startsWith("MBH") || typeID.startsWith(LSH))
 				{
 
 					searchPageData = searchFacade.searchCategorySearch(typeID, searchState, pageableData);
@@ -1382,8 +1385,8 @@ public class ProductsController extends BaseController
 				else
 				{
 
-					searchPageData = searchFacade.dropDownSearch(searchState, typeID, MarketplaceCoreConstants.SELLER_ID,
-							pageableData);
+					searchPageData = searchFacade
+							.dropDownSearch(searchState, typeID, MarketplaceCoreConstants.SELLER_ID, pageableData);
 				}
 			}
 			//final List<String> filter = new ArrayList<String>();

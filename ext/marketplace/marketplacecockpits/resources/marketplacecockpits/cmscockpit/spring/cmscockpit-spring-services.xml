@@ -96,6 +96,11 @@
 						<value>NavigationBarComponent.link</value>
 						<value>SimpleBannerComponent.description</value>
 						<value>MplImageCategoryComponent.mobileImage</value>
+						<!-- TISLUX-2740 -->
+						<value>CMSLinkComponent.category</value>
+						<value>CMSLinkComponent.url</value>
+						<value>CMSLinkComponent.name</value>
+						<value>CMSLinkComponent.linkName</value>
 					</list>
 				</entry>
 				<entry key="CMSNavigationNode">

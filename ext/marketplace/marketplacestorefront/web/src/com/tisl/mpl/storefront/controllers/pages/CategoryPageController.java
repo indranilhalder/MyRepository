@@ -90,6 +90,17 @@ import com.tisl.mpl.util.ExceptionUtil;
 //@RequestMapping(value = "/**/c")
 public class CategoryPageController extends AbstractCategoryPageController
 {
+	/**
+	 *
+	 */
+	private static final String LSH = "LSH";
+
+
+	/**
+	 *
+	 */
+	private static final String LSH1 = "LSH1";
+
 	@Resource(name = "categoryService")
 	private CategoryService categoryService;
 
@@ -210,7 +221,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 		//final List<ProductModel> heroProducts = new ArrayList<ProductModel>();
 		if (StringUtils.isNotEmpty(searchCode) && !(searchCode.substring(0, 5).equals(categoryCode))
-				&& categoryCode.startsWith(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE))
+				&& (categoryCode.startsWith(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE) || categoryCode.startsWith(LSH1)))
 		{
 			searchCode = searchCode.substring(0, 5);
 
@@ -224,7 +235,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 		{
 
-			if (dropDownText.startsWith(DROPDOWN_CATEGORY) || dropDownText.startsWith(DROPDOWN_BRAND))
+			if (dropDownText.startsWith(DROPDOWN_CATEGORY) || dropDownText.startsWith(DROPDOWN_BRAND)
+					|| dropDownText.startsWith(LSH))
 
 			{
 				final CategoryModel categoryModel = categoryService.getCategoryForCode(dropDownText);
@@ -298,7 +310,6 @@ public class CategoryPageController extends AbstractCategoryPageController
 		return ControllerConstants.Views.Fragments.Product.SearchResultsPanel;
 	}
 
-
 	/**
 	 * @desc Main method for category landing pages SEO : Changed to accept new pattern and new pagination changes TISCR
 	 *       340
@@ -356,10 +367,9 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 			//final List<ProductModel> heroProducts = new ArrayList<ProductModel>();
 			if (StringUtils.isNotEmpty(searchCode) && !(searchCode.substring(0, 5).equals(categoryCode))
-					&& categoryCode.startsWith(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE))
+					&& (categoryCode.startsWith(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE) || categoryCode.startsWith(LSH1)))
 			{
 				searchCode = searchCode.substring(0, 5);
-
 			}
 			model.addAttribute(ModelAttributetConstants.SEARCH_CODE, searchCode);
 			model.addAttribute(ModelAttributetConstants.IS_CATEGORY_PAGE, Boolean.TRUE);
@@ -370,7 +380,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 			{
 
-				if (dropDownText.startsWith(DROPDOWN_CATEGORY) || dropDownText.startsWith(DROPDOWN_BRAND))
+				if (dropDownText.startsWith(DROPDOWN_CATEGORY) || dropDownText.startsWith(DROPDOWN_BRAND)
+						|| dropDownText.startsWith(LSH))
 
 				{
 					final CategoryModel categoryModel = categoryService.getCategoryForCode(dropDownText);
@@ -503,7 +514,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	{
 		boolean redirect = false;
 		// YTODO Auto-generated method stub
-		if (categoryCode.startsWith("LSH"))
+		if (categoryCode.startsWith(LSH))
 		{
 			redirect = true;
 			LOG.debug("**********The category is a luxury category.Hence redirecting to luxury website***********" + categoryCode);

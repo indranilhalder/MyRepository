@@ -22,27 +22,11 @@
 <spring:url value="/my-account/default/wishList" var="wishlistUrl" />
 <spring:url value="/my-account/friendsInvite" var="friendsInviteUrl" />
 
-<!-- LW-230 -->
-<input type="hidden" id="isLuxury" value="${isLuxury}"/>
 
-<script>
-	//jquery added to prevent stored Cross Site Scripting /TISSIT-1704/added for creating wishlist and renaming wishlist
- 
-	$(document).ready(function() {
-
-		$('#newWishlistName').keyup(function() {
-			validateEnteredName("newWishlistName","errorCreate");
-		});
-		$('#newWishlistName').blur(function() {
-			validateEnteredName("newWishlistName","errorCreate");
-		});
-	});
-	
-	</script>
-
- 
 <template:page pageTitle="${pageTitle}">
-
+	<!-- LW-230 -->
+	<input type="hidden" id="isLuxury" value="${isLuxury}"/>
+	
 	<body class="wishlist" onload="readyFunction();">
 
 		<!-- START OF WRAPPER DIV SECTION -->
@@ -257,19 +241,15 @@
 								<li>
 									<div class="product-info">
                                           
-										<%-- <a href="${productUrl}"> <product:productPrimaryImage
-												product="${product}" format="thumbnail" />
-										</a> --%>
-										<c:choose>
-    										<c:when test="${(param.isLux ne null and param.isLux eq true) and ((not empty isLuxury and isLuxury != 'false') or (empty isLuxury))}">
-        											<a href="${productUrl}"> <product:productPrimaryImage
-														product="${product}" format="luxuryThumbnail" /></a>
-    										</c:when>    
-    										<c:otherwise>
-         											<a href="${productUrl}"> <product:productPrimaryImage
+										 <c:if test="${fn:toLowerCase(product.luxIndicator)=='marketplace' or empty product.luxIndicator}">
+										<a href="${productUrl}"> <product:productPrimaryImage
 														product="${product}" format="thumbnail" /></a>
-    										</c:otherwise>
-										</c:choose>
+														</c:if>
+										<c:if test="${fn:toLowerCase(product.luxIndicator)=='luxury' and not empty product.luxIndicator}">
+										<a href="${productUrl}"> <product:productPrimaryImage
+														product="${product}" format="luxuryCartPage" /></a>
+														</c:if>
+										
 										<div>
 											<ul>
 												<!-- COMPANY OR BRAND NAME STATIC COMPONENT -->
@@ -956,3 +936,18 @@
 		}
 	
 </script>
+
+<script>
+	//jquery added to prevent stored Cross Site Scripting /TISSIT-1704/added for creating wishlist and renaming wishlist
+ 
+	$(document).ready(function() {
+
+		$('#newWishlistName').keyup(function() {
+			validateEnteredName("newWishlistName","errorCreate");
+		});
+		$('#newWishlistName').blur(function() {
+			validateEnteredName("newWishlistName","errorCreate");
+		});
+	});
+	
+	</script>
