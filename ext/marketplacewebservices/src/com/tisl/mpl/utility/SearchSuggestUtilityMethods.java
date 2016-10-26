@@ -6,7 +6,6 @@ package com.tisl.mpl.utility;
 import de.hybris.platform.catalog.model.classification.ClassificationClassModel;
 import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.model.CategoryModel;
-import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ImageDataType;
@@ -88,8 +87,8 @@ public class SearchSuggestUtilityMethods
 	/*
 	 * @Resource(name = "accProductFacade") private ProductFacade productFacade;
 	 */
-	@Resource(name = "accProductFacade")
-	private ProductFacade productFacade;
+	//@Resource(name = "accProductFacade")
+	//private ProductFacade productFacade;
 	//@Resource(name = "defaultMplProductSearchFacade")
 	//private DefaultMplProductSearchFacade searchFacade;
 	@Resource(name = "productDetailsHelper")
@@ -172,7 +171,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 * 
+	 *
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
