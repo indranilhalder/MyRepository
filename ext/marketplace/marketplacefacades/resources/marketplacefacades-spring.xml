@@ -1082,6 +1082,21 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 			<property name="heroProductDefinitionService" ref="heroProductDefinitionService" />
 			<property name="configurationService" ref="configurationService" />
 			<property name="sellerMasterService" ref="mplSellerMaster" />
+			<property name="brandLandingPageSlotMapping">
+			<map>
+			<entry key="BottomHeaderSlot" value="Section0-luxurybrandlandingpage" />
+			<entry key="Section1" value="Section1-heroBannerComponent" />
+			<entry key="Section2" value="Section2-luxurybrandlandingpage" />
+			<entry key="Section2.1" value="Section2.1-luxurybrandlandingpage" />
+			<entry key="Section3" value="Section3-SpringCollectionOfimages" />
+			<entry key="Section4" value="Section4-FeaturedCollectionofimages" />
+			<entry key="Section5" value="Section5-videoComponent" />
+			<entry key="Section6" value="Section6-luxurybrandlandingpage" />
+			<entry key="Section7" value="Section7-whyourproducts" />
+			<entry key="Section8" value="Section8-OurMissionSlot" />
+			<entry key="Section9" value="Section9-ourJourney" />
+			</map>
+			</property>
 			
 			</bean>
 			

@@ -42,6 +42,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -178,6 +179,8 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	private HeroProductDefinitionService heroProductDefinitionService;
 
 	private MplSellerMasterService sellerMasterService;
+
+	private Map<String, String> brandLandingPageSlotMapping;
 
 	private static final Logger LOG = Logger.getLogger(MplCmsFacadeImpl.class);
 	@Resource(name = "productFacade")
@@ -2082,7 +2085,9 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				for (final ContentSlotForPageModel contentSlotForPage : contentPage.getContentSlots())
 				{
 					final ContentSlotModel contentSlot = contentSlotForPage.getContentSlot();
-					final List<LuxBlpCompListWsDTO> luxuryComponentsForASlot = getComponentDtoforASlot(contentSlot);
+
+					final List<LuxBlpCompListWsDTO> luxuryComponentsForASlot = getComponentDtoforASlot(contentSlot,
+							contentSlotForPage.getPosition());
 					listComp.addAll(luxuryComponentsForASlot);
 				}
 
@@ -2120,13 +2125,16 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/**
 	 * @param contentSlot
+	 * @param postion
 	 * @return
 	 */
-	private List<LuxBlpCompListWsDTO> getComponentDtoforASlot(final ContentSlotModel contentSlot) throws CMSItemNotFoundException
+	private List<LuxBlpCompListWsDTO> getComponentDtoforASlot(final ContentSlotModel contentSlot, final String position)
+			throws CMSItemNotFoundException
 	{
 		// YTODO Auto-generated method stub
 		final List<LuxBlpCompListWsDTO> componentListForASlot = new ArrayList<LuxBlpCompListWsDTO>();
 		LuxBlpCompListWsDTO blpComponent = new LuxBlpCompListWsDTO();
+		final String section = getBrandLandingPageSlotMapping().get(position);
 
 		if (null != contentSlot)
 		{
@@ -2134,46 +2142,41 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 			for (final AbstractCMSComponentModel abstractCMSComponentModel : contentSlot.getCmsComponents())
 			{
 				final String typecode = abstractCMSComponentModel.getTypeCode();
-				if (typecode.equalsIgnoreCase("RotatingImagesComponent")
-						&& contentSlot.getUid().equalsIgnoreCase("Section2-luxurybrandlandingpage"))
+				if (typecode.equalsIgnoreCase("RotatingImagesComponent") && position.equalsIgnoreCase("Section2"))
 				{
 					final RotatingImagesComponentModel luxuryBannerComponent = (RotatingImagesComponentModel) abstractCMSComponentModel;
 					blpComponent = getForHimHerBannerWsDTO(luxuryBannerComponent);
 					componentListForASlot.add(blpComponent);
 				}
-				if (typecode.equalsIgnoreCase("SimpleBannerComponent")
-						&& contentSlot.getUid().equalsIgnoreCase("Section0-luxurybrandlandingpage"))
+				if (typecode.equalsIgnoreCase("SimpleBannerComponent") && position.equalsIgnoreCase("BottomHeaderSlot"))
 				{
 					final SimpleBannerComponentModel headerslot = (SimpleBannerComponentModel) abstractCMSComponentModel;
 					blpComponent = getHeaderComponent(headerslot);
 					componentListForASlot.add(blpComponent);
 				}
 
-				if (typecode.equalsIgnoreCase("RotatingImagesComponent")
-						&& contentSlot.getUid().equalsIgnoreCase("Section1-heroBannerComponent"))
+				if (typecode.equalsIgnoreCase("RotatingImagesComponent") && position.equalsIgnoreCase("Section1"))
 				{
 					final RotatingImagesComponentModel luxBlpBannerComponent = (RotatingImagesComponentModel) abstractCMSComponentModel;
 					blpComponent = getBlpBannerWsDTO(luxBlpBannerComponent);
 					componentListForASlot.add(blpComponent);
 				}
-				if (typecode.equalsIgnoreCase("SimpleBannerComponent")
-						&& contentSlot.getUid().equalsIgnoreCase("Section3-SpringCollectionOfimages"))
+				if (typecode.equalsIgnoreCase("SimpleBannerComponent") && position.equalsIgnoreCase("Section3"))
 				{
 					final SimpleBannerComponentModel springComponent = (SimpleBannerComponentModel) abstractCMSComponentModel;
 					final LuxSpringCollectionComponentWsDTO springDto = getSpringWsDTO(springComponent);
 					final LuxBlpCompListWsDTO luxBlpComponent = new LuxBlpCompListWsDTO();
 					luxBlpComponent.setSpring_component(springDto);
-					luxBlpComponent.setSectionid(contentSlot.getUid());
+					luxBlpComponent.setSectionid(section);
 					componentListForASlot.add(luxBlpComponent);
 				}
-				if (typecode.equalsIgnoreCase("SimpleBannerComponent")
-						&& contentSlot.getUid().equalsIgnoreCase("Section4-FeaturedCollectionofimages"))
+				if (typecode.equalsIgnoreCase("SimpleBannerComponent") && position.equalsIgnoreCase("Section4"))
 				{
 					final SimpleBannerComponentModel springComponent = (SimpleBannerComponentModel) abstractCMSComponentModel;
 					final LuxSpringCollectionComponentWsDTO featuredComponentDto = getSpringWsDTO(springComponent);
 					final LuxBlpCompListWsDTO luxBlpComponent = new LuxBlpCompListWsDTO();
 					luxBlpComponent.setFeatured_component(featuredComponentDto);
-					luxBlpComponent.setSectionid(contentSlot.getUid());
+					luxBlpComponent.setSectionid(section);
 					componentListForASlot.add(luxBlpComponent);
 				}
 
@@ -2183,8 +2186,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					blpComponent = getLuxBlpVideocomponentWsDTO(BlpVideoComponent);
 					componentListForASlot.add(blpComponent);
 				}
-				else if (typecode.equalsIgnoreCase("MplBigPromoBannerComponent")
-						&& contentSlot.getUid().equalsIgnoreCase("Section6-luxurybrandlandingpage"))
+				else if (typecode.equalsIgnoreCase("MplBigPromoBannerComponent") && position.equalsIgnoreCase("Section6"))
 				{
 					LuxBlpCompListWsDTO blppromoComponent = new LuxBlpCompListWsDTO();
 					final MplBigPromoBannerComponentModel promobannerComponent = (MplBigPromoBannerComponentModel) abstractCMSComponentModel;
@@ -2192,7 +2194,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					{
 						blppromoComponent = getBlpShopThelookComponentMedia(promobannerComponent,
 								blpComponent.getShop_the_look_component());
-						blppromoComponent.setSectionid(contentSlot.getUid());
+						blppromoComponent.setSectionid(section);
 						componentListForASlot.add(blppromoComponent);
 					}
 					else
@@ -2201,8 +2203,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					}
 
 				}
-				else if (typecode.equalsIgnoreCase("ProductCarouselComponent")
-						&& contentSlot.getUid().equalsIgnoreCase("Section6-luxurybrandlandingpage"))
+				else if (typecode.equalsIgnoreCase("ProductCarouselComponent") && position.equalsIgnoreCase("Section6"))
 				{
 					LuxBlpCompListWsDTO blpproductComponent = new LuxBlpCompListWsDTO();
 					final ProductCarouselComponentModel productCarouselComponent = (ProductCarouselComponentModel) abstractCMSComponentModel;
@@ -2210,7 +2211,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					{
 						blpproductComponent = getBlpShopThelookComponent(productCarouselComponent,
 								blpComponent.getShop_the_look_component());
-						blpproductComponent.setSectionid(contentSlot.getUid());
+						blpproductComponent.setSectionid(section);
 						componentListForASlot.add(blpproductComponent);
 					}
 					else
@@ -2231,24 +2232,24 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					componentListForASlot.add(blpComponent);
 				}
 
-				if (typecode.equalsIgnoreCase("OurJourneyComponent") && contentSlot.getUid().equalsIgnoreCase("Section9-ourJourney"))
+				if (typecode.equalsIgnoreCase("OurJourneyComponent") && position.equalsIgnoreCase("Section9"))
 				{
 					final OurJourneyComponentModel seeOurJourneyComponent = (OurJourneyComponentModel) abstractCMSComponentModel;
 					blpComponent = getSeeOurJourneyWsDTO(seeOurJourneyComponent);
 					componentListForASlot.add(blpComponent);
 				}
 
-				if (typecode.equalsIgnoreCase("SimpleBannerComponent")
-						&& contentSlot.getUid().equalsIgnoreCase("Section8-OurMissionSlot"))
+				if (typecode.equalsIgnoreCase("SimpleBannerComponent") && position.equalsIgnoreCase("Section8"))
 				{
 					final SimpleBannerComponentModel luxuryOurMissionComponent = (SimpleBannerComponentModel) abstractCMSComponentModel;
 					blpComponent = getOurMissionWsDTO(luxuryOurMissionComponent);
 					componentListForASlot.add(blpComponent);
 				}
 
-				LOG.debug("Adding component" + abstractCMSComponentModel.getUid() + "for section" + contentSlot.getUid());
+				LOG.debug("Adding component" + abstractCMSComponentModel.getUid() + "for section" + section + "for position"
+						+ position);
 
-				blpComponent.setSectionid(contentSlot.getUid());
+				blpComponent.setSectionid(section);
 				//	componentListForASlot.add(blpComponent);
 			}
 
@@ -3115,6 +3116,23 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 			megaNavDto.setValues(levelOneList);
 		}
 		return megaNavDto;
+	}
+
+	/**
+	 * @return the brandLandingPageSlotMapping
+	 */
+	public Map<String, String> getBrandLandingPageSlotMapping()
+	{
+		return brandLandingPageSlotMapping;
+	}
+
+	/**
+	 * @param brandLandingPageSlotMapping
+	 *           the brandLandingPageSlotMapping to set
+	 */
+	public void setBrandLandingPageSlotMapping(final Map<String, String> brandLandingPageSlotMapping)
+	{
+		this.brandLandingPageSlotMapping = brandLandingPageSlotMapping;
 	}
 
 }
