@@ -434,17 +434,20 @@ var productCodeSG = '${product.code}';
 											
 								 <c:forEach
 									items="${variantOption.colourCode}" var="color">
-								<c:choose> 
-								<c:when test="${fn:startsWith(color, 'multi')}"> 
-						     	<img src="${commonResourcePath}/images/multi.jpg" style="width:100%;height:100%;cursor: pointer;" title="${variantOption.colour}" class="colorBox"  data-producturl="${variantUrl}&sizeSelected=" data-productcode="${variantOption.code}"/>
+								<c:choose>
+								<c:when test="${fn:startsWith(color, 'multi')}">
+						     	<img src="${commonResourcePath}/images/multi.jpg" height="20" width="20" title="${variantOption.colour}" />
 								</c:when>
-								<%-- <span style="background-color: ${color};border: 1px solid rgb(204, 211, 217);" title="${variantOption.colour}" class="colorBox"  data-producturl="${variantUrl}&sizeSelected=${sizeSelectedSizeGuide}" data-productcode="${variantOption.code}"></span> --%>
+								
+								<c:when test="${empty variantOption.image}">
+						     	<span style="background-color: ${color};border: 1px solid rgb(204, 211, 217); width:50px; height:73px" title="${variantOption.colour}"></span>
+								</c:when>							
 								<c:otherwise>
-									<span
-										style="background-color: ${color};border: 1px solid rgb(204, 211, 217);"
-										title="${variantOption.colour}" class="colorBox"  data-producturl="${variantUrl}&sizeSelected=" data-productcode="${variantOption.code}"></span>
-                               </c:otherwise> 
-                               </c:choose> 
+								
+								<c:set var="imageData" value="${variantOption.image}" />
+										<img src="${imageData.url}" title="${variantOption.colour}" alt="${styleValue}" style="display: inline-block;width: 50px;"/>								
+                               </c:otherwise>
+                               </c:choose>	
 
 									<c:if test="${variantOption.code eq product.code}">
 										<c:set var="currentColor" value="${color}" /> 
