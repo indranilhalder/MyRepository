@@ -2172,7 +2172,7 @@ $("#otpMobileNUMField").focus(function(){
 		 if(cardType=="MAESTRO"){
 			 //if (name && cardNo && pin && firstName && lastName && addressLine1 && addressLine2 && addressLine3 && city && state){
 			if (name && cardNo && pin && firstName && lastName && addressLine1 && city && state){
-				 createJuspayOrderForNewCard();
+				 createJuspayOrderForNewCard(false);
 			 }
 			 else{
 				 return false;
@@ -2184,7 +2184,7 @@ $("#otpMobileNUMField").focus(function(){
 			 var expYY = validateExpYY();
 			// if (cvv && expYY && name && expMM && cardNo && pin && firstName && lastName && addressLine1 && addressLine2 && addressLine3 && city && state){
 			 if (cvv && expYY && name && expMM && cardNo && pin && firstName && lastName && addressLine1 && city && state){
-				 createJuspayOrderForNewCard();
+				 createJuspayOrderForNewCard(false);
 			 }
 			 else{
 				 return false;
@@ -2207,7 +2207,7 @@ $("#otpMobileNUMField").focus(function(){
 		 
 		 if(cardType=='MAESTRO'){
 			 if (name && cardNo){
-				 createJuspayOrderForNewCard();		 
+				 createJuspayOrderForNewCard(true);		 
 			 }
 			 
 			 else{
@@ -2218,9 +2218,8 @@ $("#otpMobileNUMField").focus(function(){
 			 var cvv = validateCVVDc();
 			 var expMM = validateExpMMDc();
 			 var expYY = validateExpYYDc();
-			 var isDebit = true;
 			 if (cvv && expYY && name && expMM && cardNo){
-				 createJuspayOrderForNewCard(isDebit);		 
+				 createJuspayOrderForNewCard(true);		 
 			 }
 			 else{
 				 return false;
@@ -4648,7 +4647,6 @@ function applyPromotion(bankName,binValue,formSubmit)
 							}
 						});
 					}
-					$("#no-click,.spinner").remove();
 				}
 				else if(paymentMode=='Credit Card' || paymentMode=='Debit Card')
 				{
@@ -4656,9 +4654,8 @@ function applyPromotion(bankName,binValue,formSubmit)
 					{
 						dopayment(binValue);
 					}
-					$("#no-click,.spinner").remove();
 				}
-				//$("#no-click").remove();
+				$("#no-click").remove();
 				//$(".make_payment").removeAttr('disabled');
 			}
 			//if(isNewCard){//if this variable is true resetting the opacity
@@ -6522,9 +6519,13 @@ function updateCart(formId){
 function expressbutton()
 {
 	//TPR-683
-	utag.link(
-	{"link_text": "mybag_express_checkout" , "event_type" : "mybag_express_checkout"}
-	);
+	if(typeof utag !="undefined")
+	{
+		utag.link(
+		{"link_text": "mybag_express_checkout" , "event_type" : "mybag_express_checkout"}
+		);
+	}
+	
 	//alert(selectedAddress);
 	//TISPRM-33
 	// var addressList= $("#addressListSelectId").val();
