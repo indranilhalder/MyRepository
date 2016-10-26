@@ -301,7 +301,6 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			return ControllerConstants.Views.Pages.Account.AccountOrderReturnPincodeServiceCheck;
 		}	   
 		
-		ReturnInfoData returnData=new ReturnInfoData();
 		
 		List<String> times=MplTimeconverUtility.splitTime(returnForm.getScheduleReturnTime());
 		
@@ -342,8 +341,6 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		returnData.setUssid(returnForm.getUssid());
 		returnData.setReturnMethod(returnForm.getReturnMethod());
 		returnData.setReturnFulfillmentMode(returnFulfillmentType);
-		
-		final ReturnItemAddressData returnAddrData = new ReturnItemAddressData();
 		
 		returnAddrData.setAddressLane1(returnForm.getAddrLine1());
 		returnAddrData.setAddressLane2(returnForm.getAddrLine2());
