@@ -1620,4 +1620,12 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	</bean> -->
 	</bean>
 	
+	<!-- <bean id="initiateReturnForOrderJob" class="com.tisl.mpl.facade.job.InitiateReturnForOrderJob">
+    </bean> -->
+    
+   <bean id="initiateReturnForOrderJob"
+		class="com.tisl.mpl.facade.job.InitiateReturnForOrderJob"
+		autowire="byName" >
+	</bean>
+	
 </beans>

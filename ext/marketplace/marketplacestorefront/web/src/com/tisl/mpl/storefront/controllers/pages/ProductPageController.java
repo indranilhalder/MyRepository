@@ -1739,11 +1739,15 @@ public class ProductPageController extends AbstractPageController
 								{
 									productFeatureMap.clear();
 								}
-								productFeatureMap.put(featureValueData.getValue(),
-										productFeature != null && productFeature.getUnit() != null
-												&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit().getSymbol()
-												: "");
-								mapConfigurableAttributes.put(featureData.getName(), productFeatureMap);
+								if (null != properitsValue && featureValueData.getValue() != null
+										&& properitsValue.toLowerCase().contains(featureData.getName().toLowerCase()))
+								{
+									productFeatureMap.put(featureValueData.getValue(),
+											productFeature != null && productFeature.getUnit() != null
+													&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit().getSymbol()
+													: "");
+									mapConfigurableAttributes.put(featureData.getName(), productFeatureMap);
+								}
 							} //end apparel
 							  //electronics
 
@@ -2503,7 +2507,6 @@ public class ProductPageController extends AbstractPageController
 
 	/**
 	 * This is used to verify the configured MPH category product can get SizeGuide & choose size
-	 *
 	 * @param productModel
 	 */
 
