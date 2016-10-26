@@ -95,6 +95,7 @@
 						<value>NavigationBarComponent.navigationNode</value>
 						<value>NavigationBarComponent.link</value>
 						<value>SimpleBannerComponent.description</value>
+						<value>MplImageCategoryComponent.mobileImage</value>
 					</list>
 				</entry>
 				<entry key="CMSNavigationNode">
