@@ -323,10 +323,19 @@ input[type="checkbox"] + label:before, input[type="radio"] + label:before {
    border-radius:100%;}
 
 input[type="checkbox"] + label, input[type="radio"] + label {
-  display: inline-block; }
-  @media (min-width: 651px) {
+  display: inline-block; 
+  }
+ /* ADDED TISLUX-1440 STARTS HERE */
+.promo-msg{
+	margin-top: -10px;
+	margin-bottom: 10px;
+}
+/* ADDED TISLUX-1440 ENDS HERE */ 
+  @media (min-width: 651px) 
+  {
     input[type="checkbox"] + label, input[type="radio"] + label {
-      padding-left: 10px; } }
+      padding-left: 10px; } 
+}
 
 input[type="radio"] + label:before, input[type="checkbox"] + label:before {
   border: 1px solid #fff;
