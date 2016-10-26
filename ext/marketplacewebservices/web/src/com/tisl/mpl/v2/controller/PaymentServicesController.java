@@ -149,7 +149,7 @@ public class PaymentServicesController extends BaseController
 					{
 						//Getting COD details
 						codCheck = getMplPaymentWebFacade().getCODDetails(cart, customer.getUid());
-						codCheck.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+						//codCheck.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 					}
 					else
 					{
@@ -174,7 +174,7 @@ public class PaymentServicesController extends BaseController
 				{
 					//Getting COD details
 					codCheck = getMplPaymentWebFacade().getCODDetails(orderModel, customer.getUid());
-					codCheck.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+					//codCheck.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 				}
 				else
 				{
