@@ -1991,7 +1991,7 @@ $(document).on("click",".facet.js-facet.Colour .more-lessFacetLinks .less",funct
 });
 $(document).on("click",".facet.js-facet.Size .more-lessFacetLinks .more",function(e) {
 	e.preventDefault();
-	$("li.filter-Size.deactivate").removeClass("deactivate");
+	$("li.filter-size.deactivate").removeClass("deactivate");
 	$('.facet.js-facet.Size .more-lessFacetLinks .more').hide();
 	$('.facet.js-facet.Size .more-lessFacetLinks .less').show();
 });
@@ -2265,6 +2265,8 @@ function callGigyaWhenNotMinified(){
 function sortByFilterResult(top){
 	
 	if($("input[name=customSku]").length > 0){
+		$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+		$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
 		var pageNo = 1;
 		if ($("#paginationFormBottom .pagination.mobile li.active span").length) {
 			pageNo = $("#paginationFormBottom .pagination.mobile li.active span").text();
@@ -2289,6 +2291,8 @@ function sortByFilterResult(top){
 			},
 			complete: function() {
 				// AJAX changes for custom price filter
+				$("#no-click").remove();
+				$(".spinner").remove();
 				
 			}
 		});
@@ -2307,6 +2311,8 @@ function sortByFilterResult(top){
 //TPR- 565 custom sku addded functionality
 function viewByFilterResult(top){
 	if($("input[name=customSku]").length > 0){
+		$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+		$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
 		var pageNo = 1;
 		if ($("#paginationFormBottom .pagination.mobile li.active span").length) {
 			pageNo = $("#paginationFormBottom .pagination.mobile li.active span").text();
@@ -2331,7 +2337,8 @@ function viewByFilterResult(top){
 			},
 			complete: function() {
 				// AJAX changes for custom price filter
-				
+				$("#no-click").remove();
+				$(".spinner").remove();
 			}
 		});
 		
