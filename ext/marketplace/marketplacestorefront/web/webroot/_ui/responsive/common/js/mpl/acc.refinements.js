@@ -133,10 +133,16 @@ ACC.refinements = {
 			
 			// generating request mapping URL
 			if($("#isCategoryPage").val() == 'true'){
-				action = action.split('/c-');
-				action = action[1].split('/');
-				requiredUrl = "/c-"+action[0];
-				requiredUrl += "/getFacetData";
+				if ($("input[name=customSku]").val()) {
+					var collectionId = $("input[name=customSkuCollectionId]").val();
+					requiredUrl = '/CustomSkuCollection/'+collectionId+'/getFacetData';
+				}
+				else {
+					action = action.split('/c-');
+					action = action[1].split('/');
+					requiredUrl = "/c-"+action[0];
+					requiredUrl += "/getFacetData";
+				}
 			} else {
 				if(action.indexOf("/getFacetData") == -1){
 					if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1) {
@@ -243,10 +249,16 @@ ACC.refinements = {
 			
 			// generating request mapping URL
 			if($("#isCategoryPage").val() == 'true'){
-				action = action.split('/c-');
-				action = action[1].split('/');
-				requiredUrl = "/c-"+action[0];
-				requiredUrl += "/getFacetData";
+				if ($("input[name=customSku]").val()) {
+					var collectionId = $("input[name=customSkuCollectionId]").val();
+					requiredUrl = '/CustomSkuCollection/'+collectionId+'/getFacetData';
+				}
+				else {
+					action = action.split('/c-');
+					action = action[1].split('/');
+					requiredUrl = "/c-"+action[0];
+					requiredUrl += "/getFacetData";
+				}
 			} else {
 				if(action.indexOf("/getFacetData") == -1){
 					if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1){
@@ -324,10 +336,16 @@ ACC.refinements = {
 			
 			// generating request mapping URL
 			if($("#isCategoryPage").val() == 'true'){
-				action = action[0].split('/c-');
-				action = action[1].split('/');
-				requiredUrl = "/c-"+action[0];
-				requiredUrl += "/getFacetData";
+				if ($("input[name=customSku]").val()) {
+					var collectionId = $("input[name=customSkuCollectionId]").val();
+					requiredUrl = '/CustomSkuCollection/'+collectionId+'/getFacetData';
+				}
+				else {
+					action = action[0].split('/c-');
+					action = action[1].split('/');
+					requiredUrl = "/c-"+action[0];
+					requiredUrl += "/getFacetData";
+				}
 			}			
 			else {
 				requiredUrl = action[0].concat("/getFacetData");
@@ -405,10 +423,16 @@ ACC.refinements = {
 				
 				// generating request mapping URL
 				if($("#isCategoryPage").val() == 'true'){
-					action = action.split('/c-');
-					action = action[1].split('/');
-					requiredUrl = "/c-"+action[0];
-					requiredUrl += "/getFacetData";
+					if ($("input[name=customSku]").val()) {
+						var collectionId = $("input[name=customSkuCollectionId]").val();
+						requiredUrl = '/CustomSkuCollection/'+collectionId+'/getFacetData';
+					}
+					else {
+						action = action.split('/c-');
+						action = action[1].split('/');
+						requiredUrl = "/c-"+action[0];
+						requiredUrl += "/getFacetData";
+					}
 				} else {
 					if(action.indexOf("/getFacetData") == -1){
 						if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1){
@@ -581,7 +605,7 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 		success : function(response) {
 			// console.log(response);
 			// putting AJAX respons to view
-			if($("#isCategoryPage").val() == 'true'){
+			if($("#isCategoryPage").val() == 'true' && !$("input[name=customSku]").val()){
 				$("#productGrid").html(response);
 			}		
 			else{

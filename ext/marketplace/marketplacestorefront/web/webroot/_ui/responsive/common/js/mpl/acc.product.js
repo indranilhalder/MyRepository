@@ -1319,10 +1319,17 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 						var requiredUrl="";
 						var action = $("#customPriceFilter").attr('action');
 						if($("#isCategoryPage").val() == 'true'){
-							action = action.split('/c-');
-							action = action[1].split('/');
-							requiredUrl = "/c-"+action[0];
-							requiredUrl += "/getFacetData";
+							if ($("input[name=customSku]").val()) {
+								var collectionId = $("input[name=customSkuCollectionId]").val();
+								requiredUrl = '/CustomSkuCollection/'+collectionId+'/getFacetData';
+							}
+							else {
+								action = action.split('/c-');
+								action = action[1].split('/');
+								requiredUrl = "/c-"+action[0];
+								requiredUrl += "/getFacetData";
+							}
+							
 						} else {
 							if(action.indexOf("/getFacetData") == -1){
 							
