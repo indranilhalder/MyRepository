@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service;
 
+import de.hybris.platform.core.model.BulkReturnProcessModel;
 import de.hybris.platform.core.model.order.OrderModel;
 
 import java.util.Date;
@@ -102,6 +103,23 @@ public interface OrderModelService
 	 * @return
 	 */
 	OrderModel updatePickUpDetailService(final String orderId, final String name, final String mobile);
+
+	/**
+	 * @param code
+	 *
+	 * @return
+	 */
+
+	OrderModel getParentOrder(final String code);
+
+
+	/**
+	 * @return : List<BulkReturnProcessModel>
+	 */
+	List<BulkReturnProcessModel> getBulkReturnData();
+
+
+
 
 
 }
