@@ -47,8 +47,7 @@
 	</div>
 	<columnlayout width="100%" height="100%">
 		<columnchildren width="100%">
-			<panel
-				style="height:20%;font-size:14px;border-bottom:3px solid #27394f;border:none">
+			<panel>
 				<panelchildren style="border:none">
 					<vlayout style="width:100%;height:120px">
 						<hlayout>
@@ -114,7 +113,7 @@
 								<label value="LP Name" hflex="1" />
 							</vlayout>
 							<vlayout width="200px">
-								<listbox model="@load(vm.activelpList)" 
+								<listbox model="@load(vm.dropDownSearchLpList)" 
 									mold="select" itemRenderer="@load(vm.listItemRenderer)"
 									selectedItem="@bind(vm.selectionLpName)" style="width:200px">
 								</listbox>
@@ -139,7 +138,7 @@
 			</panel>
 			<panel>
 				<panelchildren>
-					<listbox model="@load(vm.listOfTransactions)" 
+					<listbox model="@bind(vm.listOfTransactions)" 
 						selectedItems="@bind(vm.selectedEntities)" id="listBoxData" 
 						mold="paging" pageSize="10" checkmark="true" multiple="true"
 						pagingPosition="top"
@@ -201,9 +200,8 @@
 					</listbox>
 				</panelchildren>
 			</panel>
-			<panel id="olpanel" style="height:47%;padding:0px">
-				<panelchildren
-					style="border:none;padding:0px;max-height:100%;">
+			<panel>
+				<panelchildren>
 					<vlayout style="width:100%;height:100px">
 						<hlayout>
 							<vlayout width="200px">

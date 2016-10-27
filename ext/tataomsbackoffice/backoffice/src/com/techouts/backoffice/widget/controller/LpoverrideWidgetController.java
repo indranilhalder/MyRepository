@@ -64,8 +64,10 @@ public class LpoverrideWidgetController
 	private List<TransactionInfo> listOfTransactions; //incoming transactions
 	private List<OrderLineResponse> orderlineRespone;
 	private List<String> activelpList; //active logistcs Partners
+	private List<String> dropDownSearchLpList; //active logistcs Partners drop down
 	private Map<String, TransactionInfo> map;//modifed transaction
 	private List<String> ordersStatus;// orders statuses
+	private Map<String, String> previousAwbNumberForTrack; //track  awb numbers for scanned/HOTC
 	@WireVariable("orderLogisticsRestClient")
 	private OrderLogisticsFacade orderLogisticsUpdateFacade;
 	@WireVariable("logisticsRestClient")
@@ -91,6 +93,9 @@ public class LpoverrideWidgetController
 		{
 			map = new HashMap<String, TransactionInfo>();
 		}
+		dropDownSearchLpList = new ArrayList<String>();
+		dropDownSearchLpList.addAll(activelpList);
+		dropDownSearchLpList.add(TataomsbackofficeConstants.LPNAME_NONE);
 	}
 
 	private List<String> getLpSet()
@@ -106,7 +111,6 @@ public class LpoverrideWidgetController
 				lpList.add(logistics.getLogisticname());
 			}
 		}
-		lpList.add(TataomsbackofficeConstants.LPNAME_NONE);
 		return lpList;
 	}
 
@@ -130,7 +134,6 @@ public class LpoverrideWidgetController
 		{
 			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_HOTCOURI);
 			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_ORDALLOC);
-			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_ORDREJEC);
 			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_ODREALOC);
 			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_PILIGENE);
 			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_PICKCONF);
@@ -159,10 +162,11 @@ public class LpoverrideWidgetController
 	{ "listOfTransactions" })
 	public void lpSearch()
 	{
+
 		LOG.info("inside lp search");
 		final LPAWBSearch lpAwbSearch = new LPAWBSearch();
 		int count = 0;
-
+		previousAwbNumberForTrack = new HashMap<String, String>();
 		if (txtOrderId != null && StringUtils.isNotEmpty(txtOrderId))//orderid
 		{
 			++count;
@@ -215,6 +219,7 @@ public class LpoverrideWidgetController
 						|| orderStatus.equalsIgnoreCase(TataomsbackofficeConstants.REVERSE_ORDERSTATUS_REVERSEAWB))
 				{
 					transaction.setAwbReadOnly(Boolean.FALSE);
+					previousAwbNumberForTrack.put(transaction.getTransactionId(), transaction.getAwbNumber());
 				}
 				else
 				{
@@ -245,7 +250,7 @@ public class LpoverrideWidgetController
 	}
 
 	/*
-	 * this method is used to persist the modified Lp override and Servicable Transactions
+	 * this method is used to persist the modified Lp override and force fit Transactions
 	 */
 	@Command("lpOverrideSave")
 	@NotifyChange(
@@ -265,6 +270,18 @@ public class LpoverrideWidgetController
 
 		for (final TransactionInfo transaction : map.values())
 		{
+
+			if (transaction.getOrderStatus().equalsIgnoreCase(TataomsbackofficeConstants.ORDERSTATUS_HOTCOURI)
+					|| transaction.getOrderStatus().equalsIgnoreCase(TataomsbackofficeConstants.ORDERSTATUS_SCANNED))
+			{
+				//there no pssibility to get the null for this
+				if (previousAwbNumberForTrack.get(transaction.getTransactionId()).equals(transaction.getAwbNumber())) //previous awb number with changed awb number
+				{
+					Messagebox.show(
+							"Changes could not processed. AWB number should be changed along with LP name when order status is HOTC/SCANNED");
+					return;
+				}
+			}
 			final OrderLineInfo orderLineInfo = new OrderLineInfo();
 			orderLineInfo.setOrderId(transaction.getOrderId());
 			orderLineInfo.setTransactionId(transaction.getTransactionId());
@@ -575,4 +592,13 @@ public class LpoverrideWidgetController
 	{
 		this.selectionLpName = selectionLpName;
 	}
+
+	/**
+	 * @return the dropDownSearchLpList
+	 */
+	public List<String> getDropDownSearchLpList()
+	{
+		return dropDownSearchLpList;
+	}
+
 }

@@ -11,7 +11,7 @@
 				style="height:20%;font-size:14px;border-bottom:4px solid #27394f">
 				<panelchildren style="border:none">
                <hlayout style="text-align:left">
-					<label class="z-label">	Short Url Traking Report</label>	
+					<label class="z-label">	Short Url Tracking Report</label>	
 				</hlayout>
 					<hlayout style="text-align:center">
 						<vlayout
