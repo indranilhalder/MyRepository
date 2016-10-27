@@ -151,7 +151,7 @@
 											<c:set var='countWork'  value='1' />
 											<c:set var='countHome'  value='1' />
 											<!-- TISCR-305 starts -->
-											<button id="deliveryAddressSubmitUp" type="submit" class="button checkout-next" ><spring:theme code="checkout.multi.deliveryAddress.continue"  text="Next"/></button>
+											<button id="deliveryAddressSubmitUp" type="submit" class="button checkout-next" ><spring:theme code="checkout.pickup.continue.button"  text="Next"/></button>
 											<!-- TISCR-305 ends -->
 						<div class="checkout-indent left-block address-form">
 						
@@ -232,7 +232,7 @@
 												</c:forEach>
 													
 											</div>
-											<button id="deliveryAddressSubmit" type="submit" class="button checkout-next" ><spring:theme code="checkout.multi.deliveryAddress.continue"  text="Next"/></button>
+											<button id="deliveryAddressSubmit" type="submit" class="button checkout-next" ><spring:theme code="checkout.pickup.continue.button"  text="Next"/></button>
 
 
 										

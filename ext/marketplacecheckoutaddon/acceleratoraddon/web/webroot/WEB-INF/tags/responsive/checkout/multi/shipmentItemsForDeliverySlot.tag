@@ -160,20 +160,31 @@ li.deliverySlotRadio .reset{margin: 0px auto !important;    height: 30px !import
 			
 		});
 		
-		$(".radioPardhu").click(function(){
+		$(".radioPardhu").mouseup(function(){
 			/* Set Values For Ajax Call */
 			var mplconfigModel = $('#mplconfigModel').val();
 			var selectedUssId;
 			var date;
 			var time;
-			
-			if($(this).attr("data-name") == "date") {
-				mplconfigModel = $('#mplconfigModel').val();
+			var radioTribhuvanLen = $(".radioPardhu:checked").length;
+			//alert(radioPardhuLen);
+			if(($(this).attr("data-name") == "date")) {
+				//alert(mplconfigModel);
+				if(radioTribhuvanLen == 0){
+					mplconfigModel = $('#mplconfigModel').val();
+					
+				}else{
+					mplconfigModel = "0";
+					
+				}
 				date = $(this).val();
-				time = $(this).next().next().find("input").filter(':input:visible:first').val();
+				time = $(this).next().next().find("input.timeSlots:first").val();
 				selectedUssId = $(this).parent().parent().parent().find("#selectedUssId").val();
+				
 			} else {
+				
 				mplconfigModel = "0";
+				//alert(mplconfigModel);
 				date = $(this).parent().parent().parent().parent().parent().find(".radioClickDate").val();
 				time = $(this).val();
 				selectedUssId = $(this).parent().parent().parent().parent().parent().parent().parent().find("#selectedUssId").val();

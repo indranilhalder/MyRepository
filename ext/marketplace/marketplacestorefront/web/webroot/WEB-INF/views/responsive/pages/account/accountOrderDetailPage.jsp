@@ -235,7 +235,7 @@
 										<c:if test="${not empty creditCardBillingAddress.landmark}">
 														${fn:escapeXml(creditCardBillingAddress.landmark)},
 										</c:if>
-										<br>${fn:escapeXml(creditCardBillingAddress.landmark)}
+										<br><%-- ${fn:escapeXml(creditCardBillingAddress.landmark)} --%>
 										${fn:escapeXml(creditCardBillingAddress.town)},&nbsp;
 										<c:if test="${not empty creditCardBillingAddress.state}">
 														${fn:escapeXml(creditCardBillingAddress.state)},&nbsp;

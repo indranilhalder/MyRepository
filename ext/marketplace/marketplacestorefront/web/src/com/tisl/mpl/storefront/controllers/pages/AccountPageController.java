@@ -1099,34 +1099,39 @@ public class AccountPageController extends AbstractMplSearchPageController
 					cancelProduct = cancelReturnFacade.associatedEntriesData(orderModelService.getOrder(subOrder.getCode()),
 							orderEntry.getOrderLineId());
 					currentProductMap.put(orderEntry.getOrderLineId(), cancelProduct);
-	
-					//
-		
-					List<ReturnRequestModel> returnRequestModelList=cancelReturnFacade.getListOfReturnRequest(subOrder.getCode());
-					
-					if(null!= returnRequestModelList && returnRequestModelList.size()>0){
-					
-						for(ReturnRequestModel mm:returnRequestModelList){
-							for(ReturnEntryModel mmmodel:mm.getReturnEntries()){
-									if(orderEntry.getTransactionId().equalsIgnoreCase(mmmodel.getOrderEntry().getTransactionID())){
-										if(mm.getTypeofreturn().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.SELF_COURIER)){
-											orderEntry.setReturnMethodType("SELF_COURIER");
-										}else{
-											orderEntry.setReturnMethodType("REVERSE_PICKUP");
-										}
+
+					final List<ReturnRequestModel> returnRequestModelList = cancelReturnFacade.getListOfReturnRequest(subOrder
+							.getCode());
+
+					if (null != returnRequestModelList && returnRequestModelList.size() > 0)
+					{
+
+						for (final ReturnRequestModel mm : returnRequestModelList)
+						{
+							for (final ReturnEntryModel mmmodel : mm.getReturnEntries())
+							{
+								if (orderEntry.getTransactionId().equalsIgnoreCase(mmmodel.getOrderEntry().getTransactionID()))
+								{
+									if (mm.getTypeofreturn().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.SELF_COURIER))
+									{
+										orderEntry.setReturnMethodType("SELF_COURIER");
 									}
-								
-							
+									else
+									{
+										orderEntry.setReturnMethodType("REVERSE_PICKUP");
+									}
+								}
+
+
 							}
 						}
 					}
 				}
 
 			}
-
-
+			
 			addressChangeEligible = mplDeliveryAddressFacade.isDeliveryAddressChangable(orderDetail.getCode());
-			AccountAddressForm accountAddressForm = new AccountAddressForm();
+			final AccountAddressForm accountAddressForm = new AccountAddressForm();
 			model.addAttribute("addressForm", accountAddressForm);
 			final List<StateData> stateDataList = getAccountAddressFacade().getStates();
 			final List<StateData> stateDataListNew = getFinalStateList(stateDataList);
@@ -1527,6 +1532,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 			throws CMSItemNotFoundException
 	{
 		List<PointOfServiceData> returnableStores = new ArrayList<PointOfServiceData>();
+		String productRichAttrOfQuickDrop = null;
+		String sellerRichAttrOfQuickDrop = null;
+		
+		
 		try
 		{
 			//OrderEntryData subOrderEntry = new OrderEntryData();
@@ -1543,6 +1552,37 @@ public class AccountPageController extends AbstractMplSearchPageController
 					orderEntry = entry;
 					returnOrderEntry = cancelReturnFacade.associatedEntriesData(orderModelService.getOrder(orderCode), transactionId);
 					returnProductMap.put(orderEntry.getTransactionId(), returnOrderEntry);
+					
+					final ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntry.getProduct().getCode());
+					List<RichAttributeModel> productRichAttributeModel = null;
+					if ( null!= productModel && productModel.getRichAttribute() != null){
+						productRichAttributeModel = (List<RichAttributeModel>) productModel.getRichAttribute();
+						if (productRichAttributeModel != null && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+						{
+							productRichAttrOfQuickDrop = productRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+						}
+					}
+					
+					final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
+							.getSellerInformationRelator();
+
+					for (final SellerInformationModel sellerInformationModel : sellerInfo)
+					{
+						if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid()))
+						{
+							List<RichAttributeModel> sellerRichAttributeModel = null;
+							if (sellerInformationModel.getRichAttribute() != null){
+								sellerRichAttributeModel = (List<RichAttributeModel>) sellerInformationModel.getRichAttribute();
+								if (sellerRichAttributeModel != null && sellerRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+								{
+									sellerRichAttrOfQuickDrop = sellerRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+								}
+							}
+						}
+					}
+					model.addAttribute(ModelAttributetConstants.QUCK_DROP_PROD_LEVEL, productRichAttrOfQuickDrop);
+					model.addAttribute(ModelAttributetConstants.QUCK_DROP_SELLER_LEVEL, sellerRichAttrOfQuickDrop);
+					
 					break;
 				}
 

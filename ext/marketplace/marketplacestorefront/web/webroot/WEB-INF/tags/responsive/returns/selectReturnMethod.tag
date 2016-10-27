@@ -13,16 +13,19 @@
 		<div class="col-md-3 col-sm-6">
 			<b><spring:theme code="text.order.returns.returnmethod"/> </b> <br />
 			<div class="selectReturnMethod quick col-md-12 col-sm-12">
+			<c:if test="${productRichAttrOfQuickDrop eq 'yes' &&  sellerRichAttrOfQuickDrop eq 'yes' }">
 				<div class="selectRadio quickDropRadio col-md-2 col-sm-2 col-xs-2">
 					<!-- <input id="QuickDrop" onclick="changeRadioColor('quick')"
 						class="radioButton" type="radio" value="quick" name="returnMethod" /> -->
 						<form:radiobutton id="QuickDrop" onclick="changeRadioColor('quick')"
 						class="radioButton"  value="quickDrop" name="returnMethod" path="returnMethod" />
 				</div>
+				
 				<div class="col-md-10 col-sm-10 col-xs-10">
 					<b><spring:theme code="text.order.returns.quickdrop"/></b> <br />
 					 <span><spring:theme code="text.order.returns.droppackagenearbystore"/></span>
 				</div>
+				</c:if>
 			</div>
 			<div class="selectReturnMethod scheduled col-md-12 col-sm-12">
 				<div class="selectRadio col-md-2 col-sm-2 col-xs-2">
@@ -46,8 +49,8 @@
 			</div>
 		</div>
 		
-		
 
+		<c:if test="${productRichAttrOfQuickDrop eq 'yes' &&  sellerRichAttrOfQuickDrop eq 'yes' }"> 
 		<!-- Quick Drop -->
 		<div class="col-md-9 quickDrop">
 			<div class="col-md-4 col-sm-6">
@@ -128,7 +131,7 @@
 					current location.</div> -->
 			</div>
 		</div>
-
+		</c:if> 
 		<!-- Scheduled Pickup -->
 
 		<div class="col-md-9 scheduledPickup">
@@ -321,6 +324,9 @@ $(document).ready(function(){
 		  });
 	});
 });
+
+
+
 </script>
 <style>
 .pincodeSubmit, .pincodeSubmit:hover, .pincodeSubmit:active, .pincodeSubmit:visited, .pincodeSubmit:focus {

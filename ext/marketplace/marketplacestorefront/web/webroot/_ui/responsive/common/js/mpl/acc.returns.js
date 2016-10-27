@@ -262,7 +262,13 @@
 							$(".thirdTataCliq .returnMethod .scheduled").removeClass("blackColor").addClass("greyColor");
 							$(".thirdTataCliq .returnMethod .self").removeClass("blackColor").addClass("greyColor");
 							$(".thirdTataCliq .returnMethod .quickDrop").show(); 
+							//alert($(".selectReturnMethod .quickDropRadio").length);
+							if($(".selectReturnMethod .quickDropRadio").length == 0){
+								changeRadioColor('scheduled');
+								$(".thirdTataCliq .returnMethod .selfCourier").hide();
+							}else{
 							$(".thirdTataCliq .returnMethod .selfCourier, .thirdTataCliq .returnMethod .scheduledPickup").hide();
+							}
 							if(true) { // Trigger Quick Drop True Flag
 								getQuickDropData();
 							} else {

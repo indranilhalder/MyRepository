@@ -754,5 +754,8 @@ public final class ModelAttributetConstants
 	public static final String LPNOTAVAILABLE_ERRORMSG = "Logistic Provider not available for given pincode ";
 	public static final String MPL_RETURN_INFO_FORM = "mplReturnInfoForm";
 	public static final String RETURN_METHOD = "returnMethod";
+	
+	public static final String QUCK_DROP_PROD_LEVEL = "productRichAttrOfQuickDrop";
+	public static final String QUCK_DROP_SELLER_LEVEL = "sellerRichAttrOfQuickDrop";
 
 }
