@@ -251,17 +251,16 @@
 													<c:url value="${entry.key}" var="link" />
                                                     
 													<c:choose>
-														<c:when test="${(product.code eq variantOption.code)}">
-                                                         
+														<c:when test="${(product.code eq variantOption.code && selectedSize != null )}">                                                         
 															<c:url
 																value="${variantOption.url}/quickView" 
 																var="variantUrl" />
-															    
-																<li><a href="${variantUrl}" class="js-reference-item cboxElement">${entry.value}</a></li>
+															   <li class="selected"><a href="${variantUrl}?selectedSize=true" class="js-reference-item cboxElement">${entry.value}</a></li> 
+															<!-- <li><a href="${variantUrl}" class="js-reference-item cboxElement">${entry.value}</a></li>-->	
 														</c:when>
 														<c:otherwise>
-															
-															<li><a href="${variantUrl}" class="js-reference-item cboxElement">${entry.value}</a></li>
+															<li><a href="${variantUrl}?selectedSize=true" class="js-reference-item cboxElement">${entry.value}</a></li>
+															<!--<li><a href="${variantUrl}" class="js-reference-item cboxElement">${entry.value}</a></li> -->
 														</c:otherwise>
 													</c:choose>
 												</c:forEach>
