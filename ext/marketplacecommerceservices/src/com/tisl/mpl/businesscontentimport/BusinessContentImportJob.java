@@ -124,7 +124,7 @@ public class BusinessContentImportJob extends AbstractJobPerformable<CronJobMode
 						final FileInputStream input = new FileInputStream(inputFile);
 						final OutputStream output = new BufferedOutputStream(new FileOutputStream(errorFile));
 						LOG.debug(FILE + inputFile.getAbsolutePath() + " is being processed. " + "\n");
-						if (inputFile.getName().equals("content"))
+						if (inputFile.getName().startsWith(fileNamePrefix))
 						{
 							flag = true;
 						}
