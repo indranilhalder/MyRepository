@@ -7199,9 +7199,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 							orderCode, newAddressData);
 					if (scheduledDeliveryData != null)
 					{
+						
 						//pincode serviceable checking  
 						if (scheduledDeliveryData.getIsPincodeServiceable().booleanValue())
 						{
+							//Save Address Data In session
+							sessionService.setAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS, newAddressData);
 							//preparing Data for ScheduledDeliveryDate jsp page
 							OrderData orderDetail = mplDeliveryAddressFacade.reScheduledDeliveryPageData(orderData);
 							model.addAttribute(ModelAttributetConstants.ORDERDETAIL, orderDetail);
@@ -7220,6 +7223,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 						boolean isServiceable = mplDeliveryAddressFacade.pincodeServiceableCheck(newAddressData, orderCode);
 						if (isServiceable)
 						{
+							//Save Address Data In session
+							sessionService.setAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS, newAddressData);
 							//preparing  OTP jsp Page Data when only change Contact Details Updated
 							String phoneNumber = orderData.getDeliveryAddress().getPhone();
 							phoneNumber = mplDeliveryAddressFacade.getPartialEncryptValue("*", 6, phoneNumber);
@@ -7237,7 +7242,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 				else
 				{
 					//Save Address Data In session
-					sessionService.removeAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS);
 					sessionService.setAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS, newAddressData);
 					//preparing  OTP jsp Page Data when only change Contact Details Updated
 					mplDeliveryAddressFacade.generateNewOTP(orderCode);
