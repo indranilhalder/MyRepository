@@ -51578,6 +51578,7 @@ overflow: hidden;
 	padding: 0;
 	float: none;
 	display: inline-block;
+	vertical-align: top;
 }
 
 .shop_for .shop_for_left_wrapper .shop_for_component:last-child {
@@ -51619,6 +51620,10 @@ overflow: hidden;
 	position: absolute;
 	right: 4%;
 	font-size: 30px;
+	top: 0;
+    bottom: 0;
+    margin: auto;
+    height: 20px;
 }
 
 .shop_for .shop_for_links + .shop_for_component{
@@ -51862,7 +51867,8 @@ overflow: hidden;
 .clp_title_banner span ,.top_categories>.top_categories_section:first-child,.top_categories .top_categories_wrapper h3, .top_brands>.top_brands_section:first-child,
 .best_seller .best_seller_section:first-of-type, .winter_launch>.winter_launch_section:first-child, .style_edit .style_edit_left>div:first-child span:first-child,
 .top_deal .carousel-component h2, body.template-pages-layout-apparelCategoryLandingPageV1 .style_edit_title, .blog_content span:first-child, .blog_content span:nth-child(2),
-.shop_for>.shop_for_component:first-child, .shop_for .shop_for_links a, .shop_for .shop_for_left_wrapper .shop_for_component h3, .top_categories .top_categories_wrapper h3 + a + span{
+.shop_for>.shop_for_component:first-child, .shop_for .shop_for_links a, .shop_for .shop_for_left_wrapper .shop_for_component h3, .top_categories .top_categories_wrapper h3 + a + span,
+.shop_for .shop_for_left_wrapper .shop_for_component span{
 word-break: break-word;
 }
 @media(max-width:1024px) and (min-width:768px) {
