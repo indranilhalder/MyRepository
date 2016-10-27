@@ -1991,7 +1991,7 @@ $(document).on("click",".facet.js-facet.Colour .more-lessFacetLinks .less",funct
 });
 $(document).on("click",".facet.js-facet.Size .more-lessFacetLinks .more",function(e) {
 	e.preventDefault();
-	$("li.filter-Size.deactivate").removeClass("deactivate");
+	$("li.filter-size.deactivate").removeClass("deactivate");
 	$('.facet.js-facet.Size .more-lessFacetLinks .more').hide();
 	$('.facet.js-facet.Size .more-lessFacetLinks .less').show();
 });
