@@ -144,24 +144,21 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 					final Map<String, String> sizeLink = new HashMap<String, String>();
 					final PcmProductVariantModel pm = (PcmProductVariantModel) vm;
 					variantOptionData = getVariantOptionDataConverter().convert(pm);
-					if (null != pm.getSize())
+					if (null != selectedSize && null != variantOptionData.getImage())
 					{
-
+						if (null != pm.getSize())
+						{
 						//chceking size variant exists or not
 						//TISPRO-50 - null check added
 						//Added For TPR-210
-						if (null != selectedSize && selectedSize.equals(pm.getSize()) && null != variantOptionData.getImage())
+						if (selectedSize.equals(pm.getSize()) && null != variantOptionData.getImage())
 						{
 							isSizeVariantPresent = true;
 							defaultColorMap.put(variantOptionData.getImage().getUrl(), Y);
-
-						}
-						else
-						{
+						}else{
 							final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode()) ? pm
 									.getColourHexCode() : pm.getColour().toLowerCase());
 							defaultColorMap.put(color, Y);
-							variantOptionData.setDefaultUrl(variantOptionData.getUrl());
 						}
 						//checking for colour variant
 						if (null != pm.getColour())
@@ -212,6 +209,19 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 							defaultColorMap.put(color, Y);
 						}
 					}
+				}
+					//Added For TPR-210
+					else if (null == variantOptionData.getImage() || null == selectedSize)
+					{
+						//variantOptionData.setDefaultUrl(variantOptionData.getUrl());
+						final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode()) ? pm
+								.getColourHexCode() : pm.getColour().toLowerCase());
+						variantOptionData.setColourCode(color);
+						variantOptionData.setColour(pm.getColour());
+						defaultColorMap.put(color, Y);
+						sizeLink.put(variantOptionData.getUrl(), pm.getSize());
+						variantOptionData.setSizeLink(sizeLink);
+					}				
 
 					variantOptions.add(variantOptionData);
 				}

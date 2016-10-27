@@ -266,7 +266,7 @@ share mobile -->
 						<c:when test="${not empty currentColor}">
 							<c:if test="${currentColor eq color}">
 								<c:set var="currentColor" value="${color}" />
-
+								
 								<c:forEach var="entry" items="${variantOption.sizeLink}">
 									<c:url value="${entry.key}" var="link" />
 									<%--  <a href="${link}?selectedSize=true">${entry.value}</a> --%>
@@ -287,8 +287,8 @@ share mobile -->
 									</c:choose>
 								</c:forEach>
 							</c:if>
-						</c:when>
-						<c:otherwise>
+						</c:when>	
+						<c:otherwise>									
 							<c:forEach var="entry" items="${variantOption.sizeLink}">
 								<c:url value="${entry.key}" var="link" />
 								<c:if test="${entry.key eq product.url}">
@@ -298,16 +298,22 @@ share mobile -->
 								<c:forEach items="${product.variantOptions}" var="variantOption">
 									<c:forEach items="${variantOption.colour}" var="color">
 										<c:if test="${currentColor eq color}">
-
 											<c:forEach var="entry" items="${variantOption.sizeLink}">
 												<c:url value="${entry.key}" var="link" />
 												<c:choose>
-													<c:when test="${(variantOption.code eq product.code)}">
+												<c:when test="${(variantOption.code eq product.code)}">
+												<c:choose>
+													<c:when test="${selectedSize eq null}">
 														<li><a href="${link}?selectedSize=true">${entry.value}</a></li>
 													</c:when>
-													<c:otherwise>
-														<li><a href="${link}?selectedSize=true">${entry.value}</a></li>
-													</c:otherwise>
+												<c:otherwise>
+														<li class="selected"><a href="${link}?selectedSize=true">${entry.value}</a></li>
+												</c:otherwise>
+												</c:choose>
+											</c:when>	
+										<c:otherwise>
+											<li data-vcode="${link}"><a href="${link}?selectedSize=true">${entry.value}</a></li>
+										</c:otherwise>												
 												</c:choose>
 											</c:forEach>
 										</c:if>
