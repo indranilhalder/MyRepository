@@ -303,9 +303,12 @@ share mobile -->
 												<c:choose>
 												<c:when test="${(variantOption.code eq product.code)}">
 												<c:choose>
+												
+												
 													<c:when test="${selectedSize eq null}">
 														<li><a href="${link}?selectedSize=true">${entry.value}</a></li>
 													</c:when>
+													
 												<c:otherwise>
 														<li class="selected"><a href="${link}?selectedSize=true">${entry.value}</a></li>
 												</c:otherwise>

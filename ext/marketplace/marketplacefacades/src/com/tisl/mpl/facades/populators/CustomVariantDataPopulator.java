@@ -144,72 +144,76 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 					final Map<String, String> sizeLink = new HashMap<String, String>();
 					final PcmProductVariantModel pm = (PcmProductVariantModel) vm;
 					variantOptionData = getVariantOptionDataConverter().convert(pm);
+					//Added For TPR-210
 					if (null != selectedSize && null != variantOptionData.getImage())
 					{
 						if (null != pm.getSize())
 						{
-						//chceking size variant exists or not
-						//TISPRO-50 - null check added
-						//Added For TPR-210
-						if (selectedSize.equals(pm.getSize()) && null != variantOptionData.getImage())
+							//chceking size variant exists or not
+							//TISPRO-50 - null check added
+							//Added For TPR-210
+							if (selectedSize.equals(pm.getSize()) && null != variantOptionData.getImage())
+							{
+								isSizeVariantPresent = true;
+								defaultColorMap.put(variantOptionData.getImage().getUrl(), Y);
+							}
+							else
+							{
+								final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode()) ? pm
+										.getColourHexCode() : pm.getColour().toLowerCase());
+								defaultColorMap.put(color, Y);
+							}
+							//checking for colour variant
+							if (null != pm.getColour())
+							{
+								final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode()) ? pm
+										.getColourHexCode() : pm.getColour().toLowerCase());
+								variantOptionData.setColourCode(color);
+								variantOptionData.setColour(pm.getColour());
+							}
+							//checking for colour hex code
+							sizeLink.put(variantOptionData.getUrl(), pm.getSize());
+							variantOptionData.setSizeLink(sizeLink);
+						}
+						//chceking capacity variant exists or not
+						else if (null != pm.getCapacity())
 						{
-							isSizeVariantPresent = true;
-							defaultColorMap.put(variantOptionData.getImage().getUrl(), Y);
-						}else{
-							final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode()) ? pm
-									.getColourHexCode() : pm.getColour().toLowerCase());
-							defaultColorMap.put(color, Y);
+							isCapacityVariantPresent = true;
+							//TISPRO-50 - null check added
+							if (null != selectedCapacity && selectedCapacity.equals(pm.getCapacity()))
+							{
+								final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode()) ? pm
+										.getColourHexCode() : pm.getColour().toLowerCase());
+								defaultColorMap.put(color, Y);
+
+								variantOptionData.setDefaultUrl(variantOptionData.getUrl());
+							}
+							variantOptionData.setCapacity(pm.getCapacity());
+							//checking for colour variant
+							if (null != pm.getColour())
+							{
+								final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode()) ? pm
+										.getColourHexCode() : pm.getColour().toLowerCase());
+								variantOptionData.setColourCode(color);
+								variantOptionData.setColour(pm.getColour());
+							}
+
 						}
 						//checking for colour variant
-						if (null != pm.getColour())
+						else
 						{
-							final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode()) ? pm
-									.getColourHexCode() : pm.getColour().toLowerCase());
-							variantOptionData.setColourCode(color);
-							variantOptionData.setColour(pm.getColour());
+							if (null != pm.getColour())
+							{
+								variantOptionData.setDefaultUrl(variantOptionData.getUrl());
+								final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode()) ? pm
+										.getColourHexCode() : pm.getColour().toLowerCase());
+								variantOptionData.setColourCode(color);
+								variantOptionData.setColour(pm.getColour());
+								defaultColorMap.put(color, Y);
+							}
 						}
-						//checking for colour hex code
-						sizeLink.put(variantOptionData.getUrl(), pm.getSize());
-						variantOptionData.setSizeLink(sizeLink);
 					}
-					//chceking capacity variant exists or not
-					else if (null != pm.getCapacity())
-					{
-						isCapacityVariantPresent = true;
-						//TISPRO-50 - null check added
-						if (null != selectedCapacity && selectedCapacity.equals(pm.getCapacity()))
-						{
-							final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode()) ? pm
-									.getColourHexCode() : pm.getColour().toLowerCase());
-							defaultColorMap.put(color, Y);
 
-							variantOptionData.setDefaultUrl(variantOptionData.getUrl());
-						}
-						variantOptionData.setCapacity(pm.getCapacity());
-						//checking for colour variant
-						if (null != pm.getColour())
-						{
-							final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode()) ? pm
-									.getColourHexCode() : pm.getColour().toLowerCase());
-							variantOptionData.setColourCode(color);
-							variantOptionData.setColour(pm.getColour());
-						}
-
-					}
-					//checking for colour variant
-					else
-					{
-						if (null != pm.getColour())
-						{
-							variantOptionData.setDefaultUrl(variantOptionData.getUrl());
-							final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode()) ? pm
-									.getColourHexCode() : pm.getColour().toLowerCase());
-							variantOptionData.setColourCode(color);
-							variantOptionData.setColour(pm.getColour());
-							defaultColorMap.put(color, Y);
-						}
-					}
-				}
 					//Added For TPR-210
 					else if (null == variantOptionData.getImage() || null == selectedSize)
 					{
@@ -221,7 +225,7 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 						defaultColorMap.put(color, Y);
 						sizeLink.put(variantOptionData.getUrl(), pm.getSize());
 						variantOptionData.setSizeLink(sizeLink);
-					}				
+					}
 
 					variantOptions.add(variantOptionData);
 				}
