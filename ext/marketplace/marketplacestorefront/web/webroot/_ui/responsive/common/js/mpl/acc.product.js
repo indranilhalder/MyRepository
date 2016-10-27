@@ -1281,11 +1281,11 @@ $(document).on("change",'.filter-price',function(){
 //Splits priceValue:Rsxxx-Rsyyy to [xxx, yyy]
 function splitPrice(value) {
 	var priceRange = null;	
-	if(value.includes("-"))
-	{
+	if(value.indexOf('-') > -1)  // Fix for TISPRD-8267
+	{   
 		priceRange = value.split("-");		
 	}
-	else if(value.includes("and Above"))
+	else if(value.indexOf("and Above") > -1)  // Fix for TISPRD-8267
 	{
 		priceRange = value.split("and Above");		
 	}	

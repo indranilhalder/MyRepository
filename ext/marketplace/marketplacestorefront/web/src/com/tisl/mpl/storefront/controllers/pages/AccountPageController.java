@@ -1616,7 +1616,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 		boolean returnLogisticsCheck = true;
 		final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade.checkReturnLogistics(subOrderDetails,
-				pinCode);
+				pinCode ,transactionId);
 		for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
 		{
 			model.addAttribute(ModelAttributetConstants.PINCODE_NOT_SERVICEABLE, response.getResponseMessage());
@@ -1971,7 +1971,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 
 			final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade.checkReturnLogistics(
-					subOrderDetails, pinCode);
+					subOrderDetails, pinCode ,transactionId);
 			for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
 			{
 				model.addAttribute(ModelAttributetConstants.RETURNLOGMSG, response.getResponseMessage());
