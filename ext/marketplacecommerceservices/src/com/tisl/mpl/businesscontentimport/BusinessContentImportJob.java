@@ -98,7 +98,7 @@ public class BusinessContentImportJob extends AbstractJobPerformable<CronJobMode
 		final String fileNamePrefix = configurationService.getConfiguration()
 				.getString("businessConetnt.fileNamePrefix", "content");
 		final String productModifiactionPrefix = configurationService.getConfiguration().getString(
-				"businessConetnt.productModifiaction", "content");
+				"businessConetnt.productModifiactionPrefix", "productModifiaction");
 		final String fileExtension = configurationService.getConfiguration().getString("businessConetnt.fileExtension", "csv");
 		isFolderExist(rootFolder1);
 		isFolderExist(errorFolder);
