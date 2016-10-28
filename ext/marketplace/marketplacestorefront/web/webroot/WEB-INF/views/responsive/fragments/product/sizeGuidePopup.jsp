@@ -544,11 +544,13 @@ var productCodeSG = '${product.code}';
 													<c:when test="${(variantOption.code eq product.code)}">
 													<%-- 	<option selected="selected" data-productcode1="${variantOption.code}" data-producturl="${link}">${entry.value}</option> --%>
 																								<c:choose>
-											    <c:when test="${empty sizeSelectedSizeGuide}">
-													<li><span data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=">${entry.value}</span></li>
+											    <c:when test="${empty sizeSelectedSizeGuide || sizeSelectedSizeGuide ne 'true' }">
+													<!-- <li><span data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=">${entry.value}</span></li> -->
+												<li><span data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</span></li>
 												</c:when>
 												<c:otherwise>
-													<li class="selected"><span data-target="#popUpModal"  data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</span></li>
+													<!--<li class="selected"><span data-target="#popUpModal"  data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</span></li>  -->
+												    <li class="selected"><span data-target="#popUpModal"  data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</span></li>
 												</c:otherwise>
 												</c:choose>
 													</c:when>
