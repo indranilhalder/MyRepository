@@ -51496,6 +51496,7 @@ overflow: hidden;
 	margin-bottom: 40px;
 	text-transform: none;
     letter-spacing: 0px;
+    line-height: 1;
 }
 
 .top_deal .carousel-component .product-tile {
@@ -51737,6 +51738,8 @@ overflow: hidden;
 	margin-top: 5px;
 	font-weight: bold;
 	text-align: center;
+	line-height: 20px;
+    letter-spacing: 0.6px;
 }
 
 .best_seller .best_seller_section {
