@@ -54,8 +54,8 @@ $(function() {
 				<input type="hidden" name="text" id="text" value="${searchPageData.freeTextSearch}"/>
 				<input type="hidden" name="searchCategory" id="searchCategoryTree"/>				
 				<div id="searchPageDeptHierTree"></div>				
-				<div id="displayAll"> Show all</div>
-				<div id="clickToMore"> Hide</div>
+				<div id="displayAll"> + Show all</div>
+				<div id="clickToMore"> - Hide</div>
 			</form>
 		</c:otherwise>
 		</c:choose>
