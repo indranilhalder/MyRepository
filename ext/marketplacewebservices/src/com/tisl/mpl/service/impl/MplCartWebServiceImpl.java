@@ -70,6 +70,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import net.sourceforge.pmd.util.StringUtil;
 
@@ -528,7 +529,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	 */
 	@Override
 	public WebSerResponseWsDTO addProductToCart(final String productCode, final String cartId, final String quantity,
-			final String USSID, final boolean addedToCartWl) throws InvalidCartException, CommerceCartModificationException
+			final String USSID, final boolean addedToCartWl, final HttpServletRequest request) throws InvalidCartException,
+			CommerceCartModificationException
 	{
 		final WebSerResponseWsDTO result = new WebSerResponseWsDTO();
 		final long quant = Long.parseLong(quantity);
@@ -629,6 +631,17 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			}
 			else
 			{
+				//TISLUX-1823
+				if (request.getParameterMap().containsKey(MarketplacecommerceservicesConstants.CHANNEL)
+						&& request.getParameter(MarketplacecommerceservicesConstants.CHANNEL) != null
+						&& request.getParameter(MarketplacecommerceservicesConstants.CHANNEL).equalsIgnoreCase(
+								SalesApplication.WEB.getCode()))
+				{
+					cartModel.setChannel(SalesApplication.WEB);
+					modelService.save(cartModel);
+				}
+
+
 				addedToCart = mplCartFacade.addItemToCart(cartId, cartModel, selectedProductModel, quant, USSID);
 				if (LOG.isDebugEnabled())
 				{
@@ -693,7 +706,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	 * @return CartDataDetailsWsDTO
 	 */
 	@Override
-	public CartDataDetailsWsDTO getCartDetails(final String cartId, final AddressListWsDTO addressListWsDTO, final String pincode)
+	public CartDataDetailsWsDTO getCartDetails(final String cartId, final AddressListWsDTO addressListWsDTO, final String pincode,
+			final HttpServletRequest request)
 	{
 
 		LOG.debug(String.format("Getcart details : Cart id : %s | Pincode: %s ", cartId, pincode));
@@ -726,7 +740,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				final boolean deListedStatus = mplCartFacade.isCartEntryDelistedMobile(cart);
 				LOG.debug("Cart Delisted Status " + deListedStatus);
 				///newCartModel = mplCartFacade.removeDeliveryMode(cart); already used in productDetails
-				cartDataDetails = cartDetails(cart, addressListWsDTO, pincode, cartId);
+				cartDataDetails = cartDetails(cart, addressListWsDTO, pincode, cartId, request);
 				if (deListedStatus)
 				{
 					delistMessage = Localization.getLocalizedString(MarketplacewebservicesConstants.DELISTED_MESSAGE_CART);
@@ -784,7 +798,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	 */
 	@Override
 	public CartDataDetailsWsDTO getCartDetailsWithPOS(final String cartId, final AddressListWsDTO addressListDTO,
-			final String pincode)
+			final String pincode, final HttpServletRequest request)
 	{
 
 		CartModel cart = null;
@@ -817,7 +831,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				LOG.debug("Cart Delisted Status " + deListedStatus);
 
 				//final CartModel newCartModel = mplCartFacade.removeDeliveryMode(cartModel);
-				cartDataDetails = cartDetailsWithPos(cart, addressListDTO, pincode, cartId);
+				cartDataDetails = cartDetailsWithPos(cart, addressListDTO, pincode, cartId, request);
 				if (deListedStatus)
 				{
 					delistMessage = Localization.getLocalizedString(MarketplacewebservicesConstants.DELISTED_MESSAGE_CART);
@@ -916,7 +930,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			//	if (null != finalCart.getEntries() && !finalCart.getEntries().isEmpty())
 			/*
 			 * TISPT- 96 -- https://github.com/tcs-chennai/TCS_COMMERCE_REPO/pull/3577
-			 * 
+			 *
 			 * {
 			 */
 			for (final AbstractOrderEntryModel abstractOrderEntry : finalCart.getEntries())
@@ -1629,7 +1643,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	 * @param promotionResult
 	 * @return List<CartOfferDetailsWsDTO>
 	 */
-	private List<CartOfferDetailsWsDTO> offerDetails(final List<PromotionResultModel> promotionResult, final CartModel cart)
+	private List<CartOfferDetailsWsDTO> offerDetails(final List<PromotionResultModel> promotionResult, final CartModel cart,
+			final HttpServletRequest request)
 	{
 		CartOfferDetailsWsDTO cartOffer = null;
 		/*
@@ -1649,10 +1664,18 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		{
 			if (null != promo && null != promo.getPromotion())
 			{
-				if (null != promo.getPromotion().getChannel() && !promo.getPromotion().getChannel().isEmpty())
+				if (CollectionUtils.isNotEmpty(promo.getPromotion().getChannel()))
 				{
 					flag = promo.getPromotion().getChannel().stream()
 							.anyMatch(s -> SalesApplication.MOBILE.getCode().equals(s.getCode()));
+				}
+				else if (request.getParameterMap().containsKey(MarketplacecommerceservicesConstants.CHANNEL)
+						&& request.getParameter(MarketplacecommerceservicesConstants.CHANNEL) != null
+						&& request.getParameter(MarketplacecommerceservicesConstants.CHANNEL).equalsIgnoreCase(
+								SalesApplication.WEB.getCode()))
+				{
+					flag = promo.getPromotion().getChannel().stream()
+							.anyMatch(s -> SalesApplication.WEB.getCode().equals(s.getCode()));
 				}
 				else
 				{
@@ -1771,7 +1794,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	 * @return CartDataDetailsWsDTO
 	 */
 	private CartDataDetailsWsDTO cartDetails(final CartModel cartModel, final AddressListWsDTO addressListWsDto,
-			final String pincode, final String cartId)
+			final String pincode, final String cartId, final HttpServletRequest request)
 	{
 		final CartDataDetailsWsDTO cartDataDetails = new CartDataDetailsWsDTO();
 		int count = 0;
@@ -1879,7 +1902,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			List<CartOfferDetailsWsDTO> cartOfferList = null;
 			if (null != promotionResult && !promotionResult.isEmpty())
 			{
-				cartOfferList = offerDetails(promotionResult, cartModel);
+				cartOfferList = offerDetails(promotionResult, cartModel, request);
 			}
 			if (null != cartOfferList && !cartOfferList.isEmpty())
 			{
@@ -1902,7 +1925,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	 * @return CartDataDetailsWsDTO
 	 */
 	private CartDataDetailsWsDTO cartDetailsWithPos(final CartModel cartModel, final AddressListWsDTO addressListWsDto,
-			final String pincode, final String cartId)
+			final String pincode, final String cartId, final HttpServletRequest request)
 	{
 		final CartDataDetailsWsDTO cartDataDetails = new CartDataDetailsWsDTO();
 		int count = 0;
@@ -2012,7 +2035,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			List<CartOfferDetailsWsDTO> cartOfferList = null;
 			if (null != promotionResult && !promotionResult.isEmpty())
 			{
-				cartOfferList = offerDetails(promotionResult, cartModel);
+				cartOfferList = offerDetails(promotionResult, cartModel, request);
 			}
 			if (null != cartOfferList && !cartOfferList.isEmpty())
 			{

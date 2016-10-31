@@ -6,7 +6,6 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
-import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartCalculationStrategy;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
 import de.hybris.platform.core.enums.CreditCardType;
@@ -101,6 +100,7 @@ import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.model.PaymentModeSpecificPromotionRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.util.DiscountUtility;
+import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.util.MplEMICalculator;
 
 
@@ -1825,33 +1825,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	}
 
 
-	/**
-	 * @Description : Return Channel Data
-	 * @param channel
-	 * @return salesApplication
-	 */
-	private List<SalesApplication> returnChannelData(final String channel)
-	{
-		final List<SalesApplication> salesApplication = new ArrayList<SalesApplication>();
-		if (channel.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_WEB))
-		{
-			salesApplication.add(SalesApplication.WEB);
-		}
-		else if (channel.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_WEBMOBILE))
-		{
-			salesApplication.add(SalesApplication.WEBMOBILE);
-		}
-		else if (channel.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_MOBILE))
-		{
-			salesApplication.add(SalesApplication.MOBILE);
-		}
-		else if (channel.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_CALLCENTER))
-		{
-			salesApplication.add(SalesApplication.CALLCENTER);
-		}
-		return salesApplication;
-	}
-
 
 	/**
 	 *
@@ -1919,7 +1892,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				auditEntryList.add(auditEntry);
 
 				final MplPaymentAuditModel newAuditModel = getModelService().create(MplPaymentAuditModel.class);
-				newAuditModel.setChannel(returnChannelData(channel));
+				newAuditModel.setChannel(GenericUtilityMethods.returnChannelData(channel));
 				newAuditModel.setAuditId(juspayOrderId);
 				newAuditModel.setCartGUID(cartGuId);
 				newAuditModel.setRequestDate(new Date());

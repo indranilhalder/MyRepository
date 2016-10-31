@@ -17,6 +17,8 @@ import de.hybris.platform.order.InvalidCartException;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
@@ -52,7 +54,7 @@ public interface MplCartWebService
 	 * @throws InvalidCartException
 	 */
 	WebSerResponseWsDTO addProductToCart(final String productCode, final String cartId, final String quantity, String USSID,
-			boolean addedToCartWl) throws InvalidCartException, CommerceCartModificationException;
+			boolean addedToCartWl, HttpServletRequest request) throws InvalidCartException, CommerceCartModificationException;
 
 	/**
 	 * Service to get cart details
@@ -61,7 +63,7 @@ public interface MplCartWebService
 	 * @param addressListDTO
 	 * @return CartDataDetailsWsDTO
 	 */
-	CartDataDetailsWsDTO getCartDetails(String cartId, AddressListWsDTO addressListDTO, String pincode);
+	CartDataDetailsWsDTO getCartDetails(String cartId, AddressListWsDTO addressListDTO, String pincode, HttpServletRequest request);
 
 	/**
 	 * @param aoem
@@ -115,5 +117,6 @@ public interface MplCartWebService
 	 * @param pincode
 	 * @return CartDataDetailsWsDTO
 	 */
-	public CartDataDetailsWsDTO getCartDetailsWithPOS(String cartId, AddressListWsDTO addressListDTO, String pincode);
+	public CartDataDetailsWsDTO getCartDetailsWithPOS(String cartId, AddressListWsDTO addressListDTO, String pincode,
+			HttpServletRequest request);
 }
