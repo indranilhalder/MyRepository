@@ -367,7 +367,14 @@ function getBrandsYouLoveAjaxCall() {
             },
             complete: function() {
                 $(".home-brands-you-love-carousel").owlCarousel({
-                	items:7,
+                   items:1,
+ 			       nav:false,
+ 			       dots:true,
+ 			       loop: true,
+ 	               autoplay: true,
+ 	               autoHeight : true,
+ 	               autoplayTimeout: 5000
+                	/*items:7,
             		loop: true,
             		nav:true,
             		center:true,
@@ -393,7 +400,7 @@ function getBrandsYouLoveAjaxCall() {
             			1280 : {
             				items:7,
             			}			
-            		}		
+            		}*/		
                 });
 					var bulId = $(".home-brands-you-love-carousel .owl-item.active.center").find(".home-brands-you-love-carousel-brands").attr("id");
                 	getBrandsYouLoveContentAjaxCall(bulId);
@@ -736,7 +743,14 @@ function getBestPicksAjaxCall() {
             },
             complete: function() {
                 $(".home-best-pick-carousel").owlCarousel({
-                	items:5,
+                   items:1,
+ 			       nav:false,
+ 			       dots:true,
+ 			       loop: true,
+ 	               autoplay: true,
+ 	               autoHeight : true,
+ 	               autoplayTimeout: 5000
+                	/*items:5,
             		loop: true,
             		nav:true,
             		dots:false,
@@ -761,7 +775,7 @@ function getBestPicksAjaxCall() {
             			1280 : {
             				items:5,
             			}			
-            		}		
+            		}*/		
                     /*navigation: true,
                     navigationText: [],
                     pagination: false,
@@ -824,7 +838,14 @@ function getProductsYouCareAjaxCall() {
             },
 				            complete : function() {
 					$(".home-product-you-care-carousel").owlCarousel({
-						items : 4,
+						   items:1,
+					       nav:false,
+					       dots:true,
+					       loop: true,
+			               autoplay: true,
+			               autoHeight : true,
+			               autoplayTimeout: 5000
+						/*items : 4,
 						loop : true,
 						nav : true,
 						dots : false,
@@ -848,7 +869,7 @@ function getProductsYouCareAjaxCall() {
 							1280 : {
 								items : 4,
 							}
-						}
+						}*/
 					/*
 					 * navigation: true, navigationText: [], pagination: false,
 					 * itemsDesktop: [5000, 4], itemsDesktopSmall: [1400, 4],
@@ -907,7 +928,14 @@ function getNewAndExclusiveAjaxCall() {
         },
         complete: function() {
             $("#new_exclusive").owlCarousel({
-            	items:3,
+            	   items:1,
+			       nav:false,
+			       dots:true,
+			       loop: true,
+	               autoplay: true,
+	               autoHeight : true,
+	               autoplayTimeout: 5000
+            	/*items:3,
         		loop: true,
         		nav:true,
         		dots:false,
@@ -927,7 +955,7 @@ function getNewAndExclusiveAjaxCall() {
         			768 : {
         				items:3,
         			}		
-        		}		
+        		}*/		
                 /*navigation: true,
                 rewindNav: false,
                 navigationText: [],
