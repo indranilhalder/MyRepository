@@ -58227,3 +58227,8 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 }
 .blp-serp-banner .image{
 	margin-left:25px;}
+	
+/* TPR-3539 */
+li.facet.js-facet.collectionIds{
+	display:none;
+}	
