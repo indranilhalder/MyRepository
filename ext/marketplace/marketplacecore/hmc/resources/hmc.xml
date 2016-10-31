@@ -3961,5 +3961,25 @@
 		</defaultreference>
 	</type>
 	<!-- TPR-1035 : Item Creation for Bin Error  -->
+	
+	<!-- TPR-3564 : Customer HMC Localization  -->
+	<type name="Customer" mode="append">
+		<organizer>
+				<search mode="replace">
+					<condition attribute="customerId" />
+					<condition attribute="originalUid" />
+					<condition attribute="mobileNumber" />
+				</search>
+				<result>
+					<listview mode="replace">
+						<itemlayout>
+							<attribute name="customerId" />
+							<attribute name="firstName" />
+							<attribute name="lastName" />
+						</itemlayout>
+					</listview>
+				</result>
+		</organizer>
+	</type>
  
 </configuration>
