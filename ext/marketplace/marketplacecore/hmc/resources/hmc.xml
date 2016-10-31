@@ -3973,7 +3973,7 @@
 				<result>
 					<listview mode="replace">
 						<itemlayout>
-							<attribute name="customerId" />
+							<attribute name="uid" />
 							<attribute name="firstName" />
 							<attribute name="lastName" />
 						</itemlayout>
