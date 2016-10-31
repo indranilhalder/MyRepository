@@ -2451,7 +2451,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		try
 		{
 			final OrderModel orderToBeUpdated = getMplPaymentFacade().getOrderByGuid(guid);
-			if (null == orderToBeUpdated.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(orderToBeUpdated.getStatus()))
+			if (null != orderToBeUpdated && null == orderToBeUpdated.getPaymentInfo()
+					&& !OrderStatus.PAYMENT_TIMEOUT.equals(orderToBeUpdated.getStatus()))
 			{
 				final String orderStatusResponse = getMplPaymentFacade().getOrderStatusFromJuspay(guid, null, orderToBeUpdated, null);
 				//Redirection when transaction is successful i.e. CHARGED
