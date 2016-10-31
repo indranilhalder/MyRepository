@@ -93,7 +93,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	/**
 	 *
 	 */
-	//private static final String LSH = "LSH";
+	private static final String LSH = "LSH";
 
 
 	/**
@@ -340,157 +340,161 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 		categoryCode = categoryCode.toUpperCase();
 		String returnStatement = null;
-
-		String searchCode = new String(categoryCode);
-		//SEO: New pagination detection TISCR 340
-		pageNo = getPaginatedPageNo(request);
-		//applying search filters
-		if (searchQuery != null)
+		if (!redirectIfLuxuryCategory(categoryCode, response))
 		{
-			getfilterListCountForSize(searchQuery);
-			model.addAttribute(ModelAttributetConstants.SIZE_COUNT, Integer.valueOf(getfilterListCountForSize(searchQuery)));
-			model.addAttribute(ModelAttributetConstants.SEARCH_QUERY_VALUE, searchQuery);
-		}
-		//TISPRD-2315(checking whether the link has been clicked for pagination)
-		if (checkIfPagination(request) && searchQuery == null)
-		{
-			searchQuery = RELEVANCE;
-		}
-
-		// Get page facets to include in facet field exclude tag
-		final String pageFacets = request.getParameter(PAGE_FACET_DATA);
-
-		//Storing the user preferred search results count
-		updateUserPreferences(pageSize);
-
-		//final List<ProductModel> heroProducts = new ArrayList<ProductModel>();
-		if (StringUtils.isNotEmpty(searchCode) && !(searchCode.substring(0, 5).equals(categoryCode))
-				&& (categoryCode.startsWith(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE)))
-		{
-			searchCode = searchCode.substring(0, 5);
-		}
-		model.addAttribute(ModelAttributetConstants.SEARCH_CODE, searchCode);
-		model.addAttribute(ModelAttributetConstants.IS_CATEGORY_PAGE, Boolean.TRUE);
-		final CategoryModel category = categoryService.getCategoryForCode(categoryCode);
-		//Set the drop down text if the attribute is not empty or null
-		if (dropDownText != null && !dropDownText.isEmpty())
-		//Added For TISPRD-1243
-		{
-			if (dropDownText.startsWith(DROPDOWN_CATEGORY) || dropDownText.startsWith(DROPDOWN_BRAND))
+			String searchCode = new String(categoryCode);
+			//SEO: New pagination detection TISCR 340
+			pageNo = getPaginatedPageNo(request);
+			//applying search filters
+			if (searchQuery != null)
 			{
-				final CategoryModel categoryModel = categoryService.getCategoryForCode(dropDownText);
-
-				if (categoryModel != null)
-				{
-					dropDownText = (StringUtils.isNotEmpty(categoryModel.getName())) ? categoryModel.getName() : dropDownText;
-
-				}
+				getfilterListCountForSize(searchQuery);
+				model.addAttribute(ModelAttributetConstants.SIZE_COUNT, Integer.valueOf(getfilterListCountForSize(searchQuery)));
+				model.addAttribute(ModelAttributetConstants.SEARCH_QUERY_VALUE, searchQuery);
 			}
+			//TISPRD-2315(checking whether the link has been clicked for pagination)
+			if (checkIfPagination(request) && searchQuery == null)
+			{
+				searchQuery = RELEVANCE;
+			}
+
+			// Get page facets to include in facet field exclude tag
+			final String pageFacets = request.getParameter(PAGE_FACET_DATA);
+
+			//Storing the user preferred search results count
+			updateUserPreferences(pageSize);
+
+			//final List<ProductModel> heroProducts = new ArrayList<ProductModel>();
+			if (StringUtils.isNotEmpty(searchCode) && !(searchCode.substring(0, 5).equals(categoryCode))
+					&& (categoryCode.startsWith(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE)))
+			{
+				searchCode = searchCode.substring(0, 5);
+			}
+			model.addAttribute(ModelAttributetConstants.SEARCH_CODE, searchCode);
+			model.addAttribute(ModelAttributetConstants.IS_CATEGORY_PAGE, Boolean.TRUE);
+			final CategoryModel category = categoryService.getCategoryForCode(categoryCode);
+			//Set the drop down text if the attribute is not empty or null
+			if (dropDownText != null && !dropDownText.isEmpty())
 			//Added For TISPRD-1243
-			model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, dropDownText);
-
-		}
-		else
-		{
-			final String categoryName = (category == null) ? "" : category.getName();
-			model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, categoryName);
-		}
-		int count = getSearchPageSize();
-		//Check if there is a landing page for the category
-		try
-		{
-			final UserPreferencesData preferencesData = updateUserPreferences(pageSize);
-			if (preferencesData != null && preferencesData.getPageSize() != null)
 			{
-				count = preferencesData.getPageSize().intValue();
-			}
+				if (dropDownText.startsWith(DROPDOWN_CATEGORY) || dropDownText.startsWith(DROPDOWN_BRAND))
+				{
+					final CategoryModel categoryModel = categoryService.getCategoryForCode(dropDownText);
 
-			if (category != null)
+					if (categoryModel != null)
+					{
+						dropDownText = (StringUtils.isNotEmpty(categoryModel.getName())) ? categoryModel.getName() : dropDownText;
+
+					}
+				}
+				//Added For TISPRD-1243
+				model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, dropDownText);
+
+			}
+			else
 			{
-
-
-				final String redirection = checkRequestUrl(request, response, getCategoryModelUrlResolver().resolve(category));
-				if (StringUtils.isNotEmpty(redirection))
-				{
-					//return redirection;
-					response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-					response.setHeader(LOCATION, redirection);
-					return null;
-				}
-
-				final ContentPageModel categoryLandingPage = getLandingPageForCategory(category);
-
-				final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
-						categoryCode, searchQuery, pageNo, showMode, sortCode, count, resetAll, pageFacets);
-
-				final List<ProductData> normalProductDatas = searchPageData.getResults();
-				//Set department hierarchy
-				//if (normalProductDatas.size() > 0)
-				if (CollectionUtils.isNotEmpty(normalProductDatas))
-				{
-					model.addAttribute(ModelAttributetConstants.DEPARTMENT_HIERARCHY_DATA, searchPageData.getDepartmentHierarchyData());
-					model.addAttribute(ModelAttributetConstants.DEPARTMENTS, searchPageData.getDepartments());
-					model.addAttribute(ModelAttributetConstants.CURRENT_QUERY, searchPageData.getCurrentQuery().getQuery().getValue());
-				}
-
-				final String categoryName = category.getName();
-
-
-				setUpMetaDataForContentPage(model, categoryLandingPage);
-
-				model.addAttribute(WebConstants.BREADCRUMBS_KEY,
-						getSearchBreadcrumbBuilder().getBreadcrumbs(categoryCode, categoryName, false));
-				populateModel(model, searchPageData, ShowMode.Page);
-				model.addAttribute(ModelAttributetConstants.NORMAL_PRODUCTS, normalProductDatas);
-				model.addAttribute(ModelAttributetConstants.SHOW_CATEGORIES_ONLY, Boolean.FALSE);
-				storeCmsPageInModel(model, categoryLandingPage);
+				final String categoryName = (category == null) ? "" : category.getName();
+				model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, categoryName);
 			}
-			returnStatement = getViewForPage(model);
-		}
-		catch (final CMSItemNotFoundException e)
-		{
+			int count = getSearchPageSize();
+			//Check if there is a landing page for the category
 			try
 			{
 				final UserPreferencesData preferencesData = updateUserPreferences(pageSize);
 				if (preferencesData != null && preferencesData.getPageSize() != null)
 				{
 					count = preferencesData.getPageSize().intValue();
-					setPageSiseCount(count);
 				}
 
-				final String performSearch = performSearchAndGetResultsPage(categoryCode, searchQuery, pageNo, showMode, sortCode,
-						model, request, response, pageFacets);
+				if (category != null)
+				{
 
 
-				return performSearch;
+					final String redirection = checkRequestUrl(request, response, getCategoryModelUrlResolver().resolve(category));
+					if (StringUtils.isNotEmpty(redirection))
+					{
+						//return redirection;
+						response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+						response.setHeader(LOCATION, redirection);
+						return null;
+					}
+
+					final ContentPageModel categoryLandingPage = getLandingPageForCategory(category);
+
+					final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
+							categoryCode, searchQuery, pageNo, showMode, sortCode, count, resetAll, pageFacets);
+
+					final List<ProductData> normalProductDatas = searchPageData.getResults();
+					//Set department hierarchy
+					//if (normalProductDatas.size() > 0)
+					if (CollectionUtils.isNotEmpty(normalProductDatas))
+					{
+						model.addAttribute(ModelAttributetConstants.DEPARTMENT_HIERARCHY_DATA,
+								searchPageData.getDepartmentHierarchyData());
+						model.addAttribute(ModelAttributetConstants.DEPARTMENTS, searchPageData.getDepartments());
+						model.addAttribute(ModelAttributetConstants.CURRENT_QUERY, searchPageData.getCurrentQuery().getQuery()
+								.getValue());
+					}
+
+					final String categoryName = category.getName();
+
+
+					setUpMetaDataForContentPage(model, categoryLandingPage);
+
+					model.addAttribute(WebConstants.BREADCRUMBS_KEY,
+							getSearchBreadcrumbBuilder().getBreadcrumbs(categoryCode, categoryName, false));
+					populateModel(model, searchPageData, ShowMode.Page);
+					model.addAttribute(ModelAttributetConstants.NORMAL_PRODUCTS, normalProductDatas);
+					model.addAttribute(ModelAttributetConstants.SHOW_CATEGORIES_ONLY, Boolean.FALSE);
+					storeCmsPageInModel(model, categoryLandingPage);
+				}
+				returnStatement = getViewForPage(model);
 			}
-			catch (final Exception exp)
+			catch (final CMSItemNotFoundException e)
 			{
-				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+				try
+				{
+					final UserPreferencesData preferencesData = updateUserPreferences(pageSize);
+					if (preferencesData != null && preferencesData.getPageSize() != null)
+					{
+						count = preferencesData.getPageSize().intValue();
+						setPageSiseCount(count);
+					}
+
+					final String performSearch = performSearchAndGetResultsPage(categoryCode, searchQuery, pageNo, showMode, sortCode,
+							model, request, response, pageFacets);
+
+
+					return performSearch;
+				}
+				catch (final Exception exp)
+				{
+					ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+							MarketplacecommerceservicesConstants.E0000));
+					try
+					{
+						return frontEndErrorHelper.callNonBusinessError(model, exp.getMessage());
+					}
+					catch (final CMSItemNotFoundException e1)
+					{
+						LOG.error(EXCEPTION_OCCURED + e1);
+					}
+				}
+
+			}
+
+			catch (final Exception exception)
+			{
+				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception,
 						MarketplacecommerceservicesConstants.E0000));
 				try
 				{
-					return frontEndErrorHelper.callNonBusinessError(model, exp.getMessage());
+					return frontEndErrorHelper.callNonBusinessError(model, exception.getMessage());
 				}
 				catch (final CMSItemNotFoundException e1)
 				{
 					LOG.error(EXCEPTION_OCCURED + e1);
 				}
-			}
-
-		}
-
-		catch (final Exception exception)
-		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception,
-					MarketplacecommerceservicesConstants.E0000));
-			try
-			{
-				return frontEndErrorHelper.callNonBusinessError(model, exception.getMessage());
-			}
-			catch (final CMSItemNotFoundException e1)
-			{
-				LOG.error(EXCEPTION_OCCURED + e1);
 			}
 		}
 		return returnStatement;
@@ -501,22 +505,22 @@ public class CategoryPageController extends AbstractCategoryPageController
 	 * @param categoryCode
 	 * @param response
 	 */
-	//	private boolean redirectIfLuxuryCategory(final String categoryCode, final HttpServletResponse response)
-	//	{
-	//		boolean redirect = false;
-	//		// YTODO Auto-generated method stub
-	//		if (categoryCode.startsWith(LSH))
-	//		{
-	//			redirect = true;
-	//			LOG.debug("**********The category is a luxury category.Hence redirecting to luxury website***********" + categoryCode);
-	//			final String luxuryHost = configurationService.getConfiguration().getString("luxury.resource.host");
-	//			final String luxuryCategoryUrl = luxuryHost + "/c-" + categoryCode.toLowerCase();
-	//			LOG.debug("Redirecting to ::::::" + luxuryCategoryUrl);
-	//			response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-	//			response.setHeader("Location", luxuryCategoryUrl);
-	//		}
-	//		return redirect;
-	//	}
+	private boolean redirectIfLuxuryCategory(final String categoryCode, final HttpServletResponse response)
+	{
+		boolean redirect = false;
+		// YTODO Auto-generated method stub
+		if (categoryCode.startsWith(LSH))
+		{
+			redirect = true;
+			LOG.debug("**********The category is a luxury category.Hence redirecting to luxury website***********" + categoryCode);
+			final String luxuryHost = configurationService.getConfiguration().getString("luxury.resource.host");
+			final String luxuryCategoryUrl = luxuryHost + "/c-" + categoryCode.toLowerCase();
+			LOG.debug("Redirecting to ::::::" + luxuryCategoryUrl);
+			response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+			response.setHeader("Location", luxuryCategoryUrl);
+		}
+		return redirect;
+	}
 
 	/**
 	 * @param breadcrumbs
