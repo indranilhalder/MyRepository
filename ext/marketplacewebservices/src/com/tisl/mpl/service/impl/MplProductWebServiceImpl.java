@@ -44,6 +44,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
@@ -121,12 +122,12 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
-	public ProductDetailMobileWsData getProductdetailsForProductCode(final String productCode, final String baseUrl)
-			throws EtailNonBusinessExceptions
+	public ProductDetailMobileWsData getProductdetailsForProductCode(final String productCode, final String baseUrl,
+			final HttpServletRequest request) throws EtailNonBusinessExceptions
 	{
 		final ProductDetailMobileWsData productDetailMobile = new ProductDetailMobileWsData();
 		ProductDetailMobileWsData isNewOrOnlineExclusive = new ProductDetailMobileWsData();
@@ -363,7 +364,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 				PromotionMobileData potenitalPromo = null;
 
-				potenitalPromo = getPromotionsForProduct(productData, buyBoxData, framedOtherSellerDataList);
+				potenitalPromo = getPromotionsForProduct(productData, buyBoxData, framedOtherSellerDataList, request);
 
 				if (null != potenitalPromo)
 				{
@@ -1183,7 +1184,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	 * @param productData
 	 * @return PromotionData
 	 */
-	private PromotionData getHighestPromotion(final ProductData productData)
+	private PromotionData getHighestPromotion(final ProductData productData, final HttpServletRequest request)
 	{
 		PromotionData highestPromotion = null;
 		try
@@ -1195,7 +1196,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			}
 			final List<PromotionData> enabledPromotionList = new ArrayList<PromotionData>();
 			final Date todays_Date = new Date();
-			if (null != promotioncollection && !promotioncollection.isEmpty())
+			if (CollectionUtils.isNotEmpty(promotioncollection))
 			{
 				for (final PromotionData promodata : promotioncollection)
 				{
@@ -1211,6 +1212,14 @@ public class MplProductWebServiceImpl implements MplProductWebService
 								{
 									enabledPromotionList.add(promodata);
 								}
+								//TISLUX-1823
+								if (request.getParameterMap().containsKey(MarketplacecommerceservicesConstants.CHANNEL)
+										&& request.getParameter(MarketplacecommerceservicesConstants.CHANNEL) != null
+										&& request.getParameter(MarketplacecommerceservicesConstants.CHANNEL).equalsIgnoreCase(
+												SalesApplication.WEB.getCode()))
+								{
+									enabledPromotionList.add(promodata);
+								}
 							}
 						}
 						else
@@ -1220,7 +1229,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					}
 
 				}
-				if (!enabledPromotionList.isEmpty())
+				if (CollectionUtils.isNotEmpty(enabledPromotionList))
 				{
 					highestPromotion = checkHighestPriority(enabledPromotionList);
 				}
@@ -1269,9 +1278,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	 * @return List<PromotionMobileData>
 	 */
 	private PromotionMobileData getPromotionsForProduct(final ProductData productData, final BuyBoxData buyBoxData,
-			final List<SellerInformationMobileData> otherSellers)
+			final List<SellerInformationMobileData> otherSellers, final HttpServletRequest request)
 	{
-		final PromotionData highestPrmotion = getHighestPromotion(productData);
+		final PromotionData highestPrmotion = getHighestPromotion(productData, request);
 		PromotionMobileData promoMobiledata = null;
 		try
 		{

@@ -325,7 +325,7 @@ public class ProductsController extends BaseController
 					//+ MarketplacewebservicesConstants.FORGOTPASSWORD_URL;
 				}
 			}
-			product = mplProductWebService.getProductdetailsForProductCode(productCode, baseUrl);
+			product = mplProductWebService.getProductdetailsForProductCode(productCode, baseUrl, request);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
