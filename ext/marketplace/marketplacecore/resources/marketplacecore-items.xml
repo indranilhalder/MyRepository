@@ -2945,7 +2945,7 @@
 					</attribute>
 					<attribute qualifier="mobileNumber" type="java.lang.String">
 						<persistence type="property" />
-						<modifiers read="true" write="true" optional="true"
+						<modifiers read="true" write="true" optional="true" search="true"
 							unique="false" />
 					</attribute>
 					<attribute qualifier="dateOfAnniversary" autocreate="true"
