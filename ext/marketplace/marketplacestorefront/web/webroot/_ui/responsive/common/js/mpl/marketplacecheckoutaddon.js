@@ -5526,7 +5526,7 @@ $("#defaultPinCodeIds").click(function(){
 
 
 function reloadpage(selectedPincode,buttonType) {
-	if ($('#giftYourselfProducts').html().trim().length > 0 && selectedPincode!=null && selectedPincode != undefined && selectedPincode!="") 
+	if (/*$('#giftYourselfProducts').html().trim().length > 0 && */selectedPincode!=null && selectedPincode != undefined && selectedPincode!="") 
 
 	{		
 		if(buttonType != 'typeCheckout') {
