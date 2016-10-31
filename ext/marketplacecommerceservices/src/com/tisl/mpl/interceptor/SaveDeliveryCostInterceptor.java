@@ -5,6 +5,7 @@ package com.tisl.mpl.interceptor;
 
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
+import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.servicelayer.interceptor.InterceptorContext;
 import de.hybris.platform.servicelayer.interceptor.InterceptorException;
@@ -16,7 +17,9 @@ import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.BuyAandBGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.BuyAboveXGetPromotionOnShippingChargesModel;
@@ -28,6 +31,8 @@ import com.tisl.mpl.model.BuyAboveXGetPromotionOnShippingChargesModel;
  */
 public class SaveDeliveryCostInterceptor implements ValidateInterceptor
 {
+	@Autowired
+	private PincodeService pincodeService;
 
 	/*
 	 * (non-Javadoc)
@@ -60,6 +65,22 @@ public class SaveDeliveryCostInterceptor implements ValidateInterceptor
 						}
 					}
 					abstractOrder.setDeliveryCost(Double.valueOf(deliveryCost));
+				}
+
+			}
+
+			//TPR-3571 : Fix for Pincode Specific Promotion
+			if (null != abstractOrder.getDeliveryAddress() && null != abstractOrder.getDeliveryAddress().getPostalcode())
+			{
+				LOG.debug("Setting data for Pincode related Information");
+				final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(abstractOrder.getDeliveryAddress()
+						.getPostalcode());
+				if (null != pinCodeModelObj)
+				{
+					abstractOrder.setStateForPincode(pinCodeModelObj.getState() == null ? "" : pinCodeModelObj.getState()
+							.getCountrykey());
+					abstractOrder.setCityForPincode(pinCodeModelObj.getCity() == null ? "" : pinCodeModelObj.getCity().getCityName());
+					abstractOrder.setPincodeNumber(abstractOrder.getDeliveryAddress().getPostalcode());
 				}
 
 			}
