@@ -51532,6 +51532,12 @@ overflow: hidden;
 	letter-spacing: 0.6px;
 }
 
+/*start changes for TPR-3587*/
+.top_deal .details.short-info span:nth-child(2){
+	color: #000;
+}
+/*end changes for TPR-3587*/
+
 .top_deal .details.short-info span:last-child {
 	color: #000;
 	margin-top: 5px;
@@ -52269,6 +52275,7 @@ word-break: break-word;
 	}
 	.best_seller .best_seller_section .product-tile .short-info .price {
 		font-size: 12px;
+		line-height: 16px; /*changes for TPR-3586*/
 	}
 	.best_seller .carousel .item {
 		margin: 0 5px;
