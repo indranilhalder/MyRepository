@@ -159,6 +159,7 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 							}
 							else
 							{
+								isSizeVariantPresent = true;
 								final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode()) ? pm
 										.getColourHexCode() : pm.getColour().toLowerCase());
 								defaultColorMap.put(color, Y);
@@ -218,6 +219,7 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 					else if (null == variantOptionData.getImage() || null == selectedSize)
 					{
 						//variantOptionData.setDefaultUrl(variantOptionData.getUrl());
+						isSizeVariantPresent = true;
 						final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode()) ? pm
 								.getColourHexCode() : pm.getColour().toLowerCase());
 						variantOptionData.setColourCode(color);
