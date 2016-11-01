@@ -288,7 +288,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.solrfacet.search.MplProductSearchFacade#mplProductSearch(de.hybris.platform.commercefacades.search.
 	 * data.SearchStateData, de.hybris.platform.commerceservices.search.pagedata.PageableData, java.lang.String)
@@ -1118,7 +1118,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.solrfacet.search.MplProductSearchFacade#populateSearchState(de.hybris.platform.commercefacades.search
 	 * .data.SearchStateData)
@@ -1150,9 +1150,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		}
 		else
 		{
-			LOG.error("*****************************************************For LUX");
 			final List<SolrSearchQueryTermData> solrSearchQueryTermDataList = new ArrayList(searchQueryData.getFilterTerms());
-			LOG.error("*****************************************************For LUX ends - " + solrSearchQueryTermDataList);
 			solrSearchQueryTermDataList.add(solrSearchQueryTermData);
 			searchQueryData.setFilterTerms(solrSearchQueryTermDataList);
 		}
