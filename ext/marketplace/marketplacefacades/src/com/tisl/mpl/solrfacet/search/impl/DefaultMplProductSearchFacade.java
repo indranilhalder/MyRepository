@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.util.Assert;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -57,6 +58,9 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	 */
 	private static final String PROMOTED_PRODUCT = "promotedProduct";
 	private static final String IS_OFFER_EXISTING = "isOffersExisting";
+
+	@SuppressWarnings("unused")
+	private static final Logger LOG = Logger.getLogger(DefaultMplProductSearchFacade.class);
 
 	/**
 	 * @return the mplProductSearchService
@@ -284,7 +288,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.solrfacet.search.MplProductSearchFacade#mplProductSearch(de.hybris.platform.commercefacades.search.
 	 * data.SearchStateData, de.hybris.platform.commerceservices.search.pagedata.PageableData, java.lang.String)
@@ -1114,7 +1118,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.solrfacet.search.MplProductSearchFacade#populateSearchState(de.hybris.platform.commercefacades.search
 	 * .data.SearchStateData)
@@ -1146,7 +1150,9 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		}
 		else
 		{
+			LOG.error("*****************************************************For LUX");
 			final List<SolrSearchQueryTermData> solrSearchQueryTermDataList = new ArrayList(searchQueryData.getFilterTerms());
+			LOG.error("*****************************************************For LUX ends - " + solrSearchQueryTermDataList);
 			solrSearchQueryTermDataList.add(solrSearchQueryTermData);
 			searchQueryData.setFilterTerms(solrSearchQueryTermDataList);
 		}
