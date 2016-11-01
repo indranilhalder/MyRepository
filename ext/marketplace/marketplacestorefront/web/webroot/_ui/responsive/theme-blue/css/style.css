@@ -33847,7 +33847,7 @@ div#defaultPinDiv p,.MyBag-pincode #changePinDiv>p{
 	margin: 0 0 18px;
     letter-spacing: 0;
     font-size: 12px;
-    line-height: 16px;
+    line-height: 20px; /* --- TPR-3599--- */
 }
 div#defaultPinDiv a#changePinAnchor{
 	font-size: 12px;
