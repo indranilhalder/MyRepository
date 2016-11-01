@@ -1919,7 +1919,7 @@ public class CartsController extends BaseCommerceController
 	public WebSerResponseWsDTO addProductToCartMobile(@PathVariable final String cartId,
 			@RequestParam(required = true) final String productCode, @RequestParam(required = true) final String USSID,
 			@RequestParam(required = false, defaultValue = "1") final String quantity,
-			@RequestParam(required = true) final boolean addedToCartWl, final HttpServletRequest request)
+			@RequestParam(required = true) final boolean addedToCartWl, @RequestParam(required = false) final String channel)
 			throws InvalidCartException, CommerceCartModificationException
 	{
 		WebSerResponseWsDTO result = new WebSerResponseWsDTO();
@@ -1930,7 +1930,7 @@ public class CartsController extends BaseCommerceController
 		}
 		try
 		{
-			result = mplCartWebService.addProductToCart(productCode, cartId, quantity, USSID, addedToCartWl, request);
+			result = mplCartWebService.addProductToCart(productCode, cartId, quantity, USSID, addedToCartWl, channel);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{

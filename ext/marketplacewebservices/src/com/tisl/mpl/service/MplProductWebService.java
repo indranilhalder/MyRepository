@@ -7,8 +7,6 @@ import de.hybris.platform.commercefacades.product.data.ProductData;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.tisl.mpl.wsdto.GalleryImageData;
 import com.tisl.mpl.wsdto.ProductDetailMobileWsData;
 
@@ -19,7 +17,7 @@ import com.tisl.mpl.wsdto.ProductDetailMobileWsData;
  */
 public interface MplProductWebService
 {
-	public ProductDetailMobileWsData getProductdetailsForProductCode(String productCode, String baseUrl, HttpServletRequest request);
+	public ProductDetailMobileWsData getProductdetailsForProductCode(String productCode, String baseUrl, String channel);
 
 	public String getCategoryCodeOfProduct(final ProductData productData);
 
