@@ -156,14 +156,14 @@
 	  <span></span>
         <ul class="nav pdp">
       <c:forEach items="${product.classifications}" var="classification" varStatus="outer">
-      <li class="headline">${classification.name}</li>
+      <li>${classification.name}</li>
       </c:forEach>
         </ul>
          </div>
          <ul class="tabs pdp">
         		<c:forEach items="${product.classifications}" var="classification" varStatus="outer">
 					
-					<li class="sdsfsa">
+					<li>
 					<div class="tab-details">
 					<ul>
 					<c:forEach items="${classification.features}" var="feature" varStatus="inner">
