@@ -33310,7 +33310,7 @@ body.page-cartPage .MyBagHeadingDesktop,body.page-cartPage .MyBag-pincode h2 {
     font-size: 28px;
     font-weight: bold;
     line-height: inherit;
-    padding: 20px 0 5px;
+    padding: 10px 0 5px; /*--- TPR-3610 ---*/
     letter-spacing: 1px;
     text-transform: uppercase;
 }
@@ -33448,8 +33448,8 @@ body.page-cartPage .cart-bottom-block .cart-total-block ul.totals li span.amt{
 	float:right;
 }
 body.page-cartPage .cart-bottom-block .cart-total-block ul.totals li#total{
-	   font-size: 30px;
-
+	font-size: 30px;
+	margin-top: 0; /*--- TPR-3606 ---*/
     padding: 20px 0px;
     border-top: 1px solid #e8e8e8;
     border-bottom: 1px solid #e8e8e8;
@@ -33588,6 +33588,7 @@ letter-spacing:1px;
 body.page-cartPage .MyBag-pincode button#pinCodeButtonIds {
     line-height:1.4;
     padding:0 10px;
+    text-transform: uppercase; /*---TPR-3603---*/
 }
 @media only screen and (min-width: 1451px){
 	body.page-cartPage .cart.wrapper .checkout-types a.checkoutButton{
@@ -34548,7 +34549,7 @@ body.template-pages-category-productGridPage .trending h1,body.template-pages-se
     margin-right: 1%;
 }
 .short-info, .latest-offer-info {
-    margin-top: 20px;
+    margin-top: 10px; /*---TPR-3624---*/
 }
 .product-item .product-tile .color-swatch {
     width: 100% !important;
