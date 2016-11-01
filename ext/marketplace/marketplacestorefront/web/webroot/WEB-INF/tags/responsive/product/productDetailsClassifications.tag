@@ -145,3 +145,55 @@
 		</table>
 	</c:if>
 </div>
+
+
+
+<div class="SpecWrap">
+  <div class="Padd">
+    <h2>Specifications</h2>
+    <div class="tabs-block">
+      <div class="nav-wrapper">
+	  <span></span>
+        <ul class="nav pdp">
+      <c:forEach items="${product.classifications}" var="classification" varStatus="outer">
+      <li class="headline">${classification.name}</li>
+      </c:forEach>
+        </ul>
+         </div>
+         <ul class="tabs pdp">
+        		<c:forEach items="${product.classifications}" var="classification" varStatus="outer">
+					
+					<li class="sdsfsa">
+					<div class="tab-details">
+					<ul>
+					<c:forEach items="${classification.features}" var="feature" varStatus="inner">
+					<c:forEach items="${feature.featureValues}" var="value"
+									varStatus="status">
+             			 <li>
+							<span><%-- ${outer.index} - ${inner.index} --%>  ${feature.name}</span>
+							<span>
+										${value.value}
+										<c:choose>
+										<c:when test="${feature.range}">
+												${not status.last ? '-' : feature.featureUnit.symbol}
+											</c:when>
+										<c:otherwise>
+												${feature.featureUnit.symbol}
+												${not status.last ? '<br/>' : ''}
+											</c:otherwise>
+									</c:choose>
+								</span>
+							</li>
+							</c:forEach>
+								</c:forEach>
+							</ul>
+								</div>
+						</li>
+				
+				</c:forEach>
+         
+         </ul>
+     
+      </div>
+  </div>
+</div>

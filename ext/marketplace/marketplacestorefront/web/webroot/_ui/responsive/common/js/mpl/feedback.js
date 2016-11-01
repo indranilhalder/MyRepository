@@ -509,13 +509,17 @@ $(document).ready(function(){
 			    });
 	/*----Start of SignIn & SignUp tab Switching -----*/
 			 
-	/*----Start of  PDP tabs -----*/
+			 /*----Start of  PDP tabs -----*/
+			 $(".SpecWrap .Padd .tabs-block .nav > li:first-child, .SpecWrap .Padd .tabs-block .tabs > li:first-child").addClass("active");
 			 $(".tabs-block .nav.pdp li").on("click",function(e) {
-				 $("ul.nav.pdp li").removeClass('active'); 
+				 //$("ul.nav.pdp li").removeClass('active');
+				 $(this).siblings().removeClass('active');
 				 $(this).addClass('active');
-				 var count = $(this).index();
-				 $("ul.tabs.pdp>li").removeClass('active'); 
-				 $("ul.tabs.pdp>li").eq(count).addClass("active");
+				 var count = $(this).index() + 1;
+				 $(this).parents().find("ul.tabs.pdp>li").removeClass('active');
+				 $(this).parents().find("ul.tabs.pdp>li:nth-child("+count+")").addClass("active");
+				 //$("ul.tabs.pdp>li").removeClass('active'); 
+				// $("ul.tabs.pdp>li").eq(count).addClass("active");
 			    }); 
 	/*----END of  PDP tabs -----*/
 	
