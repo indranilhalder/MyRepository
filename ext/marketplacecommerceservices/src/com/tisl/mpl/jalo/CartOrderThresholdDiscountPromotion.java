@@ -117,7 +117,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 							MarketplacecommerceservicesConstants.THRESHOLD_TOTALS);
 
 					//TPR-969 - Code to identify qualifying count for the promotion restriction
-					Double entryQualifyingCount = null;
+					Integer entryQualifyingCount = null;
 					for (final AbstractPromotionRestriction restriction : restrictionList)
 					{
 						if (restriction instanceof EntryCountPromotionRestriction)
@@ -355,7 +355,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 	 * @param validProductUssidMap
 	 * @return List<PromotionResult>
 	 */
-	private List<PromotionResult> applyPromoForQualCount(final Double entryQualifyingCount, final int orderEntryCount,
+	private List<PromotionResult> applyPromoForQualCount(final Integer entryQualifyingCount, final int orderEntryCount,
 			final SessionContext ctx, final PromotionEvaluationContext evalCtx, final AbstractOrder order,
 			final boolean isPercentageDisc, final double percentageDiscount, final double maxDiscount,
 			List<PromotionResult> promotionResults, final double orderSubtotalAfterDiscounts,
@@ -411,7 +411,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 			final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());//Adding restrictions to List
 
 			//TPR-969 identifying qualifying count present in restriction
-			Double entryQualifyingCount = null;
+			Integer entryQualifyingCount = null;
 			for (final AbstractPromotionRestriction restriction : restrictionList)
 			{
 				if (restriction instanceof EntryCountPromotionRestriction)
@@ -561,7 +561,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 	 * @param discountPriceValue
 	 * @return String
 	 */
-	private String formatMsg(final Double entryQualifyingCount, final int orderEntryCount, final Double threshold,
+	private String formatMsg(final Integer entryQualifyingCount, final int orderEntryCount, final Double threshold,
 			final AbstractOrder order, final SessionContext ctx, final Locale locale, final Currency orderCurrency,
 			final Double discountPriceValue)
 	{
