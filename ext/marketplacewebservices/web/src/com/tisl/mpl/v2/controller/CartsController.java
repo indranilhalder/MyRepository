@@ -1919,7 +1919,7 @@ public class CartsController extends BaseCommerceController
 	public WebSerResponseWsDTO addProductToCartMobile(@PathVariable final String cartId,
 			@RequestParam(required = true) final String productCode, @RequestParam(required = true) final String USSID,
 			@RequestParam(required = false, defaultValue = "1") final String quantity,
-			@RequestParam(required = true) final boolean addedToCartWl, final HttpServletRequest request)
+			@RequestParam(required = true) final boolean addedToCartWl, @RequestParam(required = false) final String channel)
 			throws InvalidCartException, CommerceCartModificationException
 	{
 		WebSerResponseWsDTO result = new WebSerResponseWsDTO();
@@ -1930,7 +1930,7 @@ public class CartsController extends BaseCommerceController
 		}
 		try
 		{
-			result = mplCartWebService.addProductToCart(productCode, cartId, quantity, USSID, addedToCartWl, request);
+			result = mplCartWebService.addProductToCart(productCode, cartId, quantity, USSID, addedToCartWl, channel);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -1975,7 +1975,7 @@ public class CartsController extends BaseCommerceController
 	@ResponseBody
 	public CartDataDetailsWsDTO getCartDetails(@PathVariable final String cartId,
 			@RequestParam(required = false) final String pincode,
-			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields, final HttpServletRequest request)
+			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
 		final AddressListWsDTO addressListDTO = addressList(fields);
 		CartDataDetailsWsDTO cartDataDetails = new CartDataDetailsWsDTO();
@@ -1987,7 +1987,7 @@ public class CartsController extends BaseCommerceController
 				{
 					LOG.debug("************ get cart details mobile web service *********" + cartId);
 				}
-				cartDataDetails = mplCartWebService.getCartDetails(cartId, addressListDTO, pincode, request);
+				cartDataDetails = mplCartWebService.getCartDetails(cartId, addressListDTO, pincode);
 				final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
 				cartDataDetails.setMaxAllowed(maximum_configured_quantiy);
 			}
@@ -3685,7 +3685,7 @@ public class CartsController extends BaseCommerceController
 	@ResponseBody
 	public CartDataDetailsWsDTO getCartDetailsWithPOS(@PathVariable final String cartId,
 			@RequestParam(required = false) final String pincode,
-			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields, final HttpServletRequest request)
+			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
 		final AddressListWsDTO addressListDTO = addressList(fields);
 		CartDataDetailsWsDTO cartDataDetails = new CartDataDetailsWsDTO();
@@ -3694,7 +3694,7 @@ public class CartsController extends BaseCommerceController
 			if (null != cartId)
 			{
 				LOG.debug("************ get cart details with POS mobile web service *********" + cartId);
-				cartDataDetails = mplCartWebService.getCartDetailsWithPOS(cartId, addressListDTO, pincode, request);
+				cartDataDetails = mplCartWebService.getCartDetailsWithPOS(cartId, addressListDTO, pincode);
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -3739,7 +3739,7 @@ public class CartsController extends BaseCommerceController
 	@ResponseBody
 	public CartDataDetailsWsDTO addStoreToCCEntry(@PathVariable final String cartId,
 			@RequestParam(required = true) final String USSID, @RequestParam(required = true) final String slaveId,
-			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields, final HttpServletRequest request)
+			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
 
 		if (LOG.isDebugEnabled())
@@ -3759,7 +3759,7 @@ public class CartsController extends BaseCommerceController
 				{
 					LOG.debug("************ in addStoreToCCEntry :get cart details mobile web service *********" + cartId);
 					final AddressListWsDTO addressListDTO = addressList(fields);
-					cartDataDetails = mplCartWebService.getCartDetailsWithPOS(cartId, addressListDTO, null, request);
+					cartDataDetails = mplCartWebService.getCartDetailsWithPOS(cartId, addressListDTO, null);
 					cartDataDetails.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 					return cartDataDetails;
 				}
@@ -3827,7 +3827,7 @@ public class CartsController extends BaseCommerceController
 	@ResponseBody
 	public CartDataDetailsWsDTO addPickupPersonDetails(@PathVariable final String cartId, @RequestParam final String personName,
 			@RequestParam final String personMobile,
-			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields, final HttpServletRequest request)
+			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
 		CartDataDetailsWsDTO cartDataDetails = new CartDataDetailsWsDTO();
 
@@ -3855,7 +3855,7 @@ public class CartsController extends BaseCommerceController
 
 					LOG.debug("************ in addPickupPersonDetails :get cart details mobile web service *********" + cartId);
 					final AddressListWsDTO addressListDTO = addressList(fields);
-					cartDataDetails = mplCartWebService.getCartDetailsWithPOS(cartId, addressListDTO, null, request);
+					cartDataDetails = mplCartWebService.getCartDetailsWithPOS(cartId, addressListDTO, null);
 					cartDataDetails.setStatus(MarketplacecommerceservicesConstants.SUCCESSS_RESP);
 				}
 			}
