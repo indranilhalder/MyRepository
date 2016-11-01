@@ -1580,11 +1580,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1635,9 +1635,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Override
@@ -2732,17 +2732,20 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		{
 			for (final PromotionResultData promotionResultData : promoResultList)
 			{
-				final String st = promotionResultData.getDescription();
-				final String result = stripNonDigits(st);
+				if (StringUtils.isNotEmpty(promotionResultData.getDescription()))
+				{
+					final String st = promotionResultData.getDescription();
+					final String result = stripNonDigits(st);
 
-				try
-				{
-					totalDiscount = totalDiscount + Double.parseDouble(result);
-				}
-				catch (final Exception e)
-				{
-					LOG.error("Exception during double parsing ", e);
-					totalDiscount = totalDiscount + 0;
+					try
+					{
+						totalDiscount = totalDiscount + Double.parseDouble(result);
+					}
+					catch (final Exception e)
+					{
+						LOG.error("Exception during double parsing ", e);
+						totalDiscount = totalDiscount + 0;
+					}
 				}
 			}
 		}

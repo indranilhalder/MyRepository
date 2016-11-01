@@ -35,7 +35,7 @@
 					<cms:component component="${feature}" element="div" class="winter_launch_section" />
 				</cms:pageSlot>
 				</div>
-				<div class="style_edit">
+				<div class="style_edit style-edit-video">
 				 <cms:pageSlot position="Section2C" var="feature">
 					<cms:component component="${feature}" element="div" class="" />
 				</cms:pageSlot>

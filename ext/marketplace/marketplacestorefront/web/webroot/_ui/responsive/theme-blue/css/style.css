@@ -434,6 +434,29 @@ body.page-shopTheStyle .timeout-slider .owl-controls .owl-dots {
 	border-bottom: 4px solid #fff;
 }
 /* -------------End TPR-179 Style For ShopTheStyle---------- */
+
+/* -------------Start TPR-3625 Style---------- */
+
+.style-edit-video > .yCmsComponent{
+	position: relative;
+}
+.style-edit-title{
+	color: #fff;
+	font-size: 24px;
+	position: absolute;
+	left: 7%;
+	line-height: 30px;
+	bottom: 10%;
+	text-transform: uppercase;
+	width: 90%;
+	z-index: 10;
+}
+.style-edit-title span{
+	display: block;
+	text-transform: none;		
+}
+/* -------------End TPR-3625 Style	---------- */
+
   @media (min-width: 651px) {
     input[type="checkbox"] + label, input[type="radio"] + label {
       padding-left: 10px; } }
@@ -5327,7 +5350,8 @@ text-transform: uppercase;
          }
   .cart.wrapper select, .confirmation select {
     border-color: #DFD1D5;
-    line-height: 28px; }
+    line-height: 30px;  /*--- TPR-3592, TPR-3598 ---*/
+    }
     .cart.wrapper select:hover,
 .confirmation select:hover {
     border-color: #d1dee5;
@@ -33287,7 +33311,7 @@ body.page-cartPage .MyBagHeadingDesktop,body.page-cartPage .MyBag-pincode h2 {
     font-size: 28px;
     font-weight: bold;
     line-height: inherit;
-    padding: 20px 0 5px;
+    padding: 10px 0 5px; /*--- TPR-3610 ---*/
     letter-spacing: 1px;
     text-transform: uppercase;
 }
@@ -33425,21 +33449,22 @@ body.page-cartPage .cart-bottom-block .cart-total-block ul.totals li span.amt{
 	float:right;
 }
 body.page-cartPage .cart-bottom-block .cart-total-block ul.totals li#total{
-	   font-size: 30px;
-
+	font-size: 30px;
+	margin-top: 0; /*--- TPR-3606 ---*/
     padding: 20px 0px;
     border-top: 1px solid #e8e8e8;
     border-bottom: 1px solid #e8e8e8;
 }
 body.page-cartPage .cart-bottom-block .cart-total-block ul.totals li#total span.amt{
 	font-size: 18px;
+	padding-top: 6px; /*--- TPR-3609 ---*/
 }
 body.page-cartPage .cart-bottom-block .cart-total-block ul.totals li#discount span.amt{
 	color: #a7183e;
 }
 body.page-cartPage .cart.wrapper .product-block li.item > ul > li:first-child div.product-img{
-width:120px;
-margin-right: 4%;
+	width:120px;
+	margin-right: 4%;
 }
 body.page-cartPage .cart.wrapper .product-block li.item > ul > li:first-child div.product{
 	float: none;
@@ -33565,6 +33590,7 @@ letter-spacing:1px;
 body.page-cartPage .MyBag-pincode button#pinCodeButtonIds {
     line-height:1.4;
     padding:0 10px;
+    text-transform: uppercase; /*---TPR-3603---*/
 }
 @media only screen and (min-width: 1451px){
 	body.page-cartPage .cart.wrapper .checkout-types a.checkoutButton{
@@ -33574,13 +33600,15 @@ body.page-cartPage .continue-shopping.desk-view-shopping{
 	bottom:5px !important;
 }
 	}
+	
+	
 @media only screen and (max-width: 1450px){
 body.page-cartPage .MyBagHeadingDesktop, body.page-cartPage .MyBag-pincode h2 {
     font-size: 20px;
 }
 body.page-cartPage .MyBag-buttons p.desk-view, .MyBag-pincode #changePinDiv>p, body.page-cartPage .MyBag-pincode #defaultPinDiv, body.page-cartPage .exp_checkout_msg {
     font-size: 12px;
-    line-height: 18px;
+    line-height: 20px; /*--- TPR-3595 ---*/
 }
 .MyBag-pincode #changePinDiv>p {
     margin: 0 0 23px;
@@ -33824,7 +33852,7 @@ div#defaultPinDiv p,.MyBag-pincode #changePinDiv>p{
 	margin: 0 0 18px;
     letter-spacing: 0;
     font-size: 12px;
-    line-height: 16px;
+    line-height: 20px; /* --- TPR-3599--- */
 }
 div#defaultPinDiv a#changePinAnchor{
 	font-size: 12px;
@@ -34525,7 +34553,7 @@ body.template-pages-category-productGridPage .trending h1,body.template-pages-se
     margin-right: 1%;
 }
 .short-info, .latest-offer-info {
-    margin-top: 20px;
+    margin-top: 10px; /*---TPR-3624---*/
 }
 .product-item .product-tile .color-swatch {
     width: 100% !important;
@@ -35421,7 +35449,7 @@ div#compareSection {
 padding-top: 0px !important;
 }
 body.template-pages-category-productGridPage header,body.template-pages-search-searchGridPage header {
-	margin-bottom:-10px;
+	margin-bottom:-5px;
 	}
 	.facet-list.filter-opt {
 	text-align:left;
@@ -48766,21 +48794,21 @@ border-right: 2px solid #9b9b9b;
 } 
 /*mybag potential promotion section starts*/
 @media only screen and (max-width: 1450px){
-.cartPromotions .promotions.cartpotproline {
-    padding-top: 10px;
-    font-size: 24px;
-    color: #a7183e;
-    margin: 10px auto 10px;
-    font-weight: bold;
-
-}
-.cartPromotions .cartpotproline_desc {
-    padding-bottom: 15px;
-    font-size: 12px;
-    letter-spacing: 0.5px;
-    margin: 0;
-    margin-bottom:5px;
-}
+	.cartPromotions .promotions.cartpotproline {
+	    padding-top: 10px;
+	    font-size: 24px;
+	    color: #a7183e;
+	    margin: 10px auto 10px;
+	    font-weight: bold;
+	
+	}
+	.cartPromotions .cartpotproline_desc {
+	    padding-bottom: 15px;
+	    font-size: 12px;
+	    letter-spacing: 0.5px;
+	    margin: 0;
+	    /* margin-bottom:5px; */ /*--- TPR-3623 ---*/
+	}
 }
 @media (max-width: 767px){
 .cartPromotions .promotions.cartpotproline {
@@ -51496,6 +51524,7 @@ overflow: hidden;
 	margin-bottom: 40px;
 	text-transform: none;
     letter-spacing: 0px;
+    line-height: 1;
 }
 
 .top_deal .carousel-component .product-tile {
@@ -51530,6 +51559,12 @@ overflow: hidden;
 	line-height: 20px;
 	letter-spacing: 0.6px;
 }
+
+/*start changes for TPR-3587*/
+.top_deal .details.short-info span:nth-child(2){
+	color: #000;
+}
+/*end changes for TPR-3587*/
 
 .top_deal .details.short-info span:last-child {
 	color: #000;
@@ -51737,6 +51772,8 @@ overflow: hidden;
 	margin-top: 5px;
 	font-weight: bold;
 	text-align: center;
+	line-height: 20px;
+    letter-spacing: 0.6px;
 }
 
 .best_seller .best_seller_section {
@@ -51872,6 +51909,10 @@ overflow: hidden;
 word-break: break-word;
 }
 @media(max-width:1024px) and (min-width:768px) {
+	/* TPR-3598 start here */	
+		
+	/* TPR-3598 end here */
+	
 	.top_categories .top_categories_wrapper {
 		padding: 0 calc(24px - 0.7%);
 	}
@@ -52266,6 +52307,7 @@ word-break: break-word;
 	}
 	.best_seller .best_seller_section .product-tile .short-info .price {
 		font-size: 12px;
+		line-height: 16px; /*changes for TPR-3586*/
 	}
 	.best_seller .carousel .item {
 		margin: 0 5px;
@@ -58216,4 +58258,43 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 }
 .click2chat-container.send-email-container label[for="forgotPassword_email"]{
 	margin-bottom: 10px;
+}
+.blp-serp-banner{
+	    background-color: #000;
+    height: 80px;
+    padding: 10px 0 20px;
+}
+.blp-serp-banner .image{
+	margin-left:25px;}
+	
+/* TPR-3539 */
+li.facet.js-facet.collectionIds{
+	display:none;
+}	
+
+.Manufacturer.Temp02 .contVideo li{
+	display: inline-block;
+    width: 33%;
+    margin-right: 2px;
+    cursor: pointer;
+    vertical-align: top;
+}
+.Manufacturer.Temp02 .contVideo li h4{
+	font-size: 17px;
+    padding: 27px 0 50px;
+    font-weight: bold;
+}
+.Manufacturer.Temp02 .video-container{
+	margin: 0;
+}
+@media (max-width: 1280px) and (min-width: 791px){
+	.Manufacturer.Temp02 .contVideo li{
+		 width: 31.8%;
+	}
+}
+@media (max-width: 790px){
+.Manufacturer.Temp02 .contVideo li {
+    width: 100%;
+    text-align: center;
+}
 }

@@ -239,7 +239,11 @@
 		</div>
 		<div class="compact-toggle mobile"></div>
 	</div>
-
+<c:if test="${param.blpLogo ne null}">
+<div class="blp-serp-banner" style="background-color:#000;height:80px;">
+<img class="image" alt="" src="${param.blpLogo}">
+</div>
+</c:if>
 	<a id="skiptonavigation"></a>
 	<nav:topNavigation />
 </header>
