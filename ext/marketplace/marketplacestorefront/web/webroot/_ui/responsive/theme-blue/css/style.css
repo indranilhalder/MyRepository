@@ -33598,13 +33598,15 @@ body.page-cartPage .continue-shopping.desk-view-shopping{
 	bottom:5px !important;
 }
 	}
+	
+	
 @media only screen and (max-width: 1450px){
 body.page-cartPage .MyBagHeadingDesktop, body.page-cartPage .MyBag-pincode h2 {
     font-size: 20px;
 }
 body.page-cartPage .MyBag-buttons p.desk-view, .MyBag-pincode #changePinDiv>p, body.page-cartPage .MyBag-pincode #defaultPinDiv, body.page-cartPage .exp_checkout_msg {
     font-size: 12px;
-    line-height: 18px;
+    line-height: 20px; /*--- TPR-3595 ---*/
 }
 .MyBag-pincode #changePinDiv>p {
     margin: 0 0 23px;
@@ -48790,21 +48792,21 @@ border-right: 2px solid #9b9b9b;
 } 
 /*mybag potential promotion section starts*/
 @media only screen and (max-width: 1450px){
-.cartPromotions .promotions.cartpotproline {
-    padding-top: 10px;
-    font-size: 24px;
-    color: #a7183e;
-    margin: 10px auto 10px;
-    font-weight: bold;
-
-}
-.cartPromotions .cartpotproline_desc {
-    padding-bottom: 15px;
-    font-size: 12px;
-    letter-spacing: 0.5px;
-    margin: 0;
-    margin-bottom:5px;
-}
+	.cartPromotions .promotions.cartpotproline {
+	    padding-top: 10px;
+	    font-size: 24px;
+	    color: #a7183e;
+	    margin: 10px auto 10px;
+	    font-weight: bold;
+	
+	}
+	.cartPromotions .cartpotproline_desc {
+	    padding-bottom: 15px;
+	    font-size: 12px;
+	    letter-spacing: 0.5px;
+	    margin: 0;
+	    /* margin-bottom:5px; */ /*--- TPR-3623 ---*/
+	}
 }
 @media (max-width: 767px){
 .cartPromotions .promotions.cartpotproline {
@@ -51905,6 +51907,12 @@ overflow: hidden;
 word-break: break-word;
 }
 @media(max-width:1024px) and (min-width:768px) {
+	/* TPR-3598 start here */	
+	.cart.wrapper select, .confirmation select{
+		line-height: 30px; 
+	}	
+	/* TPR-3598 end here */
+	
 	.top_categories .top_categories_wrapper {
 		padding: 0 calc(24px - 0.7%);
 	}
