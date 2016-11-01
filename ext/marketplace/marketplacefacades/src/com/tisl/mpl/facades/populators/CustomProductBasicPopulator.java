@@ -31,7 +31,6 @@ import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.core.model.RatingReviewModel;
 import com.tisl.mpl.core.model.SeoContentModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPriceRowService;
 
@@ -247,7 +246,7 @@ public class CustomProductBasicPopulator<SOURCE extends ProductModel, TARGET ext
 		final PriceData priceData = new PriceData();
 		priceData.setPriceType(PriceDataType.BUY);
 		priceData.setValue(new BigDecimal(price.doubleValue()));
-		priceData.setCurrencyIso(MarketplaceFacadesConstants.INR);
+		priceData.setCurrencyIso("\u20B9");
 		final CurrencyModel currency = new CurrencyModel();
 		currency.setIsocode(priceData.getCurrencyIso());
 		currency.setSymbol(priceData.getCurrencyIso());

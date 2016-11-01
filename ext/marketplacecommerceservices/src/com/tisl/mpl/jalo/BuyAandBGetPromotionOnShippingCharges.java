@@ -103,8 +103,8 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 			{
 				//for delivery mode restriction check
 				flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForABPromo(restrictionList,
-						validProductUssidMap);
-				flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList);
+						validProductUssidMap, order);
+				flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList, order);
 				if (!eligibleProductList.isEmpty()) //Apply percentage/amount discount to valid products
 				{
 					if (flagForDeliveryModeRestrEval && flagForPincodeRestriction)
@@ -114,7 +114,7 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 						final Map<String, List<String>> productAssociatedItemsMap = getDefaultPromotionsManager()
 								.getAssociatedItemsForABorFreebiePromotions(validProductListA, validProductListB, null);
 						final Map<String, String> fetchProductRichAttribute = getDefaultPromotionsManager().fetchProductRichAttribute(
-								qCount);
+								qCount, order);
 
 						//for (final Map.Entry<Product, Integer> mapEntry : qCount.entrySet())
 						for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
@@ -152,7 +152,7 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 
 								final Map<String, Map<String, Double>> apportionedProdDelChargeMap = getDefaultPromotionsManager()
 										.updateDeliveryCharges(isDeliveryFreeFlag, isPercentageFlag, adjustedDeliveryCharge, qCount,
-												fetchProductRichAttribute);
+												fetchProductRichAttribute, order);
 								//********Calculating delivery charges & setting it at entry level ends*********
 								arg0.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
 								arg0.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, qCount);

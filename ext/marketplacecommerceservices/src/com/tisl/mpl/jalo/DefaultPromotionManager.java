@@ -10,6 +10,7 @@ import de.hybris.platform.category.jalo.Category;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -42,6 +43,7 @@ import de.hybris.platform.promotions.result.PromotionException;
 import de.hybris.platform.promotions.result.PromotionOrderEntry;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
+import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.util.localization.Localization;
 
@@ -99,6 +101,8 @@ public class DefaultPromotionManager extends PromotionsManager
 	private CartService cartService;
 	@Autowired
 	private MplDeliveryCostService deliveryCostService;
+	@Autowired
+	private ModelService modelService;
 
 
 	/**
@@ -220,6 +224,26 @@ public class DefaultPromotionManager extends PromotionsManager
 		this.deliveryCostService = deliveryCostService;
 	}
 
+
+
+
+
+	/**
+	 * @return the modelService
+	 */
+	public ModelService getModelService()
+	{
+		return modelService;
+	}
+
+	/**
+	 * @param modelService
+	 *           the modelService to set
+	 */
+	public void setModelService(final ModelService modelService)
+	{
+		this.modelService = modelService;
+	}
 
 	/**
 	 * @Description: Checks Restriction Brand names with Product Brand name
@@ -1418,13 +1442,14 @@ public class DefaultPromotionManager extends PromotionsManager
 	/**
 	 * @Description: This is for validating Delivery Mode Restriction
 	 * @param restrictionList
-	 * @param validProductListMap
+	 * @param validProductUssidMap
+	 * @param order
 	 * @return true if delivery mode restriction satisfies for A, else false and remove that element from
 	 *         validProductListMap
 	 */
 
 	public boolean getDelModeRestrEvalForAPromo(final List<AbstractPromotionRestriction> restrictionList,
-			final Map<String, AbstractOrderEntry> validProductUssidMap)
+			final Map<String, AbstractOrderEntry> validProductUssidMap, final AbstractOrder order)
 	{
 		boolean flag = false;
 		if (null == restrictionList || restrictionList.isEmpty())
@@ -1439,7 +1464,8 @@ public class DefaultPromotionManager extends PromotionsManager
 				if (restriction instanceof DeliveryModePromotionRestriction)
 				{
 					final List<String> prodSatisfiesDelModeList = new ArrayList<String>();
-					final CartModel cartModel = cartService.getSessionCart();
+					//final CartModel cartModel = cartService.getSessionCart();
+					final AbstractOrderModel abstractOrderModel = (AbstractOrderModel) getModelService().get(order);
 					final List<String> restrDeliveryModeList = new ArrayList<String>();
 
 					for (final DeliveryMode deliveryMode : ((DeliveryModePromotionRestriction) restriction)
@@ -1448,7 +1474,7 @@ public class DefaultPromotionManager extends PromotionsManager
 						restrDeliveryModeList.add(deliveryMode.getCode());
 					}
 
-					for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+					for (final AbstractOrderEntryModel entry : abstractOrderModel.getEntries())
 					{
 						final String validProdUSSID = entry.getSelectedUSSID();
 						if (validProductUssidMap.containsKey(validProdUSSID) && entry.getMplDeliveryMode() != null)
@@ -1479,12 +1505,13 @@ public class DefaultPromotionManager extends PromotionsManager
 	/**
 	 * @Description: This is for validating Delivery Mode Restriction
 	 * @param restrictionList
-	 * @param validProductListMap
+	 * @param validProductUssidMap
+	 * @param order
 	 * @return true if delivery mode restriction satisfies for both A and B, else false
 	 */
 
 	public boolean getDelModeRestrEvalForABPromo(final List<AbstractPromotionRestriction> restrictionList,
-			final Map<String, AbstractOrderEntry> validProductUssidMap)
+			final Map<String, AbstractOrderEntry> validProductUssidMap, final AbstractOrder order)
 	{
 		boolean flag = false;
 		if (null == restrictionList || restrictionList.isEmpty())
@@ -1500,7 +1527,8 @@ public class DefaultPromotionManager extends PromotionsManager
 				{
 					final List<String> prodSatisfiesDelModeList = new ArrayList<String>();
 					//final List<Product> validProductListUniqueElements = new ArrayList<Product>(new HashSet<Product>(validProductList));
-					final CartModel cartModel = cartService.getSessionCart();
+					//final CartModel cartModel = cartService.getSessionCart();
+					final AbstractOrderModel abstractOrderModel = (AbstractOrderModel) getModelService().get(order);
 					final List<String> restrDeliveryModeList = new ArrayList<String>();
 
 					for (final DeliveryMode deliveryMode : ((DeliveryModePromotionRestriction) restriction)
@@ -1509,7 +1537,7 @@ public class DefaultPromotionManager extends PromotionsManager
 						restrDeliveryModeList.add(deliveryMode.getCode());
 					}
 
-					for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+					for (final AbstractOrderEntryModel entry : abstractOrderModel.getEntries())
 					{
 						final String validProdUSSID = entry.getSelectedUSSID();
 						if (validProductUssidMap.containsKey(validProdUSSID) && entry.getMplDeliveryMode() != null)
@@ -1545,7 +1573,8 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @return true if delivery mode restriction satisfies for all products, else false
 	 */
 
-	public boolean getDelModeRestrEvalForOrderPromo(final List<AbstractPromotionRestriction> restrictionList)
+	public boolean getDelModeRestrEvalForOrderPromo(final List<AbstractPromotionRestriction> restrictionList,
+			final AbstractOrder order)
 	{
 		boolean flag = false;
 		if (null == restrictionList || restrictionList.isEmpty())
@@ -1560,7 +1589,8 @@ public class DefaultPromotionManager extends PromotionsManager
 				if (restriction instanceof DeliveryModePromotionRestriction)
 				{
 					final List<ProductModel> prodSatisfiesDelModeList = new ArrayList<ProductModel>();
-					final CartModel cartModel = cartService.getSessionCart();
+					//final CartModel cartModel = cartService.getSessionCart();
+					final AbstractOrderModel abstractOrderModel = (AbstractOrderModel) getModelService().get(order);
 					final List<String> restrDeliveryModeList = new ArrayList<String>();
 
 					for (final DeliveryMode deliveryMode : ((DeliveryModePromotionRestriction) restriction)
@@ -1569,7 +1599,7 @@ public class DefaultPromotionManager extends PromotionsManager
 						restrDeliveryModeList.add(deliveryMode.getCode());
 					}
 
-					for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+					for (final AbstractOrderEntryModel entry : abstractOrderModel.getEntries())
 					{
 						if (entry.getMplDeliveryMode() != null)
 						{
@@ -1581,7 +1611,7 @@ public class DefaultPromotionManager extends PromotionsManager
 						}
 					}
 
-					if (prodSatisfiesDelModeList.size() == cartModel.getEntries().size())
+					if (prodSatisfiesDelModeList.size() == abstractOrderModel.getEntries().size())
 					{
 						flag = true;
 					}
@@ -1599,14 +1629,16 @@ public class DefaultPromotionManager extends PromotionsManager
 	/**
 	 * @Description: This method is for fetching fullfillment type(rich attribute) for product and return product -
 	 *               fullfillment type mapping.
-	 * @param product
+	 * @param qCount
+	 * @param order
 	 * @return Map<Product, String>
 	 */
-	public Map<String, String> fetchProductRichAttribute(final Map<String, Integer> qCount)
+	public Map<String, String> fetchProductRichAttribute(final Map<String, Integer> qCount, final AbstractOrder order)
 	{
 		final Map<String, String> productfullfillmentTypeMap = new HashMap<String, String>();
-		final CartModel cartModel = cartService.getSessionCart();
-		for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+		//final CartModel cartModel = cartService.getSessionCart();
+		final AbstractOrderModel abstractOrderModel = (AbstractOrderModel) getModelService().get(order);
+		for (final AbstractOrderEntryModel entry : abstractOrderModel.getEntries())
 		{
 			if (null != entry && !entry.getGiveAway().booleanValue()) // Added for TPR-1702 : Sprint1.0
 			{
@@ -1637,18 +1669,20 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param isPercentageFlag
 	 * @param adjustedDeliveryCharge
 	 * @param fetchProductRichAttribute
+	 * @param order
 	 * @return Map<Product, Double>
 	 */
 	public Map<String, Map<String, Double>> updateDeliveryCharges(final boolean isDeliveryFreeFlag,
 			final boolean isPercentageFlag, final double adjustedDeliveryCharge, final Map<String, Integer> qCount,
-			final Map<String, String> fetchProductRichAttribute)
+			final Map<String, String> fetchProductRichAttribute, final AbstractOrder order)
 	{
 		final Map<String, Map<String, Double>> prodPrevCurrDelChargeMap = new HashMap<String, Map<String, Double>>();
 		final Map<AbstractOrderEntryModel, MplZoneDeliveryModeValueModel> prodDelChargeMap = new HashMap<AbstractOrderEntryModel, MplZoneDeliveryModeValueModel>();
-		final CartModel cartModel = cartService.getSessionCart();
+		//final CartModel cartModel = cartService.getSessionCart();
+		final AbstractOrderModel abstractOrderModel = (AbstractOrderModel) getModelService().get(order); //TPR-969
 		double totalDeliveryCostForValidProds = 0.00D;
 
-		for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+		for (final AbstractOrderEntryModel entry : abstractOrderModel.getEntries())
 		{
 			final String selectedUSSID = entry.getSelectedUSSID();
 			if (qCount.containsKey(selectedUSSID) && null != entry.getMplDeliveryMode() && !entry.getGiveAway().booleanValue())
@@ -2135,10 +2169,12 @@ public class DefaultPromotionManager extends PromotionsManager
 	/**
 	 * @Description: For checking whether seller restriction is attached with the promotion
 	 * @param deliveryModeDetailsList
+	 * @param order
 	 * @return valid ussid mapping
 	 */
 
-	public Map<String, Integer> getvalidProdQCForOrderShippingPromotion(final List<DeliveryMode> deliveryModeDetailsList)
+	public Map<String, Integer> getvalidProdQCForOrderShippingPromotion(final List<DeliveryMode> deliveryModeDetailsList,
+			final AbstractOrder order)
 	{
 		final List<String> deliveryModeCodeList = new ArrayList<String>();
 		for (final DeliveryMode deliveryMode : deliveryModeDetailsList)
@@ -2146,11 +2182,12 @@ public class DefaultPromotionManager extends PromotionsManager
 			deliveryModeCodeList.add(deliveryMode.getCode());
 		}
 		final Map<String, Integer> validProdQCountMap = new HashMap<String, Integer>();
-		final CartModel cartModel = cartService.getSessionCart();
+		//final CartModel cartModel = cartService.getSessionCart();
+		final AbstractOrderModel abstractOrderModel = (AbstractOrderModel) getModelService().get(order); //TPR-969
 
-		if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
+		if (CollectionUtils.isNotEmpty(abstractOrderModel.getEntries()))
 		{
-			for (final AbstractOrderEntryModel entryModel : cartModel.getEntries())
+			for (final AbstractOrderEntryModel entryModel : abstractOrderModel.getEntries())
 			{
 				if (null != entryModel && !entryModel.getGiveAway().booleanValue()) // Added for TPR-1702 : Sprint 1.0
 				{
@@ -2935,14 +2972,16 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @return Map<Product, Double>
 	 */
 	public Map<String, Map<String, Double>> calcDeliveryCharges(final boolean isDeliveryFreeFlag, final boolean isPercentageFlag,
-			final double adjustedDeliveryCharge, final Map<String, Integer> qCount, final String validProductUSSID)
+			final double adjustedDeliveryCharge, final Map<String, Integer> qCount, final String validProductUSSID,
+			final AbstractOrder order)
 	{
 		final Map<String, Map<String, Double>> prodPrevCurrDelChargeMap = new HashMap<String, Map<String, Double>>();
 		final Map<AbstractOrderEntryModel, MplZoneDeliveryModeValueModel> prodDelChargeMap = new HashMap<AbstractOrderEntryModel, MplZoneDeliveryModeValueModel>();
-		final CartModel cartModel = cartService.getSessionCart();
+		//final CartModel cartModel = cartService.getSessionCart();
+		final AbstractOrderModel abstractOrderModel = (AbstractOrderModel) getModelService().get(order); //TPR-969
 		double totalDeliveryCostForValidProds = 0.00D;
 
-		for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+		for (final AbstractOrderEntryModel entry : abstractOrderModel.getEntries())
 		{
 			final String selectedUSSID = entry.getSelectedUSSID();
 			if (qCount.containsKey(selectedUSSID) && null != entry.getMplDeliveryMode()
@@ -3333,54 +3372,50 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @return true
 	 */
 
-	public boolean checkPincodeSpecificRestriction(final List<AbstractPromotionRestriction> restrictionList)
+	public boolean checkPincodeSpecificRestriction(final List<AbstractPromotionRestriction> restrictionList,
+			final AbstractOrder order)
 	{
 		boolean flag = false;
 		boolean isPinCodeRestrictionPresent = false;
-		final CartModel cartModel = cartService.getSessionCart();
-		if (null != cartModel.getPincodeNumber())
+		final AbstractOrderModel abstractOrderModel = (AbstractOrderModel) getModelService().get(order);
+
+		if (CollectionUtils.isEmpty(restrictionList))
 		{
-			if (null == restrictionList || restrictionList.isEmpty())
+			return true;
+		}
+		else if (CollectionUtils.isNotEmpty(restrictionList) && null != abstractOrderModel)
+		{
+			for (final AbstractPromotionRestriction restriction : restrictionList)
+			{
+				if (restriction instanceof MplPincodeSpecificRestriction)
+				{
+					isPinCodeRestrictionPresent = true;
+					final List<State> includedStates = ((MplPincodeSpecificRestriction) restriction).getStates();
+					final List<City> excudedCity = ((MplPincodeSpecificRestriction) restriction).getCities();
+					if (CollectionUtils.isEmpty(includedStates) && CollectionUtils.isEmpty(excudedCity))
+					{
+						flag = true;
+					}
+					else if (excudedCity.isEmpty())
+					{
+						flag = isAppliedPinCodeStatesIncludes(includedStates, abstractOrderModel.getStateForPincode());
+					}
+					else
+					{
+						final boolean isValid = ((MplPincodeSpecificRestriction) restriction).isIncludeCities().booleanValue();
+						flag = checkForCityRestriction(isValid, excudedCity, includedStates, abstractOrderModel.getCityForPincode(),
+								abstractOrderModel.getStateForPincode());
+					}
+
+				}
+			}
+
+			if (!isPinCodeRestrictionPresent)
 			{
 				flag = true;
 			}
-			else
-			{
-				for (final AbstractPromotionRestriction restriction : restrictionList)
-				{
-					if (restriction instanceof MplPincodeSpecificRestriction)
-					{
-						isPinCodeRestrictionPresent = true;
-						final List<State> includedStates = ((MplPincodeSpecificRestriction) restriction).getStates();
-						final List<City> excudedCity = ((MplPincodeSpecificRestriction) restriction).getCities();
-						if (includedStates.isEmpty() && excudedCity.isEmpty())
-						{
-							flag = true;
-						}
-						else if (excudedCity.isEmpty())
-						{
-							flag = isAppliedPinCodeStatesIncludes(includedStates, cartModel.getStateForPincode());
-						}
-						else
-						{
-							final boolean isValid = ((MplPincodeSpecificRestriction) restriction).isIncludeCities().booleanValue();
-							flag = checkForCityRestriction(isValid, excudedCity, includedStates, cartModel.getCityForPincode(),
-									cartModel.getStateForPincode());
-						}
-
-					}
-				}
-				if (!isPinCodeRestrictionPresent)
-				{
-					flag = true;
-				}
-			}
-
 		}
-		else
-		{
-			flag = true;
-		}
+
 		return flag;
 	}
 
@@ -3431,7 +3466,7 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * TPR-970 changes checking whether a particular state exits against a pincode or not
 	 *
 	 * @param includedStates
-	 * @param string
+	 * @param pinCode
 	 *
 	 */
 	private boolean isAppliedPinCodeStatesIncludes(final List<State> includedStates, final String pinCode)
@@ -3443,7 +3478,7 @@ public class DefaultPromotionManager extends PromotionsManager
 		}
 		for (final State state : includedStates)
 		{
-			if (state.getCountrykey().equalsIgnoreCase(pinCode))
+			if (StringUtils.isNotEmpty(pinCode) && state.getCountrykey().equalsIgnoreCase(pinCode))
 			{
 				flag = true;
 				break;

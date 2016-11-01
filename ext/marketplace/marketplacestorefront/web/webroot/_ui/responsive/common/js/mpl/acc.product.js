@@ -1319,10 +1319,17 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 						var requiredUrl="";
 						var action = $("#customPriceFilter").attr('action');
 						if($("#isCategoryPage").val() == 'true'){
-							action = action.split('/c-');
-							action = action[1].split('/');
-							requiredUrl = "/c-"+action[0];
-							requiredUrl += "/getFacetData";
+							if ($("input[name=customSku]").val()) {
+								var collectionId = $("input[name=customSkuCollectionId]").val();
+								requiredUrl = '/CustomSkuCollection/'+collectionId+'/getFacetData';
+							}
+							else {
+								action = action.split('/c-');
+								action = action[1].split('/');
+								requiredUrl = "/c-"+action[0];
+								requiredUrl += "/getFacetData";
+							}
+							
 						} else {
 							if(action.indexOf("/getFacetData") == -1){
 							
@@ -1420,6 +1427,7 @@ $(document).ready(function() {
 
 
 function loadPriceRange(){
+	//console.log("Pricing")
 	var q = queryParam('q');
 	var priceRange = '';
 	var pvStr = ':price:';	
@@ -1430,8 +1438,8 @@ function loadPriceRange(){
 			priceRange = priceRange.substring(0, priceRange.indexOf(':'));
 		}		
 		var prices = splitPrice(priceRange);		
-		$('#customMinPrice').val(prices[0]);
-		$('#customMaxPrice').val(prices[1]);		
+		$('.minPriceSearchTxt').val(prices[0]);
+		$('.maxPriceSearchTxt').val(prices[1]);		
 		/*$('li.price').find('div.facet-name').hide();*/
 		$('li.price').find('div.facet-values .facet-list.js-facet-list').hide();
 		$('.priceBucketExpand').show();

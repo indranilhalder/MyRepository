@@ -5,9 +5,7 @@ package com.tisl.mpl.util;
 
 import de.hybris.platform.category.jalo.Category;
 import de.hybris.platform.category.model.CategoryModel;
-import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
-import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.core.Registry;
@@ -1332,24 +1330,31 @@ public class GenericUtilityMethods
 	 * For TPR-429
 	 *
 	 * @doc populates the seller IDs of the product during checkout
-	 * @param abstractOrderData
+	 * @param abstractOrderModel
 	 * @return checkoutSellerID
 	 */
-	public static String populateCheckoutSellers(final AbstractOrderData abstractOrderData)
+	public static String populateCheckoutSellers(final AbstractOrderModel abstractOrderModel)
 	{
 		String checkoutSellerID = null;
-		final List<OrderEntryData> sellerList = abstractOrderData.getEntries();
-		for (final OrderEntryData seller : sellerList)
+		final List<AbstractOrderEntryModel> entryList = abstractOrderModel.getEntries();
+		for (final AbstractOrderEntryModel entry : entryList)
 		{
-			final String sellerID = seller.getSelectedSellerInformation().getSellerID();
-			if (checkoutSellerID != null)
+			final List<SellerInformationModel> sellerInformationModels = (List<SellerInformationModel>) entry.getProduct()
+					.getSellerInformationRelator();
+			if (CollectionUtils.isNotEmpty(sellerInformationModels))
 			{
-				checkoutSellerID += MarketplacecommerceservicesConstants.UNDER_SCORE + sellerID;
+				final SellerInformationModel sellerInformationModel = sellerInformationModels.get(0);
+				final String sellerID = sellerInformationModel.getSellerID();
+				if (checkoutSellerID != null)
+				{
+					checkoutSellerID += MarketplacecommerceservicesConstants.UNDER_SCORE + sellerID;
+				}
+				else
+				{
+					checkoutSellerID = sellerID;
+				}
 			}
-			else
-			{
-				checkoutSellerID = sellerID;
-			}
+
 		}
 		return checkoutSellerID;
 	}

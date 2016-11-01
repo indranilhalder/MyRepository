@@ -1150,6 +1150,13 @@
 		<property name="usSize" type="String" />
 		<property name="footlength" type="String" />
 		<property name="age" type="String" />
+		<!-- This is added by SAP For Accessories START :::: -->
+		<property name="cmsBeltSize" type="String" />
+		<property name="inchesBeltSize" type="String" />
+		<property name="cmsWaistSize" type="String" />
+		<property name="inchesWaistSize" type="String" />
+		<property name="inchesBeltLength" type="String" />
+		<!-- This is added by SAP For Accessories END :::: -->
 	</bean>
 
 	<!-- About Us -->

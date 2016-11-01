@@ -67,8 +67,6 @@ $("#variant").change(function() {
 //AKAMAI Fix
 var productSizeVar = '${productSize}';
 </script> 
-
-
 <!-- logic for displaying color and size variant -->
 <!-- displaying colour swatches -->
 <c:choose>
@@ -118,7 +116,7 @@ var productSizeVar = '${productSize}';
 					</c:otherwise>
 				</c:choose>
 
-				<c:if test="${product.rootCategory=='Electronics'}">
+				<c:if test="${product.rootCategory=='Electronics' || product.rootCategory=='Watches'}">
 					<c:set var="notApparel" value="true" />
 				</c:if>
 				<c:if test="${not empty notApparel}">
@@ -235,6 +233,7 @@ share mobile -->
 <!-- currentcolor refers to the variable where the current color of the selected variant is stored -->
 <!-- currentcolor is populated on selecting color swatch -->
 <c:if test="${noVariant!=true&&notApparel!=true}">
+<c:if test="${showSizeGuideForFA eq true}">
 <div class="size" style="font-size: 12px;">
 
 
@@ -267,7 +266,7 @@ share mobile -->
 						<c:when test="${not empty currentColor}">
 							<c:if test="${currentColor eq color}">
 								<c:set var="currentColor" value="${color}" />
-
+								
 								<c:forEach var="entry" items="${variantOption.sizeLink}">
 									<c:url value="${entry.key}" var="link" />
 									<%--  <a href="${link}?selectedSize=true">${entry.value}</a> --%>
@@ -288,8 +287,8 @@ share mobile -->
 									</c:choose>
 								</c:forEach>
 							</c:if>
-						</c:when>
-						<c:otherwise>
+						</c:when>	
+						<c:otherwise>									
 							<c:forEach var="entry" items="${variantOption.sizeLink}">
 								<c:url value="${entry.key}" var="link" />
 								<c:if test="${entry.key eq product.url}">
@@ -299,16 +298,25 @@ share mobile -->
 								<c:forEach items="${product.variantOptions}" var="variantOption">
 									<c:forEach items="${variantOption.colour}" var="color">
 										<c:if test="${currentColor eq color}">
-
 											<c:forEach var="entry" items="${variantOption.sizeLink}">
 												<c:url value="${entry.key}" var="link" />
 												<c:choose>
-													<c:when test="${(variantOption.code eq product.code)}">
-														<li class="selected"><a href="${link}?selectedSize=true">${entry.value}</a></li>
-													</c:when>
-													<c:otherwise>
+												<c:when test="${(variantOption.code eq product.code)}">
+												<c:choose>
+												
+												
+													<c:when test="${selectedSize eq null}">
 														<li><a href="${link}?selectedSize=true">${entry.value}</a></li>
-													</c:otherwise>
+													</c:when>
+													
+												<c:otherwise>
+														<li class="selected"><a href="${link}?selectedSize=true">${entry.value}</a></li>
+												</c:otherwise>
+												</c:choose>
+											</c:when>	
+										<c:otherwise>
+											<li data-vcode="${link}"><a href="${link}?selectedSize=true">${entry.value}</a></li>
+										</c:otherwise>												
 												</c:choose>
 											</c:forEach>
 										</c:if>
@@ -318,13 +326,13 @@ share mobile -->
 						</c:otherwise>
 					</c:choose>
 				</c:forEach>
-			</c:forEach>
+			</c:forEach>			
+		
 		</ul>
-		
-		
+		<!-- Size guide Pop-up -->
 		<!-- <span id="selectSizeId" style="display: none;color: red">Please select a size!</span> -->
 		<!-- End Size guide Pop-up -->
-	</div>
+	</div></c:if> 
 	</c:if>
 
 <div id="allVariantOutOfStock" style="display: none;">

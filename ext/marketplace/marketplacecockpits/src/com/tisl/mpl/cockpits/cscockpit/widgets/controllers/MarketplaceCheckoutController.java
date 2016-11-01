@@ -131,5 +131,7 @@ public interface MarketplaceCheckoutController extends
 			String selectedUSSID);
 
 	void setFreeBiDeliveryModesAndCost(AbstractOrderEntryModel entry,
-			MplZoneDeliveryModeValueModel deliveryMode);	
+			MplZoneDeliveryModeValueModel deliveryMode);
+
+	void setCODPaymentMode(final CartModel cartModel);	//TPR-3471
 }

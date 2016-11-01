@@ -168,9 +168,9 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 
 				//for delivery mode restriction check
 				flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForAPromo(restrictionList,
-						validProductUssidMap);
+						validProductUssidMap, order);
 				final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(
-						restrictionList);
+						restrictionList, order);
 				if (flagForDeliveryModeRestrEval && flagForPincodeRestriction)
 				{
 					double percentageDiscount = getPercentageDiscount().doubleValue();

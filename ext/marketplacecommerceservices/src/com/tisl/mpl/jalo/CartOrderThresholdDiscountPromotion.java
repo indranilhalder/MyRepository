@@ -102,12 +102,12 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 						getRestrictions());//Adding restrictions to List
 				//for delivery mode restriction check
 				final boolean flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForOrderPromo(
-						restrictionList);
+						restrictionList, order);
 				//for payment mode restriction check
 				final boolean flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList,
 						ctx);
 				final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(
-						restrictionList);
+						restrictionList, order);
 				if (checkRestrictions(ctx, evalCtx) && checkChannelFlag && flagForDeliveryModeRestrEval
 						&& flagForPaymentModeRestrEval && flagForPincodeRestriction)
 				{
@@ -491,11 +491,16 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 			else
 			{
 				final int orderEntryCount = getOrderEntryCount(validProductUssidMap, ctx, order);
-				int quantityNeeded = entryQualifyingCount.intValue() - orderEntryCount;
-				if (quantityNeeded < 0)
+				int quantityNeeded = 0;
+				if (null != entryQualifyingCount)
 				{
-					quantityNeeded = 0;
+					quantityNeeded = entryQualifyingCount.intValue() - orderEntryCount;
+					if (quantityNeeded < 0)
+					{
+						quantityNeeded = 0;
+					}
 				}
+
 				final String qtyNeededMsg = quantityNeeded + " more item(s)";
 
 				final Object[] args =

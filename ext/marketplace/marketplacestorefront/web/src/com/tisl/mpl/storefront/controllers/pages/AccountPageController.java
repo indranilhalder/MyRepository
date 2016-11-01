@@ -138,6 +138,7 @@ import com.tisl.mpl.core.model.CancellationReasonModel;
 import com.tisl.mpl.core.model.MarketplacePreferenceModel;
 import com.tisl.mpl.core.model.MyRecommendationsBrandsModel;
 import com.tisl.mpl.core.model.MyRecommendationsConfigurationModel;
+import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.AddressTypeData;
@@ -911,6 +912,24 @@ public class AccountPageController extends AbstractMplSearchPageController
 								consignmentStatus = orderDetail.getStatus().getCode();
 							}
 						}
+
+						final ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntry.getProduct().getCode());
+						final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
+								.getSellerInformationRelator();
+
+						// TO-DO
+						for (final SellerInformationModel sellerInformationModel : sellerInfo)
+						{
+							if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid()))
+							{
+								final SellerInformationData sellerInfoData = new SellerInformationData();
+								sellerInfoData.setSellername(sellerInformationModel.getSellerName());
+								sellerInfoData.setUssid(sellerInformationModel.getSellerArticleSKU());
+								orderEntry.setSelectedSellerInformation(sellerInfoData);
+								break;
+							}
+						}
+
 						trackStatusMap.put(orderDetail.getCode() + orderEntry.getEntryNumber(), statusTrackMap);
 						currentStatusMap.put(orderDetail.getCode() + orderEntry.getEntryNumber(), consignmentStatus);
 					}
@@ -4575,6 +4594,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 				final List<Wishlist2EntryModel> allProductsModifiable = new ArrayList<Wishlist2EntryModel>(wishlist2EntryModels);
 				Collections.sort(allProductsModifiable, new AllProductsInWishlistByDate());
+				final Map<String, Boolean> map = new HashMap();
 				if (allProductsModifiable.size() >= 1)
 				{
 					for (final Wishlist2EntryModel entryModel : allProductsModifiable)
@@ -4648,11 +4668,13 @@ public class AccountPageController extends AbstractMplSearchPageController
 									wishlistProductData.setWishlistProductSize(productData1.getSize());
 								}
 							}
+							showSizeGuideForFA(entryModel.getProduct(), map, model);
 							wpDataList.add(wishlistProductData);
 						}
 
 					}
 				}
+				model.addAttribute("showSizeMap", map);
 			}
 			sessionService.setAttribute(ModelAttributetConstants.MY_WISHLIST_FLAG, ModelAttributetConstants.Y_CAPS_VAL);
 
@@ -7058,5 +7080,44 @@ public class AccountPageController extends AbstractMplSearchPageController
 		model.addAttribute(ModelAttributetConstants.COMMENTS, commentsWithProductDataModified);
 	}
 
+	public void showSizeGuideForFA(final ProductModel productModel, final Map map, final Model model)
+	{
+		boolean showSizeGuideForFA = true;
+		//AKAMAI fix
+		if (productModel instanceof PcmProductVariantModel)
+		{
+			final PcmProductVariantModel variantProductModel = (PcmProductVariantModel) productModel;
+
+
+			if (ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(variantProductModel.getProductCategoryType()))
+			{
+				final Collection<CategoryModel> superCategories = variantProductModel.getSupercategories();
+				final String configurationFA = configurationService.getConfiguration().getString(
+						"accessories.sideguide.category.showlist");
+				final String[] configurationFAs = configurationFA.split(",");
+				for (final CategoryModel supercategory : superCategories)
+				{
+					if (supercategory.getCode().startsWith("MPH"))
+					{
+						int num = 0;
+						for (final String fashow : configurationFAs)
+						{
+							if (!supercategory.getCode().startsWith(fashow))
+							{
+								num++;
+								if (num == configurationFAs.length)
+								{
+									showSizeGuideForFA = false;
+									break;
+								}
+							}
+						}
+						map.put(productModel.getCode(), showSizeGuideForFA);
+						break;
+					}
+				}
+			}
+		}
+	}
 
 }

@@ -92,8 +92,12 @@
 						<c:when test="${fn:startsWith(color, 'multi')}">
 							<img src="${commonResourcePath}/images/multi.jpg" height="36" width="36" title="${variantOption.colour}" />
 						</c:when>
+						<c:when test="${empty variantOption.image}">
+						     	<span style="background-color: ${color};border: 1px solid rgb(204, 211, 217); width:50px; height:73px" title="${variantOption.colour}"></span>
+						</c:when>
 						<c:otherwise>
-							<span  style="background-color: ${color};border: 1px solid rgb(204, 211, 217);"  title="${variantOption.colour}"></span>
+							<c:set var="imageData" value="${variantOption.image}" />
+										<img src="${imageData.url}" title="${variantOption.colour}" alt="${styleValue}" style="display: inline-block;width: 50px;"/>
 						</c:otherwise>
 					</c:choose>
 					<c:if test="${variantOption.code eq product.code}">
@@ -165,6 +169,7 @@
 <!-- if no sizes are variant -->
 	
 <c:if test="${noVariant!=true&&notApparel!=true}"> 
+<c:if test="${showSizeGuideForFA eq true}">
 <c:choose>
 
 <c:when test="${selectedSize==null}"> 
@@ -204,7 +209,7 @@
 				 <%-- <li><spring:theme
 							code="text.select.size" /></li> --%>
 				<c:forEach items="${product.variantOptions}" var="variantOption">
-
+					
 					<c:url value="${variantOption.url}/quickView" var="variantUrl" />
 					<c:forEach items="${variantOption.colourCode}" var="color">
 						<c:choose>
@@ -213,12 +218,12 @@
 									<c:set var="currentColor" value="${color}" />
 									<c:forEach var="entry" items="${variantOption.sizeLink}">
 										<c:url value="${entry.key}" var="link" />
-							            
-										<c:choose>
-											<c:when test="${(product.code eq variantOption.code && selectedSize !=null)}">
+							            	
+										<c:choose>									
+											<c:when test="${(product.code eq variantOption.code && selectedSize != null)}">
 											<li class="selected"><a href="${variantUrl}?selectedSize=true" class="js-reference-item cboxElement">${entry.value}</a></li>
 											</c:when>
-											<c:otherwise>   
+											<c:otherwise>  
 												<li><a href="${variantUrl}?selectedSize=true" class="js-reference-item cboxElement">${entry.value}</a></li>
 											</c:otherwise>
 										</c:choose>
@@ -243,20 +248,18 @@
 													value="${variantOption.url}/quickView"
 													var="variantUrl" />
 												<c:forEach var="entry" items="${variantOption.sizeLink}">
-													<c:url value="${entry.key}" var="link" />
-                                                    
+													<c:url value="${entry.key}" var="link" />                                                
 													<c:choose>
-														<c:when test="${(product.code eq variantOption.code)}">
-                                                         
+														<c:when test="${(product.code eq variantOption.code && selectedSize != null )}">                                                    
 															<c:url
 																value="${variantOption.url}/quickView" 
 																var="variantUrl" />
-															    
-																<li><a href="${variantUrl}" class="js-reference-item cboxElement">${entry.value}</a></li>
+															   <!--  <li class="selected"><a href="${variantUrl}?selectedSize=true" class="js-reference-item cboxElement">${entry.value}</a></li>  --> 
+															   <li class="selected"><a href="${variantUrl}" class="js-reference-item cboxElement">${entry.value}</a></li>	
 														</c:when>
 														<c:otherwise>
-															
-															<li><a href="${variantUrl}" class="js-reference-item cboxElement">${entry.value}</a></li>
+															<!--<li><a href="${variantUrl}?selectedSize=true" class="js-reference-item cboxElement">${entry.value}</a></li>-->
+															<li><a href="${variantUrl}" class="js-reference-item cboxElement">${entry.value}</a></li> 
 														</c:otherwise>
 													</c:choose>
 												</c:forEach>
@@ -273,7 +276,7 @@
 			
 		</div>
 	</form:form>
-	
+	</c:if>
 	
 </c:if>
 <input type="hidden" maxlength="10" size="1" id="sellerSelId" name="sellerId" value="${sellerID}" />

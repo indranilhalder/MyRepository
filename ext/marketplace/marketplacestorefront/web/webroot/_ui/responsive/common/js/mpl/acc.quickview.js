@@ -93,7 +93,14 @@ function quickviewGallery() {
 		});
 	 	
 	 });
-	
+	if($("#cboxContent #cboxLoadedContent .quickview.active")[0].offsetHeight < $("#cboxContent #cboxLoadedContent .quickview.active")[0].scrollHeight){
+		$("#cboxContent #cboxLoadedContent .quickview.active").css("height",$("#cboxContent #cboxLoadedContent .quickview.active")[0].scrollHeight);
+		$("#cboxContent").css("max-height",$("#cboxContent #cboxLoadedContent .quickview.active")[0].scrollHeight);
+	}
+	else{
+		$("#cboxContent #cboxLoadedContent .quickview.active").css("height","565px");
+		$("#cboxContent").css("max-height","565px");
+	}
 	
 }
 

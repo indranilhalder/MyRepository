@@ -1801,7 +1801,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				{
 					final String bin = juspayCard.getCardIsin() != null ? juspayCard.getCardIsin()
 							: MarketplacecommerceservicesConstants.EMPTY;
-					BinModel binModel = getModelService().create(BinModel.class);
+					BinModel binModel = null;
 					try
 					{
 						//Added For TPR-1035
@@ -2732,17 +2732,20 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		{
 			for (final PromotionResultData promotionResultData : promoResultList)
 			{
-				final String st = promotionResultData.getDescription();
-				final String result = stripNonDigits(st);
+				if (StringUtils.isNotEmpty(promotionResultData.getDescription()))
+				{
+					final String st = promotionResultData.getDescription();
+					final String result = stripNonDigits(st);
 
-				try
-				{
-					totalDiscount = totalDiscount + Double.parseDouble(result);
-				}
-				catch (final Exception e)
-				{
-					LOG.error("Exception during double parsing ", e);
-					totalDiscount = totalDiscount + 0;
+					try
+					{
+						totalDiscount = totalDiscount + Double.parseDouble(result);
+					}
+					catch (final Exception e)
+					{
+						LOG.error("Exception during double parsing ", e);
+						totalDiscount = totalDiscount + 0;
+					}
 				}
 			}
 		}

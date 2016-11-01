@@ -32,7 +32,7 @@ var productCodeSG = '${product.code}';
 			<div class="footwear-size-table">
 				<%-- <h2>Top</h2> --%>
 					<ul>
-						<li class="header">
+						<li class="header" >
 							<ul>
 							   <c:if test="${product.rootCategory!='Footwear'}">
 								<%-- <li><spring:theme code="product.variants.size"/></li> --%>
@@ -68,6 +68,32 @@ var productCodeSG = '${product.code}';
 								<c:set var="us" value="Y"/>
 								</c:if>
 								</c:forEach>
+								</c:if>
+								<c:if test="${product.rootCategory=='Accessories'}">
+									<c:forEach items="${sizeguideHeader}" var="sizeGuide" >
+										<li>${sizeGuide}</li>
+										<c:if test="${sizeGuide eq 'Years'}">
+											<c:set var="age" value="Y"/>
+										</c:if>
+										<c:if test="${sizeGuide eq 'Size'}">
+											<c:set var="size" value="Y"/>
+										</c:if>
+										<c:if test="${sizeGuide eq 'Belt Size (cm)' }">
+											<c:set var="cmsBeltSize" value="Y"/>
+										</c:if>
+										<c:if test="${sizeGuide eq 'Belt Size (inch)' }">
+											<c:set var="inchesBeltSize" value="Y"/>
+										</c:if>
+										<c:if test="${sizeGuide eq 'Waist (cm)' }">
+											<c:set var="cmsWaistSize" value="Y"/>
+										</c:if>
+										<c:if test="${sizeGuide eq 'Waist Size (inch)' }">
+											<c:set var="inchesWaistSize" value="Y"/>
+										</c:if>
+										<c:if test="${sizeGuide eq 'Belt Length (inch)' }">
+											<c:set var="inchesBeltLength" value="Y"/>
+										</c:if>
+									</c:forEach>
 								</c:if>
 							</ul>
 						</li>
@@ -247,12 +273,105 @@ var productCodeSG = '${product.code}';
 							</li>
 							</c:forEach>
 						 </c:when>
+						 <c:when test="${product.rootCategory=='Accessories'}">
+						 		<c:forEach items="${sizeguideData}" var="sizeGuide" >
+							    <li class="item footwear">
+									<c:forEach items="${sizeGuide.value}" var="sizeGuideValue">
+									<c:set var="imageURL" value="${sizeGuideValue.imageURL}"></c:set>
+									<ul>
+									<c:if test="${age=='Y' }">
+									<c:choose>
+									     <c:when test="${not empty sizeGuideValue.age}">
+										<li style="text-transform:Uppercase">${sizeGuideValue.age}</li>
+
+										</c:when>
+										<c:otherwise>
+										<li></li>
+									</c:otherwise>
+									</c:choose>	
+									</c:if>
+									<c:if test="${size=='Y' }">
+									<c:choose>
+									     <c:when test="${not empty sizeGuideValue.dimensionSize}">
+										<li style="text-transform:Uppercase">${sizeGuideValue.dimensionSize}</li>
+
+										</c:when>
+										<c:otherwise>
+										<li></li>
+									</c:otherwise>
+									</c:choose>	
+									</c:if>
+									<c:if test="${cmsBeltSize=='Y' }">
+									<c:choose>
+									     <c:when test="${not empty sizeGuideValue.cmsBeltSize}">
+										<li>${sizeGuideValue.cmsBeltSize}</li>
+
+										</c:when>
+										<c:otherwise>
+										<li></li>
+									</c:otherwise>
+									</c:choose>	
+									</c:if>
+									<c:if test="${inchesBeltSize=='Y'}">
+									<c:choose>
+									     <c:when test="${not empty sizeGuideValue.inchesBeltSize}">
+										<li>${sizeGuideValue.inchesBeltSize}</li>
+
+										</c:when>
+										<c:otherwise>
+										<li></li>
+									</c:otherwise>
+									</c:choose>	
+									</c:if>
+									<c:if test="${cmsWaistSize=='Y'}">
+									<c:choose>
+									     <c:when test="${not empty sizeGuideValue.cmsWaistSize}">
+										<li>${sizeGuideValue.cmsWaistSize}</li>
+
+										</c:when>
+										<c:otherwise>
+										<li></li>
+									</c:otherwise>
+									</c:choose>	
+									</c:if>
+									<c:if test="${inchesWaistSize=='Y'}">
+									<c:choose>
+									     <c:when test="${not empty sizeGuideValue.inchesWaistSize}">
+										<li>${sizeGuideValue.inchesWaistSize}</li>
+
+										</c:when>
+										<c:otherwise>
+										<li></li>
+									</c:otherwise>
+									</c:choose>	
+									</c:if>	
+									 <c:if test="${inchesBeltLength=='Y'}">
+									<c:choose>
+									     <c:when test="${not empty sizeGuideValue.inchesBeltLength}">
+										<li>${sizeGuideValue.inchesBeltLength}</li>
+
+										</c:when>
+										<c:otherwise>
+										<li></li>
+									</c:otherwise>
+									</c:choose>	
+									</c:if>	
+									</ul>	
+									</c:forEach>
+							</li>
+							</c:forEach>
+						 </c:when>
 						</c:choose>
 			</div>
 			 <c:if test="${product.rootCategory=='Footwear'}">
 			<div class="footwearNote" style="line-height:19px;">
 			<product:footwearNote/></div>
 			</c:if>		
+			<c:if test="${product.rootCategory=='Accessories' }">
+			<div class="footwearNote" style="line-height:19px;">
+				<product:fashionaccessorynote></product:fashionaccessorynote>
+			</div>
+			</c:if>
 		</div>
 
 			<div class="img">
@@ -260,7 +379,7 @@ var productCodeSG = '${product.code}';
 					<c:when test="${product.rootCategory=='Clothing'}">
 						<img src="${imageURL}" alt="sizeGuideImage" />
 					</c:when>
-					<c:when test="${product.rootCategory=='Footwear'}">
+					<c:when test="${product.rootCategory=='Footwear' || product.rootCategory=='Accessories'}">
 						<%-- <img src="${commonResourcePath}/images/foot_size.jpg" alt="sizeGuideImage" style="max-width:65%;" /> --%>
 						<img src="${imageURL}" alt="sizeGuideImage" style="max-width:65%;" />
 					</c:when>
@@ -315,17 +434,20 @@ var productCodeSG = '${product.code}';
 											
 								 <c:forEach
 									items="${variantOption.colourCode}" var="color">
-								<c:choose> 
-								<c:when test="${fn:startsWith(color, 'multi')}"> 
-						     	<img src="${commonResourcePath}/images/multi.jpg" style="width:100%;height:100%;cursor: pointer;" title="${variantOption.colour}" class="colorBox"  data-producturl="${variantUrl}&sizeSelected=" data-productcode="${variantOption.code}"/>
+								<c:choose>
+								<c:when test="${fn:startsWith(color, 'multi')}">
+						     	<img src="${commonResourcePath}/images/multi.jpg" height="20" width="20" title="${variantOption.colour}" />
 								</c:when>
-								<%-- <span style="background-color: ${color};border: 1px solid rgb(204, 211, 217);" title="${variantOption.colour}" class="colorBox"  data-producturl="${variantUrl}&sizeSelected=${sizeSelectedSizeGuide}" data-productcode="${variantOption.code}"></span> --%>
+								
+								<c:when test="${empty variantOption.image}">
+						     	<span style="background-color: ${color};border: 1px solid rgb(204, 211, 217); width:50px; height:73px" title="${variantOption.colour}"></span>
+								</c:when>							
 								<c:otherwise>
-									<span
-										style="background-color: ${color};border: 1px solid rgb(204, 211, 217);"
-										title="${variantOption.colour}" class="colorBox"  data-producturl="${variantUrl}&sizeSelected=" data-productcode="${variantOption.code}"></span>
-                               </c:otherwise> 
-                               </c:choose> 
+								
+								<c:set var="imageData" value="${variantOption.image}" />
+										<img src="${imageData.url}" title="${variantOption.colour}" alt="${styleValue}" style="display: inline-block;width: 50px;"/>								
+                               </c:otherwise>
+                               </c:choose>	
 
 									<c:if test="${variantOption.code eq product.code}">
 										<c:set var="currentColor" value="${color}" /> 
@@ -422,11 +544,13 @@ var productCodeSG = '${product.code}';
 													<c:when test="${(variantOption.code eq product.code)}">
 													<%-- 	<option selected="selected" data-productcode1="${variantOption.code}" data-producturl="${link}">${entry.value}</option> --%>
 																								<c:choose>
-											    <c:when test="${empty sizeSelectedSizeGuide}">
-													<li><span data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=">${entry.value}</span></li>
+											    <c:when test="${empty sizeSelectedSizeGuide || sizeSelectedSizeGuide ne 'true' }">
+													<!-- <li><span data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=">${entry.value}</span></li> -->
+												<li><span data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</span></li>
 												</c:when>
 												<c:otherwise>
-													<li class="selected"><span data-target="#popUpModal"  data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</span></li>
+													<!--<li class="selected"><span data-target="#popUpModal"  data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</span></li>  -->
+												    <li class="selected"><span data-target="#popUpModal"  data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</span></li>
 												</c:otherwise>
 												</c:choose>
 													</c:when>

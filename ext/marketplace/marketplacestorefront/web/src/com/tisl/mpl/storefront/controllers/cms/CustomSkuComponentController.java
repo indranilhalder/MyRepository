@@ -120,11 +120,11 @@ public class CustomSkuComponentController extends AbstractCMSComponentController
 
 		String formedPaginationUrl = null;
 
+		int count = getSearchPageSize();
+		final UserPreferencesData preferencesData = updateUserPreferences(count);
+
 		if (null != searchQuery || null != sortCode)
 		{
-			int count = getSearchPageSize();
-			final UserPreferencesData preferencesData = updateUserPreferences(count);
-
 			if (preferencesData != null && preferencesData.getPageSize() != null)
 			{
 				count = preferencesData.getPageSize().intValue();
@@ -134,19 +134,29 @@ public class CustomSkuComponentController extends AbstractCMSComponentController
 			final String url = searchPageData.getCurrentQuery().getUrl();
 			formedPaginationUrl = url.replace("/search", "");
 			searchPageData.getCurrentQuery().setUrl(formedPaginationUrl);
+			//Checking Department Hierarchy
+			model.addAttribute("departmentHierarchyData", searchPageData.getDepartmentHierarchyData());
+			model.addAttribute("departments", searchPageData.getDepartments());
 			populateModel(model, searchPageData, showMode);
 		}
 		else
 		{
-			ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
-			final SearchStateData searchState = new SearchStateData();
-			final SearchQueryData searchQueryData = new SearchQueryData();
-			final PageableData pageableData = createPageableData(page, getSearchPageSize(), null, ShowMode.Page);
-			searchState.setQuery(searchQueryData);
-			searchPageData = searchFacade.collectionSearch(sku.getLabelOrId(), searchState, pageableData);
+			/*
+			 * ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null; final
+			 * SearchStateData searchState = new SearchStateData(); final SearchQueryData searchQueryData = new
+			 * SearchQueryData(); final PageableData pageableData = createPageableData(page, getSearchPageSize(), null,
+			 * ShowMode.Page); searchState.setQuery(searchQueryData); searchPageData =
+			 * searchFacade.collectionSearch(sku.getLabelOrId(), searchState, pageableData);
+			 */
+			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
+					sku.getLabelOrId(), searchQuery, page, showMode, sortCode, count, null);
 			final String url = searchPageData.getCurrentQuery().getUrl();
 			formedPaginationUrl = url.replace("/search", "");
 			searchPageData.getCurrentQuery().setUrl(formedPaginationUrl);
+			//Checking Department Hierarchy
+			model.addAttribute("departmentHierarchyData", searchPageData.getDepartmentHierarchyData());
+			model.addAttribute("departments", searchPageData.getDepartments());
+			populateModel(model, searchPageData, showMode);
 		}
 	}
 

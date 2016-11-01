@@ -26,7 +26,7 @@ tr.d0 td {
 }
 </style>
  <script type="text/javascript">
-
+ var quickview_height;
       (function() {
        var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
        po.src = 'https://apis.google.com/js/client:plusone.js';
@@ -731,6 +731,11 @@ display:none;
 				};
 				$(document).on('click','#mailQuick',function(){
 						utag.link({link_obj: this, link_text: 'share_email' , event_type : 'share_button_click' });
+						quickview_height = $("#cboxContent #cboxLoadedContent .quickview.active")[0].offsetHeight;
+						if($("#cboxContent #cboxLoadedContent .quickview.active")[0].offsetHeight < $("#cboxContent #cboxLoadedContent .quickview.active")[0].scrollHeight){
+							$("#cboxContent #cboxLoadedContent .quickview.active").css("height",$("#cboxContent #cboxLoadedContent .quickview.active")[0].scrollHeight + 10);
+							$("#cboxContent").css("max-height",$("#cboxContent #cboxLoadedContent .quickview.active")[0].scrollHeight + 10);
+						}
 					})
 					$(document).on('click','.g-interactivepost',function(){
 				utag.link({link_obj: this, link_text: 'share_googleplus' , event_type : 'share_button_click' });
@@ -896,9 +901,10 @@ display:none;
 	
 </div>
 <script>
-
 $('ul.wish-share div.share').mouseleave(function(){
  $(this).find('[data-toggle="popover"]').popover('hide');
+		$("#cboxContent #cboxLoadedContent .quickview.active").css("height",quickview_height);
+		$("#cboxContent").css("max-height",quickview_height);
 });
 function sendmail_quick(){
 	$('#emailSuccess_quick,#emailUnSuccess_quick,#emailError_quick,#validateemail_quick,#emailEmpty_quick').hide();
@@ -986,6 +992,7 @@ wishQv = setInterval(function(){
 			"left":$(".quickview .main-image").width() - 50,
 			"display":"block"
 			});
+		$(".zoomContainer .wishlist-icon-qv.zoom-qv").hide();
 	} else {
 		clearInterval(wishQv);
 	}
@@ -993,7 +1000,7 @@ wishQv = setInterval(function(){
 },50);
 $(document).on("mouseover",".zoomContainer",function(e) {
 	if($(".zoomContainer .wishlist-icon-qv.zoom-qv").length == 0) {
-		$(".zoomContainer").append($(".wishlist-icon-qv.zoom-qv").clone());
+	    $(".zoomContainer").append($(".wishlist-icon-qv.zoom-qv").clone());
 		$(".zoomContainer .wishlist-icon-qv.zoom-qv").css({
 			"left":$(".quickview .main-image").width() - 50,
 			"display":"block"

@@ -8,23 +8,19 @@ import de.hybris.platform.commerceservices.service.data.CommerceCheckoutParamete
 import de.hybris.platform.commerceservices.service.data.CommerceOrderResult;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
-import de.hybris.platform.servicelayer.exceptions.ModelRemovalException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
-import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -208,8 +204,13 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 									MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
 
 							getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
-
-							removeVoucherInvalidation(orderModel);
+							//Code to remove coupon for Payment_Timeout orders
+							if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()))
+							{
+								final PromotionVoucherModel voucherModel = (PromotionVoucherModel) orderModel.getDiscounts().get(0);
+								getMplVoucherService().releaseVoucher(voucherModel.getVoucherCode(), null, orderModel);
+								getMplVoucherService().recalculateCartForCoupon(null, orderModel);
+							}
 
 							//Email and sms for Payment_Timeout
 							final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
@@ -483,40 +484,40 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	}
 
 
-
-	/**
-	 * This method removes voucher invalidation model when payment is timed-out, without releasing the coupon.
-	 *
-	 * @param orderModel
-	 * @throws EtailNonBusinessExceptions
-	 */
-	private void removeVoucherInvalidation(final OrderModel orderModel) throws EtailNonBusinessExceptions
-	{
-		try
-		{
-			if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()))
-			{
-
-				final CustomerModel customer = (CustomerModel) orderModel.getUser();
-				final List<VoucherInvalidationModel> invalidationList = new ArrayList<VoucherInvalidationModel>(getMplVoucherDao()
-						.findVoucherInvalidation(orderModel.getDiscounts().get(0).getCode(), customer.getOriginalUid(),
-								orderModel.getCode()));
-
-				final Iterator<VoucherInvalidationModel> iter = invalidationList.iterator();
-
-				//Remove the existing discount
-				while (iter.hasNext())
-				{
-					final VoucherInvalidationModel model = iter.next();
-					getModelService().remove(model);
-				}
-			}
-		}
-		catch (final ModelRemovalException e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0020);
-		}
-	}
+	//Not used
+	//	/**
+	//	 * This method removes voucher invalidation model when payment is timed-out, without releasing the coupon.
+	//	 *
+	//	 * @param orderModel
+	//	 * @throws EtailNonBusinessExceptions
+	//	 */
+	//	private void removeVoucherInvalidation(final OrderModel orderModel) throws EtailNonBusinessExceptions
+	//	{
+	//		try
+	//		{
+	//			if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()))
+	//			{
+	//
+	//				final CustomerModel customer = (CustomerModel) orderModel.getUser();
+	//				final List<VoucherInvalidationModel> invalidationList = new ArrayList<VoucherInvalidationModel>(getMplVoucherDao()
+	//						.findVoucherInvalidation(orderModel.getDiscounts().get(0).getCode(), customer.getOriginalUid(),
+	//								orderModel.getCode()));
+	//
+	//				final Iterator<VoucherInvalidationModel> iter = invalidationList.iterator();
+	//
+	//				//Remove the existing discount
+	//				while (iter.hasNext())
+	//				{
+	//					final VoucherInvalidationModel model = iter.next();
+	//					getModelService().remove(model);
+	//				}
+	//			}
+	//		}
+	//		catch (final ModelRemovalException e)
+	//		{
+	//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0020);
+	//		}
+	//	}
 
 
 

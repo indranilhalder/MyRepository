@@ -284,12 +284,12 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 
 					//for delivery mode restriction check
 					flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForAPromo(restrictionList,
-							validProductUssidMap);
+							validProductUssidMap, order);
 					//for payment mode restriction check
 					flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList,
 							paramSessionContext);
 					final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(
-							restrictionList);
+							restrictionList, order);
 					if (flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval && flagForPincodeRestriction) // If Total no of valid Products exceeds Qualifying Count
 					{
 						int totalValidProdCount = 0;
