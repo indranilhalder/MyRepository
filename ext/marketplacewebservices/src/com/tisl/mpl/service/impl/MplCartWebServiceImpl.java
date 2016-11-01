@@ -528,7 +528,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	 */
 	@Override
 	public WebSerResponseWsDTO addProductToCart(final String productCode, final String cartId, final String quantity,
-			final String USSID, final boolean addedToCartWl) throws InvalidCartException, CommerceCartModificationException
+			final String USSID, final boolean addedToCartWl, final String channel) throws InvalidCartException,
+			CommerceCartModificationException
 	{
 		final WebSerResponseWsDTO result = new WebSerResponseWsDTO();
 		final long quant = Long.parseLong(quantity);
@@ -629,6 +630,14 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			}
 			else
 			{
+				//TISLUX-1823 Saving channel as Web for Luxury
+				if (channel != null && channel.equalsIgnoreCase(SalesApplication.WEB.getCode()))
+				{
+					cartModel.setChannel(SalesApplication.WEB);
+					modelService.save(cartModel);
+				}
+
+
 				addedToCart = mplCartFacade.addItemToCart(cartId, cartModel, selectedProductModel, quant, USSID);
 				if (LOG.isDebugEnabled())
 				{
@@ -1649,7 +1658,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		{
 			if (null != promo && null != promo.getPromotion())
 			{
-				if (null != promo.getPromotion().getChannel() && !promo.getPromotion().getChannel().isEmpty())
+				if (CollectionUtils.isNotEmpty(promo.getPromotion().getChannel()))
 				{
 					flag = promo.getPromotion().getChannel().stream()
 							.anyMatch(s -> SalesApplication.MOBILE.getCode().equals(s.getCode()));

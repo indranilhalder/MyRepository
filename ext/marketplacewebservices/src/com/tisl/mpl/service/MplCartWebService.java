@@ -52,7 +52,7 @@ public interface MplCartWebService
 	 * @throws InvalidCartException
 	 */
 	WebSerResponseWsDTO addProductToCart(final String productCode, final String cartId, final String quantity, String USSID,
-			boolean addedToCartWl) throws InvalidCartException, CommerceCartModificationException;
+			boolean addedToCartWl, String channel) throws InvalidCartException, CommerceCartModificationException;
 
 	/**
 	 * Service to get cart details

@@ -55,6 +55,7 @@ import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
 import de.hybris.platform.converters.Populator;
 import de.hybris.platform.servicelayer.i18n.I18NService;
+import de.hybris.platform.util.localization.Localization;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -289,8 +290,8 @@ public class ProductsController extends BaseController
 	@Cacheable(value = "productCache", key = "T(de.hybris.platform.commercewebservicescommons.cache.CommerceCacheKeyGenerator).generateKey(true,true,#productCode,#fields)")
 	@ResponseBody
 	public ProductDetailMobileWsData getProductByCode(@PathVariable String productCode,
-			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields, final HttpServletRequest request)
-			throws MalformedURLException
+			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields, final HttpServletRequest request,
+			@RequestParam(required = false) final String channel) throws MalformedURLException
 	{
 		ProductDetailMobileWsData product = new ProductDetailMobileWsData();
 
@@ -325,7 +326,9 @@ public class ProductsController extends BaseController
 					//+ MarketplacewebservicesConstants.FORGOTPASSWORD_URL;
 				}
 			}
-			product = mplProductWebService.getProductdetailsForProductCode(productCode, baseUrl);
+
+
+			product = mplProductWebService.getProductdetailsForProductCode(productCode, baseUrl, channel);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -339,13 +342,17 @@ public class ProductsController extends BaseController
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-
 			product.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 			if (null != e.getErrorMessage())
 			{
 				product.setError(e.getErrorMessage());
 			}
-
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			product.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			product.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		return product;
 	}
