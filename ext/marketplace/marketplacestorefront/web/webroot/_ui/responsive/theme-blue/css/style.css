@@ -434,6 +434,29 @@ body.page-shopTheStyle .timeout-slider .owl-controls .owl-dots {
 	border-bottom: 4px solid #fff;
 }
 /* -------------End TPR-179 Style For ShopTheStyle---------- */
+
+/* -------------Start TPR-3625 Style---------- */
+
+.style-edit-video > .yCmsComponent{
+	position: relative;
+}
+.style-edit-title{
+	color: #fff;
+	font-size: 24px;
+	position: absolute;
+	left: 7%;
+	line-height: 30px;
+	bottom: 10%;
+	text-transform: uppercase;
+	width: 90%;
+	z-index: 10;
+}
+.style-edit-title span{
+	display: block;
+	text-transform: none;		
+}
+/* -------------End TPR-3625 Style	---------- */
+
   @media (min-width: 651px) {
     input[type="checkbox"] + label, input[type="radio"] + label {
       padding-left: 10px; } }
