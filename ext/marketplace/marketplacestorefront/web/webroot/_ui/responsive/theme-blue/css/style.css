@@ -33635,7 +33635,8 @@ letter-spacing:1px;
 font-weight: 500 !important;
 }
 body.page-cartPage .cart.wrapper .checkout-types a.checkoutButton{
-line-height: 14px !important;
+	line-height: 12px !important;
+    padding: 14px 18px 12px;
 }
 body.page-cartPage .cart-top-block {
     margin: 0 auto;
@@ -58326,4 +58327,7 @@ li.facet.js-facet.collectionIds{
     width: 100%;
     text-align: center;
 }
+}
+.emptyCart-mobile{
+	height: 100px;
 }
