@@ -19404,7 +19404,7 @@ header > .content .bottom .search {
   width: 100%;
   float: left;
   text-align: center;
-  margin-top: 10px;
+  /* margin-top: 10px; */
 }
 header > .content .bottom .marketplace {	
   text-align: center;
@@ -34233,7 +34233,7 @@ body.page-cartPage .cart.wrapper .product-block li.item > ul > li.qty select{
     right: 0px;
 }
 header > .content .top .toggle {
-    right: -63px;
+    right: -51px;
 }
 }
 .off-bag {
