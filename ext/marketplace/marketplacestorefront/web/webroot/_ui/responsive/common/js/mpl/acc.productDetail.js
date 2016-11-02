@@ -3025,3 +3025,37 @@ if($('#pageTemplateId').val() == 'ProductDetailsPageTemplate'){
 		lazyLoadProductContents();
 	});
 }
+
+
+//PDP Specifications arrow
+$(document).ready(function(){
+var width=0;
+$(".SpecWrap .Padd .tabs-block .nav > li").each(
+		function() {
+			width = width + $(this).width();
+		});
+console.log(width);
+var winWidth = $(".SpecWrap .nav-wrapper").innerWidth();
+console.log(winWidth);
+$(window).on("load resize", function() {
+if (width <= winWidth){
+	$(".SpecWrap .Padd .tabs-block .nav-wrapper > span").css("display","none");
+}
+if (width > winWidth){
+	var l = 0;
+	var value = 200;
+	$(".SpecWrap .Padd .tabs-block .nav-wrapper > span").css("display","inline-block");
+	$('.SpecWrap .Padd .tabs-block .nav').animate({'left':0});
+	$(".SpecWrap .Padd .tabs-block .nav-wrapper > span").unbind().click(function() {
+		l = l + value;
+		if(!$('.SpecWrap .Padd .tabs-block .nav li:last-child').visible()){
+            $('.SpecWrap .Padd .tabs-block .nav').animate({'left':-l});			
+		}else{
+			l = 0;
+			$('.SpecWrap .Padd .tabs-block .nav').animate({'left':0});
+		}
+        });	
+}
+});
+
+});
