@@ -37,6 +37,10 @@ public class CartMatchingFilter extends AbstractUrlMatchingFilter
 	private CartLoaderStrategy cartLoaderStrategy;
 	private static final String GETTOPTWOWISHLIST = "getTopTwoWishlistForUser";
 	private static final String SOFTCARTRESERVATIONFORPAYMENT = "softReservationForPayment";
+	private static final String APPLYCOUPON = "applyCoupons";
+	private static final String RELEASECOUPON = "releaseCoupons";
+	private static final String ORDER_SUMMARY = "displayOrderSummary";
+	private static final String RESEND_OTP_COD = "resendOtpforcod";
 	@Autowired
 	private UserService userService;
 
@@ -46,22 +50,28 @@ public class CartMatchingFilter extends AbstractUrlMatchingFilter
 	protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response,
 			final FilterChain filterChain) throws ServletException, IOException
 	{
-		LOG.debug("CartMatchingFilter Step 1 >>  Request path URI " + request.getRequestURI() + " Path info "
-				+ request.getPathInfo());
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("CartMatchingFilter Step 1 >>  Request path URI " + request.getRequestURI() + " Path info "
+					+ request.getPathInfo());
+		}
 
 		if (matchesUrl(request, regexp) && null != getValue(request, regexp)
-				&& !getValue(request, regexp).equalsIgnoreCase(GETTOPTWOWISHLIST)
-				&& !request.getRequestURI().contains(SOFTCARTRESERVATIONFORPAYMENT))
+				&& !request.getRequestURI().contains(GETTOPTWOWISHLIST)
+				&& !request.getRequestURI().contains(SOFTCARTRESERVATIONFORPAYMENT) && !request.getRequestURI().contains(APPLYCOUPON)
+				&& !request.getRequestURI().contains(RELEASECOUPON) && !request.getRequestURI().contains(ORDER_SUMMARY)
+				&& !request.getRequestURI().contains(RESEND_OTP_COD))
 		{
 
 			final String cartId = getValue(request, regexp);
-			LOG.debug(" CartMatchingFilter Step 2 >> Cart Id  " + cartId);
-
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug(" CartMatchingFilter Step 2 >> Cart Id  " + cartId);
+			}
 			if (getUserService().getCurrentUser() != null && getUserService().getCurrentUser().getUid() != null)
 			{
 				LOG.debug(" CartMatchingFilter Step 3 >> user Id  " + getUserService().getCurrentUser().getUid());
 			}
-
 			cartLoaderStrategy.loadCart(cartId);
 		}
 

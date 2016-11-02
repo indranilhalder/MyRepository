@@ -405,7 +405,7 @@ public class MarketplacewebservicesConstants
 		}
 	};
 
-	public static final String CART_PINCODE_ERROR_OMS_CHECK = "Delivery mode check from OMS issue ".intern();
+	public static final String CART_PINCODE_ERROR_OMS_CHECK = "Delivery mode check from OMS issue ---Pincode: ".intern();
 	public static final String CART_PINCODE_ERROR = "Delivery mode check issue ".intern();
 	public static final String WISHLIST_NON_EXISTENT = "rename.wishlist.no.exist".intern();
 
@@ -465,8 +465,8 @@ public class MarketplacewebservicesConstants
 	public static final String ENDFORHOME = "endForHome";
 	public static final String STARTFOREXPRESS = "startForExpress";
 	public static final String ENDFOREXPRESS = "endForExpress";
-	public static final String DELISTED_MESSAGE_CART = "Sorry! Some of the items in your Cart are no longer available";
-	public static final String DELISTED_MESSAGE_WISHLIST = "Sorry! Some of the items in your wishlist are no longer available";
+	public static final String DELISTED_MESSAGE_CART = "B9325";
+	public static final String DELISTED_MESSAGE_WISHLIST = "B9326";
 	public static final String JUSPAY_CONN_ERROR = "Sorry! The system is down, please try again";
 
 	public static final String LINK_LOGIN = "/login";
@@ -516,6 +516,9 @@ public class MarketplacewebservicesConstants
 	public static final String SEARCH_FACET_CONFIG = "search.facet.config";
 	public static final String GENERIC = "Generic".intern();
 	public static final String CATEGORY = "category".intern();
+	public static final String JUSPAYRETURNMETHOD = "payment.juspay.returnMethod.mobile";
+	public static final String CHARGED = "CHARGED";
+	public final static double WALLETAMOUNT = 0.00D;
 
 	//TPR_622, 627
 	public static final String YES = "yes";

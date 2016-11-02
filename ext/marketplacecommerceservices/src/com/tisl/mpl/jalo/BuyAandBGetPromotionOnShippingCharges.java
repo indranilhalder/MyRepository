@@ -90,7 +90,7 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 			//checkChannelFlag = getMplPromotionHelper().checkChannel(listOfChannel); // Verifying the Channel : Web/Web Mobile/ CockPit
 			//changes Start for omni cart fix @atmaram
 			final AbstractOrder cart = arg1.getOrder();
-
+			boolean flagForPincodeRestriction = false;
 			checkChannelFlag = getDefaultPromotionsManager().checkChannelData(listOfChannel, cart);
 
 			//changes end for omni cart fix @atmaram
@@ -103,17 +103,18 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 			{
 				//for delivery mode restriction check
 				flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForABPromo(restrictionList,
-						validProductUssidMap);
+						validProductUssidMap, order);
+				flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList, order);
 				if (!eligibleProductList.isEmpty()) //Apply percentage/amount discount to valid products
 				{
-					if (flagForDeliveryModeRestrEval)
+					if (flagForDeliveryModeRestrEval && flagForPincodeRestriction)
 					{
 						final Map<String, Integer> qCount = getDefaultPromotionsManager().getQualifyingCountForABPromotion(
 								eligibleProductList, totalFactorCount);
 						final Map<String, List<String>> productAssociatedItemsMap = getDefaultPromotionsManager()
 								.getAssociatedItemsForABorFreebiePromotions(validProductListA, validProductListB, null);
 						final Map<String, String> fetchProductRichAttribute = getDefaultPromotionsManager().fetchProductRichAttribute(
-								qCount);
+								qCount, order);
 
 						//for (final Map.Entry<Product, Integer> mapEntry : qCount.entrySet())
 						for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
@@ -151,7 +152,7 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 
 								final Map<String, Map<String, Double>> apportionedProdDelChargeMap = getDefaultPromotionsManager()
 										.updateDeliveryCharges(isDeliveryFreeFlag, isPercentageFlag, adjustedDeliveryCharge, qCount,
-												fetchProductRichAttribute);
+												fetchProductRichAttribute, order);
 								//********Calculating delivery charges & setting it at entry level ends*********
 								arg0.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
 								arg0.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, qCount);

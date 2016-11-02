@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.service;
 
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 
@@ -25,11 +26,12 @@ public interface MplPaymentWebService
 	/**
 	 * To get the COD Eligiblity for Items in the Cart
 	 *
-	 * @param cartID
-	 * @param customer_ID
+	 * @param abstractOrder
+	 * @param customerID
 	 * @return
 	 */
-	public PaymentServiceWsData getCODDetails(final String cartID, final String customerID) throws EtailNonBusinessExceptions;
+	public PaymentServiceWsData getCODDetails(final AbstractOrderModel abstractOrder, final String customerID)
+			throws EtailNonBusinessExceptions;
 
 	/**
 	 * Update CARD Transactions and Save Payment Ibnfo and Address details
@@ -83,12 +85,13 @@ public interface MplPaymentWebService
 	 * @param binNo
 	 * @param bankName
 	 * @param paymentMode
-	 * @param cartID
+	 * @param userId
 	 * @return MplPromotionDTO
 	 * @throws EtailNonBusinessExceptions
 	 */
-	public MplPromoPriceWsDTO validateBinNumber(final String binNo, final String paymentMode, final String bankName)
-			throws EtailNonBusinessExceptions;
+
+	public MplPromoPriceWsDTO validateBinNumber(final String binNo, final String paymentMode, final String bankName,
+			final String userId) throws EtailNonBusinessExceptions;
 
 	/**
 	 * @param userId
@@ -109,9 +112,9 @@ public interface MplPaymentWebService
 	public CartModel findCartAnonymousValues(final String guid);
 
 	/**
-	 * @param cartId
+	 * @param cartModel
 	 * @return PaymentServiceWsData
 	 */
-	public PaymentServiceWsData potentialPromotionOnPaymentMode(final String userId, final String cartId);
+	public PaymentServiceWsData potentialPromotionOnPaymentMode(final AbstractOrderModel cartModel);
 
 }

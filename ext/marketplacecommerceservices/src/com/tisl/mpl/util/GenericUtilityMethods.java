@@ -5,13 +5,12 @@ package com.tisl.mpl.util;
 
 import de.hybris.platform.category.jalo.Category;
 import de.hybris.platform.category.model.CategoryModel;
-import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
-import de.hybris.platform.commercefacades.order.data.OrderEntryData;
-import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.core.Registry;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.product.Product;
@@ -39,6 +38,8 @@ import org.apache.log4j.Logger;
 import org.springframework.ui.Model;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.BrandModel;
+import com.tisl.mpl.data.MplPaymentInfoData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
@@ -49,6 +50,7 @@ import com.tisl.mpl.jalo.ManufacturesRestriction;
 import com.tisl.mpl.jalo.SellerMaster;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.wsdto.BillingAddressWsDTO;
+import com.tisl.mpl.wsdto.OrderConfirmationWsDTO;
 
 
 /**
@@ -89,8 +91,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: Sends the year from Date
-	 * @param :
-	 *           date
+	 * @param : date
 	 * @return year
 	 */
 	public static String redirectYear(final Date date)
@@ -115,8 +116,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: Modifies Date with the required Year
-	 * @param :
-	 *           date,yeartoModify
+	 * @param : date,yeartoModify
 	 * @return modifedDate
 	 */
 	public static Date modifiedBDate(final Date date, final String yeartoModify)
@@ -209,8 +209,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: Compares with System Date
-	 * @param :
-	 *           date
+	 * @param : date
 	 * @return flag
 	 */
 	public static boolean compareDateWithSysDate(final Date date)
@@ -249,8 +248,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: @Promtion: Checks Excluded Manufacturer Restriction
-	 * @param :
-	 *           List<AbstractPromotionRestriction> restrictionLists
+	 * @param : List<AbstractPromotionRestriction> restrictionLists
 	 * @param restrictionList
 	 * @return manufactureList
 	 */
@@ -636,8 +634,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description : Populate the Excluded Product and Manufacture Data in separate Lists
-	 * @param :
-	 *           SessionContext arg0,PromotionEvaluationContext arg1
+	 * @param : SessionContext arg0,PromotionEvaluationContext arg1
 	 */
 	public static void populateExcludedProductManufacturerList(final SessionContext arg0, final PromotionEvaluationContext arg1,
 			final List<Product> excludedProductList, final List<String> excludeManufactureList,
@@ -648,8 +645,8 @@ public class GenericUtilityMethods
 			if (productPromotion.getProperty(arg0, MarketplacecommerceservicesConstants.EXCLUDEDPRODUCTS) != null
 					&& excludedProductList != null)
 			{
-				excludedProductList.addAll(
-						(List<Product>) productPromotion.getProperty(arg0, MarketplacecommerceservicesConstants.EXCLUDEDPRODUCTS));
+				excludedProductList.addAll((List<Product>) productPromotion.getProperty(arg0,
+						MarketplacecommerceservicesConstants.EXCLUDEDPRODUCTS));
 			}
 			if (excludeManufactureList != null)
 			{
@@ -684,8 +681,8 @@ public class GenericUtilityMethods
 			final SessionContext ctx, final PromotionEvaluationContext promoEvalCtx, final ProductPromotion productPromotion,
 			final List<AbstractPromotionRestriction> restrictionList)
 	{
-		return (getDefaultPromotionsManager().checkMinimumCategoryValue(validProductUssidMap, ctx, productPromotion)
-				&& getDefaultPromotionsManager().checkMinimumBrandAmount(ctx, promoEvalCtx, validProductUssidMap, restrictionList));
+		return (getDefaultPromotionsManager().checkMinimumCategoryValue(validProductUssidMap, ctx, productPromotion) && getDefaultPromotionsManager()
+				.checkMinimumBrandAmount(ctx, promoEvalCtx, validProductUssidMap, restrictionList));
 
 	}
 
@@ -719,11 +716,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 *
+	 * 
 	 * @param orderDetail
-	 *
+	 * 
 	 * @param type (1-Billing, 2-Shipping)
-	 *
+	 * 
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -793,6 +790,8 @@ public class GenericUtilityMethods
 		return billingAddress;
 
 	}
+
+
 
 	/**
 	 * @Description : Generate Folder if not present
@@ -995,8 +994,8 @@ public class GenericUtilityMethods
 	public static String getMissingImageUrl()
 
 	{
-		final ConfigurationService configService = (ConfigurationService) Registry.getApplicationContext()
-				.getBean("configurationService");
+		final ConfigurationService configService = (ConfigurationService) Registry.getApplicationContext().getBean(
+				"configurationService");
 		String missingImageUrl = MISSING_IMAGE_URL;
 		String staticHost = null;
 		if (null != configService)
@@ -1011,7 +1010,7 @@ public class GenericUtilityMethods
 
 	}
 
-	public static void populateTealiumDataForCartCheckout(final Model model, final CartData cartData)
+	public static void populateTealiumDataForCartCheckout(final Model model, final AbstractOrderModel cartModel)
 	{
 		String sku = null;
 		String adobeSku = null;
@@ -1034,20 +1033,22 @@ public class GenericUtilityMethods
 		final List<String> productSkuList = new ArrayList<String>();
 		final List<String> productUnitPriceList = new ArrayList<String>();
 		final List<String> pageSubCategories = new ArrayList<String>();
-		final List<String> adobeProductSkuList = new ArrayList<String>();
 		final List<String> pageSubcategoryNameL3List = new ArrayList<String>();
+		final List<String> adobeProductSkuList = new ArrayList<String>();
+
 
 		try
 		{
-			if (null != cartData)
+			if (null != cartModel)
 			{
-				if (null != cartData.getTotalPrice() && null != cartData.getTotalPrice().getValue())
+				if (null != cartModel.getTotalPrice())
 				{
-					cartTotal = cartData.getTotalPrice().getValue().toPlainString();
+					cartTotal = cartModel.getTotalPrice().toString();
 				}
-				if (CollectionUtils.isNotEmpty(cartData.getEntries()))
+
+				if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
 				{
-					for (final OrderEntryData entry : cartData.getEntries())
+					for (final AbstractOrderEntryModel entry : cartModel.getEntries())
 					{
 						if (null != entry)
 						{
@@ -1066,54 +1067,56 @@ public class GenericUtilityMethods
 								quantity = appendQuote(String.valueOf(entry.getQuantity()));
 							}
 
-							if (null != entry.getBasePrice() && null != entry.getBasePrice().getValue())
+							if (null != entry.getBasePrice())
 							{
-								basePrice = appendQuote(entry.getBasePrice().getValue().toPlainString());//base price for a cart entry
+								basePrice = appendQuote(entry.getBasePrice().toString());//base price for a cart entry
 							}
 
-							if (null != entry.getTotalPrice() && null != entry.getTotalPrice().getValue())
+							if (null != entry.getTotalPrice())
 							{
-								totalEntryPrice = appendQuote(entry.getTotalPrice().getValue().toPlainString());//total price for a cart entry
+								totalEntryPrice = appendQuote(entry.getTotalPrice().toString());//total price for a cart entry
 							}
 						}
 
-						final List<String> categoryList = new ArrayList<String>();
-						//START [05-Feb-2016] R2.1 - Adding only a Null Check to fix Card payment issue.
-						//Check that if (entry.getProduct().getCategories() != null) then only execute the loop. Else just log an
-						//error message and continue.
-						if (entry.getProduct() != null && entry.getProduct().getCategories() != null)
+						if (entry.getProduct() != null && CollectionUtils.isNotEmpty(entry.getProduct().getBrands()))
 						{
-							for (final CategoryData categoryData : entry.getProduct().getCategories())
+							final List<BrandModel> brandList = new ArrayList<BrandModel>(entry.getProduct().getBrands());
+							brand = appendQuote(brandList.get(0).getName());
+						}
+
+
+						//TPR-430 starts
+						final StringBuffer categoryName = new StringBuffer();
+						for (final CategoryModel categoryModel : entry.getProduct().getSupercategories())
+						{
+							if (categoryModel.getCode().contains(MarketplacecommerceservicesConstants.SELLER_NAME_PREFIX))
 							{
-								categoryList.add(categoryData.getName());
+								categoryName.append(categoryModel.getName()).append(':');
+								getCategoryLevel(categoryModel, 1, categoryName);
 							}
-						}
-						//End [05-Feb-2016] R2.1 - Adding Null Check to fix Card payment issue.
-						final Object[] categoryStrings = categoryList.toArray();
 
-						if (categoryStrings.length > 0)
-						{
-							category = appendQuote((String) categoryStrings[0]);
 						}
 
-						if (entry.getProduct() != null && entry.getProduct().getBrand() != null)
+						if (StringUtils.isNotEmpty(categoryName.toString()))
 						{
-							brand = appendQuote(entry.getProduct().getBrand().getBrandname());
-						}
-						if (categoryStrings.length >= 1)
-						{
-							page_subCategory_name = appendQuote((String) categoryStrings[1]).replaceAll(" ", "_").toLowerCase();
+							final String[] categoryNames = categoryName.toString().split(":");
+							category = appendQuote(categoryNames[2].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
+							productCategoryList.add(category);
+
+							page_subCategory_name = appendQuote(categoryNames[1].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
+									.toLowerCase());
 							pageSubCategories.add(page_subCategory_name);
-						}
 
-						if (categoryStrings.length >= 2)
-						{
-							page_subcategory_name_L3 = appendQuote((String) categoryStrings[2]).replaceAll(" ", "_").toLowerCase();
+							page_subcategory_name_L3 = appendQuote(categoryNames[0].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
+									.toLowerCase());
 							pageSubcategoryNameL3List.add(page_subcategory_name_L3);
 
+
 						}
+
+						//TPR-430 ends
+
 						productBrandList.add(brand);
-						productCategoryList.add(category);
 						productIdList.add(sku);
 						productListPriceList.add(totalEntryPrice);
 						productNameList.add(name);
@@ -1146,17 +1149,18 @@ public class GenericUtilityMethods
 				}
 
 				model.addAttribute("productBrandList", productBrandList);
-				model.addAttribute("productCategoryList", productCategoryList);
+
 				model.addAttribute("productIdList", productIdList);
 				model.addAttribute("productListPriceList", productListPriceList);
 				model.addAttribute("productNameList", productNameList);
 				model.addAttribute("productQuantityList", productQuantityList);
 				model.addAttribute("productSkuList", productSkuList);
 				model.addAttribute("productUnitPriceList", productUnitPriceList);
-				model.addAttribute("pageSubCategories", pageSubCategories);
 				model.addAttribute("adobe_product", adobeProductSku);
 				model.addAttribute("cart_total", cartTotal);
 				//TPR-430
+				model.addAttribute("pageSubCategories", pageSubCategories);
+				model.addAttribute("productCategoryList", productCategoryList);
 				model.addAttribute("page_subcategory_name_L3", pageSubcategoryNameL3List);
 			}
 		}
@@ -1166,11 +1170,193 @@ public class GenericUtilityMethods
 		}
 	}
 
+	/* Checking payment type and then setting payment info */
+	public static void setPaymentInfo(final OrderData orderDetail, final OrderConfirmationWsDTO orderWsDTO)
+	{
+		MplPaymentInfoData paymentInfo = null;
+
+		if (null != orderDetail.getMplPaymentInfo())
+		{
+			paymentInfo = orderDetail.getMplPaymentInfo();
+
+			if (null != paymentInfo.getPaymentOption())
+			{
+				orderWsDTO.setPaymentMethod(paymentInfo.getPaymentOption());
+			}
+			if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.CREDIT))
+			{
+				if (StringUtils.isNotEmpty(paymentInfo.getCardAccountHolderName()))
+				{
+					orderWsDTO.setCardholdername(paymentInfo.getCardAccountHolderName());
+				}
+
+				if (StringUtils.isNotEmpty(paymentInfo.getCardIssueNumber()))
+				{
+					orderWsDTO.setPaymentCardDigit(paymentInfo.getCardIssueNumber());
+				}
+				if (StringUtils.isNotEmpty(paymentInfo.getCardCardType()))
+				{
+					orderWsDTO.setPaymentCard(paymentInfo.getCardCardType());
+				}
+				if (StringUtils.isNotEmpty(paymentInfo.getCardExpirationMonth().toString())
+						&& StringUtils.isNotEmpty(paymentInfo.getCardExpirationYear().toString()))
+				{
+					orderWsDTO.setPaymentCardExpire(paymentInfo.getCardExpirationMonth() + "/" + paymentInfo.getCardExpirationYear());
+				}
+			}
+
+			else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.EMI))
+			{
+				if (StringUtils.isNotEmpty(paymentInfo.getCardAccountHolderName()))
+				{
+					orderWsDTO.setCardholdername(paymentInfo.getCardAccountHolderName());
+				}
+				if (StringUtils.isNotEmpty(paymentInfo.getCardIssueNumber()))
+				{
+					orderWsDTO.setPaymentCardDigit(paymentInfo.getCardIssueNumber());
+				}
+				if (StringUtils.isNotEmpty(paymentInfo.getCardCardType()))
+				{
+					orderWsDTO.setPaymentCard(paymentInfo.getCardCardType());
+				}
+				if (StringUtils.isNotEmpty(paymentInfo.getCardExpirationMonth().toString())
+						&& StringUtils.isNotEmpty(paymentInfo.getCardExpirationYear().toString()))
+				{
+					orderWsDTO.setPaymentCardExpire(paymentInfo.getCardExpirationMonth() + "/" + paymentInfo.getCardExpirationYear());
+				}
+			}
+			else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.NETBANKING))
+			{
+				if (StringUtils.isNotEmpty(paymentInfo.getCardAccountHolderName()))
+				{
+					orderWsDTO.setCardholdername(paymentInfo.getCardAccountHolderName());
+				}
+				if (StringUtils.isNotEmpty(paymentInfo.getBank()))
+				{
+					orderWsDTO.setPaymentCardDigit(paymentInfo.getBank());
+				}
+				if (StringUtils.isNotEmpty(paymentInfo.getCardCardType()))
+				{
+					orderWsDTO.setPaymentCard(paymentInfo.getCardCardType());
+				}
+
+				orderWsDTO.setPaymentCardExpire(MarketplacecommerceservicesConstants.NA);
+			}
+			else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.DEBIT))
+			{
+				if (StringUtils.isNotEmpty(paymentInfo.getCardAccountHolderName()))
+				{
+					orderWsDTO.setCardholdername(paymentInfo.getCardAccountHolderName());
+				}
+				if (StringUtils.isNotEmpty(paymentInfo.getCardIssueNumber()))
+				{
+					orderWsDTO.setPaymentCardDigit(paymentInfo.getCardIssueNumber());
+				}
+				if (StringUtils.isNotEmpty(paymentInfo.getCardCardType()))
+				{
+					orderWsDTO.setPaymentCard(paymentInfo.getCardCardType());
+				}
+				if (StringUtils.isNotEmpty(paymentInfo.getCardExpirationMonth().toString())
+						&& StringUtils.isNotEmpty(paymentInfo.getCardExpirationYear().toString()))
+				{
+					orderWsDTO.setPaymentCardExpire(paymentInfo.getCardExpirationMonth() + "/" + paymentInfo.getCardExpirationYear());
+				}
+			}
+			else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.COD))
+			{
+				if (StringUtils.isNotEmpty(paymentInfo.getCardAccountHolderName()))
+				{
+					orderWsDTO.setCardholdername(paymentInfo.getCardAccountHolderName());
+				}
+
+			}
+			else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.WALLET))
+			{
+				if (StringUtils.isNotEmpty(paymentInfo.getCardAccountHolderName()))
+				{
+					orderWsDTO.setCardholdername(paymentInfo.getCardAccountHolderName());
+				}
+				orderWsDTO.setPaymentCardDigit(MarketplacecommerceservicesConstants.NA);
+				orderWsDTO.setPaymentCardExpire(MarketplacecommerceservicesConstants.NA);
+			}
+		}
+		else
+		{
+
+			orderWsDTO.setPaymentCard(MarketplacecommerceservicesConstants.NA);
+			orderWsDTO.setPaymentCardDigit(MarketplacecommerceservicesConstants.NA);
+			orderWsDTO.setPaymentCardExpire(MarketplacecommerceservicesConstants.NA);
+			orderWsDTO.setCardholdername(MarketplacecommerceservicesConstants.NA);
+		}
+	}
+
 	public static String appendQuote(final String param)
 	{
 		final StringBuilder str = new StringBuilder(100);
 		str.append('\"').append(param).append('\"');
 		return str.toString();
+	}
+
+	public static void getCategoryLevel(final CategoryModel categoryId, int count, final StringBuffer categoryName)
+	{
+		final int finalCount = 3;
+		try
+		{
+			if (!categoryId.getSupercategories().isEmpty())
+			{
+				for (final CategoryModel superCategory : categoryId.getSupercategories())
+				{
+					categoryName.append(superCategory.getName()).append(':');
+					count++;
+					if (count == finalCount)
+					{
+						break;
+					}
+					else
+					{
+						getCategoryLevel(superCategory, count, categoryName);
+					}
+				}
+			}
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		//return finalCount;
+	}
+
+	/**
+	 * For TPR-429
+	 *
+	 * @doc populates the seller IDs of the product during checkout
+	 * @param abstractOrderModel
+	 * @return checkoutSellerID
+	 */
+	public static String populateCheckoutSellers(final AbstractOrderModel abstractOrderModel)
+	{
+		String checkoutSellerID = null;
+		final List<AbstractOrderEntryModel> entryList = abstractOrderModel.getEntries();
+		for (final AbstractOrderEntryModel entry : entryList)
+		{
+			final List<SellerInformationModel> sellerInformationModels = (List<SellerInformationModel>) entry.getProduct()
+					.getSellerInformationRelator();
+			if (CollectionUtils.isNotEmpty(sellerInformationModels))
+			{
+				final SellerInformationModel sellerInformationModel = sellerInformationModels.get(0);
+				final String sellerID = sellerInformationModel.getSellerID();
+				if (checkoutSellerID != null)
+				{
+					checkoutSellerID += MarketplacecommerceservicesConstants.UNDER_SCORE + sellerID;
+				}
+				else
+				{
+					checkoutSellerID = sellerID;
+				}
+			}
+
+		}
+		return checkoutSellerID;
 	}
 
 }

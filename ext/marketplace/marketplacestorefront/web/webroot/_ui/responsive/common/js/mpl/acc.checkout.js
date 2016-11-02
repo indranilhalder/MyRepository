@@ -46,6 +46,7 @@ ACC.checkout = {
 			if(selectedAddressCode == null || selectedAddressCode=='undefined')
 			{
 				//alert("Please select a delivery address");
+				$("#emptyAddress").show();
 				return false;
 			}
 			$('#selectAddressForm').submit();	

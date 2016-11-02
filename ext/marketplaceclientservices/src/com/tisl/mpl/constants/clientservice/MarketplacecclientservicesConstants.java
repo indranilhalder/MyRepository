@@ -125,10 +125,12 @@ public class MarketplacecclientservicesConstants
 	public static final String OMS_INVENTORY_RESV_TYPE_PAYMENT = "payment";
 	public static final String OMS_INVENTORY_RESV_TYPE_ORDERHELD = "orderheld";
 	public static final String OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE = "orderDeallocate";
+	public static final String OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING = "paymentPending";
 	public static final String OMS_INVENTORY_RESV_DURATION_CART = "oms.inventory.reservation.cart.duration";
 	public static final String OMS_INVENTORY_RESV_DURATION_PAYMENT = "oms.inventory.reservation.payment.duration";
 	public static final String OMS_INVENTORY_RESV_DURATION_ORDERHELD = "oms.inventory.reservation.order.held.duration";
 	public static final String OMS_INVENTORY_RESV_DURATION_ORDERDEALLOCATE = "oms.inventory.reservation.order.deallocate.duration";
+	public static final String OMS_INVENTORY_RESV_DURATION_PAYMENTPENDING = "oms.inventory.reservation.payment.pending.duration";
 	public static final String OMS_INVENTORY_RESV_REALTIMECALL = "oms.inventory.reservation.realtimecall";
 	public static final String OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLFIRSTPHASE = "oms.inventory.reservation.mock.urlfirstxmlphase";
 	public static final String OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLSECONDPHASE = "oms.inventory.reservation.mock.urlsecondxmlphase";
@@ -231,6 +233,10 @@ public class MarketplacecclientservicesConstants
 
 	public static final String EXCEPTION_TYPE_PINCODE = "pincode";
 	public static final String EXCEPTION_TYPE_INVENTORY = "inventory";
+
+	//TPR-815
+	public static final String OMS_ORDER_INVENTORY_RESV_SESSION_ID = "orderInventoryReservationFailed";
+	public static final String ORDER_INV_FAIL_MSG = "Uh oh! Looks like what you wanted isn't available right now, but it could come back soon. Please try again later";
 
 	// Strat OMS Fallback constants PLAN C
 

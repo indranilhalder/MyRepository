@@ -3,7 +3,14 @@
  */
 package com.tisl.mpl.service.impl;
 
+import de.hybris.platform.acceleratorcms.model.components.SimpleBannerComponentModel;
 import de.hybris.platform.category.model.CategoryModel;
+import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
+import de.hybris.platform.cms2.model.contents.components.CMSImageComponentModel;
+import de.hybris.platform.cms2.model.contents.components.CMSParagraphComponentModel;
+import de.hybris.platform.cms2.model.pages.ContentPageModel;
+import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
@@ -41,6 +48,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import javax.annotation.Resource;
@@ -53,6 +61,7 @@ import org.apache.log4j.Logger;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.core.model.VideoComponentModel;
 import com.tisl.mpl.enums.OnlineExclusiveEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -62,8 +71,10 @@ import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplKeywordRedirectDao;
+import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
+import com.tisl.mpl.seller.product.facades.ProductOfferDetailFacade;
 import com.tisl.mpl.service.MplProductWebService;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.CapacityLinkData;
@@ -73,7 +84,10 @@ import com.tisl.mpl.wsdto.DeliveryModeData;
 import com.tisl.mpl.wsdto.GalleryImageData;
 import com.tisl.mpl.wsdto.GiftProductMobileData;
 import com.tisl.mpl.wsdto.KnowMoreDTO;
+import com.tisl.mpl.wsdto.ProductAPlusWsData;
+import com.tisl.mpl.wsdto.ProductContentWsData;
 import com.tisl.mpl.wsdto.ProductDetailMobileWsData;
+import com.tisl.mpl.wsdto.ProductOfferMsgDTO;
 import com.tisl.mpl.wsdto.PromotionMobileData;
 import com.tisl.mpl.wsdto.SellerInformationMobileData;
 import com.tisl.mpl.wsdto.SizeLinkData;
@@ -110,6 +124,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	private MplKeywordRedirectDao mplKeywordRedirectDao;
 	private Map<KeywordRedirectMatchType, KeywordRedirectHandler> redirectHandlers;
 
+
+
+
 	private static final String Y = "Y";
 	private static final String N = "N";
 	private static final String WARRANTY = "Warranty";
@@ -117,6 +134,123 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	private static final String HTTPS = "https";
 
 	private static final Logger LOG = Logger.getLogger(MplProductWebServiceImpl.class);
+
+	@Resource(name = "prodOfferDetFacade")
+	private ProductOfferDetailFacade prodOfferDetFacade;
+
+	@Resource(name = "cmsPageService")
+	private MplCmsPageService mplCmsPageService;
+
+	/**
+	 * @throws CMSItemNotFoundException
+	 * @desc This service fetches all the details of A+ content based on product code
+	 */
+	@Override
+	public ProductAPlusWsData getAPluscontentForProductCode(String productCode) throws EtailNonBusinessExceptions,
+			CMSItemNotFoundException
+	{
+
+		if (null != productCode)
+		{
+			productCode = productCode.toUpperCase();
+		}
+		ContentPageModel contentPage = null;
+		List<String> contentList = null;
+		List<String> imageList = null;
+		List<String> videoList = null;
+		final ProductAPlusWsData productAPlus = new ProductAPlusWsData();
+		final HashMap<String, ProductContentWsData> productContentDataMap = new HashMap<String, ProductContentWsData>();
+		final ProductModel productModel = productService.getProductForCode(productCode);
+		try
+		{
+
+			contentPage = getContentPageForProduct(productModel);
+			if (null != contentPage)
+			{
+
+				for (final ContentSlotForPageModel contentSlotForPageModel : contentPage.getContentSlots())
+				{
+					final ProductContentWsData productContentData = new ProductContentWsData();
+					contentList = new ArrayList<String>();
+					imageList = new ArrayList<String>();
+					videoList = new ArrayList<String>();
+
+
+					for (final AbstractCMSComponentModel abstractCMSComponentModel : contentSlotForPageModel.getContentSlot()
+							.getCmsComponents())
+					{
+
+						if (abstractCMSComponentModel instanceof CMSParagraphComponentModel)
+						{
+							final CMSParagraphComponentModel paragraphComponent = (CMSParagraphComponentModel) abstractCMSComponentModel;
+							contentList.add(paragraphComponent.getContent());
+						}
+
+						if (abstractCMSComponentModel instanceof CMSImageComponentModel)
+						{
+							final CMSImageComponentModel cmsImageComponent = (CMSImageComponentModel) abstractCMSComponentModel;
+							imageList.add(cmsImageComponent.getMedia().getUrl2());
+						}
+
+						if (abstractCMSComponentModel instanceof SimpleBannerComponentModel)
+						{
+							final SimpleBannerComponentModel bannerComponent = (SimpleBannerComponentModel) abstractCMSComponentModel;
+							if (bannerComponent.getMedia() != null && StringUtils.isNotEmpty(bannerComponent.getMedia().getUrl2()))
+							{
+
+								imageList.add(bannerComponent.getMedia().getUrl2());
+
+
+							}
+							else if (StringUtils.isNotEmpty(bannerComponent.getUrlLink()))
+							{
+
+								imageList.add(bannerComponent.getUrlLink());
+
+
+							}
+						}
+
+						if (abstractCMSComponentModel instanceof VideoComponentModel)
+						{
+							final VideoComponentModel bannerComponent = (VideoComponentModel) abstractCMSComponentModel;
+							videoList.add(bannerComponent.getVideoUrl());
+						}
+
+					}
+
+					productContentData.setTextList(contentList);
+					productContentData.setImageList(imageList);
+					productContentData.setVideoList(videoList);
+					productContentDataMap.put(contentSlotForPageModel.getPosition(), productContentData);
+
+				}
+			}//final end of if
+			productAPlus.setTemlateName(contentPage.getLabelOrId());
+			productAPlus.setProductContent(productContentDataMap);
+		}
+		catch (final CMSItemNotFoundException e)
+		{
+			throw e;
+		}
+		return productAPlus;
+	}
+
+	/**
+	 * @desc get the content page for the provded product code
+	 * @param product
+	 * @return ContentPageModel
+	 * @throws CMSItemNotFoundException
+	 */
+	private ContentPageModel getContentPageForProduct(final ProductModel product) throws CMSItemNotFoundException
+	{
+		final ContentPageModel productContentPage = mplCmsPageService.getContentPageForProduct(product);
+		if (productContentPage == null)
+		{
+			throw new CMSItemNotFoundException("Could not find a product content for the product" + product.getName());
+		}
+		return productContentPage;
+	}
 
 	/*
 	 * To get product details for a product code
@@ -247,6 +381,53 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			{
 				productDetailMobile.setSellerAssociationstatus(MarketplacecommerceservicesConstants.N);
 			}
+
+
+			//			Added for OfferDetail of  a product TPR-1299
+			if (null != productCode)
+			{
+				final Map<String, Map<String, String>> offerMessageMap = prodOfferDetFacade.showOfferMessage(productCode);
+				if (MapUtils.isNotEmpty(offerMessageMap) && null != buyBoxData && null != buyBoxData.getSellerId()
+						&& offerMessageMap.containsKey(buyBoxData.getSellerId()))
+				{
+					for (final Entry<String, Map<String, String>> entry : offerMessageMap.entrySet())
+					{
+						if (null != entry && null != entry.getKey() && null != entry.getValue()
+								&& entry.getKey().equals(buyBoxData.getSellerId()))
+						{
+							final Map<String, String> offerMessage = entry.getValue();
+							final ProductOfferMsgDTO ProductOfferMsgDTO = new ProductOfferMsgDTO();
+							for (final Entry<String, String> entry1 : offerMessage.entrySet())
+							{
+								if (null != entry1 && null != entry1.getValue()
+										&& entry1.getKey().equalsIgnoreCase(MarketplacecommerceservicesConstants.MESSAGEDET))
+								{
+									ProductOfferMsgDTO.setMessageDetails(entry1.getValue());
+								}
+								if (null != entry1 && null != entry1.getValue()
+										&& entry1.getKey().equalsIgnoreCase(MarketplacecommerceservicesConstants.MESSAGE))
+								{
+									ProductOfferMsgDTO.setMessageID(entry1.getValue());
+								}
+								if (null != entry1 && null != entry1.getValue()
+										&& entry1.getKey().equalsIgnoreCase(MarketplacecommerceservicesConstants.MESSAGESTARTDATE))
+								{
+
+									ProductOfferMsgDTO.setStartDate(entry1.getValue());
+								}
+								if (null != entry1 && null != entry1.getValue()
+										&& entry1.getKey().equalsIgnoreCase(MarketplacecommerceservicesConstants.MESSAGEENDDATE))
+								{
+									ProductOfferMsgDTO.setEndDate(entry1.getValue());
+								}
+							}
+							productDetailMobile.setProductOfferMsg(ProductOfferMsgDTO);
+						}
+					}
+
+				}
+			}
+
 			if (null != buyBoxData && null != buyBoxData.getSellerArticleSKU())
 			{
 				ussid = buyBoxData.getSellerArticleSKU();
@@ -299,6 +480,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				if (null != productData.getRootCategory())
 				{
 					productDetailMobile.setRootCategory(productData.getRootCategory());
+
+					LOG.debug("*************** Mobile web service product root category ****************"
+							+ productData.getRootCategory());
 				}
 				if (CollectionUtils.isNotEmpty(productData.getImages()))
 				{
@@ -550,6 +734,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					+ Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_POST);
 			productDetailMobile.setSharedText(sharedText);
 			LOG.debug("******************** PDP mobile web service  fetching done *****************");
+
+			//TPR-978
+
 
 		}
 
