@@ -489,7 +489,14 @@ ACC.carousel = {
 	},
 	blpTopDealsCarousel: function(){
 		$(".top_deal_blp #mplAdvancedCategoryCarousel").owlCarousel({
-					items:5,
+			items:1,
+		    nav:false,
+		    dots:true,
+		    loop: true,
+            autoplay: true,
+            autoHeight : true,
+            autoplayTimeout: 5000
+					/*items:5,
             		loop: true,
             		nav:true,
             		dots:false,
@@ -513,7 +520,7 @@ ACC.carousel = {
             			1000 : {
             				items:5,
             			}			
-            		}	
+            		}*/	
 			/*navigation:true,
 			rewindNav: false,
 			navigationText :[],
@@ -534,7 +541,14 @@ ACC.carousel = {
 
 	ClpTopDealsCarousel: function(){
 		$(".top_deal .offersCarousel").owlCarousel({
-					items:5,
+			items:1,
+		    nav:false,
+		    dots:true,
+		    loop: true,
+            autoplay: true,
+            autoHeight : true,
+            autoplayTimeout: 5000
+					/*items:5,
             		loop: true,
             		nav:false,
             		dots:false,
@@ -566,7 +580,7 @@ ACC.carousel = {
             				loop: ($(".top_deal .offersCarousel .image").length <= 5)?false:true,
             				nav: ($(".top_deal .offersCarousel .image").length <= 5)?false:true,
             			}			
-            		}	
+            		}*/	
 			/*navigation:true,
 			rewindNav: false,
 			navigationText :[],
