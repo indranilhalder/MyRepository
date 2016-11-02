@@ -1,7 +1,22 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template" %>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags" %>
+<script type="text/javascript">
 
+$(window).resize(function(){
+	iframe_resize();
+});
+function iframe_resize(){
+	$('.bkg-img').show();
+	var iframeHeight = $('.bkg-img').height();
+	var iframeWidth = $('.bkg-img').width();
+	$('.bkg-img').hide();
+	$('.video-container').css('width', iframeWidth);
+	$('.video-container').css('height', iframeHeight);	
+}
+iframe_resize();
+
+</script>
 <div class="Manufacturer Temp07">
   <div class="Padd">
    <h2><span>From the Manufacturer</span></h2>
@@ -105,9 +120,12 @@
 			           
 			         </div>
 			       </div> -->
+			      <div class="js_ytvideo_inline">
+			       <img class="bkg-img" src="http://tatacliq.uat006.fmgdevelopment.com/images/related-video.jpg" alt="">
 		        <cms:pageSlot position="Section7A" var="feature">
 							<cms:component component="${feature}" element="div" class="" />
 						</cms:pageSlot>
+						</div>
 		         </div>
 	         </div>
          	<!-- <div class="owl-controls"><div class="owl-nav"><div class="owl-prev" style=""></div><div class="owl-next" style=""></div></div><div class="owl-dots" style="display: none;"></div></div> -->
