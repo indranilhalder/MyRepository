@@ -87,6 +87,31 @@
         </div>         
         <!-- <div class="owl-controls"><div class="owl-nav"><div class="owl-prev" style=""></div><div class="owl-next" style=""></div></div><div class="owl-dots" style="display: none;"></div></div> -->
         </ul>
+   </div>
+   <div class="related-video">
+	<cms:pageSlot position="Section6A" var="feature">
+		<cms:component component="${feature}" element="div" class="" />
+	</cms:pageSlot>
+      <div class="related-video-wrapper owl-carousel owl-theme owl-loaded">         
+	      <div class="owl-stage-outer">
+		      <div class="owl-stage">
+			      <!--  <div class="owl-item" style="width: 1269px; margin-right: 0px;">
+			      <div class="video-wrapper">
+			            <!-- <div id="home-july-workshopsvideo" class="large-banner banner-row  js_ytvideo_container">
+			               <button class="play-video-button js_ytvideo_control" data-yvid="WpMr_BVqWjw?rel=0&amp;autoplay=1"></button>
+			               <div class="js_ytvideo_inline"> <img class="bkg-img" src="images/related-video.jpg" alt=""> 
+			              <a class="banner-cta" href="#a29061">PLAY VIDEO</a> </div>
+			            </div>
+			           
+			         </div>
+			       </div> -->
+		        <cms:pageSlot position="Section7A" var="feature">
+							<cms:component component="${feature}" element="div" class="" />
+						</cms:pageSlot>
+		         </div>
+	         </div>
+         	<!-- <div class="owl-controls"><div class="owl-nav"><div class="owl-prev" style=""></div><div class="owl-next" style=""></div></div><div class="owl-dots" style="display: none;"></div></div> -->
+      </div>
    </div>  
   </div>
 </div>
