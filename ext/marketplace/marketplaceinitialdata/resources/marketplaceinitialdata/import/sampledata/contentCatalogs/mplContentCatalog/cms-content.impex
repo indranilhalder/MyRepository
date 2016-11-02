@@ -1421,7 +1421,7 @@ INSERT_UPDATE RotatingImagesComponent;$contentCV[unique=true];uid[unique=true];n
 
 
 INSERT_UPDATE VideoComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;videoUrl;videoTitle;videoDescription;
-;;StyleEditVideoComponent;Style Edit Video Component;StyleEditVideoComponent;https://www.youtube.com/embed/vOPL2uqcOHE;REVENGE DRESSING:<span>Best outfits in history</span>;;
+;;StyleEditVideoComponent;Style Edit Video Component;StyleEditVideoComponent;https://www.youtube.com/embed/vOPL2uqcOHE;REVENGE DRESSING:Best outfits in history;;
 
 
 #CMSMediaParagraphComponent changes starts
