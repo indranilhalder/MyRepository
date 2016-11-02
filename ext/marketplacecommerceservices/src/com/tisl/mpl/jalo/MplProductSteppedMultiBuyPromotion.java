@@ -181,6 +181,7 @@ public class MplProductSteppedMultiBuyPromotion extends GeneratedMplProductStepp
 				long promotionConsmdCount = 0;
 				double promoSetTotalDiscount = 0.0D;
 				List<PromotionOrderEntryConsumed> remainingItemsFromTail = null;
+				double totalAdjustOffPrice = 0.0D;
 
 				LOG.debug("Validated Steps for Bundle Promotions");
 				LOG.debug("Checking Delivery Mode Restriction ");
@@ -222,7 +223,7 @@ public class MplProductSteppedMultiBuyPromotion extends GeneratedMplProductStepp
 					{
 						while (promotionEligibleCount > 0 && priceData.quantity <= promotionEligibleCount)
 						{
-							totalAdjustment += priceData.price;
+							totalAdjustOffPrice += priceData.price;
 							promotionEligibleCount = promotionEligibleCount - priceData.quantity;
 							promoSetTotalDiscount += priceData.price;
 
@@ -233,10 +234,10 @@ public class MplProductSteppedMultiBuyPromotion extends GeneratedMplProductStepp
 							}
 						}
 					}
-
+					totalAdjustment = totalPrice - totalAdjustOffPrice;
 
 					LOG.debug("Previous Cart Value" + totalPrice);
-					LOG.debug("Total Adjustment" + totalAdjustment);
+					LOG.debug("Total Adjustment Price" + totalAdjustOffPrice);
 					LOG.debug("Total Post Discount" + (totalPrice - totalAdjustment));
 					LOG.debug("Total Promotion Discount" + promoSetTotalDiscount);
 
