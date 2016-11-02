@@ -431,6 +431,9 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 				validProductUssidMap = getMplPromotionHelper().getCartSellerInEligibleProducts(ctx, order, restrictionList);
 			}
 
+
+
+
 			if (threshold != null)
 			{
 				Double discountPriceValue = getPriceForOrder(ctx, getDiscountPrices(ctx), order,
@@ -452,17 +455,6 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 				}
 				else if (result.getCouldFire(ctx))
 				{
-					//Commented as not needed for TPR-969
-					//					final double orderSubtotalAfterDiscounts = getMplPromotionHelper().getTotalPrice(order);
-					//					final double amountRequired = threshold.doubleValue() - orderSubtotalAfterDiscounts;
-					//
-					//					final Object[] args =
-					//					{ threshold, Helper.formatCurrencyAmount(ctx, locale, orderCurrency, threshold.doubleValue()), discountPriceValue,
-					//							Helper.formatCurrencyAmount(ctx, locale, orderCurrency, discountPriceValue.doubleValue()),
-					//							Double.valueOf(amountRequired), Helper.formatCurrencyAmount(ctx, locale, orderCurrency, amountRequired) };
-					//					return formatMessage(getMessageCouldHaveFired(ctx), args, locale);
-
-					//TPR-969 - When no entry count restriction is added
 					if (null == entryQualifyingCount)
 					{
 						//return formatMsg(entryQualifyingCount, 0, threshold, order, ctx, locale, orderCurrency, discountPriceValue);
@@ -487,6 +479,8 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 					}
 				}
 			}
+
+
 			//TPR-969 display message without any threshold value
 			else
 			{
@@ -572,6 +566,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 			final Double discountPriceValue)
 	{
 		int quantityNeeded = 0;
+		String printData = MarketplacecommerceservicesConstants.EMPTY; // Added for TPR-3580
 
 		if (null != entryQualifyingCount)
 		{
@@ -590,10 +585,30 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 			amountRequired = 0;
 		}
 
+		if (amountRequired > 0 && quantityNeeded == 0)
+		{
+			printData = Helper.formatCurrencyAmount(ctx, locale, orderCurrency, amountRequired);
+		}
+		else if (amountRequired == 0 && quantityNeeded > 0)
+		{
+			printData = "to buy" + MarketplacecommerceservicesConstants.SINGLE_SPACE + qtyNeededMsg;
+		}
+		else if (amountRequired > 0 && quantityNeeded > 0)
+		{
+			final StringBuilder data = new StringBuilder(500);
+			data.append(String.valueOf(amountRequired));
+			data.append(MarketplacecommerceservicesConstants.SINGLE_SPACE);
+			data.append("and buy");
+			data.append(MarketplacecommerceservicesConstants.SINGLE_SPACE);
+			data.append(qtyNeededMsg);
+
+			printData = data.toString();
+		}
+
 		final Object[] args =
 		{ threshold, Helper.formatCurrencyAmount(ctx, locale, orderCurrency, threshold.doubleValue()), discountPriceValue,
 				Helper.formatCurrencyAmount(ctx, locale, orderCurrency, discountPriceValue.doubleValue()),
-				Double.valueOf(amountRequired), Helper.formatCurrencyAmount(ctx, locale, orderCurrency, amountRequired), qtyNeededMsg };
+				Double.valueOf(amountRequired), printData, qtyNeededMsg };
 		return formatMessage(getMessageCouldHaveFired(ctx), args, locale);
 	}
 

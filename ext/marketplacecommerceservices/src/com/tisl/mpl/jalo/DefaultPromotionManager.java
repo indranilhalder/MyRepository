@@ -1967,17 +1967,20 @@ public class DefaultPromotionManager extends PromotionsManager
 	public boolean getPaymentModeRestrEval(final List<AbstractPromotionRestriction> restrictionList, final SessionContext ctx)
 	{
 		boolean flag = false;
+		boolean isPaymentResticted = false;
 		if (null == restrictionList || restrictionList.isEmpty())
 		{
 			flag = true;
 		}
 		else
 		{
+
 			for (final AbstractPromotionRestriction restriction : restrictionList)
 			{
 				//flag = false;	//Unwanted - TPR-969
 				if (restriction instanceof PaymentModeSpecificPromotionRestriction)
 				{
+					isPaymentResticted = true;
 					String paymentMode = null;
 					String selectedBank = MarketplacecommerceservicesConstants.EMPTY;
 					if (null != ctx)
@@ -2016,10 +2019,13 @@ public class DefaultPromotionManager extends PromotionsManager
 					}
 					break;
 				}
-				else
-				{
-					flag = true;
-				}
+			}
+
+
+
+			if (!isPaymentResticted)
+			{
+				flag = true;
 			}
 
 
