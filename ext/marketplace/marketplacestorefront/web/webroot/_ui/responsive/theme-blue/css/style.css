@@ -437,7 +437,7 @@ body.page-shopTheStyle .timeout-slider .owl-controls .owl-dots {
 
 /* -------------Start TPR-3625 Style---------- */
 
-.style-edit-video > .yCmsComponent{
+/* .style-edit-video > .yCmsComponent{
 	position: relative;
 }
 .style-edit-title{
@@ -454,7 +454,7 @@ body.page-shopTheStyle .timeout-slider .owl-controls .owl-dots {
 .style-edit-title span{
 	display: block;
 	text-transform: none;		
-}
+} */
 /* -------------End TPR-3625 Style	---------- */
 .Manufacturer.Temp04 .Padd h2:after {
     content: '';
