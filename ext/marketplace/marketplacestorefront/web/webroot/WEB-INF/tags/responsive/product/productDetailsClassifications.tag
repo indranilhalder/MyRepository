@@ -41,10 +41,10 @@
 </script>
 
 <c:if test="${not empty product.classifications}">
-	<div class="view-button">Check The Specs</div>
+	<!-- <div class="view-button">Check The Specs</div> -->
 </c:if>
 <!-- <div class="hide-button" style="display:none;">Hide Specifications</div> -->
-<div class="product-classifications wrapper">
+<%-- <div class="product-classifications wrapper">
 	<c:if test="${not empty product.classifications}">
 		<table class="stats-table">
 			<tbody>
@@ -59,7 +59,7 @@
 								items="${mapConfigurableAttributes}">
 								<tr style="border: 1px solid #f0f4f5;">
 									<td style="border-right: 1px solid #f0f4f5;" class="title">
-										<%-- ${outer.index} - ${inner.index} --%>
+										${outer.index} - ${inner.index}
 										${classification.key}
 									</td>
 
@@ -91,7 +91,7 @@
 								varStatus="inner">
 								<tr style="border: 1px solid #f0f4f5;">
 									<td style="border-right: 1px solid #f0f4f5;" class="title">
-										<%-- ${outer.index} - ${inner.index} --%> ${feature.name}
+										${outer.index} - ${inner.index} ${feature.name}
 									</td>
 									<td><c:forEach items="${feature.featureValues}"
 											var="value" varStatus="status">
@@ -144,7 +144,7 @@
 			</tbody>
 		</table>
 	</c:if>
-</div>
+</div> --%>
 
 
 
