@@ -34578,7 +34578,7 @@ body.template-pages-category-productGridPage .trending h1,body.template-pages-se
     margin-right: 1%;
 }
 .short-info, .latest-offer-info {
-    margin-top: 10px; /*---TPR-3624---*/
+    margin-top: 20px; /*---TPR-3651---*/
 }
 .product-item .product-tile .color-swatch {
     width: 100% !important;
