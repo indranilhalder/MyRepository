@@ -396,6 +396,7 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 
 		boolean flagForDeliveryModeRestrEval = false;
 		boolean flagForPaymentModeRestrEval = false;
+		boolean flagForPincodeRestriction = false;
 		//double percentageDiscount = Double.valueOf(0.0D).doubleValue();	SONAR Fix
 		double percentageDiscount = 0.0D;
 		double totalProductPrice = 0.0D;
@@ -422,8 +423,11 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 		//for payment mode restriction check
 		flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList, ctx);
 
+		flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList,
+				evaluationContext.getOrder());
+
 		if (null != thresholdVal && totalEligibleProductPrice.doubleValue() >= thresholdVal.doubleValue()
-				&& flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval)
+				&& flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval && flagForPincodeRestriction)
 		{
 			boolean isPercentageDisc = false;
 			if (isPercentageOrAmount().booleanValue() && null != getPercentageDiscount())
