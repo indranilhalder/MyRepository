@@ -481,7 +481,15 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		try
 		{
 			//OTP validation
-			final OTPResponseData otpResponse = getOtpGenericService().validateOTP(
+			//			final OTPResponseData otpResponse = getOtpGenericService().validateOTP(
+			//					customerID,
+			//					null,
+			//					enteredOTPNumber,
+			//					OTPTypeEnum.COD,
+			//					Long.parseLong(getConfigurationService().getConfiguration().getString(
+			//							MarketplacecommerceservicesConstants.TIMEFOROTP)));
+
+			final OTPResponseData otpResponse = getOtpGenericService().validateLatestOTP(
 					customerID,
 					null,
 					enteredOTPNumber,

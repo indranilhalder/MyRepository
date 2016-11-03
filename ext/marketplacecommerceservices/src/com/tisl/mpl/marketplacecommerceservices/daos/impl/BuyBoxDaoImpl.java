@@ -60,54 +60,69 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the price for a buybox wining seller against a product code.
-	 * 
+	 *
 	 * @param productCode
-	 * 
+	 *
 	 * @return flexibleSearchService.<BuyBoxModel> search(query).getResult()
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
+	//Performance fix - use bind variable - TISPRD-9025
 	@Override
-	public List<BuyBoxModel> buyBoxPrice(String productCode)
+	public List<BuyBoxModel> buyBoxPrice(final String productCode)
 	{
-
-		//final String COMMA_SEPARATED = ",";
-
-		final String SEMICOLON = "'";
+		final StringBuilder productCodes = new StringBuilder(100);
+		final Map<String, String> queryParamMap = new HashMap<String, String>();
 		try
 		{
 			//TISPRM-56
-			if (productCode.indexOf(MarketplacecommerceservicesConstants.COMMA) != -1)
+			if (productCode.indexOf(MarketplacecommerceservicesConstants.COMMA) != -1)//if multiple products
 			{
-				final StringBuilder stringBuilder = new StringBuilder();
+
 				final String[] codes = productCode.split(MarketplacecommerceservicesConstants.COMMA);
+				int cnt = 0;
+				productCodes.append("( ");
 				for (final String id : codes)
 				{
-					stringBuilder.append('\'').append(escapeString(id)).append('\'')
-							.append(MarketplacecommerceservicesConstants.COMMA);
+					cnt = cnt + 1;
+					if (cnt == 1)
+					{
+						productCodes.append(" {bb.product}=?productParam" + (cnt));
+					}
+					else
+					{
+						productCodes.append(" OR {bb.product}=?productParam" + (cnt));
+					}
+					queryParamMap.put("productParam" + (cnt), id);
 				}
-				final int index = stringBuilder.lastIndexOf(MarketplacecommerceservicesConstants.COMMA);
-				productCode = stringBuilder.replace(index, index + 1, "").toString();
+				productCodes.append(" )");
 			}
-
-
-			if (productCode.indexOf(SEMICOLON) == -1)
+			else
+			//if no variant
 			{
-				productCode = MarketplacecommerceservicesConstants.INVERTED_COMMA + productCode
-						+ MarketplacecommerceservicesConstants.INVERTED_COMMA;
+				productCodes.append("( ");
+				productCodes.append(" {bb.product}=?productParam1");
+				queryParamMap.put("productParam1", productCode);
+				productCodes.append(" )");
 			}
 
-			final String queryStringForPrice = SELECT_CLASS + BuyBoxModel._TYPECODE + AS_CLASS + WHERE_CLASS + BuyBoxModel.PRODUCT
-					+ "} IN (" + productCode + ") AND ( {bb:" + BuyBoxModel.DELISTED + "}  IS NULL OR {bb:" + BuyBoxModel.DELISTED
-					+ "}=0)    AND   {bb:" + BuyBoxModel.AVAILABLE + "} > 0 AND (sysdate between  {bb:" + BuyBoxModel.SELLERSTARTDATE
-					+ "} and {bb:" + BuyBoxModel.SELLERENDDATE + "}) AND {bb:" + BuyBoxModel.PRICE + "} > 0  ORDER BY {bb:"
-					+ BuyBoxModel.WEIGHTAGE + "} DESC,{bb:" + BuyBoxModel.AVAILABLE + "} DESC";
+			final String queryStringForPrice = SELECT_CLASS + BuyBoxModel._TYPECODE + AS_CLASS + " Where " + productCodes.toString()
+					+ " AND ( {bb:" + BuyBoxModel.DELISTED + "}  IS NULL OR {bb:" + BuyBoxModel.DELISTED + "}=0)    AND   {bb:"
+					+ BuyBoxModel.AVAILABLE + "} > 0 AND (sysdate between  {bb:" + BuyBoxModel.SELLERSTARTDATE + "} and {bb:"
+					+ BuyBoxModel.SELLERENDDATE + "}) AND {bb:" + BuyBoxModel.PRICE + "} > 0  ORDER BY {bb:" + BuyBoxModel.WEIGHTAGE
+					+ "} DESC,{bb:" + BuyBoxModel.AVAILABLE + "} DESC";
 
 			log.debug("QueryStringFetchingPrice" + queryStringForPrice);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryStringForPrice);
-			//query.addQueryParameter("productBuyBox", productCode);
-			return flexibleSearchService.<BuyBoxModel> search(query).getResult();
+
+			for (final Map.Entry<String, String> entry : queryParamMap.entrySet())
+			{
+				query.addQueryParameter(entry.getKey(), entry.getValue());
+			}
+
+			final List<BuyBoxModel> retList = flexibleSearchService.<BuyBoxModel> search(query).getResult();
+			return retList;
 		}
 		catch (final FlexibleSearchException e)
 		{
@@ -123,14 +138,69 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 		}
 	}
 
+	//	@Override
+	//	public List<BuyBoxModel> buyBoxPrice(String productCode)
+	//	{
+	//
+	//		//final String COMMA_SEPARATED = ",";
+	//
+	//		final String SEMICOLON = "'";
+	//		try
+	//		{
+	//			//TISPRM-56
+	//			if (productCode.indexOf(MarketplacecommerceservicesConstants.COMMA) != -1)
+	//			{
+	//				final StringBuilder stringBuilder = new StringBuilder();
+	//				final String[] codes = productCode.split(MarketplacecommerceservicesConstants.COMMA);
+	//				for (final String id : codes)
+	//				{
+	//					stringBuilder.append('\'').append(escapeString(id)).append('\'')
+	//							.append(MarketplacecommerceservicesConstants.COMMA);
+	//				}
+	//				final int index = stringBuilder.lastIndexOf(MarketplacecommerceservicesConstants.COMMA);
+	//				productCode = stringBuilder.replace(index, index + 1, "").toString();
+	//			}
+	//
+	//
+	//			if (productCode.indexOf(SEMICOLON) == -1)
+	//			{
+	//				productCode = MarketplacecommerceservicesConstants.INVERTED_COMMA + productCode
+	//						+ MarketplacecommerceservicesConstants.INVERTED_COMMA;
+	//			}
+	//
+	//			final String queryStringForPrice = SELECT_CLASS + BuyBoxModel._TYPECODE + AS_CLASS + WHERE_CLASS + BuyBoxModel.PRODUCT
+	//					+ "} IN (" + productCode + ") AND ( {bb:" + BuyBoxModel.DELISTED + "}  IS NULL OR {bb:" + BuyBoxModel.DELISTED
+	//					+ "}=0)    AND   {bb:" + BuyBoxModel.AVAILABLE + "} > 0 AND (sysdate between  {bb:" + BuyBoxModel.SELLERSTARTDATE
+	//					+ "} and {bb:" + BuyBoxModel.SELLERENDDATE + "}) AND {bb:" + BuyBoxModel.PRICE + "} > 0  ORDER BY {bb:"
+	//					+ BuyBoxModel.WEIGHTAGE + "} DESC,{bb:" + BuyBoxModel.AVAILABLE + "} DESC";
+	//
+	//			log.debug("QueryStringFetchingPrice" + queryStringForPrice);
+	//			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryStringForPrice);
+	//			//query.addQueryParameter("productBuyBox", productCode);
+	//			return flexibleSearchService.<BuyBoxModel> search(query).getResult();
+	//		}
+	//		catch (final FlexibleSearchException e)
+	//		{
+	//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+	//		}
+	//		catch (final UnknownIdentifierException e)
+	//		{
+	//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+	//		}
+	//	}
+
 
 	/*
 	 * This method is responsible for get the price for a buybox wining seller against a product code.
-	 * 
+	 *
 	 * @param productCode
-	 * 
+	 *
 	 * @return flexibleSearchService.<BuyBoxModel> search(query).getResult()
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -178,11 +248,11 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the inventory for a buybox wining seller against a product code.
-	 * 
+	 *
 	 * @param productCode
-	 * 
+	 *
 	 * @return flexibleSearchService.<BuyBoxModel> search(query).getResult()
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -246,11 +316,11 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for invalidating pk of the buybox sellers in the cache.
-	 * 
+	 *
 	 * @param productCode
-	 * 
+	 *
 	 * @return flexibleSearchService.<BuyBoxModel> search(query).getResult()
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -301,9 +371,9 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the buybox price for given product code if all the seller has stock zero
-	 * 
+	 *
 	 * @param productCode
-	 * 
+	 *
 	 * @return List<BuyBoxModel>
 	 */
 	@Override
@@ -347,7 +417,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao#getRichAttributeData(java.lang.String)
 	 */
 	@Override
@@ -460,9 +530,9 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the buybox price for given ussid if all the seller has stock zero
-	 * 
+	 *
 	 * @param productCode
-	 * 
+	 *
 	 * @return List<BuyBoxModel>
 	 */
 	@Override
@@ -488,7 +558,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao#priceForUssid(java.lang.String)
 	 */
 	@Override
@@ -522,11 +592,11 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the price for a buybox wining seller against a product code.
-	 * 
+	 *
 	 * @param productCode
-	 * 
+	 *
 	 * @return flexibleSearchService.<BuyBoxModel> search(query).getResult()
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 

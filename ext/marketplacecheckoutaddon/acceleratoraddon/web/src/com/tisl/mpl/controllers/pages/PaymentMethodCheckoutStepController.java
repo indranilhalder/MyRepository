@@ -784,10 +784,20 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			NoSuchAlgorithmException
 	{
 		//getting current user
-		final String mplCustomerID = (null == getUserService().getCurrentUser().getUid()) ? "" : getUserService().getCurrentUser()
-				.getUid();
-		final String mplCustomerName = (null == getUserService().getCurrentUser().getName()) ? "" : getUserService()
-				.getCurrentUser().getName();
+		final CustomerModel customerModel = (CustomerModel) getUserService().getCurrentUser();
+		//String mplCustomerID = "";
+		String mplCustomerName = "";
+		String emailId = "";
+		if (null != customerModel)
+		{
+			//mplCustomerID = customerModel.getUid();
+			mplCustomerName = customerModel.getName();
+			emailId = customerModel.getOriginalUid();
+		}
+		//		final String mplCustomerID = (null == getUserService().getCurrentUser().getUid()) ? "" : getUserService().getCurrentUser()
+		//				.getUid();
+		//		final String mplCustomerName = (null == getUserService().getCurrentUser().getName()) ? "" : getUserService()
+		//				.getCurrentUser().getName();
 		boolean redirectFlag = false;
 
 		final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
@@ -803,10 +813,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		}
 
 		//If customer is not null
-		else if (null != mplCustomerID)
+		else if (null != emailId)
 		{
 			//calling generate OTP with customerID
-			final String otp = getMplPaymentFacade().generateOTPforCODWeb(mplCustomerID, mobileNumber, mplCustomerName, null);
+			final String otp = getMplPaymentFacade().generateOTPforCODWeb(emailId, mobileNumber, mplCustomerName, null);
 
 			//Code refracted to MplPaymentFacadeImpl.java
 			if (otp == null)
@@ -836,14 +846,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			@PathVariable(MarketplacecheckoutaddonConstants.OTPNUMFIELD) final String enteredOTPNumber) throws InvalidKeyException,
 			NoSuchAlgorithmException
 	{
-		//getting current user
-		final String mplCustomerID = getUserService().getCurrentUser().getUid();
-		final CartModel cart = getCartService().getSessionCart();
 		boolean redirectFlag = false;
 		String validationMsg = "";
 
 		try
 		{
+			//getting current user
+			final String emailId = ((CustomerModel) getUserService().getCurrentUser()).getOriginalUid();
+			final CartModel cart = getCartService().getSessionCart();
 
 			LOG.debug(" TIS-414 : Checking - onclick of pay now button pincode servicabilty and promotion");
 			if (!mplCheckoutFacade.isPromotionValid(cart))
@@ -900,9 +910,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			else
 			{
 				//If customer is not null
-				if (null != mplCustomerID)
+				if (null != emailId)
 				{
-					validationMsg = getMplPaymentFacade().validateOTPforCODWeb(mplCustomerID, enteredOTPNumber);
+					validationMsg = getMplPaymentFacade().validateOTPforCODWeb(emailId, enteredOTPNumber);
 				}
 				else
 				{
