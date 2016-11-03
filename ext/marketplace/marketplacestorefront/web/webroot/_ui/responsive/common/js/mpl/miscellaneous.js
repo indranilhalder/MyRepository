@@ -146,9 +146,59 @@
 			}
 		}); 
 	   //End
-		 
+	
+		//TISLUX-1865 Start
+		var luxuryCookie="isLux";
+		var loc = window.location.href;
+		var isLux = $.cookie(luxuryCookie);
+		var finalURL="";
+		var luxuryLoginPage = "luxuryLoginPage";
+		
+		if($('#pageType').attr('value').indexOf("login") > -1){
+			
+			if(sessionStorage.getItem(luxuryLoginPage) != null && sessionStorage.getItem(luxuryLoginPage) == "true"){
+				finalURL = setLuxuryLoginURL(loc);
+				window.history.pushState({}, loc, finalURL);
+			}
+			
+			if(isLux == "true"){
+				finalURL = setLuxuryLoginURL(loc);
+				deleteCookie(luxuryCookie);
+				if(sessionStorage.getItem(luxuryLoginPage) == null){
+					sessionStorage.setItem(luxuryLoginPage, true);
+				}
+				window.history.pushState({}, loc, finalURL);
+			}
+		}
+		else{
+			if(isLux == "true"){
+				deleteCookie(luxuryCookie);
+				sessionStorage.setItem(luxuryLoginPage, false);
+			}
+		}
+		
+		//TISLUX-1865 End
+	
  });
  
+ //For TISLUX-1865
+ function setLuxuryLoginURL(loc){
+	var finalURL="";
+	if(loc.indexOf("?") > -1){
+		finalURL = loc+"&";
+	}
+	else{
+		finalURL = loc+"?";
+	}
+	finalURL = finalURL+"isLux=true";
+	return finalURL;
+ }
+ 
+ // For TISLUX-1865
+function deleteCookie(name){
+    document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+};
+
 //Script from facetNavAppliedFilters.tag
  var serpSizeList=[];
  function populateFacet(){
