@@ -2,26 +2,32 @@
 	<table width="100%" cellspacing="0" style="margin:0;padding:0;table-layout:auto;border:1px solid #1E4EBF;">
 		<tbody>			
 			<tr>
-				<td style="vertical-align:top;" class="structureViewSection">
+				<td style="vertical-align:top;" class="structureViewSection" colspan="3">
 					<cockpit code="Section1A" />
-				</td>
-				<td style="vertical-align:top;" class="structureViewSection" colspan="2">
-					<cockpit code="Section1B" />
 				</td>
 			</tr>
 			<tr>
 				<td style="vertical-align:top;" class="structureViewSection">
 					<cockpit code="Section2A" />
 				</td>
-				<td style="vertical-align:top;" class="structureViewSection" colspan="2">
+				<td style="vertical-align:top;" class="structureViewSection">
 					<cockpit code="Section2B" />
+				</td>
+				<td style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Section2C" />
 				</td>
 			</tr>
 			<tr>
-				<td style="vertical-align:top;" class="structureViewSection" colspan="3">
+				<td style="vertical-align:top;" class="structureViewSection">
 					<cockpit code="Section3A" />
-				</td>				
-			</tr>			
+				</td>
+				<td style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Section3B" />
+				</td>
+				<td style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Section3C" />
+				</td>
+			</tr>
 			<tr>
 				<td style="vertical-align:top;" class="structureViewSection">
 					<cockpit code="Section4A" />
@@ -47,12 +53,18 @@
 			<tr>
 				<td style="vertical-align:top;" class="structureViewSection" colspan="3">
 					<cockpit code="Section6A" />
-				</td>				
+				</td>
 			</tr>
 			<tr>
-				<td style="vertical-align:top;" class="structureViewSection" colspan="3">
+				<td style="vertical-align:top;" class="structureViewSection">
 					<cockpit code="Section7A" />
-				</td>				
+				</td>
+				<td style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Section7B" />
+				</td>
+				<td style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Section7C" />
+				</td>
 			</tr>
 		</tbody>
 	</table>
@@ -60,4 +72,3 @@
 		<cockpit code="editor" />
 	</div>
 </div>
-
