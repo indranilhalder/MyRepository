@@ -52,6 +52,8 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 	private int noOfProducts = 0;
 	private Map<AbstractOrderEntry, String> productSellerDetails = null;
 
+	private int productACount = 0;
+	private int productBCount = 0;
 
 	@Override
 	protected Item createItem(final SessionContext ctx, final ComposedType type, final ItemAttributeMap allAttributes)
@@ -67,7 +69,7 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.promotions.jalo.AbstractPromotion#evaluate(de.hybris.platform.jalo.SessionContext,
 	 * de.hybris.platform.promotions.result.PromotionEvaluationContext)
 	 */
@@ -78,6 +80,7 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 		productSellerDetails = new HashMap<AbstractOrderEntry, String>();
 
 		boolean isMultipleSeller = false;
+
 
 		List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
 		final PromotionsManager.RestrictionSetResult rsr = findEligibleProductsInBasket(ctx, evaluationContext);
@@ -113,6 +116,7 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 
 			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag) // if Restrictions return valid && Channel is valid
 			{
+				resetFlag();
 				LOG.debug("Promotion Restriction and Channel Satisfied");
 				final Map<String, AbstractOrderEntry> validProductUssidMap = getValidProductList(cart, ctx);
 
@@ -164,18 +168,30 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 
 
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.hybris.platform.promotions.jalo.AbstractPromotion#getResultDescription(de.hybris.platform.jalo.SessionContext,
-	 * de.hybris.platform.promotions.jalo.PromotionResult, java.util.Locale)
+
+	/**
+	 * @Description : Assign Promotion Fired and Potential-Promotion Message
+	 * @param paramSessionContext
+	 * @param paramPromotionResult
+	 * @param paramLocale
+	 * @return : String
 	 */
 	@Override
-	public String getResultDescription(final SessionContext arg0, final PromotionResult arg1, final Locale arg2)
+	public String getResultDescription(final SessionContext paramSessionContext, final PromotionResult paramPromotionResult,
+			final Locale paramLocale)
 	{
-		// YTODO Auto-generated method stub
-		return null;
+		if (paramPromotionResult.getFired(paramSessionContext))
+		{
+			final Object[] args = {};
+			return formatMessage(this.getMessageFired(paramSessionContext), args, paramLocale);
+		}
+		else if (paramPromotionResult.getCouldFire(paramSessionContext))
+		{
+			final Object[] args = {};
+			return formatMessage(this.getMessageCouldHaveFired(paramSessionContext), args, paramLocale);
+		}
+
+		return MarketplacecommerceservicesConstants.EMPTYSPACE;
 	}
 
 	/**
@@ -222,6 +238,12 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 			String sellerID = MarketplacecommerceservicesConstants.EMPTY;
 			final List<Product> promotionProductList = new ArrayList<>(getProducts());
 			final List<Category> promotionCategoryList = new ArrayList<>(getCategories());
+
+
+			final List<Product> promotionSecProductList = new ArrayList<>(getSecondProducts());
+			final List<Category> promotionSecCategoryList = new ArrayList<>(getSecondCategories());
+
+
 			//int productQty = 0;
 			for (final AbstractOrderEntry entry : cart.getEntries())
 			{
@@ -237,9 +259,12 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 					if (promotionProductList.contains(product))
 					{
 						applyPromotion = true;
-						productFlag = true;
 						brandFlag = true;
 						sellerFlag = getDefaultPromotionsManager().checkSellerData(ctx, restrictionList, entry);
+						if (sellerFlag)
+						{
+							productACount += entry.getQuantity().intValue();
+						}
 					}
 				}
 				else if (promotionProductList.isEmpty() && !promotionCategoryList.isEmpty())
@@ -252,8 +277,44 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 					if (applyPromotion && sellerFlag && brandFlag)
 					{
 						categoryFlag = true;
+						productACount += entry.getQuantity().intValue();
 					}
 				}
+
+
+				//checking product is a valid product for promotion
+				if (!promotionSecProductList.isEmpty())
+				{
+					if (promotionSecProductList.contains(product))
+					{
+						sellerFlag = getDefaultPromotionsManager().checkSellerData(ctx, restrictionList, entry);
+						if (sellerFlag)
+						{
+							productBCount += entry.getQuantity().intValue();
+						}
+					}
+				}
+				else if (promotionSecCategoryList.isEmpty() && !promotionSecCategoryList.isEmpty())
+				//checking product category is permitted by promotion category or not
+				{
+					final List<String> productCategoryList = getDefaultPromotionsManager().getcategoryList(product, ctx);
+					applyPromotion = GenericUtilityMethods.productExistsIncat(promotionSecCategoryList, productCategoryList);
+					brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
+					sellerFlag = getDefaultPromotionsManager().checkSellerData(ctx, restrictionList, entry);
+					if (applyPromotion && sellerFlag && brandFlag)
+					{
+						categoryFlag = true;
+						productBCount += entry.getQuantity().intValue();
+					}
+				}
+
+
+
+
+
+
+
+
 				//Code snippet for TPR-961
 
 				if (applyPromotion && sellerFlag && brandFlag && CollectionUtils.isNotEmpty(promotionProductListB)
@@ -265,7 +326,8 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 						if (isExistInPromotion(orderEntry))
 						{
 
-							validProductUssidMap.put(entry.toString(), orderEntry);
+							validProductUssidMap.put(entry.getAttribute(ctx, MarketplacecommerceservicesConstants.SELECTEDUSSID)
+									.toString(), orderEntry);
 						}
 						else
 						{
@@ -334,6 +396,7 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 
 		boolean flagForDeliveryModeRestrEval = false;
 		boolean flagForPaymentModeRestrEval = false;
+		boolean flagForPincodeRestriction = false;
 		//double percentageDiscount = Double.valueOf(0.0D).doubleValue();	SONAR Fix
 		double percentageDiscount = 0.0D;
 		double totalProductPrice = 0.0D;
@@ -360,8 +423,11 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 		//for payment mode restriction check
 		flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList, ctx);
 
+		flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList,
+				evaluationContext.getOrder());
+
 		if (null != thresholdVal && totalEligibleProductPrice.doubleValue() >= thresholdVal.doubleValue()
-				&& flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval)
+				&& flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval && flagForPincodeRestriction)
 		{
 			boolean isPercentageDisc = false;
 			if (isPercentageOrAmount().booleanValue() && null != getPercentageDiscount())
@@ -433,20 +499,48 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 				}
 			}
 		}
-		else
+		//		else
+		//		{
+		//			if (getNoOfProducts() > 0 && flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval)
+		//			{
+		//				final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(ctx, this,
+		//						evaluationContext.getOrder(), 0.00F);
+		//				promotionResults.add(result);
+		//			}
+		//		}
+
+		if (validateCouldFireMsg())
 		{
-			if (getNoOfProducts() > 0 && flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval)
-			{
-				final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(ctx, this,
-						evaluationContext.getOrder(), 0.00F);
-				promotionResults.add(result);
-			}
+			final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(ctx, this,
+					evaluationContext.getOrder(), 0.00F);
+			promotionResults.add(result);
 		}
+
+
+
 		return promotionResults;
 
 	}
 
 
+
+	/**
+	 * @return boolean
+	 */
+	private boolean validateCouldFireMsg()
+	{
+		if (productACount != productBCount)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	private void resetFlag()
+	{
+		productACount = 0;
+		productBCount = 0;
+	}
 
 	/**
 	 * @Description : Assign Promotion Fired and Potential-Promotion Message
