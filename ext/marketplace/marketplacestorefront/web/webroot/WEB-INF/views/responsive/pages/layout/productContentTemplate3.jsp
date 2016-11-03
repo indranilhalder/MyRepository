@@ -1,6 +1,9 @@
 <%@ page trimDirectiveWhitespaces="true" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template" %>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags" %>
+
+<c:url value="/_ui/responsive/theme-blue/images/related-video.jpg" var="videoImagePath"/>
 <script type="text/javascript">
 
 $(window).resize(function(){
@@ -121,7 +124,7 @@ iframe_resize();
 			         </div>
 			       </div> -->
 			      <div class="js_ytvideo_inline">
-			       <img class="bkg-img" src="http://tatacliq.uat006.fmgdevelopment.com/images/related-video.jpg" alt="">
+			       <img class="bkg-img" src="${videoImagePath}" alt="">
 		        <cms:pageSlot position="Section7A" var="feature">
 							<cms:component component="${feature}" element="div" class="" />
 						</cms:pageSlot>
