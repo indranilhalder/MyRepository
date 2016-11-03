@@ -9,7 +9,7 @@
 <%-- **${component.link.url}
 +++${component.navigationNode.links[0].linkName} --%>
 
-<div class="toggle departmenthover" id="depts${component.link.category.code}">
+<div class="toggle departmenthover L1" id="depts${component.link.category.code}">
 <a href="${component.link.url}">${component.navigationNode.title}</a>
 </div>  <!-- TPR-561 -->
 	<%-- <cms:component component="${component.link}" evaluateRestriction="true"/> --%>
@@ -55,7 +55,7 @@
 
 							<c:if test="${not empty child.title}">
 								<li class="short words">
-								<div class="toggle">
+								<div class="toggle L2">
 								<a href="${child.links[0].url}">${child.title}</a>
 								</div>
 								<span id="mobile-menu-toggle" class=""></span>		<!-- TPR-561 -->
@@ -74,7 +74,7 @@
 								
 										<c:forEach items="${child.links}" var="childlink" begin="${i.index+1}" end="${i.index + component.wrapAfter - 1}">
 											<li class="long words">
-											<div class="toggle">
+											<div class="toggle L3">
 											<cms:component component="${childlink}" evaluateRestriction="true" />
 											</div>
 											</li>   <!-- TPR-561 -->

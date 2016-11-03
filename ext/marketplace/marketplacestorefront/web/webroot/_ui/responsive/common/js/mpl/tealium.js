@@ -811,14 +811,40 @@ $(document).on("click", ".home-brands-you-love-carousel-brands", function() {
 			/*TPR-675 ends 2nd part*/ 
 			
 			
-			/*TPR-561 starts*/
-			$('.long.words .toogle a').click(function(){				
-				var msg="top navigation click";
-				var l3 = $(this).text();
-				var l2 = $(this).prev().find(".short.words").text();
-				var l1 = $(this).parents().find(".toggle.departmenthover").text();
-				utag.link({"link_obj": this, "link_text": l3 + l2 + l1, "event_type" : msg
-						});
-					
+
+			
+			/*TPR-654*/ 			
+			$("nav ul li div a").click(function(e)
+			{
+			var that = $(this);
+			var target = $(e.target);
+			var hAr = "";
+			var x= $(".toggle.shop_dept").text();
+			var y = $(this).text();
+			var navigationClick= top_navigation_click;
+			
+			if($(target).parent().hasClass("toggle departmenthover L1"))
+			          {
+				       // hAr+= x+">>>>"+ ">>>>"+y;
+				utag.link({link_text:'x:y',event_type : 'navigationClick'});
+				
+			          }
+			
+			if($(target).parent().hasClass("toggle L2"))
+			{
+				var itsParentL1 = that.parents().siblings(".departmenthover.L1").text();
+				//hAr+= x+">>>"+">>"+itsParentL1 +" >> "+ y;
+				utag.link({link_text:'x:itsParentL1:y', event_type : 'navigationClick'});
+			}
+			
+			if(that.parent().hasClass("toggle L3")){
+				var itsParentL1 =that.parents().siblings(".departmenthover.L1").text();
+				var itsParentL2 = that.parent().parent().prevAll("li.short.words:first").text();
+				
+				//hAr+= x+">>>>" +">>>>>"+itsParentL1 +" >> "+ ">>"+itsParentL2 +$(this).text();
+				utag.link({link_text:'x:itsParentL1:itsParentL2:y',event_type : 'navigationClick'});
+			}
+			//console.log(hAr);
 			});
-			/*TPR-561 ends*/
+			/*TPR-654*/ 			
+			
