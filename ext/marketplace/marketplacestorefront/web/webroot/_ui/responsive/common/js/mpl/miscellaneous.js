@@ -163,11 +163,18 @@
 			
 			if(isLux == "true"){
 				finalURL = setLuxuryLoginURL(loc);
-				deleteCookie(luxuryCookie);
+				if(typeof(luxuryCookie) != 'undefined'){
+					deleteCookie(luxuryCookie);
+				}
 				if(sessionStorage.getItem(luxuryLoginPage) == null){
 					sessionStorage.setItem(luxuryLoginPage, true);
 				}
 				window.history.pushState({}, loc, finalURL);
+			}
+			else if(loc.indexOf("isLux=true") > -1){
+				if(sessionStorage.getItem(luxuryLoginPage) == null){
+					sessionStorage.setItem(luxuryLoginPage, true);
+				}
 			}
 		}
 		else{
