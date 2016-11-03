@@ -1425,6 +1425,7 @@ $( document ).ready(function() {
 			for(var i in data['buyboxList'] ){
 				buyBoxList.push(data['buyboxList'][i]);
 			}
+		//	alert(buyBoxList);
 			if($("#isProductPage").val()=='true'){
 			sessionStorage.setItem('servicableList',"");
 			}
@@ -1490,6 +1491,7 @@ $( document ).ready(function() {
 					
 					$("#sellerNameId").html(sellerName);
 					$("#sellerSelId").val(sellerID);
+				//	alert(data['othersSellersCount']);
 					if (isOOS() && data['othersSellersCount']>0) {
 						//if( $("#variant,#sizevariant option:selected").val()!="#") {  //TISPRD-1173 TPR-465
 						$("#addToCartButton").hide();
@@ -1577,6 +1579,8 @@ $( document ).ready(function() {
 						$("#otherSellerLinkId").show();
 					}
 					else {
+					//	alert(data['othersSellersCount']);
+						$("#otherSellerInfoId").show();
 						$("#otherSellersId").html(data['othersSellersCount']);
 						$("#minPriceId").html(data['minPrice'].formattedValue);
 					}
