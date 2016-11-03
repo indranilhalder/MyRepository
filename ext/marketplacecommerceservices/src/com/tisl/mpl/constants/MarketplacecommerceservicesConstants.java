@@ -13,7 +13,6 @@
  */
 package com.tisl.mpl.constants;
 
-import de.hybris.platform.core.model.BulkReturnProcessModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.ordercancel.model.OrderCancelRecordEntryModel;
 import de.hybris.platform.returns.model.RefundEntryModel;
@@ -102,12 +101,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PROMOPRIORITY = "Promotion Priority :".intern();
 	public static final String PRODUCT_PRICE_COLUMN = "price".intern();
 	public static final String PRESENT_CATEGORY = "Present Category :".intern();
-
-	//For Bulk Orders Return Initiation
-	public static final String COMMA_DELIMITER = ",";
-	public static final String TICKETTYPECODE = "R";
-	public static final String REFUNDTYPE = "S";
-	public static final String REASONCODE = "03"; // Hard coded value -- I'm not happy with the product quality
 
 	//For SuperCategoryDecorator
 	public static final String CONFIGURATION_SER = "configurationService";
@@ -706,6 +699,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//TISPRO-607
 	public static final String E0021 = "E0021";
 	public static final String E0022 = "E0022";
+	//
+	public static final String E0023 = "E0023";
+
+
 
 
 	//System/Non Business constants
@@ -958,11 +955,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SALES_REPORT_QUERY_START_END = "SELECT {" + OrderModel.PK + "} FROM {" + OrderModel._TYPECODE
 			+ "} WHERE {" + OrderModel.CREATIONTIME + "} >= ?startDate AND {" + OrderModel.CREATIONTIME + "} <=?endDate AND {"
 			+ OrderModel.TYPE + "}=?type order by {" + OrderModel.CODE + "} desc";
-
-	//Bulk Return Initiation
-
-	public static final String BULK_RETURN_DATA_QUERY_START = "SELECT {" + BulkReturnProcessModel.PK + "} FROM {"
-			+ BulkReturnProcessModel._TYPECODE + "}";
 
 
 	public static final String NOEMIBANKLIST = "EMI Bank list is not available , Please Enter the correct data";
@@ -1588,15 +1580,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String CATEGORY_PATH_EMPTY = "/{category-path}".intern();
 
-
-	//IA Feed For Luxury
-	public static final String IAFEED_QUERY_LUXURY = "mpl.ia.luxury.query.";
-	public static final String IA_CATEGORYEXPORT_LUXURYFOLDER = "ia.path.luxury.catexport";
-	public static final String IA_BRANDEXPORT_LUXURYFOLDER = "ia.path.luxury.brandexport";
-	public static final String IA_PRICE_INVENTORYEXPORT_LUXURYFOLDER = "ia.path.luxury.priceinventoryexport";
-	//	public static final String IA_SELLERPRICEDETAILSEXPORT_LUXURYFOLDER = "ia.path.luxury.sellerpricedetails";
-	//	public static final String IA_PRICEINVENTORYCONTROL_LUXURYFOLDER = "ia.path.luxury.priceinventorycontrol";
-
 	//TISCR-421
 	public static final String EBS_SESSION_ID_KEY = "payment.juspay.sessionId.length";
 	public static final String JUSPAY_ENCODING_TYPE = "payment.juspay.encoding.type";
@@ -1648,9 +1631,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String EMIBANK = "emi_bank".intern();
 	public static final String EMITENURE = "emi_tenure".intern();
 
-	//luxury
-	public static final String IS_LUXURY = "0".intern();
-	public static final String IS_MARKETPLACE = "0".intern();
+	public static final String LATESTOTPQUERY = "select {o.pk} from {otp as o} where {o.customerid}=?customerPK and {o.otptype}=?OTPType and {o.isvalidated}='0' order by {creationtime} desc fetch first 1 rows only";
+	public static final String LATESTOTPMOBILEQUERY = "select {o.pk} from {otp as o} where {o.emailid}=?emailId and {o.mobileNo}=?mobileNo and {o.otptype}=?OTPType and {o.isvalidated}='0' order by {creationtime} desc fetch first 1 rows only";
+	public static final String LATESTOTPEMAILQUERY = "select {o.pk} from {otp as o} where {o.emailid}=?emailId and {o.otptype}=?OTPType and {o.isvalidated}='0' order by {creationtime} desc fetch first 1 rows only";
+	public static final String LATESTOTPQUERYINV = "select {o.pk} from {otp as o} where {o.emailid}=?emailId and {o.otptype}=?OTPType order by {creationtime} desc fetch first 1 rows only";
 
 	private MarketplacecommerceservicesConstants()
 	{
@@ -1661,10 +1645,4 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// Sonar Fix
 	public static final String ALLVARIANTSSTRING = "allVariantsString";
-
-	//Added for luxury
-	public static final String CHANNEL_APP = "APP";
-	public static final String MEGANAVNODE = "luxury.root.navigation.node.id";
-
-	public static final String LUXURY_CARTICON = "luxuryCartIcon";
 }

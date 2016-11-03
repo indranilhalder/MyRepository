@@ -135,9 +135,8 @@ public class ClickToChatCallController extends AbstractPageController
 			{
 				final String otp = getOtpService().generateOTP(emailId, OTPTypeEnum.C2C.getCode(), contactNo);
 				sendSMSFacade.sendSms(MarketplacecommerceservicesConstants.SMS_SENDER_ID,
-						MarketplacecommerceservicesConstants.SMS_MESSAGE_C2C_OTP
-								.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, otp),
-						contactNo);
+						MarketplacecommerceservicesConstants.SMS_MESSAGE_C2C_OTP.replace(
+								MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, otp), contactNo);
 			}
 			catch (final InvalidKeyException e)
 			{
@@ -189,8 +188,16 @@ public class ClickToChatCallController extends AbstractPageController
 
 		if (valOTPMap.isEmpty() && null != otp && !otp.isEmpty())
 		{
-			final OTPResponseData otpResponseData = getOtpService().validateOTP(emailId, contactNo, otp, OTPTypeEnum.C2C, Long
-					.valueOf(getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.TIMEFOROTP)));
+			//			final OTPResponseData otpResponseData = getOtpService().validateOTP(emailId, contactNo, otp, OTPTypeEnum.C2C, Long
+			//					.valueOf(getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.TIMEFOROTP)));
+			final OTPResponseData otpResponseData = getOtpService().validateLatestOTP(
+					emailId,
+					contactNo,
+					otp,
+					OTPTypeEnum.C2C,
+					Long.valueOf(getConfigurationService().getConfiguration().getString(
+							MarketplacecommerceservicesConstants.TIMEFOROTP)));
+
 			if (otpResponseData.getOTPValid())
 			{
 				/*
