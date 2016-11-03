@@ -58530,3 +58530,7 @@ li.facet.js-facet.collectionIds{
     width: inherit;
     height: inherit;
 }
+.checkout-shipping.checkTab #emptyAddress{
+	text-align: center;
+    margin-bottom: 10px;
+}
