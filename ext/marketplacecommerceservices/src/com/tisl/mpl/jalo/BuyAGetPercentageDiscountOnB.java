@@ -6,15 +6,18 @@ import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.jalo.Item;
 import de.hybris.platform.jalo.JaloBusinessException;
+import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.enumeration.EnumerationValue;
 import de.hybris.platform.jalo.order.AbstractOrder;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.order.Order;
 import de.hybris.platform.jalo.product.Product;
+import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.jalo.type.ComposedType;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.promotions.jalo.AbstractPromotionRestriction;
+import de.hybris.platform.promotions.jalo.PromotionOrderEntryConsumed;
 import de.hybris.platform.promotions.jalo.PromotionResult;
 import de.hybris.platform.promotions.jalo.PromotionsManager;
 import de.hybris.platform.promotions.result.PromotionEvaluationContext;
@@ -26,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
@@ -69,7 +73,7 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.hybris.platform.promotions.jalo.AbstractPromotion#evaluate(de.hybris.platform.jalo.SessionContext,
 	 * de.hybris.platform.promotions.result.PromotionEvaluationContext)
 	 */
@@ -388,10 +392,12 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 	 * @param evaluationContext
 	 * @param validProductUssidMap
 	 * @param totalEligibleProductPrice
+	 * @throws JaloSecurityException
+	 * @throws JaloInvalidParameterException
 	 */
 	private List<PromotionResult> promotionEvaluation(final SessionContext ctx,
 			final PromotionEvaluationContext evaluationContext, final Map<String, AbstractOrderEntry> validProductUssidMap,
-			final Double totalEligibleProductPrice)
+			final Double totalEligibleProductPrice) throws JaloInvalidParameterException, JaloSecurityException
 	{
 
 		boolean flagForDeliveryModeRestrEval = false;
@@ -415,6 +421,21 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 		{
 			thresholdVal = Double.valueOf(0.0D);
 		}
+
+		//*****Added for TPR-3654
+		final List<Product> eligibleList = new ArrayList<Product>();
+		for (final AbstractOrderEntry entry : validProductUssidMap.values())
+		{
+			eligibleList.add(entry.getProduct());
+		}
+		final PromotionOrderView view = evaluationContext.createView(ctx, this, eligibleList);
+		final Map<String, Integer> tcMapForValidEntries = new ConcurrentHashMap<String, Integer>();
+		for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
+		{
+			tcMapForValidEntries.put(mapEntry.getKey(), Integer.valueOf(mapEntry.getValue().getQuantity().intValue()));
+		}
+		//*****Added for TPR-3654
+
 
 
 		//for delivery mode restriction check
@@ -474,9 +495,9 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 			//for (final Map.Entry<Product, Integer> mapEntry : validProductList.entrySet())
 			for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
 			{
-				evaluationContext.startLoggingConsumed(this);
+				//evaluationContext.startLoggingConsumed(this);
 				final AbstractOrderEntry entry = mapEntry.getValue();
-				final PromotionOrderView view = evaluationContext.createView(ctx, this, eligibleProductList);
+				//final PromotionOrderView view = evaluationContext.createView(ctx, this, eligibleProductList);
 				final PromotionOrderEntry viewEntry = view.peek(ctx);
 				final long quantityOfOrderEntry = viewEntry.getBaseOrderEntry().getQuantity(ctx).longValue();
 				LOG.debug("BaseOrderEntry" + quantityOfOrderEntry);
@@ -486,18 +507,40 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 				{
 					final double adjustment = -(entry.getBasePrice().doubleValue() * percentageDiscountvalue * entry.getQuantity()
 							.doubleValue());
+
+					//Added for TPR-3654
+					final List<PromotionOrderEntryConsumed> consumed = new ArrayList<PromotionOrderEntryConsumed>();
+					consumed.add(getDefaultPromotionsManager().consume(ctx, this, entry.getQuantity().longValue(),
+							entry.getQuantity().longValue(), entry));
+					tcMapForValidEntries.put(entry.getAttribute(ctx, MarketplacecommerceservicesConstants.SELECTEDUSSID).toString(),
+							Integer.valueOf(entry.getQuantity().intValue()));
+					for (final PromotionOrderEntryConsumed poec : consumed)
+					{
+						if (adjustment < 0)
+						{
+							poec.setAdjustedUnitPrice(ctx, (entry.getBasePrice().doubleValue() + adjustment));
+						}
+						else
+						{
+							poec.setAdjustedUnitPrice(ctx, (entry.getBasePrice().doubleValue() - adjustment));
+						}
+
+					}
+					//Added for TPR-3654
+
 					LOG.debug("Adjustment" + adjustment);
 					final PromotionResult result = promotionsManager.createPromotionResult(ctx, this, evaluationContext.getOrder(),
 							1.0F);
 					final CustomBuyAgetPercentageDiscountOnBAdjustAction poeac = getDefaultPromotionsManager()
 							.createCustomBuyAgetPercentageDiscountOnBAdjustAction(ctx, entry, quantityOfOrderEntry, adjustment);
 
-					final List consumed = evaluationContext.finishLoggingAndGetConsumed(this, true);
+					//final List consumed = evaluationContext.finishLoggingAndGetConsumed(this, true);
 					result.setConsumedEntries(ctx, consumed);
 					result.addAction(ctx, poeac);
 					promotionResults.add(result);
 				}
 			}
+
 		}
 		//		else
 		//		{
