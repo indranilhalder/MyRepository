@@ -33725,7 +33725,7 @@ body.page-cartPage .MyBagHeadingDesktop, body.page-cartPage .MyBag-pincode h2 {
 }
 body.page-cartPage .MyBag-buttons p.desk-view, .MyBag-pincode #changePinDiv>p, body.page-cartPage .MyBag-pincode #defaultPinDiv, body.page-cartPage .exp_checkout_msg {
     font-size: 12px;
-    line-height: 20px; /*--- TPR-3595 ---*/
+    line-height: 18px; /*--- TPR-3595 ---*/
 }
 .MyBag-pincode #changePinDiv>p {
     margin: 0 0 23px;
