@@ -41,10 +41,10 @@
 </script>
 
 <c:if test="${not empty product.classifications}">
-	<div class="view-button">Check The Specs</div>
+	<!-- <div class="view-button">Check The Specs</div> -->
 </c:if>
 <!-- <div class="hide-button" style="display:none;">Hide Specifications</div> -->
-<div class="product-classifications wrapper">
+<%-- <div class="product-classifications wrapper">
 	<c:if test="${not empty product.classifications}">
 		<table class="stats-table">
 			<tbody>
@@ -59,7 +59,7 @@
 								items="${mapConfigurableAttributes}">
 								<tr style="border: 1px solid #f0f4f5;">
 									<td style="border-right: 1px solid #f0f4f5;" class="title">
-										<%-- ${outer.index} - ${inner.index} --%>
+										${outer.index} - ${inner.index}
 										${classification.key}
 									</td>
 
@@ -91,7 +91,7 @@
 								varStatus="inner">
 								<tr style="border: 1px solid #f0f4f5;">
 									<td style="border-right: 1px solid #f0f4f5;" class="title">
-										<%-- ${outer.index} - ${inner.index} --%> ${feature.name}
+										${outer.index} - ${inner.index} ${feature.name}
 									</td>
 									<td><c:forEach items="${feature.featureValues}"
 											var="value" varStatus="status">
@@ -144,4 +144,56 @@
 			</tbody>
 		</table>
 	</c:if>
+</div> --%>
+
+
+
+<div class="SpecWrap">
+  <div class="Padd">
+    <h2>Specifications</h2>
+    <div class="tabs-block">
+      <div class="nav-wrapper">
+	  <span></span>
+        <ul class="nav pdp">
+      <c:forEach items="${product.classifications}" var="classification" varStatus="outer">
+      <li>${classification.name}</li>
+      </c:forEach>
+        </ul>
+         </div>
+         <ul class="tabs pdp">
+        		<c:forEach items="${product.classifications}" var="classification" varStatus="outer">
+					
+					<li>
+					<div class="tab-details">
+					<ul>
+					<c:forEach items="${classification.features}" var="feature" varStatus="inner">
+					<c:forEach items="${feature.featureValues}" var="value"
+									varStatus="status">
+             			 <li>
+							<span><%-- ${outer.index} - ${inner.index} --%>  ${feature.name}</span>
+							<span>
+										${value.value}
+										<c:choose>
+										<c:when test="${feature.range}">
+												${not status.last ? '-' : feature.featureUnit.symbol}
+											</c:when>
+										<c:otherwise>
+												${feature.featureUnit.symbol}
+												${not status.last ? '<br/>' : ''}
+											</c:otherwise>
+									</c:choose>
+								</span>
+							</li>
+							</c:forEach>
+								</c:forEach>
+							</ul>
+								</div>
+						</li>
+				
+				</c:forEach>
+         
+         </ul>
+     
+      </div>
+  </div>
 </div>

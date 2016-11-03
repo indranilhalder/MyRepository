@@ -31,7 +31,7 @@
 					<button type="submit" name="submit" id="submit"
 						class="otherSellersFont">
 						<p id="otherSellerInfoId" class="other-sellers">
-							<span class="other-sellers-link">
+							&nbsp;&<span class="other-sellers-link">
 							<span id="otherSellersId"></span>&nbsp;
 							<span><spring:theme code="product.othersellers"></spring:theme></span></span><%-- &nbsp;
 							<spring:theme code="product.available"></spring:theme>
