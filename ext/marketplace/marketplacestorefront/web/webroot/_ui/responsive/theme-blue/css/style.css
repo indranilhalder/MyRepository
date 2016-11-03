@@ -35228,8 +35228,8 @@ display: none;
 .product-facet .facet .facet-list .facet-mark{
 float:right;
 }
-.listing.wrapper div.facet_mobile:nth-child(2n) h3{
-    background: #eeeeee;
+.listing.wrapper div.facet_mobile.light-bg h3{
+    background: #f5f5f5; /*TPR-3658*/
 }
 .listing.wrapper div.facet_mobile h3.tree-dept{
     background: #eeeeee;
@@ -35251,7 +35251,7 @@ float:right;
     padding: 0 20px 0 35px;
     height: 85px;
     line-height: 85px;
-    background: #f5f5f5;
+    background: #eeeeee;
     margin: 0;
     border: 0;
 }

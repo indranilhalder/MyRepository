@@ -1810,6 +1810,21 @@ $(document).ready(function(){
 					$(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("top",sort_top+"px")
 				}
 			}
+			/*TPR-3658 start*/
+			var j = 0;
+			$(".listing.wrapper .mob-filter-wrapper > .listing-leftmenu > div.facet_mobile").not(".facet-name").each(function(){
+				if($(this).children().length == 0){
+					return true;
+				}
+				if($(this).find(".facet.js-facet.collectionIds").length > 0){
+					return true;
+				}
+				if(j % 2 == 0){
+					$(this).addClass("light-bg");
+				}
+				j++;
+				});
+			/*TPR-3658 end*/
 			
 if($(".facet.js-facet.Colour .js-facet-values.js-facet-form .more-lessFacetLinks").length == 0){	
 var colorMoreLess = '<div class="more-lessFacetLinks" style="display:none;">'
