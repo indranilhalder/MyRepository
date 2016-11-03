@@ -489,18 +489,14 @@ ACC.carousel = {
 	},
 	blpTopDealsCarousel: function(){
 		$(".top_deal_blp #mplAdvancedCategoryCarousel").owlCarousel({
-			items:1,
-		    nav:false,
-		    dots:true,
-		    loop: true,
-            autoplay: true,
-            autoHeight : true,
-            autoplayTimeout: 5000
-					/*items:5,
+					items:5,
             		loop: true,
             		nav:true,
             		dots:false,
             		navText:[],
+            		autoplay: true,
+                    autoHeight : true,
+                    autoplayTimeout: 5000,
             		responsive : {
             			// breakpoint from 0 up
             			0 : {
@@ -520,7 +516,7 @@ ACC.carousel = {
             			1000 : {
             				items:5,
             			}			
-            		}*/	
+            		}	
 			/*navigation:true,
 			rewindNav: false,
 			navigationText :[],
@@ -541,18 +537,14 @@ ACC.carousel = {
 
 	ClpTopDealsCarousel: function(){
 		$(".top_deal .offersCarousel").owlCarousel({
-			items:1,
-		    nav:false,
-		    dots:true,
-		    loop: true,
-            autoplay: true,
-            autoHeight : true,
-            autoplayTimeout: 5000
-					/*items:5,
+					items:5,
             		loop: true,
             		nav:false,
             		dots:false,
             		navText:[],
+            		autoplay: true,
+                    autoHeight : true,
+                    autoplayTimeout: 5000,
             		responsive : {
             			// breakpoint from 0 up
             			0 : {
@@ -580,7 +572,7 @@ ACC.carousel = {
             				loop: ($(".top_deal .offersCarousel .image").length <= 5)?false:true,
             				nav: ($(".top_deal .offersCarousel .image").length <= 5)?false:true,
             			}			
-            		}*/	
+            		}
 			/*navigation:true,
 			rewindNav: false,
 			navigationText :[],
