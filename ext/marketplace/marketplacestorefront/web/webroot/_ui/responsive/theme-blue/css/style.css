@@ -58240,4 +58240,18 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 	.SpecWrap .Padd .tab-details li span + span{ font-size:12px;font-weight:normal;}
 	.SpecWrap .Padd .tabs-block .nav.pdp{ padding:0;}
 	}
+ /* Start of TPR-860 */
+ .OtherSellers .Padd .InfoWrap .Content > div.Buying .btn-buy-now.oosOtherSeller{
+    opacity: .5;
+ }
+ .OtherSellers .Padd .InfoWrap .Content > div.Buying .add_to_cart_form{
+    text-align: center;
+ }
+ .OtherSellers .Padd .InfoWrap .Content > div.Buying .add_to_cart_form > span{
+    font-size: 12px;
+    margin-bottom: 10px;
+    color: #ff1c47;
+    display: inline-block;
+ }
  
+ /* End of TPR-860 */
