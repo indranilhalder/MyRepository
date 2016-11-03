@@ -7,7 +7,6 @@ import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.CustomerModel;
-import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -319,19 +318,19 @@ public class PaymentServicesController extends BaseController
 	/*
 	 * // Get Billing Address
 	 *//**
-	   * @Description Get Billing Address
-	   * @param userId
-	   * @param cardRefNo
-	   * @return BillingAddressWsData
-	   * @throws EtailNonBusinessExceptions
-	   */
+	 * @Description Get Billing Address
+	 * @param userId
+	 * @param cardRefNo
+	 * @return BillingAddressWsData
+	 * @throws EtailNonBusinessExceptions
+	 */
 	/*
-	 *
+	 * 
 	 * @Secured( { "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
-	 *
+	 * 
 	 * @RequestMapping(value = MarketplacewebservicesConstants.BILLINGADDRESSURL, method = RequestMethod.POST, produces =
 	 * MarketplacewebservicesConstants.APPLICATIONPRODUCES)
-	 *
+	 * 
 	 * @ResponseBody public BillingAddressWsData getBillingAddress(@PathVariable final String userId, @RequestParam final
 	 * String cardRefNo) { LOG.debug(String.format("getBillingAddress : cardRefNo : %s", cardRefNo));
 	 * BillingAddressWsData billingAddress = new BillingAddressWsData(); try { if (StringUtils.isNotEmpty(cardRefNo)) {
@@ -346,26 +345,26 @@ public class PaymentServicesController extends BaseController
 	 * { billingAddress.setError(((EtailBusinessExceptions) ex).getErrorMessage());
 	 * billingAddress.setErrorCode(((EtailBusinessExceptions) ex).getErrorCode()); } } return billingAddress; }
 	 *//**
-	   * @Description Update Transaction and related Retails for COD
-	   * @param juspayOrderId
-	   * @param channel
-	   * @param cartID
-	   * @return MplUserResultWsDto
-	   * @throws EtailNonBusinessExceptions
-	   */
+	 * @Description Update Transaction and related Retails for COD
+	 * @param juspayOrderId
+	 * @param channel
+	 * @param cartID
+	 * @return MplUserResultWsDto
+	 * @throws EtailNonBusinessExceptions
+	 */
 	/*
-	 *
+	 * 
 	 * @Secured( { "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
-	 *
+	 * 
 	 * @RequestMapping(value = MarketplacewebservicesConstants.CREATEENTRYINAUDITURL, method = RequestMethod.POST,
 	 * produces = "application/json")
-	 *
+	 * 
 	 * @ResponseBody public MplUserResultWsDto createEntryInAudit(@RequestParam final String juspayOrderId, @RequestParam
 	 * String channel,
-	 *
+	 * 
 	 * @RequestParam final String cartID, @PathVariable final String userId) { LOG.debug(String.format(
 	 * "createEntryInAudit : juspayOrderId: %s | channel: %s | cartID : %s", juspayOrderId, channel));
-	 *
+	 * 
 	 * MplUserResultWsDto auditEntry = new MplUserResultWsDto(); try { channel =
 	 * MarketplacecommerceservicesConstants.CHANNEL_WEBMOBILE; if (StringUtils.isNotEmpty(juspayOrderId) &&
 	 * StringUtils.isNotEmpty(channel) && StringUtils.isNotEmpty(cartID)) { auditEntry =
@@ -591,8 +590,8 @@ public class PaymentServicesController extends BaseController
 			if (StringUtils.isNotEmpty(updateTransactionDtls.getStatus())
 					&& updateTransactionDtls.getStatus().equalsIgnoreCase(MarketplacewebservicesConstants.UPDATE_SUCCESS))
 			{
-				final UserModel user = getExtUserService().getUserForOriginalUid(userId);
-				final String validationMsg = getMplPaymentFacade().validateOTPforCODWeb(user.getUid(), otpPin);
+				//final UserModel user = getExtUserService().getUserForOriginalUid(userId);
+				final String validationMsg = getMplPaymentFacade().validateOTPforCODWeb(userId, otpPin);
 				if (null != validationMsg)
 				{
 					if (validationMsg == MarketplacecommerceservicesConstants.OTPVALIDITY)
@@ -724,12 +723,10 @@ public class PaymentServicesController extends BaseController
 				//				updateTransactionDtls.setError(MarketplacewebservicesConstants.JUSPAY_DECLINED_ERROR);
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9322);
 			}
-			else
-				if (StringUtils.isNotEmpty(updateTransactionDtls.getStatus())
-						&& (updateTransactionDtls.getStatus().equalsIgnoreCase(MarketplacewebservicesConstants.AUTHORIZATION_FAILED)
-								|| updateTransactionDtls.getStatus()
-										.equalsIgnoreCase(MarketplacewebservicesConstants.AUTHENTICATION_FAILED)
-						|| updateTransactionDtls.getStatus().equalsIgnoreCase(MarketplacewebservicesConstants.PENDING_VBV)))
+			else if (StringUtils.isNotEmpty(updateTransactionDtls.getStatus())
+					&& (updateTransactionDtls.getStatus().equalsIgnoreCase(MarketplacewebservicesConstants.AUTHORIZATION_FAILED)
+							|| updateTransactionDtls.getStatus().equalsIgnoreCase(MarketplacewebservicesConstants.AUTHENTICATION_FAILED) || updateTransactionDtls
+							.getStatus().equalsIgnoreCase(MarketplacewebservicesConstants.PENDING_VBV)))
 			{
 				//				updateTransactionDtls.setError(MarketplacewebservicesConstants.JUSPAY_FAILED_ERROR);
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9323);
@@ -1081,4 +1078,3 @@ public class PaymentServicesController extends BaseController
 	}
 
 }
-

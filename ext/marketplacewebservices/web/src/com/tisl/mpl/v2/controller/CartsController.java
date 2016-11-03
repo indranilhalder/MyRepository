@@ -3390,7 +3390,9 @@ public class CartsController extends BaseCommerceController
 						final boolean notBlackListed = mplPaymentFacade.isMobileBlackListed(mobilenumber);
 						if (notBlackListed)
 						{ ////////
-							final String validation = mplPaymentFacade.generateOTPforCODWeb(mplCustomerID, mobilenumber,
+						  //							final String validation = mplPaymentFacade.generateOTPforCODWeb(mplCustomerID, mobilenumber,
+						  //									mplCustomerName, cartId);
+							final String validation = mplPaymentFacade.generateOTPforCODWeb(customerData.getEmail(), mobilenumber,
 									mplCustomerName, cartId);
 							if (null != validation && StringUtils.isNotEmpty(validation))
 							{

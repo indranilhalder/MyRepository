@@ -23,6 +23,29 @@ public interface OTPDao
 	 * @return List<OTPModel>
 	 */
 	List<OTPModel> fetchOTP(String customerPK, OTPTypeEnum OTPType);
-	List<OTPModel> fetchOTP(String customerPK,String mobileNo, OTPTypeEnum OTPType);
+
+	List<OTPModel> fetchOTP(String customerPK, String mobileNo, OTPTypeEnum OTPType);
+
+	/**
+	 * @param customerPK
+	 * @param OTPType
+	 * @return OTPModel
+	 */
+	OTPModel fetchLatestOTP(String customerPK, OTPTypeEnum OTPType);
+
+	/**
+	 * @param emailId
+	 * @param mobileNo
+	 * @param OTPType
+	 * @return OTPModel
+	 */
+	OTPModel fetchLatestOTP(String emailId, String mobileNo, OTPTypeEnum OTPType);
+
+	/**
+	 * @param customerPK
+	 * @param OTPType
+	 * @return OTPModel
+	 */
+	OTPModel fetchLatestInvalidatedOTP(String customerPK, OTPTypeEnum OTPType);
 
 }
