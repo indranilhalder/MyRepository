@@ -180,6 +180,8 @@
 		else{
 			if(isLux == "true"){
 				deleteCookie(luxuryCookie);
+			}
+			if(sessionStorage.getItem(luxuryLoginPage) != null){
 				sessionStorage.setItem(luxuryLoginPage, false);
 			}
 		}
