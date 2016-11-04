@@ -5,23 +5,18 @@ package com.tisl.mpl.interceptor;
 
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.product.PincodeModel;
-import de.hybris.platform.promotions.model.PromotionResultModel;
+
 import de.hybris.platform.servicelayer.interceptor.InterceptorContext;
 import de.hybris.platform.servicelayer.interceptor.InterceptorException;
 import de.hybris.platform.servicelayer.interceptor.ValidateInterceptor;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
-import org.apache.commons.collections.CollectionUtils;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
-import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
-import com.tisl.mpl.model.BuyAandBGetPromotionOnShippingChargesModel;
-import com.tisl.mpl.model.BuyAboveXGetPromotionOnShippingChargesModel;
+
 
 
 /**
@@ -100,7 +95,7 @@ public class SaveDeliveryCostInterceptor implements ValidateInterceptor
 	 * @param allPromotionResults
 	 * @return flag
 	 */
-	private boolean validateForShippingPromo(final Set<PromotionResultModel> allPromotionResults)
+/*	private boolean validateForShippingPromo(final Set<PromotionResultModel> allPromotionResults)
 	{
 		boolean flag = false;
 		if (CollectionUtils.isNotEmpty(allPromotionResults))
@@ -118,6 +113,6 @@ public class SaveDeliveryCostInterceptor implements ValidateInterceptor
 			}
 		}
 		return flag;
-	}
+	}*/
 
 }
