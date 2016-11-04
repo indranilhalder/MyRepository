@@ -630,14 +630,6 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			}
 			else
 			{
-				//TISLUX-1823 Saving channel as Web for Luxury
-				if (channel != null && channel.equalsIgnoreCase(SalesApplication.WEB.getCode()))
-				{
-					cartModel.setChannel(SalesApplication.WEB);
-					modelService.save(cartModel);
-				}
-
-
 				addedToCart = mplCartFacade.addItemToCart(cartId, cartModel, selectedProductModel, quant, USSID);
 				if (LOG.isDebugEnabled())
 				{
@@ -702,7 +694,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	 * @return CartDataDetailsWsDTO
 	 */
 	@Override
-	public CartDataDetailsWsDTO getCartDetails(final String cartId, final AddressListWsDTO addressListWsDTO, final String pincode)
+	public CartDataDetailsWsDTO getCartDetails(final String cartId, final AddressListWsDTO addressListWsDTO, final String pincode,
+			final String channel)
 	{
 
 		LOG.debug(String.format("Getcart details : Cart id : %s | Pincode: %s ", cartId, pincode));
@@ -749,7 +742,12 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				{
 					cartDataDetails.setPickupPersonMobile(cart.getPickupPersonMobile());
 				}
-
+				//TISLUX-1823 -For LuxuryWeb
+				if (channel != null && channel.equalsIgnoreCase(SalesApplication.WEB.getCode()))
+				{
+					cart.setChannel(SalesApplication.WEB);
+					modelService.save(cart);
+				}
 			}
 			else
 			{
@@ -899,8 +897,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		final List<MarketplaceDeliveryModeData> deliveryModeList = new ArrayList<>();
 		try
 		{
-			cartModel.setChannel(SalesApplication.MOBILE);
-			getModelService().save(cartModel);
+			/*
+			 * cartModel.setChannel(SalesApplication.MOBILE); getModelService().save(cartModel);
+			 */
 			if (resetReqd)
 			{
 				if (LOG.isDebugEnabled())
