@@ -300,13 +300,9 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 							if (!paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
 							{
 								cart.setConvenienceCharges(Double.valueOf(0.0));
-								modelService.save(cart);
 							}
-
-							getCartService().setSessionCart(cart);
-							//					SalesApplicationCockpit
 							cart.setChannel(SalesApplication.MOBILE);
-							getModelService().save(cart);
+							modelService.save(cart);
 
 							LOG.debug("binValidation : cartModel : " + cart);
 
