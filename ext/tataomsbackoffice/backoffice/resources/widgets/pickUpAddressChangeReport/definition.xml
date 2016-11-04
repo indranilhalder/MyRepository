@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+  
+<widget-definition id="com.techouts.widgets.pickupaddresschangerequest" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:noNamespaceSchemaLocation="http://hybris.com/cockpitng/widget-definition">
+     
+	<name>Pick up Address Request Report</name>
+   
+ 
+    <view src="pickupaddresschangerequest.zul" /> 
+    <keywords>
+        <keyword>pick up address report</keyword>
+    </keywords>
+    <sockets>
+		<input id="startendDates" type="java.lang.String" />
+	</sockets>
+    <controller class="com.techouts.backoffice.widget.controller.PickUpAddressChangeRequestWidgetController" /> 
+    
+</widget-definition>

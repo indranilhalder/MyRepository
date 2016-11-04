@@ -1,0 +1,1099 @@
+package com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl;
+
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.zkoss.zhtml.Br;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.Session;
+import org.zkoss.zk.ui.api.HtmlBasedComponent;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zul.Button;
+import org.zkoss.zul.Checkbox;
+import org.zkoss.zul.Div;
+import org.zkoss.zul.Label;
+import org.zkoss.zul.Listbox;
+import org.zkoss.zul.Listcell;
+import org.zkoss.zul.Listhead;
+import org.zkoss.zul.Listheader;
+import org.zkoss.zul.Listitem;
+import org.zkoss.zul.Messagebox;
+import org.zkoss.zul.Radio;
+import org.zkoss.zul.Radiogroup;
+import org.zkoss.zul.Textbox;
+
+import bsh.ParseException;
+
+import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
+import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceReturnsController;
+import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.TypeofReturn;
+import com.tisl.mpl.core.enums.RefundMode;
+import com.tisl.mpl.data.CODSelfShipData;
+import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
+import com.tisl.mpl.facades.data.RescheduleData;
+import com.tisl.mpl.wsdto.ReturnLogistics;
+import com.tisl.mpl.xml.pojo.OrderLineDataResponse;
+
+import de.hybris.platform.cockpit.model.meta.TypedObject;
+import de.hybris.platform.cockpit.services.meta.TypeService;
+import de.hybris.platform.cockpit.util.TypeTools;
+import de.hybris.platform.cockpit.widgets.InputWidget;
+import de.hybris.platform.cockpit.widgets.models.impl.DefaultListWidgetModel;
+import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
+import de.hybris.platform.commercefacades.user.data.AddressData;
+import de.hybris.platform.converters.Populator;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.order.payment.CreditCardPaymentInfoModel;
+import de.hybris.platform.core.model.user.AddressModel;
+import de.hybris.platform.cscockpit.utils.LabelUtils;
+import de.hybris.platform.cscockpit.utils.TypeUtils;
+import de.hybris.platform.cscockpit.widgets.controllers.ReturnsController;
+import de.hybris.platform.cscockpit.widgets.renderers.impl.ReturnRequestCreateWidgetRenderer;
+import de.hybris.platform.cscockpit.widgets.renderers.utils.PopupWidgetHelper;
+import de.hybris.platform.payment.model.PaymentTransactionModel;
+import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.storelocator.model.PointOfServiceModel;
+
+public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
+		ReturnRequestCreateWidgetRenderer {
+
+	@Autowired
+	private PopupWidgetHelper popupWidgetHelper;
+	@Autowired
+	private MplCheckoutFacade mplCheckoutFacade;
+	@Autowired
+	private TypeService cockpitTypeService;
+	@Autowired
+	private ModelService modelService;
+	@Autowired
+	private Populator<AddressModel, AddressData> addressPopulator;
+
+	private static final String TEXTBOX = "returntext";
+	private static final String CONTINUE = "continue";
+	private static final String BUTTON = "creditButton";
+	private static final String BOLD_TEXT = "boldText";
+	public static final String REVERSE_LOGISTICS_NOTAVAILABLE = "reverselogisticnotavailable";
+	private static final String REVERSE_LOGISTICS_AVAILABLE = "reverselogisticavailable";
+	private static final String REVERSE_LOGISTICS_PARTIALAVAILABLE = "reverselogisticpartialavailable";
+	private static final String NO_RESPONSE_FROM_SERVER = "noResponseFromServer";
+	private static final String SELECT_RETURN_ADDRESS = "selectReturnAddress";
+
+	private static final String FAILED_TO_VALIDATE_PINCODE_FEILD = "FailedToValidatePinCode";
+	private static final String ENTER_VALUES_IN_ALLFIELDS = "enterValuesInAllFields";
+
+	private List<PointOfServiceData> returnableStores;
+
+	@Override
+	protected HtmlBasedComponent createContentInternal(
+			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
+			HtmlBasedComponent rootContainer) {
+
+		Div AccountDetailsDiv = null;
+		String paymentType = null;
+		PaymentTransactionModel paymentTransation = null;
+		final Div bankDetailsArea = new Div();
+		
+		final TypedObject order = (TypedObject) ((ReturnsController) widget
+				.getWidgetController()).getRefundOrderPreview();
+		final OrderModel subOrder = (OrderModel) order.getObject();
+		 List<AbstractOrderEntryModel> orderEntries = new ArrayList<AbstractOrderEntryModel>();
+		if(null != subOrder) {
+			orderEntries= subOrder.getEntries();
+		}
+		if (subOrder != null && subOrder.getParentReference() != null) {
+			paymentTransation = subOrder.getPaymentTransactions().get(0);
+			paymentType = paymentTransation.getEntries().get(0)
+					.getPaymentMode().getMode();
+		}
+		if (paymentType != null
+				&& paymentType
+						.equalsIgnoreCase(MarketplaceCockpitsConstants.PAYMENT_MODE_COD)) {
+			AccountDetailsDiv = collectBankDetailsForCodOrder(widget, orderEntries,
+					 subOrder);
+			AccountDetailsDiv.setParent(bankDetailsArea);
+		} else if (paymentType != null) {
+			AccountDetailsDiv = populatePrePaidPaymentDetails(widget, subOrder,
+					bankDetailsArea, orderEntries);
+			AccountDetailsDiv.setParent(bankDetailsArea);
+		}
+		return bankDetailsArea;
+	}
+
+	private Textbox createTextbox(final Div parent) {
+		final Textbox textBox = new Textbox();
+		textBox.setWidth("30%");
+		textBox.setParent(parent);
+		return textBox;
+	}
+
+	private Div collectBankDetailsForCodOrder(
+			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
+			final List<AbstractOrderEntryModel> entries, 
+			final OrderModel orderModel) {
+		 final Div bankDetailsDiv = new Div();	
+		 // Account Number 
+		 Div accNoDiv = new Div();
+		 accNoDiv.setParent(bankDetailsDiv);
+		 accNoDiv.setClass(TEXTBOX);
+		 Label accNo = new Label(LabelUtils.getLabel(widget, "accNo"));
+		 accNo.setClass("AcntNumberLabel");
+		 accNo.setParent(accNoDiv);
+		 final Textbox accNoTextbox = createTextbox(accNoDiv);      
+		 accNoTextbox.setParent(accNoDiv);
+		 accNoTextbox.setClass("accHolderNameTextbox");
+		 accNoTextbox.setMaxlength(16);
+		 String errorMsgAcntNumber = LabelUtils.getLabel(widget,
+					"error.msg.acntNumber", new Object[0]);
+		accNoTextbox.setConstraint("/[0-9][0-9]*$/:"+errorMsgAcntNumber);
+		// Re - Enter Account Number 
+		Label re_accNo = new Label(LabelUtils.getLabel(widget, "re_accNo"));
+		re_accNo.setParent(accNoDiv);
+		re_accNo.setClass("reEntrAcntnumber");
+		final Textbox re_accNoTextBox = createTextbox(accNoDiv);
+		re_accNoTextBox.setParent(accNoDiv);
+		re_accNoTextBox.setClass("accHolderNameTextbox");
+		re_accNoTextBox.setMaxlength(16);
+		 String errorMsgReEnterAcntNumber = LabelUtils.getLabel(widget,
+					"error.msg.acntNumber", new Object[0]);
+		re_accNoTextBox.setConstraint("/[0-9][0-9]*$/:"+errorMsgReEnterAcntNumber);
+
+		// Account Holder's Name 
+		Div acntholderDiv = new Div();
+		acntholderDiv.setParent(bankDetailsDiv);
+		acntholderDiv.setClass(TEXTBOX);
+		final Label accHolderName = new Label(LabelUtils.getLabel(widget,"accName"));
+		accHolderName.setParent(acntholderDiv);
+		accHolderName.setClass("acntHolderName");
+		accHolderName.setWidth("10px");
+		final Textbox accHolderNameTextbox = createTextbox(acntholderDiv);
+		accHolderNameTextbox.setParent(acntholderDiv);
+		accHolderNameTextbox.setMaxlength(20);
+		accHolderNameTextbox.setClass("accHolderNameTextbox");
+		String errorMsgName = LabelUtils.getLabel(widget,
+				"error.msg.name", new Object[0]);
+		accHolderNameTextbox.setConstraint("/[a-zA-Z ][a-zA-Z ]*$/:"+errorMsgName);
+		
+		// RefundMode 
+		final Label refundMode = new Label(LabelUtils.getLabel(widget,"refund_mode"));
+		refundMode.setParent(acntholderDiv);
+		refundMode.setClass("reEntrAcntnumber");
+		final Listbox refundModeListbox = new Listbox();
+		refundModeListbox.setParent(acntholderDiv);
+		refundModeListbox.setClass("refundModedropDown");
+		refundModeListbox.setWidth("80px");
+		refundModeListbox.setVisible(true);
+		refundModeListbox.setMold("select");
+		final List<String> refundModeList = new ArrayList<String>();
+		refundModeList.add(RefundMode.IFSC.getCode());
+		refundModeList.add(RefundMode.NEFT.getCode());
+		refundModeList.add(RefundMode.RGFT.getCode());
+		for (String modes : refundModeList) {
+			final Listitem refundModeItems = new Listitem(modes);
+			refundModeItems.setParent(refundModeListbox);
+			refundModeItems.setSelected(true);
+		}
+		
+		// Title 
+		final Label titleLabel = new Label("Title");
+		titleLabel.setParent(acntholderDiv);
+		titleLabel.setClass("reEntrAcntnumber");
+		final Listbox titleListBox = new Listbox();
+		titleListBox.setParent(acntholderDiv);
+		titleListBox.setClass("refundModedropDown");
+		titleListBox.setWidth("100px");
+		titleListBox.setMold("select");
+		List<String> titleList = new ArrayList<String>();
+		titleList.add("MR");
+		titleList.add("MRs");
+		titleList.add("Company");
+		for (String title : titleList) {
+			final Listitem titleItem = new Listitem(title);
+			titleItem.setParent(titleListBox);
+			titleItem.setSelected(true);	
+		}
+		
+		// Bank Name 
+		final Div banNameDiv = new Div();
+		banNameDiv.setParent(bankDetailsDiv);
+		banNameDiv.setClass(TEXTBOX);
+		final Label bankName = new Label(LabelUtils.getLabel(widget,"bank_name"));
+		bankName.setParent(banNameDiv);
+		bankName.setClass("bankNameLabel");
+		final Textbox bankNameTextbox = createTextbox(banNameDiv);
+		bankNameTextbox.setParent(banNameDiv);
+		bankNameTextbox.setMaxlength(20);
+		bankNameTextbox.setClass("accHolderNameTextbox");
+		String errorMsgBankName = LabelUtils.getLabel(widget,
+				"error.msg.name", new Object[0]);
+		bankNameTextbox.setConstraint("/[a-zA-Z ][a-zA-Z ]*$/:"+errorMsgBankName);
+		
+		// IFSC CODE Details
+		final Label ifscCode = new Label(LabelUtils.getLabel(widget, "IFCS"));
+		ifscCode.setParent(banNameDiv);
+		ifscCode.setClass("reEntrAcntnumber");
+		final Textbox ifscTextbox = createTextbox(banNameDiv);
+		ifscTextbox.setMaxlength(11);
+		ifscTextbox.setParent(banNameDiv);
+		ifscTextbox.setClass("accHolderNameTextbox");
+		String errorMsgIfsc = LabelUtils.getLabel(widget,
+				"error.msg.ifsc", new Object[0]);
+		ifscTextbox.setConstraint("/[a-zA-Z][a-zA-Z0-9]*$/:"+errorMsgIfsc);	
+		final Div codButtonDiv = new Div();
+		codButtonDiv.setParent(bankDetailsDiv);
+		codButtonDiv.setClass(BUTTON);
+		final Button codButton = new Button(LabelUtils.getLabel(widget,
+				CONTINUE));
+		codButton.setParent(codButtonDiv);
+		codButton.addEventListener(Events.ON_CLICK, new EventListener() {
+			
+			@Override
+			public void onEvent(Event arg0) throws Exception {
+				
+				if(accNoTextbox.getValue().isEmpty() || accNoTextbox.getValue().length()<11) {
+					Messagebox.show(LabelUtils.getLabel(widget,
+								"InvalidAcntNumber",
+								Messagebox.OK, Messagebox.ERROR
+				     	));
+					return;
+				} else if  (re_accNoTextBox.getValue().isEmpty() ) {
+					Messagebox.show(LabelUtils.getLabel(widget,
+							"InvalidAcntNumber",
+							Messagebox.OK, Messagebox.ERROR
+			     	));
+					return;
+				}  else if  (re_accNoTextBox.getValue().isEmpty() || !re_accNoTextBox.getValue().equalsIgnoreCase(accNoTextbox.getValue()) ) {
+						Messagebox.show(LabelUtils.getLabel(widget,
+								"AcntNumbersDoes'tMatch",
+								Messagebox.OK, Messagebox.ERROR
+				     	));
+						return;
+				} else if (accHolderNameTextbox.getValue().isEmpty() || accHolderNameTextbox.getValue().length()<3) {
+					
+						Messagebox.show(LabelUtils.getLabel(widget,
+								"invalidAcntHolderName",
+								Messagebox.OK, Messagebox.ERROR
+				     	));
+						return;
+				}else if (bankNameTextbox.getValue().isEmpty() ||  bankNameTextbox.getValue().length()<3) {
+						Messagebox.show(LabelUtils.getLabel(widget,
+								"invalidBankName",
+								Messagebox.OK, Messagebox.ERROR
+				     	));
+						return;
+				} else if ( ifscTextbox.getValue().isEmpty() ||  ifscTextbox.getValue().length()<11) {
+					Messagebox.show(LabelUtils.getLabel(widget,
+							"invaliIfscCode",
+							Messagebox.OK, Messagebox.ERROR
+			     	));
+					return;
+				}
+					codUpadatesToFico(widget, entries, accNoTextbox,re_accNoTextBox,
+							accHolderNameTextbox, refundModeListbox, titleListBox,
+							bankNameTextbox, ifscTextbox);
+					codButton.setDisabled(true);
+					bankDetailsDiv.appendChild(getReturnModeDetails(widget, entries, orderModel));
+			}
+		});
+		return bankDetailsDiv;
+	}
+
+	private Div populatePrePaidPaymentDetails(
+			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
+			final OrderModel orderModel,
+			Div bankDetailsArea, final List<AbstractOrderEntryModel> entry) {
+		final Div prepaidOrdeDetials = new Div();
+		CreditCardPaymentInfoModel cCard = null;
+		PaymentTransactionModel payment=null;
+		if(null != orderModel.getPaymentTransactions() && null != orderModel.getPaymentTransactions().get(0)) {
+		 payment = orderModel.getPaymentTransactions()
+				.get(0);
+		}
+		if (orderModel.getPaymentInfo() instanceof CreditCardPaymentInfoModel) {
+			cCard = (CreditCardPaymentInfoModel) orderModel.getPaymentInfo();
+			final Div retunDetails = new Div();
+			retunDetails.setParent(prepaidOrdeDetials);
+			retunDetails.setClass("detailsClasss");
+			final Label returnHead = new Label(LabelUtils.getLabel(widget,
+					"returnDetails"));
+			returnHead.setParent(retunDetails);
+			returnHead.setClass(BOLD_TEXT);
+			final Div Div1 = new Div();
+			Div1.setParent(retunDetails);
+			final Label returnDescription = new Label(LabelUtils.getLabel(
+					widget, "return_Description"));
+			returnDescription.setParent(retunDetails);
+		final Div cardDetailsldiv = new Div();
+			cardDetailsldiv.setParent(prepaidOrdeDetials);
+			cardDetailsldiv.setClass("cardDetailsClass");
+			final Label cardDetails = new Label(LabelUtils.getLabel(widget,
+					"card_Details"));
+			cardDetails.setParent(cardDetailsldiv);
+			cardDetails.setClass(BOLD_TEXT);
+			final Div Div2 = new Div();
+			Div2.setParent(cardDetailsldiv);
+		final Label paymentType = new Label(payment.getEntries().get(0)
+					.getPaymentMode().getMode());
+			paymentType.setParent(cardDetailsldiv);
+			final Div Div3 = new Div();
+			Div3.setParent(cardDetailsldiv);
+			final Label cardNo = new Label(cCard.getNumber());
+			cardNo.setParent(cardDetailsldiv);
+			cardNo.setClass(BOLD_TEXT);
+			final Div Div4 = new Div();
+			Div4.setParent(cardDetailsldiv);
+			final Label deliveyDetails = new Label(LabelUtils.getLabel(widget,
+					"delivey_Details"));
+			deliveyDetails.setParent(cardDetailsldiv);
+			final Div Div5 = new Div();
+			Div5.setParent(prepaidOrdeDetials);
+			
+			final Div prepaidButtonDiv = new Div();
+			prepaidButtonDiv.setParent(prepaidOrdeDetials);
+			prepaidButtonDiv.setClass(BOLD_TEXT);
+			final Button processButton = new Button(LabelUtils.getLabel(widget,
+					CONTINUE));
+			processButton.setParent(prepaidButtonDiv);
+			processButton.addEventListener(Events.ON_CLICK,
+					new EventListener() {
+						@Override
+						public void onEvent(Event arg0) throws Exception {
+							prepaidOrdeDetials
+									.appendChild(getReturnModeDetails(widget,
+											entry,orderModel));
+						}
+					});
+		}
+		return prepaidOrdeDetials;
+	}
+
+	private List<PointOfServiceModel> getStoresDetails(
+			List<PointOfServiceData> returnStores) {
+		List<PointOfServiceModel> storeDetails = new ArrayList<PointOfServiceModel>();
+		if (returnStores != null && returnStores.size() > 0) {
+			PointOfServiceModel storeModel = new PointOfServiceModel();
+			AddressModel storeAddrModel = null;
+			for (PointOfServiceData storeAddr : returnStores) {
+				if (StringUtils.isNotBlank(storeAddr.getName())) {
+					storeModel.setName(storeAddr.getName());
+				}
+				if (null != storeAddr.getAddress()) {
+					storeAddrModel = new AddressModel();
+					if (StringUtils.isNotBlank(storeAddr.getAddress()
+							.getLine1())) {
+						storeAddrModel.setLine1(storeAddr.getAddress()
+								.getLine1());
+					}
+					if (StringUtils.isNotBlank(storeAddr.getAddress()
+							.getLine2())) {
+						storeAddrModel.setLine2(storeAddr.getAddress()
+								.getLine2());
+					}
+					if (StringUtils.isNotBlank(storeAddr.getAddress()
+							.getLine3())) {
+						storeAddrModel.setAddressLine3(storeAddr.getAddress()
+								.getLine3());
+					}
+					if (StringUtils.isNotBlank(storeAddr.getAddress()
+							.getLandmark())) {
+						storeAddrModel.setLandmark(storeAddr.getAddress()
+								.getLandmark());
+					}
+					if (StringUtils
+							.isNotBlank(storeAddr.getAddress().getCity())) {
+						storeAddrModel
+								.setCity(storeAddr.getAddress().getCity());
+					}
+					if (StringUtils.isNotBlank(storeAddr.getAddress()
+							.getPostalCode())) {
+						storeAddrModel.setPostalcode(storeAddr.getAddress()
+								.getPostalCode());
+					}
+					if (StringUtils.isNotBlank(storeAddr.getAddress()
+							.getPhone())) {
+						storeAddrModel.setPhone1(storeAddr.getAddress()
+								.getPhone());
+					}
+					if (null != storeAddrModel) {
+						storeModel.setAddress(storeAddrModel);
+					}
+				}
+				storeDetails.add(storeModel);
+			}
+		}
+		return storeDetails;
+	}
+
+	private Div getReturnModeDetails(
+			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
+			final List<AbstractOrderEntryModel> entry,
+			final OrderModel subOrder) {
+		final Div returnMethodDiv = new Div();
+		final Div modelSelctionDiv = new Div();
+		modelSelctionDiv.setParent(returnMethodDiv);
+		modelSelctionDiv.setClass("modeDetails");
+		final Label selectTitle = new Label(LabelUtils.getLabel(widget,
+				"return_mode"));
+		selectTitle.setParent(modelSelctionDiv);
+		selectTitle.setClass(BOLD_TEXT);
+		final Div Div = new Div();
+		Div.setParent(modelSelctionDiv);
+		final Div quickDropArea = new Div();
+		quickDropArea.setParent(returnMethodDiv);
+		final Div schedulePickupArea = new Div();
+		schedulePickupArea.setParent(returnMethodDiv);
+		schedulePickupArea.setClass("displayArea");
+		final Div modes = new Div();
+		modes.setParent(modelSelctionDiv);
+		modes.setClass("returnModels");
+		final Radiogroup radioGroup = new Radiogroup();
+		modes.appendChild(radioGroup);
+		Radio quickDrop = new Radio();
+		radioGroup.appendChild(quickDrop);
+		quickDrop.setLabel(TypeofReturn.QUICK_DROP);
+		quickDrop.setClass(BOLD_TEXT);
+		quickDrop.addEventListener(Events.ON_CHECK, new EventListener() {
+			@Override
+			public void onEvent(Event arg0) throws Exception {
+				if (null != schedulePickupArea
+						&& null != schedulePickupArea.getChildren()) {
+					schedulePickupArea.getChildren().clear();
+				}
+				schedulePickupArea.appendChild(getQuickDropDetails(widget,
+						entry));
+			}
+		});
+		final Div Div9 = new Div();
+		Div9.setParent(modelSelctionDiv);
+		Radio schedulePickup = new Radio();
+		radioGroup.appendChild(schedulePickup);
+		schedulePickup.setLabel(TypeofReturn.SCHEDULE_PICKUP);
+		schedulePickup.addEventListener(Events.ON_CHECK, new EventListener() {
+			@Override
+			public void onEvent(Event arg0) throws Exception {
+				if (null != schedulePickupArea
+						&& null != schedulePickupArea.getChildren()) {
+					schedulePickupArea.getChildren().clear();
+
+				}
+				schedulePickupArea.appendChild(getSchedulePicupDetails(widget,
+						entry, subOrder));
+			}
+		});
+		
+		Div9.setParent(modelSelctionDiv);
+		Radio selfShipRadio = new Radio();
+		selfShipRadio.setLabel(TypeofReturn.SELF_COURIER);
+		radioGroup.appendChild(selfShipRadio);
+		selfShipRadio.addEventListener(Events.ON_CHECK, new EventListener() {
+			@Override
+			public void onEvent(Event arg0) throws Exception {
+				if (null != schedulePickupArea
+						&& null != schedulePickupArea.getChildren()) {
+					schedulePickupArea.getChildren().clear();
+				}
+				schedulePickupArea.appendChild(getselfShipDetails(widget,
+						entry, subOrder,TypeofReturn.SELF_COURIER));
+			}
+		});
+			
+		if (radioGroup.getSelectedIndex() == 0) {
+			schedulePickupArea.appendChild(getQuickDropDetails(widget, entry));
+		}
+		return returnMethodDiv;
+	}
+
+	protected Component getselfShipDetails(
+			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
+			List<AbstractOrderEntryModel> entry, OrderModel subOrder,final String typeOfReturn) {
+		final Div content = new Div();
+		content.setClass("displayArea");
+		Label selfCourierHeading = new Label(LabelUtils.getLabel(widget, "self-courier"));
+		selfCourierHeading.setClass(BOLD_TEXT);
+		selfCourierHeading.setParent(content);
+		      
+		final Div selfCourierAreaDiv = new Div();
+		selfCourierAreaDiv.setParent(content);
+		Label selfCourier = new Label(LabelUtils.getLabel(widget, "sendViaCourier"));
+		selfCourier.setParent(selfCourierAreaDiv);
+		Div div1 = new Div();
+		div1.setParent(selfCourierAreaDiv);
+		Label step1SelfCourier = new Label(LabelUtils.getLabel(widget, "Step1InSelfCourier"));
+		step1SelfCourier.setParent(div1);
+		Div div2 = new Div();
+		div2.setParent(selfCourierAreaDiv);
+		Label step2SelfCourier = new Label(LabelUtils.getLabel(widget, "Step2InSelfCourier"));
+		step2SelfCourier.setParent(div2);
+		
+		Div div3 = new Div();
+		div3.setParent(selfCourierAreaDiv);
+		Label step3SelfCourier = new Label(LabelUtils.getLabel(widget, "Step3InSelfCourier"));
+		step3SelfCourier.setParent(div3);
+		
+		final Div buttonDiv = new Div();
+		buttonDiv.setParent(content);
+		buttonDiv.setClass(BUTTON);
+		final Button continueButton = new Button(LabelUtils.getLabel(widget,
+				CONTINUE));
+		continueButton.setParent(buttonDiv);
+		continueButton.setClass("creditButton");
+		continueButton.setClass(BUTTON);
+		continueButton.addEventListener(Events.ON_CLICK, new EventListener() {
+			@Override
+			public void onEvent(final Event event) throws InterruptedException,
+			ParseException, InvalidKeyException,
+			NoSuchAlgorithmException {
+				createReturnRequestEventListener(widget,typeOfReturn);
+			}
+		});
+		
+		selfCourier.setClass(BOLD_TEXT);
+		return content;
+	}
+
+	
+
+	protected void createReturnRequestEventListener(
+			InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget, String typeOfReturn) {
+		proceedToReturnItem(widget,typeOfReturn);
+			
+	}
+
+	private void proceedToReturnItem(
+			InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget, String typeOfReturn) {
+		Session session = Executions.getCurrent().getDesktop().getSession();
+		session.setAttribute("typeofReturn", typeOfReturn);
+		createRefundConfirmationPopupWindow(widget, getPopupWidgetHelper()
+				.getCurrentPopup().getParent());
+		
+	}
+
+	private Div getQuickDropDetails(
+			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
+			final List<AbstractOrderEntryModel> entries) {
+		final Div storeAdressDiv = new Div();
+		storeAdressDiv.setClass("displayArea");
+		Label quickDrop = new Label(LabelUtils.getLabel(widget, "quick_drop"));
+		quickDrop.setParent(storeAdressDiv);
+		quickDrop.setClass(BOLD_TEXT);
+		final Br br5 = new Br();
+		br5.setParent(storeAdressDiv);
+		final Div listOfReturnItems = new Div();
+		listOfReturnItems.setParent(storeAdressDiv);
+		final Listbox listbox = new Listbox();
+		listbox.setParent(listOfReturnItems);
+		listbox.setClass("selectedMode");
+
+		final Listhead listHead = new Listhead();
+		listHead.setParent(listbox);
+
+		final Listheader transId = new Listheader("TransactionID");
+		transId.setParent(listHead);
+		final Listheader productDesc = new Listheader("Product Name");
+		productDesc.setParent(listHead);
+
+		final Listheader returnStore = new Listheader("Available Stores");
+		returnStore.setParent(listHead);
+		final List<Checkbox> storeChecks = new ArrayList<Checkbox>();
+		String pinCode = entries.get(0).getOrder().getDeliveryAddress().getPostalcode();
+		for (AbstractOrderEntryModel e : entries) {
+			final Listitem listItem = new Listitem();
+			listItem.setParent(listbox);
+			returnableStores = ((MarketPlaceReturnsController) widget
+					.getWidgetController()).getAllReturnableStores(pinCode,
+					StringUtils.substring(e.getSelectedUSSID(), 0, 6));
+			List<PointOfServiceModel> storesList = getStoresDetails(returnableStores);
+			final Listcell cellTransId = new Listcell(e.getTransactionID());
+			cellTransId.setParent(listItem);
+			final Listcell cellProdDesc = new Listcell(e.getProduct().getName());
+			cellProdDesc.setParent(listItem);
+			final Listcell cellAvailStores = new Listcell();
+			cellAvailStores.setParent(listItem);
+			final Div storesAvailList = new Div();
+			storesAvailList.setParent(cellAvailStores);		
+			final Listcell storecell = new Listcell();	
+			storesAvailList.setParent(storecell);
+			for(PointOfServiceData stores : returnableStores) {
+				final Div storeDetails = new Div();
+				try {
+				storeDetails.setParent(storesAvailList);
+				}catch(Exception e1) {
+					e1.getCause();
+				}
+				Checkbox storesSelection = new Checkbox();
+				storesSelection.setAttribute(stores.getSlaveId(), stores);
+				storesSelection.setLabel(stores.getDisplayName());
+				storesSelection.setParent(storeDetails);
+				final Br storeAddBr = new Br();
+				storeAddBr.setParent(storeDetails);
+				final Label storeLabel = new Label(stores.getAddress().getCity()+ "," + stores.getAddress().getLine1()+ ", "+stores.getAddress().getPostalCode());
+				storeLabel.setParent(storeDetails);
+				storeChecks.add(storesSelection);
+			}
+			final Br storeBr = new Br();
+			storeBr.setParent(listOfReturnItems);
+		}
+		final Br br4 = new Br();
+		br4.setParent(storeAdressDiv);
+		final Div buttonDiv = new Div();
+		buttonDiv.setParent(storeAdressDiv);
+		buttonDiv.setClass(BUTTON);
+		final Button continueBt = new Button(LabelUtils.getLabel(widget,
+				CONTINUE));
+		continueBt.setParent(buttonDiv);
+		continueBt.setClass("creditButton");
+		continueBt.setClass(BUTTON);
+		continueBt.addEventListener(Events.ON_CLICK, new EventListener() {
+			@Override
+			public void onEvent(Event arg0) throws Exception {
+				retrunInfoCallToOMS(widget, entries, returnableStores, storeChecks);
+				proceedToReturnItem(widget,TypeofReturn.QUICK_DROP);
+			}
+		});
+		return storeAdressDiv;
+	}
+
+	private Div getSchedulePicupDetails(
+			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
+			final List<AbstractOrderEntryModel> entries, OrderModel subOrder) throws InterruptedException {
+		final Div scheduleDiv = new Div();
+		final Label scheduleHeader = new Label(LabelUtils.getLabel(widget,
+				"schedule_pickUp"));
+		scheduleHeader.setParent(scheduleDiv);
+		scheduleHeader.setClass(BOLD_TEXT);
+		final Br br6 = new Br();
+		br6.setParent(scheduleDiv);
+		final Div listBoxOfSchedulepick = new Div();
+		listBoxOfSchedulepick.setParent(scheduleDiv);
+		final Listbox scheduleList = new Listbox();
+		scheduleList.setParent(listBoxOfSchedulepick);
+		final Listhead listhead = new Listhead();
+		listhead.setParent(scheduleList);
+
+		final Listheader headerTransId = new Listheader("Transaction Id");
+		headerTransId.setWidth("23px");
+		headerTransId.setParent(listhead);
+		final Listheader headerProdName = new Listheader("Product Name");
+		headerProdName.setParent(listhead);
+		headerProdName.setWidth("260px");
+		final Listheader headerPrice = new Listheader("Total Price");
+		headerPrice.setParent(listhead);
+		headerPrice.setWidth("80px");
+		final Listheader headerReturnDate = new Listheader(
+				"Select Pick-up Date");
+		headerReturnDate.setWidth("280px");
+		headerReturnDate.setParent(listhead);
+		final Listheader pickupDateAndTime = new Listheader(
+				"Select Pick-up Time");
+		pickupDateAndTime.setWidth("390px");
+		pickupDateAndTime.setParent(listhead);
+		final List<RescheduleData> scheduleDeliveryDates = new ArrayList<RescheduleData>();
+		for (final AbstractOrderEntryModel entry : entries) {
+			Listitem listItem = new Listitem();
+			listItem.setParent(scheduleList);
+			Listcell transIdCell = new Listcell(entry.getTransactionID());
+			transIdCell.setParent(listItem);
+			Listcell productCell = new Listcell(entry.getProduct().getName());
+			productCell.setParent(listItem);
+			Listcell costCell = new Listcell(entry.getTotalPrice().toString());
+			costCell.setParent(listItem);		
+			List<String> returnDates = ((MarketPlaceReturnsController) widget
+					.getWidgetController()).getReturnScheduleDates(entry);
+
+			Listcell pickupDateCell = new Listcell();
+			pickupDateCell.setParent(listItem);
+			final Div pickupDateDiv = new Div();
+			pickupDateDiv.setParent(pickupDateCell);
+			final Radiogroup dateGroup = new Radiogroup();
+			dateGroup.setOrient("vertical");
+			dateGroup.setClass("dateSelection");
+			dateGroup.setParent(pickupDateDiv);
+
+			for (String date : returnDates) {
+				final Div dateDiv = new Div();
+				dateDiv.setParent(pickupDateDiv);
+				final Radio dateRadio = new Radio();
+				dateRadio.setParent(dateDiv);
+				dateRadio.setLabel(date);
+				dateGroup.appendChild(dateRadio);
+			}
+			dateGroup.setSelectedIndex(0);
+			Listcell pickupTimeCell = new Listcell();
+			pickupTimeCell.setParent(listItem);
+			final Div pickupTimeDiv = new Div();
+			pickupTimeDiv.setParent(pickupTimeCell);
+			final Radiogroup timeGruop = new Radiogroup();
+			timeGruop.setOrient("vertical");
+			timeGruop.setParent(pickupTimeDiv);
+			List<String> timeSlots = ((MarketPlaceReturnsController) widget
+					.getWidgetController()).getReturnTimeSlotsByKey("RD");
+			for (String time : timeSlots) {
+				final Div timeDiv = new Div();
+				timeDiv.setParent(pickupTimeDiv);
+				final Radio rio = new Radio();
+				rio.setParent(timeDiv);
+				rio.setLabel(time);
+				timeGruop.appendChild(rio);
+			}			
+			timeGruop.setSelectedIndex(0);			
+			RescheduleData scheduleData = new RescheduleData();			
+			scheduleData.setDate(dateGroup.getSelectedItem().getName());
+			scheduleData.setTime(timeGruop.getSelectedItem().getName());
+			scheduleData.setProductCode(entry.getProduct().getCode());
+			scheduleDeliveryDates.add(scheduleData);
+			dateGroup.addEventListener(Events.ON_CHECK, new EventListener() {
+				@Override
+				public void onEvent(final Event event) throws InterruptedException,
+				ParseException, InvalidKeyException,
+				NoSuchAlgorithmException {
+					createDateChangeEventListener(widget,entry,dateGroup,scheduleDeliveryDates);
+				}
+			});	
+			timeGruop.addEventListener(Events.ON_CHECK, new EventListener() {
+				@Override
+				public void onEvent(final Event event) throws InterruptedException,
+				ParseException, InvalidKeyException,
+				NoSuchAlgorithmException {
+					createTimeChangeEventListener(widget,entry,timeGruop,scheduleDeliveryDates);
+				}
+			});	
+		}	
+		Label selectAddressLabel  = new Label("selectAddress");
+		selectAddressLabel.setClass("selectaddress");
+		selectAddressLabel.setParent(scheduleDiv);
+		final Listbox deliveryAddressList = new Listbox();
+		deliveryAddressList.setParent(scheduleDiv);
+		deliveryAddressList.setMold("select");
+		List<AddressModel> addrssModel = (List<AddressModel>) subOrder
+				.getUser().getAddresses();
+		Listitem item = new Listitem(" ");
+		item.setParent(deliveryAddressList);
+		
+		 AddressModel deliveryAddress = subOrder.getDeliveryAddress();
+	       TypedObject currentAddressObject = getCockpitTypeService().wrapItem(deliveryAddress);
+		for (AddressModel add : addrssModel) {
+			try {
+				TypedObject address = cockpitTypeService.wrapItem(add);
+				String text = TypeTools.getValueAsString(getLabelService(),
+						address);
+				item = new Listitem(text, address);
+				item.setParent(deliveryAddressList);
+				address.equals(currentAddressObject);
+				item.setSelected(address.getObject().equals(currentAddressObject.getObject()));
+			} catch (Exception e1) {
+				e1.getStackTrace();
+			}
+		}
+		deliveryAddressList.setSelectedIndex(0);
+		final Br br7 = new Br();
+		br7.setParent(scheduleDiv);
+		final Div buttonDiv = new Div();
+		buttonDiv.setParent(scheduleDiv);
+		buttonDiv.setClass(BUTTON);
+		final Button continueButton = new Button(LabelUtils.getLabel(widget,
+				CONTINUE));
+		continueButton.setParent(buttonDiv);
+		continueButton.setClass("creditButton");
+		continueButton.setClass(BUTTON);
+		continueButton.addEventListener(Events.ON_CLICK,
+				createReturnRequestCreateEventListener(widget,deliveryAddressList,scheduleDeliveryDates));	
+		deliveryAddressList.addEventListener(Events.ON_SELECT, new EventListener() {
+			@Override
+			public void onEvent(final Event event) throws InterruptedException,
+			ParseException, InvalidKeyException,
+			NoSuchAlgorithmException {
+				createselectDeliveryAddressCreateEventListener(widget,deliveryAddressList);
+			}
+		});
+		return scheduleDiv;
+	}
+	
+	private void createselectDeliveryAddressCreateEventListener(
+			InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
+			Listbox deliveryAddressList) throws InterruptedException {
+		if(null !=deliveryAddressList.getSelectedItem() && null != deliveryAddressList.getSelectedItem().getValue()) {
+			Object selectedItem=deliveryAddressList.getSelectedItem().getValue();
+			TypedObject address= ( (TypedObject) selectedItem);
+			final AddressModel returnAddress =  TypeUtils.unwrapItem(address, AddressModel.class);
+			String pinCode = returnAddress.getPostalcode();
+			List<ReturnLogistics> returnLogisticsList = new ArrayList();
+			final TypedObject order = (TypedObject) ((ReturnsController) widget
+					.getWidgetController()).getRefundOrderPreview();
+			OrderModel orderModel = (OrderModel) order.getObject();
+			for (AbstractOrderEntryModel orderEntry : orderModel.getEntries()) {
+				ReturnLogistics returnLogistics = new ReturnLogistics();
+				returnLogistics.setOrderId(orderEntry.getOrder().getCode());
+				returnLogistics.setTransactionId(orderEntry.getTransactionID());
+				returnLogistics.setPinCode(pinCode);
+				returnLogisticsList.add(returnLogistics);
+			}
+			Map<Boolean, List<OrderLineDataResponse>> responseMap =((MarketPlaceReturnsController) widget.getWidgetController())
+					.validateReverseLogistics(returnLogisticsList);
+			if (MapUtils.isNotEmpty(responseMap)) {
+				 if (CollectionUtils.isEmpty(responseMap.get(Boolean.TRUE))) {
+					Messagebox.show(LabelUtils.getLabel(widget,
+							REVERSE_LOGISTICS_NOTAVAILABLE, new Object[0]), "Error",
+							Messagebox.OK, Messagebox.ERROR,
+							new org.zkoss.zk.ui.event.EventListener() {
+								public void onEvent(Event e)
+										throws InterruptedException {
+									if (e.getName().equals("onOK")) {
+										return;
+									}
+								}
+							});
+				} else {
+					String notAvailabletransactionList = null;
+					if (CollectionUtils.isNotEmpty(responseMap.get(Boolean.FALSE))) {
+						for (OrderLineDataResponse orderEntry : responseMap
+								.get(Boolean.FALSE)) {
+							if (StringUtils.isNotEmpty(notAvailabletransactionList))
+								notAvailabletransactionList = notAvailabletransactionList
+										+ System.getProperty("line.separator")
+										+ orderEntry.getTransactionId();
+							else
+								notAvailabletransactionList = orderEntry
+										.getTransactionId();
+						}
+					}
+					String availabletransactionList = null;
+					if (CollectionUtils.isNotEmpty(responseMap.get(Boolean.TRUE))) {
+						for (OrderLineDataResponse orderEntry : responseMap
+								.get(Boolean.TRUE)) {
+							if (StringUtils.isNotEmpty(availabletransactionList))
+								availabletransactionList = availabletransactionList
+										+ System.getProperty("line.separator")
+										+ orderEntry.getTransactionId();
+							else
+								availabletransactionList = orderEntry
+										.getTransactionId();
+						}
+					}
+					String finalMessage = LabelUtils.getLabel(widget,
+							REVERSE_LOGISTICS_PARTIALAVAILABLE);
+					if (null != availabletransactionList)
+						finalMessage = finalMessage
+								+ System.getProperty("line.separator")
+								+ "The Transaction Id's for which Reverse Logisitic is available: "
+								+ System.getProperty("line.separator")
+								+ availabletransactionList;
+					if (null != notAvailabletransactionList)
+						finalMessage = finalMessage
+								+ System.getProperty("line.separator")
+								+ "The Transaction Id's for which Reverse Logisitic is not available: "
+								+ System.getProperty("line.separator")
+								+ notAvailabletransactionList;
+
+					Messagebox.show(finalMessage, "Error", Messagebox.OK,
+							Messagebox.ERROR,
+							new org.zkoss.zk.ui.event.EventListener() {
+								public void onEvent(Event e)
+										throws InterruptedException {
+									if (e.getName().equals("onOK")) {
+										return;
+									}
+								}
+							});
+				}
+			} else {
+				Messagebox.show(LabelUtils.getLabel(widget,
+						NO_RESPONSE_FROM_SERVER, new Object[0]), "Error",
+						Messagebox.OK, Messagebox.ERROR,
+						new org.zkoss.zk.ui.event.EventListener() {
+							public void onEvent(Event e)
+									throws InterruptedException {
+								if (e.getName().equals("onOK")) {
+									return;
+								}
+							}
+						});
+			}
+			return;
+		}
+	}
+
+	protected void createDateChangeEventListener(
+			InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
+			AbstractOrderEntryModel entry, Radiogroup dateGroup, List<RescheduleData> scheduleDeliveryDatesList) {
+		if (null != scheduleDeliveryDatesList) {
+			for (RescheduleData scheduleData : scheduleDeliveryDatesList) {
+				if (scheduleData.getProductCode().equalsIgnoreCase(
+						entry.getProduct().getCode())) {
+					scheduleData
+							.setDate(dateGroup.getSelectedItem().getName());
+					return;
+				}
+			}
+		}
+	} 
+		
+	protected void createTimeChangeEventListener(
+			InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
+			AbstractOrderEntryModel entry,
+			Radiogroup timeGruop, List<RescheduleData> scheduleDeliveryDates) {
+		if (null != scheduleDeliveryDates) {
+			for (RescheduleData scheduleData : scheduleDeliveryDates) {
+				if (scheduleData.getProductCode().equalsIgnoreCase(
+						entry.getProduct().getCode())) {
+					scheduleData
+							.setTime(timeGruop.getSelectedItem().getName());
+					return;
+				}
+			}
+		}
+	}
+
+	protected EventListener createReturnRequestCreateEventListener(
+			InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget, Listbox deliveryAddressList, List<RescheduleData> scheduleDeliveryDates) {
+		return new ReturnRequestCreateEventListener(widget,deliveryAddressList,scheduleDeliveryDates);
+	}
+
+	protected class ReturnRequestCreateEventListener implements EventListener {
+		private final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget;
+		private final Listbox deliveryAddressList;
+		private final List<RescheduleData> scheduleDeliveryDates;
+		public ReturnRequestCreateEventListener(
+				InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget, Listbox deliveryAddressList,List<RescheduleData> scheduleDeliveryDates) {
+			this.widget = widget;
+			this.deliveryAddressList=deliveryAddressList;
+			this.scheduleDeliveryDates =scheduleDeliveryDates;		
+		}
+
+		public void onEvent(Event event) throws Exception {
+			System.out.println("Inside Event");
+			if(null != deliveryAddressList.getSelectedItem() && null != deliveryAddressList.getSelectedItem().getValue()) {
+				Object selectedItem=deliveryAddressList.getSelectedItem().getValue();
+				TypedObject address= ( (TypedObject) selectedItem);
+				final AddressModel returnAddress =  TypeUtils.unwrapItem(address, AddressModel.class);
+				if(null != returnAddress) {
+					System.out.println(returnAddress.getAddressLine3()+""+returnAddress.getCity()+""+returnAddress.getFirstname()+""+returnAddress.getLastname()+""+returnAddress.getLandmark()+""+returnAddress.getPhone1());
+				}
+				String pinCode = null;		
+				if(null !=returnAddress) {
+					pinCode = returnAddress.getPostalcode();
+				}
+				List<ReturnLogistics> returnLogisticsList = new ArrayList();
+								final TypedObject order = (TypedObject) ((ReturnsController) widget
+						.getWidgetController()).getRefundOrderPreview();
+				OrderModel orderModel = (OrderModel) order.getObject();
+				for (AbstractOrderEntryModel orderEntry : orderModel.getEntries()) {
+					ReturnLogistics returnLogistics = new ReturnLogistics();
+					returnLogistics.setOrderId(orderEntry.getOrder().getCode());
+					returnLogistics.setTransactionId(orderEntry.getTransactionID());
+					returnLogistics.setPinCode(pinCode);
+					returnLogisticsList.add(returnLogistics);
+				}
+				final Map<Boolean, List<OrderLineDataResponse>> responseMap = ((MarketPlaceReturnsController) widget
+						.getWidgetController())
+						.validateReverseLogistics(returnLogisticsList);
+				if (MapUtils.isNotEmpty(responseMap)) {
+					if (CollectionUtils.isEmpty(responseMap.get(Boolean.FALSE))) {
+						Messagebox.show(LabelUtils.getLabel(widget,
+								REVERSE_LOGISTICS_AVAILABLE, new Object[0]),
+								"Question", Messagebox.OK | Messagebox.CANCEL,
+								Messagebox.QUESTION,
+								new org.zkoss.zk.ui.event.EventListener() {
+							public void onEvent(Event e)
+									throws InterruptedException {
+								if (e.getName().equals("onOK")) {
+									proceedToReturn(returnAddress, scheduleDeliveryDates);
+								} else {
+									return;
+								}
+							}
+						});
+					}  if (CollectionUtils.isEmpty(responseMap.get(Boolean.TRUE))) {
+						Messagebox.show(LabelUtils.getLabel(widget,
+								REVERSE_LOGISTICS_NOTAVAILABLE, new Object[0]),
+								"Question", Messagebox.OK | Messagebox.CANCEL,
+								Messagebox.QUESTION,
+								new org.zkoss.zk.ui.event.EventListener() {
+							public void onEvent(Event e)
+									throws InterruptedException {
+								if (e.getName().equals("onOK")) {
+									proceedToReturn(returnAddress, scheduleDeliveryDates);
+								} else {
+									return;
+								}
+							}
+						});
+					} 
+				} else {
+					Messagebox.show(LabelUtils.getLabel(widget,
+							NO_RESPONSE_FROM_SERVER, new Object[0]), "Error",
+							Messagebox.OK, Messagebox.ERROR,
+							new org.zkoss.zk.ui.event.EventListener() {
+						public void onEvent(Event e)
+								throws InterruptedException {
+							if (e.getName().equals("onOK")) {
+								return;
+							}
+						}
+					});
+				}
+			} else {
+				Messagebox.show(LabelUtils.getLabel(widget,
+						SELECT_RETURN_ADDRESS, new Object[0]), "Error",
+						Messagebox.OK, Messagebox.ERROR,
+						new org.zkoss.zk.ui.event.EventListener() {
+					public void onEvent(Event e)
+							throws InterruptedException {
+						if (e.getName().equals("onOK")) {
+							return;
+						}
+					}
+				});
+			
+			}
+	}
+
+		protected void proceedToReturn(AddressModel returnAddress,List<RescheduleData> scheduleDeliveryDates) {		
+			AddressData returnAddressData = new AddressData();
+			addressPopulator.populate(returnAddress, returnAddressData);
+			Session session = Executions.getCurrent().getDesktop().getSession();
+			session.setAttribute("returnAddress",returnAddressData);
+			session.setAttribute("scheduleDeliveryDates", scheduleDeliveryDates);
+			createRefundConfirmationPopupWindow(widget, getPopupWidgetHelper()
+					.getCurrentPopup().getParent());
+			proceedToReturnItem(widget,TypeofReturn.SCHEDULE_PICKUP);
+		}	
+	}
+
+	private void retrunInfoCallToOMS(
+			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
+			final List<AbstractOrderEntryModel> returnEntry,
+			List<PointOfServiceData> listOfStores,List<Checkbox> storeChecks ) {
+		for (AbstractOrderEntryModel entry : returnEntry) {
+			((MarketPlaceReturnsController) widget.getWidgetController())
+					.retrunInfoCallToOMSFromCsCockpit(widget, entry, storeChecks);
+		}
+	}
+
+	private void codUpadatesToFico(
+			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
+			List<AbstractOrderEntryModel> returnEntry, final Textbox accNoTextbox,final Textbox reEnteAaccNoTextbox,
+			Textbox accHolderNameTextbox, Listbox refundModeListbox,
+			Listbox titleListBox, Textbox bankNameTextbox, Textbox ifscTextbox) throws InterruptedException {
+			CODSelfShipData codData = new CODSelfShipData();
+			codData.setTitle((String) titleListBox.getSelectedItem().getLabel());
+			codData.setName(accHolderNameTextbox.getValue());
+			codData.setBankAccount(accNoTextbox.getValue());
+			codData.setBankName(bankNameTextbox.getValue());
+			codData.setBankKey(ifscTextbox.getValue());
+			codData.setPaymentMode((String) refundModeListbox.getSelectedItem()
+					.getLabel());
+			((MarketPlaceReturnsController) widget.getWidgetController())
+					.getCodPaymentInfoToFICO(codData, returnEntry);
+	
+	}
+}

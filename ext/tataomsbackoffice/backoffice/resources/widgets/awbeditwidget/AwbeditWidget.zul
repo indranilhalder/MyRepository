@@ -1,0 +1,157 @@
+<widget xmlns="http://www.zkoss.org/2005/zul"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:w="http://www.zkoss.org/2005/zk/client"
+	xmlns:zk="http://www.zkoss.org/2005/zk"
+	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
+	height="100%"  apply="org.zkoss.bind.BindComposer"
+	viewModel="@id('vm') @init('com.techouts.backoffice.widget.controller.AwbEditWidgetController')">
+	<columnlayout width="100%" height="100%" >
+		<columnchildren width="100%">
+			<panel>
+				<panelchildren style="border:none">
+					<vlayout style="width:100%;height:120px">
+						<hlayout>
+							<vlayout width="100px">
+								<label value="OrderId" hflex="1" />
+							</vlayout>
+							<vlayout width="200px">
+								<textbox hflex="1" 
+									value="@save(vm.txtOrderId)" style="width:200px;height:10px">
+								</textbox>
+							</vlayout>
+                         <vlayout width="100px">
+								<label></label>
+							</vlayout>
+							<vlayout width="100px">
+								<label value="TransactionId" hflex="1" />
+							</vlayout>
+							<vlayout width="200px">
+								<textbox hflex="1"
+									value="@save(vm.txtTransactionId)"
+									style="width:200px;height:10px" >
+								</textbox>
+							</vlayout>
+
+						</hlayout>
+						<hlayout>
+							<vlayout width="100px">
+								<label value="Slave ID" hflex="1" />
+							</vlayout>
+							<vlayout width="200px">
+								<textbox hflex="1"
+									value="@save(vm.txtSlaveId)" style="width:200px;height:10px">
+								</textbox>
+							</vlayout>
+							 <vlayout width="100px">
+								<label></label>
+							</vlayout>
+							<vlayout width="100px">
+								<label value="Seller ID" hflex="1" />
+							</vlayout>
+							<vlayout width="200px">
+								<textbox hflex="1" 
+									value="@save(vm.txtsellerId)"
+									style="width:200px;height:10px">
+								</textbox>
+							</vlayout>
+						</hlayout>
+						<hlayout>
+							<vlayout width="100px">
+								<label value="Order Status" hflex="1" />
+							</vlayout>
+							<vlayout width="200px">
+								<listbox model="@bind(vm.ordersStatus)" itemRenderer="@load(vm.listItemRenderer)"
+									mold="select" selectedItem="@bind(vm.selectionOrderStatus)" style="width:200px;">
+								</listbox>
+							</vlayout>
+							 <vlayout width="100px">
+								<label></label>
+							</vlayout>
+							<vlayout width="100px">
+								<label value="LP Name" hflex="1" />
+							</vlayout>
+							<vlayout width="200px">
+								<listbox   model="@load(vm.activelpList)" mold="select"  itemRenderer="@load(vm.listItemRenderer)"  selectedItem="@save(vm.selectionLpName)" 
+									style="width:200px">
+								</listbox>
+							</vlayout>
+							<vlayout width="100px">
+								<label></label>
+							</vlayout>
+							<vlayout>
+								<checkbox  label="Is Return"
+									onCheck="@command('isReturnCheck',checkedValue=self.checked)">
+								</checkbox>
+							</vlayout>
+							<vlayout
+								style="width:100px">
+								<button style="float:right"
+									label="SEARCH" onClick="@command('awbSearch')" />
+							</vlayout>
+						</hlayout>
+						
+					</vlayout>
+				</panelchildren>
+			</panel>					
+			<panel>
+				<panelchildren>
+					<listbox model="@bind(vm.listOfTransactions)"
+						id="listBoxData" mold="paging" pageSize="10" pagingPosition="top"
+						emptyMessage="No result found in the result">		
+						<listhead sizable="true">		
+							<listheader style="text-align:left"
+								label="Order Id ">
+							</listheader>
+							<listheader style="text-align:left"
+								label="Transaction Id">
+							</listheader>
+							<listheader style="text-align:left"
+								label="Slave Id">
+							</listheader>
+							<listheader style="text-align:left"
+								label="Seller Id">
+							</listheader>
+
+							<listheader style="text-align:left"
+								label="Order Status">
+							</listheader>
+							<listheader style="text-align:left"
+								label="Awb Number">
+							</listheader>
+						</listhead>		
+						<template name="model" var="item">
+							<listitem>
+								<listcell label="@bind(item.orderId)" />	
+								<listcell label="@bind(item.transactionId)" />
+								<listcell label="@bind(item.slaveId)" />
+								<listcell label="@bind(item.sellerId)" />
+								<listcell label="@bind(item.orderStatus)" />
+								<listcell>
+									<textbox  
+										onChange="@command('onChangeTransactionInfo',transaction=item)"
+										value="@bind(item.awbNumber)">
+									</textbox>
+								</listcell>
+							</listitem>
+						</template>		
+					</listbox>
+					
+				</panelchildren>
+			</panel>
+			<panel>
+				<panelchildren
+					style="border:none;padding:0px;max-height:100%;">
+					<vlayout style="width:100%;height:100px">
+						<hlayout>
+							<vlayout width="700px">
+								<button style="float:right"
+									onClick="@command('saveAllTransactions')" label="Save" />
+							</vlayout>
+						</hlayout>				
+					</vlayout>
+				</panelchildren>
+			</panel>
+		</columnchildren>
+	</columnlayout>
+</widget>

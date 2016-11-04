@@ -1,0 +1,107 @@
+<widget xmlns="http://www.zkoss.org/2005/zul"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:w="http://www.zkoss.org/2005/zk/client"
+	xmlns:zk="http://www.zkoss.org/2005/zk"
+	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
+	height="100%">
+	<style>
+		.uploadContainer{margin:5% auto 0;background:#fff;padding:15px;}
+		.uploadContainer .z-div {width:80%;text-algin:center;}
+		.uploadContainer .z-div input{width:280px;} .uploadContainer
+		.z-div button{margin:0px 130px 0 5px;} .heading
+		{font-weight:bold;display:block;font-size:16px;margin-bottom:5px;text-align:left;}
+		.error_class{ color:red;} .containerVlayout{margin-left:100px;}
+	</style>
+	<div class="uploadContainer">
+		<vlayout class="containerVlayout">
+			<vlayout>
+				<label sclass="heading" value="BLUEDART"></label>
+				<div>
+					<textbox id="homeExcelFileName" disabled="true" />
+					<button sclass="uploadTxtbox" label="upload"
+						upload="true,maxsize=302400" id="home_uploadzip">
+					</button>
+				</div>
+				<label id="homeEmptyFileError" sclass="error_class"
+					value="">
+				</label>
+			</vlayout>
+			<vlayout>
+				<label sclass="heading" value="INDIAPOST"></label>
+				<div>
+					<textbox id="expressExcelFileName" disabled="true" />
+					<button sclass="uploadTxtbox" label="upload"
+						upload="true,maxsize=302400" id="express_uploadzip">
+					</button>
+				</div>
+				<label id="expressEmptyFileError" sclass="error_class"
+					value="">
+				</label>
+			</vlayout>
+			<vlayout>
+				<label sclass="heading" value="FEDEX"></label>
+				<div>
+					<textbox id="returnsExcelFileName" disabled="true" />
+					<button sclass="uploadTxtbox" label="upload"
+						upload="true,maxsize=302400" id="returns_uploadzip">
+					</button>
+				</div>
+				<label id="returnsEmptyFileError" sclass="error_class"
+					value="">
+				</label>
+			</vlayout>
+			<vlayout>
+				<label sclass="heading" value="GOJAVAS"></label>
+				<div>
+					<textbox disabled="true" />
+					<button sclass="uploadTxtbox" label="upload"
+						upload="true,maxsize=302400">
+					</button>
+				</div>
+				<label sclass="error_class" value=""></label>
+			</vlayout>
+			<vlayout>
+				<label sclass="heading" value="GATI"></label>
+				<div>
+					<textbox disabled="true" />
+					<button sclass="uploadTxtbox" label="upload"
+						upload="true,maxsize=302400">
+					</button>
+				</div>
+				<label sclass="error_class" value=""></label>
+			</vlayout>
+	
+
+			<vlayout>
+				<label sclass="heading"
+					value="Returns Upload">
+				</label>
+				<div>
+					<textbox  disabled="true" />
+					<button sclass="uploadTxtbox" label="upload"
+						upload="true,maxsize=302400" id="returnOrderupload">
+					</button>
+				</div>
+				<label id="returnOrderEmptyFileError" sclass="error_class"
+					value="">
+				</label>
+			</vlayout>
+			<vlayout>
+				<label sclass="heading"
+					value="Precious Fragile Scheduled Upload">
+				</label>
+				<div>
+					<textbox  disabled="true" />
+					<button sclass="uploadTxtbox" label="upload"
+						upload="true,maxsize=302400" id="frigileOrderupload">
+					</button>
+				</div>
+				<label id="fragileOrderEmptyFileError" sclass="error_class"
+					value="">
+				</label>
+			</vlayout>
+	
+		</vlayout>
+	</div>
+</widget>

@@ -1,0 +1,46 @@
+
+
+
+<widget xmlns="http://www.zkoss.org/2005/zul"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:w="http://www.zkoss.org/2005/zk/client"
+	xmlns:zk="http://www.zkoss.org/2005/zk"
+	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
+	height="100%">
+
+<columnlayout width="100%" height="100%">
+		<columnchildren width="100%">
+		
+		<panel
+				style="max-height:70%;height:70%;overflow-x:hidden;overflow-y:auto;border-bottom:3px solid #27394f;border:none">
+				<panelchildren>
+
+					<listbox id="listBoxData" multiple="true" mold="paging" pageSize="10"
+						checkmark="false" emptyMessage="No result found in the result" >
+
+						<listhead sizable="true">
+							<listheader style="text-align:left"
+								label="${labels.lbl.lbx.header1}">
+							</listheader>
+							<listheader style="text-align:left"
+								label="${labels.lbl.lbx.header2}">
+							</listheader>
+							<listheader style="text-align:left"
+								label="${labels.lbl.lbx.header3}">
+							</listheader>
+							<listheader style="text-align:left"
+								label="${labels.lbl.lbx.header4}">
+							</listheader>
+							
+						</listhead>
+						
+					</listbox>
+				</panelchildren>
+			</panel>
+		
+		
+		</columnchildren>
+</columnlayout>
+
+</widget>
