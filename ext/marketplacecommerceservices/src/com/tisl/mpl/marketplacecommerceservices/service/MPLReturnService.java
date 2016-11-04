@@ -12,6 +12,8 @@ import de.hybris.platform.returns.model.ReturnRequestModel;
 
 import java.util.List;
 
+import com.tisl.mpl.core.model.MplCustomerBankAccountDetailsModel;
+
 
 public interface MPLReturnService extends ReturnService
 {
@@ -24,5 +26,15 @@ public interface MPLReturnService extends ReturnService
 			RefundReason refundreason);
 
 	public abstract void addReplacementOrderEntries(ReplacementOrderModel order, List<ReplacementEntryModel> replacements);
+	
+	/**
+	 * 
+	 * @param customerId
+	 * @return MplCustomerBankAccountDetailsModel
+	 */
+	public  MplCustomerBankAccountDetailsModel getCustomerBakDetailsById(String customerId);
+	
+	
+	 public List<ReturnRequestModel> getListOfReturnRequest(String orlderId);
 
 }

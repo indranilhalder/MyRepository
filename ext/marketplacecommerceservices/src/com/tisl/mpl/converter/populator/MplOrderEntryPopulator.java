@@ -134,9 +134,32 @@ public class MplOrderEntryPopulator implements Populator<AbstractOrderEntryModel
 			addConsignmentValue(source, target);
 			addPromotionValue(source, target);
 			addImeiDetails(source, target);
+			addDeliverySlots(source, target);
 		}
 	}
 
+
+	/**
+	 * @param source
+	 * @param target
+	 */
+	private void addDeliverySlots(AbstractOrderEntryModel source, OrderEntryData target)
+	{
+		if (null != source.getScheduledDeliveryCharge())
+		{
+			target.setScheduledDeliveryCharge(source.getScheduledDeliveryCharge());
+		}
+		if(null != source.getEdScheduledDate()){
+			target.setSelectedDeliverySlotDate(source.getEdScheduledDate());
+		}
+		if(null != source.getTimeSlotFrom()){
+			target.setTimeSlotFrom(source.getTimeSlotFrom());
+		}
+		if(null != source.getTimeSlotTo()){
+			target.setTimeSlotTo(source.getTimeSlotTo());
+		}
+		
+	}
 
 	/**
 	 * @param source

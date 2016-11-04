@@ -1782,6 +1782,11 @@
 	<bean id="sizeStandardInterceptor"
 		class="com.tisl.mpl.interceptor.SizeStandardInterceptor">
 	</bean>
+<bean id="mplDeliveryAddressServiceImpl"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplDeliveryAddressServiceImpl"/>
+<bean id="mplDeliveryAddressDaoImpl"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.impl.MplDeliveryAddressDaoImpl">
+</bean>
 
 	<bean id="sizeStandardInterceptorMapping"
 		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
@@ -1789,5 +1794,9 @@
 		<property name="typeCode" value="Sizesystem" />
 	</bean>
 	<!-- Bean for POC Search ends-->
+<alias name="defaultmplReturnDao" alias="mplReturnDao"/>
+<bean class="com.tisl.mpl.returns.dao.impl.MplReturnDaoImpl" id="defaultmplReturnDao">
+</bean>
+
 </beans>
 

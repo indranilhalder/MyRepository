@@ -37,6 +37,8 @@ import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.StateModel;
 import com.tisl.mpl.mplcommerceservices.service.data.CartSoftReservationData;
+import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRequestData;
+import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
 import com.tisl.mpl.wsdto.InventoryReservListResponse;
 import com.tisl.mpl.wsdto.PinCodeDeliveryModeListResponse;
@@ -452,5 +454,10 @@ public interface MplCommerceCartService
 			throws EtailNonBusinessExceptions;
 
 
+	/**
+	 * @param cartdata
+	 * @return
+	 */
+	public InvReserForDeliverySlotsResponseData convertDeliverySlotsDatatoWsdto(InvReserForDeliverySlotsRequestData cartdata);
 
 }

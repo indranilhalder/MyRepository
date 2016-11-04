@@ -1141,6 +1141,160 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 		return neededStatus;
 	}
 
+	
+	/*
+	 * @param orderCode
+	 *
+	 * @return
+	 */
+	/*
+	 * @param orderCode
+	 *
+	 * @return
+	 */
+	@Override
+	public Map<String, List<AWBResponseData>> getOrderStatusTrack(final OrderEntryData orderEntryDetail, final OrderData subOrder,
+			final OrderData parentOrder)
+	{
+
+		final Map<String, List<AWBResponseData>> returnMap = new HashMap<String, List<AWBResponseData>>();
+
+		List<AWBResponseData> approvalMapList = new ArrayList<AWBResponseData>();
+		List<AWBResponseData> processingMapList = new ArrayList<AWBResponseData>();
+		List<AWBResponseData> shippingMapList = new ArrayList<AWBResponseData>();
+		List<AWBResponseData> cancelMapList = new ArrayList<AWBResponseData>();
+		List<AWBResponseData> returnMapList = new ArrayList<AWBResponseData>();
+		OrderStatusCodeMasterModel trackModel = null;
+
+		final Map<String, AWBResponseData> awbApprovalMap = new LinkedHashMap<String, AWBResponseData>();
+		final Map<String, AWBResponseData> awbProcessingMap = new LinkedHashMap<String, AWBResponseData>();
+		final Map<String, AWBResponseData> awbShippingMap = new LinkedHashMap<String, AWBResponseData>();
+		final Map<String, AWBResponseData> awbCancelMap = new LinkedHashMap<String, AWBResponseData>();
+		final Map<String, AWBResponseData> awbReturnMap = new LinkedHashMap<String, AWBResponseData>();
+
+		try
+		{
+			final OrderModel orderMod = orderModelService.getOrder(subOrder.getCode());
+			final Map<String, OrderStatusCodeMasterModel> orderStatusCodeMap = orderModelService.getOrderStausCodeMasterList();
+
+			if (orderMod.getHistoryEntries().size() > 0)
+			{
+				for (final OrderHistoryEntryModel orderHistoryEntry : orderMod.getHistoryEntries())
+				{
+					if (orderEntryDetail.getOrderLineId().equalsIgnoreCase(orderHistoryEntry.getLineId()))
+					{
+						//****************************** Approval Block
+						trackModel = orderStatusCodeMap.get(MarketplaceFacadesConstants.APPROVED
+								+ MarketplacecommerceservicesConstants.STRINGSEPARATOR + orderHistoryEntry.getDescription());
+						if (null != trackModel && trackModel.getStage().equalsIgnoreCase(MarketplaceFacadesConstants.APPROVED)
+								&& !isStatusAlradyExists(awbApprovalMap, trackModel) && trackModel.getDisplay().booleanValue())
+						{
+							awbApprovalMap.put(trackModel.getDotId().trim().toUpperCase(),
+									orderTrackingDetails(trackModel, orderHistoryEntry, subOrder));
+						}
+
+						//****************************** PROCESSING Block
+						trackModel = orderStatusCodeMap.get(MarketplaceFacadesConstants.PROCESSING
+								+ MarketplacecommerceservicesConstants.STRINGSEPARATOR + orderHistoryEntry.getDescription());
+						if (null != trackModel && trackModel.getStage().equalsIgnoreCase(MarketplaceFacadesConstants.PROCESSING)
+								&& !isStatusAlradyExists(awbProcessingMap, trackModel) && trackModel.getDisplay().booleanValue())
+						{
+							awbProcessingMap.put(trackModel.getDotId().trim().toUpperCase(),
+									orderTrackingDetails(trackModel, orderHistoryEntry, subOrder));
+						}
+
+						//****************************** SHIPPING Block
+						trackModel = orderStatusCodeMap.get(MarketplaceFacadesConstants.SHIPPING
+								+ MarketplacecommerceservicesConstants.STRINGSEPARATOR + orderHistoryEntry.getDescription());
+						if (null != trackModel && trackModel.getStage().equalsIgnoreCase(MarketplaceFacadesConstants.SHIPPING)
+								&& !isStatusAlradyExists(awbShippingMap, trackModel) && trackModel.getDisplay().booleanValue())
+						{
+							awbShippingMap.put(trackModel.getDotId().trim().toUpperCase(),
+									orderTrackingDetails(trackModel, orderHistoryEntry, subOrder));
+						}
+
+
+						trackModel = orderStatusCodeMap.get(MarketplaceFacadesConstants.CANCEL
+								+ MarketplacecommerceservicesConstants.STRINGSEPARATOR + orderHistoryEntry.getDescription());
+
+						//****************************** CANCEL Block
+						if (null != trackModel && trackModel.getStage().equalsIgnoreCase(MarketplaceFacadesConstants.CANCEL)
+								&& !isStatusAlradyExists(awbCancelMap, trackModel) && trackModel.getDisplay().booleanValue())
+						{
+							if ((trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_INITIATED.getCode())
+									|| trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_IN_PROGRESS.getCode())))
+							{
+								if (awbCancelMap.size() >= 1)
+								{
+									awbCancelMap.put(trackModel.getDotId(), orderTrackingDetails(trackModel, orderHistoryEntry, subOrder));
+								}
+							}
+							else
+							{
+								awbCancelMap.put(trackModel.getDotId().trim().toUpperCase(),
+										orderTrackingDetails(trackModel, orderHistoryEntry, subOrder));
+							}
+						}
+
+						//****************************** RETURN Block
+						trackModel = orderStatusCodeMap.get(MarketplaceFacadesConstants.RETURN
+								+ MarketplacecommerceservicesConstants.STRINGSEPARATOR + orderHistoryEntry.getDescription());
+						if (null != trackModel && trackModel.getStage().equalsIgnoreCase(MarketplaceFacadesConstants.RETURN)
+								&& !isStatusAlradyExists(awbReturnMap, trackModel) && trackModel.getDisplay().booleanValue())
+						{
+							if ((trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_INITIATED.getCode())
+									|| trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_IN_PROGRESS.getCode())))
+							{
+								if (awbReturnMap.size() >= 1)
+								{
+									awbReturnMap.put(trackModel.getDotId(), orderTrackingDetails(trackModel, orderHistoryEntry, subOrder));
+								}
+							}
+							else
+							{
+								awbReturnMap.put(trackModel.getDotId().trim().toUpperCase(),
+										orderTrackingDetails(trackModel, orderHistoryEntry, subOrder));
+							}
+						}
+					}
+				}
+			}
+
+			approvalMapList = getTrackOrderList(awbApprovalMap);
+			processingMapList = getTrackOrderList(awbProcessingMap);
+			shippingMapList = getTrackOrderList(awbShippingMap);
+			cancelMapList = getTrackOrderList(awbCancelMap);
+			returnMapList = getTrackOrderList(awbReturnMap);
+
+			LOG.info("************************approvalMapList: " + approvalMapList.size());
+			LOG.info("************************processingMapList: " + processingMapList.size());
+			LOG.info("************************shippingMapList: " + shippingMapList.size());
+			LOG.info("************************cancelMapList: " + cancelMapList.size());
+			LOG.info("************************returnMapList: " + returnMapList.size());
+
+			returnMap.put(MarketplaceFacadesConstants.APPROVED, approvalMapList);
+			returnMap.put(MarketplaceFacadesConstants.PROCESSING, processingMapList);
+			returnMap.put(MarketplaceFacadesConstants.SHIPPING, shippingMapList);
+			returnMap.put(MarketplaceFacadesConstants.CANCEL, cancelMapList);
+			returnMap.put(MarketplaceFacadesConstants.RETURN, returnMapList);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
+			return returnMap;
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
+			return returnMap;
+		}
+		catch (final Exception e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
+			return returnMap;
+		}
+		return returnMap;
+	}
 
 	/**
 	 * @return the mplSellerInformationService

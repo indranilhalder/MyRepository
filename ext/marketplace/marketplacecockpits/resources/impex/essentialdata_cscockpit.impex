@@ -39,6 +39,8 @@ INSERT_UPDATE UserGroup;UID[unique=true];groups(uid)[mode=replace];locname[lang=
 ;sendinvcsagentgroup;;"Send invoice Customer Service Agent Group"
 ;fraudcsagentgroup;;"Fruad Agent Customer Service Agent Group"
 ;rejectreturncsagentgroup;;"reject returnCustomer Service Agent Group"
+;alternatecontactcsagentgroup;;"Alternate Contact Details Customer Service Agent Group"
+;changedeliverycsagentgroup;;"Change Delivery Customer Service Agent Group"
 ;synccsagentgroup;;"Sync Service Agent Group"
 
 
@@ -46,7 +48,7 @@ INSERT_UPDATE UserGroup;UID[unique=true];groups(uid)[mode=replace];locname[lang=
 
 
 UPDATE UserGroup;UID[unique=true];groups(uid)[mode=append];locname[lang=en]
-;csagentgroup;refundcsagentgroup,replacecsagentgroup,cancelcsagentgroup,sendinvcsagentgroup,refunddelcsagentgroup,fraudcsagentgroup,rejectreturncsagentgroup;"Customer Service Agent Group"
+;csagentgroup;refundcsagentgroup,replacecsagentgroup,cancelcsagentgroup,sendinvcsagentgroup,refunddelcsagentgroup,fraudcsagentgroup,rejectreturncsagentgroup,alternatecontactcsagentgroup,changedeliverycsagentgroup;"Customer Service Agent Group"
 
 
 

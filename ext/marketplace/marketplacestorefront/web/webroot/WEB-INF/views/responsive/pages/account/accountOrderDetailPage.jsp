@@ -15,6 +15,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user" %>
+<%@ taglib prefix="return" tagdir="/WEB-INF/tags/responsive/returns"%>
 
 <spring:url value="/my-account/profile" var="profileUrl" />
 <spring:url value="/my-account/update-profile" var="updateProfileUrl" />
@@ -236,6 +237,10 @@
 														${fn:escapeXml(creditCardBillingAddress.line3)},
 													</c:if>
 										<br>
+										<c:if test="${not empty creditCardBillingAddress.landmark}">
+														${fn:escapeXml(creditCardBillingAddress.landmark)},
+										</c:if>
+										<br><%-- ${fn:escapeXml(creditCardBillingAddress.landmark)} --%>
 										${fn:escapeXml(creditCardBillingAddress.town)},&nbsp;
 										<c:if test="${not empty creditCardBillingAddress.state}">
 														${fn:escapeXml(creditCardBillingAddress.state)},&nbsp;
@@ -312,15 +317,26 @@
 									<c:if test="${not empty subOrderLine3}">
 												&nbsp;${fn:escapeXml(subOrder.deliveryAddress.line3)},
 											</c:if>
-									<br> ${fn:escapeXml(subOrder.deliveryAddress.town)},&nbsp;
-									<c:if test="${not empty subOrder.deliveryAddress.state}">
-												${fn:escapeXml(subOrder.deliveryAddress.state)},&nbsp;
-											</c:if>
-									${fn:escapeXml(subOrder.deliveryAddress.postalCode)}&nbsp;${fn:escapeXml(subOrder.deliveryAddress.country.isocode)}
-									<br>
-									91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)} <br>
-								</address>
+											<br> ${fn:escapeXml(subOrder.deliveryAddress.town)},&nbsp;
+											<c:if test="${not empty subOrder.deliveryAddress.state}">
+														${fn:escapeXml(subOrder.deliveryAddress.state)},&nbsp;
+													</c:if>
+											${fn:escapeXml(subOrder.deliveryAddress.postalCode)}&nbsp;${fn:escapeXml(subOrder.deliveryAddress.country.isocode)}
+											<br>
+											91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)} <br>
+									  </address>
+									</div>
+									<div class="col-md-4 col-sm-6">
+										<div class="editIconCSS">
+										<c:if test="${addressChangeEligible eq true}">
+									       <a href="#" id="changeAddressLink">Edit / Change Address </a>
+									   </c:if>
+										</div>
+									</div>
+								</div>
 							</div>
+							<p style="clear:both"></p>
+							<div class="itemBorder">&nbsp;</div>
 							</c:if>
 							<c:forEach items="${filterDeliveryMode}" var="deliveryType">
 							 <c:forEach items="${subOrder.sellerOrderList}" var="sellerOrder"
@@ -533,6 +549,7 @@
 
 										</div>
 										<div class="actions">
+											<div class="col-md-6">
 											<c:if
 												test="${entry.itemCancellationStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
 												<c:set var="bogoCheck"
@@ -546,14 +563,14 @@
 												<spring:theme code="trackOrder.cancellableBefore.msg" />
 												
 											</c:if>
-											<c:if
+											 <c:if
 												test="${entry.itemReturnStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
-												<a
+											 	<a
 													href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${sellerOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}">
 													<spring:theme code="text.account.returnReplace"
 														text="Return Item" />
 												</a>
-											</c:if>
+											 </c:if>
 
 											<c:if test="${entry.showInvoiceStatus eq 'true'}">
 												<a
@@ -566,6 +583,16 @@
 												<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
 											</c:if>
 											<!-- TISCR-410 ends -->
+											
+											</div>
+											<div class="col-md-5">
+												<c:if test="${fn:containsIgnoreCase(entry.returnMethodType , 'SELF_COURIER')}">
+													<div class="awsInnerClass">
+															Please provide AWB number, Logistics partner and upload POD <a href="#" id="awbNumberLink">here</a>
+													</div>	
+												</c:if>
+											</div>
+											
 										</div>
 
 										<div class="modal cancellation-request fade"
@@ -1300,6 +1327,8 @@
 
 
                                    </c:if>
+                                    <return:lpDetailsUploadPopup  entry="${entry}"/>
+                                    
 								</c:forEach>
 								</c:forEach>
 							</c:forEach>
@@ -1311,12 +1340,18 @@
 					</ul>
 				</div>
 			</div>
-
-
-
-
 		</div>
 	</div>
+			<div class="removeModalAfterLoad" id="changeAddressPopup">
+			  <order:changeDeliveryAddress orderDetails="${subOrder}" />
+            </div>
+            <div class="removeModalAfterLoad" id="otpPopup">
+            </div>
+             </div><!-- /.modal -->
+	    
+ 
+        <div class="wrapBG" style="background-color: rgba(0, 0, 0, 0.5); width: 100%; height: 600px; position: fixed; top: 0px; left: 0px; z-index: 99999; display: none;"></div>
+        
 </template:page>
 <%-- <script type="text/javascript"
 	src="${commonResourcePath}/js/jquery-2.1.1.min.js"></script>
@@ -1326,7 +1361,19 @@
 <script>
 
 /*--------- Start of track order UI -------*/
-
+ 
+ <!--   AWB Jquery codes PopUp  -->
+	$(document).ready(function(){
+		$("#uploadFile").change(function(){
+			var url = $(this).val();
+			var res = url.split('\\');
+			var filename = res[res.length - 1];
+			$('.textFile').text(filename);
+		});
+		});
+	
+	<!--  End of AWB Jquery codes PopUp  -->
+	
 $(function(){
 	$('body .right-account .order-details .deliveryTrack ul.nav').each(function(){
 		var track_order_length= $(this).find('li').length;
@@ -1621,6 +1668,16 @@ $(function() {
 		      } 
 	}	 
 	$(document).ready(function(){
+		 $("#changeAddressLink").click(function(){
+			  $("#changeAddressPopup").show();
+			  $(".wrapBG").show();
+			  var height = $(window).height();
+			  $(".wrapBG").css("height",height);
+			  $("#changeAddressPopup").css("z-index","999999");
+			  setTimeout(function() { console.log($("#deliveryAddressForm #firstName").attr("value")); $("#deliveryAddressForm #firstName").val($("#deliveryAddressForm #firstName").attr("value")); $("#deliveryAddressForm #lastName").val($("#deliveryAddressForm #lastName").attr("value")) }, 100);
+			  loadPincodeData();
+		});
+		
 		    var length = $(".returnStatus .dot").length;
 		    if(length >=3) {
 			    var percent = 100/parseInt(length);
@@ -1638,7 +1695,228 @@ $(function() {
 			// $(".pickupeditbtn").css("display","block");
 			 
 		 });
+		 
+		 $("#changeAddressLink").click(function(){
+			  $("#changeAddressPopup").show();
+			  $(".wrapBG").show();
+			  var height = $(window).height();
+			  $(".wrapBG").css("height",height);
+			  $("#changeAddressPopup").css("z-index","999999");
+		});
+		 
+	 	$("#saveBlockData").click(function(){
+				$("#changeAddressPopup").hide();
+				$("#showOrderDetails").show();
+				$("#showOrderDetails").css("z-index","999999");
+		});
+		
+ 	$(".submitSchedule").click(function(){
+			$("#changeAddressPopup, #showOrderDetails").hide();
+			$("#showOTP").show();
+			$("#showOTP").css("z-index","999999");
+		});
+		 
+		 $(".close").click(function(){
+			 $("#changeAddressPopup,#otpPopup").hide();
+			 $(".wrapBG, #showOrderDetails").hide();
+			 $("#showOTP").hide();
+		 });
 		 //$(".pickupeditbtn").hide(); 
+		 
+		 
+		 <!--   AWB Jquery codes PopUp  -->
+		 
+		 $("#awbNumberLink").click(function(){
+			  $("#awbNumberPopup").show();
+			  $(".wrapBG").show();
+			  var height = $(window).height();
+			  $(".wrapBG").css("height",height);
+			  $("#awbNumberPopup").css("z-index","999999");
+		});
+		$(".submitButton").click(function(){
+			$("#awbNumberPopup").hide();
+		});
+
+
+		$(".closeAWSNum").click(function(){
+		 $("#awbNumberPopup").hide();
+		 $(".wrapBG").hide();
+		});
+		
+		$("#submitBlock").click(function(event){
+			
+			$(".awsNumError").hide();
+			$(".logisticPartnerError").hide();
+			$(".uploadError").hide(); 
+			
+			var awsNumber=$("#awsNum").val();
+			var logPart=$("#logisticPartner").val();
+			var upload=$("#uploadFile").val();
+			
+			if(awsNumber == null || awsNumber.trim() == '' ){
+	  			$(".awsNumError").show();
+	  			$(".awsNumError").text("AWB Number cannot be Blank");
+	  			$("#awbNumberPopup").css('display','block');
+			}
+			
+			if(logPart == null || logPart.trim() == '' ){
+				$(".logisticPartnerError").show();
+	  			$(".logisticPartnerError").text("Logistic Partner cannot be Blank");
+	  			$("#awbNumberPopup").css('display','block');
+			}else{
+				return true;
+			}
+			
+			
+		});
+		
+		<!-- End of  AWB Jquery codes PopUp  -->
 	 });	 
-	
 </script>
+
+<!--   AWB CSS for PopUp -->
+<style>
+
+@media (max-width: 1366px) {
+	.awsNumberModal .changeAWS {
+		height: 390px;
+		width: 700px;
+	}
+}
+
+@media (max-width: 720px) {
+	.awsNumberModal .changeAWS{
+		height: 400px;
+		overflow-y: scroll;
+		width: auto;
+	}
+	#awbNumberPopup{
+		left:0 !important;
+	}
+	
+	.submitButton {
+		margin: 60px auto;
+	}
+}
+#awbNumberPopup {
+	display: none;
+	position: fixed;
+	top: 50px;
+	left:25%;
+	
+}
+
+#awbNumberPopup .space{
+	margin: 20px 10px;
+	line-height: 20px;
+	color: #8c8c8c;
+}
+#awbNumberPopup label{
+	padding: 10px 0px;
+	color: #8c8c8c;
+	font-size: 14px;
+}
+#awbNumberPopup .control-label {
+    font-weight: inherit;
+}
+#awbNumberPopup .awsUpload, #awbNumberPopup .awsUpload:focus {
+	border: none;
+} 
+#awbNumberPopup .form-group {
+    margin-bottom: 0px;
+}
+.closeAWSNum{
+	border-radius: 50%;
+	border: 1px solid #ccc !important;
+	width: 40px;
+	height: 40px;
+    position: absolute;
+    right: 17px;
+    top: -6px;
+    font-size: 35px;
+    font-weight: 100;
+    color: #ccc;
+    padding: 9px 9px;
+}
+#awbNumberPopup h4{
+    font-size: 22px !important;
+    font-weight: 100 !important;
+    margin-bottom: 25px !important;
+}
+#awbNumberPopup .awsTextinput{
+	width: 100%;
+}
+.submitButton{
+	background: #ff9900;
+	color: #fff;
+	width: 150px;
+	margin: 39px auto;
+	height: 46px;
+    font-size: 20px;
+}
+.submitButton:focus, .submitButton:hover{
+	border: none;
+	background: #ff9900;
+	color: #fff;
+	width: 150px;
+	margin: 39px auto;
+	height: 46px;
+    font-size: 20px;
+}
+#awbNumberLink{
+	color: #00cfe6;
+	display: inline-block;
+}
+
+.awsInnerClass {
+	display: inline-block;
+	position: relative;
+	background: #fafafa;
+	padding: 9px 12px 2px 12px;
+	border: 2px solid #edad24;
+	font-size: 13px;
+}
+.awsInnerClass:after {
+	content: '';
+	display: block;  
+	position: absolute;
+	right: 100%;
+	top: 50%;
+	margin-top: -18px;
+	width: 0;
+	height: 0;
+	border-top: 10px solid transparent;
+	border-right: 12px solid #edad24;
+	border-bottom: 10px solid transparent;
+	border-left: 10px solid transparent;
+}
+.errorText{
+	color: red;
+}
+.awsNumError{
+	padding: 3px 0;
+}
+.textFile{
+	display: inline-block;
+	padding: 0px 10px;
+	color: #8c8c8c;
+	height: 44px;
+	line-height: 44px;
+}
+.uploadButton{
+	background: #00cfe6;
+	color: #fff;
+	display: inline-block;
+    padding: 0px 11px;
+    font-size: 14px;
+    height: 44px;
+	line-height: 44px;
+}
+.uploadDiv{
+    border: 1px solid #dfd1d5;
+    width: 100%;
+    
+}
+</style>
+
+<!-- End of  AWB CSS for PopUp -->

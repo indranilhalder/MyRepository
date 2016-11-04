@@ -89,6 +89,41 @@ table {
 td, th {
 	padding: 0;
 }
+@font-face {
+  font-family: 'icomoon';
+  src: url('./fonts/icomoon.eot?qucrqz');
+  src: url('./fonts/icomoon.eot?#iefixqucrqz') format('embedded-opentype'), url('./fonts/icomoon.woff?qucrqz') format('woff'), url('./fonts/icomoon.ttf?qucrqz') format('truetype'), url('./fonts/icomoon.svg?qucrqz#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('./fonts/fontawesome-webfont.eot?v=4.3.0');
+  src: url('./fonts/fontawesome-webfont.eot?#iefix&v=4.3.0') format('embedded-opentype'), url('./fonts/fontawesome-webfont.woff2?v=4.3.0') format('woff2'), url('./fonts/fontawesome-webfont.woff?v=4.3.0') format('woff'), url('./fonts/fontawesome-webfont.ttf?v=4.3.0') format('truetype'), url('./fonts/fontawesome-webfont.svg?v=4.3.0#fontawesomeregular') format('svg');
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+	font-family: 'Glyphicons Halflings';
+	src: url('../fonts/glyphicons-halflings-regular.eot');
+	src: url('../fonts/glyphicons-halflings-regular.eot?#iefix')
+		format('embedded-opentype'),
+		url('../fonts/glyphicons-halflings-regular.woff') format('woff'),
+		url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'),
+		url('../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular')
+		format('svg');
+}
+/* @font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/materialicons/v11/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.eot);
+src: local('Material Icons'),
+local('MaterialIcons-Regular'),
+url(https://fonts.gstatic.com/s/materialicons/v11/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2'),
+url(https://fonts.gstatic.com/s/materialicons/v11/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff) format('woff'),
+url(https://fonts.gstatic.com/s/materialicons/v11/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.ttf) format('truetype');
+} */
 
 .glyphicon {
 	position: relative;
@@ -45673,8 +45708,962 @@ body.no-scroll {
 #zoomId img {
 	padding-bottom: 40px;
 }
+ordermargingalignment {
+	height: 41px;
+	padding-top: 7px;
+	font-size: 12px;
+	font-weight: 300;
+}
+
+.orderheadingalignment {
+	font-size: 12px;
+}
+
+.orderbodyalignment {
+	font-size: 12px;
+}
 
 /*  Chnage for TISPRD-4587 */
  .importantDisplay{ 
  	display: block !important; 
  } 
+.attributes {
+	font-size: 12px;
+}
+
+.actions {
+	font-size: 12px;
+}
+
+.editIconCSS {
+	font-size: 12px;
+	padding-top: 17px;
+}
+
+.editIconCSS a:link, .editIconCSS a:visited {
+	text-decoration: none;
+}
+
+.editIconCSS a:hover {
+	text-decoration: underline;
+}
+
+.pickupeditbtn:after, .editIconCSS a:before{
+
+     font-family: 'FontAwesome';
+    content:"\f040";
+    padding:0 5px 0 5px; 
+}
+.deliverymode {
+	font-size: 12px;
+	font-weight: 600;
+	min-height: 17px;
+}
+
+.error_text {
+	color: red;
+}
+
+#pickName {
+	height: 25px !important;
+	white-space: nowrap;
+}
+.order {
+	margin-top: 8px !important;
+}
+
+.itemBorder {
+	border-top: 1px solid #DFD1D5;
+	width: 100%;
+	margin-top: -7px;
+	padding: 15px;
+}
+
+#changeAddressPopup {
+	margin: 0px auto;
+	width: 100%;
+	height: 700px;
+}
+
+#showOTP {
+	display: none;
+	margin: 0px auto;
+	width: 100%;
+	position: fixed;
+	top: 100px;
+	left: 0px;
+}
+
+#showOTP .row {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+#showOTP .row label {
+	margin-bottom: 10px;
+}
+
+#showOTP  .otpMessage {
+	margin-top: 25px;
+}
+
+#changeAddressPopup .close {
+	float: right;
+}
+#showOTP .modal-footer { 
+    margin-top: 20px;
+    text-align: left;
+}
+
+#showOTP .modal-footer button {
+	background: rgb(201, 201, 35) none repeat scroll 0% 0%;
+	color: #fff;
+	font-weight: bold;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.modal-title {
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.modal-header {
+	border: none !important;
+}
+
+.NOP {
+	padding: 0px !important;
+}
+
+.modal-footer {
+	text-align: center !important;
+}
+
+.textInputChangeAddress, #showOTP input {
+	width: 100% !important;
+}
+
+.input-group-addon {
+	position: absolute;
+	top: 12px;
+	left: 13px;
+	z-index: 9;
+	height: 40px;
+	border-right: 1px solid rgb(204, 204, 204);
+	padding: 13px;
+}
+
+#landmark {
+	/* padding-left: 47px; */
+}
+
+.address_townCity, .otherLandMark {
+	width: 100%;
+}
+
+.addressTextChange {
+	line-height: 15px;
+}
+
+#deliveryAddressForm input, #deliveryAddressForm option, #deliveryAddressForm select {
+	color: #000;
+}
+
+.modal-dialog {
+	background: #fff;
+	border: 1px solid rgb(204, 204, 204);
+	border-radius: 8px;
+	background: rgb(255, 255, 255) none repeat scroll 0% 0%;
+	padding-top: 20px;
+}
+
+#changeAddressPopup {
+	display: none;
+	position: fixed;
+	top: 50px;
+	left: 0px;
+}
+
+.modal-body h4 {
+	font-size: 13px;
+	font-weight: bold;
+}
+
+.close {
+	border-radius: 50%;
+	border: 1px solid #ccc !important;
+	width: 30px;
+	height: 30px;
+    margin-top: -10px !important;
+    margin-right: -14px !important;
+    position: absolute;
+    right: 17px;
+    top: -6px;
+}
+
+#saveBlockData, .saveBlockData {
+	background: rgb(201, 201, 35) none repeat scroll 0% 0%;
+	color: #fff;
+	font-weight: bold;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+.radioButton:checked {
+	background-color: #000;
+	border: 2px solid #ccc !important;
+}
+
+.radioButton {
+	display: block !important;
+	height: 15px !important;
+	width: 15px !important;
+	color: #fff;
+	padding: 0px !important;
+	margin-right: 5px;
+	border: 1px solid #000 !important;
+	cursor: pointer;
+	margin-top: 5px;
+	border-radius: 50%;
+	z-index: 9999999999;
+}
+
+.addressListPop {
+	height: 456px;
+	overflow-y: scroll;
+}
+
+
+.changeAdddd {
+	height: auto;
+	overflow-y: scroll;
+}
+
+.address_postcode {
+	width: 100%;
+}
+
+@media (max-width: 1365px) {
+	.changeAdddd {
+		height: 550px;
+		overflow-y: scroll;
+	}
+	.addressListPop {
+		height: 356px;
+		overflow-y: scroll;
+	}
+}
+
+@media (max-width: 720px) {
+	.changeAdddd {
+		height: 400px;
+		overflow-y: scroll;
+	}
+	.addressListPop {
+		height: 300px;
+		overflow-y: scroll;
+	}
+}
+
+#showOrderDetails .modal-dialog {
+	height: 550px;
+	overflow-y: scroll;
+}
+
+#showOrderDetails .leftBlockSchedule {
+	padding: 0px 10px 0px 10px;
+	line-height: 24px;
+	border-left: 2px solid #ccc;
+}
+
+#showOrderDetails .row {
+	margin-top: 10px;
+}
+
+.scheduleRadio {
+	font-size: 12px;
+	color: #5f5050;
+	text-align: center;
+	margin-bottom: 10px;
+}
+
+.scheduleRadio .col-md-4 {
+	padding: 0px;
+	line-height: 14px;
+	font-size: 10px;
+	padding-bottom: 10px;
+	color: #333;
+	text-align: center;
+}
+
+.scheduleRadio input[type="radio"] {
+	display: block !important;
+	height: 15px !important;
+	width: 15px !important;
+	color: #fff;
+	padding: 0px !important;
+	margin-right: 5px;
+	border: 1px solid #ccc !important;
+	cursor: pointer;
+	margin: 0 auto;
+	border-radius: 50%;
+	z-index: 9999999999;
+}
+
+.scheduleRadio input[type="radio"]:checked {
+	background-color: #000;
+	border: 2px solid #ccc !important;
+}
+
+
+.scheduleRadio .sideheadsch {
+	font-size: 14px;
+	color: #333;
+}
+
+.orderReference {
+	font-size: 16px;
+	color: #333;
+}
+
+hr {
+	border-color: #ccc;
+}
+
+
+@media (min-width: 791px){
+body .account .track{
+    width: 75%;
+     float: none;
+    padding: 0px;  
+      margin: 0px auto;
+}
+}
+
+/* Track Order PopUp start */
+
+#showTrackOrder {	
+	display: none;
+	margin: 0px auto;
+	width: 100%;
+	position: fixed;
+	top: 100px;
+	left: 0px;
+}
+
+.error_text {
+	font-color: #a9143c;
+	display: none;
+	width: 100%;
+	text-align: center;
+}
+
+#showTrackOrder .modal-dialog {	
+	background: #fff;
+	border-radius: 5px;
+	padding: 10px 10px 50px 10px;
+	width: 653px;
+}
+#showTrackOrder .modal-dialog .trackPopupText {
+	color: #333;
+	font-size: 10px;
+	margin-top: 10px;
+}
+
+#showTrackOrder .modal-dialog .viewOrderButton {
+	font-size: 12px;
+	background: #a9143c;
+	color: #fff;
+	margin-top: 10px;
+	float: right;
+}
+
+#showTrackOrder .modal-dialog .col-md-6, #showTrackOrder .modal-dialog .col-md-12, #showTrackOrder .modal-dialog .col-md-5 {
+	margin: 0px 0px 0px 0px;
+	padding: 0px 10px 0px 0px;
+}
+
+#showTrackOrder .modal-dialog label {
+	font-weight: bold;
+	padding-bottom: 5px;
+	margin-top: 14px;
+}
+
+#showTrackOrder .modal-dialog .captcha img {
+	border: 1px solid #ccc;
+	margin: 5px 0px 5px 0px;
+}
+
+#showTrackOrder .modal-dialog input[type="text"] {
+	width: 100%;
+}
+
+#showTrackOrder .modal-dialog h4 {
+	width: 95%;
+	font-size: 24px;
+}
+
+#showTrackOrder .modal-dialog .close {
+	float: right;
+	border-radius: 50%;
+	width: 30px;
+	height: 30px;
+	border: 1px solid #ccc;
+	margin-top:18px !important;
+    margin-right:-10px !important;
+}
+
+@media screen and (max-width: 620px){
+#showTrackOrder .modal-dialog {
+		width: auto !important;
+	}
+}
+
+/* Track Order PopUp end */
+
+/* piczoomer css end */
+
+
+
+/* returns and refunds */
+.returnItemForm .return-container {
+			width: 100%;
+			margin: 0 auto;
+		}
+	
+	
+	.accContents img {
+		width: 100%;
+	}
+	
+	.accContents span {
+		clear: both;
+	}
+	
+	.accordtionTataCliq {
+		border: 1px solid #ebeff0;
+		height: auto;
+		padding: 0px !important;
+		margin-top: 90px;
+	}
+	
+	.firstTataCliq {
+		margin-top: 0px;
+	}
+	
+	.accordtionTataCliq .accHeading {
+	    padding: 15px;
+   		background: #ebeff0;
+   		color: #596161;
+   		font-size: 16px;
+   		cursor: pointer;
+ 	}
+ 	
+ 	.accordtionTataCliq .accContents {
+ 		padding: 0px 0px 15px 0px !important;
+ 		margin-top: 10px;
+ 	}
+ 	
+ 	.accordtionTataCliq .accContents .productDetails {
+ 		padding-top: 5px;
+ 	}
+ 	
+ 	.accordtionTataCliq .accContents .productDetails .brandName, .accordtionTataCliq .accContents .productDetails .size {
+ 		font-size: 12px;
+ 	}
+ 	
+ 	.accordtionTataCliq .accContents .productDetails .productName {
+ 		font-size: 14px;
+ 	}
+ 	
+ 	.accordtionTataCliq .accContents .button_holder .submit-request {
+ 		margin: 0 auto;
+ 		text-align: center;
+ 		font-size: 12px;
+ 		margin-top: 0px;
+ 		display: inline-block;
+ 	}
+ 	
+ 	.accordtionTataCliq .accContents .button_holder .newRequest {
+ 		text-align: center;
+ 		font-size: 12px;
+ 		margin-top: 0px;
+ 		display: inline-block;
+ 		margin-right: 15px;
+ 		background-color: #ccc !important;
+ 	}
+ 	
+ 	.accordtionTataCliq .accContents .button_holder {
+ 		position: absolute;
+ 		margin-top: 45px;
+ 		width: 100%;
+ 		text-align: center;
+ 	}
+ 	
+ 	.accordtionTataCliq .accContents .productDetails .checkradioButton {
+ 		display: block !important;
+ 		height: 15px !important;
+ 		width: 15px !important;
+ 		color: #fff;
+ 		float: left;
+ 		padding: 0px !important;
+ 		margin-right: 5px;
+ 		border: 0px solid #fff !important;
+ 		cursor: pointer;
+ 	}
+ 	
+ 	.accordtionTataCliq .accContents .productDetails .checkradioButton:checked {
+ 		border: 3px solid #000 !important;
+ 	}
+ 	
+ 	.return-container {
+ 		margin-bottom: 50px;
+ 	}
+ 	
+ 	.account .wrapper {
+ 		margin-bottom: 50px;
+ 	}
+ 	
+ 	.accordtionTataCliq .accContents .radioButton {
+ 		display: block !important;
+ 		height: 15px !important;
+ 		width: 15px !important;
+ 		color: #fff;
+ 		padding: 0px !important;
+ 		margin-right: 5px;
+ 		border: 1px solid #000 !important;
+ 		cursor: pointer;
+ 		margin-top: 5px;
+ 		border-radius: 50%;
+ 		z-index: 9999999999;
+ 	}
+ 	
+ 	.accordtionTataCliq .accContents .radioButton:checked {
+ 		background-color: #000;
+ 		border: 2px solid #ccc !important;
+ 	}
+ 	
+ 	.accordtionTataCliq .accContents .selectReason, .accordtionTataCliq .accContents .selectReturnMethod, .accordtionTataCliq .accContents .selectquickDrop {
+ 		margin-top: 15px;
+ 	}
+ 	
+ 	.accordtionTataCliq .accContents .selectReason span, .accordtionTataCliq .accContents .selectReturnMethod span, .accordtionTataCliq .accContents .selectquickDrop span {
+ 		line-height: 20px;
+ 	}
+ 	
+ 	.accordtionTataCliq .accContents .selectReason b , .accordtionTataCliq .accContents .selectReturnMethod b, .accordtionTataCliq .accContents .selectquickDrop b {
+ 		line-height: 25px;
+ 	}
+ 	
+ 	.accordtionTataCliq .slectionRefund, .accordtionTataCliq .scheduledPickup, .accordtionTataCliq .selfCourier, .accordtionTataCliq .slectionReplace, .accordtionTataCliq .selfCourier, .accordtionTataCliq .quickDrop {
+ 		display: none;
+ 	}
+ 	
+ 	
+ 	.accordtionTataCliq .accContents .slectionRefund .col-md-12 {
+ 		padding: 0px !important;
+ 	}
+ 	
+ 	 .accordtionTataCliq .accContents .slectionRefund, .accordtionTataCliq .accContents .slectionRefund .col-md-12 .col-md-4  {
+ 	 	padding: 0px 15px 0px 10px !important;
+ 	 }
+ 	
+ 	.accordtionTataCliq .accContents .slectionRefund .col-md-12 b {
+ 		line-height: 22px;
+ 	}
+ 	
+ 	.accordtionTataCliq .accContents .slectionRefund .col-md-12 input {
+ 		width: 100%;
+ 	}
+ 	
+ 	.accordtionTataCliq .accContents .slectionRefund .col-md-12 .suggestionText {
+ 		line-height: 18px;
+ 		margin-top: 20px;
+ 		color: orange;
+ 	}
+ 	
+ 	.accordtionTataCliq .accContents .slectionRefund .bankDetailsText {
+ 		line-height: 24px;
+ 		font-size: 14px;
+ 	}
+ 	
+ 	.accordtionTataCliq .accContents .quickDropArea, .accordtionTataCliq .accContents .scheduledPickupArea {
+ 		height: 211px;
+ 		overflow-x: hidden;
+ 		overflow-y: scroll;
+ 		margin-top: 10px;
+ 	}
+ 	
+ 	.accordtionTataCliq .accContents .quickDrop span, .accordtionTataCliq .accContents .scheduledPickup span {
+ 		line-height: 25px;
+ 	}
+ 	
+ 	.accordtionTataCliq .accContents #map-canvas {
+ 		width: 100%;
+ 		height: 260px;
+ 	}
+ 	
+ 	.accordtionTataCliq .accContents .mapDistance {
+ 		margin-top: 5px;
+ 	}
+ 	
+ 	.accordtionTataCliq .accContents .quickDrop {
+ 		padding: 0px !important;
+ 	}
+ 	
+ 	.accordtionTataCliq .accContents .scheduledPickup .selectDateTime .selectRadio {
+ 		text-align: center;
+ 	}
+ 	
+ 	.accordtionTataCliq .accContents .scheduledPickup .selectDateTime .selectRadio  input {
+ 		margin-left: 40px;
+ 		margin-bottom: 15px;
+ 		margin-top: 10px;
+ 	}
+ 	
+ 	.accordtionTataCliq .accContents .scheduledPickup .sideHead {
+ 		margin-top: 35px;
+ 	}
+ 	
+ 	.accordtionTataCliq .reasonType, .accordtionTataCliq .returnMethod, .accordtionTataCliq .accContents .quickDrop .mapArea , .accordtionTataCliq .accContents .scheduledPickup .selectDateTime {
+ 		display: none;
+ 	}
+ 	
+ 	.removeMargin {
+ 		margin-top: 1px;
+ 	}
+ 	
+ 	.accordtionTataCliq .errorText, .accordtionTataCliq .errorTextSelection {
+ 		color: red;
+ 		text-align: center;
+ 	}
+ 	
+ 	.accordtionTataCliq .greyColor {
+ 		color: #ccc;
+ 	}
+ 	
+ 	.accordtionTataCliq .blackColor {
+ 		color: #000;
+ 	}
+ 	
+ 	.accordtionTataCliq .accContents .fa-angle-right:before {
+		font-family: FontAwesome;
+	    font-weight: lighter;
+	    color: #a9143c;
+	    content: "\f105";;
+	    font-size: 70px;
+	    line-height: 18px;
+	    margin-right: 5px;
+	    top: 2px;
+	    position: relative;
+ 	}
+ 	
+ 	.accordtionTataCliq .accContents .selfCourierArea {
+ 		line-height: 18px;
+ 	}
+ 	
+ 	.accordtionTataCliq .accContents a {
+ 		color: #a9143c;
+ 		text-decoration: underline;
+ 	}
+ 	
+ 	.accordtionTataCliq .returnMethod .col-sm-6, .accordtionTataCliq .returnMethod .col-sm-12, .accordtionTataCliq .returnMethod .col-sm-2 {
+ 		z-index: 99;
+ 	} 
+ 	
+ 	@media (max-width: 650px) {
+ 	
+	 	.accordtionTataCliq .selectReasonForReturn {
+	 		margin-left: 15px;
+	 		margin-top: 10px;
+	 	}
+	 	
+	 	.accordtionTataCliq .selectReasonForReturn select {
+	 		width: 90%;
+	 	}
+	 	
+	 	.accordtionTataCliq .slectionRefund {
+	 		margin-top: 15px;
+	 		padding: 10px;
+	 	}
+	 	
+	 	.accordtionTataCliq .suggestionText {
+	 		margin-top: 0px !important;;
+	 	}
+	 	
+	 	.accordtionTataCliq .mapArea {
+	 		margin-top: 10px;
+	 	}
+	 	
+	 	.accordtionTataCliq .accContents .quickDrop {
+	 		z-index: 9;
+	 	}
+	 	
+	 	
+	 	
+	 	.accordtionTataCliq .scheduledPickup .col-md-6 {
+	 		margin-left: -30px;
+	 		margin-top: 10px;
+	 		margin-bottom: 10px;
+	 	}
+	 	
+	 	.accordtionTataCliq .scheduledPickupArea {
+	 		width: 118%;
+	 	}
+	}
+	
+	@media (max-width: 1020px) {
+		.accordtionTataCliq .mapArea {
+	 		margin-top: 10px;
+	 	}
+	} 	
+	
+	.accordtionTataCliq .slectionRefund .paymentCC {
+ 		background: #ebeff0;
+	    margin: 30px;
+	    padding: 25px; 		
+ 	}
+ 	
+ 	.accordtionTataCliq .slectionRefund .paymentText {
+ 		line-height: 20px; 	
+ 		padding-left: 40px;
+ 	}
+ 	
+ 	@media (max-width: 1024px) {
+ 		.accordtionTataCliq .slectionRefund .paymentCC {
+ 			margin-top: 100px;
+ 		}
+ 		
+ 		.accordtionTataCliq .slectionRefund .paymentText {
+ 			padding-left: 0px;
+ 		}
+ 	}
+ 	
+ 	/* popup style start */
+ 	
+ 	#changeAddressPopup {
+	margin: 0px auto;
+	width: 100%;
+	height: 700px;
+}
+
+.modal-title {
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.modal-header {
+	border: none !important;
+}
+
+.NOP {
+	padding: 0px !important;
+}
+
+.modal-footer {
+	text-align: center !important;
+}
+
+.input-group-addon {
+	position: absolute;
+	top: 29px;
+	left: 13px;
+	z-index: 9;
+	height: 40px;
+	border-right: 1px solid rgb(204, 204, 204);
+	padding: 13px;
+}
+
+#landmark {
+	padding-left: 47px;
+}
+
+.addressTextChange {
+	line-height: 15px;
+}
+
+.modal-dialog {
+	background: #fff;
+	border: 1px solid rgb(204, 204, 204);
+	border-radius: 8px;
+	background: rgb(255, 255, 255) none repeat scroll 0% 0%;
+	padding-top: 20px;
+}
+
+#changeAddressPopup {
+	display: none;
+	position: fixed;
+	top: 10px;
+	left: 0px;
+}
+
+.modal-header h4 {
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.close {
+	border-radius: 50%;
+	border: 1px solid #ccc !important;
+	width: 30px;
+	height: 30px;
+	margin-top: -10px !important;
+	margin-right: -14px !important;
+	position: absolute;
+	right: 17px;
+	top: -6px;
+}
+
+#saveBlockData, .saveBlockData, .saveBlockData:hover, .saveBlockData:focus .saveBlockData:active{
+	background: #a9143c;
+	color: #fff;
+	font-weight: bold;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.radioButton:checked {
+	background-color: #000;
+	border: 2px solid #ccc !important;
+}
+
+.radioButton {
+	display: block !important;
+	height: 15px !important;
+	width: 15px !important;
+	color: #fff;
+	padding: 0px !important;
+	margin-right: 5px;
+	border: 1px solid #000 !important;
+	cursor: pointer;
+	margin-top: 5px;
+	border-radius: 50%;
+	z-index: 9999999999;
+}
+
+h4 {
+	font-size: 18px !important;
+	font-weight: bolder !important;
+	margin-bottom: 15px !important;
+}
+
+@media ( max-width : 1024px) {
+	.removeModalAfterLoad .changeAdddd {
+		height: 550px;
+		overflow-y: scroll;
+	}
+}
+
+@media ( max-width : 720px) {
+	.removeModalAfterLoad .changeAdddd {
+		height: 400px;
+		overflow-y: scroll;
+	}
+}
+
+.addNewAddressPopup  {
+	float: right;
+}
+
+.changeAdddd input {
+	width: 100%;
+	margin-top: 3px;
+}
+
+/* popup */
+	/* Retuns end */
+	
+
+.accordtionTataCliq .accContents .checkButton {
+	display: block !important;
+		height: 15px !important;
+		width: 15px !important;
+		color: #fff;
+		padding: 5px !important;
+		margin-right: 5px;
+		cursor: pointer;
+		margin-top: 5px;
+		z-index: 9999999999;
+}
+
+.accordtionTataCliq .accContents .checkButton:checked {
+	background: #333;
+	padding: 2px;
+}
+
+.textDisabled{
+	border:none;
+	height: 30px;
+}
+
+.secondTataCliq .accContents .errorText {
+	padding-top: 10px;
+}
+
+
+#addAddressForm .col-md-6 {
+	margin-bottom: 0px;
+}
+
+#addAddressForm .form-group {
+	margin-bottom: 8px;
+}
+
+#addAddressForm input:hover {
+	border-color: #000;
+}
+
+#addAddressForm input[type="radio"] {
+	margin-bottom: 8px;
+}
+
+#addAddressForm .padd{
+	margin-bottom: 10px;
+}
+
+#addAddressForm select {
+	width: 100%;
+}
+
+#addAddressForm .defaultAddCheck {
+	padding-left: 8px;
+    margin-bottom: 13px;
+}
+
+#addAddressForm .errorText {
+	color: red;
+	text-align: center;
+	display: none;
+}
+
+#addAddressForm h4.newAddress, #addAddressForm h4.editAddress {
+	display: none;
+}
+
+#saveAddress:hover, #saveAddress:active, #saveAddress:focus {
+	color: #fff;
+    background-color: #A9143C;
+}
+#addAddressForm .errorCodemessage{
+	color: red;
+	padding: 0px 0px 10px 32px;
+}
+.thirdTataCliq .body-Content{
+	padding-bottom: 395px;
+}
+#addAddressForm #new-address-option-1 + label, #new-address-option-2 + label{
+	width:100%;
+}
+
+
+
+.page-returnSubmit .wrapper {
+	padding-bottom: 50px;
+}
+
+#deliveryAddressForm .form-group {
+    margin-bottom: 10px;
+}
+#deliveryAddressForm h4{
+    margin-bottom: 10px !important;
+}

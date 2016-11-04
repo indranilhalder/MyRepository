@@ -13,7 +13,7 @@
 			<listheader label="DELIVERY MODE"></listheader>
 			<listheader label="CUT OFF TIME"></listheader>
 			<listheader label="DFM TAT"></listheader>
-			<listheader label="SELLER RESP TAT"></listheader>
+			<listheader label="LP Handover Time"></listheader>
 			<listheader label="HOTC TAT"></listheader>
 			<listheader label="SHIPMENT TAT"></listheader>
 		</listhead>

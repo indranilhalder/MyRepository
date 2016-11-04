@@ -13,7 +13,7 @@ import com.hybris.oms.domain.logistics.dto.Logistics;
 
 /**
  * @author Saood
- * 
+ *
  */
 public class LogisticsContactsListItemRenderer implements ListitemRenderer
 {
@@ -29,6 +29,7 @@ public class LogisticsContactsListItemRenderer implements ListitemRenderer
 
 		addListcell(listitem, logistics.getLogisticsid());
 		addListcell(listitem, logistics.getLogisticname());
+		addListcell(listitem, logistics.getIsScheduled());
 		addListcell(listitem, String.valueOf(logistics.getActive()));
 		addListcell(listitem, logistics.getAddress());
 		addListcell(listitem, logistics.getCName());

@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import com.tisl.mpl.constants.MarketplaceclientservicesConstants;
 import com.tisl.mpl.wsdto.ReturnLogistics;
 import com.tisl.mpl.xml.pojo.OrderLineData;
 import com.tisl.mpl.xml.pojo.ReturnLogisticsRequest;
@@ -92,16 +93,48 @@ public class ReturnLogisticsServiceImpl implements ReturnLogisticsService
 					{
 						reqObj.setTransactionId(returnLogisticsObj.getTransactionId());
 					}
+					if(StringUtils.isNotBlank(returnLogisticsObj.getReturnFulfillmentType()))
+					{
+						List<String> returnFulfilmentTypes=new ArrayList<String>();
+						
+						//check return fulfillment type and add P1fulfillmemt first and then rest.
+						if(returnLogisticsObj.getReturnFulfillmentType().equalsIgnoreCase(MarketplaceclientservicesConstants.FULFILLMENTTYPE_BOTH))
+						{
+							
+							if(StringUtils.isNotBlank(returnLogisticsObj.getReturnFulfillmentByP1()) && returnLogisticsObj.getReturnFulfillmentByP1().equalsIgnoreCase(MarketplaceclientservicesConstants.TSHIP_CODE))
+							{
+							returnFulfilmentTypes.add(StringUtils.upperCase(returnLogisticsObj.getReturnFulfillmentByP1()));
+							
+							//if P1 fulfillment type is TSHIP set second fulfillment type as SSHIP
+							returnFulfilmentTypes.add(StringUtils.upperCase(MarketplaceclientservicesConstants.SSHIP_CODE));
+							}
+							else
+							{
+								//if P1 fulfillment type is SSHIP set first fulfillment type as SSHIP
+								returnFulfilmentTypes.add(StringUtils.upperCase(returnLogisticsObj.getReturnFulfillmentByP1()));
+								returnFulfilmentTypes.add(StringUtils.upperCase(MarketplaceclientservicesConstants.TSHIP_CODE));
+								
+							}
+						}
+						else
+						{
+							//if returnFulfilmentType is either TSHIP/SSHIP ! set return fulfillment type
+							returnFulfilmentTypes.add(returnLogisticsObj.getReturnFulfillmentType());
+						}
+						
+						reqObj.setReturnFulfilmentType(returnFulfilmentTypes);
+					}
 					if (StringUtils.isNotBlank(reqObj.getOrderId()) && StringUtils.isNotBlank(reqObj.getPinCode())
 							&& StringUtils.isNotBlank(reqObj.getTransactionId()))
 					{
 						reqlist.add(reqObj);
 					}
-				}
+				
 				reqdata.setOrderlines(reqlist);
 				response = reverseLogistics(reqdata);
 			}
-		}
+			}
+			}
 		catch (final Exception e)
 		{
 			LOG.error(e.getMessage());

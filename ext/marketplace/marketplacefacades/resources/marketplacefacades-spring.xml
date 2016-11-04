@@ -814,6 +814,23 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="userFacade" ref="userFacade"/>
 	</bean>
 	
+	
+	
+	<alias name="customAddressReverseConverter" alias="customAddressReverseConverter"/>
+	<bean id="customAddressReverseConverter" parent="defaultAddressReverseConverter">
+		<property name="targetClass" value="de.hybris.platform.core.model.user.AddressModel"/>
+		<property name="populators">
+			<list>
+				<ref bean="customAddressReversePopulator"/>
+			</list>
+		</property>
+	</bean>
+	
+	
+	<alias name="customAddressReversePopulator" alias="customAddressReversePopulator" />
+	<bean id="customAddressReversePopulator" parent="defaultAddressReversePopulator" class="com.tisl.mpl.facades.populators.CustomAddressReversePopulator">
+	</bean>
+	
 	<!--End : Added for Adreess state field additon  -->
 	
 	<bean id="mplSendTicketFacade"
@@ -1577,5 +1594,122 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="solrCoreNameResolver" ref="solrCoreNameResolver" />		
 	</bean> -->
 	</bean>
+	
+		<bean id="deliveryAddressFacade"
+		class="com.tis.mpl.facade.changedelivery.Impl.MplDeliveryAddressFacadeImpl"/>
+		
+		<!-- 	R2.3 FL04 changes	 -->
+			
+	<bean id="mplStatePopulator" class="com.tisl.mpl.facades.populators.MplStatePopulator"/>
+	
+	<bean id="mplStateConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.tisl.mpl.facades.product.data.StateData"/>
+		<property name="populators">
+			<list>
+				<ref bean="mplStatePopulator"/>
+			</list>
+		</property>
+	</bean> 
+	
+	<bean id="mplLandMarksPopulator" class="com.tisl.mpl.facades.populators.MplLandMarksPopulator"/>
+	
+	<bean id="returnItemAddressDataPopulator" class="com.tisl.mpl.facades.populators.ReturnItemAddressDataPopulator"/>
+	
+	
+	
+	<bean id="mplLandMarksConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.tisl.mpl.facade.data.LandMarksData"/>
+		<property name="populators">
+			<list>
+				<ref bean="mplLandMarksPopulator"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="mplPincodePopulator" class="com.tisl.mpl.facades.populators.MplPincodePopulator">
+		<property name="mplLandMarksConverter" ref="mplLandMarksConverter"/>
+		<property name="mplStateConverter" ref="mplStateConverter"/>
+	</bean>
+	
+		<bean id="mplPincodeConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.tisl.mpl.facades.data.PincodeData"/>
+		<property name="populators">
+			<list>
+				<ref bean="mplPincodePopulator"/>
+			</list>
+		</property>
+	</bean> 
+	
+	<alias name="mplDeliveryAddressReverseConverter" alias="tempAddressReverseConverter"/>
+	<bean id="mplDeliveryAddressReverseConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="de.hybris.platform.core.model.user.AddressModel"/>
+		<property name="populators">
+			<list>
+				<ref bean="temporaryAddressReversePopulator"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="temporaryAddressReversePopulator"
+			class="com.tisl.mpl.facades.populators.AdressDtoToModelPopulator">
+		<property name="commonI18NService" ref="commonI18NService"/> 
+	</bean>
+	
+	<bean id="MplDeliveryAddressComparator"
+		class="com.tis.mpl.facade.address.validator.MplDeliveryAddressComparatorImpl">
+    </bean>
+		<bean id="mplCODReturnPaymentInfoReversePopulator" class="com.tisl.mpl.facade.codpayment.populator.MplCODReturnPaymentInfoReversePopulator">
+	</bean>
+	
+	<alias name="defaultMplCODReturnPaymentInfoReverseConverter" alias="codReturnPaymentInfoReverseConverter"/>
+	<bean id="defaultMplCODReturnPaymentInfoReverseConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.tisl.mpl.core.model.BankDetailsInfoToFICOHistoryModel"/>
+		<property name="populators">
+			<list>
+				<ref bean="mplCODReturnPaymentInfoReversePopulator"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="mplCustomerBankDetailsReversePopulator" class="com.tisl.mpl.facade.codpayment.populator.MplCustomerBankDetailsReversePopulator">
+	</bean>
+	<alias name="defaultMplCustomerBankDetailsReverseConverter" alias="mplCustomerBankDetailsReverseConverter"/>
+	<bean id="defaultMplCustomerBankDetailsReverseConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.tisl.mpl.core.model.MplCustomerBankAccountDetailsModel"/>
+		<property name="populators">
+			<list>
+				<ref bean="mplCustomerBankDetailsReversePopulator"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="mplCustomerBankDetailsPopulator" class="com.tisl.mpl.facade.codpayment.populator.MplCustomerBankDetailsPopulator">
+	</bean>
+	<alias name="defaultMplCustomerBankDetailsConverter" alias="mplCustomerBankDetailsConverter"/>
+	<bean id="defaultMplCustomerBankDetailsConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value=" com.tisl.mpl.data.CODSelfShipData"/>
+		<property name="populators">
+			<list>
+				<ref bean="mplCustomerBankDetailsPopulator"/>
+			</list>
+		</property>
+	</bean>
+	<bean id="shortUrlPopulator"
+		class="com.tisl.mpl.facades.populators.ShortUrlModelToDataPopulator" />
+
+	<alias name="defaultShortUrlConverter" alias="shortUrlConverter" />
+	<bean id="defaultShortUrlConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.tis.mpl.facade.shorturl.ShortUrlReportData" />
+		<property name="populators">
+			<list>
+				<ref bean="shortUrlPopulator" />
+			</list>
+		</property>
+	</bean>
+	<alias name="defaultShortUrlFacade" alias="shortUrlFacade" />
+	<bean id="defaultShortUrlFacade" class="com.tis.mpl.facade.shorturl.DefaultShortUrlTrackFacade"></bean>
+	
+
+	<!-- close R2.3 Changes -->
 	
 </beans>

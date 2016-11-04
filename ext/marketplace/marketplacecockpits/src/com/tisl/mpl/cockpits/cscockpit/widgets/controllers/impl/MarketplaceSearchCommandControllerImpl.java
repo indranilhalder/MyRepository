@@ -162,7 +162,7 @@ public class MarketplaceSearchCommandControllerImpl extends
 			throws EtailNonBusinessExceptions, ClientEtailNonBusinessExceptions {
 
 		List<PinCodeResponseData> responseData = marketplaceServiceabilityCheckHelper
-				.getResponseForPinCode(product, pin, isDeliveryDateRequired, ussid);		
+				.getResponseForPinCode(null,product, pin, isDeliveryDateRequired, ussid);		
 		return responseData;
 	}
 

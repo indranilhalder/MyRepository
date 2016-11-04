@@ -9,6 +9,34 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 
+<!-- Move it to style.css before committing -->
+
+<style>
+	.address_landmarks, .address_landmarkOther, .address_landmarkOtherDiv {
+		width: 100% !important;
+		display: inline-block;
+	}
+	
+	.address_landmarkOther, .address_landmarkOtherDiv label, .address_landmarkOtherDiv {
+		display: inherit;
+	}
+	
+	.address_landmarkOtherDiv {
+		display: none;
+	}
+	
+	.address_landmarkOtherDiv {
+		margin: inherit;
+	}
+	
+	.address_landmarkOtherDiv {
+		margin: 0px !important;
+	}
+	
+	
+</style>
+
+
 <c:choose>
 	<c:when test="${country == 'US'}">
 		<formElement:formSelectBox idKey="address.title"
@@ -174,6 +202,15 @@
 			</div>
 			</div>
 			<div class='full'>
+		<formElement:formInputBox idKey="address.postcode" inputCSS="address_postcode"
+			labelKey="address.postcode" path="postcode"
+			mandatory="true" maxLength="6" />
+		<div class="help-block has-error" id="addressPincodeServicableDiv"
+			style="display: none;"></div>
+			<div class="help-block has-error" id="pincodeError" style="display: none;">
+			</div>
+			</div>
+			<div class='full'>
 			<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.line1"
 			labelKey="address.line1" path="line1"
@@ -197,22 +234,57 @@
 			 <div class="help-block has-error" id="address3Error" style="display: none;">
 			</div>
 			</div>
+			
+			<div class='half'>
+				<div class="optionsLandmark">
+					<formElement:formSelectBox  idKey="address.landmarks" selectCSSClass="address_landmarks"
+						labelKey="Landmarks" path="landmark" mandatory="true"
+						skipBlank="false" selectedValue="${addressForm.landmark}" skipBlankMessageKey="address.state.pleaseSelect"
+						items="${abc}"
+						itemValue="name"  />
+				</div>
+			</div>
+			<div class='half'>
+			
+				<div class='half address_landmarkOtherDiv' data-value="${addressForm.landmark}">
+						<formElement:formInputBox inputCSS="address_landmarkOther" idKey="otherLandmark"
+							labelKey="Enter Nearest Landmark" path="otherLandmark"
+							maxLength="30" />
+							<div class="error_text otherLandMarkError"></div>
+				</div>
+			</div>
+			
+			
 		<%-- <formElement:formInputBox idKey="address.locality" labelKey="address.locality" path="locality" inputCSS="form-control" mandatory="true"/> --%>
-		<div class='full'>
+		<div class='half'>
 		<!-- TISUAT-4696  /TPR-215-->
-		<formElement:formInputBox idKey="address.townCity"
+		<formElement:formInputBox idKey="address.townCity" inputCSS="address_townCity"
 			labelKey="address.townCity" path="townCity" 
 			mandatory="true" maxLength="40"/>
 			<div class="help-block has-error" id="cityError" style="display: none;">
 			</div>
 			</div>
 			<div class="half address-select">
-		<formElement:formSelectBox idKey="address.states"
-			labelKey="address.states" path="state" mandatory="true"
-			skipBlank="false" skipBlankMessageKey="address.state.pleaseSelect"
-			items="${stateDataList}" selectedValue="${addressForm.state}"
-			itemValue="name"  />
-			<div class="help-block has-error" id="stateError" style="display: none;">		
+				<div class="mainDrop">
+				<formElement:formSelectBox idKey="address.states"
+					selectCSSClass="address_states addressRead" labelKey="address.states"
+					path="state" mandatory="true" skipBlank="false"
+					skipBlankMessageKey="address.state.pleaseSelect"
+					items="${stateDataList}" selectedValue="${addressForm.state}"
+					itemValue="name" />
+				<div class="help-block has-error" id="stateError"
+					style="display: none;"></div>
+				</div>
+					
+
+			<div class="dupDisplay">
+				<label><spring:theme code="text.addressBook.State"
+						text="State *" /></label>
+					<form:input path="state" id="address.statesReadOnly"
+						class="address_states addressDup" maxlength="30" readonly="readonly"/>
+					<div class="errorMessage">
+							<div id="erraddressCity"></div>
+					</div>
 			</div>
 			</div>
 				   		

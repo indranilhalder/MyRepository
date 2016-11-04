@@ -196,6 +196,7 @@
 	<bean class="de.hybris.platform.commercefacades.order.data.CartData">
 		<property name="convenienceChargeForCOD" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
 		<property name="totalPriceWithConvCharge" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<property name="deliverySlotCharge" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
 	</bean>
 	<bean class="de.hybris.platform.commercefacades.order.data.OrderData">
 		<property name="convenienceChargeForCOD" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
@@ -243,6 +244,13 @@
 		<property name="fulfillmentType" type="String"/>
 		<property name="deliveryMode" type="String"/>
 		<property name="quantity" type="Integer"/>
+		
+		<property name="transportMode" type="String"/>
+		
+		<!-- Added new ServiceableSlavesData   -->
+		<property name="serviceableSlaves" type="java.util.List&lt;de.hybris.platform.commercefacades.product.data.ServiceableSlavesData>" />
+		<property name="cncServiceableSlaves" type="java.util.List&lt;de.hybris.platform.commercefacades.product.data.CNCServiceableSlavesData>" />
+		
 	</bean>
 	<!--END: Added for Cart Soft Reservation -->
 	
@@ -267,6 +275,10 @@
         <property name="source" type="String"/>
         <property name="ticketSubType" type="String"/>
 		<property name="addressInfo" type="com.tisl.mpl.data.ReturnAddressInfo"/>
+		<property name="ecomRequestId" type="String"/>
+		<property name="returnPickupDate" type="String"/>
+		<property name="timeSlotFrom" type="String"/>
+		<property name="timeSlotTo" type="String"/>
 	</bean>
 	
 	<bean class="com.tisl.mpl.data.SendTicketLineItemData">
@@ -447,7 +459,7 @@
 		<property name="freeCount" type="Integer"/>
 		<property name="qualifyingCount" type="Integer"/>
 		<property name="isCancellationMissed" type="boolean"/>
-		
+		<property name="eddDateBetWeen" type="String"/>
 	</bean>
 	<!-- Attribute to handle the order cancel status for My Account ends -->
 	
@@ -491,6 +503,7 @@
 		<property name ="isReturnLogisticsAvailable" type="String" />
 		<property name ="responseMessage" type="String" />
 		<property name ="responseDescription" type="String" />
+		<property name ="returnFulfillmentType" type="String" />
 	</bean>
     <!-- DTO for reverse Logistics Response Ends --> 
     <!-- Order Refund Report Headers Data-->
@@ -664,5 +677,84 @@
 	<bean class="de.hybris.platform.solrfacetsearch.config.IndexedType">
 		<property name="pageTypeFacets" type="java.util.Set&lt;String>" />
 	</bean>
+	
+	<bean class="com.tisl.mpl.data.CODSelfShipData">
+	<property name="transactionType" type="String"/>
+	<property name="orderDate" type="String"/>
+	<property name="transactionDate" type="String"/>
+	<property name="bankAccount" type="String"/>
+	<property name="bankBranch" type="String"/>
+	<property name="bankCity" type="String"/>
+	<property name="bankStreet" type="String"/>
+	<property name="region" type="String"/>
+	<property name="bankName" type="String"/>
+	<property name="bankKey" type="String"/>
+	<property name="country" type="String"/>
+	<property name="city" type="String"/>
+	<property name="pobox" type="String"/>
+	<property name="street" type="String"/>
+	<property name="name" type="String"/>
+	<property name="title" type="String"/>
+	<property name="customerNumber" type="String"/>
+	<property name="amount" type="String"/>
+	<property name="transactionID" type="String"/>
+	<property name="orderTag" type="String"/>
+	<property name="orderRefNo" type="String"/>
+	<property name="orderNo" type="String"/>
+	<property name="paymentMode" type="String"/>
+	<property name="bankCounrty" type="String"/>
+			
+	</bean>
+	
+	<bean class="com.tisl.mpl.data.CODSelfShipResponseData">
+	<property name="success" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.data.CRMTicketUpdateData">
+	<property name="ecomRequestId" type="String"/>
+	<property name="ticketId" type="String"/>
+	<property name="transactionId" type="String"/>
+	<property name="rssLPName" type="String"/>
+	<property name="rssOtherLPName" type="String"/>
+	<property name="rssAWBNumber" type="String"/>
+	<property name="rssCharge" type="String"/>
+	<property name="rssDispathProofURL" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.data.CRMTicketUpdateResponseData">
+	<property name="success" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.data.RTSAndRSSReturnInfoRequestData">
+	<property name="orderId" type="String"/>
+	<property name="transactionId" type="String"/>
+	<property name="returnType" type="String"/>
+	<property name="rTSStore" type="java.util.List&lt;String>"/>
+	<property name="logisticsID" type="String"/>
+	<property name="lPNameOther" type="String"/>
+	<property name="aWBNum" type="String"/>
+	<property name="shipmentCharge" type="String"/>
+	<property name="shipmentProofURL" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.data.RTSAndRSSReturnInfoResponseData">
+	<property name="success" type="String"/>
+	</bean>
+
+				
+	<bean class="com.tisl.mpl.data.ReturnInfoData">
+		<property name="isReturn" type="String"/>
+		<property name="ecomRequestId" type="String"/>
+		<property name="reasonCode" type="String"/>
+		<property name="refundType" type="String"/>
+		<property name="returnPickupDate" type="String"/>
+		<property name="ticketTypeCode" type="String"/>
+		<property name="TimeSlotFrom" type="String"/>
+		<property name="timeSlotTo" type="String"/>
+		<property name="ussid" type="String"/>
+		<property name="returnMethod" type="String"/>
+		<property name="returnFulfillmentMode" type="String"/>
+	</bean>
+	
 	
 </beans>

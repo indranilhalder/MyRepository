@@ -12,6 +12,8 @@ import de.hybris.platform.integration.oms.order.service.ProductAttributeStrategy
 import de.hybris.platform.integration.oms.order.strategies.OrderEntryNoteStrategy;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -193,44 +195,113 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			}
 
 
-			if (richAttributeModel.get(0).getDeliveryFulfillModes() != null
-					&& richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
+			if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null
+					&& richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
 
 			{
-				final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode().toUpperCase();
-
-				target.setFulfillmentMode(MplCodeMasterUtility.getglobalCode(fulfilmentType));
-				// Setting parentFullfillment type to freebie in the case of SSHIP  
-				if(source.getGiveAway().booleanValue()) 
-				{
-					try
-					{
-						String parentFullfillmentType = getMplSellerInformationService().getFullfillmentTypeOfParent(source);
-						if (null != parentFullfillmentType &&  null != source.getFulfillmentType() )
-						{
-							LOG.debug("Parent entry fullFillment type :"+parentFullfillmentType);
-							if(source.getFulfillmentType().equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIPCODE)
-									&& parentFullfillmentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.SSHIPCODE))
-							{
-								target.setFulfillmentMode(parentFullfillmentType.toUpperCase());
-								LOG.info(" Parent is SSHIP  and FreeBie is TSHIP : Setting FreeBie Fulfillemt Type as SSHIP");
-							}
-						}
-								
-					}
-					catch(EtailBusinessExceptions e) 
-					{
-						LOG.error("Exception occured while setting fullFillMent Type for freebie "+e.getErrorCode());
-					}
-					catch (Exception e)
-					{
-						LOG.error("Exception occured while setting fullFillMent Type for freebie " + e.getMessage());
-					}
-				}
+				final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase();
+				target.setFulfillmentMode(fulfilmentType);
 			}
 			else
 			{
 				LOG.debug("CustomOmsOrderLinePopulator : FulfillmentMode  is null ");
+			}
+			// Added the fields for OMS Order create
+			/*if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null
+					&& richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
+
+			{
+				final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase();
+            	   	target.setFulfillmentTypeP1(fulfilmentType);
+         }
+			
+				if (richAttributeModel.get(0).getDeliveryFulfillModes() != null
+					&& richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
+
+			{
+				final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode().toUpperCase();
+            if(fulfilmentType.equalsIgnoreCase(MarketplaceomsservicesConstants.BOTH)){
+           	   if(richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase().equalsIgnoreCase(MarketplaceomsservicesConstants.TSHIP)){
+           	   	target.setFulfillmentTypeP2(MarketplaceomsservicesConstants.SSHIP);
+           	   }else{
+           	   	target.setFulfillmentTypeP2(MarketplaceomsservicesConstants.TSHIP);
+           	   }
+            }else{
+           	 target.setFulfillmentTypeP2(fulfilmentType); 
+            }
+			}
+			else
+			{
+				LOG.debug("CustomOmsOrderLinePopulator : FulfillmentTypeP2  is null ");
+			}*/
+			
+			if (source.getFulfillmentMode() != null)
+			{
+				target.setFulfillmentMode(String.valueOf(source.getFulfillmentMode()));
+			}
+			
+			
+			if (source.getFulfillmentTypeP1() != null)
+			{
+				target.setFulfillmentTypeP1(String.valueOf(source.getFulfillmentTypeP1()));
+			}
+			if (source.getFulfillmentTypeP2() != null)
+			{
+				target.setFulfillmentTypeP2(String.valueOf(source.getFulfillmentTypeP2()));
+			}
+			
+			if (richAttributeModel.get(0).getIsPrecious() != null
+					&& richAttributeModel.get(0).getIsPrecious().getCode() != null)
+
+			{
+				final String isPrecious = richAttributeModel.get(0).getIsPrecious().getCode().toUpperCase();
+
+				target.setIsPrecious(isPrecious);
+			}
+			else
+			{
+				LOG.debug("CustomOmsOrderLinePopulator : IsFragile  is null ");
+			}
+			
+			if (source.getEdScheduledDate() != null)
+			{
+				target.setEdScheduledDate(String.valueOf(source.getEdScheduledDate()));
+			}
+			
+			if (source.getTimeSlotFrom() != null)
+			{
+				
+				 String timeSlotFrom= source.getTimeSlotFrom();
+				 SimpleDateFormat format1 = new SimpleDateFormat("hh:mm a");
+			    SimpleDateFormat format2 = new SimpleDateFormat("HH:mm:ss");
+			    
+				try
+				{
+					target.setTimeSlotFrom(String.valueOf(format2.format(format1.parse(timeSlotFrom))));
+				}
+				catch (ParseException e)
+				{
+					LOG.error("unable to parse timeslots "+ e.getMessage());
+				}
+			}
+			
+			if (source.getTimeSlotTo() != null)
+			{
+				 String timeSlotTo= source.getTimeSlotTo();
+				 SimpleDateFormat format1 = new SimpleDateFormat("hh:mm a");
+			    SimpleDateFormat format2 = new SimpleDateFormat("HH:mm:ss");   
+				try
+				{
+					target.setTimeSlotTo(String.valueOf(format2.format(format1.parse(timeSlotTo))));
+				}
+				catch (ParseException e)
+				{
+					LOG.error("unable to parse timeslots "+ e.getMessage());
+				}
+			}
+			if (source.getScheduledDeliveryCharge() != null)
+			{
+				target.setScheduledDeliveryCharge(source.getScheduledDeliveryCharge().doubleValue());
 			}
 
 			final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = source.getMplDeliveryMode();

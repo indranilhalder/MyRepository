@@ -20,6 +20,8 @@
         <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="StoreImage"/> 
         <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="daysToExtend"/>
         <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="extensionTimes"/>
+        <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="isCDAllowed"/>
+        <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="isLPAWBEdit"/>
         <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Customer"/>
         <xs:element name="corporateAddress" maxOccurs="unbounded" minOccurs="0">
           <xs:complexType>

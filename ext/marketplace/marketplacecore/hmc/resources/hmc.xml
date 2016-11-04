@@ -3441,51 +3441,96 @@
 <explorertree>
 		<group name="mpl"  description="group.mplConfig.description">
 			<typeref type="MplConfig"  description="mpl.config.table.description"/>
+			<typeref type="OrderShortUrlInfo"  description="mpl.shorturl.report.description"/>
 		</group>
 	</explorertree>
-	
-	<type name="MplConfig" mode="append">
-  <organizer>
-   <search mode="append">
-    <condition attribute="id" />
-    <condition attribute="value" />
-   </search>
-   <result defaultview="list">
-    <listview>
-     <itemlayout mode="replace">
-      <attribute name="id" width="200"></attribute>
-      <attribute name="value" width="200"></attribute>
-     </itemlayout>
-    </listview>
-    <editview mode="replace">
-     <itemlayout>
-      <attribute name="id" width="200" />
-      <attribute name="value" width="200" />
-      <attribute name="description" width="200" />
-     </itemlayout>
-    </editview>
-    <treeview mode="replace">
-     <itemlayout>
-      <attribute name="id" width="200" />
-      <attribute name="value" width="200" />
-      <attribute name="description" width="200" />
-     </itemlayout>
-    </treeview>
-   </result>
-   <editor>
-    
-    <tab name="mplconfig.tab" position="0">
-      <section name="mplconfig.section">
-      <listlayout>
-       <attribute name="id"/>
-       <attribute name="value"/>
-       <attribute name="description"/>
-      </listlayout>
-     </section>
-    </tab>
-    
-   </editor>
-   
-  </organizer>
- </type>
+
+<type name="MplConfig" mode="append">
+	<organizer>
+		<search mode="append">
+			<condition attribute="id" />
+			<condition attribute="value" />
+		</search>
+		<result defaultview="list">
+			<listview>
+				<itemlayout mode="replace">
+					<attribute name="id" width="200" />
+					<attribute name="value" width="200" />
+				</itemlayout>
+			</listview>
+			<editview mode="replace">
+				<itemlayout>
+					<attribute name="id" width="200" />
+					<attribute name="value" width="200" />
+					<attribute name="description" width="200" />
+				</itemlayout>
+			</editview>
+			<treeview mode="replace">
+				<itemlayout>
+					<attribute name="id" width="200" />
+					<attribute name="value" width="200" />
+					<attribute name="description" width="200" />
+				</itemlayout>
+			</treeview>
+		</result>
+		<editor>
+			<tab name="mplconfig.tab" position="0">
+				<section name="mplconfig.section">
+					<listlayout>
+						<attribute name="id" />
+						<attribute name="value" />
+						<attribute name="description" />
+					</listlayout>
+				</section>
+			</tab>
+		</editor>
+	</organizer>
+</type>
+ 
+ <type name="OrderShortUrlInfo" mode="append">
+	<organizer>
+		<search mode="replace">
+			<condition attribute="orderId" />
+			<condition attribute="shortURL" />
+		</search>
+		<result>
+			<listview mode="replace">
+				<itemlayout>
+					<attribute name="orderId" width="100" />
+					<attribute name="shortURL" width="100" />
+				</itemlayout>
+			</listview>
+			<editview mode="replace">
+				<itemlayout>
+					<attribute name="orderId" width="100" />
+					<attribute name="shortURL" width="100" />
+				</itemlayout>
+			</editview>
+			<treeview mode="replace">
+				<itemlayout>
+					<attribute name="orderId" width="100" />
+					<attribute name="shortURL" width="100" />
+				</itemlayout>
+			</treeview>
+		</result>
+		<editor>
+			<essentials mode="replace">
+				<listlayout>
+					<attribute name="orderId" />
+				</listlayout>
+			</essentials>
+			<tab name="properties">
+				<section name="section.common">
+					<listlayout>
+						<attribute name="shortURL" />
+						<attribute name="longURL" />
+						<attribute name="clicks" />
+						<attribute name="login" />
+					</listlayout>
+				</section>
+			</tab>
+		</editor>
+	</organizer>
+</type>
+
 </configuration>

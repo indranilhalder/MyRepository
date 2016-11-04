@@ -22,6 +22,12 @@ public final class MarketplaceclientservicesConstants extends GeneratedMarketpla
 	public static final String EXTENSIONNAME = "marketplaceclientservices";
 	public static final String REFUNDURL = "Comerce_oms_refundinfo_url";
 	public static final String EXCEPTION_IS = "Exception is : ";
+	public static final String GOOGLE_SHORT_URL_API_KEY = "mpl.google.shorturl.apikey".intern();
+	public static final String GOOGLE_API_SHORT_URL = "mpl.google.shortener.url".intern();
+	public static final String MPL_TRACK_ORDER_LONG_URL_FORMAT = "mpl.order.track.longurl.format".intern();	
+	public static final String TSHIP_CODE = "TSHIP";
+	public static final String SSHIP_CODE = "SSHIP";
+	public static final String FULFILLMENTTYPE_BOTH = "both";
 
 	// Pincode Serviceabilty constants
 	/*

@@ -11,8 +11,8 @@
 	xsi:noNamespaceSchemaLocation="items.xsd">
 
 	<collectiontypes>
-		<!-- <collectiontype code="brandList" elementtype="java.lang.String"
-			autocreate="true" generate="false" type="list" /> -->
+		<!-- <collectiontype code="brandList" elementtype="java.lang.String" autocreate="true" 
+			generate="false" type="list" /> -->
 		<collectiontype code="ChannelList" elementtype="SalesApplication"
 			autocreate="true" generate="false" type="list" />
 		<collectiontype code="bankList" elementtype="java.lang.String"
@@ -26,14 +26,13 @@
 			type="list" />
 		<collectiontype code="RestrictionBankCollection"
 			elementtype="Bank" autocreate="true" generate="false" type="list" />
-			<collectiontype code="updatedDetailsList" elementtype="java.lang.String"
+		<collectiontype code="updatedDetailsList" elementtype="java.lang.String"
 			autocreate="true" generate="false" type="list" />
 		<collectiontype code="EtailSellerMasterCollection"
-			elementtype="SellerMaster" autocreate="true" generate="false"
-			type="list" />
+			elementtype="SellerMaster" autocreate="true" generate="false" type="list" />
 		<!-- Store Icon Image URL -->
 		<collectiontype elementtype="java.lang.String" code="mplStoreImageUrl"
-				autocreate="true" generate="true" type="list"/>
+			autocreate="true" generate="true" type="list" />
 	</collectiontypes>
 
 	<enumtypes>
@@ -59,6 +58,7 @@
 			<value code="COD" />
 			<value code="Easy_Checkout" />
 			<value code="C2C" />
+			<value code="CDA" />
 		</enumtype>
 		<enumtype code="orderStatus" autocreate="false" generate="true"
 			dynamic="true">
@@ -70,29 +70,23 @@
 			<value code="IN_TRANSIT_BY_LP" />
 			<value code="DELIVERED_BY_LP" />
 		</enumtype>
-		
-		<enumtype code="discTypesEnum" autocreate="true"
-			generate="true" dynamic="false">
+
+		<enumtype code="discTypesEnum" autocreate="true" generate="true"
+			dynamic="false">
 			<value code="Percentage" />
 			<value code="Amount" />
 			<value code="Free" />
 		</enumtype>
 	</enumtypes>
-	
+
 	<maptypes>
-		<maptype code="multipleFreeGiftMap"
-               argumenttype="java.lang.String"
-               returntype="Product"
-               autocreate="true"
-               generate="true"/>
-              
-       <!--    Added For BOGO Promotion TISST-13948     -->
-         <maptype code="bogoPromoDataMap"
-               argumenttype="AbstractOrderEntry"
-               returntype="java.lang.Double"
-               autocreate="true"
-               generate="true"/>
-   </maptypes>
+		<maptype code="multipleFreeGiftMap" argumenttype="java.lang.String"
+			returntype="Product" autocreate="true" generate="true" />
+
+		<!-- Added For BOGO Promotion TISST-13948 -->
+		<maptype code="bogoPromoDataMap" argumenttype="AbstractOrderEntry"
+			returntype="java.lang.Double" autocreate="true" generate="true" />
+	</maptypes>
 
 	<relations>
 		<!-- Relation between Basestore and PaymentType -->
@@ -146,17 +140,19 @@
 					<modifiers read="true" write="true" />
 					<persistence type="property" />
 				</attribute>
-				<attribute qualifier="freeGiftInfoMap" type="multipleFreeGiftMap" autocreate="true" >
-	               <persistence type="property"/>
-	               <modifiers read="true" write="true" search="true" optional="true" initial="true"/>
-             </attribute>
-             <attribute qualifier="isBuyAGetPromo" autocreate="true"
-						type="java.lang.Boolean">
-						<description>Flag to check whether is Buy A get B Free Promotion</description>
-						<defaultvalue>Boolean.FALSE</defaultvalue>
-						<persistence type="property" />
-						<modifiers read="true" write="true" optional="true" />
-			</attribute>
+				<attribute qualifier="freeGiftInfoMap" type="multipleFreeGiftMap"
+					autocreate="true">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" initial="true" />
+				</attribute>
+				<attribute qualifier="isBuyAGetPromo" autocreate="true"
+					type="java.lang.Boolean">
+					<description>Flag to check whether is Buy A get B Free Promotion</description>
+					<defaultvalue>Boolean.FALSE</defaultvalue>
+					<persistence type="property" />
+					<modifiers read="true" write="true" optional="true" />
+				</attribute>
 			</attributes>
 		</itemtype>
 
@@ -174,7 +170,7 @@
 					<persistence type="property" />
 				</attribute>
 			</attributes>
-		</itemtype>		
+		</itemtype>
 
 		<!-- Custom PromotionOrderEntryAdjustAction class for apportioned value 
 			for Product level promotions -->
@@ -490,7 +486,7 @@
 					<description>The quantity.</description>
 					<defaultvalue>Long.valueOf(1)</defaultvalue>
 					<persistence type="property" />
-				</attribute>				
+				</attribute>
 				<attribute qualifier="giftProducts" autocreate="true"
 					generate="true" type="ProductCollection">
 					<description>List of Gift Products</description>
@@ -946,13 +942,13 @@
 					<defaultvalue>Boolean.TRUE</defaultvalue>
 					<persistence type="property" />
 					<modifiers read="true" write="true" optional="false" />
-				</attribute>				
+				</attribute>
 				<attribute qualifier="maxDiscount" autocreate="true"
 					type="java.lang.Double">
 					<description>maxDiscount discount in specific currencies.</description>
 					<defaultvalue>Double.valueOf(1)</defaultvalue>
 					<persistence type="property" />
-				</attribute>				
+				</attribute>
 			</attributes>
 		</itemtype>
 
@@ -1037,7 +1033,7 @@
 					<description>maxDiscount discount in specific currencies.</description>
 					<defaultvalue>Double.valueOf(1)</defaultvalue>
 					<persistence type="property" />
-				</attribute>				
+				</attribute>
 			</attributes>
 		</itemtype>
 
@@ -1105,24 +1101,14 @@
 
 
 		<!-- Tata Etail change - Customer Specific Restriction For Promotions -->
-		<!-- <itemtype code="CustomerSpecificPromotionRestriction"
-			extends="AbstractPromotionRestriction" jaloclass="com.tisl.mpl.jalo.CustomerSpecificPromotionRestriction"
-			autocreate="true" generate="true">
-			<attributes>
-				<attribute type="PromoCustomerType" qualifier="PromoCustomerType">
-					<persistence type="property" />
-					<defaultvalue>em().getEnumerationValue("PromoCustomerType","Registered")</defaultvalue>
-				</attribute>
+		<!-- <itemtype code="CustomerSpecificPromotionRestriction" extends="AbstractPromotionRestriction" 
+			jaloclass="com.tisl.mpl.jalo.CustomerSpecificPromotionRestriction" autocreate="true" 
+			generate="true"> <attributes> <attribute type="PromoCustomerType" qualifier="PromoCustomerType"> 
+			<persistence type="property" /> <defaultvalue>em().getEnumerationValue("PromoCustomerType","Registered")</defaultvalue> 
+			</attribute> <attribute qualifier="customerType" autocreate="true" type="PromoCustomerType"> 
+			<modifiers read="true" write="true" search="true" optional="false" /> <persistence 
+			type="property" /> </attribute> </attributes> </itemtype> -->
 
-				<attribute qualifier="customerType" autocreate="true"
-					type="PromoCustomerType">
-					<modifiers read="true" write="true" search="true"
-						optional="false" />
-					<persistence type="property" />
-				</attribute>
-			</attributes>
-		</itemtype> -->
-		
 		<!-- Tata Etail change - PaymentModeSpecificPromotionRestriction For Promotions -->
 		<itemtype code="PaymentModeSpecificPromotionRestriction"
 			extends="AbstractPromotionRestriction" jaloclass="com.tisl.mpl.jalo.PaymentModeSpecificPromotionRestriction"
@@ -1163,7 +1149,7 @@
 		<itemtype code="ManufacturersRestriction" extends="AbstractPromotionRestriction"
 			jaloclass="com.tisl.mpl.jalo.ManufacturesRestriction" autocreate="true"
 			generate="true">
-			<attributes>				
+			<attributes>
 				<attribute autocreate="true" qualifier="manufacturers"
 					type="CategoryCollection">
 					<description>List of brands/Manufacturer</description>
@@ -1185,7 +1171,7 @@
 		<itemtype code="ExcludeManufacturersRestriction" extends="AbstractPromotionRestriction"
 			jaloclass="com.tisl.mpl.jalo.ExcludeManufacturesRestriction"
 			autocreate="true" generate="true">
-			<attributes>				
+			<attributes>
 				<attribute autocreate="true" qualifier="manufacturers"
 					type="CategoryCollection">
 					<description>List of excluded brands/Manufacturer</description>
@@ -1193,7 +1179,7 @@
 					<modifiers search="false" />
 				</attribute>
 			</attributes>
-		</itemtype>		
+		</itemtype>
 
 		<!-- Tata Etail Seller Information -->
 		<itemtype code="SellerInformation" autocreate="true"
@@ -1225,9 +1211,9 @@
 					<modifiers read="true" write="true" optional="true"
 						unique="false" />
 					<persistence type='property'>
-					<columntype database='oracle'>
-						<value>VARCHAR2(50)</value>
-					</columntype>
+						<columntype database='oracle'>
+							<value>VARCHAR2(50)</value>
+						</columntype>
 					</persistence>
 				</attribute>
 				<attribute type="java.lang.String" qualifier="sellerName">
@@ -1249,7 +1235,7 @@
 					</persistence>
 				</attribute>
 				<attribute type="java.lang.String" qualifier="USSID">
-				<description>Represent the USSID</description>
+					<description>Represent the USSID</description>
 					<modifiers read="true" write="true" optional="true"
 						unique="true" />
 					<persistence type='property'>
@@ -1259,7 +1245,7 @@
 					</persistence>
 				</attribute>
 				<attribute type="java.lang.String" qualifier="SellerSKU">
-				<description>Represent the seller Sku</description>
+					<description>Represent the seller Sku</description>
 					<modifiers read="true" write="true" optional="true"
 						unique="true" />
 					<persistence type='property'>
@@ -1283,16 +1269,16 @@
 					<description>This attribute will signfy the status of the seller product assciation. This will be used for delisting process</description>
 					<modifiers read="true" write="true" optional="true"
 						unique="false" />
-						<!-- TISPRD-207 Changes Start-->
-						<defaultvalue>em().getEnumerationValue("sellerAssociationStatusEnum","yes")</defaultvalue>
-						<!-- TISPRD-207 Changes End-->
+					<!-- TISPRD-207 Changes Start -->
+					<defaultvalue>em().getEnumerationValue("sellerAssociationStatusEnum","yes")</defaultvalue>
+					<!-- TISPRD-207 Changes End -->
 					<persistence type='property'>
-					<columntype database='oracle'>
-						<value>VARCHAR2(50)</value>
-					</columntype>
+						<columntype database='oracle'>
+							<value>VARCHAR2(50)</value>
+						</columntype>
 					</persistence>
 				</attribute>
-				
+
 				<attribute type="java.lang.String" qualifier="blockOMS">
 					<description>Delisting USSID</description>
 					<modifiers read="true" write="true" optional="true"
@@ -1304,26 +1290,26 @@
 					</persistence>
 				</attribute>
 				<attribute type="java.util.Date" qualifier="delistDate">
-						<modifiers read="true" write="true" search="true"
+					<modifiers read="true" write="true" search="true"
 						optional="true" />
 					<persistence type="property" />
-					</attribute>
-				
+				</attribute>
+
 				<attribute type="java.util.Date" qualifier="startDate">
-						<modifiers read="true" write="true" search="true"
+					<modifiers read="true" write="true" search="true"
 						optional="true" />
 					<persistence type="property" />
-					</attribute>
-					<attribute type="java.util.Date" qualifier="endDate">
-						<modifiers read="true" write="true" search="true"
+				</attribute>
+				<attribute type="java.util.Date" qualifier="endDate">
+					<modifiers read="true" write="true" search="true"
 						optional="true" />
 					<persistence type="property" />
-					</attribute>
-					<attribute type="java.util.Date" qualifier="inwardDate">
-						<modifiers read="true" write="true" search="true"
+				</attribute>
+				<attribute type="java.util.Date" qualifier="inwardDate">
+					<modifiers read="true" write="true" search="true"
 						optional="true" />
 					<persistence type="property" />
-					</attribute>
+				</attribute>
 				<!--End Attribute added in MDD v_1.6 -->
 				<attribute type="CatalogVersion" qualifier="catalogVersion">
 					<modifiers read="true" write="true" optional="false"
@@ -1340,7 +1326,7 @@
 					<key attribute="sellerName" />
 				</index>
 				<index name="SLINFO_ARTICLESKU_IDX" unique="false">
-					<key attribute="sellerArticleSKU"/>
+					<key attribute="sellerArticleSKU" />
 				</index>
 			</indexes>
 		</itemtype>
@@ -1397,8 +1383,8 @@
 
 		<!-- Item Types for Payment -->
 		<itemtype code="PaymentType" autocreate="true" generate="true"
-		jaloclass="com.tisl.mpl.jalo.PaymentType">
-		 <deployment table="MplPymntType" typecode="12018" />
+			jaloclass="com.tisl.mpl.jalo.PaymentType">
+			<deployment table="MplPymntType" typecode="12018" />
 			<attributes>
 				<attribute qualifier="mode" type="java.lang.String">
 					<persistence type="property" />
@@ -1412,8 +1398,8 @@
 		</itemtype>
 
 		<itemtype code="Bank" autocreate="true" generate="true"
-		jaloclass="com.tisl.mpl.jalo.Bank">
-		 <deployment table="MplBank" typecode="12019" />
+			jaloclass="com.tisl.mpl.jalo.Bank">
+			<deployment table="MplBank" typecode="12019" />
 			<attributes>
 				<attribute qualifier="bankName" type="java.lang.String">
 					<persistence type="property" />
@@ -1429,44 +1415,45 @@
 				</attribute>
 			</attributes>
 		</itemtype>
-		
+
 		<!-- Item Types for Payment Ends -->
-	<itemtype code="SellerShippingInfo" autocreate="true" generate="true" jaloclass="com.tisl.mpl.jalo.SellerShippingInfo">
-				<deployment table="MplSellerShipInfo" typecode="5469" />
-				<attributes>
-					<attribute type="java.lang.String" qualifier="deliveryType">
-						<modifiers read="true" write="true" optional="true"
-							unique="false" />
-						<persistence type='property'>
-							<columntype database='oracle'>
-								<value>VARCHAR2(20)</value>
-							</columntype>
-						</persistence>
-					</attribute>
+		<itemtype code="SellerShippingInfo" autocreate="true"
+			generate="true" jaloclass="com.tisl.mpl.jalo.SellerShippingInfo">
+			<deployment table="MplSellerShipInfo" typecode="5469" />
+			<attributes>
+				<attribute type="java.lang.String" qualifier="deliveryType">
+					<modifiers read="true" write="true" optional="true"
+						unique="false" />
+					<persistence type='property'>
+						<columntype database='oracle'>
+							<value>VARCHAR2(20)</value>
+						</columntype>
+					</persistence>
+				</attribute>
 				<attribute qualifier='shippingCharges' type="java.lang.Double">
-						<description>Represent the Mrp of the product</description>
-						<modifiers read="true" write="true" optional="true"
-							unique="false" />
-						<persistence type="property">
-							<columntype database='oracle'>
-								<value>VARCHAR2(10)</value>
-							</columntype>
-						</persistence>
-					</attribute>
-				</attributes>
-			</itemtype>
-			
-			<!-- Etail-For Customer Ftech Job -->
-			<itemtype code="MplConfiguration" autocreate="true" generate="true"
-				jaloclass="com.tisl.mpl.jalo.MplConfiguration">
-				 <deployment table="MplConfiguration" typecode="12020" />
-				<attributes>
-					<attribute type="java.util.Date" qualifier="mplConfigDate">
-						<modifiers read="true" write="true" search="true"
+					<description>Represent the Mrp of the product</description>
+					<modifiers read="true" write="true" optional="true"
+						unique="false" />
+					<persistence type="property">
+						<columntype database='oracle'>
+							<value>VARCHAR2(10)</value>
+						</columntype>
+					</persistence>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<!-- Etail-For Customer Ftech Job -->
+		<itemtype code="MplConfiguration" autocreate="true" generate="true"
+			jaloclass="com.tisl.mpl.jalo.MplConfiguration">
+			<deployment table="MplConfiguration" typecode="12020" />
+			<attributes>
+				<attribute type="java.util.Date" qualifier="mplConfigDate">
+					<modifiers read="true" write="true" search="true"
 						optional="true" />
 					<persistence type="property" />
-					</attribute>
-					<attribute qualifier="mplConfigCode" autocreate="true"
+				</attribute>
+				<attribute qualifier="mplConfigCode" autocreate="true"
 					type="java.lang.String">
 					<modifiers read="true" write="true" search="true"
 						optional="false" unique="true" />
@@ -1475,24 +1462,24 @@
 				<attribute qualifier="mplConfigVal" autocreate="true"
 					type="java.lang.String">
 					<modifiers read="true" write="true" search="true"
-						optional="true"  />
+						optional="true" />
 					<persistence type="property" />
 				</attribute>
-				</attributes>
-			</itemtype>
-			<!-- Tata Unistore : Seller and Brand Threshold based Promotion-->
+			</attributes>
+		</itemtype>
+		<!-- Tata Unistore : Seller and Brand Threshold based Promotion -->
 		<itemtype code="BuyAAboveXGetPercentageOrAmountOff" extends="ProductPromotion"
-			jaloclass="com.tisl.mpl.jalo.BuyAAboveXGetPercentageOrAmountOff" autocreate="true"
-			generate="true">
+			jaloclass="com.tisl.mpl.jalo.BuyAAboveXGetPercentageOrAmountOff"
+			autocreate="true" generate="true">
 			<attributes>
-			<attribute qualifier="thresholdTotals" autocreate="true"
+				<attribute qualifier="thresholdTotals" autocreate="true"
 					type="PromotionPriceRowCollectionType">
 					<description>The value beyond which if added to cart Promotion applies</description>
 					<persistence type="property" />
 					<modifiers read="true" write="true" search="false"
 						initial="false" optional="true" partof="true" />
-			</attribute>
-			<attribute qualifier="percentageOrAmount" autocreate="true"
+				</attribute>
+				<attribute qualifier="percentageOrAmount" autocreate="true"
 					type="java.lang.Boolean">
 					<description>Flag to indicate that the promotion is having amount or percentage discount.</description>
 					<defaultvalue>Boolean.TRUE</defaultvalue>
@@ -1513,8 +1500,8 @@
 					<persistence type="property" />
 					<modifiers read="true" write="true" search="false"
 						initial="false" optional="true" partof="true" />
-			</attribute>
-			<attribute qualifier="messageFired" type="localized:java.lang.String">
+				</attribute>
+				<attribute qualifier="messageFired" type="localized:java.lang.String">
 					<description>The message to show when the promotion has fired.
 					</description>
 					<modifiers read="true" write="true" optional="true" />
@@ -1560,7 +1547,7 @@
 				</attribute>
 			</attributes>
 		</itemtype>
-		
+
 		<!-- CustomBOGOPromoOrderEntryAdjustAction class for apportioned value 
 			for BOGO -->
 		<itemtype code="CustomBOGOPromoOrderEntryAdjustAction"
@@ -1571,21 +1558,21 @@
 					type="java.lang.Double">
 					<defaultvalue>Double.valueOf(0.0D)</defaultvalue>
 					<description>The amount to adjust the order entry by.</description>
-					<modifiers read="true" write="true" optional="true"/>
+					<modifiers read="true" write="true" optional="true" />
 					<persistence type="property" />
 				</attribute>
 
 				<attribute qualifier="orderEntryProduct" autocreate="true"
 					type="Product">
 					<description>The product of the order entry to adjust</description>
-					<modifiers read="true" write="true" optional="true"/>
+					<modifiers read="true" write="true" optional="true" />
 					<persistence type="property" />
 				</attribute>
 
 				<attribute qualifier="orderEntryQuantity" autocreate="true"
 					type="java.lang.Long">
 					<description>The quantity of the order entry to adjust</description>
-					<modifiers read="true" write="true" optional="true"/>
+					<modifiers read="true" write="true" optional="true" />
 					<persistence type="property" />
 				</attribute>
 
@@ -1596,83 +1583,81 @@
 					<modifiers read="true" write="true" optional="true" />
 					<persistence type="property" />
 				</attribute>
-				
-				<attribute qualifier="cutomBogoPromoDataMap" type="bogoPromoDataMap" autocreate="true" >
-	               <persistence type="property"/>
-                   <modifiers read="true" write="true" search="true" optional="true" initial="true"/>
-	            </attribute>
+
+				<attribute qualifier="cutomBogoPromoDataMap" type="bogoPromoDataMap"
+					autocreate="true">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" initial="true" />
+				</attribute>
 
 			</attributes>
 		</itemtype>
-		
-			<!-- Tata Etail- Bulk Promotion Creation Job -->
-			<itemtype code="BulkPromotionCreationJob" extends="CronJob"
-				autocreate="true" generate="true"
-				jaloclass="com.tisl.mpl.jalo.BulkPromotionCreationJob">
-				<attributes>
-					<attribute type="java.lang.String" qualifier="fileNamePrefix">
-						<modifiers optional="false" />
-						<persistence type="property" />
-					</attribute>
-					<attribute type="java.lang.String" qualifier="fileExtension">
-						<modifiers optional="false" />
-						<persistence type="property" />
-					</attribute>
-				</attributes>
-			</itemtype>
-			
-			<!-- Tata Etail- Delisting Job -->
-			<itemtype code="DelistingJobHelper" extends="CronJob"
-				autocreate="true" generate="true">
-				<attributes>
-					<attribute type="java.lang.String" qualifier="fileNamePrefix">
-						<modifiers optional="false" />
-						<persistence type="property" />
-					</attribute>
-					<attribute type="java.lang.String" qualifier="fileExtension">
-						<modifiers optional="false" />
-						<persistence type="property" />
-					</attribute>
-				</attributes>
-			</itemtype>
-			
-			<!-- ADDED FOR SHIPPING CHARGES PROMOTIONS -->
-		<itemtype code="BuyAGetPromotionOnShippingCharges" extends="ProductPromotion"
-			jaloclass="com.tisl.mpl.jalo.BuyAGetPromotionOnShippingCharges" autocreate="true"
-			generate="true">
+
+		<!-- Tata Etail- Bulk Promotion Creation Job -->
+		<itemtype code="BulkPromotionCreationJob" extends="CronJob"
+			autocreate="true" generate="true"
+			jaloclass="com.tisl.mpl.jalo.BulkPromotionCreationJob">
 			<attributes>
-			    <attribute qualifier="quantity" autocreate="true"
+				<attribute type="java.lang.String" qualifier="fileNamePrefix">
+					<modifiers optional="false" />
+					<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="fileExtension">
+					<modifiers optional="false" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<!-- Tata Etail- Delisting Job -->
+		<itemtype code="DelistingJobHelper" extends="CronJob"
+			autocreate="true" generate="true">
+			<attributes>
+				<attribute type="java.lang.String" qualifier="fileNamePrefix">
+					<modifiers optional="false" />
+					<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="fileExtension">
+					<modifiers optional="false" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<!-- ADDED FOR SHIPPING CHARGES PROMOTIONS -->
+		<itemtype code="BuyAGetPromotionOnShippingCharges" extends="ProductPromotion"
+			jaloclass="com.tisl.mpl.jalo.BuyAGetPromotionOnShippingCharges"
+			autocreate="true" generate="true">
+			<attributes>
+				<attribute qualifier="quantity" autocreate="true"
 					type="java.lang.Long">
 					<description>The quantity.</description>
 					<defaultvalue>Long.valueOf(1)</defaultvalue>
 					<persistence type="property" />
 				</attribute>
-			    <attribute
-					qualifier="tShip"
-					autocreate="true"
+				<attribute qualifier="tShip" autocreate="true"
 					type="java.lang.Boolean">
 					<description>Flag to indicate if this promotion is enabled.</description>
 					<defaultvalue>Boolean.FALSE</defaultvalue>
-					<persistence type="property"/>
+					<persistence type="property" />
 					<modifiers read="true" write="true" optional="false" />
 				</attribute>
-				<attribute
-					qualifier="sShip"
-					autocreate="true"
+				<attribute qualifier="sShip" autocreate="true"
 					type="java.lang.Boolean">
 					<description>Flag to indicate if this promotion is enabled.</description>
 					<defaultvalue>Boolean.FALSE</defaultvalue>
-					<persistence type="property"/>
+					<persistence type="property" />
 					<modifiers read="true" write="true" optional="false" />
 				</attribute>
-			     <attribute qualifier="discTypesOnShippingCharges" autocreate="true"
-					type="discTypesEnum">
+				<attribute qualifier="discTypesOnShippingCharges"
+					autocreate="true" type="discTypesEnum">
 					<description>Flag to indicate that the promotion is having amount
 						or percentage discount.</description>
 					<defaultvalue>Boolean.TRUE</defaultvalue>
 					<persistence type="property" />
 					<modifiers read="true" write="true" optional="false" />
-				</attribute>	
+				</attribute>
 				<attribute qualifier="percentageDiscount" autocreate="true"
 					type="java.lang.Double">
 					<!-- <defaultvalue>Double.valueOf(10.0D)</defaultvalue> -->
@@ -1731,15 +1716,15 @@
 							<value>varchar</value>
 						</columntype>
 					</persistence>
-				</attribute>							
+				</attribute>
 			</attributes>
 		</itemtype>
-		
-		<itemtype code="BuyAandBGetPromotionOnShippingCharges" extends="ProductPromotion"
-			jaloclass="com.tisl.mpl.jalo.BuyAandBGetPromotionOnShippingCharges" autocreate="true"
-			generate="true">
+
+		<itemtype code="BuyAandBGetPromotionOnShippingCharges"
+			extends="ProductPromotion" jaloclass="com.tisl.mpl.jalo.BuyAandBGetPromotionOnShippingCharges"
+			autocreate="true" generate="true">
 			<attributes>
-			<attribute qualifier="secondProducts" autocreate="true"
+				<attribute qualifier="secondProducts" autocreate="true"
 					generate="true" type="ProductCollection">
 					<description>The B products that the promotion should not be applied to</description>
 					<persistence type="property" />
@@ -1752,39 +1737,35 @@
 					<persistence type="property" />
 					<modifiers read="true" write="true" search="false"
 						optional="true" />
-				</attribute>				
+				</attribute>
 				<attribute autocreate="true" qualifier="secondCategories"
 					type="CategoryCollection">
 					<description>the categories the given voucher is valid for.</description>
 					<persistence type="property" />
 					<modifiers search="false" />
 				</attribute>
-			    <attribute
-					qualifier="tShip"
-					autocreate="true"
+				<attribute qualifier="tShip" autocreate="true"
 					type="java.lang.Boolean">
 					<description>Flag to indicate if this promotion is enabled.</description>
 					<defaultvalue>Boolean.FALSE</defaultvalue>
-					<persistence type="property"/>
+					<persistence type="property" />
 					<modifiers read="true" write="true" optional="false" />
 				</attribute>
-				<attribute
-					qualifier="sShip"
-					autocreate="true"
+				<attribute qualifier="sShip" autocreate="true"
 					type="java.lang.Boolean">
 					<description>Flag to indicate if this promotion is enabled.</description>
 					<defaultvalue>Boolean.FALSE</defaultvalue>
-					<persistence type="property"/>
+					<persistence type="property" />
 					<modifiers read="true" write="true" optional="false" />
 				</attribute>
-			     <attribute qualifier="discTypesOnShippingCharges" autocreate="true"
-					type="discTypesEnum">
+				<attribute qualifier="discTypesOnShippingCharges"
+					autocreate="true" type="discTypesEnum">
 					<description>Flag to indicate that the promotion is having amount
 						or percentage discount.</description>
 					<defaultvalue>Boolean.TRUE</defaultvalue>
 					<persistence type="property" />
 					<modifiers read="true" write="true" optional="false" />
-				</attribute>	
+				</attribute>
 				<attribute qualifier="percentageDiscount" autocreate="true"
 					type="java.lang.Double">
 					<!-- <defaultvalue>Double.valueOf(10.0D)</defaultvalue> -->
@@ -1843,47 +1824,43 @@
 							<value>varchar</value>
 						</columntype>
 					</persistence>
-				</attribute>							
+				</attribute>
 			</attributes>
 		</itemtype>
-		
-		<itemtype code="BuyAboveXGetPromotionOnShippingCharges" extends="OrderPromotion"
-			jaloclass="com.tisl.mpl.jalo.BuyAboveXGetPromotionOnShippingCharges" autocreate="true"
-			generate="true">
+
+		<itemtype code="BuyAboveXGetPromotionOnShippingCharges"
+			extends="OrderPromotion" jaloclass="com.tisl.mpl.jalo.BuyAboveXGetPromotionOnShippingCharges"
+			autocreate="true" generate="true">
 			<attributes>
-			<attribute qualifier="thresholdTotals" autocreate="true"
+				<attribute qualifier="thresholdTotals" autocreate="true"
 					type="PromotionPriceRowCollectionType">
 					<description>The cart total value threshold in specific currencies.</description>
 					<persistence type="property" />
 					<modifiers read="true" write="true" search="false"
 						initial="false" optional="true" partof="true" />
 				</attribute>
-			    <attribute
-					qualifier="tShip"
-					autocreate="true"
+				<attribute qualifier="tShip" autocreate="true"
 					type="java.lang.Boolean">
 					<description>Flag to indicate if this promotion is enabled.</description>
 					<defaultvalue>Boolean.FALSE</defaultvalue>
-					<persistence type="property"/>
+					<persistence type="property" />
 					<modifiers read="true" write="true" optional="false" />
 				</attribute>
-				<attribute
-					qualifier="sShip"
-					autocreate="true"
+				<attribute qualifier="sShip" autocreate="true"
 					type="java.lang.Boolean">
 					<description>Flag to indicate if this promotion is enabled.</description>
 					<defaultvalue>Boolean.FALSE</defaultvalue>
-					<persistence type="property"/>
+					<persistence type="property" />
 					<modifiers read="true" write="true" optional="false" />
 				</attribute>
-			     <attribute qualifier="discTypesOnShippingCharges" autocreate="true"
-					type="discTypesEnum">
+				<attribute qualifier="discTypesOnShippingCharges"
+					autocreate="true" type="discTypesEnum">
 					<description>Flag to indicate that the promotion is having amount
 						or percentage discount.</description>
 					<defaultvalue>Boolean.TRUE</defaultvalue>
 					<persistence type="property" />
 					<modifiers read="true" write="true" optional="false" />
-				</attribute>	
+				</attribute>
 				<attribute qualifier="percentageDiscount" autocreate="true"
 					type="java.lang.Double">
 					<!-- <defaultvalue>Double.valueOf(10.0D)</defaultvalue> -->
@@ -1948,16 +1925,17 @@
 							<value>varchar</value>
 						</columntype>
 					</persistence>
-				</attribute>							
+				</attribute>
 			</attributes>
 		</itemtype>
-		
-		
-		
+
+
+
 		<!-- CustomShippingChargesPromotionAdjustAction class for apportioned value 
 			for BOGO -->
 		<itemtype code="CustomShippingChargesPromotionAdjustAction"
-			extends="AbstractPromotionAction" jaloclass="com.tisl.mpl.jalo.CustomShippingChargesPromotionAdjustAction"
+			extends="AbstractPromotionAction"
+			jaloclass="com.tisl.mpl.jalo.CustomShippingChargesPromotionAdjustAction"
 			autocreate="true" generate="true">
 			<attributes>
 				<attribute qualifier="amount" autocreate="true"
@@ -1991,8 +1969,8 @@
 				</attribute>
 			</attributes>
 		</itemtype>
-		
-		<!-- Tata Etail-Promotion Creation Mail-->
+
+		<!-- Tata Etail-Promotion Creation Mail -->
 		<itemtype code="PromotionCreationMailProcess" extends="StoreFrontProcess"
 			autocreate="true" generate="true"
 			jaloclass="com.tisl.mpl.jalo.PromotionCreationMailProcess">
@@ -2026,384 +2004,396 @@
 				</attribute>
 			</attributes>
 		</itemtype>
-		
+
 		<!-- Tata Etail- Promotional Report Creation Job -->
-			<itemtype code="PromotionalReportCreationJob" extends="CronJob"
-				autocreate="true" generate="true"
-				jaloclass="com.tisl.mpl.jalo.PromotionalReportCreationJob">
-				<attributes>
-					<attribute type="java.util.Date" qualifier="startDate" autocreate="true">
-						<modifiers read="true" write="true" search="true" optional="true" initial="true"/>
-						<persistence type="property" />
-					</attribute>
-					<attribute type="java.util.Date" qualifier="endDate" autocreate="true">
-						<modifiers read="true" write="true" search="true" optional="true" initial="true"/>
-						<persistence type="property" />
-					</attribute>					
-				</attributes>
-			</itemtype>			
-			
-			<!-- Tata Etail- Sales Data Creation Job -->
-			<itemtype code="SalesReportCreationJob" extends="CronJob"
-				autocreate="true" generate="true"
-				jaloclass="com.tisl.mpl.jalo.SalesReportCreationJob">
-				<attributes>
-					<attribute type="java.util.Date" qualifier="startDate">
-						<modifiers optional="false" />
-						<persistence type="property" />
-					</attribute>
-					<attribute type="java.util.Date" qualifier="endDate">
-						<modifiers optional="false" />
-						<persistence type="property" />
-					</attribute>
-					<attribute type="java.lang.String" qualifier="category">
-						<modifiers optional="true" />
-						<persistence type="property" />
-					</attribute> 
-					<attribute type="java.lang.String" qualifier="quantity">
-						<modifiers optional="true" />
-						<persistence type="property" />
-					</attribute> 
-					<attribute type="java.lang.String" qualifier="sellerId">
-						<modifiers optional="true" />
-						<persistence type="property" />
-					</attribute> 
-					<attribute type="java.lang.String" qualifier="orderStatus">
-						<modifiers optional="true" />
-						<persistence type="property" />
-					</attribute> 
-				</attributes>
-			</itemtype>
-			
-			<!-- Tata Etail- Refund Data Creation Job -->
-			<itemtype code="OrderRefundReportJob" extends="CronJob"
-				autocreate="true" generate="true"
-				jaloclass="com.tisl.mpl.jalo.OrderRefundReportJob">
-				<attributes>
-					<attribute type="java.util.Date" qualifier="startDate">
-						<modifiers optional="false" />
-						<persistence type="property" />
-					</attribute>
-					<attribute type="java.util.Date" qualifier="endDate">
-						<modifiers optional="false" />
-						<persistence type="property" />
-					</attribute>
-					<attribute type="java.lang.String" qualifier="paymentMethod">
-						<modifiers optional="true" />
-						<persistence type="property" />
-					</attribute>
-					<attribute type="java.lang.String" qualifier="refundStatus">
-						<modifiers optional="true" />
-						<persistence type="property" />
-					</attribute>
-					<attribute type="java.lang.String" qualifier="refundRef">
-						<modifiers optional="true" />
-						<persistence type="property" />
-					</attribute>
-						<attribute type="java.lang.String" qualifier="reason">
-						<modifiers optional="true" />
-						<persistence type="property" />
-					</attribute>
-						<attribute type="java.lang.String" qualifier="sellerId">
-						<modifiers optional="true" />
-						<persistence type="property" />
-					</attribute>
-					
-				</attributes>
-			</itemtype>
-			
-			<!-- Tata Etail- Seller Structure for Microsite -->
-			<itemtype code="SellerSalesCategory" autocreate="true"
-				generate="true">
-				<deployment table="MplSellerStructure" typecode="12059"/>
-				<attributes>
-					<attribute autocreate="true" qualifier="sellerId" type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" unique="false" />
-					</attribute>
-					<attribute type="java.lang.String" qualifier="sellerRootCategoryId">
-						<modifiers read="true" write="true" optional="true" />
-						<persistence type="property" />
-					</attribute>
-					<attribute type="java.lang.String" qualifier="active">
-						<modifiers read="true" write="true" optional="true" />
-						<persistence type="property" />
-					</attribute>
-					</attributes>
-			</itemtype>
-			
-			
-			<!-- Tata Etail- OrderSattusCode  Job -->
-			<itemtype code="OrderStatusCodeMaster" autocreate="true"
-				generate="true">
-				<deployment table="OrderStatusCodeMaster" typecode="12057"/>
-				<attributes>
-					<attribute autocreate="true" qualifier="id" type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="false" unique="true" />
-					</attribute>
-					<attribute type="java.lang.String" qualifier="statusCode">
-						<modifiers read="true" write="true" optional="false" />
-						<persistence type="property" />
-					</attribute>
-					<attribute type="java.lang.String" qualifier="responseStatus">
-						<modifiers read="true" write="true" optional="false" />
-						<persistence type="property" />
-					</attribute>
-					<attribute type="java.lang.String" qualifier="statusMessage">
-						<modifiers read="true" write="true" optional="false" />
-						<persistence type="property" />
-					</attribute>
-					<attribute type="java.lang.String" qualifier="stage">
-						<modifiers read="true" write="true" optional="false" />
-						<persistence type="property" />
-					</attribute>
-					<attribute qualifier="enable" type="java.lang.Boolean">
-						<description>Flag to indicate to active teh dot.</description>
-						<defaultvalue>Boolean.TRUE</defaultvalue>
-						<persistence type="property" />
-					</attribute>
-					<attribute qualifier="display" type="java.lang.Boolean">
-						<description>Flag to indicate that it need to displayed.</description>
-						<defaultvalue>Boolean.TRUE</defaultvalue>
-						<persistence type="property" />
-					</attribute>
-					<attribute qualifier="colorCode" type="java.lang.String">
-						<description>Flag to indicate the color of the dot.</description>
-						<modifiers read="true" write="true" search="true"/>
-						<persistence type="property" />
-					</attribute>
-					<attribute qualifier="dotId" type="java.lang.String">
-						<description>Flag to indicate the color of the dot.</description>
-						<modifiers read="true" write="true" search="true" optional="false"  />
-						<persistence type="property" />
-					</attribute>
-				</attributes>
-			</itemtype>
-			
-			
-			<!-- Tata Etail- Seller Master Model Creation -->
-			<itemtype code="SellerMaster" autocreate="true" generate="true" jaloclass="com.tisl.mpl.jalo.SellerMaster">
-				<deployment table="MplSellerMstr" typecode="12045" />
-				<attributes>
-					<attribute autocreate="true" qualifier="id" type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="false" unique="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="firstname" type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="midname" type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="lastname" type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="legalName" type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="type" type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="CompanyCode"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="AccountGroup"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="Search1" type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="Search2" type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="Title" type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="Language" type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="Customer" type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="TAN" type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="LST" type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="CST" type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="ServiceTAXNo"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="PAN" type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="PANValidThru"
-						type="java.util.Date">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="SettlementPeriod"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="PayoutPeriod"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="RegisteredAddress1"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="RegisteredAddress2"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="RegisteredAddCountry"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="RegisteredAddState"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="RegisteredAddCity"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="RegisteredAddPin"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="RegisteredEmail"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="RegisteredPhone"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="RegisteredMobile"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="RegisteredFAX"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					
-					<!--Newly Added R2 Three More Attributes In Seller Master -->
-				
-					<attribute autocreate="true" qualifier="isupdate"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
+		<itemtype code="PromotionalReportCreationJob" extends="CronJob"
+			autocreate="true" generate="true"
+			jaloclass="com.tisl.mpl.jalo.PromotionalReportCreationJob">
+			<attributes>
+				<attribute type="java.util.Date" qualifier="startDate"
+					autocreate="true">
+					<modifiers read="true" write="true" search="true"
+						optional="true" initial="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute type="java.util.Date" qualifier="endDate"
+					autocreate="true">
+					<modifiers read="true" write="true" search="true"
+						optional="true" initial="true" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
 
-					<attribute autocreate="true" qualifier="collectionDays"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="daysToExtend"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					<attribute autocreate="true" qualifier="extensionTimes"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					
-					<attribute autocreate="true" qualifier="clicknCollect"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
+		<!-- Tata Etail- Sales Data Creation Job -->
+		<itemtype code="SalesReportCreationJob" extends="CronJob"
+			autocreate="true" generate="true" jaloclass="com.tisl.mpl.jalo.SalesReportCreationJob">
+			<attributes>
+				<attribute type="java.util.Date" qualifier="startDate">
+					<modifiers optional="false" />
+					<persistence type="property" />
+				</attribute>
+				<attribute type="java.util.Date" qualifier="endDate">
+					<modifiers optional="false" />
+					<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="category">
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="quantity">
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="sellerId">
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="orderStatus">
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
 
-					<!-- Store Icon Image URL -->
-					<attribute autocreate="true" qualifier="mplImageUrls" type="mplStoreImageUrl"
-						generate="true">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>					
-				</attributes>
-			</itemtype>	
+		<!-- Tata Etail- Refund Data Creation Job -->
+		<itemtype code="OrderRefundReportJob" extends="CronJob"
+			autocreate="true" generate="true" jaloclass="com.tisl.mpl.jalo.OrderRefundReportJob">
+			<attributes>
+				<attribute type="java.util.Date" qualifier="startDate">
+					<modifiers optional="false" />
+					<persistence type="property" />
+				</attribute>
+				<attribute type="java.util.Date" qualifier="endDate">
+					<modifiers optional="false" />
+					<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="paymentMethod">
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="refundStatus">
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="refundRef">
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="reason">
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="sellerId">
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+
+			</attributes>
+		</itemtype>
+
+		<!-- Tata Etail- Seller Structure for Microsite -->
+		<itemtype code="SellerSalesCategory" autocreate="true"
+			generate="true">
+			<deployment table="MplSellerStructure" typecode="12059" />
+			<attributes>
+				<attribute autocreate="true" qualifier="sellerId" type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" unique="false" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="sellerRootCategoryId">
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="active">
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+
+		<!-- Tata Etail- OrderSattusCode Job -->
+		<itemtype code="OrderStatusCodeMaster" autocreate="true"
+			generate="true">
+			<deployment table="OrderStatusCodeMaster" typecode="12057" />
+			<attributes>
+				<attribute autocreate="true" qualifier="id" type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="false" unique="true" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="statusCode">
+					<modifiers read="true" write="true" optional="false" />
+					<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="responseStatus">
+					<modifiers read="true" write="true" optional="false" />
+					<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="statusMessage">
+					<modifiers read="true" write="true" optional="false" />
+					<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="stage">
+					<modifiers read="true" write="true" optional="false" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="enable" type="java.lang.Boolean">
+					<description>Flag to indicate to active teh dot.</description>
+					<defaultvalue>Boolean.TRUE</defaultvalue>
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="display" type="java.lang.Boolean">
+					<description>Flag to indicate that it need to displayed.</description>
+					<defaultvalue>Boolean.TRUE</defaultvalue>
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="colorCode" type="java.lang.String">
+					<description>Flag to indicate the color of the dot.</description>
+					<modifiers read="true" write="true" search="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="dotId" type="java.lang.String">
+					<description>Flag to indicate the color of the dot.</description>
+					<modifiers read="true" write="true" search="true"
+						optional="false" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+
+		<!-- Tata Etail- Seller Master Model Creation -->
+		<itemtype code="SellerMaster" autocreate="true" generate="true"
+			jaloclass="com.tisl.mpl.jalo.SellerMaster">
+			<deployment table="MplSellerMstr" typecode="12045" />
+			<attributes>
+				<attribute autocreate="true" qualifier="id" type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="false" unique="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="firstname" type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="midname" type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="lastname" type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="legalName" type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="type" type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="CompanyCode" type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="AccountGroup"
+					type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="Search1" type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="Search2" type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="Title" type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="Language" type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="Customer" type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="TAN" type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="LST" type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="CST" type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="ServiceTAXNo"
+					type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="PAN" type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="PANValidThru"
+					type="java.util.Date">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="SettlementPeriod"
+					type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="PayoutPeriod"
+					type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="RegisteredAddress1"
+					type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="RegisteredAddress2"
+					type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="RegisteredAddCountry"
+					type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="RegisteredAddState"
+					type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="RegisteredAddCity"
+					type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="RegisteredAddPin"
+					type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="RegisteredEmail"
+					type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="RegisteredPhone"
+					type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="RegisteredMobile"
+					type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="RegisteredFAX"
+					type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+
+				<!--Newly Added R2 Three More Attributes In Seller Master -->
+
+				<attribute autocreate="true" qualifier="isupdate" type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+
+				<attribute autocreate="true" qualifier="collectionDays"
+					type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="daysToExtend"
+					type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="extensionTimes"
+					type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+
+				<attribute autocreate="true" qualifier="clicknCollect"
+					type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+
+				<!-- Store Icon Image URL -->
+				<attribute autocreate="true" qualifier="mplImageUrls"
+					type="mplStoreImageUrl" generate="true">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="isCDAllowed" type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="isLPAWBEdit" type="java.lang.String">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+				</attribute>
+			</attributes>
+		</itemtype>
 	</itemtypes>
-	
+
 </items>

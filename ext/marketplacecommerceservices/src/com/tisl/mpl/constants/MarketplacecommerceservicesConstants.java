@@ -558,6 +558,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String EMAIL_BODY_EMPTY = "body must not be empty";
 	public static final String EMAIL_BODY_MEDIA = "bodyMedia-";
 
+	public static final String SMS_MESSAGE_CD_OTP = "Peek-a-boo {0}! One-time password to Change delivery Address {1}. Please feel free to call us at {2} in case of any queries.";
 
 
 	//For Bulk Upload in Promotions
@@ -861,6 +862,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9325 = "B9325";
 	public static final String B9326 = "B9326";
 	public static final String B9327 = "B9327";
+
+	// Auto populating pincode details Error Codes   Start
+	public static final String B9351 = "B9351";
+	public static final String B9352 = "B9352";
+	// Auto popuklating pincode details Error Codes End
+
 	//Mobile web service error codes ends
 
 	//Payment Error Codes
@@ -1616,7 +1623,31 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String BUYBOX_FILE_NAME = "filename";
 	public static final String BUYBOX_FILE_EXTENSION = "csv";
 	public static final String BUYBOX_FILE_NAME_TEMP = "filename.temp";
+	public final static String TICKET_TYPE_CDA = "D";
+	public final static String TICKET_SUB_TYPE_CDA = "DAC";
+	public final static String ADDRESS_TYPE_HOME = "Home";
+	public final static String ADDRESS_TYPE_WORK = "Work";
+	public final static String DELIVERY_MODE_SD = "SD";
+	public final static String DELIVERY_MODE_ED = "ED";
+	public final static String PINCODE_RESPONSE_DATA_TO_SESSION = "PincodeResponseDataForCart";
+	public final static String INTERFACE_TYPE_CA = "CA";
+	public final static String INTERFACE_TYPE_CU = "CU";
+	public final static String INTERFACE_TYPE_SD = "SD";
 
+	public static final String RETURNABLE = "Y";
+	public static final String RETURN_SCHEDULE = "schedule";
+	public static final String RETURN_SELF = "selfShipment";
+	public static final String RETURN_RETURN_TO_STORE = "returntostore";
+	public static final String FULFILMENT_TYPE_BOTH = "both";
+	public static final String RETURN_TYPE_RTS = "RTS";
+	public static final String RETURN_TYPE_RSS = "RSS";
+	public static final String RETURN_TYPE_RSP = "RSP";
+	public static final String TICKETID_PREFIX_E = "E";
+	public static final String RETURN_METHOD_QUICKDROP = "quickdrop";
+	public static final String RETURN_METHOD_SELFSHIP = "self";
+	public static final String RETURN_TYPE = "R";
+	public static final String ORDERTAG_TYPE_PREPAID = "PREPAIDRRF";
+	public static final String ORDERTAG_TYPE_POSTPAID = "POSTPAIDRRF";
 
 	public static final String CURRENT = "current".intern();
 	public static final String INVERTED_COMMA = "'".intern();
@@ -1626,14 +1657,33 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//TISPRO-675
 	public static final String EMIBANK = "emi_bank".intern();
 	public static final String EMITENURE = "emi_tenure".intern();
+	public static final String FAILED = "failed";
+	public static final String TO = "TO".intern();
+	public static final String AND = " AND ";
+	public final static String RESERVATION_DATA_TO_SESSION = "reservationData";
+
 
 	private MarketplacecommerceservicesConstants()
 	{
 		//empty to avoid instantiating this constant class
 	}
 
+	// track order error codes
+	public static final String B9104 = "B9104";
+	public static final String B9105 = "B9105";
+	public static final String B9106 = "B9106";
+	public static final String B9107 = "B9107";
+	public static final String B9108 = "B9108";
+
 	// implement here constants used by this extension
 
 	// Sonar Fix
 	public static final String ALLVARIANTSSTRING = "allVariantsString";
+	public static final String CHANGE_DELIVERY_ADDRESS = "changeDeliveryAddressData";
+	public static final String RESCHEDULE_DATA_SESSION_KEY = "rescheduleDataList";
+
+	public static final String S = "S";
+	public static final String SELF_COURIER = "SELF_COURIER";
+
+
 }

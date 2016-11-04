@@ -7,20 +7,25 @@ import de.hybris.platform.acceleratorfacades.order.AcceleratorCheckoutFacade.Exp
 import de.hybris.platform.commercefacades.order.CheckoutFacade;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import com.hybris.oms.tata.model.MplTimeSlotsModel;
+import com.tisl.mpl.core.model.MplLPHolidaysModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.data.AddressTypeData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
+import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData;
 
 
 /**
@@ -166,7 +171,7 @@ public interface MplCheckoutFacade extends CheckoutFacade
 	 */
 	Map<String, List<MarketplaceDeliveryModeData>> repopulateTshipDeliveryCost(
 			final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap, final CartData cartData)
-					throws EtailNonBusinessExceptions;
+			throws EtailNonBusinessExceptions;
 
 	/**
 	 * @description: It is used for fetching order details for code
@@ -231,4 +236,27 @@ public interface MplCheckoutFacade extends CheckoutFacade
 	 * @return OrderData
 	 */
 	OrderData getOrderDetailsForCode(OrderModel orderModel);
+
+	/**
+	 * @description: It is used for fetching order data by order code for non-logged in users
+	 * @param orderCode
+	 * @return OrderData
+	 */
+	OrderData getOrderDetailsForAnonymousUser(String orderCode);
+	
+	
+	/**
+	 * @description : Order Data For CsCockpit user
+	 * @param orderCode
+	 * @param customerModel
+	 * @return OrderData
+	 */
+	public OrderData getOrderDetailsForCockpitUser(String orderCode,CustomerModel customerModel);
+	
+	
+	public Map<String, List<String>> getDateAndTimeslotMapList(List<MplTimeSlotsModel> modelList, List<String> calculatedDateList, 
+			String deteWithOutTime ,String timeWithOutDate,  OrderEntryData cartEntryData, MplLPHolidaysModel mplLPHolidaysModel);
+	
+	
+	public void constructDeliverySlotsForEDAndHD(InvReserForDeliverySlotsItemEDDInfoData deliverySlotsResponse,OrderEntryData cartEntryData,MplLPHolidaysModel mplLPHolidaysModel);
 }

@@ -1,59 +1,144 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ [y] hybris Platform
-  ~
-  ~ Copyright (c) 2000-2015 hybris AG
-  ~ All rights reserved.
-  ~
-  ~ This software is the confidential and proprietary information of hybris
-  ~ ("Confidential Information"). You shall not disclose such Confidential
-  ~ Information and shall use it only in accordance with the terms of the
-  ~ license agreement you entered into with hybris.
-  -->
+<!-- ~ [y] hybris Platform ~ ~ Copyright (c) 2000-2015 hybris AG ~ All rights 
+	reserved. ~ ~ This software is the confidential and proprietary information 
+	of hybris ~ ("Confidential Information"). You shall not disclose such Confidential 
+	~ Information and shall use it only in accordance with the terms of the ~ 
+	license agreement you entered into with hybris. -->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans.xsd">
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd">
 
-	 <!-- Added for code service-->
-	<bean id="tataomsbackofficeService" class="com.hybris.oms.tata.services.TataomsbackofficeService" >
-	     <property name="ordpnasgCode"  value="${tata.oms.ordpnasg.code:#{null}}" />
-    	 <property name="cncCode"  value="${tata.oms.cnc.code:#{null}}" />
-    	 <property name="sshipCode"  value="${tata.oms.sship.code:#{null}}" />
-     	 <property name="tshipCode"  value="${tata.oms.tship.code:#{null}}" />
-    	 <property name="edCode"  value="${tata.oms.ed.code:#{null}}" />
-    	 <property name="hdCode"  value="${tata.oms.hd.code:#{null}}" />
-    	 <property name="ordREJECCode"  value="${tata.oms.ordrejec.code:#{null}}" />
-    	 <property name="pymtSCSSCode"  value="${tata.oms.pymtscss.code:#{null}}" />
-     </bean>
 
-	<bean id="tataomsbackofficeLabelLocator" class="com.hybris.cockpitng.util.labels.ResourcesLabelLocator" scope="singleton" init-method="init" lazy-init="false">
-  		<property name="location" value="/tataomsbackoffice-backoffice-labels/"/>
-  		<property name="name" value="labels"/>
-  	</bean>
-  	
-  	<!-- Added for logisticDataUpload -->
-  	<bean id="convertCSVToLogisticService" class="com.hybris.oms.tata.services.ConvertCSVToLogisticServicibility" />
-  	<bean id="customTimeStampConfigService" class="com.hybris.oms.tata.services.CustomTimeStampConfigService" />
-  	
-  	<!-- Added for bulk upload file path -->
-  	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-    <property name="location" value="file:${HYBRIS_CONFIG_DIR}/local.properties" />
-    <property name="ignoreResourceNotFound" value="true" />
-    <property name="ignoreUnresolvablePlaceholders" value="true" />
-    </bean>
-    <bean id="filePathProviderService"   class="com.hybris.oms.tata.services.FilePathProviderService">
-     <property name="pinSvcReptDwnldPath"  value="${tata.oms.serviceability.report.download.path:#{null}}"/>
-     <!-- for bulk upload -->
-     <property name="pinMstrTmpPath"  value="${tata.oms.tpl.upload.tmp.path:#{null}}"/>
-	 <property name="tplInbndCsvPath"  value="${tata.oms.tpl.upload.inbnd.path:#{null}}"/>
-	 <property name="tplOutbndCsvPath"  value="${tata.oms.tpl.upload.outbnd.path:#{null}}"/>
-     <property name="validationErrFilePath"  value="${tata.oms.tpl.upload.err.path:#{null}}" />
-     <property name="statesPropFilePath" value="${HYBRIS_CONFIG_DIR}"/>
-     <!-- for pincodes upload -->
-     <property name="pincodesUploadPath"  value="${tata.oms.pincodes.upload.path:#{null}}" />
-    </bean>
-    <bean id="csvFileToZipFileService" class="com.hybris.oms.tata.services.CsvFileToZipFileService"></bean>
- </beans>
+	<context:annotation-config />
+	<!-- Added for code service -->
+	<bean id="tataomsbackofficeService" class="com.hybris.oms.tata.services.TataomsbackofficeService">
+		<property name="ordpnasgCode" value="${tata.oms.ordpnasg.code:#{null}}" />
+		<property name="cncCode" value="${tata.oms.cnc.code:#{null}}" />
+		<property name="sshipCode" value="${tata.oms.sship.code:#{null}}" />
+		<property name="tshipCode" value="${tata.oms.tship.code:#{null}}" />
+		<property name="edCode" value="${tata.oms.ed.code:#{null}}" />
+		<property name="hdCode" value="${tata.oms.hd.code:#{null}}" />
+		<property name="ordREJECCode" value="${tata.oms.ordrejec.code:#{null}}" />
+		<property name="pymtSCSSCode" value="${tata.oms.pymtscss.code:#{null}}" />
+	</bean>
 
+	<bean id="tataomsbackofficeLabelLocator" class="com.hybris.cockpitng.util.labels.ResourcesLabelLocator"
+		scope="singleton" init-method="init" lazy-init="false">
+		<property name="location" value="/tataomsbackoffice-backoffice-labels/" />
+		<property name="name" value="labels" />
+	</bean>
+
+	<!-- Added for logisticDataUpload -->
+	<bean id="convertCSVToLogisticService"
+		class="com.hybris.oms.tata.services.ConvertCSVToLogisticServicibility" />
+	<bean id="customTimeStampConfigService"
+		class="com.hybris.oms.tata.services.CustomTimeStampConfigService" />
+
+	<!-- Added for bulk upload file path -->
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="file:${HYBRIS_CONFIG_DIR}/local.properties" />
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+	</bean>
+	<bean id="filePathProviderService" class="com.hybris.oms.tata.services.FilePathProviderService">
+		<property name="pinSvcReptDwnldPath"
+			value="${tata.oms.serviceability.report.download.path:#{null}}" />
+
+		<!-- for bulk upload -->
+		<property name="pinMstrTmpPath" value="${tata.oms.tpl.upload.tmp.path:#{null}}" />
+		<property name="tplInbndCsvPath" value="${tata.oms.tpl.upload.inbnd.path:#{null}}" />
+		<property name="tplOutbndCsvPath" value="${tata.oms.tpl.upload.outbnd.path:#{null}}" />
+		<property name="validationErrFilePath" value="${tata.oms.tpl.upload.err.path:#{null}}" />
+		<property name="statesPropFilePath" value="${HYBRIS_CONFIG_DIR}" />
+		<!-- for pincodes upload -->
+		<property name="pincodesUploadPath" value="${tata.oms.pincodes.upload.path:#{null}}" />
+		<property name="landmarkUploadPath" value="${tata.oms.landmark.upload.path:#{null}}" />
+		<property name="returnOrderFileUploadPath"
+			value="${com.techouts.order.return.logistics.upload.path:#{null}}" />
+		<property name="fragileOrderFileUploadPath"
+			value="${com.techouts.order.pfsd.logistics.upload.path:#{null}}" />
+		<property name="forwardFileHeaderProperty"
+			value="${com.techouts.forwardorderfile.headers:#{null}}" />
+		<property name="returnFileHeaderProperty"
+			value="${com.techouts.returnorderfile.headers:#{null}}"></property>
+	</bean>
+	<bean id="csvFileToZipFileService" class="com.hybris.oms.tata.services.CsvFileToZipFileService"></bean>
+
+	<bean id="dataUploadService" class="com.hybris.oms.tata.util.DataUploadService"></bean>
+
+	<!-- add by prabhakar for configarable parameters -->
+	<alias name="defaultConfigarableParameterFacade" alias="configarableParameterFacade" />
+	<bean id="defaultConfigarableParameterFacade"
+		class="com.hybris.oms.tata.facade.impl.DefaultConfigarableParameterFacade"></bean>
+
+	<alias name="defaultConfigarableParameterService" alias="configrableParameterService" />
+	<bean id="defaultConfigarableParameterService"
+		class="com.hybris.oms.tata.services.impl.DefaultConfigarableParameterService"></bean>
+
+	<alias name="defaultConfigarableParameterDAO" alias="configarableParameterDAO" />
+	<bean id="defaultConfigarableParameterDAO"
+		class="com.hybris.oms.tata.daos.impl.DefaultConfigarableParameterDAO"></bean>
+
+	<bean id="mplTimeSlotsPopulator"
+		class="com.hybris.oms.tata.populator.MplTimeSlotsModelToDataPopulator" />
+
+	<alias name="defaultMplTimeSlotsConverter" alias="mplTimeSlotsConverter" />
+	<bean id="defaultMplTimeSlotsConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.hybris.oms.tata.data.MplTimeSlotsData" />
+		<property name="populators">
+			<list>
+				<ref bean="mplTimeSlotsPopulator" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="mplBUCConfigurationReversePopulator"
+		class="com.hybris.oms.tata.populator.MplBUCConfigurationsDataToModelReversePopulator" />
+
+	<alias name="defaultMplBUCReverseConverter" alias="mplBUCReverseConverter" />
+	<bean id="defaultMplBUCReverseConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass"
+			value="com.hybris.oms.tata.model.MplBUCConfigurationsModel" />
+		<property name="populators">
+			<list>
+				<ref bean="mplBUCConfigurationReversePopulator" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="mplTimeSlotsReversePopulator"
+		class="com.hybris.oms.tata.populator.MplTimeSlotsDataToModelReversePopulator" />
+
+	<alias name="defaultMplTimeSlotsReverseConverter" alias="mplTimeSlotsReverseConverter" />
+	<bean id="defaultMplTimeSlotsReverseConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.hybris.oms.tata.model.MplTimeSlotsModel" />
+		<property name="populators">
+			<list>
+				<ref bean="mplTimeSlotsReversePopulator" />
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="bucFileComparitor" class="com.techouts.dataonboarding.util.BUCFileComparitor"></bean>
+	<!-- bulk upload -->
+	<bean id="excelToCsvConverter" class="com.hybris.oms.tata.exceltocsv.main.ExcelToCsvConverter">
+	</bean>
+	<bean id="csvService" class="com.hybris.oms.tata.service.CsvService">
+	</bean>
+	<bean id="logisticPartnerValidator"
+		class="com.hybris.oms.tata.exceltocsv.validator.LogisticPartnerValidator"></bean>
+	<bean id="priorityMasterValidator"
+		class="com.hybris.oms.tata.exceltocsv.validator.PriorityMasterValidator"></bean>
+
+<bean id="priorityMaster" class="com.hybris.oms.tata.pincodesupload.pojo.PriorityMaster">
+ <property name="airPriorityMaster" ref="airPriorityMaster"></property>
+ <property name="surfacePriorityMaster" ref="surfacePriorityMaster"></property>
+</bean>
+<bean id="airPriorityMaster" class="com.hybris.oms.tata.pincodesupload.pojo.AirPriorityMaster"></bean>
+<bean id="surfacePriorityMaster" class="com.hybris.oms.tata.pincodesupload.pojo.SurfacePriorityMaster"></bean>
+</beans>

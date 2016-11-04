@@ -352,6 +352,91 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 		}
 		return getCockpitTypeService().wrapItem(paymentTransactionModel);
 	}
+	
+	/**
+	 * Refund Schedule delivery Charges  
+	 */
+	
+	@Override
+	public TypedObject createRefundScheduleDeliveryChargesRequest(
+			OrderModel orderModel,
+			Map<AbstractOrderEntryModel, RefundDeliveryData> refundMap) {
+		PaymentTransactionModel paymentTransactionModel = null;
+		Double totalRefundScheduleDeliveryCharges = Double.valueOf(0);
+		if (MapUtils.isNotEmpty(refundMap)) {
+			final String uniqueRequestId = mplJusPayRefundService.getRefundUniqueRequestId();
+			
+			try {
+				for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
+						.entrySet()) {
+					totalRefundScheduleDeliveryCharges = totalRefundScheduleDeliveryCharges
+							+ refundEntry.getKey().getScheduledDeliveryCharge();
+
+					refundEntry.getKey().setRefundedScheduleDeliveryChargeAmt(
+							refundEntry.getKey().getScheduledDeliveryCharge());
+					refundEntry.getKey().setScheduledDeliveryCharge(Double.valueOf(0));
+					modelService.save(refundEntry.getKey());
+
+				}
+				LOG.debug("Total Refund Schedule Delivery Charges :"+totalRefundScheduleDeliveryCharges);
+				paymentTransactionModel = mplJusPayRefundService.doRefund(
+						orderModel, totalRefundScheduleDeliveryCharges,
+						PaymentTransactionType.REFUND_SCHEDULE_DELIVERY_CHARGES,uniqueRequestId);
+				if (null != paymentTransactionModel) {
+					mplJusPayRefundService.attachPaymentTransactionModel(
+							orderModel, paymentTransactionModel);
+					if ("PENDING".equalsIgnoreCase(paymentTransactionModel
+							.getStatus())) {
+						RefundTransactionMappingModel refundTransactionMappingModel = getModelService()
+								.create(RefundTransactionMappingModel.class);
+						refundTransactionMappingModel
+								.setRefundedOrderEntry(orderModel.getEntries()
+										.iterator().next());
+						refundTransactionMappingModel
+								.setJuspayRefundId(paymentTransactionModel
+										.getCode());
+						refundTransactionMappingModel
+								.setCreationtime(new Date());
+						refundTransactionMappingModel
+								.setRefundType(JuspayRefundType.REFUND_SCHEDULE_DELIVERY_CHARGE);
+						refundTransactionMappingModel
+								.setRefundAmount(totalRefundScheduleDeliveryCharges);//TISPRO-216 : Refund amount Set in RTM
+						getModelService().save(refundTransactionMappingModel);
+					}
+					for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
+							.entrySet()) {
+						mplJusPayRefundService.makeRefundOMSCall(refundEntry
+								.getKey(), paymentTransactionModel, refundEntry
+								.getKey().getRefundedDeliveryChargeAmt(), null);// Sending
+																				// null
+																				// as
+																				// for
+																				// refund
+																				// delivery
+																				// charge
+																				// no
+																				// status
+																				// update
+																				// is
+																				// required.
+					}
+				} else {
+					LOG.error("Refund Schedule Delivery Charges Failed");
+				}
+
+			} catch (Exception e) {
+				LOG.error(e.getMessage(), e);
+				paymentTransactionModel = mplJusPayRefundService
+						.createPaymentTransactionModel(orderModel, "FAILURE",
+								totalRefundScheduleDeliveryCharges,
+								PaymentTransactionType.REFUND_SCHEDULE_DELIVERY_CHARGES,
+								"FAILURE", uniqueRequestId);
+				mplJusPayRefundService.attachPaymentTransactionModel(
+						orderModel, paymentTransactionModel);
+			}
+		}
+		return getCockpitTypeService().wrapItem(paymentTransactionModel);
+	}
 
 	@Override
 	public TypedObject createOrderHistoryRequest(OrderModel orderModel,
@@ -562,25 +647,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 		List<PaymentTransactionModel> tranactions = new ArrayList<PaymentTransactionModel>(
 				order.getPaymentTransactions());
 		boolean flag = false;
-		if (CollectionUtils.isNotEmpty(tranactions)) {
-			for (PaymentTransactionModel transaction : tranactions) {
-				if (CollectionUtils.isNotEmpty(transaction.getEntries())) {
-					for (PaymentTransactionEntryModel entry : transaction
-							.getEntries()) {
-						if (entry.getPaymentMode() != null
-								&& entry.getPaymentMode().getMode() != null
-								&& entry.getPaymentMode().getMode()
-										.equalsIgnoreCase("COD")) {
-							flag = true;
-							break;
-						}
-					}
-				}
-				if (flag) {
-					break;
-				}
-			}
-		}
+		flag = checkIsOrderCod(tranactions);
 		if (flag) {
 			Double totalRefundDeliveryCharges = Double.valueOf(0);
 			if (MapUtils.isNotEmpty(refundMap)) {
@@ -607,6 +674,64 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 		return false;
 	}
 	
+	
+	@Override
+	public boolean isOrderCODforScheduleDeliveryCharges(OrderModel order,
+			Map<AbstractOrderEntryModel, RefundDeliveryData> refundMap) {
+		List<PaymentTransactionModel> tranactions = new ArrayList<PaymentTransactionModel>(
+				order.getPaymentTransactions());
+		boolean flag = false;
+		flag = checkIsOrderCod(tranactions);
+		if (flag) {
+			Double totalRefundScheduleDeliveryCharges = Double.valueOf(0);
+			if (MapUtils.isNotEmpty(refundMap)) {
+				for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
+						.entrySet()) {
+					totalRefundScheduleDeliveryCharges = totalRefundScheduleDeliveryCharges
+							+ refundEntry.getKey().getScheduledDeliveryCharge();
+
+					refundEntry.getKey().setRefundedScheduleDeliveryChargeAmt(
+							refundEntry.getKey().getScheduledDeliveryCharge());
+					refundEntry.getKey().setCurrDelCharge(Double.valueOf(0));
+					modelService.save(refundEntry.getKey());
+				}
+			}
+			PaymentTransactionModel paymentTransactionModel = mplJusPayRefundService
+					.createPaymentTransactionModel(order, "FAILURE",
+							totalRefundScheduleDeliveryCharges,
+							PaymentTransactionType.REFUND_SCHEDULE_DELIVERY_CHARGES,
+							"FAILURE", UUID.randomUUID().toString());
+			mplJusPayRefundService.attachPaymentTransactionModel(order,
+					paymentTransactionModel);
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean checkIsOrderCod(List<PaymentTransactionModel> tranactions) {
+		boolean flag = false;
+		if (CollectionUtils.isNotEmpty(tranactions)) {
+			for (PaymentTransactionModel transaction : tranactions) {
+				if (CollectionUtils.isNotEmpty(transaction.getEntries())) {
+					for (PaymentTransactionEntryModel entry : transaction
+							.getEntries()) {
+						if (entry.getPaymentMode() != null
+								&& entry.getPaymentMode().getMode() != null
+								&& entry.getPaymentMode().getMode()
+										.equalsIgnoreCase("COD")) {
+							flag = true;
+							break;
+						}
+					}
+				}
+				if (flag) {
+					break;
+				}
+			}
+		}
+		return flag;
+	}
+
 	@Override
 	public boolean syncOrder(OrderModel order){
 		LOG.debug("Going for Manal Sync of Order" +order.getCode());

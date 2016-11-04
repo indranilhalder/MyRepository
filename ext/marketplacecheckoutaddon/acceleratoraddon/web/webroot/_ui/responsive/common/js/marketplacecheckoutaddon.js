@@ -2391,6 +2391,7 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 	var zipcode = document.getElementsByName("postcode")[0].value;
 	var txtMobile = document.getElementsByName("MobileNo")[0].value;
 	var result=firstName.value;
+	$(".otherLandMarkError").hide();
 	 
 	if(result == undefined || result == "" )
 	{	
@@ -2409,8 +2410,21 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 	{
 		$("#firstnameError").hide();
 	}
-			
-	 result=lastName.value;
+	
+	result=$("#otherLandmark").val();
+	if(result != null && ! result == ''){
+	   if(result.trim() == ''){
+  	        $(".otherLandMarkError").show();
+	  		$(".otherLandMarkError").text("Other LandMark cannot be allow  space");
+	  	    validate = false;
+  	     }else if(/[^a-zA-Z0-9]/.test(result)){
+  		      $(".otherLandMarkError").show();
+		  	  $(".otherLandMarkError").text("Other LandMark cannot be allow special characters");
+		  	 validate = false;
+  	  }
+    }
+	
+	   result=lastName.value;
 	if(result == undefined || result == "")
 	{	
 		$("#lastnameError").show();
@@ -3524,7 +3538,7 @@ function checkSignUpValidation(path){
 		validationResult=false;
 	}else if(password.length < 8){
 		$("#signupPasswordDiv").show();
-		$("#signupPasswordDiv").html("Your password should be minimum 8 characters");
+		$("#signupPasswordDiv").html("Minimum length is 8 characters");
 		validationResult=false;
 	}else{
 		$("#signupPasswordDiv").hide();
@@ -3536,7 +3550,7 @@ function checkSignUpValidation(path){
 		validationResult=false;
 	}else if(rePassword.length < 8){
 		$("#signupConfirmPasswordDiv").show();
-		$("#signupConfirmPasswordDiv").html("Your password should be minimum 8 characters");
+		$("#signupConfirmPasswordDiv").html("Minimum length is 8 characters");
 		validationResult=false;
 	}else{
 		$("#signupConfirmPasswordDiv").hide();

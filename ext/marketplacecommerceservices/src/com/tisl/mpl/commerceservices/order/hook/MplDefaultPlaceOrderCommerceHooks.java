@@ -1401,7 +1401,53 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						- productApportionvalue - bogoCouponApportion))));
 				orderEntryModel.setCurrDelCharge(deliveryCharge);
 			}
-
+			// Start Order line  Code for OrderLine 
+			if (abstractOrderEntryModel.getEdScheduledDate() != null)
+			{
+				orderEntryModel.setEdScheduledDate(abstractOrderEntryModel.getEdScheduledDate());
+			}
+			if (abstractOrderEntryModel.getTimeSlotFrom() != null)
+			{
+				orderEntryModel.setTimeSlotFrom(abstractOrderEntryModel.getTimeSlotFrom());
+			}
+			if (abstractOrderEntryModel.getTimeSlotTo() != null)
+			{
+				orderEntryModel.setTimeSlotTo(abstractOrderEntryModel.getTimeSlotTo());
+			}
+			if (abstractOrderEntryModel.getIsPrecious() != null)
+			{
+				orderEntryModel.setIsPrecious(abstractOrderEntryModel.getIsPrecious());
+			}
+			if (abstractOrderEntryModel.getIsFragile() != null)
+			{
+				orderEntryModel.setIsFragile(abstractOrderEntryModel.getIsFragile());
+			}
+			if (abstractOrderEntryModel.getFulfillmentMode() != null)
+			{
+				orderEntryModel.setFulfillmentMode(abstractOrderEntryModel.getFulfillmentMode());
+			}
+			if (abstractOrderEntryModel.getFulfillmentType() != null)
+			{
+				orderEntryModel.setFulfillmentType(abstractOrderEntryModel.getFulfillmentType());
+			}
+			if (abstractOrderEntryModel.getFulfillmentTypeP1() != null)
+			{
+				orderEntryModel.setFulfillmentTypeP1(abstractOrderEntryModel.getFulfillmentTypeP1());
+			}
+			if (abstractOrderEntryModel.getFulfillmentTypeP2() != null)
+			{
+				orderEntryModel.setFulfillmentTypeP2(abstractOrderEntryModel.getFulfillmentTypeP2());
+			}
+			if (abstractOrderEntryModel.getScheduledDeliveryCharge() != null)
+			{
+				orderEntryModel.setScheduledDeliveryCharge(abstractOrderEntryModel.getScheduledDeliveryCharge());
+			}
+			if (abstractOrderEntryModel.getReturnStoreId() != null)
+			{
+				orderEntryModel.setReturnStoreId(abstractOrderEntryModel.getReturnStoreId());
+			}
+			
+		  // End Order line  Code for OrderLine 
 			orderEntryModel = setAdditionalDetails(orderEntryModel);
 
 		}

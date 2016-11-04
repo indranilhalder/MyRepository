@@ -5,23 +5,40 @@
 	xmlns:zk="http://www.zkoss.org/2005/zk"
 	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
 	height="100%">
+	<hbox visible="${widgetSettings.shipmentType}">
+		<label value="Shipment Type"></label>
+		<listbox mold="select" rows="1" id="shipmentListBox">
+			<listitem label="ALL" selected="true" />
+			<listitem label="TSHIP" />
+			<listitem label="SSHIP" />
+		</listbox>
+	</hbox>
 	<hlayout style="text-align:center">
 		<vlayout style="margin-top: 10px;font-size:14px">
 			<label value="START DATE"></label>
 		</vlayout>
 		<vlayout style="text-align:center">
-		<hlayout>
-			<datebox id="startdpic"  cols="12" constraint="no empty, no future: NOT EMPTY or NO FUTURE" format="short" width="230px" />
-			<label style="margin-top: 10px;font-size:12px;" value="(mm/dd/yy)"></label>
+			<hlayout>
+				<datebox id="startdpic" cols="12"
+					constraint="no empty, no future: NOT EMPTY or NO FUTURE"
+					format="short" width="230px" />
+				<label style="margin-top: 7px;font-size:12px;display:block;"
+					value="(mm/dd/yy)">
+				</label>
 			</hlayout>
 		</vlayout>
-		<vlayout style="margin-top: 10px;font-size:14px;margin-left: 20px">
+		<vlayout
+			style="margin-top: 10px;font-size:14px;margin-left: 20px">
 			<label value="END DATE"></label>
 		</vlayout>
 		<vlayout style="text-align:center">
-		<hlayout>
-			<datebox id="enddpic" cols="12" constraint="no empty, no future: NOT EMPTY or NO FUTURE" format="short" width="230px" />
-			<label style="margin-top: 10px;font-size:12px;" value="(mm/dd/yy)"></label>
+			<hlayout>
+				<datebox id="enddpic" cols="12"
+					constraint="no empty, no future: NOT EMPTY or NO FUTURE"
+					format="short" width="230px" />
+				<label style="margin-top: 7px;font-size:12px;display:block;"
+					value="(mm/dd/yy)">
+				</label>
 			</hlayout>
 		</vlayout>
 	</hlayout>

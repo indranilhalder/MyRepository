@@ -646,7 +646,11 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					sellerData.setShippingMode(rich.getShippingModes().getCode());
 				}
 
+				if (null != rich.getDeliveryFulfillModeByP1())
+				{
 
+					sellerData.setDeliveryFulfillModebyP1(rich.getDeliveryFulfillModeByP1().getCode());
+				}
 				if (null != rich.getDeliveryFulfillModes() && rich.getDeliveryFulfillModes().equals(DeliveryFulfillModesEnum.TSHIP))
 				{
 
@@ -668,6 +672,14 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				else
 				{
 					sellerData.setIsCod(MarketplaceFacadesConstants.N);
+				}
+				if (null != rich.getIsFragile())
+				{
+					sellerData.setIsFragile(rich.getIsFragile().getCode());
+				}
+				if (null != rich.getIsPrecious())
+				{
+					sellerData.setIsPrecious(rich.getIsPrecious().getCode());
 				}
 
 				sellerData.setReturnPolicy(rich.getReturnWindow());

@@ -25,6 +25,7 @@ import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceBasketCont
 import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceabilityCheckHelper;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
+import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -120,16 +121,16 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 
 	@Autowired
 	private BuyBoxFacade buyBoxFacade;
-	
+
 	@Autowired
 	private MplFindDeliveryFulfillModeStrategy mplFindDeliveryFulfillModeStrategy;
-	
+
 	@Resource(name = "voucherService")
 	private VoucherService voucherService;
-	
+
 	@Resource(name = "voucherModelService")
 	private VoucherModelService voucherModelService;
-		
+
 	@Resource(name = "mplVoucherService")
 	private MplVoucherService mplVoucherService;	
 
@@ -154,8 +155,8 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		final CartModel cart = getCartModel();
 		ImpersonationContext context = createImpersonationContext(cart);
 		getImpersonationService()
-				.executeInContext(
-						context,
+		.executeInContext(
+				context,
 						new ImpersonationService.Executor<CartModel, ImpersonationService.Nothing>() {
 							@Override
 							public CartModel execute() {
@@ -263,7 +264,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 			throws EtailNonBusinessExceptions, ClientEtailNonBusinessExceptions {
 
 		List<PinCodeResponseData> responseData = marketplaceServiceabilityCheckHelper
-				.getResponseForPinCode(product, pin, isDeliveryDateRequired, ussid);
+				.getResponseForPinCode(null,product, pin, isDeliveryDateRequired, ussid);
 		LOG.info("responseData size:" + responseData);
 
 		return responseData;
@@ -364,7 +365,67 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 						// refer TIS-276 for details
 						
 						cartSoftReservationRequestData.setFulfillmentType(mplFindDeliveryFulfillModeStrategy.findDeliveryFulfillMode(cartEntry.getSelectedUSSID()));
-						cartdatalist.add(cartSoftReservationRequestData);
+						//cartSoftReservationRequestData.setServiceableSlaves(cartEntry.getv\);
+						//	final List<PinCodeResponseData> pincoderesponseDataList = getSessionService().getAttribute(
+						//		MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION);
+						List<PinCodeResponseData> pincoderesponseDataList = marketplaceServiceabilityCheckHelper
+								.getResponseForPinCode(null,cartEntry.getProduct(),String.valueOf(cartEntry.getOrder().getDeliveryAddress().getPostalcode()),
+										"Y",cartEntry.getSelectedUSSID());
+
+						if(null != pincoderesponseDataList && pincoderesponseDataList.size()>0)
+						{
+							for (final PinCodeResponseData responseData : pincoderesponseDataList)
+							{
+								if (cartEntry.getSelectedUSSID().equals(responseData.getUssid()) && responseData.getValidDeliveryModes().size()>0)
+								{
+									for (final DeliveryDetailsData DeliveryData : responseData.getValidDeliveryModes())
+									{
+										if(DeliveryData.getIsPincodeServiceable()) {
+											if(MarketplaceCockpitsConstants.delCodeMap
+													.get(DeliveryData.getType()).equalsIgnoreCase(cartEntry.getMplDeliveryMode().getDeliveryMode().getCode())) {
+												if(!DeliveryData.getType().equalsIgnoreCase(MarketplacecclientservicesConstants.CNC)) {
+													if (null != DeliveryData.getServiceableSlaves() && DeliveryData.getServiceableSlaves().size() > 0)
+													{
+														cartSoftReservationRequestData.setServiceableSlaves(DeliveryData.getServiceableSlaves());
+													}
+												}
+												else if (null != DeliveryData.getCNCServiceableSlavesData()
+														&& DeliveryData.getCNCServiceableSlavesData().size() > 0)
+												{
+													cartSoftReservationRequestData.setCncServiceableSlaves(DeliveryData.getCNCServiceableSlavesData());
+												}
+												if (null != DeliveryData.getFulfilmentType())
+												{
+													cartSoftReservationRequestData.setFulfillmentType(DeliveryData.getFulfilmentType());
+											}
+										}
+										Collection<RichAttributeModel> rich=cartEntry.getProduct().getRichAttribute();
+										rich.iterator().next().getShippingModes().toString();
+										if(null !=rich && null != rich.iterator().next().getShippingModes()) {
+										cartSoftReservationRequestData.setTransportMode(rich.iterator().next().getShippingModes().getCode());
+										}
+										if(null != DeliveryData.getFulfilmentType()) {
+											cartEntry.setFulfillmentMode(DeliveryData.getFulfilmentType());
+											cartEntry.setFulfillmentType(DeliveryData.getFulfilmentType());
+										}
+										if(null !=rich && null != rich.iterator().next().getDeliveryFulfillModeByP1()) {
+										  cartEntry.setFulfillmentTypeP1(rich.iterator().next().getDeliveryFulfillModeByP1().getCode());
+										}
+										cartdatalist.add(cartSoftReservationRequestData);
+										}
+										
+									}
+								}
+							}
+						}
+						modelService.save(cartEntry);
+//						Collection<RichAttributeModel> rich=cartEntry.getProduct().getRichAttribute();
+//						rich.iterator().next().getShippingModes().toString();
+//						
+//						cartSoftReservationRequestData.setTransportMode(rich.iterator().next().getShippingModes().getCode());
+//						cartdatalist.add(cartSoftReservationRequestData);
+//						cartEntry.setFulfillmentTypeP1(DeliveryData.get);
+//						cartEntry.setFulfillmentType(rich.iterator().next().getDeliveryFulfillModes().getCode());
 					}
 					
 					// 	Added inventory request type to set the duration type for cart only
@@ -692,7 +753,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		        throw new ValidationException(errorMessages);
 		      }
 			List<PinCodeResponseData> pinCodeResponses = marketplaceServiceabilityCheckHelper
-					.getResponseForPinCode(
+					.getResponseForPinCode(entry.getOrder().getGuid(),
 							entry.getProduct(),
 							String.valueOf(entry.getOrder()
 									.getDeliveryAddress().getPostalcode()),

@@ -33,8 +33,10 @@ import de.hybris.platform.cms2.servicelayer.services.CMSPageService;
 import de.hybris.platform.cms2.servicelayer.services.CMSPreviewService;
 import de.hybris.platform.cms2.servicelayer.services.CMSSiteService;
 import de.hybris.platform.jalo.c2l.LocalizableItem;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.AbstractItemModel;
 import de.hybris.platform.servicelayer.session.SessionService;
+
 import com.tisl.mpl.storefront.filters.cms.CMSSiteFilter;
 import com.tisl.mpl.storefront.interceptors.BeforeViewHandler;
 
@@ -64,6 +66,7 @@ public class CmsPageBeforeViewHandler implements BeforeViewHandler
 	private static final String CSS_LABEL_PREFIX = "pageLabel-";
 	private static final String CSS_TYPE_PREFIX = "pageType-";
 	private static final String CSS_TEMPLATE_PREFIX = "template-";
+	private static final String RECAPTCHA_PUBLIC_KEY_PROPERTY= "recaptcha.publickey";
 
 	@Resource(name = "cmsSiteService")
 	private CMSSiteService cmsSiteService;
@@ -82,12 +85,17 @@ public class CmsPageBeforeViewHandler implements BeforeViewHandler
 
 	@Resource(name = "requestContextRestrictionConverter")
 	private Converter<RequestContextData, RestrictionData> requestContextRestrictionConverter;
+	
+	@Resource(name = "configurationService")
+	private ConfigurationService configurationService;
 
 
 	@Override
 	public void beforeView(final HttpServletRequest request, final HttpServletResponse response, final ModelAndView modelAndView)
 	{
 		modelAndView.addObject("cmsSite", cmsSiteService.getCurrentSite());
+		modelAndView.addObject("recaptchaKey", configurationService.getConfiguration().getString(RECAPTCHA_PUBLIC_KEY_PROPERTY));
+	
 
 		// Look for the page in the model
 		final AbstractPageModel page = updateCmsPageInModelAndView(request, modelAndView);

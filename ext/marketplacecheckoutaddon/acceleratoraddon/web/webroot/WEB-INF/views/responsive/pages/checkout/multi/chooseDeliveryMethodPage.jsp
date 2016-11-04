@@ -175,7 +175,7 @@
 											<c:set var='countWork'  value='1' />
 											<c:set var='countHome'  value='1' />
 											<!-- TISCR-305 starts -->
-											<button id="deliveryAddressSubmitUp" type="submit" class="button checkout-next" ><spring:theme code="checkout.multi.deliveryAddress.continue"  text="Next"/></button>
+											<button id="deliveryAddressSubmitUp" type="submit" class="button checkout-next" ><spring:theme code="checkout.pickup.continue.button"  text="Next"/></button>
 											<!-- TISCR-305 ends -->
 						<div class="checkout-indent left-block address-form">
 						
@@ -282,7 +282,8 @@
 	                                                         <c:if test="${not empty myline2  && not empty myline3}">
 															<address>
 															<li>${fn:escapeXml(deliveryAddress.title)}	 ${fn:escapeXml(deliveryAddress.firstName)}&nbsp; ${fn:escapeXml(deliveryAddress.lastName)}</br>
-															${fn:escapeXml(deliveryAddress.line1)}, &nbsp;  ${fn:escapeXml(deliveryAddress.line2)},  &nbsp;  ${fn:escapeXml(deliveryAddress.line3)},  &nbsp; </br> 
+															${fn:escapeXml(deliveryAddress.line1)}, &nbsp;  ${fn:escapeXml(deliveryAddress.line2)},  &nbsp;  ${fn:escapeXml(deliveryAddress.line3)},  &nbsp;
+															<c:if test="${not empty deliveryAddress.landmark}">&nbsp; ${fn:escapeXml(deliveryAddress.landmark)}</c:if></br> 
 															${fn:escapeXml(deliveryAddress.town)}, &nbsp;${fn:escapeXml(deliveryAddress.state)}, &nbsp; ${fn:escapeXml(deliveryAddress.postalCode)} <!--DSC_006 : Fix for Checkout Address State display issue -->
 															${fn:escapeXml(deliveryAddress.country.isocode)}<c:if test="${not empty deliveryAddress.region.name}">&nbsp; ${fn:escapeXml(deliveryAddress.region.name)}</c:if></br>
 															<spring:theme code="checkout.phone.no" text="+91"/>&nbsp;${fn:escapeXml(deliveryAddress.phone)} <br>
@@ -311,7 +312,7 @@
 												</c:forEach>
 													
 											</div>
-											<button id="deliveryAddressSubmit" type="submit" class="button checkout-next" ><spring:theme code="checkout.multi.deliveryAddress.continue"  text="Next"/></button>
+											<button id="deliveryAddressSubmit" type="submit" class="button checkout-next" ><spring:theme code="checkout.pickup.continue.button"  text="Next"/></button>
 
 
 										

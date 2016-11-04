@@ -447,6 +447,16 @@ public class SalesOrderXMLUtility
 								xmlData.setExpressdeliveryCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
 							}
 							LOG.debug("set express del charge from curr del charge" + entry.getCurrDelCharge().doubleValue());// zoneDelivery.getValue().doubleValue()
+							
+							if (null != entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() > 0)
+							{
+								xmlData.setScheduleDelCharge(entry.getScheduledDeliveryCharge().doubleValue());
+							}
+							else
+							{
+								xmlData.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue());
+							}
+							
 						}
 						else if (null != zoneDelivery && null != zoneDelivery.getDeliveryMode() && entry.getCurrDelCharge() != null
 								&& entry.getRefundedDeliveryChargeAmt() != null && null != zoneDelivery.getDeliveryMode().getCode()
@@ -459,6 +469,15 @@ public class SalesOrderXMLUtility
 							else
 							{
 								xmlData.setShipmentCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
+							}
+							
+							if (null != entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() > 0)
+							{
+								xmlData.setScheduleDelCharge(entry.getScheduledDeliveryCharge().doubleValue());
+							}
+							else
+							{
+								xmlData.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue());
 							}
 							LOG.debug("set del charge");
 						}

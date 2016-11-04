@@ -526,113 +526,126 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 			throws EtailNonBusinessExceptions
 	{
 		ConsignmentModel consignmentModel = null;
-		if (null != orderEntryData.getConsignment() && orderEntryData.getConsignment().getStatus() != null)
-		{
-			consignmentModel = mplOrderService.fetchConsignment(orderEntryData.getConsignment().getCode());
-			//TISPT-194
-			//		final String tranSactionId = orderEntryData.getTransactionId();
+		if (null != orderEntryData.getConsignment() && orderEntryData.getConsignment().getStatus() != null){
+			
 			//TISEE-1067
-			if (null != consignmentModel && null != consignmentModel.getInvoice()
-					&& null != consignmentModel.getInvoice().getInvoiceUrl() && null != orderEntryData.getConsignment()
+			if (null != orderEntryData.getConsignment()
 					&& orderEntryData.getConsignment().getStatus() != null
 					&& (orderEntryData.getConsignment().getStatus().getCode()
-							.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED)
-							|| orderEntryData.getConsignment().getStatus().getCode()
-									.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED)))
-			{
-				orderEntryData.setShowInvoiceStatus(true);
-			}
-		}
-
-		//getting the product code
-		ProductModel productModel = new ProductModel();
-		try
-		{
-			productModel = getProductForCode(orderEntryData.getProduct().getCode());
-			LOG.debug("Step4-************************Order History: After Product:" + subOrder.getCode());
-		}
-		catch (final Exception e)
-		{
-			LOG.error("**********Product " + orderEntryData.getProduct().getCode()
-					+ " is having some data issue. Please validate the product!");
-			return null;
-		}
-
-
-		if (CollectionUtils.isNotEmpty(productModel.getBrands()))
-		{
-			for (final BrandModel brand : productModel.getBrands())
-			{
-				orderEntryData.setBrandName(brand.getName());
-				break;
-			}
-		}
-
-		List<RichAttributeModel> richAttributeModel = new ArrayList<RichAttributeModel>();
-		final SellerInformationModel sellerInfoModel = getMplSellerInformationService()
-				.getSellerDetail(orderEntryData.getSelectedUssid());
-
-		if (sellerInfoModel != null && CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute()))
-		{
-			richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
-
-			LOG.debug("Step 5************************Order History:  setting setItemCancellationStatus for " + subOrder.getCode());
-			//TISEE-5389 - Cancellation window check while initiating a cancel request need not be performed.
-			//Commenting cancellation window check, as not all seller will set this value. If it is not set,
-			//the default value would be '0' and as per the below check cancellation link won't shown at all.
-			/*
-			 * if (richAttributeModel.get(0).getCancellationWindow() != null &&
-			 * Integer.parseInt(richAttributeModel.get(0).getCancellationWindow()) == 0) {
-			 * orderEntryData.setItemCancellationStatus(false); } else
-			 */
-			//TISEE-6419
-			if (!isChildCancelleable(subOrder, orderEntryData.getTransactionId()))
-			{
-				orderEntryData.setItemCancellationStatus(false);
-			}
-			else if (null == orderEntryData.getConsignment() && orderEntryData.getQuantity().longValue() != 0)
-			{
-				if (subOrder.getStatus() != null)
-				{
-					orderEntryData.setItemCancellationStatus(
-							checkCancelStatus(subOrder.getStatus().getCode(), MarketplacecommerceservicesConstants.CANCEL_ORDER_STATUS));
-				}
-			}
-			else if (null != orderEntryData.getConsignment() && null != orderEntryData.getConsignment().getStatus())
-			{
-				final String consignmentStatus = orderEntryData.getConsignment().getStatus().getCode();
-				orderEntryData.setItemCancellationStatus(
-						checkCancelStatus(consignmentStatus, MarketplacecommerceservicesConstants.CANCEL_STATUS));
-			}
-
-			LOG.debug("Step 6************************Order History:  setting setItemReturnStatus for " + subOrder.getCode());
-
-
-			if (null != orderEntryData.getConsignment() && null != orderEntryData.getConsignment().getStatus()
-					&& null != richAttributeModel.get(0).getReturnWindow()
-					&& Integer.parseInt(richAttributeModel.get(0).getReturnWindow()) > 0)
+							.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED) || orderEntryData.getConsignment()
+							.getStatus().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED))
+							)
 			{
 				consignmentModel = mplOrderService.fetchConsignment(orderEntryData.getConsignment().getCode());
-				if (null != consignmentModel)
+				//TISPT-194
+				//		final String tranSactionId = orderEntryData.getTransactionId();
+				//TISEE-1067
+				if (null != consignmentModel && null != consignmentModel.getInvoice()
+						&& null != consignmentModel.getInvoice().getInvoiceUrl() && null != orderEntryData.getConsignment()
+						&& orderEntryData.getConsignment().getStatus() != null
+						&& (orderEntryData.getConsignment().getStatus().getCode()
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED)
+								|| orderEntryData.getConsignment().getStatus().getCode()
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED)))
 				{
+					orderEntryData.setShowInvoiceStatus(true);
+				}
+			}
+		}
+			//getting the product code
+			ProductModel productModel = new ProductModel();
+			try
+			{
+				productModel = getProductForCode(orderEntryData.getProduct().getCode());
+				LOG.debug("Step4-************************Order History: After Product:" + subOrder.getCode());
+			}
+			catch (final Exception e)
+			{
+				LOG.error("**********Product " + orderEntryData.getProduct().getCode()
+						+ " is having some data issue. Please validate the product!");
+				return null;
+			}
 
-					//					if (richAttributeModel.get(0).getReturnWindow() != null
-					//							&& Integer.parseInt(richAttributeModel.get(0).getReturnWindow()) == 0)
-					//					{
-					//						orderEntryData.setItemReturnStatus(false);
-					//					}
-					final Date sDate = new Date();
-					final int returnWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(consignmentModel.getDeliveryDate(),
-							sDate);
-					final int actualReturnWindow = Integer.parseInt(richAttributeModel.get(0).getReturnWindow());
-					if (null != orderEntryData.getConsignment() && null != orderEntryData.getConsignment().getStatus()
-							&& (orderEntryData.getConsignment().getStatus().getCode()
-									.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED)
-									|| orderEntryData.getConsignment().getStatus().getCode()
-											.equalsIgnoreCase(MarketplacecommerceservicesConstants.COLLECTED))
-							&& returnWindow <= actualReturnWindow)
+
+			if (CollectionUtils.isNotEmpty(productModel.getBrands()))
+			{
+				for (final BrandModel brand : productModel.getBrands())
+				{
+					orderEntryData.setBrandName(brand.getName());
+					break;
+				}
+			}
+
+			List<RichAttributeModel> richAttributeModel = new ArrayList<RichAttributeModel>();
+			final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+					orderEntryData.getSelectedUssid());
+
+			if (sellerInfoModel != null && CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute()))
+			{
+				richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+
+				LOG.debug("Step 5************************Order History:  setting setItemCancellationStatus for " + subOrder.getCode());
+				//TISEE-5389 - Cancellation window check while initiating a cancel request need not be performed.
+				//Commenting cancellation window check, as not all seller will set this value. If it is not set,
+				//the default value would be '0' and as per the below check cancellation link won't shown at all.
+				/*
+				 * if (richAttributeModel.get(0).getCancellationWindow() != null &&
+				 * Integer.parseInt(richAttributeModel.get(0).getCancellationWindow()) == 0) {
+				 * orderEntryData.setItemCancellationStatus(false); } else
+				 */
+				//TISEE-6419
+				if (!isChildCancelleable(subOrder, orderEntryData.getTransactionId()))
+				{
+					orderEntryData.setItemCancellationStatus(false);
+				}
+				else if (null == orderEntryData.getConsignment() && orderEntryData.getQuantity().longValue() != 0)
+				{
+					if (subOrder.getStatus() != null)
 					{
-						orderEntryData.setItemReturnStatus(true);
+						orderEntryData.setItemCancellationStatus(checkCancelStatus(subOrder.getStatus().getCode(),
+								MarketplacecommerceservicesConstants.CANCEL_ORDER_STATUS));
+					}
+				}
+				else if (null != orderEntryData.getConsignment() && null != orderEntryData.getConsignment().getStatus())
+				{
+					final String consignmentStatus = orderEntryData.getConsignment().getStatus().getCode();
+					orderEntryData.setItemCancellationStatus(checkCancelStatus(consignmentStatus,
+							MarketplacecommerceservicesConstants.CANCEL_STATUS));
+				}
+
+				LOG.debug("Step 6************************Order History:  setting setItemReturnStatus for " + subOrder.getCode());
+
+
+				if (null != orderEntryData.getConsignment() && null != orderEntryData.getConsignment().getStatus()
+						&& null != richAttributeModel.get(0).getReturnWindow()
+						&& Integer.parseInt(richAttributeModel.get(0).getReturnWindow()) > 0)
+				{
+					consignmentModel = mplOrderService.fetchConsignment(orderEntryData.getConsignment().getCode());
+					if (null != consignmentModel)
+					{
+
+						//					if (richAttributeModel.get(0).getReturnWindow() != null
+						//							&& Integer.parseInt(richAttributeModel.get(0).getReturnWindow()) == 0)
+						//					{
+						//						orderEntryData.setItemReturnStatus(false);
+						//					}
+						final Date sDate = new Date();
+						final int returnWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(consignmentModel.getDeliveryDate(),
+								sDate);
+						final int actualReturnWindow = Integer.parseInt(richAttributeModel.get(0).getReturnWindow());
+						if (null != orderEntryData.getConsignment() && null != orderEntryData.getConsignment().getStatus()
+								&& (orderEntryData.getConsignment().getStatus().getCode()
+										.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED)
+										|| orderEntryData.getConsignment().getStatus().getCode()
+										.equalsIgnoreCase(MarketplacecommerceservicesConstants.COLLECTED))
+										&& returnWindow <= actualReturnWindow)
+						{
+							orderEntryData.setItemReturnStatus(true);
+						}
+					}
+					else
+					{
+						orderEntryData.setItemReturnStatus(false);
 					}
 				}
 				else
@@ -642,15 +655,10 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 			}
 			else
 			{
-				orderEntryData.setItemReturnStatus(false);
+				LOG.debug("Order History : Seller Info model or rich attribute model is null or empty for ussid "
+						+ orderEntryData.getSelectedUssid());
 			}
-		}
-		else
-		{
-			LOG.debug("Order History : Seller Info model or rich attribute model is null or empty for ussid "
-					+ orderEntryData.getSelectedUssid());
-		}
-
+		
 		return orderEntryData;
 	}
 
@@ -1127,6 +1135,27 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	}
 
+	/**
+	 * This method returns the order model based on orderNumber, without customer check
+	 *
+	 * @param orderNumber
+	 * @return OrderModel
+	 */
+	@Override
+	public OrderModel getOrderForAnonymousUser(final String orderNumber)
+	{
+		LOG.debug("Searching for order with order id:" + orderNumber);
+		final BaseStoreModel baseStoreModel = getBaseStoreService().getCurrentBaseStore();
+		final OrderModel orderModel = getCustomerAccountService().getOrderForCode(orderNumber, baseStoreModel);
+		if (orderModel == null)
+		{
+			LOG.debug("Couldn't found order id DB for :" + orderNumber);
+			throw new UnknownIdentifierException("Order with orderGUID " + orderNumber
+					+ " not found for current user in current BaseStore");
+		}
+		LOG.debug("Order found for given order id :" + orderNumber);
+		return orderModel;
+	}
 
 	/**
 	 * @return the customerAccountService

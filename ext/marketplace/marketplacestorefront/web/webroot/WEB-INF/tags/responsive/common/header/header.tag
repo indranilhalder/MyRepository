@@ -1,15 +1,15 @@
 <%@ tag body-content="empty" trimDirectiveWhitespaces="true"%>
 <%@ attribute name="hideHeaderLinks" required="false"%>
 <%@ attribute name="showOnlySiteLogo" required="false"%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
-<%@ taglib prefix="sec"
-	uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="sec"	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="nav" tagdir="/WEB-INF/tags/responsive/nav"%>
+<%@ taglib prefix="trackOrder" tagdir="/WEB-INF/tags/responsive/common/header"%>
+<%@ taglib prefix="sec"	uri="http://www.springframework.org/security/tags"%>
 
 <%-- <cms:pageSlot position="TopHeaderSlot" var="component" element="div"
 	class="container">
@@ -103,6 +103,11 @@
 								<cms:pageSlot position="MiniCart" var="component">
 									<cms:component component="${component}" />
 								</cms:pageSlot>
+								<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
+									<li class="track_order_header"><a href="#" onclick="openTrackOrder()">
+										<spring:theme code="trackorder.header.text" text="Track Order"/></a>
+									</li>
+								</sec:authorize>
 								<li class="store-locator-header"><a href="${request.contextPath}/store-finder">Our Stores</a></li>
 								<li class="download-app"><a href="${request.contextPath}/apps">Download App</a></li>
 							</c:if>
@@ -212,6 +217,10 @@
 		<div class="compact-toggle mobile"></div>
 	</div>
 
+	<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
+		<trackOrder:trackOrder />
+	</sec:authorize>
+
 	<a id="skiptonavigation"></a>
 	<nav:topNavigation />
 </header>
@@ -239,8 +248,7 @@
 	right: 20px !important;
 }
 </style>
-<script>
-</script>
+
 <!--  Commented for TISPRD-1440  -->
 <!-- <script>
 /*$(document).ready(function(){

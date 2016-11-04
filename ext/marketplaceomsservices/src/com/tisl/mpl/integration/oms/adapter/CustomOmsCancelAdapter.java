@@ -110,7 +110,7 @@ public class CustomOmsCancelAdapter implements Serializable
 	
 
 	public boolean createTicketInCRM(final String subOrderEntryTransactionId, final String ticketTypeCode,
-			final String reasonCode, final String refundType, final OrderModel subOrderModel)
+			final String reasonCode, final String refundType, final OrderModel subOrderModel,boolean isSsb)
 	{
 		boolean ticketCreationStatus = false;
 		try
@@ -126,9 +126,15 @@ public class CustomOmsCancelAdapter implements Serializable
 				sendTicketLineItemData.setLineItemId(abstractOrderEntryModel.getOrderLineId());
 				if (ticketTypeCode.equalsIgnoreCase("C"))
 				{
-					sendTicketLineItemData.setCancelReasonCode(reasonCode);
+					
 					sendTicketRequestData.setRefundType(refundType);
-					sendTicketRequestData.setTicketSubType(MarketplaceomsordersConstants.TICKET_SUB_TYPE_CODE);
+					if(isSsb){
+						sendTicketRequestData.setTicketSubType(MarketplaceomsordersConstants.TICKET_SUB_TYPE_CODE_SSB);
+						sendTicketLineItemData.setCancelReasonCode(MarketplaceomsordersConstants.CRM_SSB_REASON_CODE);
+					}else{
+   					sendTicketRequestData.setTicketSubType(MarketplaceomsordersConstants.TICKET_SUB_TYPE_CODE);
+   					sendTicketLineItemData.setCancelReasonCode(reasonCode);
+					}
 				}
 				lineItemDataList.add(sendTicketLineItemData);
 			}

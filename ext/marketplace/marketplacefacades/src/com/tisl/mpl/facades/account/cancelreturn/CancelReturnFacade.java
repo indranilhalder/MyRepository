@@ -8,9 +8,17 @@ import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.returns.model.ReturnRequestModel;
 
 import java.util.List;
 
+import com.tisl.mpl.data.CODSelfShipData;
+import com.tisl.mpl.data.CODSelfShipResponseData;
+import com.tisl.mpl.data.CRMTicketUpdateData;
+import com.tisl.mpl.data.CRMTicketUpdateResponseData;
+import com.tisl.mpl.data.RTSAndRSSReturnInfoRequestData;
+import com.tisl.mpl.data.RTSAndRSSReturnInfoResponseData;
+import com.tisl.mpl.data.ReturnInfoData;
 import com.tisl.mpl.data.ReturnLogisticsResponseData;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
 
@@ -67,17 +75,19 @@ public interface CancelReturnFacade
 	 * @param ussid
 	 * @param customerData
 	 * @param subOrderModel
+
+	 * @param returnAddress
+	 * @param returnInfoData
 	 * @return CRMTicketStatus
 	 */
 	public boolean createTicketInCRM(final OrderData subOrderDetails, final OrderEntryData subOrderEntry,
 			final String ticketTypeCode, final String reasonCode, final String refundType, final String ussid,
-			final CustomerData customerData, final OrderModel subOrderModel, ReturnItemAddressData returnAddress);
+			final CustomerData customerData, final OrderModel subOrderModel, ReturnItemAddressData returnAddress,ReturnInfoData returnInfoData);
 
 
 	/**
 	 * @param order
 	 * @param orderLineId
-	 * @return
 	 * @throws Exception
 	 */
 	public List<OrderEntryData> associatedEntriesData(OrderModel order, String orderLineId) throws Exception;
@@ -94,26 +104,68 @@ public interface CancelReturnFacade
 	 * @author Techouts
 	 * @param subOrderDetails
 	 * @param subOrderEntry
-	 * @param reasonCode
-	 * @param ussid
-	 * @param ticketTypeCode
 	 * @param customerData
-	 * @param refundType
-	 * @param isReturn
 	 * @param salesApplication
-	 * @param pinCode
 	 * @return Return Item Status
 	 */
-	public boolean implementReturnItem(OrderData subOrderDetails, OrderEntryData subOrderEntry, String reasonCode, String ussid,
-			String ticketTypeCode, CustomerData customerData, String refundType, boolean isReturn,
+	public boolean implementReturnItem(OrderData subOrderDetails, OrderEntryData subOrderEntry, ReturnInfoData returnData,CustomerData customerData,
 			SalesApplication salesApplication, ReturnItemAddressData returnAddress);
 
 
+	/**
+	 * 
+	 * @param returnRequestData
+	 * @return RTSAndRSSReturnInfoRequestData
+	 */
+	public RTSAndRSSReturnInfoResponseData retrunInfoCallToOMS(final RTSAndRSSReturnInfoRequestData returnRequestData);
+	
+	/**
+	 * 
+	 * @param codSelfShipData
+	 * @return RTSAndRSSReturnInfoRequestData
+	 */
+	public CODSelfShipResponseData codPaymentInfoToFICO(final CODSelfShipData codSelfShipData);
+	
+	/**
+	 * 
+	 * @param updateTicketData
+	 * @return CRMTicketUpdateResponseData
+	 */
+	public CRMTicketUpdateResponseData UpdateCRMTicket(final CRMTicketUpdateData updateTicketData);
+	
+	
+	
 	/**
 	 * @param orderEntryStatus
 	 * @return String
 	 */
 	String getOrderStatusStage(String orderEntryStatus);
+	
+	
+	/**
+	 * 
+	 * @param ussid
+	 * @return List<String>
+	 */
+	List<String> getReturnableDates(OrderEntryData ussid);
+	
+	/**
+	 * @param codSelfShipData
+	 */
+	public void saveCODReturnsBankDetails(CODSelfShipData codSelfShipData);
+	
+	/**
+	 * @param codSelfShipData
+	 */
+	public void insertUpdateCustomerBankDetails(CODSelfShipData codSelfShipData);
+	
+	/**
+	 * @param customerId
+	 */
+	public CODSelfShipData getCustomerBankDetailsByCustomerId(String customerId);
+	
+	
+	public List<ReturnRequestModel> getListOfReturnRequest(String orderId);
 
 
 }

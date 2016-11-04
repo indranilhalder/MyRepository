@@ -784,4 +784,25 @@ public final class ModelAttributetConstants
 	public static final String Homepage_Title = "Online Shopping Site in India for Mobiles, Electronics & Fashion at TataCLiQ";
 	public static final String Homepage_Description = "Online Shopping in India for Mobiles, Electronics, Men & Women Clothing, Shoes at TataCLiQ. Get 100% Genuine products!";
 	public static final String Homepage_Keyword = "Online Shopping sites, online shopping store, online shopping, Online mobile shopping, shopping online, TataCLiQ";
+	public static final String PHONE_NUMBER = "phoneNumber";
+	public static final String ADDRESS_CHANGE_ELIGIBLE = "addressChangeEligible";
+	public static final String STRINGMEAASGE="stringMessage";
+	public static final String ORDERDETAIL="orderDetail";
+	public static final String TXNSCHEDULEDATA="txnScheduleData";
+	
+
+	public static final String SCHEDULE_TIMESLOTS = "timeSlots";
+	public static final String RETURNABLE_SLAVES = "returnableSlaves";
+	public static final String RETURN_FORM = "returnForm";
+	public static final String RETURN_DATES = "returnDates";
+	public static final String RETURN_SLOT_TYPE = "RD";
+	public static final String CUSTOMER_BANK_DETAILS = "customerBankDetails";
+
+	public static final String LPNOTAVAILABLE_ERRORMSG = "Logistic Provider not available for given pincode ";
+	public static final String MPL_RETURN_INFO_FORM = "mplReturnInfoForm";
+	public static final String RETURN_METHOD = "returnMethod";
+	
+	public static final String QUCK_DROP_PROD_LEVEL = "productRichAttrOfQuickDrop";
+	public static final String QUCK_DROP_SELLER_LEVEL = "sellerRichAttrOfQuickDrop";
+
 }

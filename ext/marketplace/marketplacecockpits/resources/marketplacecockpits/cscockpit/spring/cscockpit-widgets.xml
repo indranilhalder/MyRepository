@@ -63,6 +63,10 @@
 	<bean id="marketplaceCsShippingAddressCreateWidgetRenderer"
 		parent="defaultCsAddressCreateWidgetRenderer"
 		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceDeliveryAddressWidgetRenderer">
+		<property name="callContextController" ref="csCallContextController" />
+		<property name="isChangeDeliveryAddress">
+			<value type="java.lang.Boolean">false</value>
+		</property>
 	</bean>
 
 	<alias alias="csShippingAddressWidgetRenderer" name="mplCsShippingAddressWidgetRenderer" />
@@ -87,6 +91,8 @@
 				parent="csBaseAppender" />
 		</property>
 	</bean> -->
+
+
 
 	<!-- For Payment Mode COD -->
 	<alias alias="csCheckoutPaymentWidgetRenderer" name="defaultCsCheckoutPaymentCustomizedWidgetRenderer" />
@@ -589,7 +595,38 @@
 		<property name="formatFactory" ref="formatFactory" />
 		<property name="sessionService" ref="sessionService" />
 	</bean>
+	
+	
+	
+	<!-- Refund Schedule Delivery Charges  Start --> 
+	
+	<alias alias="csRefundScheduleDeliveryChargeWidgetConfig" name="defaultCsRefundScheduleDeliveryChargeWidgetConfig" />
+	<bean id="defaultCsRefundScheduleDeliveryChargeWidgetConfig" parent="csBaseWidgetConfig">
+		<property name="widgetTitle" value="cscockpit.widget.refund.refundScheduleDeliveryCharge.create" />
+		<property name="widgetRenderer" ref="csRefundScheduleDeliveryChargeWidgetRenderer" />
+		<property name="widgetController" ref="csAssociatedOrderController" />
+		<property name="widgetClass"
+			value="de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget" />
+		<property name="widgetSclass" value="defaultWidgetFrame csInvoiceWidgetFrame" />
+		<property name="widgetModel">
+			<bean
+				class="de.hybris.platform.cockpit.widgets.models.impl.DefaultListWidgetModel" />
+		</property>
+	</bean>
+	
+	<alias alias="csRefundScheduleDeliveryChargeWidgetRenderer" name="marketPlacedefaultCsRefundScheduleDeliveryChargeWidgetRenderer" />
+	<bean id="marketPlacedefaultCsRefundScheduleDeliveryChargeWidgetRenderer"
+		parent="abstractWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceRefundScheduleDeliveryChargeWidgetRenderer"
+		scope="request">
+		<property name="listConfigurationCode" value="orderRefundDeliveryChargeListDetail" />
+		<property name="listConfigurationType" value="AbstractOrderEntry" />
+		<property name="commonI18NService" ref="commonI18NService" />
+		<property name="formatFactory" ref="formatFactory" />
+		<property name="sessionService" ref="sessionService" />
+	</bean>
 		
+		<!-- Refund Schedule Delivery Charges  END --> 
 	<alias alias="csFraudReportWidgetRenderer" name="mplDefaultCsFraudReportWidgetRenderer"/>
 	<bean id="mplDefaultCsFraudReportWidgetRenderer" parent="defaultCsFraudReportWidgetRenderer" class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MplFraudReportWidgetRenderer"/>
 	
@@ -650,19 +687,24 @@
 	<alias alias="csCouponOrderWidgetRenderer" name="csCouponOrderWidgetRenderer" />
 	<bean id="csCouponOrderWidgetRenderer" parent="abstractWidgetRenderer"
 		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceCouponOrderWidgetRenderer">
-	</bean> 
-	
-<!--Alternate Conatct details for CNC -->
-<alias alias="csAlternateContactDetailsCreateWidgetConfig" name="defaultCsAlternateContactDetailsCreateWidgetConfig"/>
-	<bean id="defaultCsAlternateContactDetailsCreateWidgetConfig" parent="csBaseWidgetConfig">
-	
-		<property name="widgetTitle" value="cscockpit.widget.order.alternateContactDetails.create"/>
-		<property name="widgetRenderer" ref="csAlternateContactDetailsCreateWidgetRenderer"/>
-		<property name="widgetController" ref="csCustomerController"/>
-		<property name="widgetClass" value="de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget"/>
-		<property name="widgetSclass" value="defaultWidgetFrame csCustomerEditWidgetFrame"/>
+	</bean>
+
+	<!--Alternate Conatct details for CNC -->
+	<alias alias="csAlternateContactDetailsCreateWidgetConfig" name="defaultCsAlternateContactDetailsCreateWidgetConfig" />
+	<bean id="defaultCsAlternateContactDetailsCreateWidgetConfig"
+		parent="csBaseWidgetConfig">
+
+		<property name="widgetTitle"
+			value="cscockpit.widget.order.alternateContactDetails.create" />
+		<property name="widgetRenderer"
+			ref="csAlternateContactDetailsCreateWidgetRenderer" />
+		<property name="widgetController" ref="csCustomerController" />
+		<property name="widgetClass"
+			value="de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget" />
+		<property name="widgetSclass" value="defaultWidgetFrame csCustomerEditWidgetFrame" />
 		<property name="widgetModel">
-			<bean class="de.hybris.platform.cscockpit.widgets.models.impl.OrderItemWidgetModel"/>
+			<bean
+				class="de.hybris.platform.cscockpit.widgets.models.impl.OrderItemWidgetModel" />
 		</property>
 
 	</bean>
@@ -678,5 +720,164 @@
 		<property name="callContextController" ref="csCallContextController"/>
 		
 	</bean>
+
+
+	<!-- Change Delivery Address -->
+  <alias alias="csChangeDeliveryAddressWidgetConfig" name="defaultCsChangeDeliveryAddressWidgetConfig" />
+	<bean id="defaultCsChangeDeliveryAddressWidgetConfig" parent="defaultCsAddressCreateWidgetConfig">
+		<property name="widgetRenderer" ref="csChangeDeliveryAddressCreateWidgetRenderer" />
+	</bean>
+
+	<alias alias="csChangeDeliveryAddressCreateWidgetRenderer" name="DefaultCsChangeDeliveryAddressCreateWidgetRenderer" />
+	<bean id="DefaultCsChangeDeliveryAddressCreateWidgetRenderer"
+		parent="defaultCsAddressCreateWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceDeliveryAddressWidgetRenderer">
+        <property name="callContextController" ref="csCallContextController" />
+		<property name="isChangeDeliveryAddress">
+			<value type="java.lang.Boolean">true</value>
+		</property>
+	</bean>
+
+
+
+	<alias alias="csChangeDeliveryAddressOtpWidgetConfig" name="defaultCsChangeDeliveryAddressOtpWidgetConfig" />
+	<bean id="defaultCsChangeDeliveryAddressOtpWidgetConfig" parent="csBaseWidgetConfig">
+
+		<property name="widgetTitle"
+			value="cscockpit.widget.order.changeDeliveryAddress.create" />
+		<property name="widgetRenderer" ref="csChangeDeliveryOtpCreateWidgetRenderer" />
+		<property name="widgetController" ref="csCustomerController" />
+		<property name="widgetClass"
+			value="de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget" />
+		<property name="widgetSclass" value="defaultWidgetFrame csCustomerEditWidgetFrame" />
+		<property name="widgetModel">
+			<bean
+				class="de.hybris.platform.cscockpit.widgets.models.impl.OrderItemWidgetModel" />
+		</property>
+
+	</bean>
+
+	<alias alias="csChangeDeliveryOtpCreateWidgetRenderer" name="defaultCsChangeDeliveryOtpCreateWidgetRenderer"/>
+	<bean id="defaultCsChangeDeliveryOtpCreateWidgetRenderer"
+		parent="abstractWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MplChangeDeliveryOTPWidgetRenderer">
+		<property name="callContextController" ref="csCallContextController" />
+		<property name="detailRenderer">
+			<bean
+				class="de.hybris.platform.cscockpit.widgets.renderers.details.impl.ProductSearchProductDetailRenderer">
+				<property name="urlStrategy" ref="csProductUrlStrategy" />
+				<property name="configurationCode" value="productDetails" />
+			</bean>
+		</property>
+	</bean>
+	
+
+ <!--  Change DeliveryAddress Controller  -->
+ <alias alias="csChangeDeliveryAddressControler" name="marketPlaceChangeDeliveryAddressControler" />
+	<bean id="marketPlaceChangeDeliveryAddressControler" parent="csBaseWidgetController"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl.MplDeliveryAddressControllerImpl"
+		scope="session">
+		<property name="callContextController" ref="csCallContextController"/>
+		<property name="orderCancelService" ref="orderCancelService"/>
+		<property name="userService" ref="userService"/>
+	</bean>
+
+
+
+<!-- Address  history widget -->
+	
+<alias alias="csAddressHistoryWidgetConfig" name="defaultCsAddressHistoryWidgetConfig"/>
+	<bean id="defaultCsAddressHistoryWidgetConfig" parent="csBaseWidgetConfig">
+		<property name="widgetTitle" value="cscockpit.widget.order.addressHistory"/>
+		<property name="widgetRenderer" ref="csAddressHistoryWidgetRenderer"/>
+		<property name="widgetController" ref="csOrderController"/>
+		<property name="widgetClass" value="de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget"/>
+		<property name="widgetModel">
+			<bean class="com.tisl.mpl.cockpits.cscockpit.widgets.models.impl.AddressHistoryListWidgetModel"/>
+		</property>
+		<property name="widgetAdapter">
+			<bean class="com.tisl.mpl.cockpits.cscockpit.widgets.adapter.impl.MplOrderDeliveryAddressHistoryWidgetAdapter">
+				<property name="cockpitTypeService" ref="cockpitTypeService"/>
+				<property name="orderHistoryService" ref="orderHistoryService"/>
+			</bean>
+		</property>
+	</bean>
+
+	<alias alias="csAddressHistoryWidgetRenderer" name="defaultCsAddressHistoryWidgetRenderer"/>
+	<bean id="defaultCsAddressHistoryWidgetRenderer" parent="abstractWidgetRenderer" class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MplDeliveryAddressHistoryWidgetRenderer">
+		<property name="listConfigurationCode" value="addressHistoryList"/>
+		<property name="listConfigurationType" value="Address"/>
+		<property name="callContextController" ref="csCallContextController"/>
+	</bean>
+ 
+		<!--Schedule Delivery  Timings START -->
+
+	<alias alias="csOrderScheduleDeliverySlotWidgetConfig" name="defaultCsOrderScheduleDeliverySlotWidgetConfig"/>
+	<bean id="defaultCsOrderScheduleDeliverySlotWidgetConfig" parent="csBaseWidgetConfig">
+		<property name="widgetTitle" value="cscockpit.widget.order.ScheduleDeliverySlots"/>
+		<property name="widgetRenderer" ref="csOrderScheduleDeliverySlotWidgetRenderer"/>
+		<property name="widgetController" ref="csOrderController"/>
+		<property name="widgetClass" value="de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget"/>
+		<property name="widgetModel">
+			<bean class="de.hybris.platform.cockpit.widgets.models.impl.DefaultListWidgetModel"/>
+		</property>
+	</bean>
+
+	<alias alias="csOrderScheduleDeliverySlotWidgetRenderer" name="defaultCsOrderScheduleDeliverySlotWidgetRenderer"/>
+	<bean id="defaultCsOrderScheduleDeliverySlotWidgetRenderer" parent="abstractWidgetRenderer" class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MplScheduleDeliverySlotsWidgetRenderer">
+		<property name="callContextController" ref="csCallContextController"/>
+		<property name="cockpitTypeService" ref="cockpitTypeService"/>
+	</bean>
+	
+		<!--Schedule Delivery  Timings END  -->
+	
+	
+	  <!--Schedule Delivery  Slots START -->
+
+<alias alias="csCheckoutScheduleDeliveryWidgetConfig" name="defaultCsCheckoutScheduleDeliveryWidgetConfig"/>
+	<bean id="defaultCsCheckoutScheduleDeliveryWidgetConfig" parent="csBaseWidgetConfig">
+		<property name="widgetTitle" value="cscockpit.widget.checkout.ScheduleDelivery"/>
+		<property name="widgetRenderer" ref="csOrderScheduleDeliveryWidgetRenderer"/>
+		<property name="widgetController" ref="csCheckoutController"/>
+		<property name="widgetClass" value="de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget"/>
+		<property name="widgetSclass" value="defaultWidgetFrame csCheckoutPaymentWidgetFrame"/>
+		<property name="widgetModel">
+			<bean class="de.hybris.platform.cockpit.widgets.models.impl.DefaultListWidgetModel"/>
+		</property>
+	</bean>
+
+	<alias alias="csOrderScheduleDeliveryWidgetRenderer" name="defaultCsOrderScheduleDeliveryWidgetRenderer" />
+	<bean id="defaultCsOrderScheduleDeliveryWidgetRenderer"
+		parent="abstractWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MplScheduleDeliveryWidgetRenderer">
+		<property name="cockpitTypeService" ref="cockpitTypeService"/>
+	</bean>
+	
+	<!--Schedule Delivery  Slots END  -->
+	
+	
+	<!-- R2.3 Return Changes -->
+	
+	<alias alias="csReturnRequestCreditWidgetConfig" name="defaultCsReturnRequestCreditWidgetConfig"/>
+	<bean id="defaultCsReturnRequestCreditWidgetConfig" parent="csBaseWidgetConfig">
+		<property name="widgetTitle" value="cscockpit.widget.order.returnReplacement.create"/>
+		<property name="widgetRenderer" ref="csReturnRequestCreditWidgetRenderer"/>
+		<property name="widgetController" ref="csReturnsController"/>
+		<property name="widgetClass" value="de.hybris.platform.cockpit.widgets.impl.DefaultInputWidget"/>
+		<property name="widgetSclass" value="defaultWidgetFrame csReturnsCreateWidgetFrame"/>
+		<property name="widgetModel">
+			<bean class="de.hybris.platform.cockpit.widgets.models.impl.DefaultListWidgetModel"/>
+		</property>
+	</bean>
+
+	<alias alias="csReturnRequestCreditWidgetRenderer" name="defaultCsReturnRequestCreditWidgetRenderer"/>
+	<bean id="defaultCsReturnRequestCreditWidgetRenderer" parent="abstractWidgetRenderer" class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceReturnRequestCreditDetailsWidgetRenderer">
+		<property name="productInfoConfigurationCode" value="returnsOrderEntryList"/>
+		<property name="listConfigurationCode" value="replacementEntryList"/>
+		<property name="listEditorConfigurationCode" value="replacementEntryEdit"/>
+		<property name="listConfigurationType" value="ReplacementEntry"/>
+		<property name="popupWidgetHelper" ref="popupWidgetHelper"/>
+	</bean>
+	<!-- R2.3 Return Cs-Cockpit Changes Close -->
 	
 </beans>

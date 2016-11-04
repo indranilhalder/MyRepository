@@ -296,21 +296,27 @@ public class MarketPlaceRefundDeliveryChargeWidgetRenderer extends
 											.getLabelWithFallback() : col
 											.getLabel());
 							headerLabel.setTooltip(col.getName());
-							headerLabel.setSclass("invoiceHeaderLabel");
+							headerLabel.setSclass("deliveryChargeHeaderLabel");
 							tableHeader.appendChild(headerLabel);
 						}
 					}
+					
+					Listheader headerLabel4 = new Listheader("is ED To HD");
+					headerLabel4.setTooltip("is ED To HD");
+					headerLabel4.setSclass("deliveryChargeHeaderLabel");
+					tableHeader.appendChild(headerLabel4);
+					
 					Listheader headerLabel3 = new Listheader("Delivery Charges");
 					headerLabel3.setTooltip("Delivery Charges");
-					headerLabel3.setSclass("invoiceHeaderLabel");
+					headerLabel3.setSclass("deliveryChargeHeaderLabel");
 					tableHeader.appendChild(headerLabel3);
 					Listheader headerLabel1 = new Listheader("Reason");
 					headerLabel1.setTooltip("Reason");
-					headerLabel1.setSclass("invoiceHeaderLabel");
+					//headerLabel1.setSclass("deliverychargeHeaderLabel");
 					tableHeader.appendChild(headerLabel1);
 					Listheader headerLabel2 = new Listheader("Notes");
 					headerLabel2.setTooltip("Notes");
-					headerLabel2.setSclass("invoiceHeaderLabel");
+					headerLabel2.setSclass("deliveryChargeHeaderLabel");
 					tableHeader.appendChild(headerLabel2);
 					tableVbox.appendChild(tableHeader);
 					buttonFlag = true;
@@ -349,6 +355,15 @@ public class MarketPlaceRefundDeliveryChargeWidgetRenderer extends
 					tableRow.appendChild(rowLabel);
 					createDataRow(getCockpitTypeService().wrapItem(orderEntry),
 							tableRow);
+					
+					Listcell rowLabel5 = new Listcell();
+					String isEdToHdLabelString =  ((null != orderEntry
+							.getIsEDtoHD() && orderEntry.getIsEDtoHD()) ? "YES" : "NO");
+					final Label isEdToHdLabel = new Label(
+							isEdToHdLabelString);
+					rowLabel5.appendChild(isEdToHdLabel);
+					tableRow.appendChild(rowLabel5);
+					
 					Listcell rowLabel3 = new Listcell();
 					String deliveryChargesString = (null != orderEntry
 							.getCurrDelCharge()) ? currencyInstance

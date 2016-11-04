@@ -30,35 +30,37 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 	
 	
 	<!-- Added For Pincode -->
-	<import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_pincode-spring.xml" />
+	<!-- <import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_pincode-spring.xml" />
 	
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-common-spring.xml" />
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_import-spring.xml" />
 		
-		
+	Added for landmarks
+	<import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_landmarks-spring.xml" />
+	
 <import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_buybox-spring.xml" />
 
-		<!-- TISPRD-207 Changes Start-->
+		TISPRD-207 Changes Start
 		<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_delist-spring.xml" />
-		<!-- TISPRD-207 Changes End-->
-	<!-- <import
-		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_classification-spring.xml" /> -->
+		TISPRD-207 Changes End
+	<import
+		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_classification-spring.xml" />
 
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_price-spring.xml" />
-	<!-- <import
-		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_product-spring.xml" /> -->
+	<import
+		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_product-spring.xml" />
 
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_stock-spring.xml" />
-	<!-- <import
+	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_seller-spring.xml" />
 	<import
-		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_media-spring.xml" /> -->
+		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_media-spring.xml" />
 
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_bin-spring.xml" />
@@ -67,7 +69,7 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 		
 	<import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_manualRefund-spring.xml"/>
 	
-	<import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_userGroup-spring.xml"/>
+	<import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_userGroup-spring.xml"/> -->
 		
 
 
@@ -1564,7 +1566,7 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 	</bean>
 	<!-- ============== configure beans for mplConfig ============== -->
 	
-	<import	resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_omsFallback-spring.xml" />
+	<!-- <import	resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_omsFallback-spring.xml" /> -->
   <!--  TISPRO-325 changes -->
   <bean id="sizeAttributeSortProvider"
 	      class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.DefaultSizeFacetTopValuesProvider">
@@ -1653,4 +1655,19 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 	<bean id="facetDisplayNameComparator" class="com.tisl.mpl.core.comparator.DisplayFacetNameComparator" />	
 		
 	
+
+	<bean id="dateUtilHelper" class="com.tisl.mpl.core.util.DateUtilHelper"/>
+	
+	<alias name="defaultPrefixableKeyGenerator" alias="prefixableKeyGenerator"/>
+	<!-- Key generator for Ecomm request ID for CRM ticket create -->
+	<bean id="defaultPrefixableKeyGenerator"
+		class="com.tisl.mpl.core.keygenerator.MplPrefixablePersistentKeyGenerator"
+		init-method="init" scope="tenant">
+		<property name="key" value="ecommCode" />
+		<property name="digits" value="9" />
+		<property name="start" value="100000001" />
+		<property name="numeric" value="false" />
+	</bean>
+	
+
 </beans>

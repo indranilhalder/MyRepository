@@ -14,12 +14,30 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlRootElement(name = "OrderLine")
 @XmlType(propOrder =
-{ "orderId", "transactionId", "isReturnLogisticsAvailable" })
+{ "orderId", "transactionId", "isReturnLogisticsAvailable","returnFulfillmentType" })
 public class OrderLineDataResponse
 {
 	private String orderId;
 	private String transactionId;
 	private String isReturnLogisticsAvailable;
+	private String returnFulfillmentType;
+
+	/**
+	 * @return the returnFulfillmentType
+	 */
+	@XmlElement(name = "ReturnFulfilmentType")
+	public String getReturnFulfillmentType()
+	{
+		return returnFulfillmentType;
+	}
+
+	/**
+	 * @param returnFulfillmentType the returnFulfillmentType to set
+	 */
+	public void setReturnFulfillmentType(String returnFulfillmentType)
+	{
+		this.returnFulfillmentType = returnFulfillmentType;
+	}
 
 	/**
 	 * @return the orderId

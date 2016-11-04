@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "AddressInfo")
 @XmlType(propOrder =
 { "shippingFirstName", "shippingLastName", "phoneNo", "address1", "address2", "address3", "country", "city", "state", "pincode",
-		"landmark" })
+		"landmark", "returnPickupDate", "timeSlotFrom", "timeSlotTo" })
 public class AddressInfoDTO
 {
 	private String shippingFirstName;
@@ -29,6 +29,9 @@ public class AddressInfoDTO
 	private String state;
 	private String pincode;
 	private String landmark;
+	private String returnPickupDate;
+	private String timeSlotFrom;
+	private String timeSlotTo;
 
 	/**
 	 * @return the shippingFirstName
@@ -226,5 +229,59 @@ public class AddressInfoDTO
 	public void setLandmark(final String landmark)
 	{
 		this.landmark = landmark;
+	}
+
+	/**
+	 * @return the returnPickupDate
+	 */
+	
+	@XmlElement(name = "returnPickupDate")
+	public String getReturnPickupDate()
+	{
+		return returnPickupDate;
+	}
+
+	/**
+	 * @param returnPickupDate the returnPickupDate to set
+	 */
+	public void setReturnPickupDate(String returnPickupDate)
+	{
+		this.returnPickupDate = returnPickupDate;
+	}
+
+	/**
+	 * @return the timeSlotFrom
+	 */
+	
+	@XmlElement(name = "TimeSlotFrom")
+	public String getTimeSlotFrom()
+	{
+		return timeSlotFrom;
+	}
+
+	/**
+	 * @param timeSlotFrom the timeSlotFrom to set
+	 */
+	public void setTimeSlotFrom(String timeSlotFrom)
+	{
+		this.timeSlotFrom = timeSlotFrom;
+	}
+
+	/**
+	 * @return the timeSlotTo
+	 */
+	
+	@XmlElement(name = "TimeSlotTo")
+	public String getTimeSlotTo()
+	{
+		return timeSlotTo;
+	}
+
+	/**
+	 * @param timeSlotTo the timeSlotTo to set
+	 */
+	public void setTimeSlotTo(String timeSlotTo)
+	{
+		this.timeSlotTo = timeSlotTo;
 	}
 }

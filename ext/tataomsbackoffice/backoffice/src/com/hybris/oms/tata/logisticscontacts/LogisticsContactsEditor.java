@@ -6,9 +6,10 @@ package com.hybris.oms.tata.logisticscontacts;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zk.ui.select.annotation.Wire;
+import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zul.Checkbox;
 import org.zkoss.zul.Grid;
 import org.zkoss.zul.Label;
@@ -26,17 +27,20 @@ import com.hybris.oms.tata.services.PhoneNumberValidation;
 
 /**
  * This class is to show the editorial area in logistic widget
- * 
+ *
  */
 public class LogisticsContactsEditor extends DefaultWidgetController
 {
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
 	private static final Logger LOG = LoggerFactory.getLogger(LogisticsContactsEditor.class);
 
 	private final PhoneNumberValidation phonenumValidation = new PhoneNumberValidation();
 
 	private final EmailValidator emailValidation = new EmailValidator();
-
-	@Autowired
+	@WireVariable
 	private LogisticsFacade logisticsRestClient;
 	private Grid createGrid;
 	private Grid editGrid;
@@ -52,6 +56,7 @@ public class LogisticsContactsEditor extends DefaultWidgetController
 	private Textbox email;
 	private Label lEmail;
 	private Checkbox isActive;
+	private Checkbox isScheduled;
 
 	private Textbox logisticsIdEdit;
 	private Textbox logisticsNameEdit;
@@ -60,15 +65,16 @@ public class LogisticsContactsEditor extends DefaultWidgetController
 	private Textbox phoneNoEdit;
 	private Label lPNumEdit;
 	private Textbox faxNoEdit;
-	private Label lFaxEdit;
 	private Textbox emailEdit;
-	private Label lemailEdit;
 	private Checkbox isActiveEdit;
-
+	@Wire
+	private Checkbox isScheduledEdit;
+	private Label lFaxEdit;
+	private Label lemailEdit;
 
 	/**
 	 * method to activate create and deactivate the update in editor area while selecting add symbol
-	 * 
+	 *
 	 * @param status
 	 * @throws InterruptedException
 	 */
@@ -92,13 +98,12 @@ public class LogisticsContactsEditor extends DefaultWidgetController
 		lPNumEdit.setValue("");
 		lFax.setValue("");
 		lFaxEdit.setValue("");
-		doFormEmpty(logisticsId, logisticsName, address, contactName, phoneNo, faxNo, email, isActive);
-
+		doFormEmpty(logisticsId, logisticsName, address, contactName, phoneNo, faxNo, email, isActive, isScheduled);
 	}
 
 	/**
 	 * method to activate edit and deactivate the create in editor area while selecting edit symbol
-	 * 
+	 *
 	 * @param status
 	 * @throws InterruptedException
 	 */
@@ -112,8 +117,9 @@ public class LogisticsContactsEditor extends DefaultWidgetController
 		lPNumEdit.setValue("");
 		lFaxEdit.setValue("");
 		doFormEmpty(logisticsIdEdit, logisticsNameEdit, addressEdit, contactNameEdit, phoneNoEdit, faxNoEdit, emailEdit,
-				isActiveEdit);
+				isActiveEdit, isScheduledEdit);
 		logisticsIdEdit.setValue(logistics.getLogisticsid());
+
 		logisticsNameEdit.setValue(logistics.getLogisticname());
 		addressEdit.setValue(logistics.getAddress());
 		contactNameEdit.setValue(logistics.getCName());
@@ -122,6 +128,10 @@ public class LogisticsContactsEditor extends DefaultWidgetController
 		{
 			isActiveEdit.setChecked(true);
 		}
+		if (logistics.getIsScheduled().equalsIgnoreCase("Y"))
+		{
+			isScheduledEdit.setChecked(true);
+		}
 		faxNoEdit.setValue(logistics.getCFax());
 		emailEdit.setValue(logistics.getCEmail());
 
@@ -129,9 +139,9 @@ public class LogisticsContactsEditor extends DefaultWidgetController
 
 	/**
 	 * method to save the newly create Logistics contact in database
-	 * 
+	 *
 	 * and generate one socket event for updating the list view
-	 * 
+	 *
 	 * @throws InterruptedException
 	 */
 	@ViewEvent(componentID = "addSave", eventName = Events.ON_CLICK)
@@ -141,12 +151,12 @@ public class LogisticsContactsEditor extends DefaultWidgetController
 		try
 		{
 			final Logistics logistics = getLogisticsContactsFormData(logisticsId, logisticsName, address, contactName, phoneNo,
-					faxNo, email, isActive);
+					faxNo, email, isActive, isScheduled);
 			if (logistics != null)
 			{
 				logisticsRestClient.createLogistics(logistics);
 				sendOutput("refreshlogisticscontactlist", Boolean.TRUE);
-				doFormEmpty(logisticsId, logisticsName, address, contactName, phoneNo, faxNo, email, isActive);
+				doFormEmpty(logisticsId, logisticsName, address, contactName, phoneNo, faxNo, email, isActive, isScheduled);
 				Messagebox.show("Logistics Contacts Added Successfully");
 			}
 		}
@@ -161,7 +171,7 @@ public class LogisticsContactsEditor extends DefaultWidgetController
 
 	/**
 	 * method to update Logistics calendar in database and generate one socket event for updating the list view
-	 * 
+	 *
 	 * @throws InterruptedException
 	 */
 	@ViewEvent(componentID = "updateSave", eventName = Events.ON_CLICK)
@@ -171,7 +181,7 @@ public class LogisticsContactsEditor extends DefaultWidgetController
 		try
 		{
 			final Logistics logistics = getLogisticsContactsFormData(logisticsIdEdit, logisticsNameEdit, addressEdit,
-					contactNameEdit, phoneNoEdit, faxNoEdit, emailEdit, isActiveEdit);
+					contactNameEdit, phoneNoEdit, faxNoEdit, emailEdit, isActiveEdit, isScheduledEdit);
 			if (logistics != null)
 			{
 				logisticsRestClient.updateLogistics(logistics);
@@ -190,7 +200,7 @@ public class LogisticsContactsEditor extends DefaultWidgetController
 	}
 
 	/**
-	 * 
+	 *
 	 * This socket event disable the create and editor widgets, after delete action performed in the list widget
 	 */
 
@@ -305,14 +315,15 @@ public class LogisticsContactsEditor extends DefaultWidgetController
 
 	/*
 	 * @ViewEvent(componentID = "phoneNo", eventName = Events.ON_CHANGING) public void phonenumValidation() {
-	 * 
+	 *
 	 * if(phoneNo.getV
-	 * 
+	 *
 	 * }
 	 */
 	public Logistics getLogisticsContactsFormData(final Textbox logisticsContactId, final Textbox logisticsName,
 			final Textbox logisticsContactAddress, final Textbox logisticsContactName, final Textbox logisticsPhoneNo,
-			final Textbox contactFaxNo, final Textbox logisticsContactEmail, final Checkbox isActive) throws InterruptedException
+			final Textbox contactFaxNo, final Textbox logisticsContactEmail, final Checkbox isActive, final Checkbox isShceduled)
+			throws InterruptedException
 
 	{
 
@@ -329,8 +340,8 @@ public class LogisticsContactsEditor extends DefaultWidgetController
 			return null;
 		}
 
-		if (!emailValidation.validate(logisticsContactEmail.getValue())
-				|| !phonenumValidation.validate(logisticsPhoneNo.getValue()) || !phonenumValidation.validate(contactFaxNo.getValue()))
+		if (!emailValidation.validate(logisticsContactEmail.getValue()) || !phonenumValidation.validate(logisticsPhoneNo.getValue())
+				|| !phonenumValidation.validate(contactFaxNo.getValue()))
 		{
 
 			Messagebox.show("Please first salve the form errors..");
@@ -352,6 +363,15 @@ public class LogisticsContactsEditor extends DefaultWidgetController
 		{
 			logistics.setActive(false);
 		}
+
+		if (isShceduled.isChecked())
+		{
+			logistics.setIsScheduled("Y");
+		}
+		else
+		{
+			logistics.setIsScheduled("N");
+		}
 		return logistics;
 
 	}
@@ -359,8 +379,7 @@ public class LogisticsContactsEditor extends DefaultWidgetController
 
 	public void doFormEmpty(final Textbox logisticsContactId, final Textbox logisticsName, final Textbox logisticsContactAddress,
 			final Textbox logisticsContactName, final Textbox logisticsPhoneNo, final Textbox contactFaxNo,
-			final Textbox logisticsContactEmail, final Checkbox isActive)
-
+			final Textbox logisticsContactEmail, final Checkbox isActive, final Checkbox isScheduled)
 	{
 		LOG.info("***************************************initialized method");
 		logisticsContactId.setValue("");
@@ -369,9 +388,9 @@ public class LogisticsContactsEditor extends DefaultWidgetController
 		logisticsContactName.setValue("");
 		logisticsPhoneNo.setValue("");
 		contactFaxNo.setValue("");
-		logisticsContactEmail.setValue(" ");
+		logisticsContactEmail.setValue("");
 		isActive.setChecked(false);
-
+		isScheduled.setChecked(false);
 	}
 
 }

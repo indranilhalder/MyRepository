@@ -183,6 +183,8 @@ public interface ControllerConstants
 				String AccountInviteFriendPage = "pages/account/inviteFriends";
 				String AccountCouponsPage = "pages/account/accountCouponDetailsPage";
 				String AccountOrderReturnPincodeServiceCheck = "pages/account/returnPincodeAvailabilityCheck";
+				String ScheduledDeliveryDate= "pages/account/scheduledDeliveryDate";
+				String OTPPopup= "pages/account/otpPopup";
 			}
 
 
@@ -247,7 +249,10 @@ public interface ControllerConstants
 				String chatPage = "pages/clickToChatCall/clickToChat";
 				String callPage = "pages/clickToChatCall/clickToCall";
 			}
-
+			interface Order
+			{
+				String TrackOrderDetailsPage = "pages/order/trackOrderDetailsPage";
+			}
 			interface Search
 			{
 				// TPR-198

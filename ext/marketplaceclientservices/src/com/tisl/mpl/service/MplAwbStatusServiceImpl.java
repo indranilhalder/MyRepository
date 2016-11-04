@@ -74,10 +74,12 @@ public class MplAwbStatusServiceImpl implements MplAwbStatusService
 			{
 				awbRequestInfo.setAWBNumber(awbNumber);
 			}
-			if (StringUtils.isNotEmpty(tplCode))
+			
+			  //2.3 Changes Commerce  
+			/*if (StringUtils.isNotEmpty(tplCode))
 			{
 				awbStatusRequest.setTPLCode(tplCode);
-			}
+			}*/
 			awbStatusRequest.setAWBRequestInfo(awbRequestInfo);
 
 			final JAXBContext context = JAXBContext.newInstance(AWBStatusRequest.class);

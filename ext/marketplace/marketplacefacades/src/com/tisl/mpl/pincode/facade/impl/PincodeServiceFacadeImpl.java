@@ -18,11 +18,11 @@ import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.storelocator.GPS;
+import de.hybris.platform.storelocator.exception.LocationServiceException;
 import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
-
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,6 +46,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
+import com.tisl.mpl.facades.data.PincodeData;
 import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
@@ -84,6 +85,9 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 	
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
+	
+	@Resource(name = "mplPincodeConverter")
+	private Converter<PincodeModel, PincodeData> mplPincodeConverter;
 
 
 	/**
@@ -322,6 +326,26 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 				{
 					data.setFullFillmentType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getFullfillment().toUpperCase()));
 				}
+				LOG.debug("seller.getFullfillment() :" + seller.getFullfillment());
+				LOG.debug("seller.getDeliveryFulfillModebyP1():" +seller.getDeliveryFulfillModebyP1());
+				
+				if (null != seller.getDeliveryFulfillModebyP1() && StringUtils.isNotEmpty(seller.getDeliveryFulfillModebyP1()))
+				{
+					data.setDeliveryFulfillModeByP1(seller.getDeliveryFulfillModebyP1().toUpperCase());
+				}
+				LOG.debug("seller.getDeliveryFulfillModebyP1()******:" +seller.getDeliveryFulfillModebyP1());
+				LOG.debug("seller.getIsFragile()******:" +seller.getIsFragile());
+				if (null != seller.getIsFragile() && StringUtils.isNotEmpty(seller.getIsFragile()))
+				{
+					data.setIsFragile(seller.getIsFragile().toUpperCase());
+				}
+				LOG.debug("seller.getIsPrecious()******:" +seller.getIsPrecious());
+				if (null != seller.getIsPrecious() && StringUtils.isNotEmpty(seller.getIsPrecious()))
+				{
+					data.setIsPrecious(seller.getIsPrecious().toUpperCase());
+				}
+				
+				
 				if (null != seller.getShippingMode() && (StringUtils.isNotEmpty(seller.getShippingMode())))
 				{
 					data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getShippingMode().toUpperCase()));
@@ -477,6 +501,55 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 		}
 		return storeLocationRequestDataList;
 	}
+	/**
+	 * 
+	 * @param pincode
+	 * @param sellerId
+	 * @return List<PointOfServiceData>
+	 */
+	@Override
+	public List<PointOfServiceData> getAllReturnableStores(String pincode,String sellerId)
+	{
+		PincodeModel pincodeModel=pincodeService.getLatAndLongForPincode(pincode);
+		List<PointOfServiceData> posData =null;
+			if(null!=pincodeModel){
+      			final LocationDTO dto = new LocationDTO();
+      			dto.setLongitude(pincodeModel.getLongitude().toString());
+      			dto.setLatitude(pincodeModel.getLatitude().toString());
+      			final Location myLocation = new LocationDtoWrapper(dto);
+      	
+      			final String configRadius = mplConfigService.getConfigValueById(MarketplaceFacadesConstants.CONFIGURABLE_RADIUS);
+      			final double configurableRadius = Double.parseDouble(configRadius);
+      			LOG.debug("**********configrableRadius:" + configurableRadius);
+      			posData = new ArrayList<PointOfServiceData>();
+      			try
+      			{
+      			Collection<PointOfServiceModel> pointOfServiceModels=pincodeService.getAllReturnableStores(myLocation.getGPS(), configurableRadius, sellerId);
+      			
+      			if (CollectionUtils.isNotEmpty(pointOfServiceModels))
+      			{
+      				//convert model to data
+      				posData = converters.convertAll(pointOfServiceModels, pointOfServiceConverter);
+      				if (CollectionUtils.isNotEmpty(posData))
+      				{
+      					return posData;
+      				}
+      			}
+      			}
+      			catch(LocationServiceException e)
+      			{
+      				throw new EtailNonBusinessExceptions(e);
+      			}
+      			catch (Exception e) {
+      				throw new EtailNonBusinessExceptions(e);
+      			}
+      		
+      			return posData;
+			}else{
+				LOG.debug("Stores not Avalable...");
+				return	posData;
+			}
+	}
 
 	/**
 	 * @return the pinCodeFacade
@@ -623,6 +696,57 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 	public List<Location> getSortedLocationsNearby(final GPS gps, final double distance, final String sellerId)
 	{
 		return pincodeService.getSortedLocationsNearby(gps, distance, sellerId);
+	}
+	
+	/**
+	 * Get the Pincode Details
+	 *
+	 * @param pincode
+	 * @return PincodeData
+	 */
+	@Override
+	public PincodeData getAutoPopulatePincodeData(final String pincode)
+	{
+		PincodeData pincodeData = null;
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("Pincode Facade Class :"+pincode);
+		}
+		try
+		{
+			final PincodeModel pincodeModel = pincodeService.getDetailsOfPincode(pincode);
+			LOG.debug("Getting Pincode  Details of the Pincode and call to Converted");
+			if(null != pincodeModel)
+			{
+				pincodeData = getMplPincodeConverter().convert(pincodeModel);
+			}
+		}
+		catch (final Exception exception)
+		{
+			LOG.error("No ProperDetails for the Given Pincode", exception);
+			throw exception;
+		}
+		return pincodeData;
+	}
+
+
+
+	/**
+	 * @return the mplPincodeConverter
+	 */
+	public Converter<PincodeModel, PincodeData> getMplPincodeConverter()
+	{
+		return mplPincodeConverter;
+	}
+
+
+
+	/**
+	 * @param mplPincodeConverter the mplPincodeConverter to set
+	 */
+	public void setMplPincodeConverter(Converter<PincodeModel, PincodeData> mplPincodeConverter)
+	{
+		this.mplPincodeConverter = mplPincodeConverter;
 	}
 
 }

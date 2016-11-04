@@ -52,6 +52,35 @@ public class CustomOmsShipmentReversePopulator extends OmsShipmentReversePopulat
 		target.setWarehouse(wareHouse);
 
 		target.setCode(source.getShipmentId());
+		
+		if (source.getIsEDtoHD() != null)
+		{
+			target.setIsEDtoHD(source.getIsEDtoHD());
+		}
+		if (source.getSsb() != null)
+		{
+			target.setSsb(source.getSsb());
+		}
+		if (source.getReturnInScan() != null)
+		{
+			target.setReturnInscan(source.getReturnInScan());
+		}
+		if (source.getReturnPickUp() != null)
+		{
+			target.setReturnPickUp(source.getReturnPickUp());
+		}
+		if (source.getAwbSecondaryStatus() != null)
+		{
+			target.setAwbSecondaryStatus(source.getAwbSecondaryStatus());
+		}
+		if (source.getReturnAwbSecondaryStatus() != null)
+		{
+			target.setReturnAwbSecondaryStatus(source.getReturnAwbSecondaryStatus());
+		}
+		if (source.getSdb() != null)
+		{
+			target.setSdb(source.getSdb());
+		}
 
 		final List orderModel = this.getOrderDao().find(Collections.singletonMap("code", source.getOrderId()));
 		if (orderModel.size() <= 0)

@@ -380,8 +380,9 @@ public class SalesOrderReverseXMLUtility
 			//for (final OrderModel order : childOrders)
 
 			final Map checkReturnCancelMap = checkCanelReturn(childOrders);
+			boolean sdbOrEdToHDFlag    = getSDBOrEdToHdFlag(childOrders);
 			//if (checkReturnCancelMap != null && checkReturnCancelMap.size() > 0)
-			if (MapUtils.isNotEmpty(checkReturnCancelMap))
+			if (MapUtils.isNotEmpty(checkReturnCancelMap) || sdbOrEdToHDFlag)
 			{
 				/*
 				 * if (null != order.getPaymentTransactions()) { final List<PaymentTransactionModel> list =
@@ -444,6 +445,35 @@ public class SalesOrderReverseXMLUtility
 		return subOrderDataList;
 	}
 
+	
+	/** 
+	 * @param childOrders
+	 * @return Boolean
+	 */
+	private boolean getSDBOrEdToHdFlag(OrderModel childOrders)
+	{
+		boolean edToHdFlag = false;
+		boolean sdbFlag = false;
+		try {
+			for (AbstractOrderEntryModel entry : childOrders.getEntries()) {
+				if(null != entry.getIsEDtoHD()) {
+					if(entry.getIsEDtoHD().booleanValue()) {
+						edToHdFlag = true;
+						return true;
+					}
+				}
+				if(entry.getIsSdb().booleanValue()) {
+					sdbFlag = true;
+					return true;
+				}
+			}
+		}catch(Exception e) {
+			LOG.error("Exception while checking EDToHD Flag/SDB Flag for the order :"+childOrders.getCode());
+		}
+		return edToHdFlag || sdbFlag  ;
+	}
+
+	
 	/**
 	 * @param entry
 	 */
@@ -462,6 +492,8 @@ public class SalesOrderReverseXMLUtility
 					boolean canOrRetflag = false; //flag for checking if order line is cancelled or returned. If flag is false the order line will not be set in the XML
 					boolean returnFlag = false;
 					boolean cancelFlag = false;
+					boolean sdbFlag    = false;
+					boolean edToHdFlag = false;
 					if (null != entry && null != entry.getProduct()
 							&& (null == entry.getIsSentToFico() || !(entry.getIsSentToFico().booleanValue()))) // null ==  entry.getIsSentToFico() is added for n/a scenarios for previous placed orders
 					{
@@ -668,6 +700,16 @@ public class SalesOrderReverseXMLUtility
 
 						final String orderLineId = entry.getOrderLineId() != null ? entry.getOrderLineId() : entry.getTransactionID();
 
+						if(null != entry.getIsSdb()) {
+							if(entry.getIsSdb().booleanValue()) {
+								sdbFlag = true;
+							}
+						}
+						if(null != entry.getIsEDtoHD()) {
+							if( entry.getIsEDtoHD().booleanValue()) {
+								edToHdFlag = true;
+							}
+						}
 
 
 						if (checkReturnCancelMap.containsKey(orderLineId))
@@ -706,6 +748,28 @@ public class SalesOrderReverseXMLUtility
 							xmlData.setShipmentCharge(0.0);
 							xmlData.setExpressdeliveryCharge(0.0);
 						}
+						if(sdbFlag) {
+							if (null != entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() > 0)
+							{
+								xmlData.setScheduleDelCharge(entry.getScheduledDeliveryCharge().doubleValue());
+							}
+							else
+							{
+								xmlData.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue());
+							}
+						}
+						if(edToHdFlag) {
+							if (entry.getCurrDelCharge().doubleValue() > 0)
+							{
+								xmlData.setExpressdeliveryCharge(entry.getCurrDelCharge().doubleValue());
+							}
+							else
+							{
+								xmlData.setExpressdeliveryCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
+							}
+						}
+						
+						
 						if (null != entry.getMplDeliveryMode() && xmlToFico && cancelFlag)
 						{
 							LOG.debug("inside del mode" + entry.getMplDeliveryMode());

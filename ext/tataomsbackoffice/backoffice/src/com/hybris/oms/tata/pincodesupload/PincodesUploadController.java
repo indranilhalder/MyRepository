@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.util.media.Media;
@@ -25,11 +24,13 @@ import org.zkoss.zul.Textbox;
 import com.hybris.cockpitng.annotations.ViewEvent;
 import com.hybris.cockpitng.util.DefaultWidgetController;
 import com.hybris.oms.tata.services.FilePathProviderService;
+import com.hybris.oms.tata.util.DataUploadService;
 
 
 
 /**
  * @author irfan
+ * @author prabhakar modified on 29-06-2016
  */
 
 @SuppressWarnings("serial")
@@ -39,13 +40,22 @@ public class PincodesUploadController extends DefaultWidgetController
 	@WireVariable("filePathProviderService")
 	private FilePathProviderService filePathProviderService;
 
+@WireVariable
+	private DataUploadService dataUploadService;
+
+	private Label pincodeError;
+	private Label landmarkError;
+
 	private Label error;
 	private Textbox text;
 	private Media media;
 	private String pinCodeuploadFilePath = "";
+	private String landmarkUploadFilePath = "";
 	private static final String CSV = ".csv";
 	final static String[] LIST_OF_ERROR =
 	{ "pinCodeupload FilePath" };
+
+	private final String message = "";
 
 	private static final Logger LOG = LoggerFactory.getLogger(PincodesUploadController.class);
 
@@ -55,6 +65,7 @@ public class PincodesUploadController extends DefaultWidgetController
 		super.initialize(comp);
 		text.setText("");
 		pinCodeuploadFilePath = filePathProviderService.getPincodesUploadPath();
+		landmarkUploadFilePath = filePathProviderService.getLandmarkUploadPath();
 	}
 
 	/**
@@ -63,73 +74,53 @@ public class PincodesUploadController extends DefaultWidgetController
 	 * @param uploadEvent
 	 */
 	@ViewEvent(componentID = "upload_button", eventName = Events.ON_UPLOAD)
-	public void selectUploadPincodes(final UploadEvent uploadEvent)
+	public void pincodeUploadEvent(final UploadEvent event)
 	{
-		text.setText("");
-		error.setVisible(false);
-		media = uploadEvent.getMedia();
+		if ("null".equals(pinCodeuploadFilePath) || "".equals(pinCodeuploadFilePath) || pinCodeuploadFilePath == null)
+		{
+			Messagebox.show("Unable to find Pincode file path config inside PropertyFile", "Error", Messagebox.OK, Messagebox.ERROR);
+		}
+		else
+		{
+			DataUplaod(event.getMedia(), getFile("Pincodes-", pinCodeuploadFilePath), pincodeError);
+		}
+	}
+
+	@ViewEvent(componentID = "landmark_upload", eventName = Events.ON_UPLOAD)
+	public void landmarkUploadEvent(final UploadEvent event)
+	{
+
+		if ("null".equals(landmarkUploadFilePath) || "".equals(landmarkUploadFilePath) || landmarkUploadFilePath == null)
+		{
+			Messagebox
+					.show("Unable to find landmark file path config inside PropertyFile", "Error", Messagebox.OK, Messagebox.ERROR);
+		}
+		else
+		{
+			DataUplaod(event.getMedia(), getFile("Landmarks-", landmarkUploadFilePath), landmarkError);
+		}
+	}
+
+	/**
+	 *
+	 * @param media
+	 * @param uploadeFilePath
+	 * @param prefix
+	 */
+	private void DataUplaod(final Media media, final File file, final Label error)
+	{
+
 		final String fileName = media.getName();
 
 		if (fileName.endsWith(CSV) || fileName.endsWith(".xlsx"))
 		{
 			try
 			{
-				if (!filePathProviderService.propertyFilePathValidation(LIST_OF_ERROR, pinCodeuploadFilePath))
-				{
-					return;
-				}
+				Messagebox.show(dataUploadService.dataUpload(media, file));
 			}
-			catch (final InterruptedException e)
+			catch (final IOException e)
 			{
-				LOG.error("pinCodeuploadFilePath not found" + e.getMessage());
-			}
-
-			if (media.isBinary())
-			{
-				try
-				{
-					if (media.getStreamData().read() == -1)
-					{
-						LOG.info("File is Empty ...");
-						Messagebox.show("File is Empty ");
-						return;
-					}
-				}
-				catch (final IOException e1)
-				{
-					LOG.error("unable to read null media " + e1.getMessage());
-				}
-				try
-				{
-					LOG.info(media.getStreamData().toString());
-					FileUtils.copyInputStreamToFile(media.getStreamData(), getFile());
-					text.setText(fileName);
-					Messagebox.show("File uploaded successfully");
-				}
-				catch (final IOException e)
-				{
-					LOG.error("unable to copyInputStreamToFile" + e.getMessage());
-				}
-			}
-			else
-			{
-				if (media.getStringData().length() == 0)
-				{
-					LOG.info("File is Empty ...");
-					Messagebox.show("File is Empty ");
-					return;
-				}
-				try
-				{
-					LOG.info(media.getStringData().toString());
-					FileUtils.writeStringToFile(getFile(), media.getStringData());
-					text.setText(fileName);
-					Messagebox.show("File uploaded successfully");
-				}
-				catch (final IOException e)
-				{
-					LOG.error("unable to writeStringToFile" + e.getMessage());
-				}
+				Messagebox.show("Unable to upload file try again");
 			}
 		}
 		else
@@ -137,18 +128,17 @@ public class PincodesUploadController extends DefaultWidgetController
 			error.setVisible(true);
 		}
 	}
-
 	/**
 	 * this method is used for getting PincodeFormat file.
 	 *
 	 * @return File
 	 */
-	public File getFile()
+	public File getFile(final String prefix, final String filePath)
 	{
 		final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMyyyyHHmm");
 		final String TimeStamp = simpleDateFormat.format(new Date());
-		final String fileNameTimeStamp = "Pincode-".concat(TimeStamp).concat(CSV);
-		final File destFile = new File(pinCodeuploadFilePath.trim(), fileNameTimeStamp);
+		final String fileNameTimeStamp = prefix.concat(TimeStamp).concat(CSV);
+		final File destFile = new File(filePath.trim(), fileNameTimeStamp);
 		LOG.info("Now Media name is " + destFile.getName());
 		return destFile;
 	}

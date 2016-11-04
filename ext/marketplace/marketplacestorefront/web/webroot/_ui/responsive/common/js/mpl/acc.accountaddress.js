@@ -120,6 +120,10 @@ function editAddress(addressId) {
    				$('#line2').val(data.line2);
    				$('#line3').val(data.line3);
    				$('#postcode').val(data.postcode);
+   				$('.address_landmarks').val(data.landmark);
+   				$('.address_landmarkOther').val(data.otherLandmark);
+   				loadPincodeData();
+   				$('.address_landmarkOther').val(data.otherLandmark);
    				$('#townCity').val(data.townCity);
    				$('#mobileNo').val(data.mobileNo);
    				$('#stateListBox').val(data.state);
@@ -137,6 +141,24 @@ function editAddress(addressId) {
    				
    				$("#addNewAddress").css("display","none");
    				$("#edit").css("display","block");
+   				if(data.landmark.length != "") {
+   	            	setTimeout(function(){
+   	            		console.log($(".address_landmarks option[value='"+data.landmark+"']").length);
+   		            	if($(".address_landmarks option[value='"+data.landmark+"']").length > "0") {
+   		            		console.log(data.landmark); 
+   		            		$(".address_landmarks").val(data.landmark);
+   		            	} else {
+   	            			console.log(data.landmark); 
+   	            			if($(".address_landmarks option[value='Other']").length > "0") {
+   	            				$(".address_landmarks").val("Other"); 
+   	                			changeFunction("Other"); 
+   	                			$(".address_landmarkOther").val(data.landmark);
+   	            			} else {
+   	            				$(".address_landmarkOther").val(data.landmark);
+   	            			}	            	
+   		            	}
+   	            	}, 200);
+   	            }
     	   },
     	   error : function(data) {
     		   	console.log(data.responseText) 
@@ -841,7 +863,7 @@ function editAddress(addressId) {
 //  Update Password *********************************************
 	function validatePassword() {
 		var flag=true;
-		//var regexPasswordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#^$%*&!^~]).{8,16}$/; //TISPRM-11
+		var regexPasswordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#^$%*&!^~]).{8,16}$/; //TISPRM-11
 		if (document.getElementById("currentPassword").value == null
 				|| document.getElementById("currentPassword").value == "") {
 			$("#errCurpwd").css({
@@ -1025,12 +1047,12 @@ function editAddress(addressId) {
             document.getElementById("erraddressln").innerHTML = "<font color='red' size='2'>Last name should not contain any special characters or space</font>";
             flagLn = false;
         }
-        if (addressForm.line1.value == null || addressForm.line1.value == "") {
+        if (addressForm.line1.value == null || addressForm.line1.value.trim() == "") {
         	$("#errddressline1").css({"display":"block"});
         	document.getElementById("erraddressline1").innerHTML = "<font color='#ff1c47' size='2'>Please enter address line 1</font>";
         	flagAd1 = false;
         }
-       /* if (addressForm.line2.value == null || addressForm.line2.value == "") {
+        if (addressForm.line2.value == null || addressForm.line2.value == "") {
         	$("#errddressline2").css({"display":"block"});
         	document.getElementById("erraddressline2").innerHTML = "<font color='#ff1c47' size='2'>Please enter address line 2</font>";
         	flagAd2 = false;
@@ -1039,7 +1061,7 @@ function editAddress(addressId) {
         	$("#errddressline3").css({"display":"block"});
         	document.getElementById("erraddressline3").innerHTML = "<font color='#ff1c47' size='2'>Please enter address line 3</font>";
         	flagAd3 = false;
-        }*/
+        }
         if (addressForm.postcode.value == null || addressForm.postcode.value == "") {
         	$("#errddressPost").css({"display":"block"});
         	document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Please enter post code</font>";

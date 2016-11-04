@@ -19,7 +19,6 @@
 <spring:url value="/my-account/orders" var="ordersUrl" />
 <spring:url value="/my-account/default/wishList" var="wishlistUrl" />
 
-
 	<template:page pageTitle="${pageTitle}">
 	<div class="account">
 		<div class="page-header">
@@ -53,7 +52,7 @@
 
 							<li class="item look">
 								<ul class="product-info">
-									<c:forEach items="${returnProductMap[orderEntry.transactionId]}" var="entryReturn" >
+									<c:forEach items="${returnProductMap[subOrderEntry.transactionId]}" var="entryReturn" >
 									<li>
 										<div class="product-img">
 											<product:productPrimaryImage

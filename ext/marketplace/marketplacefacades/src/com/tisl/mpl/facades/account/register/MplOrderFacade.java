@@ -71,11 +71,11 @@ public interface MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch IMEI details for Account Page order history
-	 *
+	 * 
 	 * @param : orderModelList
-	 *
+	 * 
 	 * @return Map<String, Map<String, String>>
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	Map<String, Map<String, String>> fetchOrderSerialNoDetails(final List<OrderModel> orderModelList)
@@ -83,22 +83,22 @@ public interface MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch Invoice details for Account Page order history
-	 *
+	 * 
 	 * @param : orderModelList
-	 *
+	 * 
 	 * @return Map<String, Boolean>
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	Map<String, Boolean> fetchOrderInvoiceDetails(final List<OrderModel> orderModelList) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @Desc : Used to fetch and populate details for Account Page order history
-	 *
+	 * 
 	 * @param : orderEntryData
-	 *
+	 * 
 	 * @return OrderEntryData
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	OrderEntryData fetchOrderEntryDetails(OrderEntryData orderEntryData, OrderData subOrder) throws EtailNonBusinessExceptions;
@@ -164,5 +164,14 @@ public interface MplOrderFacade
 	 * @return OrderModel
 	 */
 	OrderModel getOrder(String orderCode);
+
+	/**
+	 * This method used to get Order Model by orderNumber for anonymous users
+	 *
+	 * @param orderNumber
+	 * @return OrderModel
+	 */
+	OrderModel getOrderForAnonymousUser(String orderNumber);
+
 
 }

@@ -44,6 +44,7 @@ import com.tisl.mpl.core.model.OrderUpdateSmsProcessModel;
 import com.tisl.mpl.data.SendSMSRequestData;
 import com.tisl.mpl.marketplaceomsservices.daos.EmailAndSmsNotification;
 import com.tisl.mpl.model.PaymentTypeModel;
+import com.tisl.mpl.shorturl.service.ShortUrlService;
 import com.tisl.mpl.sms.MplSendSMSService;
 import com.tisl.mpl.sns.push.service.impl.MplSNSMobilePushServiceImpl;
 import com.tisl.mpl.wsdto.PushNotificationData;
@@ -69,6 +70,9 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 
 	@Resource(name = "emailAndSmsNotification")
 	private EmailAndSmsNotification emailAndSmsNotification;
+
+	@Resource(name = "googleShortUrlService")
+	private ShortUrlService googleShortUrlService;
 
 	/**
 	 * @return the configurationService
@@ -629,6 +633,11 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 			LOG.info("******Inside sendSMSHotc******");
 			final SendSMSRequestData smsRequestDataHOTC = new SendSMSRequestData();
 
+			//call google short url service to generate short url for an order code
+			final String shortTrackingUrl = googleShortUrlService
+					.genearateShortURL(orderModel.getParentReference() == null ? orderModel.getCode() : orderModel
+							.getParentReference().getCode());
+
 			//print parent order number in the url
 			trackingUrl = orderModel.getParentReference() == null ? (getConfigurationService().getConfiguration().getString(
 					MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL) + orderModel.getCode()) : getConfigurationService()
@@ -636,11 +645,15 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 					+ orderModel.getParentReference().getCode();
 
 			smsRequestDataHOTC.setSenderID(MarketplacecommerceservicesConstants.SMS_SENDER_ID);
-			smsRequestDataHOTC.setContent(MarketplacecommerceservicesConstants.SMS_MESSAGE_HOTC
+			
+			final String smsContent = MarketplacecommerceservicesConstants.SMS_MESSAGE_HOTC
 					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, String.valueOf(childOrders.size()))
 					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderNumber)
 					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, logisticPartner)
-					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_THREE, trackingUrl));//Add Order tracking URL
+					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_THREE, null==shortTrackingUrl?trackingUrl:shortTrackingUrl);
+	
+			smsRequestDataHOTC.setSenderID(MarketplacecommerceservicesConstants.SMS_SENDER_ID);
+			smsRequestDataHOTC.setContent(smsContent);//Add Order tracking URL
 			smsRequestDataHOTC.setRecipientPhoneNumber(mobileNumber);
 			LOG.info("******Befor check SMS Sent******");
 			final List<OrderUpdateSmsProcessModel> orderUpdateSmsModelList = checkSmsSent(awbNumber, ConsignmentStatus.HOTC);
@@ -670,7 +683,7 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, String.valueOf(childOrders.size()))
 						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderNumber)
 						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, logisticPartner)
-						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_THREE, trackingUrl));
+						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_THREE, null==shortTrackingUrl?trackingUrl:shortTrackingUrl));
 				orderUpdateSmsProcessModel.setRecipientPhoneNumber(mobileNumber);
 				final List<String> entryNumber = new ArrayList<String>();
 				for (final AbstractOrderEntryModel child : childOrders)
@@ -790,8 +803,9 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 	private void sendNotificationForHotc(final OrderModel orderModel, final String orderNumber, final String mobileNumber,
 			final String trackingUrl, final String logisticPartner)
 	{
-
-		LOG.debug(UPDATE_CONSIGNMENT + MarketplacecommerceservicesConstants.ORDER_STATUS_HOTC);
+		if(LOG.isDebugEnabled()){
+			LOG.debug(UPDATE_CONSIGNMENT + MarketplacecommerceservicesConstants.ORDER_STATUS_HOTC);
+		}
 		String awbNumber = "";
 		try
 		{

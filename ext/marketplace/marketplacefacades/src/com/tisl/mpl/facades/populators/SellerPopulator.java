@@ -198,6 +198,21 @@ public class SellerPopulator<SOURCE extends ProductModel, TARGET extends Product
 						{
 							sellerData.setFullfillment(rm.getDeliveryFulfillModes().getCode());
 						}
+						if (null != rm.getDeliveryFulfillModeByP1())
+						{
+							sellerData.setDeliveryFulfillModebyP1(rm.getDeliveryFulfillModeByP1().getCode());
+						}
+						
+						if (null != rm.getIsFragile())
+						{
+							sellerData.setIsFragile(rm.getIsFragile().getCode());
+						}
+						
+						if (null != rm.getIsPrecious())
+						{
+							sellerData.setIsPrecious(rm.getIsPrecious().getCode());
+						}
+						
 						sellerData.setSellername(sellerInformationModel.getSellerName());
 
 						if (null != rm.getShippingModes())

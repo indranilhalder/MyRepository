@@ -1,5 +1,7 @@
 package com.tisl.mpl.wsdto;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -16,7 +18,7 @@ import javax.xml.bind.annotation.XmlType;
  * "isPrepaidEligible" })
  */
 @XmlType(propOrder =
-{ "Type", "Inventory", "DeliveryDate","isPincodeServiceable", "isCOD", "isCODLimitFailed", "isPrepaidEligible" })
+{ "Type", "Inventory", "DeliveryDate","isPincodeServiceable", "isCOD", "isCODLimitFailed", "isPrepaidEligible","FulfillmentType" ,"ServiceableSlaves","CNCServiceableSlaves"})
 public class DeliveryModeResOMSWsDto
 {
 	@XmlElement(name = "Type")
@@ -35,6 +37,16 @@ public class DeliveryModeResOMSWsDto
 
 	@XmlElement(name = "DeliveryDate")
 	private String DeliveryDate;
+	
+	@XmlElement(name = "FulfillmentType")
+	private String FulfillmentType;
+	
+	@XmlElement(name = "ServiceableSlaves")
+	private List<ServiceableSlavesDTO> ServiceableSlaves;
+	
+	
+	@XmlElement(name = "CNCServiceableSlaves")
+	private List<CNCServiceableSlavesWsDTO> CNCServiceableSlaves;
 
 	/**
 	 * @return the type
@@ -155,4 +167,53 @@ public class DeliveryModeResOMSWsDto
 		DeliveryDate = deliveryDate;
 	}
 
+	/**
+	 * @return the serviceableSlaves
+	 */
+	public List<ServiceableSlavesDTO> getServiceableSlaves()
+	{
+		return ServiceableSlaves;
+	}
+
+	/**
+	 * @param serviceableSlaves the serviceableSlaves to set
+	 */
+	public void setServiceableSlaves(List<ServiceableSlavesDTO> serviceableSlaves)
+	{
+		this.ServiceableSlaves = serviceableSlaves;
+	}
+
+	/**
+	 * @return the cNCServiceableSlaves
+	 */
+	public List<CNCServiceableSlavesWsDTO> getCNCServiceableSlaves()
+	{
+		return CNCServiceableSlaves;
+	}
+
+	/**
+	 * @param cNCServiceableSlaves the cNCServiceableSlaves to set
+	 */
+	public void setCNCServiceableSlaves(List<CNCServiceableSlavesWsDTO> cNCServiceableSlaves)
+	{
+		CNCServiceableSlaves = cNCServiceableSlaves;
+	}
+
+	/**
+	 * @return the fulfillmentType
+	 */
+	public String getFulfillmentType()
+	{
+		return FulfillmentType;
+	}
+
+	/**
+	 * @param fulfillmentType the fulfillmentType to set
+	 */
+	public void setFulfillmentType(String fulfillmentType)
+	{
+		FulfillmentType = fulfillmentType;
+	}
+
+	
 }

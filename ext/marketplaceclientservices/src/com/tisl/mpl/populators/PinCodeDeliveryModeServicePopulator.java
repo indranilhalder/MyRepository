@@ -57,7 +57,7 @@ public class PinCodeDeliveryModeServicePopulator implements Populator<PinCodeDel
 				}
 				if (singleCommerceItem.getFulfilmentType() != null)
 				{
-					singleOMSItem.setFulfilmentType(singleCommerceItem.getFulfilmentType());
+					//singleOMSItem.setFulfilmentType(singleCommerceItem.getFulfilmentType());
 				}
 				if (singleCommerceItem.getTransportMode() != null)
 				{

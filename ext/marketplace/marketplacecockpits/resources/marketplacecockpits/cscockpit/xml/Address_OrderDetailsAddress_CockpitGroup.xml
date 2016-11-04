@@ -12,6 +12,9 @@
 			<property qualifier="Address.line2" visible="true"/>
 		</group>
 		<group name="line">
+			<property qualifier="Address.addressLine3" visible="true"/>
+		</group>
+		<group name="line">
 			<property qualifier="Address.town" visible="true"/>
 		</group>
 		<group name="line">
@@ -22,6 +25,9 @@
 		</group>
 		<group name="line">
 			<property qualifier="Address.phone1" visible="true"/>
+		</group>
+		<group name="line">
+			<property qualifier="Address.landmark" visible="true"/>
 		</group>
 	</group>
 </list-view>

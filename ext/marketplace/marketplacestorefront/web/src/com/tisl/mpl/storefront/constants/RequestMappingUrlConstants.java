@@ -29,7 +29,15 @@ public final class RequestMappingUrlConstants
 	public static final String LINK_PROFILE = "/profile";
 	public static final String LINK_COUPONS = "/coupons";
 	public static final String UPDATE_PICKUP_DETAILS = "/updatepickUp_Details";
+	public static final String PINCODE_CHECK = "/pincodeCheck";
+	public static final String OTP_GENERAT = "/otpGenerat";
+
 	public static final String CREATE_TICKET_CRM_UPDATE_PICKUP_DETAILS = "crmTicketCreateUpdatePickUpDetail";
+	public static final String CHANGE_DELIVERY_ADDRES_URL = "/{orderCode}/changeDeliveryAddress";
+	public static final String OTP_VALIDATION_URL = "/validationOTP";
+	public static final String NEW_OTP_GENERATE = "/newOTP";
+	public static final String RESCHEDULEDDELIVERYDATE="/{orderCode}/reScheduledDeliveryDate";
+	
 
 
 	public static final String LINK_UPDATE_EMAIL = "/update-email";
@@ -145,5 +153,30 @@ public final class RequestMappingUrlConstants
 	public static final String SITEMAP = "/site-map";
 
 	public static final String SHOP_BY_BRAND_AJAX = "/shopbybrand";
+
+	//order tracking page start
+	public static final String ANONYMOUS_ORDER_TRACKING_URL = "/trackOrder";
+	public static final String BEFORE_ANONYMOUS_USER_TRACK_URL = "/beforeTrack/{orderId}";
+	public static final String TRACK_ORDER_DETAILS_PAGE_URL = "/shortDetails";
+	public static final String ANONYMOUS_TRACK_ORDER_VALIDATE_URL = "/anonymousTrack";
+	public static final String ANONYMOUS_TRACKING_PAGE_URL = "/trackOrder/shortDetails/?orderCode=";
+	public static final String LOGIN_TRACKING_PAGE_URL = "/my-account/order/?orderCode=";
+	//order tracking page end
+	
+	public static final String RETURN_TO_STORE_AJAX = "/returnToStore";
+	public static final String LINK_INITIATE_RETURN="/initiateReturn";
+	public static final String LINK_MY_ACCOUNT_RETRUNS = "/my-account/returns";
+	public static final String LINK_UPDATE_RETURNINFO = "/updateReturnInfo";
+	public static final String LINK_TICKET_UPDATE = "/updateTicket";
+	public static final String LINK_EDIT_RETURN_ADDRESS = "/editReturnAddress";
+	public static final String LINK_ADD_RETURN_ADDRESS = "/addNewReturnAddress";
+	public static final String LINK_PINCODE_CHECK="/pincodeServiceCheck";
+	
+	public static final String FILE_UPLOAD_PATH="return.fileupload.path";
+	public static final String SHIPMENT_CHARGE_AMOUNT="return.shipmentcharge";
+	public static final String RSS="RSS";
+	public static final String RETURN_TYPE="02";
+	public static final String COD="COD";
+	
 
 }

@@ -236,5 +236,15 @@ public class MarketplacecclientservicesConstants
 
 	public static final String UIDSIG = "UIDSig";
 	public static final String UIDTIMESTAMP = "UIDTimestamp";
+	public static final String OMS_CHANGE_DELIVERY_URL = "oms.changedelivery.endpoint.url";
+
+	public static final String URL_FOR_DELIVERYSLOT_REALCALL = "oms.deliveryslots.realtimecall";
+	public static final String URL_FOR_DELIVERYSLOT_FIRSTPHASE = "oms.deliveryslots.firstxmlphase";
+	public static final String URL_FOR_DELIVERYSLOT_SECONDPHASE = "oms.deliveryslots.secondxmlphase";
+	public static final String URL_FOR_DELIVERYSLOT_THIRDPHASE = "oms.deliveryslots.thirdxmlphase";
+	public static final String OMS_DELIVERY_SLOT_CON_TIMEOUT = "oms.deliveryslot.connection.timeout";
+	public static final String OMS_DELIVERY_SLOT_READ_TIMEOUT = "oms.deliveryslot.read.timeout";
+	public static final String OMS_DELIVERY_SLOT_URL = "oms.deliveryslot.url";
+	public static final String CNC = "CNC";
 
 }

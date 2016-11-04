@@ -137,6 +137,13 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 	public static final String UNKNOWN = "unknown".intern();
 	public static final String DEFAULT_WISHLIST_NAME = "My Wishlist";
 
+	public static final String CA = "CA";
+	public static final String CU = "CU";
+	public static final String CDP="CDP";
+	public static final String SUCCESS = "success";
+	public static final String SERVER_EXCEPTION = "Internal Server Error, Please try again later";
+	public static final String PINCODE_NOT_SERVICEABLE="Pincode not Serviceable";
+
 	private MarketplaceFacadesConstants()
 	{
 		//empty

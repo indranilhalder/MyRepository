@@ -9,6 +9,9 @@
 	font-family: Arial, non-serif;
 }
 
+
+
+
 .loginContainerWindow {
 	background-image: url(../images/login-cscockpit.png);
 }
@@ -1191,7 +1194,6 @@ body .hywin a.greenLink, body .hywin a.greenLink:visited {
 .csContentArea .csOrderConsignmentsWidgetConfig .csWidgetContent {
 	padding: 5px;
 }
-
 .csContentArea .orderPaymentTransactionsWidget .csWidgetContent {
 	padding: 5px;
 }
@@ -1396,7 +1398,7 @@ body .hywin a.greenLink, body .hywin a.greenLink:visited {
 	text-align: left;
 }
 
-.csContentArea .checkoutCartWidget .csCartLineDeliveryActions Â  {
+.csContentArea .checkoutCartWidget .csCartLineDeliveryActions   {
 	text-align: left
 }
 
@@ -2327,7 +2329,14 @@ table.z-button.btn {
 .address3ForAddressField {
 	margin-left: 63px;
 }
-
+.landMarkDropDownField {
+	margin-left: 65px;
+	width: 180px;
+	
+}
+.landMarkAddressField {
+	margin-left: 10px;
+}
 .addressForCityField {
 	margin-left: 93px;
 } 
@@ -3398,11 +3407,11 @@ div.z-listbox {
 	text-align: left !important;
 }
 
-* html .appliedPromotionsWidget Â  {
+* html .appliedPromotionsWidget   {
 	text-align: left !important;
 }
 
-* html .orderPaymentTransactionsWidget Â  {
+* html .orderPaymentTransactionsWidget   {
 	text-align: left !important;
 }
 
@@ -3663,4 +3672,151 @@ th.csPropReturnEntryexpectedQuantity.z-list-header  {
 }
 th.csPropReturnEntryreceivedQuantity.z-list-header{
 	        min-width: 70px !important;/*UI Fix*/
+}
+.changeDeliveryAddress {
+	margin-top: 20px;
+	margin-left: 30px;
+	margin-bottom: 20px;
+}
+.hbox {
+	margin-top: 20px;
+	margin-left: 150px;
+	margin-bottom: 20px;
+}
+.updateDeliveryAddress {
+	margin-left: 300px;
+	margin-top: 20px;
+}
+.validateOTP{
+	margin-top: 5px;
+	margin-left: 260px;
+	margin-bottom: 10px;
+	
+}
+.otpHbox{
+	margin-top: 30px;
+	margin-left: 200px;
+	margin-bottom: 20px;
+}
+.sdDeliveryButton {
+	margin-top: 5px;
+	margin-left: 300px;
+	margin-bottom: 10px;
+	width:120px;
+}
+.returntext {
+	margin-top: 15px;
+	margin-left: 35px;
+}
+.secondLabel {
+margin-left: 35px;
+margin-top: 15px;
+}
+
+.boldText {
+	font-weight: bold;
+}
+
+.detailsClasss {
+	margin-top: 40px;
+	margin-left: 72px;
+	margin-right: 600px;
+	margin-bottom: 30px;
+	font-weight: bold;
+}
+.cardDetailsClass {
+	margin-top: -80px;
+    float: right;
+    margin-right: 135px;
+}
+.creditButton {
+	float: right;
+    margin-right: 45px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+.listClass {
+	margin-top: 10px;
+}
+.modeSelection {
+   margin-top: 0px;
+   margin-left: 72px;
+   margin-right: 600px;
+   margin-bottom: 30px;
+   font-weight: bold;
+}
+
+/* new CHANGHES */
+
+.returnModels {
+	margin-top: 20px;
+}
+.selectedMode {
+	margin-top:15px;
+}
+.dateSelection {
+	margin-top: 35px;
+}
+.modeDetails {
+	margin-top: 50px;
+    margin-left: 72px;
+}
+.displayArea {
+	margin-left: 72px;
+    margin-top: 20px;
+    margin-right: 72px;
+}
+
+.scheduleDeliveryChargeHeaderLabel {
+	width: 13% !important;
+	background-color: #F2F2F2;
+	height: 23px;
+} 
+.deliveryChargeHeaderLabel {
+	width: 12% !important;
+	background-color: #F2F2F2;
+	height: 23px;
+} 
+ 
+.AcntNumberLabel{
+	font-size: 15px;
+    padding-right: 40px;
+}
+.accNoTextbox{
+	width: 29%;
+    height: 15px;
+    border-color: black;
+    font-size: 15px;
+}
+.reEntrAcntnumber{
+	 font-size: 15px;
+    padding-left: 50px;
+    padding-right: 5px;
+}
+.acntHolderName{
+	    width: 10px;
+    font-size: 15px;
+}
+.accHolderNameTextbox{
+	width: 30%;
+    height: 16px;
+    border-color: black;
+    font-size: 15px;
+}
+
+.bankNameLabel{
+	font-size: 15px;
+	padding-right: 70px;
+}
+.acntHolderTitle {
+    padding-left: 20px;
+    padding-right: 5px;
+    width: 10px;
+    font-size: 15px;
+}
+.refundModedropDown{
+	width: 30%;
+    height: 16px;
+    border-color: black;
+    font-size: 12px;
 }

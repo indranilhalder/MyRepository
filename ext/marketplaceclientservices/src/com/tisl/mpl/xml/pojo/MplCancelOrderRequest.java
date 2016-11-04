@@ -135,7 +135,7 @@ public class MplCancelOrderRequest
 	 */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "", propOrder =
-	{ "orderId", "transactionId", "returnCancelFlag", "requestID", "reasonCode", "returnCancelRemarks", "pinCode" })
+	{ "orderId", "transactionId", "returnCancelFlag", "requestID", "reasonCode", "returnCancelRemarks", "pinCode","returnFulfillmentMode" })
 	public static class OrderLine
 	{
 
@@ -153,6 +153,26 @@ public class MplCancelOrderRequest
 		protected String returnCancelRemarks;
 		@XmlElement(name = "pinCode", required = true)
 		protected String pinCode;
+		@XmlElement(name = "ReturnFulfilmentType", required = true)
+		protected String returnFulfillmentMode;
+		
+		
+		/**
+		 * @return the returnFulfillmentMode
+		 */
+		public String getReturnFulfillmentMode()
+		{
+			return returnFulfillmentMode;
+		}
+
+		/**
+		 * @param returnFulfillmentMode the returnFulfillmentMode to set
+		 */
+		public void setReturnFulfillmentMode(String returnFulfillmentMode)
+		{
+			this.returnFulfillmentMode = returnFulfillmentMode;
+		}
+
 		/**
 		 * Gets the value of the orderId property.
 		 *

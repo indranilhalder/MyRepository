@@ -2388,5 +2388,61 @@
 		<property name="errorCode" type="String" />	
 		<property name="total" type="String" />
 	</bean>
-
+	
+	
+	<!-- Added for  Inventory Reservation with Delivery Slots -->
+	<bean class="com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRequestData">
+		<property name="cartId" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData">
+		<property name="cartId" type="String"/>
+		<property name="invReserForDeliverySlotsItemEDDInfoData" type="java.util.List&lt;com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData>"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData">
+		<property name="ussId" type="String"/>
+		<property name="eDD" type="String"/>
+		<property name="nextEDD" type="String"/>
+		<property name="isScheduled" type="String"/>
+		<property name="codEligible" type="String"/>		
+	</bean>
+	<!--END: Added for Inventory Reservation with Delivery Slots  -->
+	
+	
+	 <bean class="com.tisl.mpl.wsdto.TrackOrderWsDTO">
+		<property name="orderCode" type="String" />
+		<property name="emailId" type="String" />
+		<property name="captchaCode" type="String" />		
+		<property name="errorCode" type="String" />		
+		<property name="error" type="String" />		
+		<property name="status" type="String" />	
+	</bean>
+	
+	<!-- FOr Auto Populating pincode data  --> 
+ 
+	<bean class="com.tisl.mpl.wsdto.LandMarksDataWsDTO">	
+		<property name="landmarksCode" type="String"/>
+		<property name="landmark" type="String"/>
+	</bean>
+    
+    <bean class="com.tisl.mpl.wsdto.StateDataWsDTO">	
+		<property name="countryKey" type="String"/>
+		<property name="code" type="String"/>
+		<property name="name" type="String"/>
+	</bean>
+    
+    <bean class="com.tisl.mpl.wsdto.PincodeDataWsDTO">	
+		<property name="pincode" type="String"/>
+		<property name="cityName" type="String"/>
+		<property name="state" type="com.tisl.mpl.wsdto.StateDataWsDTO"/>
+		<property name="country" type="String"/>
+		<property name="countryCode" type="String"/>
+		<property name="landMarks" type="java.util.List&lt;com.tisl.mpl.wsdto.LandMarksDataWsDTO>"/>
+		<property name="status" type="String"/>
+		<property name="error" type="String"/>
+		<property name="errorCode" type="String"/>
+	</bean>
+    
+	
 </beans>

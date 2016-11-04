@@ -38,6 +38,36 @@ public class SellerMasterWsDTO implements java.io.Serializable
 	private String Title;
 	private String Language;
 	private String Customer;
+	private String isCDAllowed;
+	private String isLPAWBEdit;
+
+
+	public String getisCDAllowed()
+	{
+		return isCDAllowed;
+	}
+
+	public void setCDAllowed(final String isCDAllowed)
+	{
+		this.isCDAllowed = isCDAllowed;
+	}
+
+	/**
+	 * @return the isLPAWBEdit
+	 */
+	public String getIsLPAWBEdit()
+	{
+		return isLPAWBEdit;
+	}
+
+	/**
+	 * @param isLPAWBEdit the isLPAWBEdit to set
+	 */
+	public void setIsLPAWBEdit(String isLPAWBEdit)
+	{
+		this.isLPAWBEdit = isLPAWBEdit;
+	}
+
 	@XStreamImplicit(itemFieldName = "corporateAddress")
 	private List<CorporateAddressWsDTO> corporateAddress;
 	private RegisteredAddressWsDTO registerAddress;
@@ -145,6 +175,7 @@ public class SellerMasterWsDTO implements java.io.Serializable
 	{
 		this.lastname = lastname;
 	}
+
 
 	/**
 	 * @return the type

@@ -587,6 +587,10 @@
 					<property name="widgetConfig" ref="csBasketTotalsWidgetConfig"/>
 				</bean>
 				<bean class="de.hybris.platform.cscockpit.widgets.models.impl.CsWidgetBrowserModel$WidgetMapKey">
+					<property name="widgetCode" value="checkoutScheduleDeliveryWidget"/>
+					<property name="widgetConfig" ref="csCheckoutScheduleDeliveryWidgetConfig"/>
+				</bean>
+				<bean class="de.hybris.platform.cscockpit.widgets.models.impl.CsWidgetBrowserModel$WidgetMapKey">
 					<property name="widgetCode" value="checkoutCartAppliedPromotionsWidget"/>
 					<property name="widgetConfig" ref="csCheckoutCartAppliedPromotionsWidgetConfig"/>
 				</bean>
@@ -630,6 +634,13 @@
 					<property name="widgetCode" value="orderDetailOrderItemsWidget"/>
 					<property name="widgetConfig" ref="csOrderDetailOrderItemsWidgetConfig"/>
 				</bean>
+				
+				<bean class="de.hybris.platform.cscockpit.widgets.models.impl.CsWidgetBrowserModel$WidgetMapKey">
+					<property name="widgetCode" value="orderScheduleDeliverySlotWidget"/>
+					<property name="widgetConfig" ref="csOrderScheduleDeliverySlotWidgetConfig"/>
+				</bean>
+				
+				
 				<bean class="de.hybris.platform.cscockpit.widgets.models.impl.CsWidgetBrowserModel$WidgetMapKey">
 					<property name="widgetCode" value="orderDetailAppliedPromotionsWidget"/>
 					<property name="widgetConfig" ref="csOrderDetailAppliedPromotionsWidgetConfig"/>
@@ -667,6 +678,12 @@
 					<property name="widgetCode" value="orderReturnRequestsWidget"/>
 					<property name="widgetConfig" ref="csOrderReturnRequestsWidgetConfig"/>
 				</bean>
+				<!-- Address History  -->
+				<bean class="de.hybris.platform.cscockpit.widgets.models.impl.CsWidgetBrowserModel$WidgetMapKey">
+					<property name="widgetCode" value="addressHistoryWidget"/>
+					<property name="widgetConfig" ref="csAddressHistoryWidgetConfig"/>
+				</bean>
+				
 				<bean class="de.hybris.platform.cscockpit.widgets.models.impl.CsWidgetBrowserModel$WidgetMapKey">
 					<property name="widgetCode" value="orderHistoryWidget"/>
 					<property name="widgetConfig" ref="csOrderHistoryWidgetConfig"/>

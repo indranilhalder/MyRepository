@@ -11,20 +11,20 @@
 
 
 
-	<!-- Added by sana //importing the omsbackoffice widgets and commerce search  -->
+	<!-- Added by sana //importing the omsbackoffice widgets and commerce search -->
 
 
-<import resource="/tata-omsbackoffice-oms-perspective-widgets.xml"/>
-<import resource="/tata-omsbackoffice-oms-return-perspective-widgets.xml"/>
-<import resource="/tata-omsbackoffice-oms-admin-perspective-widgets.xml"/>
+	<import resource="/tata-omsbackoffice-oms-perspective-widgets.xml" />
+	<import resource="/tata-omsbackoffice-oms-return-perspective-widgets.xml" />
+	<import resource="/tata-omsbackoffice-oms-admin-perspective-widgets.xml" />
 
-<import resource="/tata-commercesearchbackoffice-backoffice-widgets.xml"/>
+	<import resource="/tata-commercesearchbackoffice-backoffice-widgets.xml" />
 
 
-	<widget-extension widgetId="backofficeMainSlot" >
-	
-	<widget id="tataBUCperspective" widgetDefinitionId="com.hybris.cockpitng.borderlayout"
-			slotId="perspectives" title="Tata BUC" template="false" >
+	<widget-extension widgetId="backofficeMainSlot">
+
+		<widget id="tataBUCperspective" widgetDefinitionId="com.hybris.cockpitng.borderlayout"
+			slotId="perspectives" title="Tata BUC" template="false">
 
 			<widget id="tataomsexplorerTree" widgetDefinitionId="com.hybris.cockpitng.widgets.common.explorertree"
 				slotId="leftSlot" template="false">
@@ -68,7 +68,8 @@
 					<setting key="bottomCaption" type="String">Edit Area</setting>
 					<setting key="centerPanelCollapsed" type="Boolean">false</setting>
 					<setting key="widgetStyleClass" type="String"></setting>
-					<setting key="topCaption" type="String">Delivery Mode Configuration</setting>
+					<setting key="topCaption" type="String">Delivery Mode Configuration
+					</setting>
 					<setting key="centerPanelInitiallyLocked" type="Boolean">false
 					</setting>
 					<setting key="topPanelCollapsed" type="Boolean">true</setting>
@@ -80,6 +81,7 @@
 					slotId="perspectives" template="true">
 					<virtual-sockets />
 				</widget>
+
 
 				<!-- Added for logistics Calendar -->
 				<widget id="logisticcollapsibleContainer" widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
@@ -197,7 +199,8 @@
 
 
 				<!-- Added for Inventory By ORDERID -->
-				<widget id="ordersbyorderid" widgetDefinitionId="com.hybris.oms.tata.orders.OrderLinesListController"
+				<widget id="ordersbyorderid"
+					widgetDefinitionId="com.hybris.oms.tata.orders.OrderLinesListController"
 					slotId="perspectives" template="true">
 				</widget>
 
@@ -207,32 +210,49 @@
 					slotId="perspectives" template="true">
 
 				</widget>
-				
-				<!-- Added for pincodesUpload -->
-                <widget id="pincodes_upload" widgetDefinitionId="com.hybris.oms.widgets.pincodesuploadwidget"
-					slotId="perspectives" template="true">
-				 </widget>
 
-				<!-- Added for Pin code serviceability and LogisticsReport -->
-				<widget id="container_pincode_logistics_report"
+				<!-- Added for pincodesUpload -->
+				<widget id="pincodes_upload" widgetDefinitionId="com.hybris.oms.widgets.pincodesuploadwidget"
+					slotId="perspectives" template="true">
+				</widget>
+				<!-- Tship Delivery tat @prabhakar.s@techouts -->
+				<widget widgetDefinitionId="com.techouts.widgets.tshipdeliverytatwidget"
+					id="tshipdeliverytat" slotId="perspectives" template="true"></widget>
+
+				<!-- awb edit -->
+				<widget id="awbedit" widgetDefinitionId="com.hybris.oms.widgets.awbwidget"
+					slotId="perspectives" template="true">
+				</widget>
+
+				<!-- lp override -->
+				<widget id="lpoverride" widgetDefinitionId="com.techouts.widgets.lpoverride"
+					slotId="perspectives" template="true">
+				</widget>
+
+				<!-- Add for Configurable Parameters -->
+
+				<widget id="configarable_params" widgetDefinitionId="com.hybris.oms.widgets.configurableParamWidget"
+					slotId="perspectives" template="true">
+				</widget>
+
+
+				<!-- Tship vs SShip Assignment Report -->
+
+				<widget id="tship_sship_assignment_collapseble" title="Tship SSHIP Assignemnet collapseble Container"
 					widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
 					slotId="perspectives" template="true">
 
-					<widget id="pincode_logistics_report_datepic"
+					<widget id="tship_ship_assignment_datepic" title="Tship SSHIP Assignment Date pickup"
 						widgetDefinitionId="com.hybris.oms.tata.pincodelogistics.datepicwidget"
 						slotId="center" template="false">
 
 					</widget>
-
-					<widget id="pincode_logistics_report_listview"
-						widgetDefinitionId="com.hybris.oms.tata.pincodelogistics.listwidget"
-						slotId="bottom" title="Orders list" template="false">
+					<widget id="tship_sship_assignment_widget_report"
+						widgetDefinitionId="com.techouts.widgets.tshipvssshipassignment"
+						slotId="bottom" title="tship vs ship Assignment report" template="false">
 						<virtual-sockets />
 
 					</widget>
-
-
-
 					<setting key="widgetStyleAttribute" type="String"></setting>
 					<setting key="allowLockingCenterPanel" type="Boolean">true</setting>
 					<setting key="bottomPanelCollapsed" type="Boolean">false</setting>
@@ -247,7 +267,91 @@
 					<setting key="bottomCaption" type="String"></setting>
 					<setting key="centerPanelCollapsed" type="Boolean">false</setting>
 					<setting key="widgetStyleClass" type="String"></setting>
-					<setting key="topCaption" type="String">Seller And Logistics Performance Report
+					<setting key="topCaption" type="String">TSHIP vs SShip Assignment
+						report
+					</setting>
+					<setting key="centerPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="topPanelCollapsed" type="Boolean">true</setting>
+					<setting key="allowLockingTopPanel" type="Boolean">true</setting>
+					<virtual-sockets />
+				</widget>
+				<!-- add for short url tracking info -->
+				<widget id="short_url_tracking_collapseble" title="Short url Tracking Report"
+					widgetDefinitionId="com.techouts.widgets.shorturltrakingreport"
+					slotId="perspectives" template="true">
+				</widget>
+
+
+
+				<!-- Delivery addresses Request Report -->
+				<widget id="delivery_address_request_collapseble" title="Delivery Addresses Request collapsable Container"
+					widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
+					slotId="perspectives" template="true">
+
+					<widget id="delivery_address_request_datepic" title="Delivery Address request date pic "
+						widgetDefinitionId="com.techouts.widgets.deliveryaddressdatepic"
+						slotId="center" template="false">
+					</widget>
+					<widget id="delivery_address_request_widget_report"
+						widgetDefinitionId="com.techouts.widgets.deliveryaddressrequestsreport"
+						slotId="bottom" title="Delivery Address Request report" template="false">
+						<virtual-sockets />
+
+					</widget>
+					<setting key="widgetStyleAttribute" type="String"></setting>
+					<setting key="allowLockingCenterPanel" type="Boolean">true</setting>
+					<setting key="bottomPanelCollapsed" type="Boolean">false</setting>
+					<setting key="topHeight" type="String">14%</setting>
+					<setting key="centerCaption" type="String">Editor</setting>
+					<setting key="bottomPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="centerHeight" type="String">14%</setting>
+					<setting key="topPanelInitiallyLocked" type="Boolean">false</setting>
+					<setting key="thirdSectionDisabled" type="Boolean">true</setting>
+					<setting key="allowLockingBottomPanel" type="Boolean">true</setting>
+					<setting key="bottomCaption" type="String"></setting>
+					<setting key="centerPanelCollapsed" type="Boolean">false</setting>
+					<setting key="widgetStyleClass" type="String"></setting>
+					<setting key="topCaption" type="String">Delivery Address Request
+						Report
+					</setting>
+					<setting key="centerPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="topPanelCollapsed" type="Boolean">true</setting>
+					<setting key="allowLockingTopPanel" type="Boolean">true</setting>
+					<virtual-sockets />
+				</widget>
+				<!-- Lp Override and Awb Edit Report -->
+				<widget id="lp_and_awbedit_collapseble" title="Lp override and Awb Edit Collapsible Container"
+					widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
+					slotId="perspectives" template="true">
+
+					<widget id="lp_and_awbedit_datepic" title="Lp override and Awb Edit date pic"
+						widgetDefinitionId="com.hybris.oms.tata.pincodelogistics.datepicwidget"
+						slotId="center" template="false">
+					</widget>
+					<widget id="lp_and_awbedit_widget_report"
+						widgetDefinitionId="com.techouts.widgets.lpoverrideandawbeditreport"
+						slotId="bottom" title="Lp and Awb Edit  report" template="false">
+						<virtual-sockets />
+
+					</widget>
+					<setting key="widgetStyleAttribute" type="String"></setting>
+					<setting key="allowLockingCenterPanel" type="Boolean">true</setting>
+					<setting key="bottomPanelCollapsed" type="Boolean">false</setting>
+					<setting key="topHeight" type="String">14%</setting>
+					<setting key="centerCaption" type="String">Editor</setting>
+					<setting key="bottomPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="centerHeight" type="String">14%</setting>
+					<setting key="topPanelInitiallyLocked" type="Boolean">false</setting>
+					<setting key="thirdSectionDisabled" type="Boolean">true</setting>
+					<setting key="allowLockingBottomPanel" type="Boolean">true</setting>
+					<setting key="bottomCaption" type="String"></setting>
+					<setting key="centerPanelCollapsed" type="Boolean">false</setting>
+					<setting key="widgetStyleClass" type="String"></setting>
+					<setting key="topCaption" type="String">Lp and Awb Edit Report
 					</setting>
 					<setting key="centerPanelInitiallyLocked" type="Boolean">false
 					</setting>
@@ -256,6 +360,240 @@
 					<virtual-sockets />
 				</widget>
 
+				<!-- Scheduled Delivery Tracking Report -->
+				<widget id="schdeuled_delivery_tracking_collapseble"
+					title="Scheduled Delivery tracking Collapsible Container"
+					widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
+					slotId="perspectives" template="true">
+
+					<widget id="schdeuled_delivery_tracking_datepic" title="Scheduled Delivery tracking date pic"
+						widgetDefinitionId="com.hybris.oms.tata.pincodelogistics.datepicwidget"
+						slotId="center" template="false">
+					</widget>
+					<widget id="schdeuled_delivery_tracking_widget_report"
+						widgetDefinitionId="com.techouts.widgets.scheduleddeliverytrackingreport"
+						slotId="bottom" title="Scheduled Delivery tracking Report"
+						template="false">
+						<virtual-sockets />
+
+					</widget>
+					<setting key="widgetStyleAttribute" type="String"></setting>
+					<setting key="allowLockingCenterPanel" type="Boolean">true</setting>
+					<setting key="bottomPanelCollapsed" type="Boolean">false</setting>
+					<setting key="topHeight" type="String">14%</setting>
+					<setting key="centerCaption" type="String">Editor</setting>
+					<setting key="bottomPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="centerHeight" type="String">14%</setting>
+					<setting key="topPanelInitiallyLocked" type="Boolean">false</setting>
+					<setting key="thirdSectionDisabled" type="Boolean">true</setting>
+					<setting key="allowLockingBottomPanel" type="Boolean">true</setting>
+					<setting key="bottomCaption" type="String"></setting>
+					<setting key="centerPanelCollapsed" type="Boolean">false</setting>
+					<setting key="widgetStyleClass" type="String"></setting>
+					<setting key="topCaption" type="String">Scheduled Delivery Tracking
+						Report
+					</setting>
+					<setting key="centerPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="topPanelCollapsed" type="Boolean">true</setting>
+					<setting key="allowLockingTopPanel" type="Boolean">true</setting>
+					<virtual-sockets />
+				</widget>
+				<!-- Express Delivery Tracking Report -->
+				<widget id="express_delivery_tracking_collapseble" title="Express Delivery tracking Collapseble Container"
+					widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
+					slotId="perspectives" template="true">
+
+					<widget id="express_delivery_tracking_datepic" title="Express Delivery tracking date pic"
+						widgetDefinitionId="com.hybris.oms.tata.pincodelogistics.datepicwidget"
+						slotId="center" template="false">
+					</widget>
+					<widget id="express_delivery_tracking_widget_report"
+						widgetDefinitionId="com.techouts.widgets.edtrackingreport" slotId="bottom"
+						title="Express Delivery tracking Report" template="false">
+						<virtual-sockets />
+
+					</widget>
+					<setting key="widgetStyleAttribute" type="String"></setting>
+					<setting key="allowLockingCenterPanel" type="Boolean">true</setting>
+					<setting key="bottomPanelCollapsed" type="Boolean">false</setting>
+					<setting key="topHeight" type="String">14%</setting>
+					<setting key="centerCaption" type="String">Editor</setting>
+					<setting key="bottomPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="centerHeight" type="String">14%</setting>
+					<setting key="topPanelInitiallyLocked" type="Boolean">false</setting>
+					<setting key="thirdSectionDisabled" type="Boolean">true</setting>
+					<setting key="allowLockingBottomPanel" type="Boolean">true</setting>
+					<setting key="bottomCaption" type="String"></setting>
+					<setting key="centerPanelCollapsed" type="Boolean">false</setting>
+					<setting key="widgetStyleClass" type="String"></setting>
+					<setting key="topCaption" type="String">Express Delivery Tracking
+						Report
+					</setting>
+					<setting key="centerPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="topPanelCollapsed" type="Boolean">true</setting>
+					<setting key="allowLockingTopPanel" type="Boolean">true</setting>
+					<virtual-sockets />
+				</widget>
+
+				<!-- add for SShip Delivery Breach -->
+
+
+				<widget id="sship_delivery_breach_collapseble"
+					widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
+					title="sship breach collapsible contatiner" slotId="perspectives"
+					template="true">
+
+					<widget id="sship_delivery_breach_datepic"
+						widgetDefinitionId="com.hybris.oms.tata.pincodelogistics.datepicwidget"
+						title="sship breach date pic" slotId="center" template="false">
+					</widget>
+					<widget id="sship_breach_widget" widgetDefinitionId="com.techouts.widgets.sshipdeliverybreach"
+						slotId="bottom" title="sship breach widget " template="false">
+						<virtual-sockets />
+					</widget>
+					<setting key="widgetStyleAttribute" type="String"></setting>
+					<setting key="allowLockingCenterPanel" type="Boolean">true</setting>
+					<setting key="bottomPanelCollapsed" type="Boolean">false</setting>
+					<setting key="topHeight" type="String">14%</setting>
+					<setting key="centerCaption" type="String">Editor</setting>
+					<setting key="bottomPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="centerHeight" type="String">14%</setting>
+					<setting key="topPanelInitiallyLocked" type="Boolean">false</setting>
+					<setting key="thirdSectionDisabled" type="Boolean">true</setting>
+					<setting key="allowLockingBottomPanel" type="Boolean">true</setting>
+					<setting key="bottomCaption" type="String"></setting>
+					<setting key="centerPanelCollapsed" type="Boolean">false</setting>
+					<setting key="widgetStyleClass" type="String"></setting>
+					<setting key="topCaption" type="String">SShip Delivery Breached
+						Orders Search
+					</setting>
+					<setting key="centerPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="topPanelCollapsed" type="Boolean">true</setting>
+					<setting key="allowLockingTopPanel" type="Boolean">true</setting>
+					<virtual-sockets />
+				</widget>
+
+				<!-- Added for Pin code serviceability and LogisticsReport -->
+				<widget id="container_pincode_logistics_report"
+					widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
+					slotId="perspectives" template="true">
+
+					<widget id="pincode_logistics_report_datepic"
+						widgetDefinitionId="com.hybris.oms.tata.pincodelogistics.datepicwidget"
+						slotId="center" template="false">
+						<setting key="shipmentType" type="Boolean">true</setting>
+					</widget>
+					<widget id="pincode_logistics_report_listview"
+						widgetDefinitionId="com.hybris.oms.tata.pincodelogistics.listwidget"
+						slotId="bottom" title="Orders list" template="false">
+						<virtual-sockets />
+					</widget>
+					<setting key="widgetStyleAttribute" type="String"></setting>
+					<setting key="allowLockingCenterPanel" type="Boolean">true</setting>
+					<setting key="bottomPanelCollapsed" type="Boolean">false</setting>
+					<setting key="topHeight" type="String">14%</setting>
+					<setting key="centerCaption" type="String">Editor</setting>
+					<setting key="bottomPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="centerHeight" type="String">14%</setting>
+					<setting key="topPanelInitiallyLocked" type="Boolean">false</setting>
+					<setting key="thirdSectionDisabled" type="Boolean">true</setting>
+					<setting key="allowLockingBottomPanel" type="Boolean">true</setting>
+					<setting key="bottomCaption" type="String"></setting>
+					<setting key="centerPanelCollapsed" type="Boolean">false</setting>
+					<setting key="widgetStyleClass" type="String"></setting>
+					<setting key="topCaption" type="String">Seller And Logistics
+						Performance Report
+					</setting>
+					<setting key="centerPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="topPanelCollapsed" type="Boolean">true</setting>
+					<setting key="allowLockingTopPanel" type="Boolean">true</setting>
+					<virtual-sockets />
+				</widget>
+
+				<!-- Added for delivery date against promised date -->
+				<widget id="delivery_date_against_promisddate_collapseble"
+					widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
+					title="Delivery date against promised date report" slotId="perspectives"
+					template="true">
+
+					<widget id="deliverydate_against_promiseddate_datepic"
+						widgetDefinitionId="com.hybris.oms.tata.pincodelogistics.datepicwidget"
+						slotId="center" template="false">
+					</widget>
+					<widget id="deliverydate_against_promiseddate-widget"
+						widgetDefinitionId="com.techouts.widgets.delverydateagainstpromiseddate"
+						slotId="bottom" title="Delivery date against promised date"
+						template="false">
+						<virtual-sockets />
+					</widget>
+					<setting key="widgetStyleAttribute" type="String"></setting>
+					<setting key="allowLockingCenterPanel" type="Boolean">true</setting>
+					<setting key="bottomPanelCollapsed" type="Boolean">false</setting>
+					<setting key="topHeight" type="String">14%</setting>
+					<setting key="centerCaption" type="String">Editor</setting>
+					<setting key="bottomPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="centerHeight" type="String">14%</setting>
+					<setting key="topPanelInitiallyLocked" type="Boolean">false</setting>
+					<setting key="thirdSectionDisabled" type="Boolean">true</setting>
+					<setting key="allowLockingBottomPanel" type="Boolean">true</setting>
+					<setting key="bottomCaption" type="String"></setting>
+					<setting key="centerPanelCollapsed" type="Boolean">false</setting>
+					<setting key="widgetStyleClass" type="String"></setting>
+					<setting key="topCaption" type="String">Delivery Date Against
+						Promised Date Report
+					</setting>
+					<setting key="centerPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="topPanelCollapsed" type="Boolean">true</setting>
+					<setting key="allowLockingTopPanel" type="Boolean">true</setting>
+					<virtual-sockets />
+				</widget>
+				<!-- pick up address change request report -->
+				<widget id="pickup_address_change_request_collapseble" title="Pick Up Address Change collapsable Container"
+					widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
+					slotId="perspectives" template="true">
+					<widget id="pickup_address_request_datepic" title="PickUp Address request date pic "
+						widgetDefinitionId="com.techouts.widgets.deliveryaddressdatepic"
+						slotId="center" template="false">
+					</widget>
+					<widget id="pickup_address_request_widget_report"
+						widgetDefinitionId="com.techouts.widgets.pickupaddresschangerequest"
+						slotId="bottom" title="pickup Address Request report" template="false">
+						<virtual-sockets />
+
+					</widget>
+					<setting key="widgetStyleAttribute" type="String"></setting>
+					<setting key="allowLockingCenterPanel" type="Boolean">true</setting>
+					<setting key="bottomPanelCollapsed" type="Boolean">false</setting>
+					<setting key="topHeight" type="String">14%</setting>
+					<setting key="centerCaption" type="String">Editor</setting>
+					<setting key="bottomPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="centerHeight" type="String">14%</setting>
+					<setting key="topPanelInitiallyLocked" type="Boolean">false</setting>
+					<setting key="thirdSectionDisabled" type="Boolean">true</setting>
+					<setting key="allowLockingBottomPanel" type="Boolean">true</setting>
+					<setting key="bottomCaption" type="String"></setting>
+					<setting key="centerPanelCollapsed" type="Boolean">false</setting>
+					<setting key="widgetStyleClass" type="String"></setting>
+					<setting key="topCaption" type="String">PickUp Address Change Requests
+						Report
+					</setting>
+					<setting key="centerPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="topPanelCollapsed" type="Boolean">true</setting>
+					<setting key="allowLockingTopPanel" type="Boolean">true</setting>
+					<virtual-sockets />
+				</widget>
 
 				<virtual-sockets />
 			</widget>
@@ -266,12 +604,12 @@
 				type="String" />
 		</widget>
 
+	</widget-extension>
+	<widget-extension widgetId="tataBUCperspective">
+		<move widgetId="backofficeMainSlot" targetWidgetId="backofficeMainSlot"
+			targetSlotId="perspectives" position="0" />
+	</widget-extension>
 
-	</widget-extension>
-	 <widget-extension widgetId="tataBUCperspective">
-	<move widgetId="backofficeMainSlot" targetWidgetId="backofficeMainSlot" targetSlotId="perspectives" position="0"/>
-	</widget-extension>
-	
 	<widget-connection inputId="input" outputId="nodeSelected"
 		sourceWidgetId="tataomsbackoffice-explorer-tree" targetWidgetId="tataomsbackoffice-tree-node-adapter" />
 	<widget-connection inputId="genericInput" outputId="true"
@@ -351,11 +689,39 @@
 	<!-- SocketConnection For InventorySearchByUSSID -->
 	<widget-connection sourceWidgetId="inventory-by-ussid-searchwidget"
 		outputId="searchedText" inputId="ussid" targetWidgetId="inventory-by-ussid-listview" />
-	<!-- socketConnections for Pincode Logistics Reports -->	
-	<widget-connection sourceWidgetId="pincode_logistics_report_datepic" outputId="startendDates" targetWidgetId="pincode_logistics_report_listview"  inputId="startendDates" />
-		
-    <widget-connection sourceWidgetId="tataBUCperspective" outputId="possiblePerspectives" targetWidgetId="backofficePerspectiveChooser" inputId="possiblePerspectives"/>
-    <widget-connection sourceWidgetId="backofficePerspectiveChooser" outputId="selectPerspective" targetWidgetId="tataBUCperspective" inputId="selectPerspective"/>
+	<!-- socketConnections for Pincode Logistics Reports -->
+	<widget-connection sourceWidgetId="pincode_logistics_report_datepic"
+		outputId="startendDates" targetWidgetId="pincode_logistics_report_listview"
+		inputId="startendDates" />
+	<widget-connection sourceWidgetId="pincode_logistics_report_datepic"
+		outputId="selectedShipmentType" targetWidgetId="pincode_logistics_report_listview"
+		inputId="selectedShipmentType" />
 
+	<widget-connection sourceWidgetId="tataBUCperspective"
+		outputId="possiblePerspectives" targetWidgetId="backofficePerspectiveChooser"
+		inputId="possiblePerspectives" />
+	<widget-connection sourceWidgetId="backofficePerspectiveChooser"
+		outputId="selectPerspective" targetWidgetId="tataBUCperspective"
+		inputId="selectPerspective" />
+
+	<!-- socket connections for buc reports -->
+	<widget-connection sourceWidgetId="tship_ship_assignment_datepic"
+		outputId="startendDates" targetWidgetId="tship_sship_assignment_widget_report"
+		inputId="startendDates" />
+	<widget-connection targetWidgetId="lp_and_awbedit_widget_report"
+		outputId="startendDates" inputId="startendDates" sourceWidgetId="lp_and_awbedit_datepic" />
+	<widget-connection targetWidgetId="delivery_address_request_widget_report"
+		outputId="startendDates" inputId="startendDates" sourceWidgetId="delivery_address_request_datepic" />
+	<widget-connection targetWidgetId="schdeuled_delivery_tracking_widget_report"
+		outputId="startendDates" inputId="startendDates" sourceWidgetId="schdeuled_delivery_tracking_datepic" />
+	<widget-connection targetWidgetId="express_delivery_tracking_widget_report"
+		outputId="startendDates" inputId="startendDates" sourceWidgetId="express_delivery_tracking_datepic" />
+	<widget-connection targetWidgetId="deliverydate_against_promiseddate-widget"
+		outputId="startendDates" inputId="startendDates"
+		sourceWidgetId="deliverydate_against_promiseddate_datepic" />
+	<widget-connection sourceWidgetId="sship_delivery_breach_datepic"
+		outputId="startendDates" targetWidgetId="sship_breach_widget" inputId="startendDates" />
+	<widget-connection targetWidgetId="pickup_address_request_widget_report"
+		outputId="startendDates" inputId="startendDates" sourceWidgetId="pickup_address_request_datepic" />
 </widgets>
  

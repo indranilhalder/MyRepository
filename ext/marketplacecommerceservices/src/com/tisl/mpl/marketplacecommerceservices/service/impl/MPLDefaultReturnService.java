@@ -15,12 +15,19 @@ import de.hybris.platform.returns.model.ReturnRequestModel;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.tisl.mpl.core.model.MplCustomerBankAccountDetailsModel;
 import com.tisl.mpl.marketplacecommerceservices.service.MPLReturnService;
+import com.tisl.mpl.returns.dao.MplReturnsDao;
 
 
 public class MPLDefaultReturnService extends DefaultReturnService implements MPLReturnService
 {
 
+	@Autowired
+	private MplReturnsDao mplReturnsDao;
+	
 	@Override
 	public ReplacementEntryModel createReplacement(final ReturnRequestModel request, final AbstractOrderEntryModel entry,
 			final String notes, final Long expectedQuantity, final ReturnAction action, final ReplacementReason reason)
@@ -106,13 +113,25 @@ public class MPLDefaultReturnService extends DefaultReturnService implements MPL
 		getModelService().refresh(order);
 	}
 
-
-	//need to save to generate return id 
-	/*
-	 * @Override public ReturnRequestModel createReturnRequest(final OrderModel order) { final ReturnRequestModel request
-	 * = (ReturnRequestModel) getModelService().create(ReturnRequestModel.class); request.setOrder(order); return
-	 * request; }
+	/**
+	 * @author TECHOUTS 
+	 * 
+	 * @param  customerId
+	 * 
+	 * @return MplCustomerBankAccountDetailsModel
+	 * 
 	 */
+	@Override
+	public MplCustomerBankAccountDetailsModel getCustomerBakDetailsById(String customerId)
+	{
+		
+		return mplReturnsDao.getCustomerBankDetailsById(customerId);
+	}
+
+  @Override
+  public List<ReturnRequestModel> getListOfReturnRequest(String orlderId){
+	  return mplReturnsDao.getListOfReturnRequest(orlderId);
+  }
 
 
 }
