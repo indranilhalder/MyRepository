@@ -2499,7 +2499,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 		}
 		if (null != request.getParameterMap() && request.getParameterMap().containsKey(isLux))
 		{
-			returnAction = returnAction + isLux + "=true";
+			returnAction = returnAction + "?" + isLux + "=true";
 		}
 		return returnAction;
 	}
@@ -2846,7 +2846,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
 			if (null != request.getParameterMap() && request.getParameterMap().containsKey(isLux))
 			{
-				returnAction = returnAction + isLux + "=true";
+				returnAction = returnAction + "?" + isLux + "=true";
 			}
 			return returnAction;
 		}
@@ -3180,7 +3180,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
 			if (null != request.getParameterMap() && request.getParameterMap().containsKey(isLux))
 			{
-				returnAction = returnAction + isLux + "=true";
+				returnAction = returnAction + "?" + isLux + "=true";
 			}
 			return returnAction;
 		}
