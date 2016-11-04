@@ -45896,8 +45896,8 @@ header .content .right ul.loggedIn-flyout li a, header .content .right ul.logged
 #flip-navigation li:hover a{
 	text-decoration:underline;
 }
-header>.content .bottom .marketplace .simple-banner-component img{
-	max-height:37px;
+header > .content .bottom .marketplace .simple-banner-component img {
+    max-height: 45px;
 }
 body.page-multiStepCheckoutSummaryPage header .content .top, body.page-checkout-login header .content .top{
 background: transparent;} 
