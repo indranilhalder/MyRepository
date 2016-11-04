@@ -153,9 +153,7 @@
 		var isLux = $.cookie(luxuryCookie);
 		var finalURL="";
 		var luxuryLoginPage = "luxuryLoginPage";
-		
 		if($('#pageType').attr('value').indexOf("login") > -1){
-			
 			if(sessionStorage.getItem(luxuryLoginPage) != null && sessionStorage.getItem(luxuryLoginPage) == "true"){
 				finalURL = setLuxuryLoginURL(loc);
 				window.history.pushState({}, loc, finalURL);
@@ -193,13 +191,19 @@
  //For TISLUX-1865
  function setLuxuryLoginURL(loc){
 	var finalURL="";
-	if(loc.indexOf("?") > -1){
-		finalURL = loc+"&";
+	if(loc.indexOf("isLux=true") == -1){
+		if(loc.indexOf("?") > -1){
+			finalURL = loc+"&";
+		}
+		else{
+			finalURL = loc+"?";
+		}
+		finalURL = finalURL+"isLux=true";
 	}
 	else{
-		finalURL = loc+"?";
+		finalURL=loc;
 	}
-	finalURL = finalURL+"isLux=true";
+	
 	return finalURL;
  }
  
