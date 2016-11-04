@@ -23,9 +23,9 @@ public class LuxuryProductCategoryDecorator implements CSVCellDecorator
 
 	/*
 	 * @Javadoc
-	 *
+	 * 
 	 * @param position,srcLine
-	 *
+	 * 
 	 * @return finalvalue
 	 */
 	@Override
@@ -49,6 +49,10 @@ public class LuxuryProductCategoryDecorator implements CSVCellDecorator
 		else if (StringUtils.isNotBlank(luxIndicator) && StringUtils.isNotBlank(categories))
 		{
 			returnValue.append(stripCategories(categories, luxIndicator));
+		}
+		else
+		{
+			returnValue.append(categories);
 		}
 
 		return returnValue.toString();
