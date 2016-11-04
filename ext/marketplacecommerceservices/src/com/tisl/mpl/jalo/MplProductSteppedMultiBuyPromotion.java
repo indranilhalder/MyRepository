@@ -106,18 +106,18 @@ public class MplProductSteppedMultiBuyPromotion extends GeneratedMplProductStepp
 			checkChannelFlag = getDefaultPromotionsManager().checkChannelData(listOfChannel, cart);
 			if (checkChannelFlag)
 			{
-				final Map<String, List<String>> productAssociatedItemsFinalMap = new ConcurrentHashMap<String, List<String>>();
-				final Map<String, Integer> validProductFinalList = new ConcurrentHashMap<String, Integer>();
+				//******************** Block Code ****************************************************************************
+				//final Map<String, List<String>> productAssociatedItemsFinalMap = new ConcurrentHashMap<String, List<String>>();
+				//final Map<String, Integer> validProductFinalList = new ConcurrentHashMap<String, Integer>();
 
 				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager()
 						.getValidProdListForBuyXofAPromo(cart, paramSessionContext, promotionProductList, promotionCategoryList,
 								restrictionList, excludedProductList, excludeManufactureList, null, null);
 				if (!getDefaultPromotionsManager().promotionAlreadyFired(paramSessionContext, validProductUssidMap)
-						&& MapUtils.isNotEmpty(validProductUssidMap))
+						&& MapUtils.isNotEmpty(validProductUssidMap) /* && validProductUssidMap.size() == 1 */) // For One Eligible line for Promotion in cart
 				{
 					promotionResults = promotionEvaluation(paramSessionContext, paramPromotionEvaluationContext, validProductUssidMap,
-							restrictionList, promotionProductList, promotionCategoryList, cart, productAssociatedItemsFinalMap,
-							validProductFinalList);
+							restrictionList, promotionProductList, promotionCategoryList, cart);
 				}
 			}
 		}
@@ -142,6 +142,120 @@ public class MplProductSteppedMultiBuyPromotion extends GeneratedMplProductStepp
 		return promotionResults;
 	}
 
+	//	/**
+	//	 * Method to evaluate for Multi Lines in Cart
+	//	 *
+	//	 * @param paramSessionContext
+	//	 * @param paramPromotionEvaluationContext
+	//	 * @param validProductUssidMap
+	//	 * @param restrictionList
+	//	 * @param promotionProductList
+	//	 * @param promotionCategoryList
+	//	 * @param cart
+	//	 * @return promotionResults
+	//	 */
+	//	private List<PromotionResult> promotionEvaluationMultiLine(final SessionContext paramSessionContext,
+	//			final PromotionEvaluationContext paramPromotionEvaluationContext,
+	//			final Map<String, AbstractOrderEntry> validProductUssidMap, final List<AbstractPromotionRestriction> restrictionList,
+	//			final List<Product> promotionProductList, final List<Category> promotionCategoryList, final AbstractOrder cart)
+	//	{
+	//		final List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
+	//		try
+	//		{
+	//			LOG.debug("Evaluting  Multi Step Bundle Promotion for Multi Line");
+	//			final List<QuantityPrice> steps = getSteps(paramSessionContext, cart,
+	//					getQualifyingCountsAndBundlePrices(paramSessionContext));
+	//			if (CollectionUtils.isNotEmpty(steps))
+	//			{
+	//				boolean flagForDeliveryModeRestrEval = false;
+	//				boolean flagForPaymentModeRestrEval = false;
+	//				boolean flagForPincodeRestriction = false;
+	//				long promotionEligibleCount = 0;
+	//				long totalCount = 0;
+	//				double totalAdjustOffPrice = 0.0D;
+	//				double promoSetTotalDiscount = 0.0D;
+	//				double totalAdjustment = 0.0D;
+	//				final List<Long> stepQuantityList = new ArrayList<Long>();
+	//
+	//				LOG.debug("Validated Steps for Bundle Promotions");
+	//				LOG.debug("Checking Delivery Mode Restriction ");
+	//				flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForAPromo(restrictionList,
+	//						validProductUssidMap, cart);
+	//				LOG.debug("Checking Payment Mode Restriction && Pincode Restriction ");
+	//				flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList,
+	//						paramSessionContext);
+	//				flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList, cart);
+	//
+	//				if (flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval && flagForPincodeRestriction)
+	//				{
+	//					final List<Product> eligibleProductList = new ArrayList<Product>();
+	//					for (final AbstractOrderEntry entry : validProductUssidMap.values())
+	//					{
+	//						totalCount += entry.getQuantity().intValue(); // Fetches total count of Valid Products
+	//						eligibleProductList.add(entry.getProduct());
+	//					}
+	//					LOG.debug("Total Eligible Count of Products" + totalCount);
+	//
+	//					if (totalCount > 0)
+	//					{
+	//						LOG.debug("Assignining Total Count for Promotion Evaluation");
+	//						promotionEligibleCount = totalCount;
+	//					}
+	//
+	//
+	//					for (final QuantityPrice priceData : steps)
+	//					{
+	//						while (promotionEligibleCount > 0 && priceData.quantity <= promotionEligibleCount)
+	//						{
+	//							totalAdjustOffPrice += priceData.price;
+	//							promotionEligibleCount = promotionEligibleCount - priceData.quantity;
+	//							promoSetTotalDiscount += priceData.price;
+	//
+	//							if (CollectionUtils.isEmpty(stepQuantityList)
+	//									|| !(stepQuantityList.contains(Long.valueOf(priceData.quantity))))
+	//							{
+	//								stepQuantityList.add(Long.valueOf(priceData.quantity));
+	//							}
+	//						}
+	//					}
+	//					LOG.debug("Promotion Set Total Off" + promoSetTotalDiscount);
+	//
+	//					final Map<String, Integer> validProductList = getMplBundlePromotionHelper().getSortedValidProdUssidMap(
+	//							validProductUssidMap, stepQuantityList, paramSessionContext, (int) totalCount, restrictionList);
+	//
+	//					totalAdjustment = getMplBundlePromotionHelper().getTotalEligiblePrice(validProductUssidMap, validProductList)
+	//							- totalAdjustOffPrice;
+	//
+	//					if (totalAdjustment > 0)
+	//					{
+	//						//
+	//					}
+	//
+	//
+	//
+	//				}
+	//			}
+	//		}
+	//		catch (final EtailBusinessExceptions e)
+	//		{
+	//			LOG.error("Error in Multi Stepped Promotion Evaluation + Multi Step" + e);
+	//			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+	//		}
+	//		catch (final EtailNonBusinessExceptions e) //Added for TISPT-195
+	//		{
+	//			LOG.error("Error in Multi Stepped Promotion Evaluation + Multi Step" + e);
+	//			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+	//					MarketplacecommerceservicesConstants.E0000));
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			LOG.error("Error in Multi Stepped Promotion Evaluation + Multi Step" + e);
+	//			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+	//					MarketplacecommerceservicesConstants.E0000));
+	//		}
+	//		return promotionResults;
+	//	}
+
 	/**
 	 *
 	 * Bundle Promotion Evaluation
@@ -153,15 +267,12 @@ public class MplProductSteppedMultiBuyPromotion extends GeneratedMplProductStepp
 	 * @param promotionProductList
 	 * @param promotionCategoryList
 	 * @param cart
-	 * @param productAssociatedItemsFinalMap
-	 * @param validProductFinalList
 	 * @return promotionResults
 	 */
 	private List<PromotionResult> promotionEvaluation(final SessionContext paramSessionContext,
 			final PromotionEvaluationContext paramPromotionEvaluationContext,
 			final Map<String, AbstractOrderEntry> validProductUssidMap, final List<AbstractPromotionRestriction> restrictionList,
-			final List<Product> promotionProductList, final List<Category> promotionCategoryList, final AbstractOrder cart,
-			final Map<String, List<String>> productAssociatedItemsFinalMap, final Map<String, Integer> validProductFinalList)
+			final List<Product> promotionProductList, final List<Category> promotionCategoryList, final AbstractOrder cart)
 	{
 		final List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
 		try
@@ -175,6 +286,7 @@ public class MplProductSteppedMultiBuyPromotion extends GeneratedMplProductStepp
 				long promotionEligibleCount = 0;
 				boolean flagForDeliveryModeRestrEval = false;
 				boolean flagForPaymentModeRestrEval = false;
+				boolean flagForPincodeRestriction = false;
 				double totalAdjustment = 0.0D;
 				double totalPrice = 0.0D;
 				final List<Long> stepQuantityList = new ArrayList<Long>();
@@ -187,11 +299,12 @@ public class MplProductSteppedMultiBuyPromotion extends GeneratedMplProductStepp
 				LOG.debug("Checking Delivery Mode Restriction ");
 				flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForAPromo(restrictionList,
 						validProductUssidMap, cart);
-				LOG.debug("Checking Payment Mode Restriction ");
+				LOG.debug("Checking Payment Mode Restriction && Pincode Restriction ");
 				flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList,
 						paramSessionContext);
+				flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList, cart);
 
-				if (flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval)
+				if (flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval && flagForPincodeRestriction)
 				{
 					final List<Product> eligibleProductList = new ArrayList<Product>();
 					for (final AbstractOrderEntry entry : validProductUssidMap.values())
@@ -234,7 +347,15 @@ public class MplProductSteppedMultiBuyPromotion extends GeneratedMplProductStepp
 							}
 						}
 					}
-					totalAdjustment = totalPrice - totalAdjustOffPrice;
+					//totalAdjustment = totalPrice - totalAdjustOffPrice;
+
+
+
+					final Map<String, Integer> validProductList = getMplBundlePromotionHelper().getSortedValidProdUssidMap(
+							validProductUssidMap, stepQuantityList, paramSessionContext, (int) totalCount, restrictionList);
+
+					totalAdjustment = getMplBundlePromotionHelper().getTotalEligiblePrice(validProductUssidMap, validProductList)
+							- totalAdjustOffPrice;
 
 					LOG.debug("Previous Cart Value" + totalPrice);
 					LOG.debug("Total Adjustment Price" + totalAdjustOffPrice);
@@ -250,10 +371,6 @@ public class MplProductSteppedMultiBuyPromotion extends GeneratedMplProductStepp
 							final BigDecimal unitAdjustment = BigDecimal.valueOf(totalAdjustment).divide(
 									BigDecimal.valueOf(promotionConsmdCount), RoundingMode.HALF_EVEN);
 							LOG.debug("Unit Adjustment: " + unitAdjustment);
-
-
-							final Map<String, Integer> validProductList = getMplBundlePromotionHelper().getSortedValidProdUssidMap(
-									validProductUssidMap, stepQuantityList, paramSessionContext, (int) totalCount, restrictionList);
 
 							LOG.debug("Converting the Price off to Percentage: ");
 							final double percentageDiscount = getMplBundlePromotionHelper().getDiscountPercentage(validProductList,
@@ -360,18 +477,18 @@ public class MplProductSteppedMultiBuyPromotion extends GeneratedMplProductStepp
 		}
 		catch (final EtailBusinessExceptions e)
 		{
-			LOG.error(e.getMessage());
+			LOG.error("Error in Multi Stepped Promotion Evaluation " + e);
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 		}
 		catch (final EtailNonBusinessExceptions e) //Added for TISPT-195
 		{
-			LOG.error(e.getMessage());
+			LOG.error("Error in Multi Stepped Promotion Evaluation " + e);
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
 		}
 		catch (final Exception e)
 		{
-			LOG.error(e.getMessage());
+			LOG.error("Error in Multi Stepped Promotion Evaluation " + e);
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
 		}
