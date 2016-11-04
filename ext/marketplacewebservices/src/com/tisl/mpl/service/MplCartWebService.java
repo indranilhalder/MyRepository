@@ -58,10 +58,13 @@ public interface MplCartWebService
 	 * Service to get cart details
 	 *
 	 * @param cartId
-	 * @param addressListDTO
+	 * @param addressListWsDTO
+	 * @param pincode
+	 * @param channel
 	 * @return CartDataDetailsWsDTO
 	 */
-	CartDataDetailsWsDTO getCartDetails(String cartId, AddressListWsDTO addressListDTO, String pincode);
+	CartDataDetailsWsDTO getCartDetails(final String cartId, final AddressListWsDTO addressListWsDTO, final String pincode,
+			String channel);
 
 	/**
 	 * @param aoem

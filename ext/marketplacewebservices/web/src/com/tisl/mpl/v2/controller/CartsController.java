@@ -1975,7 +1975,8 @@ public class CartsController extends BaseCommerceController
 	@ResponseBody
 	public CartDataDetailsWsDTO getCartDetails(@PathVariable final String cartId,
 			@RequestParam(required = false) final String pincode,
-			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
+			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields,
+			@RequestParam(required = false) final String channel)
 	{
 		final AddressListWsDTO addressListDTO = addressList(fields);
 		CartDataDetailsWsDTO cartDataDetails = new CartDataDetailsWsDTO();
@@ -1987,7 +1988,7 @@ public class CartsController extends BaseCommerceController
 				{
 					LOG.debug("************ get cart details mobile web service *********" + cartId);
 				}
-				cartDataDetails = mplCartWebService.getCartDetails(cartId, addressListDTO, pincode);
+				cartDataDetails = mplCartWebService.getCartDetails(cartId, addressListDTO, pincode, channel);
 				final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
 				cartDataDetails.setMaxAllowed(maximum_configured_quantiy);
 			}
