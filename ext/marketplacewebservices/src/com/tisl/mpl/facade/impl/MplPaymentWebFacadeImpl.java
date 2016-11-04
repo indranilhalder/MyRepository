@@ -4,7 +4,6 @@
 package com.tisl.mpl.facade.impl;
 
 import de.hybris.platform.commercefacades.order.data.CartData;
-import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -303,10 +302,10 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 								modelService.save(cart);
 							}
 
-							getCartService().setSessionCart(cart);
-							//					SalesApplicationCockpit
-							cart.setChannel(SalesApplication.MOBILE);
-							getModelService().save(cart);
+							/*
+							 * getCartService().setSessionCart(cart); // SalesApplicationCockpit
+							 * cart.setChannel(SalesApplication.MOBILE); getModelService().save(cart);
+							 */
 
 							LOG.debug("binValidation : cartModel : " + cart);
 
@@ -481,7 +480,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.MplPaymentWebFacade#potentialPromotionOnPaymentMode(java.lang.String, java.lang.String)
 	 */
 	@Override

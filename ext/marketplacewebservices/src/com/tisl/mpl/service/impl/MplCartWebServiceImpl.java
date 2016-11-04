@@ -649,6 +649,12 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				}
 				//For saving all the data at once rather in loop;
 				modelService.saveAll(entryModelList);
+				//TISLUX-1823 -For LuxuryWeb
+				if (channel != null && channel.equalsIgnoreCase(SalesApplication.WEB.getCode()))
+				{
+					cartModel.setChannel(SalesApplication.WEB);
+					modelService.save(cartModel);
+				}
 			}
 
 			if (!addedToCart && !delisted)
@@ -924,7 +930,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			//	if (null != finalCart.getEntries() && !finalCart.getEntries().isEmpty())
 			/*
 			 * TISPT- 96 -- https://github.com/tcs-chennai/TCS_COMMERCE_REPO/pull/3577
-			 * 
+			 *
 			 * {
 			 */
 			for (final AbstractOrderEntryModel abstractOrderEntry : finalCart.getEntries())
