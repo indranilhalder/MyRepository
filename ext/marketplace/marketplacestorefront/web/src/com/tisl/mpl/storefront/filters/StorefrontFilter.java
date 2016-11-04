@@ -127,11 +127,13 @@ public class StorefrontFilter extends OncePerRequestFilter
 				if (null == isLuxCookie)
 				{
 					isLuxCookie = new Cookie("isLux", "true");
+					isLuxCookie.setPath("/");
 					response.addCookie(isLuxCookie);
 				}
 				else
 				{
 					isLuxCookie.setValue("true");
+					isLuxCookie.setPath("/");
 					response.addCookie(isLuxCookie);
 				}
 
