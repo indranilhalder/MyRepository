@@ -100,7 +100,7 @@ public class SaveDeliveryCostInterceptor implements ValidateInterceptor
 	 * @param allPromotionResults
 	 * @return flag
 	 */
-	private boolean validateForShippingPromo(final Set<PromotionResultModel> allPromotionResults)
+/*	private boolean validateForShippingPromo(final Set<PromotionResultModel> allPromotionResults)
 	{
 		boolean flag = false;
 		if (CollectionUtils.isNotEmpty(allPromotionResults))
@@ -118,6 +118,6 @@ public class SaveDeliveryCostInterceptor implements ValidateInterceptor
 			}
 		}
 		return flag;
-	}
+	}*/
 
 }

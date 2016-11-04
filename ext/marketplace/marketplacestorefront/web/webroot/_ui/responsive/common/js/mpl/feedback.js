@@ -1766,21 +1766,7 @@ $(document).ready(function(){
 		else{
 			$(".facet-list.filter-opt").hide();
 		}
-		/*TPR-3658 start*/
-		var j = 0;
-		$(".listing.wrapper .mob-filter-wrapper > .listing-leftmenu > div.facet_mobile").not(".facet-name").each(function(){
-			if($(this).children().length == 0){
-				return true;
-			}
-			if($(this).find(".facet.js-facet.collectionIds").length > 0){
-				return true;
-			}
-			if(j % 2 == 0){
-				$(this).addClass("light-bg");
-			}
-			j++;
-			});
-		/*TPR-3658 end*/
+		
 		$(document).ajaxComplete(function(){
 			if($(".facet-list.filter-opt").children().length > 0){
 			var filter_html = $(".listing.wrapper .right-block .facet-values.js-facet-values").html();
@@ -2076,6 +2062,22 @@ function toggleFilter(){
 		$(".facet-name.js-facet-name h3.active-mob").parent().siblings().show();
 		$(".facet-name.js-facet-name h3.active-mob").parent().siblings().find("#searchPageDeptHierTree").show();
 		$(".facet-name.js-facet-name h3.active-mob").parent().siblings().find("#categoryPageDeptHierTree").show();
+		
+		/*TPR-3658 start*/
+		var j = 0;
+		$(".listing.wrapper .mob-filter-wrapper > .listing-leftmenu > div.facet_mobile").not(".facet-name").each(function(){
+			if($(this).children().length == 0){
+				return true;
+			}
+			if($(this).find(".facet.js-facet.collectionIds").length > 0){
+				return true;
+			}
+			if(j % 2 == 0){
+				$(this).addClass("light-bg");
+			}
+			j++;
+			});
+		/*TPR-3658 end*/
 }
 		//	});
 	$(".category-icons").each(function(){
