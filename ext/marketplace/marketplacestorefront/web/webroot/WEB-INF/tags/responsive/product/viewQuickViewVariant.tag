@@ -37,11 +37,18 @@
 		var currentColour = '${product.colour}';
 		var currentCapacity = $("#variantForm input#cpcty").attr("value");
 		$(".color-swatch li span").each(function(){
-			var title = $(this).attr("title");
-			if(currentColour == title){
+			var title = $(this).attr("title").toLowerCase();
+			if(currentColour.toLowerCase() == title){
 				$(this).parent().parent().addClass("active");
 			}			
 		});
+		//Added for TPR-210
+		 $(".color-swatch li img").each(function(){
+			var title = $(this).attr("title").toLowerCase();
+			if(currentColour.toLowerCase() == title){
+				$(this).parent().parent().addClass("active");
+			}
+		});	 
 		$("#variantForm span.capacity-box a").each(function(){
 			var title = $(this).attr("title");
 			if(currentCapacity == title){
