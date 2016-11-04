@@ -38,8 +38,8 @@ import com.tisl.mpl.facade.comparator.VariantSizeComparator;
 
 @SuppressWarnings(
 { "PMD" })
-public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET extends ProductData> extends
-		VariantFullPopulator<SOURCE, TARGET>
+public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET extends ProductData>
+		extends VariantFullPopulator<SOURCE, TARGET>
 {
 
 	/**
@@ -59,7 +59,7 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 	@Autowired
 	private UrlResolver<ProductModel> productModelUrlResolver;
 
-
+	private static final String HASH = "#";
 
 
 
@@ -115,8 +115,8 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 	 */
 
 	@Override
-	public void populate(final SOURCE productModel, final TARGET productData) throws ConversionException,
-			EtailNonBusinessExceptions
+	public void populate(final SOURCE productModel, final TARGET productData)
+			throws ConversionException, EtailNonBusinessExceptions
 	{
 		final List<String> allVariantsId = new ArrayList<String>();
 		VariantOptionData variantOptionData = null;
@@ -161,17 +161,17 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 							else
 							{
 								isSizeVariantPresent = true;
-								final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode()) ? pm
-										.getColourHexCode() : pm.getColour().toLowerCase());
+								final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode())
+										? pm.getColourHexCode() : pm.getColour().toLowerCase());
 								defaultColorMap.put(color, Y);
 							}
 							//checking for colour variant
 							if (null != pm.getColour())
 							{
-								final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode()) ? pm
-										.getColourHexCode() : pm.getColour().toLowerCase());
+								final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode())
+										? pm.getColourHexCode() : pm.getColour().toLowerCase());
 								variantOptionData.setColourCode(color);
-								variantOptionData.setColour(pm.getColour());
+								variantOptionData.setColour(pm.getColour().toUpperCase());
 							}
 							//checking for colour hex code
 							sizeLink.put(variantOptionData.getUrl(), pm.getSize());
@@ -184,8 +184,8 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 							//TISPRO-50 - null check added
 							if (null != selectedCapacity && selectedCapacity.equals(pm.getCapacity()))
 							{
-								final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode()) ? pm
-										.getColourHexCode() : pm.getColour().toLowerCase());
+								final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode())
+										? pm.getColourHexCode() : pm.getColour().toLowerCase());
 								defaultColorMap.put(color, Y);
 
 								variantOptionData.setDefaultUrl(variantOptionData.getUrl());
@@ -194,10 +194,10 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 							//checking for colour variant
 							if (null != pm.getColour())
 							{
-								final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode()) ? pm
-										.getColourHexCode() : pm.getColour().toLowerCase());
+								final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode())
+										? pm.getColourHexCode() : pm.getColour().toLowerCase());
 								variantOptionData.setColourCode(color);
-								variantOptionData.setColour(pm.getColour());
+								variantOptionData.setColour(pm.getColour().toUpperCase());
 							}
 
 						}
@@ -207,10 +207,10 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 							if (null != pm.getColour())
 							{
 								variantOptionData.setDefaultUrl(variantOptionData.getUrl());
-								final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode()) ? pm
-										.getColourHexCode() : pm.getColour().toLowerCase());
+								final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode())
+										? pm.getColourHexCode() : pm.getColour().toLowerCase());
 								variantOptionData.setColourCode(color);
-								variantOptionData.setColour(pm.getColour());
+								variantOptionData.setColour(pm.getColour().toUpperCase());
 								defaultColorMap.put(color, Y);
 							}
 						}
@@ -221,10 +221,10 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 					{
 						//variantOptionData.setDefaultUrl(variantOptionData.getUrl());
 						isSizeVariantPresent = true;
-						final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode()) ? pm
-								.getColourHexCode() : pm.getColour().toLowerCase());
+						final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode())
+								? pm.getColourHexCode() : pm.getColour().toLowerCase());
 						variantOptionData.setColourCode(color);
-						variantOptionData.setColour(pm.getColour());
+						variantOptionData.setColour(pm.getColour().toUpperCase());
 						defaultColorMap.put(color, Y);
 						sizeLink.put(variantOptionData.getUrl(), pm.getSize());
 						variantOptionData.setSizeLink(sizeLink);
@@ -300,8 +300,10 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 		{
 			if (colourMap.containsValue(variantData))
 			{
-				variantData.setDefaultUrl(colourMap.get(variantData.getColourCode()).getUrl());
-
+				if (variantData.getColourCode().startsWith(HASH))
+				{
+					variantData.setDefaultUrl(colourMap.get(variantData.getColourCode()).getUrl());
+				}
 			}
 		}
 
