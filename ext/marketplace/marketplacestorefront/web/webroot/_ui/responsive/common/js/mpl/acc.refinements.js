@@ -1,6 +1,7 @@
 
 var updatedsearchQuery = "";
 var dummyForm ;
+var brandFacet = [];
 ACC.refinements = {
 
 	_autoload: [
@@ -368,6 +369,41 @@ ACC.refinements = {
 
 			$(this).parents(".js-facet").find(".js-more-facet-values").hide();
 			$(this).parents(".js-facet").find(".js-less-facet-values").show();
+			
+			 
+			$('.js-facet-top-values input[type=checkbox]:checked').parent().find('span.facet-text').each(function(){
+			brandFacet.push($(this).text().trim());
+			});
+			console.log("more "+brandFacet);
+			$('.js-facet-list-hidden input[type=checkbox]').parent().find('span.facet-text').each(function(){
+			console.log($(this).text().trim());
+			if($.inArray($(this).text().trim(),brandFacet )!= -1){
+			$(this).closest('label').find('input[type=checkbox]').prop('checked',true)
+			console.log($(this).closest('label').find('input[type=checkbox]').prop('checked',true));
+			}
+			});
+		})
+		
+			$(document).on("click",".js-less-facet-values-link",function(e){
+			e.preventDefault();
+			$(this).parents(".js-facet").find(".js-facet-top-values").show();
+			$(this).parents(".js-facet").find(".js-facet-list-hidden").hide();
+
+			$(this).parents(".js-facet").find(".js-more-facet-values").show();
+			$(this).parents(".js-facet").find(".js-less-facet-values").hide();
+			
+			 
+			$('.js-facet-list-hidden input[type=checkbox]:checked').parent().find('span.facet-text').each(function(){
+			brandFacet.push($(this).text().trim());
+			});
+			console.log("less "+brandFacet);
+			$('.js-facet-top-values input[type=checkbox]').parent().find('span.facet-text').each(function(){
+			console.log($(this).text().trim());
+			if($.inArray($(this).text().trim(),brandFacet )!= -1){
+			$(this).closest('label').find('input[type=checkbox]').prop('checked',true)
+			console.log($(this).closest('label').find('input[type=checkbox]').prop('checked',true));
+			}
+			});
 		})
 
 		// AJAX for removal of filters

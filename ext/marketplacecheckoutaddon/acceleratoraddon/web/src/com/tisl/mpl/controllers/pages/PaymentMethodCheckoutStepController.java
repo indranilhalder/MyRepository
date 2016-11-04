@@ -3577,7 +3577,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		LOG.debug("========================Inside Update Order============================");
 		try
 		{
-			if (null != orderToBeUpdated.getPaymentInfo() && CollectionUtils.isEmpty(orderToBeUpdated.getChildOrders()))
+			if (null != orderToBeUpdated && null != orderToBeUpdated.getPaymentInfo()
+					&& CollectionUtils.isEmpty(orderToBeUpdated.getChildOrders()))
 			{
 				getMplCheckoutFacade().beforeSubmitOrder(orderToBeUpdated);
 				getMplCheckoutFacade().submitOrder(orderToBeUpdated);
@@ -3589,12 +3590,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 				return redirectToOrderConfirmationPage(orderData);
 			}
-			else if (null != orderToBeUpdated.getPaymentInfo() && CollectionUtils.isNotEmpty(orderToBeUpdated.getChildOrders()))
+			else if (null != orderToBeUpdated && null != orderToBeUpdated.getPaymentInfo()
+					&& CollectionUtils.isNotEmpty(orderToBeUpdated.getChildOrders()))
 			{
 				final OrderData orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderToBeUpdated);
 				return redirectToOrderConfirmationPage(orderData);
 			}
-			else if (null == orderToBeUpdated.getPaymentInfo() && OrderStatus.PAYMENT_TIMEOUT.equals(orderToBeUpdated.getStatus()))
+			else if (null != orderToBeUpdated && null == orderToBeUpdated.getPaymentInfo()
+					&& OrderStatus.PAYMENT_TIMEOUT.equals(orderToBeUpdated.getStatus()))
 			{
 				LOG.error("Issue with update order...redirecting to payment page only");
 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
