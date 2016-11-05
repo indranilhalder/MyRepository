@@ -1919,8 +1919,8 @@ public class CartsController extends BaseCommerceController
 	public WebSerResponseWsDTO addProductToCartMobile(@PathVariable final String cartId,
 			@RequestParam(required = true) final String productCode, @RequestParam(required = true) final String USSID,
 			@RequestParam(required = false, defaultValue = "1") final String quantity,
-			@RequestParam(required = true) final boolean addedToCartWl) throws InvalidCartException,
-			CommerceCartModificationException
+			@RequestParam(required = true) final boolean addedToCartWl, @RequestParam(required = false) final String channel)
+			throws InvalidCartException, CommerceCartModificationException
 	{
 		WebSerResponseWsDTO result = new WebSerResponseWsDTO();
 		if (LOG.isDebugEnabled())
@@ -1930,7 +1930,7 @@ public class CartsController extends BaseCommerceController
 		}
 		try
 		{
-			result = mplCartWebService.addProductToCart(productCode, cartId, quantity, USSID, addedToCartWl);
+			result = mplCartWebService.addProductToCart(productCode, cartId, quantity, USSID, addedToCartWl, channel);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -1975,7 +1975,8 @@ public class CartsController extends BaseCommerceController
 	@ResponseBody
 	public CartDataDetailsWsDTO getCartDetails(@PathVariable final String cartId,
 			@RequestParam(required = false) final String pincode,
-			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
+			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields,
+			@RequestParam(required = false) final String channel)
 	{
 		final AddressListWsDTO addressListDTO = addressList(fields);
 		CartDataDetailsWsDTO cartDataDetails = new CartDataDetailsWsDTO();
@@ -1987,7 +1988,7 @@ public class CartsController extends BaseCommerceController
 				{
 					LOG.debug("************ get cart details mobile web service *********" + cartId);
 				}
-				cartDataDetails = mplCartWebService.getCartDetails(cartId, addressListDTO, pincode);
+				cartDataDetails = mplCartWebService.getCartDetails(cartId, addressListDTO, pincode, channel);
 				final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
 				cartDataDetails.setMaxAllowed(maximum_configured_quantiy);
 			}
@@ -3390,7 +3391,9 @@ public class CartsController extends BaseCommerceController
 						final boolean notBlackListed = mplPaymentFacade.isMobileBlackListed(mobilenumber);
 						if (notBlackListed)
 						{ ////////
-							final String validation = mplPaymentFacade.generateOTPforCODWeb(mplCustomerID, mobilenumber,
+						  //							final String validation = mplPaymentFacade.generateOTPforCODWeb(mplCustomerID, mobilenumber,
+						  //									mplCustomerName, cartId);
+							final String validation = mplPaymentFacade.generateOTPforCODWeb(customerData.getEmail(), mobilenumber,
 									mplCustomerName, cartId);
 							if (null != validation && StringUtils.isNotEmpty(validation))
 							{

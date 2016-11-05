@@ -45908,3 +45908,16 @@ body.page-wishlist .body-Content .wrapper{
 .cart.wrapper .product-block li.item ul .item-edit-details li .popover.bottom{
 z-index:11;}
 /*--------------Added for luxury site ends-----------*/
+
+/*TISLUX-2855 Starts*/
+.store-finder-search #storeFinderForm label.control-label.sr-only{
+	  position: inherit;
+  width: auto;
+  height: auto;
+  margin-bottom: 5px;
+ }
+@media (max-width: 767px){
+.luxury-header {
+  margin-bottom:25px;
+}}
+/*TISLUX-2855 Ends*/

@@ -528,7 +528,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	 */
 	@Override
 	public WebSerResponseWsDTO addProductToCart(final String productCode, final String cartId, final String quantity,
-			final String USSID, final boolean addedToCartWl) throws InvalidCartException, CommerceCartModificationException
+			final String USSID, final boolean addedToCartWl, final String channel) throws InvalidCartException,
+			CommerceCartModificationException
 	{
 		final WebSerResponseWsDTO result = new WebSerResponseWsDTO();
 		final long quant = Long.parseLong(quantity);
@@ -648,6 +649,12 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				}
 				//For saving all the data at once rather in loop;
 				modelService.saveAll(entryModelList);
+				//TISLUX-1823 -For LuxuryWeb
+				if (channel != null && channel.equalsIgnoreCase(SalesApplication.WEB.getCode()))
+				{
+					cartModel.setChannel(SalesApplication.WEB);
+					modelService.save(cartModel);
+				}
 			}
 
 			if (!addedToCart && !delisted)
@@ -693,7 +700,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	 * @return CartDataDetailsWsDTO
 	 */
 	@Override
-	public CartDataDetailsWsDTO getCartDetails(final String cartId, final AddressListWsDTO addressListWsDTO, final String pincode)
+	public CartDataDetailsWsDTO getCartDetails(final String cartId, final AddressListWsDTO addressListWsDTO, final String pincode,
+			final String channel)
 	{
 
 		LOG.debug(String.format("Getcart details : Cart id : %s | Pincode: %s ", cartId, pincode));
@@ -740,7 +748,12 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				{
 					cartDataDetails.setPickupPersonMobile(cart.getPickupPersonMobile());
 				}
-
+				//TISLUX-1823 -For LuxuryWeb
+				if (channel != null && channel.equalsIgnoreCase(SalesApplication.WEB.getCode()))
+				{
+					cart.setChannel(SalesApplication.WEB);
+					modelService.save(cart);
+				}
 			}
 			else
 			{
@@ -890,8 +903,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		final List<MarketplaceDeliveryModeData> deliveryModeList = new ArrayList<>();
 		try
 		{
-			cartModel.setChannel(SalesApplication.MOBILE);
-			getModelService().save(cartModel);
+			/*
+			 * cartModel.setChannel(SalesApplication.MOBILE); getModelService().save(cartModel);
+			 */
 			if (resetReqd)
 			{
 				if (LOG.isDebugEnabled())
@@ -916,7 +930,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			//	if (null != finalCart.getEntries() && !finalCart.getEntries().isEmpty())
 			/*
 			 * TISPT- 96 -- https://github.com/tcs-chennai/TCS_COMMERCE_REPO/pull/3577
-			 * 
+			 *
 			 * {
 			 */
 			for (final AbstractOrderEntryModel abstractOrderEntry : finalCart.getEntries())
@@ -1649,7 +1663,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		{
 			if (null != promo && null != promo.getPromotion())
 			{
-				if (null != promo.getPromotion().getChannel() && !promo.getPromotion().getChannel().isEmpty())
+				if (CollectionUtils.isNotEmpty(promo.getPromotion().getChannel()))
 				{
 					flag = promo.getPromotion().getChannel().stream()
 							.anyMatch(s -> SalesApplication.MOBILE.getCode().equals(s.getCode()));

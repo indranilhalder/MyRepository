@@ -43,6 +43,7 @@ import de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.cscockpit.exceptions.PaymentException;
 import de.hybris.platform.cscockpit.exceptions.ValidationException;
 import de.hybris.platform.cscockpit.utils.LabelUtils;
@@ -123,7 +124,7 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 			HtmlBasedComponent rootContainer) {
 		
 		 CartModel  cart = (CartModel)widget.getWidgetController().getBasketController().getCart().getObject();
-		 OTPModel opt = getoTPGenericService().getLatestOTPModel(cart.getUser().getUid(), OTPTypeEnum.COD);
+		 OTPModel opt = getoTPGenericService().getLatestOTPModel(((CustomerModel)cart.getUser()).getOriginalUid(), OTPTypeEnum.COD);
 		//boolean isCODEligible = ((MarketplaceCheckoutController)widget.getWidgetController()).checkDeliveryModeCODLimit(cart,widget);
 		Div div = new 	Div();
 		Hbox hbox = new Hbox();
@@ -504,7 +505,7 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 					.getWidgetController()).getBasketController().getCart()
 					.getObject());
 			long time=0l;
-			String userId = cart.getUser().getUid();
+			String userId = ((CustomerModel)cart.getUser()).getOriginalUid();
 			try{
 			time=Long.parseLong(configurationService.getConfiguration().getString("OTP_Valid_Time_milliSeconds"));
 			
@@ -513,8 +514,11 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 			}
 			
 			
-			OTPResponseData otpResponse = oTPGenericService.validateOTP(userId,null,
+//			OTPResponseData otpResponse = oTPGenericService.validateOTP(userId,null,
+//					oTPTextBox.getValue(), OTPTypeEnum.COD, time);
+			OTPResponseData otpResponse = oTPGenericService.validateLatestOTP(userId,null,
 					oTPTextBox.getValue(), OTPTypeEnum.COD, time);
+			
 			boolean validate = otpResponse.getOTPValid();
 			
 				
@@ -618,7 +622,9 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 				.getWidgetController()).getBasketController().getCart()
 				.getObject());
 		
-		String userId = cart.getUser().getUid();
+		//CustomerModel customerModel=(CustomerModel) cart.getUser();
+		//String userId = cart.getUser().getUid();
+		String emailId=((CustomerModel) cart.getUser()).getOriginalUid();
 		
 		if(cart.getDeliveryAddress()==null ||  cart.getDeliveryAddress().getPhone1()==null) {
 			popupMessage(widget, MOBILE_NUMBER_REQUIRED,Messagebox.ERROR);
@@ -630,8 +636,11 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 	
 		String oTPMobileNumber =   cart.getDeliveryAddress().getPhone1();
 		
-		String smsContent=oTPGenericService.generateOTP(userId, OTPTypeEnum.COD.getCode(),
+//		String smsContent=oTPGenericService.generateOTP(userId, OTPTypeEnum.COD.getCode(),
+//				oTPMobileNumber);
+		String smsContent=oTPGenericService.generateOTP(emailId, OTPTypeEnum.COD.getCode(),
 				oTPMobileNumber);
+		
 		final String contactNumber = configurationService.getConfiguration().getString(
 				MarketplacecommerceservicesConstants.SMS_SERVICE_CONTACTNO);
 		

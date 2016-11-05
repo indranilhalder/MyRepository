@@ -11,6 +11,7 @@ import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
+import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
@@ -89,8 +90,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: Sends the year from Date
-	 * @param :
-	 *           date
+	 * @param : date
 	 * @return year
 	 */
 	public static String redirectYear(final Date date)
@@ -115,8 +115,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: Modifies Date with the required Year
-	 * @param :
-	 *           date,yeartoModify
+	 * @param : date,yeartoModify
 	 * @return modifedDate
 	 */
 	public static Date modifiedBDate(final Date date, final String yeartoModify)
@@ -209,8 +208,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: Compares with System Date
-	 * @param :
-	 *           date
+	 * @param : date
 	 * @return flag
 	 */
 	public static boolean compareDateWithSysDate(final Date date)
@@ -249,8 +247,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: @Promtion: Checks Excluded Manufacturer Restriction
-	 * @param :
-	 *           List<AbstractPromotionRestriction> restrictionLists
+	 * @param : List<AbstractPromotionRestriction> restrictionLists
 	 * @param restrictionList
 	 * @return manufactureList
 	 */
@@ -636,8 +633,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description : Populate the Excluded Product and Manufacture Data in separate Lists
-	 * @param :
-	 *           SessionContext arg0,PromotionEvaluationContext arg1
+	 * @param : SessionContext arg0,PromotionEvaluationContext arg1
 	 */
 	public static void populateExcludedProductManufacturerList(final SessionContext arg0, final PromotionEvaluationContext arg1,
 			final List<Product> excludedProductList, final List<String> excludeManufactureList,
@@ -648,8 +644,8 @@ public class GenericUtilityMethods
 			if (productPromotion.getProperty(arg0, MarketplacecommerceservicesConstants.EXCLUDEDPRODUCTS) != null
 					&& excludedProductList != null)
 			{
-				excludedProductList.addAll(
-						(List<Product>) productPromotion.getProperty(arg0, MarketplacecommerceservicesConstants.EXCLUDEDPRODUCTS));
+				excludedProductList.addAll((List<Product>) productPromotion.getProperty(arg0,
+						MarketplacecommerceservicesConstants.EXCLUDEDPRODUCTS));
 			}
 			if (excludeManufactureList != null)
 			{
@@ -684,8 +680,8 @@ public class GenericUtilityMethods
 			final SessionContext ctx, final PromotionEvaluationContext promoEvalCtx, final ProductPromotion productPromotion,
 			final List<AbstractPromotionRestriction> restrictionList)
 	{
-		return (getDefaultPromotionsManager().checkMinimumCategoryValue(validProductUssidMap, ctx, productPromotion)
-				&& getDefaultPromotionsManager().checkMinimumBrandAmount(ctx, promoEvalCtx, validProductUssidMap, restrictionList));
+		return (getDefaultPromotionsManager().checkMinimumCategoryValue(validProductUssidMap, ctx, productPromotion) && getDefaultPromotionsManager()
+				.checkMinimumBrandAmount(ctx, promoEvalCtx, validProductUssidMap, restrictionList));
 
 	}
 
@@ -995,8 +991,8 @@ public class GenericUtilityMethods
 	public static String getMissingImageUrl()
 
 	{
-		final ConfigurationService configService = (ConfigurationService) Registry.getApplicationContext()
-				.getBean("configurationService");
+		final ConfigurationService configService = (ConfigurationService) Registry.getApplicationContext().getBean(
+				"configurationService");
 		String missingImageUrl = MISSING_IMAGE_URL;
 		String staticHost = null;
 		if (null != configService)
@@ -1171,6 +1167,33 @@ public class GenericUtilityMethods
 		final StringBuilder str = new StringBuilder(100);
 		str.append('\"').append(param).append('\"');
 		return str.toString();
+	}
+
+	/**
+	 * @Description : Return Channel Data
+	 * @param channel
+	 * @return salesApplication
+	 */
+	public static List<SalesApplication> returnChannelData(final String channel)
+	{
+		final List<SalesApplication> salesApplication = new ArrayList<SalesApplication>();
+		if (channel.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_WEB))
+		{
+			salesApplication.add(SalesApplication.WEB);
+		}
+		else if (channel.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_WEBMOBILE))
+		{
+			salesApplication.add(SalesApplication.WEBMOBILE);
+		}
+		else if (channel.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_MOBILE))
+		{
+			salesApplication.add(SalesApplication.MOBILE);
+		}
+		else if (channel.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_CALLCENTER))
+		{
+			salesApplication.add(SalesApplication.CALLCENTER);
+		}
+		return salesApplication;
 	}
 
 }

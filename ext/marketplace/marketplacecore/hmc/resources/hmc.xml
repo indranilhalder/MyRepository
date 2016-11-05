@@ -132,12 +132,18 @@
 				</listview>
 			</result>
 			<editor>
-				<tab name="tab.common" position="0" mode="replace">
-					<section name="properties" mode="replace">
+				<tab name="tab.common" position="0" mode="append">
+					<section name="properties" mode="append">
 						<listlayout>
-						<attribute name="mobileNo" />
-						<attribute name="OTPNumber" />
-						<attribute name="OTPType" />
+							<attribute name="mobileNo" />
+							<attribute name="OTPNumber" />
+							<attribute name="OTPType" />
+							<attribute name="CustomerId" />
+							<attribute name="emailId" />
+							<attribute name="isValidated">
+								<advancedbooleaneditor truename="true"
+										falsename="false" />
+							</attribute>
 						</listlayout>
 					</section>
 				</tab>
@@ -2252,16 +2258,16 @@
 							<attribute name="warrantyType" />
 							<!-- us-10: added by i324321 start -->
  							<attribute name="deliveryFulfillModeByP1" />
- 							<attribute name="returnFulfillMode" />
- 							<attribute name="returnFulfillModeByP1" />
- 							<attribute name="sellerHandlingTime" />
- 							<attribute name="giftWrappable" />
- 							<attribute name="returnAtStoreEligible" />
- 							<attribute name="isFragile" />
- 							<attribute name="isPrecious" />
- 							<attribute name="mediationRequired" />
- 							<attribute name="scheduledDelivery" />
- 							<!-- added by i324321 end -->
+  							<attribute name="returnFulfillMode" />
+  							<attribute name="returnFulfillModeByP1" />
+  							<attribute name="sellerHandlingTime" />
+  							<attribute name="giftWrappable" />
+  							<attribute name="returnAtStoreEligible" />
+  							<attribute name="isFragile" />
+  							<attribute name="isPrecious" />
+  							<attribute name="mediationRequired" />
+  							<attribute name="scheduledDelivery" />
+  							<!-- added by i324321 end -->
 						</listlayout>
 					</section>
 				</tab>
