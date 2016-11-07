@@ -160,6 +160,7 @@
 		<property name="storeSessionFacade" ref="storeSessionFacade"/>
 		<property name="browseHistory" ref="browseHistory"/>
 		<property name="cookieGenerator" ref="sessionCookieGenerator"/>
+		<property name="cartRestoreCookieGenerator" ref="cartRestoreCookieGenerator"/>
 	</bean>
 	
 	<bean id="cartRestorationFilter" class="com.tisl.mpl.storefront.filters.CartRestorationFilter" >

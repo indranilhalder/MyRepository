@@ -34,6 +34,8 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.CookieGenerator;
 
+import com.tisl.mpl.storefront.security.cookie.CartRestoreCookieGenerator;
+
 
 /**
  * Filter that initializes the session for the marketplacestorefront. This is a spring configured filter that is
@@ -47,7 +49,7 @@ public class StorefrontFilter extends OncePerRequestFilter
 	private StoreSessionFacade storeSessionFacade;
 	private BrowseHistory browseHistory;
 	private CookieGenerator cookieGenerator;
-
+	private CartRestoreCookieGenerator cartRestoreCookieGenerator;
 	/*
 	 * @Resource private ConfigurationService configurationService;
 	 */
@@ -139,6 +141,24 @@ public class StorefrontFilter extends OncePerRequestFilter
 
 			}
 
+		}
+		if (request.getRequestURI().contains("logout") && cookies != null)
+		{
+			for (final Cookie cookie : cookies)
+			{
+				if (cookie.getName().equals("mpl-cart"))
+				{
+					cookie.setValue("");
+					if (StringUtils.isNotEmpty(getCartRestoreCookieGenerator().getCustomDomain()))
+					{
+						cookie.setDomain(getCartRestoreCookieGenerator().getCustomDomain());
+						cookie.setPath("/");
+						//cookie.setMaxAge(0);
+					}
+					response.addCookie(cookie);
+					break;
+				}
+			}
 		}
 
 	}
@@ -271,5 +291,22 @@ public class StorefrontFilter extends OncePerRequestFilter
 	public void setCookieGenerator(final CookieGenerator cookieGenerator)
 	{
 		this.cookieGenerator = cookieGenerator;
+	}
+
+	/**
+	 * @return the cartRestoreCookieGenerator
+	 */
+	public CartRestoreCookieGenerator getCartRestoreCookieGenerator()
+	{
+		return cartRestoreCookieGenerator;
+	}
+
+	/**
+	 * @param cartRestoreCookieGenerator
+	 *           the cartRestoreCookieGenerator to set
+	 */
+	public void setCartRestoreCookieGenerator(final CartRestoreCookieGenerator cartRestoreCookieGenerator)
+	{
+		this.cartRestoreCookieGenerator = cartRestoreCookieGenerator;
 	}
 }
