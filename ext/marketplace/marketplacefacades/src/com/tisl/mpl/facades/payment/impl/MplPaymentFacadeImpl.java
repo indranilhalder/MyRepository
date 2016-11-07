@@ -414,6 +414,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		{
 			isMobile = true;
 		}
+
+		LOG.debug("customerID" + customerID);
+
 		String otp = getOtpGenericService().generateOTP(customerID, OTPTypeEnum.COD.getCode(), mobileNumber);
 		if (null == otp)
 		{
@@ -432,6 +435,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		{
 			cart = getCartService().getSessionCart();
 		}
+
+		LOG.debug("cart:" + cart.getCode());
 		if (null != cart.getDeliveryAddress() && null != cart.getDeliveryAddress().getPhone1())
 		{
 			cart.getDeliveryAddress().setPhone1(mobileNumber);
@@ -1542,11 +1547,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1597,9 +1602,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Override

@@ -3375,7 +3375,7 @@ public class CartsController extends BaseCommerceController
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
 			}
-			final String mplCustomerID = customerData.getUid();
+			final String mplCustomerID = customerData.getDisplayUid();
 			final String mplCustomerName = customerData.getName() != null ? customerData.getName() : "";
 
 
@@ -3393,6 +3393,7 @@ public class CartsController extends BaseCommerceController
 						{ ////////
 						  //							final String validation = mplPaymentFacade.generateOTPforCODWeb(mplCustomerID, mobilenumber,
 						  //									mplCustomerName, cartId);
+							LOG.debug("mplCustomerID" + mplCustomerID + ":::userId" + userId);
 							final String validation = mplPaymentFacade.generateOTPforCODWeb(mplCustomerID, mobilenumber,
 									mplCustomerName, cartId);
 							if (null != validation && StringUtils.isNotEmpty(validation))
