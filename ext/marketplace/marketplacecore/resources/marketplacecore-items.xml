@@ -107,6 +107,12 @@
 
 		<collectiontype elementtype="java.lang.String" code="mplImageUrl"
 			autocreate="true" generate="true" type="list" />
+		
+		<!-- Luxury SignatureCollection-->	
+		<collectiontype code="signColItemsCollection"
+			elementtype="SignColItemComponent" autocreate="true" generate="true"
+			type="list" />
+		<!-- Luxury SignatureCollection -->
 
 	</collectiontypes>
 
@@ -758,7 +764,6 @@
 			<value code="false" />
 		</enumtype>
 
-
 		<!-- TPR-1035 ENUM added For BinDB   -->
 		<enumtype code="TypeOfError" autocreate="true"
 			generate="true" dynamic="true">
@@ -766,6 +771,14 @@
 			<value code="CARDMISMATCH" />
 		</enumtype>
 
+				
+		<!-- For Luxury Products -->
+        <enumtype code="luxIndicatorEnum" autocreate="true" generate="true" dynamic="true">
+            <value code="marketplace" />
+			<value code="luxury" />
+		</enumtype>
+		
+		
 <!-- us-10: added by i324321 start -->
  		<enumtype code="deliveryFulfillModeByP1Enum" autocreate="true" generate="true" 
  			dynamic="true">
@@ -1128,6 +1141,7 @@
 				qualifier="collectionProducts"></targetElement>
 		</relation>
 		
+
 		<!-- Added for offer Engine  TPR-589-->
 		<!-- Relationship between Offer && ProductOfferDetail-->
 		<relation code="OfferProductDetailRelation"
@@ -1138,7 +1152,29 @@
 			</targetElement>
 		</relation>
 		
+		<relation code="CategoryCrosssellBannerRelation" generate="true" localized="false" autocreate="true">
+			<sourceElement qualifier="associatedCategory" type="Category" cardinality="one">
+				<modifiers read="true" write="true" search="true" optional="true" />
+			</sourceElement>
+			<targetElement qualifier="crosssellBanners" type="SimpleBannerComponent" cardinality="many" collectiontype="list">
+				<modifiers read="true" write="true" search="true" optional="true" />
+			</targetElement>
+		</relation>
+		<relation code="CategoryDynamicBannerRelation" generate="true" localized="false" autocreate="true">
+			<sourceElement qualifier="bannerForCategory" type="Category" cardinality="one">
+				<modifiers read="true" write="true" search="true" optional="true" />
+			</sourceElement>
+			<targetElement qualifier="dynamicBanners" type="SimpleBannerComponent" cardinality="many" collectiontype="list">
+				<modifiers read="true" write="true" search="true" optional="true" />
+			</targetElement>
+		</relation>
+	<!-- relation of category to cross-sell banners -->
+		
+		<!-- End -->
+		
 	</relations>
+
+		
 	<itemtypes>
 	<!-- TPR-628 : Make changes to Banners rendering in MObile Viewports		 -->
 	
@@ -1322,6 +1358,10 @@
 				<indexes>
 					<index name="MEDIASIDIDX">
 						<key attribute="owner" />
+					</index>
+					<index name="IDX_MEDIAS_CT">
+						<key attribute="catalogVersion" />
+						<key attribute="itemtype" />
 					</index>
 				</indexes>
 			</itemtype>
@@ -1582,7 +1622,17 @@
 						<persistence type="property"></persistence>
 					</attribute>
 				</attributes>
+				
+				<!-- new indexes added for performace improvement -->
+				<indexes>
+					<index name="MPLBRAND_IDX_CVER">
+						<key attribute="catalogVersion" />
+					</index>
+				</indexes> 
+				
 			</itemtype>
+			
+			
 			<itemtype code="SeoContent" autocreate="true" generate="true"
 				jaloclass="com.tisl.mpl.core.jalo.SeoContent">
 				<deployment table="MplSeoContent" typecode="13002" />
@@ -2922,6 +2972,13 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
+				<indexes>
+					<index name="IDX_PRODUCTS_CTA">
+						<key attribute="catalogVersion" />
+						<key attribute="approvalStatus" />
+						<key attribute="itemtype" />
+					</index> 
+				</indexes>
 			</itemtype>
 			<itemtype code="Customer" generate="false" autocreate="false">
 				<attributes>
@@ -3863,6 +3920,19 @@
 					</attribute>
 				</attributes>
 			</itemtype>
+			<itemtype code="MplNavigationNodeComponent" autocreate="true"
+				generate="true" extends="CMSNavigationNode"
+				jaloclass="com.tisl.mpl.core.jalo.MplNavigationNodeComponent">
+				<description>This component is made to support Luxury mega Navigation wire frame structure</description>
+				<attributes>
+					<attribute qualifier="sliders" type="FooterImageCollection"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<description>This attribute represents the list of L2 images</description>
+					</attribute>
+				</attributes>
+			</itemtype>
+			
 			<!-- CMS Media Paragraph Component -->
 			<itemtype code="CMSMediaParagraphComponent" generate="true"
 				jaloclass="com.tisl.mpl.jalo.cms.components.CMSMediaParagraphComponent"
@@ -4183,14 +4253,32 @@
 						<persistence type="property" />
 					</attribute>
 
+
 					<attribute type="java.lang.String" qualifier="videoDescription">
 						<modifiers read="true" write="true" search="true"
 							unique="true" optional="true" />
 						<description>Video Description</description>
 						<persistence type="property" />
+					</attribute>					               
+					              <!--Attributed added for luxuary page--> 
+					
+					<attribute type="java.lang.String" qualifier="previewUrl">
+						<modifiers read="true" write="true" search="true"
+							unique="true" optional="true" />
+						<description>Preview URL of the video</description>
+						<persistence type="property" />
 					</attribute>
+					
+					<attribute type="java.lang.String" qualifier="videoSectionHeading">
+						<modifiers read="true" write="true" search="true"
+							unique="true" optional="true" />
+						<description>Section heading of the video to be shown on Luxury Homepage</description>
+						<persistence type="property" />
+					</attribute>
+					
 				</attributes>
 			</itemtype>
+			
 
 			<!-- New attributes added to SimpleBanner Component -->
 
@@ -4296,6 +4384,7 @@
 						<modifiers read="true" write="true" search="true" />
 						<persistence type='property' />
 					</attribute>
+				
 				</attributes>
 			</itemtype>
 
@@ -4321,6 +4410,15 @@
 					</attribute>
 
 					<attribute type="Media" qualifier="image" autocreate="true"
+						generate="true">
+						<description>This attribute is render a manually uploaded image for the category</description>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+
+					</attribute>
+					
+					<attribute type="Media" qualifier="mobileImage" autocreate="true"
 						generate="true">
 						<description>This attribute is render a manually uploaded image for the category</description>
 						<modifiers read="true" write="true" search="true"
@@ -4499,7 +4597,69 @@
 				</attributes>
 			</itemtype>
 			<!-- End -->
+			
+			
+<!-- Component created for Luxury Signature Collection Starts -->
+			<itemtype code="SignColComponent" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.core.jalo.SignColComponent">
+				<description>This component is created for signature collection section</description>
+				<attributes>
 
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<description>This attribute is for showing the title of the component</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+
+
+
+					<attribute type="signColItemsCollection" qualifier="showcaseItems"
+						autocreate="true" generate="true">
+						<description>This attribute is a collection of signature collection items</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+					
+					<!--
+						<attribute type="signatureCollectionLayout" qualifier="layout"
+							autocreate="true" generate="true">
+							<description>This attribute is for determining the layout structure of the component</description>
+							<defaultvalue>em().getEnumerationValue("showCaseLayout","BrandShowCase")</defaultvalue>
+							<modifiers read="true" write="true" search="true" />
+							<persistence type='property' />
+						</attribute>
+					-->
+				</attributes>
+			</itemtype>
+
+
+			<itemtype code="SignColItemComponent" autocreate="true"
+				generate="true" extends="MplShowcaseItemComponent"
+				jaloclass="com.tisl.mpl.core.jalo.SignColItemComponent">
+				<description>This component is created for configuring each item of the signature collection</description>
+				<deployment table="SignColItemComponent" typecode="15987" />
+
+				<attributes>
+					<attribute type="Product" qualifier="product3"
+						autocreate="true" generate="true">
+						<description>This attribute is for storing 3rd product</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+					
+					<attribute type="Product" qualifier="product4"
+						autocreate="true" generate="true">
+						<description>This attribute is for storing 4th product</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+
+				</attributes>
+			</itemtype>
+			<!-- Component created for Luxury Signature Collection Ends -->
+			
 			<!-- for offer Image carousel component -->
 			<itemtype code="MplOfferImageCarouselComponent" extends="ImageCarouselComponent"
 				generate="true" autocreate="true"
@@ -4515,6 +4675,47 @@
 						<persistence type="property" />
 					</attribute>
 					</attributes>
+			</itemtype>
+			
+			
+			<!--  Luxury Site -->
+			
+			<itemtype code="OurJourneyComponent" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.core.jalo.OurJourneyComponent">
+				<description>This component is created for see our journey section</description>
+				<attributes>
+
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<description>This attribute is for showing the title of the component</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+
+					<attribute type="java.lang.String" qualifier="headerText"
+						autocreate="true" generate="true">
+						<description>This attribute is for showing the header text of the component</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+
+					<attribute qualifier="footerImageList" type="FooterImageCollection"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<description>This attribute represents the list of footer images</description>
+					</attribute>
+					
+					<!--
+						<attribute type="signatureCollectionLayout" qualifier="layout"
+							autocreate="true" generate="true">
+							<description>This attribute is for determining the layout structure of the component</description>
+							<defaultvalue>em().getEnumerationValue("showCaseLayout","BrandShowCase")</defaultvalue>
+							<modifiers read="true" write="true" search="true" />
+							<persistence type='property' />
+						</attribute>
+					-->
+				</attributes>
 			</itemtype>
 
 		</typegroup>
@@ -4650,6 +4851,52 @@
 
 
 			</itemtype>
+			
+			<!--luxury pdp question -->
+                  <itemtype code="LuxuryPdpQuestionProcess" extends="StoreFrontCustomerProcess"
+				autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.core.jalo.LuxuryPdpQuestionProcess">
+				<description>Represents process that is used for "Question about this item in luxury PDP page" in the contact us page</description>
+				<attributes>
+					<attribute qualifier="message" type="java.lang.String">
+						<persistence type="property" />
+						<description>Message given by the customer</description>
+					</attribute>
+					<attribute qualifier="productCode" type="java.lang.String">
+						<persistence type="property" />
+						<description>product code given by the customer</description>
+					</attribute>
+		
+					<attribute qualifier="attachedFileName" type="java.lang.String">
+						<persistence type="property" />
+						<description>Email attachment name</description>
+					</attribute>
+
+					<attribute qualifier="issueDetails" type="java.lang.String">
+						<persistence type="property" />
+						<description>Email attachment name</description>
+					</attribute>
+
+					<attribute qualifier="customerEmailId" type="java.lang.String">
+						<persistence type="property" />
+						<description>Customer Email Id</description>
+					</attribute>
+					<attribute qualifier="issueType" type="java.lang.String">
+						<persistence type="property" />
+						<description>Issue Type</description>
+					</attribute>
+					<attribute qualifier="emailTo" type="java.lang.String">
+						<persistence type="property" />
+						<description>Our Email Id</description>
+					</attribute>
+
+				</attributes>
+
+
+
+			</itemtype>
+
+
 
 
 			<itemtype code="OrderPlacedFeedbackProcess" extends="StoreFrontCustomerProcess"
@@ -4726,6 +4973,13 @@
 						<persistence type='property' />
 					</attribute>
 				</attributes>
+				<indexes>
+					<index name="IDEX_PROCESSES_AST">
+							<key attribute="awbNumber" />
+							<key attribute="shipmentStatus" />
+							<key attribute="itemtype" />	
+					</index>
+				</indexes>
 			</itemtype>
 			<itemtype code="OrderRefundProcess" extends="OrderProcess"
 				autocreate="true" generate="true"
@@ -5596,7 +5850,15 @@
 					</index>
 					<index name="BuyBox_USSID_IDX">
 						<key attribute="sellerArticleSKU" />
-					</index> 
+					</index>
+					<index name="IDX_MPLBUYBOX_PDA">
+						<key attribute="product" />
+						<key attribute="delisted" />
+						<key attribute="available" />
+						<key attribute="sellerStartDate" />
+						<key attribute="price" />
+						<key attribute="itemtype" />
+					</index>  
 				</indexes>
 			</itemtype>
 
@@ -6055,34 +6317,6 @@
 	      
 		</typegroup>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 		<typegroup name="AccountManagement">
 
 			<itemtype code="ReturnReason" autocreate="true" generate="true"
@@ -6258,6 +6492,16 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
+				
+				<!-- new indexes added for performace improvement -->
+				<indexes>
+					<index name="CARTS_IDX_MSS">
+						<key attribute="modifiedtime" />
+						<key attribute="site" />
+						<key attribute="saveTime" />
+					</index>
+				</indexes>
+				
 			</itemtype>
 		</typegroup>
 
@@ -6412,6 +6656,10 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
+				<indexes><index name="IDX_ORDERHISTORY_LINEID">
+						<key attribute="lineId" />
+					</index>
+				</indexes>
 			</itemtype>
 		</typegroup>
 
@@ -6923,6 +7171,18 @@
 						<modifiers read="true" write="true" search="true" />
 						<persistence type="property" />
 					</attribute>
+					<attribute qualifier="IsLuxury" type="java.lang.Boolean"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="IsMarketplace" type="java.lang.Boolean"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 		</typegroup>
@@ -7392,6 +7652,11 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
+				<indexes>
+					<index name="MPLJUSPAYEBS_IDX" unique="false">
+						<key attribute="itemtype" />
+					</index>
+				</indexes>
 			</itemtype>
 			<itemtype code="FraudReport" autocreate="false" generate="true">
 				<attributes>
@@ -8693,7 +8958,6 @@
 			</itemtype>
 		</typegroup>
 		
-		
 		<!-- Search POC start-->
 		<typegroup name="DataConversion">
 			<itemtype code="Sizesystem" autocreate="true" generate="true">
@@ -8729,6 +8993,7 @@
 		</typegroup>
 		<!-- Search POC ends-->
 		
+
 		
 		<!-- Added for offer Engine, TPR-589 -->
 		
@@ -8851,5 +9116,72 @@
 			</itemtype>
 		</typegroup>
 	<!-- TPR-1035 : Item Creation for Bin Error ends  -->
+
+		<!-- Added for Luxury -->
+		<typegroup name="Luxury">
+			<itemtype code="Product" autocreate="false" generate="false">
+				<attributes>
+				    <attribute type="luxIndicatorEnum" qualifier="luxIndicator">
+						<description>The flag for the luxury Indicator</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type='property' />					
+				    </attribute>	
+			        <!-- <attribute qualifier="isLuxuryProduct" type="java.lang.Boolean" autocreate="true" generate="true">
+						<description>It is a flag for Luxury Products.</description>
+						<modifiers optional="true" />
+						<persistence type="property" />
+					</attribute> -->
+			    </attributes>
+			</itemtype>		
+       </typegroup>
+       
+ 
+		<typegroup name="BulkReturnProcessForOrder">
+			<itemtype code="BulkReturnProcess" extends="GenericItem" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.BulkReturnProcess">
+				<deployment table="MplBulkReturnProcess" typecode="15804" />
+				<attributes>
+					<attribute qualifier="parentOrderNo"  autocreate="true" type="java.lang.String"
+						generate="true">
+						<description>Parent Order Number</description>
+						<modifiers optional="false" read="true" write="true"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="transactionId"  autocreate="true" type="java.lang.String"
+						generate="true">
+						<description>Transaction Id</description>
+						<modifiers optional="false" read="true" write="true"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="loadStatus"  autocreate="true" type="java.lang.String"
+						generate="true">
+						<description>Load Status</description>
+						<modifiers optional="false" read="true" write="true"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="errorDescription"  autocreate="true" type="java.lang.String"
+						generate="true">
+						<description>Error Description</description>
+						<modifiers optional="true" read="true" write="true"/>
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			</typegroup>
+		
+		    <typegroup name="ItemSyncTimestampGroup">
+					<itemtype code="ItemSyncTimestamp" autocreate="false"
+						generate="false">
+						<indexes>
+							<index name="IDX_ITEMSYNCTIMESTAMPS_CPKC">
+								<key attribute="syncJob" />
+								<key attribute="targetVersion" />
+								<key attribute="sourceItem" />
+								<key attribute="itemtype" />
+							</index>
+						</indexes>
+					</itemtype>
+				</typegroup>
+				
 	</itemtypes>
 </items>

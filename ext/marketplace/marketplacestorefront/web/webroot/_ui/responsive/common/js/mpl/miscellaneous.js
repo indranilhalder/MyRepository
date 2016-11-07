@@ -184,3 +184,22 @@
 		$("body").append('<div class="modal fade" id="globalErrorPopupMsg"><div class="content" style="padding: 10px;"><span style="display: block; margin: 7px 16px;line-height: 18px;">'+msg+'</span><button class="close" data-dismiss="modal"></button></div><div class="overlay" data-dismiss="modal"></div></div>');
 		$("#globalErrorPopupMsg").modal('show');
 	} 
+
+	
+// TISLUX-1468 start
+$(document).on('click','.right-account .yCmsComponent',function(){
+	var browserURL = window.location.href;
+	var requiredUrl = $(this).find('a').attr('href');
+	if(browserURL.indexOf("isLux=true") != -1){
+		requiredUrl = $(this).find('a').attr('href')+"?isLux=true";
+	}
+	else{
+		var luxParam = browserURL.split("isLux=");
+		if(luxParam[1].indexOf("true") != -1){
+			requiredUrl = $(this).find('a').attr('href')+"?isLux=true";
+		}
+	}
+	window.location = requiredUrl;
+	return false;
+});
+// TISLUX-1468 end

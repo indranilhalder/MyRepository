@@ -90,6 +90,7 @@ import org.springframework.security.access.AccessDeniedException;
 import com.tisl.mpl.cart.impl.CommerceWebServicesCartFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
+import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.data.MplPromotionData;
@@ -890,6 +891,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap, final boolean isPinCodeCheckRequired,
 			final boolean resetReqd) throws EtailBusinessExceptions, EtailNonBusinessExceptions
 	{
+
+		String mediaFormat = null;
+		if (LOG.isDebugEnabled())
+		{
+			//	LOG.debug(String.format("productDetails: |  cartId : %s | isPinCodeCheckRequired %s", cartId, Boolean.valueOf(resetReqd)));
+		}
+
 		CartModel finalCart = null;
 		OrderModel finalOrder = null;
 		final List<GetWishListProductWsDTO> gwlpList = new ArrayList<>();
@@ -930,7 +938,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			//Removed checkedPincode
 			//	if (null != finalCart.getEntries() && !finalCart.getEntries().isEmpty())
 			/*
-			 * TISPT- 96
+			 * <<<<<<< HEAD TISPT- 96 ======= TISPT- 96 -- https://github.com/tcs-chennai/TCS_COMMERCE_REPO/pull/3577
+			 * >>>>>>> refs/remotes/origin/GOLDEN_PROD_SUPPORT_3rd_Nov_2016
 			 * 
 			 * {
 			 */
@@ -976,6 +985,23 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					gwlp.setProductBrand(productData.getBrand().getBrandname());
 				}
 
+				//Luxury LW-174
+				if (null != productData.getLuxIndicator()
+						&& (MarketplaceCoreConstants.LUXURY).equalsIgnoreCase(productData.getLuxIndicator()))
+				{
+					gwlp.setIsLuxury(productData.getLuxIndicator());
+					mediaFormat = MarketplacecommerceservicesConstants.LUXURY_CARTICON;
+				}
+				else if ((null == productData.getLuxIndicator())
+						|| (null != productData.getLuxIndicator() && (MarketplaceCoreConstants.Marketplace)
+								.equalsIgnoreCase(productData.getLuxIndicator())))
+				{
+					gwlp.setIsLuxury(MarketplaceCoreConstants.Marketplace);
+					mediaFormat = MarketplacecommerceservicesConstants.THUMBNAIL;
+				}
+
+				//Luxury LW-174 Ends
+
 				if (null != abstractOrderEntry.getGiveAway() && abstractOrderEntry.getGiveAway().booleanValue())
 				{
 					gwlp.setIsGiveAway(MarketplacecommerceservicesConstants.Y);
@@ -1009,7 +1035,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					{
 						if (null != img && null != img.getUrl() && StringUtils.isNotEmpty(img.getFormat())
 						//&& img.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.THUMBNAIL) Sonar fix
-								&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.THUMBNAIL))
+								&& img.getFormat().equalsIgnoreCase(mediaFormat))
 						{
 							gwlp.setImageURL(img.getUrl());
 						}
@@ -2626,4 +2652,5 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	{
 		this.addressReversePopulator = addressReversePopulator;
 	}
+
 }

@@ -47,7 +47,7 @@ function callSetHeader() {
  
 $(document).on("mouseover touchend", "div.departmenthover", function() {
     var id = this.id;
-    var code = id.substring(4);
+   // var code = id.substring(4);
 
     if (!$.cookie("dept-list") && window.localStorage) {
         for (var key in localStorage) {
@@ -58,42 +58,43 @@ $(document).on("mouseover touchend", "div.departmenthover", function() {
             }
         }
     }
-    if (window.localStorage && (html = window.localStorage.getItem("deptmenuhtml-" + code)) && html != "") {
-        // console.log("Local");
-        $("ul." + id).html(decodeURI(html));
-        $('header .content .container > .right ul li #mobile-menu-toggle + ul li ul.words li.long div').removeClass('toggle');
-		$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul li.short div').removeClass('toggle');
-        //LazyLoad();
-    } else {
-        $.ajax({
-            url: ACC.config.encodedContextPath +
-                "/departmentCollection",
-            type: 'GET',
-            data: "department=" + code,
-            success: function(html) {
-                // console.log("Server");
-                $("ul." + id).html(html);
-                if (window.localStorage) {
-                    $.cookie("dept-list", "true", {
-                        expires: 1,
-                        path: "/"
-
-                    });
-                    window.localStorage.setItem(
-                        "deptmenuhtml-" + code,
-                        encodeURI(html));
-
-                }
-            },
-            complete: function(){
-	        	$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul.words li.long div').removeClass('toggle');
-	    		$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul li.short div').removeClass('toggle');
-	        	
-	        } 
-        });
-
-
-    }
+//    if (window.localStorage && (html = window.localStorage.getItem("deptmenuhtml-" + code)) && html != "") {
+//        // console.log("Local");
+//        $("ul." + id).html(decodeURI(html));
+//        $('header .content .container > .right ul li #mobile-menu-toggle + ul li ul.words li.long div').removeClass('toggle');
+//		$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul li.short div').removeClass('toggle');
+//        //LazyLoad();
+//    } 
+//    else {
+//        $.ajax({
+//            url: ACC.config.encodedContextPath +
+//                "/departmentCollection",
+//            type: 'GET',
+//            data: "department=" + code,
+//            success: function(html) {
+//                // console.log("Server");
+//                $("ul." + id).html(html);
+//                if (window.localStorage) {
+//                    $.cookie("dept-list", "true", {
+//                        expires: 1,
+//                        path: "/"
+//
+//                    });
+//                    window.localStorage.setItem(
+//                        "deptmenuhtml-" + code,
+//                        encodeURI(html));
+//
+//                }
+//            },
+//            complete: function(){
+//	        	$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul.words li.long div').removeClass('toggle');
+//	    		$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul li.short div').removeClass('toggle');
+//	        	
+//	        } 
+//        });
+//
+//
+//    }
     
 });
 
@@ -1698,7 +1699,7 @@ $(document).ready(function(){
 		//department/////////////////////
 		if($('header .content nav > ul > li:first-child').hasClass('hovered')) {
 			var id = $('header .content nav > ul > li.hovered > ul > li:first-child .departmenthover').attr('id');
-		    var code = id.substring(4);
+		   // var code = id.substring(4);
 
 		    if (!$.cookie("dept-list") && window.localStorage) {
 		        for (var key in localStorage) {
@@ -1709,36 +1710,39 @@ $(document).ready(function(){
 		            }
 		        }
 		    }
-		    if (window.localStorage && (html = window.localStorage.getItem("deptmenuhtml-" + code)) && html != "") {
-		        // console.log("Local");
-		        $("ul." + id).html(decodeURI(html));
-		        //LazyLoad();
-		        
-		    } else {
-		        $.ajax({
-		            url: ACC.config.encodedContextPath +
-		                "/departmentCollection",
-		            type: 'GET',
-		            data: "department=" + code,
-		            success: function(html) {
-		                // console.log("Server");
-		                $("ul." + id).html(html);
-		                if (window.localStorage) {
-		                    $.cookie("dept-list", "true", {
-		                        expires: 1,
-		                        path: "/"
-
-		                    });
-		                    window.localStorage.setItem(
-		                        "deptmenuhtml-" + code,
-		                        encodeURI(html));
-
-		                }
-		            }
-		        });
-
-
-		    }
+//	    if (window.localStorage && (html = window.localStorage.getItem("deptmenuhtml-" + code)) && html != "") {
+//	         console.log("Local");
+//	        $("ul." + id).html(decodeURI(html));
+//	        LazyLoad();
+//	        
+//	    }
+		    
+		    
+//	    else {
+//		        $.ajax({
+//	            url: ACC.config.encodedContextPath +
+//		                "/departmentCollection",
+//	            type: 'GET',
+//		            data: "department=" + code,
+//           success: function(html) {
+//		                 console.log("Server");
+//		                $("ul." + id).html(html);
+//		                if (window.localStorage) {
+//		                    $.cookie("dept-list", "true", {
+//		                        expires: 1,
+//		                        path: "/"
+//
+//		                    });
+//		                    window.localStorage.setItem(
+//		                        "deptmenuhtml-" + code,
+//		                        encodeURI(html));
+//
+//		                }
+//		            }
+//		        });
+//
+//
+//		    }
 		    
 		} else {
 			if($('header .content nav > ul > li.hovered > ul > li:first-child > div').hasClass('brandClass')) {
@@ -2029,6 +2033,25 @@ $(document).ready(function(){
 		
 		
 	});
+	
+	//Added for luxury site starts
+	$('document').ready(function(){
+	    $('#flip-navigation li a').each(function(){  
+	        $(this).click(function(){  
+	            $('#flip-navigation li').each(function(){  
+	                $(this).removeClass('selected');  
+	            });  
+	            $(this).parent().addClass('selected');           
+	            // Here we get the href value of the selected tab
+	            var selected_tab = $(this).find("a").attr("href");             
+	            var starting = selected_tab.indexOf("#");
+	            var sub = selected_tab.substring(starting);            
+	            $(sub).fadeIn();
+	            return false;  
+	        });  
+	    });  
+	}); 
+	//Added for luxury site ends
 
 	
    //  Change for TISPRD-4587 

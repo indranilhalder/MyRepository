@@ -3161,6 +3161,14 @@ public class UsersController extends BaseCommerceController
 							{
 								wldpDTO.setDate(entryModel.getAddedDate());
 							}
+
+							/*
+							 * // Added for luxury if (null != productData1 && null != productData1.getLuxIndicator() &&
+							 * (MarketplaceCoreConstants.LUXURY).equalsIgnoreCase(productData1.getLuxIndicator())) {
+							 * wldpDTO.setIsLuxury(productData1.getLuxIndicator()); }
+							 */
+
+
 							String delistMessage = MarketplacewebservicesConstants.EMPTY;
 							boolean delisted = false;
 							if (null != productData1 && null != productData1.getSeller() && productData1.getSeller().size() > 0)
@@ -6532,9 +6540,34 @@ public class UsersController extends BaseCommerceController
 					final Double cartTotalWithConvCharge = cart.getTotalPriceWithConv();
 					if (cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0)
 					{
+
+						final CustomerModel customerModel = mplPaymentWebFacade.getCustomer(userId);
+
+						juspayMerchantId = !getConfigurationService().getConfiguration()
+								.getString(MarketplacecommerceservicesConstants.MARCHANTID).isEmpty() ? getConfigurationService()
+								.getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID)
+								: "No juspayMerchantKey is defined in local properties";
+						juspayReturnUrl = !getConfigurationService().getConfiguration()
+								.getString(MarketplacecommerceservicesConstants.RETURNURL).isEmpty() ? getConfigurationService()
+								.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURL)
+								: "No juspayReturnUrl is defined in local properties";
+
+						juspayOrderId = mplPaymentFacade.createJuspayOrder(cart, null, firstName, lastName, addressLine1, addressLine2,
+								addressLine3, country, state, city, pincode, cardSaved + MarketplacewebservicesConstants.STRINGSEPARATOR
+										+ sameAsShipping, juspayReturnUrl, customerModel.getUid(),
+								MarketplacewebservicesConstants.CHANNEL_MOBILE);
+						LOG.debug("********* Created juspay Order mobile web service *************" + juspayOrderId);
+
+						orderCreateInJusPayWsDto.setJuspayMerchantId(juspayMerchantId);
+						orderCreateInJusPayWsDto.setJuspayReturnUrl(juspayReturnUrl);
+						orderCreateInJusPayWsDto.setJuspayOrderId(juspayOrderId);
+						//final CartModel cartModel = mplPaymentWebDAO.findCartValues(cartID);
+						//try
+						//{
 						//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CARTAMOUNTINVALID, "TRUE");
 						failFlag = true;
 						failErrorCode = MarketplacecommerceservicesConstants.B9509;
+						//}
 					}
 				}
 				//TISPRO-578

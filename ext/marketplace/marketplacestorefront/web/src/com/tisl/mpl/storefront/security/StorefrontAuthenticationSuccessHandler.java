@@ -23,6 +23,7 @@ import de.hybris.platform.commerceservices.order.CommerceCartMergingException;
 import de.hybris.platform.commerceservices.order.CommerceCartRestorationException;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.session.SessionService;
 
@@ -55,6 +56,8 @@ import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
+import com.tisl.mpl.storefront.security.cookie.UserCookieGenerator;
+import com.tisl.mpl.storefront.security.cookie.UserTypeCookieGenerator;
 
 
 /**
@@ -75,6 +78,50 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 	private static final String CHECKOUT_URL = "/checkout";
 	private static final String CART_MERGED = "cartMerged";
 	private static final String LOGIN_SUCCESS = "loginSuccess";
+
+	private static final String ANONYMOUS = "session";
+	private static final String REGISTERED = "site_user";
+
+	private static final String FACEBOOKUSER = "facebook";
+	private static final String FACEBOOK_LOGIN = "FACEBOOK_LOGIN";
+
+	private UserCookieGenerator userCookieGenerator;
+
+	/**
+	 * @return the userCookieGenerator
+	 */
+	public UserCookieGenerator getUserCookieGenerator()
+	{
+		return userCookieGenerator;
+	}
+
+	/**
+	 * @param userCookieGenerator
+	 *           the userCookieGenerator to set
+	 */
+	public void setUserCookieGenerator(final UserCookieGenerator userCookieGenerator)
+	{
+		this.userCookieGenerator = userCookieGenerator;
+	}
+
+	/**
+	 * @return the userTypeCookieGenerator
+	 */
+	public UserTypeCookieGenerator getUserTypeCookieGenerator()
+	{
+		return userTypeCookieGenerator;
+	}
+
+	/**
+	 * @param userTypeCookieGenerator
+	 *           the userTypeCookieGenerator to set
+	 */
+	public void setUserTypeCookieGenerator(final UserTypeCookieGenerator userTypeCookieGenerator)
+	{
+		this.userTypeCookieGenerator = userTypeCookieGenerator;
+	}
+
+	private UserTypeCookieGenerator userTypeCookieGenerator;
 
 	@Autowired
 	private ExtendedUserService extUserService;
@@ -116,6 +163,10 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 	{
 
 		getCustomerFacade().loginSuccess();
+		//Microsite POC
+		//This is present in the filter but in case the login request comes from a microsite,the redirect url will be the microsite url and hence not pass through the filter.
+		//Hence updating the cookie here.
+		updateUserDetailsCookie(request, response);
 
 		final HttpSession session = request.getSession();
 
@@ -279,6 +330,90 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 		else
 		{
 			super.onAuthenticationSuccess(request, response, authentication);
+		}
+
+	}
+
+	/**
+	 * @param request
+	 * @param response
+	 */
+	private void updateUserDetailsCookie(final HttpServletRequest request, final HttpServletResponse response)
+	{
+		String userId = null;
+		String userType = null;
+		boolean userCookieSet = false;
+		boolean userTypeCookieSet = false;
+		final UserModel currentUser = extUserService.getCurrentUser();
+		final CustomerModel currCust = (CustomerModel) extUserService.getCurrentUser();
+
+		//TISLUX-1352
+		if (request.getCookies() != null && null != getUserCookieGenerator() && null != getUserCookieGenerator().getCookieName()
+				&& null != getUserTypeCookieGenerator() && null != getUserTypeCookieGenerator().getCookieName())
+		{
+			final String userCookieName = getUserCookieGenerator().getCookieName();
+			final String userTypeCookieName = getUserTypeCookieGenerator().getCookieName();
+			for (final Cookie cookie : request.getCookies())
+			{
+				if (userCookieName.equals(cookie.getName()))
+				{
+					userId = currentUser.getUid();
+					cookie.setValue(userId);
+					cookie.setMaxAge(60 * 60 * 24);// setting 1 day life time for cookies
+					getUserCookieGenerator().addCookie(response, userId);
+					userCookieSet = true;
+				}
+
+				if (userTypeCookieName.equals(cookie.getName()))
+				{
+					if (extUserService.isAnonymousUser(currentUser))
+					{
+						userType = ANONYMOUS;
+					}
+					else
+					{
+						if (null != currCust && null != currCust.getType())
+						{
+							if (currCust.getType().toString().equals(FACEBOOK_LOGIN))
+							{
+								userType = FACEBOOKUSER;
+							}
+							else
+							{
+								userType = REGISTERED;
+							}
+						}
+					}
+					cookie.setValue(userType);
+					cookie.setMaxAge(60 * 60 * 24);// setting 1 day life time for cookies
+					getUserTypeCookieGenerator().addCookie(response, userType);
+					userTypeCookieSet = true;
+				}
+			}
+		}
+
+
+		if (!userTypeCookieSet && !userCookieSet)
+		{
+			LOG.info("generating new Cookies");
+			//TISLUX-1352
+			if (null != getUserCookieGenerator())
+			{
+				getUserCookieGenerator().addCookie(response, currentUser.getUid());
+			}
+			if (extUserService.isAnonymousUser(currentUser))
+			{
+				userType = ANONYMOUS;
+			}
+			else
+			{
+				userType = REGISTERED;
+			}
+			//TISLUX-1352
+			if (null != getUserCookieGenerator())
+			{
+				getUserTypeCookieGenerator().addCookie(response, userType);
+			}
 		}
 
 	}

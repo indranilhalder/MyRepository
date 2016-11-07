@@ -142,6 +142,12 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 	public static final String B8000 = "B8000";
 	public static final String B9327 = "B9327";
 	public static final String E0000 = "E0000";
+	// TISLUX-356
+	public static final String CATEGORY = "category";
+	public static final String PRODUCT = "product";
+	public static final String ROOT_NAME = "Luxury";
+
+	public static final String LUXURY_STYLE_SWATCH = "luxuryStyleSwatch";
 
 	private MarketplaceFacadesConstants()
 	{
