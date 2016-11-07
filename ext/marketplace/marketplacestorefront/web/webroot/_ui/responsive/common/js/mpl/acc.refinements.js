@@ -1,7 +1,7 @@
 
 var updatedsearchQuery = "";
 var dummyForm ;
-var brandFacet = [];
+var lessBrands = [];
 ACC.refinements = {
 
 	_autoload: [
@@ -359,6 +359,23 @@ ACC.refinements = {
 		
 		/* TPR-198 : AJAX Call in SERP and PDP END */
 		
+		$('ul.facet-list.js-facet-top-values.active').first().find('input[type=checkbox]').change(function(){
+			var brandNode = $(this).parent().find('span.facet-text').text().trim();
+			if($(this).is(':checked')){
+				$('ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden').first().find("span.facet-text:contains('"+brandNode+"')").closest('label').find('input[type=checkbox]').prop('checked',true);	
+			}else{
+				$('ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden').first().find("span.facet-text:contains('"+brandNode+"')").closest('label').find('input[type=checkbox]').prop('checked',false);
+			}
+		});
+		
+		$('ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden').first().find('input[type=checkbox]').change(function(){
+			var brandNode = $(this).parent().find('span.facet-text').text().trim();
+			if($(this).is(':checked')){
+				$('ul.facet-list.js-facet-top-values.active').first().find("span.facet-text:contains('"+brandNode+"')").closest('label').find('input[type=checkbox]').prop('checked',true);	
+			}else{
+				$('ul.facet-list.js-facet-top-values.active').first().find("span.facet-text:contains('"+brandNode+"')").closest('label').find('input[type=checkbox]').prop('checked',false);
+			}
+		});
 		
 		
 		
@@ -369,42 +386,18 @@ ACC.refinements = {
 
 			$(this).parents(".js-facet").find(".js-more-facet-values").hide();
 			$(this).parents(".js-facet").find(".js-less-facet-values").show();
-			
-			 
-			$('.js-facet-top-values input[type=checkbox]:checked').parent().find('span.facet-text').each(function(){
-			brandFacet.push($(this).text().trim());
-			});
-			console.log("more "+brandFacet);
-			$('.js-facet-list-hidden input[type=checkbox]').parent().find('span.facet-text').each(function(){
-			console.log($(this).text().trim());
-			if($.inArray($(this).text().trim(),brandFacet )!= -1){
-			$(this).closest('label').find('input[type=checkbox]').prop('checked',true)
-			console.log($(this).closest('label').find('input[type=checkbox]').prop('checked',true));
-			}
-			});
-		})
+		});
 		
 			$(document).on("click",".js-less-facet-values-link",function(e){
 			e.preventDefault();
+			//var brandFacet = [];
+			
 			$(this).parents(".js-facet").find(".js-facet-top-values").show();
 			$(this).parents(".js-facet").find(".js-facet-list-hidden").hide();
 
 			$(this).parents(".js-facet").find(".js-more-facet-values").show();
 			$(this).parents(".js-facet").find(".js-less-facet-values").hide();
-			
-			 
-			$('.js-facet-list-hidden input[type=checkbox]:checked').parent().find('span.facet-text').each(function(){
-			brandFacet.push($(this).text().trim());
-			});
-			console.log("less "+brandFacet);
-			$('.js-facet-top-values input[type=checkbox]').parent().find('span.facet-text').each(function(){
-			console.log($(this).text().trim());
-			if($.inArray($(this).text().trim(),brandFacet )!= -1){
-			$(this).closest('label').find('input[type=checkbox]').prop('checked',true)
-			console.log($(this).closest('label').find('input[type=checkbox]').prop('checked',true));
-			}
-			});
-		})
+		});
 
 		// AJAX for removal of filters
 		$(document).on("click",".filter-apply",function(e){
@@ -557,16 +550,34 @@ ACC.refinements = {
 
 		$(document).off('change', '.facet_mobile .facet.js-facet').on('change', '.facet_mobile .facet.js-facet', function() { 
 			$(".facet_mobile .facet.js-facet").not(".Colour,.Size").each(function(){
-				var spanCount=$(this).find(".facet-list li").find("input[type=checkbox]:checked").length;
-				if(spanCount>0)
-				{
-					$(this).find(".category-icons").removeClass("blank");
-					$(this).find(".category-icons span").text(spanCount);
+				if($('.active-mob').find('.filter-nav').text().trim() == 'Brand'){
+					var spanCount = $('ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden').find("input[type=checkbox]:checked").length;
+					//var spanCount=$(this).find(".facet-list li").find("input[type=checkbox]:checked").length;
+					if(spanCount>0)
+					{
+						$('li.facet.js-facet.Brand').find('span.category-icons').removeClass("blank");
+						$('li.facet.js-facet.Brand').find('span.category-icons span').text(spanCount);
+						//$(this).find(".category-icons").removeClass("blank");
+						//$(this).find(".category-icons span").text(spanCount);
+					}
+					else
+					{
+						//$(this).find(".category-icons").addClass("blank");
+						$('li.facet.js-facet.Brand').find('span.category-icons').addClass("blank");
+					}
+				}else{
+					var spanCount=$(this).find(".facet-list li").find("input[type=checkbox]:checked").length;
+					if(spanCount>0)
+					{
+						$(this).find(".category-icons").removeClass("blank");
+						$(this).find(".category-icons span").text(spanCount);
+					}
+					else
+					{
+						$(this).find(".category-icons").addClass("blank");
+					}
 				}
-				else
-				{
-					$(this).find(".category-icons").addClass("blank");
-				}
+				
 			});
 		});
 
