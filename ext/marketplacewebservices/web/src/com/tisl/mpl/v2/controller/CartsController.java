@@ -3393,8 +3393,8 @@ public class CartsController extends BaseCommerceController
 						{ ////////
 						  //							final String validation = mplPaymentFacade.generateOTPforCODWeb(mplCustomerID, mobilenumber,
 						  //									mplCustomerName, cartId);
-							final String validation = mplPaymentFacade.generateOTPforCODWeb(customerData.getEmail(), mobilenumber,
-									mplCustomerName, cartId);
+							final String validation = mplPaymentFacade.generateOTPforCODWeb(userId, mobilenumber, mplCustomerName,
+									cartId);
 							if (null != validation && StringUtils.isNotEmpty(validation))
 							{
 
