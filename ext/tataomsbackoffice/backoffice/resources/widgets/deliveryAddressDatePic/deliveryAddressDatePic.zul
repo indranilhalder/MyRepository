@@ -1,3 +1,4 @@
+
 <widget xmlns="http://www.zkoss.org/2005/zul"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:h="http://www.w3.org/1999/xhtml"
@@ -5,24 +6,20 @@
 	xmlns:zk="http://www.zkoss.org/2005/zk"
 	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
 	height="100%">
-	<hlayout style="text-align:center">
-		<vlayout style="margin-top: 10px;font-size:14px">
-			<label value="START DATE"></label>
-		</vlayout>
-		<vlayout style="text-align:center">
-		<hlayout>
-			<datebox id="startdpic"  cols="12" constraint="no empty, no future: NOT EMPTY or NO FUTURE" format="short" width="230px" />
-			<label style="margin-top: 7px;font-size:12px;display:block;" value="(mm/dd/yy)"></label>
-			</hlayout>
-		</vlayout>
-		<vlayout style="margin-top: 10px;font-size:14px;margin-left: 20px">
-			<label value="END DATE"></label>
-		</vlayout>
-		<vlayout style="text-align:center">
-		<hlayout>
-			<datebox id="enddpic" cols="12" constraint="no empty, no future: NOT EMPTY or NO FUTURE" format="short" width="230px" />
-			<label style="margin-top: 7px;font-size:12px;display:block;" value="(mm/dd/yy)"></label>
-			</hlayout>
-		</vlayout>
-	</hlayout>
+					<listbox id="listBoxData" 
+					 emptyMessage="No result found in the result" mold="paging" pageSize="10"  	pagingPosition="top">
+						<listhead sizable="true">
+							<listheader style="text-align:left"
+								label="${labels.lbl.lbx.header1}">
+							</listheader>
+							<listheader style="text-align:left"
+								label="${labels.lbl.lbx.header2}">
+							</listheader>
+							<listheader style="text-align:left"
+								label="${labels.lbl.lbx.header3}">
+							</listheader>
+							
+						</listhead>
+					</listbox>
+				
 </widget>

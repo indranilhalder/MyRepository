@@ -8,17 +8,15 @@
 
 	<columnlayout width="100%" height="100%">
 		<columnchildren width="100%">
-			<panel
-				style="height:18%;font-size:14px;border-bottom:none solid #27394f">
+			<panel>
 				<panelchildren style="border:none">
-					<vlayout style="width:100%;height:100px">
+					<vlayout>
 						<hlayout>
-
 							<vlayout width="100px">
 								<label value="Order ID" hflex="1" />
 							</vlayout>
 							<vlayout width="200px">
-								<textbox hflex="1" id="txtOrderId"  constraint="no empty"
+								<textbox hflex="1" id="txtOrderId"
 									style="width:200px;height:10px">
 								</textbox>
 							</vlayout>
@@ -29,60 +27,53 @@
 								<label value="Customer ID" hflex="1" />
 							</vlayout>
 							<vlayout width="200px">
-								<textbox hflex="1" id="txtCustomerID"  constraint="no empty"
+								<textbox hflex="1" id="txtCustomerID"
 									style="width:200px;height:10px">
 								</textbox>
 							</vlayout>
-							<vlayout width="10px">
-								<label value="" />
-							</vlayout>
-							<vlayout width="150px">
+						 </hlayout>
+						 <hlayout>
+							<vlayout width="100px">
 								<label value="Shipping Address Pincode"
 									hflex="1" />
 							</vlayout>
 							<vlayout width="200px">
-								<intbox hflex="1" id="intPincode" constraint="no negative,no empty" maxlength="6"
-									style="width:200px;height:10px">
+								<intbox hflex="1" id="intPincode"
+									maxlength="6" style="width:200px;height:10px">
 								</intbox>
 							</vlayout>
-							<separator />
 							<vlayout
 								style="width:100px;margin-left:10px">
-								<button style="float:right"
+								<button style="float:left"
 									label="Search" id="btnPickUpAddressSearch" />
 							</vlayout>
 						</hlayout>
+						<separator />
+						<listbox id="listBoxData"
+							emptyMessage="No result found in the result" mold="paging"
+							pageSize="12">
+							<listhead sizable="true">
+								<listheader style="text-align:left"
+									label="${labels.lbl.lbx.header1}">
+								</listheader>
+								<listheader style="text-align:left"
+									label="${labels.lbl.lbx.header2}">
+								</listheader>
+								<listheader style="text-align:left"
+									label="${labels.lbl.lbx.header3}">
+								</listheader>
+								<listheader style="text-align:left"
+									label="${labels.lbl.lbx.header4}">
+								</listheader>
+								<listheader style="text-align:left"
+									label="${labels.lbl.lbx.header5}">
+								</listheader>
+								<listheader style="text-align:left"
+									label="${labels.lbl.lbx.header6}">
+								</listheader>
+							</listhead>
+						</listbox>
 					</vlayout>
-				</panelchildren>
-			</panel>
-
-			<panel
-				style="max-height:80%;height:70%;border-bottom:3px solid #27394f;border:none">
-				<panelchildren>
-					<listbox id="listBoxData"
-						emptyMessage="No result found in the result" mold="paging"
-						pageSize="12">
-						<listhead sizable="true">
-							<listheader style="text-align:left"
-								label="${labels.lbl.lbx.header1}">
-							</listheader>
-							<listheader style="text-align:left"
-								label="${labels.lbl.lbx.header2}">
-							</listheader>
-							<listheader style="text-align:left"
-								label="${labels.lbl.lbx.header3}">
-							</listheader>
-							<listheader style="text-align:left"
-								label="${labels.lbl.lbx.header4}">
-							</listheader>
-							<listheader style="text-align:left"
-								label="${labels.lbl.lbx.header5}">
-							</listheader>
-							<listheader style="text-align:left"
-								label="${labels.lbl.lbx.header6}">
-							</listheader>
-						</listhead>
-					</listbox>
 				</panelchildren>
 			</panel>
 

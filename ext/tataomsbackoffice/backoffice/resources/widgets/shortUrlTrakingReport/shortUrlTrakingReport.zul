@@ -5,14 +5,23 @@
 	xmlns:zk="http://www.zkoss.org/2005/zk"
 	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
 	height="100%">
+	<style>
+		.z-listcell-content, .z-listgroup-content,
+		.z-listgroupfoot-content, .z-listfooter-content { font-family:
+		"Open Sans",Arial,Sans-serif; font-size: 12px; font-weight: 400;
+		font-style: normal; color: #555; padding: 3px 4px 4px;
+		line-height: -1px; overflow: none; cursor: pointer; }
+	</style>
 	<columnlayout width="100%" height="100%">
 		<columnchildren width="100%">
 			<panel
-				style="height:20%;font-size:14px;border-bottom:4px solid #27394f">
+				style="height:15%;font-size:14px;border-bottom:4px solid #27394f">
 				<panelchildren style="border:none">
-               <hlayout style="text-align:left">
-					<label class="z-label">	Short Url Tracking Report</label>	
-				</hlayout>
+					<hlayout style="text-align:left">
+						<label class="z-label">
+							Short Url Tracking Report
+						</label>
+					</hlayout>
 					<hlayout style="text-align:center">
 						<vlayout
 							style="margin-top: 10px;font-size:14px">
@@ -20,11 +29,12 @@
 						</vlayout>
 						<vlayout style="text-align:center">
 							<hlayout>
-								<datebox id="startdpic" cols="12"
+								<datebox id="startDateValue" cols="12"
 									constraint="no empty, no future: NOT EMPTY or NO FUTURE"
-									format="short" width="230px" />
+									format="MM/dd/yyyy HH:mm:ss" width="230px" />
 								<label
-									 style="margin-top: 7px;font-size:12px;display:block;" value="(mm/dd/yy)">
+									style="margin-top: 7px;font-size:12px;display:block;"
+									value="(mm/dd/yy)">
 								</label>
 							</hlayout>
 						</vlayout>
@@ -34,22 +44,22 @@
 						</vlayout>
 						<vlayout style="text-align:center">
 							<hlayout>
-								<datebox id="enddpic" cols="12"
+								<datebox id="endDateValue" cols="12"
 									constraint="no empty, no future: NOT EMPTY or NO FUTURE"
-									format="short" width="230px" />
+									format="MM/dd/yyyy HH:mm:ss" width="230px" />
 								<label
-								 style="margin-top: 7px;font-size:12px;display:block;" value="(mm/dd/yy)">
+									style="margin-top: 7px;font-size:12px;display:block;"
+									value="(mm/dd/yy)">
 								</label>
 							</hlayout>
 						</vlayout>
 					</hlayout>
 				</panelchildren>
 			</panel>
-			<panel
-				style="max-height:70%;height:60%;border-bottom:3px solid #27394f;border:none">
+			<panel>
 				<panelchildren>
 					<listbox id="listBoxData" multiple="true"
-						mold="paging" pageSize="15" checkmark="false"
+						mold="paging" pageSize="10" checkmark="false"
 						emptyMessage="No result found in the result">
 						<listhead sizable="true">
 							<listheader style="text-align:left"

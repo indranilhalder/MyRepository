@@ -18,51 +18,14 @@
 		13px; } .error_class{font-size:13px;color:red;}
 		.success_class{font-size:13px;color:green;width:40}
 	</style>
-
-
 	<grid id="gridForm" style="width:100%;height:100%;padding-left:10px;" >
-
 		<rows>
 			<row>
-				<label id="successLabel" sclass="success_class"
-					value="MplBucConfigaration saved SuceessFully " visible="false" />
 				<label class="lheading" value="Delivery Time Lines" />
-			</row>
-			<row style="border-bottom:none">
-				<label value="AIR Delivery Time Line" hflex="1" />
-				<intbox id="airDeleveryDays"
-					onChanging="airDaysError.visible=false;successLabel.visible=false" />
-				<label value="days" />
-				<label id="airDaysError" sclass="error_class"
-					visible="false" value="Required air Delevery  days" />
-			</row>
-
-			<row style="border-bottom:none">
-				<label value="SUR Delivery Time Line" hflex="1" />
-				<intbox id="surDeleveryDays"
-					onChanging="surfaceDaysError.visible=false" />
-				<label value="days" />
-				<label id="surfaceDaysError" sclass="error_class"
-					visible="false" value="Required surface Delevery  days" />
-			</row>
-
-			<row style="border-bottom:none">
-				<label value="Scheduled delivey Charge" hflex="1" />
-				<doublebox id="sdCharge"
-					onChanging="sdChargeError.visible=false" />
-				<label id="sdChargeError" sclass="error_class"
-					visible="false" value="Required  Scheduled Delevery Charge" />
-			</row>
-			<row style="border-bottom:none">
-				<label value="Express delivey Charge" hflex="1" />
-				<doublebox id="edCharge"
-					onChanging="edChargeError.visible=false" />
-				<label id="edChargeError" sclass="error_class"
-					visible="false" value="Required Express Delevery Charge" />
-			</row>
+			</row>		
 			<row>
 				<label value="Scheduled Delivery Time Slots" />
-				<listbox id="sdListbox" height="100%" hflex="1"  rows="3"
+				<listbox id="sdListbox"  rows="3"
 					emptyMessage="No result found in the result"
 					style="font-size:10px">
 					<listhead sizable="true">
@@ -76,8 +39,7 @@
 						</listheader>
 						<listheader
 							style="text-align:center;font-size:10px" label="To">
-						</listheader>
-						
+						</listheader>					
 					</listhead>
 					<template name="model">
 						<listitem>
@@ -90,13 +52,11 @@
 					</template>
 				</listbox>
 				<button id="saveSdTimeSlots" label="Save" />
-
-			</row>
-			
+			</row>		
 			<row style="border-bottom:none">
-				<label value="Express delivery Time Slots" />
+				<label value="Express Delivery Time Slots" />
  
-				<listbox id="edListbox" height="100%" hflex="1"  rows="3"
+				<listbox id="edListbox" rows="3"
 					emptyMessage="No result found in the result"
 					style="font-size:10px">
 					<listhead sizable="true">
@@ -124,9 +84,8 @@
 				<button id="saveEdTimeSlots" label="Save" />
 			</row>
 			<row style="border-bottom:none">
-				<label value="Return delivery Time Slots" />
+				<label value="Return Delivery Time Slots" />
 				<listbox id="rdListbox"  rows="3"
-					height="100%"
 					hflex="1" emptyMessage="No result found in the result"
 					style="font-size:10px">
 					<listhead sizable="true">
@@ -153,23 +112,18 @@
 				</listbox>
 				<button id="saveRdTimeSlots" label="Save" />
 			</row>
-			<row>
-				<label class="lheading" value="SSHIP Requirement" />
+			<row>		
 			</row>
 			<row style="border-bottom:none">
-				<label
-					value="No.of days within which customer can confirm product receipt"
-					hflex="1" />
-				<textbox style="width:30px" hflex="1" />
-			</row>
-			<row style="border-bottom:none">
-				<cell></cell>
-				<button id="saveMplBucConfigaration" label="Save" />
+				<label value="Scheduled Delivery Charge" hflex="1" />				
+				<doublebox id="sdCharge" width="320px"
+					onChanging="sdChargeMessage.visible=false"  class="success_class"/>
+				<button id="saveMplBucConfigaration" label="Save" />	
+				<label id="sdChargeMessage"
+					visible="false" value="Required Scheduled Delevery Charge" />	
 			</row>
 		</rows>
 	</grid>
-
-
 	<div class="popuped" id="sdpopup" visible="false"
 		action="show: slideDown;hide: slideUp">
 		<label class="headingpopup"
@@ -245,5 +199,5 @@
 			</div>
 			<label>Note:These time slots are temporary add to list box click save to permanent store</label>
 		</div>
-	</div>
+	</div>			
 </widget>
