@@ -7244,4 +7244,200 @@ public class AccountPageController extends AbstractMplSearchPageController
 		}
 	}
 
+	@RequestMapping(value = RequestMappingUrlConstants.CHANGE_DELIVERY_ADDRES_URL, method =
+	{ RequestMethod.POST, RequestMethod.GET })
+	public String changeDeliveryAddress(@PathVariable final String orderCode,
+			@ModelAttribute("addressForm") final AccountAddressForm addressForm, Model model) throws CMSItemNotFoundException
+	{
+		String errorMsg = mplAddressValidator.validate(addressForm);
+		//Validate the address 
+		if (errorMsg.equalsIgnoreCase(MessageConstants.SUCCESS))
+		{
+			AddressData newAddressData = new AddressData();
+			newAddressData.setAddressType(addressForm.getAddressType());
+			newAddressData.setId(addressForm.getAddressId());
+			newAddressData.setPhone(addressForm.getMobileNo());
+			newAddressData.setFirstName(addressForm.getFirstName());
+			newAddressData.setLastName(addressForm.getLastName());
+			newAddressData.setLine1(addressForm.getLine1());
+			newAddressData.setLine2(addressForm.getLine2());
+			newAddressData.setLine3(addressForm.getLine3());
+			newAddressData.setCity(addressForm.getTownCity());
+			newAddressData.setPostalCode(addressForm.getPostcode());
+			newAddressData.setState(addressForm.getState());
+			newAddressData.setBillingAddress(false);
+			newAddressData.setShippingAddress(true);
+			if (null != addressForm.getLandmark() && !StringUtils.isEmpty(addressForm.getLandmark().trim()))
+			{
+				newAddressData.setLandmark(addressForm.getLandmark());
+			}
+			else if (null != addressForm.getOtherLandmark())
+			{
+				newAddressData.setLandmark(addressForm.getOtherLandmark());
+			}
+			if (StringUtils.isNotEmpty(addressForm.getCountryIso()))
+			{
+				CountryData countryData = getI18NFacade().getCountryForIsocode(addressForm.getCountryIso());
+				newAddressData.setCountry(countryData);
+			}
+			if (addressForm.getRegionIso() != null && !StringUtils.isEmpty(addressForm.getRegionIso()))
+			{
+				newAddressData.setRegion(getI18NFacade().getRegion(addressForm.getCountryIso(), addressForm.getRegionIso()));
+			}
+			LOG.info("Change Delievry Address Request For Order {}" + orderCode);
+			ServicesUtil.validateParameterNotNull(orderCode, "orderCode must not be null");
+			OrderData orderData = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+			boolean isAddressChanged = mplDeliveryAddressComparator.compareAddress(orderData.getDeliveryAddress(), newAddressData);
+			boolean isContactDetails = mplDeliveryAddressComparator.compareContactDetails(orderData.getDeliveryAddress(),
+					newAddressData);
+
+			if (isAddressChanged || isContactDetails)
+			{
+				//pincode are changed or not checking 
+				if (!newAddressData.getPostalCode().equalsIgnoreCase(orderData.getDeliveryAddress().getPostalCode()))
+				{
+					ScheduledDeliveryData scheduledDeliveryData = mplDeliveryAddressFacade.scheduledDeliveryData(
+							orderCode, newAddressData);
+					if (scheduledDeliveryData != null)
+					{
+						
+						//pincode serviceable checking  
+						if (scheduledDeliveryData.getIsPincodeServiceable().booleanValue())
+						{
+							//Save Address Data In session
+							sessionService.setAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS, newAddressData);
+							//preparing Data for ScheduledDeliveryDate jsp page
+							OrderData orderDetail = mplDeliveryAddressFacade.reScheduledDeliveryPageData(orderData);
+							model.addAttribute(ModelAttributetConstants.ORDERDETAIL, orderDetail);
+							model.addAttribute(ModelAttributetConstants.TXNSCHEDULEDATA, scheduledDeliveryData);
+							return ControllerConstants.Views.Pages.Account.ScheduledDeliveryDate;
+						}
+						else
+						{
+							model.addAttribute(ModelAttributetConstants.STRINGMEAASGE, MessageConstants.PINCODE_NOT_SERVICEABLE);
+							return ControllerConstants.Views.Pages.Account.ScheduledDeliveryDate;
+						}
+					}
+					else
+					{
+						//pincode serviceable checking  
+						boolean isServiceable = mplDeliveryAddressFacade.pincodeServiceableCheck(newAddressData, orderCode);
+						if (isServiceable)
+						{
+							//Save Address Data In session
+							sessionService.setAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS, newAddressData);
+							//preparing  OTP jsp Page Data when only change Contact Details Updated
+							String phoneNumber = orderData.getDeliveryAddress().getPhone();
+							phoneNumber = mplDeliveryAddressFacade.getPartialEncryptValue("*", 6, phoneNumber);
+							model.addAttribute(ModelAttributetConstants.PHONE_NUMBER, phoneNumber);
+							model.addAttribute(ModelAttributetConstants.ORDERCODE, orderCode);
+							return ControllerConstants.Views.Pages.Account.OTPPopup;
+						}
+						else
+						{
+							model.addAttribute(ModelAttributetConstants.STRINGMEAASGE, MessageConstants.PINCODE_NOT_SERVICEABLE);
+							return ControllerConstants.Views.Pages.Account.ScheduledDeliveryDate;
+						}
+					}
+				}
+				else
+				{
+					//Save Address Data In session
+					sessionService.setAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS, newAddressData);
+					//preparing  OTP jsp Page Data when only change Contact Details Updated
+					mplDeliveryAddressFacade.newOTPRequest(orderCode);
+					String phoneNumber = orderData.getDeliveryAddress().getPhone();
+					phoneNumber = mplDeliveryAddressFacade.getPartialEncryptValue("*", 6, phoneNumber);
+					model.addAttribute(ModelAttributetConstants.PHONE_NUMBER, phoneNumber);
+					model.addAttribute(ModelAttributetConstants.ORDERCODE, orderCode);
+					return ControllerConstants.Views.Pages.Account.OTPPopup;
+				}
+			}
+			else
+			{
+				model.addAttribute(ModelAttributetConstants.STRINGMEAASGE, MessageConstants.UPDATED);
+				return ControllerConstants.Views.Pages.Account.ScheduledDeliveryDate;
+			}
+		}
+		model.addAttribute(ModelAttributetConstants.STRINGMEAASGE, errorMsg);
+		return ControllerConstants.Views.Pages.Account.ScheduledDeliveryDate;
+	}
+
+
+
+
+	@RequestMapping(value = RequestMappingUrlConstants.OTP_VALIDATION_URL, method = {RequestMethod.POST, RequestMethod.GET})
+	public String submitChangeDeliveryAddress(@RequestParam(value = "orderId") final String orderId,
+			@RequestParam(value = "otpNumber") final String enteredOTPNumber,Model model)
+	{
+		String validateOTPMesg = null;
+		final CustomerData customerData = customerFacade.getCurrentCustomer();
+		if (StringUtils.isNotEmpty(enteredOTPNumber) && StringUtils.isNotEmpty(orderId))
+		{
+			LOG.debug("Cheking OTP Validation Account Page Controller");
+			OTPResponseData otpResponse = mplDeliveryAddressFacade.validteOTP(customerData.getUid(), enteredOTPNumber);
+			if (otpResponse.getOTPValid().booleanValue())
+			{
+				//OTP is valid then call save in commerce DB and Call to OMS and CRM
+				validateOTPMesg = mplDeliveryAddressFacade.submitChangeDeliveryAddress(customerData.getUid(), orderId);
+			}
+			else
+			{
+				validateOTPMesg = otpResponse.getInvalidErrorMessage();
+			}
+		}
+	   model.addAttribute(ModelAttributetConstants.STRINGMEAASGE, validateOTPMesg);
+		return ControllerConstants.Views.Pages.Account.OTPPopup;
+	}
+
+	@RequestMapping(value = RequestMappingUrlConstants.NEW_OTP_GENERATE, method ={RequestMethod.POST, RequestMethod.GET})
+	@ResponseBody
+	public boolean newOTP(@RequestParam(value = "orderCode") final String orderCode)
+	{
+		boolean isNewOTPCreated;
+		LOG.debug("Generate new OTP For changing Delivery Address ");
+		isNewOTPCreated = mplDeliveryAddressFacade.newOTPRequest(orderCode);
+		return isNewOTPCreated;
+	}
+
+
+	@RequestMapping(value = RequestMappingUrlConstants.RESCHEDULEDDELIVERYDATE, method = {RequestMethod.POST, RequestMethod.GET})
+	public String scheduledDeliveryDate(@PathVariable final String orderCode,
+			@RequestParam(value = "entryData") final String entryData,Model model)
+	{
+		try
+		{
+			ServicesUtil.validateParameterNotNull(orderCode,"orderCode must not be null");
+			if (StringUtils.isNotEmpty(entryData))
+			{
+				RescheduleDataList rescheduleDataList = (RescheduleDataList) GenericUtilityMethods.jsonToObject(RescheduleDataList.class,
+						entryData);
+				if (rescheduleDataList != null)
+				{  
+					// if Exiting session in key related value is available we need to remove first  
+					sessionService.removeAttribute(MarketplacecommerceservicesConstants.RESCHEDULE_DATA_SESSION_KEY);
+					sessionService.setAttribute(MarketplacecommerceservicesConstants.RESCHEDULE_DATA_SESSION_KEY, rescheduleDataList);
+				}
+			}
+			if (StringUtils.isNotEmpty(orderCode))
+			{
+				LOG.info("AccountPageController:OTP Creating for ChangeDeliveryAddress");
+			 	mplDeliveryAddressFacade.newOTPRequest(orderCode);
+			 	//preparing  OTP jsp Page Data
+				final OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+				String phoneNumber = orderDetail.getDeliveryAddress().getPhone();
+				phoneNumber = mplDeliveryAddressFacade.getPartialEncryptValue("*", 6, phoneNumber);
+				model.addAttribute(ModelAttributetConstants.PHONE_NUMBER, phoneNumber);
+				model.addAttribute(ModelAttributetConstants.ORDERCODE, orderCode);
+			}
+	 
+		}
+		catch (Exception parseException)
+		{
+			LOG.error("parseException raising converrting time" + parseException.getMessage());
+		}
+		return ControllerConstants.Views.Pages.Account.OTPPopup;
+	}
+	
+
 }

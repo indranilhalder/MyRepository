@@ -74,7 +74,7 @@ public interface MplDeliveryAddressFacade
 	public String submitChangeDeliveryAddress(String customerID, String orderCode);
 
 	//Generate new OTP
-	public boolean generateNewOTP(String orderCode);
+	public boolean newOTPRequest(String orderCode);
 
 	public String getPartialEncryptValue(String encryptSymbol, int encryptLength, String source);
 

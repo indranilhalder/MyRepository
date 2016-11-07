@@ -660,7 +660,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	}
 
 	@Override
-	public boolean generateNewOTP(String orderCode)
+	public boolean newOTPRequest(String orderCode)
 	{
 		boolean isGenerated = false;
 		 OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
