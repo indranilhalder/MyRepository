@@ -133,4 +133,15 @@ public interface OTPGenericService
 	 */
 	OTPResponseData validateLatestOTP(String userIdOrEmail, String mobileNo, String enteredOTPNumber, OTPTypeEnum OTPType,
 			long expiryTime);
+
+	/**
+	 * @param userIdOrEmail
+	 * @param mobileNo
+	 * @param enteredOTPNumber
+	 * @param OTPType
+	 * @param expiryTime
+	 * @return OTPResponseData
+	 */
+	OTPResponseData validateLatestOTPWV(String userIdOrEmail, String mobileNo, String enteredOTPNumber, OTPTypeEnum OTPType,
+			long expiryTime);
 }

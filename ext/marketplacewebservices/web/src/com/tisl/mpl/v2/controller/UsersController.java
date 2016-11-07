@@ -3987,12 +3987,12 @@ public class UsersController extends BaseCommerceController
 					LOG.debug("************** Mobile web service Validate OTP for COD  RESPONSE SUCCESSSSS ******************"
 							+ emailid);
 
-					if (validationMsg.equals(MarketplacecommerceservicesConstants.OTPVALIDITY))
+					if (validationMsg.equalsIgnoreCase(MarketplacecommerceservicesConstants.OTPVALIDITY))
 					{
 						result.setError(MarketplacecommerceservicesConstants.OTP_SENT);
 						result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 					}
-					else if (validationMsg.equals(MarketplacecommerceservicesConstants.OTPEXPIRY))
+					else if (validationMsg.equalsIgnoreCase(MarketplacecommerceservicesConstants.OTPEXPIRY))
 					{
 						result.setError(MarketplacecommerceservicesConstants.OTP_EXPIRY_MESSAGE);
 						result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);

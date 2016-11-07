@@ -42,6 +42,14 @@ public interface OTPDao
 	OTPModel fetchLatestOTP(String emailId, String mobileNo, OTPTypeEnum OTPType);
 
 	/**
+	 * @param emailId
+	 * @param mobileNo
+	 * @param OTPType
+	 * @return OTPModel
+	 */
+	OTPModel fetchLatestOTPWV(String emailId, String mobileNo, OTPTypeEnum OTPType);
+
+	/**
 	 * @param customerPK
 	 * @param OTPType
 	 * @return OTPModel

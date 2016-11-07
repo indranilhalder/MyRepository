@@ -117,6 +117,16 @@ public interface MplPaymentFacade
 	 */
 	String validateOTPforCODWeb(String customerID, String enteredOTPNumber);
 
+	/**
+	 * This method takes the customer ID and enter OTP as input parameters and calls the service to validate the entered
+	 * OTP
+	 *
+	 * @param customerID
+	 * @param enteredOTPNumber
+	 * @return OTPResponseData
+	 */
+	String validateOTPforCODWV(String customerID, String enteredOTPNumber);
+
 
 	/**
 	 * This method takes the customer ID as input parameters and calls the service to check whether the customer is
@@ -278,11 +288,11 @@ public interface MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 *
+	 * 
 	 * @param bankName
-	 *
+	 * 
 	 * @return Boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -290,9 +300,9 @@ public interface MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return Map<String, List<MplNetbankingData>>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions, Exception;

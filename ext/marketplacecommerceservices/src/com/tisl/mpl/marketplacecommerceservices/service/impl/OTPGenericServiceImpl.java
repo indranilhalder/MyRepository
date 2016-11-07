@@ -665,6 +665,84 @@ public class OTPGenericServiceImpl implements OTPGenericService
 
 	}
 
+	/**
+	 * This method validates OTP
+	 *
+	 * @param userIdOrEmail
+	 * @param enteredOTPNumber
+	 * @param OTPType
+	 * @param expiryTime
+	 * @return boolean
+	 *
+	 */
+	@Override
+	public OTPResponseData validateLatestOTPWV(final String userIdOrEmail, final String mobileNo, final String enteredOTPNumber,
+			final OTPTypeEnum OTPType, final long expiryTime)
+	{
+		OTPModel otpModel = null;
+		final OTPResponseData otpResponse = new OTPResponseData();
+
+		if (getConfigurationService().getConfiguration().getBoolean(OTP_ENABLED_STRING, true))
+		{
+			otpModel = otpDao.fetchLatestOTPWV(userIdOrEmail, mobileNo, OTPType);
+			LOG.debug("userIdOrEmail" + userIdOrEmail);
+		}
+		else
+		{
+			otpResponse.setOTPValid(Boolean.TRUE);
+			otpResponse.setInvalidErrorMessage("VALID");
+			return otpResponse;
+		}
+
+		if (null != otpModel)
+		{
+			if (otpModel.getOTPNumber().equals(enteredOTPNumber))
+			{
+				LOG.debug("otpModel" + otpModel.getOTPNumber());
+				Date currentDate = null;
+				try
+				{
+					currentDate = dateFormat.parse(getCurrentDate());
+				}
+				catch (final ParseException e)
+				{
+					LOG.debug(e);
+				}
+				final long difference = currentDate.getTime() - otpModel.getCreationtime().getTime();
+				LOG.debug("Time Difference is" + difference);
+
+				if (difference > expiryTime)
+				{
+					LOG.debug("Otp has expired");
+					otpResponse.setOTPValid(Boolean.FALSE);
+					otpResponse.setInvalidErrorMessage("EXPIRED");
+				}
+				else
+				{
+					//TIS-3168
+					LOG.error("Otp validation matched for OTP:::" + enteredOTPNumber);
+					otpModel.setIsValidated(Boolean.TRUE);
+					getModelservice().save(otpModel);
+					otpResponse.setOTPValid(Boolean.TRUE);
+					otpResponse.setInvalidErrorMessage("VALID");
+				}
+			}
+			else
+			{
+				otpResponse.setOTPValid(Boolean.FALSE);
+				otpResponse.setInvalidErrorMessage("INVALID");
+			}
+		}
+		else
+		{
+			otpResponse.setOTPValid(Boolean.FALSE);
+			otpResponse.setInvalidErrorMessage("INVALID");
+		}
+
+		return otpResponse;
+
+	}
+
 
 
 

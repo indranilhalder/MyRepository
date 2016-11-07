@@ -523,6 +523,57 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		}
 	}
 
+	/**
+	 * This method takes the customer ID and enter OTP as input parameters and calls the service to validate the entered
+	 * OTP
+	 *
+	 * @param customerID
+	 * @param enteredOTPNumber
+	 * @return String
+	 */
+	@Override
+	public String validateOTPforCODWV(final String customerID, final String enteredOTPNumber)
+	{
+		try
+		{
+			//OTP validation
+			//			final OTPResponseData otpResponse = getOtpGenericService().validateOTP(
+			//					customerID,
+			//					null,
+			//					enteredOTPNumber,
+			//					OTPTypeEnum.COD,
+			//					Long.parseLong(getConfigurationService().getConfiguration().getString(
+			//							MarketplacecommerceservicesConstants.TIMEFOROTP)));
+
+			final OTPResponseData otpResponse = getOtpGenericService().validateLatestOTPWV(
+					customerID,
+					null,
+					enteredOTPNumber,
+					OTPTypeEnum.COD,
+					Long.parseLong(getConfigurationService().getConfiguration().getString(
+							MarketplacecommerceservicesConstants.TIMEFOROTP)));
+
+			if (null != otpResponse && null != otpResponse.getInvalidErrorMessage())
+			{
+				//TIS-3168
+				LOG.error("OTP Validation message is " + otpResponse.getInvalidErrorMessage());
+				//returning true or false based on whether OTP is valid or not
+				return otpResponse.getInvalidErrorMessage();
+			}
+			else
+			{
+				//TIS-3168
+				LOG.error("OTP Validation message is null");
+				return null;
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e);
+			return null;
+		}
+	}
+
 
 	/**
 	 * This method takes the customer ID as input parameters and calls the service to check whether the customer is

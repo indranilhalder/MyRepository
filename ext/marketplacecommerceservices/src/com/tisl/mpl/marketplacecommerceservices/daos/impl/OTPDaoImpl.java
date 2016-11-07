@@ -216,6 +216,69 @@ public class OTPDaoImpl implements OTPDao
 
 	}
 
+	/**
+	 * This method returns the latest OTP against a specific customer
+	 *
+	 * @param emailId
+	 * @param mobileNo
+	 * @param OTPType
+	 * @return OTPModel
+	 *
+	 */
+	@Override
+	public OTPModel fetchLatestOTPWV(final String emailId, final String mobileNo, final OTPTypeEnum OTPType)
+	{
+		try
+		{
+			String queryString = "";
+			if (StringUtils.isNotEmpty(mobileNo))
+			{
+				queryString = MarketplacecommerceservicesConstants.LATESTOTPMOBILEQUERY;
+			}
+			else
+			{
+				queryString = MarketplacecommerceservicesConstants.LATESTOTPQUERYINV;
+			}
+
+			LOG.debug("LATESTQUERY" + queryString);
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter("emailId", emailId);
+			if (StringUtils.isNotEmpty(mobileNo))
+			{
+				query.addQueryParameter("mobileNo", mobileNo);
+			}
+			LOG.debug("mobileNo" + mobileNo);
+			query.addQueryParameter("OTPType", OTPType.getCode());
+
+			final List<OTPModel> otpList = getFlexibleSearchService().<OTPModel> search(query).getResult();
+			OTPModel otpModel = null;
+			if (CollectionUtils.isNotEmpty(otpList))
+			{
+				otpModel = otpList.get(0);
+				LOG.debug("LATESTQUERY" + otpModel.getOTPNumber());
+			}
+
+			return otpModel;
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final NullPointerException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
+	}
+
 
 
 	/**
