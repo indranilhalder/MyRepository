@@ -1622,7 +1622,17 @@
 						<persistence type="property"></persistence>
 					</attribute>
 				</attributes>
+				
+				<!-- new indexes added for performace improvement -->
+				<indexes>
+					<index name="MPLBRAND_IDX_CVER">
+						<key attribute="catalogVersion" />
+					</index>
+				</indexes> 
+				
 			</itemtype>
+			
+			
 			<itemtype code="SeoContent" autocreate="true" generate="true"
 				jaloclass="com.tisl.mpl.core.jalo.SeoContent">
 				<deployment table="MplSeoContent" typecode="13002" />
@@ -6482,6 +6492,16 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
+				
+				<!-- new indexes added for performace improvement -->
+				<indexes>
+					<index name="CARTS_IDX_MSS">
+						<key attribute="modifiedtime" />
+						<key attribute="site" />
+						<key attribute="saveTime" />
+					</index>
+				</indexes>
+				
 			</itemtype>
 		</typegroup>
 
