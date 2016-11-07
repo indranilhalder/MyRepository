@@ -1836,7 +1836,7 @@ public class UsersController extends BaseCommerceController
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
 	@RequestMapping(value = "/{emailId}/inviteFriend", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public UserResultWsDto inviteFriend(@RequestParam final String custEmailId, @RequestParam String textMessage,
+	public UserResultWsDto inviteFriend(@RequestParam final String custEmailId, @RequestParam final String textMessage,
 			@RequestParam final List friendEmailIdList, final HttpServletRequest request)
 					throws RequestParameterException, CMSItemNotFoundException, MalformedURLException
 	{
@@ -3161,6 +3161,14 @@ public class UsersController extends BaseCommerceController
 							{
 								wldpDTO.setDate(entryModel.getAddedDate());
 							}
+
+							/*
+							 * // Added for luxury if (null != productData1 && null != productData1.getLuxIndicator() &&
+							 * (MarketplaceCoreConstants.LUXURY).equalsIgnoreCase(productData1.getLuxIndicator())) {
+							 * wldpDTO.setIsLuxury(productData1.getLuxIndicator()); }
+							 */
+
+
 							String delistMessage = MarketplacewebservicesConstants.EMPTY;
 							boolean delisted = false;
 							if (null != productData1 && null != productData1.getSeller() && productData1.getSeller().size() > 0)
@@ -4164,7 +4172,7 @@ public class UsersController extends BaseCommerceController
 	public UserResultWsDto resetPassword(@PathVariable final String userId, @RequestParam final String old,
 			@RequestParam final String newPassword, final HttpServletRequest request)
 					throws RequestParameterException, de.hybris.platform.commerceservices.customer.PasswordMismatchException
-	{
+    {
 		final UserResultWsDto result = new UserResultWsDto();
 		final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		MplUserResultWsDto validated = new MplUserResultWsDto();
@@ -5836,9 +5844,9 @@ public class UsersController extends BaseCommerceController
 	@RequestMapping(value = "{emailId}/getFavCategoriesBrands", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public MplAllFavouritePreferenceWsDTO getFavCategoriesBrands(@PathVariable final String emailId, final String fields,
-			@RequestParam(required = false) final String deviceId)
+          @RequestParam(required = false) final String deviceId)
 					throws RequestParameterException, WebserviceValidationException, MalformedURLException
-	{
+    {
 		final MplAllFavouritePreferenceWsDTO mplAllFavouritePreferenceWsDTO = new MplAllFavouritePreferenceWsDTO();
 		final List<MplFavBrandCategoryWsDTO> favBrandCategoryDtoForCategory = new ArrayList<MplFavBrandCategoryWsDTO>();
 		Map<String, MplFavBrandCategoryData> brandCategoryDataForCategory = new HashMap<String, MplFavBrandCategoryData>();
@@ -6537,11 +6545,34 @@ public class UsersController extends BaseCommerceController
 					final Double cartTotal = cart.getTotalPrice();
 					final Double cartTotalWithConvCharge = cart.getTotalPriceWithConv();
 					if (cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0)
+                    {
+					final String juspayMerchantId = !getConfigurationService().getConfiguration()
+							.getString(MarketplacecommerceservicesConstants.MARCHANTID).isEmpty() ? getConfigurationService()
+							.getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID)
+							: "No juspayMerchantKey is defined in local properties";
+					final String juspayReturnUrl = !getConfigurationService().getConfiguration()
+							.getString(MarketplacecommerceservicesConstants.RETURNURL).isEmpty() ? getConfigurationService()
+							.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURL)
+							: "No juspayReturnUrl is defined in local properties";
+
+					String juspayOrderId;
+					juspayOrderId = mplPaymentFacade.createJuspayOrder(cart, firstName, lastName, addressLine1, addressLine2,
+							addressLine3, country, state, city, pincode, cardSaved + MarketplacewebservicesConstants.STRINGSEPARATOR
+									+ sameAsShipping, juspayReturnUrl, customerModel.getUid(),
+							MarketplacewebservicesConstants.CHANNEL_MOBILE);
+					LOG.debug("********* Created juspay Order mobile web service *************" + juspayOrderId);
+
+					orderCreateInJusPayWsDto.setJuspayMerchantId(juspayMerchantId);
+					orderCreateInJusPayWsDto.setJuspayReturnUrl(juspayReturnUrl);
+					orderCreateInJusPayWsDto.setJuspayOrderId(juspayOrderId);
+					//final CartModel cartModel = mplPaymentWebDAO.findCartValues(cartID);
+					try
 					{
 						//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CARTAMOUNTINVALID, "TRUE");
 						failFlag = true;
 						failErrorCode = MarketplacecommerceservicesConstants.B9509;
 					}
+				  }
 				}
 				//TISPRO-578
 				if (!failFlag && !mplPaymentFacade.isValidCart(cart))

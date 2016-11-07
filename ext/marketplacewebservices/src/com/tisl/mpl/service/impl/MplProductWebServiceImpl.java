@@ -60,6 +60,7 @@ import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
+import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.model.VideoComponentModel;
 import com.tisl.mpl.enums.OnlineExclusiveEnum;
@@ -268,12 +269,15 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		ProductModel productModel = null;
 		List<SellerInformationMobileData> framedOtherSellerDataList = null;
 		List<SellerInformationData> otherSellerDataList = null;
+
 		List<KnowMoreDTO> knowMoreList = null;
 		PromotionMobileData potenitalPromo = null;
 		List<VariantOptionMobileData> variantDataList = new ArrayList<VariantOptionMobileData>();
 		final StringBuilder allVariants = new StringBuilder();
 		String variantCodes = "";
 		String variantsString = "";
+
+		
 		final Map<String, Integer> stockAvailibilty = new TreeMap<String, Integer>();
 		try
 		{
@@ -477,9 +481,6 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				if (null != productData.getRootCategory())
 				{
 					productDetailMobile.setRootCategory(productData.getRootCategory());
-
-					LOG.debug("*************** Mobile web service product root category ****************"
-							+ productData.getRootCategory());
 				}
 				if (CollectionUtils.isNotEmpty(productData.getImages()))
 				{
@@ -673,6 +674,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					}
 				}
 				//TISSTRT-1411
+
 				variantDataList = getVariantDetailsForProduct(productData, stockAvailibilty);
 
 				if (null != variantDataList && !variantDataList.isEmpty())
@@ -724,6 +726,12 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				else if (null != productData.getUrl())
 				{
 					sharedText += productData.getUrl();
+				}
+
+				if (productData.getLuxIndicator() != null
+						&& productData.getLuxIndicator().equalsIgnoreCase(MarketplaceCoreConstants.LUXURY))
+				{
+					productDetailMobile.setLuxIndicator(MarketplaceCoreConstants.LUXURY);
 				}
 
 			}

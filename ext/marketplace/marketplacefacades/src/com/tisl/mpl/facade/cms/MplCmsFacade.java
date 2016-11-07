@@ -17,8 +17,9 @@ import com.tisl.mpl.facades.cms.data.MplPageData;
 import com.tisl.mpl.facades.cms.data.PageData;
 
 
+
 /**
- * @author 584443
+ * @author TCS
  *
  */
 public interface MplCmsFacade
@@ -34,6 +35,7 @@ public interface MplCmsFacade
 
 	MplPageData getHomePageForMobile();
 
+	LuxHomePageCompWsDTO getHomePageForLuxury() throws CMSItemNotFoundException;
 
 	PageData populateCategoryLandingPageForMobile(ContentPageModel contentPage, String categoryCode);
 
@@ -66,10 +68,22 @@ public interface MplCmsFacade
 
 	/**
 	 * Modified for TPR-798
-	 * 
+	 *
 	 * @param homePageUid
 	 * @param pageableData
 	 * @return
 	 */
+
 	List<MplPageData> getPageInformationForPageId(String homePageUid, final PageableData pageableData);
+
+
+	/**
+	 * @return
+	 */
+	LuxBlpCompWsDTO getlandingForBrand(String brandCode) throws CMSItemNotFoundException;
+
+	/**
+	 * @return
+	 */
+	LuxNavigationWsDTO getMegaNavigation() throws CMSItemNotFoundException;
 }

@@ -2033,6 +2033,25 @@ $(document).ready(function(){
 		
 		
 	});
+	
+	//Added for luxury site starts
+	$('document').ready(function(){
+	    $('#flip-navigation li a').each(function(){  
+	        $(this).click(function(){  
+	            $('#flip-navigation li').each(function(){  
+	                $(this).removeClass('selected');  
+	            });  
+	            $(this).parent().addClass('selected');           
+	            // Here we get the href value of the selected tab
+	            var selected_tab = $(this).find("a").attr("href");             
+	            var starting = selected_tab.indexOf("#");
+	            var sub = selected_tab.substring(starting);            
+	            $(sub).fadeIn();
+	            return false;  
+	        });  
+	    });  
+	}); 
+	//Added for luxury site ends
 
 	
    //  Change for TISPRD-4587 

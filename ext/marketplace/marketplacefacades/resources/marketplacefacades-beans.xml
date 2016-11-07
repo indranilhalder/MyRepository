@@ -170,6 +170,10 @@
 		<property name="productTitle" type="String" />
 		<property name="fulfillmentType" type="String" />
 		<property name="sellerName" type="String" />
+		<!-- LW-216 -->
+		<property name="luxIndicator" type="String" />
+		
+
 		<property name="stockValue" type="boolean" />
 		<!-- pdp changes ends -->
 
@@ -855,10 +859,14 @@
 	
 	<bean class="de.hybris.platform.commerceservices.search.solrfacetsearch.data.SolrSearchQueryData">
 		<property name="sns" type="boolean"/>
+		<!-- Added for Luxury -->
+		<!-- <property name="luxarySite" type="boolean"/> -->
 	</bean>
 
 	<bean class="de.hybris.platform.commercefacades.search.data.SearchStateData">
 		<property name="sns" type="boolean"/>
+		<!-- Added for Luxury -->
+		<property name="luxurySiteFrom" type="String"/>
 	</bean>
 
 	<!-- Return Item Address Data -->
@@ -935,4 +943,5 @@
 		<property name="imageList" type="java.util.List&lt;java.lang.String>"></property>
 		<property name="videoList" type="java.util.List&lt;java.lang.String>"></property>
 	</bean>
+
 </beans>

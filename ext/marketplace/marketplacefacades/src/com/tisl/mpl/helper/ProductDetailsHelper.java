@@ -1185,10 +1185,10 @@ public class ProductDetailsHelper
 		return existUssid;
 	}
 
-	/**
+	
+
+	/** 
 	 * @param productCode
-	 * @param ussid
-	 * @param user
 	 * @param valueOf
 	 * @return
 	 */
@@ -1258,5 +1258,45 @@ public class ProductDetailsHelper
 	public void setBuyBoxService(final BuyBoxService buyBoxService)
 	{
 		this.buyBoxService = buyBoxService;
+	}	
+
+	/**
+	 * @param productCode
+	 * @param ussid		 
+	 * @return
+	 */
+	public boolean removeFromWishList(final String productCode, final String ussid)
+	{
+
+		Wishlist2Model lastCreatedWishlist = null;
+		Wishlist2Model removedWishlist = null;
+		boolean removeFromWl = false;
+		try
+		{
+			final UserModel user = userService.getCurrentUser();
+			lastCreatedWishlist = wishlistFacade.getSingleWishlist(user);
+			if (null != lastCreatedWishlist)
+			{
+				removedWishlist = wishlistFacade.removeProductFromWl(productCode, lastCreatedWishlist.getName(), ussid);
+			}
+			if (null != removedWishlist)
+			{
+				removeFromWl = true;
+			}
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return removeFromWl;
 	}
 }

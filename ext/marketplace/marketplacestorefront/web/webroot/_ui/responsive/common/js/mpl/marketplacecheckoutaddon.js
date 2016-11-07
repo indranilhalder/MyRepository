@@ -6551,7 +6551,7 @@ function expressbutton()
 	 			populatePincodeDeliveryMode(response,'typeExpressCheckout');
 	 			// TISPRM-33
 
-	 			$$("#defaultPinCodeIdsq").val($("#defaultPinCodeIds").val());
+	 			$("#defaultPinCodeIdsq").val($("#defaultPinCodeIds").val());
 	 			
 		 		// $("#changePinDiv").hide();
 		 		// $("#defaultPinDiv").show();

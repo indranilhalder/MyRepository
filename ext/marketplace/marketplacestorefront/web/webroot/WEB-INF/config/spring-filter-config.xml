@@ -205,6 +205,8 @@
 		<property name="useDefaultPath" value="false"/>
 		<property name="httpOnly" value="true"/>
 		<property name="baseSiteService" ref="baseSiteService"/>
+		<property name="useDefaultDomain" value="false"/>
+		<property name="customDomain" value="#{configurationService.configuration.getProperty('shared.cookies.domain')}"/>
 	</bean>
 
 	<alias name="defaultCustomerLocationCookieGenerator" alias="customerLocationCookieGenerator"/>
@@ -221,6 +223,8 @@
 		<property name="cookieSecure" value="false"/>
 		<property name="cookieMaxAge" value="360000000"/>
 		<property name="useDefaultPath" value="false"/>
+		<property name="useDefaultDomain" value="false"/>
+		<property name="customDomain" value="#{configurationService.configuration.getProperty('shared.cookies.domain')}"/>
 	</bean>
 	
 	<bean id="defaultUserTypeCookieGenerator" class="com.tisl.mpl.storefront.security.cookie.UserTypeCookieGenerator" >
@@ -228,7 +232,26 @@
 		<property name="cookieSecure" value="false"/>
 		<property name="cookieMaxAge" value="360000000"/>
 		<property name="useDefaultPath" value="false"/>
+		<property name="useDefaultDomain" value="false"/>
+		<property name="customDomain" value="#{configurationService.configuration.getProperty('shared.cookies.domain')}"/>
 	</bean>
+	
+	<!-- Luxury site cookies -->
+	<bean id="luxuryEmailCookieGenerator" class="com.tisl.mpl.storefront.security.cookie.LuxuryEmailCookieGenerator" >
+		<property name="cookieSecure" value="false"/>
+		<property name="cookieMaxAge" value="360000000"/>
+		<property name="useDefaultPath" value="false"/>
+		<property name="useDefaultDomain" value="false"/>
+		<property name="customDomain" value="#{configurationService.configuration.getProperty('shared.cookies.domain')}"/> 
+	</bean>
+	<bean id="luxuryUserCookieGenerator" class="com.tisl.mpl.storefront.security.cookie.LuxuryUserCookieGenerator" >
+		<property name="cookieSecure" value="false"/>
+		<property name="cookieMaxAge" value="360000000"/>
+		<property name="useDefaultPath" value="false"/>
+		<property name="useDefaultDomain" value="false"/>
+		<property name="customDomain" value="#{configurationService.configuration.getProperty('shared.cookies.domain')}"/> 
+	</bean>
+	<!-- End -->
 	<!-- BTG filters -->
 	<bean id="abstractBtgFilter" class="com.tisl.mpl.storefront.filters.btg.AbstractBtgFilter" abstract="true" >
 		<property name="eventService" ref="eventService"/>

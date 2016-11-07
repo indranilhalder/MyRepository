@@ -556,9 +556,56 @@ body.page-shopTheStyle .timeout-slider .owl-controls .owl-dots {
     margin-left: auto;
     margin-right: auto;
 }
-  @media (min-width: 651px) {
+/* ADDED TISLUX-1440 STARTS HERE */
+.promo-msg{
+	margin-top: -10px;
+	margin-bottom: 10px;
+}
+/* ADDED TISLUX-1440 ENDS HERE */ 
+
+/* ADDED TISLUX-1407 STARTS HERE */
+.pagination-order-history pagination{
+	margin: 0;
+}
+
+.pagination-order-history .pagination>.active>a,
+.pagination-order-history .pagination>.active>a:focus,
+.pagination-order-history .pagination>.active>a:hover, 
+.pagination-order-history .pagination>.active>span,
+.pagination-order-history .pagination>.active>span:focus, 
+.pagination-order-history .pagination>.active>span:hover,
+.pagination-order-history .pagination>li>a,
+.pagination-order-history .pagination>li>span{
+	background-color: transparent;
+	border: none;
+	color: #000;
+}
+.pagination-order-history .pagination li.active span,
+.pagination-order-history .pagination li.active a{
+	border-bottom: 1px solid #000;
+    text-decoration: none;
+}
+.pagination-order-history .pagination>.active>a,
+.pagination-order-history .pagination>.active>a:focus,
+.pagination-order-history .pagination>.active>a:hover{
+	color: #a9143c;
+}
+.pagination-order-history .pagination>li>a,
+.pagination-order-history .pagination>li>span{
+    float: none;
+	padding: 0;
+	line-height: 30px;
+	margin-left: 0;
+}
+.pagination-order-history pagination{
+	border-radius: 0;
+}
+/* ADDED TISLUX-1407 ENDS HERE */ 
+
+@media (min-width: 651px){
     input[type="checkbox"] + label, input[type="radio"] + label {
-      padding-left: 10px; } }
+      padding-left: 10px; } 
+}
 
 input[type="radio"] + label:before, input[type="checkbox"] + label:before {
   border: 1px solid #fff;
@@ -916,7 +963,7 @@ h2 {
         -webkit-transition: margin 0.3s;		
         -moz-transition: margin 0.3s;		
         transition: margin 0.3s;
-        margin-bottom: 20px;	
+      /*   margin-bottom: 20px;	 */
     }
    /*  body.page-cartPage header{
     margin-bottom: 30px;
@@ -1089,7 +1136,7 @@ h2 {
     clear: both;
     margin-bottom: 0; }
     header .content .top{
- /*    min-height:50px; */
+   /*  min-height:50px; */
     }
     header .content .top::after, header .content .bottom::after {
       clear: both;
@@ -1097,8 +1144,9 @@ h2 {
       display: table; }
   header .content .left, header .content .right {
     display: inline-block;
-    line-height: 50px;
-    vertical-align: middle; }
+    line-height: 42px;
+    vertical-align: middle; 
+      height: 42px;}
     header .content .left a, header .content .right a {
       font-weight: 500; }
   header .content .left {
@@ -1147,7 +1195,7 @@ h2 {
             background-color: #fff; }
           header .content .right > ul > li.bag > a:before {
                content: "";
-    background: url("../images/sprite.svg") no-repeat scroll -92px 0;
+   /*  background: url("../images/sprite.svg") no-repeat scroll -92px 0; */
     top: 7px;
     width: 20px;
     height: 25px;
@@ -1259,7 +1307,7 @@ h2 {
                     -moz-transition: color 0.15s, background 0.15s;
                     transition: color 0.15s, background 0.15s; }
           header .content .right > ul > li.bag:hover{
-            border-left: 2px solid #f0f4f5;
+           /*  border-left: 2px solid #f0f4f5; */
             z-index: 4;
             -webkit-transition: z-index 0s, border 0.3s;
             -moz-transition: z-index 0s, border 0.3s;
@@ -1334,7 +1382,7 @@ h2 {
     }
      @media (min-width:791px) {
         header .content .right > ul > li.wishlist:hover {
-          background: #fafafa; }
+         /*  background: #fafafa;  */}
           header .content .right > ul > li.wishlist:hover .wishlist-info {
             z-index: 10;
             max-height: 1000px;
@@ -1448,7 +1496,7 @@ h2 {
 			 }
 			  @media (min-width:791px) {
         header .content .right > ul > li.sign-in:hover {
-          background-color: #fafafa;
+         /*  background-color: #fafafa; */
           -webkit-transition: background 0.15s;
           -moz-transition: background 0.15s;
           transition: background 0.15s; }
@@ -25139,7 +25187,7 @@ button#buyNowButton[disabled="disabled"], #buyNowButtonQuick-wrong[disabled="dis
     opacity: 0.5;
 } 
 .account-userTitle-custom{
-	line-height:50px;
+	/* line-height:50px; */
     white-space: nowrap;
 }
 
@@ -29132,8 +29180,8 @@ min-width: 150px;
    content:"\f0a2";
     font-size: 13px;
     color: #A9143C;
-    line-height: 46px;
-    height:46px;
+    line-height: 41px;
+    height:41px;
     top: 0px;
     position: relative;
     font-weight: bold;
@@ -47591,6 +47639,7 @@ padding:0 40px;	}
   	transition: opacity 0.25s, top 0.45s;
 }
 
+
 .product-info>div.wishAddLogin.active, .product-info>div.wishAddSucess.active, .product-info>div.wishAlreadyAdded.active,div.wishAlreadyAddedPlp.active,div.wishAddLoginPlp.active,div.wishAddSucessPlp.active,div.wishAddSucessQV.active,div.wishAddLoginQV.active,div.wishAlreadyAddedQV.active{
 	opacity: 1;
 	top: 90px;
@@ -48634,7 +48683,6 @@ margin-top:0px;
 body.pageLabel--Lingerie-page-revised .brand-content-grid .hero ul{
 	overflow:hidden;
 }
-
 .pdp-promo-block.promo-block .pdp-promo-title {
 	cursor: pointer;
 }
@@ -52613,7 +52661,6 @@ body .lookbook_wrapper .listing.wrapper .left-block{
     text-align: left;
 }
 /* shop the look end */
-
 
 /*  Chnage for TISPRD-4587 */
  .importantDisplay{ 
@@ -58534,3 +58581,185 @@ li.facet.js-facet.collectionIds{
 	text-align: center;
     margin-bottom: 10px;
 }
+ 
+ /*--------------Added for luxury site starts-----------*/
+#flip-tabs{  
+    width:340px;  
+    /* position:relative; */
+    position:absolute;
+    z-index:1;  
+}  
+#flip-navigation{  
+   /*  margin:0 0 10px; */ padding:0;   
+    list-style:none;  
+}  
+#flip-navigation li{   
+    display: inline-block;
+    width: 170px;
+    margin: 0;
+    vertical-align: top;
+    float:left;
+      background: #000;
+}  
+#flip-navigation li a{  
+    text-decoration: none;
+   padding: 11px 20px;
+    margin-right: 0;
+  /*   background: #000; */
+    color: #fff;
+    font-weight: bold;
+    font-family: montserrat;
+    letter-spacing: 1.5px;
+    outline: 0;
+    font-size: 12px;
+    text-transform: uppercase;
+    width: 100%;
+    display: block;
+    /* height: 41px; */
+    line-height: 20px;
+    text-align: center;
+}  
+#flip-navigation li a:hover{  
+    background:#999;   
+    color:#f0f0f0;  
+}  
+#flip-navigation li.selected a{  
+    /* background: #a9143c; */
+    color: #fff;
+    font-weight: bold;
+    font-family: montserrat;
+    letter-spacing: 1.5px;
+   /*  width: auto; */
+    display: block;
+   /*  height: 41px; */
+   /*  line-height: 22px; */
+    text-align: center;
+}  
+.luxury_ribbon{
+	max-height:36px;
+}
+.wishlist-content .products>ul>li div.product-info > a{
+	width:20%;
+	float:left;
+	}
+.wishlist-content .products>ul>li div.product-info > a img{
+	width:100%;
+	float:none;
+	}
+@media (max-width: 991px){
+	#flip-navigation li a{
+  padding: 9px 10px;
+  font-size: 11px;
+  width: 120px;}
+  #flip-navigation li{
+  width:120px;}
+}
+@media (min-width:791px){
+header .content .top{
+	background:#a9143c;
+}
+header>.content .bottom .marketplace{
+	margin-top:0px;
+}
+header .content .right > ul > li > a{
+	color:#fff;
+}
+header .content .right li.download-app:hover a, header .content .right li.store-locator-header:hover a
+{
+	color:#a9143c;
+}
+header .content .right > ul > li:hover,header .content .right li.dropdown.sign-in-dropdown.sign-in.ajaxloginhi:hover{
+	    background: #f7bbcb;
+	  /*   color:#a9143c; */
+}
+header .content .right > ul > li.bag{
+	border-left:none;
+}
+header .content .right > ul > li.bag:after{
+	height:0px;
+}
+.bell-icon:after, li.store-locator-header a:before, li.download-app a:before, span.material-icons,header .content .right > ul > li.wishlist > a:before{
+	color:#fff;
+}
+header .content .right li.track.trackOrder:hover .bell-icon:after, li.store-locator-header:hover a:before, li.download-app:hover a:before,header .content .right .sign-in-dropdown:hover span.material-icons,
+.logged_in.dropdown:hover span.material-icons,
+header .content .right > ul > li.wishlist:hover > a:before, header .content .right > ul > li.bag:hover > a:before {
+	color:#a9143c;
+}
+/* header .content .right li ul > li:hover{
+	background-color:#fff; 
+} */
+header.compact .content .top {
+  margin-top: -37px;
+}
+header .content .marketplace.compact a img{
+	margin-top:24px;
+}
+}
+@media (max-width:790px){
+	header > .content .top .toggle {
+  margin-top: 32px;
+}
+header > .content .top.active .toggle{
+	margin-top:0px;
+}
+	#flip-tabs{
+    width: calc(100% - -46px);
+  overflow: hidden;
+  left: -23px;
+  position: relative;}
+	#flip-navigation li{
+	width:50%;
+	float:left;
+	}
+	#flip-navigation li a{
+	width:100%;
+	line-height:15px;}
+}
+@media(max-width:767px){
+	#flip-tabs{
+    width: calc(100% - -24px);
+  left: -12px;
+		}
+}
+@media (max-width:1140px){
+	header .content .right{
+	clear:left;}
+}
+header .content .right > ul > li.bag > a:before {
+    font-family: 'icomoon';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 100;
+    content: "\e605";
+    font-size: 18px;
+    color: #fff;
+    line-height: 18px;
+    margin-right: 5px;
+    top: 3px;
+    position: relative;
+    font-weight: bold;
+} 
+header .content .right ul.loggedIn-flyout li a, header .content .right ul.loggedIn-flyout li{
+	color:#000;
+}
+#flip-navigation li:first-child a{
+	background:#fff;
+	color:#a9143c;
+}
+#flip-navigation li:hover a{
+	text-decoration:underline;
+}
+header > .content .bottom .marketplace .simple-banner-component img {
+    max-height: 45px;
+}
+body.page-multiStepCheckoutSummaryPage header .content .top, body.page-checkout-login header .content .top{
+background: transparent;} 
+/*------- TIS_JIRA:358 for luxury --------*/
+body.page-wishlist .body-Content .wrapper{
+	    padding: 0 30px;
+} 
+.cart.wrapper .product-block li.item ul .item-edit-details li .popover.bottom{
+z-index:11;}
+/*--------------Added for luxury site ends-----------*/
+

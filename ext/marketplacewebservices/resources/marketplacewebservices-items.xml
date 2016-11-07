@@ -83,6 +83,7 @@
 		</itemtype>
 		<!-- Priority -->
 		<itemtype code="UserAccess" autocreate="true" generate="true">
+		<deployment table="MplUserAccess" typecode="25080" />
 				<attributes>
 					<attribute autocreate="true" qualifier="emailID"
 						type="java.lang.String">
@@ -116,6 +117,7 @@
 				</attributes>
 			</itemtype>
 			<itemtype code="UserInstallerAccess" autocreate="true" generate="true">
+			<deployment table="MplUserInslAccess" typecode="25081" />
 				<attributes>
 					<attribute autocreate="true" qualifier="userName"
 						type="java.lang.String">
@@ -145,9 +147,8 @@
 <!-- Priority -->
 <itemtype code="restrictionsetup" autocreate="true"
 					 generate="true">
-					 	
+	    <deployment table="MplRestnSetup" typecode="25082" /> 			 	
 		<attributes>
-					
 					<attribute autocreate="true" qualifier="pincode"
 						type="java.lang.String">
 						<persistence type="property">
@@ -210,10 +211,19 @@
 							optional="false" />
 					</attribute>
 			</attributes>
+			<indexes><index name="MPLRESTRCSTP_IDX">
+						<key attribute="pincode" />
+						<key attribute="sellerId" />
+						<key attribute="USSID" />
+						<key attribute="listingID" />
+						<key attribute="primaryCatID" />
+					</index>
+			</indexes>	
 		</itemtype>
  
  	<itemtype code="SellerTypeGlobalCodes" autocreate="true"
 					 generate="true">
+			<deployment table="MplSellrGbCodes" typecode="25083" /> 
 			<attributes>
 					<attribute autocreate="true" qualifier="globalcode"
 						type="java.lang.String">
@@ -230,31 +240,30 @@
 			</attributes>
 	</itemtype>
 
-	
-	
-	
-	
-<itemtype code="MerchantMasterTable" autocreate="true"
-					 generate="true">
-			<attributes>
-					<attribute autocreate="true" qualifier="MerchantCode"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="false" />
-					</attribute>
-					<attribute autocreate="true" qualifier="MerchantDesc"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="false" />
-					</attribute>				
-			</attributes>
-	</itemtype>
+
+	<itemtype code="MerchantMasterTable" autocreate="true"
+						 generate="true">
+				<deployment table="MplMerchntMstrTbl" typecode="25085" /> 
+				<attributes>
+						<attribute autocreate="true" qualifier="MerchantCode"
+							type="java.lang.String">
+							<persistence type="property" />
+							<modifiers read="true" write="true" search="true"
+								optional="false" />
+						</attribute>
+						<attribute autocreate="true" qualifier="MerchantDesc"
+							type="java.lang.String">
+							<persistence type="property" />
+							<modifiers read="true" write="true" search="true"
+								optional="false" />
+						</attribute>				
+				</attributes>
+		</itemtype>
 <!-- Ticket create interface  -->
 
 <itemtype code="ReturnCategoryCode" autocreate="true"
 					 generate="true">
+			 <deployment table="MplRetnCatCode" typecode="25086" /> 
 			<attributes>
 					<attribute autocreate="true" qualifier="returnCategory"
 						type="java.lang.String">
@@ -272,6 +281,7 @@
 	</itemtype>
 	<itemtype code="TicketTypeCode" autocreate="true"
 					 generate="true">
+			<deployment table="MplTcktTypeCode" typecode="25087" /> 
 			<attributes>
 					<attribute autocreate="true" qualifier="ticketType"
 						type="java.lang.String">
@@ -289,6 +299,7 @@
 	</itemtype>
 	<itemtype code="RefundType" autocreate="true"
 					 generate="true">
+			<deployment table="MplRefundType" typecode="25088" /> 
 			<attributes>
 					<attribute autocreate="true" qualifier="refundedTo"
 						type="java.lang.String">
@@ -306,6 +317,7 @@
 	</itemtype>
 	<itemtype code="CustomerCancellationCode" autocreate="true"
 					 generate="true">
+			<deployment table="MplCustCnclCode" typecode="25089" /> 
 			<attributes>
 					<attribute autocreate="true" qualifier="cancellReason"
 						type="java.lang.String">

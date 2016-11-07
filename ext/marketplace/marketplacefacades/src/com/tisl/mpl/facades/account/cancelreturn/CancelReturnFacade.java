@@ -88,7 +88,7 @@ public interface CancelReturnFacade
 	 * @param pincode
 	 * @return ReturnLogisticsResponseData List
 	 */
-	public List<ReturnLogisticsResponseData> checkReturnLogistics(OrderData orderDetails, String pincode);
+	public List<ReturnLogisticsResponseData> checkReturnLogistics(OrderData orderDetails, String pincode, String transactionId);
 
 	/**
 	 * @author Techouts
