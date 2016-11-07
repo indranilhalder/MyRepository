@@ -482,6 +482,7 @@
 		<property name="sellerArticleSKU" type="String" />
 		<property name="deliveryCost"
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="fulfillmentType" type="String" /> 
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.product.data.MarketplaceDeliveryModesData">
