@@ -235,8 +235,7 @@ public class LpoverrideWidgetController extends DefaultWidgetController
 		{
 			lpAwbSearch.setTransactionType(transactionType);
 			lpAwbSearch.setIsReturn(isReturn);
-			try
-			{
+		
 				final List<TransactionInfo> transactionsList = orderLogisticsUpdateFacade.getOrderLogisticsInfo(lpAwbSearch)
 						.getTransactionInfo(); //if response
 
@@ -261,11 +260,7 @@ public class LpoverrideWidgetController extends DefaultWidgetController
 					}
 				}
 				this.listOfTransactions = transactionsList;
-			}
-			catch (final EntityValidationException e)
-			{
-				Messagebox.show(e.getMessage());
-			}
+			
 		}
 		else
 		{
