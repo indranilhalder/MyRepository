@@ -61,9 +61,13 @@ import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.model.MplAdvancedCategoryCarouselComponentModel;
 import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplImageCategoryComponentModel;
+import com.tisl.mpl.core.model.MplNavigationNodeComponentModel;
 import com.tisl.mpl.core.model.MplShopByLookModel;
 import com.tisl.mpl.core.model.MplShowcaseComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseItemComponentModel;
+import com.tisl.mpl.core.model.OurJourneyComponentModel;
+import com.tisl.mpl.core.model.SignColComponentModel;
+import com.tisl.mpl.core.model.SignColItemComponentModel;
 import com.tisl.mpl.core.model.VideoComponentModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.facades.cms.data.BannerComponentData;
@@ -104,6 +108,31 @@ import com.tisl.mpl.model.cms.components.SmallBrandMobileAppComponentModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
+import com.tisl.mpl.wsdto.LuxBlpCompListWsDTO;
+import com.tisl.mpl.wsdto.LuxBlpCompWsDTO;
+import com.tisl.mpl.wsdto.LuxBlpStripWsDTO;
+import com.tisl.mpl.wsdto.LuxBrandProductsListWsDTO;
+import com.tisl.mpl.wsdto.LuxComponentsListWsDTO;
+import com.tisl.mpl.wsdto.LuxEngagementcomponentWsDTO;
+import com.tisl.mpl.wsdto.LuxHeroBannerWsDTO;
+import com.tisl.mpl.wsdto.LuxHomePageCompWsDTO;
+import com.tisl.mpl.wsdto.LuxJourneyTimeLineListWsDTO;
+import com.tisl.mpl.wsdto.LuxLevelFourWsDTO;
+import com.tisl.mpl.wsdto.LuxLevelOneWsDTO;
+import com.tisl.mpl.wsdto.LuxLevelThreeWsDTO;
+import com.tisl.mpl.wsdto.LuxLevelTwoSliderWsDTO;
+import com.tisl.mpl.wsdto.LuxLevelTwoWsDTO;
+import com.tisl.mpl.wsdto.LuxNavigationWsDTO;
+import com.tisl.mpl.wsdto.LuxOurJourneyComponentWsDTO;
+import com.tisl.mpl.wsdto.LuxOurMissionComponentWsDTO;
+import com.tisl.mpl.wsdto.LuxShopByListWsDTO;
+import com.tisl.mpl.wsdto.LuxShopTheLookWsDTO;
+import com.tisl.mpl.wsdto.LuxShopYourFavListWsDTO;
+import com.tisl.mpl.wsdto.LuxShowcasecomponentWsDTO;
+import com.tisl.mpl.wsdto.LuxSignatureWsDTO;
+import com.tisl.mpl.wsdto.LuxSocialFeedComponentWsDTO;
+import com.tisl.mpl.wsdto.LuxSpringCollectionComponentWsDTO;
+import com.tisl.mpl.wsdto.LuxVideocomponentWsDTO;
 import com.tisl.mpl.wsdto.TextComponentWsDTO;
 
 
@@ -362,7 +391,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getLandingPageForCategory(java.lang.String)
 	 */
 	@Override
@@ -387,7 +416,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getHomePageForMobile()
 	 */
 	@Override
@@ -1521,7 +1550,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateCategoryLandingPageForMobile()
 	 */
 	@Override
@@ -1637,7 +1666,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.facade.cms.MplCmsFacade#populateSubBrandLandingPageForMobile(de.hybris.platform.cms2.model.pages.
 	 * ContentPageModel, java.lang.String)
@@ -1688,7 +1717,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populatePageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -1835,7 +1864,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getCategoryNameForCode(java.lang.String)
 	 */
 	@Override
@@ -1847,7 +1876,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getHeroProducts(java.lang.String)
 	 */
 	@Override
@@ -1921,7 +1950,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateSellerLandingPageForMobile()
 	 */
 	@Override
@@ -1962,7 +1991,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				 * (SmallBrandMobileAppComponentModel) abstractCMSComponentModel; final ComponentData componentData =
 				 * getMobileCategoryComponentConverter().convert(smallBrandMobileComponentModel);
 				 * componentDatas.add(componentData);
-				 * 
+				 *
 				 * }
 				 */
 				else if (abstractCMSComponentModel instanceof PromotionalProductsComponentModel)
@@ -2020,7 +2049,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getSellerMasterName(java.lang.String)
 	 */
 	@Override
@@ -2032,7 +2061,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateSellerPageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -2048,7 +2077,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateOfferPageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -2065,7 +2094,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getlandingForBrand()
 	 */
 	@Override
@@ -2883,7 +2912,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getMegaNavigation()
 	 */
 	@Override

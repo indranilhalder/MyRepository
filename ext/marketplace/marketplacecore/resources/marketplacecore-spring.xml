@@ -1729,8 +1729,6 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 	 <!-- Added for TPR-1035-->
    	<bean id="mplBinErrorJob" class="com.tisl.mpl.core.payment.cronjob.MplBinErrorJob"
    		autowire="byName" />
-
-	<bean id="facetDisplayNameComparator" class="com.tisl.mpl.core.comparator.DisplayFacetNameComparator" />
 	
 	<!-- For Luxury Products -->	
 	<bean id="luxuryProductValueProvider"

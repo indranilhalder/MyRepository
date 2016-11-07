@@ -335,6 +335,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	 * @param response
 	 * @return String
 	 * @throws UnsupportedEncodingException
+	 * @throws CMSItemNotFoundException
 	 */
 	@RequestMapping(value =
 	{ NEW_CATEGORY_URL_PATTERN, NEW_CATEGORY_URL_PATTERN_PAGINATION }, method = RequestMethod.GET)
@@ -346,7 +347,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = "pageSize", required = false) final Integer pageSize,
 			@RequestParam(value = "searchCategory", required = false) String dropDownText,
 			@RequestParam(value = "resetAll", required = false) final boolean resetAll, final Model model,
-			final HttpServletRequest request, final HttpServletResponse response) throws UnsupportedEncodingException
+			final HttpServletRequest request, final HttpServletResponse response) throws UnsupportedEncodingException,
+			CMSItemNotFoundException
 	{
 
 		categoryCode = categoryCode.toUpperCase();
@@ -402,7 +404,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 				final ContentPageModel categoryLandingPage = getLandingPageForCategory(category);
 
 				final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
-						categoryCode, searchQuery, pageNo, showMode, sortCode, count, resetAll, pageFacets);
+						categoryCode, searchQuery, pageNo, showMode, sortCode, getSearchPageSize(), resetAll, pageFacets);
 
 				final List<ProductData> normalProductDatas = searchPageData.getResults();
 				//Set department hierarchy
@@ -517,10 +519,11 @@ public class CategoryPageController extends AbstractCategoryPageController
 				}
 				returnStatement = getViewForPage(model);
 			}
-			catch (final CMSItemNotFoundException e)
+			catch (final CMSItemNotFoundException exp)
 			{
 				LOG.error("************** category method exception " + exp);
-				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exp,
+						MarketplacecommerceservicesConstants.E0000));
 
 				try
 				{
@@ -537,9 +540,9 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 					return performSearch;
 				}
-				catch (final Exception exp)
+				catch (final Exception exception)
 				{
-					ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception,
 							MarketplacecommerceservicesConstants.E0000));
 					try
 					{

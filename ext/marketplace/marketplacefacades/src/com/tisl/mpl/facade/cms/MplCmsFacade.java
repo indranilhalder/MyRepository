@@ -15,6 +15,9 @@ import com.tisl.mpl.facades.cms.data.CollectionPageData;
 import com.tisl.mpl.facades.cms.data.HeroProductData;
 import com.tisl.mpl.facades.cms.data.MplPageData;
 import com.tisl.mpl.facades.cms.data.PageData;
+import com.tisl.mpl.wsdto.LuxBlpCompWsDTO;
+import com.tisl.mpl.wsdto.LuxHomePageCompWsDTO;
+import com.tisl.mpl.wsdto.LuxNavigationWsDTO;
 
 
 
