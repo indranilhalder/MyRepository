@@ -325,12 +325,12 @@ public class PaymentServicesController extends BaseController
 	 * @throws EtailNonBusinessExceptions
 	 */
 	/*
-	 *
+	 * 
 	 * @Secured( { "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
-	 *
+	 * 
 	 * @RequestMapping(value = MarketplacewebservicesConstants.BILLINGADDRESSURL, method = RequestMethod.POST, produces =
 	 * MarketplacewebservicesConstants.APPLICATIONPRODUCES)
-	 *
+	 * 
 	 * @ResponseBody public BillingAddressWsData getBillingAddress(@PathVariable final String userId, @RequestParam final
 	 * String cardRefNo) { LOG.debug(String.format("getBillingAddress : cardRefNo : %s", cardRefNo));
 	 * BillingAddressWsData billingAddress = new BillingAddressWsData(); try { if (StringUtils.isNotEmpty(cardRefNo)) {
@@ -353,18 +353,18 @@ public class PaymentServicesController extends BaseController
 	 * @throws EtailNonBusinessExceptions
 	 */
 	/*
-	 *
+	 * 
 	 * @Secured( { "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
-	 *
+	 * 
 	 * @RequestMapping(value = MarketplacewebservicesConstants.CREATEENTRYINAUDITURL, method = RequestMethod.POST,
 	 * produces = "application/json")
-	 *
+	 * 
 	 * @ResponseBody public MplUserResultWsDto createEntryInAudit(@RequestParam final String juspayOrderId, @RequestParam
 	 * String channel,
-	 *
+	 * 
 	 * @RequestParam final String cartID, @PathVariable final String userId) { LOG.debug(String.format(
 	 * "createEntryInAudit : juspayOrderId: %s | channel: %s | cartID : %s", juspayOrderId, channel));
-	 *
+	 * 
 	 * MplUserResultWsDto auditEntry = new MplUserResultWsDto(); try { channel =
 	 * MarketplacecommerceservicesConstants.CHANNEL_WEBMOBILE; if (StringUtils.isNotEmpty(juspayOrderId) &&
 	 * StringUtils.isNotEmpty(channel) && StringUtils.isNotEmpty(cartID)) { auditEntry =
@@ -598,6 +598,7 @@ public class PaymentServicesController extends BaseController
 					if (validationMsg.equalsIgnoreCase(MarketplacecommerceservicesConstants.OTPVALIDITY))
 					{
 						//after validation create order
+						LOG.debug("Under 1" + validationMsg);
 						final OrderData orderdata = getMplCheckoutFacade().placeOrderByCartId(cartId, userId);
 						if (orderdata != null)
 						{
@@ -613,11 +614,13 @@ public class PaymentServicesController extends BaseController
 					}
 					else if (validationMsg.equalsIgnoreCase(MarketplacecommerceservicesConstants.OTPEXPIRY))
 					{
+						LOG.debug("Under 2" + validationMsg);
 						updateTransactionDtls.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 						updateTransactionDtls.setError(MarketplacecommerceservicesConstants.OTP_EXPIRY_MESSAGE);
 					}
 					else
 					{
+						LOG.debug("Under 3" + validationMsg);
 						updateTransactionDtls.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 						updateTransactionDtls.setError(MarketplacecommerceservicesConstants.INVALID_OTP);
 					}
