@@ -176,19 +176,25 @@ public class OTPDaoImpl implements OTPDao
 			{
 				queryString = MarketplacecommerceservicesConstants.LATESTOTPEMAILQUERY;
 			}
+
+			LOG.debug("LATESTQUERY" + queryString);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("emailId", emailId);
 			if (StringUtils.isNotEmpty(mobileNo))
 			{
 				query.addQueryParameter("mobileNo", mobileNo);
 			}
+			LOG.debug("mobileNo" + mobileNo);
 			query.addQueryParameter("OTPType", OTPType.getCode());
+
 			final List<OTPModel> otpList = getFlexibleSearchService().<OTPModel> search(query).getResult();
 			OTPModel otpModel = null;
 			if (CollectionUtils.isNotEmpty(otpList))
 			{
 				otpModel = otpList.get(0);
+				LOG.debug("LATESTQUERY" + otpModel.getOTPNumber());
 			}
+
 			return otpModel;
 		}
 		catch (final FlexibleSearchException e)

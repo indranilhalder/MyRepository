@@ -607,6 +607,7 @@ public class OTPGenericServiceImpl implements OTPGenericService
 		if (getConfigurationService().getConfiguration().getBoolean(OTP_ENABLED_STRING, true))
 		{
 			otpModel = otpDao.fetchLatestOTP(userIdOrEmail, mobileNo, OTPType);
+			LOG.debug("userIdOrEmail" + userIdOrEmail);
 		}
 		else
 		{
@@ -619,6 +620,7 @@ public class OTPGenericServiceImpl implements OTPGenericService
 		{
 			if (otpModel.getOTPNumber().equals(enteredOTPNumber))
 			{
+				LOG.debug("otpModel" + otpModel.getOTPNumber());
 				Date currentDate = null;
 				try
 				{
