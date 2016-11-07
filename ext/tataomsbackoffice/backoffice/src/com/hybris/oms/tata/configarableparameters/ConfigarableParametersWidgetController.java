@@ -17,7 +17,6 @@ import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Doublebox;
-import org.zkoss.zul.Intbox;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
@@ -54,23 +53,9 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	@Wire
 	private Listbox rdListbox;
 	@Wire
-	private Intbox airDeleveryDays;
-	@Wire
-	private Intbox surDeleveryDays;
-	@Wire
 	private Doublebox sdCharge;
 	@Wire
-	private Doublebox edCharge;
-	@Wire
-	private Label airDaysError;
-	@Wire
-	private Label surfaceDaysError;
-	@Wire
-	private Label sdChargeError;
-	@Wire
-	private Label edChargeError;
-	@Wire
-	private Label successLabel;
+	private Label sdChargeMessage;
 	@Wire
 	private Timebox sdTimeBoxFrom;
 	@Wire
@@ -109,7 +94,6 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	{
 		this.configarableParameterFacade = configarableParameterFacade;
 	}
-
 
 	@Override
 	public void initialize(final Component comp)
@@ -155,41 +139,18 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	@ViewEvent(componentID = TataomsbackofficeConstants.SAVEMPLBUCCONFIG, eventName = Events.ON_CLICK)
 	public void saveMplBucConfigaration()
 	{
-		final Integer airDays = airDeleveryDays.getValue();
-		final Integer surDays = surDeleveryDays.getValue();
 		final Double sd = sdCharge.getValue();
-		final Double ed = edCharge.getValue();
-		if (airDays == null || airDays <= 0)
-		{
-			airDaysError.setVisible(true);
-		}
-		else if (surDays == null || surDays <= 0)
-		{
-			surfaceDaysError.setVisible(true);
 
-		}
-		else if (sd == null || sd <= 0)
+		if (sd == null || sd <= 0)
 		{
-			sdChargeError.setVisible(true);
-		}
-		else if (ed == null || ed <= 0)
-		{
-			edChargeError.setVisible(true);
+			sdChargeMessage.setVisible(true);
 		}
 		else
 		{
 			final MplBUCConfigurationsData mplBucConfigData = new MplBUCConfigurationsData();
-			mplBucConfigData.setAirDeliveryBuffer(airDays);
-			mplBucConfigData.setSurDeliveryBuffer(surDays);
 			mplBucConfigData.setSdCharge(sd);
-			mplBucConfigData.setEdCharge(ed);
 			configarableParameterFacade.saveMplBUCConfigurations(mplBucConfigData);
-			successLabel.setVisible(true);
-
-			surDeleveryDays.setValue(0);
-			airDeleveryDays.setValue(0);
-			sdCharge.setValue(0.0);
-			edCharge.setValue(0.0);
+			Messagebox.show("Sd Charge Saved SucessFully..");
 		}
 	}
 
@@ -402,10 +363,9 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	@ViewEvent(componentID = TataomsbackofficeConstants.SCHEDULEDDELIVERY_ITEMSAVE, eventName = Events.ON_CLICK)
 	public void sdTimeSlotsSave()
 	{
-
-
 		LOG.info("sd time slots save " + sdTimeSlots.toString());
 		configarableParameterFacade.saveMplTimeSlots(sdTimeSlots, TataomsbackofficeConstants.SCHEDULEDDELIVERY);
+		Messagebox.show("Scheduled Delivery Time Slots Saved Success");
 	}
 
 	/**
@@ -416,6 +376,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	{
 		LOG.info("ed timeslots save" + edTimeSlots.toString());
 		configarableParameterFacade.saveMplTimeSlots(edTimeSlots, TataomsbackofficeConstants.EXPRESSDELIVERY);
+		Messagebox.show("Express Delivery Time Slots Saved Success");
 	}
 
 	/**
@@ -426,5 +387,6 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	{
 		LOG.info("rd timeslots save" + rdTimeSlots.toString());
 		configarableParameterFacade.saveMplTimeSlots(rdTimeSlots, TataomsbackofficeConstants.RETURNDELIVERY);
+		Messagebox.show("Return Delivery Time Slots Saved Success");
 	}
 }

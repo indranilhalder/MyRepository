@@ -28,7 +28,10 @@ import com.hybris.oms.tata.model.MplTimeSlotsModel;
 public class DefaultConfigarableParameterDAO implements ConfigarableParameterDAO
 {
 	private static final Logger LOG = LoggerFactory.getLogger(DefaultConfigarableParameterDAO.class);
-
+	private static final String LRP_CONFIG_GET_ALLTIMESLOTS_QUERY = "SELECT {p:" + MplTimeSlotsModel.PK + "} "//
+			+ "FROM {" + MplTimeSlotsModel._TYPECODE + " AS p} ";
+	private static final String LRP_CONFIG_GET_ALLMPLBUCCONFIGARATIONS = "SELECT {p:" + MplBUCConfigurationsModel.PK + "} "//
+			+ "FROM {" + MplBUCConfigurationsModel._TYPECODE + " AS p} ";
 
 	/**
 	 * We use hybris' FlexibleSearchService for running queries against the database
@@ -48,16 +51,9 @@ public class DefaultConfigarableParameterDAO implements ConfigarableParameterDAO
 	@Override
 	public List<MplTimeSlotsModel> onLoadMplTimeSlots()
 	{
-
-		// Build a query for the flexible search.
-		final String queryString = //
-		"SELECT {p:" + MplTimeSlotsModel.PK + "} "//
-				+ "FROM {" + MplTimeSlotsModel._TYPECODE + " AS p} ";
-
-		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(LRP_CONFIG_GET_ALLTIMESLOTS_QUERY);
 		// Return the list of MplTimeSlotsModel.
 		return flexibleSearchService.<MplTimeSlotsModel> search(query).getResult();
-
 	}
 
 	/*
@@ -72,8 +68,8 @@ public class DefaultConfigarableParameterDAO implements ConfigarableParameterDAO
 
 		LOG.info("save MplTimeSlots dao");
 
-		final StringBuilder queryString = new StringBuilder("SELECT {p:" + MplTimeSlotsModel.PK + "} "//
-				+ "FROM {" + MplTimeSlotsModel._TYPECODE + " AS p} WHERE {p:" + MplTimeSlotsModel.TIMESLOTTYPE + "} " + "LIKE ");
+		final StringBuilder queryString = new StringBuilder(
+				LRP_CONFIG_GET_ALLTIMESLOTS_QUERY + " WHERE {p:" + MplTimeSlotsModel.TIMESLOTTYPE + "} " + "LIKE ");
 
 		LOG.info(queryString.toString());
 
@@ -115,15 +111,10 @@ public class DefaultConfigarableParameterDAO implements ConfigarableParameterDAO
 	@Override
 	public void saveMplBUCConfigurations(final MplBUCConfigurationsModel mplBucConfigurations)
 	{
-
-		if (mplBucConfigurations != null)
-		{
-			modelService.save(mplBucConfigurations);
-		}
-		else
-		{
-			LOG.warn("Empty mplBucConfigurations ");
-		}
-
+		final FlexibleSearchQuery flexibleSearchQuery = new FlexibleSearchQuery(LRP_CONFIG_GET_ALLMPLBUCCONFIGARATIONS);
+		final MplBUCConfigurationsModel mplBUCModel = flexibleSearchService.<MplBUCConfigurationsModel> search(flexibleSearchQuery)
+				.getResult().get(0);
+		mplBUCModel.setSdCharge(mplBucConfigurations.getSdCharge());
+		modelService.save(mplBUCModel);
 	}
 }

@@ -42,7 +42,7 @@ public class DefaultConfigarableParameterService implements ConfigrableParameter
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.hybris.oms.tata.services.ConfigrableParameterService#onLoadMplTimeSlots()
 	 */
 	@Override
@@ -53,7 +53,7 @@ public class DefaultConfigarableParameterService implements ConfigrableParameter
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.hybris.oms.tata.services.ConfigrableParameterService#saveMplTimeSlots(java.util.List)
 	 */
 	@Override
@@ -65,17 +65,14 @@ public class DefaultConfigarableParameterService implements ConfigrableParameter
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.hybris.oms.tata.services.ConfigrableParameterService#saveMplBUCConfigurations(com.hybris.oms.tata.model.
 	 * MplBUCConfigurationsModel)
 	 */
 	@Override
 	public void saveMplBUCConfigurations(final MplBUCConfigurationsModel mplBucConfigurations)
 	{
-		if (mplBucConfigurations != null)
-		{
-			configarableParameterDAO.saveMplBUCConfigurations(mplBucConfigurations);
-		}
+		configarableParameterDAO.saveMplBUCConfigurations(mplBucConfigurations);
 
 	}
 

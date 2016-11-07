@@ -83,7 +83,7 @@ public class DefaultConfigarableParameterFacade implements ConfigarableParameter
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.hybris.oms.tata.facade.ConfigarableParameterFacade#onLoadMplTimeSlots()
 	 */
 	@Override
