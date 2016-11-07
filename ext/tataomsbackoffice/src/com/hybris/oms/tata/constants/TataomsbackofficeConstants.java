@@ -17,7 +17,6 @@ package com.hybris.oms.tata.constants;
 public final class TataomsbackofficeConstants extends GeneratedTataomsbackofficeConstants
 {
 	public static final String EXTENSIONNAME = "tataomsbackoffice";
-
 	public static final String EXPRESSDELIVERY = "ED";
 	public static final String RETURNDELIVERY = "RD";
 	public static final String SCHEDULEDDELIVERY = "SD";
@@ -41,6 +40,9 @@ public final class TataomsbackofficeConstants extends GeneratedTataomsbackoffice
 	public static final String REVERSE_ORDERSTATUS_REVERSEAWB = "REVRSAWB";
 	public static final String REVERSE_ORDERSTATUS_RETURINIT = "RETUINIT";
 	public static final String LPNAME_NONE = "NONE";
+	public static final String UPLOAD_LPANDAWB_FIELDS = "ordered,orderlineid,lpname,awbnumber,flowtype";
+	public static final String SPLIT_BY_COMMA = ",";
+	public static final String SPLIT_BY_NEWLINE = "\n";
 
 	private TataomsbackofficeConstants()
 	{
