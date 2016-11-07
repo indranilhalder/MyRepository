@@ -953,8 +953,18 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 								&& cartData.getTotalPrice().getValue().doubleValue() > Double.parseDouble(tshipThresholdValue))
 
 						{
-							marketplaceDeliveryModeData.setDeliveryCost(createPrice(getCartService().getSessionCart(),
-									Double.valueOf(0.0)));
+							//******New Code Added for TPR-579 : TSHIP Shipping Charges******************
+							if (validate(fulfillmentType, marketplaceDeliveryModeData.getFulfillmentType()))
+							{
+								marketplaceDeliveryModeData.setDeliveryCost(createPrice(getCartService().getSessionCart(),
+										marketplaceDeliveryModeData.getDeliveryCost().getDoubleValue()));
+							}
+							else
+							{
+								marketplaceDeliveryModeData.setDeliveryCost(createPrice(getCartService().getSessionCart(),
+										Double.valueOf(0.0)));
+							}
+							//******************New Code Added for TPR-579 : TSHIP Shipping Charges ends***********
 						}
 					}
 				}
@@ -963,6 +973,25 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 		return deliveryModeDataMap;
 	}
+
+	/**
+	 * New Code Added for TPR-579: Matches Fulfillment Modes
+	 *
+	 * @param fulfillmentType
+	 * @param fulfillmentTypeData
+	 * @return flag
+	 */
+	private boolean validate(final String fulfillmentType, final String fulfillmentTypeData)
+	{
+		boolean flag = false;
+		if (fulfillmentType.equalsIgnoreCase(fulfillmentTypeData))
+		{
+			flag = true;
+		}
+		return flag;
+	}
+
+
 
 	/*
 	 * (non-Javadoc)

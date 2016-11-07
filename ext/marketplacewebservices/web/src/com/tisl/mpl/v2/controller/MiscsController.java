@@ -54,9 +54,9 @@ import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.enumeration.EnumerationService;
-import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.event.EventService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
+import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.storelocator.location.Location;
@@ -119,7 +119,6 @@ import com.tisl.mpl.core.model.MplEnhancedSearchBoxComponentModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.brand.BrandFacade;
-import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.netbank.MplNetBankingFacade;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
@@ -256,12 +255,18 @@ public class MiscsController extends BaseController
 	private PincodeServiceFacade pincodeServiceFacade;
 	@Resource(name = "categoryService")
 	private CategoryService categoryService;
-	/*
-	 * @Resource(name = "mplPaymentFacade") private MplPaymentFacade mplPaymentFacade;
+	@Autowired
+	private ModelService modelService;
+
 	private static final String APPLICATION_TYPE = "application/json";
 	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
-
-	/**
+	/*
+	 * @Resource(name = "mplPaymentFacade") private MplPaymentFacade mplPaymentFacade; private static final String
+	 * APPLICATION_TYPE = "application/json"; public static final String EMAIL_REGEX =
+	 * "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
+	 * 
+	 * /**
+	 * 
 	 * @return the configurationService
 	 */
 	@Autowired
@@ -660,9 +665,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * restriction set up interface to save the data comming from seller portal
-	 *
+	 * 
 	 * @param restrictionXML
-	 *
+	 * 
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/restrictionServer", method = RequestMethod.POST)
