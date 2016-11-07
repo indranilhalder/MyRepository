@@ -28,6 +28,7 @@ import org.zkoss.zul.Messagebox;
 import com.hybris.cockpitng.core.user.AuthorityGroupService;
 import com.hybris.cockpitng.core.user.CockpitUserService;
 import com.hybris.cockpitng.core.user.impl.AuthorityGroup;
+import com.hybris.cockpitng.util.DefaultWidgetController;
 import com.hybris.oms.api.logistics.LogisticsFacade;
 import com.hybris.oms.api.orderlogistics.OrderLogisticsFacade;
 import com.hybris.oms.domain.logistics.dto.Logistics;
@@ -45,8 +46,12 @@ import com.hybris.oms.tata.constants.TataomsbackofficeConstants;
  *
  * @author prabhakar
  */
-public class AwbEditWidgetController
+public class AwbEditWidgetController extends DefaultWidgetController
 {
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
 	private static final Logger LOG = Logger.getLogger(AwbEditWidgetController.class);
 	private String txtOrderId;
 	private String txtTransactionId;
@@ -124,12 +129,23 @@ public class AwbEditWidgetController
 
 	@Command("isReturnCheck")
 	@NotifyChange(
-	{ "ordersStatus" })
+	{ "ordersStatus", "selectionOrderStatus", "listOfTransactions", "txtOrderId", "txtsellerId", "txtSlaveId", "selectionLpName",
+			"txtTransactionId" })
 	public void isReturnCheck(@BindingParam("checkedValue") final Boolean isReturnCheckdValue)
 	{
 		LOG.info("is Return Checked Value" + isReturnCheckdValue);
+		selectionOrderStatus = null;
+		txtOrderId = null;
+		txtsellerId = null;
+		txtSlaveId = null;
+		selectionLpName = null;
+		txtTransactionId = null;
 		this.isReturn = isReturnCheckdValue;
 		this.ordersStatus = getOrderStatuses(this.isReturn);
+		if (this.listOfTransactions != null && CollectionUtils.isNotEmpty(this.listOfTransactions))
+		{
+			this.listOfTransactions.clear();
+		}
 	}
 
 	/*
@@ -144,13 +160,12 @@ public class AwbEditWidgetController
 		if (isReturn)
 		{
 			ordersStatus.add(TataomsbackofficeConstants.REVERSE_ORDERSTATUS_REVERSEAWB);
-			ordersStatus.add(TataomsbackofficeConstants.REVERSE_ORDERSTATUS_RETURINIT);
 			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_NONE);
 		}
 		else
 		{
-			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_HOTCOURI);
 			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_SCANNED);
+			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_HOTCOURI);
 			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_NONE);
 		}
 		return ordersStatus;

@@ -11,11 +11,15 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
+import org.zkoss.zul.Textbox;
 
 import com.hybris.cockpitng.annotations.SocketEvent;
+import com.hybris.cockpitng.annotations.ViewEvent;
 import com.hybris.cockpitng.util.DefaultWidgetController;
 import com.hybris.oms.api.orderlogistics.OrderLogisticsFacade;
 import com.hybris.oms.domain.lpawb.dto.LPAWBEditAuditDto;
@@ -39,6 +43,12 @@ public class LPOverrideAndAwbEditReportWidgetController extends DefaultWidgetCon
 	private Listbox listBoxData;
 	@WireVariable("orderLogisticsRestClient")
 	private OrderLogisticsFacade orderLogisticsFacade;
+	@Wire
+	private Textbox txtOrderId;
+	private Textbox txtTransactionId;
+	private Listbox typeListbox;
+	private Listbox flowTypeListbox;
+
 
 	@Override
 	public void initialize(final Component comp)
@@ -78,5 +88,12 @@ public class LPOverrideAndAwbEditReportWidgetController extends DefaultWidgetCon
 		LOG.info("Start Date " + startDate + "******* End Date " + endDate);
 		getLpOverrideAndAwbEditReport(startDate, endDate);
 	}
+
+	@ViewEvent(componentID = "LpAndAwbReportsearch", eventName = Events.ON_CLICK)
+	public void sshipOrderSearch()
+	{
+
+	}
+
 
 }

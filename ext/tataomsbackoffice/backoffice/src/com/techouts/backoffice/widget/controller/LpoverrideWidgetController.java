@@ -3,15 +3,19 @@
  */
 package com.techouts.backoffice.widget.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.processing.FilerException;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.zkoss.bind.BindContext;
 import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
@@ -19,7 +23,9 @@ import org.zkoss.bind.annotation.ContextParam;
 import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.util.media.Media;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.event.UploadEvent;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
@@ -31,8 +37,10 @@ import org.zkoss.zul.Messagebox;
 import com.hybris.cockpitng.core.user.AuthorityGroupService;
 import com.hybris.cockpitng.core.user.CockpitUserService;
 import com.hybris.cockpitng.core.user.impl.AuthorityGroup;
+import com.hybris.cockpitng.util.DefaultWidgetController;
 import com.hybris.oms.api.logistics.LogisticsFacade;
 import com.hybris.oms.api.orderlogistics.OrderLogisticsFacade;
+import com.hybris.oms.domain.exception.EntityValidationException;
 import com.hybris.oms.domain.logistics.dto.Logistics;
 import com.hybris.oms.domain.lpawb.dto.LPAWBSearch;
 import com.hybris.oms.domain.lpawb.dto.LPOverrideAWBEdit;
@@ -48,8 +56,13 @@ import com.hybris.oms.tata.constants.TataomsbackofficeConstants;
  *
  * @author prabhakar
  */
-public class LpoverrideWidgetController
+public class LpoverrideWidgetController extends DefaultWidgetController
 {
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static final Logger LOG = Logger.getLogger(LpoverrideWidgetController.class);
 
 	private String txtOrderId;
@@ -65,9 +78,9 @@ public class LpoverrideWidgetController
 	private List<OrderLineResponse> orderlineRespone;
 	private List<String> activelpList; //active logistcs Partners
 	private List<String> dropDownSearchLpList; //active logistcs Partners drop down
-	private Map<String, TransactionInfo> map;//modifed transaction
+	private Map<String, TransactionInfo> modifiedTransactinTrack;//modifed transaction
 	private List<String> ordersStatus;// orders statuses
-	private Map<String, String> previousAwbNumberForTrack; //track  awb numbers for scanned/HOTC
+	private Map<String, TransactionInfo> previousLpAndAwbNumberForTrack; //track  awb numbers for scanned/HOTC
 	@WireVariable("orderLogisticsRestClient")
 	private OrderLogisticsFacade orderLogisticsUpdateFacade;
 	@WireVariable("logisticsRestClient")
@@ -80,6 +93,8 @@ public class LpoverrideWidgetController
 	private Boolean displayPopup = Boolean.FALSE;
 	@Wire("#listBoxData")
 	private Listbox listBoxData;
+	private static final String CSV = ".csv";
+	private String[] LpUploadFields;
 
 	@Init
 	@NotifyChange(
@@ -89,11 +104,13 @@ public class LpoverrideWidgetController
 		LOG.info("inside init");
 		ordersStatus = getOrderStatuses(isReturn);
 		activelpList = getLpSet();
-		if (map == null)
-		{
-			map = new HashMap<String, TransactionInfo>();
-		}
 		dropDownSearchLpList = new ArrayList<String>();
+		LOG.info("inside onchange");
+		if (modifiedTransactinTrack == null)
+		{
+			modifiedTransactinTrack = new HashMap<String, TransactionInfo>();
+		}
+		LpUploadFields = TataomsbackofficeConstants.UPLOAD_LPANDAWB_FIELDS.split(TataomsbackofficeConstants.SPLIT_BY_COMMA);
 		dropDownSearchLpList.addAll(activelpList);
 		dropDownSearchLpList.add(TataomsbackofficeConstants.LPNAME_NONE);
 	}
@@ -128,30 +145,39 @@ public class LpoverrideWidgetController
 			ordersStatus.add(TataomsbackofficeConstants.REVERSE_ORDERSTATUS_REVERSEAWB);
 			ordersStatus.add(TataomsbackofficeConstants.REVERSE_ORDERSTATUS_RETURINIT);
 			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_NONE);
-
 		}
 		else
 		{
-			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_HOTCOURI);
 			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_ORDALLOC);
 			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_ODREALOC);
 			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_PILIGENE);
 			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_PICKCONF);
 			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_SCANNED);
+			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_HOTCOURI);
 			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_NONE);
 		}
 		return ordersStatus;
 	}
 
-
 	@Command("isReturnCheck")
 	@NotifyChange(
-	{ "ordersStatus" })
+	{ "ordersStatus", "selectionOrderStatus", "listOfTransactions", "txtOrderId", "txtsellerId", "txtSlaveId", "selectionLpName",
+			"txtTransactionId" })
 	public void isReturnCheck(@BindingParam("checkedValue") final Boolean isReturnCheckdValue)
 	{
 		LOG.info("is Return Checked Value" + isReturnCheckdValue);
+		selectionOrderStatus = null;
+		txtOrderId = null;
+		txtsellerId = null;
+		txtSlaveId = null;
+		selectionLpName = null;
+		txtTransactionId = null;
 		this.isReturn = isReturnCheckdValue;
 		this.ordersStatus = getOrderStatuses(this.isReturn);
+		if (this.listOfTransactions != null && CollectionUtils.isNotEmpty(this.listOfTransactions))
+		{
+			this.listOfTransactions.clear();
+		}
 	}
 
 	/*
@@ -159,14 +185,14 @@ public class LpoverrideWidgetController
 	 */
 	@Command
 	@NotifyChange(
-	{ "listOfTransactions" })
+	{ "listOfTransactions", "displayPopup" })
 	public void lpSearch()
 	{
-
+		displayPopup = Boolean.FALSE;
 		LOG.info("inside lp search");
 		final LPAWBSearch lpAwbSearch = new LPAWBSearch();
 		int count = 0;
-		previousAwbNumberForTrack = new HashMap<String, String>();
+		previousLpAndAwbNumberForTrack = new HashMap<String, TransactionInfo>();
 		if (txtOrderId != null && StringUtils.isNotEmpty(txtOrderId))//orderid
 		{
 			++count;
@@ -209,30 +235,43 @@ public class LpoverrideWidgetController
 		{
 			lpAwbSearch.setTransactionType(transactionType);
 			lpAwbSearch.setIsReturn(isReturn);
-			final List<TransactionInfo> transactionsList = orderLogisticsUpdateFacade.getOrderLogisticsInfo(lpAwbSearch)
-					.getTransactionInfo(); //if response
-			for (final TransactionInfo transaction : transactionsList)
+			try
 			{
-				final String orderStatus = transaction.getOrderStatus();
-				if (orderStatus.equalsIgnoreCase(TataomsbackofficeConstants.ORDERSTATUS_SCANNED)
-						|| orderStatus.equalsIgnoreCase(TataomsbackofficeConstants.ORDERSTATUS_HOTCOURI)
-						|| orderStatus.equalsIgnoreCase(TataomsbackofficeConstants.REVERSE_ORDERSTATUS_REVERSEAWB))
+				final List<TransactionInfo> transactionsList = orderLogisticsUpdateFacade.getOrderLogisticsInfo(lpAwbSearch)
+						.getTransactionInfo(); //if response
+
+				for (final TransactionInfo transaction : transactionsList)
 				{
-					transaction.setAwbReadOnly(Boolean.FALSE);
-					previousAwbNumberForTrack.put(transaction.getTransactionId(), transaction.getAwbNumber());
+					final String orderStatus = transaction.getOrderStatus();
+					if (orderStatus.equalsIgnoreCase(TataomsbackofficeConstants.ORDERSTATUS_SCANNED)
+							|| orderStatus.equalsIgnoreCase(TataomsbackofficeConstants.ORDERSTATUS_HOTCOURI)
+							|| orderStatus.equalsIgnoreCase(TataomsbackofficeConstants.REVERSE_ORDERSTATUS_REVERSEAWB))
+					{
+						transaction.setAwbReadOnly(Boolean.FALSE);
+						//create new Transaction Object  for track
+						final TransactionInfo newTransaction = new TransactionInfo();
+						newTransaction.setAwbNumber(transaction.getAwbNumber());
+						newTransaction.setLogisticName(transaction.getLogisticName());
+						previousLpAndAwbNumberForTrack.put(transaction.getTransactionId(), newTransaction);
+					}
+					else
+					{
+						transaction.setAwbReadOnly(Boolean.TRUE); //this step is removed once awbEditable default value==true
+
+					}
 				}
-				else
-				{
-					transaction.setAwbReadOnly(Boolean.TRUE);
-					//this step is removed once awbEditable default value== false at dto level
-				}
+				this.listOfTransactions = transactionsList;
 			}
-			this.listOfTransactions = transactionsList;
+			catch (final EntityValidationException e)
+			{
+				Messagebox.show(e.getMessage());
+			}
 		}
 		else
 		{
 			Messagebox.show("Atleast one field is mandatory");
 		}
+
 
 	}
 
@@ -244,9 +283,9 @@ public class LpoverrideWidgetController
 	{ "lpOverrideEnabled" })
 	public void onChangeTransactionInfo(@BindingParam("transaction") final TransactionInfo selectedTransaction)
 	{
-		LOG.info("inside onchange");
-		map.put(selectedTransaction.getTransactionId(), selectedTransaction); //if required lp flag then send as bind prarm attribute
-		LOG.info("the final map " + map.toString());
+
+		modifiedTransactinTrack.put(selectedTransaction.getTransactionId(), selectedTransaction); //if required lp flag then send as bind prarm attribute
+
 	}
 
 	/*
@@ -261,32 +300,38 @@ public class LpoverrideWidgetController
 		LOG.info("in side lp override and servicable" + lpOverride);
 
 		final List<OrderLineInfo> listOfOrderLineInfo = new ArrayList<OrderLineInfo>();
-		if (CollectionUtils.sizeIsEmpty(map))
+		if (modifiedTransactinTrack != null && modifiedTransactinTrack.isEmpty())
 		{
 			Messagebox.show("No Changes Found ");
 			displayPopup = Boolean.FALSE;
 			return;
 		}
 
-		for (final TransactionInfo transaction : map.values())
+		for (final TransactionInfo currentTransaction : modifiedTransactinTrack.values())
 		{
-
-			if (transaction.getOrderStatus().equalsIgnoreCase(TataomsbackofficeConstants.ORDERSTATUS_HOTCOURI)
-					|| transaction.getOrderStatus().equalsIgnoreCase(TataomsbackofficeConstants.ORDERSTATUS_SCANNED))
+			if (currentTransaction.getOrderStatus().equalsIgnoreCase(TataomsbackofficeConstants.ORDERSTATUS_HOTCOURI)
+					|| currentTransaction.getOrderStatus().equalsIgnoreCase(TataomsbackofficeConstants.ORDERSTATUS_SCANNED))
 			{
-				//there no pssibility to get the null for this
-				if (previousAwbNumberForTrack.get(transaction.getTransactionId()).equals(transaction.getAwbNumber())) //previous awb number with changed awb number
+				//if changed transaction order status HOTC/SCANNED  then awb manditory to change
+				final TransactionInfo previousTransaction = previousLpAndAwbNumberForTrack.get(currentTransaction.getTransactionId());
+				LOG.info("Previous Transaction details" + previousTransaction.getLogisticName() + "\t"
+						+ previousTransaction.getAwbNumber());
+				LOG.info("Current Transasction details" + currentTransaction.getLogisticName() + "\t"
+						+ currentTransaction.getAwbNumber());
+
+				if (!previousTransaction.getLogisticName().equals(currentTransaction.getLogisticName())
+						&& previousTransaction.getAwbNumber().equals(currentTransaction.getAwbNumber()))
 				{
 					Messagebox.show(
-							"Changes could not processed. AWB number should be changed along with LP name when order status is HOTC/SCANNED");
+							"Changes could not processed. AWB number should be changed along with LP name when order status is SCANNED/HOTC");
 					return;
 				}
 			}
 			final OrderLineInfo orderLineInfo = new OrderLineInfo();
-			orderLineInfo.setOrderId(transaction.getOrderId());
-			orderLineInfo.setTransactionId(transaction.getTransactionId());
-			orderLineInfo.setLogisticName(transaction.getLogisticName());
-			orderLineInfo.setAwbNumber(transaction.getAwbNumber());
+			orderLineInfo.setOrderId(currentTransaction.getOrderId());
+			orderLineInfo.setTransactionId(currentTransaction.getTransactionId());
+			orderLineInfo.setLogisticName(currentTransaction.getLogisticName());
+			orderLineInfo.setAwbNumber(currentTransaction.getAwbNumber());
 			orderLineInfo.setLpOverride(lpOverride); //this will get from check box button
 			orderLineInfo.setNextLP(Boolean.FALSE);//this will get from checkbox button
 			listOfOrderLineInfo.add(orderLineInfo);
@@ -314,12 +359,9 @@ public class LpoverrideWidgetController
 		{
 			displayPopup = Boolean.TRUE;
 		}
-		map.clear();
-
+		modifiedTransactinTrack.clear();
+		previousLpAndAwbNumberForTrack.clear();
 	}
-
-
-
 
 	@Command("nextLpSave")
 	@NotifyChange(
@@ -335,46 +377,49 @@ public class LpoverrideWidgetController
 			return;
 		}
 
-		if (this.selectedEntities != null)
+		for (final TransactionInfo transaction : selectedEntities)
 		{
-			for (final TransactionInfo transaction : selectedEntities)
+			if (transaction.getOrderStatus().equals(TataomsbackofficeConstants.ORDERSTATUS_SCANNED)
+					|| transaction.getOrderStatus().equals(TataomsbackofficeConstants.ORDERSTATUS_HOTCOURI))
 			{
-				final OrderLineInfo orderLineInfo = new OrderLineInfo();
-				orderLineInfo.setOrderId(transaction.getOrderId());
-				orderLineInfo.setTransactionId(transaction.getTransactionId());
-				orderLineInfo.setLogisticName(transaction.getLogisticName());
-				orderLineInfo.setAwbNumber(transaction.getAwbNumber());
-				orderLineInfo.setLpOverride(Boolean.FALSE); //this will get from check box button
-				orderLineInfo.setNextLP(Boolean.TRUE);//this will get from checkbox button
-				listOfOrderLineInfo.add(orderLineInfo);
+				Messagebox.show("Next Lp could not processed. Some of the order status is SCANNED/HOTC");
+				selectedEntities.clear();
+				return;
 			}
-			LOG.info("No Of Transactions For Next Lp " + listOfOrderLineInfo.size());
-			final LPOverrideAWBEdit lpOverrideEdit = new LPOverrideAWBEdit();
-			lpOverrideEdit.setOrderLineInfo(listOfOrderLineInfo);
-			lpOverrideEdit.setIsReturn(isReturn);
-			final String userId = cockpitUserService.getCurrentUser();
-			lpOverrideEdit.setUserId(userId);
-			activeUserRole = authorityGroupService.getActiveAuthorityGroupForUser(userId);
-			if (activeUserRole != null)
-			{
-				lpOverrideEdit.setRoleId(activeUserRole.getCode());
-			}
-			else
-			{
-				lpOverrideEdit.setRoleId("none");
-			}
-			lpOverrideEdit.setTransactionType(transactionType);
-			final LPOverrideAWBEditResponse lpOverrideAwbEditResponse = orderLogisticsUpdateFacade
-					.updateOrderLogisticOrAwbNumber(lpOverrideEdit);
-			orderlineRespone = lpOverrideAwbEditResponse.getOrderLineResponse();
-			listBoxData.clearSelection();
-			selectedEntities.clear();
-			if (CollectionUtils.isNotEmpty(orderlineRespone))
-			{
-				displayPopup = Boolean.TRUE;
-			}
+			final OrderLineInfo orderLineInfo = new OrderLineInfo();
+			orderLineInfo.setOrderId(transaction.getOrderId());
+			orderLineInfo.setTransactionId(transaction.getTransactionId());
+			orderLineInfo.setLogisticName(transaction.getLogisticName());
+			orderLineInfo.setAwbNumber(transaction.getAwbNumber());
+			orderLineInfo.setLpOverride(Boolean.FALSE); //this will get from check box button
+			orderLineInfo.setNextLP(Boolean.TRUE);//this will get from checkbox button
+			listOfOrderLineInfo.add(orderLineInfo);
 		}
-
+		LOG.info("No Of Transactions For Next Lp " + listOfOrderLineInfo.size());
+		final LPOverrideAWBEdit lpOverrideEdit = new LPOverrideAWBEdit();
+		lpOverrideEdit.setOrderLineInfo(listOfOrderLineInfo);
+		lpOverrideEdit.setIsReturn(isReturn);
+		final String userId = cockpitUserService.getCurrentUser();
+		lpOverrideEdit.setUserId(userId);
+		activeUserRole = authorityGroupService.getActiveAuthorityGroupForUser(userId);
+		if (activeUserRole != null)
+		{
+			lpOverrideEdit.setRoleId(activeUserRole.getCode());
+		}
+		else
+		{
+			lpOverrideEdit.setRoleId("none");
+		}
+		lpOverrideEdit.setTransactionType(transactionType);
+		final LPOverrideAWBEditResponse lpOverrideAwbEditResponse = orderLogisticsUpdateFacade
+				.updateOrderLogisticOrAwbNumber(lpOverrideEdit);
+		orderlineRespone = lpOverrideAwbEditResponse.getOrderLineResponse();
+		listBoxData.clearSelection();
+		selectedEntities.clear();
+		if (CollectionUtils.isNotEmpty(orderlineRespone))
+		{
+			displayPopup = Boolean.TRUE;
+		}
 	}
 
 	@AfterCompose
@@ -601,4 +646,75 @@ public class LpoverrideWidgetController
 		return dropDownSearchLpList;
 	}
 
+	@Command
+	public void onUploadCSV(@ContextParam(ContextType.BIND_CONTEXT) final BindContext ctx) throws IOException
+	{
+		UploadEvent upEvent = null;
+		final Object objUploadEvent = ctx.getTriggerEvent();
+		if (objUploadEvent != null && (objUploadEvent instanceof UploadEvent))
+		{
+			upEvent = (UploadEvent) objUploadEvent;
+		}
+		if (upEvent != null)
+		{
+			final Media media = upEvent.getMedia();
+			if (media.getName().endsWith(CSV) && media.getStringData().length() > 0)
+			{
+				final String[] rowData = media.getStringData().split(TataomsbackofficeConstants.SPLIT_BY_NEWLINE);
+				try
+				{
+					if (!validateFileHedders(rowData[0]))
+					{
+						throw new FilerException("The Csv File Headers Format " + TataomsbackofficeConstants.UPLOAD_LPANDAWB_FIELDS);
+					}
+					LOG.info("the uploaded csv file Length" + rowData.length);
+					//read the each record and generate object for that
+					for (int i = 1; i < rowData.length; i++)
+					{
+						LOG.info("each row data" + rowData[i]);
+					}
+				}
+				catch (final FilerException e)
+				{
+					Messagebox.show(e.getMessage());
+				}
+			}
+			else
+			{
+				LOG.info("file extension should be CSV" + media.getName() + "File Empty size" + media.getStringData().length());
+				Messagebox.show("Unable to upload file try again");
+			}
+		}
+	}
+
+	/*
+	 * this method is used to validate the csv file Headers with Positions
+	 */
+	private boolean validateFileHedders(final String csvfileHeaders)
+	{
+		final String headers[] = csvfileHeaders.split(TataomsbackofficeConstants.SPLIT_BY_COMMA);
+
+		if (!headers[0].equalsIgnoreCase(LpUploadFields[0]))
+		{
+			return Boolean.FALSE;
+		}
+
+		if (!headers[1].equalsIgnoreCase(LpUploadFields[1]))
+		{
+			return Boolean.FALSE;
+		}
+		if (!headers[2].equalsIgnoreCase(LpUploadFields[2]))
+		{
+			return Boolean.FALSE;
+		}
+		if (!headers[3].equalsIgnoreCase(LpUploadFields[3]))
+		{
+			return Boolean.FALSE;
+		}
+		if (!headers[4].equalsIgnoreCase(LpUploadFields[4]))
+		{
+			return Boolean.FALSE;
+		}
+		return Boolean.TRUE;
+	}
 }

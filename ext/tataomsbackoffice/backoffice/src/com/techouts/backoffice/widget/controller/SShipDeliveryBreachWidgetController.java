@@ -21,7 +21,6 @@ import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zul.Datebox;
-import org.zkoss.zul.Label;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
@@ -75,8 +74,6 @@ public class SShipDeliveryBreachWidgetController extends DefaultWidgetController
 	private Textbox txtsellerId;
 	@Wire
 	private Textbox txtSlaveId;
-	@Wire
-	private Label msg;
 	@WireVariable("sshipTxnRestClient")
 	private SShipTxnFacade sShipTxnFacade;
 	@WireVariable("orderCancellationRestClient")

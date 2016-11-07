@@ -41,9 +41,9 @@ public class ShortUrlMappingWidgetController extends DefaultWidgetController
 	private static final Logger LOG = LoggerFactory.getLogger(ShortUrlMappingWidgetController.class);
 
 	@Wire
-	private Datebox startdpic;
+	private Datebox startDateValue;
 	@Wire
-	private Datebox enddpic;
+	private Datebox endDateValue;
 
 	@Wire
 	private Listbox listBoxData;
@@ -58,9 +58,8 @@ public class ShortUrlMappingWidgetController extends DefaultWidgetController
 		final Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, -6);
 		super.initialize(comp);
-		startdpic.setValue(cal.getTime());
-		enddpic.setValue(new Date());
-
+		startDateValue.setValue(cal.getTime());
+		endDateValue.setValue(new Date());
 		LOG.info("inside initialize method" + "Start Date " + cal.getTime() + "******* End Date " + new Date());
 		getShortUrlMappingInfo(cal.getTime(), new Date());
 	}
@@ -69,34 +68,34 @@ public class ShortUrlMappingWidgetController extends DefaultWidgetController
 	/**
 	 * This method is to Get the selected date
 	 */
-	@ViewEvent(componentID = "startdpic", eventName = Events.ON_CHANGE)
+	@ViewEvent(componentID = "startDateValue", eventName = Events.ON_CHANGE)
 	public void getStartdpic()
 	{
 
-		if (startdpic.getValue().after(enddpic.getValue())) //this kind of comparison ,it will check date along with time sec
+		if (startDateValue.getValue().after(endDateValue.getValue())) //this kind of comparison ,it will check date along with time sec
 		{
 			msgBox("Start date must be less than End date");
 			return;
 		}
-		LOG.info("Start date " + startdpic.getValue() + "end date " + enddpic.getValue() + "output socket sended");
-		getShortUrlMappingInfo(startdpic.getValue(), enddpic.getValue());
+		LOG.info("Start date " + startDateValue.getValue() + "end date " + endDateValue.getValue() + "output socket sended");
+		getShortUrlMappingInfo(startDateValue.getValue(), endDateValue.getValue());
 
 	}
 
 	/**
 	 * This method is to Get the selected date
 	 */
-	@ViewEvent(componentID = "enddpic", eventName = Events.ON_CHANGE)
+	@ViewEvent(componentID = "endDateValue", eventName = Events.ON_CHANGE)
 	public void getEnddpic()
 	{
-		if (enddpic.getValue().before(startdpic.getValue()))
+		if (endDateValue.getValue().before(startDateValue.getValue()))
 		{
 			msgBox("End date must be greater than  Start date");
 			return;
 		}
 
-		LOG.info("Start date " + startdpic.getValue() + "end date " + enddpic.getValue() + "output socket sended");
-		getShortUrlMappingInfo(startdpic.getValue(), enddpic.getValue());
+		LOG.info("Start date " + startDateValue.getValue() + "end date " + endDateValue.getValue() + "output socket sended");
+		getShortUrlMappingInfo(startDateValue.getValue(), endDateValue.getValue());
 	}
 
 	private void msgBox(final String mesg)
