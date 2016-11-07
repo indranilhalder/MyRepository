@@ -2428,7 +2428,6 @@
 		<property name="imageList" type="java.util.List&lt;java.lang.String>"></property>
 		<property name="videoList" type="java.util.List&lt;java.lang.String>"></property>
 	</bean>
-=======
 <!-- Luxury Homepage -->
 
     <bean class="com.tisl.mpl.wsdto.LuxHomePageCompWsDTO">
