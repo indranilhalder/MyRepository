@@ -40,6 +40,9 @@ tr.d0 td {
 <input type="hidden" name="selectedSize" id="selectedSize"	value="${selectedSize}"/>
 
 <!--- START: INSERTED for MSD --->
+<!-- TPR-1375 changes -->
+<input type="hidden" value="true" id="isProductPage" name="isProductPage"/>
+
 <c:if test="${isMSDEnabled}">
 	<input type="hidden" value="${isMSDEnabled}" name="isMSDEnabled"/>
 		<c:if test="${product.rootCategory eq 'Clothing'}">
@@ -67,12 +70,21 @@ tr.d0 td {
 <input type="hidden" id="page_name" value="${page_name}" />
 <input type="hidden" id="product_id" value="${product_id}" />
 <input type="hidden" id="page_subcategory_name" value="${page_subcategory_name}" />
-<input type="hidden" id="page_subcategory_name_L3" value="${page_subcategory_name_L3}" />
+<input type="hidden" id="page_subcategory_name_l3" value="${page_subcategory_name_l3}" />
 <input type="hidden" id="product_brand" value="${product_brand}" />
 <input type="hidden" id="site_section_detail" value="${site_section_detail}" />
 <input type="hidden" id="product_category" value="${product_category}" />
-
+<!-- TPR-672 START -->
+<input type="hidden" id="product_applied_promotion_title" value="${product_applied_promotion_title}" />
+<input type="hidden" id="product_applied_promotion_code" value="${product_applied_promotion_code}" />
+<!-- TPR-672 END -->
+<!-- TPR-429 START-->
+<input type="hidden" id="pdpSellerIDs" value='${pdpSellerIDs}'/>
+<input type="hidden" id="pdpBuyboxWinnerSellerID" value=''/>
+<input type="hidden" id="pdpOtherSellerIDs" value=''/>
+<!-- TPR-429 END-->
 <!-- End Tealium -->
+
 <!-- TISPRM-56 -->
 <input type="hidden" id="product_allVariantsListingId" value="${allVariantsString}"/>
 
@@ -160,24 +172,29 @@ tr.d0 td {
 				<c:forEach var="channel"
 							items="${product.potentialPromotions[0].channels}">
 				<c:if test="${channel eq 'Web'||channel eq ''||channel==null}">	
-			<div class="pdp-promo-title">
+			<div class="pdp-promo-title pdp-title">
 				<b>OFFER:</b> ${product.potentialPromotions[0].title}
-				<a class="details">View more</a>
+				<!-- <a class="details">View more</a> --> <!-- commented for TPR-589  -->
 			</div>
 			</c:if> <!-- end if check for channel web -->
 			</c:forEach>
 			</c:when>
 			
 			<c:otherwise>
-			<div class="pdp-promo-title">
+			<div class="pdp-promo-title pdp-title">
 				<b>OFFER:</b> ${product.potentialPromotions[0].title}
-				<a class="details">View more</a>
+			<!-- 	<a class="details">View more</a> --><!-- commented for TPR-589  -->
 			</div>
 			</c:otherwise>
-			</c:choose>
-			
+			</c:choose>			
 			</c:if>
 			</div>
+			
+			<!--  Added for displaying offer messages other than promotion, TPR-589 -->
+				 <div>
+					<a class="pdp-promo-title-link">View more</a>
+				</div>	
+				
 			<!-- TISPRM-97 ends -->
 			<!-- TPR-275 starts  -->
 			<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('freebiePriceThreshold')" var="freebiePriceThreshVal"/>
@@ -198,7 +215,7 @@ tr.d0 td {
 				</ycommerce:testId> --%>
 				<div class="seller">
 					<ycommerce:testId code="productDetails_productNamePrice_label_${product.code}">
-						<span class="seller-details"><span>Sold by <span id="sellerNameId"></span>&nbsp;&</span><product:sellerInfoDetailsSection /></span>
+						<span class="seller-details"><span>Sold by <span id="sellerNameId"></span></span><product:sellerInfoDetailsSection /></span>
 					</ycommerce:testId>
 					
 				</div>
@@ -312,14 +329,18 @@ tr.d0 td {
 	<c:set var="clothing"><spring:theme code='product.clothing'/></c:set>
 	<!-- TISPRO-271 Changes -->
 	<c:set var="footwear"><spring:theme code='product.footwear'/></c:set>
+	
+	<!-- Added for TATAUNISTORE-15 Start -->
+	<c:set var="watches"><spring:theme code='product.watches'/></c:set>
+	<c:set var="accessories"><spring:theme code='product.fashionAccessories'/></c:set>
 	<!-- For Infinite Analytics Start -->
 	<input type="hidden" value="${productCategoryType}" id="categoryType"/>
 <c:choose>
-		<c:when test="${productCategoryType==clothing || productCategoryType== footwear}">  <!-- Added for TISPRO-271 -->
+		<c:when test="${product.rootCategory==clothing || product.rootCategory== footwear || product.rootCategory==accessories}">  <!-- Added for TISPRO-271 -->
 			<div class="trending"  id="ia_products_complements"></div>
 			<div class="trending"  id="ia_products"></div>
 		</c:when>
-		<c:when test="${productCategoryType==electronics}">
+		<c:when test="${product.rootCategory==electronics  || product.rootCategory==watches}">
 			<div class="trending"  id="ia_products_bought_together"></div>
 			<div class="trending"  id="ia_products_similar"></div>
 		</c:when>
@@ -330,7 +351,7 @@ tr.d0 td {
 <!--- START: INSERTED for MSD --->
 <br/><br/>
 <c:choose>
-<c:when test="${product.rootCategory==clothing}">
+<c:when test="${product.rootCategory==clothing || product.rootCategory== footwear || product.rootCategory==accessories}">
 <div class="view-similar-items" id="view-similar-items"></div>
 </c:when>
 <c:otherwise>
@@ -339,7 +360,7 @@ tr.d0 td {
 <!--- END:MSD ---> 
 	
 <c:choose>
-<c:when test="${product.rootCategory==electronics}">
+<c:when test="${product.rootCategory==electronics  || product.rootCategory==watches}">
 <product:productDetailsClassifications product="${product}"/>
 </c:when>
 <c:otherwise>

@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.facade.cms;
 
+
 import de.hybris.platform.acceleratorcms.model.components.SimpleBannerComponentModel;
 import de.hybris.platform.category.impl.DefaultCategoryService;
 import de.hybris.platform.category.model.CategoryModel;
@@ -17,6 +18,8 @@ import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercesearch.model.SolrHeroProductDefinitionModel;
 import de.hybris.platform.commercesearch.searchandizing.heroproduct.HeroProductDefinitionService;
+import de.hybris.platform.commerceservices.search.pagedata.PageableData;
+import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.converters.Converters;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.ProductService;
@@ -37,6 +40,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -56,6 +60,7 @@ import com.tisl.mpl.facades.cms.data.ImageListComponentData;
 import com.tisl.mpl.facades.cms.data.LinkedCollectionsData;
 import com.tisl.mpl.facades.cms.data.MplPageData;
 import com.tisl.mpl.facades.cms.data.PageData;
+import com.tisl.mpl.facades.cms.data.ProductComponentData;
 import com.tisl.mpl.facades.cms.data.ProductListComponentData;
 import com.tisl.mpl.facades.cms.data.PromotionComponentData;
 import com.tisl.mpl.facades.cms.data.SectionData;
@@ -75,6 +80,8 @@ import com.tisl.mpl.model.cms.components.MobileCollectionLinkComponentModel;
 import com.tisl.mpl.model.cms.components.PromotionalProductsComponentModel;
 import com.tisl.mpl.model.cms.components.SmallBrandMobileAppComponentModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
+import com.tisl.mpl.util.ExceptionUtil;
+
 
 
 /**
@@ -420,9 +427,12 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 
 	@Override
-	public List<MplPageData> getPageInformationForPageId(final String pageUid)
+	public List<MplPageData> getPageInformationForPageId(final String pageUid, final PageableData pageableData)
 	{
-		final ContentPageModel contentPage = getMplCMSPageService().getPageForAppById(pageUid);
+		//Modified for TPR-798
+		//final ContentPageModel contentPage = getMplCMSPageService().getPageForAppById(pageUid);
+		final SearchPageData<ContentSlotForPageModel> contentPage = getMplCMSPageService().getContentSlotsForAppById(pageUid,
+				pageableData);
 
 		final List<MplPageData> componentDatas = new ArrayList<MplPageData>();
 		final List<Date> lastModifiedTimes = new ArrayList<Date>();
@@ -430,12 +440,15 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 		if (contentPage != null)
 		{
-			for (final ContentSlotForPageModel contentSlotForPage : contentPage.getContentSlots())
+			//Modified for TPR-798
+			//for (final ContentSlotForPageModel contentSlotForPage : contentPage.getContentSlots())
+			for (final ContentSlotForPageModel contentSlotForPage : contentPage.getResults())
 			{
 				final MplPageData homePageData = new MplPageData();
 				final List<TextComponentData> texts = new ArrayList<TextComponentData>();
 				final List<BannerComponentData> banners = new ArrayList<BannerComponentData>();
 				final List<ProductListComponentData> productForShowCase = new ArrayList<ProductListComponentData>();
+				final List<ProductComponentData> productCollection = new ArrayList<ProductComponentData>();
 				final List<ImageListComponentData> imageCarousels = new ArrayList<ImageListComponentData>();
 
 				for (final AbstractCMSComponentModel abstractCMSComponentModel : contentSlotForPage.getContentSlot()
@@ -511,7 +524,6 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					}
 					else if (abstractCMSComponentModel instanceof ImageCarouselComponentModel)
 					{
-
 						final ImageCarouselComponentModel carouselComponent = (ImageCarouselComponentModel) abstractCMSComponentModel;
 						final ImageListComponentData imageListData = new ImageListComponentData();
 						final List<BannerComponentData> carouselBanners = new ArrayList<BannerComponentData>();
@@ -528,6 +540,11 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 								if (cmsMediaPara.getMedia().getDescription() != null)
 								{
 									banner.setImageDiscription(cmsMediaPara.getMedia().getDescription());
+								}
+								// TPR-472
+								if (cmsMediaPara.getPk() != null)
+								{
+									banner.setIcid(cmsMediaPara.getPk().getLongValueAsString());
 								}
 								// TPR-472
 								if (cmsMediaPara.getPk() != null)
@@ -556,73 +573,78 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 						imageListData.setBannerslist(carouselBanners);
 						imageCarousels.add(imageListData);
 					}
-
-
 					else if (abstractCMSComponentModel instanceof ProductCarouselComponentModel)
 					{
+						///start TPR-1316
+						final ProductComponentData prodCompData = new ProductComponentData();
+						final List<ProductListComponentData> productCompList = new ArrayList<ProductListComponentData>();
 						final ProductCarouselComponentModel productCarousel = (ProductCarouselComponentModel) abstractCMSComponentModel;
-						final List<String> products = productCarousel.getProductCodes();
-
-						for (final String productCode : products)
+						if (productCarousel.getComponentType() != null)
+						{
+							prodCompData.setComponentType(productCarousel.getComponentType().getCode());
+						}
+						for (final String productCode : productCarousel.getProductCodes())
 						{
 							final ProductListComponentData productComp = new ProductListComponentData();
-							final ProductData product = productFacade.getProductForCodeAndOptions(productCode,
-									Arrays.asList(ProductOption.BASIC, ProductOption.PRICE, ProductOption.CATEGORIES));
 							ProductModel productModel = null;
-							final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productCode);
+							ProductData product = null;
+							BuyBoxData buyboxdata = null;
+							//IQA
 							try
 							{
+								product = productFacade.getProductForCodeAndOptions(productCode,
+										Arrays.asList(ProductOption.BASIC, ProductOption.PRICE, ProductOption.CATEGORIES));
+								buyboxdata = buyBoxFacade.buyboxPrice(productCode);
 								productModel = productService.getProductForCode(productCode);
 								if (null != productModel && null != productModel.getPicture())
 								{
 									productComp.setImage(productModel.getPicture().getUrl2());
 								}
+								//IQA
+								if (StringUtils.isNotEmpty(product.getName()))
+								{
+									productComp.setName(product.getName());
+								}
+								if (buyboxdata.getMrp() != null)
+								{
+									productComp.setPrice(buyboxdata.getMrp().getFormattedValue());
+								}
+								if (buyboxdata.getPrice() != null)
+								{
+									productComp.setSlashedPrice(buyboxdata.getPrice().getFormattedValue());
+								}
+
+								if (productModel != null)
+								{
+									if (productModel.getDeeplinkType() != null)
+									{
+										productComp.setType(productModel.getDeeplinkType());
+									}
+									if (productModel.getDeeplinkTypeId() != null)
+									{
+										productComp.setTypeId(productModel.getDeeplinkTypeId());
+									}
+									if (productModel.getDeeplinkTypeVal() != null)
+									{
+										productComp.setTypeVal(productModel.getDeeplinkTypeVal());
+									}
+									if (productModel.getCode() != null)
+									{
+										productComp.setProductID(productModel.getCode());
+									}
+								}
+								productCompList.add(productComp);
 							}
 							catch (final Exception e)
 							{
 								LOG.warn("Encountered error while seting product image. ", e);
+								ExceptionUtil.getCustomizedExceptionTrace(e);
 							}
-							if (product.getName() != null)
-							{
-								productComp.setName(product.getName());
-							}
-							if (buyboxdata.getPrice() != null)
-							{
-								productComp.setPrice(buyboxdata.getMrp().getFormattedValue());
-							}
-							if (buyboxdata.getMrp() != null)
-							{
-								productComp.setSlashedPrice(buyboxdata.getPrice().getFormattedValue());
-							}
-
-							if (productModel != null)
-							{
-								if (productModel.getDeeplinkType() != null)
-								{
-									productComp.setType(productModel.getDeeplinkType());
-								}
-								if (productModel.getDeeplinkTypeId() != null)
-								{
-									productComp.setTypeId(productModel.getDeeplinkTypeId());
-								}
-								if (productModel.getDeeplinkTypeVal() != null)
-								{
-									productComp.setTypeVal(productModel.getDeeplinkTypeVal());
-								}
-								if (productModel.getCode() != null)
-								{
-									productComp.setProductID(productModel.getCode());
-								}
-							}
-							productForShowCase.add(productComp);
-
 						}
-
-						//homePageData.setBannerComponents(bannerComponents);
+						prodCompData.setProductList(productCompList);
+						productCollection.add(prodCompData);
+						///End TPR-1316
 					}
-					//homePageData.setSequence(new Integer(count));  // Sonar Fixes
-
-					//componentDatas.add(homePageData);
 				}
 				if (lastModifiedTimes.size() >= 1)
 				{
@@ -631,10 +653,13 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				}
 				else
 				{
-					homePageData.setLastModifiedTime(contentPage.getModifiedtime());
+					//Modified for TPR-798
+					//homePageData.setLastModifiedTime(contentPage.getModifiedtime());
+					homePageData.setLastModifiedTime(contentSlotForPage.getModifiedtime());
 				}
 				homePageData.setTextComponents(texts);
 				homePageData.setProductComponents(productForShowCase);
+				homePageData.setProductSliderComponents(productCollection);
 				homePageData.setBannerComponents(banners);
 				homePageData.setBannerslistComponents(imageCarousels);
 				componentDatas.add(homePageData);
@@ -643,8 +668,6 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 		return componentDatas;
 	}
-
-
 
 	/*
 	 * (non-Javadoc)

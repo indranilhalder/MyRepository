@@ -82,6 +82,43 @@ $(document).ready(function () {
 		 			$(this).attr("href","#");
 		 		});
 				}
-	
+	        	
+	    	/*TPR-682*/
+				/*For menu*/
+				 $(document).on('click','header .content nav > ul > li#shopMicrositeSeller > ul#topul > li.level1',function(){
+					var brand_name = lastSegment.replace(/[^a-z0-9\s]/gi, '').replace(/[\s]+/g, '_').toLowerCase();
+					var top_menu_name = $(this).children('div.toggle').children('a').text().replace(/[^a-z0-9\s]/gi, '').replace(/[\s]+/g, '_').toLowerCase();
+			    	var linkText = "shop_" + brand_name + "_" + top_menu_name;
+					utag.link({
+						link_text: linkText, 
+						event_type : 'brandstore_navigation_click'
+					});
+			    });
+			
+				/*For Sub menu*/
+			   $(document).on('click','header .content nav > ul > li#shopMicrositeSeller > ul#topul > li.level1 > ul.words > li.short.words',function(){
+					var brand_name = lastSegment.replace(/[^a-z0-9\s]/gi, '').replace(/[\s]+/g, '_').toLowerCase();
+					var top_menu_name = $(this).parents('li.level1').children('div.toggle').children('a').text().replace(/[^a-z0-9\s]/gi, '').replace(/[\s]+/g, '_').toLowerCase();
+			    	var sub_menu_name = $(this).text().replace(/[^a-z0-9\s]/gi, '').replace(/[\s]+/g, '_').toLowerCase();
+					var linkText = "shop_" + brand_name + "_" + top_menu_name + "_" + sub_menu_name;
+					utag.link({
+						link_text: linkText, 
+						event_type : 'brandstore_navigation_click'
+					});
+			    });
+				/*For Sub Sub menu*/
+				$(document).on('click','header .content nav > ul > li#shopMicrositeSeller > ul#topul > li.level1 > ul.words > li.long.words',function(){
+					var brand_name = lastSegment.replace(/[^a-z0-9\s]/gi, '').replace(/[\s]+/g, '_').toLowerCase();
+					var top_menu_name = $(this).parents('li.level1').children('div.toggle').children('a').text().replace(/[^a-z0-9\s]/gi, '').replace(/[\s]+/g, '_').toLowerCase();
+			    	var sub_menu_name = $(this).prevAll('li.short.words:first').children('div.toggle').children('a').text().replace(/[^a-z0-9\s]/gi, '').replace(/[\s]+/g, '_').toLowerCase();
+					var sub_sub_menu_name = $(this).text().replace(/[^a-z0-9\s]/gi, '').replace(/[\s]+/g, '_').toLowerCase();
+					var linkText = "shop_" + brand_name + "_" + top_menu_name + "_" + sub_menu_name + "_" + sub_sub_menu_name;
+					utag.link({
+						link_text: linkText, 
+						event_type : 'brandstore_navigation_click'
+					});
+			    });
+		   /*TPR-682 ends*/
+	   
 	});
 	</script>	

@@ -19,5 +19,6 @@ public interface BusinessContentImportService
 	void processUpdateForContentImport(CSVReader reader, CSVWriter writer, Map<Integer, String> map, Integer errorPosition,
 			boolean headerRowIncluded);
 
-
+	void processUpdateForProductMappingImport(CSVReader reader, CSVWriter writer, Map<Integer, String> map, Integer errorPosition,
+			boolean headerRowIncluded);
 }

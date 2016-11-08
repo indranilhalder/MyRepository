@@ -18,7 +18,7 @@ import com.tisl.mpl.model.SellerMasterModel;
 
 
 /**
- * @author 765463
+ * @author TCS
  *
  */
 public interface MplCmsPageDao extends CMSPageDao
@@ -50,8 +50,11 @@ public interface MplCmsPageDao extends CMSPageDao
 	 */
 	ContentPageModel getPageForAppById(String pageUid);
 
-	SearchPageData<ContentSlotForPageModel> getContentSlotsForAppById(String pageUid, PageableData pageableData);
+	//SearchPageData<ContentSlotForPageModel> getContentSlotsForAppById(String pageUid, PageableData pageableData);
 
+	//Added for TPR-798
+	public SearchPageData<ContentSlotForPageModel> getContentSlotsForAppById(final String pageUid, final PageableData pageableData);
+
+	//Added for TPR-978
 	ContentPageModel getContentPageForProduct(ProductModel product);
-
 }

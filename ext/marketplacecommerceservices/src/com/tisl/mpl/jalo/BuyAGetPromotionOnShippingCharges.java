@@ -344,7 +344,6 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 		int totalCount = 0;
 		final Long eligibleQuantity = getQuantity();
 		boolean flagForDeliveryModeRestrEval = false;
-
 		try
 		{
 			if (GenericUtilityMethods.checkBrandAndCategoryMinimumAmt(validProductUssidMap, paramSessionContext,
@@ -386,9 +385,12 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 
 					//for delivery mode restriction check
 					flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForAPromo(restrictionList,
-							validProductUssidMap);
+							validProductUssidMap, order);
 
-					if (flagForDeliveryModeRestrEval) // delivery mode true and If Total no of valid Products exceeds Qualifying Count
+					final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(
+							restrictionList, order);
+
+					if (flagForDeliveryModeRestrEval && flagForPincodeRestriction) // delivery mode true and If Total no of valid Products exceeds Qualifying Count
 					{
 						final Map<String, List<String>> productAssociatedItemsMap = getDefaultPromotionsManager()
 								.getAssociatedItemsForAorBOGOorFreebiePromotions(validProductUssidMap, null);
@@ -397,7 +399,7 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 
 						//Fetching product rich attribute
 						final Map<String, String> fetchProductRichAttribute = getDefaultPromotionsManager().fetchProductRichAttribute(
-								validProductList);
+								validProductList, order);
 
 						for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
 						{
@@ -436,7 +438,7 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 								}
 								//TISEE-5339 : Fix
 								prodPrevCurrDelChargeMap = getDefaultPromotionsManager().calcDeliveryCharges(isDeliveryFreeFlag,
-										isPercentageFlag, adjustedDeliveryCharge, validProductList, validProductUSSID);
+										isPercentageFlag, adjustedDeliveryCharge, validProductList, validProductUSSID, order);
 
 								//TISEE-5339 : Fix
 								//								paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE,

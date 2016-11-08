@@ -27,4 +27,10 @@ public interface SellerBasedPromotionService
 	void modifyFiredMessage(String string);
 
 	List<AbstractPromotionModel> getPromoDetails();
+
+	/**
+	 * @param promoCode
+	 * @return boolean
+	 */
+	boolean getPromoDetails(String promoCode);
 }

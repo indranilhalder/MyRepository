@@ -5,6 +5,7 @@ package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
 import de.hybris.platform.core.model.c2l.CountryModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
@@ -360,8 +361,8 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 			final FlexibleSearchQuery paymentTransactionQuery = new FlexibleSearchQuery(queryString);
 			paymentTransactionQuery.addQueryParameter(MarketplacecommerceservicesConstants.CUSTOMERID, mplCustomerID);
 			paymentTransactionQuery.addQueryParameter(MarketplacecommerceservicesConstants.JUSPAYORDERID, juspayOrderId);
-			final List<PaymentTransactionModel> paymentTransactionList = flexibleSearchService
-					.<PaymentTransactionModel> search(paymentTransactionQuery).getResult();
+			final List<PaymentTransactionModel> paymentTransactionList = flexibleSearchService.<PaymentTransactionModel> search(
+					paymentTransactionQuery).getResult();
 			if (null != paymentTransactionList && !paymentTransactionList.isEmpty())
 			{
 				//fetching Payment Transaction from DB using flexible search query
@@ -604,14 +605,12 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 	}
 
 	/*
-	 * @Description : Fetching bank name for net banking-- TISPT-169
+	 * @Description : Fetching bank name for net banking-- TISPT-169 --- Exception fixed for PMD and TPR-629
 	 *
 	 * @return List<BankforNetbankingModel>
-	 *
-	 * @throws Exception
 	 */
 	@Override
-	public List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions, Exception
+	public List<BankforNetbankingModel> getNetBankingBanks() /* throws EtailNonBusinessExceptions , Exception */
 	{
 		try
 		{
@@ -634,10 +633,10 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
 		}
-		catch (final NullPointerException e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
-		}
+		//		catch (final NullPointerException e)
+		//		{
+		//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
+		//		}
 		catch (final Exception e)
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
@@ -648,15 +647,14 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 
 
 	/**
-	 * This method picks up the latest audit id against the cart guid which is in submitted status TISPT-200
+	 * This method picks up the latest audit id against the cart guid which is in submitted status TISPT-200 ---
+	 * Exception fixed for PMD and TPR-629
 	 *
 	 * @param cartGuid
 	 * @return List<MplPaymentAuditModel>
-	 * @throws EtailNonBusinessExceptions
-	 * @throws Exception
 	 */
 	@Override
-	public List<MplPaymentAuditModel> getAuditId(final String cartGuid) throws EtailNonBusinessExceptions, Exception
+	public List<MplPaymentAuditModel> getAuditId(final String cartGuid) /* throws EtailNonBusinessExceptions , Exception */
 	{
 		try
 		{
@@ -680,15 +678,60 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
 		}
-		catch (final NullPointerException e)
+		//		catch (final NullPointerException e)
+		//		{
+		//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
+		//		}
+		catch (final Exception e)
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
+	}
+
+
+
+
+
+	/**
+	 * @Decsription : Fetch Order Details Based on GUID for new Payment Soln - Order before payment TPR-629
+	 * @param: guid
+	 */
+	@Override
+	public OrderModel fetchOrderOnGUID(final String guid)
+	{
+		OrderModel orderModel = null;
+		try
+		{
+			final String queryString = //
+			"SELECT {om:" + OrderModel.PK
+					+ "} "//
+					+ MarketplacecommerceservicesConstants.QUERYFROM + OrderModel._TYPECODE + " AS om } where" + "{om."
+					+ OrderModel.GUID + "} = ?code and " + "{om." + OrderModel.TYPE + "} = ?type";
+
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.CODE, guid);
+			query.addQueryParameter("type", "Parent");
+			final List<OrderModel> orderModelList = getFlexibleSearchService().<OrderModel> search(query).getResult();
+			if (!CollectionUtils.isEmpty(orderModelList))
+			{
+				orderModel = orderModelList.get(0);
+			}
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
 		}
 		catch (final Exception e)
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 
+		return orderModel;
 	}
 
 

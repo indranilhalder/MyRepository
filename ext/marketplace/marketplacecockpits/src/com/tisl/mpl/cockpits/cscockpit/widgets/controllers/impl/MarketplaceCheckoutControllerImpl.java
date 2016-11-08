@@ -359,33 +359,41 @@ public class MarketplaceCheckoutControllerImpl extends
 		try {
 			final CartModel cart = (CartModel) getBasketController().getCart()
 					.getObject();
-			final String pincode = cart.getDeliveryAddress().getPostalcode();
+			String pincode=null;
+			
+			if(null!=cart.getDeliveryAddress())
+			{
+				pincode = cart.getDeliveryAddress().getPostalcode();
+			}
 
-			for (final AbstractOrderEntryModel cartEntry : cart.getEntries()) {
-				List<PinCodeResponseData> responseData = marketplaceServiceabilityCheckHelper
-						.getResponseForPinCode(cartEntry.getProduct(), pincode,
-								MarketplaceCockpitsConstants.NO,
-								cartEntry.getSelectedUSSID());
-				if (responseData == null) {
-					return false;
-				}
-				LOG.info("Response size for pin code serviceability call:"
-						+ responseData.size());
-				for (PinCodeResponseData response : responseData) {
-					LOG.info("COD eligibility status for "
-							+ cartEntry.getProduct().getCode() + " is "
-							+ response.getCod());
-
-					if (StringUtils.equalsIgnoreCase(response.getCod(),
-							MarketplaceCockpitsConstants.NO)) {
-						isEntryCODEligible = false;
-						errorMessages.add(new ResourceMessage(
-								"placeOrder.validation.nocod", Arrays
-										.asList(response.getUssid())));
-						break;
+			if(null!=pincode)
+			{
+				for (final AbstractOrderEntryModel cartEntry : cart.getEntries()) {
+					List<PinCodeResponseData> responseData = marketplaceServiceabilityCheckHelper
+							.getResponseForPinCode(cartEntry.getProduct(), pincode,
+									MarketplaceCockpitsConstants.NO,
+									cartEntry.getSelectedUSSID());
+					if (responseData == null) {
+						return false;
 					}
+					LOG.info("Response size for pin code serviceability call:"
+							+ responseData.size());
+					for (PinCodeResponseData response : responseData) {
+						LOG.info("COD eligibility status for "
+								+ cartEntry.getProduct().getCode() + " is "
+								+ response.getCod());
+	
+						if (StringUtils.equalsIgnoreCase(response.getCod(),
+								MarketplaceCockpitsConstants.NO)) {
+							isEntryCODEligible = false;
+							errorMessages.add(new ResourceMessage(
+									"placeOrder.validation.nocod", Arrays
+											.asList(response.getUssid())));
+							break;
+						}
+					}
+					break;
 				}
-				break;
 			}
 		} catch (Exception ex) {
 			isEntryCODEligible = false;
@@ -719,6 +727,21 @@ public class MarketplaceCheckoutControllerImpl extends
 	public void setMplVoucherService(MplVoucherService mplVoucherService) {
 		this.mplVoucherService = mplVoucherService;
 	}	
+	
+	
+	
+	
+	/**
+	 * Setting mode of payment against cart TPR-3471
+	 * @param cartModel
+	 * 
+	 */
+	@Override
+	public void setCODPaymentMode(final CartModel cartModel)
+	{
+		cartModel.setModeOfPayment("COD");
+		getModelService().save(cartModel);
+	}
 	
 	
 	

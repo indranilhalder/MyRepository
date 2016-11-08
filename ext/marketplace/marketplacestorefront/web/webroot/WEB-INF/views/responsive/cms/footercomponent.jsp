@@ -8,7 +8,15 @@
 
 <!-- This is used for displaying text in footer -->
 <div class="footer-text">
-	${footerText}
+	<%-- ${footerText} --%>
+	<c:choose>
+		<c:when test="${not empty categoryFooterTxt}">
+			${categoryFooterTxt}
+		</c:when>
+		<c:otherwise>
+			${footerText}
+		</c:otherwise>
+	</c:choose>
 </div>
 <!-- This is used for displaying copyright in footer -->
 <div class="banner">

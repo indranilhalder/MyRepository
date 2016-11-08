@@ -330,6 +330,10 @@ public class ProductsController extends BaseController
 			{
 				product.setError(e.getErrorMessage());
 			}
+			if (null != e.getErrorCode())
+			{
+				product.setErrorCode(e.getErrorCode());
+			}
 			product.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		catch (final EtailBusinessExceptions e)
@@ -338,6 +342,10 @@ public class ProductsController extends BaseController
 			if (null != e.getErrorMessage())
 			{
 				product.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				product.setErrorCode(e.getErrorCode());
 			}
 			product.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
@@ -1044,17 +1052,29 @@ public class ProductsController extends BaseController
 		}
 		catch (final EtailBusinessExceptions e)
 		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
-			//e.printStackTrace();
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				productSearchPage.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				productSearchPage.setErrorCode(e.getErrorCode());
+			}
 			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-			productSearchPage.setError(MarketplacecommerceservicesConstants.EXCEPTION_IS + e);
+
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
-			//e.printStackTrace();
+			if (null != e.getErrorMessage())
+			{
+				productSearchPage.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				productSearchPage.setErrorCode(e.getErrorCode());
+			}
 			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-			productSearchPage.setError(MarketplacecommerceservicesConstants.EXCEPTION_IS + ":" + e);
 		}
 		catch (final Exception e)
 		{

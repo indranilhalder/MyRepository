@@ -9,7 +9,10 @@ import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
+import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
 import de.hybris.platform.cms2.servicelayer.services.impl.DefaultCMSPageService;
+import de.hybris.platform.commerceservices.search.pagedata.PageableData;
+import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.model.product.ProductModel;
 
 import java.util.Collection;
@@ -60,7 +63,7 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService#getLandingPageForCategory(de.hybris.platform
 	 * .category.model.CategoryModel)
@@ -106,7 +109,7 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService#getHomePageForMobile()
 	 */
 	@Override
@@ -127,7 +130,7 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService#getLandingPageForCategory(de.hybris.platform
 	 * .category.model.CategoryModel)
@@ -201,7 +204,7 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService#getContentSlotByUidForPage(java.lang.String,
 	 * java.lang.String, java.lang.String)
@@ -213,6 +216,22 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 		return contentSlot;
 	}
 
+	/**
+	 * Method added for TPR-798
+	 *
+	 * @param pageUid
+	 * @param pageableData
+	 * @return SearchPageData<ContentSlotForPageModel>
+	 */
+	@Override
+	public SearchPageData<ContentSlotForPageModel> getContentSlotsForAppById(final String pageUid, final PageableData pageableData)
+	{
+		// YTODO Auto-generated method stub
+		return mplCmsPageDao.getContentSlotsForAppById(pageUid, pageableData);
+
+	}
+
+	//TPR-978
 	@Override
 	public ContentPageModel getContentPageForProduct(final ProductModel product) throws CMSItemNotFoundException
 	{

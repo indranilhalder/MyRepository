@@ -5,6 +5,7 @@ package com.tisl.mpl.marketplacecommerceservices.daos;
 
 import de.hybris.platform.core.model.c2l.CountryModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 
@@ -146,32 +147,34 @@ public interface MplPaymentDao
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 *
+	 * 
 	 * @param : bankName
-	 *
+	 * 
 	 * @return : BankModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	BankModel getBankDetailsForBank(final String bankName) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
-	 * @throws Exception
 	 */
-	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions, Exception;
+	List<BankforNetbankingModel> getNetBankingBanks();
 
 	/**
 	 * TISPT-200
 	 *
 	 * @param cartGuid
 	 * @return List<MplPaymentAuditModel>
-	 * @throws EtailNonBusinessExceptions
-	 * @throws Exception
 	 */
-	List<MplPaymentAuditModel> getAuditId(String cartGuid) throws EtailNonBusinessExceptions, Exception;
+	List<MplPaymentAuditModel> getAuditId(String cartGuid);
+
+	/**
+	 * @param guid
+	 * @return OrderModel
+	 */
+	OrderModel fetchOrderOnGUID(String guid);
 
 }

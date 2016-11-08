@@ -5,6 +5,10 @@
 <%@ taglib prefix="footer" tagdir="/WEB-INF/tags/responsive/common/footer"  %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<!-- TPR-667 START -->
+<script type='text/javascript'>(function(a,b,c,d){a='//tags.tiqcdn.com/utag/tataunistore/main/prod/utag.js';b=document;c='script';d=b.createElement(c);d.src=a;d.type='text/java'+c;d.async=true;a=b.getElementsByTagName(c)[0];a.parentNode.insertBefore(d,a);})();</script>
+<script type='text/javascript'>(function(a,b,c,d){a='//tags.tiqcdn.com/utag/tataunistore/main/dev/utag.js';b=document;c='script';d=b.createElement(c);d.src=a;d.type='text/java'+c;d.async=true;a=b.getElementsByTagName(c)[0];a.parentNode.insertBefore(d,a);})();</script>
+<!-- TPR-667 END -->
 
 <!-- This is used for NewsLetter SignUp Section in footer -->
 <div class="right">
@@ -80,6 +84,11 @@
 <!-- The script is used for validating email in news letter sign up Section -->
 <script>
 	function emailvalidate() {
+		<!-- TPR - 667--->
+		utag.link({
+		"link_obj": this, "link_text": "newsletter_subscription" , "event_type" : "newsletter_subscription" 
+	}); 
+		<!-- TPR - 667 ends --->
 		var mail = $("#mailtext").val();
 
 		if (mail == "") {
@@ -116,6 +125,11 @@
 						
 						$("#error_message").css({"display":"block"});
 			            document.getElementById("error_message").innerHTML = "<font color='#60a119'>Yay! We can't wait to be pen-pals with you.</font>";
+			          //TPR-667 START
+			            /* utag.link({
+							"link_obj": this, "link_text": "newsletter_subscription" , "event_type" : "newsletter_subscription" 
+						}); */
+			          	//TPR-667 END
 						return true;
 					}
 					

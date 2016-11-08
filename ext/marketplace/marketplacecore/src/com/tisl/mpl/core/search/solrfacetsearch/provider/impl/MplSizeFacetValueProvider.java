@@ -31,6 +31,9 @@ public class MplSizeFacetValueProvider extends AbstractPropertyFieldValueProvide
 {
 	private FieldNameProvider fieldNameProvider;
 
+	//	@Autowired
+	//	private ConfigurationService configurationService;
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -55,6 +58,19 @@ public class MplSizeFacetValueProvider extends AbstractPropertyFieldValueProvide
 			final PcmProductVariantModel pcmColorModel = (PcmProductVariantModel) model;
 			//Get size for a product
 			final String size = pcmColorModel.getSize();
+
+			/**
+			 * This logic used to fix issue: TISREL-654 ('Size' facet shouldn't get displayed in the PLP of Belts category)
+			 */
+			if ("Accessories".equalsIgnoreCase(pcmColorModel.getProductCategoryType()))
+			{
+				return Collections.emptyList();
+			}
+
+			/**
+			 * Fix issue : TISREL-654 End
+			 */
+
 			//If size is not empty
 			if (size != null && !size.isEmpty())
 			{

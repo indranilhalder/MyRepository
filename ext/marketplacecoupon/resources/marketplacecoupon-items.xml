@@ -327,6 +327,36 @@
 				</attribute>
 			</attributes>
 		</itemtype>
+		<!-- added for TPR-1076 -->
+		<itemtype code="UnregisteredUserRestriction"
+		 	extends="Restriction"
+		 	generate="true" 
+			jaloclass="com.tisl.mpl.jalo.UnregisteredUserRestriction"
+		 	autocreate="true">
+		 	<attributes>
+		 		<attribute type="java.lang.String" qualifier="emailList">
+		 			<persistence type="property">
+		                <columntype database="oracle">
+							<value>CLOB</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+		 			</persistence>
+		 			<description>List of  unregistered email IDs in the website</description>
+		 			<modifiers read="true"  write="true"  search="true" optional="false"/>
+				 </attribute>
+		 	</attributes>
+		 </itemtype>
 		
 	</itemtypes>
 </items>

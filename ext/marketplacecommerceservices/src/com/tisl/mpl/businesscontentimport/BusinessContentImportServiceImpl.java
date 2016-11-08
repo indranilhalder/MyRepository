@@ -163,13 +163,18 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 			final String template = line.get(Integer.valueOf(TEMPLATE));
 			addInvalidColumnName(invalidColumns, "TEMPLATE", template);
 
+			//checks if there is entry for config in properties file
+			final String searchForTemplateInConfig = configurationService.getConfiguration().getString(
+					"businessConetnt.Template." + template);
+			//add error in column for invalid template names
+			if (StringUtils.isNotEmpty(template))
+			{
+				addInvalidColumnName(invalidColumns, "INVALID_TEMPLATE_NAME", searchForTemplateInConfig);
+			}
+
 			//if invalid columns are empty get inside
 			if (StringUtils.isEmpty(invalidColumns.toString()))
 			{
-				//checks if there is entry for config in properties file
-				final String searchForTemplateInConfig = configurationService.getConfiguration().getString(
-						"businessConetnt.Template." + template);
-
 				if (StringUtils.isNotEmpty(searchForTemplateInConfig))
 				{
 					int countAfter = 2;
@@ -189,24 +194,115 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 						processData(line, writer, contentMap);
 						continue;
 					}
+					else
+					{
+						try
+						{
+							writeErrorData(writer, invalidColumns.toString(), line, "MISSING_VALUES");
+						}
+						catch (final IOException e)
+						{
+							LOG.error("IOException Occured " + e.getMessage());
+						}
+					}
 				}
-
 				continue;
-
 			}
 			else
 			{
 				try
 				{
-					writeErrorData(writer, invalidColumns.toString(), line, "MISSING VALUES");
+					writeErrorData(writer, invalidColumns.toString(), line, "MISSING_VALUES");
 				}
 				catch (final IOException e)
 				{
-					// YTODO Auto-generated catch block
-					e.printStackTrace();
+					LOG.error("IOException Occured " + e.getMessage());
 				}
 			}
 			//add else to write the error for the file
+		}
+	}
+
+	/**
+	 * @Description: For mapping products against content template in bulk,checks for the basic coloumns
+	 * @param reader
+	 * @param writer
+	 * @param map
+	 * @param errorPosition
+	 * @param headerRowIncluded
+	 */
+	@Override
+	public void processUpdateForProductMappingImport(final CSVReader reader, final CSVWriter writer,
+			final Map<Integer, String> map, final Integer errorPosition, final boolean headerRowIncluded)
+	{
+		LOG.debug("Mapping to product starts");
+		while (reader.readNextLine())
+		{
+			final Map<Integer, String> line = reader.getLine();
+			final StringBuilder invalidColumns = new StringBuilder();
+
+			final String productCode = line.get(Integer.valueOf(PRODUCTCODE));
+			addInvalidColumnName(invalidColumns, "PRODUCTCODE", productCode);
+
+			final String templateCode = line.get(Integer.valueOf(TEMPLATE));
+			addInvalidColumnName(invalidColumns, "TEMPLATEPRODUCTCODE", templateCode);
+
+			final String action = line.get(Integer.valueOf(2));
+			addInvalidColumnName(invalidColumns, "ACTION", action);
+
+
+			//if invalid columns are empty get inside
+			if (StringUtils.isEmpty(invalidColumns.toString()))
+			{
+				ContentPageModel cm = null;
+				final ProductModel product = businessContentImportDao.fetchProductforCode(productCode);
+				try
+				{
+					cm = (ContentPageModel) getCmsPageService().getPageForIdandCatalogVersion(templateCode, getCatalogVersion());
+					final List<ProductModel> productList = cm.getAssociatedProducts();
+					final List<ProductModel> updateProductList = new ArrayList();
+					// Deletion of product mapping
+					if (action.equalsIgnoreCase("delete"))
+					{
+
+						if (productList.contains(product))
+						{
+							updateProductList.addAll(productList);
+							updateProductList.remove(product);
+						}
+					}
+					//addition of product mapping
+					if (action.equalsIgnoreCase("add"))
+					{
+						if (!productList.contains(product))
+						{
+							updateProductList.add(product);
+							updateProductList.addAll(productList);
+						}
+					}
+					if (CollectionUtils.isNotEmpty(updateProductList))
+					{
+						cm.setAssociatedProducts(updateProductList);
+						modelService.save(cm);
+					}
+				}
+				catch (final Exception e)
+				{
+					LOG.error("No page exist with Uid:" + templateCode + ". Error is " + e.getMessage());
+				}
+				continue;
+			}
+			else
+			{
+				try
+				{
+					writeErrorData(writer, invalidColumns.toString(), line, "MISSING_VALUES");
+				}
+				catch (final IOException e)
+				{
+					LOG.error("IOException Occured " + e.getMessage());
+				}
+			}
 		}
 	}
 
@@ -222,8 +318,6 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		final boolean isIncorrectCode = false;
 		try
 		{
-
-
 			//Check If Already Present
 			final ProductModel product = businessContentImportDao.fetchProductforCode(line.get(Integer.valueOf(PRODUCTCODE)));
 			String title = product.getTitle();
@@ -234,18 +328,17 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 			final String template = line.get(Integer.valueOf(TEMPLATE));
 			final String uid = makeUid(product.getCode(), title, template);
 			List<AbstractCMSComponentModel> componentlist;
-			ContentPageModel cm2 = null;
+
 			try
 			{
-				cm2 = (ContentPageModel) getCmsPageService().getPageForIdandCatalogVersion(uid, getCatalogVersion());
+				final ContentPageModel cmodel = (ContentPageModel) getCmsPageService().getPageForIdandCatalogVersion(uid,
+						getCatalogVersion());
+				LOG.debug(cmodel);
 				componentlist = makeComponents(contentMap, line, writer, true);
 			}
 			catch (final CMSItemNotFoundException e)
 			{
-				//				// YTODO Auto-generated catch block
-				LOG.error("No page Exist..Making new page with Uid:" + uid);
-				e.printStackTrace();
-
+				LOG.error("No page Exist..Making new page with Uid:" + uid + "Error is " + e.getMessage());
 				componentlist = makeComponents(contentMap, line, writer, false);
 				//Make Content Page
 				final ContentPageModel cm = makeContentPageforProduct(line, writer);
@@ -256,15 +349,12 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 				//Make Content Slot for Page and assigning content slots to ContentPageModel
 				makeCotentSlotforPage(cm, cSlotList, line, writer);
 				//}
-
 			}
-
-
 		}
 		catch (final ModelSavingException | ModelNotFoundException | NumberFormatException exception)
 		{
 			final List<Integer> errorColumnList = errorListData(isIncorrectCode);
-			LOG.error(exception.getMessage());
+			LOG.error("Exception in processing processData" + exception.getMessage());
 			populateErrorEntry(line, writer, errorColumnList);
 		}
 	}
@@ -341,12 +431,12 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		}
 		catch (final ModelSavingException | ModelNotFoundException exception)
 		{
-			LOG.error("Problem while Making ContentPage" + exception.getMessage());
+			LOG.error("Problem while Making ContentPage in makeContentPageforProduct " + exception.getMessage());
 			populateErrorEntry(line, writer, errorColumnList);
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Problem while Making ContentPage" + e.getMessage());
+			LOG.error("Problem while Making ContentPage in makeContentPageforProduct " + e.getMessage());
 			populateErrorEntry(line, writer, errorColumnList);
 		}
 
@@ -354,14 +444,18 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 
 	}
 
-
+	/**
+	 * @Description This method creates the components as recieved from contentMap
+	 * @param contentMap
+	 * @param line
+	 * @param writer
+	 * @param isUpdatefeed
+	 * @return List<AbstractCMSComponentModel>
+	 */
 	List<AbstractCMSComponentModel> makeComponents(final Map<String, String> contentMap, final Map<Integer, String> line,
 			final CSVWriter writer, final boolean isUpdatefeed)
 	{
 		final List<AbstractCMSComponentModel> componentlist = new ArrayList<>();
-
-
-
 		//Making Components
 		for (final Map.Entry<String, String> entry : contentMap.entrySet())
 		{
@@ -402,32 +496,23 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		final List<Integer> errorColumnList = errorListData(false);
 		final String uid = makeUid(line.get(Integer.valueOf(PRODUCTCODE)), line.get(Integer.valueOf(TEMPLATE)), attributeName);
 		SimpleBannerComponentModel sm = null;
-		//final MediaModel mm = null;
 		try
 		{
 			if (!isUpdatefeed)
 			{
 				sm = new SimpleBannerComponentModel();
-				//mm = new MediaModel();
-				//mm.setURL2(imageUrl);
 				sm.setUid(uid);
 				sm.setName(uid);
 				sm.setUrlLink(imageUrl);
 				sm.setCatalogVersion(getCatalogVersion());
-				//sm.setMedia(mm);
 				modelService.save(sm);
 			}
 			else
 			{
 				sm = businessContentImportDao.getSimpleBannerComponentforUid(uid);
-				sm.getMedia().setUrl2(imageUrl);
 				sm.setUrlLink(imageUrl);
 				modelService.save(sm);
-
 			}
-
-
-
 		}
 		catch (final ModelSavingException | ModelNotFoundException exception)
 		{
@@ -438,6 +523,15 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 
 	}
 
+	/**
+	 * @Description Make a video banner component model
+	 * @param videoUrl
+	 * @param attributeName
+	 * @param line
+	 * @param writer
+	 * @param isUpdatefeed
+	 * @return VideoComponentModel
+	 */
 	VideoComponentModel makeVideoComponent(final String videoUrl, final String attributeName, final Map<Integer, String> line,
 			final CSVWriter writer, final boolean isUpdatefeed)
 	{
@@ -474,7 +568,15 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 
 	}
 
-
+	/**
+	 * @Description makeTextComponent
+	 * @param content
+	 * @param attributeName
+	 * @param line
+	 * @param writer
+	 * @param isUpdatefeed
+	 * @return CMSParagraphComponentModel
+	 */
 	CMSParagraphComponentModel makeTextComponent(final String content, final String attributeName,
 			final Map<Integer, String> line, final CSVWriter writer, final boolean isUpdatefeed)
 	{
@@ -513,7 +615,13 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 
 	}
 
-
+	/**
+	 * @Description makeContentSlot
+	 * @param line
+	 * @param writer
+	 * @param componentlist
+	 * @return List<ContentSlotModel>
+	 */
 	List<ContentSlotModel> makeContentSlot(final Map<Integer, String> line, final CSVWriter writer,
 			final List<AbstractCMSComponentModel> componentlist)
 	{
@@ -538,7 +646,6 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 				cSlotList.add(cSlot);
 
 			}
-
 			modelService.saveAll(cSlotList);
 		}
 		catch (final ModelSavingException | ModelNotFoundException exception)
@@ -549,6 +656,13 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		return cSlotList;
 	}
 
+	/**
+	 * @Description makeCotentSlotforPage
+	 * @param cm
+	 * @param cSlotList
+	 * @param line
+	 * @param writer
+	 */
 	void makeCotentSlotforPage(final ContentPageModel cm, final List<ContentSlotModel> cSlotList, final Map<Integer, String> line,
 			final CSVWriter writer)
 	{
@@ -588,6 +702,12 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 
 	}
 
+	/**
+	 * @Description Populating error entries for logging into error csv
+	 * @param line
+	 * @param writer
+	 * @param errorColumnList
+	 */
 	private void populateErrorEntry(final Map<Integer, String> line, final CSVWriter writer, final List<Integer> errorColumnList)
 	{
 		try
@@ -596,12 +716,9 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		}
 		catch (final IOException e)
 		{
-			LOG.debug(e.getMessage());
+			LOG.error("IO exception occured in populateErrorEntry " + e.getMessage());
 		}
 	}
-
-
-
 
 	/**
 	 * @Description: Validates Data Uploaded
@@ -664,10 +781,10 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 	public void writeErrorData(final CSVWriter writer, final String errorColumn, final Map<Integer, String> line,
 			final String errorMessage) throws IOException
 	{
-
-		writer.writeComment(errorColumn + "errorMessage ,");
+		line.put(Integer.valueOf(0), errorColumn);
+		line.put(Integer.valueOf(1), errorMessage);
+		writer.writeComment("columnName," + "errorMessage ," + "Line");
 		writer.write(line);
-
 	}
 
 
@@ -688,18 +805,21 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 			}
 			else
 			{
+				invalidColumns.append('-');
 				invalidColumns.append(columnName);
-				invalidColumns.append(',');
 			}
 		}
 	}
 
+	/**
+	 * @Description Make the UID for template
+	 * @param param1
+	 * @param param2
+	 * @param param3
+	 * @return String
+	 */
 	public String makeUid(final String param1, final String param2, final String param3)
 	{
 		return param1 + "_" + param2 + "_" + param3;
 	}
-
-
-
-
 }
