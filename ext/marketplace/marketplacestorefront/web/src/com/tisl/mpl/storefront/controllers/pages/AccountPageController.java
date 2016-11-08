@@ -1130,17 +1130,18 @@ public class AccountPageController extends AbstractMplSearchPageController
 							{
 								if (orderEntry.getTransactionId().equalsIgnoreCase(mmmodel.getOrderEntry().getTransactionID()))
 								{
-									if (mm.getTypeofreturn().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.SELF_COURIER))
+									if(null!= mm.getTypeofreturn() && null!=mm.getTypeofreturn().getCode())
 									{
-										orderEntry.setReturnMethodType("SELF_COURIER");
-									}
-									else
-									{
-										orderEntry.setReturnMethodType("REVERSE_PICKUP");
+      									if (mm.getTypeofreturn().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.SELF_COURIER))
+      									{
+      										orderEntry.setReturnMethodType("SELF_COURIER");
+      									}
+      									else
+      									{
+      										orderEntry.setReturnMethodType("REVERSE_PICKUP");
+      									}
 									}
 								}
-
-
 							}
 						}
 					}
@@ -7247,7 +7248,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequestMapping(value = RequestMappingUrlConstants.CHANGE_DELIVERY_ADDRES_URL, method =
 	{ RequestMethod.POST, RequestMethod.GET })
 	public String changeDeliveryAddress(@PathVariable final String orderCode,
-			@ModelAttribute("addressForm") final AccountAddressForm addressForm, Model model) throws CMSItemNotFoundException
+			@ModelAttribute("addressForm") final AccountAddressForm addressForm, Model model) throws CMSItemNotFoundException ,UnsupportedEncodingException
 	{
 		String errorMsg = mplAddressValidator.validate(addressForm);
 		//Validate the address 

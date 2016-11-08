@@ -310,7 +310,7 @@
 			} catch(error) {
 				$( "#QuickDrop" ).prop( "checked", true );
 				console.log("Error"+error);
-				$(".quickDropArea").append("<div class='errorText'>No Stores Available.</div>");
+				/*$(".quickDropArea").append("<div class='errorText'>No Stores Available.</div>");*/
 				updateMap();
 				$("#map-canvas").prepend("<div style='padding: 15px 10px;'>No stores availabe to show Map, please try again.</div>");
 			}
@@ -431,9 +431,10 @@
 				$("#popupFields #lastName").val($("."+className+" .lastName").text());
 				$("#popupFields #addressLine1").val($("."+className+" .addressline1").text());
 				$("#popupFields #addressLine2").val($("."+className+" .addressline2").text());
+				$("#popupFields #addressLine3").val($("."+className+" .addressline3").text());
 				$("#popupFields #pincode").val($("."+className+" .postalCode").text());
 				$("#popupFields #mobileNo").val($("."+className+" .phoneNumber").text());
-				$("#popupFields #landmark").val($("."+className+" .addressline2").text());
+				$("#popupFields #landmarkother").val($("."+className+" .otherLandmark").text());
 				$("#popupFields #city").val($("."+className+" .addressTown").text());
 				$("#popupFields #stateListBox").val($("."+className+" .state").text());
 				$("#popupFields #country").val($("."+className+" .country").text());
@@ -596,12 +597,22 @@
 		
 		
 		function checkPopupValidations() {
+			console.log('checkPopupValidations()');
+			var letters = new RegExp(/^[A-z]*$/);
+			var isString = isNaN(mobile);
+			
 			$("#addAddressForm .errorText").hide();
 			if($("#addAddressForm #firstName").val().length < 2) {
 				$("#addAddressForm .errorText").show().text("Please enter First name");
 				return false;
-			} else if($("#addAddressForm #lastName").val().length < 2) {
+			}else if(letters.test($("#addAddressForm #firstName").val()) == false ){
+				$("#addAddressForm .errorText").show().text("First Name should contain only alphabets");
+				return false;
+			}else if($("#addAddressForm #lastName").val().length < 2) {
 				$("#addAddressForm .errorText").show().text("Please enter Last name");
+				return false;
+			}else if(letters.test($("#addAddressForm #lastName").val()) == false){
+				$("#addAddressForm .errorText").show().text("Last Name should contain only alphabets");
 				return false;
 			}else if($("#addAddressForm #addressLine1").val().length < 2) {
 				$("#addAddressForm .errorText").show().text("Please enter Address Line 1");
@@ -609,13 +620,20 @@
 			}else if($("#addAddressForm #addressLine2").val().length < 2) {
 				$("#addAddressForm .errorText").show().text("Please enter Address Line 2");
 				return false;
+			}else if($("#addAddressForm #addressLine3").val().length < 2) {
+				$("#addAddressForm .errorText").show().text("Please enter Address Line 3");
+				return false;
 			}else if($("#addAddressForm #pincode").val().length < 6) {
 				$("#addAddressForm .errorText").show().text("Please enter valid pincode");
 				return false;
 			}else if($("#addAddressForm #mobileNo").val().length < 10) {
 				$("#addAddressForm .errorText").show().text("Please enter valid Mobile number");
 				return false;
-			}else if($("#addAddressForm #city").val().length < 2) {
+			}else if(isString==true || $("#addAddressForm #mobileNo").val().trim()==''){
+				$("#addAddressForm .errorText").show().text("Enter only Numbers");
+				return false;
+			}
+			else if($("#addAddressForm #city").val().length < 2) {
 				$("#addAddressForm .errorText").show().text("Please enter City");
 				return false;
 			}else if($("#addAddressForm #stateListBox").val().length < 2) {
@@ -729,6 +747,7 @@
 							$(".update"+temp+" li span.lastName").text($("#addAddressForm #lastName").val());
 							$(".update"+temp+" li span.addressLine1").text($("#addAddressForm #addressLine1").val());
 							$(".update"+temp+" li span.addressLine2").text($("#addAddressForm #addressLine2").val());
+							$(".update"+temp+" li span.otherLandmark").text($("#addAddressForm #otherLandmark").val());
 							$(".update"+temp+" li span.postalCode").text($("#addAddressForm #pincode").val());
 							$(".update"+temp+" li span.city").text($("#addAddressForm #city").val());
 							$(".update"+temp+" li span.stateListBox").text($("#addAddressForm #stateListBox").val());
@@ -779,6 +798,7 @@
 					$(".update"+temp+" li span.lastName").text($("#addAddressForm #lastName").val());
 					$(".update"+temp+" li span.addressLine1").text($("#addAddressForm #addressLine1").val());
 					$(".update"+temp+" li span.addressLine2").text($("#addAddressForm #addressLine2").val());
+					$(".update"+temp+" li span.otherLandmark").text($("#addAddressForm #otherLandmark").val());
 					$(".update"+temp+" li span.postalCode").text($("#addAddressForm #pincode").val());
 					$(".update"+temp+" li span.city").text($("#addAddressForm #city").val());
 					$(".update"+temp+" li span.stateListBox").text($("#addAddressForm #stateListBox").val());

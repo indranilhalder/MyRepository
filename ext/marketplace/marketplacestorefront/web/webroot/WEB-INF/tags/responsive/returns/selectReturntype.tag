@@ -100,8 +100,8 @@
 								<div class="col-md-2 col-sm-2">
 									<b><spring:theme code="text.order.returns.refundmode"/></b> <br/>
 									<form:select name="size" class="refundMode" path="refundMode" value="${customerBankDetails.transactionType}">
-										    <form:option value="NEFT" >NEFT</form:option>
-											<form:option value="RTGF">RTGF</form:option>						
+										    <form:option value="N" >NEFT</form:option>
+											<form:option value="R">RTGS</form:option>						
 									</form:select>
 								</div>
 								<div class="col-md-2 col-sm-2">

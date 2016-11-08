@@ -281,11 +281,15 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
 		{
 			model.addAttribute(ModelAttributetConstants.PINCODE_NOT_SERVICEABLE, response.getResponseMessage());
-			if (response.getIsReturnLogisticsAvailable().equalsIgnoreCase(ModelAttributetConstants.N_CAPS_VAL))
-			{
-				returnLogisticsCheck = false;
-				returnFulfillmentType=response.getReturnFulfillmentType();
-			}
+			 if (response.getIsReturnLogisticsAvailable().equalsIgnoreCase(ModelAttributetConstants.N_CAPS_VAL))
+			   {
+			    returnLogisticsCheck = false;
+			    //returnFulfillmentType = response.getReturnFulfillmentType();
+			   }
+			   else if (response.getIsReturnLogisticsAvailable().equalsIgnoreCase(ModelAttributetConstants.Y_CAPS_VAL))
+			   {
+			    returnFulfillmentType = response.getReturnFulfillmentType();
+			   }
 		}
 		storeContentPageTitleInModel(model, MessageConstants.RETURN_REQUEST);
 		storeCmsPageInModel(model, getContentPageForLabelOrId(RETURN_SUBMIT));
@@ -377,7 +381,11 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		RTSAndRSSReturnInfoRequestData infoRequestData=new RTSAndRSSReturnInfoRequestData();
 		
 		List<String> stores=Arrays.asList(returnForm.getStoreIds());
+		if(null!= subOrderDetails.getPurchaseOrderNumber()){
+		infoRequestData.setOrderId(subOrderDetails.getPurchaseOrderNumber());
+		}else{
 		infoRequestData.setOrderId(returnForm.getOrderCode());
+		}
 		infoRequestData.setRTSStore(stores);
 		infoRequestData.setTransactionId(transactionId);
 		infoRequestData.setReturnType(MarketplacecommerceservicesConstants.RETURN_TYPE_RTS);
