@@ -107,9 +107,11 @@ public class StorefrontLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandle
 		}
 		getGuidCookieStrategy().deleteCookie(request, response);
 
+
 		// Delegate to default redirect behaviour
 		super.onLogoutSuccess(request, response, authentication);
 	}
+
 
 
 	@Override

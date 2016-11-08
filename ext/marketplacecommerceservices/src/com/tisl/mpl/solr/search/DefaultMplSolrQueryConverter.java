@@ -275,6 +275,7 @@ public class DefaultMplSolrQueryConverter extends DefaultSolrQueryConverter
 			populatedFacetDetails(searchQuery, results, 2, indexedType, "micrositeSnsCategory");
 			populatedFacetDetails(searchQuery, results, 3, indexedType, "allCategories");
 			populatedFacetDetails(searchQuery, results, 4, indexedType, "sellerId");
+			populatedFacetDetails(searchQuery, results, 5, indexedType, "isLuxuryProduct");
 			return results;
 		}
 		else

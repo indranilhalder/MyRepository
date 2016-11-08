@@ -231,6 +231,12 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 					}
 
 					variantOptions.add(variantOptionData);
+					if (null == variantOptionData.getColourCode())
+					{
+						final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode()) ? pm
+								.getColourHexCode() : pm.getColour().toLowerCase());
+						variantOptionData.setColourCode(color);
+					}
 					if (sizeLink.isEmpty())
 					{
 						isSizeVariantPresent = false;
@@ -239,7 +245,6 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 				productData.setAllVariantsId(allVariantsId);
 				variantOptions = populateColor(variantOptions);
 				productData.setVariantOptions(variantOptions);
-
 				if (isSizeVariantPresent && CollectionUtils.isNotEmpty(productData.getVariantOptions()))
 				{
 					Collections.sort(productData.getVariantOptions(), variantSizeComparator);

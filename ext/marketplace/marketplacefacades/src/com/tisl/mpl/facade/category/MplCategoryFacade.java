@@ -6,6 +6,8 @@ package com.tisl.mpl.facade.category;
 import de.hybris.platform.commercefacades.catalog.CatalogFacade;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
 
+import com.tisl.mpl.wsdto.BreadcrumbResponseWsDTO;
+
 
 /**
  * @author TCS
@@ -31,4 +33,11 @@ public interface MplCategoryFacade extends CatalogFacade
 	 * @param sellerId
 	 */
 	public String getActiveSellerRootCategoryBySellerId(final String sellerId);
+
+	/**
+	 * @param code
+	 * @param type
+	 * @return BreadcrumbResponseWsDTO
+	 */
+	public BreadcrumbResponseWsDTO getBreadcrumb(String code, String type);
 }

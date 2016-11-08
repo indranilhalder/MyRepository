@@ -41,7 +41,7 @@
 							Exclude OutofStock&nbsp;<a href="${removeQueryUrl}" ><span class="remove_filter">x</span></a>
 						</li>
 					</c:if>
-					<c:if test="${breadcrumb.facetName ne 'inStockFlag' && breadcrumb.facetName ne 'sellerId' &&  breadcrumb.facetName ne 'isOffersExisting' && breadcrumb.facetName ne 'promotedProduct'}">
+					<c:if test="${breadcrumb.facetName ne 'inStockFlag' && breadcrumb.facetName ne 'sellerId' &&  breadcrumb.facetName ne 'isOffersExisting' && breadcrumb.facetName ne 'promotedProduct'  && breadcrumb.facetName ne 'isLuxuryProduct'}">
 						<li>
 						   <c:choose>
 						   <c:when test="${breadcrumb.removeQuery.url!='' && not empty offers}">

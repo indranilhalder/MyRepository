@@ -210,6 +210,7 @@ public class ProductPageController extends AbstractPageController
 	private static final String CUSTOMER_CARE_EMAIL = "hello@tatacliq.com";
 	private static final String PRODUCT_OLD_URL_PATTERN = "/**/p";
 	private static final String BOXING = "boxing";
+	private static final String USSID = "ussid";
 
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(ProductPageController.class);
@@ -337,6 +338,16 @@ public class ProductPageController extends AbstractPageController
 			LOG.debug("**************************************opening pdp for*************" + productCode);
 			final ProductModel productModel = productService.getProductForCode(productCode);
 
+			if (productModel.getLuxIndicator() != null
+					&& productModel.getLuxIndicator().getCode().equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
+			{
+				LOG.debug("**********The product is a luxury product.Hence redirecting to luxury website***********" + productCode);
+				final String luxuryHost = configurationService.getConfiguration().getString("luxury.resource.host");
+				final String luxuryProductUrl = luxuryHost + "/p-" + productCode;
+				LOG.debug("Redirecting to ::::::" + luxuryProductUrl);
+				response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+				response.setHeader("Location", luxuryProductUrl);
+			}
 			final String redirection = checkRequestUrl(request, response, productModelUrlResolver.resolve(productModel));
 
 			if (StringUtils.isNotEmpty(redirection))
@@ -571,6 +582,7 @@ public class ProductPageController extends AbstractPageController
 			//model.addAttribute("product_category", productCategory);
 			model.addAttribute("product_category", breadcrumbs.get(0).getName());
 			model.addAttribute("page_subcategory_name_L3", productSubCategoryName);
+
 			//TPR-430 Start
 			if (breadcrumbs.size() > 0)
 			{
@@ -1160,7 +1172,7 @@ public class ProductPageController extends AbstractPageController
 				{
 					final PinCodeResponseData data = new PinCodeResponseData();
 					final JSONObject rec = recs.getJSONObject(i);
-					final String ussid = rec.getString("ussid");
+					final String ussid = rec.getString(USSID);
 					final String stock = rec.getString("stock");
 					data.setUssid(ussid);
 					data.setStockCount(Integer.valueOf(stock));
@@ -1791,11 +1803,15 @@ public class ProductPageController extends AbstractPageController
 								{
 									productFeatureMap.clear();
 								}
-								productFeatureMap.put(featureValueData.getValue(),
-										productFeature != null && productFeature.getUnit() != null
-												&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit().getSymbol()
-												: "");
-								mapConfigurableAttributes.put(featureData.getName(), productFeatureMap);
+								if (null != properitsValue && featureValueData.getValue() != null
+										&& properitsValue.toLowerCase().contains(featureData.getName().toLowerCase()))
+								{
+									productFeatureMap.put(featureValueData.getValue(),
+											productFeature != null && productFeature.getUnit() != null
+													&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit().getSymbol()
+													: "");
+									mapConfigurableAttributes.put(featureData.getName(), productFeatureMap);
+								}
 							} //end apparel
 							  //electronics
 
@@ -1961,7 +1977,7 @@ public class ProductPageController extends AbstractPageController
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + RequestMappingUrlConstants.ADD_WISHLIST_IN_POPUP, method = RequestMethod.GET)
 	//@RequireHardLogIn
 	public boolean addWishListsForPDP(@RequestParam(ModelAttributetConstants.PRODUCT) final String productCode,
-			@RequestParam("ussid") final String ussid, @RequestParam("wish") final String wishName,
+			@RequestParam(USSID) final String ussid, @RequestParam("wish") final String wishName,
 			@RequestParam("sizeSelected") final String sizeSelected, final Model model, final HttpServletRequest request,
 			final HttpServletResponse response) throws CMSItemNotFoundException
 	{
@@ -2460,7 +2476,7 @@ public class ProductPageController extends AbstractPageController
 	 * @return Wishlist2Model
 	 */
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-getLastModifiedWishlistByUssid", method = RequestMethod.GET)
-	public @ResponseBody boolean getLastModifiedWishlist(@RequestParam("ussid") final String ussid)
+	public @ResponseBody boolean getLastModifiedWishlist(@RequestParam(USSID) final String ussid)
 	{
 		boolean existUssid = false;
 
@@ -2480,7 +2496,6 @@ public class ProductPageController extends AbstractPageController
 		return existUssid;
 
 	}
-
 
 	/**
 	 * @Description Added for displaying offer messages other than promotion, TPR-589: Displaying offer message from
@@ -2692,6 +2707,44 @@ public class ProductPageController extends AbstractPageController
 		}
 
 		return productContentPage;
+	}
+
+	/**
+	 * @description method is to remove products in wishlist in in pdp
+	 * @param productCode
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @throws CMSItemNotFoundException
+	 */
+	@ResponseBody
+	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-removeFromWl", method = RequestMethod.GET)
+	//@RequireHardLogIn
+	public boolean removeFromWl(@RequestParam(ModelAttributetConstants.PRODUCT) final String productCode,
+			@RequestParam(USSID) final String ussid, @RequestParam("wish") final String wishName, final Model model)
+			throws CMSItemNotFoundException
+	{
+		model.addAttribute(ModelAttributetConstants.MY_ACCOUNT_FLAG, ModelAttributetConstants.N_CAPS_VAL);
+
+		boolean remove = false;
+		try
+		{
+			remove = productDetailsHelper.removeFromWishList(productCode, ussid);
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+
+		return remove;
+
+
 	}
 
 
