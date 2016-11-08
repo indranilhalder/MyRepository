@@ -51194,13 +51194,17 @@ padding: 0 24px;
 .featured_collection .blp_featured_collection_wrapper .featured_collection_section {
     width: 48.5%;
     margin-bottom: 10px;
+    display: inline-block;
+    float: none;
+    vertical-align: top;
 }
 .featured_collection .blp_featured_collection_wrapper {
     padding: 0;
 }
 .featured_collection .blp_featured_collection_wrapper .featured_collection_section:nth-child(even) {
-    float: right;
+   /* float: right; */
     margin-right: 0;
+    margin-left: 1.5%;
 }
 .featured_collection{
 	padding: 30px 12px;
@@ -52436,14 +52440,18 @@ word-break: break-word;
 	.winter_launch .clp_winter_launch_wrapper .winter_launch_section {
 		width: 48.5%;
 		margin-bottom: 10px;
+		display: inline-block;
+    	float: none;
+    	vertical-align: top;
 	}
 	.winter_launch .clp_winter_launch_wrapper {
 		padding: 0;
 	}
 	.winter_launch .clp_winter_launch_wrapper .winter_launch_section:nth-child(even)
 		{
-		float: right;
+		/* float: right; */
 		margin-right: 0;
+		margin-left:1.5%;
 	}
 	.winter_launch {
 		padding: 30px 12px;
