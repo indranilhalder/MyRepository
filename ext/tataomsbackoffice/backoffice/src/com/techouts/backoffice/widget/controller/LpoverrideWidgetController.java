@@ -149,7 +149,6 @@ public class LpoverrideWidgetController extends DefaultWidgetController
 		else
 		{
 			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_ORDALLOC);
-			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_ODREALOC);
 			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_PILIGENE);
 			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_PICKCONF);
 			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_SCANNED);
@@ -266,8 +265,6 @@ public class LpoverrideWidgetController extends DefaultWidgetController
 		{
 			Messagebox.show("Atleast one field is mandatory");
 		}
-
-
 	}
 
 	/*
