@@ -2054,65 +2054,71 @@ $(document).on('click','.facet.js-facet.Size .js-facet-name h3',function(){
 });
 //$(document).on('click','.left-block .toggle-filterSerp',function(){
 function toggleFilter(){
-		colorSwatch();
-		sizeSwatch();
-		//Mobile view filter ajax
-		//$(".product-facet.js-product-facet.listing-leftmenu").slideToggle();
-		//$(".toggle-filterSerp").toggleClass("active");
-		/*mobile filter*/
-		$(".mob-filter-wrapper").fadeIn();
-		$(this).toggleClass("active");
-		
-		//TPR-845
-		var spanCount_colour=$(".facet_mobile .filter-colour.selected-colour").length;
-		if(spanCount_colour>0)
-			{
-				$(".facet_mobile .filter-colour.selected-colour").parents(".facet.js-facet").find(".category-icons span").text(spanCount_colour);
-			}
-
-		var spanCount_size=$(".facet_mobile .filter-size.selected-size").length;
-		if(spanCount_size>0)
+	colorSwatch();
+	sizeSwatch();
+	//Mobile view filter ajax
+	//$(".product-facet.js-product-facet.listing-leftmenu").slideToggle();
+	//$(".toggle-filterSerp").toggleClass("active");
+	/*mobile filter*/
+	$(".mob-filter-wrapper").fadeIn();
+	$(this).toggleClass("active");
+	
+	//TPR-845
+	var spanCount_colour=$(".facet_mobile .filter-colour.selected-colour").length;
+	if(spanCount_colour>0)
 		{
-			$(".facet_mobile .filter-size.selected-size").parents(".facet.js-facet").find(".category-icons span").text(spanCount_size);
+			$(".facet_mobile .filter-colour.selected-colour").parents(".facet.js-facet").find(".category-icons span").text(spanCount_colour);
 		}
 
-		$(".facet_mobile .facet.js-facet").each(function(){
+	var spanCount_size=$(".facet_mobile .filter-size.selected-size").length;
+	if(spanCount_size>0)
+	{
+		$(".facet_mobile .filter-size.selected-size").parents(".facet.js-facet").find(".category-icons span").text(spanCount_size);
+	}
+
+	$(".facet_mobile .facet.js-facet").each(function(){
+		console.log('hi');
+		var spanCountMoreView = $(this).find('ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden').find("input[type=checkbox]:checked").length;
+		if(spanCountMoreView){
+			$(this).find(".category-icons span").text(spanCountMoreView);
+		}else{
 			var spanCount=$(this).find(".facet-list li").find("input[type=checkbox]:checked").length;
 			if(spanCount>0)
 				{
 					$(this).find(".category-icons span").text(spanCount);
 				}
-			});
-		$(".category-icons").each(function(){
-			if($(this).find("span").text() == ""){
-				$(this).addClass("blank");
-			}
-			else{
-				$(this).removeClass("blank");
-			}
+		}
 		});
-		$(".facet-name.js-facet-name h3").removeClass("active-mob");
-		$(".facet-name.js-facet-name h3").first().addClass("active-mob");
-		$(".facet-name.js-facet-name h3").parent().siblings().hide();
-		$(".facet-name.js-facet-name h3.active-mob").parent().siblings().show();
-		$(".facet-name.js-facet-name h3.active-mob").parent().siblings().find("#searchPageDeptHierTree").show();
-		$(".facet-name.js-facet-name h3.active-mob").parent().siblings().find("#categoryPageDeptHierTree").show();
-		
-		/*TPR-3658 start*/
-		var j = 0;
-		$(".listing.wrapper .mob-filter-wrapper > .listing-leftmenu > div.facet_mobile").not(".facet-name").each(function(){
-			if($(this).children().length == 0){
-				return true;
-			}
-			if($(this).find(".facet.js-facet.collectionIds").length > 0){
-				return true;
-			}
-			if(j % 2 == 0){
-				$(this).addClass("light-bg");
-			}
-			j++;
-			});
-		/*TPR-3658 end*/
+	$(".category-icons").each(function(){
+		if($(this).find("span").text() == ""){
+			$(this).addClass("blank");
+		}
+		else{
+			$(this).removeClass("blank");
+		}
+	});
+	$(".facet-name.js-facet-name h3").removeClass("active-mob");
+	$(".facet-name.js-facet-name h3").first().addClass("active-mob");
+	$(".facet-name.js-facet-name h3").parent().siblings().hide();
+	$(".facet-name.js-facet-name h3.active-mob").parent().siblings().show();
+	$(".facet-name.js-facet-name h3.active-mob").parent().siblings().find("#searchPageDeptHierTree").show();
+	$(".facet-name.js-facet-name h3.active-mob").parent().siblings().find("#categoryPageDeptHierTree").show();
+	
+	/*TPR-3658 start*/
+	var j = 0;
+	$(".listing.wrapper .mob-filter-wrapper > .listing-leftmenu > div.facet_mobile").not(".facet-name").each(function(){
+		if($(this).children().length == 0){
+			return true;
+		}
+		if($(this).find(".facet.js-facet.collectionIds").length > 0){
+			return true;
+		}
+		if(j % 2 == 0){
+			$(this).addClass("light-bg");
+		}
+		j++;
+		});
+	/*TPR-3658 end*/
 }
 		//	});
 	$(".category-icons").each(function(){
