@@ -1711,5 +1711,8 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	
 
 	<!-- close R2.3 Changes -->
-	
+	  <bean id="initiateReturnForOrderJob"
+		class="com.tisl.mpl.facade.job.InitiateReturnForOrderJob"
+		autowire="byName" >
+	</bean>
 </beans>

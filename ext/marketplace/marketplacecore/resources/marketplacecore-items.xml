@@ -1332,6 +1332,10 @@
 					<index name="MEDIASIDIDX">
 						<key attribute="owner" />
 					</index>
+					<index name="IDX_MEDIAS_CT">
+						<key attribute="catalogVersion" />
+						<key attribute="itemtype" />
+					</index>
 				</indexes>
 			</itemtype>
 
@@ -2880,6 +2884,13 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
+				<indexes>
+					<index name="IDX_PRODUCTS_CTA">
+						<key attribute="catalogVersion" />
+						<key attribute="approvalStatus" />
+						<key attribute="itemtype" />
+					</index> 
+				</indexes>
 			</itemtype>
 			<itemtype code="Customer" generate="false" autocreate="false">
 				<attributes>
@@ -4636,6 +4647,13 @@
 						<persistence type='property' />
 					</attribute>
 				</attributes>
+				<indexes>
+					<index name="IDEX_PROCESSES_AST">
+							<key attribute="awbNumber" />
+							<key attribute="shipmentStatus" />
+							<key attribute="itemtype" />	
+					</index>
+				</indexes>
 			</itemtype>
 			<itemtype code="OrderRefundProcess" extends="OrderProcess"
 				autocreate="true" generate="true"
@@ -5523,7 +5541,15 @@
 					</index>
 					<index name="BuyBox_USSID_IDX">
 						<key attribute="sellerArticleSKU" />
-					</index> 
+					</index>
+					<index name="IDX_MPLBUYBOX_PDA">
+						<key attribute="product" />
+						<key attribute="delisted" />
+						<key attribute="available" />
+						<key attribute="sellerStartDate" />
+						<key attribute="price" />
+						<key attribute="itemtype" />
+					</index>  
 				</indexes>
 			</itemtype>
 
@@ -6413,12 +6439,12 @@
 			<itemtype code="OrderHistoryEntry" autocreate="false"
 				generate="false">
 				<attributes>
-					<!-- <attribute type="java.lang.String" qualifier="lineId"
+					 <attribute type="java.lang.String" qualifier="lineId"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true" />
 						<description> Line Id for Order Status Update</description>
 						<persistence type="property" />
-					</attribute> -->
+					</attribute> 
 					<!--Start  Added new Attributes for Order Update  -->
 					
 					<attribute qualifier="returnInscan" type="java.lang.Boolean">
@@ -6433,6 +6459,10 @@
 							<persistence type="property" />
 					</attribute>
 				</attributes>
+				<indexes><index name="IDX_ORDERHISTORY_LINEID">
+						<key attribute="lineId" />
+					</index>
+				</indexes>
 			</itemtype>
 		</typegroup>
 
@@ -7496,6 +7526,11 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
+				<indexes>
+					<index name="MPLJUSPAYEBS_IDX" unique="false">
+						<key attribute="itemtype" />
+					</index>
+				</indexes>
 			</itemtype>
 			<itemtype code="FraudReport" autocreate="false" generate="true">
 				<attributes>
@@ -9242,6 +9277,54 @@
 			</itemtype>
 
 		</typegroup>
+		
+		<typegroup name="BulkReturnProcessForOrder">
+			<itemtype code="BulkReturnProcess" extends="GenericItem" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.BulkReturnProcess">
+				<deployment table="MplBulkReturnProcess" typecode="15804" />
+				<attributes>
+					<attribute qualifier="parentOrderNo"  autocreate="true" type="java.lang.String"
+						generate="true">
+						<description>Parent Order Number</description>
+						<modifiers optional="false" read="true" write="true"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="transactionId"  autocreate="true" type="java.lang.String"
+						generate="true">
+						<description>Transaction Id</description>
+						<modifiers optional="false" read="true" write="true"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="loadStatus"  autocreate="true" type="java.lang.String"
+						generate="true">
+						<description>Load Status</description>
+						<modifiers optional="false" read="true" write="true"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="errorDescription"  autocreate="true" type="java.lang.String"
+						generate="true">
+						<description>Error Description</description>
+						<modifiers optional="true" read="true" write="true"/>
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			</typegroup>
+			
+			
+			<typegroup name="ItemSyncTimestampGroup">
+					<itemtype code="ItemSyncTimestamp" autocreate="false"
+						generate="false">
+						<indexes>
+							<index name="IDX_ITEMSYNCTIMESTAMPS_CPKC">
+								<key attribute="syncJob" />
+								<key attribute="targetVersion" />
+								<key attribute="sourceItem" />
+								<key attribute="itemtype" />
+							</index>
+						</indexes>
+					</itemtype>
+				</typegroup>
+				
 	</itemtypes>
 	
 </items>

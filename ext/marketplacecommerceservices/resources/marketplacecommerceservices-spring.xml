@@ -1795,8 +1795,36 @@
 	</bean>
 	<!-- Bean for POC Search ends-->
 <alias name="defaultmplReturnDao" alias="mplReturnDao"/>
-<bean class="com.tisl.mpl.returns.dao.impl.MplReturnDaoImpl" id="defaultmplReturnDao">
-</bean>
+<bean class="com.tisl.mpl.returns.dao.impl.MplReturnDaoImpl" id="defaultmplReturnDao"></bean>
+
+<!-- Old Cron Job Deletion Logic : Added as part of PT FIX-->
+	<alias name="mplcleanupCronJobsPerformable" alias="cleanupCronJobsPerformable" />
+	<bean id="mplcleanupCronJobsPerformable" parent="abstractGenericMaintenanceJobPerformable">
+        <property name="maintenanceCleanupStrategy">
+            <bean class="com.tisl.mpl.marketplacecommerceservices.strategy.MplCleanupCronJobStrategy">
+                <property name="modelService" ref="modelService"/>
+                <property name="typeService" ref="typeService"/>
+                <property name="status">
+                    <set>
+                        <value type="de.hybris.platform.cronjob.enums.CronJobStatus">FINISHED</value>
+                        <value type="de.hybris.platform.cronjob.enums.CronJobStatus">ABORTED</value>
+                    </set>
+                </property>
+                <property name="result">
+                    <set>
+                        <value type="de.hybris.platform.cronjob.enums.CronJobResult">SUCCESS</value>
+      				    <value type="de.hybris.platform.cronjob.enums.CronJobResult">FAILURE</value>
+                        <value type="de.hybris.platform.cronjob.enums.CronJobResult">ERROR</value>
+                    </set>
+                </property>
+                <property name="excludedCronJobCodes">
+                    <set/>
+                </property>
+                <property name="expiryDays" value="${cronjob.dayOld.count}"/>
+            </bean>
+        </property>
+    </bean>
+	<!-- Old Cron Job Deletion Logic ends: -->
 
 </beans>
 
