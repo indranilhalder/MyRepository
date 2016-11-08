@@ -716,11 +716,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 * 
+	 *
 	 * @param orderDetail
-	 * 
+	 *
 	 * @param type (1-Billing, 2-Shipping)
-	 * 
+	 *
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -1358,5 +1358,18 @@ public class GenericUtilityMethods
 		}
 		return checkoutSellerID;
 	}
+
+	//TPR-1285
+	public static String changePrefix(String prefix)
+	{
+		prefix = prefix.replaceAll("[^\\w/-]", "-");
+		//TISSTRT-1297
+		if (prefix.contains("--"))
+		{
+			prefix = prefix.replaceAll("--", "-");
+		}
+		return prefix;
+	}
+
 
 }

@@ -827,10 +827,19 @@
  			<value code="no" />
  		</enumtype>
  		<!-- added by i324321 end -->
+ 		
+ 		
+ 		<!-- TPR-1285 ENUM added  --> 
+ 		<enumtype code="siteMapUpdateModeEnum" autocreate="true" generate="true"
+ 			dynamic="true">
+ 			<value code="PRODUCT" />
+ 			<value code="CUSTOM" />
+ 			<value code="ALL" />
+ 		</enumtype>
 	</enumtypes>
 		<!-- Product Feature Enum Ends -->
 
-
+	
 
 
 	<relations>
@@ -9162,6 +9171,21 @@
 						</indexes>
 					</itemtype>
 				</typegroup>
+				
+				
+				<!-- TPR-1285 Dynamic Sitemap -->
+		<typegroup name="Seo">
+			<itemtype code="SiteMapMediaCronJob" autocreate="false"
+				generate="false" extends="CronJob">
+				<description>Cronjob to generate the sitemap media per site</description>
+				<attributes>
+					<attribute qualifier="updateType" type="siteMapUpdateModeEnum">
+						<modifiers optional="false" />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+		</typegroup>
 				
 	</itemtypes>
 </items>

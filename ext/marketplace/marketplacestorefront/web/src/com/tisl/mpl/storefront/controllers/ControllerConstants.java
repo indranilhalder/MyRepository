@@ -235,6 +235,7 @@ public interface ControllerConstants
 			{
 				String MiscRobotsPage = "pages/misc/miscRobotsPage";
 				String MiscSiteMapPage = "pages/misc/miscSiteMapPage";
+				String MiscIndividualSiteMapPage = "pages/misc/miscIndividualSiteMapPage";
 			}
 
 			interface Guest

@@ -685,4 +685,20 @@
 		</property>
 	</bean>
 	
+			<!-- TPR-1285 Start -->
+ 	<bean class="com.tisl.mpl.data.CustomPageData">
+ 		<property name ="url" type="String"/>
+ 		<property name ="changeFrequency" type = "String" />
+ 		<property name ="priority" type = "String" />
+  	</bean>
+  	
+  
+ 	
+ 	<bean class="de.hybris.platform.acceleratorservices.sitemap.data.SiteMapUrlData">
+ 		<property name="changeFrequency" type="String" />
+ 		<property name="priority" type="String" />
+ 		<property name="lastMod" type="String" />
+ 	</bean>
+	<!-- TPR-1285 ends-->
+	
 </beans>
