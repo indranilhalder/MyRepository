@@ -6371,6 +6371,25 @@
 							<description>for returnInscan</description>
 							<persistence type="property" />
 					</attribute>
+				</attributes>
+				<indexes><index name="IDX_ORDERHISTORY_LINEID">
+						<key attribute="lineId" />
+					</index>
+				</indexes>
+			</itemtype>
+		</typegroup>
+
+		<typegroup name="InvoiceDetail">
+			<itemtype code="InvoiceDetail" autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.core.jalo.InvoiceDetails">
+				<deployment table="MplInvoice" typecode="11064" />
+				<attributes>
+					<attribute qualifier="invoiceNo" type="java.lang.String">
+						<modifiers initial="true" read="true" write="true"
+							optional="false" unique="true" />
+						<description>Invoice Number</description>
+						<persistence type="property" />
+					</attribute>
 					
 					<attribute qualifier="returnPickUp" type="java.lang.Boolean">
 							<modifiers optional="true" read="true" write="true" />
@@ -9509,20 +9528,17 @@
 				</attribute>
 				</attributes>
 			</itemtype>
-		</typegroup>
-		
-		
-		<!-- Tata Etail FL06 -->
-		<typegroup name="MarketplaceDeliveryTimeSlots">
-			<itemtype code="AbstractOrderEntry" autocreate="false"
-				generate="false">
+
+
+			<itemtype code="PinServiceabilitySlaveData" autocreate="true"
+				generate="true" jaloclass="com.tisl.mpl.core.jalo.PinServiceabilitySlaveData">
+				<description>For Fallback Mechanism on COM end when OMS is down (Slave Model)</description>
+				<deployment table="MplPinServiceableSlave" typecode="15801" />
 				<attributes>
-				
-					<attribute autocreate="true" qualifier="edScheduledDate" type="java.lang.String"
-						generate="true">
+					<attribute qualifier="pincode" type="java.lang.String">
+						<description>Defines the Pincode</description>
 						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
+						<modifiers optional="false" />
 					</attribute>
 					
 					<attribute autocreate="true" qualifier="timeSlotFrom" type="java.lang.String"
@@ -9575,6 +9591,53 @@
 			</itemtype>
 
 		</typegroup>
+ 
+		<typegroup name="BulkReturnProcessForOrder">
+			<itemtype code="BulkReturnProcess" extends="GenericItem" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.BulkReturnProcess">
+				<deployment table="MplBulkReturnProcess" typecode="15804" />
+				<attributes>
+					<attribute qualifier="parentOrderNo"  autocreate="true" type="java.lang.String"
+						generate="true">
+						<description>Parent Order Number</description>
+						<modifiers optional="false" read="true" write="true"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="transactionId"  autocreate="true" type="java.lang.String"
+						generate="true">
+						<description>Transaction Id</description>
+						<modifiers optional="false" read="true" write="true"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="loadStatus"  autocreate="true" type="java.lang.String"
+						generate="true">
+						<description>Load Status</description>
+						<modifiers optional="false" read="true" write="true"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="errorDescription"  autocreate="true" type="java.lang.String"
+						generate="true">
+						<description>Error Description</description>
+						<modifiers optional="true" read="true" write="true"/>
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			</typegroup>
+		
+		    <typegroup name="ItemSyncTimestampGroup">
+					<itemtype code="ItemSyncTimestamp" autocreate="false"
+						generate="false">
+						<indexes>
+							<index name="IDX_ITEMSYNCTIMESTAMPS_CPKC">
+								<key attribute="syncJob" />
+								<key attribute="targetVersion" />
+								<key attribute="sourceItem" />
+								<key attribute="itemtype" />
+							</index>
+						</indexes>
+					</itemtype>
+				</typegroup>
+     
  
 		<typegroup name="BulkReturnProcessForOrder">
 			<itemtype code="BulkReturnProcess" extends="GenericItem" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.BulkReturnProcess">

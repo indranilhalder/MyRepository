@@ -1819,6 +1819,7 @@
         </property>
     </bean>
 	<!-- Old Cron Job Deletion Logic ends: -->
+
 <alias name="defaultmplReturnDao" alias="mplReturnDao"/>
 <bean class="com.tisl.mpl.returns.dao.impl.MplReturnDaoImpl" id="defaultmplReturnDao"></bean>
 
@@ -1830,5 +1831,4 @@
 </bean>
 
 </beans>
-
 
