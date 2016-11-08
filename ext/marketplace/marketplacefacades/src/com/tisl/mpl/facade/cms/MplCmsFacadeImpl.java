@@ -162,6 +162,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	private final String HEROERROR_NOCAT = "Invalid Category Id";
 
 	private final String CONTENTPAGE = "Content";
+	private final String SIMPLE_BANNER = "SimpleBannerComponent";
 
 	private MplCMSPageServiceImpl mplCMSPageService;
 
@@ -2179,7 +2180,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					blpComponent = getForHimHerBannerWsDTO(luxuryBannerComponent);
 					componentListForASlot.add(blpComponent);
 				}
-				if (typecode.equalsIgnoreCase("SimpleBannerComponent") && position.equalsIgnoreCase("BottomHeaderSlot"))
+				if (typecode.equalsIgnoreCase(SIMPLE_BANNER) && position.equalsIgnoreCase("BottomHeaderSlot"))
 				{
 					final SimpleBannerComponentModel headerslot = (SimpleBannerComponentModel) abstractCMSComponentModel;
 					blpComponent = getHeaderComponent(headerslot);
@@ -2192,7 +2193,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					blpComponent = getBlpBannerWsDTO(luxBlpBannerComponent);
 					componentListForASlot.add(blpComponent);
 				}
-				if (typecode.equalsIgnoreCase("SimpleBannerComponent") && position.equalsIgnoreCase("Section3"))
+				if (typecode.equalsIgnoreCase(SIMPLE_BANNER) && position.equalsIgnoreCase("Section3"))
 				{
 					final SimpleBannerComponentModel springComponent = (SimpleBannerComponentModel) abstractCMSComponentModel;
 					final LuxSpringCollectionComponentWsDTO springDto = getSpringWsDTO(springComponent);
@@ -2201,7 +2202,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					luxBlpComponent.setSectionid(section);
 					componentListForASlot.add(luxBlpComponent);
 				}
-				if (typecode.equalsIgnoreCase("SimpleBannerComponent") && position.equalsIgnoreCase("Section4"))
+				if (typecode.equalsIgnoreCase(SIMPLE_BANNER) && position.equalsIgnoreCase("Section4"))
 				{
 					final SimpleBannerComponentModel springComponent = (SimpleBannerComponentModel) abstractCMSComponentModel;
 					final LuxSpringCollectionComponentWsDTO featuredComponentDto = getSpringWsDTO(springComponent);
@@ -2270,7 +2271,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					componentListForASlot.add(blpComponent);
 				}
 
-				if (typecode.equalsIgnoreCase("SimpleBannerComponent") && position.equalsIgnoreCase("Section8"))
+				if (typecode.equalsIgnoreCase(SIMPLE_BANNER) && position.equalsIgnoreCase("Section8"))
 				{
 					final SimpleBannerComponentModel luxuryOurMissionComponent = (SimpleBannerComponentModel) abstractCMSComponentModel;
 					blpComponent = getOurMissionWsDTO(luxuryOurMissionComponent);

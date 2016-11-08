@@ -895,7 +895,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		String mediaFormat = null;
 		if (LOG.isDebugEnabled())
 		{
-			//	LOG.debug(String.format("productDetails: |  cartId : %s | isPinCodeCheckRequired %s", cartId, Boolean.valueOf(resetReqd)));
+			LOG.debug(String.format("productDetails: |  cartId : %s | isPinCodeCheckRequired %s", abstractOrderModel.getCode(),
+					Boolean.valueOf(resetReqd)));
 		}
 
 		CartModel finalCart = null;
@@ -940,7 +941,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			/*
 			 * <<<<<<< HEAD TISPT- 96 ======= TISPT- 96 -- https://github.com/tcs-chennai/TCS_COMMERCE_REPO/pull/3577
 			 * >>>>>>> refs/remotes/origin/GOLDEN_PROD_SUPPORT_3rd_Nov_2016
-			 * 
+			 *
 			 * {
 			 */
 			for (final AbstractOrderEntryModel abstractOrderEntry : abstractOrderModel.getEntries())

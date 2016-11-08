@@ -35,9 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
-import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -54,11 +52,7 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 	@Autowired
 	private CancelReturnFacade cancelReturnFacade;
 	@Autowired
-	private MplCheckoutFacade mplCheckoutFacade;
-	@Autowired
 	private OrderModelService orderModelService;
-	@Autowired
-	private MplOrderFacade mplOrderFacade;
 
 	@Resource(name = "sessionService")
 	private SessionService sessionService;

@@ -101,18 +101,18 @@ public class ExtendedCORSFilter extends CORSFilter
 			}
 			else if (this.config.allowGenericHttpRequests)
 			{
-				request.setAttribute("cors.isCorsRequest", Boolean.valueOf(false));
+				request.setAttribute("cors.isCorsRequest", Boolean.FALSE);
 				chain.doFilter(request, response);
 			}
 			else
 			{
-				request.setAttribute("cors.isCorsRequest", Boolean.valueOf(false));
+				request.setAttribute("cors.isCorsRequest", Boolean.FALSE);
 				printMessage(response, 403, "Generic HTTP requests not allowed");
 			}
 		}
 		catch (final InvalidCORSRequestException e)
 		{
-			request.setAttribute("cors.isCorsRequest", Boolean.valueOf(false));
+			request.setAttribute("cors.isCorsRequest", Boolean.FALSE);
 			printMessage(response, 400, e.getMessage());
 		}
 		catch (final CORSOriginDeniedException e)
