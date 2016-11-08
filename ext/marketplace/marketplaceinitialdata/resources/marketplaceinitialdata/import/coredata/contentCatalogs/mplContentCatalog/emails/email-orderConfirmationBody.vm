@@ -332,7 +332,7 @@
 					<td style="text-align: right;"><a href="https://www.facebook.com/TataCLiQ/" target="_blank">${ctx.cmsSlotContents.fb}</a></td>
 					<td><a href="https://twitter.com/tatacliq" target="_blank">${ctx.cmsSlotContents.tweet}</a></td>
 					<td><a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" target="_blank">${ctx.cmsSlotContents.youtube}</a></td>
-					<td><a href="https://www.instagram.com/tatacliq/" target="_blank">${ctx.cmsSlotContents.insta}</a></td>
+					 <td><a href="https://www.instagram.com/tatacliq/" target="_blank">${ctx.cmsSlotContents.insta}</a></td>
 			
 				</tr>
 				</table>
