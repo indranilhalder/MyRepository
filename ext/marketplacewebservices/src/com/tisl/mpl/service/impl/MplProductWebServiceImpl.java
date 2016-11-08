@@ -485,6 +485,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 						&& productData.getLuxIndicator().equalsIgnoreCase(MarketplaceCoreConstants.LUXURY))
 				{
 					productDetailMobile.setLuxIndicator(MarketplaceCoreConstants.LUXURY);
+					//TISPRD-9238
+					productDetailMobile.setKnowMoreEmail(configurationService.getConfiguration().getString("luxury.care.mail"));
 				}
 
 			}
@@ -612,6 +614,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		KnowMoreDTO knowMoreItem = null;
 		final String cliqCareNumber = configurationService.getConfiguration().getString("cliq.care.number");
 		final String cliqCareMail = configurationService.getConfiguration().getString("cliq.care.mail");
+		final String luxuryCareMail = configurationService.getConfiguration().getString("luxury.care.mail");
 		String lingerieReturnMsg = null;
 		boolean isProductLingerie = false;
 		if (null != productModel && StringUtils.isNotEmpty(buyBoxData.getSellerArticleSKU()))
@@ -675,9 +678,21 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				&& StringUtils.isNotEmpty(knowMoreFifth) && StringUtils.isNotEmpty(cliqCareMail))
 		{
 			knowMoreItem = new KnowMoreDTO();
-			knowMoreItem.setKnowMoreItem(knowMoreFourth + MarketplacecommerceservicesConstants.SPACE + cliqCareNumber
-					+ MarketplacecommerceservicesConstants.SPACE + knowMoreFifth + MarketplacecommerceservicesConstants.SPACE
-					+ cliqCareMail);
+			//TISPRD-9238
+			if (productModel.getLuxIndicator() != null
+					&& productModel.getLuxIndicator().getCode().equalsIgnoreCase(MarketplaceCoreConstants.LUXURY))
+			{
+				knowMoreItem.setKnowMoreItem(knowMoreFourth + MarketplacecommerceservicesConstants.SPACE + cliqCareNumber
+						+ MarketplacecommerceservicesConstants.SPACE + knowMoreFifth + MarketplacecommerceservicesConstants.SPACE
+						+ luxuryCareMail);
+			}
+			else
+			{
+				knowMoreItem.setKnowMoreItem(knowMoreFourth + MarketplacecommerceservicesConstants.SPACE + cliqCareNumber
+						+ MarketplacecommerceservicesConstants.SPACE + knowMoreFifth + MarketplacecommerceservicesConstants.SPACE
+						+ cliqCareMail);
+			}
+
 			knowMoreList.add(knowMoreItem);
 		}
 		return knowMoreList;
