@@ -1595,14 +1595,21 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	</bean> -->
 	</bean>
 	
-		<bean id="deliveryAddressFacade"
+	<!-- <bean id="initiateReturnForOrderJob" class="com.tisl.mpl.facade.job.InitiateReturnForOrderJob">
+    </bean> -->
+    
+   <bean id="initiateReturnForOrderJob"
+		class="com.tisl.mpl.facade.job.InitiateReturnForOrderJob"
+		autowire="byName" >
+	</bean>
+	<bean id="deliveryAddressFacade"
 		class="com.tis.mpl.facade.changedelivery.Impl.MplDeliveryAddressFacadeImpl"/>
 		
 		<!-- 	R2.3 FL04 changes	 -->
 			
 	<bean id="mplStatePopulator" class="com.tisl.mpl.facades.populators.MplStatePopulator"/>
 	
-	<bean id="mplStateConverter" parent="abstractPopulatingConverter">
+		<bean id="mplStateConverter" parent="abstractPopulatingConverter">
 		<property name="targetClass" value="com.tisl.mpl.facades.product.data.StateData"/>
 		<property name="populators">
 			<list>
@@ -1711,8 +1718,5 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	
 
 	<!-- close R2.3 Changes -->
-	  <bean id="initiateReturnForOrderJob"
-		class="com.tisl.mpl.facade.job.InitiateReturnForOrderJob"
-		autowire="byName" >
-	</bean>
+	
 </beans>

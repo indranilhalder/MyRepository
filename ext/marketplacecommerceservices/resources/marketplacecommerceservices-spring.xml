@@ -1782,11 +1782,6 @@
 	<bean id="sizeStandardInterceptor"
 		class="com.tisl.mpl.interceptor.SizeStandardInterceptor">
 	</bean>
-<bean id="mplDeliveryAddressServiceImpl"
-		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplDeliveryAddressServiceImpl"/>
-<bean id="mplDeliveryAddressDaoImpl"
-		class="com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.impl.MplDeliveryAddressDaoImpl">
-</bean>
 
 	<bean id="sizeStandardInterceptorMapping"
 		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
@@ -1794,10 +1789,9 @@
 		<property name="typeCode" value="Sizesystem" />
 	</bean>
 	<!-- Bean for POC Search ends-->
-<alias name="defaultmplReturnDao" alias="mplReturnDao"/>
-<bean class="com.tisl.mpl.returns.dao.impl.MplReturnDaoImpl" id="defaultmplReturnDao"></bean>
-
-<!-- Old Cron Job Deletion Logic : Added as part of PT FIX-->
+	
+	
+	<!-- Old Cron Job Deletion Logic : Added as part of PT FIX-->
 	<alias name="mplcleanupCronJobsPerformable" alias="cleanupCronJobsPerformable" />
 	<bean id="mplcleanupCronJobsPerformable" parent="abstractGenericMaintenanceJobPerformable">
         <property name="maintenanceCleanupStrategy">
@@ -1825,6 +1819,16 @@
         </property>
     </bean>
 	<!-- Old Cron Job Deletion Logic ends: -->
+<alias name="defaultmplReturnDao" alias="mplReturnDao"/>
+<bean class="com.tisl.mpl.returns.dao.impl.MplReturnDaoImpl" id="defaultmplReturnDao"></bean>
+
+
+<bean id="mplDeliveryAddressServiceImpl"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplDeliveryAddressServiceImpl"/>
+<bean id="mplDeliveryAddressDaoImpl"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.impl.MplDeliveryAddressDaoImpl">
+</bean>
 
 </beans>
+
 

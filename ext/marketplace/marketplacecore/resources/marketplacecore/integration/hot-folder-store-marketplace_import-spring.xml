@@ -802,6 +802,11 @@ $language=language(isocode)[default='en'][unique=true];
         </property>
         </bean>
         
+        
+     
+        
+        
+        
         <!-- Converter for Online Exclusive Import --> 
      <bean id="batchOnlineExclusiveConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
@@ -821,6 +826,7 @@ $language=language(isocode)[default='en'][unique=true];
             <value>;{+0};{+0};{+1};</value>
         </property>
         </bean>
+        
     <!-- Converter for Promoted Product Import --> 
     <bean id="batchPromotedProductConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
@@ -848,3 +854,4 @@ $language=language(isocode)[default='en'][unique=true];
         </bean>
 
   </beans>
+

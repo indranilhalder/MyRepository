@@ -107,9 +107,9 @@
 
 		<collectiontype elementtype="java.lang.String" code="mplImageUrl"
 			autocreate="true" generate="true" type="list" />
-			
-			<collectiontype elementtype="Address" code="addressList"
+        <collectiontype elementtype="Address" code="addressList"
 			autocreate="true" generate="true" type="list" />
+
 	</collectiontypes>
 
 
@@ -5957,7 +5957,6 @@
 					
 					<!-- End Added new Attributes  for Order Update -->
 				</attributes>
-				
 			</itemtype>
 
 
@@ -6325,6 +6324,7 @@
 			</attributes>
 		</itemtype>
 	</typegroup>
+
 		<typegroup name="Consignment">
 			<itemtype code="Consignment" autocreate="false" generate="false">
 				<attributes>
@@ -6439,7 +6439,7 @@
 			<itemtype code="OrderHistoryEntry" autocreate="false"
 				generate="false">
 				<attributes>
-					 <attribute type="java.lang.String" qualifier="lineId"
+					<attribute type="java.lang.String" qualifier="lineId"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true" />
 						<description> Line Id for Order Status Update</description>
@@ -8265,6 +8265,7 @@
 							optional="true" />
 					</attribute>
 
+
 				</attributes>
 			</itemtype>
 
@@ -8943,7 +8944,6 @@
 			</itemtype>
 		</typegroup>
 		
-		
 		<!-- Search POC start-->
 		<typegroup name="DataConversion">
 			<itemtype code="Sizesystem" autocreate="true" generate="true">
@@ -9276,8 +9276,306 @@
 				</attributes>
 			</itemtype>
 
+		</typegroup>		
+		
+			<!-- R2.3 changes Landmarks Model -->
+		
+		<typegroup name="LandMarks">
+			<itemtype code="LandMarks" autocreate="true" generate="true">
+				<deployment table="LandMarks" typecode="15009" />
+				<attributes>
+				
+					<attribute autocreate="true" qualifier="landmarksCode" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="landmark" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="isActive"
+						type="java.lang.Boolean" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+				</attributes>
+			</itemtype>
+		</typegroup>
+
+	
+	<typegroup name="OrderShortUrlInfo">
+		<itemtype code="OrderShortUrlInfo" autocreate="true"  generate="true">
+				<description>Used to Generate Short url clicks report</description>
+				<deployment table="OrderShortUrl" typecode="15017" />
+				
+				<attributes>
+					<attribute qualifier="orderId" type="java.lang.String"  autocreate="true" generate="true">
+						<persistence type="property"/>
+						<modifiers read="true" write="true" search="true" optional="false" unique="true" />
+					</attribute>
+					<attribute  qualifier="longURL" type="java.lang.String"  autocreate="true" generate="true">
+						<persistence type="property"/>
+						<modifiers read="true" write="true" search="true"  unique="true" />
+					</attribute>
+					<attribute  qualifier="shortURL" type="java.lang.String"  autocreate="true" generate="true">
+						<persistence type="property"/>
+						<modifiers read="true" write="true" search="true" />
+					</attribute>
+					<attribute  qualifier="clicks" type="java.lang.Integer"  autocreate="true" generate="true">
+						<persistence type="property"/>
+						<modifiers read="true" write="true" search="true"/>
+						<defaultvalue>Integer.valueOf(0)</defaultvalue>
+					</attribute>
+					<attribute  qualifier="login" type="java.lang.Integer"  autocreate="true" generate="true">
+						<persistence type="property"/>
+						<modifiers read="true" write="true" search="true"/>
+						<defaultvalue>Integer.valueOf(0)</defaultvalue>
+					</attribute>					
+				</attributes>
+			</itemtype>
+		 </typegroup>
+		 
+		 <typegroup name="BankDetailsInfoToFICO">
+			<itemtype code="BankDetailsInfoToFICOHistory" autocreate="true"
+				generate="true" jaloclass="com.tisl.mpl.core.jalo.BankDetailsInfoToFICOHistory">
+				<description>Comm to FICO COD</description>
+				<deployment table="BankInfoToFICOHistory" typecode="17981" />
+			<attributes>
+			
+				<attribute type="java.lang.String" qualifier="transactionType">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="orderDate">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="orderNo">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="transactionDate">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="orderRefNo">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="transactionID">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="name">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="title">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="customerNumber">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="amount">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="orderTag">
+						<modifiers read="true" write="true" optional="false" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="bankName">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="bankKey">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="country">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="city">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="pobox">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="street">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="bankStreet">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="bankCity">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="bankBranch">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="region">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="bankCounrty">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="paymentMode">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				</attributes>
+			</itemtype>
+			<itemtype code="MplCustomerBankAccountDetails" autocreate="true"
+				generate="true" jaloclass="com.tisl.mpl.core.jalo.MplCustomerBankAccountDetails">
+				<description>Captured bank details for COD returns Payment </description>
+				<deployment table="CustBankAccDetails" typecode="17982" />
+				<attributes>
+				<attribute type="java.lang.String" qualifier="customerId"  >
+			    <description>Customer Id</description>	
+			    <persistence type="property" />
+			    <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
+			    </attribute>
+			    <attribute type="java.lang.String" qualifier="customerName"  >
+			    <persistence type="property" />
+			    <description>Customer Name</description>	
+			    <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
+			    </attribute>
+			    <attribute type="java.lang.String" qualifier="title"  >
+			    <persistence type="property" />
+			    <description>Title</description>	
+			    <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
+			    </attribute>
+			    <attribute type="java.lang.String" qualifier="accountNumber"  >
+			    <persistence type="property" />
+			    <description>Account Number</description>	
+			    <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
+			    </attribute>
+			    <attribute type="java.lang.String" qualifier="accountHolderName"  >
+			    <persistence type="property" />
+			    <description>Account holder name </description>	
+			    <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
+			    </attribute>
+			    <attribute type="java.lang.String" qualifier="ifscCode"  >
+			    <persistence type="property" />
+			    <description>IFSC code </description>	
+			    <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
+			    </attribute>
+				  <attribute type="java.lang.String" qualifier="bankName"  >
+				  <persistence type="property" />
+			    <description>Bank name</description>	
+			    <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
+			    </attribute>
+			    <attribute type="java.lang.String" qualifier="paymentMode"  >
+			    <persistence type="property" />
+			    <description>Refund payment Mode </description>	
+			    <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
+			    </attribute>
+			    	<attribute type="java.lang.String" qualifier="orderTag">
+						<modifiers read="true" write="true" optional="false" search="true" />
+						<persistence type="property" />
+				</attribute>
+				</attributes>
+			</itemtype>
+			<itemtype code="MplLPHolidays" autocreate="true"
+				generate="true" jaloclass="com.tisl.mpl.core.jalo.MplLPHolidays">
+				<description>Logistics holidays</description>
+				<deployment table="MplLPHolidays" typecode="17983" />
+				<attributes>
+				<attribute type="java.lang.String" qualifier="lpname">
+				 <persistence type="property" />
+				<description>Logistic partner name </description>
+				 <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
+				</attribute>
+				<attribute type="java.lang.String" qualifier="workingDays">
+				<persistence type="property" />
+				<description>Working days</description>
+				 <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
+				</attribute>
+				</attributes>
+			</itemtype>
 		</typegroup>
 		
+		
+		<!-- Tata Etail FL06 -->
+		<typegroup name="MarketplaceDeliveryTimeSlots">
+			<itemtype code="AbstractOrderEntry" autocreate="false"
+				generate="false">
+				<attributes>
+				
+					<attribute autocreate="true" qualifier="edScheduledDate" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					
+					<attribute autocreate="true" qualifier="timeSlotFrom" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					
+					<attribute autocreate="true" qualifier="timeSlotTo" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					
+					<attribute autocreate="true" qualifier="fulfillmentMode" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="scheduledDeliveryCharge" type="java.lang.Double"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+					</attribute>
+					
+					<attribute autocreate="true" qualifier="returnStoreId" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="refundedScheduleDeliveryChargeAmt"
+						type="java.lang.Double">
+						<persistence type="property" qualifier="refundedScheduleDeliveryChargeAmt">
+							<columntype>
+								<value>java.math.BigDecimal</value>
+							</columntype>
+						</persistence>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+					</attribute>
+					
+				</attributes>
+			</itemtype>
+
+		</typegroup>
+ 
 		<typegroup name="BulkReturnProcessForOrder">
 			<itemtype code="BulkReturnProcess" extends="GenericItem" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.BulkReturnProcess">
 				<deployment table="MplBulkReturnProcess" typecode="15804" />
@@ -9309,9 +9607,8 @@
 				</attributes>
 			</itemtype>
 			</typegroup>
-			
-			
-			<typegroup name="ItemSyncTimestampGroup">
+		
+		    <typegroup name="ItemSyncTimestampGroup">
 					<itemtype code="ItemSyncTimestamp" autocreate="false"
 						generate="false">
 						<indexes>
@@ -9324,7 +9621,8 @@
 						</indexes>
 					</itemtype>
 				</typegroup>
-				
+     
 	</itemtypes>
 	
 </items>
+
