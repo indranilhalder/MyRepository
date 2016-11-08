@@ -54,9 +54,9 @@ import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.enumeration.EnumerationService;
-import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.event.EventService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
+import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.storelocator.location.Location;
@@ -119,7 +119,6 @@ import com.tisl.mpl.core.model.MplEnhancedSearchBoxComponentModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.brand.BrandFacade;
-import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.netbank.MplNetBankingFacade;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
@@ -193,9 +192,6 @@ public class MiscsController extends BaseController
 	private StoreSessionFacade storeSessionFacade;
 	@Resource(name = "checkoutFacade")
 	private CheckoutFacade checkoutFacade;
-	/*
-	 * @Autowired private ConfigurationService configurationService;
-	 */
 	@Resource(name = "httpRequestCustomerUpdatePopulator")
 	private HttpRequestCustomerUpdatePopulator httpRequestCustomerUpdatePopulator;
 	@Resource(name = "customerFacade")
@@ -257,11 +253,12 @@ public class MiscsController extends BaseController
 	@Resource(name = "categoryService")
 	private CategoryService categoryService;
 	/*
-	 * @Resource(name = "mplPaymentFacade") private MplPaymentFacade mplPaymentFacade;
-	private static final String APPLICATION_TYPE = "application/json";
-	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
-
-	/**
+	 * @Resource(name = "mplPaymentFacade") private MplPaymentFacade mplPaymentFacade; private static final String
+	 * APPLICATION_TYPE = "application/json"; public static final String EMAIL_REGEX =
+	 * "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
+	 *
+	 * /**
+	 *
 	 * @return the configurationService
 	 */
 	@Autowired
@@ -291,10 +288,10 @@ public class MiscsController extends BaseController
 
 	@Autowired
 	private BaseSiteService baseSiteService;
-	@Autowired								
+	@Autowired
 	private ModelService modelService;
-  	private static final String APPLICATION_TYPE = "application/json";
-  	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
+	private static final String APPLICATION_TYPE = "application/json";
+	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
 
 	/*
 	 * private static final String DROPDOWN_BRAND = "MBH"; private static final String DROPDOWN_CATEGORY = "MSH";
@@ -1562,7 +1559,7 @@ public class MiscsController extends BaseController
 	/*
 	 * @Secured( { "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
 	 */
-	@RequestMapping(value = "/{baseSiteId}/feedbackno", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/{baseSiteId}/feedbackno", method = RequestMethod.GET, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public UserResultWsDto captureFeedbackNo(@RequestParam final String emailId, @RequestParam final String searchCategory,
 			@RequestParam final String searchText, @RequestParam final String comment, @RequestParam final String category)
@@ -1599,7 +1596,7 @@ public class MiscsController extends BaseController
 	/*
 	 * @Secured( { "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
 	 */
-	@RequestMapping(value = "/{baseSiteId}/getFeedbackCategory", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/{baseSiteId}/getFeedbackCategory", method = RequestMethod.GET, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public UserResultWsDto getFeedbackCategory()
 	{
@@ -1634,7 +1631,7 @@ public class MiscsController extends BaseController
 		return userResultWsDto;
 	}
 
-	@RequestMapping(value = "/{baseSiteId}/askAQuestion", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/{baseSiteId}/askAQuestion", method = RequestMethod.GET, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public UserResultWsDto askquestion(@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields,
 			@RequestParam final String emailId, @RequestParam final String question, @RequestParam final String productCode)

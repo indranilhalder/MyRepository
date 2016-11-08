@@ -6186,21 +6186,16 @@ public class UsersController extends BaseCommerceController
 		final UserResultWsDto result = new UserResultWsDto();
 		try
 		{
-			//			final UserModel user = userService.getCurrentUser();
-			//fetch usermodel against customer
-			final UserModel user = getExtUserService().getUserForOriginalUid(emailId);
-			LOG.debug("addAddressToOrder : user : " + user);
+			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+			LOG.debug("addAddressToOrder : user : " + currentCustomer);
 			// Check userModel null
-			if (null != user)
+			if (null != currentCustomer)
 			{
-				// Type Cast User Model to Address Model
-				final CustomerModel currentCustomer = (CustomerModel) user;
-
 				LOG.debug(String.format("addAddressToOrder: | addressId: %s | currentCustomer : %s | cartId : %s ", addressId,
 						currentCustomer.getUid(), cartId));
 
 				//getting cartmodel using cart id and user
-				final CartModel cartModel = getCommerceCartService().getCartForCodeAndUser(cartId, user);
+				final CartModel cartModel = getCommerceCartService().getCartForCodeAndUser(cartId, currentCustomer);
 				// Validate Cart Model is not null
 				if (null != cartModel)
 				{
@@ -6210,16 +6205,15 @@ public class UsersController extends BaseCommerceController
 
 					if (StringUtils.isNotEmpty(addressId))
 					{
-						final List<AddressData> addressList = accountAddressFacade.getAddressBook();
-						for (final AddressData addEntry : addressList)
-						{
-							// Validate if valid address id for for the specific user
-							if (addEntry.getId().equals(addressId))
-							{
-								addressmodel = customerAccountService.getAddressForCode(currentCustomer, addEntry.getId());
-								break;
-							}
-						}
+						/*
+						 * final List<AddressData> addressList = accountAddressFacade.getAddressBook(); for (final AddressData
+						 * addEntry : addressList) { // Validate if valid address id for for the specific user if
+						 * (addEntry.getId().equals(addressId)) {
+						 */
+						addressmodel = customerAccountService.getAddressForCode(currentCustomer, addressId);
+						/*
+						 * break; } }
+						 */
 					}
 					//new address//
 					else
