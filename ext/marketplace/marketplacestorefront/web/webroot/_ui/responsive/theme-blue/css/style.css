@@ -35473,10 +35473,10 @@ display:none;
 }
 /*mobile filter*/
 ul.jqtree-tree .jqtree-element {
-    height: 22px;
+    min-height: 22px;
 }
 ul.jqtree_common > li.jqtree_common:not(.jqtree-folder) {
-    height: 27px;
+    min-height: 27px;
     margin-top: 4px;
     margin-bottom: 4px;
 }
@@ -35497,6 +35497,9 @@ span.jqtree-facetCount.jqtree_common{
 }
 .product-item .product-tile p.savings {
     margin-left: -3px;
+    float: none;	/* TISQAEE-1 */
+    clear: both;
+    display: block;
 }
 .short-info .company .old, .short-info .price .old {
     margin-right: -3px;
