@@ -225,7 +225,7 @@
          </tr>
 		 
 		 <tr bgcolor="#f5f5f5">
-		 <td colspan="2" style="padding-left:15px; width: 50%" align="left" bgcolor="#f5f5f5">
+		 <td colspan="2" style="padding-left:15px; padding-top: 10px; width: 50%; vertical-align: top" align="left" bgcolor="#f5f5f5">
                <p style="float: left; margin-top: 0;"><font size="2" color="#000000" >
                   As you’ve requested, we’ll be
                   sending SMS alerts about your order
@@ -236,11 +236,11 @@
 		 <td colspan="1">&nbsp;</td>
 		 
 		 
-		 <td colspan="2">
+		 <td colspan="2" style="vertical-align: top; padding-top: 10px;">
 		 <table>
          <tr>
 			#if($ctx.deliveryAddress)
-            <td colspan="5" style="padding-left:15px; padding-top: 15px" align="left" bgcolor="#f5f5f5">
+            <td colspan="5" style="padding-left:15px;" align="left" bgcolor="#f5f5f5">
                <p style="margin: 0;"><font size="3" color="#000000" >
 			    Your Delivery Address: <br/><br/>
                   ${ctx.deliveryAddress}
