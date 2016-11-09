@@ -58,6 +58,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -68,6 +70,7 @@ import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.marketplacecommerceservices.service.ExtStockLevelPromotionCheckService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplStockService;
 import com.tisl.mpl.model.EtailSellerSpecificRestrictionModel;
@@ -104,6 +107,8 @@ public class DefaultPromotionManager extends PromotionsManager
 	@Autowired
 	private ModelService modelService;
 
+	@Resource(name = "stockPromoCheckService")
+	private ExtStockLevelPromotionCheckService stockPromoCheckService;
 
 	/**
 	 * @return the categoryService
@@ -3465,8 +3470,131 @@ public class DefaultPromotionManager extends PromotionsManager
 	}
 
 
+	/**
+	 * consume entries based on stock
+	 */
+	/**
+	 * TPR-965
+	 *
+	 * @param validEntries
+	 * @param totalEligibleCount
+	 * @param ctx
+	 * @param qCountMap
+	 * @return validProdUssidSet
+	 */
+	public Set<String> doConsumeEntriesForStockPromo(final List<AbstractOrderEntry> validEntries, final int stockLevel,
+			final SessionContext ctx, final Map<String, Integer> qCountMap)
+	{
 
+		final Set<String> validProdUssidSet = new HashSet<String>();
 
+		for (int i = 0; i < validEntries.size(); i++)
+		{
+			final AbstractOrderEntry sortedEntry = validEntries.get(i);
+			final int entryTotalQty = sortedEntry.getQuantity().intValue();
+			//	if (stockLevel > 0)
+			//			{
+			String selectedUSSID = null;
+			try
+			{
+				selectedUSSID = (String) sortedEntry.getAttribute(ctx, MarketplacecommerceservicesConstants.SELECTEDUSSID);
+			}
+			catch (JaloInvalidParameterException | JaloSecurityException e)
+			{
+				LOG.error(e);
+			}
+			long consumeCount = 0L;
+			validProdUssidSet.add(selectedUSSID);
+			final String ussid = MarketplacecommerceservicesConstants.INVERTED_COMMA + selectedUSSID
+					+ MarketplacecommerceservicesConstants.INVERTED_COMMA;
+			final Map<String, Integer> stockMap = stockPromoCheckService.getCumulativeStockMap(ussid, true);
+			final Integer stockQuantity = stockMap.get(selectedUSSID);
+
+			if (stockMap.isEmpty())
+			{
+				consumeCount = (entryTotalQty <= stockLevel) ? entryTotalQty : stockLevel;
+			}
+			else if (stockLevel > stockQuantity.intValue())
+			{
+				consumeCount = (entryTotalQty > (stockLevel - stockQuantity.intValue())) ? (stockLevel - stockQuantity.intValue())
+						: entryTotalQty;
+			}
+			if (qCountMap != null)
+			{
+				qCountMap.put(selectedUSSID, Integer.valueOf((int) consumeCount));
+			}
+			//		stockLevel -= consumeCount;
+			//	}
+		}
+		return validProdUssidSet;
+	}
+
+	/**
+	 * TPR-965
+	 *
+	 * @param validProductUssidMap
+	 * @param eligibleQty
+	 * @param paramSessionContext
+	 * @param restrictionList
+	 * @return validUssidList
+	 */
+	Map<String, Integer> getProductUssidMapForStockPromo(final Map<String, AbstractOrderEntry> validProductUssidMap,
+			final int stockLevelCount, final SessionContext paramSessionContext,
+			final List<AbstractPromotionRestriction> restrictionList)
+	{
+		final Map<String, Integer> validUssidList = new HashMap<String, Integer>();
+		//		final int totalFactorCount = totalCount / (int) eligibleQty;
+		//		final int totalEligibleCount = totalFactorCount * (int) eligibleQty;
+
+		validProductUssidMap.keySet().retainAll(
+				populateStockOfSortedValidProdUssidMap(validProductUssidMap, stockLevelCount, paramSessionContext, restrictionList,
+						validUssidList, true));
+		return validUssidList;
+	}
+
+	/**
+	 * @Description: For populating sorted valid product, ussid map
+	 * @param cart
+	 * @param validProductUssidTempMap
+	 * @param isStockPromo
+	 * @return mapping of valid ussids
+	 */
+	public Set<String> populateStockOfSortedValidProdUssidMap(final Map<String, AbstractOrderEntry> validProductUssidTempMap,
+			final int totalEligibleCount, final SessionContext ctx, final List<AbstractPromotionRestriction> restrictionList,
+			final Map<String, Integer> qCountMap, final boolean isStockPromo)
+	{
+		List<AbstractOrderEntry> validEntries = null;
+		if (validProductUssidTempMap != null)
+		{
+			validEntries = new ArrayList<AbstractOrderEntry>(validProductUssidTempMap.values());
+		}
+		Collections.sort(validEntries, new Comparator<AbstractOrderEntry>()
+		{
+			public int compare(final AbstractOrderEntry o1, final AbstractOrderEntry o2)
+			{
+				if (o1.getBasePriceAsPrimitive() > o2.getBasePriceAsPrimitive())
+				{
+					return 1;
+				}
+				else
+				{
+					return -1;
+				}
+			}
+		});
+		//		}
+		if (!isStockPromo)
+
+		{
+			return doConsumeEntries(validEntries, totalEligibleCount, ctx, qCountMap);
+		}
+		else
+
+		{
+			return doConsumeEntriesForStockPromo(validEntries, totalEligibleCount, ctx, qCountMap);
+		}
+
+	}
 
 	/**
 	 * TPR-970 changes checking whether a particular state exits against a pincode or not
@@ -3492,6 +3620,141 @@ public class DefaultPromotionManager extends PromotionsManager
 
 		}
 		return flag;
+	}
 
+
+	/**
+	 * TPR-965 changes
+	 *
+	 * @param cart
+	 * @param paramSessionContext
+	 * @param promotionProductList
+	 * @param promotionCategoryList
+	 * @param restrictions
+	 * @param restrictionList
+	 * @param stockCount
+	 * @return validProductUssidMap
+	 * @throws JaloInvalidParameterException
+	 * @throws JaloSecurityException
+	 */
+	public Map<String, AbstractOrderEntry> getValidEntriesForStockLevelPromo(final AbstractOrder cart,
+			final SessionContext paramSessionContext, final List<Product> promotionProductList,
+			final List<Category> promotionCategoryList, final List<AbstractPromotionRestriction> restrictionList,
+			final List<Product> excludedProductList, final List<String> excludeManufactureList, final int stockCount
+	/* final List<String> sellerIDData, *//* final Map<AbstractOrderEntry, String> eligibleProductMap */)
+			throws JaloInvalidParameterException, JaloSecurityException
+	{
+		Map<String, Integer> stockCountMap = new HashMap<String, Integer>();
+		final Map<String, AbstractOrderEntry> validProductUssidMap = new HashMap<String, AbstractOrderEntry>();
+		final StringBuilder ussidIds = new StringBuilder();
+		final StringBuilder productCodes = new StringBuilder();
+		//		final CartModel cartModel = cartService.getSessionCart();
+		boolean isSellerRestricPresent = false;
+		if (cart != null)
+		{
+			for (final AbstractOrderEntry entry : cart.getEntries())
+			{
+				productCodes.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + entry.getProduct().getCode()
+						+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
+				productCodes.append(",");
+				ussidIds.append(MarketplacecommerceservicesConstants.INVERTED_COMMA
+						+ entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID).toString()
+						+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
+				ussidIds.append(",");
+			}
+		}
+
+		if (CollectionUtils.isNotEmpty(restrictionList))
+		{
+
+			for (final AbstractPromotionRestriction restriction : restrictionList)
+			{
+				if (restriction instanceof EtailSellerSpecificRestriction)
+				{
+					isSellerRestricPresent = true;
+					stockCountMap = stockPromoCheckService.getCumulativeStockMap(
+							ussidIds.toString().substring(0, ussidIds.lastIndexOf(",")), true);
+				}
+				if (restriction instanceof EtailExcludeSellerSpecificRestriction)
+				{
+					isSellerRestricPresent = true;
+					stockCountMap = stockPromoCheckService.getCumulativeStockMap(
+							ussidIds.toString().substring(0, ussidIds.lastIndexOf(",")), true);
+				}
+			}
+			if (!isSellerRestricPresent && CollectionUtils.isNotEmpty(restrictionList))
+			{
+				stockCountMap = stockPromoCheckService.getCumulativeStockMap(
+						productCodes.toString().substring(0, productCodes.lastIndexOf(",")), false);
+			}
+
+		}
+		else
+		{
+			stockCountMap = stockPromoCheckService.getCumulativeStockMap(
+					productCodes.toString().substring(0, productCodes.lastIndexOf(",")), false);
+		}
+		for (final AbstractOrderEntry entry : cart.getEntries())
+		{
+
+			final Product product = entry.getProduct();
+
+
+			//checking product is a valid product for promotion
+			boolean applyPromotion = false;
+			boolean brandFlag = false;
+			boolean sellerFlag = false;
+			if (GenericUtilityMethods.isProductExcluded(product, excludedProductList)
+					|| GenericUtilityMethods.isProductExcludedForManufacture(product, excludeManufactureList)
+					|| isProductExcludedForSeller(paramSessionContext, restrictionList, entry))
+			{
+				continue;
+			}
+			if (!promotionProductList.isEmpty())
+			{
+				if (promotionProductList.contains(product))
+				{
+					applyPromotion = true;
+					brandFlag = true;
+					sellerFlag = checkSellerData(paramSessionContext, restrictionList, entry);
+				}
+			}
+			else if (promotionProductList.isEmpty() && !promotionCategoryList.isEmpty())
+			//checking product category is permitted by promotion category or not
+			{
+				final List<String> productCategoryList = getcategoryList(product, paramSessionContext);
+				applyPromotion = GenericUtilityMethods.productExistsIncat(promotionCategoryList, productCategoryList);
+				brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
+				sellerFlag = checkSellerData(paramSessionContext, restrictionList, entry);
+			}
+			final String selectedUssid = entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID)
+					.toString();
+			final String productCode = entry.getProduct().getCode();
+			if (applyPromotion && brandFlag && sellerFlag && isSellerRestricPresent && null != stockCountMap.get(selectedUssid)
+					&& stockCount - stockCountMap.get(selectedUssid).intValue() > 0)
+			{
+				validProductUssidMap.put(selectedUssid, entry);
+			}
+			else if (applyPromotion && brandFlag && sellerFlag && !isSellerRestricPresent && null != stockCountMap.get(productCode)
+					&& stockCount - stockCountMap.get(productCode).intValue() > 0)
+			{
+				validProductUssidMap.put(selectedUssid, entry);
+
+			}
+			else if (applyPromotion && brandFlag && sellerFlag && !isSellerRestricPresent && null == stockCountMap.get(productCode))
+			{
+				validProductUssidMap.put(selectedUssid, entry);
+			}
+			else if (applyPromotion && brandFlag && sellerFlag && isSellerRestricPresent && null == stockCountMap.get(selectedUssid))
+			{
+				validProductUssidMap.put(selectedUssid, entry);
+			}
+			else if (applyPromotion && brandFlag && sellerFlag && stockCountMap.isEmpty())
+			{
+				validProductUssidMap.put(selectedUssid, entry);
+			}
+
+		}
+		return validProductUssidMap;
 	}
 }
