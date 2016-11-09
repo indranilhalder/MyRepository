@@ -333,9 +333,9 @@
          </tr>
         <tr bgcolor="#fbfbfb">		
 		
-			<td colspan="2"><font size="2" color="#000000" style="margin-left: 15px;"> © 2016 Tata CLiQ | All Rights Reserved<br/>
-					   </font></td>
-			<td colspan="3">
+			<td colspan="5">
+				<font size="2" color="#000000" style="margin-left: 15px; float: left; padding-top: 11px;"> © 2016 Tata CLiQ | All Rights Reserved<br/>
+					   </font>
 				<table style="float: right;">
 			
 				<tr>
@@ -346,7 +346,7 @@
 			
 				</tr>
 				</table>
-			
+
 			</td>
 
 			
