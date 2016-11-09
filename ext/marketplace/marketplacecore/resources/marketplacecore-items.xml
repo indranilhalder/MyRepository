@@ -9624,20 +9624,40 @@
 			</itemtype>
 			</typegroup>
 		
-		    <typegroup name="ItemSyncTimestampGroup">
-					<itemtype code="ItemSyncTimestamp" autocreate="false"
-						generate="false">
-						<indexes>
-							<index name="IDX_ITEMSYNCTIMESTAMPS_CPKC">
-								<key attribute="syncJob" />
-								<key attribute="targetVersion" />
-								<key attribute="sourceItem" />
-								<key attribute="itemtype" />
-							</index>
-						</indexes>
-					</itemtype>
-				</typegroup>
-     
+		<!-- Search POC start-->
+		<typegroup name="DataConversion">
+			<itemtype code="Sizesystem" autocreate="true" generate="true">
+				<deployment table="mplDataConversion" typecode="16010" />
+				<attributes>
+					<attribute autocreate="true" qualifier="Name" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers unique="true" optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="From" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="To"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers optional="false" />
+					</attribute>
+				<attribute autocreate="true" qualifier="conversionUnit" 
+						type="java.lang.Double" generate="true">
+						<persistence type="property" />
+						<modifiers optional="true" />
+							</attribute>
+				<attribute autocreate="true" qualifier="propertyName" 
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers optional="true" />
+					</attribute>
+				</attributes>
+			</itemtype>
+		</typegroup>
+		<!-- Search POC ends-->
  
 		<typegroup name="BulkReturnProcessForOrder">
 			<itemtype code="BulkReturnProcess" extends="GenericItem" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.BulkReturnProcess">
