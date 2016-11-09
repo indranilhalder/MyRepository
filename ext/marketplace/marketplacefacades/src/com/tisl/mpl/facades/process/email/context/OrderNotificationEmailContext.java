@@ -119,6 +119,10 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 		for (final AbstractOrderEntryModel entryModel : orderProcessModel.getOrder().getEntries())
 
 		{
+			LOG.debug("convienence apportion " + entryModel.getConvenienceChargeApportion());
+			LOG.debug("total mrp" + entryModel.getTotalMrp());
+			LOG.debug("total price" + entryModel.getTotalPrice());
+			LOG.debug("total sale price" + entryModel.getTotalSalePrice());
 			childEntries.add(entryModel);
 
 			if (entryModel.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
