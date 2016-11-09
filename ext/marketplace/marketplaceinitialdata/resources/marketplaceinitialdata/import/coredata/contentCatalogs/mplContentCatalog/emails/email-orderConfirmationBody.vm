@@ -74,7 +74,7 @@
 		 <tr>
 			<td colspan="5">
 		 
-		 <table style="border-bottom: 1px solid #e2e2e2;">
+		 <table style="border-bottom: 1px solid #e2e2e2; width: 100%;">
           <tr class="order-detail-heading">
             <td align="center" bgcolor="#fbfbfb" style="margin-top: 0px; width: 19%; padding-left: 0%; padding-right: 1%;">
                <p align="center"><font size="2" color="#000000" ><strong>
@@ -157,17 +157,19 @@
                </p>
             </td>
 			
-			<td align="left" bgcolor="#fbfbfb">
-               <p align="center"><font size="2" color="#000000" >
-                  $entry.convenienceChargeApportion</font>
-               </p>
-            </td>
+			
 			
             
             
             <td align="left" bgcolor="#fbfbfb">
                <p align="center"><font size="2" color="#000000" >
                   $entry.currDelCharge </font>
+               </p>
+            </td>
+			
+			<td align="left" bgcolor="#fbfbfb">
+               <p align="center"><font size="2" color="#000000" >
+                  $entry.convenienceChargeApportion</font>
                </p>
             </td>
 			<!--<td align="left" bgcolor="#fbfbfb">
