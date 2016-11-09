@@ -58763,3 +58763,14 @@ body.page-wishlist .body-Content .wrapper{
 z-index:11;}
 /*--------------Added for luxury site ends-----------*/
 
+/* Added For TPR-996 */
+
+.pdp-promoDesc .show-termsConditions{
+  	padding-top: 10px;
+      line-height: 16px;
+      overflow: auto;
+      max-height: 500px;
+      width: 100%;
+      max-width: 300px;
+}
+
