@@ -604,6 +604,28 @@
 					<modifiers read="true" write="true" search="false"
 						optional="true" />
 				</attribute>
+				<!-- Added For TPR-996 -->
+ 				 <attribute qualifier="termsAndCondition" type="localized:java.lang.String">
+ 				<description>The message to show configurable text in Offer Section</description>
+ 				<modifiers read="true" write="true" optional="true" />
+ 					<persistence type="property">
+ 						<columntype database="oracle">
+ 							<value>varchar2(4000)</value>
+ 						</columntype>
+ 						<columntype database="mysql">
+ 							<value>text</value>
+ 						</columntype>
+ 						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+ 						</columntype>
+ 						<columntype database="hsqldb">
+ 							<value>LONGVARCHAR</value>
+ 						</columntype>
+ 					<columntype>
+ 							<value>varchar</value>
+ 						</columntype>
+ 					</persistence>
+ 			</attribute>
 			</attributes>
 		</itemtype>
 

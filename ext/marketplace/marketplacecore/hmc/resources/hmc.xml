@@ -1248,6 +1248,9 @@
 						<listlayout>
 							<text name="text.productpromotion.productcodelisttitledescription" />
 							<attribute name="productCodeList" />
+							<attribute name="termsAndCondition">
+                        		 <wysiwygeditor/>
+                   		   </attribute>
 							</listlayout>
 					</section>
 				</tab>
