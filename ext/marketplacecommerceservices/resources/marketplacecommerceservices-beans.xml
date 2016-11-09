@@ -48,6 +48,11 @@
 		<property name="doubleValue" type="Double"/>
 	</bean>
 
+<!-- TPR-182 -->
+	<bean class="de.hybris.platform.commercefacades.product.data.PriceData">
+		<property name="formattedValueNoDecimal" type="String"/>
+	</bean>
+
 	<!-- <bean class="com.tisl.mpl.data.SellerInfoDetailsData">
 		<property name="priceData" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
 		<property name="sellerDetail" type="de.hybris.platform.commerceservices.model.SellerModel"/>
