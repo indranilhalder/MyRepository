@@ -1595,6 +1595,10 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	</bean> -->
 	</bean>
 	
+
+	
+	
+	
 	<!-- <bean id="initiateReturnForOrderJob" class="com.tisl.mpl.facade.job.InitiateReturnForOrderJob">
     </bean> -->
     
@@ -1603,8 +1607,8 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		autowire="byName" >
 	</bean>
 	
-	
-	<bean id="deliveryAddressFacade"
+
+<bean id="deliveryAddressFacade"
 		class="com.tis.mpl.facade.changedelivery.Impl.MplDeliveryAddressFacadeImpl"/>
 		
 		<!-- 	R2.3 FL04 changes	 -->
@@ -1720,5 +1724,4 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	
 
 	<!-- close R2.3 Changes -->
-	
 </beans>
