@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
    <head>
       <title>Order Confirmation</title>
@@ -8,6 +8,9 @@
          body,td,th {
          font-family: Arial, Helvetica, sans-serif;
          }
+	table{
+		border-spacing: inherit;
+	}
 		 .order-detail-row td{
 			border-bottom: 1px solid #e2e2e2;
 			padding: 0;
@@ -23,6 +26,10 @@
 		 .order-prodDetail-row p{
 			margin-top: 10px;
 			margin-bottom: 10px;
+		 }
+		 .order-detail-heading td{
+			padding-top: 10px;
+			padding-bottom: 10px;
 		 }
 		 .tip-icon img{
 			float: left;
@@ -57,7 +64,7 @@
          </tr>
          <tr>
             <td colspan="5" style="padding-left:16px;" align="left" bgcolor="#f5f5f5">
-               <p style="margin-bottom: 20px;"><font size="4" color="#000000" ><strong>
+               <p style="margin-bottom: 0px; padding-top: 10px; padding-bottom: 10px;"><font size="4" color="#000000" ><strong>
                   Order Reference Number: ${ctx.orderReferenceNumber}
                   </strong></font>
                </p>
@@ -191,14 +198,14 @@
 		 
 		 
 		
-         <tr class="total-amt-row">
-            <td colspan="3" style="padding-left:16px; padding-top: 32px;" align="left" bgcolor="#fbfbfb"><font size="4" color="#000000" ><strong> Total: ${ctx.totalPrice}</strong></font></td>
+         <tr class="total-amt-row" bgcolor="#fbfbfb">
+            <td colspan="3" style="padding-left:16px; padding-top: 16px;" align="left" bgcolor="#fbfbfb"><font size="4" color="#000000" ><strong> Total: ${ctx.totalPrice}</strong></font></td>
             <td colspan="2" rowspan="2" style="padding-top: 0; text-align: right">			
                <a href="${ctx.trackOrderUrl}" class="btn-track-order">${ctx.cmsSlotContents.TrackOrder1}</a>			   
             </td>
          </tr>
          <tr>
-            <td colspan="5" style="padding: 15px 15px 10px;" align="left" bgcolor="#f5f5f5">
+            <td colspan="5" style="padding: 15px 15px 10px;" align="left" bgcolor="#fbfbfb">
                <p><font size="3" color="#000000" ><strong>
                   Delivery Details
                   </strong></font>
@@ -215,7 +222,7 @@
             </td>
          </tr>
 		 
-		 <tr>
+		 <tr bgcolor="#f5f5f5">
 		 <td colspan="2" style="padding-left:15px; width: 50%" align="left" bgcolor="#f5f5f5">
                <p style="float: left; margin-top: 0;"><font size="2" color="#000000" >
                   As you’ve requested, we’ll be
@@ -277,7 +284,7 @@
 		 
 		 
          
-         <tr>
+         <tr bgcolor="#fbfbfb">
             <td colspan="5" height="18">
                &nbsp;
             </td>
@@ -285,7 +292,7 @@
 		 
 		 
 		 
-         <tr>
+         <tr bgcolor="#fbfbfb">
 			#if($ctx.cmsSlotContents.Tip)
             <td colspan="5" class="tip-icon">
                ${ctx.cmsSlotContents.Tip} <font size="4" color="#000000" style="display: block; padding-left: 5px; text-align: left; margin-top: 8px; margin-left: 58px;"><strong> HERE'S A TIP </strong></font>
@@ -302,7 +309,7 @@
             </td>
          </tr>
 		 #if($ctx.cmsSlotContents.app)
-         <tr>
+         <tr bgcolor="#fbfbfb">
             <td colspan="5">
                <a href="https://www.tatacliq.com/apps" target="_blank" style="display: block; margin-bottom: 25px;" class="downloadapp-icon">
 					${ctx.cmsSlotContents.app}
@@ -322,7 +329,7 @@
                write to <a href="mailto:luxury@tatacliq.com">luxury@tatacliq.com</a>. <br/></font>
             </td>
          </tr>
-        <tr>		
+        <tr bgcolor="#fbfbfb">		
 		
 			<td colspan="2"><font size="2" color="#000000" style="margin-left: 15px;"> © 2016 Tata CLiQ | All Rights Reserved<br/>
 					   </font></td>
