@@ -13,7 +13,10 @@
  */
 package com.tisl.mpl.v2.controller;
 
+import de.hybris.platform.acceleratorcms.model.components.SimpleBannerComponentModel;
 import de.hybris.platform.catalog.enums.ProductReferenceTypeEnum;
+import de.hybris.platform.category.CategoryService;
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commercefacades.catalog.CatalogFacade;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
@@ -95,6 +98,7 @@ import com.tisl.mpl.constants.YcommercewebservicesConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facade.category.MplCategoryFacade;
 import com.tisl.mpl.facade.compare.MplProductCompareFacade;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
 import com.tisl.mpl.facades.product.data.ProductCompareData;
@@ -111,8 +115,10 @@ import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.utility.SearchSuggestUtilityMethods;
 import com.tisl.mpl.v2.helper.ProductsHelper;
 import com.tisl.mpl.validator.PointOfServiceValidator;
+import com.tisl.mpl.wsdto.BreadcrumbResponseWsDTO;
 import com.tisl.mpl.wsdto.DepartmentHierarchyWs;
 import com.tisl.mpl.wsdto.ProductAPlusWsData;
+import com.tisl.mpl.wsdto.LuxHeroBannerWsDTO;
 import com.tisl.mpl.wsdto.ProductCompareWsDTO;
 import com.tisl.mpl.wsdto.ProductDetailMobileWsData;
 import com.tisl.mpl.wsdto.ProductSearchPageWsDto;
@@ -131,6 +137,10 @@ import com.tisl.mpl.wsdto.SizeGuideWsDTO;
 @RequestMapping(value = "/{baseSiteId}/products")
 public class ProductsController extends BaseController
 {
+	/**
+	 *
+	 */
+	private static final String LSH = "LSH";
 	private static final String BASIC_OPTION = "BASIC";
 	private static final Set<ProductOption> OPTIONS;
 	private static final String MAX_INTEGER = "2147483647";
@@ -183,10 +193,15 @@ public class ProductsController extends BaseController
 	private I18NService i18nService;
 	@Resource(name = "defaultMplProductSearchFacade")
 	private DefaultMplProductSearchFacade searchFacade;
+	@Resource(name = "mplCategoryFacade")
+	private MplCategoryFacade mplCategoryFacade;
+
 	@Resource
 	private SearchSuggestUtilityMethods searchSuggestUtilityMethods;
 	//	@Autowired
 	//	private ConfigurationService configurationService;
+	@Resource(name = "categoryService")
+	private CategoryService categoryService;
 
 	static
 	{
@@ -875,7 +890,8 @@ public class ProductsController extends BaseController
 			@RequestParam(required = false) String typeID, @RequestParam(required = false) int page,
 			@RequestParam(required = false) int pageSize, @RequestParam(required = false) String sortCode,
 			@RequestParam(required = false, defaultValue = "false") final boolean isTextSearch,
-			@RequestParam(required = false) boolean isFilter, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+			@RequestParam(required = false) boolean isFilter, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields,
+			@RequestParam(required = false) final boolean isFromLuxuryWeb)
 	{
 
 		final ProductSearchPageWsDto productSearchPage = new ProductSearchPageWsDto();
@@ -934,6 +950,14 @@ public class ProductsController extends BaseController
 				final SearchQueryData searchQueryData = new SearchQueryData();
 				searchQueryData.setValue(searchText);
 				searchState.setQuery(searchQueryData);
+				if (isFromLuxuryWeb)
+				{
+					searchState.setLuxurySiteFrom(MarketplacecommerceservicesConstants.CHANNEL_WEB);
+				}
+				else
+				{
+					searchState.setLuxurySiteFrom(MarketplacecommerceservicesConstants.CHANNEL_APP);
+				}
 
 				if (StringUtils.isNotEmpty(typeID))
 				{
@@ -942,10 +966,35 @@ public class ProductsController extends BaseController
 						searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
 								.textSearch(searchState, pageableData);
 					}
-					else if (typeID.startsWith(DROPDOWN_CATEGORY) || typeID.startsWith(DROPDOWN_BRAND))
+					else if (typeID.startsWith(DROPDOWN_CATEGORY) || typeID.startsWith(DROPDOWN_BRAND) || typeID.startsWith(LSH))
 					{
 						//searchPageData = productSearchFacade.categorySearch(typeID, searchState, pageableData);
 						searchPageData = searchFacade.searchCategorySearch(typeID, searchState, pageableData);
+						final CategoryModel category = categoryService.getCategoryForCode(typeID);
+						if (CollectionUtils.isNotEmpty(category.getCrosssellBanners()))
+						{
+							final SimpleBannerComponentModel crossSellBannerModel = category.getCrosssellBanners().get(0);
+							final LuxHeroBannerWsDTO bannerDto = new LuxHeroBannerWsDTO();
+							bannerDto.setBannerUrl(crossSellBannerModel.getUrlLink());
+							if (null != crossSellBannerModel.getMedia())
+							{
+								bannerDto.setBannerMedia(crossSellBannerModel.getMedia().getURL2());
+								bannerDto.setAltText(crossSellBannerModel.getMedia().getAltText());
+							}
+							productSearchPage.setCrosssellBanner(bannerDto);
+						}
+						if (CollectionUtils.isNotEmpty(category.getDynamicBanners()))
+						{
+							final SimpleBannerComponentModel dynamicBannerModel = category.getDynamicBanners().get(0);
+							final LuxHeroBannerWsDTO bannerDto = new LuxHeroBannerWsDTO();
+							bannerDto.setBannerUrl(dynamicBannerModel.getUrlLink());
+							if (null != dynamicBannerModel.getMedia())
+							{
+								bannerDto.setBannerMedia(dynamicBannerModel.getMedia().getURL2());
+								bannerDto.setAltText(dynamicBannerModel.getMedia().getAltText());
+							}
+							productSearchPage.setPlpHeroBanner(bannerDto);
+						}
 					}
 					else
 					{
@@ -979,7 +1028,7 @@ public class ProductsController extends BaseController
 			}
 			else if (StringUtils.isNotBlank(typeID))
 			{
-				if (typeID.startsWith(DROPDOWN_CATEGORY) || typeID.startsWith(DROPDOWN_BRAND))
+				if (typeID.startsWith(DROPDOWN_CATEGORY) || typeID.startsWith(DROPDOWN_BRAND) || typeID.startsWith(LSH))
 				{
 					searchPageData = productsHelper.searchProductsForCategory(typeID, page, pageSize, sortCode);
 				}
@@ -1037,6 +1086,7 @@ public class ProductsController extends BaseController
 					productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion());
 				}
 			}
+
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -1369,7 +1419,7 @@ public class ProductsController extends BaseController
 							.textSearch(searchState, pageableData);
 
 				}
-				else if (typeID.startsWith("MSH") || typeID.startsWith("MBH"))
+				else if (typeID.startsWith("MSH") || typeID.startsWith("MBH") || typeID.startsWith(LSH))
 				{
 
 					searchPageData = searchFacade.searchCategorySearch(typeID, searchState, pageableData);
@@ -1399,5 +1449,26 @@ public class ProductsController extends BaseController
 		}
 		return null;
 	}
+
+	// ######################### TISLUX-356 START
+
+	@RequestMapping(value = "/getBreadcrumb", method = RequestMethod.POST, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public BreadcrumbResponseWsDTO getBreadcrumb(@RequestParam(required = false) final String code,
+			@RequestParam(required = false, defaultValue = "category") final String type)
+	{
+		try
+		{
+			final BreadcrumbResponseWsDTO breadcrumbData = mplCategoryFacade.getBreadcrumb(code, type);
+			return breadcrumbData;
+		}
+		catch (final Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		return null;
+	}
+
+	// ######################### TISLUX-356 END
 
 }

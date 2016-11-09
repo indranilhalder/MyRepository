@@ -127,6 +127,36 @@ function registerUserGigya(eventObject)
 
 
     	function reviewCount(response) {
+    		
+    		//TPR-675 PART- A  starts
+   		 var categoryId = $('input[name=gigya_product_root_category]').val();
+   		 var title= response.commentTitle;
+   		 var overall= response.ratings._overall; 
+   		 var fit = "not_applicable";
+		 var ease_of_use = "not_applicable";
+    		
+    		if(categoryId  != "Electronics" )
+    			{
+    			var fit= response.ratings.fit;
+    			
+    			var quality= response.ratings.quality;
+    			
+    			var value_for_money= response.ratings.value_for_money;
+    			}
+    	
+    		if(categoryId == "Electronics"){
+    			
+    			var ease_of_use = response.ratings['Ease of use'];
+    			var quality= response.ratings.Quality;
+    			var value_for_money = response.ratings['Value for Money'];
+    		}
+    		  utag.link(
+   					{"link_text": title.replace(/ /g,'_').toLowerCase() , "event_type" : "review_post" , "review_overall_rating" : overall , "review_quality" : quality ,
+   						"review_ease_of_use" : ease_of_use	, "review_fit" : fit , "review_value_for_money": value_for_money }
+   				);
+    		  
+    		//TPR-675 PART-A  ends
+    		  
     		getRating($('input[name=gigya_api_key]').val(),$('input[name=gigya_product_code]').val(),$('input[name=gigya_product_root_category]').val());
     	}
     	

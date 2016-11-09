@@ -136,6 +136,11 @@ tr.d0 td {
 		<div class="wishAddSucess">
 			<span><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
 		</div>
+		
+		<div class="wishRemoveSucess">
+			<span><spring:theme code="mpl.pdp.wishlistRemoveSuccess"></spring:theme></span>
+		</div>
+		
 		<div class="wishAddLogin">
 			<span><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
 		</div>

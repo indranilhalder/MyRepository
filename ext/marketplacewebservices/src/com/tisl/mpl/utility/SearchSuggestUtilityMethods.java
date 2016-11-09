@@ -657,11 +657,34 @@ public class SearchSuggestUtilityMethods
 			if (null != productData && null != productData.getCode())
 			{
 				// commented as per TPR-796
+
+				if (null != productData.getUssID())
+				{
+					sellingItemDetail.setUssid(productData.getUssID());
+				}
+
 				/*
+<<<<<<< HEAD
 				 * try { productDataImage = productFacade.getProductForCodeAndOptions(productData.getCode(),
 				 * Arrays.asList(ProductOption.GALLERY)); galleryImages =
 				 * productDetailsHelper.getGalleryImagesMobile(productDataImage); } catch (final Exception e) {
 				 * LOG.error("SERPSEARCH ProductError:" + productData.getCode()); continue; }
+=======
+				 * final ProductModel productModel = productService.getProductForCode(defaultPromotionManager.catalogData(),
+				 * productData.getCode());
+				 *
+				 * ProductData productData1 = null; if (null != productModel) { productData1 =
+				 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.GALLERY)); } else { throw
+				 * new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9037); }
+				 *
+				 *
+				 * if (null != productData1) { final List<GalleryImageData> gallaryImages =
+				 * mplProductWebService.getGalleryImages(productData1);
+				 *
+				 * if (!gallaryImages.isEmpty()) { sellingItemDetail.setGalleryImagesList(gallaryImages); }
+				 *
+				 * }
+>>>>>>> refs/remotes/origin/GOLDEN_PROD_SUPPORT_3rd_Nov_2016
 				 */
 
 				//TPR-796

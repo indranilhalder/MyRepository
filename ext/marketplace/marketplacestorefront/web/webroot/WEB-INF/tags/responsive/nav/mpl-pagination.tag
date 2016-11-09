@@ -38,7 +38,7 @@
 
 <c:if test="${searchPageData.pagination.totalNumberOfResults > 0}">
 
-	<div class="pagination-bar listing-menu ${(top)?"top":"bottom"}">
+	<div class="pagination-bar listing-menu pagination-order-history ${(top)?"top":"bottom"}">
 		<c:if test="${not empty searchPageData.sorts}">
 			<div>
 				<pagination:mplPageSelectionPagination searchUrl="${searchUrl}"
