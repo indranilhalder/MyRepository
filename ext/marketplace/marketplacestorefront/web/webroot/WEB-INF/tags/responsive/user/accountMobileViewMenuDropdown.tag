@@ -13,9 +13,9 @@
 <c:set var="isLuxVal" value="${not empty param.isLux?param.isLux:false}"/>
 <select class="menu-select" id="menuPageSelect"
 	onchange="window.location=this.options[this.selectedIndex].value;">
-	<optgroup label="<spring:theme code="header.flyout.myaccount" />">
+	<optgroup label='<spring:theme code="header.flyout.myaccount" />'>
 		<option value=/store/mpl/en/my-account?isLux=${isLuxVal}
-			/ data-href="/store/mpl/en/my-account/"><spring:theme
+			 data-href="/store/mpl/en/my-account/"><spring:theme
 				code="header.flyout.overview" />
 		</option>
 		<option value=/store/mpl/en/my-account/marketplace-preference?isLux=${isLuxVal}
