@@ -282,7 +282,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		String variantsString = "";
 		final Map<String, Integer> stockAvailibilty = new TreeMap<String, Integer>();
 		List<ClassificationMobileWsData> specificationsList = null;
-		PromotionMobileData potenitalPromo = null;
+	//	PromotionMobileData potenitalPromo = null;
 
 		try
 		{
