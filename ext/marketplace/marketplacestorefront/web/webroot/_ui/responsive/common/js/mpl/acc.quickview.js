@@ -779,12 +779,6 @@ function openPopForBankEMI_quick() {
 	var optionData = "<option value='select' disabled selected>Select</option>";
 	$("#emiTableTHead").hide();
 	$("#emiTableTbody").hide();
-	/*TPR-641*/
-	utag.link({
-		link_obj: this,
-		link_text: 'emi_more_information' ,
-		event_type : 'emi_more_information'
-	});
 	var requiredUrl = ACC.config.encodedContextPath + "/p" + "-enlistEMIBanks";
 	var dataString = 'productVal=' + productVal;
 	$.ajax({
@@ -798,6 +792,12 @@ function openPopForBankEMI_quick() {
 						+ "</option>";
 			}
 			$("#bankNameForEMI").html(optionData);
+			/*TPR-641*/
+			utag.link({
+				link_obj: this,
+				link_text: 'emi_more_information' ,
+				event_type : 'emi_more_information'
+			});
 
 		},
 		error : function(xhr, status, error) {
