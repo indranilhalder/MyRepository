@@ -9026,7 +9026,7 @@
 <typegroup name="MplDeliveryAddressInfo">
 		<itemtype code="MplDeliveryAddressInfo" autocreate="true"  generate="true">
 				<description>Used to Change delivery address  report</description>
-				<deployment table="MplDeliveryAddressReport" typecode="15018" />
+				<deployment table="DeliveryAddressReport" typecode="15018" />
 				
 				<attributes>
 					<attribute qualifier="orderId" type="java.lang.String"  autocreate="true" generate="true">
@@ -9050,7 +9050,7 @@
 			<itemtype code="BankDetailsInfoToFICOHistory" autocreate="true"
 				generate="true" jaloclass="com.tisl.mpl.core.jalo.BankDetailsInfoToFICOHistory">
 				<description>Comm to FICO COD</description>
-				<deployment table="BankDetailsInfoToFICOHistory" typecode="17981" />
+				<deployment table="FICOBankDetails" typecode="17981" />
 			<attributes>
 			
 				<attribute type="java.lang.String" qualifier="transactionType">
@@ -9150,7 +9150,7 @@
 			<itemtype code="MplCustomerBankAccountDetails" autocreate="true"
 				generate="true" jaloclass="com.tisl.mpl.core.jalo.MplCustomerBankAccountDetails">
 				<description>Captured bank details for COD returns Payment </description>
-				<deployment table="MplCustomerBankAccountDetails" typecode="17982" />
+				<deployment table="BankAccountDetails" typecode="17982" />
 				<attributes>
 				<attribute type="java.lang.String" qualifier="customerId"  >
 			    <description>Customer Id</description>	
