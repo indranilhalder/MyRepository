@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
+import de.hybris.platform.core.model.BulkReturnProcessModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -290,4 +291,31 @@ public class OrderModelDaoImpl implements OrderModelDao
 		}
 		return orderModel;
 	}
+
+	/**
+	 * It gets the list of Parent Order No and Transaction Id
+	 *
+	 * @return List<BulkReturnProcessModel>
+	 *
+	 */
+	@Override
+	public List<BulkReturnProcessModel> getAllBulkReturnData() throws EtailNonBusinessExceptions
+	{
+		//final Map<String, Object> params = new HashMap<String, Object>();
+		//params.put("fromDate", fromDate);
+		//params.put(MarketplacecommerceservicesConstants.ORDERTYPE, MarketplacecommerceservicesConstants.PARENTORDER);
+		try
+		{
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(
+					MarketplacecommerceservicesConstants.BULK_RETURN_DATA_QUERY_START);
+
+			return flexibleSearchService.<BulkReturnProcessModel> search(query).getResult();
+		}
+
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e);
+		}
+	}
+
 }

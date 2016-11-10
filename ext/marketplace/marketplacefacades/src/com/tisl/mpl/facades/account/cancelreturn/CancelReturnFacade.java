@@ -166,6 +166,49 @@ public interface CancelReturnFacade
 	
 	
 	public List<ReturnRequestModel> getListOfReturnRequest(String orderId);
+	
+	/**
+	 * @author Techouts
+	 * @param subOrderDetails
+	 * @param subOrderEntry
+	 * @param reasonCode
+	 * @param ussid
+	 * @param ticketTypeCode
+	 * @param customerData
+	 * @param refundType
+	 * @param isReturn
+	 * @param salesApplication
+	 * @param pinCode
+	 * @return Return Item Status
+	 */
+	public boolean implementReturnItem(OrderData subOrderDetails, OrderEntryData subOrderEntry, String reasonCode, String ussid,
+			String ticketTypeCode, CustomerData customerData, String refundType, boolean isReturn,
+			SalesApplication salesApplication, ReturnItemAddressData returnAddress);
+
+
+	/**
+	 * @param orderDetails
+	 * @param pincode
+	 * @param transId
+	 * @return
+	 */
+	List<ReturnLogisticsResponseData> checkReturnLogistics(OrderData orderDetails, String pincode, String transId);
+
+
+	/**
+	 * @param subOrderDetails
+	 * @param subOrderEntry
+	 * @param ticketTypeCode
+	 * @param reasonCode
+	 * @param refundType
+	 * @param ussid
+	 * @param customerData
+	 * @param subOrderModel
+	 * @param returnAddress
+	 * @return
+	 */
+	boolean createTicketInCRM(OrderData subOrderDetails, OrderEntryData subOrderEntry, String ticketTypeCode, String reasonCode,
+			String refundType, String ussid, CustomerData customerData, OrderModel subOrderModel, ReturnItemAddressData returnAddress);
 
 
 }

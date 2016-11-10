@@ -13,6 +13,7 @@
  */
 package com.tisl.mpl.constants;
 
+import de.hybris.platform.core.model.BulkReturnProcessModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.ordercancel.model.OrderCancelRecordEntryModel;
 import de.hybris.platform.returns.model.RefundEntryModel;
@@ -971,6 +972,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 			+ "} WHERE {" + ReturnOrderModel.CREATIONTIME + "} >= ?startDate AND {" + ReturnOrderModel.CREATIONTIME
 			+ "} <=?endDate ";
 
+	//Bulk Return Initiation
+		public static final String BULK_RETURN_DATA_QUERY_START = "SELECT {" + BulkReturnProcessModel.PK + "} FROM {"
+				+ BulkReturnProcessModel._TYPECODE + "}";
 
 	public static final String CART_NULL = "Cart model cannot be null";
 
@@ -1685,6 +1689,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String S = "S";
 	public static final String SELF_COURIER = "SELF_COURIER";
+
+	public static final String TICKETTYPECODE = "R";
+   public static final String REFUNDTYPE = "S";
+   public static final String REASONCODE = "03"; // Hard coded value -- I'm not happy with the product quality
+
 
 
 }
