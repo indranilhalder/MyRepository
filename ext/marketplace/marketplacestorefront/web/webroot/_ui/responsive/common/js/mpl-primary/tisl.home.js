@@ -794,6 +794,7 @@ function getProductsYouCareAjaxCall() {
             url: ACC.config.encodedContextPath + "/getProductsYouCare",
             data: dataString,
             success: function(response) {
+            	console.log(response);
                 renderHtml = "<h2>" + response.title + "</h2>";
                 renderHtml +=
                     "<div class='home-product-you-care-carousel'>";
@@ -809,11 +810,16 @@ function getProductsYouCareAjaxCall() {
                     renderHtml +=
                         "<div class='home-product-you-care-carousel-img'> <img class='' src='" +
                         v.mediaURL + "'></img></div>";
-                    renderHtml +=
-                        "<div class='short-info'><h3 class='product-name'><span>" +
-                        v.categoryName +
-                        "</span></h3></div>";
+                 /*TPR-562 -start   */
+                   if(v.imageName) {
+                   renderHtml +=
+                     "<div class='short-info'><h3 class='product-name'><span>" +
+                        v.imageName +
+                       "</span></h3></div>";
                     renderHtml += "</a>";
+                    
+                   }
+                   /*TPR-562 -ends   */
                 });
                 renderHtml += "</div>";
                 $("#productYouCare").html(renderHtml);
