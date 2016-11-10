@@ -77,7 +77,7 @@
 				
 				<form:form id="selectDeliveryMethodForm" action="${request.contextPath}/checkout/multi/delivery-method/next" method="get" >
 				<!-- TISCR-305 starts -->
-				<button class="button" id="deliveryMethodSubmitUp" type="submit" class="checkout-next"><spring:theme code="checkout.multi.deliveryMethod.continue" text="Next"/></button>
+				<button class="button" id="deliveryMethodSubmitUp" type="submit" class="checkout-next"><spring:theme code="checkout.pickup.continue.button" text="Next"/></button>
 				<!-- TISCR-305 ends -->
 					<div class="checkout-shipping left-block">
 					
