@@ -97,6 +97,7 @@
 				
 	</c:when>
 	<c:otherwise>
+	<span id="mobile-menu-toggle" class=""></span>	<!-- TISQAEE-4 -->
 		<ul class="words"></ul>
 	</c:otherwise>		
 	</c:choose>			<!-- TPR-561 -->

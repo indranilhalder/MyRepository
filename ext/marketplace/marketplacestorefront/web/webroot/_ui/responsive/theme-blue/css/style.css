@@ -35473,10 +35473,10 @@ display:none;
 }
 /*mobile filter*/
 ul.jqtree-tree .jqtree-element {
-    height: 22px;
+    min-height: 22px;
 }
 ul.jqtree_common > li.jqtree_common:not(.jqtree-folder) {
-    height: 27px;
+    min-height: 27px;
     margin-top: 4px;
     margin-bottom: 4px;
 }
@@ -35497,6 +35497,9 @@ span.jqtree-facetCount.jqtree_common{
 }
 .product-item .product-tile p.savings {
     margin-left: -3px;
+    float: none;	/* TISQAEE-1 */
+    clear: both;
+    display: block;
 }
 .short-info .company .old, .short-info .price .old {
     margin-right: -3px;
@@ -47619,7 +47622,7 @@ padding:0 40px;	}
 /* TPR-628 ends*/
 
 /*TPR-873*/
-.product-info>div.wishAddLogin, .product-info>div.wishAddSucess, .product-info>div.wishAlreadyAdded,div.wishAlreadyAddedPlp,div.wishAddLoginPlp,div.wishAddSucessPlp,div.wishAddSucessQV,div.wishAddLoginQV,div.wishAlreadyAddedQV {
+.product-info>div.wishAddLogin, .product-info>div.wishAddSucess,.product-info>div.wishAddLogin, .product-info>div.wishRemoveSucess, .product-info>div.wishAlreadyAdded,div.wishAlreadyAddedPlp,div.wishAddLoginPlp,div.wishAddSucessPlp,div.wishAddSucessQV,div.wishAddLoginQV,div.wishAlreadyAddedQV {
 	display: inline-block;
     position: fixed;
    	z-index: 100000;
@@ -47640,7 +47643,7 @@ padding:0 40px;	}
 }
 
 
-.product-info>div.wishAddLogin.active, .product-info>div.wishAddSucess.active, .product-info>div.wishAlreadyAdded.active,div.wishAlreadyAddedPlp.active,div.wishAddLoginPlp.active,div.wishAddSucessPlp.active,div.wishAddSucessQV.active,div.wishAddLoginQV.active,div.wishAlreadyAddedQV.active{
+.product-info>div.wishAddLogin.active, .product-info>div.wishAddSucess.active,.product-info>div.wishAddLogin.active, .product-info>div.wishRemoveSucess.active, .product-info>div.wishAlreadyAdded.active,div.wishAlreadyAddedPlp.active,div.wishAddLoginPlp.active,div.wishAddSucessPlp.active,div.wishAddSucessQV.active,div.wishAddLoginQV.active,div.wishAlreadyAddedQV.active{
 	opacity: 1;
 	top: 90px;
 }
@@ -47652,11 +47655,11 @@ padding:0 40px;	}
     top:0px;
 	}
 } */
-.product-info>div.wishAddSucess>span,div.wishAddSucessPlp>span,div.wishAddSucessQV>span{
+.product-info>div.wishAddSucess>span,.product-info>div.wishRemoveSucess>span,div.wishAddSucessPlp>span,div.wishAddSucessQV>span{
 	margin-left: 30px;
 	    line-height: 20px;
 }
-.product-info>div.wishAddSucess,div.wishAddSucessPlp,div.wishAddSucessQV{
+.product-info>div.wishAddSucess,.product-info>div.wishRemoveSucess,div.wishAddSucessPlp,div.wishAddSucessQV{
 	color:green;
 	
 }
@@ -47665,7 +47668,7 @@ padding:0 40px;	}
 }
 
 
-.wishAddSucess:before,div.wishAddSucessPlp:before,div.wishAddSucessQV:before{
+.wishAddSucess:before,.wishRemoveSucess:before,div.wishAddSucessPlp:before,div.wishAddSucessQV:before{
 
     content: "";
     width: 9px;
@@ -47682,7 +47685,7 @@ padding:0 40px;	}
     left: 24px;
     margin: auto;
 }
-.wishAddSucess:after,div.wishAddSucessPlp:after,div.wishAddSucessQV:after{
+.wishAddSucess:after,.wishRemoveSucess:after,div.wishAddSucessPlp:after,div.wishAddSucessQV:after{
 
 	width: 30px;
     height: 30px;
@@ -51194,13 +51197,17 @@ padding: 0 24px;
 .featured_collection .blp_featured_collection_wrapper .featured_collection_section {
     width: 48.5%;
     margin-bottom: 10px;
+    display: inline-block;
+    float: none;
+    vertical-align: top;
 }
 .featured_collection .blp_featured_collection_wrapper {
     padding: 0;
 }
 .featured_collection .blp_featured_collection_wrapper .featured_collection_section:nth-child(even) {
-    float: right;
+   /* float: right; */
     margin-right: 0;
+    margin-left: 1.5%;
 }
 .featured_collection{
 	padding: 30px 12px;
@@ -52436,14 +52443,18 @@ word-break: break-word;
 	.winter_launch .clp_winter_launch_wrapper .winter_launch_section {
 		width: 48.5%;
 		margin-bottom: 10px;
+		display: inline-block;
+    	float: none;
+    	vertical-align: top;
 	}
 	.winter_launch .clp_winter_launch_wrapper {
 		padding: 0;
 	}
 	.winter_launch .clp_winter_launch_wrapper .winter_launch_section:nth-child(even)
 		{
-		float: right;
+		/* float: right; */
 		margin-right: 0;
+		margin-left:1.5%;
 	}
 	.winter_launch {
 		padding: 30px 12px;
@@ -58763,3 +58774,6 @@ body.page-wishlist .body-Content .wrapper{
 z-index:11;}
 /*--------------Added for luxury site ends-----------*/
 
+.page-checkout-login .body-Content{
+	padding-top: 50px;
+}

@@ -792,6 +792,12 @@ function openPopForBankEMI_quick() {
 						+ "</option>";
 			}
 			$("#bankNameForEMI").html(optionData);
+			/*TPR-641*/
+			utag.link({
+				link_obj: this,
+				link_text: 'emi_more_information' ,
+				event_type : 'emi_more_information'
+			});
 
 		},
 		error : function(xhr, status, error) {
