@@ -126,7 +126,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -459,11 +459,11 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				{
 					productDetailMobile.setDeliveryModesATP(deliveryModesForProduct);
 				}
-				if (null != getCategoryOfProduct(productData))
+				if (CollectionUtils.isNotEmpty(productData.getCategories()))
 				{
 					productDetailMobile.setProductCategory(getCategoryOfProduct(productData));
 				}
-				if (null != getCategoryCodeOfProduct(productData))
+				if (CollectionUtils.isNotEmpty(productData.getCategories()))
 				{
 					productDetailMobile.setProductCategoryId(getCategoryCodeOfProduct(productData));
 				}
@@ -1479,19 +1479,18 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	private String getCategoryOfProduct(final ProductData productData)
 	{
 		String productCategory = null;
+		final String salesCategory = configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.SALESCATEGORYTYPE);
+		final String luxSalesCategory = configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.LUX_SALESCATEGORYTYPE);
 		try
 		{
-			if (null != productData.getCategories() && !productData.getCategories().isEmpty())
+			if (CollectionUtils.isNotEmpty(productData.getCategories()))
 			{
 				for (final CategoryData category : productData.getCategories())
 				{
-					if (null != category
-							&& null != category.getCode()
-							&& null != configurationService.getConfiguration().getString(
-									MarketplacecommerceservicesConstants.SALESCATEGORYTYPE)
-							&& category.getCode().startsWith(
-									configurationService.getConfiguration().getString(
-											MarketplacecommerceservicesConstants.SALESCATEGORYTYPE)) && null != category.getName())
+					if (null != category && null != category.getName() && null != category.getCode()
+							&& (category.getCode().startsWith(salesCategory) || category.getCode().startsWith(luxSalesCategory)))
 					{
 						productCategory = category.getName();
 						return productCategory;
@@ -1516,19 +1515,19 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	public String getCategoryCodeOfProduct(final ProductData productData)
 	{
 		String productCategory = null;
+		final String salesCategory = configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.SALESCATEGORYTYPE);
+
+		final String luxSalesCategory = configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.LUX_SALESCATEGORYTYPE);
 		try
 		{
-			if (null != productData.getCategories() && !productData.getCategories().isEmpty())
+			if (CollectionUtils.isNotEmpty(productData.getCategories()))
 			{
 				for (final CategoryData category : productData.getCategories())
 				{
-					if (null != category
-							&& null != category.getCode()
-							&& null != configurationService.getConfiguration().getString(
-									MarketplacecommerceservicesConstants.SALESCATEGORYTYPE)
-							&& category.getCode().startsWith(
-									configurationService.getConfiguration().getString(
-											MarketplacecommerceservicesConstants.SALESCATEGORYTYPE)) && null != category.getName())
+					if (null != category && null != category.getCode() && null != category.getCode()
+							&& (category.getCode().startsWith(salesCategory) || category.getCode().startsWith(luxSalesCategory)))
 					{
 						productCategory = category.getCode();
 						return productCategory;
