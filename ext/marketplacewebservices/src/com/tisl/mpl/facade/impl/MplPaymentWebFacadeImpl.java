@@ -313,7 +313,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 							cart.setChannel(SalesApplication.MOBILE);
 
 							LOG.debug("binValidation : cartModel : " + cart);
-
+							//final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 							//TISPRD-9350--  New Method created to pass the cartModel in place of fetching data from session
 							final CartData cartData = getMplCustomAddressFacade().getCheckoutCartWS(cart);
 
