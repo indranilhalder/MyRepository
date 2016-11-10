@@ -66,7 +66,6 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
@@ -3130,16 +3129,15 @@ public class CartsController extends BaseCommerceController
 							{
 								cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
 								////////
-								validation = mplPaymentFacade.generateOTPforCODWeb(mplCustomerID, mobilenumber, mplCustomerName, cart);
+								validation = mplPaymentFacade.generateOTPforCOD(mplCustomerID, mobilenumber, mplCustomerName, cart);
 							}
 							else
 							{
 								////////
-								validation = mplPaymentFacade.generateOTPforCODWeb(mplCustomerID, mobilenumber, mplCustomerName, orderModel);
+								validation = mplPaymentFacade.generateOTPforCOD(mplCustomerID, mobilenumber, mplCustomerName, orderModel);
 							}
 							if (StringUtils.isNotEmpty(validation))
 							{
-
 								validateOtpWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 							}
 							else
