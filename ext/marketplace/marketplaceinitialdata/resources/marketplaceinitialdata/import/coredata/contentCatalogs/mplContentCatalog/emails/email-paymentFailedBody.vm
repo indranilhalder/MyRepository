@@ -36,9 +36,9 @@
                 <br>
 
 
-                <font style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#AA133D;">Bad news: the payment for your order has been declined for some reason. We're not sure what went wrong.<br>
+                <font style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#AA133D;">Bad news: the payment for your order has been declined for some reason. We're not sure what went wrong. 
+				Click here to place the order again.<br>
                 <br>
-				<b>Click <a href='#'>here</a> to place the order again.</b><br><br>
                 </font></td>
 
 
@@ -69,8 +69,7 @@
                     				
                   				</tr>
                   				<span  align="center" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#4a4a4a; font-weight:bold; padding:0 10px; width:100px;background-color: #ddd"><span style="font-size: 22px;color: #A52A2A;">OrderDetails:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Order  No : ${ctx.orderReferenceNumber}</span>
-     				#set ($shippingCharge=0)
-					#foreach( $childorder in ${ctx.childOrders} )
+     			
 							<tr>
 
 							  	<td height="5" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
@@ -102,20 +101,24 @@
                       				<tr>
                         			<td   style="width: 177px;padding-left: 0px;text-align: center;height:65px;">Transaction <br>
                           				ID</td>
-                        			<td style="width: 115px;padding-left: 27px;">Product</td>
+                        			<td style="width: 115px;padding-left: 27px;">Name of<br>
+                          			Product</td>
                         			<td style="padding-left: 22px;width: 50px;">Qty</td>
 									<td style="padding-left: 18px;">Price</td>
-                        			
+                        		
                       				</tr>
+									#set ($shippingCharge=0)
                       				#set ($srNo=1)
-                      				#foreach($entry in ${childorder.entries})
+                      				#foreach($entry in ${ctx.childEntries})
                       			<tr height="50">
 
-		                			<td style="padding-left: 12px;color: #504B49;" >$entry.orderLineId</td>
+		                			<td style="padding-left: 12px;color: #504B49;" >Pending</td>
 		                			<td style="color: #504B49;text-align:center">$entry.product.name</td>
 		                			<td align="center" style="padding-left: 10px;color: #504B49;" >$entry.quantity</td>
-		                			<td width="80" align="center"style="color: #504B49;">$entry.netAmountAfterAllDisc</td>
+		                			<td width="80" align="center"style="color: #504B49;">$entry.totalPrice</td>
 		                			
+		                			
+		                  			
 		              			</tr>
 
                       			#set ($srNo=$srNo+1)
@@ -125,7 +128,7 @@
                       			</table></td>
                       			<td align="left" valign="top">&nbsp;</td>
                   				</tr>
-                  				#end
+                  				
                   			</table>
                   			</td>
                   		</tr>
