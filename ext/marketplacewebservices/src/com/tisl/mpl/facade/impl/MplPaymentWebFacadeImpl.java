@@ -3,14 +3,19 @@
  */
 package com.tisl.mpl.facade.impl;
 
+import de.hybris.platform.commercefacades.order.data.CCPaymentInfoData;
 import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.payment.CreditCardPaymentInfoModel;
+import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import org.apache.commons.lang.StringUtils;
@@ -66,6 +71,9 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 	private CommerceCartService commerceCartService;
 	@Autowired
 	private ExtendedUserService extendedUserService;
+	private Converter<CartModel, CartData> mplExtendedCartConverter;
+	private Converter<AddressModel, AddressData> customAddressConverter;
+	private Converter<CreditCardPaymentInfoModel, CCPaymentInfoData> creditCardPaymentInfoConverter;
 
 	//	@Resource(name = "sessionService")
 	//	private SessionService sessionService;
@@ -301,12 +309,14 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 							{
 								cart.setConvenienceCharges(Double.valueOf(0.0));
 							}
-							cart.setChannel(SalesApplication.MOBILE);
 							modelService.save(cart);
+							cart.setChannel(SalesApplication.MOBILE);
 
 							LOG.debug("binValidation : cartModel : " + cart);
 
-							final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+							//TISPRD-9350--  New Method created to pass the cartModel in place of fetching data from session
+							final CartData cartData = getMplCustomAddressFacade().getCheckoutCartWS(cart);
+
 							if (null != cartData)
 							{
 								LOG.debug("binValidation : cartData : " + cartData);
@@ -477,7 +487,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.MplPaymentWebFacade#potentialPromotionOnPaymentMode(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -487,7 +497,6 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 		promoData = getMplPaymentWebService().potentialPromotionOnPaymentMode(userId, cartId);
 		return promoData;
 	}
-
 
 	/**
 	 * @return the configurationService
@@ -640,6 +649,58 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 	public void setExtendedUserService(final ExtendedUserService extendedUserService)
 	{
 		this.extendedUserService = extendedUserService;
+	}
+
+	/**
+	 * @return the mplExtendedCartConverter
+	 */
+	public Converter<CartModel, CartData> getMplExtendedCartConverter()
+	{
+		return mplExtendedCartConverter;
+	}
+
+	/**
+	 * @param mplExtendedCartConverter
+	 *           the mplExtendedCartConverter to set
+	 */
+	public void setMplExtendedCartConverter(final Converter<CartModel, CartData> mplExtendedCartConverter)
+	{
+		this.mplExtendedCartConverter = mplExtendedCartConverter;
+	}
+
+	/**
+	 * @return the customAddressConverter
+	 */
+	public Converter<AddressModel, AddressData> getCustomAddressConverter()
+	{
+		return customAddressConverter;
+	}
+
+	/**
+	 * @param customAddressConverter
+	 *           the customAddressConverter to set
+	 */
+	public void setCustomAddressConverter(final Converter<AddressModel, AddressData> customAddressConverter)
+	{
+		this.customAddressConverter = customAddressConverter;
+	}
+
+	/**
+	 * @return the creditCardPaymentInfoConverter
+	 */
+	public Converter<CreditCardPaymentInfoModel, CCPaymentInfoData> getCreditCardPaymentInfoConverter()
+	{
+		return creditCardPaymentInfoConverter;
+	}
+
+	/**
+	 * @param creditCardPaymentInfoConverter
+	 *           the creditCardPaymentInfoConverter to set
+	 */
+	public void setCreditCardPaymentInfoConverter(
+			final Converter<CreditCardPaymentInfoModel, CCPaymentInfoData> creditCardPaymentInfoConverter)
+	{
+		this.creditCardPaymentInfoConverter = creditCardPaymentInfoConverter;
 	}
 
 }

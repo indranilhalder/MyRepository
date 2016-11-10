@@ -4,7 +4,9 @@
 package com.tisl.mpl.facade.checkout.impl;
 
 import de.hybris.platform.commercefacades.order.CartFacade;
+import de.hybris.platform.commercefacades.order.data.CCPaymentInfoData;
 import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.order.data.DeliveryModeData;
 import de.hybris.platform.commercefacades.order.impl.DefaultCheckoutFacade;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
@@ -14,6 +16,9 @@ import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
+import de.hybris.platform.core.model.order.payment.CreditCardPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.CartService;
@@ -29,6 +34,7 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
@@ -740,5 +746,141 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 			}
 		}
 		return deliveryCost;
+	}
+
+	/**
+	 * It is responsible for fetching Cart Data
+	 *
+	 * @param cartModel
+	 * @return
+	 */
+	//TISPRD-9350--  New Method created for Web service to pass the cartModel in place of fetching data from session
+	@Override
+	public CartData getCheckoutCartWS(final CartModel cart)
+	{
+		final CartModel cartModel = cart;
+		CartData cartData = null;
+		if (null != cartModel)
+		{
+			cartData = getMplExtendedCartConverter().convert(cartModel);
+
+			if (cartData != null)
+			{
+				cartData.setDeliveryAddress(getDeliveryAddressWS(cartModel));
+				cartData.setPaymentInfo(getPaymentDetailsWS(cartModel));
+				cartData.setDeliveryMode(getDeliveryModeWS(cartModel));
+			}
+			if (null != cartModel.getConvenienceCharges())
+			{
+				cartData.setConvenienceChargeForCOD(createPrice(cartModel, cartModel.getConvenienceCharges()));
+			}
+			if (null != cartModel.getTotalPriceWithConv())
+			{
+				cartData.setTotalPriceWithConvCharge(createPrice(cartModel, cartModel.getTotalPriceWithConv()));
+			}
+		}
+		else
+		{
+			LOG.error(">>>> getCheckoutCart() CartModel is null ");
+		}
+		return cartData;
+	}
+
+	//TISPRD-9350--  New Method created for Web service to pass the cartModel in place of fetching data from session and calculate the delivery address
+	/**
+	 *
+	 * @param cartModel
+	 * @return
+	 */
+	protected AddressData getDeliveryAddressWS(final CartModel cartModel)
+	{
+		final CartModel cart = cartModel;
+		if (cart != null)
+		{
+			final AddressModel deliveryAddress = cart.getDeliveryAddress();
+			if (deliveryAddress != null)
+			{
+				// Ensure that the delivery address is in the set of supported addresses
+				final AddressModel supportedAddress = getDeliveryAddressModelForCodeWS(deliveryAddress.getPk().toString(), cartModel);
+				if (supportedAddress != null)
+				{
+					return getCustomAddressConverter().convert(supportedAddress);
+				}
+			}
+		}
+
+		return null;
+	}
+
+	//TISPRD-9350--  New Method created for Web service to pass the cartModel in place of fetching data from session and get the delivery address Model
+	/**
+	 *
+	 * @param code
+	 * @param cart
+	 * @return
+	 */
+	protected AddressModel getDeliveryAddressModelForCodeWS(final String code, final CartModel cart)
+	{
+		Assert.notNull(code, "Parameter code cannot be null.");
+
+		final CartModel cartModel = cart;
+		if (cartModel != null)
+		{
+			final List<AddressModel> addresses = getDeliveryService().getSupportedDeliveryAddressesForOrder(cartModel, false);
+			if (addresses != null)
+			{
+				for (final AddressModel address : addresses)
+				{
+					if (code.equals(address.getPk().toString()))
+					{
+						return address;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	//TISPRD-9350--  New Method created for Web service to pass the cartModel in place of fetching data from session and get the payment details
+	/**
+	 *
+	 * @param cartModel
+	 * @return
+	 */
+	protected CCPaymentInfoData getPaymentDetailsWS(final CartModel cartModel)
+	{
+		final CartModel cart = cartModel;
+		if (cart != null)
+		{
+			final PaymentInfoModel paymentInfo = cart.getPaymentInfo();
+			if (paymentInfo instanceof CreditCardPaymentInfoModel)
+			{
+				return getCreditCardPaymentInfoConverter().convert((CreditCardPaymentInfoModel) paymentInfo);
+			}
+		}
+
+		return null;
+	}
+
+
+	//TISPRD-9350--  New Method created for Web service to pass the cartModel in place of fetching data from session and get the delivery mode
+	/**
+	 *
+	 * @param cartModel
+	 * @return
+	 */
+	protected DeliveryModeData getDeliveryModeWS(final CartModel cartModel)
+	{
+		final CartModel cart = cartModel;
+		if (cart != null)
+		{
+			final DeliveryModeModel deliveryModeModel = cart.getDeliveryMode();
+			if (deliveryModeModel != null)
+			{
+				return convert(deliveryModeModel);
+			}
+		}
+
+		return null;
 	}
 }
