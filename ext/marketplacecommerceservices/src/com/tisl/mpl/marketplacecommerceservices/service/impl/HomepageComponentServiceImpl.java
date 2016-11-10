@@ -177,6 +177,8 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 
 		String title = MarketplacecommerceservicesConstants.EMPTY;
 		String mediaUrl = MarketplacecommerceservicesConstants.EMPTY;
+		String imageName = MarketplacecommerceservicesConstants.EMPTY;
+
 
 		final JSONArray subComponentJsonArray = new JSONArray();
 
@@ -236,29 +238,43 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 										&& StringUtils.isNotEmpty(imageCategoryComponent.getImage().getURL()))
 								{
 									mediaUrl = imageCategoryComponent.getImage().getURL();
+
 								}
 
 							}
 
+
+							if (null != imageCategoryComponent.getImageTitle())
+							{
+								imageName = imageCategoryComponent.getImageTitle();
+							}
+							else
+							{
+								imageName = MarketplacecommerceservicesConstants.EMPTY;
+							}
+
+							categoryJSON.put("imageName", imageName);
 							categoryJSON.put("mediaURL", mediaUrl);
 							categoryJSON.put(ICID, imageCategoryComponent.getPk().getLongValueAsString());
 							subComponentJsonArray.add(categoryJSON);
+
+
+
+
 						}
 
-
 					}
+
+					productYouCare.put(TITLE, title);
+					productYouCare.put("categories", subComponentJsonArray);
+
+
 				}
 
 			}
-
-			productYouCare.put(TITLE, title);
-			productYouCare.put("categories", subComponentJsonArray);
-
-
 		}
 		return productYouCare;
 	}
-
 
 	/**
 	 * @param category
