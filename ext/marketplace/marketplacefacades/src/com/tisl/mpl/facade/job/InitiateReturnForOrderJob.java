@@ -25,10 +25,13 @@ import de.hybris.platform.store.services.BaseStoreService;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -76,7 +79,7 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.servicelayer.cronjob.AbstractJobPerformable#perform(de.hybris.platform.cronjob.model.CronJobModel
 	 * )
@@ -84,193 +87,106 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 	@Override
 	public PerformResult perform(final CronJobModel arg0)
 	{
-
-		//Reading CSV file
-
-		//String fileName = System.getProperty("user.home") + "/csv_files/return.csv";
-
-		//final String fileName = "D:/Nazia/csv_files/return.csv";
-		//BufferedReader fileReader = null;
-
-
 		try
 		{
-
-
 			String orderCode = null; // TODO to fetch from given CSV66
 			String transactionId = null; // TODO to fetch from given CSV66
-			String ussid = null;
-			final String ticketTypeCode = MarketplacecommerceservicesConstants.TICKETTYPECODE;
-			final String refundType = MarketplacecommerceservicesConstants.REFUNDTYPE;
-			final String reasonCode = MarketplacecommerceservicesConstants.REASONCODE;
-			String orderStatus = null;
-			CustomerData customerData = null;
 			OrderData subOrderDetails = null;
+			ReturnItemAddressData returnAddrData = null;
+			Map<String, Boolean> returnResonseMap = null;
+			OrderEntryData subOrderEntry = null;
 
-			boolean returnStatus = false;
-			/*
-			 * String line = ""; fileReader = new BufferedReader(new FileReader(fileName));
-			 */
+			final Map<OrderEntryData, OrderData> dataToCallOMS = new HashMap<OrderEntryData, OrderData>();
 
+			final long startTime = System.currentTimeMillis();
+			LOG.info(MarketplacecommerceservicesConstants.START_TIME + startTime);
+
+			//fetch list of bulk data processed
 			final List<BulkReturnProcessModel> bulkList = orderModelService.getBulkReturnData();
 
-			for (final BulkReturnProcessModel bulkModel : bulkList)
+			if (CollectionUtils.isNotEmpty(bulkList))
 			{
-				if (null != bulkModel && null != bulkModel.getParentOrderNo() && null != bulkModel.getTransactionId())
+				for (final BulkReturnProcessModel bulkModel : bulkList)
 				{
-					orderCode = bulkModel.getParentOrderNo();
-					transactionId = bulkModel.getTransactionId();
-
-
-					LOG.info("orderCode is" + bulkModel.getParentOrderNo() + "&&" + "transactionId is" + bulkModel.getTransactionId());
-
-
-					/*
-					 * while ((line = fileReader.readLine()) != null) {
-					 * 
-					 * final String[] tokens = line.split(MarketplacecommerceservicesConstants.COMMA_DELIMITER);
-					 * 
-					 * 
-					 * orderCode = tokens[0]; transactionId = tokens[1];
-					 * 
-					 * System.out.println("RETURN [orderCode= " + tokens[0] + " , transactionId=" + tokens[1] + "]");
-					 */
-
-
-
-					final ReturnItemAddressData returnAddrData = new ReturnItemAddressData();
-					OrderEntryData subOrderEntry = new OrderEntryData();
-					final OrderModel orderModel = orderModelService.getParentOrder(orderCode);
-					final AddressModel addrModel = orderModel.getDeliveryAddress();
-
-					returnAddrData.setPincode(addrModel.getPostalcode());
-					returnAddrData.setFirstName(addrModel.getFirstname());
-					returnAddrData.setLastName(addrModel.getLastname());
-					returnAddrData.setCity(addrModel.getCity());
-					returnAddrData.setMobileNo(addrModel.getCellphone());
-					returnAddrData.setState(addrModel.getState());
-
-					for (final OrderModel subOrder : orderModel.getChildOrders())
+					if (null != bulkModel && null != bulkModel.getParentOrderNo() && null != bulkModel.getTransactionId())
 					{
-						try
+						orderCode = bulkModel.getParentOrderNo();
+						transactionId = bulkModel.getTransactionId();
+
+						LOG.info("orderCode is" + bulkModel.getParentOrderNo() + "&&" + "transactionId is"
+								+ bulkModel.getTransactionId());
+
+						final OrderModel orderModel = orderModelService.getParentOrder(orderCode);
+						final AddressModel addrModel = orderModel.getDeliveryAddress();
+
+						//Step 1. prepare AddressData
+						returnAddrData = getReturnData(addrModel);
+
+						//Step 2: prepare map to call OMS
+						for (final OrderModel subOrder : orderModel.getChildOrders())
 						{
-							subOrderDetails = convertToData(subOrder);
-							customerData = subOrderDetails.getCustomerData();
+							try
+							{
+								subOrderDetails = convertToData(subOrder);
+								final List<OrderEntryData> subOrderEntries = subOrderDetails.getEntries();
+
+								for (final OrderEntryData entry : subOrderEntries)
+								{
+									if (entry.getTransactionId().equalsIgnoreCase(transactionId))
+									{
+										subOrderEntry = entry;
+										dataToCallOMS.put(entry, subOrderDetails);
+
+									}
+								}
+
+								if (null != subOrderEntry)
+								{
+									break;
+								}
+							}
+							catch (final Exception e)
+							{
+								LOG.info("-----------Order Data Conversion Exception and skipping----" + orderModel.getCode());
+								continue;
+							}
 						}
-						catch (final Exception e)
-						{
-							LOG.info("-----------Order Data Conversion Exception and skipping----" + orderModel.getCode());
-							continue;
-						}
-					}
-					final List<OrderEntryData> subOrderEntries = subOrderDetails.getEntries();
-
-					for (final OrderEntryData entry : subOrderEntries)
-					{
-						if (entry.getTransactionId().equalsIgnoreCase(transactionId))
-						{
-							subOrderEntry = entry;
-							ussid = entry.getSelectedUssid();
-							orderStatus = entry.getConsignment().getStatus().getCode();
-
-							break;
-						}
-						// TODO To read csv for getting order ids,ussid and transcation id
-					}
 
 
-					if (ticketTypeCode.equalsIgnoreCase("R") && orderStatus != null
-							&& orderStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED))
-					{
-						returnStatus = cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry, reasonCode, ussid,
-								ticketTypeCode, customerData, refundType, true, SalesApplication.WEB, returnAddrData);
-					}
-					else
-					{
-						LOG.info("-----------Unable to initiate return----" + "Order Id " + orderModel.getCode() + "Order Status "
-								+ orderStatus);
 					}
 
-					if (returnStatus)
-					{
-						bulkModel.setLoadStatus("1");
-						bulkModel.setErrorDescription(MarketplacecommerceservicesConstants.SUCCESS);
-					}
-					else
-					{
-						bulkModel.setLoadStatus("-1");
-						bulkModel.setErrorDescription(MarketplacecommerceservicesConstants.FAILURE);
-					}
-					modelService.save(bulkModel);
-					LOG.info("Update Load Status with success");
 				}
-				else
-				{
-					bulkModel.setLoadStatus("-1");
-					bulkModel.setErrorDescription(MarketplacecommerceservicesConstants.FAILURE);
-					modelService.save(bulkModel);
-					LOG.info("Update Load Status with failure");
-				}
+
+
 			}
-			/*
-			 * else { cancelReturnFacade.implementCancelOrReturn(subOrderDetails, subOrderEntry, reasonCode, ussid,
-			 * ticketTypeCode, customerData, refundType, true, SalesApplication.WEB); }
-			 */
-			//}
 
-			/*
-			 * try { fileReader.close(); } catch (final IOException e) {
-			 * System.out.println("Error while closing fileReader !!!"); e.printStackTrace(); }
-			 */
+			try
+			{
 
+				//Step 3: call OMS and CRM
+				returnResonseMap = callOMSandCRM(dataToCallOMS, returnAddrData);
 
+			}
 
-			/*
-			 * //Start Archiving
-			 * 
-			 * 
-			 * InputStream inStream = null; OutputStream outStream = null;
-			 * 
-			 * 
-			 * String dateTime = null; final DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss"); final Calendar
-			 * cal = Calendar.getInstance(); dateTime = dateFormat.format(cal.getTime());
-			 * System.out.println(dateFormat.format(cal.getTime()));
-			 * 
-			 * 
-			 * final File afile = new File("D:\\Nazia\\csv_files\\return.csv"); final File bfile = new
-			 * File("D:\\Nazia\\Archive\\return_" + dateTime + ".csv");
-			 * 
-			 * 
-			 * boolean blnCreated = false;
-			 * 
-			 * blnCreated = bfile.createNewFile();
-			 * 
-			 * System.out.println("Was file " + bfile.getPath() + " created ? : " + blnCreated);
-			 * 
-			 * inStream = new FileInputStream(afile); outStream = new FileOutputStream(bfile);
-			 * 
-			 * 
-			 * 
-			 * final byte[] buffer = new byte[1024];
-			 * 
-			 * 
-			 * int length; //copy the file content in bytes while ((length = inStream.read(buffer)) > 0) {
-			 * 
-			 * outStream.write(buffer, 0, length);
-			 * 
-			 * //afile.renameTo((new File(afile.getName() + dateTime))); }
-			 * 
-			 * inStream.close(); outStream.close();
-			 * 
-			 * //delete the original file afile.delete();
-			 * 
-			 * System.out.println("File is copied successful!");
-			 */
+			catch (final Exception e)
+			{
+				LOG.error("", e);
+
+			}
+
+			//Step 4 : saving the modified bulkmodel list
+			saveBulkData(returnResonseMap, bulkList);
 
 
+			final long endTime = System.currentTimeMillis();
+			LOG.info(MarketplacecommerceservicesConstants.END_TIME + endTime);
 
+			LOG.info("Total time taken : " + (endTime - startTime) / 1000);
 
 		}
+
+
+
 		catch (final EtailBusinessExceptions exception)
 		{
 			LOG.error("", exception);
@@ -287,16 +203,114 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 
 		catch (final Exception e)
 		{
-			System.out.println("Error in Processing !!!");
-			e.printStackTrace();
+			LOG.error("", e);
+
 		}
 
 		return new PerformResult(CronJobResult.SUCCESS, CronJobStatus.FINISHED);
 	}
 
+	//prepare AddressData
+	private ReturnItemAddressData getReturnData(final AddressModel addrModel)
+	{
+		final ReturnItemAddressData returnAddrData = new ReturnItemAddressData();
+		returnAddrData.setPincode(addrModel.getPostalcode());
+		returnAddrData.setFirstName(addrModel.getFirstname());
+		returnAddrData.setLastName(addrModel.getLastname());
+		returnAddrData.setCity(addrModel.getCity());
+		returnAddrData.setMobileNo(addrModel.getCellphone());
+		returnAddrData.setState(addrModel.getState());
+		return returnAddrData;
+	}
+
+	//call OMS
+	private Map<String, Boolean> callOMSandCRM(final Map<OrderEntryData, OrderData> dataToCallOMS,
+			final ReturnItemAddressData returnAddrData)
+	{
+		final String ticketTypeCode = MarketplacecommerceservicesConstants.TICKETTYPECODE;
+		final String refundType = MarketplacecommerceservicesConstants.REFUNDTYPE;
+		final String reasonCode = MarketplacecommerceservicesConstants.REASONCODE;
+		final Map<String, Boolean> returnResonseMap = new HashMap<String, Boolean>();
+
+
+		for (final Map.Entry<OrderEntryData, OrderData> entry : dataToCallOMS.entrySet())
+		{
+			final OrderData subOrderDetails = entry.getValue();
+			final OrderEntryData subOrderEntry = entry.getKey();
+			boolean returnStatus = false;
+			String orderStatus = null;
+			final CustomerData customerData = subOrderDetails.getCustomerData();
+			final String ussid = subOrderEntry.getSelectedUssid();
+
+			if (subOrderEntry.getQuantity().intValue() != 0 && null != subOrderEntry.getConsignment()
+					&& null != subOrderEntry.getConsignment().getStatus())
+			{
+				orderStatus = subOrderEntry.getConsignment().getStatus().getCode();
+			}
+
+			if (ticketTypeCode.equalsIgnoreCase("R") && null != orderStatus
+					&& orderStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED))
+			{
+				LOG.info(subOrderEntry.getTransactionId());
+				returnStatus = cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry, reasonCode, ussid,
+						ticketTypeCode, customerData, refundType, true, SalesApplication.WEB, returnAddrData);
+			}
+			else
+			{
+				LOG.info("-----------Unable to initiate return for TransactionId----- " + subOrderEntry.getTransactionId()
+						+ "==========" + "Order Status is  " + orderStatus);
+			}
+
+			returnResonseMap.put(subOrderEntry.getTransactionId(), Boolean.valueOf(returnStatus));
+		}
+
+		return returnResonseMap;
+	}
+
+	private BulkReturnProcessModel getBulkModel(final List<BulkReturnProcessModel> bulkList, final String transactionId)
+	{
+		BulkReturnProcessModel bulkModel = null;
+		for (final BulkReturnProcessModel model : bulkList)
+		{
+			if (transactionId.equalsIgnoreCase(model.getTransactionId()))
+			{
+				bulkModel = model;
+				break;
+			}
+		}
+
+		return bulkModel;
+	}
+
+	//save data
+	private void saveBulkData(final Map<String, Boolean> returnResonseMap, final List<BulkReturnProcessModel> bulkList)
+	{
+		final List<BulkReturnProcessModel> updatedBulkReturnProcessList = new ArrayList<BulkReturnProcessModel>();
+		for (final Map.Entry<String, Boolean> entry : returnResonseMap.entrySet())
+		{
+			final BulkReturnProcessModel returnBulkModel = getBulkModel(bulkList, entry.getKey());
+			final Boolean returnStatus = entry.getValue();
+			if (null != returnBulkModel && null != returnStatus)
+			{
+				if (returnStatus.booleanValue())
+				{
+					returnBulkModel.setLoadStatus("1");
+					returnBulkModel.setErrorDescription(MarketplacecommerceservicesConstants.SUCCESS);
+				}
+				else
+				{
+					returnBulkModel.setLoadStatus("-1");
+					returnBulkModel.setErrorDescription(MarketplacecommerceservicesConstants.FAILURE);
+				}
+				updatedBulkReturnProcessList.add(returnBulkModel);
+			}
+		}
+		modelService.saveAll(updatedBulkReturnProcessList);
+	}
+
 	/*
 	 * This method is used to convert the Order Model into Order Data
-	 * 
+	 *
 	 * @param orderModel
 	 */
 	protected OrderData convertToData(final OrderModel orderModel)

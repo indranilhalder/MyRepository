@@ -90,7 +90,6 @@ public class OrderModelDaoImpl implements OrderModelDao
 		}
 	}
 
-
 	/**
 	 * It gets the list of Parent Order No and Transaction Id
 	 *
@@ -100,15 +99,15 @@ public class OrderModelDaoImpl implements OrderModelDao
 	@Override
 	public List<BulkReturnProcessModel> getAllBulkReturnData() throws EtailNonBusinessExceptions
 	{
-		//final Map<String, Object> params = new HashMap<String, Object>();
-		//params.put("fromDate", fromDate);
-		//params.put(MarketplacecommerceservicesConstants.ORDERTYPE, MarketplacecommerceservicesConstants.PARENTORDER);
 		try
 		{
-			final FlexibleSearchQuery query = new FlexibleSearchQuery(
-					MarketplacecommerceservicesConstants.BULK_RETURN_DATA_QUERY_START);
+			final String queryString = MarketplacecommerceservicesConstants.BULK_RETURN_DATA_QUERY_START;
 
-			return flexibleSearchService.<BulkReturnProcessModel> search(query).getResult();
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.LOADSTATUS, "0");
+
+			final List<BulkReturnProcessModel> listOfData = flexibleSearchService.<BulkReturnProcessModel> search(query).getResult();
+			return listOfData;
 		}
 
 		catch (final Exception e)
@@ -155,7 +154,7 @@ public class OrderModelDaoImpl implements OrderModelDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao#getOrder(java.util.Date)
 	 */
 	@Override
@@ -197,7 +196,7 @@ public class OrderModelDaoImpl implements OrderModelDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao#getOrder(java.util.Date)
 	 */
 	@Override

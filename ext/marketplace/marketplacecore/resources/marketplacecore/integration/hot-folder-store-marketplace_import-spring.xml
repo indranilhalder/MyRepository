@@ -1372,7 +1372,7 @@ INSERT_UPDATE SellerInformation;productSource(code,$catalogVersion);sellerSKU[un
        <bean id="batchBulkReturnInitiationConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
              <value>
-				INSERT_UPDATE BulkReturnProcess;parentOrderNo[unique=true];transactionId(code);loadStatus(code);errorDescription(code);
+				INSERT_UPDATE BulkReturnProcess;parentOrderNo(code);transactionId[unique=true];loadStatus(code);errorDescription(code);
 			</value>
         </property>
         <property name="impexRow">

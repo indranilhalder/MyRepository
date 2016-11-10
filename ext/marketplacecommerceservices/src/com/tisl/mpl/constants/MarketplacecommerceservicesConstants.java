@@ -961,8 +961,13 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//Bulk Return Initiation
 
+	public static final String START_TIME = "START TIME";
+	public static final String END_TIME = "END TIME";
+
+	public static final String LOADSTATUS = "loadstatus";
+
 	public static final String BULK_RETURN_DATA_QUERY_START = "SELECT {" + BulkReturnProcessModel.PK + "} FROM {"
-			+ BulkReturnProcessModel._TYPECODE + "}";
+			+ BulkReturnProcessModel._TYPECODE + "} WHERE {" + BulkReturnProcessModel.LOADSTATUS + "}=?loadstatus";
 
 
 	public static final String NOEMIBANKLIST = "EMI Bank list is not available , Please Enter the correct data";
