@@ -196,4 +196,6 @@ public final class MarketplaceCockpitsConstants extends
 	public static final String CU = "CU";
 	public static final String SD = "SD";
 	public static final String CA = "CA";
+
+	public static final String BOTH = "BOTH";
 }

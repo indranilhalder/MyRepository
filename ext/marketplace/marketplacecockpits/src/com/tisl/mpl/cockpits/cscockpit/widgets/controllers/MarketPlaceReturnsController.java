@@ -22,6 +22,7 @@ import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.cscockpit.widgets.controllers.ReturnsController;
 
 public interface MarketPlaceReturnsController extends ReturnsController {
@@ -55,8 +56,13 @@ public interface MarketPlaceReturnsController extends ReturnsController {
 			List<AbstractOrderEntryModel> entry);
 
 	public void retrunInfoCallToOMSFromCsCockpit(
-			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
-			final AbstractOrderEntryModel entry, List<Checkbox> storeChecks);
+			InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
+			AbstractOrderEntryModel entry, Map<String, List<String>> storeMap);
+	public String getReturnFulFillmenttype(ProductModel product);
+
+	String getReturnFulfillModeByP1(ProductModel productModel);
+
+	public void saveCODReturnsBankDetails(CODSelfShipData codData);
 
 }
 

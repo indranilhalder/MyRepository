@@ -81,6 +81,23 @@ public class DateUtilHelper
  	    LOG.debug("convertTime  *****:"+convertTime);
  	    return convertTime;
  	}
+	
+	 /* Take input has 12:00 AM/PM Format but it returns 24 Hours Format
+		 * 
+		 */
+	public  String convertTo12Hour(String Time) {
+	    DateFormat f1 = new SimpleDateFormat("HH:mm"); //23:00 
+	    Date d = null;
+	    try {
+	        d = f1.parse(Time);
+	    } catch (ParseException e) {
+	   	LOG.error("Time Formater ********:"+e.getMessage());
+	    }
+	    DateFormat f2 = new SimpleDateFormat("hh:mm");
+	    String convertTime = f2.format(d); // "11:00 PM"
+	    LOG.debug("convertTime  *****:"+convertTime);
+	    return convertTime;
+	}
 	 /* Take input has Date Format   but it returns 3 next Dates 
 		 * 
 		 */

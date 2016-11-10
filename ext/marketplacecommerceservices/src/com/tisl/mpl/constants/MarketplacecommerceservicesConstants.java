@@ -330,6 +330,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//FOR SHIPPING CHARGE PROMOTIONS
 	public static final String TSHIP = "tShip".intern();
 	public static final String SSHIP = "sShip".intern();
+	public static final String BOTH = "both".intern();
 	public static final String PRODPREVCURRDELCHARGEMAP = "prodPrevCurrDelChargeMap".intern();
 	public static final String PREVDELIVERYCHARGE = "prevDelCharge".intern();
 	public static final String CURRENTDELIVERYCHARGE = "currDelCharge".intern();

@@ -58,7 +58,6 @@ import com.tisl.mpl.sms.facades.SendSMSFacade;
 
 import de.hybris.platform.cockpit.model.meta.TypedObject;
 import de.hybris.platform.cockpit.widgets.Widget;
-import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
@@ -144,11 +143,13 @@ public class MplChangeDeliveryOTPWidgetRenderer
 		final Div SDAreaDiv = new Div();
 		content.appendChild(SDAreaDiv);
 		OrderModel  orderModel = (OrderModel) getOrder().getObject();
-		AddressData addressData;
+		de.hybris.platform.commercefacades.user.data.AddressData addressData;
 		addressData=sessionService.getAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS); 
-
 		AddressModel deliveryAddress = modelService.create(AddressModel.class);
-		addressReversePopulator.populate(addressData, deliveryAddress);
+		if(null != addressData) {
+			addressReversePopulator.populate(addressData, deliveryAddress);
+		}
+		
 		boolean isScheduleDeliveryPossible = isScheduledeliveryPossible(deliveryAddress,orderModel);
 	
 		if(isScheduleDeliveryPossible) {
@@ -180,42 +181,42 @@ public class MplChangeDeliveryOTPWidgetRenderer
 		} catch (Exception e) {
 			LOG.error("Exception occurred while getting the delivery Dates from oms " + e.getMessage());
 		}
-		if(transactionEddDto== null || transactionEddDto.isEmpty() ) {
-			LOG.debug("EDD responce is empty");
-		}
+		
+        if(null != transactionEddDto &&  !transactionEddDto.isEmpty()) {
+        	final 	List<TransactionSDDto>  ScheduleDeliverydDtoList = new ArrayList<TransactionSDDto>();
+        	
+    		for (TransactionEddDto eddDto:   transactionEddDto) {
+    			TransactionSDDto sdDto = new TransactionSDDto();
+    			sdDto.setTransactionID(eddDto.getTransactionID());
+    			ScheduleDeliverydDtoList.add(sdDto);
+    		}
+    			try {
+    				Listbox listBox = new Listbox();
+    				listBox.setParent(SDAreaDiv);
+    				listBox.setVflex(false);
+    				listBox.setFixedLayout(true);
+    				listBox.setSclass("csWidgetListbox");
 
-	final 	List<TransactionSDDto>  ScheduleDeliverydDtoList = new ArrayList<TransactionSDDto>();
-	
-	for (TransactionEddDto eddDto:   transactionEddDto) {
-		TransactionSDDto sdDto = new TransactionSDDto();
-		sdDto.setTransactionID(eddDto.getTransactionID());
-		ScheduleDeliverydDtoList.add(sdDto);
-	}
-			try {
-				Listbox listBox = new Listbox();
-				listBox.setParent(SDAreaDiv);
-				listBox.setVflex(false);
-				listBox.setFixedLayout(true);
-				listBox.setSclass("csWidgetListbox");
+    				renderScheduledDeliveryListbox(ScheduleDeliverydDtoList,transactionEddDto,listBox, widget);
 
-				renderScheduledDeliveryListbox(ScheduleDeliverydDtoList,transactionEddDto,listBox, widget);
-
-			}catch(Exception e) {
-				LOG.error("Exception occurred  while displaying delivery slots"+e.getMessage());
-			}
-			 Button SdConfirmbutton = new Button(LabelUtils.getLabel(widget,
-		   				"sdDeliveryButton"));
-			 Div sdButtonDiv = new Div();
-			 sdButtonDiv.setClass("sdDeliveryButton");
-			 
-			 sdButtonDiv.appendChild(SdConfirmbutton);
-			 SDAreaDiv.appendChild(sdButtonDiv);
-			 SdConfirmbutton.addEventListener(Events.ON_CLICK, new EventListener() {
-		   			@Override
-		   			public void onEvent(Event arg0) throws Exception {
-		   				handleSdbuttonButtonClickEvent(widget,deliveryAddress, content,SDAreaDiv,ScheduleDeliverydDtoList);
-		   			}
-		   		});
+    			}catch(Exception e) {
+    				LOG.error("Exception occurred  while displaying delivery slots"+e.getMessage());
+    			}
+    			 Button SdConfirmbutton = new Button(LabelUtils.getLabel(widget,
+    		   				"sdDeliveryButton"));
+    			 Div sdButtonDiv = new Div();
+    			 sdButtonDiv.setClass("sdDeliveryButton");
+    			 
+    			 sdButtonDiv.appendChild(SdConfirmbutton);
+    			 SDAreaDiv.appendChild(sdButtonDiv);
+    			 SdConfirmbutton.addEventListener(Events.ON_CLICK, new EventListener() {
+    		   			@Override
+    		   			public void onEvent(Event arg0) throws Exception {
+    		   				handleSdbuttonButtonClickEvent(widget,deliveryAddress, content,SDAreaDiv,ScheduleDeliverydDtoList);
+    		   			}
+    		   		});
+        }
+		
 	}
 
 	protected void handleSdbuttonButtonClickEvent(Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,AddressModel  deliveryAddress ,Div content,Div sDAreaDiv,
@@ -270,8 +271,9 @@ public class MplChangeDeliveryOTPWidgetRenderer
 			Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget) throws java.text.ParseException {
 		 Listhead listHead = new Listhead();
          listHead.setParent(listBox);
+         try {
          // Displaying headers for Schedule delivery 
-         renderScheduledDeliveryHeaders(widget, listHead);
+        	 renderScheduledDeliveryHeaders(widget, listHead);
 
 	           listHead.setParent(listBox);
 	           OrderModel order = (OrderModel) getOrder().getObject();	           
@@ -281,7 +283,10 @@ public class MplChangeDeliveryOTPWidgetRenderer
 		           row.setSclass("listbox-row-item");
 		           row.setParent(listBox);
 	        	   renderDeliverySlots(widget, row,transactionEdDto,SdDtoList);
-	           }          
+	           }
+         }catch(Exception e) {
+        	 LOG.error("Exception Occurred while rendering schedule Delivery ListBox "+e.getMessage());
+         }
      }
 
 	private void renderDeliverySlots(
@@ -290,11 +295,16 @@ public class MplChangeDeliveryOTPWidgetRenderer
 		OrderModel order = (OrderModel) getOrder().getObject();
 
 		AbstractOrderEntryModel orderEntry = modelService.create(AbstractOrderEntryModel.class);
-		for (AbstractOrderEntryModel entryModel : order.getEntries()) {
-			if(entryModel.getTransactionID().equalsIgnoreCase(transactionEddDto.getTransactionID()))
-			{
-				orderEntry = entryModel;
+
+		
+		for (OrderModel orderModel : order.getParentReference().getChildOrders()) {
+			for (AbstractOrderEntryModel entryModel :orderModel.getEntries()) {
+				if(entryModel.getTransactionID().equalsIgnoreCase(transactionEddDto.getTransactionID()))
+				{
+					orderEntry = entryModel;
+				}
 			}
+			
 		}
 		// Entry number 
 		Listcell entryNoCell = new Listcell();
@@ -325,27 +335,28 @@ public class MplChangeDeliveryOTPWidgetRenderer
 		productLabel.setParent(productDiv);
 		
 		
-		 final Map<String, List<String>> dateTimeslotMapList = getDateAndTimeMap(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD,transactionEddDto.getEDD());
-//		if(orderEntry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceCockpitsConstants.HOME_DELIVERY)) {
-//			if(null != transactionEddDto.getEDD()) {
-//				try {
-//			//		dateTimeslotMapList = getDateAndTimeMap(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD,transactionEddDto.getEDD());
-//				} catch (java.text.ParseException e) {
-//					LOG.error("ParseException While getting the time slots "+e.getMessage());
-//				}
-//			}
-//		}
-//		else if (orderEntry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceCockpitsConstants.EXPRESS_DELIVERY)) {
-//			if(null != transactionEddDto.getEDD()) {
-//			try {
-//			//	dateTimeslotMapList = getDateAndTimeMap(MarketplacecommerceservicesConstants.DELIVERY_MODE_ED,transactionEddDto.getEDD());
-//			} catch (java.text.ParseException e) {
-//				LOG.error("ParseException While getting the time slots "+e.getMessage() );
-//			}
-//			}
-//		}
+		// Map<String, List<String>> dateTimeslotMapList = getDateAndTimeMap(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD,transactionEddDto.getEDD());
+		Map<String, List<String>> datesList = null ;
+		if(orderEntry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceCockpitsConstants.HOME_DELIVERY)) {
+			if(null != transactionEddDto.getEDD()) {
+				try {
+					datesList = getDateAndTimeMap(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD,transactionEddDto.getEDD());
+				} catch (Exception e) {
+					LOG.error("Exception While getting the time slots "+e.getMessage());
+				}
+			}
+		}
+		else if (orderEntry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceCockpitsConstants.EXPRESS_DELIVERY)) {
+			if(null != transactionEddDto.getEDD()) {
+				try {
+					datesList = getDateAndTimeMap(MarketplacecommerceservicesConstants.DELIVERY_MODE_ED,transactionEddDto.getEDD());
+				} catch (Exception e) {
+					LOG.error("Exception While getting the time slots "+e.getMessage() );
+				}
+			}
+		}
 		
-		
+		final Map<String, List<String>> dateTimeslotMapList =datesList;
 
 		// Date Cell 
 		try {
@@ -381,7 +392,7 @@ public class MplChangeDeliveryOTPWidgetRenderer
 			}
 			radioTimeGroup.setSelectedIndex(0);
 			String selectedTime = radioTimeGroup.getSelectedItem().getLabel();
-			String[] fromAndToTime =  selectedTime.split("-");
+			String[] fromAndToTime =  selectedTime.split("TO");
 			String fromTime = fromAndToTime[0];
 			String toTime   = fromAndToTime[1];
 			for (TransactionSDDto sdDto : SdDto) {
@@ -462,7 +473,7 @@ public class MplChangeDeliveryOTPWidgetRenderer
 		if (null != radioTimeGroup && null != radioTimeGroup.getSelectedItem()) {
 			LOG.debug("Selected time = "+radioTimeGroup.getSelectedItem().getLabel());
 			String selectedTime = radioTimeGroup.getSelectedItem().getLabel();
-			String[] fromAndToTime =  selectedTime.split("-");
+			String[] fromAndToTime =  selectedTime.split("TO");
 			String fromTime = fromAndToTime[0];
 			String toTime   = fromAndToTime[1];
 			for (TransactionSDDto sdDto : sdDtoList) {
@@ -488,7 +499,7 @@ public class MplChangeDeliveryOTPWidgetRenderer
 			modelList=mplConfigFacade.getDeliveryTimeSlotByKey(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD);
 			LOG.debug("********* Delivery Mode :" + MarketplacecommerceservicesConstants.DELIVERY_MODE_SD);
 			calculatedDateList=dateUtilHelper.getDeteList(deteWithOutTIme,format,3);
-		}else if (timeSlotType.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)){
+		}else if (timeSlotType.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERY_MODE_ED)){
 			modelList=mplConfigFacade.getDeliveryTimeSlotByKey(MarketplacecommerceservicesConstants.ED);
 			LOG.debug("********* Delivery Mode :" + MarketplacecommerceservicesConstants.ED);
 			calculatedDateList=dateUtilHelper.getDeteList(deteWithOutTIme,format,2);
@@ -575,11 +586,18 @@ public class MplChangeDeliveryOTPWidgetRenderer
 	private boolean isScheduledeliveryPossible(AddressModel changeDeliveryAddress,
 			OrderModel order) {
 		boolean scheduleDeliveryPossible = false;
-				if(!changeDeliveryAddress.getPostalcode().trim().equalsIgnoreCase(order.getDeliveryAddress().getPostalcode().trim())) {
-					scheduleDeliveryPossible = mplDeliveryAddressController.checkScheduledDeliveryForOrder(order.getParentReference());
-					return scheduleDeliveryPossible;
-				}
+		try {
+			LOG.info("Checking Whether order is eligible for schedule delivery or not for order id :"+order.getCode());
+			scheduleDeliveryPossible = false;
+			if(!changeDeliveryAddress.getPostalcode().trim().equalsIgnoreCase(order.getDeliveryAddress().getPostalcode().trim())) {
+				scheduleDeliveryPossible = mplDeliveryAddressController.checkScheduledDeliveryForOrder(order.getParentReference());
 				return scheduleDeliveryPossible;
+			}
+			return scheduleDeliveryPossible;
+		}catch(Exception e ) {
+			LOG.error("Exception While Checking whether order is eligible for scheduling or not for order Id :"+order.getCode());
+		}
+		return scheduleDeliveryPossible;
 	}
 
 	private Textbox createTextbox(final Hbox parent) {
@@ -777,25 +795,25 @@ public class MplChangeDeliveryOTPWidgetRenderer
 			if(!changeDeliveryAddress.getPostalcode().equalsIgnoreCase(deliveryAddress.getPostalcode())) {
 				interfacetype = MarketplaceCockpitsConstants.CA;
 				return interfacetype;
-			} else if (!changeDeliveryAddress.getLine1().trim().equalsIgnoreCase(deliveryAddress.getLine1().trim())) {
+			} else if (!changeDeliveryAddress.getLine1().equalsIgnoreCase(deliveryAddress.getLine1())) {
 				interfacetype = MarketplaceCockpitsConstants.CA;
 				return interfacetype;
-			} else if (!changeDeliveryAddress.getLine2().trim().equalsIgnoreCase(deliveryAddress.getLine2().trim())){
+			} else if (!changeDeliveryAddress.getLine2().equalsIgnoreCase(deliveryAddress.getLine2())){
 				interfacetype = MarketplaceCockpitsConstants.CA;
 				return interfacetype;
-			}else if (!changeDeliveryAddress.getAddressLine3().trim().equalsIgnoreCase(deliveryAddress.getAddressLine3().trim())){
+			}else if (!changeDeliveryAddress.getAddressLine3().equalsIgnoreCase(deliveryAddress.getAddressLine3())){
 				interfacetype = MarketplaceCockpitsConstants.CA;
 				return interfacetype;
-			}else if (!changeDeliveryAddress.getLandmark().trim().equalsIgnoreCase(deliveryAddress.getLandmark().trim())){
+			}else if (!changeDeliveryAddress.getLandmark().equalsIgnoreCase(deliveryAddress.getLandmark())){
 				interfacetype = MarketplaceCockpitsConstants.CA;
 				return interfacetype;
-			}else if (!changeDeliveryAddress.getCity().trim().equalsIgnoreCase(deliveryAddress.getCity().trim())){
+			}else if (!changeDeliveryAddress.getCity().equalsIgnoreCase(deliveryAddress.getCity())){
 				interfacetype = MarketplaceCockpitsConstants.CA;
 				return interfacetype;
-			}else if (!changeDeliveryAddress.getState().trim().equalsIgnoreCase(deliveryAddress.getState().trim())){
+			}else if (!changeDeliveryAddress.getState().equalsIgnoreCase(deliveryAddress.getState())){
 				interfacetype = MarketplaceCockpitsConstants.CA;
 				return interfacetype;
-			}else if (!changeDeliveryAddress.getCountry().getName().trim().equalsIgnoreCase(deliveryAddress.getCountry().getName().trim())){
+			}else if (!changeDeliveryAddress.getCountry().getName().equalsIgnoreCase(deliveryAddress.getCountry().getName())){
 				interfacetype = MarketplaceCockpitsConstants.CA;
 				return interfacetype;
 			}

@@ -17,6 +17,7 @@ import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Session;
 import org.zkoss.zul.Checkbox;
 
+import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.utilities.CodeMasterUtility;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceReturnsController;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -225,7 +226,7 @@ public class MarketPlaceDefaultReturnsController extends
 			boolean isOMSBypass = configurationService.getConfiguration()
 					.getBoolean(OMS_BYPASS_KEY);
 			if (!isOMSBypass) {
-				returnCalltoOMS(request, null,null);
+				returnCalltoOMS(request, null,null,null);
 			}
 			modelService.saveAll(returnEntries);
 			replacementOrder = getReturnService().createReplacementOrder(
@@ -264,7 +265,7 @@ public class MarketPlaceDefaultReturnsController extends
 	public TypedObject createRefundRequest() {
 		try {
 
-			List<ReturnLogistics> returnLogisticsList = new ArrayList();
+			//List<ReturnLogistics> returnLogisticsList = new ArrayList();
 			ModelService modelService = getModelService();
 			OrderModel orderModel = getOrderModel();
 			ReturnRequestModel refundRequest = getReturnService()
@@ -275,11 +276,20 @@ public class MarketPlaceDefaultReturnsController extends
 			String returnType = (String) session.getAttribute("typeofReturn");
 			AddressData addressData = null;		
 			String pincode = null;
+			if(null != returnType && returnType.equalsIgnoreCase(TypeofReturn.QUICK_DROP.getCode())){
+				pincode = (String) session.getAttribute("pinCode");
+			}else if(null != returnType && returnType.equalsIgnoreCase(TypeofReturn.SCHEDULE_PICKUP.getCode())){
+				addressData = (AddressData) session.getAttribute("returnAddress");
+				if(null != addressData) {
+					pincode = addressData.getPostalCode();
+				}
+			}
+			
 			if (!isOMSBypass) {
-				returnCalltoOMS(refundRequest, this.refundDetailsList,pincode);
+				returnCalltoOMS(refundRequest, this.refundDetailsList,pincode,returnType);
 			}
 			if(null != returnType && returnType.equalsIgnoreCase(TypeofReturn.SCHEDULE_PICKUP.getCode())){
-				addressData = (AddressData) session.getAttribute("returnAddress");
+				
 				List<RescheduleData> scheduleDeliveryDates = (List<RescheduleData>) session.getAttribute("scheduleDeliveryDates");
 				saveReturnPickUpDates(refundRequest,scheduleDeliveryDates);
 				AddressModel addressModel = new AddressModel();
@@ -485,8 +495,8 @@ public class MarketPlaceDefaultReturnsController extends
 	}
 
 	private void returnCalltoOMS(ReturnRequestModel returnRequest,
-			Map<Long, de.hybris.platform.cscockpit.widgets.controllers.impl.DefaultReturnsController.RefundDetails> refundDetailsList, String pincode)
-			throws OrderReturnException {
+			Map<Long, de.hybris.platform.cscockpit.widgets.controllers.impl.DefaultReturnsController.RefundDetails> refundDetailsList, String pincode, String returnType)
+					throws OrderReturnException {
 		try {
 			if (null != returnRequest) {
 				Set<ConsignmentEntryModel> consignmentEntryModels = returnRequest
@@ -498,12 +508,24 @@ public class MarketPlaceDefaultReturnsController extends
 					OrderLine orderLine = null;
 					String reason = null;
 					String notes = null;
+					Map<Boolean, List<OrderLineDataResponse>> responseMap = null;
+					List<ReturnLogistics> returnLogisticsList = new ArrayList();
+						OrderModel order = (OrderModel) returnRequest.getOrder();
+					if(null != returnType && returnType.equalsIgnoreCase(TypeofReturn.SCHEDULE_PICKUP.getCode())) {
+						for (AbstractOrderEntryModel orderEntry : order.getEntries()) {
+							ReturnLogistics returnLogistics = new ReturnLogistics();
+							returnLogistics.setOrderId(order.getParentReference().getCode());
+							returnLogistics.setTransactionId(orderEntry.getTransactionID());
+							returnLogistics.setPinCode(pincode);
+							String fullfillmentType=getReturnFulFillmenttype(orderEntry.getProduct());
+							String returnFulfillModeByP1=getReturnFulfillModeByP1(orderEntry.getProduct());
+							returnLogistics.setReturnFulfillmentType(fullfillmentType);
+							returnLogistics.setReturnFulfillmentByP1(returnFulfillModeByP1);
+							returnLogisticsList.add(returnLogistics);
+						}
+						responseMap = validateReverseLogistics(returnLogisticsList);
+					}
 
-					// Added By Techouts
-
-//					Session session = Executions.getCurrent().getDesktop()
-//							.getSession();
-//					String pinCode = (String) session.getAttribute("pinCode");
 					List<ReturnEntryModel> returnEntries = returnRequest
 							.getReturnEntries();
 					if (CollectionUtils.isNotEmpty(returnEntries)) {
@@ -512,36 +534,55 @@ public class MarketPlaceDefaultReturnsController extends
 							orderModel = ((OrderModel) (returnEntry
 									.getOrderEntry().getOrder()))
 									.getParentReference();
-							orderLine.setOrderId(orderModel.getCode());
+							orderLine.setOrderId(returnRequest.getOrder().getParentReference().getCode());
 							orderLine.setTransactionId(returnEntry
 									.getOrderEntry().getTransactionID());
 							orderLine.setReturnCancelFlag("R");
 							orderLine.setRequestID(returnRequest.getCode());
 							// For FullFillment Type
-						//	for (AbstractOrderEntryModel entry : orderModel.getEntries()) {
+							//	for (AbstractOrderEntryModel entry : orderModel.getEntries()) {
 							String returnFulfillmentType = null;
-								final ProductModel productModel = mplOrderFacade
-										.getProductForCode(returnEntry.getOrderEntry().getProduct().getCode());
-								for (final SellerInformationModel sellerInfo : productModel
-										.getSellerInformationRelator()) {
-									if (returnEntry.getOrderEntry().getSelectedUSSID().equalsIgnoreCase(sellerInfo.getUSSID())) {
-										if (CollectionUtils.isNotEmpty(sellerInfo
-												.getRichAttribute())) {
-											for (RichAttributeModel richAttribute : sellerInfo
-													.getRichAttribute()) {
-												if (null != richAttribute
-														.getReturnFulfillMode()) {
-													LOG.info(richAttribute
-															.getReturnFulfillMode());
-													returnFulfillmentType = richAttribute
-															.getReturnFulfillMode()
-															.getCode();
-												}
+							if(null != returnType && returnType.equalsIgnoreCase(TypeofReturn.SCHEDULE_PICKUP.getCode())) {
+								if(CollectionUtils.isEmpty(responseMap.get(Boolean.FALSE))) {
+									for (Entry<Boolean, List<OrderLineDataResponse>> responce: responseMap.entrySet()) {
+										for(OrderLineDataResponse lineResponce : responce.getValue()) { 
+											if(lineResponce.getTransactionId().equalsIgnoreCase(orderLine.getTransactionId())) {
+												returnFulfillmentType = lineResponce.getReturnFulfillmentType();
 											}
 										}
 									}
 								}
+							}
+
+//							final ProductModel productModel = mplOrderFacade
+//									.getProductForCode(returnEntry.getOrderEntry().getProduct().getCode());
+//
+//							for (final SellerInformationModel sellerInfo : productModel
+//									.getSellerInformationRelator()) {
+//								if (returnEntry.getOrderEntry().getSelectedUSSID().equalsIgnoreCase(sellerInfo.getUSSID())) {
+//									if (CollectionUtils.isNotEmpty(sellerInfo
+//											.getRichAttribute())) {
+//										for (RichAttributeModel richAttribute : sellerInfo
+//												.getRichAttribute()) {
+//											if (null != richAttribute
+//													.getReturnFulfillMode()) {
+//												LOG.info(richAttribute
+//														.getReturnFulfillMode());
+//												returnFulfillmentType = richAttribute
+//														.getReturnFulfillMode()
+//														.getCode();
+//											}
+//										}
+//									}
+//								}
+//							}
 							//}
+							else {
+								returnFulfillmentType = getReturnFulFillmenttype(returnEntry.getOrderEntry().getProduct());
+								if(returnFulfillmentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.BOTH)) {
+									returnFulfillmentType = getReturnFulfillModeByP1(returnEntry.getOrderEntry().getProduct());
+								}
+							}
 							if(returnFulfillmentType != null) {
 								orderLine.setReturnFulfillmentMode(returnFulfillmentType);
 							}
@@ -553,8 +594,13 @@ public class MarketPlaceDefaultReturnsController extends
 							orderLine.setReasonCode(reason);
 							orderLine.setReturnCancelRemarks(notes);
 							request.getOrderLine().add(orderLine);
-							if (null != pincode || !pincode.isEmpty()) {
+							if (null != pincode && !pincode.isEmpty()) {
 								orderLine.setPinCode(pincode);
+							}else if(null !=returnEntry.getOrderEntry().getOrder().getDeliveryAddress() && null != returnEntry.getOrderEntry().getOrder().getDeliveryAddress().getPostalcode()){{
+								pincode = returnEntry.getOrderEntry().getOrder().getDeliveryAddress().getPostalcode();
+								orderLine.setPinCode(pincode);
+							}
+
 							}
 						}
 
@@ -568,45 +614,66 @@ public class MarketPlaceDefaultReturnsController extends
 							orderLine = new OrderLine();
 							orderModel = ((OrderModel) (orderEntryModel
 									.getOrder())).getParentReference();
-							orderLine.setOrderId(orderModel.getCode());
+							orderLine.setOrderId(returnRequest.getOrder().getParentReference().getCode());
 							orderLine.setTransactionId(orderEntryModel
 									.getTransactionID());
 							orderLine.setReturnCancelFlag("R");
 							orderLine.setRequestID(returnRequest.getCode());
-							
+
 							// For FullFillment Type
 							//	for (AbstractOrderEntryModel entry : orderModel.getEntries()) {
-								String returnFulfillmentType = null;
-									final ProductModel productModel = mplOrderFacade
-											.getProductForCode(orderEntryModel.getProduct().getCode());
-									for (final SellerInformationModel sellerInfo : productModel
-											.getSellerInformationRelator()) {
-										if (orderEntryModel.getSelectedUSSID().equalsIgnoreCase(sellerInfo.getUSSID())) {
-											if (CollectionUtils.isNotEmpty(sellerInfo
-													.getRichAttribute())) {
-												for (RichAttributeModel richAttribute : sellerInfo
-														.getRichAttribute()) {
-													if (null != richAttribute
-															.getReturnFulfillMode()) {
-														LOG.info(richAttribute
-																.getReturnFulfillMode());
-														returnFulfillmentType = richAttribute
-																.getReturnFulfillMode()
-																.getCode();
-													}
-												}
+							String returnFulfillmentType = null;
+							if(null != returnType && returnType.equalsIgnoreCase(TypeofReturn.SCHEDULE_PICKUP.getCode())) {
+								if(CollectionUtils.isEmpty(responseMap.get(Boolean.FALSE))) {
+									for (Entry<Boolean, List<OrderLineDataResponse>> responce: responseMap.entrySet()) {
+										for(OrderLineDataResponse lineResponce : responce.getValue()) { 
+											if(lineResponce.getTransactionId().equalsIgnoreCase(orderLine.getTransactionId())) {
+												returnFulfillmentType = lineResponce.getReturnFulfillmentType();
 											}
 										}
 									}
-								//}
+								}
+							}else {
+								returnFulfillmentType = getReturnFulFillmenttype(orderEntryModel.getProduct());
+								if(returnFulfillmentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.BOTH)) {
+									returnFulfillmentType = getReturnFulfillModeByP1(orderEntryModel.getProduct());
+								}
+							}
+							/*final ProductModel productModel = mplOrderFacade
+									.getProductForCode(orderEntryModel.getProduct().getCode());
+							for (final SellerInformationModel sellerInfo : productModel
+									.getSellerInformationRelator()) {
+								if (orderEntryModel.getSelectedUSSID().equalsIgnoreCase(sellerInfo.getUSSID())) {
+									if (CollectionUtils.isNotEmpty(sellerInfo
+											.getRichAttribute())) {
+										for (RichAttributeModel richAttribute : sellerInfo
+												.getRichAttribute()) {
+											if (null != richAttribute
+													.getReturnFulfillMode()) {
+												LOG.info(richAttribute
+														.getReturnFulfillMode());
+												returnFulfillmentType = richAttribute
+														.getReturnFulfillMode()
+														.getCode();
+											}
+										}
+									}
+								}
+							}*/
+							//}
 							reason = CodeMasterUtility
 									.getglobalCode(refundDetail.getValue()
 											.getReason().getCode());
 							notes = refundDetail.getValue().getNotes();
 							orderLine.setReasonCode(reason);
 							orderLine.setReturnCancelRemarks(notes);
+							orderLine.setReturnFulfillmentMode(returnFulfillmentType);
 							request.getOrderLine().add(orderLine);
+
 							if (null != pincode && !pincode.isEmpty()) {
+								orderLine.setPinCode(pincode);
+							}else if(null !=orderEntryModel.getOrder().getDeliveryAddress() && null != orderEntryModel.getOrder().getDeliveryAddress().getPostalcode()){
+								pincode = orderEntryModel.getOrder().getDeliveryAddress().getPostalcode();
 								orderLine.setPinCode(pincode);
 							}
 
@@ -615,8 +682,16 @@ public class MarketPlaceDefaultReturnsController extends
 
 					MplOrderIsCancellableResponse response = mplOrderCancelClientService
 							.orderCancelDataToOMS(request);
-					if (null == response) {
-					getModelService().remove(returnRequest);//Remove if created any 
+					boolean cancellable = false ;
+					for (com.tisl.mpl.xml.pojo.MplOrderIsCancellableResponse.OrderLine line : response.getOrderLine()  ) 
+					{
+						if(line.isIsCancellable().equalsIgnoreCase("N")) {
+							cancellable= false;
+							break;
+						}
+					}
+					if (null == response || cancellable ) {
+						getModelService().remove(returnRequest);//Remove if created any 
 						throw new OrderReturnException(orderModel.getCode(),
 								"Item is not returnable at OMS.");
 					}
@@ -626,6 +701,7 @@ public class MarketPlaceDefaultReturnsController extends
 			throw new OrderReturnException("Failed", "OMS is not responding");
 		}
 	}
+
 
 	@Override
 	public boolean isFreebieAvaialble(
@@ -697,13 +773,18 @@ public class MarketPlaceDefaultReturnsController extends
 	@Override
 	public List<String> getReturnScheduleDates(AbstractOrderEntryModel entry) {
 		List<String> returnableDates = new ArrayList<String>();
-		final String orderCode = entry.getOrder().getCode();
-		OrderData orderData = mplCheckoutFacade.getOrderDetailsForCockpitUser(orderCode, (CustomerModel) entry.getOrder().getUser());
-		final List<OrderEntryData> subOrderEntries = orderData.getEntries();
-		for (OrderEntryData entrys : subOrderEntries) {
-			if (entry.getTransactionID().equals(entrys.getTransactionId())) {
-				returnableDates = cancelReturnFacade.getReturnableDates(entrys);
+		try {
+
+			final String orderCode = entry.getOrder().getCode();
+			OrderData orderData = mplCheckoutFacade.getOrderDetailsForCockpitUser(orderCode, (CustomerModel) entry.getOrder().getUser());
+			final List<OrderEntryData> subOrderEntries = orderData.getEntries();
+			for (OrderEntryData entrys : subOrderEntries) {
+				if (entry.getTransactionID().equals(entrys.getTransactionId())) {
+					returnableDates = cancelReturnFacade.getReturnableDates(entrys);
+				}
 			}
+		}catch(Exception e) {
+			LOG.error("Exception while getting the  return Dates "+e.getMessage());
 		}
 		return returnableDates;
 	}
@@ -727,28 +808,87 @@ public class MarketPlaceDefaultReturnsController extends
 	@Override
 	public void retrunInfoCallToOMSFromCsCockpit(
 			InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
-			AbstractOrderEntryModel entry, List<Checkbox> storeChecks) {
+			AbstractOrderEntryModel entry, Map<String, List<String>> storeMap) {
 		OrderModel orderModel = (OrderModel) entry.getOrder();
 		RTSAndRSSReturnInfoRequestData infoRequestData = new RTSAndRSSReturnInfoRequestData();
-		List<String> stores = new ArrayList<String>();
-		Map<String, PointOfServiceData> stor = new HashMap<String, PointOfServiceData>();
-		for (Checkbox selctedStores : storeChecks) {
-			selctedStores.getAttributes();
-			if (selctedStores.isChecked()) {
-				stor = selctedStores.getAttributes();
-				for (Entry<String, PointOfServiceData> entrySet : stor
-						.entrySet()) {
-					PointOfServiceData store = entrySet.getValue();
-					stores.add(store.getSlaveId());
-				}
-			}
+		if(storeMap.containsKey(entry.getTransactionID())) {
+			List<String> stores = storeMap.get(entry.getTransactionID());
+			infoRequestData.setRTSStore(stores);
 		}
 		infoRequestData.setOrderId(orderModel.getParentReference().getCode());
-		infoRequestData.setRTSStore(stores);
 		infoRequestData.setTransactionId(entry.getTransactionID());
 		infoRequestData
 				.setReturnType(MarketplacecommerceservicesConstants.RETURN_TYPE_RTS);
 		cancelReturnFacade.retrunInfoCallToOMS(infoRequestData);
 
+	}
+
+	@Override
+	public String getReturnFulFillmenttype(ProductModel productModel) {
+		String returnFulfillmentType = null;
+		try {
+			for (final SellerInformationModel sellerInfo : productModel
+					.getSellerInformationRelator()) {
+
+				if (CollectionUtils.isNotEmpty(sellerInfo
+						.getRichAttribute())) {
+					for (RichAttributeModel richAttribute : sellerInfo
+							.getRichAttribute()) {
+						if (null != richAttribute
+								.getReturnFulfillMode()) {
+							LOG.info(richAttribute
+									.getReturnFulfillMode());
+							returnFulfillmentType = richAttribute
+									.getReturnFulfillMode()
+									.getCode();
+						}
+					}
+				}
+			}
+		}catch(Exception e) {
+			LOG.error("Exception while getting the returnFulFilllemt Type"+e.getMessage());
+		}
+		return returnFulfillmentType;
 	} 
+	
+	
+	@Override
+	public String getReturnFulfillModeByP1(ProductModel productModel) {
+		String returnFulfillmentType = null;
+		try {
+			for (final SellerInformationModel sellerInfo : productModel
+					.getSellerInformationRelator()) {
+
+				if (CollectionUtils.isNotEmpty(sellerInfo
+						.getRichAttribute())) {
+					for (RichAttributeModel richAttribute : sellerInfo
+							.getRichAttribute()) {
+						if (null != richAttribute
+								.getReturnFulfillModeByP1()) {
+							LOG.info(richAttribute
+									.getReturnFulfillModeByP1());
+							returnFulfillmentType = richAttribute
+									.getReturnFulfillModeByP1()
+									.getCode();
+						}
+					}
+				}
+			}
+		}catch(Exception e) {
+			LOG.error("Exception while getting the returnFulFilllemt Type"+e.getMessage());
+		}
+		return returnFulfillmentType;
+	}
+
+	@Override
+	public void saveCODReturnsBankDetails(CODSelfShipData codData) {
+		try {
+			//saving bank details failed payment details in commerce 
+			cancelReturnFacade.saveCODReturnsBankDetails(codData);	
+			LOG.debug("Failed to post COD return paymnet details to FICO Order No:"+codData.getOrderNo());
+		} catch(Exception e) {
+			LOG.error("Exception while saving cod bank Details"+e.getMessage());
+		}
+	}
+		
 }

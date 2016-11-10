@@ -17,6 +17,7 @@ import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.Messagebox;
 
+import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.services.MarketplaceCsCheckoutService;
 import com.tisl.mpl.cockpits.cscockpit.strategies.MplFindDeliveryFulfillModeStrategy;
@@ -24,9 +25,11 @@ import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceBasketCont
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceCheckoutController;
 import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceabilityCheckHelper;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
+import com.tisl.mpl.core.mplconfig.service.impl.MplConfigServiceImpl;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
+import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.CODPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
@@ -115,6 +118,8 @@ public class MarketplaceCheckoutControllerImpl extends
 	
 	@Autowired
 	private MplPaymentService mplPaymentService;
+	@Autowired
+	private MplConfigFacade mplConfigFacade;
 	
 	@Autowired
 	private MplFindDeliveryFulfillModeStrategy mplFindDeliveryFulfillModeStrategy;
@@ -735,6 +740,21 @@ public class MarketplaceCheckoutControllerImpl extends
 		}
 
 		return omsResponceData;
+	}
+
+	@Override
+	public Double getScheduleDeliveryCharges() {
+		LOG.info("Inside  getDeliveryCharges Method");
+		Double scheduleDeliveryCharge = 0.0D;
+		try {
+			MplBUCConfigurationsModel configModel = mplConfigFacade.getDeliveryCharges();
+			if(null != configModel) {
+				scheduleDeliveryCharge = configModel.getSdCharge();
+			}
+		}catch(Exception e) {
+			LOG.error("Exception while Getting SChedule Delivery Charges from DB :"+e.getMessage());
+		}
+		return scheduleDeliveryCharge;
 	}	
 	
 	

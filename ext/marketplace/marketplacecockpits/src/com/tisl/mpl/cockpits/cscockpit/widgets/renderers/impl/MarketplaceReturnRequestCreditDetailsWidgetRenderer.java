@@ -3,12 +3,15 @@ package com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.zkoss.zhtml.Br;
 import org.zkoss.zk.ui.Component;
@@ -19,7 +22,6 @@ import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Button;
-import org.zkoss.zul.Checkbox;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Listbox;
@@ -27,6 +29,7 @@ import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listhead;
 import org.zkoss.zul.Listheader;
 import org.zkoss.zul.Listitem;
+import org.zkoss.zul.Longbox;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Radio;
 import org.zkoss.zul.Radiogroup;
@@ -49,7 +52,9 @@ import de.hybris.platform.cockpit.services.meta.TypeService;
 import de.hybris.platform.cockpit.util.TypeTools;
 import de.hybris.platform.cockpit.widgets.InputWidget;
 import de.hybris.platform.cockpit.widgets.models.impl.DefaultListWidgetModel;
+import de.hybris.platform.commercefacades.storelocator.converters.populator.PointOfServicePopulator;
 import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
+import de.hybris.platform.commercefacades.user.converters.populator.AddressReversePopulator;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
@@ -63,11 +68,10 @@ import de.hybris.platform.cscockpit.widgets.renderers.impl.ReturnRequestCreateWi
 import de.hybris.platform.cscockpit.widgets.renderers.utils.PopupWidgetHelper;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 		ReturnRequestCreateWidgetRenderer {
-
+	private static final Logger LOG = Logger.getLogger(MarketplaceReturnRequestCreditDetailsWidgetRenderer.class);
 	@Autowired
 	private PopupWidgetHelper popupWidgetHelper;
 	@Autowired
@@ -78,6 +82,10 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 	private ModelService modelService;
 	@Autowired
 	private Populator<AddressModel, AddressData> addressPopulator;
+	@Autowired
+	private PointOfServicePopulator pointOfServicePopulator;
+	@Autowired
+	private AddressReversePopulator addressReversePopulator;
 
 	private static final String TEXTBOX = "returntext";
 	private static final String CONTINUE = "continue";
@@ -91,8 +99,16 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 
 	private static final String FAILED_TO_VALIDATE_PINCODE_FEILD = "FailedToValidatePinCode";
 	private static final String ENTER_VALUES_IN_ALLFIELDS = "enterValuesInAllFields";
+	private static final String PIN_REGEX = "^[1-9][0-9]{5}";
+	private static final String IFSC_REGEX="^[A-Za-z][A-Za-z]{3}[0-0][0-9]{6}";
+	
+	private static final String INFO = "info";
+	protected static final String NO_STORE_AVAILABLE = "noStoresAvailable";
+	protected static final String NO_STORE_SELECTED = "noStoreSelected";
+	protected static final String FORM_ERROS = null;
+	protected static final String FORM_ERRORS = null;
+	protected static final String FAILED_VALIDATION ="validationErrors";
 
-	private List<PointOfServiceData> returnableStores;
 
 	@Override
 	protected HtmlBasedComponent createContentInternal(
@@ -106,13 +122,16 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 		
 		final TypedObject order = (TypedObject) ((ReturnsController) widget
 				.getWidgetController()).getRefundOrderPreview();
-		final OrderModel subOrder = (OrderModel) order.getObject();
+		final OrderModel refundOrder = (OrderModel) order.getObject();
 		 List<AbstractOrderEntryModel> orderEntries = new ArrayList<AbstractOrderEntryModel>();
-		if(null != subOrder) {
-			orderEntries= subOrder.getEntries();
+
+		for (AbstractOrderEntryModel entry : refundOrder.getEntries()) {
+			if(entry.getQuantity() == 0){
+				orderEntries.add(entry);
+			}
 		}
-		if (subOrder != null && subOrder.getParentReference() != null) {
-			paymentTransation = subOrder.getPaymentTransactions().get(0);
+		if (refundOrder != null && refundOrder.getParentReference() != null) {
+			paymentTransation = refundOrder.getPaymentTransactions().get(0);
 			paymentType = paymentTransation.getEntries().get(0)
 					.getPaymentMode().getMode();
 		}
@@ -120,10 +139,10 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 				&& paymentType
 						.equalsIgnoreCase(MarketplaceCockpitsConstants.PAYMENT_MODE_COD)) {
 			AccountDetailsDiv = collectBankDetailsForCodOrder(widget, orderEntries,
-					 subOrder);
+					refundOrder);
 			AccountDetailsDiv.setParent(bankDetailsArea);
 		} else if (paymentType != null) {
-			AccountDetailsDiv = populatePrePaidPaymentDetails(widget, subOrder,
+			AccountDetailsDiv = populatePrePaidPaymentDetails(widget, refundOrder,
 					bankDetailsArea, orderEntries);
 			AccountDetailsDiv.setParent(bankDetailsArea);
 		}
@@ -136,23 +155,34 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 		textBox.setParent(parent);
 		return textBox;
 	}
+	
+	private Longbox createLongBox(final Div parent) {
+		final Longbox longBox = new Longbox();
+		longBox.setWidth("30%");
+		longBox.setParent(parent);
+		return longBox;
+	}
 
 	private Div collectBankDetailsForCodOrder(
 			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
 			final List<AbstractOrderEntryModel> entries, 
 			final OrderModel orderModel) {
+		
+		//codReturnPaymentModel codBankDetails = modelService.create(codReturnPaymentModel.Class);
+		
+		
 		 final Div bankDetailsDiv = new Div();	
 		 // Account Number 
 		 Div accNoDiv = new Div();
 		 accNoDiv.setParent(bankDetailsDiv);
 		 accNoDiv.setClass(TEXTBOX);
 		 Label accNo = new Label(LabelUtils.getLabel(widget, "accNo"));
-		 accNo.setClass("AcntNumberLabel");
+		                   accNo.setClass("AcntNumberLabel");
 		 accNo.setParent(accNoDiv);
 		 final Textbox accNoTextbox = createTextbox(accNoDiv);      
 		 accNoTextbox.setParent(accNoDiv);
 		 accNoTextbox.setClass("accHolderNameTextbox");
-		 accNoTextbox.setMaxlength(16);
+		 accNoTextbox.setMaxlength(24);
 		 String errorMsgAcntNumber = LabelUtils.getLabel(widget,
 					"error.msg.acntNumber", new Object[0]);
 		accNoTextbox.setConstraint("/[0-9][0-9]*$/:"+errorMsgAcntNumber);
@@ -162,8 +192,9 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 		re_accNo.setClass("reEntrAcntnumber");
 		final Textbox re_accNoTextBox = createTextbox(accNoDiv);
 		re_accNoTextBox.setParent(accNoDiv);
+		re_accNoTextBox.setType("password");
 		re_accNoTextBox.setClass("accHolderNameTextbox");
-		re_accNoTextBox.setMaxlength(16);
+		re_accNoTextBox.setMaxlength(24);
 		 String errorMsgReEnterAcntNumber = LabelUtils.getLabel(widget,
 					"error.msg.acntNumber", new Object[0]);
 		re_accNoTextBox.setConstraint("/[0-9][0-9]*$/:"+errorMsgReEnterAcntNumber);
@@ -178,11 +209,11 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 		accHolderName.setWidth("10px");
 		final Textbox accHolderNameTextbox = createTextbox(acntholderDiv);
 		accHolderNameTextbox.setParent(acntholderDiv);
-		accHolderNameTextbox.setMaxlength(20);
+		accHolderNameTextbox.setMaxlength(30);
 		accHolderNameTextbox.setClass("accHolderNameTextbox");
 		String errorMsgName = LabelUtils.getLabel(widget,
 				"error.msg.name", new Object[0]);
-		accHolderNameTextbox.setConstraint("/[a-zA-Z ][a-zA-Z ]*$/:"+errorMsgName);
+		accHolderNameTextbox.setConstraint("/[a-zA-Z][a-zA-Z ]*$/:"+errorMsgName);
 		
 		// RefundMode 
 		final Label refundMode = new Label(LabelUtils.getLabel(widget,"refund_mode"));
@@ -195,9 +226,9 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 		refundModeListbox.setVisible(true);
 		refundModeListbox.setMold("select");
 		final List<String> refundModeList = new ArrayList<String>();
-		refundModeList.add(RefundMode.IFSC.getCode());
 		refundModeList.add(RefundMode.NEFT.getCode());
-		refundModeList.add(RefundMode.RGFT.getCode());
+		refundModeList.add(RefundMode.RTGS.getCode());
+		refundModeList.add(RefundMode.IMPS.getCode());
 		for (String modes : refundModeList) {
 			final Listitem refundModeItems = new Listitem(modes);
 			refundModeItems.setParent(refundModeListbox);
@@ -232,11 +263,11 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 		bankName.setClass("bankNameLabel");
 		final Textbox bankNameTextbox = createTextbox(banNameDiv);
 		bankNameTextbox.setParent(banNameDiv);
-		bankNameTextbox.setMaxlength(20);
+		bankNameTextbox.setMaxlength(30);
 		bankNameTextbox.setClass("accHolderNameTextbox");
 		String errorMsgBankName = LabelUtils.getLabel(widget,
-				"error.msg.name", new Object[0]);
-		bankNameTextbox.setConstraint("/[a-zA-Z ][a-zA-Z ]*$/:"+errorMsgBankName);
+				"error.msg.bankName", new Object[0]);
+		bankNameTextbox.setConstraint("/[a-zA-Z][a-zA-Z ]*$/:"+errorMsgBankName);
 		
 		// IFSC CODE Details
 		final Label ifscCode = new Label(LabelUtils.getLabel(widget, "IFCS"));
@@ -245,10 +276,7 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 		final Textbox ifscTextbox = createTextbox(banNameDiv);
 		ifscTextbox.setMaxlength(11);
 		ifscTextbox.setParent(banNameDiv);
-		ifscTextbox.setClass("accHolderNameTextbox");
-		String errorMsgIfsc = LabelUtils.getLabel(widget,
-				"error.msg.ifsc", new Object[0]);
-		ifscTextbox.setConstraint("/[a-zA-Z][a-zA-Z0-9]*$/:"+errorMsgIfsc);	
+		ifscTextbox.setClass("accHolderNameTextbox");	
 		final Div codButtonDiv = new Div();
 		codButtonDiv.setParent(bankDetailsDiv);
 		codButtonDiv.setClass(BUTTON);
@@ -260,42 +288,49 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 			@Override
 			public void onEvent(Event arg0) throws Exception {
 				
-				if(accNoTextbox.getValue().isEmpty() || accNoTextbox.getValue().length()<11) {
-					Messagebox.show(LabelUtils.getLabel(widget,
-								"InvalidAcntNumber",
-								Messagebox.OK, Messagebox.ERROR
-				     	));
+				if(null == accNoTextbox.getValue() || StringUtils.isEmpty(accNoTextbox.getValue().trim()) || accNoTextbox.getValue().length()<4) {
+					
+					Messagebox.show(
+							LabelUtils.getLabel(widget, "InvalidAcntNumber"),
+							LabelUtils.getLabel(widget, FAILED_VALIDATION),
+							Messagebox.OK, Messagebox.ERROR);
+					accNoTextbox.setFocus(true);
 					return;
-				} else if  (re_accNoTextBox.getValue().isEmpty() ) {
+				}else if  (null==re_accNoTextBox.getValue() || StringUtils.isEmpty(re_accNoTextBox.getValue().trim())) {
 					Messagebox.show(LabelUtils.getLabel(widget,
 							"InvalidAcntNumber",
 							Messagebox.OK, Messagebox.ERROR
 			     	));
+					re_accNoTextBox.setFocus(true);
 					return;
-				}  else if  (re_accNoTextBox.getValue().isEmpty() || !re_accNoTextBox.getValue().equalsIgnoreCase(accNoTextbox.getValue()) ) {
-						Messagebox.show(LabelUtils.getLabel(widget,
-								"AcntNumbersDoes'tMatch",
-								Messagebox.OK, Messagebox.ERROR
-				     	));
+				} 
+				else if  (!re_accNoTextBox.getValue().trim().equalsIgnoreCase(accNoTextbox.getValue().trim()) ) {
+					Messagebox.show(
+							LabelUtils.getLabel(widget, "AcntNumbersDoes'tMatch"),
+							LabelUtils.getLabel(widget, FAILED_VALIDATION),
+							Messagebox.OK, Messagebox.ERROR);
+					re_accNoTextBox.setFocus(true);
+					return;
+				} else if (null == accHolderNameTextbox.getValue() || StringUtils.isEmpty(accHolderNameTextbox.getValue().trim()) || accHolderNameTextbox.getValue().length()<3) {
+					Messagebox.show(
+							LabelUtils.getLabel(widget, "invalidAcntHolderName"),
+							LabelUtils.getLabel(widget, FAILED_VALIDATION),
+							Messagebox.OK, Messagebox.ERROR);
+					accHolderNameTextbox.setFocus(true);
 						return;
-				} else if (accHolderNameTextbox.getValue().isEmpty() || accHolderNameTextbox.getValue().length()<3) {
-					
-						Messagebox.show(LabelUtils.getLabel(widget,
-								"invalidAcntHolderName",
-								Messagebox.OK, Messagebox.ERROR
-				     	));
+				}else if (null ==bankNameTextbox.getValue() || StringUtils.isEmpty(bankNameTextbox.getValue().trim()) ||  bankNameTextbox.getValue().length()<3) {
+					Messagebox.show(
+							LabelUtils.getLabel(widget, "invalidBankName"),
+							LabelUtils.getLabel(widget, FAILED_VALIDATION),
+							Messagebox.OK, Messagebox.ERROR);
+					bankNameTextbox.setFocus(true);
 						return;
-				}else if (bankNameTextbox.getValue().isEmpty() ||  bankNameTextbox.getValue().length()<3) {
-						Messagebox.show(LabelUtils.getLabel(widget,
-								"invalidBankName",
-								Messagebox.OK, Messagebox.ERROR
-				     	));
-						return;
-				} else if ( ifscTextbox.getValue().isEmpty() ||  ifscTextbox.getValue().length()<11) {
-					Messagebox.show(LabelUtils.getLabel(widget,
-							"invaliIfscCode",
-							Messagebox.OK, Messagebox.ERROR
-			     	));
+				} else if ( null ==ifscTextbox.getValue() ||   StringUtils.isEmpty(ifscTextbox.getValue().trim()) || ifscTextbox.getValue().length()<11 ||  !ifscTextbox.getValue().trim().matches(IFSC_REGEX)) {
+					Messagebox.show(
+							LabelUtils.getLabel(widget, "invaliIfscCode"),
+							LabelUtils.getLabel(widget, FAILED_VALIDATION),
+							Messagebox.OK, Messagebox.ERROR);
+					ifscTextbox.setFocus(true);
 					return;
 				}
 					codUpadatesToFico(widget, entries, accNoTextbox,re_accNoTextBox,
@@ -330,31 +365,49 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 			returnHead.setClass(BOLD_TEXT);
 			final Div Div1 = new Div();
 			Div1.setParent(retunDetails);
-			final Label returnDescription = new Label(LabelUtils.getLabel(
-					widget, "return_Description"));
+			final Label returnDescription = new Label(LabelUtils.getLabel(widget,
+					"return_Description",
+					new Object[] {
+							payment.getEntries().get(0)
+							.getPaymentMode().getMode()}));
+
 			returnDescription.setParent(retunDetails);
-		final Div cardDetailsldiv = new Div();
+		   final Div cardDetailsldiv = new Div();
 			cardDetailsldiv.setParent(prepaidOrdeDetials);
 			cardDetailsldiv.setClass("cardDetailsClass");
 			final Label cardDetails = new Label(LabelUtils.getLabel(widget,
-					"card_Details"));
+					"card_Details",
+					new Object[] {
+					cCard.getType()  }));
+			
 			cardDetails.setParent(cardDetailsldiv);
 			cardDetails.setClass(BOLD_TEXT);
+			
 			final Div Div2 = new Div();
 			Div2.setParent(cardDetailsldiv);
-		final Label paymentType = new Label(payment.getEntries().get(0)
-					.getPaymentMode().getMode());
-			paymentType.setParent(cardDetailsldiv);
+			final Label nameOnCart = new Label(LabelUtils.getLabel(widget,
+				"nameOnCart",
+				new Object[] {
+				cCard.getCcOwner() }));
+		    nameOnCart.setParent(cardDetailsldiv);
+		    
 			final Div Div3 = new Div();
 			Div3.setParent(cardDetailsldiv);
-			final Label cardNo = new Label(cCard.getNumber());
+			final Label cardNo = new Label(LabelUtils.getLabel(widget,
+					"cartNumber",
+					new Object[] {
+					cCard.getType(),cCard.getNumber()  }));
 			cardNo.setParent(cardDetailsldiv);
 			cardNo.setClass(BOLD_TEXT);
+			
 			final Div Div4 = new Div();
 			Div4.setParent(cardDetailsldiv);
 			final Label deliveyDetails = new Label(LabelUtils.getLabel(widget,
-					"delivey_Details"));
+					"expiresOn",
+					new Object[] {
+					cCard.getType(),cCard.getValidToMonth(),cCard.getValidToMonth(),cCard.getValidToYear() }));
 			deliveyDetails.setParent(cardDetailsldiv);
+			
 			final Div Div5 = new Div();
 			Div5.setParent(prepaidOrdeDetials);
 			
@@ -368,6 +421,7 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 					new EventListener() {
 						@Override
 						public void onEvent(Event arg0) throws Exception {
+							processButton.setDisabled(true);
 							prepaidOrdeDetials
 									.appendChild(getReturnModeDetails(widget,
 											entry,orderModel));
@@ -377,66 +431,9 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 		return prepaidOrdeDetials;
 	}
 
-	private List<PointOfServiceModel> getStoresDetails(
-			List<PointOfServiceData> returnStores) {
-		List<PointOfServiceModel> storeDetails = new ArrayList<PointOfServiceModel>();
-		if (returnStores != null && returnStores.size() > 0) {
-			PointOfServiceModel storeModel = new PointOfServiceModel();
-			AddressModel storeAddrModel = null;
-			for (PointOfServiceData storeAddr : returnStores) {
-				if (StringUtils.isNotBlank(storeAddr.getName())) {
-					storeModel.setName(storeAddr.getName());
-				}
-				if (null != storeAddr.getAddress()) {
-					storeAddrModel = new AddressModel();
-					if (StringUtils.isNotBlank(storeAddr.getAddress()
-							.getLine1())) {
-						storeAddrModel.setLine1(storeAddr.getAddress()
-								.getLine1());
-					}
-					if (StringUtils.isNotBlank(storeAddr.getAddress()
-							.getLine2())) {
-						storeAddrModel.setLine2(storeAddr.getAddress()
-								.getLine2());
-					}
-					if (StringUtils.isNotBlank(storeAddr.getAddress()
-							.getLine3())) {
-						storeAddrModel.setAddressLine3(storeAddr.getAddress()
-								.getLine3());
-					}
-					if (StringUtils.isNotBlank(storeAddr.getAddress()
-							.getLandmark())) {
-						storeAddrModel.setLandmark(storeAddr.getAddress()
-								.getLandmark());
-					}
-					if (StringUtils
-							.isNotBlank(storeAddr.getAddress().getCity())) {
-						storeAddrModel
-								.setCity(storeAddr.getAddress().getCity());
-					}
-					if (StringUtils.isNotBlank(storeAddr.getAddress()
-							.getPostalCode())) {
-						storeAddrModel.setPostalcode(storeAddr.getAddress()
-								.getPostalCode());
-					}
-					if (StringUtils.isNotBlank(storeAddr.getAddress()
-							.getPhone())) {
-						storeAddrModel.setPhone1(storeAddr.getAddress()
-								.getPhone());
-					}
-					if (null != storeAddrModel) {
-						storeModel.setAddress(storeAddrModel);
-					}
-				}
-				storeDetails.add(storeModel);
-			}
-		}
-		return storeDetails;
-	}
-
 	private Div getReturnModeDetails(
 			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
-			final List<AbstractOrderEntryModel> entry,
+			final List<AbstractOrderEntryModel> entries,
 			final OrderModel subOrder) {
 		final Div returnMethodDiv = new Div();
 		final Div modelSelctionDiv = new Div();
@@ -448,8 +445,8 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 		selectTitle.setClass(BOLD_TEXT);
 		final Div Div = new Div();
 		Div.setParent(modelSelctionDiv);
-		final Div quickDropArea = new Div();
-		quickDropArea.setParent(returnMethodDiv);
+		//final Div quickDropArea = new Div();
+		//quickDropArea.setParent(returnMethodDiv);
 		final Div schedulePickupArea = new Div();
 		schedulePickupArea.setParent(returnMethodDiv);
 		schedulePickupArea.setClass("displayArea");
@@ -470,7 +467,7 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 					schedulePickupArea.getChildren().clear();
 				}
 				schedulePickupArea.appendChild(getQuickDropDetails(widget,
-						entry));
+						entries));
 			}
 		});
 		final Div Div9 = new Div();
@@ -487,9 +484,10 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 
 				}
 				schedulePickupArea.appendChild(getSchedulePicupDetails(widget,
-						entry, subOrder));
+						entries, subOrder));
 			}
 		});
+		
 		
 		Div9.setParent(modelSelctionDiv);
 		Radio selfShipRadio = new Radio();
@@ -503,12 +501,16 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 					schedulePickupArea.getChildren().clear();
 				}
 				schedulePickupArea.appendChild(getselfShipDetails(widget,
-						entry, subOrder,TypeofReturn.SELF_COURIER));
+						entries, subOrder,TypeofReturn.SELF_COURIER));
 			}
 		});
-			
+		radioGroup.setSelectedIndex(0);
 		if (radioGroup.getSelectedIndex() == 0) {
-			schedulePickupArea.appendChild(getQuickDropDetails(widget, entry));
+			try {
+				schedulePickupArea.appendChild(getQuickDropDetails(widget, entries));
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		return returnMethodDiv;
 	}
@@ -580,7 +582,8 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 
 	private Div getQuickDropDetails(
 			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
-			final List<AbstractOrderEntryModel> entries) {
+			final List<AbstractOrderEntryModel> entries) throws InterruptedException {
+		final Map<String, List<String>>  storesMap = new HashMap<String, List<String>>();
 		final Div storeAdressDiv = new Div();
 		storeAdressDiv.setClass("displayArea");
 		Label quickDrop = new Label(LabelUtils.getLabel(widget, "quick_drop"));
@@ -588,8 +591,108 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 		quickDrop.setClass(BOLD_TEXT);
 		final Br br5 = new Br();
 		br5.setParent(storeAdressDiv);
-		final Div listOfReturnItems = new Div();
-		listOfReturnItems.setParent(storeAdressDiv);
+		
+		final Div pincodeDiv = new Div();
+		pincodeDiv.setParent(storeAdressDiv);
+		
+		Label re_accNo = new Label(LabelUtils.getLabel(widget, "pincode"));
+		re_accNo.setParent(pincodeDiv);
+		final Longbox pincodeLongbox = createLongBox(pincodeDiv);
+		pincodeLongbox.setMaxlength(6);
+		pincodeLongbox.setParent(pincodeDiv);
+		TypedObject order = widget.getWidgetController().getCurrentOrder();
+		OrderModel orderModel = (OrderModel) order.getObject();
+		String pinCode = null;
+		if(null != orderModel && null != orderModel.getDeliveryAddress() && null != orderModel.getDeliveryAddress().getPostalcode()) {
+			
+			 pinCode= orderModel.getDeliveryAddress().getPostalcode();
+			pincodeLongbox.setValue(Long.valueOf(pinCode));
+		}
+		Button pincodeSubmitbtn = new Button("Submit");
+		
+		final Div listOfReturnItemsDiv = new Div();
+		listOfReturnItemsDiv.setParent(pincodeDiv);
+		
+		
+		if(null != pinCode) {
+			String sellerId =StringUtils.substring(entries.get(0).getSelectedUSSID(), 0, 6);
+			
+			List<PointOfServiceData> returnableStores =  ((MarketPlaceReturnsController) widget
+					.getWidgetController()).getAllReturnableStores(pinCode,sellerId);
+			if(null !=returnableStores && !returnableStores.isEmpty()){
+				if(null != listOfReturnItemsDiv && null !=listOfReturnItemsDiv.getChildren()) {
+					listOfReturnItemsDiv.getChildren().clear();
+				}
+				renderStoreDetails(widget,listOfReturnItemsDiv,returnableStores,entries,storesMap);
+			}else {
+				pincodeDiv.setTooltiptext("No stores Available");
+				
+			}
+		}
+		
+		 pincodeLongbox.addEventListener(Events.ON_CHANGE, new EventListener() {
+			@Override
+			public void onEvent(Event arg0) throws Exception {
+				Long pincodeValue = pincodeLongbox.getValue();
+				String pinCode= pincodeValue.toString();
+				if(pinCode.matches(PIN_REGEX)) {
+					String sellerId =StringUtils.substring(entries.get(0).getSelectedUSSID(), 0, 6);
+					
+					List<PointOfServiceData> returnableStores =  ((MarketPlaceReturnsController) widget
+							.getWidgetController()).getAllReturnableStores(pinCode,sellerId);
+					if(null !=returnableStores && !returnableStores.isEmpty()){
+						if(null != listOfReturnItemsDiv && null !=listOfReturnItemsDiv.getChildren()) {
+							listOfReturnItemsDiv.getChildren().clear();
+						}
+						renderStoreDetails(widget,listOfReturnItemsDiv,returnableStores,entries,storesMap);
+					}else {
+						if(null != listOfReturnItemsDiv && null !=listOfReturnItemsDiv.getChildren()) {
+							listOfReturnItemsDiv.getChildren().clear();
+						}
+						Messagebox.show(NO_STORE_AVAILABLE);
+						return;
+					}
+				}else {
+					pincodeLongbox.setFocus(true);
+					if(null != listOfReturnItemsDiv && null !=listOfReturnItemsDiv.getChildren()) {
+						listOfReturnItemsDiv.getChildren().clear();
+					}
+					popupMessage(widget,
+							MarketplaceCockpitsConstants.PIN_CODE_INVALID);
+				}
+			}
+		});
+		final Br br4 = new Br();
+		br4.setParent(storeAdressDiv);
+		final Div buttonDiv = new Div();
+		buttonDiv.setParent(storeAdressDiv);
+		buttonDiv.setClass(BUTTON);
+		final Button continueBt = new Button(LabelUtils.getLabel(widget,
+				CONTINUE));
+		continueBt.setParent(buttonDiv);
+		continueBt.setClass("creditButton");
+		continueBt.setClass(BUTTON);
+		continueBt.addEventListener(Events.ON_CLICK, new EventListener() {
+			@Override
+			public void onEvent(Event arg0) throws Exception {
+					if(null != storesMap && !storesMap.isEmpty()) {
+						LOG.debug("return Store Map  : "+storesMap.entrySet());
+						Long pincodeValue = pincodeLongbox.getValue();
+						String pinCode= pincodeValue.toString();
+						Session session = Executions.getCurrent().getDesktop().getSession();
+						session.setAttribute("pinCode", pinCode);
+						retrunInfoCallToOMS(widget, entries, storesMap);
+						proceedToReturnItem(widget,TypeofReturn.QUICK_DROP);
+					}else {
+						Messagebox.show(NO_STORE_SELECTED);
+					}
+					
+			}
+		});
+		
+		return storeAdressDiv;
+	}
+	protected void renderStoreDetails(final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget, Div listOfReturnItems, List<PointOfServiceData> returnableStores, List<AbstractOrderEntryModel> entries, final Map<String, List<String>> storesMap) {
 		final Listbox listbox = new Listbox();
 		listbox.setParent(listOfReturnItems);
 		listbox.setClass("selectedMode");
@@ -604,64 +707,85 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 
 		final Listheader returnStore = new Listheader("Available Stores");
 		returnStore.setParent(listHead);
-		final List<Checkbox> storeChecks = new ArrayList<Checkbox>();
-		String pinCode = entries.get(0).getOrder().getDeliveryAddress().getPostalcode();
-		for (AbstractOrderEntryModel e : entries) {
+		for (final AbstractOrderEntryModel e : entries) {
 			final Listitem listItem = new Listitem();
 			listItem.setParent(listbox);
-			returnableStores = ((MarketPlaceReturnsController) widget
-					.getWidgetController()).getAllReturnableStores(pinCode,
-					StringUtils.substring(e.getSelectedUSSID(), 0, 6));
-			List<PointOfServiceModel> storesList = getStoresDetails(returnableStores);
+			// Transaction Id 
 			final Listcell cellTransId = new Listcell(e.getTransactionID());
 			cellTransId.setParent(listItem);
+			
+			// Product 
 			final Listcell cellProdDesc = new Listcell(e.getProduct().getName());
 			cellProdDesc.setParent(listItem);
-			final Listcell cellAvailStores = new Listcell();
-			cellAvailStores.setParent(listItem);
-			final Div storesAvailList = new Div();
-			storesAvailList.setParent(cellAvailStores);		
-			final Listcell storecell = new Listcell();	
-			storesAvailList.setParent(storecell);
-			for(PointOfServiceData stores : returnableStores) {
-				final Div storeDetails = new Div();
-				try {
-				storeDetails.setParent(storesAvailList);
-				}catch(Exception e1) {
-					e1.getCause();
-				}
-				Checkbox storesSelection = new Checkbox();
-				storesSelection.setAttribute(stores.getSlaveId(), stores);
-				storesSelection.setLabel(stores.getDisplayName());
-				storesSelection.setParent(storeDetails);
-				final Br storeAddBr = new Br();
-				storeAddBr.setParent(storeDetails);
-				final Label storeLabel = new Label(stores.getAddress().getCity()+ "," + stores.getAddress().getLine1()+ ", "+stores.getAddress().getPostalCode());
-				storeLabel.setParent(storeDetails);
-				storeChecks.add(storesSelection);
+			
+			// Stores 
+			final Listcell storesListCell = new Listcell();
+			storesListCell.setParent(listItem);
+
+			Div storeLiDiv = new Div();
+			storeLiDiv.setParent(storesListCell);
+			final Listbox storesListBox = new Listbox();
+			storesListBox.setParent(storeLiDiv);
+			storesListBox.setMultiple(true);
+			storesListBox.setMold("select");
+			
+			for(final PointOfServiceData store : returnableStores) { 
+				final String storeLabel = new String(store.getSlaveId()+ "," + store.getAddress().getFormattedAddress());
+				final Listitem item = new Listitem();
+				item.setLabel(storeLabel);
+				item.setParent(storesListBox);
+				item.setAttribute(store.getSlaveId(), e.getTransactionID());
+				item.setValue(store.getSlaveId());
+				storesListBox.addItemToSelection(item);
 			}
+			storesListBox.setSelectedIndex(0);
+			List<String> stores = new ArrayList<String>();
+			if(null != storesListBox.getSelectedItem() && null != storesListBox.getSelectedItem().getValue()) {
+				stores.add(storesListBox.getSelectedItem().getValue().toString());
+			}
+			if(null != stores && !stores.isEmpty()) {
+				storesMap.put(e.getTransactionID(), stores);
+			}
+			
+			storesListBox.addEventListener(Events.ON_SELECT, new EventListener() {
+				@Override
+				public void onEvent(Event arg0) throws Exception {
+					addStoresToReturnInfoList(widget,storesListBox,e,storesMap);
+				}
+			});
 			final Br storeBr = new Br();
 			storeBr.setParent(listOfReturnItems);
 		}
-		final Br br4 = new Br();
-		br4.setParent(storeAdressDiv);
-		final Div buttonDiv = new Div();
-		buttonDiv.setParent(storeAdressDiv);
-		buttonDiv.setClass(BUTTON);
-		final Button continueBt = new Button(LabelUtils.getLabel(widget,
-				CONTINUE));
-		continueBt.setParent(buttonDiv);
-		continueBt.setClass("creditButton");
-		continueBt.setClass(BUTTON);
-		continueBt.addEventListener(Events.ON_CLICK, new EventListener() {
-			@Override
-			public void onEvent(Event arg0) throws Exception {
-				retrunInfoCallToOMS(widget, entries, returnableStores, storeChecks);
-				proceedToReturnItem(widget,TypeofReturn.QUICK_DROP);
-			}
-		});
-		return storeAdressDiv;
 	}
+
+	protected void addStoresToReturnInfoList(
+			InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
+			Listbox storesListBox, AbstractOrderEntryModel entry,
+			Map<String, List<String>> storesMap1) {
+	     Set<Listitem> items = storesListBox.getSelectedItems();
+	     List<String> stores= new ArrayList<String>();
+	     if(null !=storesMap1 && !storesMap1.isEmpty() && storesMap1.containsKey(entry.getTransactionID())) {
+	    	 storesMap1.get(entry.getTransactionID()).clear();
+	     }
+	     for (Listitem item : items) {
+	    	 	stores.add(item.getValue().toString());
+	     }
+	     storesMap1.put(entry.getTransactionID(), stores);	   
+	     LOG.debug(storesMap1);
+		}
+
+	private void popupMessage(
+			InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
+			final String message) {
+		try {
+			Messagebox.show(
+					LabelUtils.getLabel(widget, message, new Object[0]), INFO,
+					Messagebox.OK, Messagebox.ERROR);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
 
 	private Div getSchedulePicupDetails(
 			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
@@ -698,6 +822,8 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 		pickupDateAndTime.setWidth("390px");
 		pickupDateAndTime.setParent(listhead);
 		final List<RescheduleData> scheduleDeliveryDates = new ArrayList<RescheduleData>();
+		List<String> timeSlots = ((MarketPlaceReturnsController) widget
+				.getWidgetController()).getReturnTimeSlotsByKey("RD");
 		for (final AbstractOrderEntryModel entry : entries) {
 			Listitem listItem = new Listitem();
 			listItem.setParent(scheduleList);
@@ -705,7 +831,7 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 			transIdCell.setParent(listItem);
 			Listcell productCell = new Listcell(entry.getProduct().getName());
 			productCell.setParent(listItem);
-			Listcell costCell = new Listcell(entry.getTotalPrice().toString());
+			Listcell costCell = new Listcell(entry.getNetAmountAfterAllDisc().toString());
 			costCell.setParent(listItem);		
 			List<String> returnDates = ((MarketPlaceReturnsController) widget
 					.getWidgetController()).getReturnScheduleDates(entry);
@@ -735,8 +861,7 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 			final Radiogroup timeGruop = new Radiogroup();
 			timeGruop.setOrient("vertical");
 			timeGruop.setParent(pickupTimeDiv);
-			List<String> timeSlots = ((MarketPlaceReturnsController) widget
-					.getWidgetController()).getReturnTimeSlotsByKey("RD");
+			
 			for (String time : timeSlots) {
 				final Div timeDiv = new Div();
 				timeDiv.setParent(pickupTimeDiv);
@@ -747,8 +872,8 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 			}			
 			timeGruop.setSelectedIndex(0);			
 			RescheduleData scheduleData = new RescheduleData();			
-			scheduleData.setDate(dateGroup.getSelectedItem().getName());
-			scheduleData.setTime(timeGruop.getSelectedItem().getName());
+			scheduleData.setDate(dateGroup.getSelectedItem().getLabel());
+			scheduleData.setTime(timeGruop.getSelectedItem().getLabel());
 			scheduleData.setProductCode(entry.getProduct().getCode());
 			scheduleDeliveryDates.add(scheduleData);
 			dateGroup.addEventListener(Events.ON_CHECK, new EventListener() {
@@ -768,6 +893,7 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 				}
 			});	
 		}	
+	
 		Label selectAddressLabel  = new Label("selectAddress");
 		selectAddressLabel.setClass("selectaddress");
 		selectAddressLabel.setParent(scheduleDiv);
@@ -832,9 +958,15 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 			OrderModel orderModel = (OrderModel) order.getObject();
 			for (AbstractOrderEntryModel orderEntry : orderModel.getEntries()) {
 				ReturnLogistics returnLogistics = new ReturnLogistics();
-				returnLogistics.setOrderId(orderEntry.getOrder().getCode());
+				returnLogistics.setOrderId(orderModel.getParentReference().getCode());
 				returnLogistics.setTransactionId(orderEntry.getTransactionID());
 				returnLogistics.setPinCode(pinCode);
+				String fullfillmentType=((MarketPlaceReturnsController) widget
+						.getWidgetController()).getReturnFulFillmenttype(orderEntry.getProduct());
+				String returnFulfillModeByP1=((MarketPlaceReturnsController) widget
+						.getWidgetController()).getReturnFulfillModeByP1(orderEntry.getProduct());
+				returnLogistics.setReturnFulfillmentType(fullfillmentType);
+				returnLogistics.setReturnFulfillmentByP1(returnFulfillModeByP1);
 				returnLogisticsList.add(returnLogistics);
 			}
 			Map<Boolean, List<OrderLineDataResponse>> responseMap =((MarketPlaceReturnsController) widget.getWidgetController())
@@ -852,7 +984,7 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 									}
 								}
 							});
-				} else {
+				} else if(CollectionUtils.isNotEmpty(responseMap.get(Boolean.TRUE)) && CollectionUtils.isNotEmpty(responseMap.get(Boolean.FALSE))){
 					String notAvailabletransactionList = null;
 					if (CollectionUtils.isNotEmpty(responseMap.get(Boolean.FALSE))) {
 						for (OrderLineDataResponse orderEntry : responseMap
@@ -930,7 +1062,7 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 				if (scheduleData.getProductCode().equalsIgnoreCase(
 						entry.getProduct().getCode())) {
 					scheduleData
-							.setDate(dateGroup.getSelectedItem().getName());
+							.setDate(dateGroup.getSelectedItem().getLabel());
 					return;
 				}
 			}
@@ -946,7 +1078,7 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 				if (scheduleData.getProductCode().equalsIgnoreCase(
 						entry.getProduct().getCode())) {
 					scheduleData
-							.setTime(timeGruop.getSelectedItem().getName());
+							.setTime(timeGruop.getSelectedItem().getLabel());
 					return;
 				}
 			}
@@ -988,9 +1120,15 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 				OrderModel orderModel = (OrderModel) order.getObject();
 				for (AbstractOrderEntryModel orderEntry : orderModel.getEntries()) {
 					ReturnLogistics returnLogistics = new ReturnLogistics();
-					returnLogistics.setOrderId(orderEntry.getOrder().getCode());
+					returnLogistics.setOrderId(orderModel.getParentReference().getCode());
 					returnLogistics.setTransactionId(orderEntry.getTransactionID());
 					returnLogistics.setPinCode(pinCode);
+					String fullfillmentType=((MarketPlaceReturnsController) widget
+							.getWidgetController()).getReturnFulFillmenttype(orderEntry.getProduct());
+					String returnFulfillModeByP1=((MarketPlaceReturnsController) widget
+							.getWidgetController()).getReturnFulfillModeByP1(orderEntry.getProduct());
+					returnLogistics.setReturnFulfillmentType(fullfillmentType);
+					returnLogistics.setReturnFulfillmentByP1(returnFulfillModeByP1);
 					returnLogisticsList.add(returnLogistics);
 				}
 				final Map<Boolean, List<OrderLineDataResponse>> responseMap = ((MarketPlaceReturnsController) widget
@@ -1014,19 +1152,16 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 						});
 					}  if (CollectionUtils.isEmpty(responseMap.get(Boolean.TRUE))) {
 						Messagebox.show(LabelUtils.getLabel(widget,
-								REVERSE_LOGISTICS_NOTAVAILABLE, new Object[0]),
-								"Question", Messagebox.OK | Messagebox.CANCEL,
-								Messagebox.QUESTION,
+								REVERSE_LOGISTICS_NOTAVAILABLE, new Object[0]), "Error",
+								Messagebox.OK, Messagebox.ERROR,
 								new org.zkoss.zk.ui.event.EventListener() {
-							public void onEvent(Event e)
-									throws InterruptedException {
-								if (e.getName().equals("onOK")) {
-									proceedToReturn(returnAddress, scheduleDeliveryDates);
-								} else {
-									return;
-								}
-							}
-						});
+									public void onEvent(Event e)
+											throws InterruptedException {
+										if (e.getName().equals("onOK")) {
+											return;
+										}
+									}
+								});
 					} 
 				} else {
 					Messagebox.show(LabelUtils.getLabel(widget,
@@ -1071,29 +1206,45 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 
 	private void retrunInfoCallToOMS(
 			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
-			final List<AbstractOrderEntryModel> returnEntry,
-			List<PointOfServiceData> listOfStores,List<Checkbox> storeChecks ) {
+			final List<AbstractOrderEntryModel> returnEntry,Map<String, List<String>>storeMap ) {
 		for (AbstractOrderEntryModel entry : returnEntry) {
 			((MarketPlaceReturnsController) widget.getWidgetController())
-					.retrunInfoCallToOMSFromCsCockpit(widget, entry, storeChecks);
+					.retrunInfoCallToOMSFromCsCockpit(widget, entry, storeMap);
 		}
 	}
 
-	private void codUpadatesToFico(
+	private void codUpadatesToFico(   
 			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
 			List<AbstractOrderEntryModel> returnEntry, final Textbox accNoTextbox,final Textbox reEnteAaccNoTextbox,
 			Textbox accHolderNameTextbox, Listbox refundModeListbox,
 			Listbox titleListBox, Textbox bankNameTextbox, Textbox ifscTextbox) throws InterruptedException {
+		try {
+		accNoTextbox.setDisabled(true);
+		reEnteAaccNoTextbox.setDisabled(true);
+		accHolderNameTextbox.setDisabled(true);
+		bankNameTextbox.setDisabled(true);
+		ifscTextbox.setDisabled(true);
+		refundModeListbox.setDisabled(true);
+		titleListBox.setDisabled(true);
 			CODSelfShipData codData = new CODSelfShipData();
-			codData.setTitle((String) titleListBox.getSelectedItem().getLabel());
-			codData.setName(accHolderNameTextbox.getValue());
-			codData.setBankAccount(accNoTextbox.getValue());
-			codData.setBankName(bankNameTextbox.getValue());
-			codData.setBankKey(ifscTextbox.getValue());
+			codData.setOrderRefNo(returnEntry.get(0).getOrder().getCode());
+			//codData.set
+			//codData.setTitle((String) titleListBox.getSelectedItem().getLabel());
+			codData.setName(accHolderNameTextbox.getValue().trim());
+			codData.setBankAccount(accNoTextbox.getValue().trim());
+			codData.setBankName(bankNameTextbox.getValue().trim());
+			codData.setBankKey(ifscTextbox.getValue().trim());
 			codData.setPaymentMode((String) refundModeListbox.getSelectedItem()
 					.getLabel());
-			((MarketPlaceReturnsController) widget.getWidgetController())
+			codData.setOrderNo(returnEntry.get(0).getOrder().getCode());
+		  	((MarketPlaceReturnsController) widget.getWidgetController())
 					.getCodPaymentInfoToFICO(codData, returnEntry);
+		  	((MarketPlaceReturnsController) widget.getWidgetController())
+			.saveCODReturnsBankDetails(codData);
 	
+	}catch(Exception e) {
+		e.printStackTrace();
 	}
+	}
+		
 }

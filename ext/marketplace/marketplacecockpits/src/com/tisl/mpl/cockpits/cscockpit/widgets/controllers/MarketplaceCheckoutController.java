@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.zkoss.zul.Listbox;
 
+import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -135,4 +136,5 @@ public interface MarketplaceCheckoutController extends
 	void setFreeBiDeliveryModesAndCost(AbstractOrderEntryModel entry,
 			MplZoneDeliveryModeValueModel deliveryMode);	
 	InvReserForDeliverySlotsResponseData deliverySlotsRequestDataCallToOms(InvReserForDeliverySlotsRequestData deliverySlotsRequestData);
+	public Double getScheduleDeliveryCharges();
 }

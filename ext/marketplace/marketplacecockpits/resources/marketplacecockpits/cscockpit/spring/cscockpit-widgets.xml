@@ -849,7 +849,7 @@
 	<alias alias="csOrderScheduleDeliveryWidgetRenderer" name="defaultCsOrderScheduleDeliveryWidgetRenderer" />
 	<bean id="defaultCsOrderScheduleDeliveryWidgetRenderer"
 		parent="abstractWidgetRenderer"
-		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MplScheduleDeliveryWidgetRenderer">
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MplCheckoutScheduleDeliveryWidgetRenderer">
 		<property name="cockpitTypeService" ref="cockpitTypeService"/>
 	</bean>
 	

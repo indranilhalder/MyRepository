@@ -19,6 +19,8 @@ import de.hybris.platform.cockpit.widgets.InputWidget;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
+import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.cscockpit.utils.LabelUtils;
 import de.hybris.platform.cscockpit.widgets.controllers.BasketController;
@@ -100,6 +102,23 @@ public class MarketPlaceBasketTotalsWidgetRenderer extends
 				}*/
 				
 		        renderRow(deliveryCosts, LabelUtils.getLabel(widget, "deliveryCosts", new Object[0]), currencyInstance, container);
+		        
+		        
+		        
+				Double scheduleDeliveryCosts = 0D;
+				
+//				for (AbstractOrderEntryModel orderEntry : abstractOrderModel
+//						.getEntries()) {
+//					if (null != orderEntry.getMplDeliveryMode()) {
+//						scheduleDeliveryCosts = deliveryCosts
+//								+ ( orderEntry.getScheduledDeliveryCharge());
+//					}
+//				}
+				if(null !=( (CartModel)abstractOrderModel).getScheduleDelCharge()) {
+					scheduleDeliveryCosts = ( (CartModel)abstractOrderModel).getScheduleDelCharge();
+				}
+				
+		        renderRow(scheduleDeliveryCosts, LabelUtils.getLabel(widget, "scheduleDeliveryCosts", new Object[0]), currencyInstance, container);
 
 				Double totalDeliveryCostDisc = 0D;
 				

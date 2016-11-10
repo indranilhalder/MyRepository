@@ -610,6 +610,15 @@
 			dynamic="true">
 			<value code="SELF_COURIER" />
 			<value code="REVERSE_PICKUP" />
+			<value code="SCHEDULE_PICKUP" />
+			<value code="QUICK_DROP" />
+		</enumtype>
+		
+		<enumtype code="RefundMode" autocreate="true" generate="true"
+			dynamic="true">
+			<value code="NEFT" />
+			<value code="IMPS" />
+			<value code="RTGS" />
 		</enumtype>
 
 		<enumtype code="FeedbackArea" autocreate="true" generate="true"
@@ -5082,6 +5091,13 @@
 						<modifiers optional="true" />
 						<persistence type="property" />
 					</attribute>
+					<attribute qualifier="scheduleDelCharge" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
 					<attribute qualifier="changeDeliveryTotalRequests" type="java.lang.Integer">
 	                   <modifiers optional="true" />
 	                   <defaultvalue>Integer.valueOf(0)</defaultvalue>
@@ -6249,6 +6265,13 @@
 					<!-- TISPRO-540 - Payment Type -->
 					<attribute qualifier="modeOfPayment" type="java.lang.String">
 						<modifiers optional="true" read="true" write="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="scheduleDelCharge" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
 					</attribute>
 					<!-- TISPRO-540 - Payment Type -->
@@ -9000,6 +9023,29 @@
 			</itemtype>
 		 </typegroup>
 		 
+<typegroup name="MplDeliveryAddressInfo">
+		<itemtype code="MplDeliveryAddressInfo" autocreate="true"  generate="true">
+				<description>Used to Change delivery address  report</description>
+				<deployment table="MplDeliveryAddressReport" typecode="15018" />
+				
+				<attributes>
+					<attribute qualifier="orderId" type="java.lang.String"  autocreate="true" generate="true">
+						<persistence type="property"/>
+						<modifiers read="true" write="true" search="true" optional="false" unique="true" />
+					</attribute>
+					<attribute  qualifier="changeDeliveryTotalRequests" type="java.lang.Integer"  autocreate="true" generate="true">
+						<persistence type="property"/>
+						<modifiers read="true" write="true" search="true"/>
+						<defaultvalue>Integer.valueOf(0)</defaultvalue>
+					</attribute>
+					<attribute  qualifier="changeDeliveryRejectsCount" type="java.lang.Integer"  autocreate="true" generate="true">
+						<persistence type="property"/>
+						<modifiers read="true" write="true" search="true"/>
+						<defaultvalue>Integer.valueOf(0)</defaultvalue>
+					</attribute>					
+				</attributes>
+			</itemtype>
+		 </typegroup>
 		 <typegroup name="BankDetailsInfoToFICO">
 			<itemtype code="BankDetailsInfoToFICOHistory" autocreate="true"
 				generate="true" jaloclass="com.tisl.mpl.core.jalo.BankDetailsInfoToFICOHistory">
