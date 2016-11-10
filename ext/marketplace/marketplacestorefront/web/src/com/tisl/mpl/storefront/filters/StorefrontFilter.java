@@ -45,6 +45,7 @@ public class StorefrontFilter extends OncePerRequestFilter
 {
 	public static final String AJAX_REQUEST_HEADER_NAME = "X-Requested-With";
 	public static final String ORIGINAL_REFERER = "originalReferer";
+	public static final String ISLUX = "isLux";
 
 	private StoreSessionFacade storeSessionFacade;
 	private BrowseHistory browseHistory;
@@ -114,7 +115,7 @@ public class StorefrontFilter extends OncePerRequestFilter
 		{
 			for (final Cookie cookie : cookies)
 			{
-				if (cookie.getName().equals("isLux"))
+				if (cookie.getName().equals(ISLUX))
 				{
 					isLuxCookie = cookie;
 					break;
@@ -124,11 +125,11 @@ public class StorefrontFilter extends OncePerRequestFilter
 
 		if (!request.getRequestURI().contains("login"))
 		{
-			if (null != request.getParameter("isLux") && "true".equalsIgnoreCase(request.getParameter("isLux")))
+			if (null != request.getParameter(ISLUX) && "true".equalsIgnoreCase(request.getParameter(ISLUX)))
 			{
 				if (null == isLuxCookie)
 				{
-					isLuxCookie = new Cookie("isLux", "true");
+					isLuxCookie = new Cookie(ISLUX, "true");
 					isLuxCookie.setPath("/");
 					response.addCookie(isLuxCookie);
 				}

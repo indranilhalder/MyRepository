@@ -43,6 +43,8 @@ public class OTPGenericServiceImpl implements OTPGenericService
 	private OTPDao otpDao;
 	private final DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 	private static final String OTP_ENABLED_STRING = "marketplace.otp.enabled";
+	private static final String VALID = "VALID";
+	private static final String INVALID = "INVALID";
 	private ConfigurationService configurationService;
 	private ModelService modelservice;
 	private UserService userService;
@@ -612,7 +614,7 @@ public class OTPGenericServiceImpl implements OTPGenericService
 		else
 		{
 			otpResponse.setOTPValid(Boolean.TRUE);
-			otpResponse.setInvalidErrorMessage("VALID");
+			otpResponse.setInvalidErrorMessage(VALID);
 			return otpResponse;
 		}
 
@@ -646,19 +648,19 @@ public class OTPGenericServiceImpl implements OTPGenericService
 					otpModel.setIsValidated(Boolean.TRUE);
 					getModelservice().save(otpModel);
 					otpResponse.setOTPValid(Boolean.TRUE);
-					otpResponse.setInvalidErrorMessage("VALID");
+					otpResponse.setInvalidErrorMessage(VALID);
 				}
 			}
 			else
 			{
 				otpResponse.setOTPValid(Boolean.FALSE);
-				otpResponse.setInvalidErrorMessage("INVALID");
+				otpResponse.setInvalidErrorMessage(INVALID);
 			}
 		}
 		else
 		{
 			otpResponse.setOTPValid(Boolean.FALSE);
-			otpResponse.setInvalidErrorMessage("INVALID");
+			otpResponse.setInvalidErrorMessage(INVALID);
 		}
 
 		return otpResponse;
@@ -690,7 +692,7 @@ public class OTPGenericServiceImpl implements OTPGenericService
 		else
 		{
 			otpResponse.setOTPValid(Boolean.TRUE);
-			otpResponse.setInvalidErrorMessage("VALID");
+			otpResponse.setInvalidErrorMessage(VALID);
 			return otpResponse;
 		}
 
@@ -724,19 +726,19 @@ public class OTPGenericServiceImpl implements OTPGenericService
 					otpModel.setIsValidated(Boolean.TRUE);
 					getModelservice().save(otpModel);
 					otpResponse.setOTPValid(Boolean.TRUE);
-					otpResponse.setInvalidErrorMessage("VALID");
+					otpResponse.setInvalidErrorMessage(VALID);
 				}
 			}
 			else
 			{
 				otpResponse.setOTPValid(Boolean.FALSE);
-				otpResponse.setInvalidErrorMessage("INVALID");
+				otpResponse.setInvalidErrorMessage(INVALID);
 			}
 		}
 		else
 		{
 			otpResponse.setOTPValid(Boolean.FALSE);
-			otpResponse.setInvalidErrorMessage("INVALID");
+			otpResponse.setInvalidErrorMessage(INVALID);
 		}
 
 		return otpResponse;
