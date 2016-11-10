@@ -24,7 +24,7 @@
 			<input type="hidden" name="isConceirge" id="isConceirge" value="${isConceirge}" />
 			<input type="hidden" name="isCategoryPage" id="isCategoryPage" value="${isCategoryPage}" />
 		
-			<span class="toggle-filterSerp">Filter By</span>
+			<span class="toggle-filterSerp" onclick="toggleFilter()">Filter By</span>
 		<ul id="product-facet " class="product-facet js-product-facet listing-leftmenu">
 		
 				<div class="facet-name js-facet-name">

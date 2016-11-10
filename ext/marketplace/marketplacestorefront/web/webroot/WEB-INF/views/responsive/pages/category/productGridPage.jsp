@@ -12,6 +12,9 @@
 <template:page pageTitle="${pageTitle}">
 <div class="list_title"><h1>${dropDownText}</h1></div>
 <div class="listing wrapper">
+	<div class="search-result">
+			<h2>&nbsp;</h2>
+	</div>
 	<div id="productGrid">	<!-- Div to be overridden by AJAX response : TPR-198 --> 
 	<c:if test="${searchPageData.pagination.totalNumberOfResults ne 0}">
 	<div class="left-block">
