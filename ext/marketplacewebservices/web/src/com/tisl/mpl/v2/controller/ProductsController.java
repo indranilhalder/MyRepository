@@ -291,8 +291,8 @@ public class ProductsController extends BaseController
 	@Cacheable(value = "productCache", key = "T(de.hybris.platform.commercewebservicescommons.cache.CommerceCacheKeyGenerator).generateKey(true,true,#productCode,#fields)")
 	@ResponseBody
 	public ProductDetailMobileWsData getProductByCode(@PathVariable String productCode,
-			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields, final HttpServletRequest request)
-			throws MalformedURLException
+			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields, final HttpServletRequest request,
+			@RequestParam(required = false) final String channel) throws MalformedURLException
 	{
 		ProductDetailMobileWsData product = new ProductDetailMobileWsData();
 
@@ -327,7 +327,8 @@ public class ProductsController extends BaseController
 					//+ MarketplacewebservicesConstants.FORGOTPASSWORD_URL;
 				}
 			}
-			product = mplProductWebService.getProductdetailsForProductCode(productCode, baseUrl);
+
+			product = mplProductWebService.getProductdetailsForProductCode(productCode, baseUrl, channel);
 			//TPR-978
 			final ProductAPlusWsData aPlusProductData = mplProductWebService.getAPluscontentForProductCode(productCode);
 			product.setAPlusContent(aPlusProductData);
@@ -348,6 +349,7 @@ public class ProductsController extends BaseController
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			product.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 			if (null != e.getErrorMessage())
 			{
 				product.setError(e.getErrorMessage());
@@ -356,7 +358,6 @@ public class ProductsController extends BaseController
 			{
 				product.setErrorCode(e.getErrorCode());
 			}
-			product.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		//TPR-799
 		catch (final Exception e)

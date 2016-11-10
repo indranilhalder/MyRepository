@@ -339,27 +339,27 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 					{
 						cart.setModeOfPayment(MarketplacewebservicesConstants.CREDIT);
 						cart.setConvenienceCharges(Double.valueOf(0.0));
-						getModelService().save(cart);
+						//getModelService().save(cart);
 					}
 					else if (StringUtils.isNotEmpty(paymentMode)
 							&& paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT))
 					{
 						cart.setModeOfPayment(MarketplacewebservicesConstants.DEBIT);
 						cart.setConvenienceCharges(Double.valueOf(0.0));
-						getModelService().save(cart);
+						//getModelService().save(cart);
 					}
 					else if (StringUtils.isNotEmpty(paymentMode)
 							&& paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING))
 					{
 						cart.setModeOfPayment(MarketplacewebservicesConstants.NETBANKING);
 						cart.setConvenienceCharges(Double.valueOf(0.0));
-						getModelService().save(cart);
+						//getModelService().save(cart);
 					}
 					else if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI))
 					{
 						cart.setModeOfPayment(MarketplacewebservicesConstants.EMI);
 						cart.setConvenienceCharges(Double.valueOf(0.0));
-						getModelService().save(cart);
+						//getModelService().save(cart);
 					}
 					else if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
 					{
@@ -371,14 +371,13 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 						}
 						//setting conv charge in cartmodel
 						cart.setConvenienceCharges(Double.valueOf(convenienceCharge.longValue()));
-						//saving the cartmodel
-						getModelService().save(cart);
 						//TISEE-5555
 						//getting customer mobile number
 						final String mplCustomerIDCellNumber = getMplPaymentFacade().fetchPhoneNumber(cart);
 						promoPriceData.setMobileNo(mplCustomerIDCellNumber);
 					}
-
+					//saving the cartmodel
+					getModelService().save(cart);
 
 					cartData = mplExtendedCartConverter.convert(cart);
 					//Note : Response will Have DTO within which will be a list of DTO with Promo Details
@@ -399,7 +398,6 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 							{
 								promoPriceData.setConvCharges(data.getConvCharge());
 							}
-
 							//Populating Delivery Charges
 							if (null != data.getDeliveryCost())
 							{
@@ -516,7 +514,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 						}
 					}
 
-					//TISPRO-540 - Setting Payment mode in Cart
+					//TISPRO-540 - Setting Payment mode (In order channel can't be set)
 					//order.setChannel(SalesApplication.MOBILE);
 					if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT))
 					{

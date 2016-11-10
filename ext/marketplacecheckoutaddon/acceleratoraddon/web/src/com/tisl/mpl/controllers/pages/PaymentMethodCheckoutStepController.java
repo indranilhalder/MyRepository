@@ -967,9 +967,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	public @ResponseBody String generateOTPforCOD(final Model model, final String mobileNumber, final String guid) //guid added as parameter TPR-629
 			throws InvalidKeyException, NoSuchAlgorithmException
 	{
+		//String mplCustomerID = "";
+		OrderModel orderModel = null;
 		try
 		{
-			OrderModel orderModel = null;
+
 			//OTP handled for both cart and order
 			if (StringUtils.isNotEmpty(guid))
 			{
@@ -1098,13 +1100,15 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			@PathVariable(MarketplacecheckoutaddonConstants.OTPNUMFIELD) final String enteredOTPNumber, final String guid)
 			throws InvalidKeyException, NoSuchAlgorithmException
 	{
-		//getting current user
-		final String mplCustomerID = getUserService().getCurrentUser().getUid();
+
 		boolean redirectFlag = false;
 		String validationMsg = "";
 		OrderModel orderModel = null;
+		String emailId = null;
 		try
 		{
+			//getting current user
+			emailId = getUserService().getCurrentUser().getUid();
 			//OTP handled for both cart and order
 			if (StringUtils.isNotEmpty(guid))
 			{
@@ -1169,9 +1173,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				else
 				{
 					//If customer is not null
-					if (null != mplCustomerID)
+					if (null != emailId)
 					{
-						validationMsg = getMplPaymentFacade().validateOTPforCODWeb(mplCustomerID, enteredOTPNumber);
+						validationMsg = getMplPaymentFacade().validateOTPforCODWeb(emailId, enteredOTPNumber);
 					}
 					else
 					{
@@ -1212,9 +1216,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 
 				//If customer is not null
-				if (null != mplCustomerID)
+				if (null != emailId)
 				{
-					validationMsg = getMplPaymentFacade().validateOTPforCODWeb(mplCustomerID, enteredOTPNumber);
+					validationMsg = getMplPaymentFacade().validateOTPforCODWeb(emailId, enteredOTPNumber);
 				}
 				else
 				{
@@ -1240,7 +1244,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		return validationMsg;
 	}
-
 
 
 

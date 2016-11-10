@@ -58777,3 +58777,16 @@ z-index:11;}
 .page-checkout-login .body-Content{
 	padding-top: 50px;
 }
+
+/*TISLUX-2855 Starts*/
+.store-finder-search #storeFinderForm label.control-label.sr-only{
+	  position: inherit;
+  width: auto;
+  height: auto;
+  margin-bottom: 5px;
+ }
+@media (max-width: 767px){
+.luxury-header {
+  margin-bottom:25px;
+}}
+/*TISLUX-2855 Ends*/
