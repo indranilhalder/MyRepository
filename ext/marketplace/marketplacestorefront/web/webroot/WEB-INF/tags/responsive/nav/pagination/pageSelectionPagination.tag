@@ -249,13 +249,13 @@
 						</spring:url>
 						<ycommerce:testId code="pageNumber_link">
 						
-							<li>
+							<%-- <li>
 							<!-- TISPRD-2315 -->
-							<a href="${newPaginationUrlDotPrev}" class="pagination_a_link">1</a>
+							<a href="${newPaginationUrlDotPrev}" class="pagination_a_link"><!-- 1 --></a>
 								<c:if test="${beginPage ne 2}">
-									...
+									<!-- ... -->
 								</c:if>
-							</li>
+							</li> --%>
 						</ycommerce:testId>
 					</c:when>
 				</c:choose>
@@ -265,14 +265,14 @@
 							test="${searchPageData.pagination.currentPage + 1 ne pageNumber}">
 							<!-- New pagination URL -->
 							<c:url var="newPaginationUrl" value="${fn:replace(searchUrl,'{pageNo}',pageNumber)}"></c:url>
-							<spring:url value="${searchUrl}" var="pageNumberUrl"
+							<%-- <spring:url value="${searchUrl}" var="pageNumberUrl"
 								htmlEscape="true">
 								<spring:param name="page" value="${pageNumber - 1}" />
-							</spring:url>
+							</spring:url> --%>
 							
 							<ycommerce:testId code="pageNumber_link">
 							<!-- TISPRD-2315 -->
-							<li><a href="${newPaginationUrl}" class="pagination_a_link">${pageNumber}</a></li>
+							<%-- <li><a href="${newPaginationUrl}" class="pagination_a_link">${pageNumber}</a></li> --%>
 							</ycommerce:testId>
 						</c:when>
 						<c:otherwise>
@@ -291,14 +291,14 @@
 								<spring:param name="page" value="${searchPageData.pagination.numberOfPages - 1}" />
 						</spring:url>
 						<ycommerce:testId code="pageNumber_link">
-						<li>
+						<%-- <li>
 						<!-- TISPRD-2315 -->
 						<c:if test="${searchPageData.pagination.currentPage ne (searchPageData.pagination.numberOfPages-4)}">
-							...
+							<!-- ... -->
 						</c:if>
 
 						   <a href="${newPaginationUrlDotsNext}" class="pagination_a_link">${searchPageData.pagination.numberOfPages}</a>
-						</li>
+						</li> --%>
 						</ycommerce:testId>
 					</c:when>
 				</c:choose>
