@@ -35029,6 +35029,9 @@ cursor: auto;
 .product-facet .filter-colour input[value='White_FFFFFF'] ~ .js-facet-colourbutton {
     border: 1px solid rgb(204, 211, 217) !important;
 }
+.listing.wrapper .right-block .listing-menu > div .pagination.mobile.tablet-pagination{
+display: none;
+}
 @media (max-width: 790px){
 .product-listing.product-grid li.product-item, .listing.wrapper .right-block .product-list > li{
     width: 33%;
@@ -35198,6 +35201,39 @@ position:static !important;
 .listing.wrapper .right-block .listing-menu > div .pagination.mobile{
 display:none;
 }
+/* TISQAEE-3 */
+.listing.wrapper .right-block .listing-menu > div .pagination.mobile.tablet-pagination{
+	display: inline-block;
+	position: absolute;
+    top: -10px;
+    right: 15px;
+    padding:0;
+}
+.listing.wrapper .right-block .listing-menu > div .pagination.mobile.tablet-pagination li.active{
+	width: 26px;
+    border: 1px #cccccc solid;
+    height: 24px;
+    text-align: center;
+}
+.listing.wrapper .right-block .listing-menu > div .pagination.mobile.tablet-pagination li.active span{
+    border-bottom: 0px;
+    line-height: 22px;
+}
+.listing.wrapper .right-block .listing-menu > div .pagination.mobile.tablet-pagination li.next{
+	padding-left: 5px;
+	position: relative;
+    top: -2px;
+}
+.listing.wrapper .right-block .listing-menu > div .pagination.mobile.tablet-pagination li.prev{
+	padding-right: 5px;
+	position: relative;
+    top: -2px;
+}
+.facet-list.filter-opt {
+    padding: 30px 85px 0;
+}
+/* TISQAEE-3 end */
+
 /*mobile filter*/
 .listing.wrapper .left-block .mob-filter-wrapper{
 width: 94%;
@@ -35607,6 +35643,15 @@ body.template-pages-category-productGridPage .trending h1,body.template-pages-se
     margin-top: 0 !important;
 }
 /*mobile filter*/
+
+/* TISQAEE-3 */
+.listing.wrapper .right-block .listing-menu > div .pagination.mobile.tablet-pagination{
+	display: none;
+}
+.facet-list.filter-opt {
+    padding: 30px 0 0 0;
+}
+/* TISQAEE-3 end */
 .mob-filter-wrapper .apply-clear{
 	width:100%;
 	position: fixed;
@@ -58774,6 +58819,25 @@ body.page-wishlist .body-Content .wrapper{
 z-index:11;}
 /*--------------Added for luxury site ends-----------*/
 
-.page-checkout-login .body-Content{
+/* .page-checkout-login .body-Content{
 	padding-top: 50px;
+} */
+
+/*TISLUX-2855 Starts*/
+.store-finder-search #storeFinderForm label.control-label.sr-only{
+	  position: inherit;
+  width: auto;
+  height: auto;
+  margin-bottom: 5px;
+ }
+@media (max-width: 767px){
+.luxury-header {
+  margin-bottom:25px;
+}}
+/*TISLUX-2855 Ends*/
+
+
+/* TISQAEE-24 */
+body.page-multiStepCheckoutSummaryPage #flip-tabs, body.page-checkout-login header .content .top, body.page-checkout-login #flip-tabs, body.page-multiStepCheckoutSummaryPage header .content .top{
+display: none;
 }

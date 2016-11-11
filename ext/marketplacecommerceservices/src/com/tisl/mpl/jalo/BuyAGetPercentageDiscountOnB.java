@@ -29,9 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -55,6 +53,7 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 	private boolean categoryFlag = false;
 	private int noOfProducts = 0;
 	private Map<AbstractOrderEntry, String> productSellerDetails = null;
+	Map<String, AbstractOrderEntry> validProductUssidAandB = null;
 
 	private int productACount = 0;
 	private int productBCount = 0;
@@ -73,7 +72,7 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.promotions.jalo.AbstractPromotion#evaluate(de.hybris.platform.jalo.SessionContext,
 	 * de.hybris.platform.promotions.result.PromotionEvaluationContext)
 	 */
@@ -124,7 +123,7 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 				LOG.debug("Promotion Restriction and Channel Satisfied");
 				final Map<String, AbstractOrderEntry> validProductUssidMap = getValidProductList(cart, ctx);
 
-				if (!getDefaultPromotionsManager().promotionAlreadyFired(ctx, validProductUssidMap))
+				if (!getDefaultPromotionsManager().promotionAlreadyFired(ctx, validProductUssidAandB))
 				{
 					isMultipleSeller = getMplPromotionHelper().checkMultipleSeller(restrictionList);
 					if (isMultipleSeller)
@@ -232,20 +231,22 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 	private Map<String, AbstractOrderEntry> getValidProductList(final AbstractOrder cart, final SessionContext ctx)
 	{
 		//final Map<String, Integer> validUssidList = new HashMap<String, Integer>();
+		boolean sellerFlag = false;
+		boolean brandFlag = false;
+		String sellerID = MarketplacecommerceservicesConstants.EMPTY;
 		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());
 		final Map<String, AbstractOrderEntry> validProductUssidMap = new HashMap<String, AbstractOrderEntry>();
-		final List<Product> promotionProductListB = new ArrayList<Product>(getSecondProducts());
+		validProductUssidAandB = new HashMap<String, AbstractOrderEntry>();
+		final List<Product> promotionProductList = new ArrayList<>(getProducts());
+		final List<Category> promotionCategoryList = new ArrayList<>(getCategories());
+
+
+		final List<Product> promotionSecProductList = new ArrayList<>(getSecondProducts());
+		final List<Category> promotionSecCategoryList = new ArrayList<>(getSecondCategories());
+
 		try
 		{
-			boolean sellerFlag = false;
-			boolean brandFlag = false;
-			String sellerID = MarketplacecommerceservicesConstants.EMPTY;
-			final List<Product> promotionProductList = new ArrayList<>(getProducts());
-			final List<Category> promotionCategoryList = new ArrayList<>(getCategories());
 
-
-			final List<Product> promotionSecProductList = new ArrayList<>(getSecondProducts());
-			final List<Category> promotionSecCategoryList = new ArrayList<>(getSecondCategories());
 
 
 			//int productQty = 0;
@@ -291,6 +292,8 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 				{
 					if (promotionSecProductList.contains(product))
 					{
+						applyPromotion = true;
+						brandFlag = true;
 						sellerFlag = getDefaultPromotionsManager().checkSellerData(ctx, restrictionList, entry);
 						if (sellerFlag)
 						{
@@ -321,30 +324,31 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 
 				//Code snippet for TPR-961
 
-				if (applyPromotion && sellerFlag && brandFlag && CollectionUtils.isNotEmpty(promotionProductListB)
-						&& CollectionUtils.isNotEmpty(cart.getEntries()))
+				if (applyPromotion && sellerFlag && brandFlag)
 				{
-					for (final AbstractOrderEntry orderEntry : cart.getEntries())
+
+
+
+					if (isExistInPromotion(entry))
 					{
-
-						if (isExistInPromotion(orderEntry))
-						{
-
-							validProductUssidMap.put(entry.getAttribute(ctx, MarketplacecommerceservicesConstants.SELECTEDUSSID)
-									.toString(), orderEntry);
-						}
-						else
-						{
-							LOG.debug("No Valid Products are there in the Cart Or Promotion does not contain any vaild products ");
-						}
-
+						validProductUssidMap.put(
+								entry.getAttribute(ctx, MarketplacecommerceservicesConstants.SELECTEDUSSID).toString(), entry);
 					}
-
-					//validProductUssidMap.putAll(getDefaultPromotionsManager().populateValidProductUssidMap(product, cart,restrictionList, ctx, entry));
-					sellerID = getDefaultPromotionsManager().getSellerID(ctx, restrictionList, entry);
-					productSellerDetails.put(entry, sellerID);
-
+					validProductUssidAandB.put(entry.getAttribute(ctx, MarketplacecommerceservicesConstants.SELECTEDUSSID).toString(),
+							entry);
 				}
+				else
+				{
+					LOG.debug("No Valid Products are there in the Cart Or Promotion does not contain any vaild products ");
+				}
+
+
+
+				//validProductUssidMap.putAll(getDefaultPromotionsManager().populateValidProductUssidMap(product, cart,restrictionList, ctx, entry));
+				sellerID = getDefaultPromotionsManager().getSellerID(ctx, restrictionList, entry);
+				productSellerDetails.put(entry, sellerID);
+
+
 			}
 		}
 		catch (final EtailBusinessExceptions e)
@@ -429,11 +433,11 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 			eligibleList.add(entry.getProduct());
 		}
 		final PromotionOrderView view = evaluationContext.createView(ctx, this, eligibleList);
-		final Map<String, Integer> tcMapForValidEntries = new ConcurrentHashMap<String, Integer>();
-		for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
-		{
-			tcMapForValidEntries.put(mapEntry.getKey(), Integer.valueOf(mapEntry.getValue().getQuantity().intValue()));
-		}
+		//		final Map<String, Integer> tcMapForValidEntries = new ConcurrentHashMap<String, Integer>();
+		//		for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
+		//		{
+		//			tcMapForValidEntries.put(mapEntry.getKey(), Integer.valueOf(mapEntry.getValue().getQuantity().intValue()));
+		//		}
 		//*****Added for TPR-3654
 
 
@@ -469,11 +473,11 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 
 			//getting eligible Product List from ussid map
 
-			final List<Product> eligibleProductList = new ArrayList<Product>();
-			for (final AbstractOrderEntry orderEntry : validProductUssidMap.values())
-			{
-				eligibleProductList.add(orderEntry.getProduct());
-			}
+			//			final List<Product> eligibleProductList = new ArrayList<Product>();
+			//			for (final AbstractOrderEntry orderEntry : validProductUssidMap.values())
+			//			{
+			//				eligibleProductList.add(orderEntry.getProduct());
+			//			}
 			final Map<String, Integer> qCount = new HashMap<String, Integer>();
 			for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
 			{
@@ -491,6 +495,13 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 			ctx.setAttribute(MarketplacecommerceservicesConstants.PROMOCODE, String.valueOf(this.getCode()));
 			ctx.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, productAssociatedItemsMap);
 			ctx.setAttribute(MarketplacecommerceservicesConstants.ISPERCENTAGEDISC, Boolean.valueOf(isPercentageDisc));
+			for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidAandB.entrySet())
+			{
+				final AbstractOrderEntry entry = mapEntry.getValue();
+				final List<PromotionOrderEntryConsumed> consumed = new ArrayList<PromotionOrderEntryConsumed>();
+				consumed.add(getDefaultPromotionsManager().consume(ctx, this, entry.getQuantity().longValue(),
+						entry.getQuantity().longValue(), entry));
+			}
 
 			//for (final Map.Entry<Product, Integer> mapEntry : validProductList.entrySet())
 			for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
@@ -505,15 +516,17 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 
 				if (percentageDiscount < 100)
 				{
-					final double adjustment = -(entry.getBasePrice().doubleValue() * percentageDiscountvalue * entry.getQuantity()
-							.doubleValue());
+					//					final double adjustment = -(entry.getBasePrice().doubleValue() * percentageDiscountvalue * entry.getQuantity()
+					//							.doubleValue());
+
+					final double adjustment = -(entry.getTotalPriceAsPrimitive() * percentageDiscountvalue);
 
 					//Added for TPR-3654
 					final List<PromotionOrderEntryConsumed> consumed = new ArrayList<PromotionOrderEntryConsumed>();
 					consumed.add(getDefaultPromotionsManager().consume(ctx, this, entry.getQuantity().longValue(),
 							entry.getQuantity().longValue(), entry));
-					tcMapForValidEntries.put(entry.getAttribute(ctx, MarketplacecommerceservicesConstants.SELECTEDUSSID).toString(),
-							Integer.valueOf(entry.getQuantity().intValue()));
+					//					tcMapForValidEntries.put(entry.getAttribute(ctx, MarketplacecommerceservicesConstants.SELECTEDUSSID).toString(),
+					//							Integer.valueOf(entry.getQuantity().intValue()));
 					for (final PromotionOrderEntryConsumed poec : consumed)
 					{
 						if (adjustment < 0)
@@ -531,8 +544,11 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 					LOG.debug("Adjustment" + adjustment);
 					final PromotionResult result = promotionsManager.createPromotionResult(ctx, this, evaluationContext.getOrder(),
 							1.0F);
-					final CustomBuyAgetPercentageDiscountOnBAdjustAction poeac = getDefaultPromotionsManager()
-							.createCustomBuyAgetPercentageDiscountOnBAdjustAction(ctx, entry, quantityOfOrderEntry, adjustment);
+					//					final CustomBuyAgetPercentageDiscountOnBAdjustAction poeac = getDefaultPromotionsManager()
+					//							.createCustomBuyAgetPercentageDiscountOnBAdjustAction(ctx, entry, quantityOfOrderEntry, adjustment);
+
+					final CustomPromotionOrderEntryAdjustAction poeac = getDefaultPromotionsManager()
+							.createCustomPromotionOrderEntryAdjustAction(ctx, entry, quantityOfOrderEntry, adjustment);
 
 					//final List consumed = evaluationContext.finishLoggingAndGetConsumed(this, true);
 					result.setConsumedEntries(ctx, consumed);

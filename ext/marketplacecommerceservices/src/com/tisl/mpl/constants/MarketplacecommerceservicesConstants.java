@@ -1714,6 +1714,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String IS_LUXURY = "0".intern();
 	public static final String IS_MARKETPLACE = "0".intern();
 
+	public static final String LATESTOTPQUERY = "select {o.pk} from {otp as o} where {o.customerid}=?customerPK and {o.otptype}=?OTPType and {o.isvalidated}='0' order by {creationtime} desc fetch first 1 rows only";
+	public static final String LATESTOTPMOBILEQUERY = "select {o.pk} from {otp as o} where {o.emailid}=?emailId and {o.mobileNo}=?mobileNo and {o.otptype}=?OTPType and {o.isvalidated}='0' order by {creationtime} desc fetch first 1 rows only";
+	public static final String LATESTOTPEMAILQUERY = "select {o.pk} from {otp as o} where {o.emailid}=?emailId and {o.otptype}=?OTPType and {o.isvalidated}='0' order by {creationtime} desc fetch first 1 rows only";
+	public static final String LATESTOTPQUERYINV = "select {o.pk} from {otp as o} where {o.emailid}=?emailId and {o.otptype}=?OTPType order by {creationtime} desc fetch first 1 rows only";
+
 	private MarketplacecommerceservicesConstants()
 	{
 		//empty to avoid instantiating this constant class
@@ -1761,4 +1766,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String MEGANAVNODE = "luxury.root.navigation.node.id";
 
 	public static final String LUXURY_CARTICON = "luxuryCartIcon";
+
+	//Luxury Changes
+	public static final String MARKETPLACE = "marketplace";
+	public static final String LUXURY = "luxury";
+	public static final String MSH = "MSH";
+	public static final String LSH = "LSH";
+
 }
