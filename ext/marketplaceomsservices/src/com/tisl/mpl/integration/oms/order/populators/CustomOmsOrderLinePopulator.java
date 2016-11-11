@@ -31,15 +31,15 @@ import com.hybris.oms.domain.order.OrderlineFulfillmentType;
 import com.hybris.oms.domain.order.Promotion;
 import com.hybris.oms.domain.types.Amount;
 import com.hybris.oms.domain.types.Quantity;
-import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplaceomsservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
-import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.globalcodes.utilities.MplCodeMasterUtility;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplSellerMasterService;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.model.SellerMasterModel;
 
 
 /**
@@ -57,7 +57,10 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 	private ProductAttributeStrategy productAttributeStrategy;
 	private OrderEntryNoteStrategy orderEntryNoteStrategy;
 	private OndemandTaxCalculationService ondemandTaxCalculationService;
+	private MplSellerMasterService mplSellerMasterService;
 
+
+	
 
 	@Override
 	public void populate(final OrderEntryModel source, final OrderLine target) throws ConversionException
@@ -357,6 +360,20 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			target.setUnitTax(new Amount(source.getOrder().getCurrency().getIsocode(), Double.valueOf(0.0)));
 			target.setTaxCategory(MarketplaceomsservicesConstants.TAX_CATEGORY);
 
+
+			//added new attribute isLPAWBEdit for orderLine
+			final SellerMasterModel sellerMasterModel = getMplSellerMasterService().getSellerMaster(sellerInfoModel.getSellerID());
+			if (sellerMasterModel != null && sellerMasterModel.getIsLPAWBEdit() != null)
+			{
+				if (MarketplaceomsservicesConstants.Y.equalsIgnoreCase(sellerMasterModel.getIsLPAWBEdit()))
+				{
+					target.setIsLPAWBEdit(Boolean.TRUE);
+				}
+				else
+				{
+					target.setIsLPAWBEdit(Boolean.FALSE);
+				}
+			}
 		}
 		else
 		{
@@ -498,4 +515,14 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 	{
 		this.mplSellerInformationService = mplSellerInformationService;
 	}
+
+	/**
+	 * @return the mplSellerMasterService
+	 */
+	public MplSellerMasterService getMplSellerMasterService()
+	{
+		return mplSellerMasterService;
+	}
+
+	
 }
