@@ -444,8 +444,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 				}
 
 				setUpMetaDataForContentPage(model, categoryLandingPage);
-				model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY, categoryName.replaceAll(SPECIAL_CHARACTERS, "")
-						.replaceAll(" ", "_").toLowerCase());
+				//				model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY, categoryName.replaceAll(SPECIAL_CHARACTERS, "")
+				//						.replaceAll(" ", "_").toLowerCase());
 				model.addAttribute(WebConstants.BREADCRUMBS_KEY,
 						getSearchBreadcrumbBuilder().getBreadcrumbs(categoryCode, categoryName, false));
 				populateModel(model, searchPageData, ShowMode.Page);
@@ -510,6 +510,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 					setUpMetaDataForContentPage(model, categoryLandingPage);
 
+					model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY, categoryName.replaceAll(SPECIAL_CHARACTERS, "")
+							.replaceAll(" ", "_").toLowerCase());
 					model.addAttribute(WebConstants.BREADCRUMBS_KEY,
 							getSearchBreadcrumbBuilder().getBreadcrumbs(categoryCode, categoryName, false));
 					populateModel(model, searchPageData, ShowMode.Page);

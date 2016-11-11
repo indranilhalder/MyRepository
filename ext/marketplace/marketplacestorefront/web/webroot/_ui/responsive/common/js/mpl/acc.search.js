@@ -137,7 +137,11 @@ function constructDepartmentHierarchy(inputArray) {
 					//Changes Added for TOR-488
 					//$('#q').val($('#text').val() + ":relevance:category:" + node.categoryCode);
 					//$('#searchCategoryTree').val(node.categoryCode);
+					// alert($('#q').val());
+					 //TISQAEE-14
+					 if($('#q').val().indexOf(node.categoryCode)==-1){
 					 $('#q').val(searchQuery +":category:" + node.categoryCode);
+					 }
 					 $('#searchCategoryTree').val(node.categoryCode);
 					
 				} 
