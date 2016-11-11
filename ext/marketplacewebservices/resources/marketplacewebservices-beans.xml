@@ -375,7 +375,8 @@
 
 	</bean>
 
-	<bean class="de.hybris.platform.commercewebservicescommons.dto.user.AddressListWsDTO">
+	<bean
+		class="de.hybris.platform.commercewebservicescommons.dto.user.AddressListWsDTO">
 		<property name="status" type="String" />
 		<property name="error" type="String" />
 		<property name="errorCode" type="String" />
@@ -639,35 +640,38 @@
 			type="java.util.List&lt;de.hybris.platform.commercewebservicescommons.dto.user.AddressListWsDTO>" />
 		<property name="deliveryDetails"
 			type="de.hybris.platform.commercewebservicescommons.dto.user.AddressWsDTO" />
-	<!-- Potential Promotion Details	-->
-			<property name="selectedDeliveryMode" type="com.tisl.mpl.wsdto.MobdeliveryModeWsDTO" />
-			<property name="elligibleDeliveryMode" type="java.util.List&lt;com.tisl.mpl.wsdto.MobdeliveryModeWsDTO>" />
-			<property name="fullfillmentType" type="String" />
-			<property name="capacity" type="String" />
-			<property name="isGiveAway" type="String" />
-			<property name="associatedBaseProducts" type="java.util.List&lt;String>" />
-			<property name="freeItem" type="com.tisl.mpl.wsdto.FreebieDTO" />
-			<property name="cartLevelDisc" type="java.lang.Double" />
-			<property name="cartLevelDiscount" type="String" />
-			<property name="productLevelDisc" type="java.lang.Double" />
-			<property name="cartLevelDiscDesc" type="String" />
-			<property name="productLevelDiscDesc" type="String" />
-			<property name="sizeSelected" type="String" />
-			<property name="rootCategory" type="String" />
-			<property name="productLevelDiscount" type="java.lang.Double" />
-			<property name="productCategoryId" type="String" />
-			<!--  Added for luxury -->
-			<property name="isLuxury" type="String" /> 
-			
-			
-			<!-- 	-->	
-			<property name="discountPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
-			<property name="isPercentage" type="String" />
-			<property name="percentagePromotion" type="String" />
-			<property name="cartDiscountPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
-			<property name="cartIsPercentage" type="String" />
-			<property name="cartPercentagePromotion" type="String" />
-			<property name="trackingAWB" type="String" />
+	<!-- Potential Promotion Details -->
+		<property name="selectedDeliveryMode" type="com.tisl.mpl.wsdto.MobdeliveryModeWsDTO" />
+		<property name="elligibleDeliveryMode"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.MobdeliveryModeWsDTO>" />
+		<property name="fullfillmentType" type="String" />
+		<property name="capacity" type="String" />
+		<property name="isGiveAway" type="String" />
+		<property name="associatedBaseProducts" type="java.util.List&lt;String>" />
+		<property name="freeItem" type="com.tisl.mpl.wsdto.FreebieDTO" />
+		<property name="cartLevelDisc" type="java.lang.Double" />
+		<property name="cartLevelDiscount" type="String" />
+		<property name="productLevelDisc" type="java.lang.Double" />
+		<property name="cartLevelDiscDesc" type="String" />
+		<property name="productLevelDiscDesc" type="String" />
+		<property name="sizeSelected" type="String" />
+		<property name="rootCategory" type="String" />
+		<property name="productLevelDiscount" type="java.lang.Double" />
+		<property name="productCategoryId" type="String" />
+		<!-- Added for luxury -->
+		<property name="isLuxury" type="String" />
+
+
+		<!-- -->
+		<property name="discountPrice"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="isPercentage" type="String" />
+		<property name="percentagePromotion" type="String" />
+		<property name="cartDiscountPrice"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="cartIsPercentage" type="String" />
+		<property name="cartPercentagePromotion" type="String" />
+		<property name="trackingAWB" type="String" />
 		<property name="returnAWB" type="String" />
 		<property name="storeDetails"
 			type="de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO" />
@@ -972,24 +976,25 @@
 			type="java.util.List&lt;com.tisl.mpl.wsdto.FreebieDTO>"></property>
 		<property name="isProductNew" type="java.lang.String"></property>
 		<property name="sellerAssociationstatus" type="String" />
-		<!-- TPR-797 changed as per mail-->
+		<!-- TPR-797 changed as per mail -->
 		<property name="discount" type="String" />
 
-		<property name="productOfferMsg"  type="com.tisl.mpl.wsdto.ProductOfferMsgDTO" />	
+		<property name="productOfferMsg" type="com.tisl.mpl.wsdto.ProductOfferMsgDTO" />
 		<property name="allOOStock" type="Boolean" />
-		<property name="aPlusContent" type="com.tisl.mpl.wsdto.ProductAPlusWsData"/>
+		<property name="aPlusContent" type="com.tisl.mpl.wsdto.ProductAPlusWsData" />
 
 		<!-- Added for luxury products -->
 		<property name="luxIndicator" type="String" />
 
 	</bean>
-	<!-- 		Added for OfferDetail of  a product TPR-TPR-1299 -->
+	<!-- Added for OfferDetail of a product TPR-TPR-1299 -->
 	<bean class="com.tisl.mpl.wsdto.ProductOfferMsgDTO">
-	<property name="messageDetails" type="String" />
-	<property name="messageID" type="String" />
-	<property name="startDate" type="String" />
-	<property name="endDate" type="String" /></bean>
-	
+		<property name="messageDetails" type="String" />
+		<property name="messageID" type="String" />
+		<property name="startDate" type="String" />
+		<property name="endDate" type="String" />
+	</bean>
+
 	<bean class="com.tisl.mpl.wsdto.KnowMoreDTO">
 		<property name="knowMoreItem" type="java.lang.String"></property>
 	</bean>
@@ -1088,7 +1093,7 @@
 			type="java.util.List&lt;com.tisl.mpl.wsdto.PotentialRestrictionData>" />
 		<property name="status" type="String" />
 		<property name="error" type="String" />
-		<property name="errorCode" type="String" />	
+		<property name="errorCode" type="String" />
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.PotentialRestrictionData">
@@ -1096,7 +1101,7 @@
 		<property name="paymentModePromotion" type="java.util.List&lt;String>" />
 	</bean>
 
-	<bean class="com.tisl.mpl.wsdto.PaymentServiceWsDTO" >
+	<bean class="com.tisl.mpl.wsdto.PaymentServiceWsDTO">
 		<property name="bankName" type="String"></property>
 		<property name="bankCode" type="String"></property>
 		<property name="basestore" type="String"></property>
@@ -1105,7 +1110,7 @@
 		<property name="paymentModes" type="java.util.Map&lt;String,Boolean>" />
 		<property name="status" type="String" />
 		<property name="error" type="String" />
-		<property name="errorCode" type="String" />	
+		<property name="errorCode" type="String" />
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.PaymentResultWsData" extends="com.tisl.mpl.wsdto.ErrorDTO">
@@ -1658,14 +1663,32 @@
 		<property name="componentType" type="String" />
 	</bean>
 
-	<!-- <bean class="com.tisl.mpl.wsdto.TextComponentWsDTO">
+	<!-- <bean class="com.tisl.mpl.wsdto.TextComponentWsDTO"> <property name="text" 
+		type="String" /> <property name="type" type="String" /> <property name="typeId" 
+		type="String" /> <property name="typeVal" type="String" /> </bean> -->
+
+	<!-- <bean class="com.tisl.mpl.wsdto.ProductListComponentWsDTO"> <property 
+		name="image" type="String" /> <property name="name" type="String" /> <property 
+		name="price" type="String" /> <property name="slashedPrice" type="String" 
+		/> <property name="url" type="String" /> <property name="type" type="String" 
+		/> <property name="typeId" type="String" /> <property name="typeVal" type="String" 
+		/> -->
+
+	<!-- <bean class="com.tisl.mpl.wsdto.BannerComponentWsDTO"> <property name="image" 
+		type="String" /> <property name="url" type="String" /> <property name="type" 
+		type="String" /> <property name="typeId" type="String" /> <property name="typeVal" 
+		type="String" /> <property name="imageDiscription" type="String" /> <property 
+		name="componentType" type="String" /> </bean> -->
+
+	<bean class="com.tisl.mpl.wsdto.TextComponentWsDTO">
 		<property name="text" type="String" />
 		<property name="type" type="String" />
 		<property name="typeId" type="String" />
 		<property name="typeVal" type="String" />
-	</bean> -->
+		<property name="title" type="String" />
+	</bean>
 
-	<!-- <bean class="com.tisl.mpl.wsdto.ProductListComponentWsDTO">
+	<bean class="com.tisl.mpl.wsdto.ProductListComponentWsDTO">
 		<property name="image" type="String" />
 		<property name="name" type="String" />
 		<property name="price" type="String" />
@@ -1673,35 +1696,7 @@
 		<property name="url" type="String" />
 		<property name="type" type="String" />
 		<property name="typeId" type="String" />
-		<property name="typeVal" type="String" /> -->
-
- <!--  <bean class="com.tisl.mpl.wsdto.BannerComponentWsDTO">
-    	<property name="image" type="String" />
-    	<property name="url" type="String" />
-    	<property name="type" type="String" />
-    	<property name="typeId" type="String" />
-    	<property name="typeVal" type="String" />
-    	<property name="imageDiscription" type="String" />
-	<property name="componentType" type="String" />
-    </bean>  -->
-    
-     <bean class="com.tisl.mpl.wsdto.TextComponentWsDTO">
-        <property name="text" type="String" />
-        <property name="type" type="String" />
-    	<property name="typeId" type="String" />
-    	<property name="typeVal" type="String" />
-    	<property name="title" type="String" />
-    </bean>
-    
-     <bean class="com.tisl.mpl.wsdto.ProductListComponentWsDTO">
-    	<property name="image" type="String" />
-    	<property name="name" type="String" />
-    	<property name="price" type="String" />
-    	<property name="slashedPrice" type="String" />
-    	<property name="url" type="String" />
-    	<property name="type" type="String" />
-    	<property name="typeId" type="String" />
-    	<property name="typeVal" type="String" />
+		<property name="typeVal" type="String" />
 		<property name="productID" type="String" />
 		<property name="componentType" type="String" />
 	</bean>
@@ -1716,10 +1711,11 @@
 		<property name="componentType" type="String" />
 	</bean>
 
-    <bean class="com.tisl.mpl.wsdto.ProductComponentWsDTO">
-    	<property name="productList" type="java.util.List&lt;com.tisl.mpl.wsdto.ProductListComponentWsDTO>"/>
-       	<property name="componentType" type="String" />
-    </bean> 
+	<bean class="com.tisl.mpl.wsdto.ProductComponentWsDTO">
+		<property name="productList"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.ProductListComponentWsDTO>" />
+		<property name="componentType" type="String" />
+	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.MplPageWsDTO">
 		<property name="sectionId" type="String" />
@@ -1729,7 +1725,8 @@
 			type="java.util.List&lt;com.tisl.mpl.wsdto.BannerComponentWsDTO>" />
 		<property name="productComponents"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.ProductListComponentWsDTO>" />
-			<property name="productSliderComponents" type="java.util.List&lt;com.tisl.mpl.wsdto.ProductComponentWsDTO>"/>
+		<property name="productSliderComponents"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.ProductComponentWsDTO>" />
 		<property name="bannerslistComponents"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.ImageListComponentWsDTO>" />
 		<property name="sectionName" type="String" />
@@ -1802,8 +1799,15 @@
 
 		<property name="keywordRedirectUrl" type="String" />
 		<!-- <property name="facets" type="java.util.List&lt;de.hybris.platform.commercewebservicescommons.dto.search.facetdata.FacetWsDTO>"/> -->
-		<!-- <property name="facetdata"
+		<!-- <property name="facetdata" type="java.util.List&lt;com.tisl.mpl.wsdto.FacetDataWsDTO>" 
+			/> <property name="sorts" type="java.util.List&lt;de.hybris.platform.commercewebservicescommons.dto.search.pagedata.SortWsDTO>" 
+			/> <property name="pagination" type="de.hybris.platform.commercewebservicescommons.dto.search.pagedata.PaginationWsDTO" 
+			/> <property name="currentQuery" type="de.hybris.platform.commercewebservicescommons.dto.search.SearchStateWsDTO" 
+			/> <property name="facetdatacategory" type="com.tisl.mpl.wsdto.DepartmentHierarchyWs" 
+			/> -->
 
+
+		<property name="facetdata"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.FacetDataWsDTO>" />
 		<property name="sorts"
 			type="java.util.List&lt;de.hybris.platform.commercewebservicescommons.dto.search.pagedata.SortWsDTO>" />
@@ -1811,20 +1815,10 @@
 			type="de.hybris.platform.commercewebservicescommons.dto.search.pagedata.PaginationWsDTO" />
 		<property name="currentQuery"
 			type="de.hybris.platform.commercewebservicescommons.dto.search.SearchStateWsDTO" />
-		<property name="facetdatacategory" type="com.tisl.mpl.wsdto.DepartmentHierarchyWs" /> -->
-
-
-        <property name="facetdata" type="java.util.List&lt;com.tisl.mpl.wsdto.FacetDataWsDTO>"/>
-		<property name="sorts" type="java.util.List&lt;de.hybris.platform.commercewebservicescommons.dto.search.pagedata.SortWsDTO>"/> 
-		<property name="pagination" type="de.hybris.platform.commercewebservicescommons.dto.search.pagedata.PaginationWsDTO"/>
-		<property name="currentQuery" type="de.hybris.platform.commercewebservicescommons.dto.search.SearchStateWsDTO"/>
-		<property name="facetdatacategory"
-		          type="com.tisl.mpl.wsdto.DepartmentHierarchyWs"/>
-		 <!-- Added for Luxury -->
-		<property name="crosssellBanner"
-		          type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO"/>
-		<property name="plpHeroBanner"
-		          type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO"/>
+		<property name="facetdatacategory" type="com.tisl.mpl.wsdto.DepartmentHierarchyWs" />
+		<!-- Added for Luxury -->
+		<property name="crosssellBanner" type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO" />
+		<property name="plpHeroBanner" type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO" />
 		<!-- Ended -->
 
 	</bean>
@@ -2264,7 +2258,7 @@
 	</bean>
 
 	<bean
-		class="de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData"	>
+		class="de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData">
 		<property name="sellerId" type="String" />
 		<property name="slaveId" type="String" />
 		<property name="clicknCollect" type="String" />
@@ -2317,7 +2311,7 @@
 		<property name="regularImgUrl" type="String" />
 		<property name="onHoverImgUrl" type="String" />
 		<property name="onClickImgUrl" type="String" />
-		
+
 		<property name="status" type="String" />
 		<property name="error" type="String" />
 		<property name="errorCode" type="String" />
@@ -2406,295 +2400,356 @@
 
 	<bean class="com.tisl.mpl.wsdto.ReleaseCouponsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
 
-    <!--  <bean class="com.tisl.mpl.wsdto.ReleaseCouponsDTO"> -->
+		<!-- <bean class="com.tisl.mpl.wsdto.ReleaseCouponsDTO"> -->
 		<property name="status" type="String" />
-		<property name="error" type="String"/>
-		<property name="errorCode" type="String"/>	
+		<property name="error" type="String" />
+		<property name="errorCode" type="String" />
 
 		<property name="total" type="String" />
 	</bean>
 
- 	<!-- TPR-816 -->
+	<!-- TPR-816 -->
 	<bean class="com.tisl.mpl.wsdto.CategoryBrandDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="name" type="String" />
 		<property name="type" type="String" />
 		<property name="code" type="String" />
 	</bean>
-	
+
 	<!-- TPR-978 -->
 	<bean class="com.tisl.mpl.wsdto.ProductContentWsData" extends="com.tisl.mpl.wsdto.ErrorDTO">
-		<property name="section" type="String" />		
+		<property name="section" type="String" />
 		<property name="textList" type="java.util.List&lt;java.lang.String>"></property>
 		<property name="imageList" type="java.util.List&lt;java.lang.String>"></property>
 		<property name="videoList" type="java.util.List&lt;java.lang.String>"></property>
 	</bean>
-<!-- Luxury Homepage -->
+	<!-- Luxury Homepage -->
 
-    <bean class="com.tisl.mpl.wsdto.LuxHomePageCompWsDTO">
-    	<property name="sectionId" type="String" />
-    	<property name="Components" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxComponentsListWsDTO>"/>
-    	<property name="pageTitle" type="String" />
-    	<property name="metaKeywords" type="String" />
-    	<property name="metaDescription" type="String" />
-    </bean>
- 	<bean class="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO">
-    	<property name="bannerMedia" type="String" />
-    	<property name="bannerUrl" type="String" />
-    	<property name="timeout" type="int" />
-    	<property name="bannerNumber" type="int" /> 	
-    	<property name="bannerText" type="String" /> 
-    	<property name="resolution" type="String" />
-    	<property name="altText" type="String" /> 
-    	<property name="icid" type="String" /> 
-    	<property name="position" type="Integer"/>
-    	
-    </bean>
-    <bean class="com.tisl.mpl.wsdto.LuxSignatureWsDTO">
-    	<property name="brandLogoUrl" type="String" />
-    	<property name="brandBannerImageUrl" type="String" />
-    	<property name="brandBannerUrl" type="String" /> 
-    	<property name="brandBannerText" type="String" /> 
-    	<property name="showByDefault" type="boolean" /> 
-    	<property name="brandProducts" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxBrandProductsListWsDTO>"/>		
-    </bean>
- 	<bean class="com.tisl.mpl.wsdto.LuxBrandProductsListWsDTO">
-    	<property name="productId" type="String" />
-    	<property name="productUrl" type="String" />
-    	<property name="productImageUrl" type="String" /> 
-    	<property name="productTitle" type="String" /> 
-    	<property name="productMRP" type="String"/>
-    	<property name="productMOP" type="String"/>
-    	<property name="productSpecialPrice" type="String"/>
-    	<property name="productBrand" type="String"/>
-    	<property name="position" type="Integer"/>
-    			
-    </bean>
-    <bean class="com.tisl.mpl.wsdto.LuxShopYourFavListWsDTO">
-    	<property name="categoryId" type="String"/>
-    	<property name="categoryImageUrl" type="String" />
-    	<property name="mobileCategoryImageUrl" type="String" />
-    	<property name="categoryName" type="String"/> 
-    	<property name="categoryUrl" type="String"/> 
-    	<property name="altText" type="String"/> 
-    	<property name="position" type="Integer"/>
-    </bean>
-     <bean class="com.tisl.mpl.wsdto.LuxVideocomponentWsDTO">
-    	<property name="videoUrl" type="String"/>
-    	<property name="videoDescription" type="String" />
-    	<property name="previewUrl" type="String"/>
-    	<property name="videoTitle" type="String"/>
-    	<property name="videoSectionHeading" type="String"/>
-    </bean>
-     <bean class="com.tisl.mpl.wsdto.LuxEngagementcomponentWsDTO">
-    	<property name="bannerMedia" type="String"/>
-    	<property name="bannerUrl" type="String" />
-    	<property name="textArea" type="String" />
-    	<property name="linkArea" type="String" />
-    </bean>
-     <bean class="com.tisl.mpl.wsdto.LuxShopByListWsDTO">
-    	<property name="brandLogoUrl" type="String"/>
-    	<property name="brandUrl" type="String" />
-    </bean>
-     <bean class="com.tisl.mpl.wsdto.LuxComponentsListWsDTO">
-    	<property name="title" type="String" />
-    	<property name="sectionid" type="String" />
-    	<property name="bannerlist" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/>
-    	<property name="subsections" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxSignatureWsDTO>"/>
-    	<property name="categorylist" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxShopYourFavListWsDTO>"/>
-    	<property name="videocomponent" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxVideocomponentWsDTO>"/>
-    	<property name="engagementcomponent" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxEngagementcomponentWsDTO>"/>
-    	<property name="featuredproducts" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxBrandProductsListWsDTO>"/>
-    	<property name="shopbycomponents" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxShopByListWsDTO>"/>
-    	<property name="socialfeedHeadercomponent" type="com.tisl.mpl.wsdto.TextComponentWsDTO"/>
-    	<property name="socialfeedcomponent" type="com.tisl.mpl.wsdto.LuxSocialFeedComponentWsDTO"/>
-    </bean>
-    
-    <bean class="com.tisl.mpl.wsdto.LuxSocialFeedComponentWsDTO">
-       <!--  <property name="textContent" type="com.tisl.mpl.wsdto.TextComponentWsDTO"/> -->
-         <!-- For RotatingImagesComponent -->
-    	<property name="LuxSocialFeedFacebook" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/> 
-    	<property name="LuxSocialFeedTwitter" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/> 
-    	<property name="LuxSocialFeedGooglePlus" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/> 
-    	<property name="LuxSocialFeedInstagram" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/>    	
-    </bean>
-    
-    <bean class="com.tisl.mpl.wsdto.LuxBlpCompWsDTO">
-    	<property name="pageTitle" type="String" />
-    	<property name="metaKeywords" type="String" />
-    	<property name="metaDescription" type="String" />
-    	<property name="Components" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxBlpCompListWsDTO>"/>
-    </bean>
-    
-    <bean class="com.tisl.mpl.wsdto.LuxTextMediaComponentWsDTO">
-         <!-- For RotatingImagesComponent -->
-        <property name="textContent" type="com.tisl.mpl.wsdto.TextComponentWsDTO"/>
-         <!-- For RotatingImagesComponent -->
-    	<property name="carousal_images" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/>    	
-    </bean>
-    
-    <bean class="com.tisl.mpl.wsdto.LuxBlpStripWsDTO">         
-        <property name="url" type="String"/>    	
-    </bean>
-    
-    <!-- <bean class="com.tisl.mpl.wsdto.LuxShowcasecomponentWsDTO"> 
-        <property name="section_header" type="String"/>             
-    	<property name="tabs" type="java.util.List&lt;com.tisl.mpl.wsdto.TabWsDTO>"/>    	
-    </bean>
-    
-    <bean class="com.tisl.mpl.wsdto.TabWsDTO">        
-    	<property name="image_url" type="String"/>
-    	<property name="img_alt" type="String"/>
-    	<property name="showByDefault" type="boolean"/> 
-    	<property name="heading" type="String"/>
-    	<property name="text" type="String"/>    	   	
-    </bean> -->
-    <bean class="com.tisl.mpl.wsdto.LuxShowcasecomponentWsDTO">
-    	<property name="image_url" type="String"/>
-    	<property name="img_alt" type="String"/>
-    	<property name="showByDefault" type="boolean"/> 
-    	<property name="heading" type="String"/>
-    	<property name="text" type="String"/>
-    	<property name="position" type="Integer"/>    	   	
-    </bean>
-    
-    <bean class="com.tisl.mpl.wsdto.LuxShopTheLookWsDTO">
-    	<property name="image" type="String"/>
-    	<property name="img_alt" type="String"/>
-    	<property name="destination" type="String"/> 
-    	<property name="cta" type="String"/>
-    	<property name="header" type="String"/>
-    	<property name="section_text" type="String"/>
-    	<property name="productlisting" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxBrandProductsListWsDTO>"/>    	   	
-    </bean>
-    
-    <bean class="com.tisl.mpl.wsdto.LuxBlpCompListWsDTO">
-    	<property name="title" type="String" />
-    	<property name="sectionid" type="String" />
-    	<!-- For SimpleBannerComponent -->
-		<property name="banner_strip_component" type="com.tisl.mpl.wsdto.LuxBlpStripWsDTO"/>
-    	<!-- For RotatingImagesComponent -->
-    	<property name="hero_banner_component" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/>		
-    	<!-- For him/her, RotatingImagesComponent-->
-    	<property name="gender_component" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/>
-    	<!-- For MplAdvancedCategoryCarouselComponent -->
-    	<property name="category_component" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxShopYourFavListWsDTO>"/>
-    	<!-- For spring_component -->
-    	<property name="spring_component" type="com.tisl.mpl.wsdto.LuxSpringCollectionComponentWsDTO"/>
-    	<!-- For Featured Products -->
-    	<property name="featured_component" type="com.tisl.mpl.wsdto.LuxSpringCollectionComponentWsDTO"/>
-    	<!-- For VideoComponent -->
-    	<property name="videocomponent" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxVideocomponentWsDTO>"/>
-    	<!-- For Why Out Products, MplShowcaseComponent -->
+	<bean class="com.tisl.mpl.wsdto.LuxHomePageCompWsDTO">
+		<property name="sectionId" type="String" />
+		<property name="Components"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.LuxComponentsListWsDTO>" />
+		<property name="pageTitle" type="String" />
+		<property name="metaKeywords" type="String" />
+		<property name="metaDescription" type="String" />
+	</bean>
+	<bean class="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO">
+		<property name="bannerMedia" type="String" />
+		<property name="bannerUrl" type="String" />
+		<property name="timeout" type="int" />
+		<property name="bannerNumber" type="int" />
+		<property name="bannerText" type="String" />
+		<property name="resolution" type="String" />
+		<property name="altText" type="String" />
+		<property name="icid" type="String" />
+		<property name="position" type="Integer" />
 
-    	<!-- Shop The Look -->     	    	
-    	<property name="shop_the_look_component" type="com.tisl.mpl.wsdto.LuxShopTheLookWsDTO"/>
-    	<property name="why_our_product_component" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxShowcasecomponentWsDTO>"/>    
-    	<property name="our_journey_component" type="com.tisl.mpl.wsdto.LuxOurJourneyComponentWsDTO"/> 	 
-    	<property name="our_mission_component" type="com.tisl.mpl.wsdto.LuxOurMissionComponentWsDTO"/>   	
-    </bean>    
-    
-    <bean class="com.tisl.mpl.wsdto.LuxOurJourneyComponentWsDTO">
-    	<property name="sectionHeading" type="String" />
-    	<property name="timelineBeginText" type="String" />
-    	<property name="timelines" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxJourneyTimeLineListWsDTO>" />
-    </bean>
-	
-	<bean class="com.tisl.mpl.wsdto.LuxJourneyTimeLineListWsDTO">
-    	<property name="year" type="String" />
-    	<property name="image" type="String" />
-		<property name="img_alt" type="String" />
-		<property name="text" type="String" />	
-    </bean>
-    
-     <bean class="com.tisl.mpl.wsdto.LuxOurMissionComponentWsDTO">
-    	<property name="sectionHeading" type="String" />
-		<property name="text" type="String" />	
-    </bean>
-    <bean class="com.tisl.mpl.wsdto.LuxSpringCollectionComponentWsDTO">
-    	<property name="text_heading" type="String" />
-    	<property name="text" type="String" />
-    	<property name="image" type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO" />
-    </bean>
-    
-<!-- <bean class="com.tisl.mpl.wsdto.LuxFeaturedCollectionComponentWsDTO">
-    	<property name="heading" type="String" />
-    	<property name="text" type="String" />
-    	<property name="carousal_images" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxCollectionListWsDTO>" />
-    </bean> -->
-    <bean class="com.tisl.mpl.wsdto.LuxCollectionListWsDTO">
-    	<property name="is_default" type="boolean" />
-    	<property name="image" type="String" />
-		<property name="alt" type="String" />
-		<property name="text" type="String" />
-		<property name="position" type="Integer"/>
-		<property name="destination" type="String"/>	
-    </bean> 
-    
-    <!-- Mega navigation DTO struture starts -->
-    <bean class="com.tisl.mpl.wsdto.LuxNavigationWsDTO">
-    	<property name="isLuxury" type="boolean" />
-    	<property name="values" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxLevelOneWsDTO>" />
-    </bean>
-    
-    <bean class="com.tisl.mpl.wsdto.LuxLevelOneWsDTO">
-    	<property name="name" type="String" />
-    	<property name="value" type="String" />
-    	<property name="destination" type="String" />
-    	<property name="subcategories" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxLevelTwoWsDTO>" />
-    </bean>
-    
-     <bean class="com.tisl.mpl.wsdto.LuxLevelTwoWsDTO">
-    	<property name="name" type="String" />
-    	<property name="value" type="String" />
-    	<property name="image" type="String" />
-    	<property name="destination" type="String" />
-    	<property name="collections" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxLevelThreeWsDTO>" />
-    	<property name="sliders" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxLevelTwoSliderWsDTO>" />
-    </bean>
-    
-     <bean class="com.tisl.mpl.wsdto.LuxLevelThreeWsDTO">
-    	<property name="name" type="String" />
-    	<property name="subCategory" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxLevelFourWsDTO>" />
-    </bean>
-    
-      <bean class="com.tisl.mpl.wsdto.LuxLevelFourWsDTO">
-    	<property name="name" type="String" />
-    	<!-- <property name="isBrand" type="boolean" /> -->
-    	<property name="value" type="String" />
-    	<property name="destination" type="String" />
-    	<property name="image" type="String" />
-    </bean>
-    
-    <bean class="com.tisl.mpl.wsdto.LuxLevelTwoSliderWsDTO">
-    	<property name="title" type="String" />
-    	<property name="image" type="String" />
-    	<property name="destination" type="String" />
-    	<property name="cta" type="String" />
-    </bean>
-    
-    <!-- Mega navigation DTO struture ends -->
-    
- 	<!-- Newsletter DTO struture starts -->
-    <bean class="com.tisl.mpl.wsdto.NewsletterWsDTO">
-    	<property name="success" type="String"/>
-    </bean>
-    <!-- Newsletter DTO struture ends -->
-    
-    
-    <!-- TISLUX-356 : Breadcrumbs in Response -->
-    <bean class="com.tisl.mpl.wsdto.BreadcrumbListWsDTO">
-    	<property name="code" type="String"/>
-    	<property name="name" type="String"/>
-    	<property name="url" type="String"/>
-    	<property name="level" type="Integer"/>
-    </bean>
-    <bean class="com.tisl.mpl.wsdto.BreadcrumbResponseWsDTO">
-    	<property name="rootName" type="String"/>
-    	<property name="breadcrumbList" type="java.util.List&lt;com.tisl.mpl.wsdto.BreadcrumbListWsDTO>"/>
-    </bean>
-<bean class="com.tisl.mpl.wsdto.ProductAPlusWsData" extends="com.tisl.mpl.wsdto.ErrorDTO">
-		<property name="temlateName" type="String" />
-		<property name="productContent" type="java.util.HashMap&lt;String, com.tisl.mpl.wsdto.ProductContentWsData>" />
+	</bean>
+	<bean class="com.tisl.mpl.wsdto.LuxSignatureWsDTO">
+		<property name="brandLogoUrl" type="String" />
+		<property name="brandBannerImageUrl" type="String" />
+		<property name="brandBannerUrl" type="String" />
+		<property name="brandBannerText" type="String" />
+		<property name="showByDefault" type="boolean" />
+		<property name="brandProducts"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.LuxBrandProductsListWsDTO>" />
+	</bean>
+	<bean class="com.tisl.mpl.wsdto.LuxBrandProductsListWsDTO">
+		<property name="productId" type="String" />
+		<property name="productUrl" type="String" />
+		<property name="productImageUrl" type="String" />
+		<property name="productTitle" type="String" />
+		<property name="productMRP" type="String" />
+		<property name="productMOP" type="String" />
+		<property name="productSpecialPrice" type="String" />
+		<property name="productBrand" type="String" />
+		<property name="position" type="Integer" />
+
+	</bean>
+	<bean class="com.tisl.mpl.wsdto.LuxShopYourFavListWsDTO">
+		<property name="categoryId" type="String" />
+		<property name="categoryImageUrl" type="String" />
+		<property name="mobileCategoryImageUrl" type="String" />
+		<property name="categoryName" type="String" />
+		<property name="categoryUrl" type="String" />
+		<property name="altText" type="String" />
+		<property name="position" type="Integer" />
+	</bean>
+	<bean class="com.tisl.mpl.wsdto.LuxVideocomponentWsDTO">
+		<property name="videoUrl" type="String" />
+		<property name="videoDescription" type="String" />
+		<property name="previewUrl" type="String" />
+		<property name="videoTitle" type="String" />
+		<property name="videoSectionHeading" type="String" />
+	</bean>
+	<bean class="com.tisl.mpl.wsdto.LuxEngagementcomponentWsDTO">
+		<property name="bannerMedia" type="String" />
+		<property name="bannerUrl" type="String" />
+		<property name="textArea" type="String" />
+		<property name="linkArea" type="String" />
+	</bean>
+	<bean class="com.tisl.mpl.wsdto.LuxShopByListWsDTO">
+		<property name="brandLogoUrl" type="String" />
+		<property name="brandUrl" type="String" />
+	</bean>
+	<bean class="com.tisl.mpl.wsdto.LuxComponentsListWsDTO">
+		<property name="title" type="String" />
+		<property name="sectionid" type="String" />
+		<property name="bannerlist"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>" />
+		<property name="subsections"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.LuxSignatureWsDTO>" />
+		<property name="categorylist"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.LuxShopYourFavListWsDTO>" />
+		<property name="videocomponent"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.LuxVideocomponentWsDTO>" />
+		<property name="engagementcomponent"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.LuxEngagementcomponentWsDTO>" />
+		<property name="featuredproducts"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.LuxBrandProductsListWsDTO>" />
+		<property name="shopbycomponents"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.LuxShopByListWsDTO>" />
+		<property name="socialfeedHeadercomponent" type="com.tisl.mpl.wsdto.TextComponentWsDTO" />
+		<property name="socialfeedcomponent"
+			type="com.tisl.mpl.wsdto.LuxSocialFeedComponentWsDTO" />
 	</bean>
 
+	<bean class="com.tisl.mpl.wsdto.LuxSocialFeedComponentWsDTO">
+		<!-- <property name="textContent" type="com.tisl.mpl.wsdto.TextComponentWsDTO"/> -->
+		<!-- For RotatingImagesComponent -->
+		<property name="LuxSocialFeedFacebook"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>" />
+		<property name="LuxSocialFeedTwitter"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>" />
+		<property name="LuxSocialFeedGooglePlus"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>" />
+		<property name="LuxSocialFeedInstagram"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>" />
+	</bean>
+
+	<bean class="com.tisl.mpl.wsdto.LuxBlpCompWsDTO">
+		<property name="pageTitle" type="String" />
+		<property name="metaKeywords" type="String" />
+		<property name="metaDescription" type="String" />
+		<property name="Components"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.LuxBlpCompListWsDTO>" />
+	</bean>
+
+	<bean class="com.tisl.mpl.wsdto.LuxTextMediaComponentWsDTO">
+		<!-- For RotatingImagesComponent -->
+		<property name="textContent" type="com.tisl.mpl.wsdto.TextComponentWsDTO" />
+		<!-- For RotatingImagesComponent -->
+		<property name="carousal_images"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>" />
+	</bean>
+
+	<bean class="com.tisl.mpl.wsdto.LuxBlpStripWsDTO">
+		<property name="url" type="String" />
+	</bean>
+
+	<!-- <bean class="com.tisl.mpl.wsdto.LuxShowcasecomponentWsDTO"> <property 
+		name="section_header" type="String"/> <property name="tabs" type="java.util.List&lt;com.tisl.mpl.wsdto.TabWsDTO>"/> 
+		</bean> <bean class="com.tisl.mpl.wsdto.TabWsDTO"> <property name="image_url" 
+		type="String"/> <property name="img_alt" type="String"/> <property name="showByDefault" 
+		type="boolean"/> <property name="heading" type="String"/> <property name="text" 
+		type="String"/> </bean> -->
+	<bean class="com.tisl.mpl.wsdto.LuxShowcasecomponentWsDTO">
+		<property name="image_url" type="String" />
+		<property name="img_alt" type="String" />
+		<property name="showByDefault" type="boolean" />
+		<property name="heading" type="String" />
+		<property name="text" type="String" />
+		<property name="position" type="Integer" />
+	</bean>
+
+	<bean class="com.tisl.mpl.wsdto.LuxShopTheLookWsDTO">
+		<property name="image" type="String" />
+		<property name="img_alt" type="String" />
+		<property name="destination" type="String" />
+		<property name="cta" type="String" />
+		<property name="header" type="String" />
+		<property name="section_text" type="String" />
+		<property name="productlisting"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.LuxBrandProductsListWsDTO>" />
+	</bean>
+
+	<bean class="com.tisl.mpl.wsdto.LuxBlpCompListWsDTO">
+		<property name="title" type="String" />
+		<property name="sectionid" type="String" />
+		<!-- For SimpleBannerComponent -->
+		<property name="banner_strip_component" type="com.tisl.mpl.wsdto.LuxBlpStripWsDTO" />
+		<!-- For RotatingImagesComponent -->
+		<property name="hero_banner_component"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>" />
+		<!-- For him/her, RotatingImagesComponent -->
+		<property name="gender_component"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>" />
+		<!-- For MplAdvancedCategoryCarouselComponent -->
+		<property name="category_component"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.LuxShopYourFavListWsDTO>" />
+		<!-- For spring_component -->
+		<property name="spring_component"
+			type="com.tisl.mpl.wsdto.LuxSpringCollectionComponentWsDTO" />
+		<!-- For Featured Products -->
+		<property name="featured_component"
+			type="com.tisl.mpl.wsdto.LuxSpringCollectionComponentWsDTO" />
+		<!-- For VideoComponent -->
+		<property name="videocomponent"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.LuxVideocomponentWsDTO>" />
+		<!-- For Why Out Products, MplShowcaseComponent -->
+
+		<!-- Shop The Look -->
+		<property name="shop_the_look_component" type="com.tisl.mpl.wsdto.LuxShopTheLookWsDTO" />
+		<property name="why_our_product_component"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.LuxShowcasecomponentWsDTO>" />
+		<property name="our_journey_component"
+			type="com.tisl.mpl.wsdto.LuxOurJourneyComponentWsDTO" />
+		<property name="our_mission_component"
+			type="com.tisl.mpl.wsdto.LuxOurMissionComponentWsDTO" />
+	</bean>
+
+	<bean class="com.tisl.mpl.wsdto.LuxOurJourneyComponentWsDTO">
+		<property name="sectionHeading" type="String" />
+		<property name="timelineBeginText" type="String" />
+		<property name="timelines"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.LuxJourneyTimeLineListWsDTO>" />
+	</bean>
+
+	<bean class="com.tisl.mpl.wsdto.LuxJourneyTimeLineListWsDTO">
+		<property name="year" type="String" />
+		<property name="image" type="String" />
+		<property name="img_alt" type="String" />
+		<property name="text" type="String" />
+	</bean>
+
+	<bean class="com.tisl.mpl.wsdto.LuxOurMissionComponentWsDTO">
+		<property name="sectionHeading" type="String" />
+		<property name="text" type="String" />
+	</bean>
+	<bean class="com.tisl.mpl.wsdto.LuxSpringCollectionComponentWsDTO">
+		<property name="text_heading" type="String" />
+		<property name="text" type="String" />
+		<property name="image" type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO" />
+	</bean>
+
+	<!-- <bean class="com.tisl.mpl.wsdto.LuxFeaturedCollectionComponentWsDTO"> 
+		<property name="heading" type="String" /> <property name="text" type="String" 
+		/> <property name="carousal_images" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxCollectionListWsDTO>" 
+		/> </bean> -->
+	<bean class="com.tisl.mpl.wsdto.LuxCollectionListWsDTO">
+		<property name="is_default" type="boolean" />
+		<property name="image" type="String" />
+		<property name="alt" type="String" />
+		<property name="text" type="String" />
+		<property name="position" type="Integer" />
+		<property name="destination" type="String" />
+	</bean>
+
+	<!-- Mega navigation DTO struture starts -->
+	<bean class="com.tisl.mpl.wsdto.LuxNavigationWsDTO">
+		<property name="isLuxury" type="boolean" />
+		<property name="values"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.LuxLevelOneWsDTO>" />
+	</bean>
+
+	<bean class="com.tisl.mpl.wsdto.LuxLevelOneWsDTO">
+		<property name="name" type="String" />
+		<property name="value" type="String" />
+		<property name="destination" type="String" />
+		<property name="subcategories"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.LuxLevelTwoWsDTO>" />
+	</bean>
+
+	<bean class="com.tisl.mpl.wsdto.LuxLevelTwoWsDTO">
+		<property name="name" type="String" />
+		<property name="value" type="String" />
+		<property name="image" type="String" />
+		<property name="destination" type="String" />
+		<property name="collections"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.LuxLevelThreeWsDTO>" />
+		<property name="sliders"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.LuxLevelTwoSliderWsDTO>" />
+	</bean>
+
+	<bean class="com.tisl.mpl.wsdto.LuxLevelThreeWsDTO">
+		<property name="name" type="String" />
+		<property name="subCategory"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.LuxLevelFourWsDTO>" />
+	</bean>
+
+	<bean class="com.tisl.mpl.wsdto.LuxLevelFourWsDTO">
+		<property name="name" type="String" />
+		<!-- <property name="isBrand" type="boolean" /> -->
+		<property name="value" type="String" />
+		<property name="destination" type="String" />
+		<property name="image" type="String" />
+	</bean>
+
+	<bean class="com.tisl.mpl.wsdto.LuxLevelTwoSliderWsDTO">
+		<property name="title" type="String" />
+		<property name="image" type="String" />
+		<property name="destination" type="String" />
+		<property name="cta" type="String" />
+	</bean>
+
+	<!-- Mega navigation DTO struture ends -->
+
+	<!-- Newsletter DTO struture starts -->
+	<bean class="com.tisl.mpl.wsdto.NewsletterWsDTO">
+		<property name="success" type="String" />
+	</bean>
+	<!-- Newsletter DTO struture ends -->
+
+
+	<!-- TISLUX-356 : Breadcrumbs in Response -->
+	<bean class="com.tisl.mpl.wsdto.BreadcrumbListWsDTO">
+		<property name="code" type="String" />
+		<property name="name" type="String" />
+		<property name="url" type="String" />
+		<property name="level" type="Integer" />
+	</bean>
+	<bean class="com.tisl.mpl.wsdto.BreadcrumbResponseWsDTO">
+		<property name="rootName" type="String" />
+		<property name="breadcrumbList"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.BreadcrumbListWsDTO>" />
+	</bean>
+	<bean class="com.tisl.mpl.wsdto.ProductAPlusWsData" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="temlateName" type="String" />
+		<property name="productContent"
+			type="java.util.HashMap&lt;String, com.tisl.mpl.wsdto.ProductContentWsData>" />
+	</bean>
+	<bean class="com.tisl.mpl.wsdto.ReturnPincodeDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="isPincodeServiceable" type="boolean" />
+		<property name="returnLogisticsResponseDTO"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.ReturnLogisticsResponseDTO>" />
+	</bean>
+
+	<!-- TPR-1630 -->
+	<bean class="com.tisl.mpl.wsdto.ReturnLogisticsResponseDTO">
+		<property name="isReturnLogisticsAvailable" type="String" />
+		<property name="orderId" type="String" />
+		<property name="responseDescription" type="String" />
+		<property name="responseMessage" type="String" />
+		<property name="transactionId" type="String" />
+	</bean>
+
+	<bean class="com.tisl.mpl.wsdto.ReturnRequestDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="orderProductWsDTO"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.OrderProductWsDTO>" />
+		<property name="returnReasonDetailsWsDTO"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.ReturnReasonDTO>" />
+	</bean>
+
+	<bean class="com.tisl.mpl.wsdto.ReturnReasonDTO">
+		<property name="reasonDescription" type="String" />
+		<property name="code" type="String" />
+		<property name="returnKey" type="String" />
+	</bean>
+
+
+	<!-- TPR-1727 -->
+	<bean class="com.tisl.mpl.wsdto.ProductInfoWSDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="results"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.ProductDetailMobileWsData>" />
+	</bean>
 </beans>
+

@@ -401,6 +401,29 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 						final Map<String, String> fetchProductRichAttribute = getDefaultPromotionsManager().fetchProductRichAttribute(
 								validProductList, order);
 
+						final EnumerationValue discountType = getDiscTypesOnShippingCharges();
+						double adjustedDeliveryCharge = 0.00D;
+						boolean isDeliveryFreeFlag = false;
+						if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.PERCENTAGE_MESSAGE)
+								&& (getPercentageDiscount() != null))
+						{
+							adjustedDeliveryCharge = getPercentageDiscount().doubleValue();
+						}
+						else if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.AMOUNT)
+								&& (getPriceForOrder(paramSessionContext, getDiscountPrices(paramSessionContext), order,
+										MarketplacecommerceservicesConstants.DISCOUNT_PRICES) != null))
+						{
+							final double amount = getPriceForOrder(paramSessionContext, getDiscountPrices(paramSessionContext), order,
+									MarketplacecommerceservicesConstants.DISCOUNT_PRICES).doubleValue();
+							final double totalDelCostForValidProds = getDefaultPromotionsManager().getTotalDelCostForValidProds(
+									validProductUssidMap, validProductList);
+							adjustedDeliveryCharge = (amount / totalDelCostForValidProds) * 100;
+						}
+						else if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.FREE))
+						{
+							isDeliveryFreeFlag = true;
+						}
+
 						for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
 						{
 							Map<String, Map<String, Double>> prodPrevCurrDelChargeMap = new HashMap<String, Map<String, Double>>();
@@ -414,40 +437,13 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 									|| ((fullfillmentTypeForProduct.equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP) && isTShipAsPrimitive()) || (fullfillmentTypeForProduct
 											.equalsIgnoreCase(MarketplacecommerceservicesConstants.SSHIP) && isSShipAsPrimitive())))
 							{
-								//Calculating delivery charges & setting it at entry level
-								final EnumerationValue discountType = getDiscTypesOnShippingCharges();
-								double adjustedDeliveryCharge = 0.00D;
-								boolean isPercentageFlag = false;
-								boolean isDeliveryFreeFlag = false;
-								if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.PERCENTAGE_MESSAGE)
-										&& (getPercentageDiscount() != null))
-								{
-									isPercentageFlag = true;
-									adjustedDeliveryCharge = getPercentageDiscount().doubleValue();
-								}
-								else if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.AMOUNT)
-										&& (getPriceForOrder(paramSessionContext, getDiscountPrices(paramSessionContext), order,
-												MarketplacecommerceservicesConstants.DISCOUNT_PRICES) != null))
-								{
-									adjustedDeliveryCharge = getPriceForOrder(paramSessionContext, getDiscountPrices(paramSessionContext),
-											order, MarketplacecommerceservicesConstants.DISCOUNT_PRICES).doubleValue();
-								}
-								else if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.FREE))
-								{
-									isDeliveryFreeFlag = true;
-								}
-								//TISEE-5339 : Fix
 								prodPrevCurrDelChargeMap = getDefaultPromotionsManager().calcDeliveryCharges(isDeliveryFreeFlag,
-										isPercentageFlag, adjustedDeliveryCharge, validProductList, validProductUSSID, order);
+										adjustedDeliveryCharge, validProductUSSID, order, null);
 
 								//TISEE-5339 : Fix
-								//								paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE,
-								//										String.valueOf(this.getCode()));
-								//								paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP,
-								//										prodPrevCurrDelChargeMap);
 								finalDelChrgMap.putAll(prodPrevCurrDelChargeMap);
-								final int eligibleCount = validProductList.get(validProductUSSID).intValue();
 
+								final int eligibleCount = validProductList.get(validProductUSSID).intValue();
 								final List<PromotionOrderEntryConsumed> consumed = new ArrayList<PromotionOrderEntryConsumed>();
 								consumed.add(getDefaultPromotionsManager().consume(paramSessionContext, this, eligibleCount,
 										eligibleCount, entry));
