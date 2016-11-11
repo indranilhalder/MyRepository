@@ -1806,9 +1806,9 @@ $(document).on('click','.facet.js-facet.Size .js-facet-name h4',function(){
 });
 
 //changes for TISPRO-796
-$(document).on('click','.left-block .toggle-filterSerp',function(){
-	toggleFilter();
-	});
+//$(document).on('click','.left-block .toggle-filterSerp',function(){
+	//toggleFilter();
+	//});
 	function toggleFilter(){
 			colorSwatch();
 			sizeSwatch();
