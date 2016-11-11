@@ -24,6 +24,7 @@ import de.hybris.platform.commercefacades.i18n.I18NFacade;
 import de.hybris.platform.commercefacades.order.OrderFacade;
 import de.hybris.platform.commercefacades.order.data.CCPaymentInfoData;
 import de.hybris.platform.commercefacades.order.data.CCPaymentInfoDatas;
+import de.hybris.platform.commercefacades.order.data.ConsignmentData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.order.data.OrderHistoriesData;
@@ -6873,6 +6874,7 @@ public class UsersController extends BaseCommerceController
 		List<OrderModel> subOrderModels = null;
 		OrderModel subOrderModel = null;
 		OrderModel subOrderModelVersioned = null;
+		ReturnPincodeDTO returnPincodeAvailDTO = null;
 		final ReturnItemAddressData returnItemAddressData = new ReturnItemAddressData();
 		try
 		{
@@ -6922,8 +6924,20 @@ public class UsersController extends BaseCommerceController
 			}
 
 			boolean returnLogisticsCheck = true;
-			final ReturnPincodeDTO returnPincodeAvailDTO = cancelReturnFacade.checkReturnLogisticsForApp(orderDetails, pincode,
-					transactionId);
+			for (final ConsignmentData consignmentData : orderDetails.getConsignments())
+			{
+				if (consignmentData.getStatus() != null && consignmentData.getStatus().getCode() == "DELIVERED")
+				{
+
+					returnPincodeAvailDTO = cancelReturnFacade.checkReturnLogisticsForApp(orderDetails, pincode, transactionId);
+				}
+				else
+				{
+					returnPincodeDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+				}
+			}
+
+
 			for (final ReturnLogisticsResponseDTO response : returnPincodeAvailDTO.getReturnLogisticsResponseDTO())
 			{
 				if (response.getIsReturnLogisticsAvailable().equalsIgnoreCase("N"))
@@ -6946,12 +6960,12 @@ public class UsersController extends BaseCommerceController
 
 				}
 			}
-
 			final boolean ticketCreationStatus = cancelReturnFacadeimpl.createTicketInCRM(orderDetails, orderEntry, ticketTypeCode,
 					reasonCode, refundType, USSID, customerData, subOrderModel, returnLogisticsCheck);
-			//create ticket only if async is not working
-
 		}
+
+		//returnPincodeDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
 
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -6966,6 +6980,7 @@ public class UsersController extends BaseCommerceController
 			}
 			returnPincodeDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
+
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
@@ -7008,24 +7023,33 @@ public class UsersController extends BaseCommerceController
 		try
 		{
 			final List<OrderProductWsDTO> orderproductWsDto = getOrderDetailsFacade.getOrderdetailsForApp(orderCode);
-			for (final OrderProductWsDTO entry : orderproductWsDto)
+			if (orderproductWsDto.size() > 0)
 			{
-				if (entry.getTransactionId().equalsIgnoreCase(transactionId))
+				for (final OrderProductWsDTO entry : orderproductWsDto)
 				{
-					returnRequestDTO.setOrderProductWsDTO(orderproductWsDto);
+					if (entry.getTransactionId().equalsIgnoreCase(transactionId))
+					{
+						returnRequestDTO.setOrderProductWsDTO(orderproductWsDto);
+					}
 				}
-			}
-			returnReasonData = mplOrderFacade.getReturnReasonForOrderItem(returnCancelFlag);
-			if (null != returnReasonData && CollectionUtils.isNotEmpty(returnReasonData.getReturnReasonDetailsList()))
-			{
-				for (final ReturnReasonData entry : returnReasonData.getReturnReasonDetailsList())
+				returnReasonData = mplOrderFacade.getReturnReasonForOrderItem(returnCancelFlag);
+				if (null != returnReasonData && CollectionUtils.isNotEmpty(returnReasonData.getReturnReasonDetailsList()))
 				{
-					reasonDto = dataMapper.map(entry, ReturnReasonDTO.class);
-					returnReasondtolist.add(reasonDto);
+					for (final ReturnReasonData entry : returnReasonData.getReturnReasonDetailsList())
+					{
+						reasonDto = dataMapper.map(entry, ReturnReasonDTO.class);
+						returnReasondtolist.add(reasonDto);
 
+					}
 				}
+				returnRequestDTO.setReturnReasonDetailsWsDTO(returnReasondtolist);
 			}
-			returnRequestDTO.setReturnReasonDetailsWsDTO(returnReasondtolist);
+			else
+			{
+				returnRequestDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9004));
+				returnRequestDTO.setErrorCode(MarketplacecommerceservicesConstants.B9004);
+				returnRequestDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
 
 		}
 		catch (final Exception e)
