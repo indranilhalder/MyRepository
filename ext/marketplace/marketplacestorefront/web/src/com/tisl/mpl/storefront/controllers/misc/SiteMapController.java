@@ -23,6 +23,7 @@ import de.hybris.platform.cms2.model.site.CMSSiteModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSSiteService;
 import de.hybris.platform.cms2.servicelayer.services.impl.DefaultCMSContentSlotService;
 import de.hybris.platform.core.model.media.MediaModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.media.MediaService;
 
 import java.net.URLDecoder;
@@ -74,6 +75,9 @@ public class SiteMapController extends AbstractPageController
 	private CategoryService categoryService;
 
 	@Autowired
+	private ConfigurationService configurationService;
+
+	@Autowired
 	private DefaultCMSContentSlotService contentSlotService;
 
 	@Resource
@@ -95,14 +99,21 @@ public class SiteMapController extends AbstractPageController
 	{
 		final CMSSiteModel currentSite = cmsSiteService.getCurrentSite();
 
-		final String mediaUrlForSite = siteBaseUrlResolutionService.getMediaUrlForSite(currentSite, false, "");
+		String mediaUrlForSite = siteBaseUrlResolutionService.getMediaUrlForSite(currentSite, false, "");
+
+		final String usePropertyFile = configurationService.getConfiguration().getString("mpl.sitemap.propertyfile.use", "false");
+
+		if (usePropertyFile.equalsIgnoreCase("true"))
+		{
+			mediaUrlForSite = configurationService.getConfiguration().getString("mpl.sitemap.url", "www.tatacliq.com");
+		}
 
 		final List<String> siteMapUrls = new ArrayList<>();
 
 		final Collection<MediaModel> siteMaps = currentSite.getSiteMaps();
 		for (final MediaModel siteMap : siteMaps)
 		{
-			siteMapUrls.add(mediaUrlForSite + siteMap.getURL());
+			siteMapUrls.add(mediaUrlForSite + siteMap.getCode());
 		}
 		model.addAttribute("siteMapUrls", siteMapUrls);
 

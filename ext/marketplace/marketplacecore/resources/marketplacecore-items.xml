@@ -4676,6 +4676,24 @@
 					</attributes>
 			</itemtype>
 			
+		<!-- TPR-1285 Changes -->
+			<itemtype code="CMSSite" autocreate="false" generate="false">
+				
+				<attributes>
+					
+					<attribute qualifier="siteMaps" type="MediaCollection" autocreate="false">
+						<persistence type="property" >
+						<columntype database="oracle">
+							<value>CLOB</value>
+						</columntype>
+						<columntype>							
+							<value>HYBRIS.LONG_STRING</value>
+						</columntype>
+						</persistence>
+						</attribute>
+					</attributes>
+			</itemtype>
+		<!-- TPR-1285 Changes -->
 			
 			<!--  Luxury Site -->
 			
