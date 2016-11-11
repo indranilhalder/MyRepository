@@ -22,6 +22,7 @@ import java.util.Set;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.hybris.oms.domain.locationrole.LocationRole;
@@ -57,6 +58,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 	private ProductAttributeStrategy productAttributeStrategy;
 	private OrderEntryNoteStrategy orderEntryNoteStrategy;
 	private OndemandTaxCalculationService ondemandTaxCalculationService;
+	@Autowired
 	private MplSellerMasterService mplSellerMasterService;
 
 
@@ -362,7 +364,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 
 
 			//added new attribute isLPAWBEdit for orderLine
-			final SellerMasterModel sellerMasterModel = getMplSellerMasterService().getSellerMaster(sellerInfoModel.getSellerID());
+			final SellerMasterModel sellerMasterModel =mplSellerMasterService.getSellerMaster(sellerInfoModel.getSellerID());
 			if (sellerMasterModel != null && sellerMasterModel.getIsLPAWBEdit() != null)
 			{
 				if (MarketplaceomsservicesConstants.Y.equalsIgnoreCase(sellerMasterModel.getIsLPAWBEdit()))
@@ -516,13 +518,6 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 		this.mplSellerInformationService = mplSellerInformationService;
 	}
 
-	/**
-	 * @return the mplSellerMasterService
-	 */
-	public MplSellerMasterService getMplSellerMasterService()
-	{
-		return mplSellerMasterService;
-	}
-
+	
 	
 }
