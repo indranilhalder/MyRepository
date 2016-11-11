@@ -960,6 +960,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 			+ OrderModel.TYPE + "}=?type order by {" + OrderModel.CODE + "} desc";
 
 	//Bulk Return Initiation
+	public static final String START_TIME = "START TIME";
+	public static final String END_TIME = "END TIME";
+
+	public static final String LOADSTATUS = "loadstatus";
 
 	public static final String START_TIME = "START TIME";
 	public static final String END_TIME = "END TIME";
