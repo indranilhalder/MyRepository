@@ -8924,6 +8924,37 @@
 					</itemtype>
 				</typegroup>
      
+     	<typegroup name="BulkCancelProcessForOrder">
+			<itemtype code="BulkCancellationProcess" extends="GenericItem" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.BulkCancellationProcess">
+				<deployment table="MplBulkCancellation" typecode="15808" />
+				<attributes>
+					<attribute qualifier="parentOrderNo"  autocreate="true" type="java.lang.String"
+						generate="true">
+						<description>Parent Order Number</description>
+						<modifiers optional="false" read="true" write="true"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="transactionId"  autocreate="true" type="java.lang.String"
+						generate="true">
+						<description>Transaction Id</description>
+						<modifiers optional="false" read="true" write="true"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="loadStatus"  autocreate="true" type="java.lang.String"
+						generate="true">
+						<description>Load Status</description>
+						<modifiers optional="false" read="true" write="true"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="statusDescription"  autocreate="true" type="java.lang.String"
+						generate="true">
+						<description>Status Description</description>
+						<modifiers optional="true" read="true" write="true"/>
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+		</typegroup>
 	</itemtypes>
 	
 </items>

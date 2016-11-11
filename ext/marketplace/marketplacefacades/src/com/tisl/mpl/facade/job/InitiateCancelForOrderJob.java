@@ -1,3 +1,6 @@
+/**
+ *
+ */
 package com.tisl.mpl.facade.job;
 
 import de.hybris.platform.commercefacades.order.data.OrderData;
@@ -7,16 +10,16 @@ import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
-import de.hybris.platform.core.model.BulkReturnProcessModel;
+import de.hybris.platform.core.model.BulkCancellationProcessModel;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.cronjob.enums.CronJobResult;
 import de.hybris.platform.cronjob.enums.CronJobStatus;
 import de.hybris.platform.cronjob.model.CronJobModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.cronjob.AbstractJobPerformable;
 import de.hybris.platform.servicelayer.cronjob.PerformResult;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
@@ -32,6 +35,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -41,7 +45,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
-import com.tisl.mpl.facades.data.ReturnItemAddressData;
+import com.tisl.mpl.facades.data.BulCancelStoreData;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.util.ExceptionUtil;
 
@@ -50,10 +54,11 @@ import com.tisl.mpl.util.ExceptionUtil;
  * @author TCS
  *
  */
-public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobModel>
+public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobModel>
 {
+
 	@SuppressWarnings("unused")
-	private final static Logger LOG = Logger.getLogger(InitiateReturnForOrderJob.class.getName());
+	private final static Logger LOG = Logger.getLogger(InitiateCancelForOrderJob.class.getName());
 	@Autowired
 	private CancelReturnFacade cancelReturnFacade;
 	@Autowired
@@ -62,131 +67,100 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 	private OrderModelService orderModelService;
 	@Autowired
 	private MplOrderFacade mplOrderFacade;
-
 	@Resource(name = "sessionService")
 	private SessionService sessionService;
-
 	@Autowired
 	private BaseStoreService baseStoreService;
-
 	private Converter<OrderModel, OrderData> orderConverter;
 	@Autowired
 	private PriceDataFactory priceDataFactory;
+	@Autowired
+	private ConfigurationService configurationService;
 
-
-
-
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.hybris.platform.servicelayer.cronjob.AbstractJobPerformable#perform(de.hybris.platform.cronjob.model.CronJobModel
-	 * )
-	 */
+	@SuppressWarnings(MarketplacecommerceservicesConstants.BOXING)
 	@Override
 	public PerformResult perform(final CronJobModel arg0)
 	{
 		try
 		{
-			String orderCode = null; // TODO to fetch from given CSV66
-			String transactionId = null; // TODO to fetch from given CSV66
-			OrderData subOrderDetails = null;
-			ReturnItemAddressData returnAddrData = null;
-			Map<String, Boolean> returnResonseMap = null;
-			OrderEntryData subOrderEntry = null;
-
-			final Map<OrderEntryData, OrderData> dataToCallOMS = new HashMap<OrderEntryData, OrderData>();
-
+			String orderCode = null;
+			String transactionId = null;
+			OrderData subOrderDetailsForMap = null;
+			int counter = 0;
+			final Map<OrderEntryData, BulCancelStoreData> cancellationDataMap = new HashMap<OrderEntryData, BulCancelStoreData>();
+			List<BulkCancellationProcessModel> finalModelToSave = new ArrayList<BulkCancellationProcessModel>();
 			final long startTime = System.currentTimeMillis();
-			LOG.info(MarketplacecommerceservicesConstants.START_TIME + startTime);
-
-			//fetch list of bulk data processed
-			final List<BulkReturnProcessModel> bulkList = orderModelService.getBulkReturnData();
+			LOG.info(MarketplacecommerceservicesConstants.START_TIME_C + startTime);
+			final List<BulkCancellationProcessModel> bulkList = orderModelService.getBulkCancelData();
 
 			if (CollectionUtils.isNotEmpty(bulkList))
 			{
-				for (final BulkReturnProcessModel bulkModel : bulkList)
+				LOG.info(MarketplacecommerceservicesConstants.BULK_CANCEL_LOG_STEP_1 + bulkList.size());
+				for (final BulkCancellationProcessModel bulkModel : bulkList)
 				{
 					if (null != bulkModel && null != bulkModel.getParentOrderNo() && null != bulkModel.getTransactionId())
 					{
 						orderCode = bulkModel.getParentOrderNo();
 						transactionId = bulkModel.getTransactionId();
 
-						LOG.info("orderCode is" + bulkModel.getParentOrderNo() + "&&" + "transactionId is"
-								+ bulkModel.getTransactionId());
+						LOG.info(MarketplacecommerceservicesConstants.BULK_CANCEL_LOG_STEP_2_1 + bulkModel.getParentOrderNo()
+								+ MarketplacecommerceservicesConstants.BULK_CANCEL_LOG_STEP_2_2 + bulkModel.getTransactionId());
 
 						final OrderModel orderModel = orderModelService.getParentOrder(orderCode);
-						final AddressModel addrModel = orderModel.getDeliveryAddress();
-
-						//Step 1. prepare AddressData
-						returnAddrData = getReturnData(addrModel);
-
-						//Step 2: prepare map to call OMS
 						for (final OrderModel subOrder : orderModel.getChildOrders())
 						{
 							try
 							{
-								subOrderDetails = convertToData(subOrder);
-								final List<OrderEntryData> subOrderEntries = subOrderDetails.getEntries();
+								subOrderDetailsForMap = convertToData(subOrder);
 
-								for (final OrderEntryData entry : subOrderEntries)
+								// Fetch USSID and orderEntry from Sub Order
+								final List<OrderEntryData> subOrderEntries = subOrderDetailsForMap.getEntries();
+								for (final OrderEntryData orderEntry : subOrderEntries)
 								{
-									if (entry.getTransactionId().equalsIgnoreCase(transactionId))
+									if (orderEntry.getTransactionId().equalsIgnoreCase(transactionId))
 									{
-										subOrderEntry = entry;
-										dataToCallOMS.put(entry, subOrderDetails);
-
+										final BulCancelStoreData bulCancelStoreData = new BulCancelStoreData();
+										// SubOrderDetails are added into Map having the key as subOrderEntry
+										bulCancelStoreData.setSubOrderDetails(subOrderDetailsForMap);
+										bulCancelStoreData.setBulkCancelModelData(bulkModel);
+										cancellationDataMap.put(orderEntry, bulCancelStoreData);
+										break;
 									}
-								}
-
-								if (null != subOrderEntry)
-								{
-									break;
 								}
 							}
 							catch (final Exception e)
 							{
-								LOG.info("-----------Order Data Conversion Exception and skipping----" + orderModel.getCode());
+								LOG.error(MarketplacecommerceservicesConstants.BULK_CANCEL_LOG_STEP_11);
 								continue;
 							}
 						}
-
-
 					}
-
+					else
+					{
+						LOG.error(MarketplacecommerceservicesConstants.BULK_CANCEL_LOG_STEP_12);
+						bulkModel.setLoadStatus(MarketplacecommerceservicesConstants.FAILURE_LOAD_STATUS);
+						bulkModel.setStatusDescription(MarketplacecommerceservicesConstants.FAILURE);
+						finalModelToSave.add(bulkModel);
+					}
+					counter++;
 				}
+				LOG.info(MarketplacecommerceservicesConstants.BULK_CANCEL_LOG_STEP_13 + counter);
 
 
+				// Iterate the HashMap to trigger the bulk cancellation process
+				if (!cancellationDataMap.isEmpty() && cancellationDataMap.size() > 0)
+				{
+					finalModelToSave = callOMStoCancelOrder(cancellationDataMap);
+					modelService.saveAll(finalModelToSave);
+				}
 			}
-
-			try
+			else
 			{
-
-				//Step 3: call OMS and CRM
-				returnResonseMap = callOMSandCRM(dataToCallOMS, returnAddrData);
-
+				LOG.error(MarketplacecommerceservicesConstants.BULK_CANCEL_LOG_STEP_14);
 			}
-
-			catch (final Exception e)
-			{
-				LOG.error("", e);
-
-			}
-
-			//Step 4 : saving the modified bulkmodel list
-			saveBulkData(returnResonseMap, bulkList);
-
-
 			final long endTime = System.currentTimeMillis();
-			LOG.info(MarketplacecommerceservicesConstants.END_TIME + endTime);
-
-			LOG.info("Total time taken : " + (endTime - startTime) / 1000);
-
+			LOG.info(MarketplacecommerceservicesConstants.END_TIME_C + endTime);
 		}
-
-
-
 		catch (final EtailBusinessExceptions exception)
 		{
 			LOG.error("", exception);
@@ -195,124 +169,119 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 		}
 		catch (final EtailNonBusinessExceptions exception)
 		{
+
 			LOG.error(exception.getMessage());
 			ExceptionUtil.etailNonBusinessExceptionHandler(exception);
 			return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
 		}
-
-
 		catch (final Exception e)
 		{
-			LOG.error("", e);
-
+			return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
 		}
-
 		return new PerformResult(CronJobResult.SUCCESS, CronJobStatus.FINISHED);
 	}
 
-	//prepare AddressData
-	private ReturnItemAddressData getReturnData(final AddressModel addrModel)
+	/**
+	 * @param cancellationDataMap
+	 * @return List
+	 *
+	 */
+	private List<BulkCancellationProcessModel> callOMStoCancelOrder(
+			final Map<OrderEntryData, BulCancelStoreData> cancellationDataMap)
 	{
-		final ReturnItemAddressData returnAddrData = new ReturnItemAddressData();
-		returnAddrData.setPincode(addrModel.getPostalcode());
-		returnAddrData.setFirstName(addrModel.getFirstname());
-		returnAddrData.setLastName(addrModel.getLastname());
-		returnAddrData.setCity(addrModel.getCity());
-		returnAddrData.setMobileNo(addrModel.getCellphone());
-		returnAddrData.setState(addrModel.getState());
-		return returnAddrData;
-	}
-
-	//call OMS
-	private Map<String, Boolean> callOMSandCRM(final Map<OrderEntryData, OrderData> dataToCallOMS,
-			final ReturnItemAddressData returnAddrData)
-	{
-		final String ticketTypeCode = MarketplacecommerceservicesConstants.TICKETTYPECODE;
+		String ussid = null;
+		final String ticketTypeCode = MarketplacecommerceservicesConstants.TICKETTYPECODE_CANCEL;
 		final String refundType = MarketplacecommerceservicesConstants.REFUNDTYPE;
 		final String reasonCode = MarketplacecommerceservicesConstants.REASONCODE;
-		final Map<String, Boolean> returnResonseMap = new HashMap<String, Boolean>();
+		String orderConsignmentStatus = null;
+		final CustomerData customerData = null;
+		boolean cancellationStatus = false;
+		boolean isCancellable = false;
+		OrderEntryData subOrderEntry = new OrderEntryData();
+		OrderData subOrderDetails = new OrderData();
+		final List<BulkCancellationProcessModel> finalModelToSave = new ArrayList<BulkCancellationProcessModel>();
 
-
-		for (final Map.Entry<OrderEntryData, OrderData> entry : dataToCallOMS.entrySet())
+		for (final OrderEntryData entryHashMap : cancellationDataMap.keySet())
 		{
-			final OrderData subOrderDetails = entry.getValue();
-			final OrderEntryData subOrderEntry = entry.getKey();
-			boolean returnStatus = false;
-			String orderStatus = null;
-			final CustomerData customerData = subOrderDetails.getCustomerData();
-			final String ussid = subOrderEntry.getSelectedUssid();
+			BulCancelStoreData mplCancelStoreData = new BulCancelStoreData();
+			BulkCancellationProcessModel bulkCancelModel = new BulkCancellationProcessModel();
+			subOrderEntry = entryHashMap;
+			mplCancelStoreData = cancellationDataMap.get(entryHashMap);
+			subOrderDetails = mplCancelStoreData.getSubOrderDetails();
+			bulkCancelModel = mplCancelStoreData.getBulkCancelModelData();
+			ussid = subOrderEntry.getSelectedUssid();
 
-			if (subOrderEntry.getQuantity().intValue() != 0 && null != subOrderEntry.getConsignment()
-					&& null != subOrderEntry.getConsignment().getStatus())
+
+			// Check consignment status (if present) and cancellable flag
+
+			if (null == subOrderEntry.getConsignment() && subOrderEntry.getQuantity().intValue() != 0
+					&& null != subOrderDetails.getStatus())
 			{
-				orderStatus = subOrderEntry.getConsignment().getStatus().getCode();
+				LOG.info(MarketplacecommerceservicesConstants.BULK_CANCEL_LOG_STEP_4 + orderConsignmentStatus);
+				orderConsignmentStatus = subOrderDetails.getStatus().getCode();
+				isCancellable = mplOrderFacade.checkCancelStatus(orderConsignmentStatus,
+						MarketplacecommerceservicesConstants.CANCEL_ORDER_STATUS);
 			}
-
-			if (ticketTypeCode.equalsIgnoreCase("R") && null != orderStatus
-					&& orderStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED))
+			else if (null != subOrderEntry.getConsignment() && null != subOrderEntry.getConsignment().getStatus())
 			{
-				LOG.info(subOrderEntry.getTransactionId());
-				returnStatus = cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry, reasonCode, ussid,
-						ticketTypeCode, customerData, refundType, true, SalesApplication.WEB, returnAddrData);
+				LOG.info(MarketplacecommerceservicesConstants.BULK_CANCEL_LOG_STEP_5 + orderConsignmentStatus);
+				orderConsignmentStatus = subOrderEntry.getConsignment().getStatus().getCode();
+				isCancellable = mplOrderFacade.checkCancelStatus(orderConsignmentStatus,
+						MarketplacecommerceservicesConstants.CANCEL_STATUS);
 			}
-			else
+			LOG.info(MarketplacecommerceservicesConstants.BULK_CANCEL_LOG_STEP_6 + isCancellable);
+
+
+
+			String message = MarketplacecommerceservicesConstants.EMPTY;
+			message = MarketplacecommerceservicesConstants.BLANK_SPACE + MarketplacecommerceservicesConstants.LEFT_PARENTHESIS
+					+ MarketplacecommerceservicesConstants.LAST_CONSIGNMENT_STATUS + orderConsignmentStatus
+					+ MarketplacecommerceservicesConstants.RIGHT_PARENTHESIS;
+
+			// Call cancelReturnFacade to implement cancellation process and to create CRM ticket
+			if (ticketTypeCode.equalsIgnoreCase(MarketplacecommerceservicesConstants.TICKETTYPECODE_CANCEL)
+					&& null != orderConsignmentStatus && isCancellable)
 			{
-				LOG.info("-----------Unable to initiate return for TransactionId----- " + subOrderEntry.getTransactionId()
-						+ "==========" + "Order Status is  " + orderStatus);
-			}
-
-			returnResonseMap.put(subOrderEntry.getTransactionId(), Boolean.valueOf(returnStatus));
-		}
-
-		return returnResonseMap;
-	}
-
-	private BulkReturnProcessModel getBulkModel(final List<BulkReturnProcessModel> bulkList, final String transactionId)
-	{
-		BulkReturnProcessModel bulkModel = null;
-		for (final BulkReturnProcessModel model : bulkList)
-		{
-			if (transactionId.equalsIgnoreCase(model.getTransactionId()))
-			{
-				bulkModel = model;
-				break;
-			}
-		}
-
-		return bulkModel;
-	}
-
-	//save data
-	private void saveBulkData(final Map<String, Boolean> returnResonseMap, final List<BulkReturnProcessModel> bulkList)
-	{
-		final List<BulkReturnProcessModel> updatedBulkReturnProcessList = new ArrayList<BulkReturnProcessModel>();
-		for (final Map.Entry<String, Boolean> entry : returnResonseMap.entrySet())
-		{
-			final BulkReturnProcessModel returnBulkModel = getBulkModel(bulkList, entry.getKey());
-			final Boolean returnStatus = entry.getValue();
-			if (null != returnBulkModel && null != returnStatus)
-			{
-				if (returnStatus.booleanValue())
+				if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(
+						MarketplacecommerceservicesConstants.initiate_cancel_job_cancellation_flag))
+						&& (configurationService.getConfiguration().getString(
+								MarketplacecommerceservicesConstants.initiate_cancel_job_cancellation_flag).equals("true")))
 				{
-					returnBulkModel.setLoadStatus("1");
-					returnBulkModel.setErrorDescription(MarketplacecommerceservicesConstants.SUCCESS);
+					cancellationStatus = Boolean.parseBoolean(configurationService.getConfiguration().getString(
+							MarketplacecommerceservicesConstants.initiate_cancel_job_cancellation_flag));
 				}
 				else
 				{
-					returnBulkModel.setLoadStatus("-1");
-					returnBulkModel.setErrorDescription(MarketplacecommerceservicesConstants.FAILURE);
+					cancellationStatus = cancelReturnFacade.implementCancelOrReturn(subOrderDetails, subOrderEntry, reasonCode, ussid,
+							ticketTypeCode, customerData, refundType, false, SalesApplication.WEB);
 				}
-				updatedBulkReturnProcessList.add(returnBulkModel);
+
+				if (cancellationStatus)
+				{
+					bulkCancelModel.setLoadStatus(MarketplacecommerceservicesConstants.SUCCESS_LOAD_STATUS);
+					bulkCancelModel.setStatusDescription(MarketplacecommerceservicesConstants.BULK_CANCEL_SUCCESS_DESC + message);
+
+				}
+				else
+				{
+					bulkCancelModel.setLoadStatus(MarketplacecommerceservicesConstants.FAILURE_LOAD_STATUS);
+					bulkCancelModel.setStatusDescription(MarketplacecommerceservicesConstants.BULK_CANCEL_FAILURE_DESC + message);
+				}
+				finalModelToSave.add(bulkCancelModel);
+			}
+			else
+			{
+				bulkCancelModel.setLoadStatus(MarketplacecommerceservicesConstants.FAILURE_LOAD_STATUS);
+				bulkCancelModel.setStatusDescription(MarketplacecommerceservicesConstants.BULK_CANCEL_FAILURE_DESC + message);
+				finalModelToSave.add(bulkCancelModel);
 			}
 		}
-		modelService.saveAll(updatedBulkReturnProcessList);
+		return finalModelToSave;
 	}
 
-
-	/*
-	 * This method is used to convert the Order Model into Order Data
-	 * 
+	/**
 	 * @param orderModel
+	 * @return OrderData
 	 */
 	protected OrderData convertToData(final OrderModel orderModel)
 	{
@@ -324,25 +293,20 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 		final List<OrderData> sellerOrderList = new ArrayList<OrderData>();
 		try
 		{
-			LOG.info("-----------Order Model to Order Data" + orderModel.getCode());
 			final PriceData deliveryCost = createPrice(orderModel, orderModel.getDeliveryCost());
 			if (orderModel.getConvenienceCharges() != null)
 			{
 				convenienceCharge = createPrice(orderModel, orderModel.getConvenienceCharges());
-				LOG.info("-----------Order Data ConvenienceCharges" + orderModel.getCode());
 			}
 			if (orderModel.getTotalPriceWithConv() != null)
 			{
 				totalPriceWithConvenienceCharge = createPrice(orderModel, orderModel.getTotalPriceWithConv());
-				LOG.info("-----------Order Data total Price with Conv" + orderModel.getCode());
 			}
 			//skip the order if product is missing in the order entries
 			for (final AbstractOrderEntryModel orderEntry : orderModel.getEntries())
 			{
 				if (null == orderEntry.getProduct()) // it means somehow product is deleted from the order entry.
 				{
-					LOG.info("************************Skipping order history for order :" + orderModel.getCode() + " and for user: "
-							+ orderModel.getUser().getName() + " **************************");
 					return null;
 				}
 			}
@@ -356,7 +320,6 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 			{
 				orderData.setTotalPriceWithConvCharge(totalPriceWithConvenienceCharge);
 			}
-			LOG.info("-----------Order Model to Order Data Customer" + orderModel.getCode());
 			if (orderModel.getUser() instanceof CustomerModel)
 			{
 				customer = (CustomerModel) orderModel.getUser();
@@ -416,18 +379,8 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 		}
 		catch (final Exception e)
 		{
-			LOG.info("-----------Order Model to Order Data Exception" + orderModel.getCode());
-			//ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
 			return orderData;
 		}
-		//TODO
-		//for (final OrderEntryData entry : orderData.getEntries())
-		//{
-		//final String productCode = entry.getProduct().getCode();
-		//final ProductData product = productFacade.getProductForCodeAndOptions(productCode,
-		//	Arrays.asList(ProductOption.BASIC, ProductOption.PRICE, ProductOption.CATEGORIES));
-		//entry.setProduct(product);
-		//}
 
 		return orderData;
 
@@ -452,8 +405,6 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 
 		return getPriceDataFactory().create(PriceDataType.BUY, BigDecimal.valueOf(priceValue), currency);
 	}
-
-
 
 	/**
 	 * @return the sessionService
@@ -527,6 +478,4 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 	{
 		this.priceDataFactory = priceDataFactory;
 	}
-
 }
-

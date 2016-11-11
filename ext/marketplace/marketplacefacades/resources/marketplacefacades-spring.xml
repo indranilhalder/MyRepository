@@ -1643,4 +1643,12 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		autowire="byName" >
 	</bean>
 	
+	<bean id="initiateCancelForOrderJob"
+		class="com.tisl.mpl.facade.job.InitiateCancelForOrderJob"
+		autowire="byName" >
+	</bean>
+	<bean id="bulCancelStoreData"
+		class="com.tisl.mpl.facades.data.BulCancelStoreData"
+		autowire="byName" >
+	</bean>
 </beans>

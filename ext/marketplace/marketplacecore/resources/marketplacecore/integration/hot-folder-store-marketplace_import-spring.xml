@@ -55,6 +55,7 @@
 				<entry key="priority_seller" value="0"/>
 				<entry key="promoted_product" value="0"/>
 				<entry key="bulk_return_initiation" value="0"/>
+				<entry key="bulk_cancel_initiation" value="0"/>
 					</map>
 		</property>
 	</bean>
@@ -101,6 +102,12 @@
     p:mapping="bulk_return_initiation"
     p:converter-ref="batchBulkReturnInitiationConverter"/>
 	
+	<!-- Transformer Bulk Cancel Initiation -->
+    <bean id="batchBulkCancelInitiationConverterMapping"
+    class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+    p:mapping="bulk_cancel_initiation"
+    p:converter-ref="batchBulkCancelInitiationConverter"/>
+    
      <!-- Transformer for Classification Attribute Import -->
       <bean id="batchClassificationAttributeConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
@@ -1373,6 +1380,18 @@ INSERT_UPDATE SellerInformation;productSource(code,$catalogVersion);sellerSKU[un
         <property name="header">
              <value>
 				INSERT_UPDATE BulkReturnProcess;parentOrderNo(code);transactionId[unique=true];loadStatus(code);errorDescription(code);
+			</value>
+        </property>
+        <property name="impexRow">
+            <value>;{+0};{+1};{+2};{3}</value>
+        </property>
+        </bean>
+        
+         <!-- Converter for Bulk Cancel Initiation For Order Import --> 
+       <bean id="batchBulkCancelInitiationConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+        <property name="header">
+             <value>
+				INSERT_UPDATE BulkCancellationProcess;parentOrderNo(code);transactionId(code)[unique=true];loadStatus(code);statusDescription(code);
 			</value>
         </property>
         <property name="impexRow">

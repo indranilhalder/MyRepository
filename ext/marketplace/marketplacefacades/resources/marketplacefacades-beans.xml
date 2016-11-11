@@ -916,4 +916,9 @@
 		<property name="brandData" type="java.util.List&lt;com.tisl.mpl.facades.data.EnhancedSearchBrandData>"></property>
 		<property name="sellerData" type="java.util.List&lt;com.tisl.mpl.facades.data.EnhancedSearchSellerData>"></property>
 	</bean>	
+	
+	<bean class="com.tisl.mpl.facades.data.BulCancelStoreData">
+		<property name="subOrderDetails" type="de.hybris.platform.commercefacades.order.data.OrderData"></property>
+		<property name="bulkCancelModelData" type="de.hybris.platform.core.model.BulkCancellationProcessModel"></property>
+	</bean>
 </beans>
