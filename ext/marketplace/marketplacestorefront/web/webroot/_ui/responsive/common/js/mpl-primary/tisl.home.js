@@ -336,7 +336,7 @@ function getBrandsYouLoveAjaxCall() {
             url: ACC.config.encodedContextPath + "/getBrandsYouLove",
             data: dataString,
             success: function(response) {
-                //console.log(response.subComponents);
+               //console.log(response.subComponents);
                 defaultComponentId = "";
                 renderHtml = "<h2>" + response.title + "</h2>" +
                     "<div class='home-brands-you-love-carousel'>";
@@ -366,7 +366,8 @@ function getBrandsYouLoveAjaxCall() {
                 console.log("Error while getting brands you love");
             },
             complete: function() {
-                $(".home-brands-you-love-carousel").owlCarousel({
+            	//console.log("Response :: " + response);
+            	$(".home-brands-you-love-carousel").owlCarousel({
                 	items:7,
             		loop: true,
             		nav:true,
@@ -376,6 +377,7 @@ function getBrandsYouLoveAjaxCall() {
             		autoplay: true,
  	               autoHeight : true,
  	               autoplayTimeout: 5000,
+ 	               slideBy: 2,
             		responsive : {
             			// breakpoint from 0 up
             			0 : {
@@ -684,12 +686,18 @@ function getBestPicksAjaxCall() {
         } else {
             var dataString = 'version=Online';
         }
+        var autoplayTimeout = 0;
+        var slideBy = 1;
         $.ajax({
             type: "GET",
             dataType: "json",
             url: ACC.config.encodedContextPath + "/getBestPicks",
             data: dataString,
             success: function(response) {
+            	console.log(response.autoplayTimeout);
+                console.log(response.slideBy);
+                autoplayTimeout = response.autoplayTimeout;
+                slideBy = response.slideBy;
                 renderHtml = "<h2>" + response.title + "</h2>" +
                     "<div class='home-best-pick-carousel'>";
                 $.each(response.subItems, function(k, v) {
@@ -738,7 +746,10 @@ function getBestPicksAjaxCall() {
                 console.log("Error while getting best picks");
             },
             complete: function() {
-                $(".home-best-pick-carousel").owlCarousel({
+                console.log('complete');
+                console.log(autoplayTimeout);
+                console.log(slideBy);
+            	$(".home-best-pick-carousel").owlCarousel({
                 	items:5,
             		loop: true,
             		nav:true,
@@ -747,7 +758,8 @@ function getBestPicksAjaxCall() {
             		lazyLoad: false,
             		autoplay: true,
  	               autoHeight : true,
- 	               autoplayTimeout: 5000,
+ 	               autoplayTimeout: autoplayTimeout,
+ 	               slideBy: slideBy,
             		responsive : {
             			// breakpoint from 0 up
             			0 : {
@@ -839,6 +851,7 @@ function getProductsYouCareAjaxCall() {
 						autoplay: true,
 			            autoHeight : true,
 			            autoplayTimeout: 5000,
+			            slideBy: 2,
 						responsive : {
 							// breakpoint from 0 up
 							0 : {
@@ -925,6 +938,7 @@ function getNewAndExclusiveAjaxCall() {
         		autoplay: true,
 	            autoHeight : true,
 	            autoplayTimeout: 5000,
+	            slideBy: 2,
         		responsive : {
         			// breakpoint from 0 up
         			0 : {

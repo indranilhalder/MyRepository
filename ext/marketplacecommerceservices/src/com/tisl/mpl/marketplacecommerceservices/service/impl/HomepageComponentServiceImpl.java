@@ -153,7 +153,8 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 					}
 				}
 				bestPicks.put("subItems", subComponentJsonArray);
-
+				bestPicks.put("slideBy", bestPickCarouselComponent.getSlideBy());
+				bestPicks.put("autoplayTimeout", bestPickCarouselComponent.getAutoplayTimeout());
 			}
 		}
 
