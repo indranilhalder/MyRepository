@@ -131,6 +131,8 @@
 		<property name="orderEntryNoteStrategy" ref="orderEntryNoteStrategy" />
 		<property name="ondemandTaxCalculationService" ref="ondemandTaxCalculationService" />
 		<property name="mplSellerInformationService" ref="mplSellerInformationService" />
+		   <!-- R2.3 Added new property -->
+		<property name="mplSellerMasterService" ref="mplSellerMasterService" />
 		
 	</bean>
 
