@@ -106,4 +106,39 @@ public class ProductOfferDetailServiceImpl implements ProductOfferDetailService
 		final Matcher matcher = pattern.matcher(offerMessageDet);
 		return matcher.matches();
 	}
+
+	//update the message for Freebie product TPR-1754
+	/**
+	 * Return Map
+	 */
+	@Override
+	public Map<String, Map<String, String>> showFreebieMessage(final String productCode)
+	{
+		final SearchResult<List<Object>> result = prodOfferDetDao.showFreebieMessage(productCode);
+		final Map<String, Map<String, String>> resultMap = new HashMap<String, Map<String, String>>();
+		if (null != result && CollectionUtils.isNotEmpty(result.getResult()))
+		{
+			for (final List<Object> row : result.getResult())
+			{
+				final Map<String, String> freebieDetMap = new HashMap<String, String>();
+				String sellerIdQry = null;
+				String freebieMessage = null;
+
+				if (!row.isEmpty())
+				{
+					sellerIdQry = (String) row.get(0);
+					freebieMessage = (String) row.get(1);
+				}
+				if (null != sellerIdQry)
+				{
+					if (StringUtils.isNotEmpty(freebieMessage))
+					{
+						freebieDetMap.put(MarketplacecommerceservicesConstants.FREEBIEMSG, freebieMessage);
+					}
+					resultMap.put(sellerIdQry, freebieDetMap);
+				}
+			}
+		}
+		return resultMap;
+	}
 }

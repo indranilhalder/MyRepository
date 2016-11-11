@@ -34,4 +34,14 @@ public class ProductOfferDetailFacadeImpl implements ProductOfferDetailFacade
 		return prodOfferDetService.showOfferMessage(productCode);
 	}
 
+
+	//update the message for Freebie product TPR-1754
+	/**
+	 * Return Map
+	 */
+	@Override
+	public Map<String, Map<String, String>> showFreebieMessage(final String productCode)
+	{
+		return prodOfferDetService.showFreebieMessage(productCode);
+	}
 }
