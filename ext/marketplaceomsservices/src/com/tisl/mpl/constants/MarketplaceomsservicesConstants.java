@@ -39,6 +39,7 @@ public final class MarketplaceomsservicesConstants extends GeneratedMarketplaceo
 	public static final String LOSTINTT = "LOSTINTT";
 	public static final String UNDLVERD = "UNDLVERD";
 	public static final String TAX_CATEGORY = "N/A";
+	public static final String Y="Y";
 
 	
 	public static final String BOTH = "BOTH".intern();
