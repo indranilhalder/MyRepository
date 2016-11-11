@@ -235,12 +235,14 @@
 
 
 	<!-- PDP changes for Promotion begin -->
+	<!-- termsAndConditions Added for TPR-996 -->
 
 	<bean class="de.hybris.platform.commercefacades.product.data.PromotionData">
 		<property name="giftProduct"
 			type="java.util.List&lt;de.hybris.platform.commercefacades.product.data.ProductData>"></property>
 		<property name="channels" type="java.util.List&lt;java.lang.String>"></property>
 		<property name="allowedSellers" type="java.util.List&lt;java.lang.String>"></property>
+		<property name="termsAndConditions" type="String" />
 	</bean>
 
 	<!-- PDP changes for Promotion end -->

@@ -638,4 +638,47 @@ INSERT_UPDATE luxIndicatorEnum;code[unique=true];name[lang=en]
 ;marketplace;Marketplace
 ;luxury;Luxury;
 
+####SiteMap CronJob
+$storePrefix=mpl
+$siteUid=$storePrefix
+$siteMapUrlLimitPerFile=1000
+ 
+INSERT_UPDATE CronJob; code[unique=true];job(code);singleExecutable;sessionLanguage(isocode)
+;customSiteMapMediaJob;customSiteMapMediaJob;false;en
+
+INSERT_UPDATE SiteMapMediaCronJob;code[unique=true];job(code);sessionLanguage(isocode);updatetype(code);contentsite(uid);siteMapUrlLimitPerFile
+;customSiteMapMediaJob;customSiteMapMediaJob;en;ALL;$siteUid;$siteMapUrlLimitPerFile
+
+INSERT_UPDATE SiteMapPage;code(code)[unique=true];frequency(code);priority;active
+;Homepage;daily;1;true
+;Product;daily;0.7;true
+;Category;daily;0.8;true
+;CategoryLanding;daily;0.8;true
+;Store;weekly;0.5;true
+;Content;weekly;0.5;true
+;Custom;weekly;0.5;true
+
+INSERT_UPDATE RendererTemplate;code[unique=true];templatescript[lang=en];
+;mpl-siteMapTemplate;"<?xml version=""1.0"" encoding=""UTF-8""?>
+<urlset xmlns=""http://www.sitemaps.org/schemas/sitemap/0.9"" xmlns:image=""http://www.google.com/schemas/sitemap-image/1.1"">
+	#foreach( $siteMapUrl in $ctx.siteMapData )
+		<url>
+			<loc>${ctx.baseUrl}${siteMapUrl.loc}</loc>
+
+			#if ($siteMapUrl.images)
+				#foreach( $image in $siteMapUrl.images )
+					<image:image>
+						<image:loc>${ctx.mediaUrl}${image}</image:loc>
+					</image:image>
+
+				#end
+			#end
+			<changefreq>${ctx.changeFreq}</changefreq>
+			<priority>${ctx.priority}</priority>
+		</url>
+	#end
+</urlset>"
+
+####SiteMap CronJob Ends
+
 

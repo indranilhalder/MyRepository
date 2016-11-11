@@ -1737,6 +1737,12 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />		
 	</bean>	
 
-		
-	
+		<!-- TPR-1285 Dynamic Sitemap Start -->
+	<bean id="customSiteMapMediaJob"
+ 	      class="com.tisl.mpl.core.sitemap.jobs.CustomSiteMapMediaJob"
+ 	      parent="siteMapMediaJob">
+ 		<property name="mplCategoryDao" ref="mplCategoryDao"/>
+ 		<property name="mplCustomPageSiteMapGenerator" ref="mplCustomPageSiteMapGenerator"/>
+ 	</bean>	
+	<!-- TPR-1285 Dynamic Sitemap Stop -->
 </beans>

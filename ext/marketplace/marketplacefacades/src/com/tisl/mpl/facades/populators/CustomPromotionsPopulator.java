@@ -137,7 +137,7 @@ public class CustomPromotionsPopulator implements Populator<AbstractPromotionMod
 			 * sellerRestriction.getSellerMasterList(); for (final SellerMasterModel seller : sellerList) {
 			 * allowedSellerList.add(seller.getId()); } //setting allowed seller list
 			 * target.setAllowedSellers(allowedSellerList); }
-			 *
+			 * 
 			 * } }
 			 */
 			//}
@@ -180,6 +180,14 @@ public class CustomPromotionsPopulator implements Populator<AbstractPromotionMod
 			target.setGiftProduct(productDataList);
 		}
 		processPromotionMessages(source, target);
+
+		/* Added for TPR-996 */
+		if (source instanceof ProductPromotionModel)
+		{
+			final ProductPromotionModel productPromotion = (ProductPromotionModel) source;
+			target.setTermsAndConditions(productPromotion.getTermsAndCondition());
+
+		}
 	}
 
 	/**
@@ -216,18 +224,18 @@ public class CustomPromotionsPopulator implements Populator<AbstractPromotionMod
 		if (getCartService().hasSessionCart())
 		{
 			final CartModel cartModel = getCartService().getSessionCart();
-			
-				final AbstractPromotion promotion = getModelService().getSource(source);
 
-				final PromotionOrderResults promoOrderResults = getPromotionService().getPromotionResults(cartModel);
-				if (promoOrderResults != null)
-				{
-					prototype.setCouldFireMessages(getCouldFirePromotionsMessages(promoOrderResults, promotion));
-					prototype.setFiredMessages(getFiredPromotionsMessages(promoOrderResults, promotion));
-				}
+			final AbstractPromotion promotion = getModelService().getSource(source);
+
+			final PromotionOrderResults promoOrderResults = getPromotionService().getPromotionResults(cartModel);
+			if (promoOrderResults != null)
+			{
+				prototype.setCouldFireMessages(getCouldFirePromotionsMessages(promoOrderResults, promotion));
+				prototype.setFiredMessages(getFiredPromotionsMessages(promoOrderResults, promotion));
 			}
 		}
-	
+	}
+
 
 	protected List<String> getCouldFirePromotionsMessages(final PromotionOrderResults promoOrderResults,
 			final AbstractPromotion promotion)

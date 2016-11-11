@@ -706,15 +706,21 @@ public class HomePageController extends AbstractPageController
 			{
 				if (buyBoxData.getSpecialPrice() != null)
 				{
-					productPrice = buyBoxData.getSpecialPrice().getFormattedValue();
+					//productPrice = buyBoxData.getSpecialPrice().getFormattedValue();
+					/* TPR-182 */
+					productPrice = buyBoxData.getSpecialPrice().getFormattedValueNoDecimal();
 				}
 				else if (buyBoxData.getPrice() != null)
 				{
-					productPrice = buyBoxData.getPrice().getFormattedValue();
+					//productPrice = buyBoxData.getPrice().getFormattedValue();
+					/* TPR-182 */
+					productPrice = buyBoxData.getPrice().getFormattedValueNoDecimal();
 				}
 				else
 				{
-					productPrice = buyBoxData.getMrp().getFormattedValue();
+					//productPrice = buyBoxData.getMrp().getFormattedValue();
+					/* TPR-182 */
+					productPrice = buyBoxData.getMrp().getFormattedValueNoDecimal();
 				}
 			}
 			LOG.info("ProductPrice>>>>>>>" + productPrice);
