@@ -63,6 +63,10 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 			<!-- Added for offer Engine, TPR-589 -->	
 <import resource="classpath:/marketplacecore/integration/hot-folder-marketplace-offer-product-details.xml"/>
 
+	
+	<!-- update the message for Freebie product TPR-1754 -->
+
+<import resource="classpath:/marketplacecore/integration/hot-folder-marketplace-freebie-product-details.xml"/>
 		
 <!-- TPR-1316 -->	
 	<import

@@ -1768,4 +1768,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 			.intern();
 	public static final String SITEMAP_FILE_LOCATION_CUSTOM = "mpl.sitemap.customFileLocation".intern();
 	public static final String SITEMAP_FILE_LOCATION_PRODUCT = "mpl.sitemap.productFileLocation".intern();
+
+	//update the message for Freebie product TPR-1754
+
+	public static final String PRODUCTFREEBIEDETMSGQUERY = "SELECT {prodOffrDet.sellerId},{offerDet.freebieMsg} FROM {FreebieDetail as offerDet}, {ProductFreebieDetail as  prodOffrDet} WHERE {prodOffrDet.productId}= ?productId AND {prodOffrDet.offer} = {offerDet.pk}"
+			.intern();
+
+	public static final String FREEBIEMSG = "freebieMsg".intern();
 }

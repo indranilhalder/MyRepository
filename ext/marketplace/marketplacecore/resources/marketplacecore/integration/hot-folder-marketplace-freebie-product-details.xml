@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+ 
+ Copyright (c) 2000-2014 hybris AG
+ All rights reserved.
+ 
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+-->
+ 
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:int="http://www.springframework.org/schema/integration"
+   xmlns:file="http://www.springframework.org/schema/integration/file"
+   xmlns:p="http://www.springframework.org/schema/p"
+   xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/integration
+       http://www.springframework.org/schema/integration/spring-integration.xsd
+       http://www.springframework.org/schema/integration/file
+       http://www.springframework.org/schema/integration/file/spring-integration-file.xsd">
+ 
+ 
+ 		<!-- General setup -->
+ 		<bean id="fileOrderComparator" class="de.hybris.platform.acceleratorservices.dataimport.batch.FileOrderComparator">
+		<property name="prefixPriority">
+			<map>
+				<!-- default priority is 0 -->
+				<entry key="freebieDetail" value="1" />		
+				<entry key="productFreebieDetail" value="2" />			
+			</map>
+		</property>
+	</bean>
+ 
+    <bean id="baseDirectoryFreebieProductDetail" class="java.lang.String">
+        <constructor-arg value="#{baseDirectory}/${tenantId}/marketplace-freebieProductDetails" />
+    </bean>
+ 
+    <!-- 1) Scan for files -->
+    
+    <file:inbound-channel-adapter id="batchFilesFreebieProductDetail" directory="#{baseDirectoryFreebieProductDetail}"
+        filename-regex="^(.*)-(\d+)\.csv" comparator="fileOrderComparator" auto-startup="#{configurationService.configuration.getProperty('etail.batch.import.hotfolder.enabled')}">
+        <int:poller fixed-rate="1000" />
+    </file:inbound-channel-adapter>
+ 
+    <!-- 2) move the file to processing and setup header -->
+    
+    <file:outbound-gateway request-channel="batchFilesFreebieProductDetail" reply-channel="batchFilesFreebieProductDetailProc"
+        directory="#{baseDirectoryFreebieProductDetail}/processing" delete-source-files="true" />
+
+	<!-- 3) transform csv to impex file -->
+	
+ 	<int:service-activator input-channel="batchFilesFreebieProductDetailProc" output-channel="batchFilesHeaderInit"
+        ref="CreateFreebieProdDetHeaderSetupTask" method="execute" />
+ 
+ 	<bean id="CreateFreebieProdDetHeaderSetupTask" class="de.hybris.platform.acceleratorservices.dataimport.batch.task.HeaderSetupTask">
+        <property name="catalog" value="mplProductCatalog" />
+        <property name="net" value="false" />
+        <property name="storeBaseDirectory" ref="baseDirectoryFreebieProductDetail" />
+    </bean>   
+    
+ <!-- Transformer converters mappings --> 		 
+    <bean id="batchFreebieDetailConverterMapping"
+    class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+    p:mapping="freebieDetail"
+    p:converter-ref="batchFreebieDetailConverter"/>
+    
+    <bean id="batchProductFreebieDetailConverterMapping"
+    class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+    p:mapping="productFreebieDetail"
+    p:converter-ref="batchProductFreebieDetailConverter"/>		    
+    
+ 	  <!-- Converters --> 	  
+  	<bean id="batchFreebieDetailConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+        <property name="header">
+            <value>#{defaultImpexProductHeader}
+            	 # Insert FreebieDetail
+              INSERT_UPDATE FreebieDetail;freebieId[unique=true];freebieMsg
+            </value>
+        </property>
+        <property name="impexRow">
+            <value>;{+0};{+1};</value>
+        </property>
+        </bean>
+        
+        <bean id="batchProductFreebieDetailConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+        <property name="header">
+            <value>#{defaultImpexProductHeader}
+            	 # Insert ProductFreebieDetail
+             INSERT_UPDATE ProductFreebieDetail;productId[unique=true][mode=append];sellerId[unique=true][mode=append];offer(freebieId)
+            </value>
+        </property>
+        <property name="impexRow">
+            <value>;{+0};{+1};{+2};</value>
+        </property>
+        </bean>       
+       
+  </beans>
