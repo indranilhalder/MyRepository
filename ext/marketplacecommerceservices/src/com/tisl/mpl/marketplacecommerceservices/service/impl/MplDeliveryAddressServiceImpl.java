@@ -24,8 +24,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 //import com.sap.security.core.server.csi.util.StringUtils;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.MplDeliveryAddressInfoModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
 /*import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;*/
 import com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.MplDeliveryAddressDao;
@@ -149,8 +151,9 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 	}
 
 	/**
-	 *  This method is used to save the changed delivery Address
-	 * @param newAddressModel 
+	 * This method is used to save the changed delivery Address
+	 * 
+	 * @param newAddressModel
 	 * @param orderModel
 	 * @return boolean
 	 */
@@ -167,10 +170,10 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 			{
 				if (orderModel != null)
 				{
-					 UserModel user = orderModel.getUser();
-					 List<AddressModel> deliveryAddressesList = new ArrayList<AddressModel>();
-					 Collection<AddressModel> customerAddressesList = new ArrayList<AddressModel>();
-					 Collection<AddressModel> deliveryAddresses = orderModel.getDeliveryAddresses();
+					UserModel user = orderModel.getUser();
+					List<AddressModel> deliveryAddressesList = new ArrayList<AddressModel>();
+					Collection<AddressModel> customerAddressesList = new ArrayList<AddressModel>();
+					Collection<AddressModel> deliveryAddresses = orderModel.getDeliveryAddresses();
 					newAddressModel.setOwner(orderModel.getDeliveryAddress().getOwner());
 					if (null != deliveryAddresses && !deliveryAddresses.isEmpty())
 					{
@@ -191,20 +194,30 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 						childOrder.setDeliveryAddresses(deliveryAddressesList);
 						modelService.save(childOrder);
 					}
-					if (null != orderModel.getChangeDeliveryTotalRequests())
+
+					
+					 //Mpl Delivery Address Report
+					MplDeliveryAddressInfoModel mplDeliveryAddressInfoModel = mplDeliveryAddressDao
+							.getMplDeliveryAddressReportModelByOrderId(orderModel.getCode());
+					if (mplDeliveryAddressInfoModel != null)
 					{
-						orderModel.setChangeDeliveryTotalRequests(new Integer(
-								orderModel.getChangeDeliveryTotalRequests().intValue() + 1));
+						mplDeliveryAddressInfoModel.setChangeDeliveryTotalRequests(new Integer(
+								mplDeliveryAddressInfoModel.getChangeDeliveryTotalRequests().intValue() + 1));
+						modelService.save(mplDeliveryAddressInfoModel);
 					}
 					else
 					{
-						orderModel.setChangeDeliveryTotalRequests(Integer.valueOf(1));
+						MplDeliveryAddressInfoModel newDeliveryAddressInfoModel =modelService.create(MplDeliveryAddressInfoModel.class);
+						newDeliveryAddressInfoModel.setChangeDeliveryTotalRequests(Integer.valueOf(1));
+						newDeliveryAddressInfoModel.setOrderId(orderModel.getCode());
+						modelService.save(newDeliveryAddressInfoModel);
 					}
-					user.setAddresses(customerAddressesList);
 
+					user.setAddresses(customerAddressesList);
 					modelService.save(user);
-					sessionService.removeAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS);
 					isDeliveryAddressChanged = true;
+					sessionService.removeAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS);
+
 				}
 			}
 		}
@@ -215,9 +228,10 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 		return isDeliveryAddressChanged;
 	}
 
-	
+
 	/**
 	 * This method is used to save the failure requests of change delivery address
+	 * 
 	 * @param orderModel
 	 */
 
@@ -226,31 +240,39 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 	{
 		try
 		{
-
-			if (null != orderModel.getChangeDeliveryTotalRequests())
+			//Mpl Delivery Address Report
+			MplDeliveryAddressInfoModel mplDeliveryAddressInfoModel = mplDeliveryAddressDao
+					.getMplDeliveryAddressReportModelByOrderId(orderModel.getCode());
+			if (mplDeliveryAddressInfoModel != null)
 			{
-				orderModel.setChangeDeliveryTotalRequests(new Integer(orderModel.getChangeDeliveryTotalRequests().intValue() + 1));
+				mplDeliveryAddressInfoModel.setChangeDeliveryTotalRequests(new Integer(mplDeliveryAddressInfoModel
+						.getChangeDeliveryTotalRequests().intValue() + 1));
+
+				if (mplDeliveryAddressInfoModel.getChangeDeliveryRejectsCount() != null)
+				{
+					mplDeliveryAddressInfoModel.setChangeDeliveryRejectsCount(new Integer(mplDeliveryAddressInfoModel
+							.getChangeDeliveryRejectsCount().intValue() + 1));
+				}
+				else
+				{
+					mplDeliveryAddressInfoModel.setChangeDeliveryRejectsCount(Integer.valueOf(1));
+				}
+				modelService.save(mplDeliveryAddressInfoModel);
 			}
 			else
 			{
-				orderModel.setChangeDeliveryTotalRequests(Integer.valueOf(1));
+				MplDeliveryAddressInfoModel newDeliveryAddressInfoModel = modelService.create(MplDeliveryAddressInfoModel.class);
+				newDeliveryAddressInfoModel.setChangeDeliveryTotalRequests(Integer.valueOf(1));
+				newDeliveryAddressInfoModel.setChangeDeliveryRejectsCount(Integer.valueOf(1));
+				newDeliveryAddressInfoModel.setOrderId(orderModel.getCode());
+				modelService.save(newDeliveryAddressInfoModel);
 			}
 
-			if (null != orderModel.getChangeDeliveryRejectsCount())
-			{
-				orderModel.setChangeDeliveryRejectsCount(new Integer(orderModel.getChangeDeliveryRejectsCount().intValue() + 1));
-			}
-			else
-			{
-				orderModel.setChangeDeliveryRejectsCount(Integer.valueOf(1));
-			}
-
-			modelService.save(orderModel);
 			sessionService.removeAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS);
 		}
 		catch (final ModelSavingException e)
 		{
-			LOG.error("ModelSavingException while setting status for TemporaryAddress" + e.getMessage());
+			LOG.error("ModelSavingException while setting status " + e.getMessage());
 		}
 		catch (final NullPointerException nullPointerException)
 		{
@@ -298,11 +320,67 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 	 * Give List Of OrderModel Based one Mode
 	 */
 	@Override
-	public List<OrderModel> getOrderModelList(final Date fromDate, final Date toDate)
+	public List<MplDeliveryAddressInfoModel> getMplDeliveryAddressReportModels(final Date fromDate, final Date toDate)
 	{
-		return mplDeliveryAddressDao.getOrderModelList(fromDate, toDate);
+		return mplDeliveryAddressDao.getMplDeliveryAddressReportModels(fromDate, toDate);
+	}
+
+	/**
+	 * This method used for save Date and time information into AbstractOrderEntryModel selected by customer
+	 * 
+	 * @param transactionSDDtoList
+	 * @param orderModel
+	 */
+
+	@Override
+	public void saveSelectedDateAndTime(OrderModel orderModel, List<TransactionSDDto> transactionSDDtoList)
+	{
+		for (OrderModel subOrder : orderModel.getChildOrders())
+		{
+			for (AbstractOrderEntryModel entryModel : subOrder.getEntries())
+			{
+				if (!MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(entryModel.getMplDeliveryMode()
+						.getDeliveryMode().getCode())
+						&& entryModel.getEdScheduledDate() != null)
+				{
+
+
+					//get Entry related(OrderLine) Information  
+					TransactionSDDto transactionSDDto = getEntryData(transactionSDDtoList, entryModel.getTransactionID());
+					if (transactionSDDto != null)
+					{
+						//Save Transaction level  Entry model 
+						entryModel.setEdScheduledDate(transactionSDDto.getPickupDate());
+						entryModel.setTimeSlotFrom(transactionSDDto.getTimeSlotFrom());
+						entryModel.setTimeSlotTo(transactionSDDto.getTimeSlotTo());
+						modelService.save(entryModel);
+					}
+
+
+				}
+			}
+		}
 	}
 
 
-
+	/**
+	 * This method used for check Entry(OrderLine) Related information
+	 * 
+	 * @param transactionSDDtoList
+	 * @param transactionID
+	 */
+	private TransactionSDDto getEntryData(List<TransactionSDDto> transactionSDDtoList, String transactionID)
+	{
+		for (TransactionSDDto transactionSDDto : transactionSDDtoList)
+		{
+			if (StringUtils.isNotEmpty(transactionID) && StringUtils.isNotEmpty(transactionSDDto.getTransactionID()))
+			{
+				if (transactionSDDto.getTransactionID().equalsIgnoreCase(transactionID))
+				{
+					return transactionSDDto;
+				}
+			}
+		}
+		return null;
+	}
 }

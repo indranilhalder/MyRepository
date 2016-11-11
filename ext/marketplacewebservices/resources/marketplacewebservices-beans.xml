@@ -1375,6 +1375,7 @@
 		<property name="pickupPersonName" type="String" />
 		<property name="pickupPersonMobile" type="String" />
 		<property name="isPickupUpdatable" type="boolean"/>	
+		<property name="isCDA" type="boolean"/>	
 	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.ListPinCodeServiceData">
@@ -2444,5 +2445,24 @@
 		<property name="errorCode" type="String"/>
 	</bean>
     
-	
+            <!--FLO1 New Class Added By pankaj  -->
+	<bean class="com.tisl.mpl.wsdto.MplDeliveryAddressResponseWsDTO">
+	    <property name="isPincodeServiceable" type="boolean"/>
+		<property name="isScheduled" type="boolean"/>
+		 <property name="estimateDeliveryDates" type="java.util.List&lt;com.tisl.mpl.wsdto.MplSDInfoWsDTO>"/>
+    </bean>
+    
+     <bean class="com.tisl.mpl.wsdto.MplSDInfoWsDTO">
+        <property name="productCode" type="String"/>
+        <property name="estimateDeliveryDates" type="java.util.List&lt;com.tisl.mpl.wsdto.MplEstimateDeliveryDateWsDTO>"/>
+    </bean>
+    
+    <bean class="com.tisl.mpl.wsdto.MplEstimateDeliveryDateWsDTO">
+        <property name="deliveryDate" type="String"/>
+        <property name="timeSlots" type="java.util.List&lt;com.tisl.mpl.wsdto.MplDeliveryTimeSlotWsDTO>"/>
+    </bean>
+    
+    <bean class="com.tisl.mpl.wsdto.MplDeliveryTimeSlotWsDTO">
+        <property name="timeSlot" type="String"/> 
+    </bean>
 </beans>

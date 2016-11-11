@@ -49,6 +49,7 @@ import com.tis.mpl.facade.address.validator.MplDeliveryAddressComparator;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.BrandModel;
+import com.tisl.mpl.core.model.MplDeliveryAddressInfoModel;
 import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.data.ReturnAddressInfo;
@@ -69,6 +70,9 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryAddressServic
 import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.service.TicketCreationCRMservice;
+import com.tisl.mpl.wsdto.MplDeliveryTimeSlotWsDTO;
+import com.tisl.mpl.wsdto.MplEstimateDeliveryDateWsDTO;
+import com.tisl.mpl.wsdto.MplSDInfoWsDTO;
 
 
 /**
@@ -436,8 +440,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 					transactionEddDtoList = getScheduledDeliveryDate(orderModel, newDeliveryAddress.getPostalcode());
 					if (CollectionUtils.isNotEmpty(transactionEddDtoList))
 					{
-						//Updated address save into session for Temporary Purpose and remove existing data
-						sessionService.removeAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS);
+						//setting changed delivery address in a session
 						sessionService.setAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS, addressData);
 						Map<String, Object> scheduledDeliveryDate = null;
 						scheduledDeliveryDate = getDeliveryDate(transactionEddDtoList, orderModel);
@@ -501,8 +504,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 				 CustomerModel customer = (CustomerModel) orderModel.getUser();
 				 ServicesUtil.validateParameterNotNull(customer.getOriginalUid(), "OriginalUid must not be null");
 				 newDeliveryAddress.setEmail(customer.getOriginalUid());
-				//Updated address save into session for Temporary Purpose 
-				sessionService.removeAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS);
+				// set the Address in a session
 				sessionService.setAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS, addressData);
 				if (StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getPhone1()))
 				{
@@ -600,15 +602,13 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 						{
 							transactionSDDtoList = reScheduleddeliveryDate(orderModel, rescheduleDataList);
 							sessionService.removeAttribute(MarketplacecommerceservicesConstants.RESCHEDULE_DATA_SESSION_KEY);
+							//save selected Date and time
+							mplDeliveryAddressService.saveSelectedDateAndTime(orderModel, transactionSDDtoList);
 						}
 					}
-					//save Address in commerce DB 
-					if (isEligibleScheduledDelivery)
-					{
-						///Save date for delivery
-					}
-					  mplDeliveryAddressService.saveDeliveryAddress(newDeliveryAddressModel,orderModel);
-					  valditionMsg = MarketplaceFacadesConstants.SUCCESS;
+					  
+					   mplDeliveryAddressService.saveDeliveryAddress(newDeliveryAddressModel,orderModel);
+					   valditionMsg = MarketplaceFacadesConstants.SUCCESS;
 				
 					if (LOG.isDebugEnabled())
 					{
@@ -631,7 +631,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 				{
 					mplDeliveryAddressService.saveDeliveryAddress(newDeliveryAddressModel, orderModel);
 					valditionMsg = MarketplaceFacadesConstants.SUCCESS;
-					//customer changed only first name Last name and mobile number then OMS Call CU
+					//customer changed only first name Last name and mobile number then OMS Call CU interface Type
 					if (LOG.isDebugEnabled())
 					{
 						LOG.debug("Updated Contact Related filed  into commerce  then Call to OMS And CRM with CU interface");
@@ -663,28 +663,30 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	public boolean newOTPRequest(String orderCode)
 	{
 		boolean isGenerated = false;
-		 OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
-		 CustomerModel customer = (CustomerModel) orderModel.getUser();
-
-		try
+		OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
+		if (orderModel != null)
 		{
-			if (StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getPhone1()))
+			CustomerModel customer = (CustomerModel) orderModel.getUser();
+			try
 			{
-				generateOTP(customer.getUid(), orderModel.getDeliveryAddress().getPhone1());
+				if (StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getPhone1()))
+				{
+					generateOTP(customer.getUid(), orderModel.getDeliveryAddress().getPhone1());
+				}
+				else if (StringUtils.isNotEmpty(customer.getMobileNumber()))
+				{
+					generateOTP(customer.getUid(), customer.getMobileNumber());
+				}
+				isGenerated = true;
 			}
-			else if(StringUtils.isNotEmpty(customer.getMobileNumber()))
+			catch (final InvalidKeyException excption)
 			{
-				generateOTP(customer.getUid(), customer.getMobileNumber());
+				LOG.error(excption.getMessage());
 			}
-			isGenerated = true;
-		}
-		catch (final InvalidKeyException excption)
-		{
-			LOG.error(excption.getMessage());
-		}
-		catch (final NoSuchAlgorithmException excption)
-		{
-			LOG.error(excption.getMessage());
+			catch (final NoSuchAlgorithmException excption)
+			{
+				LOG.error(excption.getMessage());
+			}
 		}
 		return isGenerated;
 	}
@@ -737,7 +739,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 			ChangeDeliveryAddressResponseDto changeDeliveryAddressResponseDto = new ChangeDeliveryAddressResponseDto();
 
 			changeDeliveryAddressResponseDto = scheduledDeliveryDateRequestToOMS(orderModel, newPincode);
-			if (changeDeliveryAddressResponseDto.getResponse().equalsIgnoreCase(MarketplaceFacadesConstants.SUCCESS))
+			if (MarketplaceFacadesConstants.SUCCESS.equalsIgnoreCase(changeDeliveryAddressResponseDto.getResponse()))
 			{
 				transactionEddDtosList = changeDeliveryAddressResponseDto.getTransactionEddDtos();
 			}
@@ -811,8 +813,8 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		{
 			for (AbstractOrderEntryModel abstractOrderEntry : subOrder.getEntries())
 			{
-				if (!abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getCode()
-						.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
+				if (!MarketplacecommerceservicesConstants.CLICK_COLLECT
+						.equalsIgnoreCase(abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getCode()))
 				{
 					if (abstractOrderEntry.getEdScheduledDate() != null)
 					{
@@ -865,7 +867,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 						break;
 					}
 				}
-				if (deliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
+				if (MarketplacecommerceservicesConstants.HOME_DELIVERY.equalsIgnoreCase(deliveryMode))
 				{
 					timeSlotType = MarketplacecommerceservicesConstants.INTERFACE_TYPE_SD;
 				}
@@ -911,23 +913,20 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 			ServicesUtil.validateParameterNotNull(dateFrom, "dateFrom must not be null");
 			ServicesUtil.validateParameterNotNull(dateTo, "dateTo must not be null");
 
-			List<OrderModel> orderModelList = mplDeliveryAddressService.getOrderModelList(dateFrom, dateTo);
+			List<MplDeliveryAddressInfoModel> mplDeliveryAddressInfoModelList = mplDeliveryAddressService.getMplDeliveryAddressReportModels(dateFrom, dateTo);
 			if (LOG.isDebugEnabled())
 			{
 				LOG.debug("MplDeliveryAddressFacadeImpl:Preparing Data For BackOffice DeliveryAddressRepot");
 			}
-			if (CollectionUtils.isNotEmpty(orderModelList))
+			if (CollectionUtils.isNotEmpty(mplDeliveryAddressInfoModelList))
 			{
-				for (OrderModel orderModel : orderModelList)
+				for (MplDeliveryAddressInfoModel mplDeliveryAddressInfoModel : mplDeliveryAddressInfoModelList)
 				{
 					MplDeliveryAddressReportData mplDeliveryAddressReportData = new MplDeliveryAddressReportData();
-
-					ServicesUtil.validateParameterNotNull(orderModel.getCode(), "orderCode must not be null");
-					mplDeliveryAddressReportData.setOrderId(orderModel.getCode());
-					mplDeliveryAddressReportData.setTotalRequestCount(orderModel.getChangeDeliveryTotalRequests().intValue());
-					mplDeliveryAddressReportData.setFailureRequsetCount(orderModel.getChangeDeliveryRejectsCount().intValue());
+					mplDeliveryAddressReportData.setOrderId(mplDeliveryAddressInfoModel.getOrderId());
+					mplDeliveryAddressReportData.setTotalRequestCount(mplDeliveryAddressInfoModel.getChangeDeliveryTotalRequests().intValue());
+					mplDeliveryAddressReportData.setFailureRequsetCount(mplDeliveryAddressInfoModel.getChangeDeliveryRejectsCount().intValue());
 					mplDeliveryAddressReportDataList.add(mplDeliveryAddressReportData);
-
 				}
 			}
 		}
@@ -1177,6 +1176,72 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		
 	}
 	
+
+	
+   /**
+    * Preparing EstimateDeliveryDate data
+    * for Mobile  
+    * 
+    */
+   @Override
+	public List<MplSDInfoWsDTO> getSDDatesMobile(Object dataSDDates)
+	{
+      //ProductData
+		List<MplSDInfoWsDTO> mplSDInfoWsDTOList = new ArrayList<MplSDInfoWsDTO>();
+		MplSDInfoWsDTO mplSDInfoWsDTO;
+		
+		//DeliveyDate
+		List<MplEstimateDeliveryDateWsDTO> mplEstimateDateList;
+		MplEstimateDeliveryDateWsDTO mplEstimateDeliveryDateWsDTO;
+		
+		//DeliveryTimeSlot
+		List<MplDeliveryTimeSlotWsDTO> mplDeliveryTimeSlotWsDTOList;
+		MplDeliveryTimeSlotWsDTO mplDeliveryTimeSlotWsDTO;
+		
+		Map<String, Object> productData = (Map<String, Object>) dataSDDates;
+
+		for (Entry<String, Object> estimateDates : productData.entrySet())
+		{
+		   // new instance create for each product
+			mplSDInfoWsDTO = new MplSDInfoWsDTO();
+			mplEstimateDateList=new ArrayList<MplEstimateDeliveryDateWsDTO>();
+			
+			//setting product code value 
+			mplSDInfoWsDTO.setProductCode(estimateDates.getKey());
+			Map<String, List<String>> estimateDateData = (Map<String, List<String>>) estimateDates.getValue();
+			for (Entry<String, List<String>> dateData : estimateDateData.entrySet())
+			{
+			   // new instance create for each product
+				mplEstimateDeliveryDateWsDTO = new MplEstimateDeliveryDateWsDTO();
+				
+				//Setting Delivery date
+				mplEstimateDeliveryDateWsDTO.setDeliveryDate(dateData.getKey());
+				
+				// new instance create  for each date  
+				 mplDeliveryTimeSlotWsDTOList = new ArrayList<MplDeliveryTimeSlotWsDTO>();
+				
+				for (String timeSlot : dateData.getValue())
+				{
+				// new instance create for each date 
+					mplDeliveryTimeSlotWsDTO = new MplDeliveryTimeSlotWsDTO();
+					mplDeliveryTimeSlotWsDTO.setTimeSlot(timeSlot);
+					mplDeliveryTimeSlotWsDTOList.add(mplDeliveryTimeSlotWsDTO);
+
+				}
+				//setting value TimeSlots
+				mplEstimateDeliveryDateWsDTO.setTimeSlots(mplDeliveryTimeSlotWsDTOList);
+				
+				//preparing list of Date Data 
+				mplEstimateDateList.add(mplEstimateDeliveryDateWsDTO);
+			}
+			//Setting DeliveyDates Value and preparing List 
+			mplSDInfoWsDTO.setEstimateDeliveryDates(mplEstimateDateList);
+			mplSDInfoWsDTOList.add(mplSDInfoWsDTO);
+		}
+		return mplSDInfoWsDTOList;
+
+	}
+	
 	
 	/**
 	 * @return the mplOrderFacade
@@ -1186,14 +1251,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		return mplOrderFacade;
 	}
 
-	/**
-	 * @param mplOrderFacade
-	 *           the mplOrderFacade to set
-	 */
-	public void setMplOrderFacade(final MplOrderFacade mplOrderFacade)
-	{
-		this.mplOrderFacade = mplOrderFacade;
-	}
+
 
 
 }

@@ -40,7 +40,8 @@ ${stringMessage}
 						</div>
 						<div class="col-md-12 clearfix">
 							<button type="button" class="btn btn-primary submitOrange"
-								onclick="submitOTP('${orderCode}')">SUBMIT</button>
+								onclick="submitOTP('${orderCode}')"><spring:theme
+										code="text.otpPopup.submit" /></button>
 						</div>
 					</div>
 					<p style="clear: both;"></p>
@@ -56,7 +57,7 @@ $(document).ready(function(){
 	});
 		
 });
-function submitOTP((orderCode){
+function submitOTP(orderCode){
 	 $(".otpError").hide();
     $(".serverError").hide();
     
@@ -73,7 +74,7 @@ function submitOTP((orderCode){
 		$.ajax({
 			type : "GET",
 			url : ACC.config.encodedContextPath + "/my-account/validationOTP",
-			data : "orderCode=" + orderCode + "&otpNumber="+$("#OTP").val(),
+			data : "orderId=" + orderCode + "&otpNumber="+$("#OTP").val(),
 			success : function(response) {
 					$(".otpError").show();
 				if(response=="INVALID"){	
@@ -86,7 +87,7 @@ function submitOTP((orderCode){
 					$(".otpError").text("Invalid OTP, Please Re-enter.");
 				}
 				else{
-					window.location.href=ACC.config.encodedContextPath+"/my-account/order/?orderCode="+orderId+"&isServiceable="+true;
+					window.location.href=ACC.config.encodedContextPath+"/my-account/order/?orderCode="+orderCode+"&isServiceable="+true;
 				} 
 			},
 			error: function(jqXHR, textStatus, errorThrown) {

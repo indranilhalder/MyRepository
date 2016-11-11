@@ -44,12 +44,16 @@ ${stringMessage}
 									<c:forEach var="entry"
 									items="${orderDetail.entries}">
 									<c:if test="${entry.product.code eq txnScheduleData.key}">
-									<b>Product Name:</b>
+									<b><spring:theme
+								code="text.scheduledDeliveryDate.productName" /></b>
 									${entry.brandName}<br /> <b>Seller ID:</b> #
 									${entry.selectedSellerInformation.sellerID} <br />
-									<b>quantity:</b>
+									<b> <spring:theme
+								code="text.order.quantity" />
+									</b>
 									${entry.quantity}<br />
-									 <span>Price
+									 <span><spring:theme
+								code="text.order.price" />
 										&nbsp;</span>
 									<format:price priceData="${entry.totalPrice}"
 										displayFreeForZero="true" />
@@ -60,7 +64,8 @@ ${stringMessage}
 								<div class="hidden-sm" style="height: 20px;"></div>
 									<c:set var="txnId" value="${txnId + 1}" scope="page"></c:set>
 									<div class="col-md-6 col-sm-6 scheduleRadio clearfix">
-										<div class="sideheadsch">Preferred date of delivery</div>
+										<div class="sideheadsch"><spring:theme
+								code="text.order.deliveryDate" /></div>
 										<div class="row">
 											<c:set var="dateSlotId" value="0" scope="page"></c:set>
 
@@ -74,8 +79,7 @@ ${stringMessage}
 														name="date${txnId}" class="timeTribhuvan"
 														value="${txnDateData.key}" checked > <span>${txnDateData.key}</span>
 															<div class="timeDelivery" data-timeBlock="${dateSlotId}">
-																<div class="sideheadsch">Preferred time of
-																	delivery</div>
+																<div class="sideheadsch"><spring:theme code="text.order.deliveryTime" /></div>
 																<c:set var="timeSlotId" value="0" scope="page"></c:set>
 																<c:forEach var="txnTimeData"
 																	items="${txnDateData.value}">
@@ -102,8 +106,8 @@ ${stringMessage}
 														value="${txnDateData.key}"  > <span>${txnDateData.key}</span>
 															<div class="timeDelivery display"
 																data-timeBlock="${dateSlotId}">
-																<div class="sideheadsch">Preferred time of
-																	delivery</div>
+																<div class="sideheadsch"><spring:theme
+								code="text.order.deliveryTime" /></div>
 																<c:set var="timeSlotId" value="0" scope="page"></c:set>
 																<c:forEach var="txnTimeData"
 																	items="${txnDateData.value}">
@@ -134,7 +138,8 @@ ${stringMessage}
 					<p style="clear: both;"></p>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-primary submitSchedule"
-							id="reschedule">Re-Schedule</button>
+							id="reschedule"><spring:theme
+								code="text.order.reSchedule" /></button>
 					</div>
 				</form>
 			</div>

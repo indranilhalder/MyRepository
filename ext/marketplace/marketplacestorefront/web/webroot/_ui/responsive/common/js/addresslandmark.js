@@ -244,38 +244,44 @@ function checkPopupDataOrderHistory() {
 			  			validate = false;
 				  	}
 				      if(validate == true){
-						var data = $("#deliveryAddressForm").serialize();
-						var orderCode = $('#deliveryAddorderCode').val();
-						$.ajax({
-							url : ACC.config.encodedContextPath
-									+ "/my-account/" + orderCode
-									+ "/changeDeliveryAddress/",
-							type : 'GET',
-							data : data,
-							contentType: "text/application/html",
-							success : function(result){
-								if(result=='Pincode not Serviceable'){
+							var data = $("#deliveryAddressForm").serialize();
+							var orderCode = $('#deliveryAddorderCode').val();
+							$.ajax({
+								url : ACC.config.encodedContextPath
+										+ "/my-account/" + orderCode
+										+ "/changeDeliveryAddress/",
+								type : 'GET',
+								data : data,
+								contentType: "text/application/html",
+								success : function(result){
+									if(result=='Pincode not Serviceable'){
+										$("#changeAddressPopup").show();
+										$("#showOTP").hide();
+										$(".wrapBG").show();
+										var height = $(window).height();
+										$(".wrapBG").css("height", height);
+										//$("#changeAddressPopup").css("z-index", "999999");
+										$(".pincodeNoError").show();
+										$(".pincodeNoError").text(result);
+									}else if(result =='Updated'){
+										window.location.href=ACC.config.encodedContextPath+"/my-account/order/?orderCode="+orderCode;
+									}else{
+										$("#changeAddressPopup").hide();
+										$("#otpPopup").css({"z-index": "999999", "display":"block", "position":"absolute", "top":"-10%", "left":"30%"});
+										$("#otpPopup").html(result).show();
+										$(".wrapBG").show();
+									}
+								},
+								error : function(result) {
 									$("#changeAddressPopup").show();
 									$("#showOTP").hide();
 									$(".wrapBG").show();
 									var height = $(window).height();
 									$(".wrapBG").css("height", height);
-									$("#changeAddressPopup").css("z-index", "999999");
-									$(".pincodeNoError").show();
-									$(".pincodeNoError").text(result);
-								}else if(result =='Updated'){
-									window.location.href=ACC.config.encodedContextPath+"/my-account/order/?orderCode="+orderCode;
-								}else{
-									$("#changeAddressPopup").hide();
-									$("#otpPopup").html(result).show();
-									$(".wrapBG").show();
+									$(".main_error").show();
+									$(".main_error").text("Internal server error Please try after sometime");
 								}
-							},
-							error : function(result) {
-								alert("error");
-							}
-
-						});
+							});
 					}
 						
 					}
@@ -311,7 +317,10 @@ $(document).ready(function() {
 	
 });
 
+var count=0;
 function newOTPGenerate(orderCode){
+	count++;
+	if(count <= 6){
 	 $.ajax({
 			type : "GET",
 			url : ACC.config.encodedContextPath + "/my-account/newOTP",
@@ -326,4 +335,13 @@ function newOTPGenerate(orderCode){
 				}
 			}
 		}); 
+	 
+	}else{
+		$(".otpError").show();
+		$(".otpError").text("OTP sending failed, Because you haven't try More then  six times ");
+	}
 } 
+function closeOTP(){
+	$("#changeAddressPopup, #otpPopup").hide();
+	$(".wrapBG").hide();
+}

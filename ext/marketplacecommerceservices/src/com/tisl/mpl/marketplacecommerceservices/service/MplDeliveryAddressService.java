@@ -10,6 +10,9 @@ import de.hybris.platform.core.model.user.AddressModel;
 import java.util.Date;
 import java.util.List;
 
+import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
+import com.tisl.mpl.core.model.MplDeliveryAddressInfoModel;
+
 
 /**
  * @author prasad1
@@ -43,6 +46,8 @@ public interface MplDeliveryAddressService
 	public boolean checkScheduledDeliveryForOrder(OrderModel orderModel);
 
 	
-	public List<OrderModel> getOrderModelList(Date fromDate, final Date toDate);
+	public List<MplDeliveryAddressInfoModel> getMplDeliveryAddressReportModels(final Date fromDate, final Date toDate);
+	
+	public void saveSelectedDateAndTime(OrderModel orderModel,List<TransactionSDDto> transactionSDDto);
 
 }

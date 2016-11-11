@@ -30,13 +30,13 @@
 				<div class="row">
 					<div class="col-md-6">
 					<div class="error_text serverError"></div>
-						<h4>Edit Shipping Address</h4>
+						<h4><spring:theme code="text.order.deliveryAddress.editAddress"/></h4>
 					</div>
 					<div class="col-md-1">
-						<h4>OR</h4>
+						<h4><spring:theme code="text.order.deliveryAddress.or"/></h4>
 					</div>
 					<div class="col-md-5">
-						<h4>Change Address To </h4>
+						<h4><spring:theme code="text.order.changeAddTo"/></h4>
 					</div>
 				</div>
 			</div>
@@ -45,14 +45,14 @@
 					<div class="col-md-7 NOP">
 						<div class="row">
 							<div class="col-md-6 form-group">
-								<label for="firstName">First Name*</label>
+								<label for="firstName"><spring:theme code="text.order.returns.firstname"/></label>
 								<form:input path="firstName"
 									class="form-control textInputChangeAddress" id="firstName"
 									value="${orderDetails.deliveryAddress.firstName}" placeholder="First Name" />
 								<div class="error_text firstNameError"></div>
 							</div>
 							<div class="col-md-6 form-group">
-								<label for="lastName">Last Name*</label>
+								<label for="lastName"><spring:theme code="text.order.returns.lastname"/></label>
 
 								<form:input path="lastName"
 									class="form-control textInputChangeAddress" id="lastName"
@@ -64,7 +64,7 @@
 						<div class="row" style="clear: both">
 							<div class="col-md-6">
 								<div class="form-group">
-									<label for="pincode">Pincode*</label>
+									<label for="pincode"><spring:theme code="text.order.returns.pincode"/></label>
 									<form:input path="postcode" class="address_postcode"
 										id="pincode" maxlength="6"
 										value="${orderDetails.deliveryAddress.postalCode}"  placeholder="Pincode" />
@@ -74,7 +74,7 @@
 						</div>
 						<div class="row">
 							<div class="col-md-12 form-group">
-								<label for="addressLine1">Address Line 1*</label>
+								<label for="addressLine1"><spring:theme code="text.order.returns.addressline1"/></label>
 
 								<form:input path="line1"
 									class="form-control textInputChangeAddress" id="addressLine1"
@@ -84,7 +84,7 @@
 						</div>
 						<div class="row">
 							<div class="col-md-12 form-group">
-								<label for="addressLine2">Address Line 2*</label>
+								<label for="addressLine2"><spring:theme code="text.order.returns.addressline2"/></label>
 								<form:input path="line2"
 									value="${orderDetails.deliveryAddress.line2}" placeholder="Address Line 2"
 									class="form-control textInputChangeAddress" id="addressLine2" />
@@ -93,7 +93,7 @@
 						</div>
 						<div class="row">
 							<div class="col-md-12 form-group">
-								<label for="addressLine2">Address Line 3*</label>
+								<label for="addressLine2"><spring:theme code="text.order.returns.addressline3"/></label>
 								<form:input path="line3" id="addressLine3"
 									class="form-control textInputChangeAddress"
 									value="${orderDetails.deliveryAddress.line3}" placeholder="Address Line 3" />
@@ -106,7 +106,7 @@
 						<div class="row">
 							<div class="optionsLandmark">
 								<div class="col-md-12">
-									<label for="landmark">Landmark</label>
+									<label for="landmark"><spring:theme code="text.order.returns.landmark"/></label>
 									<%-- <c:if test="${orderDetails.deliveryAddress.landmark==}"></c:if> --%>
 									<form:select path="landmark" 
 										class="form-control textInputChangeAddress address_landmarks slected_value" id="landmark"
@@ -118,7 +118,7 @@
 						<div class="row">
 							<div class="address_landmarkOtherDiv">
 								<div class="col-md-12">
-									<label>Landmark</label>
+									<label><spring:theme code="text.order.returns.landmarkother"/></label>
 										<form:input class="otherLandMark" placeholder="Other Landmark" path="otherLandmark"/>	
 										<div class="error_text otherLandMarkError"></div>									
 								</div>
@@ -127,7 +127,7 @@
 						<div class="row">
 							<div class="col-md-12" style="margin-top: 10px;">
 								<div class="form-group">
-									<label for="city">City*</label>
+									<label for="city"><spring:theme code="text.order.returns.city"/></label>
 									<form:input path="townCity" class="address_townCity" id="city"
 										value="${orderDetails.deliveryAddress.town}" placeholder="City" />
 									<div class="error_text cityError"></div>
@@ -152,7 +152,7 @@
 								<div class="error_text stateError"></div>
 							</div>
 							<div class="col-md-6 form-group">
-								<label for="country">Country*</label> <input type="text"
+								<label for="country"><spring:theme code="text.order.returns.country"/></label> <input type="text"
 									id="country"
 									value='${orderDetails.deliveryAddress.country.name}' readonly />
 								<form:input path="countryIso" type="hidden" id="country"
@@ -163,7 +163,7 @@
 
 						<div class="row">
 							<div class="col-md-8 form-group">
-								<label for="phonenumber">Phone Number*</label>
+								<label for="phonenumber"><spring:theme code="text.order.returns.phonenumber"/></label>
 								<form:input path="mobileNo"
 									class="form-control textInputChangeAddress" id="mobileNo" maxlength="10"
 									value="${orderDetails.deliveryAddress.phone}" placeholder="Mobile Number" />
@@ -235,7 +235,7 @@
 			<p style="clear: both;"></p>
 			<div class="modal-footer">
 				<div class="error_text main_error"></div>
-				<button type="button" onclick="checkPopupDataOrderHistory()" class="btn btn-primary saveBlockData">Save</button>
+				<button type="button" onclick="checkPopupDataOrderHistory()" class="btn btn-primary saveBlockData"><spring:theme code="text.order.returns.savebutton"/></button>
 			</div>
 		</form:form>
 		<p style="clear: both;"></p>

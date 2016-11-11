@@ -20,6 +20,7 @@ import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.facades.data.MplDeliveryAddressReportData;
 import com.tisl.mpl.facades.data.RescheduleDataList;
 import com.tisl.mpl.facades.data.ScheduledDeliveryData;
+import com.tisl.mpl.wsdto.MplSDInfoWsDTO;
 
 
 /**
@@ -88,21 +89,16 @@ public interface MplDeliveryAddressFacade
 	
 	public OTPResponseData validteOTP(String customerID, String enteredOTPNumber);
     
-    /**
-	 * @param orderId
-	 * @param status
-	 */
 	public void saveChangeDeliveryRequests(OrderModel orderModel);
 
+	
+   public boolean checkScheduledDeliveryForOrder(OrderModel orderModel);
 
-/**
- * @param orderModel
- * @return
- */
-public boolean checkScheduledDeliveryForOrder(OrderModel orderModel);
+   public boolean pincodeServiceableCheck(AddressData addressData, String orderCode);
 
-public boolean pincodeServiceableCheck(AddressData addressData, String orderCode);
-
-public OrderData reScheduledDeliveryPageData(OrderData orderData);
+   public OrderData reScheduledDeliveryPageData(OrderData orderData);
+  
+   /* added new Method for  MobileAppData*/
+   public List<MplSDInfoWsDTO> getSDDatesMobile(Object deliverySDEDData);
 	
 }
