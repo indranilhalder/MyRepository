@@ -305,16 +305,7 @@
 		</div>
 				
 		<%-- <formElement:formInputBox idKey="address.states" labelKey="address.states" path="state" inputCSS="form-control" mandatory="true"/> --%>
-		<div class='half'>
-		<formElement:formInputBox idKey="address.postcode"
-			labelKey="address.postcode" path="postcode"
-			mandatory="true" maxLength="6" />
-		<div class="help-block has-error" id="addressPincodeServicableDiv"
-			style="display: none;"></div>
-			<div class="help-block has-error" id="pincodeError" style="display: none;">
-			</div>
-			</div>
-				
+
          <div class='half'>
           <label for="myselect"><spring:theme code="text.addressBook.PhoneNumber" text="Mobile Number" /></label>		
       <div class="showPhone">
