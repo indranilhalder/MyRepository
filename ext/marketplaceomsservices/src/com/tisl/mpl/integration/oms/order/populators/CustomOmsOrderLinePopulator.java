@@ -268,6 +268,19 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				LOG.debug("CustomOmsOrderLinePopulator : IsFragile  is null ");
 			}
 			
+			if (richAttributeModel.get(0).getIsFragile() != null
+					&& richAttributeModel.get(0).getIsFragile().getCode() != null)
+
+			{
+				final String isFragile = richAttributeModel.get(0).getIsFragile().getCode().toUpperCase();
+
+				target.setIsFragile(isFragile);
+			}
+			else
+			{
+				LOG.debug("CustomOmsOrderLinePopulator : IsFragile  is null ");
+			}
+
 			if (source.getEdScheduledDate() != null)
 			{
 				target.setEdScheduledDate(String.valueOf(source.getEdScheduledDate()));
@@ -365,9 +378,11 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 
 			//added new attribute isLPAWBEdit for orderLine
 			final SellerMasterModel sellerMasterModel =mplSellerMasterService.getSellerMaster(sellerInfoModel.getSellerID());
-			if (sellerMasterModel != null && sellerMasterModel.getIsLPAWBEdit() != null)
+			if (sellerMasterModel != null)
 			{
-				if (MarketplaceomsservicesConstants.Y.equalsIgnoreCase(sellerMasterModel.getIsLPAWBEdit()))
+				
+				if (StringUtils.isNotEmpty(sellerMasterModel.getIsLPAWBEdit())
+						&& MarketplaceomsservicesConstants.Y.equalsIgnoreCase(sellerMasterModel.getIsLPAWBEdit()))
 				{
 					target.setIsLPAWBEdit(Boolean.TRUE);
 				}

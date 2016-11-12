@@ -430,7 +430,7 @@
 										<label>Enter Nearest Landmark</label>
 											<form:input path="otherLandmark" id="otherLandmark" onkeyup="optionsLandmark1()" class="address_landmarkOther"
 												maxlength="30" />
-												<div class="errorMessage errland2"> hgsh  </div>
+												<div class="errorMessage errland2"></div>
 										</div>
 									</div>
 									
@@ -438,21 +438,23 @@
 									<div class="half" style="clear: both">
 									<label><spring:theme code="text.addressBook.City" text="City *" /></label>
 										<form:input path="townCity" id="townCity" class="address_townCity"
-											onkeyup="kpressaddresscity()" maxlength="40" />
+											onkeyup="kpressaddresscity()" maxlength="30" />
 											<div class="errorMessage"><div id="erraddressCity">  </div></div>
 									</div>
 									
 
 
 									<div class="half no-display">
-										<label><spring:theme code="text.addressBook.State" text="State *" /></label>
-										<form:select name="stateList" id="stateListBox" path="state"
-											 onChange="onAddressSelectValidate()">
-											<c:forEach items="${stateDataList}" var="state"
-												varStatus="stateStatus">
-												<option value="${state.name}">${state.name}</option>
-											</c:forEach>
-										</form:select>
+										<div class="mainDrop">
+											<label><spring:theme code="text.addressBook.State"
+													text="State *" /></label>
+											<form:select name="stateList" id="stateListBox" path="state"
+												class="address_states" onChange="onAddressSelectValidate()">
+												<c:forEach items="${stateDataList}" var="state"
+													varStatus="stateStatus">
+													<option value="${state.name}">${state.name}</option>
+												</c:forEach>
+											</form:select>
 											<div class="errorMessage">
 												<div id="erraddressState"></div>
 											</div>
@@ -485,13 +487,6 @@
 										
 										<input type="text" name="CountryList" value="India" disabled="">
 										
-									</div>
-									
-									<div class="half" style="clear:both;">
-									<label><spring:theme code="text.addressBook.PinCode" text="PinCode *" /></label>
-										<form:input path="postcode" id="postcode"
-											onkeyup="kpressaddresspost()" maxlength="6" />
-											<div class="errorMessage"><div id="erraddressPost">   </div></div> 
 									</div>
 									
 									<div class="half phone">

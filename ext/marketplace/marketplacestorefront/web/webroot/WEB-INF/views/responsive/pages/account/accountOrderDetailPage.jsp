@@ -305,6 +305,8 @@
 										Shipping Address:
 									</h3>
 								</c:if>
+                               <div class="row">
+							       <div class="col-md-4 col-sm-6">
 								<c:set var="subOrderLine2" value="${fn:trim(subOrder.deliveryAddress.line2)}"/>
 								<c:set var="subOrderLine3" value="${fn:trim(subOrder.deliveryAddress.line3)}"/>
 								<address>
