@@ -267,7 +267,7 @@ function checkPopupDataOrderHistory() {
 										window.location.href=ACC.config.encodedContextPath+"/my-account/order/?orderCode="+orderCode;
 									}else{
 										$("#changeAddressPopup").hide();
-										$("#otpPopup").css({"z-index": "999999", "display":"block", "position":"absolute", "top":"-10%", "left":"30%"});
+										$("#otpPopup").css({"z-index": "999999", "display":"block", "position":"absolute", "top":"2px", "left":"30%"});
 										$("#otpPopup").html(result).show();
 										$(".wrapBG").show();
 									}
