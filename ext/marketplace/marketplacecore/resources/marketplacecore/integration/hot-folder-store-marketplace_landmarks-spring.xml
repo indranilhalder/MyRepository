@@ -16,7 +16,7 @@
     http://www.springframework.org/schema/context/spring-context.xsd">
     
      <bean id="baseDirectoryMarketplaceLandMarks" class="java.lang.String">
-        <constructor-arg value="#{baseDirectory}/${tenantId}/marketplace-LandMarks" />
+        <constructor-arg value="#{baseDirectory}/${tenantId}/marketplace-landMarks" />
     </bean>
     
      <!-- 1) Scan for files -->
@@ -45,7 +45,7 @@
     <!-- Landmarks Data Importing -->
     <bean id="batchMplLandMarksConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-    p:mapping="Landmarks"
+    p:mapping="landMarks"
     p:converter-ref="batchMplLandMarksConverter"/>
     
     

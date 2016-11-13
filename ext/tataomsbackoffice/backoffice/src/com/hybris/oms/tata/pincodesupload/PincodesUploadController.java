@@ -97,7 +97,7 @@ public class PincodesUploadController extends DefaultWidgetController
 		}
 		else
 		{
-			DataUplaod(event.getMedia(), getFile("Landmarks-", landmarkUploadFilePath), landmarkError);
+			DataUplaod(event.getMedia(), getFile("landMarks-", landmarkUploadFilePath), landmarkError);
 		}
 	}
 

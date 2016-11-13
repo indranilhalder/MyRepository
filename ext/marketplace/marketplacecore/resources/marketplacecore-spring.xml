@@ -30,37 +30,37 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 	
 	
 	<!-- Added For Pincode -->
-	<!-- <import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_pincode-spring.xml" />
+	 <import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_pincode-spring.xml" />
 	
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-common-spring.xml" />
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_import-spring.xml" />
 		
-	Added for landmarks
+	<!-- Added for landmarks -->
 	<import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_landmarks-spring.xml" />
 	
 <import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_buybox-spring.xml" />
 
-		TISPRD-207 Changes Start
+		<!-- TISPRD-207 Changes Start -->
 		<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_delist-spring.xml" />
-		TISPRD-207 Changes End
-	<import
-		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_classification-spring.xml" />
+		<!-- TISPRD-207 Changes End -->
+	<!-- <import
+		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_classification-spring.xml" /> -->
 
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_price-spring.xml" />
-	<import
-		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_product-spring.xml" />
+	<!-- <import
+		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_product-spring.xml" /> -->
 
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_stock-spring.xml" />
-	<import
+	<!-- <import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_seller-spring.xml" />
 	<import
-		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_media-spring.xml" />
+		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_media-spring.xml" /> -->
 
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_bin-spring.xml" />
@@ -69,7 +69,7 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 		
 	<import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_manualRefund-spring.xml"/>
 	
-	<import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_userGroup-spring.xml"/> -->
+	<import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_userGroup-spring.xml"/> 
 		
 
 
