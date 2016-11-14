@@ -90,11 +90,13 @@
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	 # Insert ProductFreebieDetail
-             INSERT_UPDATE ProductFreebieDetail;productId[unique=true][mode=append];sellerId[unique=true][mode=append];offer(freebieId)
+           <!--   INSERT_UPDATE ProductFreebieDetail;productId[unique=true][mode=append];sellerId[unique=true][mode=append];offer(freebieId);startDate[dateformat=yyyyMMddHHmmss];endDate[dateformat=yyyyMMddHHmmss] -->
+             INSERT_UPDATE ProductFreebieDetail;ussId[unique=true][mode=append];offer(freebieId);startDate[dateformat=yyyyMMddHHmmss];endDate[dateformat=yyyyMMddHHmmss]
             </value>
         </property>
         <property name="impexRow">
-            <value>;{+0};{+1};{+2};</value>
+          <!--   <value>;{+0};{+1};{+2};{+3};{+4};</value> -->
+            <value>;{+0};{+1};{+2};{+3};</value>
         </property>
         </bean>       
        

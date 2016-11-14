@@ -810,10 +810,11 @@ function setValidPrice(sellersArray, index) {
 			 $("#mrpPriceId").hide();
 			 $("#savingsOnProductId").hide();
 			 //$("#dListedErrorMsg").show(); //Need to Change	
-			// $("#freebieProductMsgId").show();	
+			// $("#freebieProductMsgId").show();
+			 var ussId=  $("#ussid").val();
 			 
 			//update the message for Freebie product TPR-1754
-			 var freebieproductMsg =populateFreebieMsg(productCode);
+			 var freebieproductMsg =populateFreebieMsg(ussId);
 			
 			 if($.isEmptyObject(freebieproductMsg)){
 				 
@@ -1863,10 +1864,12 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 				 $(".star-review").hide();
 				 //$("#dListedErrorMsg").show();	//Need to Change
 				// $("#freebieProductMsgId").show();
-				 			 
+			var ussId=  $("#ussid").val();
+				
+			//	$("#ussid").val(data['sellerArticleSKU']);
 				 
 				//update the message for Freebie product TPR-1754
-				 var freebieproductMsg =populateFreebieMsg(productCode);			 
+				 var freebieproductMsg =populateFreebieMsg(ussId);			 
 				 if($.isEmptyObject(freebieproductMsg)){	
 					 
 					 $("#freebieProductMsgId").show();			 
@@ -3112,10 +3115,10 @@ function getProductContents() {
 
 	
 	//update the message for Freebie product TPR-1754
-	function  populateFreebieMsg(productCode){
-		var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
+	function  populateFreebieMsg(ussId){
+		var requiredUrl = ACC.config.encodedContextPath + "/p-" + ussId
 		                  + "/getFreebieMessage";		
-		var dataString = 'productCode=' + productCode;	
+		var dataString = 'ussId=' + ussId;	
 		$.ajax({
 			contentType : "application/json; charset=utf-8",
 			url : requiredUrl,
@@ -3125,14 +3128,13 @@ function getProductContents() {
 			success : function(data){
 				if (data != null) {			
 				    var freebieMessageMap = data['offerMessageMap'];
-				    
 				    if(!$.isEmptyObject(freebieMessageMap)){
 				    	
 				    	$.each( freebieMessageMap, function(key,value){		
 				    		
 							$.each(value, function(keyInternal,valueInternal){
 								 if(keyInternal == 'freebieMsg'){
-									 freebieMsg = valueInternal;
+									 freebieMsg = valueInternal;		 
 									 
 								 }				 
 							 });

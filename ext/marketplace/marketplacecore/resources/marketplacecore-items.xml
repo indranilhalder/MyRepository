@@ -9241,24 +9241,34 @@
 			<itemtype code="ProductFreebieDetail" autocreate="true" generate="true">
 				<deployment table="ProductFreebieDetail" typecode="17021" />
 				<attributes>
-					<attribute autocreate="true" qualifier="productId" type="java.lang.String" generate="true">
-					    <description>Product Id for freebie</description>
+					<attribute autocreate="true" qualifier="ussId" type="java.lang.String" generate="true">
+					    <description>UssId for freebie</description>
 						<persistence type="property" />
 						<modifiers unique="true" optional="false" />
 					</attribute>
-					<attribute autocreate="true" qualifier="sellerId" type="java.lang.String" generate="true">
+					<!-- <attribute autocreate="true" qualifier="sellerId" type="java.lang.String" generate="true">
 					    <description>Seller Id for freebie</description>
 						<persistence type="property" />
 						<modifiers unique="true" optional="false" />
+					</attribute> -->
+					<attribute qualifier='startDate' type="java.util.Date"  generate="true">
+						<description>Date on which the product promotion would start</description>
+						<modifiers read="true" write="true" optional="false"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier='endDate' type="java.util.Date"  generate="true">
+						<description>Date on which the product promotion would start</description>
+						<modifiers read="true" write="true" optional="false"/>
+						<persistence type="property" />
 					</attribute>
 				</attributes>
 				<indexes>
 					<index name="freebieProductId_Index">
-						<key attribute="productId" />
+						<key attribute="ussId" />
 					</index>
-					<index name="freebieSellerId_Index">
+					<!-- <index name="freebieSellerId_Index">
 						<key attribute="sellerId" />
-					</index>
+					</index> -->
 				</indexes>
 			</itemtype>
 			</typegroup>

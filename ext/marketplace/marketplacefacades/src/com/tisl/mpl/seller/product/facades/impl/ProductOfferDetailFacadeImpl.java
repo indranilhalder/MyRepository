@@ -40,8 +40,8 @@ public class ProductOfferDetailFacadeImpl implements ProductOfferDetailFacade
 	 * Return Map
 	 */
 	@Override
-	public Map<String, Map<String, String>> showFreebieMessage(final String productCode)
+	public Map<String, Map<String, String>> showFreebieMessage(final String ussId)
 	{
-		return prodOfferDetService.showFreebieMessage(productCode);
+		return prodOfferDetService.showFreebieMessage(ussId);
 	}
 }

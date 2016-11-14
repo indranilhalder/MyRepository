@@ -76,7 +76,7 @@ public class ProductOfferDetailDaoImpl extends AbstractItemDao implements Produc
 	 * return SearchResult
 	 */
 	@Override
-	public SearchResult<List<Object>> showFreebieMessage(final String productCode)
+	public SearchResult<List<Object>> showFreebieMessage(final String ussId)
 	{
 		try
 		{
@@ -85,9 +85,11 @@ public class ProductOfferDetailDaoImpl extends AbstractItemDao implements Produc
 			LOG.debug("queryString: " + queryString);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 
-			query.addQueryParameter(MarketplacecommerceservicesConstants.OFFERPRODUCTID, productCode);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.FREEBIEUSSID, ussId);
 
-			query.setResultClassList(Arrays.asList(String.class, String.class));
+			query.addQueryParameter(MarketplacecommerceservicesConstants.SYSDATE, new Date());
+
+			query.setResultClassList(Arrays.asList(String.class, String.class, String.class, String.class));
 			final SearchResult<List<Object>> result = search(query);
 			if (null != result)
 			{

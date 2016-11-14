@@ -2823,25 +2823,25 @@ public class ProductPageController extends AbstractPageController
 	//update the message for Freebie product TPR-1754
 
 	@ResponseBody
-	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN
+	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.USSID_CODE_PATH_NEW_PATTERN
 			+ "/getFreebieMessage", method = RequestMethod.GET)
-	public JSONObject populateFreebieMessage(
-			@RequestParam(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode)
-					throws com.granule.json.JSONException
+	public JSONObject populateFreebieMessage(@RequestParam(ControllerConstants.Views.Fragments.Product.USSID) final String ussId)
+			throws com.granule.json.JSONException
 	{
 		final JSONObject buyboxJson = new JSONObject();
 		buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.EMPTY);
 		try
 		{
-			if (StringUtils.isNotEmpty(productCode))
+			if (StringUtils.isNotEmpty(ussId))
 			{
-				final Map<String, Map<String, String>> offerMessageMap = prodOfferDetFacade.showFreebieMessage(productCode);
+				final Map<String, Map<String, String>> offerMessageMap = prodOfferDetFacade.showFreebieMessage(ussId);
 
 
 				// populate json with offer message
 				if (MapUtils.isNotEmpty(offerMessageMap))
 				{
 					buyboxJson.put(ControllerConstants.Views.Fragments.Product.OFFERMESSAGEMAP, offerMessageMap);
+
 				}
 			}
 
