@@ -2017,7 +2017,7 @@
 													<span class="start"></span>
 													<c:set value="0" var="dotCount" /> 
 													<!-- Show only first and last result to restrict in 2 dots-->
-													<c:forEach items="${paymentStatus}" var="productStatus" varStatus="loop">
+													<c:forEach items="${approvedStatus}" var="productStatus" varStatus="loop">
 
 														<c:choose>
 															<c:when test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
