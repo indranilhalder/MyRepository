@@ -295,7 +295,7 @@
 								 <c:choose>
 									<c:when test="${product.productMRP.value > 0}">
 										<span class="priceFormat">
-											<span id="mrpprice_${product.code}"> ${product.productMRP.}</span></span>
+											<span id="mrpprice_${product.code}"> ${product.productMRP.formattedValue}</span></span>
 									</c:when>
 									<c:otherwise>
 										<c:if test="${displayFreeForZero}">
@@ -312,7 +312,7 @@
 								<c:choose>
 									<c:when test="${product.price.value > 0}">
 										<span class="priceFormat">
-											<span id="price_${product.code}"> ${product.price.formattedValueNoDecimal}</span></span>
+											<span id="price_${product.code}"> ${product.price.formattedValue}</span></span>
 									</c:when>
 									<c:otherwise>
 										<c:if test="${displayFreeForZero}">
@@ -341,7 +341,7 @@
 							<c:choose>
 									<c:when test="${product.productMRP.value > 0}">
 										<span class="priceFormat">
-										<span id="priceEqual_${product.code}">${product.productMRP.formattedValueNoDecimal}</span></span>
+										<span id="priceEqual_${product.code}">${product.productMRP.formattedValue}</span></span>
 									</c:when>
 									<c:otherwise>
 										<c:if test="${displayFreeForZero}">
