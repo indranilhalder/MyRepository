@@ -3519,7 +3519,6 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * TPR-965
 	 *
 	 * @param validEntries
-	 * @param totalEligibleCount
 	 * @param ctx
 	 * @param qCountMap
 	 * @return validProdUssidSet
@@ -3596,7 +3595,6 @@ public class DefaultPromotionManager extends PromotionsManager
 
 	/**
 	 * @Description: For populating sorted valid product, ussid map
-	 * @param cart
 	 * @param validProductUssidTempMap
 	 * @param isStockPromo
 	 * @return mapping of valid ussids
@@ -3624,7 +3622,6 @@ public class DefaultPromotionManager extends PromotionsManager
 				}
 			}
 		});
-		//		}
 		if (!isStockPromo)
 
 		{
@@ -3672,7 +3669,6 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param paramSessionContext
 	 * @param promotionProductList
 	 * @param promotionCategoryList
-	 * @param restrictions
 	 * @param restrictionList
 	 * @param stockCount
 	 * @return validProductUssidMap
@@ -3682,15 +3678,13 @@ public class DefaultPromotionManager extends PromotionsManager
 	public Map<String, AbstractOrderEntry> getValidEntriesForStockLevelPromo(final AbstractOrder cart,
 			final SessionContext paramSessionContext, final List<Product> promotionProductList,
 			final List<Category> promotionCategoryList, final List<AbstractPromotionRestriction> restrictionList,
-			final List<Product> excludedProductList, final List<String> excludeManufactureList, final int stockCount
-	/* final List<String> sellerIDData, *//* final Map<AbstractOrderEntry, String> eligibleProductMap */)
+			final List<Product> excludedProductList, final List<String> excludeManufactureList, final int stockCount)
 			throws JaloInvalidParameterException, JaloSecurityException
 	{
 		Map<String, Integer> stockCountMap = new HashMap<String, Integer>();
 		final Map<String, AbstractOrderEntry> validProductUssidMap = new HashMap<String, AbstractOrderEntry>();
 		final StringBuilder ussidIds = new StringBuilder();
 		final StringBuilder productCodes = new StringBuilder();
-		//		final CartModel cartModel = cartService.getSessionCart();
 		boolean isSellerRestricPresent = false;
 		if (cart != null)
 		{
