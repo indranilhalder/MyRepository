@@ -70,7 +70,7 @@ public interface MplDeliveryAddressFacade
 	 * after OTP validation address save in commerce and call to OMS and CRM 
 	 * @return String msg Valid or not
 	 */
-	public String submitChangeDeliveryAddress(String customerID, String orderCode);
+	public String submitChangeDeliveryAddress(String customerID, String orderCode,AddressData addressData,boolean isMobile,List<TransactionSDDto> transactionSDDtoList);
 
 	//Generate new OTP
 	public boolean newOTPRequest(String orderCode);
@@ -87,7 +87,7 @@ public interface MplDeliveryAddressFacade
 
 	public Collection<MplDeliveryAddressReportData> getDeliveryAddressRepot(Date dateFrom, Date toDate);
 	
-	public OTPResponseData validteOTP(String customerID, String enteredOTPNumber);
+	public OTPResponseData validateOTP(String customerID, String enteredOTPNumber);
     
 	public void saveChangeDeliveryRequests(OrderModel orderModel);
 
@@ -100,5 +100,7 @@ public interface MplDeliveryAddressFacade
   
    /* added new Method for  MobileAppData*/
    public List<MplSDInfoWsDTO> getSDDatesMobile(Object deliverySDEDData);
+   
+   public void saveSelectedDateAndTime(OrderModel orderModel,List<TransactionSDDto> transactionSDDto);
 	
 }

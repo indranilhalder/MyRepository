@@ -559,7 +559,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 *  @return OTPResponseData
 	 */
 	@Override
-	public OTPResponseData validteOTP(String customerID, String enteredOTPNumber){
+	public OTPResponseData validateOTP(String customerID, String enteredOTPNumber){
 		OTPResponseData otpResponse = otpGenericService.validateOTP(customerID, null, enteredOTPNumber, OTPTypeEnum.CDA,
 				Long.parseLong(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.TIMEFOROTP)));
 		return otpResponse;
@@ -570,19 +570,16 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 * Changed Address Save in data base and call to OMS And CRM
 	 * 
 	 * @param customerID
-	 * @param enteredOTPNumber
 	 * @param orderCode
 	 * @return Validation flag Value
 	 */
 	@Override
-	public String submitChangeDeliveryAddress(String customerID, String orderCode)
+	public String submitChangeDeliveryAddress(String customerID, String orderCode,AddressData newDeliveryAddressData,boolean isMobile,List<TransactionSDDto> transactionSDDtoList)
 	{
 		String valditionMsg = null;
 		OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
 		try
 		{
-			AddressData newDeliveryAddressData = sessionService
-					.getAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS);
 			AddressModel newDeliveryAddressModel = tempAddressReverseConverter.convert(newDeliveryAddressData);
 			boolean isDiffrentAddress = false;
 			//Address Related filed is changed  then send to OMS  Request CA Type
@@ -592,21 +589,23 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 			{
 				if (isDiffrentAddress)
 				{
-					List<TransactionSDDto> transactionSDDtoList = null;
 					boolean isEligibleScheduledDelivery = mplDeliveryAddressService.checkScheduledDeliveryForOrder(orderModel);
 					//checking  order Eligible for ReScheduledDelivery 
 					if (isEligibleScheduledDelivery)
 					{
-						RescheduleDataList rescheduleDataList = sessionService.getAttribute(MarketplacecommerceservicesConstants.RESCHEDULE_DATA_SESSION_KEY);
-						if (CollectionUtils.isNotEmpty(rescheduleDataList.getRescheduleDataList()))
+						if (!isMobile)
 						{
-							transactionSDDtoList = reScheduleddeliveryDate(orderModel, rescheduleDataList);
-							sessionService.removeAttribute(MarketplacecommerceservicesConstants.RESCHEDULE_DATA_SESSION_KEY);
-							//save selected Date and time
-							mplDeliveryAddressService.saveSelectedDateAndTime(orderModel, transactionSDDtoList);
+							RescheduleDataList rescheduleDataList = sessionService
+									.getAttribute(MarketplacecommerceservicesConstants.RESCHEDULE_DATA_SESSION_KEY);
+							if (CollectionUtils.isNotEmpty(rescheduleDataList.getRescheduleDataList()))
+							{
+								transactionSDDtoList = reScheduleddeliveryDate(orderModel, rescheduleDataList);
+								sessionService.removeAttribute(MarketplacecommerceservicesConstants.RESCHEDULE_DATA_SESSION_KEY);
+								//save selected Date and time
+								mplDeliveryAddressService.saveSelectedDateAndTime(orderModel, transactionSDDtoList);
+							}
 						}
 					}
-					  
 					   mplDeliveryAddressService.saveDeliveryAddress(newDeliveryAddressModel,orderModel);
 					   valditionMsg = MarketplaceFacadesConstants.SUCCESS;
 				
@@ -659,6 +658,11 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		return valditionMsg;
 	}
 
+	
+	/**
+	 * new OTP Request For  CDA
+	 * Based On orderCode 
+	 */
 	@Override
 	public boolean newOTPRequest(String orderCode)
 	{
@@ -1243,6 +1247,16 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	}
 	
 	
+   /**
+    * save selected DeliveryDate and time for 
+    * selected through Mobile
+    */
+   @Override
+	public void saveSelectedDateAndTime(OrderModel orderModel,List<TransactionSDDto> transactionSDDto){
+   	mplDeliveryAddressService.saveSelectedDateAndTime(orderModel, transactionSDDto);
+   }
+
+   
 	/**
 	 * @return the mplOrderFacade
 	 */
