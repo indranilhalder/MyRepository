@@ -112,30 +112,44 @@ public class ProductOfferDetailServiceImpl implements ProductOfferDetailService
 	 * Return Map
 	 */
 	@Override
-	public Map<String, Map<String, String>> showFreebieMessage(final String productCode)
+	public Map<String, Map<String, String>> showFreebieMessage(final String ussId)
 	{
-		final SearchResult<List<Object>> result = prodOfferDetDao.showFreebieMessage(productCode);
+		final SearchResult<List<Object>> result = prodOfferDetDao.showFreebieMessage(ussId);
 		final Map<String, Map<String, String>> resultMap = new HashMap<String, Map<String, String>>();
 		if (null != result && CollectionUtils.isNotEmpty(result.getResult()))
 		{
 			for (final List<Object> row : result.getResult())
 			{
 				final Map<String, String> freebieDetMap = new HashMap<String, String>();
-				String sellerIdQry = null;
+				String ussIdQry = null;
 				String freebieMessage = null;
+				String freebieStartDate = null;
+				String freebieEndDate = null;
 
 				if (!row.isEmpty())
 				{
-					sellerIdQry = (String) row.get(0);
+					ussIdQry = (String) row.get(0);
 					freebieMessage = (String) row.get(1);
+					freebieStartDate = (String) row.get(2);
+					freebieEndDate = (String) row.get(3);
 				}
-				if (null != sellerIdQry)
+				if (null != ussIdQry)
 				{
 					if (StringUtils.isNotEmpty(freebieMessage))
 					{
 						freebieDetMap.put(MarketplacecommerceservicesConstants.FREEBIEMSG, freebieMessage);
 					}
-					resultMap.put(sellerIdQry, freebieDetMap);
+
+					if (StringUtils.isNotEmpty(freebieStartDate))
+					{
+						freebieDetMap.put(MarketplacecommerceservicesConstants.MESSAGESTARTDATE, freebieStartDate);
+					}
+					if (StringUtils.isNotEmpty(freebieEndDate))
+					{
+						freebieDetMap.put(MarketplacecommerceservicesConstants.MESSAGEENDDATE, freebieEndDate);
+					}
+
+					resultMap.put(ussIdQry, freebieDetMap);
 				}
 			}
 		}
