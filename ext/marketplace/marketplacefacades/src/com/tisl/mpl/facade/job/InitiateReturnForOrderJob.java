@@ -32,6 +32,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -41,6 +42,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
+import com.tisl.mpl.facades.data.BulkReturnStatusData;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -79,7 +81,7 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.servicelayer.cronjob.AbstractJobPerformable#perform(de.hybris.platform.cronjob.model.CronJobModel
 	 * )
@@ -93,7 +95,7 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 			String transactionId = null; // TODO to fetch from given CSV66
 			OrderData subOrderDetails = null;
 			ReturnItemAddressData returnAddrData = null;
-			Map<String, Boolean> returnResonseMap = null;
+			Map<String, BulkReturnStatusData> returnResonseMap = null;
 			OrderEntryData subOrderEntry = null;
 
 			final Map<OrderEntryData, OrderData> dataToCallOMS = new HashMap<OrderEntryData, OrderData>();
@@ -136,10 +138,8 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 									{
 										subOrderEntry = entry;
 										dataToCallOMS.put(entry, subOrderDetails);
-
 									}
 								}
-
 								if (null != subOrderEntry)
 								{
 									break;
@@ -151,38 +151,27 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 								continue;
 							}
 						}
-
-
 					}
-
 				}
-
-
 			}
-
 			try
 			{
-
 				//Step 3: call OMS and CRM
 				returnResonseMap = callOMSandCRM(dataToCallOMS, returnAddrData);
-
 			}
 
 			catch (final Exception e)
 			{
 				LOG.error("", e);
-
 			}
 
 			//Step 4 : saving the modified bulkmodel list
 			saveBulkData(returnResonseMap, bulkList);
 
-
 			final long endTime = System.currentTimeMillis();
 			LOG.info(MarketplacecommerceservicesConstants.END_TIME + endTime);
 
 			LOG.info("Total time taken : " + (endTime - startTime) / 1000);
-
 		}
 
 
@@ -224,13 +213,13 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 	}
 
 	//call OMS
-	private Map<String, Boolean> callOMSandCRM(final Map<OrderEntryData, OrderData> dataToCallOMS,
+	private Map<String, BulkReturnStatusData> callOMSandCRM(final Map<OrderEntryData, OrderData> dataToCallOMS,
 			final ReturnItemAddressData returnAddrData)
 	{
 		final String ticketTypeCode = MarketplacecommerceservicesConstants.TICKETTYPECODE;
 		final String refundType = MarketplacecommerceservicesConstants.REFUNDTYPE;
 		final String reasonCode = MarketplacecommerceservicesConstants.REASONCODE;
-		final Map<String, Boolean> returnResonseMap = new HashMap<String, Boolean>();
+		final Map<String, BulkReturnStatusData> returnResonseMap = new HashMap<String, BulkReturnStatusData>();
 
 
 		for (final Map.Entry<OrderEntryData, OrderData> entry : dataToCallOMS.entrySet())
@@ -241,11 +230,13 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 			String orderStatus = null;
 			final CustomerData customerData = subOrderDetails.getCustomerData();
 			final String ussid = subOrderEntry.getSelectedUssid();
+			String orderConsignmentStatus = MarketplacecommerceservicesConstants.EMPTY;
 
 			if (subOrderEntry.getQuantity().intValue() != 0 && null != subOrderEntry.getConsignment()
 					&& null != subOrderEntry.getConsignment().getStatus())
 			{
 				orderStatus = subOrderEntry.getConsignment().getStatus().getCode();
+				orderConsignmentStatus = orderStatus;
 			}
 
 			if (ticketTypeCode.equalsIgnoreCase("R") && null != orderStatus
@@ -260,8 +251,10 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 				LOG.info("-----------Unable to initiate return for TransactionId----- " + subOrderEntry.getTransactionId()
 						+ "==========" + "Order Status is  " + orderStatus);
 			}
-
-			returnResonseMap.put(subOrderEntry.getTransactionId(), Boolean.valueOf(returnStatus));
+			final BulkReturnStatusData bulkReturnStatusData = new BulkReturnStatusData();
+			bulkReturnStatusData.setConsignmentStatus(orderConsignmentStatus);
+			bulkReturnStatusData.setReturnStatus(Boolean.valueOf(returnStatus));
+			returnResonseMap.put(subOrderEntry.getTransactionId(), bulkReturnStatusData);
 		}
 
 		return returnResonseMap;
@@ -283,24 +276,35 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 	}
 
 	//save data
-	private void saveBulkData(final Map<String, Boolean> returnResonseMap, final List<BulkReturnProcessModel> bulkList)
+	private void saveBulkData(final Map<String, BulkReturnStatusData> returnResonseMap, final List<BulkReturnProcessModel> bulkList)
 	{
 		final List<BulkReturnProcessModel> updatedBulkReturnProcessList = new ArrayList<BulkReturnProcessModel>();
-		for (final Map.Entry<String, Boolean> entry : returnResonseMap.entrySet())
+		for (final Map.Entry<String, BulkReturnStatusData> entry : returnResonseMap.entrySet())
 		{
 			final BulkReturnProcessModel returnBulkModel = getBulkModel(bulkList, entry.getKey());
-			final Boolean returnStatus = entry.getValue();
+			BulkReturnStatusData bulkReturnStatusData = new BulkReturnStatusData();
+			bulkReturnStatusData = entry.getValue();
+			final Boolean returnStatus = bulkReturnStatusData.getReturnStatus();
+			String consignment = MarketplacecommerceservicesConstants.EMPTY;
+			if (StringUtils.isNotEmpty(bulkReturnStatusData.getConsignmentStatus()))
+			{
+				consignment = bulkReturnStatusData.getConsignmentStatus();
+			}
+			String message = MarketplacecommerceservicesConstants.EMPTY;
+			message = MarketplacecommerceservicesConstants.BLANK_SPACE + MarketplacecommerceservicesConstants.LEFT_PARENTHESIS
+					+ MarketplacecommerceservicesConstants.LAST_CONSIGNMENT_STATUS + consignment
+					+ MarketplacecommerceservicesConstants.RIGHT_PARENTHESIS;
 			if (null != returnBulkModel && null != returnStatus)
 			{
 				if (returnStatus.booleanValue())
 				{
 					returnBulkModel.setLoadStatus("1");
-					returnBulkModel.setErrorDescription(MarketplacecommerceservicesConstants.SUCCESS);
+					returnBulkModel.setErrorDescription(MarketplacecommerceservicesConstants.BULK_RETURN_SUCCESS_DESC + message);
 				}
 				else
 				{
 					returnBulkModel.setLoadStatus("-1");
-					returnBulkModel.setErrorDescription(MarketplacecommerceservicesConstants.FAILURE);
+					returnBulkModel.setErrorDescription(MarketplacecommerceservicesConstants.BULK_RETURN_FAILURE_DESC + message);
 				}
 				updatedBulkReturnProcessList.add(returnBulkModel);
 			}
@@ -308,10 +312,9 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 		modelService.saveAll(updatedBulkReturnProcessList);
 	}
 
-
 	/*
 	 * This method is used to convert the Order Model into Order Data
-	 * 
+	 *
 	 * @param orderModel
 	 */
 	protected OrderData convertToData(final OrderModel orderModel)

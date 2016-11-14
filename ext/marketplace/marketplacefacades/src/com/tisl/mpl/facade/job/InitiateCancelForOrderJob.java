@@ -45,7 +45,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
-import com.tisl.mpl.facades.data.BulCancelStoreData;
+import com.tisl.mpl.facades.data.BulkCancelStoreData;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.util.ExceptionUtil;
 
@@ -87,7 +87,7 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 			String transactionId = null;
 			OrderData subOrderDetailsForMap = null;
 			int counter = 0;
-			final Map<OrderEntryData, BulCancelStoreData> cancellationDataMap = new HashMap<OrderEntryData, BulCancelStoreData>();
+			final Map<OrderEntryData, BulkCancelStoreData> cancellationDataMap = new HashMap<OrderEntryData, BulkCancelStoreData>();
 			List<BulkCancellationProcessModel> finalModelToSave = new ArrayList<BulkCancellationProcessModel>();
 			final long startTime = System.currentTimeMillis();
 			LOG.info(MarketplacecommerceservicesConstants.START_TIME_C + startTime);
@@ -119,11 +119,11 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 								{
 									if (orderEntry.getTransactionId().equalsIgnoreCase(transactionId))
 									{
-										final BulCancelStoreData bulCancelStoreData = new BulCancelStoreData();
+										final BulkCancelStoreData bulkCancelStoreData = new BulkCancelStoreData();
 										// SubOrderDetails are added into Map having the key as subOrderEntry
-										bulCancelStoreData.setSubOrderDetails(subOrderDetailsForMap);
-										bulCancelStoreData.setBulkCancelModelData(bulkModel);
-										cancellationDataMap.put(orderEntry, bulCancelStoreData);
+										bulkCancelStoreData.setSubOrderDetails(subOrderDetailsForMap);
+										bulkCancelStoreData.setBulkCancelModelData(bulkModel);
+										cancellationDataMap.put(orderEntry, bulkCancelStoreData);
 										break;
 									}
 								}
@@ -187,7 +187,7 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 	 *
 	 */
 	private List<BulkCancellationProcessModel> callOMStoCancelOrder(
-			final Map<OrderEntryData, BulCancelStoreData> cancellationDataMap)
+			final Map<OrderEntryData, BulkCancelStoreData> cancellationDataMap)
 	{
 		String ussid = null;
 		final String ticketTypeCode = MarketplacecommerceservicesConstants.TICKETTYPECODE_CANCEL;
@@ -203,7 +203,7 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 
 		for (final OrderEntryData entryHashMap : cancellationDataMap.keySet())
 		{
-			BulCancelStoreData mplCancelStoreData = new BulCancelStoreData();
+			BulkCancelStoreData mplCancelStoreData = new BulkCancelStoreData();
 			BulkCancellationProcessModel bulkCancelModel = new BulkCancellationProcessModel();
 			subOrderEntry = entryHashMap;
 			mplCancelStoreData = cancellationDataMap.get(entryHashMap);

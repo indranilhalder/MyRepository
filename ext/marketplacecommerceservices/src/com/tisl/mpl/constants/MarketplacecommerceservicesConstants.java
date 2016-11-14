@@ -1722,4 +1722,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String BULK_CANCEL_DATA_QUERY_START = "SELECT {" + BulkCancellationProcessModel.PK + "} FROM {"
 			+ BulkCancellationProcessModel._TYPECODE + "} WHERE {" + BulkCancellationProcessModel.LOADSTATUS + "}=?loadstatus";
 
+	public static final String BULK_RETURN_SUCCESS_DESC = "Return Success";
+	public static final String BULK_RETURN_FAILURE_DESC = "Return Failure";
 }

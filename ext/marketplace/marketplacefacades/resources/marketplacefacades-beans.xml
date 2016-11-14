@@ -917,8 +917,12 @@
 		<property name="sellerData" type="java.util.List&lt;com.tisl.mpl.facades.data.EnhancedSearchSellerData>"></property>
 	</bean>	
 	
-	<bean class="com.tisl.mpl.facades.data.BulCancelStoreData">
+	<bean class="com.tisl.mpl.facades.data.BulkCancelStoreData">
 		<property name="subOrderDetails" type="de.hybris.platform.commercefacades.order.data.OrderData"></property>
 		<property name="bulkCancelModelData" type="de.hybris.platform.core.model.BulkCancellationProcessModel"></property>
+	</bean>
+	<bean class="com.tisl.mpl.facades.data.BulkReturnStatusData">
+		<property name="consignmentStatus" type="String"></property>
+		<property name="returnStatus" type="java.lang.Boolean"></property>
 	</bean>
 </beans>
