@@ -3,14 +3,13 @@
  */
 package com.tisl.mpl.util;
 
-import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
-import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.promotions.model.OrderPromotionModel;
 import de.hybris.platform.promotions.model.ProductPromotionModel;
@@ -55,37 +54,38 @@ public class DiscountUtility
 	/**
 	 * @Description : For Filtering Product Promotions
 	 * @param productPromotion
-	 * @param cart
+	 * @param abstractOrderModel
 	 * @return responseData
 	 */
-	public MplPromotionData populateData(final ProductPromotionModel productPromotion, final CartModel cart)
+	public MplPromotionData populateData(final ProductPromotionModel productPromotion, final AbstractOrderModel abstractOrderModel)
+	//Changed to abstractOrderModel for TPR-629
 	{
 		final long startTime = System.currentTimeMillis();
 		MplPromotionData promoData = new MplPromotionData();
 		if (productPromotion instanceof BuyAPercentageDiscountModel)
 		{
-			promoData = getBuyAPercentageDiscountData(productPromotion, cart);
+			promoData = getBuyAPercentageDiscountData(productPromotion, abstractOrderModel);
 
 		}
 		else if (productPromotion instanceof BuyAandBPrecentageDiscountModel)
 		{
-			promoData = getBuyAandBPrecentageDiscountData(productPromotion, cart);
+			promoData = getBuyAandBPrecentageDiscountData(productPromotion, abstractOrderModel);
 		}
 		else if (productPromotion instanceof CustomProductBOGOFPromotionModel)
 		{
-			promoData = getBOGOData(productPromotion, cart);
+			promoData = getBOGOData(productPromotion, abstractOrderModel);
 		}
 		else if (productPromotion instanceof BuyAGetPrecentageDiscountCashbackModel)
 		{
-			promoData = getBuyACashBackData(productPromotion, cart);
+			promoData = getBuyACashBackData(productPromotion, abstractOrderModel);
 		}
 		else if (productPromotion instanceof BuyAandBGetPrecentageDiscountCashbackModel)
 		{
-			promoData = getBuyAandBCashBackData(productPromotion, cart);
+			promoData = getBuyAandBCashBackData(productPromotion, abstractOrderModel);
 		}
 		else if (productPromotion instanceof BuyAAboveXGetPercentageOrAmountOffModel)
 		{
-			promoData = getBuyAAboveXData(productPromotion, cart);
+			promoData = getBuyAAboveXData(productPromotion, abstractOrderModel);
 		}
 		final long endTime = System.currentTimeMillis();
 		LOG.debug("Exiting service populateData====== " + (endTime - startTime));
@@ -99,16 +99,17 @@ public class DiscountUtility
 	/**
 	 * @Description : For Filtering Cart Promotions
 	 * @param orderPromotion
-	 * @param cart
+	 * @param abstractOrderModel
 	 * @return MplPromotionData
 	 */
-	public MplPromotionData populateCartPromoData(final OrderPromotionModel orderPromotion, final CartModel cart)
+	public MplPromotionData populateCartPromoData(final OrderPromotionModel orderPromotion,
+			final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		final long startTime = System.currentTimeMillis();
 		MplPromotionData promoData = new MplPromotionData();
 		if (orderPromotion instanceof CartOrderThresholdDiscountPromotionModel)
 		{
-			promoData = getCartDiscountPromoData(orderPromotion, cart);
+			promoData = getCartDiscountPromoData(orderPromotion, abstractOrderModel);
 		}
 
 		final long endTime = System.currentTimeMillis();
@@ -121,10 +122,9 @@ public class DiscountUtility
 	/**
 	 * @Description : Populate Potential Product Promotion Data
 	 * @param productPromotion
-	 * @param cart
 	 * @return MplPromotionData
 	 */
-	public MplPromotionData populatePotentialPromoData(final ProductPromotionModel productPromotion, final CartModel cart)
+	public MplPromotionData populatePotentialPromoData(final ProductPromotionModel productPromotion)
 	{
 		final long startTime = System.currentTimeMillis();
 		MplPromotionData promoData = null;
@@ -223,10 +223,9 @@ public class DiscountUtility
 	/**
 	 * @Description: Populate Potential Promotion Data for Order Promotion
 	 * @param orderPromotion
-	 * @param cart
 	 * @return responseData
 	 */
-	public MplPromotionData populatePotentialOrderPromoData(final OrderPromotionModel orderPromotion, final CartModel cart)
+	public MplPromotionData populatePotentialOrderPromoData(final OrderPromotionModel orderPromotion)
 	{
 		final long startTime = System.currentTimeMillis();
 		MplPromotionData promoData = null;
@@ -251,10 +250,11 @@ public class DiscountUtility
 	/**
 	 * @Description : For Cart Level Discount Promotion
 	 * @param orderPromotion
-	 * @param cart
+	 * @param abstractOrderModel
 	 * @return responseData
 	 */
-	private MplPromotionData getCartDiscountPromoData(final OrderPromotionModel orderPromotion, final CartModel cart)
+	private MplPromotionData getCartDiscountPromoData(final OrderPromotionModel orderPromotion,
+			final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		final MplPromotionData cartPromoData = new MplPromotionData();
 		final List<PromotionPriceRowModel> priceRowList = new ArrayList<PromotionPriceRowModel>();
@@ -275,7 +275,7 @@ public class DiscountUtility
 				if (CollectionUtils.isNotEmpty(priceRowList) && null != priceRowList.get(0).getCurrency()
 						&& null != priceRowList.get(0).getCurrency().getIsocode() && null != priceRowList.get(0).getPrice())
 				{
-					final PriceData discountPrice = createPrice(cart, priceRowList.get(0).getPrice());
+					final PriceData discountPrice = createPrice(abstractOrderModel, priceRowList.get(0).getPrice());
 					cartPromoData.setDiscountPrice(discountPrice);
 				}
 			}
@@ -307,10 +307,11 @@ public class DiscountUtility
 	/**
 	 * @Description : For Buy A Above X Get Percentage Or Amount Off Promotion
 	 * @param productPromotion
-	 * @param cart
+	 * @param abstractOrderModel
 	 * @return promoData
 	 */
-	private MplPromotionData getBuyAAboveXData(final ProductPromotionModel productPromotion, final CartModel cart)
+	private MplPromotionData getBuyAAboveXData(final ProductPromotionModel productPromotion,
+			final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		final MplPromotionData promoData = new MplPromotionData();
 
@@ -319,7 +320,7 @@ public class DiscountUtility
 		{
 			promoData.setPromoTypeIdentifier(MarketplacecommerceservicesConstants.PRODUCT_PROMO);
 			promoData.setIsPercentage(buyAAboveXDiscountModel.getPercentageOrAmount().toString());
-			final PriceData discountPrice = createPrice(cart, calculateDiscount(cart));
+			final PriceData discountPrice = createPrice(abstractOrderModel, calculateDiscount(abstractOrderModel));
 			promoData.setDiscountPrice(discountPrice);
 
 			if (null != buyAAboveXDiscountModel.getPercentageDiscount())
@@ -354,10 +355,11 @@ public class DiscountUtility
 	/**
 	 * @Description : For Buy A Get Percentage/Amount CashBack
 	 * @param productPromotion
-	 * @param cart
+	 * @param abstractOrderModel
 	 * @return responseData
 	 */
-	private MplPromotionData getBuyACashBackData(final ProductPromotionModel productPromotion, final CartModel cart)
+	private MplPromotionData getBuyACashBackData(final ProductPromotionModel productPromotion,
+			final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		final MplPromotionData promoData = new MplPromotionData();
 
@@ -386,7 +388,7 @@ public class DiscountUtility
 				if (CollectionUtils.isNotEmpty(priceRowList) && null != priceRowList.get(0).getPrice())
 				{
 					final Double cashbBackVal = priceRowList.get(0).getPrice();
-					final PriceData discountPrice = createPrice(cart, cashbBackVal);
+					final PriceData discountPrice = createPrice(abstractOrderModel, cashbBackVal);
 					promoData.setDiscountPrice(discountPrice);
 
 					final FiredPromoData firedPromo = new FiredPromoData();
@@ -405,10 +407,11 @@ public class DiscountUtility
 	/**
 	 * @Description : For Buy A and B Get Percentage/Amount CashBack
 	 * @param productPromotion
-	 * @param cart
+	 * @param abstractOrderModel
 	 * @return responseData
 	 */
-	private MplPromotionData getBuyAandBCashBackData(final ProductPromotionModel productPromotion, final CartModel cart)
+	private MplPromotionData getBuyAandBCashBackData(final ProductPromotionModel productPromotion,
+			final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		final MplPromotionData promoData = new MplPromotionData();
 		final List<PromotionPriceRowModel> priceRowList = new ArrayList<PromotionPriceRowModel>();
@@ -437,7 +440,7 @@ public class DiscountUtility
 					if (CollectionUtils.isNotEmpty(priceRowList) && null != priceRowList.get(0).getPrice())
 					{
 						final Double cashbBackVal = priceRowList.get(0).getPrice();
-						final PriceData discountPrice = createPrice(cart, cashbBackVal);
+						final PriceData discountPrice = createPrice(abstractOrderModel, cashbBackVal);
 						promoData.setDiscountPrice(discountPrice);
 
 						final FiredPromoData firedPromo = new FiredPromoData();
@@ -459,17 +462,17 @@ public class DiscountUtility
 	/**
 	 * @Description : For BOGO Promotion
 	 * @param productPromotion
-	 * @param cart
+	 * @param abstractOrderModel
 	 * @return responseData
 	 */
-	private MplPromotionData getBOGOData(final ProductPromotionModel productPromotion, final CartModel cart)
+	private MplPromotionData getBOGOData(final ProductPromotionModel productPromotion, final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		final MplPromotionData promoData = new MplPromotionData();
 		final CustomProductBOGOFPromotionModel bogoModel = (CustomProductBOGOFPromotionModel) productPromotion;
 		if (null != bogoModel)
 		{
 			promoData.setPromoTypeIdentifier(MarketplacecommerceservicesConstants.PRODUCT_PROMO);
-			final PriceData discountPrice = createPrice(cart, calculateDiscount(cart));
+			final PriceData discountPrice = createPrice(abstractOrderModel, calculateDiscount(abstractOrderModel));
 			promoData.setDiscountPrice(discountPrice);
 
 			if (null != bogoModel.getMessageFired())
@@ -498,10 +501,11 @@ public class DiscountUtility
 	/**
 	 * @Description : For Buy A and B Get Discount Promotion
 	 * @param productPromotion
-	 * @param cart
+	 * @param abstractOrderModel
 	 * @return MplPromotionData
 	 */
-	private MplPromotionData getBuyAandBPrecentageDiscountData(final ProductPromotionModel productPromotion, final CartModel cart)
+	private MplPromotionData getBuyAandBPrecentageDiscountData(final ProductPromotionModel productPromotion,
+			final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		final MplPromotionData promoData = new MplPromotionData();
 
@@ -509,7 +513,7 @@ public class DiscountUtility
 		if (null != oModel)
 		{
 			promoData.setPromoTypeIdentifier(MarketplacecommerceservicesConstants.PRODUCT_PROMO);
-			final PriceData discountPrice = createPrice(cart, calculateDiscount(cart));
+			final PriceData discountPrice = createPrice(abstractOrderModel, calculateDiscount(abstractOrderModel));
 			promoData.setDiscountPrice(discountPrice);
 			if (null != oModel.getPercentageOrAmount())
 			{
@@ -547,10 +551,11 @@ public class DiscountUtility
 	/**
 	 * @Description : For Buy A Get Discount Promotion
 	 * @param productPromotion
-	 * @param cart
+	 * @param abstractOrderModel
 	 * @return responseData
 	 */
-	private MplPromotionData getBuyAPercentageDiscountData(final ProductPromotionModel productPromotion, final CartModel cart)
+	private MplPromotionData getBuyAPercentageDiscountData(final ProductPromotionModel productPromotion,
+			final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		final MplPromotionData promoData = new MplPromotionData();
 
@@ -559,7 +564,7 @@ public class DiscountUtility
 		{
 			promoData.setPromoTypeIdentifier(MarketplacecommerceservicesConstants.PRODUCT_PROMO);
 			promoData.setIsPercentage(buyAPercentageDiscountModel.getPercentageOrAmount().toString());
-			final PriceData discountPrice = createPrice(cart, calculateDiscount(cart));
+			final PriceData discountPrice = createPrice(abstractOrderModel, calculateDiscount(abstractOrderModel));
 			promoData.setDiscountPrice(discountPrice);
 
 			if (null != buyAPercentageDiscountModel.getPercentageDiscount())
@@ -593,19 +598,19 @@ public class DiscountUtility
 
 	/**
 	 * @Description : To Calculate Discount value
-	 * @param cart
+	 * @param abstractOrderModel
 	 * @return discount
 	 */
-	private Double calculateDiscount(final CartModel cart)
+	private Double calculateDiscount(final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		double discount = 0.0d;
 		double totalPrice = 0.0D;
-		if (null != cart && CollectionUtils.isNotEmpty(cart.getEntries()))
+		if (null != abstractOrderModel && CollectionUtils.isNotEmpty(abstractOrderModel.getEntries()))
 		{
-			final List<DiscountModel> discountList = cart.getDiscounts();
-			final List<DiscountValue> discountValueList = cart.getGlobalDiscountValues();
+			final List<DiscountModel> discountList = abstractOrderModel.getDiscounts();
+			final List<DiscountValue> discountValueList = abstractOrderModel.getGlobalDiscountValues();
 			double voucherDiscount = 0.0d;
-			for (final AbstractOrderEntryModel entry : cart.getEntries())
+			for (final AbstractOrderEntryModel entry : abstractOrderModel.getEntries())
 			{
 				totalPrice = totalPrice + (entry.getBasePrice().doubleValue() * entry.getQuantity().doubleValue());
 			}
@@ -619,8 +624,8 @@ public class DiscountUtility
 				}
 			}
 
-			discount = (totalPrice + cart.getDeliveryCost().doubleValue()) - cart.getTotalPriceWithConv().doubleValue()
-					- voucherDiscount;
+			discount = (totalPrice + abstractOrderModel.getDeliveryCost().doubleValue())
+					- abstractOrderModel.getTotalPriceWithConv().doubleValue() - voucherDiscount;
 		}
 		return roundData(discount);
 	}
@@ -670,16 +675,16 @@ public class DiscountUtility
 
 	/**
 	 * @Description
-	 * @param cartData
+	 * @param abstractOrderData
 	 * @return promoPriceData
 	 */
-	public MplPromotionData populateNonPromoData(final CartData cartData)
+	public MplPromotionData populateNonPromoData(final AbstractOrderData abstractOrderData)
 	{
 		final long startTime = System.currentTimeMillis();
 		final MplPromotionData promoData = new MplPromotionData();
-		if (null != cartData && null != cartData.getTotalDiscounts())
+		if (null != abstractOrderData && null != abstractOrderData.getTotalDiscounts())
 		{
-			promoData.setDiscountPrice(cartData.getTotalDiscounts());
+			promoData.setDiscountPrice(abstractOrderData.getTotalDiscounts());
 			promoData.setPromoTypeIdentifier(MarketplacecommerceservicesConstants.OTHER_PROMO);
 		}
 

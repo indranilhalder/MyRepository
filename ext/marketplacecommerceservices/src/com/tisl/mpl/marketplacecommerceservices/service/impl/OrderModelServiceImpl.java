@@ -174,4 +174,9 @@ public class OrderModelServiceImpl implements OrderModelService
 		return orderModelDao.updatePickUpDetailsDao(orderId, name, mobile);
 	}
 
+	@Override
+	public OrderModel getOrderModel(final String code)
+	{
+		return getOrderModelDao().getOrderModel(code);
+	}
 }

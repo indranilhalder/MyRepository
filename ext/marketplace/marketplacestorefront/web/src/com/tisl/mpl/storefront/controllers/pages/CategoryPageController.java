@@ -135,7 +135,9 @@ public class CategoryPageController extends AbstractCategoryPageController
 	private static final String LOCATION = "Location";
 	private static final String PAGE_FACET_DATA = "pageFacetData";
 
-
+	//TPR_1282
+	private static final String CATEGORY_FOOTER_TEXT = "categoryFooterTxt";
+	private static final String SPECIAL_CHARACTERS = "[^\\w\\s]";
 	private int pageSiseCount;
 
 	/**
@@ -275,6 +277,12 @@ public class CategoryPageController extends AbstractCategoryPageController
 				populateModel(model, searchPageData, ShowMode.Page);
 				model.addAttribute(ModelAttributetConstants.NORMAL_PRODUCTS, normalProductDatas);
 				model.addAttribute(ModelAttributetConstants.SHOW_CATEGORIES_ONLY, Boolean.FALSE);
+				// For Category Footer
+				if (null != category.getCategoryFooterText())
+				{
+					model.addAttribute(CATEGORY_FOOTER_TEXT, category.getCategoryFooterText());
+				}
+
 			}
 		}
 
@@ -448,11 +456,19 @@ public class CategoryPageController extends AbstractCategoryPageController
 					updatePageTitle(model, metaTitle);
 				}
 
+				setUpMetaDataForContentPage(model, categoryLandingPage);
+				model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY, categoryName.replaceAll(SPECIAL_CHARACTERS, "")
+						.replaceAll(" ", "_").toLowerCase());
 				model.addAttribute(WebConstants.BREADCRUMBS_KEY,
 						getSearchBreadcrumbBuilder().getBreadcrumbs(categoryCode, categoryName, false));
 				populateModel(model, searchPageData, ShowMode.Page);
 				model.addAttribute(ModelAttributetConstants.NORMAL_PRODUCTS, normalProductDatas);
 				model.addAttribute(ModelAttributetConstants.SHOW_CATEGORIES_ONLY, Boolean.FALSE);
+				// For Category Footer
+				//				if (null != category.getCategoryFooterText())
+				//				{
+				//					model.addAttribute(CATEGORY_FOOTER_TEXT, category.getCategoryFooterText());
+				//				}
 				storeCmsPageInModel(model, categoryLandingPage);
 
 
@@ -536,20 +552,21 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 		model.addAttribute("page_name", "Product Grid:" + breadcrumbName);
 		//TPR-430
-		//Additional Checking Added for breadcrumbs for TISUATMS-300
-		if (CollectionUtils.isNotEmpty(breadcrumbs) && breadcrumbs.size() > 0 && null != breadcrumbs.get(1).getName())
+		if (breadcrumbs.size() > 0)
 		{
-			model.addAttribute("product_category", breadcrumbs.get(0).getName().replaceAll(" ", "_").toLowerCase());
+			model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY,
+					breadcrumbs.get(0).getName().replaceAll(SPECIAL_CHARACTERS, "").replaceAll(" ", "_").toLowerCase());
 		}
-		if (CollectionUtils.isNotEmpty(breadcrumbs) && breadcrumbs.size() > 1 && null != breadcrumbs.get(1).getName())
+		if (breadcrumbs.size() > 1)
 		{
-			model.addAttribute("page_subcategory_name", breadcrumbs.get(1).getName().replaceAll(" ", "_").toLowerCase());
+			model.addAttribute(ModelAttributetConstants.PAGE_SUBCATEGORY_NAME,
+					breadcrumbs.get(1).getName().replaceAll(SPECIAL_CHARACTERS, "").replaceAll(" ", "_").toLowerCase());
 		}
-		if (CollectionUtils.isNotEmpty(breadcrumbs) && breadcrumbs.size() > 2 && null != breadcrumbs.get(2).getName())
+		if (breadcrumbs.size() > 2)
 		{
-			model.addAttribute("page_subcategory_name_L3", breadcrumbs.get(2).getName().replaceAll(" ", "_").toLowerCase());
+			model.addAttribute(ModelAttributetConstants.PAGE_SUBCATEGORY_NAME_L3,
+					breadcrumbs.get(2).getName().replaceAll(SPECIAL_CHARACTERS, "").replaceAll(" ", "_").toLowerCase());
 		}
-
 	}
 
 	/**
@@ -855,6 +872,13 @@ public class CategoryPageController extends AbstractCategoryPageController
 		model.addAttribute("pageType", PageType.CATEGORY.name());
 		model.addAttribute("userLocation", getCustomerLocationService().getUserLocation());
 		model.addAttribute("otherProducts", true);
+		// For Category Footer
+		if (null != category.getCategoryFooterText())
+		{
+			model.addAttribute(CATEGORY_FOOTER_TEXT, category.getCategoryFooterText());
+		}
+
+
 		updatePageTitle(category, searchPageData.getBreadcrumbs(), model);
 		if (CollectionUtils.isNotEmpty(searchPageData.getResults()))
 		{
@@ -937,21 +961,21 @@ public class CategoryPageController extends AbstractCategoryPageController
 	 * @param metaTitle
 	 */
 	//private void setUpMetaDataForSeo(final Model model, final String metaKeywords, final String metaDescription,
-		//	final String metaTitle)
-//	{
+	//	final String metaTitle)
+	//	{
 	//	final List<MetaElementData> metadata = new LinkedList<>();
 	//	metadata.add(createMetaElement("keywords", metaKeywords));
 	//	metadata.add(createMetaElement("description", metaDescription));
-		//metadata.add(createMetaElement("title", metaTitle));
+	//metadata.add(createMetaElement("title", metaTitle));
 	//	model.addAttribute("metatags", metadata);
 
-//	}
+	//	}
 
 	/* PageTitle in header - (TPR-243) SEO Meta Tags and Titles */
-//	private void updatePageTitle(final Model model, final String metaTitle)
-//	{
-//		model.addAttribute("metaPageTitle", metaTitle);
-//	}
+	//	private void updatePageTitle(final Model model, final String metaTitle)
+	//	{
+	//		model.addAttribute("metaPageTitle", metaTitle);
+	//	}
 
 
 

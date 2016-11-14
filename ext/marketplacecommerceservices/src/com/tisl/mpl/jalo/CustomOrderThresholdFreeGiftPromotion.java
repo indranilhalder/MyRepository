@@ -57,8 +57,7 @@ public class CustomOrderThresholdFreeGiftPromotion extends GeneratedCustomOrderT
 
 	/**
 	 * @Description : If Cart Value Greater than Threshold Value Set Customer gets free Gift
-	 * @param :
-	 *           SessionContext ctx ,PromotionEvaluationContext promoContext
+	 * @param : SessionContext ctx ,PromotionEvaluationContext promoContext
 	 * @return : List<PromotionResult> promotionResults
 	 */
 	@Override
@@ -66,7 +65,6 @@ public class CustomOrderThresholdFreeGiftPromotion extends GeneratedCustomOrderT
 	{
 		boolean flagForDeliveryModeRestrEval = false;
 		boolean flagForPaymentModeRestrEval = false;
-
 		final List promotionResults = new ArrayList();
 		boolean checkChannelFlag = false;
 		try
@@ -80,12 +78,15 @@ public class CustomOrderThresholdFreeGiftPromotion extends GeneratedCustomOrderT
 				final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(
 						getRestrictions());//Adding restrictions to List
 				//for delivery mode restriction check
-				flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForOrderPromo(restrictionList);
+				flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForOrderPromo(restrictionList, order);
 				//for payment mode restriction check
 				flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList, ctx);
+				/* TPR-970 changes */
+				final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(
+						restrictionList, order);
 
 				if (checkRestrictions(ctx, promoContext) && checkChannelFlag && flagForDeliveryModeRestrEval
-						&& flagForPaymentModeRestrEval)
+						&& flagForPaymentModeRestrEval && flagForPincodeRestriction)
 				{
 					final Double threshold = getPriceForOrder(ctx, getThresholdTotals(ctx), promoContext.getOrder(),
 							MarketplacecommerceservicesConstants.THRESHOLD_TOTALS);
@@ -108,16 +109,17 @@ public class CustomOrderThresholdFreeGiftPromotion extends GeneratedCustomOrderT
 							final List<Product> giftProductList = (List<Product>) getGiftProducts(ctx);
 							if (null != giftProductList && !giftProductList.isEmpty())
 							{
-								final Map<String, Product> giftProductDetails = getDefaultPromotionsManager()
-										.getCartPromoGiftProducts(giftProductList);//Validating the free gift corresponding to seller ID for scenario : Eligible product and Free gift from same DC
+								final Map<String, Product> giftProductDetails = getDefaultPromotionsManager().getCartPromoGiftProducts(
+										giftProductList);//Validating the free gift corresponding to seller ID for scenario : Eligible product and Free gift from same DC
 								if (null != giftProductDetails)
 								{
 									for (final Map.Entry<String, Product> entry : giftProductDetails.entrySet())
 									{
-										ctx.setAttribute(MarketplacecommerceservicesConstants.CARTPROMOCODE,
-												String.valueOf(this.getCode()));
-										result.addAction(ctx, getDefaultPromotionsManager().createCustomPromotionOrderAddFreeGiftAction(ctx,
-												entry.getValue(), entry.getKey(), result, Double.valueOf(1))); //Adding Free gifts to cart
+										ctx.setAttribute(MarketplacecommerceservicesConstants.CARTPROMOCODE, String.valueOf(this.getCode()));
+										result.addAction(
+												ctx,
+												getDefaultPromotionsManager().createCustomPromotionOrderAddFreeGiftAction(ctx,
+														entry.getValue(), entry.getKey(), result, Double.valueOf(1))); //Adding Free gifts to cart
 									}
 								}
 							}
@@ -160,8 +162,7 @@ public class CustomOrderThresholdFreeGiftPromotion extends GeneratedCustomOrderT
 
 	/**
 	 * @Description : Verify Channel Data
-	 * @param :
-	 *           SessionContext arg0
+	 * @param : SessionContext arg0
 	 * @return : minimumCategoryValue
 	 */
 	private boolean verifyChannelData(final SessionContext arg0, final AbstractOrder cart)
@@ -174,8 +175,7 @@ public class CustomOrderThresholdFreeGiftPromotion extends GeneratedCustomOrderT
 
 	/**
 	 * @Description : Assign Promotion Fired and Potential-Promotion Message
-	 * @param :
-	 *           SessionContext ctx ,PromotionResult result ,Locale locale
+	 * @param : SessionContext ctx ,PromotionResult result ,Locale locale
 	 * @return : String
 	 */
 	@Override

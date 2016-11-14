@@ -6,7 +6,6 @@ package com.tisl.mpl.buyboxdataimport;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.jdbcwrapper.HybrisDataSource;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
-import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.util.CSVWriter;
 import de.hybris.platform.virtualjdbc.db.VjdbcDataSourceImplFactory;
 

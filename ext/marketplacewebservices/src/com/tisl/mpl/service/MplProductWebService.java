@@ -28,10 +28,7 @@ public interface MplProductWebService
 
 	public String getKeywordSearch(String searchText);
 
-
-
 	public ProductAPlusWsData getAPluscontentForProductCode(String productCode) throws EtailNonBusinessExceptions,
 			CMSItemNotFoundException;
-
 
 }

@@ -37,10 +37,10 @@ $(document).ready(function(){
      $("#selectSizeId").hide();
    	 var stock=$("#stock").val();
    	 var quantity= $("#qty").val();
-  
+  	 var isShowSize= $("#showSize").val();
    	 //Changes for pdp CR
-   	if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'){
-  		
+   	if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='Watches' && isShowSize=='true'){
+  		/* alert("please select size !"+isShowSize); */
    		$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 		$("#addToCartFormTitle").show();
  	    return false;
@@ -85,10 +85,10 @@ $(document).ready(function(){
 <%-- <c:url value="${url}" var="addToCartUrl" /> --%>
 <c:url value="/cart/addBag" var="addToCartUrl" />
 
-<div id="addToCartFormTitle" class="addToCartTitle">
-	<%-- <spring:theme code="basket.added.to.basket" /> --%>
+<%-- <div id="addToCartFormTitle" class="addToCartTitle">
+	<spring:theme code="basket.added.to.basket" />
 	<spring:theme code="product.addtocart.success" />
-</div>
+</div> --%>
 <span id="addtobag" style="display:none"><spring:theme code="product.addtocart.success"/></span>
 <span id="addtobagerror" style="display:none"><spring:theme code="product.wishlist.outOfStock"/></span>
 <span id="bagtofull" style="display:none"><spring:theme code="product.addtocart.aboutfull"/></span>
@@ -110,6 +110,7 @@ $(document).ready(function(){
 		value="N" />
 	<input type="hidden" maxlength="3" size="" id="ussid" name="ussid" class="ussidPdp"
 		value="" />
+	<input type="hidden" id="showSize" name="showSize" value="${showSizeGuideForFA}" />
 	<%-- <span id="inventory" style="display: none"><p class="inventory">
 			<font color="#ff1c47"><spring:theme code="Product.outofinventory" /></font>
 		</p></span>

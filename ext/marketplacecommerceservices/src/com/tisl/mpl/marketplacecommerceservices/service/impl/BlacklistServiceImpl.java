@@ -43,13 +43,21 @@ public class BlacklistServiceImpl implements BlacklistService
 		boolean blacklistedOrNot = false;
 		for (final BlacklistModel customer : customerList)
 		{
-			if (null != customer.getCustomerId() && null != customer.getCustomerId().getUid())
+			//			if (null != customer.getCustomerId() && null != customer.getCustomerId().getUid())
+			//			{
+			//				if (user.getUid().equals(customer.getCustomerId().getUid()))
+			//				{
+			//					blacklistedOrNot = true;
+			//					break;
+			//				}
+			//			}
+
+			//PMD Fix---collapsible if statements
+			if (null != customer.getCustomerId() && null != customer.getCustomerId().getUid()
+					&& user.getUid().equals(customer.getCustomerId().getUid()))
 			{
-				if (user.getUid().equals(customer.getCustomerId().getUid()))
-				{
-					blacklistedOrNot = true;
-					break;
-				}
+				blacklistedOrNot = true;
+				break;
 			}
 		}
 		return blacklistedOrNot;

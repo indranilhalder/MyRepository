@@ -26,6 +26,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.util.Assert;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 
@@ -220,7 +221,16 @@ public class MplOrderEntryPopulator implements Populator<AbstractOrderEntryModel
 			{
 				target.setTotalSalePrice(createPrice(source, source.getTotalSalePrice()));
 			}
-
+			//TPR-774--  ProductPerDisDisplay and TotalMrp added and converted into data
+			if (null != source.getProductPerDiscDisplay() && source.getProductPerDiscDisplay().doubleValue() != 0.0)
+			{
+				target.setProductPerDiscDisplay(createPrice(source, source.getProductPerDiscDisplay()));
+			}
+			if (null != source.getTotalMrp() && source.getTotalMrp().doubleValue() != 0.0)
+			{
+				target.setTotalMrp(createPrice(source, source.getTotalMrp()));
+			}
+			//TPR-774
 			if (null != source.getFreeCount())
 			{
 				target.setFreeCount(source.getFreeCount());
@@ -354,6 +364,21 @@ public class MplOrderEntryPopulator implements Populator<AbstractOrderEntryModel
 		if (orderEntry.getTotalPrice() != null)
 		{
 			entry.setTotalPrice(createPrice(orderEntry, orderEntry.getTotalPrice()));
+		}
+		//TPR-774
+		if (null != orderEntry.getMrp())
+		{
+			final BigDecimal mprBigDec = new BigDecimal((int) orderEntry.getMrp().doubleValue());
+			final PriceData entryMrp = getPriceDataFactory().create(PriceDataType.BUY, mprBigDec,
+					MarketplacecommerceservicesConstants.INR);
+			entry.setMrp(entryMrp);
+		}
+		else
+		{
+			final BigDecimal mprBigDec = BigDecimal.valueOf(0);
+			final PriceData entryMrp = getPriceDataFactory().create(PriceDataType.BUY, mprBigDec,
+					MarketplacecommerceservicesConstants.INR);
+			entry.setMrp(entryMrp);
 		}
 	}
 

@@ -10,7 +10,9 @@ import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commercewebservicescommons.dto.user.AddressListWsDTO;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.order.InvalidCartException;
 
@@ -75,25 +77,29 @@ public interface MplCartWebService
 	/**
 	 * Service to get product details
 	 *
-	 * @param aoem
+	 * @param cartModel
+	 * @param deliveryModeDataMap
+	 * @param isPinCodeCheckRequired
+	 * @param resetReqd
 	 * @return List<GetWishListProductWsDTO>
 	 * @throws EtailBusinessExceptions
 	 * @throws EtailNonBusinessExceptions
 	 */
-	List<GetWishListProductWsDTO> productDetails(String cartId, CartModel cartModel, CartData cartData,
-			Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMapfinal, boolean isPinCodeCheckRequired,
-			boolean resetReqd) throws EtailBusinessExceptions, EtailNonBusinessExceptions;
+	public List<GetWishListProductWsDTO> productDetails(AbstractOrderModel cartModel,
+			final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap, final boolean isPinCodeCheckRequired,
+			final boolean resetReqd) throws EtailBusinessExceptions, EtailNonBusinessExceptions;
 
 	/**
 	 * pincode response from OMS at cart level
 	 *
 	 * @param cartData
+	 * @param cartModel
 	 * @param pincode
 	 * @return List<PinCodeResponseData>
 	 * @throws EtailNonBusinessExceptions
 	 */
-	public List<PinCodeResponseData> checkPinCodeAtCart(final CartData cartData, final String pincode)
-			throws EtailBusinessExceptions, EtailNonBusinessExceptions;
+	public List<PinCodeResponseData> checkPinCodeAtCart(final CartData cartData, CartModel cartModel, final String pincode)
+			throws EtailNonBusinessExceptions;
 
 
 	/**
@@ -116,4 +122,27 @@ public interface MplCartWebService
 	 * @return CartDataDetailsWsDTO
 	 */
 	public CartDataDetailsWsDTO getCartDetailsWithPOS(String cartId, AddressListWsDTO addressListDTO, String pincode);
+
+	/**
+	 * Service to get cart details with with all summary using cartModel
+	 *
+	 * @param cartModel
+	 * @param pincode
+	 * @param cartDetailsData
+	 * @return CartDataDetailsWsDTO
+	 */
+	public CartDataDetailsWsDTO displayOrderSummary(final String pincode, final CartModel cartModel,
+			final CartDataDetailsWsDTO cartDetailsData);
+
+	/**
+	 * Service to get cart details with with all summary using OrderModel
+	 *
+	 * @param cartModel
+	 * @param pincode
+	 * @param cartDetailsData
+	 * @return CartDataDetailsWsDTO
+	 */
+	public CartDataDetailsWsDTO displayOrderSummary(final String pincode, final OrderModel cartModel,
+			final CartDataDetailsWsDTO cartDetailsData);
+
 }

@@ -460,7 +460,7 @@ function navigateToPage(queryString,textString)
 		<c:if test="${facetData.code eq 'price'}">
 		    <div class="priceBucketExpand" style="display:none">		    				
 				<c:url value="${removeQueryUrlForPriceValue}" var="removeQueryUrl"/>
-				<a href="${removeQueryUrl}" ><span class="any_price">Any Price</span></a>
+				<a href="${removeQueryUrl}" ><span class="any_price_mobile">Any Price</span></a>
 			</div>		  
 			<h4 class="customPriceRange">Price Range</h4>
 							<input type="hidden" name="currentPriceQueryParams" value="${searchPageData.currentQuery.query.value}" class="currentPriceQueryParams"/>					  

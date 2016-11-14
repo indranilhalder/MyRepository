@@ -20,8 +20,9 @@
 	src="${commonResourcePath}/js/acc.productDetail.js"></script> --%>
 <%-- <script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/acc.sellerDetails.js"></script> --%>
-	<product:sellerForm></product:sellerForm>
 	<!-- Tealium -->
+<%--  <product:sellerForm></product:sellerForm> --%> 
+<input type="hidden" value="" id="testing"/>
 <input type="hidden" id="product_unit_price" value="${product_unit_price}" />
 <input type="hidden" id="site_section" value="${site_section}" />
 <input type="hidden" id="product_list_price" value="${product_list_price}" />
@@ -36,6 +37,12 @@
 <input type="hidden" id="product_brand" value="${product_brand}" />
 <input type="hidden" id="site_section_detail" value="${site_section_detail}" />
 <input type="hidden" id="product_category" value="${product_category}" />	
+<!-- TPR-429 START-->
+<input type="hidden" id="pdpSellerIDs" value='${pdpSellerIDs}'/>
+<input type="hidden" id="pdpBuyboxWinnerSellerID" value=''/>
+<input type="hidden" id="pdpOtherSellerIDs" value=''/>
+<!-- TPR-429 END-->
+
 <!-- End Tealium -->
 	<input type="hidden" maxlength="10" size="1" id="pinCodeCheckedFlag" name="pinCodeCheckedFlag" value="${pincodeChecked}" />	
 		<input type="hidden" value="${productCategoryType}" id="categoryType"/>
@@ -475,9 +482,6 @@ var allSellers='${allsellers}';
 			<input type="hidden" id="freebiePriceThreshId" value="${freebiePriceThreshVal}">
 			<!-- TISPRD-5467 end  -->
 			<product:productMainVariant />
-			<cms:pageSlot position="AddToCart" var="component">
-				<cms:component component="${component}" />
-			</cms:pageSlot>
 			<div class="SoldWrap">
 				<ycommerce:testId
 					code="productDetails_productNamePrice_label_${product.code}">
@@ -501,9 +505,9 @@ var allSellers='${allsellers}';
 
 
 
-			<%-- <cms:pageSlot position="AddToCart" var="component">
+			<cms:pageSlot position="AddToCart" var="component">
 				<cms:component component="${component}" />
-			</cms:pageSlot> --%>
+			</cms:pageSlot>
 			
 		</div>
 		</div>
@@ -587,7 +591,9 @@ var allSellers='${allsellers}';
 	      <p>Delivery Information </p>
 	      <p>Buying Option </p>
 	    </div>
-	    <ul class="InfoWrap" id="sellerDetailTbdy"></ul>
+	    <ul class="InfoWrap" id="sellerDetailTbdy">
+	    	<input type="hidden" id="showSize" name="showSize" value="${showSizeGuideForFA}" />
+	    </ul>
 		<%--  <table id ="sellerTable" class="other-sellers-table">
 			<thead>
 				<tr >
@@ -609,6 +615,8 @@ var allSellers='${allsellers}';
     <span id="cashondeliveryid"  style="display:none"><spring:theme code="seller.product.cashondelivery"/></span>
     <span id="emiavailableid"  style="display:none"><spring:theme code="marketplace.emiavailable"/></span>
     <span id="addtobagid"  style="display:none"><spring:theme code="seller.product.addtobag"/></span>
+     <!-- TPR-887 -->
+    <span id="buynowid"  style="display:none"><spring:theme code="buyNow.button.pdp"/></span>
     <span id="addwishlistid"  style="display:none"><spring:theme code="product.addwishlist"/></span>
     <span id="deliveryratesid"  style="display:none"><spring:theme code="seller.product.deliveryrates"/></span>
     <span id="returnpolicyid"  style="display:none"><spring:theme code="seller.product.returnpolicy"/></span>

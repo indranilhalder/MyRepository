@@ -3,7 +3,8 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
-import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.payment.enums.PaymentTransactionType;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
@@ -20,6 +21,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplPaymentDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentTransactionService;
@@ -51,69 +53,113 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 	 */
 	@Override
 	public List<PaymentTransactionEntryModel> createPaymentTranEntry(final GetOrderStatusResponse getOrderStatusResponse,
-			final CartModel cart, final Map.Entry<String, Double> entry,
-			final List<PaymentTransactionEntryModel> paymentTransactionEntryList)
+			final AbstractOrderModel cart, final Map.Entry<String, Double> entry,
+			final List<PaymentTransactionEntryModel> paymentTransactionEntryList) //Changed to abstractOrderModel for TPR-629
 	{
 
 		final PaymentTransactionEntryModel paymentTransactionEntry = getModelService().create(PaymentTransactionEntryModel.class);
-		if (null != getOrderStatusResponse.getPaymentGatewayResponse())
+		try
 		{
-			if (StringUtils.isNotEmpty(getOrderStatusResponse.getPaymentGatewayResponse().getRootReferenceNumber()))
+			if (null != getOrderStatusResponse.getPaymentGatewayResponse())
 			{
-				paymentTransactionEntry
-						.setSubscriptionID(getOrderStatusResponse.getPaymentGatewayResponse().getRootReferenceNumber());
-			}
+				if (StringUtils.isNotEmpty(getOrderStatusResponse.getPaymentGatewayResponse().getRootReferenceNumber()))
+				{
+					paymentTransactionEntry.setSubscriptionID(getOrderStatusResponse.getPaymentGatewayResponse()
+							.getRootReferenceNumber());
+				}
 
-			paymentTransactionEntry.setTransactionStatusDetails(getOrderStatusResponse.getPaymentGatewayResponse()
-					.getResponseMessage());
-			paymentTransactionEntry.setRequestToken(getOrderStatusResponse.getPaymentGatewayResponse().getTxnId());
-			paymentTransactionEntry.setRequestId(getOrderStatusResponse.getPaymentGatewayResponse().getExternalGatewayTxnId());
+				paymentTransactionEntry.setTransactionStatusDetails(getOrderStatusResponse.getPaymentGatewayResponse()
+						.getResponseMessage());
+				paymentTransactionEntry.setRequestToken(getOrderStatusResponse.getPaymentGatewayResponse().getTxnId());
+				paymentTransactionEntry.setRequestId(getOrderStatusResponse.getPaymentGatewayResponse().getExternalGatewayTxnId());
 
-			if (StringUtils.isNotEmpty(getOrderStatusResponse.getPaymentGatewayResponse().getAuthIdCode()))
-			{
-				paymentTransactionEntry.setCode(getOrderStatusResponse.getPaymentGatewayResponse().getAuthIdCode() + "-"
-						+ System.currentTimeMillis());
+				if (StringUtils.isNotEmpty(getOrderStatusResponse.getPaymentGatewayResponse().getAuthIdCode()))
+				{
+					paymentTransactionEntry.setCode(getOrderStatusResponse.getPaymentGatewayResponse().getAuthIdCode() + "-"
+							+ System.currentTimeMillis());
+				}
+				else
+				{
+					paymentTransactionEntry.setCode(cart.getCode() + "-" + System.currentTimeMillis());
+				}
 			}
 			else
 			{
 				paymentTransactionEntry.setCode(cart.getCode() + "-" + System.currentTimeMillis());
 			}
-		}
-		else
-		{
-			paymentTransactionEntry.setCode(cart.getCode() + "-" + System.currentTimeMillis());
-		}
 
-		final String orderStatus = getOrderStatusResponse.getStatus();
+			final String orderStatus = getOrderStatusResponse.getStatus();
 
-		if (StringUtils.isNotEmpty(orderStatus))
-		{
-			setEntryStatus(orderStatus, paymentTransactionEntry);
-		}
+			if (StringUtils.isNotEmpty(orderStatus))
+			{
+				setEntryStatus(orderStatus, paymentTransactionEntry);
+			}
 
-		//paymentTransactionEntry.setAmount(BigDecimal.valueOf(entry.getValue().doubleValue()));
-		//TISPRO-540 - Getting amount from CartModel
-		paymentTransactionEntry.setAmount(BigDecimal.valueOf(cart.getTotalPrice().doubleValue()));
-		paymentTransactionEntry.setTime(new Date());
-		paymentTransactionEntry.setCurrency(cart.getCurrency());
+			//paymentTransactionEntry.setAmount(BigDecimal.valueOf(entry.getValue().doubleValue()));
+			//TISPRO-540 - Getting amount from CartModel
+			paymentTransactionEntry.setAmount(BigDecimal.valueOf(cart.getTotalPrice().doubleValue()));
+			paymentTransactionEntry.setTime(new Date());
+			paymentTransactionEntry.setCurrency(cart.getCurrency());
 
-		//final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode(entry.getKey());
-		//TISPRO-540 - Getting Payment mode from CartModel
-		if (StringUtils.isNotEmpty(cart.getModeOfPayment()))
-		{
-			final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode(cart.getModeOfPayment());
-			paymentTransactionEntry.setPaymentMode(paymenttype);
-		}
+			//final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode(entry.getKey());
+			//TISPRO-540 - Getting Payment mode from CartModel
+			//		if (StringUtils.isNotEmpty(cart.getModeOfPayment()))
+			//		{
+			//			final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode(cart.getModeOfPayment());
+			//			paymentTransactionEntry.setPaymentMode(paymenttype);
+			//		}
 
-		try
-		{
-			getModelService().save(paymentTransactionEntry);
-			paymentTransactionEntryList.add(paymentTransactionEntry);
+			if (StringUtils.isNotEmpty(getOrderStatusResponse.getPaymentMethodType())
+					&& getOrderStatusResponse.getPaymentMethodType().equalsIgnoreCase("NB"))
+			{
+				final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Netbanking");
+				paymentTransactionEntry.setPaymentMode(paymenttype);
+			}
+			else if (StringUtils.isNotEmpty(getOrderStatusResponse.getPaymentMethodType())
+					&& getOrderStatusResponse.getPaymentMethodType().equalsIgnoreCase("CARD"))
+			{
+				final String cardType = getOrderStatusResponse.getCardResponse().getCardType();
+				if (cardType.equalsIgnoreCase("DEBIT"))
+				{
+					final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Debit Card");
+					paymentTransactionEntry.setPaymentMode(paymenttype);
+				}
+				else if (cardType.equalsIgnoreCase("CREDIT"))
+				{
+					final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Credit Card");
+					paymentTransactionEntry.setPaymentMode(paymenttype);
+				}
+				else
+				{
+					final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("EMI");
+					paymentTransactionEntry.setPaymentMode(paymenttype);
+				}
+			}
+
+			//Check handled to remove concurrent scenario - TPR-629
+			if (null == cart.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(cart.getStatus()))
+			{
+				getModelService().save(paymentTransactionEntry);
+				paymentTransactionEntryList.add(paymentTransactionEntry);
+			}
+			else if (null != cart.getPaymentInfo())
+			{
+				LOG.error("Order already has payment info -- not saving paymentTransactionEntry>>>" + cart.getPaymentInfo().getCode());
+			}
+			else
+			{
+				LOG.error("Payment_Timeout order status for orderCode>>>" + cart.getCode());
+			}
 		}
 		catch (final ModelSavingException e)
 		{
 			LOG.error(MarketplacecommerceservicesConstants.PAYMENT_TRAN_EXC_LOG + e);
-			throw new ModelSavingException(e + ": Exception while saving payment transaction entry with");
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+		}
+		catch (final Exception e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.PAYMENT_TRAN_EXC_LOG + e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 
 		return paymentTransactionEntryList;
@@ -156,7 +202,8 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 
 
 	/**
-	 * This method creates a new Payment Transaction Model after Payment
+	 * This method creates a new Payment Transaction Model after Payment /// Commented as it is not used anymore after
+	 * TPR-629
 	 *
 	 * @param cart
 	 * @param orderStatusResponse
@@ -164,81 +211,193 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 	 * @param paymentTransactionList
 	 * @return List<PaymentTransactionModel>
 	 */
+	//	@Override
+	//	public List<PaymentTransactionModel> createPaymentTransaction(final AbstractOrderModel cart,
+	//			final GetOrderStatusResponse orderStatusResponse, final List<PaymentTransactionEntryModel> paymentTransactionEntryList,
+	//			final List<PaymentTransactionModel> paymentTransactionList)
+	//	{
+	//		final PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
+	//		if (null != cart.getPaymentInfo())
+	//		{
+	//			paymentTransactionModel.setInfo(cart.getPaymentInfo());
+	//		}
+	//
+	//		if (StringUtils.isNotEmpty(orderStatusResponse.getOrderId()))
+	//		{
+	//			paymentTransactionModel.setCode(orderStatusResponse.getOrderId() + "-" + System.currentTimeMillis());
+	//		}
+	//		else
+	//		{
+	//			paymentTransactionModel.setCode(cart.getCode() + "-" + System.currentTimeMillis());//TODO:Change required when Order Ref No. is ready
+	//		}
+	//
+	//		paymentTransactionModel.setCreationtime(new Date());
+	//		paymentTransactionModel.setCurrency(cart.getCurrency());
+	//		paymentTransactionModel.setEntries(paymentTransactionEntryList);
+	//		paymentTransactionModel.setOrder(cart);
+	//
+	//		if (StringUtils.isNotEmpty(orderStatusResponse.getGatewayId().toString()))
+	//		{
+	//			paymentTransactionModel.setPaymentProvider(orderStatusResponse.getGatewayId().toString());
+	//		}
+	//
+	//		paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(cart.getTotalPrice().doubleValue()));
+	//
+	//		if (StringUtils.isNotEmpty(orderStatusResponse.getTxnId()))
+	//		{
+	//			paymentTransactionModel.setRequestId(orderStatusResponse.getTxnId());
+	//		}
+	//
+	//		if (StringUtils.isNotEmpty(orderStatusResponse.getBankErrorCode()))
+	//		{
+	//			paymentTransactionModel.setRequestToken(orderStatusResponse.getBankErrorCode());
+	//		}
+	//
+	//		//the flag is used to identify whether all the entries in the PaymentTransactionModel are successful or not. If all are successful then flag is set as true and status against paymentTransactionModel is set as success
+	//		boolean flag = false;
+	//		for (final PaymentTransactionEntryModel entry : paymentTransactionEntryList)
+	//		{
+	//			if (entry.getTransactionStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+	//			{
+	//				flag = true;
+	//			}
+	//			else
+	//			{
+	//				flag = false;
+	//			}
+	//		}
+	//		if (flag) //flag == true
+	//		{
+	//			paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+	//		}
+	//		else
+	//		{
+	//			paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.FAILURE);
+	//		}
+	//		try
+	//		{
+	//			getModelService().save(paymentTransactionModel);
+	//			paymentTransactionList.add(paymentTransactionModel);
+	//		}
+	//		catch (final ModelSavingException e)
+	//		{
+	//			LOG.error("Exception while saving payment transaction with ", e);
+	//		}
+	//
+	//		return paymentTransactionList;
+	//	}
+
+
+
+
+
+
+	/**
+	 * This method creates a new Payment Transaction Model after Payment
+	 *
+	 * @param cart
+	 * @param orderStatusResponse
+	 * @param paymentTransactionEntryList
+	 * @return PaymentTransactionModel
+	 */
 	@Override
-	public List<PaymentTransactionModel> createPaymentTransaction(final CartModel cart,
-			final GetOrderStatusResponse orderStatusResponse, final List<PaymentTransactionEntryModel> paymentTransactionEntryList,
-			final List<PaymentTransactionModel> paymentTransactionList)
+	public PaymentTransactionModel createPaymentTransaction(final AbstractOrderModel cart,
+			final GetOrderStatusResponse orderStatusResponse, final List<PaymentTransactionEntryModel> paymentTransactionEntryList)
+	//Changed to abstractOrderModel for TPR-629
 	{
 		final PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
-		if (null != cart.getPaymentInfo())
+		try
 		{
-			paymentTransactionModel.setInfo(cart.getPaymentInfo());
-		}
-
-		if (StringUtils.isNotEmpty(orderStatusResponse.getOrderId()))
-		{
-			paymentTransactionModel.setCode(orderStatusResponse.getOrderId() + "-" + System.currentTimeMillis());
-		}
-		else
-		{
-			paymentTransactionModel.setCode(cart.getCode() + "-" + System.currentTimeMillis());//TODO:Change required when Order Ref No. is ready
-		}
-
-		paymentTransactionModel.setCreationtime(new Date());
-		paymentTransactionModel.setCurrency(cart.getCurrency());
-		paymentTransactionModel.setEntries(paymentTransactionEntryList);
-		paymentTransactionModel.setOrder(cart);
-
-		if (StringUtils.isNotEmpty(orderStatusResponse.getGatewayId().toString()))
-		{
-			paymentTransactionModel.setPaymentProvider(orderStatusResponse.getGatewayId().toString());
-		}
-
-		paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(cart.getTotalPrice().doubleValue()));
-
-		if (StringUtils.isNotEmpty(orderStatusResponse.getTxnId()))
-		{
-			paymentTransactionModel.setRequestId(orderStatusResponse.getTxnId());
-		}
-
-		if (StringUtils.isNotEmpty(orderStatusResponse.getBankErrorCode()))
-		{
-			paymentTransactionModel.setRequestToken(orderStatusResponse.getBankErrorCode());
-		}
-
-		//the flag is used to identify whether all the entries in the PaymentTransactionModel are successful or not. If all are successful then flag is set as true and status against paymentTransactionModel is set as success
-		boolean flag = false;
-		for (final PaymentTransactionEntryModel entry : paymentTransactionEntryList)
-		{
-			if (entry.getTransactionStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+			if (null != cart.getPaymentInfo())
 			{
-				flag = true;
+				paymentTransactionModel.setInfo(cart.getPaymentInfo());
+			}
+
+			if (StringUtils.isNotEmpty(orderStatusResponse.getOrderId()))
+			{
+				paymentTransactionModel.setCode(orderStatusResponse.getOrderId() + "-" + System.currentTimeMillis());
 			}
 			else
 			{
-				flag = false;
+				paymentTransactionModel.setCode(cart.getCode() + "-" + System.currentTimeMillis());//TODO:Change required when Order Ref No. is ready
 			}
-		}
-		if (flag) //flag == true
-		{
-			paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
-		}
-		else
-		{
-			paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.FAILURE);
-		}
-		try
-		{
-			getModelService().save(paymentTransactionModel);
-			paymentTransactionList.add(paymentTransactionModel);
+
+			paymentTransactionModel.setCreationtime(new Date());
+			paymentTransactionModel.setCurrency(cart.getCurrency());
+			paymentTransactionModel.setEntries(paymentTransactionEntryList);
+			paymentTransactionModel.setOrder(cart);
+
+			if (StringUtils.isNotEmpty(orderStatusResponse.getGatewayId().toString()))
+			{
+				paymentTransactionModel.setPaymentProvider(orderStatusResponse.getGatewayId().toString());
+			}
+
+			paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(cart.getTotalPrice().doubleValue()));
+
+			if (StringUtils.isNotEmpty(orderStatusResponse.getTxnId()))
+			{
+				paymentTransactionModel.setRequestId(orderStatusResponse.getTxnId());
+			}
+
+			if (StringUtils.isNotEmpty(orderStatusResponse.getBankErrorCode()))
+			{
+				paymentTransactionModel.setRequestToken(orderStatusResponse.getBankErrorCode());
+			}
+
+			//the flag is used to identify whether all the entries in the PaymentTransactionModel are successful or not. If all are successful then flag is set as true and status against paymentTransactionModel is set as success
+			boolean flag = false;
+			for (final PaymentTransactionEntryModel entry : paymentTransactionEntryList)
+			{
+				if (entry.getTransactionStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+				{
+					flag = true;
+				}
+				else
+				{
+					flag = false;
+				}
+			}
+			if (flag) //flag == true
+			{
+				paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+			}
+			else
+			{
+				paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.FAILURE);
+			}
+
+			//Check handled to remove concurrent scenario - TPR-629
+			if (null == cart.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(cart.getStatus()))
+			{
+				getModelService().save(paymentTransactionModel);
+				//paymentTransactionList.add(paymentTransactionModel);
+			}
+			else if (null != cart.getPaymentInfo())
+			{
+				LOG.error("Order already has payment info -- not saving paymentTransaction>>>" + cart.getPaymentInfo().getCode());
+			}
+			else
+			{
+				LOG.error("Payment_Timeout order status for orderCode>>>" + cart.getCode());
+			}
+
 		}
 		catch (final ModelSavingException e)
 		{
-			LOG.error("Exception while saving payment transaction with ", e);
+			LOG.error(MarketplacecommerceservicesConstants.PAYMENT_TRAN_ERR_LOG + e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+		}
+		catch (final Exception e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.PAYMENT_TRAN_ERR_LOG + e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 
-		return paymentTransactionList;
+		return paymentTransactionModel;
 	}
+
+
+
 
 
 	//Getters and setters

@@ -30,14 +30,14 @@ display: none;
 </style>
 
 
-<template:page pageTitle="${pageTitle}" hideHeaderLinks="true"
-	showOnlySiteLogo="true">
-	<cart:tealiumCartParameters />
-	
+<template:page pageTitle="${pageTitle}" hideHeaderLinks="true" showOnlySiteLogo="true">
+<cart:tealiumCartParameters/>
+	<%-- <div class="checkout-headline">
+		<spring:theme code="checkout.multi.secure.checkout" text="Secure Checkout"></spring:theme>
+	</div> --%>
 	<div class="checkout-content cart checkout wrapper delivery">
-		<!-- store url fix -->
-		<script type="text/javascript"
-			src="/_ui/responsive/common/js/jquery-2.1.1.min.js"></script>
+	<!-- store url fix -->
+	<script type="text/javascript" src="/_ui/responsive/common/js/jquery-2.1.1.min.js"></script>
 		<c:if test="${showDeliveryMethod eq true}">
 
 			<multi-checkout:checkoutSteps checkoutSteps="${checkoutSteps}"
@@ -457,7 +457,7 @@ display: none;
 									
 						<!--  If no address is present -->
 						<c:if test="${empty deliveryAddresses}"> 
-								
+						<div id="emptyAddress" style="color:red;display:none;">Please select a delivery address</div>		
 										<form id="selectAddressForm"
 									action="${request.contextPath}/checkout/multi/delivery-method/select-address"
 									method="get">
@@ -933,16 +933,13 @@ display: none;
 						
 					</ycommerce:testId>
 				</jsp:body>
-		</multi-checkout:checkoutSteps>
-
-	</c:if>
-	
-
-
+			</multi-checkout:checkoutSteps>			
+				
+		</c:if>
 	<div class="right-block shipping">
-		<div class="checkout-order-summary">
-			<multi-checkout:orderTotals cartData="${cartData}"
-				showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" />
+			<div class="checkout-order-summary">
+				<multi-checkout:orderTotals cartData="${cartData}"
+					showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" />
 				<c:if test="${showDeliveryMethod eq true}">
 		<c:choose>
 			<c:when test="${isExpressCheckoutSelected}">
