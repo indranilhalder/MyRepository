@@ -35,7 +35,6 @@ import de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsD
 import de.hybris.platform.commercewebservicescommons.dto.user.AddressListWsDTO;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.CartException;
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
-import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -77,6 +76,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 
 import com.tisl.mpl.cart.impl.CommerceWebServicesCartFacade;
@@ -90,6 +90,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
+import com.tisl.mpl.facades.populators.CustomAddressReversePopulator;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
@@ -157,9 +158,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	private Converter<CartModel, CartData> mplExtendedCartConverter;
 	@Resource
 	private MplDiscountUtil mplDiscountUtil;
-	@Resource(name = "addressReversePopulator")
-	private Populator<AddressData, AddressModel> addressReversePopulator;
-
+    @Autowired
+	private CustomAddressReversePopulator addressReversePopulator;
 	private static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
 
 	private final static Logger LOG = Logger.getLogger(MplCartWebServiceImpl.class);
@@ -2114,7 +2114,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		final AddressModel addressModel = getModelService().create(AddressModel.class);
 		try
 		{
-			getAddressReversePopulator().populate(addressData, addressModel);
+			addressReversePopulator.populate(addressData, addressModel);
 			if (null != addressData.getState())
 			{
 				addressModel.setDistrict(addressData.getState());
@@ -2266,20 +2266,5 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		this.modelService = modelService;
 	}
 
-	/**
-	 * @return the addressReversePopulator
-	 */
-	public Populator<AddressData, AddressModel> getAddressReversePopulator()
-	{
-		return addressReversePopulator;
-	}
 
-	/**
-	 * @param addressReversePopulator
-	 *           the addressReversePopulator to set
-	 */
-	public void setAddressReversePopulator(final Populator<AddressData, AddressModel> addressReversePopulator)
-	{
-		this.addressReversePopulator = addressReversePopulator;
-	}
 }

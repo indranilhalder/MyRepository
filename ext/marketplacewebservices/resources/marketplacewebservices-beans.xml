@@ -1281,6 +1281,7 @@
 		<property name="addressLine1" type="String" />
 		<property name="addressLine2" type="String" />
 		<property name="addressLine3" type="String" />
+		<property name="landmark" type="String" />
 		<property name="town" type="String" />
 		<property name="state" type="String" />
 		<property name="country" type="String" />
@@ -1299,6 +1300,7 @@
 		<property name="addressLine1" type="String" />
 		<property name="addressLine2" type="String" />
 		<property name="addressLine3" type="String" />
+		<property name="landmark" type="String" />
 		<property name="town" type="String" />
 		<property name="state" type="String" />
 		<property name="country" type="String" />

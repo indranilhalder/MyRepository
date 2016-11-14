@@ -10,7 +10,6 @@ import de.hybris.platform.core.model.c2l.CountryModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
-import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 
@@ -27,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facades.populators.CustomAddressPopulator;
 import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.marketplacecommerceservices.service.AccountAddressService;
 
@@ -125,22 +125,6 @@ public class AccountAddressFacade
 		this.commerceCommonI18NService = commerceCommonI18NService;
 	}
 
-	/**
-	 * @return the addressConverter
-	 */
-	public Converter<AddressModel, AddressData> getAddressConverter()
-	{
-		return addressConverter;
-	}
-
-	/**
-	 * @param addressConverter
-	 *           the addressConverter to set
-	 */
-	public void setAddressConverter(final Converter<AddressModel, AddressData> addressConverter)
-	{
-		this.addressConverter = addressConverter;
-	}
 
 	/**
 	 * @return the accountAddressService
@@ -168,7 +152,7 @@ public class AccountAddressFacade
 	@Autowired
 	private CommerceCommonI18NService commerceCommonI18NService;
 	@Autowired
-	private Converter<AddressModel, AddressData> addressConverter;
+	private CustomAddressPopulator addressPopulator;
 	@Autowired
 	private AccountAddressService accountAddressService;
 	protected static final Logger LOG = Logger.getLogger(AccountAddressFacade.class);
@@ -387,12 +371,8 @@ public class AccountAddressFacade
 						final boolean validForSite = deliveryCountries != null && deliveryCountries.contains(address.getCountry());
 						if (validForSite)
 						{
-							final AddressData addressData = addressConverter.convert(address);
-							addressData.setPhone(address.getCellphone());
-							addressData.setState(address.getDistrict());
-							addressData.setAddressType(address.getAddressType());
-							addressData.setLocality(address.getLocality());
-							addressData.setLine3(address.getAddressLine3());
+							 AddressData addressData = new AddressData();
+							 addressPopulator.populate(address, addressData);
 
 							if (defaultAddress != null && defaultAddress.getId() != null
 									&& defaultAddress.getId().equals(addressData.getId()))
@@ -427,29 +407,20 @@ public class AccountAddressFacade
 		try
 		{
 			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-			AddressData defaultAddressData = null;
+			 AddressData defaultAddressData = new AddressData();
 
 			final AddressModel defaultAddress = customerAccountService.getDefaultAddress(currentCustomer);
 			if (defaultAddress != null)
 			{
-				defaultAddressData = addressConverter.convert(defaultAddress);
-				defaultAddressData.setPhone(defaultAddress.getCellphone());
-				defaultAddressData.setState(defaultAddress.getDistrict());
-				defaultAddressData.setAddressType(defaultAddress.getAddressType());
-				defaultAddressData.setLocality(defaultAddress.getLocality());
-				defaultAddressData.setLine3(defaultAddress.getAddressLine3());
+				addressPopulator.populate(defaultAddress,defaultAddressData);
 			}
 			else
 			{
 				final List<AddressModel> addresses = customerAccountService.getAddressBookEntries(currentCustomer);
 				if (CollectionUtils.isNotEmpty(addresses))
 				{
-					defaultAddressData = addressConverter.convert(addresses.get(0));
-					defaultAddressData.setPhone(addresses.get(0).getCellphone());
-					defaultAddressData.setState(addresses.get(0).getDistrict());
-					defaultAddressData.setAddressType(addresses.get(0).getAddressType());
-					defaultAddressData.setLocality(addresses.get(0).getLocality());
-					defaultAddressData.setLine3(addresses.get(0).getAddressLine3());
+					addressPopulator.populate(addresses.get(0), defaultAddressData);
+
 				}
 			}
 			return defaultAddressData;
@@ -473,11 +444,8 @@ public class AccountAddressFacade
 					(CustomerModel) userService.getCurrentUser(), code);
 			if (defaultAddress != null)
 			{
-				final AddressData addressData = addressConverter.convert(defaultAddress);
-				addressData.setState(defaultAddress.getDistrict());
-				addressData.setAddressType(defaultAddress.getAddressType());
-				addressData.setLocality(defaultAddress.getLocality());
-				addressData.setLine3(defaultAddress.getAddressLine3());
+			    AddressData addressData = new AddressData();
+				addressPopulator.populate(defaultAddress, addressData);
 				return addressData;
 			}
 			return null;

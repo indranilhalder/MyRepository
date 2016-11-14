@@ -35,7 +35,7 @@ public class CustomAddressReversePopulator extends AddressReversePopulator
 		if (null != source.getCity())
 		{
 			target.setCity(source.getCity());
-			target.setCity(source.getCity());
+			target.setTown(source.getCity());
 		}
 		else if (null != source.getTown())
 		{
@@ -46,6 +46,7 @@ public class CustomAddressReversePopulator extends AddressReversePopulator
 		{
 			target.setLandmark(source.getLandmark());
 		}
+		target.setCellphone(source.getPhone());
 
 	}
 }

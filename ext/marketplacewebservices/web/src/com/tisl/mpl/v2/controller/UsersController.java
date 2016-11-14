@@ -177,6 +177,7 @@ import com.tisl.mpl.facades.data.MplFavBrandCategoryData;
 import com.tisl.mpl.facades.data.MplFavBrandCategoryWsDTO;
 import com.tisl.mpl.facades.data.MplPreferenceData;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
+import com.tisl.mpl.facades.populators.CustomAddressReversePopulator;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.product.data.ReturnReasonDetails;
 import com.tisl.mpl.helper.MplEnumerationHelper;
@@ -291,7 +292,7 @@ public class UsersController extends BaseCommerceController
 	//	@Autowired Critical Sonar fixes Unused private Field
 	//	private RegisterCustomerFacade registerCustomerFacade;
 	@Autowired
-	private Populator<AddressData, AddressModel> addressReversePopulator;
+	private CustomAddressReversePopulator addressReversePopulator;
 	@Autowired
 	private Wishlist2Service wishlistService;
 
@@ -403,6 +404,7 @@ public class UsersController extends BaseCommerceController
 	private static final int MAX_FIELD_LENGTH_ADDLINE = 40;
 	private static final int MAX_FIELD_LENGTH_STATE = 20;
 	private static final int MAX_FIELD_LENGTH_COUNTRY = 15;
+	private static final int MAX_LANDMARK_LENGTH = 20;
 	public static final String MOBILE_REGEX = "^[0-9]*$";
 	public static final String NAME_REGEX = "[a-zA-Z]+\\.?";
 
@@ -2426,7 +2428,7 @@ public class UsersController extends BaseCommerceController
 	@ResponseBody
 	public UserResultWsDto addAddress(@RequestParam final String emailId, @RequestParam final String firstName,
 			@RequestParam final String lastName, @RequestParam final String line1, @RequestParam final String line2,
-			@RequestParam final String line3, @RequestParam final String town, @RequestParam final String state,
+			@RequestParam final String line3, @RequestParam final String landmark,@RequestParam final String town, @RequestParam final String state,
 			@RequestParam final String countryIso, @RequestParam final String postalCode, @RequestParam final String phone,
 			@RequestParam final String addressType, @RequestParam final boolean defaultFlag) throws RequestParameterException
 	{
@@ -2454,16 +2456,16 @@ public class UsersController extends BaseCommerceController
 			validation(errorMsg);
 			errorMsg = validateStringField(line3, AddressField.LINE3, MAX_FIELD_LENGTH_ADDLINE);
 			validation(errorMsg);
-			errorMsg = validateStringField(town, AddressField.TOWN, MAX_FIELD_LENGTH_ADDLINE);
+			errorMsg = validateStringField(landmark, AddressField.LANDMARK, MAX_LANDMARK_LENGTH);
 			validation(errorMsg);
-			errorMsg = validateStringField(postalCode, AddressField.POSTCODE, MAX_POSTCODE_LENGTH);
+			errorMsg = validateStringField(town, AddressField.TOWN, MAX_FIELD_LENGTH_ADDLINE);
 			validation(errorMsg);
 			errorMsg = validateStringField(addressType, AddressField.ADDRESSTYPE, MAX_FIELD_LENGTH);
 			validation(errorMsg);
 			errorMsg = validateStringField(state, AddressField.STATE, MAX_FIELD_LENGTH_STATE);
 			validation(errorMsg);
 			errorMsg = validateStringField(phone, AddressField.MOBILE, MAX_POSTCODE_LENGTH);
-			validation(errorMsg);
+			validation(errorMsg);	
 
 			if (null == errorMsg)
 			{
@@ -2472,6 +2474,7 @@ public class UsersController extends BaseCommerceController
 				newAddress.setLine1(line1);
 				newAddress.setLine2(line2);
 				newAddress.setLine3(line3);
+				newAddress.setLandmark(landmark);
 				newAddress.setTown(town);
 				newAddress.setPostalCode(postalCode);
 				newAddress.setBillingAddress(false);
@@ -2503,12 +2506,6 @@ public class UsersController extends BaseCommerceController
 					LOG.debug("AddresId" + newAddress.getId());
 					final AddressModel addressmodel = modelService.create(AddressModel.class);
 					addressReversePopulator.populate(newAddress, addressmodel);
-					addressmodel.setCellphone(newAddress.getPhone());
-					addressmodel.setDistrict(newAddress.getState());
-					addressmodel.setAddressType(newAddress.getAddressType());
-					addressmodel.setLocality(newAddress.getLocality());
-					addressmodel.setAddressLine3(newAddress.getLine3());
-
 					customerAccountService.saveAddressEntry(currentCustomer, addressmodel);
 					newAddress.setId(addressmodel.getPk().toString());
 
@@ -2673,10 +2670,9 @@ public class UsersController extends BaseCommerceController
 	@ResponseBody
 	public UserResultWsDto editAddress(@RequestParam final String emailId, @RequestParam final String addressId,
 			@RequestParam final String firstName, @RequestParam final String lastName, @RequestParam final String line1,
-			@RequestParam final String line2, @RequestParam final String line3, @RequestParam final String town,
-			@RequestParam final String state, @RequestParam final String countryIso, @RequestParam final String postalCode,
-			@RequestParam final String phone, @RequestParam final String addressType, @RequestParam final boolean defaultFlag)
-			throws RequestParameterException
+			@RequestParam final String line2, @RequestParam final String line3,@RequestParam final String landmark, 
+			@RequestParam final String town,@RequestParam final String state, @RequestParam final String countryIso, @RequestParam final String postalCode,@RequestParam final String phone, @RequestParam final String addressType, 
+			@RequestParam final boolean defaultFlag) throws RequestParameterException
 	{
 
 		String errorMsg = null;
@@ -2702,9 +2698,9 @@ public class UsersController extends BaseCommerceController
 			validation(errorMsg);
 			errorMsg = validateStringField(line3, AddressField.LINE3, MAX_FIELD_LENGTH_ADDLINE);
 			validation(errorMsg);
-			errorMsg = validateStringField(town, AddressField.TOWN, MAX_FIELD_LENGTH_ADDLINE);
+			errorMsg = validateStringField(phone, AddressField.LANDMARK, MAX_LANDMARK_LENGTH);
 			validation(errorMsg);
-			errorMsg = validateStringField(postalCode, AddressField.POSTCODE, MAX_POSTCODE_LENGTH);
+			errorMsg = validateStringField(town, AddressField.TOWN, MAX_FIELD_LENGTH_ADDLINE);
 			validation(errorMsg);
 			errorMsg = validateStringField(addressType, AddressField.ADDRESSTYPE, MAX_FIELD_LENGTH);
 			validation(errorMsg);
@@ -2722,6 +2718,7 @@ public class UsersController extends BaseCommerceController
 				newAddress.setLine1(line1);
 				newAddress.setLine2(line2);
 				newAddress.setLine3(line3);
+				newAddress.setLandmark(landmark);
 				newAddress.setTown(town);
 				newAddress.setPostalCode(postalCode);
 				newAddress.setBillingAddress(false);
@@ -2733,7 +2730,6 @@ public class UsersController extends BaseCommerceController
 				newAddress.setPhone(phone);
 				newAddress.setState(state);
 				newAddress.setDefaultAddress(defaultFlag);
-
 				final CustomerModel currentCustomer = (CustomerModel) user;
 
 				if (null != currentCustomer)
@@ -2742,11 +2738,6 @@ public class UsersController extends BaseCommerceController
 					LOG.debug("AddresId" + newAddress.getId());
 					addressModel.setRegion(null);
 					addressReversePopulator.populate(newAddress, addressModel);
-					addressModel.setCellphone(newAddress.getPhone());
-					addressModel.setDistrict(newAddress.getState());
-					addressModel.setAddressType(newAddress.getAddressType());
-					addressModel.setLocality(newAddress.getLocality());
-					addressModel.setAddressLine3(newAddress.getLine3());
 					customerAccountService.saveAddressEntry(currentCustomer, addressModel);
 					successFlag = true;
 					if (newAddress.isDefaultAddress())
@@ -2843,11 +2834,10 @@ public class UsersController extends BaseCommerceController
 	protected enum AddressField
 	{
 		FIRSTNAME("firstName", "address.firstName.invalid"), LASTNAME("lastName", "address.lastName.invalid"), LINE1("line1",
-				"address.line1.invalid"), LINE2("line2", "address.line2.invalid"), LINE3("line3", "address.line3.invalid"), TOWN(
-						"townCity", "address.townCity.invalid"), POSTCODE("postcode", "address.postcode.invalid"), REGION("regionIso",
-								"address.regionIso.invalid"), COUNTRY("countryIso", "address.country.invalid"), ADDRESSTYPE("addressType",
-										"address.addressType.invalid"), STATE("state", "address.selectState"), LOCALITY("locality",
-												"address.locality.invalid"), MOBILE("mobileNo", "address.mobile.invalid");
+				"address.line1.invalid"), LINE2("line2", "address.line2.invalid"), LINE3("line3", "address.line3.invalid"),LANDMARK("landmark","address.landmark.invalid"),
+				TOWN("townCity", "address.townCity.invalid"), POSTCODE("postcode", "address.postcode.invalid"), REGION("regionIso", "address.regionIso.invalid"), COUNTRY("countryIso",
+				"address.country.invalid"), ADDRESSTYPE("addressType", "address.addressType.invalid"), STATE("state",
+				"address.selectState"), LOCALITY("locality", "address.locality.invalid"), MOBILE("mobileNo", "address.mobile.invalid");
 
 
 		private final String fieldKey;
@@ -6150,11 +6140,12 @@ public class UsersController extends BaseCommerceController
 			@PathVariable final String emailId, @RequestParam final String cartId,
 			@RequestParam(required = false) final String firstName, @RequestParam(required = false) final String lastName,
 			@RequestParam(required = false) final String line1, @RequestParam(required = false) final String line2,
-			@RequestParam(required = false) final String line3, @RequestParam(required = false) final String town,
+			@RequestParam(required = false) final String line3, @RequestParam(required = false) final String landmark,@RequestParam(required = false) final String town,
 			@RequestParam(required = false) final String state, @RequestParam(required = false) final String countryIso,
-			@RequestParam(required = false) final String postalCode, @RequestParam(required = false) final String phone,
-			@RequestParam(required = false) final String addressType, @RequestParam(required = false) final boolean defaultFlag,
-			@RequestParam(required = false) final boolean saveFlag) throws RequestParameterException
+			@RequestParam(required = false) final String postalCode,
+			@RequestParam(required = false) final String phone,@RequestParam(required = false) final String addressType,
+			@RequestParam(required = false) final boolean defaultFlag,@RequestParam(required = false) final boolean saveFlag)
+			throws RequestParameterException
 	{
 		String errorMsg = null;
 		String cartIdentifier;
@@ -6211,6 +6202,8 @@ public class UsersController extends BaseCommerceController
 						validation(errorMsg);
 						errorMsg = validateStringField(line3, AddressField.LINE3, MAX_FIELD_LENGTH_ADDLINE);
 						validation(errorMsg);
+						errorMsg = validateStringField(landmark, AddressField.LANDMARK, MAX_LANDMARK_LENGTH);
+						validation(errorMsg);
 						errorMsg = validateStringField(town, AddressField.TOWN, MAX_FIELD_LENGTH_ADDLINE);
 						validation(errorMsg);
 						errorMsg = validateStringField(postalCode, AddressField.POSTCODE, MAX_POSTCODE_LENGTH);
@@ -6230,6 +6223,7 @@ public class UsersController extends BaseCommerceController
 							newAddress.setLine1(line1);
 							newAddress.setLine2(line2);
 							newAddress.setLine3(line3);
+							newAddress.setLandmark(landmark);
 							newAddress.setTown(town);
 							newAddress.setPostalCode(postalCode);
 							newAddress.setBillingAddress(false);
@@ -6245,14 +6239,7 @@ public class UsersController extends BaseCommerceController
 									|| (currentCustomer.getDefaultShipmentAddress() == null && newAddress.isVisibleInAddressBook());
 
 							LOG.debug("addAddressToOrder : makeThisAddressTheDefault : " + makeThisAddressTheDefault);
-
 							addressReversePopulator.populate(newAddress, addressmodel);
-							addressmodel.setCellphone(newAddress.getPhone());
-							addressmodel.setDistrict(newAddress.getState());
-							addressmodel.setAddressType(newAddress.getAddressType());
-							addressmodel.setLocality(newAddress.getLocality());
-							addressmodel.setAddressLine3(newAddress.getLine3());
-
 							//adding new address to user
 							if (saveFlag)
 							{
@@ -7075,22 +7062,7 @@ public class UsersController extends BaseCommerceController
 		this.mplCheckoutFacade = mplCheckoutFacade;
 	}
 
-	/**
-	 * @return the addressReversePopulator
-	 */
-	public Populator<AddressData, AddressModel> getAddressReversePopulator()
-	{
-		return addressReversePopulator;
-	}
 
-	/**
-	 * @param addressReversePopulator
-	 *           the addressReversePopulator to set
-	 */
-	public void setAddressReversePopulator(final Populator<AddressData, AddressModel> addressReversePopulator)
-	{
-		this.addressReversePopulator = addressReversePopulator;
-	}
 
 	/**
 	 * @return the wishlistService

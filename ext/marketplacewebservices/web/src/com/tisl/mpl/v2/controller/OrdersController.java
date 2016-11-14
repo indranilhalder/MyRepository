@@ -1000,6 +1000,7 @@ public class OrdersController extends BaseCommerceController
 			billingAddress.setAddressLine1(orderDetail.getDeliveryAddress().getLine1());
 			billingAddress.setAddressLine2(orderDetail.getDeliveryAddress().getLine2());
 			billingAddress.setAddressLine3(orderDetail.getDeliveryAddress().getLine3());
+			billingAddress.setLandmark(orderDetail.getDeliveryAddress().getLandmark());
 			billingAddress.setPhone(countrycode + orderDetail.getDeliveryAddress().getPhone());
 
 			billingAddress.setShippingFlag(Boolean.valueOf(orderDetail.getDeliveryAddress().isShippingAddress()));
@@ -1021,6 +1022,7 @@ public class OrdersController extends BaseCommerceController
 			billingAddress.setAddressLine1(billAddress.getLine1());
 			billingAddress.setAddressLine2(billAddress.getLine2());
 			billingAddress.setAddressLine3(billAddress.getLine3());
+			billingAddress.setLandmark(billAddress.getLandmark());
 			billingAddress.setPhone(countrycode + billAddress.getPhone());
 			billingAddress.setShippingFlag(Boolean.valueOf(billAddress.isShippingAddress()));
 			billingAddress.setId(billAddress.getId());

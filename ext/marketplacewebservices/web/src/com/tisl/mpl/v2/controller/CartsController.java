@@ -2737,6 +2737,10 @@ public class CartsController extends BaseCommerceController
 		{
 			shippingAddress.setAddressLine3(address.getAddressLine3());
 		}
+		if (null != address.getLandmark())
+		{
+			shippingAddress.setLandmark(address.getLandmark());
+		}
 		if (null != address.getCountry() && null != address.getCountry().getName())
 		{
 			shippingAddress.setCountry(address.getCountry().getName());
