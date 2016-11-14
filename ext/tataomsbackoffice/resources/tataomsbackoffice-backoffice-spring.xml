@@ -126,19 +126,23 @@
 	
 	<bean id="bucFileComparitor" class="com.techouts.dataonboarding.util.BUCFileComparitor"></bean>
 	<!-- bulk upload -->
-	<bean id="excelToCsvConverter" class="com.hybris.oms.tata.exceltocsv.main.ExcelToCsvConverter">
+	<bean id="excelToCsvConverter"
+		class="com.hybris.oms.tata.tship.exceltocsv.converter.TShipExcelToCsvConverter">
 	</bean>
-	<bean id="csvService" class="com.hybris.oms.tata.service.CsvService">
+	<bean id="tshipExcelToCsvService"
+		class="com.hybris.oms.tata.tship.exceltocsv.service.DefaultTshipExcelToCsvService">
 	</bean>
 	<bean id="logisticPartnerValidator"
-		class="com.hybris.oms.tata.exceltocsv.validator.LogisticPartnerValidator"></bean>
+		class="com.hybris.oms.tata.tship.exceltocsv.validator.TshipLogisticPartnerValidator"></bean>
 	<bean id="priorityMasterValidator"
-		class="com.hybris.oms.tata.exceltocsv.validator.PriorityMasterValidator"></bean>
+		class="com.hybris.oms.tata.tship.exceltocsv.validator.TshipPriorityMasterValidator"></bean>
 
-<bean id="priorityMaster" class="com.hybris.oms.tata.pincodesupload.pojo.PriorityMaster">
- <property name="airPriorityMaster" ref="airPriorityMaster"></property>
- <property name="surfacePriorityMaster" ref="surfacePriorityMaster"></property>
-</bean>
-<bean id="airPriorityMaster" class="com.hybris.oms.tata.pincodesupload.pojo.AirPriorityMaster"></bean>
-<bean id="surfacePriorityMaster" class="com.hybris.oms.tata.pincodesupload.pojo.SurfacePriorityMaster"></bean>
+	<bean id="priorityMaster" class="com.hybris.oms.tata.tship.exceltocsv.pojo.PriorityMaster">
+		<property name="airPriorityMaster" ref="airPriorityMaster"></property>
+		<property name="surfacePriorityMaster" ref="surfacePriorityMaster"></property>
+	</bean>
+	<bean id="airPriorityMaster"
+		class="com.hybris.oms.tata.tship.exceltocsv.pojo.AirPriorityMaster"></bean>
+	<bean id="surfacePriorityMaster"
+		class="com.hybris.oms.tata.tship.exceltocsv.pojo.SurfacePriorityMaster"></bean>
 </beans>
