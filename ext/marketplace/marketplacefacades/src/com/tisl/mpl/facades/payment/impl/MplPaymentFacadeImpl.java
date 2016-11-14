@@ -2219,9 +2219,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					//Payment Changes - Order before Payment
 					updAuditErrStatus = getMplPaymentService().updateAuditEntry(orderStatusResponse, orderStatusRequest, orderModel,
 							paymentMode);
+					LOG.warn(" Total price in commerce with convenience" + orderModel.getTotalPriceWithConv());
+					LOG.warn(" Total price  " + orderModel.getTotalPriceWithConv());
+					LOG.warn(" Total price in juspay " + orderStatusResponse.getAmount());
 
-
-					if (orderModel.getTotalPrice().equals(orderStatusResponse.getAmount()))
+					if (orderModel.getTotalPriceWithConv().equals(orderStatusResponse.getAmount()))
 					{
 						getMplPaymentService().setPaymentTransaction(orderStatusResponse, paymentMode, orderModel);
 					}
