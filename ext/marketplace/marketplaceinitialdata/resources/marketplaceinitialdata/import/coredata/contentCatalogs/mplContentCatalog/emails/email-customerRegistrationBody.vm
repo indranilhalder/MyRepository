@@ -28,8 +28,7 @@
    <body style="margin:0;">
       <table width="600" border="0" cellspacing="0" cellpadding="0" align="center" style="display: block; border:solid 1px #cccccc;table-layout:fixed;font-family:Arial, Helvetica, sans-serif;">
          <tr>
-            <td align="left" valign="top"><span><img src="http://localhost:9001/medias/sys_master/images/8816640655390.jpg" alt="" border="0"/>
-</span></td>
+            <td align="left" valign="top"><span>${ctx.cmsSlotContents.SiteLogo}</span></td>
          </tr>
          <tr>
             <td align="left" valign="top" style="display:inherit;">
@@ -85,15 +84,12 @@
                   <tr>
                      <td align="left" valign="top">
                         <table class="emailPass" border="0" cellspacing="0" cellpadding="0">
-						<tr>
-                              <td align="left" valign="top" style="font-family:Arial, Helvetica, sans-serif;font-size: 2px;color:#606060;padding: 0;" height="5">&nbsp;</td>
-                           </tr>
                            <tr>
 							  <td width="129" height="27" style="padding: 0;"></td>
                               <td align="left" valign="middle" bgcolor="#f5f5f5" style="font-family:Arial, Helvetica, sans-serif; font-size:medium; color:#000000;font-weight:normal;padding-left: 40px;padding-top:8px; padding-bottom:8px;">Username: </td>
 							  <td bgcolor="#f5f5f5" style="padding:0px;padding-top:8px; padding-bottom:8px;">&nbsp;</td>
                               <td  align="left" valign="middle" bgcolor="#f5f5f5" style="font-family:Arial, Helvetica, sans-serif; font-size:medium; color:#000000; font-weight:normal;padding-right: 30px;padding-top:8px;padding-bottom:8px; padding-left:0px; "> <span><span>
-                                fdg@dgsdg.com</span></span>
+                                ${ctx.customerId}</span></span>
                               </td>
                            </tr>
                         </table>
@@ -101,7 +97,7 @@
                      <td align="left" valign="top">&nbsp;</td>
                   </tr>
                   <tr>
-                     <td height="18">&nbsp;</td>
+                     <td height="24">&nbsp;</td>
                   </tr>
                   <tr>
                      <td align="center" valign="top" style="border-bottom: 1px solid black;" >
@@ -124,12 +120,12 @@
                      <td align="left" valign="top" bgcolor="#fbfbfb" style="padding-left: 16px;">
                         <table border="0" cellspacing="0" cellpadding="0">
                            <tr>
-                              <td height="25" align="left" valign="top" >&nbsp;</td>
+                              <td height="35" align="left" valign="top" >&nbsp;</td>
                               <td align="left" valign="middle" style="font-family:Arial, Helvetica, sans-serif; font-size:medium; color:#000000;">Here's why this is going to be a fantastic friendship:</td>
                            </tr>
                         </table>
                      </td>
-                     <td align="left" valign="top" bgcolor="#fbfbfb">&nbsp;</td>
+                     <td align="left" valign="top">&nbsp;</td>
                   </tr>
                   <tr>
                      <td height="18" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
@@ -264,14 +260,10 @@
                               <td align="right" valign="top">
                                  <table width="70" border="0" cellspacing="0" cellpadding="0" align="right" style="float:right;  padding-top: 5px;">
                                   	<tr>
-					<td style="text-align: right;"><a href="https://www.facebook.com/TataCLiQ/" target="_blank"><img src="http://localhost:9001/medias/sys_master/images/8816640720926.jpg" alt="" border="0"/>
-</a></td>
-					<td><a href="https://twitter.com/tatacliq" target="_blank"><img src="http://localhost:9001/medias/sys_master/images/8816511909918.jpg" alt="" border="0"/>
-</a></td>
-					<td><a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" target="_blank"><img src="http://localhost:9001/medias/sys_master/images/8816511942686.jpg" alt="" border="0"/>
-</a></td>
-					<td><a href="https://www.instagram.com/tatacliq/" target="_blank"><img src="http://localhost:9001/medias/sys_master/images/8816511975454.jpg" alt="" border="0"/>
-</a></td>
+					<td style="text-align: right;"><a href="https://www.facebook.com/TataCLiQ/" target="_blank">${ctx.cmsSlotContents.fb}</a></td>
+					<td><a href="https://twitter.com/tatacliq" target="_blank">${ctx.cmsSlotContents.tweet}</a></td>
+					<td><a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" target="_blank">${ctx.cmsSlotContents.youtube}</a></td>
+					<td><a href="https://www.instagram.com/tatacliq/" target="_blank">${ctx.cmsSlotContents.insta}</a></td>
 			
 				</tr>
                                  </table>
@@ -292,3 +284,5 @@
       </table>
    </body>
 </html>
+
+
