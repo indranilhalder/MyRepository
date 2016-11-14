@@ -106,7 +106,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PRODUCT_PRICE_COLUMN = "price".intern();
 	public static final String PRESENT_CATEGORY = "Present Category :".intern();
 
-	public static final String PROMO_ERROR_MESSAGE = "Cannot exceed 25 characters.".intern();
+	public static final String PROMO_ERROR_MESSAGE = "Title cannot exceed 25 characters.".intern();
 
 
 	//For Bulk Orders Return Initiation
