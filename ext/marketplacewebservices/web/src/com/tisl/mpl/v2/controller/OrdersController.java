@@ -40,6 +40,7 @@ import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
@@ -58,6 +59,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -66,20 +68,28 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
+import com.tis.mpl.facade.address.validator.MplDeliveryAddressComparator;
+import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.data.MplPaymentInfoData;
+import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.exceptions.NoCheckoutCartException;
@@ -92,6 +102,8 @@ import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
 import com.tisl.mpl.facades.account.register.impl.DefaultMplOrderFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.AWBResponseData;
+import com.tisl.mpl.facades.data.RescheduleDataList;
+import com.tisl.mpl.facades.data.ScheduledDeliveryData;
 import com.tisl.mpl.facades.data.StatusRecordData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.facades.product.data.SendInvoiceData;
@@ -108,6 +120,9 @@ import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.v2.helper.OrdersHelper;
 import com.tisl.mpl.wsdto.BillingAddressWsDTO;
 import com.tisl.mpl.wsdto.GetOrderHistoryListWsDTO;
+import com.tisl.mpl.wsdto.MplDeliveryAddressRequestWsDTO;
+import com.tisl.mpl.wsdto.MplDeliveryAddressResponseWsDTO;
+import com.tisl.mpl.wsdto.MplSDInfoWsDTO;
 import com.tisl.mpl.wsdto.OrderConfirmationWsDTO;
 import com.tisl.mpl.wsdto.OrderDataWsDTO;
 import com.tisl.mpl.wsdto.OrderProductWsDTO;
@@ -207,6 +222,13 @@ public class OrdersController extends BaseCommerceController
 
 	@Resource(name = "mplDataMapper")
 	protected DataMapper mplDataMapper;
+	
+	@Autowired
+	private MplDeliveryAddressFacade mplDeliveryAddressFacade;
+	
+	@Autowired
+	private MplDeliveryAddressComparator mplDeliveryAddressComparator;
+	
 
 	/**
 	 * @return the mplSellerInformationService
@@ -1732,6 +1754,8 @@ public class OrdersController extends BaseCommerceController
 					orderTrackingWsDTO.setIsPickupUpdatable(getOrderDetailsFacade.isPickUpButtonEditable(orderDetail));
 					orderTrackingWsDTO.setStatusDisplay(orderDetail.getStatusDisplay());
 					orderTrackingWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+					//R2.3 FLO1 new attribute Added 
+					orderTrackingWsDTO.setIsCDA(mplDeliveryAddressFacade.isDeliveryAddressChangable(orderCode));
 				}
 			}
 		}
@@ -2142,5 +2166,241 @@ public class OrdersController extends BaseCommerceController
 		}
 
 
+	}
+	
+	//R2.3 FLO1 Added new Controller Method Change Deliverry Request
+	@Secured(
+	{ "ROLE_CUSTOMERGROUP", "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
+	@RequestMapping(value = "/users/{userId}/changeDeliveryAddress/{orderCode}", method = RequestMethod.POST)
+	@ResponseBody
+	public MplDeliveryAddressResponseWsDTO changeDeliveryAddress(@PathVariable final String orderCode,
+			final HttpServletRequest request) throws WebserviceValidationException
+	{
+		MplDeliveryAddressResponseWsDTO mplDeliveryAddressResponseWsDTO = new MplDeliveryAddressResponseWsDTO();
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("MplDeliveryAddress change request: OrderCode=" + sanitize(orderCode));
+		}
+		try
+		{
+			OrderData orderData = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+			final AddressData newAddressData = new AddressData();
+
+			final Errors errors = new BeanPropertyBindingResult(newAddressData, "newAddressData");
+			httpRequestAddressDataPopulator.populate(request, newAddressData);
+
+			addressValidator.validate(newAddressData, errors);
+
+			if (errors.hasErrors())
+			{
+				throw new WebserviceValidationException(errors);
+			}
+			//address
+			boolean isAddressChanged = mplDeliveryAddressComparator.compareAddress(orderData.getDeliveryAddress(), newAddressData);
+			boolean isContactDetails = mplDeliveryAddressComparator.compareContactDetails(orderData.getDeliveryAddress(),
+					newAddressData);
+			if (isAddressChanged || isContactDetails)
+			{
+				//checking pincode changed  
+				if (StringUtils.isNotEmpty(newAddressData.getPostalCode())
+						&& !newAddressData.getPostalCode().equalsIgnoreCase(orderData.getDeliveryAddress().getPostalCode()))
+				{
+					ScheduledDeliveryData scheduledDeliveryData = mplDeliveryAddressFacade.scheduledDeliveryData(orderCode,
+							newAddressData);
+					if (scheduledDeliveryData != null)
+					{
+						mplDeliveryAddressResponseWsDTO.setIsScheduled(true);
+						mplDeliveryAddressResponseWsDTO.setIsPincodeServiceable(scheduledDeliveryData.getIsPincodeServiceable()
+								.booleanValue());
+						if (scheduledDeliveryData.getIsPincodeServiceable().booleanValue())
+						{
+							List<MplSDInfoWsDTO> mplSDInfoWsDTO = mplDeliveryAddressFacade.getSDDatesMobile(scheduledDeliveryData
+									.getEntries());
+							mplDeliveryAddressResponseWsDTO.setEstimateDeliveryDates(mplSDInfoWsDTO);
+						}
+					}
+					else
+					{
+						boolean isServiceable = mplDeliveryAddressFacade.pincodeServiceableCheck(newAddressData, orderCode);
+						mplDeliveryAddressResponseWsDTO.setIsPincodeServiceable(isServiceable);
+						mplDeliveryAddressResponseWsDTO.setIsScheduled(false);
+					}
+				}
+				else
+				{
+					mplDeliveryAddressResponseWsDTO.setIsScheduled(false);
+					mplDeliveryAddressResponseWsDTO.setIsPincodeServiceable(true);
+				}
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				mplDeliveryAddressResponseWsDTO.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				mplDeliveryAddressResponseWsDTO.setErrorCode(e.getErrorCode());
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				mplDeliveryAddressResponseWsDTO.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				mplDeliveryAddressResponseWsDTO.setErrorCode(e.getErrorCode());
+			}
+		}
+		catch (final Exception e)
+		{
+			if (null != e.getMessage())
+			{
+				mplDeliveryAddressResponseWsDTO.setError(e.getMessage());
+			}
+		}
+		return mplDeliveryAddressResponseWsDTO;
+	}
+
+
+	
+	//R2.3 FL01 :Changed Delivery Address Saved Request
+	@Secured(
+	{ "ROLE_CUSTOMERGROUP", "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
+	@RequestMapping(value = "/users/{userId}/validateOTP/{orderCode}", method = RequestMethod.POST,consumes =
+		{ MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+	@ResponseBody
+	public WebSerResponseWsDTO submitChangeDeliveryAddress(@PathVariable final String orderCode,@RequestBody final MplDeliveryAddressRequestWsDTO newAddressData) throws WebserviceValidationException
+	{
+		
+		WebSerResponseWsDTO webSerResponseWsDTO = new WebSerResponseWsDTO();
+		try
+		{
+			String validateOTPMesg = null;
+
+			if (newAddressData !=null && StringUtils.isNotEmpty(newAddressData.getOtpNumber()) && StringUtils.isNotEmpty(orderCode))
+			{
+				final OrderModel orderModel = orderModelService.getParentOrder(orderCode);
+				CustomerModel customerModel = (CustomerModel) orderModel.getUser();
+
+				LOG.debug("OTP Validation Request through Mobile App");
+				OTPResponseData otpResponse = mplDeliveryAddressFacade.validateOTP(customerModel.getUid(),
+						newAddressData.getOtpNumber());
+				if (otpResponse.getOTPValid().booleanValue())
+				{
+					AddressData newAddress = newAddressData.getChangedAddress();
+					List<TransactionSDDto> transactionSDDtoList = null;
+					if (CollectionUtils.isNotEmpty(newAddressData.getRescheduleData()))
+					{
+						RescheduleDataList reScheduleDataList = new RescheduleDataList();
+						reScheduleDataList.setRescheduleDataList(newAddressData.getRescheduleData());
+						transactionSDDtoList = mplDeliveryAddressFacade.reScheduleddeliveryDate(orderModel, reScheduleDataList);
+						mplDeliveryAddressFacade.saveSelectedDateAndTime(orderModel, transactionSDDtoList);
+					}
+					validateOTPMesg = mplDeliveryAddressFacade.submitChangeDeliveryAddress(customerModel.getUid(), orderCode,
+							newAddress, true, transactionSDDtoList);
+				}
+				else
+				{
+					validateOTPMesg = otpResponse.getInvalidErrorMessage();
+				}
+
+				webSerResponseWsDTO.setStatus(validateOTPMesg);
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				webSerResponseWsDTO.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				webSerResponseWsDTO.setErrorCode(e.getErrorCode());
+			}
+			webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				webSerResponseWsDTO.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				webSerResponseWsDTO.setErrorCode(e.getErrorCode());
+			}
+			webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
+		}
+		catch (final Exception e)
+		{
+			if (null != e.getMessage())
+			{
+				webSerResponseWsDTO.setError(e.getMessage());
+			}
+			webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
+		}
+		return webSerResponseWsDTO;
+	}
+	
+	
+   //R2.3 FLO1 New OTP Request
+	@Secured(
+	{ "ROLE_CUSTOMERGROUP", "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
+	@RequestMapping(value = "/users/{userId}/newOTPRequest/{orderCode}", method = RequestMethod.POST)
+	@ResponseBody
+	public WebSerResponseWsDTO newOTPRequest(@PathVariable final String orderCode) throws WebserviceValidationException
+	{
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("Change delivery address new OTP requst : OrderCode=" + sanitize(orderCode));
+		}
+		WebSerResponseWsDTO webSerResponseWsDTO = new WebSerResponseWsDTO();
+		try
+		{
+			if (StringUtils.isNotEmpty(orderCode))
+			{
+				mplDeliveryAddressFacade.newOTPRequest(orderCode);
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9521);
+			}
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				webSerResponseWsDTO.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				webSerResponseWsDTO.setErrorCode(e.getErrorCode());
+			}
+			webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
+		}
+		catch (final Exception e)
+		{
+			if (null != e.getMessage())
+			{
+				webSerResponseWsDTO.setError(e.getMessage());
+			}
+			webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
+		}
+		return webSerResponseWsDTO;
 	}
 }

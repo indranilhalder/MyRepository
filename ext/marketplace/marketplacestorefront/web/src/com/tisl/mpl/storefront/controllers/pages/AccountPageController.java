@@ -132,6 +132,7 @@ import com.granule.json.JSON;
 import com.granule.json.JSONArray;
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
+import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.tis.mpl.facade.address.validator.MplDeliveryAddressComparator;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -7376,11 +7377,14 @@ public class AccountPageController extends AbstractMplSearchPageController
 		if (StringUtils.isNotEmpty(enteredOTPNumber) && StringUtils.isNotEmpty(orderId))
 		{
 			LOG.debug("Cheking OTP Validation Account Page Controller");
-			OTPResponseData otpResponse = mplDeliveryAddressFacade.validteOTP(customerData.getUid(), enteredOTPNumber);
+			OTPResponseData otpResponse = mplDeliveryAddressFacade.validateOTP(customerData.getUid(), enteredOTPNumber);
 			if (otpResponse.getOTPValid().booleanValue())
 			{
 				//OTP is valid then call save in commerce DB and Call to OMS and CRM
-				validateOTPMesg = mplDeliveryAddressFacade.submitChangeDeliveryAddress(customerData.getUid(), orderId);
+				AddressData newDeliveryAddressData = sessionService
+						.getAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS);
+				List<TransactionSDDto> transactionSDDtoList=null;
+				validateOTPMesg = mplDeliveryAddressFacade.submitChangeDeliveryAddress(customerData.getUid(), orderId, newDeliveryAddressData,false,transactionSDDtoList);
 			}
 			else
 			{
@@ -7396,7 +7400,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	public boolean newOTP(@RequestParam(value = "orderCode") final String orderCode)
 	{
 		boolean isNewOTPCreated;
-		LOG.debug("Generate new OTP For changing Delivery Address ");
+		LOG.debug("Generate new OTP For change Delivery Address ");
 		isNewOTPCreated = mplDeliveryAddressFacade.newOTPRequest(orderCode);
 		return isNewOTPCreated;
 	}

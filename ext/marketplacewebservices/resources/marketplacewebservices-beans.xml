@@ -2449,6 +2449,9 @@
 	<bean class="com.tisl.mpl.wsdto.MplDeliveryAddressResponseWsDTO">
 	    <property name="isPincodeServiceable" type="boolean"/>
 		<property name="isScheduled" type="boolean"/>
+		<property name="error" type="String" />
+		<property name="status" type="String" />
+<property name="errorCode" type="String" />
 		 <property name="estimateDeliveryDates" type="java.util.List&lt;com.tisl.mpl.wsdto.MplSDInfoWsDTO>"/>
     </bean>
     
@@ -2465,4 +2468,12 @@
     <bean class="com.tisl.mpl.wsdto.MplDeliveryTimeSlotWsDTO">
         <property name="timeSlot" type="String"/> 
     </bean>
+    
+    <bean class="com.tisl.mpl.wsdto.MplDeliveryAddressRequestWsDTO">
+    <property name="otpNumber" type="String" />
+	<property name="changedAddress"
+		type="de.hybris.platform.commercefacades.user.data.AddressData" />
+	<property name="rescheduleData"
+		type="java.util.List&lt;com.tisl.mpl.facades.data.RescheduleData>" />
+</bean>
 </beans>
