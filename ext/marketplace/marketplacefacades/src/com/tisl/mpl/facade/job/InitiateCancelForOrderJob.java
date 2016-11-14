@@ -89,8 +89,8 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 			int counter = 0;
 			final Map<OrderEntryData, BulkCancelStoreData> cancellationDataMap = new HashMap<OrderEntryData, BulkCancelStoreData>();
 			List<BulkCancellationProcessModel> finalModelToSave = new ArrayList<BulkCancellationProcessModel>();
-			final long startTime = System.currentTimeMillis();
-			LOG.info(MarketplacecommerceservicesConstants.START_TIME_C + startTime);
+			//			final long startTime = System.currentTimeMillis();
+			//			LOG.info(MarketplacecommerceservicesConstants.START_TIME_C + startTime);
 			final List<BulkCancellationProcessModel> bulkList = orderModelService.getBulkCancelData();
 
 			if (CollectionUtils.isNotEmpty(bulkList))
@@ -158,8 +158,8 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 			{
 				LOG.error(MarketplacecommerceservicesConstants.BULK_CANCEL_LOG_STEP_14);
 			}
-			final long endTime = System.currentTimeMillis();
-			LOG.info(MarketplacecommerceservicesConstants.END_TIME_C + endTime);
+			//			final long endTime = System.currentTimeMillis();
+			//			LOG.info(MarketplacecommerceservicesConstants.END_TIME_C + endTime);
 		}
 		catch (final EtailBusinessExceptions exception)
 		{

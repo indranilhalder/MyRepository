@@ -100,8 +100,8 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 
 			final Map<OrderEntryData, OrderData> dataToCallOMS = new HashMap<OrderEntryData, OrderData>();
 
-			final long startTime = System.currentTimeMillis();
-			LOG.info(MarketplacecommerceservicesConstants.START_TIME + startTime);
+			//			final long startTime = System.currentTimeMillis();
+			//			LOG.info(MarketplacecommerceservicesConstants.START_TIME + startTime);
 
 			//fetch list of bulk data processed
 			final List<BulkReturnProcessModel> bulkList = orderModelService.getBulkReturnData();
@@ -159,7 +159,6 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 				//Step 3: call OMS and CRM
 				returnResonseMap = callOMSandCRM(dataToCallOMS, returnAddrData);
 			}
-
 			catch (final Exception e)
 			{
 				LOG.error("", e);
@@ -168,10 +167,10 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 			//Step 4 : saving the modified bulkmodel list
 			saveBulkData(returnResonseMap, bulkList);
 
-			final long endTime = System.currentTimeMillis();
-			LOG.info(MarketplacecommerceservicesConstants.END_TIME + endTime);
+			//			final long endTime = System.currentTimeMillis();
+			//			LOG.info(MarketplacecommerceservicesConstants.END_TIME + endTime);
 
-			LOG.info("Total time taken : " + (endTime - startTime) / 1000);
+			//			LOG.info("Total time taken : " + (endTime - startTime) / 1000);
 		}
 
 
@@ -279,37 +278,46 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 	private void saveBulkData(final Map<String, BulkReturnStatusData> returnResonseMap, final List<BulkReturnProcessModel> bulkList)
 	{
 		final List<BulkReturnProcessModel> updatedBulkReturnProcessList = new ArrayList<BulkReturnProcessModel>();
-		for (final Map.Entry<String, BulkReturnStatusData> entry : returnResonseMap.entrySet())
+		if (null != returnResonseMap && !returnResonseMap.isEmpty())
 		{
-			final BulkReturnProcessModel returnBulkModel = getBulkModel(bulkList, entry.getKey());
-			BulkReturnStatusData bulkReturnStatusData = new BulkReturnStatusData();
-			bulkReturnStatusData = entry.getValue();
-			final Boolean returnStatus = bulkReturnStatusData.getReturnStatus();
-			String consignment = MarketplacecommerceservicesConstants.EMPTY;
-			if (StringUtils.isNotEmpty(bulkReturnStatusData.getConsignmentStatus()))
+			for (final Map.Entry<String, BulkReturnStatusData> entry : returnResonseMap.entrySet())
 			{
-				consignment = bulkReturnStatusData.getConsignmentStatus();
-			}
-			String message = MarketplacecommerceservicesConstants.EMPTY;
-			message = MarketplacecommerceservicesConstants.BLANK_SPACE + MarketplacecommerceservicesConstants.LEFT_PARENTHESIS
-					+ MarketplacecommerceservicesConstants.LAST_CONSIGNMENT_STATUS + consignment
-					+ MarketplacecommerceservicesConstants.RIGHT_PARENTHESIS;
-			if (null != returnBulkModel && null != returnStatus)
-			{
-				if (returnStatus.booleanValue())
+				final BulkReturnProcessModel returnBulkModel = getBulkModel(bulkList, entry.getKey());
+				final BulkReturnStatusData bulkReturnStatusData = entry.getValue();
+				final Boolean returnStatus = bulkReturnStatusData.getReturnStatus();
+				String consignment = null;
+				if (StringUtils.isNotEmpty(bulkReturnStatusData.getConsignmentStatus()))
 				{
-					returnBulkModel.setLoadStatus("1");
-					returnBulkModel.setErrorDescription(MarketplacecommerceservicesConstants.BULK_RETURN_SUCCESS_DESC + message);
+					consignment = bulkReturnStatusData.getConsignmentStatus();
 				}
 				else
 				{
-					returnBulkModel.setLoadStatus("-1");
-					returnBulkModel.setErrorDescription(MarketplacecommerceservicesConstants.BULK_RETURN_FAILURE_DESC + message);
+					consignment = MarketplacecommerceservicesConstants.EMPTY;
 				}
-				updatedBulkReturnProcessList.add(returnBulkModel);
+				final String message = MarketplacecommerceservicesConstants.BLANK_SPACE
+						+ MarketplacecommerceservicesConstants.LEFT_PARENTHESIS
+						+ MarketplacecommerceservicesConstants.LAST_CONSIGNMENT_STATUS + consignment
+						+ MarketplacecommerceservicesConstants.RIGHT_PARENTHESIS;
+				if (null != returnBulkModel && null != returnStatus)
+				{
+					if (returnStatus.booleanValue())
+					{
+						returnBulkModel.setLoadStatus("1");
+						returnBulkModel.setErrorDescription(MarketplacecommerceservicesConstants.BULK_RETURN_SUCCESS_DESC + message);
+					}
+					else
+					{
+						returnBulkModel.setLoadStatus("-1");
+						returnBulkModel.setErrorDescription(MarketplacecommerceservicesConstants.BULK_RETURN_FAILURE_DESC + message);
+					}
+					updatedBulkReturnProcessList.add(returnBulkModel);
+				}
+			}
+			if (CollectionUtils.isNotEmpty(updatedBulkReturnProcessList))
+			{
+				modelService.saveAll(updatedBulkReturnProcessList);
 			}
 		}
-		modelService.saveAll(updatedBulkReturnProcessList);
 	}
 
 	/*
