@@ -1,5 +1,6 @@
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
+import de.hybris.platform.core.model.BulkCancellationProcessModel;
 import de.hybris.platform.core.model.BulkReturnProcessModel;
 import de.hybris.platform.core.model.order.OrderModel;
 
@@ -79,7 +80,7 @@ public class OrderModelServiceImpl implements OrderModelService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.OrderModelService#getOrder(java.lang.String)
 	 */
 	@Override
@@ -90,7 +91,7 @@ public class OrderModelServiceImpl implements OrderModelService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.OrderModelService#getOrder(java.lang.String)
 	 */
 	@Override
@@ -108,7 +109,7 @@ public class OrderModelServiceImpl implements OrderModelService
 
 	/*
 	 * @Override public void updateLoadStatus()
-	 * 
+	 *
 	 * { getOrderModelDao().updateLoadValue(); }
 	 */
 
@@ -133,7 +134,7 @@ public class OrderModelServiceImpl implements OrderModelService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.OrderModelService#getOrderStausCodeMaster(java.lang.String)
 	 */
 	@Override
@@ -144,7 +145,7 @@ public class OrderModelServiceImpl implements OrderModelService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.OrderModelService#getOrderStausCodeMasterList()
 	 */
 	@Override
@@ -205,4 +206,10 @@ public class OrderModelServiceImpl implements OrderModelService
 	{
 		return getOrderModelDao().getOrderModel(code);
 	}
+
+	public List<BulkCancellationProcessModel> getBulkCancelData()
+	{
+		return getOrderModelDao().getAllBulkCancelData();
+	}
+
 }
