@@ -26,8 +26,7 @@ import org.springframework.beans.factory.annotation.Required;
  * @author 584443
  *
  */
-public class MplCompareProductValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider,
-		Serializable
+public class MplCompareProductValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider, Serializable
 {
 	private FieldNameProvider fieldNameProvider;
 
@@ -49,40 +48,48 @@ public class MplCompareProductValueProvider extends AbstractPropertyFieldValuePr
 	public Collection<FieldValue> getFieldValues(final IndexConfig indexConfig, final IndexedProperty indexedProperty,
 			final Object model) throws FieldValueProviderException
 	{
-		if (model instanceof ProductModel)
+		try
 		{
-			//Model should be instance of PcmProductVariantModel
-			final ProductModel productModel = (ProductModel) model;
-			String categoryCode = null;
-			//Get size for a product
-			final Collection<CategoryModel> categories = productModel.getSupercategories();
-			//If size is not empty
-			if (categories != null && !categories.isEmpty())
+			if (model instanceof ProductModel)
 			{
-
-				final Collection<FieldValue> fieldValues = new ArrayList<FieldValue>();
-				for (final CategoryModel category : categories)
+				//Model should be instance of PcmProductVariantModel
+				final ProductModel productModel = (ProductModel) model;
+				String categoryCode = null;
+				//Get size for a product
+				final Collection<CategoryModel> categories = productModel.getSupercategories();
+				//If size is not empty
+				if (categories != null && !categories.isEmpty())
 				{
-					if (null != productModel.getLuxIndicator() && productModel.getLuxIndicator().getCode().equalsIgnoreCase("luxury")
-							&& category.getCode().startsWith("LSH"))
-					{
 
-						categoryCode = category.getCode();
-						break;
+					final Collection<FieldValue> fieldValues = new ArrayList<FieldValue>();
+					for (final CategoryModel category : categories)
+					{
+						if (null != productModel.getLuxIndicator()
+								&& productModel.getLuxIndicator().getCode().equalsIgnoreCase("luxury")
+								&& category.getCode().startsWith("LSH"))
+						{
+
+							categoryCode = category.getCode();
+							break;
+
+						}
+						else if (category.getCode().startsWith("MSH"))
+						{
+
+							categoryCode = category.getCode();
+							break;
+						}
 
 					}
-					else if (category.getCode().startsWith("MSH"))
+					if (categoryCode != null)
 					{
-
-						categoryCode = category.getCode();
-						break;
+						fieldValues.addAll(createFieldValue(categoryCode, indexedProperty));
+						return fieldValues;
 					}
-
-				}
-				if (categoryCode != null)
-				{
-					fieldValues.addAll(createFieldValue(categoryCode, indexedProperty));
-					return fieldValues;
+					else
+					{
+						return Collections.emptyList();
+					}
 				}
 				else
 				{
@@ -94,9 +101,10 @@ public class MplCompareProductValueProvider extends AbstractPropertyFieldValuePr
 				return Collections.emptyList();
 			}
 		}
-		else
+		catch (final Exception e) /* added part of value provider go through */
 		{
-			return Collections.emptyList();
+			throw new FieldValueProviderException(
+					"Cannot evaluate " + indexedProperty.getName() + " using " + super.getClass().getName() + "exception" + e, e);
 		}
 	}
 
