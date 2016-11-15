@@ -1995,6 +1995,17 @@
  	      class="com.tisl.mpl.converter.populator.MplProductModelToSiteMapUrlDataPopulator"
  	      parent="defaultProductModelToSiteMapUrlDataPopulator">
  	</bean>
+ 	<!-- TPR-965 STARTS-->
+	 <bean id="stockPromoCheckService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.ExtStockLevelPromotionCheckServiceImpl">
+		<!-- <property name="stockPromoCheckDao" ref="stockPromoCheckDao" /> -->
+	</bean>
+	 <bean id="stockPromoCheckDao"
+		class="com.tisl.mpl.promotion.dao.impl.ExtStockLevelPromotionCheckDaoImpl">
+		<property name="flexibleSearchService" ref="flexibleSearchService" />
+		<property name="modelService" ref="modelService" />
+	</bean>
+	<!-- TPR-965 ENDS-->
 <!-- TPR-1285 End -->
 </beans>
 

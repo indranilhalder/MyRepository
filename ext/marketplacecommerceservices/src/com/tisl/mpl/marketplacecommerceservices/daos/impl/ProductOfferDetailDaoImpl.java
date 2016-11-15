@@ -70,4 +70,44 @@ public class ProductOfferDetailDaoImpl extends AbstractItemDao implements Produc
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
+
+	//update the message for Freebie product TPR-1754
+	/**
+	 * return SearchResult
+	 */
+	@Override
+	public SearchResult<List<Object>> showFreebieMessage(final String ussId)
+	{
+		try
+		{
+
+			final String queryString = MarketplacecommerceservicesConstants.PRODUCTFREEBIEDETMSGQUERY;
+			LOG.debug("queryString: " + queryString);
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+
+			query.addQueryParameter(MarketplacecommerceservicesConstants.FREEBIEUSSID, ussId);
+
+			query.addQueryParameter(MarketplacecommerceservicesConstants.SYSDATE, new Date());
+
+			query.setResultClassList(Arrays.asList(String.class, String.class, String.class, String.class));
+			final SearchResult<List<Object>> result = search(query);
+			if (null != result)
+			{
+				return result;
+			}
+			return null;
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
 }

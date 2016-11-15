@@ -1181,6 +1181,16 @@
 		
 		<!-- End -->
 		
+		<!-- update the message for Freebie product TPR-1754 -->
+		
+		<relation code="FreebieProductDetailRelation"
+			localized="false" autocreate="true">
+			<sourceElement qualifier="offer" type="FreebieDetail" cardinality="one">
+			</sourceElement>
+			<targetElement qualifier="productsWithFreebieoffer" type="ProductFreebieDetail" cardinality="many">
+			</targetElement>
+		</relation>
+		
 	</relations>
 
 		
@@ -4676,6 +4686,24 @@
 					</attributes>
 			</itemtype>
 			
+		<!-- TPR-1285 Changes -->
+			<itemtype code="CMSSite" autocreate="false" generate="false">
+				
+				<attributes>
+					
+					<attribute qualifier="siteMaps" type="MediaCollection" autocreate="false">
+						<persistence type="property" >
+						<columntype database="oracle">
+							<value>CLOB</value>
+						</columntype>
+						<columntype>							
+							<value>HYBRIS.LONG_STRING</value>
+						</columntype>
+						</persistence>
+						</attribute>
+					</attributes>
+			</itemtype>
+		<!-- TPR-1285 Changes -->
 			
 			<!--  Luxury Site -->
 			
@@ -9186,6 +9214,64 @@
 				</attributes>
 			</itemtype>
 		</typegroup>
+		
+		
+		<!-- update the message for Freebie product TPR-1754 -->
+		
+		<typegroup name="FreebieEngine">
+			<itemtype code="FreebieDetail" autocreate="true" generate="true">
+				<deployment table="FreebieDetail" typecode="17020" />
+				<attributes>
+					<attribute autocreate="true" qualifier="freebieId" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers unique="true" optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="freebieMsg" type="java.lang.String" generate="true">
+					<persistence type="property" />
+					<modifiers read="true" write="true" unique="false" optional="true" />
+					</attribute>										
+				</attributes>
+				<indexes>
+					<index name="freebieId_Index">
+						<key attribute="freebieId" />
+					</index>
+				</indexes>
+			</itemtype>
+			<itemtype code="ProductFreebieDetail" autocreate="true" generate="true">
+				<deployment table="ProductFreebieDetail" typecode="17021" />
+				<attributes>
+					<attribute autocreate="true" qualifier="ussId" type="java.lang.String" generate="true">
+					    <description>UssId for freebie</description>
+						<persistence type="property" />
+						<modifiers unique="true" optional="false" />
+					</attribute>
+					<!-- <attribute autocreate="true" qualifier="sellerId" type="java.lang.String" generate="true">
+					    <description>Seller Id for freebie</description>
+						<persistence type="property" />
+						<modifiers unique="true" optional="false" />
+					</attribute> -->
+					<attribute qualifier='startDate' type="java.util.Date"  generate="true">
+						<description>Date on which the product promotion would start</description>
+						<modifiers read="true" write="true" optional="false"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier='endDate' type="java.util.Date"  generate="true">
+						<description>Date on which the product promotion would start</description>
+						<modifiers read="true" write="true" optional="false"/>
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+				<indexes>
+					<index name="freebieProductId_Index">
+						<key attribute="ussId" />
+					</index>
+					<!-- <index name="freebieSellerId_Index">
+						<key attribute="sellerId" />
+					</index> -->
+				</indexes>
+			</itemtype>
+			</typegroup>
 				
 	</itemtypes>
 </items>
