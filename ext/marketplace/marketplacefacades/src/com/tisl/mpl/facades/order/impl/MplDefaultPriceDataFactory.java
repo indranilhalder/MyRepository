@@ -11,6 +11,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
@@ -53,15 +54,17 @@ public class MplDefaultPriceDataFactory extends DefaultPriceDataFactory
 
 		//for Sales report its creating issue
 		//final String decimalFormat = siteConfigService.getString("site.decimal.format", "0.00");
-		//final String decimalFormat = configurationService.getConfiguration().getString("site.decimal.format", "0.00");
+		final String decimalFormat = configurationService.getConfiguration().getString("site.decimal.format", "0.00");
 
 		final String currencySymbol = currency.getSymbol();
 
-		/*
-		 * final DecimalFormat df = new DecimalFormat(decimalFormat); final String totalPriceFormatted = df.format(value);
-		 * StringBuilder stb = new StringBuilder(20); stb = stb.append(currencySymbol).append(totalPriceFormatted);
-		 * priceData.setFormattedValue(stb.toString());
-		 */
+
+		final DecimalFormat df = new DecimalFormat(decimalFormat);
+		final String totalPriceFormatted = df.format(value);
+		StringBuilder stb = new StringBuilder(20);
+		stb = stb.append(currencySymbol).append(totalPriceFormatted);
+		priceData.setFormattedValue(stb.toString());
+
 		/* TPR-182 */
 
 		final long valueLong = value.setScale(0, BigDecimal.ROUND_CEILING).longValue();
@@ -74,7 +77,7 @@ public class MplDefaultPriceDataFactory extends DefaultPriceDataFactory
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.commercefacades.product.PriceDataFactory#create(de.hybris.platform.commercefacades.product.
 	 * data.PriceDataType, java.math.BigDecimal, java.lang.String)
