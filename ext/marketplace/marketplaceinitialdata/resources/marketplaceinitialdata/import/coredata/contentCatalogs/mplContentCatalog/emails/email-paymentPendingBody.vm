@@ -98,12 +98,12 @@
                       					<td>&nbsp;</td>
                       				</tr>
                       				<tr>
-                        			<td   style="width: 177px;padding-left: 0px;text-align: center;height:65px;">Transaction <br>
+                        			<td   style="width: 177px;padding-left:0px;text-align:center;height:65px;">Transaction <br>
                           				ID</td>
-                        			<td style="width: 115px;padding-left: 27px;">Name of<br>
+                        			<td style="width: 115px;padding-left:12px;text-align:center;">Name of<br>
                           			Product</td>
-                        			<td style="padding-left: 22px;width: 50px;">Qty</td>
-									<td style="padding-left: 18px;">Price</td>
+                        			<td style="padding-left:12px;text-align:center;width: 50px;">Qty</td>
+									<td style="padding-left:12px;text-align:center;">Price</td>
                         		
                       				</tr>
 									#set ($shippingCharge=0)
@@ -111,10 +111,10 @@
                       				#foreach($entry in ${ctx.childEntries})
                       			<tr height="50">
 
-		                			<td style="padding-left: 12px;color: #504B49;" >Pending</td>
-		                			<td style="color: #504B49;text-align:center">$entry.product.name</td>
-		                			<td align="center" style="padding-left: 10px;color: #504B49;" >$entry.quantity</td>
-		                			<td width="80" align="center"style="color: #504B49;">$entry.totalPrice</td>
+		                			<td style="padding-left:0px;text-align:center;color: #504B49;" >Pending</td>
+		                			<td style="color: #504B49;padding-left:12px;text-align:center;">$entry.product.name</td>
+		                			<td align="center" style="padding-left:12px;text-align:center;color: #504B49;" >$entry.quantity</td>
+		                			<td width="80" align="center"style="color: #504B49;" style="padding-left:12px;text-align:center;">$entry.totalPrice</td>
 		                			
 		                			
 		                  			

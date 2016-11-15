@@ -1986,7 +1986,7 @@ function populateEMIDetailsForPDP(){
 					}
 					
 					/*TPR-641 starts*/
-					emiBankSelectedTealium = "emi_option_" + selectedBank.replace(/ /g, "").toLowerCase();
+					emiBankSelectedTealium = "emi_option_" + selectedBank.replace(/ /g, "").replace(/[^a-z0-9\s]/gi, '').toLowerCase();
 					utag.link({
 						link_obj: this, 
 						link_text: emiBankSelectedTealium , 
@@ -2962,13 +2962,16 @@ function loadDefaultWishListName_SizeGuide() {
 				    nonServicableList.push(buyBoxList[i]);
 			}
 		}
+		
 		sessionStorage.setItem('servicableList', JSON.stringify(servicableList[0]));
 		sessionStorage.setItem('isproductPage', isproductPage);
 		sessionStorage.setItem('allOosFlag', allOosFlag);
 		sessionStorage.setItem('otherSellerCount', servicableList.length-1);
 		sessionStorage.setItem('pincodeChecked', 'Y');
 		//TPR-1375 populating buybox details so that buybox seller should be servicable
+		if (typeof(sessionStorage.getItem("servicableList")) != undefined){
 		populateBuyBoxData(JSON.parse(sessionStorage.getItem("servicableList")),servicableList.length-1,isproductPage,allOosFlag);
+		}
 	}
 	
 	/*Offer popup*/

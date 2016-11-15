@@ -3240,6 +3240,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				{
 					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED, "TRUE");
 					redirectFlag = true;
+					LOG.info("::setting redirect flag--1::");
 				}
 				//TISST-13012
 				//				final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(cart);
@@ -3254,6 +3255,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					if (cartItemDelistedStatus)
 					{
 						redirectFlag = true;
+						LOG.info("::setting redirect flag--2::");
 					}
 				}
 
@@ -3268,6 +3270,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 						getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
 						redirectFlag = true;
+						LOG.info("::setting redirect flag--3::");
 					}
 				}
 
@@ -3275,6 +3278,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				{
 					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID, "TRUE");
 					redirectFlag = true;
+					LOG.info("::setting redirect flag--4::");
 				}
 
 				//TISPRO-497
@@ -3291,10 +3295,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					final Double cartTotal = cart.getTotalPrice();
 					final Double cartTotalWithConvCharge = cart.getTotalPriceWithConv();
 
+					LOG.info("::cartTotal**::" + cartTotal);
+					LOG.info("::cartTotalWithConvCharge**::" + cartTotalWithConvCharge);
 					if (cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0)
 					{
 						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CARTAMOUNTINVALID, "TRUE");
 						redirectFlag = true;
+						LOG.info("::setting redirect flag--5::");
 					}
 				}
 
@@ -3303,18 +3310,23 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				{
 					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CART_DELIVERYMODE_ADDRESS_INVALID, "TRUE");
 					redirectFlag = true;
+					LOG.info("::setting redirect flag--6::");
 				}
 
 				if (redirectFlag)
 				{
+					LOG.info("::returning redirect String::");
 					return MarketplacecheckoutaddonConstants.REDIRECTSTRING; //IQA for TPR-629
 				}
 				else
 				{
+					LOG.info("::Going to Create Juspay OrderId::");
 					orderId = getMplPaymentFacade().createJuspayOrder(cart, null, firstName, lastName, paymentAddressLine1,
 							paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 							cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping, returnUrlBuilder.toString(),
 							uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB);
+
+					LOG.info("::Created Juspay OrderId::" + orderId);
 
 					//create order here --- order will be created during first try TPR-629
 
