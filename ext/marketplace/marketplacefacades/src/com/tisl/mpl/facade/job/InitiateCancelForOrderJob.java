@@ -42,7 +42,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.data.BulkCancelStoreData;
@@ -61,8 +60,7 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 	private final static Logger LOG = Logger.getLogger(InitiateCancelForOrderJob.class.getName());
 	@Autowired
 	private CancelReturnFacade cancelReturnFacade;
-	@Autowired
-	private MplCheckoutFacade mplCheckoutFacade;
+
 	@Autowired
 	private OrderModelService orderModelService;
 	@Autowired
