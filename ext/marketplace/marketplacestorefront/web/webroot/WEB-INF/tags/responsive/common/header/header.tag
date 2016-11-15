@@ -10,6 +10,7 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="nav" tagdir="/WEB-INF/tags/responsive/nav"%>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
 
 <%-- <cms:pageSlot position="TopHeaderSlot" var="component" element="div"
 	class="container">
@@ -54,7 +55,23 @@
 	<input type="hidden" id="pageName" value="${cmsPage.name}">
 	<!-- Static resource host -->
 	<input type="hidden" id="staticHost" value="//${staticHost}">
+	
+	<!-- geolocation start-->
+	
+	<input type="hidden" id="latlng" value="">
+    <input type="hidden" id="location" value="">
+    
+    <!-- geolocation End-->
 	<!-- End -->
+	
+	
+	
+    
+   
+	
+	
+	
+	
 	<div class="row header-row"></div>
 	<c:choose>
 		<c:when test="${empty showOnlySiteLogo }">
@@ -239,7 +256,11 @@
 		</div>
 		<div class="compact-toggle mobile"></div>
 	</div>
-
+<c:if test="${param.blpLogo ne null}">
+<div class="blp-serp-banner" style="background-color:#000;height:80px;">
+<img class="image" alt="" src="${param.blpLogo}">
+</div>
+</c:if>
 	<a id="skiptonavigation"></a>
 	<nav:topNavigation />
 </header>
