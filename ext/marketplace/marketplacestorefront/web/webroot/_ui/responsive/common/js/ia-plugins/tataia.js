@@ -104,11 +104,11 @@ if (status == google.maps.GeocoderStatus.OK) {
 
      
       } else {
-      console.log("No results found");
+     // console.log("No results found");
       }
   //}
 } else {
-	  console.log("Geocoder failed due to: " + status);
+	  //console.log("Geocoder failed due to: " + status);
 }
       
   });

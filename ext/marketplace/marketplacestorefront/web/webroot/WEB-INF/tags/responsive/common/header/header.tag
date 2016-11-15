@@ -57,8 +57,10 @@
 	<input type="hidden" id="staticHost" value="//${staticHost}">
 	
 	<!-- geolocation start-->
+	
 	<input type="hidden" id="latlng" value="">
     <input type="hidden" id="location" value="">
+    
     <!-- geolocation End-->
 	<!-- End -->
 	
