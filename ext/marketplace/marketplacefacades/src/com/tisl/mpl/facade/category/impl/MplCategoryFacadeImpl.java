@@ -4,23 +4,35 @@ import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSSiteService;
 import de.hybris.platform.commercefacades.catalog.impl.DefaultCatalogFacade;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
+import de.hybris.platform.commerceservices.url.UrlResolver;
+import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
+import de.hybris.platform.variants.model.VariantProductModel;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.util.CollectionUtils;
 
 import com.google.common.base.Preconditions;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.facade.category.MplCategoryFacade;
+import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCategoryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.SellerSalesCategoryModel;
+import com.tisl.mpl.wsdto.BreadcrumbListWsDTO;
+import com.tisl.mpl.wsdto.BreadcrumbResponseWsDTO;
 
 
 /**
@@ -31,6 +43,34 @@ public class MplCategoryFacadeImpl extends DefaultCatalogFacade implements MplCa
 {
 
 	private ConfigurationService configurationService;
+	@Autowired
+	private UrlResolver<ProductModel> productModelUrlResolver;
+	@Autowired
+	private UrlResolver<CategoryModel> categoryModelUrlResolver;
+	private ProductService productService;
+
+
+
+
+
+
+	/**
+	 * @return the productService
+	 */
+	public ProductService getProductService()
+	{
+		return productService;
+	}
+
+	/**
+	 * @param productService
+	 *           the productService to set
+	 */
+	public void setProductService(final ProductService productService)
+	{
+		this.productService = productService;
+	}
+
 
 	@Autowired
 	private Converter<CategoryModel, CategoryData> categoryConverter;
@@ -94,8 +134,8 @@ public class MplCategoryFacadeImpl extends DefaultCatalogFacade implements MplCa
 	@Override
 	public String getSellerInformationBySellerName(final String sellerName)
 	{
-		final SellerInformationModel sellerInformationModel = mplSellerInformationService
-				.getSellerInformationBySellerName(cmsSiteService.getCurrentCatalogVersion(), sellerName.toUpperCase());
+		final SellerInformationModel sellerInformationModel = mplSellerInformationService.getSellerInformationBySellerName(
+				cmsSiteService.getCurrentCatalogVersion(), sellerName.toUpperCase());
 		if (null != sellerInformationModel)
 		{
 			final String sellerID = sellerInformationModel.getSellerID();
@@ -129,11 +169,11 @@ public class MplCategoryFacadeImpl extends DefaultCatalogFacade implements MplCa
 		{
 			final String sellerRootCategoryId = getActiveSellerRootCategoryBySellerId(sellerId);
 			Preconditions.checkArgument(sellerName != null, "Category is required to perform this operation, null given");
-			final String categoryCode = getConfigurationService().getConfiguration()
-					.getString("marketplace.mplcatalog.seller.sales.category.root.id");
+			final String categoryCode = getConfigurationService().getConfiguration().getString(
+					"marketplace.mplcatalog.seller.sales.category.root.id");
 
-			final CategoryModel topCategoryDetails = mplCategoryService
-					.getCategoryModelForCode(cmsSiteService.getCurrentCatalogVersion(), categoryCode);//SSH1
+			final CategoryModel topCategoryDetails = mplCategoryService.getCategoryModelForCode(
+					cmsSiteService.getCurrentCatalogVersion(), categoryCode);//SSH1
 
 			boolean isCategoryIDAvailable = false;
 
@@ -218,4 +258,169 @@ public class MplCategoryFacadeImpl extends DefaultCatalogFacade implements MplCa
 	{
 		this.configurationService = configurationService;
 	}
+
+	// ######################### TISLUX-356 START
+
+	@Override
+	public BreadcrumbResponseWsDTO getBreadcrumb(final String code, final String type)
+	{
+		BreadcrumbResponseWsDTO responseBreadcrumb = null;
+
+		if (MarketplaceFacadesConstants.CATEGORY.equalsIgnoreCase(type))
+		{
+			final CategoryModel category = getCategoryService().getCategoryForCode(code);
+			responseBreadcrumb = getBreadcrumbsForCategory(category);
+		}
+		else if (MarketplaceFacadesConstants.PRODUCT.equalsIgnoreCase(type))
+		{
+			final ProductModel product = getProductService().getProductForCode(code);
+			responseBreadcrumb = getBreadcrumbsForProduct(product);
+		}
+		responseBreadcrumb.setRootName(MarketplaceFacadesConstants.ROOT_NAME);
+		return responseBreadcrumb;
+	}
+
+	/**
+	 * @param categoryModel
+	 * @return BreadcrumbResponseWsDTO
+	 */
+	private BreadcrumbResponseWsDTO getBreadcrumbsForCategory(final CategoryModel categoryModel)
+	{
+		final List<CategoryModel> categoryHierarchy = getCategoryService().getPathForCategory(categoryModel);
+		final BreadcrumbResponseWsDTO breadcrumbResponse = new BreadcrumbResponseWsDTO();
+		final List<BreadcrumbListWsDTO> breadcrumbList = new ArrayList<BreadcrumbListWsDTO>();
+
+		if (!CollectionUtils.isEmpty(categoryHierarchy) && categoryHierarchy.size() > 1)
+		{
+			int count = 0;
+			for (final CategoryModel category : categoryHierarchy)
+			{
+				final BreadcrumbListWsDTO categoryBreadcrumb = new BreadcrumbListWsDTO();
+				if (count == 0)
+				{
+					count++;
+					continue;
+				}
+				categoryBreadcrumb.setCode(category.getCode());
+				categoryBreadcrumb.setName(category.getName());
+				categoryBreadcrumb.setUrl(getCategoryUrl(category));
+				categoryBreadcrumb.setLevel(Integer.valueOf(count++));
+				breadcrumbList.add(categoryBreadcrumb);
+			}
+		}
+		breadcrumbResponse.setBreadcrumbList(breadcrumbList);
+		return breadcrumbResponse;
+	}
+
+	/**
+	 * @param product
+	 * @return BreadcrumbResponseWsDTO
+	 */
+	private BreadcrumbResponseWsDTO getBreadcrumbsForProduct(final ProductModel product)
+	{
+		final BreadcrumbResponseWsDTO breadcrumbResponse = new BreadcrumbResponseWsDTO();
+		final List<BreadcrumbListWsDTO> breadcrumbList = new ArrayList<BreadcrumbListWsDTO>();
+		final List<CategoryModel> categoryHierarchy = getCategoryPathForProduct(product, configurationService.getConfiguration()
+				.getString(MarketplacecommerceservicesConstants.LUX_SALESCATEGORYTYPE), CategoryModel.class);
+
+		if (!CollectionUtils.isEmpty(categoryHierarchy) && categoryHierarchy.size() > 1)
+		{
+			int count = 0;
+			for (final CategoryModel category : categoryHierarchy)
+			{
+				final BreadcrumbListWsDTO categoryBreadcrumb = new BreadcrumbListWsDTO();
+				if (count == 0)
+				{
+					count++;
+					continue;
+				}
+				categoryBreadcrumb.setCode(category.getCode());
+				categoryBreadcrumb.setName(category.getName());
+				categoryBreadcrumb.setUrl(getCategoryUrl(category));
+				categoryBreadcrumb.setLevel(Integer.valueOf(count++));
+				breadcrumbList.add(categoryBreadcrumb);
+			}
+
+			final BreadcrumbListWsDTO productBreadcrumb = new BreadcrumbListWsDTO();
+			productBreadcrumb.setCode(product.getCode());
+			productBreadcrumb.setName(product.getName());
+			productBreadcrumb.setUrl(getProductUrl(product));
+			productBreadcrumb.setLevel(Integer.valueOf(count));
+			breadcrumbList.add(productBreadcrumb);
+		}
+		breadcrumbResponse.setBreadcrumbList(breadcrumbList);
+		return breadcrumbResponse;
+	}
+
+	private List<CategoryModel> getCategoryPathForProduct(final ProductModel product, final String rootCategory,
+			final Class... includeOnlyCategories)
+	{
+		final List<CategoryModel> result = new ArrayList<CategoryModel>();
+		final Collection<CategoryModel> currentLevel = new ArrayList<CategoryModel>();
+		currentLevel.addAll(product.getSupercategories());
+
+		while (!CollectionUtils.isEmpty(currentLevel))
+		{
+			CategoryModel categoryModel = null;
+			for (final CategoryModel category : currentLevel)
+			{
+				if (categoryModel == null && shouldAddPathElement(category.getClass(), includeOnlyCategories)
+						&& category.getCode().startsWith(rootCategory))
+				{
+					categoryModel = category;
+				}
+			}
+			currentLevel.clear();
+			if (categoryModel != null)
+			{
+				currentLevel.addAll(categoryModel.getSupercategories());
+				result.add(categoryModel);
+			}
+		}
+
+		Collections.reverse(result);
+		return result;
+	}
+
+	private boolean shouldAddPathElement(final Class element, final Class... includeOnlyCategories)
+	{
+		boolean result = false;
+		if (ArrayUtils.isEmpty(includeOnlyCategories))
+		{
+			result = true;
+		}
+		else
+		{
+			if (ArrayUtils.contains(includeOnlyCategories, element))
+			{
+				result = true;
+			}
+		}
+		return result;
+	}
+
+	protected ProductModel getBaseProduct(final ProductModel product)
+	{
+		if (product instanceof VariantProductModel)
+		{
+			return getBaseProduct(((VariantProductModel) product).getBaseProduct());
+		}
+		return product;
+	}
+
+
+	protected String getCategoryUrl(final CategoryModel category)
+	{
+		final String categoryUrl = categoryModelUrlResolver.resolve(category);
+		return categoryUrl;
+	}
+
+	protected String getProductUrl(final ProductModel product)
+	{
+		final String productUrl = productModelUrlResolver.resolve(product);
+		return productUrl;
+	}
+
+	// ######################### TISLUX-356 END
+
 }

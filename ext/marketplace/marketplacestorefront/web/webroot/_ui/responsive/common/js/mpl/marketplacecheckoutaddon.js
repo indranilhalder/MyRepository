@@ -37,10 +37,12 @@ $("#viewPaymentCredit").click(function(){
 		$("#make_cc_payment_up").show();
 	}
 	//TPR-665
+	if(typeof utag !="undefined"){
 	utag.link({
 		"link_text": "pay_credit_card_selected" , "event_type" : "payment_mode_selection"
 			
 	});
+	}
 });
 
 $("#viewPaymentDebit").click(function(){
@@ -2170,7 +2172,7 @@ $("#otpMobileNUMField").focus(function(){
 		 if(cardType=="MAESTRO"){
 			 //if (name && cardNo && pin && firstName && lastName && addressLine1 && addressLine2 && addressLine3 && city && state){
 			if (name && cardNo && pin && firstName && lastName && addressLine1 && city && state){
-				 createJuspayOrderForNewCard();
+				 createJuspayOrderForNewCard(false);
 			 }
 			 else{
 				 return false;
@@ -2182,7 +2184,7 @@ $("#otpMobileNUMField").focus(function(){
 			 var expYY = validateExpYY();
 			// if (cvv && expYY && name && expMM && cardNo && pin && firstName && lastName && addressLine1 && addressLine2 && addressLine3 && city && state){
 			 if (cvv && expYY && name && expMM && cardNo && pin && firstName && lastName && addressLine1 && city && state){
-				 createJuspayOrderForNewCard();
+				 createJuspayOrderForNewCard(false);
 			 }
 			 else{
 				 return false;
@@ -2205,7 +2207,7 @@ $("#otpMobileNUMField").focus(function(){
 		 
 		 if(cardType=='MAESTRO'){
 			 if (name && cardNo){
-				 createJuspayOrderForNewCard();		 
+				 createJuspayOrderForNewCard(true);		 
 			 }
 			 
 			 else{
@@ -2216,9 +2218,8 @@ $("#otpMobileNUMField").focus(function(){
 			 var cvv = validateCVVDc();
 			 var expMM = validateExpMMDc();
 			 var expYY = validateExpYYDc();
-			 var isDebit = true;
 			 if (cvv && expYY && name && expMM && cardNo){
-				 createJuspayOrderForNewCard(isDebit);		 
+				 createJuspayOrderForNewCard(true);		 
 			 }
 			 else{
 				 return false;
@@ -4628,7 +4629,7 @@ function applyPromotion(bankName,binValue,formSubmit)
 									$("#emi-notice").show();
 									
 									/*TPR-641 starts*/
-									emiBankSelectedTealium = "emi_option_" + selectedBank.replace(/ /g, "").toLowerCase();
+									emiBankSelectedTealium = "emi_option_" + selectedBank.replace(/ /g, "").replace(/[^a-z0-9\s]/gi, '').toLowerCase();
 									utag.link({
 										link_obj: this, 
 										link_text: emiBankSelectedTealium , 
@@ -4646,7 +4647,6 @@ function applyPromotion(bankName,binValue,formSubmit)
 							}
 						});
 					}
-					$("#no-click,.spinner").remove();
 				}
 				else if(paymentMode=='Credit Card' || paymentMode=='Debit Card')
 				{
@@ -4654,9 +4654,8 @@ function applyPromotion(bankName,binValue,formSubmit)
 					{
 						dopayment(binValue);
 					}
-					$("#no-click,.spinner").remove();
 				}
-				//$("#no-click").remove();
+				$("#no-click").remove();
 				//$(".make_payment").removeAttr('disabled');
 			}
 			//if(isNewCard){//if this variable is true resetting the opacity
@@ -5215,10 +5214,16 @@ function checkPincodeServiceability(buttonType,el)
 // alert($(el).attr("id")+" :::button id")
 	if(buttonType == "typeCheckout")
 	{
-		//TPR-683
-		utag.link(
-		{"link_text": "mybag_checkout" , "event_type" : "mybag_checkout"}
-		);
+		
+		if(typeof utag == "undefined"){
+			console.log("Utag is undefined")
+		}
+		else{
+			//TPR-683
+			utag.link(
+			{"link_text": "mybag_checkout" , "event_type" : "mybag_checkout"}
+			);
+		}
 	}
 	/*spinner commented starts*/
 	//$("#pinCodeDispalyDiv").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right:0;bottom:0; left:0; top:0; margin:auto; height: 30px;">');
@@ -5319,10 +5324,12 @@ function checkPincodeServiceability(buttonType,el)
  			//TPR-970 changes
  			if(responeStr[0]=="N")
  			{
- 				
- 				utag.link(
- 				{"link_obj": this,"link_text": "mybag_pincode:"+selectedPincode+":not serviceable", "event_type" : "mybag_pincode"}
- 		 	 	);
+ 				if(typeof utag !="undefined")
+ 				{
+	 				utag.link(
+	 				{"link_obj": this,"link_text": "mybag_pincode:"+selectedPincode+":not serviceable", "event_type" : "mybag_pincode"}
+	 		 	 	);
+ 				}
  				// TISTI-255
 				// Please try later or contact our helpdesk");
  				// TISPRD-1666 - console replaced with alert and resp print
@@ -5337,11 +5344,12 @@ function checkPincodeServiceability(buttonType,el)
  				} 
  			else
  				{
- 				
+ 				if(typeof utag !="undefined")
+ 				{
  				utag.link(
  		 	 	{"link_obj": this,"link_text": "mybag_pincode:"+selectedPincode+":success", "event_type" : "mybag_pincode"}
  		 	 	);
- 			
+ 				}
  				$(".pincodeServiceError").hide();
  				$("#unserviceablepincode").hide();
  				$("#cartPinCodeAvailable").hide();
@@ -5377,9 +5385,11 @@ function checkPincodeServiceability(buttonType,el)
  	 				}
  		},
  		error : function(resp) {
+ 			if(typeof utag !="undefined"){
  			utag.link(
  			{"link_obj": this,"link_text": "mybag_pincode:"+selectedPincode+":not serviceable", "event_type" : "mybag_pincode"}
  			);
+ 			}
  			//TISTI-255
  			//alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
  			console.log(resp);
@@ -5516,7 +5526,7 @@ $("#defaultPinCodeIds").click(function(){
 
 
 function reloadpage(selectedPincode,buttonType) {
-	if ($('#giftYourselfProducts').html().trim().length > 0 && selectedPincode!=null && selectedPincode != undefined && selectedPincode!="") 
+	if (/*$('#giftYourselfProducts').html().trim().length > 0 && */selectedPincode!=null && selectedPincode != undefined && selectedPincode!="") 
 
 	{		
 		if(buttonType != 'typeCheckout') {
@@ -6031,7 +6041,7 @@ function checkExpressCheckoutPincodeService(buttonType){
 	 			/*TPR-3446 new starts*/
 	 			/*$("#pinCodeDispalyDiv").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right:0;bottom:0; left:0; top:0; margin:auto; height: 30px;">');
 	 			$("body").append("<div id='no-click' style='opacity:0.6; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");*/
-	 			$("body").append("<div style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	 			$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 	 			$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
 	 			/*TPR-3446 new ends*/
 	 			$("#defaultPinCodeIdsq").val($("#defaultPinCodeIds").val());
@@ -6057,7 +6067,7 @@ function checkExpressCheckoutPincodeService(buttonType){
 	 			/*TPR-3446 new starts*/
 	 			/*$("#pinCodeDispalyDiv").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right:0;bottom:0; left:0; top:0; margin:auto; height: 30px;">');
 	 			$("body").append("<div id='no-click' style='opacity:0.6; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");*/
-	 			$("body").append("<div style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	 			$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 	 			$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
 	 			/*TPR-3446 new ends*/
 	 			
@@ -6509,9 +6519,13 @@ function updateCart(formId){
 function expressbutton()
 {
 	//TPR-683
-	utag.link(
-	{"link_text": "mybag_express_checkout" , "event_type" : "mybag_express_checkout"}
-	);
+	if(typeof utag !="undefined")
+	{
+		utag.link(
+		{"link_text": "mybag_express_checkout" , "event_type" : "mybag_express_checkout"}
+		);
+	}
+	
 	//alert(selectedAddress);
 	//TISPRM-33
 	// var addressList= $("#addressListSelectId").val();
@@ -6537,7 +6551,7 @@ function expressbutton()
 	 			populatePincodeDeliveryMode(response,'typeExpressCheckout');
 	 			// TISPRM-33
 
-	 			$$("#defaultPinCodeIdsq").val($("#defaultPinCodeIds").val());
+	 			$("#defaultPinCodeIdsq").val($("#defaultPinCodeIds").val());
 	 			
 		 		// $("#changePinDiv").hide();
 		 		// $("#defaultPinDiv").show();

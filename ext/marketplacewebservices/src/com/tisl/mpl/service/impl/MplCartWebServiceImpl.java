@@ -90,6 +90,7 @@ import org.springframework.security.access.AccessDeniedException;
 import com.tisl.mpl.cart.impl.CommerceWebServicesCartFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
+import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.data.MplPromotionData;
@@ -542,7 +543,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	 */
 	@Override
 	public WebSerResponseWsDTO addProductToCart(final String productCode, final String cartId, final String quantity,
-			final String USSID, final boolean addedToCartWl) throws InvalidCartException, CommerceCartModificationException
+			final String USSID, final boolean addedToCartWl, final String channel) throws InvalidCartException,
+			CommerceCartModificationException
 	{
 		final WebSerResponseWsDTO result = new WebSerResponseWsDTO();
 		final long quant = Long.parseLong(quantity);
@@ -662,6 +664,12 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				}
 				//For saving all the data at once rather in loop;
 				modelService.saveAll(entryModelList);
+				//TISLUX-1823 -For LuxuryWeb
+				if (channel != null && channel.equalsIgnoreCase(SalesApplication.WEB.getCode()))
+				{
+					cartModel.setChannel(SalesApplication.WEB);
+					modelService.save(cartModel);
+				}
 			}
 
 			if (!addedToCart && !delisted)
@@ -707,7 +715,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	 * @return CartDataDetailsWsDTO
 	 */
 	@Override
-	public CartDataDetailsWsDTO getCartDetails(final String cartId, final AddressListWsDTO addressListWsDTO, final String pincode)
+	public CartDataDetailsWsDTO getCartDetails(final String cartId, final AddressListWsDTO addressListWsDTO, final String pincode,
+			final String channel)
 	{
 
 		LOG.debug(String.format("Getcart details : Cart id : %s | Pincode: %s ", cartId, pincode));
@@ -754,7 +763,12 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				{
 					cartDataDetails.setPickupPersonMobile(cart.getPickupPersonMobile());
 				}
-
+				//TISLUX-1823 -For LuxuryWeb
+				if (channel != null && channel.equalsIgnoreCase(SalesApplication.WEB.getCode()))
+				{
+					cart.setChannel(SalesApplication.WEB);
+					modelService.save(cart);
+				}
 			}
 			else
 			{
@@ -890,6 +904,14 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap, final boolean isPinCodeCheckRequired,
 			final boolean resetReqd) throws EtailBusinessExceptions, EtailNonBusinessExceptions
 	{
+
+		String mediaFormat = null;
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug(String.format("productDetails: |  cartId : %s | isPinCodeCheckRequired %s", abstractOrderModel.getCode(),
+					Boolean.valueOf(resetReqd)));
+		}
+
 		CartModel finalCart = null;
 		OrderModel finalOrder = null;
 		final List<GetWishListProductWsDTO> gwlpList = new ArrayList<>();
@@ -929,11 +951,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 			//Removed checkedPincode
 			//	if (null != finalCart.getEntries() && !finalCart.getEntries().isEmpty())
-			/*
-			 * TISPT- 96
-			 * 
-			 * {
-			 */
+			/* TISPT- 96 { */
 			for (final AbstractOrderEntryModel abstractOrderEntry : abstractOrderModel.getEntries())
 			{
 
@@ -976,6 +994,23 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					gwlp.setProductBrand(productData.getBrand().getBrandname());
 				}
 
+				//Luxury LW-174
+				if (null != productData.getLuxIndicator()
+						&& (MarketplaceCoreConstants.LUXURY).equalsIgnoreCase(productData.getLuxIndicator()))
+				{
+					gwlp.setIsLuxury(productData.getLuxIndicator());
+					mediaFormat = MarketplacecommerceservicesConstants.LUXURY_CARTICON;
+				}
+				else if ((null == productData.getLuxIndicator())
+						|| (null != productData.getLuxIndicator() && (MarketplaceCoreConstants.Marketplace)
+								.equalsIgnoreCase(productData.getLuxIndicator())))
+				{
+					gwlp.setIsLuxury(MarketplaceCoreConstants.Marketplace);
+					mediaFormat = MarketplacecommerceservicesConstants.THUMBNAIL;
+				}
+
+				//Luxury LW-174 Ends
+
 				if (null != abstractOrderEntry.getGiveAway() && abstractOrderEntry.getGiveAway().booleanValue())
 				{
 					gwlp.setIsGiveAway(MarketplacecommerceservicesConstants.Y);
@@ -1009,7 +1044,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					{
 						if (null != img && null != img.getUrl() && StringUtils.isNotEmpty(img.getFormat())
 						//&& img.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.THUMBNAIL) Sonar fix
-								&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.THUMBNAIL))
+								&& img.getFormat().equalsIgnoreCase(mediaFormat))
 						{
 							gwlp.setImageURL(img.getUrl());
 						}
@@ -1649,7 +1684,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		{
 			if (null != promo && null != promo.getPromotion())
 			{
-				if (null != promo.getPromotion().getChannel() && !promo.getPromotion().getChannel().isEmpty())
+				if (CollectionUtils.isNotEmpty(promo.getPromotion().getChannel()))
 				{
 					flag = promo.getPromotion().getChannel().stream()
 							.anyMatch(s -> SalesApplication.MOBILE.getCode().equals(s.getCode()));
@@ -2626,4 +2661,5 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	{
 		this.addressReversePopulator = addressReversePopulator;
 	}
+
 }

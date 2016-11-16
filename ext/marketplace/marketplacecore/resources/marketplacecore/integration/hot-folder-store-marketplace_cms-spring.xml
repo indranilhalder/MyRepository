@@ -35,31 +35,31 @@
 		</property>
 	</bean>
  
-    <bean id="baseDirectoryMarketplaceCategory" class="java.lang.String">
+    <bean id="baseDirectoryMarketplaceCMS" class="java.lang.String">
         <constructor-arg value="#{baseDirectory}/${tenantId}/marketplace-cms" />
     </bean>
  
     <!-- 1) Scan for files -->
     
-    <file:inbound-channel-adapter id="batchFilesMarketplaceCategory" directory="#{baseDirectoryMarketplaceCategory}"
+    <file:inbound-channel-adapter id="batchFilesMarketplaceCMS" directory="#{baseDirectoryMarketplaceCMS}"
         filename-regex="^(.*)-(\d+)\.csv" comparator="fileOrderComparator" auto-startup="#{configurationService.configuration.getProperty('etail.batch.import.hotfolder.enabled')}">
         <int:poller fixed-rate="1000" />
     </file:inbound-channel-adapter>
  
     <!-- 2) move the file to processing and setup header -->
     
-    <file:outbound-gateway request-channel="batchFilesMarketplaceCategory" reply-channel="batchFilesMarketplaceCategoryProc"
-        directory="#{baseDirectoryMarketplaceCategory}/processing" delete-source-files="true" />
+    <file:outbound-gateway request-channel="batchFilesMarketplaceCMS" reply-channel="batchFilesMarketplaceCMSProc"
+        directory="#{baseDirectoryMarketplaceCMS}/processing" delete-source-files="true" />
 
 	<!-- 3) transform csv to impex file -->
 	
- 	<int:service-activator input-channel="batchFilesMarketplaceCategoryProc" output-channel="batchFilesHeaderInit"
-        ref="MarketplaceCategoryHeaderSetupTask" method="execute" />
+ 	<int:service-activator input-channel="batchFilesMarketplaceCMSProc" output-channel="batchFilesHeaderInit"
+        ref="MarketplaceCMSHeaderSetupTask" method="execute" />
  
- 	<bean id="MarketplaceCategoryHeaderSetupTask" class="de.hybris.platform.acceleratorservices.dataimport.batch.task.HeaderSetupTask">
+ 	<bean id="MarketplaceCMSHeaderSetupTask" class="de.hybris.platform.acceleratorservices.dataimport.batch.task.HeaderSetupTask">
         <property name="catalog" value="mplContentCatalog" />
         <property name="net" value="false" />
-        <property name="storeBaseDirectory" ref="baseDirectoryMarketplaceCategory" />
+        <property name="storeBaseDirectory" ref="baseDirectoryMarketplaceCMS" />
     </bean>   
     
  	<!-- Transformer converters mappings -->

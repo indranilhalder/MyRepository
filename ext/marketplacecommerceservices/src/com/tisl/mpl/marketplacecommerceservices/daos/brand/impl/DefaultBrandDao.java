@@ -11,6 +11,7 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
 import java.util.List;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.brand.BrandDao;
 import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
@@ -25,6 +26,8 @@ public class DefaultBrandDao extends AbstractItemDao implements BrandDao
 
 	private FlexibleSearchService flexibleSearchService;
 	private ModelService modelService;
+
+	private final String P_STR = "{p:";
 
 	@Override
 	protected ModelService getModelService()
@@ -98,9 +101,9 @@ public class DefaultBrandDao extends AbstractItemDao implements BrandDao
 		if (null != emailId && !emailId.isEmpty())
 		{
 			final String queryString = //
-			"SELECT {p:" + MplNewsLetterSubscriptionModel.PK + "}" //
+			"SELECT " + P_STR + MplNewsLetterSubscriptionModel.PK + "}" //
 					+ "FROM {" + MplNewsLetterSubscriptionModel._TYPECODE + " AS p} "//
-					+ "WHERE " + "{p:" + MplNewsLetterSubscriptionModel.EMAILID + "}=?emailId ";
+					+ "WHERE " + P_STR + MplNewsLetterSubscriptionModel.EMAILID + "}=?emailId ";
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("emailId", emailId);
@@ -112,11 +115,56 @@ public class DefaultBrandDao extends AbstractItemDao implements BrandDao
 		}
 		return false;
 
-
-
-
-
 	}
 
+	@Override
+	public List<MplNewsLetterSubscriptionModel> checkEmailIdForluxury(final String emailId)
+	{
 
+		if (null != emailId && !emailId.isEmpty())
+		{
+			final String queryString = //
+			"SELECT " + P_STR + MplNewsLetterSubscriptionModel.PK + "}" //
+					+ "FROM {" + MplNewsLetterSubscriptionModel._TYPECODE + " AS p} "//
+					+ "WHERE " + P_STR + MplNewsLetterSubscriptionModel.EMAILID + "}=?emailId "//
+					+ "AND " + P_STR + MplNewsLetterSubscriptionModel.ISLUXURY + "}IS NULL OR"//
+					+ P_STR + MplNewsLetterSubscriptionModel.ISLUXURY + "} = ?isluxury";
+
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter("emailId", emailId);
+			query.addQueryParameter("isluxury", MarketplacecommerceservicesConstants.IS_LUXURY);
+			/*
+			 * if ((flexibleSearchService.<MplNewsLetterSubscriptionModel> search(query).getResult().isEmpty())) { return
+			 * false; }
+			 */
+			return flexibleSearchService.<MplNewsLetterSubscriptionModel> search(query).getResult();
+		}
+		//return true;
+		return null;
+	}
+
+	@Override
+	public List<MplNewsLetterSubscriptionModel> checkEmailIdForMarketplace(final String emailId)
+	{
+		if (null != emailId && !emailId.isEmpty())
+		{
+			final String queryString = //
+			"SELECT " + P_STR + MplNewsLetterSubscriptionModel.PK + "}" //
+					+ "FROM {" + MplNewsLetterSubscriptionModel._TYPECODE + " AS p} "//
+					+ "WHERE " + P_STR + MplNewsLetterSubscriptionModel.EMAILID + "}=?emailId "//
+					+ "AND " + P_STR + MplNewsLetterSubscriptionModel.ISMARKETPLACE + "}IS NULL OR"//
+					+ P_STR + MplNewsLetterSubscriptionModel.ISMARKETPLACE + "} = ?ismarketplace";
+
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter("emailId", emailId);
+			query.addQueryParameter("ismarketplace", MarketplacecommerceservicesConstants.IS_MARKETPLACE);
+			/*
+			 * if ((flexibleSearchService.<MplNewsLetterSubscriptionModel> search(query).getResult().isEmpty())) { return
+			 * false; }
+			 */
+			return flexibleSearchService.<MplNewsLetterSubscriptionModel> search(query).getResult();
+		}
+		//return true;
+		return null;
+	}
 }

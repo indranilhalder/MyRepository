@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -151,12 +152,7 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 						{
 							//chceking size variant exists or not
 							//TISPRO-50 - null check added
-							//if (null != selectedSize && selectedSize.equals(pm.getSize()))
 							//Added For TPR-210
-							/*
-							 * if (selectedSize.equals(variantOptionData.getImage().getUrl()) &&
-							 * !(defaultColorMap.containsKey(variantOptionData.getImage().getUrl())))
-							 */
 							if (selectedSize.equals(pm.getSize()) && null != variantOptionData.getImage())
 							{
 								isSizeVariantPresent = true;
@@ -164,6 +160,7 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 							}
 							else
 							{
+								isSizeVariantPresent = true;
 								final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode()) ? pm
 										.getColourHexCode() : pm.getColour().toLowerCase());
 								defaultColorMap.put(color, Y);
@@ -177,11 +174,9 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 								variantOptionData.setColour(pm.getColour());
 							}
 							//checking for colour hex code
-							//changes for unique size
 							sizeLink.put(variantOptionData.getUrl(), pm.getSize());
 							variantOptionData.setSizeLink(sizeLink);
 						}
-
 						//chceking capacity variant exists or not
 						else if (null != pm.getCapacity())
 						{
@@ -206,27 +201,26 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 							}
 
 						}
-
 						//checking for colour variant
 						else
 						{
 							if (null != pm.getColour())
 							{
-								//variantOptionData.setDefaultUrl(variantOptionData.getUrl());
+								variantOptionData.setDefaultUrl(variantOptionData.getUrl());
 								final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode()) ? pm
 										.getColourHexCode() : pm.getColour().toLowerCase());
 								variantOptionData.setColourCode(color);
 								variantOptionData.setColour(pm.getColour());
 								defaultColorMap.put(color, Y);
-
 							}
 						}
-
 					}
+
 					//Added For TPR-210
 					else if (null == variantOptionData.getImage() || null == selectedSize)
 					{
 						//variantOptionData.setDefaultUrl(variantOptionData.getUrl());
+						isSizeVariantPresent = true;
 						final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode()) ? pm
 								.getColourHexCode() : pm.getColour().toLowerCase());
 						variantOptionData.setColourCode(color);
@@ -237,12 +231,21 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 					}
 
 					variantOptions.add(variantOptionData);
+					if (null == variantOptionData.getColourCode())
+					{
+						final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode()) ? pm
+								.getColourHexCode() : pm.getColour().toLowerCase());
+						variantOptionData.setColourCode(color);
+					}
+					if (sizeLink.isEmpty())
+					{
+						isSizeVariantPresent = false;
+					}
 				}
 				productData.setAllVariantsId(allVariantsId);
-				//Added For TPR-210
 				variantOptions = populateColor(variantOptions);
 				productData.setVariantOptions(variantOptions);
-				if (isSizeVariantPresent)
+				if (isSizeVariantPresent && CollectionUtils.isNotEmpty(productData.getVariantOptions()))
 				{
 					Collections.sort(productData.getVariantOptions(), variantSizeComparator);
 				}

@@ -28,6 +28,7 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.brand.BrandDao;
 import com.tisl.mpl.marketplacecommerceservices.service.brand.BrandService;
+import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 
@@ -120,6 +121,19 @@ public class DefaultBrandService implements BrandService
 		// YTODO Auto-generated method stub
 		return brandDao.checkEmailId(emailId);
 	}
+
+	@Override
+	public List<MplNewsLetterSubscriptionModel> checkEmailIdForluxury(final String emailId)
+	{
+		// YTODO Auto-generated method stub
+		return brandDao.checkEmailIdForluxury(emailId);
+	}
+
+
+	/*
+	 * public List<MplNewsLetterSubscriptionModel> checkEmailIdForMarketplace(final String emailId) { return
+	 * brandDao.checkEmailIdForMarketplace(emailId); }
+	 */
 
 	/**
 	 * @description method fetches all the brands from cmscockpit and sorts all the brands as per first alphabet
@@ -234,5 +248,16 @@ public class DefaultBrandService implements BrandService
 		}
 		final Map<Character, List<CategoryModel>> sortedMap = new TreeMap<Character, List<CategoryModel>>(alphabeticalSubBrands);
 		return sortedMap;
+	}
+
+	/**
+	 * @param emailId
+	 * @return
+	 */
+	@Override
+	public List<MplNewsLetterSubscriptionModel> checkEmailIdForMarketplace(final String emailId)
+	{
+		// YTODO Auto-generated method stub
+		return brandDao.checkEmailIdForMarketplace(emailId);
 	}
 }

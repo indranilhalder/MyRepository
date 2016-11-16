@@ -32,11 +32,14 @@ import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuc
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.storefront.constants.MessageConstants;
+import com.tisl.mpl.storefront.security.cookie.CartRestoreCookieGenerator;
 
 
 public class StorefrontLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler
 {
 	private GUIDCookieStrategy guidCookieStrategy;
+	@Resource(name = "cartRestoreCookieGenerator")
+	private CartRestoreCookieGenerator cartRestoreCookieGenerator;
 	private List<String> restrictedPages;
 	@Resource(name = "productDetailsHelper")
 	private ProductDetailsHelper productDetailsHelper;
@@ -107,9 +110,11 @@ public class StorefrontLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandle
 		}
 		getGuidCookieStrategy().deleteCookie(request, response);
 
+
 		// Delegate to default redirect behaviour
 		super.onLogoutSuccess(request, response, authentication);
 	}
+
 
 
 	@Override
@@ -135,5 +140,22 @@ public class StorefrontLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandle
 		//		}
 
 		return targetUrl;
+	}
+
+	/**
+	 * @return the cartRestoreCookieGenerator
+	 */
+	public CartRestoreCookieGenerator getCartRestoreCookieGenerator()
+	{
+		return cartRestoreCookieGenerator;
+	}
+
+	/**
+	 * @param cartRestoreCookieGenerator
+	 *           the cartRestoreCookieGenerator to set
+	 */
+	public void setCartRestoreCookieGenerator(final CartRestoreCookieGenerator cartRestoreCookieGenerator)
+	{
+		this.cartRestoreCookieGenerator = cartRestoreCookieGenerator;
 	}
 }

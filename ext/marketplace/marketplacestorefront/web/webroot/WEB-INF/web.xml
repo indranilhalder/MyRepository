@@ -219,7 +219,8 @@
 
 		</cookie-config>  -->
 	   	
-	  	<cookie-config>
+
+	  	 <cookie-config>
 			<secure>true</secure>
 			<http-only>true</http-only>
 		</cookie-config>

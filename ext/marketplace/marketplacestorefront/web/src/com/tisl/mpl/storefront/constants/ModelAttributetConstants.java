@@ -801,4 +801,6 @@ public final class ModelAttributetConstants
 	public static final String PAGE_SUBCATEGORY_NAME = "page_subcategory_name";
 	public static final String PAGE_SUBCATEGORY_NAME_L3 = "page_subcategory_name_l3";
 	public static final String SHOP_BY_LOOK = "shopbylook".intern();
+	//LW-230
+	public static final String IS_LUXURY = "isLuxury";
 }

@@ -133,12 +133,18 @@
 				</listview>
 			</result>
 			<editor>
-				<tab name="tab.common" position="0" mode="replace">
-					<section name="properties" mode="replace">
+				<tab name="tab.common" position="0" mode="append">
+					<section name="properties" mode="append">
 						<listlayout>
-						<attribute name="mobileNo" />
-						<attribute name="OTPNumber" />
-						<attribute name="OTPType" />
+							<attribute name="mobileNo" />
+							<attribute name="OTPNumber" />
+							<attribute name="OTPType" />
+							<attribute name="CustomerId" />
+							<attribute name="emailId" />
+							<attribute name="isValidated">
+								<advancedbooleaneditor truename="true"
+										falsename="false" />
+							</attribute>
 						</listlayout>
 					</section>
 				</tab>
@@ -2394,16 +2400,16 @@
 							<attribute name="warrantyType" />
 							<!-- us-10: added by i324321 start -->
  							<attribute name="deliveryFulfillModeByP1" />
- 							<attribute name="returnFulfillMode" />
- 							<attribute name="returnFulfillModeByP1" />
- 							<attribute name="sellerHandlingTime" />
- 							<attribute name="giftWrappable" />
- 							<attribute name="returnAtStoreEligible" />
- 							<attribute name="isFragile" />
- 							<attribute name="isPrecious" />
- 							<attribute name="mediationRequired" />
- 							<attribute name="scheduledDelivery" />
- 							<!-- added by i324321 end -->
+  							<attribute name="returnFulfillMode" />
+  							<attribute name="returnFulfillModeByP1" />
+  							<attribute name="sellerHandlingTime" />
+  							<attribute name="giftWrappable" />
+  							<attribute name="returnAtStoreEligible" />
+  							<attribute name="isFragile" />
+  							<attribute name="isPrecious" />
+  							<attribute name="mediationRequired" />
+  							<attribute name="scheduledDelivery" />
+  							<!-- added by i324321 end -->
 						</listlayout>
 					</section>
 				</tab>
@@ -3961,5 +3967,25 @@
 		</defaultreference>
 	</type>
 	<!-- TPR-1035 : Item Creation for Bin Error  -->
+	
+	<!-- TPR-3564 : Customer HMC Localization  -->
+	<type name="Customer" mode="append">
+		<organizer>
+				<search mode="replace">
+					<condition attribute="customerId" />
+					<condition attribute="originalUid" />
+					<condition attribute="mobileNumber" />
+				</search>
+				<result>
+					<listview mode="replace">
+						<itemlayout>
+							<attribute name="uid" />
+							<attribute name="firstName" />
+							<attribute name="lastName" />
+						</itemlayout>
+					</listview>
+				</result>
+		</organizer>
+	</type>
  
 </configuration>

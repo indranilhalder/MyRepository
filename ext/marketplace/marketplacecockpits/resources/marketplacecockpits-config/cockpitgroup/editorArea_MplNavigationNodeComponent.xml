@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<editor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="editor.xsd">
+	<group qualifier="General" visible="true" initially-opened="true">
+		<label key="cockpit.config.label.General" />
+		<property qualifier="MplNavigationNodeComponent.name"/>
+		<property qualifier="MplNavigationNodeComponent.title"/>
+		<property qualifier="MplNavigationNodeComponent.media" editor="simpleMediaReferenceSelector">
+            <parameter>
+                <name>mimeTypes</name>
+                <value>
+                    image/jpeg;image/gif
+                </value>
+            </parameter>
+            <parameter>
+                <name>mimeTypes</name>
+                <value>
+                    image/jpeg;image/gif
+                </value>
+            </parameter>
+            <parameter>
+                <name>allowCreate</name>
+                <value>true</value>
+            </parameter>
+            <parameter>
+                <name>restrictToCreateTypes</name>
+                <value>Media</value>
+            </parameter>
+            <parameter>
+                <name>celumMediaFormat</name>
+                <value>picture</value>
+            </parameter>
+        </property>    
+		<property qualifier="MplNavigationNodeComponent.visible"/>
+		<property qualifier="MplNavigationNodeComponent.catalogVersion" editor="shortListEditor"/>
+		<property qualifier="MplNavigationNodeComponent.sliders">
+			<parameter>
+				<name>predefinedValuesStrategy</name>
+				<value>cmsItemPredefinedValuesStrategy</value>
+			</parameter>
+		</property>
+	</group>
+	
+	<group qualifier="linkedResources" visible="true" initially-opened="true">
+		<label key="config.general.hierachy" />
+		<property qualifier="MplNavigationNodeComponent.parent">
+			<parameter>
+				<name>predefinedValuesStrategy</name>
+				<value>cmsItemPredefinedValuesStrategy</value>
+			</parameter>
+		</property>
+		<property qualifier="MplNavigationNodeComponent.children">
+			<parameter>
+				<name>predefinedValuesStrategy</name>
+				<value>cmsItemPredefinedValuesStrategy</value>
+			</parameter>
+		</property>
+		<property qualifier="MplNavigationNodeComponent.links">
+			<parameter>
+				<name>predefinedValuesStrategy</name>
+				<value>cmsItemPredefinedValuesStrategy</value>
+			</parameter>
+			<parameter>
+				<name>showEditButton</name>
+				<value>true</value>
+			</parameter>
+		</property>
+		<property qualifier="MplNavigationNodeComponent.pages">
+			<parameter>
+				<name>predefinedValuesStrategy</name>
+				<value>cmsItemPredefinedValuesStrategy</value>
+			</parameter>
+		</property>
+	</group>
+
+	<group qualifier="linkedResources" visible="true" initially-opened="true">
+		<label key="config.general.linkeditems" />
+		<property qualifier="MplNavigationNodeComponent.entries">
+			<parameter>
+				<name>allowCreate</name>
+				<value>true</value>
+			</parameter>
+			<parameter>
+				<name>predefinedValuesStrategy</name>
+				<value>cmsItemPredefinedValuesStrategy</value>
+			</parameter>
+		</property>
+	</group>
+	
+	<custom-group 
+		class="de.hybris.platform.cockpit.services.config.impl.UnassignedEditorSectionConfiguration" 
+		qualifier="unassigned"
+		initially-opened="false">
+		<label key="cockpit.config.label.Other" />
+	</custom-group>
+</editor>
