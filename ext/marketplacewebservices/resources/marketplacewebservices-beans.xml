@@ -2453,22 +2453,18 @@
 		<property name="isScheduled" type="boolean"/>
 		<property name="error" type="String" />
 		<property name="status" type="String" />
-<property name="errorCode" type="String" />
-		 <property name="estimateDeliveryDates" type="java.util.List&lt;com.tisl.mpl.wsdto.MplSDInfoWsDTO>"/>
+        <property name="errorCode" type="String" />
+		 <property name="estimateDeliveryDateInfo" type="java.util.List&lt;com.tisl.mpl.wsdto.MplSDInfoWsDTO>"/>
     </bean>
     
      <bean class="com.tisl.mpl.wsdto.MplSDInfoWsDTO">
         <property name="productCode" type="String"/>
-        <property name="estimateDeliveryDates" type="java.util.List&lt;com.tisl.mpl.wsdto.MplEstimateDeliveryDateWsDTO>"/>
+        <property name="estimateDeliveryDateList" type="java.util.List&lt;com.tisl.mpl.wsdto.MplEstimateDeliveryDateWsDTO>"/>
     </bean>
     
     <bean class="com.tisl.mpl.wsdto.MplEstimateDeliveryDateWsDTO">
         <property name="deliveryDate" type="String"/>
-        <property name="timeSlots" type="java.util.List&lt;com.tisl.mpl.wsdto.MplDeliveryTimeSlotWsDTO>"/>
-    </bean>
-    
-    <bean class="com.tisl.mpl.wsdto.MplDeliveryTimeSlotWsDTO">
-        <property name="timeSlot" type="String"/> 
+        <property name="timeSlotList" type="java.util.List&lt;java.lang.String>"/>
     </bean>
     
     <bean class="com.tisl.mpl.wsdto.MplDeliveryAddressRequestWsDTO">

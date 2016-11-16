@@ -2209,7 +2209,7 @@ public class OrdersController extends BaseCommerceController
 						{
 							List<MplSDInfoWsDTO> mplSDInfoWsDTO = mplDeliveryAddressFacade.getSDDatesMobile(scheduledDeliveryData
 									.getEntries());
-							mplDeliveryAddressResponseWsDTO.setEstimateDeliveryDates(mplSDInfoWsDTO);
+							mplDeliveryAddressResponseWsDTO.setEstimateDeliveryDateInfo(mplSDInfoWsDTO);
 						}
 					}
 					else

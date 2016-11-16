@@ -70,7 +70,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryAddressServic
 import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.service.TicketCreationCRMservice;
-import com.tisl.mpl.wsdto.MplDeliveryTimeSlotWsDTO;
+import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.wsdto.MplEstimateDeliveryDateWsDTO;
 import com.tisl.mpl.wsdto.MplSDInfoWsDTO;
 
@@ -110,6 +110,9 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	
 	@Autowired
 	private MplOrderFacade mplOrderFacade;
+	
+	@Autowired
+	private SendSMSFacade sendSMSFacade;
 
 	private static final Logger LOG = Logger.getLogger(MplDeliveryAddressFacadeImpl.class);
 
@@ -510,7 +513,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 				{
 					try
 					{
-						generateOTP(customer.getUid(), orderModel.getDeliveryAddress().getPhone1());
+						generateOTP(customer, orderModel.getDeliveryAddress().getPhone1());
 					}
 					catch (final InvalidKeyException excption)
 					{
@@ -544,9 +547,10 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 * @throws InvalidKeyException
 	 * @throws NoSuchAlgorithmException
 	 */
-	String generateOTP(String customerId,String mobileNumber) throws InvalidKeyException, NoSuchAlgorithmException
+	String generateOTP(CustomerModel customerModel,String mobileNumber) throws InvalidKeyException, NoSuchAlgorithmException
 	{
-		 String otp = otpGenericService.generateOTP(customerId, OTPTypeEnum.CDA.getCode(), mobileNumber);
+		 String otp = otpGenericService.generateOTP(customerModel.getUid(), OTPTypeEnum.CDA.getCode(), mobileNumber);
+		 sendPushNotificationForCDA(customerModel, otp,mobileNumber);
 		return otp;
 	}
 
@@ -675,11 +679,11 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 			{
 				if (StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getPhone1()))
 				{
-					generateOTP(customer.getUid(), orderModel.getDeliveryAddress().getPhone1());
+					generateOTP(customer, orderModel.getDeliveryAddress().getPhone1());
 				}
 				else if (StringUtils.isNotEmpty(customer.getMobileNumber()))
 				{
-					generateOTP(customer.getUid(), customer.getMobileNumber());
+					generateOTP(customer, customer.getMobileNumber());
 				}
 				isGenerated = true;
 			}
@@ -1199,8 +1203,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		MplEstimateDeliveryDateWsDTO mplEstimateDeliveryDateWsDTO;
 		
 		//DeliveryTimeSlot
-		List<MplDeliveryTimeSlotWsDTO> mplDeliveryTimeSlotWsDTOList;
-		MplDeliveryTimeSlotWsDTO mplDeliveryTimeSlotWsDTO;
+		List<String> mplDeliveryTimeSlotList;
 		
 		Map<String, Object> productData = (Map<String, Object>) dataSDDates;
 
@@ -1222,24 +1225,22 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 				mplEstimateDeliveryDateWsDTO.setDeliveryDate(dateData.getKey());
 				
 				// new instance create  for each date  
-				 mplDeliveryTimeSlotWsDTOList = new ArrayList<MplDeliveryTimeSlotWsDTO>();
-				
+				mplDeliveryTimeSlotList= new ArrayList<String>();
 				for (String timeSlot : dateData.getValue())
 				{
-				// new instance create for each date 
-					mplDeliveryTimeSlotWsDTO = new MplDeliveryTimeSlotWsDTO();
-					mplDeliveryTimeSlotWsDTO.setTimeSlot(timeSlot);
-					mplDeliveryTimeSlotWsDTOList.add(mplDeliveryTimeSlotWsDTO);
+				// new instance create for each Time 
+					String timeSlotValue=timeSlot;
+					mplDeliveryTimeSlotList.add(timeSlotValue);
 
 				}
 				//setting value TimeSlots
-				mplEstimateDeliveryDateWsDTO.setTimeSlots(mplDeliveryTimeSlotWsDTOList);
+				mplEstimateDeliveryDateWsDTO.setTimeSlotList(mplDeliveryTimeSlotList);
 				
 				//preparing list of Date Data 
 				mplEstimateDateList.add(mplEstimateDeliveryDateWsDTO);
 			}
 			//Setting DeliveyDates Value and preparing List 
-			mplSDInfoWsDTO.setEstimateDeliveryDates(mplEstimateDateList);
+			mplSDInfoWsDTO.setEstimateDeliveryDateList(mplEstimateDateList);
 			mplSDInfoWsDTOList.add(mplSDInfoWsDTO);
 		}
 		return mplSDInfoWsDTOList;
@@ -1265,8 +1266,28 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		return mplOrderFacade;
 	}
 
+	/***
+	 * Send Notification For CDA
+	 * 
+	 * @param customerId
+	 * @param OTPNumber
+	 */
+	@Override
+	public void sendPushNotificationForCDA(CustomerModel customerModel, String otPNumber, String mobileNumber)
+	{
+		String mplCustomerName = customerModel.getFirstName();
+		String contactNumber = configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.SMS_SERVICE_CONTACTNO);
 
+		sendSMSFacade.sendSms(
+				MarketplacecommerceservicesConstants.SMS_SENDER_ID,
+				MarketplacecommerceservicesConstants.SMS_MESSAGE_CD_OTP
+						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO,
+								mplCustomerName != null ? mplCustomerName : "There")
+						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, otPNumber)
+						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, contactNumber),mobileNumber);
 
+	}
 
 }
 	

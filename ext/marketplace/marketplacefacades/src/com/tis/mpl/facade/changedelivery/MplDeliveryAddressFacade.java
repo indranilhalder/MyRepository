@@ -7,6 +7,7 @@ import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 
 import java.util.Collection;
 import java.util.Date;
@@ -102,5 +103,6 @@ public interface MplDeliveryAddressFacade
    public List<MplSDInfoWsDTO> getSDDatesMobile(Object deliverySDEDData);
    
    public void saveSelectedDateAndTime(OrderModel orderModel,List<TransactionSDDto> transactionSDDto);
+   public void sendPushNotificationForCDA(CustomerModel customerModel, String otoNumber,String mobileNumber);
 	
 }
