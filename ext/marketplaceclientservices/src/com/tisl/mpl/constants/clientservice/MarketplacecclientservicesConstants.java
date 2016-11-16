@@ -246,5 +246,7 @@ public class MarketplacecclientservicesConstants
 	public static final String OMS_DELIVERY_SLOT_READ_TIMEOUT = "oms.deliveryslot.read.timeout";
 	public static final String OMS_DELIVERY_SLOT_URL = "oms.deliveryslot.url";
 	public static final String CNC = "CNC";
-
+	
+	public static final String YES = "YES".intern();
+	public static final String NO = "NO".intern();
 }

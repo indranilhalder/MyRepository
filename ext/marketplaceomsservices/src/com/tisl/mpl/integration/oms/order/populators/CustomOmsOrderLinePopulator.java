@@ -33,6 +33,7 @@ import com.hybris.oms.domain.order.Promotion;
 import com.hybris.oms.domain.types.Amount;
 import com.hybris.oms.domain.types.Quantity;
 import com.tisl.mpl.constants.MarketplaceomsservicesConstants;
+import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
@@ -260,8 +261,13 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 
 			{
 				final String isPrecious = richAttributeModel.get(0).getIsPrecious().getCode().toUpperCase();
-
-				target.setIsPrecious(isPrecious);
+				
+				if(isPrecious.equalsIgnoreCase(MarketplaceomsservicesConstants.YES) || isPrecious.equalsIgnoreCase(MarketplaceomsservicesConstants.Y)){
+					target.setIsPrecious(MarketplaceomsservicesConstants.Y);
+				}else{
+					target.setIsPrecious(MarketplaceomsservicesConstants.N);
+				}
+				
 			}
 			else
 			{
@@ -273,8 +279,11 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 
 			{
 				final String isFragile = richAttributeModel.get(0).getIsFragile().getCode().toUpperCase();
-
-				target.setIsFragile(isFragile);
+				if(isFragile.equalsIgnoreCase(MarketplaceomsservicesConstants.YES) || isFragile.equalsIgnoreCase(MarketplaceomsservicesConstants.Y)){
+					target.setIsFragile(MarketplaceomsservicesConstants.Y);
+				}else{
+					target.setIsFragile(MarketplaceomsservicesConstants.N);
+				}
 			}
 			else
 			{

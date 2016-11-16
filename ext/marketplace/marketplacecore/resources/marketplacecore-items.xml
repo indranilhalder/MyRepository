@@ -807,14 +807,14 @@
  			<value code="no" />
  		</enumtype>
  		<enumtype code="isFragileEnum"               autocreate="true" generate="true" 
- 			dynamic="true"><!-- Changed to Y and N for Pincode Serviceable  -->
- 			<value code="Y" />
- 			<value code="N" />
+ 			dynamic="true">
+ 			<value code="yes" />
+ 			<value code="no" />
  		</enumtype>
  		<enumtype code="isPreciousEnum"              autocreate="true" generate="true" 
- 			dynamic="true"><!--  Changed to Y and N for Pincode Serviceable -->
- 			<value code="Y" />
- 			<value code="N" />
+ 			dynamic="true">
+ 			<value code="yes" />
+ 			<value code="no" />
  		</enumtype>
  		<enumtype code="mediationRequiredEnum"       autocreate="true" generate="true" 
  			dynamic="true">

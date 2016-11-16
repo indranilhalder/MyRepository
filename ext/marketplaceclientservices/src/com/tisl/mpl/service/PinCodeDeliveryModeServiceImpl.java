@@ -84,6 +84,7 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 	private static final String TSHIP = "TSHIP".intern();
 	private static final String SSHIP = "SSHIP".intern();
 	private static final String BOTH = "BOTH".intern();
+
 	
 	
 	private static final Logger LOG = Logger.getLogger(PinCodeDeliveryModeServiceImpl.class);
@@ -260,14 +261,26 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 						}
 						
 						
-						if (null != reqData.get(i).getIsFragile())
+						if (null != reqData.get(i).getIsFragile()  || StringUtils.isNotEmpty(reqData.get(i).getIsFragile()))
 						{
-							pincodereqObj.setIsFragile(reqData.get(i).getIsFragile());
+							if(reqData.get(i).getIsFragile().equalsIgnoreCase(MarketplacecclientservicesConstants.YES) || reqData.get(i).getIsFragile().equalsIgnoreCase(MarketplacecclientservicesConstants.Y)){
+								pincodereqObj.setIsFragile(MarketplacecclientservicesConstants.Y);
+							}else{
+								pincodereqObj.setIsFragile(MarketplacecclientservicesConstants.N);
+							}
+						}else{
+							pincodereqObj.setIsFragile(MarketplacecclientservicesConstants.N);
 						}
 						
-						if (null != reqData.get(i).getIsPrecious())
+						if (null != reqData.get(i).getIsPrecious() || StringUtils.isNotEmpty(reqData.get(i).getIsPrecious()))
 						{
-							pincodereqObj.setIsPrecious(reqData.get(i).getIsPrecious());
+							if(reqData.get(i).getIsPrecious().equalsIgnoreCase(MarketplacecclientservicesConstants.YES) || reqData.get(i).getIsPrecious().equalsIgnoreCase(MarketplacecclientservicesConstants.Y)){
+								pincodereqObj.setIsPrecious(MarketplacecclientservicesConstants.Y);
+							}else{
+								pincodereqObj.setIsPrecious(MarketplacecclientservicesConstants.N);
+							}
+						}else{
+							pincodereqObj.setIsPrecious(MarketplacecclientservicesConstants.N);
 						}
 
 						pincodeList.add(pincodereqObj);

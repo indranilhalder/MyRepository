@@ -45,6 +45,8 @@ public final class MarketplaceomsservicesConstants extends GeneratedMarketplaceo
 	public static final String BOTH = "BOTH".intern();
 	public static final String TSHIP = "TSHIP".intern();
 	public static final String SSHIP = "SSHIP".intern();
+	
+	public static final String N = "N".intern();
 
 	private MarketplaceomsservicesConstants()
 	{
