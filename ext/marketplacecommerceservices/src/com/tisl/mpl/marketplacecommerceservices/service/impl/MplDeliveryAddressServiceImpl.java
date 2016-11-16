@@ -34,7 +34,9 @@ import com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.MplDe
 //import com.tis.mpl.facade.changedelivery.Impl.ChangeDeliveryAddressFacadeImpl;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryAddressService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplSellerMasterService;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.model.SellerMasterModel;
 
 
 /**
@@ -58,6 +60,8 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 
 	@Autowired
 	SessionService sessionService;
+	@Autowired 
+	MplSellerMasterService sellerMasterService;
 	private static final Logger LOG = Logger.getLogger(MplDeliveryAddressServiceImpl.class);
 
 
@@ -67,7 +71,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 	{
 		final List<String> ChangableOrdeStatus = Arrays.asList(OrderStatus.PAYMENT_SUCCESSFUL.getCode(),
 				OrderStatus.ORDER_ALLOCATED.getCode(), OrderStatus.PICK_LIST_GENERATED.getCode(),
-				OrderStatus.ORDER_REALLOCATED.getCode(), OrderStatus.PICK_CONFIRMED.getCode(), OrderStatus.ORDER_REJECTED.getCode(),
+				OrderStatus.ORDER_REALLOCATED.getCode(),OrderStatus.ORDER_REJECTED.getCode(),
 				OrderStatus.PENDING_SELLER_ASSIGNMENT.getCode());
 		boolean isAddressChangable = false;
 
@@ -93,15 +97,22 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 						{
 							final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(entry
 									.getSelectedUSSID());
-							if (null != sellerInfoModel && null != sellerInfoModel.getSellerMaster()
-									&& null != sellerInfoModel.getSellerMaster().getIsCDAllowed())
-							{
-								isCdAllowed = sellerInfoModel.getSellerMaster().getIsCDAllowed();
-								if (LOG.isDebugEnabled())
+							if(null != sellerInfoModel ) {
+								SellerMasterModel sellerMasterInfo= sellerMasterService.getSellerMaster(sellerInfoModel.getSellerID());
+								if (null != sellerMasterInfo && null != sellerMasterInfo.getIsCDAllowed())
 								{
-									LOG.debug("Is CD allowed for seller " + sellerInfoModel.getSellerID() + " " + isCdAllowed);
+									isCdAllowed = sellerMasterInfo.getIsCDAllowed();
+									if (LOG.isDebugEnabled())
+									{
+										LOG.debug("Is CD allowed for seller " + sellerInfoModel.getSellerID() + " " + isCdAllowed);
+									}
+								}else {
+									isCdAllowed = MarketplacecommerceservicesConstants.N;
 								}
+							}else {
+								isCdAllowed = MarketplacecommerceservicesConstants.N;
 							}
+							
 
 						}
 						if (!deliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)

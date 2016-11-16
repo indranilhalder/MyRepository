@@ -1079,9 +1079,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 								// Saving no_of Total requests and rejects for changeDelivery
 								mplDeliveryAddressController.saveChangeDeliveryRequests(orderModel.getParentReference());;
 								popupMessage(
-										widget,
-										deliveryAddress.getPostalcode()
-												+ PINCODE_NOT_SERVICIBLE);
+										widget, PINCODE_NOT_SERVICIBLE);
 								return;
 							}
 						} else {
