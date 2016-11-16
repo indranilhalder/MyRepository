@@ -669,6 +669,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;NavigationBar;;;navigation
 ;TopContent;;;wide
 ;EmptyCartMiddleContent;;CMSParagraphComponent
+;EmptyCartSignIn;;CMSParagraphComponent
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;;wide

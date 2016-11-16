@@ -72,6 +72,8 @@ UPDATE FooterComponent;$contentCV[unique=true];uid[unique=true];footerText[lang=
 # CMS Paragraph Components
 UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
 ;;EmptyCartParagraphComponent;"Your bag's empty - let's fill it up shall we?"
+;;EmptyCartSignInParagraphComponent;"Your bag's empty - let's fill it up shall we? Hey there. You will need to <Sign In> to see what's in your cart. No account? No problem. <Sign Up> here."
+
 ;;TitleForSellWithUsComponent;"Sell With Us"
 ;;TitleForShippingPageComponent;"Shipping"
 ;;TitleForCancellationPageComponent;"Cancellation"
