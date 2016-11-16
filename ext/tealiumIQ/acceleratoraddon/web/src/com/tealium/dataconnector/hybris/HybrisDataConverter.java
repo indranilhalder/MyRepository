@@ -812,7 +812,8 @@ public final class HybrisDataConverter
 			final List<String> pageSubCategories = new ArrayList<String>();
 			final List<String> pageSubcategoryNameL3List = new ArrayList<String>();
 			final List<String> transactionIdList = new ArrayList<String>();
-
+			//TPR-429
+			final List<String> sellerIdList = new ArrayList<String>();
 			String category = null;
 			String page_subCategory_name = null;
 			String page_subcategory_name_L3 = null;
@@ -831,6 +832,10 @@ public final class HybrisDataConverter
 			String pageSubCategoriesText = null;
 			String pageSubcategoryNameL3ListText = null;
 			String userLoginType= null;//TPR-668
+			//TPR-429 Start
+			String sellerId = null;
+			String sellerIds = null;
+			//TPR-429 End
 			if(null != orderModel)
 			{
 				for (final AbstractOrderEntryModel entry : orderModel.getEntries())
@@ -838,6 +843,12 @@ public final class HybrisDataConverter
 					if (entry.getProduct() != null && entry.getProduct().getCode() != null)
 					{
 					sku = entry.getProduct().getCode();
+					}
+					//TPR-429
+					if (entry.getSelectedUSSID() != null)
+					{
+						sellerId = entry.getSelectedUSSID().substring(0, 6);
+
 					}
 					if (entry.getProduct() != null && entry.getProduct().getName() != null)
 					{
@@ -880,7 +891,8 @@ public final class HybrisDataConverter
 
 						order_shipping_charge = currencySymbol.concat(entry.getCurrDelCharge().toString());
 					}
-					
+					//TPR-429
+					sellerIdList.add(sellerId);
 					productBrandList.add(brand);
 					productIdList.add(sku);
 					productListPriceList.add(totalEntryPrice);
@@ -941,6 +953,12 @@ public final class HybrisDataConverter
 					transactionIds = StringUtils.join(transactionIdList,',');
 				}
 				/*TPR-687*/
+				/* TPR-429 */
+				if (CollectionUtils.isNotEmpty(sellerIdList))
+				{
+					sellerIds = StringUtils.join(sellerIdList, '_');
+				}
+				/* TPR-429 */
 				
 			}
 //			if (orderData != null)
@@ -1032,7 +1050,8 @@ public final class HybrisDataConverter
 //					.addArrayValues("page_subcategory_name", pageSubCategories)
 //					.addArrayValues("page_subcategory_name_l3", pageSubcategoryNameL3List)
 					.addArrayValues("order_shipping_charges", orderShippingCharges);
-			udo.setValue("transaction_id",transactionIds);	
+			udo.setValue("transaction_id",transactionIds)
+			.setValue("checkout_seller_ids", sellerIds);	
 
 			scriptString = tealiumHelper.outputFullHtml(udo);
 		}

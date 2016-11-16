@@ -2066,6 +2066,8 @@ $(document).on('click','.facet.js-facet.Size .js-facet-name h3',function(){
 		}
 	},80)
 });
+
+//changes for TISPRO-796
 //$(document).on('click','.left-block .toggle-filterSerp',function(){
 function toggleFilter(){
 	colorSwatch();
@@ -2078,11 +2080,24 @@ function toggleFilter(){
 	$(this).toggleClass("active");
 	
 	//TPR-845
-	var spanCount_colour=$(".facet_mobile .filter-colour.selected-colour").length;
-	if(spanCount_colour>0)
+	// Fixing error of facet starts
+	if ($(".facet_mobile .facet.js-facet.Colour").find('ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden').length) {
+		var spanCountMoreViewColor = $(".facet_mobile .facet.js-facet.Colour").find('ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden').find("li.selected-colour").length;
+		if(spanCountMoreViewColor)
 		{
-			$(".facet_mobile .filter-colour.selected-colour").parents(".facet.js-facet").find(".category-icons span").text(spanCount_colour);
+			$(".facet_mobile .filter-colour.selected-colour").parents(".facet.js-facet").find(".category-icons span").text(spanCountMoreViewColor);
 		}
+	}
+	else {
+	// Fixing error of facet ends
+		var spanCount_colour=$(".facet_mobile .filter-colour.selected-colour").length;
+		if(spanCount_colour>0)
+			{
+				$(".facet_mobile .filter-colour.selected-colour").parents(".facet.js-facet").find(".category-icons span").text(spanCount_colour);
+			}
+	// Fixing error of facet starts	
+	}
+	// Fixing error of facet ends	
 
 	var spanCount_size=$(".facet_mobile .filter-size.selected-size").length;
 	if(spanCount_size>0)
@@ -2091,7 +2106,7 @@ function toggleFilter(){
 	}
 
 	$(".facet_mobile .facet.js-facet").each(function(){
-		console.log('hi');
+		//console.log('hi');
 		var spanCountMoreView = $(this).find('ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden').find("input[type=checkbox]:checked").length;
 		if(spanCountMoreView){
 			$(this).find(".category-icons span").text(spanCountMoreView);
@@ -2731,3 +2746,10 @@ if($(".body-Content").find(".shop_for_blp").children().length==0){
 }
 
 //-----BLP------//
+
+/*
+$(document).on("click",".toggle-filterSerp",function(){
+$(".product-facet.js-product-facet.listing-leftmenu").slideToggle();
+$(this).toggleClass("active");
+});*/
+

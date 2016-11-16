@@ -602,6 +602,8 @@ body.page-shopTheStyle .timeout-slider .owl-controls .owl-dots {
 }
 /* ADDED TISLUX-1407 ENDS HERE */ 
 
+
+
 @media (min-width: 651px){
     input[type="checkbox"] + label, input[type="radio"] + label {
       padding-left: 10px; } 
@@ -2634,7 +2636,7 @@ header .content .bottom.active nav>ul>li:first-child+li.hovered > ul {
         display: inline;
         font-size: 14px; }
         header > .content .top > div:not(.toggle) li, header > .content .top ul li {
-          padding-left: 15px;
+           padding-left: 15px;
           line-height: 50px;
           cursor: pointer;
         border-bottom: 1px solid #e6e6e6; }
@@ -30143,9 +30145,9 @@ header .content .brand-logo {
        width: auto;
        margin-right: 0px;
   }
-header .content .bottom.active .marketplace a img {
+/* header .content .bottom.active .marketplace a img {
 width: 90px !important;
-  }
+  } */
     header .content .bottom.active .marketplace {
    margin-right: 0px;  
    margin-top: 0px;  }
@@ -34438,7 +34440,7 @@ body.page-cartPage .cart.wrapper .product-block li.item > ul > li.qty select{
     right: 0px;
 }
 header > .content .top .toggle {
-    right: -63px;
+    right: -51px; /*Changed for TISPRD-7419*/
 }
 }
 .off-bag {
@@ -45448,6 +45450,45 @@ body.pageLabel-Footwear .feature-collections ul.collections li.chef .feature-col
 		 padding: 40px 0 55px;
 	}
 }
+/* Comment on 16/11/2016 starts IA*/
+.page-productDetails .trending h2 {
+	margin: 0;
+	font-weight: bold;
+	margin: 50px 0;
+}
+.page-productDetails .trending h2 span {
+	font-weight: bold;
+}
+@media(max-width:1024px){
+.page-productDetails .trending h2 {
+		border-top: 1px solid #ccc;
+		margin: 40px 25px 20px;
+		left: 0;
+		font-size: 24px;
+		padding: 25px 0 0;
+		transform: inherit;
+	}
+	.trending h2 span {
+		font-size: 24px;
+	}
+}
+@media(max-width:790px){
+.trending h2 span {
+    clear: both;
+    float: none;
+    text-align: center;
+    position: static;
+}
+}
+@media(max-width:767px){
+.page-productDetails .trending h2 {		
+		margin: 20px 25px;		
+	}
+	.trending h2 span {		
+		font-size: 20px;		
+	}	
+}
+/* Comment on 16/11/2016 ends IA*/
 
 /* TPR-245 SEO Ends */
 
@@ -45644,6 +45685,7 @@ float: right;
 
 .product-info .size span+a {
 	position: relative;
+	color: #a9143c; /* TISPRD-7672 & TISPRD-7593 */
 }
 
 .product-info .size span+a:after {
@@ -48131,6 +48173,10 @@ padding:0 40px;	}
 }
 .product-image-container.device .owl-carousel .owl-item img{
 padding:0;
+}
+   .product-info .picZoomer-pic-wp .zoom a:hover:before,  .product-image-container.device a.wishlist-icon:hover:before {
+	content: "\e602";
+	opacity: 1;
 }
 }
 @media(max-width:1024px) and (min-width:768px){
