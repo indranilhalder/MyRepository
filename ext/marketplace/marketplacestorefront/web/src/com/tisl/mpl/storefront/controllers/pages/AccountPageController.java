@@ -239,6 +239,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private static final String REDIRECT_TO_INVITE_FRIENDS_PAGE = REDIRECT_PREFIX + "/my-account/friendsInvite";
 
 	// CMS Pages
+	final String isLux = "isLux";
 	private static final String ACCOUNT_CMS_PAGE = "overview";
 	private static final String PROFILE_CMS_PAGE = "profile";
 	private static final String UPDATE_PASSWORD_CMS_PAGE = "updatePassword";
@@ -647,7 +648,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 			//TISEE-1855
 			final SearchPageData<OrderHistoryData> searchPageDataParentOrder = getMplOrderFacade()
 					.getPagedFilteredParentOrderHistory(pageableData);
-
+			// LW-225,230
+			boolean luxFlag = false;
 
 			populateModel(model, searchPageDataParentOrder, showMode);
 
@@ -692,7 +694,17 @@ public class AccountPageController extends AbstractMplSearchPageController
 						{
 							continue;
 						}
-
+						//LW-225,230 start
+						if (null != orderEntryData.getProduct())
+						{
+							if (orderEntryData.getProduct().getLuxIndicator() != null
+									&& orderEntryData.getProduct().getLuxIndicator()
+											.equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
+							{
+								luxFlag = true; //Setting true if at least one luxury product found
+							}
+						}
+						//LW-225,230 ends
 						boolean cancellationMsgFlag = false;
 						if (null != orderEntryData.getConsignment() && null != orderEntryData.getConsignment().getStatus())
 						{
@@ -745,6 +757,17 @@ public class AccountPageController extends AbstractMplSearchPageController
 			// TISPRO-48 - added page index and page size attribute for pagination
 			model.addAttribute(ModelAttributetConstants.PAGE_INDEX, page);
 			model.addAttribute(ModelAttributetConstants.PAGE_SIZE, pageSize);
+
+			// LW-225,230
+			if (CollectionUtils.isEmpty(orderHistoryList))
+			{
+				model.addAttribute(ModelAttributetConstants.EMPTY, luxFlag);
+			}
+			else
+			{
+				model.addAttribute(ModelAttributetConstants.IS_LUXURY, luxFlag);
+			}
+
 
 		}
 		catch (
@@ -1644,7 +1667,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 		boolean returnLogisticsCheck = true;
 		final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade.checkReturnLogistics(subOrderDetails,
-				pinCode);
+				pinCode, transactionId);
 		for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
 		{
 			model.addAttribute(ModelAttributetConstants.PINCODE_NOT_SERVICEABLE, response.getResponseMessage());
@@ -1999,7 +2022,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 
 			final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade.checkReturnLogistics(
-					subOrderDetails, pinCode);
+					subOrderDetails, pinCode, transactionId);
 			for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
 			{
 				model.addAttribute(ModelAttributetConstants.RETURNLOGMSG, response.getResponseMessage());
@@ -2524,7 +2547,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 				return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 			}
 		}
-
+		if (null != request.getParameterMap() && request.getParameterMap().containsKey(isLux))
+		{
+			returnAction = returnAction + "?" + isLux + "=true";
+		}
 		return returnAction;
 	}
 
@@ -2716,6 +2742,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 		try
 		{
+
 			final String specificUrl = RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_UPDATE_PROFILE;
 			final String profileUpdateUrl = urlForEmailContext(request, specificUrl);
 
@@ -2867,6 +2894,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 			model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
 					accountBreadcrumbBuilder.getBreadcrumbs(MessageConstants.TEXT_ACCOUNT_PROFILE));
 			model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
+			if (null != request.getParameterMap() && request.getParameterMap().containsKey(isLux))
+			{
+				returnAction = returnAction + "?" + isLux + "=true";
+			}
 			return returnAction;
 		}
 		catch (final EtailBusinessExceptions e)
@@ -3197,6 +3228,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 			model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
 					accountBreadcrumbBuilder.getBreadcrumbs(MessageConstants.TEXT_ACCOUNT_PROFILE));
 			model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
+			if (null != request.getParameterMap() && request.getParameterMap().containsKey(isLux))
+			{
+				returnAction = returnAction + "?" + isLux + "=true";
+			}
 			return returnAction;
 		}
 		catch (final EtailBusinessExceptions e)
@@ -4550,6 +4585,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final List<ProductData> datas = new ArrayList<ProductData>();
 			final List<WishlistProductData> wpDataList = new ArrayList<WishlistProductData>();
 			Boolean isDelisted = Boolean.FALSE;
+			boolean luxProduct = false;
 			if (null != particularWishlist && null != particularWishlist.getEntries() && !particularWishlist.getEntries().isEmpty())
 			{
 				final List<Wishlist2EntryModel> entryModels = particularWishlist.getEntries();
@@ -4577,6 +4613,14 @@ public class AccountPageController extends AbstractMplSearchPageController
 								}
 							}
 						}
+						// LW-225,230 start
+						if (productModel.getLuxIndicator() != null
+								&& productModel.getLuxIndicator().getCode()
+										.equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
+						{
+							luxProduct = true; //Setting true if at least one luxury product found
+						}
+						// LW-225,230 end
 					}
 
 					final boolean isWishlistEntryValid = mplCartFacade.isWishlistEntryValid(entry);
@@ -4587,6 +4631,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 					}
 
 				}
+				// LW-225,230
+				model.addAttribute(ModelAttributetConstants.IS_LUXURY, luxProduct);
 
 				//refreshing Wishlist2Model
 				modelService.refresh(particularWishlist);
@@ -4674,7 +4720,15 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 					}
 				}
+
 				model.addAttribute("showSizeMap", map);
+			}
+			else
+			{
+				model.addAttribute(ModelAttributetConstants.IS_LUXURY, ControllerConstants.Views.Fragments.Account.EMPTY_WISHLIST);
+
+				//model.addAttribute("showSizeMap", map);
+
 			}
 			sessionService.setAttribute(ModelAttributetConstants.MY_WISHLIST_FLAG, ModelAttributetConstants.Y_CAPS_VAL);
 
@@ -4797,7 +4851,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @throws CMSItemNotFoundException
 	 */
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_WISHLIST_HOME_PAGE, method = RequestMethod.GET)
-	public String wishlistHomePage(final Model model, final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException
+	public String wishlistHomePage(final Model model, final RedirectAttributes redirectAttributes,
+			@RequestParam(value = "isLux", defaultValue = "false") final String luxury) throws CMSItemNotFoundException
 	{
 		try
 		{
@@ -4806,11 +4861,14 @@ public class AccountPageController extends AbstractMplSearchPageController
 			{
 				final String nameWL = allWishlists.get(0).getName();
 				return REDIRECT_PREFIX + RequestMappingUrlConstants.LINK_MY_ACCOUNT
-						+ RequestMappingUrlConstants.LINK_VIEW_PARTICULAR_WISHLIST + "?particularWishlist=" + nameWL;
+						+ RequestMappingUrlConstants.LINK_VIEW_PARTICULAR_WISHLIST + "?particularWishlist=" + nameWL + "&isLux="
+						+ luxury;
 			}
 			else
 			{
-				return REDIRECT_PREFIX + RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_WISHLIST_PAGE;
+				//TISLUX-21
+				return REDIRECT_PREFIX + RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_WISHLIST_PAGE
+						+ "?isLux=" + luxury;
 			}
 		}
 		catch (final EtailBusinessExceptions e)

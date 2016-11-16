@@ -31,6 +31,93 @@ searchCategory_idFromMicrosite		= $('#selectedSearchCategoryIdMicrosite').val();
 var daysDif = '';
 var is_new_product = false;
 
+//start for geolocations tpr-1304
+$(document).ready(function(){
+	
+	  var output = document.getElementById("latlng");
+
+	  if (!navigator.geolocation){
+	    output.innerHTML = "<p>Geolocation is not supported by your browser</p>";
+	    return;
+	  }
+
+	  function success(position) {
+	    var latitude  = position.coords.latitude;
+	    var longitude = position.coords.longitude;
+
+	    output.value =    latitude + ',' + longitude ;
+	    codeLatLng(latitude,longitude);
+	    
+	  };
+
+	  function error() {
+	    output.innerHTML = "Unable to retrieve your location";
+	  };
+
+	  
+	  navigator.geolocation.getCurrentPosition(success, error);
+	  
+	
+
+// Reverse geocoding-- = get location from latitude and longitude
+
+var geocoder;
+
+function codeLatLng(lat,lng) {
+	
+  var lat = parseFloat(lat);
+  var lng = parseFloat(lng);
+  
+  var latlng = new google.maps.LatLng(lat, lng);
+  
+  geocoder = new google.maps.Geocoder();
+  geocoder.geocode({
+      'latLng': latlng
+  }, function(results, status) {
+  	
+if (status == google.maps.GeocoderStatus.OK) {
+
+  if (results[1]) {
+  var indice=0;
+  for (var j=0; j<results.length; j++)
+  {
+      if (results[j].types[0]=='locality')
+          {
+              indice=j;
+              break;
+          }
+      }
+ 
+ 
+  for (var i=0; i<results[j].address_components.length; i++)
+      {
+          if (results[j].address_components[i].types[0] == "locality") {
+                  
+                  city = results[j].address_components[i];
+                  var cityName = city.long_name.toLowerCase();
+                  $('#location').val(cityName);
+                 
+              }
+          
+          
+      }
+
+     
+      } else {
+     // console.log("No results found");
+      }
+  //}
+} else {
+	  //console.log("Geocoder failed due to: " + status);
+}
+      
+  });
+}
+
+	});
+
+//end for geolocations tpr-1304
+
 if (searchCategory_id){
 	if(searchCategory_id.indexOf("MSH") > -1){
 	category_id = searchCategory_id;

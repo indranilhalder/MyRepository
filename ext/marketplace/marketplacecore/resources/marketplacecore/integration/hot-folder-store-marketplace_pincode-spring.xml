@@ -27,6 +27,16 @@
 	http://www.springframework.org/schema/context
     http://www.springframework.org/schema/context/spring-context.xsd">
 
+
+ <bean id="fileOrderComparator"
+	class="de.hybris.platform.acceleratorservices.dataimport.batch.FileOrderComparator">
+			<property name="prefixPriority">
+					<map>
+					<entry key="Pincode" value="0" />
+					<entry key="City" value="0" />
+					</map>
+			</property>
+	</bean>  
  <bean id="baseDirectoryMarketplacePincode" class="java.lang.String">
         <constructor-arg value="#{baseDirectory}/${tenantId}/marketplace-pincode" />
     </bean>

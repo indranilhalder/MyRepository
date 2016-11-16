@@ -2695,8 +2695,9 @@
 			extends="AbstractPromotionRestriction" jaloclass="com.tisl.mpl.jalo.EntryCountPromotionRestriction"
 			autocreate="true" generate="true">
 			<attributes>
+			<!-- TPR-3582 FIX -->
 				<attribute qualifier="entryQualifyingCount" autocreate="true"
-					type="java.lang.Double">
+					type="java.lang.Integer">
 					<description>The count of entries needed to apply the promotion.</description>
 					<persistence type="property" />
 					<modifiers read="true" write="true" search="true"

@@ -88,8 +88,8 @@ public class MplDiscountFlagValueProvider extends AbstractPropertyFieldValueProv
 			//Model should be instance of PcmProductVariantModel
 			final ProductModel product = (ProductModel) model;
 			final Double value = getDiscountPrice(product);
-
-			if (null != value)
+			// TISPRD-9068
+			if (null != value && value.doubleValue() > 0.0)
 			{
 
 				final Collection<FieldValue> fieldValues = new ArrayList<FieldValue>();

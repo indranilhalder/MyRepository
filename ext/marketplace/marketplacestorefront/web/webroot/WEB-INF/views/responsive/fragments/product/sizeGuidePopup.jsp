@@ -434,17 +434,20 @@ var productCodeSG = '${product.code}';
 											
 								 <c:forEach
 									items="${variantOption.colourCode}" var="color">
-								<c:choose> 
-								<c:when test="${fn:startsWith(color, 'multi')}"> 
-						     	<img src="${commonResourcePath}/images/multi.jpg" style="width:100%;height:100%;cursor: pointer;" title="${variantOption.colour}" class="colorBox"  data-producturl="${variantUrl}&sizeSelected=" data-productcode="${variantOption.code}"/>
+								<c:choose>
+								<c:when test="${fn:startsWith(color, 'multi')}">
+						     	<img src="${commonResourcePath}/images/multi.jpg" height="20" width="20" title="${variantOption.colour}" />
 								</c:when>
-								<%-- <span style="background-color: ${color};border: 1px solid rgb(204, 211, 217);" title="${variantOption.colour}" class="colorBox"  data-producturl="${variantUrl}&sizeSelected=${sizeSelectedSizeGuide}" data-productcode="${variantOption.code}"></span> --%>
+								
+								<c:when test="${empty variantOption.image}">
+						     	<span style="background-color: ${color};border: 1px solid rgb(204, 211, 217); width:50px; height:73px" title="${variantOption.colour}"></span>
+								</c:when>							
 								<c:otherwise>
-									<span
-										style="background-color: ${color};border: 1px solid rgb(204, 211, 217);"
-										title="${variantOption.colour}" class="colorBox"  data-producturl="${variantUrl}&sizeSelected=" data-productcode="${variantOption.code}"></span>
-                               </c:otherwise> 
-                               </c:choose> 
+								
+								<c:set var="imageData" value="${variantOption.image}" />
+										<img src="${imageData.url}" title="${variantOption.colour}" alt="${styleValue}" style="display: inline-block;width: 50px;"/>								
+                               </c:otherwise>
+                               </c:choose>	
 
 									<c:if test="${variantOption.code eq product.code}">
 										<c:set var="currentColor" value="${color}" /> 
@@ -541,11 +544,13 @@ var productCodeSG = '${product.code}';
 													<c:when test="${(variantOption.code eq product.code)}">
 													<%-- 	<option selected="selected" data-productcode1="${variantOption.code}" data-producturl="${link}">${entry.value}</option> --%>
 																								<c:choose>
-											    <c:when test="${empty sizeSelectedSizeGuide}">
-													<li><span data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=">${entry.value}</span></li>
+											    <c:when test="${empty sizeSelectedSizeGuide || sizeSelectedSizeGuide ne 'true' }">
+													<!-- <li><span data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=">${entry.value}</span></li> -->
+												<li><span data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</span></li>
 												</c:when>
 												<c:otherwise>
-													<li class="selected"><span data-target="#popUpModal"  data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</span></li>
+													<!--<li class="selected"><span data-target="#popUpModal"  data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</span></li>  -->
+												    <li class="selected"><span data-target="#popUpModal"  data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</span></li>
 												</c:otherwise>
 												</c:choose>
 													</c:when>
@@ -726,13 +731,24 @@ $(document).ready(function(){
 	}
 	var currentColour = '${product.colour}';
 	$(".color-swatch li span").each(function(){
-		var title = $(this).attr("title");
-		if(currentColour == title){
+		/* var title = $(this).attr("title");
+		if(currentColour == title){ */
+			var title = $(this).attr("title").toLowerCase();
+		if(currentColour.toLowerCase() == title){
 			//TISPRO-322 PDP Size Guide issue fixed
 			$(this).parent().addClass("active");
 			
 		}			
 	});
+	
+	//Added for TPR-210
+	$(".color-swatch li img").each(function(){
+		var title = $(this).attr("title").toLowerCase();
+		if(currentColour.toLowerCase() == title){
+			$(this).parent().parent().addClass("active");
+		}
+	});	 
+	
 	 if($('body').find('input.wishlist#add_to_wishlist-sizeguide').length > 0){
 			$('input.wishlist#add_to_wishlist-sizeguide').popover({ 
 				html : true,

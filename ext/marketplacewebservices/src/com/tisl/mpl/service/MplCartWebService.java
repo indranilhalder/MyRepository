@@ -54,16 +54,19 @@ public interface MplCartWebService
 	 * @throws InvalidCartException
 	 */
 	WebSerResponseWsDTO addProductToCart(final String productCode, final String cartId, final String quantity, String USSID,
-			boolean addedToCartWl) throws InvalidCartException, CommerceCartModificationException;
+			boolean addedToCartWl, String channel) throws InvalidCartException, CommerceCartModificationException;
 
 	/**
 	 * Service to get cart details
 	 *
 	 * @param cartId
-	 * @param addressListDTO
+	 * @param addressListWsDTO
+	 * @param pincode
+	 * @param channel
 	 * @return CartDataDetailsWsDTO
 	 */
-	CartDataDetailsWsDTO getCartDetails(String cartId, AddressListWsDTO addressListDTO, String pincode);
+	CartDataDetailsWsDTO getCartDetails(final String cartId, final AddressListWsDTO addressListWsDTO, final String pincode,
+			String channel);
 
 	/**
 	 * @param aoem

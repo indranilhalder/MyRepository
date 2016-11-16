@@ -36,14 +36,21 @@
 	src="${commonResourcePath}/js/acc.productDetail.js"></script> --%>
 <script>
 $(document).ready(function(){
-		var currentColour = '${product.colour}';
+		var currentColour = '${product.colour}';		
 		var currentCapacity = $(".variantFormContainer input#cpcty").attr("value");
 		$(".color-swatch li span").each(function(){
-			var title = $(this).attr("title");
-			if(currentColour == title){
+			var title = $(this).attr("title").toLowerCase();			
+			if(currentColour.toLowerCase() == title){
 				$(this).parent().parent().addClass("active");
-			}			
-		});
+			}
+		});	
+		//Added for TPR-210
+		$(".color-swatch li img").each(function(){
+			var title = $(this).attr("title").toLowerCase();
+			if(currentColour.toLowerCase() == title){
+				$(this).parent().parent().addClass("active");
+			}
+		});		
 		$(".variantFormContainer span.capacity-box a").each(function(){
 			var title = $(this).attr("title");
 			if(currentCapacity == title){
@@ -107,7 +114,6 @@ var productSizeVar = '${productSize}';
 										<c:set var="currentColor" value="${color}" />
 										<!--  set current selected color -->
 								</c:if>
-
 								</c:forEach>
 						</a></li>
 					</c:when>
@@ -115,7 +121,6 @@ var productSizeVar = '${productSize}';
 
 					</c:otherwise>
 				</c:choose>
-
 				<c:if test="${product.rootCategory=='Electronics' || product.rootCategory=='Watches'}">
 					<c:set var="notApparel" value="true" />
 				</c:if>
@@ -128,11 +133,15 @@ var productSizeVar = '${productSize}';
 				</c:if>
 
 			</c:forEach>
+
 		</c:when>
 		<c:otherwise>
 			<c:set var="noVariant" value="true" />
 		</c:otherwise>
+		
 	</c:choose>
+	
+	
 </ul>
 <!-- share mobile -->
 <!-- <ul class="wish-share mobile">
@@ -198,7 +207,6 @@ var productSizeVar = '${productSize}';
 	</c:forEach>
 	</div>
 </c:if>
-
 
 <!--  share mobile
 <ul class="wish-share mobile">
@@ -266,7 +274,7 @@ share mobile -->
 						<c:when test="${not empty currentColor}">
 							<c:if test="${currentColor eq color}">
 								<c:set var="currentColor" value="${color}" />
-
+								
 								<c:forEach var="entry" items="${variantOption.sizeLink}">
 									<c:url value="${entry.key}" var="link" />
 									<%--  <a href="${link}?selectedSize=true">${entry.value}</a> --%>
@@ -287,8 +295,8 @@ share mobile -->
 									</c:choose>
 								</c:forEach>
 							</c:if>
-						</c:when>
-						<c:otherwise>
+						</c:when>	
+						<c:otherwise>									
 							<c:forEach var="entry" items="${variantOption.sizeLink}">
 								<c:url value="${entry.key}" var="link" />
 								<c:if test="${entry.key eq product.url}">
@@ -298,16 +306,25 @@ share mobile -->
 								<c:forEach items="${product.variantOptions}" var="variantOption">
 									<c:forEach items="${variantOption.colour}" var="color">
 										<c:if test="${currentColor eq color}">
-
 											<c:forEach var="entry" items="${variantOption.sizeLink}">
 												<c:url value="${entry.key}" var="link" />
 												<c:choose>
-													<c:when test="${(variantOption.code eq product.code)}">
+												<c:when test="${(variantOption.code eq product.code)}">
+												<c:choose>
+												
+												
+													<c:when test="${selectedSize eq null}">
 														<li><a href="${link}?selectedSize=true">${entry.value}</a></li>
 													</c:when>
-													<c:otherwise>
-														<li><a href="${link}?selectedSize=true">${entry.value}</a></li>
-													</c:otherwise>
+													
+												<c:otherwise>
+														<li class="selected"><a href="${link}?selectedSize=true">${entry.value}</a></li>
+												</c:otherwise>
+												</c:choose>
+											</c:when>	
+										<c:otherwise>
+											<li data-vcode="${link}"><a href="${link}?selectedSize=true">${entry.value}</a></li>
+										</c:otherwise>												
 												</c:choose>
 											</c:forEach>
 										</c:if>

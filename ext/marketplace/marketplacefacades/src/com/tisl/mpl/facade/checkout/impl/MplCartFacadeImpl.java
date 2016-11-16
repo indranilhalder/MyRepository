@@ -1944,6 +1944,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	{
 		boolean delistedStatus = false;
 		final List<AbstractOrderEntryModel> cartEntryModelList = new ArrayList<AbstractOrderEntryModel>();
+
 		//TISEE-5143
 		final CatalogVersionModel onlineCatalog = catalogService.getCatalogVersion(
 				MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID,
@@ -2008,6 +2009,13 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			//saving model list
 			if (cartEntryModelList.size() > 0)
 			{
+				/*
+				 * //Fix for Freebie issue with duplicate Product in cart //Converting ArrayList to HashSet to remove
+				 * duplicates final HashSet<AbstractOrderEntryModel> cartEntryModellistToSet = new
+				 * HashSet<AbstractOrderEntryModel>( cartEntryModelList); //Creating Arraylist without duplicate values
+				 * final List<AbstractOrderEntryModel> cartEntryModellistWithoutDuplicates = new
+				 * ArrayList<AbstractOrderEntryModel>( cartEntryModellistToSet);
+				 */
 				modelService.remove(cartEntryModelList);
 				modelService.refresh(cartEntryModelList);
 			}
