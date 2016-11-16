@@ -602,6 +602,8 @@ body.page-shopTheStyle .timeout-slider .owl-controls .owl-dots {
 }
 /* ADDED TISLUX-1407 ENDS HERE */ 
 
+
+
 @media (min-width: 651px){
     input[type="checkbox"] + label, input[type="radio"] + label {
       padding-left: 10px; } 
@@ -2634,7 +2636,7 @@ header .content .bottom.active nav>ul>li:first-child+li.hovered > ul {
         display: inline;
         font-size: 14px; }
         header > .content .top > div:not(.toggle) li, header > .content .top ul li {
-          padding-left: 15px;
+           padding-left: 15px;
           line-height: 50px;
           cursor: pointer;
         border-bottom: 1px solid #e6e6e6; }
@@ -30143,9 +30145,9 @@ header .content .brand-logo {
        width: auto;
        margin-right: 0px;
   }
-header .content .bottom.active .marketplace a img {
+/* header .content .bottom.active .marketplace a img {
 width: 90px !important;
-  }
+  } */
     header .content .bottom.active .marketplace {
    margin-right: 0px;  
    margin-top: 0px;  }
@@ -34438,7 +34440,7 @@ body.page-cartPage .cart.wrapper .product-block li.item > ul > li.qty select{
     right: 0px;
 }
 header > .content .top .toggle {
-    right: -63px;
+    right: -51px; /*Changed for TISPRD-7419*/
 }
 }
 .off-bag {
@@ -45644,6 +45646,7 @@ float: right;
 
 .product-info .size span+a {
 	position: relative;
+	color: #a9143c; /* TISPRD-7672 & TISPRD-7593 */
 }
 
 .product-info .size span+a:after {

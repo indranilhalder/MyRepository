@@ -453,6 +453,8 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;youtube;;$wideContent;
 ;insta;;$wideContent;
 
+# ORDER DELIVERY CHANGES
+
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderDeliveryEmailTemplate'];validComponentTypes(code)
 ;SiteLogo;;;logo
 ;TopContent;;$wideContent;
@@ -1399,3 +1401,261 @@ INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)
 
 UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];previewImage(code, $contentCV)
 ;;PromotionCreationMail;EmailPageModel_preview
+
+
+####################Payment Related Emails##############################
+########Inventory Reservation Failed
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;InventoryReservationFailedEmailTemplate;$jarResourceCms/structure-view/structure_inventoryReservationFailedEmailTemplate.vm
+
+
+# Email page Template
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;active;frontendTemplateName;subject(code);htmlTemplate(code);restrictedPageTypes(code)
+;;InventoryReservationFailedEmailTemplate;Inventory Reservation Failed Email Template;true;inventoryReservationFailedEmail;mpl_Email_Inventory_Reservation_Failed_Subject;mpl_Email_Inventory_Reservation_Failed_Body;EmailPage
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='InventoryReservationFailedEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;OrderReferenceNumberOne;;$wideContent;
+;OrderReferenceNumberTwo;;$wideContent;
+;TrackOrder1;;$wideContent;
+;TrackOrder2;;$wideContent;
+;DeliveryPerson;;$wideContent;
+;Tip;;$wideContent;
+;Description;;$wideContent;
+;handpick;;$wideContent;
+;slashImgOne;;$wideContent;
+;brand;;$wideContent;
+;slashImgTwo;;$wideContent;
+;exp;;$wideContent;
+;slashImgThree;;$wideContent;
+;fast;;$wideContent;
+;OrderConfirmationBannerTwo;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;twitter;;$wideContent;
+;youtube;;$wideContent;
+;gplus;;$wideContent;
+;app;;$wideContent;
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='InventoryReservationFailedEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-InventoryReservationFailedEmail;SiteLogo;;EmailSiteLogoConfSlot;true
+#;;TopContent-InventoryReservationFailedEmail;TopContent;;EmailTopConfSlot;true
+#;;BottomContent-InventoryReservationFailedEmail;BottomContent;;EmailBottomConfSlot;true
+;;OrderReferenceNumberOne-InventoryReservationFailedEmail;OrderReferenceNumberOne;;EmailOrderRefNoOneConfSlot;true
+;;OrderReferenceNumberTwo-InventoryReservationFailedEmail;OrderReferenceNumberTwo;;EmailOrderRefNoTwoConfSlot;true
+;;TrackOrder1-InventoryReservationFailedEmail;TrackOrder1;;EmailTrackOrderOneConfSlot;true
+;;TrackOrder2-InventoryReservationFailedEmail;TrackOrder2;;EmailTrackOrderTwoConfSlot;true
+;;DeliveryPerson-InventoryReservationFailedEmail;DeliveryPerson;;EmailDeliveryPersonConfSlot;true
+;;Tip-InventoryReservationFailedEmail;Tip;;EmailTipConfSlot;true
+;;Description-InventoryReservationFailedEmail;Description;;EmailDescriptionConfSlot;true
+;;OrderConfirmationBannerTwo-InventoryReservationFailedEmail;OrderConfirmationBannerTwo;;EmailConfBanner2ConfSlot;true
+;;smileyimg-InventoryReservationFailedEmail;smileyimg;;EmailsmileyimgConfSlot;true
+;;fb-InventoryReservationFailedEmail;fb;;EmailfbConfSlot;true
+;;gplus-InventoryReservationFailedEmail;gplus;;EmailgplusConfSlot;true
+#;;twitter-InventoryReservationFailedEmail;twitter;;EmailtwitterconfSlot;true
+;;youtube-InventoryReservationFailedEmail;youtube;;EmailyoutubeConfSlot;true
+;;app-InventoryReservationFailedEmail;app;;EmailappConfSlot;true
+
+INSERT_UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
+;;InventoryReservationFailedEmail;Inventory Reservation Failed Email;InventoryReservationFailedEmailTemplate;true;
+
+
+# Email velocity templates
+INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)[default='velocity']
+;mpl_Email_Inventory_Reservation_Failed_Body;$emailPackageName.OrderNotificationEmailContext
+;mpl_Email_Inventory_Reservation_Failed_Subject;$emailPackageName.OrderNotificationEmailContext
+
+#################Payment Failed Emails
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;PaymentFailedEmailTemplate;$jarResourceCms/structure-view/structure_paymentFailedEmailTemplate.vm
+
+
+# Email page Template
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;active;frontendTemplateName;subject(code);htmlTemplate(code);restrictedPageTypes(code)
+;;PaymentFailedEmailTemplate;Payment Failed Email Template;true;paymentFailedEmail;mpl_Email_Payment_Failed_Subject;mpl_Email_Payment_Failed_Body;EmailPage
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='PaymentFailedEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;OrderReferenceNumberOne;;$wideContent;
+;OrderReferenceNumberTwo;;$wideContent;
+;TrackOrder1;;$wideContent;
+;TrackOrder2;;$wideContent;
+;DeliveryPerson;;$wideContent;
+;Tip;;$wideContent;
+;Description;;$wideContent;
+;handpick;;$wideContent;
+;slashImgOne;;$wideContent;
+;brand;;$wideContent;
+;slashImgTwo;;$wideContent;
+;exp;;$wideContent;
+;slashImgThree;;$wideContent;
+;fast;;$wideContent;
+;OrderConfirmationBannerTwo;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;twitter;;$wideContent;
+;youtube;;$wideContent;
+;gplus;;$wideContent;
+;app;;$wideContent;
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='PaymentFailedEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-PaymentFailedEmail;SiteLogo;;EmailSiteLogoConfSlot;true
+#;;TopContent-PaymentFailedEmail;TopContent;;EmailTopConfSlot;true
+#;;BottomContent-PaymentFailedEmail;BottomContent;;EmailBottomConfSlot;true
+;;OrderReferenceNumberOne-PaymentFailedEmail;OrderReferenceNumberOne;;EmailOrderRefNoOneConfSlot;true
+;;OrderReferenceNumberTwo-PaymentFailedEmail;OrderReferenceNumberTwo;;EmailOrderRefNoTwoConfSlot;true
+;;TrackOrder1-PaymentFailedEmail;TrackOrder1;;EmailTrackOrderOneConfSlot;true
+;;TrackOrder2-PaymentFailedEmail;TrackOrder2;;EmailTrackOrderTwoConfSlot;true
+;;DeliveryPerson-PaymentFailedEmail;DeliveryPerson;;EmailDeliveryPersonConfSlot;true
+;;Tip-PaymentFailedEmail;Tip;;EmailTipConfSlot;true
+;;Description-PaymentFailedEmail;Description;;EmailDescriptionConfSlot;true
+;;OrderConfirmationBannerTwo-PaymentFailedEmail;OrderConfirmationBannerTwo;;EmailConfBanner2ConfSlot;true
+;;smileyimg-PaymentFailedEmail;smileyimg;;EmailsmileyimgConfSlot;true
+;;fb-PaymentFailedEmail;fb;;EmailfbConfSlot;true
+;;gplus-PaymentFailedEmail;gplus;;EmailgplusConfSlot;true
+#;;twitter-PaymentFailedEmail;twitter;;EmailtwitterconfSlot;true
+;;youtube-PaymentFailedEmail;youtube;;EmailyoutubeConfSlot;true
+;;app-PaymentFailedEmail;app;;EmailappConfSlot;true
+
+INSERT_UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
+;;PaymentFailedEmail;Payment Failed Email;PaymentFailedEmailTemplate;true;
+
+
+# Email velocity templates
+INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)[default='velocity']
+;mpl_Email_Payment_Failed_Body;$emailPackageName.OrderNotificationEmailContext
+;mpl_Email_Payment_Failed_Subject;$emailPackageName.OrderNotificationEmailContext
+
+######Payment Pending Email
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;PaymentPendingEmailTemplate;$jarResourceCms/structure-view/structure_paymentPendingEmailTemplate.vm
+
+
+# Email page Template
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;active;frontendTemplateName;subject(code);htmlTemplate(code);restrictedPageTypes(code)
+;;PaymentPendingEmailTemplate;Payment Pending Email Template;true;paymentPendingEmail;mpl_Email_Payment_Pending_Subject;mpl_Email_Payment_Pending_Body;EmailPage
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='PaymentPendingEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;OrderReferenceNumberOne;;$wideContent;
+;OrderReferenceNumberTwo;;$wideContent;
+;TrackOrder1;;$wideContent;
+;TrackOrder2;;$wideContent;
+;DeliveryPerson;;$wideContent;
+;Tip;;$wideContent;
+;Description;;$wideContent;
+;handpick;;$wideContent;
+;slashImgOne;;$wideContent;
+;brand;;$wideContent;
+;slashImgTwo;;$wideContent;
+;exp;;$wideContent;
+;slashImgThree;;$wideContent;
+;fast;;$wideContent;
+;OrderConfirmationBannerTwo;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;twitter;;$wideContent;
+;youtube;;$wideContent;
+;gplus;;$wideContent;
+;app;;$wideContent;
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='PaymentPendingEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-PaymentPendingEmail;SiteLogo;;EmailSiteLogoConfSlot;true
+#;;TopContent-PaymentPendingEmail;TopContent;;EmailTopConfSlot;true
+#;;BottomContent-PaymentPendingEmail;BottomContent;;EmailBottomConfSlot;true
+;;OrderReferenceNumberOne-PaymentPendingEmail;OrderReferenceNumberOne;;EmailOrderRefNoOneConfSlot;true
+;;OrderReferenceNumberTwo-PaymentPendingEmail;OrderReferenceNumberTwo;;EmailOrderRefNoTwoConfSlot;true
+;;TrackOrder1-PaymentPendingEmail;TrackOrder1;;EmailTrackOrderOneConfSlot;true
+;;TrackOrder2-PaymentPendingEmail;TrackOrder2;;EmailTrackOrderTwoConfSlot;true
+;;DeliveryPerson-PaymentPendingEmail;DeliveryPerson;;EmailDeliveryPersonConfSlot;true
+;;Tip-PaymentPendingEmail;Tip;;EmailTipConfSlot;true
+;;Description-PaymentPendingEmail;Description;;EmailDescriptionConfSlot;true
+;;OrderConfirmationBannerTwo-PaymentPendingEmail;OrderConfirmationBannerTwo;;EmailConfBanner2ConfSlot;true
+;;smileyimg-PaymentPendingEmail;smileyimg;;EmailsmileyimgConfSlot;true
+;;fb-PaymentPendingEmail;fb;;EmailfbConfSlot;true
+;;gplus-PaymentPendingEmail;gplus;;EmailgplusConfSlot;true
+#;;twitter-PaymentPendingEmail;twitter;;EmailtwitterconfSlot;true
+;;youtube-PaymentPendingEmail;youtube;;EmailyoutubeConfSlot;true
+;;app-PaymentPendingEmail;app;;EmailappConfSlot;true
+
+INSERT_UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
+;;PaymentPendingEmail;Payment Pending Email;PaymentPendingEmailTemplate;true;
+
+
+# Email velocity templates
+INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)[default='velocity']
+;mpl_Email_Payment_Pending_Body;$emailPackageName.OrderNotificationEmailContext
+;mpl_Email_Payment_Pending_Subject;$emailPackageName.OrderNotificationEmailContext
+
+#########Payment Timeout Email
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;PaymentTimeoutEmailTemplate;$jarResourceCms/structure-view/structure_paymentTimeoutEmailTemplate.vm
+
+
+# Email page Template
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;active;frontendTemplateName;subject(code);htmlTemplate(code);restrictedPageTypes(code)
+;;PaymentTimeoutEmailTemplate;Payment Timeout Email Template;true;paymentTimeoutEmail;mpl_Email_Payment_Timeout_Subject;mpl_Email_Payment_Timeout_Body;EmailPage
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='PaymentTimeoutEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;OrderReferenceNumberOne;;$wideContent;
+;OrderReferenceNumberTwo;;$wideContent;
+;TrackOrder1;;$wideContent;
+;TrackOrder2;;$wideContent;
+;DeliveryPerson;;$wideContent;
+;Tip;;$wideContent;
+;Description;;$wideContent;
+;handpick;;$wideContent;
+;slashImgOne;;$wideContent;
+;brand;;$wideContent;
+;slashImgTwo;;$wideContent;
+;exp;;$wideContent;
+;slashImgThree;;$wideContent;
+;fast;;$wideContent;
+;OrderConfirmationBannerTwo;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;twitter;;$wideContent;
+;youtube;;$wideContent;
+;gplus;;$wideContent;
+;app;;$wideContent;
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='PaymentTimeoutEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-PaymentTimeoutEmail;SiteLogo;;EmailSiteLogoConfSlot;true
+#;;TopContent-PaymentTimeoutEmail;TopContent;;EmailTopConfSlot;true
+#;;BottomContent-PaymentTimeoutEmail;BottomContent;;EmailBottomConfSlot;true
+;;OrderReferenceNumberOne-PaymentTimeoutEmail;OrderReferenceNumberOne;;EmailOrderRefNoOneConfSlot;true
+;;OrderReferenceNumberTwo-PaymentTimeoutEmail;OrderReferenceNumberTwo;;EmailOrderRefNoTwoConfSlot;true
+;;TrackOrder1-PaymentTimeoutEmail;TrackOrder1;;EmailTrackOrderOneConfSlot;true
+;;TrackOrder2-PaymentTimeoutEmail;TrackOrder2;;EmailTrackOrderTwoConfSlot;true
+;;DeliveryPerson-PaymentTimeoutEmail;DeliveryPerson;;EmailDeliveryPersonConfSlot;true
+;;Tip-PaymentTimeoutEmail;Tip;;EmailTipConfSlot;true
+;;Description-PaymentTimeoutEmail;Description;;EmailDescriptionConfSlot;true
+;;OrderConfirmationBannerTwo-PaymentTimeoutEmail;OrderConfirmationBannerTwo;;EmailConfBanner2ConfSlot;true
+;;smileyimg-PaymentTimeoutEmail;smileyimg;;EmailsmileyimgConfSlot;true
+;;fb-PaymentTimeoutEmail;fb;;EmailfbConfSlot;true
+;;gplus-PaymentTimeoutEmail;gplus;;EmailgplusConfSlot;true
+#;;twitter-PaymentTimeoutEmail;twitter;;EmailtwitterconfSlot;true
+;;youtube-PaymentTimeoutEmail;youtube;;EmailyoutubeConfSlot;true
+;;app-PaymentTimeoutEmail;app;;EmailappConfSlot;true
+
+INSERT_UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
+;;PaymentTimeoutEmail;Payment Timeout Email;PaymentTimeoutEmailTemplate;true;
+
+
+# Email velocity templates
+INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)[default='velocity']
+;mpl_Email_Payment_Timeout_Body;$emailPackageName.OrderNotificationEmailContext
+;mpl_Email_Payment_Timeout_Subject;$emailPackageName.OrderNotificationEmailContext

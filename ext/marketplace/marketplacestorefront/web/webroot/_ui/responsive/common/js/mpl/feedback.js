@@ -2066,6 +2066,8 @@ $(document).on('click','.facet.js-facet.Size .js-facet-name h3',function(){
 		}
 	},80)
 });
+
+//changes for TISPRO-796
 //$(document).on('click','.left-block .toggle-filterSerp',function(){
 function toggleFilter(){
 	colorSwatch();
@@ -2731,3 +2733,10 @@ if($(".body-Content").find(".shop_for_blp").children().length==0){
 }
 
 //-----BLP------//
+
+/*
+$(document).on("click",".toggle-filterSerp",function(){
+$(".product-facet.js-product-facet.listing-leftmenu").slideToggle();
+$(this).toggleClass("active");
+});*/
+

@@ -2962,13 +2962,16 @@ function loadDefaultWishListName_SizeGuide() {
 				    nonServicableList.push(buyBoxList[i]);
 			}
 		}
+		
 		sessionStorage.setItem('servicableList', JSON.stringify(servicableList[0]));
 		sessionStorage.setItem('isproductPage', isproductPage);
 		sessionStorage.setItem('allOosFlag', allOosFlag);
 		sessionStorage.setItem('otherSellerCount', servicableList.length-1);
 		sessionStorage.setItem('pincodeChecked', 'Y');
 		//TPR-1375 populating buybox details so that buybox seller should be servicable
+		if (typeof(sessionStorage.getItem("servicableList")) != undefined){
 		populateBuyBoxData(JSON.parse(sessionStorage.getItem("servicableList")),servicableList.length-1,isproductPage,allOosFlag);
+		}
 	}
 	
 	/*Offer popup*/

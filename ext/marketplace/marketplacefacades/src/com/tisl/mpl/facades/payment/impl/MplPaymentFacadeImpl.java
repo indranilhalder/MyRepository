@@ -2219,18 +2219,18 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					//Payment Changes - Order before Payment
 					updAuditErrStatus = getMplPaymentService().updateAuditEntry(orderStatusResponse, orderStatusRequest, orderModel,
 							paymentMode);
-					LOG.warn(" Total price in commerce with convenience" + orderModel.getTotalPriceWithConv());
-					LOG.warn(" Total price  " + orderModel.getTotalPriceWithConv());
-					LOG.warn(" Total price in juspay " + orderStatusResponse.getAmount());
+					LOG.warn("**Total price in commerce with convenience" + orderModel.getTotalPriceWithConv());
+					LOG.warn("**Total price  " + orderModel.getTotalPrice());
+					LOG.warn("**Total price in juspay " + orderStatusResponse.getAmount());
 
-					if (orderModel.getTotalPriceWithConv().equals(orderStatusResponse.getAmount()))
-					{
-						getMplPaymentService().setPaymentTransaction(orderStatusResponse, paymentMode, orderModel);
-					}
-					else
-					{
-						throw new EtailBusinessExceptions();
-					}
+					/*
+					 * Commented as validation is no longer required
+					 *
+					 * if (orderModel.getTotalPriceWithConv().equals(orderStatusResponse.getAmount())) {
+					 * getMplPaymentService().setPaymentTransaction(orderStatusResponse, paymentMode, orderModel); } else {
+					 * throw new EtailBusinessExceptions(); }
+					 */
+
 
 					//Logic when transaction is successful i.e. CHARGED
 					if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(orderStatusResponse.getStatus()))
