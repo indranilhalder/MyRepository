@@ -119,6 +119,11 @@
 			<value code="mobileView" />
 			<value code="desktopView" />
 		</enumtype>
+		
+		<enumtype generate="true" code="CarouselRotateType" autocreate="true">
+			<value code="slideByNewIn" />
+			<value code="autoplayTimeoutNewIn" />
+		</enumtype>
 
 		<enumtype code="sizeEnum" autocreate="true" generate="true"
 			dynamic="false">
@@ -3524,6 +3529,21 @@
 						<persistence type='property' />
 
 					</attribute>
+					
+					<attribute type="java.lang.Integer" qualifier="autoplayTimeout"
+						autocreate="true" generate="true">
+						<description>Auto play time for CategoryCarouselComponent</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+
+					</attribute>
+					<attribute type="java.lang.Integer" qualifier="slideBy"
+						autocreate="true" generate="true">
+						<description>Slideby for CategoryCarouselComponent</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+
+					</attribute>
 				</attributes>
 			</itemtype>
 			<!-- PRoduct Carousel Component TPR-1316-->
@@ -3533,6 +3553,28 @@
 				jaloclass="com.tisl.mpl.core.jalo.MplProductCollectionComponent">
 				<description>This component is made to show the Products in a carousel</description>
 				
+			</itemtype>
+			
+			<itemtype code="ProductCarouselComponent" autocreate="false" generate="false" extends="SimpleCMSComponent"
+			jaloclass="com.tisl.mpl.jalo.cms.components.ProductCarouselComponent">
+			
+			<attributes>
+			<attribute type="java.lang.Integer" qualifier="autoplayTimeoutNewIn"
+						autocreate="true" generate="true">
+						<description>Auto play time for ProductCarouselComponent</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+
+					</attribute>
+					<attribute type="java.lang.Integer" qualifier="slideByNewIn"
+						autocreate="true" generate="true">
+						<description>Slideby for ProductCarouselComponent</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+
+					</attribute>
+			
+			</attributes>
 			</itemtype>
 			
 			<!-- Now Trending Carousel Component -->
@@ -4309,6 +4351,20 @@
 						<modifiers read="true" write="true" search="true" />
 						<persistence type='property' />
 					</attribute>
+					
+					<attribute type="java.lang.Integer" qualifier="slideBy"
+						autocreate="true" generate="true">
+						<description>SlideBy for AdvancedCategoryCarouselComponent</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+					
+					<attribute type="java.lang.Integer" qualifier="autoplayTimeout"
+						autocreate="true" generate="true">
+						<description>AutoplayTimeout for AdvancedCategoryCarouselComponent</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
 				</attributes>
 			</itemtype>
 
@@ -4396,6 +4452,23 @@
 						<modifiers read="true" write="true" search="true" />
 						<persistence type='property' />
 					</attribute>
+					
+					
+ 
+                    <attribute type="java.lang.Integer" qualifier="slideBy"
+						autocreate="true" generate="true">
+						<description>SlideBy for showcasecomponent</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+					
+					 <attribute type="java.lang.Integer" qualifier="autoplayTimeout"
+						autocreate="true" generate="true">
+						<description>AutoplayTimeout for showcasecomponent</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+				
 
 				</attributes>
 			</itemtype>

@@ -178,6 +178,8 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 
 		String title = MarketplacecommerceservicesConstants.EMPTY;
 		String mediaUrl = MarketplacecommerceservicesConstants.EMPTY;
+		Integer slideBy = null;
+		Integer autoplayTimeout = null;
 
 		final JSONArray subComponentJsonArray = new JSONArray();
 
@@ -191,6 +193,19 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 				if (StringUtils.isNotEmpty(productYouCareCarouselComponent.getTitle()))
 				{
 					title = productYouCareCarouselComponent.getTitle();
+				}
+
+				if (productYouCareCarouselComponent.getSlideBy() != null)
+				{
+
+					slideBy = productYouCareCarouselComponent.getSlideBy();
+				}
+
+				if (productYouCareCarouselComponent.getAutoplayTimeout() != null)
+				{
+
+					autoplayTimeout = productYouCareCarouselComponent.getAutoplayTimeout();
+
 				}
 
 
@@ -219,6 +234,18 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 					title = productYouCareCarouselComponent.getTitle();
 				}
 
+				if (productYouCareCarouselComponent.getSlideBy() != null)
+				{
+
+					slideBy = productYouCareCarouselComponent.getSlideBy();
+				}
+
+				if (productYouCareCarouselComponent.getAutoplayTimeout() != null)
+				{
+
+					autoplayTimeout = productYouCareCarouselComponent.getAutoplayTimeout();
+
+				}
 				if (CollectionUtils.isNotEmpty(productYouCareCarouselComponent.getCategories()))
 				{
 					for (final MplImageCategoryComponentModel imageCategoryComponent : productYouCareCarouselComponent.getCategories())
@@ -252,6 +279,8 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 
 			}
 
+			productYouCare.put("slideBy", slideBy);
+			productYouCare.put("autoplayTimeout", autoplayTimeout);
 			productYouCare.put(TITLE, title);
 			productYouCare.put("categories", subComponentJsonArray);
 

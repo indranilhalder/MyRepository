@@ -325,6 +325,9 @@ $("li.logIn-hi").on("mouseleave", function(e) {
 function getBrandsYouLoveAjaxCall() {
         var env = $("#previewVersion").val();
         var count= 0;
+        var autoplayTimeout=1;
+        var slideBy=0;
+        
         if (env == "true") {
             var dataString = 'version=Staged';
         } else {
@@ -337,6 +340,9 @@ function getBrandsYouLoveAjaxCall() {
             data: dataString,
             success: function(response) {
                //console.log(response.subComponents);
+            	autoplayTimeout = response.autoplayTimeout;
+            	slideBy = response.slideBy;
+            	
                 defaultComponentId = "";
                 renderHtml = "<h2>" + response.title + "</h2>" +
                     "<div class='home-brands-you-love-carousel'>";
@@ -376,8 +382,8 @@ function getBrandsYouLoveAjaxCall() {
             		navText:[],
             		autoplay: true,
  	               autoHeight : true,
- 	               autoplayTimeout: 5000,
- 	               slideBy: 2,
+ 	               autoplayTimeout: autoplayTimeout,
+ 	               slideBy: slideBy,
             		responsive : {
             			// breakpoint from 0 up
             			0 : {
@@ -694,8 +700,8 @@ function getBestPicksAjaxCall() {
             url: ACC.config.encodedContextPath + "/getBestPicks",
             data: dataString,
             success: function(response) {
-            	console.log(response.autoplayTimeout);
-                console.log(response.slideBy);
+            	//console.log(response.autoplayTimeout);
+               // console.log(response.slideBy);
                 autoplayTimeout = response.autoplayTimeout;
                 slideBy = response.slideBy;
                 renderHtml = "<h2>" + response.title + "</h2>" +
@@ -747,8 +753,8 @@ function getBestPicksAjaxCall() {
             },
             complete: function() {
                 console.log('complete');
-                console.log(autoplayTimeout);
-                console.log(slideBy);
+                //console.log(autoplayTimeout);
+                //console.log(slideBy);
             	$(".home-best-pick-carousel").owlCarousel({
                 	items:5,
             		loop: true,
@@ -806,12 +812,20 @@ function getProductsYouCareAjaxCall() {
         } else {
             var dataString = 'version=Online';
         }
+        
+        var slideBy=2;
+        var autoplayTimeout=5000;
         $.ajax({
             type: "GET",
             dataType: "json",
             url: ACC.config.encodedContextPath + "/getProductsYouCare",
             data: dataString,
             success: function(response) {
+            	
+            	autoplayTimeout = response.autoplayTimeout;
+            	slideBy = response.slideBy;
+            	console.log('want to care'+autoplayTimeout);
+            	console.log('want to care'+slideBy);
                 renderHtml = "<h2>" + response.title + "</h2>";
                 renderHtml +=
                     "<div class='home-product-you-care-carousel'>";
@@ -850,8 +864,8 @@ function getProductsYouCareAjaxCall() {
 						lazyLoad : false,
 						autoplay: true,
 			            autoHeight : true,
-			            autoplayTimeout: 5000,
-			            slideBy: 2,
+			            autoplayTimeout: autoplayTimeout,
+			            slideBy: slideBy,
 						responsive : {
 							// breakpoint from 0 up
 							0 : {
@@ -890,6 +904,9 @@ function getNewAndExclusiveAjaxCall() {
     } else {
         var dataString = 'version=Online';
     }
+     var slideBy=2;
+     var autoplayTimeout=5000;
+    
     $.ajax({
         type: "GET",
         dataType: "json",
@@ -897,6 +914,11 @@ function getNewAndExclusiveAjaxCall() {
         data: dataString,
         success: function(response) {
             //console.log(response.newAndExclusiveProducts);
+        	
+        	autoplayTimeout = response.autoplayTimeout;
+        	slideBy = response.slideBy;
+        	 
+        	
         	var staticHost=$('#staticHost').val();
             var defaultHtml = "";
             renderHtml = "<h2>" + response.title + "</h2>" +
@@ -937,8 +959,8 @@ function getNewAndExclusiveAjaxCall() {
         		lazyLoad: false,
         		autoplay: true,
 	            autoHeight : true,
-	            autoplayTimeout: 5000,
-	            slideBy: 2,
+	            autoplayTimeout: autoplayTimeout,
+	            slideBy: slideBy,
         		responsive : {
         			// breakpoint from 0 up
         			0 : {

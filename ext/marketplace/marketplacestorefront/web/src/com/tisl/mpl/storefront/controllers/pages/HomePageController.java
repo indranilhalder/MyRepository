@@ -282,6 +282,7 @@ public class HomePageController extends AbstractPageController
 			title = showCaseComponent.getTitle();
 		}
 		showCaseComponentJson.put(TITLE, title);
+
 		final JSONArray subComponentJsonArray = new JSONArray();
 
 		if (CollectionUtils.isNotEmpty(showCaseComponent.getShowcaseItems()))
@@ -323,6 +324,8 @@ public class HomePageController extends AbstractPageController
 			}
 		}
 
+		showCaseComponentJson.put("slideBy", showCaseComponent.getSlideBy());
+		showCaseComponentJson.put("autoplayTimeout", showCaseComponent.getAutoplayTimeout());
 		showCaseComponentJson.put("subComponents", subComponentJsonArray);
 
 		return showCaseComponentJson;
@@ -574,7 +577,12 @@ public class HomePageController extends AbstractPageController
 					{
 						title = newAndExclusiveComponent.getTitle();
 					}
+
+
 					newAndExclusiveJson.put(TITLE, title);
+					newAndExclusiveJson.put("slideBy", newAndExclusiveComponent.getSlideByNewIn());
+					newAndExclusiveJson.put("autoplayTimeout", newAndExclusiveComponent.getAutoplayTimeoutNewIn());
+
 					final JSONArray newAndExclusiveJsonArray = new JSONArray();
 
 					if (CollectionUtils.isNotEmpty(newAndExclusiveComponent.getProducts()))
@@ -639,9 +647,11 @@ public class HomePageController extends AbstractPageController
 							existDate = null;
 
 						}
+
 						newAndExclusiveJson.put("newAndExclusiveProducts", newAndExclusiveJsonArray);
 					}
 				}
+
 			}
 		}
 		catch (final EtailBusinessExceptions e)
