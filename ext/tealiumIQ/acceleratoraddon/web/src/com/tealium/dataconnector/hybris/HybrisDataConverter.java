@@ -830,7 +830,7 @@ public final class HybrisDataConverter
 			String productCategoryListText = null;
 			String pageSubCategoriesText = null;
 			String pageSubcategoryNameL3ListText = null;
-			
+			String userLoginType= null;//TPR-668
 			if(null != orderModel)
 			{
 				for (final AbstractOrderEntryModel entry : orderModel.getEntries())
@@ -1010,6 +1010,11 @@ public final class HybrisDataConverter
 				
 //			}
 
+			//tpr-668
+			userLoginType = (String) request.getAttribute("userLoginType");
+			if(userLoginType != null){
+				udo.setValue("userLoginType", userLoginType);
+		 }
 			udo.setValue(TealiumHelper.HomePageUDO.PredefinedUDOFields.PAGE_TYPE, "checkout")
 			.setValue(TealiumHelper.ConfirmationPageUDO.PredefinedUDOFields.PRODUCT_CATEGORY, productCategoryListText)
 			.setValue("page_subcategory_name", pageSubCategoriesText)
@@ -1190,6 +1195,7 @@ public final class HybrisDataConverter
 			String productCategoryListText = null;
 			String pageSubCategoriesText = null;
 			String pageSubcategoryNameL3ListText = null;
+			String userLoginType= null;//TPR-668
 			/*TPR-646*/
 			int totalCountInWishlist = 0;
 
@@ -1289,6 +1295,14 @@ public final class HybrisDataConverter
 					}
 				}
 			}
+
+			//tpr-668
+						userLoginType = (String) request.getAttribute("userLoginType");
+						if(userLoginType != null){
+							udo.setValue("userLoginType", userLoginType);
+					 }
+			
+			
 			udo.setValue(TealiumHelper.HomePageUDO.PredefinedUDOFields.PAGE_TYPE, "wishlist")
 					.addArrayValues("product_id", productIdListInWl).addArrayValues("product_name", productNameListInWl)
 					.addArrayValues("product_quantity", productQuantityListInWl).addArrayValues("product_brand", productBrandListInWl)

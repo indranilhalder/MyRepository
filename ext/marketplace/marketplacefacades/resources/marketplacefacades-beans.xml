@@ -170,6 +170,10 @@
 		<property name="productTitle" type="String" />
 		<property name="fulfillmentType" type="String" />
 		<property name="sellerName" type="String" />
+		<!-- LW-216 -->
+		<property name="luxIndicator" type="String" />
+		
+
 		<property name="stockValue" type="boolean" />
 		<!-- pdp changes ends -->
 
@@ -855,10 +859,14 @@
 	
 	<bean class="de.hybris.platform.commerceservices.search.solrfacetsearch.data.SolrSearchQueryData">
 		<property name="sns" type="boolean"/>
+		<!-- Added for Luxury -->
+		<!-- <property name="luxarySite" type="boolean"/> -->
 	</bean>
 
 	<bean class="de.hybris.platform.commercefacades.search.data.SearchStateData">
 		<property name="sns" type="boolean"/>
+		<!-- Added for Luxury -->
+		<property name="luxurySiteFrom" type="String"/>
 	</bean>
 
 	<!-- Return Item Address Data -->
@@ -935,5 +943,22 @@
 		<property name="productPerDiscDisplay" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
 	</bean>
 	<!-- TPR-774 -->
+
+		<!-- TPR-978 -->
+	<bean class="de.hybris.platform.commercefacades.product.data.ProductContentData">
+		<property name="section" type="String" />		
+		<property name="textList" type="java.util.List&lt;java.lang.String>"></property>
+		<property name="imageList" type="java.util.List&lt;java.lang.String>"></property>
+		<property name="videoList" type="java.util.List&lt;java.lang.String>"></property>
+	</bean>
+
 	
+	<bean class="com.tisl.mpl.facades.data.BulkCancelStoreData">
+		<property name="subOrderDetails" type="de.hybris.platform.commercefacades.order.data.OrderData"></property>
+		<property name="bulkCancelModelData" type="de.hybris.platform.core.model.BulkCancellationProcessModel"></property>
+	</bean>
+	<bean class="com.tisl.mpl.facades.data.BulkReturnStatusData">
+		<property name="consignmentStatus" type="String"></property>
+		<property name="returnStatus" type="java.lang.Boolean"></property>
+	</bean>
 </beans>

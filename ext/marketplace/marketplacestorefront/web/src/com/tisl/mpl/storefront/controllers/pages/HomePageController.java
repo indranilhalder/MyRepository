@@ -972,23 +972,41 @@ public class HomePageController extends AbstractPageController
 		}
 		else
 		{
-			newsLetter.setEmailId(emailId);
+			//newsLetter.setEmailId(emailId);
 			final boolean result = brandFacade.checkEmailId(emailId);
 
 			//newsLetter.setIsSaved(Boolean.TRUE);
 
 			if (result)
 			{
+				newsLetter.setEmailId(emailId);
+				newsLetter.setIsMarketplace(Boolean.TRUE);
 				modelService.save(newsLetter);
 				return "success";
 			}
 			else
 			{
+				final List<MplNewsLetterSubscriptionModel> newsLetterSubscriptionList = brandFacade
+						.checkEmailIdForMarketplace(emailId);
+
+				if (null != newsLetterSubscriptionList && !newsLetterSubscriptionList.isEmpty())
+				{
+					for (final MplNewsLetterSubscriptionModel mplNewsLetterSubscriptionModel : newsLetterSubscriptionList)
+					{
+						if ((mplNewsLetterSubscriptionModel.getEmailId().equalsIgnoreCase(emailId))
+								&& (!(mplNewsLetterSubscriptionModel.getIsMarketplace().booleanValue()) || mplNewsLetterSubscriptionModel
+										.getIsMarketplace() == null))
+						{
+							mplNewsLetterSubscriptionModel.setIsMarketplace(Boolean.TRUE);
+							modelService.save(mplNewsLetterSubscriptionModel);
+						}
+
+					}
+					return "success";
+				}
 				return "fail";
 			}
-
 		}
-
 	}
 
 	public boolean validateEmailAddress(final String email)

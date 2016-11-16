@@ -54,10 +54,34 @@
 						<cms:component component="${feature}" element="div" class="" />
 					</cms:pageSlot>
 		         </div>
+		     </li>
+		     <li>     
+		        <div class="media">
+		           <cms:pageSlot position="Section5A" var="feature">
+						<img src="${feature.urlLink }"/>
+					</cms:pageSlot>
+		         </div>
+		         <div class="media-content">
+		            <cms:pageSlot position="Section5B" var="feature">
+						<cms:component component="${feature}" element="div" class="" />
+					</cms:pageSlot>
+		         </div>
+		     </li>
+		     <li>     
+		        <div class="media">
+		           <cms:pageSlot position="Section6B" var="feature">
+						<img src="${feature.urlLink }"/>
+					</cms:pageSlot>
+		         </div>
+		         <div class="media-content">
+		            <cms:pageSlot position="Section6A" var="feature">
+						<cms:component component="${feature}" element="div" class="" />
+					</cms:pageSlot>
+		         </div>
 		     </li>	
 		</ul>
 	</div>
-	<cms:pageSlot position="Section5A" var="feature">
+	<cms:pageSlot position="Section7A" var="feature">
 		<cms:component component="${feature}" element="div" class="" />
 	</cms:pageSlot>
 </div>

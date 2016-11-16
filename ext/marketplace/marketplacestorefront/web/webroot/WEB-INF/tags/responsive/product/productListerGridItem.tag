@@ -328,7 +328,7 @@
 							<c:if test="${product.savingsOnProduct.value > 0}">																		
 							<p class="savings">																				
 							<%-- <span id="savings_${product.code}">  You save ${product.savingsOnProduct.formattedValue} </span> --%>
-							 <span id="savings_${product.code}">  (-${product.savingsOnProduct.value} %) </span>
+							 <span id="savings_${product.code}">  ( -${product.savingsOnProduct.value}% ) </span>
 							</p>
 							</c:if>
 							

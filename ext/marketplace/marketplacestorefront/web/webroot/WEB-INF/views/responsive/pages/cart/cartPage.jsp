@@ -6,6 +6,9 @@
 <%@ taglib prefix="cart" tagdir="/WEB-INF/tags/responsive/cart" %>
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/responsive/common" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<!-- LW-230 -->
+<input type="hidden" id="isLuxury" value="${isLuxury}"/>
+
 <template:page pageTitle="${pageTitle}">
 	<cart:tealiumCartParameters/>
 	<cart:cartValidation/>

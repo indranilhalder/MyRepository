@@ -202,7 +202,7 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 			/* Added for TPR-1290 */
 			else if (e.getMessage().contains(MarketplacecouponConstants.EXCFIRSTPURUSERINVALID))
 			{
-				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9330);
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9332);
 			}
 		}
 		catch (final EtailBusinessExceptions e)

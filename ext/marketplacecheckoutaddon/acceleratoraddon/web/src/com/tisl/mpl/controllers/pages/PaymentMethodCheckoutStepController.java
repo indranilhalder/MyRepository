@@ -967,9 +967,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	public @ResponseBody String generateOTPforCOD(final Model model, final String mobileNumber, final String guid) //guid added as parameter TPR-629
 			throws InvalidKeyException, NoSuchAlgorithmException
 	{
+		//String mplCustomerID = "";
+		OrderModel orderModel = null;
 		try
 		{
-			OrderModel orderModel = null;
+
 			//OTP handled for both cart and order
 			if (StringUtils.isNotEmpty(guid))
 			{
@@ -1098,13 +1100,15 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			@PathVariable(MarketplacecheckoutaddonConstants.OTPNUMFIELD) final String enteredOTPNumber, final String guid)
 			throws InvalidKeyException, NoSuchAlgorithmException
 	{
-		//getting current user
-		final String mplCustomerID = getUserService().getCurrentUser().getUid();
+
 		boolean redirectFlag = false;
 		String validationMsg = "";
 		OrderModel orderModel = null;
+		String emailId = null;
 		try
 		{
+			//getting current user
+			emailId = getUserService().getCurrentUser().getUid();
 			//OTP handled for both cart and order
 			if (StringUtils.isNotEmpty(guid))
 			{
@@ -1169,9 +1173,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				else
 				{
 					//If customer is not null
-					if (null != mplCustomerID)
+					if (null != emailId)
 					{
-						validationMsg = getMplPaymentFacade().validateOTPforCODWeb(mplCustomerID, enteredOTPNumber);
+						validationMsg = getMplPaymentFacade().validateOTPforCODWeb(emailId, enteredOTPNumber);
 					}
 					else
 					{
@@ -1212,9 +1216,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 
 				//If customer is not null
-				if (null != mplCustomerID)
+				if (null != emailId)
 				{
-					validationMsg = getMplPaymentFacade().validateOTPforCODWeb(mplCustomerID, enteredOTPNumber);
+					validationMsg = getMplPaymentFacade().validateOTPforCODWeb(emailId, enteredOTPNumber);
 				}
 				else
 				{
@@ -1240,7 +1244,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		return validationMsg;
 	}
-
 
 
 
@@ -2451,7 +2454,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		try
 		{
 			final OrderModel orderToBeUpdated = getMplPaymentFacade().getOrderByGuid(guid);
-			if (null == orderToBeUpdated.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(orderToBeUpdated.getStatus()))
+			if (null != orderToBeUpdated && null == orderToBeUpdated.getPaymentInfo()
+					&& !OrderStatus.PAYMENT_TIMEOUT.equals(orderToBeUpdated.getStatus()))
 			{
 				final String orderStatusResponse = getMplPaymentFacade().getOrderStatusFromJuspay(guid, null, orderToBeUpdated, null);
 				//Redirection when transaction is successful i.e. CHARGED
@@ -3236,6 +3240,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				{
 					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED, "TRUE");
 					redirectFlag = true;
+					LOG.info("::setting redirect flag--1::");
 				}
 				//TISST-13012
 				//				final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(cart);
@@ -3250,6 +3255,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					if (cartItemDelistedStatus)
 					{
 						redirectFlag = true;
+						LOG.info("::setting redirect flag--2::");
 					}
 				}
 
@@ -3264,6 +3270,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 						getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
 						redirectFlag = true;
+						LOG.info("::setting redirect flag--3::");
 					}
 				}
 
@@ -3271,6 +3278,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				{
 					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID, "TRUE");
 					redirectFlag = true;
+					LOG.info("::setting redirect flag--4::");
 				}
 
 				//TISPRO-497
@@ -3287,10 +3295,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					final Double cartTotal = cart.getTotalPrice();
 					final Double cartTotalWithConvCharge = cart.getTotalPriceWithConv();
 
+					LOG.info("::cartTotal**::" + cartTotal);
+					LOG.info("::cartTotalWithConvCharge**::" + cartTotalWithConvCharge);
 					if (cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0)
 					{
 						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CARTAMOUNTINVALID, "TRUE");
 						redirectFlag = true;
+						LOG.info("::setting redirect flag--5::");
 					}
 				}
 
@@ -3299,18 +3310,23 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				{
 					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CART_DELIVERYMODE_ADDRESS_INVALID, "TRUE");
 					redirectFlag = true;
+					LOG.info("::setting redirect flag--6::");
 				}
 
 				if (redirectFlag)
 				{
+					LOG.info("::returning redirect String::");
 					return MarketplacecheckoutaddonConstants.REDIRECTSTRING; //IQA for TPR-629
 				}
 				else
 				{
+					LOG.info("::Going to Create Juspay OrderId::");
 					orderId = getMplPaymentFacade().createJuspayOrder(cart, null, firstName, lastName, paymentAddressLine1,
 							paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 							cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping, returnUrlBuilder.toString(),
 							uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB);
+
+					LOG.info("::Created Juspay OrderId::" + orderId);
 
 					//create order here --- order will be created during first try TPR-629
 
@@ -3576,7 +3592,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		LOG.debug("========================Inside Update Order============================");
 		try
 		{
-			if (null != orderToBeUpdated.getPaymentInfo() && CollectionUtils.isEmpty(orderToBeUpdated.getChildOrders()))
+			if (null != orderToBeUpdated && null != orderToBeUpdated.getPaymentInfo()
+					&& CollectionUtils.isEmpty(orderToBeUpdated.getChildOrders()))
 			{
 				getMplCheckoutFacade().beforeSubmitOrder(orderToBeUpdated);
 				getMplCheckoutFacade().submitOrder(orderToBeUpdated);
@@ -3588,12 +3605,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 				return redirectToOrderConfirmationPage(orderData);
 			}
-			else if (null != orderToBeUpdated.getPaymentInfo() && CollectionUtils.isNotEmpty(orderToBeUpdated.getChildOrders()))
+			else if (null != orderToBeUpdated && null != orderToBeUpdated.getPaymentInfo()
+					&& CollectionUtils.isNotEmpty(orderToBeUpdated.getChildOrders()))
 			{
 				final OrderData orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderToBeUpdated);
 				return redirectToOrderConfirmationPage(orderData);
 			}
-			else if (null == orderToBeUpdated.getPaymentInfo() && OrderStatus.PAYMENT_TIMEOUT.equals(orderToBeUpdated.getStatus()))
+			else if (null != orderToBeUpdated && null == orderToBeUpdated.getPaymentInfo()
+					&& OrderStatus.PAYMENT_TIMEOUT.equals(orderToBeUpdated.getStatus()))
 			{
 				LOG.error("Issue with update order...redirecting to payment page only");
 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,

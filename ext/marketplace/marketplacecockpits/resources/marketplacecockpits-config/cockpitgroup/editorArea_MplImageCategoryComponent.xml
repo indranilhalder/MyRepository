@@ -11,6 +11,7 @@
 		<label key="config.general.editorial" />
 		<property qualifier="MplImageCategoryComponent.imageTitle"/>
 		<property qualifier="MplImageCategoryComponent.image"/>
+		<property qualifier="MplImageCategoryComponent.mobileImage"/>
 		<property qualifier="MplImageCategoryComponent.category"/>
 		<property qualifier="MplImageCategoryComponent.isImageFromPCM"/>
 		<property qualifier="MplImageCategoryComponent.filterBySellerName"/>

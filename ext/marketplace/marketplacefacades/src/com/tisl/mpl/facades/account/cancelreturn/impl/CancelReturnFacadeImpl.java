@@ -38,7 +38,6 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.services.BaseStoreService;
 
@@ -67,7 +66,6 @@ import com.tisl.mpl.data.ReturnLogisticsResponseData;
 import com.tisl.mpl.data.SendTicketLineItemData;
 import com.tisl.mpl.data.SendTicketRequestData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
@@ -128,10 +126,6 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	private ReturnService returnService;
 	@Resource
 	private ConfigurationService configurationService;
-	@Resource
-	private SessionService sessionService;
-	@Resource
-	private MplCheckoutFacade mplCheckoutFacade;
 	@Resource
 	private MPLRefundService mplRefundService;
 	private Converter<AbstractOrderEntryModel, OrderEntryData> orderEntryConverter;
@@ -379,8 +373,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		boolean omsCancellationStatus = false;
 		String pincode = null;
 
-		final OrderModel subOrderModel = customerAccountService.getOrderForCode((CustomerModel) userService.getCurrentUser(),
-				subOrderDetails.getCode(), baseStoreService.getCurrentBaseStore());
+		final String transactionId = subOrderEntry.getTransactionId();
+
+		final OrderModel subOrderModel = orderModelService.getOrder(subOrderDetails.getCode());
 		boolean bogoOrFreeBie = false;
 		try
 		{
@@ -402,10 +397,15 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 				orderLineRequest = populateOrderLineData(subOrderEntry, ticketTypeCode, subOrderModel, reasonCode, pincode);
 
+
+
+
 				if (CollectionUtils.isNotEmpty(orderLineRequest.getOrderLine()))
 				{
 					cancelOrRetrnanable = cancelOrderInOMS(orderLineRequest, cancelOrRetrnanable, isReturn);
 				}
+
+
 			}
 			if (ticketTypeCode.equalsIgnoreCase("R") && bogoOrFreeBie) //TISEE-933
 			{
@@ -466,7 +466,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
 					{
 						final boolean returnReqSuccess = createRefund(subOrderModel, abstractOrderEntryModel, reasonCode,
-								salesApplication, returnAddress.getPincode());
+								salesApplication, returnAddress.getPincode(), subOrderDetails, transactionId);
 
 						LOG.debug("**********************************Return request successful :" + returnReqSuccess);
 					}
@@ -518,7 +518,6 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 		return omsCancellationStatus;
 	}
-
 
 	private void updateConsignmentStatus(final AbstractOrderEntryModel orderEntryModel, final ConsignmentStatus consignmentStatus)
 	{
@@ -741,21 +740,25 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	 * @param reasonCode
 	 * @param salesApplication
 	 * @param pinCode
+	 * @param subOrderDetails2
 	 * @return boolean
 	 */
 	private boolean createRefund(final OrderModel subOrderModel, final AbstractOrderEntryModel abstractOrderEntryModel,
-			final String reasonCode, final SalesApplication salesApplication, final String pinCode)
+			final String reasonCode, final SalesApplication salesApplication, final String pinCode, final OrderData subOrderDetails,
+			final String transactionId)
 	{
 
 		boolean returnReqCreated = false;
 		boolean returnLogisticsCheck = true;
 		try
 		{
+
 			final ReturnRequestModel returnRequestModel = returnService.createReturnRequest(subOrderModel);
 			returnRequestModel.setRMA(returnService.createRMA(returnRequestModel));
 			//TISEE-5471
-			final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(subOrderModel.getCode());
-			final List<ReturnLogisticsResponseData> returnLogisticsRespList = checkReturnLogistics(subOrderDetails, pinCode);
+			//final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(subOrderModel.getCode()); //Changes for Bulk Return Initiation
+			final List<ReturnLogisticsResponseData> returnLogisticsRespList = checkReturnLogistics(subOrderDetails, pinCode,
+					transactionId);
 			if (CollectionUtils.isNotEmpty(returnLogisticsRespList))
 			{
 				for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
@@ -1058,6 +1061,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 		try
 		{
+			final String transactionId = subOrderEntry.getTransactionId();
 			final List<SendTicketLineItemData> lineItemDataList = new ArrayList<SendTicketLineItemData>();
 			final SendTicketRequestData sendTicketRequestData = new SendTicketRequestData();
 			final ReturnAddressInfo addressInfo = new ReturnAddressInfo();
@@ -1076,7 +1080,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 					boolean returnLogisticsCheck = true; //Start
 
-					final List<ReturnLogisticsResponseData> returnLogisticsRespList = checkReturnLogistics(subOrderDetails, pinCode);
+					final List<ReturnLogisticsResponseData> returnLogisticsRespList = checkReturnLogistics(subOrderDetails, pinCode,
+							transactionId);
 					if (CollectionUtils.isNotEmpty(returnLogisticsRespList))
 					{
 						for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
@@ -1317,8 +1322,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		{
 
 			LOG.debug("Step 3:*********************************** Calling OMS for return?" + isReturn);
-			final MplOrderIsCancellableResponse response = mplOrderCancelClientService.orderCancelDataToOMS(orderLineRequest);
 
+			final MplOrderIsCancellableResponse response = mplOrderCancelClientService.orderCancelDataToOMS(orderLineRequest);
 			//			if (isReturn) //for return do not need to execute the below code
 			//			{
 			//				return cancelOrRetrnanable;
@@ -1841,7 +1846,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	 * @return List
 	 */
 	@Override
-	public List<ReturnLogisticsResponseData> checkReturnLogistics(final OrderData orderDetails, final String pincode)
+	public List<ReturnLogisticsResponseData> checkReturnLogistics(final OrderData orderDetails, final String pincode,
+			final String transId)
 	{
 		try
 		{
@@ -1849,7 +1855,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			final OrderModel orderModel = orderModelService.getOrder(orderDetails.getCode());
 			final List<ReturnLogistics> returnLogisticsList = new ArrayList<ReturnLogistics>();
 			String returningTransactionId;
-			returningTransactionId = sessionService.getAttribute("transactionId");
+			//returningTransactionId = sessionService.getAttribute("transactionId"); // Commented for Bulk Return Initiation
+			returningTransactionId = transId;
 			String transactionId = "";
 			for (final OrderEntryData eachEntry : entries)
 			{
