@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -36,7 +37,7 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 	 */
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
-
+	private static final Logger LOG = Logger.getLogger(ExtStockLevelPromotionCheckDaoImpl.class);
 
 	@Override
 	public Map<String, Integer> getPromoInvalidationModelMap(final String codes, final boolean sellerFlag)
@@ -44,7 +45,6 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 		// YTODO Auto-generated method stub
 		final Map<String, Integer> stockCodeMap = new HashMap<String, Integer>();
 		String queryString = "";
-		//codes = MarketplacecommerceservicesConstants.INVERTED_COMMA + codes + MarketplacecommerceservicesConstants.INVERTED_COMMA;
 		try
 		{
 			if (sellerFlag)
@@ -77,19 +77,20 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 
 		catch (final FlexibleSearchException e)
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+			LOG.error("error in search query" + e);
+			//	throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
 		}
 		catch (final UnknownIdentifierException e)
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+			LOG.error(e);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			throw e;
+			LOG.error("exception getching the quantity count details aginst product/ussid" + e);
 		}
 		catch (final Exception e)
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+			LOG.error(e);
 		}
 		return stockCodeMap;
 
@@ -98,7 +99,7 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.promotion.dao.ExtStockLevelPromotionCheckDao#getPromoInvalidationList(java.lang.String)
 	 */
 	@Override
