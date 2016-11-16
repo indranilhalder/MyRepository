@@ -10,6 +10,7 @@
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 	
 <spring:url value="/my-account/update-profile" var="updateProfileUrl" />
@@ -43,8 +44,18 @@
 									<c:forEach items="${returnProductMap[eachSubOrderEntry.transactionId]}" var="entryReturn" >
 									<li>
 										<div class="product-img">
-											<product:productPrimaryImage
-													product="${entryReturn.product}" format="thumbnail" />
+											<c:choose>
+												<c:when test="${fn:toLowerCase(entryReturn.product.luxIndicator)=='luxury'}">
+														<product:productPrimaryImage
+															product="${entryReturn.product}" format="luxuryCartIcon" />
+							
+												</c:when>
+												<c:otherwise>
+														<product:productPrimaryImage
+															product="${entryReturn.product}" format="thumbnail" />
+														
+												</c:otherwise>
+											</c:choose>
 										
 										</div>
 										<div class="product">

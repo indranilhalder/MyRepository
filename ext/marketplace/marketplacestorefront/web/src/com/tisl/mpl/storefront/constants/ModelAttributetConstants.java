@@ -211,6 +211,12 @@ public final class ModelAttributetConstants
 	public static final String OPERATION = "operation";
 	//	pdp changes
 	public static final String CLOTHING = "Clothing";
+
+	//Added by SAP for Watches & FashionAccessories  :::  START
+	public static final String FASHION_ACCESSORIES = "Accessories";
+	public static final String WATCHES = "Watches";
+	//Added by SAP for Watches & FashionAccessories  :::  END
+
 	public static final String INVITE_URL = "/store/mpl/en/login/?affiliateId=";
 	public static final String SELECT_DAY = "selectDay";
 	public static final String SELECT_MONTH = "selectmonth";
@@ -232,6 +238,8 @@ public final class ModelAttributetConstants
 	public static final String CLIQCAREMAIL = "cliqCareMail";
 	public static final String GOOGLECLIENTID = "googleClientid";
 	public static final String FACEBOOKAPPID = "facebookAppid";
+	//TPR-743
+	public static final String CANONICAL_URL = "canonicalUrl";
 
 
 	//	public static final String CLOTHING = "Clothing";
@@ -255,6 +263,8 @@ public final class ModelAttributetConstants
 	public static final String SHIPPING_MODE = "shippingMode";
 	public static final String CONFIGURABLE_ATTRIBUTE = "classification.attributes.";
 	public static final String MAP_CONFIGURABLE_ATTRIBUTE = "mapConfigurableAttribute";
+
+	public static final String MAP_CONFIGURABLE_ATTRIBUTES = "mapConfigurableAttributes";
 	public static final String SELLER_ID = "sellerID";
 
 	public static final String PIN = "pin";
@@ -462,6 +472,7 @@ public final class ModelAttributetConstants
 	public static final String FRIENDS_TEXT_MESSAGE = "textMessage";
 	public static final String LAST_USERNAME_WITH_ERROR_ATTEMPT = "lastUnameErrorAttempt";
 	public static final String BASEPRICEMAP = "basePriceMap";
+	public static final String MRPPRICEMAP = "mrpPriceMap";
 	//Add to Cart
 	public static final String WISHLISTDATA = "wishlistDatas";
 	public static final String QUANTITY = "quantity";
@@ -557,6 +568,7 @@ public final class ModelAttributetConstants
 	public static final String ORDER_STATUS_MSG = "orderStatusMsg";
 
 	public static final String TRACK_STATUS = "trackStatusMap";
+	public static final String PAYMENT_STATUS = "paymentStatusMap";
 	public static final String CANCEL_PRODUCT_MAP = "cancelProductMap";
 	public static final String CURRENT_STATUS = "currentStatusMap";
 	public static final String ORDER_DELIVERY_DATE = "orderDeliveryDateMap";
@@ -764,6 +776,8 @@ public final class ModelAttributetConstants
 	//TPR-174
 	public static final String WELCOME_BACK_MESSAGE = "welcome_message";
 
+	//Add  for TPR-1996
+	public static final String DESC_PDP_PROPERTIES = "pdp.desc.tab.";
 
 	public static final String CATEGORY_PAGE_META_DESCRIPTION = "Buy {0} Online at best price in India. Shop from wide range of {1} online from popular brands and get 100% Genuine Products!";
 	public static final String CATEGORY_PAGE_META_KEYWORDS = "Buy {0}, buy {1} online, buy {2} online India, buy {3} online in India, {4} price";
@@ -777,4 +791,16 @@ public final class ModelAttributetConstants
 	public static final String Homepage_Title = "Online Shopping Site in India for Mobiles, Electronics & Fashion at TataCLiQ";
 	public static final String Homepage_Description = "Online Shopping in India for Mobiles, Electronics, Men & Women Clothing, Shoes at TataCLiQ. Get 100% Genuine products!";
 	public static final String Homepage_Keyword = "Online Shopping sites, online shopping store, online shopping, Online mobile shopping, shopping online, TataCLiQ";
+	// TPR-666
+	public static final String SEARCH_TYPE = "searchType";
+	//TPR-429
+	public static final String CHECKOUT_SELLER_IDS = "checkoutSellerIDs";
+	public static final String PDP_SELLER_IDS = "pdpSellerIDs";
+	//TPR-430
+	public static final String PRODUCT_CATEGORY = "product_category";
+	public static final String PAGE_SUBCATEGORY_NAME = "page_subcategory_name";
+	public static final String PAGE_SUBCATEGORY_NAME_L3 = "page_subcategory_name_l3";
+	public static final String SHOP_BY_LOOK = "shopbylook".intern();
+	//LW-230
+	public static final String IS_LUXURY = "isLuxury";
 }

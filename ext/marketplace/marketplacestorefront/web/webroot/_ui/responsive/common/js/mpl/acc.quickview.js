@@ -30,6 +30,16 @@ ACC.quickview = {
 			maxWidth:"100%",
 			onComplete: function ()
 			{
+				/*TPR-690*/
+				var productCode = productCodeQuickView;
+				utag.link({
+					link_obj: this, 
+					link_text: 'quick_view_click' ,
+					event_type : 'quick_view_click', 
+					product_sku_quick_view : productCode
+				});
+				
+				/*TPR-690 ends*/
 				quickviewGallery();
 				ACC.quickview.refreshScreenReaderBuffer();
 				ACC.quickview.initQuickviewLightbox();
@@ -71,8 +81,26 @@ function quickviewGallery() {
 				  $(this).next("ul").toggleClass("select_height_toggle");
 			  });
 			}
+	 	
+	 	$(".productImageGallery img").click(function(e) {
+			/*TPR-643 starts*/
+				utag.link({
+					link_obj: this, 
+					link_text: 'pdp_image_click' , 
+					event_type : 'pdp_image_click' 
+				});
+				/*TPR-643 ends*/
+		});
+	 	
 	 });
-	
+	if($("#cboxContent #cboxLoadedContent .quickview.active")[0].offsetHeight < $("#cboxContent #cboxLoadedContent .quickview.active")[0].scrollHeight){
+		$("#cboxContent #cboxLoadedContent .quickview.active").css("height",$("#cboxContent #cboxLoadedContent .quickview.active")[0].scrollHeight);
+		$("#cboxContent").css("max-height",$("#cboxContent #cboxLoadedContent .quickview.active")[0].scrollHeight);
+	}
+	else{
+		$("#cboxContent #cboxLoadedContent .quickview.active").css("height","565px");
+		$("#cboxContent").css("max-height","565px");
+	}
 	
 }
 
@@ -425,6 +453,15 @@ function addToWishlist_quick(alreadyAddedWlName_quick) {
 					}, 1500);
 				populateMyWishlistFlyOut(wishName);
 				
+				/*TPR-656*/
+					utag.link({
+						link_obj: this, 
+						link_text: 'add_to_wishlist' , 
+						event_type : 'add_to_wishlist', 
+						product_sku_wishlist : productCodePost
+					});
+				/*TPR-656 Ends*/
+				
 				
 				//For MSD
 				var isMSDEnabled =  $("input[name=isMSDEnabled]").val();								
@@ -755,6 +792,12 @@ function openPopForBankEMI_quick() {
 						+ "</option>";
 			}
 			$("#bankNameForEMI").html(optionData);
+			/*TPR-641*/
+			utag.link({
+				link_obj: this,
+				link_text: 'emi_more_information' ,
+				event_type : 'emi_more_information'
+			});
 
 		},
 		error : function(xhr, status, error) {
@@ -829,11 +872,13 @@ $(document).on("click",".quickview #emiStickerId p",function(e){
 	e.stopPropagation();
 	$(this).addClass("active")
 	openPopForBankEMI_quick();
+	$(".quickview #emiTableDiv #EMITermTable").hide();
 		
 	});
 $(document).on("click",".quickview .Emi .modal-content .Close",function(e){
 	$(".quickview .Emi > p").removeClass("active mobile");
 	e.stopPropagation();
+	
 	
 });
 $(document).on("click", function(e){
@@ -841,12 +886,14 @@ $(document).on("click", function(e){
 	if(!$(e.currentTarget).parents(".Emi").hasClass("Emi_wrapper")) {
 		$(".quickview .Emi > p").removeClass("active")
 	} else {
-		$(".quickview .Emi > p").addClass("active")
+		$(".quickview .Emi > p").addClass("active");
+		
 	}
 });
 $(document).on("click",".quickview .Emi > #EMImodal-content",function(e){
 	e.stopPropagation();
-		$(".quickview .Emi > p").addClass("active")
+		$(".quickview .Emi > p").addClass("active");
+
 });
 
 $(document).on('click','#buyNowQv .js-add-to-cart-qv',function(event){

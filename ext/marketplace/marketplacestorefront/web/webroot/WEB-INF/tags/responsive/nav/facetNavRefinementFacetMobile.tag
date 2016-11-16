@@ -184,11 +184,6 @@ function navigateToPage(queryString,textString)
 			</c:if>
 			<ul class="facet-list js-facet-list  <c:if test="${not empty facetData.topValues}">facet-list-hidden js-facet-list-hidden</c:if>">
 
-
-
-
-
-
 				<c:forEach items="${facetData.values}" var="facetValue">					
 				  <c:url value="${facetValue.query.url}" var="facetValueQueryUrl"/>
 					<li class="filter-${facetData.code}">
@@ -438,16 +433,16 @@ function navigateToPage(queryString,textString)
 				</div>
 				
 				<div class="less js-less-facet-values checkbox-menu">
-				    	<form action="${url}" method="get"> 
+				    <%-- 	<form action="${url}" method="get"> 
 								<input type="hidden" name="offer" value="${offer}"/>
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
 								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
 								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 								<input type="hidden" name="facetValue" value="${facetValue.code}"/>
-								<input type="hidden" name="isFacet" value="true"/>
+								<input type="hidden" name="isFacet" value="true"/> --%>
 								<input type="submit" value="<spring:theme code="search.nav.facetShowLess_${facetData.code}" text="less..."/>" class="js-less-facet-values-link"  />
-								</form>
+				<!-- 				</form> -->
 				
 					<%-- <a href="#" class="js-less-facet-values-link"><spring:theme code="search.nav.facetShowLess_${facetData.code}" /></a> --%>
 				</div>
@@ -460,7 +455,7 @@ function navigateToPage(queryString,textString)
 		<c:if test="${facetData.code eq 'price'}">
 		    <div class="priceBucketExpand" style="display:none">		    				
 				<c:url value="${removeQueryUrlForPriceValue}" var="removeQueryUrl"/>
-				<a href="${removeQueryUrl}" ><span class="any_price">Any Price</span></a>
+				<a href="${removeQueryUrl}" ><span class="any_price_mobile">Any Price</span></a>
 			</div>		  
 			<h4 class="customPriceRange">Price Range</h4>
 							<input type="hidden" name="currentPriceQueryParams" value="${searchPageData.currentQuery.query.value}" class="currentPriceQueryParams"/>					  

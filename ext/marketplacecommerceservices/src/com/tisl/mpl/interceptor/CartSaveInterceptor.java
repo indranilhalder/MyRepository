@@ -4,7 +4,7 @@ package com.tisl.mpl.interceptor;
  *
  */
 
-import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.servicelayer.interceptor.InterceptorContext;
 import de.hybris.platform.servicelayer.interceptor.InterceptorException;
 import de.hybris.platform.servicelayer.interceptor.PrepareInterceptor;
@@ -29,19 +29,19 @@ public class CartSaveInterceptor implements PrepareInterceptor
 	public void onPrepare(final Object object, final InterceptorContext arg1) throws InterceptorException
 	{
 		LOG.debug(Localization.getLocalizedString("payment.cartsaveinterceptor.message"));
-		if (object instanceof CartModel)
+		if (object instanceof AbstractOrderModel) //Changes made from cartModel to abstractOrderModel TPR-629
 		{
-			final CartModel cartModel = (CartModel) object;
+			final AbstractOrderModel abstractOrderModel = (AbstractOrderModel) object;
 
-			if (null != cartModel.getConvenienceCharges())
+			if (null != abstractOrderModel.getConvenienceCharges())
 			{
-				cartModel.setTotalPriceWithConv(Double.valueOf(cartModel.getTotalPrice().doubleValue()
-						+ cartModel.getConvenienceCharges().doubleValue()));
+				abstractOrderModel.setTotalPriceWithConv(Double.valueOf(abstractOrderModel.getTotalPrice().doubleValue()
+						+ abstractOrderModel.getConvenienceCharges().doubleValue()));
 			}
 			else
 			{
-				cartModel.setConvenienceCharges(Double.valueOf(0.0));
-				cartModel.setTotalPriceWithConv(cartModel.getTotalPrice());
+				abstractOrderModel.setConvenienceCharges(Double.valueOf(0.0));
+				abstractOrderModel.setTotalPriceWithConv(abstractOrderModel.getTotalPrice());
 			}
 		}
 

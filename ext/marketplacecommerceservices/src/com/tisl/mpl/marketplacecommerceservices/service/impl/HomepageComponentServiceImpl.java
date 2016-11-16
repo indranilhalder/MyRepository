@@ -76,90 +76,106 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 			{
 				final ImageCarouselComponentModel bestPickCarouselComponent = (ImageCarouselComponentModel) component;
 				String title = "";
-				if (StringUtils.isNotEmpty(bestPickCarouselComponent.getTitle()))
+				//TPR-559 Show/Hide Components and Sub-components
+				if (bestPickCarouselComponent.getVisible().booleanValue())
 				{
-					title = bestPickCarouselComponent.getTitle();
-				}
-
-				//Added for making the button link cmsmanaged
-				if (StringUtils.isNotEmpty(bestPickCarouselComponent.getButtonText()))
-				{
-					bestPicks.put("buttonText", bestPickCarouselComponent.getButtonText());
-				}
-				if (StringUtils.isNotEmpty(bestPickCarouselComponent.getButtonLink()))
-				{
-					bestPicks.put("buttonLink", bestPickCarouselComponent.getButtonLink());
-				}
-
-				bestPicks.put("title", title);
-
-				final JSONArray subComponentJsonArray = new JSONArray();
-				if (CollectionUtils.isNotEmpty(bestPickCarouselComponent.getCollectionItems()))
-				{
-					String imageURL = "";
-					String text = "";
-					String linkUrl = "#";
-
-					for (final CMSMediaParagraphComponentModel bestPickItem : bestPickCarouselComponent.getCollectionItems())
+					if (StringUtils.isNotEmpty(bestPickCarouselComponent.getTitle()))
 					{
-						final JSONObject bestPickItemJson = new JSONObject();
+						title = bestPickCarouselComponent.getTitle();
+					}
 
-						if (null != bestPickItem)
+					//Added for making the button link cmsmanaged
+					if (StringUtils.isNotEmpty(bestPickCarouselComponent.getButtonText()))
+					{
+						bestPicks.put("buttonText", bestPickCarouselComponent.getButtonText());
+					}
+					if (StringUtils.isNotEmpty(bestPickCarouselComponent.getButtonLink()))
+					{
+						bestPicks.put("buttonLink", bestPickCarouselComponent.getButtonLink());
+					}
+
+					bestPicks.put("title", title);
+
+					final JSONArray subComponentJsonArray = new JSONArray();
+					if (CollectionUtils.isNotEmpty(bestPickCarouselComponent.getCollectionItems()))
+					{
+						String imageURL = "";
+						String text = "";
+						String linkUrl = "#";
+
+						for (final CMSMediaParagraphComponentModel bestPickItem : bestPickCarouselComponent.getCollectionItems())
 						{
-							if (null != bestPickItem.getMedia())
+							final JSONObject bestPickItemJson = new JSONObject();
+
+							if (null != bestPickItem)
 							{
-								if (null != bestPickItem.getMedia().getURL() && StringUtils.isNotEmpty(bestPickItem.getMedia().getURL()))
+								//TPR-559 Show/Hide Components and Sub-components
+								if (bestPickItem.getVisible().booleanValue())
 								{
-									imageURL = bestPickItem.getMedia().getURL();
+									if (null != bestPickItem.getMedia())
+									{
+										if (null != bestPickItem.getMedia().getURL()
+												&& StringUtils.isNotEmpty(bestPickItem.getMedia().getURL()))
+										{
+											imageURL = bestPickItem.getMedia().getURL();
+										}
+
+									}
+									else
+									{
+										LOG.info("No Media for this item");
+										//imageURL = MISSING_IMAGE_URL;
+										imageURL = GenericUtilityMethods.getMissingImageUrl();
+									}
+
+									bestPickItemJson.put("imageUrl", imageURL);
+
+									if (null != bestPickItem.getContent() && StringUtils.isNotEmpty(bestPickItem.getContent()))
+									{
+										text = bestPickItem.getContent();
+									}
+									else
+									{
+										LOG.info("No text for this item");
+									}
+									bestPickItemJson.put("text", text);
+
+									if (null != bestPickItem.getUrl() && StringUtils.isNotEmpty(bestPickItem.getUrl()))
+									{
+										linkUrl = bestPickItem.getUrl();
+									}
+									else
+									{
+										LOG.info("No URL for this item");
+									}
+									bestPickItemJson.put("url", linkUrl);
+									bestPickItemJson.put(ICID, bestPickItem.getPk().getLongValueAsString());
+									subComponentJsonArray.add(bestPickItemJson);
+								}
+								else
+								{
+									LOG.info("Component visiblity set to false");
 								}
 
 							}
 							else
 							{
-								LOG.info("No Media for this item");
-								//imageURL = MISSING_IMAGE_URL;
-								imageURL = GenericUtilityMethods.getMissingImageUrl();
+								LOG.info("No instance of bestPickCarouselComponent found!!!");
 							}
-
-							bestPickItemJson.put("imageUrl", imageURL);
-
-							if (null != bestPickItem.getContent() && StringUtils.isNotEmpty(bestPickItem.getContent()))
-							{
-								text = bestPickItem.getContent();
-							}
-							else
-							{
-								LOG.info("No text for this item");
-							}
-							bestPickItemJson.put("text", text);
-
-							if (null != bestPickItem.getUrl() && StringUtils.isNotEmpty(bestPickItem.getUrl()))
-							{
-								linkUrl = bestPickItem.getUrl();
-							}
-							else
-							{
-								LOG.info("No URL for this item");
-							}
-							bestPickItemJson.put("url", linkUrl);
-							bestPickItemJson.put(ICID, bestPickItem.getPk().getLongValueAsString());
-							subComponentJsonArray.add(bestPickItemJson);
-
-						}
-						else
-						{
-							LOG.info("No instance of bestPickCarouselComponent found!!!");
 						}
 					}
+					bestPicks.put("subItems", subComponentJsonArray);
 				}
-				bestPicks.put("subItems", subComponentJsonArray);
+				else
+				{
+					LOG.info("Component visiblity set to false");
+				}
 
 			}
 		}
 
 		return bestPicks;
 	}
-
 
 
 
@@ -177,6 +193,8 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 
 		String title = MarketplacecommerceservicesConstants.EMPTY;
 		String mediaUrl = MarketplacecommerceservicesConstants.EMPTY;
+		String imageName = MarketplacecommerceservicesConstants.EMPTY;
+
 
 		final JSONArray subComponentJsonArray = new JSONArray();
 
@@ -186,79 +204,106 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 			if (component instanceof MplCategoryCarouselComponentModel)
 			{
 				final MplCategoryCarouselComponentModel productYouCareCarouselComponent = (MplCategoryCarouselComponentModel) component;
-
-				if (StringUtils.isNotEmpty(productYouCareCarouselComponent.getTitle()))
+				//TPR-559 Show/Hide Components and Sub-components
+				if (productYouCareCarouselComponent.getVisible().booleanValue())
 				{
-					title = productYouCareCarouselComponent.getTitle();
-				}
-
-
-				if (CollectionUtils.isNotEmpty(productYouCareCarouselComponent.getCategories()))
-				{
-					for (final CategoryModel category : productYouCareCarouselComponent.getCategories())
+					if (StringUtils.isNotEmpty(productYouCareCarouselComponent.getTitle()))
 					{
-						final JSONObject categoryJSON = getCategoryJSON(category);
-						categoryJSON.put("mediaURL", getCategoryMediaUrl(category));
-						categoryJSON.put(ICID, productYouCareCarouselComponent.getPk().getLongValueAsString());
-						subComponentJsonArray.add(categoryJSON);
+						title = productYouCareCarouselComponent.getTitle();
+					}
+
+
+					if (CollectionUtils.isNotEmpty(productYouCareCarouselComponent.getCategories()))
+					{
+						for (final CategoryModel category : productYouCareCarouselComponent.getCategories())
+						{
+							final JSONObject categoryJSON = getCategoryJSON(category);
+							categoryJSON.put("mediaURL", getCategoryMediaUrl(category));
+							categoryJSON.put(ICID, productYouCareCarouselComponent.getPk().getLongValueAsString());
+							subComponentJsonArray.add(categoryJSON);
+						}
 					}
 				}
-
-
-
+				else
+				{
+					LOG.info("Component visiblity set to false");
+				}
 			}
 			//Forming JSON is the component is of MplAdvancedCategoryCarouselComponentModel type for overriding PCM provided Category Images
 			if (component instanceof MplAdvancedCategoryCarouselComponentModel)
 			{
 
 				final MplAdvancedCategoryCarouselComponentModel productYouCareCarouselComponent = (MplAdvancedCategoryCarouselComponentModel) component;
-
-				if (StringUtils.isNotEmpty(productYouCareCarouselComponent.getTitle()))
+				//TPR-559 Show/Hide Components and Sub-components
+				if (productYouCareCarouselComponent.getVisible().booleanValue())
 				{
-					title = productYouCareCarouselComponent.getTitle();
-				}
-
-				if (CollectionUtils.isNotEmpty(productYouCareCarouselComponent.getCategories()))
-				{
-					for (final MplImageCategoryComponentModel imageCategoryComponent : productYouCareCarouselComponent.getCategories())
+					if (StringUtils.isNotEmpty(productYouCareCarouselComponent.getTitle()))
 					{
-						if (imageCategoryComponent.getCategory() != null)
-						{
-							final JSONObject categoryJSON = getCategoryJSON(imageCategoryComponent.getCategory());
-							if (imageCategoryComponent.getIsImageFromPCM().booleanValue())
-							{
-								mediaUrl = getCategoryMediaUrl(imageCategoryComponent.getCategory());
+						title = productYouCareCarouselComponent.getTitle();
+					}
 
+					if (CollectionUtils.isNotEmpty(productYouCareCarouselComponent.getCategories()))
+					{
+						for (final MplImageCategoryComponentModel imageCategoryComponent : productYouCareCarouselComponent
+								.getCategories())
+						{
+							//TPR-559 Show/Hide Components and Sub-components
+							if (imageCategoryComponent.getVisible().booleanValue())
+							{
+								if (imageCategoryComponent.getCategory() != null)
+								{
+									final JSONObject categoryJSON = getCategoryJSON(imageCategoryComponent.getCategory());
+									if (imageCategoryComponent.getIsImageFromPCM().booleanValue())
+									{
+										mediaUrl = getCategoryMediaUrl(imageCategoryComponent.getCategory());
+
+									}
+									else
+									{
+										if (null != imageCategoryComponent.getImage()
+												&& StringUtils.isNotEmpty(imageCategoryComponent.getImage().getURL()))
+										{
+											mediaUrl = imageCategoryComponent.getImage().getURL();
+
+										}
+
+									}
+
+
+									if (null != imageCategoryComponent.getImageTitle())
+									{
+										imageName = imageCategoryComponent.getImageTitle();
+									}
+									else
+									{
+										imageName = MarketplacecommerceservicesConstants.EMPTY;
+									}
+
+									categoryJSON.put("imageName", imageName);
+									categoryJSON.put("mediaURL", mediaUrl);
+									categoryJSON.put(ICID, imageCategoryComponent.getPk().getLongValueAsString());
+									subComponentJsonArray.add(categoryJSON);
+								}
 							}
 							else
 							{
-								if (null != imageCategoryComponent.getImage()
-										&& StringUtils.isNotEmpty(imageCategoryComponent.getImage().getURL()))
-								{
-									mediaUrl = imageCategoryComponent.getImage().getURL();
-								}
-
+								LOG.info("Component visiblity set to false");
 							}
 
-							categoryJSON.put("mediaURL", mediaUrl);
-							categoryJSON.put(ICID, imageCategoryComponent.getPk().getLongValueAsString());
-							subComponentJsonArray.add(categoryJSON);
 						}
 
-
+						productYouCare.put(TITLE, title);
+						productYouCare.put("categories", subComponentJsonArray);
 					}
 				}
-
+				else
+				{
+					LOG.info("Component visiblity set to false");
+				}
 			}
-
-			productYouCare.put(TITLE, title);
-			productYouCare.put("categories", subComponentJsonArray);
-
-
 		}
 		return productYouCare;
 	}
-
 
 	/**
 	 * @param category
@@ -346,63 +391,89 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 			LOG.info("Component>>>>with id :::" + component.getUid());
 			if (component instanceof MplSequentialBannerComponentModel)
 			{
-				final MplSequentialBannerComponentModel promoBanner = (MplSequentialBannerComponentModel) component;
-
-				final JSONArray bannerJsonArray = new JSONArray();
-
-				for (final BannerComponentModel banner : promoBanner.getBannersList())
+				//TPR-559 Show/Hide Components and Sub-components
+				if (component.getVisible().booleanValue())
 				{
-					final JSONObject bannerJson = new JSONObject();
-					if (banner instanceof MplBigPromoBannerComponentModel)
-					{
-						final MplBigPromoBannerComponentModel bannerImage = (MplBigPromoBannerComponentModel) banner;
-						if (bannerImage.getBannerImage() != null)
-						{
-							bannerJson.put(MarketplacecommerceservicesConstants.BANNER_IMAGE, bannerImage.getBannerImage().getURL());
-							bannerJson.put(MarketplacecommerceservicesConstants.BANNER_ALTTEXT, bannerImage.getBannerImage()
-									.getAltText());
-						}
-						else
-						{
-							bannerJson.put(MarketplacecommerceservicesConstants.BANNER_IMAGE,
-									MarketplacecommerceservicesConstants.EMPTYSPACE);
-							bannerJson.put(MarketplacecommerceservicesConstants.BANNER_ALTTEXT,
-									MarketplacecommerceservicesConstants.EMPTYSPACE);
-						}
-						bannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
-						bannerJson.put("promoText1", bannerImage.getMajorPromoText());
-						bannerJson.put("promoText2", bannerImage.getMinorPromo1Text());
-						bannerJson.put("promoText3", bannerImage.getMinorPromo2Text());
-						bannerJson.put("sequenceNumber", bannerImage.getSequenceNumber());
-						bannerJsonArray.add(bannerJson);
-					}
+					final MplSequentialBannerComponentModel promoBanner = (MplSequentialBannerComponentModel) component;
 
-					if (banner instanceof MplBigFourPromoBannerComponentModel)
+					final JSONArray bannerJsonArray = new JSONArray();
+
+					for (final BannerComponentModel banner : promoBanner.getBannersList())
 					{
-						final MplBigFourPromoBannerComponentModel bannerImage = (MplBigFourPromoBannerComponentModel) banner;
-						if (bannerImage.getBannerImage() != null)
+						final JSONObject bannerJson = new JSONObject();
+						if (banner instanceof MplBigPromoBannerComponentModel)
 						{
-							bannerJson.put(MarketplacecommerceservicesConstants.BANNER_IMAGE, bannerImage.getBannerImage().getURL());
-							bannerJson.put(MarketplacecommerceservicesConstants.BANNER_ALTTEXT, bannerImage.getBannerImage()
-									.getAltText());
+							//TPR-559 Show/Hide Components and Sub-components
+							if (banner.getVisible().booleanValue())
+							{
+								final MplBigPromoBannerComponentModel bannerImage = (MplBigPromoBannerComponentModel) banner;
+								if (bannerImage.getBannerImage() != null)
+								{
+									bannerJson.put(MarketplacecommerceservicesConstants.BANNER_IMAGE, bannerImage.getBannerImage()
+											.getURL());
+									bannerJson.put(MarketplacecommerceservicesConstants.BANNER_ALTTEXT, bannerImage.getBannerImage()
+											.getAltText());
+								}
+								else
+								{
+									bannerJson.put(MarketplacecommerceservicesConstants.BANNER_IMAGE,
+											MarketplacecommerceservicesConstants.EMPTYSPACE);
+									bannerJson.put(MarketplacecommerceservicesConstants.BANNER_ALTTEXT,
+											MarketplacecommerceservicesConstants.EMPTYSPACE);
+								}
+								bannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
+								bannerJson.put("promoText1", bannerImage.getMajorPromoText());
+								bannerJson.put("promoText2", bannerImage.getMinorPromo1Text());
+								bannerJson.put("promoText3", bannerImage.getMinorPromo2Text());
+								bannerJson.put("sequenceNumber", bannerImage.getSequenceNumber());
+								bannerJsonArray.add(bannerJson);
+							}
+							else
+							{
+								LOG.info("Component visiblity set to false");
+							}
 						}
-						else
+
+						if (banner instanceof MplBigFourPromoBannerComponentModel)
 						{
-							bannerJson.put(MarketplacecommerceservicesConstants.BANNER_IMAGE,
-									MarketplacecommerceservicesConstants.EMPTYSPACE);
-							bannerJson.put(MarketplacecommerceservicesConstants.BANNER_ALTTEXT,
-									MarketplacecommerceservicesConstants.EMPTYSPACE);
+							//TPR-559 Show/Hide Components and Sub-components
+							if (banner.getVisible().booleanValue())
+							{
+								final MplBigFourPromoBannerComponentModel bannerImage = (MplBigFourPromoBannerComponentModel) banner;
+								if (bannerImage.getBannerImage() != null)
+								{
+									bannerJson.put(MarketplacecommerceservicesConstants.BANNER_IMAGE, bannerImage.getBannerImage()
+											.getURL());
+									bannerJson.put(MarketplacecommerceservicesConstants.BANNER_ALTTEXT, bannerImage.getBannerImage()
+											.getAltText());
+								}
+								else
+								{
+									bannerJson.put(MarketplacecommerceservicesConstants.BANNER_IMAGE,
+											MarketplacecommerceservicesConstants.EMPTYSPACE);
+									bannerJson.put(MarketplacecommerceservicesConstants.BANNER_ALTTEXT,
+											MarketplacecommerceservicesConstants.EMPTYSPACE);
+								}
+								bannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
+								bannerJson.put("promoText1", bannerImage.getPromoText1());
+								bannerJson.put("promoText2", bannerImage.getPromoText2());
+								bannerJson.put("promoText3", bannerImage.getPromoText3());
+								bannerJson.put("promoText4", bannerImage.getPromoText4());
+								bannerJson.put("sequenceNumber", bannerImage.getSequenceNumber());
+								bannerJsonArray.add(bannerJson);
+							}
+							else
+							{
+								LOG.info("Component visiblity set to false");
+							}
 						}
-						bannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
-						bannerJson.put("promoText1", bannerImage.getPromoText1());
-						bannerJson.put("promoText2", bannerImage.getPromoText2());
-						bannerJson.put("promoText3", bannerImage.getPromoText3());
-						bannerJson.put("promoText4", bannerImage.getPromoText4());
-						bannerJson.put("sequenceNumber", bannerImage.getSequenceNumber());
-						bannerJsonArray.add(bannerJson);
 					}
+					allBannerJson.put("allBannerJsonObject", bannerJsonArray);
 				}
-				allBannerJson.put("allBannerJsonObject", bannerJsonArray);
+				else
+				{
+					LOG.info("Component visiblity set to false");
+				}
 			}
 		}
 		return allBannerJson;

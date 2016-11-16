@@ -10,6 +10,7 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="nav" tagdir="/WEB-INF/tags/responsive/nav"%>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
 
 <%-- <cms:pageSlot position="TopHeaderSlot" var="component" element="div"
 	class="container">
@@ -32,6 +33,7 @@
 			</div>
 	<!-- TPR-844 -->
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticHost"/>
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.resource.host')" var="luxuryHost"/>
 <header>	
 	<!-- For Infinite Analytics Start -->
 	<input type="hidden" id="ia_site_id" value="${cmsSite.uid}"> 
@@ -49,22 +51,39 @@
 	<input type="hidden" id="mplStaticResourceHost" value="${mplStaticResourceHost}">
 	<input type="hidden" id="previewVersion" value="${cmsPageRequestContextData.preview}">
 	<input type="hidden" id="pageTemplateId" value="${cmsPage.masterTemplate.uid}">
+	<input type="hidden" id="userLoginType" value="${userLoginType}">		<!-- TPR-668 -->
 	<!-- For Infinite Analytics End -->
 	<input type="hidden" id="pageName" value="${cmsPage.name}">
 	<!-- Static resource host -->
 	<input type="hidden" id="staticHost" value="//${staticHost}">
+	
+	<!-- geolocation start-->
+	
+	<input type="hidden" id="latlng" value="">
+    <input type="hidden" id="location" value="">
+    
+    <!-- geolocation End-->
 	<!-- End -->
+	
+	
+	
+    
+   
+	
+	
+	
+	
 	<div class="row header-row"></div>
 	<c:choose>
 		<c:when test="${empty showOnlySiteLogo }">
-			<div class="banner">
-			<div class="content" id="latestOffersContent"></div>
+			<%--<div class="banner">
+			 <div class="content" id="latestOffersContent"></div>
 				<span class="toggle desktop helpmeshopbanner latestOffersBanner"><p>${headerConciergeTitle}</p></span> 
 				
-				<%-- <cms:pageSlot position="HeaderLinks" var="link">
-					<cms:component component="${link}" element="" />
-				</cms:pageSlot> --%>
-			</div>
+				<!-- <cms:pageSlot position="HeaderLinks" var="link"> -->
+					<!--	<cms:component component="${link}" element="" />-->
+				<!--	</cms:pageSlot> -->
+			</div> --%>
 		</c:when>
 		<c:otherwise>
 			<c:if test="${empty hideSecureTransaction}">
@@ -75,7 +94,14 @@
 
 
 	<div class="content">
-
+	<!-- Luxury tab	 starts-->
+						<div id="flip-tabs" >				
+							<ul id="flip-navigation" >  
+					            <li class="selected"><a href="/" id="tab-1" >MARKETPLACE</a></li>
+					            <li><a href="${luxuryHost}" id="tab-2" target="_blank">LUXURY</a></li>  
+					        </ul> 
+					    </div>
+	 <!-- Luxury tab	 ends-->
 		<div class="top">
 			<c:if test="${empty showOnlySiteLogo }">
 				<div class="toggle">
@@ -85,12 +111,21 @@
 			<div class="container">
 				<c:if test="${empty showOnlySiteLogo }">
 					<div class="left">
+						<!-- Luxury tab	 starts-->
+						<%-- <div id="flip-tabs" >				
+							<ul id="flip-navigation" >  
+					            <li class="selected"><a href="/" id="tab-1" >MARKETPLACE</a></li>
+					            <li><a href="${luxuryHost}" id="tab-2" >LUXURY</a></li>  
+					        </ul> 
+					    </div> --%>
+				        <!-- Luxury tab	 ends-->
 						<ul>
 							<%-- <li><a href="<c:url value="/helpservices"/>"><spring:theme
 										code="header.help&Services" /></a></li> --%>
-
 						</ul>
-					</div>
+						
+				   </div>      
+					
 				</c:if>
 
 				<div class="marketplace compact">
@@ -238,7 +273,11 @@
 		</div>
 		<div class="compact-toggle mobile"></div>
 	</div>
-
+<c:if test="${param.blpLogo ne null}">
+<div class="blp-serp-banner" style="background-color:#000;height:80px;">
+<img class="image" alt="" src="${param.blpLogo}">
+</div>
+</c:if>
 	<a id="skiptonavigation"></a>
 	<nav:topNavigation />
 </header>
@@ -265,6 +304,42 @@
 #feedBackFormModal.modal .content > .close {
 	right: 20px !important;
 }
+
+/*--------------Added for luxury site starts-----------*/
+/* #flip-tabs{  
+    width:300px;  
+    margin:20px auto; position:relative;  
+}  
+#flip-navigation{  
+    margin:0 0 10px; padding:0;   
+    list-style:none;  
+}  
+#flip-navigation li{   
+    display:inline;   
+}  
+#flip-navigation li a{  
+    text-decoration:none; padding:10px;   
+    margin-right:0px;  
+    background:#f9f9f9;  
+    color:#333; outline:none;  
+    font-family:Arial; font-size:12px; text-transform:uppercase;  
+}  
+#flip-navigation li a:hover{  
+    background:#999;   
+    color:#f0f0f0;  
+}  
+#flip-navigation li.selected a{  
+    background:#999;  
+    color:#f0f0f0;  
+}  
+/* #flip-container{    
+    width:300px;  
+    font-family:Arial; font-size:13px;  
+}  
+#flip-container div{   
+    background:#fff;  
+}  */  */
+/*--------------Added for luxury site ends-----------*/
 </style>
 <script>
 var pathname = window.location.pathname;

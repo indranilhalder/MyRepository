@@ -134,7 +134,7 @@ public class MarketplaceDefaultCsCheckoutService extends
 			
 			CustomerModel customer =  (CustomerModel) cart.getUser();
 		
-		 OTPModel opt = otpGenericService.getLatestOTPModel(cart.getUser().getUid(), OTPTypeEnum.COD);
+		 OTPModel opt = otpGenericService.getLatestOTPModel(((CustomerModel)cart.getUser()).getOriginalUid(), OTPTypeEnum.COD);
 		boolean validateOTP =!( opt!=null && opt.getIsValidated() !=null
 				&& opt.getIsValidated().booleanValue());
 		

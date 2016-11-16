@@ -58,6 +58,7 @@
 					<%-- <form> --%>
 					<fieldset>
 						<form:form action="update-parsonal-detail" method="post" commandName="mplCustomerProfileForm" name="mplCustomerProfileForm" onSubmit="return validateForm();">
+							 <input type="hidden" name="isLux" value="${param.isLux}"/>
 							 <div class="half">
 									<label><spring:theme code="text.mplCustomerProfileForm.firstName" text="First Name" /></label>
 										<form:input path="firstName" id="profilefirstName"

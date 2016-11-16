@@ -1,0 +1,18 @@
+# ImpEx for Importing Units into Apparel Store
+
+# Macros / Replacement Parameter definitions
+$systemVersion=systemVersion(catalog(id[default='MplClassification']),version[default='1.0'])
+
+
+ ############################Added By SAP Sample Data for Classification Unit For Fashion Accessories & Watches ::: START 
+ $classSystemVersion=systemVersion(catalog(id[default='pcmClassification']),version[default='1'])[unique=true]
+ 
+ # Create unit
+# code : 1XX -> length, 2XX -> capacity
+# unitType : 001 -> length, 002 -> capacity
+INSERT_UPDATE ClassificationAttributeUnit;code[unique=true];symbol;unitType;name[lang=en];conversionfactor;$classSystemVersion[unique=true]
+;102;m;;m;1
+;103;mm;;milimeter;1
+;101;inch;;inch;1
+;201;litre;;litre;1
+;104;cm;;cm;1

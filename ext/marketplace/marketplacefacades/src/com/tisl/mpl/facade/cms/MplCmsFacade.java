@@ -5,6 +5,7 @@ package com.tisl.mpl.facade.cms;
 
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
+import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 
 import java.util.List;
 
@@ -14,10 +15,14 @@ import com.tisl.mpl.facades.cms.data.CollectionPageData;
 import com.tisl.mpl.facades.cms.data.HeroProductData;
 import com.tisl.mpl.facades.cms.data.MplPageData;
 import com.tisl.mpl.facades.cms.data.PageData;
+import com.tisl.mpl.wsdto.LuxBlpCompWsDTO;
+import com.tisl.mpl.wsdto.LuxHomePageCompWsDTO;
+import com.tisl.mpl.wsdto.LuxNavigationWsDTO;
+
 
 
 /**
- * @author 584443
+ * @author TCS
  *
  */
 public interface MplCmsFacade
@@ -33,6 +38,7 @@ public interface MplCmsFacade
 
 	MplPageData getHomePageForMobile();
 
+	LuxHomePageCompWsDTO getHomePageForLuxury() throws CMSItemNotFoundException;
 
 	PageData populateCategoryLandingPageForMobile(ContentPageModel contentPage, String categoryCode);
 
@@ -64,8 +70,23 @@ public interface MplCmsFacade
 	PageData populateOfferPageType(String offerId, String PageType);
 
 	/**
+	 * Modified for TPR-798
+	 *
 	 * @param homePageUid
+	 * @param pageableData
 	 * @return
 	 */
-	List<MplPageData> getPageInformationForPageId(String homePageUid);
+
+	List<MplPageData> getPageInformationForPageId(String homePageUid, final PageableData pageableData);
+
+
+	/**
+	 * @return
+	 */
+	LuxBlpCompWsDTO getlandingForBrand(String brandCode) throws CMSItemNotFoundException;
+
+	/**
+	 * @return
+	 */
+	LuxNavigationWsDTO getMegaNavigation() throws CMSItemNotFoundException;
 }

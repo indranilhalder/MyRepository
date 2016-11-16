@@ -34,6 +34,17 @@
 		<!-- Store Icon Image URL -->
 		<collectiontype elementtype="java.lang.String" code="mplStoreImageUrl"
 				autocreate="true" generate="true" type="list"/>
+				
+		<!-- TPR-970	starts -->
+		 <collectiontype code="EtailPincodeStatesCollection"
+			elementtype="State" autocreate="true" generate="false"
+			type="list" />
+		 <collectiontype code="EtailPincodeCitiesCollection"
+			elementtype="City" autocreate="true" generate="false"
+			type="list" />
+		<!-- TPR-970	ends --> 
+					
+				
 	</collectiontypes>
 
 	<enumtypes>
@@ -121,6 +132,53 @@
 			<attribute qualifier="media" type="Media"> <persistence type="property"/> 
 			</attribute> </attributes> </itemtype> -->
 
+<!-- TPR-970 changes	 -->
+			<!-- pincode ,latitude and longitude Model -->
+		
+       <!-- TPR-970 starts -->
+		<itemtype code="State" autocreate="true"
+					 generate="true">
+					  <deployment table="MplState" typecode="25084" /> 
+			<attributes>
+					<attribute autocreate="true" qualifier="countrykey"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="region"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="description"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>					
+			</attributes>
+	</itemtype>
+	<itemtype code="City" autocreate="true"
+					 generate="true">
+			<attributes>
+					<attribute autocreate="true" qualifier="cityName"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="description"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>					
+			</attributes>
+	</itemtype>
+	<!-- TPR-970 ends -->
+
 		<!-- Free Gift Action for promotions -->
 		<itemtype code="CustomPromotionOrderAddFreeGiftAction"
 			extends="AbstractPromotionAction" jaloclass="com.tisl.mpl.jalo.CustomPromotionOrderAddFreeGiftAction"
@@ -174,7 +232,158 @@
 					<persistence type="property" />
 				</attribute>
 			</attributes>
-		</itemtype>		
+		</itemtype>	
+		
+		
+		
+		
+			
+		
+			<!-- Tata Etail For Buy A and get percentage or Amount off on BTPR-961-->
+		<itemtype code="BuyAGetPercentageDiscountOnB" extends="ProductPromotion"
+			jaloclass="com.tisl.mpl.jalo.BuyAGetPercentageDiscountOnB" autocreate="true"
+			generate="true">
+			<attributes>
+			<attribute qualifier="thresholdTotals" autocreate="true"
+					type="PromotionPriceRowCollectionType">
+					<description>The value beyond which if added to cart Promotion applies</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						initial="false" optional="true" partof="true" />
+			</attribute>
+				<attribute qualifier="secondProducts" autocreate="true"
+					generate="true" type="ProductCollection">
+					<description>The B products that the promotion should not be applied to</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+				</attribute>
+				<attribute qualifier="secondProductCodeList" autocreate="true"
+					generate="true" type="java.lang.String">
+					<description>Promotion to be applied for list of second product codes separated by comma </description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="secondCategories"
+					type="CategoryCollection">
+					<description>the categories the given voucher is valid for.</description>
+					<persistence type="property" />
+					<modifiers search="false" />
+				</attribute>
+				<attribute qualifier="percentageDiscount" autocreate="true"
+					type="java.lang.Double">
+					<defaultvalue>Double.valueOf(0D)</defaultvalue>
+					<description>Percentage discount.</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="messageFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion has fired.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="messageCouldHaveFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion could have potentially fire.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="discountPrices" autocreate="true"
+					type="PromotionPriceRowCollectionType">
+					<description>Fixed price for discount in specific currencies.</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						initial="false" optional="true" partof="true" />
+				</attribute>
+				<attribute qualifier="percentageOrAmount" autocreate="true"
+					type="java.lang.Boolean">
+					<description>Flag to indicate that the promotion is having amount or percentage discount.</description>
+					<defaultvalue>Boolean.TRUE</defaultvalue>
+					<persistence type="property" />
+					<modifiers read="true" write="true" optional="false" />
+				</attribute>
+				<attribute qualifier="maxDiscount" autocreate="true"
+					type="java.lang.Double">
+					<description>maxDiscount discount in specific currencies.</description>
+					<defaultvalue>Double.valueOf(0)</defaultvalue>
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+		
+			<!-- CustomBuyAgetPercentageDiscountOnBAdjustAction class for apportioned value 
+			for Product level promotions -->
+		<itemtype code="CustomBuyAgetPercentageDiscountOnBAdjustAction"
+			extends="AbstractPromotionAction" jaloclass="com.tisl.mpl.jalo.CustomBuyAgetPercentageDiscountOnBAdjustAction"
+			autocreate="true" generate="true">
+			<attributes>
+				<attribute qualifier="amount" autocreate="true"
+					type="java.lang.Double">
+					<defaultvalue>Double.valueOf(0.0D)</defaultvalue>
+					<description>The amount to adjust the order entry by.</description>
+					<modifiers read="true" write="true" />
+					<persistence type="property" />
+				</attribute>
+
+				<attribute qualifier="orderEntryProduct" autocreate="true"
+					type="Product">
+					<description>The product of the order entry to adjust</description>
+					<modifiers read="true" write="true" />
+					<persistence type="property" />
+				</attribute>
+
+				<attribute qualifier="orderEntryQuantity" autocreate="true"
+					type="java.lang.Long">
+					<description>The quantity of the order entry to adjust</description>
+					<modifiers read="true" write="true" />
+					<persistence type="property" />
+				</attribute>
+
+				<!-- since 4.4, see PRO-75 -->
+				<attribute qualifier="orderEntryNumber" autocreate="true"
+					type="java.lang.Integer">
+					<description>The entry number in the order</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property" />
+				</attribute>
+
+			</attributes>
+		</itemtype>
+		
+		
 
 		<!-- Custom PromotionOrderEntryAdjustAction class for apportioned value 
 			for Product level promotions -->
@@ -1427,7 +1636,40 @@
 					<!-- For TPR-1620 : Bulk Load in Exclude Seller ends -->
 			</attributes>
 		</itemtype>
-
+       <!-- TPR-970 changes starts -->
+		<itemtype code="EtailPincodeRestriction"
+			extends="AbstractPromotionRestriction" jaloclass="com.tisl.mpl.jalo.MplPincodeSpecificRestriction"
+			autocreate="true" generate="true">
+			<attributes>
+			   <attribute autocreate="true" qualifier="states"
+					type="EtailPincodeStatesCollection">
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+			
+			<attribute autocreate="true" qualifier="cities"
+					type="EtailPincodeCitiesCollection">
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+					<persistence type="property" />
+			</attribute>
+			
+			<attribute qualifier="includeCities" type="java.lang.Boolean">
+					<defaultvalue>Boolean.TRUE</defaultvalue>
+					<description>
+						Specifies if this restriction is included for cities or not 
+					</description>
+					<persistence type="property"/>
+					<modifiers search="false" optional="false"/>
+				</attribute>
+			</attributes>
+		</itemtype>
+		
+		<!-- TPR-970 changes	 -->
+			<!-- pincode ,latitude and longitude Model -->
+		
+       
 		<itemtype code="AbstractOrderEntry" autocreate="false"
 			generate="false">
 			<attributes>
@@ -2447,6 +2689,125 @@
 					</attribute>					
 				</attributes>
 			</itemtype>	
+			
+		<!-- TPR-969 -->
+		 <itemtype code="EntryCountPromotionRestriction"
+			extends="AbstractPromotionRestriction" jaloclass="com.tisl.mpl.jalo.EntryCountPromotionRestriction"
+			autocreate="true" generate="true">
+			<attributes>
+			<!-- TPR-3582 FIX -->
+				<attribute qualifier="entryQualifyingCount" autocreate="true"
+					type="java.lang.Integer">
+					<description>The count of entries needed to apply the promotion.</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						initial="false" optional="true" partof="true" />
+				</attribute>
+			</attributes>
+		</itemtype>  
+		<!-- TPR-629 ends -->
+			
+			<!-- Item Declaration for  Bundle Promotions -->
+			<!-- TPR-1294 : Item Declaration Bundle Promotion-->
+			
+			<itemtype code="MplProductSteppedMultiBuyPromotion"
+			extends="ProductPromotion"
+			jaloclass="com.tisl.mpl.jalo.MplProductSteppedMultiBuyPromotion"
+			autocreate="true"
+			generate="true">
+
+			<attributes>
+				<attribute
+					qualifier="qualifyingCountsAndBundlePrices"
+					autocreate="true"
+					type="PromotionQuantityAndPricesRowCollectionType">
+					<description>The qualifying count and prices for each step.</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false" initial="false" optional="true" partof="true"/>
+				</attribute>
+				<attribute qualifier="messageFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion has fired.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="messageCouldHaveFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion could have potentially fire.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+			</attributes>
+		</itemtype>
+			<!-- TPR-1294 : Item Declaration ends -->
+		<!-- TPR-970 : changes starts -->
+			<typegroup name="Pincode">
+			<itemtype code="Pincode" extends="GenericItem"
+				jaloclass="de.hybris.platform.jalo.product.Pincode" autocreate="true"
+				generate="true">
+				<deployment table="Pincodes" typecode="11299" />
+				<attributes>
+					<attribute autocreate="true" qualifier="pincode" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" unique="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="latitude" type="java.lang.Double">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="longitude" type="java.lang.Double">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<!-- TPR-970 changes start -->
+					<attribute autocreate="true" qualifier="State" type="State">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="City" type="City">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+				</attributes>
+			</itemtype>
+		</typegroup>
+		<!-- TPR-970 changes end -->
 	</itemtypes>
 	
 </items>

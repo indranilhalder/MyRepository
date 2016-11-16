@@ -208,4 +208,16 @@ public class SellerBasedPromotionServiceImpl implements SellerBasedPromotionServ
 		return getSellerBasedPromotionDao().getPromoDetails();
 	}
 
+
+
+
+	/**
+	 * This method returns boolean result of fetching promotionModel based on promoCode and enabled status. TPR-629
+	 */
+	@Override
+	public boolean getPromoDetails(final String promoCode)
+	{
+		return getSellerBasedPromotionDao().getPromoDetails(promoCode);
+	}
+
 }

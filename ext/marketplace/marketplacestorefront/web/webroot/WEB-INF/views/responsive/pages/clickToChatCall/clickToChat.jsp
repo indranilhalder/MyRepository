@@ -50,7 +50,7 @@ margin-top:5px;
 		</div>
 		<div class="button_fwd_wrapper actions">
 			<button id="submitC2C" type="button" class="bsubmit"><spring:theme code="popupc2c.connect.chat" /></button>
-			 <a class="close bcancel" href="" data-dismiss="modal"><spring:theme code="text.button.cancel" /></a>
+			 <a class="close bcancel" href="" data-dismiss="modal" id="chat"><spring:theme code="text.button.cancel" /></a>
 		</div>
 		</form>
 	</div>

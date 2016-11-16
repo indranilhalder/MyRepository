@@ -168,9 +168,20 @@ public class RequireHardLoginBeforeControllerHandler implements BeforeController
 				if (!(((!getUserService().isAnonymousUser(getUserService().getCurrentUser()) || checkForAnonymousCheckout()) && checkForGUIDCookie(
 						request, response, guid))))
 				{
-					LOG.warn((guid == null ? "missing secure token in session" : "no matching guid cookie") + ", redirecting");
-					getRedirectStrategy().sendRedirect(request, response, getRedirectUrl(request));
-					return false;
+					boolean redirect = true;
+					if (keepLoginAlive(request))
+					{
+						LOG.info("Keep Alive cookie is active.. Hence not redirecting....");
+
+					}
+					else
+					{
+						LOG.warn((guid == null ? "missing secure token in session" : "no matching guid cookie") + ", redirecting");
+						getRedirectStrategy().sendRedirect(request, response, getRedirectUrl(request));
+						redirect = false;
+					}
+
+					return redirect;
 				}
 			}
 			return true;
@@ -269,5 +280,26 @@ public class RequireHardLoginBeforeControllerHandler implements BeforeController
 
 		// Search for class level annotation
 		return AnnotationUtils.findAnnotation(handlerMethod.getBeanType(), annotationType);
+	}
+
+	//POC Check if the keep alive cookie is present or not
+	protected boolean keepLoginAlive(final HttpServletRequest request)
+	{
+		boolean keepLoginAlive = false;
+		final Cookie[] cookies = request.getCookies();
+		if (cookies != null)
+		{
+			for (final Cookie cookie : request.getCookies())
+			{
+				if (cookie.getName().equals("keepAlive"))
+				{
+					keepLoginAlive = true;
+					LOG.info("Found KEEP ALIVE cookie......");
+					break;
+				}
+
+			}
+		}
+		return keepLoginAlive;
 	}
 }

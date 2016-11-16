@@ -186,7 +186,7 @@
 
 
 							<%-- <li class="product-size-list"><span class="product-size">Size : ${fn:toUpperCase(product.displaySize)} </span></li> --%>
-							<li class="product-size-list"><span class="product-size">Size: <span class="size-col">${product.displaySize}</span><%-- Price : ${product.displayPrice}### ${product.displayUrl} --%>
+							<li class="product-size-list"><span class="product-size">Size: <span class="size-col">${product.displaySizes}</span><%-- Price : ${product.displayPrice}### ${product.displayUrl} --%>
 							</span></li>
 						</c:if>
 						<%-- <li>Color: ${product.swatchColor}</li> --%>
@@ -328,7 +328,7 @@
 							<c:if test="${product.savingsOnProduct.value > 0}">																		
 							<p class="savings">																				
 							<%-- <span id="savings_${product.code}">  You save ${product.savingsOnProduct.formattedValue} </span> --%>
-							 <span id="savings_${product.code}">  (-${product.savingsOnProduct.value} %) </span>
+							 <span id="savings_${product.code}">  ( -${product.savingsOnProduct.value}% ) </span>
 							</p>
 							</c:if>
 							
@@ -410,8 +410,10 @@
 				<action:actions element="div" parentComponent="${component}"/>
 			</div>
 		</div> --%>
+			<%-- <c:if
+				test="${not empty product.productCategoryType && (product.productCategoryType eq 'Electronics' || product.productCategoryType eq 'Watches')}"> --%>
 			<c:if
-				test="${not empty product.productCategoryType && product.productCategoryType eq 'Electronics'}">
+				test="${not empty product.productCategoryType && product.productCategoryType eq 'Electronics' }">
 				<div class="compare">
 					<input type="checkbox" id="${product.leastSizeProduct}"> <label
 						for="${product.leastSizeProduct}"></label>
