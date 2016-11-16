@@ -310,9 +310,12 @@ $(document).ready(
 						tealiumData += '"product_brand":'
 							+ $("#product_brand").val() + ',';				
 						tealiumData += '"product_quantity_update":'
-							+ qtyUpdated + ',';				
-						tealiumData += '"checkout_seller_ids":"'		//for TPR-429
-							+ $("#checkoutSellerIDs").val() + ',';
+							+ qtyUpdated + ',';		
+						
+						tealiumData += '"checkout_seller_ids":'
+							+ $("#checkoutSellerIDs").val() + ',';	
+						/*tealiumData += '"checkout_seller_ids":"'		//for TPR-429
+							+ $("#checkoutSellerIDs").val() + ',';*/
 						//TPR-430 Start
 						tealiumData += '"product_category":'
 							+ $("#product_category").val().replace(/[\[\]']+/g, '') + ',';
