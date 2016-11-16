@@ -629,20 +629,20 @@ public class MplChangeDeliveryOTPWidgetRenderer
 		String smsContent = oTPGenericService.generateOTP(userId,
 				OTPTypeEnum.CDA.getCode(), oTPMobileNumber);
 
-//		sendSMSFacade
-//				.sendSms(
-//						MarketplacecommerceservicesConstants.SMS_SENDER_ID,
-//						MarketplacecommerceservicesConstants.SMS_MESSAGE_CD_OTP
-//								.replace(
-//										MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO,
-//										mplCustomerName != null ? mplCustomerName
-//												: "There")
-//								.replace(
-//										MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE,
-//										smsContent)
-//								.replace(
-//										MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO,
-//										contactNumber), oTPMobileNumber);
+		sendSMSFacade
+				.sendSms(
+						MarketplacecommerceservicesConstants.SMS_SENDER_ID,
+						MarketplacecommerceservicesConstants.SMS_MESSAGE_CD_OTP
+								.replace(
+										MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO,
+										mplCustomerName != null ? mplCustomerName
+												: "There")
+								.replace(
+										MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE,
+										smsContent)
+								.replace(
+										MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO,
+										contactNumber), oTPMobileNumber);
 
 	}
 
