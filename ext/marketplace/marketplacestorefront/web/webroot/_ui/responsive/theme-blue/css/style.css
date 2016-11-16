@@ -45450,6 +45450,45 @@ body.pageLabel-Footwear .feature-collections ul.collections li.chef .feature-col
 		 padding: 40px 0 55px;
 	}
 }
+/* Comment on 16/11/2016 starts IA*/
+.page-productDetails .trending h2 {
+	margin: 0;
+	font-weight: bold;
+	margin: 50px 0;
+}
+.page-productDetails .trending h2 span {
+	font-weight: bold;
+}
+@media(max-width:1024px){
+.page-productDetails .trending h2 {
+		border-top: 1px solid #ccc;
+		margin: 40px 25px 20px;
+		left: 0;
+		font-size: 24px;
+		padding: 25px 0 0;
+		transform: inherit;
+	}
+	.trending h2 span {
+		font-size: 24px;
+	}
+}
+@media(max-width:790px){
+.trending h2 span {
+    clear: both;
+    float: none;
+    text-align: center;
+    position: static;
+}
+}
+@media(max-width:767px){
+.page-productDetails .trending h2 {		
+		margin: 20px 25px;		
+	}
+	.trending h2 span {		
+		font-size: 20px;		
+	}	
+}
+/* Comment on 16/11/2016 ends IA*/
 
 /* TPR-245 SEO Ends */
 
