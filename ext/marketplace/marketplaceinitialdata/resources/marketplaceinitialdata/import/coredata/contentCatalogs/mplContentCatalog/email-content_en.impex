@@ -41,7 +41,7 @@ UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript
  ;mpl_Email_Order_Refund_Subject;"Order Refund Email Subject";$emailResource/email-orderRefundSubject.vm
  ;mpl_Email_Ready_For_Pickup_Body;"Ready For Pickup Email Body";$emailResource/email-readyForPickupBody.vm
  ;mpl_Email_Ready_For_Pickup_Subject;"Ready For Pickup Email Subject";$emailResource/email-readyForPickupSubject.vm
-  ;mpl_Email_FriendsInvite_Body;"Friends Invite Email Body";$emailResource/email-friendsInviteBody.vm
+ ;mpl_Email_FriendsInvite_Body;"Friends Invite Email Body";$emailResource/email-friendsInviteBody.vm
  ;mpl_Email_FriendsInvite_Subject;"Friends Invite Email Subject";$emailResource/email-friendsInviteSubject.vm
  ;mpl_Email_SendInvoice_Body;"Send Invoice Email Body";$emailResource/email-sendInvoiceBody.vm
  ;mpl_Email_SendInvoice_Subject;"Send Invoice Email Subject";$emailResource/email-sendInvoiceSubject.vm
@@ -56,6 +56,8 @@ UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript
  ;mpl_Email_ChangePassword_Body;"Change Password Email Body";$emailResource/email-changePasswordBody.vm
  ;mpl_Email_SubmitRequest_Subject;"Contact us request subject";$emailResource/email-submitRequestSubject.vm
  ;mpl_Email_SubmitRequest_Body;"Contact us request  Body";$emailResource/email-submitRequestBody.vm
+ ;mpl_Email_LuxuryPdpQuestion_Subject;"Contact us Luxury Pdp Question subject";$emailResource/email-luxuryPDPQuestionSubject.vm
+ ;mpl_Email_LuxuryPdpQuestion_Body;"Contact us Luxury Pdp Question  Body";$emailResource/email-luxuryPDPQuestionBody.vm
  ;mpl_Email_OrderPlacedFeedback_Subject;"Order Placed Feedback subject";$emailResource/email-orderPlacedFeedbackSubject.vm
  ;mpl_Email_OrderPlacedFeedback_Body;"Order Placed Feedback Body";$emailResource/email-orderPlacedFeedbackBody.vm
  #Shipping Confirmation Event
@@ -86,6 +88,15 @@ UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript
 ;mpl_Take_Action_On_Held_Order_Subject;"Take Action On Held Order Subject";$emailResource/email-takeActionOnHeldOrderSubject.vm
 ;mpl_Take_Action_On_Held_Order_Body;"Take Action On Held Order Body";$emailResource/email-takeActionOnHeldOrderBody.vm
 
+########Payment Related Emails
+;mpl_Email_Inventory_Reservation_Failed_Body;"Inventory Reservation Failed Email Body";$emailResource/email-inventoryReservationFailedBody.vm
+;mpl_Email_Inventory_Reservation_Failed_Subject;"Inventory Reservation Failed Email Subject";$emailResource/email-inventoryReservationFailedSubject.vm
+;mpl_Email_Payment_Failed_Body;"Payment Failed Email Body";$emailResource/email-paymentFailedBody.vm
+;mpl_Email_Payment_Failed_Subject;"Payment Failed Email Subject";$emailResource/email-paymentFailedSubject.vm
+;mpl_Email_Payment_Pending_Body;"Payment Pending Email Body";$emailResource/email-paymentPendingBody.vm
+;mpl_Email_Payment_Pending_Subject;"Payment Pending Email Subject";$emailResource/email-paymentPendingSubject.vm
+;mpl_Email_Payment_Timeout_Body;"Payment Timeout Email Body";$emailResource/email-paymentTimeoutBody.vm
+;mpl_Email_Payment_Timeout_Subject;"Payment Timeout Email Subject";$emailResource/email-paymentTimeoutSubject.vm
 # Email Pages
 UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];fromEmail[lang=$lang];fromName[lang=$lang]
  ;;CustomerRegistrationEmail;"customercare@tatacliq.com";"TataCLiQ Care"
@@ -115,7 +126,11 @@ UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];fromEmail[lang=$lang];
  ;;OrderDeliveryEmail;"customercare@tatacliq.com";"TataCLiQ Care" 
   ###########PDP Email
  ;;PDPEmail;"customercare@tatacliq.com";"TataCLiQ Care"
- 
+ ######Payment Related Emails
+ ;;InventoryReservationFailedEmail;"customercare@tatacliq.com";"TataCLiQ Care"
+ ;;PaymentFailedEmail;"customercare@tatacliq.com";"TataCLiQ Care"
+ ;;PaymentPendingEmail;"customercare@tatacliq.com";"TataCLiQ Care"
+ ;;PaymentTimeoutEmail;"customercare@tatacliq.com";"TataCLiQ Care"
  ###### Tata Etail-Promotion Creation Mail #########
  UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];fromEmail[lang=$lang];fromName[lang=$lang]
 

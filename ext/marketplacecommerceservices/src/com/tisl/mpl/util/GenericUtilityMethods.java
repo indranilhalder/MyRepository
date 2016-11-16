@@ -8,6 +8,7 @@ import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
+import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
@@ -1297,6 +1298,7 @@ public class GenericUtilityMethods
 		return str.toString();
 	}
 
+
 	public static void getCategoryLevel(final CategoryModel categoryId, int count, final StringBuffer categoryName)
 	{
 		final int finalCount = 3;
@@ -1357,6 +1359,34 @@ public class GenericUtilityMethods
 
 		}
 		return checkoutSellerID;
+	}
+
+
+	/**
+	 * @Description : Return Channel Data
+	 * @param channel
+	 * @return salesApplication
+	 */
+	public static List<SalesApplication> returnChannelData(final String channel)
+	{
+		final List<SalesApplication> salesApplication = new ArrayList<SalesApplication>();
+		if (channel.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_WEB))
+		{
+			salesApplication.add(SalesApplication.WEB);
+		}
+		else if (channel.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_WEBMOBILE))
+		{
+			salesApplication.add(SalesApplication.WEBMOBILE);
+		}
+		else if (channel.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_MOBILE))
+		{
+			salesApplication.add(SalesApplication.MOBILE);
+		}
+		else if (channel.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_CALLCENTER))
+		{
+			salesApplication.add(SalesApplication.CALLCENTER);
+		}
+		return salesApplication;
 	}
 
 }

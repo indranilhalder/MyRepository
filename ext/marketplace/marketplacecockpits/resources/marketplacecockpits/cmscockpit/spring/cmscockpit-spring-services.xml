@@ -78,6 +78,9 @@
 						<value>MplAdvancedCategoryCarouselComponent.categories</value>
 						<value>MplShowcaseComponent.showcaseItems</value>
 						<value>ImageCarouselComponent.collectionItems</value>
+						<value>SignColComponent.showcaseItems</value>
+						<value>OurJourneyComponent.footerImageList</value>
+						<value>MplNavigationNodeComponent.sliders</value>
 					</list>
 				</entry>
 				<entry key="AbstractCMSComponent">
@@ -91,6 +94,13 @@
 						<value>NavigationBarCollectionComponent.components</value>
 						<value>NavigationBarComponent.navigationNode</value>
 						<value>NavigationBarComponent.link</value>
+						<value>SimpleBannerComponent.description</value>
+						<value>MplImageCategoryComponent.mobileImage</value>
+						<!-- TISLUX-2740 -->
+						<value>CMSLinkComponent.category</value>
+						<value>CMSLinkComponent.url</value>
+						<value>CMSLinkComponent.name</value>
+						<value>CMSLinkComponent.linkName</value>
 					</list>
 				</entry>
 				<entry key="CMSNavigationNode">
@@ -100,6 +110,12 @@
 						<value>CMSNavigationNode.links</value>
 						<value>CMSNavigationEntry.item</value>
 						<value>CMSLinkComponent</value>
+					</list>
+				</entry>
+				<entry key="MplNavigationNodeComponent">
+					<list>
+						<value>MplNavigationNodeComponent.sliders</value>
+						<value>SimpleBannerComponent.description</value>
 					</list>
 				</entry>
 				<entry key="ContentSlot">
@@ -146,6 +162,17 @@
 				<entry key="ImageCarouselComponent">
 					<list>
 						<value>ImageCarouselComponent.collectionItems</value>
+					</list>
+				</entry>
+				
+				<entry key="SignColComponent">
+					<list>
+						<value>SignColComponent.showcaseItems</value>
+					</list>
+				</entry>
+				<entry key="OurJourneyComponent">
+					<list>
+						<value>OurJourneyComponent.footerImageList</value>
 					</list>
 				</entry>
 			</map>

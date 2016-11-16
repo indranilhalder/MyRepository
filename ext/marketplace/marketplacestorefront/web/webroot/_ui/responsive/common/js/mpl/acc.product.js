@@ -1179,6 +1179,9 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 					+ "/cart/showTransientCart",
 			data:dataString,
 			success : function(response) {
+				
+				
+				
 				$('.mini-transient-bag').remove();
 				var transientCartHtml="<div class='mini-transient-bag' ><span class='mini-cart-close'>+</span><ul class='my-bag-ul'><li class='item'><ul><li><div class='product-img'><a href='"+ACC.config.encodedContextPath+response.productUrl+"'><img class='picZoomer-pic' src='"+response.productImageUrl+"'></a></div><div class='product'><p class='company'></p><h3 class='product-name'><a href='"+ACC.config.encodedContextPath+response.productUrl+"'>"+response.productTitle+"</a></h3><span class='addedText'>has been added to your cart</span>";
 				
@@ -1186,9 +1189,14 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 					transientCartHtml+="<div class='transient-offer'>"+response.offer+"</div>";
 				}
 				
+			
 				transientCartHtml+="</div></li></ul><li class='view-bag-li'><a href='"+ACC.config.encodedContextPath+"/cart' class='go-to-bag mini-cart-checkout-button'>View Bag</a></li></ul></div>";
 				$('.transient-mini-bag').append(transientCartHtml);
-				
+				/*LW-216*/
+				if(typeof response.productType!=='undefined' && response.productType.toLowerCase() === "luxury"){
+					$('.mini-transient-bag .product-img').append("<img class='luxury_ribbon' src='/_ui/responsive/common/images/Ribbon.png'>");
+				}
+				/*LW-216*/
 				if ($("header .content .bottom").hasClass("active")){
 					$("header .content .right>ul>li.transient-mini-bag .mini-transient-bag").css({
 						"position": "fixed",
@@ -1319,10 +1327,17 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 						var requiredUrl="";
 						var action = $("#customPriceFilter").attr('action');
 						if($("#isCategoryPage").val() == 'true'){
-							action = action.split('/c-');
-							action = action[1].split('/');
-							requiredUrl = "/c-"+action[0];
-							requiredUrl += "/getFacetData";
+							if ($("input[name=customSku]").val()) {
+								var collectionId = $("input[name=customSkuCollectionId]").val();
+								requiredUrl = '/CustomSkuCollection/'+collectionId+'/getFacetData';
+							}
+							else {
+								action = action.split('/c-');
+								action = action[1].split('/');
+								requiredUrl = "/c-"+action[0];
+								requiredUrl += "/getFacetData";
+							}
+							
 						} else {
 							if(action.indexOf("/getFacetData") == -1){
 							
@@ -1383,11 +1398,11 @@ $(document).on("change",'.facet_desktop .filter-price',function(){
 //Splits priceValue:Rsxxx-Rsyyy to [xxx, yyy]
 function splitPrice(value) {
 	var priceRange = null;	
-	if(value.includes("-"))
-	{
+	if(value.indexOf('-') > -1)  // Fix for TISPRD-8267
+	{   
 		priceRange = value.split("-");		
 	}
-	else if(value.includes("and Above"))
+	else if(value.indexOf("and Above") > -1)  // Fix for TISPRD-8267
 	{
 		priceRange = value.split("and Above");		
 	}	

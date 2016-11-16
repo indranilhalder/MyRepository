@@ -52,6 +52,33 @@
 					<cockpit code="Section6C" />
 				</td>
 			</tr>
+			<tr>
+				<td style="vertical-align:top;" class="structureViewSection" colspan="3">
+					<cockpit code="Section7A" />
+				</td>
+			</tr>
+			<tr>
+				<td style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Section8A" />
+				</td>
+				<td style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Section8B" />
+				</td>
+				<td style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Section8C" />
+				</td>
+			</tr>
+			<tr>
+				<td style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Section9A" />
+				</td>
+				<td style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Section9B" />
+				</td>
+				<td style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Section9C" />
+				</td>
+			</tr>
 		</tbody>
 	</table>
 	<div style="width:100%; border-top: 2px solid #bbb" class="cmsContentEditor">

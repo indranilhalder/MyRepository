@@ -24,15 +24,14 @@ import org.springframework.beans.factory.annotation.Required;
  * @author TCS
  *
  */
-public class MplMicrositeSNSCategoryValueProvider extends AbstractPropertyFieldValueProvider
-		implements FieldValueProvider, Serializable
+public class MplMicrositeSNSCategoryValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider,
+		Serializable
 {
 	private FieldNameProvider fieldNameProvider;
 
 	/**
 	 * @Description : Return brand name
-	 * @param :
-	 *           final IndexConfig indexConfig, final IndexedProperty indexedProperty,final Object model
+	 * @param : final IndexConfig indexConfig, final IndexedProperty indexedProperty,final Object model
 	 * @return : Collection<FieldValue>
 	 */
 	//Return brand name against each Product.Return brand facets.
@@ -99,8 +98,9 @@ public class MplMicrositeSNSCategoryValueProvider extends AbstractPropertyFieldV
 		{
 
 
-			if ((categoryModel instanceof ClassificationClassModel) || (categoryModel.getCode().startsWith("MPH")
-					|| (categoryModel.getCode().startsWith("MBH")) || (categoryModel.getCode().startsWith("MSH"))))
+			if ((categoryModel instanceof ClassificationClassModel) || (categoryModel.getCode().startsWith("MPH"))
+					|| (categoryModel.getCode().startsWith("MBH")) || (categoryModel.getCode().startsWith("MSH"))
+					|| (categoryModel.getCode().startsWith("LSH")))
 			{
 				continue;
 			}
@@ -116,8 +116,7 @@ public class MplMicrositeSNSCategoryValueProvider extends AbstractPropertyFieldV
 
 	/**
 	 * @Description : Return filed values
-	 * @param :
-	 *           final String brand, final IndexedProperty indexedProperty
+	 * @param : final String brand, final IndexedProperty indexedProperty
 	 * @return : List<FieldValue>
 	 */
 	//Create field value for brand name

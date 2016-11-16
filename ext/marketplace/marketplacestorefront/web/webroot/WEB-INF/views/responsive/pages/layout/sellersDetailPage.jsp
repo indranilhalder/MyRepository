@@ -615,6 +615,8 @@ var allSellers='${allsellers}';
     <span id="cashondeliveryid"  style="display:none"><spring:theme code="seller.product.cashondelivery"/></span>
     <span id="emiavailableid"  style="display:none"><spring:theme code="marketplace.emiavailable"/></span>
     <span id="addtobagid"  style="display:none"><spring:theme code="seller.product.addtobag"/></span>
+    <span id="otherselleroutofstock"  style="display:none"><spring:theme code="seller.product.otherseller.outofstock"/></span>
+    
      <!-- TPR-887 -->
     <span id="buynowid"  style="display:none"><spring:theme code="buyNow.button.pdp"/></span>
     <span id="addwishlistid"  style="display:none"><spring:theme code="product.addwishlist"/></span>

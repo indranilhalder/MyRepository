@@ -519,9 +519,20 @@
 									<div class="order">
 										<c:url value="${entry.product.url}" var="productUrl" />
 										<div class="image">
-											<a href="${productUrl}"> <product:productPrimaryImage
-													product="${entry.product}" format="thumbnail" />
-											</a>
+											<c:choose>
+												<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
+														<a href="${productUrl}"> <product:productPrimaryImage
+															product="${entry.product}" format="luxuryCartIcon" />
+													</a>
+							
+												</c:when>
+												<c:otherwise>
+														<a href="${productUrl}"> <product:productPrimaryImage
+															product="${entry.product}" format="thumbnail" />
+													</a>
+														
+												</c:otherwise>
+											</c:choose>
 										</div>
 										<div class="details">
 											<p>${entry.brandName}</p>
@@ -539,7 +550,7 @@
 													Price:
 													<ycommerce:testId
 														code="orderDetails_productTotalPrice_label">
-														<format:price priceData="${entry.amountAfterAllDisc}"
+														<format:price priceData="${entry.totalPrice}"
 															displayFreeForZero="true" />
 													</ycommerce:testId>
 												</p>
@@ -608,10 +619,22 @@
 																		<ul class="product-info">
 																			<li>
 																				<div class="product-img">
-																					<a href="${productUrl}"> <product:productPrimaryImage
-																							product="${entryCancel.product}"
-																							format="thumbnail" />
-																					</a>
+																					<c:choose>
+																						<c:when test="${fn:toLowerCase(entryCancel.product.luxIndicator)=='luxury'}">
+																								<a href="${productUrl}"> <product:productPrimaryImage
+																																			product="${entryCancel.product}"
+																																			format="luxuryCartIcon" />
+																																	</a>
+																	
+																						</c:when>
+																						<c:otherwise>
+																								<a href="${productUrl}"> <product:productPrimaryImage
+																																			product="${entryCancel.product}"
+																																			format="thumbnail" />
+																																	</a>
+																								
+																						</c:otherwise>
+																					</c:choose>
 																				</div>
 																				<div class="product">
 																					<!-- <p class="company">Nike</p> -->
@@ -732,10 +755,22 @@
 																		<ul class="product-info">
 																			<li>
 																				<div class="product-img">
-																					<a href="${productUrl}"> <product:productPrimaryImage
-																							product="${entryCancel.product}"
-																							format="thumbnail" />
-																					</a>
+																					<c:choose>
+																						<c:when test="${fn:toLowerCase(entryCancel.product.luxIndicator)=='luxury'}">
+																								<a href="${productUrl}"> <product:productPrimaryImage
+																																			product="${entryCancel.product}"
+																																			format="luxuryCartIcon" />
+																																	</a>
+																	
+																						</c:when>
+																						<c:otherwise>
+																								<a href="${productUrl}"> <product:productPrimaryImage
+																																			product="${entryCancel.product}"
+																																			format="thumbnail" />
+																																	</a>
+																								
+																						</c:otherwise>
+																					</c:choose>
 																				</div>
 																				<div class="product">
 																					<!-- <p class="company">Nike</p> -->
@@ -1982,7 +2017,7 @@
 													<span class="start"></span>
 													<c:set value="0" var="dotCount" /> 
 													<!-- Show only first and last result to restrict in 2 dots-->
-													<c:forEach items="${paymentStatus}" var="productStatus" varStatus="loop">
+													<c:forEach items="${approvedStatus}" var="productStatus" varStatus="loop">
 
 														<c:choose>
 															<c:when test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">

@@ -592,31 +592,35 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 	
 	var ussidValue=$("#ussid").val();
   
-	/*if (wishListList == "") {
-		wishName = $("#defaultWishName").val();
-	} else {
-		wishName = wishListList[$("#hidWishlist").val()];
+	var isMSDEnabled =  $("input[name=isMSDEnabled]").val();								
+	if(isMSDEnabled === 'true')
+	{
+	
+	var isApparelExist  = $("input[name=isApparelExist]").val();
+			
+	var salesHierarchyCategoryMSD =  $("input[name=salesHierarchyCategoryMSD]").val();
+	
+	var rootCategoryMSD  = $("input[name=rootCategoryMSD]").val();
+		
+	var productCodeMSD =  $("input[name=productCodeMSD]").val();
+			
+	var priceformad =  $("input[id=price-for-mad]").val();
+				
+	
+	if(typeof isMSDEnabled === 'undefined')
+	{
+		isMSDEnabled = false;						
 	}
-	if(wishName==""){
-		var msg=$('#wishlistnotblank').text();
-		$('#addedMessage').show();
-		$('#addedMessage').html(msg);
-		return false;
+	
+	if(typeof isApparelExist === 'undefined')
+	{
+		isApparelExist = false;						
+	}	
+	
 	}
-    if(wishName==undefined||wishName==null){
-    	if(alreadyAddedWlName_pdp!=undefined || alreadyAddedWlName_pdp!=""){
-    		if(alreadyAddedWlName_pdp=="[]"){
-    			$("#wishlistErrorId_pdp").html("Please select a wishlist");
-    		}
-    		else{
-    			alreadyAddedWlName_pdp=alreadyAddedWlName_pdp.replace("[","");
-    			alreadyAddedWlName_pdp=alreadyAddedWlName_pdp.replace("]","");
-    			$("#wishlistErrorId_pdp").html("Product already added in your wishlist "+alreadyAddedWlName_pdp);
-    		}
-    		$("#wishlistErrorId_pdp").css("display","block");
-    	}
-    	return false;
-    }*/
+	
+	
+	
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
 			+ "-addToWishListInPDP";
     var sizeSelected=true;
@@ -634,7 +638,11 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 		},3000)
 	}
 	else {
-	
+		var isInWishlist = getLastModifiedWishlist(ussidValue);
+		if(isInWishlist) {
+			removeFromWishlistInPdp(wishName, productCodePost, ussidValue,isMSDEnabled,isApparelExist,rootCategoryMSD,salesHierarchyCategoryMSD,priceformad,"INR");
+		}
+		else {
 		$.ajax({
 			contentType : "application/json; charset=utf-8",
 			url : requiredUrl,
@@ -659,31 +667,9 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 					//$('#addedMessage').delay(3000).fadeOut('slow'); // TISTI-225
 					populateMyWishlistFlyOut(wishName);
 					
-					//For MSD
-					var isMSDEnabled =  $("input[name=isMSDEnabled]").val();								
+					//For MSD					
 					if(isMSDEnabled === 'true')
 					{
-					
-					var isApparelExist  = $("input[name=isApparelExist]").val();
-							
-					var salesHierarchyCategoryMSD =  $("input[name=salesHierarchyCategoryMSD]").val();
-					
-					var rootCategoryMSD  = $("input[name=rootCategoryMSD]").val();
-						
-					var productCodeMSD =  $("input[name=productCodeMSD]").val();
-							
-					var priceformad =  $("input[id=price-for-mad]").val();
-								
-					
-					if(typeof isMSDEnabled === 'undefined')
-					{
-						isMSDEnabled = false;						
-					}
-					
-					if(typeof isApparelExist === 'undefined')
-					{
-						isApparelExist = false;						
-					}	
 					
 					if(Boolean(isMSDEnabled) && Boolean(isApparelExist) && (rootCategoryMSD === 'Clothing'))
 						{					
@@ -706,12 +692,12 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 				//	$('#myModal').modal('hide');
 				//	
 				}
-				else{
+				/*else{
 					$(".wishAlreadyAdded").addClass("active");
 					setTimeout(function(){
 						$(".wishAlreadyAdded").removeClass("active")
 					},3000)
-				}
+				}*/
 			},
 		});
 	
@@ -723,6 +709,7 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 			$('input.wishlist#add_to_wishlist').popover('hide');
 
 			}, 0);
+	}
 	}
 }
 
@@ -1425,6 +1412,7 @@ $( document ).ready(function() {
 			for(var i in data['buyboxList'] ){
 				buyBoxList.push(data['buyboxList'][i]);
 			}
+		//	alert(buyBoxList);
 			if($("#isProductPage").val()=='true'){
 			sessionStorage.setItem('servicableList',"");
 			}
@@ -1490,6 +1478,7 @@ $( document ).ready(function() {
 					
 					$("#sellerNameId").html(sellerName);
 					$("#sellerSelId").val(sellerID);
+				//	alert(data['othersSellersCount']);
 					if (isOOS() && data['othersSellersCount']>0) {
 						//if( $("#variant,#sizevariant option:selected").val()!="#") {  //TISPRD-1173 TPR-465
 						$("#addToCartButton").hide();
@@ -1577,6 +1566,8 @@ $( document ).ready(function() {
 						$("#otherSellerLinkId").show();
 					}
 					else {
+					//	alert(data['othersSellersCount']);
+						$("#otherSellerInfoId").show();
 						$("#otherSellersId").html(data['othersSellersCount']);
 						$("#minPriceId").html(data['minPrice'].formattedValue);
 					}
@@ -1962,16 +1953,6 @@ function populateEMIDetailsForPDP(){
 		var selectedBank = $('#bankNameForEMI :selected').text();
 		var contentData = '';
 		if (selectedBank != "select") {
-			
-			/*TPR-641 starts*/
-			emiBankSelectedTealium = "emi_option_" + selectedBank.replace(/ /g, "").toLowerCase();
-			utag.link({
-				link_obj: this, 
-				link_text: emiBankSelectedTealium , 
-				event_type : 'emi_option_selected'
-			});
-			/*TPR-641 ends*/
-			
 			var dataString = 'selectedEMIBank=' + selectedBank + '&productVal=' + productVal;
 			$.ajax({
 				url : ACC.config.encodedContextPath + "/p-getTerms",
@@ -2003,6 +1984,15 @@ function populateEMIDetailsForPDP(){
 					} else {
 						$('#emiNoData').show();
 					}
+					
+					/*TPR-641 starts*/
+					emiBankSelectedTealium = "emi_option_" + selectedBank.replace(/ /g, "").replace(/[^a-z0-9\s]/gi, '').toLowerCase();
+					utag.link({
+						link_obj: this, 
+						link_text: emiBankSelectedTealium , 
+						event_type : 'emi_option_selected'
+					});
+					/*TPR-641 ends*/
 				},
 				error : function(resp) {
 					$('#emiSelectBank').show();
@@ -2858,7 +2848,7 @@ function loadDefaultWishListName_SizeGuide() {
 	});
 	/*Wishlist In PDP changes*/
 	function getLastModifiedWishlist(ussidValue) {
-		
+		var isInWishlist = false;
 		var requiredUrl = ACC.config.encodedContextPath + "/p"
 				+ "-getLastModifiedWishlistByUssid";
 		var dataString = 'ussid=' + ussidValue;
@@ -2867,8 +2857,10 @@ function loadDefaultWishListName_SizeGuide() {
 			url : requiredUrl,
 			data : dataString,
 			dataType : "json",
+			async: false,
 			success : function(data) {
 			if (data == true) {
+				isInWishlist = true;
 				$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').addClass("added");
 				$("#add_to_wishlist").attr("disabled",true);
 				$('.add_to_cart_form .out_of_stock #add_to_wishlist').addClass("wishDisabled");
@@ -2878,6 +2870,67 @@ function loadDefaultWishListName_SizeGuide() {
 			error : function(xhr, status, error) {
 				$("#wishlistErrorId_pdp").html("Could not add the product in your wishlist");
 			}
+		});
+		return isInWishlist;
+	}
+	
+	
+	function removeFromWishlistInPdp(wishlistName, productCode, ussid,isMSDEnabled,isApparelExist,rootCategoryMSD,catID,price,currency){	
+		var requiredUrl = ACC.config.encodedContextPath+"/p" + "-removeFromWl";
+		var dataString = 'wish=' + wishlistName + '&product=' + productCode
+		+ '&ussid=' + ussid;
+		
+		$.ajax({
+			url: requiredUrl,
+			type: "GET",
+			data: dataString,
+			dataType : "json",
+			cache: false,
+			contentType : "application/json; charset=utf-8",
+			success : function(data) {
+				//FOR MSD
+				if(Boolean(isMSDEnabled) && Boolean(isApparelExist) && (rootCategoryMSD == 'Clothing'))
+				{
+					try
+					{
+					track(['removeFromWishlist',productCode,catID,price,currency]);	
+					}
+					catch(err)
+					{
+						console.log('Error Adding trackers when remove from cart: '+err.message);					
+					}
+				}
+				
+				$(".wishRemoveSucess").addClass("active");
+				setTimeout(function(){
+					$(".wishRemoveSucess").removeClass("active")
+				},3000)
+				$("#add_to_wishlist").attr("disabled",false);
+				$('.add_to_cart_form .out_of_stock #add_to_wishlist').removeClass("wishDisabled");
+				$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').removeClass("added");
+				populateMyWishlistFlyOut(wishlistName);
+				
+				/*TPR-646 Changes*/
+				utag.link({
+					"link_obj" : this,
+			        "link_text": 'remove_from_wishlist',
+			        "event_type": 'remove_from_wishlist',
+			        "product_sku_wishlist": "" + productCode
+			    });
+				
+				//END MSD
+//				window.location.href = ACC.config.encodedContextPath + "/my-account/wishList";
+				//window.location.href = ACC.config.encodedContextPath + "/my-account/viewParticularWishlist?particularWishlist="+wishlistName;
+			},
+			error: function (xhr, status, error) {
+				if(status == "parsererror"){
+					window.location.href = ACC.config.encodedContextPath + "/login";
+				} else {
+
+					 alert("Some issues are there with Wishlist at this time. Please try later or contact out helpdesk");	
+				}
+	           
+	        }
 		});
 	}
 	
@@ -2909,13 +2962,16 @@ function loadDefaultWishListName_SizeGuide() {
 				    nonServicableList.push(buyBoxList[i]);
 			}
 		}
+		
 		sessionStorage.setItem('servicableList', JSON.stringify(servicableList[0]));
 		sessionStorage.setItem('isproductPage', isproductPage);
 		sessionStorage.setItem('allOosFlag', allOosFlag);
 		sessionStorage.setItem('otherSellerCount', servicableList.length-1);
 		sessionStorage.setItem('pincodeChecked', 'Y');
 		//TPR-1375 populating buybox details so that buybox seller should be servicable
+		if (typeof(sessionStorage.getItem("servicableList")) != undefined){
 		populateBuyBoxData(JSON.parse(sessionStorage.getItem("servicableList")),servicableList.length-1,isproductPage,allOosFlag);
+		}
 	}
 	
 	/*Offer popup*/

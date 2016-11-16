@@ -20,7 +20,6 @@ import de.hybris.platform.order.CartService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.site.BaseSiteService;
-import com.tisl.mpl.storefront.security.cookie.CartRestoreCookieGenerator;
 
 import java.io.IOException;
 
@@ -34,12 +33,14 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.tisl.mpl.storefront.security.cookie.CartRestoreCookieGenerator;
+
 
 /**
  * Filter that the restores the user's cart. This is a spring configured filter that is executed by the
  * PlatformFilterChain.
  */
-public class CartRestorationFilter extends OncePerRequestFilter	
+public class CartRestorationFilter extends OncePerRequestFilter
 {
 	private CartRestoreCookieGenerator cartRestoreCookieGenerator;
 	private CartService cartService;
@@ -52,84 +53,109 @@ public class CartRestorationFilter extends OncePerRequestFilter
 	public void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response,
 			final FilterChain filterChain) throws IOException, ServletException
 	{
-		
+
 		String servletPath = (String) request.getAttribute("javax.servlet.include.servlet_path");
 		if (servletPath == null)
 		{
 			servletPath = request.getServletPath();
 		}
-		
+
 		if (!(servletPath.equalsIgnoreCase("/") || servletPath.contains("/p-") || servletPath.contains("/c-")))
 		{//checking if current page is not among home page,pdp page or category landing page
 
-		if (getUserService().isAnonymousUser(getUserService().getCurrentUser()))
-		{
-			if (getCartService().hasSessionCart()
-					&& getBaseSiteService().getCurrentBaseSite().equals(
-							getBaseSiteService().getBaseSiteForUID(getCartService().getSessionCart().getSite().getUid())))
+			if (getUserService().isAnonymousUser(getUserService().getCurrentUser()))
 			{
-				final String guid = getCartService().getSessionCart().getGuid();
-
-				if (!StringUtils.isEmpty(guid))
+				if (getCartService().hasSessionCart()
+						&& getBaseSiteService().getCurrentBaseSite().equals(
+								getBaseSiteService().getBaseSiteForUID(getCartService().getSessionCart().getSite().getUid())))
 				{
-					getCartRestoreCookieGenerator().addCookie(response, guid);
-				}
-			}
-			else if (request.getSession().isNew()
-					|| (getCartService().hasSessionCart() && !getBaseSiteService().getCurrentBaseSite().equals(
-							getBaseSiteService().getBaseSiteForUID(getCartService().getSessionCart().getSite().getUid()))))
-			{
-				String cartGuid = null;
+					final String guid = getCartService().getSessionCart().getGuid();
 
-				if (request.getCookies() != null)
-				{
-					final String anonymousCartCookieName = getCartRestoreCookieGenerator().getCookieName();
-
-					for (final Cookie cookie : request.getCookies())
+					if (!StringUtils.isEmpty(guid))
 					{
-						if (anonymousCartCookieName.equals(cookie.getName()))
+						getCartRestoreCookieGenerator().addCookie(response, guid);
+					}
+				}
+				else if (request.getSession().isNew()
+						|| checkIfCartrestoreCookieExist(request)
+						|| (getCartService().hasSessionCart() && !getBaseSiteService().getCurrentBaseSite().equals(
+								getBaseSiteService().getBaseSiteForUID(getCartService().getSessionCart().getSite().getUid()))))
+				{
+					String cartGuid = null;
+
+					if (request.getCookies() != null)
+					{
+						final String anonymousCartCookieName = getCartRestoreCookieGenerator().getCookieName();
+
+						for (final Cookie cookie : request.getCookies())
 						{
-							cartGuid = cookie.getValue();
-							break;
+							if (anonymousCartCookieName.equals(cookie.getName()))
+							{
+								cartGuid = cookie.getValue();
+								break;
+							}
+						}
+					}
+
+					if (!StringUtils.isEmpty(cartGuid))
+					{
+						getSessionService().setAttribute(WebConstants.CART_RESTORATION_SHOW_MESSAGE, Boolean.TRUE);
+						try
+						{
+							getSessionService().setAttribute(WebConstants.CART_RESTORATION, getCartFacade().restoreSavedCart(cartGuid));
+						}
+						catch (final CommerceCartRestorationException e)
+						{
+							getSessionService().setAttribute(WebConstants.CART_RESTORATION_ERROR_STATUS,
+									WebConstants.CART_RESTORATION_ERROR_STATUS);
 						}
 					}
 				}
 
-				if (!StringUtils.isEmpty(cartGuid))
+			}
+			else
+			{
+				if ((!getCartService().hasSessionCart() && getSessionService().getAttribute(WebConstants.CART_RESTORATION) == null)
+						|| (getCartService().hasSessionCart() && !getBaseSiteService().getCurrentBaseSite().equals(
+								getBaseSiteService().getBaseSiteForUID(getCartService().getSessionCart().getSite().getUid()))))
 				{
 					getSessionService().setAttribute(WebConstants.CART_RESTORATION_SHOW_MESSAGE, Boolean.TRUE);
 					try
 					{
-						getSessionService().setAttribute(WebConstants.CART_RESTORATION, getCartFacade().restoreSavedCart(cartGuid));
+						getSessionService().setAttribute(WebConstants.CART_RESTORATION, getCartFacade().restoreSavedCart(null));
 					}
 					catch (final CommerceCartRestorationException e)
 					{
-						getSessionService().setAttribute(WebConstants.CART_RESTORATION_ERROR_STATUS,
-								WebConstants.CART_RESTORATION_ERROR_STATUS);
+						getSessionService().setAttribute(WebConstants.CART_RESTORATION, WebConstants.CART_RESTORATION_ERROR_STATUS);
 					}
 				}
 			}
-
 		}
-		else
+		filterChain.doFilter(request, response);
+	}
+
+	/**
+	 * @param request
+	 * @return
+	 */
+	private boolean checkIfCartrestoreCookieExist(final HttpServletRequest request)
+	{
+		boolean exist = false;
+
+		if (request.getCookies() != null)
 		{
-			if ((!getCartService().hasSessionCart() && getSessionService().getAttribute(WebConstants.CART_RESTORATION) == null)
-					|| (getCartService().hasSessionCart() && !getBaseSiteService().getCurrentBaseSite().equals(
-							getBaseSiteService().getBaseSiteForUID(getCartService().getSessionCart().getSite().getUid()))))
+			final String cartCookieName = getCartRestoreCookieGenerator().getCookieName();
+
+			for (final Cookie cookie : request.getCookies())
 			{
-				getSessionService().setAttribute(WebConstants.CART_RESTORATION_SHOW_MESSAGE, Boolean.TRUE);
-				try
+				if (cartCookieName.equals(cookie.getName()))
 				{
-					getSessionService().setAttribute(WebConstants.CART_RESTORATION, getCartFacade().restoreSavedCart(null));
-				}
-				catch (final CommerceCartRestorationException e)
-				{
-					getSessionService().setAttribute(WebConstants.CART_RESTORATION, WebConstants.CART_RESTORATION_ERROR_STATUS);
+					exist = true;
+					break;
 				}
 			}
 		}
-		}
-		filterChain.doFilter(request, response);
+		return exist;
 	}
 
 	protected SessionService getSessionService()

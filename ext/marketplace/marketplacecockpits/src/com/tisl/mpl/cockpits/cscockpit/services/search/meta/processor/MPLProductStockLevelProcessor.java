@@ -17,7 +17,7 @@ import de.hybris.platform.cscockpit.services.search.meta.data.MetaProductInfo;
 import de.hybris.platform.cscockpit.services.search.meta.data.impl.DefaultMetaProductInfo;
 import de.hybris.platform.cscockpit.services.search.meta.processor.ProductStockLevelProcessor;
 import de.hybris.platform.cscockpit.utils.LabelUtils;
-
+import org.apache.log4j.Logger;
 
 public class MPLProductStockLevelProcessor  extends  ProductStockLevelProcessor {
 	@Autowired
@@ -36,7 +36,7 @@ public class MPLProductStockLevelProcessor  extends  ProductStockLevelProcessor 
 
 
 
-
+	private static final Logger LOG = Logger.getLogger(MPLProductStockLevelProcessor.class);
 
 	@Required
 	public void setBuyBoxFacade(BuyBoxFacade buyBoxFacade) {
@@ -50,7 +50,10 @@ public class MPLProductStockLevelProcessor  extends  ProductStockLevelProcessor 
 	     List<SearchResultValueData> results = providerSearchResult.getResults();
 	     for (DataObject<ProductModel> metaItem : metaItems)
 	     {
-	       String stockLevel = (String)getValue(results.get(index++), "stockLevelStatus");
+	       //String stockLevel = (String)getValue(results.get(index++), "stockLevelStatus");
+	    	 //TISPRD-9070
+	    	 String stockLevel = String.valueOf(getValue(results.get(index++), "stockLevelStatus"));
+	    	 LOG.info("StockLevel::"+stockLevel);
 	 
 	       if ((stockLevel == null) && (getCommerceStockService() != null) && (getBaseStoreService() != null))
 	       {

@@ -80,7 +80,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getNotification()
 	 */
 	@Override
@@ -92,7 +92,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * Getting notificationDetails of logged User (non-Javadoc) (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getNotificationDetails(com.tisl.mpl.data.
 	 * NotificationData)
@@ -123,7 +123,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#checkCustomerFacingEntry(com.tisl.mpl.core
 	 * .model.OrderStatusNotificationModel)
@@ -145,7 +145,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#markNotificationRead(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
@@ -183,7 +183,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#markNotificationRead(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
@@ -213,6 +213,7 @@ public class NotificationServiceImpl implements NotificationService
 	public boolean triggerEmailAndSmsOnPaymentPending(final OrderModel orderDetails, final String trackorderurl)
 			throws JAXBException
 	{
+		LOG.debug("In triggerEmailAndSmsOnPaymentPending Notification");
 		boolean flag = false;
 		if (orderDetails.getStatus().equals(OrderStatus.PAYMENT_PENDING))
 		{
@@ -275,7 +276,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#triggerEmailAndSmsOnInventoryFail(de.hybris
 	 * .platform.core.model.order.OrderModel)
@@ -302,7 +303,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#triggerEmailAndSmsOnOrderConfirmation(de.
 	 * hybris.platform.core.model.order.OrderModel, java.lang.String)
@@ -360,7 +361,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#sendMobileNotifications(de.hybris.platform
 	 * .core.model.order.OrderModel)
@@ -449,7 +450,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getPromotion()
 	 */
 	@Override
@@ -469,7 +470,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getSortedNotificationData(java.util.List)
 	 */

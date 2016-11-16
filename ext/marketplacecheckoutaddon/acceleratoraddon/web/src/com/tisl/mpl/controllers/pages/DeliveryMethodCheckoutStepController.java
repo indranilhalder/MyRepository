@@ -2221,7 +2221,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		}
 
 		//forward to payment page
-		return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/payment-method/add";
+		return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/payment-method/pay";
 	}
 
 	/**
