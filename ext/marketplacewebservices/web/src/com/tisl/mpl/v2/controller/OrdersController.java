@@ -2173,10 +2173,11 @@ public class OrdersController extends BaseCommerceController
 	//R2.3 FLO1 Added new Controller Method Change Deliverry Request
 	@Secured(
 	{ "ROLE_CUSTOMERGROUP", "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
-	@RequestMapping(value = "/users/{userId}/changeDeliveryAddress/{orderCode}", method = RequestMethod.POST)
+	@RequestMapping(value = "/users/{userId}/changeDeliveryAddress/{orderCode}", method = RequestMethod.POST,consumes =
+		{ MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	@ResponseBody
 	public MplDeliveryAddressResponseWsDTO changeDeliveryAddress(@PathVariable final String orderCode,
-			final HttpServletRequest request) throws WebserviceValidationException
+			@RequestBody AddressData newAddressData) throws WebserviceValidationException
 	{
 		MplDeliveryAddressResponseWsDTO mplDeliveryAddressResponseWsDTO = new MplDeliveryAddressResponseWsDTO();
 		if (LOG.isDebugEnabled())
@@ -2186,17 +2187,7 @@ public class OrdersController extends BaseCommerceController
 		try
 		{
 			OrderData orderData = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
-			final AddressData newAddressData = new AddressData();
-
-			final Errors errors = new BeanPropertyBindingResult(newAddressData, "newAddressData");
-			httpRequestAddressDataPopulator.populate(request, newAddressData);
-
-			addressValidator.validate(newAddressData, errors);
-
-			if (errors.hasErrors())
-			{
-				throw new WebserviceValidationException(errors);
-			}
+			
 			//address
 			boolean isAddressChanged = mplDeliveryAddressComparator.compareAddress(orderData.getDeliveryAddress(), newAddressData);
 			boolean isContactDetails = mplDeliveryAddressComparator.compareContactDetails(orderData.getDeliveryAddress(),
