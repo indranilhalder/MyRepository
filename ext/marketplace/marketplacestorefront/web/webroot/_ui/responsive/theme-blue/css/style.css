@@ -48135,6 +48135,10 @@ padding:0 40px;	}
 .product-image-container.device .owl-carousel .owl-item img{
 padding:0;
 }
+   .product-info .picZoomer-pic-wp .zoom a:hover:before,  .product-image-container.device a.wishlist-icon:hover:before {
+	content: "\e602";
+	opacity: 1;
+}
 }
 @media(max-width:1024px) and (min-width:768px){
 .product-info .product-image-container.device .owl-carousel {

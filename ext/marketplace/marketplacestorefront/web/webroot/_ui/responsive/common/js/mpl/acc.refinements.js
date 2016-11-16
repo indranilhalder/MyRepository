@@ -305,8 +305,12 @@ ACC.refinements = {
 				updatedsearchQuery=filterMobileQuery;
 				
 			}else{
-				var newFilter=createSearchQuery(filterMobileQuery);
-				
+				//var newFilter=createSearchQuery(filterMobileQuery);
+				// Fixing error of facet starts
+				var ownVal = $(this).parents("form").find('input[name="facetValue"]').val();
+				var ownIdentifier = $(this).parents("li").attr('class').replace(/^(\S*).*/, '$1').replace('filter-',"");
+				var newFilter = ':' + ownIdentifier + ':' + ownVal;
+				// Fixing error of facet ends
 				if(updatedsearchQuery.includes(newFilter))
 				{
 					updatedsearchQuery=updatedsearchQuery.replace(newFilter,"");
@@ -528,16 +532,36 @@ ACC.refinements = {
 
 		$(document).off('click', '.js-facet-colourbutton').on('click', '.js-facet-colourbutton', function() { 
 			$(this).parents(".filter-colour").toggleClass("selected-colour");
-			var spanCount=$(".facet_mobile .filter-colour.selected-colour").length;
-			if(spanCount>0)
-			{
-				$(this).parents(".facet.js-facet").find(".category-icons").removeClass("blank");
-				$(this).parents(".facet.js-facet").find(".category-icons span").text(spanCount);
-			}	
-			else
-			{
-				$(this).parents(".facet.js-facet").find(".category-icons").addClass("blank");
+			// Fixing error of facet starts
+			var li_index = $('.facet_mobile .facet.js-facet.Colour .facet-list.js-facet-top-values.active li').index($(this).parents(".filter-colour"));
+			$(".facet_mobile .facet.js-facet.Colour .facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden li").eq(li_index).toggleClass("selected-colour");
+			var spanCountMoreColor = $('.facet_mobile .facet.js-facet.Colour ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden').find("li.selected-colour").length;
+			if(spanCountMoreColor){
+				if(spanCountMoreColor)
+				{
+					$(this).parents(".facet.js-facet").find(".category-icons").removeClass("blank");
+					$(this).parents(".facet.js-facet").find(".category-icons span").text(spanCountMoreColor);
+				}	
+				else
+				{
+					$(this).parents(".facet.js-facet").find(".category-icons").addClass("blank");
+				}
 			}
+			else {
+			// Fixing error of facet ends
+				var spanCount=$(".facet_mobile .filter-colour.selected-colour").length;
+				if(spanCount>0)
+				{
+					$(this).parents(".facet.js-facet").find(".category-icons").removeClass("blank");
+					$(this).parents(".facet.js-facet").find(".category-icons span").text(spanCount);
+				}	
+				else
+				{
+					$(this).parents(".facet.js-facet").find(".category-icons").addClass("blank");
+				}
+			// Fixing error of facet starts
+			}
+			// Fixing error of facet ends	
 		});
 
 		$(document).off('click', '.js-facet-sizebutton').on('click', '.js-facet-sizebutton', function() { 
