@@ -2449,6 +2449,7 @@
     	<property name="categoryUrl" type="String"/> 
     	<property name="altText" type="String"/> 
     	<property name="position" type="Integer"/>
+    	<property name="brandId" type="String"/>
     </bean>
      <bean class="com.tisl.mpl.wsdto.LuxVideocomponentWsDTO">
     	<property name="videoUrl" type="String"/>

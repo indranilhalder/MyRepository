@@ -27,7 +27,7 @@
 				 var PopUpLeftPosition = screen.width/2 - popUpWidth/2;
 				    var PopUpTopPosition= screen.height/2 - popUpHeight/2;
 			function openPopup(url,buttonType) {
-				alert(buttonType);
+				//alert(buttonType);
 				    window.open(url, 'popup_id','scrollbars,resizable,height='+popUpHeight+',width='+ popUpWidth +',left='+ PopUpLeftPosition +',top='+ PopUpTopPosition);
 			      return false;
 			    }
