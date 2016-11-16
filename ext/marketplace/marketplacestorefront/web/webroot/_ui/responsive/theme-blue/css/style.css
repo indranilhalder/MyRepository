@@ -58739,7 +58739,7 @@ li.facet.js-facet.collectionIds{
 }
 }
 .emptyCart-mobile{
-	height: 100px;
+	min-height: 100px;
 }
 
 .Manufacturer.Temp07 .iframe-video {
@@ -58957,4 +58957,10 @@ z-index:11;}
 /* TISQAEE-24 */
 body.page-multiStepCheckoutSummaryPage #flip-tabs, body.page-checkout-login header .content .top, body.page-checkout-login #flip-tabs, body.page-multiStepCheckoutSummaryPage header .content .top{
 display: none;
+}
+
+.cart.wrapper .emptyCart-mobile .content{
+	    margin: 0 150px;
+	    padding-bottom:80px;
+	        line-height: 30px;
 }
