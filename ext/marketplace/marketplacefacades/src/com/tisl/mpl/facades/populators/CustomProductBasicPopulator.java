@@ -26,12 +26,12 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.core.model.RatingReviewModel;
 import com.tisl.mpl.core.model.SeoContentModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPriceRowService;
 
@@ -116,7 +116,6 @@ public class CustomProductBasicPopulator<SOURCE extends ProductModel, TARGET ext
 	 */
 	@Override
 	public void populate(final SOURCE productModel, final TARGET productData) throws ConversionException
-
 	{
 		productData.setName((String) getProductAttribute(productModel, ProductModel.NAME));
 		productData.setArticleDescription((String) getProductAttribute(productModel, ProductModel.ARTICLEDESCRIPTION));
@@ -186,7 +185,12 @@ public class CustomProductBasicPopulator<SOURCE extends ProductModel, TARGET ext
 		productData.setPurchasable(Boolean.valueOf(productModel.getVariantType() == null && isApproved(productModel)));
 		//}
 
-
+		//Added for Luxury Product, LW-216
+		if ((productModel.getLuxIndicator() != null && productModel.getLuxIndicator().getCode() != null && productModel
+				.getLuxIndicator().getCode().equalsIgnoreCase(MarketplaceCoreConstants.LUXURY)))
+		{
+			productData.setLuxIndicator(MarketplaceCoreConstants.LUXURY);
+		}
 	}
 
 	/**
@@ -247,7 +251,7 @@ public class CustomProductBasicPopulator<SOURCE extends ProductModel, TARGET ext
 		final PriceData priceData = new PriceData();
 		priceData.setPriceType(PriceDataType.BUY);
 		priceData.setValue(new BigDecimal(price.doubleValue()));
-		priceData.setCurrencyIso(MarketplaceFacadesConstants.INR);
+		priceData.setCurrencyIso("\u20B9");
 		final CurrencyModel currency = new CurrencyModel();
 		currency.setIsocode(priceData.getCurrencyIso());
 		currency.setSymbol(priceData.getCurrencyIso());

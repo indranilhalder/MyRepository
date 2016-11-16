@@ -93,7 +93,14 @@ function quickviewGallery() {
 		});
 	 	
 	 });
-	
+	if($("#cboxContent #cboxLoadedContent .quickview.active")[0].offsetHeight < $("#cboxContent #cboxLoadedContent .quickview.active")[0].scrollHeight){
+		$("#cboxContent #cboxLoadedContent .quickview.active").css("height",$("#cboxContent #cboxLoadedContent .quickview.active")[0].scrollHeight);
+		$("#cboxContent").css("max-height",$("#cboxContent #cboxLoadedContent .quickview.active")[0].scrollHeight);
+	}
+	else{
+		$("#cboxContent #cboxLoadedContent .quickview.active").css("height","565px");
+		$("#cboxContent").css("max-height","565px");
+	}
 	
 }
 
@@ -785,6 +792,12 @@ function openPopForBankEMI_quick() {
 						+ "</option>";
 			}
 			$("#bankNameForEMI").html(optionData);
+			/*TPR-641*/
+			utag.link({
+				link_obj: this,
+				link_text: 'emi_more_information' ,
+				event_type : 'emi_more_information'
+			});
 
 		},
 		error : function(xhr, status, error) {

@@ -18,7 +18,6 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.services.BaseStoreService;
-import de.hybris.platform.util.localization.Localization;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -54,7 +53,6 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationServ
 import com.tisl.mpl.model.PaymentModeSpecificPromotionRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.model.SellerInformationModel;
-import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.BillingAddressWsData;
 import com.tisl.mpl.wsdto.MplUserResultWsDto;
 import com.tisl.mpl.wsdto.PaymentServiceWsData;
@@ -110,68 +108,88 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 			throws EtailNonBusinessExceptions
 	{
 		PaymentServiceWsData paymentServiceData = new PaymentServiceWsData();
-		try
+
+		//getting cartmodel using cart id
+		//final CartModel cartModel = getMplPaymentWebDAO().findCartValues(cartID);
+
+		if (null != abstractOrder)
 		{
-			//getting cartmodel using cart id
-			//final CartModel cartModel = getMplPaymentWebDAO().findCartValues(cartID);
+			//item eligible for COD or not
+			//final List<String> paymentTypeList = new ArrayList<String>();
 
-			if (null != abstractOrder)
+			//to check items are seller fulfilled or not
+			//final List<String> fulfillmentDataList = new ArrayList<String>();
+
+			//iterating over all the cart entries
+			LOG.debug(" getCODDetails ServiceImpl : cartModel.getEntries() : " + abstractOrder.getEntries());
+
+			/*
+			 * for (final AbstractOrderEntryModel entry : cartModel.getEntries()) { //getting the product code
+			 * LOG.debug(" getCODDetails ServiceImpl : entry.getProduct().getCode() : " + entry.getProduct().getCode());
+			 * 
+			 * if (entry.getSelectedUSSID() != null) { final SellerInformationModel sellerInfoModel =
+			 * getMplSellerInformationService().getSellerDetail( entry.getSelectedUSSID()); List<RichAttributeModel>
+			 * richAttributeModel = null; if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null) {
+			 * richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute(); if (richAttributeModel
+			 * != null && richAttributeModel.get(0).getDeliveryFulfillModes() != null) { final String fulfillmentType =
+			 * richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
+			 * LOG.debug(" getCODDetails ServiceImpl : fulfillmentType : " + fulfillmentType);
+			 * fulfillmentDataList.add(fulfillmentType.toUpperCase()); }
+			 * 
+			 * if (richAttributeModel != null && richAttributeModel.get(0).getPaymentModes() != null) { final String
+			 * paymentMode = richAttributeModel.get(0).getPaymentModes().toString(); if
+			 * (StringUtils.isNotEmpty(paymentMode)) { //setting the payment mode in a list
+			 * paymentTypeList.add(paymentMode); } } } else { // richAttributeModel or sellerInfoModel is null or empty
+			 * display error message paymentServiceData.setError(MarketplacewebservicesConstants.NODATAAVAILABLE); throw
+			 * new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9052); } } else { // Selected USSID is
+			 * null or empty display error message
+			 * paymentServiceData.setError(MarketplacewebservicesConstants.NODATAAVAILABLE); throw new
+			 * EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9052); } }
+			 */
+			//paymentServiceData = checkCODEligibility(cartModel);
+			for (final AbstractOrderEntryModel entry : abstractOrder.getEntries())
 			{
-				//item eligible for COD or not
-				//final List<String> paymentTypeList = new ArrayList<String>();
-
-				//to check items are seller fulfilled or not
-				//final List<String> fulfillmentDataList = new ArrayList<String>();
-
-				//iterating over all the cart entries
-				LOG.debug(" getCODDetails ServiceImpl : cartModel.getEntries() : " + abstractOrder.getEntries());
-
-				/*
-				 * for (final AbstractOrderEntryModel entry : cartModel.getEntries()) { //getting the product code
-				 * LOG.debug(" getCODDetails ServiceImpl : entry.getProduct().getCode() : " + entry.getProduct().getCode());
-				 *
-				 * if (entry.getSelectedUSSID() != null) { final SellerInformationModel sellerInfoModel =
-				 * getMplSellerInformationService().getSellerDetail( entry.getSelectedUSSID()); List<RichAttributeModel>
-				 * richAttributeModel = null; if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null) {
-				 * richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute(); if
-				 * (richAttributeModel != null && richAttributeModel.get(0).getDeliveryFulfillModes() != null) { final
-				 * String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
-				 * LOG.debug(" getCODDetails ServiceImpl : fulfillmentType : " + fulfillmentType);
-				 * fulfillmentDataList.add(fulfillmentType.toUpperCase()); }
-				 *
-				 * if (richAttributeModel != null && richAttributeModel.get(0).getPaymentModes() != null) { final String
-				 * paymentMode = richAttributeModel.get(0).getPaymentModes().toString(); if
-				 * (StringUtils.isNotEmpty(paymentMode)) { //setting the payment mode in a list
-				 * paymentTypeList.add(paymentMode); } } } else { // richAttributeModel or sellerInfoModel is null or empty
-				 * display error message paymentServiceData.setError(MarketplacewebservicesConstants.NODATAAVAILABLE); throw
-				 * new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9052); } } else { // Selected USSID is
-				 * null or empty display error message
-				 * paymentServiceData.setError(MarketplacewebservicesConstants.NODATAAVAILABLE); throw new
-				 * EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9052); } }
-				 */
-				//paymentServiceData = checkCODEligibility(cartModel);
-				for (final AbstractOrderEntryModel entry : abstractOrder.getEntries())
+				if (entry != null && entry.getSelectedUSSID() != null)
 				{
-					if (entry != null && entry.getSelectedUSSID() != null)
+					LOG.debug("Sellected USSID******************* " + entry.getSelectedUSSID());
+					final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+							entry.getSelectedUSSID());
+					//List<RichAttributeModel> richAttributeModel = null;
+					//TISPT-400
+					if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
 					{
-						LOG.debug("Sellected USSID******************* " + entry.getSelectedUSSID());
-						final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
-								entry.getSelectedUSSID());
-						//List<RichAttributeModel> richAttributeModel = null;
-						//TISPT-400
-						if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
+						final List<RichAttributeModel> richAttributeModel = (List<RichAttributeModel>) sellerInfoModel
+								.getRichAttribute();
+						if (richAttributeModel != null && richAttributeModel.get(0) != null
+								&& richAttributeModel.get(0).getDeliveryFulfillModes() != null)
 						{
-							final List<RichAttributeModel> richAttributeModel = (List<RichAttributeModel>) sellerInfoModel
-									.getRichAttribute();
-							if (richAttributeModel != null && richAttributeModel.get(0) != null
-									&& richAttributeModel.get(0).getDeliveryFulfillModes() != null)
-							{
-								final String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
+							final String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
 
-								LOG.debug("Sellected USSID fulfillmentType ******************* " + fulfillmentType);
-								if (DeliveryFulfillModesEnum.TSHIP.toString().equalsIgnoreCase(fulfillmentType))
+							LOG.debug("Sellected USSID fulfillmentType ******************* " + fulfillmentType);
+							if (DeliveryFulfillModesEnum.TSHIP.toString().equalsIgnoreCase(fulfillmentType))
+							{
+								//TPR-627, TPR-622 Separate method the check COD Eligibility to avoid redundant code
+								final Tuple2<PaymentServiceWsData, Boolean> returnFlag = paymentModecheckForCOD(richAttributeModel,
+										abstractOrder, paymentServiceData);
+								paymentServiceData = returnFlag.getFirst();
+								if (!returnFlag.getSecond().booleanValue())
 								{
-									//TPR-627, TPR-622 Separate method the check COD Eligibility to avoid redundant code
+									break;
+								}
+							}
+							else
+							{
+								//TPR-627, TPR-622
+								//true && false changes
+								final String isSshipCodEligble = (richAttributeModel.get(0).getIsSshipCodEligible() != null ? richAttributeModel
+										.get(0).getIsSshipCodEligible().getCode()
+										: MarketplacewebservicesConstants.FALSE);
+								// isSshipCodEligble to enable disable COD Eligible for SSHIP Products
+								//true && false changes
+								if (StringUtils.isNotEmpty(isSshipCodEligble)
+										&& isSshipCodEligble.equalsIgnoreCase(MarketplacewebservicesConstants.TRUE))
+								{
+									//TPR-627,TPR-622 Separate method the check COD Eligibility to avoid redundant code
 									final Tuple2<PaymentServiceWsData, Boolean> returnFlag = paymentModecheckForCOD(richAttributeModel,
 											abstractOrder, paymentServiceData);
 									paymentServiceData = returnFlag.getFirst();
@@ -182,75 +200,21 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 								}
 								else
 								{
-									//TPR-627, TPR-622
-									//true && false changes
-									final String isSshipCodEligble = (richAttributeModel.get(0).getIsSshipCodEligible() != null ? richAttributeModel
-											.get(0).getIsSshipCodEligible().getCode()
-											: MarketplacewebservicesConstants.FALSE);
-									// isSshipCodEligble to enable disable COD Eligible for SSHIP Products
-									//true && false changes
-									if (StringUtils.isNotEmpty(isSshipCodEligble)
-											&& isSshipCodEligble.equalsIgnoreCase(MarketplacewebservicesConstants.TRUE))
-									{
-										//TPR-627,TPR-622 Separate method the check COD Eligibility to avoid redundant code
-										final Tuple2<PaymentServiceWsData, Boolean> returnFlag = paymentModecheckForCOD(richAttributeModel,
-												abstractOrder, paymentServiceData);
-										paymentServiceData = returnFlag.getFirst();
-										if (!returnFlag.getSecond().booleanValue())
-										{
-											break;
-										}
-									}
-									else
-									{
-										//if item is not eligible for TSHIP countTshipNo display respective message
-										throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9202);
-									}
-
+									//if item is not eligible for TSHIP countTshipNo display respective message
+									throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9202);
 								}
+
 							}
 						}
 					}
 				}
 			}
-			else
-			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
-			}
 		}
-		catch (final EtailNonBusinessExceptions e)
+		else
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			if (null != e.getErrorMessage())
-			{
-				paymentServiceData.setError(e.getErrorMessage());
-			}
-			if (null != e.getErrorCode())
-			{
-				paymentServiceData.setErrorCode(e.getErrorCode());
-			}
-			paymentServiceData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
 		}
-		catch (final EtailBusinessExceptions e)
-		{
-			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-			if (null != e.getErrorMessage())
-			{
-				paymentServiceData.setError(e.getErrorMessage());
-			}
-			if (null != e.getErrorCode())
-			{
-				paymentServiceData.setErrorCode(e.getErrorCode());
-			}
-			paymentServiceData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-		}
-		catch (final Exception e)
-		{
-			ExceptionUtil.getCustomizedExceptionTrace(e);
-			paymentServiceData.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
-			paymentServiceData.setErrorCode(MarketplacecommerceservicesConstants.E0000);
-			paymentServiceData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-		}
+
 
 		return paymentServiceData;
 	}
@@ -425,9 +389,9 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 	 * "getPaymentMode : paymentMode  JSON Response : " + paymentMode); // Payment Mode Map final Map<String, Double>
 	 * paymentModeMap = new HashMap<String, Double>(); try { final JSONObject rec_paymode = (JSONObject)
 	 * JSONValue.parse(paymentMode);
-	 *
+	 * 
 	 * LOG.debug("getPaymentMode : rec_paymode  JSON Response : " + rec_paymode);
-	 *
+	 * 
 	 * // Fetch Details from Json final String debit = rec_paymode.get(MarketplacewebservicesConstants.DEBIT) != null ?
 	 * rec_paymode.get( MarketplacewebservicesConstants.DEBIT).toString() :
 	 * MarketplacewebservicesConstants.DECIMALULLCHK; final String credit =
@@ -437,10 +401,10 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 	 * MarketplacewebservicesConstants.EMI).toString() : MarketplacewebservicesConstants.DECIMALULLCHK; final String
 	 * netBanking = rec_paymode.get(MarketplacewebservicesConstants.NETBANKING) != null ? rec_paymode.get(
 	 * MarketplacewebservicesConstants.NETBANKING).toString() : MarketplacewebservicesConstants.DECIMALULLCHK;
-	 *
+	 * 
 	 * // Get data in Double value final Double debit_amt = new Double(debit); final Double credit_amt = new
 	 * Double(credit); final Double emi_amt = new Double(emi); final Double net_amt = new Double(netBanking);
-	 *
+	 * 
 	 * // Validate Payment Mode Value and set value into map if (debit != MarketplacewebservicesConstants.DECIMALULLCHK)
 	 * { paymentModeMap.put(MarketplacewebservicesConstants.DEBIT, debit_amt); } if (credit !=
 	 * MarketplacewebservicesConstants.DECIMALULLCHK) { paymentModeMap.put(MarketplacewebservicesConstants.CREDIT,
@@ -448,7 +412,7 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 	 * paymentModeMap.put(MarketplacewebservicesConstants.EMI, emi_amt); } if (netBanking !=
 	 * MarketplacewebservicesConstants.DECIMALULLCHK) { paymentModeMap.put(MarketplacewebservicesConstants.NETBANKING,
 	 * net_amt); }
-	 *
+	 * 
 	 * LOG.debug("getPaymentMode : rec_paymode  JSON Response paymentModeMap : " + paymentModeMap); } catch (final
 	 * EtailBusinessExceptions | EtailNonBusinessExceptions e) { throw e; } catch (final Exception e) { throw new
 	 * EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } // returns a Map return

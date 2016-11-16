@@ -10,6 +10,7 @@
 <%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme" %>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format" %>
 <%@ taglib prefix="order" tagdir="/WEB-INF/tags/responsive/order"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!-- <div class="orderList"> -->
 <%-- 	<div class="headline"><spring:theme code="basket.page.title.yourDeliveryItems" text="Your Delivery Items"/></div>
@@ -44,9 +45,20 @@
 				<ul class="desktop">
 					<li>
 					<div class="product-img">
-						<a href="${productUrl}">
+						<c:choose>
+										<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
+												<a href="${productUrl}">
+							<product:productPrimaryImage product="${entry.product}" format="luxuryCartIcon"/>
+						</a>
+					
+										</c:when>
+										<c:otherwise>
+												<a href="${productUrl}">
 							<product:productPrimaryImage product="${entry.product}" format="thumbnail"/>
 						</a>
+												
+										</c:otherwise>
+									</c:choose>
 						</div>
 						<div class="product">
 								

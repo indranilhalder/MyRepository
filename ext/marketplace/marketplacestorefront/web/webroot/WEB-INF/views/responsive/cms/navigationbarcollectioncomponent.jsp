@@ -4,7 +4,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <c:if test="${component.visible}">
-<div class="toggle"><span><spring:theme code="navigation.department.shopBy"/></span>
+<div class="toggle shop_dept"><span><spring:theme code="navigation.department.shopBy"/></span>
 	<span><spring:theme code="navigation.department.shopByDepartment"/></span></div> <!-- TPR-561 -->
 		<span id="mobile-menu-toggle" class="mainli"></span>
 			<ul>

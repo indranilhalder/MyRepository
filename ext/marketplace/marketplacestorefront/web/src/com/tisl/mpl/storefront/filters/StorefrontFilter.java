@@ -23,6 +23,7 @@ import java.util.Collections;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -33,6 +34,8 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.CookieGenerator;
 
+import com.tisl.mpl.storefront.security.cookie.CartRestoreCookieGenerator;
+
 
 /**
  * Filter that initializes the session for the marketplacestorefront. This is a spring configured filter that is
@@ -42,11 +45,12 @@ public class StorefrontFilter extends OncePerRequestFilter
 {
 	public static final String AJAX_REQUEST_HEADER_NAME = "X-Requested-With";
 	public static final String ORIGINAL_REFERER = "originalReferer";
+	public static final String ISLUX = "isLux";
 
 	private StoreSessionFacade storeSessionFacade;
 	private BrowseHistory browseHistory;
 	private CookieGenerator cookieGenerator;
-
+	private CartRestoreCookieGenerator cartRestoreCookieGenerator;
 	/*
 	 * @Resource private ConfigurationService configurationService;
 	 */
@@ -78,6 +82,9 @@ public class StorefrontFilter extends OncePerRequestFilter
 		{
 			fixSecureHttpJSessionIdCookie(request, response);
 		}
+		// TISLUX-1865
+		setLuxuryCookie(request, response);
+
 
 		if (isGetMethod(request))
 		{
@@ -94,6 +101,67 @@ public class StorefrontFilter extends OncePerRequestFilter
 		//getSEOAttributes(request);
 
 		filterChain.doFilter(request, response);
+	}
+
+	/**
+	 * @param request
+	 * @param response
+	 */
+	private void setLuxuryCookie(final HttpServletRequest request, final HttpServletResponse response)
+	{
+		Cookie isLuxCookie = null;
+		final Cookie[] cookies = request.getCookies();
+		if (cookies != null)
+		{
+			for (final Cookie cookie : cookies)
+			{
+				if (cookie.getName().equals(ISLUX))
+				{
+					isLuxCookie = cookie;
+					break;
+				}
+			}
+		}
+
+		if (!request.getRequestURI().contains("login"))
+		{
+			if (null != request.getParameter(ISLUX) && "true".equalsIgnoreCase(request.getParameter(ISLUX)))
+			{
+				if (null == isLuxCookie)
+				{
+					isLuxCookie = new Cookie(ISLUX, "true");
+					isLuxCookie.setPath("/");
+					response.addCookie(isLuxCookie);
+				}
+				else
+				{
+					isLuxCookie.setValue("true");
+					isLuxCookie.setPath("/");
+					response.addCookie(isLuxCookie);
+				}
+
+			}
+
+		}
+		if (request.getRequestURI().contains("logout") && cookies != null)
+		{
+			for (final Cookie cookie : cookies)
+			{
+				if (cookie.getName().equals("mpl-cart"))
+				{
+					cookie.setValue("");
+					if (StringUtils.isNotEmpty(getCartRestoreCookieGenerator().getCustomDomain()))
+					{
+						cookie.setDomain(getCartRestoreCookieGenerator().getCustomDomain());
+						cookie.setPath("/");
+						//cookie.setMaxAge(0);
+					}
+					response.addCookie(cookie);
+					break;
+				}
+			}
+		}
+
 	}
 
 	//Fix for TISPT-113
@@ -224,5 +292,22 @@ public class StorefrontFilter extends OncePerRequestFilter
 	public void setCookieGenerator(final CookieGenerator cookieGenerator)
 	{
 		this.cookieGenerator = cookieGenerator;
+	}
+
+	/**
+	 * @return the cartRestoreCookieGenerator
+	 */
+	public CartRestoreCookieGenerator getCartRestoreCookieGenerator()
+	{
+		return cartRestoreCookieGenerator;
+	}
+
+	/**
+	 * @param cartRestoreCookieGenerator
+	 *           the cartRestoreCookieGenerator to set
+	 */
+	public void setCartRestoreCookieGenerator(final CartRestoreCookieGenerator cartRestoreCookieGenerator)
+	{
+		this.cartRestoreCookieGenerator = cartRestoreCookieGenerator;
 	}
 }

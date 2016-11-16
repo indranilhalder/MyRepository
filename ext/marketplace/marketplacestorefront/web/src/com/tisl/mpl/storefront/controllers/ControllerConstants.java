@@ -220,6 +220,8 @@ public interface ControllerConstants
 			interface Cart
 			{
 				String CartPage = "pages/cart/cartPage";
+				String LUX_INDICATOR = "luxury";
+				String EMPTY_CART = "emptyCart";
 			}
 
 			interface StoreFinder
@@ -294,7 +296,7 @@ public interface ControllerConstants
 				String WishlistName = "wishlistName";
 				String WishlistSize = "wishlistSize";
 				String WishlistUrl = "wishlistUrl";
-
+				String EMPTY_WISHLIST = "emptyWishlist";
 			}
 
 			interface Checkout
