@@ -29706,11 +29706,11 @@ padding:20px;
 
 /*best picks start*/
 #bestPicks, #productYouCare {
-padding: 0;
+	padding: 0;
     clear: both;
 }
 .home-best-pick-carousel{
-margin: 10px 0px;
+	margin: 10px 0px;
     text-align: center;
     padding: 0 40px;
     }
@@ -45480,6 +45480,11 @@ body.template-pages-category-productGridPage .trending h2,body.template-pages-se
 body.page-homepage .trending h2 > span{
     font-weight: bold;
     font-size: 28px;
+}
+.listing.wrapper .left-block .listing-leftmenu .facet.js-facet.AvailabilitySize h3{
+	font-size: inherit;
+    padding: 0;
+    text-transform: inherit !important;
 }
 @media(max-width:1024px){
 .page-productDetails .trending h2 {
