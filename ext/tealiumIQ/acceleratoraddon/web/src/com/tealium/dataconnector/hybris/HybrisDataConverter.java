@@ -835,7 +835,7 @@ public final class HybrisDataConverter
 			String productCategoryListText = null;
 			String pageSubCategoriesText = null;
 			String pageSubcategoryNameL3ListText = null;
-			String userLoginType = null;//TPR-668
+			String user_login_type = null;//TPR-668
 			//TPR-429 Start
 			String sellerId = null;
 			String sellerIds = null;
@@ -1035,7 +1035,7 @@ public final class HybrisDataConverter
 
 			//tpr-668
 			user_login_type = (String) request.getAttribute("userLoginType");
-			
+
 
 			udo.setValue(TealiumHelper.HomePageUDO.PredefinedUDOFields.PAGE_TYPE, "checkout")
 					.addArrayValues(TealiumHelper.ConfirmationPageUDO.PredefinedUDOFields.PRODUCT_BRAND, productBrandList)
