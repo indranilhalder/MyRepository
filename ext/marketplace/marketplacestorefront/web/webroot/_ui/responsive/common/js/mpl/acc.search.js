@@ -212,7 +212,7 @@ function donotShowAll()
 	displayHideShowAll = true;
 	}	
 	
-	//l2ClassCount = -1;
+	//l2ClassCount = -1 ;
 	l2ClassCount = 0;
 	//**********below iteration for L2 and L3 categories
 	$(this).find("ul>li").each(function(e){	
