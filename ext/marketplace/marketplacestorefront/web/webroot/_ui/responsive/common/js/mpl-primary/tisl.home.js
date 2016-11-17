@@ -325,8 +325,8 @@ $("li.logIn-hi").on("mouseleave", function(e) {
 function getBrandsYouLoveAjaxCall() {
         var env = $("#previewVersion").val();
         var count= 0;
-        var autoplayTimeout=1;
-        var slideBy=0;
+        var autoplayTimeout=5000;
+        var slideBy=1;
         
         if (env == "true") {
             var dataString = 'version=Staged';
@@ -340,9 +340,23 @@ function getBrandsYouLoveAjaxCall() {
             data: dataString,
             success: function(response) {
                //console.log(response.subComponents);
-            	autoplayTimeout = response.autoplayTimeout;
-            	slideBy = response.slideBy;
             	
+            	autoplayTimeout = response.autoplayTimeout;
+            	slideBy = response.slideBy; 
+            	
+            	if(autoplayTimeout && slideBy){
+            	
+            		autoplayTimeout = autoplayTimeout;
+                	slideBy = slideBy;
+            		
+            	}else{
+            		
+            		 autoplayTimeout=5000;
+            	     slideBy=1;
+            	}
+            	
+            	
+            	 
                 defaultComponentId = "";
                 renderHtml = "<h2>" + response.title + "</h2>" +
                     "<div class='home-brands-you-love-carousel'>";
@@ -692,7 +706,7 @@ function getBestPicksAjaxCall() {
         } else {
             var dataString = 'version=Online';
         }
-        var autoplayTimeout = 0;
+        var autoplayTimeout = 5000;
         var slideBy = 1;
         $.ajax({
             type: "GET",
@@ -704,6 +718,17 @@ function getBestPicksAjaxCall() {
                // console.log(response.slideBy);
                 autoplayTimeout = response.autoplayTimeout;
                 slideBy = response.slideBy;
+                
+                if(autoplayTimeout && slideBy){
+                	
+            		autoplayTimeout = autoplayTimeout;
+                	slideBy = slideBy;
+            		
+            	}else{
+            		
+            		 autoplayTimeout=5000;
+            	     slideBy=1;
+            	}
                 renderHtml = "<h2>" + response.title + "</h2>" +
                     "<div class='home-best-pick-carousel'>";
                 $.each(response.subItems, function(k, v) {
@@ -813,7 +838,7 @@ function getProductsYouCareAjaxCall() {
             var dataString = 'version=Online';
         }
         
-        var slideBy=2;
+        var slideBy=1;
         var autoplayTimeout=5000;
         $.ajax({
             type: "GET",
@@ -824,8 +849,18 @@ function getProductsYouCareAjaxCall() {
             	
             	autoplayTimeout = response.autoplayTimeout;
             	slideBy = response.slideBy;
-            	console.log('want to care'+autoplayTimeout);
-            	console.log('want to care'+slideBy);
+            	
+            	if(autoplayTimeout && slideBy){
+                	
+            		autoplayTimeout = autoplayTimeout;
+                	slideBy = slideBy;
+            		
+            	}else{
+            		
+            		 autoplayTimeout=5000;
+            	     slideBy=1;
+            	}
+            	
                 renderHtml = "<h2>" + response.title + "</h2>";
                 renderHtml +=
                     "<div class='home-product-you-care-carousel'>";
@@ -904,7 +939,7 @@ function getNewAndExclusiveAjaxCall() {
     } else {
         var dataString = 'version=Online';
     }
-     var slideBy=2;
+     var slideBy=1;
      var autoplayTimeout=5000;
     
     $.ajax({
@@ -918,6 +953,16 @@ function getNewAndExclusiveAjaxCall() {
         	autoplayTimeout = response.autoplayTimeout;
         	slideBy = response.slideBy;
         	 
+        	if(autoplayTimeout && slideBy){
+            	
+        		autoplayTimeout = autoplayTimeout;
+            	slideBy = slideBy;
+        		
+        	}else{
+        		
+        		 autoplayTimeout=5000;
+        	     slideBy=1;
+        	}
         	
         	var staticHost=$('#staticHost').val();
             var defaultHtml = "";
