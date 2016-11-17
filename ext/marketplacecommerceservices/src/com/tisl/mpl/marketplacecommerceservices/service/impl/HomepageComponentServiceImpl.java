@@ -6,6 +6,7 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
+import de.hybris.platform.cms2.model.restrictions.CMSTimeRestrictionModel;
 import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
 import de.hybris.platform.commerceservices.category.CommerceCategoryService;
 import de.hybris.platform.core.model.media.MediaModel;
@@ -14,6 +15,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -76,8 +78,8 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 			{
 				final ImageCarouselComponentModel bestPickCarouselComponent = (ImageCarouselComponentModel) component;
 				String title = "";
-				//TPR-559 Show/Hide Components and Sub-components
-				if (bestPickCarouselComponent.getVisible().booleanValue())
+				//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+				if (bestPickCarouselComponent.getVisible().booleanValue() && showOnTimeRestriction(bestPickCarouselComponent))
 				{
 					if (StringUtils.isNotEmpty(bestPickCarouselComponent.getTitle()))
 					{
@@ -109,8 +111,8 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 
 							if (null != bestPickItem)
 							{
-								//TPR-559 Show/Hide Components and Sub-components
-								if (bestPickItem.getVisible().booleanValue())
+								//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+								if (bestPickItem.getVisible().booleanValue() && showOnTimeRestriction(bestPickItem))
 								{
 									if (null != bestPickItem.getMedia())
 									{
@@ -207,8 +209,9 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 			if (component instanceof MplCategoryCarouselComponentModel)
 			{
 				final MplCategoryCarouselComponentModel productYouCareCarouselComponent = (MplCategoryCarouselComponentModel) component;
-				//TPR-559 Show/Hide Components and Sub-components
-				if (productYouCareCarouselComponent.getVisible().booleanValue())
+				//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+				if (productYouCareCarouselComponent.getVisible().booleanValue()
+						&& showOnTimeRestriction(productYouCareCarouselComponent))
 				{
 					if (StringUtils.isNotEmpty(productYouCareCarouselComponent.getTitle()))
 					{
@@ -250,8 +253,9 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 			{
 
 				final MplAdvancedCategoryCarouselComponentModel productYouCareCarouselComponent = (MplAdvancedCategoryCarouselComponentModel) component;
-				//TPR-559 Show/Hide Components and Sub-components
-				if (productYouCareCarouselComponent.getVisible().booleanValue())
+				//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+				if (productYouCareCarouselComponent.getVisible().booleanValue()
+						&& showOnTimeRestriction(productYouCareCarouselComponent))
 				{
 					if (StringUtils.isNotEmpty(productYouCareCarouselComponent.getTitle()))
 					{
@@ -276,8 +280,8 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 						for (final MplImageCategoryComponentModel imageCategoryComponent : productYouCareCarouselComponent
 								.getCategories())
 						{
-							//TPR-559 Show/Hide Components and Sub-components
-							if (imageCategoryComponent.getVisible().booleanValue())
+							//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+							if (imageCategoryComponent.getVisible().booleanValue() && showOnTimeRestriction(imageCategoryComponent))
 							{
 								if (imageCategoryComponent.getCategory() != null)
 								{
@@ -421,8 +425,8 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 			LOG.info("Component>>>>with id :::" + component.getUid());
 			if (component instanceof MplSequentialBannerComponentModel)
 			{
-				//TPR-559 Show/Hide Components and Sub-components
-				if (component.getVisible().booleanValue())
+				//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+				if (component.getVisible().booleanValue() && showOnTimeRestriction(component))
 				{
 					final MplSequentialBannerComponentModel promoBanner = (MplSequentialBannerComponentModel) component;
 
@@ -433,8 +437,8 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 						final JSONObject bannerJson = new JSONObject();
 						if (banner instanceof MplBigPromoBannerComponentModel)
 						{
-							//TPR-559 Show/Hide Components and Sub-components
-							if (banner.getVisible().booleanValue())
+							//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+							if (banner.getVisible().booleanValue() && showOnTimeRestriction(banner))
 							{
 								final MplBigPromoBannerComponentModel bannerImage = (MplBigPromoBannerComponentModel) banner;
 								if (bannerImage.getBannerImage() != null)
@@ -466,8 +470,8 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 
 						if (banner instanceof MplBigFourPromoBannerComponentModel)
 						{
-							//TPR-559 Show/Hide Components and Sub-components
-							if (banner.getVisible().booleanValue())
+							//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+							if (banner.getVisible().booleanValue() && showOnTimeRestriction(banner))
 							{
 								final MplBigFourPromoBannerComponentModel bannerImage = (MplBigFourPromoBannerComponentModel) banner;
 								if (bannerImage.getBannerImage() != null)
@@ -605,6 +609,28 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 		}
 
 		return (path.iterator().next());
+	}
+
+	//TPR-558 Scheduling of banners
+	@Override
+	public boolean showOnTimeRestriction(final AbstractCMSComponentModel component)
+	{
+		CMSTimeRestrictionModel cmsTimeRestriction = null;
+		Date activeFrom = null;
+		Date activeTo = null;
+		boolean showOnTimeRestriction = true;
+		final Date date = new Date();
+		if (CollectionUtils.isNotEmpty(component.getRestrictions()))
+		{
+			cmsTimeRestriction = (CMSTimeRestrictionModel) component.getRestrictions().get(0);
+			activeFrom = cmsTimeRestriction.getActiveFrom();
+			activeTo = cmsTimeRestriction.getActiveUntil();
+			if (null == activeFrom || null == activeTo || !date.after(activeFrom) || !date.before(activeTo))
+			{
+				showOnTimeRestriction = false;
+			}
+		}
+		return showOnTimeRestriction;
 	}
 
 }
