@@ -78,7 +78,7 @@
 <div id="emailSend" class="emailSend">
 	
 				<div class="click2chat-container send-email-container" id="myModalLabel">
-					<h1><spring:theme code="email.mail"/></h1>
+					<h2><spring:theme code="email.mail"/></h2>
 					
 					<form>
 				
