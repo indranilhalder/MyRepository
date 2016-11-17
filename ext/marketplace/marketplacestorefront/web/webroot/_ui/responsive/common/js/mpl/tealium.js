@@ -310,16 +310,16 @@ $(document).ready(
 						tealiumData += '"product_brand":'
 							+ $("#product_brand").val() + ',';				
 						tealiumData += '"product_quantity_update":'
-							+ qtyUpdated + ',';				
+							+ qtyUpdated + ',';			
 						tealiumData += '"checkout_seller_ids":"'		//for TPR-429
-							+ $("#checkoutSellerIDs").val() + ',';
+							+ $("#checkoutSellerIDs").val() + '",';
 						//TPR-430 Start
-						tealiumData += '"product_category":'
-							+ $("#product_category").val().replace(/[\[\]']+/g, '') + ',';
-						tealiumData += '"page_subcategory_name":'
-							+ $("#page_subcategory_name").val().replace(/[\[\]']+/g, '') + ',';
-					tealiumData += '"page_subcategory_name_L3":'
-						+ $("#page_subcategory_name_l3").val().replace(/[\[\]']+/g, '') + '}';
+						tealiumData += '"product_category":"'
+							+ $("#product_category").val() + '",';
+						tealiumData += '"page_subcategory_name":"'
+							+ $("#page_subcategory_name").val() + '",';
+					tealiumData += '"page_subcategory_name_L3":"'
+						+ $("#page_subcategory_name_l3").val() + '"}';
 					//TPR-430 End
 						data = data.replace("}<TealiumScript>", tealiumData);
 						$('#tealiumHome').html(data);
@@ -359,12 +359,12 @@ $(document).ready(
 						tealiumData += '"product_brand":'
 							+ $("#product_brand").val() + ',';
 						//TPR-430 Start
-						tealiumData += '"product_category":'
-							+ $("#product_category").val().replace(/[\[\]']+/g, '') + ',';
-						tealiumData += '"page_subcategory_name":'
-							+ $("#page_subcategory_name").val().replace(/[\[\]']+/g, '') + ',';
-					tealiumData += '"page_subcategory_name_L3":'
-						+ $("#page_subcategory_name_l3").val().replace(/[\[\]']+/g, '') + ',';
+						tealiumData += '"product_category":"'
+							+ $("#product_category").val() + '",';
+						tealiumData += '"page_subcategory_name":"'
+							+ $("#page_subcategory_name").val() + '",';
+					tealiumData += '"page_subcategory_name_L3":"'
+						+ $("#page_subcategory_name_l3").val() + '",';
 					//TPR-430 End
 						tealiumData += '"checkout_seller_ids":"'		//for TPR-429
 							+ $("#checkoutSellerIDs").val() + '"}';
@@ -814,44 +814,47 @@ $(document).on("click", ".home-brands-you-love-carousel-brands", function() {
 
 			
 			
-			/*TPR-654*/ 			
+/**TPR-654*---ShopByDepartment	*/
+			
 			$("nav ul li div a").click(function(e)
 			{
 			var that = $(this);
 			var target = $(e.target);
-			var hAr = "";
-			var x= $.trim($(".toggle.shop_dept").text().replace(/[\t\n]+/g,' '));
+			//var hAr = "";
+			var x= $.trim($(".toggle.shop_dept").text().replace(/[\t\n\']+/g,' '));
 			x = x.replace(" ","").toLowerCase();
 			x = x.replace(" ","_");
-			var y = $.trim($(this).text().replace(/[\t\n]+/g,' ')).toLowerCase();
-			y = y.replace(" ","");
+			var y = $.trim($(this).text().replace(/[\t\n\']+/g,' ')).toLowerCase();
+			y = y.replace(/[\s]/g,"");
 			var navigationClick= "top_navigation_click";
 			
 			if($(target).parent().hasClass("toggle departmenthover L1"))
 			          {
-				        hAr+= x+">>>>"+ ">>>>"+y;
+				        //hAr+= x+">>>>"+ ">>>>"+y;
 				utag.link({"link_text":x+"_"+y,"event_type" : navigationClick});
 				
 			          }
 			
 			if($(target).parent().hasClass("toggle L2"))
 			{
-				var itsParentL1 = $.trim(that.parents().siblings(".departmenthover.L1").text().replace(/[\t\n]+/g,' ')).toLowerCase();
-				itsParentL1 = itsParentL1.replace(" ","");
-				hAr+= x+">>>"+">>"+itsParentL1 +" >> "+ y;
+				var itsParentL1 = $.trim(that.parents().siblings(".departmenthover.L1").text().replace(/[\t\n\']+/g,' ')).toLowerCase();
+				itsParentL1 = itsParentL1.replace(/[\s]/g,"");
+				//hAr+= x+">>>"+">>"+itsParentL1 +" >> "+ y;
 				utag.link({"link_text":x+"_"+itsParentL1+"_"+y, "event_type" : navigationClick});
 			}
 			
 			if(that.parent().hasClass("toggle L3")){
-				var itsParentL1 =$.trim(that.parents().siblings(".departmenthover.L1").text().replace(/[\t\n]+/g,' ')).toLowerCase();
-				itsParentL1 = itsParentL1.replace(" ","");
-				var itsParentL2 = $.trim(that.parent().parent().prevAll("li.short.words:first").text().replace(/[\t\n]+/g,' ')).toLowerCase();
-				itsParentL2 = itsParentL2.replace(" ","");
+				var itsParentL1 =$.trim(that.parents().siblings(".departmenthover.L1").text().replace(/[\t\n\']+/g,' ')).toLowerCase();
+				itsParentL1 = itsParentL1.replace(/[\s]/g,"");
+				var itsParentL2 = $.trim(that.parent().parent().prevAll("li.short.words:first").text().replace(/[\t\n\']+/g,' ')).toLowerCase();
+				itsParentL2 = itsParentL2.replace(/[\s]/g,"");
 				
-				hAr+= x+">>>>" +">>>>>"+itsParentL1 +" >> "+ ">>"+itsParentL2 +$(this).text();
+				//hAr+= x+">>>>" +">>>>>"+itsParentL1 +" >> "+ ">>"+itsParentL2 +$(this).text();
 				utag.link({"link_text":x+"_"+itsParentL1+"_"+itsParentL2+"_"+y,"event_type" : navigationClick});
 			}
 			//console.log(hAr);
 			});
-			/*TPR-654*/ 			
+			
+			/*TPR-654*/	
+						
 			
