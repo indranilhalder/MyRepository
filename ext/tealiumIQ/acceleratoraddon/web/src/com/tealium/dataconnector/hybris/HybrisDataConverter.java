@@ -1034,11 +1034,8 @@ public final class HybrisDataConverter
 			//			}
 
 			//tpr-668
-			userLoginType = (String) request.getAttribute("userLoginType");
-			if (userLoginType != null)
-			{
-				udo.setValue("userLoginType", userLoginType);
-			}
+			user_login_type = (String) request.getAttribute("userLoginType");
+			
 
 			udo.setValue(TealiumHelper.HomePageUDO.PredefinedUDOFields.PAGE_TYPE, "checkout")
 					.addArrayValues(TealiumHelper.ConfirmationPageUDO.PredefinedUDOFields.PRODUCT_BRAND, productBrandList)
@@ -1059,7 +1056,7 @@ public final class HybrisDataConverter
 			udo.addArrayValues("product_category", productCategoryList);
 			udo.addArrayValues("page_subcategory_name", pageSubCategories);
 			udo.addArrayValues("page_subcategory_name_L3", pageSubcategoryNameL3List);
-
+			udo.setValue("user_login_type", user_login_type);
 			scriptString = tealiumHelper.outputFullHtml(udo);
 		}
 		catch (final Exception e)
@@ -1221,7 +1218,7 @@ public final class HybrisDataConverter
 			String productCategoryListText = null;
 			String pageSubCategoriesText = null;
 			String pageSubcategoryNameL3ListText = null;
-			String userLoginType= null;//TPR-668
+			String user_login_type = null;//TPR-668
 			/*TPR-646*/
 			int totalCountInWishlist = 0;
 
@@ -1323,12 +1320,8 @@ public final class HybrisDataConverter
 			}
 
 			//tpr-668
-						userLoginType = (String) request.getAttribute("userLoginType");
-						if(userLoginType != null){
-							udo.setValue("userLoginType", userLoginType);
-					 }
-			
-			
+			user_login_type = (String) request.getAttribute("userLoginType");
+						
 			udo.setValue(TealiumHelper.HomePageUDO.PredefinedUDOFields.PAGE_TYPE, "wishlist")
 					.addArrayValues("product_id", productIdListInWl).addArrayValues("product_name", productNameListInWl)
 					.addArrayValues("product_quantity", productQuantityListInWl).addArrayValues("product_brand", productBrandListInWl)
@@ -1339,6 +1332,7 @@ public final class HybrisDataConverter
 			udo.setValue("page_subcategory_name", pageSubCategoriesText);
 			udo.setValue("page_subcategory_name_L3", pageSubcategoryNameL3ListText);
 
+			udo.setValue("user_login_type", user_login_type);
 			scriptString = tealiumHelper.outputFullHtml(udo);
 		}
 		catch (final Exception e)
