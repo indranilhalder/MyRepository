@@ -2364,9 +2364,12 @@ public class OrdersController extends BaseCommerceController
 			if (StringUtils.isNotEmpty(orderCode))
 			{
 				mplDeliveryAddressFacade.newOTPRequest(orderCode);
+			   webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+
 			}
 			else
 			{
+			   webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9521);
 			}
 
