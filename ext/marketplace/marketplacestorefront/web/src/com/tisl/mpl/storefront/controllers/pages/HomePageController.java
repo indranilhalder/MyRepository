@@ -290,6 +290,7 @@ public class HomePageController extends AbstractPageController
 			title = showCaseComponent.getTitle();
 		}
 		showCaseComponentJson.put(TITLE, title);
+
 		final JSONArray subComponentJsonArray = new JSONArray();
 
 		if (CollectionUtils.isNotEmpty(showCaseComponent.getShowcaseItems()))
@@ -339,6 +340,8 @@ public class HomePageController extends AbstractPageController
 			}
 		}
 
+		showCaseComponentJson.put("slideBy", showCaseComponent.getSlideBy());
+		showCaseComponentJson.put("autoplayTimeout", showCaseComponent.getAutoplayTimeout());
 		showCaseComponentJson.put("subComponents", subComponentJsonArray);
 
 		return showCaseComponentJson;
@@ -586,7 +589,19 @@ public class HomePageController extends AbstractPageController
 					//TPR-559 Show/Hide Components and Sub-components
 					if (component.getVisible().booleanValue())
 					{
+
+						title = newAndExclusiveComponent.getTitle();
+					}
+
+
+					newAndExclusiveJson.put(TITLE, title);
+					newAndExclusiveJson.put("slideBy", newAndExclusiveComponent.getSlideByNewIn());
+					newAndExclusiveJson.put("autoplayTimeout", newAndExclusiveComponent.getAutoplayTimeoutNewIn());
+
+					final JSONArray newAndExclusiveJsonArray = new JSONArray();
+
 						final ProductCarouselComponentModel newAndExclusiveComponent = (ProductCarouselComponentModel) component;
+
 
 						String title = EMPTY_STRING;
 						if (StringUtils.isNotEmpty(newAndExclusiveComponent.getTitle()))
@@ -660,12 +675,14 @@ public class HomePageController extends AbstractPageController
 							}
 							newAndExclusiveJson.put("newAndExclusiveProducts", newAndExclusiveJsonArray);
 						}
-					}
+
 					else
 					{
 						LOG.info("Component visiblity set to false");
+
 					}
 				}
+
 			}
 		}
 		catch (final EtailBusinessExceptions e)
