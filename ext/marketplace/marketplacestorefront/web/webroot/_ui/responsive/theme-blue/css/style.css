@@ -45459,6 +45459,19 @@ body.pageLabel-Footwear .feature-collections ul.collections li.chef .feature-col
 .page-productDetails .trending h2 span {
 	font-weight: bold;
 }
+ .listing-leftmenu h3.customPriceRange
+{
+    font-weight: bold;
+}
+.listing-leftmenu h3.customPriceRange{
+    text-transform: capitalize;
+    padding: 10px 0;
+    word-break: break-word;
+    padding-right: 15px;
+    letter-spacing: normal;
+    font-size: 14px;
+    text-transform: uppercase;
+}
 @media(max-width:1024px){
 .page-productDetails .trending h2 {
 		border-top: 1px solid #ccc;
@@ -45479,6 +45492,10 @@ body.pageLabel-Footwear .feature-collections ul.collections li.chef .feature-col
     text-align: center;
     position: static;
 }
+.listing-leftmenu h3.customPriceRange{
+	padding-left: 38px;
+    background: #fff !important;
+}
 }
 @media(max-width:767px){
 .page-productDetails .trending h2 {		
@@ -45486,9 +45503,13 @@ body.pageLabel-Footwear .feature-collections ul.collections li.chef .feature-col
 	}
 	.trending h2 span {		
 		font-size: 20px;		
+	}
+	.listing-leftmenu h3.customPriceRange{
+		padding-left: 20px;
 	}	
 }
 /* Comment on 16/11/2016 ends IA*/
+
 
 /* TPR-245 SEO Ends */
 
