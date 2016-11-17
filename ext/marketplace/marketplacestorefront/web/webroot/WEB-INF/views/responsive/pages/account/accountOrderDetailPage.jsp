@@ -26,6 +26,9 @@
 <spring:url value="/my-account/default/wishList" var="wishlistUrl" />
 <spring:url value="/my-account/friendsInvite" var="friendsInviteUrl" />
 
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.cancel.enabled')" var="cancelFlag"/> 
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.return.enabled')" var="returnFlag"/> 
+
 <template:page pageTitle="${pageTitle}">
 	<div class="account" id="anchorHead">
 		<h1 class="account-header">
@@ -545,7 +548,7 @@
 										</div>
 										<div class="actions">
 											<c:if
-												test="${entry.itemCancellationStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
+												test="${entry.itemCancellationStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false and cancelFlag}">
 												<c:set var="bogoCheck"
 													value="${entry.associatedItems ne null ? 'true': 'false'}"></c:set>
 												<a href="" data-toggle="modal"
@@ -558,7 +561,7 @@
 												
 											</c:if>
 											<c:if
-												test="${entry.itemReturnStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
+												test="${entry.itemReturnStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false and returnFlag}">
 												<a
 													href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${sellerOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}">
 													<spring:theme code="text.account.returnReplace"
