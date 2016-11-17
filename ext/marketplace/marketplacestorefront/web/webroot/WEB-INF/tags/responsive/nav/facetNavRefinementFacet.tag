@@ -470,7 +470,7 @@ function navigateToPage(queryString,textString)
 				<c:url value="${removeQueryUrlForPriceValue}" var="removeQueryUrl"/>
 				<a href="${removeQueryUrl}" ><span class="any_price">Any Price</span></a>
 			</div>		  
-			<h4 class="customPriceRange">Price Range</h4>
+			<h3 class="customPriceRange">Price Range</h3>
 							<input type="hidden" name="currentPriceQueryParams" value="${searchPageData.currentQuery.query.value}" class="currentPriceQueryParams"/>					  
 							 <form action="${url}" method="get" id="customPriceFilter">
 							    <input type="hidden" name="offer" value="${offer}"/>
