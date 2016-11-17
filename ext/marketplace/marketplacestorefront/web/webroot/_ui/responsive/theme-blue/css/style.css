@@ -45459,6 +45459,28 @@ body.pageLabel-Footwear .feature-collections ul.collections li.chef .feature-col
 .page-productDetails .trending h2 span {
 	font-weight: bold;
 }
+ .listing-leftmenu h3.customPriceRange
+{
+    font-weight: bold;
+}
+.listing-leftmenu h3.customPriceRange{
+    text-transform: capitalize;
+    padding: 10px 0;
+    word-break: break-word;
+    padding-right: 15px;
+    letter-spacing: normal;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+body.template-pages-category-productGridPage .trending h2,body.template-pages-search-searchGridPage .trending h2{
+	margin-top: 35px;
+    margin-bottom: 35px;
+    height: 37px;
+}
+body.page-homepage .trending h2 > span{
+    font-weight: bold;
+    font-size: 28px;
+}
 @media(max-width:1024px){
 .page-productDetails .trending h2 {
 		border-top: 1px solid #ccc;
@@ -45472,12 +45494,27 @@ body.pageLabel-Footwear .feature-collections ul.collections li.chef .feature-col
 		font-size: 24px;
 	}
 }
+@media(max-width:1200px) and (min-width:791px){
+	body.page-homepage .trending h2>span{
+		font-size: 15px;
+	}
+}
 @media(max-width:790px){
 .trending h2 span {
     clear: both;
     float: none;
     text-align: center;
     position: static;
+}
+.listing-leftmenu h3.customPriceRange{
+	padding-left: 38px;
+    background: #fff !important;
+}
+body.page-homepage .trending h2 {
+    margin-top: 5px;
+}
+body.page-homepage .trending h2>span{
+	font-size: 24px;
 }
 }
 @media(max-width:767px){
@@ -45486,9 +45523,22 @@ body.pageLabel-Footwear .feature-collections ul.collections li.chef .feature-col
 	}
 	.trending h2 span {		
 		font-size: 20px;		
+	}
+	.listing-leftmenu h3.customPriceRange{
+		padding-left: 20px;
+	}
+	body.template-pages-category-productGridPage .trending h2, body.template-pages-search-searchGridPage .trending h2{
+		margin-top: 20px;
+	}
+	body.page-homepage .trending h2 {
+    	margin-bottom: 30px;
+	}
+	body.page-homepage .trending h2>span {
+    	font-size: 20px !important;
 	}	
 }
 /* Comment on 16/11/2016 ends IA*/
+
 
 /* TPR-245 SEO Ends */
 
