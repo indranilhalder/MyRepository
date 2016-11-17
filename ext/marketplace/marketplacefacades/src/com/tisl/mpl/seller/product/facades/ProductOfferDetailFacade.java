@@ -19,5 +19,5 @@ public interface ProductOfferDetailFacade
 
 	//update the message for Freebie product TPR-1754
 
-	public Map<String, Map<String, String>> showFreebieMessage(String ussId);
+	public Map<String, String> showFreebieMessage(String ussId);
 }

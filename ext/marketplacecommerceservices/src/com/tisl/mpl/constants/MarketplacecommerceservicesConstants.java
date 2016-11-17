@@ -22,6 +22,9 @@ import de.hybris.platform.returns.model.ReturnOrderModel;
 
 import java.util.Date;
 
+import com.tisl.mpl.core.model.FreebieDetailModel;
+import com.tisl.mpl.core.model.ProductFreebieDetailModel;
+
 
 /**
  * Global class for all Marketplacecommerceservices constants. You can add global constants for your extension into this
@@ -1771,11 +1774,16 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//update the message for Freebie product TPR-1754
 
-	//	public static final String PRODUCTFREEBIEDETMSGQUERY = "SELECT {prodOffrDet.sellerId},{offerDet.freebieMsg} FROM {FreebieDetail as offerDet}, {ProductFreebieDetail as  prodOffrDet} WHERE {prodOffrDet.productId}= ?productId AND {prodOffrDet.offer} = {offerDet.pk}"
+
+	//	public static final String PRODUCTFREEBIEDETMSGQUERY = "SELECT {prodOffrDet.ussId},{offerDet.freebieMsg},{prodOffrDet.startDate},{prodOffrDet.endDate}  FROM {FreebieDetail as offerDet}, {ProductFreebieDetail as  prodOffrDet} WHERE {prodOffrDet.ussId}= ?ussId AND {prodOffrDet.offer} = {offerDet.pk} AND {prodOffrDet.startDate} <=sysdate AND {prodOffrDet.endDate} >=sysdate"
 	//			.intern();
 
-	public static final String PRODUCTFREEBIEDETMSGQUERY = "SELECT {prodOffrDet.ussId},{offerDet.freebieMsg},{prodOffrDet.startDate},{prodOffrDet.endDate}  FROM {FreebieDetail as offerDet}, {ProductFreebieDetail as  prodOffrDet} WHERE {prodOffrDet.ussId}= ?ussId AND {prodOffrDet.offer} = {offerDet.pk} AND {prodOffrDet.startDate} <= ?sysdate AND {prodOffrDet.endDate} >= ?sysdate"
-			.intern();
+	public static final String PRODUCTFREEBIEDETMSGQUERY = "select {prodOffrDet.pk},{offerDet.pk} from {"
+			+ ProductFreebieDetailModel._TYPECODE + " as prodOffrDet JOIN " + FreebieDetailModel._TYPECODE
+			+ " as offerDet ON {prodOffrDet.offer} = {offerDet.pk} }"
+			+ " where {prodOffrDet.ussId}= ?ussId AND {prodOffrDet.startDate} <=sysdate AND {prodOffrDet.endDate} >=sysdate"
+					.intern();
+
 
 	public static final String FREEBIEMSG = "freebieMsg".intern();
 	public static final String FREEBIEUSSID = "ussId".intern();
