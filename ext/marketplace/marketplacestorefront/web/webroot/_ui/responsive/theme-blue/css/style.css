@@ -45486,6 +45486,19 @@ body.page-homepage .trending h2 > span{
     padding: 0;
     text-transform: inherit !important;
 }
+.click2chat-container h2{
+	font-size: 24px;
+    margin-bottom: 15px;
+    line-height: 24px;
+    width: 100%;
+    float: right;
+}
+.send-email-container h2 {
+    font-size: 16px;
+}
+.click2chat-container.send-email-container h2 {
+    margin-bottom: 5px;
+}
 @media(max-width:1024px){
 .page-productDetails .trending h2 {
 		border-top: 1px solid #ccc;
@@ -45520,6 +45533,9 @@ body.page-homepage .trending h2 {
 }
 body.page-homepage .trending h2>span{
 	font-size: 24px;
+}
+.click2chat-container h2{
+	font-size: 22px;
 }
 }
 @media(max-width:767px){
