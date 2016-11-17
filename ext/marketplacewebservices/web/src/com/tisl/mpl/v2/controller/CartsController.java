@@ -13,7 +13,6 @@
  */
 package com.tisl.mpl.v2.controller;
 
-
 import de.hybris.platform.acceleratorservices.config.SiteConfigService;
 import de.hybris.platform.basecommerce.enums.StockLevelStatus;
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
@@ -30,6 +29,7 @@ import de.hybris.platform.commercefacades.product.data.StockData;
 import de.hybris.platform.commercefacades.promotion.CommercePromotionRestrictionFacade;
 import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
+import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commerceservices.customer.DuplicateUidException;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
@@ -65,7 +65,6 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
@@ -1825,8 +1824,8 @@ public class CartsController extends BaseCommerceController
 	public WebSerResponseWsDTO addProductToCartMobile(@PathVariable final String cartId,
 			@RequestParam(required = true) final String productCode, @RequestParam(required = true) final String USSID,
 			@RequestParam(required = false, defaultValue = "1") final String quantity,
-			@RequestParam(required = true) final boolean addedToCartWl) throws InvalidCartException,
-			CommerceCartModificationException
+			@RequestParam(required = true) final boolean addedToCartWl, @RequestParam(required = false) final String channel)
+			throws InvalidCartException, CommerceCartModificationException
 	{
 		WebSerResponseWsDTO result = new WebSerResponseWsDTO();
 		if (LOG.isDebugEnabled())
@@ -1836,7 +1835,7 @@ public class CartsController extends BaseCommerceController
 		}
 		try
 		{
-			result = mplCartWebService.addProductToCart(productCode, cartId, quantity, USSID, addedToCartWl);
+			result = mplCartWebService.addProductToCart(productCode, cartId, quantity, USSID, addedToCartWl, channel);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -1881,7 +1880,8 @@ public class CartsController extends BaseCommerceController
 	@ResponseBody
 	public CartDataDetailsWsDTO getCartDetails(@PathVariable final String cartId,
 			@RequestParam(required = false) final String pincode,
-			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
+			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields,
+			@RequestParam(required = false) final String channel)
 	{
 		final AddressListWsDTO addressListDTO = addressList(fields);
 		CartDataDetailsWsDTO cartDataDetails = new CartDataDetailsWsDTO();
@@ -1893,7 +1893,7 @@ public class CartsController extends BaseCommerceController
 				{
 					LOG.debug("************ get cart details mobile web service *********" + cartId);
 				}
-				cartDataDetails = mplCartWebService.getCartDetails(cartId, addressListDTO, pincode);
+				cartDataDetails = mplCartWebService.getCartDetails(cartId, addressListDTO, pincode, channel);
 				final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
 				cartDataDetails.setMaxAllowed(maximum_configured_quantiy);
 			}
@@ -2538,7 +2538,6 @@ public class CartsController extends BaseCommerceController
 		CartModel cart = null;
 		try
 		{
-			LOG.debug("******************* Soft reservation Mobile web service ******************" + cartId + pincode);
 			cart = mplPaymentWebFacade.findCartValues(cartId);
 			if (setFreebieDeliverMode(cart))
 			{
@@ -2577,6 +2576,13 @@ public class CartsController extends BaseCommerceController
 			}
 			reservationList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			reservationList.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			reservationList.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			reservationList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
 
 		return reservationList;
 	}
@@ -2601,22 +2607,8 @@ public class CartsController extends BaseCommerceController
 		boolean deListedStatus = false;
 		boolean delvieryModeset = false;
 		String delistMessage = MarketplacecommerceservicesConstants.EMPTY;
-		//List<PinCodeResponseData> pinCodeResponse = null;
 		try
 		{
-			//getSessionService().setAttribute(MarketplacewebservicesConstants.PAYMENTMODEFORPROMOTION, paymentMode);
-			//LOG.debug("************ Logged-in cart mobile soft reservation paymentMode **************" + paymentMode);
-			/*
-			 * if (StringUtils.isNotEmpty(bankName)) {
-			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bankName); } else { BinModel
-			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
-			 * StringUtils.isNotEmpty(bin.getBankName())) {
-			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 * 
-			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
-			 * bin.getBankName()); } }
-			 */
-
 			if (StringUtils.isNotEmpty(cartGuid))
 			{
 				orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
@@ -2632,13 +2624,11 @@ public class CartsController extends BaseCommerceController
 					//bin = getBinService().checkBin(binNo, paymentMode, null, false);
 					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9075);
 				}
-				LOG.debug("************ Logged-in cart mobile promotion is valid **************" + cartGuid);
 				try
 				{
-					LOG.debug("************ Logged-in cart mobile delisting **************" + cartGuid);
 					//duplicate cart fix for mobile
 					deListedStatus = mplCartFacade.isCartEntryDelistedMobile(cart);
-					LOG.debug(MarketplacecommerceservicesConstants.CART_DELISTED_STATUS + deListedStatus);
+					LOG.debug(MarketplacecommerceservicesConstants.CART_DELISTED_STATUS + deListedStatus + "::::" + cartGuid);
 				}
 				catch (final Exception ex)
 				{
@@ -3101,22 +3091,19 @@ public class CartsController extends BaseCommerceController
 		final ValidateOtpWsDto validateOtpWsDto = new ValidateOtpWsDto();
 		OrderModel orderModel = null;
 		CartModel cart = null;
-		String validation = "";
+		String validation = null;
 		try
 		{
-			final CustomerModel user = getExtUserService().getUserForOriginalUid(userId);
-			if (null == user)
+			final CustomerData customerData = customerFacade.getCurrentCustomer();
+			if (null == customerData)
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
 			}
-			final String mplCustomerID = user.getUid();
-			final String mplCustomerName = user.getName() != null ? user.getName() : "";
-
-
-			if (null != mplCustomerID && StringUtils.isNotEmpty(mplCustomerID))
+			final String mplCustomerID = customerData.getDisplayUid();
+			final String mplCustomerName = customerData.getName() != null ? customerData.getName() : "";
+			if (StringUtils.isNotEmpty(mplCustomerID))
 			{
-
-				if (null != mobilenumber && StringUtils.isNotEmpty(mobilenumber))
+				if (StringUtils.isNotEmpty(mobilenumber))
 				{
 					if (StringUtils.length(mobilenumber) == MarketplacecommerceservicesConstants.MOBLENGTH
 							&& mobilenumber.matches(MarketplacecommerceservicesConstants.MOBILE_REGEX))
@@ -3138,10 +3125,8 @@ public class CartsController extends BaseCommerceController
 								////////
 								validation = mplPaymentFacade.generateOTPforCOD(mplCustomerID, mobilenumber, mplCustomerName, orderModel);
 							}
-
-							if (null != validation && StringUtils.isNotEmpty(validation))
+							if (StringUtils.isNotEmpty(validation))
 							{
-
 								validateOtpWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 							}
 							else

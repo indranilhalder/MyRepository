@@ -47,7 +47,7 @@ function callSetHeader() {
  
 $(document).on("mouseover touchend", "div.departmenthover", function() {
     var id = this.id;
-    var code = id.substring(4);
+   // var code = id.substring(4);
 
     if (!$.cookie("dept-list") && window.localStorage) {
         for (var key in localStorage) {
@@ -58,42 +58,43 @@ $(document).on("mouseover touchend", "div.departmenthover", function() {
             }
         }
     }
-    if (window.localStorage && (html = window.localStorage.getItem("deptmenuhtml-" + code)) && html != "") {
-        // console.log("Local");
-        $("ul." + id).html(decodeURI(html));
-        $('header .content .container > .right ul li #mobile-menu-toggle + ul li ul.words li.long div').removeClass('toggle');
-		$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul li.short div').removeClass('toggle');
-        //LazyLoad();
-    } else {
-        $.ajax({
-            url: ACC.config.encodedContextPath +
-                "/departmentCollection",
-            type: 'GET',
-            data: "department=" + code,
-            success: function(html) {
-                // console.log("Server");
-                $("ul." + id).html(html);
-                if (window.localStorage) {
-                    $.cookie("dept-list", "true", {
-                        expires: 1,
-                        path: "/"
-
-                    });
-                    window.localStorage.setItem(
-                        "deptmenuhtml-" + code,
-                        encodeURI(html));
-
-                }
-            },
-            complete: function(){
-	        	$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul.words li.long div').removeClass('toggle');
-	    		$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul li.short div').removeClass('toggle');
-	        	
-	        } 
-        });
-
-
-    }
+//    if (window.localStorage && (html = window.localStorage.getItem("deptmenuhtml-" + code)) && html != "") {
+//        // console.log("Local");
+//        $("ul." + id).html(decodeURI(html));
+//        $('header .content .container > .right ul li #mobile-menu-toggle + ul li ul.words li.long div').removeClass('toggle');
+//		$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul li.short div').removeClass('toggle');
+//        //LazyLoad();
+//    } 
+//    else {
+//        $.ajax({
+//            url: ACC.config.encodedContextPath +
+//                "/departmentCollection",
+//            type: 'GET',
+//            data: "department=" + code,
+//            success: function(html) {
+//                // console.log("Server");
+//                $("ul." + id).html(html);
+//                if (window.localStorage) {
+//                    $.cookie("dept-list", "true", {
+//                        expires: 1,
+//                        path: "/"
+//
+//                    });
+//                    window.localStorage.setItem(
+//                        "deptmenuhtml-" + code,
+//                        encodeURI(html));
+//
+//                }
+//            },
+//            complete: function(){
+//	        	$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul.words li.long div').removeClass('toggle');
+//	    		$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul li.short div').removeClass('toggle');
+//	        	
+//	        } 
+//        });
+//
+//
+//    }
     
 });
 
@@ -339,6 +340,7 @@ function getBrandsYouLoveAjaxCall() {
             url: ACC.config.encodedContextPath + "/getBrandsYouLove",
             data: dataString,
             success: function(response) {
+
                //console.log(response.subComponents);
             	
             	autoplayTimeout = response.autoplayTimeout;
@@ -357,112 +359,123 @@ function getBrandsYouLoveAjaxCall() {
             	
             	
             	 
-                defaultComponentId = "";
-                renderHtml = "<h2>" + response.title + "</h2>" +
-                    "<div class='home-brands-you-love-carousel'>";
-                $.each(response.subComponents, function(k, v) {
-                    //console.log(v.brandLogoUrl);
-                	
-                    if (!v.showByDefault) {
-                        renderHtml +=
-                            "<div class='home-brands-you-love-carousel-brands item' data-count ="+ count +" id='" +
-                            v.compId + "'><img src='" + v.brandLogoUrl +
-                            "' alt='"+v.brandLogoAltText+"'></img></div>";
-                    } else {
-                        renderHtml +=
-                            "<div class='home-brands-you-love-carousel-brands item' data-count ="+ count +" id='" +
-                            v.compId + "'><img src='" + v.brandLogoUrl +
-                            "' alt='"+v.brandLogoAltText+"'></img></div>";
-                        defaultComponentId = v.compId;
-                    }
-                    count++;
-                });
-                renderHtml += "</div>";
-                $('#brandsYouLove').html(renderHtml);
-                getBrandsYouLoveContentAjaxCall(defaultComponentId);
+                
+
+                //console.log(response.subComponents);
+            	//TPR-559 Show/Hide Components and Sub-components
+	            if (response.hasOwnProperty("title") && response.hasOwnProperty("subComponents") && response.subComponents.length) {
+	                defaultComponentId = "";
+	                renderHtml = "<h2>" + response.title + "</h2>" +
+	                    "<div class='home-brands-you-love-carousel'>";
+	                $.each(response.subComponents, function(k, v) {
+	                    //console.log(v.brandLogoUrl);
+	                	
+	                    if (!v.showByDefault) {
+	                        renderHtml +=
+	                            "<div class='home-brands-you-love-carousel-brands item' data-count ="+ count +" id='" +
+	                            v.compId + "'><img src='" + v.brandLogoUrl +
+	                            "' alt='"+v.brandLogoAltText+"'></img></div>";
+	                    } else {
+	                        renderHtml +=
+	                            "<div class='home-brands-you-love-carousel-brands item' data-count ="+ count +" id='" +
+	                            v.compId + "'><img src='" + v.brandLogoUrl +
+	                            "' alt='"+v.brandLogoAltText+"'></img></div>";
+	                        defaultComponentId = v.compId;
+	                    }
+	                    count++;
+	                });
+	                renderHtml += "</div>";
+	                $('#brandsYouLove').html(renderHtml);
+	                getBrandsYouLoveContentAjaxCall(defaultComponentId);
+	            }    
+
             },
             error: function() {
                 // globalErrorPopup('Failure!!!');
                 console.log("Error while getting brands you love");
             },
             complete: function() {
-            	//console.log("Response :: " + response);
-            	$(".home-brands-you-love-carousel").owlCarousel({
-                	items:7,
-            		loop: true,
-            		nav:true,
-            		center:true,
-            		dots:false,
-            		navText:[],
-            		autoplay: true,
- 	               autoHeight : true,
- 	               autoplayTimeout: autoplayTimeout,
- 	               slideBy: slideBy,
-            		responsive : {
-            			// breakpoint from 0 up
-            			0 : {
-            				items:1,
-            				stagePadding: 75,
-            			},
-            			// breakpoint from 480 up
-            			480 : {
-            				items:3,
-            				stagePadding: 50,
-            			},
-            			// breakpoint from 768 up
-            			768 : {
-            				items:3,
-            				stagePadding: 90,
-            			},
-            			// breakpoint from 768 up
-            			1280 : {
-            				items:7,
-            			}			
-            		}		
-                });
-					var bulId = $(".home-brands-you-love-carousel .owl-item.active.center").find(".home-brands-you-love-carousel-brands").attr("id");
-                	getBrandsYouLoveContentAjaxCall(bulId);
-                /*	$(document).on('click', '.home-brands-you-love-carousel .owl-item.active', function () {
-                		
-                		$(".home-brands-you-love-carousel").trigger('to.owl.carousel', [$(this).find(".home-brands-you-love-carousel-brands").attr("data-count"), 500, true]);
 
-                	});*/
-                $(".home-brands-you-love-carousel").on('changed.owl.carousel', function(event) {
-                	setTimeout(function(){
-                	//	console.log($(".home-brands-you-love-carousel .owl-item.active.center").index());
-                		var bulId = $(".home-brands-you-love-carousel .owl-item.active.center").find(".home-brands-you-love-carousel-brands").attr("id");
-                		getBrandsYouLoveContentAjaxCall(bulId);
-                	},80);
-                	
-                });
-               /* $(".home-brands-you-love-carousel").on('changed.owl.carousel', function(event) {
-                    setTimeout(function(){
-                    	console.log("activePos"+activePos);
-                    	$(".home-brands-you-love-carousel .owl-item.active").eq(activePos).find(".home-brands-you-love-carousel-brands").click();
-                    },80)
-                })
-                
-                var index = $(
-                    ".home-brands-you-love-carousel-brands.active"
-                ).parents('.owl-item').index()
-                console.log("index"+index);
-                if (index > activePos) {
-                    for (var i = 0; i < index - activePos; i++) {
-                        $(
-                            ".home-brands-you-love-carousel .owl-wrapper"
-                        ).append($(
-                            ".home-brands-you-love-carousel .owl-item"
-                        ).first());
-                    }
-                } else if (index < activePos) {
-                    for (var i = 0; i < activePos - index; i++) {
-                        $(
-                            ".home-brands-you-love-carousel .owl-wrapper"
-                        ).prepend($(
-                            ".home-brands-you-love-carousel .owl-item"
-                        ).last());
-                    }
-                }*/
+            	//TPR-559 Show/Hide Components and Sub-components
+            	if ($(".home-brands-you-love-carousel").length) {
+	                $(".home-brands-you-love-carousel").owlCarousel({
+	                	items:7,
+	            		loop: true,
+	            		nav:true,
+	            		center:true,
+	            		dots:false,
+	            		navText:[],
+	            		autoplay: true,
+			            autoHeight : true,
+	            		autoplayTimeout: autoplayTimeout,
+	  	               slideBy: slideBy,
+	            		responsive : {
+	            			// breakpoint from 0 up
+	            			0 : {
+	            				items:1,
+	            				stagePadding: 75,
+	            			},
+	            			// breakpoint from 480 up
+	            			480 : {
+	            				items:3,
+	            				stagePadding: 50,
+	            			},
+	            			// breakpoint from 768 up
+	            			768 : {
+	            				items:3,
+	            				stagePadding: 90,
+	            			},
+	            			// breakpoint from 768 up
+	            			1280 : {
+	            				items:7,
+	            			}			
+	            		}		
+	                });
+						var bulId = $(".home-brands-you-love-carousel .owl-item.active.center").find(".home-brands-you-love-carousel-brands").attr("id");
+	                	getBrandsYouLoveContentAjaxCall(bulId);
+	                /*	$(document).on('click', '.home-brands-you-love-carousel .owl-item.active', function () {
+	                		
+	                		$(".home-brands-you-love-carousel").trigger('to.owl.carousel', [$(this).find(".home-brands-you-love-carousel-brands").attr("data-count"), 500, true]);
+	
+	                	});*/
+	                $(".home-brands-you-love-carousel").on('changed.owl.carousel', function(event) {
+	                	setTimeout(function(){
+	                	//	console.log($(".home-brands-you-love-carousel .owl-item.active.center").index());
+	                		var bulId = $(".home-brands-you-love-carousel .owl-item.active.center").find(".home-brands-you-love-carousel-brands").attr("id");
+	                		getBrandsYouLoveContentAjaxCall(bulId);
+	                	},80);
+	                	
+	                });
+	               /* $(".home-brands-you-love-carousel").on('changed.owl.carousel', function(event) {
+	                    setTimeout(function(){
+	                    	console.log("activePos"+activePos);
+	                    	$(".home-brands-you-love-carousel .owl-item.active").eq(activePos).find(".home-brands-you-love-carousel-brands").click();
+	                    },80)
+	                })
+	                
+	                var index = $(
+	                    ".home-brands-you-love-carousel-brands.active"
+	                ).parents('.owl-item').index()
+	                console.log("index"+index);
+	                if (index > activePos) {
+	                    for (var i = 0; i < index - activePos; i++) {
+	                        $(
+	                            ".home-brands-you-love-carousel .owl-wrapper"
+	                        ).append($(
+	                            ".home-brands-you-love-carousel .owl-item"
+	                        ).first());
+	                    }
+	                } else if (index < activePos) {
+	                    for (var i = 0; i < activePos - index; i++) {
+	                        $(
+	                            ".home-brands-you-love-carousel .owl-wrapper"
+	                        ).prepend($(
+	                            ".home-brands-you-love-carousel .owl-item"
+	                        ).last());
+	                    }
+	                }*/
+            	} 
+
             }
         });
     }
@@ -714,6 +727,7 @@ function getBestPicksAjaxCall() {
             url: ACC.config.encodedContextPath + "/getBestPicks",
             data: dataString,
             success: function(response) {
+
             	//console.log(response.autoplayTimeout);
                // console.log(response.slideBy);
                 autoplayTimeout = response.autoplayTimeout;
@@ -729,99 +743,106 @@ function getBestPicksAjaxCall() {
             		 autoplayTimeout=5000;
             	     slideBy=1;
             	}
-                renderHtml = "<h2>" + response.title + "</h2>" +
-                    "<div class='home-best-pick-carousel'>";
-                $.each(response.subItems, function(k, v) {
-                    if (v.url) {
-                        renderHtml += "<a href='" +
-                            appendIcid(v.url, v.icid) +
-                            "' class='item'>";
-                    }
-                    if (v.imageUrl) {
-                        renderHtml +=
-                            "<div class='home-best-pick-carousel-img'> <img class='' src='" +
-                            v.imageUrl + "'></img></div>";
-                    }
-                    if (v.text) {
-                        renderHtml +=
-                            "<div class='short-info'>" + v.text +
-                            "</div>";
-                    }
-                    renderHtml += "</a>";
-                });
-                
-                renderHtml +=
-                    // "</div> <a href='/store/view-all-offers' class='view-cliq-offers'> View Cliq Offers </a>";
-                 	"</div> <a href='";
-                if(typeof response.buttonLink!=="undefined"){
-                	 renderHtml +=response.buttonLink+"'";
-                }
-                else{
-                	renderHtml +=ACC.config.encodedContextPath+"/offersPage'";
-                }
-                
-                renderHtml +="class='view-cliq-offers'>";
-                if(typeof response.buttonText!=="undefined"){
-                	 renderHtml +=response.buttonText;
-                }
-                else{
-                	 renderHtml +=" View Cliq Offers ";
-                }
-                renderHtml +="</a>";
-                   // "</div> <a href='/store/view-all-offers' class='view-cliq-offers'> View Cliq Offers </a>";
-                	//"</div> <a href='"+ACC.config.encodedContextPath+"/offersPage' class='view-cliq-offers'> View Cliq Offers </a>";
-                $("#bestPicks").html(renderHtml);
-                // console.log()
+               
+            	//TPR-559 Show/Hide Components and Sub-components
+            	if (response.hasOwnProperty("title") && response.hasOwnProperty("subItems")) {
+	                renderHtml = "<h2>" + response.title + "</h2>" +
+	                    "<div class='home-best-pick-carousel'>";
+	                $.each(response.subItems, function(k, v) {
+	                    if (v.url) {
+	                        renderHtml += "<a href='" +
+	                            appendIcid(v.url, v.icid) +
+	                            "' class='item'>";
+	                    }
+	                    if (v.imageUrl) {
+	                        renderHtml +=
+	                            "<div class='home-best-pick-carousel-img'> <img class='' src='" +
+	                            v.imageUrl + "'></img></div>";
+	                    }
+	                    if (v.text) {
+	                        renderHtml +=
+	                            "<div class='short-info'>" + v.text +
+	                            "</div>";
+	                    }
+	                    renderHtml += "</a>";
+	                });
+	                
+	                renderHtml +=
+	                    // "</div> <a href='/store/view-all-offers' class='view-cliq-offers'> View Cliq Offers </a>";
+	                 	"</div> <a href='";
+	                if(typeof response.buttonLink!=="undefined"){
+	                	 renderHtml +=response.buttonLink+"'";
+	                }
+	                else{
+	                	renderHtml +=ACC.config.encodedContextPath+"/offersPage'";
+	                }
+	                
+	                renderHtml +="class='view-cliq-offers'>";
+	                if(typeof response.buttonText!=="undefined"){
+	                	 renderHtml +=response.buttonText;
+	                }
+	                else{
+	                	 renderHtml +=" View Cliq Offers ";
+	                }
+	                renderHtml +="</a>";
+	                   // "</div> <a href='/store/view-all-offers' class='view-cliq-offers'> View Cliq Offers </a>";
+	                	//"</div> <a href='"+ACC.config.encodedContextPath+"/offersPage' class='view-cliq-offers'> View Cliq Offers </a>";
+	                $("#bestPicks").html(renderHtml);
+	                // console.log()
+            	}
+
             },
             error: function() {
                 console.log("Error while getting best picks");
             },
             complete: function() {
-                console.log('complete');
-                //console.log(autoplayTimeout);
-                //console.log(slideBy);
-            	$(".home-best-pick-carousel").owlCarousel({
-                	items:5,
-            		loop: true,
-            		nav:true,
-            		dots:false,
-            		navText:[],
-            		lazyLoad: false,
-            		autoplay: true,
- 	               autoHeight : true,
- 	               autoplayTimeout: autoplayTimeout,
- 	               slideBy: slideBy,
-            		responsive : {
-            			// breakpoint from 0 up
-            			0 : {
-            				items:1,
-            				stagePadding: 50,
-            			},
-            			// breakpoint from 480 up
-            			480 : {
-            				items:2,
-            				stagePadding: 50,
-            			},
-            			// breakpoint from 768 up
-            			768 : {
-            				items:3,
-            			},
-            			// breakpoint from 768 up
-            			1280 : {
-            				items:5,
-            			}			
-            		}		
-                    /*navigation: true,
-                    navigationText: [],
-                    pagination: false,
-                    itemsDesktop: [5000, 5],
-                    itemsDesktopSmall: [1400, 5],
-                    itemsTablet: [650, 1],
-                    itemsMobile: [480, 1],
-                    rewindNav: false,
-                    lazyLoad: true,
-                    scrollPerPage: true*/
-                });
+
+            	//TPR-559 Show/Hide Components and Sub-components
+            	if ($(".home-best-pick-carousel").length) {
+	                $(".home-best-pick-carousel").owlCarousel({
+	                	items:5,
+	            		loop: true,
+	            		nav:true,
+	            		dots:false,
+	            		navText:[],
+	            		lazyLoad: false,
+	            		autoplay: true,
+			            autoHeight : true,
+	            		autoplayTimeout: autoplayTimeout,
+	  	               slideBy: slideBy,
+	            		responsive : {
+	            			// breakpoint from 0 up
+	            			0 : {
+	            				items:1,
+	            				stagePadding: 50,
+	            			},
+	            			// breakpoint from 480 up
+	            			480 : {
+	            				items:2,
+	            				stagePadding: 50,
+	            			},
+	            			// breakpoint from 768 up
+	            			768 : {
+	            				items:3,
+	            			},
+	            			// breakpoint from 768 up
+	            			1280 : {
+	            				items:5,
+	            			}			
+	            		}		
+	                    /*navigation: true,
+	                    navigationText: [],
+	                    pagination: false,
+	                    itemsDesktop: [5000, 5],
+	                    itemsDesktopSmall: [1400, 5],
+	                    itemsTablet: [650, 1],
+	                    itemsMobile: [480, 1],
+	                    rewindNav: false,
+	                    lazyLoad: true,
+	                    scrollPerPage: true*/
+	                });
+            	}    
+
             }
         });
        
@@ -846,6 +867,7 @@ function getProductsYouCareAjaxCall() {
             url: ACC.config.encodedContextPath + "/getProductsYouCare",
             data: dataString,
             success: function(response) {
+
             	
             	autoplayTimeout = response.autoplayTimeout;
             	slideBy = response.slideBy;
@@ -861,72 +883,88 @@ function getProductsYouCareAjaxCall() {
             	     slideBy=1;
             	}
             	
-                renderHtml = "<h2>" + response.title + "</h2>";
-                renderHtml +=
-                    "<div class='home-product-you-care-carousel'>";
-                $.each(response.categories, function(k, v) {
-                    var URL = ACC.config.encodedContextPath +
-                    /*"/Categories/" + v.categoryName*/ v.categoryPath +   //TISPRD_2315
-                    "/c-" + v.categoryCode.toLowerCase();
-                    //for url
-                    renderHtml += "<a href='" + appendIcid(
-                            URL, v.icid) +
-                        "' class='item'>";
-                    //for image
-                    renderHtml +=
-                        "<div class='home-product-you-care-carousel-img'> <img class='' src='" +
-                        v.mediaURL + "'></img></div>";
-                    renderHtml +=
-                        "<div class='short-info'><h3 class='product-name'><span>" +
-                        v.categoryName +
-                        "</span></h3></div>";
-                    renderHtml += "</a>";
-                });
-                renderHtml += "</div>";
-                $("#productYouCare").html(renderHtml);
+               
+            	//console.log(response);
+            	//TPR-559 Show/Hide Components and Sub-components
+                if (response.hasOwnProperty("title") && response.hasOwnProperty("categories") && response.title && response.categories.length) {
+	                renderHtml = "<h2>" + response.title + "</h2>";
+	                renderHtml +=
+	                    "<div class='home-product-you-care-carousel'>";
+	                $.each(response.categories, function(k, v) {
+	                    var URL = ACC.config.encodedContextPath +
+	                    /*"/Categories/" + v.categoryName*/ v.categoryPath +   //TISPRD_2315
+	                    "/c-" + v.categoryCode.toLowerCase();
+	                    //for url
+	                    renderHtml += "<a href='" + appendIcid(
+	                            URL, v.icid) +
+	                        "' class='item'>";
+	                    //for image
+	                    renderHtml +=
+	                        "<div class='home-product-you-care-carousel-img'> <img class='' src='" +
+	                        v.mediaURL + "'></img></div>";
+	                 /*TPR-562 -start   */
+	                   if(v.imageName) {
+	                   renderHtml +=
+	                     "<div class='short-info'><h3 class='product-name'><span>" +
+	                        v.imageName +
+	                       "</span></h3></div>";
+	                    renderHtml += "</a>";
+	                    
+	                   }
+	                   /*TPR-562 -ends   */
+	                });
+	                renderHtml += "</div>";
+	                $("#productYouCare").html(renderHtml);
+                }    
+
             },
             error: function() {
                 console.log(
                     'Error while getting getProductsYouCare');
             },
-				            complete : function() {
-					$(".home-product-you-care-carousel").owlCarousel({
-						items : 4,
-						loop : true,
-						nav : true,
-						dots : false,
-						navText : [],
-						lazyLoad : false,
-						autoplay: true,
-			            autoHeight : true,
-			            autoplayTimeout: autoplayTimeout,
-			            slideBy: slideBy,
-						responsive : {
-							// breakpoint from 0 up
-							0 : {
-								items : 1,
-								stagePadding : 50,
-							},
-							480 : {
-								items:2,
-								stagePadding: 50,
-							},
-							// breakpoint from 768 up
-							768 : {
-								items : 3,
-							},
-							// breakpoint from 768 up
-							1280 : {
-								items : 4,
+
+            complete : function() {
+            	//TPR-559 Show/Hide Components and Sub-components
+            	if ($(".home-product-you-care-carousel").length) {
+						$(".home-product-you-care-carousel").owlCarousel({
+							items : 4,
+							loop : true,
+							nav : true,
+							dots : false,
+							navText : [],
+							lazyLoad : false,
+							autoplay: true,
+				            autoHeight : true,
+							autoplayTimeout: autoplayTimeout,
+				            slideBy: slideBy,
+							responsive : {
+								// breakpoint from 0 up
+								0 : {
+									items : 1,
+									stagePadding : 50,
+								},
+								480 : {
+									items:2,
+									stagePadding: 50,
+								},
+								// breakpoint from 768 up
+								768 : {
+									items : 3,
+								},
+								// breakpoint from 768 up
+								1280 : {
+									items : 4,
+								}
+
 							}
-						}
-					/*
-					 * navigation: true, navigationText: [], pagination: false,
-					 * itemsDesktop: [5000, 4], itemsDesktopSmall: [1400, 4],
-					 * itemsTablet: [650, 2], itemsMobile: [480, 2], rewindNav:
-					 * false, lazyLoad: true, scrollPerPage: true
-					 */
-					});
+						/*
+						 * navigation: true, navigationText: [], pagination: false,
+						 * itemsDesktop: [5000, 4], itemsDesktopSmall: [1400, 4],
+						 * itemsTablet: [650, 2], itemsMobile: [480, 2], rewindNav:
+						 * false, lazyLoad: true, scrollPerPage: true
+						 */
+						});
+            		}	
 				}
         });
     }
@@ -949,6 +987,7 @@ function getNewAndExclusiveAjaxCall() {
         data: dataString,
         success: function(response) {
             //console.log(response.newAndExclusiveProducts);
+
         	
         	autoplayTimeout = response.autoplayTimeout;
         	slideBy = response.slideBy;
@@ -964,101 +1003,111 @@ function getNewAndExclusiveAjaxCall() {
         	     slideBy=1;
         	}
         	
-        	var staticHost=$('#staticHost').val();
-            var defaultHtml = "";
-            renderHtml = "<h2>" + response.title + "</h2>" +
-                "<div class='js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference' id='new_exclusive'>";
-            $.each(response.newAndExclusiveProducts, function(
-                key, value) {
-            	if(value.isNew == 'Y')
-            	{
-            	renderNewHtml = "<div style='z-index: 1;' class='new'><img class='brush-strokes-sprite sprite-New' src='"+staticHost+"/_ui/responsive/common/images/transparent.png'><span>New</span></div>";
-            	} else {
-            		renderNewHtml = '';
-            	}
-                renderHtml +=
-                    "<div class='item slide'><div class='newExclusiveElement'><a href='" +
-                    ACC.config.encodedContextPath +
-                    value.productUrl + "'>"+renderNewHtml+"<img class='' src='" +
-                    value.productImageUrl +
-                    "'></img><p class='New_Exclusive_title'>" +
-                    value.productTitle +
-                    "</p><p class='New_Exclusive_price'><span class='priceFormat'>" +
-                    value.productPrice +
-                    "</span></p></a></div></div>";
-            });
-            renderHtml += "</div><a href='" + ACC.config.encodedContextPath +
-                "/search/viewOnlineProducts' class='new_exclusive_viewAll'>View All</a>";
-            $('#newAndExclusive').html(renderHtml);
+        	
+        	//TPR-559 Show/Hide Components and Sub-components
+            if (response.hasOwnProperty("title") && response.hasOwnProperty("newAndExclusiveProducts") && response.newAndExclusiveProducts.length) {
+	        	var staticHost=$('#staticHost').val();
+	            var defaultHtml = "";
+	            renderHtml = "<h2>" + response.title + "</h2>" +
+	                "<div class='js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference' id='new_exclusive'>";
+	            $.each(response.newAndExclusiveProducts, function(
+	                key, value) {
+	            	if(value.isNew == 'Y')
+	            	{
+	            	renderNewHtml = "<div style='z-index: 1;' class='new'><img class='brush-strokes-sprite sprite-New' src='"+staticHost+"/_ui/responsive/common/images/transparent.png'><span>New</span></div>";
+	            	} else {
+	            		renderNewHtml = '';
+	            	}
+	                renderHtml +=
+	                    "<div class='item slide'><div class='newExclusiveElement'><a href='" +
+	                    ACC.config.encodedContextPath +
+	                    value.productUrl + "'>"+renderNewHtml+"<img class='' src='" +
+	                    value.productImageUrl +
+	                    "'></img><p class='New_Exclusive_title'>" +
+	                    value.productTitle +
+	                    "</p><p class='New_Exclusive_price'><span class='priceFormat'>" +
+	                    value.productPrice +
+	                    "</span></p></a></div></div>";
+	            });
+	            renderHtml += "</div><a href='" + ACC.config.encodedContextPath +
+	                "/search/viewOnlineProducts' class='new_exclusive_viewAll'>View All</a>";
+	            $('#newAndExclusive').html(renderHtml);
+            }   
+
         },
         error: function() {
             console.log("Error while getting new and exclusive");
         },
         complete: function() {
-            $("#new_exclusive").owlCarousel({
-	            items:3,
-        		loop: true,
-        		nav:true,
-        		dots:false,
-        		navText:[],
-        		lazyLoad: false,
-        		autoplay: true,
-	            autoHeight : true,
-	            autoplayTimeout: autoplayTimeout,
-	            slideBy: slideBy,
-        		responsive : {
-        			// breakpoint from 0 up
-        			0 : {
-        				items:1,
-        				stagePadding: 50,
-        			},		
-        			480 : {
-        				items:2,
-        				stagePadding: 50,
-        			},	
-        			// breakpoint from 768 up
-        			768 : {
-        				items:3,
-        			}		
-        		}
-                /*navigation: true,
-                rewindNav: false,
-                navigationText: [],
-                pagination: false,
-                items: 2,
-                itemsDesktop: false,
-                itemsDesktopSmall: false,
-                itemsTablet: false,
-                itemsMobile: false,
-                scrollPerPage: true,
-                lazyLoad: true*/
-            });
-            setTimeout(function() {
-                /*if($(window).width() > 773) {
-					$('#newAndExclusive').css('min-height',$('#newAndExclusive').parent().height()+'px');
-				}*/
-                //alert($('#newAndExclusive').height() +"|||"+$('#stayQued').height())
-                        $('#stayQued').css('min-height',
-                            $('#newAndExclusive').outerHeight() +
-                            'px');
-            }, 2500);
-            $("#new_exclusive").on('changed.owl.carousel', function(event) {
-        		setTimeout(function(){
-        			var arrHtOwl=[],diffHtOwl=0;
-        		var len = $("#newAndExclusive .owl-item.active").length;
-        		for(var j=0;j<len;j++){
-        			arrHtOwl.push($("#newAndExclusive .owl-item.active").eq(j).find(".New_Exclusive_title").height());
-        		}
-        		if($(window).width() > 790) {
-        		arrHtOwl.splice(-1,1);
-        		}
-        		var max2 = Math.max.apply(Math,arrHtOwl);
-        		for(var k=0;k < arrHtOwl.length;k++){
-        			diffHtOwl = max2 - arrHtOwl[k];
-        			$("#newAndExclusive .owl-item.active").eq(k).find(".New_Exclusive_title").css("padding-bottom",+diffHtOwl);
-        		}
-        		},80);
-            });
+
+        	//TPR-559 Show/Hide Components and Sub-components
+        	if ($("#new_exclusive").length) {
+	            $("#new_exclusive").owlCarousel({
+	            	items:3,
+	        		loop: true,
+	        		nav:true,
+	        		dots:false,
+	        		navText:[],
+	        		lazyLoad: false,
+	        		autoplay: true,
+		            autoHeight : true,
+		            autoplayTimeout: autoplayTimeout,
+		            slideBy: slideBy,
+	        		responsive : {
+	        			// breakpoint from 0 up
+	        			0 : {
+	        				items:1,
+	        				stagePadding: 50,
+	        			},		
+	        			480 : {
+	        				items:2,
+	        				stagePadding: 50,
+	        			},	
+	        			// breakpoint from 768 up
+	        			768 : {
+	        				items:3,
+	        			}		
+	        		}		
+	                /*navigation: true,
+	                rewindNav: false,
+	                navigationText: [],
+	                pagination: false,
+	                items: 2,
+	                itemsDesktop: false,
+	                itemsDesktopSmall: false,
+	                itemsTablet: false,
+	                itemsMobile: false,
+	                scrollPerPage: true,
+	                lazyLoad: true*/
+	            });
+	            setTimeout(function() {
+	                /*if($(window).width() > 773) {
+						$('#newAndExclusive').css('min-height',$('#newAndExclusive').parent().height()+'px');
+					}*/
+	                //alert($('#newAndExclusive').height() +"|||"+$('#stayQued').height())
+	                        $('#stayQued').css('min-height',
+	                            $('#newAndExclusive').outerHeight() +
+	                            'px');
+	            }, 2500);
+	            $("#new_exclusive").on('changed.owl.carousel', function(event) {
+	        		setTimeout(function(){
+	        			var arrHtOwl=[],diffHtOwl=0;
+	        		var len = $("#newAndExclusive .owl-item.active").length;
+	        		for(var j=0;j<len;j++){
+	        			arrHtOwl.push($("#newAndExclusive .owl-item.active").eq(j).find(".New_Exclusive_title").height());
+	        		}
+	        		if($(window).width() > 790) {
+	        		arrHtOwl.splice(-1,1);
+	        		}
+	        		var max2 = Math.max.apply(Math,arrHtOwl);
+	        		for(var k=0;k < arrHtOwl.length;k++){
+	        			diffHtOwl = max2 - arrHtOwl[k];
+	        			$("#newAndExclusive .owl-item.active").eq(k).find(".New_Exclusive_title").css("padding-bottom",+diffHtOwl);
+	        		}
+	        		},80);
+	            });
+        	}     
+
         }
     });
 }
@@ -1078,27 +1127,30 @@ function getPromoBannerHomepage() {
             "/getPromoBannerHomepage",
         data: dataString,
         success: function(response) {
-        	var arr= new Array();
-        	$.each( response, function(key, obj){
-                    arr.push(key,obj);
-            });
-        	var finalArr = arr[1];
-        	var count = finalArr.length;
-            if(window.sessionStorage && (seqPromo = window.sessionStorage.getItem("PromoBannerHomepage"))) {
-                seqPromo = parseInt(seqPromo);
-            	if (seqPromo == '' || seqPromo >= count || seqPromo < 1) {
-            		seqPromo = 1;
-            	} else {
-            		seqPromo=seqPromo+1;
-            	}
-        		showPromoBanner(finalArr[seqPromo-1]);
-        		window.sessionStorage.setItem("PromoBannerHomepage", seqPromo);
-        	} else {
-        		showPromoBanner(finalArr[0]);
-        		if(window.sessionStorage) {
-        			window.sessionStorage.setItem("PromoBannerHomepage", 1);
-        		}
-        	}
+        	//TPR-559 Show/Hide Components and Sub-components
+        	if (response.hasOwnProperty("allBannerJsonObject") && response.allBannerJsonObject.length) {
+	        	var arr= new Array();
+	        	$.each( response, function(key, obj){
+	                    arr.push(key,obj);
+	            });
+	        	var finalArr = arr[1];
+	        	var count = finalArr.length;
+	            if(window.sessionStorage && (seqPromo = window.sessionStorage.getItem("PromoBannerHomepage"))) {
+	                seqPromo = parseInt(seqPromo);
+	            	if (seqPromo == '' || seqPromo >= count || seqPromo < 1) {
+	            		seqPromo = 1;
+	            	} else {
+	            		seqPromo=seqPromo+1;
+	            	}
+	        		showPromoBanner(finalArr[seqPromo-1]);
+	        		window.sessionStorage.setItem("PromoBannerHomepage", seqPromo);
+	        	} else {
+	        		showPromoBanner(finalArr[0]);
+	        		if(window.sessionStorage) {
+	        			window.sessionStorage.setItem("PromoBannerHomepage", 1);
+	        		}
+	        	}
+        	}   
         },
         error: function() {
             console.log('Failure in Promo!!!');
@@ -1136,27 +1188,30 @@ function getStayQuedHomepage() {
         url: ACC.config.encodedContextPath + "/getStayQuedHomepage",
         data: dataString,
         success: function(response) {
-        	var arr= new Array();
-        	$.each( response, function(key, obj){
-                    arr.push(key,obj);
-            });
-        	var finalArr = arr[1];
-        	var count = finalArr.length;
-            if(window.sessionStorage && (seqStay = window.sessionStorage.getItem("StayQuedHomepage"))) {
-                seqStay = parseInt(seqStay);
-            	if (seqStay == '' || seqStay >= count || seqStay < 1) {
-            		seqStay = 1;
-            	} else {
-            		seqStay=seqStay+1;
-            	}
-        		showStayQued(finalArr[seqStay-1]);
-        		window.sessionStorage.setItem("StayQuedHomepage", seqStay);
-        	} else {
-        		showStayQued(finalArr[0]);
-        		if(window.sessionStorage) {
-        			window.sessionStorage.setItem("StayQuedHomepage", 1);
-        		}
-        	}
+        	//TPR-559 Show/Hide Components and Sub-components
+        	if (response.hasOwnProperty("allBannerJsonObject") && response.allBannerJsonObject.length) {
+	        	var arr= new Array();
+	        	$.each( response, function(key, obj){
+	                    arr.push(key,obj);
+	            });
+	        	var finalArr = arr[1];
+	        	var count = finalArr.length;
+	            if(window.sessionStorage && (seqStay = window.sessionStorage.getItem("StayQuedHomepage"))) {
+	                seqStay = parseInt(seqStay);
+	            	if (seqStay == '' || seqStay >= count || seqStay < 1) {
+	            		seqStay = 1;
+	            	} else {
+	            		seqStay=seqStay+1;
+	            	}
+	        		showStayQued(finalArr[seqStay-1]);
+	        		window.sessionStorage.setItem("StayQuedHomepage", seqStay);
+	        	} else {
+	        		showStayQued(finalArr[0]);
+	        		if(window.sessionStorage) {
+	        			window.sessionStorage.setItem("StayQuedHomepage", 1);
+	        		}
+	        	}
+        	}     
        },
         error: function() {
             console.log('Failure in StayQued!!!');
@@ -1208,28 +1263,31 @@ function getShowCaseAjaxCall() {
             data: dataString,
             success: function(response) {
                 //console.log(response.subComponents);
-                defaultComponentId = "";
-                renderHtml = "<h2>" + response.title + "</h2>" +
-                    "<div class='MenuWrap'><div class='mobile selectmenu'></div> <div class='showcase-heading showcase-switch'>";
-                $.each(response.subComponents, function(k, v) {
-                    if (!v.showByDefault) {
-                        renderHtml +=
-                            "<div class='showcaseItem'><a id='" +
-                            v.compId + "'>" + v.headerText +
-                            "</a></div>";
-                    } else {
-                        renderHtml +=
-                            "<div class='showcaseItem'><a id='" +
-                            v.compId +
-                            "' class='showcase-border'>" +
-                            v.headerText + "</a></div>";
-                        defaultComponentId = v.compId;
-                    }
-                });
-                renderHtml += "</div></div>";
-                $('#showcase').html(renderHtml);
-                getShowcaseContentAjaxCall(defaultComponentId);
-                $('.selectmenu').text($(".showcaseItem .showcase-border").text());
+            	//TPR-559 Show/Hide Components and Sub-components
+	            if (response.hasOwnProperty("title") && response.hasOwnProperty("subComponents") && response.subComponents.length) { 
+	                defaultComponentId = "";
+	                renderHtml = "<h2>" + response.title + "</h2>" +
+	                    "<div class='MenuWrap'><div class='mobile selectmenu'></div> <div class='showcase-heading showcase-switch'>";
+	                $.each(response.subComponents, function(k, v) {
+	                    if (!v.showByDefault) {
+	                        renderHtml +=
+	                            "<div class='showcaseItem'><a id='" +
+	                            v.compId + "'>" + v.headerText +
+	                            "</a></div>";
+	                    } else {
+	                        renderHtml +=
+	                            "<div class='showcaseItem'><a id='" +
+	                            v.compId +
+	                            "' class='showcase-border'>" +
+	                            v.headerText + "</a></div>";
+	                        defaultComponentId = v.compId;
+	                    }
+	                });
+	                renderHtml += "</div></div>";
+	                $('#showcase').html(renderHtml);
+	                getShowcaseContentAjaxCall(defaultComponentId);
+	                $('.selectmenu').text($(".showcaseItem .showcase-border").text());
+	            }     
             },
             error: function() {
                 // globalErrorPopup('Failure!!!');
@@ -1791,7 +1849,7 @@ $(document).ready(function(){
 		//department/////////////////////
 		if($('header .content nav > ul > li:first-child').hasClass('hovered')) {
 			var id = $('header .content nav > ul > li.hovered > ul > li:first-child .departmenthover').attr('id');
-		    var code = id.substring(4);
+		   // var code = id.substring(4);
 
 		    if (!$.cookie("dept-list") && window.localStorage) {
 		        for (var key in localStorage) {
@@ -1802,36 +1860,39 @@ $(document).ready(function(){
 		            }
 		        }
 		    }
-		    if (window.localStorage && (html = window.localStorage.getItem("deptmenuhtml-" + code)) && html != "") {
-		        // console.log("Local");
-		        $("ul." + id).html(decodeURI(html));
-		        //LazyLoad();
-		        
-		    } else {
-		        $.ajax({
-		            url: ACC.config.encodedContextPath +
-		                "/departmentCollection",
-		            type: 'GET',
-		            data: "department=" + code,
-		            success: function(html) {
-		                // console.log("Server");
-		                $("ul." + id).html(html);
-		                if (window.localStorage) {
-		                    $.cookie("dept-list", "true", {
-		                        expires: 1,
-		                        path: "/"
-
-		                    });
-		                    window.localStorage.setItem(
-		                        "deptmenuhtml-" + code,
-		                        encodeURI(html));
-
-		                }
-		            }
-		        });
-
-
-		    }
+//	    if (window.localStorage && (html = window.localStorage.getItem("deptmenuhtml-" + code)) && html != "") {
+//	         console.log("Local");
+//	        $("ul." + id).html(decodeURI(html));
+//	        LazyLoad();
+//	        
+//	    }
+		    
+		    
+//	    else {
+//		        $.ajax({
+//	            url: ACC.config.encodedContextPath +
+//		                "/departmentCollection",
+//	            type: 'GET',
+//		            data: "department=" + code,
+//           success: function(html) {
+//		                 console.log("Server");
+//		                $("ul." + id).html(html);
+//		                if (window.localStorage) {
+//		                    $.cookie("dept-list", "true", {
+//		                        expires: 1,
+//		                        path: "/"
+//
+//		                    });
+//		                    window.localStorage.setItem(
+//		                        "deptmenuhtml-" + code,
+//		                        encodeURI(html));
+//
+//		                }
+//		            }
+//		        });
+//
+//
+//		    }
 		    
 		} else {
 			if($('header .content nav > ul > li.hovered > ul > li:first-child > div').hasClass('brandClass')) {
@@ -2122,6 +2183,25 @@ $(document).ready(function(){
 		
 		
 	});
+	
+	//Added for luxury site starts
+	$('document').ready(function(){
+	    $('#flip-navigation li a').each(function(){  
+	        $(this).click(function(){  
+	            $('#flip-navigation li').each(function(){  
+	                $(this).removeClass('selected');  
+	            });  
+	            $(this).parent().addClass('selected');           
+	            // Here we get the href value of the selected tab
+	            var selected_tab = $(this).find("a").attr("href");             
+	            var starting = selected_tab.indexOf("#");
+	            var sub = selected_tab.substring(starting);            
+	            $(sub).fadeIn();
+	            return false;  
+	        });  
+	    });  
+	}); 
+	//Added for luxury site ends
 
 	
    //  Change for TISPRD-4587 

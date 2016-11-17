@@ -147,9 +147,72 @@
 			}
 		}); 
 	   //End
-		 
+	
+		//TISLUX-1865 Start
+		var luxuryCookie="isLux";
+		var loc = window.location.href;
+		var isLux = $.cookie(luxuryCookie);
+		var finalURL="";
+		var luxuryLoginPage = "luxuryLoginPage";
+		if($('#pageType').attr('value').indexOf("login") > -1){
+			if(sessionStorage.getItem(luxuryLoginPage) != null && sessionStorage.getItem(luxuryLoginPage) == "true"){
+				finalURL = setLuxuryLoginURL(loc);
+				window.history.pushState({}, loc, finalURL);
+			}
+			
+			if(isLux == "true"){
+				finalURL = setLuxuryLoginURL(loc);
+				if(typeof(luxuryCookie) != 'undefined'){
+					deleteCookie(luxuryCookie);
+				}
+				if(sessionStorage.getItem(luxuryLoginPage) == null){
+					sessionStorage.setItem(luxuryLoginPage, true);
+				}
+				window.history.pushState({}, loc, finalURL);
+			}
+			else if(loc.indexOf("isLux=true") > -1){
+				if(sessionStorage.getItem(luxuryLoginPage) == null){
+					sessionStorage.setItem(luxuryLoginPage, true);
+				}
+			}
+		}
+		else{
+			if(isLux == "true"){
+				deleteCookie(luxuryCookie);
+			}
+			if(sessionStorage.getItem(luxuryLoginPage) != null){
+				sessionStorage.setItem(luxuryLoginPage, false);
+			}
+		}
+		
+		//TISLUX-1865 End
+	
  });
  
+ //For TISLUX-1865
+ function setLuxuryLoginURL(loc){
+	var finalURL="";
+	if(loc.indexOf("isLux=true") == -1){
+		if(loc.indexOf("?") > -1){
+			finalURL = loc+"&";
+		}
+		else{
+			finalURL = loc+"?";
+		}
+		finalURL = finalURL+"isLux=true";
+	}
+	else{
+		finalURL=loc;
+	}
+	
+	return finalURL;
+ }
+ 
+ // For TISLUX-1865
+function deleteCookie(name){
+    document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+};
+
 //Script from facetNavAppliedFilters.tag
  var serpSizeList=[];
  function populateFacet(){
@@ -184,3 +247,22 @@
 		$("body").append('<div class="modal fade" id="globalErrorPopupMsg"><div class="content" style="padding: 10px;"><span style="display: block; margin: 7px 16px;line-height: 18px;">'+msg+'</span><button class="close" data-dismiss="modal"></button></div><div class="overlay" data-dismiss="modal"></div></div>');
 		$("#globalErrorPopupMsg").modal('show');
 	} 
+
+	
+// TISLUX-1468 start
+$(document).on('click','.right-account .yCmsComponent',function(){
+	var browserURL = window.location.href;
+	var requiredUrl = $(this).find('a').attr('href');
+	if(browserURL.indexOf("isLux=true") != -1){
+		requiredUrl = $(this).find('a').attr('href')+"?isLux=true";
+	}
+	else{
+		var luxParam = browserURL.split("isLux=");
+		if(luxParam[1].indexOf("true") != -1){
+			requiredUrl = $(this).find('a').attr('href')+"?isLux=true";
+		}
+	}
+	window.location = requiredUrl;
+	return false;
+});
+// TISLUX-1468 end

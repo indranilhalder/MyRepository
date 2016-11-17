@@ -10,7 +10,7 @@
 <%@ taglib prefix="pagination" tagdir="/WEB-INF/tags/responsive/nav/pagination" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags" %>
+<%@ taglib prefix="ycommerce"  uri="http://hybris.com/tld/ycommercetags" %>
 
 
 <c:set var="themeMsgKey" value="${not empty msgKey ? msgKey : 'search.page'}"/>
@@ -41,7 +41,7 @@
 							Exclude OutofStock&nbsp;<a href="${removeQueryUrl}" ><span class="remove_filter">x</span></a>
 						</li>
 					</c:if>
-					<c:if test="${breadcrumb.facetName ne 'inStockFlag' && breadcrumb.facetName ne 'sellerId' &&  breadcrumb.facetName ne 'isOffersExisting' && breadcrumb.facetName ne 'promotedProduct'}">
+					<c:if test="${breadcrumb.facetName ne 'inStockFlag' && breadcrumb.facetName ne 'sellerId' &&  breadcrumb.facetName ne 'isOffersExisting' && breadcrumb.facetName ne 'promotedProduct'  && breadcrumb.facetName ne 'isLuxuryProduct'}">
 						<li>
 						   <c:choose>
 						   <c:when test="${breadcrumb.removeQuery.url!='' && not empty offers}">
