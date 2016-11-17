@@ -121,13 +121,13 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 			}
 			catch (final UsernameNotFoundException notFound)
 			{
-				LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + notFound);
+				LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + "Authentication failed for User-"+userName);
 				throw new BadCredentialsException(
 						messages.getMessage(MarketplacewebservicesConstants.COREAUTH_BADCRED, "Email id does not exist"), notFound);
 			}
 			catch (final DataIntegrityViolationException dataIntegrity)
 			{
-				LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + dataIntegrity);
+				LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + "Authentication failed for User-"+userName);
 				throw new BadCredentialsException(
 						messages.getMessage(MarketplacewebservicesConstants.COREAUTH_BADCRED, "Email id does not exist"),
 						dataIntegrity);

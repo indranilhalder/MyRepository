@@ -135,7 +135,7 @@ import com.tisl.mpl.util.ExceptionUtil;
 @Controller
 @Scope("tenant")
 //@RequestMapping(value = "/**/p")
-public class ProductPageController extends AbstractPageController
+public class ProductPageController extends MidPageController
 {
 	private static final String PRODUCT_SIZE_TYPE = "productSizeType";
 	/**
@@ -1018,7 +1018,7 @@ public class ProductPageController extends AbstractPageController
 					}
 					catch (final Exception e)
 					{
-						LOG.error("configurableRadius values is empty please add radius property in properties file ");
+						LOG.debug("configurableRadius values is empty please add radius property in properties file ");
 					}
 				}
 
@@ -1201,6 +1201,7 @@ public class ProductPageController extends AbstractPageController
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
+			LOG.error("EtailNonBusinessExceptions::viewSellers::ProductPageController");
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			returnStatement = frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_PDP_ERROR_PAGE_NON_BUSINESS);
 
