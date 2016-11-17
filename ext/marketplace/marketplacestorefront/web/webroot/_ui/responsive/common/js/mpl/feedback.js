@@ -2536,7 +2536,7 @@ $(document).click(".global-alerts .close", function(){
 /*checkout login error end */
 
 
-$(document).ready(function(){
+/*$(document).ready(function(){
 	$(".feature-collections h2").each(function(){
 		var txth2 = $(this).text();
 		$(this).replaceWith("<h3>"+txth2+"</h3>");
@@ -2562,7 +2562,7 @@ $(document).ready(function(){
 		$(this).replaceWith("<h2><span style='color: black !important;'>"+txth1+"</span></h2>");
 	});
 	
-});
+});*/
 
 
 var ia_prod;
