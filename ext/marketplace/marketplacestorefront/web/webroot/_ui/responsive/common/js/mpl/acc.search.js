@@ -212,7 +212,8 @@ function donotShowAll()
 	displayHideShowAll = true;
 	}	
 	
-	l2ClassCount = -1;	
+	//l2ClassCount = -1;
+	l2ClassCount = 0;
 	//**********below iteration for L2 and L3 categories
 	$(this).find("ul>li").each(function(e){	
 	
@@ -220,7 +221,8 @@ function donotShowAll()
 	if($(this).hasClass('jqtree_common') && $(this).hasClass('jqtree-folder'))
 	{
 	l2ClassCount= l2ClassCount+1;	
-	l3ClassCount = -1;
+	//l3ClassCount = -1;
+	l3ClassCount = 0;
 	if(l2ClassCount>l2displayLimit){
 	$(this).hide();//hide L2 level
 	displayHideShowAll = true;
