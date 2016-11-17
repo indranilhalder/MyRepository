@@ -3127,6 +3127,7 @@ function getProductContents() {
 			url : requiredUrl,
 			async: false,
 			data : dataString,
+			cache : false,
 			dataType : "json",
 			success : function(data){
 				if (data != null) {			
@@ -3135,12 +3136,12 @@ function getProductContents() {
 				    	
 				    	$.each( freebieMessageMap, function(key,value){		
 				    		
-							$.each(value, function(keyInternal,valueInternal){
-								 if(keyInternal == 'freebieMsg'){
-									 freebieMsg = valueInternal;		 
+						//	$.each(value, function(keyInternal,valueInternal){
+								// if(keyInternal == 'freebieMsg'){
+									 freebieMsg = value;		 
 									 
-								 }				 
-							 });
+								// }				 
+							// });
 				    	})
 				    	
 				    	}

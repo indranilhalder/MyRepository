@@ -3,7 +3,9 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
+import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.SearchResult;
+import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +19,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.FreebieDetailModel;
+import com.tisl.mpl.core.model.ProductFreebieDetailModel;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.ProductOfferDetailDao;
 import com.tisl.mpl.marketplacecommerceservices.service.ProductOfferDetailService;
 
@@ -109,49 +114,47 @@ public class ProductOfferDetailServiceImpl implements ProductOfferDetailService
 
 	//update the message for Freebie product TPR-1754
 	/**
-	 * Return Map
+	 * @Description Added for displaying freebie messages other than default freebie message
+	 * @param ussId
+	 * @return freebie message
 	 */
 	@Override
-	public Map<String, Map<String, String>> showFreebieMessage(final String ussId)
+	public Map<String, String> showFreebieMessage(final String ussId)
+			throws EtailNonBusinessExceptions, FlexibleSearchException, UnknownIdentifierException
 	{
 		final SearchResult<List<Object>> result = prodOfferDetDao.showFreebieMessage(ussId);
-		final Map<String, Map<String, String>> resultMap = new HashMap<String, Map<String, String>>();
-		if (null != result && CollectionUtils.isNotEmpty(result.getResult()))
+		final Map<String, String> resultMap = new HashMap<String, String>();
+
+		try
 		{
-			for (final List<Object> row : result.getResult())
+			if (null != result && CollectionUtils.isNotEmpty(result.getResult()))
 			{
-				final Map<String, String> freebieDetMap = new HashMap<String, String>();
-				String ussIdQry = null;
-				String freebieMessage = null;
-				String freebieStartDate = null;
-				String freebieEndDate = null;
-
-				if (!row.isEmpty())
+				for (final List<Object> row : result.getResult())
 				{
-					ussIdQry = (String) row.get(0);
-					freebieMessage = (String) row.get(1);
-					freebieStartDate = (String) row.get(2);
-					freebieEndDate = (String) row.get(3);
-				}
-				if (null != ussIdQry)
-				{
-					if (StringUtils.isNotEmpty(freebieMessage))
+					final ProductFreebieDetailModel prddetails = (ProductFreebieDetailModel) row.get(0);
+					final FreebieDetailModel freebiedet = (FreebieDetailModel) row.get(1);
+
+					if (null != freebiedet && null != freebiedet.getFreebieId() && null != prddetails && null != prddetails.getOffer()
+							&& null != prddetails.getOffer().getFreebieId()
+							&& prddetails.getOffer().getFreebieId().equals(freebiedet.getFreebieId()))
 					{
-						freebieDetMap.put(MarketplacecommerceservicesConstants.FREEBIEMSG, freebieMessage);
+						resultMap.put(prddetails.getUssId(), freebiedet.getFreebieMsg());
 					}
 
-					if (StringUtils.isNotEmpty(freebieStartDate))
-					{
-						freebieDetMap.put(MarketplacecommerceservicesConstants.MESSAGESTARTDATE, freebieStartDate);
-					}
-					if (StringUtils.isNotEmpty(freebieEndDate))
-					{
-						freebieDetMap.put(MarketplacecommerceservicesConstants.MESSAGEENDDATE, freebieEndDate);
-					}
-
-					resultMap.put(ussIdQry, freebieDetMap);
 				}
 			}
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 		return resultMap;
 	}
