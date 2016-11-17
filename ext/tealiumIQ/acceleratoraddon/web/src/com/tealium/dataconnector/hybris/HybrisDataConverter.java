@@ -747,7 +747,9 @@ public final class HybrisDataConverter
 					{
 						paymentType = orderData.getMplPaymentInfo().getPaymentOption();
 						if (null != orderData.getMplPaymentInfo().getCardCardType())
+						{
 							paymentType += '|' + orderData.getMplPaymentInfo().getCardCardType();
+						}
 
 
 					}
@@ -755,7 +757,9 @@ public final class HybrisDataConverter
 					{
 						paymentType = orderData.getMplPaymentInfo().getPaymentOption();
 						if (null != orderData.getMplPaymentInfo().getBank())
+						{
 							paymentType += '|' + orderData.getMplPaymentInfo().getBank();
+						}
 					}
 					else
 					{
@@ -825,24 +829,25 @@ public final class HybrisDataConverter
 			String quantity = null;
 			String basePrice = null;
 			String totalEntryPrice = null;
-			CurrencyModel currency = orderModel.getCurrency();
-			String currencySymbol = currency.getSymbol();
+			final CurrencyModel currency = orderModel.getCurrency();
+			final String currencySymbol = currency.getSymbol();
 			String transactionIds = null;
 			String productCategoryListText = null;
 			String pageSubCategoriesText = null;
 			String pageSubcategoryNameL3ListText = null;
-			String userLoginType= null;//TPR-668
+			String userLoginType = null;//TPR-668
 			//TPR-429 Start
 			String sellerId = null;
 			String sellerIds = null;
+
 			//TPR-429 End
-			if(null != orderModel)
+			if (null != orderModel)
 			{
 				for (final AbstractOrderEntryModel entry : orderModel.getEntries())
 				{
 					if (entry.getProduct() != null && entry.getProduct().getCode() != null)
 					{
-					sku = entry.getProduct().getCode();
+						sku = entry.getProduct().getCode();
 					}
 					//TPR-429
 					if (entry.getSelectedUSSID() != null)
@@ -852,28 +857,28 @@ public final class HybrisDataConverter
 					}
 					if (entry.getProduct() != null && entry.getProduct().getName() != null)
 					{
-					name = entry.getProduct().getName();
+						name = entry.getProduct().getName();
 					}
 					if (entry.getQuantity() != null)
 					{
-					quantity = entry.getQuantity() + "";
+						quantity = entry.getQuantity() + "";
 					}
 					if (entry.getBasePrice() != null)
 					{
-					basePrice = entry.getBasePrice().toString();//base price for a cart entry
+						basePrice = entry.getBasePrice().toString();//base price for a cart entry
 					}
 					if (entry.getTotalPrice() != null)
 					{
-					totalEntryPrice = entry.getTotalPrice().toString();//total price for a cart entry 
+						totalEntryPrice = entry.getTotalPrice().toString();//total price for a cart entry
 					}
-//					String brand = "";
-//					String order_shipping = "";
-//					String order_shipping_charge = "";
+					//					String brand = "";
+					//					String order_shipping = "";
+					//					String order_shipping_charge = "";
 
-//					if (entry.getProduct() != null && entry.getProduct().getBrand() != null)
-//					{
-//						brand = entry.getProduct().getBrand().getBrandname();
-//					}
+					//					if (entry.getProduct() != null && entry.getProduct().getBrand() != null)
+					//					{
+					//						brand = entry.getProduct().getBrand().getBrandname();
+					//					}
 					if (entry.getProduct() != null && CollectionUtils.isNotEmpty(entry.getProduct().getBrands()))
 					{
 						final List<BrandModel> brandList = new ArrayList<BrandModel>(entry.getProduct().getBrands());
@@ -903,7 +908,7 @@ public final class HybrisDataConverter
 					productDiscountList.add("");
 					deliveryModes.add(order_shipping);
 					orderShippingCharges.add(order_shipping_charge);
-					
+
 					final StringBuffer categoryName = new StringBuffer();
 					for (final CategoryModel categoryModel : entry.getProduct().getSupercategories())
 					{
@@ -913,31 +918,30 @@ public final class HybrisDataConverter
 							getCategoryLevel(categoryModel, 1, categoryName);
 						}
 					}
-					
+
 					if (StringUtils.isNotEmpty(categoryName.toString()))
 					{
 						final String[] categoryNames = categoryName.toString().split(":");
 						category = categoryNames[2].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase();
 						productCategoryList.add(category);
-						productCategoryListText = productCategoryList.toString().replaceAll("[\\[\\](){}]","");
+						//productCategoryListText = productCategoryList.toString().replace("[", "").replace("]", "");
 
-						page_subCategory_name = categoryNames[1].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
-								.toLowerCase();
+
+						page_subCategory_name = categoryNames[1].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase();
 						pageSubCategories.add(page_subCategory_name);
-						pageSubCategoriesText = pageSubCategories.toString().replaceAll("[\\[\\](){}]","");
+						//pageSubCategoriesText = pageSubCategories.toString().replace("[", "").replace("]", "");
 
-						page_subcategory_name_L3 = categoryNames[0].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
-								.toLowerCase();
+						page_subcategory_name_L3 = categoryNames[0].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase();
 						pageSubcategoryNameL3List.add(page_subcategory_name_L3);
-						pageSubcategoryNameL3ListText = pageSubcategoryNameL3List.toString().replaceAll("[\\[\\](){}]","");
+						//pageSubcategoryNameL3ListText = pageSubcategoryNameL3List.toString().replace("[", "").replace("]", "");
 
 
 					}
 				}
-				/*TPR-687*/
+				/* TPR-687 */
 				if (CollectionUtils.isNotEmpty(orderModel.getChildOrders()))
 				{
-					for (OrderModel childOrder : orderModel.getChildOrders())
+					for (final OrderModel childOrder : orderModel.getChildOrders())
 					{
 						for (final AbstractOrderEntryModel childOrderEntry : childOrder.getEntries())
 						{
@@ -949,96 +953,96 @@ public final class HybrisDataConverter
 					}
 
 				}
-				if (CollectionUtils.isNotEmpty(transactionIdList)){
-					transactionIds = StringUtils.join(transactionIdList,',');
+				if (CollectionUtils.isNotEmpty(transactionIdList))
+				{
+					transactionIds = StringUtils.join(transactionIdList, ',');
 				}
-				/*TPR-687*/
+				/* TPR-687 */
 				/* TPR-429 */
 				if (CollectionUtils.isNotEmpty(sellerIdList))
 				{
 					sellerIds = StringUtils.join(sellerIdList, '_');
 				}
 				/* TPR-429 */
-				
+
 			}
-//			if (orderData != null)
-//			{
-//				for (final OrderEntryData entry : orderData.getEntries())
-//				{
-//					final String sku = entry.getProduct().getCode();
-//					final String name = entry.getProduct().getName();
-//					final String quantity = entry.getQuantity() + "";
-//					final String basePrice = entry.getBasePrice().getValue().toPlainString();//base price for a cart entry
-//					final String totalEntryPrice = entry.getTotalPrice().getValue().toPlainString();//total price for a cart entry 
+			//			if (orderData != null)
+			//			{
+			//				for (final OrderEntryData entry : orderData.getEntries())
+			//				{
+			//					final String sku = entry.getProduct().getCode();
+			//					final String name = entry.getProduct().getName();
+			//					final String quantity = entry.getQuantity() + "";
+			//					final String basePrice = entry.getBasePrice().getValue().toPlainString();//base price for a cart entry
+			//					final String totalEntryPrice = entry.getTotalPrice().getValue().toPlainString();//total price for a cart entry
 
 
-//					final List<String> categoryList = new ArrayList<String>();
-//					for (final CategoryData thisCategory : entry.getProduct().getCategories())
-//					{
-//						categoryList.add(thisCategory.getName());
-//					}
-//					final Object[] categoryStrings = categoryList.toArray();
-//					String category = "";
-//					String brand = "";
-//					String order_shipping = "";
+			//					final List<String> categoryList = new ArrayList<String>();
+			//					for (final CategoryData thisCategory : entry.getProduct().getCategories())
+			//					{
+			//						categoryList.add(thisCategory.getName());
+			//					}
+			//					final Object[] categoryStrings = categoryList.toArray();
+			//					String category = "";
+			//					String brand = "";
+			//					String order_shipping = "";
 
-//					String page_subcategory_name = "";
-//					String order_shipping_charge = "";
+			//					String page_subcategory_name = "";
+			//					String order_shipping_charge = "";
 
-//					if (categoryStrings.length > 0)
-//					{
-//						category = (String) categoryStrings[0];
-//						productCategoryList.add(category);
-//					}
-//					if (categoryStrings.length >= 2)
-//					{
-//						page_subcategory_name = (String) categoryStrings[1];
-//						pageSubCategories.add(page_subcategory_name);
-//					}
+			//					if (categoryStrings.length > 0)
+			//					{
+			//						category = (String) categoryStrings[0];
+			//						productCategoryList.add(category);
+			//					}
+			//					if (categoryStrings.length >= 2)
+			//					{
+			//						page_subcategory_name = (String) categoryStrings[1];
+			//						pageSubCategories.add(page_subcategory_name);
+			//					}
 
-//					if (entry.getProduct() != null && entry.getProduct().getBrand() != null)
-//					{
-//						brand = entry.getProduct().getBrand().getBrandname();
-//					}
-//
-//					if (entry.getMplDeliveryMode() != null)
-//					{
-//						order_shipping = entry.getMplDeliveryMode().getName();
-//					}
-//
-//					if (entry.getCurrDelCharge() != null)
-//					{
-//
-//						order_shipping_charge = entry.getCurrDelCharge().getFormattedValue();
-//					}
+			//					if (entry.getProduct() != null && entry.getProduct().getBrand() != null)
+			//					{
+			//						brand = entry.getProduct().getBrand().getBrandname();
+			//					}
+			//
+			//					if (entry.getMplDeliveryMode() != null)
+			//					{
+			//						order_shipping = entry.getMplDeliveryMode().getName();
+			//					}
+			//
+			//					if (entry.getCurrDelCharge() != null)
+			//					{
+			//
+			//						order_shipping_charge = entry.getCurrDelCharge().getFormattedValue();
+			//					}
 
-//					productBrandList.add(brand);
-//					productIdList.add(sku);
-//					productListPriceList.add(totalEntryPrice);
-//					productNameList.add(name);
-//					productQuantityList.add(quantity);
-//					productSkuList.add(sku);
-//					productUnitPriceList.add(basePrice);
-//					productDiscountList.add("");
-//					deliveryModes.add(order_shipping);
-//					orderShippingCharges.add(order_shipping_charge);
+			//					productBrandList.add(brand);
+			//					productIdList.add(sku);
+			//					productListPriceList.add(totalEntryPrice);
+			//					productNameList.add(name);
+			//					productQuantityList.add(quantity);
+			//					productSkuList.add(sku);
+			//					productUnitPriceList.add(basePrice);
+			//					productDiscountList.add("");
+			//					deliveryModes.add(order_shipping);
+			//					orderShippingCharges.add(order_shipping_charge);
 
-//				}
+			//				}
 
-				
-//			}
+
+			//			}
 
 			//tpr-668
 			userLoginType = (String) request.getAttribute("userLoginType");
-			if(userLoginType != null){
+			if (userLoginType != null)
+			{
 				udo.setValue("userLoginType", userLoginType);
-		 }
+			}
+
 			udo.setValue(TealiumHelper.HomePageUDO.PredefinedUDOFields.PAGE_TYPE, "checkout")
-			.setValue(TealiumHelper.ConfirmationPageUDO.PredefinedUDOFields.PRODUCT_CATEGORY, productCategoryListText)
-			.setValue("page_subcategory_name", pageSubCategoriesText)
-					.setValue("page_subcategory_name_l3", pageSubcategoryNameL3ListText)
 					.addArrayValues(TealiumHelper.ConfirmationPageUDO.PredefinedUDOFields.PRODUCT_BRAND, productBrandList)
-//					.addArrayValues(TealiumHelper.ConfirmationPageUDO.PredefinedUDOFields.PRODUCT_CATEGORY, productCategoryList)
+					//					.addArrayValues(TealiumHelper.ConfirmationPageUDO.PredefinedUDOFields.PRODUCT_CATEGORY, productCategoryList)
 					.addArrayValues(TealiumHelper.ConfirmationPageUDO.PredefinedUDOFields.PRODUCT_ID, productIdList)
 					.addArrayValues(TealiumHelper.ConfirmationPageUDO.PredefinedUDOFields.PRODUCT_LIST_PRICE, productListPriceList)
 					.addArrayValues(TealiumHelper.ConfirmationPageUDO.PredefinedUDOFields.PRODUCT_NAME, productNameList)
@@ -1047,11 +1051,14 @@ public final class HybrisDataConverter
 					.addArrayValues(TealiumHelper.ConfirmationPageUDO.PredefinedUDOFields.PRODUCT_UNIT_PRICE, productUnitPriceList)
 					.addArrayValues(TealiumHelper.ConfirmationPageUDO.PredefinedUDOFields.PRODUCT_DISCOUNT, productDiscountList)
 					.addArrayValues("order_shipping_modes", deliveryModes)
-//					.addArrayValues("page_subcategory_name", pageSubCategories)
-//					.addArrayValues("page_subcategory_name_l3", pageSubcategoryNameL3List)
+					//					.addArrayValues("page_subcategory_name", pageSubCategories)
+					//					.addArrayValues("page_subcategory_name_l3", pageSubcategoryNameL3List)
 					.addArrayValues("order_shipping_charges", orderShippingCharges);
-			udo.setValue("transaction_id",transactionIds)
-			.setValue("checkout_seller_ids", sellerIds);	
+			udo.setValue("transaction_id", transactionIds).setValue("checkout_seller_ids", sellerIds);
+
+			udo.addArrayValues("product_category", productCategoryList);
+			udo.addArrayValues("page_subcategory_name", pageSubCategories);
+			udo.addArrayValues("page_subcategory_name_L3", pageSubcategoryNameL3List);
 
 			scriptString = tealiumHelper.outputFullHtml(udo);
 		}

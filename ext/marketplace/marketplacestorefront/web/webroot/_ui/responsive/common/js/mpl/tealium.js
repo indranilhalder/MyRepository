@@ -310,16 +310,16 @@ $(document).ready(
 						tealiumData += '"product_brand":'
 							+ $("#product_brand").val() + ',';				
 						tealiumData += '"product_quantity_update":'
-							+ qtyUpdated + ',';				
+							+ qtyUpdated + ',';			
 						tealiumData += '"checkout_seller_ids":"'		//for TPR-429
-							+ $("#checkoutSellerIDs").val() + ',';
+							+ $("#checkoutSellerIDs").val() + '",';
 						//TPR-430 Start
-						tealiumData += '"product_category":'
-							+ $("#product_category").val().replace(/[\[\]']+/g, '') + ',';
-						tealiumData += '"page_subcategory_name":'
-							+ $("#page_subcategory_name").val().replace(/[\[\]']+/g, '') + ',';
-					tealiumData += '"page_subcategory_name_L3":'
-						+ $("#page_subcategory_name_l3").val().replace(/[\[\]']+/g, '') + '}';
+						tealiumData += '"product_category":"'
+							+ $("#product_category").val() + '",';
+						tealiumData += '"page_subcategory_name":"'
+							+ $("#page_subcategory_name").val() + '",';
+					tealiumData += '"page_subcategory_name_L3":"'
+						+ $("#page_subcategory_name_l3").val() + '"}';
 					//TPR-430 End
 						data = data.replace("}<TealiumScript>", tealiumData);
 						$('#tealiumHome').html(data);
@@ -359,12 +359,12 @@ $(document).ready(
 						tealiumData += '"product_brand":'
 							+ $("#product_brand").val() + ',';
 						//TPR-430 Start
-						tealiumData += '"product_category":'
-							+ $("#product_category").val().replace(/[\[\]']+/g, '') + ',';
-						tealiumData += '"page_subcategory_name":'
-							+ $("#page_subcategory_name").val().replace(/[\[\]']+/g, '') + ',';
-					tealiumData += '"page_subcategory_name_L3":'
-						+ $("#page_subcategory_name_l3").val().replace(/[\[\]']+/g, '') + ',';
+						tealiumData += '"product_category":"'
+							+ $("#product_category").val() + '",';
+						tealiumData += '"page_subcategory_name":"'
+							+ $("#page_subcategory_name").val() + '",';
+					tealiumData += '"page_subcategory_name_L3":"'
+						+ $("#page_subcategory_name_l3").val() + '",';
 					//TPR-430 End
 						tealiumData += '"checkout_seller_ids":"'		//for TPR-429
 							+ $("#checkoutSellerIDs").val() + '"}';
