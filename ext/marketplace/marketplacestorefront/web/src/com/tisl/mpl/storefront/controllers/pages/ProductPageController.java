@@ -60,6 +60,7 @@ import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
+import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.storelocator.location.Location;
@@ -2814,8 +2815,8 @@ public class ProductPageController extends AbstractPageController
 
 
 	/**
-	 *
-	 * @param productCode
+	 * @Description Added for displaying freebie messages other than default freebie message
+	 * @param ussId
 	 * @return populateFreebieMessage
 	 * @throws com.granule.json.JSONException
 	 */
@@ -2826,7 +2827,7 @@ public class ProductPageController extends AbstractPageController
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.USSID_CODE_PATH_NEW_PATTERN
 			+ "/getFreebieMessage", method = RequestMethod.GET)
 	public JSONObject populateFreebieMessage(@RequestParam(ControllerConstants.Views.Fragments.Product.USSID) final String ussId)
-			throws com.granule.json.JSONException
+			throws com.granule.json.JSONException, EtailNonBusinessExceptions, FlexibleSearchException, UnknownIdentifierException
 	{
 		final JSONObject buyboxJson = new JSONObject();
 		buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.EMPTY);
@@ -2834,7 +2835,9 @@ public class ProductPageController extends AbstractPageController
 		{
 			if (StringUtils.isNotEmpty(ussId))
 			{
-				final Map<String, Map<String, String>> offerMessageMap = prodOfferDetFacade.showFreebieMessage(ussId);
+				//				final Map<String, Map<String, String>> offerMessageMap = prodOfferDetFacade.showFreebieMessage(ussId);
+
+				final Map<String, String> offerMessageMap = prodOfferDetFacade.showFreebieMessage(ussId);
 
 
 				// populate json with offer message
@@ -2852,10 +2855,7 @@ public class ProductPageController extends AbstractPageController
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.ERROR_OCCURED);
 		}
-		catch (
-
-		final EtailNonBusinessExceptions e)
-
+		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.ERROR_OCCURED);

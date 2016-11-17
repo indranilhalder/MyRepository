@@ -3,10 +3,14 @@
  */
 package com.tisl.mpl.seller.product.facades.impl;
 
+import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
+import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
+
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.ProductOfferDetailService;
 import com.tisl.mpl.seller.product.facades.ProductOfferDetailFacade;
 
@@ -21,7 +25,7 @@ public class ProductOfferDetailFacadeImpl implements ProductOfferDetailFacade
 {
 
 	@Resource(name = "prodOfferDetService")
-	ProductOfferDetailService prodOfferDetService;
+	private ProductOfferDetailService prodOfferDetService;
 
 	/**
 	 * @Description This method is used to fetch message from OfferDetail for a product
@@ -37,10 +41,13 @@ public class ProductOfferDetailFacadeImpl implements ProductOfferDetailFacade
 
 	//update the message for Freebie product TPR-1754
 	/**
-	 * Return Map
+	 * @Description Added for displaying freebie messages other than default freebie message
+	 * @param ussId
+	 * @return freebie message
 	 */
 	@Override
-	public Map<String, Map<String, String>> showFreebieMessage(final String ussId)
+	public Map<String, String> showFreebieMessage(final String ussId)
+			throws EtailNonBusinessExceptions, FlexibleSearchException, UnknownIdentifierException
 	{
 		return prodOfferDetService.showFreebieMessage(ussId);
 	}
