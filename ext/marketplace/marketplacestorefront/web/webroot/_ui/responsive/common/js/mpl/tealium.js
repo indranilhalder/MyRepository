@@ -405,16 +405,6 @@ $(document).ready(
 			});
 			/*TPR-657 ends*/
 			
-			/*TPR-694 starts*/
-			$(document).on('click','.details',function(){
-
-			
-			//	alert("viewdetails......")
-				utag.link({"link_obj": this, "link_text": 'product_offer_view_details', "event_type": 'product_offer_details'
-							}); 
-				});
-			/*TPR-694 ends*/
-			
 			/*TPR- 659 starts*/
 			$(document).on("click",".view-cliq-offers",function(){
 		//		alert("viewcliq......")
