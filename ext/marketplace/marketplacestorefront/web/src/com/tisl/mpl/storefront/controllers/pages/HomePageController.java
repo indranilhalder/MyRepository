@@ -589,26 +589,18 @@ public class HomePageController extends AbstractPageController
 					//TPR-559 Show/Hide Components and Sub-components
 					if (component.getVisible().booleanValue())
 					{
-
-						title = newAndExclusiveComponent.getTitle();
-					}
-
-
-					newAndExclusiveJson.put(TITLE, title);
-					newAndExclusiveJson.put("slideBy", newAndExclusiveComponent.getSlideByNewIn());
-					newAndExclusiveJson.put("autoplayTimeout", newAndExclusiveComponent.getAutoplayTimeoutNewIn());
-
-					final JSONArray newAndExclusiveJsonArray = new JSONArray();
-
 						final ProductCarouselComponentModel newAndExclusiveComponent = (ProductCarouselComponentModel) component;
-
-
 						String title = EMPTY_STRING;
+
 						if (StringUtils.isNotEmpty(newAndExclusiveComponent.getTitle()))
 						{
 							title = newAndExclusiveComponent.getTitle();
 						}
+
 						newAndExclusiveJson.put(TITLE, title);
+						newAndExclusiveJson.put("slideBy", newAndExclusiveComponent.getSlideByNewIn());
+						newAndExclusiveJson.put("autoplayTimeout", newAndExclusiveComponent.getAutoplayTimeoutNewIn());
+
 						final JSONArray newAndExclusiveJsonArray = new JSONArray();
 
 						if (CollectionUtils.isNotEmpty(newAndExclusiveComponent.getProducts()))
@@ -675,7 +667,7 @@ public class HomePageController extends AbstractPageController
 							}
 							newAndExclusiveJson.put("newAndExclusiveProducts", newAndExclusiveJsonArray);
 						}
-
+					}
 					else
 					{
 						LOG.info("Component visiblity set to false");
