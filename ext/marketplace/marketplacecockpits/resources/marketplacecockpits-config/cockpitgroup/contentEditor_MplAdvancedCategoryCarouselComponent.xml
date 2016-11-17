@@ -22,7 +22,17 @@
 					<td><cockpit code="property" value="MplAdvancedCategoryCarouselComponent.categories"/></td>
 					<td><div style="height:6px"/></td>
 				</tr>
+
+				<tr>
+					<td><cockpit code="property" value="MplAdvancedCategoryCarouselComponent.autoplayTimeout"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="MplAdvancedCategoryCarouselComponent.slideBy"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
 				
+
 			</tbody>
 		</table>
 	]]>
