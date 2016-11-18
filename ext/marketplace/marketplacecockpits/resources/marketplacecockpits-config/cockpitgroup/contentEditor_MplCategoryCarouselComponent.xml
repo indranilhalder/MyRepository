@@ -23,6 +23,15 @@
 					<td><div style="height:6px"/></td>
 				</tr>
 				
+				<tr>
+					<td><cockpit code="property" value="MplCategoryCarouselComponent.autoplayTimeout"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="MplCategoryCarouselComponent.slideBy"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				
 			</tbody>
 		</table>
 	]]>

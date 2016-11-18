@@ -4,6 +4,7 @@
 package com.tisl.mpl.marketplacecommerceservices.service;
 
 import de.hybris.platform.category.model.CategoryModel;
+import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 
 import java.util.List;
@@ -26,4 +27,7 @@ public interface HomepageComponentService
 	JSONObject getJsonBanner(ContentSlotModel contentSlot, String compType) throws EtailNonBusinessExceptions;
 
 	List<CategoryModel> getCategoryPath(CategoryModel categoryModel);
+
+	//TPR-558 Scheduling of banners
+	boolean showOnTimeRestriction(final AbstractCMSComponentModel component);
 }

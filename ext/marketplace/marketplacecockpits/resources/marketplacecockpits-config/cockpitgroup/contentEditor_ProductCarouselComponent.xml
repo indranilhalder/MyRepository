@@ -16,6 +16,16 @@
 					<td><cockpit code="list"/></td>
 					<td><div style="height:6px"/></td>
 				</tr>
+				
+				<tr>
+					<td><cockpit code="property" value="ProductCarouselComponent.slideByNewIn"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				
+				<tr>
+					<td><cockpit code="property" value="ProductCarouselComponent.autoplayTimeoutNewIn"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
 			</tbody>
 		</table>
 	]]>

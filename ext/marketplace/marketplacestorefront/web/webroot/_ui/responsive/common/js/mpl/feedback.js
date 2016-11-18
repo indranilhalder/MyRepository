@@ -2085,11 +2085,24 @@ function toggleFilter(){
 	$(this).toggleClass("active");
 	
 	//TPR-845
-	var spanCount_colour=$(".facet_mobile .filter-colour.selected-colour").length;
-	if(spanCount_colour>0)
+	// Fixing error of facet starts
+	if ($(".facet_mobile .facet.js-facet.Colour").find('ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden').length) {
+		var spanCountMoreViewColor = $(".facet_mobile .facet.js-facet.Colour").find('ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden').find("li.selected-colour").length;
+		if(spanCountMoreViewColor)
 		{
-			$(".facet_mobile .filter-colour.selected-colour").parents(".facet.js-facet").find(".category-icons span").text(spanCount_colour);
+			$(".facet_mobile .filter-colour.selected-colour").parents(".facet.js-facet").find(".category-icons span").text(spanCountMoreViewColor);
 		}
+	}
+	else {
+	// Fixing error of facet ends
+		var spanCount_colour=$(".facet_mobile .filter-colour.selected-colour").length;
+		if(spanCount_colour>0)
+			{
+				$(".facet_mobile .filter-colour.selected-colour").parents(".facet.js-facet").find(".category-icons span").text(spanCount_colour);
+			}
+	// Fixing error of facet starts	
+	}
+	// Fixing error of facet ends	
 
 	var spanCount_size=$(".facet_mobile .filter-size.selected-size").length;
 	if(spanCount_size>0)
@@ -2098,7 +2111,7 @@ function toggleFilter(){
 	}
 
 	$(".facet_mobile .facet.js-facet").each(function(){
-		console.log('hi');
+		//console.log('hi');
 		var spanCountMoreView = $(this).find('ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden').find("input[type=checkbox]:checked").length;
 		if(spanCountMoreView){
 			$(this).find(".category-icons span").text(spanCountMoreView);
@@ -2528,7 +2541,7 @@ $(document).click(".global-alerts .close", function(){
 /*checkout login error end */
 
 
-$(document).ready(function(){
+/*$(document).ready(function(){
 	$(".feature-collections h2").each(function(){
 		var txth2 = $(this).text();
 		$(this).replaceWith("<h3>"+txth2+"</h3>");
@@ -2554,7 +2567,7 @@ $(document).ready(function(){
 		$(this).replaceWith("<h2><span style='color: black !important;'>"+txth1+"</span></h2>");
 	});
 	
-});
+});*/
 
 
 var ia_prod;
