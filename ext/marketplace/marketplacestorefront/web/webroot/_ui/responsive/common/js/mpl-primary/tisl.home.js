@@ -328,6 +328,7 @@ function getBrandsYouLoveAjaxCall() {
         var count= 0;
         var autoplayTimeout=5000;
         var slideBy=1;
+        var autoPlay=true;
         
         if (env == "true") {
             var dataString = 'version=Staged';
@@ -345,21 +346,29 @@ function getBrandsYouLoveAjaxCall() {
             	
             	autoplayTimeout = response.autoplayTimeout;
             	slideBy = response.slideBy; 
+            	autoPlay= response.autoPlay;
             	
-            	if(autoplayTimeout && slideBy){
-            	
-            		autoplayTimeout = autoplayTimeout;
-                	slideBy = slideBy;
+            	if(autoplayTimeout){
             		
+            		autoplayTimeout = autoplayTimeout;
+                	
             	}else{
             		
             		 autoplayTimeout=5000;
-            	     slideBy=1;
+            	
             	}
             	
+               if(slideBy){
+            		
+            	   slideBy = slideBy;
+                	
+            	}else{
+            		
+            		slideBy=1;
             	
-            	 
-                
+            	}
+            	
+               
 
                 //console.log(response.subComponents);
             	//TPR-559 Show/Hide Components and Sub-components
@@ -405,7 +414,7 @@ function getBrandsYouLoveAjaxCall() {
 	            		center:true,
 	            		dots:false,
 	            		navText:[],
-	            		autoplay: true,
+	            		autoplay: autoPlay,
 			            autoHeight : true,
 	            		autoplayTimeout: autoplayTimeout,
 	  	               slideBy: slideBy,
@@ -721,6 +730,7 @@ function getBestPicksAjaxCall() {
         }
         var autoplayTimeout = 5000;
         var slideBy = 1;
+        var autoPlay=true;
         $.ajax({
             type: "GET",
             dataType: "json",
@@ -732,17 +742,30 @@ function getBestPicksAjaxCall() {
                // console.log(response.slideBy);
                 autoplayTimeout = response.autoplayTimeout;
                 slideBy = response.slideBy;
+                autoPlay= response.autoPlay;
+            	
                 
-                if(autoplayTimeout && slideBy){
-                	
-            		autoplayTimeout = autoplayTimeout;
-                	slideBy = slideBy;
+               if(autoplayTimeout){
             		
+            		autoplayTimeout = autoplayTimeout;
+                	
             	}else{
             		
             		 autoplayTimeout=5000;
-            	     slideBy=1;
+            	
             	}
+            	
+               if(slideBy){
+            		
+            	   slideBy = slideBy;
+                	
+            	}else{
+            		
+            		slideBy=1;
+            	
+            	}
+               
+             
                
             	//TPR-559 Show/Hide Components and Sub-components
             	if (response.hasOwnProperty("title") && response.hasOwnProperty("subItems")) {
@@ -806,7 +829,7 @@ function getBestPicksAjaxCall() {
 	            		dots:false,
 	            		navText:[],
 	            		lazyLoad: false,
-	            		autoplay: true,
+	            		autoplay: autoPlay,
 			            autoHeight : true,
 	            		autoplayTimeout: autoplayTimeout,
 	  	               slideBy: slideBy,
@@ -861,6 +884,7 @@ function getProductsYouCareAjaxCall() {
         
         var slideBy=1;
         var autoplayTimeout=5000;
+        var autoPlay=true;
         $.ajax({
             type: "GET",
             dataType: "json",
@@ -871,17 +895,30 @@ function getProductsYouCareAjaxCall() {
             	
             	autoplayTimeout = response.autoplayTimeout;
             	slideBy = response.slideBy;
+            	autoPlay= response.autoPlay;
             	
-            	if(autoplayTimeout && slideBy){
-                	
-            		autoplayTimeout = autoplayTimeout;
-                	slideBy = slideBy;
+            	
+                if(autoplayTimeout){
             		
+            		autoplayTimeout = autoplayTimeout;
+                	
             	}else{
             		
             		 autoplayTimeout=5000;
-            	     slideBy=1;
+            	
             	}
+            	
+               if(slideBy){
+            		
+            	   slideBy = slideBy;
+                	
+            	}else{
+            		
+            		slideBy=1;
+            	
+            	}
+               
+               
             	
                
             	//console.log(response);
@@ -933,7 +970,7 @@ function getProductsYouCareAjaxCall() {
 							dots : false,
 							navText : [],
 							lazyLoad : false,
-							autoplay: true,
+							autoplay: autoPlay,
 				            autoHeight : true,
 							autoplayTimeout: autoplayTimeout,
 				            slideBy: slideBy,
@@ -979,6 +1016,7 @@ function getNewAndExclusiveAjaxCall() {
     }
      var slideBy=1;
      var autoplayTimeout=5000;
+     var autoPlay=true;
     
     $.ajax({
         type: "GET",
@@ -991,16 +1029,27 @@ function getNewAndExclusiveAjaxCall() {
         	
         	autoplayTimeout = response.autoplayTimeout;
         	slideBy = response.slideBy;
+        	autoPlay= response.autoPlay;
+        	
         	 
-        	if(autoplayTimeout && slideBy){
-            	
-        		autoplayTimeout = autoplayTimeout;
-            	slideBy = slideBy;
+        	if(autoplayTimeout){
         		
+        		autoplayTimeout = autoplayTimeout;
+            	
         	}else{
         		
         		 autoplayTimeout=5000;
-        	     slideBy=1;
+        	
+        	}
+        	
+           if(slideBy){
+        		
+        	   slideBy = slideBy;
+            	
+        	}else{
+        		
+        		slideBy=1;
+        	
         	}
         	
         	
@@ -1049,7 +1098,7 @@ function getNewAndExclusiveAjaxCall() {
 	        		dots:false,
 	        		navText:[],
 	        		lazyLoad: false,
-	        		autoplay: true,
+	        		autoplay: autoPlay,
 		            autoHeight : true,
 		            autoplayTimeout: autoplayTimeout,
 		            slideBy: slideBy,
