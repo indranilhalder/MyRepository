@@ -98,7 +98,7 @@ public class LimitedStockPromotion extends GeneratedLimitedStockPromotion
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.hybris.platform.promotions.jalo.AbstractPromotion#evaluate(de.hybris.platform.jalo.SessionContext,
 	 * de.hybris.platform.promotions.result.PromotionEvaluationContext)
 	 */
@@ -265,6 +265,8 @@ public class LimitedStockPromotion extends GeneratedLimitedStockPromotion
 
 			boolean flagForDeliveryModeRestrEval = false;
 			boolean flagForPaymentModeRestrEval = false;
+			final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList,
+					order);
 			boolean isPercentageDisc = false;
 			final double maxDiscount = getMaxDiscountVal() == null ? 0.0D : getMaxDiscountVal().doubleValue(); //Adding the Promotion set Max  Discount Value to a variable
 			final Double discountPrice = getPriceForOrder(paramSessionContext, getDiscountPrices(paramSessionContext), order,
@@ -318,7 +320,7 @@ public class LimitedStockPromotion extends GeneratedLimitedStockPromotion
 			flagForPaymentModeRestrEval = getDefaultPromotionsManager()
 					.getPaymentModeRestrEval(restrictionList, paramSessionContext);
 
-			if (flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval) // If Total no of valid Products exceeds Qualifying Count
+			if (flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval && flagForPincodeRestriction) // If Total no of valid Products exceeds Qualifying Count
 			{
 				int totalValidProdCount = 0;
 				for (final String key : validProductList.keySet())
@@ -695,7 +697,7 @@ public class LimitedStockPromotion extends GeneratedLimitedStockPromotion
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.promotions.jalo.AbstractPromotion#getResultDescription(de.hybris.platform.jalo.SessionContext,
 	 * de.hybris.platform.promotions.jalo.PromotionResult, java.util.Locale)
@@ -719,7 +721,7 @@ public class LimitedStockPromotion extends GeneratedLimitedStockPromotion
 	}
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.hybris.platform.promotions.jalo.GeneratedAbstractPromotion#setRestrictions(de.hybris.platform.jalo.
 	 * SessionContext, java.util.Collection)
 	 */
