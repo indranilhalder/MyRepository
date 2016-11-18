@@ -37,6 +37,10 @@
 					<td><cockpit code="property" value="MplBigPromoBannerComponent.visible"/></td>
 					<td><div style="height:6px"/></td>
 				</tr>
+				<tr>
+					<td><cockpit code="property" value="MplBigPromoBannerComponent.restrictions"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
 			</tbody>
 		</table>
 	]]>

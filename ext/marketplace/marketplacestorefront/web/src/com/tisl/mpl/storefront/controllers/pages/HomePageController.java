@@ -244,8 +244,8 @@ public class HomePageController extends AbstractPageController
 
 				if (component instanceof MplShowcaseComponentModel)
 				{
-					//TPR-559 Show/Hide Components and Sub-components
-					if (component.getVisible().booleanValue())
+					//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+					if (component.getVisible().booleanValue() && homepageComponentService.showOnTimeRestriction(component))
 					{
 						final MplShowcaseComponentModel brandsYouLoveComponent = (MplShowcaseComponentModel) component;
 						brandsYouLoveJson = getJSONForShowcaseComponent(brandsYouLoveComponent);
@@ -290,6 +290,7 @@ public class HomePageController extends AbstractPageController
 			title = showCaseComponent.getTitle();
 		}
 		showCaseComponentJson.put(TITLE, title);
+
 		final JSONArray subComponentJsonArray = new JSONArray();
 
 		if (CollectionUtils.isNotEmpty(showCaseComponent.getShowcaseItems()))
@@ -299,8 +300,8 @@ public class HomePageController extends AbstractPageController
 			String brandLogoAltText = EMPTY_STRING;
 			for (final MplShowcaseItemComponentModel showcaseItem : showCaseComponent.getShowcaseItems())
 			{
-				//TPR-559 Show/Hide Components and Sub-components
-				if (showcaseItem.getVisible().booleanValue())
+				//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+				if (showcaseItem.getVisible().booleanValue() && homepageComponentService.showOnTimeRestriction(showcaseItem))
 				{
 					final JSONObject showCaseItemJson = new JSONObject();
 					showCaseItemJson.put("compId", showcaseItem.getUid());
@@ -339,6 +340,8 @@ public class HomePageController extends AbstractPageController
 			}
 		}
 
+		showCaseComponentJson.put("slideBy", showCaseComponent.getSlideBy());
+		showCaseComponentJson.put("autoplayTimeout", showCaseComponent.getAutoplayTimeout());
 		showCaseComponentJson.put("subComponents", subComponentJsonArray);
 
 		return showCaseComponentJson;
@@ -583,17 +586,21 @@ public class HomePageController extends AbstractPageController
 
 				if (component instanceof ProductCarouselComponentModel)
 				{
-					//TPR-559 Show/Hide Components and Sub-components
-					if (component.getVisible().booleanValue())
+					//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+					if (component.getVisible().booleanValue() && homepageComponentService.showOnTimeRestriction(component))
 					{
 						final ProductCarouselComponentModel newAndExclusiveComponent = (ProductCarouselComponentModel) component;
-
 						String title = EMPTY_STRING;
+
 						if (StringUtils.isNotEmpty(newAndExclusiveComponent.getTitle()))
 						{
 							title = newAndExclusiveComponent.getTitle();
 						}
+
 						newAndExclusiveJson.put(TITLE, title);
+						newAndExclusiveJson.put("slideBy", newAndExclusiveComponent.getSlideByNewIn());
+						newAndExclusiveJson.put("autoplayTimeout", newAndExclusiveComponent.getAutoplayTimeoutNewIn());
+
 						final JSONArray newAndExclusiveJsonArray = new JSONArray();
 
 						if (CollectionUtils.isNotEmpty(newAndExclusiveComponent.getProducts()))
@@ -664,8 +671,10 @@ public class HomePageController extends AbstractPageController
 					else
 					{
 						LOG.info("Component visiblity set to false");
+
 					}
 				}
+
 			}
 		}
 		catch (final EtailBusinessExceptions e)
@@ -854,8 +863,8 @@ public class HomePageController extends AbstractPageController
 
 				if (component instanceof MplShowcaseComponentModel)
 				{
-					//TPR-559 Show/Hide Components and Sub-components
-					if (component.getVisible().booleanValue())
+					//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+					if (component.getVisible().booleanValue() && homepageComponentService.showOnTimeRestriction(component))
 					{
 						final MplShowcaseComponentModel collectionShowcaseComponent = (MplShowcaseComponentModel) component;
 						collectionShowcase = getJSONForShowcaseComponent(collectionShowcaseComponent);

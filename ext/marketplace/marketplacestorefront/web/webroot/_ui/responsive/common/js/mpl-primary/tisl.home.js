@@ -326,6 +326,9 @@ $("li.logIn-hi").on("mouseleave", function(e) {
 function getBrandsYouLoveAjaxCall() {
         var env = $("#previewVersion").val();
         var count= 0;
+        var autoplayTimeout=5000;
+        var slideBy=1;
+        
         if (env == "true") {
             var dataString = 'version=Staged';
         } else {
@@ -337,6 +340,27 @@ function getBrandsYouLoveAjaxCall() {
             url: ACC.config.encodedContextPath + "/getBrandsYouLove",
             data: dataString,
             success: function(response) {
+
+               //console.log(response.subComponents);
+            	
+            	autoplayTimeout = response.autoplayTimeout;
+            	slideBy = response.slideBy; 
+            	
+            	if(autoplayTimeout && slideBy){
+            	
+            		autoplayTimeout = autoplayTimeout;
+                	slideBy = slideBy;
+            		
+            	}else{
+            		
+            		 autoplayTimeout=5000;
+            	     slideBy=1;
+            	}
+            	
+            	
+            	 
+                
+
                 //console.log(response.subComponents);
             	//TPR-559 Show/Hide Components and Sub-components
 	            if (response.hasOwnProperty("title") && response.hasOwnProperty("subComponents") && response.subComponents.length) {
@@ -364,12 +388,14 @@ function getBrandsYouLoveAjaxCall() {
 	                $('#brandsYouLove').html(renderHtml);
 	                getBrandsYouLoveContentAjaxCall(defaultComponentId);
 	            }    
+
             },
             error: function() {
                 // globalErrorPopup('Failure!!!');
                 console.log("Error while getting brands you love");
             },
             complete: function() {
+
             	//TPR-559 Show/Hide Components and Sub-components
             	if ($(".home-brands-you-love-carousel").length) {
 	                $(".home-brands-you-love-carousel").owlCarousel({
@@ -379,6 +405,10 @@ function getBrandsYouLoveAjaxCall() {
 	            		center:true,
 	            		dots:false,
 	            		navText:[],
+	            		autoplay: true,
+			            autoHeight : true,
+	            		autoplayTimeout: autoplayTimeout,
+	  	               slideBy: slideBy,
 	            		responsive : {
 	            			// breakpoint from 0 up
 	            			0 : {
@@ -445,6 +475,7 @@ function getBrandsYouLoveAjaxCall() {
 	                    }
 	                }*/
             	} 
+
             }
         });
     }
@@ -688,12 +719,31 @@ function getBestPicksAjaxCall() {
         } else {
             var dataString = 'version=Online';
         }
+        var autoplayTimeout = 5000;
+        var slideBy = 1;
         $.ajax({
             type: "GET",
             dataType: "json",
             url: ACC.config.encodedContextPath + "/getBestPicks",
             data: dataString,
             success: function(response) {
+
+            	//console.log(response.autoplayTimeout);
+               // console.log(response.slideBy);
+                autoplayTimeout = response.autoplayTimeout;
+                slideBy = response.slideBy;
+                
+                if(autoplayTimeout && slideBy){
+                	
+            		autoplayTimeout = autoplayTimeout;
+                	slideBy = slideBy;
+            		
+            	}else{
+            		
+            		 autoplayTimeout=5000;
+            	     slideBy=1;
+            	}
+               
             	//TPR-559 Show/Hide Components and Sub-components
             	if (response.hasOwnProperty("title") && response.hasOwnProperty("subItems")) {
 	                renderHtml = "<h2>" + response.title + "</h2>" +
@@ -740,11 +790,13 @@ function getBestPicksAjaxCall() {
 	                $("#bestPicks").html(renderHtml);
 	                // console.log()
             	}
+
             },
             error: function() {
                 console.log("Error while getting best picks");
             },
             complete: function() {
+
             	//TPR-559 Show/Hide Components and Sub-components
             	if ($(".home-best-pick-carousel").length) {
 	                $(".home-best-pick-carousel").owlCarousel({
@@ -754,6 +806,10 @@ function getBestPicksAjaxCall() {
 	            		dots:false,
 	            		navText:[],
 	            		lazyLoad: false,
+	            		autoplay: true,
+			            autoHeight : true,
+	            		autoplayTimeout: autoplayTimeout,
+	  	               slideBy: slideBy,
 	            		responsive : {
 	            			// breakpoint from 0 up
 	            			0 : {
@@ -786,6 +842,7 @@ function getBestPicksAjaxCall() {
 	                    scrollPerPage: true*/
 	                });
             	}    
+
             }
         });
        
@@ -801,12 +858,32 @@ function getProductsYouCareAjaxCall() {
         } else {
             var dataString = 'version=Online';
         }
+        
+        var slideBy=1;
+        var autoplayTimeout=5000;
         $.ajax({
             type: "GET",
             dataType: "json",
             url: ACC.config.encodedContextPath + "/getProductsYouCare",
             data: dataString,
             success: function(response) {
+
+            	
+            	autoplayTimeout = response.autoplayTimeout;
+            	slideBy = response.slideBy;
+            	
+            	if(autoplayTimeout && slideBy){
+                	
+            		autoplayTimeout = autoplayTimeout;
+                	slideBy = slideBy;
+            		
+            	}else{
+            		
+            		 autoplayTimeout=5000;
+            	     slideBy=1;
+            	}
+            	
+               
             	//console.log(response);
             	//TPR-559 Show/Hide Components and Sub-components
                 if (response.hasOwnProperty("title") && response.hasOwnProperty("categories") && response.title && response.categories.length) {
@@ -839,11 +916,13 @@ function getProductsYouCareAjaxCall() {
 	                renderHtml += "</div>";
 	                $("#productYouCare").html(renderHtml);
                 }    
+
             },
             error: function() {
                 console.log(
                     'Error while getting getProductsYouCare');
             },
+
             complete : function() {
             	//TPR-559 Show/Hide Components and Sub-components
             	if ($(".home-product-you-care-carousel").length) {
@@ -854,6 +933,10 @@ function getProductsYouCareAjaxCall() {
 							dots : false,
 							navText : [],
 							lazyLoad : false,
+							autoplay: true,
+				            autoHeight : true,
+							autoplayTimeout: autoplayTimeout,
+				            slideBy: slideBy,
 							responsive : {
 								// breakpoint from 0 up
 								0 : {
@@ -872,6 +955,7 @@ function getProductsYouCareAjaxCall() {
 								1280 : {
 									items : 4,
 								}
+
 							}
 						/*
 						 * navigation: true, navigationText: [], pagination: false,
@@ -893,6 +977,9 @@ function getNewAndExclusiveAjaxCall() {
     } else {
         var dataString = 'version=Online';
     }
+     var slideBy=1;
+     var autoplayTimeout=5000;
+    
     $.ajax({
         type: "GET",
         dataType: "json",
@@ -900,6 +987,23 @@ function getNewAndExclusiveAjaxCall() {
         data: dataString,
         success: function(response) {
             //console.log(response.newAndExclusiveProducts);
+
+        	
+        	autoplayTimeout = response.autoplayTimeout;
+        	slideBy = response.slideBy;
+        	 
+        	if(autoplayTimeout && slideBy){
+            	
+        		autoplayTimeout = autoplayTimeout;
+            	slideBy = slideBy;
+        		
+        	}else{
+        		
+        		 autoplayTimeout=5000;
+        	     slideBy=1;
+        	}
+        	
+        	
         	//TPR-559 Show/Hide Components and Sub-components
             if (response.hasOwnProperty("title") && response.hasOwnProperty("newAndExclusiveProducts") && response.newAndExclusiveProducts.length) {
 	        	var staticHost=$('#staticHost').val();
@@ -929,11 +1033,13 @@ function getNewAndExclusiveAjaxCall() {
 	                "/search/viewOnlineProducts' class='new_exclusive_viewAll'>View All</a>";
 	            $('#newAndExclusive').html(renderHtml);
             }   
+
         },
         error: function() {
             console.log("Error while getting new and exclusive");
         },
         complete: function() {
+
         	//TPR-559 Show/Hide Components and Sub-components
         	if ($("#new_exclusive").length) {
 	            $("#new_exclusive").owlCarousel({
@@ -943,6 +1049,10 @@ function getNewAndExclusiveAjaxCall() {
 	        		dots:false,
 	        		navText:[],
 	        		lazyLoad: false,
+	        		autoplay: true,
+		            autoHeight : true,
+		            autoplayTimeout: autoplayTimeout,
+		            slideBy: slideBy,
 	        		responsive : {
 	        			// breakpoint from 0 up
 	        			0 : {
@@ -997,6 +1107,7 @@ function getNewAndExclusiveAjaxCall() {
 	        		},80);
 	            });
         	}     
+
         }
     });
 }
