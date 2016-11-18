@@ -45520,6 +45520,14 @@ body.page-homepage .trending h2 > span{
     padding: 0;
     letter-spacing: normal;
 }
+.myInterestCategory .questionnaire-title h2.myInterestCategoryH2First,.brandsCategory .questionnaire-title h2.brandsCategoryH2First,
+.brandsSubCategory .questionnaire-title h2#objHeading,.brandsSubCategoryApparel .questionnaire-title h2#objHeadingApparel,
+.brandsSubCategoryeElectronics .questionnaire-title h2#objHeadingElectronics{
+	color: #a9143c;
+    font-size: 32px;
+    padding: 30px 0;
+    max-width: none;
+}
 @media(max-width:1024px){
 .page-productDetails .trending h2 {
 		border-top: 1px solid #ccc;
@@ -45578,6 +45586,16 @@ body.page-homepage .trending h2>span{
 	body.page-homepage .trending h2>span {
     	font-size: 20px !important;
 	}	
+}
+@media(max-width:650px){
+	.myInterestCategory .questionnaire-title h2.myInterestCategoryH2First,.brandsCategory .questionnaire-title h2.brandsCategoryH2First,
+	.brandsSubCategory .questionnaire-title h2#objHeading,.brandsSubCategoryApparel .questionnaire-title h2#objHeadingApparel,
+	.brandsSubCategoryeElectronics .questionnaire-title h2#objHeadingElectronics{
+		color: #a9143c;
+    	font-size: 32px;
+    	padding: 30px 0;
+    	max-width: none;
+	}
 }
 /* Comment on 16/11/2016 ends IA*/
 
