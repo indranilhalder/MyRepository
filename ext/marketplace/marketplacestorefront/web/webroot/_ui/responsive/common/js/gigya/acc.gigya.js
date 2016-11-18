@@ -131,8 +131,10 @@ function registerUserGigya(eventObject)
     		//TPR-675 PART- A  starts
    		 var categoryId = $('input[name=gigya_product_root_category]').val();
    		 var title= response.commentTitle;
+   		 console.log("Review Count inside show comments ui   "+response);
    		 var overall= response.ratings._overall; 
    		 var fit = "not_applicable";
+   		 
 		 var ease_of_use = "not_applicable";
     		
     		if(categoryId  != "Electronics" )
@@ -142,13 +144,17 @@ function registerUserGigya(eventObject)
     			var quality= response.ratings.quality;
     			
     			var value_for_money= response.ratings.value_for_money;
+    			 
     			}
     	
     		if(categoryId == "Electronics"){
     			
     			var ease_of_use = response.ratings['Ease of use'];
+    			
     			var quality= response.ratings.Quality;
+    			
     			var value_for_money = response.ratings['Value for Money'];
+    			
     		}
     		  utag.link(
    					{"link_text": title.replace(/ /g,'_').toLowerCase() , "event_type" : "review_post" , "review_overall_rating" : overall , "review_quality" : quality ,
