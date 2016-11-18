@@ -57287,6 +57287,9 @@ div.radio.creditDebitLabelRadio{
     transition: position .3s;
 }
 header > .content .top.header_fix {position:fixed;}
+header > .content .top.header_fix .toggle{
+	margin-top:0px;
+}
 }
 /* TPR-1745 end */
 
