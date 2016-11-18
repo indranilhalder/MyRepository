@@ -282,17 +282,17 @@ tr.d0 td {
 																	</c:when>
 																</c:choose>
 															</c:forEach>
-															<c:choose>
+															<%-- <c:choose>
 															<c:when test="${not empty entry.cartLevelDisc && empty entry.productPerDiscDisplay}">
 																<!-- TPR-970 changes--><c:set var="totalPrice"  value="${entry.totalMrp.formattedValue}"/>
 																<!-- TPR-970 changes--><span id ="totalPrice_${entry.entryNumber}"  class="delSeat"><format:price priceData="${entry.totalMrp}"/></span>
 															</c:when>
-															</c:choose>
+															</c:choose> --%>
 															
-															<c:if test="${empty entry.cartLevelDisc && empty entry.productPerDiscDisplay}">
+															<%-- <c:if test="${empty entry.cartLevelDisc && empty entry.productPerDiscDisplay}">
 															<!-- TPR-970 changes--> <c:set var="totalPrice"  value="${entry.totalPrice.formattedValue}"/>
 														<!-- TPR-970 changes-->	<span id ="totalPrice_${entry.entryNumber}"  class="delSeat"><format:price priceData="${entry.totalPrice}"/></span>
-															 </c:if>
+															 </c:if>  --%>
 														</c:if>
 													</c:otherwise>
 								
