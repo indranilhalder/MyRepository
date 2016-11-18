@@ -1036,6 +1036,9 @@ public class GenericUtilityMethods
 		final List<String> pageSubCategories = new ArrayList<String>();
 		final List<String> pageSubcategoryNameL3List = new ArrayList<String>();
 		final List<String> adobeProductSkuList = new ArrayList<String>();
+		String productCatL1 = null;
+		String productCatL2 = null;
+		String productCatL3 = null;
 
 
 		try
@@ -1101,15 +1104,20 @@ public class GenericUtilityMethods
 						if (StringUtils.isNotEmpty(categoryName.toString()))
 						{
 							final String[] categoryNames = categoryName.toString().split(":");
-							category = appendQuote(categoryNames[2].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
+							//category = appendQuote(categoryNames[2].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
+							category = categoryNames[2].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase();
 							productCategoryList.add(category);
 
-							page_subCategory_name = appendQuote(categoryNames[1].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
-									.toLowerCase());
+							//page_subCategory_name = appendQuote(categoryNames[1].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
+							//	.toLowerCase());
+
+							page_subCategory_name = categoryNames[1].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase();
 							pageSubCategories.add(page_subCategory_name);
 
-							page_subcategory_name_L3 = appendQuote(categoryNames[0].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
-									.toLowerCase());
+							//page_subcategory_name_L3 = appendQuote(categoryNames[0].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
+							//	.toLowerCase());
+
+							page_subcategory_name_L3 = categoryNames[0].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase();
 							pageSubcategoryNameL3List.add(page_subcategory_name_L3);
 
 
@@ -1160,9 +1168,30 @@ public class GenericUtilityMethods
 				model.addAttribute("adobe_product", adobeProductSku);
 				model.addAttribute("cart_total", cartTotal);
 				//TPR-430
-				model.addAttribute("pageSubCategories", pageSubCategories);
-				model.addAttribute("productCategoryList", productCategoryList);
-				model.addAttribute("page_subcategory_name_L3", pageSubcategoryNameL3List);
+
+				if (CollectionUtils.isNotEmpty(pageSubCategories))
+				{
+					productCatL1 = StringUtils.join(pageSubCategories, ',');
+
+				}
+
+				if (CollectionUtils.isNotEmpty(productCategoryList))
+				{
+					productCatL2 = StringUtils.join(productCategoryList, ',');
+
+				}
+
+				if (CollectionUtils.isNotEmpty(pageSubcategoryNameL3List))
+				{
+					productCatL3 = StringUtils.join(pageSubcategoryNameL3List, ',');
+
+				}
+
+				model.addAttribute("pageSubCategories", productCatL1);
+				model.addAttribute("productCategoryList", productCatL2);
+				model.addAttribute("page_subcategory_name_L3", productCatL3);
+				//model.addAttribute("productCategoryList", productCategoryList);
+				//model.addAttribute("page_subcategory_name_L3", pageSubcategoryNameL3List);
 			}
 		}
 		catch (final Exception te)

@@ -29706,11 +29706,11 @@ padding:20px;
 
 /*best picks start*/
 #bestPicks, #productYouCare {
-padding: 0;
+	padding: 0;
     clear: both;
 }
 .home-best-pick-carousel{
-margin: 10px 0px;
+	margin: 10px 0px;
     text-align: center;
     padding: 0 40px;
     }
@@ -44732,10 +44732,10 @@ body.page-homepage .showcase .desc-section h2{
 	letter-spacing: normal;
 }
 .feature-collections #stayQued.qued .qued-content h3:nth-child(3){
-	text-transform: none;
-    margin: 0 0 40px;
-    line-height: 28px;
-    font-size: 28px;
+	text-transform: uppercase;
+    margin: 0 0 0;
+    line-height: 30px;
+    font-size: 26px;
 	}
 .feature-collections .qued .qued-content h3:nth-child(3){
 	margin: 0 0 40px;
@@ -44889,6 +44889,7 @@ body .account .right-account>ul.menu>li>div h2{
 body .account .right-account>ul.menu>li>div h2{
 	margin-bottom: 20px;
     font-size: 16px;
+    letter-spacing: normal;
 }
 body .account .right-account h2{
 	margin-bottom: 20px;
@@ -45270,6 +45271,7 @@ body.pageLabel-Footwear .feature-collections ul.collections li.chef .feature-col
 	body .account .right-account>ul.menu>li>div h2{
 	    font-size: 14px;
     	margin-bottom: 10px;
+    	letter-spacing: 1px;
 	}
 	.cart.wrapper .wishlist-banner h3, .confirmation .wishlist-banner h3{
 		text-align: left;
@@ -45450,6 +45452,120 @@ body.pageLabel-Footwear .feature-collections ul.collections li.chef .feature-col
 		 padding: 40px 0 55px;
 	}
 }
+/* Comment on 16/11/2016 starts IA*/
+.page-productDetails .trending h2 {
+	margin: 0;
+	font-weight: bold;
+	margin: 50px 0;
+}
+.page-productDetails .trending h2 span {
+	font-weight: bold;
+}
+ .listing-leftmenu h3.customPriceRange
+{
+    font-weight: bold;
+}
+.listing-leftmenu h3.customPriceRange{
+    text-transform: capitalize;
+    padding: 10px 0;
+    word-break: break-word;
+    padding-right: 15px;
+    letter-spacing: normal;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+body.template-pages-category-productGridPage .trending h2,body.template-pages-search-searchGridPage .trending h2{
+	margin-top: 35px;
+    margin-bottom: 35px;
+    height: 37px;
+}
+body.page-homepage .trending h2 > span{
+    font-weight: bold;
+    font-size: 28px;
+}
+.listing.wrapper .left-block .listing-leftmenu .facet.js-facet.AvailabilitySize h3{
+	font-size: inherit;
+    padding: 0;
+    text-transform: inherit !important;
+}
+.click2chat-container h2{
+	font-size: 24px;
+    margin-bottom: 15px;
+    line-height: 24px;
+    width: 100%;
+    float: right;
+}
+.send-email-container h2 {
+    font-size: 16px;
+}
+.click2chat-container.send-email-container h2 {
+    margin-bottom: 5px;
+}
+.chat h3, .call h3 {
+    height: 29px;
+    line-height: 29px;
+}
+@media(max-width:1024px){
+.page-productDetails .trending h2 {
+		border-top: 1px solid #ccc;
+		margin: 40px 25px 20px;
+		left: 0;
+		font-size: 24px;
+		padding: 25px 0 0;
+		transform: inherit;
+	}
+	.trending h2 span {
+		font-size: 24px;
+	}
+}
+@media(max-width:1200px) and (min-width:791px){
+	body.page-homepage .trending h2>span{
+		font-size: 15px;
+	}
+}
+@media(max-width:790px){
+.trending h2 span {
+    clear: both;
+    float: none;
+    text-align: center;
+    position: static;
+}
+.listing-leftmenu h3.customPriceRange{
+	padding-left: 38px;
+    background: #fff !important;
+}
+body.page-homepage .trending h2 {
+    margin-top: 5px;
+}
+body.page-homepage .trending h2>span{
+	font-size: 24px;
+}
+.click2chat-container h2{
+	font-size: 22px;
+}
+}
+@media(max-width:767px){
+.page-productDetails .trending h2 {		
+		margin: 20px 25px;		
+	}
+	.trending h2 span {		
+		font-size: 20px;		
+	}
+	.listing-leftmenu h3.customPriceRange{
+		padding-left: 20px;
+	}
+	body.template-pages-category-productGridPage .trending h2, body.template-pages-search-searchGridPage .trending h2{
+		margin-top: 20px;
+	}
+	body.page-homepage .trending h2 {
+    	margin-bottom: 30px;
+	}
+	body.page-homepage .trending h2>span {
+    	font-size: 20px !important;
+	}	
+}
+/* Comment on 16/11/2016 ends IA*/
+
 
 /* TPR-245 SEO Ends */
 
@@ -48134,6 +48250,10 @@ padding:0 40px;	}
 }
 .product-image-container.device .owl-carousel .owl-item img{
 padding:0;
+}
+   .product-info .picZoomer-pic-wp .zoom a:hover:before,  .product-image-container.device a.wishlist-icon:hover:before {
+	content: "\e602";
+	opacity: 1;
 }
 }
 @media(max-width:1024px) and (min-width:768px){
