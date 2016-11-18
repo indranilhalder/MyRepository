@@ -40,7 +40,7 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 	private static final Logger LOG = Logger.getLogger(ExtStockLevelPromotionCheckDaoImpl.class);
 
 	@Override
-	public Map<String, Integer> getPromoInvalidationModelMap(final String codes, final boolean sellerFlag)
+	public Map<String, Integer> getPromoInvalidationModelMap(final String codes, final String promoCode, final boolean sellerFlag)
 	{
 		// YTODO Auto-generated method stub
 		final Map<String, Integer> stockCodeMap = new HashMap<String, Integer>();
@@ -51,15 +51,16 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 			{
 				queryString = //
 				"select {b.ussid},SUM({b.usedUpCount}) from {" + LimitedStockPromoInvalidationModel._TYPECODE + " as b } "
-						+ " where {b.ussid} in (" + codes + ") group by {b.ussid}";
+						+ " where {b.promoCode}=?promoCode " + "  AND {b.ussid} in (" + codes + ") group by {b.ussid}";
 			}
 			else
 			{
 				queryString = //
 				"select {b.productCode},SUM({b.usedUpCount}) from {" + LimitedStockPromoInvalidationModel._TYPECODE + " as b } "
-						+ " where {b.productCode} in (" + codes + ") group by {b.productCode}";
+						+ " where {b.promoCode}=?promoCode " + " AND {b.productCode} in (" + codes + ") group by {b.productCode}";
 			}
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter("promoCode", promoCode);
 			query.setResultClassList(Arrays.asList(String.class, Integer.class));
 
 			final SearchResult<List<Object>> result = search(query);
@@ -78,7 +79,7 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 		catch (final FlexibleSearchException e)
 		{
 			LOG.error("error in search query" + e);
-			//	throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
 		}
 		catch (final UnknownIdentifierException e)
 		{
@@ -87,10 +88,12 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 		catch (final EtailNonBusinessExceptions e)
 		{
 			LOG.error("exception getching the quantity count details aginst product/ussid" + e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
 		}
 		catch (final Exception e)
 		{
 			LOG.error(e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
 		}
 		return stockCodeMap;
 

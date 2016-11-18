@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public interface ExtStockLevelPromotionCheckDao
 {
-	public Map<String, Integer> getPromoInvalidationModelMap(final String codes, final boolean sellerFlag);
+	public Map<String, Integer> getPromoInvalidationModelMap(final String codes, String promoCode, final boolean sellerFlag);
 
 	public List<LimitedStockPromoInvalidationModel> getPromoInvalidationList(final String guid);
 }

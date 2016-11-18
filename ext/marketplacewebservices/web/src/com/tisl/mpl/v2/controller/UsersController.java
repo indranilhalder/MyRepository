@@ -142,11 +142,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.tisl.mpl.constants.GeneratedMarketplacecommerceservicesConstants.Enumerations.SellerAssociationStatusEnum;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.constants.YcommercewebservicesConstants;
-import com.tisl.mpl.core.enums.FeedbackArea;
-import com.tisl.mpl.core.enums.Frequency;
+import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.Frequency;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.EMIBankModel;
@@ -156,7 +156,6 @@ import com.tisl.mpl.data.NotificationData;
 import com.tisl.mpl.data.ReturnLogisticsResponseData;
 import com.tisl.mpl.data.ReturnLogisticsResponseDetails;
 import com.tisl.mpl.data.WishlistData;
-import com.tisl.mpl.enums.SellerAssociationStatusEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
@@ -5158,7 +5157,7 @@ public class UsersController extends BaseCommerceController
 	 */
 	private List<String> getFrequency()
 	{
-		final List<EnumerationValueModel> enumList = mplEnumerationHelper.getEnumerationValuesForCode(Frequency._TYPECODE);
+		final List<EnumerationValueModel> enumList = mplEnumerationHelper.getEnumerationValuesForCode("Frequency");
 		final List<String> frequency = new ArrayList<String>();
 		for (final EnumerationValueModel enumerationValueModel : enumList)
 		{
@@ -5178,7 +5177,7 @@ public class UsersController extends BaseCommerceController
 	 */
 	private List<String> getFeedbackArea()
 	{
-		final List<EnumerationValueModel> enumList = mplEnumerationHelper.getEnumerationValuesForCode(FeedbackArea._TYPECODE);
+		final List<EnumerationValueModel> enumList = mplEnumerationHelper.getEnumerationValuesForCode("FeedbackArea");
 		final List<String> feedbackAreaList = new ArrayList<String>();
 		for (final EnumerationValueModel enumerationValueModel : enumList)
 		{
@@ -5706,9 +5705,10 @@ public class UsersController extends BaseCommerceController
 	public @ResponseBody MplUserResultWsDto initiateRefund(@PathVariable final String emailId,
 			@RequestParam final String orderCode, @RequestParam final String reasonCode, @RequestParam final String ticketTypeCode,
 			@RequestParam final String ussid, @RequestParam final String refundType, @RequestParam final String transactionId,
-			@RequestParam final String addressLane1, @RequestParam final String addressLane2, @RequestParam final String countryIso,
-			@RequestParam final String city, @RequestParam final String state, @RequestParam final String landmark,
-			@RequestParam final String pincode)
+			@RequestParam(required = false) final String addressLane1, @RequestParam(required = false) final String addressLane2,
+			@RequestParam(required = false) final String countryIso, @RequestParam(required = false) final String city,
+			@RequestParam(required = false) final String state, @RequestParam(required = false) final String landmark,
+			@RequestParam(required = false) final String pincode)
 	{
 		final MplUserResultWsDto output = new MplUserResultWsDto();
 		boolean resultFlag = false;
@@ -6862,37 +6862,30 @@ public class UsersController extends BaseCommerceController
 	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
 	@RequestMapping(value = "/{userId}/returnPincode", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public ReturnPincodeDTO returnPincodeServiceability(@RequestParam final String firstName, @RequestParam final String lastName,
-			@RequestParam final String addressLane1, @RequestParam final String addressLane2, @RequestParam final String countryIso,
-			@RequestParam final String city, @RequestParam final String state, @RequestParam final String landmark,
-			@RequestParam final String mobileNo, @RequestParam final String pincode, @RequestParam final String orderCode,
-			@RequestParam final String USSID, @RequestParam final String ticketTypeCode, @RequestParam final String transactionId,
-			@RequestParam final String reasonCode, @RequestParam final String refundType) throws EtailNonBusinessExceptions
+	public ReturnPincodeDTO returnPincodeServiceability(@RequestParam final String pincode, @RequestParam final String orderCode,
+			@RequestParam final String USSID, @RequestParam final String transactionId) throws EtailNonBusinessExceptions
 	{
 
 		final ReturnPincodeDTO returnPincodeDTO = new ReturnPincodeDTO();
-		List<OrderModel> subOrderModels = null;
-		OrderModel subOrderModel = null;
-		OrderModel subOrderModelVersioned = null;
+		//final List<OrderModel> subOrderModels = null;
+		//OrderModel subOrderModel = null;
+		//	OrderModel subOrderModelVersioned = null;
 		ReturnPincodeDTO returnPincodeAvailDTO = null;
-		final ReturnItemAddressData returnItemAddressData = new ReturnItemAddressData();
+		//final ReturnItemAddressData returnItemAddressData = new ReturnItemAddressData();
 		try
 		{
 			OrderEntryData orderEntry = new OrderEntryData();
 			final OrderData orderDetails = orderFacade.getOrderDetailsForCode(orderCode);
 			List<OrderEntryData> returnOrderEntry = new ArrayList<OrderEntryData>();
 			final Map<String, List<OrderEntryData>> returnProductMap = new HashMap<>();
-			returnItemAddressData.setAddressLane1(addressLane1);
-			returnItemAddressData.setAddressLane2(addressLane2);
-			returnItemAddressData.setCity(city);
-			returnItemAddressData.setCountry(countryIso);
-			returnItemAddressData.setState(state);
-			returnItemAddressData.setLandmark(landmark);
-			returnItemAddressData.setPincode(pincode);
-			returnItemAddressData.setMobileNo(mobileNo);
-			returnItemAddressData.setFirstName(firstName);
-			returnItemAddressData.setLastName(lastName);
-			final CustomerData customerData = customerFacade.getCurrentCustomer();
+			/*
+			 * returnItemAddressData.setAddressLane1(addressLane1); returnItemAddressData.setAddressLane2(addressLane2);
+			 * returnItemAddressData.setCity(city); returnItemAddressData.setCountry(countryIso);
+			 * returnItemAddressData.setState(state); returnItemAddressData.setLandmark(landmark);
+			 * returnItemAddressData.setPincode(pincode); returnItemAddressData.setMobileNo(mobileNo);
+			 * returnItemAddressData.setFirstName(firstName); returnItemAddressData.setLastName(lastName);
+			 */
+			//final CustomerData customerData = customerFacade.getCurrentCustomer();
 			final List<OrderEntryData> subOrderEntries = orderDetails.getEntries();
 			for (final OrderEntryData entry : subOrderEntries)
 			{
@@ -6910,18 +6903,11 @@ public class UsersController extends BaseCommerceController
 				}
 			}
 
-			subOrderModels = orderModelService.getOrders(orderCode);
-			for (final OrderModel subOrder : subOrderModels)
-			{
-				if (subOrder.getVersionID() != null)
-				{
-					subOrderModelVersioned = subOrder;
-				}
-				if (subOrder.getVersionID() == null)
-				{
-					subOrderModel = subOrder;
-				}
-			}
+			/*
+			 * subOrderModels = orderModelService.getOrders(orderCode); for (final OrderModel subOrder : subOrderModels) {
+			 * if (subOrder.getVersionID() != null) { subOrderModelVersioned = subOrder; } if (subOrder.getVersionID() ==
+			 * null) { subOrderModel = subOrder; } }
+			 */
 
 			boolean returnLogisticsCheck = true;
 			for (final ConsignmentData consignmentData : orderDetails.getConsignments())
@@ -6960,8 +6946,7 @@ public class UsersController extends BaseCommerceController
 
 				}
 			}
-			final boolean ticketCreationStatus = cancelReturnFacadeimpl.createTicketInCRM(orderDetails, orderEntry, ticketTypeCode,
-					reasonCode, refundType, USSID, customerData, subOrderModel, returnLogisticsCheck);
+
 		}
 
 		//returnPincodeDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
@@ -7013,12 +6998,13 @@ public class UsersController extends BaseCommerceController
 	@RequestMapping(value = "/{userId}/returnProductDetails", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public ReturnRequestDTO returnProductDetails(@RequestParam final String orderCode, @RequestParam final String USSID,
-			@RequestParam final String transactionId, @RequestParam final String returnCancelFlag) throws EtailNonBusinessExceptions
+			@RequestParam final String transactionId) throws EtailNonBusinessExceptions
 	{
 		final ReturnRequestDTO returnRequestDTO = new ReturnRequestDTO();
 		ReturnReasonDetails returnReasonData = null;
 		ReturnReasonDTO reasonDto = new ReturnReasonDTO();
 		final List<ReturnReasonDTO> returnReasondtolist = new ArrayList<ReturnReasonDTO>();
+		final String returnCancelFlag = "R";
 		//final OrderProductWsDTO orderProductWsDto = new OrderProductWsDTO();
 		try
 		{

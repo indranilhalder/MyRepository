@@ -143,13 +143,7 @@ public class LimitedStockPromotion extends GeneratedLimitedStockPromotion
 				//getting the valid products
 				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager()
 						.getValidEntriesForStockLevelPromo(order, paramSessionContext, promotionProductList, promotionCategoryList,
-								restrictionList, excludedProductList, excludeManufactureList, getMaxStockCount().intValue()/*
-																																						  * ,
-																																						  * null
-																																						  * ,
-																																						  * null
-																																						  */); // Adding Eligible Products to List
-
+								restrictionList, excludedProductList, excludeManufactureList, getMaxStockCount().intValue(), getCode());
 				if (!getDefaultPromotionsManager().promotionAlreadyFired(paramSessionContext, validProductUssidMap))
 				{
 					isMultipleSeller = getMplPromotionHelper().checkMultipleSeller(restrictionList);
@@ -271,6 +265,8 @@ public class LimitedStockPromotion extends GeneratedLimitedStockPromotion
 
 			boolean flagForDeliveryModeRestrEval = false;
 			boolean flagForPaymentModeRestrEval = false;
+			final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList,
+					order);
 			boolean isPercentageDisc = false;
 			final double maxDiscount = getMaxDiscountVal() == null ? 0.0D : getMaxDiscountVal().doubleValue(); //Adding the Promotion set Max  Discount Value to a variable
 			final Double discountPrice = getPriceForOrder(paramSessionContext, getDiscountPrices(paramSessionContext), order,
@@ -305,7 +301,7 @@ public class LimitedStockPromotion extends GeneratedLimitedStockPromotion
 			final int totalFactorCount = totalCount;
 
 			final Map<String, Integer> validProductList = getDefaultPromotionsManager().getProductUssidMapForStockPromo(
-					validProductUssidMap, eligibleQuantity, paramSessionContext, restrictionList);
+					validProductUssidMap, eligibleQuantity, paramSessionContext, restrictionList, getCode());
 
 			validProductFinalList.putAll(validProductList);
 			validProductUssidFinalMap.putAll(validProductUssidMap);
@@ -324,7 +320,7 @@ public class LimitedStockPromotion extends GeneratedLimitedStockPromotion
 			flagForPaymentModeRestrEval = getDefaultPromotionsManager()
 					.getPaymentModeRestrEval(restrictionList, paramSessionContext);
 
-			if (flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval) // If Total no of valid Products exceeds Qualifying Count
+			if (flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval && flagForPincodeRestriction) // If Total no of valid Products exceeds Qualifying Count
 			{
 				int totalValidProdCount = 0;
 				for (final String key : validProductList.keySet())

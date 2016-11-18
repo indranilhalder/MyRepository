@@ -29,17 +29,18 @@ public class ExtStockLevelPromotionCheckServiceImpl implements ExtStockLevelProm
 
 
 	@Override
-	public Map<String, Integer> getCumulativeStockMap(final String codes, final boolean sellerFlag)
+	public Map<String, Integer> getCumulativeStockMap(final String codes, final String promoCode, final boolean sellerFlag)
 	{
 		// YTODO Auto-generated method stub
-		final Map<String, Integer> cumualatibveStockMap = stockPromoCheckDao.getPromoInvalidationModelMap(codes, sellerFlag);
+		final Map<String, Integer> cumualatibveStockMap = stockPromoCheckDao.getPromoInvalidationModelMap(codes, promoCode,
+				sellerFlag);
 		return cumualatibveStockMap;
 	}
 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExtStockLevelPromotionCheckService#getPromoInvalidationList(java
 	 * .lang.String)

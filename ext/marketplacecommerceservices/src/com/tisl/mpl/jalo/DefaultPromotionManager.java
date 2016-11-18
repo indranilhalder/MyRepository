@@ -3521,10 +3521,11 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param validEntries
 	 * @param ctx
 	 * @param qCountMap
+	 * @param code
 	 * @return validProdUssidSet
 	 */
 	public Set<String> doConsumeEntriesForStockPromo(final List<AbstractOrderEntry> validEntries, final int stockLevel,
-			final SessionContext ctx, final Map<String, Integer> qCountMap)
+			final SessionContext ctx, final Map<String, Integer> qCountMap, final String code)
 	{
 
 		final Set<String> validProdUssidSet = new HashSet<String>();
@@ -3548,7 +3549,7 @@ public class DefaultPromotionManager extends PromotionsManager
 			validProdUssidSet.add(selectedUSSID);
 			final String ussid = MarketplacecommerceservicesConstants.INVERTED_COMMA + selectedUSSID
 					+ MarketplacecommerceservicesConstants.INVERTED_COMMA;
-			final Map<String, Integer> stockMap = stockPromoCheckService.getCumulativeStockMap(ussid, true);
+			final Map<String, Integer> stockMap = stockPromoCheckService.getCumulativeStockMap(ussid, code, true);
 			final Integer stockQuantity = stockMap.get(selectedUSSID);
 
 			if (stockMap.isEmpty())
@@ -3577,11 +3578,12 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param eligibleQty
 	 * @param paramSessionContext
 	 * @param restrictionList
+	 * @param code
 	 * @return validUssidList
 	 */
 	Map<String, Integer> getProductUssidMapForStockPromo(final Map<String, AbstractOrderEntry> validProductUssidMap,
 			final int stockLevelCount, final SessionContext paramSessionContext,
-			final List<AbstractPromotionRestriction> restrictionList)
+			final List<AbstractPromotionRestriction> restrictionList, final String code)
 	{
 		final Map<String, Integer> validUssidList = new HashMap<String, Integer>();
 		//		final int totalFactorCount = totalCount / (int) eligibleQty;
@@ -3589,19 +3591,20 @@ public class DefaultPromotionManager extends PromotionsManager
 
 		validProductUssidMap.keySet().retainAll(
 				populateStockOfSortedValidProdUssidMap(validProductUssidMap, stockLevelCount, paramSessionContext, restrictionList,
-						validUssidList, true));
+						validUssidList, code, true));
 		return validUssidList;
 	}
 
 	/**
 	 * @Description: For populating sorted valid product, ussid map
 	 * @param validProductUssidTempMap
+	 * @param code
 	 * @param isStockPromo
 	 * @return mapping of valid ussids
 	 */
 	public Set<String> populateStockOfSortedValidProdUssidMap(final Map<String, AbstractOrderEntry> validProductUssidTempMap,
 			final int totalEligibleCount, final SessionContext ctx, final List<AbstractPromotionRestriction> restrictionList,
-			final Map<String, Integer> qCountMap, final boolean isStockPromo)
+			final Map<String, Integer> qCountMap, final String code, final boolean isStockPromo)
 	{
 		List<AbstractOrderEntry> validEntries = null;
 		if (validProductUssidTempMap != null)
@@ -3630,7 +3633,7 @@ public class DefaultPromotionManager extends PromotionsManager
 		else
 
 		{
-			return doConsumeEntriesForStockPromo(validEntries, totalEligibleCount, ctx, qCountMap);
+			return doConsumeEntriesForStockPromo(validEntries, totalEligibleCount, ctx, qCountMap, code);
 		}
 
 	}
@@ -3671,6 +3674,7 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param promotionCategoryList
 	 * @param restrictionList
 	 * @param stockCount
+	 * @param code
 	 * @return validProductUssidMap
 	 * @throws JaloInvalidParameterException
 	 * @throws JaloSecurityException
@@ -3678,8 +3682,8 @@ public class DefaultPromotionManager extends PromotionsManager
 	public Map<String, AbstractOrderEntry> getValidEntriesForStockLevelPromo(final AbstractOrder cart,
 			final SessionContext paramSessionContext, final List<Product> promotionProductList,
 			final List<Category> promotionCategoryList, final List<AbstractPromotionRestriction> restrictionList,
-			final List<Product> excludedProductList, final List<String> excludeManufactureList, final int stockCount)
-			throws JaloInvalidParameterException, JaloSecurityException
+			final List<Product> excludedProductList, final List<String> excludeManufactureList, final int stockCount,
+			final String code) throws JaloInvalidParameterException, JaloSecurityException
 	{
 		Map<String, Integer> stockCountMap = new HashMap<String, Integer>();
 		final Map<String, AbstractOrderEntry> validProductUssidMap = new HashMap<String, AbstractOrderEntry>();
@@ -3709,26 +3713,26 @@ public class DefaultPromotionManager extends PromotionsManager
 				{
 					isSellerRestricPresent = true;
 					stockCountMap = stockPromoCheckService.getCumulativeStockMap(
-							ussidIds.toString().substring(0, ussidIds.lastIndexOf(",")), true);
+							ussidIds.toString().substring(0, ussidIds.lastIndexOf(",")), code, true);
 				}
 				if (restriction instanceof EtailExcludeSellerSpecificRestriction)
 				{
 					isSellerRestricPresent = true;
 					stockCountMap = stockPromoCheckService.getCumulativeStockMap(
-							ussidIds.toString().substring(0, ussidIds.lastIndexOf(",")), true);
+							ussidIds.toString().substring(0, ussidIds.lastIndexOf(",")), code, true);
 				}
 			}
 			if (!isSellerRestricPresent && CollectionUtils.isNotEmpty(restrictionList))
 			{
 				stockCountMap = stockPromoCheckService.getCumulativeStockMap(
-						productCodes.toString().substring(0, productCodes.lastIndexOf(",")), false);
+						productCodes.toString().substring(0, productCodes.lastIndexOf(",")), code, false);
 			}
 
 		}
 		else
 		{
 			stockCountMap = stockPromoCheckService.getCumulativeStockMap(
-					productCodes.toString().substring(0, productCodes.lastIndexOf(",")), false);
+					productCodes.toString().substring(0, productCodes.lastIndexOf(",")), code, false);
 		}
 		for (final AbstractOrderEntry entry : cart.getEntries())
 		{

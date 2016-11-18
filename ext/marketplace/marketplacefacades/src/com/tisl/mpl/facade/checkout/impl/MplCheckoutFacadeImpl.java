@@ -98,12 +98,13 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.EtailExcludeSellerSpecificRestrictionModel;
 import com.tisl.mpl.model.EtailSellerSpecificRestrictionModel;
+import com.tisl.mpl.model.LimitedStockPromotionModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.promotion.service.SellerBasedPromotionService;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.sns.push.service.impl.MplSNSMobilePushServiceImpl;
 import com.tisl.mpl.wsdto.PushNotificationData;
-import com.tisl.mpl.model.LimitedStockPromotionModel;
+
 
 /**
  * @author TCS
@@ -308,15 +309,15 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 * 
+	 *
 	 * @param deliveryCode
-	 * 
+	 *
 	 * @param currencyIsoCode
-	 * 
+	 *
 	 * @param sellerArticleSKU
-	 * 
+	 *
 	 * @return MplZoneDeliveryModeValueModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -352,13 +353,13 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description modified from DefaultAcceleratorCheckoutFacade performExpressCheckout : TIS 391
-	 * 
+	 *
 	 * @ Selected Address set for express checkout
-	 * 
+	 *
 	 * @param addressId
-	 * 
+	 *
 	 * @return ExpressCheckoutResult
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions,Exception
 	 */
 	@Override
@@ -388,7 +389,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @Desc if express checkout is enabled for the store
-	 * 
+	 *
 	 * @return boolean
 	 */
 
@@ -406,11 +407,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description setting address for express checkout : TIS 391
-	 * 
+	 *
 	 * @param addressId
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions,Exception
 	 */
 	private boolean setDefaultDeliveryAddressForCheckout(final String addressId) throws EtailNonBusinessExceptions
@@ -441,11 +442,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description Re calculating cart delivery cost: TIS 400
-	 * 
+	 *
 	 * @param addressId
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -568,13 +569,13 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description Storing delivery cost while navigating from Delivery mode to address selection : TIS 400 TISEE-581
-	 * 
+	 *
 	 * @param finalDeliveryCost
-	 * 
+	 *
 	 * @param deliveryCostPromotionMap
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -786,11 +787,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @Desc to check pincode inventory for Pay now TIS 414
-	 * 
+	 *
 	 * @param cartData
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -859,11 +860,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @ Desc to check promotion expired or not for Pay now : TIS 414
-	 * 
+	 *
 	 * @param cartData
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -1023,7 +1024,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.checkout.MplCheckoutFacade#placeOrder(java.lang.String)
 	 */
 	@Override
@@ -1206,7 +1207,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.facade.checkout.MplCheckoutFacade#triggerEmailAndSmsOnOrderConfirmation(de.hybris.platform.core.model
 	 * .order.OrderModel)
@@ -1259,15 +1260,15 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @desc use to save freebie delivery mode
-	 * 
+	 *
 	 * @param cartModel
-	 * 
+	 *
 	 * @param freebieModelMap
-	 * 
+	 *
 	 * @param freebieParentQtyMap
-	 * 
+	 *
 	 * @return void
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -1280,11 +1281,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @Description to check coupon expired or not for Pay now
-	 * 
+	 *
 	 * @param cartData
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -1804,8 +1805,6 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	 * @param collection
 	 * @return isStockPromoValid
 	 */
-	//	public boolean checkIsStockPromoValid(final AbstractPromotionModel promoModel, final AbstractOrderModel cartModel,
-	//			final Collection<PromotionOrderEntryConsumedModel> consumedEntries)
 	public boolean checkIsStockPromoValid(final AbstractPromotionModel promoModel, final AbstractOrderModel cartModel)
 	{
 		boolean isStockPromoValid = true;
@@ -1837,26 +1836,26 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 				{
 					isSellerRestricPresent = true;
 					stockCountMap = stockPromoCheckService.getCumulativeStockMap(
-							ussidIds.toString().substring(0, ussidIds.lastIndexOf(",")), true);
+							ussidIds.toString().substring(0, ussidIds.lastIndexOf(",")), stockPromo.getCode(), true);
 				}
 				if (restriction instanceof EtailExcludeSellerSpecificRestrictionModel)
 				{
 					isSellerRestricPresent = true;
 					stockCountMap = stockPromoCheckService.getCumulativeStockMap(
-							ussidIds.toString().substring(0, ussidIds.lastIndexOf(",")), true);
+							ussidIds.toString().substring(0, ussidIds.lastIndexOf(",")), stockPromo.getCode(), true);
 				}
 			}
 			if (!isSellerRestricPresent && CollectionUtils.isNotEmpty(restrictionList))
 			{
 				stockCountMap = stockPromoCheckService.getCumulativeStockMap(
-						productCodes.toString().substring(0, productCodes.lastIndexOf(",")), false);
+						productCodes.toString().substring(0, productCodes.lastIndexOf(",")), stockPromo.getCode(), false);
 			}
 
 		}
 		else
 		{
 			stockCountMap = stockPromoCheckService.getCumulativeStockMap(
-					productCodes.toString().substring(0, productCodes.lastIndexOf(",")), false);
+					productCodes.toString().substring(0, productCodes.lastIndexOf(",")), stockPromo.getCode(), false);
 		}
 
 		for (final AbstractOrderEntryModel entry : cartModel.getEntries())
@@ -1886,20 +1885,13 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	}
 
-
-
-
 	/**
 	 * TPR-965
 	 *
-	 * @param productCode
-	 * @param selectedUssid
-	 * @param ussid
-	 * @param productCode
-	 * @param stockCountMap
+	 * @param existingStockCount
 	 * @param stockCount
 	 * @param quantity
-	 * @param q
+	 * @param qualifyingCount
 	 */
 	private boolean isStockPromoApplicable(final int existingStockCount, final int stockCount, final int quantity,
 			final Integer qualifyingCount)
