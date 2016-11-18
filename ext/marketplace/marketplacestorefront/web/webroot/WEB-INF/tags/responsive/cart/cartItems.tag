@@ -172,7 +172,7 @@ tr.d0 td {
 								<input type="hidden" name="stock" value="${stock}" />
 								<div class="undo-text-wrapper">
 								<p><spring:theme code="mpl.myBag.product.remove.text"/></p>
-								<h4><spring:theme code="mpl.myBag.product.remove.removed"/></h4>
+								<h2><spring:theme code="mpl.myBag.product.remove.removed"/></h2>
 								<button class="undo-add-to-cart"><spring:theme code="mpl.myBag.product.remove.undo"/></button>
 								</div>
 								</form:form>
@@ -706,9 +706,9 @@ tr.d0 td {
 											<!-- Modal content-->
 											<div class="modal-header">
 												<button type="button" class="close" data-dismiss="modal"aria-hidden="true">&times;</button>
-												<h4 class="modal-title" id="myModalLabel">
+												<h2 class="modal-title" id="myModalLabel">
 													<b> <spring:theme code="cart.modal.my.wishlist"/></b>
-												</h4>
+												</h2>
 											</div>
 											<div class="modal-body" id="modelId"></div>
 											<div class="modal-footer">												
@@ -1084,9 +1084,9 @@ tr.d0 td {
 											<!-- Modal content-->
 											<div class="modal-header">
 												<button type="button" class="close" data-dismiss="modal"aria-hidden="true">&times;</button>
-												<h4 class="modal-title" id="myModalLabel">
+												<h2 class="modal-title" id="myModalLabel">
 													<b> <spring:theme code="cart.modal.my.wishlist"/></b>
-												</h4>
+												</h2>
 											</div>
 											<div class="modal-body" id="modelId"></div>
 											<div class="modal-footer">												
