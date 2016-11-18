@@ -26,6 +26,11 @@
 					<td><cockpit code="property" value="ProductCarouselComponent.autoplayTimeoutNewIn"/></td>
 					<td><div style="height:6px"/></td>
 				</tr>
+				<tr>
+					<td><cockpit code="property" value="ProductCarouselComponent.autoPlayNewIn"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				
 			</tbody>
 		</table>
 	]]>

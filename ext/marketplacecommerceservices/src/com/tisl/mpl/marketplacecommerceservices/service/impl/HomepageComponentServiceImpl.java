@@ -166,6 +166,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 							}
 						}
 					}
+					bestPicks.put("autoPlay", bestPickCarouselComponent.getAutoPlay());
 					bestPicks.put("slideBy", bestPickCarouselComponent.getSlideBy());
 					bestPicks.put("autoplayTimeout", bestPickCarouselComponent.getAutoplayTimeout());
 					bestPicks.put("subItems", subComponentJsonArray);
@@ -200,6 +201,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 		String imageName = MarketplacecommerceservicesConstants.EMPTY;
 		Integer slideBy = null;
 		Integer autoplayTimeout = null;
+		Boolean autoPlay = null;
 
 		final JSONArray subComponentJsonArray = new JSONArray();
 
@@ -229,6 +231,11 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 
 						autoplayTimeout = productYouCareCarouselComponent.getAutoplayTimeout();
 
+					}
+
+					if (productYouCareCarouselComponent.getAutoPlay() != null)
+					{
+						autoPlay = productYouCareCarouselComponent.getAutoPlay();
 					}
 
 
@@ -273,6 +280,11 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 
 						autoplayTimeout = productYouCareCarouselComponent.getAutoplayTimeout();
 
+					}
+
+					if (productYouCareCarouselComponent.getAutoPlay() != null)
+					{
+						autoPlay = productYouCareCarouselComponent.getAutoPlay();
 					}
 
 					if (CollectionUtils.isNotEmpty(productYouCareCarouselComponent.getCategories()))
@@ -324,6 +336,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 							}
 
 						}
+						productYouCare.put("autoPlay", autoPlay);
 						productYouCare.put("slideBy", slideBy);
 						productYouCare.put("autoplayTimeout", autoplayTimeout);
 						productYouCare.put(TITLE, title);
