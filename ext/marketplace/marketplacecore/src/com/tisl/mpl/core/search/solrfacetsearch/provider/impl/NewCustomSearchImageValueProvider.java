@@ -42,8 +42,8 @@ import com.tils.mpl.media.MplMediaService;
  */
 @SuppressWarnings(
 { "PMD" })
-public class NewCustomSearchImageValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider,
-		Serializable
+public class NewCustomSearchImageValueProvider extends AbstractPropertyFieldValueProvider
+		implements FieldValueProvider, Serializable
 {
 
 	@Autowired
@@ -137,8 +137,8 @@ public class NewCustomSearchImageValueProvider extends AbstractPropertyFieldValu
 		}
 		catch (final Exception e) /* added part of value provider go through */
 		{
-			throw new FieldValueProviderException("Cannot evaluate " + indexedProperty.getName() + " using "
-					+ super.getClass().getName() + "exception" + e, e);
+			throw new FieldValueProviderException(
+					"Cannot evaluate " + indexedProperty.getName() + " using " + super.getClass().getName() + "exception" + e, e);
 		}
 		return Collections.emptyList();
 	}
@@ -167,8 +167,8 @@ public class NewCustomSearchImageValueProvider extends AbstractPropertyFieldValu
 						int numberOfHosts;
 						if (configurationService.getConfiguration().getString("search.media.numberofhosts") != null)
 						{
-							numberOfHosts = Integer.parseInt(String.valueOf(configurationService.getConfiguration().getString(
-									"search.media.numberofhosts")));
+							numberOfHosts = Integer.parseInt(
+									String.valueOf(configurationService.getConfiguration().getString("search.media.numberofhosts")));
 						}
 						else
 						{
@@ -205,9 +205,6 @@ public class NewCustomSearchImageValueProvider extends AbstractPropertyFieldValu
 					}
 					return media;
 				}
-
-
-
 				catch (final ModelNotFoundException localModelNotFoundException)
 				{
 
@@ -224,7 +221,7 @@ public class NewCustomSearchImageValueProvider extends AbstractPropertyFieldValu
 				/*
 				 * final MediaModel firstMedia = getMediaContainerService().getMediaForFormat(firstMediaContainerModel,
 				 * mediaFormat); if (firstMedia != null) {
-				 * 
+				 *
 				 * return firstMedia; }
 				 */
 			}
