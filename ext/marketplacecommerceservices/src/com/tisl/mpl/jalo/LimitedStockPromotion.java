@@ -98,7 +98,7 @@ public class LimitedStockPromotion extends GeneratedLimitedStockPromotion
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.promotions.jalo.AbstractPromotion#evaluate(de.hybris.platform.jalo.SessionContext,
 	 * de.hybris.platform.promotions.result.PromotionEvaluationContext)
 	 */
@@ -143,13 +143,7 @@ public class LimitedStockPromotion extends GeneratedLimitedStockPromotion
 				//getting the valid products
 				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager()
 						.getValidEntriesForStockLevelPromo(order, paramSessionContext, promotionProductList, promotionCategoryList,
-								restrictionList, excludedProductList, excludeManufactureList, getMaxStockCount().intValue()/*
-																																						  * ,
-																																						  * null
-																																						  * ,
-																																						  * null
-																																						  */); // Adding Eligible Products to List
-
+								restrictionList, excludedProductList, excludeManufactureList, getMaxStockCount().intValue(), getCode());
 				if (!getDefaultPromotionsManager().promotionAlreadyFired(paramSessionContext, validProductUssidMap))
 				{
 					isMultipleSeller = getMplPromotionHelper().checkMultipleSeller(restrictionList);
@@ -305,7 +299,7 @@ public class LimitedStockPromotion extends GeneratedLimitedStockPromotion
 			final int totalFactorCount = totalCount;
 
 			final Map<String, Integer> validProductList = getDefaultPromotionsManager().getProductUssidMapForStockPromo(
-					validProductUssidMap, eligibleQuantity, paramSessionContext, restrictionList);
+					validProductUssidMap, eligibleQuantity, paramSessionContext, restrictionList, getCode());
 
 			validProductFinalList.putAll(validProductList);
 			validProductUssidFinalMap.putAll(validProductUssidMap);
@@ -701,7 +695,7 @@ public class LimitedStockPromotion extends GeneratedLimitedStockPromotion
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.promotions.jalo.AbstractPromotion#getResultDescription(de.hybris.platform.jalo.SessionContext,
 	 * de.hybris.platform.promotions.jalo.PromotionResult, java.util.Locale)
@@ -725,7 +719,7 @@ public class LimitedStockPromotion extends GeneratedLimitedStockPromotion
 	}
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.promotions.jalo.GeneratedAbstractPromotion#setRestrictions(de.hybris.platform.jalo.
 	 * SessionContext, java.util.Collection)
 	 */
