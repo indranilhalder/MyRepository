@@ -1056,7 +1056,9 @@ public final class HybrisDataConverter
 			udo.addArrayValues("product_category", productCategoryList);
 			udo.addArrayValues("page_subcategory_name", pageSubCategories);
 			udo.addArrayValues("page_subcategory_name_L3", pageSubcategoryNameL3List);
+			if(user_login_type != null){
 			udo.setValue("user_login_type", user_login_type);
+			}
 			scriptString = tealiumHelper.outputFullHtml(udo);
 		}
 		catch (final Exception e)
@@ -1331,8 +1333,9 @@ public final class HybrisDataConverter
 			udo.setValue("product_category", productCategoryListText);
 			udo.setValue("page_subcategory_name", pageSubCategoriesText);
 			udo.setValue("page_subcategory_name_L3", pageSubcategoryNameL3ListText);
-
+			if(user_login_type != null){
 			udo.setValue("user_login_type", user_login_type);
+			}
 			scriptString = tealiumHelper.outputFullHtml(udo);
 		}
 		catch (final Exception e)

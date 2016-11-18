@@ -443,9 +443,9 @@
 			<div class="modal-content">
 				<!-- Dynamically Insert Content Here -->
 				<div class="modal-header">
-				<h4 class="modal-title">
+				<h2 class="modal-title">
 					<spring:theme code="myaccount.review.deletemsg"/>  
-				</h4> 
+				</h2> 
 				
 				<button class="deleteReviewConfirmation" type="submit" onclick="deleteReview();"><spring:theme code="text.wishlist.yes" /></button>
 					<a class="close deleteReviewConfirmationNo" href="#nogo" onclick="closeModal(this);"><spring:theme code="text.wishlist.no" /></a>
@@ -460,9 +460,9 @@
 			<div class="modal-content">
 				<!-- Dynamically Insert Content Here -->
 				<div class="modal-header">
-				<h4 class="modal-title">
+				<h2 class="modal-title">
 					<spring:theme code="myaccount.review.updatemsg"/>  
-				</h4> 
+				</h2> 
 				
 				<button class="updateReviewConfirmation" type="submit"><spring:theme code="text.wishlist.yes" /></button>
 			    <a class="close updateReviewConfirmationNo" href="#nogo" onclick="closeModal(this);"><spring:theme code="text.wishlist.no" /></a>
@@ -475,9 +475,9 @@
 <div id="reviewPluginContainer" style="display: none;" class="modal fade">
 			<div class="modal-content content" style="background-color:#fff;margin:0 auto;">
 				<div class="modal-header">
-				<h4 class="modal-title">
+				<h2 class="modal-title">
 					<spring:theme code="myaccount.review.editpopuptitle"/> <span class="popUpProductTitle"></span> 
-				</h4> 
+				</h2> 
 				</div>
 				<div class="commentcontent" style="width:100%;padding: 5px;">
 				<input type="hidden" name="user_logged">
