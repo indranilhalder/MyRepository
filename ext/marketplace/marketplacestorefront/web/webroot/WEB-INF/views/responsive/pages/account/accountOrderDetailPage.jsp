@@ -1648,9 +1648,9 @@
 										</div>
 										<div class="details">
 											<p>${entry.brandName}</p>
-											<h3 class="product-name">
+											<h2 class="product-name">
 												<a href="${productUrl}">${entry.product.name}</a>
-											</h3>
+											</h2>
 											<div class="attributes">
 												<c:if test="${not empty entry.product.size}">
 													<p>Size: ${entry.product.size}</p>
@@ -1838,9 +1838,9 @@
 													<h2>Return Cancellation</h2>
 
 													<div>
-														<h3>
+														<h2>
 															<span id="resultTitle"></span>
-														</h3>
+														</h2>
 														<div>
 															<span id="resultDesc"></span>
 														</div>
