@@ -45499,6 +45499,10 @@ body.page-homepage .trending h2 > span{
 .click2chat-container.send-email-container h2 {
     margin-bottom: 5px;
 }
+.chat h3, .call h3 {
+    height: 29px;
+    line-height: 29px;
+}
 @media(max-width:1024px){
 .page-productDetails .trending h2 {
 		border-top: 1px solid #ccc;
