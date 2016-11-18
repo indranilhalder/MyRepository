@@ -339,7 +339,7 @@ public class HomePageController extends AbstractPageController
 				}
 			}
 		}
-
+		showCaseComponentJson.put("autoPlay", showCaseComponent.getAutoPlay());
 		showCaseComponentJson.put("slideBy", showCaseComponent.getSlideBy());
 		showCaseComponentJson.put("autoplayTimeout", showCaseComponent.getAutoplayTimeout());
 		showCaseComponentJson.put("subComponents", subComponentJsonArray);
@@ -598,6 +598,7 @@ public class HomePageController extends AbstractPageController
 						}
 
 						newAndExclusiveJson.put(TITLE, title);
+						newAndExclusiveJson.put("autoPlay", newAndExclusiveComponent.getAutoPlayNewIn());
 						newAndExclusiveJson.put("slideBy", newAndExclusiveComponent.getSlideByNewIn());
 						newAndExclusiveJson.put("autoplayTimeout", newAndExclusiveComponent.getAutoplayTimeoutNewIn());
 

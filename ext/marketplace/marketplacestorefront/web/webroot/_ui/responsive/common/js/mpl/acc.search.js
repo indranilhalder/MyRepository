@@ -212,7 +212,8 @@ function donotShowAll()
 	displayHideShowAll = true;
 	}	
 	
-	l2ClassCount = -1;	
+	//l2ClassCount = -1 ;
+	l2ClassCount = 0;
 	//**********below iteration for L2 and L3 categories
 	$(this).find("ul>li").each(function(e){	
 	
@@ -220,7 +221,8 @@ function donotShowAll()
 	if($(this).hasClass('jqtree_common') && $(this).hasClass('jqtree-folder'))
 	{
 	l2ClassCount= l2ClassCount+1;	
-	l3ClassCount = -1;
+	//l3ClassCount = -1;
+	l3ClassCount = 0;
 	if(l2ClassCount>l2displayLimit){
 	$(this).hide();//hide L2 level
 	displayHideShowAll = true;
@@ -738,6 +740,15 @@ $(document).on("click",".plp-wishlist",function(e){
 								$(".wishAlreadyAddedPlp").removeClass("active")
 							},3000)
 						}
+						
+						/*TPR-656*/
+						utag.link({
+							link_obj: this, 
+							link_text: 'add_to_wishlist' , 
+							event_type : 'add_to_wishlist', 
+							product_sku_wishlist : productCode
+						});
+						/*TPR-656 ends*/
 					},
 					error : function(xhr, status, error){
 						alert(error);

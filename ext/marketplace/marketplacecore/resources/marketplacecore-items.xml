@@ -126,12 +126,8 @@
 			<value code="desktopView" />
 		</enumtype>
 		
-		<enumtype generate="true" code="CarouselRotateType" autocreate="true">
-			<value code="slideByNewIn" />
-			<value code="autoplayTimeoutNewIn" />
-		</enumtype>
-
-		<enumtype code="sizeEnum" autocreate="true" generate="true"
+		
+       <enumtype code="sizeEnum" autocreate="true" generate="true"
 			dynamic="false">
 			<value code="thumbnail"></value>
 			<value code="large"></value>
@@ -3601,6 +3597,13 @@
 						<persistence type='property' />
 
 					</attribute>
+					<attribute type="java.lang.Boolean" qualifier="autoPlay"
+						autocreate="true" generate="true">
+						<description>Autoplay for CategoryCarouselComponent</description>
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
 				</attributes>
 			</itemtype>
 			<!-- PRoduct Carousel Component TPR-1316-->
@@ -3630,6 +3633,13 @@
 						<persistence type='property' />
 
 					</attribute>
+			<attribute type="java.lang.Boolean" qualifier="autoPlayNewIn"
+						autocreate="true" generate="true">
+						<description>Autoplay for ProductCarouselComponent</description>
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+			</attribute>		
 			
 			</attributes>
 			</itemtype>
@@ -4047,6 +4057,13 @@
 						<description>Auto play timeout if required</description>
 						<persistence type="property" />
 					</attribute>
+					<attribute type="java.lang.Boolean" qualifier="autoPlay"
+						autocreate="true" generate="true">
+						<description>Autoplay if required</description>
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
 				</attributes>
 			</itemtype>
 
@@ -4442,7 +4459,7 @@
 
 					
 					<attribute type="java.lang.Integer" qualifier="slideBy"
- 					autocreate="true" generate="true">
+                      autocreate="true" generate="true">
  					<description>SlideBy for AdvancedCategoryCarouselComponent</description>
  					<modifiers read="true" write="true" search="true" />
  					<persistence type='property' />
@@ -4454,6 +4471,16 @@
  						<modifiers read="true" write="true" search="true" />
  						<persistence type='property' />
  				  </attribute>
+			
+					<attribute type="java.lang.Boolean" qualifier="autoPlay"
+						autocreate="true" generate="true">
+						<description>Autoplay for AdvancedCategoryCarouselComponent</description>
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+
+				
 
 
 				</attributes>
@@ -4573,6 +4600,14 @@
 					 <attribute type="java.lang.Integer" qualifier="autoplayTimeout"
 						autocreate="true" generate="true">
 						<description>AutoplayTimeout for showcasecomponent</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+					
+					<attribute type="java.lang.Boolean" qualifier="autoPlay"
+						autocreate="true" generate="true">
+						<description>Autoplay for showcasecomponent</description>
+						<defaultvalue>Boolean.FALSE</defaultvalue>
 						<modifiers read="true" write="true" search="true" />
 						<persistence type='property' />
 					</attribute>
