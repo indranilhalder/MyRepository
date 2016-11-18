@@ -13,14 +13,14 @@
 	 
 	    <div class="div2">
 	        <label sclass="heading" value="${labels.Pincode.label}"></label>
-	        <textbox id="text"  disabled="true" width="250px;"/>
-	        <button sclass="uploadTxtbox" label="${labels.pincode.uploadBtn}" upload="true,maxsize=302400" id="upload_button"></button> 
+	        <textbox id="pincodeText"  disabled="true" width="250px;"/>
+	        <button sclass="uploadTxtbox" label="${labels.pincode.uploadBtn}" upload="true,maxsize=302400,accept=.csv" id="pincode-upload"></button> 
 	          <label id="pincodeError" sclass="error_class" value="${labels.common.errorMsg}"  visible="false"> </label>
         </div>     			
         <div class="div2">
 	        <label sclass="heading" value="${labels.landmark.label}"></label>
-	        <textbox id="txtLandmark"  disabled="true" width="250px;"/>
-	        <button sclass="uploadTxtbox" label="${labels.landmark.uploadBtn}" upload="true,maxsize=302400" id="landmark_upload"></button> 
+	        <textbox id="landmarkText"  disabled="true" width="250px;"/>
+	        <button sclass="uploadTxtbox" label="${labels.landmark.uploadBtn}" upload="true,maxsize=302400,accept=.csv" id="landmark_upload"></button> 
 	          <label id="landmarkError" sclass="error_class" value="${labels.common.errorMsg}"  visible="false"> </label>
         </div>
         
