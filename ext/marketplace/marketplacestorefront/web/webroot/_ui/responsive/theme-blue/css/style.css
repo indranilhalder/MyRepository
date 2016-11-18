@@ -45095,6 +45095,7 @@ body .account .right-account ul.saved-cards>li.mpl-addressBook h2{
     padding: 10px 20px;
     font-size: 16px;
     font-weight: 500;
+    height:36px;
 }
 body .account .right-account .order-history .product-block li.item .cancellation-request-block.success>div>h2{
 	font-size: 14px;
@@ -45504,6 +45505,20 @@ body.page-homepage .trending h2 > span{
 .chat h3, .call h3 {
     height: 29px;
     line-height: 29px;
+}
+#deleteReview h2.modal-title,#updateReview h2.modal-title,#reviewPluginContainer h2.modal-title{
+    font-size: inherit;
+    font-weight:normal;
+    margin: 0;
+    padding: 0;
+    letter-spacing: normal;
+}
+#reviewPluginContainer h2.modal-title span.popUpProductTitle{
+	font-size: inherit;
+	font-weight:normal;
+    margin: 0;
+    padding: 0;
+    letter-spacing: normal;
 }
 @media(max-width:1024px){
 .page-productDetails .trending h2 {

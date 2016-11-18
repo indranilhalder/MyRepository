@@ -12,11 +12,11 @@
 <div class="listing wrapper" id="facetSearchAjaxData">
 				 
 				<div class="left-block" >
-				<span class="toggle-filterSerp">Filter By</span>
-				<ul class="product-facet js-product-facet listing-leftmenu">
+				<!-- <span class="toggle-filterSerp">Filter By</span> --> <!-- TISQAEE-78 -->
+				<!-- <ul class="product-facet js-product-facet listing-leftmenu"> -->
 	             <%-- <nav:facetNavRefinements pageData="${searchPageData}"/> --%>
 	             <product:productrefinementcomponent/>
-				</ul>
+				<!-- </ul> -->
 				 
 				 </div>
 					<div class="right-block">
