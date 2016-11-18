@@ -112,7 +112,7 @@
 
 
 							<div class="totals" id="anchor">
-								<h3>Total:</h3>
+								<h2>Total:</h2>
 								<ul>
 									<li><spring:theme code="text.account.order.subtotal"
 											/>  <format:price
@@ -178,8 +178,8 @@
 								<c:otherwise>
 								<c:set var="paymentError" value="false"/>
 									<div class="payment-method">
-								<h3>Payment Method:
-									${subOrder.mplPaymentInfo.paymentOption}</h3>
+								<h2>Payment Method:
+									${subOrder.mplPaymentInfo.paymentOption}</h2>
 								<c:set var="cardNumberMasked"
 									value="${subOrder.mplPaymentInfo.cardIssueNumber}" />
 								<c:set var="cardNumberLength"
@@ -298,13 +298,13 @@
 						    	<div class="item-header">
 								<c:if test="${entryCount > 1 }">
 
-								<h3>${HD_ED_Count} Product(s)-ShippingAddress:</h3>
+								<h2>${HD_ED_Count} Product(s)-ShippingAddress:</h2>
 								</c:if>
 								<c:if test="${entryCount  <= 1 }">
-									<h3>
+									<h2>
 										<%-- ${entryCount}&nbsp; --%>
 										Shipping Address:
-									</h3>
+									</h2>
 								</c:if>
 								<c:set var="subOrderLine2" value="${fn:trim(subOrder.deliveryAddress.line2)}"/>
 								<c:set var="subOrderLine3" value="${fn:trim(subOrder.deliveryAddress.line3)}"/>

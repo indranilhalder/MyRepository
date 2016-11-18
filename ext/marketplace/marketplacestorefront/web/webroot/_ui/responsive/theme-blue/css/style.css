@@ -45095,6 +45095,7 @@ body .account .right-account ul.saved-cards>li.mpl-addressBook h2{
     padding: 10px 20px;
     font-size: 16px;
     font-weight: 500;
+    height:36px;
 }
 body .account .right-account .order-history .product-block li.item .cancellation-request-block.success>div>h2{
 	font-size: 14px;
