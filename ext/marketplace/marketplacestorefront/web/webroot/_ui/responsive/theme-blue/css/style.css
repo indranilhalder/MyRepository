@@ -59086,3 +59086,7 @@ display: none;
 	    margin: 0 20px;
 	        line-height: 30px;
 }
+.cart.wrapper .emptyCart-mobile .content a{
+color:#60A119;
+text-decoration:underline;
+}
