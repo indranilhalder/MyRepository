@@ -58700,6 +58700,7 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 	    background-color: #000;
     height: 80px;
     padding: 10px 0 20px;
+    margin-bottom: 20px; /* TISQAEE-77 fix */
 }
 .blp-serp-banner .image{
 	margin-left:25px;}
