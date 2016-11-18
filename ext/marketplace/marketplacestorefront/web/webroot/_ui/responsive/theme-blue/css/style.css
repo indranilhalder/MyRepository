@@ -45535,6 +45535,21 @@ body.page-homepage .trending h2 > span{
     text-align: center;
     line-height: 1;
 }
+/* Product related starts */
+body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo h2.product-brand-name, body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo h2.product-name {
+    font-size: 14px;
+    text-transform: uppercase;
+    line-height: 24px;
+    font-weight: normal !important;
+    margin: 0 !important;
+}
+/* Product related ends */
+@media only screen and (max-width: 1450px){
+	body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo h2.product-brand-name, body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo h2.product-name{
+    font-size: 11px !important;
+    line-height: 18px;
+}
+}
 @media(max-width:1024px){
 .page-productDetails .trending h2 {
 		border-top: 1px solid #ccc;
