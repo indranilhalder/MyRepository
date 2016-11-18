@@ -45506,6 +45506,20 @@ body.page-homepage .trending h2 > span{
     height: 29px;
     line-height: 29px;
 }
+#deleteReview h2.modal-title,#updateReview h2.modal-title,#reviewPluginContainer h2.modal-title{
+    font-size: inherit;
+    font-weight:normal;
+    margin: 0;
+    padding: 0;
+    letter-spacing: normal;
+}
+#reviewPluginContainer h2.modal-title span.popUpProductTitle{
+	font-size: inherit;
+	font-weight:normal;
+    margin: 0;
+    padding: 0;
+    letter-spacing: normal;
+}
 @media(max-width:1024px){
 .page-productDetails .trending h2 {
 		border-top: 1px solid #ccc;
