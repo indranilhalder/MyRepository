@@ -537,9 +537,9 @@
 					<!-- Dynamically Insert Content Here -->
 					<div class="manage-wishlist-container">
 
-						<h1>
+						<h2>
 							<spring:theme code="wishlist.manage" />
-						</h1>
+						</h2>
 
 
 
@@ -619,9 +619,9 @@
 			<div class="modal-content">
 				<!-- Dynamically Insert Content Here -->
 				<div class="modal-header">
-				<h4 class="modal-title">
+				<h2 class="modal-title">
 					<b><spring:theme code="text.deleteMessage.wishlist" /></b>
-				</h4>
+				</h2>
 				<div class="wishlist-deletion-confirmation-block">
 				<label class="wishlist-deletion-confirmation"><spring:theme
 							code="wishlist.deleteConfirmation.message" /><label class="particular-wishlist-name"></label><spring:theme
@@ -646,9 +646,9 @@
 			<button type="button" class="close pull-right" aria-hidden="true" data-dismiss="modal"></button>
 				<!-- Dynamically Insert Content Here -->
 				<div class="modal-header">
-				<h4 class="modal-title">
+				<h2 class="modal-title">
 					<b><spring:theme code="text.wishlist.pdp" /></b>
-				</h4>
+				</h2>
 				<div class="wishlist-redirects-to-pdp-block">
 				<label class="wishlist-redirects-to-pdp"><spring:theme
 							code="wishlist.redirectsToPdp.message" /></label>
@@ -666,9 +666,9 @@
 			<div class="modal-content">
 				<!-- Dynamically Insert Content Here -->
 				<div class="modal-header">
-				<h4 class="modal-title">
+				<h2 class="modal-title">
 					<b><spring:theme code="text.removeProductMessage.wishlist" /></b>
-				</h4>
+				</h2>
 				<div class="product-deletion-confirmation-block">
 				<label class="product-deletion-confirmation"><spring:theme
 							code="wishlist.removeProductConfirmation.message" /></label>
@@ -694,9 +694,9 @@
 				
 				<div class="click2chat-container" id="myModalLabel">
 				
-				<h1 class="modal-title">
+				<h2 class="modal-title">
 					<spring:theme code="wishlist.create.otherWishlist" />
-				</h1>
+				</h2>
 				<!-- Dynamically Insert Content Here -->
 				<%-- <form:form
 					action="${request.contextPath}/my-account/createNewWishlistWP"

@@ -45537,6 +45537,13 @@ body.page-homepage .trending h2 > span{
     text-align: center;
     line-height: 1;
 }
+.forgot-password-container h2, .click2chat-container h2, .click2call-container h2, .manage-wishlist-container h2, .create-new-wishlist-popup-container h2, .return-requestInvoice h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    line-height: 24px;
+    width: 100%;
+    float: right;
+}
 /* Product related starts */
 body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo h2.product-brand-name, body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo h2.product-name {
     font-size: 14px;
@@ -45589,6 +45596,9 @@ body.page-homepage .trending h2>span{
 }
 .click2chat-container h2{
 	font-size: 22px;
+}
+.forgot-password-container h2, .click2chat-container h2, .click2call-container h2, .manage-wishlist-container h2, .create-new-wishlist-popup-container h2, .return-requestInvoice h2 {
+    font-size: 22px;
 }
 }
 @media(max-width:767px){
