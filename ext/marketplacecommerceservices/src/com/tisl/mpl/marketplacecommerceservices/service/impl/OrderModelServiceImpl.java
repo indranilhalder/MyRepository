@@ -1,5 +1,7 @@
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
+import de.hybris.platform.core.model.BulkCancellationProcessModel;
+import de.hybris.platform.core.model.BulkReturnProcessModel;
 import de.hybris.platform.core.model.order.OrderModel;
 
 import java.util.Date;
@@ -78,7 +80,7 @@ public class OrderModelServiceImpl implements OrderModelService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.OrderModelService#getOrder(java.lang.String)
 	 */
 	@Override
@@ -86,6 +88,31 @@ public class OrderModelServiceImpl implements OrderModelService
 	{
 		return getOrderModelDao().getOrder(code);
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.marketplacecommerceservices.service.OrderModelService#getOrder(java.lang.String)
+	 */
+	@Override
+	public OrderModel getParentOrder(final String code)
+	{
+		return getOrderModelDao().getOrderModel(code);
+	}
+
+
+	@Override
+	public List<BulkReturnProcessModel> getBulkReturnData()
+	{
+		return getOrderModelDao().getAllBulkReturnData();
+	}
+
+	/*
+	 * @Override public void updateLoadStatus()
+	 *
+	 * { getOrderModelDao().updateLoadValue(); }
+	 */
+
 
 	@Override
 	public List<OrderModel> getOrders(final String code)
@@ -107,7 +134,7 @@ public class OrderModelServiceImpl implements OrderModelService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.OrderModelService#getOrderStausCodeMaster(java.lang.String)
 	 */
 	@Override
@@ -118,7 +145,7 @@ public class OrderModelServiceImpl implements OrderModelService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.OrderModelService#getOrderStausCodeMasterList()
 	 */
 	@Override
@@ -172,6 +199,17 @@ public class OrderModelServiceImpl implements OrderModelService
 	public OrderModel updatePickUpDetailService(final String orderId, final String name, final String mobile)
 	{
 		return orderModelDao.updatePickUpDetailsDao(orderId, name, mobile);
+	}
+
+	@Override
+	public OrderModel getOrderModel(final String code)
+	{
+		return getOrderModelDao().getOrderModel(code);
+	}
+
+	public List<BulkCancellationProcessModel> getBulkCancelData()
+	{
+		return getOrderModelDao().getAllBulkCancelData();
 	}
 
 }

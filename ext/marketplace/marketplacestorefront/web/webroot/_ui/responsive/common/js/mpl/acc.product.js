@@ -130,6 +130,17 @@ ACC.product = {
 			 $("#qty1").val($("#quantity").val());
 			 
 				if($("#sizeSelected").val()!='no'){
+				
+					/*TPR-681*/
+					var productCodePost = $("#productCodePost").val();
+					utag.link({
+						link_obj: this, 
+						link_text: 'quick_view_addto_bag' , 
+						event_type : 'quick_view_addto_bag', 
+						product_sku_quick_view : productCodePost
+					});
+					/*TPR-681 Ends*/
+				
 				ACC.product.sendAddToBagQuick("addToCartFormQuick");
 				
 				}else{
@@ -1051,35 +1062,6 @@ sendAddToBagQuick:function(formId){
 	
 applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("span.facet-label");
 	
-//	$(document).on("click",".applyBrandFilters",function(){
-//		
-//		//Iterate and get all checked brand values
-//		   var allBrands = "";
-//		  $('li.Brand').find('input[type="checkbox"]:checked').each(function(){	
-//				if ( $(this).parents('.facet-list').css('display') != 'none' ){
-//				var facetValue = $(this).parents('.filter-brand').find('input[name="facetValue"]').val();
-//				allBrands = allBrands + ':brand:' + facetValue;
-//				}		   					
-//		   });
-//		  
-//		//construct non brand query params
-//		  var currentQryParam = $('.currentQueryParamsApply').val();
-//		  var queryParamsAry = currentQryParam.split(':');
-//		  var nonBrandQueryParams = "";
-//			for (var i = 0; i <  queryParamsAry.length; i = i + 2) { 
-//				if(queryParamsAry[i].indexOf('brand') == -1) {
-//					if(nonBrandQueryParams != ""){
-//						nonBrandQueryParams = nonBrandQueryParams +':'+ queryParamsAry[i] +':'+queryParamsAry[i+1];
-//					}else{
-//						nonBrandQueryParams = queryParamsAry[i] +':'+queryParamsAry[i+1];
-//					}
-//				}
-//			}
-//		   //append non brand query and checked brands
-//		   $('.qValueForApply').val(nonBrandQueryParams+allBrands);
-//		   // submit brand apply form
-//		   $('form#brandApply').submit();
-//	});
 
   //Code changes done for TPR-432
   $(document).on("click",".applyBrandFilters",function() {	
@@ -1197,6 +1179,9 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 					+ "/cart/showTransientCart",
 			data:dataString,
 			success : function(response) {
+				
+				
+				
 				$('.mini-transient-bag').remove();
 				var transientCartHtml="<div class='mini-transient-bag' ><span class='mini-cart-close'>+</span><ul class='my-bag-ul'><li class='item'><ul><li><div class='product-img'><a href='"+ACC.config.encodedContextPath+response.productUrl+"'><img class='picZoomer-pic' src='"+response.productImageUrl+"'></a></div><div class='product'><p class='company'></p><h3 class='product-name'><a href='"+ACC.config.encodedContextPath+response.productUrl+"'>"+response.productTitle+"</a></h3><span class='addedText'>has been added to your cart</span>";
 				
@@ -1204,9 +1189,14 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 					transientCartHtml+="<div class='transient-offer'>"+response.offer+"</div>";
 				}
 				
+			
 				transientCartHtml+="</div></li></ul><li class='view-bag-li'><a href='"+ACC.config.encodedContextPath+"/cart' class='go-to-bag mini-cart-checkout-button'>View Bag</a></li></ul></div>";
 				$('.transient-mini-bag').append(transientCartHtml);
-				
+				/*LW-216*/
+				if(typeof response.productType!=='undefined' && response.productType.toLowerCase() === "luxury"){
+					$('.mini-transient-bag .product-img').append("<img class='luxury_ribbon' src='/_ui/responsive/common/images/Ribbon.png'>");
+				}
+				/*LW-216*/
 				if ($("header .content .bottom").hasClass("active")){
 					$("header .content .right>ul>li.transient-mini-bag .mini-transient-bag").css({
 						"position": "fixed",
@@ -1232,7 +1222,6 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 //END AJAX
 		
 	},	
-	
 	scrollForTransientCart: function ()
 	{
 		if($(window).width() > 773) {
@@ -1243,9 +1232,6 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 		} 
 		
 	}
-	
-	
-
 };
 
 /*TPR-655 START*/
@@ -1260,10 +1246,10 @@ $(document).on('click','.go-to-bag.mini-cart-checkout-button',function(){
 
 //Code changes start for TPR -168//
 
-
-
 //For AJAX Call  
-$(document).on("click",'#applyCustomPriceFilter',function(){					
+$(document).on("click",'#applyCustomPriceFilter',function(){
+	 
+	
 
 					// construct custom price query params					
 					var minPriceSearchTxt = ($('.minPriceSearchTxt').val() == null || $('.minPriceSearchTxt').val() == "") ? 0 : $('.minPriceSearchTxt').val() ;
@@ -1288,30 +1274,6 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 						// Iterate and get all checked brand values
 						var Price = "₹" + minPriceSearchTxt + "-" + "₹"
 								+ maxPriceSearchTxt;
-						
-
-
-
-
-
-
-
-
-
-
-
-
-						
-
-
-
-
-
-
-
-
-
-
 						for (var i = 0; i < queryParamsAry.length; i = i + 2) {					
 							if (queryParamsAry[i].indexOf('price') == -1) {								
 								if (nonPriceQueryParams != "") {
@@ -1327,11 +1289,6 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 						}
 						
 
-
-
-
-
-					
 						$('.qValueForCustomPrice').val(
 								nonPriceQueryParams + ":price:" + Price);
 
@@ -1363,21 +1320,34 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 						
 						// generating postAjaxURL
 						var browserURL = window.location.href.split('?');
-						var pageURL = browserURL[0]+'?'+nonEmptyDataString.replace(/:/g,"%3A");
+						var pageURL = browserURL[0]+'?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
 						
 						
 						// generating request mapping URL
 						var requiredUrl="";
 						var action = $("#customPriceFilter").attr('action');
 						if($("#isCategoryPage").val() == 'true'){
-							action = action.split('/c-');
-							action = action[1].split('/');
-							requiredUrl = "/c-"+action[0];
-							requiredUrl += "/getFacetData";
+							if ($("input[name=customSku]").val()) {
+								var collectionId = $("input[name=customSkuCollectionId]").val();
+								requiredUrl = '/CustomSkuCollection/'+collectionId+'/getFacetData';
+							}
+							else {
+								action = action.split('/c-');
+								action = action[1].split('/');
+								requiredUrl = "/c-"+action[0];
+								requiredUrl += "/getFacetData";
+							}
+							
 						} else {
 							if(action.indexOf("/getFacetData") == -1){
-								if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1){
+							
+								//if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1 || action.indexOf('/collection/') > -1){
+								if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1 ){
 									requiredUrl = action.concat("/getFacetData");
+								} 
+								else if ($("input[name=customSku]").val()) {
+									var collectionId = $("input[name=customSkuCollectionId]").val();
+									requiredUrl = '/CustomSkuCollection/'+collectionId+'/getFacetData';
 								}
 								else{
 									requiredUrl = action.concat("getFacetData");
@@ -1395,6 +1365,12 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 						$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
 						
 						filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
+						//TPR-645 start
+						var filterValue = (minPriceSearchTxt+"-"+maxPriceSearchTxt).replace(/,/g,"");
+						var filterName = $(this).parents('li.facet.js-facet').find('div.facet-name.js-facet-name h4').text().trim();
+						onFilterClickAnalytics(filterName,filterValue);
+						//TPR-645 end
+						
 					}
 					
 				});
@@ -1422,22 +1398,17 @@ $(document).on("change",'.facet_desktop .filter-price',function(){
 //Splits priceValue:Rsxxx-Rsyyy to [xxx, yyy]
 function splitPrice(value) {
 	var priceRange = null;	
-	if(value.includes("-"))
-	{
+	if(value.indexOf('-') > -1)  // Fix for TISPRD-8267
+	{   
 		priceRange = value.split("-");		
 	}
-	else if(value.includes("and Above"))
+	else if(value.indexOf("and Above") > -1)  // Fix for TISPRD-8267
 	{
 		priceRange = value.split("and Above");		
 	}	
 	var minPrice = priceRange[0].substring(1);
 	var maxPrice = priceRange[1].substring(1);
 
-//		var priceRange = value.split('-');
-//		alert("priceRange[0]: "+priceRange[0]);
-//		alert("priceRange[1]: "+priceRange[1]);	
-//		var minPrice = priceRange[0].substring(1);
-//		var maxPrice = priceRange[1].substring(1);	
 	return [ minPrice, maxPrice ];
 }
 
@@ -1458,11 +1429,13 @@ function queryParam(name) {
 //selected ranges.
 $(document).ready(function() {
 	
-	loadPriceRange();
+	loadPriceRange();	
+	
 });
 
 
 function loadPriceRange(){
+	//console.log("Pricing")
 	var q = queryParam('q');
 	var priceRange = '';
 	var pvStr = ':price:';	
@@ -1473,13 +1446,12 @@ function loadPriceRange(){
 			priceRange = priceRange.substring(0, priceRange.indexOf(':'));
 		}		
 		var prices = splitPrice(priceRange);		
-		$('#customMinPrice').val(prices[0]);
-		$('#customMaxPrice').val(prices[1]);		
+		$('.minPriceSearchTxt').val(prices[0]);
+		$('.maxPriceSearchTxt').val(prices[1]);		
 		/*$('li.price').find('div.facet-name').hide();*/
 		$('li.price').find('div.facet-values .facet-list.js-facet-list').hide();
 		$('.priceBucketExpand').show();
 	}
 
 }
-
 //Code changes end for TPR -168//

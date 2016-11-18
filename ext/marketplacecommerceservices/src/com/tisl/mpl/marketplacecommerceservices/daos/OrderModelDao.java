@@ -3,10 +3,14 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos;
 
+import de.hybris.platform.core.model.BulkCancellationProcessModel;
+import de.hybris.platform.core.model.BulkReturnProcessModel;
 import de.hybris.platform.core.model.order.OrderModel;
 
 import java.util.Date;
 import java.util.List;
+
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 
 
 /**
@@ -83,5 +87,15 @@ public interface OrderModelDao
 
 	OrderModel getOrderModel(final String orderId);
 
+	/**
+	 * @return BulkReturnProcessModel
+	 * @throws EtailNonBusinessExceptions
+	 */
+	List<BulkReturnProcessModel> getAllBulkReturnData() throws EtailNonBusinessExceptions;
+
+	/**
+	 * @return List
+	 */
+	List<BulkCancellationProcessModel> getAllBulkCancelData();
 
 }

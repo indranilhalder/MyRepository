@@ -21,9 +21,10 @@
 	<cms:pageSlot position="Section2C" var="feature">
 		<cms:component component="${feature}" />
 	</cms:pageSlot>
+	<div id="bestPicks" class="feature-collections"></div>
 	<div id="brandsYouLove" class="home-brands-you-love-wrapper feature-collections"></div>
 	<div id="promobannerhomepage" class="buy-banner"></div>
-	<div id="bestPicks" class="feature-collections"></div>
+	<!-- <div id="bestPicks" class="feature-collections"></div> -->
 	<div id="productYouCare" class="feature-collections"></div>
 	<!-- <div class="feature-categories" id="ia_categories_favorites"></div> -->
 	<div class="feature-collections">

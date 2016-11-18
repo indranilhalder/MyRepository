@@ -172,7 +172,7 @@ INSERT_UPDATE CMSSubbrand;subBrandName[unique=true];subBrandUrl;subBrandImage(co
 
 #Shop by Department Components
 INSERT_UPDATE DepartmentCollectionComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;departmentCollection(code,$productCV)
-;;ShopByDepartmentComponent;Shop By Department;ShopByDepartmentComponent;MSH10,MSH11,MSH12,MSH13
+;;ShopByDepartmentComponent;Shop By Department;ShopByDepartmentComponent;MSH10,MSH11,MSH12,MSH13,MSH20,MSH16,MSH17,MSH18,MSH19
 
 #INSERT_UPDATE CMSDepartment;department(code,$productCV)[unique=true];departmentImage(code,$contentCV)
 #;MSH10;;
@@ -474,6 +474,7 @@ INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];nam
 # ContentSlot 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef)
 ;;EmptyCartMiddleContent-cartPage;Middle Slot for Cart Page;true;EmptyCartParagraphComponent
+;;EmptyCartSignIn-cartPage;Sign In Slot for Cart Page;true;EmptyCartSignInParagraphComponent
 ;;TopContentSlot-cartPage;Top Content Slot for Cart Page;true;FreeDeliverySimpleBannerComponent,CartComponent
 ;;CenterLeftContentSlot-cartPage;Center Left Content Slot for Cart Page;true;PromotionsComponent,PotentialPromotionsComponent
 ;;CenterRightContentSlot-cartPage;Center Right Content Slot for Cart Page;true;CartTotalsComponent
@@ -484,6 +485,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 # ContentSlotForPage 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='cartPage'];contentSlot(uid,$contentCV)[unique=true]
 ;;EmptyCartMiddleForCartPage;EmptyCartMiddleContent;;EmptyCartMiddleContent-cartPage
+;;EmptyCartSignInForCartPage;EmptyCartSignIn;;EmptyCartSignIn-cartPage
 ;;TopContentSlotForCartPage;TopContent;;TopContentSlot-cartPage
 ;;CenterLeftContentSlotForCartPage;CenterLeftContentSlot;;CenterLeftContentSlot-cartPage
 ;;CenterRightContentSlotForCartPage;CenterRightContentSlot;;CenterRightContentSlot-cartPage
@@ -1352,3 +1354,118 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='nonBusinessErrorFound'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;MiddleContent-NonBusinessError;MiddleContent;;MiddleContent-NonBusinessError;;;
+
+
+### Category Landing Page V1#########
+
+INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];name;SequenceNumber;&componentRef
+;;TMPApparelHomepageBannerComponentV1;TMP Apparel Homepage Banner Component;2;TMPApparelHomepageBannerComponentV1
+
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;
+;;TMPApparelHomepageParagraphComponentV1;Apparel Title Paragraph Component;TMPApparelHomepageParagraphComponentV1;;;;
+;;ApparelCatBanParagraphComponentV1;Apparel Category Bannaer Paragraph Component;ApparelCatBanParagraphComponentV1;;;;
+;;Winter16LaunchParagraphComponent;Winter 16 Launch Paragraph Component;Winter16LaunchParagraphComponent;;;;
+;;StyleEditParagraph;Style Edit Paragraph;StyleEditParagraph;;;;
+;;TopDealParagraph1;Top Deal Paragraph 1;TopDealParagraph1;;;;
+;;TopDealParagraph2;Top Deal Paragraph 2;TopDealParagraph2;;;;
+
+
+INSERT_UPDATE MplImageCategoryComponent;$contentCV[unique=true];uid[unique=true];name;category(code,$productCV);&componentRef;isImageFromPCM[default='true']
+;;DressesImageCategoryComponent;Dresses Image Category Component;MSH1010100;DressesImageCategoryComponent
+;;TopsandTShirtsImageCategoryComponent;Tops and TShirts Image CategoryComponent;MSH1111100;TopsandTShirtsImageCategoryComponent
+;;SkirtsImageCategoryComponent;Skirts Image Category Component;MSH1011100;SkirtsImageCategoryComponent
+;;KurtaKurtisImageCategoryComponent;Kurta Kurtis Image Category Component;MSH1012100;KurtaKurtisImageCategoryComponent
+;;SmartphonesImageCategoryComponent;Smartphones Image Category Component;MSH1210100;SmartphonesImageCategoryComponent
+;;TabletsImageCategoryComponent;Tablets Image Category Component;MSH1211;TabletsImageCategoryComponent
+
+INSERT_UPDATE MplAdvancedCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];name;categories(&componentRef);&componentRef;imageSize(code)
+;;TopCategoriesCarouselComponent;Top Category Image Component;DressesImageCategoryComponent,TopsandTShirtsImageCategoryComponent,SkirtsImageCategoryComponent,KurtaKurtisImageCategoryComponent,SmartphonesImageCategoryComponent,TabletsImageCategoryComponent;TopCategoriesCarouselComponent;thumbnail
+;;ShopForCarouselComponent;Shop For Image Component;DressesImageCategoryComponent,TopsandTShirtsImageCategoryComponent,SkirtsImageCategoryComponent,KurtaKurtisImageCategoryComponent,SmartphonesImageCategoryComponent,TabletsImageCategoryComponent;ShopForCarouselComponent;thumbnail
+
+#-------------------------------------
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;title;description;
+;;BrandBanner1;Brand Banner 1;BrandBanner1;/;
+;;BrandBanner2;Brand Banner 2;BrandBanner2;/;
+;;BrandBanner3;Brand Banner 3;BrandBanner3;/;
+;;BrandBanner4;Brand Banner 4;BrandBanner4;/;
+;;BrandBanner5;Brand Banner 5;BrandBanner5;/;
+;;BrandBanner6;Brand Banner 6;BrandBanner6;/;
+;;BrandBanner7;Brand Banner 7;BrandBanner7;/;
+;;BrandBanner8;Brand Banner 8;BrandBanner8;/;
+;;BrandBanner9;Brand Banner 9;BrandBanner9;/;
+;;BrandBanner10;Brand Banner 10;BrandBanner10;/;
+;;Winter1;Winter 1;Winter1;/;
+;;Winter2;Winter 2;Winter2;/;
+;;Winter3;Winter 3;Winter3;/;
+;;Winter4;Winter 4;Winter4;/;
+;;TopDealBanner1;Top Deal Banner 1;TopDealBanner1;/;
+;;TopDealBanner2;Top Deal Banner 2;TopDealBanner2;/;
+
+INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;url;category(code, $productCV);target(code)[default='sameWindow'];;
+;;TopBrandViewMoreLink;Top Brand View More Link;TopBrandViewMoreLink;/;;;;;;
+;;BestSellerViewAllLink;Best Seller View All Link;BestSellerViewAllLink;/;;;;;;
+;;TopDealCliqLink;Top Deal Cliq Link;TopDealCliqLink;/;;;;;;
+;;ShopForLink1;Shop For Link 1;ShopForLink1;/;;;;;;
+;;ShopForLink2;Shop For Link 2;ShopForLink2;/;;;;;;
+;;ShopForLink3;Shop For Link 3;ShopForLink3;/;;;;;;
+;;ShopForLink4;Shop For Link 4;ShopForLink4;/;;;;;;
+;;ShopForLink5;Shop For Link 5;ShopForLink5;/;;;;;;
+
+INSERT_UPDATE BannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink
+;;StyleEditBanner1;Style Edit Banner1;StyleEditBanner1;/
+;;StyleEditBanner2;StyleEditBanner2;StyleEditBanner2;/
+;;StyleEditBanner3;StyleEditBanner3;StyleEditBanner3;/
+;;StyleEditBanner4;StyleEditBanner4;StyleEditBanner4;/
+
+
+INSERT_UPDATE RotatingImagesComponent;$contentCV[unique=true];uid[unique=true];name;banners(&componentRef);&componentRef
+;;StyleEditRotating;Style Edit Rotating;StyleEditBanner1,StyleEditBanner2,StyleEditBanner3,StyleEditBanner4;StyleEditRotating
+
+
+INSERT_UPDATE VideoComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;videoUrl;videoTitle;videoDescription;
+;;StyleEditVideoComponent;Style Edit Video Component;StyleEditVideoComponent;https://www.youtube.com/embed/vOPL2uqcOHE;REVENGE DRESSING:Best outfits in history;;
+
+
+#CMSMediaParagraphComponent changes starts
+INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;content;url
+;;TopDealItems1Component;Best Picks Items One;TopDealItems1Component;"<span>Westly</span><span>Duffle Bag</span><span>₹8,900</span>";"#";
+;;TopDealItems2Component;Best Picks Items Two;TopDealItems2Component;"<span>Boxy</span><span>Leather Biker Jacket</span><span>₹18,000</span>";"#";
+;;TopDealItems3Component;Best Picks Items Three;TopDealItems3Component;"<span>Zara</span><span>Kitten Floral Shirtdress</span><span>₹3,600</span>";"#";
+;;TopDealItems4Component;Best Picks Items Four;TopDealItems4Component;"<span>Ascot</span><span>Tailored Belted Coat</span><span>₹10,095</span>";"#";
+;;TopDealItems5Component;Best Picks Items Five;TopDealItems5Component;"<span>Dune</span><span>Daniella Handbag</span><span>₹100,000</span>";"#";
+
+#BestPicksCarouselComponent
+INSERT_UPDATE ImageCarouselComponent;$contentCV[unique=true];uid[unique=true];name;title;&componentRef;collectionItems(&componentRef)
+;;TopDealCarouselComponent;Top Deal Carousel Component;Top Deal;TopDealCarouselComponent;TopDealItems1Component,TopDealItems2Component,TopDealItems3Component,TopDealItems4Component,TopDealItems5Component
+
+INSERT_UPDATE ProductRefinementComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
+;;RefinementFacetComponent;Product Refinement Facet Component;RefinementFacetComponent
+
+INSERT_UPDATE ProductGridComponent;$contentCV[unique=true];uid[unique=true];name;actions(uid,$contentCV);&componentRef
+;;ProductGridComponent;Product Grid Component;ListAddToCartAction;ProductGridComponent
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+;;Section1-WomenV1;true;Banner Slot;TMPApparelHomepageParagraphComponentV1,TMPApparelHomepageBannerComponentV1
+;;Section2A-WomenV1;true;Top Category Slot;ApparelCatBanParagraphComponentV1,TopCategoriesCarouselComponent,BrandBanner1,BrandBanner2,BrandBanner3,BrandBanner4,BrandBanner5,BrandBanner6,BrandBanner7,BrandBanner8,BrandBanner9,BrandBanner10,TopBrandViewMoreLink
+;;Section2B-WomenV1;true;Best Seller & Winter Slot;BestSellerViewAllLink,Winter16LaunchParagraphComponent,Winter1,Winter2,Winter3,Winter4
+;;Section2C-WomenV1;true;Style Edit & Video Slot;StyleEditParagraph,StyleEditRotating,StyleEditVideoComponent
+;;Section3-WomenV1;true;Top Deal Slot;TopDealCarouselComponent,TopDealCliqLink,TopDealParagraph1,TopDealBanner1,TopDealParagraph2,TopDealBanner2
+;;Section3A-WomenV1;true;Shop For Slot;ShopForCarouselComponent,ShopForLink1,ShopForLink2,ShopForLink3,ShopForLink4,ShopForLink5
+;;Section4A-WomenV1;true;Section4A;RefinementFacetComponent;
+;;Section4B-WomenV1;true;Section4B;ProductGridComponent;
+
+
+# ContentSlotForPage 
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='WomenV1'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section1-WomenV1;Section1;;Section1-WomenV1;;;
+;;Section2A-WomenV1;Section2A;;Section2A-WomenV1;;;
+;;Section2B-WomenV1;Section2B;;Section2B-WomenV1;;;
+;;Section2C-WomenV1;Section2C;;Section2C-WomenV1;;;
+;;Section3-WomenV1;Section3;;Section3-WomenV1;;;
+;;Section3A-WomenV1;Section3A;;Section3A-WomenV1;;;
+;;Section4A-WomenV1;Section4A;;Section4A-WomenV1;;;
+;;Section4B-WomenV1;Section4B;;Section4B-WomenV1;;;
+
+### Category Landing Page V1#########
+
+

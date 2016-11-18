@@ -76,8 +76,8 @@ public class MplFraudModelServiceImpl implements MplFraudModelService
 				if (null != mplFraudList.get(0).getEbsRiskLevel()
 						&& StringUtils.isNotEmpty(mplFraudList.get(0).getEbsRiskPercentage()))
 				{
-					fraudSymptomScoringModel.setName(
-							mplFraudList.get(0).getEbsRiskLevel().toString() + "_" + mplFraudList.get(0).getEbsRiskPercentage());
+					fraudSymptomScoringModel.setName(mplFraudList.get(0).getEbsRiskLevel().toString() + "_"
+							+ mplFraudList.get(0).getEbsRiskPercentage());
 
 					fraudSymptomScoringModel.setScore(new Double(mplFraudList.get(0).getEbsRiskPercentage()).doubleValue());
 
@@ -98,13 +98,18 @@ public class MplFraudModelServiceImpl implements MplFraudModelService
 			}
 
 		}
-		catch (final NullPointerException e)
-		{
-			throw new EtailNonBusinessExceptions(e, "E0001");
-		}
+		//PMD and IQA for TPR-629
+		//		catch (final NullPointerException e)
+		//		{
+		//			throw new EtailNonBusinessExceptions(e, "E0001");
+		//		}
 		catch (final ModelSavingException e)
 		{
-			throw new EtailNonBusinessExceptions(e, "E0007");
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 
 	}
@@ -143,4 +148,85 @@ public class MplFraudModelServiceImpl implements MplFraudModelService
 			fraudModel.setStatus(FraudStatus.CHECK);
 		}
 	}
+
+
+
+
+
+
+	/**
+	 * This method updates the fraudModel against the order for new Payment Soln -- order before payment
+	 *
+	 * @param orderModel
+	 * @param mplAudit
+	 */
+	@Override
+	public void updateFraudModel(final OrderModel orderModel, final MplPaymentAuditModel mplAudit,
+			final JuspayEBSResponseModel juspayEBSResponseModel)
+	{
+		try
+		{
+			final FraudReportModel fraudModel = modelService.create(FraudReportModel.class);
+			fraudModel.setOrder(orderModel);
+			fraudModel.setCode(mplAudit.getAuditId());
+			fraudModel.setTimestamp(new Date());
+			if (null != juspayEBSResponseModel)
+			{
+				if (StringUtils.isNotEmpty(juspayEBSResponseModel.getEbs_bin_country()))
+				{
+					fraudModel.setEbsBinCountry(juspayEBSResponseModel.getEbs_bin_country());
+				}
+				if (null != juspayEBSResponseModel.getEbsRiskLevel())
+				{
+					fraudModel.setEbsRiskLevel(juspayEBSResponseModel.getEbsRiskLevel().toString());
+				}
+				if (null != juspayEBSResponseModel.getEbsRiskStatus())
+				{
+					setFraudStatus(fraudModel, juspayEBSResponseModel.getEbsRiskStatus().toString());
+				}
+
+				final FraudSymptomScoringModel fraudSymptomScoringModel = new FraudSymptomScoringModel();
+				final List<FraudSymptomScoringModel> fraudSymptomList = new ArrayList<FraudSymptomScoringModel>();
+				if (null != juspayEBSResponseModel.getEbsRiskLevel()
+						&& StringUtils.isNotEmpty(juspayEBSResponseModel.getEbsRiskPercentage()))
+				{
+					fraudSymptomScoringModel.setName(juspayEBSResponseModel.getEbsRiskLevel().toString() + "_"
+							+ juspayEBSResponseModel.getEbsRiskPercentage());
+
+					fraudSymptomScoringModel.setScore(new Double(juspayEBSResponseModel.getEbsRiskPercentage()).doubleValue());
+
+				}
+				else
+				{
+					fraudSymptomScoringModel.setName("TestName");
+					fraudSymptomScoringModel.setScore(0);
+				}
+				fraudSymptomScoringModel.setFraudReport(fraudModel);
+				modelService.save(fraudSymptomScoringModel);
+				fraudSymptomList.add(fraudSymptomScoringModel);
+
+				fraudModel.setFraudSymptomScorings(fraudSymptomList);
+				modelService.save(fraudModel);
+
+				modelService.save(orderModel);
+			}
+
+		}
+		//PMD and IQA for TPR-629
+		//		catch (final NullPointerException e)
+		//		{
+		//			throw new EtailNonBusinessExceptions(e, "E0001");
+		//		}
+		catch (final ModelSavingException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
+
+	}
+
 }

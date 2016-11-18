@@ -13,6 +13,8 @@
  */
 package com.tisl.mpl.constants;
 
+import de.hybris.platform.core.model.BulkCancellationProcessModel;
+import de.hybris.platform.core.model.BulkReturnProcessModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.ordercancel.model.OrderCancelRecordEntryModel;
 import de.hybris.platform.returns.model.RefundEntryModel;
@@ -97,12 +99,23 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String LINK_PASSWORD_CHANGE = "/login/pw/change";
 
 	//For Promotion Intercepter
+
 	public static final String PROMOCODE = "Promotion Identifier :".intern();
 	public static final String PROMOPRODUCT = "Promotion Product :".intern();
 	public static final String PROMOCATEGORY = "Promotion Category :".intern();
 	public static final String PROMOPRIORITY = "Promotion Priority :".intern();
 	public static final String PRODUCT_PRICE_COLUMN = "price".intern();
 	public static final String PRESENT_CATEGORY = "Present Category :".intern();
+
+	public static final String PROMO_ERROR_MESSAGE = "Title cannot exceed 25 characters.".intern();
+
+
+	//For Bulk Orders Return Initiation
+	public static final String COMMA_DELIMITER = ",";
+	public static final String TICKETTYPECODE = "R";
+	public static final String REFUNDTYPE = "S";
+	public static final String REASONCODE = "03"; // Hard coded value -- I'm not happy with the product quality
+
 
 	//For SuperCategoryDecorator
 	public static final String CONFIGURATION_SER = "configurationService";
@@ -520,7 +533,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SMS_MESSAGE = "Test from TatauniStore";
 	public static final String SMS_MESSAGE_COD_OTP = "Peek-a-boo {0}! One-time password for your COD order is {1}. Please feel free to call us at {2} in case of any queries.";
 	public static final String SMS_MESSAGE_C2C_OTP = "Hi, one time password for your request is {0}. Please enter this to submit the request. Thanks!";
-
+	public static final String SMS_MESSAGE_PAYMENT_PENDING = "Hmmm… There seems to be a spot of bother. Please hold on.";
+	public static final String SMS_MESSAGE_PAYMENT_FAILED = "Uh oh. Looks like your order was declined for some reason. Please try again.";
+	public static final String SMS_MESSAGE_PAYMENT_TIMEOUT = "Oh no! Your order couldn't go through due to techincal issues. Please try again.";
+	public static final String SMS_MESSAGE_INVENTORY_RESERVATION_FAILED = "Uh oh! Looks like what you wanted isn't available right now, but it could come back soon. Please try again later";
 
 	public static final String PUSH_MESSAGE_ORDER_PLACED = "Awesome! We think your bag looks great. Track your order {0} in the Order History section of your account.";
 	public static final String PUSH_MESSAGE_ORDER_OFD_PREPAID = "Hi! Your order {0} of {1} item(s) will reach you today. To know more, check out the Order History section of the app.";
@@ -702,6 +718,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String E0021 = "E0021";
 	public static final String E0022 = "E0022";
 
+	//TPR-629
+	public static final String E0023 = "E0023";
+
 
 	//System/Non Business constants
 
@@ -863,6 +882,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9325 = "B9325";
 	public static final String B9326 = "B9326";
 	public static final String B9327 = "B9327";
+	// Added for TPR-1290
+	public static final String B9332 = "B9332";
+	public static final String B9328 = "B9328";
 	//Mobile web service error codes ends
 
 	//Payment Error Codes
@@ -923,6 +945,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9217 = "B9217";
 	public static final String B9218 = "B9218";
 	public static final String B9219 = "B9219";
+	public static final String B9329 = "B9329";
+	public static final String B9330 = "B9330";
+	public static final String B9331 = "B9331";
+	public static final String B9300 = "B9300";
+	public static final String B9301 = "B9301";
 
 
 	//Search error codes ends
@@ -953,6 +980,16 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SALES_REPORT_QUERY_START_END = "SELECT {" + OrderModel.PK + "} FROM {" + OrderModel._TYPECODE
 			+ "} WHERE {" + OrderModel.CREATIONTIME + "} >= ?startDate AND {" + OrderModel.CREATIONTIME + "} <=?endDate AND {"
 			+ OrderModel.TYPE + "}=?type order by {" + OrderModel.CODE + "} desc";
+
+	//Bulk Return Initiation
+	public static final String START_TIME = "START TIME";
+	public static final String END_TIME = "END TIME";
+
+	public static final String LOADSTATUS = "loadstatus";
+
+
+	public static final String BULK_RETURN_DATA_QUERY_START = "SELECT {" + BulkReturnProcessModel.PK + "} FROM {"
+			+ BulkReturnProcessModel._TYPECODE + "} WHERE {" + BulkReturnProcessModel.LOADSTATUS + "}=?loadstatus";
 
 
 	public static final String NOEMIBANKLIST = "EMI Bank list is not available , Please Enter the correct data";
@@ -1266,6 +1303,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PAYMENT_EXC_LOG = "Exception while saving payment info model with ".intern();
 	public static final String PAYMENT_EXC_LOG_END = " : Exception while saving payment info model with ".intern();
 	public static final String PAYMENT_TRAN_EXC_LOG = "Exception while saving payment transaction entry with ".intern();
+	public static final String PAYMENT_TRAN_ERR_LOG = "Exception while saving payment transaction with ".intern();
 
 	//Webhook Report Path
 	public static final String WEBHOOKREPORTPATH = "webhook.report.path".intern();
@@ -1490,6 +1528,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String USER = "User".intern();
 	public static final String DATE = "Date".intern();
+	//TPR-1075
+	public static final String NEWCUSTOMER = "NewCustomer".intern();
+	public static final String NEWUSERRESTVIOLATION = "Voucher for New Customer is violated".intern();
+	public static final String VOUCHERINVALIDNEWCUST = "Voucher for New Customer : ".intern();
 	public static final String VOUCHERNOTFOUND = "Voucher not found: ".intern();
 	public static final String VOUCHERNOTREDEEMABLE = "Voucher cannot be redeemed: ".intern();
 	public static final String VOUCHERINVALIDUSER = "User not valid for : ".intern();
@@ -1578,6 +1620,15 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String CATEGORY_PATH_EMPTY = "/{category-path}".intern();
 
+
+	//IA Feed For Luxury
+	public static final String IAFEED_QUERY_LUXURY = "mpl.ia.luxury.query.";
+	public static final String IA_CATEGORYEXPORT_LUXURYFOLDER = "ia.path.luxury.catexport";
+	public static final String IA_BRANDEXPORT_LUXURYFOLDER = "ia.path.luxury.brandexport";
+	public static final String IA_PRICE_INVENTORYEXPORT_LUXURYFOLDER = "ia.path.luxury.priceinventoryexport";
+	//	public static final String IA_SELLERPRICEDETAILSEXPORT_LUXURYFOLDER = "ia.path.luxury.sellerpricedetails";
+	//	public static final String IA_PRICEINVENTORYCONTROL_LUXURYFOLDER = "ia.path.luxury.priceinventorycontrol";
+
 	//TISCR-421
 	public static final String EBS_SESSION_ID_KEY = "payment.juspay.sessionId.length";
 	public static final String JUSPAY_ENCODING_TYPE = "payment.juspay.encoding.type";
@@ -1644,6 +1695,36 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CART_SELLER_PRODUCTS = "cartSellerValidProducts".intern();
 	public static final String VALIDATE_SELLER = "validateSeller".intern();
 
+	public static final String PAYMENTPENDINGORDERQUERY = "select {pk} from {Order as o},{OrderStatus as os} where {o.status}={os.pk} and {os.code}=?status"
+			.intern();
+	public static final String PAYMENTPENDINGQUERY = "SELECT {o.pk} FROM {order as o},{OrderStatus as os} WHERE {creationtime} > (to_date(sysdate,'YYYY/MM/DD HH24:MI:SS') - INTERVAL '10' MINUTE) and {o.status}={os.pk} and {os.code}=?status"
+			.intern();
+	public static final String PAYMENTPENDINGSTATUS = "status".intern();
+	public static final String PAYMENTPENDINGWEBHOOKUERY = "select {jw.pk} from {JuspayWebhook as jw}, {JuspayOrderStatus as js} where {jw.orderstatus}={js.pk} and {js.orderId}=?reqId"
+			.intern();
+	public static final String WEBHOOKREQSTATUS = "reqId".intern();
+	public static final String OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE = "orderDeallocate";
+	public static final String PINCODE = "000000";
+	public static final String JUSPAYWEBHOOKRETRYTATQUERY = "select {b.juspayWebhookRetryTAT} from {BaseStore AS b} WHERE {b.uid}=?store";
+	public static final String JSON = "json".intern();
+
+	//TPR-629
+	//public static final String VOUCHERINVALIDATIONQUERY = "select {v.pk} from {voucherinvalidation as v},{order as o},{customer as c},{voucher as vo} where {v.order}={o.pk} and {o.code}=?code and {v.user}={c.pk} and {c.originaluid}=?customerUid and {v.voucher}={vo.pk} and {vo.code}=?voucherIdentifier";
+	public static final String VOUCHERINVALIDATIONQUERY = "select {v.pk} from {voucherinvalidation as v},{order as o},{customer as c},{voucher as vo} where {v.order}={o.pk} and {o.code}=?code and {v.user}={c.pk} and {c.originaluid}=?customerUid and {v.voucher}={vo.pk} ";
+	public static final String CUSTOMERUID = "customerUid";
+	public static final String OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING = "paymentPending";
+
+
+
+	//luxury
+	public static final String IS_LUXURY = "0".intern();
+	public static final String IS_MARKETPLACE = "0".intern();
+
+	public static final String LATESTOTPQUERY = "select {o.pk} from {otp as o} where {o.customerid}=?customerPK and {o.otptype}=?OTPType and {o.isvalidated}='0' order by {creationtime} desc fetch first 1 rows only";
+	public static final String LATESTOTPMOBILEQUERY = "select {o.pk} from {otp as o} where {o.emailid}=?emailId and {o.mobileNo}=?mobileNo and {o.otptype}=?OTPType and {o.isvalidated}='0' order by {creationtime} desc fetch first 1 rows only";
+	public static final String LATESTOTPEMAILQUERY = "select {o.pk} from {otp as o} where {o.emailid}=?emailId and {o.otptype}=?OTPType and {o.isvalidated}='0' order by {creationtime} desc fetch first 1 rows only";
+	public static final String LATESTOTPQUERYINV = "select {o.pk} from {otp as o} where {o.emailid}=?emailId and {o.otptype}=?OTPType order by {creationtime} desc fetch first 1 rows only";
+
 	private MarketplacecommerceservicesConstants()
 	{
 		//empty to avoid instantiating this constant class
@@ -1653,4 +1734,87 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// Sonar Fix
 	public static final String ALLVARIANTSSTRING = "allVariantsString";
+
+//	public static final String PRODUCTOFFERDETMSGQUERY = "SELECT {prodOffrDet.sellerId},{offerDet.message},{offerDet.messageDet},{prodOffrDet.startDate},{prodOffrDet.endDate} FROM {OfferDetail as offerDet}, {ProductOfferDetail as  prodOffrDet} "
+	//			+ "WHERE {prodOffrDet.productId}= ?productId " + "AND {prodOffrDet.offer} = {offerDet.pk} "
+	//			+ "AND {prodOffrDet.startDate} <= ?sysdate AND {prodOffrDet.endDate} >= ?sysdate".intern();
+
+	//Added for displaying Non HMC configurable offer messages , TPR-589
+	public static final String PRODUCTOFFERDETMSGQUERY = "SELECT {prodOffrDet.sellerId},{offerDet.message},{offerDet.messageDet},{prodOffrDet.startDate},{prodOffrDet.endDate} FROM {OfferDetail as offerDet}, {ProductOfferDetail as  prodOffrDet} WHERE {prodOffrDet.productId}= ?productId AND {prodOffrDet.offer} = {offerDet.pk} AND {prodOffrDet.startDate} <= ?sysdate AND {prodOffrDet.endDate} >= ?sysdate"
+			.intern();
+
+	public static final String OFFERPRODUCTID = "productId".intern();
+
+	public static final String MESSAGE = "message".intern();
+	public static final String MESSAGEDET = "messageDet".intern();
+	public static final String MESSAGESTARTDATE = "startDate".intern();
+	public static final String MESSAGEENDDATE = "endDate".intern();
+
+	//Added For TPR-1035
+	public static final String BIN_ERROR_HEADER = "BIN,CUSTOMER_ID,PAYMENTMODE,DATE,TYPE_OF_ERROR".intern();
+	public static final String BIN_ERROR_FILE_LOCATION = "bin.errorreport.csv.path".intern();
+	public static final String BIN_ERROR_FILE_PATH = "${HYBRIS_DATA_DIR}/feed/report".intern();
+	public static final String BIN_ERROR_FILE_NAME = "binErrorReport".intern();
+	//Added for TPR-798
+	public static final String MPLCATELOG = "internal.campaign.catelog";
+	public static final String MPLCATALOGNNAME = "internal.campaign.catalogVersionName";
+	public static final String WCMSPAGINATIONQUERY = "Select {CSP.pk} From {ContentSlotForPage AS CSP JOIN ContentPage as CP ON {CSP.page}={CP.pk}} "
+			+ "where {CP.uid} = ?uid and {CSP.catalogVersion}=?version";
+	//TPR-978
+	public static final String DEFAULT_IMPORT_CONTENT_CATALOG_ID = "mplContentCatalog";
+	public static final String DEFAULT_IMPORT_CONTENT_CATALOG_VERSION = "Staged";
+
+	//Added for luxury
+	public static final String CHANNEL_APP = "APP";
+	public static final String MEGANAVNODE = "luxury.root.navigation.node.id";
+
+	public static final String LUXURY_CARTICON = "luxuryCartIcon";
+
+	//Luxury Changes
+	public static final String MARKETPLACE = "marketplace";
+	public static final String LUXURY = "luxury";
+	public static final String MSH = "MSH";
+	public static final String LSH = "LSH";
+
+	public static final String LUX_SALESCATEGORYTYPE = "luxury.salescategory.code";
+
+	public static final String TICKETTYPECODE_CANCEL = "C";
+	public static final String BULK_CANCEL_SUCCESS_DESC = "Cancellation Success";
+	public static final String BULK_CANCEL_FAILURE_DESC = "Cancellation Failure";
+
+	public static final String initiate_cancel_job_cancellation_flag = "initiate.cancel.job.cancellation.flag";
+	public static final String FAILURE_LOAD_STATUS = "-1";
+	public static final String SUCCESS_LOAD_STATUS = "1";
+	public static final String LEFT_PARENTHESIS = "(";
+	public static final String RIGHT_PARENTHESIS = ")";
+	public static final String BLANK_SPACE = " ";
+	public static final String LAST_CONSIGNMENT_STATUS = "Last Consignment status -";
+	public static final String END_TIME_C = "Initiate Bulk Cancellation Job : End time : ";
+	public static final String START_TIME_C = "Initiate Bulk Cancellation Job : Start time : ";
+	public static final String TOTAL_TIME_TAKEN = "Total time taken : ";
+
+	public static final String BULK_CANCEL_LOG_STEP_START = "######################################### PROCESS STARTS ##############################################";
+	public static final String BULK_CANCEL_LOG_STEP_1 = "Initiate Bulk Cancellation Job : Data list size : ";
+	public static final String BULK_CANCEL_LOG_STEP_2_1 = "Initiate Bulk Cancellation Job : Order No : ";
+	public static final String BULK_CANCEL_LOG_STEP_2_2 = " and transactionId : ";
+	public static final String BULK_CANCEL_LOG_STEP_3 = "Initiate Bulk Cancellation Job : Transaction ID matched : ";
+	public static final String BULK_CANCEL_LOG_STEP_4 = "Initiate Bulk Cancellation Job : No Consignment Created : Status :";
+	public static final String BULK_CANCEL_LOG_STEP_5 = "Initiate Bulk Cancellation Job : Consignment Status : ";
+	public static final String BULK_CANCEL_LOG_STEP_6 = "Initiate Bulk Cancellation Job : isCancellable : ";
+	public static final String BULK_CANCEL_LOG_STEP_7 = "Initiate Bulk Cancellation Job : OMS + CRM call skipped : Cancellation Status : ";
+	public static final String BULK_CANCEL_LOG_STEP_8_1 = "Initiate Bulk Cancellation Job : subOrderDetails : ";
+	public static final String BULK_CANCEL_LOG_STEP_8_2 = "and subOrderEntry : ";
+	public static final String BULK_CANCEL_LOG_STEP_9 = "Initiate Bulk Cancellation Job : cancellationStatus : ";
+	public static final String BULK_CANCEL_LOG_STEP_10 = "Update load status";
+	public static final String BULK_CANCEL_LOG_STEP_11 = "Initiate Bulk Cancellation Job : Order Data Conversion Exception";
+	public static final String BULK_CANCEL_LOG_STEP_12 = "Initiate Bulk Cancellation Job : No data found in the iteration of Bulk cancel table";
+	public static final String BULK_CANCEL_LOG_STEP_13 = "Initiate Bulk Cancellation Job : Suborder level loop iteration count : ";
+	public static final String BULK_CANCEL_LOG_STEP_14 = "Initiate Bulk Cancellation Job : BulKCancellationProcessModel is EMPTY";
+	public static final String BULK_CANCEL_LOG_STEP_15 = "######################################### PROCESS ENDS ##############################################";
+	public static final String BULK_CANCEL_DATA_QUERY_START = "SELECT {" + BulkCancellationProcessModel.PK + "} FROM {"
+			+ BulkCancellationProcessModel._TYPECODE + "} WHERE {" + BulkCancellationProcessModel.LOADSTATUS + "}=?loadstatus";
+
+	public static final String BULK_RETURN_SUCCESS_DESC = "Return Success";
+	public static final String BULK_RETURN_FAILURE_DESC = "Return Failure";
+
 }

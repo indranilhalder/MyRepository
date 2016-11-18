@@ -9,6 +9,8 @@
 <c:set value="${ycommerce:productImage(product, format)}" var="primaryImage"/>
 
 <c:choose>
+ <%-- ${product.luxIndicator}
+ --%>
 	<c:when test="${not empty primaryImage && not empty primaryImage.url}">
 		<c:choose>
 			<c:when test="${not empty primaryImage.altText}">
@@ -24,3 +26,16 @@
 		<theme:image code="img.missingProductImage.product" alt="${fn:escapeXml(product.name)}" title="${fn:escapeXml(product.name)}"/>
 	</c:otherwise>
 </c:choose>
+
+<c:if test="${fn:toLowerCase(product.luxIndicator)=='luxury' and not empty product.luxIndicator}">
+<%-- ${product.luxIndicator} --%>
+ <img class="luxury_ribbon" src="//${mplStaticResourceHost}/_ui/responsive/common/images/Ribbon.png">
+</c:if>
+
+
+<%-- <c:choose>
+    <c:when test="${''}">
+    </c:when>    
+    <c:otherwise>
+    </c:otherwise>
+</c:choose> --%>

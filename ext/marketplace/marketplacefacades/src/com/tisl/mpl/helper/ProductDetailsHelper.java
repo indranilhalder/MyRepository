@@ -97,6 +97,16 @@ public class ProductDetailsHelper
 	 *
 	 */
 	private static final String CLASSIFICATION_ATTRIBUTES_ELECTRONICS_GROUPNAME = "classification.attributes.electronics.groupname";
+
+	/*
+	 * Added by I313024 for TATAUNISTORE-15 START :::
+	 */
+
+	private static final String CLASSIFICATION_ATTRIBUTES_WATCHES_GROUPNAME = "classification.attributes.watches.groupname";
+	/*
+	 * Added by I313024 for TATAUNISTORE-15 END :::
+	 */
+
 	/**
 	 *
 	 */
@@ -192,8 +202,8 @@ public class ProductDetailsHelper
 
 	/*
 	 * @Resource(name = "GigyaService") private GigyaService gigyaservice;
-	 *
-	 *
+	 * 
+	 * 
 	 * @Autowired private ExtendedUserServiceImpl userexService;
 	 *//**
 	 * @return the gigyaservice
@@ -329,8 +339,9 @@ public class ProductDetailsHelper
 			{
 				if (classicationDataList.isEmpty()
 						&& !(classData.getName().equalsIgnoreCase(N_A))
-						&& configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_ELECTRONICS_GROUPNAME)
-								.contains(classData.getName()))
+						&& (configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_ELECTRONICS_GROUPNAME)
+								.contains(classData.getName()) || configurationService.getConfiguration()
+								.getString(CLASSIFICATION_ATTRIBUTES_WATCHES_GROUPNAME).contains(classData.getName())))
 				{
 					classicationDataList.add(classData);
 				}
@@ -347,8 +358,9 @@ public class ProductDetailsHelper
 					else
 					{
 						if (!(classData.getName().equalsIgnoreCase(N_A))
-								&& configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_ELECTRONICS_GROUPNAME)
-										.contains(classData.getName()))
+								&& (configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_ELECTRONICS_GROUPNAME)
+										.contains(classData.getName()) || configurationService.getConfiguration()
+										.getString(CLASSIFICATION_ATTRIBUTES_WATCHES_GROUPNAME).contains(classData.getName())))
 						{
 							classicationDataList.add(classData);
 						}
@@ -944,15 +956,15 @@ public class ProductDetailsHelper
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 *
+	 * 
 	 * @param deliveryCode
-	 *
+	 * 
 	 * @param currencyIsoCode
-	 *
+	 * 
 	 * @param sellerArticleSKU
-	 *
+	 * 
 	 * @return MplZoneDeliveryModeValueModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private MplZoneDeliveryModeValueModel populateDeliveryCostForUSSIDAndDeliveryMode(final String deliveryCode,
@@ -1173,10 +1185,10 @@ public class ProductDetailsHelper
 		return existUssid;
 	}
 
-	/**
+	
+
+	/** 
 	 * @param productCode
-	 * @param ussid
-	 * @param user
 	 * @param valueOf
 	 * @return
 	 */
@@ -1246,5 +1258,45 @@ public class ProductDetailsHelper
 	public void setBuyBoxService(final BuyBoxService buyBoxService)
 	{
 		this.buyBoxService = buyBoxService;
+	}	
+
+	/**
+	 * @param productCode
+	 * @param ussid		 
+	 * @return
+	 */
+	public boolean removeFromWishList(final String productCode, final String ussid)
+	{
+
+		Wishlist2Model lastCreatedWishlist = null;
+		Wishlist2Model removedWishlist = null;
+		boolean removeFromWl = false;
+		try
+		{
+			final UserModel user = userService.getCurrentUser();
+			lastCreatedWishlist = wishlistFacade.getSingleWishlist(user);
+			if (null != lastCreatedWishlist)
+			{
+				removedWishlist = wishlistFacade.removeProductFromWl(productCode, lastCreatedWishlist.getName(), ussid);
+			}
+			if (null != removedWishlist)
+			{
+				removeFromWl = true;
+			}
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return removeFromWl;
 	}
 }

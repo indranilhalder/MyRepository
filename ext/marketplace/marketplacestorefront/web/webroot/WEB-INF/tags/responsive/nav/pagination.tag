@@ -10,7 +10,7 @@
 <%@ taglib prefix="pagination" tagdir="/WEB-INF/tags/responsive/nav/pagination" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags" %>
+<%@ taglib prefix="ycommerce"  uri="http://hybris.com/tld/ycommercetags" %>
 
 
 <c:set var="themeMsgKey" value="${not empty msgKey ? msgKey : 'search.page'}"/>
@@ -41,7 +41,7 @@
 							Exclude OutofStock&nbsp;<a href="${removeQueryUrl}" ><span class="remove_filter">x</span></a>
 						</li>
 					</c:if>
-					<c:if test="${breadcrumb.facetName ne 'inStockFlag' && breadcrumb.facetName ne 'sellerId' &&  breadcrumb.facetName ne 'isOffersExisting' && breadcrumb.facetName ne 'promotedProduct'}">
+					<c:if test="${breadcrumb.facetName ne 'inStockFlag' && breadcrumb.facetName ne 'sellerId' &&  breadcrumb.facetName ne 'isOffersExisting' && breadcrumb.facetName ne 'promotedProduct'  && breadcrumb.facetName ne 'isLuxuryProduct'}">
 						<li>
 						   <c:choose>
 						   <c:when test="${breadcrumb.removeQuery.url!='' && not empty offers}">
@@ -130,7 +130,7 @@
 											<c:set var="top" value="false" />
 								<!-- End Fix to TISTI-198 -->
 								<form id="sortForm${top ? '1' : '2'}" name="sortForm${top ? '1' : '2'}" method="get" action="#">
-									
+									<label class="sortByMobile">Sort by</label>
 									<select id="sortOptions${top ? '1' : '2'}" name="sort" class="black-arrow-left" style="display:block" onchange="sortByFilterResult(${top ? '1' : '2'})"> <!-- On change method added for TPR-198 -->
 										<!-- Start Fix to TISTI-198 -->
 										<c:set var="top" value="true" />
@@ -150,7 +150,7 @@
 											</option>
 											</c:if>
 										</c:forEach>
-										<option selected disabled  style="display:none;"><spring:theme code="${themeMsgKey}.sortTitle.mobile"/></option>
+										<%-- <option selected disabled  style="display:none;"><spring:theme code="${themeMsgKey}.sortTitle.mobile"/></option> --%>
 									</select>
 									
 									<c:catch var="errorException">
@@ -186,9 +186,9 @@
 				<form id="pageSize_form${top ? '1' : '2'}" name="pageSize_form${top ? '1' : '2'}" method="get" action="#" class="pageSizeForm">
 					<label for="pageSizeOptions${top ? '1' : '2'}"><spring:theme code="${themeMsgKey}.display"/></label>
 						<select class="black-arrow" id="pageSizeOptions${top ? '1' : '2'}" name="pageSize" class="pageSizeOptions" onchange="viewByFilterResult(${top ? '1' : '2'})">
-							<option value="24" ${not empty searchPageData.pagination.pageSize and searchPageData.pagination.pageSize eq 24 ? 'selected="selected"' : ''}>24</option>
-							<option value="48" ${not empty searchPageData.pagination.pageSize and searchPageData.pagination.pageSize eq 48 ? 'selected="selected"' : ''}>48</option>
 							<option value="72" ${not empty searchPageData.pagination.pageSize and searchPageData.pagination.pageSize eq 72 ? 'selected="selected"' : ''}>72</option>
+							<option value="48" ${not empty searchPageData.pagination.pageSize and searchPageData.pagination.pageSize eq 48 ? 'selected="selected"' : ''}>48</option>
+							<option value="24" ${not empty searchPageData.pagination.pageSize and searchPageData.pagination.pageSize eq 24 ? 'selected="selected"' : ''}>24</option>
 						</select>
 				
 					<c:catch var="errorException">

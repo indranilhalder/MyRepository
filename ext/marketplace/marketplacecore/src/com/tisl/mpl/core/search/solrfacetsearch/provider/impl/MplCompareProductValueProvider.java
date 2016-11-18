@@ -26,7 +26,8 @@ import org.springframework.beans.factory.annotation.Required;
  * @author 584443
  *
  */
-public class MplCompareProductValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider, Serializable
+public class MplCompareProductValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider,
+		Serializable
 {
 	private FieldNameProvider fieldNameProvider;
 
@@ -62,8 +63,17 @@ public class MplCompareProductValueProvider extends AbstractPropertyFieldValuePr
 				final Collection<FieldValue> fieldValues = new ArrayList<FieldValue>();
 				for (final CategoryModel category : categories)
 				{
-					if (category.getCode().startsWith("MSH"))
+					if (null != productModel.getLuxIndicator() && productModel.getLuxIndicator().getCode().equalsIgnoreCase("luxury")
+							&& category.getCode().startsWith("LSH"))
 					{
+
+						categoryCode = category.getCode();
+						break;
+
+					}
+					else if (category.getCode().startsWith("MSH"))
+					{
+
 						categoryCode = category.getCode();
 						break;
 					}

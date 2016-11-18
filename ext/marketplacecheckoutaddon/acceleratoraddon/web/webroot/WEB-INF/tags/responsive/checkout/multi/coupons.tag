@@ -1,4 +1,3 @@
-<%@ attribute name="cartData" required="true" type="de.hybris.platform.commercefacades.order.data.CartData" %>
 <%@ attribute name="showTax" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="showTaxEstimate" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="subtotalsCssClasses" required="false" type="java.lang.String" %>
@@ -7,6 +6,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ attribute name="isCart" required="false" type="java.lang.Boolean" %>	<!-- TPR-629 -->
 	
 <div class="coupon block">
 <h2>Apply Coupon Code</h2>
@@ -22,7 +22,8 @@
 		<span class="error-message" id="notReservableCouponError"><spring:theme code="checkout.multi.coupons.notReservable"/></span>
 		<span class="error-message" id="freebieCouponError"><spring:theme code="checkout.multi.coupons.freebie"/></span>
 		<span class="error-message" id="userInvalidCouponError"><spring:theme code="checkout.multi.coupons.userInvalid"/></span>
-
+<!-- changes for  [ TPR-1075]-->
+	   <span class="error-message" id="firstPurchaseOfferError"><spring:theme code="checkout.multi.coupons.firstPurchaseInvalid"/></span>
 	<!-- Top 5 coupons-----Commented as functionality out of scope of R2.1   Uncomment when in scope -->
 	<%-- <div id="voucherDisplay">
 		<c:if test="${not empty voucherDataList}">

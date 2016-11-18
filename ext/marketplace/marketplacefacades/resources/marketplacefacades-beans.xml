@@ -170,6 +170,10 @@
 		<property name="productTitle" type="String" />
 		<property name="fulfillmentType" type="String" />
 		<property name="sellerName" type="String" />
+		<!-- LW-216 -->
+		<property name="luxIndicator" type="String" />
+		
+
 		<property name="stockValue" type="boolean" />
 		<!-- pdp changes ends -->
 
@@ -189,6 +193,9 @@
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<!-- Added for TISPRM-56 -->
 		<property name="allVariantsId" type="java.util.List&lt;java.lang.String>"/>
+		<!-- CHANGES FOR TPR-249 -->
+		<property name="displaySizes" type="java.util.List&lt;java.lang.String>"></property>
+
 	</bean>
 
 	<!-- pdp changes begins -->
@@ -461,6 +468,11 @@
 		<property name="euroSize" type="String"/>
 		<property name="usSize" type="String"/>
 		<property name="age" type="String"/>
+		<property name="cmsBeltSize" type="String" />
+		<property name="inchesBeltSize" type="String" />
+		<property name="cmsWaistSize" type="String" />
+		<property name="inchesWaistSize" type="String" />
+		<property name="inchesBeltLength" type="String" />
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData">
@@ -682,6 +694,11 @@
     	<property name="productID" type="String" />
        	<property name="componentType" type="String" />
     </bean>
+    <!-- TPR-1316 -->
+    <bean class="com.tisl.mpl.facades.cms.data.ProductComponentData">
+    	<property name="productList" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.ProductListComponentData>"/>
+       	<property name="componentType" type="String" />
+    </bean>
     
     <bean class="com.tisl.mpl.facades.cms.data.ImageListComponentData">
     	<property name="type" type="String" />
@@ -697,6 +714,7 @@
     	<property name="textComponents" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.TextComponentData>"/>
     	<property name="bannerComponents" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.BannerComponentData>"/>
     	<property name="productComponents" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.ProductListComponentData>"/>
+    	<property name="productSliderComponents" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.ProductComponentData>"/>
     	<property name="bannerslistComponents" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.ImageListComponentData>"/>
     	<property name="sectionName" type="String" />
        	<property name="lastModifiedTime" type="java.util.Date" />
@@ -841,10 +859,14 @@
 	
 	<bean class="de.hybris.platform.commerceservices.search.solrfacetsearch.data.SolrSearchQueryData">
 		<property name="sns" type="boolean"/>
+		<!-- Added for Luxury -->
+		<!-- <property name="luxarySite" type="boolean"/> -->
 	</bean>
 
 	<bean class="de.hybris.platform.commercefacades.search.data.SearchStateData">
 		<property name="sns" type="boolean"/>
+		<!-- Added for Luxury -->
+		<property name="luxurySiteFrom" type="String"/>
 	</bean>
 
 	<!-- Return Item Address Data -->
@@ -906,4 +928,29 @@
 		<property name="sellerData" type="java.util.List&lt;com.tisl.mpl.facades.data.EnhancedSearchSellerData>"></property>
 	</bean>
 	
+	<!-- TPR-978 -->
+	<bean class="de.hybris.platform.commercefacades.product.data.ProductContentData">
+		<property name="section" type="String" />		
+		<property name="textList" type="java.util.List&lt;java.lang.String>"></property>
+		<property name="imageList" type="java.util.List&lt;java.lang.String>"></property>
+		<property name="videoList" type="java.util.List&lt;java.lang.String>"></property>
+	</bean>
+	
+	<!-- TPR-774 -->
+	<bean class="de.hybris.platform.commercefacades.order.data.OrderEntryData">		
+		<property name="mrp" type="de.hybris.platform.commercefacades.product.data.PriceData"/>		
+		<property name="totalMrp" type="de.hybris.platform.commercefacades.product.data.PriceData"/>		
+		<property name="productPerDiscDisplay" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+	</bean>
+	<!-- TPR-774 -->
+
+
+	<bean class="com.tisl.mpl.facades.data.BulkCancelStoreData">
+		<property name="subOrderDetails" type="de.hybris.platform.commercefacades.order.data.OrderData"></property>
+		<property name="bulkCancelModelData" type="de.hybris.platform.core.model.BulkCancellationProcessModel"></property>
+	</bean>
+	<bean class="com.tisl.mpl.facades.data.BulkReturnStatusData">
+		<property name="consignmentStatus" type="String"></property>
+		<property name="returnStatus" type="java.lang.Boolean"></property>
+	</bean>
 </beans>

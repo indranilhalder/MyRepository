@@ -136,8 +136,14 @@ public class CustomImagePopulator<SOURCE extends VariantProductModel, TARGET ext
 		final MediaContainerModel mediaContainer = getPrimaryImageMediaContainer(variantProductModel);
 		if (mediaContainer != null)
 		{
+			String styleSwatch = MarketplaceFacadesConstants.STYLE_SWATCH;
+			if (null != variantProductModel.getLuxIndicator()
+					&& variantProductModel.getLuxIndicator().getCode().equalsIgnoreCase("luxury"))
+			{
+				styleSwatch = MarketplaceFacadesConstants.LUXURY_STYLE_SWATCH;
+			}
 
-			final MediaModel media = getMediaWithImageFormat(mediaContainer, MarketplaceFacadesConstants.STYLE_SWATCH);
+			final MediaModel media = getMediaWithImageFormat(mediaContainer, styleSwatch);
 
 			if (media != null)
 			{
@@ -145,7 +151,6 @@ public class CustomImagePopulator<SOURCE extends VariantProductModel, TARGET ext
 			}
 		}
 	}
-
 
 	protected MediaModel getMediaWithImageFormat(final MediaContainerModel mediaContainer, final String imageFormat)
 	{
@@ -160,7 +165,15 @@ public class CustomImagePopulator<SOURCE extends VariantProductModel, TARGET ext
 				if (mediaFormat != null)
 				{
 					//return getMediaContainerService().getMediaForFormat(mediaContainer, mediaFormat);
-					mediaModel = getMediaContainerService().getMediaForFormat(mediaContainer, mediaFormat);
+					try
+					{
+						mediaModel = getMediaContainerService().getMediaForFormat(mediaContainer, mediaFormat);
+					}
+					catch (final Exception ex)
+					{
+						LOG.error("Could not find Media for the given resolution::::" + mediaFormat.getQualifier() + ":::"
+								+ ex.getMessage());
+					}
 				}
 			}
 		}

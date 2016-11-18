@@ -1,15 +1,17 @@
 package com.tisl.mpl.marketplacecommerceservices.service;
 
 import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.exceptions.CalculationException;
-import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 
 import java.util.List;
@@ -91,7 +93,8 @@ public interface MplPaymentService
 	 * @param paymentMode
 	 * @param cart
 	 */
-	void saveCardDetailsFromJuspay(GetOrderStatusResponse orderStatusResponse, Map<String, Double> paymentMode, CartModel cart);
+	void saveCardDetailsFromJuspay(GetOrderStatusResponse orderStatusResponse, Map<String, Double> paymentMode,
+			AbstractOrderModel cart);
 
 
 	/**
@@ -105,7 +108,7 @@ public interface MplPaymentService
 	 *            ,Exception
 	 */
 	void saveCODPaymentInfo(String custName, Double cartValue, Double totalCODCharge, List<AbstractOrderEntryModel> entries,
-			CartModel cartModel) throws EtailNonBusinessExceptions, Exception;
+			AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
 
 
 	/**
@@ -117,7 +120,7 @@ public interface MplPaymentService
 	 * @param cart
 	 *
 	 */
-	void setPaymentTransaction(GetOrderStatusResponse orderStatusResponse, Map<String, Double> paymentMode, CartModel cart);
+	void setPaymentTransaction(GetOrderStatusResponse orderStatusResponse, Map<String, Double> paymentMode, AbstractOrderModel cart);
 
 
 	/**
@@ -125,31 +128,32 @@ public interface MplPaymentService
 	 * wallet
 	 *
 	 * @param paymentMode
-	 * @param cart
+	 * @param abstractOrderModel
 	 * @throws EtailNonBusinessExceptions
 	 *            ,Exception
 	 *
 	 */
 	//TISPRD-361 method signature changes
-	void setPaymentTransactionForCOD(Map<String, Double> paymentMode, CartModel cart) throws EtailNonBusinessExceptions, Exception;
+	void setPaymentTransactionForCOD(Map<String, Double> paymentMode, AbstractOrderModel abstractOrderModel)
+			throws EtailNonBusinessExceptions;
 
 
 	/**
 	 * This method helps to save apportion for the PaymentModes which were successful
 	 *
 	 */
-	void paymentModeApportion(final CartModel cart);
+	void paymentModeApportion(final AbstractOrderModel cart);
 
 
-	/**
-	 * This method is used to check whether a Juspay order Id is present in PaymentTransactionModel in cart with status
-	 * success
-	 *
-	 * @param juspayOrderId
-	 * @param mplCustomerID
-	 * @return PaymentTransactionModel
-	 */
-	PaymentTransactionModel getOrderStatusFromCart(String juspayOrderId, String mplCustomerID);
+	//	/**
+	//	 * This method is used to check whether a Juspay order Id is present in PaymentTransactionModel in cart with status
+	//	 * success
+	//	 *
+	//	 * @param juspayOrderId
+	//	 * @param mplCustomerID
+	//	 * @return PaymentTransactionModel
+	//	 */
+	//	PaymentTransactionModel getOrderStatusFromCart(String juspayOrderId, String mplCustomerID);
 
 	/**
 	 * This method returns the list of Countries
@@ -162,7 +166,9 @@ public interface MplPaymentService
 	/**
 	 *
 	 * @param cartData
-	 * @param cart
+	 * @param orderData
+	 * @param cartModel
+	 * @param orderModel
 	 * @return MplPromoPriceData
 	 * @throws VoucherOperationException
 	 * @throws JaloInvalidParameterException
@@ -170,9 +176,10 @@ public interface MplPaymentService
 	 * @throws ModelSavingException
 	 * @throws EtailNonBusinessExceptions
 	 */
-	MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart) throws ModelSavingException,
-			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
-			JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions;
+	MplPromoPriceData applyPromotions(final CartData cartData, final OrderData orderData, final CartModel cartModel,
+			final OrderModel orderModel, final MplPromoPriceData promoPriceData) throws ModelSavingException, NumberFormatException,
+			JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException,
+			JaloPriceFactoryException, EtailNonBusinessExceptions;
 
 
 	/**
@@ -224,13 +231,13 @@ public interface MplPaymentService
 	 * @param cart
 	 * @param sameAsShipping
 	 */
-	void saveCreditCard(GetOrderStatusResponse orderStatusResponse, CartModel cart, String sameAsShipping);
+	void saveCreditCard(GetOrderStatusResponse orderStatusResponse, AbstractOrderModel cart, String sameAsShipping);
 
 	/**
 	 * @param orderStatusResponse
 	 * @param cart
 	 */
-	void saveDebitCard(GetOrderStatusResponse orderStatusResponse, CartModel cart);
+	void saveDebitCard(GetOrderStatusResponse orderStatusResponse, AbstractOrderModel cart);
 
 	/**
 	 * This method returns the customer model based on the CustomerUid
@@ -268,25 +275,32 @@ public interface MplPaymentService
 	 * 
 	 * @throws Exception
 	 */
-	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions, Exception;
+	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions;
 
 	/**
 	 * TISPT-200
 	 *
 	 * @param cartGuid
 	 * @return String
-	 * @throws Exception
 	 * @throws EtailNonBusinessExceptions
 	 */
-	String getAuditId(String cartGuid) throws EtailNonBusinessExceptions, Exception;
+	String getAuditId(String cartGuid) throws EtailNonBusinessExceptions;
 
 	/**
 	 * TIS-3168
 	 *
 	 * @param orderStatusResponse
 	 * @param orderStatusRequest
+	 * @param orderModel
 	 * @return boolean
 	 */
-	boolean updateAuditEntry(GetOrderStatusResponse orderStatusResponse, GetOrderStatusRequest orderStatusRequest);
+	boolean updateAuditEntry(GetOrderStatusResponse orderStatusResponse, GetOrderStatusRequest orderStatusRequest,
+			final OrderModel orderModel, Map<String, Double> paymentMode);
+
+	/**
+	 * @param guid
+	 * @return OrderModel
+	 */
+	OrderModel fetchOrderOnGUID(String guid);
 
 }

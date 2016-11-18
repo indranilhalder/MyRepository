@@ -27,6 +27,16 @@
 	http://www.springframework.org/schema/context
     http://www.springframework.org/schema/context/spring-context.xsd">
 
+
+ <bean id="fileOrderComparator"
+	class="de.hybris.platform.acceleratorservices.dataimport.batch.FileOrderComparator">
+			<property name="prefixPriority">
+					<map>
+					<entry key="Pincode" value="0" />
+					<entry key="City" value="0" />
+					</map>
+			</property>
+	</bean>  
  <bean id="baseDirectoryMarketplacePincode" class="java.lang.String">
         <constructor-arg value="#{baseDirectory}/${tenantId}/marketplace-pincode" />
     </bean>
@@ -73,11 +83,53 @@
                 $catalog=$CATALOG$
                 $catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
                 #% impex.setLocale(Locale.ENGLISH);
-				INSERT_UPDATE Pincode;pincode[unique=true];latitude;longitude  
+				INSERT_UPDATE Pincode;pincode[unique=true];latitude;longitude;State(region);City(cityName)  
        		</value>
         </property>
         <property name="impexRow">
-            <value>;{+0};{+1};{+2}</value>
+            <value>;{+0};{+1};{+2};{3};{4}</value>
         </property>
         </bean>
+        
+        
+       <!--  TPR-970 changes -->
+        <file:inbound-channel-adapter id="batchFilesMarketplaceCity" directory="#{baseDirectoryMarketplacePincode}"
+        filename-regex="^(.*)-(\d+)\.csv" comparator="fileOrderComparator">
+        <int:poller fixed-rate="1000" />
+    </file:inbound-channel-adapter>
+
+<file:outbound-gateway request-channel="batchFilesMarketplaceCity" reply-channel="batchFilesMarketplaceCityProc"
+        directory="#{baseDirectoryMarketplacePincode}/processing" delete-source-files="true" />
+
+ <int:service-activator input-channel="batchFilesMarketplaceCityProc" output-channel="batchFilesHeaderInit"
+        ref="MarketplaceCityHeaderSetupTask" method="execute" />
+
+<bean id="MarketplaceCityHeaderSetupTask" class="de.hybris.platform.acceleratorservices.dataimport.batch.task.HeaderSetupTask">
+        <property name="catalog" value="mplProductCatalog" />
+        <property name="net" value="false" />
+        <property name="storeBaseDirectory" ref="baseDirectoryMarketplacePincode" />
+    </bean>
+
+
+<bean id="batchMplcityConverterMapping"
+    class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+    p:mapping="City"
+    p:converter-ref="batchMplcityConverter"/>
+
+
+<bean id="batchMplcityConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+        <property name="header">
+            <value> ImpEx for Importing Prices into $CATALOG$
+                $catalog=$CATALOG$
+                $catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+                #% impex.setLocale(Locale.ENGLISH);
+				INSERT_UPDATE City;cityName[unique=true];description   
+       		</value>
+        </property>
+        <property name="impexRow">
+            <value>;{+0};{+1}</value>
+        </property>
+        </bean>
+             <!--  TPR-970 changes ends-->  
+        
 </beans>

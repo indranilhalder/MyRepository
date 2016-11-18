@@ -3,7 +3,7 @@
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template"%>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="product" tagdir="/WEB-INF/tags/desktop/product"%>
+<%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
 <%@ taglib prefix="cart" tagdir="/WEB-INF/tags/desktop/cart"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
@@ -21,24 +21,12 @@
 <spring:url value="/my-account/orders" var="ordersUrl" />
 <spring:url value="/my-account/default/wishList" var="wishlistUrl" />
 <spring:url value="/my-account/friendsInvite" var="friendsInviteUrl" />
-<script>
-	//jquery added to prevent stored Cross Site Scripting /TISSIT-1704/added for creating wishlist and renaming wishlist
 
-	$(document).ready(function() {
 
-		$('#newWishlistName').keyup(function() {
-			validateEnteredName("newWishlistName","errorCreate");
-		});
-		$('#newWishlistName').blur(function() {
-			validateEnteredName("newWishlistName","errorCreate");
-		});
-	});
-	
-	</script>
-
- 
 <template:page pageTitle="${pageTitle}">
-
+	<!-- LW-230 -->
+	<input type="hidden" id="isLuxury" value="${isLuxury}"/>
+	
 	<body class="wishlist" onload="readyFunction();">
 
 		<!-- START OF WRAPPER DIV SECTION -->
@@ -211,7 +199,7 @@
 					<c:if test="${isMSDEnabled}">
 					<input type="hidden" value="${isMSDEnabled}" name="isMSDEnabled" />
 						<c:forEach items="${WishlistProductDataList}" var="wishListMSD">
-							<c:if test="${wishListMSD.productData.rootCategory eq 'Clothing'||wishListMSD.productData.rootCategory eq 'Footwear'}">
+							<c:if test="${wishListMSD.productData.rootCategory eq 'Clothing'||wishListMSD.productData.rootCategory eq 'Footwear' || wishListMSD.productData.rootCategory eq 'Accessories'}">
 							        <c:set var="includeMSDJS" scope="request" value="true"/>
 							        <input type="hidden" value="true" name="isApparelExist"/>
 							</c:if>
@@ -252,11 +240,16 @@
 								<c:url value="${product.url}" var="productUrl" />
 								<li>
 									<div class="product-info">
-
+                                          
+										 <c:if test="${fn:toLowerCase(product.luxIndicator)=='marketplace' or empty product.luxIndicator}">
 										<a href="${productUrl}"> <product:productPrimaryImage
-												product="${product}" format="thumbnail" />
-										</a>
-
+														product="${product}" format="thumbnail" /></a>
+														</c:if>
+										<c:if test="${fn:toLowerCase(product.luxIndicator)=='luxury' and not empty product.luxIndicator}">
+										<a href="${productUrl}"> <product:productPrimaryImage
+														product="${product}" format="luxuryCartPage" /></a>
+														</c:if>
+										
 										<div>
 											<ul>
 												<!-- COMPANY OR BRAND NAME STATIC COMPONENT -->
@@ -387,7 +380,8 @@
 													</c:when>
 
 													<c:otherwise>
-													<c:if test="${(not empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing')||(not empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Footwear')}">
+													 <c:set var="showSizeGuideForFA" value="${showSizeMap[product.code]}" />
+													<c:if test="${(not empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing')||(not empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Footwear') ||(showSizeGuideForFA ne 'true' && wpproduct.productCategory eq 'Accessories')}">
 														<span>
 															<button id="addToCartButtonwl" type="${buttonType}"
 																class="blue button js-add-to-cart_wl">
@@ -396,7 +390,7 @@
 														</span>
 													</c:if>
                                                     
-													<c:if test="${empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Electronics'}">
+													<c:if test="${(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Electronics')||(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Watches')}">
 														<span>
 															<button id="addToCartButtonwl" type="${buttonType}"
 																class="blue button js-add-to-cart_wl">
@@ -404,7 +398,7 @@
 															</button>
 														</span>
 														</c:if>
-														<c:if test="${(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing')||(empty wpproduct.wishlistProductSize &&wpproduct.productCategory eq 'Footwear')}">
+														<c:if test="${(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing')||(empty wpproduct.wishlistProductSize &&wpproduct.productCategory eq 'Footwear')||(showSizeGuideForFA eq 'true' &&wpproduct.productCategory eq 'Accessories')}">
 														<span id="addToCartButtonId" style="display: none">
 															<button type="button" id="addToCartButtonwl" 
 																class="blue button sizeNotSpecified_wl" data-toggle="modal"
@@ -422,7 +416,7 @@
 												<c:if test="${isMSDEnabled}">
 													<input type="hidden" value="${isMSDEnabled}" id="isMSDEnabled_wl_AddToBag" />
 													<c:forEach items="${WishlistProductDataList}" var="wishListMSD">
-														<c:if test="${wishListMSD.productData.rootCategory eq 'Clothing'||wishListMSD.productData.rootCategory eq 'Footwear'}">
+														<c:if test="${wishListMSD.productData.rootCategory eq 'Clothing'||wishListMSD.productData.rootCategory eq 'Footwear' || wishListMSD.productData.rootCategory eq 'Accessories'}">
 														        <c:set var="includeMSDJS" scope="request" value="true"/>
 														        <input type="hidden" value="true" id="isApparelExist_wl_AddToBag"/>
 														</c:if>
@@ -468,7 +462,7 @@
 												<c:if test="${isMSDEnabled}">
 													<input type="hidden" value="${isMSDEnabled}" id="isMSDEnabled_wl" />
 													<c:forEach items="${WishlistProductDataList}" var="wishListMSD">
-														<c:if test="${wishListMSD.productData.rootCategory eq 'Clothing'||wishListMSD.productData.rootCategory eq 'Footwear'}">
+														<c:if test="${wishListMSD.productData.rootCategory eq 'Clothing'||wishListMSD.productData.rootCategory eq 'Footwear'  || wishListMSD.productData.rootCategory eq 'Accessories'}">
 														        <c:set var="includeMSDJS" scope="request" value="true"/>
 														        <input type="hidden" value="true" id="isApparelExist_wl"/>
 														</c:if>
@@ -943,3 +937,17 @@
 	
 </script>
 
+<script>
+	//jquery added to prevent stored Cross Site Scripting /TISSIT-1704/added for creating wishlist and renaming wishlist
+ 
+	$(document).ready(function() {
+
+		$('#newWishlistName').keyup(function() {
+			validateEnteredName("newWishlistName","errorCreate");
+		});
+		$('#newWishlistName').blur(function() {
+			validateEnteredName("newWishlistName","errorCreate");
+		});
+	});
+	
+	</script>
