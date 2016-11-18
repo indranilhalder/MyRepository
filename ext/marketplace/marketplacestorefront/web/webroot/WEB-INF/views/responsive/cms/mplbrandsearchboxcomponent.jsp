@@ -7,6 +7,7 @@
 
 <%-- <c:url value="/**/c-${brandCode}" var="searchUrl" /> --%>
 <c:url value="/search/" var="searchUrl" />
+<input type="hidden" name="brandCodeVal" value="${brandCode}"/>
 <div class="ui-front active ">
 	<form id="search_form_brand" name="search_form_brand" method="get"
 		action="${searchUrl}">
@@ -21,7 +22,7 @@
 			   
 		
 		<spring:theme code="search.placeholder" var="searchPlaceholder" />
-		
+		<input type="hidden" name="q" value=""/
 		<ycommerce:testId code="header_search_input">
 			<input type="text" id="js-site-micrositesearch-input"
 				class="form-control js-site-micrositesearch-input" name="text" value=""
@@ -31,13 +32,25 @@
 	</form>
 </div>
 <script>
-$("#search_form_brand").submit(function(){
+/* $("#search_form_brand").submit(function(){
 	if($("#js-site-micrositesearch-input").val()){
+		var q=$("#js-site-micrositesearch-input").val()+":relevance:brand:${categoryName}";
 		$("input[name=blpLogo]").val($(".common_logo_slot_wrapper").find(".image").attr("src"));
+		$("input[name=q]").val(q);
+		return true;
+	}else{
+		return false;
+	}
+}); */
+$("#search_form_brand").submit(function(){
+	var brandVal=$("#brandCodeVal").val();
+	if($("#js-site-micrositesearch-input").val()){
+		var q=$("#js-site-micrositesearch-input").val()+":relevance:brand:brandVal";
+		$("input[name=blpLogo]").val($(".common_logo_slot_wrapper").find(".image").attr("src"));
+		$("input[name=q]").val(q);
 		return true;
 	}else{
 		return false;
 	}
 });
-
 </script>
