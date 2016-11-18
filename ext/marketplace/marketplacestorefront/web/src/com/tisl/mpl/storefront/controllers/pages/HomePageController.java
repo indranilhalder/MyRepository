@@ -244,8 +244,8 @@ public class HomePageController extends AbstractPageController
 
 				if (component instanceof MplShowcaseComponentModel)
 				{
-					//TPR-559 Show/Hide Components and Sub-components
-					if (component.getVisible().booleanValue())
+					//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+					if (component.getVisible().booleanValue() && homepageComponentService.showOnTimeRestriction(component))
 					{
 						final MplShowcaseComponentModel brandsYouLoveComponent = (MplShowcaseComponentModel) component;
 						brandsYouLoveJson = getJSONForShowcaseComponent(brandsYouLoveComponent);
@@ -300,8 +300,8 @@ public class HomePageController extends AbstractPageController
 			String brandLogoAltText = EMPTY_STRING;
 			for (final MplShowcaseItemComponentModel showcaseItem : showCaseComponent.getShowcaseItems())
 			{
-				//TPR-559 Show/Hide Components and Sub-components
-				if (showcaseItem.getVisible().booleanValue())
+				//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+				if (showcaseItem.getVisible().booleanValue() && homepageComponentService.showOnTimeRestriction(showcaseItem))
 				{
 					final JSONObject showCaseItemJson = new JSONObject();
 					showCaseItemJson.put("compId", showcaseItem.getUid());
@@ -586,8 +586,8 @@ public class HomePageController extends AbstractPageController
 
 				if (component instanceof ProductCarouselComponentModel)
 				{
-					//TPR-559 Show/Hide Components and Sub-components
-					if (component.getVisible().booleanValue())
+					//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+					if (component.getVisible().booleanValue() && homepageComponentService.showOnTimeRestriction(component))
 					{
 						final ProductCarouselComponentModel newAndExclusiveComponent = (ProductCarouselComponentModel) component;
 						String title = EMPTY_STRING;
@@ -863,8 +863,8 @@ public class HomePageController extends AbstractPageController
 
 				if (component instanceof MplShowcaseComponentModel)
 				{
-					//TPR-559 Show/Hide Components and Sub-components
-					if (component.getVisible().booleanValue())
+					//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+					if (component.getVisible().booleanValue() && homepageComponentService.showOnTimeRestriction(component))
 					{
 						final MplShowcaseComponentModel collectionShowcaseComponent = (MplShowcaseComponentModel) component;
 						collectionShowcase = getJSONForShowcaseComponent(collectionShowcaseComponent);
