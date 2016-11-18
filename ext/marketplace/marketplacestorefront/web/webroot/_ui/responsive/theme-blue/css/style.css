@@ -44889,6 +44889,7 @@ body .account .right-account>ul.menu>li>div h2{
 body .account .right-account>ul.menu>li>div h2{
 	margin-bottom: 20px;
     font-size: 16px;
+    letter-spacing: normal;
 }
 body .account .right-account h2{
 	margin-bottom: 20px;
@@ -45270,6 +45271,7 @@ body.pageLabel-Footwear .feature-collections ul.collections li.chef .feature-col
 	body .account .right-account>ul.menu>li>div h2{
 	    font-size: 14px;
     	margin-bottom: 10px;
+    	letter-spacing: 1px;
 	}
 	.cart.wrapper .wishlist-banner h3, .confirmation .wishlist-banner h3{
 		text-align: left;
