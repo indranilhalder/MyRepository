@@ -497,6 +497,7 @@ ACC.carousel = {
             		autoplay: true,
                     autoHeight : true,
                     autoplayTimeout: 5000,
+                    slideBy: 2,
             		responsive : {
             			// breakpoint from 0 up
             			0 : {
@@ -545,6 +546,7 @@ ACC.carousel = {
             		autoplay: true,
                     autoHeight : true,
                     autoplayTimeout: 5000,
+                    slideBy: 2,
             		responsive : {
             			// breakpoint from 0 up
             			0 : {
