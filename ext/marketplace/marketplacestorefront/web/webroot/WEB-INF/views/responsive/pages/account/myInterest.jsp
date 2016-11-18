@@ -47,7 +47,7 @@
 		<div class="myInterestCategory">
 			<fieldset class="products">
 				<div class="questionnaire-title">
-					<h1>What types of products are you interested in?</h1>
+					<h2 class="myInterestCategoryH2First">What types of products are you interested in?</h2>
 					<h2>Choose at least one.</h2>
 				</div>
 				<div class="question categoryPopulate">
@@ -77,7 +77,7 @@
 				<div class="brandsCategory">
 				<fieldset class="brands">
 					<div class="questionnaire-title">
-						<h1>What brands are you interested in?</h1>
+						<h2 class="brandsCategoryH2First">What brands are you interested in?</h2>
 						<h2>Choose at least one.</h2>
 					</div>
 					<div id="brandContainer" class="question">
@@ -102,7 +102,7 @@
 				<div class="brandsSubCategory">
 				<fieldset class="objects">
 					<div class="questionnaire-title">
-						<h1 id="objHeading"></h1>
+						<h2 id="objHeading"></h2>
 						<h2>Choose at least three.</h2>
 					</div>
 					<div class="question" id="objects">
@@ -120,7 +120,7 @@
 				<div class="brandsSubCategoryApparel">
 				<fieldset class="objects-apparel">
 					<div class="questionnaire-title">
-						<h1 id="objHeadingApparel"></h1>
+						<h2 id="objHeadingApparel"></h2>
 						<h2>Choose at least three.</h2>
 					</div>
 					<div class="question" id="apparelObjects">
@@ -138,7 +138,7 @@
 				<div class="brandsSubCategoryeElectronics">	
 				<fieldset class="objects-electronics">
 					<div class="questionnaire-title">
-						<h1 id="objHeadingElectronics"></h1>
+						<h2 id="objHeadingElectronics"></h2>
 						<h2>Choose at least three.</h2>
 					</div>
 					<div class="question" id="electronicObjects">
