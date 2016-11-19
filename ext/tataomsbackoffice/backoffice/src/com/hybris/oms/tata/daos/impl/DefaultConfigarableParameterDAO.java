@@ -112,9 +112,9 @@ public class DefaultConfigarableParameterDAO implements ConfigarableParameterDAO
 	public void saveMplBUCConfigurations(final MplBUCConfigurationsModel mplBucConfigurations)
 	{
 		final FlexibleSearchQuery flexibleSearchQuery = new FlexibleSearchQuery(LRP_CONFIG_GET_ALLMPLBUCCONFIGARATIONS);
-		final MplBUCConfigurationsModel mplBUCModel = flexibleSearchService.<MplBUCConfigurationsModel> search(flexibleSearchQuery)
-				.getResult().get(0);
-		mplBUCModel.setSdCharge(mplBucConfigurations.getSdCharge());
-		modelService.save(mplBUCModel);
+		modelService.removeAll(flexibleSearchService.<MplBUCConfigurationsModel> search(flexibleSearchQuery).getResult());
+		final MplBUCConfigurationsModel newModel = modelService.create(MplBUCConfigurationsModel.class);
+		newModel.setSdCharge(mplBucConfigurations.getSdCharge());
+		modelService.save(newModel);
 	}
 }

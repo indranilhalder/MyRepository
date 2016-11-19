@@ -18,7 +18,7 @@
 		13px; } .error_class{font-size:13px;color:red;}
 		.success_class{font-size:13px;color:green;width:40}
 	</style>
-	<grid id="gridForm" style="width:100%;height:100%;padding-left:10px;" >
+	<grid id="gridForm">
 		<rows>
 			<row>
 				<label class="lheading" value="Delivery Time Lines" />
@@ -114,16 +114,19 @@
 			</row>
 			<row>		
 			</row>
-			<row style="border-bottom:none">
+			
+		</rows>
+	</grid>
+	<hbox pack="center">
+	
 				<label value="Scheduled Delivery Charge" hflex="1" />				
-				<doublebox id="sdCharge" width="320px"
+				<doublebox id="sdCharge" width="120px" maxlength="4"
 					onChanging="sdChargeMessage.visible=false"  class="success_class"/>
 				<button id="saveMplBucConfigaration" label="Save" />	
 				<label id="sdChargeMessage"
 					visible="false" value="Required Scheduled Delevery Charge" />	
-			</row>
-		</rows>
-	</grid>
+		
+	</hbox>
 	<div class="popuped" id="sdpopup" visible="false"
 		action="show: slideDown;hide: slideUp">
 		<label class="headingpopup"

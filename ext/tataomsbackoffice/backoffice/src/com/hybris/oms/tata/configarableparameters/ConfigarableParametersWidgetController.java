@@ -141,7 +141,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	{
 		final Double sd = sdCharge.getValue();
 
-		if (sd == null || sd <= 0)
+		if (sd == null || sd < 0)
 		{
 			sdChargeMessage.setVisible(true);
 		}
