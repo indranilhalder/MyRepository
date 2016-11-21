@@ -149,8 +149,8 @@ $(document).ready(
 					&& pageType != '/sellersdetailpage' && pageType != 'productsearch'
 					&& pageType != 'category' && pageType != 'cart'
 					&& pageType != 'multistepcheckoutsummary'
-					&& pageType != 'profile' && pageType != 'wishlist'
-					&& pageType != 'orderconfirmation'
+					&& pageType != 'profile' 
+					//&& pageType != 'orderconfirmation'
 					&& pageType != 'notfound'
 					&& pageType != 'businesserrorfound'
 					&& pageType != 'nonbusinesserrorfound'
@@ -571,7 +571,8 @@ $(document).on("click", ".home-brands-you-love-carousel-brands", function() {
 	var text = $(this).find('img').attr('alt');
 	if(text != ""){
 		text = $(this).find('img').attr('alt').toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
-		var header = $(this).parents('#brandsYouLove').find('h1').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+		//TISQAEE-59
+		var header = $('#brandsYouLove').find('h2').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
 		utag.link({
 			link_obj: this,
 			link_text: header+":"+text,

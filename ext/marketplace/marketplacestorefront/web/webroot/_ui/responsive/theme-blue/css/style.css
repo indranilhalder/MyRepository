@@ -22304,11 +22304,11 @@ body .right-account .order-history .cancellation-request-block h2 {
     background: #f0f4f5;
     line-height: 30px;
     padding: 15px 10px;
-
     font-size: 28px;
     font-weight: 500;
     text-align:left;
     color:#A9143C;
+    letter-spacing:normal;
 }
 @media (max-width: 790px) {
     body .right-account .order-history .cancellation-request-block h2 {
@@ -45001,6 +45001,7 @@ body .account .right-account .order-history .product-block .cancellation-request
     font-weight: 500;
     background: transparent;
     padding: 0;
+    height: initial;
 }
 body .account .right-account ul.saved-cards>li.mpl-addressBook h2{
 	font-weight: bold;
@@ -45108,7 +45109,7 @@ body .account .right-account .order-history .product-block li.item .cancellation
 body .right-account .order-history .cancellation-request-block.success>div>h2>#resultTitle{
 	font-size: 28px;
     margin-top: 0;
-    display: block;
+    /* display: block; */
   /*   line-height: 1.5; */
 }
 body .account .right-account .order-history.order-details li.header div.delivery-address h2{
@@ -45131,6 +45132,7 @@ body .right-account .order-history .cancellation-request-block.success>div h2{
     margin: 0;
     background-color: transparent;
     text-align: center;
+    line-height: 28px;
 }
 .click-to-chat h1, #clicktoCallModal h1{
 	font-weight: 600;
@@ -45506,7 +45508,7 @@ body.page-homepage .trending h2 > span{
     height: 29px;
     line-height: 29px;
 }
-#deleteReview h2.modal-title,#updateReview h2.modal-title,#reviewPluginContainer h2.modal-title{
+#deleteReview h2.modal-title,#updateReview h2.modal-title,#reviewPluginContainer h2.modal-title,h2.modal-title#myModalLabel{
     font-size: inherit;
     font-weight:normal;
     margin: 0;
@@ -45519,6 +45521,43 @@ body.page-homepage .trending h2 > span{
     margin: 0;
     padding: 0;
     letter-spacing: normal;
+}
+.myInterestCategory .questionnaire-title h2.myInterestCategoryH2First,.brandsCategory .questionnaire-title h2.brandsCategoryH2First,
+.brandsSubCategory .questionnaire-title h2#objHeading,.brandsSubCategoryApparel .questionnaire-title h2#objHeadingApparel,
+.brandsSubCategoryeElectronics .questionnaire-title h2#objHeadingElectronics{
+	color: #a9143c;
+    font-size: 32px;
+    padding: 30px 0;
+    max-width: none;
+}
+.mybag-undo-form h2 {
+    font-size: 17px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+    line-height: 1;
+}
+.forgot-password-container h2, .click2chat-container h2, .click2call-container h2, .manage-wishlist-container h2, .create-new-wishlist-popup-container h2, .return-requestInvoice h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    line-height: 24px;
+    width: 100%;
+    float: right;
+}
+/* Product related starts */
+body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo h2.product-brand-name, body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo h2.product-name {
+    font-size: 14px;
+    text-transform: uppercase;
+    line-height: 24px;
+    font-weight: normal !important;
+    margin: 0 !important;
+}
+/* Product related ends */
+@media only screen and (max-width: 1450px){
+	body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo h2.product-brand-name, body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo h2.product-name{
+    font-size: 11px !important;
+    line-height: 18px;
+}
 }
 @media(max-width:1024px){
 .page-productDetails .trending h2 {
@@ -45558,6 +45597,9 @@ body.page-homepage .trending h2>span{
 .click2chat-container h2{
 	font-size: 22px;
 }
+.forgot-password-container h2, .click2chat-container h2, .click2call-container h2, .manage-wishlist-container h2, .create-new-wishlist-popup-container h2, .return-requestInvoice h2 {
+    font-size: 22px;
+}
 }
 @media(max-width:767px){
 .page-productDetails .trending h2 {		
@@ -45578,6 +45620,16 @@ body.page-homepage .trending h2>span{
 	body.page-homepage .trending h2>span {
     	font-size: 20px !important;
 	}	
+}
+@media(max-width:650px){
+	.myInterestCategory .questionnaire-title h2.myInterestCategoryH2First,.brandsCategory .questionnaire-title h2.brandsCategoryH2First,
+	.brandsSubCategory .questionnaire-title h2#objHeading,.brandsSubCategoryApparel .questionnaire-title h2#objHeadingApparel,
+	.brandsSubCategoryeElectronics .questionnaire-title h2#objHeadingElectronics{
+		color: #a9143c;
+    	font-size: 32px;
+    	padding: 30px 0;
+    	max-width: none;
+	}
 }
 /* Comment on 16/11/2016 ends IA*/
 
