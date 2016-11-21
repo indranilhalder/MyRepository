@@ -4459,19 +4459,19 @@
 
 					
 					<attribute type="java.lang.Integer" qualifier="slideBy"
-						autocreate="true" generate="true">
-						<description>SlideBy for AdvancedCategoryCarouselComponent</description>
-						<modifiers read="true" write="true" search="true" />
-						<persistence type='property' />
-					</attribute>
-					
-					<attribute type="java.lang.Integer" qualifier="autoplayTimeout"
-						autocreate="true" generate="true">
-						<description>AutoplayTimeout for AdvancedCategoryCarouselComponent</description>
-						<modifiers read="true" write="true" search="true" />
-						<persistence type='property' />
-					</attribute>
-					
+                      autocreate="true" generate="true">
+ 					<description>SlideBy for AdvancedCategoryCarouselComponent</description>
+ 					<modifiers read="true" write="true" search="true" />
+ 					<persistence type='property' />
+ 				   </attribute>
+ 				
+ 				   <attribute type="java.lang.Integer" qualifier="autoplayTimeout"
+ 					autocreate="true" generate="true">
+ 						<description>AutoplayTimeout for AdvancedCategoryCarouselComponent</description>
+ 						<modifiers read="true" write="true" search="true" />
+ 						<persistence type='property' />
+ 				  </attribute>
+			
 					<attribute type="java.lang.Boolean" qualifier="autoPlay"
 						autocreate="true" generate="true">
 						<description>Autoplay for AdvancedCategoryCarouselComponent</description>
@@ -4481,6 +4481,7 @@
 					</attribute>
 
 				
+
 
 				</attributes>
 			</itemtype>

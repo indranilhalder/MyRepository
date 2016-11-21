@@ -5,6 +5,10 @@
 
 <div class="carousel-component">
 <div class="feature-collections">
+
+<input type="hidden" id="slideByOffer" value="${component.slideBy}">
+<input type="hidden" id="autoPlayOffer" value="${component.autoPlay}">
+<input type="hidden" id="autoplayTimeoutOffer" value="${component.autoplayTimeout}">
 <h2>${component.title}</h2>
 </div>
 	<div class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference offersCarousel" id="shopByLookCarousel">
