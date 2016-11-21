@@ -664,9 +664,10 @@ INSERT_UPDATE RendererTemplate;code[unique=true];templatescript[lang=en];
 	#foreach( $siteMapUrl in $ctx.siteMapData )
 		<url>
 			<loc>${ctx.baseUrl}${siteMapUrl.loc}</loc>
-			
-			<changefreq>${ctx.changeFreq}</changefreq>
-			<priority>${ctx.priority}</priority>
+			<lastmod>${siteMapUrl.lastMod} </lastmod>
+			<changefreq>${siteMapUrl.changeFrequency}</changefreq>
+			<priority>${siteMapUrl.priority}</priority>
+
 		</url>
 	#end
 </urlset>"
