@@ -532,7 +532,7 @@
 															<h2>Request Cancellation</h2>
 
 															<div>
-																<h2>
+																<h2 class="trackOrderLnHt">
 																	<span id="resultTitle"></span>
 																</h2>
 																<div>

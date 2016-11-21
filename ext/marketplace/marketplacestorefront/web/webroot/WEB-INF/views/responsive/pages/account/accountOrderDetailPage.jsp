@@ -738,7 +738,7 @@
 													<h2>Return Cancellation</h2>
 
 													<div>
-														<h2 class="trackOrderLnHt">
+														<h2>
 															<span id="resultTitle"></span>
 														</h2>
 														<div>
