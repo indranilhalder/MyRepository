@@ -664,15 +664,7 @@ INSERT_UPDATE RendererTemplate;code[unique=true];templatescript[lang=en];
 	#foreach( $siteMapUrl in $ctx.siteMapData )
 		<url>
 			<loc>${ctx.baseUrl}${siteMapUrl.loc}</loc>
-
-			#if ($siteMapUrl.images)
-				#foreach( $image in $siteMapUrl.images )
-					<image:image>
-						<image:loc>${ctx.mediaUrl}${image}</image:loc>
-					</image:image>
-
-				#end
-			#end
+			
 			<changefreq>${ctx.changeFreq}</changefreq>
 			<priority>${ctx.priority}</priority>
 		</url>
