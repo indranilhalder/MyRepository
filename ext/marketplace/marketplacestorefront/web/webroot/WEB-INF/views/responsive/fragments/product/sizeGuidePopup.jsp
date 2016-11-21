@@ -430,13 +430,12 @@ var productCodeSG = '${product.code}';
 							 <c:otherwise>
 								<a href="${variantUrl}&sizeSelected=true" data-target="#popUpModal" data-productcode="${variantOption.code}" data-toggle="modal">
 						     </c:otherwise>
-							 </c:choose> --%>
-											
+							 </c:choose> --%>			
 								 <c:forEach
 									items="${variantOption.colourCode}" var="color">
 								<c:choose>
 								<c:when test="${fn:startsWith(color, 'multi')}">
-						     	<img src="${commonResourcePath}/images/multi.jpg" height="20" width="20" title="${variantOption.colour}" />
+						     	<img src="${commonResourcePath}/images/multi.jpg" height="74" width="50" title="${variantOption.colour}" />
 								</c:when>
 								
 								<c:when test="${empty variantOption.image}">
