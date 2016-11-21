@@ -45105,12 +45105,16 @@ body .account .right-account .order-history .product-block li.item .cancellation
     padding: 20px 15px 15px;
     text-align: center;
     background-color: transparent;
+    height: auto;
 }
 body .right-account .order-history .cancellation-request-block.success>div>h2>#resultTitle{
 	font-size: 28px;
     margin-top: 0;
     /* display: block; */
-  /*   line-height: 1.5; */
+    /* line-height: 1.5; */
+}
+body .right-account .order-history .cancellation-request-block.success>div>h2.trackOrderLnHt>#resultTitle{
+	line-height: 1.5;
 }
 body .account .right-account .order-history.order-details li.header div.delivery-address h2{
 	font-size: 14px;
@@ -45553,6 +45557,12 @@ body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo h2.prod
     margin: 0 !important;
 }
 /* Product related ends */
+body .right-account .order-history .cancellation-request-block>h2{
+	font-size: 28px !important;
+    font-weight: 500 !important;
+    height: auto !important;
+    margin-bottom: 20px !important;
+}
 @media only screen and (max-width: 1450px){
 	body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo h2.product-brand-name, body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo h2.product-name{
     font-size: 11px !important;
