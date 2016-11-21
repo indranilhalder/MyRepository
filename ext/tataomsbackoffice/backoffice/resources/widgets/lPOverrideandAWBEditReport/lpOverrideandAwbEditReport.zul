@@ -6,131 +6,125 @@
 	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
 	height="100%">
 	<style>
-		.z-listcell-content, .z-listgroup-content, .z-listgroupfoot-content, .z-listfooter-content {
-		font-family: "Open Sans",Arial,Sans-serif;
-font-size: 12px;
-font-weight: 400;
-font-style: normal;
-color: #555;
-padding: 3px 4px 4px;
-line-height: -1px;
-overflow: none;
-cursor: pointer;
-}
+		.z-listcell-content, .z-listgroup-content,
+		.z-listgroupfoot-content, .z-listfooter-content { font-family:
+		"Open Sans",Arial,Sans-serif; font-size: 12px; font-weight: 400;
+		font-style: normal; color: #555; padding: 3px 4px 4px;
+		line-height: -1px; overflow: none; cursor: pointer; }
 	</style>
-				<div style="overflow-x:auto">
-					<vlayout>
-						<hlayout>
-							<vlayout width="100px">
-								<label value="Order ID" hflex="1" />
-							</vlayout>
-							<vlayout width="200px">
-								<textbox hflex="1" id="txtOrderId"
-									style="width:200px;height:10px">
-								</textbox>
-							</vlayout>
-							<vlayout width="50px">
-								<label></label>
-							</vlayout>
-							<vlayout width="100px">
-								<label value="Transaction ID" hflex="1" />
-							</vlayout>
-							<vlayout width="200px">
-								<textbox hflex="1" id="txtTransactionId"
-									style="width:200px;height:10px">
-								</textbox>
-							</vlayout>
-						</hlayout>
-						<hlayout>
-							<vlayout width="100px">
-								<label value="Type" hflex="1" />
-							</vlayout>
-							<vlayout width="200px">
-								<listbox mold="select" id="typeListbox"
-									style="width:200px;">
-									<listitem label="AWB" />
-									<listitem label="LP" />
-									<listitem label="BOTH" />
-								</listbox>
-							</vlayout>
-							<vlayout width="50px">
-								<label></label>
-							</vlayout>
-							<vlayout width="100px">
-								<label value="Flow Type" hflex="1" />
-							</vlayout>
-							<vlayout width="200px">
-								<listbox mold="select" id="flowTypeListbox"
-									style="width:200px;">
-									<listitem label="ISFORWARD" />
-									<listitem label="ISRETURN" />
-									<listitem label="BOTH" />
-								</listbox>
-							</vlayout>
-							<vlayout
-								style="width:100px;margin-left:10px">
-								<button style="float:right"
-									label="SEARCH"  id="LpAndAwbReportsearch" />
-							</vlayout>
-						</hlayout>	
-						<separator />	
-					<listbox id="listBoxData" multiple="true"
-						mold="paging" pageSize="10"
-						emptyMessage="No result found in the result">
-						<listhead>
-							<listheader width="200px"
-								style="text-align:left" label="${labels.lbl.lbx.header1}">
-							</listheader>
-							<listheader width="260px"
-								style="text-align:left" label="${labels.lbl.lbx.header2}">
-							</listheader>
-							<listheader width="260px"
-								style="text-align:left" label="${labels.lbl.lbx.header3}">
-							</listheader>
-							<listheader width="260px"
-								style="text-align:left" label="${labels.lbl.lbx.header4}">
-							</listheader>
-							<listheader width="260px"
-								style="text-align:left" label="${labels.lbl.lbx.header5}">
-							</listheader>
-							<listheader width="260px"
-								style="text-align:left" label="${labels.lbl.lbx.header6}">
-							</listheader>
-							<listheader width="260px"
-								style="text-align:left" label="${labels.lbl.lbx.header7}">
-							</listheader>
-							<listheader width="260px"
-								style="text-align:left" label="${labels.lbl.lbx.header8}">
-							</listheader>
-							<listheader width="260px"
-								style="text-align:left" label="${labels.lbl.lbx.header9}">
-							</listheader>
-							<listheader width="260px"
-								style="text-align:left" label="${labels.lbl.lbx.header10}">
-							</listheader>
-							<listheader width="260px"
-								style="text-align:left" label="${labels.lbl.lbx.header11}">
-							</listheader>
-						</listhead>
-						<template name="model">
-							<listitem>
-								<listcell label="${each.orderId}" />
-								<listcell label="${each.transactionId}" />
-								<listcell
-									label="${each.transactionType}" />
-								<listcell label="${each.isSuccess}" />
-								<listcell label="${each.isReturn}" />
-								<listcell
-									label="${each.oldLogisticsID}" />
-								<listcell
-									label="${each.newLogisticsID}" />
-								<listcell label="${each.oldAWBNumber}" />
-								<listcell label="${each.newAWBNumber}" />
-								<listcell label="${each.userId}" />
-								<listcell label="${each.roleId}" />
-							</listitem>
-						</template>
+	<div style="overflow-x:auto">
+		<vlayout>
+			<hlayout>
+				<vlayout width="100px">
+					<label value="Order ID" hflex="1" />
+				</vlayout>
+				<vlayout width="200px">
+					<textbox hflex="1" id="txtOrderId"
+						style="width:200px;height:10px">
+					</textbox>
+				</vlayout>
+				<vlayout width="50px">
+					<label></label>
+				</vlayout>
+				<vlayout width="100px">
+					<label value="Transaction ID" hflex="1" />
+				</vlayout>
+				<vlayout width="200px">
+					<textbox hflex="1" id="txtTransactionId"
+						style="width:200px;height:10px">
+					</textbox>
+				</vlayout>
+			</hlayout>
+			<hlayout>
+				<vlayout width="100px">
+					<label value="Type" hflex="1" />
+				</vlayout>
+				<vlayout width="200px">
+					<listbox mold="select" id="typeListbox"
+						style="width:200px;">
+						<listitem label="AWB" />
+						<listitem label="LP" />
+						<listitem label="BOTH" selected="true" />
 					</listbox>
-					</vlayout>
+				</vlayout>
+				<vlayout width="50px">
+					<label></label>
+				</vlayout>
+				<vlayout width="100px">
+					<label value="Flow Type" hflex="1" />
+				</vlayout>
+				<vlayout width="200px">
+					<listbox mold="select" id="flowTypeListbox"
+						style="width:200px;">
+						<listitem label="ISFORWARD" />
+						<listitem label="ISRETURN" />
+						<listitem label="BOTH" selected="true" />
+					</listbox>
+				</vlayout>
+				<vlayout style="width:100px;margin-left:10px">
+					<button style="float:right" label="SEARCH"
+						id="LpAndAwbReportsearch" />
+				</vlayout>
+			</hlayout>
+			<separator />
+			<hbox pack="center">
+				<button id="savecsv" sclass="cng-action-icon"
+					style="margin-left:2px;padding:0px 3px 0px 0px;font-size:12px"
+					image="${wr}/images/csv_text.png" label="Download" />
+			</hbox>
+			<listbox id="listBoxData" multiple="true" mold="paging"
+				pageSize="10" emptyMessage="No result found in the result">
+				<listhead>
+					<listheader width="200px" style="text-align:left"
+						label="${labels.lbl.lbx.header1}">
+					</listheader>
+					<listheader width="260px" style="text-align:left"
+						label="${labels.lbl.lbx.header2}">
+					</listheader>
+					<listheader width="260px" style="text-align:left"
+						label="${labels.lbl.lbx.header3}">
+					</listheader>
+					<listheader width="260px" style="text-align:left"
+						label="${labels.lbl.lbx.header4}">
+					</listheader>
+					<listheader width="260px" style="text-align:left"
+						label="${labels.lbl.lbx.header5}">
+					</listheader>
+					<listheader width="260px" style="text-align:left"
+						label="${labels.lbl.lbx.header6}">
+					</listheader>
+					<listheader width="260px" style="text-align:left"
+						label="${labels.lbl.lbx.header7}">
+					</listheader>
+					<listheader width="260px" style="text-align:left"
+						label="${labels.lbl.lbx.header8}">
+					</listheader>
+					<listheader width="260px" style="text-align:left"
+						label="${labels.lbl.lbx.header9}">
+					</listheader>
+					<listheader width="260px" style="text-align:left"
+						label="${labels.lbl.lbx.header10}">
+					</listheader>
+					<listheader width="260px" style="text-align:left"
+						label="${labels.lbl.lbx.header11}">
+					</listheader>
+				</listhead>
+				<template name="model">
+					<listitem>
+						<listcell label="${each.orderId}" />
+						<listcell label="${each.transactionId}" />
+						<listcell label="${each.transactionType}" />
+						<listcell label="${each.isSuccess}" />
+						<listcell label="${each.isReturn}" />
+						<listcell label="${each.oldLogisticsID}" />
+						<listcell label="${each.newLogisticsID}" />
+						<listcell label="${each.oldAWBNumber}" />
+						<listcell label="${each.newAWBNumber}" />
+						<listcell label="${each.userId}" />
+						<listcell label="${each.roleId}" />
+					</listitem>
+				</template>
+			</listbox>
+		</vlayout>
 	</div>
 </widget>
