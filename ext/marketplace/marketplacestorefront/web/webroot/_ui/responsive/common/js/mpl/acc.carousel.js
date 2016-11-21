@@ -488,16 +488,33 @@ ACC.carousel = {
 		});
 	},
 	blpTopDealsCarousel: function(){
+		var slideBy= $('#slideBy').val();
+		var autoplayTimeout= $('#autoplayTimeout').val();
+		var autoPlay= $('#autoPlay').val();
+		
+		if(slideBy){
+		   	slideBy= $('#slideBy').val();
+			}else{
+				
+				slideBy=1;	
+			}
+		
+		if(autoplayTimeout){
+			autoplayTimeout= $('#autoplayTimeout').val();
+			}else{
+				
+				autoplayTimeout=5000;	
+			}
 		$(".top_deal_blp #mplAdvancedCategoryCarousel").owlCarousel({
 					items:5,
             		loop: true,
             		nav:true,
             		dots:false,
             		navText:[],
-            		autoplay: true,
+            		autoplay: autoPlay,
                     autoHeight : true,
-                    autoplayTimeout: 5000,
-                    slideBy: 2,
+                    autoplayTimeout: autoplayTimeout,
+                    slideBy: slideBy,
             		responsive : {
             			// breakpoint from 0 up
             			0 : {
@@ -537,16 +554,35 @@ ACC.carousel = {
 	
 
 	ClpTopDealsCarousel: function(){
+		
+		var slideBy= $('#slideByOffer').val();
+		var autoPlay= $('#autoPlayOffer').val();
+		var autoplayTimeout= $('#autoplayTimeoutOffer').val();
+		
+		if(slideBy){
+			slideBy= $('#slideByOffer').val();
+			}else{
+				
+				slideBy=1;	
+			}
+		
+		if(autoplayTimeout){
+			autoplayTimeout= $('#autoplayTimeoutOffer').val();
+			}else{
+				
+				autoplayTimeout=5000;	
+			}
+		
 		$(".top_deal .offersCarousel").owlCarousel({
 					items:5,
             		loop: true,
             		nav:false,
             		dots:false,
             		navText:[],
-            		autoplay: true,
+            		autoplay: autoPlay,
                     autoHeight : true,
-                    autoplayTimeout: 5000,
-                    slideBy: 2,
+                    autoplayTimeout: autoplayTimeout,
+                    slideBy: slideBy,
             		responsive : {
             			// breakpoint from 0 up
             			0 : {

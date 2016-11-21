@@ -8,6 +8,9 @@
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 
 <div class="feature-categories">
+<input type="hidden" value="${component.slideBy}" id="slideBy">
+<input type="hidden" value="${component.autoplayTimeout}" id="autoplayTimeout">
+<input type="hidden" value="${component.autoPlay}" id="autoPlay">
 	<c:if test="${not empty component.title}">
 		<h2>${component.title}</h2> 
 	</c:if>
