@@ -807,7 +807,7 @@ $(document).on("click", ".home-brands-you-love-carousel-brands", function() {
 			
 /**TPR-654*---ShopByDepartment	*/
 			
-			$("nav ul li div a").click(function(e)
+			$("nav ul li.ShopByDepartmentone div a").click(function(e)
 			{
 			var that = $(this);
 			var target = $(e.target);
@@ -849,3 +849,41 @@ $(document).on("click", ".home-brands-you-love-carousel-brands", function() {
 			/*TPR-654*/	
 						
 			
+			 $(document).on('click', 'nav ul li.ShopByBrand div a', function(e){
+				 var navigationClick= "top_navigation_click";
+				 var lastItem = $.trim($(this).text().replace(/[\t\n\']+/g,' ')).toLowerCase();
+				// lastItem = lastItem.replace(" ","").toLowerCase();
+				 lastItem = lastItem.replace(/[\s]/g,"");
+				
+				 var parentItem = '';
+				 if (!$(this).parent().hasClass('toggle brandClass')) {
+				 if ($(this).parents().hasClass('lazy-brands')) {
+				 var parentObj = $(this).closest('.lazy-brands');
+				 parentItem = $.trim(parentObj.find('.toggle.brandClass').text().replace(/[\t\n\'\-]+/g,' ')).toLowerCase();
+				 parentItem = parentItem.replace(/[\s]/g,"");
+
+				 }
+				 //console.log(parentItem);
+				 }
+				 var grandParentItem = $.trim($('.ShopByBrand > div.toggle').text().replace(/[\t\n\']+/g,' ')).toLowerCase();
+				 grandParentItem = grandParentItem.replace(" ","").toLowerCase();
+				 grandParentItem = grandParentItem.replace(" ","_");
+				 utag.link({"link_text":grandParentItem+"_"+parentItem+"_"+lastItem,"event_type" : navigationClick});
+				 });
+
+				 $('nav ul li.ShopByBrand div a').on('click', function(){
+				 var navigationClick= "top_navigation_click";
+				 var lastItem = $.trim($(this).text().replace(/[\t\n\'\-]+/g,' ')).toLowerCase();
+				 //lastItem = lastItem.replace(" ","").toLowerCase();
+				 lastItem = lastItem.replace(/[\s]/g,"");
+		
+				 var parentItem = $.trim($('.ShopByBrand > div.toggle').text().replace(/[\t\n\']+/g,' ')).toLowerCase();
+				 parentItem = parentItem.replace(" ","").toLowerCase();
+				 parentItem = parentItem.replace(" ","_");
+				 //console.log(parentItem + '>>>' + lastItem);
+				 utag.link({"link_text":parentItem+"_"+lastItem,"event_type" : navigationClick});
+				 });  
+				
+
+
+					
