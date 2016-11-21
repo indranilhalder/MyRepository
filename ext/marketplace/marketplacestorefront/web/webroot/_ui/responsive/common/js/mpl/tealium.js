@@ -543,10 +543,10 @@ $(document).on('mousedown','.owl-prev,.owl-next',function(e){
 	var direction='';
 	var title='';
 	if($(this).parents('.owl-carousel').parents('.trending').length > 0){
-		title=$(this).parents('.owl-carousel').parents('.trending').find('h1>span').text().trim();
+		title=$(this).parents('.owl-carousel').parents('.trending').find('h2>span').text().trim();
 	}
 	else{
-		title=$(this).parents('.owl-carousel').parent('div').find('h1').text().trim();
+		title=$(this).parents('.owl-carousel').parent('div').find('h2').text().trim();
 	}
 	
 	if($(e.currentTarget).hasClass('owl-next')){
