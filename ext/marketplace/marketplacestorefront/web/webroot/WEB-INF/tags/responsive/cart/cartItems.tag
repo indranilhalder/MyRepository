@@ -108,13 +108,13 @@ tr.d0 td {
    <div class="product">
    <div class="cart-product-info">
 		                <p class="company"> </p>
-		                <h3 class="product-brand-name"><a href="${entryProductUrl}">${entry.product.brand.brandname}</a></h3>
-		                <h3 class="product-name">
+		                <h2 class="product-brand-name"><a href="${entryProductUrl}">${entry.product.brand.brandname}</a></h2>
+		                <h2 class="product-name">
 		                <ycommerce:testId code="cart_product_name">
 											<a href="${productUrl}">${entry.product.productTitle}</a>
 											<input type="hidden" name="productArrayForIA" value="${entry.product.code}"/>
 						</ycommerce:testId>
-			                </h3>
+			                </h2>
 			              
 			             <!-- TISEE-246   
 		                <p class="item-info">
