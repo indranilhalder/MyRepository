@@ -137,7 +137,11 @@ function constructDepartmentHierarchy(inputArray) {
 					//Changes Added for TOR-488
 					//$('#q').val($('#text').val() + ":relevance:category:" + node.categoryCode);
 					//$('#searchCategoryTree').val(node.categoryCode);
+					// alert($('#q').val());
+					 //TISQAEE-14
+					 if($('#q').val().indexOf(node.categoryCode)==-1){
 					 $('#q').val(searchQuery +":category:" + node.categoryCode);
+					 }
 					 $('#searchCategoryTree').val(node.categoryCode);
 					
 				} 
@@ -208,7 +212,8 @@ function donotShowAll()
 	displayHideShowAll = true;
 	}	
 	
-	l2ClassCount = -1;	
+	//l2ClassCount = -1 ;
+	l2ClassCount = 0;
 	//**********below iteration for L2 and L3 categories
 	$(this).find("ul>li").each(function(e){	
 	
@@ -216,7 +221,8 @@ function donotShowAll()
 	if($(this).hasClass('jqtree_common') && $(this).hasClass('jqtree-folder'))
 	{
 	l2ClassCount= l2ClassCount+1;	
-	l3ClassCount = -1;
+	//l3ClassCount = -1;
+	l3ClassCount = 0;
 	if(l2ClassCount>l2displayLimit){
 	$(this).hide();//hide L2 level
 	displayHideShowAll = true;
@@ -734,6 +740,7 @@ $(document).on("click",".plp-wishlist",function(e){
 								$(".wishAlreadyAddedPlp").removeClass("active")
 							},3000)
 						}
+						
 					},
 					error : function(xhr, status, error){
 						alert(error);

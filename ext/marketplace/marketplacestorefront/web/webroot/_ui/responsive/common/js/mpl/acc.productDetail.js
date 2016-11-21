@@ -1984,16 +1984,6 @@ function populateEMIDetailsForPDP(){
 		var selectedBank = $('#bankNameForEMI :selected').text();
 		var contentData = '';
 		if (selectedBank != "select") {
-			
-			/*TPR-641 starts*/
-			emiBankSelectedTealium = "emi_option_" + selectedBank.replace(/ /g, "").toLowerCase();
-			utag.link({
-				link_obj: this, 
-				link_text: emiBankSelectedTealium , 
-				event_type : 'emi_option_selected'
-			});
-			/*TPR-641 ends*/
-			
 			var dataString = 'selectedEMIBank=' + selectedBank + '&productVal=' + productVal;
 			$.ajax({
 				url : ACC.config.encodedContextPath + "/p-getTerms",
@@ -2025,6 +2015,15 @@ function populateEMIDetailsForPDP(){
 					} else {
 						$('#emiNoData').show();
 					}
+					
+					/*TPR-641 starts*/
+					emiBankSelectedTealium = "emi_option_" + selectedBank.replace(/ /g, "").replace(/[^a-z0-9\s]/gi, '').toLowerCase();
+					utag.link({
+						link_obj: this, 
+						link_text: emiBankSelectedTealium , 
+						event_type : 'emi_option_selected'
+					});
+					/*TPR-641 ends*/
 				},
 				error : function(resp) {
 					$('#emiSelectBank').show();
@@ -2860,6 +2859,10 @@ function loadDefaultWishListName_SizeGuide() {
 		
 		$(document).on("click",".product-detail .promo-block .pdp-promo-title, .pdp-promo-title-link",function(e){
 			e.preventDefault();
+			/*TPR-694*/
+			utag.link({"link_obj": this, "link_text": 'product_offer_view_details', "event_type": 'product_offer_details'
+			}); 
+			/*TPR-694 ends */
 			offerPopup($("#promotionDetailsId").html());
 		});
 		$(document).on('hide.bs.modal', function () {

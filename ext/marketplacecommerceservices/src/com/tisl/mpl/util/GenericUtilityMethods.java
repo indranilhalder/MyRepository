@@ -8,6 +8,7 @@ import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
+import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
@@ -716,11 +717,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 *
+	 * 
 	 * @param orderDetail
-	 *
+	 * 
 	 * @param type (1-Billing, 2-Shipping)
-	 *
+	 * 
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -1035,6 +1036,9 @@ public class GenericUtilityMethods
 		final List<String> pageSubCategories = new ArrayList<String>();
 		final List<String> pageSubcategoryNameL3List = new ArrayList<String>();
 		final List<String> adobeProductSkuList = new ArrayList<String>();
+		String productCatL1 = null;
+		String productCatL2 = null;
+		String productCatL3 = null;
 
 
 		try
@@ -1100,15 +1104,20 @@ public class GenericUtilityMethods
 						if (StringUtils.isNotEmpty(categoryName.toString()))
 						{
 							final String[] categoryNames = categoryName.toString().split(":");
-							category = appendQuote(categoryNames[2].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
+							//category = appendQuote(categoryNames[2].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
+							category = categoryNames[2].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase();
 							productCategoryList.add(category);
 
-							page_subCategory_name = appendQuote(categoryNames[1].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
-									.toLowerCase());
+							//page_subCategory_name = appendQuote(categoryNames[1].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
+							//	.toLowerCase());
+
+							page_subCategory_name = categoryNames[1].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase();
 							pageSubCategories.add(page_subCategory_name);
 
-							page_subcategory_name_L3 = appendQuote(categoryNames[0].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
-									.toLowerCase());
+							//page_subcategory_name_L3 = appendQuote(categoryNames[0].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
+							//	.toLowerCase());
+
+							page_subcategory_name_L3 = categoryNames[0].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase();
 							pageSubcategoryNameL3List.add(page_subcategory_name_L3);
 
 
@@ -1159,9 +1168,30 @@ public class GenericUtilityMethods
 				model.addAttribute("adobe_product", adobeProductSku);
 				model.addAttribute("cart_total", cartTotal);
 				//TPR-430
-				model.addAttribute("pageSubCategories", pageSubCategories);
-				model.addAttribute("productCategoryList", productCategoryList);
-				model.addAttribute("page_subcategory_name_L3", pageSubcategoryNameL3List);
+
+				if (CollectionUtils.isNotEmpty(pageSubCategories))
+				{
+					productCatL1 = StringUtils.join(pageSubCategories, ',');
+
+				}
+
+				if (CollectionUtils.isNotEmpty(productCategoryList))
+				{
+					productCatL2 = StringUtils.join(productCategoryList, ',');
+
+				}
+
+				if (CollectionUtils.isNotEmpty(pageSubcategoryNameL3List))
+				{
+					productCatL3 = StringUtils.join(pageSubcategoryNameL3List, ',');
+
+				}
+
+				model.addAttribute("pageSubCategories", productCatL1);
+				model.addAttribute("productCategoryList", productCatL2);
+				model.addAttribute("page_subcategory_name_L3", productCatL3);
+				//model.addAttribute("productCategoryList", productCategoryList);
+				//model.addAttribute("page_subcategory_name_L3", pageSubcategoryNameL3List);
 			}
 		}
 		catch (final Exception te)
@@ -1297,6 +1327,7 @@ public class GenericUtilityMethods
 		return str.toString();
 	}
 
+
 	public static void getCategoryLevel(final CategoryModel categoryId, int count, final StringBuffer categoryName)
 	{
 		final int finalCount = 3;
@@ -1359,7 +1390,14 @@ public class GenericUtilityMethods
 		return checkoutSellerID;
 	}
 
+
 	//TPR-1285
+	/**
+	 * Return the Prefix
+	 * 
+	 * @param prefix
+	 * @return prefix
+	 */
 	public static String changePrefix(String prefix)
 	{
 		prefix = prefix.replaceAll("[^\\w/-]", "-");
@@ -1371,5 +1409,33 @@ public class GenericUtilityMethods
 		return prefix;
 	}
 
+
+
+	/**
+	 * @Description : Return Channel Data
+	 * @param channel
+	 * @return salesApplication
+	 */
+	public static List<SalesApplication> returnChannelData(final String channel)
+	{
+		final List<SalesApplication> salesApplication = new ArrayList<SalesApplication>();
+		if (channel.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_WEB))
+		{
+			salesApplication.add(SalesApplication.WEB);
+		}
+		else if (channel.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_WEBMOBILE))
+		{
+			salesApplication.add(SalesApplication.WEBMOBILE);
+		}
+		else if (channel.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_MOBILE))
+		{
+			salesApplication.add(SalesApplication.MOBILE);
+		}
+		else if (channel.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_CALLCENTER))
+		{
+			salesApplication.add(SalesApplication.CALLCENTER);
+		}
+		return salesApplication;
+	}
 
 }

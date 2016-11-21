@@ -211,6 +211,7 @@ public class ProductPageController extends AbstractPageController
 	private static final String CUSTOMER_CARE_EMAIL = "hello@tatacliq.com";
 	private static final String PRODUCT_OLD_URL_PATTERN = "/**/p";
 	private static final String BOXING = "boxing";
+	private static final String USSID = "ussid";
 
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(ProductPageController.class);
@@ -1177,7 +1178,7 @@ public class ProductPageController extends AbstractPageController
 				{
 					final PinCodeResponseData data = new PinCodeResponseData();
 					final JSONObject rec = recs.getJSONObject(i);
-					final String ussid = rec.getString("ussid");
+					final String ussid = rec.getString(USSID);
 					final String stock = rec.getString("stock");
 					data.setUssid(ussid);
 					data.setStockCount(Integer.valueOf(stock));
@@ -1987,7 +1988,7 @@ public class ProductPageController extends AbstractPageController
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + RequestMappingUrlConstants.ADD_WISHLIST_IN_POPUP, method = RequestMethod.GET)
 	//@RequireHardLogIn
 	public boolean addWishListsForPDP(@RequestParam(ModelAttributetConstants.PRODUCT) final String productCode,
-			@RequestParam("ussid") final String ussid, @RequestParam("wish") final String wishName,
+			@RequestParam(USSID) final String ussid, @RequestParam("wish") final String wishName,
 			@RequestParam("sizeSelected") final String sizeSelected, final Model model, final HttpServletRequest request,
 			final HttpServletResponse response) throws CMSItemNotFoundException
 	{
@@ -2490,7 +2491,7 @@ public class ProductPageController extends AbstractPageController
 	 * @return Wishlist2Model
 	 */
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-getLastModifiedWishlistByUssid", method = RequestMethod.GET)
-	public @ResponseBody boolean getLastModifiedWishlist(@RequestParam("ussid") final String ussid)
+	public @ResponseBody boolean getLastModifiedWishlist(@RequestParam(USSID) final String ussid)
 	{
 		boolean existUssid = false;
 
@@ -2736,8 +2737,8 @@ public class ProductPageController extends AbstractPageController
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-removeFromWl", method = RequestMethod.GET)
 	//@RequireHardLogIn
 	public boolean removeFromWl(@RequestParam(ModelAttributetConstants.PRODUCT) final String productCode,
-			@RequestParam("ussid") final String ussid, @RequestParam("wish") final String wishName, final Model model)
-					throws CMSItemNotFoundException
+			@RequestParam(USSID) final String ussid, @RequestParam("wish") final String wishName, final Model model)
+			throws CMSItemNotFoundException
 	{
 		model.addAttribute(ModelAttributetConstants.MY_ACCOUNT_FLAG, ModelAttributetConstants.N_CAPS_VAL);
 

@@ -957,7 +957,7 @@ public class OrdersController extends BaseCommerceController
 	{ "ROLE_CUSTOMERGROUP", "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
 	@RequestMapping(value = "/users/{userId}/getSelectedOrder/{orderCode}", method = RequestMethod.GET)
 	@ResponseBody
-	public OrderTrackingWsDTO getOrdertracking(@PathVariable final String orderCode)
+	public OrderTrackingWsDTO getOrdertracking(@PathVariable final String orderCode, @PathVariable final String userId)
 	{
 		OrderTrackingWsDTO orderTrackingWsDTO = new OrderTrackingWsDTO();
 		try

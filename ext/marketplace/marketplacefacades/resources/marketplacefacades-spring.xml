@@ -105,6 +105,8 @@
 				<value>luxuryCartIcon</value>
 				<value>luxuryCartPage</value>
 				<value>luxurySearchPage</value>
+				<!-- TPR-1694 new resolution for Mobile App-->
+				<value>mobilePdpView</value>
 			</list>
 		</property>
 	</bean>
@@ -121,6 +123,8 @@
 				<value>luxuryZoom</value>
 				<value>luxuryProduct</value>
 				<value>luxuryThumbnail</value>
+				<!-- TPR-1694 new resolution for Mobile App-->
+				<value>mobilePdpView</value>
 			</list>
 		</property>
 	</bean>
@@ -150,6 +154,8 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 <entry key="luxuryVideo" value="97Wx108H" />
 <entry key="luxuryCartIcon" value="97Wx108H" />
 <entry key="luxuryStyleSwatch" value="97Wx108H" />
+<!-- TPR-1694 new resolution for Mobile App-->
+<entry key="mobilePdpView" value="450Wx545H" />
 </map>
 </property>
 </bean>
@@ -364,6 +370,8 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 				<value>luxuryCartIcon</value>
 				<value>luxuryCartPage</value>
 				<value>luxurySearchPage</value>
+				<!-- TPR-1694 new resolution for Mobile App-->
+				<value>mobilePdpView</value>
 				</list>
 		</property>
 	</bean>
@@ -381,6 +389,8 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 				<value>luxuryProduct</value>
 				<value>luxuryThumbnail</value>
 				<value>luxuryCartIcon</value>
+				<!-- TPR-1694 new resolution for Mobile App-->
+				<value>mobilePdpView</value>
 			</list>
 		</property>
 	</bean>
@@ -397,6 +407,8 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 				<value>luxuryZoom</value>
 				<value>luxuryProduct</value>
 				<value>luxuryThumbnail</value>
+				<!-- TPR-1694 new resolution for Mobile App-->
+				<value>mobilePdpView</value>
 			</list>
 		</property>
 	</bean>
@@ -1651,5 +1663,9 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		class="com.tisl.mpl.facade.job.InitiateReturnForOrderJob"
 		autowire="byName" >
 	</bean>
-	
+		
+	<bean id="initiateCancelForOrderJob"
+		class="com.tisl.mpl.facade.job.InitiateCancelForOrderJob"
+		autowire="byName" >
+	</bean>
 </beans>

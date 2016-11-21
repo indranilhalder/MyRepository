@@ -38,7 +38,6 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.services.BaseStoreService;
 
@@ -67,7 +66,6 @@ import com.tisl.mpl.data.ReturnLogisticsResponseData;
 import com.tisl.mpl.data.SendTicketLineItemData;
 import com.tisl.mpl.data.SendTicketRequestData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
@@ -130,10 +128,6 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	private ReturnService returnService;
 	@Resource
 	private ConfigurationService configurationService;
-	@Resource
-	private SessionService sessionService;
-	@Resource
-	private MplCheckoutFacade mplCheckoutFacade;
 	@Resource
 	private MPLRefundService mplRefundService;
 	private Converter<AbstractOrderEntryModel, OrderEntryData> orderEntryConverter;
