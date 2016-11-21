@@ -40,8 +40,8 @@ public class PincodesUploadController extends DefaultWidgetController
 	@WireVariable("filePathProviderService")
 	private FilePathProviderService filePathProviderService;
 	private static final String PINCODE_FILENAME = "Pincode-";
-	private static final String LANDMARKS_FILENAME = "Landmark-";
-	private static final String DATE_FORMAT = "ddMMyyyyHHmmss";
+	private static final String LANDMARKS_FILENAME = "landMarks-";
+	private static final String DATE_FORMAT = "ddMMyyyyHH";
 	private Label pincodeError;
 	private Label landmarkError;
 	private Textbox pincodeText;
