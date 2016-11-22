@@ -252,6 +252,22 @@ function buildParams(moreParams) {
   return currentParams;
 }
 
+//TISPRD-8849 Handles building generalized parameter object for api calls for Hot Now
+function buildParamsHotNow(moreParams) {
+	currentParams = { 'session_id': ssid,
+    'client_user_agent': navigator.userAgent,
+    'user_id': uid,
+    'user_type': user_type,
+    'ecompany': ecompany,
+    'site_page_type': site_page_type,
+    'client_type':'web_site'
+  };
+
+ 
+  jQuery.extend(currentParams, moreParams);
+  return currentParams;
+}
+
 /*Call init API to get session id*/
 function callInitApi() {
   var requestURL = rootEP + '/SocialGenomix/recommendations/init/jsonp';

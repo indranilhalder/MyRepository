@@ -1061,20 +1061,23 @@ if (searchCategory_id){
 			          params.count = '100';
 			        }
 			        
-			        params.category_id = category_id;
-			        hotDropdownselected = category_name;
 			        
-			        if(category_id === "All Department") {
-			        	category_id = "";
-			        	hotDropdownselected = 'All Department';
+			        
+			        if(category_id === "allCat") {
+			        	hotDropdownselected = category_name;
 			        } 
+			        else {
+			        	params.category_id = category_id;
+				        hotDropdownselected = category_name;
+			        }
+			        
 			        
 			        //params.category = category_id;
 			        var endpoint = '/SocialGenomix/recommendations/products/hot';
 			        //$( ".owl-item" ).css( "display", "none" );
-			        callRecApi(buildParams(params), rootEP + endpoint);
+			        callRecApi(buildParamsHotNow(params), rootEP + endpoint);
 			      });
-			    }
+			    }	
 
 			    /*SortBY dropdown*/
 			    if(widgetMode === "search"){
