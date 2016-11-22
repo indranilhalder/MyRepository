@@ -91,6 +91,7 @@ ACC.cartitem = {
 					var entryNumber = entryNumber1[1];
 					var form = $('#updateCartForm' + entryNumber[1]);
 					var entryUssid = entryNumber1[2];
+					localStorage.setItem("remove_index", entryNumber); //add for TISPRD-9417
 					$.ajax({
                        
 						url : ACC.config.encodedContextPath
@@ -179,16 +180,46 @@ $(document).on("click", ".undo-add-to-cart", function(e) {
 	});
 });
 
+/*start changes for TISPRD-9417*/
+
+//$(document).ready(function(){
+//	if(window.localStorage) {
+//		var showDeletedItem=localStorage.getItem("showDeletedEntry");
+//  for (var key in localStorage) {
+//      if (key.indexOf("deletedEntry") >= 0 && showDeletedItem=="true") {
+//      	$('.product-block:not(.wishlist)').append("<li class='item deleted'>"+window.localStorage.getItem("deletedEntry")+"</li>");
+//      	$('.item.deleted').find(".mybag-undo-form").show();
+//      	window.localStorage.setItem("showDeletedEntry","false");
+//      }
+//     
+//  }
+//	}
+//});
+
+
 $(document).ready(function(){
 	if(window.localStorage) {
 		var showDeletedItem=localStorage.getItem("showDeletedEntry");
-    for (var key in localStorage) {
-        if (key.indexOf("deletedEntry") >= 0 && showDeletedItem=="true") {
-        	$('.product-block:not(.wishlist)').append("<li class='item deleted'>"+window.localStorage.getItem("deletedEntry")+"</li>");
-        	$('.item.deleted').find(".mybag-undo-form").show();
-        	window.localStorage.setItem("showDeletedEntry","false");
-        }
-       
-    }
+		var remove_index=localStorage.getItem("remove_index");
+		var x = $(".product-block:not(.wishlist)").find("li#entry-"+ remove_index);
+		var totProd=$("#ProductCount").val();
+  for (var key in localStorage) {
+      if (key.indexOf("deletedEntry") >= 0 && showDeletedItem=="true") {
+      	var remove_index1= remove_index - 1;
+      	if (totProd == remove_index1){
+
+      		$(".product-block:not(.wishlist)").find("li#entry-"+ remove_index1).before("<li class='item deleted'>"+window.localStorage.getItem("deletedEntry")+"</li>");
+      		}
+      	else{
+      	x.after("<li class='item deleted'>"+window.localStorage.getItem("deletedEntry")+"</li>");
+      	}
+      	$('.item.deleted').find(".mybag-undo-form").show();
+      	window.localStorage.setItem("showDeletedEntry","false");
+
+      }
+
+  }
 	}
 });
+
+/*end changes for TISPRD-9417*/

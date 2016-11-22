@@ -24247,11 +24247,27 @@ div#cartItems.products p{
     color: #A9143C;
     font-weight: 500;
 }
-@media(min-width:651px){
+/*start changes TISPRD-8549*/
+/*@media(min-width:651px){
 	.totalResults h2{
    width:125%;
 }
+}*/
+@media(min-width:651px){
+
+	.totalResults h2{
+   width:145%;
+   margin-left:-45%;
 }
+}
+@media(min-width:791px){
+
+	.totalResults h2{
+   width:125%;
+   margin-left:-25%;
+}
+}
+/*end changes TISPRD-8549*/
 .checkout-order-summary address {
 	line-height:19px !important;
 }
