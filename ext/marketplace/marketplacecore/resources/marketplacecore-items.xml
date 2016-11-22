@@ -827,6 +827,20 @@
  			<value code="no" />
  		</enumtype>
  		<!-- added by i324321 end -->
+ 		
+ 		
+ 		<!-- Jewellery Changes   -->
+ 		
+ 		<enumtype code="JewelleryTypeEnum"       autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="BM" />
+ 			<value code="GS" />
+ 			<value code="D" />
+ 			<value code="MC" />
+ 			<value code="WT" />
+ 			<value code="T" />
+ 		</enumtype>
+ 		
 	</enumtypes>
 		<!-- Product Feature Enum Ends -->
 
@@ -1564,7 +1578,15 @@
 						<description>This is the value reference of the banner's deeplink reference</description>
 					</attribute>
 					<!-- Added for Deep Linking in Mobile apps - End -->
-
+                     
+                     
+                    <!--  Jewellery Changes added below  -->
+                    
+                      <attribute qualifier="JewelleryType" type="java.lang.String"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<description>This value refer the jewellery type </description>
+					</attribute>
 
 				</attributes>
 			</itemtype>
@@ -5691,6 +5713,18 @@
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
 					</attribute>
+					
+					<!--  Jewellery Changes added below -->
+					
+					<attribute qualifier="hasVariant" autocreate="true"
+						type="java.lang.Boolean">
+						<description>Flag to indicate that the USSID has a variant</description>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<persistence type="property" />
+					</attribute>
+					
 				</attributes>
 
 			</itemtype>
@@ -5842,7 +5876,25 @@
 						<description>for seller end date</description>
 						<persistence type="property" />
 					</attribute>
+                     
+                     <!--   Jewellery Changews added below  -->
+                     
+                     <attribute qualifier="PUSSID" type="java.lang.String">
+						<description>ParentUSSID</description>
+						<persistence type="property" />
+						<modifiers unique="true" />
+					</attribute>
 
+					<attribute qualifier="PLPMaxPrice" type="java.lang.Double">
+						<description>PLP Maximum Price</description>
+						<persistence type="property" />
+					</attribute>
+                     
+                    <attribute qualifier="PLPMinPrice" type="java.lang.Double">
+						<description>PLP Minimum Price</description>
+						<persistence type="property" />
+					</attribute>
+                     
 				</attributes>
 				<indexes>
 					<index name="BuyBox_IDX">
@@ -5964,6 +6016,25 @@
 						<description>for seller end date</description>
 						<persistence type="property" />
 					</attribute>
+					
+				          	<!-- Jewellery changes added below  -->
+					
+					<attribute qualifier="PUSSID" type="java.lang.String">
+						<description>ParentUSSID</description>
+						<persistence type="property" />
+						<modifiers unique="true" />
+					</attribute>
+
+					<attribute qualifier="PLPMaxPrice" type="java.lang.Double">
+						<description>PLP Maximum Price</description>
+						<persistence type="property" />
+					</attribute>
+                     
+                    <attribute qualifier="PLPMinPrice" type="java.lang.Double">
+						<description>PLP Minimum Price</description>
+						<persistence type="property" />
+					</attribute>
+					
 											
 				</attributes>
 				<indexes>
@@ -9214,5 +9285,81 @@
 				</attributes>
 			</itemtype>
 		</typegroup>
+                                              
+                                              
+                                              
+                                              <!-- Jewellery Changes Start -->
+                                              
+                                              
+                                              	
+		<typegroup name="JewelleryInfoModel">
+		   <itemtype code="JewelleryInformaion" extends="GenericItem" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.JewelleryInfoModel">
+				<deployment table="MPLJewelleryInfo" typecode="15809" />
+			    <attributes>
+			    <attribute qualifier="VUSSID" autocreate="true" type="java.lang.String" generate="true">
+			        <description>VUSSID - Variant USSID</description>
+			        <modifiers optional="false" read="true" write="true"/>
+			        <persistence type="property"/>
+			    </attribute>
+			           
+			    
+			    <attribute qualifier="ComponentName" autocreate="true" type="java.lang.String" generate="true">
+			        <description>JewelleryComponentName</description>
+			        <modifiers optional="true" read="true" write="true"/>
+			        <persistence type="property"/>
+			    </attribute>
+			    
+			    
+			    <attribute type="JewelleryTypeEnum" qualifier="JewelleryType">
+ 						<description>Jewellery Info -- Type Declaration</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type='property' />
+ 				</attribute>
+			    
+			    <attribute qualifier="Weight" autocreate="true" type="java.lang.String" generate="true">
+			        <description>JewelleryWeight</description>
+			        <modifiers optional="true" read="true" write="true"/>
+			        <persistence type="property"/>
+			    </attribute>
+			    		    
+			    
+			    <attribute qualifier="JewelleryPrice" type="java.lang.Double">
+					<description>Jewellery Price Break-up</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+			    
+			     <attribute qualifier="Rating" autocreate="true" type="java.lang.String" generate="true">
+			        <description>JewelleryRating</description>
+			        <modifiers optional="false" read="true" write="true"/>
+			        <persistence type="property"/>
+			     </attribute>
+			 
+			   </attributes>
+		  </itemtype>
+		</typegroup>
+		
+		<typegroup name="Ussid2VussidRelModel">
+		  <itemtype code="Ussid2VussidRel" extends="GenericItem" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.Ussid2VussidRelModel">
+		      <deployment table="MplUssid2VussidRel" typecode="15810" />
+		           <attributes>
+		           
+		           <attribute qualifier="USSID" autocreate="true" type="java.lang.String" generate="true">
+			        <description>USSID</description>
+			        <modifiers optional="false" read="true" write="true"/>
+			        <persistence type="property"/>
+			       </attribute>
+			    
+			       <attribute qualifier="VUSSID" autocreate="true" type="java.lang.String" generate="true">
+			        <description>VUSSID - Variant USSID</description>
+			        <modifiers optional="false" read="true" write="true"/>
+			        <persistence type="property"/>
+			       </attribute>
+			    
+		           
+		           </attributes>          
+		</itemtype>
+		</typegroup>
+		
 	</itemtypes>
 </items>
