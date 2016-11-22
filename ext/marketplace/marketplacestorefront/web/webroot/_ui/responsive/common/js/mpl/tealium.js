@@ -807,43 +807,42 @@ $(document).on("click", ".home-brands-you-love-carousel-brands", function() {
 			
 /**TPR-654*---ShopByDepartment	*/
 			
-			$("nav ul li.ShopByDepartmentone div a").click(function(e)
-			{
-			var that = $(this);
-			var target = $(e.target);
-			//var hAr = "";
-			var x= $.trim($(".toggle.shop_dept").text().replace(/[\t\n\']+/g,' '));
-			x = x.replace(" ","").toLowerCase();
-			x = x.replace(" ","_");
-			var y = $.trim($(this).text().replace(/[\t\n\']+/g,' ')).toLowerCase();
-			y = y.replace(/[\s]/g,"");
-			var navigationClick= "top_navigation_click";
-			
-			if($(target).parent().hasClass("toggle departmenthover L1"))
-			          {
-				        //hAr+= x+">>>>"+ ">>>>"+y;
-				utag.link({"link_text":x+"_"+y,"event_type" : navigationClick});
+			$("nav ul li.ShopByDepartmentone div a").click(function(e) {
+				var that = $(this);
+				var target = $(e.target);
+				//var hAr = "";
+				var x= $.trim($(".toggle.shop_dept").text().replace(/[\t\n\']+/g,' '));
+				x = x.replace(" ","").toLowerCase();
+				x = x.replace(" ","_");
+				var y = $.trim($(this).text().replace(/[\t\n\']+/g,' ')).toLowerCase();
+				y = y.replace(/[\s]/g,"");
+				var navigationClick= "top_navigation_click";
 				
-			          }
-			
-			if($(target).parent().hasClass("toggle L2"))
-			{
-				var itsParentL1 = $.trim(that.parents().siblings(".departmenthover.L1").text().replace(/[\t\n\']+/g,' ')).toLowerCase();
-				itsParentL1 = itsParentL1.replace(/[\s]/g,"");
-				//hAr+= x+">>>"+">>"+itsParentL1 +" >> "+ y;
-				utag.link({"link_text":x+"_"+itsParentL1+"_"+y, "event_type" : navigationClick});
-			}
-			
-			if(that.parent().hasClass("toggle L3")){
-				var itsParentL1 =$.trim(that.parents().siblings(".departmenthover.L1").text().replace(/[\t\n\']+/g,' ')).toLowerCase();
-				itsParentL1 = itsParentL1.replace(/[\s]/g,"");
-				var itsParentL2 = $.trim(that.parent().parent().prevAll("li.short.words:first").text().replace(/[\t\n\']+/g,' ')).toLowerCase();
-				itsParentL2 = itsParentL2.replace(/[\s]/g,"");
+				if($(target).parent().hasClass("toggle departmenthover L1"))
+				          {
+					        //hAr+= x+">>>>"+ ">>>>"+y;
+					utag.link({"link_text":x+"_"+y,"event_type" : navigationClick});
+					
+				          }
 				
-				//hAr+= x+">>>>" +">>>>>"+itsParentL1 +" >> "+ ">>"+itsParentL2 +$(this).text();
-				utag.link({"link_text":x+"_"+itsParentL1+"_"+itsParentL2+"_"+y,"event_type" : navigationClick});
-			}
-			//console.log(hAr);
+				if($(target).parent().hasClass("toggle L2"))
+				{
+					var itsParentL1 = $.trim(that.parents().siblings(".departmenthover.L1").text().replace(/[\t\n\']+/g,' ')).toLowerCase();
+					itsParentL1 = itsParentL1.replace(/[\s]/g,"");
+					//hAr+= x+">>>"+">>"+itsParentL1 +" >> "+ y;
+					utag.link({"link_text":x+"_"+itsParentL1+"_"+y, "event_type" : navigationClick});
+				}
+				
+				if(that.parent().hasClass("toggle L3")){
+					var itsParentL1 =$.trim(that.parents().siblings(".departmenthover.L1").text().replace(/[\t\n\']+/g,' ')).toLowerCase();
+					itsParentL1 = itsParentL1.replace(/[\s]/g,"");
+					var itsParentL2 = $.trim(that.parent().parent().prevAll("li.short.words:first").text().replace(/[\t\n\']+/g,' ')).toLowerCase();
+					itsParentL2 = itsParentL2.replace(/[\s]/g,"");
+					
+					//hAr+= x+">>>>" +">>>>>"+itsParentL1 +" >> "+ ">>"+itsParentL2 +$(this).text();
+					utag.link({"link_text":x+"_"+itsParentL1+"_"+itsParentL2+"_"+y,"event_type" : navigationClick});
+				}
+				//console.log(hAr);
 			});
 			
 			/*TPR-654*/	
@@ -852,43 +851,36 @@ $(document).on("click", ".home-brands-you-love-carousel-brands", function() {
 			$(document).on('click', 'nav ul li.ShopByBrand ul li.short.images a', function(e){
 				 var navigationClick= "top_navigation_click";
 				 var lastItem = $.trim($(this).text().replace(/[\t\n\'\-]+/g,' ')).toLowerCase();
-				// lastItem = lastItem.replace(" ","").toLowerCase();
 				 lastItem = lastItem.replace(/[\s]/g,"");
 				
 				 var parentItem = '';
-				 if (!$(this).parent().hasClass('toggle brandClass') || !$(this).parent().hasClass('toggle A-ZBrands')) {
-					 if ($(this).parents().hasClass('lazy-brands')) {
-						 var parentObj = $(this).closest('.lazy-brands');
-						 if ($(this).parent().hasClass('toggle brandClass')) {
-							 parentItem = $.trim(parentObj.find('.toggle.brandClass').text().replace(/[\t\n\'\-]+/g,' ')).toLowerCase(); 
-						 }
-						 else if($(this).parent().hasClass('toggle A-ZBrands')){
-							 parentItem = $.trim(parentObj.find('.toggle.A-ZBrands').text().replace(/[\t\n\'\-]+/g,' ')).toLowerCase(); 
-						 }
-						 else{
-							 parentItem = $.trim(parentObj.find('.toggle.brandClass').text().replace(/[\t\n\'\-]+/g,' ')).toLowerCase();
-						 }
-						 parentItem = parentItem.replace(/[\s]/g,"");
-					
+				 if ($(this).parents().hasClass('lazy-brands')) {
+					 var parentObj = $(this).closest('.lazy-brands');
+					 if (parentObj.find('.toggle.brandClass').length) {
+						 parentItem = $.trim(parentObj.find('.toggle.brandClass').text().replace(/[\t\n\'\-]+/g,' ')).toLowerCase(); 
 					 }
+					 else if(parentObj.find('.toggle.A-ZBrands').length){
+						 parentItem = $.trim(parentObj.find('.toggle.A-ZBrands').text().replace(/[\t\n\'\-]+/g,' ')).toLowerCase(); 
+					 }
+					 parentItem = parentItem.replace(/[\s]/g,"");
 				 }
 				 
-				 var grandParentItem = $.trim($('.ShopByBrand > div.toggle').text().replace(/[\t\n\']+/g,' ')).toLowerCase();
+				 var grandParentItem = $.trim($('div.toggle.shop_brand').text().replace(/[\t\n\']+/g,' ')).toLowerCase();
 				 grandParentItem = grandParentItem.replace(" ","").toLowerCase();
 				 grandParentItem = grandParentItem.replace(" ","_");
+				 
 				 utag.link({"link_text":grandParentItem+"_"+parentItem+"_"+lastItem,"event_type" : navigationClick});
 			});
 
 			 $('nav ul li.ShopByBrand div a').on('click', function(){
 				 var navigationClick= "top_navigation_click";
 				 var lastItem = $.trim($(this).text().replace(/[\t\n\'\-]+/g,' ')).toLowerCase();
-				 //lastItem = lastItem.replace(" ","").toLowerCase();
 				 lastItem = lastItem.replace(/[\s]/g,"");
 		
-				 var parentItem = $.trim($('.ShopByBrand > div.toggle').text().replace(/[\t\n\']+/g,' ')).toLowerCase();
+				 var parentItem = $.trim($('div.toggle.shop_brand').text().replace(/[\t\n\']+/g,' ')).toLowerCase();
 				 parentItem = parentItem.replace(" ","").toLowerCase();
 				 parentItem = parentItem.replace(" ","_");
-				 //console.log(parentItem + '>>>' + lastItem);
+				 
 				 utag.link({"link_text":parentItem+"_"+lastItem,"event_type" : navigationClick});
 			 }); 
 				
