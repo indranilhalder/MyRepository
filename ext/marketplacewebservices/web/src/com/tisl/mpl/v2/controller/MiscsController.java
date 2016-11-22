@@ -192,22 +192,19 @@ public class MiscsController extends BaseController
 	private StoreSessionFacade storeSessionFacade;
 	@Resource(name = "checkoutFacade")
 	private CheckoutFacade checkoutFacade;
-	/*
-	 * @Autowired private ConfigurationService configurationService;
-	 */
 	@Resource(name = "httpRequestCustomerUpdatePopulator")
 	private HttpRequestCustomerUpdatePopulator httpRequestCustomerUpdatePopulator;
 	@Resource(name = "customerFacade")
 	private CustomerFacade customerFacade;
 	/*
 	 * @Resource private ModelService modelService;
-	 * 
+	 *
 	 * @Autowired private ForgetPasswordFacade forgetPasswordFacade;
-	 * 
+	 *
 	 * @Autowired private ExtendedUserServiceImpl userexService;
-	 * 
+	 *
 	 * @Autowired private WishlistFacade wishlistFacade;
-	 * 
+	 *
 	 * @Autowired private MplSellerMasterService mplSellerInformationService;
 	 */
 	@Autowired
@@ -234,7 +231,7 @@ public class MiscsController extends BaseController
 	private FieldSetBuilder fieldSetBuilder;
 	/*
 	 * @Resource(name = "i18NFacade") private I18NFacade i18NFacade;
-	 * 
+	 *
 	 * @Autowired private MplCommerceCartServiceImpl mplCommerceCartService;
 	 */
 	@Autowired
@@ -255,12 +252,19 @@ public class MiscsController extends BaseController
 	private PincodeServiceFacade pincodeServiceFacade;
 	@Resource(name = "categoryService")
 	private CategoryService categoryService;
-	@Autowired
-	private ModelService modelService;
 
 	private static final String APPLICATION_TYPE = "application/json";
 	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
+
 	/*
+	 * @Resource(name = "mplPaymentFacade") private MplPaymentFacade mplPaymentFacade; private static final String
+	 * APPLICATION_TYPE = "application/json"; public static final String EMAIL_REGEX =
+	 * "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
+	 * 
+	 * /**
+	 * 
+	 * /*
+	 * 
 	 * @Resource(name = "mplPaymentFacade") private MplPaymentFacade mplPaymentFacade; private static final String
 	 * APPLICATION_TYPE = "application/json"; public static final String EMAIL_REGEX =
 	 * "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
@@ -296,6 +300,8 @@ public class MiscsController extends BaseController
 
 	@Autowired
 	private BaseSiteService baseSiteService;
+	@Autowired
+	private ModelService modelService;
 
 	/*
 	 * private static final String DROPDOWN_BRAND = "MBH"; private static final String DROPDOWN_CATEGORY = "MSH";
@@ -665,9 +671,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * restriction set up interface to save the data comming from seller portal
-	 * 
+	 *
 	 * @param restrictionXML
-	 * 
+	 *
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/restrictionServer", method = RequestMethod.POST)
@@ -896,10 +902,10 @@ public class MiscsController extends BaseController
 			{
 				searchState.setLuxurySiteFrom(MarketplacecommerceservicesConstants.CHANNEL_WEB);
 			}
-			else
-			{
-				searchState.setLuxurySiteFrom(MarketplacecommerceservicesConstants.CHANNEL_APP);
-			}
+			//			else
+			//			{
+			//				searchState.setLuxurySiteFrom(MarketplacecommerceservicesConstants.CHANNEL_APP);
+			//			}
 
 
 			if (CollectionUtils.isNotEmpty(wsData.getSuggestions()))
@@ -1238,7 +1244,6 @@ public class MiscsController extends BaseController
 				final ListPinCodeServiceData dataList = new ListPinCodeServiceData();
 				if (null != productCodeStr && StringUtils.isNotEmpty(productCodeStr))
 				{
-					//removed unused codes
 					List<PinCodeResponseData> response = null;
 					final PincodeModel pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(pin);
 					if (null != pinCodeModelObj)
@@ -1563,7 +1568,7 @@ public class MiscsController extends BaseController
 	/*
 	 * @Secured( { "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
 	 */
-	@RequestMapping(value = "/{baseSiteId}/feedbackno", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/{baseSiteId}/feedbackno", method = RequestMethod.GET, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public UserResultWsDto captureFeedbackNo(@RequestParam final String emailId, @RequestParam final String searchCategory,
 			@RequestParam final String searchText, @RequestParam final String comment, @RequestParam final String category)
@@ -1600,7 +1605,7 @@ public class MiscsController extends BaseController
 	/*
 	 * @Secured( { "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
 	 */
-	@RequestMapping(value = "/{baseSiteId}/getFeedbackCategory", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/{baseSiteId}/getFeedbackCategory", method = RequestMethod.GET, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public UserResultWsDto getFeedbackCategory()
 	{
@@ -1635,7 +1640,7 @@ public class MiscsController extends BaseController
 		return userResultWsDto;
 	}
 
-	@RequestMapping(value = "/{baseSiteId}/askAQuestion", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/{baseSiteId}/askAQuestion", method = RequestMethod.GET, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public UserResultWsDto askquestion(@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields,
 			@RequestParam final String emailId, @RequestParam final String question, @RequestParam final String productCode)

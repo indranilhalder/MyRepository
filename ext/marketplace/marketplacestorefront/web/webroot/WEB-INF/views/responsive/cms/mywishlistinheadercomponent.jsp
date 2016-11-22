@@ -36,9 +36,9 @@
 			aria-hidden="true" onclick="clearErrorMessage()"></button>
 
 		<div class="create-new-wishlist-popup-container" id="myModalLabel">
-			<h1 class="modal-title">
+			<h2 class="modal-title">
 				<spring:theme code="wishlist.create.otherWishlist" />
-			</h1>
+			</h2>
 
 
 			<ul>

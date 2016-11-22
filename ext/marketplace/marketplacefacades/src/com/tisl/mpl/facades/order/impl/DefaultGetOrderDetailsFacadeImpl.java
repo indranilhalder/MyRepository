@@ -9,15 +9,21 @@ import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
+import de.hybris.platform.commerceservices.customer.CustomerAccountService;
+import de.hybris.platform.commerceservices.strategies.CheckoutCustomerStrategy;
 import de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO;
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.store.BaseStoreModel;
+import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.variants.model.VariantProductModel;
 
 import java.text.SimpleDateFormat;
@@ -34,6 +40,7 @@ import javax.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
@@ -79,6 +86,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	private MplCheckoutFacade mplCheckoutFacade;
 	@Resource(name = "productService")
 	private ProductService productService;
+	@Resource(name = "userService")
+	private UserService userService;
 	@Resource
 	private ConfigurationService configurationService;
 	@Resource
@@ -95,6 +104,13 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 
 	@Resource(name = "mplDataMapper")
 	protected DataMapper mplDataMapper;
+
+	@Autowired
+	private BaseStoreService baseStoreService;
+	@Autowired
+	private CheckoutCustomerStrategy checkoutCustomerStrategy;
+	@Autowired
+	private CustomerAccountService customerAccountService;
 
 	/**
 	 * @description method is called to fetch the details of a particular orders for the user
@@ -1589,7 +1605,10 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 		try
 		{
 			//TPR-815
-			orderModel = orderModelService.getOrderModel(orderCode);
+			final BaseStoreModel baseStoreModel = baseStoreService.getCurrentBaseStore();
+			orderModel = customerAccountService.getOrderForCode((CustomerModel) userService.getCurrentUser(), orderCode,
+					baseStoreModel);
+
 			if (orderModel != null)
 			{
 				orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderModel);

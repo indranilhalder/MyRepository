@@ -20,7 +20,7 @@ import com.tisl.mpl.wsdto.ProductDetailMobileWsData;
  */
 public interface MplProductWebService
 {
-	public ProductDetailMobileWsData getProductdetailsForProductCode(final String productCode, String baseUrl);
+	public ProductDetailMobileWsData getProductdetailsForProductCode(String productCode, String baseUrl, String channel);
 
 	public ProductDetailMobileWsData getProductInfoForProductCode(final String productCode, String baseUrl);
 

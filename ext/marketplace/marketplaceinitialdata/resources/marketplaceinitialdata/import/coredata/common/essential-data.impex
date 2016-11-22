@@ -117,6 +117,7 @@ INSERT_UPDATE MediaFormat;qualifier[unique=true];name
 ;97Wx144H;97Wx144H
 ;40Wx40H;40Wx40H
 ;160Wx46H;160Wx46H
+;450Wx545H;450Wx545H
 
 
 # Media formats
@@ -247,6 +248,7 @@ INSERT_UPDATE CronJob;code[unique=true];job(code);singleExecutable;sessionLangua
 ;juspayWebHookCronJob;juspayWebHookJob;false;en
 ;juspayEBSCronJob;juspayEBSJob;false;en
 ;initiateReturnForOrderCronJob;initiateReturnForOrderJob;false;en
+;initiateCancelForOrderCronJob;initiateCancelForOrderJob;false;en
 ;campaignPromoDataCronJob;campaignPromoDataJob;false;en
 ;mplBankCSVPrepareCronJob;mplBankCSVPrepareJob;false;en
 #New Job To Process Order from Payment Pending to Payment Successful
@@ -664,17 +666,10 @@ INSERT_UPDATE RendererTemplate;code[unique=true];templatescript[lang=en];
 	#foreach( $siteMapUrl in $ctx.siteMapData )
 		<url>
 			<loc>${ctx.baseUrl}${siteMapUrl.loc}</loc>
+			<lastmod>${siteMapUrl.lastMod} </lastmod>
+			<changefreq>${siteMapUrl.changeFrequency}</changefreq>
+			<priority>${siteMapUrl.priority}</priority>
 
-			#if ($siteMapUrl.images)
-				#foreach( $image in $siteMapUrl.images )
-					<image:image>
-						<image:loc>${ctx.mediaUrl}${image}</image:loc>
-					</image:image>
-
-				#end
-			#end
-			<changefreq>${ctx.changeFreq}</changefreq>
-			<priority>${ctx.priority}</priority>
 		</url>
 	#end
 </urlset>"

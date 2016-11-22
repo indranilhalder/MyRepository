@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.util.CollectionUtils;
 
 import com.google.common.base.Preconditions;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.facade.category.MplCategoryFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
@@ -133,8 +134,8 @@ public class MplCategoryFacadeImpl extends DefaultCatalogFacade implements MplCa
 	@Override
 	public String getSellerInformationBySellerName(final String sellerName)
 	{
-		final SellerInformationModel sellerInformationModel = mplSellerInformationService
-				.getSellerInformationBySellerName(cmsSiteService.getCurrentCatalogVersion(), sellerName.toUpperCase());
+		final SellerInformationModel sellerInformationModel = mplSellerInformationService.getSellerInformationBySellerName(
+				cmsSiteService.getCurrentCatalogVersion(), sellerName.toUpperCase());
 		if (null != sellerInformationModel)
 		{
 			final String sellerID = sellerInformationModel.getSellerID();
@@ -168,11 +169,11 @@ public class MplCategoryFacadeImpl extends DefaultCatalogFacade implements MplCa
 		{
 			final String sellerRootCategoryId = getActiveSellerRootCategoryBySellerId(sellerId);
 			Preconditions.checkArgument(sellerName != null, "Category is required to perform this operation, null given");
-			final String categoryCode = getConfigurationService().getConfiguration()
-					.getString("marketplace.mplcatalog.seller.sales.category.root.id");
+			final String categoryCode = getConfigurationService().getConfiguration().getString(
+					"marketplace.mplcatalog.seller.sales.category.root.id");
 
-			final CategoryModel topCategoryDetails = mplCategoryService
-					.getCategoryModelForCode(cmsSiteService.getCurrentCatalogVersion(), categoryCode);//SSH1
+			final CategoryModel topCategoryDetails = mplCategoryService.getCategoryModelForCode(
+					cmsSiteService.getCurrentCatalogVersion(), categoryCode);//SSH1
 
 			boolean isCategoryIDAvailable = false;
 
@@ -319,8 +320,8 @@ public class MplCategoryFacadeImpl extends DefaultCatalogFacade implements MplCa
 	{
 		final BreadcrumbResponseWsDTO breadcrumbResponse = new BreadcrumbResponseWsDTO();
 		final List<BreadcrumbListWsDTO> breadcrumbList = new ArrayList<BreadcrumbListWsDTO>();
-		final List<CategoryModel> categoryHierarchy = getCategoryPathForProduct(product,
-				configurationService.getConfiguration().getString("luxury.salescategory.code"), CategoryModel.class);
+		final List<CategoryModel> categoryHierarchy = getCategoryPathForProduct(product, configurationService.getConfiguration()
+				.getString(MarketplacecommerceservicesConstants.LUX_SALESCATEGORYTYPE), CategoryModel.class);
 
 		if (!CollectionUtils.isEmpty(categoryHierarchy) && categoryHierarchy.size() > 1)
 		{

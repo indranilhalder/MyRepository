@@ -1641,7 +1641,17 @@
 						<persistence type="property"></persistence>
 					</attribute>
 				</attributes>
+				
+				<!-- new indexes added for performace improvement -->
+				<indexes>
+					<index name="MPLBRAND_IDX_CVER">
+						<key attribute="catalogVersion" />
+					</index>
+				</indexes> 
+				
 			</itemtype>
+			
+			
 			<itemtype code="SeoContent" autocreate="true" generate="true"
 				jaloclass="com.tisl.mpl.core.jalo.SeoContent">
 				<deployment table="MplSeoContent" typecode="13002" />
@@ -6519,6 +6529,16 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
+				
+				<!-- new indexes added for performace improvement -->
+				<indexes>
+					<index name="CARTS_IDX_MSS">
+						<key attribute="modifiedtime" />
+						<key attribute="site" />
+						<key attribute="saveTime" />
+					</index>
+				</indexes>
+				
 			</itemtype>
 		</typegroup>
 
@@ -9199,9 +9219,8 @@
 						</indexes>
 					</itemtype>
 				</typegroup>
-				
-				
-				<!-- TPR-1285 Dynamic Sitemap -->
+			
+		<!-- TPR-1285 Dynamic Sitemap -->
 		<typegroup name="Seo">
 			<itemtype code="SiteMapMediaCronJob" autocreate="false"
 				generate="false" extends="CronJob">
@@ -9273,5 +9292,39 @@
 			</itemtype>
 			</typegroup>
 				
+
+     
+     	<typegroup name="BulkCancelProcessForOrder">
+			<itemtype code="BulkCancellationProcess" extends="GenericItem" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.BulkCancellationProcess">
+				<deployment table="MplBulkCancellation" typecode="15808" />
+				<attributes>
+					<attribute qualifier="parentOrderNo"  autocreate="true" type="java.lang.String"
+						generate="true">
+						<description>Parent Order Number</description>
+						<modifiers optional="false" read="true" write="true"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="transactionId"  autocreate="true" type="java.lang.String"
+						generate="true">
+						<description>Transaction Id</description>
+						<modifiers optional="false" read="true" write="true"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="loadStatus"  autocreate="true" type="java.lang.String"
+						generate="true">
+						<description>Load Status</description>
+						<modifiers optional="false" read="true" write="true"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="statusDescription"  autocreate="true" type="java.lang.String"
+						generate="true">
+						<description>Status Description</description>
+						<modifiers optional="true" read="true" write="true"/>
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+		</typegroup>
+
 	</itemtypes>
 </items>

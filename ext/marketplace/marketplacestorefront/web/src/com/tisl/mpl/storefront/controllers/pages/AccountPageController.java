@@ -239,6 +239,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private static final String REDIRECT_TO_INVITE_FRIENDS_PAGE = REDIRECT_PREFIX + "/my-account/friendsInvite";
 
 	// CMS Pages
+	final String isLux = "isLux";
 	private static final String ACCOUNT_CMS_PAGE = "overview";
 	private static final String PROFILE_CMS_PAGE = "profile";
 	private static final String UPDATE_PASSWORD_CMS_PAGE = "updatePassword";
@@ -1666,7 +1667,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 		boolean returnLogisticsCheck = true;
 		final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade.checkReturnLogistics(subOrderDetails,
-				pinCode ,transactionId);
+				pinCode, transactionId);
 		for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
 		{
 			model.addAttribute(ModelAttributetConstants.PINCODE_NOT_SERVICEABLE, response.getResponseMessage());
@@ -2021,7 +2022,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 
 			final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade.checkReturnLogistics(
-					subOrderDetails, pinCode ,transactionId);
+					subOrderDetails, pinCode, transactionId);
 			for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
 			{
 				model.addAttribute(ModelAttributetConstants.RETURNLOGMSG, response.getResponseMessage());
@@ -2546,7 +2547,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 				return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 			}
 		}
-
+		if (null != request.getParameterMap() && request.getParameterMap().containsKey(isLux))
+		{
+			returnAction = returnAction + "?" + isLux + "=true";
+		}
 		return returnAction;
 	}
 
@@ -2738,6 +2742,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 		try
 		{
+
 			final String specificUrl = RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_UPDATE_PROFILE;
 			final String profileUpdateUrl = urlForEmailContext(request, specificUrl);
 
@@ -2889,6 +2894,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 			model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
 					accountBreadcrumbBuilder.getBreadcrumbs(MessageConstants.TEXT_ACCOUNT_PROFILE));
 			model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
+			if (null != request.getParameterMap() && request.getParameterMap().containsKey(isLux))
+			{
+				returnAction = returnAction + "?" + isLux + "=true";
+			}
 			return returnAction;
 		}
 		catch (final EtailBusinessExceptions e)
@@ -3219,6 +3228,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 			model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
 					accountBreadcrumbBuilder.getBreadcrumbs(MessageConstants.TEXT_ACCOUNT_PROFILE));
 			model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
+			if (null != request.getParameterMap() && request.getParameterMap().containsKey(isLux))
+			{
+				returnAction = returnAction + "?" + isLux + "=true";
+			}
 			return returnAction;
 		}
 		catch (final EtailBusinessExceptions e)

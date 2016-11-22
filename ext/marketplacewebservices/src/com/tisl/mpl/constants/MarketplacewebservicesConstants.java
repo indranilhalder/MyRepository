@@ -311,8 +311,8 @@ public class MarketplacewebservicesConstants
 	public static final String EMPTY = " ";
 	public static final String EXCEPTION_IS = "Exception is : ".intern();
 
-	public static String CLOTHING = "Clothing".intern();
-	public static String ELECTRONICS = "Electronics".intern();
+	public static final String CLOTHING = "Clothing".intern();
+	public static final String ELECTRONICS = "Electronics".intern();
 
 	public final static String PAYMENTMODEFORPROMOTION = "paymentModeForPromotion".intern();
 	public static final String BANKFROMBIN = "bank".intern();
@@ -523,6 +523,14 @@ public class MarketplacewebservicesConstants
 	//TPR_622, 627
 	public static final String YES = "yes";
 	public static final String NO_SSHIP = "no";
+
+	public static final String FOOTWEAR = "Footwear".intern();
+	//Added by SAP for Watches & FashionAccessories  :::  START
+	public static final String FASHION_ACCESSORIES = "Accessories";
+	public static final String WATCHES = "Watches";
+	//Added by SAP for Watches & FashionAccessories  :::  END
+	public static final String WARRANTY = "Warranty";
+	public static final String PDP_DESC_TAB = "pdp.desc.tab.".intern();
 
 
 }

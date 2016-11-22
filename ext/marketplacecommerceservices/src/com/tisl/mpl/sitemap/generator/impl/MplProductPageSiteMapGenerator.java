@@ -3,6 +3,9 @@
  */
 package com.tisl.mpl.sitemap.generator.impl;
 
+import de.hybris.platform.acceleratorservices.enums.SiteMapChangeFrequencyEnum;
+import de.hybris.platform.acceleratorservices.enums.SiteMapPageEnum;
+import de.hybris.platform.acceleratorservices.model.SiteMapPageModel;
 import de.hybris.platform.acceleratorservices.sitemap.data.SiteMapUrlData;
 import de.hybris.platform.acceleratorservices.sitemap.generator.impl.ProductPageSiteMapGenerator;
 import de.hybris.platform.acceleratorservices.sitemap.renderer.SiteMapContext;
@@ -19,6 +22,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -77,7 +81,6 @@ public class MplProductPageSiteMapGenerator extends ProductPageSiteMapGenerator
 		context.setSite(site);
 		context.setCurrency(currencyModel);
 		context.setLanguage(languageModel);
-
 		return getImpersonationService().executeInContext(context, new ImpersonationService.Executor<File, IOException>()
 		{
 			@Override
@@ -88,6 +91,28 @@ public class MplProductPageSiteMapGenerator extends ProductPageSiteMapGenerator
 				final SiteMapContext context = (SiteMapContext) applicationContext.getBean("siteMapContext");
 
 				context.init(site, getSiteMapPageEnum());
+
+				//Added for Product Page priority
+				final Collection<SiteMapPageModel> siteMapPages = site.getSiteMapConfig().getSiteMapPages();
+				Double priority = new Double(0);
+				SiteMapChangeFrequencyEnum sfrequency = SiteMapChangeFrequencyEnum.DAILY;
+
+
+				//Added for Product Page priority
+				for (final SiteMapPageModel sm : siteMapPages)
+				{
+					if (sm.getCode().equals(SiteMapPageEnum.PRODUCT))
+					{
+						priority = sm.getPriority();
+						sfrequency = sm.getFrequency();
+					}
+				}
+				//Added for Product Page priority
+				for (final SiteMapUrlData data : siteMapUrlDataList)
+				{
+					data.setChangeFrequency(sfrequency.getCode());
+					data.setPriority(priority.toString());
+				}
 				context.setSiteMapUrlData(siteMapUrlDataList);
 
 				final BufferedWriter output = new BufferedWriter(new FileWriter(siteMap));
