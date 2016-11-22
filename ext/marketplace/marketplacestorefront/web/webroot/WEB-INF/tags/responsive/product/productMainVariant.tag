@@ -73,7 +73,7 @@ $("#variant").change(function() {
 
 //AKAMAI Fix
 var productSizeVar = '${productSize}';
-</script> 
+</script>
 <!-- logic for displaying color and size variant -->
 <!-- displaying colour swatches -->
 <c:choose>
@@ -98,7 +98,7 @@ var productSizeVar = '${productSize}';
 									items="${variantOption.colourCode}" var="color">
 									<c:choose>
 								<c:when test="${fn:startsWith(color, 'multi')}">
-						     	<img src="${commonResourcePath}/images/multi.jpg" height="20" width="20" title="${variantOption.colour}" />
+						     	<img src="${commonResourcePath}/images/multi.jpg" height="74" width="50" title="${variantOption.colour}" />
 								</c:when>
 								
 								<c:when test="${empty variantOption.image}">

@@ -355,6 +355,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 		String returnStatement = null;
 		if (!redirectIfLuxuryCategory(categoryCode, response))
 		{
+
 			String searchCode = new String(categoryCode);
 			//SEO: New pagination detection TISCR 340
 			pageNo = getPaginatedPageNo(request);
@@ -386,6 +387,9 @@ public class CategoryPageController extends AbstractCategoryPageController
 			model.addAttribute(ModelAttributetConstants.SEARCH_CODE, searchCode);
 			model.addAttribute(ModelAttributetConstants.IS_CATEGORY_PAGE, Boolean.TRUE);
 			final CategoryModel category = categoryService.getCategoryForCode(categoryCode);
+			//SEO
+			this.getSEOContents(category, model);
+
 			//Set the drop down text if the attribute is not empty or null
 			if (dropDownText != null && !dropDownText.isEmpty())
 			//Added For TISPRD-1243
@@ -417,33 +421,6 @@ public class CategoryPageController extends AbstractCategoryPageController
 				}
 
 				final String categoryName = category.getName();
-
-				String metaKeywords = null;
-				String metaDescription = null;
-				String metaTitle = null;
-
-				//(TPR-243) SEO Meta Tags and Titles for Landing Page *: starts
-				if (CollectionUtils.isEmpty(category.getSeoContents()))
-				{
-					setUpMetaDataForContentPage(model, categoryLandingPage);
-				}
-				/*
-				 * (TPR-243) SEO Meta Tags and Titles for Landing Page *: ends else
-				 */
-				else
-				{
-					final List<SeoContentModel> seoContent = new ArrayList<SeoContentModel>(category.getSeoContents());
-					if (seoContent.size() >= 1)
-					{
-						metaKeywords = seoContent.get(seoContent.size() - 1).getSeoMetaKeyword();
-						metaDescription = seoContent.get(seoContent.size() - 1).getSeoMetaDescription();
-						metaTitle = seoContent.get(seoContent.size() - 1).getSeoMetaTitle();
-					}
-					setUpMetaDataForSeo(model, metaKeywords, metaDescription, metaTitle);
-					updatePageTitle(model, metaTitle);
-				}
-
-				setUpMetaDataForContentPage(model, categoryLandingPage);
 				//				model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY, categoryName.replaceAll(SPECIAL_CHARACTERS, "")
 				//						.replaceAll(" ", "_").toLowerCase());
 				model.addAttribute(WebConstants.BREADCRUMBS_KEY,
@@ -1108,6 +1085,45 @@ public class CategoryPageController extends AbstractCategoryPageController
 		}
 
 		return count;
+	}
+
+	private void getSEOContents(final CategoryModel category, final Model model)
+	{
+		String metaKeywords = null;
+		String metaDescription = null;
+		String metaTitle = null;
+		ContentPageModel categoryLandingPage;
+
+		try
+		{
+			categoryLandingPage = getLandingPageForCategory(category);
+			//(TPR-243) SEO Meta Tags and Titles for Landing Page *: starts
+			if (CollectionUtils.isEmpty(category.getSeoContents()))
+			{
+				setUpMetaDataForContentPage(model, categoryLandingPage);
+			}
+			/*
+			 * (TPR-243) SEO Meta Tags and Titles for Landing Page *: ends else
+			 */
+			else
+			{
+				final List<SeoContentModel> seoContent = new ArrayList<SeoContentModel>(category.getSeoContents());
+				if (seoContent.size() >= 1)
+				{
+					metaKeywords = seoContent.get(seoContent.size() - 1).getSeoMetaKeyword();
+					metaDescription = seoContent.get(seoContent.size() - 1).getSeoMetaDescription();
+					metaTitle = seoContent.get(seoContent.size() - 1).getSeoMetaTitle();
+				}
+				setUpMetaDataForSeo(model, metaKeywords, metaDescription, metaTitle);
+				updatePageTitle(model, metaTitle);
+			}
+
+			setUpMetaDataForContentPage(model, categoryLandingPage);
+		}
+		catch (final CMSItemNotFoundException e)
+		{
+			LOG.error("SEO meta content error ---" + e.getMessage());
+		}
 	}
 
 	protected class CategorySearchEvaluator

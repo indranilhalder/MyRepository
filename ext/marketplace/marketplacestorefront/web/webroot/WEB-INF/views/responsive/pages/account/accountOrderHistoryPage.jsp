@@ -441,9 +441,9 @@
 																			</div>
 																			<div class="product">
 																				<!-- <p class="company">Nike</p> -->
-																				<h3 class="product-name">
+																				<h2 class="product-name">
 																					<a href="${productUrl}">${entryCancel.product.name}</a>
-																				</h3>
+																				</h2>
 																				
 																				<p class="item-info">
 																					<span><b><c:if test="${entryCancel.quantity > 1}"><spring:theme code="text.orderHistory.quantity"/>
@@ -532,9 +532,9 @@
 															<h2>Request Cancellation</h2>
 
 															<div>
-																<h3>
+																<h2 class="trackOrderLnHt">
 																	<span id="resultTitle"></span>
-																</h3>
+																</h2>
 																<div>
 																	<span id="resultDesc"></span>
 																</div>

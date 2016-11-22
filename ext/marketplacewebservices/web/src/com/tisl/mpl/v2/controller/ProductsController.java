@@ -967,10 +967,10 @@ public class ProductsController extends BaseController
 				{
 					searchState.setLuxurySiteFrom(MarketplacecommerceservicesConstants.CHANNEL_WEB);
 				}
-				else
-				{
-					searchState.setLuxurySiteFrom(MarketplacecommerceservicesConstants.CHANNEL_APP);
-				}
+				//				else
+				//				{
+				//					searchState.setLuxurySiteFrom(MarketplacecommerceservicesConstants.CHANNEL_APP);
+				//				}
 
 				if (StringUtils.isNotEmpty(typeID))
 				{

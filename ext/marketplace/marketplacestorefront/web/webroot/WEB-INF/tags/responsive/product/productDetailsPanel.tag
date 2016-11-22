@@ -420,7 +420,7 @@ tr.d0 td {
 				
 
 					<div id="wishListDetailsId" class="other-sellers" style="display: none">
-					<h3 class="title-popover">Select Wishlist:</h3>
+					<h2 class="title-popover">Select Wishlist:</h2>
 						<table class="other-sellers-table add-to-wishlist-popover-table">
 							<%-- <thead>
 								<tr>

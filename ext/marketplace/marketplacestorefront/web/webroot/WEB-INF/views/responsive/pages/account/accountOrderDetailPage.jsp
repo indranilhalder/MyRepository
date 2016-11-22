@@ -65,9 +65,9 @@
 				<div class="order-history order-details">
 					<!-- Heading for saved Cards -->
 					<div class="navigation">
-						<h1>
+						<h2>
 							<spring:theme text="Order Details" />
-						</h1>
+						</h2>
 
 
 					</div>
@@ -112,7 +112,7 @@
 
 
 							<div class="totals" id="anchor">
-								<h3>Total:</h3>
+								<h2>Total:</h2>
 								<ul>
 									<li><spring:theme code="text.account.order.subtotal"
 											/>  <format:price
@@ -178,8 +178,8 @@
 								<c:otherwise>
 								<c:set var="paymentError" value="false"/>
 									<div class="payment-method">
-								<h3>Payment Method:
-									${subOrder.mplPaymentInfo.paymentOption}</h3>
+								<h2>Payment Method:
+									${subOrder.mplPaymentInfo.paymentOption}</h2>
 								<c:set var="cardNumberMasked"
 									value="${subOrder.mplPaymentInfo.cardIssueNumber}" />
 								<c:set var="cardNumberLength"
@@ -298,13 +298,13 @@
 						    	<div class="item-header">
 								<c:if test="${entryCount > 1 }">
 
-								<h3>${HD_ED_Count} Product(s)-ShippingAddress:</h3>
+								<h2>${HD_ED_Count} Product(s)-ShippingAddress:</h2>
 								</c:if>
 								<c:if test="${entryCount  <= 1 }">
-									<h3>
+									<h2>
 										<%-- ${entryCount}&nbsp; --%>
 										Shipping Address:
-									</h3>
+									</h2>
 								</c:if>
 								<c:set var="subOrderLine2" value="${fn:trim(subOrder.deliveryAddress.line2)}"/>
 								<c:set var="subOrderLine3" value="${fn:trim(subOrder.deliveryAddress.line3)}"/>
@@ -536,9 +536,9 @@
 										</div>
 										<div class="details">
 											<p>${entry.brandName}</p>
-											<h3 class="product-name">
+											<h2 class="product-name">
 												<a href="${productUrl}">${entry.product.name}</a>
-											</h3>
+											</h2>
 											<div class="attributes">
 												<c:if test="${not empty entry.product.size}">
 													<p>Size: ${entry.product.size}</p>
@@ -604,7 +604,7 @@
 										           aria-hidden="true" data-dismiss="modal">		
 										            </button> -->
 												<div class="cancellation-request-block">
-													<h2>Request Cancellation</h2>
+													<h2 class="">Request Cancellation</h2>
 													<!-- ../my-account/returnSuccess -->
 													<form:form class="return-form"
 														id="returnRequestForm${entryStatus.index}${sellerOrder.code}"
@@ -638,9 +638,9 @@
 																				</div>
 																				<div class="product">
 																					<!-- <p class="company">Nike</p> -->
-																					<h3 class="product-name">
+																					<h2 class="product-name">
 																						<a href="${productUrl}">${entryCancel.product.name}</a>
-																					</h3>
+																					</h2>
 
 																					<p class="item-info">
 																						<span><b><c:if
@@ -738,9 +738,9 @@
 													<h2>Return Cancellation</h2>
 
 													<div>
-														<h3>
+														<h2>
 															<span id="resultTitle"></span>
-														</h3>
+														</h2>
 														<div>
 															<span id="resultDesc"></span>
 														</div>
@@ -774,9 +774,9 @@
 																				</div>
 																				<div class="product">
 																					<!-- <p class="company">Nike</p> -->
-																					<h3 class="product-name">
+																					<h2 class="product-name">
 																						<a href="${productUrl}">${entryCancel.product.name}</a>
-																					</h3>
+																					</h2>
 
 																					<p class="item-info">
 																						<span><b><c:if
@@ -1648,9 +1648,9 @@
 										</div>
 										<div class="details">
 											<p>${entry.brandName}</p>
-											<h3 class="product-name">
+											<h2 class="product-name">
 												<a href="${productUrl}">${entry.product.name}</a>
-											</h3>
+											</h2>
 											<div class="attributes">
 												<c:if test="${not empty entry.product.size}">
 													<p>Size: ${entry.product.size}</p>
@@ -1716,7 +1716,7 @@
 										           aria-hidden="true" data-dismiss="modal">		
 										            </button> -->
 												<div class="cancellation-request-block">
-													<h2>Request Cancellation</h2>
+													<h2 class="orderDetailCancel">Request Cancellation</h2>
 													<!-- ../my-account/returnSuccess -->
 													<form:form class="return-form"
 														id="returnRequestForm${entryStatus.index}${sellerOrder.code}"
@@ -1738,9 +1738,9 @@
 																				</div>
 																				<div class="product">
 																					<!-- <p class="company">Nike</p> -->
-																					<h3 class="product-name">
+																					<h2 class="product-name">
 																						<a href="${productUrl}">${entryCancel.product.name}</a>
-																					</h3>
+																					</h2>
 
 																					<p class="item-info">
 																						<span><b><c:if
@@ -1838,9 +1838,9 @@
 													<h2>Return Cancellation</h2>
 
 													<div>
-														<h3>
+														<h2>
 															<span id="resultTitle"></span>
-														</h3>
+														</h2>
 														<div>
 															<span id="resultDesc"></span>
 														</div>
@@ -1862,9 +1862,9 @@
 																				</div>
 																				<div class="product">
 																					<!-- <p class="company">Nike</p> -->
-																					<h3 class="product-name">
+																					<h2 class="product-name">
 																						<a href="${productUrl}">${entryCancel.product.name}</a>
-																					</h3>
+																					</h2>
 
 																					<p class="item-info">
 																						<span><b><c:if

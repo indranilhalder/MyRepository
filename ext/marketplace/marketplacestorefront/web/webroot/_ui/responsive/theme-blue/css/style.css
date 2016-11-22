@@ -22304,11 +22304,11 @@ body .right-account .order-history .cancellation-request-block h2 {
     background: #f0f4f5;
     line-height: 30px;
     padding: 15px 10px;
-
     font-size: 28px;
     font-weight: 500;
     text-align:left;
     color:#A9143C;
+    letter-spacing:normal;
 }
 @media (max-width: 790px) {
     body .right-account .order-history .cancellation-request-block h2 {
@@ -44641,6 +44641,9 @@ bottom:35px;
     font-weight: 100;
     padding: 1px;
 }
+h3.customPriceRange:after{
+	display: none;
+}
 @media (min-width: 651px){
 	.facet-name.js-facet-name h3.tree-dept{
 		padding-bottom: 10px;
@@ -45001,6 +45004,7 @@ body .account .right-account .order-history .product-block .cancellation-request
     font-weight: 500;
     background: transparent;
     padding: 0;
+    height: initial;
 }
 body .account .right-account ul.saved-cards>li.mpl-addressBook h2{
 	font-weight: bold;
@@ -45095,6 +45099,7 @@ body .account .right-account ul.saved-cards>li.mpl-addressBook h2{
     padding: 10px 20px;
     font-size: 16px;
     font-weight: 500;
+    height:36px;
 }
 body .account .right-account .order-history .product-block li.item .cancellation-request-block.success>div>h2{
 	font-size: 14px;
@@ -45103,12 +45108,16 @@ body .account .right-account .order-history .product-block li.item .cancellation
     padding: 20px 15px 15px;
     text-align: center;
     background-color: transparent;
+    height: auto;
 }
 body .right-account .order-history .cancellation-request-block.success>div>h2>#resultTitle{
 	font-size: 28px;
     margin-top: 0;
-    display: block;
-  /*   line-height: 1.5; */
+    /* display: block; */
+    /* line-height: 1.5; */
+}
+body .right-account .order-history .cancellation-request-block.success>div>h2.trackOrderLnHt>#resultTitle{
+	line-height: 1.5;
 }
 body .account .right-account .order-history.order-details li.header div.delivery-address h2{
 	font-size: 14px;
@@ -45130,6 +45139,7 @@ body .right-account .order-history .cancellation-request-block.success>div h2{
     margin: 0;
     background-color: transparent;
     text-align: center;
+    line-height: 28px;
 }
 .click-to-chat h1, #clicktoCallModal h1{
 	font-weight: 600;
@@ -45505,6 +45515,63 @@ body.page-homepage .trending h2 > span{
     height: 29px;
     line-height: 29px;
 }
+#deleteReview h2.modal-title,#updateReview h2.modal-title,#reviewPluginContainer h2.modal-title,h2.modal-title#myModalLabel{
+    font-size: inherit;
+    font-weight:normal;
+    margin: 0;
+    padding: 0;
+    letter-spacing: normal;
+}
+#reviewPluginContainer h2.modal-title span.popUpProductTitle{
+	font-size: inherit;
+	font-weight:normal;
+    margin: 0;
+    padding: 0;
+    letter-spacing: normal;
+}
+.myInterestCategory .questionnaire-title h2.myInterestCategoryH2First,.brandsCategory .questionnaire-title h2.brandsCategoryH2First,
+.brandsSubCategory .questionnaire-title h2#objHeading,.brandsSubCategoryApparel .questionnaire-title h2#objHeadingApparel,
+.brandsSubCategoryeElectronics .questionnaire-title h2#objHeadingElectronics{
+	color: #a9143c;
+    font-size: 32px;
+    padding: 30px 0;
+    max-width: none;
+}
+.mybag-undo-form h2 {
+    font-size: 17px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+    line-height: 1;
+}
+.forgot-password-container h2, .click2chat-container h2, .click2call-container h2, .manage-wishlist-container h2, .create-new-wishlist-popup-container h2, .return-requestInvoice h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    line-height: 24px;
+    width: 100%;
+    float: right;
+}
+/* Product related starts */
+body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo h2.product-brand-name, body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo h2.product-name {
+    font-size: 14px;
+    text-transform: uppercase;
+    line-height: 24px;
+    font-weight: normal !important;
+    margin: 0 !important;
+}
+/* Product related ends */
+body .right-account .order-history .cancellation-request-block>h2{
+	font-size: 28px !important;
+    font-weight: 500 !important;
+    height: auto !important;
+    margin-bottom: 20px !important;
+}
+@media only screen and (max-width: 1450px){
+	body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo h2.product-brand-name, body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo h2.product-name{
+    font-size: 11px !important;
+    line-height: 18px;
+}
+}
 @media(max-width:1024px){
 .page-productDetails .trending h2 {
 		border-top: 1px solid #ccc;
@@ -45543,6 +45610,9 @@ body.page-homepage .trending h2>span{
 .click2chat-container h2{
 	font-size: 22px;
 }
+.forgot-password-container h2, .click2chat-container h2, .click2call-container h2, .manage-wishlist-container h2, .create-new-wishlist-popup-container h2, .return-requestInvoice h2 {
+    font-size: 22px;
+}
 }
 @media(max-width:767px){
 .page-productDetails .trending h2 {		
@@ -45563,6 +45633,16 @@ body.page-homepage .trending h2>span{
 	body.page-homepage .trending h2>span {
     	font-size: 20px !important;
 	}	
+}
+@media(max-width:650px){
+	.myInterestCategory .questionnaire-title h2.myInterestCategoryH2First,.brandsCategory .questionnaire-title h2.brandsCategoryH2First,
+	.brandsSubCategory .questionnaire-title h2#objHeading,.brandsSubCategoryApparel .questionnaire-title h2#objHeadingApparel,
+	.brandsSubCategoryeElectronics .questionnaire-title h2#objHeadingElectronics{
+		color: #a9143c;
+    	font-size: 32px;
+    	padding: 30px 0;
+    	max-width: none;
+	}
 }
 /* Comment on 16/11/2016 ends IA*/
 
@@ -46587,10 +46667,11 @@ float: right;
 	/*Products Right Share*/
 	.color-swatch {
 		float: left;
-		width: 50%;
+		width: 100%; /* TISQAEE-94 */
 	}
 	.product-info .product-content .wish-share.desktop {
-		display: none;
+		/* display: none; */
+		padding: 0 8%; /* TISQAEE-94 */
 
 	}
 	.product-info .product-detail .wish-share.mobile {
@@ -58817,6 +58898,7 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 	    background-color: #000;
     height: 80px;
     padding: 10px 0 20px;
+    margin-bottom: 20px; /* TISQAEE-77 fix */
 }
 .blp-serp-banner .image{
 	margin-left:25px;}
