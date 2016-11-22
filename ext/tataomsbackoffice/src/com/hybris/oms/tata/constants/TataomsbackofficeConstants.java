@@ -11,6 +11,9 @@
  */
 package com.hybris.oms.tata.constants;
 
+import de.hybris.platform.util.Config;
+
+
 /**
  * Global class for all Ybackoffice constants. You can add global constants for your extension into this class.
  */
@@ -43,6 +46,10 @@ public final class TataomsbackofficeConstants extends GeneratedTataomsbackoffice
 	public static final String UPLOAD_LPANDAWB_FIELDS = "ordered,orderlineid,lpname,awbnumber,flowtype";
 	public static final String SPLIT_BY_COMMA = ",";
 	public static final String SPLIT_BY_NEWLINE = "\n";
+	public static final String LPAWB_FORWARD_FiLE_PREFIX = "LPAwbForwardLogistics_";
+	public static final String LPAWB_FORWARD_FILE_PATH = Config.getParameter("tata.oms.forward.lpawbupload.path");
+	public static final String LPAWB_RETURN_FiLE_PREFIX = "LPAwbReturnLogistics_";
+	public static final String LPAWB_RETURN_FILE_PATH = Config.getParameter("tata.oms.return.lpawbupload.path");
 
 	private TataomsbackofficeConstants()
 	{

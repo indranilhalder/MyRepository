@@ -90,51 +90,63 @@
 					onClick="@command('awbSearch')" />
 			</vlayout>
 		</hlayout>
-	<separator />
-	<div style="overflow-x:auto">
-		<listbox model="@bind(vm.listOfTransactions)" id="listBoxData"
-			mold="paging" pageSize="10"
-			emptyMessage="No result found in the result">
-			<listhead sizable="true">
-				<listheader style="text-align:left" label="Order Id ">
-				</listheader>
-				<listheader style="text-align:left"
-					label="Transaction Id">
-				</listheader>
-				<listheader style="text-align:left" label="Slave Id">
-				</listheader>
-				<listheader style="text-align:left" label="Seller Id">
-				</listheader>
-
-				<listheader style="text-align:left"
-					label="Order Status">
-				</listheader>
-				<listheader style="text-align:left"
-					label="Awb Number">
-				</listheader>
-			</listhead>
-			<template name="model" var="item">
-				<listitem>
-					<listcell label="@bind(item.orderId)" />
-					<listcell label="@bind(item.transactionId)" />
-					<listcell label="@bind(item.slaveId)" />
-					<listcell label="@bind(item.sellerId)" />
-					<listcell label="@bind(item.orderStatus)" />
-					<listcell>
-						<textbox
-							onChange="@command('onChangeTransactionInfo',transaction=item)"
-							value="@bind(item.awbNumber)">
-						</textbox>
-					</listcell>
-				</listitem>
-			</template>
-		</listbox>
 		<separator />
-		<hbox pack="center" style="width:100%">
-			<button onClick="@command('saveAllTransactions')"
-				label="Save" />
-		</hbox>
-	</div>
+		<div style="overflow-x:auto">
+			<listbox model="@bind(vm.listOfTransactions)"
+				id="listBoxData" mold="paging" pageSize="10"
+				emptyMessage="No result found in the result">
+				<listhead sizable="true">
+					<listheader style="text-align:left"
+						label="Order Id ">
+					</listheader>
+					<listheader style="text-align:left"
+						label="Transaction Id">
+					</listheader>
+					<listheader style="text-align:left"
+						label="Slave Id">
+					</listheader>
+					<listheader style="text-align:left"
+						label="Seller Id">
+					</listheader>
+
+					<listheader style="text-align:left"
+						label="Order Status">
+					</listheader>
+					<listheader style="text-align:left"
+						label="Awb Number">
+					</listheader>
+				</listhead>
+				<template name="model" var="item">
+					<listitem>
+						<listcell label="@bind(item.orderId)" />
+						<listcell label="@bind(item.transactionId)" />
+						<listcell label="@bind(item.slaveId)" />
+						<listcell label="@bind(item.sellerId)" />
+						<listcell label="@bind(item.orderStatus)" />
+						<listcell>
+							<textbox
+								onChange="@command('onChangeTransactionInfo',transaction=item)"
+								value="@bind(item.awbNumber)">
+							</textbox>
+						</listcell>
+					</listitem>
+				</template>
+			</listbox>
+			<separator />
+			<hbox pack="center" style="width:100%">
+				<button onClick="@command('saveAllTransactions')"
+					label="Save" />
+			</hbox>
+			<separator spacing="20px" />
+			<hbox>
+				<label sclass="heading" value="Lp Awb Bulk Upload " />
+				<textbox id="LPBulkUploadTextBox" disabled="true" />
+				<button sclass="uploadTxtbox" label="upload"
+					upload="true,maxsize=302400,accept=.csv"
+					onUpload="@command('onUploadLPAwbCSV',upEvent=event)">
+				</button>
+			</hbox>
+		</div>
 	</vlayout>
 
 </widget>

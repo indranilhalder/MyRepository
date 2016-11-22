@@ -195,18 +195,14 @@
 					onClick="@command('lpOverrideSave',lpOverride=true)"
 					label="Forcefit LP" />
 			</hbox>
-			<separator />
+			<separator spacing="20px"/>
 			<hbox>
-				<label sclass="heading" value="LP Bulk Upload " />
-				<textbox id="LPBulkUpload" disabled="true" />
+				<label sclass="heading" value="Lp Awb Bulk Upload" />
+				<textbox id="awbBulkUploadTextBox" disabled="true" />
 				<button sclass="uploadTxtbox" label="upload"
 					upload="true,maxsize=302400,accept=.csv"
-					onUpload="@command('onUploadCSV',upEvent=event)">
-
+					onUpload="@command('onUploadLPAwbCSV',upEvent=event)">
 				</button>
-				<label id="expressEmptyFileError" sclass="error_class"
-					value="">
-				</label>
 			</hbox>
 			</div>
 	</vlayout>

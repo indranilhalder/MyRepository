@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.processing.FilerException;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -23,7 +21,6 @@ import org.zkoss.bind.annotation.ContextParam;
 import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
-import org.zkoss.util.media.Media;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.UploadEvent;
 import org.zkoss.zk.ui.select.Selectors;
@@ -40,7 +37,6 @@ import com.hybris.cockpitng.core.user.impl.AuthorityGroup;
 import com.hybris.cockpitng.util.DefaultWidgetController;
 import com.hybris.oms.api.logistics.LogisticsFacade;
 import com.hybris.oms.api.orderlogistics.OrderLogisticsFacade;
-import com.hybris.oms.domain.exception.EntityValidationException;
 import com.hybris.oms.domain.logistics.dto.Logistics;
 import com.hybris.oms.domain.lpawb.dto.LPAWBSearch;
 import com.hybris.oms.domain.lpawb.dto.LPOverrideAWBEdit;
@@ -49,6 +45,7 @@ import com.hybris.oms.domain.lpawb.dto.OrderLineInfo;
 import com.hybris.oms.domain.lpawb.dto.OrderLineResponse;
 import com.hybris.oms.domain.lpawb.dto.TransactionInfo;
 import com.hybris.oms.tata.constants.TataomsbackofficeConstants;
+import com.hybris.oms.tata.services.LpAwbDataUploadService;
 
 
 /**
@@ -89,12 +86,13 @@ public class LpoverrideWidgetController extends DefaultWidgetController
 	private transient CockpitUserService cockpitUserService;
 	@WireVariable
 	private transient AuthorityGroupService authorityGroupService;
+	@WireVariable
 	private transient AuthorityGroup activeUserRole;
 	private Boolean displayPopup = Boolean.FALSE;
 	@Wire("#listBoxData")
 	private Listbox listBoxData;
-	private static final String CSV = ".csv";
-	private String[] LpUploadFields;
+	@WireVariable
+	private LpAwbDataUploadService lpAwbDataUploadService;
 
 	@Init
 	@NotifyChange(
@@ -110,7 +108,6 @@ public class LpoverrideWidgetController extends DefaultWidgetController
 		{
 			modifiedTransactinTrack = new HashMap<String, TransactionInfo>();
 		}
-		LpUploadFields = TataomsbackofficeConstants.UPLOAD_LPANDAWB_FIELDS.split(TataomsbackofficeConstants.SPLIT_BY_COMMA);
 		dropDownSearchLpList.addAll(activelpList);
 		dropDownSearchLpList.add(TataomsbackofficeConstants.LPNAME_NONE);
 	}
@@ -234,32 +231,32 @@ public class LpoverrideWidgetController extends DefaultWidgetController
 		{
 			lpAwbSearch.setTransactionType(transactionType);
 			lpAwbSearch.setIsReturn(isReturn);
-		
-				final List<TransactionInfo> transactionsList = orderLogisticsUpdateFacade.getOrderLogisticsInfo(lpAwbSearch)
-						.getTransactionInfo(); //if response
 
-				for (final TransactionInfo transaction : transactionsList)
+			final List<TransactionInfo> transactionsList = orderLogisticsUpdateFacade.getOrderLogisticsInfo(lpAwbSearch)
+					.getTransactionInfo(); //if response
+
+			for (final TransactionInfo transaction : transactionsList)
+			{
+				final String orderStatus = transaction.getOrderStatus();
+				if (orderStatus.equalsIgnoreCase(TataomsbackofficeConstants.ORDERSTATUS_SCANNED)
+						|| orderStatus.equalsIgnoreCase(TataomsbackofficeConstants.ORDERSTATUS_HOTCOURI)
+						|| orderStatus.equalsIgnoreCase(TataomsbackofficeConstants.REVERSE_ORDERSTATUS_REVERSEAWB))
 				{
-					final String orderStatus = transaction.getOrderStatus();
-					if (orderStatus.equalsIgnoreCase(TataomsbackofficeConstants.ORDERSTATUS_SCANNED)
-							|| orderStatus.equalsIgnoreCase(TataomsbackofficeConstants.ORDERSTATUS_HOTCOURI)
-							|| orderStatus.equalsIgnoreCase(TataomsbackofficeConstants.REVERSE_ORDERSTATUS_REVERSEAWB))
-					{
-						transaction.setAwbReadOnly(Boolean.FALSE);
-						//create new Transaction Object  for track
-						final TransactionInfo newTransaction = new TransactionInfo();
-						newTransaction.setAwbNumber(transaction.getAwbNumber());
-						newTransaction.setLogisticName(transaction.getLogisticName());
-						previousLpAndAwbNumberForTrack.put(transaction.getTransactionId(), newTransaction);
-					}
-					else
-					{
-						transaction.setAwbReadOnly(Boolean.TRUE); //this step is removed once awbEditable default value==true
-
-					}
+					transaction.setAwbReadOnly(Boolean.FALSE);
+					//create new Transaction Object  for track
+					final TransactionInfo newTransaction = new TransactionInfo();
+					newTransaction.setAwbNumber(transaction.getAwbNumber());
+					newTransaction.setLogisticName(transaction.getLogisticName());
+					previousLpAndAwbNumberForTrack.put(transaction.getTransactionId(), newTransaction);
 				}
-				this.listOfTransactions = transactionsList;
-			
+				else
+				{
+					transaction.setAwbReadOnly(Boolean.TRUE); //this step is removed once awbEditable default value==true
+
+				}
+			}
+			this.listOfTransactions = transactionsList;
+
 		}
 		else
 		{
@@ -639,74 +636,15 @@ public class LpoverrideWidgetController extends DefaultWidgetController
 	}
 
 	@Command
-	public void onUploadCSV(@ContextParam(ContextType.BIND_CONTEXT) final BindContext ctx) throws IOException
+	public void onUploadLPAwbCSV(@ContextParam(ContextType.BIND_CONTEXT) final BindContext ctx)
+			throws IOException, InterruptedException
 	{
 		UploadEvent upEvent = null;
 		final Object objUploadEvent = ctx.getTriggerEvent();
 		if (objUploadEvent != null && (objUploadEvent instanceof UploadEvent))
 		{
 			upEvent = (UploadEvent) objUploadEvent;
+			lpAwbDataUploadService.lpAwbBulkUploadCommon(upEvent);
 		}
-		if (upEvent != null)
-		{
-			final Media media = upEvent.getMedia();
-			if (media.getName().endsWith(CSV) && media.getStringData().length() > 0)
-			{
-				final String[] rowData = media.getStringData().split(TataomsbackofficeConstants.SPLIT_BY_NEWLINE);
-				try
-				{
-					if (!validateFileHedders(rowData[0]))
-					{
-						throw new FilerException("The Csv File Headers Format " + TataomsbackofficeConstants.UPLOAD_LPANDAWB_FIELDS);
-					}
-					LOG.info("the uploaded csv file Length" + rowData.length);
-					//read the each record and generate object for that
-					for (int i = 1; i < rowData.length; i++)
-					{
-						LOG.info("each row data" + rowData[i]);
-					}
-				}
-				catch (final FilerException e)
-				{
-					Messagebox.show(e.getMessage());
-				}
-			}
-			else
-			{
-				LOG.info("file extension should be CSV" + media.getName() + "File Empty size" + media.getStringData().length());
-				Messagebox.show("Unable to upload file try again");
-			}
-		}
-	}
-
-	/*
-	 * this method is used to validate the csv file Headers with Positions
-	 */
-	private boolean validateFileHedders(final String csvfileHeaders)
-	{
-		final String headers[] = csvfileHeaders.split(TataomsbackofficeConstants.SPLIT_BY_COMMA);
-
-		if (!headers[0].equalsIgnoreCase(LpUploadFields[0]))
-		{
-			return Boolean.FALSE;
-		}
-
-		if (!headers[1].equalsIgnoreCase(LpUploadFields[1]))
-		{
-			return Boolean.FALSE;
-		}
-		if (!headers[2].equalsIgnoreCase(LpUploadFields[2]))
-		{
-			return Boolean.FALSE;
-		}
-		if (!headers[3].equalsIgnoreCase(LpUploadFields[3]))
-		{
-			return Boolean.FALSE;
-		}
-		if (!headers[4].equalsIgnoreCase(LpUploadFields[4]))
-		{
-			return Boolean.FALSE;
-		}
-		return Boolean.TRUE;
-	}
+	}//end uplaod method
 }

@@ -3,6 +3,7 @@
  */
 package com.techouts.backoffice.widget.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Map;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.zkoss.bind.BindContext;
 import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
@@ -19,6 +21,7 @@ import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.event.UploadEvent;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zul.Listitem;
@@ -39,6 +42,7 @@ import com.hybris.oms.domain.lpawb.dto.OrderLineInfo;
 import com.hybris.oms.domain.lpawb.dto.OrderLineResponse;
 import com.hybris.oms.domain.lpawb.dto.TransactionInfo;
 import com.hybris.oms.tata.constants.TataomsbackofficeConstants;
+import com.hybris.oms.tata.services.LpAwbDataUploadService;
 
 
 /**
@@ -70,7 +74,8 @@ public class AwbEditWidgetController extends DefaultWidgetController
 	private OrderLogisticsFacade orderLogisticsUpdateFacade;
 	@WireVariable("logisticsRestClient")
 	private LogisticsFacade logisticsFacade;
-
+	@WireVariable
+	private LpAwbDataUploadService lpAwbDataUploadService;
 	@WireVariable
 	private transient CockpitUserService cockpitUserService;
 	@WireVariable
@@ -487,7 +492,6 @@ public class AwbEditWidgetController extends DefaultWidgetController
 		return transactionType;
 	}
 
-
 	public ListitemRenderer<String> getListItemRenderer()
 	{
 		ListitemRenderer<String> _rowRenderer = null;
@@ -506,5 +510,17 @@ public class AwbEditWidgetController extends DefaultWidgetController
 		return _rowRenderer;
 	}
 
+	@Command
+	public void onUploadLPAwbCSV(@ContextParam(ContextType.BIND_CONTEXT) final BindContext ctx)
+			throws IOException, InterruptedException
+	{
+		UploadEvent upEvent = null;
+		final Object objUploadEvent = ctx.getTriggerEvent();
+		if (objUploadEvent != null && (objUploadEvent instanceof UploadEvent))
+		{
+			upEvent = (UploadEvent) objUploadEvent;
+			lpAwbDataUploadService.lpAwbBulkUploadCommon(upEvent);
+		}
+	}//end uplaod method
 
 }

@@ -145,4 +145,5 @@
 		class="com.hybris.oms.tata.tship.exceltocsv.pojo.AirPriorityMaster"></bean>
 	<bean id="surfacePriorityMaster"
 		class="com.hybris.oms.tata.tship.exceltocsv.pojo.SurfacePriorityMaster"></bean>
+		<bean id="lpAwbDataUploadService" class="com.hybris.oms.tata.services.DefaultLpAwbDataUploadService"></bean>
 </beans>
