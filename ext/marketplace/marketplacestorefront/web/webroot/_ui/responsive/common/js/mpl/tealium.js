@@ -849,35 +849,37 @@ $(document).on("click", ".home-brands-you-love-carousel-brands", function() {
 			/*TPR-654*/	
 						
 			
-				$(document).on('click', 'nav ul li.ShopByBrand div a', function(e){
-					 var navigationClick= "top_navigation_click";
-					 var lastItem = $.trim($(this).text().replace(/[\t\n\'\-]+/g,' ')).toLowerCase();
-					// lastItem = lastItem.replace(" ","").toLowerCase();
-					 lastItem = lastItem.replace(/[\s]/g,"");
-					
-					 var parentItem = '';
-					 if (!$(this).parent().hasClass('toggle brandClass') || !$(this).parent().hasClass('toggle A-ZBrands')) {
-						 if ($(this).parents().hasClass('lazy-brands')) {
-							 var parentObj = $(this).closest('.lazy-brands');
-							 if ($(this).parent().hasClass('toggle brandClass')) {
-								 parentItem = $.trim(parentObj.find('.toggle.brandClass').text().replace(/[\t\n\'\-]+/g,' ')).toLowerCase(); 
-							 }
-							 else{
-								 parentItem = $.trim(parentObj.find('.toggle.A-ZBrands').text().replace(/[\t\n\'\-]+/g,' ')).toLowerCase(); 
-							 }
-							 parentItem = parentItem.replace(/[\s]/g,"");
-						
+			$(document).on('click', 'nav ul li.ShopByBrand ul li.short.images a', function(e){
+				 var navigationClick= "top_navigation_click";
+				 var lastItem = $.trim($(this).text().replace(/[\t\n\'\-]+/g,' ')).toLowerCase();
+				// lastItem = lastItem.replace(" ","").toLowerCase();
+				 lastItem = lastItem.replace(/[\s]/g,"");
+				
+				 var parentItem = '';
+				 if (!$(this).parent().hasClass('toggle brandClass') || !$(this).parent().hasClass('toggle A-ZBrands')) {
+					 if ($(this).parents().hasClass('lazy-brands')) {
+						 var parentObj = $(this).closest('.lazy-brands');
+						 if ($(this).parent().hasClass('toggle brandClass')) {
+							 parentItem = $.trim(parentObj.find('.toggle.brandClass').text().replace(/[\t\n\'\-]+/g,' ')).toLowerCase(); 
 						 }
-						 
-					 //console.log(parentItem);
+						 else if($(this).parent().hasClass('toggle A-ZBrands')){
+							 parentItem = $.trim(parentObj.find('.toggle.A-ZBrands').text().replace(/[\t\n\'\-]+/g,' ')).toLowerCase(); 
+						 }
+						 else{
+							 parentItem = $.trim(parentObj.find('.toggle.brandClass').text().replace(/[\t\n\'\-]+/g,' ')).toLowerCase();
+						 }
+						 parentItem = parentItem.replace(/[\s]/g,"");
+					
 					 }
-					 var grandParentItem = $.trim($('.ShopByBrand > div.toggle').text().replace(/[\t\n\']+/g,' ')).toLowerCase();
-					 grandParentItem = grandParentItem.replace(" ","").toLowerCase();
-					 grandParentItem = grandParentItem.replace(" ","_");
-					 utag.link({"link_text":grandParentItem+"_"+parentItem+"_"+lastItem,"event_type" : navigationClick});
-				});
+				 }
+				 
+				 var grandParentItem = $.trim($('.ShopByBrand > div.toggle').text().replace(/[\t\n\']+/g,' ')).toLowerCase();
+				 grandParentItem = grandParentItem.replace(" ","").toLowerCase();
+				 grandParentItem = grandParentItem.replace(" ","_");
+				 utag.link({"link_text":grandParentItem+"_"+parentItem+"_"+lastItem,"event_type" : navigationClick});
+			});
 
-				 $('nav ul li.ShopByBrand div a').on('click', function(){
+			 $('nav ul li.ShopByBrand div a').on('click', function(){
 				 var navigationClick= "top_navigation_click";
 				 var lastItem = $.trim($(this).text().replace(/[\t\n\'\-]+/g,' ')).toLowerCase();
 				 //lastItem = lastItem.replace(" ","").toLowerCase();
@@ -888,7 +890,7 @@ $(document).on("click", ".home-brands-you-love-carousel-brands", function() {
 				 parentItem = parentItem.replace(" ","_");
 				 //console.log(parentItem + '>>>' + lastItem);
 				 utag.link({"link_text":parentItem+"_"+lastItem,"event_type" : navigationClick});
-				 });  
+			 }); 
 				
 
 
