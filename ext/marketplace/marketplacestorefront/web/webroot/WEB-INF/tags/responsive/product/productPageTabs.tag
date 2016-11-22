@@ -31,11 +31,11 @@ var buyboxskuId='';
 <div class="nav-wrapper">
 <ul class="nav pdp">
 <!-- 	TISPRD-7604 fix start -->
-<%-- 	<c:if test="${fn:contains(validTabs, 'stylenote')}"> --%>
-<!-- 		<li id="tabs_styleNotes" class="active"> -->
-<%-- 			 <spring:theme code="product.product.styleNotes" /> --%>
-<!-- 		</li> -->
-<%-- 	</c:if> --%>
+<%-- 	<c:if test="${fn:contains(validTabs, 'stylenote')}">
+		<li id="tabs_styleNotes" class="active">
+			 <spring:theme code="product.product.styleNotes" />
+		</li>
+	</c:if> --%>
 <!-- 	TISPRD-7604 fix end -->
 	<c:if test="${fn:contains(validTabs, 'details')}">
 		<li id="tabs_details" >
