@@ -150,7 +150,7 @@ $(document).ready(
 					&& pageType != 'category' && pageType != 'cart'
 					&& pageType != 'multistepcheckoutsummary'
 					&& pageType != 'profile' 
-					//&& pageType != 'orderconfirmation'
+					&& pageType != 'orderconfirmation'
 					&& pageType != 'notfound'
 					&& pageType != 'businesserrorfound'
 					&& pageType != 'nonbusinesserrorfound'
