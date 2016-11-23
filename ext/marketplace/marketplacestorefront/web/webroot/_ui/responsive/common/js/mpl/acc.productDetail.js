@@ -361,6 +361,9 @@
 	},
 };
 	
+	//update the message for Freebie product TPR-1754
+	var freebieMsg="";
+	
 /**
  * displaying thumb nails details
  */
@@ -807,7 +810,21 @@ function setValidPrice(sellersArray, index) {
 			 $("#mrpPriceId").hide();
 			 $("#savingsOnProductId").hide();
 			 //$("#dListedErrorMsg").show(); //Need to Change	
-			 $("#freebieProductMsgId").show();			 
+			// $("#freebieProductMsgId").show();
+			 var ussId=  $("#ussid").val();
+			 
+			//update the message for Freebie product TPR-1754
+			 var freebieproductMsg =populateFreebieMsg(ussId);
+			
+			 if($.isEmptyObject(freebieproductMsg)){
+				 
+				 $("#freebieProductMsgId").show();			 
+						}else{
+						
+						$("#freebieProductMsgId").html(freebieMsg);
+						$("#freebieProductMsgId").show();
+					}
+			 
 		}else {
 			$("#mrpPriceId").append(mrp);
 			$("#mopPriceId").html("");
@@ -1846,8 +1863,22 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 				 $(".seller").hide();
 				 $(".star-review").hide();
 				 //$("#dListedErrorMsg").show();	//Need to Change
-				 $("#freebieProductMsgId").show();
-				 			 
+				// $("#freebieProductMsgId").show();
+			var ussId=  $("#ussid").val();
+				
+			//	$("#ussid").val(data['sellerArticleSKU']);
+				 
+				//update the message for Freebie product TPR-1754
+				 var freebieproductMsg =populateFreebieMsg(ussId);			 
+				 if($.isEmptyObject(freebieproductMsg)){	
+					 
+					 $("#freebieProductMsgId").show();			 
+							}else{
+							
+							$("#freebieProductMsgId").html(freebieMsg);
+							$("#freebieProductMsgId").show();
+						}
+				 
 			}else{
 				$("#mrpPriceId").show();
 			 }
@@ -1953,16 +1984,6 @@ function populateEMIDetailsForPDP(){
 		var selectedBank = $('#bankNameForEMI :selected').text();
 		var contentData = '';
 		if (selectedBank != "select") {
-			
-			/*TPR-641 starts*/
-			emiBankSelectedTealium = "emi_option_" + selectedBank.replace(/ /g, "").toLowerCase();
-			utag.link({
-				link_obj: this, 
-				link_text: emiBankSelectedTealium , 
-				event_type : 'emi_option_selected'
-			});
-			/*TPR-641 ends*/
-			
 			var dataString = 'selectedEMIBank=' + selectedBank + '&productVal=' + productVal;
 			$.ajax({
 				url : ACC.config.encodedContextPath + "/p-getTerms",
@@ -1994,6 +2015,15 @@ function populateEMIDetailsForPDP(){
 					} else {
 						$('#emiNoData').show();
 					}
+					
+					/*TPR-641 starts*/
+					emiBankSelectedTealium = "emi_option_" + selectedBank.replace(/ /g, "").replace(/[^a-z0-9\s]/gi, '').toLowerCase();
+					utag.link({
+						link_obj: this, 
+						link_text: emiBankSelectedTealium , 
+						event_type : 'emi_option_selected'
+					});
+					/*TPR-641 ends*/
 				},
 				error : function(resp) {
 					$('#emiSelectBank').show();
@@ -2829,6 +2859,10 @@ function loadDefaultWishListName_SizeGuide() {
 		
 		$(document).on("click",".product-detail .promo-block .pdp-promo-title, .pdp-promo-title-link",function(e){
 			e.preventDefault();
+			/*TPR-694*/
+			utag.link({"link_obj": this, "link_text": 'product_offer_view_details', "event_type": 'product_offer_details'
+			}); 
+			/*TPR-694 ends */
 			offerPopup($("#promotionDetailsId").html());
 		});
 		$(document).on('hide.bs.modal', function () {
@@ -2937,7 +2971,6 @@ function loadDefaultWishListName_SizeGuide() {
 	
 	
 	/*TPR-1375*/
-
 	 //TPR-1375 populating the buybox details after chceking servicable seller list
 	function repopulateBuyBoxDetails(data,buyBoxList){
 		var isproductPage = $("#isproductPage").val();
@@ -2963,13 +2996,17 @@ function loadDefaultWishListName_SizeGuide() {
 				    nonServicableList.push(buyBoxList[i]);
 			}
 		}
-		sessionStorage.setItem('servicableList', JSON.stringify(servicableList[0]));
+		if(!$.isEmptyObject(servicableList)){
+			sessionStorage.setItem('servicableList', JSON.stringify(servicableList[0]));
+		}
 		sessionStorage.setItem('isproductPage', isproductPage);
 		sessionStorage.setItem('allOosFlag', allOosFlag);
 		sessionStorage.setItem('otherSellerCount', servicableList.length-1);
 		sessionStorage.setItem('pincodeChecked', 'Y');
 		//TPR-1375 populating buybox details so that buybox seller should be servicable
+		if(!$.isEmptyObject(servicableList)){
 		populateBuyBoxData(JSON.parse(sessionStorage.getItem("servicableList")),servicableList.length-1,isproductPage,allOosFlag);
+		}
 	}
 	
 	/*Offer popup*/
@@ -3080,4 +3117,39 @@ function getProductContents() {
 		lazyLoadProductContents();
 		});
 		
+	}
+
+	
+	//update the message for Freebie product TPR-1754
+	function  populateFreebieMsg(ussId){
+		var requiredUrl = ACC.config.encodedContextPath + "/p-" + ussId
+		                  + "/getFreebieMessage";		
+		var dataString = 'ussId=' + ussId;	
+		$.ajax({
+			contentType : "application/json; charset=utf-8",
+			url : requiredUrl,
+			async: false,
+			data : dataString,
+			cache : false,
+			dataType : "json",
+			success : function(data){
+				if (data != null) {			
+				    var freebieMessageMap = data['offerMessageMap'];
+				    if(!$.isEmptyObject(freebieMessageMap)){
+				    	
+				    	$.each( freebieMessageMap, function(key,value){		
+				    		
+						//	$.each(value, function(keyInternal,valueInternal){
+								// if(keyInternal == 'freebieMsg'){
+									 freebieMsg = value;		 
+									 
+								// }				 
+							// });
+				    	})
+				    	
+				    	}
+			}
+		}
+	});
+		 return freebieMsg;
 	}

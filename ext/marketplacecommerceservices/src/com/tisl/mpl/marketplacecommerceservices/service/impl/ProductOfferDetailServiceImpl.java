@@ -3,7 +3,9 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
+import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.SearchResult;
+import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +19,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.FreebieDetailModel;
+import com.tisl.mpl.core.model.ProductFreebieDetailModel;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.ProductOfferDetailDao;
 import com.tisl.mpl.marketplacecommerceservices.service.ProductOfferDetailService;
 
@@ -105,5 +110,52 @@ public class ProductOfferDetailServiceImpl implements ProductOfferDetailService
 		final Pattern pattern = Pattern.compile(OFFER_REGEX);
 		final Matcher matcher = pattern.matcher(offerMessageDet);
 		return matcher.matches();
+	}
+
+	//update the message for Freebie product TPR-1754
+	/**
+	 * @Description Added for displaying freebie messages other than default freebie message
+	 * @param ussId
+	 * @return freebie message
+	 */
+	@Override
+	public Map<String, String> showFreebieMessage(final String ussId)
+			throws EtailNonBusinessExceptions, FlexibleSearchException, UnknownIdentifierException
+	{
+		final SearchResult<List<Object>> result = prodOfferDetDao.showFreebieMessage(ussId);
+		final Map<String, String> resultMap = new HashMap<String, String>();
+
+		try
+		{
+			if (null != result && CollectionUtils.isNotEmpty(result.getResult()))
+			{
+				for (final List<Object> row : result.getResult())
+				{
+					final ProductFreebieDetailModel prddetails = (ProductFreebieDetailModel) row.get(0);
+					final FreebieDetailModel freebiedet = (FreebieDetailModel) row.get(1);
+
+					if (null != freebiedet && null != freebiedet.getFreebieId() && null != prddetails && null != prddetails.getOffer()
+							&& null != prddetails.getOffer().getFreebieId()
+							&& prddetails.getOffer().getFreebieId().equals(freebiedet.getFreebieId()))
+					{
+						resultMap.put(prddetails.getUssId(), freebiedet.getFreebieMsg());
+					}
+
+				}
+			}
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return resultMap;
 	}
 }

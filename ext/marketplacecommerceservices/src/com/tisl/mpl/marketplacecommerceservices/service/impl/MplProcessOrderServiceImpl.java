@@ -257,6 +257,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 								final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
 										MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
 										+ orderModel.getCode();
+								LOG.debug("Starting Payment Pending Notification");
 								try
 								{
 									flag = getNotificationService().triggerEmailAndSmsOnPaymentPending(orderModel, trackOrderUrl);

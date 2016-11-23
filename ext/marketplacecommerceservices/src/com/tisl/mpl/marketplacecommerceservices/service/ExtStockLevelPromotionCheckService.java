@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public interface ExtStockLevelPromotionCheckService
 {
-	public Map<String, Integer> getCumulativeStockMap(final String codes, boolean sellerFlag);
+	public Map<String, Integer> getCumulativeStockMap(final String codes, String promoCode, boolean sellerFlag);
 
 	public List<LimitedStockPromoInvalidationModel> getPromoInvalidationList(final String guid);
 }

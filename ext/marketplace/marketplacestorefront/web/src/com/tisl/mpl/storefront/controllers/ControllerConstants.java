@@ -366,6 +366,9 @@ public interface ControllerConstants
 				public static final String SellerResultsPage = "fragments/product/sellerResultPage";
 
 				public static final String OFFERMESSAGEMAP = "offerMessageMap";
+
+				public static final String USSID_CODE_PATH_NEW_PATTERN = "/**/p-{ussId:.*}";
+				public static final String USSID = "ussId";
 			}
 		}
 	}

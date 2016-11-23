@@ -1843,7 +1843,14 @@ $(document).ready(function(){
 				}
 				if($(".toggle-filterSerp").length>0){
 					var sort_top= $(".toggle-filterSerp").offset().top - $(".listing.wrapper").offset().top - 20;
-					$(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("top",sort_top+"px")
+					if($(".facet-list.filter-opt").offset().top == 0){
+						var pagination_top= sort_top - 24;
+					}
+					else{
+						var pagination_top= sort_top - 36;
+					}
+					$(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("top",sort_top+"px");
+					$(".listing.wrapper .right-block .listing-menu > div .pagination.mobile.tablet-pagination").css("top",pagination_top+"px");
 				}
 			}
 			
@@ -1884,7 +1891,14 @@ if($(".facet.js-facet.Size").length > 0){
 			}
 			if($(".toggle-filterSerp").length>0){
 				var sort_top= $(".toggle-filterSerp").offset().top - $(".listing.wrapper").offset().top - 20;
-				$(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("top",sort_top+"px")
+				if($(".facet-list.filter-opt").offset().top == 0){
+					var pagination_top= sort_top - 24;
+				}
+				else{
+					var pagination_top= sort_top - 36;
+				}
+				$(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("top",sort_top+"px");
+				$(".listing.wrapper .right-block .listing-menu > div .pagination.mobile.tablet-pagination").css("top",pagination_top+"px");
 			}
 		}
 		});
@@ -2052,67 +2066,88 @@ $(document).on('click','.facet.js-facet.Size .js-facet-name h3',function(){
 		}
 	},80)
 });
+
+//changes for TISPRO-796
 //$(document).on('click','.left-block .toggle-filterSerp',function(){
 function toggleFilter(){
-		colorSwatch();
-		sizeSwatch();
-		//Mobile view filter ajax
-		//$(".product-facet.js-product-facet.listing-leftmenu").slideToggle();
-		//$(".toggle-filterSerp").toggleClass("active");
-		/*mobile filter*/
-		$(".mob-filter-wrapper").fadeIn();
-		$(this).toggleClass("active");
-		
-		//TPR-845
+	colorSwatch();
+	sizeSwatch();
+	//Mobile view filter ajax
+	//$(".product-facet.js-product-facet.listing-leftmenu").slideToggle();
+	//$(".toggle-filterSerp").toggleClass("active");
+	/*mobile filter*/
+	$(".mob-filter-wrapper").fadeIn();
+	$(this).toggleClass("active");
+	
+	//TPR-845
+	// Fixing error of facet starts
+	if ($(".facet_mobile .facet.js-facet.Colour").find('ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden').length) {
+		var spanCountMoreViewColor = $(".facet_mobile .facet.js-facet.Colour").find('ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden').find("li.selected-colour").length;
+		if(spanCountMoreViewColor)
+		{
+			$(".facet_mobile .filter-colour.selected-colour").parents(".facet.js-facet").find(".category-icons span").text(spanCountMoreViewColor);
+		}
+	}
+	else {
+	// Fixing error of facet ends
 		var spanCount_colour=$(".facet_mobile .filter-colour.selected-colour").length;
 		if(spanCount_colour>0)
 			{
 				$(".facet_mobile .filter-colour.selected-colour").parents(".facet.js-facet").find(".category-icons span").text(spanCount_colour);
 			}
+	// Fixing error of facet starts	
+	}
+	// Fixing error of facet ends	
 
-		var spanCount_size=$(".facet_mobile .filter-size.selected-size").length;
-		if(spanCount_size>0)
-		{
-			$(".facet_mobile .filter-size.selected-size").parents(".facet.js-facet").find(".category-icons span").text(spanCount_size);
-		}
+	var spanCount_size=$(".facet_mobile .filter-size.selected-size").length;
+	if(spanCount_size>0)
+	{
+		$(".facet_mobile .filter-size.selected-size").parents(".facet.js-facet").find(".category-icons span").text(spanCount_size);
+	}
 
-		$(".facet_mobile .facet.js-facet").each(function(){
+	$(".facet_mobile .facet.js-facet").each(function(){
+		//console.log('hi');
+		var spanCountMoreView = $(this).find('ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden').find("input[type=checkbox]:checked").length;
+		if(spanCountMoreView){
+			$(this).find(".category-icons span").text(spanCountMoreView);
+		}else{
 			var spanCount=$(this).find(".facet-list li").find("input[type=checkbox]:checked").length;
 			if(spanCount>0)
 				{
 					$(this).find(".category-icons span").text(spanCount);
 				}
-			});
-		$(".category-icons").each(function(){
-			if($(this).find("span").text() == ""){
-				$(this).addClass("blank");
-			}
-			else{
-				$(this).removeClass("blank");
-			}
+		}
 		});
-		$(".facet-name.js-facet-name h3").removeClass("active-mob");
-		$(".facet-name.js-facet-name h3").first().addClass("active-mob");
-		$(".facet-name.js-facet-name h3").parent().siblings().hide();
-		$(".facet-name.js-facet-name h3.active-mob").parent().siblings().show();
-		$(".facet-name.js-facet-name h3.active-mob").parent().siblings().find("#searchPageDeptHierTree").show();
-		$(".facet-name.js-facet-name h3.active-mob").parent().siblings().find("#categoryPageDeptHierTree").show();
-		
-		/*TPR-3658 start*/
-		var j = 0;
-		$(".listing.wrapper .mob-filter-wrapper > .listing-leftmenu > div.facet_mobile").not(".facet-name").each(function(){
-			if($(this).children().length == 0){
-				return true;
-			}
-			if($(this).find(".facet.js-facet.collectionIds").length > 0){
-				return true;
-			}
-			if(j % 2 == 0){
-				$(this).addClass("light-bg");
-			}
-			j++;
-			});
-		/*TPR-3658 end*/
+	$(".category-icons").each(function(){
+		if($(this).find("span").text() == ""){
+			$(this).addClass("blank");
+		}
+		else{
+			$(this).removeClass("blank");
+		}
+	});
+	$(".facet-name.js-facet-name h3").removeClass("active-mob");
+	$(".facet-name.js-facet-name h3").first().addClass("active-mob");
+	$(".facet-name.js-facet-name h3").parent().siblings().hide();
+	$(".facet-name.js-facet-name h3.active-mob").parent().siblings().show();
+	$(".facet-name.js-facet-name h3.active-mob").parent().siblings().find("#searchPageDeptHierTree").show();
+	$(".facet-name.js-facet-name h3.active-mob").parent().siblings().find("#categoryPageDeptHierTree").show();
+	
+	/*TPR-3658 start*/
+	var j = 0;
+	$(".listing.wrapper .mob-filter-wrapper > .listing-leftmenu > div.facet_mobile").not(".facet-name").each(function(){
+		if($(this).children().length == 0){
+			return true;
+		}
+		if($(this).find(".facet.js-facet.collectionIds").length > 0){
+			return true;
+		}
+		if(j % 2 == 0){
+			$(this).addClass("light-bg");
+		}
+		j++;
+		});
+	/*TPR-3658 end*/
 }
 		//	});
 	$(".category-icons").each(function(){
@@ -2501,7 +2536,7 @@ $(document).click(".global-alerts .close", function(){
 /*checkout login error end */
 
 
-$(document).ready(function(){
+/*$(document).ready(function(){
 	$(".feature-collections h2").each(function(){
 		var txth2 = $(this).text();
 		$(this).replaceWith("<h3>"+txth2+"</h3>");
@@ -2527,7 +2562,7 @@ $(document).ready(function(){
 		$(this).replaceWith("<h2><span style='color: black !important;'>"+txth1+"</span></h2>");
 	});
 	
-});
+});*/
 
 
 var ia_prod;
@@ -2711,3 +2746,10 @@ if($(".body-Content").find(".shop_for_blp").children().length==0){
 }
 
 //-----BLP------//
+
+/*
+$(document).on("click",".toggle-filterSerp",function(){
+$(".product-facet.js-product-facet.listing-leftmenu").slideToggle();
+$(this).toggleClass("active");
+});*/
+

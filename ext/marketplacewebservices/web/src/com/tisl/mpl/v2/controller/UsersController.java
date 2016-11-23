@@ -3174,14 +3174,6 @@ public class UsersController extends BaseCommerceController
 							{
 								wldpDTO.setDate(entryModel.getAddedDate());
 							}
-
-							/*
-							 * // Added for luxury if (null != productData1 && null != productData1.getLuxIndicator() &&
-							 * (MarketplaceCoreConstants.LUXURY).equalsIgnoreCase(productData1.getLuxIndicator())) {
-							 * wldpDTO.setIsLuxury(productData1.getLuxIndicator()); }
-							 */
-
-
 							String delistMessage = MarketplacewebservicesConstants.EMPTY;
 							boolean delisted = false;
 							if (null != productData1 && null != productData1.getSeller() && productData1.getSeller().size() > 0)
@@ -3999,74 +3991,74 @@ public class UsersController extends BaseCommerceController
 	public ValidateOtpWsDto validateOtpforCOD(@PathVariable final String emailid, @RequestParam final String enteredOTPNumber,
 			final String fields) throws DuplicateUidException
 	{
-		final CustomerData customer = customerFacade.getCurrentCustomer();
+		//final CustomerData customer = customerFacade.getCurrentCustomer();
 		final ValidateOtpWsDto result = new ValidateOtpWsDto();
-		if (null == customer)
+		//		if (null == customer)
+		//		{
+		//			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
+		//		}
+		//		else
+		//		{
+		//final String mplCustomerID = customer.getUid();
+		try
 		{
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
-		}
-		else
-		{
-			final String mplCustomerID = customer.getUid();
-			try
+			if (StringUtils.isNotEmpty(emailid))
 			{
-				if (StringUtils.isNotEmpty(mplCustomerID))
+
+				LOG.debug("************** Mobile web service Validate OTP for COD ******************" + emailid);
+
+				final String validationMsg = getMplPaymentFacade().validateOTPforCODWeb(emailid, enteredOTPNumber);
+				if (null != validationMsg)
 				{
 
-					LOG.debug("************** Mobile web service Validate OTP for COD ******************" + emailid);
+					LOG.debug("************** Mobile web service Validate OTP for COD  RESPONSE SUCCESSSSS ******************"
+							+ emailid);
 
-					final String validationMsg = getMplPaymentFacade().validateOTPforCODWeb(mplCustomerID, enteredOTPNumber);
-					if (null != validationMsg)
+					if (validationMsg.equalsIgnoreCase(MarketplacecommerceservicesConstants.OTPVALIDITY))
 					{
-
-						LOG.debug("************** Mobile web service Validate OTP for COD  RESPONSE SUCCESSSSS ******************"
-								+ emailid);
-
-						if (validationMsg.equals(MarketplacecommerceservicesConstants.OTPVALIDITY))
-						{
-							result.setError(MarketplacecommerceservicesConstants.OTP_SENT);
-							result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-						}
-						else if (validationMsg.equals(MarketplacecommerceservicesConstants.OTPEXPIRY))
-						{
-							result.setError(MarketplacecommerceservicesConstants.OTP_EXPIRY_MESSAGE);
-							result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-						}
-						else
-						{
-							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9039);
-						}
+						result.setError(MarketplacecommerceservicesConstants.OTP_SENT);
+						result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+					}
+					else if (validationMsg.equalsIgnoreCase(MarketplacecommerceservicesConstants.OTPEXPIRY))
+					{
+						result.setError(MarketplacecommerceservicesConstants.OTP_EXPIRY_MESSAGE);
+						result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 					}
 					else
 					{
-						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9027);
-
+						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9039);
 					}
 				}
 				else
 				{
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9027);
+
 				}
 			}
-			catch (final EtailNonBusinessExceptions e)
+			else
 			{
-				ExceptionUtil.etailNonBusinessExceptionHandler(e);
-				if (null != e.getErrorMessage())
-				{
-					result.setError(e.getErrorMessage());
-				}
-				result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-			}
-			catch (final EtailBusinessExceptions e)
-			{
-				ExceptionUtil.etailBusinessExceptionHandler(e, null);
-				if (null != e.getErrorMessage())
-				{
-					result.setError(e.getErrorMessage());
-				}
-				result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
 			}
 		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				result.setError(e.getErrorMessage());
+			}
+			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				result.setError(e.getErrorMessage());
+			}
+			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		//}
 		return result;
 	}
 
@@ -6211,21 +6203,16 @@ public class UsersController extends BaseCommerceController
 		final UserResultWsDto result = new UserResultWsDto();
 		try
 		{
-			//			final UserModel user = userService.getCurrentUser();
-			//fetch usermodel against customer
-			final UserModel user = getExtUserService().getUserForOriginalUid(emailId);
-			LOG.debug("addAddressToOrder : user : " + user);
+			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+			LOG.debug("addAddressToOrder : user : " + currentCustomer);
 			// Check userModel null
-			if (null != user)
+			if (null != currentCustomer)
 			{
-				// Type Cast User Model to Address Model
-				final CustomerModel currentCustomer = (CustomerModel) user;
-
 				LOG.debug(String.format("addAddressToOrder: | addressId: %s | currentCustomer : %s | cartId : %s ", addressId,
 						currentCustomer.getUid(), cartId));
 
 				//getting cartmodel using cart id and user
-				final CartModel cartModel = getCommerceCartService().getCartForCodeAndUser(cartId, user);
+				final CartModel cartModel = getCommerceCartService().getCartForCodeAndUser(cartId, currentCustomer);
 				// Validate Cart Model is not null
 				if (null != cartModel)
 				{
@@ -6235,16 +6222,15 @@ public class UsersController extends BaseCommerceController
 
 					if (StringUtils.isNotEmpty(addressId))
 					{
-						final List<AddressData> addressList = accountAddressFacade.getAddressBook();
-						for (final AddressData addEntry : addressList)
-						{
-							// Validate if valid address id for for the specific user
-							if (addEntry.getId().equals(addressId))
-							{
-								addressmodel = customerAccountService.getAddressForCode(currentCustomer, addEntry.getId());
-								break;
-							}
-						}
+						/*
+						 * final List<AddressData> addressList = accountAddressFacade.getAddressBook(); for (final AddressData
+						 * addEntry : addressList) { // Validate if valid address id for for the specific user if
+						 * (addEntry.getId().equals(addressId)) {
+						 */
+						addressmodel = customerAccountService.getAddressForCode(currentCustomer, addressId);
+						/*
+						 * break; } }
+						 */
 					}
 					//new address//
 					else

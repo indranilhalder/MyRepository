@@ -13,6 +13,7 @@
  */
 package com.tisl.mpl.constants;
 
+import de.hybris.platform.core.model.BulkCancellationProcessModel;
 import de.hybris.platform.core.model.BulkReturnProcessModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.ordercancel.model.OrderCancelRecordEntryModel;
@@ -21,6 +22,9 @@ import de.hybris.platform.returns.model.ReplacementEntryModel;
 import de.hybris.platform.returns.model.ReturnOrderModel;
 
 import java.util.Date;
+
+import com.tisl.mpl.core.model.FreebieDetailModel;
+import com.tisl.mpl.core.model.ProductFreebieDetailModel;
 
 
 /**
@@ -106,7 +110,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PRODUCT_PRICE_COLUMN = "price".intern();
 	public static final String PRESENT_CATEGORY = "Present Category :".intern();
 
+
 	public static final String PROMO_ERROR_MESSAGE = "Cannot exceed 25 characters.".intern();
+    //public static final String PROMO_ERROR_MESSAGE = "Title cannot exceed 25 characters.".intern();
+
 
 
 	//For Bulk Orders Return Initiation
@@ -981,9 +988,14 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 			+ OrderModel.TYPE + "}=?type order by {" + OrderModel.CODE + "} desc";
 
 	//Bulk Return Initiation
+	public static final String START_TIME = "START TIME";
+	public static final String END_TIME = "END TIME";
+
+	public static final String LOADSTATUS = "loadstatus";
+
 
 	public static final String BULK_RETURN_DATA_QUERY_START = "SELECT {" + BulkReturnProcessModel.PK + "} FROM {"
-			+ BulkReturnProcessModel._TYPECODE + "}";
+			+ BulkReturnProcessModel._TYPECODE + "} WHERE {" + BulkReturnProcessModel.LOADSTATUS + "}=?loadstatus";
 
 
 	public static final String NOEMIBANKLIST = "EMI Bank list is not available , Please Enter the correct data";
@@ -1714,6 +1726,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String IS_LUXURY = "0".intern();
 	public static final String IS_MARKETPLACE = "0".intern();
 
+	public static final String LATESTOTPQUERY = "select {o.pk} from {otp as o} where {o.customerid}=?customerPK and {o.otptype}=?OTPType and {o.isvalidated}='0' order by {creationtime} desc fetch first 1 rows only";
+	public static final String LATESTOTPMOBILEQUERY = "select {o.pk} from {otp as o} where {o.emailid}=?emailId and {o.mobileNo}=?mobileNo and {o.otptype}=?OTPType and {o.isvalidated}='0' order by {creationtime} desc fetch first 1 rows only";
+	public static final String LATESTOTPEMAILQUERY = "select {o.pk} from {otp as o} where {o.emailid}=?emailId and {o.otptype}=?OTPType and {o.isvalidated}='0' order by {creationtime} desc fetch first 1 rows only";
+	public static final String LATESTOTPQUERYINV = "select {o.pk} from {otp as o} where {o.emailid}=?emailId and {o.otptype}=?OTPType order by {creationtime} desc fetch first 1 rows only";
+
 	private MarketplacecommerceservicesConstants()
 	{
 		//empty to avoid instantiating this constant class
@@ -1768,4 +1785,67 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 			.intern();
 	public static final String SITEMAP_FILE_LOCATION_CUSTOM = "mpl.sitemap.customFileLocation".intern();
 	public static final String SITEMAP_FILE_LOCATION_PRODUCT = "mpl.sitemap.productFileLocation".intern();
+
+	//update the message for Freebie product TPR-1754
+
+
+	//	public static final String PRODUCTFREEBIEDETMSGQUERY = "SELECT {prodOffrDet.ussId},{offerDet.freebieMsg},{prodOffrDet.startDate},{prodOffrDet.endDate}  FROM {FreebieDetail as offerDet}, {ProductFreebieDetail as  prodOffrDet} WHERE {prodOffrDet.ussId}= ?ussId AND {prodOffrDet.offer} = {offerDet.pk} AND {prodOffrDet.startDate} <=sysdate AND {prodOffrDet.endDate} >=sysdate"
+	//			.intern();
+
+	public static final String PRODUCTFREEBIEDETMSGQUERY = "select {prodOffrDet.pk},{offerDet.pk} from {"
+			+ ProductFreebieDetailModel._TYPECODE + " as prodOffrDet JOIN " + FreebieDetailModel._TYPECODE
+			+ " as offerDet ON {prodOffrDet.offer} = {offerDet.pk} }"
+			+ " where {prodOffrDet.ussId}= ?ussId AND {prodOffrDet.startDate} <=sysdate AND {prodOffrDet.endDate} >=sysdate"
+					.intern();
+	public static final String FREEBIEMSG = "freebieMsg".intern();
+	public static final String FREEBIEUSSID = "ussId".intern();
+
+	//Luxury Changes
+	public static final String MARKETPLACE = "marketplace";
+	public static final String LUXURY = "luxury";
+	public static final String MSH = "MSH";
+	public static final String LSH = "LSH";
+
+	public static final String LUX_SALESCATEGORYTYPE = "luxury.salescategory.code";
+
+	public static final String TICKETTYPECODE_CANCEL = "C";
+	public static final String BULK_CANCEL_SUCCESS_DESC = "Cancellation Success";
+	public static final String BULK_CANCEL_FAILURE_DESC = "Cancellation Failure";
+
+	public static final String initiate_cancel_job_cancellation_flag = "initiate.cancel.job.cancellation.flag";
+	public static final String FAILURE_LOAD_STATUS = "-1";
+	public static final String SUCCESS_LOAD_STATUS = "1";
+	public static final String LEFT_PARENTHESIS = "(";
+	public static final String RIGHT_PARENTHESIS = ")";
+	public static final String BLANK_SPACE = " ";
+	public static final String LAST_CONSIGNMENT_STATUS = "Last Consignment status -";
+	public static final String END_TIME_C = "Initiate Bulk Cancellation Job : End time : ";
+	public static final String START_TIME_C = "Initiate Bulk Cancellation Job : Start time : ";
+	public static final String TOTAL_TIME_TAKEN = "Total time taken : ";
+
+	public static final String BULK_CANCEL_LOG_STEP_START = "######################################### PROCESS STARTS ##############################################";
+	public static final String BULK_CANCEL_LOG_STEP_1 = "Initiate Bulk Cancellation Job : Data list size : ";
+	public static final String BULK_CANCEL_LOG_STEP_2_1 = "Initiate Bulk Cancellation Job : Order No : ";
+	public static final String BULK_CANCEL_LOG_STEP_2_2 = " and transactionId : ";
+	public static final String BULK_CANCEL_LOG_STEP_3 = "Initiate Bulk Cancellation Job : Transaction ID matched : ";
+	public static final String BULK_CANCEL_LOG_STEP_4 = "Initiate Bulk Cancellation Job : No Consignment Created : Status :";
+	public static final String BULK_CANCEL_LOG_STEP_5 = "Initiate Bulk Cancellation Job : Consignment Status : ";
+	public static final String BULK_CANCEL_LOG_STEP_6 = "Initiate Bulk Cancellation Job : isCancellable : ";
+	public static final String BULK_CANCEL_LOG_STEP_7 = "Initiate Bulk Cancellation Job : OMS + CRM call skipped : Cancellation Status : ";
+	public static final String BULK_CANCEL_LOG_STEP_8_1 = "Initiate Bulk Cancellation Job : subOrderDetails : ";
+	public static final String BULK_CANCEL_LOG_STEP_8_2 = "and subOrderEntry : ";
+	public static final String BULK_CANCEL_LOG_STEP_9 = "Initiate Bulk Cancellation Job : cancellationStatus : ";
+	public static final String BULK_CANCEL_LOG_STEP_10 = "Update load status";
+	public static final String BULK_CANCEL_LOG_STEP_11 = "Initiate Bulk Cancellation Job : Order Data Conversion Exception";
+	public static final String BULK_CANCEL_LOG_STEP_12 = "Initiate Bulk Cancellation Job : No data found in the iteration of Bulk cancel table";
+	public static final String BULK_CANCEL_LOG_STEP_13 = "Initiate Bulk Cancellation Job : Suborder level loop iteration count : ";
+	public static final String BULK_CANCEL_LOG_STEP_14 = "Initiate Bulk Cancellation Job : BulKCancellationProcessModel is EMPTY";
+	public static final String BULK_CANCEL_LOG_STEP_15 = "######################################### PROCESS ENDS ##############################################";
+	public static final String BULK_CANCEL_DATA_QUERY_START = "SELECT {" + BulkCancellationProcessModel.PK + "} FROM {"
+			+ BulkCancellationProcessModel._TYPECODE + "} WHERE {" + BulkCancellationProcessModel.LOADSTATUS + "}=?loadstatus";
+
+	public static final String BULK_RETURN_SUCCESS_DESC = "Return Success";
+	public static final String BULK_RETURN_FAILURE_DESC = "Return Failure";
+
+
 }

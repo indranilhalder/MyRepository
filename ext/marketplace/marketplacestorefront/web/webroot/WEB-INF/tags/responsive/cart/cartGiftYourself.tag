@@ -45,9 +45,9 @@
 			<button type="button" class="close pull-right" style="height:auto !important;" aria-hidden="true" data-dismiss="modal"></button>
 				<!-- Dynamically Insert Content Here -->
 				<div class="modal-header">
-				<h4 class="modal-title">
+				<h2 class="modal-title">
 					<b><spring:theme code="text.wishlist.pdp" /></b>
-				</h4>
+				</h2>
 				<div class="wishlist-redirects-to-pdp-block" style="font-size:12px;">
 				<label class="wishlist-redirects-to-pdp"><spring:theme
 							code="wishlist.redirectsToPdp.message" /></label>

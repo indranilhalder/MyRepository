@@ -126,6 +126,16 @@ public interface MplPaymentFacade
 	 */
 	String validateOTPforCODWeb(String customerID, String enteredOTPNumber);
 
+	/**
+	 * This method takes the customer ID and enter OTP as input parameters and calls the service to validate the entered
+	 * OTP
+	 *
+	 * @param customerID
+	 * @param enteredOTPNumber
+	 * @return OTPResponseData
+	 */
+	String validateOTPforCODWV(String customerID, String enteredOTPNumber);
+
 
 	/**
 	 * This method takes the customer ID as input parameters and calls the service to check whether the customer is

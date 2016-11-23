@@ -55,6 +55,7 @@
 				<entry key="priority_seller" value="0"/>
 				<entry key="promoted_product" value="0"/>
 				<entry key="bulk_return_initiation" value="0"/>
+				<entry key="bulk_cancel_initiation" value="0"/>
 					</map>
 		</property>
 	</bean>
@@ -101,6 +102,12 @@
     p:mapping="bulk_return_initiation"
     p:converter-ref="batchBulkReturnInitiationConverter"/>
 	
+	<!-- Transformer Bulk Cancel Initiation -->
+    <bean id="batchBulkCancelInitiationConverterMapping"
+    class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+    p:mapping="bulk_cancel_initiation"
+    p:converter-ref="batchBulkCancelInitiationConverter"/>
+    
      <!-- Transformer for Classification Attribute Import -->
       <bean id="batchClassificationAttributeConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
@@ -1159,11 +1166,12 @@ $language=language(isocode)[default='en'][unique=true];
     			$lang=en
     		      
 				
-				INSERT_UPDATE Product;code[unique=true];name[lang=$lang];title;articleMiniDescription;articleDescription;createdOn[dateformat=yyyyMMddHHmmss];reviews;mrp;$supercategories;deliveryModes(code);variantType(code);luxIndicator(code)[default='marketplace'];sequenceId[translator=de.hybris.platform.acceleratorservices.dataimport.batch.converter.SequenceIdTranslator];$catalogversion;$approved;$unit
+				INSERT_UPDATE Product;code[unique=true];name[lang=$lang];title;articleMiniDescription;articleDescription;createdOn[dateformat=yyyyMMddHHmmss];reviews;mrp;$supercategories[cellDecorator=com.tisl.mpl.core.celldecorator.LuxuryProductCategoryDecorator];deliveryModes(code);variantType(code);luxIndicator(code)[default='marketplace'];sequenceId[translator=de.hybris.platform.acceleratorservices.dataimport.batch.converter.SequenceIdTranslator];$catalogversion;$approved;$unit
             </value>
         </property>
         <property name="impexRow">
-            <value>;{+0};{+1};{2};{3};{4};{5};{6};{7};{8};{+9};{10};{11};{S}</value>
+        <!-- TISPRD-9023 Changing deliveryModes to Optional from Mandatory -->
+            <value>;{+0};{+1};{2};{3};{4};{5};{6};{7};{8};{9};{10};{11};{S}</value>
         </property>
         </bean>
      
@@ -1181,10 +1189,11 @@ $language=language(isocode)[default='en'][unique=true];
 				$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
 				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Staged'])[unique=true,default=mplProductCatalog:Staged]
 				          
-				INSERT_UPDATE PcmProductVariant;code[unique=true,alias=PIMID];name[lang=$lang];title;articleMiniDescription;articleDescription;createdOn[dateformat=yyyyMMddHHmmss];size;colour;baseProduct(code,$catalogVersion);reviews;mrp;$supercategories;deliveryModes(code);capacity;luxIndicator(code)[default='marketplace'];$catalogversion;$approved;$unit;
+				INSERT_UPDATE PcmProductVariant;code[unique=true,alias=PIMID];name[lang=$lang];title;articleMiniDescription;articleDescription;createdOn[dateformat=yyyyMMddHHmmss];size;colour;baseProduct(code,$catalogVersion);reviews;mrp;$supercategories[cellDecorator=com.tisl.mpl.core.celldecorator.LuxuryVariantProductCategoryDecorator];deliveryModes(code);capacity;luxIndicator(code)[default='marketplace'];$catalogversion;$approved;$unit;
             </value>
         </property>
         <property name="impexRow">
+          <!-- TISPRD-9023 Changing deliveryModes to Optional from Mandatory -->
             <value>;{+0};{+1};{2};{3};{4};{5};{6};{7};{8};{9};{10};{11};{+12};{13};{14}</value>
         </property>
         </bean>
@@ -1370,7 +1379,19 @@ INSERT_UPDATE SellerInformation;productSource(code,$catalogVersion);sellerSKU[un
        <bean id="batchBulkReturnInitiationConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
              <value>
-				INSERT_UPDATE BulkReturnProcess;parentOrderNo[unique=true];transactionId(code);loadStatus(code);errorDescription(code);
+				INSERT_UPDATE BulkReturnProcess;parentOrderNo(code);transactionId[unique=true];loadStatus(code);errorDescription(code);
+			</value>
+        </property>
+        <property name="impexRow">
+            <value>;{+0};{+1};{+2};{3}</value>
+        </property>
+        </bean>
+        
+         <!-- Converter for Bulk Cancel Initiation For Order Import --> 
+       <bean id="batchBulkCancelInitiationConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+        <property name="header">
+             <value>
+				INSERT_UPDATE BulkCancellationProcess;parentOrderNo(code);transactionId(code)[unique=true];loadStatus(code);statusDescription(code);
 			</value>
         </property>
         <property name="impexRow">

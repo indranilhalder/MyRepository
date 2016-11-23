@@ -295,7 +295,7 @@
 								 <c:choose>
 									<c:when test="${product.productMRP.value > 0}">
 										<span class="priceFormat">
-											<span id="mrpprice_${product.code}"> ${product.productMRP.}</span></span>
+											<span id="mrpprice_${product.code}"> ${product.productMRP.formattedValueNoDecimal}</span></span>
 									</c:when>
 									<c:otherwise>
 										<c:if test="${displayFreeForZero}">

@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -36,30 +37,30 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 	 */
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
-
+	private static final Logger LOG = Logger.getLogger(ExtStockLevelPromotionCheckDaoImpl.class);
 
 	@Override
-	public Map<String, Integer> getPromoInvalidationModelMap(final String codes, final boolean sellerFlag)
+	public Map<String, Integer> getPromoInvalidationModelMap(final String codes, final String promoCode, final boolean sellerFlag)
 	{
 		// YTODO Auto-generated method stub
 		final Map<String, Integer> stockCodeMap = new HashMap<String, Integer>();
 		String queryString = "";
-		//codes = MarketplacecommerceservicesConstants.INVERTED_COMMA + codes + MarketplacecommerceservicesConstants.INVERTED_COMMA;
 		try
 		{
 			if (sellerFlag)
 			{
 				queryString = //
 				"select {b.ussid},SUM({b.usedUpCount}) from {" + LimitedStockPromoInvalidationModel._TYPECODE + " as b } "
-						+ " where {b.ussid} in (" + codes + ") group by {b.ussid}";
+						+ " where {b.promoCode}=?promoCode " + "  AND {b.ussid} in (" + codes + ") group by {b.ussid}";
 			}
 			else
 			{
 				queryString = //
 				"select {b.productCode},SUM({b.usedUpCount}) from {" + LimitedStockPromoInvalidationModel._TYPECODE + " as b } "
-						+ " where {b.productCode} in (" + codes + ") group by {b.productCode}";
+						+ " where {b.promoCode}=?promoCode " + " AND {b.productCode} in (" + codes + ") group by {b.productCode}";
 			}
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter("promoCode", promoCode);
 			query.setResultClassList(Arrays.asList(String.class, Integer.class));
 
 			final SearchResult<List<Object>> result = search(query);
@@ -77,19 +78,22 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 
 		catch (final FlexibleSearchException e)
 		{
+			LOG.error("error in search query" + e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
 		}
 		catch (final UnknownIdentifierException e)
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+			LOG.error(e);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			throw e;
+			LOG.error("exception getching the quantity count details aginst product/ussid" + e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
 		}
 		catch (final Exception e)
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+			LOG.error(e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
 		}
 		return stockCodeMap;
 
@@ -98,7 +102,7 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.promotion.dao.ExtStockLevelPromotionCheckDao#getPromoInvalidationList(java.lang.String)
 	 */
 	@Override

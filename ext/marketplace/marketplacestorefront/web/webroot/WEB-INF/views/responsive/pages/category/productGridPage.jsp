@@ -5,7 +5,8 @@
 <%@ taglib prefix="storepickup" tagdir="/WEB-INF/tags/responsive/storepickup" %>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<input type="hidden" id="page_name" value="${page_name}"/>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<input type="hidden"  id="page_name" value="${page_name}"/>
 <input type="hidden" id="page_category_name" value="${dropDownText}"/>
 <input type="hidden" id="categoryId" value="${categoryCode}"/>
 <input type="hidden" id="site_section" value="${site_section}"/>
@@ -16,6 +17,9 @@
 <template:page pageTitle="${pageTitle}">
 <div class="list_title"><h1>${dropDownText}</h1></div>
 <div class="listing wrapper">
+	<div class="search-result">
+			<h2>&nbsp;</h2>
+	</div>
 	<div id="productGrid">	<!-- Div to be overridden by AJAX response : TPR-198 --> 
 	<c:if test="${searchPageData.pagination.totalNumberOfResults ne 0}">
 	<div class="left-block">

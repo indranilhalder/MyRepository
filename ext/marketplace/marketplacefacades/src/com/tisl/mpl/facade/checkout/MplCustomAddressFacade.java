@@ -108,5 +108,11 @@ public interface MplCustomAddressFacade
 	 */
 	Double populateDeliveryMethodData(String deliveryCode, String sellerArticleSKU, CartModel cartModel);
 
-
+	/**
+	 * It is responsible for fetching Cart Data
+	 * 
+	 * @param cartModel
+	 * @return
+	 */
+	public CartData getCheckoutCartWS(final CartModel cartModel);
 }
