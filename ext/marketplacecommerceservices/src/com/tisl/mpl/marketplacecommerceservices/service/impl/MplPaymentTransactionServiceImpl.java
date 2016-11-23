@@ -336,7 +336,9 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 				paymentTransactionModel.setPaymentProvider(orderStatusResponse.getGatewayId().toString());
 			}
 
-			paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(cart.getTotalPrice().doubleValue()));
+			//paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(cart.getTotalPrice().doubleValue()));
+			paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(orderStatusResponse.getAmount().doubleValue()));
+
 
 			if (StringUtils.isNotEmpty(orderStatusResponse.getTxnId()))
 			{
