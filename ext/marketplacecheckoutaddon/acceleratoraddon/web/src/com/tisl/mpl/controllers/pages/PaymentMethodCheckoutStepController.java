@@ -1041,21 +1041,24 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			final String promotionMssg = RECEIVED_INR + totalDiscount + DISCOUNT_MSSG;
 			model.addAttribute("promotionMssgDeliveryMode", promotionMssg);
 		}
-       Map<String ,String> selectedDateMap=getSessionService().getAttribute(MarketplacecheckoutaddonConstants.DELIVERY_SLOTS_TO_SESSION);
 		for (final OrderEntryData cartEntryData : cartData.getEntries())
-		{
-			
-			if(null!=selectedDateMap){
-	   		 for (Entry<String, String> entry :selectedDateMap.entrySet()) {
-						if(entry.getKey().equalsIgnoreCase(cartEntryData.getSelectedUssid())){
-							cartEntryData.setEddDateBetWeen(entry.getValue());
-						}
+		{	
+			final CartModel cartModel = getCartService().getSessionCart();
+			final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
+			for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
+			{
+				if (null != cartEntryModel && null != cartEntryModel.getMplDeliveryMode())
+				{
+					if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(cartEntryData.getSelectedUssid()))
+					{
+						cartEntryData.setEddDateBetWeen(cartEntryModel.getSddDateBetween());
 					}
-	   	 }
+				}
+			}
 			
 		    if(null !=cartEntryData && cartEntryData.getScheduledDeliveryCharge()!= null){
    		   	 if(cartEntryData.getScheduledDeliveryCharge().doubleValue()>0){
-         		   	 final CartModel cartModel = getCartService().getSessionCart();
+         		   	// final CartModel cartModel = getCartService().getSessionCart();
          		   	 final MplBUCConfigurationsModel configModel = mplConfigFacade.getDeliveryCharges();
          		   	 cartData.setDeliverySlotCharge(mplCheckoutFacade.createPrice(cartModel, Double.valueOf(configModel.getEdCharge())));
    		   	 }

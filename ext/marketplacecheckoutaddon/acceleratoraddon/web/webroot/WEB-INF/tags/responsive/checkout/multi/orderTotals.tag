@@ -75,7 +75,7 @@
 <input type="hidden" id="couponRelContent" value="<spring:theme code="coupon.release.content"/>">
 	</li>
 	
-    <c:if test="${not empty cartData.deliverySlotCharge}">
+   <%--  <c:if test="${not empty cartData.deliverySlotCharge}">
     <li class="total" id="edtotal">
 		<div id="edtotalPriceConvChargeId">
 			Scheduling Charge
@@ -83,7 +83,7 @@
 			
 		</div>
 	</li>
-    </c:if> 
+    </c:if>  --%>
     
 	<li class="total" id="total">
 		<div id="totalPriceConvChargeId">

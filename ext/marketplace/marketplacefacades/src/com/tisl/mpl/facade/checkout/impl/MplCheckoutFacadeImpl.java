@@ -59,6 +59,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 
@@ -1918,6 +1919,31 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			final Map<String, List<String>> dateTimeslotMapList=mplCheckoutFacade.getDateAndTimeslotMapList(modelList,calculatedDateList,deteWithOutTime ,
 					timeWithOutDate, cartEntryData,mplLPHolidaysModel);
 			cartEntryData.setDeliverySlotsTime(dateTimeslotMapList);
+		}
+		final List<String> dateList = new ArrayList<String>();
+		if(null != cartEntryData.getDeliverySlotsTime() && cartEntryData.getDeliverySlotsTime().size()>0){
+			for (final Entry<String, List<String>> entry : cartEntryData.getDeliverySlotsTime().entrySet())
+			{
+				dateList.add(entry.getKey());
+			}
+			if (dateList.size() > 0)
+			{
+				final CartModel cartModel = getCartService().getSessionCart();
+				final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
+				for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
+				{
+					if (null != cartEntryModel && null != cartEntryModel.getMplDeliveryMode())
+					{
+						if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(cartEntryData.getSelectedUssid()))
+						{
+							cartEntryModel.setSddDateBetween(dateList.get(0) + MarketplacecommerceservicesConstants.AND
+									+ dateList.get(dateList.size() - 1));
+						}
+					}
+				}
+				modelService.saveAll(cartEntryList);
+				LOG.debug("Sdd Date Saved Successfully...");
+			}
 		}
 		
 	}
