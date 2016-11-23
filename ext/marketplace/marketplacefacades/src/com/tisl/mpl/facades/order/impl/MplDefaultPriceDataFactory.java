@@ -64,7 +64,7 @@ public class MplDefaultPriceDataFactory extends DefaultPriceDataFactory
 		 */
 		/* TPR-182 */
 
-		final long valueLong = value.setScale(0, BigDecimal.ROUND_CEILING).longValue();
+		final long valueLong = value.setScale(0, BigDecimal.ROUND_FLOOR).longValue();
 		final String totalPriceNoDecimalPntFormatted = Long.toString(valueLong);
 		StringBuilder stbND = new StringBuilder(20);
 		stbND = stbND.append(currencySymbol).append(totalPriceNoDecimalPntFormatted);
@@ -74,7 +74,7 @@ public class MplDefaultPriceDataFactory extends DefaultPriceDataFactory
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.commercefacades.product.PriceDataFactory#create(de.hybris.platform.commercefacades.product.
 	 * data.PriceDataType, java.math.BigDecimal, java.lang.String)
