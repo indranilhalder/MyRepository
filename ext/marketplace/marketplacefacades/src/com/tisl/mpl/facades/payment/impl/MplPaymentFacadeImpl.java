@@ -2223,13 +2223,17 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					LOG.warn("**Total price  " + orderModel.getTotalPrice());
 					LOG.warn("**Total price in juspay " + orderStatusResponse.getAmount());
 
-					/*
-					 * Commented as validation is no longer required
-					 *
-					 * if (orderModel.getTotalPriceWithConv().equals(orderStatusResponse.getAmount())) {
-					 * getMplPaymentService().setPaymentTransaction(orderStatusResponse, paymentMode, orderModel); } else {
-					 * throw new EtailBusinessExceptions(); }
-					 */
+
+					// Commented Code Opened
+					if (orderModel.getTotalPriceWithConv().equals(orderStatusResponse.getAmount()))
+					{
+						getMplPaymentService().setPaymentTransaction(orderStatusResponse, paymentMode, orderModel);
+					}
+					else
+					{
+						throw new EtailBusinessExceptions();
+					}
+
 
 
 					//Logic when transaction is successful i.e. CHARGED
