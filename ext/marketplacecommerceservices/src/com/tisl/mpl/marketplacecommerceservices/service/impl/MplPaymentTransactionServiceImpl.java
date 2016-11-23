@@ -97,7 +97,11 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 
 			//paymentTransactionEntry.setAmount(BigDecimal.valueOf(entry.getValue().doubleValue()));
 			//TISPRO-540 - Getting amount from CartModel
-			paymentTransactionEntry.setAmount(BigDecimal.valueOf(cart.getTotalPrice().doubleValue()));
+
+			//Changes Added ***********************
+			//paymentTransactionEntry.setAmount(BigDecimal.valueOf(cart.getTotalPrice().doubleValue()));
+			paymentTransactionEntry.setAmount(BigDecimal.valueOf(getOrderStatusResponse.getAmount().doubleValue()));
+
 			paymentTransactionEntry.setTime(new Date());
 			paymentTransactionEntry.setCurrency(cart.getCurrency());
 
