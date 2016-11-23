@@ -1724,4 +1724,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String BULK_RETURN_SUCCESS_DESC = "Return Success";
 	public static final String BULK_RETURN_FAILURE_DESC = "Return Failure";
+
+	public final static String RETURN_ENABLE = "order.return.enabled".intern();
+	public final static String CANCEL_ENABLE = "order.cancel.enabled".intern();
 }

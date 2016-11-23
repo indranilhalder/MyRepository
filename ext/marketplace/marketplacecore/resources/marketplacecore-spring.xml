@@ -1677,6 +1677,12 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />		
 	</bean>	
+	
+	<!-- for promotion price row updater job -->
+ 	<bean id="promotionPriceUpdaterJob"
+ 		class="com.tisl.mpl.core.promotion.job.PromotionPriceUpdaterJob"
+ 		autowire="byName" >
+ 	</bean>
 		
 	
 </beans>

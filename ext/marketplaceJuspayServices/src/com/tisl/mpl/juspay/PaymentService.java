@@ -372,13 +372,19 @@ public class PaymentService
 		//TIS-3168
 		if (null != response)
 		{
-			LOG.error("Response from Juspay:::" + response);
+			LOG.debug("Response from Juspay:::" + response);
 		}
 		else
 		{
 			LOG.error("Null response from Juspay");
 		}
 		final JSONObject jsonResponse = (JSONObject) JSONValue.parse(response);
+		
+		if(jsonResponse!=null) {
+			LOG.error("*getOrderStatus::Merchant_Id*"+ jsonResponse.get(MarketplaceJuspayServicesConstants.MERCHANTID));
+			LOG.error("*getOrderStatus::Order_Id*"+ jsonResponse.get(MarketplaceJuspayServicesConstants.ORDERID)); 
+		}
+
 
 		return assembleOrderStatusResponse(jsonResponse, new GetOrderStatusResponse());
 	}
@@ -710,6 +716,8 @@ public class PaymentService
 		if (jsonResponse != null)
 		{
 			LOG.debug("JUSPAY REFUND RESPONSE----------" + jsonResponse.toJSONString());
+			LOG.error("JUSPAY REFUND RESPONSE::Merchant_Id*"+ jsonResponse.get(MarketplaceJuspayServicesConstants.MERCHANTID));
+			LOG.error("JUSPAY REFUND RESPONSE::Order_Id*"+ jsonResponse.get(MarketplaceJuspayServicesConstants.ORDERID)); 
 		}
 		final RefundResponse refundResponse = (RefundResponse) assembleOrderStatusResponse(jsonResponse, new RefundResponse());
 		refundResponse.setSuccess(true);
@@ -832,11 +840,15 @@ public class PaymentService
 		final String url = baseUrl + "/txns";
 
 		final String response = makeServiceCall(url, serializedParams);
-
+		final JSONObject jsonResponse = (JSONObject) JSONValue.parse(response);
 		//TIS-3168
 		if (null != response)
 		{
-			LOG.error("Netbanking response:::" + response);
+			LOG.debug("Netbanking response:::" + response);
+			LOG.error("NetBanking Response Received for Juspay order_id-"+jsonResponse.get(MarketplaceJuspayServicesConstants.ORDERID)+
+				 	"::Status::"+jsonResponse.get(MarketplaceJuspayServicesConstants.STATUS));
+
+			
 		}
 
 		return response;
