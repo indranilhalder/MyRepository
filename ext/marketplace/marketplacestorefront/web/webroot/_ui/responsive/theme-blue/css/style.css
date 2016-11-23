@@ -55262,7 +55262,7 @@ a#cvvHelp{display:none;}
     padding: 15px;
 }
 .cart.wrapper .product-block.emi #EMITermTable td{
-    display: list-item;
+    display: block;
     text-transform: none;}
 .cart.wrapper .product-block.emi #EMITermTable td:nth-last-child(3),.cart.wrapper .product-block.emi #EMITermTable td:nth-last-child(2){
     background:#f8f8f8;}
