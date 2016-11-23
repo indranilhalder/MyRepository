@@ -118,7 +118,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	private static final String Y = "Y";
 	private static final String N = "N";
-	private static final String WARRANTY = "Warranty";
+	//	private static final String WARRANTY = "Warranty";  //Sonar fix
 	private static final String HTTP = "http";
 	private static final String HTTPS = "https";
 
@@ -126,7 +126,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
