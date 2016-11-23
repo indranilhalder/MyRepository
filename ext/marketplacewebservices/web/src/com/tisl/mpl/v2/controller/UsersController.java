@@ -5706,15 +5706,16 @@ public class UsersController extends BaseCommerceController
 		boolean resultFlag = false;
 		String result = null;
 		final ReturnItemAddressData returnItemAddressData = new ReturnItemAddressData();
-		returnItemAddressData.setAddressLane1(addressLane1);
-		returnItemAddressData.setAddressLane2(addressLane2);
-		returnItemAddressData.setCity(city);
-		returnItemAddressData.setCountry(countryIso);
-		returnItemAddressData.setState(state);
-		returnItemAddressData.setLandmark(landmark);
-		returnItemAddressData.setPincode(pincode);
+
 		try
 		{
+			returnItemAddressData.setAddressLane1(addressLane1);
+			returnItemAddressData.setAddressLane2(addressLane2);
+			returnItemAddressData.setCity(city);
+			returnItemAddressData.setCountry(countryIso);
+			returnItemAddressData.setState(state);
+			returnItemAddressData.setLandmark(landmark);
+			returnItemAddressData.setPincode(pincode);
 			final CustomerData customerData = customerFacade.getCurrentCustomer();
 			final OrderData orderDetails = orderFacade.getOrderDetailsForCode(orderCode);
 			OrderEntryData orderEntry = new OrderEntryData();
@@ -5745,6 +5746,10 @@ public class UsersController extends BaseCommerceController
 			if (resultFlag)
 			{
 				result = MarketplacecommerceservicesConstants.SUCCESS_FLAG;
+			}
+			else
+			{
+				result = MarketplacecommerceservicesConstants.FAILURE_FLAG;
 			}
 			output.setStatus(result);
 		}
@@ -6853,47 +6858,13 @@ public class UsersController extends BaseCommerceController
 	{
 
 		final ReturnPincodeDTO returnPincodeDTO = new ReturnPincodeDTO();
-		//final List<OrderModel> subOrderModels = null;
-		//OrderModel subOrderModel = null;
-		//	OrderModel subOrderModelVersioned = null;
+
 		ReturnPincodeDTO returnPincodeAvailDTO = null;
-		//final ReturnItemAddressData returnItemAddressData = new ReturnItemAddressData();
+
 		try
 		{
-			OrderEntryData orderEntry = new OrderEntryData();
-			final OrderData orderDetails = orderFacade.getOrderDetailsForCode(orderCode);
-			List<OrderEntryData> returnOrderEntry = new ArrayList<OrderEntryData>();
-			final Map<String, List<OrderEntryData>> returnProductMap = new HashMap<>();
-			/*
-			 * returnItemAddressData.setAddressLane1(addressLane1); returnItemAddressData.setAddressLane2(addressLane2);
-			 * returnItemAddressData.setCity(city); returnItemAddressData.setCountry(countryIso);
-			 * returnItemAddressData.setState(state); returnItemAddressData.setLandmark(landmark);
-			 * returnItemAddressData.setPincode(pincode); returnItemAddressData.setMobileNo(mobileNo);
-			 * returnItemAddressData.setFirstName(firstName); returnItemAddressData.setLastName(lastName);
-			 */
-			//final CustomerData customerData = customerFacade.getCurrentCustomer();
-			final List<OrderEntryData> subOrderEntries = orderDetails.getEntries();
-			for (final OrderEntryData entry : subOrderEntries)
-			{
-				if (entry.getTransactionId().equalsIgnoreCase(transactionId))
-				{
-					orderEntry = entry;
-					returnOrderEntry = cancelReturnFacade.associatedEntriesData(orderModelService.getOrder(orderCode), transactionId);
-					returnProductMap.put(orderEntry.getTransactionId(), returnOrderEntry);
-					//					break;
-				}
-				boolean returnLogisticsAvailability = false;
-				if (!(entry.isGiveAway() || entry.isIsBOGOapplied()))
-				{
-					returnLogisticsAvailability = true;
-				}
-			}
 
-			/*
-			 * subOrderModels = orderModelService.getOrders(orderCode); for (final OrderModel subOrder : subOrderModels) {
-			 * if (subOrder.getVersionID() != null) { subOrderModelVersioned = subOrder; } if (subOrder.getVersionID() ==
-			 * null) { subOrderModel = subOrder; } }
-			 */
+			final OrderData orderDetails = orderFacade.getOrderDetailsForCode(orderCode);
 
 			boolean returnLogisticsCheck = true;
 			for (final ConsignmentData consignmentData : orderDetails.getConsignments())
@@ -6920,13 +6891,13 @@ public class UsersController extends BaseCommerceController
 
 				if (!returnLogisticsCheck)
 				{
-					returnPincodeDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+					returnPincodeDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
 					returnPincodeDTO.setIsPincodeServiceable(false);
 					returnPincodeDTO.setReturnLogisticsResponseDTO(returnPincodeAvailDTO.getReturnLogisticsResponseDTO());
 				}
 				else
 				{
-					returnPincodeDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+					returnPincodeDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 					returnPincodeDTO.setIsPincodeServiceable(true);
 					returnPincodeDTO.setReturnLogisticsResponseDTO(returnPincodeAvailDTO.getReturnLogisticsResponseDTO());
 
@@ -6935,7 +6906,7 @@ public class UsersController extends BaseCommerceController
 
 		}
 
-		//returnPincodeDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
 
 
 		catch (final EtailNonBusinessExceptions e)
@@ -6979,6 +6950,7 @@ public class UsersController extends BaseCommerceController
 
 
 
+
 	@Secured(
 	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
 	@RequestMapping(value = "/{userId}/returnProductDetails", method = RequestMethod.POST, produces = APPLICATION_TYPE)
@@ -6997,25 +6969,24 @@ public class UsersController extends BaseCommerceController
 			final List<OrderProductWsDTO> orderproductWsDto = getOrderDetailsFacade.getOrderdetailsForApp(orderCode);
 			if (orderproductWsDto.size() > 0)
 			{
-				for (final OrderProductWsDTO entry : orderproductWsDto)
-				{
-					if (entry.getTransactionId().equalsIgnoreCase(transactionId))
-					{
-						returnRequestDTO.setOrderProductWsDTO(orderproductWsDto);
-					}
-				}
-				returnReasonData = mplOrderFacade.getReturnReasonForOrderItem(returnCancelFlag);
-				if (null != returnReasonData && CollectionUtils.isNotEmpty(returnReasonData.getReturnReasonDetailsList()))
-				{
-					for (final ReturnReasonData entry : returnReasonData.getReturnReasonDetailsList())
-					{
-						reasonDto = dataMapper.map(entry, ReturnReasonDTO.class);
-						returnReasondtolist.add(reasonDto);
+				//for (final OrderProductWsDTO entry : orderproductWsDto)
+				//	{
 
-					}
+				returnRequestDTO.setOrderProductWsDTO(orderproductWsDto);
+			}
+			//}
+			returnReasonData = mplOrderFacade.getReturnReasonForOrderItem(returnCancelFlag);
+			if (null != returnReasonData && CollectionUtils.isNotEmpty(returnReasonData.getReturnReasonDetailsList()))
+			{
+				for (final ReturnReasonData entry : returnReasonData.getReturnReasonDetailsList())
+				{
+					reasonDto = dataMapper.map(entry, ReturnReasonDTO.class);
+					returnReasondtolist.add(reasonDto);
+
 				}
 				returnRequestDTO.setReturnReasonDetailsWsDTO(returnReasondtolist);
 			}
+
 			else
 			{
 				returnRequestDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9004));
@@ -7032,7 +7003,6 @@ public class UsersController extends BaseCommerceController
 			returnRequestDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		return returnRequestDTO;
-
 	}
 
 
