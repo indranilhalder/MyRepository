@@ -483,9 +483,9 @@ public class CategoryPageController extends AbstractCategoryPageController
 					}
 
 					final String categoryName = category.getName();
+					//TPR-243
 
-
-					setUpMetaDataForContentPage(model, categoryLandingPage);
+					//setUpMetaDataForContentPage(model, categoryLandingPage);
 
 					model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY, categoryName.replaceAll(SPECIAL_CHARACTERS, "")
 							.replaceAll(" ", "_").toLowerCase());
@@ -979,54 +979,6 @@ public class CategoryPageController extends AbstractCategoryPageController
 		return getViewPage(categorySearch.getCategoryPage());
 	}
 
-	//	/* changes for metaData content - (TPR-243) SEO Meta Tags and Titles */
-	//	/**
-	//	 * @param model
-	//	 * @param metaKeywords
-	//	 * @param metaDescription
-	//	 * @param metaTitle
-	//	 */
-	//	private void setUpMetaDataForSeo(final Model model, final String metaKeywords, final String metaDescription,
-	//			final String metaTitle)
-	//	{
-	//		final List<MetaElementData> metadata = new LinkedList<>();
-	//		metadata.add(createMetaElement("keywords", metaKeywords));
-	//		metadata.add(createMetaElement("description", metaDescription));
-	//		metadata.add(createMetaElement("title", metaTitle));
-	//		model.addAttribute("metatags", metadata);
-	//
-	//	}
-	//
-	//	/* PageTitle in header - (TPR-243) SEO Meta Tags and Titles */
-	//	private void updatePageTitle(final Model model, final String metaTitle)
-	//	{
-	//		model.addAttribute("metaPageTitle", metaTitle);
-	//	}
-
-
-	/* changes for metaData content - (TPR-243) SEO Meta Tags and Titles */
-	/**
-	 * @param model
-	 * @param metaKeywords
-	 * @param metaDescription
-	 * @param metaTitle
-	 */
-	//private void setUpMetaDataForSeo(final Model model, final String metaKeywords, final String metaDescription,
-	//	final String metaTitle)
-	//	{
-	//	final List<MetaElementData> metadata = new LinkedList<>();
-	//	metadata.add(createMetaElement("keywords", metaKeywords));
-	//	metadata.add(createMetaElement("description", metaDescription));
-	//metadata.add(createMetaElement("title", metaTitle));
-	//	model.addAttribute("metatags", metadata);
-
-	//	}
-
-	/* PageTitle in header - (TPR-243) SEO Meta Tags and Titles */
-	//	private void updatePageTitle(final Model model, final String metaTitle)
-	//	{
-	//		model.addAttribute("metaPageTitle", metaTitle);
-	//	}
 
 
 
@@ -1118,7 +1070,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 				updatePageTitle(model, metaTitle);
 			}
 
-			setUpMetaDataForContentPage(model, categoryLandingPage);
+			//setUpMetaDataForContentPage(model, categoryLandingPage);
 		}
 		catch (final CMSItemNotFoundException e)
 		{
