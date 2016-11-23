@@ -26744,7 +26744,9 @@ top: 14px;
     color: #b9b9b9;
     font-size: 12px;
 }
-.listing-leftmenu .Size .facet-list .filter-Size form input[type="button"] {
+/*start changes for INC_10172*/
+.listing-leftmenu .Size .facet-list .filter-Size form input[type="button"], 
+.listing-leftmenu .Size .prod-size-list .filter-Size form input[type="button"] {
     display: table-cell;
     vertical-align: middle;
     width: 60px;
@@ -26758,14 +26760,16 @@ top: 14px;
     padding: 0;
     white-space: normal;
 }
-.listing-leftmenu .Size .facet-list .filter-Size form input[type="button"]:hover{
+.listing-leftmenu .Size .facet-list .filter-Size form input[type="button"]:hover, 
+.listing-leftmenu .Size .prod-size-list .filter-Size form input[type="button"]:hover{
 	border-color: #000;
     -webkit-transition: border-color .5s;
     -moz-transition: border-color .5s;
     transition: border-color .5s;
     color: #000 !important;
 }
-.product-facet .facet.size .facet-list li.filter-size {
+.product-facet .facet.size .facet-list li.filter-size, 
+.product-facet .facet.size .prod-size-list li.filter-size {
     padding: 0 8px 0 0;
     width: auto;
     height: 42px;
@@ -26774,6 +26778,7 @@ top: 14px;
     margin-left: -4px;
     display: inline-block;
 } 
+/*end changes for INC_10172*/
 .listing-leftmenu .Size .facet-list .filter-Size form {
     display: table;
 }
