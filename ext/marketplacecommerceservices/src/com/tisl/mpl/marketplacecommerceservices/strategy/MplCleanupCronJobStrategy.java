@@ -8,7 +8,6 @@ import de.hybris.platform.cronjob.enums.CronJobStatus;
 import de.hybris.platform.cronjob.model.CronJobModel;
 import de.hybris.platform.cronjob.model.TriggerModel;
 import de.hybris.platform.jobs.maintenance.MaintenanceCleanupStrategy;
-import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.internal.model.MaintenanceCleanupJobModel;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
@@ -23,7 +22,6 @@ import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 
@@ -44,8 +42,8 @@ public class MplCleanupCronJobStrategy implements MaintenanceCleanupStrategy<Cro
 	private Set<String> excludedCronJobCodes;
 	private String expiryDays;
 
-	@Autowired
-	private ConfigurationService configurationService;
+	//@Autowired
+	//private ConfigurationService configurationService;  //Sonar fix
 
 	//dynamic job properties
 	private int daysOld = 14;

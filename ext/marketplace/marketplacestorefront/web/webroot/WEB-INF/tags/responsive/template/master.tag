@@ -21,7 +21,7 @@
 <html lang="${currentLanguage.isocode}">
 <head>
 	<title>
-	${not empty pageTitle ? pageTitle : not empty cmsPage.title ? cmsPage.title : 'Tata'}
+	${not empty page_name_search ? page_name_search :  not empty pageTitle ? pageTitle : not empty cmsPage.title ? cmsPage.title : 'Tata'} <!-- TISPRD-8030 -->	
 	</title>
 	<%-- Meta Content --%>
 	<meta name="apple-itunes-app" content="app-id=1101619385">

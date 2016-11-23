@@ -6,9 +6,7 @@ package com.tisl.mpl.buyboxdataimport;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.jdbcwrapper.HybrisDataSource;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
-import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.util.CSVWriter;
-import de.hybris.platform.virtualjdbc.db.VjdbcDataSourceImplFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -52,22 +50,22 @@ public class BuyBoxImportUtility
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
 
-	@Resource
-	private ModelService modelService;
+	//@Resource
+	//private ModelService modelService;   //Sonar fix
 
 	//@Resource
 	//private DataSource buyBoxDataSource;
 
 	Connection vjdbcConnection = null;
 	Connection connection = null;
-	Statement vjdbcStmt = null;  
+	Statement vjdbcStmt = null;
 	PreparedStatement pst = null;
 
 	public static final String COMMA = ",";
 
 	public void executeExtraction()
 	{
-		 HybrisDataSource currentDataSource = null;
+		HybrisDataSource currentDataSource = null;
 		final String productExportQuery = getDataExportQuery();
 		LOG.debug("Buybox Export query :" + productExportQuery);
 		Connection vjdbcConnection = null;
@@ -228,7 +226,7 @@ public class BuyBoxImportUtility
 
 
 		String tempexportFileName = null;
-		String exportFileName = null;
+		//final String exportFileName = null;  //Sonar fix
 		final Date date = new Date();
 		//	final SimpleDateFormat ft = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_S");
 		final SimpleDateFormat ft = new SimpleDateFormat("-yyMMddHHmmssSSS");
@@ -243,19 +241,22 @@ public class BuyBoxImportUtility
 		{
 			exportDir.mkdir();
 		}
-		
+
 		//Check if Folder Exist
-		File newTempFolder=new File(exportFilePath+ configurationService.getConfiguration().getString(
-				MarketplacecommerceservicesConstants.BUYBOX + MarketplacecommerceservicesConstants.BUYBOX_FILE_NAME_TEMP));
+		final File newTempFolder = new File(exportFilePath
+				+ configurationService.getConfiguration().getString(
+						MarketplacecommerceservicesConstants.BUYBOX + MarketplacecommerceservicesConstants.BUYBOX_FILE_NAME_TEMP));
 		isFolderExist(newTempFolder);
-		
+
 		//Changes for file Renaming
 		try
 		{
-		tempexportFileName = newTempFolder.getCanonicalPath()+MarketplacecommerceservicesConstants.FRONTSLASH +configurationService.getConfiguration().getString(
-								MarketplacecommerceservicesConstants.BUYBOX+MarketplacecommerceservicesConstants.BUYBOX_FILE_NAME)+MarketplacecommerceservicesConstants.HYPHEN
-				+ ft.format(date) + MarketplacecommerceservicesConstants.DOT
-				+ MarketplacecommerceservicesConstants.BUYBOX_FILE_EXTENSION;
+			tempexportFileName = newTempFolder.getCanonicalPath()
+					+ MarketplacecommerceservicesConstants.FRONTSLASH
+					+ configurationService.getConfiguration().getString(
+							MarketplacecommerceservicesConstants.BUYBOX + MarketplacecommerceservicesConstants.BUYBOX_FILE_NAME)
+					+ MarketplacecommerceservicesConstants.HYPHEN + ft.format(date) + MarketplacecommerceservicesConstants.DOT
+					+ MarketplacecommerceservicesConstants.BUYBOX_FILE_EXTENSION;
 		}
 		catch (final IOException e)
 		{
@@ -320,21 +321,21 @@ public class BuyBoxImportUtility
 
 		}
 	}
-	
+
 	/**
-	 	 * // * @Description : Generate Folder if not present // * @param file //
-	 	 */
-	 	private void isFolderExist(final File file)
-	 	{
-	 		if (null != file)
-	 		{
-	 		if (!file.exists())
-	 			{
-	 				file.mkdir();
-	 				LOG.debug("Generated Folder:" + file.getName());
-	 			}
-	 		}
-	 	}
+	 * // * @Description : Generate Folder if not present // * @param file //
+	 */
+	private void isFolderExist(final File file)
+	{
+		if (null != file)
+		{
+			if (!file.exists())
+			{
+				file.mkdir();
+				LOG.debug("Generated Folder:" + file.getName());
+			}
+		}
+	}
 
 
 

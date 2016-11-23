@@ -39,9 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
-import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.data.BulkReturnStatusData;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
@@ -58,12 +56,12 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 	private final static Logger LOG = Logger.getLogger(InitiateReturnForOrderJob.class.getName());
 	@Autowired
 	private CancelReturnFacade cancelReturnFacade;
-	@Autowired
-	private MplCheckoutFacade mplCheckoutFacade;
+	//@Autowired
+	//private MplCheckoutFacade mplCheckoutFacade;   //Sonar fix
 	@Autowired
 	private OrderModelService orderModelService;
-	@Autowired
-	private MplOrderFacade mplOrderFacade;
+	//@Autowired
+	//private MplOrderFacade mplOrderFacade; //Sonar fix
 
 	@Resource(name = "sessionService")
 	private SessionService sessionService;
@@ -81,7 +79,7 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.servicelayer.cronjob.AbstractJobPerformable#perform(de.hybris.platform.cronjob.model.CronJobModel
 	 * )
@@ -322,7 +320,7 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 
 	/*
 	 * This method is used to convert the Order Model into Order Data
-	 *
+	 * 
 	 * @param orderModel
 	 */
 	protected OrderData convertToData(final OrderModel orderModel)
@@ -540,4 +538,3 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 	}
 
 }
-

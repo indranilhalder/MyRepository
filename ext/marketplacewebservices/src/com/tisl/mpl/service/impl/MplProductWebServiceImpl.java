@@ -126,7 +126,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -523,29 +523,29 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	 * @param productData
 	 * @return List<String>
 	 */
-	private List<String> getWarrantyOfProduct(final Map<String, String> mapConfigurableAttribute, final ProductData productData)
-	{
-		final List<String> warrantyList = new ArrayList<String>();
-		try
-		{
-			if (null != mapConfigurableAttribute && null != productData && null != productData.getRootCategory()
-					&& productData.getRootCategory().equalsIgnoreCase(MarketplacewebservicesConstants.ELECTRONICS))
-			{
-				for (final Map.Entry<String, String> entry : mapConfigurableAttribute.entrySet())
-				{
-					if (null != entry.getKey() && entry.getKey().contains(WARRANTY) && null != entry.getValue())
-					{
-						warrantyList.add(entry.getValue());
-					}
-				}
-			}
-		}
-		catch (final Exception e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
-		}
-		return warrantyList;
-	}
+	//	private List<String> getWarrantyOfProduct(final Map<String, String> mapConfigurableAttribute, final ProductData productData)  //Sonar fix
+	//	{
+	//		final List<String> warrantyList = new ArrayList<String>();
+	//		try
+	//		{
+	//			if (null != mapConfigurableAttribute && null != productData && null != productData.getRootCategory()
+	//					&& productData.getRootCategory().equalsIgnoreCase(MarketplacewebservicesConstants.ELECTRONICS))
+	//			{
+	//				for (final Map.Entry<String, String> entry : mapConfigurableAttribute.entrySet())
+	//				{
+	//					if (null != entry.getKey() && entry.getKey().contains(WARRANTY) && null != entry.getValue())
+	//					{
+	//						warrantyList.add(entry.getValue());
+	//					}
+	//				}
+	//			}
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
+	//		}
+	//		return warrantyList;
+	//	}
 
 	/**
 	 * get eligible delivery modes
@@ -1410,65 +1410,65 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	 * @param productData
 	 * @return Map<String, String>
 	 */
-	private Map<String, String> getSpecificationsOfProduct(final ProductData productData)
-	{
-		final Map<String, String> mapConfigurableAttribute = new HashMap<String, String>();
-		try
-		{
-			/* Checking the presence of classification attributes */
-			if (null != productData.getClassifications())
-			{
-				final List<ClassificationData> ConfigurableAttributeList = new ArrayList<ClassificationData>(
-						productData.getClassifications());
-				for (final ClassificationData configurableAttributData : ConfigurableAttributeList)
-				{
-					final List<FeatureData> featureDataList = new ArrayList<FeatureData>(configurableAttributData.getFeatures());
-					for (final FeatureData featureData : featureDataList)
-					{
-
-						final List<FeatureValueData> featureValueList = new ArrayList<FeatureValueData>(featureData.getFeatureValues());
-						if (null != productData.getRootCategory())
-						{
-							final String properitsValue = configurationService.getConfiguration().getString(
-									MarketplacewebservicesConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
-							//apparel
-							final FeatureValueData featureValueData = featureValueList.get(0);
-							if (productData.getRootCategory().equalsIgnoreCase(MarketplacewebservicesConstants.CLOTHING))
-							{
-
-								if (null != properitsValue && featureValueData.getValue() != null
-										&& properitsValue.contains(featureData.getName()))
-								{
-									mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
-								}
-
-							} //end apparel
-							  //electronics
-							else
-							{
-								if (null != featureData.getName() && null != featureValueData.getValue())
-
-								{
-									mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
-								}
-
-							}
-						}
-					}
-				}
-			}
-
-		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
-		}
-		catch (final Exception e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
-		}
-		return mapConfigurableAttribute;
-	}
+	//	private Map<String, String> getSpecificationsOfProduct(final ProductData productData)   //Sonar fix
+	//	{
+	//		final Map<String, String> mapConfigurableAttribute = new HashMap<String, String>();
+	//		try
+	//		{
+	//			/* Checking the presence of classification attributes */
+	//			if (null != productData.getClassifications())
+	//			{
+	//				final List<ClassificationData> ConfigurableAttributeList = new ArrayList<ClassificationData>(
+	//						productData.getClassifications());
+	//				for (final ClassificationData configurableAttributData : ConfigurableAttributeList)
+	//				{
+	//					final List<FeatureData> featureDataList = new ArrayList<FeatureData>(configurableAttributData.getFeatures());
+	//					for (final FeatureData featureData : featureDataList)
+	//					{
+	//
+	//						final List<FeatureValueData> featureValueList = new ArrayList<FeatureValueData>(featureData.getFeatureValues());
+	//						if (null != productData.getRootCategory())
+	//						{
+	//							final String properitsValue = configurationService.getConfiguration().getString(
+	//									MarketplacewebservicesConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
+	//							//apparel
+	//							final FeatureValueData featureValueData = featureValueList.get(0);
+	//							if (productData.getRootCategory().equalsIgnoreCase(MarketplacewebservicesConstants.CLOTHING))
+	//							{
+	//
+	//								if (null != properitsValue && featureValueData.getValue() != null
+	//										&& properitsValue.contains(featureData.getName()))
+	//								{
+	//									mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
+	//								}
+	//
+	//							} //end apparel
+	//							  //electronics
+	//							else
+	//							{
+	//								if (null != featureData.getName() && null != featureValueData.getValue())
+	//
+	//								{
+	//									mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
+	//								}
+	//
+	//							}
+	//						}
+	//					}
+	//				}
+	//			}
+	//
+	//		}
+	//		catch (final EtailNonBusinessExceptions e)
+	//		{
+	//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
+	//		}
+	//		return mapConfigurableAttribute;
+	//	}
 
 	/**
 	 * sales category of product
