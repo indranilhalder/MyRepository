@@ -468,10 +468,10 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="isFacet" value="true"/>							
 								<input type="hidden" id="facetValue" name="facetValue" value="${facetValue.code}"/>						
 								<spring:theme code="text.minPriceSearch.placeholder" var="minPriceSearchPlaceholder" />
-							    <input class="minPriceSearchTxt" type="text" id="customMinPrice" name="customMinPrice" width="30" height="20" placeholder="${minPriceSearchPlaceholder}" onkeypress="return isNumber(event)">							
+							    <input class="minPriceSearchTxt" type="text" id="customMinPriceMob" name="customMinPrice" width="30" height="20" placeholder="${minPriceSearchPlaceholder}" onkeypress="return isNumber(event)">							
 							    <spring:theme code="text.maxPriceSearch.placeholder" var="maxPriceSearchPlaceholder" />
 							    <span>-</span>
-							    <input class="maxPriceSearchTxt" type="text" id="customMaxPrice" name="customMaxPrice" width="30" height="20" placeholder="${maxPriceSearchPlaceholder}" onkeypress="return isNumber(event)">
+							    <input class="maxPriceSearchTxt" type="text" id="customMaxPriceMob" name="customMaxPrice" width="30" height="20" placeholder="${maxPriceSearchPlaceholder}" onkeypress="return isNumber(event)">
 							   
 								<input type="button" name ="submitPriceFilter" id ="applyCustomPriceFilter"	value="GO"/>
 						</form>							
