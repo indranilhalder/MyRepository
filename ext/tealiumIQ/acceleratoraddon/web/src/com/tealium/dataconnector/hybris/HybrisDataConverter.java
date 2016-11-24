@@ -922,16 +922,16 @@ public final class HybrisDataConverter
 					if (StringUtils.isNotEmpty(categoryName.toString()))
 					{
 						final String[] categoryNames = categoryName.toString().split(":");
-						category = categoryNames[2].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase();
+						category = categoryNames[2].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").replace("__", "_").toLowerCase();
 						productCategoryList.add(category);
 						//productCategoryListText = productCategoryList.toString().replace("[", "").replace("]", "");
 
 
-						page_subCategory_name = categoryNames[1].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase();
+						page_subCategory_name = categoryNames[1].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").replace("__", "_").toLowerCase();
 						pageSubCategories.add(page_subCategory_name);
 						//pageSubCategoriesText = pageSubCategories.toString().replace("[", "").replace("]", "");
 
-						page_subcategory_name_L3 = categoryNames[0].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase();
+						page_subcategory_name_L3 = categoryNames[0].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").replace("__", "_").toLowerCase();
 						pageSubcategoryNameL3List.add(page_subcategory_name_L3);
 						//pageSubcategoryNameL3ListText = pageSubcategoryNameL3List.toString().replace("[", "").replace("]", "");
 
@@ -1258,18 +1258,18 @@ public final class HybrisDataConverter
 								if (StringUtils.isNotEmpty(categoryName.toString()))
 								{
 									final String[] categoryNames = categoryName.toString().split(":");
-									category = categoryNames[2].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase();
+									category = categoryNames[2].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").replace("__", "_").toLowerCase();
 									productCategoryList.add(category);
 //									productCategoryListText = productCategoryList.toString().replaceAll("[\\[\\](){}]","");
 									productCategoryListText = productCategoryList.toString().replace("[", "").replace("]", "");
 									
-									page_subCategory_name = categoryNames[1].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
+									page_subCategory_name = categoryNames[1].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").replace("__", "_")
 											.toLowerCase();
 									pageSubCategories.add(page_subCategory_name);
 									pageSubCategoriesText = pageSubCategories.toString().replaceAll("[\\[\\](){}]","");
 
 									page_subcategory_name_L3 = categoryNames[0].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
-											.toLowerCase();
+											.replace("__", "_").toLowerCase();
 									pageSubcategoryNameL3List.add(page_subcategory_name_L3);
 									pageSubcategoryNameL3ListText = pageSubcategoryNameL3List.toString().replaceAll("[\\[\\](){}]","");
 
