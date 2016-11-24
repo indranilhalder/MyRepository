@@ -224,11 +224,11 @@
 										<br>
 
 									</div>
-									<div class="col-md-12"><a href="#" class="addNewAdd">Add a New Address</a></div>
 								</div>
 								<p style="clear: both;"></p>
 							</c:forEach>
 						</c:if>
+					  <div class="col-md-12"><a href="#" class="addNewAdd">Add a New Address</a></div>
 					</div>
 				</div>
 			</div>
