@@ -39,36 +39,53 @@ public class MplMobileBrandNameValueProvider extends AbstractPropertyFieldValueP
 	public Collection<FieldValue> getFieldValues(final IndexConfig indexConfig, final IndexedProperty indexedProperty,
 			final Object model) throws FieldValueProviderException
 	{
-		final ProductModel productModel = (ProductModel) model;
-		if (productModel == null)
+		/* added part of value provider go through */
+		try
 		{
-			return Collections.emptyList();
-		}
-
-		final List<CategoryModel> categories = getImmediateSuperCategory(productModel);//(List<CategoryModel>) productModel.getSupercategories();
-
-
-		if (categories != null && !categories.isEmpty())
-		{
-			final Collection<FieldValue> fieldValues = new ArrayList<FieldValue>();
-			for (final CategoryModel categoryModel : categories)
+			ProductModel productModel = null;
+			if (model instanceof ProductModel)
 			{
-				if (categoryModel.getCode().startsWith("MBH"))
-				{
+				productModel = (ProductModel) model;
+			}
+			else
+			{
+				throw new FieldValueProviderException("Cannot evaluate Mobile Brand Name of non-product item");
+			}
+			/* added part of value provider go through */
+			/*
+			 * final ProductModel productModel = (ProductModel) model; if (productModel == null) { return
+			 * Collections.emptyList(); }
+			 */
 
-					fieldValues.addAll(createFieldValue(categoryModel.getName(), indexedProperty));
+			final List<CategoryModel> categories = getImmediateSuperCategory(productModel);//(List<CategoryModel>) productModel.getSupercategories();
+
+
+			if (categories != null && !categories.isEmpty())
+			{
+				final Collection<FieldValue> fieldValues = new ArrayList<FieldValue>();
+				for (final CategoryModel categoryModel : categories)
+				{
+					if (categoryModel.getCode().startsWith("MBH"))
+					{
+
+						fieldValues.addAll(createFieldValue(categoryModel.getName(), indexedProperty));
+
+					}
 
 				}
 
+
+				return fieldValues;
+
 			}
 
-
-			return fieldValues;
-
+			return Collections.emptyList();
 		}
-
-		return Collections.emptyList();
-
+		catch (final Exception e)
+		{
+			throw new FieldValueProviderException(
+					"Cannot evaluate " + indexedProperty.getName() + " using " + super.getClass().getName() + "exception" + e, e);
+		}
 
 	}
 

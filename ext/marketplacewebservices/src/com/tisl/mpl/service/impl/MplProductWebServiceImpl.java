@@ -394,7 +394,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				}
 				catch (final Exception e)
 				{
-					LOG.error("*************** Exception at PDP web service buybox fetching ******************* " + e);
+					LOG.debug("*************** Exception at PDP web service buybox fetching ******************* " + e);
 				}
 			}
 			if (null != buyBoxData && null != buyBoxData.getSellerAssociationstatus())
