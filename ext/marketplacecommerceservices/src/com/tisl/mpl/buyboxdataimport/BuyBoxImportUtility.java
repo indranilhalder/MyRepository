@@ -7,6 +7,7 @@ import de.hybris.platform.core.Registry;
 import de.hybris.platform.jdbcwrapper.HybrisDataSource;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.util.CSVWriter;
+import de.hybris.platform.virtualjdbc.db.VjdbcDataSourceImplFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
