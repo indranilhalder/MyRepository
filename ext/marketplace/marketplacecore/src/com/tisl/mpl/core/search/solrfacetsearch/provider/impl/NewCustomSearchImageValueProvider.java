@@ -107,10 +107,10 @@ public class NewCustomSearchImageValueProvider extends AbstractPropertyFieldValu
 		{
 			if ((model instanceof ProductModel))
 			{
-				final MediaModel media = mediaHelper.findMedia((ProductModel) model, mediaFormatModel);
-				if (media != null)
+				final MediaFormatModel mediaFormatModel = getMediaService().getFormat(getMediaFormat());
+				if (mediaFormatModel != null)
 				{
-					final MediaModel media = findMedia((ProductModel) model, mediaFormatModel);
+					final MediaModel media = mediaHelper.findMedia((ProductModel) model, mediaFormatModel);
 					if (media != null)
 					{
 						return createFieldValues(indexedProperty, media);
@@ -126,14 +126,14 @@ public class NewCustomSearchImageValueProvider extends AbstractPropertyFieldValu
 		}
 		catch (final Exception e) /* added part of value provider go through */
 		{
-			throw new FieldValueProviderException(
-					"Cannot evaluate " + indexedProperty.getName() + " using " + super.getClass().getName() + "exception" + e, e);
+			throw new FieldValueProviderException("Cannot evaluate " + indexedProperty.getName() + " using "
+					+ super.getClass().getName() + "exception" + e, e);
 		}
 		return Collections.emptyList();
 
 	}
 
-	
+
 	/*
 	 * protected Collection<FieldValue> createFieldValues(final IndexedProperty indexedProperty, final List<MediaModel>
 	 * media) { return createFieldValues(indexedProperty, media.getURL()); }
