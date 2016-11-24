@@ -103,27 +103,37 @@ public class NewCustomSearchImageValueProvider extends AbstractPropertyFieldValu
 	public Collection<FieldValue> getFieldValues(final IndexConfig indexConfig, final IndexedProperty indexedProperty,
 			final Object model) throws FieldValueProviderException
 	{
-		if ((model instanceof ProductModel))
+		try
 		{
-			final MediaFormatModel mediaFormatModel = getMediaService().getFormat(getMediaFormat());
-			if (mediaFormatModel != null)
+			if ((model instanceof ProductModel))
 			{
 				final MediaModel media = mediaHelper.findMedia((ProductModel) model, mediaFormatModel);
 				if (media != null)
 				{
-					return createFieldValues(indexedProperty, media);
-				}
+					final MediaModel media = findMedia((ProductModel) model, mediaFormatModel);
+					if (media != null)
+					{
+						return createFieldValues(indexedProperty, media);
+					}
 
-				//if (LOG.isDebugEnabled()) Deeply nested if..then statements are hard to read
-				//{
-				LOG.debug("No [" + mediaFormatModel.getQualifier() + "] image found for product [" + ((ProductModel) model).getCode()
-						+ "]");
-				//}
+					//if (LOG.isDebugEnabled()) Deeply nested if..then statements are hard to read
+					//{
+					LOG.debug("No [" + mediaFormatModel.getQualifier() + "] image found for product ["
+							+ ((ProductModel) model).getCode() + "]");
+					//}
+				}
 			}
 		}
+		catch (final Exception e) /* added part of value provider go through */
+		{
+			throw new FieldValueProviderException(
+					"Cannot evaluate " + indexedProperty.getName() + " using " + super.getClass().getName() + "exception" + e, e);
+		}
 		return Collections.emptyList();
+
 	}
 
+	
 	/*
 	 * protected Collection<FieldValue> createFieldValues(final IndexedProperty indexedProperty, final List<MediaModel>
 	 * media) { return createFieldValues(indexedProperty, media.getURL()); }

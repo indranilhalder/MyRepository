@@ -80,7 +80,11 @@
 					slotId="perspectives" template="true">
 					<virtual-sockets />
 				</widget>
-
+				<!-- Added for shipment data upload -->
+				<widget id="shipment_data_upload" widgetDefinitionId="com.hybris.oms.shipmentdatauploadwidget" slotId="perspectives"
+					template="true" title="shipment data upload widget">
+					<virtual-sockets />
+				</widget>
 				<!-- Added for logistics Calendar -->
 				<widget id="logisticcollapsibleContainer" widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
 					slotId="perspectives" template="true">

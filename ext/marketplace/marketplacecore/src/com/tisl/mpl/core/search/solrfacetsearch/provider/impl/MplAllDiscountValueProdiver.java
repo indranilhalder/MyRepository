@@ -70,20 +70,28 @@ public class MplAllDiscountValueProdiver extends AbstractPropertyFieldValueProvi
 			final Object model) throws FieldValueProviderException
 	{
 		// YTODO Auto-generated method stub
-		if (model instanceof ProductModel)
+		try
 		{
-			final ProductModel product = (ProductModel) model;
+			if (model instanceof ProductModel)
+			{
+				final ProductModel product = (ProductModel) model;
 
-			final Collection fieldValues = new ArrayList();
+				final Collection fieldValues = new ArrayList();
 
-			fieldValues.addAll(createFieldValue(product, indexConfig, indexedProperty));
+				fieldValues.addAll(createFieldValue(product, indexConfig, indexedProperty));
 
-			return fieldValues;
+				return fieldValues;
+			}
+			else
+			{
+				return Collections.emptyList();
+
+			}
 		}
-		else
+		catch (final Exception e) /* added part of value provider go through */
 		{
-			return Collections.emptyList();
-
+			throw new FieldValueProviderException(
+					"Cannot evaluate " + indexedProperty.getName() + " using " + super.getClass().getName() + "exception" + e, e);
 		}
 	}
 
@@ -125,6 +133,7 @@ public class MplAllDiscountValueProdiver extends AbstractPropertyFieldValueProvi
 	{
 
 		boolean offerExists = false;
+		String returnstring = null;
 		//		double percentDiscount = 0.0;
 		final BuyBoxModel buyboxWinner = mplBuyBoxUtility.getLeastPriceBuyBoxModel(product);
 		if (buyboxWinner != null)
@@ -156,13 +165,15 @@ public class MplAllDiscountValueProdiver extends AbstractPropertyFieldValueProvi
 
 		if (offerExists)
 		{
-			return "Discounted Items";
+			returnstring = "Discounted Items";
 		}
 		else
 		{
-			return "Non - Discounted Items";
+			//return "Non - Discounted Items";
+			returnstring = "Non - Discounted Items";
 		}
 
+		return returnstring;
 
 	}
 
