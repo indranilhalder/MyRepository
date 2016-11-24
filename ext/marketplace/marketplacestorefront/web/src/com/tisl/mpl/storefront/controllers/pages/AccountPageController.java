@@ -2733,6 +2733,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @throws CMSItemNotFoundException
 	 * @throws ParseException
 	 */
+	@SuppressWarnings("boxing")
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_UPDATE_PARSONAL_DETAIL, method = RequestMethod.POST)
 	@RequireHardLogIn
 	public String updateProfile(final MplCustomerProfileForm mplCustomerProfileForm, final BindingResult bindingResult,
@@ -2894,7 +2895,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 			model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
 					accountBreadcrumbBuilder.getBreadcrumbs(MessageConstants.TEXT_ACCOUNT_PROFILE));
 			model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
-			if (null != request.getParameterMap() && request.getParameterMap().containsKey(isLux))
+			//LW-697 Changes
+			if (null != request.getParameterMap() && request.getParameterMap().containsKey(isLux)
+					&& request.getParameter("isLux").toString().equalsIgnoreCase("true"))
 			{
 				returnAction = returnAction + "?" + isLux + "=true";
 			}
