@@ -1681,7 +1681,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 			if (orderEntry.getDeliveryPointOfService() != null)
 			{
 				returnableStores = pincodeServiceFacade.getAllReturnableStores(orderEntry.getDeliveryPointOfService().getAddress()
-						.getPostalCode(), orderEntry.getSelectedSellerInformation().getSellerID());
+						.getPostalCode(),StringUtils.substring(orderEntry.getSelectedUssid(), 0, 6) );
+				//orderEntry.getSelectedSellerInformation().getSellerID()
 			}
 			else
 			{

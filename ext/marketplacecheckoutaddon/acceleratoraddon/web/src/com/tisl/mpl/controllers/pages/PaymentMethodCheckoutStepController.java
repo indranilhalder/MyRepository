@@ -1513,8 +1513,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							if (richAttributeModel != null && richAttributeModel.get(0) != null
 									&& richAttributeModel.get(0).getDeliveryFulfillModes() != null)
 							{
-								final String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
-								if (DeliveryFulfillModesEnum.TSHIP.toString().equalsIgnoreCase(fulfillmentType))
+								
+								if (null!=entry.getFulfillmentMode() ) {
+									
+								//final String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
+								if (DeliveryFulfillModesEnum.TSHIP.toString().equalsIgnoreCase(entry.getFulfillmentMode()))
 								{
 									//TPR-627, TPR-622 Separate method the check COD Eligibility to avoid redundant code
 									final boolean returnFlag = paymentModecheckForCOD(richAttributeModel, cart, model);
@@ -1552,6 +1555,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 								}
 							}
+						 }
 						}
 					}
 				}
