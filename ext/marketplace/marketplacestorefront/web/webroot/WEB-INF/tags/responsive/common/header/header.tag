@@ -33,6 +33,8 @@
 	<!-- TPR-844 -->
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticHost"/>
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.resource.host')" var="luxuryHost"/>
+<c:choose>
+ <c:when test="${param.isLux eq null || param.isLux eq false}">
 <header>	
 	<!-- For Infinite Analytics Start -->
 	<input type="hidden" id="ia_site_id" value="${cmsSite.uid}"> 
@@ -264,6 +266,8 @@
 	<a id="skiptonavigation"></a>
 	<nav:topNavigation />
 </header>
+</c:when>
+</c:choose>
 
 <c:if test="${empty showOnlySiteLogo }">
 	<cms:pageSlot position="BottomHeaderSlot" var="component" element="div"
