@@ -55263,6 +55263,8 @@ a#cvvHelp{display:none;}
 }
 .cart.wrapper .product-block.emi #EMITermTable td{
     display: block;
+    float:left;
+    width:100%;
     text-transform: none;}
 .cart.wrapper .product-block.emi #EMITermTable td:nth-last-child(3),.cart.wrapper .product-block.emi #EMITermTable td:nth-last-child(2){
     background:#f8f8f8;}
