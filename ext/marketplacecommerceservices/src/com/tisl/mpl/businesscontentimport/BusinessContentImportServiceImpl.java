@@ -185,7 +185,7 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 					for (final String attribute : attributeList)
 					{
 						contentMap.put(attribute, line.get(Integer.valueOf(countAfter)));
-						addInvalidColumnName(invalidColumns, attribute, line.get(Integer.valueOf(countAfter)));
+						//addInvalidColumnName(invalidColumns, attribute, line.get(Integer.valueOf(countAfter)));
 						countAfter++;
 					}
 
@@ -459,19 +459,19 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		//Making Components
 		for (final Map.Entry<String, String> entry : contentMap.entrySet())
 		{
-			if (entry.getKey().startsWith("Image"))
+			if (entry.getKey().startsWith("Image") && StringUtils.isNotEmpty(entry.getValue()))
 			{
 				final SimpleBannerComponentModel sm = makeBannerComponent(entry.getValue(), entry.getKey(), line, writer,
 						isUpdatefeed);
 				componentlist.add(sm);
 			}
-			else if (entry.getKey().startsWith("Video"))
+			else if (entry.getKey().startsWith("Video") && StringUtils.isNotEmpty(entry.getValue()))
 			{
 				final VideoComponentModel vm = makeVideoComponent(entry.getValue(), entry.getKey(), line, writer, isUpdatefeed);
 				componentlist.add(vm);
 
 			}
-			else if (entry.getKey().startsWith("Text"))
+			else if (entry.getKey().startsWith("Text") && StringUtils.isNotEmpty(entry.getValue()))
 			{
 				final CMSParagraphComponentModel cmspara = makeTextComponent(entry.getValue(), entry.getKey(), line, writer,
 						isUpdatefeed);
