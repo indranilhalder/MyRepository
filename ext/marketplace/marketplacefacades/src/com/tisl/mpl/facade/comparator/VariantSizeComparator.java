@@ -32,10 +32,10 @@ public class VariantSizeComparator implements Comparator<VariantOptionData>
 	{
 
 		//TISPRO-50 - null check added
-		final String value0 = arg0.getSizeLink() == null ? null : arg0.getSizeLink().get(arg0.getUrl()).replaceAll("\\s+", "")
-				.toUpperCase();
-		final String value1 = arg1.getSizeLink() == null ? null : arg1.getSizeLink().get(arg1.getUrl()).replaceAll("\\s+", "")
-				.toUpperCase();
+		final String value0 = arg0.getSizeLink() == null && arg0.getSizeLink().get(arg0.getUrl()) == null ? null : arg0
+				.getSizeLink().get(arg0.getUrl()).replaceAll("\\s+", "").toUpperCase();
+		final String value1 = arg1.getSizeLink() == null && arg1.getSizeLink().get(arg1.getUrl()) == null ? null : arg1
+				.getSizeLink().get(arg1.getUrl()).replaceAll("\\s+", "").toUpperCase();
 		if (value0 == null || value1 == null || StringUtils.isEmpty(value0) || StringUtils.isEmpty(value1))
 		{
 			return 0;
