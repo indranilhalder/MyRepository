@@ -32,6 +32,7 @@ public class OTPDaoImpl implements OTPDao
 {
 	private static final String EMAILID = "emailId"; //Sonar fix
 	private static final String MOBILENO = "mobileNo";
+	private static final String LATESTQUERY = "LATESTQUERY";
 	private static final String OTPTYPE = "OTPType";
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(OTPDaoImpl.class);
@@ -180,7 +181,7 @@ public class OTPDaoImpl implements OTPDao
 				queryString = MarketplacecommerceservicesConstants.LATESTOTPEMAILQUERY;
 			}
 
-			LOG.debug("LATESTQUERY" + queryString);
+			LOG.debug(LATESTQUERY + queryString);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter(EMAILID, emailId);
 			if (StringUtils.isNotEmpty(mobileNo))
@@ -195,7 +196,7 @@ public class OTPDaoImpl implements OTPDao
 			if (CollectionUtils.isNotEmpty(otpList))
 			{
 				otpModel = otpList.get(0);
-				LOG.debug("LATESTQUERY" + otpModel.getOTPNumber());
+				LOG.debug(LATESTQUERY + otpModel.getOTPNumber());
 			}
 
 			return otpModel;
@@ -243,7 +244,7 @@ public class OTPDaoImpl implements OTPDao
 				queryString = MarketplacecommerceservicesConstants.LATESTOTPQUERYINV;
 			}
 
-			LOG.debug("LATESTQUERY" + queryString);
+			LOG.debug(LATESTQUERY + queryString);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter(EMAILID, emailId);
 			if (StringUtils.isNotEmpty(mobileNo))
@@ -258,7 +259,7 @@ public class OTPDaoImpl implements OTPDao
 			if (CollectionUtils.isNotEmpty(otpList))
 			{
 				otpModel = otpList.get(0);
-				LOG.debug("LATESTQUERY" + otpModel.getOTPNumber());
+				LOG.debug(LATESTQUERY + otpModel.getOTPNumber());
 			}
 
 			return otpModel;
