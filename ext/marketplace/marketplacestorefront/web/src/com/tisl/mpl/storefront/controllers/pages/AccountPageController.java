@@ -4670,15 +4670,15 @@ public class AccountPageController extends AbstractMplSearchPageController
 							{
 								if (null != buyboxmodel.getSpecialPrice() && buyboxmodel.getSpecialPrice().doubleValue() > 0.0)
 								{
-									price = buyboxmodel.getSpecialPrice().doubleValue();
+									price = Math.floor(buyboxmodel.getSpecialPrice().doubleValue());
 								}
 								else if (null != buyboxmodel.getPrice() && buyboxmodel.getPrice().doubleValue() > 0.0)
 								{
-									price = buyboxmodel.getPrice().doubleValue();
+									price = Math.floor(buyboxmodel.getPrice().doubleValue());
 								}
 								else
 								{
-									price = buyboxmodel.getMrp().doubleValue();
+									price = Math.floor(buyboxmodel.getMrp().doubleValue());
 								}
 								final PriceData priceData = productDetailsHelper.formPriceData(new Double(price));
 								wishlistProductData.setPrice(priceData);
