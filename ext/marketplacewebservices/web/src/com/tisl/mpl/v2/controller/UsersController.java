@@ -404,7 +404,7 @@ public class UsersController extends BaseCommerceController
 	private static final int MAX_FIELD_LENGTH_ADDLINE = 40;
 	private static final int MAX_FIELD_LENGTH_STATE = 20;
 	private static final int MAX_FIELD_LENGTH_COUNTRY = 15;
-	private static final int MAX_LANDMARK_LENGTH = 20;
+	private static final int MAX_LANDMARK_LENGTH = 30;
 	public static final String MOBILE_REGEX = "^[0-9]*$";
 	public static final String NAME_REGEX = "[a-zA-Z]+\\.?";
 
@@ -2428,7 +2428,7 @@ public class UsersController extends BaseCommerceController
 	@ResponseBody
 	public UserResultWsDto addAddress(@RequestParam final String emailId, @RequestParam final String firstName,
 			@RequestParam final String lastName, @RequestParam final String line1, @RequestParam final String line2,
-			@RequestParam final String line3, @RequestParam final String landmark,@RequestParam final String town, @RequestParam final String state,
+			@RequestParam final String line3, @RequestParam(required = false) final String landmark,@RequestParam final String town, @RequestParam final String state,
 			@RequestParam final String countryIso, @RequestParam final String postalCode, @RequestParam final String phone,
 			@RequestParam final String addressType, @RequestParam final boolean defaultFlag) throws RequestParameterException
 	{
@@ -2456,7 +2456,9 @@ public class UsersController extends BaseCommerceController
 			validation(errorMsg);
 			errorMsg = validateStringField(line3, AddressField.LINE3, MAX_FIELD_LENGTH_ADDLINE);
 			validation(errorMsg);
-			errorMsg = validateStringField(landmark, AddressField.LANDMARK, MAX_LANDMARK_LENGTH);
+			if(null != landmark) {
+				errorMsg = validateStringField(landmark, AddressField.LANDMARK, MAX_LANDMARK_LENGTH);
+			}
 			validation(errorMsg);
 			errorMsg = validateStringField(town, AddressField.TOWN, MAX_FIELD_LENGTH_ADDLINE);
 			validation(errorMsg);
@@ -2670,7 +2672,7 @@ public class UsersController extends BaseCommerceController
 	@ResponseBody
 	public UserResultWsDto editAddress(@RequestParam final String emailId, @RequestParam final String addressId,
 			@RequestParam final String firstName, @RequestParam final String lastName, @RequestParam final String line1,
-			@RequestParam final String line2, @RequestParam final String line3,@RequestParam final String landmark, 
+			@RequestParam final String line2, @RequestParam final String line3,@RequestParam(required = false) final String landmark, 
 			@RequestParam final String town,@RequestParam final String state, @RequestParam final String countryIso, @RequestParam final String postalCode,@RequestParam final String phone, @RequestParam final String addressType, 
 			@RequestParam final boolean defaultFlag) throws RequestParameterException
 	{
@@ -2698,7 +2700,9 @@ public class UsersController extends BaseCommerceController
 			validation(errorMsg);
 			errorMsg = validateStringField(line3, AddressField.LINE3, MAX_FIELD_LENGTH_ADDLINE);
 			validation(errorMsg);
-			errorMsg = validateStringField(phone, AddressField.LANDMARK, MAX_LANDMARK_LENGTH);
+			if(null != landmark) {
+				errorMsg = validateStringField(landmark, AddressField.LANDMARK, MAX_LANDMARK_LENGTH);
+			}
 			validation(errorMsg);
 			errorMsg = validateStringField(town, AddressField.TOWN, MAX_FIELD_LENGTH_ADDLINE);
 			validation(errorMsg);
@@ -6202,7 +6206,9 @@ public class UsersController extends BaseCommerceController
 						validation(errorMsg);
 						errorMsg = validateStringField(line3, AddressField.LINE3, MAX_FIELD_LENGTH_ADDLINE);
 						validation(errorMsg);
-						errorMsg = validateStringField(landmark, AddressField.LANDMARK, MAX_LANDMARK_LENGTH);
+						if(null !=landmark){
+							errorMsg = validateStringField(landmark, AddressField.LANDMARK, MAX_LANDMARK_LENGTH);
+						}
 						validation(errorMsg);
 						errorMsg = validateStringField(town, AddressField.TOWN, MAX_FIELD_LENGTH_ADDLINE);
 						validation(errorMsg);
