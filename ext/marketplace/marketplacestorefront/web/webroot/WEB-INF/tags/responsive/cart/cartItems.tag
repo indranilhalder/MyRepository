@@ -108,13 +108,13 @@ tr.d0 td {
    <div class="product">
    <div class="cart-product-info">
 		                <p class="company"> </p>
-		                <h3 class="product-brand-name"><a href="${entryProductUrl}">${entry.product.brand.brandname}</a></h3>
-		                <h3 class="product-name">
+		                <h2 class="product-brand-name"><a href="${entryProductUrl}">${entry.product.brand.brandname}</a></h2>
+		                <h2 class="product-name">
 		                <ycommerce:testId code="cart_product_name">
 											<a href="${productUrl}">${entry.product.productTitle}</a>
 											<input type="hidden" name="productArrayForIA" value="${entry.product.code}"/>
 						</ycommerce:testId>
-			                </h3>
+			                </h2>
 			              
 			             <!-- TISEE-246   
 		                <p class="item-info">
@@ -172,7 +172,7 @@ tr.d0 td {
 								<input type="hidden" name="stock" value="${stock}" />
 								<div class="undo-text-wrapper">
 								<p><spring:theme code="mpl.myBag.product.remove.text"/></p>
-								<h4><spring:theme code="mpl.myBag.product.remove.removed"/></h4>
+								<h2><spring:theme code="mpl.myBag.product.remove.removed"/></h2>
 								<button class="undo-add-to-cart"><spring:theme code="mpl.myBag.product.remove.undo"/></button>
 								</div>
 								</form:form>
@@ -282,17 +282,17 @@ tr.d0 td {
 																	</c:when>
 																</c:choose>
 															</c:forEach>
-															<c:choose>
+															<%-- <c:choose>
 															<c:when test="${not empty entry.cartLevelDisc && empty entry.productPerDiscDisplay}">
 																<!-- TPR-970 changes--><c:set var="totalPrice"  value="${entry.totalMrp.formattedValue}"/>
 																<!-- TPR-970 changes--><span id ="totalPrice_${entry.entryNumber}"  class="delSeat"><format:price priceData="${entry.totalMrp}"/></span>
 															</c:when>
-															</c:choose>
+															</c:choose> --%>
 															
-															<c:if test="${empty entry.cartLevelDisc && empty entry.productPerDiscDisplay}">
+															<%-- <c:if test="${empty entry.cartLevelDisc && empty entry.productPerDiscDisplay}">
 															<!-- TPR-970 changes--> <c:set var="totalPrice"  value="${entry.totalPrice.formattedValue}"/>
 														<!-- TPR-970 changes-->	<span id ="totalPrice_${entry.entryNumber}"  class="delSeat"><format:price priceData="${entry.totalPrice}"/></span>
-															 </c:if>
+															 </c:if>  --%>
 														</c:if>
 													</c:otherwise>
 								
@@ -706,9 +706,9 @@ tr.d0 td {
 											<!-- Modal content-->
 											<div class="modal-header">
 												<button type="button" class="close" data-dismiss="modal"aria-hidden="true">&times;</button>
-												<h4 class="modal-title" id="myModalLabel">
+												<h2 class="modal-title" id="myModalLabel">
 													<b> <spring:theme code="cart.modal.my.wishlist"/></b>
-												</h4>
+												</h2>
 											</div>
 											<div class="modal-body" id="modelId"></div>
 											<div class="modal-footer">												
@@ -1084,9 +1084,9 @@ tr.d0 td {
 											<!-- Modal content-->
 											<div class="modal-header">
 												<button type="button" class="close" data-dismiss="modal"aria-hidden="true">&times;</button>
-												<h4 class="modal-title" id="myModalLabel">
+												<h2 class="modal-title" id="myModalLabel">
 													<b> <spring:theme code="cart.modal.my.wishlist"/></b>
-												</h4>
+												</h2>
 											</div>
 											<div class="modal-body" id="modelId"></div>
 											<div class="modal-footer">												

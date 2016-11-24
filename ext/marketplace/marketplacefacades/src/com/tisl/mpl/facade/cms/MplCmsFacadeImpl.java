@@ -2119,7 +2119,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					final ContentSlotModel contentSlot = contentSlotForPage.getContentSlot();
 
 					final List<LuxBlpCompListWsDTO> luxuryComponentsForASlot = getComponentDtoforASlot(contentSlot,
-							contentSlotForPage.getPosition());
+							contentSlotForPage.getPosition(), brandCode);
 					listComp.addAll(luxuryComponentsForASlot);
 				}
 
@@ -2160,8 +2160,8 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	 * @param postion
 	 * @return
 	 */
-	private List<LuxBlpCompListWsDTO> getComponentDtoforASlot(final ContentSlotModel contentSlot, final String position)
-			throws CMSItemNotFoundException
+	private List<LuxBlpCompListWsDTO> getComponentDtoforASlot(final ContentSlotModel contentSlot, final String position,
+			final String brandCode) throws CMSItemNotFoundException
 	{
 		// YTODO Auto-generated method stub
 		final List<LuxBlpCompListWsDTO> componentListForASlot = new ArrayList<LuxBlpCompListWsDTO>();
@@ -2254,7 +2254,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				else if (typecode.equalsIgnoreCase("MplAdvancedCategoryCarouselComponent"))
 				{
 					final MplAdvancedCategoryCarouselComponentModel BlpVideoComponent = (MplAdvancedCategoryCarouselComponentModel) abstractCMSComponentModel;
-					blpComponent = getBlpAdvanceCategory(BlpVideoComponent);
+					blpComponent = getBlpAdvanceCategory(BlpVideoComponent, brandCode);
 					componentListForASlot.add(blpComponent);
 				}
 				if (typecode.equalsIgnoreCase("MplShowcaseComponent"))
@@ -2748,7 +2748,8 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 		return luxComponent;
 	}
 
-	private LuxBlpCompListWsDTO getBlpAdvanceCategory(final MplAdvancedCategoryCarouselComponentModel luxuryCategoryComponent)
+	private LuxBlpCompListWsDTO getBlpAdvanceCategory(final MplAdvancedCategoryCarouselComponentModel luxuryCategoryComponent,
+			final String brandCode)
 	{
 		// YTODO Auto-generated method stub
 		final ArrayList<LuxShopYourFavListWsDTO> shopYourFavList = new ArrayList<LuxShopYourFavListWsDTO>();
@@ -2777,6 +2778,22 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					}
 				}
 			}
+			//TISPRD-9374
+			if (StringUtils.isNotEmpty(catCompObj.getFilterByBrandName()))
+			{
+				luxshopYourFav.setBrandId(catCompObj.getFilterByBrandName());
+			}
+
+			else
+			{
+
+				if (StringUtils.isNotEmpty(brandCode))
+				{
+					luxshopYourFav.setBrandId(brandCode);
+
+				}
+			}
+
 
 			if (null != catCompObj.getCategory() && null != catCompObj.getCategory().getName())
 			{

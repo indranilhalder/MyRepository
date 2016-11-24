@@ -1874,6 +1874,8 @@
 		<property name="interceptor" ref="exSellerBulkLoadInterceptor" />
 		<property name="typeCode" value="EtailExcludeSellerSpecificRestriction" />
 	</bean>
+	
+	<!-- TPR-1282 -->
 	<alias name="mplCmsCacheService" alias="cmsCacheService"/>
 	<bean id="mplCmsCacheService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplCmsCacheServiceImpl"
 		parent="defaultCmsCacheService">
