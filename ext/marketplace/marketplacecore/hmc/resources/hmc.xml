@@ -3870,9 +3870,9 @@
 								<referencecollectioneditor editable="true"
 									externalcreate="false" resortable="false" remove="true" create="true">
 									<itemlayout>
-										<attribute name="quantity" width="40" />
-										<attribute name="currency" width="40" />
-										<attribute name="price" width="40" />
+										<attribute name="quantity" width="140" />
+										<attribute name="currency" width="140" />
+										<attribute name="price" width="140" />
 									</itemlayout>
 								</referencecollectioneditor>
 							</attribute>
