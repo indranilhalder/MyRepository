@@ -55262,7 +55262,7 @@ a#cvvHelp{display:none;}
     padding: 15px;
 }
 .cart.wrapper .product-block.emi #EMITermTable td{
-    display: list-item;
+    display: block;
     text-transform: none;}
 .cart.wrapper .product-block.emi #EMITermTable td:nth-last-child(3),.cart.wrapper .product-block.emi #EMITermTable td:nth-last-child(2){
     background:#f8f8f8;}
@@ -59046,3 +59046,28 @@ z-index:11;}
 body.page-multiStepCheckoutSummaryPage #flip-tabs, body.page-checkout-login header .content .top, body.page-checkout-login #flip-tabs, body.page-multiStepCheckoutSummaryPage header .content .top{
 display: none;
 }
+
+/*Checkout delivery page price column hide*/
+   @media (min-width: 1025px) {
+   .cart.wrapper .checkout-table.product-block.mybag-items.checkout-items#deliveryradioul li.header .mybag-item-head .Price{
+   display:none;
+   }
+   .cart.wrapper .checkout-table.product-block.mybag-items.checkout-items#deliveryradioul li.header .mybag-item-head .qty{
+   	width: 30%;
+    text-align: center;
+   }
+   
+   .checkout-table.product-block.mybag-items.checkout-items#deliveryradioul .price{
+   display:none;
+   }
+   .checkout-table.product-block.mybag-items.checkout-items#deliveryradioul .quantity{
+   	width: 30%;
+    padding-left: 0;
+   }
+   }
+   @media (max-width: 1024px) {
+   .checkout.wrapper .checkout-table.product-block.mybag-items.checkout-items#deliveryradioul li.item>ul li:first-child .delivery-price.delivery-price-mobile{
+   display:none;
+   }
+   }
+/*Checkout delivery page price column hide ends*/

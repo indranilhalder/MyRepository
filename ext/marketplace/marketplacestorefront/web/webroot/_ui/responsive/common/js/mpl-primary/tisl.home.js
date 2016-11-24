@@ -1277,7 +1277,7 @@ $(document).on("click", ".showcaseItem", function() {
 	$('.selectmenu').text($(this).children().text());
 	/*TPR-650 Start*/
 	//TISQAEE-59
-	var name=$(this).parents('#showcase').children('h2').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	var name=$(this).parents('#showcase').children('h2').text().trim().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
 	var value = $(this).find('a').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
 	utag.link({
 		link_obj: this,
