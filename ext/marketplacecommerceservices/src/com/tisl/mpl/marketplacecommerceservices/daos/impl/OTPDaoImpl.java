@@ -30,6 +30,8 @@ import com.tisl.mpl.marketplacecommerceservices.daos.OTPDao;
 @Component(value = "otpDao")
 public class OTPDaoImpl implements OTPDao
 {
+	private static final String EMAILID = "emailId"; //Sonar fix
+	private static final String MOBILENO = "mobileNo";
 	private static final String OTPTYPE = "OTPType";
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(OTPDaoImpl.class);
@@ -81,8 +83,8 @@ public class OTPDaoImpl implements OTPDao
 
 		LOG.debug("Query :::::::::: " + queryString);
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("emailId", emailId);
-		query.addQueryParameter("mobileNo", mobileNo);
+		query.addQueryParameter(EMAILID, emailId);
+		query.addQueryParameter(MOBILENO, mobileNo);
 		query.addQueryParameter(OTPTYPE, OTPType.getCode());
 		return getFlexibleSearchService().<OTPModel> search(query).getResult();
 	}
@@ -180,12 +182,12 @@ public class OTPDaoImpl implements OTPDao
 
 			LOG.debug("LATESTQUERY" + queryString);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-			query.addQueryParameter("emailId", emailId);
+			query.addQueryParameter(EMAILID, emailId);
 			if (StringUtils.isNotEmpty(mobileNo))
 			{
-				query.addQueryParameter("mobileNo", mobileNo);
+				query.addQueryParameter(MOBILENO, mobileNo);
 			}
-			LOG.debug("mobileNo" + mobileNo);
+			LOG.debug(MOBILENO + mobileNo);
 			query.addQueryParameter(OTPTYPE, OTPType.getCode());
 
 			final List<OTPModel> otpList = getFlexibleSearchService().<OTPModel> search(query).getResult();
@@ -243,12 +245,12 @@ public class OTPDaoImpl implements OTPDao
 
 			LOG.debug("LATESTQUERY" + queryString);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-			query.addQueryParameter("emailId", emailId);
+			query.addQueryParameter(EMAILID, emailId);
 			if (StringUtils.isNotEmpty(mobileNo))
 			{
-				query.addQueryParameter("mobileNo", mobileNo);
+				query.addQueryParameter(MOBILENO, mobileNo);
 			}
-			LOG.debug("mobileNo" + mobileNo);
+			LOG.debug(MOBILENO + mobileNo);
 			query.addQueryParameter(OTPTYPE, OTPType.getCode());
 
 			final List<OTPModel> otpList = getFlexibleSearchService().<OTPModel> search(query).getResult();
@@ -297,7 +299,7 @@ public class OTPDaoImpl implements OTPDao
 		{
 			final String queryString = MarketplacecommerceservicesConstants.LATESTOTPQUERYINV;
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-			query.addQueryParameter("emailId", emailId);
+			query.addQueryParameter(EMAILID, emailId);
 			query.addQueryParameter(OTPTYPE, OTPType.getCode());
 			final List<OTPModel> otpList = getFlexibleSearchService().<OTPModel> search(query).getResult();
 			OTPModel otpModel = null;
