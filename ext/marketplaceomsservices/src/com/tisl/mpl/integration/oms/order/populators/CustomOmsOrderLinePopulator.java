@@ -250,6 +250,12 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			if (source.getFulfillmentTypeP1() != null)
 			{
 				target.setFulfillmentTypeP1(String.valueOf(source.getFulfillmentTypeP1()));
+			}else if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null
+					&& richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
+
+			{
+				final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase();
+				target.setFulfillmentTypeP1(fulfilmentType);
 			}
 			if (source.getFulfillmentTypeP2() != null)
 			{
