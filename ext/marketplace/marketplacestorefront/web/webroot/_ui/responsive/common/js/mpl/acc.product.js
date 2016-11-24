@@ -1251,10 +1251,18 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 	 
 	
 
-					// construct custom price query params					
-					var minPriceSearchTxt = ($('.minPriceSearchTxt').val() == null || $('.minPriceSearchTxt').val() == "") ? 0 : $('.minPriceSearchTxt').val() ;
-					var maxPriceSearchTxt = ($('.maxPriceSearchTxt').val() == null || $('.maxPriceSearchTxt').val() == "") ? 99999999 : $('.maxPriceSearchTxt').val() ;	
-
+					// construct custom price query params	
+	                var minPriceSearchTxt ="";
+	                var maxPriceSearchTxt ="";
+	                if(isNaN($("#customMinPriceMob").val()) && isNaN($("#customMaxPriceMob").val())){
+					minPriceSearchTxt = ($('.minPriceSearchTxt').val() == null || $('.minPriceSearchTxt').val() == "") ? 0 : $('.minPriceSearchTxt').val() ;
+				    maxPriceSearchTxt = ($('.maxPriceSearchTxt').val() == null || $('.maxPriceSearchTxt').val() == "") ? 99999999 : $('.maxPriceSearchTxt').val() ;	
+	                }
+	                else{
+	                	minPriceSearchTxt = ($('#customMinPriceMob').val() == null || $('#customMinPriceMob').val() == "") ? 0 : $('#customMinPriceMob').val() ;
+					    maxPriceSearchTxt = ($('#customMaxPriceMob').val() == null || $('#customMaxPriceMob').val() == "") ? 99999999 : $('#customMaxPriceMob').val() ;	
+	                }
+				    
 					var currentQryParam = $('.currentPriceQueryParams').val();
 					var facetValue = $('.facetValue').val();
 
@@ -1311,9 +1319,11 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 								
 								if(nonEmptyDataString == null){
 									nonEmptyDataString = $(this).attr('name')+"="+$(this).val();
+								//	alert("alert(nonEmptyDataString)"+nonEmptyDataString);
 								}
 								else{
 									nonEmptyDataString = nonEmptyDataString + ("&"+$(this).attr('name')+"="+$(this).val());
+								//	alert("nonEmptyDataString"+nonEmptyDataString);
 								}
 							}
 						})

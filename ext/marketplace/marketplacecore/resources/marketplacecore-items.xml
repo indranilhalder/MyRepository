@@ -1772,6 +1772,7 @@
 							optional="true"/>
 						<persistence type="property" />
 					</attribute>
+					<!-- For TPR-1282 -->
 					<attribute qualifier="categoryFooterText" type="java.lang.String">
 						<description>Footer Content for category</description>
 						<modifiers read="true" write="true" search="true"
