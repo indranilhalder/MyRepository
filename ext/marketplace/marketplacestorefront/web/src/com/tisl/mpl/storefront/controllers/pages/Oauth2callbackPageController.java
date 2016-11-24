@@ -54,6 +54,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import atg.taglib.json.util.JSONException;
+import atg.taglib.json.util.JSONObject;
+
 import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -73,9 +76,6 @@ import com.tisl.mpl.storefront.security.cookie.LuxuryEmailCookieGenerator;
 import com.tisl.mpl.storefront.web.forms.ExtRegisterForm;
 import com.tisl.mpl.util.ExceptionUtil;
 
-import atg.taglib.json.util.JSONException;
-import atg.taglib.json.util.JSONObject;
-
 
 
 /**
@@ -86,6 +86,7 @@ import atg.taglib.json.util.JSONObject;
 @RequestMapping(RequestMappingUrlConstants.LINK_OAUTH2_CALLBACK)
 public class Oauth2callbackPageController extends AbstractLoginPageController
 {
+	private static final String UTF_8 = "UTF-8"; //Sonar fix
 	// CMS Pages
 	@Resource(name = ModelAttributetConstants.ACCOUNT_BREADCRUMB_BUILDER)
 	private ResourceBreadcrumbBuilder accountBreadcrumbBuilder;
@@ -188,8 +189,8 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 	@RequestMapping(method = RequestMethod.GET)
 	public String oauth2callback(@RequestHeader(value = ModelAttributetConstants.REFERER, required = false) final String referer,
 			final ExtRegisterForm form, final BindingResult bindingResult, final Model model, final HttpServletRequest request,
-			final HttpServletResponse response, final RedirectAttributes redirectModel)
-					throws CMSItemNotFoundException, IOException, JSONException
+			final HttpServletResponse response, final RedirectAttributes redirectModel) throws CMSItemNotFoundException,
+			IOException, JSONException
 	{
 		try
 		{
@@ -212,8 +213,8 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 			}
 			else if (request.getParameter(ModelAttributetConstants.CODE) != null
 					&& request.getParameter(ModelAttributetConstants.STATE) != null
-					&& request.getParameter(ModelAttributetConstants.STATE)
-							.equals(request.getSession().getAttribute(ModelAttributetConstants.STATE)))
+					&& request.getParameter(ModelAttributetConstants.STATE).equals(
+							request.getSession().getAttribute(ModelAttributetConstants.STATE)))
 			{
 				//Google code
 				request.getSession().removeAttribute(ModelAttributetConstants.STATE);
@@ -259,8 +260,8 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 		}
 		catch (final IllegalArgumentException e)
 		{
-			ExceptionUtil
-					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0012));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0012));
 			session.removeAttribute(ModelAttributetConstants.SOCIAL_LOGIN);
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
@@ -330,19 +331,19 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 			if (StringUtils.isNotEmpty(uid))
 			{
 
-				final String decodedUid = java.net.URLDecoder.decode(uid, "UTF-8");
+				final String decodedUid = java.net.URLDecoder.decode(uid, UTF_8);
 
 				setGigyaUID(decodedUid);
 			}
 			if (StringUtils.isNotEmpty(signature))
 			{
-				final String decodedSignature = java.net.URLDecoder.decode(signature, "UTF-8");
+				final String decodedSignature = java.net.URLDecoder.decode(signature, UTF_8);
 
 				setSignature(decodedSignature);
 			}
 			if (StringUtils.isNotEmpty(timestamp))
 			{
-				final String decodedTimestamp = java.net.URLDecoder.decode(timestamp, "UTF-8");
+				final String decodedTimestamp = java.net.URLDecoder.decode(timestamp, UTF_8);
 				setTimestamp(decodedTimestamp);
 			}
 
@@ -448,7 +449,7 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 
 	private String processRegisterUserRequestForOAuth2(final RegisterForm form, final BindingResult bindingResult,
 			final Model model, final HttpServletRequest request, final HttpServletResponse response, final String socialLogin)
-					throws CMSItemNotFoundException
+			throws CMSItemNotFoundException
 	{
 		try
 		{
@@ -537,7 +538,7 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 			cipher.init(Cipher.ENCRYPT_MODE, getSecretKey(key));
 
 
-			encryptedText = Base64.encodeBase64String(cipher.doFinal(encryptionText.getBytes("UTF-8")));
+			encryptedText = Base64.encodeBase64String(cipher.doFinal(encryptionText.getBytes(UTF_8)));
 
 		}
 		catch (final Exception e)
@@ -556,12 +557,12 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 		byte[] key = null;
 		try
 		{
-			key = encryptionKey.getBytes("UTF-8");
+			key = encryptionKey.getBytes(UTF_8);
 			sha = MessageDigest.getInstance("SHA-1");
 			key = sha.digest(key);
 			key = Arrays.copyOf(key, 16); // use only first 128 bit
 			LOG.debug("Key Length" + key.length);
-			LOG.debug(new String(key, "UTF-8"));
+			LOG.debug(new String(key, UTF_8));
 
 
 

@@ -149,6 +149,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	private final String SUBBRAND = "Subbrand";
 	private final String SELLER = "Seller";
 	private final String OFFER = "Offer";
+	private final String SIMPLEBANNERCOMPONENT = "SimpleBannerComponent"; //Sonar fix
 
 	private final String HEROSTATUS = "Success";
 
@@ -386,7 +387,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getLandingPageForCategory(java.lang.String)
 	 */
 	@Override
@@ -411,7 +412,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getHomePageForMobile()
 	 */
 	@Override
@@ -1519,7 +1520,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateCategoryLandingPageForMobile()
 	 */
 	@Override
@@ -1635,7 +1636,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.facade.cms.MplCmsFacade#populateSubBrandLandingPageForMobile(de.hybris.platform.cms2.model.pages.
 	 * ContentPageModel, java.lang.String)
@@ -1686,7 +1687,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populatePageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -1833,7 +1834,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getCategoryNameForCode(java.lang.String)
 	 */
 	@Override
@@ -1845,7 +1846,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getHeroProducts(java.lang.String)
 	 */
 	@Override
@@ -1919,7 +1920,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateSellerLandingPageForMobile()
 	 */
 	@Override
@@ -1960,7 +1961,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				 * (SmallBrandMobileAppComponentModel) abstractCMSComponentModel; final ComponentData componentData =
 				 * getMobileCategoryComponentConverter().convert(smallBrandMobileComponentModel);
 				 * componentDatas.add(componentData);
-				 *
+				 * 
 				 * }
 				 */
 				else if (abstractCMSComponentModel instanceof PromotionalProductsComponentModel)
@@ -2018,7 +2019,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getSellerMasterName(java.lang.String)
 	 */
 	@Override
@@ -2030,7 +2031,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateSellerPageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -2046,7 +2047,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateOfferPageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -2063,7 +2064,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getlandingForBrand()
 	 */
 	@Override
@@ -2148,7 +2149,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					blpComponent = getForHimHerBannerWsDTO(luxuryBannerComponent);
 					componentListForASlot.add(blpComponent);
 				}
-				if (typecode.equalsIgnoreCase("SimpleBannerComponent") && position.equalsIgnoreCase("BottomHeaderSlot"))
+				if (typecode.equalsIgnoreCase(SIMPLEBANNERCOMPONENT) && position.equalsIgnoreCase("BottomHeaderSlot"))
 				{
 					final SimpleBannerComponentModel headerslot = (SimpleBannerComponentModel) abstractCMSComponentModel;
 					blpComponent = getHeaderComponent(headerslot);
@@ -2161,7 +2162,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					blpComponent = getBlpBannerWsDTO(luxBlpBannerComponent);
 					componentListForASlot.add(blpComponent);
 				}
-				if (typecode.equalsIgnoreCase("SimpleBannerComponent") && position.equalsIgnoreCase("Section3"))
+				if (typecode.equalsIgnoreCase(SIMPLEBANNERCOMPONENT) && position.equalsIgnoreCase("Section3"))
 				{
 					final SimpleBannerComponentModel springComponent = (SimpleBannerComponentModel) abstractCMSComponentModel;
 					final LuxSpringCollectionComponentWsDTO springDto = getSpringWsDTO(springComponent);
@@ -2170,7 +2171,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					luxBlpComponent.setSectionid(section);
 					componentListForASlot.add(luxBlpComponent);
 				}
-				if (typecode.equalsIgnoreCase("SimpleBannerComponent") && position.equalsIgnoreCase("Section4"))
+				if (typecode.equalsIgnoreCase(SIMPLEBANNERCOMPONENT) && position.equalsIgnoreCase("Section4"))
 				{
 					final SimpleBannerComponentModel springComponent = (SimpleBannerComponentModel) abstractCMSComponentModel;
 					final LuxSpringCollectionComponentWsDTO featuredComponentDto = getSpringWsDTO(springComponent);
@@ -2239,7 +2240,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					componentListForASlot.add(blpComponent);
 				}
 
-				if (typecode.equalsIgnoreCase("SimpleBannerComponent") && position.equalsIgnoreCase("Section8"))
+				if (typecode.equalsIgnoreCase(SIMPLEBANNERCOMPONENT) && position.equalsIgnoreCase("Section8"))
 				{
 					final SimpleBannerComponentModel luxuryOurMissionComponent = (SimpleBannerComponentModel) abstractCMSComponentModel;
 					blpComponent = getOurMissionWsDTO(luxuryOurMissionComponent);
@@ -2898,7 +2899,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getMegaNavigation()
 	 */
 	@Override

@@ -198,6 +198,8 @@ public class ProductPageController extends AbstractPageController
 	private static final String PRODUCT_OLD_URL_PATTERN = "/**/p";
 	private static final String BOXING = "boxing";
 
+	private static final String USSID = "ussid"; //Sonar fix
+
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(ProductPageController.class);
 
@@ -1127,7 +1129,7 @@ public class ProductPageController extends AbstractPageController
 				{
 					final PinCodeResponseData data = new PinCodeResponseData();
 					final JSONObject rec = recs.getJSONObject(i);
-					final String ussid = rec.getString("ussid");
+					final String ussid = rec.getString(USSID);
 					final String stock = rec.getString("stock");
 					data.setUssid(ussid);
 					data.setStockCount(Integer.valueOf(stock));
@@ -1905,7 +1907,7 @@ public class ProductPageController extends AbstractPageController
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + RequestMappingUrlConstants.ADD_WISHLIST_IN_POPUP, method = RequestMethod.GET)
 	//@RequireHardLogIn
 	public boolean addWishListsForPDP(@RequestParam(ModelAttributetConstants.PRODUCT) final String productCode,
-			@RequestParam("ussid") final String ussid, @RequestParam("wish") final String wishName,
+			@RequestParam(USSID) final String ussid, @RequestParam("wish") final String wishName,
 			@RequestParam("sizeSelected") final String sizeSelected, final Model model, final HttpServletRequest request,
 			final HttpServletResponse response) throws CMSItemNotFoundException
 	{
@@ -2223,11 +2225,11 @@ public class ProductPageController extends AbstractPageController
 	 */
 	/*
 	 * private MarketplaceDeliveryModeData fetchDeliveryModeDataForUSSID(final String deliveryMode, final String ussid) {
-	 * 
+	 *
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 * 
+	 *
 	 * final PriceData priceData = productDetailsHelper.formPriceData(mplZoneDeliveryModeValueModel.getValue());
 	 * deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
 	 * deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
@@ -2247,76 +2249,76 @@ public class ProductPageController extends AbstractPageController
 	 */
 	/*
 	 * private List<PincodeServiceData> populatePinCodeServiceData(final String productCode) {
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * final List<PincodeServiceData> requestData = new ArrayList<>(); PincodeServiceData data = null;
-	 * 
+	 *
 	 * MarketplaceDeliveryModeData deliveryModeData = null; try { final ProductModel productModel =
-	 * 
-	 * 
+	 *
+	 *
 	 * productService.getProductForCode(productCode); final ProductData productData =
-	 * 
+	 *
 	 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER,
 	 * ProductOption.PRICE));
-	 * 
-	 * 
+	 *
+	 *
 	 * for (final SellerInformationData seller : productData.getSeller()) { final List<MarketplaceDeliveryModeData>
-	 * 
+	 *
 	 * deliveryModeList = new ArrayList<MarketplaceDeliveryModeData>(); data = new PincodeServiceData(); if ((null !=
-	 * 
+	 *
 	 * seller.getDeliveryModes()) && !(seller.getDeliveryModes().isEmpty())) { for (final MarketplaceDeliveryModeData
-	 * 
+	 *
 	 * deliveryMode : seller.getDeliveryModes()) { deliveryModeData =
-	 * 
+	 *
 	 * fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid()); deliveryModeList.add(deliveryModeData);
-	 * 
-	 * 
+	 *
+	 *
 	 * } data.setDeliveryModes(deliveryModeList); } if (null != seller.getFullfillment() &&
-	 * 
+	 *
 	 * StringUtils.isNotEmpty(seller.getFullfillment())) {
-	 * 
+	 *
 	 * data.setFullFillmentType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getFullfillment().toUpperCase())); }
-	 * 
+	 *
 	 * if (null != seller.getShippingMode() && (StringUtils.isNotEmpty(seller.getShippingMode()))) {
-	 * 
+	 *
 	 * data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getShippingMode().toUpperCase())); } if
-	 * 
+	 *
 	 * (null != seller.getSpPrice() && !(seller.getSpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 * 
+	 *
 	 * Double(seller.getSpPrice().getValue().doubleValue())); } else if (null != seller.getMopPrice() &&
-	 * 
+	 *
 	 * !(seller.getMopPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 * 
+	 *
 	 * Double(seller.getMopPrice().getValue().doubleValue())); } else if (null != seller.getMrpPrice() &&
-	 * 
+	 *
 	 * !(seller.getMrpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 * 
+	 *
 	 * Double(seller.getMrpPrice().getValue().doubleValue())); } else {
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * LOG.info("*************** No price avaiable for seller :" + seller.getSellerID()); continue; } if (null !=
-	 * 
-	 * 
+	 *
+	 *
 	 * seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod())) { data.setIsCOD(seller.getIsCod()); }
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * data.setSellerId(seller.getSellerID()); data.setUssid(seller.getUssid());
-	 * 
+	 *
 	 * data.setIsDeliveryDateRequired(ControllerConstants.Views.Fragments.Product.N); requestData.add(data); } } catch
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
+	 *
 	 * (final EtailBusinessExceptions e) { ExceptionUtil.etailBusinessExceptionHandler(e, null); }
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * catch (final Exception e) {
-	 * 
+	 *
 	 * throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } return requestData; }
 	 */
 
@@ -2446,7 +2448,7 @@ public class ProductPageController extends AbstractPageController
 	 * @return Wishlist2Model
 	 */
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-getLastModifiedWishlistByUssid", method = RequestMethod.GET)
-	public @ResponseBody boolean getLastModifiedWishlist(@RequestParam("ussid") final String ussid)
+	public @ResponseBody boolean getLastModifiedWishlist(@RequestParam(USSID) final String ussid)
 	{
 		boolean existUssid = false;
 
@@ -2479,7 +2481,7 @@ public class ProductPageController extends AbstractPageController
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-removeFromWl", method = RequestMethod.GET)
 	//@RequireHardLogIn
 	public boolean removeFromWl(@RequestParam(ModelAttributetConstants.PRODUCT) final String productCode,
-			@RequestParam("ussid") final String ussid, @RequestParam("wish") final String wishName, final Model model)
+			@RequestParam(USSID) final String ussid, @RequestParam("wish") final String wishName, final Model model)
 			throws CMSItemNotFoundException
 	{
 		model.addAttribute(ModelAttributetConstants.MY_ACCOUNT_FLAG, ModelAttributetConstants.N_CAPS_VAL);
@@ -2507,6 +2509,7 @@ public class ProductPageController extends AbstractPageController
 
 	/**
 	 * This is used to verify the configured MPH category product can get SizeGuide & choose size
+	 *
 	 * @param productModel
 	 */
 

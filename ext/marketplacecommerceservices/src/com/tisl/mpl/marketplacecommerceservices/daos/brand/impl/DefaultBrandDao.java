@@ -23,6 +23,7 @@ import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
  */
 public class DefaultBrandDao extends AbstractItemDao implements BrandDao
 {
+	private static final String P = "{p:";//Sonar fix
 
 	private FlexibleSearchService flexibleSearchService;
 	private ModelService modelService;
@@ -101,7 +102,7 @@ public class DefaultBrandDao extends AbstractItemDao implements BrandDao
 			final String queryString = //
 			"SELECT {p:" + MplNewsLetterSubscriptionModel.PK + "}" //
 					+ "FROM {" + MplNewsLetterSubscriptionModel._TYPECODE + " AS p} "//
-					+ "WHERE " + "{p:" + MplNewsLetterSubscriptionModel.EMAILID + "}=?emailId ";
+					+ "WHERE " + P + MplNewsLetterSubscriptionModel.EMAILID + "}=?emailId ";
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("emailId", emailId);
@@ -124,9 +125,9 @@ public class DefaultBrandDao extends AbstractItemDao implements BrandDao
 			final String queryString = //
 			"SELECT {p:" + MplNewsLetterSubscriptionModel.PK + "}" //
 					+ "FROM {" + MplNewsLetterSubscriptionModel._TYPECODE + " AS p} "//
-					+ "WHERE " + "{p:" + MplNewsLetterSubscriptionModel.EMAILID + "}=?emailId "//
-					+ "AND " + "{p:" + MplNewsLetterSubscriptionModel.ISLUXURY + "}IS NULL OR"//
-					+ "{p:" + MplNewsLetterSubscriptionModel.ISLUXURY + "} = ?isluxury";
+					+ "WHERE " + P + MplNewsLetterSubscriptionModel.EMAILID + "}=?emailId "//
+					+ "AND " + P + MplNewsLetterSubscriptionModel.ISLUXURY + "}IS NULL OR"//
+					+ P + MplNewsLetterSubscriptionModel.ISLUXURY + "} = ?isluxury";
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("emailId", emailId);
@@ -149,9 +150,9 @@ public class DefaultBrandDao extends AbstractItemDao implements BrandDao
 			final String queryString = //
 			"SELECT {p:" + MplNewsLetterSubscriptionModel.PK + "}" //
 					+ "FROM {" + MplNewsLetterSubscriptionModel._TYPECODE + " AS p} "//
-					+ "WHERE " + "{p:" + MplNewsLetterSubscriptionModel.EMAILID + "}=?emailId "//
-					+ "AND " + "{p:" + MplNewsLetterSubscriptionModel.ISMARKETPLACE + "}IS NULL OR"//
-					+ "{p:" + MplNewsLetterSubscriptionModel.ISMARKETPLACE + "} = ?ismarketplace";
+					+ "WHERE " + P + MplNewsLetterSubscriptionModel.EMAILID + "}=?emailId "//
+					+ "AND " + P + MplNewsLetterSubscriptionModel.ISMARKETPLACE + "}IS NULL OR"//
+					+ P + MplNewsLetterSubscriptionModel.ISMARKETPLACE + "} = ?ismarketplace";
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("emailId", emailId);

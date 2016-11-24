@@ -27,6 +27,7 @@ public class SizeGuideComparator implements Comparator<SizeGuideData>
 	private Pattern regexPattern;
 	private List<List<String>> sizeSystems;
 	private static final Logger LOG = Logger.getLogger(SizeGuideComparator.class);
+	private static final String S = "\\s+";//Sonar fix
 
 	/**
 	 * This method is responsible for sizes to be displayed in size chartok
@@ -39,16 +40,16 @@ public class SizeGuideComparator implements Comparator<SizeGuideData>
 	@Override
 	public int compare(final SizeGuideData sizeData1, final SizeGuideData sizeData2)
 	{
-		final String dimension1 = StringUtils.isNotEmpty(sizeData1.getDimension()) ? sizeData1.getDimension()
-				.replaceAll("\\s+", "").toUpperCase() : "";
+		final String dimension1 = StringUtils.isNotEmpty(sizeData1.getDimension()) ? sizeData1.getDimension().replaceAll(S, "")
+				.toUpperCase() : "";
 		LOG.debug("Check SizeData1 dimension value: " + dimension1);
-		final String dimension2 = StringUtils.isNotEmpty(sizeData1.getDimension()) ? sizeData2.getDimension()
-				.replaceAll("\\s+", "").toUpperCase() : "";
+		final String dimension2 = StringUtils.isNotEmpty(sizeData1.getDimension()) ? sizeData2.getDimension().replaceAll(S, "")
+				.toUpperCase() : "";
 		LOG.debug("Check SizeData2 dimension value: " + dimension2);
-		final String value1 = sizeData1.getDimensionSize() != null ? sizeData1.getDimensionSize().replaceAll("\\s+", "")
-				.toUpperCase() : dimension1;
-		final String value2 = sizeData2.getDimensionSize() != null ? sizeData2.getDimensionSize().replaceAll("\\s+", "")
-				.toUpperCase() : dimension2;
+		final String value1 = sizeData1.getDimensionSize() != null ? sizeData1.getDimensionSize().replaceAll(S, "").toUpperCase()
+				: dimension1;
+		final String value2 = sizeData2.getDimensionSize() != null ? sizeData2.getDimensionSize().replaceAll(S, "").toUpperCase()
+				: dimension2;
 		//System.out.println("*********************sizeguide" + value1 + value2);
 		LOG.debug("*********************sizeguide" + value1 + value2);
 
