@@ -211,14 +211,14 @@
 						{
 							
 							
-							address1.value=encodeURIComponent(address1.value);
-					    	address2.value=encodeURIComponent(address2.value);
-					   		address3.value=encodeURIComponent(address3.value);
+							//address1.value=encodeURIComponent(address1.value);
+					    	//address2.value=encodeURIComponent(address2.value);
+					   		//address3.value=encodeURIComponent(address3.value);
 					    	
 							$.ajax({
 						 		url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/new-address",
 						 		type: "POST",
-						 		data:$("#addressForm").serialize(),
+						 		data:$("#addressForm").serialize().replace(/\+/g,'%20'),
 						 		cache: false,
 						 		dataType: "json",
 						 		success : function(response) {

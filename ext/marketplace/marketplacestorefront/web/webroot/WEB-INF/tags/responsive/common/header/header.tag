@@ -213,14 +213,16 @@
 					<c:if test="${empty showOnlySiteLogo }">
 
 						<cms:pageSlot position="NavigationBar" var="component">
-							<li><cms:component component="${component}" /></li>
+							<c:set var="componentName" value="${component.name}"/>
+							<li class="${fn:replace(componentName,' ', '')}"><cms:component component="${component}" /></li>
 						</cms:pageSlot>
 
 					</c:if>
 
 
 				</ul>
-			</nav>
+			</nav> 
+			
 			<div class="search">
 				<c:if test="${empty showOnlySiteLogo }">
 					<!-- <button class="btn btn-default js-toggle-sm-navigation header-burgerMenu"
