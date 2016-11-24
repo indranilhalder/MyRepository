@@ -20,7 +20,6 @@ import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLo
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.Breadcrumb;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.impl.ProductBreadcrumbBuilder;
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
-import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
 import de.hybris.platform.acceleratorstorefrontcommons.forms.ReviewForm;
 import de.hybris.platform.acceleratorstorefrontcommons.forms.validation.ReviewValidator;
@@ -148,7 +147,7 @@ import com.tisl.mpl.util.ExceptionUtil;
 @Controller
 @Scope("tenant")
 //@RequestMapping(value = "/**/p")
-public class ProductPageController extends AbstractPageController
+public class ProductPageController extends MidPageController
 {
 	private static final String PRODUCT_SIZE_TYPE = "productSizeType";
 	/**
@@ -1063,7 +1062,7 @@ public class ProductPageController extends AbstractPageController
 					}
 					catch (final Exception e)
 					{
-						LOG.error("configurableRadius values is empty please add radius property in properties file ");
+						LOG.debug("configurableRadius values is empty please add radius property in properties file ");
 					}
 				}
 
@@ -1246,6 +1245,7 @@ public class ProductPageController extends AbstractPageController
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
+			LOG.error("EtailNonBusinessExceptions::viewSellers::ProductPageController");
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			returnStatement = frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_PDP_ERROR_PAGE_NON_BUSINESS);
 
@@ -1738,6 +1738,8 @@ public class ProductPageController extends AbstractPageController
 	}
 
 	//TODO
+
+
 	protected void setUpMetaData(final Model model, final String metaDescription, final String metaTitle,
 			final String productCode, final String metaKeywords)
 	{
