@@ -391,12 +391,9 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			target.setTaxCategory(MarketplaceomsservicesConstants.TAX_CATEGORY);
 
 
-			//added new attribute isLPAWBEdit for orderLine
-			final SellerMasterModel sellerMasterModel =mplSellerMasterService.getSellerMaster(sellerInfoModel.getSellerID());
-			if (sellerMasterModel != null)
-			{
-				
-				if (StringUtils.isNotEmpty(sellerMasterModel.getIsLPAWBEdit())
+			    //added new attribute isLPAWBEdit for orderLine
+		   	final SellerMasterModel sellerMasterModel =mplSellerMasterService.getSellerMaster(sellerInfoModel.getSellerID());
+				if (sellerMasterModel != null && StringUtils.isNotEmpty(sellerMasterModel.getIsLPAWBEdit())
 						&& MarketplaceomsservicesConstants.Y.equalsIgnoreCase(sellerMasterModel.getIsLPAWBEdit()))
 				{
 					target.setIsLPAWBEdit(Boolean.TRUE);
@@ -406,11 +403,6 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 					target.setIsLPAWBEdit(Boolean.FALSE);
 				}
 			}
-		}
-		else
-		{
-			LOG.debug("CustomOmsOrderLinePopulator : orderentry  is null ");
-		}
 	}
 
 	/**
