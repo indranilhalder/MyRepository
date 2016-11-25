@@ -3429,6 +3429,10 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						}
 
 					}
+					else
+					{
+						return getRTSResponseData(orderId, entry.getTransactionID(), false);
+					}
 					
 				}
 			}
@@ -3441,17 +3445,15 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		if(StringUtils.isNotEmpty(orderId) && StringUtils.isNotEmpty(transactionID))
 		{
 			OrderLineData responseData = new OrderLineData();
+			responseData.setOrderId(orderId);
+			responseData.setTransactionId(transactionID);
 			if(!flag)
 			{
-				responseData.setOrderId(orderId);
-				responseData.setTransactionId(transactionID);
 				responseData.setIsReturnEligible("N");
 				responseData.setIsReturnInitiated("N");
 			}
 			else
 			{
-				responseData.setOrderId(orderId);
-				responseData.setTransactionId(transactionID);
 				responseData.setIsReturnEligible("Y");
 				responseData.setIsReturnInitiated("Y");
 			}
