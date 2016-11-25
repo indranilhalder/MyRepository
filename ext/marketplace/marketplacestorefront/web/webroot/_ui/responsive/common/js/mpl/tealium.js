@@ -814,8 +814,8 @@ $(document).on("click", ".home-brands-you-love-carousel-brands", function() {
 				var x= $.trim($(".toggle.shop_dept").text().replace(/[\t\n\']+/g,' '));
 				x = x.replace(" ","").toLowerCase();
 				x = x.replace(" ","_");
-				var y = $.trim($(this).text().replace(/[\t\n\']+/g,' ')).toLowerCase();
-				y = y.replace(/[\s]/g,"");
+				var y = $.trim($(this).text().replace(/[\t\n\'\-]+/g,' ')).toLowerCase();
+				y = y.replace(/[\s\-]/g,"");
 				var navigationClick= "top_navigation_click";
 				
 				if($(target).parent().hasClass("toggle departmenthover L1"))
@@ -828,16 +828,17 @@ $(document).on("click", ".home-brands-you-love-carousel-brands", function() {
 				if($(target).parent().hasClass("toggle L2"))
 				{
 					var itsParentL1 = $.trim(that.parents().siblings(".departmenthover.L1").text().replace(/[\t\n\']+/g,' ')).toLowerCase();
-					itsParentL1 = itsParentL1.replace(/[\s]/g,"");
+					itsParentL1 = itsParentL1.replace(/[\s\-]/g,"");
 					//hAr+= x+">>>"+">>"+itsParentL1 +" >> "+ y;
 					utag.link({"link_text":x+"_"+itsParentL1+"_"+y, "event_type" : navigationClick});
 				}
 				
 				if(that.parent().hasClass("toggle L3")){
-					var itsParentL1 =$.trim(that.parents().siblings(".departmenthover.L1").text().replace(/[\t\n\']+/g,' ')).toLowerCase();
-					itsParentL1 = itsParentL1.replace(/[\s]/g,"");
-					var itsParentL2 = $.trim(that.parent().parent().prevAll("li.short.words:first").text().replace(/[\t\n\']+/g,' ')).toLowerCase();
-					itsParentL2 = itsParentL2.replace(/[\s]/g,"");
+					var itsParentL1 =$.trim(that.parents().siblings(".departmenthover.L1").text().replace(/[\t\n\'\-]+/g,' ')).toLowerCase();
+					itsParentL1 = itsParentL1.replace(/[\s\-]/g,"");
+					var itsParentL2 = $.trim(that.parent().parent().prevAll("li.short.words:first").text().replace(/[\t\n\'\-]+/g,' ')).toLowerCase();
+					itsParentL2 = itsParentL2.replace(/[\s\-]/g,"");
+					console.log("dress")
 					
 					//hAr+= x+">>>>" +">>>>>"+itsParentL1 +" >> "+ ">>"+itsParentL2 +$(this).text();
 					utag.link({"link_text":x+"_"+itsParentL1+"_"+itsParentL2+"_"+y,"event_type" : navigationClick});
