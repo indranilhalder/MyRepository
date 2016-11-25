@@ -261,7 +261,7 @@ $(document).ready(
 						tealiumData += '"search_results":"'
 							+ $("#search_results").val() + '",';
 						tealiumData += '"search_type":"'		// TPR-666
-							+ $("#search_type").val() + '"}';
+							+ $("#search_type").val() + '",';
 						//TPR-430 Start
 						tealiumData += '"product_category":"'
 							+ product_category + '",';
