@@ -192,6 +192,8 @@
 						<div class="checkout-indent payments tab-view smk_accordion acc_with_icon">
 							<div class="checkout-paymentmethod nav">
 							<div class="head-mobile">PAYMENT METHOD</div>
+							<!-- TISQAUAT-411 Fix | guid moved to common place -->
+							<input type="hidden" name="guid" id="guid" value="${guid}"/>
 								<!-- CREDIT -->
 								<c:forEach var="map" items="${paymentModes}">
 									<c:if test="${map.value eq true}">
@@ -975,7 +977,8 @@
 								<input type="hidden" name="orderPage_declineResponseURL" value="${silentOrderPageData.parameters['orderPage_declineResponseURL']}"/>
 								<input type="hidden" name="orderPage_cancelResponseURL" value="${silentOrderPageData.parameters['orderPage_cancelResponseURL']}"/>
 								<%-- <input type="hidden" id="guid" value="${guid}"> --%>
-								<form:hidden path="guid" id="guid" value="${guid}"/>
+								<!--TISQAUAT-411 Fix Removed  guid -->
+								<%-- 		<form:hidden path="guid" id="guid" value="${guid}"/> --%>
 								<input type="hidden" id="promoAvailable" value="${promoAvailable}"/>
 								<input type="hidden" id="bankAvailable" value="${bankAvailable}"/>
 								<c:forEach items="${sopPaymentDetailsForm.signatureParams}" var="entry" varStatus="status">
