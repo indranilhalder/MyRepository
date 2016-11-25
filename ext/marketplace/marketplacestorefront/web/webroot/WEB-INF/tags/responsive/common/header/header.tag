@@ -33,7 +33,8 @@
 	<!-- TPR-844 -->
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticHost"/>
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.resource.host')" var="luxuryHost"/>
-<header>	
+
+<header class="marketplace-header">	
 	<!-- For Infinite Analytics Start -->
 	<input type="hidden" id="ia_site_id" value="${cmsSite.uid}"> 
 	<input type="hidden" id="ia_site_page_id" value="${cmsPage.uid}"> 
@@ -74,8 +75,6 @@
 			</c:if>
 		</c:otherwise>
 	</c:choose>
-
-
 	<div class="content">
 	<!-- Luxury tab	 starts-->
 						<div id="flip-tabs" >				
@@ -264,6 +263,7 @@
 	<a id="skiptonavigation"></a>
 	<nav:topNavigation />
 </header>
+
 
 <c:if test="${empty showOnlySiteLogo }">
 	<cms:pageSlot position="BottomHeaderSlot" var="component" element="div"

@@ -175,7 +175,12 @@ $(document).ready(function(){
 			
 			var marketplaceHeader = (isLux || isLuxury) ? false : true ;
 			console.log("marketplaceHeader"+ marketplaceHeader);
-			
+			if (isLux == "true"){
+				$(".marketplace-header").css("visibility","hidden");
+			}
+			else{
+				$(".marketplace-header").css("visibility","visible");
+			}
 			if(marketplaceHeader){
 			if(!($('body').hasClass("page-multiStepCheckoutSummaryPage") || $('body').hasClass("page-checkout-login")))
 				{

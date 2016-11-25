@@ -59051,3 +59051,6 @@ z-index:11;}
 body.page-multiStepCheckoutSummaryPage #flip-tabs, body.page-checkout-login header .content .top, body.page-checkout-login #flip-tabs, body.page-multiStepCheckoutSummaryPage header .content .top{
 display: none;
 }
+header.marketplace-header{
+	visibility:hidden;
+}
