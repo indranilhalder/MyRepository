@@ -53,6 +53,7 @@
      <property name="statesPropFilePath" value="${HYBRIS_CONFIG_DIR}"/>
      <!-- for pincodes upload -->
      <property name="pincodesUploadPath"  value="${tata.oms.pincodes.upload.path:#{null}}" />
+      <property name="shipmentStatusUpload"  value="${tata.oms.shipmentstatus.bulk.upload.path:#{null}}" />
     </bean>
     <bean id="csvFileToZipFileService" class="com.hybris.oms.tata.services.CsvFileToZipFileService"></bean>
  </beans>

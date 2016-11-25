@@ -434,6 +434,18 @@ var productCodeSG = '${product.code}';
 								 <c:forEach
 									items="${variantOption.colourCode}" var="color">
 								<c:choose>
+							    <c:when test="${fn:startsWith(color, 'multi') && empty variantOption.image}">
+						     	<img src="${commonResourcePath}/images/multi.jpg" height="74" width="50" title="${variantOption.colour}" />
+								</c:when>
+								<c:when test="${empty variantOption.image}">
+						     	<span style="background-color: ${color};border: 1px solid rgb(204, 211, 217); width:50px; height:73px" title="${variantOption.colour}"></span>
+								</c:when>							
+								<c:otherwise>
+								<c:set var="imageData" value="${variantOption.image}" />
+								<img src="${imageData.url}" title="${variantOption.colour}" alt="${styleValue}" style="display: inline-block;width: 50px;"/>								
+                               </c:otherwise>
+                               </c:choose>
+								<%-- <c:choose>
 								<c:when test="${fn:startsWith(color, 'multi')}">
 						     	<img src="${commonResourcePath}/images/multi.jpg" height="74" width="50" title="${variantOption.colour}" />
 								</c:when>
@@ -446,7 +458,7 @@ var productCodeSG = '${product.code}';
 								<c:set var="imageData" value="${variantOption.image}" />
 										<img src="${imageData.url}" title="${variantOption.colour}" alt="${styleValue}" style="display: inline-block;width: 50px;"/>								
                                </c:otherwise>
-                               </c:choose>	
+                               </c:choose>	 --%>
 
 									<c:if test="${variantOption.code eq product.code}">
 										<c:set var="currentColor" value="${color}" /> 

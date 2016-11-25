@@ -5706,7 +5706,7 @@ public class UsersController extends BaseCommerceController
 		boolean resultFlag = false;
 		String result = null;
 		final ReturnItemAddressData returnItemAddressData = new ReturnItemAddressData();
-
+		OrderEntryData orderEntry = new OrderEntryData();
 		try
 		{
 			returnItemAddressData.setAddressLane1(addressLane1);
@@ -5716,9 +5716,9 @@ public class UsersController extends BaseCommerceController
 			returnItemAddressData.setState(state);
 			returnItemAddressData.setLandmark(landmark);
 			returnItemAddressData.setPincode(pincode);
+			LOG.debug(MarketplacewebservicesConstants.USER_DETAILS + emailId);
 			final CustomerData customerData = customerFacade.getCurrentCustomer();
 			final OrderData orderDetails = orderFacade.getOrderDetailsForCode(orderCode);
-			OrderEntryData orderEntry = new OrderEntryData();
 			final List<OrderEntryData> subOrderEntries = orderDetails.getEntries();
 			for (final OrderEntryData entry : subOrderEntries)
 			{
@@ -5728,16 +5728,17 @@ public class UsersController extends BaseCommerceController
 					break;
 				}
 			}
+			final boolean cancelFlag = getConfigurationService().getConfiguration().getBoolean(
+					MarketplacecommerceservicesConstants.CANCEL_ENABLE);
+			final boolean returnFlag = getConfigurationService().getConfiguration().getBoolean(
+					MarketplacecommerceservicesConstants.RETURN_ENABLE);
 
-			LOG.debug(MarketplacewebservicesConstants.USER_DETAILS + emailId);
-			if (ticketTypeCode.equalsIgnoreCase("C"))
+			if (ticketTypeCode.equalsIgnoreCase("C") && cancelFlag)
 			{
 				resultFlag = cancelReturnFacade.implementCancelOrReturn(orderDetails, orderEntry, reasonCode, ussid, ticketTypeCode,
 						customerData, refundType, false, SalesApplication.MOBILE);
-
-
 			}
-			else
+			else if (ticketTypeCode.equalsIgnoreCase("R") && returnFlag)
 			{
 				resultFlag = cancelReturnFacade.implementReturnItem(orderDetails, orderEntry, reasonCode, ussid, ticketTypeCode,
 						customerData, refundType, true, SalesApplication.MOBILE, returnItemAddressData);
@@ -5751,6 +5752,7 @@ public class UsersController extends BaseCommerceController
 			{
 				result = MarketplacecommerceservicesConstants.FAILURE_FLAG;
 			}
+			
 			output.setStatus(result);
 		}
 		catch (final EtailNonBusinessExceptions e)

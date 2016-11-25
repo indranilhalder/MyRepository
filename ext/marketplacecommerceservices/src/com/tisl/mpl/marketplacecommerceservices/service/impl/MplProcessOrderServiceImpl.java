@@ -470,7 +470,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 
 			//Payment Changes - Order before Payment
 			getMplPaymentService().updateAuditEntry(orderStatusResponse, null, orderModel, paymentMode);
-
+			LOG.warn("Order model total price " + orderModel.getTotalPrice() + "order status response amount"
+					+ orderStatusResponse.getAmount());
 			if (orderModel.getTotalPrice().equals(orderStatusResponse.getAmount()))
 			{
 				getMplPaymentService().setPaymentTransaction(orderStatusResponse, paymentMode, orderModel);

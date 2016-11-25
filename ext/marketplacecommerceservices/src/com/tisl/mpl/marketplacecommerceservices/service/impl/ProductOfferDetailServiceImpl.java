@@ -75,7 +75,7 @@ public class ProductOfferDetailServiceImpl implements ProductOfferDetailService
 				}
 				if (null != sellerIdQry)
 				{
-					if (StringUtils.isNotEmpty(offerMessage))
+					if (StringUtils.isNotEmpty(offerMessage) && offerMessage.length() <= MIN_OFFER_LENGTH)
 					{
 						offerDetMap.put(MarketplacecommerceservicesConstants.MESSAGE, offerMessage);
 					}

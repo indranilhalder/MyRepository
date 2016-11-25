@@ -26,6 +26,10 @@
 <spring:url value="/my-account/friendsInvite" var="friendsInviteUrl" />
 <spring:url value="/my-account/order/" var="orderDetailsUrl" />
 
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.cancel.enabled')" var="cancelFlag"/> 
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.return.enabled')" var="returnFlag"/> 
+
+
 <!-- LW-230 -->
 <input type="hidden" id="isLuxury" value="${isLuxury}"/>
 
@@ -341,7 +345,7 @@
 
 														<c:set var="bogoCheck" value='false' />
 
-														<c:if test="${entry.itemCancellationStatus eq 'true'}">
+														<c:if test="${entry.itemCancellationStatus eq 'true' and cancelFlag}">
 															<c:if
 																test="${entry.giveAway eq 'false' and entry.isBOGOapplied eq 'false'}">
 																<c:forEach items="${entry.associatedItems}"
@@ -380,7 +384,7 @@
 														<!-- TISCR-410 ends -->
 														<!--Chairman Demo Changes end-->
 														<!-- changes for TISSTRT-1173 -->
-														<c:if test="${entry.itemReturnStatus eq 'true'  and entry.giveAway eq false and entry.isBOGOapplied eq false}">
+														<c:if test="${entry.itemReturnStatus eq 'true'  and entry.giveAway eq false and entry.isBOGOapplied eq false and returnFlag}">
 															<a href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${subOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}" onClick="openReturnPage('${bogoCheck}',${entry.transactionId})">
 																<spring:theme code="text.account.returnReplace"
 																	text="Return Item"/> 
@@ -532,7 +536,7 @@
 															<h2>Request Cancellation</h2>
 
 															<div>
-																<h2>
+																<h2 class="trackOrderLnHt">
 																	<span id="resultTitle"></span>
 																</h2>
 																<div>

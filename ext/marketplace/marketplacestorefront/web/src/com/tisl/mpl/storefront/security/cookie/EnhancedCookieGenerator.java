@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.CookieGenerator;
@@ -43,6 +44,7 @@ public class EnhancedCookieGenerator extends CookieGenerator
 	private boolean useDefaultPath = DEFAULT_COOKIE_PATH;
 	private boolean httpOnly = DEFAULT_HTTP_ONLY;
 	private boolean useDefaultDomain = true;
+	private static final Logger LOG = Logger.getLogger(EnhancedCookieGenerator.class.getName());
 
 	/**
 	 * @param useDefaultDomain
@@ -117,9 +119,11 @@ public class EnhancedCookieGenerator extends CookieGenerator
 	{
 		super.addCookie(new HttpServletResponseWrapper(response)
 		{
+
 			@Override
 			public void addCookie(final Cookie cookie)
 			{
+				LOG.info("cookie domain in Enhanced Cookie Generator" + cookie.getDomain());
 				setEnhancedCookiePath(cookie);
 				setCustomDomain(cookie);
 				setEnhancedCookie(cookie);

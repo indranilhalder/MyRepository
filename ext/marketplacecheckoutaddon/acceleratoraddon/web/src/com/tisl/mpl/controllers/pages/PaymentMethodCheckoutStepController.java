@@ -2178,9 +2178,19 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			if (CollectionUtils.isNotEmpty(savedCardForCustomer)) // Code added for TISPT-204 Point no  5
 			{
 				listCardsResponse = getMplPaymentFacade().getJuspayCardResponse(customer);
+				LOG.debug("*********************************************************************");
+				LOG.debug("The Juspay Responce for Saved Card : " + listCardsResponse);
 				final Tuple2<?, ?> storedSavedCards = getMplPaymentFacade().listStoredCards(customer, listCardsResponse);
+				LOG.debug("*********************************************************************");
+
+				LOG.debug("Stored Card" + storedSavedCards);
+
 				savedCreditCards = (Map<Date, SavedCardData>) storedSavedCards.getFirst();
 				savedDebitCards = (Map<Date, SavedCardData>) storedSavedCards.getSecond();
+
+				LOG.debug("Credit Card" + savedCreditCards);
+				LOG.debug("Debit Card" + savedDebitCards);
+				LOG.debug("*********************************************************************");
 			}
 		}
 		catch (final EtailBusinessExceptions e)

@@ -11,24 +11,12 @@
 <%@ taglib prefix="address" tagdir="/WEB-INF/tags/responsive/address" %>
 <%@ taglib prefix="cart" tagdir="/WEB-INF/tags/responsive/cart" %>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format" %>
-<style>
- .checkout-paymentmethod {
-	display: none;
-} 
 
-</style>
-
-<script>
-	//Refresh the page if compare page is already visted
-	if (sessionStorage.getItem("confirmationPageVisited") != null) {
-		sessionStorage.removeItem("confirmationPageVisited");
-		window.location.reload(true); // force refresh page1
-	}
-</script>
 <c:url value="${currentStepUrl}" var="choosePaymentMethodUrl" />
 <spring:url value="/checkout/multi/debitTermsAndConditions" var="getDebitTermsAndConditionsUrl"/>
-<cart:tealiumCartParameters/>
+
 <template:page pageTitle="${pageTitle}" hideHeaderLinks="true" showOnlySiteLogo="true">
+<cart:tealiumCartParameters/>
 				<div class="alert alert-danger alert-dismissable" id="juspayconnErrorDiv">	<!-- TPR-629 changes for error -->
 					<button class="close juspayCloseButton" type="button">&times;</button>
 					<span id="juspayErrorMsg">Some issues are there with payment</span>
@@ -1658,6 +1646,20 @@
 	
 </template:page>
 
+<style>
+ .checkout-paymentmethod {
+	display: none;
+} 
+
+</style>
+
+<script>
+	//Refresh the page if compare page is already visted
+	if (sessionStorage.getItem("confirmationPageVisited") != null) {
+		sessionStorage.removeItem("confirmationPageVisited");
+		window.location.reload(true); // force refresh page1
+	}
+</script>
 	  <script type="text/javascript">
 		jQuery(document).ready(function($){
 
