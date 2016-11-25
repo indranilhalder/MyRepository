@@ -90,7 +90,9 @@ public class ExceptionUtil
 		}
 		if (null != e.toString())
 		{
-			LOG.error("************ETAIL Non Business Exception is :: " + e.toString());
+			//LOG.error("************ETAIL Non Business Exception is :: " + e.toString());
+ 			LOG.error("************ETAIL Non Business Exception is :: " + e.getErrorMessage());
+ 			LOG.error(getCustomizedExceptionTrace(e.getRootCause()));
 		}
 	}
 }

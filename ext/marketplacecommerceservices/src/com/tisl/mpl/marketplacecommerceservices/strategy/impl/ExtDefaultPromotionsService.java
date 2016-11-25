@@ -18,14 +18,15 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-
+import org.apache.log4j.Logger;
 /**
  * @author TCS
  *
  */
 public class ExtDefaultPromotionsService extends DefaultPromotionsService
 {
-
+	@SuppressWarnings("unused")
+	private static final Logger LOG = Logger.getLogger(ExtDefaultPromotionsService.class);
 
 	@Autowired
 	private ModelService modelService;
@@ -49,6 +50,11 @@ public class ExtDefaultPromotionsService extends DefaultPromotionsService
 		final PromotionOrderResults result = getPromotionsManager().updatePromotions(getSessionContext(),
 				getModelService().getAllSources(promotionGroups, new ArrayList()), getOrder(order), evaluateRestrictions,
 				productPromotionMode, orderPromotionMode, date);
+
+		if (result == null)
+ 		{
+ 			LOG.error("Failed to update promotion for orderId::" + order.getCode());
+ 		}
 		refreshOrder(order);
 		return result;
 	}
