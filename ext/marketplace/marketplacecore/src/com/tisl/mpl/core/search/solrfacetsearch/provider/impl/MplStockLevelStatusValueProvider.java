@@ -26,8 +26,8 @@ import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
  * @author tcs
  *
  */
-public class MplStockLevelStatusValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider,
-		Serializable
+public class MplStockLevelStatusValueProvider extends AbstractPropertyFieldValueProvider
+		implements FieldValueProvider, Serializable
 {
 
 	private FieldNameProvider fieldNameProvider;
@@ -36,7 +36,7 @@ public class MplStockLevelStatusValueProvider extends AbstractPropertyFieldValue
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.solrfacetsearch.provider.FieldValueProvider#getFieldValues(de.hybris.platform.solrfacetsearch.
 	 * config.IndexConfig, de.hybris.platform.solrfacetsearch.config.IndexedProperty, java.lang.Object)
@@ -45,23 +45,34 @@ public class MplStockLevelStatusValueProvider extends AbstractPropertyFieldValue
 	public Collection<FieldValue> getFieldValues(final IndexConfig indexConfig, final IndexedProperty indexedProperty,
 			final Object model) throws FieldValueProviderException
 	{
-		String productType = "";
-		String productCode = "";
-		if (model instanceof PcmProductVariantModel)
+		//String productType = "";
+		//String productCode = "";
+		String productType = null;
+		String productCode = null;
+		try
 		{
-			productType = "variant";
-			final PcmProductVariantModel product = (PcmProductVariantModel) model;
-			productCode = product.getCode();
-			return getFieldValues(productCode, productType, indexedProperty);
+			if (model instanceof PcmProductVariantModel)
+			{
+				productType = "variant";
+				final PcmProductVariantModel product = (PcmProductVariantModel) model;
+				productCode = product.getCode();
+				return getFieldValues(productCode, productType, indexedProperty);
+			}
+			else if (model instanceof ProductModel)
+			{
+				productType = "simple";
+				final ProductModel product = (ProductModel) model;
+				productCode = product.getCode();
+				return getFieldValues(productCode, productType, indexedProperty);
+			}
+			return Collections.emptyList();
 		}
-		else if (model instanceof ProductModel)
+		catch (final Exception e) /* added part of value provider go through */
 		{
-			productType = "simple";
-			final ProductModel product = (ProductModel) model;
-			productCode = product.getCode();
-			return getFieldValues(productCode, productType, indexedProperty);
+			throw new FieldValueProviderException(
+					"Cannot evaluate " + indexedProperty.getName() + " using " + super.getClass().getName() + "exception" + e, e);
 		}
-		return Collections.emptyList();
+
 	}
 
 	public Collection getFieldValues(final String productCode, final String productType, final IndexedProperty indexedProperty)

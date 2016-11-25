@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.tisl.mpl.core.search.solrfacetsearch.provider.impl;
 
 import de.hybris.platform.solrfacetsearch.config.IndexConfig;
@@ -55,7 +52,7 @@ public class MplSizeValueProvider extends AbstractPropertyFieldValueProvider imp
 
 	/*
 	 * /**
-	 * 
+	 *
 	 * @return the mplBuyBoxUtility
 	 */
 
@@ -90,56 +87,67 @@ public class MplSizeValueProvider extends AbstractPropertyFieldValueProvider imp
 
 		final Set<String> oosproducts = new TreeSet<String>();
 		final Set<String> products = new TreeSet<String>();
-		if (model instanceof PcmProductVariantModel)
+		try
 		{
-			//Model should be instance of PcmProductVariantModel
-			final PcmProductVariantModel pcmVariantModel = (PcmProductVariantModel) model;
-			//	Fetch sizes in all the Variants
-			for (final VariantProductModel pcmProductVariantModel : pcmVariantModel.getBaseProduct().getVariants())
+			if (model instanceof PcmProductVariantModel)
 			{
-
-				final PcmProductVariantModel pcmSizeVariantModel = (PcmProductVariantModel) pcmProductVariantModel;
-
-				//Included for Electronics Product
-				final String sizeVariantColour = mplBuyBoxUtility.getVariantColour(pcmSizeVariantModel);
-
-				final String pcmVariantColour = mplBuyBoxUtility.getVariantColour(pcmVariantModel);
-				/* TPR-249 CHANGES starts */
-				if (sizeVariantColour != null && pcmVariantColour != null && sizeVariantColour.equalsIgnoreCase(pcmVariantColour)
-						&& pcmSizeVariantModel.getSize() != null
-						&& CollectionUtils.isNotEmpty(buyBoxService.buyboxPrice(pcmSizeVariantModel.getCode())))
+				//Model should be instance of PcmProductVariantModel
+				final PcmProductVariantModel pcmVariantModel = (PcmProductVariantModel) model;
+				//	Fetch sizes in all the Variants
+				for (final VariantProductModel pcmProductVariantModel : pcmVariantModel.getBaseProduct().getVariants())
 				{
-					//sizes added corresponding  the products having stock
-					products.add(STOCK + pcmSizeVariantModel.getSize().toUpperCase());
+
+					final PcmProductVariantModel pcmSizeVariantModel = (PcmProductVariantModel) pcmProductVariantModel;
+					//final Set<String> sizes = new TreeSet<String>();
+
+
+					//Included for Electronics Product
+					final String sizeVariantColour = mplBuyBoxUtility.getVariantColour(pcmSizeVariantModel);
+
+					final String pcmVariantColour = mplBuyBoxUtility.getVariantColour(pcmVariantModel);
+					/* TPR-249 CHANGES starts */
+					if (sizeVariantColour != null && pcmVariantColour != null && sizeVariantColour.equalsIgnoreCase(pcmVariantColour)
+							&& pcmSizeVariantModel.getSize() != null
+							&& CollectionUtils.isNotEmpty(buyBoxService.buyboxPrice(pcmSizeVariantModel.getCode())))
+					{
+						//sizes added corresponding  the products having stock
+						products.add(STOCK + pcmSizeVariantModel.getSize().toUpperCase());
+					}
+					else if (sizeVariantColour != null && pcmVariantColour != null
+							&& sizeVariantColour.equalsIgnoreCase(pcmVariantColour) && pcmSizeVariantModel.getSize() != null
+							&& CollectionUtils.isEmpty(buyBoxService.buyboxPrice(pcmSizeVariantModel.getCode())))
+					{
+						//sizes added corresponding  the products having no stock
+						oosproducts.add(NOSTOCK + pcmSizeVariantModel.getSize().toUpperCase());
+					}
+
 				}
-				else if (sizeVariantColour != null && pcmVariantColour != null
-						&& sizeVariantColour.equalsIgnoreCase(pcmVariantColour) && pcmSizeVariantModel.getSize() != null
-						&& CollectionUtils.isEmpty(buyBoxService.buyboxPrice(pcmSizeVariantModel.getCode())))
+				if (CollectionUtils.isNotEmpty(oosproducts))
 				{
-					//sizes added corresponding  the products having no stock
-					oosproducts.add(NOSTOCK + pcmSizeVariantModel.getSize().toUpperCase());
+					products.addAll(oosproducts);
+				}
+				final Collection<FieldValue> fieldValues = new ArrayList<FieldValue>();
+
+				{
+					//add field values
+					fieldValues.addAll(createFieldValue(products, indexedProperty));
 				}
 
-			}
-			if (CollectionUtils.isNotEmpty(oosproducts))
-			{
-				products.addAll(oosproducts);
-			}
-			final Collection<FieldValue> fieldValues = new ArrayList<FieldValue>();
+				/* TPR-249 CHANGES ends */
+				//return the field values
+				return fieldValues;
 
-			{
-				//add field values
-				fieldValues.addAll(createFieldValue(products, indexedProperty));
 			}
-
-			/* TPR-249 CHANGES ends */
-			//return the field values
-			return fieldValues;
+			else
+			{
+				return Collections.emptyList();
+			}
 
 		}
-		else
+		catch (final Exception e) /* added part of value provider go through */
 		{
-			return Collections.emptyList();
+			throw new FieldValueProviderException("Cannot evaluate " + indexedProperty.getName() + " using "
+					+ super.getClass().getName() + "exception" + e, e);
 		}
 
 

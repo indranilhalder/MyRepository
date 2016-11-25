@@ -75,70 +75,75 @@ public class MplDisplayUrlValueProvider extends AbstractPropertyFieldValueProvid
 	public Collection<FieldValue> getFieldValues(final IndexConfig indexConfig, final IndexedProperty indexedProperty,
 			final Object model) throws FieldValueProviderException
 	{
-		if (model instanceof PcmProductVariantModel)
+		try
 		{
-			//Model should be instance of PcmProductVariantModel
-			final PcmProductVariantModel pcmVariantModel = (PcmProductVariantModel) model;
-
-			final JSONArray urlSizeJsonArray = new JSONArray();
-			//	System.out.println("**Inside DisplayPriceValueProvider**");
-			//	final Set<String> displayUrls = new TreeSet<String>();
-
-			String productUrl = null;
-			//	Fetch sizes in all the Variants
-			for (final VariantProductModel pcmProductVariantModel : pcmVariantModel.getBaseProduct().getVariants())
+			if (model instanceof PcmProductVariantModel)
 			{
+				//Model should be instance of PcmProductVariantModel
+				final PcmProductVariantModel pcmVariantModel = (PcmProductVariantModel) model;
 
-				final PcmProductVariantModel pcmSizeVariantModel = (PcmProductVariantModel) pcmProductVariantModel;
+				final JSONArray urlSizeJsonArray = new JSONArray();
 
-				//Included for Electronics Product
-				final String sizeVariantColour = mplBuyBoxUtility.getVariantColour(pcmSizeVariantModel);
-
-
-				final String pcmVariantColour = mplBuyBoxUtility.getVariantColour(pcmVariantModel);
-				if (sizeVariantColour != null && pcmVariantColour != null && sizeVariantColour.equalsIgnoreCase(pcmVariantColour)
-						&& pcmSizeVariantModel.getSize() != null)
+				String productUrl = null;
+				//	Fetch sizes in all the Variants
+				for (final VariantProductModel pcmProductVariantModel : pcmVariantModel.getBaseProduct().getVariants())
 				{
-					if (indexedProperty.isLocalized())
+
+					final PcmProductVariantModel pcmSizeVariantModel = (PcmProductVariantModel) pcmProductVariantModel;
+
+					//Included for Electronics Product
+					final String sizeVariantColour = mplBuyBoxUtility.getVariantColour(pcmSizeVariantModel);
+
+
+					final String pcmVariantColour = mplBuyBoxUtility.getVariantColour(pcmVariantModel);
+					if (sizeVariantColour != null && pcmVariantColour != null && sizeVariantColour.equalsIgnoreCase(pcmVariantColour)
+							&& pcmSizeVariantModel.getSize() != null)
 					{
-						final Collection<LanguageModel> languages = indexConfig.getLanguages();
-						for (final LanguageModel language : languages)
+						if (indexedProperty.isLocalized())
 						{
-							productUrl = getProductUrl(pcmSizeVariantModel, language);
+							final Collection<LanguageModel> languages = indexConfig.getLanguages();
+							for (final LanguageModel language : languages)
+							{
+								productUrl = getProductUrl(pcmSizeVariantModel, language);
+							}
 						}
+						else
+						{
+							productUrl = getProductUrl(pcmSizeVariantModel, null);
+							//productUrl.replaceAll(regex, replacement)
+						}
+						//	System.out.println("url" + productUrl.replace("\\", ""));
+						final JSONObject urlSizeJson = new JSONObject();
+						//urlSizeJson.put(pcmSizeVariantModel.getSize().toUpperCase(), productUrl.replace("\\", ""));
+						urlSizeJson.put(pcmSizeVariantModel.getSize().toUpperCase(), productUrl);
+						urlSizeJsonArray.add(urlSizeJson);
+						//	System.out.println("url" + urlSizeJsonArray);
+						//	displayUrls.add(pcmSizeVariantModel.getSize().toUpperCase() + ":" + productUrl);
 					}
-					else
-					{
-						productUrl = getProductUrl(pcmSizeVariantModel, null);
-						//productUrl.replaceAll(regex, replacement)
-					}
-					//	System.out.println("url" + productUrl.replace("\\", ""));
-					final JSONObject urlSizeJson = new JSONObject();
-					//urlSizeJson.put(pcmSizeVariantModel.getSize().toUpperCase(), productUrl.replace("\\", ""));
-					urlSizeJson.put(pcmSizeVariantModel.getSize().toUpperCase(), productUrl);
-					urlSizeJsonArray.add(urlSizeJson);
-					//	System.out.println("url" + urlSizeJsonArray);
-					//	displayUrls.add(pcmSizeVariantModel.getSize().toUpperCase() + ":" + productUrl);
 				}
-			}
 
-			//final Double price = buyBoxService.buyboxPrice(pcmSizeVariantModel.getCode()).get(0).getPrice();
-			final Collection<FieldValue> fieldValues = new ArrayList<FieldValue>();
+				//final Double price = buyBoxService.buyboxPrice(pcmSizeVariantModel.getCode()).get(0).getPrice();
+				final Collection<FieldValue> fieldValues = new ArrayList<FieldValue>();
+				{
+					//add field values
+					fieldValues.addAll(createFieldValue(urlSizeJsonArray.toString(), indexedProperty));
+					//System.out.println("fieldvalues" + fieldValues);
+				}
+				//return the field values
+				return fieldValues;
+			}
+			else
 			{
-				//add field values
-				fieldValues.addAll(createFieldValue(urlSizeJsonArray.toString(), indexedProperty));
-				//System.out.println("fieldvalues" + fieldValues);
+
+				return Collections.emptyList();
 			}
-			//return the field values
-			return fieldValues;
+
 		}
-		else
+		catch (final Exception e) /* added part of value provider go through */
 		{
-
-			return Collections.emptyList();
+			throw new FieldValueProviderException(
+					"Cannot evaluate " + indexedProperty.getName() + " using " + super.getClass().getName() + "exception" + e, e);
 		}
-
-
 
 		//		throw new FieldValueProviderException("Cannot evaluate rating of non-product item");
 	}
