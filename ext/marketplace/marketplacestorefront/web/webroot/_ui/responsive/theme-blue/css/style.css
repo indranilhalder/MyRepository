@@ -59071,3 +59071,6 @@ display: none;
    }
    }
 /*Checkout delivery page price column hide ends*/
+.page-productDetails .trending{
+	clear:both;
+}

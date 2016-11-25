@@ -223,7 +223,7 @@ tr.d0 td {
 				<span id="fulFilledBySship"  style="display:none;"></span>
 				</div>
 			</div>
-			<div id="productContentDivId"></div>
+			
 			<c:if test="${isGigyaEnabled=='Y'}">
 				<ul class="star-review" id="pdp_rating">
 					<li class="empty"></li>
@@ -335,6 +335,7 @@ tr.d0 td {
 	<c:set var="accessories"><spring:theme code='product.fashionAccessories'/></c:set>
 	<!-- For Infinite Analytics Start -->
 	<input type="hidden" value="${productCategoryType}" id="categoryType"/>
+	<div id="productContentDivId"></div>
 <c:choose>
 		<c:when test="${product.rootCategory==clothing || product.rootCategory== footwear || product.rootCategory==accessories}">  <!-- Added for TISPRO-271 -->
 			<div class="trending"  id="ia_products_complements"></div>
