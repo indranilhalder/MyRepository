@@ -74,8 +74,13 @@ $(document).on("mouseover touchend", "div.departmenthover", function() {
                 // console.log("Server");
                 $("ul." + id).html(html);
                 if (window.localStorage) {
+                	//TISPRD-8265-- Local Caching reduced to 10hrs from 1day
+                	var date = new Date();
+                	var minutes = 600;
+                	date.setTime(date.getTime() + (minutes * 60 * 1000)); 
+                	
                     $.cookie("dept-list", "true", {
-                        expires: 1,
+                        expires: date,
                         path: "/"
 
                     });
@@ -1450,19 +1455,23 @@ function populateEnhancedSearch(enhancedSearchData)
 			            success: function(html) {
 			                //$("ul#"+componentUid).html(html);
 			            	$("ul[id='"+componentUid+"']").html(html); 
-			                if (window.localStorage) {
-			                    $.cookie("dept-list", "true", {
-			                        expires: 1,
-			                        path: "/"
+			            	 if (window.localStorage) {
+				                	//TISPRD-8265-- Local Caching reduced to 10hrs from 1day
+				                	var date = new Date();
+				                	var minutes = 600;
+				                	date.setTime(date.getTime() + (minutes * 60 * 1000)); 
+				                	
+				                    $.cookie("dept-list", "true", {
+				                        expires: date,
+				                        path: "/"
 
-			                    });
-			                    window.localStorage.setItem(
-			                        "brandhtml-" + componentUid,
-			                        encodeURI(html));
+				                    });
+				                    window.localStorage.setItem(
+				                        "deptmenuhtml-" + code,
+				                        encodeURI(html));
 
-			                }
-			                
-			            }
+				                }
+				            }
 			        });
 		    	
 		    }
@@ -1698,8 +1707,13 @@ $(document).ready(function(){
 		                // console.log("Server");
 		                $("ul." + id).html(html);
 		                if (window.localStorage) {
+		                	//TISPRD-8265-- Local Caching reduced to 10hrs from 1day
+		                	var date = new Date();
+		                	var minutes = 600;
+		                	date.setTime(date.getTime() + (minutes * 60 * 1000)); 
+		                	
 		                    $.cookie("dept-list", "true", {
-		                        expires: 1,
+		                        expires: date,
 		                        path: "/"
 
 		                    });
@@ -1708,7 +1722,6 @@ $(document).ready(function(){
 		                        encodeURI(html));
 
 		                }
-		            }
 		        });
 
 
@@ -1741,9 +1754,14 @@ $(document).ready(function(){
 					            success: function(html) {
 					                //$("ul#"+componentUid).html(html);
 					            	$("ul[id='"+componentUid+"']").html(html); 
-					                if (window.localStorage) {
+					            	if (window.localStorage) {
+					                	//TISPRD-8265-- Local Caching reduced to 10hrs from 1day
+					                	var date = new Date();
+					                	var minutes = 600;
+					                	date.setTime(date.getTime() + (minutes * 60 * 1000)); 
+					                	
 					                    $.cookie("dept-list", "true", {
-					                        expires: 1,
+					                        expires: date,
 					                        path: "/"
 
 					                    });

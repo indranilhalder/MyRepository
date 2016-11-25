@@ -930,6 +930,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9218 = "B9218";
 	public static final String B9219 = "B9219";
 
+	//TISPRD-5986  MSH category 404 error handling
+	public static final String E0023 = "E0023";
+
 
 	//Search error codes ends
 

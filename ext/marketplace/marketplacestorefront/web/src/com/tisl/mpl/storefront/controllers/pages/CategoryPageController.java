@@ -37,6 +37,7 @@ import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearc
 import de.hybris.platform.commerceservices.search.facetdata.ProductSearchPageData;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.session.Session;
 import de.hybris.platform.servicelayer.session.SessionService;
 
@@ -228,37 +229,38 @@ public class CategoryPageController extends AbstractCategoryPageController
 		}
 		model.addAttribute(ModelAttributetConstants.SEARCH_CODE, searchCode);
 		model.addAttribute(ModelAttributetConstants.IS_CATEGORY_PAGE, Boolean.TRUE);
-		final CategoryModel category = categoryService.getCategoryForCode(categoryCode);
-		//Set the drop down text if the attribute is not empty or null
-		if (dropDownText != null && !dropDownText.isEmpty())
-		//Added For TISPRD-1243
-
-		{
-
-			if (dropDownText.startsWith(DROPDOWN_CATEGORY) || dropDownText.startsWith(DROPDOWN_BRAND))
-
-			{
-				final CategoryModel categoryModel = categoryService.getCategoryForCode(dropDownText);
-
-				if (categoryModel != null)
-				{
-					dropDownText = (StringUtils.isNotEmpty(categoryModel.getName())) ? categoryModel.getName() : dropDownText;
-
-				}
-			}
-			//Added For TISPRD-1243
-			model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, dropDownText);
-
-		}
-		else
-		{
-			final String categoryName = (category == null) ? "" : category.getName();
-			model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, categoryName);
-		}
-		int count = getSearchPageSize();
-		//Check if there is a landing page for the category
 		try
 		{
+			final CategoryModel category = categoryService.getCategoryForCode(categoryCode);
+			//Set the drop down text if the attribute is not empty or null
+			if (dropDownText != null && !dropDownText.isEmpty())
+			//Added For TISPRD-1243
+
+			{
+
+				if (dropDownText.startsWith(DROPDOWN_CATEGORY) || dropDownText.startsWith(DROPDOWN_BRAND))
+
+				{
+					final CategoryModel categoryModel = categoryService.getCategoryForCode(dropDownText);
+
+					if (categoryModel != null)
+					{
+						dropDownText = (StringUtils.isNotEmpty(categoryModel.getName())) ? categoryModel.getName() : dropDownText;
+
+					}
+				}
+				//Added For TISPRD-1243
+				model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, dropDownText);
+
+			}
+			else
+			{
+				final String categoryName = (category == null) ? "" : category.getName();
+				model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, categoryName);
+			}
+			int count = getSearchPageSize();
+			//Check if there is a landing page for the category
+
 			final UserPreferencesData preferencesData = updateUserPreferences(pageSize);
 			if (preferencesData != null && preferencesData.getPageSize() != null)
 			{
@@ -290,6 +292,23 @@ public class CategoryPageController extends AbstractCategoryPageController
 				model.addAttribute(ModelAttributetConstants.NORMAL_PRODUCTS, normalProductDatas);
 				model.addAttribute(ModelAttributetConstants.SHOW_CATEGORIES_ONLY, Boolean.FALSE);
 			}
+		}
+
+		//TISPRD-5986  MSH category 404 error handling
+		catch (final UnknownIdentifierException ex)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(ex,
+					MarketplacecommerceservicesConstants.E0023));
+			//LOG.error(EXCEPTION_OCCURED + ex + "  Category code: " + categoryCode + " not found!");
+			try
+			{
+				return frontEndErrorHelper.callNonBusinessError(model, ex.getMessage());
+			}
+			catch (final CMSItemNotFoundException e1)
+			{
+				LOG.error(EXCEPTION_OCCURED + e1);
+			}
+
 		}
 
 		catch (final Exception exception)
@@ -372,34 +391,35 @@ public class CategoryPageController extends AbstractCategoryPageController
 			}
 			model.addAttribute(ModelAttributetConstants.SEARCH_CODE, searchCode);
 			model.addAttribute(ModelAttributetConstants.IS_CATEGORY_PAGE, Boolean.TRUE);
-			final CategoryModel category = categoryService.getCategoryForCode(categoryCode);
-			//Set the drop down text if the attribute is not empty or null
-			if (dropDownText != null && !dropDownText.isEmpty())
-			//Added For TISPRD-1243
-			{
-				if (dropDownText.startsWith(DROPDOWN_CATEGORY) || dropDownText.startsWith(DROPDOWN_BRAND))
-				{
-					final CategoryModel categoryModel = categoryService.getCategoryForCode(dropDownText);
-
-					if (categoryModel != null)
-					{
-						dropDownText = (StringUtils.isNotEmpty(categoryModel.getName())) ? categoryModel.getName() : dropDownText;
-
-					}
-				}
-				//Added For TISPRD-1243
-				model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, dropDownText);
-
-			}
-			else
-			{
-				final String categoryName = (category == null) ? "" : category.getName();
-				model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, categoryName);
-			}
-			int count = getSearchPageSize();
-			//Check if there is a landing page for the category
 			try
 			{
+				final CategoryModel category = categoryService.getCategoryForCode(categoryCode);
+				//Set the drop down text if the attribute is not empty or null
+				if (dropDownText != null && !dropDownText.isEmpty())
+				//Added For TISPRD-1243
+				{
+					if (dropDownText.startsWith(DROPDOWN_CATEGORY) || dropDownText.startsWith(DROPDOWN_BRAND))
+					{
+						final CategoryModel categoryModel = categoryService.getCategoryForCode(dropDownText);
+
+						if (categoryModel != null)
+						{
+							dropDownText = (StringUtils.isNotEmpty(categoryModel.getName())) ? categoryModel.getName() : dropDownText;
+
+						}
+					}
+					//Added For TISPRD-1243
+					model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, dropDownText);
+
+				}
+				else
+				{
+					final String categoryName = (category == null) ? "" : category.getName();
+					model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, categoryName);
+				}
+				int count = getSearchPageSize();
+				//Check if there is a landing page for the category
+
 				final UserPreferencesData preferencesData = updateUserPreferences(pageSize);
 				if (preferencesData != null && preferencesData.getPageSize() != null)
 				{
@@ -457,7 +477,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 					final UserPreferencesData preferencesData = updateUserPreferences(pageSize);
 					if (preferencesData != null && preferencesData.getPageSize() != null)
 					{
-						count = preferencesData.getPageSize().intValue();
+						final int count = preferencesData.getPageSize().intValue();
 						setPageSiseCount(count);
 					}
 
@@ -483,6 +503,22 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 			}
 
+			//TISPRD-5986  MSH category 404 error handling
+			catch (final UnknownIdentifierException ex)
+			{
+				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(ex,
+						MarketplacecommerceservicesConstants.E0023));
+				//LOG.error(EXCEPTION_OCCURED + ex + "  Category code: " + categoryCode + " not found!");
+				try
+				{
+					return frontEndErrorHelper.callNonBusinessError(model, ex.getMessage());
+				}
+				catch (final CMSItemNotFoundException e1)
+				{
+					LOG.error(EXCEPTION_OCCURED + e1);
+				}
+
+			}
 			catch (final Exception exception)
 			{
 				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception,

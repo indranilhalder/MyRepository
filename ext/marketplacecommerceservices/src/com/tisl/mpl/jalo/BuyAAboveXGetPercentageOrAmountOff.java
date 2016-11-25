@@ -49,12 +49,9 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 
 	/**
 	 * @Description : This method is for creating item type
-	 * @param :
-	 *           ctx
-	 * @param :
-	 *           type
-	 * @param :
-	 *           allAttributes
+	 * @param : ctx
+	 * @param : type
+	 * @param : allAttributes
 	 * @return : item
 	 */
 	@Override
@@ -71,10 +68,8 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 
 	/**
 	 * @Description : Buy A Above X and get y percentage/amount off - this is for seller brand threshold promotion
-	 * @param :
-	 *           ctx
-	 * @param :
-	 *           evaluationContext
+	 * @param : ctx
+	 * @param : evaluationContext
 	 * @return : List<PromotionResult> promotionResults
 	 */
 	@Override
@@ -83,7 +78,7 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 		LOG.debug("Buy A Above X and get y percentage/amount off");
 		productSellerDetails = new HashMap<AbstractOrderEntry, String>();
 
-		boolean isMultipleSeller = false;
+		final boolean isMultipleSeller = false;
 
 		List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
 		final PromotionsManager.RestrictionSetResult rsr = findEligibleProductsInBasket(ctx, evaluationContext);
@@ -124,31 +119,24 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 
 				if (!getDefaultPromotionsManager().promotionAlreadyFired(ctx, validProductUssidMap))
 				{
-					isMultipleSeller = getMplPromotionHelper().checkMultipleSeller(restrictionList);
-					if (isMultipleSeller)
-					{
-						Map<String, Map<String, AbstractOrderEntry>> multiSellerValidUSSIDMap = new HashMap<String, Map<String, AbstractOrderEntry>>();
-						multiSellerValidUSSIDMap = getMplPromotionHelper().populateMultiSellerData(validProductUssidMap,
-								productSellerDetails, ctx);
-						for (final Map.Entry<String, Map<String, AbstractOrderEntry>> multiSellerData : multiSellerValidUSSIDMap
-								.entrySet())
-						{
-							final Map<String, AbstractOrderEntry> validMultiUssidMap = multiSellerData.getValue();
-							if (null != validProductUssidMap && !validProductUssidMap.isEmpty())
-							{
-								List<PromotionResult> promotionResultList = new ArrayList<PromotionResult>(); // This needs to be done for Multiple Seller Integration
-								final Double totalEligibleProductPrice = getTotalofEligibleProducts(validMultiUssidMap);
-								promotionResultList = promotionEvaluation(ctx, evaluationContext, validMultiUssidMap,
-										totalEligibleProductPrice);
-								promotionResults.addAll(promotionResultList);
-							}
-						}
-					}
-					else
-					{
-						final Double totalEligibleProductPrice = getTotalofEligibleProducts(validProductUssidMap);
-						promotionResults = promotionEvaluation(ctx, evaluationContext, validProductUssidMap, totalEligibleProductPrice);
-					}
+					//MultiSeller check removed TISPRD-8804 (totalPricevalue sets the last product price because of multiseller loop.
+					//Passing individual Ussid in promotionEvaluation hence overwrite the totalPricevalue)
+					/*
+					 * isMultipleSeller = getMplPromotionHelper().checkMultipleSeller(restrictionList); if (isMultipleSeller)
+					 * { Map<String, Map<String, AbstractOrderEntry>> multiSellerValidUSSIDMap = new HashMap<String,
+					 * Map<String, AbstractOrderEntry>>(); multiSellerValidUSSIDMap =
+					 * getMplPromotionHelper().populateMultiSellerData(validProductUssidMap, productSellerDetails, ctx); for
+					 * (final Map.Entry<String, Map<String, AbstractOrderEntry>> multiSellerData : multiSellerValidUSSIDMap
+					 * .entrySet()) { final Map<String, AbstractOrderEntry> validMultiUssidMap = multiSellerData.getValue();
+					 * if (null != validProductUssidMap && !validProductUssidMap.isEmpty()) { List<PromotionResult>
+					 * promotionResultList = new ArrayList<PromotionResult>(); // This needs to be done for Multiple Seller
+					 * Integration final Double totalEligibleProductPrice = getTotalofEligibleProducts(validMultiUssidMap);
+					 * promotionResultList = promotionEvaluation(ctx, evaluationContext, validMultiUssidMap,
+					 * totalEligibleProductPrice); promotionResults.addAll(promotionResultList); } } } else {
+					 */
+					final Double totalEligibleProductPrice = getTotalofEligibleProducts(validProductUssidMap);
+					promotionResults = promotionEvaluation(ctx, evaluationContext, validProductUssidMap, totalEligibleProductPrice);
+					//}
 				}
 
 			}
@@ -175,8 +163,9 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 	 * @param validProductUssidMap
 	 * @param totalEligibleProductPrice
 	 */
-	private List<PromotionResult> promotionEvaluation(final SessionContext ctx, final PromotionEvaluationContext evaluationContext,
-			final Map<String, AbstractOrderEntry> validProductUssidMap, final Double totalEligibleProductPrice)
+	private List<PromotionResult> promotionEvaluation(final SessionContext ctx,
+			final PromotionEvaluationContext evaluationContext, final Map<String, AbstractOrderEntry> validProductUssidMap,
+			final Double totalEligibleProductPrice)
 	{
 
 		boolean flagForDeliveryModeRestrEval = false;
@@ -192,10 +181,8 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 		Double thresholdVal = getPriceForOrder(ctx, getThresholdTotals(ctx), cart,
 				MarketplacecommerceservicesConstants.THRESHOLD_TOTALS);
 		final Double discountPrice = getPriceForOrder(ctx, getDiscountPrices(ctx), cart,
-				MarketplacecommerceservicesConstants.DISCOUNT_PRICES) != null
-						? (Double) getPriceForOrder(ctx, getDiscountPrices(ctx), cart,
-								MarketplacecommerceservicesConstants.DISCOUNT_PRICES)
-						: new Double(0.0);
+				MarketplacecommerceservicesConstants.DISCOUNT_PRICES) != null ? (Double) getPriceForOrder(ctx,
+				getDiscountPrices(ctx), cart, MarketplacecommerceservicesConstants.DISCOUNT_PRICES) : new Double(0.0);
 
 		if (null == thresholdVal)
 		{
@@ -266,8 +253,8 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 
 				if (percentageDiscount < 100)
 				{
-					final double adjustment = -(entry.getBasePrice().doubleValue() * percentageDiscountvalue
-							* entry.getQuantity().doubleValue());
+					final double adjustment = -(entry.getBasePrice().doubleValue() * percentageDiscountvalue * entry.getQuantity()
+							.doubleValue());
 					LOG.debug("Adjustment" + adjustment);
 					final PromotionResult result = promotionsManager.createPromotionResult(ctx, this, evaluationContext.getOrder(),
 							1.0F);
@@ -307,8 +294,8 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 		for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
 		{
 			final AbstractOrderEntry entry = mapEntry.getValue();
-			totalVal = Double
-					.valueOf(totalVal.doubleValue() + (entry.getBasePrice().doubleValue() * entry.getQuantity().doubleValue()));
+			totalVal = Double.valueOf(totalVal.doubleValue()
+					+ (entry.getBasePrice().doubleValue() * entry.getQuantity().doubleValue()));
 			count = count + 1;
 		}
 
@@ -371,8 +358,8 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 
 				if (applyPromotion && sellerFlag && brandFlag)
 				{
-					validProductUssidMap.putAll(
-							getDefaultPromotionsManager().populateValidProductUssidMap(product, cart, restrictionList, ctx, entry));
+					validProductUssidMap.putAll(getDefaultPromotionsManager().populateValidProductUssidMap(product, cart,
+							restrictionList, ctx, entry));
 					sellerID = getDefaultPromotionsManager().getSellerID(ctx, restrictionList, entry);
 					productSellerDetails.put(entry, sellerID);
 				}
@@ -396,12 +383,9 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 
 	/**
 	 * @Description : Assign Promotion Fired and Potential-Promotion Message
-	 * @param :
-	 *           ctx
-	 * @param :
-	 *           result
-	 * @param :
-	 *           locale
+	 * @param : ctx
+	 * @param : result
+	 * @param : locale
 	 * @return : String
 	 */
 	@Override
