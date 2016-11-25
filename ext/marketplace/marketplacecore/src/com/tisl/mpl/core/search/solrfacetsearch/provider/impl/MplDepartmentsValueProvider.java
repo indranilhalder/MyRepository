@@ -78,23 +78,35 @@ public class MplDepartmentsValueProvider extends AbstractPropertyFieldValueProvi
 	public Collection<FieldValue> getFieldValues(final IndexConfig indexConfig, final IndexedProperty indexedProperty,
 			final Object model) throws FieldValueProviderException
 	{
-		boolean isLuxury = false;
-		if (model instanceof ProductModel)
+		try
 		{
-			final ProductModel productmodel = (ProductModel) model;
-			if (null != productmodel.getLuxIndicator() && productmodel.getLuxIndicator().getCode().equalsIgnoreCase("luxury"))
+			boolean isLuxury = false;
+			if (model instanceof ProductModel)
 			{
-				isLuxury = true;
+				final ProductModel productmodel = (ProductModel) model;
+				if (null != productmodel.getLuxIndicator() && productmodel.getLuxIndicator().getCode().equalsIgnoreCase("luxury"))
+				{
+					isLuxury = true;
+				}
 			}
+			else /* added part of value provider go through */
+			{
+				throw new FieldValueProviderException("Cannot evaluate Luxury flag of non-product item");
+			}
+			final Collection categories = getCategorySource().getCategoriesForConfigAndProperty(indexConfig, indexedProperty, model);
+			final Collection fieldValues = new ArrayList();
+			if ((categories != null) && (!(categories.isEmpty())))
+			{
+				final Set categoryPaths = getCategoryPaths(categories, isLuxury);
+				fieldValues.addAll(createFieldValue(categoryPaths, indexedProperty));
+			}
+			return fieldValues;
 		}
-		final Collection categories = getCategorySource().getCategoriesForConfigAndProperty(indexConfig, indexedProperty, model);
-		final Collection fieldValues = new ArrayList();
-		if ((categories != null) && (!(categories.isEmpty())))
+		catch (final Exception e) /* added part of value provider go through */
 		{
-			final Set categoryPaths = getCategoryPaths(categories, isLuxury);
-			fieldValues.addAll(createFieldValue(categoryPaths, indexedProperty));
+			throw new FieldValueProviderException(
+					"Cannot evaluate " + indexedProperty.getName() + " using " + super.getClass().getName() + "exception" + e, e);
 		}
-		return fieldValues;
 	}
 
 	protected List<FieldValue> createFieldValue(final Collection<String> categoryPaths, final IndexedProperty indexedProperty)

@@ -1631,8 +1631,6 @@
 				</indexes> 
 				
 			</itemtype>
-			
-			
 			<itemtype code="SeoContent" autocreate="true" generate="true"
 				jaloclass="com.tisl.mpl.core.jalo.SeoContent">
 				<deployment table="MplSeoContent" typecode="13002" />
