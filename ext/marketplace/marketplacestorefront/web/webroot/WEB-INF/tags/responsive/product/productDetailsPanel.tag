@@ -223,6 +223,7 @@ tr.d0 td {
 				<span id="fulFilledBySship"  style="display:none;"></span>
 				</div>
 			</div>
+			<div id="productContentDivId"></div>
 			<c:if test="${isGigyaEnabled=='Y'}">
 				<ul class="star-review" id="pdp_rating">
 					<li class="empty"></li>
@@ -455,4 +456,4 @@ tr.d0 td {
 </div>
 </div>
 
-<div id="productContentDivId"></div>
+
