@@ -3,10 +3,12 @@
  */
 package com.tisl.mpl.returns.dao.impl;
 
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.jalo.flexiblesearch.FlexibleSearchException;
 import de.hybris.platform.returns.model.ReturnRequestModel;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
+import de.hybris.platform.servicelayer.search.SearchResult;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 
 import java.util.HashMap;
@@ -119,6 +121,38 @@ public class MplReturnDaoImpl implements MplReturnsDao
       catch (Exception e) {
       	LOG.error("Exception occured during fetching customer Bank account details with custmer Id :"+orderId+ "Error Trace:" +e);
       	throw new EtailNonBusinessExceptions(e);
+		}
+	}
+	
+	@Override
+	public List<OrderModel> getOrder(String orderId)
+	{
+		final String query = "SELECT {" + OrderModel.PK + "} FROM {" + OrderModel._TYPECODE + "} WHERE {" + OrderModel.CODE
+				+ "}=?orderId";
+		final FlexibleSearchQuery flexQuery = new FlexibleSearchQuery(query);
+		flexQuery.addQueryParameter("orderId", orderId);
+		try
+		{
+			final SearchResult<OrderModel> orderModel = flexibleSearchService.search(flexQuery);
+			if (null != orderModel && null != orderModel.getResult())
+			{
+				return orderModel.getResult();
+			}
+			else
+			{
+				return null;
+			}
+		}
+		catch (final FlexibleSearchException e)
+		{
+			LOG.error("Flexible search Exception" + e);
+			throw new EtailNonBusinessExceptions(e, "Flexible search Exception");
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception occured during fetching customer Bank account details with custmer Id :" + orderId + "Error Trace:"
+					+ e);
+			throw new EtailNonBusinessExceptions(e);
 		}
 	}
 

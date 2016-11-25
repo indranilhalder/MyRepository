@@ -4,6 +4,7 @@ import de.hybris.platform.basecommerce.enums.RefundReason;
 import de.hybris.platform.basecommerce.enums.ReplacementReason;
 import de.hybris.platform.basecommerce.enums.ReturnAction;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.returns.ReturnService;
 import de.hybris.platform.returns.model.RefundEntryModel;
 import de.hybris.platform.returns.model.ReplacementEntryModel;
@@ -36,5 +37,12 @@ public interface MPLReturnService extends ReturnService
 	
 	
 	 public List<ReturnRequestModel> getListOfReturnRequest(String orlderId);
+	 
+	 /**
+	  *  getting order using the orderId
+	  * @param orderId
+	  * @return OrderModel
+	  */
+	 public OrderModel getOrder(final String orderId);
 
 }

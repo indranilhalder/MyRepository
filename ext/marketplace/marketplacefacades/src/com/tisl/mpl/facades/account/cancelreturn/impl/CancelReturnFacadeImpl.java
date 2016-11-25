@@ -77,6 +77,7 @@ import com.tisl.mpl.data.CODSelfShipData;
 import com.tisl.mpl.data.CODSelfShipResponseData;
 import com.tisl.mpl.data.CRMTicketUpdateData;
 import com.tisl.mpl.data.CRMTicketUpdateResponseData;
+import com.tisl.mpl.data.OrderLineData;
 import com.tisl.mpl.data.RTSAndRSSReturnInfoRequestData;
 import com.tisl.mpl.data.RTSAndRSSReturnInfoResponseData;
 import com.tisl.mpl.data.ReturnAddressInfo;
@@ -3361,6 +3362,102 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		return orderLineRequest;
 	}
 
+	@Override
+	public List<OrderLineData> returnInitiationForRTS(List<OrderLineData> orerLines)
+	{
+		List<OrderLineData> orderList = new ArrayList<OrderLineData>();
+		for (final OrderLineData data : orerLines)
+		{		
+			final OrderModel orderModel = mplReturnService.getOrder(data.getOrderId());
+			List<OrderModel> suOrder = orderModel.getChildOrders();
+			for(OrderModel order : suOrder)
+			{
+   			for (final AbstractOrderEntryModel entry : order.getEntries())
+   			{
+   				if (entry.getTransactionID().equalsIgnoreCase(data.getTransactionId()))
+   				{
+   					final ProductModel product = entry.getProduct();
+   					LOG.info("Product Deatails : "+ product.getCode() + "Product Name : " + product.getName());
+   					final List<SellerInformationModel> sellersList = (List<SellerInformationModel>) product.getSellerInformationRelator();
+   					for(SellerInformationModel seller : sellersList)
+   					{
+   						if(seller.getSellerArticleSKU().equals(entry.getSelectedUSSID()))
+   						{
+   							OrderLineData orderData = getReturnEligibility(seller, entry,order.getCode());
+   							orderList.add(orderData);
+   						}
+   					}
+   				}
+   			}
+      	}
+		}
+		return orderList;
+	}
+	
+	private OrderLineData getReturnEligibility(SellerInformationModel seller, AbstractOrderEntryModel entry, final String orderId)
+	{
+		final List<RichAttributeModel> richAttributeModelForSeller = (List<RichAttributeModel>) seller.getRichAttribute();
+		if(Integer.parseInt(richAttributeModelForSeller.get(0).getReturnWindow()) == 0)
+		{
+			return getRTSResponseData(orderId,entry.getTransactionID(), false);
+		}
+		else
+		{
+			if(CollectionUtils.isNotEmpty(entry.getConsignmentEntries()))
+			{
+				for(ConsignmentEntryModel ceModel : entry.getConsignmentEntries())
+				{
+					String consignmentStatus = null;
+					ConsignmentModel cModel = ceModel.getConsignment();
+					if(StringUtils.isNotEmpty(cModel.getStatus().getCode()))
+					{
+						consignmentStatus = cModel.getStatus().getCode();
+					}
+					if(null != consignmentStatus && consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED) || consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED))
+					{
+						final Date sDate = new Date();
+						final int returnWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(cModel.getDeliveryDate(), sDate);
+						final int actualReturnWindow = Integer.parseInt(richAttributeModelForSeller.get(0).getReturnWindow());
+						if (returnWindow <= actualReturnWindow)
+						{
+							updateConsignmentStatus(entry, ConsignmentStatus.RETURN_INITIATED);
+							return getRTSResponseData(orderId, entry.getTransactionID(), true);
+						}
+						else
+						{
+							return getRTSResponseData(orderId, entry.getTransactionID(), false);
+						}
 
+					}
+					
+				}
+			}
+		}
+		return new OrderLineData();
+	}
+	
+	private OrderLineData getRTSResponseData(final String orderId, final String transactionID, boolean flag)
+	{
+		if(StringUtils.isNotEmpty(orderId) && StringUtils.isNotEmpty(transactionID))
+		{
+			OrderLineData responseData = new OrderLineData();
+			if(!flag)
+			{
+				responseData.setOrderId(orderId);
+				responseData.setTransactionId(transactionID);
+				responseData.setIsReturnEligible("N");
+				responseData.setIsReturnInitiated("N");
+			}
+			else
+			{
+				responseData.setOrderId(orderId);
+				responseData.setTransactionId(transactionID);
+				responseData.setIsReturnEligible("Y");
+				responseData.setIsReturnInitiated("Y");
+			}
+			return responseData;
+		}
+		return new OrderLineData();
+	}
 
 }

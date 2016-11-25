@@ -5,6 +5,7 @@ import de.hybris.platform.basecommerce.enums.ReplacementReason;
 import de.hybris.platform.basecommerce.enums.ReturnAction;
 import de.hybris.platform.basecommerce.enums.ReturnStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.returns.impl.DefaultReturnService;
 import de.hybris.platform.returns.model.RefundEntryModel;
 import de.hybris.platform.returns.model.ReplacementEntryModel;
@@ -15,6 +16,7 @@ import de.hybris.platform.returns.model.ReturnRequestModel;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.core.model.MplCustomerBankAccountDetailsModel;
@@ -132,6 +134,21 @@ public class MPLDefaultReturnService extends DefaultReturnService implements MPL
   public List<ReturnRequestModel> getListOfReturnRequest(String orlderId){
 	  return mplReturnsDao.getListOfReturnRequest(orlderId);
   }
+
+
+@Override
+public OrderModel getOrder(String orderId)
+{
+	final List<OrderModel> orderModel = mplReturnsDao.getOrder(orderId);
+	if (CollectionUtils.isNotEmpty(orderModel))
+	{
+		return orderModel.get(0);
+	}
+	else
+	{
+		return null;
+	}
+}
 
 
 }

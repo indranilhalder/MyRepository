@@ -471,6 +471,13 @@
 		<property name="requestID" type="String"/>
 		<property name="reasonCode" type="String"/>
 		<property name="returnCancelRemarks" type="String"/>
+		<!-- Added For Return RTS -->
+		<property name="interfaceType" type="String"/>
+		<property name="refundMode" type="String"/>
+		<property name="returnStoreId" type="String"/>
+		<property name="storeCreditNo" type="String"/>
+		<property name="isReturnEligible" type="String"/>
+		<property name="isReturnInitiated" type="String"/>
 	</bean>
 	
 	<bean class="com.tisl.mpl.data.HelpmeShopData">

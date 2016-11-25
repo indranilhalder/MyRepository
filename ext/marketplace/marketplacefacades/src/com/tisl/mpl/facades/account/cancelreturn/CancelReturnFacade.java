@@ -16,6 +16,7 @@ import com.tisl.mpl.data.CODSelfShipData;
 import com.tisl.mpl.data.CODSelfShipResponseData;
 import com.tisl.mpl.data.CRMTicketUpdateData;
 import com.tisl.mpl.data.CRMTicketUpdateResponseData;
+import com.tisl.mpl.data.OrderLineData;
 import com.tisl.mpl.data.RTSAndRSSReturnInfoRequestData;
 import com.tisl.mpl.data.RTSAndRSSReturnInfoResponseData;
 import com.tisl.mpl.data.ReturnInfoData;
@@ -209,6 +210,13 @@ public interface CancelReturnFacade
 	 */
 	boolean createTicketInCRM(OrderData subOrderDetails, OrderEntryData subOrderEntry, String ticketTypeCode, String reasonCode,
 			String refundType, String ussid, CustomerData customerData, OrderModel subOrderModel, ReturnItemAddressData returnAddress);
+	
+	/**
+	 *
+	 * @param orerLines
+	 * @return List of Order Lines
+	 */
+	public List<OrderLineData> returnInitiationForRTS(List<OrderLineData> orerLines);
 
 
 }
