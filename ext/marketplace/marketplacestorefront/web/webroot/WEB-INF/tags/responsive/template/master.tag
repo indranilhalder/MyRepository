@@ -21,7 +21,8 @@
 <html lang="${currentLanguage.isocode}">
 <head>
 	<title>
-	${not empty page_name_search ? page_name_search :  not empty pageTitle ? pageTitle : not empty cmsPage.title ? cmsPage.title : 'Tata'} <!-- TISPRD-8030 -->	
+	<%-- TISPRD-8030 --%>
+	${not empty page_name_search ? page_name_search :  not empty pageTitle ? pageTitle : not empty cmsPage.title ? cmsPage.title : 'Tata'}  	
 	</title>
 	<%-- Meta Content --%>
 	<meta name="apple-itunes-app" content="app-id=1101619385">
@@ -142,7 +143,9 @@
 	
 	
 	<!-- Twitter Card data -->
-	<meta name="twitter:card" content="${baseURL}/">
+	<%-- <meta name="twitter:card" content="${baseURL}/"> --%>
+	<%-- TISPRD-8041 --%>
+	<meta name="twitter:card" content="summary_large_image" /> 
 	<meta name="twitter:site" content="${twitterHandle}">
 	<meta name="twitter:title" content="${metaTitle}">
 	<meta name="twitter:description" content="${metaDescription}">

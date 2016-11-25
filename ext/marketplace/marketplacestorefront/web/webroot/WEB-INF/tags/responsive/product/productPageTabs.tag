@@ -38,13 +38,13 @@ var buyboxskuId='';
 	</c:if> --%>
 <!-- 	TISPRD-7604 fix end -->
 	<c:if test="${fn:contains(validTabs, 'details')}">
-		<li id="tabs_details" >
+		<li id="tabs_details" class="active">
 			 <spring:theme code="product.product.details" />
 		</li>
 	</c:if>
 <!-- 	TISPRD-7604 fix start -->
 	<c:if test="${fn:contains(validTabs, 'stylenote')}">
-		<li id="tabs_styleNotes" class="active">
+		<li id="tabs_styleNotes">
 			 <spring:theme code="product.product.styleNotes" />
 		</li>
 	</c:if>
