@@ -50,7 +50,6 @@ import com.tisl.mpl.model.MplConfigurationModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.SellerMasterModel;
 import com.tisl.mpl.promotion.dao.impl.UpdatePromotionalPriceDaoImpl;
-import com.tisl.mpl.promotion.service.UpdateSplPriceHelperService;
 import com.tisl.mpl.util.ExceptionUtil;
 
 
@@ -68,8 +67,9 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(DefaultPromotionPriceUpdaterServiceImpl.class.getName());
 
-	@Autowired
+	//@Autowired
 	private PromotionPriceUpdaterDao promotionPriceUpdaterDao;
+
 
 	@Resource(name = "mplUpdatePromotionPriceDao")
 	private UpdatePromotionalPriceDaoImpl updatePromotionalPriceDao;
@@ -80,11 +80,14 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	private CatalogVersionService catalogVersionService;
 	@Autowired
 	private ConfigurationService configurationService;
-
-	private UpdateSplPriceHelperService updateSplPriceHelperService;
+	//SONAR-FIX -UNUSED VARIABLE
+	//private UpdateSplPriceHelperService updateSplPriceHelperService;
 
 	@Autowired
 	private CategoryService categoryService;
+
+	//SONAR FIX-STRING LITERAL USED MULTIPLE TIMES
+	private final String CATLIST = " *** categoryList:";
 
 
 
@@ -270,16 +273,16 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 				else if ((null != categoryList && !categoryList.isEmpty()) || ((null != productList && !productList.isEmpty()))
 						&& !isEnabled && quantity.intValue() == 1)
 				{
-					LOG.debug("******** Special price check disabling promotion, productlist impacted:" + productList
-							+ " *** categoryList:" + categoryList);
+					LOG.debug("******** Special price check disabling promotion, productlist impacted:" + productList + CATLIST
+							+ categoryList);
 					disablePromotionalPrice(productList, categoryList, isEnabled, priority, brandList, quantity, rejectSellerList,
 							rejectBrandList, promoCode);
 				}
 				else if ((null != categoryList && !categoryList.isEmpty()) || ((null != productList && !productList.isEmpty()))
 						&& quantity.intValue() > 1) // If Qauntity is increased from 1 to Multiple //Fix for TISPRD-383
 				{
-					LOG.debug("******** Special price check disabling promotion, productlist impacted:" + productList
-							+ " *** categoryList:" + categoryList);
+					LOG.debug("******** Special price check disabling promotion, productlist impacted:" + productList + CATLIST
+							+ categoryList);
 					disablePromotionalPrice(productList, categoryList, isEnabled, priority, brandList, quantity, rejectSellerList,
 							rejectBrandList, promoCode);
 				}
@@ -287,23 +290,23 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 		}
 		catch (final EtailBusinessExceptions e)
 		{
-			LOG.error("******** Special price check disabling promotion, productlist error:" + productList + " *** categoryList:"
-					+ categoryList + "PROMOTION CODE:" + promoCode);
+			LOG.error("******** Special price check disabling promotion, productlist error:" + productList + CATLIST + categoryList
+					+ "PROMOTION CODE:" + promoCode);
 			errorFlag = true;
 			throw e;
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 
-			LOG.error("******** Special price check disabling promotion, productlist error:" + productList + " *** categoryList:"
-					+ categoryList + "PROMOTION CODE:" + promoCode);
+			LOG.error("******** Special price check disabling promotion, productlist error:" + productList + CATLIST + categoryList
+					+ "PROMOTION CODE:" + promoCode);
 			errorFlag = true;
 			throw e;
 		}
 		catch (final Exception e)
 		{
-			LOG.error("******** Special price check disabling promotion, productlist error:" + productList + " *** categoryList:"
-					+ categoryList + "PROMOTION CODE:" + promoCode);
+			LOG.error("******** Special price check disabling promotion, productlist error:" + productList + CATLIST + categoryList
+					+ "PROMOTION CODE:" + promoCode);
 			errorFlag = true;
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}

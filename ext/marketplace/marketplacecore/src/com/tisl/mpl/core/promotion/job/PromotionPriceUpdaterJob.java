@@ -45,8 +45,9 @@ public class PromotionPriceUpdaterJob extends AbstractJobPerformable<CronJobMode
 	/*
 	 * @Autowired private MarketplaceCoreHMCExtension marketplaceCoreHMCExtension;
 	 */
-	@Resource(name = "mplUpdatePromotionPriceDao")
-	private UpdatePromotionalPriceDaoImpl updatePromotionalPriceDao;
+	//SONAR FIX-UNUSED VARIABLE
+	//@Resource(name = "mplUpdatePromotionPriceDao")
+	//private UpdatePromotionalPriceDaoImpl updatePromotionalPriceDao;
 
 
 	/**
