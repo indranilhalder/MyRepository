@@ -1941,7 +1941,8 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 						}
 					}
 				}
-				modelService.saveAll(cartEntryList);
+				modelService.save(cartModel);
+				modelService.refresh(cartModel);
 				LOG.debug("Sdd Date Saved Successfully...");
 			}
 		}
