@@ -9,7 +9,7 @@ import java.net.URL;
 import java.security.Timestamp;
 import java.util.Date;
 import java.net.URL;
-
+import java.util.Collections;
 import com.tealium.util.udohelpers.TealiumHelper;
 import com.tealium.util.udohelpers.TealiumHelper.UDOOptions;
 import com.tealium.util.udohelpers.TealiumHelper.PrebuiltUDOPageTypes;
@@ -961,6 +961,7 @@ public final class HybrisDataConverter
 				/* TPR-429 */
 				if (CollectionUtils.isNotEmpty(sellerIdList))
 				{
+					Collections.reverse(sellerIdList);
 					sellerIds = StringUtils.join(sellerIdList, '_');
 				}
 				/* TPR-429 */
