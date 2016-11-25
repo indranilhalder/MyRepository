@@ -7,7 +7,7 @@ import de.hybris.platform.commercefacades.user.data.CountryData;
 
 import java.util.List;
 
-import com.tisl.mpl.core.model.EMIBankModel;
+import com.tisl.mpl.wsdto.EMIBankListWsDTO;
 import com.tisl.mpl.wsdto.EMITermRateDataForMobile;
 
 
@@ -17,7 +17,8 @@ import com.tisl.mpl.wsdto.EMITermRateDataForMobile;
  */
 public interface MplNetBankingFacade
 {
-	public List<EMIBankModel> getEMIBanks(final Double cartValue);
+	//public List<EMIBankModel> getEMIBanks(final Double cartValue);
+	public EMIBankListWsDTO getEMIBanks(final Double cartValue);
 
 	public List<EMITermRateDataForMobile> getBankTerms(final String bank, final Double totalAmount);
 
