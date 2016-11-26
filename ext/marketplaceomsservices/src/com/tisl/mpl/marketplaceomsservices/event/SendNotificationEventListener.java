@@ -1096,6 +1096,10 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 				//sending SMS
 				LOG.info("****************************Sending SMS for Order Delivered ");
 				sendSMSUnDelivered(childOrders, orderNumber, mobileNumber, contactNumber, firstName, orderModel, awbNumber);
+				
+				//sending Email R2.3 New EMAIL
+				LOG.info("****************************Sending Email for Order UnDelivered ");
+				sendEmailUnDelivered(orderModel, childOrders, awbNumber);
 			}
 		}
 		catch (final Exception e)
@@ -1104,6 +1108,52 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 		}
 
 	}
+	
+	
+	/**
+	 * Added R2.3 new  Email
+	 * @description Method for sending UnDelivered Email Notification
+	 * @param orderModel
+	 * @param childOrders
+	 * @param awbNumber
+	 */
+	private void sendEmailUnDelivered(final OrderModel orderModel, final List<AbstractOrderEntryModel> childOrders,
+			final String awbNumber)
+	{
+		// Checking of SMS Notification previously sent or not
+		final List<OrderUpdateProcessModel> orderUpdateModelList = checkEmailSent(awbNumber, ConsignmentStatus.UNDELIVERED);
+		int numOfRows = 0;
+		if (null != orderUpdateModelList && !orderUpdateModelList.isEmpty())
+		{
+			numOfRows = orderUpdateModelList.size();
+			
+		}
+		LOG.info("*******Before checking isToSendNotification for UNDELIVERED EMAIL********");
+		final boolean flag = isToSendNotification(awbNumber, orderModel, ConsignmentStatus.UNDELIVERED);
+		LOG.info("*******After checking isToSendNotification for UNDELIVERED EMAIL********");
+		LOG.info("No of Rows:::::sendEmailUnDelivered" + numOfRows);
+		if (numOfRows == 0 && flag)
+		{
+			final OrderUpdateProcessModel orderUpdateProcessModel = (OrderUpdateProcessModel) getBusinessProcessService()
+					.createProcess("orderUnDeliveredEmailProcess-" + orderModel.getCode() + "-" + System.currentTimeMillis(),
+							"orderUnDeliveredEmailProcess");
+			orderUpdateProcessModel.setOrder(orderModel);
+			orderUpdateProcessModel.setAwbNumber(awbNumber);
+			orderUpdateProcessModel.setShipmentStatus(ConsignmentStatus.UNDELIVERED);
+
+			final List<String> entryNumber = new ArrayList<String>();
+			for (final AbstractOrderEntryModel child : childOrders)
+			{
+				entryNumber.add(child.getEntryNumber().toString());
+			}
+
+			orderUpdateProcessModel.setEntryNumber(entryNumber);
+			modelService.save(orderUpdateProcessModel);
+			businessProcessService.startProcess(orderUpdateProcessModel);
+		}
+
+	}
+
 
 	private Map<String, List<AbstractOrderEntryModel>> updateAWBNumber(final OrderModel orderModel,
 			final ConsignmentStatus shipmentStatus)

@@ -160,6 +160,13 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="orderConverter" ref="orderConverter" />
 	</bean>
 	
+	
+	  <!--R2.3 Secondary Status Context class  -->
+	<bean id="orderSecondaryStatusEmailContext"
+		class="com.tisl.mpl.facades.process.email.context.OrderSecondaryStatusEmailContext"
+		parent="abstractEmailContext" scope="prototype">
+	</bean>
+	
 	<!-- Added For PickUp Person And Order Refund Context  -->	
 	<bean id="orderCollectedByPersonNotificationEmailContext"
 		class="com.tisl.mpl.facades.process.email.context.OrderCollectedByPersonNotificationEmailContext"

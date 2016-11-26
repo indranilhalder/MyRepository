@@ -499,9 +499,18 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 		<property name="businessProcessService" ref="businessProcessService" />
 		<property name="configurationService" ref="configurationService" />
 	</bean> 
-
-
-
+	
+           <!--R2.3  Secondary Status Listener -->
+	<bean id="sendNotificationSecondaryStatusListener"
+		class="com.tisl.mpl.marketplaceomsservices.event.SendNotificationSecondaryStatusListener"
+		parent="abstractSiteEventListener">
+		<property name="modelService" ref="modelService" />
+		<property name="businessProcessService" ref="businessProcessService" />
+		<property name="configurationService" ref="configurationService" />
+	</bean>
+           
+           
+         
 	<bean id="sendOrderToCRMEventListner" class=" com.tisl.mpl.marketplaceomsservices.event.SendOrderToCRMEventListner"
 		parent="abstractSiteEventListener">
  		<property name="orderConverter" ref="omsOrderConverter" />
@@ -592,6 +601,25 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
 		<property name="resource"
 			value="classpath:/marketplacecore/processes/orderConfirmationRiskEmailProcess.xml" />
+	</bean>
+	
+	<!--R2.3 Secondary Email process   -->
+	<bean id="deliveryAddressIssueEmailProcessDefinitionResource"
+		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
+		<property name="resource"
+			value="classpath:/marketplacecore/processes/deliveryAddressIssueEmailProcess.xml" />
+	</bean>
+	
+	<bean id="orderOutForDeliveryEmailProcessDefinitionResource"
+		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
+		<property name="resource"
+			value="classpath:/marketplacecore/processes/orderOutForDeliveryEmailProcess.xml"/>
+	</bean>
+	
+	<bean id="orderUnDeliveredEmailProcessDefinitionResource"
+		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
+		<property name="resource"
+			value="classpath:/marketplacecore/processes/orderUnDeliveredEmailProcess.xml" />
 	</bean>
 	
 
@@ -741,6 +769,20 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 	<bean id="generateOrderRefundCreditedEmail" parent="abstractGenerateEmailAction">
 		<property name="frontendTemplateName" value="OrderRefundCreditedEmailTemplate" />
 	</bean>
+	
+	  <!--R2.3 secondary Status  Email-->
+	<bean id="generateOrderUnDeliveredEmail" parent="abstractGenerateEmailAction">
+		<property name="frontendTemplateName" value="OrderUnDeliveredEmailTemplate" />
+	</bean>
+	
+	<bean id="generateDeliveryAddressIssueEmail" parent="abstractGenerateEmailAction">
+		<property name="frontendTemplateName" value="DeliveryAddressIssueEmailTemplate" />
+	</bean>
+	
+	<bean id="generateOrderOutForDeliveryEmail" parent="abstractGenerateEmailAction">
+		<property name="frontendTemplateName" value="OrderOutForDeliveryEmailTemplate" />
+	</bean>
+	
 
 	<bean id="removeSentEmail"
 		class="de.hybris.platform.acceleratorservices.process.email.actions.RemoveSentEmailAction"
