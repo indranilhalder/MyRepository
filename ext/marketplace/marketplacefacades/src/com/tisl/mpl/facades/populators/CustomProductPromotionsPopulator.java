@@ -25,6 +25,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -32,11 +33,14 @@ import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.helper.ProductDetailsHelper;
+import com.tisl.mpl.marketplacecommerceservices.service.ExtStockLevelPromotionCheckService;
 import com.tisl.mpl.model.BuyXItemsofproductAgetproductBforfreeModel;
 import com.tisl.mpl.model.EtailSellerSpecificRestrictionModel;
 import com.tisl.mpl.model.ExcludeManufacturersRestrictionModel;
+import com.tisl.mpl.model.LimitedStockPromotionModel;
 import com.tisl.mpl.model.ManufacturersRestrictionModel;
 
 
@@ -60,6 +64,8 @@ public class CustomProductPromotionsPopulator<SOURCE extends ProductModel, TARGE
 	@Resource(name = "productDetailsHelper")
 	private ProductDetailsHelper productDetailsHelper;
 	protected static final Logger LOG = Logger.getLogger(CustomImagePopulator.class);
+	@Resource(name = "stockPromoCheckService")
+	private ExtStockLevelPromotionCheckService stockPromoCheckService;
 
 	protected PromotionsService getPromotionsService()
 	{
@@ -249,9 +255,26 @@ public class CustomProductPromotionsPopulator<SOURCE extends ProductModel, TARGE
 								toRemovePromotionList.add(productPromotion);
 								excludePromotion = true;
 							}
-
-
-						}
+							//TPR-965 changes starts
+							if (isLimitedStockPromoExists(productPromotion))
+							{
+								final LimitedStockPromotionModel limitedStock = (LimitedStockPromotionModel) productPromotion;
+								final String productCode = MarketplacecommerceservicesConstants.INVERTED_COMMA + productModel.getCode()
+										+ MarketplacecommerceservicesConstants.INVERTED_COMMA;
+								final Map<String, Integer> stockMap = stockPromoCheckService.getCumulativeStockMap(productCode,
+										limitedStock.getCode(), false);
+								if (!stockMap.isEmpty())
+								{
+									final Integer stockQuantity = stockMap.get(productModel.getCode());
+									final int stockValue = stockQuantity == null ? 0 : stockQuantity.intValue();
+									if ((limitedStock.getMaxStockCount().intValue() - stockValue) == 0)
+									{
+										toRemovePromotionList.add(productPromotion);
+									}
+								}
+							}
+							//TPR-965 changes ends
+						}//end
 					}//end promotion for loop
 				}
 				if (!toRemovePromotionList.isEmpty())
@@ -286,4 +309,15 @@ public class CustomProductPromotionsPopulator<SOURCE extends ProductModel, TARGE
 		}
 		return isFreeBree;
 	}
+
+	private boolean isLimitedStockPromoExists(final ProductPromotionModel productPromotion)
+	{
+		boolean isPresent = false;
+		if (productPromotion instanceof LimitedStockPromotionModel)
+		{
+			isPresent = true;
+		}
+		return isPresent;
+	}
+
 }
