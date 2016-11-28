@@ -84,10 +84,8 @@ public class ProductOfferDetailDaoImpl extends AbstractItemDao implements Produc
 	{
 		try
 		{
-
-			final String queryString = MarketplacecommerceservicesConstants.PRODUCTFREEBIEDETMSGQUERY;
-
-			LOG.debug("queryString: " + queryString);
+			final String queryString = MarketplacecommerceservicesConstants.PRODUCTFREEBEEDETMSGQUERY;
+			LOG.debug("queryStringg: " + queryString);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 
 			query.addQueryParameter(MarketplacecommerceservicesConstants.FREEBIEUSSID, ussId);

@@ -1749,4 +1749,12 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
  		<property name="mplCustomPageSiteMapGenerator" ref="mplCustomPageSiteMapGenerator"/>
  	</bean>	
 	<!-- TPR-1285 Dynamic Sitemap Stop -->
+	
+	<!-- for promotion price row updater job -->
+ 	<bean id="promotionPriceUpdaterJob"
+ 		class="com.tisl.mpl.core.promotion.job.PromotionPriceUpdaterJob"
+ 		autowire="byName" >
+ 	</bean>
+
+			
 </beans>

@@ -7,6 +7,7 @@ import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.SearchResult;
 import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,7 +76,7 @@ public class ProductOfferDetailServiceImpl implements ProductOfferDetailService
 				}
 				if (null != sellerIdQry)
 				{
-					if (StringUtils.isNotEmpty(offerMessage))
+					if (StringUtils.isNotEmpty(offerMessage) && offerMessage.length() <= MIN_OFFER_LENGTH)
 					{
 						offerDetMap.put(MarketplacecommerceservicesConstants.MESSAGE, offerMessage);
 					}
@@ -119,8 +120,8 @@ public class ProductOfferDetailServiceImpl implements ProductOfferDetailService
 	 * @return freebie message
 	 */
 	@Override
-	public Map<String, String> showFreebieMessage(final String ussId)
-			throws EtailNonBusinessExceptions, FlexibleSearchException, UnknownIdentifierException
+	public Map<String, String> showFreebieMessage(final String ussId) throws EtailNonBusinessExceptions, FlexibleSearchException,
+			UnknownIdentifierException
 	{
 		final SearchResult<List<Object>> result = prodOfferDetDao.showFreebieMessage(ussId);
 		final Map<String, String> resultMap = new HashMap<String, String>();
@@ -132,15 +133,19 @@ public class ProductOfferDetailServiceImpl implements ProductOfferDetailService
 				for (final List<Object> row : result.getResult())
 				{
 					final ProductFreebieDetailModel prddetails = (ProductFreebieDetailModel) row.get(0);
-					final FreebieDetailModel freebiedet = (FreebieDetailModel) row.get(1);
-
-					if (null != freebiedet && null != freebiedet.getFreebieId() && null != prddetails && null != prddetails.getOffer()
-							&& null != prddetails.getOffer().getFreebieId()
-							&& prddetails.getOffer().getFreebieId().equals(freebiedet.getFreebieId()))
+					if (null != prddetails && new Date().after(prddetails.getStartDate())
+							&& new Date().before(prddetails.getEndDate()))
 					{
-						resultMap.put(prddetails.getUssId(), freebiedet.getFreebieMsg());
-					}
+						final FreebieDetailModel freebiedet = (FreebieDetailModel) row.get(1);
 
+						if (null != freebiedet && null != freebiedet.getFreebieId() && null != prddetails.getOffer()
+								&& null != prddetails.getOffer().getFreebieId()
+								&& prddetails.getOffer().getFreebieId().equals(freebiedet.getFreebieId()))
+						{
+							resultMap.put(prddetails.getUssId(), freebiedet.getFreebieMsg());
+						}
+
+					}
 				}
 			}
 		}

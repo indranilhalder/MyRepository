@@ -183,7 +183,8 @@ ACC.refinements = {
 				var ownVal = $(this).parents("form").find('input[name="facetValue"]').val();
 				var ownIdentifier = $(this).parents("li").attr('class').replace('filter-',"");
 				var newFilter = ':' + ownIdentifier + ':' + ownVal;
-				if(updatedsearchQuery.includes(newFilter))
+				//if(updatedsearchQuery.includes(newFilter))
+				if(updatedsearchQuery.indexOf(newFilter) > -1)
 				{
 					updatedsearchQuery=updatedsearchQuery.replace(newFilter,"");
 				}
@@ -202,7 +203,8 @@ ACC.refinements = {
 				updatedsearchQuery=filterMobileQuery;
 			}else{
 				var newFilter=createSearchQuery(filterMobileQuery);	
-				if(updatedsearchQuery.includes(newFilter))
+				//if(updatedsearchQuery.includes(newFilter))
+				if(updatedsearchQuery.indexOf(newFilter) > -1)
 				{
 					updatedsearchQuery=updatedsearchQuery.replace(newFilter,"");
 				}
@@ -311,7 +313,8 @@ ACC.refinements = {
 				var ownIdentifier = $(this).parents("li").attr('class').replace(/^(\S*).*/, '$1').replace('filter-',"");
 				var newFilter = ':' + ownIdentifier + ':' + ownVal;
 				// Fixing error of facet ends
-				if(updatedsearchQuery.includes(newFilter))
+				//if(updatedsearchQuery.includes(newFilter))
+				if(updatedsearchQuery.indexOf(newFilter) > -1)
 				{
 					updatedsearchQuery=updatedsearchQuery.replace(newFilter,"");
 				}
@@ -319,7 +322,7 @@ ACC.refinements = {
 					updatedsearchQuery+=newFilter;
 				}			
 			}
-			console.log("updatedsearchQuery : "+updatedsearchQuery);
+			//console.log("updatedsearchQuery : "+updatedsearchQuery);
 		});
 		
 		// AJAX for removal of filters

@@ -99,6 +99,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationServ
 import com.tisl.mpl.model.EtailExcludeSellerSpecificRestrictionModel;
 import com.tisl.mpl.model.EtailSellerSpecificRestrictionModel;
 import com.tisl.mpl.model.LimitedStockPromotionModel;
+import com.tisl.mpl.model.PaymentModeSpecificPromotionRestrictionModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.promotion.service.SellerBasedPromotionService;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
@@ -906,14 +907,27 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 					//TPR-965 starts
 					if (result && promo.getPromotion() instanceof LimitedStockPromotionModel)
 					{
-						isStockPromo = checkIsStockPromoValid(promo.getPromotion(), abstractOrderModel);
-						if (isStockPromo && result)
+						final boolean payRestrictionsPresent = checkIfPaymentRestrictions(promo.getPromotion());
+						int numRestrictions = 0;
+						if (payRestrictionsPresent)
 						{
-							result = true;
+							numRestrictions = promo.getPromotion().getRestrictions().size();
 						}
-						else if (!isStockPromo && result)
+						if (payRestrictionsPresent && numRestrictions == 1)
 						{
-							result = false;
+							//do nothing
+						}
+						else
+						{
+							isStockPromo = checkIsStockPromoValid(promo.getPromotion(), abstractOrderModel);
+							if (isStockPromo && result)
+							{
+								result = true;
+							}
+							else if (!isStockPromo && result)
+							{
+								result = false;
+							}
 						}
 						//	result = checkIsStockPromoValid(promo.getPromotion(), abstractOrderModel, promo.getConsumedEntries());
 					}
@@ -929,6 +943,27 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 		return result;
 	}
+
+
+	/**
+	 * @param promotion
+	 * @return
+	 */
+	private boolean checkIfPaymentRestrictions(final AbstractPromotionModel promotion)
+	{
+		boolean isPresent = false;
+		for (final AbstractPromotionRestrictionModel restriction : promotion.getRestrictions())
+		{
+			if (restriction instanceof PaymentModeSpecificPromotionRestrictionModel)
+			{
+				isPresent = true;
+				break;
+			}
+
+		}
+		return isPresent;
+	}
+
 
 
 	/**

@@ -258,7 +258,7 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 		catch (final Exception e)
 		{
 			//pincodeResfromOMS = null;
-			LOG.error(MarketplacecclientservicesConstants.EXCEPTION_IS, e);
+			LOG.debug(MarketplacecclientservicesConstants.EXCEPTION_IS, e);
 			throw new ClientEtailNonBusinessExceptions(e);
 		}
 		return pincodeResfromOMS;
@@ -388,7 +388,7 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 		}
 		catch (final Exception ex)
 		{
-			LOG.error("PinCodeDeliveryModeListResponse  " + MarketplacecclientservicesConstants.EXCEPTION_IS, ex);
+			LOG.debug("PinCodeDeliveryModeListResponse  " + MarketplacecclientservicesConstants.EXCEPTION_IS, ex);
 			validateOMSException(ex, MarketplacecclientservicesConstants.EXCEPTION_TYPE_PINCODE);
 			throw new ClientEtailNonBusinessExceptions(ex);
 		}
@@ -529,7 +529,7 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 		catch (final Exception e)
 		{
 			//pincodeResfromOMS = null;
-			LOG.error(MarketplacecclientservicesConstants.EXCEPTION_IS + e);
+			LOG.debug(MarketplacecclientservicesConstants.EXCEPTION_IS + e);
 			throw new ClientEtailNonBusinessExceptions("O0001", e);
 		}
 
@@ -650,7 +650,7 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 		}
 		catch (final Exception ex)
 		{
-			LOG.error(MarketplacecclientservicesConstants.EXCEPTION_IS, ex);
+			LOG.debug(MarketplacecclientservicesConstants.EXCEPTION_IS, ex);
 
 			if (ex.getMessage().contains("connect timed out") || ex.getMessage().contains("Connection refused"))
 			{

@@ -8,7 +8,7 @@
 
 
 	<c:if test ="${component.uid eq 'ShopByBrandComponent' }">
-	<div class="toggle"><span><spring:theme code="navigation.department.shopBy" /></span>
+	<div class="toggle shop_brand"><span><spring:theme code="navigation.department.shopBy" /></span>
 	
 	<span><span><spring:theme code="navigation.brand.shopByBrand" /></span></div>
 	<span id="mobile-menu-toggle" class="mainli"></span>

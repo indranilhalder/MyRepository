@@ -112,7 +112,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 
 	public static final String PROMO_ERROR_MESSAGE = "Cannot exceed 25 characters.".intern();
-    //public static final String PROMO_ERROR_MESSAGE = "Title cannot exceed 25 characters.".intern();
+	//public static final String PROMO_ERROR_MESSAGE = "Title cannot exceed 25 characters.".intern();
+
 
 
 
@@ -1787,16 +1788,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SITEMAP_FILE_LOCATION_PRODUCT = "mpl.sitemap.productFileLocation".intern();
 
 	//update the message for Freebie product TPR-1754
-
-
 	//	public static final String PRODUCTFREEBIEDETMSGQUERY = "SELECT {prodOffrDet.ussId},{offerDet.freebieMsg},{prodOffrDet.startDate},{prodOffrDet.endDate}  FROM {FreebieDetail as offerDet}, {ProductFreebieDetail as  prodOffrDet} WHERE {prodOffrDet.ussId}= ?ussId AND {prodOffrDet.offer} = {offerDet.pk} AND {prodOffrDet.startDate} <=sysdate AND {prodOffrDet.endDate} >=sysdate"
 	//			.intern();
-
-	public static final String PRODUCTFREEBIEDETMSGQUERY = "select {prodOffrDet.pk},{offerDet.pk} from {"
+	public static final String PRODUCTFREEBEEDETMSGQUERY = "select {prodOffrDet.pk},{offerDet.pk} from {"
 			+ ProductFreebieDetailModel._TYPECODE + " as prodOffrDet JOIN " + FreebieDetailModel._TYPECODE
 			+ " as offerDet ON {prodOffrDet.offer} = {offerDet.pk} }"
-			+ " where {prodOffrDet.ussId}= ?ussId AND {prodOffrDet.startDate} <=sysdate AND {prodOffrDet.endDate} >=sysdate"
-					.intern();
+			+ " where {prodOffrDet.ussId}= ?ussId AND sysdate between {prodOffrDet.startDate} AND {prodOffrDet.endDate}".intern();
 	public static final String FREEBIEMSG = "freebieMsg".intern();
 	public static final String FREEBIEUSSID = "ussId".intern();
 
@@ -1847,5 +1844,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String BULK_RETURN_SUCCESS_DESC = "Return Success";
 	public static final String BULK_RETURN_FAILURE_DESC = "Return Failure";
 
+
+
+	public final static String RETURN_ENABLE = "order.return.enabled".intern();
+	public final static String CANCEL_ENABLE = "order.cancel.enabled".intern();
 
 }
