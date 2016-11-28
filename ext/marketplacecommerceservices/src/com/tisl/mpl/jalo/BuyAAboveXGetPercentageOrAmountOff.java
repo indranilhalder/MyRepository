@@ -78,7 +78,7 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 		LOG.debug("Buy A Above X and get y percentage/amount off");
 		productSellerDetails = new HashMap<AbstractOrderEntry, String>();
 
-		final boolean isMultipleSeller = false;
+		//final boolean isMultipleSeller = false;  //sonar fix
 
 		List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
 		final PromotionsManager.RestrictionSetResult rsr = findEligibleProductsInBasket(ctx, evaluationContext);

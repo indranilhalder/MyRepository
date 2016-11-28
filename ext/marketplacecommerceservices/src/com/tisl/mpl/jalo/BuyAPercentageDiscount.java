@@ -89,7 +89,7 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 		List<String> excludeManufactureList = null;
 		List<Product> excludedProductList = null;
 		boolean checkChannelFlag = false;
-		final boolean isMultipleSeller = false;
+		//final boolean isMultipleSeller = false;   //Sonar fix
 		final List<Product> promotionProductList = new ArrayList<>(getProducts()); //Adding of Promotion Added Products to List
 		final List<Category> promotionCategoryList = new ArrayList<>(getCategories());//Adding of Promotion Added Categories to List
 		List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
@@ -136,7 +136,7 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 					//Passing individual Ussid in promotionEvaluation hence overwrite the totalPricevalue)
 					/*
 					 * isMultipleSeller = getMplPromotionHelper().checkMultipleSeller(restrictionList);
-					 * 
+					 *
 					 * if (isMultipleSeller) { Map<AbstractOrderEntry, String> productSellerDetails = new
 					 * HashMap<AbstractOrderEntry, String>(); Map<String, Map<String, AbstractOrderEntry>>
 					 * multiSellerValidUSSIDMap = new HashMap<String, Map<String, AbstractOrderEntry>>();
