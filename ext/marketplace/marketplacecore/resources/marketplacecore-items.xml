@@ -6262,7 +6262,7 @@
 						type="java.lang.Boolean">
 						<description>Set this to false for allowing Non Numeric text field Faceting</description>
 						<modifiers read="true" write="true" optional="true" />
-						<defaultvalue>true</defaultvalue>
+						<defaultvalue>Boolean.FALSE</defaultvalue>
 						<persistence type="property" />
 					</attribute>
 					<!-- TPR-3548 End -->

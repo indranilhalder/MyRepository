@@ -96,7 +96,7 @@ public class MplDefaultIndexedPropertyPopulator extends DefaultIndexedPropertyPo
 		if (source.getIsNumericRange() == null)
 		{
 
-			source.setIsNumericRange(Boolean.TRUE);
+			source.setIsNumericRange(Boolean.FALSE);
 			target.setIsNumericRange(source.getIsNumericRange());
 
 		}
