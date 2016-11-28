@@ -54,9 +54,10 @@
 			</div>
         
 		<div class="facet-values js-facet-values js-facet-form ">
-			<%--start changes for INC_10172 --%>
-			<ul class="facet-list js-facet-list prod-size-list">
-			<%--end changes for INC_10172 --%>
+			
+			
+			<ul class="facet-list js-facet-list">
+			
 
 
 

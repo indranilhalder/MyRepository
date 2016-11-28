@@ -184,9 +184,9 @@ function navigateToPage(queryString,textString)
 					</c:forEach>
 				</ul>
 			</c:if>
-			<%--start changes for INC_10172 --%>
-			<ul class="facet-list js-facet-list prod-size-list  <c:if test="${not empty facetData.topValues}">facet-list-hidden js-facet-list-hidden</c:if>">
-			<%--end changes for INC_10172 --%>
+			
+			<ul class="facet-list js-facet-list <c:if test="${not empty facetData.topValues}">facet-list-hidden js-facet-list-hidden</c:if>">
+			
 
 
 
