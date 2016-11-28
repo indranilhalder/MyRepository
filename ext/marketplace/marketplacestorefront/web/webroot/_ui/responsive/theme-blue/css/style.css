@@ -13212,6 +13212,7 @@ div.pdp .reviews .toolbar select.white {
 		color: #A9143C;
 		text-align: center;
 		background-color: #fafafa;
+		margin-top:10px;
 	}
 @media ( max-width : 790px) {
 	.customer-service .side-nav {
@@ -13333,6 +13334,9 @@ font-size:14px;
 }	
 }
 @media ( min-width : 791px) {
+	.customer-service {
+	padding-top: 50px;
+	}
 	.customer-service .side-nav {
 		padding: 50px 60px;
 	}
@@ -13368,7 +13372,8 @@ font-size:14px;
 	    text-align: center;
    		 background-color: rgb(250,250,250);
    		 width:100%;
-   		 top:-25px;
+   		 top:20px;
+   		 margin-top:0px;
 	}
 	 
 	.customer-service .side-nav+.content+.content {
@@ -55263,6 +55268,8 @@ a#cvvHelp{display:none;}
 }
 .cart.wrapper .product-block.emi #EMITermTable td{
     display: block;
+    float:left;
+    width:100%;
     text-transform: none;}
 .cart.wrapper .product-block.emi #EMITermTable td:nth-last-child(3),.cart.wrapper .product-block.emi #EMITermTable td:nth-last-child(2){
     background:#f8f8f8;}
@@ -59071,3 +59078,6 @@ display: none;
    }
    }
 /*Checkout delivery page price column hide ends*/
+.page-productDetails .trending{
+	clear:both;
+}

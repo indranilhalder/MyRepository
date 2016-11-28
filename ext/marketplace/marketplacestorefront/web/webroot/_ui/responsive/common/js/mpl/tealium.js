@@ -246,6 +246,10 @@ $(document).ready(
 					success : function(data) {
 						// console.log(data);
 						var tealiumData = "";
+						//TPR-430
+						var product_category = null;
+						var page_subcategory_name = null;
+						var page_subcategory_name_L3 = null;
 						tealiumData += ',"user_login_type":"'	//TPR-668
 							+ user_login_type + '",';
 						tealiumData += '"search_keyword":"'
@@ -257,15 +261,14 @@ $(document).ready(
 						tealiumData += '"search_results":"'
 							+ $("#search_results").val() + '",';
 						tealiumData += '"search_type":"'		// TPR-666
-							+ $("#search_type").val() + '"}';
+							+ $("#search_type").val() + '",';
 						//TPR-430 Start
-//						tealiumData += '"product_category":"'
-//							+ $("#product_category").val() + '",';
-//						tealiumData += '"page_subcategory_name":"'		// TPR-430
-//							+ $("#page_subcategory_name").val() +'",';
-//						tealiumData += '"page_subcategory_name_l3":"'		// TPR-430
-//							+ $("#page_subcategory_name_l3").val() +'"}';
-						//TPR-430 Start
+						tealiumData += '"product_category":"'
+							+ product_category + '",';
+						tealiumData += '"page_subcategory_name":"'		
+							+ page_subcategory_name +'",';
+						tealiumData += '"page_subcategory_name_l3":"'		
+							+ page_subcategory_name_L3 +'"}';
 						data = data.replace("}<TealiumScript>", tealiumData);
 						$('#tealiumHome').html(data);
 					}
@@ -814,8 +817,8 @@ $(document).on("click", ".home-brands-you-love-carousel-brands", function() {
 				var x= $.trim($(".toggle.shop_dept").text().replace(/[\t\n\']+/g,' '));
 				x = x.replace(" ","").toLowerCase();
 				x = x.replace(" ","_");
-				var y = $.trim($(this).text().replace(/[\t\n\']+/g,' ')).toLowerCase();
-				y = y.replace(/[\s]/g,"");
+				var y = $.trim($(this).text().replace(/[\t\n\'\-]+/g,' ')).toLowerCase();
+				y = y.replace(/[\s\-]/g,"");
 				var navigationClick= "top_navigation_click";
 				
 				if($(target).parent().hasClass("toggle departmenthover L1"))
@@ -828,16 +831,17 @@ $(document).on("click", ".home-brands-you-love-carousel-brands", function() {
 				if($(target).parent().hasClass("toggle L2"))
 				{
 					var itsParentL1 = $.trim(that.parents().siblings(".departmenthover.L1").text().replace(/[\t\n\']+/g,' ')).toLowerCase();
-					itsParentL1 = itsParentL1.replace(/[\s]/g,"");
+					itsParentL1 = itsParentL1.replace(/[\s\-]/g,"");
 					//hAr+= x+">>>"+">>"+itsParentL1 +" >> "+ y;
 					utag.link({"link_text":x+"_"+itsParentL1+"_"+y, "event_type" : navigationClick});
 				}
 				
 				if(that.parent().hasClass("toggle L3")){
-					var itsParentL1 =$.trim(that.parents().siblings(".departmenthover.L1").text().replace(/[\t\n\']+/g,' ')).toLowerCase();
-					itsParentL1 = itsParentL1.replace(/[\s]/g,"");
-					var itsParentL2 = $.trim(that.parent().parent().prevAll("li.short.words:first").text().replace(/[\t\n\']+/g,' ')).toLowerCase();
-					itsParentL2 = itsParentL2.replace(/[\s]/g,"");
+					var itsParentL1 =$.trim(that.parents().siblings(".departmenthover.L1").text().replace(/[\t\n\'\-]+/g,' ')).toLowerCase();
+					itsParentL1 = itsParentL1.replace(/[\s\-]/g,"");
+					var itsParentL2 = $.trim(that.parent().parent().prevAll("li.short.words:first").text().replace(/[\t\n\'\-]+/g,' ')).toLowerCase();
+					itsParentL2 = itsParentL2.replace(/[\s\-]/g,"");
+					console.log("dress")
 					
 					//hAr+= x+">>>>" +">>>>>"+itsParentL1 +" >> "+ ">>"+itsParentL2 +$(this).text();
 					utag.link({"link_text":x+"_"+itsParentL1+"_"+itsParentL2+"_"+y,"event_type" : navigationClick});

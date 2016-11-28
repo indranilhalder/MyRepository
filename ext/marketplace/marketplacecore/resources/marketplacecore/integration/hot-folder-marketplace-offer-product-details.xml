@@ -41,29 +41,29 @@
  
     <!-- 1) Scan for files -->
     
-    <file:inbound-channel-adapter id="batchFilesOfferProductDetail" directory="#{baseDirectoryOfferProductDetail}"
+   <!--  <file:inbound-channel-adapter id="batchFilesOfferProductDetail" directory="#{baseDirectoryOfferProductDetail}"
         filename-regex="^(.*)-(\d+)\.csv" comparator="fileOrderComparator" auto-startup="#{configurationService.configuration.getProperty('etail.batch.import.hotfolder.enabled')}">
         <int:poller fixed-rate="1000" />
-    </file:inbound-channel-adapter>
+    </file:inbound-channel-adapter> -->
  
     <!-- 2) move the file to processing and setup header -->
     
-    <file:outbound-gateway request-channel="batchFilesOfferProductDetail" reply-channel="batchFilesOfferProductDetailProc"
-        directory="#{baseDirectoryOfferProductDetail}/processing" delete-source-files="true" />
+   <!--  <file:outbound-gateway request-channel="batchFilesOfferProductDetail" reply-channel="batchFilesOfferProductDetailProc"
+        directory="#{baseDirectoryOfferProductDetail}/processing" delete-source-files="true" /> -->
 
 	<!-- 3) transform csv to impex file -->
 	
- 	<int:service-activator input-channel="batchFilesOfferProductDetailProc" output-channel="batchFilesHeaderInit"
+ 	<!-- <int:service-activator input-channel="batchFilesOfferProductDetailProc" output-channel="batchFilesHeaderInit"
         ref="CreateOfferProdDetHeaderSetupTask" method="execute" />
  
  	<bean id="CreateOfferProdDetHeaderSetupTask" class="de.hybris.platform.acceleratorservices.dataimport.batch.task.HeaderSetupTask">
         <property name="catalog" value="mplProductCatalog" />
         <property name="net" value="false" />
         <property name="storeBaseDirectory" ref="baseDirectoryOfferProductDetail" />
-    </bean>   
+    </bean>   --> 
     
  <!-- Transformer converters mappings --> 		 
-    <bean id="batchOfferDetailConverterMapping"
+    <!-- <bean id="batchOfferDetailConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="offerDetail"
     p:converter-ref="batchOfferDetailConverter"/>
@@ -73,7 +73,7 @@
     p:mapping="productOfferDetail"
     p:converter-ref="batchProductOfferDetailConverter"/>		    
     
- 	  <!-- Converters --> 	  
+ 	  Converters 	  
   	<bean id="batchOfferDetailConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
             <value>#{defaultImpexProductHeader}
@@ -96,6 +96,6 @@
         <property name="impexRow">
             <value>;{+0};{+1};{+2};{+3};{+4};</value>
         </property>
-        </bean>       
+        </bean>  -->      
        
   </beans>
