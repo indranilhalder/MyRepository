@@ -1722,6 +1722,7 @@ $(document).ready(function(){
 		                        encodeURI(html));
 
 		                }
+		            }
 		        });
 
 
