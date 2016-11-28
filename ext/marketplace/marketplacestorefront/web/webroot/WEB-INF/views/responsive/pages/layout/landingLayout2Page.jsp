@@ -36,6 +36,15 @@
 	<!-- <div class="feature-categories" id="ia_categories_favorites"></div>
 	<div class="feature-collections" id="ia_collections"></div> -->
 	<div class="trending" id="ia_products_hot"></div>
+
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.category.ids')" var="IACategories"/> 
+    <input type="hidden"  id="categoryIdHotNow" value="${IACategories}" />	
+	<c:set var="categoryIdlist" value="${fn:split(IACategories, ',')}" />
+	<c:forEach var="categoryIds" items="${categoryIdlist}">	
+		<c:set var="categoryId" value="${fn:substringBefore(categoryIds, '-')}" />
+		<div class="trending" id="ia_products_hot_${categoryId}"></div>
+	</c:forEach>
+	
 	<!-- For Infinite Analytics End -->
 	<div id="showcase" class="showcase feature-collections"></div>
     <!-- Store Locator  -->
