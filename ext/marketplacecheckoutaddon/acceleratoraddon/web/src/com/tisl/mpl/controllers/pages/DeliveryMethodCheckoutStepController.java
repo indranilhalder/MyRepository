@@ -58,10 +58,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -1737,22 +1735,20 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 													MarketplacecommerceservicesConstants.Y))
 											{
 												isScheduleServiceble = true;
+											}
 												mplCheckoutFacade.constructDeliverySlotsForEDAndHD(deliverySlotsResponse, cartEntryData,
 														mplLPHolidaysModel);
-											}
+											
 										}
-										   else
-										   if(cartEntryData.getSelectedUssid().equalsIgnoreCase(deliverySlotsResponse.getUssId())
-										   &&
-										   fulfillmentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.SSHIP.toUpperCase
-										   ()))
-										   { 
-										   	//isScheduleServiceble=true;
-										   mplCheckoutFacade.constructDeliverySlotsForEDAndHD(deliverySlotsResponse,
-										   cartEntryData, mplLPHolidaysModel); 
-										   final Map<String, List<String>> dateTimeslotMapList= new HashMap<String, List<String>>();
-										   cartEntryData.setDeliverySlotsTime(dateTimeslotMapList);
-										   }
+										else if (cartEntryData.getSelectedUssid().equalsIgnoreCase(deliverySlotsResponse.getUssId())
+												&& fulfillmentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.SSHIP.toUpperCase()))
+										{
+											//isScheduleServiceble=true;
+											mplCheckoutFacade.constructDeliverySlotsForEDAndHD(deliverySlotsResponse, cartEntryData,
+													mplLPHolidaysModel);
+											final Map<String, List<String>> dateTimeslotMapList = new HashMap<String, List<String>>();
+											cartEntryData.setDeliverySlotsTime(dateTimeslotMapList);
+										}
 									}
 								}
 							}
