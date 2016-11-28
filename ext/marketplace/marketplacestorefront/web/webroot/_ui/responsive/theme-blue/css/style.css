@@ -57535,9 +57535,6 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
     width: 78px;
     border-bottom: 2px solid #a9143c;
 }
-.Manufacturer.temp-six h3:after {
-    display: none;	/* TISQAUAT-695 */
-}
 
 /* Mobile & Tablet starts*/
 
