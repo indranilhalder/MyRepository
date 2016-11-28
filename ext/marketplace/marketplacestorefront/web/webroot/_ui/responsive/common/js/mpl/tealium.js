@@ -450,7 +450,7 @@ $(document).ready(
 
 /*TPR-429 Start*/
 /*TPR-689 (Part of TPR-429) Start*/
-$(document).on('click','#buyNowButton',function(){
+/*$(document).on('click','#buyNowButton',function(){
 	var productSKU = $('.add_to_cart_form').find('input[type="hidden"]#productCodePost').val();
 	utag.link({
 		link_obj: this,
@@ -459,7 +459,7 @@ $(document).on('click','#buyNowButton',function(){
 		product_sku : productSKU
 	});
 })
-/*TPR-689 End*/
+TPR-689 End
 
 
 $(document).on('mousedown','.btn-block.js-add-to-cart',function(){
@@ -478,7 +478,7 @@ $(document).on('mousedown','.btn-block.js-add-to-cart',function(){
 		}
 	}
 	
-	/*var productSKU = $(this).parents('form').find('input[type="hidden"]#ussid').val();*/
+	var productSKU = $(this).parents('form').find('input[type="hidden"]#ussid').val();
 	var productSKU = $('#productCodePost').val();
 
 	if($(this).attr('id').toLowerCase().indexOf("buynow") == -1){
@@ -489,7 +489,7 @@ $(document).on('mousedown','.btn-block.js-add-to-cart',function(){
 			product_sku : productSKU
 		});
 	}
-})
+})*/
 
 
 function differentiateSeller(){
