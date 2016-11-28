@@ -129,27 +129,27 @@
 										<div class="show-date">
 											<p>${product.potentialPromotions[0].description}</p>
 											<div class="offer-date">
-											<div class="from-date">
-											<span class="from">From:</span>
-											<span class="date-time"><fmt:formatDate pattern="dd/MM/yyyy"
-												value="${product.potentialPromotions[0].startDate}" /></span>
-												<span class="date-time"><fmt:formatDate pattern="h:mm:ss a"
-												value="${product.potentialPromotions[0].startDate}" /></span>
+												<div class="from-date">
+													<span class="from">From:</span>
+													<span class="date-time"><fmt:formatDate pattern="dd/MM/yyyy"
+													value="${product.potentialPromotions[0].startDate}" /></span>
+													<span class="date-time"><fmt:formatDate pattern="h:mm:ss a"
+													value="${product.potentialPromotions[0].startDate}" /></span>
 												</div>
 												<div class="to-date">
-											<span class="to">To:</span>
-											<span class="date-time"><fmt:formatDate pattern="dd/MM/yyyy"
-												value="${product.potentialPromotions[0].endDate}" /></span>
-											<span class="date-time"><fmt:formatDate pattern="h:mm:ss a"
-												value="${product.potentialPromotions[0].endDate}" /></span>
+													<span class="to">To:</span>
+													<span class="date-time"><fmt:formatDate pattern="dd/MM/yyyy"
+													value="${product.potentialPromotions[0].endDate}" /></span>
+													<span class="date-time"><fmt:formatDate pattern="h:mm:ss a"
+													value="${product.potentialPromotions[0].endDate}" /></span>
 												</div>
-										</div>
+											</div>
 										</div>
 										<br>
 											<c:if test="${not empty product.potentialPromotions[0].termsAndConditions}">
 											<div class="show-termsConditions">
 											<span class="from">Terms and Conditions:</span>
-											<span><p>${product.potentialPromotions[0].termsAndConditions}</p></span>
+											<span class="terms-text"><p>${product.potentialPromotions[0].termsAndConditions}</p></span>
 											</div>											
 										</c:if>	
 									</div>
