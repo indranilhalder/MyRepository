@@ -246,6 +246,10 @@ $(document).ready(
 					success : function(data) {
 						// console.log(data);
 						var tealiumData = "";
+						//TPR-430
+						var product_category = null;
+						var page_subcategory_name = null;
+						var page_subcategory_name_L3 = null;
 						tealiumData += ',"user_login_type":"'	//TPR-668
 							+ user_login_type + '",';
 						tealiumData += '"search_keyword":"'
@@ -257,15 +261,14 @@ $(document).ready(
 						tealiumData += '"search_results":"'
 							+ $("#search_results").val() + '",';
 						tealiumData += '"search_type":"'		// TPR-666
-							+ $("#search_type").val() + '"}';
+							+ $("#search_type").val() + '",';
 						//TPR-430 Start
-//						tealiumData += '"product_category":"'
-//							+ $("#product_category").val() + '",';
-//						tealiumData += '"page_subcategory_name":"'		// TPR-430
-//							+ $("#page_subcategory_name").val() +'",';
-//						tealiumData += '"page_subcategory_name_l3":"'		// TPR-430
-//							+ $("#page_subcategory_name_l3").val() +'"}';
-						//TPR-430 Start
+						tealiumData += '"product_category":"'
+							+ product_category + '",';
+						tealiumData += '"page_subcategory_name":"'		
+							+ page_subcategory_name +'",';
+						tealiumData += '"page_subcategory_name_l3":"'		
+							+ page_subcategory_name_L3 +'"}';
 						data = data.replace("}<TealiumScript>", tealiumData);
 						$('#tealiumHome').html(data);
 					}
