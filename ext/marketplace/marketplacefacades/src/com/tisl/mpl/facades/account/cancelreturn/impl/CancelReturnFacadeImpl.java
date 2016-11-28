@@ -3386,7 +3386,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
    					{
    						if(seller.getSellerArticleSKU().equals(entry.getSelectedUSSID()))
    						{
-   							OrderLineData orderData = getReturnEligibility(seller, entry, subOrderModel.getCode(),subOrderModel, data);
+   							OrderLineData orderData = getReturnEligibility(seller, entry, orderModel.getCode(),subOrderModel, data);
    							orderList.add(orderData);
    							if (orderData != null && orderData.getIsReturnInitiated().equalsIgnoreCase("Y"))
 								{
