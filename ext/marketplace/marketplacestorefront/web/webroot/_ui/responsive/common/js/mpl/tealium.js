@@ -389,13 +389,13 @@ $(document).ready(
 				
 				var pageTypeHome = 'orderconfirmation';
 				var site_section = 'orderconfirmation';
-				var homePageTealium = '';
+				var orderPageTealium = '';
 				//TPR-430
 				var product_category = null;
 				var page_subcategory_name = null;
 				var page_subcategory_name_L3 = null;
 				
-				homePageTealium+='<script type="text/javascript"> var utag_data ={"site_region":"'+site_region+'","user_type":"'+user_type+'","user_login_type":"'+user_login_type+'","user_id":"'+user_id+'","page_type":"'+pageTypeHome+'","page_name":"'+pageName+'","product_category":"'+product_category+'","page_subcategory_name":"'+page_subcategory_name+'","page_subcategory_name_L3":"'+page_subcategory_name_L3+'", "session_id":"'+session_id+'","visitor_ip":"'+visitor_ip+'","site_currency":"'+site_currency+'","site_section":"'+site_section+'","IA_company":"'+domain_name+'"}</script>';
+				orderPageTealium+='<script type="text/javascript"> var utag_data ={"site_region":"'+site_region+'","user_type":"'+user_type+'","user_login_type":"'+user_login_type+'","user_id":"'+user_id+'","page_type":"'+pageTypeHome+'","page_name":"'+pageName+'","product_category":"'+product_category+'","page_subcategory_name":"'+page_subcategory_name+'","page_subcategory_name_L3":"'+page_subcategory_name_L3+'", "session_id":"'+session_id+'","visitor_ip":"'+visitor_ip+'","site_currency":"'+site_currency+'","site_section":"'+site_section+'","IA_company":"'+domain_name+'"}</script>';
 				var script="";
 				if(domain_name =="www.tatacliq.com"){
 					
@@ -405,8 +405,8 @@ $(document).ready(
 					
 					script=UTAG_SCRIPT_DEV;
 				}
-				homePageTealium+=script;
-				$('#tealiumHome').html(homePageTealium);
+				orderPageTealium+=script;
+				$('#tealiumHome').html(orderPageTealium);
 			}
 		
 			//for order page
