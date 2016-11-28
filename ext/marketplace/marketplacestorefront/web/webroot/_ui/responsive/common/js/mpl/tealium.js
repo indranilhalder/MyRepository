@@ -382,6 +382,35 @@ $(document).ready(
 				
 			}
 
+			
+			//tpr-668  --for order page
+			
+			if (pageType == "orderconfirmation") {
+				
+				var pageTypeHome = 'orderconfirmation';
+				var site_section = 'orderconfirmation';
+				var orderPageTealium = '';
+				//TPR-430
+				var product_category = null;
+				var page_subcategory_name = null;
+				var page_subcategory_name_L3 = null;
+				
+				orderPageTealium+='<script type="text/javascript"> var utag_data ={"site_region":"'+site_region+'","user_type":"'+user_type+'","user_login_type":"'+user_login_type+'","user_id":"'+user_id+'","page_type":"'+pageTypeHome+'","page_name":"'+pageName+'","product_category":"'+product_category+'","page_subcategory_name":"'+page_subcategory_name+'","page_subcategory_name_L3":"'+page_subcategory_name_L3+'", "session_id":"'+session_id+'","visitor_ip":"'+visitor_ip+'","site_currency":"'+site_currency+'","site_section":"'+site_section+'","IA_company":"'+domain_name+'"}</script>';
+				var script="";
+				if(domain_name =="www.tatacliq.com"){
+					
+					script=UTAG_SCRIPT_PROD;
+				}
+				else{
+					
+					script=UTAG_SCRIPT_DEV;
+				}
+				orderPageTealium+=script;
+				$('#tealiumHome').html(orderPageTealium);
+			}
+		
+			//for order page
+			
 			/*TPR-648 start*/
 			$('.shop-promos .promos a').click(function(){
 				var brandText=$(this).text().replace(/ /g,'').toLowerCase()+ "_viewdetails";
