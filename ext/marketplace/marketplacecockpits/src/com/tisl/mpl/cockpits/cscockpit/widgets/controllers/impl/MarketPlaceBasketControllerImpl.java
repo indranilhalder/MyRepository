@@ -23,6 +23,7 @@ import com.tisl.mpl.cockpits.cscockpit.services.MarketplaceCsCheckoutService;
 import com.tisl.mpl.cockpits.cscockpit.strategies.MplFindDeliveryFulfillModeStrategy;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceBasketController;
 import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceabilityCheckHelper;
+import com.tisl.mpl.constants.MplGlobalCodeConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
@@ -402,7 +403,8 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 										Collection<RichAttributeModel> rich=cartEntry.getProduct().getRichAttribute();
 										rich.iterator().next().getShippingModes().toString();
 										if(null !=rich && null != rich.iterator().next().getShippingModes()) {
-										cartSoftReservationRequestData.setTransportMode(rich.iterator().next().getShippingModes().getCode());
+											String transportMode = rich.iterator().next().getShippingModes().getCode();
+										cartSoftReservationRequestData.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(transportMode.toUpperCase()));
 										}
 										if(null != DeliveryData.getFulfilmentType()) {
 											cartEntry.setFulfillmentMode(DeliveryData.getFulfilmentType());
