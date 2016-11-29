@@ -286,7 +286,11 @@ public class MarketPlaceRefundScheduleDeliveryChargeWidgetRenderer extends
 				@Override
 				public boolean evaluate(Object o) {
 					AbstractOrderEntryModel entry = (AbstractOrderEntryModel) o;
-					return entry.getScheduledDeliveryCharge() != 0D;
+					if(null != entry.getIsSdb() && entry.getIsSdb()) {
+				    	return entry.getScheduledDeliveryCharge() != 0D;
+					}else {
+						return false;
+					}
 				}
 			});
 			for (AbstractOrderEntryModel orderEntry : orderEntryList) {
@@ -321,7 +325,8 @@ public class MarketPlaceRefundScheduleDeliveryChargeWidgetRenderer extends
 				}
 			}
 			for (final AbstractOrderEntryModel orderEntry : orderEntryList) {
-				if (orderEntry instanceof AbstractOrderEntryModel) {
+				boolean refundFlag = null != orderEntry.getIsSdb() && orderEntry.getIsSdb() && orderEntry.getScheduledDeliveryCharge()!=0.0D;
+				if (orderEntry instanceof AbstractOrderEntryModel && refundFlag) {
 					resultFlag = true;
 					Listitem tableRow = new Listitem();
 					Listcell rowLabel = new Listcell();
