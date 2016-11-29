@@ -2764,11 +2764,19 @@ function loadDefaultWishListName_SizeGuide() {
 	$(document).on('click','#buyNow .js-add-to-cart',function(event){
 		//var cartReturn = ACC.product.sendAddToBag("addToCartForm");
 		var isShowSize= $("#showSize").val();
+		var productCode=$("#product_id").val();
 		 if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches' && isShowSize=='true'){
 			$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 			$("#addToCartFormTitle").show();
 	 	    return false;
 	 }
+		 //TISQAEE-64
+		 utag.link({
+				link_obj: this,
+				link_text: 'buynow' ,
+				event_type : 'buynow_winner_seller',
+				product_sku : productCode
+			});
 		ACC.product.sendAddToBag("addToCartForm",true);
 	});
 

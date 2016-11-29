@@ -452,6 +452,8 @@ sendAddToBag : function(formId, isBuyNow) {
 						$('#ajax-loader').show();
 					},
 					success : function(data) {
+						
+						
 						$('.js-add-to-cart').removeAttr("disabled");//For TISPRD-4631
 						if (data.indexOf("cnt:") >= 0) {
 							(isBuyNow == true) ? isSuccess = true
@@ -561,25 +563,7 @@ sendAddToBag : function(formId, isBuyNow) {
 									+ "/cart";
 							location.href = cartUrl;
 						}
-						//TISQAEE-64 for PDP
-						if (isBuyNow == true) {
-							utag.link({
-								link_obj: this,
-								link_text: 'buynow' ,
-								event_type : 'buynow_winner_seller',
-								product_sku : productCodeMSD
-							});
-						}
-						else {
-							//TISQAEE-64
-					   		utag.link({
-								link_obj: this,
-								link_text: 'addtobag' ,
-								event_type : 'addtobag_winner_seller' ,
-								product_sku : productCodeMSD
-							});
-							
-						}
+				
 						
 						$("#bag-clickSpin,.bagspinner").remove();			
 					},
@@ -608,7 +592,7 @@ sendAddToBagQuick:function(formId){
 	 var quantity = $("#"+formId+" :input[name='" + input_name +"']").val(); 
 	 var stock = $("#"+formId+" :input[name='" +  stock_id +"']").val(); 
 	 var ussid=$('#ussid_quick').val();
-		var productCode = $("#productCode").val();
+	var productCode = $("#productCode").val();
 		
 	 /*if(parseInt(stock)<parseInt(quantity)){
 		    $("#"+formId+"noInventory").html("<font color='#ff1c47'>" + $('#inventory').text() + "</font>");
@@ -747,6 +731,8 @@ sendAddToBagQuick:function(formId){
 		        $('#ajax-loader').show();
 		    },
 			success : function(data) {
+				//TISQAEE-64
+				var productCode = $('#productCode').val();
 				
 				var isSuccess=true;
 				if(data.indexOf("cnt:") >= 0){
@@ -803,7 +789,8 @@ sendAddToBagQuick:function(formId){
 				var productCodeMSD =  $("input[name=productCodeMSD]").val();
 				//console.log(productCodeMSD);				
 				var priceformad =  $("input[id=price-for-mad]").val();
-				//console.log(priceformad);				
+				//console.log(priceformad);	
+			
 				
 				if(typeof isMSDEnabled === 'undefined')
 				{
@@ -826,7 +813,7 @@ sendAddToBagQuick:function(formId){
 							link_obj: this,
 							link_text: 'buynow' ,
 							event_type : 'buynow_winner_seller',
-							product_sku : productCodeMSD
+							product_sku : productCode
 						});
 					
 					location.href=ACC.config.encodedContextPath + '/cart';
