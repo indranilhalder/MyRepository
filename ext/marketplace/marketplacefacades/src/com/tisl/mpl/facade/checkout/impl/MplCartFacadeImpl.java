@@ -69,6 +69,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
+import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplGlobalCodeConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
@@ -77,6 +79,7 @@ import com.tisl.mpl.core.mplconfig.service.MplConfigService;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
+import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
@@ -86,10 +89,14 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRequestData;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
+import com.tisl.mpl.wsdto.MplEDDInfoForUssIDWsDTO;
+import com.tisl.mpl.wsdto.MplEDDInfoWsDTO;
+import com.tisl.mpl.wsdto.MplEstimateDeliveryDateWsDTO;
 
 
 
@@ -140,7 +147,11 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	private MplConfigService mplConfigService;
 	@Resource
 	MplCommerceCartCalculationStrategy mplDefaultCommerceCartCalculationStrategy;
-
+	
+	@Autowired
+	MplDeliveryAddressFacade mplDeliveryAddressFacade;
+	@Autowired
+	MplConfigFacade mplConfigFacade;
 
 	public MplCommerceCartCalculationStrategy getMplDefaultCommerceCartCalculationStrategy()
 	{
@@ -2446,7 +2457,94 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		return mplCommerceCartService.getVlaidDeliveryModesByInventory(pinCodeResponseData);
 	}
 
+	/**
+	 * get EDD INFormation for Ussid
+	 * @param cartModel
+	 * @param invReserForDeliverySlotsItemEDDInfoData
+	 * @return MplEDDInfoWsDTO
+	 * @throws ParseException 
+	 */
+	@Override
+	public MplEDDInfoWsDTO getEDDInfo(CartModel cartModel,
+			List<InvReserForDeliverySlotsItemEDDInfoData> invReserForDeliverySlotsItemEDDInfoData) throws ParseException
+	{
+		MplEDDInfoWsDTO mplEDDInfoWsDTO = new MplEDDInfoWsDTO();
 
+		try
+		{
+			List<MplEDDInfoForUssIDWsDTO> mplEDDInfoForUssIDList = new ArrayList<MplEDDInfoForUssIDWsDTO>();
+			MplEDDInfoForUssIDWsDTO mplEDDInfoForUssIDWsDTO;
+			String timeSlotType = null;
+			for (InvReserForDeliverySlotsItemEDDInfoData deliverySlotsEDDData : invReserForDeliverySlotsItemEDDInfoData)
+			{
+				mplEDDInfoForUssIDWsDTO = new MplEDDInfoForUssIDWsDTO();
+				mplEDDInfoForUssIDWsDTO.setUssId(deliverySlotsEDDData.getUssId());
+				mplEDDInfoForUssIDWsDTO.setIsScheduled(deliverySlotsEDDData.getIsScheduled());
+				mplEDDInfoForUssIDWsDTO.setCodEligible(deliverySlotsEDDData.getCodEligible());
+				timeSlotType = getDeliveryMode(cartModel, deliverySlotsEDDData.getUssId());
+				//preparing mobile data
+				Map<String, List<String>> mapData = mplDeliveryAddressFacade.getDateAndTimeMap(timeSlotType,
+						deliverySlotsEDDData.getEDD());
+				mplEDDInfoForUssIDWsDTO.setEstimateDeliveryDateList(getEDDList(mapData));
+				mplEDDInfoForUssIDList.add(mplEDDInfoForUssIDWsDTO);
+
+			}
+			//Adding EstimateDeliveryDateData into list 
+			 mplEDDInfoWsDTO.setEDDInfoList(mplEDDInfoForUssIDList);
+
+			final MplBUCConfigurationsModel configModel = mplConfigFacade.getDeliveryCharges();
+			if (configModel != null)
+			{
+				mplEDDInfoWsDTO.setSdDeliveryCharge(Double.toString(configModel.getSdCharge()));
+			}
+		}
+		catch (Exception exp)
+		{
+			LOG.info("Prepare EstimateDeliveryDate Data" + exp.getMessage());
+		}
+
+		return mplEDDInfoWsDTO;
+	}
+
+	//getting EstimateDeliveryDateData
+	private List<MplEstimateDeliveryDateWsDTO> getEDDList(Map<String, List<String>> mapData)
+	{
+		List<MplEstimateDeliveryDateWsDTO> mplEDDList = new ArrayList<MplEstimateDeliveryDateWsDTO>();
+		MplEstimateDeliveryDateWsDTO mplEstimateDeliveryDateWsDTO;
+		for (Entry<String, List<String>> data : mapData.entrySet())
+		{
+			mplEstimateDeliveryDateWsDTO = new MplEstimateDeliveryDateWsDTO();
+			mplEstimateDeliveryDateWsDTO.setDeliveryDate(data.getKey());
+			mplEstimateDeliveryDateWsDTO.setTimeSlotList(data.getValue());
+			mplEDDList.add(mplEstimateDeliveryDateWsDTO);
+		}
+		return mplEDDList;
+	}
+	
+	//Getting Delivery Mode
+	private String getDeliveryMode(CartModel cartModel, String ussID)
+	{
+		for (AbstractOrderEntryModel entry : cartModel.getEntries())
+		{
+			if (ussID.equalsIgnoreCase(entry.getSelectedUSSID()))
+			{
+				if (entry.getMplDeliveryMode() != null
+						&& entry.getMplDeliveryMode().getDeliveryMode() != null
+						&& MarketplacecommerceservicesConstants.EXPRESS_DELIVERY.equalsIgnoreCase(entry.getMplDeliveryMode()
+								.getDeliveryMode().getCode()))
+				{
+					return MarketplacecommerceservicesConstants.DELIVERY_MODE_ED;
+				}
+				else
+				{
+					return MarketplacecommerceservicesConstants.DELIVERY_MODE_SD;
+				}
+			}
+		}
+		return null;
+	}
+	
+	
 	/**
 	 * @return the mplExtendedPromoCartConverter
 	 */

@@ -97,8 +97,10 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.validator.EmailValidator;
+import org.apache.http.ParseException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -146,6 +148,8 @@ import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculation
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
+import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRequestData;
+import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData;
 import com.tisl.mpl.order.data.CartDataList;
 import com.tisl.mpl.order.data.OrderEntryDataList;
 import com.tisl.mpl.product.data.PromotionResultDataList;
@@ -162,6 +166,7 @@ import com.tisl.mpl.wsdto.CartDataDetailsWsDTO;
 import com.tisl.mpl.wsdto.GetWishListProductWsDTO;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
 import com.tisl.mpl.wsdto.MplCartPinCodeResponseWsDTO;
+import com.tisl.mpl.wsdto.MplEDDInfoWsDTO;
 import com.tisl.mpl.wsdto.ReleaseCouponsDTO;
 import com.tisl.mpl.wsdto.ReservationListWsDTO;
 import com.tisl.mpl.wsdto.ValidateOtpWsDto;
@@ -3900,6 +3905,11 @@ public class CartsController extends BaseCommerceController
 		return cartDataDetails;
 	}
 
+	
+
+	
+	
+	
 
 	/**
 	 * Removes the pickup person details if cart doesn't contains the CNC entries and removes delivery address if cart
@@ -3952,6 +3962,76 @@ public class CartsController extends BaseCommerceController
 		modelService.save(cartModel);
 	}
 
+	
+	
+	//R2.3 FL06 new API getEDD
+	@Secured(
+	{ "ROLE_CUSTOMERGROUP", "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
+	@RequestMapping(value = "/{cartId}/getEDD", method = RequestMethod.POST, consumes =
+	{ MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+	@ResponseBody
+	public MplEDDInfoWsDTO getAvailableDeliverySlots(@PathVariable final String cartId)throws WebserviceValidationException
+	{
+		MplEDDInfoWsDTO mplEDDInfoWsDTO = new MplEDDInfoWsDTO();
+		try
+		{
+			 CartModel cartModel = null;
+			 cartModel = mplPaymentWebFacade.findCartValues(cartId);
+			 InvReserForDeliverySlotsRequestData deliverySlotsRequestData = new InvReserForDeliverySlotsRequestData();
+			 deliverySlotsRequestData.setCartId(cartModel.getGuid());
+			 InvReserForDeliverySlotsResponseData deliverySlotsResponseData = mplCartFacade
+					.convertDeliverySlotsDatatoWsdto(deliverySlotsRequestData);
+
+			if (CollectionUtils.isNotEmpty(deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData()))
+			{
+				try{
+				mplEDDInfoWsDTO = mplCartFacade.getEDDInfo(cartModel,
+						deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData());
+				}catch(ParseException parseException){
+					LOG.error("CartsController WEB Extension"+parseException.getMessage());
+				}
+			}else{
+				mplEDDInfoWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE);
+			}
+			
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				mplEDDInfoWsDTO.setError(e.getErrorMessage());
+			}
+			mplEDDInfoWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorCode() && e.getErrorCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.B9038))
+			{
+				mplEDDInfoWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+			else
+			{
+				mplEDDInfoWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+			if (null != e.getErrorMessage())
+			{
+				mplEDDInfoWsDTO.setError(e.getErrorMessage());
+			}
+		}
+		catch (final Exception e)
+		{
+			if (null != e.getMessage())
+			{
+				mplEDDInfoWsDTO.setError(e.getMessage());
+			}
+			mplEDDInfoWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return mplEDDInfoWsDTO;
+	}
+	
+	
 	/**
 	 * @return the baseSiteService
 	 */

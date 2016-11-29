@@ -2474,4 +2474,22 @@
 	<property name="rescheduleData"
 		type="java.util.List&lt;com.tisl.mpl.facades.data.RescheduleData>" />
 </bean>
+
+    <!--R2.3 Added New DTO  For getEDDINFO  -->
+	<bean class="com.tisl.mpl.wsdto.MplEDDInfoWsDTO">
+		<property name="error" type="String" />
+		<property name="status" type="String" />
+        <property name="errorCode" type="String" />
+        <property name="sdDeliveryCharge" type="String" />
+        <property name="eDDInfoList"
+		type="java.util.List&lt;com.tisl.mpl.wsdto.MplEDDInfoForUssIDWsDTO>" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.MplEDDInfoForUssIDWsDTO">
+		<property name="ussId" type="String" />
+		<property name="isScheduled" type="String" />
+		<property name="codEligible" type="String" />
+		<property name="estimateDeliveryDateList"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.MplEstimateDeliveryDateWsDTO>" />
+	</bean>
 </beans>

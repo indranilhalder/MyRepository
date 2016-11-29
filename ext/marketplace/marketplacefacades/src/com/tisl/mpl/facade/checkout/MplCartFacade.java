@@ -30,9 +30,11 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
+import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRequestData;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
+import com.tisl.mpl.wsdto.MplEDDInfoWsDTO;
 
 
 /**
@@ -429,5 +431,13 @@ public interface MplCartFacade extends CartFacade
 	public CartData getSessionCartWithEntryOrderingMobile(final CartModel cart, final boolean recentlyAddedFirst)
 			throws EtailNonBusinessExceptions;
 
+	/**
+	 * get EDD INFormation for Ussid
+	 * @param cartModel
+	 * @param invReserForDeliverySlotsItemEDDInfoData
+	 * @return MplEDDInfoWsDTO
+	 * @throws ParseException 
+	 */
+	public MplEDDInfoWsDTO getEDDInfo(CartModel cartModel,List<InvReserForDeliverySlotsItemEDDInfoData> invReserForDeliverySlotsItemEDDInfoData) throws ParseException;
 
 }
