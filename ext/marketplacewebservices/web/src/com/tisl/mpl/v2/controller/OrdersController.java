@@ -1172,6 +1172,8 @@ public class OrdersController extends BaseCommerceController
 		OrderStatusCodeMasterModel customerStatusModel = null;
 		OrderData orderDetail = null;
 		OrderModel subOrderModel = null;
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+		
 		String isGiveAway = "N", formattedProductDate = MarketplacecommerceservicesConstants.EMPTY, formattedActualProductDate = MarketplacecommerceservicesConstants.EMPTY;
 		ConsignmentModel consignmentModel = null;
 		try
@@ -1687,6 +1689,19 @@ public class OrdersController extends BaseCommerceController
 								}
 								orderproductdto.setParentTransactionId(parentTransactionIds);
 								//Check if invoice is available
+								
+								//ADDED R2.3 New attribute
+								if(entry.getEdScheduledDate()!=null)
+								{
+									orderproductdto.setScheduleDeliveryDate(formatter.format(entry.getEdScheduledDate()));
+									if(StringUtils.isNotEmpty(entry.getTimeSlotFrom())){
+										String deliveryTime;
+										if(StringUtils.isNotEmpty(entry.getTimeSlotTo()) && StringUtils.isNotEmpty(entry.getTimeSlotFrom())){
+											orderproductdto.setScheduleDeliveryTime(entry.getTimeSlotFrom().concat(" to ").concat(entry.getTimeSlotTo()));
+										}
+										
+									}
+								}
 								if (entry.getConsignment() != null)
 								{
 									if (entry.getConsignment().getStatus() != null
