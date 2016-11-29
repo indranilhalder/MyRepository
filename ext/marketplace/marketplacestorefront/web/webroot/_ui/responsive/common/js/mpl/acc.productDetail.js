@@ -1794,15 +1794,15 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 	//alert("mrp "+ mrp.formattedValue +"mop "+mop.formattedValue +"spPrice "+spPrice.formattedValue +"savingsOnProduct "+ savingsOnProduct.formattedValue);
 	if(null!= mrp){
 		$("#mrpPriceId").html("");
-		$("#mrpPriceId").append(mrp.formattedValueNoDecimal);
+		$("#mrpPriceId").append(mrp.formattedValue);
 	}
 	if(null!= mop){
 		$("#mopPriceId").html("");
-		$("#mopPriceId").append(mop.formattedValueNoDecimal);
+		$("#mopPriceId").append(mop.formattedValue);
 	}
 	if(null!= spPrice){
 		$("#spPriceId").html("");
-		$("#spPriceId").append(spPrice.formattedValueNoDecimal);
+		$("#spPriceId").append(spPrice.formattedValue);
 	} 
 	////TISPRM-33 , TPR-140
 	if(null!= savingsOnProduct){
