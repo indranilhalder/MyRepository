@@ -118,6 +118,7 @@ import com.tisl.mpl.wsdto.TicketUpdateResponseXML;
 import com.tisl.mpl.xml.pojo.CODSelfShipmentRequest;
 import com.tisl.mpl.xml.pojo.CODSelfShipmentResponse;
 import com.tisl.mpl.xml.pojo.MplCancelOrderRequest;
+import com.tisl.mpl.xml.pojo.MplCancelOrderRequest.OrderLine;
 import com.tisl.mpl.xml.pojo.MplOrderIsCancellableResponse;
 import com.tisl.mpl.xml.pojo.OrderLineDataResponse;
 import com.tisl.mpl.xml.pojo.RTSAndRSSReturnInfoRequest;
@@ -3366,35 +3367,48 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	public List<OrderLineData> returnInitiationForRTS(List<OrderLineData> orerLines)
 	{
 		List<OrderLineData> orderList = new ArrayList<OrderLineData>();
+		final MplCancelOrderRequest orderLineRequest = new MplCancelOrderRequest();
+		final List<OrderLine> orderLineList = new ArrayList<MplCancelOrderRequest.OrderLine>();
 		for (final OrderLineData data : orerLines)
 		{		
 			final OrderModel orderModel = mplReturnService.getOrder(data.getOrderId());
 			List<OrderModel> suOrder = orderModel.getChildOrders();
-			for(OrderModel order : suOrder)
+			for(final OrderModel subOrderModel : suOrder)
 			{
-   			for (final AbstractOrderEntryModel entry : order.getEntries())
+   			for (final AbstractOrderEntryModel entry : subOrderModel.getEntries())
    			{
    				if (entry.getTransactionID().equalsIgnoreCase(data.getTransactionId()))
    				{
    					final ProductModel product = entry.getProduct();
    					LOG.info("Product Deatails : "+ product.getCode() + "Product Name : " + product.getName());
    					final List<SellerInformationModel> sellersList = (List<SellerInformationModel>) product.getSellerInformationRelator();
-   					for(SellerInformationModel seller : sellersList)
+   					for(final SellerInformationModel seller : sellersList)
    					{
    						if(seller.getSellerArticleSKU().equals(entry.getSelectedUSSID()))
    						{
-   							OrderLineData orderData = getReturnEligibility(seller, entry,orderModel.getCode());
+   							OrderLineData orderData = getReturnEligibility(seller, entry, orderModel.getCode(),subOrderModel, data);
    							orderList.add(orderData);
+   							if (orderData != null && orderData.getIsReturnInitiated().equalsIgnoreCase("Y"))
+								{
+									final OrderLine orderLines = populateOrderLineForRTS(data, entry, subOrderModel);
+									orderLineList.add(orderLines);
+								}
    						}
    					}
    				}
    			}
       	}
 		}
+		if (CollectionUtils.isNotEmpty(orderLineList))
+		{
+			orderLineRequest.setOrderLine(orderLineList);
+			mplOrderCancelClientService.orderCancelDataToOMS(orderLineRequest);
+		}
 		return orderList;
 	}
 	
-	private OrderLineData getReturnEligibility(SellerInformationModel seller, AbstractOrderEntryModel entry, final String orderId)
+	private OrderLineData getReturnEligibility(final SellerInformationModel seller, final AbstractOrderEntryModel entry, 
+					final String orderId, final OrderModel subOrder, final OrderLineData data)
 	{
 		final List<RichAttributeModel> richAttributeModelForSeller = (List<RichAttributeModel>) seller.getRichAttribute();
 		if(Integer.parseInt(richAttributeModelForSeller.get(0).getReturnWindow()) == 0)
@@ -3421,6 +3435,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						if (returnWindow <= actualReturnWindow)
 						{
 							updateConsignmentStatus(entry, ConsignmentStatus.RETURN_INITIATED);
+							createHistoryEntry(entry, subOrder, ConsignmentStatus.RETURN_INITIATED);
+							createRefundForRTS(subOrder, entry, data.getReasonCode(), SalesApplication.WEB);
 							return getRTSResponseData(orderId, entry.getTransactionID(), true);
 						}
 						else
@@ -3460,6 +3476,88 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			return responseData;
 		}
 		return new OrderLineData();
+	}
+	
+	private OrderLine populateOrderLineForRTS(final OrderLineData data, final AbstractOrderEntryModel abstractOrderentry,
+			final OrderModel subOrder)
+	{
+		final MplCancelOrderRequest.OrderLine orderLineData = new MplCancelOrderRequest.OrderLine();
+		orderLineData.setOrderId(subOrder.getParentReference().getCode());
+		orderLineData.setReasonCode(data.getReasonCode());
+		orderLineData.setRequestID(abstractOrderentry.getSelectedUSSID() + MarketplacecommerceservicesConstants.EMPTY
+				+ System.currentTimeMillis());//TODO: Change with a valid request ID
+		orderLineData.setReturnCancelFlag("R");
+		orderLineData.setReturnCancelRemarks(getReasonDesc(data.getReasonCode()));
+		if (StringUtils.isNotEmpty(abstractOrderentry.getOrderLineId()))
+		{
+			orderLineData.setTransactionId(abstractOrderentry.getOrderLineId());
+		}
+		else if (StringUtils.isNotEmpty(abstractOrderentry.getTransactionID()))
+		{
+			orderLineData.setTransactionId(abstractOrderentry.getTransactionID());
+		}
+		return orderLineData;
+	}
+	
+	private boolean createRefundForRTS(final OrderModel subOrderModel, final AbstractOrderEntryModel abstractOrderEntryModel,
+			final String reasonCode, final SalesApplication salesApplication)
+	{
+		boolean returnReqCreated = false;
+		final boolean returnLogisticsCheck = true;
+		try
+		{
+			final ReturnRequestModel returnRequestModel = returnService.createReturnRequest(subOrderModel);
+			returnRequestModel.setRMA(returnService.createRMA(returnRequestModel));
+			LOG.info(">> createRefund >>  Setting Type of Return " + returnLogisticsCheck);
+			returnRequestModel.setTypeofreturn(TypeofReturn.REVERSE_PICKUP);
+			if (salesApplication != null)
+			{
+				returnRequestModel.setReturnRaisedFrom(salesApplication);
+			}
+			if (null != abstractOrderEntryModel)
+			{
+				final RefundEntryModel refundEntryModel = modelService.create(RefundEntryModel.class);
+				refundEntryModel.setOrderEntry(abstractOrderEntryModel);
+				refundEntryModel.setReturnRequest(returnRequestModel);
+				refundEntryModel.setReason(RefundReason.valueOf(getReasonDesc(reasonCode)));
+				refundEntryModel.setStatus(ReturnStatus.RETURN_INITIATED);
+				refundEntryModel.setAction(ReturnAction.IMMEDIATE);
+				refundEntryModel.setNotes(getReasonDesc(reasonCode));
+				refundEntryModel.setExpectedQuantity(abstractOrderEntryModel.getQuantity());//Single line quantity
+				refundEntryModel.setReceivedQuantity(abstractOrderEntryModel.getQuantity());//Single line quantity
+				refundEntryModel.setRefundedDate(new Date());
+				final List<PaymentTransactionModel> tranactions = subOrderModel.getPaymentTransactions();
+				if (CollectionUtils.isNotEmpty(tranactions))
+				{
+					final PaymentTransactionEntryModel paymentTransEntry = tranactions.iterator().next().getEntries().iterator()
+							.next();
+
+					if (paymentTransEntry.getPaymentMode() != null && paymentTransEntry.getPaymentMode().getMode() != null
+							&& "COD".equalsIgnoreCase(paymentTransEntry.getPaymentMode().getMode()))
+					{
+						refundEntryModel.setAmount(NumberUtils.createBigDecimal("0"));
+					}
+					else
+					{
+						final double amount = (abstractOrderEntryModel.getNetAmountAfterAllDisc() != null ? abstractOrderEntryModel
+								.getNetAmountAfterAllDisc().doubleValue() : 0D)
+								+ (abstractOrderEntryModel.getCurrDelCharge() != null ? abstractOrderEntryModel.getCurrDelCharge()
+										.doubleValue() : 0D);
+
+						refundEntryModel.setAmount(NumberUtils.createBigDecimal(Double.toString(amount)));
+					}
+				}
+				modelService.save(refundEntryModel);
+			}
+			modelService.save(returnRequestModel);
+			LOG.debug("*************** RMA number:" + returnRequestModel.getRMA());
+			returnReqCreated = true;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return returnReqCreated;
 	}
 
 }
