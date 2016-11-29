@@ -744,16 +744,22 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 			{
 				statusCode = newOrderLineStatus.getCode();
 			}
-			final GlobalCodeMasterModel globalCode = globalCodeService.getGlobalMasterCode(newOrderLineStatus.getCode());
-			statusCode = globalCode != null ? globalCode.getGlobalCode() : statusCode;
-			final String referenceNumber = ((OrderModel) orderEntry.getOrder()).getParentReference().getCode();
-			final RefundInfoResponse resp = mplRefundStatusService.refundStatusDatatoWsdto(refundInfos, referenceNumber,
-					orderEntry.getTransactionID(), statusCode);
-			if (resp != null && "true".equalsIgnoreCase(resp.getReceived()))
-			{
-				return true;
+			try {
+				final GlobalCodeMasterModel globalCode = globalCodeService.getGlobalMasterCode(statusCode);
+				if(LOG.isDebugEnabled()) {
+					LOG.debug("status code+"+statusCode+ " in GlobalCodeMaster :"+globalCode);
+				}
+				statusCode = globalCode != null ? globalCode.getGlobalCode() : statusCode;
+				final String referenceNumber = ((OrderModel) orderEntry.getOrder()).getParentReference().getCode();
+				final RefundInfoResponse resp = mplRefundStatusService.refundStatusDatatoWsdto(refundInfos, referenceNumber,
+						orderEntry.getTransactionID(), statusCode);
+				if (resp != null && "true".equalsIgnoreCase(resp.getReceived()))
+				{
+					return true;
+				}
+			}catch(Exception e) {
+				LOG.error("Exception in makeRefundOMSCall "+e.getMessage() );
 			}
-
 		}
 
 		return false;
