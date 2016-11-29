@@ -552,6 +552,7 @@ public class SearchPageController extends AbstractSearchPageController
 			throws CMSItemNotFoundException
 	{
 		final String uri = request.getRequestURI();
+		String pageTitle = "";
 		if (uri.contains("page"))
 		{
 			final Pattern p = Pattern.compile(COMPILE_PATTERN);
@@ -619,14 +620,18 @@ public class SearchPageController extends AbstractSearchPageController
 
 		if (searchPageData.getPagination().getTotalNumberOfResults() == 0)
 		{
-			updatePageTitle(searchPageData.getFreeTextSearch(), model);
+			//Added For INC_10385
+			//updatePageTitle(searchPageData.getFreeTextSearch(), model);
 			storeCmsPageInModel(model, getContentPageForLabelOrId(NO_RESULTS_CMS_PAGE_ID));
+			model.addAttribute(pageTitle, "Search Results Tata Cliq");
 		}
 		else
 		{
+			//Added For INC_10385
 			storeContinueUrl(request);
-			updatePageTitle(searchPageData.getFreeTextSearch(), model);
+			//updatePageTitle(searchPageData.getFreeTextSearch(), model);
 			storeCmsPageInModel(model, getContentPageForLabelOrId(SEARCH_CMS_PAGE_ID));
+			model.addAttribute(pageTitle, "Search Results Tata Cliq");
 		}
 		final List<Breadcrumb> breadcrumbs = searchBreadcrumbBuilder.getBreadcrumbs(null, searchPageData);
 		model.addAttribute(WebConstants.BREADCRUMBS_KEY, breadcrumbs);
