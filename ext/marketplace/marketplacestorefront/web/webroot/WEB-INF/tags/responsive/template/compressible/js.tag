@@ -52,9 +52,9 @@ $(document).on("click","form .pagination_a_link",function(e){
 		var pageSize = $("#paginationForm input[name='pageSize']").val();
 		
 		if (!searchCategory && q === ":relevance") {	
-		$("#paginationForm").find(':input[name="searchCategory"]').attr('disabled', true);	
-		$("#paginationForm").find(':input[name="q"]').attr('disabled', true);
-		$("#paginationForm").find(':input[name="pageSize"]').attr('disabled', true);
+		$("#paginationFormBottom").find(':input[name="searchCategory"]').attr('disabled', true);	
+		$("#paginationFormBottom").find(':input[name="q"]').attr('disabled', true);
+		$("#paginationFormBottom").find(':input[name="pageSize"]').attr('disabled', true);
 		}
 		// Added For TISPRD-8621
 		$("#paginationFormBottom").attr("action", hrefurl);

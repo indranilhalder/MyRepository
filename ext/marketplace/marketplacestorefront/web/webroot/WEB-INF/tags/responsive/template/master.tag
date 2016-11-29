@@ -21,7 +21,7 @@
 <html lang="${currentLanguage.isocode}">
 <head>
 	<title>
-	<%-- TISPRD-8030 --%>
+	<%-- TISPRD-8030 and INC_100385--%>
 	${not empty page_name_search ? page_name_search :  not empty pageTitle ? pageTitle : not empty cmsPage.title ? cmsPage.title : 'Tata'}  	
 	</title>
 	<%-- Meta Content --%>
@@ -145,7 +145,9 @@
 	<!-- Twitter Card data -->
 	<%-- <meta name="twitter:card" content="${baseURL}/"> --%>
 	<%-- TISPRD-8041 --%>
-	<meta name="twitter:card" content="summary_large_image" /> 
+	<%-- twitter-card added for INC_10384 --%>
+	<c:set var="summary_large_image" value="${summary_large_image}"/>
+	<meta name="twitter:card" content="${summary_large_image}" /> 
 	<meta name="twitter:site" content="${twitterHandle}">
 	<meta name="twitter:title" content="${metaTitle}">
 	<meta name="twitter:description" content="${metaDescription}">
