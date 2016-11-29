@@ -9,6 +9,7 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 
+import java.text.ParseException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -104,5 +105,7 @@ public interface MplDeliveryAddressFacade
    
    public void saveSelectedDateAndTime(OrderModel orderModel,List<TransactionSDDto> transactionSDDto);
    public void sendPushNotificationForCDA(CustomerModel customerModel, String otoNumber,String mobileNumber);
+   
+	public Map<String, List<String>> getDateAndTimeMap(String timeSlotType, String edd) throws ParseException;
 	
 }

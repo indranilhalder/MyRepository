@@ -952,7 +952,8 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 * @return Map
 	 * @throws java.text.ParseException
 	 */
-	private Map<String, List<String>> getDateAndTimeMap(String timeSlotType, String edd) throws java.text.ParseException
+	@Override
+	public Map<String, List<String>> getDateAndTimeMap(String timeSlotType, String edd) throws java.text.ParseException
 	{
 
 		DateUtilHelper dateUtilHelper = new DateUtilHelper();
