@@ -1551,6 +1551,11 @@ $( document ).ready(function() {
 						 $("#pin").attr("disabled",true);
 						 $("#pdpPincodeCheckDList").show();
 						 $("#buyNowButton").attr("disabled",true);
+						 $("#variant li a").each(function(){
+								$(this).removeAttr("href");
+								$(this).parent().addClass('strike');
+								//$("#outOfStockId").hide();
+						});
 						
 					}
 					else if (allStockZero == 'Y' && data['othersSellersCount']==0 && $("#variant option").length == 0){
@@ -1559,7 +1564,11 @@ $( document ).ready(function() {
 							$("#buyNowButton").hide();
 							$("#outOfStockId").show();
 							$("#allVariantOutOfStock").show();
-							
+							$("#variant li a").each(function(){
+							$(this).removeAttr("href");
+							$(this).parent().addClass('strike');
+							//$("#outOfStockId").hide();
+							});
 						//}
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").hide();
@@ -2755,11 +2764,19 @@ function loadDefaultWishListName_SizeGuide() {
 	$(document).on('click','#buyNow .js-add-to-cart',function(event){
 		//var cartReturn = ACC.product.sendAddToBag("addToCartForm");
 		var isShowSize= $("#showSize").val();
+		var productCode=$("#product_id").val();
 		 if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches' && isShowSize=='true'){
 			$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 			$("#addToCartFormTitle").show();
 	 	    return false;
 	 }
+		 //TISQAEE-64
+		 utag.link({
+				link_obj: this,
+				link_text: 'buynow' ,
+				event_type : 'buynow_winner_seller',
+				product_sku : productCode
+			});
 		ACC.product.sendAddToBag("addToCartForm",true);
 	});
 

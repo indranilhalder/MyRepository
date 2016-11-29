@@ -393,6 +393,9 @@ function focusOnElement() {
 		
 		//$(document).on('click','#addToCartFormId'+index+' .js-add-to-cart',function(){ //Changed for TPR-887
 		 $(document).on('click','#addToCartFormId'+index+' #addToCartButton'+index,function(){
+			 
+			 
+			 
 			
         if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches'&& $("#showSize").val()=='true'){
 		  		
@@ -400,6 +403,16 @@ function focusOnElement() {
 				$("#addToCartFormIdOthersel"+index).show();
 				 return false;
 		   	 }
+        //TISQAEE-64
+        var productCode= $('#productCode').val();
+	        
+	        utag.link({
+				link_obj: this,
+				link_text: 'addtobag' ,
+				event_type : 'addtobag_other_seller' ,
+				product_sku : productCode
+			});
+        
 			ACC.product.sendAddToBag("addToCartFormId"+index);
 		});
 		 
@@ -417,6 +430,7 @@ function focusOnElement() {
 	}
 	 function sendAddToBag(formId){
 			var dataString=$('#'+formId).serialize();	
+			
 			
 			
 			$.ajax({
