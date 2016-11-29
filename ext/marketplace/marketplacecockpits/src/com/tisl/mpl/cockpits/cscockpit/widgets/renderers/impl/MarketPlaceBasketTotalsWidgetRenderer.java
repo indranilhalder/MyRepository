@@ -87,17 +87,16 @@ public class MarketPlaceBasketTotalsWidgetRenderer extends
 		    	
 		        renderRow(promotion, LabelUtils.getLabel(widget, "promotion", new Object[0]), currencyInstance, container);
 		        
-		        Double deliveryCosts = abstractOrderModel.getDeliveryCost();
-		       /* 
+		       // Double deliveryCosts = abstractOrderModel.getDeliveryCost();
+		        
 				Double deliveryCosts = 0D;
 				
 				for (AbstractOrderEntryModel orderEntry : abstractOrderModel
 						.getEntries()) {
 					if (null != orderEntry.getMplDeliveryMode()) {
-						deliveryCosts = deliveryCosts
-								+ ( orderEntry.getCurrDelCharge());
+						deliveryCosts =  orderEntry.getMplDeliveryMode().getValue();
 					}
-				}*/
+				}
 				
 		        renderRow(deliveryCosts, LabelUtils.getLabel(widget, "deliveryCosts", new Object[0]), currencyInstance, container);
 
@@ -105,9 +104,9 @@ public class MarketPlaceBasketTotalsWidgetRenderer extends
 				
 				for (AbstractOrderEntryModel orderEntry : abstractOrderModel
 						.getEntries()) {
-					if(! mplFindDeliveryFulfillModeStrategy.isTShip(orderEntry.getSelectedUSSID())){
+					//if(! mplFindDeliveryFulfillModeStrategy.isTShip(orderEntry.getSelectedUSSID())){
 						totalDeliveryCostDisc =+ Double.valueOf(orderEntry.getPrevDelCharge().doubleValue() - orderEntry.getCurrDelCharge().doubleValue());
-					}
+					//}
 				}
 				
 				renderRow(totalDeliveryCostDisc > 0 ? totalDeliveryCostDisc  : 0d , LabelUtils.getLabel(widget, "deliveryDiscount", new Object[0]), currencyInstance, container);
