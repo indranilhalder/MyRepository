@@ -1818,7 +1818,7 @@
 		<property name="typeCode" value="Sizesystem" />
 	</bean>
 	<!-- Bean for POC Search ends-->
-	
+
 
 
 	<!-- TPR-565 -->
@@ -1874,7 +1874,8 @@
 		<property name="interceptor" ref="exSellerBulkLoadInterceptor" />
 		<property name="typeCode" value="EtailExcludeSellerSpecificRestriction" />
 	</bean>
-	
+
+	<!-- TPR-1282 -->
 	<alias name="mplCmsCacheService" alias="cmsCacheService"/>
 	<bean id="mplCmsCacheService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplCmsCacheServiceImpl"
 		parent="defaultCmsCacheService">
@@ -1910,7 +1911,15 @@
 	</bean>	
 	<!-- TPR-3487 -->		
 		
-		
+	<!-- Bean for Promotion Job starts-->
+ 	
+ 	<bean id="promotionPriceUpdaterDao"
+ 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.PromotionPriceUpdaterDaoImpl" />
+ 
+ 	<bean id="promotionPriceUpdaterService"
+ 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultPromotionPriceUpdaterServiceImpl">	
+ 	</bean>
+ 	<!-- Bean for Promotion Job ends-->
 
 	<!-- LW-245 -->
 	<bean id="brandProductLuxuryExportJob" class="com.tisl.mpl.integration.job.BrandProductLuxuryExportJob"

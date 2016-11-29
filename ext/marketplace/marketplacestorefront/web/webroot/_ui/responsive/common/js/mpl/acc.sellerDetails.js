@@ -577,6 +577,7 @@ function focusOnElement() {
 				contentType : "application/json; charset=utf-8",
 				url : requiredUrl,
 				async: false,
+				cache : false,
 				data : dataString,
 				dataType : "json",
 				success : function(data) {		
@@ -624,7 +625,8 @@ function focusOnElement() {
 								 {						
 									if(divId != null)
 									{
-										var offerMessageDiv="<div class='offerMessage-block' id='offerMessageId'>"+message+"</div>";
+										//var offerMessageDiv="<div class='offerMessage-block' id='offerMessageId'>"+message+"</div>";
+										var offerMessageDiv="<div class='offerMessage-block' id='offerMessageId'>"+messageDet+"</div>";
 										var divSpecificId ='#'+divId;
 										$(divSpecificId).html(offerMessageDiv);
 									}
@@ -632,10 +634,16 @@ function focusOnElement() {
 									{
 										$(".pdp-offer").html(message);						
 									}
-									$("#message").html(message);	
-									$("#offerDetailId").html(messageDet);
+//									$("#message").html(message);	
+//									$("#offerDetailId").html(messageDet);
+//									
+//									$("#messageDet").html(messageDet);
 									
-									$("#messageDet").html(messageDet);
+									$("#message").html(messageDet);	
+									$("#offerDetailId").html(message);
+									
+									$("#messageDet").html(message);
+									
 									var dateSplit = messageStartDate.split(" ");
 				                   var firstpart = dateSplit[0];
 				                   var secondpart = dateSplit[1];

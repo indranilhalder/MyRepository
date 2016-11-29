@@ -1632,8 +1632,6 @@
 				</indexes> 
 				
 			</itemtype>
-			
-			
 			<itemtype code="SeoContent" autocreate="true" generate="true"
 				jaloclass="com.tisl.mpl.core.jalo.SeoContent">
 				<deployment table="MplSeoContent" typecode="13002" />
@@ -1773,6 +1771,7 @@
 							optional="true"/>
 						<persistence type="property" />
 					</attribute>
+					<!-- For TPR-1282 -->
 					<attribute qualifier="categoryFooterText" type="java.lang.String">
 						<description>Footer Content for category</description>
 						<modifiers read="true" write="true" search="true"

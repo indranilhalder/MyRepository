@@ -1735,7 +1735,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	// Sonar Fix
 	public static final String ALLVARIANTSSTRING = "allVariantsString";
 
-//	public static final String PRODUCTOFFERDETMSGQUERY = "SELECT {prodOffrDet.sellerId},{offerDet.message},{offerDet.messageDet},{prodOffrDet.startDate},{prodOffrDet.endDate} FROM {OfferDetail as offerDet}, {ProductOfferDetail as  prodOffrDet} "
+
+	//	public static final String PRODUCTOFFERDETMSGQUERY = "SELECT {prodOffrDet.sellerId},{offerDet.message},{offerDet.messageDet},{prodOffrDet.startDate},{prodOffrDet.endDate} FROM {OfferDetail as offerDet}, {ProductOfferDetail as  prodOffrDet} "
 	//			+ "WHERE {prodOffrDet.productId}= ?productId " + "AND {prodOffrDet.offer} = {offerDet.pk} "
 	//			+ "AND {prodOffrDet.startDate} <= ?sysdate AND {prodOffrDet.endDate} >= ?sysdate".intern();
 
@@ -1816,5 +1817,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String BULK_RETURN_SUCCESS_DESC = "Return Success";
 	public static final String BULK_RETURN_FAILURE_DESC = "Return Failure";
+
+	public final static String RETURN_ENABLE = "order.return.enabled".intern();
+	public final static String CANCEL_ENABLE = "order.cancel.enabled".intern();
 
 }
