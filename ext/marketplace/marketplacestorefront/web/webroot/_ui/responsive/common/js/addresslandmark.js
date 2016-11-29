@@ -65,12 +65,18 @@ function loadPincodeData() {
         		$('.address_landmarks').empty();
         		 $('.address_landmarks').append($("<option></option>").attr("selected","selected").text("Select a Landmark").attr("value", "NA"));
         		//then fill it with data from json post
+        		if(response.landMarks != null) {
         		  $.each(response.landMarks, function(key, value) {
         		       $('.address_landmarks').append($("<option></option>").attr("value",value.landmark)
         		         .text(value.landmark));
         		    });
+        		}
+        		else {
+        			$(".address_landmarkOtherDiv, .address_landmarkOtherDiv label, .address_landmarkOther").show();
+ 					$(".address_landmarks").attr("disabled","disabled").css("padding-left","5px");
+ 					$('.address_landmarks').append($("<option class=unableto></option>").text("Unable to find landmark").attr("selected","selected").attr("value",""));
+        		 }
         		  $('.address_landmarks').append($("<option class='otherOption'></option>").attr("value","Other").text("Other"));
-        		  
         		  $(".address_states").val(response.state.name).attr("readonly", "true").data("stateValue",response.state.name);
 			}
 			

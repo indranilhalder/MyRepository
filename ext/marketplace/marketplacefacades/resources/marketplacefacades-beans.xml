@@ -964,7 +964,7 @@
 	<bean class="com.tisl.mpl.facade.data.LandMarksData">
 		<property name="landmarksCode" type="String"></property>
 		<property name="landmark" type="String"></property>
-		<property name="isActive" type="java.lang.Boolean"></property>
+		<property name="isActive" type="java.lang.String"></property>
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.data.PincodeData">

@@ -71,11 +71,11 @@
         <property name="header">
             <value> 
             	# Pincode Latitude , Longitude , cityName , isActive and stateCode Relation 
-				INSERT_UPDATE Pincode;pincode[unique=true];latitude;longitude;cityName;isActive[default=true];state(region)  
+				INSERT_UPDATE Pincode;pincode[unique=true];latitude;longitude;cityName;active[default=Y];state(region)  
        		</value>
         </property>
         <property name="impexRow">
-            <value>;{+0};{+1};{+2};{+3};true;{+4}</value>
+            <value>;{+0};{+1};{+2};{+3};{4};{+5}</value>
         </property>
         </bean>
 </beans>

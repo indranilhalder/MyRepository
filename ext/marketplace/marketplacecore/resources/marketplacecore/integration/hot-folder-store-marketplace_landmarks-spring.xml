@@ -55,11 +55,11 @@
         <property name="header">
             <value> 
             	# importing LandMarks Details
-            	INSERT_UPDATE LandMarks;landmarksCode[unique=true];landmark;isActive[default=true];pincode(pincode)
+            	INSERT_UPDATE LandMarks;landmarksCode[unique=true];landmark;active[default=Y];pincode(pincode)
        		</value>
         </property>
         <property name="impexRow">
-            <value>;{+0};{+1};true;{+2}</value>
+            <value>;{+0};{+1};{2};{+3}</value>
         </property>
         </bean>
         

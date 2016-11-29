@@ -62,7 +62,7 @@ public class MplPincodePopulator implements Populator<PincodeModel, PincodeData>
 			final List<LandMarksModel> activeLandmarks = new ArrayList<LandMarksModel>();
 			for (final LandMarksModel landmark : allLandmarks)
 			{
-				if (landmark.getIsActive().booleanValue())
+				if (landmark.getActive().equalsIgnoreCase("Y"))
 				{
 					activeLandmarks.add(landmark);
 				}

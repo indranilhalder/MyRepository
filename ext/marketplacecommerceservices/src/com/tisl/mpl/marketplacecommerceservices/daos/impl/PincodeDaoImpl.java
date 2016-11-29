@@ -214,9 +214,10 @@ public class PincodeDaoImpl implements PincodeDao
 		try
 		{
 			final String query = SELECT_CLASS + PincodeModel.PK + FROM_CLASS + PincodeModel._TYPECODE + WHERE_CLASS
-					+ PincodeModel.PINCODE + "}=?pincode AND {" + PincodeModel.ISACTIVE + "}" + "=true";
+					+ PincodeModel.PINCODE + "}=?pincode AND {" + PincodeModel.ACTIVE + "}" + "=?active";
 			final FlexibleSearchQuery flexQuery = new FlexibleSearchQuery(query);
 			flexQuery.addQueryParameter("pincode", pincode);
+			flexQuery.addQueryParameter("active", "Y");
 			if(LOG.isDebugEnabled())
 			{
 				LOG.debug("Pincode Query String ::::::::: " + query);

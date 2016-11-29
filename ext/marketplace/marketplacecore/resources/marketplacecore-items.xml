@@ -8637,8 +8637,8 @@
 							optional="false" />
 					</attribute>
 					
-					<attribute autocreate="true" qualifier="isActive"
-						type="java.lang.Boolean">
+					<attribute autocreate="true" qualifier="active"
+						type="java.lang.String">
 						<persistence type="property" />
 						<modifiers read="true" write="true" search="true"
 							optional="false" />
@@ -8980,8 +8980,8 @@
 						<modifiers read="true" write="true" search="true"
 							optional="false" />
 					</attribute>
-					<attribute autocreate="true" qualifier="isActive"
-						type="java.lang.Boolean" generate="true">
+					<attribute autocreate="true" qualifier="active"
+						type="java.lang.String" generate="true">
 						<persistence type="property" />
 						<modifiers read="true" write="true" search="true"
 							optional="false" />

@@ -36,7 +36,7 @@ public class MplLandMarksPopulator implements Populator<LandMarksModel, LandMark
 		LOG.debug("Populating LandMarksData from LandMarksModel");	
 		target.setLandmark(source.getLandmark());
 		target.setLandmarksCode(source.getLandmarksCode());
-		target.setIsActive(source.getIsActive());
+		target.setIsActive(source.getActive());
 	}
 
 }
