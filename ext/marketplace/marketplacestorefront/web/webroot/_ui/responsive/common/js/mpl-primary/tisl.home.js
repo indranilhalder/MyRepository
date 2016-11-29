@@ -1467,7 +1467,7 @@ function populateEnhancedSearch(enhancedSearchData)
 
 				                    });
 				                    window.localStorage.setItem(
-				                        "deptmenuhtml-" + code,
+				                        "deptmenuhtml-" + componentUid,
 				                        encodeURI(html));
 
 				                }
