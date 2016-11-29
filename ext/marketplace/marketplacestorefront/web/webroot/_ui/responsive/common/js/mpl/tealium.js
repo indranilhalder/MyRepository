@@ -111,12 +111,18 @@ $(document).ready(
 						tealiumData += '"product_id":["'
 								+ $("#product_id").val() + '"],';
 						//TPR-430 Start
+						if($("#product_category").val() !=undefined || $("#product_category").val() !=null){ 
 						tealiumData += '"product_category":"'
 							+ $("#product_category").val().replace(/_+/g, '_') + '",';
+						}
+						if($("#page_subcategory_name").val() !=undefined || $("#page_subcategory_name").val() !=null){ 
 						tealiumData += '"page_subcategory_name":"'
 								+ $("#page_subcategory_name").val().replace(/_+/g, '_') + '",';
+						}
+						if($("#page_subcategory_name_l3").val() !=undefined || $("#page_subcategory_name_l3").val() !=null){ 
 						tealiumData += '"page_subcategory_name_L3":"'
 							+ $("#page_subcategory_name_l3").val().replace(/_+/g, '_') + '",';
+						}
 						//TPR-430 End
 						tealiumData += '"product_brand":["'
 								+ $("#product_brand").val() + '"],';
@@ -221,12 +227,18 @@ $(document).ready(
 								tealiumData += '"categoryId":"'
 									+ $("#categoryId").val() + '",';
 								/*TPR-430 Start*/
+								if($("#product_category").val() !=undefined || $("#product_category").val() !=null){ 
 								tealiumData += '"product_category":"'
 									+ $("#product_category").val().replace(/_+/g, '_') + '",';
+								}
+								if($("#page_subcategory_name").val() !=undefined || $("#page_subcategory_name").val() !=null){ 
 								tealiumData += '"page_subcategory_name":"'
 									+ $("#page_subcategory_name").val().replace(/_+/g, '_') + '",';
+								}
+								if($("#page_subcategory_name_l3").val() !=undefined || $("#page_subcategory_name_l3").val() !=null){ 
 								tealiumData += '"page_subcategory_name_L3":"'
 									+ $("#page_subcategory_name_l3").val().replace(/_+/g, '_') + '"}';
+								}
 								/*TPR-430 End*/
 								data = data.replace("}<TealiumScript>", tealiumData);
 								$('#tealiumHome').html(data);
@@ -267,7 +279,7 @@ $(document).ready(
 							+ product_category + '",';
 						tealiumData += '"page_subcategory_name":"'		
 							+ page_subcategory_name +'",';
-						tealiumData += '"page_subcategory_name_l3":"'		
+						tealiumData += '"page_subcategory_name_L3":"'		
 							+ page_subcategory_name_L3 +'"}';
 						data = data.replace("}<TealiumScript>", tealiumData);
 						$('#tealiumHome').html(data);
@@ -317,12 +329,18 @@ $(document).ready(
 						tealiumData += '"checkout_seller_ids":"'		//for TPR-429
 							+ $("#checkoutSellerIDs").val() + '",';
 						//TPR-430 Start
+						if($("#product_category").val() !=undefined || $("#product_category").val() !=null){ 
 						tealiumData += '"product_category":"'
 							+ $("#product_category").val().replace(/_+/g, '_') + '",';
+						}
+						if($("#page_subcategory_name").val() !=undefined || $("#page_subcategory_name").val() !=null){ 
 						tealiumData += '"page_subcategory_name":"'
 							+ $("#page_subcategory_name").val().replace(/_+/g, '_') + '",';
+						}
+						if($("#page_subcategory_name_l3").val() !=undefined || $("#page_subcategory_name_l3").val() !=null){ 
 					tealiumData += '"page_subcategory_name_L3":"'
 						+ $("#page_subcategory_name_l3").val().replace(/_+/g, '_') + '"}';
+						}
 					//TPR-430 End
 						data = data.replace("}<TealiumScript>", tealiumData);
 						$('#tealiumHome').html(data);
@@ -362,12 +380,18 @@ $(document).ready(
 						tealiumData += '"product_brand":'
 							+ $("#product_brand").val() + ',';
 						//TPR-430 Start
+						if($("#product_category").val() !=undefined || $("#product_category").val() !=null){ 
 						tealiumData += '"product_category":"'
 							+ $("#product_category").val().replace(/_+/g, '_') + '",';
+						}
+						if($("#page_subcategory_name").val() !=undefined || $("#page_subcategory_name").val() !=null){ 
 						tealiumData += '"page_subcategory_name":"'
 							+ $("#page_subcategory_name").val().replace(/_+/g, '_') + '",';
+						}
+						if($("#page_subcategory_name_l3").val() !=undefined || $("#page_subcategory_name_l3").val() !=null){ 
 					tealiumData += '"page_subcategory_name_L3":"'
 						+ $("#page_subcategory_name_l3").val().replace(/_+/g, '_') + '",';
+						}
 					//TPR-430 End
 						tealiumData += '"checkout_seller_ids":"'		//for TPR-429
 							+ $("#checkoutSellerIDs").val() + '"}';
@@ -385,7 +409,7 @@ $(document).ready(
 			
 			//tpr-668  --for order page
 			
-			if (pageType == "orderconfirmation") {
+			if (pageType == "orderconfirmation" && user_login_type == 'google') {
 				
 				var pageTypeHome = 'orderconfirmation';
 				var site_section = 'orderconfirmation';
