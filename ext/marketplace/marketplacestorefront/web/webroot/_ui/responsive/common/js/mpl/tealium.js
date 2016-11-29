@@ -382,6 +382,35 @@ $(document).ready(
 				
 			}
 
+			
+			//tpr-668  --for order page
+			
+			if (pageType == "orderconfirmation") {
+				
+				var pageTypeHome = 'orderconfirmation';
+				var site_section = 'orderconfirmation';
+				var orderPageTealium = '';
+				//TPR-430
+				var product_category = null;
+				var page_subcategory_name = null;
+				var page_subcategory_name_L3 = null;
+				
+				orderPageTealium+='<script type="text/javascript"> var utag_data ={"site_region":"'+site_region+'","user_type":"'+user_type+'","user_login_type":"'+user_login_type+'","user_id":"'+user_id+'","page_type":"'+pageTypeHome+'","page_name":"'+pageName+'","product_category":"'+product_category+'","page_subcategory_name":"'+page_subcategory_name+'","page_subcategory_name_L3":"'+page_subcategory_name_L3+'", "session_id":"'+session_id+'","visitor_ip":"'+visitor_ip+'","site_currency":"'+site_currency+'","site_section":"'+site_section+'","IA_company":"'+domain_name+'"}</script>';
+				var script="";
+				if(domain_name =="www.tatacliq.com"){
+					
+					script=UTAG_SCRIPT_PROD;
+				}
+				else{
+					
+					script=UTAG_SCRIPT_DEV;
+				}
+				orderPageTealium+=script;
+				$('#tealiumHome').html(orderPageTealium);
+			}
+		
+			//for order page
+			
 			/*TPR-648 start*/
 			$('.shop-promos .promos a').click(function(){
 				var brandText=$(this).text().replace(/ /g,'').toLowerCase()+ "_viewdetails";
@@ -421,7 +450,7 @@ $(document).ready(
 
 /*TPR-429 Start*/
 /*TPR-689 (Part of TPR-429) Start*/
-$(document).on('click','#buyNowButton',function(){
+/*$(document).on('click','#buyNowButton',function(){
 	var productSKU = $('.add_to_cart_form').find('input[type="hidden"]#productCodePost').val();
 	utag.link({
 		link_obj: this,
@@ -430,7 +459,7 @@ $(document).on('click','#buyNowButton',function(){
 		product_sku : productSKU
 	});
 })
-/*TPR-689 End*/
+TPR-689 End
 
 
 $(document).on('mousedown','.btn-block.js-add-to-cart',function(){
@@ -449,7 +478,7 @@ $(document).on('mousedown','.btn-block.js-add-to-cart',function(){
 		}
 	}
 	
-	/*var productSKU = $(this).parents('form').find('input[type="hidden"]#ussid').val();*/
+	var productSKU = $(this).parents('form').find('input[type="hidden"]#ussid').val();
 	var productSKU = $('#productCodePost').val();
 
 	if($(this).attr('id').toLowerCase().indexOf("buynow") == -1){
@@ -460,7 +489,7 @@ $(document).on('mousedown','.btn-block.js-add-to-cart',function(){
 			product_sku : productSKU
 		});
 	}
-})
+})*/
 
 
 function differentiateSeller(){

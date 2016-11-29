@@ -49419,6 +49419,9 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header{
 .top.checkout-top .content{
 	  margin: 98px 0 0;
 }
+.checkout-content.checkout-payment.cart.checkout.wrapper{
+	margin-top: -12px;
+}
 .checkout-header.login .checkout-container {
     max-width: 1200px;
     padding: 0;
@@ -49756,7 +49759,7 @@ body:not(.page-checkout-login) .checkout-header.login{
 .progress-barcheck .step-1.step-done span,.progress-barcheck .step-2.step-done span,.progress-barcheck .step-3.step-done span{ border: 1px solid #a7183e; position:absolute; display:inline-block; background:#ffffff; left:7.2%; }
 .progress-barcheck .step-2.step-done span{ left:49%;}
 .progress-barcheck .step-1.step-done span:after,.progress-barcheck .step-2.step-done span:after,.progress-barcheck .step-3.step-done span:after{	content: "";    width: 19px;    height: 19px;    background: #a7183e;    border-radius: 25px;    position: relative;    display: inline-block;  top: 6px; }
-
+.progress-barcheck.paymentPage .step-1.step-done span:after, .progress-barcheck.paymentPage .step-2.step-done span:after, .progress-barcheck.paymentPage .step-3.step-done span:after{ top: 5px;}
 
 .progress-barcheck .step-1.finalstep span,.progress-barcheck .step-2.finalstep span,.progress-barcheck .step-3.finalstep span{ border: 1px solid #efefef; right:8.5%; width:25px; height:25px; top:24px; }
 .progress-barcheck .step-2.finalstep span{ left:49%; }
@@ -49809,6 +49812,7 @@ width:25px; height:25px;
 .progress-barcheck .step-1.finalstep span, .progress-barcheck .step-2.finalstep span, .progress-barcheck .step-3.finalstep span,
 .progress-barcheck .step-1 span, .progress-barcheck .step-2 span, .progress-barcheck .step-3 span{ width:18px; height:18px;}
 .progress-barcheck .step-1.step-done span:after, .progress-barcheck .step-2.step-done span:after, .progress-barcheck .step-3.step-done span:after{ width:10px; height:10px; top:3px;}
+.progress-barcheck.paymentPage .step-1.step-done span:after, .progress-barcheck.paymentPage .step-2.step-done span:after, .progress-barcheck.paymentPage .step-3.step-done span:after{ top:-7px;}
 .progress-barcheck .step-1.step-done span.paymentStepDone:after, .progress-barcheck .step-2.step-done span.paymentStepDone:after, .progress-barcheck .step-3.step-done span.paymentStepDone:after{ top:3px;}
 .progress-barcheck .step-1.active span, .progress-barcheck .step-2.active span, .progress-barcheck .step-3.active span{ border:3px solid #a7183e;}
 .progress-barcheck .step1, .progress-barcheck .step2, .progress-barcheck .step3{ height:7px; margin:0; }
@@ -57564,16 +57568,22 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 }
 .Manufacturer.Temp03 ul li{
 	margin-bottom: 1px;
-    background: #f5f5f5;
+    background: #fff;	/* TISQAUAT-694 */
     float: left;
 }
 .Manufacturer.Temp03 .media-content{
 	width: 66.85%;
     float: left;
+    /* padding: 5.8% 7% 0 2.2%; */
+}
+.Manufacturer.Temp03 .media-content > div{
     padding: 5.8% 7% 0 2.2%;
 }
 .Manufacturer.Temp03 .Padd ul li:nth-child(2n+0) .media-content {
     text-align: right;
+   /*  padding: 5.8% 2.2% 0 7%; */
+}
+.Manufacturer.Temp03 .Padd ul li:nth-child(2n+0) .media-content > div {
     padding: 5.8% 2.2% 0 7%;
 }
 .Manufacturer h3{
@@ -57611,6 +57621,9 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 }
 .Manufacturer.Temp03 .padd ul li:nth-child(2n+0) .media-content{
 	text-align: right;
+    /* padding: 5.8% 2.2% 0 7%; */
+}
+.Manufacturer.Temp03 .padd ul li:nth-child(2n+0) .media-content > div{
     padding: 5.8% 2.2% 0 7%;
 }
 #showMore, #showLess{
@@ -58215,7 +58228,9 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 /* pdp-v4-temp template5 ends */
 
 /* pdp-v4-temp template6 starts */
-
+.temp-six .Padd{
+	overflow:hidden;
+}
 .temp-six .Padd h2 {
     text-transform: uppercase;
 }
@@ -58246,7 +58261,7 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 }
 .temp-six .Padd .first-content {
     margin: 0 0 40px 0;
-    background: #f5f5f5;
+    background: #fff;	/* TISQAUAT-695 */
     overflow: hidden;
     width: 100%;
 }
@@ -58256,11 +58271,15 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 }
 .temp-six .Padd .first-content .media-content {
     float: left;
-    padding: 13% 3% 30px;
+   /*  padding: 13% 3% 30px; */
     font-size: 16px;
     vertical-align: middle;
     width: 35%;
 }
+.temp-six .Padd .first-content .media-content > div{
+    padding: 13% 3% 30px;
+}
+
 .temp-six .Padd h2 {
     text-transform: uppercase;
 }
@@ -58271,7 +58290,7 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
     margin-bottom: 20px;
 }
 .temp-six .Padd ul {
-    margin: 0 0 67px 0;
+    margin: 0px;
     width: 100%;
     float: left;
 }
@@ -58287,11 +58306,14 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 }
 .temp-six .Padd ul li .media-content {
     float: right;
-    padding: 2% 9% 0 3%;
+   /*  padding: 2% 9% 0 3%; */
     font-size: 16px;
     line-height: 22px;
     color: #000;
     width: 50%;
+}
+.temp-six .Padd ul li .media-content > div {
+    padding: 2% 9% 0 3%;
 }
 .temp-six .Padd ul li .media-content h2 {
     text-align: left;
@@ -58304,20 +58326,28 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 }
 .temp-six .Padd ul li:nth-child(2n+0) .media-content {
     float: left;
-    padding: 2% 3% 0 8%;
+  /*   padding: 2% 3% 0 8%; */
     text-align: right;
+}
+.temp-six .Padd ul li:nth-child(2n+0) .media-content > div {
+    padding: 2% 3% 0 8%;
 }
 .temp-six .Padd ul li:nth-child(2n+0) .media-content h2 {
     text-align: right;
 }
-.temp-six .Padd .show-more {
+.temp-six .Padd .show-more, .Manufacturer.Temp03 .show-more {
     text-align: center;
     display: block;
     color: #a9143c;
     font-size: 12px;
     font-weight: bold;
     text-transform: uppercase;
+    clear:both;
+    padding-top:67px;
 }
+.Manufacturer.Temp03 .show-more{
+    padding: 20px 0 40px;
+} 
 
 /* pdp-v4-temp template6 ends */
 
@@ -58377,10 +58407,10 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 
 /* pdp-v4-temp template2 tablet starts */
 
-.Manufacturer.Temp03 .media-content {
+.Manufacturer.Temp03 .media-content > div {
     padding-bottom: 2%;
 }
-.Manufacturer.Temp03 .media-content, .Manufacturer.Temp03 .padd ul li:nth-child(2n) .media-content {
+.Manufacturer.Temp03 .media-content > div, .Manufacturer.Temp03 .padd ul li:nth-child(2n) .media-content > div {
     padding-bottom: 2%;
 }
 .Manufacturer.Temp03 h3 {
@@ -58389,7 +58419,7 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 .Manufacturer.Temp03 p {
     font-size: 12px;
 }
-.Manufacturer.Temp03 .media-content, .Manufacturer.Temp03 .padd ul li:nth-child(2n) .media-content {
+.Manufacturer.Temp03 .media-content > div, .Manufacturer.Temp03 .padd ul li:nth-child(2n) .media-content > div {
     padding-bottom: 2%;
 }
 /* pdp-v4-temp template2 tablet ends */
@@ -58404,10 +58434,10 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 /* pdp-v4-temp template5 tablet ends */
 
 /* pdp-v4-temp template6 tablet starts */
-.temp-six .Padd ul li .media-content {
+.temp-six .Padd ul li .media-content > div {
     padding: 2% 2% 0;
 }
-.temp-six .Padd ul li:nth-child(2n) .media-content {
+.temp-six .Padd ul li:nth-child(2n) .media-content > div {
     padding: 2% 3% 0;
 }
 /* pdp-v4-temp template6 tablet ends */
@@ -58548,8 +58578,11 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 	}
 	.Manufacturer.Temp03 .media-content {
     width: 100%;
-    padding: 3% 2%;
+    /* padding: 3% 2%; */
     text-align: left;
+	}
+	.Manufacturer.Temp03 .media-content > div {
+    padding: 3% 2%;
 	}
 	.Manufacturer.Temp03 h3 {
     font-size: 14px;
@@ -58565,14 +58598,19 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 	}
 	.Manufacturer.Temp03 .media-content {
     width: 100%;
-    padding: 3% 2%;
+    /* padding: 3% 2%; */
     text-align: left;
+	}
+	.Manufacturer.Temp03 .media-content > div {
+    padding: 3% 2%;
 	}
 	.Manufacturer.Temp03 .Padd ul li:nth-child(2n) .media-content {
     text-align: left;
+    /* padding: 2%; */
+	}
+	.Manufacturer.Temp03 .Padd ul li:nth-child(2n) .media-content > div {
     padding: 2%;
 	}
-	
 	
 	/* pdp-v4-temp template2 mobile ends */
 	
@@ -58734,9 +58772,12 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
     font-size: 18px;
 	}
 	.temp-six .Padd ul li .media-content, .temp-six .Padd ul li:nth-child(2n+0) .media-content {
-    padding: 2% 0;
+   /*  padding: 2% 0; */
     text-align: left;
     font-size: 12px;
+	}
+	.temp-six .Padd ul li .media-content > div, .temp-six .Padd ul li:nth-child(2n+0) .media-content > div {
+    padding: 2% 0;
 	}
 	.temp-six .Padd ul li:nth-child(2n+0) .media-content h2 {
     text-align: left;

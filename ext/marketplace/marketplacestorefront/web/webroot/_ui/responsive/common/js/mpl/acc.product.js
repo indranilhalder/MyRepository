@@ -561,6 +561,25 @@ sendAddToBag : function(formId, isBuyNow) {
 									+ "/cart";
 							location.href = cartUrl;
 						}
+						//TISQAEE-64 for PDP
+						if (isBuyNow == true) {
+							utag.link({
+								link_obj: this,
+								link_text: 'buynow' ,
+								event_type : 'buynow_winner_seller',
+								product_sku : productCodeMSD
+							});
+						}
+						else {
+							//TISQAEE-64
+					   		utag.link({
+								link_obj: this,
+								link_text: 'addtobag' ,
+								event_type : 'addtobag_winner_seller' ,
+								product_sku : productCodeMSD
+							});
+							
+						}
 						
 						$("#bag-clickSpin,.bagspinner").remove();			
 					},
@@ -589,6 +608,8 @@ sendAddToBagQuick:function(formId){
 	 var quantity = $("#"+formId+" :input[name='" + input_name +"']").val(); 
 	 var stock = $("#"+formId+" :input[name='" +  stock_id +"']").val(); 
 	 var ussid=$('#ussid_quick').val();
+		var productCode = $("#productCode").val();
+		
 	 /*if(parseInt(stock)<parseInt(quantity)){
 		    $("#"+formId+"noInventory").html("<font color='#ff1c47'>" + $('#inventory').text() + "</font>");
 		    $("#"+formId+"noInventory").show().fadeOut(6000);
@@ -662,7 +683,7 @@ sendAddToBagQuick:function(formId){
 			//console.log(productCodeMSD);				
 			var priceformad =  $("input[id=price-for-mad]").val();
 			//console.log(priceformad);				
-			
+		
 			if(typeof isMSDEnabled === 'undefined')
 			{
 				isMSDEnabled = false;						
@@ -678,6 +699,14 @@ sendAddToBagQuick:function(formId){
 				ACC.track.trackAddToCartForMAD(productCodeMSD, salesHierarchyCategoryMSD, priceformad,"INR");
 				}	
 			}
+			//TISQAEE-64
+			utag.link({
+				link_obj: this,
+				link_text: 'addtobag' ,
+				event_type : 'addtobag_winner_seller' ,
+				product_sku : productCode
+			});
+			
 			
 			//End MSD
 			
@@ -792,6 +821,13 @@ sendAddToBagQuick:function(formId){
 					}	
 				}
 				if(isSuccess){
+					//TISQAEE-64 Buy Now Quick View
+					 utag.link({
+							link_obj: this,
+							link_text: 'buynow' ,
+							event_type : 'buynow_winner_seller',
+							product_sku : productCodeMSD
+						});
 					
 					location.href=ACC.config.encodedContextPath + '/cart';
 				}
