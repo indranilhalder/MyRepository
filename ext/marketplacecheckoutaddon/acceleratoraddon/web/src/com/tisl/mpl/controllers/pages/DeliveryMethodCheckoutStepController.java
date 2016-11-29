@@ -21,6 +21,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMe
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.commercefacades.order.CheckoutFacade;
 import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
@@ -247,6 +248,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			getMplCouponFacade().releaseVoucherInCheckout(cartModel);
 			getMplCartFacade().removeDeliveryMode(cartModel); //TISPT-104 // Cart recalculation method invoked inside this method
 			//applyPromotions();
+			
+			
 			final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 			final String defaultPinCodeId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
 
@@ -256,8 +259,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			{
 				responseData = getMplCartFacade().getOMSPincodeResponseData(defaultPinCodeId, cartData);
 				// TPR-429 START
-				final String cartLevelSellerID = GenericUtilityMethods.populateCheckoutSellers(cartModel);
-
+				final String cartLevelSellerID = populateCheckoutSellers(cartData);
 				model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, cartLevelSellerID);
 				// TPR-429 END
 
@@ -490,9 +492,9 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			LOG.debug(">>>>>>>>>>  Step 5:  Cod status setting done  ");
 
 			// TPR-429 START
-			final String checkoutSellerID = GenericUtilityMethods.populateCheckoutSellers(cartModel);
+			final String cartLevelSellerID = populateCheckoutSellers(cartUssidData);
 
-			model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, checkoutSellerID);
+			model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, cartLevelSellerID);
 			// TPR-429 END
 
 			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
@@ -2551,5 +2553,23 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	{
 		this.mplCouponFacade = mplCouponFacade;
 	}
-
+	//TPR-429 change
+		public static String populateCheckoutSellers(final CartData cartData)
+		{
+			String cartLevelSellerID = null;
+			final List<OrderEntryData> sellerList = cartData.getEntries();
+			for (final OrderEntryData seller : sellerList)
+			{
+				final String sellerID = seller.getSelectedSellerInformation().getSellerID();
+				if (cartLevelSellerID != null)
+				{
+					cartLevelSellerID += "_" + sellerID;
+				}
+				else
+				{
+					cartLevelSellerID = sellerID;
+				}
+			}
+			return cartLevelSellerID;
+		}
 }

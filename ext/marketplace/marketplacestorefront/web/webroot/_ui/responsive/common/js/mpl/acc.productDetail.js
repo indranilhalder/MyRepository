@@ -1586,7 +1586,7 @@ $( document ).ready(function() {
 					//	alert(data['othersSellersCount']);
 						$("#otherSellerInfoId").show();
 						$("#otherSellersId").html(data['othersSellersCount']);
-						$("#minPriceId").html(data['minPrice'].formattedValue);
+						$("#minPriceId").html(data['minPrice'].formattedValueNoDecimal);
 					}
 
 					$("#ussid").val(data['sellerArticleSKU']);
@@ -1611,7 +1611,7 @@ $( document ).ready(function() {
 					
 					if (isproductPage == 'false') {
 						fetchAllSellers();
-						$("#minPrice").html(data['minPrice'].formattedValue);
+						$("#minPrice").html(data['minPrice'].formattedValueNoDecimal);
 					}
 					//Added for displaying offer messages other than promotion, TPR-589	
 				//	ACC.productDetail.

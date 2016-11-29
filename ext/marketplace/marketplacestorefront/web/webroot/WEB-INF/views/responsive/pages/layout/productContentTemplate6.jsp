@@ -1,7 +1,15 @@
 <%@ page trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template"%>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
-
+<script>
+$(document).ready(function(){
+	if ($('a.show-more').length) {
+		var showMoreLink = $('a.show-more').clone();
+		$('a.show-more').remove();
+		$('.Padd').append(showMoreLink);
+	}
+});
+</script>
 <div class="Manufacturer temp-six">
   <div class="Padd">
     <h2><span>From the Manufacturer</span></h2>
