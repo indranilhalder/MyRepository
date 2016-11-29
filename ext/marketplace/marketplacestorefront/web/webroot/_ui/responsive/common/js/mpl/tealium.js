@@ -409,7 +409,7 @@ $(document).ready(
 			
 			//tpr-668  --for order page
 			
-			if (pageType == "orderconfirmation" && user_login_type == 'google') {
+			if (pageType == "orderconfirmation") {
 				
 				var pageTypeHome = 'orderconfirmation';
 				var site_section = 'orderconfirmation';
