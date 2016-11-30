@@ -6603,7 +6603,7 @@ text-transform: uppercase;
     		margin-right: 12%;}
         @media (min-width: 651px) {
           .cart.wrapper .product-block li.item > ul > li.qty, .cart.wrapper .product-block li.item > ul > li.price, .confirmation .product-block li.item > ul > li.qty, .confirmation .product-block li.item > ul > li.price {
-            width: 17.8%;  /* Modified for TISQAUATS-10 */
+            width: 16.8%;  /* Modified for TISQAUATS-10 */
 			} 
           .cart.wrapper .product-block li.item > ul > li.delivery, .confirmation .product-block li.item > ul > li.delivery {
             width: 20%; }
@@ -6687,7 +6687,7 @@ text-transform: uppercase;
             display: table; }
           @media (min-width: 651px) {
             .cart.wrapper .product-block li.item > ul > li:first-child, .confirmation .product-block li.item > ul > li:first-child {
-              width: 41.5%;   /* Modified for TISQAUATS-10 */ 
+              width: 38.5%;   /* Modified for TISQAUATS-10 */ 
               padding-bottom: 35px; } }
           .cart.wrapper .product-block li.item > ul > li:first-child div.product-img, .confirmation .product-block li.item > ul > li:first-child div.product-img {
             width: 30%;
@@ -7694,11 +7694,11 @@ text-transform: uppercase;
     display: inline-block; }
   @media (min-width: 651px) {
     .confirmation .product-block li.header ul li.shipping{
-      width: 40.2%; /* Modified for TISQAUATS-10 */
+      width: 44.2%; 
       margin-left:0.5%; }
       
       .confirmation .product-block li ul li.shipping {
-      width: 34%;
+      width: 44.2%; /* Modified for TISQAUATS-10 */
       margin-left:0.5%;  }
        }
   .confirmation .product-block li.header ul li.shipping ul.home, .confirmation .product-block li.header ul li.shipping ul.express, .confirmation .product-block li.header ul li.shipping ul.collect, .confirmation .product-block li ul li.shipping ul.Home, .confirmation .product-block li ul li.shipping ul.Express, .confirmation .product-block li ul li.shipping ul.collect {
