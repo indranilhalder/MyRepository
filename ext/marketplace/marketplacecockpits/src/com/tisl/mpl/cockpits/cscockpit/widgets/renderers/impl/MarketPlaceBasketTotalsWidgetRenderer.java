@@ -63,7 +63,6 @@ public class MarketPlaceBasketTotalsWidgetRenderer extends
 		  
 		      {
 		        AbstractOrderModel abstractOrderModel = (AbstractOrderModel)order.getObject();
-		        Double prevDeliveryCost=abstractOrderModel.getDeliveryCost();
 		        final CurrencyModel cartCurrencyModel = abstractOrderModel.getCurrency();
 		        NumberFormat currencyInstance = (NumberFormat)getSessionService().executeInLocalView(new SessionExecutionBody() 
 		
@@ -147,11 +146,11 @@ public class MarketPlaceBasketTotalsWidgetRenderer extends
 		        Double convenienceCharges = abstractOrderModel.getConvenienceCharges();
 		        renderRow(convenienceCharges, LabelUtils.getLabel(widget, "convenienceCharges", new Object[0]), currencyInstance, container);
 		  
-		        Double totalPrice = abstractOrderModel.getTotalPriceWithConv();
-		        if(deliveryCosts==0.0){
-		        	totalPrice=totalPrice-prevDeliveryCost;
-		        }
-		        renderRow(totalPrice, LabelUtils.getLabel(widget, "totalPrice", new Object[0]), currencyInstance, container);
+//		        Double totalPrice = abstractOrderModel.getTotalPriceWithConv();
+//		        if(deliveryCosts==0.0){
+//		        	totalPrice=totalPrice-prevDeliveryCost;
+//		        }
+		        renderRow(abstractOrderModel.getTotalPriceWithConv()+deliveryCosts, LabelUtils.getLabel(widget, "totalPrice", new Object[0]), currencyInstance, container);
 		      }
 		  
 		      container.setParent(parent);
