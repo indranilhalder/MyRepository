@@ -5,7 +5,6 @@ package com.tisl.mpl.core.search.solrfacetsearch.provider.impl;
 
 import de.hybris.platform.catalog.jalo.classification.ClassAttributeAssignment;
 import de.hybris.platform.catalog.jalo.classification.ClassificationAttribute;
-
 import de.hybris.platform.catalog.jalo.classification.ClassificationAttributeValue;
 import de.hybris.platform.catalog.jalo.classification.util.Feature;
 import de.hybris.platform.catalog.jalo.classification.util.FeatureContainer;
@@ -31,7 +30,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-
 import com.tisl.mpl.standardizationfactory.StandardizationService;
 
 
@@ -45,170 +43,182 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 
 	@Autowired
 	private StandardizationService sizeStandard;
-	
-	private static final String DYNAMICATTRIBUTE="classification.attirbutes.dynamic.";
+
+	private static final String DYNAMICATTRIBUTE = "classification.attirbutes.dynamic.";
 
 	@Override
 	public Collection<FieldValue> getFieldValues(final IndexConfig indexConfig, final IndexedProperty indexedProperty,
 			final Object model) throws FieldValueProviderException
 	{
-		if (model instanceof ProductModel)
+		try
 		{
-			//Added for Tata-24 Start :::
-			final ProductModel productModel = (ProductModel) model;
-			/********** TISPRO-326 changes **********/
-			if (!"Electronics".equalsIgnoreCase(((ProductModel) model).getProductCategoryType())
-					&& StringUtils.isEmpty(indexedProperty.getClassificationProductType())
-					||
-
-					("Electronics".equalsIgnoreCase(((ProductModel) model).getProductCategoryType()) && "Electronics"
-							.equalsIgnoreCase(indexedProperty.getClassificationProductType())))
+			if (model instanceof ProductModel)
 			{
+				//Added for Tata-24 Start :::
+				final ProductModel productModel = (ProductModel) model;
+				/********** TISPRO-326 changes **********/
+				if (!"Electronics".equalsIgnoreCase(((ProductModel) model).getProductCategoryType())
+						&& StringUtils.isEmpty(indexedProperty.getClassificationProductType()) ||
 
-				final List<ClassAttributeAssignmentModel> classAttrAssignmentList = new ArrayList<ClassAttributeAssignmentModel>();
-
-				final ClassAttributeAssignmentModel classAttributeAssignmentModel = indexedProperty.getClassAttributeAssignment();
-
-				if (classAttributeAssignmentModel != null)
+						("Electronics".equalsIgnoreCase(((ProductModel) model).getProductCategoryType())
+								&& "Electronics".equalsIgnoreCase(indexedProperty.getClassificationProductType())))
 				{
-					classAttrAssignmentList.add(classAttributeAssignmentModel);
-				}
-				if (indexedProperty.getClassificationAttributeAssignments() != null)
-				{
-					classAttrAssignmentList.addAll(indexedProperty.getClassificationAttributeAssignments());
-				}
 
-				//if (classAttrAssignmentList.size() > 0)
-				if (CollectionUtils.isNotEmpty(classAttrAssignmentList))
-				{
-					final List<ClassAttributeAssignment> classAttributeAssignmentList = new ArrayList<ClassAttributeAssignment>();
-					final Product product = (Product) this.modelService.getSource(model);
-					final List<FieldValue> fieldValues = new ArrayList<FieldValue>();
-					//for (final ClassAttributeAssignmentModel classAttrAssignmentModel : classAttrAssignmentList)
-					//{
+					final List<ClassAttributeAssignmentModel> classAttrAssignmentList = new ArrayList<ClassAttributeAssignmentModel>();
 
-					/*
-					 * final ClassAttributeAssignment classAttributeAssignment = (ClassAttributeAssignment) this.modelService
-					 * .getSource(classAttrAssignmentModel);
-					 */
-					/********** TISPRO-326 changes **********/
-					for (final ClassAttributeAssignmentModel classAttrAssignmentModel : classAttrAssignmentList)
+					final ClassAttributeAssignmentModel classAttributeAssignmentModel = indexedProperty.getClassAttributeAssignment();
+
+					if (classAttributeAssignmentModel != null)
 					{
-
-						final ClassAttributeAssignment classAttributeAssignment = (ClassAttributeAssignment) this.modelService
-								.getSource(classAttrAssignmentModel);
-
-
-						classAttributeAssignmentList.add(classAttributeAssignment);
-
-
+						classAttrAssignmentList.add(classAttributeAssignmentModel);
+					}
+					if (indexedProperty.getClassificationAttributeAssignments() != null)
+					{
+						classAttrAssignmentList.addAll(indexedProperty.getClassificationAttributeAssignments());
 					}
 
-
-					final FeatureContainer cont = FeatureContainer.loadTyped(product, classAttributeAssignmentList);
-
-					for (final ClassAttributeAssignment classAttributeAssignment : classAttributeAssignmentList)
+					//if (classAttrAssignmentList.size() > 0)
+					if (CollectionUtils.isNotEmpty(classAttrAssignmentList))
 					{
-						if (cont.hasFeature(classAttributeAssignment))
+						final List<ClassAttributeAssignment> classAttributeAssignmentList = new ArrayList<ClassAttributeAssignment>();
+						final Product product = (Product) this.modelService.getSource(model);
+						final List<FieldValue> fieldValues = new ArrayList<FieldValue>();
+						//for (final ClassAttributeAssignmentModel classAttrAssignmentModel : classAttrAssignmentList)
+						//{
+
+						/*
+						 * final ClassAttributeAssignment classAttributeAssignment = (ClassAttributeAssignment)
+						 * this.modelService .getSource(classAttrAssignmentModel);
+						 */
+						/********** TISPRO-326 changes **********/
+						for (final ClassAttributeAssignmentModel classAttrAssignmentModel : classAttrAssignmentList)
 						{
-							final Feature feature = cont.getFeature(classAttributeAssignment);
-							if ((feature != null) && (!feature.isEmpty()))
+
+							final ClassAttributeAssignment classAttributeAssignment = (ClassAttributeAssignment) this.modelService
+									.getSource(classAttrAssignmentModel);
+
+
+							classAttributeAssignmentList.add(classAttributeAssignment);
+
+
+						}
+
+
+						final FeatureContainer cont = FeatureContainer.loadTyped(product, classAttributeAssignmentList);
+
+						for (final ClassAttributeAssignment classAttributeAssignment : classAttributeAssignmentList)
+						{
+							if (cont.hasFeature(classAttributeAssignment))
 							{
-
-								final List<FieldValue> temp = getFeaturesValues(indexConfig, feature, indexedProperty);
-								//Added for Tata-24 Start :::
-								final String dynCategory = configurationService.getConfiguration().getString(
-										DYNAMICATTRIBUTE + productModel.getProductCategoryType());
-								if (StringUtils.isNotEmpty(dynCategory))
+								final Feature feature = cont.getFeature(classAttributeAssignment);
+								if ((feature != null) && (!feature.isEmpty()))
 								{
-									final String[] dynProperties = dynCategory.split(",");
-									for (final String dynproperty : dynProperties)
-									{
-										final String property = dynproperty.replaceAll(" ", "").replaceAll("-", "").toLowerCase();
 
-										if (StringUtils.isNotEmpty(indexedProperty.getName()))
+									final List<FieldValue> temp = getFeaturesValues(indexConfig, feature, indexedProperty);
+									//Added for Tata-24 Start :::
+									final String dynCategory = configurationService.getConfiguration()
+											.getString(DYNAMICATTRIBUTE + productModel.getProductCategoryType());
+									if (StringUtils.isNotEmpty(dynCategory))
+									{
+										final String[] dynProperties = dynCategory.split(",");
+										for (final String dynproperty : dynProperties)
 										{
-											final String name = indexedProperty.getName().replaceAll(" ", "").replaceAll("-", "")
-													.toLowerCase();
-											if (StringUtils.isNotEmpty(name) && property.equals(name))
+											final String property = dynproperty.replaceAll(" ", "").replaceAll("-", "").toLowerCase();
+
+											if (StringUtils.isNotEmpty(indexedProperty.getName()))
 											{
-												System.out.println("----------------Current Product Code: " + product.getCode()
-														+ " ========exportid: " + indexedProperty.getExportId().toLowerCase() + "& name : "
-														+ name);
-												dynGroupFeaturesValues(property, temp);
-												break;
+												final String name = indexedProperty.getName().replaceAll(" ", "").replaceAll("-", "")
+														.toLowerCase();
+												if (StringUtils.isNotEmpty(name) && property.equals(name))
+												{
+													/*
+													 * System.out.println("----------------Current Product Code: " +
+													 * product.getCode() + " ========exportid: " +
+													 * indexedProperty.getExportId().toLowerCase() + "& name : " + name);
+													 */
+													dynGroupFeaturesValues(property, temp);
+													break;
+												}
 											}
-										}
 
-									}
-								}
-								//Added for Tata-24 END :::
-								if ("multipack".equalsIgnoreCase(indexedProperty.getName()))
-								{
-									for (final FieldValue fieldValue : temp)
-									{
-
-										final String value = (String) fieldValue.getValue();
-										if (StringUtils.isNotEmpty(value) && !"yes".equals(value.toLowerCase()))
-										{
-											temp.remove(fieldValue);
 										}
 									}
-								}
-								/*
-								 * MDD Requirement Here: Features ==> This facet will mainly use the attribute
-								 * specialfeatureswatches (PIM_WATCH_028) from the MDD and use all LOVs from this attribute on
-								 * the UI. In addition, if the attribute waterresistancewatches (PIM_WATCH_011) is present and
-								 * set to a value more than 50m then an additional LOV called “Water Resistant” must be added to
-								 * the LOV for this facet automatically.
-								 */
-								if ("features".equalsIgnoreCase(indexedProperty.getName()))
-								{
-									final ClassificationAttribute attribute = classAttributeAssignment.getClassificationAttribute();
-									final String classificationAttrCode = attribute != null && StringUtils.isNotEmpty(attribute.getCode()) ? attribute
-											.getCode() : "";
-
-									if ("waterresistancewatches".equalsIgnoreCase(classificationAttrCode))
+									//Added for Tata-24 END :::
+									if ("multipack".equalsIgnoreCase(indexedProperty.getName()))
 									{
-										FieldValue newValue = null;
 										for (final FieldValue fieldValue : temp)
 										{
-											String valueStr = (String) fieldValue.getValue();
-											if (StringUtils.isNotEmpty(valueStr) && (valueStr.contains("m")) && valueStr.length() >= 2)
+
+											final String value = (String) fieldValue.getValue();
+											if (StringUtils.isNotEmpty(value) && !"yes".equals(value.toLowerCase()))
 											{
-												valueStr = valueStr.substring(0, valueStr.length() - 2);
-											}
-											final long value = Long.parseLong(valueStr);
-											if (Long.compare(value, 50) > 0)
-											{
-												newValue = new FieldValue(fieldValue.getFieldName(), "Water Resistant");
 												temp.remove(fieldValue);
-												temp.add(newValue);
-												break;
 											}
 										}
 									}
+									/*
+									 * MDD Requirement Here: Features ==> This facet will mainly use the attribute
+									 * specialfeatureswatches (PIM_WATCH_028) from the MDD and use all LOVs from this attribute
+									 * on the UI. In addition, if the attribute waterresistancewatches (PIM_WATCH_011) is present
+									 * and set to a value more than 50m then an additional LOV called “Water Resistant” must be
+									 * added to the LOV for this facet automatically.
+									 */
+									if ("features".equalsIgnoreCase(indexedProperty.getName()))
+									{
+										final ClassificationAttribute attribute = classAttributeAssignment.getClassificationAttribute();
+										final String classificationAttrCode = attribute != null
+												&& StringUtils.isNotEmpty(attribute.getCode()) ? attribute.getCode() : "";
+
+										if ("waterresistancewatches".equalsIgnoreCase(classificationAttrCode))
+										{
+											FieldValue newValue = null;
+											for (final FieldValue fieldValue : temp)
+											{
+												String valueStr = (String) fieldValue.getValue();
+												if (StringUtils.isNotEmpty(valueStr) && (valueStr.contains("m")) && valueStr.length() >= 2)
+												{
+													valueStr = valueStr.substring(0, valueStr.length() - 2);
+												}
+												final long value = Long.parseLong(valueStr);
+												if (Long.compare(value, 50) > 0)
+												{
+													newValue = new FieldValue(fieldValue.getFieldName(), "Water Resistant");
+													temp.remove(fieldValue);
+													temp.add(newValue);
+													break;
+												}
+											}
+										}
+
+									}
+									fieldValues.addAll(temp);
 
 								}
-								fieldValues.addAll(temp);
-
 							}
 						}
+
+						//}
+						return fieldValues;
 					}
 
-					//}
-					return fieldValues;
+					return Collections.emptyList();
+
+
 				}
 
 				return Collections.emptyList();
-
-
 			}
-
-			return Collections.emptyList();
+			else /* added part of value provider go through */
+			{
+				throw new FieldValueProviderException("Cannot provide classification property of non-product item");
+			}
 		}
-
-		throw new FieldValueProviderException("Cannot provide classification property of non-product item");
+		catch (final Exception e) /* Try added part of value provider go through */
+		{
+			throw new FieldValueProviderException(
+					"Cannot evaluate " + indexedProperty.getName() + " using " + super.getClass().getName() + "exception" + e, e);
+		}
+		//throw new FieldValueProviderException("Cannot provide classification property of non-product item");
 	}
 
 	@Override
@@ -275,18 +285,55 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 
 		else if (indexedProperty.isLocalized())
 		{
-			for (final LanguageModel language : indexConfig.getLanguages())
+
+			//TPR-3548 Start
+			if (indexedProperty.getIsNumericRange().equals(Boolean.TRUE))
 			{
-				final Locale locale = this.i18nService.getCurrentLocale();
-				try
+				for (final LanguageModel language : indexConfig.getLanguages())
 				{
-					this.i18nService.setCurrentLocale(this.localeService.getLocaleByString(language.getIsocode()));
-					result.addAll(extractFieldValues(indexedProperty, language, (feature.isLocalized()) ? feature.getValues()
-							: featureValues));
+					final Locale locale = this.i18nService.getCurrentLocale();
+					try
+					{
+						final List<FeatureValue> listFeatureValue = featureValues;
+
+						for (final FeatureValue singleFeatureValue : listFeatureValue)
+						{
+							Object value = singleFeatureValue.getValue();
+							if (null != value && value instanceof String)
+							{
+								final String vString = (String) value;
+								value = Double.valueOf(vString);
+							}
+							singleFeatureValue.setValue(value);
+							//clearing the existing value
+							listFeatureValue.clear();
+							//adding the standard value
+							listFeatureValue.add(singleFeatureValue);
+						}
+
+						result.addAll(extractFieldValues(indexedProperty, language, listFeatureValue));
+					}
+					finally
+					{
+						this.i18nService.setCurrentLocale(locale);
+					}
 				}
-				finally
+			} //TPR-3548 End
+			else
+			{
+				for (final LanguageModel language : indexConfig.getLanguages())
 				{
-					this.i18nService.setCurrentLocale(locale);
+					final Locale locale = this.i18nService.getCurrentLocale();
+					try
+					{
+						this.i18nService.setCurrentLocale(this.localeService.getLocaleByString(language.getIsocode()));
+						result.addAll(extractFieldValues(indexedProperty, language,
+								(feature.isLocalized()) ? feature.getValues() : featureValues));
+					}
+					finally
+					{
+						this.i18nService.setCurrentLocale(locale);
+					}
 				}
 			}
 
@@ -317,8 +364,8 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 				{
 					final String name = groupName.replaceAll(" ", "").replaceAll("-", "").toLowerCase();
 					//classification.attirbutes.dynamic.materialtype.metal=Metal,Alloys,Titanium,Aluminium,Stainless Steel
-					final String dynAttribute = configurationService.getConfiguration().getString(
-							DYNAMICATTRIBUTE + property + "." + name);
+					final String dynAttribute = configurationService.getConfiguration()
+							.getString(DYNAMICATTRIBUTE + property + "." + name);
 					if (StringUtils.isNotEmpty(dynAttribute))
 					{
 						//dynAttributes=[Metal,Alloys,Titanium,Aluminium,Stainless Steel]
@@ -380,8 +427,8 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 				{
 					final String name = groupName.replaceAll(" ", "").replaceAll("-", "").toLowerCase();
 					//classification.attirbutes.dynamic.materialtype.metal=Metal,Alloys,Titanium,Aluminium,Stainless Steel
-					final String dynAttribute = configurationService.getConfiguration().getString(
-							DYNAMICATTRIBUTE + property + "." + name);
+					final String dynAttribute = configurationService.getConfiguration()
+							.getString(DYNAMICATTRIBUTE + property + "." + name);
 					if (StringUtils.isNotEmpty(dynAttribute))
 					{
 						//dynAttributes=[Metal,Alloys,Titanium,Aluminium,Stainless Steel]
@@ -398,16 +445,12 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 									if (value instanceof ClassificationAttributeValue)
 									{
 										final String valueName = ((ClassificationAttributeValue) value).getName();
-										System.out.println("loggggggg========valueName=" + valueName);
 										if (valueName != null && StringUtils.isNotEmpty(valueName))
 										{
 											final String formattedValueName = valueName.replaceAll(" ", "").replaceAll("-", "")
 													.toLowerCase();
-											System.out.println("loggggggg========att=" + att);
 											if (att.equals(formattedValueName))
 											{
-												System.out.println("loggggggg========formattedValueName=" + formattedValueName);
-												System.out.println("loggggggg========groupName=" + groupName);
 												((ClassificationAttributeValue) value).setName(groupName);
 												featureValue.setValue(value);
 												flag = true;

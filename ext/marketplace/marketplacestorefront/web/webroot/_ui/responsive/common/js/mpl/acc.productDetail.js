@@ -2828,6 +2828,10 @@ function loadDefaultWishListName_SizeGuide() {
 		
 		$(document).on("click",".product-detail .promo-block .pdp-promo-title, .pdp-promo-title-link",function(e){
 			e.preventDefault();
+			/*TPR-694*/
+			utag.link({"link_obj": this, "link_text": 'product_offer_view_details', "event_type": 'product_offer_details'
+			}); 
+			/*TPR-694 ends */
 			offerPopup($("#promotionDetailsId").html());
 		});
 		$(document).on('hide.bs.modal', function () {

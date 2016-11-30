@@ -740,6 +740,7 @@ $(document).on("click",".plp-wishlist",function(e){
 								$(".wishAlreadyAddedPlp").removeClass("active")
 							},3000)
 						}
+						
 					},
 					error : function(xhr, status, error){
 						alert(error);

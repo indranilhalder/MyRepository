@@ -71,8 +71,65 @@ function loadVariant(x){
 					</p>
 				</c:if>
 				<c:choose>
+		   <c:when test="${not empty product.variantOptions}">
+			<p>
+				<spring:theme code="text.colour" />
+			</p>
+			<c:forEach items="${product.variantOptions}" var="variantOption">
+				<c:choose>
+					<c:when test="${not empty variantOption.defaultUrl}">
+						<li><c:url value="${variantOption.defaultUrl}"
+								var="variantUrl" />
+								 <a href="${variantUrl}">								
+								 <c:forEach
+									items="${variantOption.colourCode}" var="color">
+								<c:choose>
+							    <c:when test="${fn:startsWith(color, 'multi') && empty variantOption.image}">
+						     	<img src="${commonResourcePath}/images/multi.jpg" height="74" width="50" title="${variantOption.colour}" />
+								</c:when>
+								<c:when test="${empty variantOption.image}">
+						     	<span style="background-color: ${color};border: 1px solid rgb(204, 211, 217); width:50px; height:73px" title="${variantOption.colour}"></span>
+								</c:when>							
+								<c:otherwise>
+								<c:set var="imageData" value="${variantOption.image}" />
+								<img src="${imageData.url}" title="${variantOption.colour}" alt="${styleValue}" style="display: inline-block;width: 50px;"/>								
+                               </c:otherwise>
+                               </c:choose>
+								<c:if test="${variantOption.code eq product.code}">
+										<c:set var="currentColor" value="${color}" />
+										<!--  set current selected color -->
+								</c:if>
+								</c:forEach>
+						</a></li>
+					</c:when>
+					<c:otherwise>
+
+					</c:otherwise>
+				</c:choose>
+				<c:if test="${product.rootCategory=='Electronics' || product.rootCategory=='Watches'}">
+					<c:set var="notApparel" value="true" />
+				</c:if>
+				<c:if test="${not empty notApparel}">
+
+
+					<c:if test="${variantOption.capacity!=null}">
+						<c:set var="capacityPresent" value="true" />
+					</c:if>
+				</c:if>
+
+			</c:forEach>
+
+		</c:when>
+		<c:otherwise>
+			<c:set var="noVariant" value="true" />
+		</c:otherwise>
+		
+	</c:choose>
+	
+				
+				<%-- <c:choose>
 					<c:when test="${not empty product.variantOptions}">
-						<%-- <p><spring:theme code="text.colour"/></p> --%>
+						<p><spring:theme code="text.colour"/></p>
 						<c:forEach items="${product.variantOptions}" var="variantOption">
 							<c:choose>
 								<c:when test="${not empty variantOption.defaultUrl}">
@@ -96,8 +153,8 @@ function loadVariant(x){
 													</c:otherwise>
 												</c:choose>
 
-												<%-- <span  style="background-color: ${color};border: 1px solid rgb(204, 211, 217);"  title="${variantOption.colour}"></span --%>
-												<%-- <img src="${variantOption.image.url}" alt="" /> --%>
+												<span  style="background-color: ${color};border: 1px solid rgb(204, 211, 217);"  title="${variantOption.colour}"></span
+												<img src="${variantOption.image.url}" alt="" />
 												<c:if test="${variantOption.defaultUrl eq product.url}">
 													<c:set var="currentColor" value="${color}" />
 													<!--  set current selected color -->
@@ -109,7 +166,7 @@ function loadVariant(x){
 								</c:otherwise>
 							</c:choose>
 							<!-- size variant is not present -->
-							<%--   <c:if test="${variantOption.sizeLink==null}"> --%>
+							  <c:if test="${variantOption.sizeLink==null}">
 							<c:if test="${product.rootCategory=='Electronics' || product.rootCategory=='Watches'}">
 								<c:set var="notApparel" value="true" />
 							</c:if>
@@ -123,7 +180,7 @@ function loadVariant(x){
 					<c:otherwise>
 						<c:set var="noVariant" value="true" />
 					</c:otherwise>
-				</c:choose>
+				</c:choose> --%>
 			</ul>
 		</div>
 	</form:form>
