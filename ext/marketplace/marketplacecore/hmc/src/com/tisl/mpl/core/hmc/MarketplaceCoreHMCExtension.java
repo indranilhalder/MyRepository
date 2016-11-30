@@ -279,7 +279,7 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 		boolean errorCheck = false;
 		try
 		{
-			if (item instanceof BuyAPercentageDiscount)
+			if (item instanceof BuyAPercentageDiscount || item instanceof BuyABFreePrecentageDiscount)
 			{
 				LOG.debug("******** Special price check for BuyAPercentageDiscount:" + item.getAttribute("title"));
 				errorCheck = poulatePromoPriceData(item);
@@ -386,11 +386,11 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 		{
 			if (null != item)
 			{
-				//Bug Fix
-				final BuyAPercentageDiscount buyAPerDiscountPromotion = (BuyAPercentageDiscount) item;
-				promoCode = buyAPerDiscountPromotion.getCode();
 
-				for (final AbstractPromotionRestriction res : buyAPerDiscountPromotion.getRestrictions())
+				final ProductPromotion productPromo = (ProductPromotion) item;
+				promoCode = productPromo.getCode();
+
+				for (final AbstractPromotionRestriction res : productPromo.getRestrictions())
 				{
 					if (res instanceof EtailSellerSpecificRestriction)
 					{
@@ -430,6 +430,52 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 						}
 					}
 				}
+
+
+				//Bug Fix
+				//				final BuyAPercentageDiscount buyAPerDiscountPromotion = (BuyAPercentageDiscount) item;
+				//				promoCode = buyAPerDiscountPromotion.getCode();
+				//
+				//				for (final AbstractPromotionRestriction res : buyAPerDiscountPromotion.getRestrictions())
+				//				{
+				//					if (res instanceof EtailSellerSpecificRestriction)
+				//					{
+				//
+				//						final List<SellerMaster> sellerMasterList = ((EtailSellerSpecificRestriction) res).getSellerMasterList();
+				//						for (final SellerMaster seller : sellerMasterList)
+				//						{
+				//							sellerList.add(seller.getId());
+				//						}
+				//					}
+				//					if (res instanceof ManufacturesRestriction)
+				//					{
+				//						final ManufacturesRestriction brandRestriction = (ManufacturesRestriction) res;
+				//						final List<Category> brandRestrictions = new ArrayList<Category>(brandRestriction.getManufacturers());
+				//						for (final Category code : brandRestrictions)
+				//						{
+				//							brandList.add(code.getCode());
+				//						}
+				//					}
+				//
+				//					if (res instanceof EtailExcludeSellerSpecificRestriction)
+				//					{
+				//						final List<SellerMaster> sellerMasterList = ((EtailExcludeSellerSpecificRestriction) res).getSellerMasterList();
+				//						for (final SellerMaster seller : sellerMasterList)
+				//						{
+				//							rejectSellerList.add(seller.getId());
+				//						}
+				//					}
+				//
+				//					if (res instanceof ExcludeManufacturesRestriction)
+				//					{
+				//						final ExcludeManufacturesRestriction brandRestriction = (ExcludeManufacturesRestriction) res;
+				//						final List<Category> brandRestrictions = new ArrayList<Category>(brandRestriction.getManufacturers());
+				//						for (final Category code : brandRestrictions)
+				//						{
+				//							rejectBrandList.add(code.getCode());
+				//						}
+				//					}
+				//				}
 				//Bug Fix ends
 
 				if (null != item.getAttribute("priority"))

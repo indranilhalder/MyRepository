@@ -22,7 +22,7 @@
 <head>
 	<title>
 	<%-- TISPRD-8030 and INC_100385--%>
-	${not empty page_name_search ? page_name_search :  not empty pageTitle ? pageTitle : not empty cmsPage.title ? cmsPage.title : 'Tata'}  	
+	${not empty pageTitle ? pageTitle : not empty cmsPage.title ? cmsPage.title : 'Tata'}  	
 	</title>
 	<%-- Meta Content --%>
 	<meta name="apple-itunes-app" content="app-id=1101619385">
