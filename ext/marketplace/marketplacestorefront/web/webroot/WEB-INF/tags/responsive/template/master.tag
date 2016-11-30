@@ -147,7 +147,7 @@
 	<%-- TISPRD-8041 --%>
 	<%-- twitter-card added for INC_10384 --%>
 	<c:set var="summary_large_image" value="${summary_large_image}"/>
-	<meta name="twitter:card" content="${summary_large_image}" /> 
+	<meta name="twitter:card" content="summary_large_image" /> 
 	<meta name="twitter:site" content="${twitterHandle}">
 	<meta name="twitter:title" content="${metaTitle}">
 	<meta name="twitter:description" content="${metaDescription}">

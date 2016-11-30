@@ -552,7 +552,7 @@ public class SearchPageController extends AbstractSearchPageController
 			throws CMSItemNotFoundException
 	{
 		final String uri = request.getRequestURI();
-		String pageTitle = "";
+		final String pageTitle = "";
 		if (uri.contains("page"))
 		{
 			final Pattern p = Pattern.compile(COMPILE_PATTERN);
