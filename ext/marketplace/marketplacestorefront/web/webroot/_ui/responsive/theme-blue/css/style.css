@@ -7699,7 +7699,7 @@ text-transform: uppercase;
       
       .confirmation .product-block li ul li.shipping {
       width: 34%;
-      margin-left:0.5%; }
+      margin-left:0.5%;  }
        }
   .confirmation .product-block li.header ul li.shipping ul.home, .confirmation .product-block li.header ul li.shipping ul.express, .confirmation .product-block li.header ul li.shipping ul.collect, .confirmation .product-block li ul li.shipping ul.Home, .confirmation .product-block li ul li.shipping ul.Express, .confirmation .product-block li ul li.shipping ul.collect {
     line-height: 1.8; }
