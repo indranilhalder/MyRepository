@@ -4,10 +4,10 @@
 
 <script>
 $(document).ready(function(){
-	if ($('a.show-more').length) {
-		var showMoreLink = $('a.show-more').clone();
-		$('a.show-more').remove();
-		$('.Padd').after(showMoreLink);
+	if ($('.Manufacturer.Temp03 a.show-more').length) {
+		var showMoreLink = $('.Manufacturer.Temp03 a.show-more').clone();
+		$('.Manufacturer.Temp03 a.show-more').remove();
+		$('.Manufacturer.Temp03 .Padd').after(showMoreLink);
 	}
 });
 </script>
