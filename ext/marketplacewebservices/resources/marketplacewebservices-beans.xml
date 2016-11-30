@@ -2324,8 +2324,7 @@
 	</bean>
 
 	<bean
-		class="de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO"
-		extends="com.tisl.mpl.wsdto.ErrorDTO">
+		class="de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO" >
 		<property name="sellerId" type="String" />
 		<property name="slaveId" type="String" />
 		<property name="clicknCollect" type="String" />
@@ -2376,19 +2375,28 @@
 		<property name="phoneNo9" type="String" />
 		<property name="mplOpeningTime" type="String" />
 		<property name="mplClosingTime" type="String" />
+		<property name="status" type="String" />
+		<property name="error" type="String" />
+		<property name="errorCode" type="String" />
 	</bean>
 
 	<bean
 		class="de.hybris.platform.commercewebservicescommons.dto.store.ListOfPointOfServiceWsDTO"
-		extends="com.tisl.mpl.wsdto.ErrorDTO">
+		>
 		<property name="stores"
 			type="java.util.List&lt;de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO>" />
+		<property name="status" type="String" />
+		<property name="error" type="String" />
+		<property name="errorCode" type="String" />	
 	</bean>
 	<bean
 		class="de.hybris.platform.commercefacades.storelocator.data.ListOfPointOfServiceData"
-		extends="com.tisl.mpl.wsdto.ErrorDTO">
+		>
 		<property name="stores"
 			type="java.util.List&lt;de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData>" />
+		<property name="status" type="String" />
+		<property name="error" type="String" />
+		<property name="errorCode" type="String" />	
 	</bean>
 	<bean
 		class="de.hybris.platform.commercefacades.dto.storeats.ATSResponseDataWsDTO">
@@ -2396,11 +2404,13 @@
 		<property name="quantity" type="int" />
 	</bean>
 	<bean
-		class="de.hybris.platform.commercefacades.dto.storeats.StoreLocationResponseDataWsDTO"
-		extends="com.tisl.mpl.wsdto.ErrorDTO">
+		class="de.hybris.platform.commercefacades.dto.storeats.StoreLocationResponseDataWsDTO" >
 		<property name="ats"
 			type="java.util.List&lt;de.hybris.platform.commercefacades.dto.storeats.ATSResponseDataWsDTO>" />
 		<property name="ussId" type="String"></property>
+		<property name="status" type="String" />
+		<property name="error" type="String" />
+		<property name="errorCode" type="String" />
 	</bean>
 
 
