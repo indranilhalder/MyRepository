@@ -407,7 +407,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 							.entrySet()) {
 						mplJusPayRefundService.makeRefundOMSCall(refundEntry
 								.getKey(), paymentTransactionModel, refundEntry
-								.getKey().getRefundedDeliveryChargeAmt(), null);// Sending
+								.getKey().getRefundedScheduleDeliveryChargeAmt(), null);// Sending
 																				// null
 																				// as
 																				// for
