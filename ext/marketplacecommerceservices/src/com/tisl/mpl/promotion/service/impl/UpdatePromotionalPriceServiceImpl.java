@@ -4,7 +4,6 @@
 package com.tisl.mpl.promotion.service.impl;
 
 import de.hybris.platform.catalog.CatalogVersionService;
-import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.category.jalo.Category;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -255,25 +254,21 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 	 * @param productList
 	 * @return stagedProductList
 	 */
-	private List<String> getStagedProductDetails(final List<String> productList)
-	{
-		final List<String> stagedProductList = new ArrayList<String>();
-
-		final CatalogVersionModel catalogVersionModel = catalogVersionService.getCatalogVersion(
-				configurationService.getConfiguration().getString("cronjob.promotion.catelog"),
-				MarketplacecommerceservicesConstants.STAGED);
-
-		if (CollectionUtils.isNotEmpty(productList))
-		{
-			for (final String productCode : productList)
-			{
-				final ProductModel product = productService.getProductForCode(catalogVersionModel, productCode);
-				stagedProductList.add(product.getPk().toString());
-			}
-		}
-
-		return stagedProductList;
-	}
+	//	Sonar fix
+	/*
+	 * private List<String> getStagedProductDetails(final List<String> productList) { final List<String>
+	 * stagedProductList = new ArrayList<String>();
+	 * 
+	 * final CatalogVersionModel catalogVersionModel = catalogVersionService.getCatalogVersion(
+	 * configurationService.getConfiguration().getString("cronjob.promotion.catelog"),
+	 * MarketplacecommerceservicesConstants.STAGED);
+	 * 
+	 * if (CollectionUtils.isNotEmpty(productList)) { for (final String productCode : productList) { final ProductModel
+	 * product = productService.getProductForCode(catalogVersionModel, productCode);
+	 * stagedProductList.add(product.getPk().toString()); } }
+	 * 
+	 * return stagedProductList; }
+	 */
 
 	/**
 	 * @Description: To check whether to update the special price or not if seller restriction exists
@@ -285,8 +280,8 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 	private boolean isPriceToUpdate(final PriceRowModel price, final List<String> sellers, final List<String> rejectSellerList)
 	{
 		boolean updateSpecialPrice = false;
-		final List<SellerInformationModel> sellerModels = new ArrayList<SellerInformationModel>(
-				price.getProduct().getSellerInformationRelator());
+		final List<SellerInformationModel> sellerModels = new ArrayList<SellerInformationModel>(price.getProduct()
+				.getSellerInformationRelator());
 
 		if (CollectionUtils.isNotEmpty(sellers))
 		{

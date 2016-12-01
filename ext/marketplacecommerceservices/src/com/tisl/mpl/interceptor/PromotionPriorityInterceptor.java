@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +30,6 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
-import com.tisl.mpl.model.BuyABFreePrecentageDiscountModel;
-import com.tisl.mpl.model.BuyAandBgetCModel;
-import com.tisl.mpl.model.BuyXItemsofproductAgetproductBforfreeModel;
 import com.tisl.mpl.model.EtailSellerSpecificRestrictionModel;
 import com.tisl.mpl.model.SellerMasterModel;
 import com.tisl.mpl.promotion.helper.MplPromotionHelper;
@@ -286,8 +282,8 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 								throw new InterceptorException(errorMsg + MarketplacecommerceservicesConstants.SINGLE_SPACE
 										+ MarketplacecommerceservicesConstants.PROMOCODE + categoryPromotion.getCode()
 										+ MarketplacecommerceservicesConstants.SINGLE_SPACE
-										+ MarketplacecommerceservicesConstants.PROMOCATEGORY + category.getCode() + "(" + category.getName()
-										+ ")" + MarketplacecommerceservicesConstants.SINGLE_SPACE
+										+ MarketplacecommerceservicesConstants.PROMOCATEGORY + category.getCode() + "("
+										+ category.getName() + ")" + MarketplacecommerceservicesConstants.SINGLE_SPACE
 										+ MarketplacecommerceservicesConstants.PROMOPRIORITY + categoryPromotion.getPriority());
 								//}
 							}
@@ -367,8 +363,9 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 			{
 				final String errorMsg = Localization.getLocalizedString(PRODUCT_ERROR_MESSAGE);
 				throw new InterceptorException(errorMsg + MarketplacecommerceservicesConstants.SINGLE_SPACE
-						+ MarketplacecommerceservicesConstants.PROMOCODE + promoCode + MarketplacecommerceservicesConstants.SINGLE_SPACE
-						+ MarketplacecommerceservicesConstants.PROMOPRIORITY + promotion.getPriority());
+						+ MarketplacecommerceservicesConstants.PROMOCODE + promoCode
+						+ MarketplacecommerceservicesConstants.SINGLE_SPACE + MarketplacecommerceservicesConstants.PROMOPRIORITY
+						+ promotion.getPriority());
 			}
 		}
 	}
@@ -382,37 +379,22 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 	 * @param promotion
 	 * @return isValid
 	 */
-	private boolean validateFreebieData(final ProductPromotionModel promotion)
-	{
-		boolean isValid = true;
-		if (promotion instanceof BuyXItemsofproductAgetproductBforfreeModel)
-		{
-			final BuyXItemsofproductAgetproductBforfreeModel oModel = (BuyXItemsofproductAgetproductBforfreeModel) promotion;
-			if (CollectionUtils.isNotEmpty(oModel.getGiftProducts()))
-			{
-				isValid = checkCatalogVersion(oModel.getGiftProducts());
-			}
-		}
-		else if (promotion instanceof BuyAandBgetCModel)
-		{
-			final BuyAandBgetCModel oModel = (BuyAandBgetCModel) promotion;
-			if (CollectionUtils.isNotEmpty(oModel.getGiftProducts()))
-			{
-				isValid = checkCatalogVersion(oModel.getGiftProducts());
-			}
-		}
-		else if (promotion instanceof BuyABFreePrecentageDiscountModel)
-		{
-			final BuyABFreePrecentageDiscountModel oModel = (BuyABFreePrecentageDiscountModel) promotion;
-			if (CollectionUtils.isNotEmpty(oModel.getGiftProducts()))
-			{
-				isValid = checkCatalogVersion(oModel.getGiftProducts());
-			}
-		}
-
-		return isValid;
-
-	}
+	// Sonar fix
+	/*
+	 * private boolean validateFreebieData(final ProductPromotionModel promotion) { boolean isValid = true; if (promotion
+	 * instanceof BuyXItemsofproductAgetproductBforfreeModel) { final BuyXItemsofproductAgetproductBforfreeModel oModel =
+	 * (BuyXItemsofproductAgetproductBforfreeModel) promotion; if (CollectionUtils.isNotEmpty(oModel.getGiftProducts()))
+	 * { isValid = checkCatalogVersion(oModel.getGiftProducts()); } } else if (promotion instanceof BuyAandBgetCModel) {
+	 * final BuyAandBgetCModel oModel = (BuyAandBgetCModel) promotion; if
+	 * (CollectionUtils.isNotEmpty(oModel.getGiftProducts())) { isValid = checkCatalogVersion(oModel.getGiftProducts());
+	 * } } else if (promotion instanceof BuyABFreePrecentageDiscountModel) { final BuyABFreePrecentageDiscountModel
+	 * oModel = (BuyABFreePrecentageDiscountModel) promotion; if (CollectionUtils.isNotEmpty(oModel.getGiftProducts())) {
+	 * isValid = checkCatalogVersion(oModel.getGiftProducts()); } }
+	 * 
+	 * return isValid;
+	 * 
+	 * }
+	 */
 
 
 	/**
@@ -469,8 +451,8 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 	{
 		if (null != promotion && null == promotion.getPromotionGroup())
 		{
-			promotion.setPromotionGroup(mplPromotionHelper.fetchPromotionGroupDetails(
-					configurationService.getConfiguration().getString("promotion.default.promotionGroup.identifier")));
+			promotion.setPromotionGroup(mplPromotionHelper.fetchPromotionGroupDetails(configurationService.getConfiguration()
+					.getString("promotion.default.promotionGroup.identifier")));
 		}
 	}
 
