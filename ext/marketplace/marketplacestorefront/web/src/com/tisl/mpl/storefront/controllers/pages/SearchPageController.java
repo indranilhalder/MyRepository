@@ -623,7 +623,7 @@ public class SearchPageController extends AbstractSearchPageController
 			//Added For INC_10385
 			updatePageTitle(searchPageData.getFreeTextSearch(), model);
 			storeCmsPageInModel(model, getContentPageForLabelOrId(NO_RESULTS_CMS_PAGE_ID));
-			pageTitle = "Search Results Tata Cliq";
+			pageTitle = "Search results - Tata CLiQ";
 		}
 		else
 		{
@@ -631,7 +631,7 @@ public class SearchPageController extends AbstractSearchPageController
 			storeContinueUrl(request);
 			updatePageTitle(searchPageData.getFreeTextSearch(), model);
 			storeCmsPageInModel(model, getContentPageForLabelOrId(SEARCH_CMS_PAGE_ID));
-			pageTitle = "Search Results Tata Cliq";
+			pageTitle = "Search results - Tata CLiQ";
 		}
 		final List<Breadcrumb> breadcrumbs = searchBreadcrumbBuilder.getBreadcrumbs(null, searchPageData);
 		model.addAttribute(WebConstants.BREADCRUMBS_KEY, breadcrumbs);
@@ -1276,9 +1276,9 @@ public class SearchPageController extends AbstractSearchPageController
 	/*
 	 * protected <E> List<E> subList(final List<E> list, final int maxElements) { if (CollectionUtils.isEmpty(list)) {
 	 * return Collections.emptyList(); }
-	 *
+	 * 
 	 * if (list.size() > maxElements) { return list.subList(0, maxElements); }
-	 *
+	 * 
 	 * return list; }
 	 */
 
