@@ -286,8 +286,8 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 								throw new InterceptorException(errorMsg + MarketplacecommerceservicesConstants.SINGLE_SPACE
 										+ MarketplacecommerceservicesConstants.PROMOCODE + categoryPromotion.getCode()
 										+ MarketplacecommerceservicesConstants.SINGLE_SPACE
-										+ MarketplacecommerceservicesConstants.PROMOCATEGORY + category.getCode() + "("
-										+ category.getName() + ")" + MarketplacecommerceservicesConstants.SINGLE_SPACE
+										+ MarketplacecommerceservicesConstants.PROMOCATEGORY + category.getCode() + "(" + category.getName()
+										+ ")" + MarketplacecommerceservicesConstants.SINGLE_SPACE
 										+ MarketplacecommerceservicesConstants.PROMOPRIORITY + categoryPromotion.getPriority());
 								//}
 							}
@@ -349,17 +349,13 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 				}
 			}
 
-			// Code Change for TISPRD-2637
-			if (promotion instanceof BuyXItemsofproductAgetproductBforfreeModel || promotion instanceof BuyAandBgetCModel
-					|| promotion instanceof BuyABFreePrecentageDiscountModel)
-			{
-				LOG.debug("Check if Free bie Data Version");
-				final boolean isValid = validateFreebieData(promotion);
-				if (!isValid)
-				{
-					throw new InterceptorException("Free Product Details Must be of Online Version");
-				}
-			}
+			// Code Change for TISPRD-2637   commenting below section of code to remove staged product catalog from system
+			/*
+			 * if (promotion instanceof BuyXItemsofproductAgetproductBforfreeModel || promotion instanceof
+			 * BuyAandBgetCModel || promotion instanceof BuyABFreePrecentageDiscountModel) { LOG.debug(
+			 * "Check if Free bie Data Version"); final boolean isValid = validateFreebieData(promotion); if (!isValid) {
+			 * throw new InterceptorException("Free Product Details Must be of Online Version"); } }
+			 */
 
 		}
 		else if (object instanceof OrderPromotionModel)
@@ -371,9 +367,8 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 			{
 				final String errorMsg = Localization.getLocalizedString(PRODUCT_ERROR_MESSAGE);
 				throw new InterceptorException(errorMsg + MarketplacecommerceservicesConstants.SINGLE_SPACE
-						+ MarketplacecommerceservicesConstants.PROMOCODE + promoCode
-						+ MarketplacecommerceservicesConstants.SINGLE_SPACE + MarketplacecommerceservicesConstants.PROMOPRIORITY
-						+ promotion.getPriority());
+						+ MarketplacecommerceservicesConstants.PROMOCODE + promoCode + MarketplacecommerceservicesConstants.SINGLE_SPACE
+						+ MarketplacecommerceservicesConstants.PROMOPRIORITY + promotion.getPriority());
 			}
 		}
 	}
@@ -474,8 +469,8 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 	{
 		if (null != promotion && null == promotion.getPromotionGroup())
 		{
-			promotion.setPromotionGroup(mplPromotionHelper.fetchPromotionGroupDetails(configurationService.getConfiguration()
-					.getString("promotion.default.promotionGroup.identifier")));
+			promotion.setPromotionGroup(mplPromotionHelper.fetchPromotionGroupDetails(
+					configurationService.getConfiguration().getString("promotion.default.promotionGroup.identifier")));
 		}
 	}
 
