@@ -101,7 +101,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 		{
 			clearExistingData(promoCode);
 			final List<String> product = new ArrayList<String>();
-			List<String> stagedProductList = new ArrayList<String>();
+			//final List<String> stagedProductList = new ArrayList<String>();
 			final List<String> promoproductList = new ArrayList<String>();
 			final List<PriceRowModel> priceList = new ArrayList<PriceRowModel>();
 
@@ -139,11 +139,12 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 
 			if (!product.isEmpty())
 			{
-				stagedProductList = getStagedProductDetails(promoproductList); // For adding the staged catalog price Row for Product
-				if (CollectionUtils.isNotEmpty(stagedProductList))
-				{
-					product.addAll(stagedProductList);
-				}
+				//commenting below section of code to remove staged product catalog from system
+				//stagedProductList = getStagedProductDetails(promoproductList); // For adding the staged catalog price Row for Product
+				//if (CollectionUtils.isNotEmpty(stagedProductList))
+				//{
+				//	product.addAll(stagedProductList);
+				//}
 
 				boolean updateSpecialPrice = false;
 				final List<PriceRowModel> priceRow = updatePromotionalPriceDao.fetchPricedData(product);
@@ -258,8 +259,9 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 	{
 		final List<String> stagedProductList = new ArrayList<String>();
 
-		final CatalogVersionModel catalogVersionModel = catalogVersionService.getCatalogVersion(configurationService
-				.getConfiguration().getString("cronjob.promotion.catelog"), MarketplacecommerceservicesConstants.STAGED);
+		final CatalogVersionModel catalogVersionModel = catalogVersionService.getCatalogVersion(
+				configurationService.getConfiguration().getString("cronjob.promotion.catelog"),
+				MarketplacecommerceservicesConstants.STAGED);
 
 		if (CollectionUtils.isNotEmpty(productList))
 		{
@@ -283,8 +285,8 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 	private boolean isPriceToUpdate(final PriceRowModel price, final List<String> sellers, final List<String> rejectSellerList)
 	{
 		boolean updateSpecialPrice = false;
-		final List<SellerInformationModel> sellerModels = new ArrayList<SellerInformationModel>(price.getProduct()
-				.getSellerInformationRelator());
+		final List<SellerInformationModel> sellerModels = new ArrayList<SellerInformationModel>(
+				price.getProduct().getSellerInformationRelator());
 
 		if (CollectionUtils.isNotEmpty(sellers))
 		{
@@ -343,7 +345,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 		{
 			clearExistingData(promoCode);
 			final List<String> product = new ArrayList<String>();
-			List<String> stagedProductList = new ArrayList<String>();
+			//final List<String> stagedProductList = new ArrayList<String>();
 			final List<String> promoproductList = new ArrayList<String>();
 			final List<PriceRowModel> priceList = new ArrayList<PriceRowModel>();
 
@@ -381,11 +383,12 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 
 			if (!product.isEmpty())
 			{
-				stagedProductList = getStagedProductDetails(promoproductList); // For adding the staged catalog price Row for Product
-				if (CollectionUtils.isNotEmpty(stagedProductList))
-				{
-					product.addAll(stagedProductList);
-				}
+				//commenting below section of code to remove staged product catalog from system
+				//	stagedProductList = getStagedProductDetails(promoproductList); // For adding the staged catalog price Row for Product
+				//	if (CollectionUtils.isNotEmpty(stagedProductList))
+				//	{
+				//		product.addAll(stagedProductList);
+				//	}
 
 				final List<PriceRowModel> priceRow = updatePromotionalPriceDao.fetchPricedData(product);
 				for (final PriceRowModel price : priceRow)
