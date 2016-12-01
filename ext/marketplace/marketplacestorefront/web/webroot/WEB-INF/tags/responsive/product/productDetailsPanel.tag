@@ -332,6 +332,7 @@ tr.d0 td {
 	<!-- Added for TATAUNISTORE-15 Start -->
 	<c:set var="watches"><spring:theme code='product.watches'/></c:set>
 	<c:set var="accessories"><spring:theme code='product.fashionAccessories'/></c:set>
+	<c:set var="travelandluggage"><spring:theme code='product.travelandluggage'/></c:set>
 	<!-- For Infinite Analytics Start -->
 	<input type="hidden" value="${productCategoryType}" id="categoryType"/>
 <c:choose>
@@ -339,7 +340,7 @@ tr.d0 td {
 			<div class="trending"  id="ia_products_complements"></div>
 			<div class="trending"  id="ia_products"></div>
 		</c:when>
-		<c:when test="${product.rootCategory==electronics  || product.rootCategory==watches}">
+		<c:when test="${product.rootCategory==electronics  || product.rootCategory==watches || product.rootCategory==travelandluggage}">
 			<div class="trending"  id="ia_products_bought_together"></div>
 			<div class="trending"  id="ia_products_similar"></div>
 		</c:when>
@@ -359,7 +360,7 @@ tr.d0 td {
 <!--- END:MSD ---> 
 	
 <c:choose>
-<c:when test="${product.rootCategory==electronics  || product.rootCategory==watches}">
+<c:when test="${product.rootCategory==electronics  || product.rootCategory==watches || product.rootCategory==travelandluggage}">
 <product:productDetailsClassifications product="${product}"/>
 </c:when>
 <c:otherwise>
