@@ -23,11 +23,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.CancellationReasonModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
+import com.tisl.mpl.core.model.OrderShortUrlInfoModel;
 import com.tisl.mpl.core.model.ReturnReasonModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
@@ -39,6 +41,8 @@ import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
  */
 public class DefaultMplOrderDao implements MplOrderDao
 {
+	private static final Logger LOG = Logger
+			.getLogger(DefaultMplOrderDao.class);
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
 	@Autowired
@@ -353,7 +357,34 @@ public class DefaultMplOrderDao implements MplOrderDao
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
-
+/**
+ * 
+ * To get short-url for order
+ */
+	@Override
+	public String getShortUrl(String orderCode)
+	{
+		LOG.info("getting short URL for order:"+orderCode);
+		String shortUrl = null;	
+		try
+		{
+			final String query = "SELECT {osu:pk} FROM {OrderShortUrlInfo as osu} WHERE {orderId} = ?orderId";
+			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
+			flexiQuery.addQueryParameter("orderId", orderCode);
+			final List<OrderShortUrlInfoModel> orderModelList = flexibleSearchService.<OrderShortUrlInfoModel> search(flexiQuery).getResult();
+			if(null != orderModelList && orderModelList.size()>0) {
+				shortUrl = orderModelList.get(0).getShortURL();
+			}
+			if(LOG.isDebugEnabled()) {
+				LOG.debug("short Url for order:"+orderCode+" is "+shortUrl);
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception while getting the short-url for order:"+orderCode);
+		}
+		return shortUrl;
+	}
 	/**
 	 * @return the flexibleSearchService
 	 */

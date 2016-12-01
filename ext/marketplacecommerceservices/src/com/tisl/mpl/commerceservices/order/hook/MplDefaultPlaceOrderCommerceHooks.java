@@ -12,6 +12,7 @@ import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
+import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.order.AbstractOrderEntryTypeService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
@@ -246,6 +247,12 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	{
 		final OrderModel orderModel = paramCommerceOrderResult.getOrder();
 		orderModel.setType("Parent");
+		if(null != orderModel.getDeliveryAddress()) {
+		   List<AddressModel> deliveryAddreses = new ArrayList<AddressModel>();
+		   deliveryAddreses.add(orderModel.getDeliveryAddress());
+		   orderModel.setDeliveryAddresses(deliveryAddreses);
+		   getModelService().save(orderModel);
+	   }
 		final List<OrderModel> orderList = getSubOrders(orderModel);
 
 		//TISPRO-249

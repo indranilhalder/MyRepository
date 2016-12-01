@@ -18,7 +18,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -26,7 +25,6 @@ import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.data.RefundDeliveryData;
 import com.tisl.mpl.cockpits.cscockpit.services.MarketPlaceOrderSearchServices;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceOrderController;
-import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.JuspayRefundType;
 import com.tisl.mpl.core.model.InvoiceDetailModel;
 import com.tisl.mpl.core.model.RefundTransactionMappingModel;
@@ -35,6 +33,7 @@ import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
 import com.tisl.mpl.facades.product.data.SendInvoiceData;
 import com.tisl.mpl.integration.oms.adapter.CustomOmsOrderSyncAdapter;
 import com.tisl.mpl.integration.oms.order.service.impl.CustomOmsOrderService;
+import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
 
 import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
@@ -48,7 +47,6 @@ import de.hybris.platform.cscockpit.widgets.controllers.CallContextController;
 import de.hybris.platform.cscockpit.widgets.controllers.impl.DefaultOrderController;
 import de.hybris.platform.orderhistory.OrderHistoryService;
 import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
-import de.hybris.platform.ordermodify.model.OrderEntryModificationRecordEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.payment.enums.PaymentTransactionType;
@@ -100,6 +98,8 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 	@Autowired
 	private CustomOmsOrderSyncAdapter customOmsOrderSyncAdapter;
 	
+	@Autowired
+	private MplOrderDao mplOrderDao;
 	private static final Logger LOG = Logger
 			.getLogger(MarketPlaceDefaultOrderController.class);
 
@@ -748,5 +748,15 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 			getParentOrder(order);
 		}
 		return order;
+	}
+
+	@Override
+	public String getShortUrl(String orderCode) {
+		try {
+			return mplOrderDao.getShortUrl(orderCode);
+		}catch(Exception e) {
+			LOG.error("Exception while getting the short-url for order:"+orderCode);
+		}
+		return null;
 	}
 }
