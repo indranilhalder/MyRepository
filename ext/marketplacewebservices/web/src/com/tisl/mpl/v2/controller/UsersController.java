@@ -5681,11 +5681,13 @@ public class UsersController extends BaseCommerceController
 		final MplUserResultWsDto output = new MplUserResultWsDto();
 		boolean resultFlag = false;
 		String result = null;
+		OrderEntryData orderEntry = new OrderEntryData();
+
 		try
 		{
+			LOG.debug(MarketplacewebservicesConstants.USER_DETAILS + emailId);
 			final CustomerData customerData = customerFacade.getCurrentCustomer();
 			final OrderData orderDetails = orderFacade.getOrderDetailsForCode(orderCode);
-			OrderEntryData orderEntry = new OrderEntryData();
 			final List<OrderEntryData> subOrderEntries = orderDetails.getEntries();
 			for (final OrderEntryData entry : subOrderEntries)
 			{
@@ -5695,16 +5697,17 @@ public class UsersController extends BaseCommerceController
 					break;
 				}
 			}
+			final boolean cancelFlag = getConfigurationService().getConfiguration().getBoolean(
+					MarketplacecommerceservicesConstants.CANCEL_ENABLE);
+			final boolean returnFlag = getConfigurationService().getConfiguration().getBoolean(
+					MarketplacecommerceservicesConstants.RETURN_ENABLE);
 
-			LOG.debug(MarketplacewebservicesConstants.USER_DETAILS + emailId);
-			if (ticketTypeCode.equalsIgnoreCase("C"))
+			if (ticketTypeCode.equalsIgnoreCase("C") && cancelFlag)
 			{
 				resultFlag = cancelReturnFacade.implementCancelOrReturn(orderDetails, orderEntry, reasonCode, ussid, ticketTypeCode,
 						customerData, refundType, false, SalesApplication.MOBILE);
-
-
 			}
-			else
+			else if (ticketTypeCode.equalsIgnoreCase("R") && returnFlag)
 			{
 				resultFlag = cancelReturnFacade.implementCancelOrReturn(orderDetails, orderEntry, reasonCode, ussid, ticketTypeCode,
 						customerData, refundType, true, SalesApplication.MOBILE);
@@ -5713,6 +5716,10 @@ public class UsersController extends BaseCommerceController
 			if (resultFlag)
 			{
 				result = MarketplacecommerceservicesConstants.SUCCESS_FLAG;
+			}
+			else
+			{
+				result = MarketplacecommerceservicesConstants.FAILURE_FLAG;
 			}
 			output.setStatus(result);
 		}
