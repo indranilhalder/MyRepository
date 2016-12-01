@@ -186,7 +186,7 @@
 								<c:set var="addressCount" value="${addressCount+1}" />
 								<div class="row">
 									<div class="col-md-2">
-										<input type="radio" class="addAddressToForm changeAddCheck"
+										<input type="radio" class="addAddressToForm changeAddCheck radio${status.count}"
 											data-item="changeAddress${status.count}"
 											name="select_address"/>
 									</div>
