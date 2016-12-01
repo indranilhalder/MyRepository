@@ -9214,6 +9214,30 @@
 					</index>
 				</indexes>
 			</itemtype>
+			<!--  Added for testing for deployment streamline -->
+			<itemtype code="UserRecommendation" autocreate="true" generate="true">
+				<deployment table="UserRecommendation" typecode="18012" />
+				<attributes>
+					<attribute autocreate="true" qualifier="UserId" type="java.lang.String" generate="true">
+					    <description>Product Id for promotion</description>
+						<persistence type="property" />
+						<modifiers unique="true" optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="recommendationId" type="java.lang.String" generate="true">
+					    <description>Seller Id for promotion</description>
+						<persistence type="property" />
+						<modifiers unique="true" optional="false" />
+					</attribute>
+					
+					<attribute autocreate="true" qualifier="UserType" type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" unique="false" optional="true" />
+					</attribute>
+					
+				</attributes>
+				
+			</itemtype>
+			
 			</typegroup>
 			
 			

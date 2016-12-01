@@ -57865,6 +57865,9 @@ header > .content .top.header_fix .toggle{
 }
 
 /* Carousel Portion Starts */
+.Manufacturer.Temp07 .video-container{
+	padding-bottom:0px;
+}
 .Manufacturer.Temp07 .owl-item.cloned{
 	width: 423px;
 	float: left;
