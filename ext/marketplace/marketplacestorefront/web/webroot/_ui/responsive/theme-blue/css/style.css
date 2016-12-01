@@ -6571,8 +6571,8 @@ text-transform: uppercase;
               .cart.wrapper .product-block li.item ul.mobile-product > li.qty input, .confirmation .product-block li.item ul.mobile-product > li.qty input {
                 height: 40px;
                 line-height: 38px; }
-       .confirmation .product-block li.item ul.desktop {
-          display: none; }
+       /* .confirmation .product-block li.item ul.desktop {
+          display: none; } */   /* Modified for TISQAUATS-11 */
         @media (min-width: 651px) {
           .cart.wrapper .product-block li.item ul.mobile-product, .confirmation .product-block li.item ul.mobile-product {
             display: none; }
@@ -6602,9 +6602,12 @@ text-transform: uppercase;
           margin-left: 12%;
     		margin-right: 12%;}
         @media (min-width: 651px) {
-          .cart.wrapper .product-block li.item > ul > li.qty, .cart.wrapper .product-block li.item > ul > li.price, .confirmation .product-block li.item > ul > li.qty, .confirmation .product-block li.item > ul > li.price {
-            width: 16.8%;  /* Modified for TISQAUATS-10 */
+          .cart.wraper .product-block li.item > ul > li.qty, .cart.wrapper .product-block li.item > ul > li.price, .confirmation .product-block li.item > ul > li.qty, .confirmation .product-block li.item > ul > li.price {
+            width: 16.8%;  
 			} 
+			.confirmation .product-block li.item > ul > li.price{
+			width: 15.8%;  /* Modified for TISQAUATS-10 */
+			}
           .cart.wrapper .product-block li.item > ul > li.delivery, .confirmation .product-block li.item > ul > li.delivery {
             width: 20%; }
             .cart.wrapper .product-block li.item > ul > li.delivery ul, .confirmation .product-block li.item > ul > li.delivery ul {
@@ -6687,8 +6690,13 @@ text-transform: uppercase;
             display: table; }
           @media (min-width: 651px) {
             .cart.wrapper .product-block li.item > ul > li:first-child, .confirmation .product-block li.item > ul > li:first-child {
-              width: 38.5%;   /* Modified for TISQAUATS-10 */ 
-              padding-bottom: 35px; } }
+              width: 38.5%;  
+              padding-bottom: 35px; 
+              } 
+              .confirmation .product-block li.item > ul > li:first-child{
+              width: 36.5%;   /* Modified for TISQAUATS-10 */ 
+              }
+           }
           .cart.wrapper .product-block li.item > ul > li:first-child div.product-img, .confirmation .product-block li.item > ul > li:first-child div.product-img {
             width: 30%;
             float: left;
@@ -7698,7 +7706,7 @@ text-transform: uppercase;
       margin-left:0.5%; }
       
       .confirmation .product-block li ul li.shipping {
-      width: 44.2%; /* Modified for TISQAUATS-10 */
+      width: 47.2%; /* Modified for TISQAUATS-10 */
       margin-left:0.5%;  }
        }
   .confirmation .product-block li.header ul li.shipping ul.home, .confirmation .product-block li.header ul li.shipping ul.express, .confirmation .product-block li.header ul li.shipping ul.collect, .confirmation .product-block li ul li.shipping ul.Home, .confirmation .product-block li ul li.shipping ul.Express, .confirmation .product-block li ul li.shipping ul.collect {
