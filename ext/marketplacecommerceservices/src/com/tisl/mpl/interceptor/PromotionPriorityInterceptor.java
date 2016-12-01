@@ -20,7 +20,6 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.util.localization.Localization;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -390,9 +389,9 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 	 * } } else if (promotion instanceof BuyABFreePrecentageDiscountModel) { final BuyABFreePrecentageDiscountModel
 	 * oModel = (BuyABFreePrecentageDiscountModel) promotion; if (CollectionUtils.isNotEmpty(oModel.getGiftProducts())) {
 	 * isValid = checkCatalogVersion(oModel.getGiftProducts()); } }
-	 * 
+	 *
 	 * return isValid;
-	 * 
+	 *
 	 * }
 	 */
 
@@ -406,22 +405,22 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 	 * @param giftProducts
 	 * @return isValid
 	 */
-	private boolean checkCatalogVersion(final Collection<ProductModel> giftProducts)
-	{
-		boolean isValid = true;
-		final String compareCode = getDefaultPromotionsManager().catalogData().getVersion();
-		for (final ProductModel oModel : giftProducts)
-		{
-			if (null != oModel.getCatalogVersion() && null != oModel.getCatalogVersion().getVersion()
-					&& StringUtils.isNotEmpty(compareCode)
-					&& !StringUtils.equalsIgnoreCase(oModel.getCatalogVersion().getVersion(), compareCode))
-			{
-				isValid = false;
-				break;
-			}
-		}
-		return isValid;
-	}
+	//	private boolean checkCatalogVersion(final Collection<ProductModel> giftProducts)
+	//	{
+	//		boolean isValid = true;
+	//		final String compareCode = getDefaultPromotionsManager().catalogData().getVersion();
+	//		for (final ProductModel oModel : giftProducts)
+	//		{
+	//			if (null != oModel.getCatalogVersion() && null != oModel.getCatalogVersion().getVersion()
+	//					&& StringUtils.isNotEmpty(compareCode)
+	//					&& !StringUtils.equalsIgnoreCase(oModel.getCatalogVersion().getVersion(), compareCode))
+	//			{
+	//				isValid = false;
+	//				break;
+	//			}
+	//		}
+	//		return isValid;
+	//	}
 
 	/**
 	 * The Method checks the priority for Active Cart Promotions

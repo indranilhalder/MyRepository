@@ -50,7 +50,6 @@ import com.tisl.mpl.model.MplConfigurationModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.SellerMasterModel;
 import com.tisl.mpl.promotion.dao.impl.UpdatePromotionalPriceDaoImpl;
-import com.tisl.mpl.promotion.service.UpdateSplPriceHelperService;
 import com.tisl.mpl.util.ExceptionUtil;
 
 
@@ -86,7 +85,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	@Autowired
 	private CategoryService categoryService;
 
-	private static final String CATEGORY_LIST=" *** categoryList:";  //Sonar fix
+	private static final String CATEGORY_LIST = " *** categoryList:"; //Sonar fix
 
 	/**
 	 * @description getRequiredPromotion
@@ -270,16 +269,16 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 				else if ((null != categoryList && !categoryList.isEmpty()) || ((null != productList && !productList.isEmpty()))
 						&& !isEnabled && quantity.intValue() == 1)
 				{
-					LOG.debug("******** Special price check disabling promotion, productlist impacted:" + productList
-							+ CATEGORY_LIST + categoryList);
+					LOG.debug("******** Special price check disabling promotion, productlist impacted:" + productList + CATEGORY_LIST
+							+ categoryList);
 					disablePromotionalPrice(productList, categoryList, isEnabled, priority, brandList, quantity, rejectSellerList,
 							rejectBrandList, promoCode);
 				}
 				else if ((null != categoryList && !categoryList.isEmpty()) || ((null != productList && !productList.isEmpty()))
 						&& quantity.intValue() > 1) // If Qauntity is increased from 1 to Multiple //Fix for TISPRD-383
 				{
-					LOG.debug("******** Special price check disabling promotion, productlist impacted:" + productList
-							+ CATEGORY_LIST + categoryList);
+					LOG.debug("******** Special price check disabling promotion, productlist impacted:" + productList + CATEGORY_LIST
+							+ categoryList);
 					disablePromotionalPrice(productList, categoryList, isEnabled, priority, brandList, quantity, rejectSellerList,
 							rejectBrandList, promoCode);
 				}
