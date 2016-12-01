@@ -811,10 +811,11 @@ function setValidPrice(sellersArray, index) {
 			 $("#savingsOnProductId").hide();
 			 //$("#dListedErrorMsg").show(); //Need to Change	
 			// $("#freebieProductMsgId").show();
+			 var prodCode=$("#productCodePost").val();
 			 var ussId=  $("#ussid").val();
 			 
 			//update the message for Freebie product TPR-1754
-			 var freebieproductMsg =populateFreebieMsg(ussId);
+			 var freebieproductMsg =populateFreebieMsg(prodCode);
 			
 			 if($.isEmptyObject(freebieproductMsg)){
 				 
@@ -1873,12 +1874,13 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 				 $(".star-review").hide();
 				 //$("#dListedErrorMsg").show();	//Need to Change
 				// $("#freebieProductMsgId").show();
-			var ussId=  $("#ussid").val();
+				 var prodCode=$("#productCodePost").val();
+			     var ussId=  $("#ussid").val();
 				
 			//	$("#ussid").val(data['sellerArticleSKU']);
 				 
 				//update the message for Freebie product TPR-1754
-				 var freebieproductMsg =populateFreebieMsg(ussId);			 
+				 var freebieproductMsg =populateFreebieMsg(prodCode);			 
 				 if($.isEmptyObject(freebieproductMsg)){	
 					 
 					 $("#freebieProductMsgId").show();			 
