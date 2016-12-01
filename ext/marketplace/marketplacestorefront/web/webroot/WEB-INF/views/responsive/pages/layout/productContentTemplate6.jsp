@@ -3,10 +3,10 @@
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <script>
 $(document).ready(function(){
-	if ($('a.show-more').length) {
-		var showMoreLink = $('a.show-more').clone();
-		$('a.show-more').remove();
-		$('.Padd').append(showMoreLink);
+	if ($('.Manufacturer.temp-six a.show-more').length) {
+		var showMoreLink = $('.Manufacturer.temp-six a.show-more').clone();
+		$('.Manufacturer.temp-six a.show-more').remove();
+		$('.Manufacturer.temp-six .Padd').append(showMoreLink);
 	}
 });
 </script>
