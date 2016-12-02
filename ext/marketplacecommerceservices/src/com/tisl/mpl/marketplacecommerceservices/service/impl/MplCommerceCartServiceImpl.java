@@ -3803,9 +3803,14 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 										&& richAttributeModel.get(0).getDeliveryFulfillModes() != null
 										&& richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
 								{
-									//final String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
-									//LOG.debug("*****************Seller Level.....*****fulfillmentType.toUpperCase() :"+fulfillmentType.toUpperCase());
-									//	cartSoftReservationData.setFulfillmentType(fulfillmentType.toUpperCase());
+									String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
+									if(fulfillmentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.BOTH)) {
+										if(null != richAttributeModel.get(0).getDeliveryFulfillModeByP1()) {
+											fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode();
+										}
+									}
+									LOG.debug("*****************Seller Level.....*****fulfillmentType.toUpperCase() :"+fulfillmentType.toUpperCase());
+									cartSoftReservationData.setFulfillmentType(fulfillmentType.toUpperCase());
 									if (entryModel.getGiveAway().booleanValue())
 									{
 										setFullFillmentTypeForFreebie(cartSoftReservationData, abstractOrderModel);

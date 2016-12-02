@@ -108,12 +108,25 @@ $(".errland1, .errland2").hide();
 
 $(".optionsLandmark .errorMessage").css("padding-bottom", "5px");
 	
-$('.address_landmarks').attr("onchange","changeFunction(this.value)");
+$('.address_landmarks').attr("onchange","changeFuncLandMark(this.value)");
 $(".address_landmarkOther, .address_landmarkOtherDiv label").hide();
 
 $("#addNewAddress").click(function(e){
 	optionsLandmark(e);
 });
+
+
+function changeFuncLandMark(value) {
+	$(".errland1").hide();
+	if(value == "Other") {
+		$(".address_landmarkOtherDiv, .address_landmarkOtherDiv label, .address_landmarkOther").show();
+		$("#otherLandmark").prop('value','');
+	} else {
+		$(".address_landmarkOther").prop("value", "");
+		$(".address_landmarkOtherDiv, .address_landmarkOtherDiv label, .address_landmarkOther").hide();
+	}
+}
+
 
 function changeFunction(value) {
 	$('.otherOption').attr("value", "Other");
@@ -122,6 +135,7 @@ function changeFunction(value) {
 		$('.otherOption').attr("value", "");
 		$('.otherOption').val("");
 		$(".address_landmarkOtherDiv, .address_landmarkOtherDiv label, .address_landmarkOther").show();
+		/*$("#otherLandmark").attr('value','');*/
 	} else {
 		$(".address_landmarkOther").attr("value", "");
 		$(".address_landmarkOtherDiv, .address_landmarkOtherDiv label, .address_landmarkOther").hide();
@@ -250,6 +264,7 @@ function checkPopupDataOrderHistory() {
 			  			validate = false;
 				  	}
 				      if(validate == true){
+				    	  $('.saveBlockData').prop('disabled', 'disabled');
 							var data = $("#deliveryAddressForm").serialize();
 							var orderCode = $('#deliveryAddorderCode').val();
 							$.ajax({
@@ -260,7 +275,9 @@ function checkPopupDataOrderHistory() {
 								data : data,
 								contentType: "text/application/html",
 								success : function(result){
+									
 									if(result=='Pincode not Serviceable'){
+										
 										$("#changeAddressPopup").show();
 										$("#showOTP").hide();
 										$(".wrapBG").show();
@@ -269,6 +286,7 @@ function checkPopupDataOrderHistory() {
 										//$("#changeAddressPopup").css("z-index", "999999");
 										$(".pincodeNoError").show();
 										$(".pincodeNoError").text(result);
+										 $('.saveBlockData').prop('disabled', false);
 									}else if(result =='Updated'){
 										window.location.href=ACC.config.encodedContextPath+"/my-account/order/?orderCode="+orderCode;
 									}else{

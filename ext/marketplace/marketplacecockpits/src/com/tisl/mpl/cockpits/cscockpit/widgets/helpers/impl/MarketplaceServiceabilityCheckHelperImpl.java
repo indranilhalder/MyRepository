@@ -36,6 +36,7 @@ import org.springframework.beans.factory.annotation.Required;
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl.MarketplaceSearchCommandControllerImpl;
 import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceabilityCheckHelper;
+import com.tisl.mpl.constants.MplGlobalCodeConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.mplconfig.service.MplConfigService;
@@ -483,7 +484,9 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 								data = new PincodeServiceData();
 								data.setIsCOD(sd.getIsCod());
 								data.setDeliveryModes(sd.getDeliveryModes());
-								data.setTransportMode(sd.getShippingMode());
+								if(null != sd.getShippingMode()) {
+									data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(sd.getShippingMode().toUpperCase()));
+								}
 								data.setDeliveryFulfillModeByP1(sd.getDeliveryFulfillModebyP1());
 								data.setFullFillmentType(sd.getFullfillment());
 								data.setSellerId(buybox.getSellerId());
@@ -525,7 +528,9 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 							data = new PincodeServiceData();
 							data.setIsCOD(sd.getIsCod());
 							data.setDeliveryModes(sd.getDeliveryModes());
-							data.setTransportMode(sd.getShippingMode());
+							if(null != sd.getShippingMode()) {
+							  data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(sd.getShippingMode().toUpperCase()));
+							}
 							data.setDeliveryFulfillModeByP1(sd.getDeliveryFulfillModebyP1());
 							data.setFullFillmentType(sd.getFullfillment());
 							data.setSellerId(buybox.getSellerId());

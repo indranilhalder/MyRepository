@@ -1678,7 +1678,9 @@ $(function() {
 			  $("#changeAddressPopup").css("z-index","999999");
 			  setTimeout(function() { console.log($("#deliveryAddressForm #firstName").attr("value")); $("#deliveryAddressForm #firstName").val($("#deliveryAddressForm #firstName").attr("value")); $("#deliveryAddressForm #lastName").val($("#deliveryAddressForm #lastName").attr("value")) }, 100);
 			  loadPincodeData();
+			  $('.radio1').prop("checked", true);
 		});
+		
 		
 		    var length = $(".returnStatus .dot").length;
 		    if(length >=3) {
@@ -1698,13 +1700,7 @@ $(function() {
 			 
 		 });
 		 
-		 $("#changeAddressLink").click(function(){
-			  $("#changeAddressPopup").show();
-			  $(".wrapBG").show();
-			  var height = $(window).height();
-			  $(".wrapBG").css("height",height);
-			  $("#changeAddressPopup").css("z-index","999999");
-		});
+		
 		 
 	 	$("#saveBlockData").click(function(){
 				$("#changeAddressPopup").hide();
@@ -1918,6 +1914,9 @@ $(function() {
     border: 1px solid #dfd1d5;
     width: 100%;
     
+}
+input[type="radio"]:checked {
+	background: #000;
 }
 </style>
 

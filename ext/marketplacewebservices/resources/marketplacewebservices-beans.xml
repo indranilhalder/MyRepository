@@ -1478,6 +1478,8 @@
 		<property name="logisticName" type="String" />
 		<property name="reverseLogisticName" type="String" />
 		<property name="storeDetails" type="de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO" />	
+		<property name="scheduleDeliveryDate" type="String" />
+		<property name="scheduleDeliveryTime" type="String" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.StatusResponseListDTO">
 		<property name="statusList" type="java.util.List&lt;com.tisl.mpl.wsdto.StatusResponseDTO>" />
@@ -1495,7 +1497,6 @@
 		<property name="time" type="String" />
 		<property name="location" type="String" />
 	</bean>
-	
 	
 	<bean class="com.tisl.mpl.wsdto.GetOrderHistoryListWsDTO">
 		         <property name="orderData" type="java.util.List&lt;com.tisl.mpl.wsdto.OrderDataWsDTO>" />   

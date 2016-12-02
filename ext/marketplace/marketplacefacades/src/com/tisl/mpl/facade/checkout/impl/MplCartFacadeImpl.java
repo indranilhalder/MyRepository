@@ -2480,12 +2480,18 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				mplEDDInfoForUssIDWsDTO = new MplEDDInfoForUssIDWsDTO();
 				mplEDDInfoForUssIDWsDTO.setUssId(deliverySlotsEDDData.getUssId());
 				mplEDDInfoForUssIDWsDTO.setIsScheduled(deliverySlotsEDDData.getIsScheduled());
-				mplEDDInfoForUssIDWsDTO.setCodEligible(deliverySlotsEDDData.getCodEligible());
-				timeSlotType = getDeliveryMode(cartModel, deliverySlotsEDDData.getUssId());
-				//preparing mobile data
-				Map<String, List<String>> mapData = mplDeliveryAddressFacade.getDateAndTimeMap(timeSlotType,
-						deliverySlotsEDDData.getEDD());
-				mplEDDInfoForUssIDWsDTO.setEstimateDeliveryDateList(getEDDList(mapData));
+				if (MarketplaceFacadesConstants.Y.equalsIgnoreCase(deliverySlotsEDDData.getIsScheduled()))
+				{
+					mplEDDInfoForUssIDWsDTO.setCodEligible(deliverySlotsEDDData.getCodEligible());
+					timeSlotType = getDeliveryMode(cartModel, deliverySlotsEDDData.getUssId());
+					//preparing mobile data
+					if (StringUtils.isNotEmpty(timeSlotType))
+					{
+						Map<String, List<String>> mapData = mplDeliveryAddressFacade.getDateAndTimeMap(timeSlotType,
+								deliverySlotsEDDData.getEDD());
+						mplEDDInfoForUssIDWsDTO.setEstimateDeliveryDateList(getEDDList(mapData));
+					}
+				}
 				mplEDDInfoForUssIDList.add(mplEDDInfoForUssIDWsDTO);
 
 			}
@@ -2535,7 +2541,10 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				{
 					return MarketplacecommerceservicesConstants.DELIVERY_MODE_ED;
 				}
-				else
+				else if(entry.getMplDeliveryMode() != null
+						&& entry.getMplDeliveryMode().getDeliveryMode() != null
+						&& MarketplacecommerceservicesConstants.HOME_DELIVERY.equalsIgnoreCase(entry.getMplDeliveryMode()
+								.getDeliveryMode().getCode()))
 				{
 					return MarketplacecommerceservicesConstants.DELIVERY_MODE_SD;
 				}

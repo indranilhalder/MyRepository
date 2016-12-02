@@ -29,7 +29,7 @@ import com.hybris.oms.tata.services.FilePathProviderService;
 
 
 /**
- * 
+ *
  * @author techouts
  */
 
@@ -41,7 +41,7 @@ public class PincodesUploadController extends DefaultWidgetController
 	private FilePathProviderService filePathProviderService;
 	private static final String PINCODE_FILENAME = "Pincode-";
 	private static final String LANDMARKS_FILENAME = "landMarks-";
-	private static final String DATE_FORMAT = "ddMMyyyyHH";
+	private static final String DATE_FORMAT = "ddMMyyyyHHss";
 	private Label pincodeError;
 	private Label landmarkError;
 	private Textbox pincodeText;
@@ -70,7 +70,7 @@ public class PincodesUploadController extends DefaultWidgetController
 
 	/**
 	 * this method will call while uploading file
-	 * 
+	 *
 	 * @param uploadEvent
 	 */
 	@ViewEvent(componentID = "pincode-upload", eventName = Events.ON_UPLOAD)
@@ -149,7 +149,7 @@ public class PincodesUploadController extends DefaultWidgetController
 
 	/**
 	 * this method will call while uploading file
-	 * 
+	 *
 	 * @param uploadEvent
 	 */
 	@ViewEvent(componentID = "landmark_upload", eventName = Events.ON_UPLOAD)
@@ -229,7 +229,7 @@ public class PincodesUploadController extends DefaultWidgetController
 
 	/**
 	 * this method is used for getting PincodeFormat file.
-	 * 
+	 *
 	 * @return File
 	 */
 	public File getFile(final String fileName, final String filePathLocation)
