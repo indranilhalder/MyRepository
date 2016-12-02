@@ -7299,7 +7299,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				//pincode are changed or not checking 
 				if (!newAddressData.getPostalCode().equalsIgnoreCase(orderData.getDeliveryAddress().getPostalCode()))
 				{
-					ScheduledDeliveryData scheduledDeliveryData = mplDeliveryAddressFacade.scheduledDeliveryData(
+					ScheduledDeliveryData scheduledDeliveryData = mplDeliveryAddressFacade.getScheduledDeliveryData(
 							orderCode, newAddressData);
 					if (scheduledDeliveryData != null)
 					{
@@ -7310,7 +7310,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 							//Save Address Data In session
 							sessionService.setAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS, newAddressData);
 							//preparing Data for ScheduledDeliveryDate jsp page
-							OrderData orderDetail = mplDeliveryAddressFacade.reScheduledDeliveryPageData(orderData);
+							OrderData orderDetail = mplDeliveryAddressFacade.getReScheduledDeliveryPageData(orderData);
 							model.addAttribute(ModelAttributetConstants.ORDERDETAIL, orderDetail);
 							model.addAttribute(ModelAttributetConstants.TXNSCHEDULEDATA, scheduledDeliveryData);
 							return ControllerConstants.Views.Pages.Account.ScheduledDeliveryDate;

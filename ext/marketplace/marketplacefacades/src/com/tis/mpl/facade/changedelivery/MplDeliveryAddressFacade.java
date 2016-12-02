@@ -66,7 +66,7 @@ public interface MplDeliveryAddressFacade
 	 * @param addressData
 	 * @return String Status Msg Failure, success
 	 */
-	public ScheduledDeliveryData scheduledDeliveryData(String orderCode, AddressData addressData);
+	public ScheduledDeliveryData getScheduledDeliveryData(String orderCode, AddressData addressData);
 
 	/**
 	 * after OTP validation address save in commerce and call to OMS and CRM 
@@ -98,7 +98,7 @@ public interface MplDeliveryAddressFacade
 
    public boolean pincodeServiceableCheck(AddressData addressData, String orderCode);
 
-   public OrderData reScheduledDeliveryPageData(OrderData orderData);
+   public OrderData getReScheduledDeliveryPageData(OrderData orderData);
   
    /* added new Method for  MobileAppData*/
    public List<MplSDInfoWsDTO> getSDDatesMobile(Object deliverySDEDData);

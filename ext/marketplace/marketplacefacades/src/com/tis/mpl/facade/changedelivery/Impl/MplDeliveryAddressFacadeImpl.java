@@ -423,7 +423,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public ScheduledDeliveryData scheduledDeliveryData(String orderCode, AddressData addressData)
+	public ScheduledDeliveryData getScheduledDeliveryData(String orderCode, AddressData addressData)
 	{
 		ScheduledDeliveryData scheduledDeliveryData = new ScheduledDeliveryData();
 		try
@@ -1153,7 +1153,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 * @return OrderData
 	 */
 	@Override
-	public OrderData reScheduledDeliveryPageData(OrderData orderData){
+	public OrderData getReScheduledDeliveryPageData(OrderData orderData){
 		
 		for (final OrderEntryData orderEntry : orderData.getEntries())
 		{

@@ -2213,7 +2213,7 @@ public class OrdersController extends BaseCommerceController
 				if (StringUtils.isNotEmpty(newAddressData.getPostalCode())
 						&& !newAddressData.getPostalCode().equalsIgnoreCase(orderData.getDeliveryAddress().getPostalCode()))
 				{
-					ScheduledDeliveryData scheduledDeliveryData = mplDeliveryAddressFacade.scheduledDeliveryData(orderCode,
+					ScheduledDeliveryData scheduledDeliveryData = mplDeliveryAddressFacade.getScheduledDeliveryData(orderCode,
 							newAddressData);
 					if (scheduledDeliveryData != null)
 					{
