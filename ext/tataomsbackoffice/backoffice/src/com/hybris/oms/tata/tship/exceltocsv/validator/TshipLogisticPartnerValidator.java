@@ -473,7 +473,7 @@ public class TshipLogisticPartnerValidator
 				}
 				else if (logisticPartner.getName().equalsIgnoreCase(priorityMaster.getAirPriorityMaster().getAirCodPriority5()))
 				{
-					logisticPartner.setCodPriority(TshipExcelConstants.CONST_PRIORITY4);
+					logisticPartner.setCodPriority(TshipExcelConstants.CONST_PRIORITY5);
 				}
 				else
 				{
