@@ -57704,10 +57704,10 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 	float: right;
     width: 30%;
 }
-.Manufacturer.Temp02 .Padd ul.temp2-fst li:nth-child(n+0) .media-content {
+.Manufacturer.Temp02 .Padd ul.temp2-fst li:nth-child(n+0) .media-content .yCmsComponent {
     padding: 4.3% 2.1%;
 }
-.Manufacturer.Temp02 .Padd ul.temp2-fst li:last-child .media-content {
+.Manufacturer.Temp02 .Padd ul.temp2-fst li:last-child .media-content .yCmsComponent{
     padding: 5.7% 1.43% 5.7% 2.8%;
 }
 .Manufacturer .temp2-center h3:after {
@@ -57723,11 +57723,14 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
     width: 30%;
 }
 .Manufacturer.Temp02 .Padd ul.temp2-fst li:nth-child(2n+0) .media-content{
-    padding: 9.2% 9.2% 0 0;
+   /*  padding: 9.2% 9.2% 0 0; */
     width: 69%;
     float: left;
 }
-.temp2-center {
+.Manufacturer.Temp02 .Padd ul.temp2-fst li:nth-child(2n+0) .media-content .yCmsComponent {
+    padding: 9.2% 9.2% 0 0;
+}
+.temp2-center .yCmsComponent{
     padding: 48px 0;
     text-align: center;
     width: 49%;
@@ -57747,7 +57750,7 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
     padding-bottom: 38px;
     vertical-align: top;
 }
-.Manufacturer.Temp02 ul.pdpFeatures li .media-content {
+.Manufacturer.Temp02 ul.pdpFeatures li .media-content .yCmsComponent{
     padding: 30px 40px 0 0;
 }
 .Manufacturer.Temp02 ul.pdpFeatures li h4 {
@@ -57827,7 +57830,8 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 }
 .Temp07 .Padd .twocolumn .onecolumn .media {
     background: #f6f6f6;
-    height: 338px;
+    max-height: 338px;
+    height:auto;
     display: table;
     line-height: 338px;
     width: 100%;
@@ -57886,8 +57890,11 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
     font-size: 14px;
     line-height: 22px;
     text-align: center;
-    margin: 30px auto;
+   /*  margin: 30px auto; */
     width: 79%;
+}
+.Temp07 .Padd .twocolumn .onecolumn .media-content .yCmsComponent {
+    margin: 30px auto;
 }
 .Temp07 .Padd .twocolumn .onecolumn .media-content li {
     list-style: disc;
@@ -57949,6 +57956,7 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
     position: relative;
     overflow: hidden;
     z-index: 1;
+    width:100%;
     -webkit-transform: translate3d(0px, 0px, 0px);
 }
 /* Carousel Portion Ends */
@@ -58405,8 +58413,11 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
     width: 60%;
 }
 .Manufacturer.Temp02 .Padd ul.temp2-fst li:nth-child(n+0) .media-content, .Manufacturer.Temp02 .Padd ul.temp2-fst li:last-child .media-content {
-    padding: 2%;
+   /*  padding: 2%; */
     width: 40%;
+}
+.Manufacturer.Temp02 .Padd ul.temp2-fst li:nth-child(n+0) .media-content .yCmsComponent , .Manufacturer.Temp02 .Padd ul.temp2-fst li:last-child .media-content .yCmsComponent {
+    padding: 2%;
 }
 .Manufacturer.Temp02 h3 {
     font-size: 18px;
@@ -58415,10 +58426,13 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
     font-size: 12px;
 }
 .Manufacturer.Temp02 .Padd ul.temp2-fst li:nth-child(2n+0) .media-content {
-    padding: 5% 5% 5% 0;
+/*     padding: 5% 5% 5% 0; */
     width: 60%;
 }
-.Manufacturer.Temp02 .Padd ul.temp2-fst li:last-child .media-content {
+.Manufacturer.Temp02 .Padd ul.temp2-fst li:nth-child(2n+0) .media-content .yCmsComponent{
+    padding: 5% 5% 5% 0;
+}
+.Manufacturer.Temp02 .Padd ul.temp2-fst li:last-child .media-content .yCmsComponent{
     padding: 4% 1.43% 3% 2.8%;
 }
 .Manufacturer.Temp02 .Padd ul.pdpFeatures li {
@@ -58672,7 +58686,7 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 	.Manufacturer.Temp02 .Padd li p, .Manufacturer.Temp02 ul.pdpFeatures li p {
     font-size: 12px;
 	}
-	.Manufacturer.Temp02 .Padd ul.temp2-fst li:nth-child(2n+0) .media-content {
+	.Manufacturer.Temp02 .Padd ul.temp2-fst li:nth-child(2n+0) .media-content .yCmsComponent{
     padding: 9.2% 2%;
 	}
 	.temp2-center {
@@ -59169,4 +59183,14 @@ header.marketplace-header{
 /*Checkout delivery page price column hide ends*/
 .page-productDetails .trending{
 	clear:both;
+}
+
+.Manufacturer .Padd > h2 {
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 50%;
+	min-width: 180px;
+    border-top: 2px solid #a9143c;
+    margin: 0 auto 40px;
 }
