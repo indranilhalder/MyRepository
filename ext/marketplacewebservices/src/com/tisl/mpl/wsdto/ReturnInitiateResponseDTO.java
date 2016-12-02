@@ -16,6 +16,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class ReturnInitiateResponseDTO
 {
 	private List<OrderLineDTO> orderLines;
+	private String errorCode;
 
 	/**
 	 * @return the orderLines
@@ -32,5 +33,22 @@ public class ReturnInitiateResponseDTO
 	public void setOrderLines(List<OrderLineDTO> orderLines)
 	{
 		this.orderLines = orderLines;
+	}
+
+	/**
+	 * @return the errorCode
+	 */
+	@XmlElement(name = "errorCode")
+	public String getErrorCode()
+	{
+		return errorCode;
+	}
+
+	/**
+	 * @param errorCode the errorCode to set
+	 */
+	public void setErrorCode(String errorCode)
+	{
+		this.errorCode = errorCode;
 	}
 }

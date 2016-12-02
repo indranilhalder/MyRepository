@@ -352,6 +352,8 @@
 				</bean>
 			</list>
 		</property>
-	</bean>		
+	</bean>
+	
+	<bean id="returnRTSValidator" class="com.tisl.mpl.validator.ReturnRTSValidator"/>		
 
 </beans>

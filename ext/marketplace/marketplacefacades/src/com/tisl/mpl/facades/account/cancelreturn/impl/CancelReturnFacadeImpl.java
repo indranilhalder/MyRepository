@@ -3369,41 +3369,53 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		List<OrderLineData> orderList = new ArrayList<OrderLineData>();
 		final MplCancelOrderRequest orderLineRequest = new MplCancelOrderRequest();
 		final List<OrderLine> orderLineList = new ArrayList<MplCancelOrderRequest.OrderLine>();
-		for (final OrderLineData data : orerLines)
-		{		
-			final OrderModel orderModel = mplReturnService.getOrder(data.getOrderId());
-			List<OrderModel> suOrder = orderModel.getChildOrders();
-			for(final OrderModel subOrderModel : suOrder)
-			{
-   			for (final AbstractOrderEntryModel entry : subOrderModel.getEntries())
-   			{
-   				if (entry.getTransactionID().equalsIgnoreCase(data.getTransactionId()))
-   				{
-   					final ProductModel product = entry.getProduct();
-   					LOG.info("Product Deatails : "+ product.getCode() + "Product Name : " + product.getName());
-   					final List<SellerInformationModel> sellersList = (List<SellerInformationModel>) product.getSellerInformationRelator();
-   					for(final SellerInformationModel seller : sellersList)
-   					{
-   						if(seller.getSellerArticleSKU().equals(entry.getSelectedUSSID()))
-   						{
-   							OrderLineData orderData = getReturnEligibility(seller, entry, orderModel.getCode(),subOrderModel, data);
-   							orderList.add(orderData);
-   							if (orderData != null && orderData.getIsReturnInitiated().equalsIgnoreCase("Y"))
-								{
-									final OrderLine orderLines = populateOrderLineForRTS(data, entry, subOrderModel);
-									orderLineList.add(orderLines);
-								}
-   						}
-   					}
-   				}
-   			}
-      	}
-		}
-		if (CollectionUtils.isNotEmpty(orderLineList))
+		try
 		{
-			orderLineRequest.setOrderLine(orderLineList);
-			mplOrderCancelClientService.orderCancelDataToOMS(orderLineRequest);
+			for (final OrderLineData data : orerLines)
+			{		
+				final OrderModel orderModel = mplReturnService.getOrder(data.getOrderId());
+				List<OrderModel> suOrder = orderModel.getChildOrders();
+				for(final OrderModel subOrderModel : suOrder)
+				{
+	   			for (final AbstractOrderEntryModel entry : subOrderModel.getEntries())
+	   			{
+	   				if (entry.getTransactionID().equalsIgnoreCase(data.getTransactionId()))
+	   				{
+	   					final ProductModel product = entry.getProduct();
+	   					LOG.info("Product Deatails : "+ product.getCode() + "Product Name : " + product.getName());
+	   					final List<SellerInformationModel> sellersList = (List<SellerInformationModel>) product.getSellerInformationRelator();
+	   					for(final SellerInformationModel seller : sellersList)
+	   					{
+	   						if(seller.getSellerArticleSKU().equals(entry.getSelectedUSSID()))
+	   						{
+	   							OrderLineData orderData = getReturnEligibility(seller, entry, orderModel.getCode(),subOrderModel, data);
+	   							orderList.add(orderData);
+	   							if (orderData != null && orderData.getIsReturnInitiated().equalsIgnoreCase("Y"))
+									{
+										final OrderLine orderLines = populateOrderLineForRTS(data, entry, subOrderModel);
+										orderLineList.add(orderLines);
+									}
+	   						}
+	   					}
+	   				}
+	   			}
+	      	}
+			}
+			if (CollectionUtils.isNotEmpty(orderLineList))
+			{
+				orderLineRequest.setOrderLine(orderLineList);
+				mplOrderCancelClientService.orderCancelDataToOMS(orderLineRequest);
+			}
 		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw new EtailNonBusinessExceptions(e);
+		}
+		catch (final EtailBusinessExceptions e) 
+		{
+			throw new EtailBusinessExceptions();
+		}
+		
 		return orderList;
 	}
 	
@@ -3485,8 +3497,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		orderLineData.setOrderId(subOrder.getParentReference().getCode());
 		orderLineData.setReasonCode(data.getReasonCode());
 		orderLineData.setRequestID(abstractOrderentry.getSelectedUSSID() + MarketplacecommerceservicesConstants.EMPTY
-				+ System.currentTimeMillis());//TODO: Change with a valid request ID
-		orderLineData.setReturnCancelFlag("R");
+				+ System.currentTimeMillis());
+		orderLineData.setReturnCancelFlag("RTS");
 		orderLineData.setReturnCancelRemarks(getReasonDesc(data.getReasonCode()));
 		if (StringUtils.isNotEmpty(abstractOrderentry.getOrderLineId()))
 		{
@@ -3550,7 +3562,10 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				modelService.save(refundEntryModel);
 			}
 			modelService.save(returnRequestModel);
-			LOG.debug("*************** RMA number:" + returnRequestModel.getRMA());
+			if(LOG.isDebugEnabled())
+			{
+				LOG.debug("*************** RMA number:" + returnRequestModel.getRMA());	
+			}
 			returnReqCreated = true;
 		}
 		catch (final Exception e)
