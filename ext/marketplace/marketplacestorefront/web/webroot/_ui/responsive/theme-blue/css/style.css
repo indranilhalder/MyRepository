@@ -6571,8 +6571,8 @@ text-transform: uppercase;
               .cart.wrapper .product-block li.item ul.mobile-product > li.qty input, .confirmation .product-block li.item ul.mobile-product > li.qty input {
                 height: 40px;
                 line-height: 38px; }
-       /* .confirmation .product-block li.item ul.desktop {
-          display: none; } */   /* Modified for TISQAUATS-11 */
+        .confirmation .product-block li.item ul.desktop {
+          display: none; }   
         @media (min-width: 651px) {
           .cart.wrapper .product-block li.item ul.mobile-product, .confirmation .product-block li.item ul.mobile-product {
             display: none; }
@@ -31995,7 +31995,7 @@ body.page-homepage .feature-collections{
     height: 26px !important;
     padding: 0 !important;
     border-radius: 0 !important;
-    border: 1px solid #fff !important;
+    /* border: 1px solid #fff !important; */ 
 }
 
 .product-facet .filter-strapcolor input.js-facet-colourbutton {
