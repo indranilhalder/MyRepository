@@ -35,6 +35,7 @@ import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsReq
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
 import com.tisl.mpl.wsdto.MplEDDInfoWsDTO;
+import com.tisl.mpl.wsdto.MplSelectedEDDForUssID;
 
 
 /**
@@ -440,4 +441,12 @@ public interface MplCartFacade extends CartFacade
 	 */
 	public MplEDDInfoWsDTO getEDDInfo(CartModel cartModel,List<InvReserForDeliverySlotsItemEDDInfoData> invReserForDeliverySlotsItemEDDInfoData) throws ParseException;
 
+
+	/**
+	 * 
+	 * @param cartModel
+	 * @param mplSelectedEDDInfo
+	 * @return boolean
+	 */
+	public boolean addSelectedEDD(CartModel cartModel, List<MplSelectedEDDForUssID> mplSelectedEDDInfo);
 }

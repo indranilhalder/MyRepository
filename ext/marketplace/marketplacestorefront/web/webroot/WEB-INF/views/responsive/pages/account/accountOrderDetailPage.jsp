@@ -319,6 +319,9 @@
 									<c:if test="${not empty subOrderLine3}">
 												&nbsp;${fn:escapeXml(subOrder.deliveryAddress.line3)},
 											</c:if>
+									 <c:if test="${not empty subOrder.deliveryAddress.landmark}">
+									    ${fn:escapeXml(subOrder.deliveryAddress.landmark)},
+									</c:if>
 											<br> ${fn:escapeXml(subOrder.deliveryAddress.town)},&nbsp;
 											<c:if test="${not empty subOrder.deliveryAddress.state}">
 														${fn:escapeXml(subOrder.deliveryAddress.state)},&nbsp;

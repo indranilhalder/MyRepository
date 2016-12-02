@@ -86,6 +86,15 @@ public class MplDeliveryAddressComparatorImpl implements MplDeliveryAddressCompa
 			}
 		}
 
+		if (StringUtils.isNotEmpty(oldAddress.getTown()) && StringUtils.isNotEmpty(newAddress.getTown()))
+		{
+			if (!oldAddress.getTown().trim().equalsIgnoreCase(newAddress.getTown().trim()))
+			{
+				return true;
+			}
+		}
+
+		
 		if (StringUtils.isNotEmpty(oldAddress.getPostalCode()) && StringUtils.isNotEmpty(newAddress.getPostalCode()))
 		{
 			if (!oldAddress.getPostalCode().trim().equalsIgnoreCase(newAddress.getPostalCode().trim()))
@@ -140,13 +149,13 @@ public class MplDeliveryAddressComparatorImpl implements MplDeliveryAddressCompa
 	 * @return boolean
 	 */
 	@Override
-	public boolean compareAddressModel(AddressModel oldAddress,AddressModel newDelivery)
+	public boolean compareAddressModel(AddressModel oldAddress,AddressModel newDeliveryAddress)
 	{
 		boolean isChanged = false;
-		if (StringUtils.isNotEmpty(oldAddress.getStreetname()) && StringUtils.isNotEmpty(newDelivery.getStreetname()))
+		if (StringUtils.isNotEmpty(oldAddress.getStreetname()) && StringUtils.isNotEmpty(newDeliveryAddress.getStreetname()))
 		{
 
-			if (oldAddress.getStreetname().trim().equalsIgnoreCase(newDelivery.getStreetname().trim()))
+			if (oldAddress.getStreetname().trim().equalsIgnoreCase(newDeliveryAddress.getStreetname().trim()))
 			{
 				isChanged = false;
 			}
@@ -158,10 +167,10 @@ public class MplDeliveryAddressComparatorImpl implements MplDeliveryAddressCompa
 
 		}
 		if (StringUtils.isNotEmpty(oldAddress.getStreetnumber())
-				&& StringUtils.isNotEmpty(newDelivery.getStreetnumber()))
+				&& StringUtils.isNotEmpty(newDeliveryAddress.getStreetnumber()))
 		{
 
-			if (oldAddress.getStreetnumber().trim().equalsIgnoreCase(newDelivery.getStreetnumber().trim()))
+			if (oldAddress.getStreetnumber().trim().equalsIgnoreCase(newDeliveryAddress.getStreetnumber().trim()))
 			{
 				isChanged = false;
 			}
@@ -173,10 +182,10 @@ public class MplDeliveryAddressComparatorImpl implements MplDeliveryAddressCompa
 
 		}
 		if (StringUtils.isNotEmpty(oldAddress.getAddressLine3())
-				&& StringUtils.isNotEmpty(newDelivery.getAddressLine3()))
+				&& StringUtils.isNotEmpty(newDeliveryAddress.getAddressLine3()))
 		{
 
-			if (oldAddress.getAddressLine3().trim().equalsIgnoreCase(newDelivery.getAddressLine3().trim()))
+			if (oldAddress.getAddressLine3().trim().equalsIgnoreCase(newDeliveryAddress.getAddressLine3().trim()))
 			{
 				isChanged = false;
 			}
@@ -187,10 +196,10 @@ public class MplDeliveryAddressComparatorImpl implements MplDeliveryAddressCompa
 			}
 
 		}
-		if (StringUtils.isNotEmpty(oldAddress.getLandmark()) && StringUtils.isNotEmpty(newDelivery.getLandmark()))
+		if (StringUtils.isNotEmpty(oldAddress.getLandmark()) && StringUtils.isNotEmpty(newDeliveryAddress.getLandmark()))
 		{
 
-			if (oldAddress.getLandmark().trim().equalsIgnoreCase(newDelivery.getLandmark().trim()))
+			if (oldAddress.getLandmark().trim().equalsIgnoreCase(newDeliveryAddress.getLandmark().trim()))
 			{
 				isChanged = false;
 			}
@@ -200,10 +209,10 @@ public class MplDeliveryAddressComparatorImpl implements MplDeliveryAddressCompa
 				return isChanged;
 			}
 		}
-		if (StringUtils.isNotEmpty(oldAddress.getDistrict()) && StringUtils.isNotEmpty(newDelivery.getDistrict()))
+		if (StringUtils.isNotEmpty(oldAddress.getDistrict()) && StringUtils.isNotEmpty(newDeliveryAddress.getDistrict()))
 		{
 
-			if (oldAddress.getDistrict().trim().equalsIgnoreCase(newDelivery.getDistrict().trim()))
+			if (oldAddress.getDistrict().trim().equalsIgnoreCase(newDeliveryAddress.getDistrict().trim()))
 			{
 				isChanged = false;
 			}
@@ -213,9 +222,9 @@ public class MplDeliveryAddressComparatorImpl implements MplDeliveryAddressCompa
 				return isChanged;
 			}
 		}
-		if (StringUtils.isNotEmpty(oldAddress.getCity()) && StringUtils.isNotEmpty(newDelivery.getCity()))
+		if (StringUtils.isNotEmpty(oldAddress.getCity()) && StringUtils.isNotEmpty(newDeliveryAddress.getCity()))
 		{
-			if (oldAddress.getCity().trim().equalsIgnoreCase(newDelivery.getCity().trim()))
+			if (oldAddress.getCity().trim().equalsIgnoreCase(newDeliveryAddress.getCity().trim()))
 			{
 				isChanged = false;
 			}
@@ -226,10 +235,22 @@ public class MplDeliveryAddressComparatorImpl implements MplDeliveryAddressCompa
 			}
 		}
 
-
-		if (StringUtils.isNotEmpty(oldAddress.getPostalcode()) && StringUtils.isNotEmpty(newDelivery.getPostalcode()))
+		if (StringUtils.isNotEmpty(oldAddress.getTown()) && StringUtils.isNotEmpty(newDeliveryAddress.getTown()))
 		{
-			if (oldAddress.getPostalcode().trim().equalsIgnoreCase(newDelivery.getPostalcode().trim()))
+			if (oldAddress.getTown().trim().equalsIgnoreCase(newDeliveryAddress.getTown().trim()))
+			{
+				isChanged = false;
+			}
+			else
+			{
+				isChanged = true;
+				return isChanged;
+			}
+		}
+		
+		if (StringUtils.isNotEmpty(oldAddress.getPostalcode()) && StringUtils.isNotEmpty(newDeliveryAddress.getPostalcode()))
+		{
+			if (oldAddress.getPostalcode().trim().equalsIgnoreCase(newDeliveryAddress.getPostalcode().trim()))
 			{
 				isChanged = false;
 			}
