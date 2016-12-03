@@ -2521,4 +2521,22 @@
 		<property name="returnEntry" type="de.hybris.platform.commercewebservicescommons.dto.order.OrderEntryListWsDTO"/>	
 	</bean>
 	
+	<!-- Added for mobile inventory Reservation START   -->
+	
+	<bean class="com.tisl.mpl.wsdto.InventoryReservRequestWsDTO">
+		<property name="serviceableSlaves"
+			type="java.util.List&lt;de.hybris.platform.commercefacades.product.data.ServiceableSlavesData>" />
+		<property name="ussId" type="String" />
+		<property name="storeId" type="String" />
+		<property name="quantity" type="String" />
+		<property name="fulfillmentType" type="String" />
+		<property name="deliveryMode" type="String" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.InventoryReservListRequestWsDTO">
+		<property name="item"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.InventoryReservRequestWsDTO>" />
+	</bean>
+		<!-- Added for mobile inventory Reservation START  END  -->
+	
 </beans>
