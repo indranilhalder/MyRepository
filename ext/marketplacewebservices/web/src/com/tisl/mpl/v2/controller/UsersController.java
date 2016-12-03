@@ -34,6 +34,7 @@ import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
+import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
 import de.hybris.platform.commercefacades.user.UserFacade;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
@@ -50,6 +51,7 @@ import de.hybris.platform.commercewebservicescommons.cache.CacheControl;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControlDirective;
 import de.hybris.platform.commercewebservicescommons.dto.error.ErrorListWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.error.ErrorWsDTO;
+import de.hybris.platform.commercewebservicescommons.dto.order.OrderEntryListWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.order.PaymentDetailsListWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.order.PaymentDetailsWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.user.AddressListWsDTO;
@@ -149,6 +151,8 @@ import com.tisl.mpl.core.enums.Frequency;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.EMIBankModel;
+import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.data.CODSelfShipData;
 import com.tisl.mpl.data.EditWishlistNameData;
 import com.tisl.mpl.data.FriendsInviteData;
 import com.tisl.mpl.data.NotificationData;
@@ -160,6 +164,8 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
+import com.tisl.mpl.facade.checkout.impl.MplCheckoutFacadeImpl;
+import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facade.myfavbrandcategory.MplMyFavBrandCategoryFacade;
 import com.tisl.mpl.facade.netbank.MplNetBankingFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
@@ -179,6 +185,7 @@ import com.tisl.mpl.facades.data.MplPreferenceData;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.populators.CustomAddressReversePopulator;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
+import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.facades.product.data.ReturnReasonDetails;
 import com.tisl.mpl.helper.MplEnumerationHelper;
 import com.tisl.mpl.helper.MplUserHelper;
@@ -186,11 +193,15 @@ import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.FriendsInviteService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtendedUserServiceImpl;
 import com.tisl.mpl.model.OrderStatusCodeMasterModel;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.order.data.OrderEntryDataList;
+import com.tisl.mpl.order.facade.GetOrderDetailsFacade;
+import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.populator.HttpRequestCustomerDataPopulator;
 import com.tisl.mpl.populator.options.PaymentInfoOption;
 import com.tisl.mpl.search.feedback.facades.UpdateFeedbackFacade;
@@ -222,6 +233,7 @@ import com.tisl.mpl.wsdto.MplUserResultWsDto;
 import com.tisl.mpl.wsdto.NetBankingListWsDTO;
 import com.tisl.mpl.wsdto.NetBankingWsDTO;
 import com.tisl.mpl.wsdto.OrderCreateInJusPayWsDto;
+import com.tisl.mpl.wsdto.ReturnDetailsWsDTO;
 import com.tisl.mpl.wsdto.ReturnLogisticsResponseDetailsWsDTO;
 import com.tisl.mpl.wsdto.ReturnReasonDetailsWsDTO;
 import com.tisl.mpl.wsdto.UpdateCustomerDetailDto;
@@ -385,6 +397,21 @@ public class UsersController extends BaseCommerceController
 	private MplCouponWebFacade mplCouponWebFacade;
 	@Autowired
 	private GigyaFacade gigyaFacade;
+	
+	@Autowired
+   private MplConfigFacade mplConfigFacade;
+	
+	@Autowired
+	private PincodeServiceFacade pincodeServiceFacade;
+	
+	@Autowired
+	private MplCheckoutFacadeImpl mplCheckoutFacadeImpl;
+	
+	@Autowired
+	private MplOrderService mplOrderService;
+	
+	@Resource(name = "getOrderDetailsFacade")
+	private GetOrderDetailsFacade getOrderDetailsFacade;
 
 
 	//@Autowired
@@ -6617,7 +6644,137 @@ public class UsersController extends BaseCommerceController
 		}
 		return couponDto;
 	}
+	
+	
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "/{emailId}/returnRequest", method = RequestMethod.GET, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public ReturnDetailsWsDTO getReturnDetailsForOrderItem(@RequestParam final String orderCode,
+			final String transactionId, final String userId, @RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields) throws Exception
+	{
+		String sellerRichAttrOfQuickDrop = null;
+		String productRichAttrOfQuickDrop = null;
+		boolean returnLogisticsAvailability = false;
+		CODSelfShipData codSelfShipData = new CODSelfShipData();
+		ReturnDetailsWsDTO returnDeatails = new ReturnDetailsWsDTO();
+		List<ReturnReasonData> reasonList = new ArrayList<ReturnReasonData>();
+		List<PointOfServiceData> returnableStores = new ArrayList<PointOfServiceData>();
+		try
+		{
+			//OrderModel subOrderModel = orderModelService.getOrder(orderCode);
+			final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+			final List<OrderEntryData> subOrderEntries = subOrderDetails.getEntries();
+			OrderEntryData orderEntry = new OrderEntryData();
+			List<OrderEntryData> returnOrderEntry = new ArrayList<OrderEntryData>();
+			final Map<String, List<OrderEntryData>> returnProductMap = new HashMap<>();
+			for (final OrderEntryData entry : subOrderEntries)
+			{
+				if (entry.getTransactionId().equalsIgnoreCase(transactionId.trim()))
+				{
+					orderEntry = entry;
+					returnOrderEntry = cancelReturnFacade.associatedEntriesData(orderModelService.getOrder(orderCode), transactionId.trim());
+					returnProductMap.put(orderEntry.getTransactionId(), returnOrderEntry);
+					
+					final ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntry.getProduct().getCode());
+					List<RichAttributeModel> productRichAttributeModel = null;
+					if ( null!= productModel && productModel.getRichAttribute() != null){
+						productRichAttributeModel = (List<RichAttributeModel>) productModel.getRichAttribute();
+						if (productRichAttributeModel != null && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+						{
+							productRichAttrOfQuickDrop = productRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+						}
+					}
+					
+					final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
+							.getSellerInformationRelator();
 
+					for (final SellerInformationModel sellerInformationModel : sellerInfo)
+					{
+						if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid()))
+						{
+							List<RichAttributeModel> sellerRichAttributeModel = null;
+							if (sellerInformationModel.getRichAttribute() != null){
+								sellerRichAttributeModel = (List<RichAttributeModel>) sellerInformationModel.getRichAttribute();
+								if (sellerRichAttributeModel != null && sellerRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+								{
+									sellerRichAttrOfQuickDrop = sellerRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+								}
+							}
+						}
+						if (!(entry.isGiveAway() || entry.isIsBOGOapplied()))
+						{
+							returnLogisticsAvailability = true;
+						}
+					}
+					break;
+				}
+				
+			}
+			reasonList = mplOrderService.getReturnReasonForOrderItem();
+			List<String> timeSlots = mplConfigFacade.getDeliveryTimeSlots("RD");
+			List<String> returnableDates = cancelReturnFacade.getReturnableDates(orderEntry);
+			returnDeatails.setReturnTimeSlots(timeSlots);
+			returnDeatails.setReturnDates(returnableDates);
+			returnDeatails.setReturnReasonDetailsList(reasonList);
+			if (orderEntry.getDeliveryPointOfService() != null)
+			{
+				returnableStores = pincodeServiceFacade.getAllReturnableStores(orderEntry.getDeliveryPointOfService().getAddress()
+						.getPostalCode(),StringUtils.substring(orderEntry.getSelectedUssid(), 0, 6) );
+			}
+			else
+			{
+				returnableStores = pincodeServiceFacade.getAllReturnableStores(subOrderDetails.getDeliveryAddress().getPostalCode(),
+						StringUtils.substring(orderEntry.getSelectedUssid(), 0, 6));
+			}
+			returnDeatails.setReturnStoreDetailsList(returnableStores);
+			final OrderEntryDataList dataList = new OrderEntryDataList();
+			dataList.setOrderEntries(returnOrderEntry);
+			OrderEntryListWsDTO returndto = dataMapper.map(dataList, OrderEntryListWsDTO.class, fields);
+			//OrderDataWsDTO orderDto = getOrderDetailsFacade.getOrderdetails(subOrderModel.getParentReference().getCode());
+			try
+			{
+				codSelfShipData = cancelReturnFacade.getCustomerBankDetailsByCustomerId(userId);
+			}
+			catch(EtailNonBusinessExceptions e)
+			{
+				LOG.error("Exception occured for fecting CUstomer Bank details for customer ID :"+ userId +" Actual Stack trace "+e);
+			}
+			catch (Exception e) {
+				LOG.error("Exception occured for fecting CUstomer Bank details for customer ID :"+ userId +" Actual Stack trace "+e);
+			}
+			List<AddressData> addressList = mplCheckoutFacadeImpl.rePopulateDeliveryAddress(getAccountAddressFacade().getAddressBook());
+			if(codSelfShipData != null)
+			{
+				returnDeatails.setCodSelfShipData(codSelfShipData);
+			}
+			returnDeatails.setDeliveryAddressesList(addressList);
+			//returnDeatails.setOrderDetails(orderDto);
+			returnDeatails.setDeliveryAddress(subOrderDetails.getDeliveryAddress());
+			returnDeatails.setReturnEntry(returndto);
+			returnDeatails.setProductRichAttrOfQuickDrop(productRichAttrOfQuickDrop);
+			returnDeatails.setReturnLogisticsAvailability(returnLogisticsAvailability);
+			returnDeatails.setSellerRichAttrOfQuickDrop(sellerRichAttrOfQuickDrop);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			returnDeatails.setErrorCode(e.getErrorMessage());
+			
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			returnDeatails.setErrorCode(e.getErrorMessage());
+		}
+		catch (Exception e) 
+		{
+			returnDeatails.setErrorCode(e.getMessage());
+		}
+		return returnDeatails;
+	}
+	
+	
 
 	/**
 	 * @description method is called to generate update profileURL mobile service

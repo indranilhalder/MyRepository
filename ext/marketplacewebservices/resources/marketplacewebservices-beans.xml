@@ -2493,4 +2493,22 @@
 		<property name="estimateDeliveryDateList"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.MplEstimateDeliveryDateWsDTO>" />
 	</bean>
+	
+	<!-- For Return Web Services -->
+	<bean class="com.tisl.mpl.wsdto.ReturnDetailsWsDTO">
+		<property name="returnReasonDetailsList" type="java.util.List&lt;com.tisl.mpl.facades.product.data.ReturnReasonData>" />
+	 	<property name="returnStoreDetailsList" type="java.util.List&lt;de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData>"/>
+		<property name="returnTimeSlots" type="java.util.List&lt;java.lang.String>"/>
+		<property name="returnDates" type="java.util.List&lt;java.lang.String>"/>
+		<property name="codSelfShipData" type="com.tisl.mpl.data.CODSelfShipData"/>
+		<property name="productRichAttrOfQuickDrop" type="java.lang.String"/>
+		<property name="sellerRichAttrOfQuickDrop" type="java.lang.String"/>
+		<property name="returnLogisticsAvailability" type="boolean"/>
+		<property name="errorCode" type="String" />
+		<property name="deliveryAddressesList" type="java.util.List&lt;de.hybris.platform.commercefacades.user.data.AddressData>"/>
+		<property name="orderDetails" type="com.tisl.mpl.wsdto.OrderDataWsDTO"/>
+		<property name="deliveryAddress" type="de.hybris.platform.commercefacades.user.data.AddressData"/>
+		<property name="returnEntry" type="de.hybris.platform.commercewebservicescommons.dto.order.OrderEntryListWsDTO"/>	
+	</bean>
+	
 </beans>

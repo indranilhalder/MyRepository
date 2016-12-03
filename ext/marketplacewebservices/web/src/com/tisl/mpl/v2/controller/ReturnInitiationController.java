@@ -89,7 +89,8 @@ public class ReturnInitiationController extends BaseController
 						dto.setTransactionId(response.getTransactionId());
 						dto.setIsReturnEligible(response.getIsReturnEligible());
 						dto.setIsReturnInitiated(response.getIsReturnInitiated());
-					}
+						orderLines.add(dto);
+					}	
 					responseDTO.setOrderLines(orderLines);
 				}
 				return responseDTO;
