@@ -58,8 +58,10 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -1607,7 +1609,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 			final CartData cartDataSupport = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 			final List<String> deliveryModelList = new ArrayList<String>();
-
+			final Map<String, String> selectedDateBetWeen = new LinkedHashMap<String, String>();
 			final List<CartSoftReservationData> cartSoftReservationDataList = getSessionService().getAttribute(
 					MarketplacecommerceservicesConstants.RESERVATION_DATA_TO_SESSION);
 			LOG.debug("****************cartSoftReservationDataList :" + cartSoftReservationDataList.toString());
@@ -1687,7 +1689,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				String sellerScheduleDelivery = null;
 				String selectedUssId = null;
 				String fulfillmentType = null;
-
+				final List<String> dateList = new ArrayList<String>();
 				final InvReserForDeliverySlotsRequestData deliverySlotsRequestData = new InvReserForDeliverySlotsRequestData();
 				deliverySlotsRequestData.setCartId(cartDataSupport.getGuid());
 				final InvReserForDeliverySlotsResponseData deliverySlotsResponseData = getMplCartFacade()
@@ -1738,7 +1740,21 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 											}
 												mplCheckoutFacade.constructDeliverySlotsForEDAndHD(deliverySlotsResponse, cartEntryData,
 														mplLPHolidaysModel);
-											
+												if (null != cartEntryData.getDeliverySlotsTime() && cartEntryData.getDeliverySlotsTime().size() > 0)
+												{
+													for (final Entry<String, List<String>> entry : cartEntryData.getDeliverySlotsTime().entrySet())
+													{
+														dateList.add(entry.getKey());
+													}
+												}
+												String startAndEndDates = null;
+												if (dateList.size() > 0)
+												{
+													startAndEndDates = dateList.get(0) + MarketplacecommerceservicesConstants.AND
+															+ dateList.get(dateList.size() - 1);
+													
+													selectedDateBetWeen.put(cartEntryData.getSelectedUssid(), startAndEndDates);
+												}
 										}
 										else if (cartEntryData.getSelectedUssid().equalsIgnoreCase(deliverySlotsResponse.getUssId())
 												&& fulfillmentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.SSHIP.toUpperCase()))
@@ -1746,6 +1762,22 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 											//isScheduleServiceble=true;
 											mplCheckoutFacade.constructDeliverySlotsForEDAndHD(deliverySlotsResponse, cartEntryData,
 													mplLPHolidaysModel);
+											
+											
+											if (null != cartEntryData.getDeliverySlotsTime() && cartEntryData.getDeliverySlotsTime().size() > 0)
+											{
+												for (final Entry<String, List<String>> entry : cartEntryData.getDeliverySlotsTime().entrySet())
+												{
+													dateList.add(entry.getKey());
+												}
+											}
+											String startAndEndDates = null;
+											if (dateList.size() > 0)
+											{
+												startAndEndDates = dateList.get(0) + MarketplacecommerceservicesConstants.AND
+														+ dateList.get(dateList.size() - 1);
+												selectedDateBetWeen.put(cartEntryData.getSelectedUssid(), startAndEndDates);
+											}
 											final Map<String, List<String>> dateTimeslotMapList = new HashMap<String, List<String>>();
 											cartEntryData.setDeliverySlotsTime(dateTimeslotMapList);
 										}
@@ -1755,6 +1787,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 						}
 					}
 				}
+
+				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.DELIVERY_SLOTS_TO_SESSION, selectedDateBetWeen);
 				if (!isScheduleServiceble)
 				{
 					return getCheckoutStep().nextStep();
