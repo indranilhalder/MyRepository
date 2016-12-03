@@ -8,6 +8,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -65,6 +66,7 @@ import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.cscockpit.utils.CssUtils;
 import de.hybris.platform.cscockpit.utils.LabelUtils;
 import de.hybris.platform.cscockpit.widgets.controllers.CallContextController;
+import de.hybris.platform.cscockpit.widgets.controllers.OrderController;
 import de.hybris.platform.cscockpit.widgets.controllers.OrderManagementActionsWidgetController;
 import de.hybris.platform.cscockpit.widgets.models.impl.OrderItemWidgetModel;
 import de.hybris.platform.cscockpit.widgets.renderers.details.WidgetDetailRenderer;
@@ -744,9 +746,13 @@ public class MplChangeDeliveryOTPWidgetRenderer
 						}
 						//removeTempororyAddress(newDeliveryAddress);
 
+						String ticketSubType = MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_CDA;
+						if(interfaceType.equalsIgnoreCase(MarketplaceCockpitsConstants.CU)) {
+							ticketSubType = MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_DMC;
+						}
 						mplDeliveryAddressController.ticketCreateToCrm(
 								orderModel.getParentReference(), customerId,
-								MarketplaceCockpitsConstants.SOURCE);
+								MarketplaceCockpitsConstants.SOURCE,ticketSubType);
 						LOG.debug("CRM Ticket Created for Change Delivery Request");
 						Messagebox.show(LabelUtils.getLabel(widget,
 								CUSTOMER_DETAILS_UPDATED, new Object[0]), INFO,
@@ -762,6 +768,9 @@ public class MplChangeDeliveryOTPWidgetRenderer
 									FAILED_AT_OMS, new Object[0]), INFO,
 									Messagebox.OK, Messagebox.ERROR);
 							closePopUp();
+							Map data = Collections.singletonMap("refresh", Boolean.TRUE);
+							((OrderController) widget.getWidgetController()).dispatchEvent(null,
+									null, data);
 						} catch (ModelRemovalException e) {
 							LOG.error("ModelRemovalException  while removing temprory Address"
 									+ e.getMessage());
@@ -772,6 +781,9 @@ public class MplChangeDeliveryOTPWidgetRenderer
 						// Saving no_of Total requests and rejects 
 						mplDeliveryAddressController.saveChangeDeliveryRequests(orderModel.getParentReference());
 						closePopUp();
+						Map data = Collections.singletonMap("refresh", Boolean.TRUE);
+						((OrderController) widget.getWidgetController()).dispatchEvent(null,
+								null, data);
 						Messagebox.show(LabelUtils.getLabel(widget,
 								AN_ERROR_OCCURRED, new Object[0]), INFO,
 								Messagebox.OK, Messagebox.ERROR);
