@@ -86,15 +86,14 @@ public class MarketPlaceBasketTotalsWidgetRenderer extends
 		    	
 		        renderRow(promotion, LabelUtils.getLabel(widget, "promotion", new Object[0]), currencyInstance, container);
 		        
-		       // Double deliveryCosts = abstractOrderModel.getDeliveryCost();
-		        
-				Double deliveryCosts = 0D;
-				
+		        Double deliveryCosts = abstractOrderModel.getDeliveryCost();
+				if(deliveryCosts==0.0){
 				for (AbstractOrderEntryModel orderEntry : abstractOrderModel
 						.getEntries()) {
 					if (null != orderEntry.getMplDeliveryMode()) {
-						deliveryCosts =  orderEntry.getMplDeliveryMode().getValue();
+						deliveryCosts =  (orderEntry.getMplDeliveryMode().getValue()-orderEntry.getCurrDelCharge().doubleValue())*orderEntry.getQuantity();
 					}
+				}
 				}
 				
 		        renderRow(deliveryCosts, LabelUtils.getLabel(widget, "deliveryCosts", new Object[0]), currencyInstance, container);
@@ -146,11 +145,11 @@ public class MarketPlaceBasketTotalsWidgetRenderer extends
 		        Double convenienceCharges = abstractOrderModel.getConvenienceCharges();
 		        renderRow(convenienceCharges, LabelUtils.getLabel(widget, "convenienceCharges", new Object[0]), currencyInstance, container);
 		  
-//		        Double totalPrice = abstractOrderModel.getTotalPriceWithConv();
+    	        Double totalPrice = abstractOrderModel.getSubtotal()+convenienceCharges+deliveryCosts-couponDiscount-couponDiscount-totalDeliveryCostDisc-totalDeliveryCostDisc;
 //		        if(deliveryCosts==0.0){
 //		        	totalPrice=totalPrice-prevDeliveryCost;
 //		        }
-		        renderRow(abstractOrderModel.getTotalPriceWithConv()+deliveryCosts, LabelUtils.getLabel(widget, "totalPrice", new Object[0]), currencyInstance, container);
+		        renderRow(totalPrice, LabelUtils.getLabel(widget, "totalPrice", new Object[0]), currencyInstance, container);
 		      }
 		  
 		      container.setParent(parent);
