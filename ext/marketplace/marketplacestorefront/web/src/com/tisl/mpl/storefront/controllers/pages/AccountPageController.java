@@ -7265,6 +7265,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			newAddressData.setLine1(addressForm.getLine1());
 			newAddressData.setLine2(addressForm.getLine2());
 			newAddressData.setLine3(addressForm.getLine3());
+			newAddressData.setTown(addressForm.getTownCity());
 			newAddressData.setCity(addressForm.getTownCity());
 			newAddressData.setPostalCode(addressForm.getPostcode());
 			newAddressData.setState(addressForm.getState());

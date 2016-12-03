@@ -470,7 +470,23 @@
 				$("#changeAddressPopup #country").val("India");
 				$("#addAddressForm h4.newAddress").show();
 				$("#addAddressForm h4.editAddress").hide();
+				loadPincodeData();	
+				$("#new-address-option-1").val("Residential");
+				$("#new-address-option-2").val("Commercial");
 			});
+			
+
+			$(".close").click(function() {
+				$("#changeAddressPopup").hide();
+				$(".wrapBG").hide();
+			});
+			
+			$("#saveBlockData").click(function(){
+				$("#changeAddressPopup").hide();
+				$(".wrapBG").hide();
+			});
+			
+			
 		});
 		
 		
@@ -599,8 +615,8 @@
 		function checkPopupValidations() {
 			console.log('checkPopupValidations()');
 			var letters = new RegExp(/^[A-z]*$/);
-			var isString = isNaN(mobile);
-			
+			var isString = isNaN($("#addAddressForm #mobileNo").val());
+			alert($("#addAddressForm #landmark").prop('disabled'));
 			$("#addAddressForm .errorText").hide();
 			if($("#addAddressForm #firstName").val().length < 2) {
 				$("#addAddressForm .errorText").show().text("Please enter First name");
@@ -643,15 +659,18 @@
 			else if($("#addAddressForm #country").val().length < 2) {
 				$("#addAddressForm .errorText").show().text("Please enter Country");
 				return false;
-			}else if($("#addAddressForm #landmark").val().length < 2) 
+			}else if(!$("#addAddressForm #landmark").prop('disabled') && $("#addAddressForm #landmark").val().length <= 2){
+				
+				$("#addAddressForm .errorText").show().text("Please enter Landmark");
+				return false;
+			}else if($("#addAddressForm #landmark").prop('disabled') && $("#addAddressForm #otherLandmark").val().length <= 2) 
 			{
-				if($("#addAddressForm #otherLandmark").val().length < 2)
-					{
-					$("#addAddressForm .errorText").show().text("Please enter Landmark");
-					return false;
-					}	
-		    }
+				$("#addAddressForm .errorText").show().text("PinCode not serviceable, Please enter other Landmark");
+				return false;
+				
+			}
 			else {
+				console.log("true");
 				return true;
 			}
 		}
@@ -695,26 +714,36 @@
 			  //alert( ACC.config.encodedContextPath+"/my-account/returns/addNewReturnAddress");
 			  $.ajax({
 				  url: ACC.config.encodedContextPath+"/my-account/returns/addNewReturnAddress",
-				  type: "POST",
+				  type: "GET",
 				  data : $("#addAddressForm").serialize(),
 				  success: function(data) {
-					//  alert("New Address Saved Successfully");
+					console.log("New Address Saved Successfully");
 				  
 				  },
 				  error:function(data){
-					  console.log("Error");
+					  console.log("Error in NewAddress");
 				  }
 			  });
 			  
 			  if(checkPopupValidations()) {
-				  $(".scheduledPickupArea").append("<div class='address"+count+" col-md-12 col-sm-12 col-xs-12 greyColor selectScheduledPickup'><div class='col-md-2 col-sm-2 col-xs-2 selectRadio'><input class=radioButton name=selectScheduledPickup onclick='showPickupTimeDate(\"address"+count+"\")' type='radio' value='schedule'></div><div class='col-md-6 col-sm-6 col-xs-6 updateaddress"+count+"'><ul><li><span class=firstName>Balagangadhar</span>Ã‚Â <span class=lastName>Ganga</span><li><span class=addressline1>Plot no 500 AyyaappaSocity</span><li><span class=addressline2>Madhapur</span><li><span class=addressTown>Hyderabad</span><li><span class=state>Telangana</span><li><span class=postalCode>500041</span><li><span class=country>India</span><li><span class=phoneNumber>2583691409</span><li id=addressUniqueId style=display:none>8796781182999</ul></div><div class='col-md-4 col-sm-4 col-xs-4 editAddress'><a class=changeAddressLink onclick='showAddressPopup(\"address"+count+"\")' data-class=address"+count+" href=#>Edit Address</a></div></div>");
+							  $(".scheduledPickupArea").html("<div class='address"
+									  + count+ " col-md-12 col-sm-12 col-xs-12 greyColor selectScheduledPickup blackColor'><div class='col-md-2 col-sm-2 col-xs-2 selectRadio'><input class=radioButton name=selectScheduledPickup onclick='showPickupTimeDate(\"address"
+									  + count+ "\")' type='radio' value='schedule'></div><div class='col-md-6 col-sm-6 col-xs-6 updateaddress"
+									  +count+ "'><ul><li><span class=firstName>"
+									  +$('#addAddressForm  #firstName').val()+"</span>&nbsp;<span class=lastName>"+$('#addAddressForm #lastName').val()+"</span><li><span class=addressline1>"
+									  +$('#addAddressForm  #addressline1').val()+"</span><li><span class=addressline2>"+$('#addAddressForm  #addressline2').val()+"</span><li><span class=addressTown>"
+									  +$('#addAddressForm  #addressTown').val()+"</span><li><span class=state>"+$('#addAddressForm  #state').val()+"</span><li><span class=postalCode>"
+									  +$('#addAddressForm  #pincode').val()+"</span><li><span class=country>"
+									  +$('#addAddressForm  #country').val()+"</span><li><span class=phoneNumber>"
+									  +$('#addAddressForm  #mobileNo').val()+"</span><li id=addressUniqueId style=display:none></ul></div><div class='col-md-4 col-sm-4 col-xs-4 editAddress'><a class=changeAddressLink onclick='showAddressPopup(\"address"
+									  + count+ "\")' data-class=address"
+									  + count+ " href=#>Edit Address</a></div></div>");
 				  showPickupTimeDate("address"+count);
 				  $(".address"+count+" input").prop("checked", true);
 				  $("#changeAddressPopup, .wrapBG").fadeOut(300);
 			  }
 		  }else {
-			  //alert("Saving Edited Address");
-			  
+			  console.log(ACC.config.encodedContextPath+"/my-account/returns/editReturnAddress");
 			  $.ajax({
 				  type: "POST",
 				  data : $("#addAddressForm").serialize(), 
@@ -769,7 +798,7 @@
 				  },
 				  error:function(data){
 					  
-					  
+					  console.log("Error in ajax of Editing Address");
 					  
 				  }
 			  });

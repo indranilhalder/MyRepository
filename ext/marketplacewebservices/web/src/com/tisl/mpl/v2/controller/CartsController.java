@@ -167,6 +167,8 @@ import com.tisl.mpl.wsdto.GetWishListProductWsDTO;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
 import com.tisl.mpl.wsdto.MplCartPinCodeResponseWsDTO;
 import com.tisl.mpl.wsdto.MplEDDInfoWsDTO;
+import com.tisl.mpl.wsdto.MplSelectedEDDForUssID;
+import com.tisl.mpl.wsdto.MplSelectedEDDInfoWsDTO;
 import com.tisl.mpl.wsdto.ReleaseCouponsDTO;
 import com.tisl.mpl.wsdto.ReservationListWsDTO;
 import com.tisl.mpl.wsdto.ValidateOtpWsDto;
@@ -3975,25 +3977,35 @@ public class CartsController extends BaseCommerceController
 		MplEDDInfoWsDTO mplEDDInfoWsDTO = new MplEDDInfoWsDTO();
 		try
 		{
-			 CartModel cartModel = null;
-			 cartModel = mplPaymentWebFacade.findCartValues(cartId);
-			 InvReserForDeliverySlotsRequestData deliverySlotsRequestData = new InvReserForDeliverySlotsRequestData();
-			 deliverySlotsRequestData.setCartId(cartModel.getGuid());
-			 InvReserForDeliverySlotsResponseData deliverySlotsResponseData = mplCartFacade
+			if (StringUtils.isEmpty(cartId))
+			{
+				mplEDDInfoWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+				return mplEDDInfoWsDTO;
+			}
+			CartModel cartModel = null;
+			cartModel = mplPaymentWebFacade.findCartValues(cartId);
+			InvReserForDeliverySlotsRequestData deliverySlotsRequestData = new InvReserForDeliverySlotsRequestData();
+			deliverySlotsRequestData.setCartId(cartModel.getGuid());
+			InvReserForDeliverySlotsResponseData deliverySlotsResponseData = mplCartFacade
 					.convertDeliverySlotsDatatoWsdto(deliverySlotsRequestData);
 
 			if (CollectionUtils.isNotEmpty(deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData()))
 			{
-				try{
-				mplEDDInfoWsDTO = mplCartFacade.getEDDInfo(cartModel,
-						deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData());
-				}catch(ParseException parseException){
-					LOG.error("CartsController WEB Extension"+parseException.getMessage());
+				try
+				{
+					mplEDDInfoWsDTO = mplCartFacade.getEDDInfo(cartModel,
+							deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData());
 				}
-			}else{
-				mplEDDInfoWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE);
+				catch (ParseException parseException)
+				{
+					LOG.error("CartsController WEB Extension" + parseException.getMessage());
+				}
 			}
-			
+			else
+			{
+				mplEDDInfoWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -4009,7 +4021,7 @@ public class CartsController extends BaseCommerceController
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			if (null != e.getErrorCode() && e.getErrorCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.B9038))
 			{
-				mplEDDInfoWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+				mplEDDInfoWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 			}
 			else
 			{
@@ -4029,6 +4041,68 @@ public class CartsController extends BaseCommerceController
 			mplEDDInfoWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		return mplEDDInfoWsDTO;
+	}
+
+	@Secured(
+	{ "ROLE_CUSTOMERGROUP", "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
+	@RequestMapping(value = "/{cartId}/selectedEDD", method = RequestMethod.POST, consumes =
+	{ MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+	@ResponseBody
+	public WebSerResponseWsDTO setSelectedDeliverySlots(@PathVariable final String cartId,@RequestBody MplSelectedEDDInfoWsDTO mplSelectedEDDInfoWsDTO)throws WebserviceValidationException
+	{
+		WebSerResponseWsDTO webSerResponseWsDTO=new WebSerResponseWsDTO();
+		if(CollectionUtils.isEmpty(mplSelectedEDDInfoWsDTO.getSelectedEDDInfo()) || StringUtils.isEmpty(cartId)){
+			webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			return webSerResponseWsDTO;
+		}
+	
+		try
+		{
+			 CartModel cartModel = null;
+			 cartModel = mplPaymentWebFacade.findCartValues(cartId);
+			 boolean isSaved=mplCartFacade.addSelectedEDD(cartModel, mplSelectedEDDInfoWsDTO.getSelectedEDDInfo());
+			 if(isSaved){
+				 webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			 }else{
+				 webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			 }
+			
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				webSerResponseWsDTO.setError(e.getErrorMessage());
+			}
+			webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorCode() && e.getErrorCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.B9038))
+			{
+				webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+			else
+			{
+				webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+			if (null != e.getErrorMessage())
+			{
+				webSerResponseWsDTO.setError(e.getErrorMessage());
+			}
+		}
+		catch (final Exception e)
+		{
+			if (null != e.getMessage())
+			{
+				webSerResponseWsDTO.setError(e.getMessage());
+			}
+			webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		
+		return webSerResponseWsDTO;
 	}
 	
 	

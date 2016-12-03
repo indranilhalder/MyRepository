@@ -2539,6 +2539,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		if(actualReturnWindow>=returnWindow)
 		{
 			DateTime today = new DateTime().withTimeAtStartOfDay();
+			today=today.plusDays(1);
 			if((actualReturnWindow-returnWindow)>3)
 			{
 				if(mplLPHolidaysModel.getWorkingDays().contains("0")){

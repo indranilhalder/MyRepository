@@ -198,7 +198,7 @@
 
 						</div>
 					</fieldset>
-					<!-- <div class="row errorCodemessage"></div> -->
+					 <div class="row errorCodemessage"></div> 
 					<p style="clear: both;"></p>
 					<div class="modal-footer">
 						<button type="submit" id="saveAddress"

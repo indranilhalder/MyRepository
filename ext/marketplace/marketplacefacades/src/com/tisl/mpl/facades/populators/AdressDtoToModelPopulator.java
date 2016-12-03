@@ -41,6 +41,7 @@ public class AdressDtoToModelPopulator implements Populator<AddressData,AddressM
 		addressModel.setLandmark(addressData.getLandmark());
 		addressModel.setPostalcode(addressData.getPostalCode());
 		addressModel.setPhone1(addressData.getPhone());
+		addressModel.setCellphone(addressData.getPhone());
 		addressModel.setState(addressData.getState());
 		addressModel.setDistrict(addressData.getState());
 		addressModel.setCity(addressData.getCity());

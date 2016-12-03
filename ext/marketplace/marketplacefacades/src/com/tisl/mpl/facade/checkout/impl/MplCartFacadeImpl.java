@@ -97,6 +97,7 @@ import com.tisl.mpl.wsdto.GetWishListWsDTO;
 import com.tisl.mpl.wsdto.MplEDDInfoForUssIDWsDTO;
 import com.tisl.mpl.wsdto.MplEDDInfoWsDTO;
 import com.tisl.mpl.wsdto.MplEstimateDeliveryDateWsDTO;
+import com.tisl.mpl.wsdto.MplSelectedEDDForUssID;
 
 
 
@@ -2553,6 +2554,44 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		return null;
 	}
 	
+	
+
+	/**
+	 * 
+	 * @param cartModel
+	 * @param mplSelectedEDDInfo
+	 * @return boolean
+	 */
+	@Override
+	public boolean addSelectedEDD(CartModel cartModel, List<MplSelectedEDDForUssID> mplSelectedEDDInfo)
+	{
+		if (cartModel == null || CollectionUtils.isEmpty(mplSelectedEDDInfo))
+		{
+			return false;
+		}
+
+		for (MplSelectedEDDForUssID mplEdd : mplSelectedEDDInfo)
+		{
+			for (AbstractOrderEntryModel entry : cartModel.getEntries())
+			{
+				if (StringUtils.isNotEmpty(mplEdd.getUssId()) && mplEdd.getUssId().equalsIgnoreCase(entry.getSelectedUSSID()))
+				{
+
+					if (StringUtils.isNotEmpty(mplEdd.getDeliveryDate()))
+					{
+						String timeFromTo = mplEdd.getTimeSlot();
+						entry.setTimeSlotFrom(timeFromTo.substring(0, timeFromTo.indexOf("TO") - 1));
+						entry.setTimeSlotTo(timeFromTo.substring(timeFromTo.indexOf("TO") + 3, timeFromTo.length()));
+						entry.setEdScheduledDate(mplEdd.getDeliveryDate());
+						modelService.save(entry);
+					}
+
+				}
+			}
+		}
+		return true;
+	}
+
 	
 	/**
 	 * @return the mplExtendedPromoCartConverter

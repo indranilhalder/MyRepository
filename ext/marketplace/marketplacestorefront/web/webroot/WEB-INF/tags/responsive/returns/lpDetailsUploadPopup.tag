@@ -46,8 +46,14 @@
 											<div class="col-md-5 uploadButton">CHOOSE FILE</div>
 											</div>
 													</div>
-											<div class="errorText uploadError"></div>
+											<div class="errorText uploadError" style="margin-top: 40px"></div>
 											
+										</div>
+		
+										<div class="col-md-6 form-group">
+											<label for="awsNumber">Amount </label>
+		    								<form:input type="text" path="amount" class="form-control awsTextinput" id="amount" placeholder="Amount"/>
+		    								<div class="errorText amountError"></div>
 										</div>
 										
 										<div class="col-md-6">
@@ -56,14 +62,10 @@
 											<form:hidden path="transactionId" value="${entry.transactionId}" />
 											
 										</div>
-										<div class="col-md-6 form-group">
-											<label for="awsNumber">Amount </label>
-		    								<form:input type="text" path="amount" class="form-control awsTextinput" id="amount" placeholder="Amount"/>
-		    								<div class="errorText amountError"></div>
-										</div>
-										<button type="submit" id="submitBlock" class="btn btn-primary submitButton">SUBMIT</button>
+										
+										
 									</div>
-								
+								<button type="submit" id="submitBlock" class="btn btn-primary submitButton">SUBMIT</button>
 								</div>
 	                        	
 	                        </div>
@@ -74,18 +76,18 @@
                 </form:form>
             </div><!-- /.modal-dialog -->
        <style>
-       .right-account .closeAWSNum{
+       .changeAWS .closeAWSNum{
 	border-radius: 50%;
 	border: 1px solid #ccc !important;
-	width: 40px;
+	min-width: 40px !important;
 	height: 40px;
     position: absolute;
     right: 17px;
     top: -6px;
-    font-size: 35px;
+    font-size: 35px !important;
     font-weight: 100;
     color: #ccc;
-    padding: 9px 9px;
+    padding: 1px 9px !important;
 }
        </style>       
       <!--   </div>/.modal -->

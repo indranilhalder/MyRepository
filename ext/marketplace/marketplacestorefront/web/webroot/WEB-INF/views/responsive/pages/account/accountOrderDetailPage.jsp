@@ -319,6 +319,9 @@
 									<c:if test="${not empty subOrderLine3}">
 												&nbsp;${fn:escapeXml(subOrder.deliveryAddress.line3)},
 											</c:if>
+									 <c:if test="${not empty subOrder.deliveryAddress.landmark}">
+									    ${fn:escapeXml(subOrder.deliveryAddress.landmark)},
+									</c:if>
 											<br> ${fn:escapeXml(subOrder.deliveryAddress.town)},&nbsp;
 											<c:if test="${not empty subOrder.deliveryAddress.state}">
 														${fn:escapeXml(subOrder.deliveryAddress.state)},&nbsp;
@@ -1700,7 +1703,13 @@ $(function() {
 			 
 		 });
 		 
-		
+		 $("#changeAddressLink").click(function(){
+			  $("#changeAddressPopup").show();
+			  $(".wrapBG").show();
+			  var height = $(window).height();
+			  $(".wrapBG").css("height",height);
+			  $("#changeAddressPopup").css("z-index","999999");
+		});
 		 
 	 	$("#saveBlockData").click(function(){
 				$("#changeAddressPopup").hide();
@@ -1723,57 +1732,103 @@ $(function() {
 		 
 		 
 		 <!--   AWB Jquery codes PopUp  -->
+		   
+		   $("#awbNumberLink").click(function(){
+			   $(".awsNumError").hide();
+			    $(".logisticPartnerError").hide();
+			    $(".uploadError").hide(); 
+			    $(".amountError").hide();
+		     $("#awbNumberPopup").show();
+		     $(".wrapBG").show();
+		     var height = $(window).height();
+		     $(".wrapBG").css("height",height);
+		     $("#awbNumberPopup").css("z-index","999999");
+		  });
+		  $(".submitButton").click(function(event){
+		   event.preventDefault();
+		   if(awbValidations()){
+		    $("#awbNumberPopup").hide();
+		    $(".wrapBG").hide();
+		   }else{
+		    alert('elsepanchayati');
+		    $("#awbNumberPopup").show();
+		    $(".wrapBG").show();
+		   }
+		  });
+
+		  $(".closeAWSNum").click(function(){
+		   $("#awbNumberPopup").hide();
+		   $(".wrapBG").hide();
+		  });
+		  
+		function awbValidations(){
+		 var validate = true;
+		 $(".awsNumError").hide();
+		 $(".logisticPartnerError").hide();
+		 $(".uploadError").hide(); 
+		 $(".amountError").hide();
 		 
-		 $("#awbNumberLink").click(function(){
-			  $("#awbNumberPopup").show();
-			  $(".wrapBG").show();
-			  var height = $(window).height();
-			  $(".wrapBG").css("height",height);
-			  $("#awbNumberPopup").css("z-index","999999");
-		});
-		$(".submitButton").click(function(){
-			$("#awbNumberPopup").hide();
-		});
+		 var awsNumber=$("#awsNum").val();
+		 var logPart=$("#logisticPartner").val();
+		 var fileName=$("#uploadFile").val();
+		 var amount = $('#amount').val();
+		 
+		 if(awsNumber != null && awsNumber == '' && awsNumber < 2 && awsNumber.trim() == ''){
+		       $(".awsNumError").show();
+		     $(".awsNumError").text("AWB Number cannot be Blank");
+		     validate = false;
+		     } if(/[^[a-zA-Z0-9]]*$/.test(awsNumber)){
+		      $(".awsNumError").show();
+		       $(".awsNumError").text("AWB Number cannot allow special characters");
+		      validate = false;
+		     }
 
+		     if(logPart != null && logPart == '' && logPart < 2 && logPart.trim() == ''){
+		        $(".logisticPartnerError").show();
+		      $(".logisticPartnerError").text("Logistic partner cannot be Blank");
+		      validate = false;
+		      } if(/[^[a-zA-Z]]*$/.test(logPart)){
+		       $(".logisticPartnerError").show();
+		        $(".logisticPartnerError").text("Logistic partner cannot allow special characters and numbers");
+		       validate = false;
+		 }
+		 if(amount != null && amount == '' && amount < 2 && amount.trim() == ''){
+		    
+		        $(".amountError").show();
+		      $(".amountError").text("Amount cannot be Blank");
+		      validate = false;
+		      }if(isNaN(amount)){
+		       
+		       $(".amountError").show();
+		        $(".amountError").text("Amount cannot allow special characters or letters");
+		       validate = false;
+		      }
+		     
+		 
+		  if(fileName == null || fileName.trim() == '' ){
+		    var ext = fileName.substring(fileName.lastIndexOf('.') + 1);
+		   if(ext != "gif" || ext != "GIF" || ext != "JPEG" || ext != "jpeg" || ext != "jpg" || ext != "JPG" || ext != "pdf" || ext != "PDF" || ext != 'png' || ext != "PNG")
+		    {
+		     $(".uploadError").show();
+		       $(".uploadError").text("Upload images and pdf file only");
+		       validate = false;
+		    } 
+		  }
+		 return validate;
+		 
+		}
+		   
+		  <!-- End of  AWB Jquery codes PopUp  -->
+		  });  
+		</script>
 
-		$(".closeAWSNum").click(function(){
-		 $("#awbNumberPopup").hide();
-		 $(".wrapBG").hide();
-		});
-		
-		$("#submitBlock").click(function(event){
-			
-			$(".awsNumError").hide();
-			$(".logisticPartnerError").hide();
-			$(".uploadError").hide(); 
-			
-			var awsNumber=$("#awsNum").val();
-			var logPart=$("#logisticPartner").val();
-			var upload=$("#uploadFile").val();
-			
-			if(awsNumber == null || awsNumber.trim() == '' ){
-	  			$(".awsNumError").show();
-	  			$(".awsNumError").text("AWB Number cannot be Blank");
-	  			$("#awbNumberPopup").css('display','block');
-			}
-			
-			if(logPart == null || logPart.trim() == '' ){
-				$(".logisticPartnerError").show();
-	  			$(".logisticPartnerError").text("Logistic Partner cannot be Blank");
-	  			$("#awbNumberPopup").css('display','block');
-			}else{
-				return true;
-			}
-			
-			
-		});
-		
-		<!-- End of  AWB Jquery codes PopUp  -->
-	 });	 
-</script>
-
-<!--   AWB CSS for PopUp -->
-<style>
+		<!--   AWB CSS for PopUp -->
+		<style>
+		@media (max-width: 1365px){
+		.changeAdddd {
+		    height: initial !important;
+		}
+		}
 
 @media (max-width: 1366px) {
 	.awsNumberModal .changeAWS {
@@ -1847,17 +1902,17 @@ $(function() {
 .submitButton{
 	background: #ff9900;
 	color: #fff;
-	width: 150px;
-	margin: 39px auto;
+	width: 100px;
+	margin: 16px;
 	height: 46px;
-    font-size: 20px;
+    font-size: 20px !important;
 }
 .submitButton:focus, .submitButton:hover{
 	border: none;
 	background: #ff9900;
 	color: #fff;
-	width: 150px;
-	margin: 39px auto;
+	width: 100px;
+	margin: 16px;
 	height: 46px;
     font-size: 20px;
 }
@@ -1898,8 +1953,8 @@ $(function() {
 	display: inline-block;
 	padding: 0px 10px;
 	color: #8c8c8c;
-	height: 44px;
-	line-height: 44px;
+	height: 32px;
+	line-height: 32px;
 }
 .uploadButton{
 	background: #00cfe6;
@@ -1907,13 +1962,13 @@ $(function() {
 	display: inline-block;
     padding: 0px 11px;
     font-size: 14px;
-    height: 44px;
-	line-height: 44px;
+    height: 34px;
+	line-height: 34px;
 }
 .uploadDiv{
     border: 1px solid #dfd1d5;
     width: 100%;
-    
+    height:35px;
 }
 input[type="radio"]:checked {
 	background: #000;

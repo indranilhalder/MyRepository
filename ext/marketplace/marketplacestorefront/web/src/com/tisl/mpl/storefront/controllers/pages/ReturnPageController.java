@@ -758,7 +758,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		}
 	}
 	
-	@RequestMapping(value = RequestMappingUrlConstants.LINK_ADD_RETURN_ADDRESS, method = RequestMethod.POST)
+	@RequestMapping(value = RequestMappingUrlConstants.LINK_ADD_RETURN_ADDRESS, method = RequestMethod.GET)
 	@ResponseBody
 	public AddressData addReturnAddress(final AccountAddressForm addressForm, final BindingResult bindingResult, final Model model,
 			final HttpServletRequest request) throws Exception

@@ -138,6 +138,8 @@
 			<div class="col-md-6 col-sm-6 col-xs-12">
 				<div class="col-md-12 col-xs-12">
 					<%-- <b><spring:theme code="text.order.returns.schedulepickup"/> : </b> <br /> <span><spring:theme code="text.order.returns.choosepickupaddress"/></span> <span style=""><a href="#" class="addNewAddressPopup">Add New Address</a></span> --%>
+					<c:choose>
+					<c:when test="${addressData.size()>0}">
 					<div class="scheduledPickupArea">
 						<c:forEach var="address" items="${addressData}" varStatus="i">
 
@@ -168,6 +170,15 @@
 						</c:forEach>
 						
 					</div>
+					</c:when>
+					<c:otherwise>
+				      <div class="scheduledPickupArea">
+				       <b><spring:theme code="text.order.returns.schedulepickup" />: </b><br />
+				       <span><spring:theme code="text.order.returns.choosepickupaddress" /></span>
+				       <span style=""><a href="#" class="addNewAddressPopup">Add New Address</a></span>
+				      </div>
+				     </c:otherwise>
+					</c:choose>
 				</div>
 			</div>
 			<div class="col-md-6 col-sm-12 col-xs-12">

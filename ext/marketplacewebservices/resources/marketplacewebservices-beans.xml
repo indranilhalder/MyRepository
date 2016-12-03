@@ -2486,7 +2486,7 @@
 		type="java.util.List&lt;com.tisl.mpl.wsdto.MplEDDInfoForUssIDWsDTO>" />
 	</bean>
 	
-	<bean class="com.tisl.mpl.wsdto.MplEDDInfoForUssIDWsDTO">
+	<bean class="com.tisl.mpl.wsdto.MplEDDInfoForUssIDWsDTO" >
 		<property name="ussId" type="String" />
 		<property name="isScheduled" type="String" />
 		<property name="codEligible" type="String" />
@@ -2494,6 +2494,16 @@
 			type="java.util.List&lt;com.tisl.mpl.wsdto.MplEstimateDeliveryDateWsDTO>" />
 	</bean>
 	
+	<bean class="com.tisl.mpl.wsdto.MplSelectedEDDForUssID">
+	        <property name="ussId" type="String"/>
+		    <property name="deliveryDate" type="String"/>
+			<property name="timeSlot" type="String"/>
+	</bean>
+  <bean class="com.tisl.mpl.wsdto.MplSelectedEDDInfoWsDTO">
+   <property name="selectedEDDInfo"
+	type="java.util.List&lt;com.tisl.mpl.wsdto.MplSelectedEDDForUssID>" />
+  </bean>
+
 	<!-- For Return Web Services -->
 	<bean class="com.tisl.mpl.wsdto.ReturnDetailsWsDTO">
 		<property name="returnReasonDetailsList" type="java.util.List&lt;com.tisl.mpl.facades.product.data.ReturnReasonData>" />
