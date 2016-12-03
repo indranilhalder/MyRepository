@@ -11,6 +11,7 @@ import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.commercefacades.product.data.PincodeServiceData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
+import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartModification;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
@@ -40,6 +41,7 @@ import com.tisl.mpl.mplcommerceservices.service.data.CartSoftReservationData;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRequestData;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
+import com.tisl.mpl.wsdto.InventoryReservListRequestWsDTO;
 import com.tisl.mpl.wsdto.InventoryReservListResponse;
 import com.tisl.mpl.wsdto.PinCodeDeliveryModeListResponse;
 import com.tisl.mpl.wsdto.ReservationListWsDTO;
@@ -234,7 +236,7 @@ public interface MplCommerceCartService
 	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
-	ReservationListWsDTO getReservation(final String cartId, final CartData cartData, final String pincode, final String type)
+	ReservationListWsDTO getReservation(final String cartId, final CartData cartData, final String pincode, final String type,final InventoryReservListRequestWsDTO cartItems,SalesApplication salesApplication)
 			throws EtailNonBusinessExceptions;
 
 	/*

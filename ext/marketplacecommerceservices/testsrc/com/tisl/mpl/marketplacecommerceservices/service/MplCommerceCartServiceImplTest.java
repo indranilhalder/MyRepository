@@ -12,6 +12,7 @@ import de.hybris.platform.commercefacades.product.data.PincodeServiceData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
+import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartModification;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
@@ -49,6 +50,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServ
 import com.tisl.mpl.mplcommerceservices.service.data.CartSoftReservationData;
 import com.tisl.mpl.strategy.service.impl.MplDefaultCommerceAddToCartStrategyImpl;
 import com.tisl.mpl.wsdto.DeliveryModeResOMSWsDto;
+import com.tisl.mpl.wsdto.InventoryReservListRequestWsDTO;
 import com.tisl.mpl.wsdto.PinCodeDeliveryModeResponse;
 import com.tisl.mpl.wsdto.ReservationItemWsDTO;
 import com.tisl.mpl.wsdto.ReservationListWsDTO;
@@ -471,9 +473,11 @@ public class MplCommerceCartServiceImplTest
 		cartSoftReservationDataMock.setUSSID(USSID);
 
 		cartdatalistMock.add(cartSoftReservationDataMock);
+		InventoryReservListRequestWsDTO inventoryRequest = null;
+		SalesApplication salesApplication = null;
 
 		given(mplCommerceCartServiceImpl.populateDataForSoftReservation(cartDataMock)).willReturn(cartdatalistMock);
-		given(mplCommerceCartServiceImpl.getReservation(cartId, cartDataMock, pincode, type)).willReturn(wsDto);
+		given(mplCommerceCartServiceImpl.getReservation(cartId, cartDataMock, pincode, type,inventoryRequest,salesApplication)).willReturn(wsDto);
 	}
 
 	@Test

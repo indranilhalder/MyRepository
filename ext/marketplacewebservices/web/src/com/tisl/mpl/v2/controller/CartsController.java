@@ -165,9 +165,9 @@ import com.tisl.mpl.wsdto.BillingAddressWsDTO;
 import com.tisl.mpl.wsdto.CartDataDetailsWsDTO;
 import com.tisl.mpl.wsdto.GetWishListProductWsDTO;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
+import com.tisl.mpl.wsdto.InventoryReservListRequestWsDTO;
 import com.tisl.mpl.wsdto.MplCartPinCodeResponseWsDTO;
 import com.tisl.mpl.wsdto.MplEDDInfoWsDTO;
-import com.tisl.mpl.wsdto.MplSelectedEDDForUssID;
 import com.tisl.mpl.wsdto.MplSelectedEDDInfoWsDTO;
 import com.tisl.mpl.wsdto.ReleaseCouponsDTO;
 import com.tisl.mpl.wsdto.ReservationListWsDTO;
@@ -2823,7 +2823,7 @@ public class CartsController extends BaseCommerceController
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
 	@RequestMapping(value = "/{cartId}/softReservation", method = RequestMethod.POST)
 	@ResponseBody
-	public ReservationListWsDTO getCartReservation(@PathVariable final String cartId, @RequestParam final String pincode,
+	public ReservationListWsDTO getCartReservation(@PathVariable final String cartId, @RequestParam final String pincode,@RequestBody final InventoryReservListRequestWsDTO item,
 			@RequestParam final String type)
 	{
 		ReservationListWsDTO reservationList = new ReservationListWsDTO();
@@ -2836,7 +2836,7 @@ public class CartsController extends BaseCommerceController
 			if (setFreebieDeliverMode(cartId))
 			{
 				cartData = getMplExtendedCartConverter().convert(cart);
-				reservationList = mplCommerceCartService.getReservation(cartId, cartData, pincode, type);
+				reservationList = mplCommerceCartService.getReservation(cartId, cartData, pincode, type,item,SalesApplication.MOBILE);
 				LOG.debug("******************* Soft reservation Mobile web service response received from OMS ******************"
 						+ cartId);
 			}
@@ -2889,7 +2889,7 @@ public class CartsController extends BaseCommerceController
 	public ReservationListWsDTO getCartReservationForPayment(@PathVariable final String cartId,
 			@RequestParam final String pincode, @RequestParam final String type,
 			@RequestParam(required = false) final String bankName, @RequestParam(required = false) final String binNo,
-			@RequestParam final String paymentMode)
+			@RequestParam final String paymentMode,@RequestBody final InventoryReservListRequestWsDTO item)
 	{
 		ReservationListWsDTO reservationList = new ReservationListWsDTO();
 		CartModel cart = null;
@@ -2960,7 +2960,7 @@ public class CartsController extends BaseCommerceController
 				{
 					final CartData cartData = getMplExtendedCartConverter().convert(cart);
 
-					reservationList = mplCommerceCartService.getReservation(cartId, cartData, pincode, type);
+					reservationList = mplCommerceCartService.getReservation(cartId, cartData, pincode, type,item, SalesApplication.MOBILE);
 				}
 				else
 				{

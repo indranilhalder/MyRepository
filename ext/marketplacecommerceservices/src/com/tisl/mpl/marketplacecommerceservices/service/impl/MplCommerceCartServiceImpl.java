@@ -25,6 +25,7 @@ import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.product.data.ServiceableSlavesData;
 import de.hybris.platform.commercefacades.user.UserFacade;
 import de.hybris.platform.commercefacades.user.data.AddressData;
+import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartModification;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.order.impl.DefaultCommerceCartService;
@@ -149,7 +150,9 @@ import com.tisl.mpl.wsdto.EDDResponseWsDTO;
 import com.tisl.mpl.wsdto.GetWishListDataWsDTO;
 import com.tisl.mpl.wsdto.GetWishListProductWsDTO;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
+import com.tisl.mpl.wsdto.InventoryReservListRequestWsDTO;
 import com.tisl.mpl.wsdto.InventoryReservListResponse;
+import com.tisl.mpl.wsdto.InventoryReservRequestWsDTO;
 import com.tisl.mpl.wsdto.InventoryReservResponse;
 import com.tisl.mpl.wsdto.MobdeliveryModeWsDTO;
 import com.tisl.mpl.wsdto.PinCodeDeliveryModeListResponse;
@@ -2347,7 +2350,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 */
 	@Override
 	public ReservationListWsDTO getReservation(final String cartId, final CartData cartData, final String pincode,
-			final String type) throws EtailNonBusinessExceptions
+			final String type,final InventoryReservListRequestWsDTO inventoryRequest, SalesApplication salesApplication) throws EtailNonBusinessExceptions
 	{
 
 		final ReservationListWsDTO wsDto = new ReservationListWsDTO();
@@ -2369,7 +2372,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 				try
 				{
-					cartdatalist = populateDataForSoftReservation(cartModel);
+					cartdatalist = populateDataForSoftReservation(cartModel,inventoryRequest,salesApplication);
 					inventoryReservListResponse = getInventoryReservationService().convertDatatoWsdto(cartdatalist, cartGuid, pincode,
 							type);
 					LOG.debug("inventoryReservListResponse Mobile###############################" + inventoryReservListResponse);
@@ -3428,7 +3431,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	public boolean isInventoryReserved(final AbstractOrderModel abstractOrderModel, final String requestType,
 			final String defaultPinCodeId) throws EtailNonBusinessExceptions
 	{
-		final List<CartSoftReservationData> cartSoftReservationDatalist = populateDataForSoftReservation(abstractOrderModel);
+		final List<CartSoftReservationData> cartSoftReservationDatalist = populateDataForSoftReservation(abstractOrderModel,null,null);
 		final List<CartSoftReservationData> cartSoftForCncReservationDatalist = new ArrayList<CartSoftReservationData>();
 
 
@@ -3616,12 +3619,15 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @throws EtailNonBusinessExceptions
 	 */
 
-	private List<CartSoftReservationData> populateDataForSoftReservation(final AbstractOrderModel abstractOrderModel)
+	private List<CartSoftReservationData> populateDataForSoftReservation(final AbstractOrderModel abstractOrderModel, InventoryReservListRequestWsDTO inventoryRequest,SalesApplication salesApplication)
 			throws EtailNonBusinessExceptions
 	{
-
-		final List<PinCodeResponseData> pincoderesponseDataList = getSessionService().getAttribute(
-				MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION);
+		 List<PinCodeResponseData> pincoderesponseDataList = null;
+		  if(!salesApplication.equals(SalesApplication.MOBILE)){
+			   pincoderesponseDataList = getSessionService().getAttribute(
+						MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION);
+		  }
+		
 		LOG.debug("******responceData******** " + pincoderesponseDataList);
 		CartSoftReservationData cartSoftReservationData = null;
 		final List<CartSoftReservationData> cartSoftReservationDataList = new ArrayList<CartSoftReservationData>();
@@ -3833,29 +3839,44 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 							}
 						}
 
-						for (final PinCodeResponseData responseData : pincoderesponseDataList)
-						{
-							if (entryModel.getSelectedUSSID().equals(responseData.getUssid()))
-							{
-								for (final DeliveryDetailsData detailsData : responseData.getValidDeliveryModes())
-								{
-									if (deliveryModeGlobalCode.equalsIgnoreCase(detailsData.getType()))
-									{
-										if (null != detailsData.getServiceableSlaves() && detailsData.getServiceableSlaves().size() > 0)
-										{
-											cartSoftReservationData.setServiceableSlaves(detailsData.getServiceableSlaves());
-										}
-										if (null != detailsData.getCNCServiceableSlavesData()
-												&& detailsData.getCNCServiceableSlavesData().size() > 0)
-										{
-											cartSoftReservationData.setCncServiceableSlaves(detailsData.getCNCServiceableSlavesData());
-											cartSoftReservationData.setFulfillmentType(detailsData.getCNCServiceableSlavesData().get(0)
-													.getFulfillmentType());
+						if(salesApplication.equals(SalesApplication.MOBILE)) {
+							for (InventoryReservRequestWsDTO  item: inventoryRequest.getItem()) {
+								if(item.getUssId().equalsIgnoreCase(entryModel.getSelectedUSSID())) {
+									cartSoftReservationData.setDeliveryMode(item.getDeliveryMode());
+									cartSoftReservationData.setFulfillmentType(item.getFulfillmentType());
+									if(null != item.getServiceableSlaves()) {
+										cartSoftReservationData.setServiceableSlaves(item.getServiceableSlaves()); 
+									}else if(item.getDeliveryMode().equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC)){
+										cartSoftReservationData.setStoreId(item.getStoreId());
+									}
+								}
+							}
 
-										}
-										if (null != detailsData.getFulfilmentType())
+						}else {
+							for (final PinCodeResponseData responseData : pincoderesponseDataList)
+							{
+								if (entryModel.getSelectedUSSID().equals(responseData.getUssid()))
+								{
+									for (final DeliveryDetailsData detailsData : responseData.getValidDeliveryModes())
+									{
+										if (deliveryModeGlobalCode.equalsIgnoreCase(detailsData.getType()))
 										{
-											cartSoftReservationData.setFulfillmentType(detailsData.getFulfilmentType());
+											if (null != detailsData.getServiceableSlaves() && detailsData.getServiceableSlaves().size() > 0)
+											{
+												cartSoftReservationData.setServiceableSlaves(detailsData.getServiceableSlaves());
+											}
+											if (null != detailsData.getCNCServiceableSlavesData()
+													&& detailsData.getCNCServiceableSlavesData().size() > 0)
+											{
+												cartSoftReservationData.setCncServiceableSlaves(detailsData.getCNCServiceableSlavesData());
+												cartSoftReservationData.setFulfillmentType(detailsData.getCNCServiceableSlavesData().get(0)
+														.getFulfillmentType());
+
+											}
+											if (null != detailsData.getFulfilmentType())
+											{
+												cartSoftReservationData.setFulfillmentType(detailsData.getFulfilmentType());
+											}
 										}
 									}
 								}
