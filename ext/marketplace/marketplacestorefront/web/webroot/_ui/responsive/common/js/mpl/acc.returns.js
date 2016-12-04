@@ -616,7 +616,7 @@
 			console.log('checkPopupValidations()');
 			var letters = new RegExp(/^[A-z]*$/);
 			var isString = isNaN($("#addAddressForm #mobileNo").val());
-			alert($("#addAddressForm #landmark").prop('disabled'));
+			//alert($("#addAddressForm #landmark").prop('disabled'));
 			$("#addAddressForm .errorText").hide();
 			if($("#addAddressForm #firstName").val().length < 2) {
 				$("#addAddressForm .errorText").show().text("Please enter First name");
