@@ -1745,12 +1745,14 @@ $(function() {
 		     $("#awbNumberPopup").css("z-index","999999");
 		  });
 		  $(".submitButton").click(function(event){
-		   event.preventDefault();
 		   if(awbValidations()){
-		    $("#awbNumberPopup").hide();
-		    $(".wrapBG").hide();
+		  $("#awbNumberPopup").hide(); 
+		  $(".wrapBG").hide();
+		  $('#awbNumberPopup form').unbind('submit').submit();
+
 		   }else{
-		    alert('elsepanchayati');
+		    //alert('elsepanchayati');
+		    event.preventDefault();
 		    $("#awbNumberPopup").show();
 		    $(".wrapBG").show();
 		   }

@@ -23,7 +23,7 @@
                         				<div class="space">Fill in the below mentioned information to start the Return and Refund process for self shipped product and click on 'Submit' </div>
 										<div class="col-md-6 form-group">
 											<label for="awsNumber">AWB Number</label>
-		    								<form:input type="text" path="awbNumber" class="form-control awsTextinput" id="awsNum" placeholder="AWS Number"/>
+		    								<form:input type="text" path="awbNumber" class="form-control awsTextinput" id="awsNum" placeholder="AWB Number"/>
 		    								<div class="errorText awsNumError"></div>
 										</div>
 										<div class="col-md-6 form-group">
