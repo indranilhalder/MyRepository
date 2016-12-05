@@ -57829,7 +57829,7 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
     margin-left: 2%;
 }
 .Temp07 .Padd .twocolumn .onecolumn .media {
-    background: #f6f6f6;
+    /* background: #f6f6f6; */
     max-height: 338px;
     height:auto;
     display: table;
