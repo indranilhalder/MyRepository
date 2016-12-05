@@ -58,12 +58,14 @@ import com.tisl.mpl.data.SendTicketRequestData;
 import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.config.MplConfigFacade;
+import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.MplDeliveryAddressReportData;
 import com.tisl.mpl.facades.data.RescheduleData;
 import com.tisl.mpl.facades.data.RescheduleDataList;
 import com.tisl.mpl.facades.data.ScheduledDeliveryData;
+import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.integration.oms.order.service.impl.CustomOmsOrderService;
 import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryAddressService;
@@ -113,6 +115,9 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 
 	@Autowired
 	private SendSMSFacade sendSMSFacade;
+	
+	@Autowired
+	private AccountAddressFacade  accountAddressFacade;
 
 	private static final Logger LOG = Logger.getLogger(MplDeliveryAddressFacadeImpl.class);
 
@@ -224,7 +229,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 					}
 					if (null != newDeliveryAddress.getState())
 					{
-						requestData.setState(newDeliveryAddress.getState());
+						requestData.setState(getStateCode(newDeliveryAddress.getState()));
 					}
 					if (null != newDeliveryAddress.getPostalcode())
 					{
@@ -324,7 +329,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		}
 		if (null != changeDeliveryAddress.getState())
 		{
-			addressinfo.setState(changeDeliveryAddress.getState());
+			addressinfo.setState(getStateCode(changeDeliveryAddress.getState()));
 		}
 		if (null != changeDeliveryAddress.getCity())
 		{
@@ -1299,5 +1304,18 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, contactNumber), mobileNumber);
 
 	}
+	
+	    //Get State code
+		private String getStateCode(String stateName)
+		{
+			for (final StateData state : accountAddressFacade.getStates())
+			{
+				if (state.getName().equalsIgnoreCase(stateName))
+				{
+					return state.getCode();
+				}
+			}
+			return null;
+		}
 
 }
