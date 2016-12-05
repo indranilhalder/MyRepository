@@ -152,10 +152,16 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 	{
 		LOG.debug("Generationg Contents..");
 		LOG.debug("Error Checking Contents..");
-		int lineNo = 1;
+		int lineNo = 0;
 		while (reader.readNextLine())
 		{
 			lineNo++;
+			//To skip header section defined in CSV
+			if (lineNo == 1)
+			{
+				continue;
+			}
+
 			final Map<Integer, String> line = reader.getLine();
 			final StringBuilder invalidColumns = new StringBuilder();
 
@@ -469,7 +475,7 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 			 * isUpdatefeed); componentlist.add(sm); } else if (entry.getKey().startsWith("Video") &&
 			 * StringUtils.isNotEmpty(entry.getValue())) { final VideoComponentModel vm =
 			 * makeVideoComponent(entry.getValue(), entry.getKey(), line, writer, isUpdatefeed); componentlist.add(vm);
-			 *
+			 * 
 			 * } else if (entry.getKey().startsWith("Text") && StringUtils.isNotEmpty(entry.getValue())) { final
 			 * CMSParagraphComponentModel cmspara = makeTextComponent(entry.getValue(), entry.getKey(), line, writer,
 			 * isUpdatefeed); componentlist.add(cmspara); }
