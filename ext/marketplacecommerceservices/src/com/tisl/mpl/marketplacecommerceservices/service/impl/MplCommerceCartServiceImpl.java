@@ -3431,7 +3431,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	public boolean isInventoryReserved(final AbstractOrderModel abstractOrderModel, final String requestType,
 			final String defaultPinCodeId) throws EtailNonBusinessExceptions
 	{
-		final List<CartSoftReservationData> cartSoftReservationDatalist = populateDataForSoftReservation(abstractOrderModel,null,null);
+		final List<CartSoftReservationData> cartSoftReservationDatalist = populateDataForSoftReservation(abstractOrderModel,null,SalesApplication.WEB);
 		final List<CartSoftReservationData> cartSoftForCncReservationDatalist = new ArrayList<CartSoftReservationData>();
 
 
@@ -3623,7 +3623,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			throws EtailNonBusinessExceptions
 	{
 		 List<PinCodeResponseData> pincoderesponseDataList = null;
-		  if(!salesApplication.equals(SalesApplication.MOBILE)){
+		  if(null != salesApplication && salesApplication.equals(SalesApplication.WEB)){
 			   pincoderesponseDataList = getSessionService().getAttribute(
 						MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION);
 		  }
@@ -3839,7 +3839,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 							}
 						}
 
-						if(salesApplication.equals(SalesApplication.MOBILE)) {
+						if(null != inventoryRequest && null != salesApplication && salesApplication.equals(SalesApplication.MOBILE)) {
 							for (InventoryReservRequestWsDTO  item: inventoryRequest.getItem()) {
 								if(item.getUssId().equalsIgnoreCase(entryModel.getSelectedUSSID())) {
 									cartSoftReservationData.setDeliveryMode(item.getDeliveryMode());
