@@ -34,7 +34,9 @@ import org.apache.commons.lang.BooleanUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.SiteMapUpdateModeEnum;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCategoryDao;
 import com.tisl.mpl.marketplacecommerceservices.service.CustomMediaService;
 import com.tisl.mpl.sitemap.generator.impl.MplCustomPageSiteMapGenerator;
@@ -90,6 +92,8 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 					final List<CategoryModel> categoryList = getMplCategoryDao().getLowestPrimaryCategories();
 					for (final CategoryModel categoryModel : categoryList)
 					{
+						final int count = 4;
+						final CategoryModel l2Cat = findCategoryLevel(categoryModel, count);
 						final List models = categoryModel.getProducts();
 						if (CollectionUtils.isNotEmpty(models))
 						{
@@ -101,13 +105,13 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 								for (int modelIndex = 0; modelIndex < modelsList.size(); modelIndex++)
 								{
 									generateSiteMapFiles(siteMapFiles, contentSite, generator, siteMapConfig, modelsList.get(modelIndex),
-											pageType, Integer.valueOf(modelIndex), categoryModel.getName());
+											pageType, Integer.valueOf(modelIndex), l2Cat.getName());
 								}
 							}
 							else
 							{
 								generateSiteMapFiles(siteMapFiles, contentSite, generator, siteMapConfig, models, pageType, null,
-										categoryModel.getName());
+										l2Cat.getName());
 							}
 						}
 					}
@@ -165,6 +169,49 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 
 
 		return new PerformResult(CronJobResult.SUCCESS, CronJobStatus.FINISHED);
+	}
+
+
+	/**
+	 * finding a category level corresponding to a category id
+	 *
+	 * @param categoryId
+	 * @param count
+	 * @return count
+	 */
+	private CategoryModel findCategoryLevel(final CategoryModel categoryId, int count)
+	{
+
+		final int finalCount = 2;
+		CategoryModel cat = categoryId;
+		try
+		{
+			if (count == 1)
+			{
+				return cat;
+			}
+			else
+			{
+				for (final CategoryModel superCategory : categoryId.getSupercategories())
+				{
+					count--;
+					if (count == finalCount)
+					{
+						break;
+					}
+					else
+					{
+						cat = superCategory;
+						return findCategoryLevel(superCategory, count);
+					}
+				}
+			}
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return cat;
 	}
 
 
@@ -294,6 +341,8 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 	{
 		this.mplCustomPageSiteMapGenerator = mplCustomPageSiteMapGenerator;
 	}
+
+
 
 
 
