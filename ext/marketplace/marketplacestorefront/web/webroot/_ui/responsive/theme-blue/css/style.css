@@ -57593,7 +57593,7 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 }
 .Manufacturer.Temp03 ul li{
 	margin-bottom: 1px;
-    background: #fff;	/* TISQAUAT-694 */
+    background: #f5f5f5;	/* TISQAUAT-694 revert*/
     float: left;
 }
 .Manufacturer.Temp03 .media-content{
@@ -58297,7 +58297,7 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 }
 .temp-six .Padd .first-content {
     margin: 0 0 40px 0;
-    background: #fff;	/* TISQAUAT-695 */
+    background: #f5f5f5;	/* TISQAUAT-695 revert*/
     overflow: hidden;
     width: 100%;
 }
