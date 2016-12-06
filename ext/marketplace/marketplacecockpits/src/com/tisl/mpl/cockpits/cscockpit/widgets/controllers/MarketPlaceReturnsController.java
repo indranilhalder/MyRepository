@@ -63,6 +63,6 @@ public interface MarketPlaceReturnsController extends ReturnsController {
 	String getReturnFulfillModeByP1(ProductModel productModel);
 
 	public void saveCODReturnsBankDetails(CODSelfShipData codData);
-
+	public CODSelfShipData getCustomerBankDetailsByCustomerId(String customerId);
 }
 

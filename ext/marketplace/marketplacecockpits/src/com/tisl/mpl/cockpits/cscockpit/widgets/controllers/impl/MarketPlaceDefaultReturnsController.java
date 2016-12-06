@@ -1,5 +1,6 @@
 package com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,7 +16,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Session;
-import org.zkoss.zul.Checkbox;
 
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.utilities.CodeMasterUtility;
@@ -23,6 +23,7 @@ import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceReturnsCon
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.TypeofReturn;
 import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.CODSelfShipData;
 import com.tisl.mpl.data.CODSelfShipResponseData;
 import com.tisl.mpl.data.RTSAndRSSReturnInfoRequestData;
@@ -71,6 +72,8 @@ import de.hybris.platform.cscockpit.utils.SafeUnbox;
 import de.hybris.platform.cscockpit.widgets.controllers.ReturnsController;
 import de.hybris.platform.cscockpit.widgets.controllers.impl.DefaultReturnsController;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
+import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
+import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.returns.OrderReturnException;
 import de.hybris.platform.returns.model.ReplacementEntryModel;
 import de.hybris.platform.returns.model.ReplacementOrderModel;
@@ -121,6 +124,8 @@ public class MarketPlaceDefaultReturnsController extends
 	private Populator<AbstractOrderEntryModel, OrderEntryData> orderEntryPopulator;
 	@Autowired
 	private Populator<AddressData, ReturnItemAddressData> returnItemAddressDatapopulator;
+	@Autowired
+	private DateUtilHelper dateUtilHelper;
 
 	private static final String OMS_BYPASS_KEY = "cscockpit.oms.serviceability.check.bypass";
 
@@ -793,16 +798,47 @@ public class MarketPlaceDefaultReturnsController extends
 	public CODSelfShipResponseData getCodPaymentInfoToFICO(
 			CODSelfShipData codSelfShipData,
 			List<AbstractOrderEntryModel> returnEntry) {
-
 		OrderModel subOrder = (OrderModel) returnEntry.get(0).getOrder();
 		String orderCode = subOrder.getParentReference().getCode();
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+		codSelfShipData.setTransactionType(MarketplaceCockpitsConstants.RETURN_TYPE);
+		codSelfShipData.setTransactionDate(dateUtilHelper.convertDateWithFormat(formatter.format(subOrder.getCreationtime())));
+		codSelfShipData.setOrderDate(dateUtilHelper.convertDateWithFormat(formatter.format(subOrder.getCreationtime())));
+		String paymentMode = getpaymentmode(subOrder);
+		if(null != paymentMode && paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.COD)) {
+			codSelfShipData.setOrderTag(MarketplacecommerceservicesConstants.ORDERTAG_TYPE_POSTPAID);
+		}
+		else {
+			codSelfShipData.setOrderTag(MarketplacecommerceservicesConstants.ORDERTAG_TYPE_POSTPAID);
+		}
+		codSelfShipData.setCustomerNumber(subOrder.getUser().getUid());
 		for (AbstractOrderEntryModel entry : returnEntry) {
 			codSelfShipData.setOrderNo(orderCode);
 			codSelfShipData.setTransactionID(entry.getTransactionID());
+			if(null != entry.getNetAmountAfterAllDisc()) {
+				codSelfShipData.setAmount(entry.getNetAmountAfterAllDisc().toString());
+			}
 			cancelReturnFacade.codPaymentInfoToFICO(codSelfShipData);
 		}
-
 		return null;
+	}
+
+	/**
+	 *  To get payment mode 
+	 * @param subOrder
+	 * @return
+	 */
+	private String getpaymentmode(OrderModel subOrder) {
+		String paymentMode = null;
+		if(null !=subOrder && null != subOrder.getPaymentTransactions() && null != subOrder.getPaymentTransactions().get(0)) {
+			List<PaymentTransactionEntryModel> paymenttransactionEntryModel = subOrder.getPaymentTransactions().get(0).getEntries();
+			if(null !=paymenttransactionEntryModel)
+			{
+				if(paymenttransactionEntryModel.size() >=1 && null != paymenttransactionEntryModel.get(0).getPaymentMode())
+				paymentMode = paymenttransactionEntryModel.get(0).getPaymentMode().getMode();
+			}
+		}
+		return paymentMode;
 	}
 
 	@Override
@@ -840,7 +876,7 @@ public class MarketPlaceDefaultReturnsController extends
 									.getReturnFulfillMode());
 							returnFulfillmentType = richAttribute
 									.getReturnFulfillMode()
-									.getCode();
+									.getCode().toUpperCase();
 						}
 					}
 				}
@@ -869,7 +905,7 @@ public class MarketPlaceDefaultReturnsController extends
 									.getReturnFulfillModeByP1());
 							returnFulfillmentType = richAttribute
 									.getReturnFulfillModeByP1()
-									.getCode();
+									.getCode().toUpperCase();
 						}
 					}
 				}
@@ -879,16 +915,31 @@ public class MarketPlaceDefaultReturnsController extends
 		}
 		return returnFulfillmentType;
 	}
-
+/**
+ * this method is used to save/update the bank Details for COD order while returning item
+ */
 	@Override
 	public void saveCODReturnsBankDetails(CODSelfShipData codData) {
 		try {
 			//saving bank details failed payment details in commerce 
-			cancelReturnFacade.saveCODReturnsBankDetails(codData);	
+			cancelReturnFacade.insertUpdateCustomerBankDetails(codData);	
 			LOG.debug("Failed to post COD return paymnet details to FICO Order No:"+codData.getOrderNo());
 		} catch(Exception e) {
 			LOG.error("Exception while saving cod bank Details"+e.getMessage());
 		}
+	}
+
+	/**
+	 * This method is used to get the bankDetails by customer Id
+	 */
+	@Override
+	public CODSelfShipData getCustomerBankDetailsByCustomerId(String customerId) {
+		try {
+			return 	cancelReturnFacade.getCustomerBankDetailsByCustomerId(customerId);
+		}catch(Exception e) {
+			LOG.error("Exception while getting bank details for customer "+customerId+""+e.getMessage());
+		}
+		return null;
 	}
 		
 }

@@ -380,8 +380,8 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 		if (isChangeDeliveryAddress) {
 			try {
 				TypedObject orderModel = getOrder();
-				OrderModel order1 = (OrderModel) orderModel.getObject();
-				AddressModel deliveryAddress = order1.getDeliveryAddress();
+				OrderModel order = (OrderModel) orderModel.getObject();
+				AddressModel deliveryAddress = order.getDeliveryAddress();
 
 				if (null != deliveryAddress) {
 					PincodeData pincodeData = mplDeliveryAddressController
@@ -417,8 +417,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 					List<Listitem> items = stateFieldListBox.getItems();
 					for (Listitem item : items) {
 						String stateName = (String) item.getLabel();
-						if (stateName.equalsIgnoreCase(pincodeData.getState()
-								.getName())) {
+						if (stateName.equalsIgnoreCase(deliveryAddress.getState())) {
 							stateFieldListBox.setSelectedItem(item);
 							stateFieldListBox.setDisabled(true);
 						}

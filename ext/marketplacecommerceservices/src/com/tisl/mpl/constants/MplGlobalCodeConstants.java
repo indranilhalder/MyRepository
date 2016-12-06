@@ -75,5 +75,11 @@ public class MplGlobalCodeConstants
 		GLOBALCONSTANTSMAP.put("NETBANKING", "NB");
 		GLOBALCONSTANTSMAP.put("COD", "CD");
 		GLOBALCONSTANTSMAP.put("WALLET", "CB");
+		
+		// payment Mode
+		GLOBALCONSTANTSMAP.put("NEFT", "N");
+		GLOBALCONSTANTSMAP.put("RTGS", "R");
+		GLOBALCONSTANTSMAP.put("CHEQUE", "C");
+		GLOBALCONSTANTSMAP.put("Bank Transfer", "B");
 	}
 }
