@@ -1804,6 +1804,20 @@
 					<!-- For TPR-1620 : Bulk Load in Exclude Seller ends -->
 			</attributes>
 		</itemtype>
+		 <!-- TISUATNOV-100-->
+		 <itemtype code="EtailLimitedStockRestriction"
+			extends="AbstractPromotionRestriction" jaloclass="com.tisl.mpl.jalo.EtailLimitedStockRestriction"
+			autocreate="true" generate="true">
+			<attributes>
+			   <attribute autocreate="true" qualifier="maxStock"
+					type="java.lang.Integer">
+					<defaultvalue>Double.valueOf(0)</defaultvalue>
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+                          </attributes>
+             </itemtype> 
        <!-- TPR-970 changes starts -->
 		<itemtype code="EtailPincodeRestriction"
 			extends="AbstractPromotionRestriction" jaloclass="com.tisl.mpl.jalo.MplPincodeSpecificRestriction"
