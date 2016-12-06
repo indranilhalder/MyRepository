@@ -152,10 +152,13 @@ import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.EMIBankModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.CODSelfShipData;
 import com.tisl.mpl.data.EditWishlistNameData;
 import com.tisl.mpl.data.FriendsInviteData;
 import com.tisl.mpl.data.NotificationData;
+import com.tisl.mpl.data.RTSAndRSSReturnInfoRequestData;
+import com.tisl.mpl.data.ReturnInfoData;
 import com.tisl.mpl.data.ReturnLogisticsResponseData;
 import com.tisl.mpl.data.ReturnLogisticsResponseDetails;
 import com.tisl.mpl.data.WishlistData;
@@ -182,6 +185,7 @@ import com.tisl.mpl.facades.account.reviews.GigyaFacade;
 import com.tisl.mpl.facades.data.MplFavBrandCategoryData;
 import com.tisl.mpl.facades.data.MplFavBrandCategoryWsDTO;
 import com.tisl.mpl.facades.data.MplPreferenceData;
+import com.tisl.mpl.facades.data.ReturnItemAddressData;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.populators.CustomAddressReversePopulator;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
@@ -211,6 +215,7 @@ import com.tisl.mpl.service.MplMobileUserService;
 import com.tisl.mpl.service.impl.MplProductWebServiceImpl;
 import com.tisl.mpl.user.data.AddressDataList;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.util.MplTimeconverUtility;
 import com.tisl.mpl.validation.data.AddressValidationData;
 import com.tisl.mpl.webservice.businessvalidator.DefaultCommonAsciiValidator;
 import com.tisl.mpl.wsdto.CommonCouponsDTO;
@@ -236,6 +241,7 @@ import com.tisl.mpl.wsdto.OrderCreateInJusPayWsDto;
 import com.tisl.mpl.wsdto.ReturnDetailsWsDTO;
 import com.tisl.mpl.wsdto.ReturnLogisticsResponseDetailsWsDTO;
 import com.tisl.mpl.wsdto.ReturnReasonDetailsWsDTO;
+import com.tisl.mpl.wsdto.ReturnRequestDTO;
 import com.tisl.mpl.wsdto.UpdateCustomerDetailDto;
 import com.tisl.mpl.wsdto.UserResultWsDto;
 import com.tisl.mpl.wsdto.ValidateOtpWsDto;
@@ -412,7 +418,9 @@ public class UsersController extends BaseCommerceController
 	
 	@Resource(name = "getOrderDetailsFacade")
 	private GetOrderDetailsFacade getOrderDetailsFacade;
-
+	
+	@Autowired
+	private DateUtilHelper dateUtilHelper;
 
 	//@Autowired
 	//private MplPaymentFacadeImpl mplPaymentFacadeImpl;
@@ -6773,6 +6781,230 @@ public class UsersController extends BaseCommerceController
 		}
 		return returnDeatails;
 	}
+	
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "/{emailId}/returnInitiate", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public MplUserResultWsDto initiateRefund(@RequestBody ReturnRequestDTO returnData) throws Exception
+	{
+		boolean cancellationStatus = false;
+		final String orderCode = returnData.getOrderCode();
+		final String transactionId = returnData.getTransactionId();
+		final String pinCode = returnData.getPincode();
+		ReturnInfoData returnInfoData = new ReturnInfoData();
+		final MplUserResultWsDto output = new MplUserResultWsDto();
+		final ReturnItemAddressData returnAddrData = new ReturnItemAddressData();
+		try
+		{
+			final CustomerData customerData = customerFacade.getCurrentCustomer();
+			final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+			OrderEntryData subOrderEntry = new OrderEntryData();
+			final List<OrderEntryData> subOrderEntries = subOrderDetails.getEntries();
+			
+			for (final OrderEntryData entry : subOrderEntries)
+			{
+				if (entry.getTransactionId().equalsIgnoreCase(transactionId))
+				{
+					subOrderEntry = entry;
+					break;
+				}
+			}
+			List<String> times = MplTimeconverUtility.splitTime(returnData.getScheduleReturnTime());
+			String timeSlotFrom=null;
+			String timeSlotto=null;
+			for (String time : times)
+			{
+				if(null==timeSlotFrom)
+				{
+					if (LOG.isDebugEnabled())
+					{
+						LOG.debug("Return Pickup Slot From Time :"+timeSlotFrom+" for the TransactionId :"+ returnData.getTransactionId());
+					}
+				timeSlotFrom=time;
+				}
+				else
+				{
+					if (LOG.isDebugEnabled())
+					{
+						LOG.debug("Return Pickup Slot From Time :"+timeSlotto+" for the TransactionId :"+ returnData.getTransactionId());
+					}
+				 timeSlotto=time;
+				}
+				
+			}
+   		//for schedule pickup
+   		if(StringUtils.isNotBlank(returnData.getReturnMethod()) &&  MarketplacecommerceservicesConstants.RETURN_SCHEDULE.equalsIgnoreCase(returnData.getReturnMethod()))
+   		{
+   			boolean returnLogisticsCheck = true;			
+   			String returnFulfillmentType =null;
+   			final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade.checkReturnLogistics(subOrderDetails,
+   					pinCode);
+   			for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
+   			{
+   				if(response.getTransactionId().equalsIgnoreCase(returnData.getTransactionId()))
+   				{
+   				 if (response.getIsReturnLogisticsAvailable().equalsIgnoreCase("N"))
+   				   {
+   					 	returnLogisticsCheck = false;
+   					 	output.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+   				   }
+   				   else if (response.getIsReturnLogisticsAvailable().equalsIgnoreCase("Y"))
+   				   {
+   				    returnFulfillmentType = response.getReturnFulfillmentType();
+   				   }
+   				}
+   			}
+   			if (!returnLogisticsCheck)
+   			{	
+   				return output;
+   			}	
+			String returnPickupDate = returnData.getScheduleReturnDate();
+			returnInfoData.setReasonCode(returnData.getReturnReasonCode());
+			if(returnData.getIsCODorder().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
+			{
+				returnInfoData.setRefundType(MarketplacecommerceservicesConstants.N);
+			}
+			else
+			{
+				returnInfoData.setRefundType(MarketplacecommerceservicesConstants.S);
+			}
+			returnInfoData.setReturnPickupDate(dateUtilHelper.convertDateWithFormat(returnPickupDate));
+			returnInfoData.setTicketTypeCode(MarketplacecommerceservicesConstants.RETURN_TYPE);
+			returnInfoData.setTimeSlotFrom(dateUtilHelper.convertTo24HourWithSecodnds(timeSlotFrom));
+			returnInfoData.setTimeSlotTo(dateUtilHelper.convertTo24HourWithSecodnds(timeSlotto));
+			returnInfoData.setUssid(returnData.getUssid());
+			returnInfoData.setReturnMethod(returnData.getReturnMethod());
+			returnInfoData.setReturnFulfillmentMode(returnFulfillmentType);
+			
+			returnAddrData.setAddressLane1(returnData.getAddrLine1());
+			returnAddrData.setAddressLane2(returnData.getAddrLine2());
+			returnAddrData.setLandmark(returnData.getLandMark());
+			returnAddrData.setCity(returnData.getCity());
+			returnAddrData.setCountry(returnData.getCountry());
+			returnAddrData.setFirstName(returnData.getFirstName());
+			returnAddrData.setLastName(returnData.getLastName());
+			returnAddrData.setMobileNo(returnData.getPhoneNumber());
+			returnAddrData.setState(returnData.getState());
+			returnAddrData.setPincode(returnData.getPincode());
+			if (returnData.getRefundType().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_TYPE))
+			{
+				cancellationStatus = cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry,returnInfoData, customerData, SalesApplication.MOBILE, returnAddrData);
+			}
+			if(!cancellationStatus)
+			{
+				output.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+				return output;
+			}
+		}
+			
+		//for quick drop
+		if(returnData.getReturnMethod().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_METHOD_QUICKDROP))
+		{
+   		RTSAndRSSReturnInfoRequestData infoRequestData=new RTSAndRSSReturnInfoRequestData();
+   		List<String> stores=	returnData.getStoreIds();
+   		if(null!= subOrderDetails.getPurchaseOrderNumber())
+   		{
+   			infoRequestData.setOrderId(subOrderDetails.getPurchaseOrderNumber());
+   		}
+   		else
+   		{
+   			infoRequestData.setOrderId(returnData.getOrderCode());
+   		}
+   		infoRequestData.setRTSStore(stores);
+   		infoRequestData.setTransactionId(transactionId);
+   		infoRequestData.setReturnType(MarketplacecommerceservicesConstants.RETURN_TYPE_RTS);
+   		//return info call to OMS 
+   		cancelReturnFacade.retrunInfoCallToOMS(infoRequestData);
+		}
+		
+		if(returnData.getIsCODorder().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
+		{
+   		CODSelfShipData selfShipData=new CODSelfShipData();
+   		selfShipData.setCustomerNumber(customerData.getUid());
+   		selfShipData.setTitle(returnData.getTitle());
+   		selfShipData.setName(returnData.getAccountHolderName());
+   		selfShipData.setBankAccount(returnData.getAccountNumber());
+   		selfShipData.setBankName(returnData.getBankName());
+   		selfShipData.setBankKey(returnData.getIFSCCode());
+   		selfShipData.setOrderNo(returnData.getOrderCode());
+   		selfShipData.setTransactionID(returnData.getTransactionId());
+   		selfShipData.setPaymentMode(returnData.getRefundMode());
+		
+   		if(null != returnData.getIsCODorder() &&  returnData.getIsCODorder().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y) )
+   		{
+   			//set ordertag POSTPAIDRRF for COD orders
+   		selfShipData.setOrderTag(MarketplacecommerceservicesConstants.ORDERTAG_TYPE_POSTPAID);
+   		}
+   		else 
+   		{
+   			//set ordertag POSTPAIDRRF for PREPAID orders
+   			selfShipData.setOrderTag(MarketplacecommerceservicesConstants.ORDERTAG_TYPE_PREPAID);
+   		}
+			try
+			{
+				//inser or update Customer Bank Details
+				cancelReturnFacade.insertUpdateCustomerBankDetails(selfShipData);
+			}
+			catch (EtailNonBusinessExceptions e)
+			{
+				LOG.error("Exception Occured during saving Customer BankDetails for COD order : " + orderCode
+						+ " Exception cause :" + e);
+			}
+			catch (Exception e)
+			{
+				LOG.error("Exception Occured during saving Customer BankDetails for COD order : " + orderCode
+						+ " Exception cause :" + e);
+			}
+   	}
+		//for self Courier
+		if(returnData.getReturnMethod().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_SELF))
+		{
+			LOG.debug(" returnForm>>>>>>>>>>>>>>>>>>>>>>>>>>>>: " +returnData.toString());
+			ReturnInfoData returnInfoDataObj = new ReturnInfoData(); 
+			returnInfoDataObj.setTicketTypeCode(MarketplacecommerceservicesConstants.RETURN_TYPE);
+			returnInfoDataObj.setReasonCode(returnData.getReturnReasonCode());
+			returnInfoDataObj.setUssid(returnData.getUssid());
+			returnInfoDataObj.setReturnMethod(returnData.getReturnMethod());
+			boolean cancellationStatusForSelfShip = cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry,returnInfoDataObj, customerData, SalesApplication.MOBILE, returnAddrData);
+			if (!cancellationStatusForSelfShip)
+			{
+				output.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+			else
+			{
+				output.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+			return output;
+		}
+	}
+	catch (final EtailBusinessExceptions e)
+	{
+		ExceptionUtil.etailBusinessExceptionHandler(e, null);
+		if (null != e.getErrorMessage())
+		{
+			output.setError(e.getErrorMessage());
+		}
+		if (null != e.getErrorCode())
+		{
+			output.setErrorCode(e.getErrorCode());
+		}
+		output.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		return output;
+	}
+	catch (final Exception e)
+	{
+		ExceptionUtil.getCustomizedExceptionTrace(e);
+		if (null != e.getMessage())
+		{
+			output.setError(e.getMessage());
+		}
+		output.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+		output.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		return output;
+	}
+	return output;
+}
 	
 	
 
