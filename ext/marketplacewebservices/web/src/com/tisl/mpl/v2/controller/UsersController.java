@@ -6930,11 +6930,10 @@ public class UsersController extends BaseCommerceController
    		selfShipData.setOrderNo(returnData.getOrderCode());
    		selfShipData.setTransactionID(returnData.getTransactionId());
    		selfShipData.setPaymentMode(returnData.getRefundMode());
-		
    		if(null != returnData.getIsCODorder() &&  returnData.getIsCODorder().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y) )
    		{
    			//set ordertag POSTPAIDRRF for COD orders
-   		selfShipData.setOrderTag(MarketplacecommerceservicesConstants.ORDERTAG_TYPE_POSTPAID);
+   			selfShipData.setOrderTag(MarketplacecommerceservicesConstants.ORDERTAG_TYPE_POSTPAID);
    		}
    		else 
    		{
@@ -6952,7 +6951,7 @@ public class UsersController extends BaseCommerceController
 						+ " Exception cause :" + e);
 			}
 			catch (Exception e)
-			{
+			{e
 				LOG.error("Exception Occured during saving Customer BankDetails for COD order : " + orderCode
 						+ " Exception cause :" + e);
 			}
