@@ -39,9 +39,11 @@ import bsh.ParseException;
 
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceReturnsController;
+import com.tisl.mpl.constants.MplGlobalCodeConstants;
 import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.TypeofReturn;
 import com.tisl.mpl.core.enums.RefundMode;
 import com.tisl.mpl.data.CODSelfShipData;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.data.RescheduleData;
 import com.tisl.mpl.wsdto.ReturnLogistics;
@@ -70,7 +72,7 @@ import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
-		ReturnRequestCreateWidgetRenderer {
+ReturnRequestCreateWidgetRenderer {
 	private static final Logger LOG = Logger.getLogger(MarketplaceReturnRequestCreditDetailsWidgetRenderer.class);
 	@Autowired
 	private PopupWidgetHelper popupWidgetHelper;
@@ -167,24 +169,36 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
 			final List<AbstractOrderEntryModel> entries, 
 			final OrderModel orderModel) {
-		
-		//codReturnPaymentModel codBankDetails = modelService.create(codReturnPaymentModel.Class);
-		
-		
-		 final Div bankDetailsDiv = new Div();	
-		 // Account Number 
-		 Div accNoDiv = new Div();
-		 accNoDiv.setParent(bankDetailsDiv);
-		 accNoDiv.setClass(TEXTBOX);
-		 Label accNo = new Label(LabelUtils.getLabel(widget, "accNo"));
-		                   accNo.setClass("AcntNumberLabel");
-		 accNo.setParent(accNoDiv);
-		 final Textbox accNoTextbox = createTextbox(accNoDiv);      
-		 accNoTextbox.setParent(accNoDiv);
-		 accNoTextbox.setClass("accHolderNameTextbox");
-		 accNoTextbox.setMaxlength(24);
-		 String errorMsgAcntNumber = LabelUtils.getLabel(widget,
-					"error.msg.acntNumber", new Object[0]);
+
+		CODSelfShipData codSelfShipData = null;
+		try{
+			if(null!=orderModel.getUser()){
+				codSelfShipData = ((MarketPlaceReturnsController)widget.getWidgetController()).getCustomerBankDetailsByCustomerId(orderModel.getUser().getUid());
+			}
+		}
+		catch(EtailNonBusinessExceptions e)
+		{
+			LOG.error("Exception occured for fecting CUstomer Bank details for customer ID :"+orderModel.getUser().getUid()+" Actual Stack trace "+e);
+		}
+
+		final Div bankDetailsDiv = new Div();	
+		// Account Number 
+		Div accNoDiv = new Div();
+		accNoDiv.setParent(bankDetailsDiv);
+		accNoDiv.setClass(TEXTBOX);
+		Label accNo = new Label(LabelUtils.getLabel(widget, "accNo"));
+		accNo.setClass("AcntNumberLabel");
+		accNo.setParent(accNoDiv);
+		final Textbox accNoTextbox = createTextbox(accNoDiv);      
+		accNoTextbox.setParent(accNoDiv);
+		if(null != codSelfShipData && null !=codSelfShipData.getBankAccount()) {
+			accNoTextbox.setValue(codSelfShipData.getBankAccount());
+		}
+		accNoTextbox.setClass("accHolderNameTextbox");
+		accNoTextbox.setMaxlength(24);
+		accNoTextbox.setType("password");
+		String errorMsgAcntNumber = LabelUtils.getLabel(widget,
+				"error.msg.acntNumber", new Object[0]);
 		accNoTextbox.setConstraint("/[0-9][0-9]*$/:"+errorMsgAcntNumber);
 		// Re - Enter Account Number 
 		Label re_accNo = new Label(LabelUtils.getLabel(widget, "re_accNo"));
@@ -192,7 +206,9 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 		re_accNo.setClass("reEntrAcntnumber");
 		final Textbox re_accNoTextBox = createTextbox(accNoDiv);
 		re_accNoTextBox.setParent(accNoDiv);
-		re_accNoTextBox.setType("password");
+		if(null != codSelfShipData && null !=codSelfShipData.getBankAccount()) {
+			re_accNoTextBox.setValue(codSelfShipData.getBankAccount());
+		}
 		re_accNoTextBox.setClass("accHolderNameTextbox");
 		re_accNoTextBox.setMaxlength(24);
 		 String errorMsgReEnterAcntNumber = LabelUtils.getLabel(widget,
@@ -210,6 +226,9 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 		final Textbox accHolderNameTextbox = createTextbox(acntholderDiv);
 		accHolderNameTextbox.setParent(acntholderDiv);
 		accHolderNameTextbox.setMaxlength(30);
+		if(null != codSelfShipData && null !=codSelfShipData.getName()) {
+			accHolderNameTextbox.setValue(codSelfShipData.getName());
+		}
 		accHolderNameTextbox.setClass("accHolderNameTextbox");
 		String errorMsgName = LabelUtils.getLabel(widget,
 				"error.msg.name", new Object[0]);
@@ -227,11 +246,10 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 		refundModeListbox.setMold("select");
 		final List<String> refundModeList = new ArrayList<String>();
 		refundModeList.add(RefundMode.NEFT.getCode());
-		refundModeList.add(RefundMode.RTGS.getCode());
-		refundModeList.add(RefundMode.IMPS.getCode());
 		for (String modes : refundModeList) {
 			final Listitem refundModeItems = new Listitem(modes);
 			refundModeItems.setParent(refundModeListbox);
+			refundModeItems.setValue(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(refundModeItems.getLabel()));
 			refundModeItems.setSelected(true);
 		}
 		
@@ -251,7 +269,14 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 		for (String title : titleList) {
 			final Listitem titleItem = new Listitem(title);
 			titleItem.setParent(titleListBox);
-			titleItem.setSelected(true);	
+			if(null != codSelfShipData && null !=codSelfShipData.getTitle()) {
+				if(title.equalsIgnoreCase(codSelfShipData.getTitle())) {
+					titleItem.setSelected(true);
+				}
+			}
+		}
+		if(null == titleListBox.getSelectedItem() ) {
+			titleListBox.setSelectedIndex(0);
 		}
 		
 		// Bank Name 
@@ -264,6 +289,9 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 		final Textbox bankNameTextbox = createTextbox(banNameDiv);
 		bankNameTextbox.setParent(banNameDiv);
 		bankNameTextbox.setMaxlength(30);
+		if(null != codSelfShipData && null !=codSelfShipData.getBankName()) {
+			bankNameTextbox.setValue(codSelfShipData.getBankName());
+		}
 		bankNameTextbox.setClass("accHolderNameTextbox");
 		String errorMsgBankName = LabelUtils.getLabel(widget,
 				"error.msg.bankName", new Object[0]);
@@ -276,6 +304,9 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 		final Textbox ifscTextbox = createTextbox(banNameDiv);
 		ifscTextbox.setMaxlength(11);
 		ifscTextbox.setParent(banNameDiv);
+		if(null != codSelfShipData && null !=codSelfShipData.getBankKey()) {
+			ifscTextbox.setValue(codSelfShipData.getBankKey());
+		}
 		ifscTextbox.setClass("accHolderNameTextbox");	
 		final Div codButtonDiv = new Div();
 		codButtonDiv.setParent(bankDetailsDiv);
@@ -1229,7 +1260,7 @@ public class MarketplaceReturnRequestCreditDetailsWidgetRenderer extends
 			CODSelfShipData codData = new CODSelfShipData();
 			codData.setOrderRefNo(returnEntry.get(0).getOrder().getCode());
 			//codData.set
-			//codData.setTitle((String) titleListBox.getSelectedItem().getLabel());
+			codData.setTitle((String) titleListBox.getSelectedItem().getLabel());
 			codData.setName(accHolderNameTextbox.getValue().trim());
 			codData.setBankAccount(accNoTextbox.getValue().trim());
 			codData.setBankName(bankNameTextbox.getValue().trim());
