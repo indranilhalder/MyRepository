@@ -6951,7 +6951,7 @@ public class UsersController extends BaseCommerceController
 						+ " Exception cause :" + e);
 			}
 			catch (Exception e)
-			{e
+			{
 				LOG.error("Exception Occured during saving Customer BankDetails for COD order : " + orderCode
 						+ " Exception cause :" + e);
 			}
