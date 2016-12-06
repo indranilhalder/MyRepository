@@ -1504,19 +1504,60 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					{
 						final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
 								entry.getSelectedUSSID());
+						List<RichAttributeModel> richAttributeModel = null;
 						//List<RichAttributeModel> richAttributeModel = null;
 						//TISPT-400
-						if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
+						String fulfillmentType = null;
+						if (null != entry.getFulfillmentType())
 						{
-							final List<RichAttributeModel> richAttributeModel = (List<RichAttributeModel>) sellerInfoModel
-									.getRichAttribute();
+							fulfillmentType = entry.getFulfillmentType();
+						}
+						else if (null != entry.getFulfillmentTypeP1())
+						{
+							fulfillmentType = entry.getFulfillmentTypeP1();
+						}
+						else if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
+						{
+							richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+
 							if (richAttributeModel != null && richAttributeModel.get(0) != null
 									&& richAttributeModel.get(0).getDeliveryFulfillModes() != null)
 							{
-								final String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
-								if (DeliveryFulfillModesEnum.TSHIP.toString().equalsIgnoreCase(fulfillmentType))
+								fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
+								if (DeliveryFulfillModesEnum.BOTH.toString().equalsIgnoreCase(fulfillmentType))
 								{
-									//TPR-627, TPR-622 Separate method the check COD Eligibility to avoid redundant code
+									if (null != richAttributeModel.get(0).getDeliveryFulfillModeByP1()
+											&& null != richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode())
+									{
+										fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase();
+									}
+								}
+							}
+						}
+						if (null != richAttributeModel)
+						{
+							if (DeliveryFulfillModesEnum.TSHIP.toString().equalsIgnoreCase(fulfillmentType))
+							{
+								//TPR-627, TPR-622 Separate method the check COD Eligibility to avoid redundant code
+								final boolean returnFlag = paymentModecheckForCOD(richAttributeModel, cart, model);
+								if (!returnFlag)
+								{
+									break;
+								}
+							}
+							else
+							{
+								//TPR-627, TPR-622
+								//Changes to TRUE & FALSE
+								final String isSshipCodEligble = (richAttributeModel.get(0).getIsSshipCodEligible() != null ? richAttributeModel
+										.get(0).getIsSshipCodEligible().getCode()
+										: MarketplacecheckoutaddonConstants.FALSE);
+								// isSshipCodEligble to enable disable COD Eligible for SSHIP Products
+								//Changes to TRUE & FALSE
+								if (StringUtils.isNotEmpty(isSshipCodEligble)
+										&& isSshipCodEligble.equalsIgnoreCase(MarketplacecheckoutaddonConstants.TRUE))
+								{
+									//TPR-627,TPR-622 Separate method the check COD Eligibility to avoid redundant code
 									final boolean returnFlag = paymentModecheckForCOD(richAttributeModel, cart, model);
 									if (!returnFlag)
 									{
@@ -1525,31 +1566,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								}
 								else
 								{
-									//TPR-627, TPR-622
-									//Changes to TRUE & FALSE
-									final String isSshipCodEligble = (richAttributeModel.get(0).getIsSshipCodEligible() != null ? richAttributeModel
-											.get(0).getIsSshipCodEligible().getCode()
-											: MarketplacecheckoutaddonConstants.FALSE);
-									// isSshipCodEligble to enable disable COD Eligible for SSHIP Products
-									//Changes to TRUE & FALSE
-									if (StringUtils.isNotEmpty(isSshipCodEligble)
-											&& isSshipCodEligble.equalsIgnoreCase(MarketplacecheckoutaddonConstants.TRUE))
-									{
-										//TPR-627,TPR-622 Separate method the check COD Eligibility to avoid redundant code
-										final boolean returnFlag = paymentModecheckForCOD(richAttributeModel, cart, model);
-										if (!returnFlag)
-										{
-											break;
-										}
-									}
-									else
-									{
-										//error message for Fulfillment will go here
-										model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE,
-												CodCheckMessage.NOT_TSHIP.toString());
-										break;
-									}
-
+									//error message for Fulfillment will go here
+									model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.NOT_TSHIP.toString());
+									break;
 								}
 							}
 						}
