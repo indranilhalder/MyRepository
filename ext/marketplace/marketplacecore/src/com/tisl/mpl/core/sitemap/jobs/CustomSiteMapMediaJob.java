@@ -31,6 +31,7 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -94,6 +95,12 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 					{
 						final int count = 4;
 						final CategoryModel l2Cat = findCategoryLevel(categoryModel, count);
+						final CategoryModel l1Cat = findL2CategoryLevel(categoryModel, count);
+						String categoryName = l2Cat.getName();
+						if (StringUtils.isNotEmpty(l1Cat.getName()))
+						{
+							categoryName = l1Cat.getName() + " " + l2Cat.getName();
+						}
 						final List models = categoryModel.getProducts();
 						if (CollectionUtils.isNotEmpty(models))
 						{
@@ -105,13 +112,13 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 								for (int modelIndex = 0; modelIndex < modelsList.size(); modelIndex++)
 								{
 									generateSiteMapFiles(siteMapFiles, contentSite, generator, siteMapConfig, modelsList.get(modelIndex),
-											pageType, Integer.valueOf(modelIndex), l2Cat.getName());
+											pageType, Integer.valueOf(modelIndex), categoryName);
 								}
 							}
 							else
 							{
 								generateSiteMapFiles(siteMapFiles, contentSite, generator, siteMapConfig, models, pageType, null,
-										l2Cat.getName());
+										categoryName);
 							}
 						}
 					}
@@ -171,7 +178,6 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 		return new PerformResult(CronJobResult.SUCCESS, CronJobStatus.FINISHED);
 	}
 
-
 	/**
 	 * finding a category level corresponding to a category id
 	 *
@@ -213,6 +219,42 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 		}
 		return cat;
 	}
+
+	private CategoryModel findL2CategoryLevel(final CategoryModel categoryId, int count)
+	{
+
+		final int finalCount = 1;
+		CategoryModel cat = categoryId;
+		try
+		{
+			if (count == 1)
+			{
+				return cat;
+			}
+			else
+			{
+				for (final CategoryModel superCategory : categoryId.getSupercategories())
+				{
+					count--;
+					if (count == finalCount)
+					{
+						break;
+					}
+					else
+					{
+						cat = superCategory;
+						return findL2CategoryLevel(superCategory, count);
+					}
+				}
+			}
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return cat;
+	}
+
 
 
 	/**
