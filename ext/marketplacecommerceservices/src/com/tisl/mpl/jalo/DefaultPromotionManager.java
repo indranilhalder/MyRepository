@@ -3855,4 +3855,60 @@ public class DefaultPromotionManager extends PromotionsManager
 
 		return isProdShippingPromoAppliedMap;
 	}
+	
+	
+	public Set<String> getValidMapAfterStockLevelRestriction(final Map<String, AbstractOrderEntry> multiSellerValidUSSIDMap,
+			final String code, final List<AbstractPromotionRestriction> restrictionList)
+	{
+		final StringBuilder ussidIds = new StringBuilder();
+		final Set<String> ussidSet = new HashSet<String>();
+		Map<String, Integer> stockCountMap = new HashMap<String, Integer>();
+		final int stockCount = getStockRestrictionVal(restrictionList);
+		for (final Map.Entry<String, AbstractOrderEntry> entry : multiSellerValidUSSIDMap.entrySet())
+		{
+			ussidIds.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + entry.getKey()
+					+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
+			ussidIds.append(",");
+
+		}
+		stockCountMap = stockPromoCheckService.getCumulativeStockMap(ussidIds.toString().substring(0, ussidIds.lastIndexOf(",")),
+				code, true);
+		for (final Map.Entry<String, AbstractOrderEntry> entry : multiSellerValidUSSIDMap.entrySet())
+		{
+			if (null != stockCountMap.get(entry.getKey()) && stockCount - stockCountMap.get(entry.getKey()).intValue() > 0)
+			{
+				ussidSet.add(entry.getKey());
+			}
+			else if (null == stockCountMap.get(entry.getKey()))
+			{
+				ussidSet.add(entry.getKey());
+			}
+			else if (stockCountMap.isEmpty())
+			{
+				ussidSet.add(entry.getKey());
+			}
+			else if (stockCount == 0)
+			{
+				ussidSet.add(entry.getKey());
+			}
+		}
+		return ussidSet;
+	}
+
+	private int getStockRestrictionVal(final List<AbstractPromotionRestriction> restrictionList)
+	{
+		int stockVal = 0;
+		for (final AbstractPromotionRestriction restriction : restrictionList)
+		{
+			if (restriction instanceof EtailLimitedStockRestriction)
+			{
+				if (((EtailLimitedStockRestriction) restriction).getMaxStock() != null)
+				{
+					stockVal = ((EtailLimitedStockRestriction) restriction).getMaxStock().intValue();
+					break;
+				}
+			}
+		}
+		return stockVal;
+	}
 }
