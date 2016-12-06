@@ -246,6 +246,18 @@ function checkPopupDataOrderHistory() {
 			  			$(".pincodeNoError").text("Enter only Numbers");
 			  			validate = false;
 				  	}
+				  	if(!/^[0-9]+$/.test(pincode))
+			        {
+				  		$(".pincodeNoError").show();
+			  			$(".pincodeNoError").text("Enter only Numbers");
+			  			validate = false;
+			        }
+				  	if(!/^[0-9]+$/.test(mobile))
+			        {
+				  		  $(".mobileNumberError").show();
+				          $(".mobileNumberError").text("Enter only Numbers");
+				          validate = false;
+			        }
 				  	if(mobile.length < 9 || mobile.length > 11){
 				    	  $(".mobileNumberError").show();
 				          $(".mobileNumberError").text("Enter correct mobile number");
@@ -275,9 +287,8 @@ function checkPopupDataOrderHistory() {
 								data : data,
 								contentType: "text/application/html",
 								success : function(result){
-									
+								  $('.saveBlockData').prop('disabled', false);
 									if(result=='Pincode not Serviceable'){
-										
 										$("#changeAddressPopup").show();
 										$("#showOTP").hide();
 										$(".wrapBG").show();
@@ -304,6 +315,7 @@ function checkPopupDataOrderHistory() {
 									$(".wrapBG").css("height", height);
 									$(".main_error").show();
 									$(".main_error").text("Internal server error Please try after sometime");
+									$('.saveBlockData').prop('disabled', false);
 								}
 							});
 					}
@@ -344,7 +356,7 @@ $(document).ready(function() {
 var count=0;
 function newOTPGenerate(orderCode){
 	count++;
-	if(count <= 6){
+	if(count <= 10){
 	 $.ajax({
 			type : "GET",
 			url : ACC.config.encodedContextPath + "/my-account/newOTP",
