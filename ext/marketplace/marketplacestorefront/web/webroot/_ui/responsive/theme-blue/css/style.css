@@ -32468,7 +32468,7 @@ background-color: transparent;
     font-size: 12px;
     text-align: center;
     font-weight: bold;
-    margin: 3px 0 50px;
+    margin: 3px 0 40px;
 }
 p.showcase-para {
     width: 70%;
@@ -44755,8 +44755,8 @@ body.page-homepage .showcase .desc-section h2{
     letter-spacing: 1px;
     line-height: 15px;
     text-align: center;
-    margin-bottom: 40px;
-    padding: 50px 0 50px;
+    margin-bottom: 0px;
+    padding: 0px;
 }
 
 @media (max-width: 767px){
