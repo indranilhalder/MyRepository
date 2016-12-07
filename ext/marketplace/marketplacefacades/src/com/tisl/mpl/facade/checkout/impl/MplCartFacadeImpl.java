@@ -87,6 +87,7 @@ import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData;
@@ -153,6 +154,9 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	MplDeliveryAddressFacade mplDeliveryAddressFacade;
 	@Autowired
 	MplConfigFacade mplConfigFacade;
+	
+	 @Autowired
+	 private MplSellerInformationService mplSellerInformationService;
 
 	public MplCommerceCartCalculationStrategy getMplDefaultCommerceCartCalculationStrategy()
 	{
@@ -1039,7 +1043,28 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				{
 					LOG.debug("getOMSPincodeResponseData : Seller information is null or empty for product selected");
 				}
-
+            
+				SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(entryData.getSelectedUssid());
+			
+				List<RichAttributeModel> sellerRichAttributeModel = null;
+			   	int sellerHandlingTime=0;
+			   	String sellerRichAttrForHandlingTime=null;
+					if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
+					{
+						sellerRichAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+						if (sellerRichAttributeModel != null && sellerRichAttributeModel.get(0).getSellerHandlingTime() != null)
+						{
+							sellerRichAttrForHandlingTime = sellerRichAttributeModel.get(0).getSellerHandlingTime().toString();
+							if( StringUtils.isNotEmpty(sellerRichAttrForHandlingTime)){
+								sellerHandlingTime=Integer.parseInt(sellerRichAttrForHandlingTime);
+							}
+							
+						}
+						pincodeServiceData.setSellerHandlingTime(Integer.valueOf(sellerHandlingTime));
+					}else{
+						pincodeServiceData.setSellerHandlingTime(Integer.valueOf(sellerHandlingTime));
+					}
+				
 				if (StringUtils.isNotEmpty(cartData.getGuid()))
 				{
 					pincodeServiceData.setCartId(cartData.getGuid());
