@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- [y] hybris Platform Copyright (c) 2000-2014 hybris AG All rights reserved. 
+	This software is the confidential and proprietary information of hybris ("Confidential 
+	Information"). You shall not disclose such Confidential Information and shall 
+	use it only in accordance with the terms of the license agreement you entered 
+	into with hybris. -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:file="http://www.springframework.org/schema/integration/file"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/integration
+       http://www.springframework.org/schema/integration/spring-integration.xsd
+       http://www.springframework.org/schema/integration/file
+       http://www.springframework.org/schema/integration/file/spring-integration-file.xsd">
+
+	<!-- General setup -->
+	<bean id="baseDirectoryMarketplaceAssociation" class="java.lang.String">
+		<constructor-arg
+			value="#{baseDirectory}/${tenantId}/marketplace-association" />
+	</bean>
+
+	<!-- 1) Scan for files -->
+	<file:inbound-channel-adapter id="batchFilesMarketplaceAssociation"
+		directory="#{baseDirectoryMarketplaceAssociation}" filename-regex="^(.*)-(\d+)\.csv"
+		comparator="fileOrderComparator" auto-startup="#{configurationService.configuration.getProperty('etail.batch.import.hotfolder.enabled')}">
+		<int:poller fixed-rate="1000" />
+	</file:inbound-channel-adapter>
+
+	<!-- 2) move the file to processing and setup header -->
+	<file:outbound-gateway request-channel="batchFilesMarketplaceAssociation"
+		reply-channel="batchFilesMarketplaceAssociationProc" directory="#{baseDirectoryMarketplaceAssociation}/processing"
+		delete-source-files="true" />
+
+
+	<!-- 3) transform csv to impex file -->
+	<int:service-activator input-channel="batchFilesMarketplaceAssociationProc"
+		output-channel="batchFilesHeaderInit" ref="MarketplaceStockHeaderSetupTask"
+		method="execute" />
+
+	<bean id="MarketplaceStockHeaderSetupTask"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.task.HeaderSetupTask">
+		<property name="catalog" value="mplProductCatalog" />
+		<property name="net" value="false" />
+		<property name="storeBaseDirectory" ref="baseDirectoryMarketplaceAssociation" />
+	</bean>
+
+
+	<!-- Transformer converters mappings -->
+
+	<!-- Transformer for Association Import -->
+
+	<bean id="batchMplAssociationConverterMapping"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+		p:mapping="mplassociation" p:converter-ref="batchMplAssociationConverter" />
+
+
+	<bean id="batchMplAssociationConverter"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+		<property name="header">
+			<value>#{defaultImpexProductHeader}
+				$productCatalog=mplProductCatalog
+				$productCatalogName=Marketplace Product Catalog
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$approved=approvalstatus(code)[default='approved']
+				INSERT_UPDATE JewelleryInformaion;ProductCode;PCMUSSID;USSID[unique=true];PIMAttributeId;Weight
+			</value>
+		</property>
+		<property name="impexRow">
+			<value>;{0};{1};{2};{3};{4}</value>
+		</property>
+	</bean>
+
+
+</beans>
