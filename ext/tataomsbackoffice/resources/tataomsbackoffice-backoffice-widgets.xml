@@ -529,6 +529,12 @@
 					slotId="perspectives" title="pickup Address Request report"
 					template="false">
 				</widget>
+				<!-- Reverse Logistics Failure info  report -->
+				<widget id="reverse_logistics_failure_info"
+					widgetDefinitionId="com.techouts.widgets.reverselogistics.failureinfo"
+					slotId="perspectives" title="reverse Logistics Failure report"
+					template="false">
+				</widget>	
 			</widget>
 			<setting key="eastClosed" type="Boolean">true</setting>
 			<setting key="perspectiveImageUrl" value="cng/images/TUL_OMS_icon.png"
