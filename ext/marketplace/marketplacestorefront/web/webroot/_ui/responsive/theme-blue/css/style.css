@@ -31960,7 +31960,8 @@ body.page-homepage .feature-collections{
 }
 }
 
-.product-facet .filter-colour input[type="submit"] {
+.product-facet .filter-colour input[type="submit"] ,
+.product-facet .filter-colorfamilytrlg input[type="submit"] {
     margin-left: 0;
     margin-right: 0;
     width: 26px !important;
@@ -31969,7 +31970,8 @@ body.page-homepage .feature-collections{
     border-radius: 0;
     border: 1px solid #fff !important;
 }
-.product-facet .filter-colour input.js-facet-colourbutton {
+.product-facet .filter-colour input.js-facet-colourbutton ,
+.product-facet .filter-colorfamilytrlg input.js-facet-colourbutton {
     margin-left: 0;
     margin-right: 0;
     width: 26px !important;
