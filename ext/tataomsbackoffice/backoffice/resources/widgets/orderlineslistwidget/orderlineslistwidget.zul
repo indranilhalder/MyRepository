@@ -309,6 +309,13 @@
 							</label>
 						</hlayout>
 						<hlayout>
+							<label value="Secondary AWB Number" hflex="1" />
+							<label value=":" hflex="1"></label>
+							<label
+								value="@bind(vm.transTrackOLBus.awbSecondaryStatus)" hflex="1">
+							</label>
+						</hlayout>
+						<hlayout>
 							<label value="Return AWB Number" hflex="1" />
 							<label value=":" hflex="1"></label>
 							<label

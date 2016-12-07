@@ -94,11 +94,11 @@ public class LPOverrideAndAwbEditReportWidgetController extends DefaultWidgetCon
 	@ViewEvent(componentID = "LpAndAwbReportsearch", eventName = Events.ON_CLICK)
 	public void sshipOrderSearch()
 	{
-		/*
+
 		final LPAWBUpdateTrackingInfo lpAndAwbUpdateInfo = orderLogisticsFacade.getLpAwbReportsData(txtOrderId.getValue(),
 				txtTransactionId.getValue(), typeListbox.getSelectedItem().getLabel(), flowTypeListbox.getSelectedItem().getLabel());
 		lpawbAuditReport = lpAndAwbUpdateInfo.getLPAWBEditAudit();
-		listBoxData.setModel(new ListModelList<LPAWBEditAuditDto>(lpawbAuditReport));*/
+		listBoxData.setModel(new ListModelList<LPAWBEditAuditDto>(lpawbAuditReport));
 	}
 
 	/**
