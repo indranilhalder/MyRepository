@@ -16,6 +16,7 @@ import de.hybris.platform.commercefacades.user.UserFacade;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.session.SessionService;
 
@@ -379,10 +380,10 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		if(returnForm.getReturnMethod().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_METHOD_QUICKDROP))
 		{
 		RTSAndRSSReturnInfoRequestData infoRequestData=new RTSAndRSSReturnInfoRequestData();
-		
+		OrderModel orderModel=mplOrderFacade.getOrder(returnForm.getOrderCode());
 		List<String> stores=Arrays.asList(returnForm.getStoreIds());
-		if(null!= subOrderDetails.getPurchaseOrderNumber()){
-		infoRequestData.setOrderId(subOrderDetails.getPurchaseOrderNumber());
+		if( null!= orderModel.getParentReference()){
+		infoRequestData.setOrderId(orderModel.getParentReference().getCode());
 		}else{
 		infoRequestData.setOrderId(returnForm.getOrderCode());
 		}
