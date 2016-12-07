@@ -1256,7 +1256,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			//TIS-3168
 			if (null != cartModel.getGuid())
 			{
-				LOG.error("COD Payment Info set for cart with GUID" + cartModel.getGuid());
+				LOG.debug("COD Payment Info set for cart with GUID" + cartModel.getGuid());
 			}
 
 		}

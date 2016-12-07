@@ -17,6 +17,8 @@ import javax.annotation.Resource;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.model.MplConfigurationModel;
 import com.tisl.mpl.promotion.dao.UpdatePromotionalPriceDao;
 
 
@@ -110,6 +112,24 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 			priceRow = searchRes.getResult();
 		}
 		return priceRow;
+	}
+
+	/**
+	 * @Description : Fetch Cron Details for Last Run time
+	 * @param: code
+	 */
+	@Override
+	public MplConfigurationModel getCronDetails(final String code)
+	{
+		final String queryString = //
+		"SELECT {cm:" + MplConfigurationModel.PK
+				+ "} "//
+				+ MarketplacecommerceservicesConstants.QUERYFROM + MplConfigurationModel._TYPECODE + " AS cm } where" + "{cm."
+				+ MplConfigurationModel.MPLCONFIGCODE + "} = ?code";
+
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter(MarketplacecommerceservicesConstants.CODE, code);
+		return flexibleSearchService.<MplConfigurationModel> searchUnique(query);
 	}
 
 	/**

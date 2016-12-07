@@ -42,7 +42,7 @@ public class MplSizeValueProvider extends AbstractPropertyFieldValueProvider imp
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.solrfacetsearch.provider.FieldValueProvider#getFieldValues(de.hybris.platform.solrfacetsearch
 	 * .config.IndexConfig, de.hybris.platform.solrfacetsearch.config.IndexedProperty, java.lang.Object)
@@ -78,68 +78,74 @@ public class MplSizeValueProvider extends AbstractPropertyFieldValueProvider imp
 			final Object model) throws FieldValueProviderException
 	{
 
-
-		if (model instanceof PcmProductVariantModel)
+		try
 		{
-			//Model should be instance of PcmProductVariantModel
-			final PcmProductVariantModel pcmVariantModel = (PcmProductVariantModel) model;
-
-
-			final Set<String> sizes = new TreeSet<String>();
-
-
-			//	Fetch sizes in all the Variants
-			for (final VariantProductModel pcmProductVariantModel : pcmVariantModel.getBaseProduct().getVariants())
+			if (model instanceof PcmProductVariantModel)
 			{
+				//Model should be instance of PcmProductVariantModel
+				final PcmProductVariantModel pcmVariantModel = (PcmProductVariantModel) model;
 
-				final PcmProductVariantModel pcmSizeVariantModel = (PcmProductVariantModel) pcmProductVariantModel;
 
-				//SONAR Fix
-				//				if (pcmSizeVariantModel.getColour() != null && pcmVariantModel.getColour() != null)
-				//				{
-				//
-				//					if (pcmSizeVariantModel.getColour().equals(pcmVariantModel.getColour()))
-				//					{
-				//						//Included for Electronics Product
-				//						if (pcmSizeVariantModel.getSize() != null)
-				//						{
-				//							sizes.add(pcmSizeVariantModel.getSize());
-				//						}
-				//					}
-				//
-				//
-				//				}
+				final Set<String> sizes = new TreeSet<String>();
 
-				//Included for Electronics Product
-				final String sizeVariantColour = mplBuyBoxUtility.getVariantColour(pcmSizeVariantModel);
 
-				final String pcmVariantColour = mplBuyBoxUtility.getVariantColour(pcmVariantModel);
-				if (sizeVariantColour != null && pcmVariantColour != null && sizeVariantColour.equalsIgnoreCase(pcmVariantColour)
-						&& pcmSizeVariantModel.getSize() != null)
+				//	Fetch sizes in all the Variants
+				for (final VariantProductModel pcmProductVariantModel : pcmVariantModel.getBaseProduct().getVariants())
 				{
 
-					sizes.add(pcmSizeVariantModel.getSize().toUpperCase());
+					final PcmProductVariantModel pcmSizeVariantModel = (PcmProductVariantModel) pcmProductVariantModel;
+
+					//SONAR Fix
+					//				if (pcmSizeVariantModel.getColour() != null && pcmVariantModel.getColour() != null)
+					//				{
+					//
+					//					if (pcmSizeVariantModel.getColour().equals(pcmVariantModel.getColour()))
+					//					{
+					//						//Included for Electronics Product
+					//						if (pcmSizeVariantModel.getSize() != null)
+					//						{
+					//							sizes.add(pcmSizeVariantModel.getSize());
+					//						}
+					//					}
+					//
+					//
+					//				}
+
+					//Included for Electronics Product
+					final String sizeVariantColour = mplBuyBoxUtility.getVariantColour(pcmSizeVariantModel);
+
+					final String pcmVariantColour = mplBuyBoxUtility.getVariantColour(pcmVariantModel);
+					if (sizeVariantColour != null && pcmVariantColour != null && sizeVariantColour.equalsIgnoreCase(pcmVariantColour)
+							&& pcmSizeVariantModel.getSize() != null)
+					{
+
+						sizes.add(pcmSizeVariantModel.getSize().toUpperCase());
+
+					}
 
 				}
 
+
+				final Collection<FieldValue> fieldValues = new ArrayList<FieldValue>();
+
+				{
+					//add field values
+					fieldValues.addAll(createFieldValue(sizes, indexedProperty));
+				}
+				//return the field values
+				return fieldValues;
+
 			}
-
-
-			final Collection<FieldValue> fieldValues = new ArrayList<FieldValue>();
-
+			else
 			{
-				//add field values
-				fieldValues.addAll(createFieldValue(sizes, indexedProperty));
+				return Collections.emptyList();
 			}
-			//return the field values
-			return fieldValues;
-
 		}
-		else
+		catch (final Exception e) /* added part of value provider go through */
 		{
-			return Collections.emptyList();
+			throw new FieldValueProviderException("Cannot evaluate " + indexedProperty.getName() + " using "
+					+ super.getClass().getName() + "exception" + e, e);
 		}
-
 
 
 	}

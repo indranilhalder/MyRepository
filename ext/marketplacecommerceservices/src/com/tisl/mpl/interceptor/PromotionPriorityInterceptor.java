@@ -20,10 +20,8 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.util.localization.Localization;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +29,6 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
-import com.tisl.mpl.model.BuyABFreePrecentageDiscountModel;
-import com.tisl.mpl.model.BuyAandBgetCModel;
-import com.tisl.mpl.model.BuyXItemsofproductAgetproductBforfreeModel;
 import com.tisl.mpl.model.EtailSellerSpecificRestrictionModel;
 import com.tisl.mpl.model.SellerMasterModel;
 import com.tisl.mpl.promotion.helper.MplPromotionHelper;
@@ -349,17 +344,13 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 				}
 			}
 
-			// Code Change for TISPRD-2637
-			if (promotion instanceof BuyXItemsofproductAgetproductBforfreeModel || promotion instanceof BuyAandBgetCModel
-					|| promotion instanceof BuyABFreePrecentageDiscountModel)
-			{
-				LOG.debug("Check if Free bie Data Version");
-				final boolean isValid = validateFreebieData(promotion);
-				if (!isValid)
-				{
-					throw new InterceptorException("Free Product Details Must be of Online Version");
-				}
-			}
+			// Code Change for TISPRD-2637   commenting below section of code to remove staged product catalog from system
+			/*
+			 * if (promotion instanceof BuyXItemsofproductAgetproductBforfreeModel || promotion instanceof
+			 * BuyAandBgetCModel || promotion instanceof BuyABFreePrecentageDiscountModel) { LOG.debug(
+			 * "Check if Free bie Data Version"); final boolean isValid = validateFreebieData(promotion); if (!isValid) {
+			 * throw new InterceptorException("Free Product Details Must be of Online Version"); } }
+			 */
 
 		}
 		else if (object instanceof OrderPromotionModel)
@@ -387,37 +378,22 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 	 * @param promotion
 	 * @return isValid
 	 */
-	private boolean validateFreebieData(final ProductPromotionModel promotion)
-	{
-		boolean isValid = true;
-		if (promotion instanceof BuyXItemsofproductAgetproductBforfreeModel)
-		{
-			final BuyXItemsofproductAgetproductBforfreeModel oModel = (BuyXItemsofproductAgetproductBforfreeModel) promotion;
-			if (CollectionUtils.isNotEmpty(oModel.getGiftProducts()))
-			{
-				isValid = checkCatalogVersion(oModel.getGiftProducts());
-			}
-		}
-		else if (promotion instanceof BuyAandBgetCModel)
-		{
-			final BuyAandBgetCModel oModel = (BuyAandBgetCModel) promotion;
-			if (CollectionUtils.isNotEmpty(oModel.getGiftProducts()))
-			{
-				isValid = checkCatalogVersion(oModel.getGiftProducts());
-			}
-		}
-		else if (promotion instanceof BuyABFreePrecentageDiscountModel)
-		{
-			final BuyABFreePrecentageDiscountModel oModel = (BuyABFreePrecentageDiscountModel) promotion;
-			if (CollectionUtils.isNotEmpty(oModel.getGiftProducts()))
-			{
-				isValid = checkCatalogVersion(oModel.getGiftProducts());
-			}
-		}
-
-		return isValid;
-
-	}
+	// Sonar fix
+	/*
+	 * private boolean validateFreebieData(final ProductPromotionModel promotion) { boolean isValid = true; if (promotion
+	 * instanceof BuyXItemsofproductAgetproductBforfreeModel) { final BuyXItemsofproductAgetproductBforfreeModel oModel =
+	 * (BuyXItemsofproductAgetproductBforfreeModel) promotion; if (CollectionUtils.isNotEmpty(oModel.getGiftProducts()))
+	 * { isValid = checkCatalogVersion(oModel.getGiftProducts()); } } else if (promotion instanceof BuyAandBgetCModel) {
+	 * final BuyAandBgetCModel oModel = (BuyAandBgetCModel) promotion; if
+	 * (CollectionUtils.isNotEmpty(oModel.getGiftProducts())) { isValid = checkCatalogVersion(oModel.getGiftProducts());
+	 * } } else if (promotion instanceof BuyABFreePrecentageDiscountModel) { final BuyABFreePrecentageDiscountModel
+	 * oModel = (BuyABFreePrecentageDiscountModel) promotion; if (CollectionUtils.isNotEmpty(oModel.getGiftProducts())) {
+	 * isValid = checkCatalogVersion(oModel.getGiftProducts()); } }
+	 *
+	 * return isValid;
+	 *
+	 * }
+	 */
 
 
 	/**
@@ -429,22 +405,22 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 	 * @param giftProducts
 	 * @return isValid
 	 */
-	private boolean checkCatalogVersion(final Collection<ProductModel> giftProducts)
-	{
-		boolean isValid = true;
-		final String compareCode = getDefaultPromotionsManager().catalogData().getVersion();
-		for (final ProductModel oModel : giftProducts)
-		{
-			if (null != oModel.getCatalogVersion() && null != oModel.getCatalogVersion().getVersion()
-					&& StringUtils.isNotEmpty(compareCode)
-					&& !StringUtils.equalsIgnoreCase(oModel.getCatalogVersion().getVersion(), compareCode))
-			{
-				isValid = false;
-				break;
-			}
-		}
-		return isValid;
-	}
+	//	private boolean checkCatalogVersion(final Collection<ProductModel> giftProducts)
+	//	{
+	//		boolean isValid = true;
+	//		final String compareCode = getDefaultPromotionsManager().catalogData().getVersion();
+	//		for (final ProductModel oModel : giftProducts)
+	//		{
+	//			if (null != oModel.getCatalogVersion() && null != oModel.getCatalogVersion().getVersion()
+	//					&& StringUtils.isNotEmpty(compareCode)
+	//					&& !StringUtils.equalsIgnoreCase(oModel.getCatalogVersion().getVersion(), compareCode))
+	//			{
+	//				isValid = false;
+	//				break;
+	//			}
+	//		}
+	//		return isValid;
+	//	}
 
 	/**
 	 * The Method checks the priority for Active Cart Promotions
