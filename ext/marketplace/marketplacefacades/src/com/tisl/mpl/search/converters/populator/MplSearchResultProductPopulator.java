@@ -249,7 +249,8 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 		{
 
 			//final boolean stockLevelStatus = Boolean.valueOf(getValue(source, "stockLevelStatus").toString()).booleanValue();
-			final boolean stockLevelStatus = Boolean.getBoolean(getValue(source, "stockLevelStatus").toString()); //Sonar fix
+			//final boolean stockLevelStatus = Boolean.getBoolean(getValue(source, "stockLevelStatus").toString()); //Sonar fix
+			final boolean stockLevelStatus = Boolean.parseBoolean(getValue(source, "stockLevelStatus").toString()); //modified Boolean.getBoolean() as it always return false
 			try
 			{
 				// In case of low stock then make a call to the stock service to determine if in or out of stock.
