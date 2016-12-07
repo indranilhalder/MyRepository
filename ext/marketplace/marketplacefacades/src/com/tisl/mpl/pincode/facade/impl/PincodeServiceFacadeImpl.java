@@ -386,6 +386,25 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 					LOG.debug("locationList:" + locationList.size());
 					data.setStore(locationList);
 				}
+				
+				SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(seller.getUssid());
+				List<RichAttributeModel> sellerRichAttributeModel = null;
+		   	int sellerHandlingTime=0;
+		   	String sellerRichAttrForHandlingTime=null;
+				if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
+				{
+					sellerRichAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+					if (sellerRichAttributeModel != null && sellerRichAttributeModel.get(0).getSellerHandlingTime() != null)
+					{
+						sellerRichAttrForHandlingTime = sellerRichAttributeModel.get(0).getSellerHandlingTime().toString();
+						if( StringUtils.isNotEmpty(sellerRichAttrForHandlingTime)){
+							sellerHandlingTime=Integer.parseInt(sellerRichAttrForHandlingTime);
+						}
+						
+					}
+					data.setSellerHandlingTime(Integer.valueOf(sellerHandlingTime));	
+				}
+				
 				data.setSellerId(seller.getSellerID());
 				data.setUssid(seller.getUssid());
 				data.setIsDeliveryDateRequired("N");
