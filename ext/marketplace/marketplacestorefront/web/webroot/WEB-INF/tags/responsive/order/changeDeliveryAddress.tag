@@ -65,7 +65,7 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="pincode"><spring:theme code="text.order.returns.pincode"/></label>
-									<form:input path="postcode" class="address_postcode"
+									<form:input path="postcode" class="address_postcode" onkeypress="return isNumber(event)"
 										id="pincode" maxlength="6"
 										value="${orderDetails.deliveryAddress.postalCode}"  placeholder="Pincode" />
 									<div  class="error_text pincodeNoError"></div>
@@ -164,7 +164,7 @@
 						<div class="row">
 							<div class="col-md-8 form-group">
 								<label for="phonenumber"><spring:theme code="text.order.returns.phonenumber"/></label>
-								<form:input path="mobileNo"
+								<form:input path="mobileNo" onkeypress="return isNumber(event)"
 									class="form-control textInputChangeAddress" id="mobileNo" maxlength="10"
 									value="${orderDetails.deliveryAddress.phone}" placeholder="Mobile Number" />
 								<div class="error_text mobileNumberError"></div>

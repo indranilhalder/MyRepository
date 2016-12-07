@@ -126,7 +126,7 @@
 									<span><spring:theme code="text.order.returns.safetyinformationlabl3"/></span><br/>
 								</div>
 							</div>
-							
+						
 						</div>
 						</c:when>
 						<c:otherwise>
