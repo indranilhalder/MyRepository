@@ -133,6 +133,7 @@
 	    <property name="deliveryFulfillModeByP1" type="String" />
 		<property name="isFragile" type="String" />
 		<property name="isPrecious" type="String" />
+		<property name="sellerHandlingTime" type="Integer"/>
 		
 	</bean>
 
