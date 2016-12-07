@@ -123,7 +123,7 @@
 									<form:input  path="iFSCCode"  onkeyup="this.value=this.value.replace(/[^A-z0-9]/g,'');"   maxlength="11" minlength="" type="text" name="ifscCode" placeholder="IFSC CODE"  value="${customerBankDetails.bankKey}"/>
 								</div>
 								<div class="col-md-4 col-sm-4 suggestionText">
-									<%-- <span><spring:theme code="text.order.returns.safetyinformationlabl3"/></span><br/> --%>
+									<span><spring:theme code="text.order.returns.safetyinformationlabl3"/></span><br/>
 								</div>
 							</div>
 							
