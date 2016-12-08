@@ -3639,7 +3639,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			newAddress.setCountry(getI18NFacade().getCountryForIsocode(ModelAttributetConstants.INDIA_ISO_CODE));
 			newAddress.setLine3(addressForm.getLine3());
 			newAddress.setLocality(addressForm.getLocality());
-			if(null != addressForm.getLandmark() && !StringUtils.isEmpty(addressForm.getLandmark().trim()))
+			if(StringUtils.isNotBlank(addressForm.getLandmark()) && !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
 			{
 				newAddress.setLandmark(addressForm.getLandmark());
 			}
@@ -3758,7 +3758,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			newAddress.setState(addressForm.getState());
 			newAddress.setLine3(addressForm.getLine3());
 			newAddress.setLocality(addressForm.getLocality());
-			if (null != addressForm.getLandmark() && !StringUtils.isEmpty(addressForm.getLandmark().trim()))
+			if (StringUtils.isNotBlank(addressForm.getLandmark().trim()) && !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
 			{
 				newAddress.setLandmark(addressForm.getLandmark());
 			}
@@ -4004,7 +4004,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			selectedAddress.setVisibleInAddressBook(true);
 			selectedAddress.setLine3(addressForm.getLine3());
 			selectedAddress.setLocality(addressForm.getLocality());
-			if (null != addressForm.getLandmark() && !StringUtils.isEmpty(addressForm.getLandmark().trim()))
+			if (StringUtils.isNotBlank(addressForm.getLandmark().trim()) && !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
 			{
 				selectedAddress.setLandmark(addressForm.getLandmark());
 			}
@@ -7271,7 +7271,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			newAddressData.setState(addressForm.getState());
 			newAddressData.setBillingAddress(false);
 			newAddressData.setShippingAddress(true);
-			if (null != addressForm.getLandmark() && !StringUtils.isEmpty(addressForm.getLandmark().trim()))
+			if (StringUtils.isNotBlank(addressForm.getLandmark().trim()) && !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
 			{
 				newAddressData.setLandmark(addressForm.getLandmark());
 			}

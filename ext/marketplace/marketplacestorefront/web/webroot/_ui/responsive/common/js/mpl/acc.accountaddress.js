@@ -151,7 +151,7 @@ function editAddress(addressId) {
    	            			console.log(data.landmark); 
    	            			if($(".address_landmarks option[value='Other']").length > "0") {
    	            				$(".address_landmarks").val("Other"); 
-   	                			changeFunction("Other"); 
+   	            				changeFuncLandMark("Other"); 
    	                			$(".address_landmarkOther").val(data.landmark);
    	            			} else {
    	            				$(".address_landmarkOther").val(data.landmark);

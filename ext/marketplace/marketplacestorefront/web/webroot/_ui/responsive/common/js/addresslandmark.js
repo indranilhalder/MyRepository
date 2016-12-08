@@ -90,7 +90,7 @@ function loadPincodeData() {
 				} else {
 					if($(".address_landmarks option[value='Other']").length > "0") {
 						$(".address_landmarks").val("Other"); 
-		  			changeFunction("Other"); 
+						changeFuncLandMark("Other"); 
 		  			$(".address_landmarkOther").val(value);
 					} else {
 						$(".address_landmarkOther").val(value);
