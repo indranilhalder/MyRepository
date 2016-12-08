@@ -95,6 +95,7 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 	public static final String RETURN = "RETURN";
 	public static final String CANCEL = "CANCEL";
 	public static final String DELIVERY = "DELIVERY";
+	public static final String PAYMENT = "PAYMENT";
 
 	public static final String VALID_APPROVED = "valid.order.statuses.APPROVED";
 	public static final String VALID_SHIPPING = "valid.order.statuses.SHIPPING";
@@ -136,6 +137,11 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 	public static final String SAVE_STORE_TOPORUDCT_FAIL_MSG = "no";
 	public static final String UNKNOWN = "unknown".intern();
 	public static final String DEFAULT_WISHLIST_NAME = "My Wishlist";
+	public static final String CART_ENTRY_NULL = "Cart Entry not present".intern();
+	public static final String STATIC_VIDEO = "store/_ui/responsive/common/images/video-play.png";
+	public static final String B8000 = "B8000";
+	public static final String B9327 = "B9327";
+	public static final String E0000 = "E0000";
 	// TISLUX-356
 	public static final String CATEGORY = "category";
 	public static final String PRODUCT = "product";

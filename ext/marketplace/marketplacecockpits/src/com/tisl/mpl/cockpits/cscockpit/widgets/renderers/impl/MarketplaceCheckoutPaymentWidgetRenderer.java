@@ -366,7 +366,9 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 				//
 				((MarketplaceCheckoutController) widget.getWidgetController()).canCreatePayments();
 				((MarketplaceCheckoutController) widget.getWidgetController()).processCODPayment();
+				((MarketplaceCheckoutController) widget.getWidgetController()).setCODPaymentMode(cart);	//TPR-3471
 				try {
+					
 					getMplVoucherService().checkCartWithVoucher(cart);
 				} catch (EtailNonBusinessExceptions e) {
 					LOG.error("Exception calculating cart ["

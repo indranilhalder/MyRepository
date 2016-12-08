@@ -1971,3 +1971,31 @@ INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true
 ;;BestPicksConcierge3Component;LeatherBikerJacket.png
 ;;BestPicksConcierge4Component;TailoredBeltedCoat.png
 ;;BestPicksConcierge5Component;DuffleBag.png
+
+##################Shop The Style###########################################
+# CMS Link Components for Shop The style
+UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];linkName[lang=$lang]
+;;ShopTheStyleLink1Comp;"WISELY WHITE"
+;;ShopTheStyleLink2Comp;"THROW IT LIKE A PRO"
+;;ShopTheStyleLink3Comp;"DATE NIGHT"
+;;ShopTheStyleLink4Comp;"THE DESI DAPPER LOOK"
+
+UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
+;;ShopTheStyleParagraphComponent1;"
+	<h1>WISELY WHITE</h1>
+	<p>Whites when not done right can lead to serious fashion disasters right from making you look dat or dark or may be both at the same time. So, this reason our fashion insiders have handpicked some gorgeous whites for you from New Look, 
+	exclusively on Tata CLiQ.</p>
+	
+"
+;;ShopTheStyleParagraphComponent2;"
+   <h1>THROW IT LIKE A BOSS</h1>
+	<p>Whites when not done right can lead to serious fashion disasters right from making you look dat or dark or may be both at the same time. So, this reason our fashion insiders have handpicked some gorgeous whites for you from New Look, exclusively on Tata CLiQ.</p>
+"    
+;;ShopTheStyleParagraphComponent3;"
+     <h1>DATE NIGHT</h1>
+	<p>Whites when not done right can lead to serious fashion disasters right from making you look dat or dark or may be both at the same time. So, this reason our fashion insiders have handpicked some gorgeous whites for you from New Look, exclusively on Tata CLiQ.</p>
+"
+;;ShopTheStyleParagraphComponent4;"
+  <h1>THE DESI DAPPER LOOK</h1>
+	<p>Whites when not done right can lead to serious fashion disasters right from making you look dat or dark or may be both at the same time. So, this reason our fashion insiders have handpicked some gorgeous whites for you from New Look, exclusively on Tata CLiQ.</p>
+"

@@ -12,7 +12,7 @@
 
 <div class="feature-categories">
 	<c:if test="${not empty component.title}">
-		<h1>${component.title}</h1>
+		<h2>${component.title}</h2> 
 	</c:if>
 	<c:if test="${component.imageSize eq 'LARGE'}">
 		<ul class="categories count-3">

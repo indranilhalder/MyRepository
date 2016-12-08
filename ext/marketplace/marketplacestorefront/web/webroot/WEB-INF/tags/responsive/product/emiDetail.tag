@@ -19,7 +19,7 @@
 <div id="EMImodal-content" class="modal-content">
 <span class="Close">+</span>
   <div class="modal-header">   
-    <h4 class="modal-title" id="myModalLabel"> <span class="Emi-tableTitle">EMI Details</span> <span class="Emi-subTitle">EMI for the product is provided by the below banks</span> </h4>
+    <h3 class="modal-title" id="myModalLabel"> <span class="Emi-tableTitle">EMI Details</span> <span class="Emi-subTitle">EMI for the product is provided by the below banks</span> </h3>
   </div>
   <div class="modal-body" id="modelId">
 			<div class="SelectWrap">

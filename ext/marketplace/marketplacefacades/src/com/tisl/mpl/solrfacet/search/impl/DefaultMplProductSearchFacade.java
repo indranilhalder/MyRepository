@@ -535,9 +535,13 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		if (collectionId != null)
 		{
 			final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
-			solrSearchQueryTermData.setKey("collectionIds");
-			solrSearchQueryTermData.setValue(collectionId);
-			searchQueryData.setFilterTerms(Collections.singletonList(solrSearchQueryTermData));
+			if (null == searchQueryData.getFilterTerms())
+			{
+				solrSearchQueryTermData.setKey("collectionIds");
+				solrSearchQueryTermData.setValue(collectionId);
+				searchQueryData.setFilterTerms(Collections.singletonList(solrSearchQueryTermData));
+			}
+
 		}
 		populateSolrSearchQueryData(searchState, searchQueryData);
 		return searchQueryData;

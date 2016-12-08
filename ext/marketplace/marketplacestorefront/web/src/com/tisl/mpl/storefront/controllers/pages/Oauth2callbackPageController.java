@@ -109,6 +109,7 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 	private String gigyaUID;
 	private String signature;
 	private String timestamp;
+	
 
 	public GigyaService getGigyaservice()
 	{
@@ -331,19 +332,25 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 			if (StringUtils.isNotEmpty(uid))
 			{
 
+
 				final String decodedUid = java.net.URLDecoder.decode(uid, UTF_8);
+
 
 				setGigyaUID(decodedUid);
 			}
 			if (StringUtils.isNotEmpty(signature))
 			{
+
 				final String decodedSignature = java.net.URLDecoder.decode(signature, UTF_8);
+
 
 				setSignature(decodedSignature);
 			}
 			if (StringUtils.isNotEmpty(timestamp))
 			{
+
 				final String decodedTimestamp = java.net.URLDecoder.decode(timestamp, UTF_8);
+
 				setTimestamp(decodedTimestamp);
 			}
 
@@ -537,8 +544,8 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 
 			cipher.init(Cipher.ENCRYPT_MODE, getSecretKey(key));
 
-
 			encryptedText = Base64.encodeBase64String(cipher.doFinal(encryptionText.getBytes(UTF_8)));
+
 
 		}
 		catch (final Exception e)
@@ -557,12 +564,16 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 		byte[] key = null;
 		try
 		{
+
 			key = encryptionKey.getBytes(UTF_8);
+
 			sha = MessageDigest.getInstance("SHA-1");
 			key = sha.digest(key);
 			key = Arrays.copyOf(key, 16); // use only first 128 bit
 			LOG.debug("Key Length" + key.length);
+
 			LOG.debug(new String(key, UTF_8));
+
 
 
 

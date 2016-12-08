@@ -223,8 +223,10 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 
 				//for delivery mode restriction check
 				flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForAPromo(restrictionList,
-						validProductUssidMap);
-				if (flagForDeliveryModeRestrEval)
+						validProductUssidMap, order);
+				final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(
+						restrictionList, order);
+				if (flagForDeliveryModeRestrEval && flagForPincodeRestriction)
 				{
 					double percentageDiscount = getPercentageDiscount().doubleValue();
 
@@ -356,6 +358,7 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 								promotionGiftProductList, sellerIDData);
 
 						if (MapUtils.isNotEmpty(giftProductDetails))
+
 						{
 							getPromotionUtilityPOJO().setPromoProductList(eligibleProductList);
 							skuFreebieList = populateFreebieSKUIDs(giftProductDetails);
@@ -367,19 +370,18 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 								giftCount = getDefaultPromotionsManager().getFreeGiftCount(entry.getKey(), eligibleProductMap,
 										eligibleQuantity.intValue());
 							}
-
+							
 							if (giftCount > 0)
 							{
 								arg0.setAttribute(MarketplacecommerceservicesConstants.FREEGIFT_QUANTITY, String.valueOf(giftCount));
 							}
-
-							//							final Map<String, List<String>> productAssociatedItemsMap = getDefaultPromotionsManager()
-							//									.getAssociatedItemsForAorBOGOorFreebiePromotions(validProductUssidMap, entry.getKey());
-
+							
+                             //final Map<String, List<String>> productAssociatedItemsMap = getDefaultPromotionsManager()
+							//									.getAssociatedItemsForAorBOGOorFreebiePromotions(validProductUssidMap, entry.getKey());							
 							final Map<String, List<String>> productAssociatedItemsMap = getDefaultPromotionsManager()
 									.getAssociatedItemsForAFreebiePromotions(validProductUssidMap, skuFreebieList);
-
-							productAssociatedItemsFinalMap.putAll(productAssociatedItemsMap);
+							
+							productAssociatedItemsFinalMap.putAll(productAssociatedItemsMap);							
 
 							arg0.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, productAssociatedItemsMap);
 							arg0.setAttribute(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, String.valueOf(this.getCode()));

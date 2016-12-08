@@ -60,7 +60,7 @@ function constructDepartmentHierarchy(inputArray) {
 		  var categoryTypeValue=$(this).closest('span').find('#categoryType').val()
 		 //  console.log("categoryTypeValue"+categoryTypeValue);
 		  var productUrl=$(this).closest('span').find('#productUrl').val();
-		 // console.log("productUrl"+productUrl);
+		 //console.log("productUrl"+productUrl);
 		  var productPrice=$(this).closest('span').find('#productPrice').val();
 		//  console.log("productPrice"+productPrice);
 		  var list=$(this).closest('span').find('#list').val();
@@ -118,6 +118,7 @@ function constructDepartmentHierarchy(inputArray) {
 					var actionText = ACC.config.contextPath;
 					actionText = (actionText + '/Categories/' + node.name + '/c-' + node.categoryCode);
 					$('#categoryPageDeptHierTreeForm').attr('action',actionText);
+					
 					$('#categoryPageDeptHierTreeForm').submit();
 				}
 			}
@@ -127,13 +128,22 @@ function constructDepartmentHierarchy(inputArray) {
 			'tree.click',
 			function(event) {
 				var node = event.node;
+				var searchQuery = document.getElementById("q").value;				
 				if(node.categoryType == 'All') {
 					$('#q').val($('#text').val() + ":relevance");
 					$('#searchCategoryTree').val("all");
 				}
 				else{
-					$('#q').val($('#text').val() + ":relevance:category:" + node.categoryCode);
-					$('#searchCategoryTree').val(node.categoryCode);
+					//Changes Added for TOR-488
+					//$('#q').val($('#text').val() + ":relevance:category:" + node.categoryCode);
+					//$('#searchCategoryTree').val(node.categoryCode);
+					// alert($('#q').val());
+					 //TISQAEE-14
+					 if($('#q').val().indexOf(node.categoryCode)==-1){
+					 $('#q').val(searchQuery +":category:" + node.categoryCode);
+					 }
+					 $('#searchCategoryTree').val(node.categoryCode);
+					
 				} 
 				
 				$('#searchPageDeptHierTreeForm').submit();
@@ -143,8 +153,116 @@ function constructDepartmentHierarchy(inputArray) {
 		
 	}
 
+
+  //TPR-158 and TPR-413 starts here
+
+$(document).ready(function(){	
+	$("#displayAll").show();
+	$("#clickToMore").hide();
+	donotShowAll();	
+	
+	$("#displayAll").on("click",function(e){	
+		showAll();		
+		$("#displayAll").hide();
+		$("#clickToMore").show();
+		});
+
+		//clicking on the clickToMore div will display limited department categories.
+	$("#clickToMore").click(function(e){	
+		donotShowAll();		
+		$("#displayAll").show();
+		$("#clickToMore").hide();
+		});
+});
+
+
+
+//For department Hierarchy Expansion
+function showAll()
+{
+	//alert("Hi in Show All");
+	$(".jqtree-tree >li").each(function(e){		
+	$(this).show();//show all		
+	$(this).find("ul>li").each(function(e){
+	$(this).show();//show all
+	});		
+	});
+}
+
+
+function donotShowAll()
+{	//alert("Hi in donotShowAll");
+	//below attributes can be made configurable through local.properties. The number of categories to be displayed are configurable for L1,L2 and L3 separately
+	var l1ClassCount = -1;
+	var l2ClassCount = -1;
+	var l3ClassCount = -1;
+	var l1displayLimit = $("#deptCountL1").val();
+	var l2displayLimit = $("#deptCountL2").val();
+	var l3displayLimit = $("#deptCountL3").val();
+	var displayHideShowAll = false;
+	
+	//***************below first iteration for L1 categories
+	$(".jqtree-tree >li").each(function(e){
+	
+	l1ClassCount= l1ClassCount+1;
+	
+	if(l1ClassCount>l1displayLimit)
+	{
+	$(this).hide();//hide L1 level
+	displayHideShowAll = true;
+	}	
+	
+	//l2ClassCount = -1 ;
+	l2ClassCount = 0;
+	//**********below iteration for L2 and L3 categories
+	$(this).find("ul>li").each(function(e){	
+	
+	//if li has both class jqtree_common and jqtree-folder then it will be L2 category
+	if($(this).hasClass('jqtree_common') && $(this).hasClass('jqtree-folder'))
+	{
+	l2ClassCount= l2ClassCount+1;	
+	//l3ClassCount = -1;
+	l3ClassCount = 0;
+	if(l2ClassCount>l2displayLimit){
+	$(this).hide();//hide L2 level
+	displayHideShowAll = true;
+	}
+	}
+	//if li has only class jqtree_common then it will be L3 category
+	else if($(this).hasClass('jqtree_common'))
+	{
+	l3ClassCount= l3ClassCount+1;	
+	if(l3ClassCount>l3displayLimit){
+	$(this).hide();//hide L3 level
+	displayHideShowAll = true;
+	}
+	}	
+	else
+	{
+	//do nothing
+	}
+	
+	});		//end ul>li iteration
+		
+	});		//end .jqtree-tree >li iteration	
+	
+	
+	if(!displayHideShowAll)
+	{	
+	$("#displayAll").hide();
+	}
+}
+
+
+	
+		
+//CR Changes End
+//TPR-158 and TPR-413 ends here
+
+
+
 	//change serp product details based on filters
-	function modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,stockLevel,productPromotion){
+	function modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,stockLevel,productPromotion,wishListUrl){
 		if(mrpPriceValue!="" && productPrice!=""){
 		}
 
@@ -520,7 +638,7 @@ function constructDepartmentHierarchy(inputArray) {
 		  event.preventDefault();
 	});
 	
-	 $(".facet-name.js-facet-name h4").each(function(){
+	 $(".facet-name.js-facet-name h3").each(function(){
 		 var facetStockSize=$("#facetStockSize").val();
 		 if($("#stockStatusId").val()!= "true" && facetStockSize==1){
 			 $(".Availability").hide();
@@ -543,3 +661,105 @@ function constructDepartmentHierarchy(inputArray) {
 	      }
 
 	});*/
+
+	 
+	 $( document ).ready(function() {
+		//Add to Wishlist PLP TPR-844 CR
+		 $(".wishlist a").mouseover();
+		var productCodePost = $("#productCode").val();
+		getLastModifiedWishlistForPLP(productCodePost);
+		//Ended here//
+		}); 
+
+		/*Wishlist In PLP changes*/
+		function getLastModifiedWishlistForPLP(productCodePost) {
+			var requiredUrl = ACC.config.encodedContextPath + "/search/"
+					+ "getLastModifiedWishlistByPcode";	
+			var dataString = 'pcode=' + productCodePost;	
+			$.ajax({		
+				contentType : "application/json; charset=utf-8",
+				url : requiredUrl,
+				data : dataString,
+				dataType : "json",
+				success : function(data) {
+				if (data == true) {
+					$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').addClass("added");
+					$("#add_to_wishlist").attr("disabled",true);
+					$('.add_to_cart_form .out_of_stock #add_to_wishlist').addClass("wishDisabled");
+				}
+				
+				},
+				error : function(xhr, status, error) {		
+					//alert("error"+error);
+				}
+			});
+		}
+
+$(document).on("click",".plp-wishlist",function(e){
+	
+	addToWishlistForPLP($(this).data("product"),this);
+	return false;
+})
+		function addToWishlistForPLP(productURL,el) {
+			var loggedIn=$("#loggedIn").val();
+			var productCode=urlToProductCode(productURL);
+			var wishName = "";
+			var requiredUrl = ACC.config.encodedContextPath + "/search/"
+					+ "addToWishListInPLP";	
+		    var sizeSelected=true;
+		    if( $("#variant,#sizevariant option:selected").val()=="#"){
+		    	sizeSelected=false;
+		    }
+			var dataString = 'wish=' + wishName + '&product=' + productCode
+					+ '&sizeSelected=' + sizeSelected;
+			
+			if(loggedIn == 'false') {
+				$(".wishAddLoginPlp").addClass("active");
+				setTimeout(function(){
+					$(".wishAddLoginPlp").removeClass("active")
+				},3000)
+				return false;
+			}	
+			else {	
+				$.ajax({			
+					contentType : "application/json; charset=utf-8",
+					url : requiredUrl,
+					data : dataString,
+					dataType : "json",			
+					success : function(data){
+						if (data == true) {					
+							$(".wishAddSucessPlp").addClass("active");
+							setTimeout(function(){
+								$(".wishAddSucessPlp").removeClass("active")
+							},3000)
+							$(el).addClass("added");
+						}
+						else{
+							$(".wishAlreadyAddedPlp").addClass("active");
+							setTimeout(function(){
+								$(".wishAlreadyAddedPlp").removeClass("active")
+							},3000)
+						}
+						
+					},
+					error : function(xhr, status, error){
+						alert(error);
+					}
+				});
+				
+				setTimeout(function() {
+					$('a.wishlist#wishlist').popover('hide');
+					$('input.wishlist#add_to_wishlist').popover('hide');
+
+					}, 0);
+			}
+			return false;
+		}
+		
+		function urlToProductCode(productURL) {
+			var n = productURL.lastIndexOf("-");
+			var productCode=productURL.substring(n+1, productURL.length);
+		    return productCode.toUpperCase();
+			
+		}
+		

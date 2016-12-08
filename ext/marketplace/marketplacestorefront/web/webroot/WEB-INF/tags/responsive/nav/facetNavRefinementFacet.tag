@@ -27,6 +27,7 @@ function navigateToPage(queryString,textString)
 	window.open(urlString,"_self");
 }
 </script>
+<div class="facet_desktop">
 <c:if test="${not empty facetData.values}">
 <c:if test="${facetData.code ne 'category'}">
 <c:if test="${facetData.code ne 'snsCategory' && facetData.code ne 'micrositeSnsCategory'}">
@@ -62,7 +63,7 @@ function navigateToPage(queryString,textString)
 	
 			<c:when test="${facetData.code == 'inStockFlag'}">
 			<c:if test="${facetStockSize=='2'}">
-				<h4 class="${facetData.genericFilter}">${facetData.name}</h4>
+				<h3 class="${facetData.genericFilter}">${facetData.name}</h3>
 			</c:if>		 
 			</c:when> 
 			<c:when test="${facetData.code eq 'strapcolor'}">
@@ -72,7 +73,7 @@ function navigateToPage(queryString,textString)
 				<h4 class="true">${facetData.name}</h4>
 			</c:when> --%>
 			<c:otherwise>
-				<h4 class="true">${facetData.name}</h4>
+				<h3 class="true">${facetData.name}</h3>
 			</c:otherwise>
 	   </c:choose>
 		
@@ -118,7 +119,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
 								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>							
 								<input type="hidden" name="isFacet" value="true"/>
-								
+								<input type="hidden" name="facetValue" value="${facetValue.code}"/>								
 								<input type="button" class="js-facet-colourbutton" style="background-color:${colorHexCode}; border:1px solid rgb(204, 211, 217); height: 36px;    padding: 13px 17px;"  />
 								<%-- <input type="submit" value="" style="background-color:${colorHexCode}; border:1px solid rgb(204, 211, 217); height: 36px;    padding: 13px 17px;"  /> --%>
 								<span><span>${facetValue.name}</span></span>
@@ -461,7 +462,7 @@ function navigateToPage(queryString,textString)
 				</div>
 				</div>
 			</c:if>
-		</div>
+		
 		
 		
 		
@@ -470,7 +471,7 @@ function navigateToPage(queryString,textString)
 				<c:url value="${removeQueryUrlForPriceValue}" var="removeQueryUrl"/>
 				<a href="${removeQueryUrl}" ><span class="any_price">Any Price</span></a>
 			</div>		  
-			<h4 class="customPriceRange">Price Range</h4>
+			<h3 class="customPriceRange">Price Range</h3>
 							<input type="hidden" name="currentPriceQueryParams" value="${searchPageData.currentQuery.query.value}" class="currentPriceQueryParams"/>					  
 							 <form action="${url}" method="get" id="customPriceFilter">
 							    <input type="hidden" name="offer" value="${offer}"/>
@@ -489,7 +490,7 @@ function navigateToPage(queryString,textString)
 								<input type="button" name ="submitPriceFilter" id ="applyCustomPriceFilter"	value="GO"/>
 						</form>							
 		</c:if>
-		
+		</div>
 		
 		
 		
@@ -505,10 +506,10 @@ function navigateToPage(queryString,textString)
 			</c:if>
 </c:if>
 </c:if>
+</div>
 <script>
 	
 
 
 	
 </script>
-

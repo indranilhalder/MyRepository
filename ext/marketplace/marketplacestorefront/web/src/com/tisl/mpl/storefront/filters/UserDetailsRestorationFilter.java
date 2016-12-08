@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.security.cookie.UserCookieGenerator;
 import com.tisl.mpl.storefront.security.cookie.UserTypeCookieGenerator;
 
@@ -77,7 +78,6 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 	private final String REGISTERED = "site_user";
 	private final String FACEBOOKUSER = "facebook";
 	private final String FACEBOOK_LOGIN = "FACEBOOK_LOGIN";
-
 	private static final Logger LOG = Logger.getLogger(UserDetailsRestorationFilter.class.getName());
 
 	private ConfigurationService configurationService;
@@ -105,6 +105,7 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 	{
 		String userId = null;
 		String userType = null;
+		String userLoginType = null; //TPR-668
 		boolean userCookieSet = false;
 		boolean userTypeCookieSet = false;
 		final UserModel currentUser = getUserService().getCurrentUser();
@@ -131,6 +132,7 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 			{
 				if (userCookieName.equals(cookie.getName()))
 				{
+					LOG.info("inside mpl user " + cookie.getDomain());
 					userId = currentUser.getUid();
 					cookie.setValue(userId);
 					cookie.setMaxAge(60 * 60 * 24);// setting 1 day life time for cookies
@@ -140,9 +142,11 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 
 				if (userTypeCookieName.equals(cookie.getName()))
 				{
+					LOG.info("inside mpl user  type " + cookie.getDomain());
 					if (getUserService().isAnonymousUser(currentUser))
 					{
 						userType = ANONYMOUS;
+						userLoginType = MessageConstants.GUESTUSER;
 					}
 					else
 					{
@@ -151,10 +155,16 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 							if (currCust.getType().toString().equals(FACEBOOK_LOGIN))
 							{
 								userType = FACEBOOKUSER;
+								userLoginType = FACEBOOKUSER;
+							}
+							else if (currCust.getType().toString().equals(MessageConstants.GOOGLE_LOGIN)) // TPR-668
+							{
+								userLoginType = MessageConstants.GOOGLEUSER;
 							}
 							else
 							{
 								userType = REGISTERED;
+								userLoginType = MessageConstants.EMAILUSER;
 							}
 						}
 					}
@@ -180,10 +190,14 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 				userType = REGISTERED;
 			}
 			getUserTypeCookieGenerator().addCookie(response, userType);
+
 		}
+		request.setAttribute(MessageConstants.USER_LOGIN_TYPE, userLoginType);
 		updateKeepAliveCookie(request, response);
+		LOG.info("after updateKeepAlive Method :value of userlogintype  in request is " + request.getAttribute(userLoginType));
 
 		filterChain.doFilter(request, response);
+		LOG.info("after filter chain  Method : value in userlogintype request is " + request.getAttribute(userLoginType));
 	}
 
 	protected SessionService getSessionService()

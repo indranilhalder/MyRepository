@@ -30,7 +30,7 @@
 						name="skuIdForCod" value="" />	
 					<button type="submit" name="submit" id="submit"
 						class="otherSellersFont">
-						<p id="otherSellerInfoId" class="other-sellers">
+						<p id="otherSellerInfoId" class="other-sellers" style="display: none">
 							<span class="other-sellers-link">
 							<span id="otherSellersId"></span>&nbsp;
 							<span><spring:theme code="product.othersellers"></spring:theme></span></span>&nbsp;

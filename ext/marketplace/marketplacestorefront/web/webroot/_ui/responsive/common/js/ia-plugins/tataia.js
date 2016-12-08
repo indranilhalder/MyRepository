@@ -509,6 +509,12 @@ if (searchCategory_id){
 			  var qv = productElement.getElementsByClassName("IAQuickView")[0];
 			  qv.style.zIndex = 11;
 			  qv.style.visibility = "visible";
+			// Added as part of TPR-859 (size on hover)
+				var size_bottom = $(productElement).find(".short-info").height() + 31;
+				$(productElement).find(".sizesAvailable").css("bottom",size_bottom + "px");
+				if($(productElement).find(".sizesAvailable").length > 0){
+					$(productElement).find(".IAQuickView").addClass("size_on_hover");
+				}
 			}
 			/*Make quickview and Add to cart visible and on top*/
 			function showBoth(productElement) {
@@ -669,7 +675,7 @@ if (searchCategory_id){
 						  }
 						 /* TISPRD-2119 Changes for Quick View position*/
 						 if((obj.colors != null && obj.colors.length < 2) && (obj.sizes != null && obj.sizes.length < 2)&& (obj.type == 'Electronics')){ 
-							 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0;left: 0px; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block; width: 50%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height:70px;font-size:12px;"><span>Quick View</span></div><div onclick=submitAddToCart("'+obj.site_product_id+'","'+obj.site_uss_id+'") class="iaAddToCartButton" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block;right:0; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;width: 50%;font-size:12px;"><span>Add To Bag</span></div>';
+							 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView ia_both" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0;left: 0px; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block; width: 50%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height:70px;font-size:12px;"><span>Quick View</span></div><div onclick=submitAddToCart("'+obj.site_product_id+'","'+obj.site_uss_id+'") class="iaAddToCartButton ia_both" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block;right:0; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;width: 50%;font-size:12px;"><span>Add To Bag</span></div>';
 							
 						 }else{
 							 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0; z-index: -1; visibility: hidden; color: #00cbe9;display: block; width: 100%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;font-size:12px;"><span>Quick View</span></div>';
@@ -689,7 +695,7 @@ if (searchCategory_id){
 						  }
 						  /* TISPRD-2119 Changes for Quick View position*/
 							 if((obj.colors != null && obj.colors.length < 2) && (obj.sizes != null && obj.sizes.length < 2)&& (obj.type == 'Electronics')){ 
-								 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0;left: 0px; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block; width: 50%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height:70px;font-size:12px;"><span>Quick View</span></div><div onclick=submitAddToCart("'+obj.site_product_id+'","'+obj.site_uss_id+'") class="iaAddToCartButton" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block;right:0; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;width: 50%;font-size:12px;"><span>Add To Bag</span></div>';
+								 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView ia_both" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0;left: 0px; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block; width: 50%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height:70px;font-size:12px;"><span>Quick View</span></div><div onclick=submitAddToCart("'+obj.site_product_id+'","'+obj.site_uss_id+'") class="iaAddToCartButton ia_both" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block;right:0; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;width: 50%;font-size:12px;"><span>Add To Bag</span></div>';
 								
 							 }else{
 								 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0; z-index: -1; visibility: hidden; color: #00cbe9;display: block; width: 100%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;font-size:12px;"><span>Quick View</span></div>';
@@ -778,7 +784,7 @@ if (searchCategory_id){
 					  } else {
 					  obj.sizes.sort() /*Not a string-based size array, sort normally*/
 					  }
-					   	html += '</div><span style="padding-bottom: 0;line-height:2;" class="sizesAvailable">Size : ['+obj.sizes+'] </span>';
+					   	html += '</div><span class="sizesAvailable">Size : <span class="size-col">['+obj.sizes+'] </span></span>';
 					  }
 					  } 
 				  html += '</div></a>';
@@ -954,16 +960,16 @@ if (searchCategory_id){
 			    
 			    if(slider) {
 			    	if(site_page_type === 'search' && widgetElement === 'ia_products_search'){
-			    		html += '<h1><span style="color: black !important;">Best Sellers</span>';
+			    		html += '<h2><span style="color: black !important;">Best Sellers</span>';
 			    	}else if(site_page_type === 'viewSellers' && widgetElement === 'ia_products'){
-			    		html += '<h1><span style="color: black !important;">You May Also Need</span>';
+			    		html += '<h2><span style="color: black !important;">You May Also Need</span>';
 			    	}else{
 			    		//for release 2 changes in pdp-page 
 			    		if(site_page_type === 'productpage' && widgetElement ==='ia_products_complements'){
-			    			html += '<h1><span style="color: black !important;">Things That Go With This</span>';
+			    			html += '<h2><span style="color: black !important;">Things That Go With This</span>';
 			    		}else{
 						
-			    		html += '<h1><span style="color: black !important;">'+productWidgetTitle[jQuery.inArray(widgetMode, productWidget)]+'</span>';
+			    		html += '<h2><span style="color: black !important;">'+productWidgetTitle[jQuery.inArray(widgetMode, productWidget)]+'</span>';
 			    	}
 			    		}
 			      
@@ -971,7 +977,7 @@ if (searchCategory_id){
 			      if(site_page_type === "homepage" || site_page_type ==="viewAllTrending" && widgetMode != "recent") {
 			        html += catHtml;
 			      }
-			      html += '</h1>';
+			      html += '</h2>';
 			      html += '<div class="spacer" style="padding: 0 25px;"><div class="slider product ready"><div class="frame"><ul id="' + widgetElement + '_list" class="overflow owl-carousel" style="width: 0.953empx; left: 0px;">';
 			    } else {
 			      if(site_page_type === "homepage" || site_page_type ==="viewAllTrending") {
@@ -1127,28 +1133,26 @@ if (searchCategory_id){
 			            		nav:true,
 			            		dots:false,
 			            		navText:[],
-			            		slideBy:'page',
-			            		responsive : {
-			            			// breakpoint from 0 up
-			            			0 : {
-			            				items:1,
-			            				stagePadding: 50,
-			            			},	
-			            			480 : {
-			            				items:2,
-			            				stagePadding: 50,
-			            			},
-			            			768 : {
-			            				items:2,
-			            			},
-			            			980 : {
-			            				items:3,
-			            			},		
-			            			// breakpoint from 650 up
-			            			1200 : {
-			            				items:4,
-			            			}			
-			            		}	
+			            		responsive: {
+			                        // breakpoint from 0 up
+			                        0: {
+			                            items: 1,
+			                            stagePadding: 50,
+			                        },
+			                        // breakpoint from 480 up
+			                        480: {
+			                            items: 2,
+			                            stagePadding: 50,
+			                        },
+			                        // breakpoint from 768 up
+			                        768: {
+			                            items: 3,
+			                        },
+			                        // breakpoint from 768 up
+			                        1280: {
+			                            items: 5,
+			                        }
+			                    }
 
 						    	    	  /*items : 4,
 
@@ -1181,28 +1185,26 @@ if (searchCategory_id){
 	            		nav:true,
 	            		dots:false,
 	            		navText:[],
-	            		slideBy:'page',
-	            		responsive : {
-	            			// breakpoint from 0 up
-	            			0 : {
-	            				items:1,
-	            				stagePadding: 50,
-	            			},	
-	            			480 : {
-	            				items:2,
-	            				stagePadding: 50,
-	            			},
-	            			768 : {
-	            				items:3,
-	            			},
-	            			980 : {
-	            				items:4,
-	            			},		
-	            			// breakpoint from 650 up
-	            			1200 : {
-	            				items:5,
-	            			}			
-	            		}	
+	            		responsive: {
+	                        // breakpoint from 0 up
+	                        0: {
+	                            items: 1,
+	                            stagePadding: 50,
+	                        },
+	                        // breakpoint from 480 up
+	                        480: {
+	                            items: 2,
+	                            stagePadding: 50,
+	                        },
+	                        // breakpoint from 768 up
+	                        768: {
+	                            items: 3,
+	                        },
+	                        // breakpoint from 768 up
+	                        1280: {
+	                            items: 5,
+	                        }
+	                    }
 
 			        /*items : 5,
 
@@ -1422,28 +1424,26 @@ if (searchCategory_id){
 	            		nav:true,
 	            		dots:false,
 	            		navText:[],
-	            		slideBy:'page',
-	            		responsive : {
-	            			// breakpoint from 0 up
-	            			0 : {
-	            				items:1,
-	            				stagePadding: 50,
-	            			},	
-	            			480 : {
-	            				items:2,
-	            				stagePadding: 50,
-	            			},
-	            			768 : {
-	            				items:2,
-	            			},
-	            			980 : {
-	            				items:3,
-	            			},		
-	            			// breakpoint from 650 up
-	            			1200 : {
-	            				items:4,
-	            			}			
-	            		}	
+	            		responsive: {
+	                        // breakpoint from 0 up
+	                        0: {
+	                            items: 1,
+	                            stagePadding: 50,
+	                        },
+	                        // breakpoint from 480 up
+	                        480: {
+	                            items: 2,
+	                            stagePadding: 50,
+	                        },
+	                        // breakpoint from 768 up
+	                        768: {
+	                            items: 3,
+	                        },
+	                        // breakpoint from 768 up
+	                        1280: {
+	                            items: 5,
+	                        }
+	                    }
 					    	/*items : 4,
 
 							navigation:true,

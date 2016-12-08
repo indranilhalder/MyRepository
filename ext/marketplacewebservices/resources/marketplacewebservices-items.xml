@@ -29,6 +29,9 @@
 			<value code="SingleBanner"/>
 			<value code="Banners3TypeReverse"/>	
 			<value code="Banner3Type"/>
+			<!--  TPR-1316 -->
+			<value code="ProductSliderType"/>
+			<value code="ProductListType"/>
 		</enumtype>
 	</enumtypes>
 	
@@ -237,48 +240,25 @@
 			</attributes>
 	</itemtype>
 
-	<itemtype code="State" autocreate="true"
-					 generate="true">
-			 <deployment table="MplState" typecode="25084" /> 
-			<attributes>
-					<attribute autocreate="true" qualifier="countrykey"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="false" />
-					</attribute>
-					<attribute autocreate="true" qualifier="region"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="false" />
-					</attribute>
-					<attribute autocreate="true" qualifier="description"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="false" />
-					</attribute>					
-			</attributes>
-	</itemtype>
-<itemtype code="MerchantMasterTable" autocreate="true"
-					 generate="true">
-			<deployment table="MplMerchntMstrTbl" typecode="25085" /> 
-			<attributes>
-					<attribute autocreate="true" qualifier="MerchantCode"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="false" />
-					</attribute>
-					<attribute autocreate="true" qualifier="MerchantDesc"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="false" />
-					</attribute>				
-			</attributes>
-	</itemtype>
+
+	<itemtype code="MerchantMasterTable" autocreate="true"
+						 generate="true">
+				<deployment table="MplMerchntMstrTbl" typecode="25085" /> 
+				<attributes>
+						<attribute autocreate="true" qualifier="MerchantCode"
+							type="java.lang.String">
+							<persistence type="property" />
+							<modifiers read="true" write="true" search="true"
+								optional="false" />
+						</attribute>
+						<attribute autocreate="true" qualifier="MerchantDesc"
+							type="java.lang.String">
+							<persistence type="property" />
+							<modifiers read="true" write="true" search="true"
+								optional="false" />
+						</attribute>				
+				</attributes>
+		</itemtype>
 <!-- Ticket create interface  -->
 
 <itemtype code="ReturnCategoryCode" autocreate="true"

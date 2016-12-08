@@ -34,6 +34,7 @@ public class LuxuryProductCategoryDecorator implements CSVCellDecorator
 
 		//final Integer position2 = new Integer(12);
 		final Integer position2 = Integer.valueOf(12); //Sonar fix
+
 		final String categories = srcLine.get(position);
 		final String luxIndicator = srcLine.get(position2);
 

@@ -1,9 +1,5 @@
 package com.tisl.mpl.interceptor;
 
-/**
- *
- */
-
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -129,6 +125,22 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 	{
 		LOG.debug(Localization.getLocalizedString("promotion.priorityIntercepter.message"));
 
+		final boolean errorflag = checkDescriptionData(object);
+
+		if (!errorflag)
+		{
+			final String errorMsg = Localization.getLocalizedString(MarketplacecommerceservicesConstants.PROMO_ERROR_MESSAGE);
+			//interceptor exeption is thrown(Message : Cannot exceed 25 characters).
+			throw new InterceptorException(errorMsg);
+
+		}
+
+
+
+
+
+
+
 		if (object instanceof ProductPromotionModel)
 		{
 			//@Description :To check if an Enabled Promotions exists with the Product and same priority
@@ -147,6 +159,7 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 									&& productPromotion.getPromotionType().equals(promotion.getPromotionType()))
 							{
 								LOG.debug(Localization.getLocalizedString(MODIFY_MESSAGE));
+
 								continue;
 							}
 
@@ -281,8 +294,8 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 								throw new InterceptorException(errorMsg + MarketplacecommerceservicesConstants.SINGLE_SPACE
 										+ MarketplacecommerceservicesConstants.PROMOCODE + categoryPromotion.getCode()
 										+ MarketplacecommerceservicesConstants.SINGLE_SPACE
-										+ MarketplacecommerceservicesConstants.PROMOCATEGORY + category.getCode() + "("
-										+ category.getName() + ")" + MarketplacecommerceservicesConstants.SINGLE_SPACE
+										+ MarketplacecommerceservicesConstants.PROMOCATEGORY + category.getCode() + "(" + category.getName()
+										+ ")" + MarketplacecommerceservicesConstants.SINGLE_SPACE
 										+ MarketplacecommerceservicesConstants.PROMOPRIORITY + categoryPromotion.getPriority());
 								//}
 							}
@@ -362,12 +375,29 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 			{
 				final String errorMsg = Localization.getLocalizedString(PRODUCT_ERROR_MESSAGE);
 				throw new InterceptorException(errorMsg + MarketplacecommerceservicesConstants.SINGLE_SPACE
-						+ MarketplacecommerceservicesConstants.PROMOCODE + promoCode
-						+ MarketplacecommerceservicesConstants.SINGLE_SPACE + MarketplacecommerceservicesConstants.PROMOPRIORITY
-						+ promotion.getPriority());
+						+ MarketplacecommerceservicesConstants.PROMOCODE + promoCode + MarketplacecommerceservicesConstants.SINGLE_SPACE
+						+ MarketplacecommerceservicesConstants.PROMOPRIORITY + promotion.getPriority());
 			}
 		}
 	}
+
+	/**
+	 * @param object
+	 * @return
+	 */
+	private boolean checkDescriptionData(final Object object)
+	{
+		if (object instanceof AbstractPromotionModel)
+		{
+			final AbstractPromotionModel promo = (AbstractPromotionModel) object;
+			if (StringUtils.isNotEmpty(promo.getTitle()) && promo.getTitle().trim().length() > 25)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
 
 	/**
 	 * Code Change for TISPRD-2637
@@ -450,8 +480,8 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 	{
 		if (null != promotion && null == promotion.getPromotionGroup())
 		{
-			promotion.setPromotionGroup(mplPromotionHelper.fetchPromotionGroupDetails(configurationService.getConfiguration()
-					.getString("promotion.default.promotionGroup.identifier")));
+			promotion.setPromotionGroup(mplPromotionHelper.fetchPromotionGroupDetails(
+					configurationService.getConfiguration().getString("promotion.default.promotionGroup.identifier")));
 		}
 	}
 

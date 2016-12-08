@@ -53,6 +53,7 @@ import javax.servlet.http.Cookie;
 
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +73,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
+import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtendedUserServiceImpl;
@@ -137,6 +139,9 @@ public class ProductDetailsHelper
 
 	@Autowired
 	private ExtendedUserServiceImpl userexService;
+
+	@Resource(name = "buyBoxService")
+	private BuyBoxService buyBoxService;
 
 	//SOnar fixes
 	//@Autowired
@@ -602,7 +607,7 @@ public class ProductDetailsHelper
 						if (null != image.getMediaType() && null != image.getMediaType().getCode()
 								&& image.getMediaType().getCode().equalsIgnoreCase("Video"))
 						{
-							galleryImageData.setStaticImage("store/_ui/responsive/common/images/video-play.png");
+							galleryImageData.setStaticImage(MarketplaceFacadesConstants.STATIC_VIDEO);
 						}
 
 					}
@@ -613,6 +618,93 @@ public class ProductDetailsHelper
 						galleryImages.add(formats);
 
 					}
+				}
+			}
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return galleryImageList;
+	}
+
+	/**
+	 * frame gallery images for mobile web service TPR-796
+	 *
+	 * @param productData
+	 * @return List<Map<String, String>>
+	 */
+	public List<GalleryImageData> getPrimaryGalleryImagesMobile(final ProductData productData)
+	{
+		int currentIndex = 0;
+		final List<Map<String, String>> galleryImages = new ArrayList<>();
+		final List<GalleryImageData> galleryImageList = new ArrayList<GalleryImageData>();
+		GalleryImageData galleryImageData = null;
+		try
+		{
+			if (CollectionUtils.isNotEmpty(productData.getImages()))
+			{
+				final List<ImageData> images = new ArrayList<>();
+				for (final ImageData image : productData.getImages())
+				{
+					if (ImageDataType.PRIMARY.equals(image.getImageType()))
+					{
+						images.add(image);
+					}
+				}
+				/*
+				 * final BeanComparator reverseOrderBeanComparator = new BeanComparator(MEDIA_PRIORITY, new
+				 * ReverseComparator( new ComparableComparator())); Collections.sort(images, reverseOrderBeanComparator);
+				 */
+				//final Comparator<ImageData> comp = new BeanComparator(MEDIA_PRIORITY);
+				//Collections.sort(images, comp);
+				if (CollectionUtils.isNotEmpty(images))
+				{
+					Map<String, String> formats = new HashMap<String, String>();
+					galleryImageData = new GalleryImageData();
+					if (images.get(0).getGalleryIndex() != null)
+					{
+						currentIndex = images.get(0).getGalleryIndex().intValue();
+					}
+					for (final ImageData image : images)
+					{
+						if (null != image.getGalleryIndex() && currentIndex != image.getGalleryIndex().intValue())
+						{
+							galleryImages.add(formats);
+							galleryImageData.setGalleryImages(formats);
+							galleryImageList.add(galleryImageData);
+							formats = new HashMap<>();
+							galleryImageData = new GalleryImageData();
+							currentIndex = image.getGalleryIndex().intValue();
+						}
+						if (null != image.getFormat() && !image.getFormat().isEmpty() && null != image.getUrl()
+								&& !image.getUrl().isEmpty())
+						{
+							formats.put(image.getFormat(), image.getUrl());
+							galleryImageData.setGalleryImages(formats);
+						}
+						if (null != image.getMediaType() && null != image.getMediaType().getCode())
+						{
+							galleryImageData.setMediaType(image.getMediaType().getCode());
+						}
+						if (null != image.getMediaType() && null != image.getMediaType().getCode()
+								&& image.getMediaType().getCode().equalsIgnoreCase("Video"))
+						{
+							//IQA comment
+							galleryImageData.setStaticImage(MarketplaceFacadesConstants.STATIC_VIDEO);
+						}
+
+					}
+					//TODO mediatype can be made dynamic
+					galleryImageData.setMediaType(MarketplacecommerceservicesConstants.IMAGE_MEDIA_TYPE);
+
+					galleryImageList.add(galleryImageData);
+
+					if (MapUtils.isNotEmpty(formats))
+					{
+						galleryImages.add(formats);
+					}
+
 				}
 			}
 		}
@@ -1093,10 +1185,84 @@ public class ProductDetailsHelper
 		return existUssid;
 	}
 
+	
+
+	/** 
+	 * @param productCode
+	 * @param valueOf
+	 * @return
+	 */
+	public boolean addSingleToWishListForPLP(final String productCode, final Boolean sizeSelected)
+	{
+		boolean add = false;
+		final String wishName = MarketplaceFacadesConstants.DEFAULT_WISHLIST_NAME;
+		Wishlist2Model lastCreatedWishlist = null;
+		final UserModel user = userService.getCurrentUser();
+		String ussid = null;
+		if (getBuyBoxService().getBuyboxPricesForSearch(productCode) != null)
+		{
+			ussid = getBuyBoxService().getBuyboxPricesForSearch(productCode).get(0).getSellerArticleSKU();
+		}
+		try
+		{
+			lastCreatedWishlist = wishlistFacade.getSingleWishlist(user);
+			if (null != lastCreatedWishlist)
+			{
+				add = wishlistFacade.addProductToWishlist(lastCreatedWishlist, productCode, ussid, sizeSelected.booleanValue());
+
+				LOG.debug("addToWishListInPopup: ***** getLastCreatedWishlist: add" + add);
+			}
+			else
+			{
+				LOG.debug("addToWishListInPopup: ***** New Create");
+				final Wishlist2Model createdWishlist = wishlistFacade.createNewWishlist(user, wishName, productCode);
+				add = wishlistFacade.addProductToWishlist(createdWishlist, productCode, ussid, sizeSelected.booleanValue());
+				final WishlistData wishData = new WishlistData();
+				wishData.setParticularWishlistName(createdWishlist.getName());
+				//existingWishlist = wishlistFacade.getWishlistForName(wishName);
+				wishData.setProductCode(productCode);
+			}
+			if (!add) //add == false
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B3002);
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+
+			throw e;
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return add;
+	}
+
+	/**
+	 * @return the buyBoxService
+	 */
+	public BuyBoxService getBuyBoxService()
+	{
+		return buyBoxService;
+	}
+
+	/**
+	 * @param buyBoxService
+	 *           the buyBoxService to set
+	 */
+	public void setBuyBoxService(final BuyBoxService buyBoxService)
+	{
+		this.buyBoxService = buyBoxService;
+	}	
+
 	/**
 	 * @param productCode
-	 * @param ussid
-	 * @param valueOf
+	 * @param ussid		 
 	 * @return
 	 */
 	public boolean removeFromWishList(final String productCode, final String ussid)
@@ -1132,6 +1298,5 @@ public class ProductDetailsHelper
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 		return removeFromWl;
-
 	}
 }

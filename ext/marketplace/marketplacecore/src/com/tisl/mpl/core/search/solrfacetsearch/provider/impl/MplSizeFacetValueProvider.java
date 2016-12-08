@@ -31,8 +31,9 @@ public class MplSizeFacetValueProvider extends AbstractPropertyFieldValueProvide
 {
 	private FieldNameProvider fieldNameProvider;
 
-	//@Autowired
-	//private ConfigurationService configurationService;  //Sonar fix
+
+	//	@Autowired
+	//	private ConfigurationService configurationService;
 
 	/*
 	 * (non-Javadoc)

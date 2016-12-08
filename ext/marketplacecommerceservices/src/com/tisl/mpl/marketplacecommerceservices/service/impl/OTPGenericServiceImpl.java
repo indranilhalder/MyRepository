@@ -43,13 +43,14 @@ public class OTPGenericServiceImpl implements OTPGenericService
 	private OTPDao otpDao;
 	private final DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 	private static final String OTP_ENABLED_STRING = "marketplace.otp.enabled";
+	private static final String VALID = "VALID";
+	private static final String INVALID = "INVALID";
 	private ConfigurationService configurationService;
 	private ModelService modelservice;
 	private UserService userService;
 	private final String EMAILPATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
 			+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-	private static final String VALID = "VALID"; //Sonar fix
-	private static final String INVALID = "INVALID";
+
 
 	/**
 	 * Calculates the checksum using the credit card algorithm. This algorithm has the advantage that it detects any

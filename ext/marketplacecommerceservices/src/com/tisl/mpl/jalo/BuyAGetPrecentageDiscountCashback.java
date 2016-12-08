@@ -194,7 +194,7 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 				}
 				//for delivery mode restriction check
 				flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForAPromo(restrictionList,
-						validProductUssidMap);
+						validProductUssidMap, order);
 				//for payment mode restriction check
 				flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList,
 						paramSessionContext);

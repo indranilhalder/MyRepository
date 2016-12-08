@@ -5,29 +5,43 @@ package com.tisl.mpl.facade.impl;
 
 import de.hybris.platform.commercefacades.order.data.CCPaymentInfoData;
 import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.payment.CreditCardPaymentInfoModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
-import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.CartService;
+import de.hybris.platform.order.InvalidCartException;
+import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.store.services.BaseStoreService;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
+import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.data.MplPromoPriceWsDTO;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
@@ -37,9 +51,11 @@ import com.tisl.mpl.juspay.request.GetOrderStatusRequest;
 import com.tisl.mpl.juspay.response.DeleteCardResponse;
 import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
+import com.tisl.mpl.service.MplCartWebService;
 import com.tisl.mpl.service.MplPaymentWebService;
 import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.wsdto.BillingAddressWsData;
+import com.tisl.mpl.wsdto.CartDataDetailsWsDTO;
 import com.tisl.mpl.wsdto.MplSavedCardDTO;
 import com.tisl.mpl.wsdto.MplUserResultWsDto;
 import com.tisl.mpl.wsdto.PaymentServiceWsData;
@@ -53,24 +69,31 @@ import com.tisl.mpl.wsdto.PaymentServiceWsData;
 public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 {
 	private static final Logger LOG = Logger.getLogger(MplPaymentWebFacadeImpl.class);
-	@Autowired
+	@Resource
 	private MplPaymentWebService mplPaymentWebService;
-	@Autowired
+	@Resource
 	private ConfigurationService configurationService;
-	@Autowired
+	@Resource
 	private DiscountUtility discountUtility;
-	@Autowired
+	@Resource
 	private MplPaymentFacade mplPaymentFacade;
-	@Autowired
+	@Resource
 	private MplCustomAddressFacade mplCustomAddressFacade;
-	@Autowired
+	@Resource
 	private CartService cartService;
-	@Autowired
+	@Resource
 	private ModelService modelService;
-	@Autowired
+	@Resource
 	private CommerceCartService commerceCartService;
-	@Autowired
+	@Resource
 	private ExtendedUserService extendedUserService;
+	@Resource
+	private MplCartWebService mplCartWebService;
+	@Resource(name = "checkoutFacade")
+	private MplCheckoutFacade mplCheckoutFacade;
+	@Resource(name = "baseStoreService")
+	private BaseStoreService baseStoreService;
+	@Autowired
 	private Converter<CartModel, CartData> mplExtendedCartConverter;
 	private Converter<AddressModel, AddressData> customAddressConverter;
 	private Converter<CreditCardPaymentInfoModel, CCPaymentInfoData> creditCardPaymentInfoConverter;
@@ -81,16 +104,16 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 	/**
 	 * To Check COD Eligibility for Cart Items
 	 *
-	 * @param cartID
+	 * @param abstractOrder
 	 * @param customerID
 	 * @return PaymentServiceWsData
 	 */
 	@Override
-	public PaymentServiceWsData getCODDetails(final String cartID, final String customerID)
+	public PaymentServiceWsData getCODDetails(final AbstractOrderModel abstractOrder, final String customerID)
 	{
 		//final PaymentServiceWsData PaymentServiceData = getMplPaymentWebService().getCODDetails(cartID, customerID);		//SONAR Fix
 		//return PaymentServiceData;		//SONAR Fix
-		return getMplPaymentWebService().getCODDetails(cartID, customerID);
+		return getMplPaymentWebService().getCODDetails(abstractOrder, customerID);
 	}
 
 	/**
@@ -111,14 +134,13 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 		{
 			final PaymentService juspayService = new PaymentService();
 
-			juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
-					MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+			juspayService.setBaseUrl(
+					getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYBASEURL));
 			juspayService
-					.withKey(
-							getConfigurationService().getConfiguration().getString(
-									MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY)).withMerchantId(
-							getConfigurationService().getConfiguration()
-									.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
+					.withKey(getConfigurationService().getConfiguration()
+							.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
+					.withMerchantId(getConfigurationService().getConfiguration()
+							.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
 
 			final GetOrderStatusRequest orderStatusRequest = new GetOrderStatusRequest();
 			//Set the card Token into DeleteCardRequest
@@ -130,8 +152,8 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 			getOrderResponse = juspayService.getOrderStatus(orderStatusRequest);
 
 			LOG.debug("Response from juspay Web::::::::::::::::::::::::::::" + getOrderResponse);
-			updateCardDetails = getMplPaymentWebService()
-					.updateCardTransactionDetails(getOrderResponse, paymentMode, cartID, userId);
+			updateCardDetails = getMplPaymentWebService().updateCardTransactionDetails(getOrderResponse, paymentMode, cartID,
+					userId);
 
 		}
 		/*
@@ -219,14 +241,13 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 			//creating PaymentService of Juspay
 			final PaymentService juspayService = new PaymentService();
 
-			juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
-					MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+			juspayService.setBaseUrl(
+					getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYBASEURL));
 			juspayService
-					.withKey(
-							getConfigurationService().getConfiguration().getString(
-									MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY)).withMerchantId(
-							getConfigurationService().getConfiguration()
-									.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
+					.withKey(getConfigurationService().getConfiguration()
+							.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
+					.withMerchantId(getConfigurationService().getConfiguration()
+							.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
 
 			final DeleteCardRequest deleteCardRequest = new DeleteCardRequest();
 			//Set the card Token into DeleteCardRequest
@@ -273,140 +294,357 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 	 * @param binNo
 	 * @param bankName
 	 * @param paymentMode
-	 * @param cartID
+	 * @param cart
 	 * @return MplPromotionDTO
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public MplPromoPriceWsDTO binValidation(final String binNo, final String paymentMode, final String cartID,
+	public MplPromoPriceWsDTO binValidation(final String binNo, final String paymentMode, final CartModel cart,
 			final String userId, final String bankName) throws EtailNonBusinessExceptions
 	{
 		MplPromoPriceWsDTO promoPriceData = new MplPromoPriceWsDTO(); //The New Returning DTO
 		MplPromoPriceData data;
+		CartData cartData = null;
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug(String.format("binValidation Facade: | paymentMode: %s | cartId : %s  ", userId, cart.getCode()));
+		}
 		try
 		{
 			// Validate Correct Input
-			promoPriceData = getMplPaymentWebService().validateBinNumber(binNo, paymentMode, bankName);
+			//promoPriceData = getMplPaymentWebService().validateBinNumber(binNo, paymentMode, bankName);
+
+			//Added for TPR-1035
+			promoPriceData = getMplPaymentWebService().validateBinNumber(binNo, paymentMode, bankName, userId);
 			if (promoPriceData.getBinCheck().booleanValue())
 			{
 				data = new MplPromoPriceData();
-				try
+				// Validate Cart Model is not null
+				if (null != cart)
 				{
-					//fetch usermodel against customer
-					final UserModel user = getExtendedUserService().getUserForOriginalUid(userId);
-					// Check userModel null
-					if (null != user)
+					final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
+					final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
+					if (cart.getEntries() != null)
 					{
-
-						LOG.debug(String.format("binValidation Facade: | userId: %s | cartId : %s  ", userId, cartID));
-
-						//getting cartmodel using cart id and user
-						final CartModel cart = getCommerceCartService().getCartForCodeAndUser(cartID, user);
-						// Validate Cart Model is not null
-						if (null != cart)
+						for (final AbstractOrderEntryModel cartEntryModel : cart.getEntries())
 						{
-							if (!paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
+							if (cartEntryModel != null
+									&& cartEntryModel.getGiveAway() != null & !cartEntryModel.getGiveAway().booleanValue()
+									&& cartEntryModel.getSelectedUSSID() != null)
 							{
-								cart.setConvenienceCharges(Double.valueOf(0.0));
+								freebieModelMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getMplDeliveryMode());
+								freebieParentQtyMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getQuantity());
 							}
-							modelService.save(cart);
-							cart.setChannel(SalesApplication.MOBILE);
+						}
+					}
+					//TISPRO-540 - Setting Payment mode in Cart
+					cart.setChannel(SalesApplication.MOBILE);
+					if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT))
+					{
+						cart.setModeOfPayment(MarketplacewebservicesConstants.CREDIT);
+						cart.setConvenienceCharges(Double.valueOf(0.0));
+						//getModelService().save(cart);
+					}
+					else
+						if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT))
+					{
+						cart.setModeOfPayment(MarketplacewebservicesConstants.DEBIT);
+						cart.setConvenienceCharges(Double.valueOf(0.0));
+						//getModelService().save(cart);
+					}
+					else if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING))
+					{
+						cart.setModeOfPayment(MarketplacewebservicesConstants.NETBANKING);
+						cart.setConvenienceCharges(Double.valueOf(0.0));
+						//getModelService().save(cart);
+					}
+					else if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI))
+					{
+						cart.setModeOfPayment(MarketplacewebservicesConstants.EMI);
+						cart.setConvenienceCharges(Double.valueOf(0.0));
+						//getModelService().save(cart);
+					}
+					else if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
+					{
+						cart.setModeOfPayment(MarketplacewebservicesConstants.COD);
+						Long convenienceCharge = baseStoreService.getCurrentBaseStore().getConvenienceChargeForCOD();
+						if (null == convenienceCharge)
+						{
+							convenienceCharge = Long.valueOf(0);
+						}
+						//setting conv charge in cartmodel
+						cart.setConvenienceCharges(Double.valueOf(convenienceCharge.longValue()));
+						//TISEE-5555
+						//getting customer mobile number
+						final String mplCustomerIDCellNumber = getMplPaymentFacade().fetchPhoneNumber(cart);
+						promoPriceData.setMobileNo(mplCustomerIDCellNumber);
+					}
+					//saving the cartmodel TISQAUAT-609
+					getModelService().save(cart);
 
-							LOG.debug("binValidation : cartModel : " + cart);
-							//final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
-							//TISPRD-9350--  New Method created to pass the cartModel in place of fetching data from session
-							final CartData cartData = getMplCustomAddressFacade().getCheckoutCartWS(cart);
+					LOG.debug("binValidation : cartModel : " + cart);
+					//final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+					//TISPRD-9350--  New Method created to pass the cartModel in place of fetching data from session
+					cartData = mplExtendedCartConverter.convert(cart);
+					//Note : Response will Have DTO within which will be a list of DTO with Promo Details
+					data = getMplPaymentFacade().applyPromotions(cartData, null, cart, null, data);
+					if (LOG.isDebugEnabled())
+					{
+						LOG.debug("binValidation : promotionData : " + data);
+					}
 
-							if (null != cartData)
+					getMplPaymentFacade().populateDelvPOSForFreebie(cart, freebieModelMap, freebieParentQtyMap);
+					//TISEE-515
+					if (null != data)
+					{
+						if (StringUtils.isEmpty(data.getErrorMsgForEMI()))
+						{
+							//TISEE-515
+							if (null != data.getConvCharge())
 							{
-								LOG.debug("binValidation : cartData : " + cartData);
+								promoPriceData.setConvCharges(data.getConvCharge());
+							}
+							//Populating Delivery Charges
+							if (null != data.getDeliveryCost())
+							{
+								promoPriceData.setDeliveryCost(data.getDeliveryCost());
+							}
 
-								//Note : Response will Have DTO within which will be a list of DTO with Promo Details
-								data = getMplPaymentFacade().applyPromotions(cartData, cart);
+							//Populating Total Price Excluding Convenience
+							if (null != data.getTotalExcConv())
+							{
+								promoPriceData.setTotalPrice(data.getTotalExcConv());
+							}
 
-								LOG.debug("binValidation : promotionData : " + data);
-
+							//Populating Total Price
+							if (null != data.getTotalPrice())
+							{
+								promoPriceData.setCurrency(MarketplacewebservicesConstants.EMPTY);
+								if (null != data.getCurrency())
+								{
+									promoPriceData.setCurrency(data.getCurrency());
+								}
 								//TISEE-515
-
-								if (null != data)
-								{
-									if (StringUtils.isEmpty(data.getErrorMsgForEMI()))
-									{
-										//TISEE-515
-										if (null != data.getConvCharge())
-										{
-											promoPriceData.setConvCharges(data.getConvCharge());
-										}
-
-										//Populating Delivery Charges
-										if (null != data.getDeliveryCost())
-										{
-											promoPriceData.setDeliveryCost(data.getDeliveryCost());
-										}
-
-										//Populating Total Price Excluding Convenience
-										if (null != data.getTotalExcConv())
-										{
-											promoPriceData.setTotalPrice(data.getTotalExcConv());
-										}
-
-										//Populating Total Price
-										if (null != data.getTotalPrice())
-										{
-											promoPriceData.setCurrency(MarketplacewebservicesConstants.EMPTY);
-											if (null != data.getCurrency())
-											{
-												promoPriceData.setCurrency(data.getCurrency());
-											}
-											//TISEE-515
-											promoPriceData.setTotalPriceInclConv(data.getTotalPrice());
-										}
-										//Populating Sub Total Details
-										if (null != cart.getSubtotal())
-										{
-											promoPriceData.setSubTotal(getDiscountUtility().createPrice(cart, cart.getSubtotal()));
-										}
-										//Populating Discount Details
-										if (null != data.getTotalDiscount())
-										{
-											promoPriceData.setTotalDiscount(data.getTotalDiscount());
-										}
-									}
-									else
-									{
-										promoPriceData.setError(data.getErrorMsgForEMI());
-									}
-
-								}
-								else
-								{
-									promoPriceData.setError(MarketplacewebservicesConstants.PROMOTIONDATAEMPTY);
-									throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9803);
-								}
+								promoPriceData.setTotalPriceInclConv(data.getTotalPrice());
 							}
-							else
+							//Populating Sub Total Details
+							if (null != cart.getSubtotal())
 							{
-								promoPriceData.setError(MarketplacewebservicesConstants.CARTDATAEMPTY);
-								throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9802);
+								promoPriceData.setSubTotal(getDiscountUtility().createPrice(cart, cart.getSubtotal()));
+							}
+							//Populating Discount Details
+							if (null != data.getTotalDiscount())
+							{
+								promoPriceData.setTotalDiscount(data.getTotalDiscount());
 							}
 						}
 						else
 						{
-							promoPriceData.setError(MarketplacewebservicesConstants.CARTMODELEMPTY);
-							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
+							promoPriceData.setError(data.getErrorMsgForEMI());
 						}
+
 					}
 					else
 					{
-						//If  User Model is null display error message
-						promoPriceData.setError(MarketplacewebservicesConstants.USEREMPTY);
-						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9055);
+
+						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9803);
 					}
+
+
 				}
-				catch (final EtailNonBusinessExceptions e)
+				else
 				{
-					promoPriceData.setError(MarketplacewebservicesConstants.UPDATE_FAILURE);
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9055);
 				}
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9055);
+			}
+		}
+		catch (final EtailBusinessExceptions | EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
+		return promoPriceData;
+	}
+
+	/**
+	 * Check Valid Bin Number and Apply promotion for new char and saved card --TPR-629
+	 *
+	 * @param binNo
+	 * @param bankName
+	 * @param paymentMode
+	 * @param order
+	 * @return MplPromotionDTO
+	 * @throws EtailNonBusinessExceptions
+	 */
+	@Override
+	public MplPromoPriceWsDTO binValidation(final String binNo, final String paymentMode, final OrderModel order,
+			final String userId, final String bankName) throws EtailNonBusinessExceptions
+	{
+		MplPromoPriceWsDTO promoPriceData = new MplPromoPriceWsDTO(); //The New Returning DTO
+		MplPromoPriceData data;
+		OrderData orderData = null;
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug(String.format("binValidation Facade: | paymentMode: %s | cartId : %s  ", userId, order.getCode()));
+		}
+		try
+		{
+			// Validate Correct Input
+			promoPriceData = getMplPaymentWebService().validateBinNumber(binNo, paymentMode, bankName, userId);
+			if (promoPriceData.getBinCheck().booleanValue())
+			{
+				data = new MplPromoPriceData();
+				// Validate Cart Model is not null
+				if (null != order)
+				{
+					final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
+					final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
+					if (order.getEntries() != null)
+					{
+						for (final AbstractOrderEntryModel cartEntryModel : order.getEntries())
+						{
+							if (cartEntryModel != null
+									&& cartEntryModel.getGiveAway() != null & !cartEntryModel.getGiveAway().booleanValue()
+									&& cartEntryModel.getSelectedUSSID() != null)
+							{
+								freebieModelMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getMplDeliveryMode());
+								freebieParentQtyMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getQuantity());
+							}
+						}
+					}
+
+					//TISPRO-540 - Setting Payment mode (In order channel can't be set)
+					//order.setChannel(SalesApplication.MOBILE);
+					if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT))
+					{
+						order.setModeOfOrderPayment(MarketplacewebservicesConstants.CREDIT);
+						order.setConvenienceCharges(Double.valueOf(0.0));
+						getModelService().save(order);
+					}
+					else
+						if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT))
+					{
+						order.setModeOfOrderPayment(MarketplacewebservicesConstants.DEBIT);
+						order.setConvenienceCharges(Double.valueOf(0.0));
+						getModelService().save(order);
+					}
+					else if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING))
+					{
+						order.setModeOfOrderPayment(MarketplacewebservicesConstants.NETBANKING);
+						order.setConvenienceCharges(Double.valueOf(0.0));
+						getModelService().save(order);
+					}
+					else if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI))
+					{
+						order.setModeOfOrderPayment(MarketplacewebservicesConstants.EMI);
+						order.setConvenienceCharges(Double.valueOf(0.0));
+						getModelService().save(order);
+					}
+					else if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
+					{
+						order.setModeOfOrderPayment(MarketplacewebservicesConstants.COD);
+						Long convenienceCharge = baseStoreService.getCurrentBaseStore().getConvenienceChargeForCOD();
+						if (null == convenienceCharge)
+						{
+							convenienceCharge = Long.valueOf(0);
+						}
+						//setting conv charge in cartmodel
+						order.setConvenienceCharges(Double.valueOf(convenienceCharge.longValue()));
+						//saving the cartmodel
+						getModelService().save(order);
+						//TISEE-5555
+						//getting customer mobile number
+						final String mplCustomerIDCellNumber = getMplPaymentFacade().fetchPhoneNumber(order);
+						promoPriceData.setMobileNo(mplCustomerIDCellNumber);
+					}
+
+
+					orderData = mplCheckoutFacade.getOrderDetailsForCode(order);
+					//Note : Response will Have DTO within which will be a list of DTO with Promo Details
+					data = getMplPaymentFacade().applyPromotions(null, orderData, null, order, data);
+					if (LOG.isDebugEnabled())
+					{
+						LOG.debug("binValidation : promotionData : " + data);
+					}
+
+					getMplPaymentFacade().populateDelvPOSForFreebie(order, freebieModelMap, freebieParentQtyMap);
+					//TISEE-515
+					if (null != data)
+					{
+						if (StringUtils.isEmpty(data.getErrorMsgForEMI()))
+						{
+							//TISEE-515
+							if (null != data.getConvCharge())
+							{
+								promoPriceData.setConvCharges(data.getConvCharge());
+							}
+
+							//Populating Delivery Charges
+							if (null != data.getDeliveryCost())
+							{
+								promoPriceData.setDeliveryCost(data.getDeliveryCost());
+							}
+
+							//Populating Total Price Excluding Convenience
+							if (null != data.getTotalExcConv())
+							{
+								promoPriceData.setTotalPrice(data.getTotalExcConv());
+							}
+
+							//Populating Total Price
+							if (null != data.getTotalPrice())
+							{
+								promoPriceData.setCurrency(MarketplacewebservicesConstants.EMPTY);
+								if (null != data.getCurrency())
+								{
+									promoPriceData.setCurrency(data.getCurrency());
+								}
+								//TISEE-515
+								promoPriceData.setTotalPriceInclConv(data.getTotalPrice());
+							}
+							//Populating Sub Total Details
+							if (null != order.getSubtotal())
+							{
+								promoPriceData.setSubTotal(getDiscountUtility().createPrice(order, order.getSubtotal()));
+							}
+							//Populating Discount Details
+							if (null != data.getTotalDiscount())
+							{
+								promoPriceData.setTotalDiscount(data.getTotalDiscount());
+							}
+						}
+						else
+						{
+							promoPriceData.setError(data.getErrorMsgForEMI());
+						}
+
+					}
+					else
+					{
+
+						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9803);
+					}
+
+
+				}
+				else
+				{
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9055);
+				}
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9055);
 			}
 		}
 		catch (final EtailBusinessExceptions | EtailNonBusinessExceptions e)
@@ -491,12 +729,86 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 	 * @see com.tisl.mpl.facades.MplPaymentWebFacade#potentialPromotionOnPaymentMode(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public PaymentServiceWsData potentialPromotionOnPaymentMode(final String userId, final String cartId)
+	public PaymentServiceWsData potentialPromotionOnPaymentMode(final AbstractOrderModel cartModel)
 	{
 		PaymentServiceWsData promoData = new PaymentServiceWsData();
-		promoData = getMplPaymentWebService().potentialPromotionOnPaymentMode(userId, cartId);
+		promoData = getMplPaymentWebService().potentialPromotionOnPaymentMode(cartModel);
 		return promoData;
 	}
+
+	/**
+	 * This method returns the cart model based on the guid
+	 *
+	 * @param cartGuId
+	 * @param pincode
+	 * @return CartModel
+	 *
+	 */
+	@Override
+	public CartDataDetailsWsDTO displayOrderSummary(final String userId, final String cartId, final String cartGuId,
+			final String pincode)
+	{
+		CartDataDetailsWsDTO cartDetailsData = new CartDataDetailsWsDTO();
+		OrderModel orderModel = null;
+		CartModel cartModel = null;
+		if (StringUtils.isNotEmpty(cartGuId))
+		{
+			orderModel = mplPaymentFacade.getOrderByGuid(cartGuId);
+		}
+		if (null == orderModel)
+		{
+			cartModel = findCartValues(cartId);
+			// Validate Cart Model is not null
+			if (null != cartModel)
+			{
+				cartDetailsData = mplCartWebService.displayOrderSummary(pincode, cartModel, cartDetailsData);
+				cartDetailsData.setCartGuid(cartModel.getGuid());
+				cartDetailsData.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
+			}
+		}
+		else
+		{
+			cartDetailsData = mplCartWebService.displayOrderSummary(pincode, orderModel, cartDetailsData);
+			cartDetailsData.setCartGuid(cartGuId);
+			cartDetailsData.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+		}
+		return cartDetailsData;
+	}
+
+	/**
+	 * This method helps to save COD Payment info into database
+	 *
+	 * @param order
+	 * @return updated
+	 * @throws CalculationException
+	 * @throws InvalidCartException
+	 */
+	@Override
+	public boolean updateOrder(final OrderModel order) throws EtailBusinessExceptions, InvalidCartException, CalculationException
+	{
+		boolean updated = false;
+		OrderData orderData = null;
+		if (null != order.getPaymentInfo() && CollectionUtils.isEmpty(order.getChildOrders()))
+		{
+			mplCheckoutFacade.beforeSubmitOrder(order);
+			mplCheckoutFacade.submitOrder(order);
+			orderData = mplCheckoutFacade.getOrderDetailsForCode(order);
+		}
+		else if (null != order.getPaymentInfo() && CollectionUtils.isNotEmpty(order.getChildOrders()))
+		{
+			orderData = mplCheckoutFacade.getOrderDetailsForCode(order);
+		}
+		if (orderData != null)
+		{
+			updated = true;
+		}
+		return updated;
+	}
+
 
 	/**
 	 * @return the configurationService

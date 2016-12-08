@@ -107,6 +107,13 @@ public interface OrderModelService
 
 	/**
 	 * @param code
+	 * 
+	 * @return OrderModel
+	 */
+	OrderModel getOrderModel(String code);
+
+	/**
+	 * @param code
 	 *
 	 * @return
 	 */
@@ -124,6 +131,7 @@ public interface OrderModelService
 	 * @return List
 	 */
 	List<BulkCancellationProcessModel> getBulkCancelData();
+
 
 
 }

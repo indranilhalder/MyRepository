@@ -169,6 +169,8 @@ public final class MarketplaceCockpitsConstants extends
 			);	
 	
 	public static final String COUPON_REDEEM = "coupon_redeem";
+	/* TPR-1075  */
+	public static final String FIRST_PURCHASE_ERROR= "newCustomer_not_valid";
 	
 	public static final String SOURCE="CSCockpit";
 	

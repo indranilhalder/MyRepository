@@ -46,7 +46,6 @@
 		</ycommerce:testId>
 	</div>
 	
-
 	<%-- <div class="forgotten-password_register">
 			<a href="<c:url value='/login/pw/request'/>" class="js-password-forgotten"> <spring:theme code="login.link.forgottenPwd" /></a>
 			<input type="hidden" name="Mobileno" id="Mobileno"
@@ -54,9 +53,9 @@
 	</div> --%>
 	<div class="forgotten-password_register">
 			New to Tatacliq? &nbsp;<a id="newToTata" href="javascript:void(0);">Register here</a>
+
 	</div>
 	  
-
 		<input type="hidden" id="recaptchaChallangeAnswered"
 			value="${requestScope.recaptchaChallangeAnswered}" />
 	

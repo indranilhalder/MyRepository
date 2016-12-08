@@ -60,8 +60,7 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 	private final static Logger LOG = Logger.getLogger(InitiateCancelForOrderJob.class.getName());
 	@Autowired
 	private CancelReturnFacade cancelReturnFacade;
-	//@Autowired
-	//private MplCheckoutFacade mplCheckoutFacade;   //Sonar fix
+
 	@Autowired
 	private OrderModelService orderModelService;
 	@Autowired

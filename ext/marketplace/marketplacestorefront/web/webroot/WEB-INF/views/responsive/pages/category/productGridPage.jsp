@@ -10,6 +10,10 @@
 <input type="hidden" id="page_category_name" value="${dropDownText}"/>
 <input type="hidden" id="categoryId" value="${categoryCode}"/>
 <input type="hidden" id="site_section" value="${site_section}"/>
+<!-- TPR-430 -->
+<input type="hidden" id="product_category" value="${product_category}"/>
+<input type="hidden" id="page_subcategory_name" value="${page_subcategory_name}"/>
+<input type="hidden" id="page_subcategory_name_l3" value="${page_subcategory_name_l3}"/>
 <template:page pageTitle="${pageTitle}">
 <div class="list_title"><h1>${dropDownText}</h1></div>
 <div class="listing wrapper">
@@ -24,7 +28,6 @@
 			</cms:pageSlot>
 	</div>
 	</c:if>
-
 	
 		<cms:pageSlot position="ProductGridSlot" var="feature">
 			<cms:component component="${feature}"/>

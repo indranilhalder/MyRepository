@@ -47,7 +47,7 @@ function callSetHeader() {
  
 $(document).on("mouseover touchend", "div.departmenthover", function() {
     var id = this.id;
-    var code = id.substring(4);
+   // var code = id.substring(4);
 
     if (!$.cookie("dept-list") && window.localStorage) {
         for (var key in localStorage) {
@@ -58,48 +58,44 @@ $(document).on("mouseover touchend", "div.departmenthover", function() {
             }
         }
     }
-    if (window.localStorage && (html = window.localStorage.getItem("deptmenuhtml-" + code)) && html != "") {
-        // console.log("Local");
-        $("ul." + id).html(decodeURI(html));
-        $('header .content .container > .right ul li #mobile-menu-toggle + ul li ul.words li.long div').removeClass('toggle');
-		$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul li.short div').removeClass('toggle');
-        //LazyLoad();
-    } else {
-        $.ajax({
-            url: ACC.config.encodedContextPath +
-                "/departmentCollection",
-            type: 'GET',
-            data: "department=" + code,
-            success: function(html) {
-                // console.log("Server");
-                $("ul." + id).html(html);
-                if (window.localStorage) {
-                	//TISPRD-8265-- Local Caching reduced to 10hrs from 1day
-                	var date = new Date();
-                	var minutes = 600;
-                	date.setTime(date.getTime() + (minutes * 60 * 1000)); 
-                	
-                    $.cookie("dept-list", "true", {
-                        expires: date,
-                        path: "/"
 
-                    });
-                    window.localStorage.setItem(
-                        "deptmenuhtml-" + code,
-                        encodeURI(html));
-
-                }
-            },
-            complete: function(){
-	        	$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul.words li.long div').removeClass('toggle');
-	    		$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul li.short div').removeClass('toggle');
-	        	
-	        } 
-        });
-
-
-    }
-    
+//	    if (window.localStorage && (html = window.localStorage.getItem("deptmenuhtml-" + code)) && html != "") {
+//	        // console.log("Local");
+//	        $("ul." + id).html(decodeURI(html));
+//	        $('header .content .container > .right ul li #mobile-menu-toggle + ul li ul.words li.long div').removeClass('toggle');
+//			$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul li.short div').removeClass('toggle');
+//	        //LazyLoad();
+//	    } else {
+//	        $.ajax({
+//	            url: ACC.config.encodedContextPath +
+//	                "/departmentCollection",
+//	            type: 'GET',
+//	            data: "department=" + code,
+//	            success: function(html) {
+//	                // console.log("Server");
+//	                $("ul." + id).html(html);
+//	                if (window.localStorage) {
+//	                	//TISPRD-8265-- Local Caching reduced to 10hrs from 1day
+//	                	var date = new Date();
+//	                	var minutes = 600;
+//	                	date.setTime(date.getTime() + (minutes * 60 * 1000)); 
+//	                	
+//	                    $.cookie("dept-list", "true", {
+//	                        expires: date,
+//	                        path: "/"
+//
+//	                    });
+//	                    window.localStorage.setItem(
+//	                        "deptmenuhtml-" + code,
+//	                        encodeURI(html));
+//	                }
+//	            },
+//	            complete: function(){
+//		        	$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul.words li.long div').removeClass('toggle');
+//		    		$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul li.short div').removeClass('toggle');      	
+//		        } 
+//	        });
+//	    } 
 });
 
 
@@ -274,6 +270,23 @@ $("a#myWishlistHeader").on("mouseover touchend", function(e) {
             data: "&productCount=" + $('li.wishlist').find('a').attr("data-count"),
             success: function(html) {
                 $("div.wishlist-info").html(html);
+                /*TPR-844*/
+                var wlCode = [];
+				$(".wlCode").each(function(){
+					wlCode.push($(this).text().trim());
+				});
+				$(".plpWlcode").each(function(){
+					var productURL = $(this).text(), n = productURL.lastIndexOf("-"), productCode=productURL.substring(n+1, productURL.length);
+					//wlPlpCode.push(productCode.toUpperCase());
+					
+					for(var i = 0; i < wlCode.length; i++) {
+						if(productCode.toUpperCase() == wlCode[i]) {
+							console.log("Controle Inside");
+							$(this).siblings(".plp-wishlist").addClass("added");
+						}
+					}
+				});
+				/*TPR-844*/
             }
         });
     },300);
@@ -326,7 +339,7 @@ function getBrandsYouLoveAjaxCall() {
             success: function(response) {
                 //console.log(response.subComponents);
                 defaultComponentId = "";
-                renderHtml = "<h1>" + response.title + "</h1>" +
+                renderHtml = "<h2>" + response.title + "</h2>" +
                     "<div class='home-brands-you-love-carousel'>";
                 $.each(response.subComponents, function(k, v) {
                     //console.log(v.brandLogoUrl);
@@ -335,12 +348,14 @@ function getBrandsYouLoveAjaxCall() {
                         renderHtml +=
                             "<div class='home-brands-you-love-carousel-brands item' data-count ="+ count +" id='" +
                             v.compId + "'><img src='" + v.brandLogoUrl +
-                            "'></img></div>";
+                            "' alt='"+v.brandLogoAltText+"'></img></div>";
+
                     } else {
                         renderHtml +=
                             "<div class='home-brands-you-love-carousel-brands item' data-count ="+ count +" id='" +
                             v.compId + "'><img src='" + v.brandLogoUrl +
-                            "'></img></div>";
+                            "' alt='"+v.brandLogoAltText+"'></img></div>";
+
                         defaultComponentId = v.compId;
                     }
                     count++;
@@ -675,7 +690,7 @@ function getBestPicksAjaxCall() {
             url: ACC.config.encodedContextPath + "/getBestPicks",
             data: dataString,
             success: function(response) {
-                renderHtml = "<h1>" + response.title + "</h1>" +
+                renderHtml = "<h2>" + response.title + "</h2>" +
                     "<div class='home-best-pick-carousel'>";
                 $.each(response.subItems, function(k, v) {
                     if (v.url) {
@@ -782,7 +797,7 @@ function getProductsYouCareAjaxCall() {
             url: ACC.config.encodedContextPath + "/getProductsYouCare",
             data: dataString,
             success: function(response) {
-                renderHtml = "<h1>" + response.title + "</h1>";
+                renderHtml = "<h2>" + response.title + "</h2>";
                 renderHtml +=
                     "<div class='home-product-you-care-carousel'>";
                 $.each(response.categories, function(k, v) {
@@ -865,7 +880,7 @@ function getNewAndExclusiveAjaxCall() {
             //console.log(response.newAndExclusiveProducts);
         	var staticHost=$('#staticHost').val();
             var defaultHtml = "";
-            renderHtml = "<h1>" + response.title + "</h1>" +
+            renderHtml = "<h2>" + response.title + "</h2>" +
                 "<div class='js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference' id='new_exclusive'>";
             $.each(response.newAndExclusiveProducts, function(
                 key, value) {
@@ -1076,7 +1091,7 @@ function showStayQued(response){
         linkText = promoText2;
     }
     renderHtml =
-        '<div class="qued-padding"><div class="qued-content"><h1><span class="spriteImg"></span><span class="h1-qued">Stay Qued</span></h1>' +
+        '<div class="qued-padding"><div class="qued-content"><h2><span class="spriteImg"></span><span class="h1-qued">Stay Qued</span></h2>' +
         promoText1 + '<a href="' + bannerUrlLink +
         '" class="button maroon">' + linkText +
         '</a></div><div class="qued-image"><img class="lazy" src="' +
@@ -1104,7 +1119,7 @@ function getShowCaseAjaxCall() {
             success: function(response) {
                 //console.log(response.subComponents);
                 defaultComponentId = "";
-                renderHtml = "<h1>" + response.title + "</h1>" +
+                renderHtml = "<h2>" + response.title + "</h2>" +
                     "<div class='MenuWrap'><div class='mobile selectmenu'></div> <div class='showcase-heading showcase-switch'>";
                 $.each(response.subComponents, function(k, v) {
                     if (!v.showByDefault) {
@@ -1195,9 +1210,10 @@ function getShowcaseContentAjaxCall(id) {
                         if (typeof response.firstProductTitle !==
                             "undefined") {
                             defaultHtml +=
-                                "<h3 class='product-name'>" +
+                                "<h2 class='product-name'>" +
                                 response.firstProductTitle +
-                                "</h3>";
+                                "</h2>";
+
                         }
                         if (typeof response.firstProductPrice !==
                             "undefined") {
@@ -1261,7 +1277,17 @@ $(document).ready(function(){
 getFooterOnLoad();
 
 $(document).on("click", ".showcaseItem", function() {
-$('.selectmenu').text($(this).children().text());
+	$('.selectmenu').text($(this).children().text());
+	/*TPR-650 Start*/
+	//TISQAEE-59
+	var name=$(this).parents('#showcase').children('h2').text().trim().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	var value = $(this).find('a').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	utag.link({
+		link_obj: this,
+		link_text: name+'_'+value,
+		event_type : name+'_click'
+	});
+	/*TPR-650 End*/
 });
 
 $(window).on("load resize", function() {
@@ -1455,28 +1481,23 @@ function populateEnhancedSearch(enhancedSearchData)
 			            success: function(html) {
 			                //$("ul#"+componentUid).html(html);
 			            	$("ul[id='"+componentUid+"']").html(html); 
-			            	 if (window.localStorage) {
-				                	//TISPRD-8265-- Local Caching reduced to 10hrs from 1day
-				                	var date = new Date();
-				                	var minutes = 600;
-				                	date.setTime(date.getTime() + (minutes * 60 * 1000)); 
-				                	
-				                    $.cookie("dept-list", "true", {
-				                        expires: date,
-				                        path: "/"
+			                if (window.localStorage) {
+			                	var date = new Date();
+			                	var minutes = 600;
+			                	date.setTime(date.getTime() + (minutes * 60 * 1000)); 
+			                	
+			                    $.cookie("dept-list", "true", {
+			                        expires: date,
+			                        path: "/"
 
-				                    });
-				                    window.localStorage.setItem(
-				                        "deptmenuhtml-" + componentUid,
-				                        encodeURI(html));
-
-				                }
-				            }
-			        });
-		    	
-		    }
-	       
-	    
+			                    });
+			                    window.localStorage.setItem(
+			                        "brandhtml-" + componentUid,
+			                        encodeURI(html));
+			                }			                
+			            }
+			        });		    	
+		    }	 	    
 	});
 	//End
 	
@@ -1673,13 +1694,16 @@ function populateEnhancedSearch(enhancedSearchData)
 	        }
 	}
 }
-$(document).ready(function(){
+$(document).ready(function()
+{
 	//start//
-	$('header .content nav > ul > li > div.toggle').on('mouseover touchend',function(){
+	$('header .content nav > ul > li > div.toggle').on('mouseover touchend',function()
+	{
 		$(this).parent().addClass('hovered');
 		
 		//department/////////////////////
-		if($('header .content nav > ul > li:first-child').hasClass('hovered')) {
+		if($('header .content nav > ul > li:first-child').hasClass('hovered')) 
+		{
 			var id = $('header .content nav > ul > li.hovered > ul > li:first-child .departmenthover').attr('id');
 		    var code = id.substring(4);
 
@@ -1692,41 +1716,42 @@ $(document).ready(function(){
 		            }
 		        }
 		    }
-		    if (window.localStorage && (html = window.localStorage.getItem("deptmenuhtml-" + code)) && html != "") {
-		        // console.log("Local");
-		        $("ul." + id).html(decodeURI(html));
-		        //LazyLoad();
-		        
-		    } else {
-		        $.ajax({
-		            url: ACC.config.encodedContextPath +
-		                "/departmentCollection",
-		            type: 'GET',
-		            data: "department=" + code,
-		            success: function(html) {
-		                // console.log("Server");
-		                $("ul." + id).html(html);
-		                if (window.localStorage) {
-		                	//TISPRD-8265-- Local Caching reduced to 10hrs from 1day
-		                	var date = new Date();
-		                	var minutes = 600;
-		                	date.setTime(date.getTime() + (minutes * 60 * 1000)); 
-		                	
-		                    $.cookie("dept-list", "true", {
-		                        expires: date,
-		                        path: "/"
-
-		                    });
-		                    window.localStorage.setItem(
-		                        "deptmenuhtml-" + code,
-		                        encodeURI(html));
-
-		                }
-		            }
-		        });
-
-
-		    }
+//	    if (window.localStorage && (html = window.localStorage.getItem("deptmenuhtml-" + code)) && html != "") 
+//		{
+//	        // console.log("Local");
+//	        $("ul." + id).html(decodeURI(html));
+//	        //LazyLoad();
+//	        
+//	    } else {
+//	        $.ajax({
+//	            url: ACC.config.encodedContextPath +
+//	                "/departmentCollection",
+//	            type: 'GET',
+//	            data: "department=" + code,
+//	            success: function(html) {
+//	                // console.log("Server");
+//	                $("ul." + id).html(html);
+//	                if (window.localStorage) {
+//	                	//TISPRD-8265-- Local Caching reduced to 10hrs from 1day
+//	                	var date = new Date();
+//	                	var minutes = 600;
+//	                	date.setTime(date.getTime() + (minutes * 60 * 1000)); 
+//	                	
+//	                    $.cookie("dept-list", "true", {
+//	                        expires: date,
+//	                        path: "/"
+//
+//	                    });
+//	                    window.localStorage.setItem(
+//	                        "deptmenuhtml-" + code,
+//	                        encodeURI(html));
+//
+//	                }
+//	            }
+//	        });
+//
+//
+//	    }
 		    
 		} else {
 			if($('header .content nav > ul > li.hovered > ul > li:first-child > div').hasClass('brandClass')) {
@@ -1755,8 +1780,7 @@ $(document).ready(function(){
 					            success: function(html) {
 					                //$("ul#"+componentUid).html(html);
 					            	$("ul[id='"+componentUid+"']").html(html); 
-					            	if (window.localStorage) {
-					                	//TISPRD-8265-- Local Caching reduced to 10hrs from 1day
+					                if (window.localStorage) {
 					                	var date = new Date();
 					                	var minutes = 600;
 					                	date.setTime(date.getTime() + (minutes * 60 * 1000)); 
@@ -1770,16 +1794,13 @@ $(document).ready(function(){
 					                        "brandhtml-" + componentUid,
 					                        encodeURI(html));
 
-					                }
-					                
+					                }				                
 					            }
-					        });
-				    	
-				    }
-			       
+					        });		    	
+				    }			       
 				 ////////new brand
 			} else if($('header .content nav > ul > li.hovered > ul > li:first-child > div').hasClass('A-ZBrands')) {
-
+				
 				var componentUid = $("#componentUid").val();
 			    if ($("li#atozbrandsdiplay").length) {
 			        // console.log("Dipslaying A-Z Brands..");
@@ -1789,11 +1810,11 @@ $(document).ready(function(){
 			                if (key.indexOf("atozbrandmenuhtml") >= 0) {
 			                    window.localStorage.removeItem(key);
 			                    // console.log("Deleting.." + key);
-
 			                }
 			            }
 			        }
-			        if (window.localStorage && (html = window.localStorage.getItem("atozbrandmenuhtml")) && html != "") {
+			        
+					if (window.localStorage && (html = window.localStorage.getItem("atozbrandmenuhtml")) && html != "") {
 			            // console.log("Local");
 			            if ($("div#appendedAtoZBrands") == null || $(
 			                "div#appendedAtoZBrands").length == 0) {
@@ -1801,8 +1822,8 @@ $(document).ready(function(){
 			            }
 			        } else {
 			            // console.log("Server");
-
-			            $.ajax({
+			           
+					   $.ajax({
 			                url: ACC.config.encodedContextPath +
 			                    "/atozbrands",
 			                type: 'GET',
@@ -1844,7 +1865,6 @@ $(document).ready(function(){
 	});
 	
 });
-
 
 	function forceUpdateHeader(){
 		$.ajax({
@@ -2083,5 +2103,4 @@ $(document).ready(function(){
 				$(".azWrapper").eq(1).children("#A-E").removeClass("importantDisplay");
 			}
 		});
-
 

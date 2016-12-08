@@ -12,9 +12,10 @@
 <c:set var="isLuxVal" value="${not empty param.isLux?param.isLux:false}"/>
 	<ul id="leftNavUl">
 		<li id="accountHead">
-			<h3>
+			<h2>
 				<spring:theme code="header.flyout.myaccount" />
-			</h3>	
+			</h2>
+				
 		</li>
 		<li id="lnOverView"><a href="<c:url value="/my-account?isLux=${isLuxVal}"/>"><spring:theme
 					code="header.flyout.overview" /></a></li>
@@ -37,18 +38,18 @@
 	</ul>
 	 <ul>
 		<li class="header-coupon">
-			<h3>
+			<h2>
 				<spring:theme code="header.flyout.credits" />
-			</h3>
+			</h2>
 		</li>
 		<li id="lnCoupons"><a href="<c:url value="/my-account/coupons?isLux=${isLuxVal}"/>"><spring:theme
 					code="header.flyout.coupons" /></a></li>
 	</ul> 
 	<ul>
 		<li id="shareHead">
-			<h3>
+			<h2>
 				<spring:theme code="header.flyout.share" />
-			</h3>
+			</h2>
 		</li>
 		<li id="lnInvite"><a href="<c:url value="/my-account/friendsInvite?isLux=${isLuxVal}"/>"><spring:theme
 					code="header.flyout.invite" /></a></li>

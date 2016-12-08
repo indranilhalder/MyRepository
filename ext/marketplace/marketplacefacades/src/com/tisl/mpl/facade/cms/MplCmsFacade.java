@@ -5,6 +5,7 @@ package com.tisl.mpl.facade.cms;
 
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
+import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 
 import java.util.List;
 
@@ -69,10 +70,15 @@ public interface MplCmsFacade
 	PageData populateOfferPageType(String offerId, String PageType);
 
 	/**
+	 * Modified for TPR-798
+	 *
 	 * @param homePageUid
+	 * @param pageableData
 	 * @return
 	 */
-	List<MplPageData> getPageInformationForPageId(String homePageUid);
+
+	List<MplPageData> getPageInformationForPageId(String homePageUid, final PageableData pageableData);
+
 
 	/**
 	 * @return

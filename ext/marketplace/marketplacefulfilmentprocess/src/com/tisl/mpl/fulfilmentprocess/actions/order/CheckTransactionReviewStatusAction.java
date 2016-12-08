@@ -314,6 +314,19 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 				return Transition.NOK;
 			}
 		}
+		//New block for new payment process --- order before payment TPR-629 (This will normally be not hit as Payment_pending is handled elsewhere)
+		else if (orderStatus.equalsIgnoreCase(MarketplaceFulfilmentProcessConstants.PAYMENT_PENDING))
+		{
+			if (StringUtils.isNotEmpty(defaultPinCode))
+			{
+				//OMS Allocation 6 hours call for failed order
+				mplCommerceCartService.isInventoryReserved(orderModel,
+						MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_PAYMENT, defaultPinCode);
+
+			}
+			return Transition.NOK;
+
+		}
 		else
 		{
 			return Transition.WAIT;
@@ -418,7 +431,7 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 
 								refundAmount = subOrderEntryModel.getNetAmountAfterAllDisc().doubleValue() + deliveryCost;
 								refundAmount = mplJusPayRefundService.validateRefundAmount(refundAmount, subOrderModel);
-								//TISPRO-216 Ends	
+								//TISPRO-216 Ends
 
 								// Making RTM entry to be picked up by webhook job
 								final RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(

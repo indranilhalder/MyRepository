@@ -6,7 +6,11 @@ package com.tisl.mpl.facade.checkout.impl;
 import de.hybris.platform.commercefacades.order.CartFacade;
 import de.hybris.platform.commercefacades.order.data.CCPaymentInfoData;
 import de.hybris.platform.commercefacades.order.data.CartData;
+
+import de.hybris.platform.commercefacades.order.data.OrderData;
+
 import de.hybris.platform.commercefacades.order.data.DeliveryModeData;
+
 import de.hybris.platform.commercefacades.order.impl.DefaultCheckoutFacade;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
@@ -16,6 +20,9 @@ import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
+
+import de.hybris.platform.core.model.order.OrderModel;
+
 import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
 import de.hybris.platform.core.model.order.payment.CreditCardPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
@@ -368,6 +375,31 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 
 	@Override
 	public PriceData setTotalWithConvCharge(final CartModel source, final CartData prototype)
+	{
+		prototype.setTotalPriceWithConvCharge(createPrice(source, source.getTotalPriceWithConv()));
+		return prototype.getTotalPriceWithConvCharge();
+	}
+
+
+
+	/**
+	 * Method adds convenience charge to orderModel TPR-629
+	 *
+	 */
+	@Override
+	public PriceData addConvCharge(final OrderModel source, final OrderData prototype)
+	{
+		prototype.setConvenienceChargeForCOD(createPrice(source, source.getConvenienceCharges()));
+		return prototype.getConvenienceChargeForCOD();
+	}
+
+
+	/**
+	 * Method sets total with conv charge for orderModel TPR-629
+	 *
+	 */
+	@Override
+	public PriceData setTotalWithConvCharge(final OrderModel source, final OrderData prototype)
 	{
 		prototype.setTotalPriceWithConvCharge(createPrice(source, source.getTotalPriceWithConv()));
 		return prototype.getTotalPriceWithConvCharge();

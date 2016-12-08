@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.tisl.mpl.core.search.solrfacetsearch.provider.impl;
 
 import de.hybris.platform.solrfacetsearch.config.IndexConfig;
@@ -20,14 +17,18 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.annotation.Resource;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.model.PcmProductVariantModel;
+import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.util.MplBuyBoxUtility;
 
 
 /**
- * @author 361234
+ * @author TCS
  *
  */
 public class MplSizeValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider, Serializable
@@ -36,18 +37,22 @@ public class MplSizeValueProvider extends AbstractPropertyFieldValueProvider imp
 
 
 
+	/**
+	 *
+	 */
+	private static final String NOSTOCK = "NOSTOCK:";
+	private static final String STOCK = "STOCK:";
 	private FieldNameProvider fieldNameProvider;
 	private MplBuyBoxUtility mplBuyBoxUtility;
+	@Resource
+	private BuyBoxService buyBoxService;
+
+
 
 
 	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.hybris.platform.solrfacetsearch.provider.FieldValueProvider#getFieldValues(de.hybris.platform.solrfacetsearch
-	 * .config.IndexConfig, de.hybris.platform.solrfacetsearch.config.IndexedProperty, java.lang.Object)
-	 */
-	/**
+	 * /**
+	 *
 	 * @return the mplBuyBoxUtility
 	 */
 
@@ -67,6 +72,8 @@ public class MplSizeValueProvider extends AbstractPropertyFieldValueProvider imp
 	}
 
 	/**
+	 * this value provider will fetch stock related details
+	 *
 	 * @return Collection<fieldValues>
 	 * @param indexConfig
 	 *           ,indexedProperty,model
@@ -78,60 +85,55 @@ public class MplSizeValueProvider extends AbstractPropertyFieldValueProvider imp
 			final Object model) throws FieldValueProviderException
 	{
 
+		final Set<String> oosproducts = new TreeSet<String>();
+		final Set<String> products = new TreeSet<String>();
 		try
 		{
 			if (model instanceof PcmProductVariantModel)
 			{
 				//Model should be instance of PcmProductVariantModel
 				final PcmProductVariantModel pcmVariantModel = (PcmProductVariantModel) model;
-
-
-				final Set<String> sizes = new TreeSet<String>();
-
-
 				//	Fetch sizes in all the Variants
 				for (final VariantProductModel pcmProductVariantModel : pcmVariantModel.getBaseProduct().getVariants())
 				{
 
 					final PcmProductVariantModel pcmSizeVariantModel = (PcmProductVariantModel) pcmProductVariantModel;
+					//final Set<String> sizes = new TreeSet<String>();
 
-					//SONAR Fix
-					//				if (pcmSizeVariantModel.getColour() != null && pcmVariantModel.getColour() != null)
-					//				{
-					//
-					//					if (pcmSizeVariantModel.getColour().equals(pcmVariantModel.getColour()))
-					//					{
-					//						//Included for Electronics Product
-					//						if (pcmSizeVariantModel.getSize() != null)
-					//						{
-					//							sizes.add(pcmSizeVariantModel.getSize());
-					//						}
-					//					}
-					//
-					//
-					//				}
 
 					//Included for Electronics Product
 					final String sizeVariantColour = mplBuyBoxUtility.getVariantColour(pcmSizeVariantModel);
 
 					final String pcmVariantColour = mplBuyBoxUtility.getVariantColour(pcmVariantModel);
+					/* TPR-249 CHANGES starts */
 					if (sizeVariantColour != null && pcmVariantColour != null && sizeVariantColour.equalsIgnoreCase(pcmVariantColour)
-							&& pcmSizeVariantModel.getSize() != null)
+							&& pcmSizeVariantModel.getSize() != null
+							&& CollectionUtils.isNotEmpty(buyBoxService.buyboxPrice(pcmSizeVariantModel.getCode())))
 					{
-
-						sizes.add(pcmSizeVariantModel.getSize().toUpperCase());
-
+						//sizes added corresponding  the products having stock
+						products.add(STOCK + pcmSizeVariantModel.getSize().toUpperCase());
+					}
+					else if (sizeVariantColour != null && pcmVariantColour != null
+							&& sizeVariantColour.equalsIgnoreCase(pcmVariantColour) && pcmSizeVariantModel.getSize() != null
+							&& CollectionUtils.isEmpty(buyBoxService.buyboxPrice(pcmSizeVariantModel.getCode())))
+					{
+						//sizes added corresponding  the products having no stock
+						oosproducts.add(NOSTOCK + pcmSizeVariantModel.getSize().toUpperCase());
 					}
 
 				}
-
-
+				if (CollectionUtils.isNotEmpty(oosproducts))
+				{
+					products.addAll(oosproducts);
+				}
 				final Collection<FieldValue> fieldValues = new ArrayList<FieldValue>();
 
 				{
 					//add field values
-					fieldValues.addAll(createFieldValue(sizes, indexedProperty));
+					fieldValues.addAll(createFieldValue(products, indexedProperty));
 				}
+
+				/* TPR-249 CHANGES ends */
 				//return the field values
 				return fieldValues;
 
@@ -140,12 +142,14 @@ public class MplSizeValueProvider extends AbstractPropertyFieldValueProvider imp
 			{
 				return Collections.emptyList();
 			}
+
 		}
 		catch (final Exception e) /* added part of value provider go through */
 		{
 			throw new FieldValueProviderException("Cannot evaluate " + indexedProperty.getName() + " using "
 					+ super.getClass().getName() + "exception" + e, e);
 		}
+
 
 
 	}
@@ -170,7 +174,7 @@ public class MplSizeValueProvider extends AbstractPropertyFieldValueProvider imp
 	}
 
 	/**
-	 * @return void
+	 *
 	 * @param fieldNameProvider
 	 * @description: Set Field name provider
 	 *

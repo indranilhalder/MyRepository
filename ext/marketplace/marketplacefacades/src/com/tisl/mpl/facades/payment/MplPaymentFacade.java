@@ -1,14 +1,18 @@
 package com.tisl.mpl.facades.payment;
 
 import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.commercefacades.product.data.PromotionResultData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.exceptions.CalculationException;
-import de.hybris.platform.payment.model.PaymentTransactionModel;
+import de.hybris.platform.payment.AdapterException;
 import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 
@@ -21,10 +25,12 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import com.tisl.mpl.core.model.BankforNetbankingModel;
+import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.MplNetbankingData;
 import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.data.SavedCardData;
+import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.juspay.response.ListCardsResponse;
 
@@ -99,12 +105,15 @@ public interface MplPaymentFacade
 	 * This method takes the customerID as parameter and calls the service to generate OTP
 	 *
 	 * @param customerID
+	 * @param mobileNumber
+	 * @param mplCustomerName
+	 * @param orderModel
 	 * @return otp
 	 * @throws InvalidKeyException
 	 * @throws NoSuchAlgorithmException
 	 */
-	String generateOTPforCODWeb(String customerID, String mobileNumber, String mplCustomerName, String cartId)
-			throws InvalidKeyException, NoSuchAlgorithmException;
+	String generateOTPforCOD(final String customerID, final String mobileNumber, final String mplCustomerName,
+			final AbstractOrderModel orderModel) throws InvalidKeyException, NoSuchAlgorithmException;
 
 
 	/**
@@ -135,7 +144,7 @@ public interface MplPaymentFacade
 	 * @param mplCustomerID
 	 * @return boolean
 	 */
-	boolean isBlackListed(String mplCustomerID, final CartModel cart) throws EtailNonBusinessExceptions;
+	boolean isBlackListed(String mplCustomerID, final AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
 
 
 	/**
@@ -146,13 +155,13 @@ public interface MplPaymentFacade
 	void saveCart(CartModel cart);
 
 
-	/**
-	 * This method sends request to JusPay to get the Order Status
-	 *
-	 * @return String
-	 *
-	 */
-	String getOrderStatusFromJuspay();
+	//	/**
+	//	 * This method sends request to JusPay to get the Order Status
+	//	 *
+	//	 * @return String
+	//	 *
+	//	 */
+	//String getOrderStatusFromJuspay();
 
 
 	/**
@@ -170,39 +179,41 @@ public interface MplPaymentFacade
 	 *
 	 * @param cartValue
 	 * @param totalCODCharge
+	 * @param abstractOrderModel
 	 */
-	//TISPRD-361
-	void saveCODPaymentInfo(Double cartValue, Double totalCODCharge) throws EtailNonBusinessExceptions, Exception;
+	//TISPRD-361 TPR-629 Refactor
+	void saveCODPaymentInfo(final Double cartValue, final Double totalCODCharge, final AbstractOrderModel abstractOrderModel) //Parameter OrderModel added extra for TPR-629
+			throws EtailNonBusinessExceptions, Exception;
 
 
 	/**
 	 * This method fetches the customer's phone number from Delivery address
 	 *
-	 * @param cart
+	 * @param abstractOrderModel
 	 * @return String
 	 */
-	String fetchPhoneNumber(final CartModel cart);
+	String fetchPhoneNumber(final AbstractOrderModel abstractOrderModel);
 
 
-	/**
-	 * This method sends request to JusPay to get the Order Status everytime the user enters the payment screen
-	 *
-	 * @param orderId
-	 * @return String
-	 *
-	 */
-	String getJuspayOrderStatus(String orderId);
+	//	/**
+	//	 * This method sends request to JusPay to get the Order Status everytime the user enters the payment screen
+	//	 *
+	//	 * @param orderId
+	//	 * @return String
+	//	 *
+	//	 */
+	//	String getJuspayOrderStatus(String orderId);
 
 
-	/**
-	 * This method is used to check whether a Juspay order Id is present in PaymentTransactionModel in cart with status
-	 * success
-	 *
-	 * @param juspayOrderId
-	 * @param mplCustomerID
-	 * @return PaymentTransactionModel
-	 */
-	PaymentTransactionModel getOrderStatusFromCart(String juspayOrderId, String mplCustomerID);
+	//	/**
+	//	 * This method is used to check whether a Juspay order Id is present in PaymentTransactionModel in cart with status
+	//	 * success
+	//	 *
+	//	 * @param juspayOrderId
+	//	 * @param mplCustomerID
+	//	 * @return PaymentTransactionModel
+	//	 */
+	//	PaymentTransactionModel getOrderStatusFromCart(String juspayOrderId, String mplCustomerID);
 
 	/**
 	 * This method takes the Mobile Number as input parameters and calls the service to check whether the customer is
@@ -227,28 +238,28 @@ public interface MplPaymentFacade
 			String redirectAfterPayment, String format) throws EtailNonBusinessExceptions;
 
 
-	/**
-	 * This method creates an order in Juspay against which Payment will be processed
-	 *
-	 * @param cart
-	 * @param firstName
-	 * @param lastName
-	 * @param addressLine1
-	 * @param addressLine2
-	 * @param addressLine3
-	 * @param country
-	 * @param state
-	 * @param city
-	 * @param pincode
-	 * @param returnUrl
-	 * @param uid
-	 * @param channel
-	 * @return String
-	 * @throws EtailNonBusinessExceptions
-	 */
-	String createJuspayOrder(CartModel cart, String firstName, String lastName, String addressLine1, String addressLine2,
-			String addressLine3, String country, String state, String city, String pincode, String cardSaved, String returnUrl,
-			String uid, String channel) throws EtailNonBusinessExceptions;
+	//	/**
+	//	 * This method creates an order in Juspay against which Payment will be processed
+	//	 *
+	//	 * @param cart
+	//	 * @param firstName
+	//	 * @param lastName
+	//	 * @param addressLine1
+	//	 * @param addressLine2
+	//	 * @param addressLine3
+	//	 * @param country
+	//	 * @param state
+	//	 * @param city
+	//	 * @param pincode
+	//	 * @param returnUrl
+	//	 * @param uid
+	//	 * @param channel
+	//	 * @return String
+	//	 * @throws EtailNonBusinessExceptions
+	//	 */
+	//	String createJuspayOrder(CartModel cart, String firstName, String lastName, String addressLine1, String addressLine2,
+	//			String addressLine3, String country, String state, String city, String pincode, String cardSaved, String returnUrl,
+	//			String uid, String channel) throws EtailNonBusinessExceptions;
 
 
 	/**
@@ -273,7 +284,8 @@ public interface MplPaymentFacade
 	 * @throws ModelSavingException
 	 */
 
-	MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart) throws ModelSavingException,
+	MplPromoPriceData applyPromotions(final CartData cartData, final OrderData orderData, final CartModel cartModel,
+			final OrderModel orderModel, final MplPromoPriceData mplPromoPriceData) throws ModelSavingException,
 			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
 			JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions;
 
@@ -347,5 +359,81 @@ public interface MplPaymentFacade
 	 * @return boolean
 	 */
 	boolean checkCart(final CartModel cart);
+
+
+	/**
+	 * @param guid
+	 * @return OrderModel
+	 */
+	OrderModel getOrderByGuid(String guid);
+
+
+	/**
+	 * @param store
+	 * @param orderData
+	 * @return Map<String, Boolean>
+	 * @throws EtailNonBusinessExceptions
+	 */
+	Map<String, Boolean> getPaymentModes(String store, OrderData orderData) throws EtailNonBusinessExceptions;
+
+
+	/**
+	 * @param orderGuid
+	 * @param orderModel
+	 * @return String
+	 * @throws EtailBusinessExceptions
+	 * @throws EtailNonBusinessExceptions
+	 */
+	public String getOrderStatusFromJuspay(final String orderGuid, Map<String, Double> paymentMode, final OrderModel orderModel,
+			String juspayOrderId) throws EtailBusinessExceptions, EtailNonBusinessExceptions;
+
+
+	/**
+	 * @param cart
+	 * @param order
+	 * @param firstName
+	 * @param lastName
+	 * @param addressLine1
+	 * @param addressLine2
+	 * @param addressLine3
+	 * @param country
+	 * @param state
+	 * @param city
+	 * @param pincode
+	 * @param checkValues
+	 * @param returnUrl
+	 * @param uid
+	 * @param channel
+	 * @return String
+	 * @throws EtailNonBusinessExceptions
+	 * @throws AdapterException
+	 *
+	 */
+	String createJuspayOrder(CartModel cart, OrderModel order, String firstName, String lastName, String addressLine1,
+			String addressLine2, String addressLine3, String country, String state, String city, String pincode, String checkValues,
+			String returnUrl, String uid, String channel) throws EtailNonBusinessExceptions, AdapterException;
+
+
+	/**
+	 * @param abstractOrderModel
+	 */
+	void populateDeliveryPointOfServ(AbstractOrderModel abstractOrderModel);
+
+
+	/**
+	 * @param promoResultList
+	 * @return double
+	 * @throws Exception
+	 */
+	double calculateTotalDiscount(List<PromotionResultData> promoResultList) throws Exception;
+
+
+	/**
+	 * @param abstractOrderModel
+	 * @param freebieModelMap
+	 * @param freebieParentQtyMap
+	 */
+	void populateDelvPOSForFreebie(AbstractOrderModel abstractOrderModel,
+			Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, Map<String, Long> freebieParentQtyMap);
 
 }

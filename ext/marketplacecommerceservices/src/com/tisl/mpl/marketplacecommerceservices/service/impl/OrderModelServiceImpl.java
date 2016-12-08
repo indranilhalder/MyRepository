@@ -202,6 +202,11 @@ public class OrderModelServiceImpl implements OrderModelService
 	}
 
 	@Override
+	public OrderModel getOrderModel(final String code)
+	{
+		return getOrderModelDao().getOrderModel(code);
+	}
+
 	public List<BulkCancellationProcessModel> getBulkCancelData()
 	{
 		return getOrderModelDao().getAllBulkCancelData();

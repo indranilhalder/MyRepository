@@ -30,6 +30,7 @@ import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceSearchComm
 import com.tisl.mpl.cockpits.cscockpit.widgets.models.impl.MarketplaceSearchResultWidgetModel;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.marketplacecommerceservices.strategy.MplFindDeliveryCostStrategy;
 
 import de.hybris.platform.cockpit.model.meta.TypedObject;
@@ -39,6 +40,7 @@ import de.hybris.platform.cockpit.util.UITools;
 import de.hybris.platform.cockpit.widgets.ListboxWidget;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.cscockpit.model.data.DataObject;
 import de.hybris.platform.cscockpit.services.search.CsFacetSearchCommand;
@@ -48,7 +50,6 @@ import de.hybris.platform.cscockpit.utils.SafeUnbox;
 import de.hybris.platform.cscockpit.widgets.controllers.search.SearchCommandController;
 import de.hybris.platform.cscockpit.widgets.models.impl.SearchResultWidgetModel;
 import de.hybris.platform.cscockpit.widgets.renderers.impl.BasketResultWidgetRenderer;
-import de.hybris.platform.order.CartService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.util.PriceValue;
@@ -102,6 +103,9 @@ public class MarketPlaceBasketResultWidgetRenderer<SC extends CsFacetSearchComma
 	@Autowired
 	private MplFindDeliveryCostStrategy mplFindDeliveryCostStrategy;
 	
+	
+	@Autowired
+	private PincodeService pincodeService;
 	/**
 	 * Creates the content internal.
 	 *
@@ -160,7 +164,7 @@ public class MarketPlaceBasketResultWidgetRenderer<SC extends CsFacetSearchComma
 		pincodediv.appendChild(hbox);
 		toolbar.appendChild(pincodediv);
 		CartModel cart = (CartModel) (basketController.getCart().getObject());
-
+		
 		Label pincodeLabel = new Label(LabelUtils.getLabel(widget,
 				"pincodeLabel", new Object[0]));
 
@@ -563,6 +567,11 @@ public class MarketPlaceBasketResultWidgetRenderer<SC extends CsFacetSearchComma
 			popupMessage(widget, MarketplaceCockpitsConstants.PIN_CODE_EMPTY);
 		} else {
 			ProductModel product = (ProductModel) item.getObject();
+			PincodeModel pincodeModel=pincodeService.getLatAndLongForPincode(pincode.toString());
+			CartModel cart = (CartModel) (basketController.getCart().getObject());
+			cart.setStateForPincode(pincodeModel.getState() == null ? "" : pincodeModel.getState().getCountrykey());
+			cart.setCityForPincode(pincodeModel.getCity() == null ? "" : pincodeModel.getCity().getCityName());
+			cart.setPincodeNumber(pincode.toString());
 			final String isDeliveryDateRequired = LabelUtils.getLabel(widget,
 					IS_DELIVERY_DATE_REQUIRED, new Object[0]);
 			processPinCodeServiceability(widget, item, quantityToAdd, pincode, product,

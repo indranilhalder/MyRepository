@@ -118,6 +118,7 @@ import com.tisl.mpl.validator.PointOfServiceValidator;
 import com.tisl.mpl.wsdto.BreadcrumbResponseWsDTO;
 import com.tisl.mpl.wsdto.DepartmentHierarchyWs;
 import com.tisl.mpl.wsdto.LuxHeroBannerWsDTO;
+import com.tisl.mpl.wsdto.ProductAPlusWsData;
 import com.tisl.mpl.wsdto.ProductCompareWsDTO;
 import com.tisl.mpl.wsdto.ProductDetailMobileWsData;
 import com.tisl.mpl.wsdto.ProductSearchPageWsDto;
@@ -228,7 +229,8 @@ public class ProductsController extends BaseController
 	 * Returns a list of products and additional data such as: available facets, available sorting and pagination
 	 * options. It can include spelling suggestions.To make spelling suggestions work you need to:
 	 * <ul>
-	 * <li>Make sure enableSpellCheck on the SearchQuery is set to true. By default it should be already set to true.</li>
+	 * <li>Make sure enableSpellCheck on the SearchQuery is set to true. By default it should be already set to true.
+	 * </li>
 	 * <li>Have indexed properties configured to be used for spellchecking.</li>
 	 * </ul>
 	 *
@@ -327,8 +329,13 @@ public class ProductsController extends BaseController
 				}
 			}
 
-
 			product = mplProductWebService.getProductdetailsForProductCode(productCode, baseUrl, channel);
+			//TPR-978
+			final ProductAPlusWsData aPlusProductData = mplProductWebService.getAPluscontentForProductCode(productCode);
+			if (null != aPlusProductData)
+			{
+				product.setAPlusContent(aPlusProductData);
+			}
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -336,6 +343,10 @@ public class ProductsController extends BaseController
 			if (null != e.getErrorMessage())
 			{
 				product.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				product.setErrorCode(e.getErrorCode());
 			}
 			product.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
@@ -347,13 +358,20 @@ public class ProductsController extends BaseController
 			{
 				product.setError(e.getErrorMessage());
 			}
+			if (null != e.getErrorCode())
+			{
+				product.setErrorCode(e.getErrorCode());
+			}
 		}
+		//TPR-799
 		catch (final Exception e)
 		{
 			ExceptionUtil.getCustomizedExceptionTrace(e);
 			product.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			product.setErrorCode(MarketplacecommerceservicesConstants.E0000);
 			product.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
+
 		return product;
 	}
 
@@ -372,7 +390,7 @@ public class ProductsController extends BaseController
 	@ResponseBody
 	public StockWsDTO getStockData(@PathVariable final String baseSiteId, @PathVariable final String productCode,
 			@PathVariable final String storeName, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
-			throws WebserviceValidationException, StockSystemException
+					throws WebserviceValidationException, StockSystemException
 	{
 		validate(storeName, "storeName", pointOfServiceValidator);
 		if (!commerceStockFacade.isStockSystemEnabled(baseSiteId))
@@ -503,7 +521,7 @@ public class ProductsController extends BaseController
 	@ResponseBody
 	public ReviewWsDTO createReview(@PathVariable final String productCode,
 			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields, final HttpServletRequest request)
-			throws WebserviceValidationException
+					throws WebserviceValidationException
 	{
 		final ReviewData reviewData = new ReviewData();
 		httpRequestReviewDataPopulator.populate(request, reviewData);
@@ -550,8 +568,8 @@ public class ProductsController extends BaseController
 	@RequestMapping(value = "/{productCode}/references", method = RequestMethod.GET)
 	@ResponseBody
 	public ProductReferenceListWsDTO exportProductReferences(@PathVariable final String productCode,
-			@RequestParam(required = false, defaultValue = MAX_INTEGER) final int pageSize,
-			@RequestParam final String referenceType, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+			@RequestParam(required = false, defaultValue = MAX_INTEGER) final int pageSize, @RequestParam final String referenceType,
+			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
 		final List<ProductOption> opts = Lists.newArrayList(OPTIONS);
 		final ProductReferenceTypeEnum referenceTypeEnum = ProductReferenceTypeEnum.valueOf(referenceType);
@@ -798,10 +816,9 @@ public class ProductsController extends BaseController
 		}
 		catch (final Exception e)
 		{
-			if (null != e.getMessage())
-			{
-				sizeGuideDataList.setError(e.getMessage());
-			}
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			sizeGuideDataList.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			sizeGuideDataList.setErrorCode(MarketplacecommerceservicesConstants.E0000);
 			sizeGuideDataList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		return sizeGuideDataList;
@@ -859,7 +876,20 @@ public class ProductsController extends BaseController
 		return productSearchPage;
 	}
 
-	@RequestMapping(value = "/serpsearch", method = RequestMethod.POST, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
+	/**
+	 * @desc SERP search with key word redirects
+	 * @param searchText
+	 * @param typeID
+	 * @param page
+	 * @param pageSize
+	 * @param sortCode
+	 * @param isTextSearch
+	 * @param isFilter
+	 * @param fields
+	 * @return
+	 */
+	@RequestMapping(value = "/serpsearch", method =
+	{ RequestMethod.POST, RequestMethod.GET }, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ProductSearchPageWsDto searchProductDto(@RequestParam(required = false) String searchText,
 			@RequestParam(required = false) String typeID, @RequestParam(required = false) int page,
@@ -934,7 +964,7 @@ public class ProductsController extends BaseController
 				//					searchState.setLuxurySiteFrom(MarketplacecommerceservicesConstants.CHANNEL_APP);
 				//				}
 
-				if (typeID != null)
+				if (StringUtils.isNotEmpty(typeID))
 				{
 					if (typeID.equalsIgnoreCase("all"))
 					{
@@ -994,10 +1024,8 @@ public class ProductsController extends BaseController
 						searchSuggestUtilityMethods.setSearchPageData(productSearchPage, searchPageData);
 					}
 				}
-
 				else
 				{
-
 					productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 					productSearchPage.setError(MarketplacecommerceservicesConstants.INVALIDSEARCHKEY);
 				}
@@ -1028,7 +1056,8 @@ public class ProductsController extends BaseController
 				productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 				productSearchPage.setError(MarketplacecommerceservicesConstants.INVALIDSEARCHKEY);
 			}
-			if (null != typeID)
+
+			if (StringUtils.isNotEmpty(typeID))
 			{
 				productSearchPage.setCategoryCode(typeID);
 			}
@@ -1066,24 +1095,36 @@ public class ProductsController extends BaseController
 		}
 		catch (final EtailBusinessExceptions e)
 		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
-			//e.printStackTrace();
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				productSearchPage.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				productSearchPage.setErrorCode(e.getErrorCode());
+			}
 			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-			productSearchPage.setError(MarketplacecommerceservicesConstants.EXCEPTION_IS + e);
+
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
-			//e.printStackTrace();
+			if (null != e.getErrorMessage())
+			{
+				productSearchPage.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				productSearchPage.setErrorCode(e.getErrorCode());
+			}
 			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-			productSearchPage.setError(MarketplacecommerceservicesConstants.EXCEPTION_IS + ":" + e);
 		}
 		catch (final Exception e)
 		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
-			//e.printStackTrace();
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			productSearchPage.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			productSearchPage.setErrorCode(MarketplacecommerceservicesConstants.E0000);
 			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-			productSearchPage.setError(MarketplacecommerceservicesConstants.EXCEPTION_IS + ":" + e);
 		}
 		return productSearchPage;
 	}
@@ -1392,8 +1433,8 @@ public class ProductsController extends BaseController
 				else
 				{
 
-					searchPageData = searchFacade
-							.dropDownSearch(searchState, typeID, MarketplaceCoreConstants.SELLER_ID, pageableData);
+					searchPageData = searchFacade.dropDownSearch(searchState, typeID, MarketplaceCoreConstants.SELLER_ID,
+							pageableData);
 				}
 			}
 			//final List<String> filter = new ArrayList<String>();

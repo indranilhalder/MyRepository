@@ -20,6 +20,17 @@
 	<c:set var="hideSecureTransaction" value="true"></c:set>
 	<c:set var="hideLogo" value="true"></c:set>
 </c:if>
+<!-- TPR-844 -->
+			<div class="wishAddLoginPlp">
+			<span><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
+			</div>
+			<div class="wishAddSucessPlp">
+			<span><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
+			</div>
+			<div class="wishAlreadyAddedPlp">
+			<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
+			</div>
+	<!-- TPR-844 -->
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticHost"/>
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.resource.host')" var="luxuryHost"/>
 <header>	
@@ -39,6 +50,7 @@
 	<input type="hidden" id="mplStaticResourceHost" value="${mplStaticResourceHost}">
 	<input type="hidden" id="previewVersion" value="${cmsPageRequestContextData.preview}">
 	<input type="hidden" id="pageTemplateId" value="${cmsPage.masterTemplate.uid}">
+	<input type="hidden" id="userLoginType" value="${userLoginType}">		<!-- TPR-668 -->
 	<!-- For Infinite Analytics End -->
 	<input type="hidden" id="pageName" value="${cmsPage.name}">
 	<!-- Static resource host -->
@@ -58,9 +70,7 @@
 		</c:when>
 		<c:otherwise>
 			<c:if test="${empty hideSecureTransaction}">
-				<span class="secure secureTransaction"> <spring:theme
-						code="text.secure.transaction" /></span>
-						<span class="secure secureTransaction secMobile"></span>
+						<!-- <span class="secure secureTransaction secMobile"></span> -->
 			</c:if>
 		</c:otherwise>
 	</c:choose>
@@ -108,6 +118,7 @@
 						<cms:pageSlot position="TopHeaderSlot" var="logo" limit="1">
 							<cms:component component="${logo}" />
 						</cms:pageSlot>
+					
 					</c:if>
 				</div>
 				<div class="right">
@@ -172,9 +183,26 @@
 				<c:otherwise>
 					<div class="marketplace-checkout">
 						<c:if test="${empty hideLogo}">
-							<cms:pageSlot position="TopHeaderSlot" var="logo" limit="1">
+							<%-- <cms:pageSlot position="TopHeaderSlot" var="logo" limit="1">
 								<cms:component component="${logo}" />
-							</cms:pageSlot>
+							</cms:pageSlot> --%>
+							<div class="logo">
+							<div class="desktop-logo" data-logo="marketplace">
+						<cms:pageSlot position="SiteLogo" var="logo" limit="1">
+							<cms:component component="${logo}"/>
+						</cms:pageSlot>
+					</div>
+					<div class="tab-logo">
+						<cms:pageSlot position="TopHeaderSlot" var="logo" limit="1">
+							<cms:component component="${logo}"/>
+						</cms:pageSlot>
+					</div>
+					</div>
+					
+					<span>CHECKOUT</span>
+					
+					
+					<button id="deliveryAddressSubmitUp" type="submit" class="button checkout-next" style="display:none;">Proceed to Payment</button>
 						</c:if>
 					</div>
 				</c:otherwise>
@@ -187,14 +215,16 @@
 					<c:if test="${empty showOnlySiteLogo }">
 
 						<cms:pageSlot position="NavigationBar" var="component">
-							<li><cms:component component="${component}" /></li>
+							<c:set var="componentName" value="${component.name}"/>
+							<li class="${fn:replace(componentName,' ', '')}"><cms:component component="${component}" /></li>
 						</cms:pageSlot>
 
 					</c:if>
 
 
 				</ul>
-			</nav>
+			</nav> 
+			
 			<div class="search">
 				<c:if test="${empty showOnlySiteLogo }">
 					<!-- <button class="btn btn-default js-toggle-sm-navigation header-burgerMenu"
@@ -230,7 +260,11 @@
 		</div>
 		<div class="compact-toggle mobile"></div>
 	</div>
-
+<c:if test="${param.blpLogo ne null}">
+<div class="blp-serp-banner" style="background-color:#000;height:80px;">
+<img class="image" alt="" src="${param.blpLogo}">
+</div>
+</c:if>
 	<a id="skiptonavigation"></a>
 	<nav:topNavigation />
 </header>
@@ -295,6 +329,12 @@
 /*--------------Added for luxury site ends-----------*/
 </style>
 <script>
+var pathname = window.location.pathname;
+if(pathname =='/checkout/multi/delivery-method/select'){
+	$('#deliveryAddressSubmitUp').show();
+	
+	
+}
 </script>
 <!--  Commented for TISPRD-1440  -->
 <!-- <script>
@@ -305,3 +345,12 @@
 });*/
 
 </script>  -->
+<div class="wishAddSucessQV">
+	<span><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
+</div>
+<div class="wishAddLoginQV">
+	<span><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
+</div>
+<div class="wishAlreadyAddedQV">
+	<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
+</div>

@@ -42,8 +42,6 @@ public class MplCleanupCronJobStrategy implements MaintenanceCleanupStrategy<Cro
 	private Set<String> excludedCronJobCodes;
 	private String expiryDays;
 
-	//@Autowired
-	//private ConfigurationService configurationService;  //Sonar fix
 
 	//dynamic job properties
 	private int daysOld = 14;

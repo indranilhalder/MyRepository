@@ -182,6 +182,7 @@ public class OTPDaoImpl implements OTPDao
 			}
 
 			LOG.debug(LATESTQUERY + queryString);
+
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter(EMAILID, emailId);
 			if (StringUtils.isNotEmpty(mobileNo))

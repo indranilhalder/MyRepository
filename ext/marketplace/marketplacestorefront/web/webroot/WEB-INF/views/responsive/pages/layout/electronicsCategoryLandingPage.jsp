@@ -3,6 +3,9 @@
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
+<!-- TPR-430 -->
+<input type="hidden" id="product_category" value="${product_category}"/>
+
 <template:page pageTitle="${pageTitle}">
 
 	<cms:pageSlot position="Section1" var="feature">

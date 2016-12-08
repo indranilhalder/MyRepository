@@ -47,6 +47,7 @@ public class StorefrontFilter extends OncePerRequestFilter
 	public static final String ORIGINAL_REFERER = "originalReferer";
 	public static final String ISLUX = "isLux"; //Sonar fix
 
+
 	private StoreSessionFacade storeSessionFacade;
 	private BrowseHistory browseHistory;
 	private CookieGenerator cookieGenerator;

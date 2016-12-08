@@ -389,6 +389,9 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				setUidForRegister(registerData, newCustomer);
 				newCustomer.setSessionLanguage(getCommonI18NService().getCurrentLanguage());
 				newCustomer.setSessionCurrency(getCommonI18NService().getCurrentCurrency());
+				//TPR-1372
+				newCustomer.setIscheckedMyRewards(Boolean.valueOf(registerData.isCheckTataRewards()));
+
 				//Register customer social
 				newCustomer.setCustomerRegisteredBySocialMedia(Boolean.TRUE);
 				data = extDefaultCustomerService.registerUserForSocialSignup(newCustomer);
@@ -438,9 +441,30 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 			else
 			{
 				final CustomerModel customerModel = (CustomerModel) extUserService.getUserForUID(registerData.getLogin());
+				LOG.debug("customer model type before update " + customerModel.getType());
+				//tpr-668 update customer type
+				if (StringUtils.isNotEmpty(registerData.getSocialMediaType()))
+				{
+					if (registerData.getSocialMediaType().equalsIgnoreCase(MarketplacecommerceservicesConstants.FACEBOOK))
+					{
+						customerModel.setType(CustomerType.FACEBOOK_LOGIN);
+						LOG.debug("customer model type " + customerModel.getType());
+					}
+					if (registerData.getSocialMediaType().equalsIgnoreCase(MarketplacecommerceservicesConstants.GOOGLE))
+					{
+						customerModel.setType(CustomerType.GOOGLE_LOGIN);
+						LOG.debug("customer model type " + customerModel.getType());
+					}
+
+					//tpr-668 update customer type
+				}
+
+				getModelService().save(customerModel);
+				LOG.debug("Method  registerSocial return user ,SITE UID " + customerModel.getUid());
 				LOG.debug("Method  registerSocial return user ,SITE UID " + customerModel.getUid());
 				LOG.debug("Method  registerSocial else FIRST_NAME " + registerData.getFirstName());
 				LOG.debug("Method  registerSocial else LAST_NAME " + registerData.getLastName());
+				LOG.debug("customer model email is   " + customerModel.getOriginalUid());
 
 				if (registerData.getFirstName() != null)
 				{
@@ -480,6 +504,8 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 					LOG.debug("Customer model UID is different from Gigya UID :Error code is " + errorcode2);
 					LOG.debug("Customer model UID is different from Gigya UID :Email id is  " + registerData.getLogin());
 					LOG.debug("Customer model UID is different from Gigya UID :UID is   " + registerData.getUid());
+					LOG.debug("Customer model UID is different from Gigya UID :customer model email is   "
+							+ customerModel.getOriginalUid());
 					//added to check : if we deleted the mismatched data,then to set the site uid
 					final int errorcode3 = gigyaservice.checkGigyaUID(customerModel.getUid());
 					if (errorcode3 == 403005)

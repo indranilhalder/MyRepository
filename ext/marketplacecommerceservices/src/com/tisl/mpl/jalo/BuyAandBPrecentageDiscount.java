@@ -152,9 +152,13 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 			double percentageDiscount = getPercentageDiscount().doubleValue(); // Sets the Percentage Discount Value to a variable
 			//for delivery mode restriction check
 			flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForABPromo(restrictionList,
-					validProductUssidMap);
+					validProductUssidMap, order);
 			//for payment mode restriction check
 			flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList, arg0);
+
+
+			final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList,
+					order);
 
 			final List<Product> validProductList = new ArrayList<Product>();
 			final Map<String, Integer> tcMapForValidEntries = new HashMap<String, Integer>();
@@ -170,7 +174,7 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 
 			if (!eligibleProductList.isEmpty()) //Apply percentage/amount discount to valid products
 			{
-				if (flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval)
+				if (flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval && flagForPincodeRestriction)
 				{
 					//List<PromotionOrderEntryConsumed> remainingItemsFromTail = null;
 

@@ -4,9 +4,11 @@
 package com.tisl.mpl.facade.checkout;
 
 import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderModel;
 
 import java.util.List;
 
@@ -83,6 +85,21 @@ public interface MplCustomAddressFacade
 	 */
 	boolean setDeliveryAddress(final AddressData addressData);
 
+	/**
+	 * @param source
+	 * @param prototype
+	 * @return PriceData
+	 */
+	PriceData addConvCharge(OrderModel source, OrderData prototype);
+
+	/**
+	 * @param source
+	 * @param prototype
+	 * @return PriceData
+	 */
+	PriceData setTotalWithConvCharge(OrderModel source, OrderData prototype);
+
+	
 	/**
 	 * @param deliveryCode
 	 * @param sellerArticleSKU

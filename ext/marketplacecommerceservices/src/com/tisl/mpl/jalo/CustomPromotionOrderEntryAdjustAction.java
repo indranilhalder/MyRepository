@@ -17,7 +17,6 @@ import de.hybris.platform.core.Registry;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.order.AbstractOrder;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
-import de.hybris.platform.jalo.order.CartEntry;
 import de.hybris.platform.promotions.util.Pair;
 import de.hybris.platform.util.DiscountValue;
 
@@ -107,7 +106,7 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 				while (iter.hasNext())
 				{
 					final Map.Entry mapEntry = (Map.Entry) iter.next();
-					final CartEntry cartEntry = (CartEntry) mapEntry.getValue();
+					final AbstractOrderEntry cartEntry = (AbstractOrderEntry) mapEntry.getValue(); //Changed to abstractOrderEntry for TPR-629
 					final String validProductUSSID = (String) mapEntry.getKey();
 					double amtTobeDeductedAtlineItemLevel = 0.00D;
 					int qualifyingCount = 0;
