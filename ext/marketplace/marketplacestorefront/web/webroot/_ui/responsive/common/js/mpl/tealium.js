@@ -409,30 +409,82 @@ $(document).ready(
 			
 			//tpr-668  --for order page
 			
-			if (pageType == "orderconfirmation" && user_login_type == 'google') {
-				
-				var pageTypeHome = 'orderconfirmation';
-				var site_section = 'orderconfirmation';
-				var orderPageTealium = '';
-				//TPR-430
-				var product_category = null;
-				var page_subcategory_name = null;
-				var page_subcategory_name_L3 = null;
-				
-				orderPageTealium+='<script type="text/javascript"> var utag_data ={"site_region":"'+site_region+'","user_type":"'+user_type+'","user_login_type":"'+user_login_type+'","user_id":"'+user_id+'","page_type":"'+pageTypeHome+'","page_name":"'+pageName+'","product_category":"'+product_category+'","page_subcategory_name":"'+page_subcategory_name+'","page_subcategory_name_L3":"'+page_subcategory_name_L3+'", "session_id":"'+session_id+'","visitor_ip":"'+visitor_ip+'","site_currency":"'+site_currency+'","site_section":"'+site_section+'","IA_company":"'+domain_name+'"}</script>';
-				var script="";
-				if(domain_name =="www.tatacliq.com"){
+//tpr-668  --for order page
+			
+			if(pageType =="orderconfirmation"){
+				$
+				.ajax({
+					url : ACC.config.encodedContextPath
+							+ "/getTealiumDataOrder",
+					type : 'GET',
+					cache : false,
+					success : function(data) {
+						var tealiumData = "";
+						/*var order_subTotal=${order_payment_type};
+						console.log(order_subTotal);*/
+						tealiumData += ',"user_login_type":"'	//TPR-668
+							+ user_login_type + '",';
+					    tealiumData += '"order_id":"'
+								+ $('#orderIDString').val() + '",';
+					     tealiumData += '"order_subtotal":"'
+							+ $('#orderSubTotal').val() + '",';
+					    //tealiumData += '"order_total":'
+						//+ $("#orderTotal").val() + ',';
+					     tealiumData += '"order_date":"'
+						+ $("#orderDate").val() + '",';
+					     tealiumData += '"product_quantity":"'
+						+ $("#product_quantity").val() + '",';
+						 tealiumData += '"order_payment_type":"'
+							+ $("#order_payment_type").val() + '",';
+				         tealiumData += '"product_sku":"'
+						+ $("#product_sku").val() + '",';
+						 tealiumData += '"product_id":"'
+							+ $("#product_id").val() + '",';
+						tealiumData += '"product_brand":"'
+							+ $("#product_brand").val() + '",';
+						 tealiumData += '"order_shipping_charges":"'
+								+ $('#order_shipping_charges').val() + '",';
+						 tealiumData += '"order_tax":"'
+								+ $('#order_tax').val() + '",';
+						 tealiumData += '"transaction_id":"'
+								+ $('#transaction_id').val() + '",';
+						 tealiumData += '"order_total":"'
+								+ $('#order_total').val() + '",';
+						 tealiumData += '"order_discount":"'
+								+ $('#order_discount').val() + '",';
+						 tealiumData += '"order_currency":"'
+								+ $('#order_currency').val() + '",';
+						 tealiumData += '"product_unit_price":"'
+								+ $('#product_unit_price').val() + '",';
+						 tealiumData += '"product_list_price":"'
+								+ $('#product_list_price').val() + '",';
+						 tealiumData += '"product_name":"'
+								+ $('#product_name').val() + '",';
+						 tealiumData += '"order_shipping_modes":"'
+								+ $('#order_shipping_modes').val() + '",';
+						 
+						//TPR-430 Start
+						 if($("#product_category").val() !=undefined || $("#product_category").val() !=null){ 
+						tealiumData += '"product_category":"'
+							+ $("#product_category").val().replace(/_+/g, '_') + '",';
+						}
+						if($("#page_subcategory_name").val() !=undefined || $("#page_subcategory_name").val() !=null){ 
+						tealiumData += '"page_subcategory_name":"'
+							+ $("#page_subcategory_name").val().replace(/_+/g, '_') + '",';
+						}
+						if($("#page_subcategory_name_l3").val() !=undefined || $("#page_subcategory_name_l3").val() !=null){ 
+					   tealiumData += '"page_subcategory_name_L3":"'
+						+ $("#page_subcategory_name_l3").val().replace(/_+/g, '_') + '",';
+						}
+					//TPR-430 End
+						tealiumData += '"checkout_seller_ids":"'		//for TPR-429
+							+ $("#checkoutSellerIDs").val() + '"}';
+						data = data.replace("}<TealiumScript>", tealiumData);
+						$("#tealiumHome").html(data);
 					
-					script=UTAG_SCRIPT_PROD;
-				}
-				else{
-					
-					script=UTAG_SCRIPT_DEV;
-				}
-				orderPageTealium+=script;
-				$('#tealiumHome').html(orderPageTealium);
+					}
+				});
 			}
-		
 			//for order page
 			
 			/*TPR-648 start*/
