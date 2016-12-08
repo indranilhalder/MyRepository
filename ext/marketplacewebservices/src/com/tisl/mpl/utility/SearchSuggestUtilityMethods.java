@@ -35,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
+import com.tisl.mpl.core.enums.LuxIndicatorEnum;
 import com.tisl.mpl.facades.product.data.ProductTagDto;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.service.MplProductWebService;
@@ -171,7 +172,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 *
+	 * 
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -656,37 +657,10 @@ public class SearchSuggestUtilityMethods
 
 			if (null != productData && null != productData.getCode())
 			{
-				// commented as per TPR-796
-
 				if (null != productData.getUssID())
 				{
 					sellingItemDetail.setUssid(productData.getUssID());
 				}
-
-				/*
-<<<<<<< HEAD
-				 * try { productDataImage = productFacade.getProductForCodeAndOptions(productData.getCode(),
-				 * Arrays.asList(ProductOption.GALLERY)); galleryImages =
-				 * productDetailsHelper.getGalleryImagesMobile(productDataImage); } catch (final Exception e) {
-				 * LOG.error("SERPSEARCH ProductError:" + productData.getCode()); continue; }
-=======
-				 * final ProductModel productModel = productService.getProductForCode(defaultPromotionManager.catalogData(),
-				 * productData.getCode());
-				 *
-				 * ProductData productData1 = null; if (null != productModel) { productData1 =
-				 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.GALLERY)); } else { throw
-				 * new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9037); }
-				 *
-				 *
-				 * if (null != productData1) { final List<GalleryImageData> gallaryImages =
-				 * mplProductWebService.getGalleryImages(productData1);
-				 *
-				 * if (!gallaryImages.isEmpty()) { sellingItemDetail.setGalleryImagesList(gallaryImages); }
-				 *
-				 * }
->>>>>>> refs/remotes/origin/GOLDEN_PROD_SUPPORT_3rd_Nov_2016
-				 */
-
 				//TPR-796
 				try
 				{
@@ -694,7 +668,7 @@ public class SearchSuggestUtilityMethods
 				}
 				catch (final Exception e)
 				{
-					LOG.error("SERPSEARCH ProductError:" + productData.getCode());
+					LOG.error("SERPSEARCH Product Image Error:" + productData.getCode());
 					ExceptionUtil.getCustomizedExceptionTrace(e);
 					continue;
 				}
@@ -753,13 +727,23 @@ public class SearchSuggestUtilityMethods
 					sellingItemDetail.setLeastSizeProduct(productData.getLeastSizeProduct());
 				}
 
+				//For changes in LUXURY imageUrl
 				final ImageData imgData = getPrimaryImageForProductAndFormat(productData, "searchPage");
+				final ImageData imgDataLuxury = getPrimaryImageForProductAndFormat(productData, "luxurySearchPage");
 
-				if (imgData != null && imgData.getUrl() != null)
+				if (imgDataLuxury != null && imgDataLuxury.getUrl() != null && productData.getLuxIndicator() != null
+						&& productData.getLuxIndicator().equalsIgnoreCase(LuxIndicatorEnum.LUXURY.getCode()))
 				{
-
-					sellingItemDetail.setImageURL(imgData.getUrl());
+					sellingItemDetail.setImageURL(imgDataLuxury.getUrl());
 				}
+				else
+				{
+					if (imgData != null && imgData.getUrl() != null)
+					{
+						sellingItemDetail.setImageURL(imgData.getUrl());
+					}
+				}
+
 				if (null != productData.getDescription())
 				{
 					sellingItemDetail.setDetails(productData.getDescription());

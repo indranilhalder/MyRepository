@@ -286,6 +286,8 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 		//TPR-796
 		addImageData(source, "product", result);
 
+		addImageData(source, "luxurySearchPage", result);
+
 
 		return result;
 	}
