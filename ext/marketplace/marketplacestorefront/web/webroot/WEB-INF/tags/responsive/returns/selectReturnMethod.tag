@@ -56,7 +56,7 @@
 			<div class="col-md-4 col-sm-6">
 				<b><spring:theme code="text.order.returns.quickdrop"/> : </b> <br /> <span><spring:theme code="text.order.returns.listofstores"/></span>
 				<div class="quickDropArea" data-loaded="false">
-
+						<div class='error_text'></div>
 					 <c:forEach var="returnableStore" varStatus="i" items="${returnableSlaves}">
 					 
 				<div class="selectquickDrop quickDropRadio${i.index} col-md-12">
@@ -105,6 +105,7 @@
 							<button id="subOrderEntry" type="button" class="btn btn-primary pincodeSubmit">Submit</button>
 						</div>
 					</div>
+					<div class='error_text'></div>
 					<%-- <span>Pincode :</span><input id="pin" type="text" value="${subOrderEntry.deliveryPointOfService.address.postalCode}" placeholder="Enter Pincode" maxlength="6" onkeypress="return isNum(event)"/>
 					<span><button type="button" class="light-blue" value="SUBMIT" id="mplDeliveryMode"></button></span> --%>
 					</c:when>
@@ -119,6 +120,7 @@
 							<button id="subOrder" type="button" class="btn btn-primary pincodeSubmit">Submit</button>
 						</div>
 					</div>
+					<div class='error_text'></div>
 					</c:otherwise>
 					
 					</c:choose>
@@ -293,6 +295,7 @@
 .secondTataCliq select{
 	width: 100%;
 }
+.error_text{text-align: left}
 </style>
 
 
@@ -301,9 +304,14 @@
 <script>
 $(document).ready(function(){
 	$("#subOrder").click(function() {
+		
 		var pincode=$("#pin").val();
 	    var ussid=$("#ussid").val();
-	    var dataString = 'pin=' + pincode + '&ussid=' + ussid;
+		if(pincode.length<6){
+			$('.quickDrop .quickDropAreaPincode .error_text').show().text("Enter Valid 6 digit pincode");
+		}else{
+			$('.quickDrop .quickDropAreaPincode .error_text').hide();
+		var dataString = 'pin=' + pincode + '&ussid=' + ussid;
 		  $.ajax({
 			  url: ACC.config.encodedContextPath+"/my-account/returns/pincodeServiceCheck",
 			  data : dataString,
@@ -311,32 +319,61 @@ $(document).ready(function(){
 			  success: function(data) {
 				  if (data == "" || data == []
 					|| data == null) {
-					  $('.quickDropArea').html("<div>Stores Not Avalible</div>");
+					  $('#nearbystore').hide(); 
+					  $('.quickDropArea').html("<div>Stores Not Available </div>");
+					  getQuickDropData();	  
 				  }else{
-					 // alert("Stores are :"+data); 
-					  $('.quickDropArea').empty();
-					  for(var i=0; i<data.length; i++){
+						//alert("Stores are :"+data.length); 
+						 // $('.quickDropArea').empty();
+						  for(var i=0; i<data.length; i++){
+							  if(i == 0){
+								  tempHtml = "<div class='error_text'></div><div class='selectquickDrop quickDropRadio"+i+" col-md-12'>"
+								  +"<div class='selectRadio col-md-2 col-sm-2 col-xs-2'>"	
+								  +"<input id='storeIds"+i+"' name='storeIds'  onclick=updatePointersNew('quickDropRadio"+i+"','"+ data[i].geoPoint.latitude+"','"+ data[i].geoPoint.longitude+"','"+ data[i].displayName+","+data[i].address.town+","+ data[i].address.postalCode+"') class='checkButton' type='checkbox' value = '"+data[i].slaveId+"' /></div>"
+										+"<div class='col-md-10 col-sm-10 col-xs-10'>"
+									+"<b>"+data[i].displayName+"</b> <br /> <span>"+data[i].address.line1+","+ data[i].address.line2+","+ data[i].address.line3+"," 
+										 +data[i].address.town+","+data[i].address.postalCode+"</span></div></div>";
+							  }else{
+							  
+							  tempHtml += "<div class='selectquickDrop quickDropRadio"+i+" col-md-12'>"
+							  +"<div class='selectRadio col-md-2 col-sm-2 col-xs-2'>"	
+							  +"<input id='storeIds"+i+"' name='storeIds' onclick=updatePointersNew('quickDropRadio"+i+"','"+ data[i].geoPoint.latitude+"','"+ data[i].geoPoint.longitude+"','"+ data[i].displayName+","+data[i].address.town+","+ data[i].address.postalCode+"') class='checkButton' type='checkbox' value = '"+data[i].slaveId+"' /></div>"
+									+"<div class='col-md-10 col-sm-10 col-xs-10'>"
+								+"<b>"+data[i].displayName+"</b> <br /> <span>"+data[i].address.line1+","+ data[i].address.line2+","+ data[i].address.line3+"," 
+									 +data[i].address.town+","+data[i].address.postalCode+"</span></div></div>";
+			
+							  
+							  }	// console.log(tempHtml);
+							 
+							  }
 						 
-						  var tempHtml = "<div class='selectquickDrop quickDropRadio"+i+" col-md-12'>"
-						  +"<div class='selectRadio col-md-2 col-sm-2 col-xs-2'>"	
-						  +"<input id='storeIds"+i+"' name='storeIds' onclick='updatePointersNew('quickDropRadio"+i+"','"+ data[i].geoPoint.latitude+"','"+ data[i].geoPoint.longitude+"','"+ data[i].displayName+","+data[i].address.town+","+ data[i].address.postalCode+"')' class='checkButton' type='checkbox' value = '"+data[i].slaveId+"' /></div>"
-								+"<div class='col-md-10 col-sm-10 col-xs-10'>"
-							+"<b>"+data[i].displayName+"</b> <br /> <span>"+ data[i].address.line1+","+ data[i].address.line2+","+ data[i].address.line3+"," 
-								 +data[i].address.town+","+data[i].address.postalCode+"</span></div></div>";
-								// console.log(tempHtml);
-						  $('.quickDropArea').append(tempHtml);
-						  }
+						//  console.log(tempHtml);
+						 $('.quickDropArea').empty().html(tempHtml);
+						  getQuickDropData();
 				  }
 			  
 			  },
 			  error:function(data){
-				  $('.quickDropArea').html("<div>Oops Some thing wrong.Please try other pincode</div>");
+				  $('.quickDropArea').html("<div class='errorTextRed'>Oops Some thing wrong.Please try other pincode</div>");
 			  }
 		  });
+		}
 	});
+	
 });
 
-
+$(document).on('click', ' .checkButton', function (event) {
+	
+	// alert($(".quickDropArea .checkButton:checked").length)
+		if($(".quickDropArea .checkButton:checked").length < 1){
+			
+			
+			$('.quickDrop .quickDropArea .error_text').show().text("please select atleast one store.");
+		}else{
+			$('.quickDrop .quickDropArea .error_text').hide();
+		}
+	
+});
 
 </script>
 <style>

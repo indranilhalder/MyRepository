@@ -454,6 +454,14 @@
 			$("#saveBlockData").click(function(){
 				$("#changeAddressPopup").hide();
 				$(".wrapBG").hide();
+				if($(".checkButton:checked").length < 1){
+					e.preventDefault();
+					$('.quickDrop .quickDropArea .error_text').show().text("please select atleast one store.");
+					return false;
+				}else{
+					$('#returnForm').submit();
+					$('.quickDrop .quickDropArea .error_text').hide();
+				}
 			});
 			
 			$(".addNewAddressPopup").click(function(){
