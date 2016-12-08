@@ -27476,8 +27476,8 @@ header .content nav > ul > li > ul > li > ul > li.images > a .multibrand-logo{
 }
 
 .short-info .color-swatch > li img.multicolor-serp{
-	height:12px;
-	width:12px;
+	height:15px;
+	width:16px;
 }
 /* It is afftecting IA UI
 .no-results ul li a {
@@ -35009,7 +35009,7 @@ cursor: auto;
     transition: all .2s;
     opacity: 1;
 }
-.product-facet .filter-colour.selected-multi-colour input[type="submit"] {
+.product-facet .filter-colour.selected-multi-colour input[type="button"] {
     background-image: url(../images/multi-color-tick.png) !important;
     transition: all .2s;
     opacity: 1;
