@@ -422,14 +422,14 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				{
 					//inser or update Customer Bank Details
 					cancelReturnFacade.insertUpdateCustomerBankDetails(selfShipData);
-					/*CODSelfShipResponseData responseData=cancelReturnFacade.codPaymentInfoToFICO(selfShipData);
+					CODSelfShipResponseData responseData=cancelReturnFacade.codPaymentInfoToFICO(selfShipData);
 					
 					if(responseData.getSuccess() == null || !responseData.getSuccess().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS) )
 					{
 						//saving bank details failed payment details in commerce 
 						cancelReturnFacade.saveCODReturnsBankDetails(selfShipData);	
 						LOG.debug("Failed to post COD return paymnet details to FICO Order No:"+orderCode);
-					}*/
+					}
 				}
 				catch (EtailNonBusinessExceptions e)
 				{
