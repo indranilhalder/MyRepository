@@ -3582,6 +3582,7 @@
 
 					</attribute>
 					
+					<!-- Changes implemented for TPR-1121 -->
 					<attribute type="java.lang.Integer" qualifier="autoplayTimeout"
 						autocreate="true" generate="true">
 						<description>Auto play time for CategoryCarouselComponent</description>
@@ -3618,6 +3619,7 @@
 			jaloclass="com.tisl.mpl.jalo.cms.components.ProductCarouselComponent">
 			
 			<attributes>
+			<!-- Changes implemented for TPR-1121 -->
 			<attribute type="java.lang.Integer" qualifier="autoplayTimeoutNewIn"
 						autocreate="true" generate="true">
 						<description>Auto play time for ProductCarouselComponent</description>
@@ -4044,6 +4046,7 @@
 						<description>Button Link if required</description>
 						<persistence type="property" />
 					</attribute>
+					<!-- Changes implemented for TPR-1121 -->
 					<attribute qualifier="slideBy" type="java.lang.Integer"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true" />
@@ -4456,7 +4459,7 @@
 						<persistence type='property' />
 					</attribute>
 
-					
+					<!-- Changes implemented for TPR-1121 -->
 					<attribute type="java.lang.Integer" qualifier="slideBy"
                       autocreate="true" generate="true">
  					<description>SlideBy for AdvancedCategoryCarouselComponent</description>
@@ -4587,7 +4590,7 @@
 						<persistence type='property' />
 					</attribute>
 					
-					
+					<!-- Changes implemented for TPR-1121 -->
  
                     <attribute type="java.lang.Integer" qualifier="slideBy"
 						autocreate="true" generate="true">

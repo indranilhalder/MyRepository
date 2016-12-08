@@ -8,6 +8,8 @@
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 
 <div class="feature-categories">
+
+<!-- changes for tpr-599 -->
 <input type="hidden" value="${component.slideBy}" id="slideBy">
 <input type="hidden" value="${component.autoplayTimeout}" id="autoplayTimeout">
 <input type="hidden" value="${component.autoPlay}" id="autoPlay">

@@ -488,6 +488,9 @@ ACC.carousel = {
 		});
 	},
 	blpTopDealsCarousel: function(){
+		
+		//changes for tpr-599(BLP and CLP changes)
+		
 		var slideBy= $('#slideBy').val();
 		var autoplayTimeout= $('#autoplayTimeout').val();
 		var autoPlay= $('#autoPlay').val();
@@ -554,6 +557,8 @@ ACC.carousel = {
 	
 
 	ClpTopDealsCarousel: function(){
+		
+		//changes for tpr-599(BLP and CLP changes)
 		
 		var slideBy= $('#slideByOffer').val();
 		var autoPlay= $('#autoPlayOffer').val();

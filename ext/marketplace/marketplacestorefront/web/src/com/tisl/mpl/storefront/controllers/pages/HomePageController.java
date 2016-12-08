@@ -339,6 +339,7 @@ public class HomePageController extends AbstractPageController
 				}
 			}
 		}
+		// Changes implemented for TPR-1121
 		showCaseComponentJson.put("autoPlay", showCaseComponent.getAutoPlay());
 		showCaseComponentJson.put("slideBy", showCaseComponent.getSlideBy());
 		showCaseComponentJson.put("autoplayTimeout", showCaseComponent.getAutoplayTimeout());
@@ -598,6 +599,8 @@ public class HomePageController extends AbstractPageController
 						}
 
 						newAndExclusiveJson.put(TITLE, title);
+
+						// Changes implemented for TPR-1121
 						newAndExclusiveJson.put("autoPlay", newAndExclusiveComponent.getAutoPlayNewIn());
 						newAndExclusiveJson.put("slideBy", newAndExclusiveComponent.getSlideByNewIn());
 						newAndExclusiveJson.put("autoplayTimeout", newAndExclusiveComponent.getAutoplayTimeoutNewIn());

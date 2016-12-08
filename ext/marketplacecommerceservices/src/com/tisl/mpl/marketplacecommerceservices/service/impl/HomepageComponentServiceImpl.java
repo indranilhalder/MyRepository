@@ -166,6 +166,8 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 							}
 						}
 					}
+
+					// Changes implemented for TPR-1121
 					bestPicks.put("autoPlay", bestPickCarouselComponent.getAutoPlay());
 					bestPicks.put("slideBy", bestPickCarouselComponent.getSlideBy());
 					bestPicks.put("autoplayTimeout", bestPickCarouselComponent.getAutoplayTimeout());
@@ -336,6 +338,8 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 							}
 
 						}
+
+						// Changes implemented for TPR-1121
 						productYouCare.put("autoPlay", autoPlay);
 						productYouCare.put("slideBy", slideBy);
 						productYouCare.put("autoplayTimeout", autoplayTimeout);

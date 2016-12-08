@@ -6,6 +6,7 @@
 <div class="carousel-component">
 <div class="feature-collections">
 
+<!-- changes for tpr-599 -->
 <input type="hidden" id="slideByOffer" value="${component.slideBy}">
 <input type="hidden" id="autoPlayOffer" value="${component.autoPlay}">
 <input type="hidden" id="autoplayTimeoutOffer" value="${component.autoplayTimeout}">

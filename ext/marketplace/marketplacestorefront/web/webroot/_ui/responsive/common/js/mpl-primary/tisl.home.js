@@ -343,7 +343,7 @@ function getBrandsYouLoveAjaxCall() {
             success: function(response) {
 
                //console.log(response.subComponents);
-            	
+            	//changes for TPR-1121
             	autoplayTimeout = response.autoplayTimeout;
             	slideBy = response.slideBy; 
             	autoPlay= response.autoPlay;
@@ -738,8 +738,7 @@ function getBestPicksAjaxCall() {
             data: dataString,
             success: function(response) {
 
-            	//console.log(response.autoplayTimeout);
-               // console.log(response.slideBy);
+            	//changes for TPR-1121
                 autoplayTimeout = response.autoplayTimeout;
                 slideBy = response.slideBy;
                 autoPlay= response.autoPlay;
@@ -892,7 +891,7 @@ function getProductsYouCareAjaxCall() {
             data: dataString,
             success: function(response) {
 
-            	
+            	//changes for TPR-1121
             	autoplayTimeout = response.autoplayTimeout;
             	slideBy = response.slideBy;
             	autoPlay= response.autoPlay;
@@ -1025,7 +1024,7 @@ function getNewAndExclusiveAjaxCall() {
         data: dataString,
         success: function(response) {
             //console.log(response.newAndExclusiveProducts);
-
+        	//changes for TPR-1121
         	
         	autoplayTimeout = response.autoplayTimeout;
         	slideBy = response.slideBy;
