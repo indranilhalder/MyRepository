@@ -250,7 +250,7 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 	{
 		if (getValue(source, "stockLevelStatus") != null)
 		{
-			final boolean stockLevelStatus = Boolean.parseBoolean(getValue(source, "stockLevelStatus").toString());
+			//final boolean stockLevelStatus = Boolean.parseBoolean(getValue(source, "stockLevelStatus").toString());
 
 			//final boolean stockLevelStatus = Boolean.valueOf(getValue(source, "stockLevelStatus").toString()).booleanValue();
 			//final boolean stockLevelStatus = Boolean.getBoolean(getValue(source, "stockLevelStatus").toString()); //Sonar fix
