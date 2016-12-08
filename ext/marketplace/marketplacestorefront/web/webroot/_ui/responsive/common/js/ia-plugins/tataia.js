@@ -30,9 +30,10 @@ searchCategory_id		= $('#selectedSearchCategoryId').val(); // For Normal search
 searchCategory_idFromMicrosite		= $('#selectedSearchCategoryIdMicrosite').val(); // For Microsite search
 var daysDif = '';
 var is_new_product = false;
-category_idString		= $('#categoryIdHotNow').val(); // For HotNow category
-var category_idArray = new Array();
-category_idArray = category_idString.split(",");
+//Variables added for TPR 1313
+category_idString		= $('#categoryIdHotNow').val(); // For HotNow category for TPR 1313
+var category_idArray = new Array();//Variables added for TPR 1313
+category_idArray = category_idString.split(",");//Variables added for TPR 1313
 
 //start for geolocations tpr-1304
 $(document).ready(function(){
