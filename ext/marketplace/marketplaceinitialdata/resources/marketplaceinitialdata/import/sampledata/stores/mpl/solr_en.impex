@@ -224,4 +224,5 @@ UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=
  ;$solrIndexedType		;height-classification						;"Height"
  ;$solrIndexedType		;capacity-classification					;"Capacity"
  ;$solrIndexedType		;compatiblelaptopsizet-classification		;"Compatible Laptop Size"
+ ;$solrIndexedType		;colorfamilytrlg							;"Colour Family"
  
