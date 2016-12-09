@@ -150,10 +150,10 @@
 		 <extension name="cacheclear" />
 		 
 		 <!-- Extension for Node Warmer-->
-	    
+	    <!--
 	    <extension name="psdtocache" /> 
 	  	<extension name="ypsnodewarmer" /> 
-	 
+	 -->
 	    <!-- Extension for Node Warmer-->
 
 	</extensions>
