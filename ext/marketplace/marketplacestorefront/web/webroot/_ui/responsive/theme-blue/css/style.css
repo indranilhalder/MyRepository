@@ -45515,6 +45515,7 @@ body.page-homepage .trending h2 > span{
 }
 .click2chat-container.send-email-container h2 {
     margin-bottom: 5px;
+    font-size: 16px;
 }
 .chat h3, .call h3 {
     height: 29px;
@@ -53245,11 +53246,11 @@ body .lookbook_wrapper .listing.wrapper .left-block{
 }
 
 
-.edit {
+.address-list .edit {
     float: left;
 }
 
-.edit>a:before {
+.address-list .edit>a:before {
     content: "\f040";
     font-family: 'FontAwesome';
     -webkit-font-smoothing: antialiased;
