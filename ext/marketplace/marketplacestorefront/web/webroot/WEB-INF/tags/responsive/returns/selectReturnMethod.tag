@@ -237,8 +237,8 @@
 				<div class="col-md-2 col-xs-12 col-sm-2">
 					<b><spring:theme code="text.order.returns.step2"/></b> <br /><spring:theme code="text.order.returns.downloaddocuments"/> <br /> 
 					
-					<a href=""><spring:theme code="text.order.returns.document1"/></a><br />
-					<a href=""><spring:theme code="text.order.returns.document2"/></a>
+					<a href="/my-account/returns/returnFileDownload"><spring:theme code="text.order.returns.document1"/></a><br />
+					<%-- <a href=""><spring:theme code="text.order.returns.document2"/></a> --%>
 				</div>
 				<div class="col-md-1 col-xs-1 hidden-xs col-sm-1">
 					<span class="fa-angle-right"></span>

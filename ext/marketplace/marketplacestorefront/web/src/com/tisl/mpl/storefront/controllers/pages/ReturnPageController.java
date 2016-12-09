@@ -22,7 +22,10 @@ import de.hybris.platform.servicelayer.session.SessionService;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,7 +35,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -905,6 +910,33 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		newdata.setName("Select");
 		stateDataList.add(0, newdata);
 		return stateDataList;
+	}
+	//RETURN_FILE_DOWNLOAD="/returnFileDownload";
+	@ResponseBody
+	@RequestMapping(value = RequestMappingUrlConstants.RETURN_FILE_DOWNLOAD, method = RequestMethod.GET)
+	protected void returnFileDownload(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		String fileDownloadLocation =null;
+		String returnDownloadFileName=null;
+		 if(null!=configurationService){
+			 fileDownloadLocation=configurationService.getConfiguration().getString(RequestMappingUrlConstants.FILE_DOWNLOAD_PATH);
+			 returnDownloadFileName=configurationService.getConfiguration().getString(RequestMappingUrlConstants.RETURN_FILE_NAME );
+	      	if(null !=fileDownloadLocation && !fileDownloadLocation.isEmpty()){
+	      		response.setContentType("text/html");
+	      		PrintWriter out = response.getWriter();
+	      		response.setContentType("APPLICATION/OCTET-STREAM");
+	      		if(null !=returnDownloadFileName && !returnDownloadFileName.isEmpty()){
+	      		response.setHeader("Content-Disposition", "attachment; filename=\" " + returnDownloadFileName + "\"");
+	      		}
+	      		FileInputStream fileInputStream = new FileInputStream(fileDownloadLocation + returnDownloadFileName);
+	      		int i;
+	      		while ((i = fileInputStream.read()) != -1) {
+	      			out.write(i);
+	      		}
+	      		fileInputStream.close();
+	      		out.close();
+	      	}
+	    }	
 	}
 
 	/**

@@ -178,5 +178,8 @@ public final class RequestMappingUrlConstants
 	public static final String RETURN_TYPE="02";
 	public static final String COD="COD";
 	
-
+	public static final String RETURN_FILE_DOWNLOAD="/returnFileDownload";
+	public static final String FILE_DOWNLOAD_PATH="return.filedownload.path";
+	public static final String RETURN_FILE_NAME="return.filedownload.filename";
+	
 }
