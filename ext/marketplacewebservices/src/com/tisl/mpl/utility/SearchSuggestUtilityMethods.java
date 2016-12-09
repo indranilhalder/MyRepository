@@ -171,7 +171,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 *
+	 * 
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -664,27 +664,24 @@ public class SearchSuggestUtilityMethods
 				}
 
 				/*
-<<<<<<< HEAD
-				 * try { productDataImage = productFacade.getProductForCodeAndOptions(productData.getCode(),
+				 * <<<<<<< HEAD try { productDataImage = productFacade.getProductForCodeAndOptions(productData.getCode(),
 				 * Arrays.asList(ProductOption.GALLERY)); galleryImages =
 				 * productDetailsHelper.getGalleryImagesMobile(productDataImage); } catch (final Exception e) {
-				 * LOG.error("SERPSEARCH ProductError:" + productData.getCode()); continue; }
-=======
-				 * final ProductModel productModel = productService.getProductForCode(defaultPromotionManager.catalogData(),
+				 * LOG.error("SERPSEARCH ProductError:" + productData.getCode()); continue; } ======= final ProductModel
+				 * productModel = productService.getProductForCode(defaultPromotionManager.catalogData(),
 				 * productData.getCode());
-				 *
+				 * 
 				 * ProductData productData1 = null; if (null != productModel) { productData1 =
 				 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.GALLERY)); } else { throw
 				 * new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9037); }
-				 *
-				 *
+				 * 
+				 * 
 				 * if (null != productData1) { final List<GalleryImageData> gallaryImages =
 				 * mplProductWebService.getGalleryImages(productData1);
-				 *
+				 * 
 				 * if (!gallaryImages.isEmpty()) { sellingItemDetail.setGalleryImagesList(gallaryImages); }
-				 *
-				 * }
->>>>>>> refs/remotes/origin/GOLDEN_PROD_SUPPORT_3rd_Nov_2016
+				 * 
+				 * } >>>>>>> refs/remotes/origin/GOLDEN_PROD_SUPPORT_3rd_Nov_2016
 				 */
 
 				//TPR-796
@@ -807,6 +804,9 @@ public class SearchSuggestUtilityMethods
 				{
 					sellingItemDetail.setInStockFlag(productData.getInStockFlag());
 				}
+
+				//CumulativeStock
+				sellingItemDetail.setCumulativeStockLevel(Boolean.valueOf(productData.isStockValue()));
 				if (null == productData.getIsOfferExisting())
 				{
 					sellingItemDetail.setIsOfferExisting(Boolean.FALSE);
