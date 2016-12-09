@@ -17,6 +17,7 @@ import de.hybris.platform.acceleratorcms.model.components.CartSuggestionComponen
 import de.hybris.platform.acceleratorcms.model.components.CategoryFeatureComponentModel;
 import de.hybris.platform.acceleratorcms.model.components.DynamicBannerComponentModel;
 import de.hybris.platform.acceleratorcms.model.components.MiniCartComponentModel;
+import de.hybris.platform.acceleratorcms.model.components.NavigationBarCollectionComponentModel;
 import de.hybris.platform.acceleratorcms.model.components.NavigationBarComponentModel;
 import de.hybris.platform.acceleratorcms.model.components.ProductFeatureComponentModel;
 import de.hybris.platform.acceleratorcms.model.components.ProductReferencesComponentModel;
@@ -117,6 +118,7 @@ public interface ControllerConstants
 			String MplBrandLogoComponent = _Prefix + MplBrandLogoComponentModel._TYPECODE + _Suffix;
 			String RotatingImagesComponent = _Prefix + RotatingImagesComponentModel._TYPECODE + _Suffix;
 			String CustomSkuComponent = _Prefix + CustomSkuComponentModel._TYPECODE + _Suffix;
+			String NavigationBarCollectionComponent = _Prefix + NavigationBarCollectionComponentModel._TYPECODE + _Suffix;
 		}
 	}
 
