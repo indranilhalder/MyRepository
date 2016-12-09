@@ -153,12 +153,13 @@
 								</div>
 								<div class="row">
 									<div class="col-md-6 form-group">
-
-
+									
+									
+									<div class="mainDrop">
 										<label for="state"><spring:theme
 												code="text.order.returns.state" /></label>
 										<form:select
-											cssClass="form-control textInputChangeAddress address_states"
+											cssClass="form-control textInputChangeAddress address_states addressRead"
 											name="stateList" id="stateListBox" path="state"
 											onChange="onAddressSelectValidate()">
 											<c:forEach items="${stateDataList}" var="state"
@@ -166,6 +167,15 @@
 												<option value="${state.name}">${state.name}</option>
 											</c:forEach>
 										</form:select>
+									</div>
+									<div class="dupDisplay">
+										<label><spring:theme code="text.order.returns.state" text="State *" /></label>
+											<form:input path="state" id="stateListBoxReadOnly"
+												class="form-control textInputChangeAddress address_states addressDup" maxlength="30" readonly="readonly"/>
+									</div>
+									</div>
+										
+										
 									</div>
 									<div class="col-md-6 form-group">
 										<label for="country"> <spring:theme
@@ -195,9 +205,9 @@
 								</div>
 
 							</div>
-
+						</fieldset>
 						</div>
-					</fieldset>
+					
 					 <div class="row errorCodemessage"></div> 
 					<p style="clear: both;"></p>
 					<div class="modal-footer">

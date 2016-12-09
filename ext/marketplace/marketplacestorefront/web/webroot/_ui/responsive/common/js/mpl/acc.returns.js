@@ -425,8 +425,8 @@
 				$(".wrapBG").css("z-index", "99");
 				$(".changeAdddd").css("overflow-y", "hidden");
 				var className = $(this).attr("data-class");
-				console.log(className);
-				console.log("Test"+$(".update"+className+" .lastName").text());
+				//alert(className);
+				//alert("Test"+$(".update"+className+" .lastName").text());
 				$("#popupFields #firstName").val($("."+className+" .firstName").text());
 				$("#popupFields #lastName").val($("."+className+" .lastName").text());
 				$("#popupFields #addressLine1").val($("."+className+" .addressline1").text());
@@ -434,6 +434,39 @@
 				$("#popupFields #addressLine3").val($("."+className+" .addressline3").text());
 				$("#popupFields #pincode").val($("."+className+" .postalCode").text());
 				$("#popupFields #mobileNo").val($("."+className+" .phoneNumber").text());
+				$("#popupFields #landmark").val($("."+className+" .landmark").text());
+				
+/*				$("#landmark option").each(function() {
+				   // alert(this.text + ' ' + this.value);
+				if(this.text == $("."+className+" .landmark").text()){
+					alert(this.text);
+					this.prop("selected","selected");
+					
+				}else{
+					
+					alert(this.text+" HHHH "+$("."+className+" .landmark").text());
+					$("#landmark option").text("Other").prop("selected","selected");
+				}1
+				
+				});
+*/	
+				
+				if($("."+className+" .landmark").text() != "") {
+   	            	
+   	            		alert($(".address_landmarks option[value='"+$("."+className+" .landmark").text()+"']").length);
+   	            		alert($("."+className+" .landmark").text() + "$(.+className+ .landmark).text()"); 
+   		            	if($(".address_landmarks option[value='"+$("."+className+" .landmark").text()+"']").length > 0) {
+   		            		console.log($("."+className+" .landmark").text() + "$(.+className+ .landmark).text()"); 
+   		            		$(".address_landmarks").val($("."+className+" .landmark").text());
+   		            	} else {
+   	            			console.log( $("."+className+" .landmark").text()+" FFFF "+ $("."+className+" .landmark").text()); 
+   	            			$(".address_landmarks").val("Other"); 
+	            				changeFuncLandMark("Other"); 
+	                			$("#otherLandmark").val($("."+className+" .landmark").text());            	
+   		            	}
+   	            	
+   	            }
+				
 				$("#popupFields #landmarkother").val($("."+className+" .otherLandmark").text());
 				$("#popupFields #city").val($("."+className+" .addressTown").text());
 				$("#popupFields #stateListBox").val($("."+className+" .state").text());
@@ -451,11 +484,12 @@
 				$(".wrapBG").hide();
 			});
 			
-			$("#saveBlockData").click(function(){
+			$("#saveBlockData").click(function(event){
 				$("#changeAddressPopup").hide();
 				$(".wrapBG").hide();
 				if($(".checkButton:checked").length < 1){
-					e.preventDefault();
+					event.preventDefault();
+					alert('in save block return false');
 					$('.quickDrop .quickDropArea .error_text').show().text("please select atleast one store.");
 					return false;
 				}else{
@@ -485,11 +519,6 @@
 			
 
 			$(".close").click(function() {
-				$("#changeAddressPopup").hide();
-				$(".wrapBG").hide();
-			});
-			
-			$("#saveBlockData").click(function(){
 				$("#changeAddressPopup").hide();
 				$(".wrapBG").hide();
 			});
@@ -685,21 +714,27 @@
 		
 		
 		function showAddressPopup(addressId) {
+			alert('showAddressPopup');
 			$("#addAddressForm .errorText").hide();
 			$("#changeAddressPopup, .wrapBG").fadeIn(300);
 			var height = $(window).height();
 			$(".wrapBG").css("height", height);
 			$("#changeAddressPopup").css("z-index", "999999");
 			var className = addressId;
-			console.log(className);
+			alert(className);
 			console.log("Test"+$(".update"+className+" .lastName").text());
 			$("#popupFields #firstName").val($("."+className+" .firstName").text());
 			$("#popupFields #lastName").val($("."+className+" .lastName").text());
 			$("#popupFields #addressLine1").val($("."+className+" .addressline1").text());
 			$("#popupFields #addressLine2").val($("."+className+" .addressline2").text());
+			$("#popupFields #addressLine3").val($("."+className+" .addressline3").text());
 			$("#popupFields #pincode").val($("."+className+" .postalCode").text());
 			$("#popupFields #mobileNo").val($("."+className+" .phoneNumber").text());
-			$("#popupFields #landmark").val($("."+className+" .addressline2").text());
+			$("#popupFields #landmark").val($("."+className+" .landmark").text());
+			$("#landmark option").each(function() {
+			    alert(this.text + ' ' + this.value);
+			});
+			alert($("#landmark option").length);
 			$("#popupFields #city").val($("."+className+" .addressTown").text());
 			$("#popupFields #stateListBox").val($("."+className+" .state").text());
 			$("#popupFields #country").val($("."+className+" .country").text());
@@ -739,7 +774,7 @@
 									  + count+ "\")' type='radio' value='schedule'></div><div class='col-md-6 col-sm-6 col-xs-6 updateaddress"
 									  +count+ "'><ul><li><span class=firstName>"
 									  +$('#addAddressForm  #firstName').val()+"</span>&nbsp;<span class=lastName>"+$('#addAddressForm #lastName').val()+"</span><li><span class=addressline1>"
-									  +$('#addAddressForm  #addressline1').val()+"</span><li><span class=addressline2>"+$('#addAddressForm  #addressline2').val()+"</span><li><span class=addressTown>"
+									  +$('#addAddressForm  #addressline1').val()+"</span><li><span class=addressline2>"+$('#addAddressForm  #addressline2').val()+"</span><li><span class=addressline3>"+$('#addAddressForm  #addressline3').val()+"</span><li><span class=addressTown>"
 									  +$('#addAddressForm  #addressTown').val()+"</span><li><span class=state>"+$('#addAddressForm  #state').val()+"</span><li><span class=postalCode>"
 									  +$('#addAddressForm  #pincode').val()+"</span><li><span class=country>"
 									  +$('#addAddressForm  #country').val()+"</span><li><span class=phoneNumber>"
@@ -770,6 +805,7 @@
 							$("#hiddenFields #lastName").val($("#addAddressForm #lastName").val());
 						    $("#hiddenFields #addressLine1").val($("#addAddressForm #addressLine1").val());
 							$("#hiddenFields #addressLine2").val($("#addAddressForm #addressLine2").val());
+							$("#hiddenFields #addressLine3").val($("#addAddressForm #addressLine3").val());
 							$("#hiddenFields #landmark").val($("#addAddressForm #landmark").val());
 							$("#hiddenFields #pincode").val($("#addAddressForm #pincode").val());
 							$("#hiddenFields #city").val($("#addAddressForm #city").val());
@@ -784,6 +820,7 @@
 							$(".update"+temp+" li span.lastName").text($("#addAddressForm #lastName").val());
 							$(".update"+temp+" li span.addressLine1").text($("#addAddressForm #addressLine1").val());
 							$(".update"+temp+" li span.addressLine2").text($("#addAddressForm #addressLine2").val());
+							$(".update"+temp+" li span.addressLine3").text($("#addAddressForm #addressLine3").val());
 							$(".update"+temp+" li span.otherLandmark").text($("#addAddressForm #otherLandmark").val());
 							$(".update"+temp+" li span.postalCode").text($("#addAddressForm #pincode").val());
 							$(".update"+temp+" li span.city").text($("#addAddressForm #city").val());
