@@ -225,7 +225,6 @@
 				</div> --%>
 
 				</div>
-
 			</form:form>
 		</div>
 		<!-- /.modal-content -->
