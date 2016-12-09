@@ -378,7 +378,8 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 				if (totalCount >= eligibleQuantity.intValue())
 				{
 					final Map<String, Integer> validProductList = getDefaultPromotionsManager().getSortedValidProdUssidMap(
-							validProductUssidMap, totalCount, eligibleQuantity.longValue(), paramSessionContext, restrictionList);
+							validProductUssidMap, totalCount, eligibleQuantity.longValue(), paramSessionContext, restrictionList,
+							getCode());
 
 					validProductFinalList.putAll(validProductList);
 					validProductUssidFinalMap.putAll(validProductUssidMap);

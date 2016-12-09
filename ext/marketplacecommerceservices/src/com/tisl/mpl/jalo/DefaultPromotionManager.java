@@ -2152,8 +2152,17 @@ public class DefaultPromotionManager extends PromotionsManager
 	 */
 	public Set<String> populateSortedValidProdUssidMap(final Map<String, AbstractOrderEntry> validProductUssidTempMap,
 			final int totalEligibleCount, final SessionContext ctx, final List<AbstractPromotionRestriction> restrictionList,
-			final Map<String, Integer> qCountMap)
+			final Map<String, Integer> qCountMap, final String promoCode)
 	{
+		//Check whether Stock level restriction exists
+		final Set<String> validSetAfterStockCheck = getValidMapAfterStockLevelRestriction(validProductUssidTempMap, promoCode,
+				restrictionList);
+		if (null != validProductUssidTempMap)
+		{
+			validProductUssidTempMap.keySet().retainAll(validSetAfterStockCheck);
+		}
+
+
 		List<AbstractOrderEntry> validEntries = null;
 		if (validProductUssidTempMap != null)
 		{
@@ -2350,7 +2359,7 @@ public class DefaultPromotionManager extends PromotionsManager
 
 	Map<String, Integer> getSortedValidProdUssidMap(final Map<String, AbstractOrderEntry> validProductUssidMap,
 			final int totalCount, final long eligibleQty, final SessionContext paramSessionContext,
-			final List<AbstractPromotionRestriction> restrictionList)
+			final List<AbstractPromotionRestriction> restrictionList, final String promoCode)
 	{
 		final Map<String, Integer> validUssidList = new HashMap<String, Integer>();
 		final int totalFactorCount = totalCount / (int) eligibleQty;
@@ -2358,7 +2367,7 @@ public class DefaultPromotionManager extends PromotionsManager
 
 		validProductUssidMap.keySet().retainAll(
 				populateSortedValidProdUssidMap(validProductUssidMap, totalEligibleCount, paramSessionContext, restrictionList,
-						validUssidList));
+						validUssidList, promoCode));
 		return validUssidList;
 	}
 
@@ -3855,8 +3864,8 @@ public class DefaultPromotionManager extends PromotionsManager
 
 		return isProdShippingPromoAppliedMap;
 	}
-	
-	
+
+
 	public Set<String> getValidMapAfterStockLevelRestriction(final Map<String, AbstractOrderEntry> multiSellerValidUSSIDMap,
 			final String code, final List<AbstractPromotionRestriction> restrictionList)
 	{
