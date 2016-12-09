@@ -30,8 +30,8 @@ searchCategory_id		= $('#selectedSearchCategoryId').val(); // For Normal search
 searchCategory_idFromMicrosite		= $('#selectedSearchCategoryIdMicrosite').val(); // For Microsite search
 var daysDif = '';
 var is_new_product = false;
-//Variables added for TPR 1313
-category_idString		= $('#categoryIdHotNow').val(); // For HotNow category for TPR 1313
+
+var category_idString		= $('#categoryIdHotNow').val(); // For HotNow category for TPR 1313
 var category_idArray = new Array();//Variables added for TPR 1313
 category_idArray = category_idString.split(",");//Variables added for TPR 1313
 
@@ -1036,22 +1036,8 @@ if (searchCategory_id){
 			    	sortHtml += '<li class="sort_li" id="name-desc">Name: Z to A</li>';
 			    	sortHtml += '<li class="sort_li" id="price-asc">Price: Low to High</li>';
 			    	sortHtml += '<li class="sort_li" id="price-desc">Price: High to Low</li>';
-			    	sortHtml += '</ul></div></div>';
-			 
-			/* 
-			 * commented as HotNow category drop-down logic has been removed
-			 *  
-			 *   var catHtml = '<div class="select-view ">'; 
-			    //for release 2 changes in home-page headers-All Departments
-			    catHtml += '<div class="select-list"><span class="selected hotSelected">All Departments</span><ul id="ia_category_select" style="width: auto;">';
-			    for (var i=0; i<categoryFilters.length; i++) {
-			    	if(i==0){
-			    		 catHtml += '<li class="category_li" id="allCat">All Departments</li>';
-			    	}
-			      catHtml += '<li class="category_li" id="'+categoryCodeForFilters[i]+'">'+categoryFilters[i]+'</li>';
-			    } 
-			    catHtml += '</ul></div></div>'; */
-			    
+			    	sortHtml += '</ul></div></div>';			 
+						    
 			    if(slider) {
 			    	if(site_page_type === 'search' && widgetElement === 'ia_products_search'){
 			    		html += '<h2><span style="color: black !important;">Best Sellers</span>';
@@ -1065,13 +1051,8 @@ if (searchCategory_id){
 						
 			    		html += '<h2><span style="color: black !important;">'+productWidgetTitle[jQuery.inArray(widgetMode, productWidget)]+'</span>';
 			    	}
-			    		}
+			    		}			      
 			      
-			      /*For hot we need a scrolldown bar to select filters*/
-			      /*commented as HotNow category drop-down logic has been removed
-			       * if(site_page_type === "homepage" || site_page_type ==="viewAllTrending" && widgetMode != "recent") {
-			        html += catHtml;
-			      }*/
 			      html += '</h2>';
 			      html += '<div class="spacer" style="padding: 0 25px;"><div class="slider product ready"><div class="frame"><ul id="' + widgetElement + '_list" class="overflow owl-carousel" style="width: 0.953empx; left: 0px;">';
 			    } else {
@@ -1092,7 +1073,7 @@ if (searchCategory_id){
 			      	 html += sortHtml;
 			        }
 			        
-			      //  html += catHtml;//commented as HotNow category drop-down logic has been removed
+			      
 			        
 			      }
 			      html += '<ul id="'+widgetElement+'_list" class="product-list" style="width: 100%; float: left;margin-top: 55px; ">';
