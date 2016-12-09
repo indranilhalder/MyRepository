@@ -29,7 +29,7 @@ public class SizeGuideComparator implements Comparator<SizeGuideData>
 	private static final Logger LOG = Logger.getLogger(SizeGuideComparator.class);
 	private static final String S = "\\s+";//Sonar fix
 
-	private static final String ESCAPE_STRING = "\\s+";
+	//private static final String ESCAPE_STRING = "\\s+";  Sonar fix
 
 	/**
 	 * This method is responsible for sizes to be displayed in size chartok

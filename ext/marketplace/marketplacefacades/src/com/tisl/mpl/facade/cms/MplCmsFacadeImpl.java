@@ -84,7 +84,6 @@ import com.tisl.mpl.facades.cms.data.ImageListComponentData;
 import com.tisl.mpl.facades.cms.data.LinkedCollectionsData;
 import com.tisl.mpl.facades.cms.data.MplPageData;
 import com.tisl.mpl.facades.cms.data.PageData;
-import com.tisl.mpl.facades.cms.data.ProductComponentData;
 import com.tisl.mpl.facades.cms.data.ProductListComponentData;
 import com.tisl.mpl.facades.cms.data.PromotionComponentData;
 import com.tisl.mpl.facades.cms.data.SectionData;
@@ -154,7 +153,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	private final String SUBBRAND = "Subbrand";
 	private final String SELLER = "Seller";
 	private final String OFFER = "Offer";
-	private final String SIMPLEBANNERCOMPONENT = "SimpleBannerComponent"; //Sonar fix
+	//private final String SIMPLEBANNERCOMPONENT = "SimpleBannerComponent"; //Sonar fix
 
 	private final String HEROSTATUS = "Success";
 
@@ -393,7 +392,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getLandingPageForCategory(java.lang.String)
 	 */
 	@Override
@@ -418,7 +417,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getHomePageForMobile()
 	 */
 	@Override
@@ -1552,7 +1551,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateCategoryLandingPageForMobile()
 	 */
 	@Override
@@ -1668,7 +1667,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.facade.cms.MplCmsFacade#populateSubBrandLandingPageForMobile(de.hybris.platform.cms2.model.pages.
 	 * ContentPageModel, java.lang.String)
@@ -1719,7 +1718,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populatePageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -1866,7 +1865,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getCategoryNameForCode(java.lang.String)
 	 */
 	@Override
@@ -1878,7 +1877,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getHeroProducts(java.lang.String)
 	 */
 	@Override
@@ -1952,7 +1951,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateSellerLandingPageForMobile()
 	 */
 	@Override
@@ -1993,7 +1992,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				 * (SmallBrandMobileAppComponentModel) abstractCMSComponentModel; final ComponentData componentData =
 				 * getMobileCategoryComponentConverter().convert(smallBrandMobileComponentModel);
 				 * componentDatas.add(componentData);
-				 * 
+				 *
 				 * }
 				 */
 				else if (abstractCMSComponentModel instanceof PromotionalProductsComponentModel)
@@ -2051,7 +2050,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getSellerMasterName(java.lang.String)
 	 */
 	@Override
@@ -2063,7 +2062,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateSellerPageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -2079,7 +2078,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateOfferPageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -2096,7 +2095,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getlandingForBrand()
 	 */
 	@Override
@@ -2940,7 +2939,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getMegaNavigation()
 	 */
 	@Override
