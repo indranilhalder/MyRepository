@@ -390,7 +390,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 			final String isDeliveryDateRequired, final String ussid)
 	{
 		final List<PincodeServiceData> requestData = new WeakArrayList<>();
-		PincodeServiceData data = new PincodeServiceData();
+		PincodeServiceData data = null;
 		final List<SellerInformationData> sellers = buyBoxFacade.getsellersDetails(productModel.getCode());
 		try
 		{
@@ -405,6 +405,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 						{
 							if (sd.getSellerID().equalsIgnoreCase(buybox.getSellerId()))
 							{
+								data = new PincodeServiceData();
 								// Added For Seller Handling Time
 								SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussid);
 								List<RichAttributeModel> sellerRichAttributeModel = null;
@@ -426,7 +427,6 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 										data.setSellerHandlingTime(Integer.valueOf(sellerHandlingTime));
 									}
 								// Close seller Handling Time
-								data = new PincodeServiceData();
 								data.setIsCOD(sd.getIsCod());
 								data.setDeliveryModes(sd.getDeliveryModes());
 								data.setTransportMode(sd.getShippingMode());
@@ -492,7 +492,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 			final String isDeliveryDateRequired, final String ussid, final GPS gps, final Double configurableRadius)
 	{
 		final List<PincodeServiceData> requestData = new WeakArrayList<>();
-		PincodeServiceData data = new PincodeServiceData();
+		PincodeServiceData data = null;
 		final List<SellerInformationData> sellers = buyBoxFacade.getsellersDetails(productModel.getCode());
 		try
 		{
@@ -507,6 +507,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 						{
 							if (sd.getSellerID().equalsIgnoreCase(buybox.getSellerId()))
 							{
+								data = new PincodeServiceData();
 								// Added For Seller Handling Time
 								SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussid);
 								List<RichAttributeModel> sellerRichAttributeModel = null;
@@ -528,7 +529,6 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 										data.setSellerHandlingTime(Integer.valueOf(sellerHandlingTime));
 									}
 								// Close seller Handling Time
-								data = new PincodeServiceData();
 								data.setIsCOD(sd.getIsCod());
 								data.setDeliveryModes(sd.getDeliveryModes());
 								if(null != sd.getShippingMode()) {
