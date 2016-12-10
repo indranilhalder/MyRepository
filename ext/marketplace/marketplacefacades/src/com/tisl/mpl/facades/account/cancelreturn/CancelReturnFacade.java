@@ -217,6 +217,8 @@ public interface CancelReturnFacade
 	 * @return List of Order Lines
 	 */
 	public List<OrderLineData> returnInitiationForRTS(List<OrderLineData> orerLines);
+	
+	public void saveRTSAndRSSFInfoflag(String transactionId);
 
 
 }

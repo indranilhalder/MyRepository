@@ -57,8 +57,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.CODSelfShipData;
-import com.tisl.mpl.data.RTSAndRSSReturnInfoRequestData;
 import com.tisl.mpl.data.CODSelfShipResponseData;
+import com.tisl.mpl.data.RTSAndRSSReturnInfoRequestData;
+import com.tisl.mpl.data.RTSAndRSSReturnInfoResponseData;
 import com.tisl.mpl.data.ReturnInfoData;
 import com.tisl.mpl.data.ReturnLogisticsResponseData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -545,7 +546,12 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		returnInfoRequestData.setLogisticsID(mplReturnInfoForm.getLpNameOther());
 		returnInfoRequestData.setReturnType(RequestMappingUrlConstants.RSS);
 		
-		cancelReturnFacade.retrunInfoCallToOMS(returnInfoRequestData);
+
+		RTSAndRSSReturnInfoResponseData returnInfoResponse=cancelReturnFacade.retrunInfoCallToOMS(returnInfoRequestData);
+		if(MarketplacecommerceservicesConstants.SUCCESS_FLAG.equalsIgnoreCase(returnInfoResponse.getSuccess())){
+			cancelReturnFacade.saveRTSAndRSSFInfoflag(mplReturnInfoForm.getTransactionId());
+		}
+		
 		
 		final CustomerData customerData = customerFacade.getCurrentCustomer();
 		 CODSelfShipData codSelfShipData = null;

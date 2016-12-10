@@ -111,5 +111,7 @@ public interface MplDeliveryAddressFacade
 	public void sendPushNotificationForCDA(CustomerModel customerModel, String otoNumber, String mobileNumber);
 
 	public Map<String, List<String>> getDateAndTimeMap(String timeSlotType, String edd) throws ParseException;
+	
+	public boolean isEDOrder(OrderData orderData);
 
 }

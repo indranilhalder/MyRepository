@@ -8,6 +8,7 @@ import de.hybris.platform.commerceservices.search.flexiblesearch.data.SortQueryD
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -385,6 +386,35 @@ public class DefaultMplOrderDao implements MplOrderDao
 		}
 		return shortUrl;
 	}
+	
+	/**
+	 * 
+	 * To get AbstractOrderEntryModel 
+	 * Beased on transactionId
+	 */
+		@Override
+	public AbstractOrderEntryModel getEntryModel(String transactionId){
+			try
+			{
+				 final String queryString= "SELECT {srm:" + AbstractOrderEntryModel.PK + "}" + " FROM {"
+						+ AbstractOrderEntryModel._TYPECODE + " AS srm} " + "WHERE " + "{srm:" + AbstractOrderEntryModel.TRANSACTIONID + "}=?code ";
+				if(LOG.isDebugEnabled()){
+					LOG.debug("In getEntryModel - transactionId ***"+transactionId);
+				}
+				final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(queryString);
+				fQuery.addQueryParameter("code", transactionId);
+
+				final List<AbstractOrderEntryModel> listOfData = flexibleSearchService.<AbstractOrderEntryModel> search(fQuery).getResult();
+				return !listOfData.isEmpty() ? listOfData.get(0) : null;
+			}
+			catch (final Exception e)
+			{
+				LOG.error("�rror while searching  AbstractOrderEntryModel model by transactionId  " + transactionId);
+			}
+			return null;
+		
+	}
+	
 	/**
 	 * @return the flexibleSearchService
 	 */
@@ -418,5 +448,8 @@ public class DefaultMplOrderDao implements MplOrderDao
 	{
 		this.pagedFlexibleSearchService = pagedFlexibleSearchService;
 	}
+	
+	
+	
 
 }
