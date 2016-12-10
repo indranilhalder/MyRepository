@@ -236,8 +236,11 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 								}
 								if (deliveryMode.equalsIgnoreCase(EXPRESS_DELIVERY))
 								{
-									if(reqData.get(i).getSellerHandlingTime().intValue()>=0 && reqData.get(i).getSellerHandlingTime().intValue()<=24){
-										deliveryModes.add(ED);
+									if(null != reqData.get(i) &&  null != reqData.get(i).getSellerHandlingTime() ){
+										
+										if(reqData.get(i).getSellerHandlingTime().intValue()>=0 && reqData.get(i).getSellerHandlingTime().intValue()<=24){
+											deliveryModes.add(ED);
+										}
 									}
 									
 								}

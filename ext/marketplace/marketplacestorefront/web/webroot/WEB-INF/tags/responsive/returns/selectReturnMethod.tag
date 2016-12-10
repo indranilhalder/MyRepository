@@ -113,7 +113,7 @@
 					<div class="row clearfix">
 						<div class="col-md-6 col-sm-6 col-xs-6">
 							<div class="form-group">
-								 <input type="text" class="form-control" id="pin" maxlength="6" placeholder="Enter Pincode" value="${subOrder.deliveryAddress.postalCode } " onkeypress="return isNum(event)" />
+								 <input type="text" class="form-control" id="pin" maxlength="6" placeholder="Enter Pincode" value="${subOrder.deliveryAddress.postalCode}" onkeypress="return isNum(event)" />
 							</div>
 						</div>
 						<div class="col-md-6 col-sm-6 col-xs-6">
@@ -157,6 +157,8 @@
 										<li>${fn:escapeXml(address.title)}&nbsp;<span class="firstName">${fn:escapeXml(address.firstName)}</span>&nbsp;<span class="lastName">${fn:escapeXml(address.lastName)}</span></li>
 										<li><span class="addressline1">${fn:escapeXml(address.line1)}</span></li>
 										<li><span class="addressline2">${fn:escapeXml(address.line2)}</span></li>
+										<li><span class="addressline3">${fn:escapeXml(address.line3)}</span></li>
+										<li><span class="landmark">${fn:escapeXml(address.landmark)}</span></li>
 										<li><span class="addressTown">${fn:escapeXml(address.town)}</span></li>
 										<li><span class="state">${fn:escapeXml(address.state)}</span></li>
 										<li><span class="postalCode">${fn:escapeXml(address.postalCode)}</span></li>
@@ -266,7 +268,7 @@
 <form:hidden path="addrLine1"  id="addressLine1"/>
 <form:hidden path="addrLine2"  id="addressLine2"/>
 <form:hidden path="addrLine3" />
-<form:hidden path="landMark" /> 
+<form:hidden path="landMark" id="landMark"/> 
 <form:hidden path="state" id="stateListBox"/> 
 <form:hidden path="pincode"  id="pincode"/>
 <form:hidden path="phoneNumber"  id="phoneNumber"/>
@@ -312,18 +314,19 @@ $(document).ready(function(){
 		}else{
 			$('.quickDrop .quickDropAreaPincode .error_text').hide();
 		var dataString = 'pin=' + pincode + '&ussid=' + ussid;
+		alert("dataString" + dataString);
 		  $.ajax({
 			  url: ACC.config.encodedContextPath+"/my-account/returns/pincodeServiceCheck",
 			  data : dataString,
 			  contentType : "application/json; charset=utf-8",
 			  success: function(data) {
-				  if (data == "" || data == []
-					|| data == null) {
+				  if (data == "" || data == [] || data == null) {
+					  alert('Stores Not Available');
 					  $('#nearbystore').hide(); 
 					  $('.quickDropArea').html("<div>Stores Not Available </div>");
 					  getQuickDropData();	  
 				  }else{
-						//alert("Stores are :"+data.length); 
+						alert("Stores are :"+data.length); 
 						 // $('.quickDropArea').empty();
 						  for(var i=0; i<data.length; i++){
 							  if(i == 0){
@@ -347,7 +350,7 @@ $(document).ready(function(){
 							 
 							  }
 						 
-						//  console.log(tempHtml);
+						 //console.log(tempHtml);
 						 $('.quickDropArea').empty().html(tempHtml);
 						  getQuickDropData();
 				  }
@@ -374,6 +377,36 @@ $(document).on('click', ' .checkButton', function (event) {
 		}
 	
 });
+
+function showAddressPopup(addressId) {
+	$("#addAddressForm .errorText").hide();
+	$("#changeAddressPopup, .wrapBG").fadeIn(300);
+	var height = $(window).height();
+	$(".wrapBG").css("height", height);
+	$("#changeAddressPopup").css("z-index", "999999");
+	var className = addressId;
+	console.log(className);
+	console.log("Test"+$(".update"+className+" .lastName").text());
+	$("#popupFields #firstName").val($("."+className+" .firstName").text());
+	$("#popupFields #lastName").val($("."+className+" .lastName").text());
+	$("#popupFields #addressLine1").val($("."+className+" .addressline1").text());
+	$("#popupFields #addressLine2").val($("."+className+" .addressline2").text());
+	$("#popupFields #addressLine3").val($("."+className+" .addressline3").text());
+	$("#popupFields #pincode").val($("."+className+" .postalCode").text());
+	$("#popupFields #mobileNo").val($("."+className+" .phoneNumber").text());
+	$("#popupFields #landmark").val($("."+className+" .landmark").text());
+	
+	$("#popupFields #city").val($("."+className+" .addressTown").text());
+	$("#popupFields #stateListBox").val($("."+className+" .state").text());
+	$("#popupFields #country").val($("."+className+" .country").text());
+	$("#popupFields #addressId").val($("."+className+" #addressUniqueId").text());
+	$("#popupFields #temp").val(className);
+	$("#saveAddress").attr("data-value","editAddress");
+	$("#popupFields #landmark > option").each(function() {
+	    alert(this.text + ' ' + this.value);
+	});
+}
+
 
 </script>
 <style>
