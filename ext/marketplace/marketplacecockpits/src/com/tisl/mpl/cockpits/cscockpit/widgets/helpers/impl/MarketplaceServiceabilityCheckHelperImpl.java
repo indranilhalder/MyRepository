@@ -390,7 +390,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 			final String isDeliveryDateRequired, final String ussid)
 	{
 		final List<PincodeServiceData> requestData = new WeakArrayList<>();
-		PincodeServiceData data = null;
+		PincodeServiceData data = new PincodeServiceData();
 		final List<SellerInformationData> sellers = buyBoxFacade.getsellersDetails(productModel.getCode());
 		try
 		{
@@ -492,7 +492,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 			final String isDeliveryDateRequired, final String ussid, final GPS gps, final Double configurableRadius)
 	{
 		final List<PincodeServiceData> requestData = new WeakArrayList<>();
-		PincodeServiceData data = null;
+		PincodeServiceData data = new PincodeServiceData();
 		final List<SellerInformationData> sellers = buyBoxFacade.getsellersDetails(productModel.getCode());
 		try
 		{
@@ -507,6 +507,27 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 						{
 							if (sd.getSellerID().equalsIgnoreCase(buybox.getSellerId()))
 							{
+								// Added For Seller Handling Time
+								SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussid);
+								List<RichAttributeModel> sellerRichAttributeModel = null;
+							   	int sellerHandlingTime=0;
+							   	String sellerRichAttrForHandlingTime=null;
+									if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
+									{
+										sellerRichAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+										if (sellerRichAttributeModel != null && sellerRichAttributeModel.get(0).getSellerHandlingTime() != null)
+										{
+											sellerRichAttrForHandlingTime = sellerRichAttributeModel.get(0).getSellerHandlingTime().toString();
+											if( StringUtils.isNotEmpty(sellerRichAttrForHandlingTime)){
+												sellerHandlingTime=Integer.parseInt(sellerRichAttrForHandlingTime);
+											}
+											
+										}
+										data.setSellerHandlingTime(Integer.valueOf(sellerHandlingTime));
+									}else{
+										data.setSellerHandlingTime(Integer.valueOf(sellerHandlingTime));
+									}
+								// Close seller Handling Time
 								data = new PincodeServiceData();
 								data.setIsCOD(sd.getIsCod());
 								data.setDeliveryModes(sd.getDeliveryModes());

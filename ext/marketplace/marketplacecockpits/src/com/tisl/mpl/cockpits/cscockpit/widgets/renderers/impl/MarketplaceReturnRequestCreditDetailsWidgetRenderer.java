@@ -110,7 +110,8 @@ ReturnRequestCreateWidgetRenderer {
 	protected static final String FORM_ERROS = null;
 	protected static final String FORM_ERRORS = null;
 	protected static final String FAILED_VALIDATION ="validationErrors";
-
+	
+	protected static final String TIME 	= " , Working Hours : ";
 
 	@Override
 	protected HtmlBasedComponent createContentInternal(
@@ -639,6 +640,10 @@ ReturnRequestCreateWidgetRenderer {
 			 pinCode= orderModel.getDeliveryAddress().getPostalcode();
 			pincodeLongbox.setValue(Long.valueOf(pinCode));
 		}
+		else if(CollectionUtils.isNotEmpty(entries) && entries.get(0).getDeliveryPointOfService() != null && entries.get(0).getDeliveryPointOfService().getAddress() != null) {
+			pinCode= entries.get(0).getDeliveryPointOfService().getAddress().getPostalcode();
+			pincodeLongbox.setValue(Long.valueOf(pinCode));
+		}
 		Button pincodeSubmitbtn = new Button("Submit");
 		
 		final Div listOfReturnItemsDiv = new Div();
@@ -761,7 +766,8 @@ ReturnRequestCreateWidgetRenderer {
 			storesListBox.setMold("select");
 			
 			for(final PointOfServiceData store : returnableStores) { 
-				final String storeLabel = new String(store.getSlaveId()+ "," + store.getAddress().getFormattedAddress());
+				final String storeLabel = new String(store.getSlaveId()+ " , " + store.getDisplayName() + " , " +store.getAddress().getFormattedAddress()
+						+ TIME + store.getMplOpeningTime() + " - " + store.getMplClosingTime());
 				final Listitem item = new Listitem();
 				item.setLabel(storeLabel);
 				item.setParent(storesListBox);
