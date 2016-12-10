@@ -39,6 +39,7 @@ import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceability
 import com.tisl.mpl.constants.MplGlobalCodeConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.BuyBoxModel;
+import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.mplconfig.service.MplConfigService;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -46,6 +47,7 @@ import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeRestrictionService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
@@ -112,6 +114,9 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 
 	@Autowired
 	private MplConfigService mplConfigService;
+	
+	@Autowired
+	 private MplSellerInformationService mplSellerInformationService;
 
 	/**
 	 * Gets the response for pin code.
@@ -400,6 +405,27 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 						{
 							if (sd.getSellerID().equalsIgnoreCase(buybox.getSellerId()))
 							{
+								// Added For Seller Handling Time
+								SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussid);
+								List<RichAttributeModel> sellerRichAttributeModel = null;
+							   	int sellerHandlingTime=0;
+							   	String sellerRichAttrForHandlingTime=null;
+									if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
+									{
+										sellerRichAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+										if (sellerRichAttributeModel != null && sellerRichAttributeModel.get(0).getSellerHandlingTime() != null)
+										{
+											sellerRichAttrForHandlingTime = sellerRichAttributeModel.get(0).getSellerHandlingTime().toString();
+											if( StringUtils.isNotEmpty(sellerRichAttrForHandlingTime)){
+												sellerHandlingTime=Integer.parseInt(sellerRichAttrForHandlingTime);
+											}
+											
+										}
+										data.setSellerHandlingTime(Integer.valueOf(sellerHandlingTime));
+									}else{
+										data.setSellerHandlingTime(Integer.valueOf(sellerHandlingTime));
+									}
+								// Close seller Handling Time
 								data = new PincodeServiceData();
 								data.setIsCOD(sd.getIsCod());
 								data.setDeliveryModes(sd.getDeliveryModes());
@@ -496,7 +522,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 								data.setMopPrice(formPriceData(buybox.getPrice()));
 								data.setIsFragile(sd.getIsFragile());
 								data.setIsPrecious(sd.getIsPrecious());
-								//data.set
+								data.setSellerHandlingTime(123654);
 								if(null != cartId) {
 									data.setCartId(cartId);
 								}
