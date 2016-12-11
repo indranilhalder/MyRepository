@@ -198,7 +198,7 @@
 			<separator spacing="20px"/>
 			<hbox>
 				<label sclass="heading" value="Lp Awb Bulk Upload" />
-				<textbox id="awbBulkUploadTextBox" disabled="true" />
+				<textbox id="LpBulkUploadTextBox" disabled="true" value="@bind(vm.lpawbBulkUploadTextBox)" />
 				<button sclass="uploadTxtbox" label="upload"
 					upload="true,maxsize=302400,accept=.csv"
 					onUpload="@command('onUploadLPAwbCSV',upEvent=event)">

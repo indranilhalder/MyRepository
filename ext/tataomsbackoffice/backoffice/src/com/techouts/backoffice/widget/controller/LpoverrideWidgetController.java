@@ -91,8 +91,9 @@ public class LpoverrideWidgetController extends DefaultWidgetController
 	private Boolean displayPopup = Boolean.FALSE;
 	@Wire("#listBoxData")
 	private Listbox listBoxData;
-	@WireVariable
+	@WireVariable("lpAwbDataUploadService")
 	private LpAwbDataUploadService lpAwbDataUploadService;
+	private String lpawbBulkUploadTextBox = "Please select File";
 
 	@Init
 	@NotifyChange(
@@ -403,6 +404,13 @@ public class LpoverrideWidgetController extends DefaultWidgetController
 		final LPOverrideAWBEditResponse lpOverrideAwbEditResponse = orderLogisticsUpdateFacade
 				.updateOrderLogisticOrAwbNumber(lpOverrideEdit);
 		orderlineRespone = lpOverrideAwbEditResponse.getOrderLineResponse();
+		/*
+		 * final ArrayList<TransactionInfo> refreshListTransactions = new ArrayList<TransactionInfo>(); for (final
+		 * TransactionInfo transaction : selectedEntities) { for (final OrderLineResponse ordreLineResponse :
+		 * orderlineRespone) { if (transaction.getTransactionId().equals(ordreLineResponse.getTransactionId())) {
+		 * transaction.setLogisticName(ordreLineResponse.getId()); } } refreshListTransactions.add(transaction); }
+		 * this.listOfTransactions = refreshListTransactions;
+		 */
 		listBoxData.clearSelection();
 		selectedEntities.clear();
 		if (CollectionUtils.isNotEmpty(orderlineRespone))
@@ -473,9 +481,6 @@ public class LpoverrideWidgetController extends DefaultWidgetController
 	{
 		return ordersStatus;
 	}
-
-
-
 
 	@NotifyChange
 	public void setSelectedEntities(final Set<TransactionInfo> entities)
@@ -636,6 +641,7 @@ public class LpoverrideWidgetController extends DefaultWidgetController
 	}
 
 	@Command
+	@NotifyChange("lpawbBulkUploadTextBox")
 	public void onUploadLPAwbCSV(@ContextParam(ContextType.BIND_CONTEXT) final BindContext ctx)
 			throws IOException, InterruptedException
 	{
@@ -644,7 +650,32 @@ public class LpoverrideWidgetController extends DefaultWidgetController
 		if (objUploadEvent != null && (objUploadEvent instanceof UploadEvent))
 		{
 			upEvent = (UploadEvent) objUploadEvent;
-			lpAwbDataUploadService.lpAwbBulkUploadCommon(upEvent);
+			final String userId = cockpitUserService.getCurrentUser();
+			String roleId = "none";
+			activeUserRole = authorityGroupService.getActiveAuthorityGroupForUser(userId);
+			if (activeUserRole != null)
+			{
+				roleId = activeUserRole.getCode();
+			}
+			lpAwbDataUploadService.lpAwbBulkUploadCommon(upEvent, "LP", userId, roleId);
+			lpawbBulkUploadTextBox = upEvent.getMedia().getName();
 		}
 	}//end uplaod method
+
+	/**
+	 * @return the lpawbBulkUploadTextBox
+	 */
+	public String getLpawbBulkUploadTextBox()
+	{
+		return lpawbBulkUploadTextBox;
+	}
+
+	/**
+	 * @param lpawbBulkUploadTextBox
+	 *           the lpawbBulkUploadTextBox to set
+	 */
+	public void setLpawbBulkUploadTextBox(final String lpawbBulkUploadTextBox)
+	{
+		this.lpawbBulkUploadTextBox = lpawbBulkUploadTextBox;
+	}
 }

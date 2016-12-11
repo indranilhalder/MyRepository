@@ -52,9 +52,6 @@ import com.hybris.oms.tata.services.LpAwbDataUploadService;
  */
 public class AwbEditWidgetController extends DefaultWidgetController
 {
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOG = Logger.getLogger(AwbEditWidgetController.class);
 	private String txtOrderId;
@@ -74,13 +71,14 @@ public class AwbEditWidgetController extends DefaultWidgetController
 	private OrderLogisticsFacade orderLogisticsUpdateFacade;
 	@WireVariable("logisticsRestClient")
 	private LogisticsFacade logisticsFacade;
-	@WireVariable
+	@WireVariable("lpAwbDataUploadService")
 	private LpAwbDataUploadService lpAwbDataUploadService;
 	@WireVariable
 	private transient CockpitUserService cockpitUserService;
 	@WireVariable
 	private transient AuthorityGroupService authorityGroupService;
 	private transient AuthorityGroup activeUserRole;
+	private String lpAwbBulkUploadTextBo = "";
 
 	@Init
 	@NotifyChange(
@@ -94,6 +92,7 @@ public class AwbEditWidgetController extends DefaultWidgetController
 		{
 			map = new HashMap<String, TransactionInfo>();
 		}
+
 	}
 
 
@@ -511,6 +510,7 @@ public class AwbEditWidgetController extends DefaultWidgetController
 	}
 
 	@Command
+	@NotifyChange("lpAwbBulkUploadTextBo")
 	public void onUploadLPAwbCSV(@ContextParam(ContextType.BIND_CONTEXT) final BindContext ctx)
 			throws IOException, InterruptedException
 	{
@@ -519,8 +519,33 @@ public class AwbEditWidgetController extends DefaultWidgetController
 		if (objUploadEvent != null && (objUploadEvent instanceof UploadEvent))
 		{
 			upEvent = (UploadEvent) objUploadEvent;
-			lpAwbDataUploadService.lpAwbBulkUploadCommon(upEvent);
+			final String userId = cockpitUserService.getCurrentUser();
+			String roleId = "none";
+			activeUserRole = authorityGroupService.getActiveAuthorityGroupForUser(userId);
+			if (activeUserRole != null)
+			{
+				roleId = activeUserRole.getCode();
+			}
+			lpAwbDataUploadService.lpAwbBulkUploadCommon(upEvent, "AWB", userId, roleId);
+			lpAwbBulkUploadTextBo = upEvent.getMedia().getName();
 		}
 	}//end uplaod method
 
+	/**
+	 * @return the lpAwbBulkUploadTextBo
+	 */
+	public String getLpAwbBulkUploadTextBo()
+	{
+		return lpAwbBulkUploadTextBo;
+	}
+
+
+	/**
+	 * @param lpAwbBulkUploadTextBo
+	 *           the lpAwbBulkUploadTextBo to set
+	 */
+	public void setLpAwbBulkUploadTextBo(final String lpAwbBulkUploadTextBo)
+	{
+		this.lpAwbBulkUploadTextBo = lpAwbBulkUploadTextBo;
+	}
 }

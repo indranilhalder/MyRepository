@@ -13,6 +13,6 @@ import org.zkoss.zk.ui.event.UploadEvent;
 public interface LpAwbDataUploadService
 {
 
-	public void lpAwbBulkUploadCommon(UploadEvent uploadEvent);
+	public void lpAwbBulkUploadCommon(UploadEvent uploadEvent, String transactionType,String userId,String roleId);
 
 }

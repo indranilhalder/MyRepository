@@ -4,7 +4,9 @@
 package com.hybris.oms.tata.services;
 
 import java.io.File;
+import java.io.FileReader;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.annotation.Resource;
@@ -15,6 +17,10 @@ import org.zkoss.util.media.Media;
 import org.zkoss.zk.ui.event.UploadEvent;
 import org.zkoss.zul.Messagebox;
 
+import com.csvreader.CsvReader;
+import com.hybris.oms.api.orderlogistics.OrderLogisticsFacade;
+import com.hybris.oms.domain.lpawb.dto.LPOverrideAWBEdit;
+import com.hybris.oms.domain.lpawb.dto.OrderLineInfo;
 import com.hybris.oms.tata.constants.TataomsbackofficeConstants;
 import com.techouts.backoffice.exception.InvalidFileNameException;
 
@@ -26,6 +32,9 @@ import com.techouts.backoffice.exception.InvalidFileNameException;
  */
 public class DefaultLpAwbDataUploadService implements LpAwbDataUploadService
 {
+	@Resource(name = "orderLogisticsRestClient")
+	private OrderLogisticsFacade orderLogisticsUpdateFacade;
+
 	private Media media;
 	private static final String CSV = ".csv";
 	private static final String DATE_FORMAT = "ddMMyyyyHHmm";
@@ -34,9 +43,11 @@ public class DefaultLpAwbDataUploadService implements LpAwbDataUploadService
 	private static final Logger LOG = Logger.getLogger(DefaultLpAwbDataUploadService.class);
 	@Resource(name = "filePathProviderService")
 	private FilePathProviderService filePathProviderService;
+	private final String header = "orderID,transactionId,lpname,awbnumber";
 
 	@Override
-	public void lpAwbBulkUploadCommon(final UploadEvent uploadEvent)
+	public void lpAwbBulkUploadCommon(final UploadEvent uploadEvent, final String transactionType, final String userId,
+			final String roleId)
 	{
 		try
 		{
@@ -48,6 +59,7 @@ public class DefaultLpAwbDataUploadService implements LpAwbDataUploadService
 			final String destinationFile;
 			final String destFilePath;
 			media = uploadEvent.getMedia();
+			LOG.info("the format " + media.getFormat());
 			final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT);
 			final String TimeStamp = simpleDateFormat.format(new Date());
 			if (media.getName().startsWith(TataomsbackofficeConstants.LPAWB_FORWARD_FiLE_PREFIX))
@@ -72,8 +84,10 @@ public class DefaultLpAwbDataUploadService implements LpAwbDataUploadService
 					Messagebox.show("File is Empty ");
 					return;
 				}
+				final java.io.File destFile = new File(destFilePath.trim(), destinationFile);
 				FileUtils.copyInputStreamToFile(media.getStreamData(), new File(destFilePath.trim(), destinationFile));
-				Messagebox.show("File uploaded successfully");
+				sendBulkDatatoOms(destFile, transactionType, userId, roleId);
+
 			} //end is Binary Check
 			else
 			{
@@ -83,8 +97,9 @@ public class DefaultLpAwbDataUploadService implements LpAwbDataUploadService
 					Messagebox.show("File is Empty ");
 					return;
 				}
-				FileUtils.writeStringToFile(new File(destFilePath.trim(), destinationFile), media.getStringData());
-				Messagebox.show("File uploaded successfully");
+				final java.io.File destFile = new File(destFilePath.trim(), destinationFile);
+				FileUtils.writeStringToFile(destFile, media.getStringData());
+				sendBulkDatatoOms(destFile, transactionType, userId, roleId);
 			}
 		}
 		catch (final InvalidFileNameException e)
@@ -93,7 +108,7 @@ public class DefaultLpAwbDataUploadService implements LpAwbDataUploadService
 		}
 		catch (final Exception message)
 		{
-			LOG.error(message.toString());
+			message.printStackTrace();
 		}
 	}
 
@@ -104,6 +119,83 @@ public class DefaultLpAwbDataUploadService implements LpAwbDataUploadService
 	public void setFilePathProviderService(final FilePathProviderService filePathProviderService)
 	{
 		this.filePathProviderService = filePathProviderService;
+	}
+
+	private void sendBulkDatatoOms(final File destFile, final String transactionType, final String userId, final String roleId)
+	{
+		final LPOverrideAWBEdit lpEdit = new LPOverrideAWBEdit();
+		lpEdit.setTransactionType(transactionType);//set transaction Type
+		lpEdit.setUserId(userId);
+		lpEdit.setRoleId(roleId);
+		if (destFile.getName().startsWith(TataomsbackofficeConstants.LPAWB_FORWARD_FiLE_PREFIX))
+		{
+			lpEdit.setIsReturn(false);
+		}
+		else
+		{
+			lpEdit.setIsReturn(true);
+		}
+		final ArrayList<OrderLineInfo> orderLineInfoList = new ArrayList<OrderLineInfo>();
+		CsvReader records = null;
+		FileReader fileReader = null;
+		try
+		{
+			fileReader = new FileReader(destFile);
+			records = new CsvReader(fileReader);
+			if (records.readHeaders())
+			{
+				LOG.info("Record Object Headers " + records.getHeaders() + records.getHeaderCount() + records.getHeader(0));
+				for (final String headerField : records.getHeaders())
+				{
+					if (!header.contains(headerField))
+					{
+						throw new InvalidFileNameException("Invalid File Headers Found");
+					}
+				}
+				while (records.readRecord())
+				{
+					final OrderLineInfo info = new OrderLineInfo();
+					info.setOrderId(records.get("orderID"));
+					info.setTransactionId(records.get("transactionId"));
+					info.setLogisticName(records.get("lpname"));
+					info.setAwbNumber(records.get("awbnumber"));
+					info.setLpOverride(true);
+					info.setNextLP(false);
+					orderLineInfoList.add(info);
+
+				}
+				lpEdit.setOrderLineInfo(orderLineInfoList);
+				final boolean updateResult = orderLogisticsUpdateFacade.bulkUpload(lpEdit);
+				if (updateResult)
+				{
+					Messagebox.show("Lp awb BulkUpload Sucess");
+					return;
+				}
+				else
+				{
+					Messagebox.show("Lp awb BulkUpload Faild ,please find mail attachment");
+				}
+			}
+			else
+			{
+				Messagebox.show("Bulk Upload Faild due to heders");
+				return;
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e.getMessage());
+			records.close();
+		}
+	}
+
+	/**
+	 * @param orderLogisticsUpdateFacade
+	 *           the orderLogisticsUpdateFacade to set
+	 */
+	public void setOrderLogisticsUpdateFacade(final OrderLogisticsFacade orderLogisticsUpdateFacade)
+	{
+		this.orderLogisticsUpdateFacade = orderLogisticsUpdateFacade;
 	}
 
 }
