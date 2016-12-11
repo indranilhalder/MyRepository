@@ -804,5 +804,6 @@ public final class ModelAttributetConstants
 	
 	public static final String QUCK_DROP_PROD_LEVEL = "productRichAttrOfQuickDrop";
 	public static final String QUCK_DROP_SELLER_LEVEL = "sellerRichAttrOfQuickDrop";
+	public static final String IS_ED_ORDER ="isEDOrder";
 
 }

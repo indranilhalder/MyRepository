@@ -1332,8 +1332,10 @@
 
 
                                    </c:if>
-                                    <return:lpDetailsUploadPopup  entry="${entry}"/>
-                                    
+                                  
+									 <c:if test="${entry.isRefundable eq false }">
+										<return:lpDetailsUploadPopup entry="${entry}" />
+								    </c:if>
 								</c:forEach>
 								</c:forEach>
 							</c:forEach>

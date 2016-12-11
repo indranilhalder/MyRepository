@@ -136,6 +136,7 @@ public class MplOrderEntryPopulator implements Populator<AbstractOrderEntryModel
 			addImeiDetails(source, target);
 			addDeliverySlots(source, target);
 		}
+		target.setIsRefundable(source.isIsRefundable());
 	}
 
 

@@ -462,6 +462,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 						mplDeliveryAddressService.deliveryAddressFailureRequest(orderModel);
 						scheduledDeliveryData.setIsActive(Boolean.TRUE);
 						scheduledDeliveryData.setIsPincodeServiceable(Boolean.FALSE);
+						
 					}
 
 				}
@@ -1109,6 +1110,10 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	public List<TransactionSDDto> reScheduleddeliveryDate(final OrderModel orderModel,
 			final RescheduleDataList rescheduleDataListDto)
 	{
+		SimpleDateFormat format1 = new SimpleDateFormat("hh:mm a");
+		SimpleDateFormat format2 = new SimpleDateFormat("HH:mm:ss");
+		String timeSlotFrom = null;
+		String timeSlotTo = null;
 		final List<TransactionSDDto> transactionSDDtoList = new ArrayList<TransactionSDDto>();
 		final List<RescheduleData> rescheduleDataList = rescheduleDataListDto.getRescheduleDataList();
 		for (final OrderModel subModel : orderModel.getChildOrders())
@@ -1127,9 +1132,18 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 							final String timeFromTo = rescheduleData.getTime();
 							if (StringUtils.isNotEmpty(timeFromTo))
 							{
-								transactionSDDto.setTimeSlotFrom(timeFromTo.substring(0, timeFromTo.indexOf("TO") - 1));
-								transactionSDDto.setTimeSlotTo(timeFromTo.substring(timeFromTo.indexOf("TO") + 3, timeFromTo.length()));
+								timeSlotFrom = timeFromTo.substring(0, timeFromTo.indexOf("TO") - 1);
+								timeSlotTo = timeFromTo.substring(timeFromTo.indexOf("TO") + 3, timeFromTo.length());
+								try
+								{
+								transactionSDDto.setTimeSlotFrom(String.valueOf(format2.format(format1.parse(timeSlotFrom))));
+								transactionSDDto.setTimeSlotTo(String.valueOf(format2.format(format1.parse(timeSlotTo))));
 								abstractOrderEntryModel.setEdScheduledDate(rescheduleData.getDate());
+								}
+								catch (ParseException e)
+								{
+									LOG.error("unable to parse timeslots "+ e.getMessage());
+								}
 							}
 							transactionSDDtoList.add(transactionSDDto);
 							break;
@@ -1318,4 +1332,25 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 			return null;
 		}
 
+		
+		/**
+		 * This method will check  ED Transaction 
+		 */
+	@Override
+	public boolean isEDOrder(OrderData orderData)
+	{
+		boolean isEDEntry = false;
+		for (OrderData subOrder : orderData.getSellerOrderList())
+		{
+			for (OrderEntryData entry : subOrder.getEntries())
+			{
+				if (MarketplaceFacadesConstants.EXPRESS_DELIVERY.equalsIgnoreCase(entry.getMplDeliveryMode().getCode()))
+				{
+					isEDEntry = true;
+					return isEDEntry;
+				}
+			}
+		}
+		return isEDEntry;
+	}
 }

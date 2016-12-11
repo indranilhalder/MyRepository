@@ -7,6 +7,7 @@ import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
@@ -28,6 +29,7 @@ import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 //import com.sap.security.core.server.csi.util.StringUtils;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplDeliveryAddressInfoModel;
+import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
 /*import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;*/
 import com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.MplDeliveryAddressDao;
@@ -181,6 +183,12 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 			{
 				if (orderModel != null)
 				{
+					
+		            //Change Ed to HD Delivery Mode
+					if(newAddressModel.getPostalcode().equalsIgnoreCase(orderModel.getDeliveryAddress().getPostalcode())){
+						convertEDToHDDeliveryMode(orderModel);
+					}
+					  
 					UserModel user = orderModel.getUser();
 					List<AddressModel> deliveryAddressesList = new ArrayList<AddressModel>();
 					Collection<AddressModel> customerAddressesList = new ArrayList<AddressModel>();
@@ -346,31 +354,43 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 	@Override
 	public void saveSelectedDateAndTime(OrderModel orderModel, List<TransactionSDDto> transactionSDDtoList)
 	{
-		for (OrderModel subOrder : orderModel.getChildOrders())
+		try
 		{
-			for (AbstractOrderEntryModel entryModel : subOrder.getEntries())
+			for (OrderModel subOrder : orderModel.getChildOrders())
 			{
-				if (!MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(entryModel.getMplDeliveryMode()
-						.getDeliveryMode().getCode())
-						&& entryModel.getEdScheduledDate() != null)
+				for (AbstractOrderEntryModel entryModel : subOrder.getEntries())
 				{
-
-
-					//get Entry related(OrderLine) Information  
-					TransactionSDDto transactionSDDto = getEntryData(transactionSDDtoList, entryModel.getTransactionID());
-					if (transactionSDDto != null)
+					if (!MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(entryModel.getMplDeliveryMode()
+							.getDeliveryMode().getCode())
+							&& entryModel.getEdScheduledDate() != null)
 					{
-						//Save Transaction level  Entry model 
-						entryModel.setEdScheduledDate(transactionSDDto.getPickupDate());
-						entryModel.setTimeSlotFrom(transactionSDDto.getTimeSlotFrom());
-						entryModel.setTimeSlotTo(transactionSDDto.getTimeSlotTo());
-						modelService.save(entryModel);
+
+
+						//get Entry related(OrderLine) Information  
+						TransactionSDDto transactionSDDto = getEntryData(transactionSDDtoList, entryModel.getTransactionID());
+						if (transactionSDDto != null)
+						{
+							//Save Transaction level  Entry model 
+							entryModel.setEdScheduledDate(transactionSDDto.getPickupDate());
+							entryModel.setTimeSlotFrom(transactionSDDto.getTimeSlotFrom());
+							entryModel.setTimeSlotTo(transactionSDDto.getTimeSlotTo());
+							modelService.save(entryModel);
+						}
+
+
 					}
-
-
 				}
 			}
 		}
+		catch (final ModelSavingException e)
+		{
+			LOG.error("ModelSavingException while setting status " + e.getMessage());
+		}
+		catch (final NullPointerException nullPointerException)
+		{
+			LOG.error("Exception occure while setting " + nullPointerException.getMessage());
+		}
+
 	}
 
 
@@ -393,5 +413,37 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 			}
 		}
 		return null;
+	}
+	
+	//convert Ed To HD Order
+	private void convertEDToHDDeliveryMode(OrderModel orderModel)
+	{
+		try
+		{
+			DeliveryModeModel deliveryMode = null;
+			for (OrderModel subOrder : orderModel.getChildOrders())
+			{
+				for (AbstractOrderEntryModel entry : subOrder.getEntries())
+				{
+					if (MarketplacecommerceservicesConstants.EXPRESS_DELIVERY.equalsIgnoreCase(entry.getMplDeliveryMode()
+							.getDeliveryMode().getCode()))
+					{
+						deliveryMode = entry.getMplDeliveryMode().getDeliveryMode();
+						deliveryMode.setCode(MarketplacecommerceservicesConstants.HOME_DELIVERY);
+						deliveryMode.setName(MarketplacecommerceservicesConstants.CART_HOME_DELIVERY);
+						modelService.saveAll(deliveryMode);
+					}
+
+				}
+			}
+		}
+		catch (final ModelSavingException e)
+		{
+			LOG.error("ModelSavingException while setting status " + e.getMessage());
+		}
+		catch (final NullPointerException nullPointerException)
+		{
+			LOG.error("Exception occure while setting " + nullPointerException.getMessage());
+		}
 	}
 }

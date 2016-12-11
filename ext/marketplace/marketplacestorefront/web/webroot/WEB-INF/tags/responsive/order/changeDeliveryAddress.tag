@@ -228,11 +228,19 @@
 								<p style="clear: both;"></p>
 							</c:forEach>
 						</c:if>
-					  <div class="col-md-12"><a href="#" class="addNewAdd">Add a New Address</a></div>
+					<!--   <div class="col-md-12"><a href="#" class="addNewAdd">Add a New Address</a></div> -->
 					</div>
 				</div>
+
+				<c:if test="${isEDOrder eq true}">
+					<div class="row">
+						<div class="col-md-12 form-group formMsg">
+							<spring:theme code="text.order.CDA.ED" />
+						</div>
+					</div>
+				</c:if>
 			</div>
-			<p style="clear: both;"></p>
+				<p style="clear: both;"></p>
 			<div class="modal-footer">
 				<div class="error_text main_error"></div>
 				<button type="button" onclick="checkPopupDataOrderHistory()" class="btn btn-primary saveBlockData"><spring:theme code="text.order.returns.savebutton"/></button>
@@ -283,6 +291,11 @@ font-size: 10px;
 .addNewAdd{
 	color: #A9143C;
 text-decoration: underline;
+}
+
+.formMsg{
+    font-size: 14px;
+    color: red;
 }
 </style>
 <!-- /.modal-dialog -->

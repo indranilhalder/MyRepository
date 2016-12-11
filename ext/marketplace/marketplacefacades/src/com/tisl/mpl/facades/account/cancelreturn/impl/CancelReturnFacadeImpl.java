@@ -3575,5 +3575,31 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		}
 		return returnReqCreated;
 	}
+	
+	
+	 /**
+	 * This method will save Proof of  dispatcher information
+	 * saved flag 
+	 */
+	@Override
+	public void saveRTSAndRSSFInfoflag(String transactionId)
+	{
+		try
+		{
+			AbstractOrderEntryModel abstractOrderEntryModel = mplOrderService.getEntryModel(transactionId);
+			abstractOrderEntryModel.setIsRefundable(true);
+			modelService.save(abstractOrderEntryModel);
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("***************  number:" + transactionId);
+			}
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+	
+	
 
 }
