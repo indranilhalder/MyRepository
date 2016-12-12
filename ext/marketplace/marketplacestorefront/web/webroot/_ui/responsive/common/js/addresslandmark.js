@@ -10,6 +10,19 @@ $(document).ready(function(){
 			$(".address_states").val($(this).data("stateValue"))
 		}
 	});
+	
+	$("#addNewAddressPOP").click(function() {
+		  $("#deliveryAddressForm #firstName").prop('value','');
+		  $("#lastName").prop('value','');
+		  $("#addressLine1").prop('value','');
+		  $("#addressLine2").prop('value','');
+		  $("#addressLine3").prop('value','');
+		  $("#landmark").prop('value','');
+		  $("#state").prop('value','');
+		  $("#city").prop('value','');
+		  $("#pincode").prop('value','');
+		  $("#mobileNo").prop('value','');
+		 });
 });
 
 $(".address_landmarkOtherDiv").hide();
@@ -41,7 +54,7 @@ function loadPincodeData() {
 				$(".mainDrop").show();
 				$(".dupDisplay").hide();
 				$(".addState").show();
-				$('.address_landmarks').append($("<option class=unableto></option>").text("Unable to find landmark").attr("selected","selected").attr("value",""));
+				$('.address_landmarks').html($("<option class=unableto></option>").text("Unable to find landmark").attr("selected","selected").attr("value",""));
 				$(".address_townCity").prop("readonly", false);
 				$(".address_states").removeAttr("readonly").removeData("stateValue");
 				
@@ -63,7 +76,7 @@ function loadPincodeData() {
     			$('.otherOption').attr("value", "Other");
         		$(".address_townCity").val(response['cityName']).prop("readonly", true);
         		$('.address_landmarks').empty();
-        		 $('.address_landmarks').append($("<option></option>").attr("selected","selected").text("Select a Landmark").attr("value", "NA"));
+        		 $('.address_landmarks').html($("<option></option>").attr("selected","selected").text("Select a Landmark").attr("value", "NA"));
         		//then fill it with data from json post
         		if(response.landMarks != null) {
         		  $.each(response.landMarks, function(key, value) {

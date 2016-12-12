@@ -314,19 +314,19 @@ $(document).ready(function(){
 		}else{
 			$('.quickDrop .quickDropAreaPincode .error_text').hide();
 		var dataString = 'pin=' + pincode + '&ussid=' + ussid;
-		alert("dataString" + dataString);
+		//alert("dataString" + dataString);
 		  $.ajax({
 			  url: ACC.config.encodedContextPath+"/my-account/returns/pincodeServiceCheck",
 			  data : dataString,
 			  contentType : "application/json; charset=utf-8",
 			  success: function(data) {
 				  if (data == "" || data == [] || data == null) {
-					  alert('Stores Not Available');
+					 // alert('Stores Not Available');
 					  $('#nearbystore').hide(); 
 					  $('.quickDropArea').html("<div>Stores Not Available </div>");
 					  getQuickDropData();	  
 				  }else{
-						alert("Stores are :"+data.length); 
+						//alert("Stores are :"+data.length); 
 						 // $('.quickDropArea').empty();
 						  for(var i=0; i<data.length; i++){
 							  if(i == 0){
@@ -377,36 +377,6 @@ $(document).on('click', ' .checkButton', function (event) {
 		}
 	
 });
-
-function showAddressPopup(addressId) {
-	$("#addAddressForm .errorText").hide();
-	$("#changeAddressPopup, .wrapBG").fadeIn(300);
-	var height = $(window).height();
-	$(".wrapBG").css("height", height);
-	$("#changeAddressPopup").css("z-index", "999999");
-	var className = addressId;
-	console.log(className);
-	console.log("Test"+$(".update"+className+" .lastName").text());
-	$("#popupFields #firstName").val($("."+className+" .firstName").text());
-	$("#popupFields #lastName").val($("."+className+" .lastName").text());
-	$("#popupFields #addressLine1").val($("."+className+" .addressline1").text());
-	$("#popupFields #addressLine2").val($("."+className+" .addressline2").text());
-	$("#popupFields #addressLine3").val($("."+className+" .addressline3").text());
-	$("#popupFields #pincode").val($("."+className+" .postalCode").text());
-	$("#popupFields #mobileNo").val($("."+className+" .phoneNumber").text());
-	$("#popupFields #landmark").val($("."+className+" .landmark").text());
-	
-	$("#popupFields #city").val($("."+className+" .addressTown").text());
-	$("#popupFields #stateListBox").val($("."+className+" .state").text());
-	$("#popupFields #country").val($("."+className+" .country").text());
-	$("#popupFields #addressId").val($("."+className+" #addressUniqueId").text());
-	$("#popupFields #temp").val(className);
-	$("#saveAddress").attr("data-value","editAddress");
-	$("#popupFields #landmark > option").each(function() {
-	    alert(this.text + ' ' + this.value);
-	});
-}
-
 
 </script>
 <style>

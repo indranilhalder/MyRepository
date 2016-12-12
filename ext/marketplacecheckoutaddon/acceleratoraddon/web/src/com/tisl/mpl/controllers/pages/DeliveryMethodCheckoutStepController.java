@@ -511,7 +511,37 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				if (cartData.getDeliveryAddress() != null)
 				{
 					LOG.debug("Express checkout selected for address id : " + cartData.getDeliveryAddress().getId());
-					return getCheckoutStep().nextStep();
+					
+					//Added the code for Delivery Method slots
+					final CartData cartDataSupport = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+					final List<String> deliveryModelList = new ArrayList<String>();
+					for (final OrderEntryData cartEntryData : cartDataSupport.getEntries())
+					{
+						if (null != cartEntryData && null != cartEntryData.getMplDeliveryMode())
+						{
+							if (cartEntryData.getMplDeliveryMode().getCode()
+									.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
+							{
+								deliveryModelList.add(cartEntryData.getMplDeliveryMode().getCode());
+							}
+							else if (cartEntryData.getMplDeliveryMode().getCode()
+									.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
+							{
+								deliveryModelList.add(cartEntryData.getMplDeliveryMode().getCode());
+							}
+						}
+					}
+					if (deliveryModelList.size() > 0)
+					{
+						LOG.debug("****************:" + MarketplacecommerceservicesConstants.REDIRECT
+								+ MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL
+								+ MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL);
+						return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL
+								+ MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL;
+					}else{
+						return getCheckoutStep().nextStep();
+					}
+					
 				}
 
 				deliveryAddress = (List<AddressData>) getMplCustomAddressFacade().getDeliveryAddresses(cartData.getDeliveryAddress());

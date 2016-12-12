@@ -128,7 +128,19 @@
 							</c:otherwise>
 						</c:choose>
 						<%--${entry.eddDateBetWeen}  ${entry.mplDeliveryMode.description}--%>
-					<li class="deliver deliver-desc"> Your Order Will Be Delivered Between ${entry.eddDateBetWeen}</li>
+					<%-- <li class="deliver deliver-desc"> Your Order Will Be Delivered Between ${entry.eddDateBetWeen}</li> --%>
+					  <c:choose>
+                       <c:when test="${not empty entry.timeSlotFrom  && entry.timeSlotFrom !=null }">
+                         
+                        <li class="deliver deliver-desc">Your Order Will Be Delivered on ${entry.selectedDeliverySlotDate}   ${entry.timeSlotFrom} TO ${entry.timeSlotTo}</li>
+                        
+                       </c:when>
+                       <c:otherwise>
+                       <li class="deliver deliver-desc"> Your Order Will Be Delivered Between ${entry.eddDateBetWeen}</li>
+                       
+                       </c:otherwise>
+                  
+                  </c:choose>
 				</ul>
 			</li>
 			<%-- <td headers="header5">

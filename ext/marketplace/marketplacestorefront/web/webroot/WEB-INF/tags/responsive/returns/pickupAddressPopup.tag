@@ -52,7 +52,7 @@
 										<label for="firstName"><spring:theme
 												code="text.order.returns.firstname" /></label>
 
-										<form:input path="firstName"
+										<form:input path="firstName" maxlength="40"
 											class="form-control textInputChangeAddress" id="firstName"
 											placeholder="First Name"
 											onkeyup="this.value=this.value.replace(/\s\s+/g,'');" />
@@ -60,7 +60,7 @@
 									<div class="col-md-6 form-group">
 										<label for="lastName"><spring:theme
 												code="text.order.returns.lastname" /></label>
-										<form:input path="lastName"
+										<form:input path="lastName" maxlength="40"
 											class="form-control textInputChangeAddress" id="lastName"
 											placeholder="Last Name"
 											onkeyup="this.value=this.value.replace(/\s\s+/g,'');" />
@@ -91,7 +91,7 @@
 									<div class="col-md-12 form-group">
 										<label for="addressLine1"><spring:theme
 												code="text.order.returns.addressline1" /></label>
-										<form:input path="line1"
+										<form:input path="line1" maxlength="40"
 											class="form-control textInputChangeAddress" id="addressLine1"
 											placeholder="Address Line 1"
 											onkeyup="this.value=this.value.replace(/\s\s+/g,'');" />
@@ -101,7 +101,7 @@
 									<div class="col-md-12 form-group">
 										<label for="addressLine2"><spring:theme
 												code="text.order.returns.addressline2" /></label>
-										<form:input path="line2"
+										<form:input path="line2" maxlength="40"
 											class="form-control textInputChangeAddress" id="addressLine2"
 											placeholder="Address Line 2"
 											onkeyup="this.value=this.value.replace(/\s\s+/g,'');" />
@@ -111,7 +111,7 @@
 									<div class="col-md-12 form-group">
 										<label for="addressLine3"><spring:theme
 												code="text.order.returns.addressline3" /></label>
-										<form:input path="line3"
+										<form:input path="line3" maxlength="40"
 											class="form-control textInputChangeAddress" id="addressLine3"
 											placeholder="Address Line 3"
 											onkeyup="this.value=this.value.replace(/\s\s+/g,'');" />
@@ -144,7 +144,7 @@
 										<div class="form-group">
 											<label for="city"><spring:theme
 													code="text.order.returns.city" /></label>
-											<form:input path="townCity"
+											<form:input path="townCity" onkeypress="return ValidateAlpha(event)"
 												class="form-control textInputChangeAddress address_townCity"
 												id="city" placeholder="City"
 												onkeyup="this.value=this.value.replace(/\s\s+/g,'');" />

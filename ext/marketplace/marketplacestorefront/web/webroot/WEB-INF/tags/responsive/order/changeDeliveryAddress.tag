@@ -46,7 +46,7 @@
 						<div class="row">
 							<div class="col-md-6 form-group">
 								<label for="firstName"><spring:theme code="text.order.returns.firstname"/></label>
-								<form:input path="firstName"
+								<form:input path="firstName" onkeypress="return ValidateAlpha(event)"
 									class="form-control textInputChangeAddress" id="firstName"
 									value="${orderDetails.deliveryAddress.firstName}" placeholder="First Name" />
 								<div class="error_text firstNameError"></div>
@@ -54,7 +54,7 @@
 							<div class="col-md-6 form-group">
 								<label for="lastName"><spring:theme code="text.order.returns.lastname"/></label>
 
-								<form:input path="lastName"
+								<form:input path="lastName" onkeypress="return ValidateAlpha(event)"
 									class="form-control textInputChangeAddress" id="lastName"
 									value="${orderDetails.deliveryAddress.lastName}" placeholder="Last Name" />
 								<div class="error_text lastNameError"></div>

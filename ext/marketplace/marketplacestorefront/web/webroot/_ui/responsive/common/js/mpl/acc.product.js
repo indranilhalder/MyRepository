@@ -1281,6 +1281,16 @@ function isNumber(evt) {
 	return true;
 }
 
+function ValidateAlpha(evt)
+{
+ evt = (evt) ? evt : window.event;
+    var keyCode = (evt.which) ? evt.which : evt.keyCode
+    if ((keyCode < 65 || keyCode > 90) && (keyCode < 97 || keyCode > 123) && keyCode != 32){
+      return false;
+    }
+        return true;
+}
+
 $(document).on("change",'.filter-price',function(){
 
 			var prices = splitPrice($(this).find('form').find(

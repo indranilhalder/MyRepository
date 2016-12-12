@@ -78,7 +78,7 @@
 												<span class="price">
 													<ycommerce:testId
 														code="orderDetails_productTotalPrice_label">
-														<format:price priceData="${entryReturn.totalPrice}"
+														Price :<format:price priceData="${entryReturn.totalPrice}"
 															displayFreeForZero="true" />
 													</ycommerce:testId></span>
 												<c:forEach items="${entryReturn.product.seller}" var="seller">
