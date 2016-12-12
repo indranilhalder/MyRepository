@@ -35,6 +35,7 @@ import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.MplDeliveryAddressDao;
 //import com.tis.mpl.facade.changedelivery.Impl.ChangeDeliveryAddressFacadeImpl;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryAddressService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerMasterService;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -64,6 +65,10 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 	SessionService sessionService;
 	@Autowired 
 	MplSellerMasterService sellerMasterService;
+	
+	@Autowired
+	private MplDeliveryCostService mplDeliveryCostService;
+	
 	private static final Logger LOG = Logger.getLogger(MplDeliveryAddressServiceImpl.class);
 
 
@@ -185,7 +190,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 				{
 					
 		            //Change Ed to HD Delivery Mode
-					if(newAddressModel.getPostalcode().equalsIgnoreCase(orderModel.getDeliveryAddress().getPostalcode())){
+					if(!newAddressModel.getPostalcode().equalsIgnoreCase(orderModel.getDeliveryAddress().getPostalcode())){
 						convertEDToHDDeliveryMode(orderModel);
 					}
 					  
@@ -415,12 +420,11 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 		return null;
 	}
 	
-	//convert Ed To HD Order
+	//convert Ed To HD Order Bug-ID TATA-679
 	private void convertEDToHDDeliveryMode(OrderModel orderModel)
 	{
 		try
 		{
-			DeliveryModeModel deliveryMode = null;
 			for (OrderModel subOrder : orderModel.getChildOrders())
 			{
 				for (AbstractOrderEntryModel entry : subOrder.getEntries())
@@ -428,10 +432,11 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 					if (MarketplacecommerceservicesConstants.EXPRESS_DELIVERY.equalsIgnoreCase(entry.getMplDeliveryMode()
 							.getDeliveryMode().getCode()))
 					{
-						deliveryMode = entry.getMplDeliveryMode().getDeliveryMode();
-						deliveryMode.setCode(MarketplacecommerceservicesConstants.HOME_DELIVERY);
-						deliveryMode.setName(MarketplacecommerceservicesConstants.CART_HOME_DELIVERY);
-						modelService.saveAll(deliveryMode);
+						MplZoneDeliveryModeValueModel deliveryModel = mplDeliveryCostService.getDeliveryCost(
+								MarketplacecommerceservicesConstants.HOME_DELIVERY, MarketplacecommerceservicesConstants.INR,
+								entry.getSelectedUSSID());
+						      entry.setMplDeliveryMode(deliveryModel);
+						modelService.saveAll(entry);
 					}
 
 				}

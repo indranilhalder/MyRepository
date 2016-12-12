@@ -613,7 +613,8 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 						{
 							final RescheduleDataList rescheduleDataList = sessionService
 									.getAttribute(MarketplacecommerceservicesConstants.RESCHEDULE_DATA_SESSION_KEY);
-							if (CollectionUtils.isNotEmpty(rescheduleDataList.getRescheduleDataList()))
+							//Bug ID 686
+							if (rescheduleDataList != null && CollectionUtils.isNotEmpty(rescheduleDataList.getRescheduleDataList()))
 							{
 								transactionSDDtoList = reScheduleddeliveryDate(orderModel, rescheduleDataList);
 								sessionService.removeAttribute(MarketplacecommerceservicesConstants.RESCHEDULE_DATA_SESSION_KEY);
