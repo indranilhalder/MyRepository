@@ -82,7 +82,6 @@ ReturnRequestCreateWidgetRenderer {
 	private TypeService cockpitTypeService;
 	@Autowired
 	private ModelService modelService;
-	@Autowired
 	private Populator<AddressModel, AddressData> addressPopulator;
 	@Autowired
 	private PointOfServicePopulator pointOfServicePopulator;
@@ -111,7 +110,10 @@ ReturnRequestCreateWidgetRenderer {
 	protected static final String FORM_ERRORS = null;
 	protected static final String FAILED_VALIDATION ="validationErrors";
 	
-	protected static final String TIME 	= " , Working Hours : ";
+	protected static final String TIME 	= "  Working Hours : ";
+	protected static final String AM	= " am  to ";
+	protected static final String PM	= " pm ";
+
 
 	@Override
 	protected HtmlBasedComponent createContentInternal(
@@ -487,21 +489,24 @@ ReturnRequestCreateWidgetRenderer {
 		modes.setClass("returnModels");
 		final Radiogroup radioGroup = new Radiogroup();
 		modes.appendChild(radioGroup);
-		Radio quickDrop = new Radio();
-		radioGroup.appendChild(quickDrop);
-		quickDrop.setLabel(TypeofReturn.QUICK_DROP);
-		quickDrop.setClass(BOLD_TEXT);
-		quickDrop.addEventListener(Events.ON_CHECK, new EventListener() {
-			@Override
-			public void onEvent(Event arg0) throws Exception {
-				if (null != schedulePickupArea
-						&& null != schedulePickupArea.getChildren()) {
-					schedulePickupArea.getChildren().clear();
+		boolean isOrderEligibleForQuickDrop = ((MarketPlaceReturnsController)widget.getWidgetController()).checkProductEligibilityForRTS(entries);
+		if(isOrderEligibleForQuickDrop) {
+			Radio quickDrop = new Radio();
+			radioGroup.appendChild(quickDrop);
+			quickDrop.setLabel(TypeofReturn.QUICK_DROP);
+			quickDrop.setClass(BOLD_TEXT);
+			quickDrop.addEventListener(Events.ON_CHECK, new EventListener() {
+				@Override
+				public void onEvent(Event arg0) throws Exception {
+					if (null != schedulePickupArea
+							&& null != schedulePickupArea.getChildren()) {
+						schedulePickupArea.getChildren().clear();
+					}
+					schedulePickupArea.appendChild(getQuickDropDetails(widget,
+							entries));
 				}
-				schedulePickupArea.appendChild(getQuickDropDetails(widget,
-						entries));
-			}
-		});
+			});
+		}
 		final Div Div9 = new Div();
 		Div9.setParent(modelSelctionDiv);
 		Radio schedulePickup = new Radio();
@@ -513,7 +518,6 @@ ReturnRequestCreateWidgetRenderer {
 				if (null != schedulePickupArea
 						&& null != schedulePickupArea.getChildren()) {
 					schedulePickupArea.getChildren().clear();
-
 				}
 				schedulePickupArea.appendChild(getSchedulePicupDetails(widget,
 						entries, subOrder));
@@ -666,7 +670,7 @@ ReturnRequestCreateWidgetRenderer {
 			}
 		}
 		
-		 pincodeLongbox.addEventListener(Events.ON_CHANGE, new EventListener() {
+		 pincodeLongbox.addEventListener(Events.ON_BLUR, new EventListener() {
 			@Override
 			public void onEvent(Event arg0) throws Exception {
 				Long pincodeValue = pincodeLongbox.getValue();
@@ -765,8 +769,9 @@ ReturnRequestCreateWidgetRenderer {
 			storesListBox.setMultiple(true);
 			storesListBox.setMold("select");
 			
-			for(final PointOfServiceData store : returnableStores) { 
-				final String storeLabel = new String(store.getSlaveId()+ " , " + store.getDisplayName() + " , " +store.getAddress().getFormattedAddress()
+			for(final PointOfServiceData store : returnableStores) {
+				
+				final String storeLabel = new String(store.getSlaveId()+ "," + store.getDisplayName() + '\n' +store.getAddress().getFormattedAddress()
 						+ TIME + store.getMplOpeningTime() + " - " + store.getMplClosingTime());
 				final Listitem item = new Listitem();
 				item.setLabel(storeLabel);

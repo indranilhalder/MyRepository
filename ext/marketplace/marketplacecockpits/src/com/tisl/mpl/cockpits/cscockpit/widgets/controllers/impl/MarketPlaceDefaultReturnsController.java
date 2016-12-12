@@ -126,6 +126,8 @@ public class MarketPlaceDefaultReturnsController extends
 	private Populator<AddressData, ReturnItemAddressData> returnItemAddressDatapopulator;
 	@Autowired
 	private DateUtilHelper dateUtilHelper;
+	@Autowired
+	private MPLReturnService mPLReturnService;
 
 	private static final String OMS_BYPASS_KEY = "cscockpit.oms.serviceability.check.bypass";
 
@@ -940,6 +942,20 @@ public class MarketPlaceDefaultReturnsController extends
 			LOG.error("Exception while getting bank details for customer "+customerId+""+e.getMessage());
 		}
 		return null;
+	}
+
+	@Override
+	public boolean checkProductEligibilityForRTS(
+			List<AbstractOrderEntryModel> entries) {
+		boolean eligibleForRTS = false ;
+		try {
+			eligibleForRTS= mPLReturnService.checkProductEligibilityForRTS(entries);
+			LOG.debug("eligible for quickdrop :"+eligibleForRTS);
+		}catch(Exception e) {
+			LOG.error("Exception while checking order entries eligible for quick drop or not ");
+		}
+		return eligibleForRTS;
+
 	}
 		
 }

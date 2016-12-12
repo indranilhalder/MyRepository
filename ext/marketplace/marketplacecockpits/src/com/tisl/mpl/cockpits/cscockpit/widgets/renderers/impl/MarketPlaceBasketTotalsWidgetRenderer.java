@@ -105,21 +105,6 @@ public class MarketPlaceBasketTotalsWidgetRenderer extends
 		        
 		        
 		        
-				Double scheduleDeliveryCosts = 0D;
-				
-//				for (AbstractOrderEntryModel orderEntry : abstractOrderModel
-//						.getEntries()) {
-//					if (null != orderEntry.getMplDeliveryMode()) {
-//						scheduleDeliveryCosts = deliveryCosts
-//								+ ( orderEntry.getScheduledDeliveryCharge());
-//					}
-//				}
-				if(null !=( (CartModel)abstractOrderModel).getScheduleDelCharge()) {
-					scheduleDeliveryCosts = ( (CartModel)abstractOrderModel).getScheduleDelCharge();
-				}
-				
-		        renderRow(scheduleDeliveryCosts, LabelUtils.getLabel(widget, "scheduleDeliveryCosts", new Object[0]), currencyInstance, container);
-
 				Double totalDeliveryCostDisc = 0D;
 				
 				for (AbstractOrderEntryModel orderEntry : abstractOrderModel

@@ -834,23 +834,33 @@
 	
 	  <!--Schedule Delivery  Slots START -->
 
-<alias alias="csCheckoutScheduleDeliveryWidgetConfig" name="defaultCsCheckoutScheduleDeliveryWidgetConfig"/>
+
+	<!--Schedule Delivery Slots START -->
+	<alias alias="csCheckoutScheduleDeliveryWidgetConfig" name="defaultCsCheckoutScheduleDeliveryWidgetConfig" />
 	<bean id="defaultCsCheckoutScheduleDeliveryWidgetConfig" parent="csBaseWidgetConfig">
-		<property name="widgetTitle" value="cscockpit.widget.checkout.ScheduleDelivery"/>
-		<property name="widgetRenderer" ref="csOrderScheduleDeliveryWidgetRenderer"/>
-		<property name="widgetController" ref="csCheckoutController"/>
-		<property name="widgetClass" value="de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget"/>
-		<property name="widgetSclass" value="defaultWidgetFrame csCheckoutPaymentWidgetFrame"/>
+		<property name="widgetTitle" value="cscockpit.widget.checkout.ScheduleDelivery" />
+		<property name="widgetRenderer" ref="csCheckoutScheduleDeliveryWidgetRenderer" />
+		<property name="widgetController" ref="csCheckoutController" />
+		<property name="widgetClass"
+			value="de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget" />
+		<property name="widgetSclass"
+			value="defaultWidgetFrame csCheckoutPaymentWidgetFrame" />
 		<property name="widgetModel">
-			<bean class="de.hybris.platform.cockpit.widgets.models.impl.DefaultListWidgetModel"/>
+			<bean
+				class="de.hybris.platform.cscockpit.widgets.models.impl.CheckoutCartWidgetModel" />
+		</property>
+		<property name="widgetAdapter">
+			<bean
+				class="de.hybris.platform.cscockpit.widgets.adapters.CheckoutCartAdapter">
+				<property name="cockpitTypeService" ref="cockpitTypeService" />
+			</bean>
 		</property>
 	</bean>
 
-	<alias alias="csOrderScheduleDeliveryWidgetRenderer" name="defaultCsOrderScheduleDeliveryWidgetRenderer" />
-	<bean id="defaultCsOrderScheduleDeliveryWidgetRenderer"
-		parent="abstractWidgetRenderer"
+	<alias alias="csCheckoutScheduleDeliveryWidgetRenderer" name="defaultCsCheckoutScheduleDeliveryWidgetRenderer" />
+	<bean id="defaultCsCheckoutScheduleDeliveryWidgetRenderer" parent="abstractWidgetRenderer"
 		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MplCheckoutScheduleDeliveryWidgetRenderer">
-		<property name="cockpitTypeService" ref="cockpitTypeService"/>
+		<property name="cockpitTypeService" ref="cockpitTypeService" />
 	</bean>
 	
 	<!--Schedule Delivery  Slots END  -->

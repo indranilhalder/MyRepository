@@ -6,6 +6,7 @@ import de.hybris.platform.basecommerce.enums.ReturnAction;
 import de.hybris.platform.basecommerce.enums.ReturnStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.returns.impl.DefaultReturnService;
 import de.hybris.platform.returns.model.RefundEntryModel;
 import de.hybris.platform.returns.model.ReplacementEntryModel;
@@ -19,8 +20,11 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplCustomerBankAccountDetailsModel;
+import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.marketplacecommerceservices.service.MPLReturnService;
+import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.returns.dao.MplReturnsDao;
 
 
@@ -136,19 +140,77 @@ public class MPLDefaultReturnService extends DefaultReturnService implements MPL
   }
 
 
-@Override
-public OrderModel getOrder(String orderId)
-{
-	final List<OrderModel> orderModel = mplReturnsDao.getOrder(orderId);
-	if (CollectionUtils.isNotEmpty(orderModel))
+	@Override
+	public OrderModel getOrder(final String orderId)
 	{
-		return orderModel.get(0);
+		final List<OrderModel> orderModel = mplReturnsDao.getOrder(orderId);
+		if (CollectionUtils.isNotEmpty(orderModel))
+		{
+			return orderModel.get(0);
+		}
+		else
+		{
+			return null;
+		}
 	}
-	else
+
+	/* (non-Javadoc)
+	 * @see com.tisl.mpl.marketplacecommerceservices.service.MPLReturnService#checkProductEligibilityForRTS(java.util.List)
+	 */
+	@Override
+	public boolean checkProductEligibilityForRTS(List<AbstractOrderEntryModel> entries)
 	{
-		return null;
+      
+		boolean eligibleForRTS = false;
+		String productRTSValue = null;
+		String sellerRichAttrOfQuickDrop = null;
+		for (final AbstractOrderEntryModel entry : entries)
+		{
+			final ProductModel productModel = entry.getProduct();
+			List<RichAttributeModel> productRichAttributeModel = null;
+			if (null != productModel && productModel.getRichAttribute() != null)
+			{
+				productRichAttributeModel = (List<RichAttributeModel>) productModel.getRichAttribute();
+				if (productRichAttributeModel != null && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+				{
+					productRTSValue = productRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+					if(null != productRTSValue && productRTSValue.equalsIgnoreCase(MarketplacecommerceservicesConstants.YES)) {
+						eligibleForRTS = true;
+					}else {
+						return false;
+					}
+				}
+			}
+			if(!eligibleForRTS) {
+				return eligibleForRTS;
+			}
+			final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
+					.getSellerInformationRelator();
+			for (final SellerInformationModel sellerInformationModel : sellerInfo)
+			{
+				if (sellerInformationModel.getSellerArticleSKU().equals(entry.getSelectedUSSID()))
+				{
+					List<RichAttributeModel> sellerRichAttributeModel = null;
+					if (sellerInformationModel.getRichAttribute() != null)
+					{
+						sellerRichAttributeModel = (List<RichAttributeModel>) sellerInformationModel.getRichAttribute();
+						if (sellerRichAttributeModel != null && sellerRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+						{
+							sellerRichAttrOfQuickDrop = sellerRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+							if(sellerRichAttrOfQuickDrop.equalsIgnoreCase(MarketplacecommerceservicesConstants.YES)) {
+								eligibleForRTS = true;
+							}else {
+								return false;
+							}
+						}
+					}
+				}
+				
+			}
+			if(!eligibleForRTS) {
+				return false;
+			}
+		}
+		return eligibleForRTS;
 	}
-}
-
-
 }

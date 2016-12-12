@@ -33,16 +33,18 @@ public interface MPLReturnService extends ReturnService
 	 * @param customerId
 	 * @return MplCustomerBankAccountDetailsModel
 	 */
-	public  MplCustomerBankAccountDetailsModel getCustomerBakDetailsById(String customerId);
-	
-	
-	 public List<ReturnRequestModel> getListOfReturnRequest(String orlderId);
-	 
-	 /**
-	  *  getting order using the orderId
-	  * @param orderId
-	  * @return OrderModel
-	  */
-	 public OrderModel getOrder(final String orderId);
+	public MplCustomerBankAccountDetailsModel getCustomerBakDetailsById(String customerId);
 
+
+	public List<ReturnRequestModel> getListOfReturnRequest(String orlderId);
+
+	/**
+	 * getting order using the orderId
+	 * 
+	 * @param orderId
+	 * @return OrderModel
+	 */
+	public OrderModel getOrder(final String orderId);
+
+	public boolean checkProductEligibilityForRTS(List<AbstractOrderEntryModel> entries);
 }

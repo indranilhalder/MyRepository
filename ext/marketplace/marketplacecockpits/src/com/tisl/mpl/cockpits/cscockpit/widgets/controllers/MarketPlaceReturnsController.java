@@ -64,5 +64,6 @@ public interface MarketPlaceReturnsController extends ReturnsController {
 
 	public void saveCODReturnsBankDetails(CODSelfShipData codData);
 	public CODSelfShipData getCustomerBankDetailsByCustomerId(String customerId);
+	public boolean checkProductEligibilityForRTS(List<AbstractOrderEntryModel> entries);
 }
 
