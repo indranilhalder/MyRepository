@@ -301,7 +301,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				target.setEdScheduledDate(String.valueOf(source.getEdScheduledDate()));
 			}
 			
-			if (source.getTimeSlotFrom() != null)
+			if (StringUtils.isNotEmpty(source.getTimeSlotFrom()))
 			{
 				
 				 String timeSlotFrom= source.getTimeSlotFrom();
@@ -318,7 +318,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				}
 			}
 			
-			if (source.getTimeSlotTo() != null)
+			if (StringUtils.isNotEmpty(source.getTimeSlotTo()))
 			{
 				 String timeSlotTo= source.getTimeSlotTo();
 				 SimpleDateFormat format1 = new SimpleDateFormat("hh:mm a");
