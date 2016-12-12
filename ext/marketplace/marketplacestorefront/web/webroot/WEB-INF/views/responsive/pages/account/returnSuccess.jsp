@@ -89,7 +89,7 @@
 												<!-- TISEE-5457 -->
 												<!--  <span>Seller ID: ${sellerId} </span> -->
 												
-												 <span><spring:message code="seller.order.code"> </spring:message>&nbsp;${suborder.code} </span>
+												 <span><spring:message code="seller.order.code"> </spring:message>&nbsp;${subOrder.code} </span>
 											</p>
 										</div>
 										<ul class="item-details">
@@ -121,9 +121,9 @@
 					 <label for="return-method-1">
 							<h3>Return and Refund</h3> <span>Estimated refund timing:
 								2-3 days after we have received the item. This product was paid
-								for via ${suborder.mplPaymentInfo.paymentOption} 
+								for via ${subOrder.mplPaymentInfo.paymentOption} 
 								<c:choose>
-								 	 <c:when test="${suborder.mplPaymentInfo.paymentOption =='COD'}">
+								 	 <c:when test="${subOrder.mplPaymentInfo.paymentOption =='COD'}">
 											 so you will receive the refund via cheque/NEFT. 	 
 								  	</c:when>
 								  	<c:otherwise>
