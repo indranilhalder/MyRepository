@@ -165,6 +165,10 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 			{
 				deliveryAddr.append(COMMA).append(deliveryAddress.getAddressLine3());
 			}
+			if (!StringUtils.isEmpty(deliveryAddress.getLandmark()))
+			{
+				deliveryAddr.append(COMMA).append(deliveryAddress.getLandmark());
+			}
 
 			deliveryAddr.append(COMMA).append(deliveryAddress.getTown()).append(COMMA).append(deliveryAddress.getDistrict())
 					.append(COMMA).append(deliveryAddress.getPostalcode());

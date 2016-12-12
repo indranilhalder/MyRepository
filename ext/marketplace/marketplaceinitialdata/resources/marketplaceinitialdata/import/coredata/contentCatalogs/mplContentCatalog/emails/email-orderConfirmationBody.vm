@@ -112,6 +112,8 @@ Confirmed!<br>
                           			</td>
                         			<td style="padding-left: 20px;text-align: center;width: 120px;"> Delivery<br>
                           			Mode</td>
+                          			<td style="padding-left: 20px;text-align: center;width: 120px;"> ScheduleDeliveryDate<br>
+                          			</td>
                       				</tr>
                       				#set ($srNo=1)
                       				#foreach($entry in ${childorder.entries})
@@ -123,8 +125,16 @@ Confirmed!<br>
 		                			<td width="80" align="center"style="color: #504B49;">$entry.netAmountAfterAllDisc</td>
 		                			<td width="120" align="center" style="padding-left: 20px;color: #504B49;">$entry.convenienceChargeApportion</td>
 		                			<td width="120" align="center" style="padding-left: 20px;color: #504B49;">$entry.currDelCharge</td>
-		                			
 		                  			<td style="color: #504B49;padding-left: 24px;text-align: center;">$entry.mplDeliveryMode.deliveryMode.name</td>
+		                  			<td width="120" align="center" style="padding-left: 20px;color: #504B49;">
+		                  			#if($entry.edScheduledDate)
+		                  			 $entry.edScheduledDate <br>
+		                  			 $entry.timeSlotFrom To
+		                  			 $entry.timeSlotTo
+		                  			#else
+		                  			NA
+		                  			#end
+		                  			</td>
 		              			</tr>
 
                       			#set ($srNo=$srNo+1)
