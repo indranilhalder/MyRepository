@@ -48,7 +48,9 @@ public class ReturnInitiationController extends BaseController
 	@Resource(name = "returnRTSValidator")
 	private Validator returnRTSValidator;
 	
-	@RequestMapping(method = RequestMethod.POST)
+	private static final String APPLICATION_TYPE = "application/xml";
+	
+	@RequestMapping(method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public ReturnInitiateResponseDTO initiationRequest(@RequestBody final ReturnInitiateRequestDTO returnRequest) 
 				throws WebserviceValidationException

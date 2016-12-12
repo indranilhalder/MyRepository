@@ -3499,7 +3499,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		orderLineData.setReasonCode(data.getReasonCode());
 		orderLineData.setRequestID(abstractOrderentry.getSelectedUSSID() + MarketplacecommerceservicesConstants.EMPTY
 				+ System.currentTimeMillis());
-		orderLineData.setReturnCancelFlag("RTS");
+		orderLineData.setReturnCancelFlag("R");
 		orderLineData.setReturnCancelRemarks(getReasonDesc(data.getReasonCode()));
 		if (StringUtils.isNotEmpty(abstractOrderentry.getOrderLineId()))
 		{
