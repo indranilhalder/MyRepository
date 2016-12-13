@@ -534,7 +534,8 @@ ACC.refinements = {
 			})
 
 		$(document).off('click', '.js-facet-colourbutton').on('click', '.js-facet-colourbutton', function() { 
-			$(this).parents(".filter-colour").toggleClass("selected-colour");
+			$(this).parents(".filter-colour, .filter-colorfamilytrlg").toggleClass("selected-colour");
+		
 			// Fixing error of facet starts
 			var li_index = $('.facet_mobile .facet.js-facet.Colour .facet-list.js-facet-top-values.active li').index($(this).parents(".filter-colour"));
 			$(".facet_mobile .facet.js-facet.Colour .facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden li").eq(li_index).toggleClass("selected-colour");
