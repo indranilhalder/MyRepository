@@ -236,8 +236,7 @@ public class ProductsController extends BaseController
 	 * Returns a list of products and additional data such as: available facets, available sorting and pagination
 	 * options. It can include spelling suggestions.To make spelling suggestions work you need to:
 	 * <ul>
-	 * <li>Make sure enableSpellCheck on the SearchQuery is set to true. By default it should be already set to true.
-	 * </li>
+	 * <li>Make sure enableSpellCheck on the SearchQuery is set to true. By default it should be already set to true.</li>
 	 * <li>Have indexed properties configured to be used for spellchecking.</li>
 	 * </ul>
 	 *
@@ -397,7 +396,7 @@ public class ProductsController extends BaseController
 	@ResponseBody
 	public StockWsDTO getStockData(@PathVariable final String baseSiteId, @PathVariable final String productCode,
 			@PathVariable final String storeName, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
-					throws WebserviceValidationException, StockSystemException
+			throws WebserviceValidationException, StockSystemException
 	{
 		validate(storeName, "storeName", pointOfServiceValidator);
 		if (!commerceStockFacade.isStockSystemEnabled(baseSiteId))
@@ -534,7 +533,7 @@ public class ProductsController extends BaseController
 	@ResponseBody
 	public ReviewWsDTO createReview(@PathVariable final String productCode,
 			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields, final HttpServletRequest request)
-					throws WebserviceValidationException
+			throws WebserviceValidationException
 	{
 		final ReviewData reviewData = new ReviewData();
 		httpRequestReviewDataPopulator.populate(request, reviewData);
@@ -581,8 +580,8 @@ public class ProductsController extends BaseController
 	@RequestMapping(value = "/{productCode}/references", method = RequestMethod.GET)
 	@ResponseBody
 	public ProductReferenceListWsDTO exportProductReferences(@PathVariable final String productCode,
-			@RequestParam(required = false, defaultValue = MAX_INTEGER) final int pageSize, @RequestParam final String referenceType,
-			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+			@RequestParam(required = false, defaultValue = MAX_INTEGER) final int pageSize,
+			@RequestParam final String referenceType, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
 		final List<ProductOption> opts = Lists.newArrayList(OPTIONS);
 		final ProductReferenceTypeEnum referenceTypeEnum = ProductReferenceTypeEnum.valueOf(referenceType);
@@ -1336,8 +1335,8 @@ public class ProductsController extends BaseController
 				else
 				{
 
-					searchPageData = searchFacade.dropDownSearch(searchState, typeID, MarketplaceCoreConstants.SELLER_ID,
-							pageableData);
+					searchPageData = searchFacade
+							.dropDownSearch(searchState, typeID, MarketplaceCoreConstants.SELLER_ID, pageableData);
 				}
 			}
 			//final List<String> filter = new ArrayList<String>();
@@ -1393,7 +1392,7 @@ public class ProductsController extends BaseController
 			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields, final HttpServletRequest request)
 	{
 		final List<String> productCodeList = new ArrayList<String>();
-		ProductDetailMobileWsData productWSData = new ProductDetailMobileWsData();
+		ProductDetailMobileWsData productWSData = null;
 		final List<ProductDetailMobileWsData> productWSDataList = new ArrayList<ProductDetailMobileWsData>();
 		final ProductInfoWSDTO productDTOList = new ProductInfoWSDTO();
 		String productCode = "";
@@ -1438,10 +1437,16 @@ public class ProductsController extends BaseController
 			for (final String productCodeRef : productCodeList)
 			{
 				productWSData = mplProductWebService.getProductInfoForProductCode(productCodeRef, baseUrl);
-				productWSDataList.add(productWSData);
+				if (productWSData != null)
+				{
+					productWSDataList.add(productWSData);
+				}
 			}
-			productDTOList.setResults(productWSDataList);
-			productDTOList.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			if (productWSDataList.size() > 0)
+			{
+				productDTOList.setResults(productWSDataList);
+				productDTOList.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{

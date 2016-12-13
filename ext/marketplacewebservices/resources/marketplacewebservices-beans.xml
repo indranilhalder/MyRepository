@@ -982,8 +982,8 @@
 		<property name="productOfferMsg" type="com.tisl.mpl.wsdto.ProductOfferMsgDTO" />
 		<property name="allOOStock" type="Boolean" />
 		<property name="aPlusContent" type="com.tisl.mpl.wsdto.ProductAPlusWsData" />
-
-		<!-- Added for luxury products -->
+        <property name="imageUrl" type="String" />
+	  	<!-- Added for luxury products -->
 		<property name="luxIndicator" type="String" />
 
 	</bean>

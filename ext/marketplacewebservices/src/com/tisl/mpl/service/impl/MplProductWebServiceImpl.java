@@ -146,6 +146,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	@Resource(name = "cmsPageService")
 	private MplCmsPageService mplCmsPageService;
+	@Resource(name = "mplProductWebService")
+	private MplProductWebServiceImpl mplProductWebServiceImpl;
 
 	/**
 	 * @throws CMSItemNotFoundException
@@ -404,7 +406,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					LOG.debug("*************** Exception at PDP web service buybox fetching ******************* " + e);
 				}
 			}
-			if (null != buyBoxData && null != buyBoxData.getSellerAssociationstatus())
+			if (null != buyBoxData && null != buyBoxData.getSellerAssociationstatus()
+					&& buyBoxData.getSellerAssociationstatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
 			{
 				productDetailMobile.setSellerAssociationstatus(MarketplacecommerceservicesConstants.Y);
 			}
@@ -2270,12 +2273,12 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	public ProductDetailMobileWsData getProductInfoForProductCode(final String productCode, final String baseUrl)
 	{
 		final ProductDetailMobileWsData productDetailMobile = new ProductDetailMobileWsData();
+		//final MplProductWebServiceImpl mplProductWebServiceImpl = new MplProductWebServiceImpl();
 		BuyBoxData buyBoxData = null;
-		String ussid = null;
 		ProductData productData = null;
 		ProductModel productModel = null;
 		final StringBuilder allVariants = new StringBuilder();
-		String variantCodes = "";
+		String variantCodes = null;
 		String variantsString = "";
 		final Map<String, Integer> stockAvailibilty = new TreeMap<String, Integer>();
 		try
@@ -2286,19 +2289,18 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			{
 				productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
 						ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
-						ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL,
-						ProductOption.DELIVERY_MODE_AVAILABILITY, ProductOption.SELLER));
+						ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL, ProductOption.SELLER));
 			}
 			else
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9037);
 			}
-			if (null != productCode)
+			if (null != productData && StringUtils.isNotEmpty(productData.getCode()))
 			{
 				try
 				{
 					//get left over variants
-					if (productData.getAllVariantsId().size() > 1)
+					if (productData.getAllVariantsId() != null && productData.getAllVariantsId().size() > 1)
 					{
 						productData.getAllVariantsId().remove(productData.getCode());
 						for (final String variants : productData.getAllVariantsId())
@@ -2308,7 +2310,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 						final int length = allVariants.length();
 						variantCodes = allVariants.substring(0, length - 1);
 					}
-					if (StringUtils.isNotEmpty(productData.getCode()))
+					if (StringUtils.isNotEmpty(variantCodes))
 					{
 						variantsString = productData.getCode() + "," + variantCodes;
 					}
@@ -2332,10 +2334,10 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				}
 			}
 
-			if (null != buyBoxData && null != buyBoxData.getSellerArticleSKU())
+			//TPR-1727 Removal of Out of stock
+			if (null != buyBoxData && null != buyBoxData.getAvailable() && buyBoxData.getAvailable().intValue() <= 0)
 			{
-				ussid = buyBoxData.getSellerArticleSKU();
-				LOG.debug("*************** Mobile web service buyBox USSID ****************" + ussid);
+				return null;
 			}
 			if (null != productData)
 			{
@@ -2370,6 +2372,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				if (null != buyBoxData && null != buyBoxData.getSellerArticleSKU())
 				{
 					productDetailMobile.setWinningUssID(buyBoxData.getSellerArticleSKU());
+					LOG.debug("*************** Mobile web service buyBox USSID ****************" + buyBoxData.getSellerArticleSKU());
 				}
 
 				if (null != productData.getUrl()
@@ -2386,6 +2389,25 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					+ Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_POST);
 			productDetailMobile.setSharedText(sharedText);
 			LOG.debug("******************** PDP mobile web service  fetching done *****************");
+			//TPR-1727 PRODUCT IMAGES
+			if (CollectionUtils.isNotEmpty(productData.getImages()))
+			{
+				//Set product image(thumbnail) url
+				for (final ImageData img : productData.getImages())
+				{
+					if (null != img && null != img.getUrl() && StringUtils.isNotEmpty(img.getFormat())
+					//&& img.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.THUMBNAIL) Sonar fix
+							&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.PRODUCT_IMAGE))
+					{
+						productDetailMobile.setImageUrl(img.getUrl());
+					}
+
+				}
+			}
+			else
+			{
+				LOG.debug("*************** productInfo images not found ********************");
+			}
 
 		}
 		catch (final UnknownIdentifierException e)
@@ -2407,7 +2429,6 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		return productDetailMobile;
 
 	}
-
 
 	/**
 	 * @return the buyBoxFacade
