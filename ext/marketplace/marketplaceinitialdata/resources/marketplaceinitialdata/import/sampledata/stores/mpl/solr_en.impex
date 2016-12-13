@@ -225,4 +225,5 @@ UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=
  ;$solrIndexedType		;capacity-classification					;"Capacity"
  ;$solrIndexedType		;compatiblelaptopsizet-classification		;"Compatible Laptop Size"
  ;$solrIndexedType		;colorfamilytrlg							;"Colour Family"
+ ;$solrIndexedType		;leathertypetrlg							;"Leather type"
  
