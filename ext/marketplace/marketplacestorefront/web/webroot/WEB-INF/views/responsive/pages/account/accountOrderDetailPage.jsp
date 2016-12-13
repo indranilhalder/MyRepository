@@ -600,7 +600,7 @@
 																						<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
 																</c:if>
 														  	</c:otherwise>
-														</c:choose>--%>
+														</c:choose> --%>
 											<!-- TISCR-410 ends -->
 											
 											</div>
