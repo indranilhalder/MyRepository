@@ -539,7 +539,7 @@ var productCodeSG = '${product.code}';
 							</c:if>
 						</c:when>
 						<c:otherwise>
-							<c:forEach var="entry" items="${variantOption.sizeLink}">${variantOption.sizeLink}
+							<c:forEach var="entry" items="${variantOption.sizeLink}"><%-- ${variantOption.sizeLink} --%>
 								
 								<c:if test="${entry.key eq product.url}">
 									<c:set var="currentColor" value="${color}" />

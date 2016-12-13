@@ -82,6 +82,7 @@ import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 /**
@@ -285,6 +286,8 @@ public class CheckoutController extends AbstractCheckoutController
 			//wishlistFacade.removeProductFromWL(orderCode);
 			wishlistFacade.remProdFromWLForConf(orderDetails, orderModel.getUser()); //TISPT-175 --- removing products from wishlist : passing order data as it was fetching order data based on code again inside the method
 			SessionOverrideCheckoutFlowFacade.resetSessionOverrides();
+			GenericUtilityMethods.populateTealiumDataForCartCheckout(model, orderModel);
+			GenericUtilityMethods.populateCheckoutSellersOrderConfirmation(model, orderModel, orderDetails);
 			// for MSD
 			final String msdjsURL = configurationService.getConfiguration().getString("msd.js.url");
 			final Boolean isMSDEnabled = Boolean.valueOf(configurationService.getConfiguration().getString("msd.enabled"));
@@ -335,7 +338,6 @@ public class CheckoutController extends AbstractCheckoutController
 		//return processOrderCode(orderCode, model, request);	//TISPT-175 : Changing method parameters
 		return processOrderCode(orderCode, orderModel, orderDetails, model, request); //TISPT-175 : Changing method parameters
 	}
-
 
 	//TISPT-175 ---- Not used
 	//	@RequestMapping(value = "/orderConfirmation/" + ORDER_CODE_PATH_VARIABLE_PATTERN, method = RequestMethod.POST)

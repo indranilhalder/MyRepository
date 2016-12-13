@@ -231,7 +231,32 @@
 													<div class="credit-card-group card-sec">
 			            								<div class="card card-num">
 										        			<div class="radio">
-										        			<span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
+										        				 <c:choose>
+														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'visa')}">
+														           <span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
+														           </c:when> 
+														           	<c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'master')}">
+														           <span class="visa card_image"><img src="${commonResourcePath}/images/Master_Card.png" alt=""></span>
+														           </c:when>
+														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'maestro')}">
+														           <span class="visa card_image"><img src="${commonResourcePath}/images/Maestro.png" alt=""></span>
+														           </c:when>
+														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'amex')}">
+														           <span class="visa card_image"><img src="${commonResourcePath}/images/American_Express.png" alt=""></span>
+														           </c:when>
+														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'diners')}">
+														           <span class="visa card_image"><img src="${commonResourcePath}/images/dinner_club.png" alt=""></span>
+														           </c:when>
+														            <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'discover')}">
+														           <span class="visa card_image"><img src="${commonResourcePath}/images/Discover.png" alt=""></span>
+														           </c:when>
+														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'discover')}">
+														           <span class="visa card_image"><img src="${commonResourcePath}/images/JCB.png" alt=""></span>
+														           </c:when>
+														           <c:otherwise>
+																	<span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
+																	</c:otherwise>   
+														        </c:choose>		
 										                 		<input type="radio" data-id="savedCCard" name="creditCards" class="card_token creditCardsRadio" id="cc${status.index}"  value="${map.value.cardToken}" />
 									                 	 		<label for="cc${status.index}" data-id="savedCCard" class="numbers">
 									                 	 			${map.value.cardBrand} ending in ${map.value.cardEndingDigits}</label>
@@ -518,7 +543,34 @@
 			            								
 			            									<div class="card card-num">
 										        				<div class="radio">
-										        				<span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
+															     <c:choose>
+														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'visa')}">
+														           <span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
+														           </c:when> 
+														           	<c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'master')}">
+														           <span class="visa card_image"><img src="${commonResourcePath}/images/Master_Card.png" alt=""></span>
+														           </c:when>
+														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'maestro')}">
+														           <span class="visa card_image"><img src="${commonResourcePath}/images/Maestro.png" alt=""></span>
+														           </c:when>
+														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'amex')}">
+														           <span class="visa card_image"><img src="${commonResourcePath}/images/American_Express.png" alt=""></span>
+														           </c:when>
+														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'diners')}">
+														           <span class="visa card_image"><img src="${commonResourcePath}/images/dinner_club.png" alt=""></span>
+														           </c:when>
+														            <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'discover')}">
+														           <span class="visa card_image"><img src="${commonResourcePath}/images/Discover.png" alt=""></span>
+														           </c:when>
+														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'discover')}">
+														           <span class="visa card_image"><img src="${commonResourcePath}/images/JCB.png" alt=""></span>
+														           </c:when>
+														           <c:otherwise>
+																	<span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
+																	</c:otherwise>   
+														        </c:choose>															 
+				        							
+										        			<%-- <span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span> --%>
 										                    		<input type="radio" data-id="savedDCard" name="debitCards" class="card_token  debitCardsRadio" id="dc${status.index}"  value="${map.value.cardToken}"/>
 										                    		<label for="dc${status.index}" data-id="savedDCard" class="numbers">${map.value.cardBrand} ending in ${map.value.cardEndingDigits}</label>
 										                  				<p>${map.value.nameOnCard}</p>

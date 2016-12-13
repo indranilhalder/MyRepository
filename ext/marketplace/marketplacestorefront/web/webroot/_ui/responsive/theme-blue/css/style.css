@@ -27530,8 +27530,8 @@ header .content nav > ul > li > ul > li > ul > li.images > a .multibrand-logo{
 }
 
 .short-info .color-swatch > li img.multicolor-serp{
-	height:12px;
-	width:12px;
+	height:15px;
+	width:16px;
 }
 /* It is afftecting IA UI
 .no-results ul li a {
@@ -32522,7 +32522,7 @@ background-color: transparent;
     font-size: 12px;
     text-align: center;
     font-weight: bold;
-    margin: 3px 0 50px;
+    margin: 3px 0 40px;
 }
 p.showcase-para {
     width: 70%;
@@ -35063,7 +35063,7 @@ cursor: auto;
     transition: all .2s;
     opacity: 1;
 }
-.product-facet .filter-colour.selected-multi-colour input[type="submit"] {
+.product-facet .filter-colour.selected-multi-colour input[type="button"] {
     background-image: url(../images/multi-color-tick.png) !important;
     transition: all .2s;
     opacity: 1;
@@ -44809,8 +44809,8 @@ body.page-homepage .showcase .desc-section h2{
     letter-spacing: 1px;
     line-height: 15px;
     text-align: center;
-    margin-bottom: 40px;
-    padding: 50px 0 50px;
+    margin-bottom: 0px;
+    padding: 0px;
 }
 
 @media (max-width: 767px){
@@ -45569,6 +45569,7 @@ body.page-homepage .trending h2 > span{
 }
 .click2chat-container.send-email-container h2 {
     margin-bottom: 5px;
+    font-size: 16px;
 }
 .chat h3, .call h3 {
     height: 29px;
@@ -53299,11 +53300,11 @@ body .lookbook_wrapper .listing.wrapper .left-block{
 }
 
 
-.edit {
+.address-list .edit {
     float: left;
 }
 
-.edit>a:before {
+.address-list .edit>a:before {
     content: "\f040";
     font-family: 'FontAwesome';
     -webkit-font-smoothing: antialiased;

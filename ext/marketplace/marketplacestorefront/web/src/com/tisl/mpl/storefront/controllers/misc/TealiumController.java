@@ -217,6 +217,31 @@ public class TealiumController extends AbstractController
 		return tealiumData.toString();
 	}
 
+	//order confirmation script
+	@RequestMapping(value = "/getTealiumDataOrder", method = RequestMethod.GET)
+	@ResponseBody
+	public String getTealiumDataOrder() throws Exception
+	{
+		final StringBuilder tealiumData = new StringBuilder(1000); // SONAR FIX
+		try
+		{
+			final JSONObject utag = populateCommonTealiumData();
+			utag.put(PAGETYPE, "checkout");
+			utag.put(SITE_SECTION, "orderconfirmation");
+			utag.put(PAGE_NAME, "Order Confirmation");
+			final String utagData = utag.toJSONString();
+			tealiumData.append(UTAG_DATA);
+			tealiumData.append(utagData);
+			tealiumData.append(TEALIUM_SCRIPT);
+			tealiumData.append(getTealiumScript((String) utag.get(IA_COMPANY)));
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(TEALIUM_ERROR + ex.getMessage());
+		}
+		LOG.debug(tealiumData.toString());
+		return tealiumData.toString();
+	}
 
 	private static String getVisitorIpAddress(final HttpServletRequest request)
 	{

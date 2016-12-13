@@ -627,6 +627,10 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
 			+ "-addToWishListInPDP";
     var sizeSelected=true;
+    
+    if(!$('#variant li').hasClass('selected')) {
+    	sizeSelected=false;
+    }
     if( $("#variant,#sizevariant option:selected").val()=="#"){
     	sizeSelected=false;
     }
