@@ -541,9 +541,15 @@ ReturnRequestCreateWidgetRenderer {
 			}
 		});
 		radioGroup.setSelectedIndex(0);
-		if (radioGroup.getSelectedIndex() == 0) {
+		if (null != radioGroup.getSelectedItem() && null != radioGroup.getSelectedItem().getLabel()) {
 			try {
-				schedulePickupArea.appendChild(getQuickDropDetails(widget, entries));
+				if(radioGroup.getSelectedItem().getLabel().equalsIgnoreCase(TypeofReturn.QUICK_DROP)) {
+					schedulePickupArea.appendChild(getQuickDropDetails(widget, entries));
+				}else if(radioGroup.getSelectedItem().getLabel().equalsIgnoreCase(TypeofReturn.SCHEDULE_PICKUP)){
+					schedulePickupArea.appendChild(getSchedulePicupDetails(widget, entries,subOrder));
+				}else {
+					schedulePickupArea.appendChild(getselfShipDetails(widget, entries,subOrder,TypeofReturn.SELF_COURIER));
+				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -648,7 +654,6 @@ ReturnRequestCreateWidgetRenderer {
 			pinCode= entries.get(0).getDeliveryPointOfService().getAddress().getPostalcode();
 			pincodeLongbox.setValue(Long.valueOf(pinCode));
 		}
-		Button pincodeSubmitbtn = new Button("Submit");
 		
 		final Div listOfReturnItemsDiv = new Div();
 		listOfReturnItemsDiv.setParent(pincodeDiv);
@@ -886,16 +891,18 @@ ReturnRequestCreateWidgetRenderer {
 			dateGroup.setOrient("vertical");
 			dateGroup.setClass("dateSelection");
 			dateGroup.setParent(pickupDateDiv);
-
-			for (String date : returnDates) {
-				final Div dateDiv = new Div();
-				dateDiv.setParent(pickupDateDiv);
-				final Radio dateRadio = new Radio();
-				dateRadio.setParent(dateDiv);
-				dateRadio.setLabel(date);
-				dateGroup.appendChild(dateRadio);
+			if(null != returnDates && !returnDates.isEmpty()){
+				for (String date : returnDates) {
+					final Div dateDiv = new Div();
+					dateDiv.setParent(pickupDateDiv);
+					final Radio dateRadio = new Radio();
+					dateRadio.setParent(dateDiv);
+					dateRadio.setLabel(date);
+					dateGroup.appendChild(dateRadio);
+				}
+				dateGroup.setSelectedIndex(0);
 			}
-			dateGroup.setSelectedIndex(0);
+			
 			Listcell pickupTimeCell = new Listcell();
 			pickupTimeCell.setParent(listItem);
 			final Div pickupTimeDiv = new Div();
@@ -903,16 +910,18 @@ ReturnRequestCreateWidgetRenderer {
 			final Radiogroup timeGruop = new Radiogroup();
 			timeGruop.setOrient("vertical");
 			timeGruop.setParent(pickupTimeDiv);
-			
-			for (String time : timeSlots) {
-				final Div timeDiv = new Div();
-				timeDiv.setParent(pickupTimeDiv);
-				final Radio rio = new Radio();
-				rio.setParent(timeDiv);
-				rio.setLabel(time);
-				timeGruop.appendChild(rio);
-			}			
-			timeGruop.setSelectedIndex(0);			
+			if(null != timeSlots && !timeSlots.isEmpty()) {
+				for (String time : timeSlots) {
+					final Div timeDiv = new Div();
+					timeDiv.setParent(pickupTimeDiv);
+					final Radio rio = new Radio();
+					rio.setParent(timeDiv);
+					rio.setLabel(time);
+					timeGruop.appendChild(rio);
+				}			
+				timeGruop.setSelectedIndex(0);
+			}
+						
 			RescheduleData scheduleData = new RescheduleData();			
 			scheduleData.setDate(dateGroup.getSelectedItem().getLabel());
 			scheduleData.setTime(timeGruop.getSelectedItem().getLabel());

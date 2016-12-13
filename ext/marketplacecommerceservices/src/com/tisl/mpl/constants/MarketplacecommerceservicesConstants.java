@@ -1692,6 +1692,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ALLVARIANTSSTRING = "allVariantsString";
 	public static final String CHANGE_DELIVERY_ADDRESS = "changeDeliveryAddressData";
 	public static final String RESCHEDULE_DATA_SESSION_KEY = "rescheduleDataList";
+	public static final String SCHEDULE_DELIVRY_DATA = "scheduleDeliveryData";
 
 	public static final String S = "S";
 	public static final String SELF_COURIER = "SELF_COURIER";
@@ -1701,6 +1702,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String REASONCODE = "03"; // Hard coded value -- I'm not happy with the product quality
 	
 	public static final String OTHER = "Other";
+	
+	public static final String OFD ="OUT FOR DELIVERY";
+	public static final String ADDRESS_ISSUE="Address Issue";
 
 
 

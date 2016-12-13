@@ -3,13 +3,9 @@
  */
 package com.tisl.mpl.marketplaceomsservices.event;
 
-import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.commerceservices.event.AbstractCommerceUserEvent;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.ordersplitting.model.ConsignmentModel;
-
-import com.hybris.oms.domain.shipping.Shipment;
 
 /**
  * @author pankajk
@@ -20,39 +16,38 @@ public class SendNotificationSecondaryStatusEvent extends AbstractCommerceUserEv
 
 	/**
 	 *
-	 * @param shipment
-	 * @param consignmentModel
 	 * @param orderModel
-	 * @param secondaryShipmentNewStatus
 	 */
-	public SendNotificationSecondaryStatusEvent(final Shipment shipment, final ConsignmentModel consignmentModel, final OrderModel orderModel,
-			final ConsignmentStatus secondaryShipmentNewStatus)
+	public SendNotificationSecondaryStatusEvent(final String awbSecondaryStatus , String orderLineID, final OrderModel orderModel)
 	{
 
-		this.shipment = shipment;
-		this.consignmentModel = consignmentModel;
+		this.awbSecondaryStatus = awbSecondaryStatus;
+		this.orderLineID = orderLineID;
 		this.orderModel = orderModel;
-		this.secondaryShipmentNewStatus = secondaryShipmentNewStatus;
 	}
 
-	private final Shipment shipment;
-	private final ConsignmentModel consignmentModel;
+	private final String awbSecondaryStatus;
+	/**
+	 * @return the awbSecondaryStatus
+	 */
+	public String getAwbSecondaryStatus()
+	{
+		return awbSecondaryStatus;
+	}
+
+
+	/**
+	 * @return the orderLineID
+	 */
+	public String getOrderLineID()
+	{
+		return orderLineID;
+	}
+
+	private final String orderLineID;
 	private final OrderModel orderModel;
-	private final ConsignmentStatus secondaryShipmentNewStatus;
-	/**
-	 * @return the shipment
-	 */
-	public Shipment getShipment()
-	{
-		return shipment;
-	}
-	/**
-	 * @return the consignmentModel
-	 */
-	public ConsignmentModel getConsignmentModel()
-	{
-		return consignmentModel;
-	}
+
+	
 	/**
 	 * @return the orderModel
 	 */
@@ -60,13 +55,6 @@ public class SendNotificationSecondaryStatusEvent extends AbstractCommerceUserEv
 	{
 		return orderModel;
 	}
-	/**
-	 * @return the secondaryShipmentNewStatus
-	 */
-	public ConsignmentStatus getSecondaryShipmentNewStatus()
-	{
-		return secondaryShipmentNewStatus;
-	}
-
+	
 
 }

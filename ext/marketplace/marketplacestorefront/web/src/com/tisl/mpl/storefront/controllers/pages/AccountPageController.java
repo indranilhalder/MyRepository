@@ -1679,7 +1679,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 				returnPincodeCheckForm.setCity(address.getTown());
 				returnPincodeCheckForm.setState(address.getState());
 				returnPincodeCheckForm.setCountry(address.getCountry().getName());
-				returnPincodeCheckForm.setLandmark(address.getLine3());
+				returnPincodeCheckForm.setLandmark(address.getLandmark());
+				returnPincodeCheckForm.setAddressLane3(address.getLine3());
 			}
 			model.addAttribute(ModelAttributetConstants.RETURN_PINCODE_FORM, returnPincodeCheckForm);
 

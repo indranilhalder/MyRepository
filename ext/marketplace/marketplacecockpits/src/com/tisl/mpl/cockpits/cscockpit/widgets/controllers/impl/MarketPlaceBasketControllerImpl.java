@@ -31,6 +31,7 @@ import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
+import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.mplcommerceservices.service.data.CartSoftReservationData;
@@ -134,6 +135,8 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 
 	@Resource(name = "mplVoucherService")
 	private MplVoucherService mplVoucherService;	
+	@Autowired
+	private MplCommerceCartCalculationStrategy calculationStrategy;
 
 	/**
 	 * Adds the to market place cart.
@@ -463,9 +466,11 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 										Arrays.asList(entry.getUSSID(), entry.getAvailableQuantity()==null?entry.getReservationStatus():entry.getAvailableQuantity())));
 							} else{
 								cart.setCartReservationDate(new Date());
+								cart.setIsInventoryChanged(Boolean.TRUE);
 								modelService.save(cart);
 								modelService.refresh(cart);
 							}
+							calculatetotals(cart);
 						}
 					}
 					else
@@ -504,6 +509,18 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 
 	}
 	
+   private void calculatetotals(CartModel cart) {
+		// TODO Auto-generated method stub
+	   CommerceCartParameter cartParameter = new CommerceCartParameter();
+		cartParameter.setCart(getCartModel());
+		for (AbstractOrderEntryModel cartEntry : getCartModel().getEntries()) {
+			if(null != cartEntry.getScheduledDeliveryCharge() && cartEntry.getScheduledDeliveryCharge() !=0.0D)
+			cartEntry.setScheduledDeliveryCharge(0.0D);
+			modelService.save(cartEntry);
+		}
+	   calculationStrategy.recalculateCart(cartParameter);
+	}
+
 /**
 	 * Gets the cart data.
 	 *
@@ -1109,8 +1126,9 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		try
 		{
 			CartModel cartModel = getCartModel();
-				
 			calculateCartInContext(cartModel);
+			resetDeliveryCostifNeeded(cartModel);
+			addScheduleChargesIfAny(cartModel);
 			validateBasketReadyForCheckout(cartModel);
 			setDeliveryAddressIfAvailable(cartModel);
 			setDeliveryModeIfAvailable(cartModel);
@@ -1140,6 +1158,33 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	
 	
 	
+	private void resetDeliveryCostifNeeded(CartModel cartModel) {
+		Double deliveryCost = 0.0D;
+		for (AbstractOrderEntryModel cartEntry : cartModel.getEntries()) {
+			if(null != cartEntry.getScheduledDeliveryCharge() && cartEntry.getScheduledDeliveryCharge() >0.0D) {
+				deliveryCost += cartEntry.getScheduledDeliveryCharge();
+			}
+		} 
+		if(deliveryCost > 0.0D) {
+			cartModel.setDeliveryCost(deliveryCost);
+		}else {
+			cartModel.setDeliveryCost(0.0D);
+		}
+		modelService.save(cartModel);
+	}
+
+	private void addScheduleChargesIfAny(CartModel cartModel) {
+		for (AbstractOrderEntryModel cartEntry : cartModel.getEntries()) {
+			if(null != cartEntry.getScheduledDeliveryCharge() && cartEntry.getScheduledDeliveryCharge() >0.0D) {
+				cartEntry.setTotalPrice(cartEntry.getTotalPrice()+cartEntry.getScheduledDeliveryCharge());
+				modelService.save(cartEntry);
+			}
+		}
+		modelService.save(cartModel);
+	}
+
+
+
 	/**
 	 * @return the mplVoucherService
 	 */

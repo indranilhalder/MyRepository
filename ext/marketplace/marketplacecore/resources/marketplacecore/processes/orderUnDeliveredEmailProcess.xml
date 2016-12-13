@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <process xmlns="http://www.hybris.de/xsd/processdefinition" start="generateOrderUnDeliveredEmail" name="orderUnDeliveredEmailProcess"
-		processClass="de.hybris.platform.orderprocessing.model.OrderProcessModel" onError="error">
+		processClass="com.tisl.mpl.core.model.OrderUpdateProcessModel" onError="error">
 
 	<action id="generateOrderUnDeliveredEmail" bean="generateOrderUnDeliveredEmail">
 		<transition name="OK" to="sendEmail"/>

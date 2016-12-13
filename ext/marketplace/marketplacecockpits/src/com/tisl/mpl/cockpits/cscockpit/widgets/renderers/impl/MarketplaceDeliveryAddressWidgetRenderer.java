@@ -54,6 +54,7 @@ import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.cscockpit.utils.LabelUtils;
 import de.hybris.platform.cscockpit.widgets.controllers.CallContextController;
 import de.hybris.platform.cscockpit.widgets.controllers.CustomerController;
+import de.hybris.platform.cscockpit.widgets.controllers.OrderController;
 import de.hybris.platform.cscockpit.widgets.models.impl.DefaultMasterDetailListWidgetModel;
 import de.hybris.platform.cscockpit.widgets.renderers.impl.AddressCreateWidgetRenderer;
 import de.hybris.platform.cscockpit.widgets.renderers.utils.PopupWidgetHelper;
@@ -410,8 +411,12 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 					}
 					if (null != deliveryAddress.getCity()) {
 						cityField.setValue(deliveryAddress.getCity());
-					} else {
+						cityField.setDisabled(true);
+					} else if(null != deliveryAddress.getTown()){
 						cityField.setValue(deliveryAddress.getTown());
+						cityField.setDisabled(true);
+					}else{
+						cityField.setDisabled(false);
 					}
 					mobileNumberField.setValue(deliveryAddress.getPhone1());
 					List<Listitem> items = stateFieldListBox.getItems();
@@ -565,9 +570,11 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 					if (null != pincodeData) {
 						if (null != pincodeData.getCityName()) {
 							cityField.setValue(pincodeData.getCityName());
+							cityField.setDisabled(true);
 						} else {
 							cityField
 							.setValue(MarketplacecommerceservicesConstants.EMPTY);
+							cityField.setDisabled(false);
 						}
 						StateData stateData = pincodeData.getState();
 						if (null != stateData && null != stateData.getName()) {
