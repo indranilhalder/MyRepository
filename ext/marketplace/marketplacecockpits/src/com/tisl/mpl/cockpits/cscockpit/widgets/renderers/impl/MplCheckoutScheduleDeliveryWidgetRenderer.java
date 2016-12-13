@@ -54,6 +54,7 @@ import de.hybris.platform.cscockpit.widgets.models.impl.CheckoutCartWidgetModel;
 import de.hybris.platform.cscockpit.widgets.renderers.impl.AbstractCsListboxWidgetRenderer;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.session.SessionService;
 
 public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListboxWidgetRenderer<ListboxWidget<CheckoutCartWidgetModel, CheckoutController>>{
 	@Autowired
@@ -68,6 +69,9 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 	
 	@Autowired
 	private MarketplaceServiceabilityCheckHelper marketplaceServiceabilityCheckHelper;
+	
+	@Autowired
+	private SessionService sessionService;
 	/**
 	 * Creates the content internal.
 	 *
@@ -131,19 +135,31 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 		InvReserForDeliverySlotsRequestData deliverySlotsRequestData=new InvReserForDeliverySlotsRequestData();
 		deliverySlotsRequestData.setCartId(cart.getGuid());
 		LOG.debug("calling oms For InvReserForDeliverySlots");
-		InvReserForDeliverySlotsResponseData deliverySlotsResponseData=((MarketplaceCheckoutController) widget.getWidgetController()).deliverySlotsRequestDataCallToOms(deliverySlotsRequestData);
+		InvReserForDeliverySlotsResponseData deliverySlotsResponseData = new InvReserForDeliverySlotsResponseData();
+		if(null != cart.getIsInventoryChanged() && cart.getIsInventoryChanged()) {
+			 deliverySlotsResponseData=((MarketplaceCheckoutController) widget.getWidgetController()).deliverySlotsRequestDataCallToOms(deliverySlotsRequestData);
+			 if(null !=deliverySlotsResponseData ) {
+				 sessionService.setAttribute(MarketplacecommerceservicesConstants.SCHEDULE_DELIVRY_DATA, deliverySlotsResponseData);
+			 }
+			 cart.setIsInventoryChanged(Boolean.FALSE);
+		}else {
+			 deliverySlotsResponseData= sessionService.getAttribute(MarketplacecommerceservicesConstants.SCHEDULE_DELIVRY_DATA);
+		}
 		if(null != deliverySlotsResponseData && null != deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData()) {
 			populateScheduledDeliveryHeaders(widget, listHead);
 			for(AbstractOrderEntryModel orderEntry: cart.getEntries()) {
-				Listitem row = new Listitem();
-				row.setSclass("listbox-row-item");
-				row.setParent(listBox);
-				for( InvReserForDeliverySlotsItemEDDInfoData deliverySlotsItemEDDInfo :deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData() ) {
-					if(deliverySlotsItemEDDInfo.getUssId().trim().equalsIgnoreCase(orderEntry.getSelectedUSSID().trim())) {
-						renderDeliverySlots(widget,orderEntry,deliverySlotsItemEDDInfo, row);
-						break;
+				if(!orderEntry.getGiveAway()) {
+					Listitem row = new Listitem();
+					row.setSclass("listbox-row-item");
+					row.setParent(listBox);
+					for( InvReserForDeliverySlotsItemEDDInfoData deliverySlotsItemEDDInfo :deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData() ) {
+						if(deliverySlotsItemEDDInfo.getUssId().trim().equalsIgnoreCase(orderEntry.getSelectedUSSID().trim())) {
+								renderDeliverySlots(widget,orderEntry,deliverySlotsItemEDDInfo, row);
+							break;
+						}
 					}
 				}
+				
 			}
 		}
 		
@@ -270,10 +286,8 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 			String selectedTime = null;
 			
 			if(null != orderEntry.getEddFrom() && null != orderEntry.getEddTo()) {
-				String fromTime = orderEntry.getEddFrom().toString();
-				//String toTime  = orderEntry.getEddTo().toString();
-				DateUtilHelper dateUtilhelper = new DateUtilHelper();
-				 selectedTime=dateUtilhelper.convertTo12Hour(fromTime);
+				 selectedTime = orderEntry.getEddFrom().toString();
+
 			}
 			final Radiogroup dateGroup = new Radiogroup();
 			
@@ -332,8 +346,8 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 					String time = radioTimeGroup.getSelectedItem().getLabel();
 					String[] fromAndToTime =  time.split("TO");
 					DateUtilHelper dateUtilhelper = new DateUtilHelper();
-					String fromTime=dateUtilhelper.convertTo24Hour(fromAndToTime[0]);
-					String toTime=dateUtilhelper.convertTo24Hour(fromAndToTime[1]);
+					String fromTime=fromAndToTime[0];
+					String toTime=fromAndToTime[1];
 					orderEntry.setTimeSlotFrom(fromTime);
 					orderEntry.setTimeSlotTo(toTime);
 					try {
@@ -449,8 +463,8 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 			String selectedTime = radioTimeGroup.getSelectedItem().getLabel();
 			String[] fromAndToTime =  selectedTime.split("TO");
 			DateUtilHelper dateUtilhelper = new DateUtilHelper();
-			String fromTime=dateUtilhelper.convertTo24Hour(fromAndToTime[0]);
-			String toTime=dateUtilhelper.convertTo24Hour(fromAndToTime[1]);
+			String fromTime=fromAndToTime[0];
+			String toTime=fromAndToTime[1];
 			orderEntry.setTimeSlotFrom(fromTime);
 			orderEntry.setTimeSlotTo(toTime);
 			try {
@@ -495,31 +509,34 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 		String selectedTime = radioTimeGroup.getSelectedItem().getLabel();
 		String[] fromAndToTime =  selectedTime.split("TO");
 		DateUtilHelper dateUtilhelper = new DateUtilHelper();
-		String fromTime=dateUtilhelper.convertTo24Hour(fromAndToTime[0]);
-		String toTime=dateUtilhelper.convertTo24Hour(fromAndToTime[1]);
+		//String fromTime=dateUtilhelper.convertTo24Hour(fromAndToTime[0]);
+		String fromTime=fromAndToTime[0];
+		//String toTime=dateUtilhelper.convertTo24Hour(fromAndToTime[1]);
+		String toTime=fromAndToTime[1];
 		orderEntry.setTimeSlotFrom(fromTime);
 		orderEntry.setTimeSlotTo(toTime);
 		try {
 			Double ScheduleDeliveryCharges = 0.0D;
 			Double orderScheduleCharges  = 0.0D;
+			Double totalDeliveryCharges  = 0.0D;
 			ScheduleDeliveryCharges = ((MarketplaceCheckoutController) widget.getWidgetController()).getScheduleDeliveryCharges();
 			CartModel cartModel = (CartModel) orderEntry.getOrder();
 			if(ScheduleDeliveryCharges != 0.0D && orderEntry.getScheduledDeliveryCharge() == 0.0D) {
 				orderEntry.setScheduledDeliveryCharge(ScheduleDeliveryCharges);
 				Double totalOrderPrice = cartModel.getTotalPrice()+ScheduleDeliveryCharges;
 				Double orderEntryTotal = orderEntry.getTotalPrice()+ScheduleDeliveryCharges;
-				if(null != cartModel.getScheduleDelCharge() && cartModel.getScheduleDelCharge() !=0D) {
-					orderScheduleCharges = cartModel.getScheduleDelCharge() + ScheduleDeliveryCharges;
+				if(null != cartModel.getDeliveryCost() && cartModel.getDeliveryCost() >0.0D) {
+					totalDeliveryCharges = cartModel.getDeliveryCost() + ScheduleDeliveryCharges;
 				}else {
-					orderScheduleCharges = ScheduleDeliveryCharges;
+					totalDeliveryCharges = ScheduleDeliveryCharges;
 				}
-				cartModel.setScheduleDelCharge(orderScheduleCharges);
+				cartModel.setDeliveryCost(totalDeliveryCharges);
 				orderEntry.setTotalPrice(orderEntryTotal);
 				cartModel.setTotalPrice(totalOrderPrice);
 			}
 			modelService.save(orderEntry);
 			modelService.save(cartModel);
-			//modelService.refresh(cartModel);
+			modelService.refresh(cartModel);
 			try {
 				((BasketController)widget.getWidgetController().getBasketController()).dispatchEvent(null, widget, null);
 			}catch(Exception e) {

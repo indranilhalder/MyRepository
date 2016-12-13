@@ -158,6 +158,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 	{
 		boolean cancellationStatus;
 		LOG.info(returnForm);
+		boolean quickdrop=false;
 		ReturnInfoData returnData=new ReturnInfoData();
 		final ReturnItemAddressData returnAddrData = new ReturnItemAddressData();
 		try{
@@ -385,6 +386,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		//for quick drop
 		if(returnForm.getReturnMethod().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_METHOD_QUICKDROP))
 		{
+			quickdrop=true;
 		RTSAndRSSReturnInfoRequestData infoRequestData=new RTSAndRSSReturnInfoRequestData();
 		OrderModel orderModel=mplOrderFacade.getOrder(returnForm.getOrderCode());
 		List<String> stores=Arrays.asList(returnForm.getStoreIds());
@@ -398,6 +400,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		infoRequestData.setReturnType(MarketplacecommerceservicesConstants.RETURN_TYPE_RTS);
 		//return info call to OMS 
 			cancelReturnFacade.retrunInfoCallToOMS(infoRequestData);
+			model.addAttribute(MarketplacecommerceservicesConstants.RETURN_METHOD_QUICKDROP, quickdrop);
 		}
 		
 		if(returnForm.getIsCODorder().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
@@ -924,10 +927,15 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			HttpServletResponse response) throws ServletException, IOException {
 		String fileDownloadLocation =null;
 		String returnDownloadFileName=null;
-		 if(null!=configurationService){
-			 fileDownloadLocation=configurationService.getConfiguration().getString(RequestMappingUrlConstants.FILE_DOWNLOAD_PATH);
-			 returnDownloadFileName=configurationService.getConfiguration().getString(RequestMappingUrlConstants.RETURN_FILE_NAME );
-	      	if(null !=fileDownloadLocation && !fileDownloadLocation.isEmpty()){
+		
+			// fileDownloadLocation=configurationService.getConfiguration().getString(RequestMappingUrlConstants.FILE_DOWNLOAD_PATH);
+			 fileDownloadLocation=request.getServletContext().getRealPath("/")+ File.separator +ModelAttributetConstants.RETURN_FILE_UPLOAD_FILE_PATH_WEB_INF
+					 +File.separator+ModelAttributetConstants.RETURN_FILE_UPLOAD_FILE_PATH_DOC+File.separator;
+			 returnDownloadFileName=ModelAttributetConstants.RETURN_FILE_UPLOAD_FILE_NAME;
+
+			 LOG.debug("Return And Refund Upload File Path:"+fileDownloadLocation);
+			 LOG.debug("Return And Refund Upload File Name:"+returnDownloadFileName);
+	      	if( !fileDownloadLocation.isEmpty()){
 	      		response.setContentType("text/html");
 	      		PrintWriter out = response.getWriter();
 	      		response.setContentType("APPLICATION/OCTET-STREAM");
@@ -941,7 +949,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 	      		}
 	      		fileInputStream.close();
 	      		out.close();
-	      	}
+	      	
 	    }	
 	}
 

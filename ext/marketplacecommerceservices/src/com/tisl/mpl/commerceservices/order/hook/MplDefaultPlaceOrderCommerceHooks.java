@@ -424,7 +424,6 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		{
 			BigDecimal totalPrice = BigDecimal.valueOf(0);
 			double totalDeliveryPrice = 0D;
-			double totalScheduleDeliveryPrice = 0D;
 			double totalCartLevelDiscount = 0D;
 			double totalDeliveryDiscount = 0D;
 			double totalPriceForSubTotal = 0D;
@@ -491,7 +490,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				if (entryModelList.getScheduledDeliveryCharge() != null
 						&& entryModelList.getScheduledDeliveryCharge().doubleValue() > 0D)
 				{
-					totalScheduleDeliveryPrice += entryModelList.getScheduledDeliveryCharge().doubleValue();
+					totalDeliveryPrice += entryModelList.getScheduledDeliveryCharge().doubleValue();
 				}
 				else
 				{
@@ -503,8 +502,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			//totalPrice = totalPriceForSubTotal + totalConvChargeForCOD + totalDeliveryPrice
 			//		- (totalDeliveryDiscount + totalCartLevelDiscount + totalProductDiscount + totalCouponDiscount);
 			totalPrice = BigDecimal.valueOf(totalPriceForSubTotal).add(BigDecimal.valueOf(totalConvChargeForCOD))
-					.add(BigDecimal.valueOf(totalDeliveryPrice)).add(BigDecimal.valueOf(totalScheduleDeliveryPrice))
-					.subtract(BigDecimal.valueOf(totalDeliveryDiscount)).subtract(BigDecimal.valueOf(totalCartLevelDiscount))
+					.add(BigDecimal.valueOf(totalDeliveryPrice)).subtract(BigDecimal.valueOf(totalDeliveryDiscount)).subtract(BigDecimal.valueOf(totalCartLevelDiscount))
 					.subtract(BigDecimal.valueOf(totalProductDiscount)).subtract(BigDecimal.valueOf(totalCouponDiscount));
 			final DecimalFormat decimalFormat = new DecimalFormat("#.00");
 			totalPrice = totalPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);

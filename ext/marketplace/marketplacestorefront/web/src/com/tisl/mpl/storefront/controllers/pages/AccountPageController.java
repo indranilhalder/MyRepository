@@ -1614,18 +1614,26 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			final AccountAddressForm addressForm = new AccountAddressForm();
 			model.addAttribute(ModelAttributetConstants.ADDRESS_FORM, addressForm);
-			
+			final OrderData orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
 			final MplReturnsForm returnForm=new MplReturnsForm();
 			model.addAttribute(ModelAttributetConstants.RETURN_FORM, returnForm);
+		
+			 List<AddressData> addressDataList= new ArrayList<AddressData>();
 			
-			 List<String> timeSlots = mplConfigFacade.getDeliveryTimeSlots("RD");
-			 
-			 
-
-			model.addAttribute(ModelAttributetConstants.SCHEDULE_TIMESLOTS, timeSlots);
-
-			model.addAttribute(ModelAttributetConstants.ADDRESS_DATA,
-					mplCheckoutFacadeImpl.rePopulateDeliveryAddress(getAccountAddressFacade().getAddressBook()));
+         if(null != mplCheckoutFacadeImpl.rePopulateDeliveryAddress(getAccountAddressFacade().getAddressBook()) && mplCheckoutFacadeImpl.rePopulateDeliveryAddress(getAccountAddressFacade().getAddressBook()).size()>0){
+         	addressDataList=mplCheckoutFacadeImpl.rePopulateDeliveryAddress(getAccountAddressFacade().getAddressBook());
+         }else{
+         	AddressData addressData=null;
+         	if(null !=orderDetails.getDeliveryAddress()){
+         		addressData=orderDetails.getDeliveryAddress();
+         		addressDataList.add(addressData);
+         	}else if (null != orderDetails.getPaymentInfo() && null !=orderDetails.getPaymentInfo().getBillingAddress()){
+         		addressData=orderDetails.getPaymentInfo().getBillingAddress();
+         		addressDataList.add(addressData);
+         	}
+         	
+         }
+         model.addAttribute(ModelAttributetConstants.ADDRESS_DATA,addressDataList);
 			final List<ReturnReasonData> reasonDataList = getMplOrderFacade().getReturnReasonForOrderItem();
 			model.addAttribute(ModelAttributetConstants.REASON_DATA_LIST, reasonDataList);
 			model.addAttribute(ModelAttributetConstants.RETURN_PRODUCT_MAP, returnProductMap);
@@ -1638,7 +1646,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final List<StateData> stateDataList = getAccountAddressFacade().getStates();
 			final List<StateData> stateDataListNew = getFinalStateList(stateDataList);
 			model.addAttribute(ModelAttributetConstants.STATE_DATA_LIST, stateDataListNew);
-			final OrderData orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+			
 			final AddressData address = orderDetails.getDeliveryAddress();
 			storeCmsPageInModel(model, getContentPageForLabelOrId(RETURN_SUBMIT));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(RETURN_SUBMIT));
@@ -1657,9 +1665,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 				LOG.error("Exception occured for fecting CUstomer Bank details for customer ID :"+customerData.getUid()+" Actual Stack trace "+e);
 			}
 			
-			
-			
-
 			returnPincodeCheckForm.setTransactionId(transactionId);
 			returnPincodeCheckForm.setOrderCode(orderCode);
 			returnPincodeCheckForm.setUssid(ussid);
@@ -1674,7 +1679,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 				returnPincodeCheckForm.setCity(address.getTown());
 				returnPincodeCheckForm.setState(address.getState());
 				returnPincodeCheckForm.setCountry(address.getCountry().getName());
-				returnPincodeCheckForm.setLandmark(address.getLine3());
+				returnPincodeCheckForm.setLandmark(address.getLandmark());
+				returnPincodeCheckForm.setAddressLane3(address.getLine3());
 			}
 			model.addAttribute(ModelAttributetConstants.RETURN_PINCODE_FORM, returnPincodeCheckForm);
 
@@ -1692,9 +1698,21 @@ public class AccountPageController extends AbstractMplSearchPageController
 			model.addAttribute(ModelAttributetConstants.RETURNABLE_SLAVES, returnableStores);
 			try
 			{
+				boolean scheduleDatesEmpty = false;
+				List<String> timeSlots = new ArrayList<String>();
 				List<String> returnableDates = cancelReturnFacade.getReturnableDates(orderEntry);
-
+				if(null !=returnableDates && returnableDates.size()>0){
+					timeSlots = mplConfigFacade.getDeliveryTimeSlots("RD");
+				}
+				if(null !=returnableDates && returnableDates.size()>0){
+					  if(returnableDates.size()==1){
+						  scheduleDatesEmpty=true;
+					  }
+				}
+				
+				model.addAttribute(ModelAttributetConstants.SCHEDULE_TIMESLOTS, timeSlots);
 				model.addAttribute(ModelAttributetConstants.RETURN_DATES, returnableDates);
+				model.addAttribute(ModelAttributetConstants.RETURN_SCHEDULE_INFO, scheduleDatesEmpty);
 			}
 			catch (EtailNonBusinessExceptions e)
 			{

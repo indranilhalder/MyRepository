@@ -160,10 +160,8 @@ public class MPLDefaultReturnService extends DefaultReturnService implements MPL
 	@Override
 	public boolean checkProductEligibilityForRTS(List<AbstractOrderEntryModel> entries)
 	{
-      
+
 		boolean eligibleForRTS = false;
-		String productRTSValue = null;
-		String sellerRichAttrOfQuickDrop = null;
 		for (final AbstractOrderEntryModel entry : entries)
 		{
 			final ProductModel productModel = entry.getProduct();
@@ -173,12 +171,14 @@ public class MPLDefaultReturnService extends DefaultReturnService implements MPL
 				productRichAttributeModel = (List<RichAttributeModel>) productModel.getRichAttribute();
 				if (productRichAttributeModel != null && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
 				{
-					productRTSValue = productRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+					String productRTSValue = productRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
 					if(null != productRTSValue && productRTSValue.equalsIgnoreCase(MarketplacecommerceservicesConstants.YES)) {
 						eligibleForRTS = true;
 					}else {
-						return false;
+						eligibleForRTS= false;
 					}
+				}else {
+					eligibleForRTS= false;
 				}
 			}
 			if(!eligibleForRTS) {
@@ -196,20 +196,23 @@ public class MPLDefaultReturnService extends DefaultReturnService implements MPL
 						sellerRichAttributeModel = (List<RichAttributeModel>) sellerInformationModel.getRichAttribute();
 						if (sellerRichAttributeModel != null && sellerRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
 						{
-							sellerRichAttrOfQuickDrop = sellerRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+							String sellerRichAttrOfQuickDrop = sellerRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
 							if(sellerRichAttrOfQuickDrop.equalsIgnoreCase(MarketplacecommerceservicesConstants.YES)) {
 								eligibleForRTS = true;
 							}else {
-								return false;
+								eligibleForRTS = false;
 							}
+						}else {
+							eligibleForRTS = false;
 						}
 					}
+					if(!eligibleForRTS) {
+						return false;
+					}
 				}
-				
+
 			}
-			if(!eligibleForRTS) {
-				return false;
-			}
+
 		}
 		return eligibleForRTS;
 	}

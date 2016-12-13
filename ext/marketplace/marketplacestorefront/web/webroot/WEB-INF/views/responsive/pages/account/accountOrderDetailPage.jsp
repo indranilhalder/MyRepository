@@ -568,14 +568,14 @@
 												<spring:theme code="trackOrder.cancellableBefore.msg" />
 												
 											</c:if>
-											 <c:if
+											<%--  <c:if
 												test="${entry.itemReturnStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
 											 	<a
 													href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${sellerOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}">
 													<spring:theme code="text.account.returnReplace"
 														text="Return Item" />
 												</a>
-											 </c:if>
+											 </c:if> --%>
 
 											<c:if test="${entry.showInvoiceStatus eq 'true'}">
 												<a
@@ -584,9 +584,23 @@
 														code="text.account.RequestInvoice" text="Request Invoice" /></a>
 											</c:if>
 											<!-- TISCR-410 -->
-											<c:if test="${cancellationMsg eq 'true'}">
+											<%-- <c:if test="${cancellationMsg eq 'true'}">
 												<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
-											</c:if>
+											</c:if> --%>
+											
+											<c:choose>
+														 	 <c:when test="${entry.itemReturnStatus eq 'true'  and entry.giveAway eq false and entry.isBOGOapplied eq false}">
+																	<a href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${subOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}" onClick="openReturnPage('${bogoCheck}',${entry.transactionId})">
+																						<spring:theme code="text.account.returnReplace"
+																							text="Return Item"/> 
+																	</a>		 
+														  	</c:when>
+														  	<c:otherwise>
+														  		<c:if test="${entry.isCancellationMissed eq 'true'}">
+																						<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
+																</c:if>
+														  	</c:otherwise>
+														</c:choose>
 											<!-- TISCR-410 ends -->
 											
 											</div>
