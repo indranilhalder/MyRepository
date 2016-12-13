@@ -1840,6 +1840,21 @@ $(document).ready(function(){
 					}
 					});
 				}
+				if($(this).find("input.colorfamilytrlg").length > 0){
+					var selected_colour = $(this).find("input.applied-color").val();
+					$(".left-block .product-facet .facet.Colour .facet-list li.filter-colorfamilytrlg").each(function(){
+					var colour_name = $(this).find("input[name=facetValue]").val().split("_", 1);
+					if(colour_name == selected_colour){
+						$(this).addClass("selected-colour");
+					}
+					if(selected_colour == "Multicolor"){
+						if(colour_name == "Multi"){
+							$(this).addClass("selected-multi-colour");
+						}
+					}
+					});
+				}
+				
 				if($(this).find("input.size").length > 0){
 			var selected_size = $(this).find("input.applied-color").val();
 			$(".left-block .product-facet .facet.Size .facet-list li.filter-size").each(function(){
