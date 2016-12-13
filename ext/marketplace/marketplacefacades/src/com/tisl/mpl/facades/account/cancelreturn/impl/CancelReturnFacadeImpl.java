@@ -73,6 +73,7 @@ import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.marketplacecommerceservices.service.MPLRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplProcessOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.model.CRMTicketDetailModel;
 import com.tisl.mpl.ordercancel.MplOrderCancelEntry;
@@ -132,6 +133,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	private MPLRefundService mplRefundService;
 	private Converter<AbstractOrderEntryModel, OrderEntryData> orderEntryConverter;
 	private OrderCancelRecordsHandler orderCancelRecordsHandler;
+
+	@Resource(name = "mplProcessOrderService")
+	MplProcessOrderService mplProcessOrderService;
 
 	protected static final Logger LOG = Logger.getLogger(CancelReturnFacadeImpl.class);
 
@@ -330,6 +334,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 			if (omsCancellationStatus)
 			{
+				//TPR-965
+				mplProcessOrderService.removePromotionInvalidation(subOrderModel.getParentReference());
+
 				final List<AbstractOrderEntryModel> orderEntriesModel = associatedEntries(subOrderModel,
 						subOrderEntry.getTransactionId());
 				for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
@@ -493,6 +500,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 			if (omsCancellationStatus)
 			{
+				//TPR-965
+				mplProcessOrderService.removePromotionInvalidation(subOrderModel.getParentReference());
+
 				final List<AbstractOrderEntryModel> orderEntriesModel = associatedEntries(subOrderModel,
 						subOrderEntry.getTransactionId());
 				for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
