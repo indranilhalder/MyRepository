@@ -587,8 +587,8 @@
 											 <c:if test="${cancellationMsg eq 'true'}">
 												<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
 											</c:if> 
-											<%--
-											<c:choose>
+											
+											<%--  <c:choose>
 														 	 <c:when test="${entry.itemReturnStatus eq 'true'  and entry.giveAway eq false and entry.isBOGOapplied eq false}">
 																	<a href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${subOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}" onClick="openReturnPage('${bogoCheck}',${entry.transactionId})">
 																						<spring:theme code="text.account.returnReplace"
