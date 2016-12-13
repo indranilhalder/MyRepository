@@ -411,8 +411,12 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 					}
 					if (null != deliveryAddress.getCity()) {
 						cityField.setValue(deliveryAddress.getCity());
-					} else {
+						cityField.setDisabled(true);
+					} else if(null != deliveryAddress.getTown()){
 						cityField.setValue(deliveryAddress.getTown());
+						cityField.setDisabled(true);
+					}else{
+						cityField.setDisabled(false);
 					}
 					mobileNumberField.setValue(deliveryAddress.getPhone1());
 					List<Listitem> items = stateFieldListBox.getItems();
