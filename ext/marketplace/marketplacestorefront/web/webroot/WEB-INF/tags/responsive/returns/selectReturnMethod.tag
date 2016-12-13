@@ -375,8 +375,10 @@ $(document).on('click', ' .checkButton', function (event) {
 			
 			
 			$('.quickDrop .quickDropArea .error_text').show().text("please select atleast one store.");
+			$('#saveBlockData').prop('disabled', true);
 		}else{
 			$('.quickDrop .quickDropArea .error_text').hide();
+			$('#saveBlockData').prop('disabled', false);
 		}
 	
 });

@@ -474,14 +474,6 @@
 			$("#saveBlockData").click(function(event){
 				$("#changeAddressPopup").hide();
 				$(".wrapBG").hide();
-				if($(".checkButton:checked").length < 1){
-					event.preventDefault();
-					$('.quickDrop .quickDropArea .error_text').show().text("please select atleast one store.");
-					return false;
-				}else{
-					$('#returnForm').submit();
-					$('.quickDrop .quickDropArea .error_text').hide();
-				}
 			});
 			
 			$(".addNewAddressPopup").click(function(){
