@@ -515,7 +515,7 @@ ACC.carousel = {
             		dots:false,
             		navText:[],
             		autoplay: autoPlay,
-                    autoHeight : true,
+                    autoHeight : false,
                     autoplayTimeout: autoplayTimeout,
                     slideBy: slideBy,
             		responsive : {
@@ -585,7 +585,7 @@ ACC.carousel = {
             		dots:false,
             		navText:[],
             		autoplay: autoPlay,
-                    autoHeight : true,
+                    autoHeight : false,
                     autoplayTimeout: autoplayTimeout,
                     slideBy: slideBy,
             		responsive : {

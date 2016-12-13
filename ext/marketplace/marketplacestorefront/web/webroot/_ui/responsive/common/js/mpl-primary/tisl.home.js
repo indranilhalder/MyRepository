@@ -415,7 +415,7 @@ function getBrandsYouLoveAjaxCall() {
 	            		dots:false,
 	            		navText:[],
 	            		autoplay: autoPlay,
-			            autoHeight : true,
+			            autoHeight : false,
 	            		autoplayTimeout: autoplayTimeout,
 	  	               slideBy: slideBy,
 	            		responsive : {
@@ -829,7 +829,7 @@ function getBestPicksAjaxCall() {
 	            		navText:[],
 	            		lazyLoad: false,
 	            		autoplay: autoPlay,
-			            autoHeight : true,
+			            autoHeight : false,
 	            		autoplayTimeout: autoplayTimeout,
 	  	               slideBy: slideBy,
 	            		responsive : {
@@ -970,7 +970,7 @@ function getProductsYouCareAjaxCall() {
 							navText : [],
 							lazyLoad : false,
 							autoplay: autoPlay,
-				            autoHeight : true,
+				            autoHeight : false,
 							autoplayTimeout: autoplayTimeout,
 				            slideBy: slideBy,
 							responsive : {
@@ -1098,7 +1098,7 @@ function getNewAndExclusiveAjaxCall() {
 	        		navText:[],
 	        		lazyLoad: false,
 	        		autoplay: autoPlay,
-		            autoHeight : true,
+		            autoHeight : false,
 		            autoplayTimeout: autoplayTimeout,
 		            slideBy: slideBy,
 	        		responsive : {
