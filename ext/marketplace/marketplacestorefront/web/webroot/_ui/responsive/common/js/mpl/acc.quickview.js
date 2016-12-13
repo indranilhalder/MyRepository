@@ -659,7 +659,7 @@ function openPop_quick(ussidfromSeller){
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
 			+ "-addToWishListInPDP";
     var sizeSelected=true;
-    if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#categoryType").val()!='TravelAndLuggage')){
+    if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='TravelAndLuggage')){
     	sizeSelected=false;
     }
 	var dataString = 'wish=' + wishName + '&product=' + productCodePost
@@ -672,7 +672,7 @@ function openPop_quick(ussidfromSeller){
 		},3000)
 	}
 	else {
-			
+	 		
 		$.ajax({
 			contentType : "application/json; charset=utf-8",
 			url : requiredUrl,
