@@ -668,10 +668,18 @@ ReturnRequestCreateWidgetRenderer {
 				if(null != listOfReturnItemsDiv && null !=listOfReturnItemsDiv.getChildren()) {
 					listOfReturnItemsDiv.getChildren().clear();
 				}
+				Div div = new Div();
+			    div.setParent(listOfReturnItemsDiv);
+			    final Label label = new Label(LabelUtils.getLabel(widget,
+			      "selectingMultipleStores"));
+			    label.setClass("storeSelectionmsg");
+			    label.setParent(div);
 				renderStoreDetails(widget,listOfReturnItemsDiv,returnableStores,entries,storesMap);
 			}else {
 				pincodeDiv.setTooltiptext("No stores Available");
-				
+				if(null !=storesMap) {
+					storesMap.clear();
+				}
 			}
 		}
 		
@@ -689,10 +697,19 @@ ReturnRequestCreateWidgetRenderer {
 						if(null != listOfReturnItemsDiv && null !=listOfReturnItemsDiv.getChildren()) {
 							listOfReturnItemsDiv.getChildren().clear();
 						}
+						Div div = new Div();
+					    div.setParent(listOfReturnItemsDiv);
+					    final Label label = new Label(LabelUtils.getLabel(widget,
+					      "selectingMultipleStores"));
+					    label.setClass("storeSelectionmsg");
+					    label.setParent(div);
 						renderStoreDetails(widget,listOfReturnItemsDiv,returnableStores,entries,storesMap);
 					}else {
 						if(null != listOfReturnItemsDiv && null !=listOfReturnItemsDiv.getChildren()) {
 							listOfReturnItemsDiv.getChildren().clear();
+						}
+						if(null !=storesMap) {
+							storesMap.clear();
 						}
 						Messagebox.show(NO_STORE_AVAILABLE);
 						return;
@@ -701,6 +718,9 @@ ReturnRequestCreateWidgetRenderer {
 					pincodeLongbox.setFocus(true);
 					if(null != listOfReturnItemsDiv && null !=listOfReturnItemsDiv.getChildren()) {
 						listOfReturnItemsDiv.getChildren().clear();
+					}
+					if(null !=storesMap) {
+						storesMap.clear();
 					}
 					popupMessage(widget,
 							MarketplaceCockpitsConstants.PIN_CODE_INVALID);

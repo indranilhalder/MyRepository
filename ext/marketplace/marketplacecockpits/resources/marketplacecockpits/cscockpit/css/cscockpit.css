@@ -1398,7 +1398,7 @@ body .hywin a.greenLink, body .hywin a.greenLink:visited {
 	text-align: left;
 }
 
-.csContentArea .checkoutCartWidget .csCartLineDeliveryActions   {
+.csContentArea .checkoutCartWidget .csCartLineDeliveryActions ï¿½ {
 	text-align: left
 }
 
@@ -3407,11 +3407,11 @@ div.z-listbox {
 	text-align: left !important;
 }
 
-* html .appliedPromotionsWidget   {
+* html .appliedPromotionsWidget ï¿½ {
 	text-align: left !important;
 }
 
-* html .orderPaymentTransactionsWidget   {
+* html .orderPaymentTransactionsWidget ï¿½ {
 	text-align: left !important;
 }
 
@@ -3819,4 +3819,9 @@ margin-top: 15px;
     height: 16px;
     border-color: black;
     font-size: 12px;
+}
+
+.storeSelectionmsg {
+	margin-left: 450px;
+    margin-top: 25px;
 }

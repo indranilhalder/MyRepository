@@ -546,6 +546,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 			this.landMarkField = landMarkField;
 		}
 
+		
 		/**//**
 		 * On event.
 		 *
@@ -603,10 +604,12 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 						} else {
 							landMarkListbox.getItems().clear();
 							landMarkField.setDisabled(false);
+							landMarkField.setVisible(true);
 						}
 					} else {
 						cityField
 						.setValue(MarketplacecommerceservicesConstants.EMPTY);
+						cityField.setDisabled(false);
 						landMarkListbox.getItems().clear();
 						Listitem listItem;
 						listItem = new Listitem(
