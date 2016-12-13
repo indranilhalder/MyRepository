@@ -924,10 +924,15 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			HttpServletResponse response) throws ServletException, IOException {
 		String fileDownloadLocation =null;
 		String returnDownloadFileName=null;
-		 if(null!=configurationService){
-			 fileDownloadLocation=configurationService.getConfiguration().getString(RequestMappingUrlConstants.FILE_DOWNLOAD_PATH);
-			 returnDownloadFileName=configurationService.getConfiguration().getString(RequestMappingUrlConstants.RETURN_FILE_NAME );
-	      	if(null !=fileDownloadLocation && !fileDownloadLocation.isEmpty()){
+		
+			// fileDownloadLocation=configurationService.getConfiguration().getString(RequestMappingUrlConstants.FILE_DOWNLOAD_PATH);
+			 fileDownloadLocation=request.getServletContext().getRealPath("/")+ File.separator +ModelAttributetConstants.RETURN_FILE_UPLOAD_FILE_PATH_WEB_INF
+					 +File.separator+ModelAttributetConstants.RETURN_FILE_UPLOAD_FILE_PATH_DOC+File.separator;
+			 returnDownloadFileName=ModelAttributetConstants.RETURN_FILE_UPLOAD_FILE_NAME;
+
+			 LOG.debug("Return And Refund Upload File Path:"+fileDownloadLocation);
+			 LOG.debug("Return And Refund Upload File Name:"+returnDownloadFileName);
+	      	if( !fileDownloadLocation.isEmpty()){
 	      		response.setContentType("text/html");
 	      		PrintWriter out = response.getWriter();
 	      		response.setContentType("APPLICATION/OCTET-STREAM");
@@ -941,7 +946,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 	      		}
 	      		fileInputStream.close();
 	      		out.close();
-	      	}
+	      	
 	    }	
 	}
 

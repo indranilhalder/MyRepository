@@ -805,5 +805,9 @@ public final class ModelAttributetConstants
 	public static final String QUCK_DROP_PROD_LEVEL = "productRichAttrOfQuickDrop";
 	public static final String QUCK_DROP_SELLER_LEVEL = "sellerRichAttrOfQuickDrop";
 	public static final String IS_ED_ORDER ="isEDOrder";
+	
+	public static final String RETURN_FILE_UPLOAD_FILE_PATH_WEB_INF ="WEB-INF";
+	public static final String RETURN_FILE_UPLOAD_FILE_PATH_DOC ="doc";
+	public static final String RETURN_FILE_UPLOAD_FILE_NAME ="ReturnAndRefund.pdf";
 
 }
