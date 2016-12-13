@@ -672,7 +672,7 @@ function openPop_quick(ussidfromSeller){
 		},3000)
 	}
 	else {
-			
+	 		
 		$.ajax({
 			contentType : "application/json; charset=utf-8",
 			url : requiredUrl,
