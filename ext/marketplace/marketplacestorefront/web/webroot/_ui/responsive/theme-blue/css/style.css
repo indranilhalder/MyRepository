@@ -35001,7 +35001,8 @@ cursor: auto;
     width: 13px;
     display: inline-block;
 }
-.product-facet .filter-colour.selected-colour .js-facet-colourbutton {
+.product-facet .filter-colour.selected-colour .js-facet-colourbutton, 
+.product-facet .filter-colorfamilytrlg.selected-colour .js-facet-colourbutton {
     background-image: url(../images/color-tick.png);
     transition: all .2s;
     opacity: 1;
