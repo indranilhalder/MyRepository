@@ -6282,6 +6282,11 @@
 							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
 					</attribute>
+					<attribute qualifier="isInventoryChanged" type="java.lang.Boolean">
+						<modifiers optional="true" read="true" write="true" />
+						<description>for Cockpit use only</description>
+						<persistence type="property" />
+					</attribute>
 					<!-- TISPRO-540 - Payment Type -->
 				</attributes>
 			</itemtype>

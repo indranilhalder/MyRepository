@@ -689,10 +689,10 @@ public class MarketPlaceDefaultReturnsController extends
 
 					MplOrderIsCancellableResponse response = mplOrderCancelClientService
 							.orderCancelDataToOMS(request);
-					boolean cancellable = false ;
+					boolean cancellable = true ;
 					for (com.tisl.mpl.xml.pojo.MplOrderIsCancellableResponse.OrderLine line : response.getOrderLine()  ) 
 					{
-						if(line.isIsCancellable().equalsIgnoreCase("N")) {
+						if(null != line.isIsCancellable() && line.isIsCancellable().equalsIgnoreCase("N")) {
 							cancellable= false;
 							break;
 						}

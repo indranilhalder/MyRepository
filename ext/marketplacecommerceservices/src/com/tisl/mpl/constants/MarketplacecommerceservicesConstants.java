@@ -1692,6 +1692,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ALLVARIANTSSTRING = "allVariantsString";
 	public static final String CHANGE_DELIVERY_ADDRESS = "changeDeliveryAddressData";
 	public static final String RESCHEDULE_DATA_SESSION_KEY = "rescheduleDataList";
+	public static final String SCHEDULE_DELIVRY_DATA = "scheduleDeliveryData";
 
 	public static final String S = "S";
 	public static final String SELF_COURIER = "SELF_COURIER";
