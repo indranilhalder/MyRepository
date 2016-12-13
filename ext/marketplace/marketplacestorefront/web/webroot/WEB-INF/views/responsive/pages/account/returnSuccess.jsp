@@ -23,12 +23,11 @@
 	<div class="account">
 		<div class="page-header">
 			<c:choose>
-			<c:when test="${returnLogisticsCheck eq 'true'}">
+			<c:when test="${quickdrop eq 'true'}">
 			<h2><spring:message code="return.success"></spring:message></h2>
-			<span><spring:message code="return.success.message"></spring:message></span>
+			<h2><spring:message code="return.success.reverse"></spring:message></h2>
 			</c:when>
 			<c:otherwise>
-			<h2><spring:message code="return.success.reverse"></spring:message></h2>
 			<span><spring:message code="return.success.message"></spring:message></span>
 			</c:otherwise>
 			</c:choose>
@@ -41,7 +40,6 @@
 			<%-- </c:otherwise> 
 			</c:choose>--%>
 		</div>
-
 		<div class="wrapper">
 			<a class="return-order-history" href="order-history.php">Back to
 				Order History</a>
@@ -108,10 +106,14 @@
 					</div>
 					<div class="method">
 					
-					<c:if test="${refundType eq 'E'}">
 					<label>Refund Method:</label>
+					<h3>Return and Replace</h3> 
+					<c:if test="${quickdrop ne 'true'}">
+					
+					<c:if test="${refundType eq 'E'}">
+					
 					<label for="return-method-0">
-							<h3>Return and Replace</h3> <span>Estimated replaced
+							<span>Estimated replaced
 								timing: item will be shipped 1 day after we have received the
 								item.</span>
 						</label> 
@@ -132,6 +134,8 @@
 								</c:choose>
 								</span>
 						</label>
+					</c:if>
+					
 					</c:if>
 					</div>
 				</div>

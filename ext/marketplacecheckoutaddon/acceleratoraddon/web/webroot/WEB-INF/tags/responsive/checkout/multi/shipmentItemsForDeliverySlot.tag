@@ -429,7 +429,16 @@ li.deliverySlotRadio .reset{margin: 0px auto !important;    height: 30px !import
 													<c:choose>
 		      										<c:when test="${dateTimeSlotId ==1}">
 														<div class="displayClick" id="${dateTimeSlotId}">
-															<div class="greyText">(Shipped at INR ${mplconfigModel} per order)</div>
+														
+															<%-- <div class="greyText">(Shipped at INR ${mplconfigModel} per order)</div> --%>
+															<c:choose>
+																	<c:when test="${empty mplconfigModel}">
+																		<div class="greyText">(Shipped at INR 0.00 per order)</div>
+																	</c:when>
+																	<c:otherwise>
+																		<div class="greyText">(Shipped at INR ${mplconfigModel} per order)</div>
+																	</c:otherwise>
+															</c:choose>
 															<div class="timeSlotsLat">
 																<span class="selectTime">Select a time slot</span>
 																<ul class="workingTimeslots">
@@ -444,7 +453,15 @@ li.deliverySlotRadio .reset{margin: 0px auto !important;    height: 30px !import
 													</c:when>
 													<c:otherwise>
 														<div class="displayClick" id="${dateTimeSlotId}">
-															<div class="greyText">(Shipped at INR 100 per order)</div>
+															<%-- <div class="greyText">(Shipped at INR ${mplconfigModel} per order)</div> --%>
+															<c:choose>
+																	<c:when test="${empty mplconfigModel}">
+																		<div class="greyText">(Shipped at INR 0.00 per order)</div>
+																	</c:when>
+																	<c:otherwise>
+																		<div class="greyText">(Shipped at INR ${mplconfigModel} per order)</div>
+																	</c:otherwise>
+															</c:choose>
 															<div class="timeSlotsLat">
 																<span class="selectTime">Select a time slot</span>
 																<ul class="workingTimeslots">

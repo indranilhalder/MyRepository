@@ -809,5 +809,6 @@ public final class ModelAttributetConstants
 	public static final String RETURN_FILE_UPLOAD_FILE_PATH_WEB_INF ="WEB-INF";
 	public static final String RETURN_FILE_UPLOAD_FILE_PATH_DOC ="doc";
 	public static final String RETURN_FILE_UPLOAD_FILE_NAME ="ReturnAndRefund.pdf";
+	public static final String RETURN_SCHEDULE_INFO ="ScheduleDatesEmpty";
 
 }

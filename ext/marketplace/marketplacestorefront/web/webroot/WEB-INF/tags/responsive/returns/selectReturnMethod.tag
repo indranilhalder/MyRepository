@@ -186,6 +186,7 @@
 				</div>
 			</div>
 			<div class="col-md-6 col-sm-12 col-xs-12">
+			
 				<b><spring:theme code="text.order.returns.selectpickupdate"/></b><br /> <br />
 				<div class="row col-md-12 col-sm-6 col-xs-12 selectDateTime">
 					<div class="sideHead"><spring:theme code="text.order.returns.preferreddate"/></div>
@@ -208,7 +209,7 @@
 				<div class="row col-md-12 col-sm-6  col-xs-12 selectDateTime">
 					<div class="sideHead"><spring:theme code="text.order.returns.preferredtime"/></div>
 					<br />
-
+                   <c:if test="${returnDates.size()>0}">
 					<c:forEach var="timeSlot" items="${timeSlots}">
 						<div class="selectRadio time col-md-4 col-sm-4 col-xs-4">
 							<form:radiobutton  class="radioButton" value="${timeSlot}" path="scheduleReturnTime"
@@ -218,9 +219,11 @@
 							<div>${timeSlot}</div>
 						</div>
 					</c:forEach>
-
-
+				 </c:if>
 				</div>
+				<c:if test="${ScheduleDatesEmpty eq 'true'}">
+				<span>  Customer should be advised that product needs to be shipped on next immediate else the return will be deemed non eligible </span>
+				</c:if>
 			</div>
 		</div>
 

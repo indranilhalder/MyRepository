@@ -158,6 +158,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 	{
 		boolean cancellationStatus;
 		LOG.info(returnForm);
+		boolean quickdrop=false;
 		ReturnInfoData returnData=new ReturnInfoData();
 		final ReturnItemAddressData returnAddrData = new ReturnItemAddressData();
 		try{
@@ -385,6 +386,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		//for quick drop
 		if(returnForm.getReturnMethod().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_METHOD_QUICKDROP))
 		{
+			quickdrop=true;
 		RTSAndRSSReturnInfoRequestData infoRequestData=new RTSAndRSSReturnInfoRequestData();
 		OrderModel orderModel=mplOrderFacade.getOrder(returnForm.getOrderCode());
 		List<String> stores=Arrays.asList(returnForm.getStoreIds());
@@ -398,6 +400,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		infoRequestData.setReturnType(MarketplacecommerceservicesConstants.RETURN_TYPE_RTS);
 		//return info call to OMS 
 			cancelReturnFacade.retrunInfoCallToOMS(infoRequestData);
+			model.addAttribute(MarketplacecommerceservicesConstants.RETURN_METHOD_QUICKDROP, quickdrop);
 		}
 		
 		if(returnForm.getIsCODorder().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
