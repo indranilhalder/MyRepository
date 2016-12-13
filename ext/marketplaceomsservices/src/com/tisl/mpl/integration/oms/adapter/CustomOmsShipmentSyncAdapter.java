@@ -41,6 +41,7 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +50,6 @@ import org.springframework.beans.factory.annotation.Required;
 import com.hybris.oms.domain.order.OrderLine;
 import com.hybris.oms.domain.shipping.Shipment;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-
 import com.tisl.mpl.constants.MarketplaceomsservicesConstants;
 import com.tisl.mpl.core.model.ImeiDetailModel;
 import com.tisl.mpl.core.model.InvoiceDetailModel;
@@ -57,8 +57,8 @@ import com.tisl.mpl.globalcodes.utilities.MplCodeMasterUtility;
 //import com.tisl.mpl.fulfilmentprocess.events.OrderRefundEvent;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCheckInvoice;
 import com.tisl.mpl.marketplacecommerceservices.event.OrderCollectedByPersonEvent;
-
 import com.tisl.mpl.marketplaceomsservices.event.SendNotificationEvent;
+import com.tisl.mpl.marketplaceomsservices.event.SendNotificationSecondaryStatusEvent;
 import com.tisl.mpl.marketplaceomsservices.event.SendUnCollectedOrderToCRMEvent;
 import com.tisl.mpl.marketplaceomsservices.event.UnCollectedOrderToInitiateRefundEvent;
 import com.tisl.mpl.sms.MplSendSMSService;
@@ -184,7 +184,12 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 						}
 
 					}
-
+					
+					if(StringUtils.isNotEmpty(line.getAwbSecondaryStatus())){
+						sendNotification(line.getAwbSecondaryStatus(),existingConsignmentModel.getAwbSecondaryStatus(),line.getOrderLineId(),orderModel);
+					}
+				
+					existingConsignmentModel.setAwbSecondaryStatus(line.getAwbSecondaryStatus());
 					existingConsignmentModel.setTrackingID(line.getAwbNumber());
 					existingConsignmentModel.setEstimatedDelivery(line.getEstimatedDelivery());
 					existingConsignmentModel.setDeliveryDate(line.getDeliveryDate());
@@ -849,6 +854,20 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 			
 	}
 
+	
+	// R2.3 SendNotification for SecondaryStatus 
+	private void sendNotification(String newAwbSecondaryStatus, String oldAwbSecondaryStatus, String ordeLine,
+			OrderModel orderModel)
+	{
+		if (!newAwbSecondaryStatus.equalsIgnoreCase(oldAwbSecondaryStatus) && MarketplacecommerceservicesConstants.ADDRESS_ISSUE.equalsIgnoreCase(newAwbSecondaryStatus) ||
+				MarketplacecommerceservicesConstants.OFD.equalsIgnoreCase(newAwbSecondaryStatus))
+		{
+			SendNotificationSecondaryStatusEvent sendNotificationSecondaryStatusEvent = new SendNotificationSecondaryStatusEvent(
+					newAwbSecondaryStatus, ordeLine, orderModel);
+			eventService.publishEvent(sendNotificationSecondaryStatusEvent);
+		}
+	}
+	
 	/**
 	 * @return the sendSMSService
 	 */

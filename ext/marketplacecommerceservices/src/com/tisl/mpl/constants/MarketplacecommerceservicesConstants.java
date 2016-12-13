@@ -1701,6 +1701,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String REASONCODE = "03"; // Hard coded value -- I'm not happy with the product quality
 	
 	public static final String OTHER = "Other";
+	
+	public static final String OFD ="OUT FOR DELIVERY";
+	public static final String ADDRESS_ISSUE="Address Issue";
 
 
 
