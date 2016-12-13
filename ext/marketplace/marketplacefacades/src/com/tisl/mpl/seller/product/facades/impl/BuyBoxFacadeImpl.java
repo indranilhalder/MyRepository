@@ -684,7 +684,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 				sellerData.setReturnPolicy(rich.getReturnWindow());
 				sellerData.setReplacement(rich.getReplacementWindow());
-
+				sellerData.setSellerHandlingTime(rich.getSellerHandlingTime());
 				SellerInformationDataList.add(sellerData);
 
 			}

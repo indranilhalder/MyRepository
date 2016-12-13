@@ -647,7 +647,7 @@ public class MarketplaceCheckoutControllerImpl extends
 												getCommerceCartService()
 														.recalculateCart(
 																cartParameter);
-												
+												addScheduleCharges(getCartModel());
 											} catch (CalculationException e) {
 												LOG.error("Exception calculating cart ["
 														+ getCartModel() + "]", e);
@@ -678,7 +678,8 @@ public class MarketplaceCheckoutControllerImpl extends
 										cartParameter.setCart(getCartModel());
 										getCommerceCartService()
 												.recalculateCart(
-														cartParameter);		
+														cartParameter);
+										addScheduleCharges(getCartModel());
 										//getMplVoucherService().checkCartWithVoucher(getCartModel());
 									} catch (CalculationException e) {
 										LOG.error("Exception calculating cart ["
@@ -690,6 +691,15 @@ public class MarketplaceCheckoutControllerImpl extends
 							});
 		/* 382 */return (true);
 		/*     */}
+
+	protected void addScheduleCharges(CartModel cartModel) {
+		for (AbstractOrderEntryModel cartEntry : cartModel.getEntries()) {
+			if(null != cartEntry.getScheduledDeliveryCharge() && cartEntry.getScheduledDeliveryCharge() > 0.0D) {
+				cartEntry.setTotalPrice(cartEntry.getTotalPrice()+cartEntry.getScheduledDeliveryCharge());
+				modelService.save(cartEntry);
+			}
+		}
+    }
 
 	@Override
 	/*     */public void checkCustomerStatus()

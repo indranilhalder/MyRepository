@@ -406,27 +406,6 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 							if (sd.getSellerID().equalsIgnoreCase(buybox.getSellerId()))
 							{
 								data = new PincodeServiceData();
-								// Added For Seller Handling Time
-								SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussid);
-								List<RichAttributeModel> sellerRichAttributeModel = null;
-							   	int sellerHandlingTime=0;
-							   	String sellerRichAttrForHandlingTime=null;
-									if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
-									{
-										sellerRichAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
-										if (sellerRichAttributeModel != null && sellerRichAttributeModel.get(0).getSellerHandlingTime() != null)
-										{
-											sellerRichAttrForHandlingTime = sellerRichAttributeModel.get(0).getSellerHandlingTime().toString();
-											if( StringUtils.isNotEmpty(sellerRichAttrForHandlingTime)){
-												sellerHandlingTime=Integer.parseInt(sellerRichAttrForHandlingTime);
-											}
-											
-										}
-										data.setSellerHandlingTime(Integer.valueOf(sellerHandlingTime));
-									}else{
-										data.setSellerHandlingTime(Integer.valueOf(sellerHandlingTime));
-									}
-								// Close seller Handling Time
 								data.setIsCOD(sd.getIsCod());
 								data.setDeliveryModes(sd.getDeliveryModes());
 								data.setTransportMode(sd.getShippingMode());
@@ -437,6 +416,9 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 								data.setIsDeliveryDateRequired(isDeliveryDateRequired);
 								data.setPrice(buybox.getPrice());
 								data.setMopPrice(formPriceData(buybox.getPrice()));
+								if(null != sd.getSellerHandlingTime()) {
+									data.setSellerHandlingTime(Integer.valueOf(sd.getSellerHandlingTime()));
+								}
 								requestData.add(data);
 							}
 						}
@@ -458,6 +440,9 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 							data.setIsDeliveryDateRequired(isDeliveryDateRequired);
 							data.setPrice(buybox.getPrice());
 							data.setMopPrice(formPriceData(buybox.getPrice()));
+							if(null != sd.getSellerHandlingTime()) {
+								data.setSellerHandlingTime(Integer.valueOf(sd.getSellerHandlingTime()));
+							}
 							requestData.add(data);
 						}
 					}
@@ -508,27 +493,6 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 							if (sd.getSellerID().equalsIgnoreCase(buybox.getSellerId()))
 							{
 								data = new PincodeServiceData();
-								// Added For Seller Handling Time
-								SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussid);
-								List<RichAttributeModel> sellerRichAttributeModel = null;
-							   	int sellerHandlingTime=0;
-							   	String sellerRichAttrForHandlingTime=null;
-									if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
-									{
-										sellerRichAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
-										if (sellerRichAttributeModel != null && sellerRichAttributeModel.get(0).getSellerHandlingTime() != null)
-										{
-											sellerRichAttrForHandlingTime = sellerRichAttributeModel.get(0).getSellerHandlingTime().toString();
-											if( StringUtils.isNotEmpty(sellerRichAttrForHandlingTime)){
-												sellerHandlingTime=Integer.parseInt(sellerRichAttrForHandlingTime);
-											}
-											
-										}
-										data.setSellerHandlingTime(Integer.valueOf(sellerHandlingTime));
-									}else{
-										data.setSellerHandlingTime(Integer.valueOf(sellerHandlingTime));
-									}
-								// Close seller Handling Time
 								data.setIsCOD(sd.getIsCod());
 								data.setDeliveryModes(sd.getDeliveryModes());
 								if(null != sd.getShippingMode()) {
@@ -543,7 +507,6 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 								data.setMopPrice(formPriceData(buybox.getPrice()));
 								data.setIsFragile(sd.getIsFragile());
 								data.setIsPrecious(sd.getIsPrecious());
-								data.setSellerHandlingTime(123654);
 								if(null != cartId) {
 									data.setCartId(cartId);
 								}
@@ -560,7 +523,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 									LOG.debug("locationList:" + locationList.size());
 									data.setStore(locationList);
 								}
-
+								data.setSellerHandlingTime(sd.getSellerHandlingTime());
 								requestData.add(data);
 							}
 						}
@@ -601,6 +564,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 								LOG.debug("locationList:" + locationList.size());
 								data.setStore(locationList);
 							}
+							data.setSellerHandlingTime(data.getSellerHandlingTime());
 							requestData.add(data);
 						}
 					}
