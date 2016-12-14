@@ -892,10 +892,10 @@ public class MiscsController extends BaseController
 			{
 				searchState.setLuxurySiteFrom(MarketplacecommerceservicesConstants.CHANNEL_WEB);
 			}
-			else
-			{
-				searchState.setLuxurySiteFrom(MarketplacecommerceservicesConstants.CHANNEL_APP);
-			}
+			//			else
+			//			{
+			//				searchState.setLuxurySiteFrom(MarketplacecommerceservicesConstants.CHANNEL_APP);
+			//			}
 
 
 			if (CollectionUtils.isNotEmpty(wsData.getSuggestions()))
@@ -1234,7 +1234,6 @@ public class MiscsController extends BaseController
 				final ListPinCodeServiceData dataList = new ListPinCodeServiceData();
 				if (null != productCodeStr && StringUtils.isNotEmpty(productCodeStr))
 				{
-					//removed unused codes
 					List<PinCodeResponseData> response = null;
 					final PincodeModel pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(pin);
 					if (null != pinCodeModelObj)

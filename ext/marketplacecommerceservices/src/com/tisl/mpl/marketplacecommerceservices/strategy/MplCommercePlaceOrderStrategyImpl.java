@@ -84,7 +84,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 			beforePlaceOrder(parameter);
 			if (this.calculationService.requiresCalculation(cartModel))
 			{
-				LOG.error(String.format("CartModel's [%s] calculated flag was false", new Object[]
+				LOG.debug(String.format("CartModel's [%s] calculated flag was false", new Object[]
 				{ cartModel.getCode() }));
 			}
 
