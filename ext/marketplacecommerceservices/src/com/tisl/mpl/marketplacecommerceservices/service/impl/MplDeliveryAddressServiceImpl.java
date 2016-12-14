@@ -324,7 +324,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 				if (!abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getCode()
 						.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
 				{
-					if (abstractOrderEntry.getEdScheduledDate() != null)
+					if (StringUtils.isNotEmpty(abstractOrderEntry.getEdScheduledDate()))
 					{
 						isEligibleScheduledDelivery = true;
 						break;
@@ -441,6 +441,20 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 
 				}
 			}
+			
+			for (AbstractOrderEntryModel mainEntry : orderModel.getEntries())
+			{
+				if (MarketplacecommerceservicesConstants.EXPRESS_DELIVERY.equalsIgnoreCase(mainEntry.getMplDeliveryMode()
+						.getDeliveryMode().getCode()))
+				{
+					MplZoneDeliveryModeValueModel deliveryModel = mplDeliveryCostService.getDeliveryCost(
+							MarketplacecommerceservicesConstants.HOME_DELIVERY, MarketplacecommerceservicesConstants.INR,
+							mainEntry.getSelectedUSSID());
+					mainEntry.setMplDeliveryMode(deliveryModel);
+					modelService.saveAll(mainEntry);
+				}
+			}
+			
 		}
 		catch (final ModelSavingException e)
 		{
