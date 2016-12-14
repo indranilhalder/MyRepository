@@ -22,9 +22,13 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.util.PriceValue;
 
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
@@ -303,6 +307,36 @@ public class DefaultMplFindDeliveryCostStrategy extends AbstractBusinessService 
 		}
 		return null;
 
+	}
+
+	/* (non-Javadoc)
+	 * @see com.tisl.mpl.marketplacecommerceservices.strategy.MplFindDeliveryCostStrategy#getCodEligible(java.lang.String)
+	 */
+	@Override
+	public boolean getIsSshipCodEligible(String ussid)
+	{
+		boolean codEligible = false;
+		final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussid);
+		List<RichAttributeModel> richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+		if (sellerInfoModel.getRichAttribute() != null)
+		{
+			if (null != richAttributeModel.get(0).getIsSshipCodEligible())
+			{
+				final String isSshipCodEligble = richAttributeModel.get(0).getIsSshipCodEligible().getCode();
+				if(LOG.isDebugEnabled()) {
+					LOG.debug("in AddToCart isSshipCodEligble for  USSID " +ussid+" " +isSshipCodEligble);
+				}
+				if (null !=isSshipCodEligble &&  StringUtils.isNotEmpty(isSshipCodEligble)) {
+					if(isSshipCodEligble.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE) || isSshipCodEligble.equalsIgnoreCase(MarketplacecommerceservicesConstants.YES) ) 
+					{
+						codEligible = true;						}
+				}
+			}
+		}
+		if(LOG.isDebugEnabled()) {
+			LOG.debug("in AddToCart COD Eligible for  USSID " +ussid+" " +codEligible);
+		}
+		return codEligible;
 	}
 
 

@@ -6,22 +6,25 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
+import org.zkoss.util.logging.Log;
 import org.zkoss.zk.ui.api.HtmlBasedComponent;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listhead;
-import org.zkoss.zul.Listheader;
 import org.zkoss.zul.Listitem;
 
 import com.tisl.mpl.cockpits.cscockpit.services.AddressHistoryService;
 import com.tisl.mpl.cockpits.cscockpit.widgets.models.impl.AddressHistoryListWidgetModel;
+import com.tisl.mpl.core.model.MplDeliveryAddressInfoModel;
+import com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.MplDeliveryAddressDao;
 
 import de.hybris.platform.cockpit.model.meta.TypedObject;
 import de.hybris.platform.cockpit.services.config.ColumnConfiguration;
 import de.hybris.platform.cockpit.session.UISessionUtils;
 import de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.cscockpit.utils.LabelUtils;
 import de.hybris.platform.cscockpit.utils.ObjectGetValueUtils;
 import de.hybris.platform.cscockpit.widgets.controllers.CallContextController;
@@ -50,6 +53,8 @@ public class MplDeliveryAddressHistoryWidgetRenderer
 
 	@Autowired
 	private AddressHistoryService addressHistoryService;
+	@Autowired
+	private MplDeliveryAddressDao mplDeliveryAddressDao;
 	protected static final String CSS_ORDER_HISTORY = "csOrderHistory";
 
 	protected HtmlBasedComponent createContentInternal(
@@ -80,18 +85,42 @@ public class MplDeliveryAddressHistoryWidgetRenderer
 				.wrapItems(
 						new ArrayList(addressHistoryService
 								.getHistoryEntries(orderModel)));
+		
 		if (!((AddressHistoryListWidgetModel) widget.getWidgetModel())
 				.getItems().isEmpty()) {
 			Listhead header = new Listhead();
 			header.setParent(listBox);
 			List<ColumnConfiguration> columns = getColumnConfigurations();
 			populateHeaderRow(widget, header, columns);
-
+			
 			for (TypedObject orderHistory : (widget.getWidgetModel())
 					.getItems()) {
 				renderOrderHistory(widget, orderHistory, listBox, columns);
 			}
-
+			AddressModel bollingAddress = orderModel.getPaymentAddress();
+			try {
+				MplDeliveryAddressInfoModel  mplDeliveryAddressInfoModel = null;
+				if(null != orderModel.getType() && orderModel.getType().equalsIgnoreCase("PARENT")) {
+					mplDeliveryAddressInfoModel = mplDeliveryAddressDao
+							.getMplDeliveryAddressReportModelByOrderId(orderModel.getCode());
+				}else {
+					mplDeliveryAddressInfoModel = mplDeliveryAddressDao
+							.getMplDeliveryAddressReportModelByOrderId(orderModel.getParentReference().getCode());
+				}
+				if(null !=bollingAddress && null != mplDeliveryAddressInfoModel) {
+					int rejectsCount = mplDeliveryAddressInfoModel.getChangeDeliveryRejectsCount();
+					int totalRequests = mplDeliveryAddressInfoModel.getChangeDeliveryTotalRequests();
+					if(totalRequests != 0 && totalRequests != rejectsCount) {
+						TypedObject address = UISessionUtils.getCurrentSession().getTypeService().wrapItem(bollingAddress);
+						if(null !=address ) {
+							renderOrderHistory(widget, address, listBox, columns);
+						}
+					}
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+			
 		} else {
 			Listitem row = new Listitem();
 			row.setParent(listBox);

@@ -76,6 +76,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 	protected static final String FAILED_VALIDATION = "failedValidation";
 	private static final String USE_WEBSITE_FOR_COD = "useWebsiteForCOD";
 	private static final String PIN_REGEX = "^[1-9][0-9]{5}";
+			private static final String NAME_REGEX = "^[A-Za-z][ A-Za-z]{1,20}";
 	private boolean isChangeDeliveryAddress;
 
 	public boolean getIsChangeDeliveryAddress() {
@@ -824,6 +825,12 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 						Messagebox.OK, Messagebox.ERROR);
 				// valid = Boolean.FALSE;
 				return;
+			}else if (!(firstNameField.getValue().trim().matches("^[A-Za-z][ A-Za-z]{1,20}")) ) {
+				Messagebox.show(
+						LabelUtils.getLabel(widget, "invalidFirstName"),
+						LabelUtils.getLabel(widget, FAILED_VALIDATION),
+						Messagebox.OK, Messagebox.ERROR);
+				return;
 			} else if (firstNameField.getValue().length() > 20) {
 				Messagebox.show(
 						LabelUtils.getLabel(widget, "invalidFirstNameLength"),
@@ -837,6 +844,12 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 						LabelUtils.getLabel(widget, FAILED_VALIDATION),
 						Messagebox.OK, Messagebox.ERROR);
 				// valid = Boolean.FALSE;
+				return;
+			} else if (!(lastNameField.getValue().trim().matches(NAME_REGEX)) ) {
+				Messagebox.show(
+						LabelUtils.getLabel(widget, "invalidLastName"),
+						LabelUtils.getLabel(widget, FAILED_VALIDATION),
+						Messagebox.OK, Messagebox.ERROR);
 				return;
 			} else if (lastNameField.getValue().length() > 20) {
 				Messagebox.show(
@@ -905,7 +918,13 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 						 LabelUtils.getLabel(widget, FAILED_VALIDATION),
 						 Messagebox.OK, Messagebox.ERROR);
 				 return;
-			 } else if (stateFieldListBox.getSelectedItem() == null
+			 }else if (!(cityField.getValue().trim().matches(NAME_REGEX)) ) {
+					Messagebox.show(
+							LabelUtils.getLabel(widget, "invalidCityName"),
+							LabelUtils.getLabel(widget, FAILED_VALIDATION),
+							Messagebox.OK, Messagebox.ERROR);
+					return;
+				}  else if (stateFieldListBox.getSelectedItem() == null
 					 || stateFieldListBox.getSelectedItem().getLabel()
 					 .equalsIgnoreCase("Select")) {
 				 Messagebox.show(

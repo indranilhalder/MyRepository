@@ -82,6 +82,7 @@ ReturnRequestCreateWidgetRenderer {
 	private TypeService cockpitTypeService;
 	@Autowired
 	private ModelService modelService;
+	@Autowired
 	private Populator<AddressModel, AddressData> addressPopulator;
 	@Autowired
 	private PointOfServicePopulator pointOfServicePopulator;
@@ -942,10 +943,16 @@ ReturnRequestCreateWidgetRenderer {
 				timeGruop.setSelectedIndex(0);
 			}
 						
-			RescheduleData scheduleData = new RescheduleData();			
-			scheduleData.setDate(dateGroup.getSelectedItem().getLabel());
-			scheduleData.setTime(timeGruop.getSelectedItem().getLabel());
-			scheduleData.setProductCode(entry.getProduct().getCode());
+			RescheduleData scheduleData = new RescheduleData();	
+			if(null != dateGroup && null != dateGroup.getSelectedItem() && null != dateGroup.getSelectedItem().getLabel()) {
+				scheduleData.setDate(dateGroup.getSelectedItem().getLabel());
+			}
+			if(null != dateGroup && null != dateGroup.getSelectedItem() && null != dateGroup.getSelectedItem().getLabel()) {
+				scheduleData.setTime(timeGruop.getSelectedItem().getLabel());
+			}
+			if(null != dateGroup && null != dateGroup.getSelectedItem() && null != dateGroup.getSelectedItem().getLabel()) {
+				scheduleData.setProductCode(entry.getProduct().getCode());
+			}
 			scheduleDeliveryDates.add(scheduleData);
 			dateGroup.addEventListener(Events.ON_CHECK, new EventListener() {
 				@Override

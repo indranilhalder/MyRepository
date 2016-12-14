@@ -138,9 +138,11 @@ public class MplChangeDeliveryOTPWidgetRenderer
 		return getCallContextController().getCurrentOrder();
 	}
 
+	int otpResendCount ;
 	protected HtmlBasedComponent createContentInternal(
 			final Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,
 			HtmlBasedComponent rootContainer) {	
+		otpResendCount= 0;
 		Div content = new Div();	
 		final Div SDAreaDiv = new Div();
 		content.appendChild(SDAreaDiv);
@@ -228,7 +230,7 @@ public class MplChangeDeliveryOTPWidgetRenderer
 		
 	}
 
-	private void createOtpArea(Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,AddressModel deliveryAddress, Div content,final List<TransactionSDDto>  ScheduledeliveryDtoList) {
+	private void createOtpArea(final Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,AddressModel deliveryAddress, Div content,final List<TransactionSDDto>  ScheduledeliveryDtoList) {
 		final Div otpAreaDiv = new Div();
 		content.appendChild(otpAreaDiv);
 		final OrderModel  orderModel = (OrderModel) getOrder().getObject();
@@ -237,6 +239,8 @@ public class MplChangeDeliveryOTPWidgetRenderer
 		} catch (InvalidKeyException | NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
+		final Div otpLimitsDiv = new Div();
+		otpLimitsDiv.setParent(otpAreaDiv);
 		final Hbox otpHbox = createHbox(widget, "OTP", false, true);
 		otpHbox.setClass("hbox");
 		final Textbox OTPTextBox = createTextbox(otpHbox);
@@ -259,6 +263,24 @@ public class MplChangeDeliveryOTPWidgetRenderer
 			@Override
 			public void onEvent(Event arg0) throws Exception {
 				handleResendOtpButtonClickEvent(orderModel, resendOtp);
+				if(null != otpLimitsDiv && null != otpLimitsDiv.getChildren()){
+					otpLimitsDiv.getChildren().clear();
+				}
+				int  remainingotpLimits= 10 - otpResendCount;
+				if(LOG.isDebugEnabled()){
+					LOG.debug("Limits Remaining  For Resending OTP:"+remainingotpLimits);
+				}
+				final Label otpLimitsMessageLabel = new Label(LabelUtils.getLabel(widget,
+						"resendOtpLimits",
+						new Object[] { remainingotpLimits}));
+				otpLimitsMessageLabel.setClass("otpLimitsDiv");
+				otpLimitsMessageLabel.setParent(otpLimitsDiv);
+				if(otpResendCount>=10) {
+					resendOtp.setVisible(false);
+					if(null != otpLimitsDiv && null != otpLimitsDiv.getChildren()){
+						otpLimitsDiv.getChildren().clear();
+					}
+				}
 			}
 		});
 		validateOTP.addEventListener(
@@ -612,7 +634,13 @@ public class MplChangeDeliveryOTPWidgetRenderer
 	private void handleResendOtpButtonClickEvent(OrderModel ordermodel,
 			Toolbarbutton resendOtp) throws InvalidKeyException,
 			NoSuchAlgorithmException {
-		sendSmsToCustomer(ordermodel);
+		try {
+			sendSmsToCustomer(ordermodel);
+			otpResendCount++;
+		}catch(Exception e) {
+			LOG.error("Exception while sending sms to customer for change delivery :"+e.getMessage());
+		}
+		
 	}
 
 	// To send SMS
