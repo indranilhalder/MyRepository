@@ -1719,7 +1719,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				String sellerScheduleDelivery = null;
 				String selectedUssId = null;
 				String fulfillmentType = null;
-				final List<String> dateList = new ArrayList<String>();
+				List<String> dateList ;
 				final InvReserForDeliverySlotsRequestData deliverySlotsRequestData = new InvReserForDeliverySlotsRequestData();
 				deliverySlotsRequestData.setCartId(cartDataSupport.getGuid());
 				final InvReserForDeliverySlotsResponseData deliverySlotsResponseData = getMplCartFacade()
@@ -1727,7 +1727,26 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				final MplBUCConfigurationsModel configModel = mplConfigFacade.getDeliveryCharges();
 				final MplLPHolidaysModel mplLPHolidaysModel = mplConfigFacade
 						.getMplLPHolidays(MarketplacecommerceservicesConstants.CAMPAIGN_URL_ALL);
-
+				final Map<String, List<String>> dateTimeslotMapList = new HashMap<String, List<String>>();
+				
+				
+				final CartModel cartModel = getCartService().getSessionCart();
+				final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
+				for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
+				{
+					if (null != cartEntryModel && null != cartEntryModel.getMplDeliveryMode())
+					{
+						if (null != cartEntryModel.getEdScheduledDate() && StringUtils.isNotEmpty(cartEntryModel.getEdScheduledDate()))
+						{
+							cartEntryModel.setEdScheduledDate("".trim());
+							cartEntryModel.setTimeSlotFrom("".trim());
+							cartEntryModel.setTimeSlotTo("".trim());
+							
+						}
+					}
+			  }
+				modelService.saveAll(cartEntryList);
+				
 				for (final String selectedDeliveryModes : deliveryModelList)
 				{
 					final String[] splitString = selectedDeliveryModes.split(MarketplacecommerceservicesConstants.COMMA);
@@ -1763,28 +1782,34 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 												&& fulfillmentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP.toUpperCase()))
 										{
 
+											mplCheckoutFacade.constructDeliverySlotsForEDAndHD(deliverySlotsResponse, cartEntryData,
+													mplLPHolidaysModel);
+											dateList = new ArrayList<String>();
+											if (null != cartEntryData.getDeliverySlotsTime() && cartEntryData.getDeliverySlotsTime().size() > 0)
+											{
+												
+												for (final Entry<String, List<String>> entry : cartEntryData.getDeliverySlotsTime().entrySet())
+												{
+													dateList.add(entry.getKey());
+												}
+											}
+											String startAndEndDates = null;
+											if (dateList.size() > 0)
+											{
+												startAndEndDates = dateList.get(0) + MarketplacecommerceservicesConstants.AND
+														+ dateList.get(dateList.size() - 1);
+												
+												selectedDateBetWeen.put(cartEntryData.getSelectedUssid(), startAndEndDates);
+											}
 											if (deliverySlotsResponse.getIsScheduled().equalsIgnoreCase(
 													MarketplacecommerceservicesConstants.Y))
 											{
 												isScheduleServiceble = true;
+												
+											}else{
+												cartEntryData.setDeliverySlotsTime(dateTimeslotMapList);
 											}
-												mplCheckoutFacade.constructDeliverySlotsForEDAndHD(deliverySlotsResponse, cartEntryData,
-														mplLPHolidaysModel);
-												if (null != cartEntryData.getDeliverySlotsTime() && cartEntryData.getDeliverySlotsTime().size() > 0)
-												{
-													for (final Entry<String, List<String>> entry : cartEntryData.getDeliverySlotsTime().entrySet())
-													{
-														dateList.add(entry.getKey());
-													}
-												}
-												String startAndEndDates = null;
-												if (dateList.size() > 0)
-												{
-													startAndEndDates = dateList.get(0) + MarketplacecommerceservicesConstants.AND
-															+ dateList.get(dateList.size() - 1);
-													
-													selectedDateBetWeen.put(cartEntryData.getSelectedUssid(), startAndEndDates);
-												}
+														
 										}
 										else if (cartEntryData.getSelectedUssid().equalsIgnoreCase(deliverySlotsResponse.getUssId())
 												&& fulfillmentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.SSHIP.toUpperCase()))
@@ -1793,7 +1818,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 											mplCheckoutFacade.constructDeliverySlotsForEDAndHD(deliverySlotsResponse, cartEntryData,
 													mplLPHolidaysModel);
 											
-											
+											dateList = new ArrayList<String>();
 											if (null != cartEntryData.getDeliverySlotsTime() && cartEntryData.getDeliverySlotsTime().size() > 0)
 											{
 												for (final Entry<String, List<String>> entry : cartEntryData.getDeliverySlotsTime().entrySet())
@@ -1808,7 +1833,6 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 														+ dateList.get(dateList.size() - 1);
 												selectedDateBetWeen.put(cartEntryData.getSelectedUssid(), startAndEndDates);
 											}
-											final Map<String, List<String>> dateTimeslotMapList = new HashMap<String, List<String>>();
 											cartEntryData.setDeliverySlotsTime(dateTimeslotMapList);
 										}
 									}
@@ -1827,7 +1851,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				final DecimalFormat df = new DecimalFormat("#.00");
 				if (configModel.getSdCharge() > 0)
 				{
-					final CartModel cartModel = getCartService().getSessionCart();
+					//final CartModel cartModel = getCartService().getSessionCart();
 					cartDataSupport.setDeliverySlotCharge(mplCheckoutFacade.createPrice(cartModel,
 							Double.valueOf(configModel.getSdCharge())));
 					deliverySlotCharge = df.format(configModel.getSdCharge());
