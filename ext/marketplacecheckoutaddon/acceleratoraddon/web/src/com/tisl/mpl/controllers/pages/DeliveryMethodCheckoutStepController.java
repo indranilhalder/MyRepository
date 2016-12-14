@@ -1809,6 +1809,10 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 											}else{
 												cartEntryData.setDeliverySlotsTime(dateTimeslotMapList);
 											}
+											//cartEntryData.isIsBOGOapplied() ||
+											if(cartEntryData.isGiveAway()){
+												cartEntryData.setDeliverySlotsTime(dateTimeslotMapList);
+											}
 														
 										}
 										else if (cartEntryData.getSelectedUssid().equalsIgnoreCase(deliverySlotsResponse.getUssId())

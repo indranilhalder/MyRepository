@@ -470,24 +470,13 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 								modelService.save(cart);
 								modelService.refresh(cart);
 							}
-							calculatetotals(cart);
 						}
 					}
 					else
 					{
 						throw new Exception("Error in Inventory Reservation in CSCockpit");
 					}
-					/*for(InventoryReservResponse entry: response.getItem()){
-						if(!"success".equalsIgnoreCase(entry.getReservationStatus()) ){
-							errorMessages.add(new ResourceMessage("placeOrder.validation.cartItemNotReserved",
-									Arrays.asList(entry.getUSSID(), entry.getAvailableQuantity()==null?entry.getReservationStatus():entry.getAvailableQuantity())));
-						} else{
-							// cart.setAddressConfirmationFlag(true);
-							cart.setCartReservationDate(new Date());
-							modelService.save(cart);
-							modelService.refresh(cart);
-						}
-					}*/
+		
 				} catch (Exception ex) {
 					isCartReserved = Boolean.FALSE;
 					cart.setCartReservationDate(null);
@@ -509,17 +498,6 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 
 	}
 	
-   private void calculatetotals(CartModel cart) {
-		// TODO Auto-generated method stub
-	   CommerceCartParameter cartParameter = new CommerceCartParameter();
-		cartParameter.setCart(getCartModel());
-		for (AbstractOrderEntryModel cartEntry : getCartModel().getEntries()) {
-			if(null != cartEntry.getScheduledDeliveryCharge() && cartEntry.getScheduledDeliveryCharge() !=0.0D)
-			cartEntry.setScheduledDeliveryCharge(0.0D);
-			modelService.save(cartEntry);
-		}
-	   calculationStrategy.recalculateCart(cartParameter);
-	}
 
 /**
 	 * Gets the cart data.
@@ -1127,8 +1105,6 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		{
 			CartModel cartModel = getCartModel();
 			calculateCartInContext(cartModel);
-			resetDeliveryCostifNeeded(cartModel);
-			addScheduleChargesIfAny(cartModel);
 			validateBasketReadyForCheckout(cartModel);
 			setDeliveryAddressIfAvailable(cartModel);
 			setDeliveryModeIfAvailable(cartModel);

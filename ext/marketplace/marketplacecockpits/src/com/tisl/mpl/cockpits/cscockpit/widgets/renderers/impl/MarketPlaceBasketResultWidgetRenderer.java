@@ -593,10 +593,11 @@ public class MarketPlaceBasketResultWidgetRenderer<SC extends CsFacetSearchComma
 					.getWidgetController()).setCurrentSite();
 
 			//TISUAT-4526 no sship in cod
-			if(!mplFindDeliveryCostStrategy.isTShip(ussid)){
-				popupMessage(widget,"noSellerCOD");
-				return;
-			}
+			// commenting below line since from R2.3 SSHIP COD IS eligible  if seller Allows
+//			if(!mplFindDeliveryCostStrategy.isTShip(ussid)){
+//				popupMessage(widget,"noSellerCOD");
+//				return;
+//			}
 				
 			List<PinCodeResponseData> pinCodeResponses = ((MarketplaceSearchCommandController) widget
 					.getWidgetController()).getResponseForPinCode(product,

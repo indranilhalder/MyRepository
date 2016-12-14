@@ -32,4 +32,10 @@ public interface MplFindDeliveryCostStrategy extends FindDeliveryCostStrategy
 	//String findDeliveryFulfillMode(String selectedUssid);
 	//TPR-622,627--- CSCOCKPIT Add to cart to get and isSshipCodEligble checking need to done for SSHIP Products hence return type changed
 	RichAttributeModel findDeliveryFulfillMode(String selectedUssid);
+
+	/**
+	 * @param ussid
+	 * @return
+	 */
+	boolean getIsSshipCodEligible(String ussid);
 }

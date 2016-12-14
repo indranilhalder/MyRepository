@@ -228,7 +228,7 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 			}
 		}
 		createRadiobuttonForDateAndTime(widget,orderEntry,dateTimeslotMapList,parent);
-
+		
 	}
 	private void populateScheduledDeliveryHeaders(
 			ListboxWidget<CheckoutCartWidgetModel, CheckoutController> widget,
@@ -301,7 +301,7 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 				Radio.setLabel(date);
 				Radio.setParent(DateDiv);
 				dateGroup.appendChild(Radio);
-				if(orderEntry.getScheduledDeliveryCharge() > 0.0D && date.equalsIgnoreCase(selectedDate)) {
+				if(date.equalsIgnoreCase(selectedDate)) {
 					Radio.setSelected(true);
 				}
 			}
@@ -330,7 +330,7 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 						radio.setLabel(time.trim());
 						radio.setParent(timeDiv1);
 						radioTimeGroup.appendChild(radio);
-						if(orderEntry.getScheduledDeliveryCharge() > 0.0D && null != selectedTime) {
+						if(null != selectedTime) {
 							if(time.trim().startsWith(selectedTime.trim())){
 								radio.setSelected(true);
 							}
@@ -427,20 +427,20 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 				}
 				
 				CartModel cartModel = (CartModel) orderEntry.getOrder();
-				if(null != cartModel.getEntries() && orderEntry.getScheduledDeliveryCharge() != 0.0D ) { 
-					cartModel.setTotalPrice(cartModel.getTotalPrice() - orderEntry.getScheduledDeliveryCharge());
-					cartModel.setScheduleDelCharge(cartModel.getScheduleDelCharge() - orderEntry.getScheduledDeliveryCharge());
-				} 
-				if(null != orderEntry && orderEntry.getScheduledDeliveryCharge() != 0.0D) {
-					orderEntry.setTotalPrice(orderEntry.getTotalPrice() - orderEntry.getScheduledDeliveryCharge());
-					orderEntry.setScheduledDeliveryCharge(0.0D);
-				} 
-
+//				if(null != cartModel.getEntries() && orderEntry.getScheduledDeliveryCharge() != 0.0D ) { 
+//					cartModel.setTotalPrice(cartModel.getTotalPrice() - orderEntry.getScheduledDeliveryCharge());
+//					cartModel.setScheduleDelCharge(cartModel.getScheduleDelCharge() - orderEntry.getScheduledDeliveryCharge());
+//				} 
+//				if(null != orderEntry && orderEntry.getScheduledDeliveryCharge() != 0.0D) {
+//					orderEntry.setTotalPrice(orderEntry.getTotalPrice() - orderEntry.getScheduledDeliveryCharge());
+//					orderEntry.setScheduledDeliveryCharge(0.0D);
+//				} 
+//
 				try {
 					modelService.save(orderEntry);
 					modelService.save(cartModel);
 				//	modelService.refresh(cartModel);
-					((BasketController)widget.getWidgetController().getBasketController()).dispatchEvent(null, widget, null);
+				//	((BasketController)widget.getWidgetController().getBasketController()).dispatchEvent(null, widget, null);
 				}catch(Exception e) {
 					e.printStackTrace();
 				}
@@ -515,33 +515,34 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 		String toTime=fromAndToTime[1];
 		orderEntry.setTimeSlotFrom(fromTime);
 		orderEntry.setTimeSlotTo(toTime);
+		CartModel cartModel = (CartModel) orderEntry.getOrder();
 		try {
-			Double ScheduleDeliveryCharges = 0.0D;
-			Double orderScheduleCharges  = 0.0D;
-			Double totalDeliveryCharges  = 0.0D;
-			ScheduleDeliveryCharges = ((MarketplaceCheckoutController) widget.getWidgetController()).getScheduleDeliveryCharges();
-			CartModel cartModel = (CartModel) orderEntry.getOrder();
-			if(ScheduleDeliveryCharges != 0.0D && orderEntry.getScheduledDeliveryCharge() == 0.0D) {
-				orderEntry.setScheduledDeliveryCharge(ScheduleDeliveryCharges);
-				Double totalOrderPrice = cartModel.getTotalPrice()+ScheduleDeliveryCharges;
-				Double orderEntryTotal = orderEntry.getTotalPrice()+ScheduleDeliveryCharges;
-				if(null != cartModel.getDeliveryCost() && cartModel.getDeliveryCost() >0.0D) {
-					totalDeliveryCharges = cartModel.getDeliveryCost() + ScheduleDeliveryCharges;
-				}else {
-					totalDeliveryCharges = ScheduleDeliveryCharges;
-				}
-				cartModel.setDeliveryCost(totalDeliveryCharges);
-				orderEntry.setTotalPrice(orderEntryTotal);
-				cartModel.setTotalPrice(totalOrderPrice);
-			}
+//			Double ScheduleDeliveryCharges = 0.0D;
+//			Double orderScheduleCharges  = 0.0D;
+//			Double totalDeliveryCharges  = 0.0D;
+//			ScheduleDeliveryCharges = ((MarketplaceCheckoutController) widget.getWidgetController()).getScheduleDeliveryCharges();
+//			CartModel cartModel = (CartModel) orderEntry.getOrder();
+//			if(ScheduleDeliveryCharges != 0.0D && orderEntry.getScheduledDeliveryCharge() == 0.0D) {
+//				orderEntry.setScheduledDeliveryCharge(ScheduleDeliveryCharges);
+//				Double totalOrderPrice = cartModel.getTotalPrice()+ScheduleDeliveryCharges;
+//				Double orderEntryTotal = orderEntry.getTotalPrice()+ScheduleDeliveryCharges;
+//				if(null != cartModel.getDeliveryCost() && cartModel.getDeliveryCost() >0.0D) {
+//					totalDeliveryCharges = cartModel.getDeliveryCost() + ScheduleDeliveryCharges;
+//				}else {
+//					totalDeliveryCharges = ScheduleDeliveryCharges;
+//				}
+//				cartModel.setDeliveryCost(totalDeliveryCharges);
+//				orderEntry.setTotalPrice(orderEntryTotal);
+//				cartModel.setTotalPrice(totalOrderPrice);
+//			}
 			modelService.save(orderEntry);
 			modelService.save(cartModel);
 			modelService.refresh(cartModel);
-			try {
-				((BasketController)widget.getWidgetController().getBasketController()).dispatchEvent(null, widget, null);
-			}catch(Exception e) {
-				e.printStackTrace();
-			}
+//			try {
+//				((BasketController)widget.getWidgetController().getBasketController()).dispatchEvent(null, widget, null);
+//			}catch(Exception e) {
+//				e.printStackTrace();
+//			}
 
 		}catch(Exception e) {
 			LOG.error("Exception occurred While Saving Order Entry"+e.getMessage());

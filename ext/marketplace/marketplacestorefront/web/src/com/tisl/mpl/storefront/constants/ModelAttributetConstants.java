@@ -798,7 +798,7 @@ public final class ModelAttributetConstants
 	public static final String RETURN_SLOT_TYPE = "RD";
 	public static final String CUSTOMER_BANK_DETAILS = "customerBankDetails";
 
-	public static final String LPNOTAVAILABLE_ERRORMSG = "Logistic Provider not available for given pincode ";
+	public static final String LPNOTAVAILABLE_ERRORMSG = " Sorry! Pick up is not avaiable for your area. You can still return the item by Dropping in store or by slef shipping the product.";
 	public static final String MPL_RETURN_INFO_FORM = "mplReturnInfoForm";
 	public static final String RETURN_METHOD = "returnMethod";
 	

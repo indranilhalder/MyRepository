@@ -268,7 +268,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			{
 				final String isPrecious = richAttributeModel.get(0).getIsPrecious().getCode().toUpperCase();
 				
-				if(isPrecious.equalsIgnoreCase(MarketplaceomsservicesConstants.YES) || isPrecious.equalsIgnoreCase(MarketplaceomsservicesConstants.Y)){
+				if(isPrecious.equalsIgnoreCase("YES") || isPrecious.equalsIgnoreCase(MarketplaceomsservicesConstants.Y)){
 					target.setIsPrecious(MarketplaceomsservicesConstants.Y);
 				}else{
 					target.setIsPrecious(MarketplaceomsservicesConstants.N);
@@ -277,6 +277,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			}
 			else
 			{
+				target.setIsPrecious(MarketplaceomsservicesConstants.N);
 				LOG.debug("CustomOmsOrderLinePopulator : IsFragile  is null ");
 			}
 			
@@ -285,7 +286,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 
 			{
 				final String isFragile = richAttributeModel.get(0).getIsFragile().getCode().toUpperCase();
-				if(isFragile.equalsIgnoreCase(MarketplaceomsservicesConstants.YES) || isFragile.equalsIgnoreCase(MarketplaceomsservicesConstants.Y)){
+				if(isFragile.equalsIgnoreCase("YES") || isFragile.equalsIgnoreCase(MarketplaceomsservicesConstants.Y)){
 					target.setIsFragile(MarketplaceomsservicesConstants.Y);
 				}else{
 					target.setIsFragile(MarketplaceomsservicesConstants.N);
@@ -293,6 +294,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			}
 			else
 			{
+				target.setIsPrecious(MarketplaceomsservicesConstants.N);
 				LOG.debug("CustomOmsOrderLinePopulator : IsFragile  is null ");
 			}
 

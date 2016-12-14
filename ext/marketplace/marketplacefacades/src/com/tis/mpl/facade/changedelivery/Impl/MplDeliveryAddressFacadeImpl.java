@@ -871,30 +871,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 			for (final Entry<String, TransactionEddDto> key : mapTransactionEddDto.entrySet())
 			{
 				final TransactionEddDto transactionEddDto = key.getValue();
-				String deliveryMode = null;
-				for (final OrderModel subOrder : orderModel.getChildOrders())
-				{
-					for (final AbstractOrderEntryModel abstractOrderEntryModel : subOrder.getEntries())
-					{
-						if (transactionEddDto.getTransactionID().equalsIgnoreCase(abstractOrderEntryModel.getTransactionID()))
-						{
-							deliveryMode = abstractOrderEntryModel.getMplDeliveryMode().getDeliveryMode().getCode();
-							break;
-						}
-					}
-					if (StringUtils.isNotEmpty(deliveryMode))
-					{
-						break;
-					}
-				}
-				if (MarketplacecommerceservicesConstants.HOME_DELIVERY.equalsIgnoreCase(deliveryMode))
-				{
-					timeSlotType = MarketplacecommerceservicesConstants.INTERFACE_TYPE_SD;
-				}
-				else
-				{
-					timeSlotType = MarketplacecommerceservicesConstants.ED;
-				}
+			   timeSlotType = MarketplacecommerceservicesConstants.INTERFACE_TYPE_SD;
 				ServicesUtil.validateParameterNotNull(timeSlotType, "timeSlotType must not be null");
 				if (LOG.isDebugEnabled())
 				{
@@ -978,14 +955,9 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		final String deteWithOutTIme = dateUtilHelper.getDateFromat(estDeliveryDateAndTime, format);
 		final String timeWithOutDate = dateUtilHelper.getTimeFromat(estDeliveryDateAndTime);
 		List<String> calculatedDateList = null;
-		if (timeSlotType.equalsIgnoreCase(MarketplacecommerceservicesConstants.INTERFACE_TYPE_SD))
-		{
-			calculatedDateList = dateUtilHelper.getDeteList(deteWithOutTIme, format, 3);
-		}
-		else
-		{
-			calculatedDateList = dateUtilHelper.getDeteList(deteWithOutTIme, format, 2);
-		}
+		
+		calculatedDateList = dateUtilHelper.getDeteList(deteWithOutTIme, format, 3);
+		
 		List<MplTimeSlotsModel> modelList = null;
 		modelList = mplConfigFacade.getDeliveryTimeSlotByKey(timeSlotType);
 		LOG.debug("********* Delivery Mode :" + timeSlotType);
