@@ -222,7 +222,7 @@
 				 </c:if>
 				</div>
 				<c:if test="${ScheduleDatesEmpty eq 'true'}">
-				<span>  Customer should be advised that product needs to be shipped on next immediate else the return will be deemed non eligible </span>
+				<span> The Product needs to be shipped on next immediate else the return will be deemed non eligible  </span>
 				</c:if>
 			</div>
 		</div>
