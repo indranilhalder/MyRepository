@@ -136,16 +136,7 @@
 			<hbox pack="center" style="width:100%">
 				<button onClick="@command('saveAllTransactions')"
 					label="Save" />
-			</hbox>
-			<separator spacing="20px" />
-			<hbox>
-				<label sclass="heading" value="Lp Awb Bulk Upload " />
-				<textbox id="LPBulkUploadTextBox" disabled="true"  value="@bind(vm.lpAwbBulkUploadTextBo)"/>
-				<button sclass="uploadTxtbox" label="upload"
-					upload="true,maxsize=302400,accept=.csv"
-					onUpload="@command('onUploadLPAwbCSV',upEvent=event)">
-				</button>
-			</hbox>
+			</hbox>	
 		</div>
 	</vlayout>
 

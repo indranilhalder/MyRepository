@@ -3,7 +3,6 @@
  */
 package com.techouts.backoffice.widget.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +11,6 @@ import java.util.Map;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.zkoss.bind.BindContext;
 import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
@@ -21,7 +19,6 @@ import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.event.UploadEvent;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zul.Listitem;
@@ -78,7 +75,6 @@ public class AwbEditWidgetController extends DefaultWidgetController
 	@WireVariable
 	private transient AuthorityGroupService authorityGroupService;
 	private transient AuthorityGroup activeUserRole;
-	private String lpAwbBulkUploadTextBo = "";
 
 	@Init
 	@NotifyChange(
@@ -509,43 +505,4 @@ public class AwbEditWidgetController extends DefaultWidgetController
 		return _rowRenderer;
 	}
 
-	@Command
-	@NotifyChange("lpAwbBulkUploadTextBo")
-	public void onUploadLPAwbCSV(@ContextParam(ContextType.BIND_CONTEXT) final BindContext ctx)
-			throws IOException, InterruptedException
-	{
-		UploadEvent upEvent = null;
-		final Object objUploadEvent = ctx.getTriggerEvent();
-		if (objUploadEvent != null && (objUploadEvent instanceof UploadEvent))
-		{
-			upEvent = (UploadEvent) objUploadEvent;
-			final String userId = cockpitUserService.getCurrentUser();
-			String roleId = "none";
-			activeUserRole = authorityGroupService.getActiveAuthorityGroupForUser(userId);
-			if (activeUserRole != null)
-			{
-				roleId = activeUserRole.getCode();
-			}
-			lpAwbDataUploadService.lpAwbBulkUploadCommon(upEvent, "AWB", userId, roleId);
-			lpAwbBulkUploadTextBo = upEvent.getMedia().getName();
-		}
-	}//end uplaod method
-
-	/**
-	 * @return the lpAwbBulkUploadTextBo
-	 */
-	public String getLpAwbBulkUploadTextBo()
-	{
-		return lpAwbBulkUploadTextBo;
-	}
-
-
-	/**
-	 * @param lpAwbBulkUploadTextBo
-	 *           the lpAwbBulkUploadTextBo to set
-	 */
-	public void setLpAwbBulkUploadTextBo(final String lpAwbBulkUploadTextBo)
-	{
-		this.lpAwbBulkUploadTextBo = lpAwbBulkUploadTextBo;
-	}
 }
