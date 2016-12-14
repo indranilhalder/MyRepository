@@ -54,6 +54,10 @@ public class LPOverrideAndAwbEditReportWidgetController extends DefaultWidgetCon
 	private Listbox typeListbox;
 	private Listbox flowTypeListbox;
 	private List<LPAWBEditAuditDto> lpawbAuditReport;
+	private static final String ISFORWARD = "F";
+	private static final String ISFORWARD_LABEL = "ISFORWARD";
+	private static final String ISRETURN = "R";
+	private static final String ISRETURN_LABEL = "ISRETURN";
 
 	@Override
 	public void initialize(final Component comp)
@@ -95,8 +99,17 @@ public class LPOverrideAndAwbEditReportWidgetController extends DefaultWidgetCon
 	public void sshipOrderSearch()
 	{
 
+		String flowType = "BOTH";
+		if (flowTypeListbox.getSelectedItem().getLabel().equals(ISFORWARD_LABEL))
+		{
+			flowType = ISFORWARD;
+		}
+		if (flowTypeListbox.getSelectedItem().getLabel().equals(ISRETURN_LABEL))
+		{
+			flowType = ISRETURN;
+		}
 		final LPAWBUpdateTrackingInfo lpAndAwbUpdateInfo = orderLogisticsFacade.getLpAwbReportsData(txtOrderId.getValue(),
-				txtTransactionId.getValue(), typeListbox.getSelectedItem().getLabel(), flowTypeListbox.getSelectedItem().getLabel());
+				txtTransactionId.getValue(), typeListbox.getSelectedItem().getLabel(), flowType);
 		lpawbAuditReport = lpAndAwbUpdateInfo.getLPAWBEditAudit();
 		listBoxData.setModel(new ListModelList<LPAWBEditAuditDto>(lpawbAuditReport));
 	}

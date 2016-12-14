@@ -22,7 +22,7 @@
 
 		} .z-panel-header {font-size: 16px; color: #4476B6;
 		font-weight:bold;} z-panel-body {padding:0px;}
-		
+
 	</style>
 	<columnlayout apply="org.zkoss.bind.BindComposer" width="100%"
 		height="100%"
@@ -34,8 +34,9 @@
 				<panelchildren style="border:none">
 					<hlayout>
 						<label sclass="search-label" value="ORDERID"></label>
-						<textbox width="300px" onOK="@command('searchEnter')" 
-							value="@bind(vm.searchText)" sclass="search-area" />
+						<textbox width="300px"
+							onOK="@command('searchEnter')" value="@bind(vm.searchText)"
+							sclass="search-area" />
 						<button onClick="@command('searchClick')"
 							style="background-color: #1169F6; border: medium none;"
 							sclass="search-button" label="Search" />
@@ -48,24 +49,31 @@
 				title=" " border="normal" maximizable="true" collapsible="true">
 				<panelchildren>
 					<div style="max-height:100%;overflow:auto">
-						<listbox id="orderListbox" model="@bind(vm.busList)" rows="6" sclass="mylist"
+						<listbox id="orderListbox"
+							model="@bind(vm.busList)" rows="6" sclass="mylist"
 							itemRenderer="com.hybris.oms.tata.orders.OrderListRenderer"
 							emptyMessage="No result found in the result" mold="paging"
 							pagingPosition="top" pageSize="6"
 							onSelect="@command('onListItemSelectOfOrder')">
 							<listhead>
-								<listheader style="text-align:center" label="Order RefNo"></listheader>
-								<listheader 
+								<listheader style="text-align:center"
+									label="Order RefNo">
+								</listheader>
+								<listheader
 									label="Original Order RefNo">
 								</listheader>
-								<listheader style="text-align:center" 
+								<listheader style="text-align:center"
 									label="Order Submission DateTime">
 								</listheader>
-								<listheader style="text-align:center" 
+								<listheader style="text-align:center"
 									label="Order Issue DateTim">
-								</listheader >
-								<listheader style="text-align:center"  label="OrderType"></listheader>
-								<listheader style="text-align:center"  label="Channel"></listheader>
+								</listheader>
+								<listheader style="text-align:center"
+									label="OrderType">
+								</listheader>
+								<listheader style="text-align:center"
+									label="Channel">
+								</listheader>
 							</listhead>
 
 						</listbox>
@@ -78,64 +86,65 @@
 					style="border:none;padding:0px;max-height:100%;overflow-y:auto"
 					visible="@bind(vm.editorVisible)">
 					<hlayout width="100%" style="overflow-x:auto">
-						<listbox id="orderLinesListbox" height="200px" sclass="orderlines_list"
-							rows="3" emptyMessage="No result found in the result"
-							mold="paging" pagingPosition="top" pageSize="6"
+						<listbox id="orderLinesListbox" height="200px"
+							sclass="orderlines_list" rows="3"
+							emptyMessage="No result found in the result" mold="paging"
+							pagingPosition="top" pageSize="6"
 							model="@bind(vm.orderlinebusList)"
 							onSelect="@command('onOrderLineItemSelectOrderLines')"
 							selectedItem="@bind(vm.selectedOLBuc)"
 							itemRenderer="com.hybris.oms.tata.orders.OrderLinesListRenderer">
 							<listhead sizable="true">
-								<listheader style="text-align:center"  width="200px"
-									label="USSID">
+								<listheader style="text-align:center"
+									width="200px" label="USSID">
 								</listheader>
-								<listheader style="text-align:center"   width="150px"
-									label="Trans.Line Status">
+								<listheader style="text-align:center"
+									width="150px" label="Trans.Line Status">
 								</listheader>
-								<listheader style="text-align:center"  width="100px"
-									label="Unit Price">
+								<listheader style="text-align:center"
+									width="100px" label="Unit Price">
 								</listheader>
-								<listheader style="text-align:center"  width="150px"
-									label="apportioned Price">
+								<listheader style="text-align:center"
+									width="150px" label="apportioned Price">
 								</listheader>
-								<listheader style="text-align:center"  width="150px"
-									label="apportionedCOD Price">
+								<listheader style="text-align:center"
+									width="150px" label="apportionedCOD Price">
 								</listheader>
-								<listheader style="text-align:center"  width="150px"
-									label="Slave Allocated">
+								<listheader style="text-align:center"
+									width="150px" label="Slave Allocated">
 								</listheader>
-								<listheader style="text-align:center"  width="150px"
-									label="Rejection ReqID">
+								<listheader style="text-align:center"
+									width="150px" label="Rejection ReqID">
 								</listheader>
-								<listheader style="text-align:center"  width="160px"
-									label="Rejection Reason Code">
+								<listheader style="text-align:center"
+									width="160px" label="Rejection Reason Code">
 								</listheader>
-								<listheader style="text-align:center"  width="70px"
-									label="IsAFreebie">
+								<listheader style="text-align:center"
+									width="70px" label="IsAFreebie">
 								</listheader>
-								<listheader style="text-align:center"  width="50px"
-									label="IsCOD">
+								<listheader style="text-align:center"
+									width="50px" label="IsCOD">
 								</listheader>
-								<listheader style="text-align:center"  width="100px"
-									label="DeliveryMode">
+								<listheader style="text-align:center"
+									width="100px" label="DeliveryMode">
 								</listheader>
-								<listheader style="text-align:center"  width="150px"
-									label="TransportMode">
+								<listheader style="text-align:center"
+									width="150px" label="TransportMode">
 								</listheader>
-								<listheader style="text-align:center"  width="150px"
-									label="FulfillmentType">
+								<listheader style="text-align:center"
+									width="150px" label="FulfillmentType">
 								</listheader>
-								<listheader style="text-align:center"  width="160px"
-									label="LogisticProviderName">
+								<listheader style="text-align:center"
+									width="160px" label="LogisticProviderName">
 								</listheader>
-								<listheader style="text-align:center"  width="100px"
-									label="DeliveryDate">
+								<listheader style="text-align:center"
+									width="100px" label="DeliveryDate">
 								</listheader>
-								<listheader style="text-align:center"  width="150px"
-									label="OrderStatusTimeStamp">
+								<listheader style="text-align:center"
+									width="150px" label="OrderStatusTimeStamp">
 								</listheader>
-								<listheader style="text-align:center"  width="100px"
-									label="Received By">
+								<listheader style="text-align:center"
+									width="100px" label="Received By">
 								</listheader>
 
 							</listhead>
@@ -151,11 +160,13 @@
 
 					</hlayout>
 					<vlayout width="500px">
-						<hlayout visible="@bind(vm.p1slavesVisibleStatus)">
+						<hlayout
+							visible="@bind(vm.p1slavesVisibleStatus)">
 							<label value="P1SlaveID" hflex="1" />
 							<label value=":" hflex="1"></label>
 
-							<listbox id="p1SlaveIDListbox" disabled="@bind(vm.p1slavesDropDownsStatus)"
+							<listbox id="p1SlaveIDListbox"
+								disabled="@bind(vm.p1slavesDropDownsStatus)"
 								model="@bind(vm.p1SlaveIDList)" mold="select" hflex="1"
 								onSelect="@command('onSelectp1SlaveIDList')">
 
@@ -171,7 +182,8 @@
 							</listbox>
 						</hlayout>
 
-						<hlayout visible="@bind(vm.p1slavesVisibleStatus)">
+						<hlayout
+							visible="@bind(vm.p1slavesVisibleStatus)">
 							<label value="P1SlaveName" hflex="1" />
 							<label value=":" hflex="1"></label>
 							<label value="@bind(vm.p1SlaveName)"
@@ -180,39 +192,43 @@
 						</hlayout>
 
 						<!-- to enable p2slave uncomment the code -->
-						<hlayout visible="@bind(vm.p2slavesVisibleStatus)">
+						<hlayout
+							visible="@bind(vm.p2slavesVisibleStatus)">
 							<label value="P2SlaveID" hflex="1" />
 							<label value=":" hflex="1"></label>
-							<listbox  id="p2SlaveIDListbox" disabled="@bind(vm.p2slavesDropDownsStatus)"
-							model="@bind(vm.p2SlaveIDList)" hflex="1" mold="select"
-							onSelect="@command('onSelectp2SlaveIDList')">
-							<template name="model">
-							
-							<listitem>
-							
-							<listcell
-							label="@bind(each.slaveid)">
-							</listcell>
-							</listitem>
-							</template>
+							<listbox id="p2SlaveIDListbox"
+								disabled="@bind(vm.p2slavesDropDownsStatus)"
+								model="@bind(vm.p2SlaveIDList)" hflex="1" mold="select"
+								onSelect="@command('onSelectp2SlaveIDList')">
+								<template name="model">
+
+									<listitem>
+
+										<listcell
+											label="@bind(each.slaveid)">
+										</listcell>
+									</listitem>
+								</template>
 							</listbox>
-							
-							</hlayout> 
-							
-							<hlayout visible="@bind(vm.p2slavesVisibleStatus)">
+
+						</hlayout>
+
+						<hlayout
+							visible="@bind(vm.p2slavesVisibleStatus)">
 							<label value="P2SlaveName" hflex="1" />
 							<label value=":" hflex="1"></label>
 							<label value="@bind(vm.p2SlaveName)"
-							hflex="1">
+								hflex="1">
 							</label>
-							</hlayout>
+						</hlayout>
 						<hlayout visible="@bind(vm.sShipStatus)">
 							<label value="P1LogisticsID" hflex="1" />
 							<label value=":" hflex="1"></label>
 
-							<listbox id="p1LogisticsIDListbox" disabled="@bind(vm.logisticsDropDownsStatus)"
+							<listbox id="p1LogisticsIDListbox"
+								disabled="@bind(vm.logisticsDropDownsStatus)"
 								model="@bind(vm.p1LogisticsIDList)" hflex="1" mold="select"
-								onSelect="@command('onSelectp1LogisticsIDList')" >
+								onSelect="@command('onSelectp1LogisticsIDList')">
 								<template name="model">
 									<listitem>
 										<listcell
@@ -225,7 +241,7 @@
 
 						</hlayout>
 
-						<hlayout visible="@bind(vm.sShipStatus)" > 
+						<hlayout visible="@bind(vm.sShipStatus)">
 							<label value="P1LogisticsName" hflex="1" />
 							<label value=":" hflex="1"></label>
 							<label value="@bind(vm.p1LogisticsName)"
@@ -237,8 +253,9 @@
 							<label value="P2LogisticsID" hflex="1" />
 							<label value=":" hflex="1"></label>
 
-							<listbox id="p2LogisticsIDListbox"  disabled="@bind(vm.logisticsDropDownsStatus)"
-								model="@bind(vm.p2LogisticsIDList)" hflex="1" mold="select"  
+							<listbox id="p2LogisticsIDListbox"
+								disabled="@bind(vm.logisticsDropDownsStatus)"
+								model="@bind(vm.p2LogisticsIDList)" hflex="1" mold="select"
 								onSelect="@command('onSelectp2LogisticsIDList')">
 								<template name="model">
 									<listitem>
@@ -261,8 +278,9 @@
 						<hlayout width="450px">
 							<label value="" hflex="1" />
 							<label value="" hflex="1"></label>
-							<button visible="@bind(vm.slaveinfoBtn)" onClick="@command('slaveinfoBtnAction')"
-								label="Save" style="font-size:12px;width:80px" hflex=".4">
+							<button visible="@bind(vm.slaveinfoBtn)"
+								onClick="@command('slaveinfoBtnAction')" label="Save"
+								style="font-size:12px;width:80px" hflex=".4">
 							</button>
 						</hlayout>
 					</vlayout>
@@ -309,10 +327,12 @@
 							</label>
 						</hlayout>
 						<hlayout>
-							<label value="Secondary AWB Number" hflex="1" />
+							<label value="AWB Sencondary Status"
+								hflex="1" />
 							<label value=":" hflex="1"></label>
 							<label
-								value="@bind(vm.transTrackOLBus.awbSecondaryStatus)" hflex="1">
+								value="@bind(vm.transTrackOLBus.awbSecondaryStatus)"
+								hflex="1">
 							</label>
 						</hlayout>
 						<hlayout>
@@ -421,7 +441,13 @@
 								value="@load(vm.orderBUC.shipment_addressLine3)" hflex="1">
 							</label>
 						</hlayout>
-
+						<hlayout>
+							<label value="Landmark" hflex="1" />
+							<label value=":" hflex="1"></label>
+							<label id="landmark_id"
+								value="@load(vm.orderBUC.shipmentLandMark)" hflex="1">
+							</label>
+						</hlayout>
 						<hlayout>
 							<label value="City" hflex="1" />
 							<label value=":" hflex="1"></label>
@@ -600,22 +626,27 @@
 							model="@bind(vm.refundedInfoBUCList)"
 							emptyMessage="list empty">
 							<listhead sizable="true">
-								<listheader  style="font-size:10px;text-align:center"
+								<listheader
+									style="font-size:10px;text-align:center"
 									label="Refunded Amt">
 								</listheader>
-								<listheader style="font-size:10px;text-align:center"
+								<listheader
+									style="font-size:10px;text-align:center"
 									label="RefundedBankTrxId">
 								</listheader>
-								<listheader style="font-size:10px;text-align:center"
+								<listheader
+									style="font-size:10px;text-align:center"
 									label="RefundedBankTrxStatus">
 								</listheader>
-								<listheader style="font-size:10px;text-align:center"
-									label="RefundedBy">
+								<listheader
+									style="font-size:10px;text-align:center" label="RefundedBy">
 								</listheader>
-								<listheader style="font-size:10px;text-align:center"
+								<listheader
+									style="font-size:10px;text-align:center"
 									label="RefundTriggeredDate">
 								</listheader>
-								<listheader style="font-size:10px;text-align:center"
+								<listheader
+									style="font-size:10px;text-align:center"
 									label="RefundedType">
 								</listheader>
 							</listhead>
@@ -640,17 +671,17 @@
 							itemRenderer="com.hybris.oms.tata.orders.BusStatusRecordsListRenderer"
 							emptyMessage="list empty" model="@bind(vm.shipStatusRepBusSR)">
 							<listhead sizable="true">
-								<listheader style="font-size:10px;text-align:center"
-									label="Date">
+								<listheader
+									style="font-size:10px;text-align:center" label="Date">
 								</listheader>
-								<listheader style="font-size:10px;text-align:center"
-									label="Time">
+								<listheader
+									style="font-size:10px;text-align:center" label="Time">
 								</listheader>
-								<listheader style="font-size:10px;text-align:center"
-									label="Location">
+								<listheader
+									style="font-size:10px;text-align:center" label="Location">
 								</listheader>
-								<listheader style="font-size:10px;text-align:center"
-									label="StatusDesc">
+								<listheader
+									style="font-size:10px;text-align:center" label="StatusDesc">
 								</listheader>
 							</listhead>
 						</listbox>
