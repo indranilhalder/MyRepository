@@ -13,6 +13,8 @@
  */
 package com.tisl.mpl.storefront.controllers.misc;
 
+import de.hybris.platform.acceleratorcms.model.components.NavigationBarCollectionComponentModel;
+import de.hybris.platform.acceleratorcms.model.components.NavigationBarComponentModel;
 import de.hybris.platform.acceleratorservices.urlresolver.SiteBaseUrlResolutionService;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
 import de.hybris.platform.category.CategoryService;
@@ -44,7 +46,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.tisl.mpl.core.model.DepartmentCollectionComponentModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService;
@@ -108,15 +109,24 @@ public class SiteMapController extends AbstractPageController
 
 		final Map<CategoryModel, Map<CategoryModel, Collection<CategoryModel>>> megaMap = new LinkedHashMap<CategoryModel, Map<CategoryModel, Collection<CategoryModel>>>();
 
+		final ArrayList<CategoryModel> departments = new ArrayList<CategoryModel>();
+
 		final ContentSlotModel contentSlotModel = contentSlotService.getContentSlotForId("NavigationBarSlot");
 		final List<AbstractCMSComponentModel> componentLists = contentSlotModel.getCmsComponents();
 		for (final AbstractCMSComponentModel model : componentLists)
 		{
-			if (model instanceof DepartmentCollectionComponentModel)
+			if (model instanceof NavigationBarCollectionComponentModel)
 			{
-				final DepartmentCollectionComponentModel deptModel = (DepartmentCollectionComponentModel) model;
-				final Collection<CategoryModel> mainDepts = deptModel.getDepartmentCollection();
-				for (final CategoryModel categoryModel : mainDepts)
+				final NavigationBarCollectionComponentModel deptModel = (NavigationBarCollectionComponentModel) model;
+				final Collection<NavigationBarComponentModel> navigationBars = deptModel.getComponents();
+
+				for (final NavigationBarComponentModel navigationBar : navigationBars)
+				{
+					final CategoryModel department = navigationBar.getLink().getCategory();
+					departments.add(department);
+				}
+
+				for (final CategoryModel categoryModel : departments)
 				{
 					try
 					{

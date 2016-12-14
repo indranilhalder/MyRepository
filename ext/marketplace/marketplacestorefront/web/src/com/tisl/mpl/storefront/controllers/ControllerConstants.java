@@ -117,6 +117,7 @@ public interface ControllerConstants
 			String MplBrandLogoComponent = _Prefix + MplBrandLogoComponentModel._TYPECODE + _Suffix;
 			String RotatingImagesComponent = _Prefix + RotatingImagesComponentModel._TYPECODE + _Suffix;
 			String CustomSkuComponent = _Prefix + CustomSkuComponentModel._TYPECODE + _Suffix;
+			//String NavigationBarCollectionComponent = _Prefix + NavigationBarCollectionComponentModel._TYPECODE + _Suffix;
 		}
 	}
 

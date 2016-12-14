@@ -71,7 +71,8 @@ $("#variant").change(function() {
 	}
 });
 
-//AKAMAI Fix
+//AKAMAI Fix 
+
 var productSizeVar = '${productSize}';
 </script>
 <!-- logic for displaying color and size variant -->
@@ -92,22 +93,19 @@ var productSizeVar = '${productSize}';
 					<c:when test="${not empty variantOption.defaultUrl}">
 						<li><c:url value="${variantOption.defaultUrl}"
 								var="variantUrl" />
-								
 								 <a href="${variantUrl}">								
 								 <c:forEach
 									items="${variantOption.colourCode}" var="color">
-									<c:choose>
-								<c:when test="${fn:startsWith(color, 'multi')}">
+								<c:choose>
+							    <c:when test="${fn:startsWith(color, 'multi') && empty variantOption.image}">
 						     	<img src="${commonResourcePath}/images/multi.jpg" height="74" width="50" title="${variantOption.colour}" />
 								</c:when>
-								
 								<c:when test="${empty variantOption.image}">
 						     	<span style="background-color: ${color};border: 1px solid rgb(204, 211, 217); width:50px; height:73px" title="${variantOption.colour}"></span>
 								</c:when>							
 								<c:otherwise>
-								
 								<c:set var="imageData" value="${variantOption.image}" />
-										<img src="${imageData.url}" title="${variantOption.colour}" alt="${styleValue}" style="display: inline-block;width: 50px;"/>								
+								<img src="${imageData.url}" title="${variantOption.colour}" alt="${styleValue}" style="display: inline-block;width: 50px;"/>								
                                </c:otherwise>
                                </c:choose>
 								<c:if test="${variantOption.code eq product.code}">

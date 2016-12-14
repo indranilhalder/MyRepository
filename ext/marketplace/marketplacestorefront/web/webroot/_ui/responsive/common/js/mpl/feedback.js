@@ -1841,7 +1841,7 @@ $(document).ready(function(){
 					$(".toggle-filterSerp").css("margin-top",$(".searchSpellingSuggestionPrompt").height() + 40 + "px");
 					$(".listing.wrapper .right-block").css("padding-top",$(".searchSpellingSuggestionPrompt").height() + 50 + "px");
 				}
-				if($(".toggle-filterSerp").length>0){
+				if(($(".toggle-filterSerp").length>0) && ($(".facet-list.filter-opt").length>0)){
 					var sort_top= $(".toggle-filterSerp").offset().top - $(".listing.wrapper").offset().top - 20;
 					if($(".facet-list.filter-opt").offset().top == 0){
 						var pagination_top= sort_top - 24;
@@ -1889,7 +1889,7 @@ if($(".facet.js-facet.Size").length > 0){
 				$(".toggle-filterSerp").css("margin-top",$(".searchSpellingSuggestionPrompt").height() + 40 + "px");
 				$(".listing.wrapper .right-block").css("padding-top",$(".searchSpellingSuggestionPrompt").height() + 50 + "px");
 			}
-			if($(".toggle-filterSerp").length>0){
+			if(($(".toggle-filterSerp").length>0) && ($(".facet-list.filter-opt").length>0)){
 				var sort_top= $(".toggle-filterSerp").offset().top - $(".listing.wrapper").offset().top - 20;
 				if($(".facet-list.filter-opt").offset().top == 0){
 					var pagination_top= sort_top - 24;
@@ -2083,14 +2083,27 @@ function toggleFilter(){
 	// Fixing error of facet starts
 	if ($(".facet_mobile .facet.js-facet.Colour").find('ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden').length) {
 		var spanCountMoreViewColor = $(".facet_mobile .facet.js-facet.Colour").find('ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden').find("li.selected-colour").length;
+		//TISQAUATS-12 starts
+		spanCountMoreViewColor = spanCountMoreViewColor + $(".facet_mobile .facet.js-facet.Colour").find('ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden').find("li.selected-multi-colour").length;
+		//TISQAUATS-12 ends
 		if(spanCountMoreViewColor)
 		{
-			$(".facet_mobile .filter-colour.selected-colour").parents(".facet.js-facet").find(".category-icons span").text(spanCountMoreViewColor);
+			//$(".facet_mobile .filter-colour.selected-colour").parents(".facet.js-facet").find(".category-icons span").text(spanCountMoreViewColor);
+			//TISQAUATS-12 starts
+			if ($(".facet_mobile .filter-colour.selected-colour").length) {
+				$(".facet_mobile .filter-colour.selected-colour").parents(".facet.js-facet").find(".category-icons span").text(spanCountMoreViewColor);
+			} else {
+				$(".facet_mobile .filter-colour.selected-multi-colour").parents(".facet.js-facet").find(".category-icons span").text(spanCountMoreViewColor);
+			}
+			//TISQAUATS-12 ends
 		}
 	}
 	else {
 	// Fixing error of facet ends
 		var spanCount_colour=$(".facet_mobile .filter-colour.selected-colour").length;
+		//TISQAUATS-12 starts
+		spanCount_colour = spanCount_colour + $(".facet_mobile .filter-colour.selected-multi-colour").length;
+		//TISQAUATS-12 ends
 		if(spanCount_colour>0)
 			{
 				$(".facet_mobile .filter-colour.selected-colour").parents(".facet.js-facet").find(".category-icons span").text(spanCount_colour);

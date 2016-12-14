@@ -97,8 +97,8 @@ public class BusinessContentImportJob extends AbstractJobPerformable<CronJobMode
 				"businessConetnt.archiveFolderLocation", ""));
 		final String fileNamePrefix = configurationService.getConfiguration()
 				.getString("businessConetnt.fileNamePrefix", "content");
-		final String productModifiactionPrefix = configurationService.getConfiguration().getString(
-				"businessConetnt.productModifiactionPrefix", "productModifiaction");
+		final String productModificationPrefix = configurationService.getConfiguration().getString(
+				"businessConetnt.productModificationPrefix", "productModification");
 		final String fileExtension = configurationService.getConfiguration().getString("businessConetnt.fileExtension", "csv");
 		isFolderExist(rootFolder1);
 		isFolderExist(errorFolder);
@@ -109,7 +109,7 @@ public class BusinessContentImportJob extends AbstractJobPerformable<CronJobMode
 		{
 			for (final File inputFile : rootFolder1.listFiles())
 			{
-				if ((inputFile.getName().startsWith(fileNamePrefix) || inputFile.getName().startsWith(productModifiactionPrefix))
+				if ((inputFile.getName().startsWith(fileNamePrefix) || inputFile.getName().startsWith(productModificationPrefix))
 						&& inputFile.getName().endsWith(fileExtension))
 				{
 					String datePrefix = MarketplacecommerceservicesConstants.EMPTYSPACE;

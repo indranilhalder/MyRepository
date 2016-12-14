@@ -187,6 +187,8 @@
      </explorer-tree:navigation-node>
      <explorer-tree:navigation-node  id="pincodes_upload">
      </explorer-tree:navigation-node>
+     <explorer-tree:navigation-node  id="shipment_data_upload">
+     </explorer-tree:navigation-node>
 	</explorer-tree:explorer-tree>
 </context>
 

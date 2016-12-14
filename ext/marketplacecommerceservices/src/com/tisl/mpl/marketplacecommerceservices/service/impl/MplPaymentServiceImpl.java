@@ -1451,13 +1451,16 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		{
 			try
 			{
+
 				//saving CODPaymentInfoModel
 				getModelService().save(cODPaymentInfoModel);
 			}
 			catch (final ModelSavingException e)
 			{
-				LOG.error("Exception while saving cod payment info with " + e);
+				//LOG.error("Exception while saving cod payment info with " + e);
+				LOG.debug("COD Payment Info set for cart with GUID" + abstractOrderModel.getGuid());
 				throw new EtailNonBusinessExceptions(e, "Exception while saving cod payment info with");
+
 			}
 
 			//setting CODPaymentInfoModel in cartmodel
@@ -2993,11 +2996,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3009,9 +3012,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override

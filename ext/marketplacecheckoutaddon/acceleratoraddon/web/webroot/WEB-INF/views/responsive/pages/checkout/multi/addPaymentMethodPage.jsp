@@ -11,24 +11,12 @@
 <%@ taglib prefix="address" tagdir="/WEB-INF/tags/responsive/address" %>
 <%@ taglib prefix="cart" tagdir="/WEB-INF/tags/responsive/cart" %>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format" %>
-<style>
- .checkout-paymentmethod {
-	display: none;
-} 
 
-</style>
-
-<script>
-	//Refresh the page if compare page is already visted
-	if (sessionStorage.getItem("confirmationPageVisited") != null) {
-		sessionStorage.removeItem("confirmationPageVisited");
-		window.location.reload(true); // force refresh page1
-	}
-</script>
 <c:url value="${currentStepUrl}" var="choosePaymentMethodUrl" />
 <spring:url value="/checkout/multi/debitTermsAndConditions" var="getDebitTermsAndConditionsUrl"/>
-<cart:tealiumCartParameters/>
+
 <template:page pageTitle="${pageTitle}" hideHeaderLinks="true" showOnlySiteLogo="true">
+<cart:tealiumCartParameters/>
 				<div class="alert alert-danger alert-dismissable" id="juspayconnErrorDiv">	<!-- TPR-629 changes for error -->
 					<button class="close juspayCloseButton" type="button">&times;</button>
 					<span id="juspayErrorMsg">Some issues are there with payment</span>
@@ -204,6 +192,8 @@
 						<div class="checkout-indent payments tab-view smk_accordion acc_with_icon">
 							<div class="checkout-paymentmethod nav">
 							<div class="head-mobile">PAYMENT METHOD</div>
+							<!-- TISQAUAT-411 Fix | guid moved to common place -->
+							<input type="hidden" name="guid" id="guid" value="${guid}"/>
 								<!-- CREDIT -->
 								<c:forEach var="map" items="${paymentModes}">
 									<c:if test="${map.value eq true}">
@@ -241,7 +231,32 @@
 													<div class="credit-card-group card-sec">
 			            								<div class="card card-num">
 										        			<div class="radio">
-										        			<span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
+										        				 <c:choose>
+														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'visa')}">
+														           <span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
+														           </c:when> 
+														           	<c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'master')}">
+														           <span class="visa card_image"><img src="${commonResourcePath}/images/Master_Card.png" alt=""></span>
+														           </c:when>
+														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'maestro')}">
+														           <span class="visa card_image"><img src="${commonResourcePath}/images/Maestro.png" alt=""></span>
+														           </c:when>
+														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'amex')}">
+														           <span class="visa card_image"><img src="${commonResourcePath}/images/American_Express.png" alt=""></span>
+														           </c:when>
+														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'diners')}">
+														           <span class="visa card_image"><img src="${commonResourcePath}/images/dinner_club.png" alt=""></span>
+														           </c:when>
+														            <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'discover')}">
+														           <span class="visa card_image"><img src="${commonResourcePath}/images/Discover.png" alt=""></span>
+														           </c:when>
+														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'discover')}">
+														           <span class="visa card_image"><img src="${commonResourcePath}/images/JCB.png" alt=""></span>
+														           </c:when>
+														           <c:otherwise>
+																	<span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
+																	</c:otherwise>   
+														        </c:choose>		
 										                 		<input type="radio" data-id="savedCCard" name="creditCards" class="card_token creditCardsRadio" id="cc${status.index}"  value="${map.value.cardToken}" />
 									                 	 		<label for="cc${status.index}" data-id="savedCCard" class="numbers">
 									                 	 			${map.value.cardBrand} ending in ${map.value.cardEndingDigits}</label>
@@ -528,7 +543,34 @@
 			            								
 			            									<div class="card card-num">
 										        				<div class="radio">
-										        				<span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
+															     <c:choose>
+														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'visa')}">
+														           <span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
+														           </c:when> 
+														           	<c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'master')}">
+														           <span class="visa card_image"><img src="${commonResourcePath}/images/Master_Card.png" alt=""></span>
+														           </c:when>
+														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'maestro')}">
+														           <span class="visa card_image"><img src="${commonResourcePath}/images/Maestro.png" alt=""></span>
+														           </c:when>
+														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'amex')}">
+														           <span class="visa card_image"><img src="${commonResourcePath}/images/American_Express.png" alt=""></span>
+														           </c:when>
+														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'diners')}">
+														           <span class="visa card_image"><img src="${commonResourcePath}/images/dinner_club.png" alt=""></span>
+														           </c:when>
+														            <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'discover')}">
+														           <span class="visa card_image"><img src="${commonResourcePath}/images/Discover.png" alt=""></span>
+														           </c:when>
+														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'discover')}">
+														           <span class="visa card_image"><img src="${commonResourcePath}/images/JCB.png" alt=""></span>
+														           </c:when>
+														           <c:otherwise>
+																	<span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
+																	</c:otherwise>   
+														        </c:choose>															 
+				        							
+										        			<%-- <span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span> --%>
 										                    		<input type="radio" data-id="savedDCard" name="debitCards" class="card_token  debitCardsRadio" id="dc${status.index}"  value="${map.value.cardToken}"/>
 										                    		<label for="dc${status.index}" data-id="savedDCard" class="numbers">${map.value.cardBrand} ending in ${map.value.cardEndingDigits}</label>
 										                  				<p>${map.value.nameOnCard}</p>
@@ -987,7 +1029,8 @@
 								<input type="hidden" name="orderPage_declineResponseURL" value="${silentOrderPageData.parameters['orderPage_declineResponseURL']}"/>
 								<input type="hidden" name="orderPage_cancelResponseURL" value="${silentOrderPageData.parameters['orderPage_cancelResponseURL']}"/>
 								<%-- <input type="hidden" id="guid" value="${guid}"> --%>
-								<form:hidden path="guid" id="guid" value="${guid}"/>
+								<!--TISQAUAT-411 Fix Removed  guid -->
+								<%-- 		<form:hidden path="guid" id="guid" value="${guid}"/> --%>
 								<input type="hidden" id="promoAvailable" value="${promoAvailable}"/>
 								<input type="hidden" id="bankAvailable" value="${bankAvailable}"/>
 								<c:forEach items="${sopPaymentDetailsForm.signatureParams}" var="entry" varStatus="status">
@@ -1658,6 +1701,20 @@
 	
 </template:page>
 
+<style>
+ .checkout-paymentmethod {
+	display: none;
+} 
+
+</style>
+
+<script>
+	//Refresh the page if compare page is already visted
+	if (sessionStorage.getItem("confirmationPageVisited") != null) {
+		sessionStorage.removeItem("confirmationPageVisited");
+		window.location.reload(true); // force refresh page1
+	}
+</script>
 	  <script type="text/javascript">
 		jQuery(document).ready(function($){
 

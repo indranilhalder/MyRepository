@@ -64,24 +64,34 @@ public class MplProductInStockFlagValueProvider extends ProductInStockFlagValueP
 			final Object model) throws FieldValueProviderException
 	{
 
+		try
+		{
 
-		String productType = "";
-		String productCode = "";
-		if (model instanceof PcmProductVariantModel)
-		{
-			productType = "variant";
-			final PcmProductVariantModel product = (PcmProductVariantModel) model;
-			productCode = product.getCode();
-			return getFieldValues(productCode, productType, indexedProperty, indexConfig);
+			//String productType = "";
+			//String productCode = "";
+			String productType = null;
+			String productCode = null;
+			if (model instanceof PcmProductVariantModel)
+			{
+				productType = "variant";
+				final PcmProductVariantModel product = (PcmProductVariantModel) model;
+				productCode = product.getCode();
+				return getFieldValues(productCode, productType, indexedProperty, indexConfig);
+			}
+			else if (model instanceof ProductModel)
+			{
+				productType = "simple";
+				final ProductModel product = (ProductModel) model;
+				productCode = product.getCode();
+				return getFieldValues(productCode, productType, indexedProperty, indexConfig);
+			}
+			return Collections.emptyList();
 		}
-		else if (model instanceof ProductModel)
+		catch (final Exception e) /* added part of value provider go through */
 		{
-			productType = "simple";
-			final ProductModel product = (ProductModel) model;
-			productCode = product.getCode();
-			return getFieldValues(productCode, productType, indexedProperty, indexConfig);
+			throw new FieldValueProviderException(
+					"Cannot evaluate " + indexedProperty.getName() + " using " + super.getClass().getName() + "exception" + e, e);
 		}
-		return Collections.emptyList();
 
 	}
 
@@ -95,8 +105,8 @@ public class MplProductInStockFlagValueProvider extends ProductInStockFlagValueP
 		if ((baseSiteModel != null) && (baseSiteModel.getStores() != null) && (!(baseSiteModel.getStores().isEmpty()))
 				&& (getCommerceStockService().isStockSystemEnabled(baseSiteModel.getStores().get(0))))
 		{
-			fieldValues.addAll(createFieldValue(productCode, productType, indexConfig.getBaseSite().getStores().get(0),
-					indexedProperty));
+			fieldValues
+					.addAll(createFieldValue(productCode, productType, indexConfig.getBaseSite().getStores().get(0), indexedProperty));
 		}
 		else
 		{
@@ -105,8 +115,8 @@ public class MplProductInStockFlagValueProvider extends ProductInStockFlagValueP
 		return fieldValues;
 	}
 
-	protected List<FieldValue> createFieldValue(final String productCode, final String productType,
-			final BaseStoreModel baseStore, final IndexedProperty indexedProperty)
+	protected List<FieldValue> createFieldValue(final String productCode, final String productType, final BaseStoreModel baseStore,
+			final IndexedProperty indexedProperty)
 	{
 		final List fieldValues = new ArrayList();
 		if (baseStore != null)

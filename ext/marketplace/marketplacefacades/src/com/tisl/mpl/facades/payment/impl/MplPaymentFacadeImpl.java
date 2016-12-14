@@ -1642,11 +1642,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1697,9 +1697,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Override
@@ -2223,13 +2223,18 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					LOG.warn("**Total price  " + orderModel.getTotalPrice());
 					LOG.warn("**Total price in juspay " + orderStatusResponse.getAmount());
 
-					/*
-					 * Commented as validation is no longer required
-					 *
-					 * if (orderModel.getTotalPriceWithConv().equals(orderStatusResponse.getAmount())) {
-					 * getMplPaymentService().setPaymentTransaction(orderStatusResponse, paymentMode, orderModel); } else {
-					 * throw new EtailBusinessExceptions(); }
-					 */
+
+					// Commented Code Opened
+					if (/* orderModel.getTotalPriceWithConv().equals */(null != orderStatusResponse.getAmount() && orderStatusResponse
+							.getAmount().doubleValue() > 0))
+					{
+						getMplPaymentService().setPaymentTransaction(orderStatusResponse, paymentMode, orderModel);
+					}
+					else
+					{
+						throw new EtailBusinessExceptions();
+					}
+
 
 
 					//Logic when transaction is successful i.e. CHARGED
