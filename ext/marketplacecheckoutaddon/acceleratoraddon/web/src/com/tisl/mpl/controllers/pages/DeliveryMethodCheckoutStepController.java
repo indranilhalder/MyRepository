@@ -1762,8 +1762,6 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 							+ "-- SellerScheduleDelivery" + sellerScheduleDelivery + "-- selectedUssId" + selectedUssId);
 					for (final OrderEntryData cartEntryData : cartDataSupport.getEntries())
 					{
-						if (!cartEntryData.isIsBOGOapplied() || !cartEntryData.isGiveAway())
-						{
 							if ((cartEntryData.getSelectedUssid().equalsIgnoreCase(selectedUssId)
 									&& selectedDeliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)
 									&& productScheduleDelivery.equalsIgnoreCase(MarketplacecommerceservicesConstants.YES) && sellerScheduleDelivery
@@ -1782,6 +1780,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 												&& fulfillmentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP.toUpperCase()))
 										{
 
+											
 											mplCheckoutFacade.constructDeliverySlotsForEDAndHD(deliverySlotsResponse, cartEntryData,
 													mplLPHolidaysModel);
 											dateList = new ArrayList<String>();
@@ -1807,6 +1806,9 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 												isScheduleServiceble = true;
 												
 											}else{
+												cartEntryData.setDeliverySlotsTime(dateTimeslotMapList);
+											}
+											if (!cartEntryData.isIsBOGOapplied() || !cartEntryData.isGiveAway()){
 												cartEntryData.setDeliverySlotsTime(dateTimeslotMapList);
 											}
 														
@@ -1838,7 +1840,6 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 									}
 								}
 							}
-						}
 					}
 				}
 
