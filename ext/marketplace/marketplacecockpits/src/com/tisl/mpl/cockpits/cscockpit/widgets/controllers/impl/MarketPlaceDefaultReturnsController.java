@@ -315,8 +315,8 @@ public class MarketPlaceDefaultReturnsController extends
 				refundRequest.setTypeofreturn(TypeofReturn.SELF_COURIER);
 			}else {
 				refundRequest.setTypeofreturn(TypeofReturn.QUICK_DROP);
-				refundRequest.setTypeofreturn(TypeofReturn.SELF_COURIER);
-				refundRequest.setReturnRaisedFrom(SalesApplication.CALLCENTER);		
+			}
+				refundRequest.setReturnRaisedFrom(SalesApplication.CALLCENTER);
 				modelService.save(refundRequest);
 				this.refundDetailsList.clear();
 				this.refundDetailsList = null;
@@ -329,6 +329,7 @@ public class MarketPlaceDefaultReturnsController extends
 					CustomerData customerData = null;
 					ReturnItemAddressData returnItemAddressData = null;
 					ReturnInfoData returnInfoData = null;
+					modelService.refresh(refundRequest);
 					for (ReturnEntryModel returnEntry : refundRequest.getReturnEntries()) {
 						orderEntryPopulator.populate(returnEntry.getOrderEntry(), subOrderEntry);										
 						returnInfoData = populateReturnInfoData(returnEntry);
@@ -344,7 +345,7 @@ public class MarketPlaceDefaultReturnsController extends
 					LOG.error("Exception while creating crm ticket for the order ID :"+orderModel.getCode());
 				}
 				return refundRequestObject;
-			} 
+			
 		}catch (Exception e) {
 			LOG.error("Failed to create refund request", e);
 		}
@@ -695,9 +696,11 @@ public class MarketPlaceDefaultReturnsController extends
 						if(null != line.isIsCancellable() && line.isIsCancellable().equalsIgnoreCase("N")) {
 							cancellable= false;
 							break;
+						}else {
+							cancellable =true;
 						}
 					}
-					if (null == response || cancellable ) {
+					if (null == response || !cancellable ) {
 						getModelService().remove(returnRequest);//Remove if created any 
 						throw new OrderReturnException(orderModel.getCode(),
 								"Item is not returnable at OMS.");
