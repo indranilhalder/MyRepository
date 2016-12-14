@@ -137,6 +137,7 @@
 						</div>
 						<div class="row">
 							<div class="col-md-6 form-group">
+							<div class="mainDrop">
 <!-- 								<label for="state">State*</label> -->
 								<%-- <form:input path="state"
 									class="form-control textInputChangeAddress address_states"
@@ -150,6 +151,15 @@
 									items="${stateDataList}" selectedValue="${addressForm.state}"
 									itemValue="name" />
 								<div class="error_text stateError"></div>
+							</div>
+								<div class="dupDisplay">
+       
+							       	<label for="state">State*</label>
+							        <form:input path="state"
+							         class="form-control textInputChangeAddress address_states"
+							         id="state" value="${orderDetails.deliveryAddress.state}"
+							         placeholder="State" />
+							    </div>
 							</div>
 							<div class="col-md-6 form-group">
 								<label for="country"><spring:theme code="text.order.returns.country"/></label> <input type="text"

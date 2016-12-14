@@ -240,8 +240,9 @@
 								$(".thirdTataCliq .returnMethod .quick").addClass("blackColor").removeClass("greyColor");
 								$(".thirdTataCliq .returnMethod .scheduled").removeClass("blackColor").addClass("greyColor");
 								$(".thirdTataCliq .returnMethod .self").removeClass("blackColor").addClass("greyColor");
-								$(".thirdTataCliq .returnMethod .quickDrop").show(); 
-								$(".thirdTataCliq .returnMethod .selfCourier, .thirdTataCliq .returnMethod .scheduledPickup").hide();
+								$(".thirdTataCliq .returnMethod .quickDrop").hide(); 
+						        $(".thirdTataCliq .returnMethod .selfCourier").hide();
+						        $(".thirdTataCliq .returnMethod .scheduledPickup").show();
 								getQuickDropData();
 							}
 						}

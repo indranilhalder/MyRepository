@@ -81,11 +81,11 @@
 								<div class="col-md-4 col-sm-4 accountnumber">
 
 									<b><spring:theme code="text.order.returns.accountnumber"/></b> <br/>
-									<form:password onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="24" minlength="16" path="accountNumber" name="accountNumber" placeholder="Account Number" value="${customerBankDetails.bankAccount}" />
+									<form:password onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="24" minlength="16" path="accountNumber" name="accountNumber" placeholder="Account Number" value="${customerBankDetails.bankAccount}" onkeyup="this.value=this.value.replace(/\s\s+/g,'');" />
 								</div>
 								<div class="col-md-4 col-sm-4 reenteraccountnumber">
 									<b><spring:theme code="text.order.returns.reenteraccountnumber"/></b> <br/>
-									<form:input onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="24" minlength="16" type="text" path="reEnterAccountNumber" name="reaccountNumber" placeholder="Re-Account Number" value="${customerBankDetails.bankAccount}" />
+									<form:input onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="24" minlength="16" type="text" path="reEnterAccountNumber" name="reaccountNumber" placeholder="Re-Account Number" value="${customerBankDetails.bankAccount}" onkeyup="this.value=this.value.replace(/\s\s+/g,'');" />
 								</div>
 								<div class="col-md-4 col-sm-4 suggestionText">
 									<span><spring:theme code="text.order.returns.safetyinformationlable1"/></span><br/>
@@ -95,7 +95,7 @@
 							<div class="col-md-12 col-sm-12">
 								<div class="col-md-4 col-sm-4 accountholdername">
 									<b><spring:theme code="text.order.returns.accountholdername"/></b> <br/>
-									<form:input type="text" onkeyup="this.value=this.value.replace(/[^A-z\s]/g,'');" maxlength="40"  path="accountHolderName" name="accountHolderName" placeholder="Account Holder Name" value="${customerBankDetails.name}" />
+									<form:input type="text" onkeyup="this.value=this.value.replace(/[^A-z\s]/g,''); this.value=this.value.replace(/\s\s+/g,'');"  maxlength="40"  path="accountHolderName" name="accountHolderName" placeholder="Account Holder Name" value="${customerBankDetails.name}" />
 								</div>
 								<div class="col-md-2 col-sm-2">
 									<b><spring:theme code="text.order.returns.refundmode"/></b> <br/>
@@ -123,11 +123,11 @@
 							<div class="col-md-12 col-sm-12">
 								<div class="col-md-4 col-sm-4 bankname">
 									<b><spring:theme code="text.order.returns.bankname"/></b> <br/>
-									<form:input  onkeyup="this.value=this.value.replace(/[^A-z\s]/g,'');" path="bankName" type="text"  name="bankName" placeholder="Bank Name" value="${customerBankDetails.bankName}" />
+									<form:input  onkeyup="this.value=this.value.replace(/[^A-z\s]/g,''); this.value=this.value.replace(/\s\s+/g,'');" path="bankName" type="text"  name="bankName" placeholder="Bank Name" value="${customerBankDetails.bankName}" />
 								</div>
 								<div class="col-md-4 col-sm-4 ifsccode">
 									<b><spring:theme code="text.order.returns.ifsccode"/></b> <br/>
-									<form:input  path="iFSCCode"  onkeyup="this.value=this.value.replace(/[^A-z0-9]/g,'');"   maxlength="11" minlength="" type="text" name="ifscCode" placeholder="IFSC CODE"  value="${customerBankDetails.bankKey}"/>
+									<form:input  path="iFSCCode"  onkeyup="this.value=this.value.replace(/[^A-z0-9]/g,''); this.value=this.value.replace(/\s\s+/g,'');"   maxlength="11" minlength="" type="text" name="ifscCode" placeholder="IFSC CODE"  value="${customerBankDetails.bankKey}"/>
 								</div>
 								<div class="col-md-4 col-sm-4 suggestionText">
 									<span><spring:theme code="text.order.returns.safetyinformationlabl3"/></span><br/>

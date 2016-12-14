@@ -1855,6 +1855,11 @@ $(function() {
 	}
 }
 
+.awsNumberModal .changeAWS {
+    height: 390px;
+    width: 700px;
+}
+
 @media (max-width: 720px) {
 	.awsNumberModal .changeAWS{
 		height: 400px;
@@ -1969,10 +1974,13 @@ $(function() {
 }
 .textFile{
 	display: inline-block;
-	padding: 0px 10px;
-	color: #8c8c8c;
-	height: 32px;
-	line-height: 32px;
+ 	padding: 0px 10px;
+ 	color: #8c8c8c;
+ 	height: 32px;
+ 	line-height: 32px;
+ 	overflow: hidden;
+ 	text-overflow: ellipsis;
+    white-space: nowrap
 }
 .uploadButton{
 	background: #00cfe6;

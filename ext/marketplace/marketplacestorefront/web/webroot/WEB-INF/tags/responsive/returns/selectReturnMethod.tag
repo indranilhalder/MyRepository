@@ -391,4 +391,8 @@ $(document).on('click', ' .checkButton', function (event) {
 	font-weight: bold;
 	height: 40px;
 }
+
+.close{
+margin-top: 1% !important;
+}
 </style>
