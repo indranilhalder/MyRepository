@@ -2804,12 +2804,15 @@ if($("body.template-pages-layout-newBrandLandingPageTemplate .body-Content").fin
 if($("body.template-pages-layout-newBrandLandingPageTemplate .body-Content").find(".shop_for_blp").children().length==0){
 	$(".shop_for_blp").css("padding","0px");
 } 
-if($("body.template-pages-layout-newBrandLandingPageTemplate .body-Content").find(".shop_the_look").children().length==0){	
+/*if($("body.template-pages-layout-newBrandLandingPageTemplate .body-Content").find(".shop_the_look").children().length==0){	
 	$(".shop_the_look").css({
 		'padding' : '0px !important',
 		'margin' : '0px'		
 	});
-} 
+}*/
+if($("body.template-pages-layout-newBrandLandingPageTemplate .body-Content").find(".shop_the_look").children().length==0){	
+	$(".shop_the_look").prop("style","padding:0px !important;margin:0px");
+}
 
 //-----BLP------//
 
