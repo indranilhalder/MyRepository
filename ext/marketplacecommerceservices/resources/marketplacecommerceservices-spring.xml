@@ -1967,7 +1967,7 @@
     </bean>
 	<!-- Old Cron Job Deletion Logic ends: -->
 
-	<bean id="nodeWarmupService" class="com.hybris.yps.nodewarmer.service.NodeWarmupService">
+<!-- 	<bean id="nodeWarmupService" class="com.hybris.yps.nodewarmer.service.NodeWarmupService">
 		<property name="warmerStrategies">
 			<list>
 				<bean class="com.hybris.yps.nodewarmer.warmer.impl.ComposedTypeWarmer" />
@@ -1984,7 +1984,7 @@
 				</bean>
 			</list>
 		</property>
-	</bean>
+	</bean> -->
 	<!-- Old Cron Job Deletion Logic ends: -->
 
 </beans>
