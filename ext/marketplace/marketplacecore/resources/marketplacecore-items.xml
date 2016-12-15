@@ -4507,6 +4507,13 @@
 						<modifiers read="true" write="true" search="true" />
 						<persistence type='property' />
 					</attribute>
+					
+					 <attribute type="java.lang.String" qualifier="imageURL"
+						autocreate="true" generate="true">
+						<description>This attribute is required to provide URL of the image</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
 
 <!-- TPR-562 ends -->
 					<attribute type="java.lang.String" qualifier="filterByBrandName"
