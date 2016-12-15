@@ -2540,7 +2540,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		{
 			DateTime today = new DateTime().withTimeAtStartOfDay();
 			today=today.plusDays(1);
-			if((actualReturnWindow-returnWindow)>3)
+			if((actualReturnWindow-returnWindow)>=3)
 			{
 				if(mplLPHolidaysModel.getWorkingDays().contains("0")){
 					returnableDates = dateUtilHelper.calculatedLpHolidays(dtfOut.print(today),3);
