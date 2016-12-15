@@ -117,6 +117,7 @@ public interface ControllerConstants
 			String MplBrandLogoComponent = _Prefix + MplBrandLogoComponentModel._TYPECODE + _Suffix;
 			String RotatingImagesComponent = _Prefix + RotatingImagesComponentModel._TYPECODE + _Suffix;
 			String CustomSkuComponent = _Prefix + CustomSkuComponentModel._TYPECODE + _Suffix;
+			//String NavigationBarCollectionComponent = _Prefix + NavigationBarCollectionComponentModel._TYPECODE + _Suffix;
 		}
 	}
 
@@ -220,6 +221,8 @@ public interface ControllerConstants
 			interface Cart
 			{
 				String CartPage = "pages/cart/cartPage";
+				String LUX_INDICATOR = "luxury";
+				String EMPTY_CART = "emptyCart";
 			}
 
 			interface StoreFinder
@@ -294,7 +297,7 @@ public interface ControllerConstants
 				String WishlistName = "wishlistName";
 				String WishlistSize = "wishlistSize";
 				String WishlistUrl = "wishlistUrl";
-
+				String EMPTY_WISHLIST = "emptyWishlist";
 			}
 
 			interface Checkout

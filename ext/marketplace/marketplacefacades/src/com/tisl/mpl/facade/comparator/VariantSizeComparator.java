@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Required;
 
 
@@ -31,11 +32,17 @@ public class VariantSizeComparator implements Comparator<VariantOptionData>
 	{
 
 		//TISPRO-50 - null check added
-		final String value0 = arg0.getSizeLink() == null ? null : arg0.getSizeLink().get(arg0.getUrl()).replaceAll("\\s+", "")
-				.toUpperCase();
-		final String value1 = arg1.getSizeLink() == null ? null : arg1.getSizeLink().get(arg1.getUrl()).replaceAll("\\s+", "")
-				.toUpperCase();
-		if (value0 == null || value1 == null)
+		String value0 = "";
+		String value1 = "";
+		if (null != arg0.getSizeLink() && null != arg0.getSizeLink().get(arg0.getUrl()))
+		{
+			value0 = arg0.getSizeLink().get(arg0.getUrl()).replaceAll("\\s+", "").toUpperCase();
+		}
+		if (null != arg1.getSizeLink() && null != arg1.getSizeLink().get(arg1.getUrl()))
+		{
+			value1 = arg1.getSizeLink().get(arg1.getUrl()).replaceAll("\\s+", "").toUpperCase();
+		}
+		if (StringUtils.isNotEmpty(value0) || StringUtils.isNotEmpty(value1))
 		{
 			return 0;
 		}

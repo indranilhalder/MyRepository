@@ -474,6 +474,7 @@ INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];nam
 # ContentSlot 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef)
 ;;EmptyCartMiddleContent-cartPage;Middle Slot for Cart Page;true;EmptyCartParagraphComponent
+;;EmptyCartSignIn-cartPage;Sign In Slot for Cart Page;true;EmptyCartSignInParagraphComponent
 ;;TopContentSlot-cartPage;Top Content Slot for Cart Page;true;FreeDeliverySimpleBannerComponent,CartComponent
 ;;CenterLeftContentSlot-cartPage;Center Left Content Slot for Cart Page;true;PromotionsComponent,PotentialPromotionsComponent
 ;;CenterRightContentSlot-cartPage;Center Right Content Slot for Cart Page;true;CartTotalsComponent
@@ -484,6 +485,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 # ContentSlotForPage 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='cartPage'];contentSlot(uid,$contentCV)[unique=true]
 ;;EmptyCartMiddleForCartPage;EmptyCartMiddleContent;;EmptyCartMiddleContent-cartPage
+;;EmptyCartSignInForCartPage;EmptyCartSignIn;;EmptyCartSignIn-cartPage
 ;;TopContentSlotForCartPage;TopContent;;TopContentSlot-cartPage
 ;;CenterLeftContentSlotForCartPage;CenterLeftContentSlot;;CenterLeftContentSlot-cartPage
 ;;CenterRightContentSlotForCartPage;CenterRightContentSlot;;CenterRightContentSlot-cartPage

@@ -8,7 +8,6 @@ import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
-import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartCalculationStrategy;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
 import de.hybris.platform.core.enums.CreditCardType;
@@ -108,6 +107,7 @@ import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.model.PaymentModeSpecificPromotionRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.util.DiscountUtility;
+import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.util.MplEMICalculator;
 import com.tisl.mpl.util.OrderStatusSpecifier;
 
@@ -1451,13 +1451,16 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		{
 			try
 			{
+
 				//saving CODPaymentInfoModel
 				getModelService().save(cODPaymentInfoModel);
 			}
 			catch (final ModelSavingException e)
 			{
-				LOG.error("Exception while saving cod payment info with " + e);
+				//LOG.error("Exception while saving cod payment info with " + e);
+				LOG.debug("COD Payment Info set for cart with GUID" + abstractOrderModel.getGuid());
 				throw new EtailNonBusinessExceptions(e, "Exception while saving cod payment info with");
+
 			}
 
 			//setting CODPaymentInfoModel in cartmodel
@@ -2255,33 +2258,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	}
 
 
-	/**
-	 * @Description : Return Channel Data
-	 * @param channel
-	 * @return salesApplication
-	 */
-	private List<SalesApplication> returnChannelData(final String channel)
-	{
-		final List<SalesApplication> salesApplication = new ArrayList<SalesApplication>();
-		if (channel.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_WEB))
-		{
-			salesApplication.add(SalesApplication.WEB);
-		}
-		else if (channel.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_WEBMOBILE))
-		{
-			salesApplication.add(SalesApplication.WEBMOBILE);
-		}
-		else if (channel.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_MOBILE))
-		{
-			salesApplication.add(SalesApplication.MOBILE);
-		}
-		else if (channel.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_CALLCENTER))
-		{
-			salesApplication.add(SalesApplication.CALLCENTER);
-		}
-		return salesApplication;
-	}
-
 
 	/**
 	 *
@@ -2351,7 +2327,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				auditEntryList.add(auditEntry);
 
 				final MplPaymentAuditModel newAuditModel = getModelService().create(MplPaymentAuditModel.class);
-				newAuditModel.setChannel(returnChannelData(channel));
+				newAuditModel.setChannel(GenericUtilityMethods.returnChannelData(channel));
 				newAuditModel.setAuditId(juspayOrderId);
 				newAuditModel.setCartGUID(cartGuId);
 				newAuditModel.setRequestDate(new Date());
@@ -3020,11 +2996,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3036,9 +3012,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override

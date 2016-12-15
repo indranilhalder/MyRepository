@@ -361,6 +361,9 @@
 	},
 };
 	
+	//update the message for Freebie product TPR-1754
+	var freebieMsg="";
+	
 /**
  * displaying thumb nails details
  */
@@ -592,34 +595,42 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 	
 	var ussidValue=$("#ussid").val();
   
-	/*if (wishListList == "") {
-		wishName = $("#defaultWishName").val();
-	} else {
-		wishName = wishListList[$("#hidWishlist").val()];
+	var isMSDEnabled =  $("input[name=isMSDEnabled]").val();								
+	if(isMSDEnabled === 'true')
+	{
+	
+	var isApparelExist  = $("input[name=isApparelExist]").val();
+			
+	var salesHierarchyCategoryMSD =  $("input[name=salesHierarchyCategoryMSD]").val();
+	
+	var rootCategoryMSD  = $("input[name=rootCategoryMSD]").val();
+		
+	var productCodeMSD =  $("input[name=productCodeMSD]").val();
+			
+	var priceformad =  $("input[id=price-for-mad]").val();
+				
+	
+	if(typeof isMSDEnabled === 'undefined')
+	{
+		isMSDEnabled = false;						
 	}
-	if(wishName==""){
-		var msg=$('#wishlistnotblank').text();
-		$('#addedMessage').show();
-		$('#addedMessage').html(msg);
-		return false;
+	
+	if(typeof isApparelExist === 'undefined')
+	{
+		isApparelExist = false;						
+	}	
+	
 	}
-    if(wishName==undefined||wishName==null){
-    	if(alreadyAddedWlName_pdp!=undefined || alreadyAddedWlName_pdp!=""){
-    		if(alreadyAddedWlName_pdp=="[]"){
-    			$("#wishlistErrorId_pdp").html("Please select a wishlist");
-    		}
-    		else{
-    			alreadyAddedWlName_pdp=alreadyAddedWlName_pdp.replace("[","");
-    			alreadyAddedWlName_pdp=alreadyAddedWlName_pdp.replace("]","");
-    			$("#wishlistErrorId_pdp").html("Product already added in your wishlist "+alreadyAddedWlName_pdp);
-    		}
-    		$("#wishlistErrorId_pdp").css("display","block");
-    	}
-    	return false;
-    }*/
+	
+	
+	
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
 			+ "-addToWishListInPDP";
     var sizeSelected=true;
+    
+    if(!$('#variant li').hasClass('selected')) {
+    	sizeSelected=false;
+    }
     if( $("#variant,#sizevariant option:selected").val()=="#"){
     	sizeSelected=false;
     }
@@ -634,7 +645,11 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 		},3000)
 	}
 	else {
-	
+		var isInWishlist = getLastModifiedWishlist(ussidValue);
+		if(isInWishlist) {
+			removeFromWishlistInPdp(wishName, productCodePost, ussidValue,isMSDEnabled,isApparelExist,rootCategoryMSD,salesHierarchyCategoryMSD,priceformad,"INR");
+		}
+		else {
 		$.ajax({
 			contentType : "application/json; charset=utf-8",
 			url : requiredUrl,
@@ -659,31 +674,9 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 					//$('#addedMessage').delay(3000).fadeOut('slow'); // TISTI-225
 					populateMyWishlistFlyOut(wishName);
 					
-					//For MSD
-					var isMSDEnabled =  $("input[name=isMSDEnabled]").val();								
+					//For MSD					
 					if(isMSDEnabled === 'true')
 					{
-					
-					var isApparelExist  = $("input[name=isApparelExist]").val();
-							
-					var salesHierarchyCategoryMSD =  $("input[name=salesHierarchyCategoryMSD]").val();
-					
-					var rootCategoryMSD  = $("input[name=rootCategoryMSD]").val();
-						
-					var productCodeMSD =  $("input[name=productCodeMSD]").val();
-							
-					var priceformad =  $("input[id=price-for-mad]").val();
-								
-					
-					if(typeof isMSDEnabled === 'undefined')
-					{
-						isMSDEnabled = false;						
-					}
-					
-					if(typeof isApparelExist === 'undefined')
-					{
-						isApparelExist = false;						
-					}	
 					
 					if(Boolean(isMSDEnabled) && Boolean(isApparelExist) && (rootCategoryMSD === 'Clothing'))
 						{					
@@ -706,12 +699,12 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 				//	$('#myModal').modal('hide');
 				//	
 				}
-				else{
+				/*else{
 					$(".wishAlreadyAdded").addClass("active");
 					setTimeout(function(){
 						$(".wishAlreadyAdded").removeClass("active")
 					},3000)
-				}
+				}*/
 			},
 		});
 	
@@ -723,6 +716,7 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 			$('input.wishlist#add_to_wishlist').popover('hide');
 
 			}, 0);
+	}
 	}
 }
 
@@ -820,7 +814,21 @@ function setValidPrice(sellersArray, index) {
 			 $("#mrpPriceId").hide();
 			 $("#savingsOnProductId").hide();
 			 //$("#dListedErrorMsg").show(); //Need to Change	
-			 $("#freebieProductMsgId").show();			 
+			// $("#freebieProductMsgId").show();
+			 var ussId=  $("#ussid").val();
+			 
+			//update the message for Freebie product TPR-1754
+			 var freebieproductMsg =populateFreebieMsg(ussId);
+			
+			 if($.isEmptyObject(freebieproductMsg)){
+				 
+				 $("#freebieProductMsgId").show();			 
+						}else{
+						
+						$("#freebieProductMsgId").html(freebieMsg);
+						$("#freebieProductMsgId").show();
+					}
+			 
 		}else {
 			$("#mrpPriceId").append(mrp);
 			$("#mopPriceId").html("");
@@ -1425,6 +1433,7 @@ $( document ).ready(function() {
 			for(var i in data['buyboxList'] ){
 				buyBoxList.push(data['buyboxList'][i]);
 			}
+		//	alert(buyBoxList);
 			if($("#isProductPage").val()=='true'){
 			sessionStorage.setItem('servicableList',"");
 			}
@@ -1490,6 +1499,7 @@ $( document ).ready(function() {
 					
 					$("#sellerNameId").html(sellerName);
 					$("#sellerSelId").val(sellerID);
+				//	alert(data['othersSellersCount']);
 					if (isOOS() && data['othersSellersCount']>0) {
 						//if( $("#variant,#sizevariant option:selected").val()!="#") {  //TISPRD-1173 TPR-465
 						$("#addToCartButton").hide();
@@ -1545,6 +1555,11 @@ $( document ).ready(function() {
 						 $("#pin").attr("disabled",true);
 						 $("#pdpPincodeCheckDList").show();
 						 $("#buyNowButton").attr("disabled",true);
+						 $("#variant li a").each(function(){
+								$(this).removeAttr("href");
+								$(this).parent().addClass('strike');
+								//$("#outOfStockId").hide();
+						});
 						
 					}
 					else if (allStockZero == 'Y' && data['othersSellersCount']==0 && $("#variant option").length == 0){
@@ -1553,7 +1568,11 @@ $( document ).ready(function() {
 							$("#buyNowButton").hide();
 							$("#outOfStockId").show();
 							$("#allVariantOutOfStock").show();
-							
+							$("#variant li a").each(function(){
+							$(this).removeAttr("href");
+							$(this).parent().addClass('strike');
+							//$("#outOfStockId").hide();
+							});
 						//}
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").hide();
@@ -1577,6 +1596,8 @@ $( document ).ready(function() {
 						$("#otherSellerLinkId").show();
 					}
 					else {
+					//	alert(data['othersSellersCount']);
+						$("#otherSellerInfoId").show();
 						$("#otherSellersId").html(data['othersSellersCount']);
 						$("#minPriceId").html(data['minPrice'].formattedValue);
 					}
@@ -1855,8 +1876,22 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 				 $(".seller").hide();
 				 $(".star-review").hide();
 				 //$("#dListedErrorMsg").show();	//Need to Change
-				 $("#freebieProductMsgId").show();
-				 			 
+				// $("#freebieProductMsgId").show();
+			var ussId=  $("#ussid").val();
+				
+			//	$("#ussid").val(data['sellerArticleSKU']);
+				 
+				//update the message for Freebie product TPR-1754
+				 var freebieproductMsg =populateFreebieMsg(ussId);			 
+				 if($.isEmptyObject(freebieproductMsg)){	
+					 
+					 $("#freebieProductMsgId").show();			 
+							}else{
+							
+							$("#freebieProductMsgId").html(freebieMsg);
+							$("#freebieProductMsgId").show();
+						}
+				 
 			}else{
 				$("#mrpPriceId").show();
 			 }
@@ -1962,16 +1997,6 @@ function populateEMIDetailsForPDP(){
 		var selectedBank = $('#bankNameForEMI :selected').text();
 		var contentData = '';
 		if (selectedBank != "select") {
-			
-			/*TPR-641 starts*/
-			emiBankSelectedTealium = "emi_option_" + selectedBank.replace(/ /g, "").toLowerCase();
-			utag.link({
-				link_obj: this, 
-				link_text: emiBankSelectedTealium , 
-				event_type : 'emi_option_selected'
-			});
-			/*TPR-641 ends*/
-			
 			var dataString = 'selectedEMIBank=' + selectedBank + '&productVal=' + productVal;
 			$.ajax({
 				url : ACC.config.encodedContextPath + "/p-getTerms",
@@ -2003,6 +2028,15 @@ function populateEMIDetailsForPDP(){
 					} else {
 						$('#emiNoData').show();
 					}
+					
+					/*TPR-641 starts*/
+					emiBankSelectedTealium = "emi_option_" + selectedBank.replace(/ /g, "").replace(/[^a-z0-9\s]/gi, '').toLowerCase();
+					utag.link({
+						link_obj: this, 
+						link_text: emiBankSelectedTealium , 
+						event_type : 'emi_option_selected'
+					});
+					/*TPR-641 ends*/
 				},
 				error : function(resp) {
 					$('#emiSelectBank').show();
@@ -2734,11 +2768,19 @@ function loadDefaultWishListName_SizeGuide() {
 	$(document).on('click','#buyNow .js-add-to-cart',function(event){
 		//var cartReturn = ACC.product.sendAddToBag("addToCartForm");
 		var isShowSize= $("#showSize").val();
+		var productCode=$("#product_id").val();
 		 if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches' && isShowSize=='true'){
 			$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 			$("#addToCartFormTitle").show();
 	 	    return false;
 	 }
+		 //TISQAEE-64
+		 utag.link({
+				link_obj: this,
+				link_text: 'buynow' ,
+				event_type : 'buynow_winner_seller',
+				product_sku : productCode
+			});
 		ACC.product.sendAddToBag("addToCartForm",true);
 	});
 
@@ -2838,6 +2880,10 @@ function loadDefaultWishListName_SizeGuide() {
 		
 		$(document).on("click",".product-detail .promo-block .pdp-promo-title, .pdp-promo-title-link",function(e){
 			e.preventDefault();
+			/*TPR-694*/
+			utag.link({"link_obj": this, "link_text": 'product_offer_view_details', "event_type": 'product_offer_details'
+			}); 
+			/*TPR-694 ends */
 			offerPopup($("#promotionDetailsId").html());
 		});
 		$(document).on('hide.bs.modal', function () {
@@ -2858,7 +2904,7 @@ function loadDefaultWishListName_SizeGuide() {
 	});
 	/*Wishlist In PDP changes*/
 	function getLastModifiedWishlist(ussidValue) {
-		
+		var isInWishlist = false;
 		var requiredUrl = ACC.config.encodedContextPath + "/p"
 				+ "-getLastModifiedWishlistByUssid";
 		var dataString = 'ussid=' + ussidValue;
@@ -2867,8 +2913,10 @@ function loadDefaultWishListName_SizeGuide() {
 			url : requiredUrl,
 			data : dataString,
 			dataType : "json",
+			async: false,
 			success : function(data) {
 			if (data == true) {
+				isInWishlist = true;
 				$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').addClass("added");
 				$("#add_to_wishlist").attr("disabled",true);
 				$('.add_to_cart_form .out_of_stock #add_to_wishlist').addClass("wishDisabled");
@@ -2879,11 +2927,71 @@ function loadDefaultWishListName_SizeGuide() {
 				$("#wishlistErrorId_pdp").html("Could not add the product in your wishlist");
 			}
 		});
+		return isInWishlist;
+	}
+	
+	
+	function removeFromWishlistInPdp(wishlistName, productCode, ussid,isMSDEnabled,isApparelExist,rootCategoryMSD,catID,price,currency){	
+		var requiredUrl = ACC.config.encodedContextPath+"/p" + "-removeFromWl";
+		var dataString = 'wish=' + wishlistName + '&product=' + productCode
+		+ '&ussid=' + ussid;
+		
+		$.ajax({
+			url: requiredUrl,
+			type: "GET",
+			data: dataString,
+			dataType : "json",
+			cache: false,
+			contentType : "application/json; charset=utf-8",
+			success : function(data) {
+				//FOR MSD
+				if(Boolean(isMSDEnabled) && Boolean(isApparelExist) && (rootCategoryMSD == 'Clothing'))
+				{
+					try
+					{
+					track(['removeFromWishlist',productCode,catID,price,currency]);	
+					}
+					catch(err)
+					{
+						console.log('Error Adding trackers when remove from cart: '+err.message);					
+					}
+				}
+				
+				$(".wishRemoveSucess").addClass("active");
+				setTimeout(function(){
+					$(".wishRemoveSucess").removeClass("active")
+				},3000)
+				$("#add_to_wishlist").attr("disabled",false);
+				$('.add_to_cart_form .out_of_stock #add_to_wishlist').removeClass("wishDisabled");
+				$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').removeClass("added");
+				populateMyWishlistFlyOut(wishlistName);
+				
+				/*TPR-646 Changes*/
+				utag.link({
+					"link_obj" : this,
+			        "link_text": 'remove_from_wishlist',
+			        "event_type": 'remove_from_wishlist',
+			        "product_sku_wishlist": "" + productCode
+			    });
+				
+				//END MSD
+//				window.location.href = ACC.config.encodedContextPath + "/my-account/wishList";
+				//window.location.href = ACC.config.encodedContextPath + "/my-account/viewParticularWishlist?particularWishlist="+wishlistName;
+			},
+			error: function (xhr, status, error) {
+				if(status == "parsererror"){
+					window.location.href = ACC.config.encodedContextPath + "/login";
+				} else {
+
+					 alert("Some issues are there with Wishlist at this time. Please try later or contact out helpdesk");	
+				}
+	           
+	        }
+		});
 	}
 	
 	
 	/*TPR-1375*/
-
 	 //TPR-1375 populating the buybox details after chceking servicable seller list
 	function repopulateBuyBoxDetails(data,buyBoxList){
 		var isproductPage = $("#isproductPage").val();
@@ -2909,13 +3017,17 @@ function loadDefaultWishListName_SizeGuide() {
 				    nonServicableList.push(buyBoxList[i]);
 			}
 		}
-		sessionStorage.setItem('servicableList', JSON.stringify(servicableList[0]));
+		if(!$.isEmptyObject(servicableList)){
+			sessionStorage.setItem('servicableList', JSON.stringify(servicableList[0]));
+		}
 		sessionStorage.setItem('isproductPage', isproductPage);
 		sessionStorage.setItem('allOosFlag', allOosFlag);
 		sessionStorage.setItem('otherSellerCount', servicableList.length-1);
 		sessionStorage.setItem('pincodeChecked', 'Y');
 		//TPR-1375 populating buybox details so that buybox seller should be servicable
+		if(!$.isEmptyObject(servicableList)){
 		populateBuyBoxData(JSON.parse(sessionStorage.getItem("servicableList")),servicableList.length-1,isproductPage,allOosFlag);
+		}
 	}
 	
 	/*Offer popup*/
@@ -3059,3 +3171,37 @@ if (width > winWidth){
 });
 
 });
+
+	//update the message for Freebie product TPR-1754
+	function  populateFreebieMsg(ussId){
+		var requiredUrl = ACC.config.encodedContextPath + "/p-" + ussId
+		                  + "/getFreebieMessage";		
+		var dataString = 'ussId=' + ussId;	
+		$.ajax({
+			contentType : "application/json; charset=utf-8",
+			url : requiredUrl,
+			async: false,
+			data : dataString,
+			cache : false,
+			dataType : "json",
+			success : function(data){
+				if (data != null) {			
+				    var freebieMessageMap = data['offerMessageMap'];
+				    if(!$.isEmptyObject(freebieMessageMap)){
+				    	
+				    	$.each( freebieMessageMap, function(key,value){		
+				    		
+						//	$.each(value, function(keyInternal,valueInternal){
+								// if(keyInternal == 'freebieMsg'){
+									 freebieMsg = value;		 
+									 
+								// }				 
+							// });
+				    	})
+				    	
+				    	}
+			}
+		}
+	});
+		 return freebieMsg;
+	}

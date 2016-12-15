@@ -184,11 +184,6 @@ function navigateToPage(queryString,textString)
 			</c:if>
 			<ul class="facet-list js-facet-list  <c:if test="${not empty facetData.topValues}">facet-list-hidden js-facet-list-hidden</c:if>">
 
-
-
-
-
-
 				<c:forEach items="${facetData.values}" var="facetValue">					
 				  <c:url value="${facetValue.query.url}" var="facetValueQueryUrl"/>
 					<li class="filter-${facetData.code}">
@@ -438,16 +433,16 @@ function navigateToPage(queryString,textString)
 				</div>
 				
 				<div class="less js-less-facet-values checkbox-menu">
-				    	<form action="${url}" method="get"> 
+				    <%-- 	<form action="${url}" method="get"> 
 								<input type="hidden" name="offer" value="${offer}"/>
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
 								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
 								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 								<input type="hidden" name="facetValue" value="${facetValue.code}"/>
-								<input type="hidden" name="isFacet" value="true"/>
+								<input type="hidden" name="isFacet" value="true"/> --%>
 								<input type="submit" value="<spring:theme code="search.nav.facetShowLess_${facetData.code}" text="less..."/>" class="js-less-facet-values-link"  />
-								</form>
+				<!-- 				</form> -->
 				
 					<%-- <a href="#" class="js-less-facet-values-link"><spring:theme code="search.nav.facetShowLess_${facetData.code}" /></a> --%>
 				</div>
@@ -473,12 +468,12 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="isFacet" value="true"/>							
 								<input type="hidden" id="facetValue" name="facetValue" value="${facetValue.code}"/>						
 								<spring:theme code="text.minPriceSearch.placeholder" var="minPriceSearchPlaceholder" />
-							    <input class="minPriceSearchTxt" type="text" id="customMinPrice" name="customMinPrice" width="30" height="20" placeholder="${minPriceSearchPlaceholder}" onkeypress="return isNumber(event)">							
+							    <input class="minPriceSearchTxt" type="text" id="customMinPriceMob" name="customMinPrice" width="30" height="20" placeholder="${minPriceSearchPlaceholder}" onkeypress="return isNumber(event)">							
 							    <spring:theme code="text.maxPriceSearch.placeholder" var="maxPriceSearchPlaceholder" />
 							    <span>-</span>
-							    <input class="maxPriceSearchTxt" type="text" id="customMaxPrice" name="customMaxPrice" width="30" height="20" placeholder="${maxPriceSearchPlaceholder}" onkeypress="return isNumber(event)">
+							    <input class="maxPriceSearchTxt" type="text" id="customMaxPriceMob" name="customMaxPrice" width="30" height="20" placeholder="${maxPriceSearchPlaceholder}" onkeypress="return isNumber(event)">
 							   
-								<input type="button" name ="submitPriceFilter" id ="applyCustomPriceFilter"	value="GO"/>
+								<input type="button" name ="submitPriceFilter" id ="applyCustomPriceFilterMob"	value="GO"/>
 						</form>							
 		</c:if>
 		</div>

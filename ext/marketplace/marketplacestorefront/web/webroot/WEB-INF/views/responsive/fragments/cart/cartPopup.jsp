@@ -28,9 +28,19 @@
 								<ul>
 									<li>
 										<div class="product-img">
-										<a href="${entryProductUrl}">
-											<product:productPrimaryImage product="${entry.product}" format="cartIcon"/>
-										</a>
+										<c:choose>
+											<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
+													<a href="${entryProductUrl}">
+												<product:productPrimaryImage product="${entry.product}" format="luxuryCartIcon"/>
+											</a>
+											</c:when>
+											<c:otherwise>
+													<a href="${entryProductUrl}">
+												<product:productPrimaryImage product="${entry.product}" format="cartIcon"/>
+											</a>
+													
+											</c:otherwise>
+										</c:choose>
 										</div>
 										<div class="product">
 											<p class="company"></p>

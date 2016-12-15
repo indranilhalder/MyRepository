@@ -244,8 +244,16 @@ public class HomePageController extends AbstractPageController
 
 				if (component instanceof MplShowcaseComponentModel)
 				{
-					final MplShowcaseComponentModel brandsYouLoveComponent = (MplShowcaseComponentModel) component;
-					brandsYouLoveJson = getJSONForShowcaseComponent(brandsYouLoveComponent);
+					//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+					if (component.getVisible().booleanValue() && homepageComponentService.showOnTimeRestriction(component))
+					{
+						final MplShowcaseComponentModel brandsYouLoveComponent = (MplShowcaseComponentModel) component;
+						brandsYouLoveJson = getJSONForShowcaseComponent(brandsYouLoveComponent);
+					}
+					else
+					{
+						LOG.info("Component visiblity set to false");
+					}
 				}
 			}
 		}
@@ -282,6 +290,7 @@ public class HomePageController extends AbstractPageController
 			title = showCaseComponent.getTitle();
 		}
 		showCaseComponentJson.put(TITLE, title);
+
 		final JSONArray subComponentJsonArray = new JSONArray();
 
 		if (CollectionUtils.isNotEmpty(showCaseComponent.getShowcaseItems()))
@@ -291,38 +300,49 @@ public class HomePageController extends AbstractPageController
 			String brandLogoAltText = EMPTY_STRING;
 			for (final MplShowcaseItemComponentModel showcaseItem : showCaseComponent.getShowcaseItems())
 			{
-				final JSONObject showCaseItemJson = new JSONObject();
-				showCaseItemJson.put("compId", showcaseItem.getUid());
-				showCaseItemJson.put("showByDefault", showcaseItem.getShowByDefault());
-				if (null != showCaseComponent.getLayout() && showCaseComponent.getLayout().equals(ShowCaseLayout.BRANDSHOWCASE))
+				//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+				if (showcaseItem.getVisible().booleanValue() && homepageComponentService.showOnTimeRestriction(showcaseItem))
 				{
-					if (null != showcaseItem.getLogo())
+					final JSONObject showCaseItemJson = new JSONObject();
+					showCaseItemJson.put("compId", showcaseItem.getUid());
+					showCaseItemJson.put("showByDefault", showcaseItem.getShowByDefault());
+					if (null != showCaseComponent.getLayout() && showCaseComponent.getLayout().equals(ShowCaseLayout.BRANDSHOWCASE))
 					{
-						if (StringUtils.isNotEmpty(showcaseItem.getLogo().getURL()))
+						if (null != showcaseItem.getLogo())
 						{
-							brandLogoUrl = showcaseItem.getLogo().getURL();
+							if (StringUtils.isNotEmpty(showcaseItem.getLogo().getURL()))
+							{
+								brandLogoUrl = showcaseItem.getLogo().getURL();
+							}
+							showCaseItemJson.put("brandLogoUrl", brandLogoUrl);
+							if (StringUtils.isNotEmpty(showcaseItem.getLogo().getAltText()))
+							{
+								brandLogoAltText = showcaseItem.getLogo().getAltText();
+							}
+							showCaseItemJson.put("brandLogoAltText", brandLogoAltText);
 						}
-						showCaseItemJson.put("brandLogoUrl", brandLogoUrl);
-						if (StringUtils.isNotEmpty(showcaseItem.getLogo().getAltText()))
-						{
-							brandLogoAltText = showcaseItem.getLogo().getAltText();
-						}
-						showCaseItemJson.put("brandLogoAltText", brandLogoAltText);
 					}
+					else
+					{
+						String headerText = EMPTY_STRING;
+						if (StringUtils.isNotEmpty(showcaseItem.getHeaderText()))
+						{
+							headerText = showcaseItem.getHeaderText();
+						}
+						showCaseItemJson.put("headerText", headerText);
+					}
+					subComponentJsonArray.add(showCaseItemJson);
 				}
 				else
 				{
-					String headerText = EMPTY_STRING;
-					if (StringUtils.isNotEmpty(showcaseItem.getHeaderText()))
-					{
-						headerText = showcaseItem.getHeaderText();
-					}
-					showCaseItemJson.put("headerText", headerText);
+					LOG.info("Component visiblity set to false");
 				}
-				subComponentJsonArray.add(showCaseItemJson);
 			}
 		}
-
+		// Changes implemented for TPR-1121
+		showCaseComponentJson.put("autoPlay", showCaseComponent.getAutoPlay());
+		showCaseComponentJson.put("slideBy", showCaseComponent.getSlideBy());
+		showCaseComponentJson.put("autoplayTimeout", showCaseComponent.getAutoplayTimeout());
 		showCaseComponentJson.put("subComponents", subComponentJsonArray);
 
 		return showCaseComponentJson;
@@ -567,81 +587,98 @@ public class HomePageController extends AbstractPageController
 
 				if (component instanceof ProductCarouselComponentModel)
 				{
-					final ProductCarouselComponentModel newAndExclusiveComponent = (ProductCarouselComponentModel) component;
-
-					String title = EMPTY_STRING;
-					if (StringUtils.isNotEmpty(newAndExclusiveComponent.getTitle()))
+					//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+					if (component.getVisible().booleanValue() && homepageComponentService.showOnTimeRestriction(component))
 					{
-						title = newAndExclusiveComponent.getTitle();
-					}
-					newAndExclusiveJson.put(TITLE, title);
-					final JSONArray newAndExclusiveJsonArray = new JSONArray();
+						final ProductCarouselComponentModel newAndExclusiveComponent = (ProductCarouselComponentModel) component;
+						String title = EMPTY_STRING;
 
-					if (CollectionUtils.isNotEmpty(newAndExclusiveComponent.getProducts()))
-					{
-						for (final ProductModel newAndExclusiveProducts : newAndExclusiveComponent.getProducts())
+						if (StringUtils.isNotEmpty(newAndExclusiveComponent.getTitle()))
 						{
-							//START :code added for 'NEW' tag on the product image
-							for (final SellerInformationModel seller : newAndExclusiveProducts.getSellerInformationRelator())
+							title = newAndExclusiveComponent.getTitle();
+						}
+
+						newAndExclusiveJson.put(TITLE, title);
+
+						// Changes implemented for TPR-1121
+						newAndExclusiveJson.put("autoPlay", newAndExclusiveComponent.getAutoPlayNewIn());
+						newAndExclusiveJson.put("slideBy", newAndExclusiveComponent.getSlideByNewIn());
+						newAndExclusiveJson.put("autoplayTimeout", newAndExclusiveComponent.getAutoplayTimeoutNewIn());
+
+						final JSONArray newAndExclusiveJsonArray = new JSONArray();
+
+						if (CollectionUtils.isNotEmpty(newAndExclusiveComponent.getProducts()))
+						{
+							for (final ProductModel newAndExclusiveProducts : newAndExclusiveComponent.getProducts())
 							{
-								if (null != seller.getStartDate() && new Date().after(seller.getStartDate())
-										&& null != seller.getEndDate() && new Date().before(seller.getEndDate()))
+								//START :code added for 'NEW' tag on the product image
+								for (final SellerInformationModel seller : newAndExclusiveProducts.getSellerInformationRelator())
 								{
-									if (null != allowNew && allowNew.equalsIgnoreCase(Y))
+									if (null != seller.getStartDate() && new Date().after(seller.getStartDate())
+											&& null != seller.getEndDate() && new Date().before(seller.getEndDate()))
 									{
-										//Find the oldest startDate of the seller
-										if (null == existDate)
+										if (null != allowNew && allowNew.equalsIgnoreCase(Y))
 										{
-											existDate = seller.getStartDate();
-										}
-										else if (existDate.after(seller.getStartDate()))
-										{
-											existDate = seller.getStartDate();
+											//Find the oldest startDate of the seller
+											if (null == existDate)
+											{
+												existDate = seller.getStartDate();
+											}
+											else if (existDate.after(seller.getStartDate()))
+											{
+												existDate = seller.getStartDate();
+											}
 										}
 									}
 								}
-							}
-							final JSONObject newAndExclusiveProductJson = new JSONObject();
-							if (null != existDate && isNew(existDate))
-							{
-								newAndExclusiveProductJson.put("isNew", Y);
-							}
-							//END :code added for 'NEW' tag on the product image
+								final JSONObject newAndExclusiveProductJson = new JSONObject();
+								if (null != existDate && isNew(existDate))
+								{
+									newAndExclusiveProductJson.put("isNew", Y);
+								}
+								//END :code added for 'NEW' tag on the product image
 
 
-							ProductData product = null;
-							product = productFacade.getProductForOptions(newAndExclusiveProducts, PRODUCT_OPTIONS);
-							newAndExclusiveProductJson.put("productImageUrl", getProductPrimaryImageUrl(product));
-							newAndExclusiveProductJson.put("productTitle", product.getProductTitle());
-							newAndExclusiveProductJson.put("productUrl", product.getUrl());
-							String price = null;
-							try
-							{
-								price = getProductPrice(product);
-							}
-							catch (final EtailBusinessExceptions e)
-							{
-								price = EMPTY_STRING;
-								LOG.error(EXCEPTION_MESSAGE_PRICE + product.getCode());
-							}
-							catch (final EtailNonBusinessExceptions e)
-							{
-								price = EMPTY_STRING;
-								LOG.error(EXCEPTION_MESSAGE_PRICE + product.getCode());
-							}
-							catch (final Exception e)
-							{
-								price = EMPTY_STRING;
-								LOG.error(EXCEPTION_MESSAGE_PRICE + product.getCode());
-							}
-							newAndExclusiveProductJson.put("productPrice", price);
-							newAndExclusiveJsonArray.add(newAndExclusiveProductJson);
-							existDate = null;
+								ProductData product = null;
+								product = productFacade.getProductForOptions(newAndExclusiveProducts, PRODUCT_OPTIONS);
+								newAndExclusiveProductJson.put("productImageUrl", getProductPrimaryImageUrl(product));
+								newAndExclusiveProductJson.put("productTitle", product.getProductTitle());
+								newAndExclusiveProductJson.put("productUrl", product.getUrl());
+								String price = null;
+								try
+								{
+									price = getProductPrice(product);
+								}
+								catch (final EtailBusinessExceptions e)
+								{
+									price = EMPTY_STRING;
+									LOG.error(EXCEPTION_MESSAGE_PRICE + product.getCode());
+								}
+								catch (final EtailNonBusinessExceptions e)
+								{
+									price = EMPTY_STRING;
+									LOG.error(EXCEPTION_MESSAGE_PRICE + product.getCode());
+								}
+								catch (final Exception e)
+								{
+									price = EMPTY_STRING;
+									LOG.error(EXCEPTION_MESSAGE_PRICE + product.getCode());
+								}
+								newAndExclusiveProductJson.put("productPrice", price);
+								newAndExclusiveJsonArray.add(newAndExclusiveProductJson);
+								existDate = null;
 
+							}
+							newAndExclusiveJson.put("newAndExclusiveProducts", newAndExclusiveJsonArray);
 						}
-						newAndExclusiveJson.put("newAndExclusiveProducts", newAndExclusiveJsonArray);
+					}
+					else
+					{
+						LOG.info("Component visiblity set to false");
+
 					}
 				}
+
 			}
 		}
 		catch (final EtailBusinessExceptions e)
@@ -830,8 +867,16 @@ public class HomePageController extends AbstractPageController
 
 				if (component instanceof MplShowcaseComponentModel)
 				{
-					final MplShowcaseComponentModel collectionShowcaseComponent = (MplShowcaseComponentModel) component;
-					collectionShowcase = getJSONForShowcaseComponent(collectionShowcaseComponent);
+					//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+					if (component.getVisible().booleanValue() && homepageComponentService.showOnTimeRestriction(component))
+					{
+						final MplShowcaseComponentModel collectionShowcaseComponent = (MplShowcaseComponentModel) component;
+						collectionShowcase = getJSONForShowcaseComponent(collectionShowcaseComponent);
+					}
+					else
+					{
+						LOG.info("Component visiblity set to false");
+					}
 				}
 			}
 
@@ -940,23 +985,41 @@ public class HomePageController extends AbstractPageController
 		}
 		else
 		{
-			newsLetter.setEmailId(emailId);
+			//newsLetter.setEmailId(emailId);
 			final boolean result = brandFacade.checkEmailId(emailId);
 
 			//newsLetter.setIsSaved(Boolean.TRUE);
 
 			if (result)
 			{
+				newsLetter.setEmailId(emailId);
+				newsLetter.setIsMarketplace(Boolean.TRUE);
 				modelService.save(newsLetter);
 				return "success";
 			}
 			else
 			{
+				final List<MplNewsLetterSubscriptionModel> newsLetterSubscriptionList = brandFacade
+						.checkEmailIdForMarketplace(emailId);
+
+				if (null != newsLetterSubscriptionList && !newsLetterSubscriptionList.isEmpty())
+				{
+					for (final MplNewsLetterSubscriptionModel mplNewsLetterSubscriptionModel : newsLetterSubscriptionList)
+					{
+						if ((mplNewsLetterSubscriptionModel.getEmailId().equalsIgnoreCase(emailId))
+								&& (!(mplNewsLetterSubscriptionModel.getIsMarketplace().booleanValue()) || mplNewsLetterSubscriptionModel
+										.getIsMarketplace() == null))
+						{
+							mplNewsLetterSubscriptionModel.setIsMarketplace(Boolean.TRUE);
+							modelService.save(mplNewsLetterSubscriptionModel);
+						}
+
+					}
+					return "success";
+				}
 				return "fail";
 			}
-
 		}
-
 	}
 
 	public boolean validateEmailAddress(final String email)

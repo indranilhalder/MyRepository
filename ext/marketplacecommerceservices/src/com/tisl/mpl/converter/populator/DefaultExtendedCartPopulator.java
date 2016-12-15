@@ -70,17 +70,22 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 				addMplDeliveryMethod(source, target);
 				/* TPR-928 */
 				final DecimalFormat formatter = new DecimalFormat("0.00");
-				if (target != null && target.getOrderDiscounts().getDoubleValue().doubleValue() > 0.0)
+				//Defect-Fix ProductLevelDiscounts were Not Considered
+				if (target != null
+						&& (target.getOrderDiscounts().getDoubleValue().doubleValue() > 0.0 || (target.getProductDiscounts() != null && target
+								.getProductDiscounts().getDoubleValue().doubleValue() > 0.0)))
 				{
 
-					final String formate = formatter.format(100 * (target.getOrderDiscounts().getDoubleValue().doubleValue() / (target
-							.getSubTotal().getDoubleValue().doubleValue())));
+					final String formate = formatter.format(100 * ((target.getOrderDiscounts().getDoubleValue().doubleValue() + target
+							.getProductDiscounts().getDoubleValue().doubleValue()) / (target.getSubTotal().getDoubleValue()
+							.doubleValue())));
+
 					target.setDiscountPercentage(formate);
 
 				}
 				/*
 				 * else if (target != null) {
-				 *
+				 * 
 				 * final String formate = formatter.format(100 * (target.getTotalDiscounts().getDoubleValue().doubleValue()
 				 * / (target .getSubTotal().getDoubleValue().doubleValue()))); target.setDiscountPercentage(formate); }
 				 */

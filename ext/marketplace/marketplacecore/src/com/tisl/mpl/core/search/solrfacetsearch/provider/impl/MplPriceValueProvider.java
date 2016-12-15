@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.mpl.core.enums.LuxIndicatorEnum;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPriceRowService;
 import com.tisl.mpl.util.MplBuyBoxUtility;
 
@@ -206,20 +207,27 @@ public class MplPriceValueProvider extends AbstractPropertyFieldValueProvider im
 	{
 		String rangeKey = currency.getIsocode();
 		final String productCategoryType = product.getProductCategoryType();
-		if (null != productCategoryType)
+		if (product.getLuxIndicator().equals(LuxIndicatorEnum.LUXURY.getCode()))
 		{
-			if (productCategoryType.equalsIgnoreCase("Clothing"))
-			{
-				rangeKey = rangeKey + "-APPAREL";
-			}
-			else
-			{
-				rangeKey = rangeKey + "-ELECTRONICS";
-			}
+			rangeKey = rangeKey + "-LUXURY";
 		}
 		else
 		{
-			return null;
+			if (null != productCategoryType)
+			{
+				if (productCategoryType.equalsIgnoreCase("Clothing"))
+				{
+					rangeKey = rangeKey + "-APPAREL";
+				}
+				else
+				{
+					rangeKey = rangeKey + "-ELECTRONICS";
+				}
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		return rangeKey;

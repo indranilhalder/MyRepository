@@ -22,6 +22,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.CookieGenerator;
@@ -41,6 +43,44 @@ public class EnhancedCookieGenerator extends CookieGenerator
 
 	private boolean useDefaultPath = DEFAULT_COOKIE_PATH;
 	private boolean httpOnly = DEFAULT_HTTP_ONLY;
+	private boolean useDefaultDomain = true;
+	private static final Logger LOG = Logger.getLogger(EnhancedCookieGenerator.class.getName());
+
+	/**
+	 * @param useDefaultDomain
+	 *           the useDefaultDomain to set
+	 */
+	public void setUseDefaultDomain(final boolean useDefaultDomain)
+	{
+		this.useDefaultDomain = useDefaultDomain;
+	}
+
+	/**
+	 * @return the customDomain
+	 */
+	public String getCustomDomain()
+	{
+		return customDomain;
+	}
+
+	/**
+	 * @param customDomain
+	 *           the customDomain to set
+	 */
+	public void setCustomDomain(final String customDomain)
+	{
+		this.customDomain = customDomain;
+	}
+
+	/**
+	 * @return the useDefaultDomain
+	 */
+	public boolean isUseDefaultDomain()
+	{
+		return useDefaultDomain;
+	}
+
+	private String customDomain;
 
 	protected ConfigurationService getConfigurationService()
 	{
@@ -79,10 +119,13 @@ public class EnhancedCookieGenerator extends CookieGenerator
 	{
 		super.addCookie(new HttpServletResponseWrapper(response)
 		{
+
 			@Override
 			public void addCookie(final Cookie cookie)
 			{
+				LOG.info("cookie domain in Enhanced Cookie Generator" + cookie.getDomain());
 				setEnhancedCookiePath(cookie);
+				setCustomDomain(cookie);
 				setEnhancedCookie(cookie);
 				cookie.setPath("/"); //TISPT-307
 
@@ -124,9 +167,22 @@ public class EnhancedCookieGenerator extends CookieGenerator
 	 */
 	protected void setEnhancedCookie(final Cookie cookie)
 	{
-		final int str = Integer
-				.parseInt(getConfigurationService().getConfiguration().getString(MessageConstants.LOGIN_COOKIE_EXPIRY_DAY));
+		final int str = Integer.parseInt(getConfigurationService().getConfiguration().getString(
+				MessageConstants.LOGIN_COOKIE_EXPIRY_DAY));
 		final int expiryTime = 60 * 60 * 24 * str; // 24h in seconds
 		cookie.setMaxAge(expiryTime);
+	}
+
+	/**
+	 * @param cookie
+	 */
+	protected void setCustomDomain(final Cookie cookie)
+	{
+		// If cookie doesnot use the default domain
+		if (!isUseDefaultDomain() && StringUtils.isNotEmpty(getCustomDomain()))
+		{
+			cookie.setDomain(getCustomDomain());
+		}
+
 	}
 }

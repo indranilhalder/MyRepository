@@ -9,10 +9,21 @@
 <%-- **${component.link.url}
 +++${component.navigationNode.links[0].linkName} --%>
 
-<div class="toggle departmenthover" id="depts${component.link.category.code}">
+<div class="toggle departmenthover L1" id="depts${component.link.category.code}">
 <a href="${component.link.url}">${component.navigationNode.title}</a>
 </div>  <!-- TPR-561 -->
 	<%-- <cms:component component="${component.link}" evaluateRestriction="true"/> --%>
+	<%-- <c:set var="deptName" value="${fn:split(component.navigationNode.title, '||')}" />
+					<c:url
+						value="/${deptName[1]}/c-${fn:toLowerCase(component.link.category.code)}" var="departmentUrl" />
+	 --%>
+	
+	<c:set var="main" value="${component.navigationNode.title}"/>
+	<c:set var="withoutspecial" value="${fn:replace(main, '\\'','')}"/>
+	<c:set var="lowercasecharacter" value="${fn:toLowerCase(withoutspecial)}"/>
+	<input type="hidden" id="for_ia_hot_dropdown_name" value="${main}||${fn:replace(lowercasecharacter,' ', '-')}">
+	<input type="hidden" id="for_ia_hot_dropdown_code" value="${component.link.category.code}">
+	  
 	<c:choose>
 	<c:when test="${not empty component.navigationNode.children}">
 			<span id="mobile-menu-toggle" class=""></span>		<!-- TPR-561 -->
@@ -55,7 +66,7 @@
 
 							<c:if test="${not empty child.title}">
 								<li class="short words">
-								<div class="toggle">
+								<div class="toggle L2">
 								<a href="${child.links[0].url}">${child.title}</a>
 								</div>
 								<span id="mobile-menu-toggle" class=""></span>		<!-- TPR-561 -->
@@ -74,7 +85,7 @@
 								
 										<c:forEach items="${child.links}" var="childlink" begin="${i.index+1}" end="${i.index + component.wrapAfter - 1}">
 											<li class="long words">
-											<div class="toggle">
+											<div class="toggle L3">
 											<cms:component component="${childlink}" evaluateRestriction="true" />
 											</div>
 											</li>   <!-- TPR-561 -->
@@ -97,6 +108,7 @@
 				
 	</c:when>
 	<c:otherwise>
+	<span id="mobile-menu-toggle" class=""></span>	<!-- TISQAEE-4 -->
 		<ul class="words"></ul>
 	</c:otherwise>		
 	</c:choose>			<!-- TPR-561 -->

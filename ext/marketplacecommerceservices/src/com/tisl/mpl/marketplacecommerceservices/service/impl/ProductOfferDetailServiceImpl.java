@@ -35,7 +35,7 @@ public class ProductOfferDetailServiceImpl implements ProductOfferDetailService
 	private ProductOfferDetailDao prodOfferDetDao;
 	public static final int MIN_OFFER_LENGTH = 200;
 
-	public static final String OFFER_REGEX = "(^[a-zA-Z0-9][\\$#\\+{}:\\?\\.^*()_+=,-~@\"a-zA-Z0-9 ]+$)";
+	public static final String OFFER_REGEX = "(^[a-zA-Z0-9][\\$#\\+{}:\\?\\.^*()_+=,%&'!;|<>-~@\"a-zA-Z0-9 ]+$)";
 
 	/**
 	 * @Description This method is used to fetch message from OfferDetail for a product
@@ -70,7 +70,7 @@ public class ProductOfferDetailServiceImpl implements ProductOfferDetailService
 				}
 				if (null != sellerIdQry)
 				{
-					if (StringUtils.isNotEmpty(offerMessage))
+					if (StringUtils.isNotEmpty(offerMessage) && offerMessage.length() <= MIN_OFFER_LENGTH)
 					{
 						offerDetMap.put(MarketplacecommerceservicesConstants.MESSAGE, offerMessage);
 					}

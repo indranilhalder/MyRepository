@@ -88,5 +88,48 @@
 		   </li>
 		
 		</ul>
+		<ul class="row-brdr contVideo">   
+			<div class="temp2-center">
+				<cms:pageSlot position="Section7A" var="feature">
+					<cms:component component="${feature}" element="div" class="" />							
+				</cms:pageSlot>
+			</div>
+			<li>
+				<div class="media">
+					<cms:pageSlot position="Section8A" var="feature">
+						<cms:component component="${feature}" element="div" class="" />							
+					</cms:pageSlot>
+				</div>
+				<div class="media-content">
+					<cms:pageSlot position="Section9A" var="feature">
+						<cms:component component="${feature}" element="div" class="" />							
+					</cms:pageSlot>
+				</div>
+			</li>
+			<li>
+				<div class="media">     
+					<cms:pageSlot position="Section8B" var="feature">
+						<cms:component component="${feature}" element="div" class="" />							
+					</cms:pageSlot>
+				</div>
+				<div class="media-content">
+					<cms:pageSlot position="Section9B" var="feature">
+						<cms:component component="${feature}" element="div" class="" />							
+					</cms:pageSlot>
+				</div>
+			</li>
+			<li>
+				<div class="media">  
+					<cms:pageSlot position="Section8C" var="feature">
+						<cms:component component="${feature}" element="div" class="" />							
+					</cms:pageSlot>
+				</div>
+				<div class="media-content">
+					<cms:pageSlot position="Section9C" var="feature">
+						<cms:component component="${feature}" element="div" class="" />							
+					</cms:pageSlot>
+				</div>
+			</li>
+		</ul>
 	</div>
 </div>

@@ -3,6 +3,9 @@
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
+<!-- TPR-430 -->
+<input type="hidden" id="product_category" value="${product_category}"/>
+
 <template:page pageTitle="${pageTitle}">
 
 	<cms:pageSlot position="CommonLogoParaSlot" var="feature">
@@ -35,7 +38,7 @@
 					<cms:component component="${feature}" element="div" class="winter_launch_section" />
 				</cms:pageSlot>
 				</div>
-				<div class="style_edit">
+				<div class="style_edit style-edit-video">
 				 <cms:pageSlot position="Section2C" var="feature">
 					<cms:component component="${feature}" element="div" class="" />
 				</cms:pageSlot>

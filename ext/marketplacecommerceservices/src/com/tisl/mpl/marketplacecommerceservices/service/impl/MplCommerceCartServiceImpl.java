@@ -60,6 +60,7 @@ import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 import de.hybris.platform.util.Config;
+import de.hybris.platform.util.localization.Localization;
 import de.hybris.platform.wishlist2.Wishlist2Service;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
@@ -806,15 +807,15 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc : used to fetch delivery mode description details TISEE-950
-	 *
+	 * 
 	 * @param ussId
-	 *
+	 * 
 	 * @param deliveryMode
-	 *
+	 * 
 	 * @param startTime
-	 *
+	 * 
 	 * @param endTime
-	 *
+	 * 
 	 * @return String
 	 */
 
@@ -1228,11 +1229,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc checking wishlist entry is valid or not , delisted , end date , online from TISEE-5185
-	 *
+	 * 
 	 * @param wishlistEntryModel
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -1279,11 +1280,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc creating pin code service data for pincode serviceability for wishlist
-	 *
+	 * 
 	 * @param sortedWishListMap
-	 *
+	 * 
 	 * @return List<PincodeServiceData>
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private List<PincodeServiceData> fetchWishlistPincodeRequestData(
@@ -1413,11 +1414,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc creating pin code service data for pincode serviceability for wishlist
-	 *
+	 * 
 	 * @param sortedWishListMap
-	 *
+	 * 
 	 * @return List<PincodeServiceData>
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private List<PincodeServiceData> fetchWishlistPincodeRequestDataMobile(final Wishlist2EntryModel wishlist2EntryModel)
@@ -2281,13 +2282,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc fetching reservation details
-	 *
+	 * 
 	 * @param cartId
-	 *
+	 * 
 	 * @param cartData
-	 *
+	 * 
 	 * @param pincode
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -2296,13 +2297,16 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	{
 		final ReservationListWsDTO wsDto = new ReservationListWsDTO();
 		InventoryReservListResponse inventoryReservListResponse = null;
-		List<ReservationItemWsDTO> reservationData = new ArrayList<ReservationItemWsDTO>();
+		List<ReservationItemWsDTO> reservationDataList = new ArrayList<ReservationItemWsDTO>();
 		final String cartGuid = "";
+		String failedProduct = "";
+		final String[] failedProductArray = new String[10];
 		final List<CartSoftReservationData> cartSoftForCncReservationDatalist = new ArrayList<CartSoftReservationData>();
 		try
 		{
 			final List<CartSoftReservationData> cartSoftReservationDatalist = populateDataForSoftReservation(abstractOrderModel);
-			if (requestType != null && CollectionUtils.isNotEmpty(cartSoftReservationDatalist) && pincode != null)
+			if (CollectionUtils.isNotEmpty(cartSoftReservationDatalist) && StringUtils.isNotEmpty(requestType)
+					&& StringUtils.isNotEmpty(pincode))
 			{
 				try
 				{
@@ -2346,60 +2350,72 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					}
 				}
 
-				LOG.debug("inventoryReservListResponse " + inventoryReservListResponse);
 				if (inventoryReservListResponse != null)
 				{
-					reservationData = converter(inventoryReservListResponse);
-					if (CollectionUtils.isNotEmpty(reservationData))
+					reservationDataList = converter(inventoryReservListResponse);
+					if (CollectionUtils.isNotEmpty(reservationDataList))
 					{
-						for (int i = 0; i < reservationData.size(); i++)
+						boolean flag = true;
+						for (final ReservationItemWsDTO reservationData : reservationDataList)
 						{
-							if (null != reservationData.get(i)
-									&& null != reservationData.get(i).getReservationStatus()
-									&& reservationData.get(i).getReservationStatus()
-											.equalsIgnoreCase(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SUCCESS))
+							if (null != reservationData && null != reservationData.getReservationStatus())
 							{
-								wsDto.setReservationItem(reservationData);
-								wsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+								if (reservationData.getReservationStatus().equalsIgnoreCase(
+										MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SUCCESS))
+								{
+									flag = true;
+								}
+								else
+								{
+									failedProduct += reservationData.getUSSID() + " , ";
+									flag = false;
+								}
 							}
-							else
-							{
-								LOG.debug("Inventory reservationData for Mobile from OMS is not success ###### =" + cartGuid);
-								throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047);
-							}
+							/*
+							 * else { LOG.debug("Inventory reservationData for Mobile from OMS is not success ###### =" +
+							 * cartGuid); throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047); }
+							 */
 						}
-					}
-					else
-					{
-						LOG.debug("Inventory reservationData for Mobile from OMS is empty###### =" + cartGuid);
-						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047);
+						//inserting
+						wsDto.setReservationItem(reservationDataList);
+						if (flag)
+						{
+							wsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+						}
+						else
+						{
+							failedProductArray[0] = failedProduct;
+							LOG.debug("Inventory reservationData for Mobile from OMS is not success ###### =" + cartGuid);
+							throw new EtailBusinessExceptions(Localization.getLocalizedString(
+									MarketplacecommerceservicesConstants.B9047, failedProductArray));
+						}
 					}
 				}
 				else
 				{
 					LOG.debug("InventoryReservListResponse for mobile is null ##### =" + cartGuid);
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047);
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9201);
 				}
 			}
 			else
 			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9201);
 			}
 		}
 		catch (final Exception e)
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9047);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9201);
 		}
 		return wsDto;
 	}
 
 	/*
 	 * @Desc converting response to dto
-	 *
+	 * 
 	 * @param inventoryReservListResponse
-	 *
+	 * 
 	 * @return List<ReservationItemWsDTO>
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private List<ReservationItemWsDTO> converter(final InventoryReservListResponse inventoryReservListResponse)
@@ -2436,11 +2452,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc populating data for soft reservation
-	 *
+	 * 
 	 * @param cartData
-	 *
+	 * 
 	 * @return List<CartSoftReservationData>
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	public List<CartSoftReservationData> populateDataForSoftReservation(final CartData cartData) throws EtailNonBusinessExceptions
@@ -2513,13 +2529,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @DESC MobileWS105 : get top two wish list for mobile web service
-	 *
+	 * 
 	 * @param userModel
-	 *
+	 * 
 	 * @param pincode
-	 *
+	 * 
 	 * @return GetWishListWsDTO
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -2592,9 +2608,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @param sortedWishListMap
-	 *
+	 * 
 	 * @return GetWishListWsDTO
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private GetWishListWsDTO getWishListWebserviceDetails(final Map<String, List<Wishlist2EntryModel>> sortedWishListMap,
@@ -2832,13 +2848,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc For webservice
-	 *
+	 * 
 	 * @param buyBoxModelList
-	 *
+	 * 
 	 * @param getWishListProductWsObj
-	 *
+	 * 
 	 * @return GetWishListProductWsDTO
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -2867,11 +2883,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc For webservice
-	 *
+	 * 
 	 * @param wishlist2EntryModel
-	 *
+	 * 
 	 * @param getWishListProductWsObj
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private GetWishListProductWsDTO setWSWishlistEligibleDeliveryMode(final Wishlist2EntryModel wishlist2EntryModel,
@@ -2998,13 +3014,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @DESC TISST-6994,TISST-6990 adding to cart COD eligible or not with Pincode serviceabilty and sship product
-	 *
+	 * 
 	 * @param deliveryModeMap
-	 *
+	 * 
 	 * @param pincodeResponseData
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3315,11 +3331,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc fetching state details for a state name
-	 *
+	 * 
 	 * @param stateName
-	 *
+	 * 
 	 * @return StateModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -3344,9 +3360,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc to generate Sub order id
-	 *
+	 * 
 	 * @return String
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3357,9 +3373,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc to generate Order Line id and transaction id
-	 *
+	 * 
 	 * @return String
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3371,9 +3387,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc to generate Order Id
-	 *
+	 * 
 	 * @return String
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3385,13 +3401,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc used for inventory soft reservation from Commerce Checkout and Payment
-	 *
+	 * 
 	 * @param requestType
-	 *
+	 * 
 	 * @param abstractOrderModel
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3553,9 +3569,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @description:Populate data to CartSoftReservationData
-	 *
+	 * 
 	 * @return:List<CartSoftReservationData>
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -3973,11 +3989,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @DESC : Inventory list to be generated for TISPRD-2758
-	 * 
+	 *
 	 * @param abstractOrderModel
-	 * 
+	 *
 	 * @param entryModel
-	 * 
+	 *
 	 * @return Tuple2<?, ?>
 	 */
 	private Tuple2<?, ?> getFreebieInventoryList(final AbstractOrderModel abstractOrderModel,
@@ -4020,13 +4036,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @DESC : Inventory list to be generated for TISPRD-2758
-	 * 
+	 *
 	 * @param abstractOrderModel
-	 * 
+	 *
 	 * @param entryModel
-	 * 
+	 *
 	 * @param productPromoCode
-	 * 
+	 *
 	 * @return List<CartSoftReservationData>
 	 */
 	private List<CartSoftReservationData> populateFreebieInventoryData(final AbstractOrderModel abstractOrderModel,
@@ -4763,15 +4779,15 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @desc use to save freebie delivery mode
-	 *
+	 * 
 	 * @param cartModel
-	 *
+	 * 
 	 * @param freebieModelMap
-	 *
+	 * 
 	 * @param freebieParentQtyMap
-	 *
+	 * 
 	 * @return void
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override

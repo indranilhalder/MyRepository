@@ -31,6 +31,97 @@ searchCategory_idFromMicrosite		= $('#selectedSearchCategoryIdMicrosite').val();
 var daysDif = '';
 var is_new_product = false;
 
+var category_idString		= $('#categoryIdHotNow').val(); // For HotNow category for TPR 1313
+var category_idArray = new Array();//Variables added for TPR 1313
+category_idArray = category_idString.split(",");//Variables added for TPR 1313
+
+//start for geolocations tpr-1304
+$(document).ready(function(){
+	
+	  var output = document.getElementById("latlng");
+
+	  if (!navigator.geolocation){
+	    output.innerHTML = "<p>Geolocation is not supported by your browser</p>";
+	    return;
+	  }
+
+	  function success(position) {
+	    var latitude  = position.coords.latitude;
+	    var longitude = position.coords.longitude;
+
+	    output.value =    latitude + ',' + longitude ;
+	    codeLatLng(latitude,longitude);
+	    
+	  };
+
+	  function error() {
+	    output.innerHTML = "Unable to retrieve your location";
+	  };
+
+	  
+	  navigator.geolocation.getCurrentPosition(success, error);
+	  
+	
+
+// Reverse geocoding-- = get location from latitude and longitude
+
+var geocoder;
+
+function codeLatLng(lat,lng) {
+	
+  var lat = parseFloat(lat);
+  var lng = parseFloat(lng);
+  
+  var latlng = new google.maps.LatLng(lat, lng);
+  
+  geocoder = new google.maps.Geocoder();
+  geocoder.geocode({
+      'latLng': latlng
+  }, function(results, status) {
+  	
+if (status == google.maps.GeocoderStatus.OK) {
+
+  if (results[1]) {
+  var indice=0;
+  for (var j=0; j<results.length; j++)
+  {
+      if (results[j].types[0]=='locality')
+          {
+              indice=j;
+              break;
+          }
+      }
+ 
+ 
+  for (var i=0; i<results[j].address_components.length; i++)
+      {
+          if (results[j].address_components[i].types[0] == "locality") {
+                  
+                  city = results[j].address_components[i];
+                  var cityName = city.long_name.toLowerCase();
+                  $('#location').val(cityName);
+                 
+              }
+          
+          
+      }
+
+     
+      } else {
+     // console.log("No results found");
+      }
+  //}
+} else {
+	  //console.log("Geocoder failed due to: " + status);
+}
+      
+  });
+}
+
+	});
+
+//end for geolocations tpr-1304
+
 if (searchCategory_id){
 	if(searchCategory_id.indexOf("MSH") > -1){
 	category_id = searchCategory_id;
@@ -945,39 +1036,24 @@ if (searchCategory_id){
 			    	sortHtml += '<li class="sort_li" id="name-desc">Name: Z to A</li>';
 			    	sortHtml += '<li class="sort_li" id="price-asc">Price: Low to High</li>';
 			    	sortHtml += '<li class="sort_li" id="price-desc">Price: High to Low</li>';
-			    	sortHtml += '</ul></div></div>';
-			 
-			    var catHtml = '<div class="select-view ">'; 
-			    //for release 2 changes in home-page headers-All Departments
-			    catHtml += '<div class="select-list"><span class="selected hotSelected">All Departments</span><ul id="ia_category_select" style="width: auto;">';
-			    for (var i=0; i<categoryFilters.length; i++) {
-			    	if(i==0){
-			    		 catHtml += '<li class="category_li" id="allCat">All Departments</li>';
-			    	}
-			      catHtml += '<li class="category_li" id="'+categoryCodeForFilters[i]+'">'+categoryFilters[i]+'</li>';
-			    } 
-			    catHtml += '</ul></div></div>';
-			    
+			    	sortHtml += '</ul></div></div>';			 
+						    
 			    if(slider) {
 			    	if(site_page_type === 'search' && widgetElement === 'ia_products_search'){
-			    		html += '<h1><span style="color: black !important;">Best Sellers</span>';
+			    		html += '<h2><span style="color: black !important;">Best Sellers</span>';
 			    	}else if(site_page_type === 'viewSellers' && widgetElement === 'ia_products'){
-			    		html += '<h1><span style="color: black !important;">You May Also Need</span>';
+			    		html += '<h2><span style="color: black !important;">You May Also Need</span>';
 			    	}else{
 			    		//for release 2 changes in pdp-page 
 			    		if(site_page_type === 'productpage' && widgetElement ==='ia_products_complements'){
-			    			html += '<h1><span style="color: black !important;">Things That Go With This</span>';
+			    			html += '<h2><span style="color: black !important;">Things That Go With This</span>';
 			    		}else{
 						
-			    		html += '<h1><span style="color: black !important;">'+productWidgetTitle[jQuery.inArray(widgetMode, productWidget)]+'</span>';
+			    		html += '<h2><span style="color: black !important;">'+productWidgetTitle[jQuery.inArray(widgetMode, productWidget)]+'</span>';
 			    	}
-			    		}
+			    		}			      
 			      
-			      /*For hot we need a scrolldown bar to select filters*/
-			      if(site_page_type === "homepage" || site_page_type ==="viewAllTrending" && widgetMode != "recent") {
-			        html += catHtml;
-			      }
-			      html += '</h1>';
+			      html += '</h2>';
 			      html += '<div class="spacer" style="padding: 0 25px;"><div class="slider product ready"><div class="frame"><ul id="' + widgetElement + '_list" class="overflow owl-carousel" style="width: 0.953empx; left: 0px;">';
 			    } else {
 			      if(site_page_type === "homepage" || site_page_type ==="viewAllTrending") {
@@ -997,7 +1073,7 @@ if (searchCategory_id){
 			      	 html += sortHtml;
 			        }
 			        
-			        html += catHtml;
+			      
 			        
 			      }
 			      html += '<ul id="'+widgetElement+'_list" class="product-list" style="width: 100%; float: left;margin-top: 55px; ">';

@@ -420,6 +420,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	public String generateOTPforCOD(final String customerID, final String mobileNumber, final String mplCustomerName,
 			final AbstractOrderModel orderModel) throws InvalidKeyException, NoSuchAlgorithmException //OrderModel added to handle TPR-629
 	{
+
+		//calling service to generate OTP
 		String otp = getOtpGenericService().generateOTP(customerID, OTPTypeEnum.COD.getCode(), mobileNumber);
 		if (null == otp)
 		{
@@ -433,6 +435,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		{
 			orderModel.getDeliveryAddress().setCellphone(mobileNumber);
 		}
+
 		getModelService().save(orderModel.getDeliveryAddress());
 		getModelService().save(orderModel);
 
@@ -478,7 +481,66 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		try
 		{
 			//OTP validation
-			final OTPResponseData otpResponse = getOtpGenericService().validateOTP(
+			//			final OTPResponseData otpResponse = getOtpGenericService().validateOTP(
+			//					customerID,
+			//					null,
+			//					enteredOTPNumber,
+			//					OTPTypeEnum.COD,
+			//					Long.parseLong(getConfigurationService().getConfiguration().getString(
+			//							MarketplacecommerceservicesConstants.TIMEFOROTP)));
+
+			final OTPResponseData otpResponse = getOtpGenericService().validateLatestOTP(
+					customerID,
+					null,
+					enteredOTPNumber,
+					OTPTypeEnum.COD,
+					Long.parseLong(getConfigurationService().getConfiguration().getString(
+							MarketplacecommerceservicesConstants.TIMEFOROTP)));
+
+			if (null != otpResponse && null != otpResponse.getInvalidErrorMessage())
+			{
+				//TIS-3168
+				LOG.error("OTP Validation message is " + otpResponse.getInvalidErrorMessage());
+				//returning true or false based on whether OTP is valid or not
+				return otpResponse.getInvalidErrorMessage();
+			}
+			else
+			{
+				//TIS-3168
+				LOG.error("OTP Validation message is null");
+				return null;
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e);
+			return null;
+		}
+	}
+
+	/**
+	 * This method takes the customer ID and enter OTP as input parameters and calls the service to validate the entered
+	 * OTP
+	 *
+	 * @param customerID
+	 * @param enteredOTPNumber
+	 * @return String
+	 */
+	@Override
+	public String validateOTPforCODWV(final String customerID, final String enteredOTPNumber)
+	{
+		try
+		{
+			//OTP validation
+			//			final OTPResponseData otpResponse = getOtpGenericService().validateOTP(
+			//					customerID,
+			//					null,
+			//					enteredOTPNumber,
+			//					OTPTypeEnum.COD,
+			//					Long.parseLong(getConfigurationService().getConfiguration().getString(
+			//							MarketplacecommerceservicesConstants.TIMEFOROTP)));
+
+			final OTPResponseData otpResponse = getOtpGenericService().validateLatestOTPWV(
 					customerID,
 					null,
 					enteredOTPNumber,
@@ -1580,11 +1642,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1635,9 +1697,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Override
@@ -2157,9 +2219,14 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					//Payment Changes - Order before Payment
 					updAuditErrStatus = getMplPaymentService().updateAuditEntry(orderStatusResponse, orderStatusRequest, orderModel,
 							paymentMode);
+					LOG.warn("**Total price in commerce with convenience" + orderModel.getTotalPriceWithConv());
+					LOG.warn("**Total price  " + orderModel.getTotalPrice());
+					LOG.warn("**Total price in juspay " + orderStatusResponse.getAmount());
 
 
-					if (orderModel.getTotalPrice().equals(orderStatusResponse.getAmount()))
+					// Commented Code Opened
+					if (/* orderModel.getTotalPriceWithConv().equals */(null != orderStatusResponse.getAmount() && orderStatusResponse
+							.getAmount().doubleValue() > 0))
 					{
 						getMplPaymentService().setPaymentTransaction(orderStatusResponse, paymentMode, orderModel);
 					}
@@ -2167,6 +2234,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					{
 						throw new EtailBusinessExceptions();
 					}
+
+
 
 					//Logic when transaction is successful i.e. CHARGED
 					if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(orderStatusResponse.getStatus()))
@@ -2732,17 +2801,20 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		{
 			for (final PromotionResultData promotionResultData : promoResultList)
 			{
-				final String st = promotionResultData.getDescription();
-				final String result = stripNonDigits(st);
+				if (StringUtils.isNotEmpty(promotionResultData.getDescription()))
+				{
+					final String st = promotionResultData.getDescription();
+					final String result = stripNonDigits(st);
 
-				try
-				{
-					totalDiscount = totalDiscount + Double.parseDouble(result);
-				}
-				catch (final Exception e)
-				{
-					LOG.error("Exception during double parsing ", e);
-					totalDiscount = totalDiscount + 0;
+					try
+					{
+						totalDiscount = totalDiscount + Double.parseDouble(result);
+					}
+					catch (final Exception e)
+					{
+						LOG.error("Exception during double parsing ", e);
+						totalDiscount = totalDiscount + 0;
+					}
 				}
 			}
 		}

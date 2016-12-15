@@ -452,6 +452,8 @@ sendAddToBag : function(formId, isBuyNow) {
 						$('#ajax-loader').show();
 					},
 					success : function(data) {
+						
+						
 						$('.js-add-to-cart').removeAttr("disabled");//For TISPRD-4631
 						if (data.indexOf("cnt:") >= 0) {
 							(isBuyNow == true) ? isSuccess = true
@@ -561,6 +563,7 @@ sendAddToBag : function(formId, isBuyNow) {
 									+ "/cart";
 							location.href = cartUrl;
 						}
+				
 						
 						$("#bag-clickSpin,.bagspinner").remove();			
 					},
@@ -589,6 +592,8 @@ sendAddToBagQuick:function(formId){
 	 var quantity = $("#"+formId+" :input[name='" + input_name +"']").val(); 
 	 var stock = $("#"+formId+" :input[name='" +  stock_id +"']").val(); 
 	 var ussid=$('#ussid_quick').val();
+	var productCode = $("#productCode").val();
+		
 	 /*if(parseInt(stock)<parseInt(quantity)){
 		    $("#"+formId+"noInventory").html("<font color='#ff1c47'>" + $('#inventory').text() + "</font>");
 		    $("#"+formId+"noInventory").show().fadeOut(6000);
@@ -662,7 +667,7 @@ sendAddToBagQuick:function(formId){
 			//console.log(productCodeMSD);				
 			var priceformad =  $("input[id=price-for-mad]").val();
 			//console.log(priceformad);				
-			
+		
 			if(typeof isMSDEnabled === 'undefined')
 			{
 				isMSDEnabled = false;						
@@ -678,6 +683,14 @@ sendAddToBagQuick:function(formId){
 				ACC.track.trackAddToCartForMAD(productCodeMSD, salesHierarchyCategoryMSD, priceformad,"INR");
 				}	
 			}
+			//TISQAEE-64
+			utag.link({
+				link_obj: this,
+				link_text: 'addtobag' ,
+				event_type : 'addtobag_winner_seller' ,
+				product_sku : productCode
+			});
+			
 			
 			//End MSD
 			
@@ -718,6 +731,8 @@ sendAddToBagQuick:function(formId){
 		        $('#ajax-loader').show();
 		    },
 			success : function(data) {
+				//TISQAEE-64
+				var productCode = $('#productCode').val();
 				
 				var isSuccess=true;
 				if(data.indexOf("cnt:") >= 0){
@@ -774,7 +789,8 @@ sendAddToBagQuick:function(formId){
 				var productCodeMSD =  $("input[name=productCodeMSD]").val();
 				//console.log(productCodeMSD);				
 				var priceformad =  $("input[id=price-for-mad]").val();
-				//console.log(priceformad);				
+				//console.log(priceformad);	
+			
 				
 				if(typeof isMSDEnabled === 'undefined')
 				{
@@ -792,6 +808,13 @@ sendAddToBagQuick:function(formId){
 					}	
 				}
 				if(isSuccess){
+					//TISQAEE-64 Buy Now Quick View
+					 utag.link({
+							link_obj: this,
+							link_text: 'buynow' ,
+							event_type : 'buynow_winner_seller',
+							product_sku : productCode
+						});
 					
 					location.href=ACC.config.encodedContextPath + '/cart';
 				}
@@ -1179,6 +1202,9 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 					+ "/cart/showTransientCart",
 			data:dataString,
 			success : function(response) {
+				
+				
+				
 				$('.mini-transient-bag').remove();
 				var transientCartHtml="<div class='mini-transient-bag' ><span class='mini-cart-close'>+</span><ul class='my-bag-ul'><li class='item'><ul><li><div class='product-img'><a href='"+ACC.config.encodedContextPath+response.productUrl+"'><img class='picZoomer-pic' src='"+response.productImageUrl+"'></a></div><div class='product'><p class='company'></p><h3 class='product-name'><a href='"+ACC.config.encodedContextPath+response.productUrl+"'>"+response.productTitle+"</a></h3><span class='addedText'>has been added to your cart</span>";
 				
@@ -1186,9 +1212,14 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 					transientCartHtml+="<div class='transient-offer'>"+response.offer+"</div>";
 				}
 				
+			
 				transientCartHtml+="</div></li></ul><li class='view-bag-li'><a href='"+ACC.config.encodedContextPath+"/cart' class='go-to-bag mini-cart-checkout-button'>View Bag</a></li></ul></div>";
 				$('.transient-mini-bag').append(transientCartHtml);
-				
+				/*LW-216*/
+				if(typeof response.productType!=='undefined' && response.productType.toLowerCase() === "luxury"){
+					$('.mini-transient-bag .product-img').append("<img class='luxury_ribbon' src='/_ui/responsive/common/images/Ribbon.png'>");
+				}
+				/*LW-216*/
 				if ($("header .content .bottom").hasClass("active")){
 					$("header .content .right>ul>li.transient-mini-bag .mini-transient-bag").css({
 						"position": "fixed",
@@ -1243,10 +1274,18 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 	 
 	
 
-					// construct custom price query params					
-					var minPriceSearchTxt = ($('.minPriceSearchTxt').val() == null || $('.minPriceSearchTxt').val() == "") ? 0 : $('.minPriceSearchTxt').val() ;
-					var maxPriceSearchTxt = ($('.maxPriceSearchTxt').val() == null || $('.maxPriceSearchTxt').val() == "") ? 99999999 : $('.maxPriceSearchTxt').val() ;	
-
+					// construct custom price query params	
+	                var minPriceSearchTxt ="";
+	                var maxPriceSearchTxt ="";
+	                if(isNaN($("#customMinPriceMob").val()) && isNaN($("#customMaxPriceMob").val())){
+					minPriceSearchTxt = ($('.minPriceSearchTxt').val() == null || $('.minPriceSearchTxt').val() == "") ? 0 : $('.minPriceSearchTxt').val() ;
+				    maxPriceSearchTxt = ($('.maxPriceSearchTxt').val() == null || $('.maxPriceSearchTxt').val() == "") ? 99999999 : $('.maxPriceSearchTxt').val() ;	
+	                }
+	                else{
+	                	minPriceSearchTxt = ($('#customMinPriceMob').val() == null || $('#customMinPriceMob').val() == "") ? 0 : $('#customMinPriceMob').val() ;
+					    maxPriceSearchTxt = ($('#customMaxPriceMob').val() == null || $('#customMaxPriceMob').val() == "") ? 99999999 : $('#customMaxPriceMob').val() ;	
+	                }
+				    
 					var currentQryParam = $('.currentPriceQueryParams').val();
 					var facetValue = $('.facetValue').val();
 
@@ -1303,9 +1342,11 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 								
 								if(nonEmptyDataString == null){
 									nonEmptyDataString = $(this).attr('name')+"="+$(this).val();
+								//	alert("alert(nonEmptyDataString)"+nonEmptyDataString);
 								}
 								else{
 									nonEmptyDataString = nonEmptyDataString + ("&"+$(this).attr('name')+"="+$(this).val());
+								//	alert("nonEmptyDataString"+nonEmptyDataString);
 								}
 							}
 						})
@@ -1319,10 +1360,17 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 						var requiredUrl="";
 						var action = $("#customPriceFilter").attr('action');
 						if($("#isCategoryPage").val() == 'true'){
-							action = action.split('/c-');
-							action = action[1].split('/');
-							requiredUrl = "/c-"+action[0];
-							requiredUrl += "/getFacetData";
+							if ($("input[name=customSku]").val()) {
+								var collectionId = $("input[name=customSkuCollectionId]").val();
+								requiredUrl = '/CustomSkuCollection/'+collectionId+'/getFacetData';
+							}
+							else {
+								action = action.split('/c-');
+								action = action[1].split('/');
+								requiredUrl = "/c-"+action[0];
+								requiredUrl += "/getFacetData";
+							}
+							
 						} else {
 							if(action.indexOf("/getFacetData") == -1){
 							
@@ -1383,11 +1431,11 @@ $(document).on("change",'.facet_desktop .filter-price',function(){
 //Splits priceValue:Rsxxx-Rsyyy to [xxx, yyy]
 function splitPrice(value) {
 	var priceRange = null;	
-	if(value.includes("-"))
-	{
+	if(value.indexOf('-') > -1)  // Fix for TISPRD-8267
+	{   
 		priceRange = value.split("-");		
 	}
-	else if(value.includes("and Above"))
+	else if(value.indexOf("and Above") > -1)  // Fix for TISPRD-8267
 	{
 		priceRange = value.split("and Above");		
 	}	

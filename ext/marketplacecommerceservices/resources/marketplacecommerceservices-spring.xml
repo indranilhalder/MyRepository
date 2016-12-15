@@ -1728,16 +1728,21 @@
 	<bean id="iaFeedUtil" class="com.tisl.mpl.integration.job.IAFeedUtility">
 	</bean>
 <!-- IA STAGED DATA SOURCE -->
+<!-- <bean id="iaDataSource"
+ -->
 
- <!--<bean id="iaDataSource"
+  <!--  <bean id="iaDataSource"
+>>>>>>> refs/remotes/origin/GOLDEN_PROD_SUPPORT_3rd_Nov_2016
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
 		<property name="url" value="jdbc:oracle:thin:@10.10.64.34:1621/MPLDEVDB" />
 		<property name="username" value="mpldev2com" />
 		<property name="password" value="mpldev2com123" />
-	</bean>  -->
+	</bean>   -->
+
+
 	
-	<bean id="iaDataSource"
+	 <bean id="iaDataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
 		<property name="url" value="${jdbc.iastg.url}" />
@@ -1813,7 +1818,8 @@
 		<property name="typeCode" value="Sizesystem" />
 	</bean>
 	<!-- Bean for POC Search ends-->
-	
+
+
 
 	<!-- TPR-565 -->
 	<bean id="mplShopByLookSaveInterceptor" class="com.tisl.mpl.interceptor.MplShopByLookInterceptor" />
@@ -1868,7 +1874,8 @@
 		<property name="interceptor" ref="exSellerBulkLoadInterceptor" />
 		<property name="typeCode" value="EtailExcludeSellerSpecificRestriction" />
 	</bean>
-	
+
+	<!-- TPR-1282 -->
 	<alias name="mplCmsCacheService" alias="cmsCacheService"/>
 	<bean id="mplCmsCacheService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplCmsCacheServiceImpl"
 		parent="defaultCmsCacheService">
@@ -1902,6 +1909,64 @@
 		<property name="interceptor" ref="DeliveryCostInterceptor" />
 		<property name="typeCode" value="AbstractOrder" />	
 	</bean>	
-	<!-- TPR-3487 -->
+	<!-- TPR-3487 -->		
+		
+	<!-- Bean for Promotion Job starts-->
+ 	
+ 	<bean id="promotionPriceUpdaterDao"
+ 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.PromotionPriceUpdaterDaoImpl" />
+ 
+ 	<bean id="promotionPriceUpdaterService"
+ 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultPromotionPriceUpdaterServiceImpl">	
+ 	</bean>
+ 	<!-- Bean for Promotion Job ends-->
+
+	<!-- LW-245 -->
+	<bean id="brandProductLuxuryExportJob" class="com.tisl.mpl.integration.job.BrandProductLuxuryExportJob"
+		parent="abstractJobPerformable"
+			autowire="byName">
+		<property name="modelService" ref="modelService" />
+	</bean>
+	<bean id="catProdLuxuryExportJob" class="com.tisl.mpl.integration.job.CategoryProductLuxuryExtractJob"
+		parent="abstractJobPerformable"
+			autowire="byName">
+		<property name="modelService" ref="modelService" />
+	</bean>
+	<bean id="priceInventoryLuxuryExportJob" class="com.tisl.mpl.integration.job.PriceInventoryLuxuryExportJob"
+		parent="abstractJobPerformable"
+			autowire="byName">
+		<property name="modelService" ref="modelService" />
+	</bean>
+	
+	
+	<!-- Old Cron Job Deletion Logic : Added as part of PT FIX-->
+	<alias name="mplcleanupCronJobsPerformable" alias="cleanupCronJobsPerformable" />
+	<bean id="mplcleanupCronJobsPerformable" parent="abstractGenericMaintenanceJobPerformable">
+        <property name="maintenanceCleanupStrategy">
+            <bean class="com.tisl.mpl.marketplacecommerceservices.strategy.MplCleanupCronJobStrategy">
+                <property name="modelService" ref="modelService"/>
+                <property name="typeService" ref="typeService"/>
+                <property name="status">
+                    <set>
+                        <value type="de.hybris.platform.cronjob.enums.CronJobStatus">FINISHED</value>
+                        <value type="de.hybris.platform.cronjob.enums.CronJobStatus">ABORTED</value>
+                    </set>
+                </property>
+                <property name="result">
+                    <set>
+                        <value type="de.hybris.platform.cronjob.enums.CronJobResult">SUCCESS</value>
+      				    <value type="de.hybris.platform.cronjob.enums.CronJobResult">FAILURE</value>
+                        <value type="de.hybris.platform.cronjob.enums.CronJobResult">ERROR</value>
+                    </set>
+                </property>
+                <property name="excludedCronJobCodes">
+                    <set/>
+                </property>
+                <property name="expiryDays" value="${cronjob.dayOld.count}"/>
+            </bean>
+        </property>
+    </bean>
+	<!-- Old Cron Job Deletion Logic ends: -->
+
 </beans>
 

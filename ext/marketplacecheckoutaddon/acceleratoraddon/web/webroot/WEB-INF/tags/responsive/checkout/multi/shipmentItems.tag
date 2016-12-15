@@ -54,8 +54,17 @@
 									<li>
 										<div >
 											<div class="thumb product-img">
-												<a href="${productUrl}"><product:productPrimaryImage
-														product="${entry.product}" format="thumbnail" /></a>
+												<c:choose>
+													<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
+															<a href="${productUrl}"><product:productPrimaryImage
+																	product="${entry.product}" format="luxuryCartIcon" /></a>
+													</c:when>
+													<c:otherwise>
+															<a href="${productUrl}"><product:productPrimaryImage
+																	product="${entry.product}" format="thumbnail" /></a>
+															
+													</c:otherwise>
+												</c:choose>
 											</div>
 													   
 													   
@@ -230,8 +239,8 @@
 								    <div class="item-price delivery-price">
 											<ycommerce:testId code="cart_totalProductPrice_label">
 											<c:choose>
-											<c:when test="${not empty entry.totalSalePrice}">
-												<format:price priceData="${entry.totalSalePrice}"
+											<c:when test="${not empty entry.netSellingPrice}">
+												<format:price priceData="${entry.netSellingPrice}"
 													displayFreeForZero="true" />
 													</c:when>
 													<c:otherwise>

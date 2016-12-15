@@ -38,6 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
+import com.tisl.mpl.core.enums.LuxIndicatorEnum;
 import com.tisl.mpl.facades.product.data.ProductTagDto;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.service.MplProductWebService;
@@ -61,14 +62,6 @@ import com.tisl.mpl.wsdto.VariantOptionsWsDto;
  * @author TCS
  *
  */
-/**
- * @author 1047001
- *
- */
-/**
- * @author 1047001
- *
- */
 public class SearchSuggestUtilityMethods
 {
 	@SuppressWarnings("unused")
@@ -86,8 +79,8 @@ public class SearchSuggestUtilityMethods
 	private MplProductWebService mplProductWebService;
 	//	@Resource(name = "productService")
 	//	private ProductService productService;
-	//	@Resource(name = "cwsProductFacade")
-	//	private ProductFacade productFacade;
+	@Resource(name = "productFacade")
+	private ProductFacade productFacade;
 	//@Resource(name = "productService")
 	//private ProductService productService;
 
@@ -97,8 +90,8 @@ public class SearchSuggestUtilityMethods
 	/*
 	 * @Resource(name = "accProductFacade") private ProductFacade productFacade;
 	 */
-	@Resource(name = "accProductFacade")
-	private ProductFacade productFacade;
+	//@Resource(name = "accProductFacade")
+	//private ProductFacade productFacade;
 	//@Resource(name = "defaultMplProductSearchFacade")
 	//private DefaultMplProductSearchFacade searchFacade;
 	@Resource(name = "productDetailsHelper")
@@ -667,26 +660,11 @@ public class SearchSuggestUtilityMethods
 
 			if (null != productData && null != productData.getCode())
 			{
-				//productDataImage = productFacade.getProductForCodeAndOptions(productData.getCode(),
-				//	Arrays.asList(ProductOption.GALLERY));
-				//TPR-796
-				//galleryImages = productDetailsHelper.getPrimaryGalleryImagesMobile(productData);
-				/*
-				 * final ProductModel productModel = productService.getProductForCode(defaultPromotionManager.catalogData(),
-				 * productData.getCode());
-				 * 
-				 * ProductData productData1 = null; if (null != productModel) { productData1 =
-				 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.GALLERY)); } else { throw
-				 * new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9037); }
-				 * 
-				 * 
-				 * if (null != productData1) { final List<GalleryImageData> gallaryImages =
-				 * mplProductWebService.getGalleryImages(productData1);
-				 * 
-				 * if (!gallaryImages.isEmpty()) { sellingItemDetail.setGalleryImagesList(gallaryImages); }
-				 * 
-				 * }
-				 */
+				if (null != productData.getUssID())
+				{
+					sellingItemDetail.setUssid(productData.getUssID());
+				}
+				//Revert of TPR-796
 				try
 				{
 					productDataImage = productFacade.getProductForCodeAndOptions(productData.getCode(),
@@ -695,9 +673,17 @@ public class SearchSuggestUtilityMethods
 				}
 				catch (final Exception e)
 				{
-					LOG.error("SERPSEARCH ProductError:" + productData.getCode());
+					LOG.error("SERPSEARCH Product Image Error:" + productData.getCode());
 					continue;
 				}
+
+				//TPR-796
+				/*
+				 * try { galleryImages = productDetailsHelper.getPrimaryGalleryImagesMobile(productData); } catch (final
+				 * Exception e) { LOG.error("SERPSEARCH ProductError:" + productData.getCode());
+				 * ExceptionUtil.getCustomizedExceptionTrace(e); continue; }
+				 */
+
 				if (CollectionUtils.isNotEmpty(galleryImages))
 				{
 					sellingItemDetail.setGalleryImagesList(galleryImages);
@@ -753,12 +739,24 @@ public class SearchSuggestUtilityMethods
 				}
 
 				final ImageData imgData = getPrimaryImageForProductAndFormat(productData, "searchPage");
+				final ImageData imgDataLuxury = getPrimaryImageForProductAndFormat(productData, "luxurySearchPage");
 
-				if (imgData != null && imgData.getUrl() != null)
+				if (productData.getLuxIndicator() != null
+						&& productData.getLuxIndicator().equalsIgnoreCase(LuxIndicatorEnum.LUXURY.getCode()))
 				{
-
-					sellingItemDetail.setImageURL(imgData.getUrl());
+					if (imgDataLuxury != null && imgDataLuxury.getUrl() != null)
+					{
+						sellingItemDetail.setImageURL(imgDataLuxury.getUrl());
+					}
 				}
+				else
+				{
+					if (imgData != null && imgData.getUrl() != null)
+					{
+						sellingItemDetail.setImageURL(imgData.getUrl());
+					}
+				}
+
 				if (null != productData.getDescription())
 				{
 					sellingItemDetail.setDetails(productData.getDescription());

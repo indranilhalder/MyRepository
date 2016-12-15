@@ -132,6 +132,7 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 			{
 				if (userCookieName.equals(cookie.getName()))
 				{
+					LOG.info("inside mpl user " + cookie.getDomain());
 					userId = currentUser.getUid();
 					cookie.setValue(userId);
 					cookie.setMaxAge(60 * 60 * 24);// setting 1 day life time for cookies
@@ -141,6 +142,7 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 
 				if (userTypeCookieName.equals(cookie.getName()))
 				{
+					LOG.info("inside mpl user  type " + cookie.getDomain());
 					if (getUserService().isAnonymousUser(currentUser))
 					{
 						userType = ANONYMOUS;
@@ -188,9 +190,14 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 				userType = REGISTERED;
 			}
 			getUserTypeCookieGenerator().addCookie(response, userType);
+
 		}
 		request.setAttribute(MessageConstants.USER_LOGIN_TYPE, userLoginType);
+		updateKeepAliveCookie(request, response);
+		LOG.info("after updateKeepAlive Method :value of userlogintype  in request is " + request.getAttribute(userLoginType));
+
 		filterChain.doFilter(request, response);
+		LOG.info("after filter chain  Method : value in userlogintype request is " + request.getAttribute(userLoginType));
 	}
 
 	protected SessionService getSessionService()
@@ -221,4 +228,30 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 	}
 
 
+	/**
+	 * @param request
+	 * @param response
+	 */
+	private void updateKeepAliveCookie(final HttpServletRequest request, final HttpServletResponse response)
+	{
+		LOG.info("For any request coming we should update the Keep Alive cookie if present");
+		final String sessionTimeout = getConfigurationService().getConfiguration().getString("default.session.timeout");
+		final int sessionTimeoutvalue = (Integer.valueOf(sessionTimeout)).intValue();
+		final Cookie[] cookies = request.getCookies();
+		if (cookies != null)
+		{
+			for (final Cookie cookie : cookies)
+			{
+				if (cookie.getName().equals("keepAlive"))
+				{
+					LOG.info("Found the Keep Alive Cookie. Hence adding back to response with new expiry timeout");
+					LOG.info("Cookie domain :::" + cookie.getDomain());
+					cookie.setMaxAge(sessionTimeoutvalue);
+					cookie.setPath("/");
+					response.addCookie(cookie);
+				}
+			}
+		}
+
+	}
 }

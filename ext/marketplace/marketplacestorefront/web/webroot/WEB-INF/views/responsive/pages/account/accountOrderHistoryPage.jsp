@@ -26,6 +26,12 @@
 <spring:url value="/my-account/friendsInvite" var="friendsInviteUrl" />
 <spring:url value="/my-account/order/" var="orderDetailsUrl" />
 
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.cancel.enabled')" var="cancelFlag"/> 
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.return.enabled')" var="returnFlag"/> 
+
+
+<!-- LW-230 -->
+<input type="hidden" id="isLuxury" value="${isLuxury}"/>
 
 <template:page pageTitle="${pageTitle}">
 	<div class="account">
@@ -192,9 +198,20 @@
 												</c:forEach>
 												<li class="item">
 													<div class="image">
-														<a href="${productUrl}"> <product:productPrimaryImage
-																product="${entry.product}" format="thumbnail" />
-														</a>
+														<c:choose>
+															<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
+																	<a href="${productUrl}"> <product:productPrimaryImage
+																					product="${entry.product}" format="luxuryCartIcon" />
+																			</a>
+										
+															</c:when>
+															<c:otherwise>
+																	<a href="${productUrl}"> <product:productPrimaryImage
+																					product="${entry.product}" format="thumbnail" />
+																			</a>
+																	
+															</c:otherwise>
+														</c:choose>
 													</div>
 													<div class="details">
 														<h2 class="product-name">${entry.brandName}</h2>
@@ -328,7 +345,7 @@
 
 														<c:set var="bogoCheck" value='false' />
 
-														<c:if test="${entry.itemCancellationStatus eq 'true'}">
+														<c:if test="${entry.itemCancellationStatus eq 'true' and cancelFlag}">
 															<c:if
 																test="${entry.giveAway eq 'false' and entry.isBOGOapplied eq 'false'}">
 																<c:forEach items="${entry.associatedItems}"
@@ -367,7 +384,7 @@
 														<!-- TISCR-410 ends -->
 														<!--Chairman Demo Changes end-->
 														<!-- changes for TISSTRT-1173 -->
-														<c:if test="${entry.itemReturnStatus eq 'true'  and entry.giveAway eq false and entry.isBOGOapplied eq false}">
+														<c:if test="${entry.itemReturnStatus eq 'true'  and entry.giveAway eq false and entry.isBOGOapplied eq false and returnFlag}">
 															<a href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${subOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}" onClick="openReturnPage('${bogoCheck}',${entry.transactionId})">
 																<spring:theme code="text.account.returnReplace"
 																	text="Return Item"/> 
@@ -411,15 +428,26 @@
 																		<ul class="product-info">
 																			<li>
 																			<div class="product-img">
-																				<a href="${productUrl}"> <product:productPrimaryImage
-																						product="${entryCancel.product}" format="thumbnail" />
-																				</a>
+																				<c:choose>
+																					<c:when test="${fn:toLowerCase(entryCancel.product.luxIndicator)=='luxury'}">
+																							<a href="${productUrl}"> <product:productPrimaryImage
+																																	product="${entryCancel.product}" format="luxuryCartIcon" />
+																															</a>
+																
+																					</c:when>
+																					<c:otherwise>
+																							<a href="${productUrl}"> <product:productPrimaryImage
+																																	product="${entryCancel.product}" format="thumbnail" />
+																															</a>
+																							
+																					</c:otherwise>
+																				</c:choose>
 																			</div>
 																			<div class="product">
 																				<!-- <p class="company">Nike</p> -->
-																				<h3 class="product-name">
+																				<h2 class="product-name">
 																					<a href="${productUrl}">${entryCancel.product.name}</a>
-																				</h3>
+																				</h2>
 																				
 																				<p class="item-info">
 																					<span><b><c:if test="${entryCancel.quantity > 1}"><spring:theme code="text.orderHistory.quantity"/>
@@ -508,9 +536,9 @@
 															<h2>Request Cancellation</h2>
 
 															<div>
-																<h3>
+																<h2 class="trackOrderLnHt">
 																	<span id="resultTitle"></span>
-																</h3>
+																</h2>
 																<div>
 																	<span id="resultDesc"></span>
 																</div>
@@ -526,9 +554,20 @@
 																		<ul class="product-info">
 																			<li>
 																			<div class="product-img">
-																				<a href="${productUrl}"> <product:productPrimaryImage
-																						product="${entryCancel.product}" format="thumbnail" />
-																				</a>
+																				<c:choose>
+																					<c:when test="${fn:toLowerCase(entryCancel.product.luxIndicator)=='luxury'}">
+																							<a href="${productUrl}"> <product:productPrimaryImage
+																																	product="${entryCancel.product}" format="luxuryCartIcon" />
+																															</a>
+																
+																					</c:when>
+																					<c:otherwise>
+																							<a href="${productUrl}"> <product:productPrimaryImage
+																																	product="${entryCancel.product}" format="thumbnail" />
+																															</a>
+																							
+																					</c:otherwise>
+																				</c:choose>
 																			</div>
 																			<div class="product">
 																				<!-- <p class="company">Nike</p> -->

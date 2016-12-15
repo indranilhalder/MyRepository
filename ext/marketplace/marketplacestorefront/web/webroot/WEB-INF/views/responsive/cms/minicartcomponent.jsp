@@ -5,6 +5,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 
+
 <!-- using this to display the 'MyBag' Link in the header navigation pane & the total number of product in 'MyBag' -->
 
 <c:url value="/cart/miniCart/${totalDisplay}" var="refreshMiniCartUrl"/>

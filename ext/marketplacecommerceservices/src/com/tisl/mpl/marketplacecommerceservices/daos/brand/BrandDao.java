@@ -7,6 +7,8 @@ import de.hybris.platform.catalog.model.CatalogVersionModel;
 
 import java.util.List;
 
+import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
+
 
 /**
  * @author TCS
@@ -18,4 +20,8 @@ public interface BrandDao
 
 
 	public boolean checkEmailId(String emailId);
+
+	public List<MplNewsLetterSubscriptionModel> checkEmailIdForluxury(final String emailId);
+
+	public List<MplNewsLetterSubscriptionModel> checkEmailIdForMarketplace(final String emailId);
 }

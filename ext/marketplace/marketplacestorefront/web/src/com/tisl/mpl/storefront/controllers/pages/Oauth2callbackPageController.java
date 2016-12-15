@@ -26,12 +26,19 @@ import de.hybris.platform.commercefacades.order.CartFacade;
 import de.hybris.platform.servicelayer.session.SessionService;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +72,7 @@ import com.tisl.mpl.storefront.controllers.helpers.FBConnection;
 import com.tisl.mpl.storefront.controllers.helpers.FBGraph;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.storefront.controllers.helpers.GoogleAuthHelper;
+import com.tisl.mpl.storefront.security.cookie.LuxuryEmailCookieGenerator;
 import com.tisl.mpl.storefront.web.forms.ExtRegisterForm;
 import com.tisl.mpl.util.ExceptionUtil;
 
@@ -95,9 +103,12 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 	@Resource(name = "GigyaService")
 	private GigyaService gigyaservice;
 
+	@Autowired
+	private LuxuryEmailCookieGenerator luxuryEmailCookieGenerator;
 	private String gigyaUID;
 	private String signature;
 	private String timestamp;
+	private final String UTF = "UTF-8";
 
 	public GigyaService getGigyaservice()
 	{
@@ -320,19 +331,19 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 			if (StringUtils.isNotEmpty(uid))
 			{
 
-				final String decodedUid = java.net.URLDecoder.decode(uid, "UTF-8");
+				final String decodedUid = java.net.URLDecoder.decode(uid, UTF);
 
 				setGigyaUID(decodedUid);
 			}
 			if (StringUtils.isNotEmpty(signature))
 			{
-				final String decodedSignature = java.net.URLDecoder.decode(signature, "UTF-8");
+				final String decodedSignature = java.net.URLDecoder.decode(signature, UTF);
 
 				setSignature(decodedSignature);
 			}
 			if (StringUtils.isNotEmpty(timestamp))
 			{
-				final String decodedTimestamp = java.net.URLDecoder.decode(timestamp, "UTF-8");
+				final String decodedTimestamp = java.net.URLDecoder.decode(timestamp, UTF);
 				setTimestamp(decodedTimestamp);
 			}
 
@@ -495,9 +506,79 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 		}
 
 		session.setAttribute(ModelAttributetConstants.SOCIAL_LOGIN_C, socialLogin);
+		luxuryEmailCookieGenerator.addCookie(response, encrypt(form.getEmail()));
 		return getSuccessRedirect(request, response);
 	}
 
+	/**
+	 * @param originalUid
+	 * @return
+	 */
+	private String encrypt(final String originalUid)
+	{
+		final String encryptionKey = "encryptor key";
+		final String encryptedText = encryptAES(originalUid.trim(), encryptionKey);
+
+		LOG.debug("String to Encrypt: " + originalUid);
+		LOG.debug("Encrypted: " + encryptedText);
+		return encryptedText;
+	}
+
+	/**
+	 * @param trim
+	 */
+	private String encryptAES(final String encryptionText, final String key)
+	{
+		String encryptedText = null;
+		try
+		{
+
+			final Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+
+			cipher.init(Cipher.ENCRYPT_MODE, getSecretKey(key));
+
+
+			encryptedText = Base64.encodeBase64String(cipher.doFinal(encryptionText.getBytes(UTF)));
+
+		}
+		catch (final Exception e)
+		{
+
+			LOG.error("Error while encrypting: " + e.toString());
+		}
+		return encryptedText;
+
+
+	}
+
+	private SecretKeySpec getSecretKey(final String encryptionKey)
+	{
+		MessageDigest sha = null;
+		byte[] key = null;
+		try
+		{
+			key = encryptionKey.getBytes(UTF);
+			sha = MessageDigest.getInstance("SHA-1");
+			key = sha.digest(key);
+			key = Arrays.copyOf(key, 16); // use only first 128 bit
+			LOG.debug("Key Length" + key.length);
+			LOG.debug(new String(key, UTF));
+
+
+
+		}
+		catch (final NoSuchAlgorithmException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (final UnsupportedEncodingException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new SecretKeySpec(key, "AES");
+	}
 
 	protected void storeReferer(final String referer, final HttpServletRequest request, final HttpServletResponse response)
 	{

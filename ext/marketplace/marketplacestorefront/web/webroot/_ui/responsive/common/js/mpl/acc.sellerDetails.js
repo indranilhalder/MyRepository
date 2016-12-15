@@ -320,7 +320,14 @@ function focusOnElement() {
 	    //if(stockUssidIds.indexOf(sellersArray[i]['ussid'])==-1){
 	  	 if($("#isPinCodeChecked").val()!="true"){
 	    	 if(stock<=0||sellersArray[i]['deliveryModes']==null){
+	    		
 	    			$("#addToCartButton"+index).hide();
+	    			
+	    			tbodycontent+="<span class='outOfStock"+index+"'>"+$('#otherselleroutofstock').text()+"</span>";
+					tbodycontent+="<div class='btn-buy-now oosOtherSeller'><button id='buyNowButton"+index+"' type='button' class='button add-to-bag btn-block js-add-to-cart buy-now' disabled='disabled'>"+$('#buynowid').text()+"</button>";
+					tbodycontent+="<span id='addToCartButtonIds' class='btn-buy-now-holder'><button id='addToCartButton"+index+"' type='button' class='button add-to-bag btn-block js-add-to-cart add-to-bag-seller' disabled='disabled'>"+$('#addtobagid').text()+"</button></span></div>";
+					
+					
 					//tbodycontent+=$("#hiddenIdForNoStock").html();
 					}else{
 						//TPR-887
@@ -339,8 +346,13 @@ function focusOnElement() {
 			  	}
 	    else{
 	    	if(stockUssidIds.indexOf(sellersArray[i]['ussid'])!=-1){
+	    		 
 	    	$("#addToCartButton"+index).hide();
-		  	}else{
+	    	tbodycontent+="<span class='outOfStock"+index+"'>"+$('#otherselleroutofstock').text()+"</span>";
+	    	tbodycontent+="<div class='btn-buy-now oosOtherSeller'><button id='buyNowButton"+index+"' type='button' class='button add-to-bag btn-block js-add-to-cart buy-now' disabled='disabled'>"+$('#buynowid').text()+"</button>";
+			tbodycontent+="<span id='addToCartButtonId' class='btn-buy-now-holder'><button id='addToCartButton"+index+"' type='button' class='button add-to-bag btn-block js-add-to-cart add-to-bag-seller' disabled='disabled'>"+$('#addtobagid').text()+"</button></span></div>";
+			
+	    	}else{
 		  	//TPR-887
 				tbodycontent+="<div id='buyNowFormIdOthersel"+index+"' class='OSErrorMsg' style='display:none;'></div>";
 				tbodycontent+="<div id='buyNowFormId"+index+"excedeInventory' style='display:none;'>"+$('#buyNowFormexcedeInventory').text()+"</div>";
@@ -393,6 +405,9 @@ function focusOnElement() {
 		
 		//$(document).on('click','#addToCartFormId'+index+' .js-add-to-cart',function(){ //Changed for TPR-887
 		 $(document).on('click','#addToCartFormId'+index+' #addToCartButton'+index,function(){
+			 
+			 
+			 
 			
         if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches'&& $("#showSize").val()=='true'){
 		  		
@@ -400,6 +415,16 @@ function focusOnElement() {
 				$("#addToCartFormIdOthersel"+index).show();
 				 return false;
 		   	 }
+        //TISQAEE-64
+        var productCode= $('#productCode').val();
+	        
+	        utag.link({
+				link_obj: this,
+				link_text: 'addtobag' ,
+				event_type : 'addtobag_other_seller' ,
+				product_sku : productCode
+			});
+        
 			ACC.product.sendAddToBag("addToCartFormId"+index);
 		});
 		 
@@ -417,6 +442,7 @@ function focusOnElement() {
 	}
 	 function sendAddToBag(formId){
 			var dataString=$('#'+formId).serialize();	
+			
 			
 			
 			$.ajax({
@@ -565,6 +591,7 @@ function focusOnElement() {
 				contentType : "application/json; charset=utf-8",
 				url : requiredUrl,
 				async: false,
+				cache : false,
 				data : dataString,
 				dataType : "json",
 				success : function(data) {		
@@ -612,7 +639,8 @@ function focusOnElement() {
 								 {						
 									if(divId != null)
 									{
-										var offerMessageDiv="<div class='offerMessage-block' id='offerMessageId'>"+message+"</div>";
+										//var offerMessageDiv="<div class='offerMessage-block' id='offerMessageId'>"+message+"</div>";
+										var offerMessageDiv="<div class='offerMessage-block' id='offerMessageId'>"+messageDet+"</div>";
 										var divSpecificId ='#'+divId;
 										$(divSpecificId).html(offerMessageDiv);
 									}
@@ -620,10 +648,16 @@ function focusOnElement() {
 									{
 										$(".pdp-offer").html(message);						
 									}
-									$("#message").html(message);	
-									$("#offerDetailId").html(messageDet);
+//									$("#message").html(message);	
+//									$("#offerDetailId").html(messageDet);
+//									
+//									$("#messageDet").html(messageDet);
 									
-									$("#messageDet").html(messageDet);
+									$("#message").html(messageDet);	
+									$("#offerDetailId").html(message);
+									
+									$("#messageDet").html(message);
+									
 									var dateSplit = messageStartDate.split(" ");
 				                   var firstpart = dateSplit[0];
 				                   var secondpart = dateSplit[1];
