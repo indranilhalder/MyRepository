@@ -140,32 +140,35 @@ public class MarketPlaceDefaultReturnsController extends
 		final Map<Boolean, List<OrderLineDataResponse>> responseMap = new HashMap();
 		ReturnLogisticsResponse returnLogisticsResponse = returnLogisticsService
 				.returnLogisticsCheck(returnLogisticsList);
-	
-		
-		String pincode = returnLogisticsList.get(0).getPinCode();
-		if (returnLogisticsResponse != null
-				&& CollectionUtils.isNotEmpty(returnLogisticsResponse
-						.getOrderlines())) {
-			for (OrderLineDataResponse orderLineDataResponse : returnLogisticsResponse
-					.getOrderlines()) {
-				MplReturnPickUpAddressInfoModel mplReturnReport = modelService
-						.create(MplReturnPickUpAddressInfoModel.class);
-				mplReturnReport.setOrderId(orderLineDataResponse.getOrderId());
-				mplReturnReport.setPincode(pincode);
-				mplReturnReport.setTransactionId(orderLineDataResponse
-						.getTransactionId());
-				if (StringUtils.isNotEmpty(orderLineDataResponse
-						.getIsReturnLogisticsAvailable())
-						&& orderLineDataResponse
-								.getIsReturnLogisticsAvailable()
-								.equalsIgnoreCase("Y")) {
-					mplReturnReport.setStatus("Sucess");
-				} else {
-					mplReturnReport.setStatus("Fail");
+		try {
+			String pincode = returnLogisticsList.get(0).getPinCode();
+			if (returnLogisticsResponse != null
+					&& CollectionUtils.isNotEmpty(returnLogisticsResponse
+							.getOrderlines())) {
+				for (OrderLineDataResponse orderLineDataResponse : returnLogisticsResponse
+						.getOrderlines()) {
+					MplReturnPickUpAddressInfoModel mplReturnReport = modelService
+							.create(MplReturnPickUpAddressInfoModel.class);
+					mplReturnReport.setOrderId(orderLineDataResponse.getOrderId());
+					mplReturnReport.setPincode(pincode);
+					mplReturnReport.setTransactionId(orderLineDataResponse
+							.getTransactionId());
+					if (StringUtils.isNotEmpty(orderLineDataResponse
+							.getIsReturnLogisticsAvailable())
+							&& orderLineDataResponse
+									.getIsReturnLogisticsAvailable()
+									.equalsIgnoreCase("Y")) {
+						mplReturnReport.setStatus("Sucess");
+					} else {
+						mplReturnReport.setStatus("Fail");
+					}
+					modelService.save(mplReturnReport);
 				}
-				modelService.save(mplReturnReport);
 			}
+		}catch(Exception e) {
+			LOG.error("Exception while saving returnLogistics Check report "+e.getMessage());
 		}
+	
 		
 	
 

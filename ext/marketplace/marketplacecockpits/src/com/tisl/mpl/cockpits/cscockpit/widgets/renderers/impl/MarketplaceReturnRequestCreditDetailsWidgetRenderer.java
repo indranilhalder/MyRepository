@@ -34,6 +34,7 @@ import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Radio;
 import org.zkoss.zul.Radiogroup;
 import org.zkoss.zul.Textbox;
+import org.zkoss.zul.Window;
 
 import bsh.ParseException;
 
@@ -53,6 +54,10 @@ import de.hybris.platform.cockpit.model.meta.TypedObject;
 import de.hybris.platform.cockpit.services.meta.TypeService;
 import de.hybris.platform.cockpit.util.TypeTools;
 import de.hybris.platform.cockpit.widgets.InputWidget;
+import de.hybris.platform.cockpit.widgets.Widget;
+import de.hybris.platform.cockpit.widgets.WidgetContainer;
+import de.hybris.platform.cockpit.widgets.impl.DefaultWidgetContainer;
+import de.hybris.platform.cockpit.widgets.impl.DefaultWidgetFactory;
 import de.hybris.platform.cockpit.widgets.models.impl.DefaultListWidgetModel;
 import de.hybris.platform.commercefacades.storelocator.converters.populator.PointOfServicePopulator;
 import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
@@ -63,6 +68,7 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.payment.CreditCardPaymentInfoModel;
 import de.hybris.platform.core.model.user.AddressModel;
+import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.cscockpit.utils.LabelUtils;
 import de.hybris.platform.cscockpit.utils.TypeUtils;
 import de.hybris.platform.cscockpit.widgets.controllers.ReturnsController;
@@ -93,6 +99,7 @@ ReturnRequestCreateWidgetRenderer {
 	private static final String CONTINUE = "continue";
 	private static final String BUTTON = "creditButton";
 	private static final String BOLD_TEXT = "boldText";
+	private static final String ADD = "Add";
 	public static final String REVERSE_LOGISTICS_NOTAVAILABLE = "reverselogisticnotavailable";
 	private static final String REVERSE_LOGISTICS_AVAILABLE = "reverselogisticavailable";
 	private static final String REVERSE_LOGISTICS_PARTIALAVAILABLE = "reverselogisticpartialavailable";
@@ -857,7 +864,7 @@ ReturnRequestCreateWidgetRenderer {
 
 	private Div getSchedulePicupDetails(
 			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
-			final List<AbstractOrderEntryModel> entries, OrderModel subOrder) throws InterruptedException {
+			final List<AbstractOrderEntryModel> entries, final OrderModel subOrder) throws InterruptedException {
 		final Div scheduleDiv = new Div();
 		final Label scheduleHeader = new Label(LabelUtils.getLabel(widget,
 				"schedule_pickUp"));
@@ -978,8 +985,13 @@ ReturnRequestCreateWidgetRenderer {
 		final Listbox deliveryAddressList = new Listbox();
 		deliveryAddressList.setParent(scheduleDiv);
 		deliveryAddressList.setMold("select");
-		List<AddressModel> addrssModel = (List<AddressModel>) subOrder
-				.getUser().getAddresses();
+	
+		final TypedObject order = (TypedObject) ((ReturnsController) widget
+				.getWidgetController()).getRefundOrderPreview();
+		OrderModel orderModel = (OrderModel) order.getObject();
+		
+		List<AddressModel> addrssModel = (List<AddressModel>) orderModel.getUser().getAddresses();
+		
 		Listitem item = new Listitem(" ");
 		item.setParent(deliveryAddressList);
 		
@@ -1001,6 +1013,27 @@ ReturnRequestCreateWidgetRenderer {
 		deliveryAddressList.setSelectedIndex(0);
 		final Br br7 = new Br();
 		br7.setParent(scheduleDiv);
+		
+		final Div addAddrDiv = new Div();
+		addAddrDiv.setParent(scheduleDiv);
+		addAddrDiv.setClass(BUTTON);
+		final Button addAddrButton = new Button(LabelUtils.getLabel(widget,
+				ADD));
+		addAddrButton.setParent(addAddrDiv);
+		addAddrButton.setClass("returnAddresBtn");
+		//addAddrButton.setClass(BUTTON);
+		addAddrButton.addEventListener(Events.ON_CLICK, new EventListener() {
+
+			@Override
+			public void onEvent(Event event) throws Exception {
+				
+				createReturnAddAddressPopupWindow(widget, getPopupWidgetHelper().getCurrentPopup().getParent()); 
+			}
+			
+		});
+		
+		final Br br8 = new Br();
+		br8.setParent(scheduleDiv);
 		final Div buttonDiv = new Div();
 		buttonDiv.setParent(scheduleDiv);
 		buttonDiv.setClass(BUTTON);
@@ -1011,11 +1044,30 @@ ReturnRequestCreateWidgetRenderer {
 		continueButton.setClass(BUTTON);
 		continueButton.addEventListener(Events.ON_CLICK,
 				createReturnRequestCreateEventListener(widget,deliveryAddressList,scheduleDeliveryDates));	
+	
 		deliveryAddressList.addEventListener(Events.ON_SELECT, new EventListener() {
 			@Override
 			public void onEvent(final Event event) throws InterruptedException,
 			ParseException, InvalidKeyException,
 			NoSuchAlgorithmException {
+				AddressModel deliveryAddress = subOrder.getDeliveryAddress();
+				List<AddressModel> addrssModel = (List<AddressModel>) subOrder.getUser().getAddresses();
+			       TypedObject currentAddressObject = getCockpitTypeService().wrapItem(deliveryAddress);
+			       Listitem item = new Listitem(" ");
+					item.setParent(deliveryAddressList);
+				for (AddressModel add : addrssModel) {
+					try {
+						TypedObject address = cockpitTypeService.wrapItem(add);
+						String text = TypeTools.getValueAsString(getLabelService(),
+								address);
+						item = new Listitem(text, address);
+						item.setParent(deliveryAddressList);
+						address.equals(currentAddressObject);
+						item.setSelected(address.getObject().equals(currentAddressObject.getObject()));
+					} catch (Exception e1) {
+						e1.getStackTrace();
+					}
+				}
 				createselectDeliveryAddressCreateEventListener(widget,deliveryAddressList);
 			}
 		});
@@ -1324,5 +1376,25 @@ ReturnRequestCreateWidgetRenderer {
 		e.printStackTrace();
 	}
 	}
-		
+	
+	
+	private Window createReturnAddAddressPopupWindow(final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> parentWidget,Component parentWindow) throws InterruptedException {
+		@SuppressWarnings("rawtypes")
+		WidgetContainer widgetContainer = new DefaultWidgetContainer(
+				new DefaultWidgetFactory());
+		@SuppressWarnings("unchecked")
+		Widget<DefaultListWidgetModel<TypedObject>, ReturnsController> popupWidget = createPopupWidget(widgetContainer,
+				"csReturnAddAddressWidgetConfig",
+				"csReturnAddAddressWidgetConfig-Popup");
+		Window popup = new Window();
+		popup.setSclass("csRefundConfirmationWidget");
+		popup.appendChild(popupWidget);	
+		popup.setTitle(LabelUtils.getLabel(popupWidget,
+				"popup.returnCreditTitle", new Object[0]));
+		popup.setParent(parentWindow);
+		popup.doHighlighted();
+		popup.setClosable(true);
+		popup.setWidth("900");	
+		return popup;
+	}
 }

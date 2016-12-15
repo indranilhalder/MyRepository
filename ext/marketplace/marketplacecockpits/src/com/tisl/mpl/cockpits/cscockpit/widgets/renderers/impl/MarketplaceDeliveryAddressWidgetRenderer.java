@@ -78,6 +78,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 	private static final String PIN_REGEX = "^[1-9][0-9]{5}";
 			private static final String NAME_REGEX = "^[A-Za-z][ A-Za-z]{1,20}";
 	private boolean isChangeDeliveryAddress;
+	private boolean isAddressForReturn;
 
 	public boolean getIsChangeDeliveryAddress() {
 		return isChangeDeliveryAddress;
@@ -85,6 +86,14 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 
 	public void setIsChangeDeliveryAddress(boolean isChangeDeliveryAddress) {
 		this.isChangeDeliveryAddress = isChangeDeliveryAddress;
+	}
+	
+	public boolean getIsAddressForReturn() {
+		return isChangeDeliveryAddress;
+	}
+
+	public void setIsAddressForReturn(boolean isAddressForReturn) {
+		this.isAddressForReturn = isAddressForReturn;
 	}
 
 	@Autowired
@@ -1010,12 +1019,20 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 						.getSelectedItem().getLabel().toString(),
 						countryListbox.getSelectedItem().getLabel().toString());
 				// kill the popup
-				if (!isChangeDeliveryAddress) {
-					popupWidgetHelper.dismissCurrentPopup();
-					// fire a dispatch event to refresh the page/widget
-					widget.getWidgetController().dispatchEvent(
-							widget.getControllerCtx(), this, null);
+				try {
+					if(isAddressForReturn){
+						popupWidgetHelper.getCurrentPopup().getNextSibling().getNextSibling().detach();
+					}
+					if (!isChangeDeliveryAddress) {
+						popupWidgetHelper.dismissCurrentPopup();
+						// fire a dispatch event to refresh the page/widget
+						widget.getWidgetController().dispatchEvent(
+								widget.getControllerCtx(), this, null);
+					}
+				}catch(Exception e){
+					LOG.error("Exception while closing the popUp "+e.getMessage());
 				}
+
 			}
 		}
 
