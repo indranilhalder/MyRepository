@@ -371,7 +371,7 @@ $(document).ready(function() {
 var count=0;
 function newOTPGenerate(orderCode){
 	count++;
-	if(count <= 10){
+	if(count <= 9){
 	 $.ajax({
 			type : "GET",
 			url : ACC.config.encodedContextPath + "/my-account/newOTP",
@@ -379,7 +379,8 @@ function newOTPGenerate(orderCode){
 			success : function(response) {
 				if(response==true){
 					$(".otpError").show();
-					$(".otpError").text("OTP has been sent");
+					$(".otpError").text("Rsending OTP limt remaining "+(10-count));
+					
 				}else{
 					$(".otpError").show();
 					$(".otpError").text("OTP sending fail try again ");
@@ -389,7 +390,7 @@ function newOTPGenerate(orderCode){
 	 
 	}else{
 		$(".otpError").show();
-		$(".otpError").text("OTP sending failed, Because you haven't try More then  six times ");
+		$(".otpError").text("OTP limt exceeded 10 times, pleae try again");
 	}
 } 
 function closeOTP(){
