@@ -78,42 +78,27 @@ function codeLatLng(lat,lng) {
   geocoder.geocode({
       'latLng': latlng
   }, function(results, status) {
-  	
-if (status == google.maps.GeocoderStatus.OK) {
 
-  if (results[1]) {
-  var indice=0;
-  for (var j=0; j<results.length; j++)
-  {
-      if (results[j].types[0]=='locality')
-          {
-              indice=j;
-              break;
+	  if (status == google.maps.GeocoderStatus.OK) {
+		 
+          if (results[0]) {
+        	  
+              var add= results[0].formatted_address ;
+              var  value=add.split(",");
+              count=value.length;
+              country=value[count-1];
+              state=value[count-2];
+              city=value[count-3].toLowerCase();
+              $('#location').val(city);
+              
           }
-      }
- 
- 
-  for (var i=0; i<results[j].address_components.length; i++)
-      {
-          if (results[j].address_components[i].types[0] == "locality") {
-                  
-                  city = results[j].address_components[i];
-                  var cityName = city.long_name.toLowerCase();
-                  $('#location').val(cityName);
-                 
-              }
-          
-          
-      }
-
-     
-      } else {
-     // console.log("No results found");
-      }
-  //}
-} else {
-	  //console.log("Geocoder failed due to: " + status);
-}
+          else  {
+        	// console.log("No results found");
+          }
+  }
+   else {
+	   //console.log("Geocoder failed due to: " + status);
+  }
       
   });
 }
