@@ -12,17 +12,22 @@ $(document).ready(function(){
 	});
 	
 	$("#addNewAddressPOP").click(function() {
-		  $("#deliveryAddressForm #firstName").prop('value','');
-		  $("#lastName").prop('value','');
-		  $("#addressLine1").prop('value','');
-		  $("#addressLine2").prop('value','');
-		  $("#addressLine3").prop('value','');
-		  $("#landmark").prop('value','');
-		  $("#state").prop('value','');
-		  $("#city").prop('value','');
-		  $("#pincode").prop('value','');
-		  $("#mobileNo").prop('value','');
-		 });
+	    $("#deliveryAddressForm #firstName").prop('value','');
+	    $("#deliveryAddressForm #lastName").prop('value','');
+	    $("#deliveryAddressForm #addressLine1").prop('value','');
+	    $("#deliveryAddressForm #addressLine2").prop('value','');
+	    $("#deliveryAddressForm #addressLine3").prop('value','');
+	    $("#deliveryAddressForm #landmark").prop("disabled",false).val('Select');
+	    $("#deliveryAddressForm #otherLandmark").prop('value','');
+	    $(".address_landmarkOtherDiv, .address_landmarkOtherDiv label, .address_landmarkOther").hide();
+	    $("#deliveryAddressForm #state").prop('value','Select');
+	    $(".dupDisplay").hide();
+	    $(".mainDrop").show();
+	    $(".mainDrop select").prop("disabled",false);
+	    $("#deliveryAddressForm #city").prop('value','');
+	    $("#deliveryAddressForm #pincode").prop('value','');
+	    $("#deliveryAddressForm #mobileNo").prop('value','');
+	   });
 });
 
 $(".address_landmarkOtherDiv").hide();
@@ -46,18 +51,17 @@ function loadPincodeData() {
 				$("#stateListBoxReadOnly").prop("disabled","disabled");
 				$(".addressRead").prop("disabled",false);
 				$(".addressDup").prop("disabled","disabled");
-				//$(".mainDrop").show();
-				//$(".dupDisplay").hide();
+				$(".mainDrop").show();
+				$(".mainDrop select").prop("disabled",false);
+				$(".stateInput input").prop("disabled","disabled");
+				$(".dupDisplay").hide();
 				$('.otherOption').attr("value", "");
 				$('.otherOption').val("");
 				$(".address_landmarkOtherDiv, .address_landmarkOtherDiv label, .address_landmarkOther").show();
-				//$(".mainDrop").show();
-				//$(".dupDisplay").hide();
-				
 				$(".addState").show();
 				$('.address_landmarks').html($("<option class=unableto></option>").text("Unable to find landmark").attr("selected","selected").attr("value",""));
 				$(".address_landmarkOther").val("");
-				$(".address_townCity").prop("readonly", false);
+				$(".address_townCity").prop("readonly", false).val('');
 				$(".address_states").removeAttr("readonly").removeData("stateValue");
 				
 			} else {
@@ -71,8 +75,11 @@ function loadPincodeData() {
     			$("#stateListBoxReadOnly").prop("disabled",false);
     			$(".addressRead").prop("disabled","disabled");
     			$(".addressDup").prop("disabled",false);
-    			//$(".mainDrop").hide();
-				//$(".dupDisplay").show();
+    			$(".mainDrop").hide();
+				$(".dupDisplay").show();
+				$(".mainDrop select").prop("disabled","disabled");
+				$(".stateInput").html("<input id='address.statesReadOnly' name='state'/>");
+				$(".stateInput input").prop("disabled",false).val(response.state.name).attr("readonly", "true");
     			$(".address_landmarkOther").attr("value", "");
     			$(".address_landmarkOther").val("");
     			$('.otherOption').attr("value", "Other");
@@ -93,7 +100,7 @@ function loadPincodeData() {
  					$(".address_landmarkOther").val("");
         		}
         		  $('.address_landmarks').append($("<option class='otherOption'></option>").attr("value","Other").text("Other"));
-        		  $(".address_states").val(response.state.name).attr("readonly", "true").data("stateValue",response.state.name);
+        		 // $(".address_states").val(response.state.name).attr("readonly", "true").data("stateValue",response.state.name);
 			}
 		},
 		error: function(jqXHR, textStatus, errorThrown) {
@@ -275,6 +282,8 @@ function checkPopupDataOrderHistory() {
 				      if(validate == true){
 				    	  $('.saveBlockData').prop('disabled', 'disabled');
 							var data = $("#deliveryAddressForm").serialize();
+						
+							alert(data);
 							var orderCode = $('#deliveryAddorderCode').val();
 							$.ajax({
 								url : ACC.config.encodedContextPath

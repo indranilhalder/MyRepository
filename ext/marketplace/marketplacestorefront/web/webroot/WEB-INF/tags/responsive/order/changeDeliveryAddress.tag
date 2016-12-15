@@ -139,7 +139,7 @@
 							<div class="col-md-6 form-group">
 							
 <!-- 								<label for="state">State*</label> -->
-								
+								<div class="mainDrop">
 								<formElement:formSelectBox idKey="state"
 									selectCSSClass="l textInputChangeAddress address_states" 
 									labelKey="address.states"
@@ -148,8 +148,14 @@
 									items="${stateDataList}" selectedValue="${addressForm.state}"
 									itemValue="name" />
 								<div class="error_text stateError"></div>
-								
-								
+								</div>
+								<div class="dupDisplay">
+								<label>State *</label>
+								<div class="stateInput"></div>
+									<div class="help-block has-error" id="stateError"
+								style="display: none;">
+									</div>
+									</div>
 							</div>
 							<div class="col-md-6 form-group">
 								<label for="country"><spring:theme code="text.order.returns.country"/></label> <input type="text"
@@ -191,7 +197,7 @@
 											name="select_address"/>
 									</div>
 									<div
-										class="col-md-10 addressTextChange addressSpace changeAddress${status.count}">
+										class="col-md-9 addressTextChange addressSpace changeAddress${status.count}">
 										<b>Residential Address ${addressCount} - Default</b> <br /> 
 										<span class="firstName addressFont">${orderDeliveryAddressList.firstName}</span>
 										<span class="lastName addressFont">${orderDeliveryAddressList.lastName}</span><br>
@@ -228,7 +234,7 @@
 								<p style="clear: both;"></p>
 							</c:forEach>
 						</c:if>
-					<!--   <div class="col-md-12"><a href="#" class="addNewAdd">Add a New Address</a></div> -->
+					  <div class="col-md-12"><a href="#" id="addNewAddressPOP">Add a New Address</a></div>
 					</div>
 				</div>
 
@@ -288,7 +294,7 @@ width: 17px;
 .addressFont{
 font-size: 10px;
 }
-.addNewAdd{
+#addNewAddressPOP{
 	color: #A9143C;
 text-decoration: underline;
 }

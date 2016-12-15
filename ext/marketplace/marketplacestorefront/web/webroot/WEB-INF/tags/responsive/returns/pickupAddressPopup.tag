@@ -168,11 +168,13 @@
 											</c:forEach>
 										</form:select>
 									</div>
+									
 									<div class="dupDisplay">
-										<label><spring:theme code="text.order.returns.state" text="State *" /></label>
-											<form:input path="state" id="stateListBoxReadOnly"
-												class="form-control textInputChangeAddress address_states addressDup" maxlength="30" readonly="readonly"/>
-									</div>
+										<label>State *</label>
+										<div class="stateInput"></div>
+											<div class="help-block has-error" id="stateError"
+										style="display: none;"></div>
+								</div>
 									</div>
 										
 										
