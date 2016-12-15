@@ -32,8 +32,7 @@
 						class="otherSellersFont">
 						<p id="otherSellerInfoId" class="other-sellers">
 							&nbsp;&<span class="other-sellers-link">
-							<span id="otherSellersId"></span>&nbsp;
-							<span><spring:theme code="product.othersellers"></spring:theme></span></span><%-- &nbsp;
+							<span id="otherSellersId"></span>&nbsp;<span><spring:theme code="product.othersellers"></spring:theme></span></span><%-- &nbsp;
 							<spring:theme code="product.available"></spring:theme>
 							&nbsp;<span id="minPriceId"></span> --%>
 						</p>

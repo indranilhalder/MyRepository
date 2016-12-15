@@ -57447,7 +57447,7 @@ div.radio.creditDebitLabelRadio{
                font-weight: normal;
     }
 /* TPR-791 Start */
-.product-info .product-detail .other-sellers#otherSellerInfoId{margin-top:0px;}
+.product-info .product-detail .other-sellers#otherSellerInfoId, .product-info .product-detail #otherSellerLinkId{margin-top:0px;}
 .product-info .SoldWrap>div.fullfilled-by{padding-right:0px;/* width:43%; */}
 /* .product-info .SoldWrap>div.seller{width:57%;}
 .product-info .SoldWrap>div.seller .seller-details, .product-info .SoldWrap>div.seller form#sellerForm{float:left;}
@@ -59219,6 +59219,7 @@ display: none;
 .cart.wrapper .emptyCart-mobile .content{
 	    margin: 0 20px;
 	        line-height: 30px;
+	        padding:40px 0;
 }
 .cart.wrapper .emptyCart-mobile .content a{
 color:#60A119;
