@@ -354,7 +354,7 @@ public class LpoverrideWidgetController extends DefaultWidgetController
 
 	@Command("nextLpSave")
 	@NotifyChange(
-	{ "orderlineRespone", "displayPopup", "selectedEntities" })
+	{ "orderlineRespone", "displayPopup", "selectedEntities", "listOfTransactions" })
 	public void nextLpSaveTransaction()
 	{
 		LOG.info("inside nextLp");
@@ -403,13 +403,22 @@ public class LpoverrideWidgetController extends DefaultWidgetController
 		final LPOverrideAWBEditResponse lpOverrideAwbEditResponse = orderLogisticsUpdateFacade
 				.updateOrderLogisticOrAwbNumber(lpOverrideEdit);
 		orderlineRespone = lpOverrideAwbEditResponse.getOrderLineResponse();
-		/*
-		 * final ArrayList<TransactionInfo> refreshListTransactions = new ArrayList<TransactionInfo>(); for (final
-		 * TransactionInfo transaction : selectedEntities) { for (final OrderLineResponse ordreLineResponse :
-		 * orderlineRespone) { if (transaction.getTransactionId().equals(ordreLineResponse.getTransactionId())) {
-		 * transaction.setLogisticName(ordreLineResponse.getId()); } } refreshListTransactions.add(transaction); }
-		 * this.listOfTransactions = refreshListTransactions;
-		 */
+		//refresh
+		final ArrayList<TransactionInfo> refreshListTransactions = new ArrayList<TransactionInfo>();
+		for (final TransactionInfo transaction : selectedEntities)
+		{
+			for (final OrderLineResponse ordreLineResponseRecord : orderlineRespone)
+			{
+				if (transaction.getTransactionId().equals(ordreLineResponseRecord.getTransactionId()))
+				{
+					if (ordreLineResponseRecord.getLogisticId() != null)
+					{
+						refreshListTransactions.add(transaction);
+					}
+				}
+			}
+		}
+		this.listOfTransactions = refreshListTransactions;
 		listBoxData.clearSelection();
 		selectedEntities.clear();
 		if (CollectionUtils.isNotEmpty(orderlineRespone))
