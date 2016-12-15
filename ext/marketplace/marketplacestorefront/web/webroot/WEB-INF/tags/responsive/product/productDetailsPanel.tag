@@ -21,6 +21,12 @@ tr.d0 td {
      po.src = 'https://apis.google.com/js/client:plusone.js';
      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
  });
+ $(document).ready(function(){
+	 $('.gig-rating-readReviewsLink_pdp').css( 'cursor', 'pointer' );
+	 $(".gig-rating-readReviewsLink_pdp").click(function() {
+		    $('html,body').animate({scrollTop: $("#ReviewSecion").offset().top},'slow');
+		});
+ });
  
       $("#sellersSkuListId").val("");
       $("#skuIdForED").val("");
