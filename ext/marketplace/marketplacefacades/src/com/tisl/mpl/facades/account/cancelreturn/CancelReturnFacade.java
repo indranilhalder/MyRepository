@@ -10,8 +10,10 @@ import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.returns.model.ReturnRequestModel;
 
+import java.util.Date;
 import java.util.List;
 
+import com.tisl.mpl.core.model.MplReturnPickUpAddressInfoModel;
 import com.tisl.mpl.data.CODSelfShipData;
 import com.tisl.mpl.data.CODSelfShipResponseData;
 import com.tisl.mpl.data.CRMTicketUpdateData;
@@ -219,6 +221,9 @@ public interface CancelReturnFacade
 	public List<OrderLineData> returnInitiationForRTS(List<OrderLineData> orerLines);
 	
 	public void saveRTSAndRSSFInfoflag(String transactionId);
+	
+	public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReport(Date fromDate, Date toDate, String orderID,
+			String customerId, String pincode);
 
 
 }

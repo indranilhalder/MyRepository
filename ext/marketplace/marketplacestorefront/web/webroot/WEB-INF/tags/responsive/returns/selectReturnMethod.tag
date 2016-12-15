@@ -69,6 +69,7 @@
 						<div class="col-md-10 col-sm-10 col-xs-10">
 							<b>${returnableStore.displayName}</b> <br /> <span>${returnableStore.address.line1 }, ${returnableStore.address.line2},${returnableStore.address.line3},
 								 ${returnableStore.address.town},${returnableStore.address.postalCode}</span>
+								 <span>Opening Time :${returnableStore.mplOpeningTime},</br> Closing Time :${returnableStore.mplClosingTime}</span>
 						</div>
 					</div>
 				</c:forEach> 
@@ -222,7 +223,7 @@
 				 </c:if>
 				</div>
 				<c:if test="${ScheduleDatesEmpty eq 'true'}">
-				<span> The Product needs to be shipped on next immediate else the return will be deemed non eligible  </span>
+				<span>  The Product needs to be shipped on next immediate else the return will be deemed non eligible </span>
 				</c:if>
 			</div>
 		</div>
@@ -338,7 +339,7 @@ $(document).ready(function(){
 								  +"<input id='storeIds"+i+"' name='storeIds'  onclick=updatePointersNew('quickDropRadio"+i+"','"+ data[i].geoPoint.latitude+"','"+ data[i].geoPoint.longitude+"','"+ data[i].displayName+","+data[i].address.town+","+ data[i].address.postalCode+"') class='checkButton' type='checkbox' value = '"+data[i].slaveId+"' /></div>"
 										+"<div class='col-md-10 col-sm-10 col-xs-10'>"
 									+"<b>"+data[i].displayName+"</b> <br /> <span>"+data[i].address.line1+","+ data[i].address.line2+","+ data[i].address.line3+"," 
-										 +data[i].address.town+","+data[i].address.postalCode+"</span></div></div>";
+										 +data[i].address.town+","+data[i].address.postalCode+",  Opening Time :"+data[i].mplOpeningTime +",  Closing Time : "+data[i].mplClosingTime + "</span></div></div>";
 							  }else{
 							  
 							  tempHtml += "<div class='selectquickDrop quickDropRadio"+i+" col-md-12'>"
@@ -346,7 +347,7 @@ $(document).ready(function(){
 							  +"<input id='storeIds"+i+"' name='storeIds' onclick=updatePointersNew('quickDropRadio"+i+"','"+ data[i].geoPoint.latitude+"','"+ data[i].geoPoint.longitude+"','"+ data[i].displayName+","+data[i].address.town+","+ data[i].address.postalCode+"') class='checkButton' type='checkbox' value = '"+data[i].slaveId+"' /></div>"
 									+"<div class='col-md-10 col-sm-10 col-xs-10'>"
 								+"<b>"+data[i].displayName+"</b> <br /> <span>"+data[i].address.line1+","+ data[i].address.line2+","+ data[i].address.line3+"," 
-									 +data[i].address.town+","+data[i].address.postalCode+"</span></div></div>";
+									 +data[i].address.town+","+data[i].address.postalCode+", Opening Time :"+data[i].mplOpeningTime +", Closing Time :"+data[i].mplClosingTime +"</span></div></div>";
 			
 							  
 							  }	// console.log(tempHtml);

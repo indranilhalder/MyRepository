@@ -116,10 +116,10 @@
 							</div>
 						</div>
 						<div class="row">
-							<div class="address_landmarkOtherDiv">
+							<div class="address_landmarkOtherDiv" data-value="${orderDetails.deliveryAddress.landmark}">
 								<div class="col-md-12">
 									<label><spring:theme code="text.order.returns.landmarkother"/></label>
-										<form:input class="otherLandMark" placeholder="Other Landmark" path="otherLandmark"/>	
+										<form:input class="otherLandMark address_landmarkOther" placeholder="Other Landmark" path="otherLandmark"/>	
 										<div class="error_text otherLandMarkError"></div>									
 								</div>
 							</div>
@@ -137,12 +137,9 @@
 						</div>
 						<div class="row">
 							<div class="col-md-6 form-group">
-							<div class="mainDrop">
+							
 <!-- 								<label for="state">State*</label> -->
-								<%-- <form:input path="state"
-									class="form-control textInputChangeAddress address_states"
-									id="state" value="${orderDetails.deliveryAddress.state}"
-									placeholder="State" /> --%>
+								
 								<formElement:formSelectBox idKey="state"
 									selectCSSClass="l textInputChangeAddress address_states" 
 									labelKey="address.states"
@@ -151,15 +148,8 @@
 									items="${stateDataList}" selectedValue="${addressForm.state}"
 									itemValue="name" />
 								<div class="error_text stateError"></div>
-							</div>
-								<div class="dupDisplay">
-       
-							       	<label for="state">State*</label>
-							        <form:input path="state"
-							         class="form-control textInputChangeAddress address_states"
-							         id="state" value="${orderDetails.deliveryAddress.state}"
-							         placeholder="State" />
-							    </div>
+								
+								
 							</div>
 							<div class="col-md-6 form-group">
 								<label for="country"><spring:theme code="text.order.returns.country"/></label> <input type="text"

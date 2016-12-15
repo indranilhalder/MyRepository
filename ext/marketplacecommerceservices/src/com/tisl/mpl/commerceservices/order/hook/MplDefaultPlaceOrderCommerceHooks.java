@@ -1499,10 +1499,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						orderEntryModel.setReturnWindow(model.getReturnWindow());
 					}
 
-					if (null != model.getDeliveryFulfillModes() && StringUtils.isNotEmpty(model.getDeliveryFulfillModes().getCode()))
-					{
-						orderEntryModel.setFulfillmentType(model.getDeliveryFulfillModes().getCode());
-					}
+//					if (null != model.getDeliveryFulfillModes() && StringUtils.isNotEmpty(model.getDeliveryFulfillModes().getCode()))
+//					{
+//						orderEntryModel.setFulfillmentType(model.getDeliveryFulfillModes().getCode());
+//					}
+					
 				}
 			}
 		}

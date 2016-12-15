@@ -22,6 +22,7 @@ import com.tisl.mpl.cockpits.cscockpit.utilities.CodeMasterUtility;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceReturnsController;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.TypeofReturn;
+import com.tisl.mpl.core.model.MplReturnPickUpAddressInfoModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.CODSelfShipData;
@@ -73,7 +74,6 @@ import de.hybris.platform.cscockpit.widgets.controllers.ReturnsController;
 import de.hybris.platform.cscockpit.widgets.controllers.impl.DefaultReturnsController;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
-import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.returns.OrderReturnException;
 import de.hybris.platform.returns.model.ReplacementEntryModel;
 import de.hybris.platform.returns.model.ReplacementOrderModel;
@@ -140,6 +140,34 @@ public class MarketPlaceDefaultReturnsController extends
 		final Map<Boolean, List<OrderLineDataResponse>> responseMap = new HashMap();
 		ReturnLogisticsResponse returnLogisticsResponse = returnLogisticsService
 				.returnLogisticsCheck(returnLogisticsList);
+	
+		
+		String pincode = returnLogisticsList.get(0).getPinCode();
+		if (returnLogisticsResponse != null
+				&& CollectionUtils.isNotEmpty(returnLogisticsResponse
+						.getOrderlines())) {
+			for (OrderLineDataResponse orderLineDataResponse : returnLogisticsResponse
+					.getOrderlines()) {
+				MplReturnPickUpAddressInfoModel mplReturnReport = modelService
+						.create(MplReturnPickUpAddressInfoModel.class);
+				mplReturnReport.setOrderId(orderLineDataResponse.getOrderId());
+				mplReturnReport.setPincode(pincode);
+				mplReturnReport.setTransactionId(orderLineDataResponse
+						.getTransactionId());
+				if (StringUtils.isNotEmpty(orderLineDataResponse
+						.getIsReturnLogisticsAvailable())
+						&& orderLineDataResponse
+								.getIsReturnLogisticsAvailable()
+								.equalsIgnoreCase("Y")) {
+					mplReturnReport.setStatus("Sucess");
+				} else {
+					mplReturnReport.setStatus("Fail");
+				}
+				modelService.save(mplReturnReport);
+			}
+		}
+		
+	
 
 		if (null != returnLogisticsResponse
 				&& CollectionUtils.isNotEmpty(returnLogisticsResponse

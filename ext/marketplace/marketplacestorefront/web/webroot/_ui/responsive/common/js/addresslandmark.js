@@ -46,15 +46,17 @@ function loadPincodeData() {
 				$("#stateListBoxReadOnly").prop("disabled","disabled");
 				$(".addressRead").prop("disabled",false);
 				$(".addressDup").prop("disabled","disabled");
-				$(".mainDrop").show();
-				$(".dupDisplay").hide();
+				//$(".mainDrop").show();
+				//$(".dupDisplay").hide();
 				$('.otherOption').attr("value", "");
 				$('.otherOption').val("");
 				$(".address_landmarkOtherDiv, .address_landmarkOtherDiv label, .address_landmarkOther").show();
-				$(".mainDrop").show();
-				$(".dupDisplay").hide();
+				//$(".mainDrop").show();
+				//$(".dupDisplay").hide();
+				
 				$(".addState").show();
 				$('.address_landmarks').html($("<option class=unableto></option>").text("Unable to find landmark").attr("selected","selected").attr("value",""));
+				$(".address_landmarkOther").val("");
 				$(".address_townCity").prop("readonly", false);
 				$(".address_states").removeAttr("readonly").removeData("stateValue");
 				
@@ -69,8 +71,8 @@ function loadPincodeData() {
     			$("#stateListBoxReadOnly").prop("disabled",false);
     			$(".addressRead").prop("disabled","disabled");
     			$(".addressDup").prop("disabled",false);
-    			$(".mainDrop").hide();
-				$(".dupDisplay").show();
+    			//$(".mainDrop").hide();
+				//$(".dupDisplay").show();
     			$(".address_landmarkOther").attr("value", "");
     			$(".address_landmarkOther").val("");
     			$('.otherOption').attr("value", "Other");
@@ -88,29 +90,11 @@ function loadPincodeData() {
         			$(".address_landmarkOtherDiv, .address_landmarkOtherDiv label, .address_landmarkOther").show();
  					$(".address_landmarks").attr("disabled","disabled").css("padding-left","5px");
  					$('.address_landmarks').append($("<option class=unableto></option>").text("Unable to find landmark").attr("selected","selected").attr("value",""));
-        		 }
+ 					$(".address_landmarkOther").val("");
+        		}
         		  $('.address_landmarks').append($("<option class='otherOption'></option>").attr("value","Other").text("Other"));
         		  $(".address_states").val(response.state.name).attr("readonly", "true").data("stateValue",response.state.name);
 			}
-			
-			var url = window.location.href;
-			var string = "edit-address";
-			var shippingAddress = "my-account";
-			if(url.indexOf(string) >= "0") {
-				var value = $(".address_landmarkOtherDiv").attr("data-value");
-				if($(".address_landmarks option[value='"+value+"']").length > "0") {
-					$(".address_landmarks").val(value);
-				} else {
-					if($(".address_landmarks option[value='Other']").length > "0") {
-						$(".address_landmarks").val("Other"); 
-						changeFuncLandMark("Other"); 
-		  			$(".address_landmarkOther").val(value);
-					} else {
-						$(".address_landmarkOther").val(value);
-					}
-				}
-			}
-			
 		},
 		error: function(jqXHR, textStatus, errorThrown) {
 		}
@@ -133,7 +117,7 @@ function changeFuncLandMark(value) {
 	$(".errland1").hide();
 	if(value == "Other") {
 		$(".address_landmarkOtherDiv, .address_landmarkOtherDiv label, .address_landmarkOther").show();
-		$("#otherLandmark").prop('value','');
+		//$("#otherLandmark").prop('value','');
 	} else {
 		$(".address_landmarkOther").prop("value", "");
 		$(".address_landmarkOtherDiv, .address_landmarkOtherDiv label, .address_landmarkOther").hide();
@@ -358,7 +342,25 @@ $(document).ready(function() {
 		$("#addressLine1").val($("."+className+" .addressLine1").text());
 		$("#addressLine2").val($("."+className+" .addressLine2").text());
 		$("#addressLine3").val($("."+className+" .addressLine3").text());
-		$("#landmark").val($("."+className+" .landmark").text());
+		var value = $("."+className+" .landmark").text();
+		  
+		  setTimeout(function(){
+		  if($(".address_landmarks option[value='"+value+"']").length > "0") {
+			  
+			  alert(value+ " 2 in if x"+$(".address_landmarks option[value='"+value+"']").val());
+			  $(".address_landmarks").val("");
+			$(".address_landmarks option[value='"+value+"']").prop("selected",true);
+			
+			} else {
+			alert(value+ " 3 in else");
+			  $(".address_landmarks").val("Other"); 
+				changeFuncLandMark("Other"); 
+			$(".address_landmarkOther").val(value);
+			
+		}
+		  
+		  }); 
+		
 		$("#state").val($("."+className+" .state").text());
 		$("#pincode").val($("."+className+" .postalCode").text());
 		$("#mobileNo").val($("."+className+" .phone").text());

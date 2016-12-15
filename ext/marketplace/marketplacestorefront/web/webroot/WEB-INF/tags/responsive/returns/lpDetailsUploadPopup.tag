@@ -23,12 +23,14 @@
                         				<div class="space">Fill in the below mentioned information to start the Return and Refund process for self shipped product and click on 'Submit' </div>
 										<div class="col-md-6 form-group">
 											<label for="awsNumber">AWB Number</label>
-		    								<form:input type="text" path="awbNumber" class="form-control awsTextinput" id="awsNum" placeholder="AWB Number"/>
+		    								<form:input type="text" path="awbNumber" class="form-control awsTextinput" id="awsNum" placeholder="AWB Number"
+		    									onkeyup="this.value=this.value.trim().replace(/\s\s+/g,'');"/>
 		    								<div class="errorText awsNumError"></div>
 										</div>
 										<div class="col-md-6 form-group">
 											<label for="logisticPart">Logistics Partner</label>
-		    								<form:input type="text"  path="lpname" class="form-control awsTextinput" id="logisticPartner" placeholder="Logistics Partner"/>
+		    								<form:input type="text"  path="lpname" class="form-control awsTextinput" id="logisticPartner" placeholder="Logistics Partner"
+		    									onkeyup="this.value=this.value.trim().replace(/\s\s+/g,'');"/>
 		    								<div class="errorText logisticPartnerError"></div>
 										</div>
 									</div>
@@ -52,7 +54,8 @@
 		
 										<div class="col-md-6 form-group">
 											<label for="awsNumber">Amount </label>
-		    								<form:input type="text" path="amount" class="form-control awsTextinput" id="amount" placeholder="Amount"/>
+		    								<form:input type="text" path="amount" class="form-control awsTextinput" id="amount" placeholder="Amount" 
+		    									onkeyup="this.value=this.value.trim().replace(/\s\s+/g,'');" onkeypress="return isNumber(event)"/>
 		    								<div class="errorText amountError"></div>
 										</div>
 										

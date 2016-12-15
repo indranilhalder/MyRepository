@@ -1747,7 +1747,10 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			if ((cartData.getEntries() != null && !cartData.getEntries().isEmpty()))
 			{
 				responseDataList = getOMSPincodeResponseData(selectedPincode, cartData);
-
+				if (null != responseDataList)
+				{
+					getSessionService().setAttribute(MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION, responseDataList);
+				}
 				if (null != responseDataList && responseDataList.size() > 0 && cartModel != null && cartModel.getEntries() != null
 						&& cartModel.getEntries().size() > 0)
 				{

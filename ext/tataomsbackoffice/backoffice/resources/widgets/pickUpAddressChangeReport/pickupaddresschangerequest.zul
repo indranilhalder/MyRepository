@@ -100,16 +100,11 @@
 								</listheader>
 								<listheader style="text-align:left"
 									label="${labels.lbl.lbx.header2}">
-								</listheader>
-								<listheader style="text-align:left"
-									label="${labels.lbl.lbx.header3}">
-								</listheader>
+								</listheader>						
 								<listheader style="text-align:left"
 									label="${labels.lbl.lbx.header4}">
 								</listheader>
-								<listheader style="text-align:left"
-									label="${labels.lbl.lbx.header5}">
-								</listheader>
+								
 								<listheader style="text-align:left"
 									label="${labels.lbl.lbx.header6}">
 								</listheader>

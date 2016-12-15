@@ -25,6 +25,7 @@ import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceBasketCont
 import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceabilityCheckHelper;
 import com.tisl.mpl.constants.MplGlobalCodeConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.data.VoucherDiscountData;
@@ -305,12 +306,12 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	        errorMessages.add(new ResourceMessage("placeOrder.validation.noPaymentAddress"));
 	      }
 	      
-			for(AbstractOrderEntryModel entry : cart.getEntries()){
-				if(!mplFindDeliveryFulfillModeStrategy.isTShip(entry.getSelectedUSSID())){						
-					errorMessages.add(new ResourceMessage("placeOrder.validation.sship",Arrays.asList(entry.getInfo())));
-					break;
-				} 
-			}
+//			for(AbstractOrderEntryModel entry : cart.getEntries()){
+//				if(!mplFindDeliveryFulfillModeStrategy.isTShip(entry.getSelectedUSSID())){						
+//					errorMessages.add(new ResourceMessage("placeOrder.validation.sship",Arrays.asList(entry.getInfo())));
+//					break;
+//				} 
+//			}
 	      
 			for(AbstractOrderEntryModel entry : cart.getEntries()){
 					if(entry.getMplDeliveryMode()==null){						
@@ -375,7 +376,46 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 						List<PinCodeResponseData> pincoderesponseDataList = marketplaceServiceabilityCheckHelper
 								.getResponseForPinCode(null,cartEntry.getProduct(),String.valueOf(cartEntry.getOrder().getDeliveryAddress().getPostalcode()),
 										"Y",cartEntry.getSelectedUSSID());
-
+						try {
+							if(LOG.isDebugEnabled()) {
+								LOG.info("Checking COD Eligibility of entries");
+							}
+							boolean codEligible = true;
+							if(null != pincoderesponseDataList && pincoderesponseDataList.size()>0)
+							{
+								for (final PinCodeResponseData responseData : pincoderesponseDataList)
+								{
+									if (cartEntry.getSelectedUSSID().equals(responseData.getUssid()) && responseData.getValidDeliveryModes().size()>0)
+									{
+										for (final DeliveryDetailsData DeliveryData : responseData.getValidDeliveryModes())
+										{
+											if(DeliveryData.getIsPincodeServiceable()) {
+												if(MarketplaceCockpitsConstants.delCodeMap
+														.get(DeliveryData.getType()).equalsIgnoreCase(cartEntry.getMplDeliveryMode().getDeliveryMode().getCode())) {
+													if(null != DeliveryData.getFulfilmentType()) {
+														if(DeliveryFulfillModesEnum.SSHIP.getCode().equalsIgnoreCase(DeliveryData.getFulfilmentType().trim())){
+															codEligible =mplFindDeliveryFulfillModeStrategy.getIsShipCODEligible(cartEntry.getSelectedUSSID());
+															if(LOG.isDebugEnabled()) {
+																LOG.debug("COD Eligibility for product "+cartEntry.getSelectedUSSID()+" "+codEligible);
+															}
+															if(!codEligible) {
+																errorMessages.add(new ResourceMessage("placeOrder.validation.sship",Arrays.asList(cartEntry.getInfo())));
+																break;
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+							if(LOG.isDebugEnabled()) {
+								LOG.info("cart is eligible for COD "+codEligible);
+							}
+						}catch(Exception e) {
+							LOG.error("Exception while checking codEligibility of products "+e.getMessage());
+						}
 						if(null != pincoderesponseDataList && pincoderesponseDataList.size()>0)
 						{
 							for (final PinCodeResponseData responseData : pincoderesponseDataList)

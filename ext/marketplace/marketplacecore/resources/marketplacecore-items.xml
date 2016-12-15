@@ -9059,6 +9059,43 @@
 				</attributes>
 			</itemtype>
 		 </typegroup>
+		 
+		 <typegroup name="MplReturnPickUpAddressInfo">
+		<itemtype code="MplReturnPickUpAddressInfo" autocreate="true"  generate="true">
+				<description>Used to Return delivery address  report</description>
+				<deployment table="ReturnReport" typecode="15024" />
+				
+				<attributes>
+					<attribute qualifier="orderId" type="java.lang.String"  autocreate="true" generate="true">
+						<persistence type="property"/>
+						<modifiers read="true" write="true" search="true" optional="false" unique="false" />
+					</attribute>
+					
+					<attribute qualifier="transactionId" type="java.lang.String"  autocreate="true" generate="true">
+						<persistence type="property"/>
+						<modifiers read="true" write="true" search="true" optional="false" unique="false" />
+					</attribute>
+					
+					<attribute qualifier="pincode" type="java.lang.String"  autocreate="true" generate="true">
+						<persistence type="property"/>
+						<modifiers read="true" write="true" search="true" optional="false" unique="false" />
+					</attribute>
+					
+				    <attribute qualifier="customerId" type="java.lang.String"  autocreate="true" generate="true">
+						<persistence type="property"/>
+						<modifiers read="true" write="true" search="true" optional="false" unique="false" />
+					</attribute>
+					
+					 <attribute qualifier="status" type="java.lang.String"  autocreate="true" generate="true">
+						<persistence type="property"/>
+						<modifiers read="true" write="true" search="true" optional="false" unique="false" />
+					</attribute>
+				</attributes>
+			</itemtype>
+		 </typegroup>
+		 
+		 
+		 
 		 <typegroup name="BankDetailsInfoToFICO">
 			<itemtype code="BankDetailsInfoToFICOHistory" autocreate="true"
 				generate="true" jaloclass="com.tisl.mpl.core.jalo.BankDetailsInfoToFICOHistory">
