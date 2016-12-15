@@ -85,10 +85,10 @@ function codeLatLng(lat,lng) {
         	  
               var add= results[0].formatted_address ;
               var  value=add.split(",");
-              count=value.length;
-              country=value[count-1];
-              state=value[count-2];
-              city=value[count-3].toLowerCase();
+              var count=value.length;
+              var country=value[count-1];
+              var state=value[count-2];
+              var city=value[count-3].toLowerCase();
               $('#location').val(city);
               
           }
