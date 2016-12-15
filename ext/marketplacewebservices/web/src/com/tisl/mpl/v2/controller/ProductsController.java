@@ -122,6 +122,7 @@ import com.tisl.mpl.wsdto.LuxHeroBannerWsDTO;
 import com.tisl.mpl.wsdto.ProductAPlusWsData;
 import com.tisl.mpl.wsdto.ProductCompareWsDTO;
 import com.tisl.mpl.wsdto.ProductDetailMobileWsData;
+import com.tisl.mpl.wsdto.ProductInfoWSDTO;
 import com.tisl.mpl.wsdto.ProductSearchPageWsDto;
 import com.tisl.mpl.wsdto.ProductSearchPagefacateWsDTO;
 import com.tisl.mpl.wsdto.SizeGuideWsDTO;
@@ -1236,82 +1237,6 @@ public class ProductsController extends BaseController
 		return pageableData;
 	}
 
-
-	//Commenting due to SONAR Fix
-	//	/**
-	//	 * @description method is called to get all Images of the products
-	//	 * @param productData
-	//	 * @return Map
-	//	 */
-	//	private List<Map<String, String>> getGalleryImages(final ProductData productData)
-	//	{
-	//
-	//		final List<Map<String, String>> galleryImages = new ArrayList<>();
-	//		if (CollectionUtils.isNotEmpty(productData.getImages()))
-	//		{
-	//			final List<ImageData> images = new ArrayList<>();
-	//			for (final ImageData image : productData.getImages())
-	//			{
-	//				if (ImageDataType.GALLERY.equals(image.getImageType()))
-	//				{
-	//					images.add(image);
-	//				}
-	//			}
-	//			Collections.sort(images, new Comparator<ImageData>()
-	//			{
-	//				@Override
-	//				public int compare(final ImageData image1, final ImageData image2)
-	//				{
-	//					return image1.getGalleryIndex().compareTo(image2.getGalleryIndex());
-	//				}
-	//			});
-	//
-	//			if (CollectionUtils.isNotEmpty(images))
-	//			{
-	//				int currentIndex = images.get(0).getGalleryIndex().intValue();
-	//				Map<String, String> formats = new HashMap<String, String>();
-	//				for (final ImageData image : images)
-	//				{
-	//					if (currentIndex != image.getGalleryIndex().intValue())
-	//					{
-	//						galleryImages.add(formats);
-	//						formats = new HashMap<>();
-	//						currentIndex = image.getGalleryIndex().intValue();
-	//					}
-	//					if (null != image.getFormat() && null != image.getUrl())
-	//					{
-	//						formats.put(image.getFormat(), image.getUrl());
-	//					}
-	//				}
-	//				if (!formats.isEmpty() && formats.equals(MarketplacecommerceservicesConstants.THUMBNAIL))
-	//				{
-	//					galleryImages.add(formats);
-	//				}
-	//			}
-	//		}
-	//		return galleryImages;
-	//	}
-	//
-	//	/**
-	//	 * @description method is called to get all Images of the products
-	//	 * @param galleryImages
-	//	 * @return GalleryImageData
-	//	 */
-	//	private final List<GalleryImageData> getGalleryImagesList(final List<Map<String, String>> galleryImages)
-	//	{
-	//		final List<GalleryImageData> galleryImageList = new ArrayList<GalleryImageData>();
-	//		GalleryImageData galleryImage = null;
-	//		for (final Map<String, String> map : galleryImages)
-	//		{
-	//			galleryImage = new GalleryImageData();
-	//			galleryImage.setGalleryImages(map);
-	//			galleryImageList.add(galleryImage);
-	//		}
-	//
-	//		return galleryImageList;
-	//	}
-
-
 	@SuppressWarnings("finally")
 	@RequestMapping(value = "/compare/{firstProductCode}/{secondProductCode}", method = RequestMethod.GET)
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
@@ -1375,40 +1300,6 @@ public class ProductsController extends BaseController
 
 
 
-	/**
-	 * @return the messageSource
-	 */
-	public MessageSource getMessageSource()
-	{
-		return messageSource;
-	}
-
-	/**
-	 * @param messageSource
-	 *           the messageSource to set
-	 */
-	public void setMessageSource(final MessageSource messageSource)
-	{
-		this.messageSource = messageSource;
-	}
-
-	/**
-	 * @return the i18nService
-	 */
-	public I18NService getI18nService()
-	{
-		return i18nService;
-	}
-
-	/**
-	 * @param i18nService
-	 *           the i18nService to set
-	 */
-	public void setI18nService(final I18NService i18nService)
-	{
-		this.i18nService = i18nService;
-	}
-
 	@RequestMapping(value = "/getDepartmentFilter", method = RequestMethod.POST, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public DepartmentHierarchyWs departmentFilter(@RequestParam(required = false) final String searchText,
@@ -1467,6 +1358,7 @@ public class ProductsController extends BaseController
 		return null;
 	}
 
+
 	// ######################### TISLUX-356 START
 
 	@RequestMapping(value = "/getBreadcrumb", method = RequestMethod.POST, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
@@ -1488,4 +1380,129 @@ public class ProductsController extends BaseController
 
 	// ######################### TISLUX-356 END
 
+	/**
+	 * Returns the reviews for a product with a given product code.
+	 *
+	 * @return product's review list
+	 */
+	@RequestMapping(value = "/productInfo", method = RequestMethod.GET)
+	//@CacheControl(directive = CacheControlDirective.PRIVATE, maxAge = 120)
+	//@Cacheable(value = "productCache", key = "T(de.hybris.platform.commercewebservicescommons.cache.CommerceCacheKeyGenerator).generateKey(true,true,#productCode,#fields)")
+	@ResponseBody
+	public ProductInfoWSDTO getProductInfo(@RequestParam(required = true) final String productCodes,
+			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields, final HttpServletRequest request)
+	{
+		final List<String> productCodeList = new ArrayList<String>();
+		ProductDetailMobileWsData productWSData = new ProductDetailMobileWsData();
+		final List<ProductDetailMobileWsData> productWSDataList = new ArrayList<ProductDetailMobileWsData>();
+		final ProductInfoWSDTO productDTOList = new ProductInfoWSDTO();
+		String productCode = "";
+
+		if (productCodes.indexOf(",") != -1)
+		{
+			productCode = productCodes.toUpperCase();
+			for (final String prdStr : productCode.split(","))
+			{
+				productCodeList.add(prdStr);
+			}
+		}
+		else
+		{
+			productCode = productCodes.toUpperCase();
+			productCodeList.add(productCode);
+		}
+
+		try
+		{
+			URL requestUrl = null;
+			if (null != request && null != request.getRequestURL())
+			{
+				requestUrl = new URL(request.getRequestURL().toString());
+			}
+			String portString = MarketplacecommerceservicesConstants.EMPTYSPACE;
+			String baseUrl = MarketplacecommerceservicesConstants.EMPTYSPACE;
+			if (null != requestUrl)
+			{
+				if (0 != requestUrl.getPort())
+				{
+					portString = requestUrl.getPort() == -1 ? MarketplacecommerceservicesConstants.EMPTYSPACE
+							: MarketplacecommerceservicesConstants.COLON + requestUrl.getPort();
+				}
+				if (null != requestUrl.getHost() && null != requestUrl.getProtocol())
+				{
+					baseUrl = requestUrl.getProtocol() + MarketplacecommerceservicesConstants.COLON_SLASH + requestUrl.getHost()
+							+ portString + MarketplacecommerceservicesConstants.EMPTYSPACE;
+					//+ MarketplacewebservicesConstants.FORGOTPASSWORD_URL;
+				}
+			}
+			for (final String productCodeRef : productCodeList)
+			{
+				productWSData = mplProductWebService.getProductInfoForProductCode(productCodeRef, baseUrl);
+				productWSDataList.add(productWSData);
+			}
+			productDTOList.setResults(productWSDataList);
+			productDTOList.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				productDTOList.setError(e.getErrorMessage());
+			}
+			productDTOList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				productDTOList.setError(e.getErrorMessage());
+			}
+			productDTOList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		//TPR-799
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			productDTOList.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			productDTOList.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			productDTOList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return productDTOList;
+	}
+
+	/**
+	 * @return the messageSource
+	 */
+	public MessageSource getMessageSource()
+	{
+		return messageSource;
+	}
+
+	/**
+	 * @param messageSource
+	 *           the messageSource to set
+	 */
+	public void setMessageSource(final MessageSource messageSource)
+	{
+		this.messageSource = messageSource;
+	}
+
+	/**
+	 * @return the i18nService
+	 */
+	public I18NService getI18nService()
+	{
+		return i18nService;
+	}
+
+	/**
+	 * @param i18nService
+	 *           the i18nService to set
+	 */
+	public void setI18nService(final I18NService i18nService)
+	{
+		this.i18nService = i18nService;
+	}
 }

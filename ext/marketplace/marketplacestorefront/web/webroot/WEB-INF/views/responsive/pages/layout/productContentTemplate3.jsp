@@ -22,6 +22,14 @@ function iframe_resize(){
 $('.Manufacturer.Temp07 .bkg-img').on("load", function() {
 	iframe_resize();
 });	
+$(document).ready(function(){
+	if($(".Temp07 .Padd .twocolumn .onecolumn img").length == 0){
+		$(".Temp07 .Padd .twocolumn").css ("display","none");
+	}
+	if (($(".Temp07 .Padd .every-scene li .media").children().length == 0) && ($(".Temp07 .Padd .every-scene li .media-content").children().length == 0)){
+		$(".Temp07 .Padd .every-scene").css("display","none");
+	}
+});
 
 </script>
 <div class="Manufacturer Temp07">

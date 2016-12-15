@@ -158,7 +158,7 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 			if (totalCount >= eligibleQuantity.intValue())
 			{
 				final Map<String, Integer> validProductList = getDefaultPromotionsManager().getSortedValidProdUssidMap(
-						validProductUssidMap, totalCount, eligibleQuantity.longValue(), arg0, restrictionList);
+						validProductUssidMap, totalCount, eligibleQuantity.longValue(), arg0, restrictionList, getCode());
 
 				if (!isPercentageOrAmount().booleanValue())
 				{

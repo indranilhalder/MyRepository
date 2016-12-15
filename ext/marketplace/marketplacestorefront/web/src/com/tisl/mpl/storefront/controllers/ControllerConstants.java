@@ -236,6 +236,7 @@ public interface ControllerConstants
 			{
 				String MiscRobotsPage = "pages/misc/miscRobotsPage";
 				String MiscSiteMapPage = "pages/misc/miscSiteMapPage";
+				String MiscIndividualSiteMapPage = "pages/misc/miscIndividualSiteMapPage";
 			}
 
 			interface Guest
@@ -366,6 +367,9 @@ public interface ControllerConstants
 				public static final String SellerResultsPage = "fragments/product/sellerResultPage";
 
 				public static final String OFFERMESSAGEMAP = "offerMessageMap";
+
+				public static final String USSID_CODE_PATH_NEW_PATTERN = "/**/p-{ussId:.*}";
+				public static final String USSID = "ussId";
 			}
 		}
 	}

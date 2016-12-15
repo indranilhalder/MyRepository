@@ -734,17 +734,21 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 						fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
 								.getDeliveryFulfillModes().getCode();
 
-						// For Release 1 , TShip delivery cost will always be zero . Hence , commenting the below code which check configuration from HAC
-						if (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE)
-								&& entry.getTotalPrice().doubleValue() > Double.parseDouble(tshipThresholdValue))
+						//Blocked for TPR-579
 
-						{
-							mplZoneDeliveryModeValueModel.setValue(Double.valueOf(0.0));
-						}
+						// For Release 1 , TShip delivery cost will always be zero . Hence , commenting the below code which check configuration from HAC
+						//						if (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE)
+						//								&& entry.getTotalPrice().doubleValue() > Double.parseDouble(tshipThresholdValue))
+						//
+						//						{
+						//							mplZoneDeliveryModeValueModel.setValue(Double.valueOf(0.0));
+						//						}
 					}
 
 					entry.setMplDeliveryMode(mplZoneDeliveryModeValueModel);
-					if (mplZoneDeliveryModeValueModel.getValue() != null)
+					if (mplZoneDeliveryModeValueModel.getValue() != null
+							&& null != mplZoneDeliveryModeValueModel.getDeliveryFulfillModes()
+							&& fulfillmentType.equalsIgnoreCase(mplZoneDeliveryModeValueModel.getDeliveryFulfillModes().getCode()))
 					{
 						if (entry.getIsBOGOapplied().booleanValue())
 						{

@@ -13,6 +13,7 @@ import java.util.List;
 
 import com.tisl.mpl.data.ReturnLogisticsResponseData;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
+import com.tisl.mpl.wsdto.ReturnPincodeDTO;
 
 
 /**
@@ -114,6 +115,10 @@ public interface CancelReturnFacade
 	 * @return String
 	 */
 	String getOrderStatusStage(String orderEntryStatus);
+
+
+	public ReturnPincodeDTO checkReturnLogisticsForApp(final OrderData orderDetails, final String pincode,
+			final String returntransactionId);
 
 
 }

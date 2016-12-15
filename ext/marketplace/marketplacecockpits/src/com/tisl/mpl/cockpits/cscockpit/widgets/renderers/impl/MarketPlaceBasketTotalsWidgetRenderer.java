@@ -63,7 +63,6 @@ public class MarketPlaceBasketTotalsWidgetRenderer extends
 		  
 		      {
 		        AbstractOrderModel abstractOrderModel = (AbstractOrderModel)order.getObject();
-		  
 		        final CurrencyModel cartCurrencyModel = abstractOrderModel.getCurrency();
 		        NumberFormat currencyInstance = (NumberFormat)getSessionService().executeInLocalView(new SessionExecutionBody() 
 		
@@ -88,16 +87,14 @@ public class MarketPlaceBasketTotalsWidgetRenderer extends
 		        renderRow(promotion, LabelUtils.getLabel(widget, "promotion", new Object[0]), currencyInstance, container);
 		        
 		        Double deliveryCosts = abstractOrderModel.getDeliveryCost();
-		       /* 
-				Double deliveryCosts = 0D;
-				
+				if(deliveryCosts==0.0){
 				for (AbstractOrderEntryModel orderEntry : abstractOrderModel
 						.getEntries()) {
 					if (null != orderEntry.getMplDeliveryMode()) {
-						deliveryCosts = deliveryCosts
-								+ ( orderEntry.getCurrDelCharge());
+						deliveryCosts =  (orderEntry.getMplDeliveryMode().getValue()-orderEntry.getCurrDelCharge().doubleValue())*orderEntry.getQuantity();
 					}
-				}*/
+				}
+				}
 				
 		        renderRow(deliveryCosts, LabelUtils.getLabel(widget, "deliveryCosts", new Object[0]), currencyInstance, container);
 
@@ -105,9 +102,9 @@ public class MarketPlaceBasketTotalsWidgetRenderer extends
 				
 				for (AbstractOrderEntryModel orderEntry : abstractOrderModel
 						.getEntries()) {
-					if(! mplFindDeliveryFulfillModeStrategy.isTShip(orderEntry.getSelectedUSSID())){
+					//if(! mplFindDeliveryFulfillModeStrategy.isTShip(orderEntry.getSelectedUSSID())){
 						totalDeliveryCostDisc =+ Double.valueOf(orderEntry.getPrevDelCharge().doubleValue() - orderEntry.getCurrDelCharge().doubleValue());
-					}
+					//}
 				}
 				
 				renderRow(totalDeliveryCostDisc > 0 ? totalDeliveryCostDisc  : 0d , LabelUtils.getLabel(widget, "deliveryDiscount", new Object[0]), currencyInstance, container);
@@ -148,8 +145,11 @@ public class MarketPlaceBasketTotalsWidgetRenderer extends
 		        Double convenienceCharges = abstractOrderModel.getConvenienceCharges();
 		        renderRow(convenienceCharges, LabelUtils.getLabel(widget, "convenienceCharges", new Object[0]), currencyInstance, container);
 		  
-		      //  Double totalPrice = abstractOrderModel.getTotalPriceWithConv();
-		        renderRow(abstractOrderModel.getTotalPriceWithConv(), LabelUtils.getLabel(widget, "totalPrice", new Object[0]), currencyInstance, container);
+    	        Double totalPrice = abstractOrderModel.getSubtotal()+convenienceCharges+deliveryCosts-couponDiscount-couponDiscount-totalDeliveryCostDisc-totalDeliveryCostDisc;
+//		        if(deliveryCosts==0.0){
+//		        	totalPrice=totalPrice-prevDeliveryCost;
+//		        }
+		        renderRow(totalPrice, LabelUtils.getLabel(widget, "totalPrice", new Object[0]), currencyInstance, container);
 		      }
 		  
 		      container.setParent(parent);
