@@ -1,7 +1,7 @@
 /*
  * ----------------------------------------------------------------
  * --- WARNING: THIS FILE IS GENERATED AND WILL BE OVERWRITTEN! ---
- * --- Generated at Nov 15, 2016 3:59:26 PM                     ---
+ * --- Generated at Dec 15, 2016 3:32:03 PM                     ---
  * ----------------------------------------------------------------
  */
 package com.hybris.yps.nodewarmer.constants;

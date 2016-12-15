@@ -399,12 +399,56 @@
 			<xs:annotation>
 				<xs:documentation>If 'true' this index is a replacement/redeclaration for already existing index.</xs:documentation>
 			</xs:annotation>
-		</xs:attribute>		
+		</xs:attribute>
 		<xs:attribute name="unique" type="xs:boolean" use="optional">
 			<xs:annotation>
 				<xs:documentation>If 'true', the value of this attribute has to be unique within all instances of this index. Attributes with persistence type set to 'jalo' can not be unique. Default is 'false'.</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
+        <xs:attribute name="creationmode" use="optional" default="all">
+            <xs:annotation>
+                <xs:documentation>Determines index creation mode.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:NMTOKEN">
+                    <xs:enumeration value="all">
+                        <xs:annotation>
+                            <xs:documentation>Create index on all supported databases (default)</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="force">
+                        <xs:annotation>
+                            <xs:documentation>Force creation on Database which by default prevents index creation by external configuration</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="sap">
+                        <xs:annotation>
+                            <xs:documentation>Create index only on SAP Hana database</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="mysql">
+                        <xs:annotation>
+                            <xs:documentation>Create index only on MySQL database</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="oracle">
+                        <xs:annotation>
+                            <xs:documentation>Create index only on Oracle database</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="sqlserver">
+                        <xs:annotation>
+                            <xs:documentation>Create index only on MSSQL Server database</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="hsqldb">
+                        <xs:annotation>
+                            <xs:documentation>Create index only on HSQL databsse</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
 	</xs:complexType>
 
 	<xs:complexType name="indexKeyType">
