@@ -367,9 +367,8 @@ function getBrandsYouLoveAjaxCall() {
             		slideBy=1;
             	
             	}
-            	
                
-
+          
                 //console.log(response.subComponents);
             	//TPR-559 Show/Hide Components and Sub-components
 	            if (response.hasOwnProperty("title") && response.hasOwnProperty("subComponents") && response.subComponents.length) {
@@ -414,7 +413,7 @@ function getBrandsYouLoveAjaxCall() {
 	            		center:true,
 	            		dots:false,
 	            		navText:[],
-	            		autoplay: $.parseJSON(autoPlay),
+	            		autoplay: autoPlay?$.parseJSON(autoPlay):true,
 			            autoHeight : false,
 	            		autoplayTimeout: autoplayTimeout,
 	  	               slideBy: slideBy,
@@ -767,7 +766,6 @@ function getBestPicksAjaxCall() {
             	}
                
              
-               
             	//TPR-559 Show/Hide Components and Sub-components
             	if (response.hasOwnProperty("title") && response.hasOwnProperty("subItems")) {
 	                renderHtml = "<h2>" + response.title + "</h2>" +
@@ -830,7 +828,7 @@ function getBestPicksAjaxCall() {
 	            		dots:false,
 	            		navText:[],
 	            		lazyLoad: false,
-	            		autoplay: $.parseJSON(autoPlay),
+	            		autoplay: autoPlay?$.parseJSON(autoPlay):true,
 			            autoHeight : false,
 	            		autoplayTimeout: autoplayTimeout,
 	  	               slideBy: slideBy,
@@ -919,9 +917,7 @@ function getProductsYouCareAjaxCall() {
             	
             	}
                
-               
-            	
-               
+              
             	//console.log(response);
             	//TPR-559 Show/Hide Components and Sub-components
                 if (response.hasOwnProperty("title") && response.hasOwnProperty("categories") && response.title && response.categories.length) {
@@ -971,7 +967,7 @@ function getProductsYouCareAjaxCall() {
 							dots : false,
 							navText : [],
 							lazyLoad : false,
-							autoplay: $.parseJSON(autoPlay),
+							autoplay: autoPlay?$.parseJSON(autoPlay):true,
 				            autoHeight : false,
 							autoplayTimeout: autoplayTimeout,
 				            slideBy: slideBy,
@@ -1052,7 +1048,8 @@ function getNewAndExclusiveAjaxCall() {
         		slideBy=1;
         	
         	}
-        	
+           
+          
         	
         	//TPR-559 Show/Hide Components and Sub-components
             if (response.hasOwnProperty("title") && response.hasOwnProperty("newAndExclusiveProducts") && response.newAndExclusiveProducts.length) {
@@ -1099,7 +1096,7 @@ function getNewAndExclusiveAjaxCall() {
 	        		dots:false,
 	        		navText:[],
 	        		lazyLoad: false,
-	        		autoplay: $.parseJSON(autoPlay),
+	        		autoplay: autoPlay?$.parseJSON(autoPlay):true,
 		            autoHeight : false,
 		            autoplayTimeout: autoplayTimeout,
 		            slideBy: slideBy,

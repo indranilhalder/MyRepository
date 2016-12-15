@@ -508,13 +508,14 @@ ACC.carousel = {
 				
 				autoplayTimeout=5000;	
 			}
+		
 		$(".top_deal_blp #mplAdvancedCategoryCarousel").owlCarousel({
 					items:5,
             		loop: true,
             		nav:true,
             		dots:false,
             		navText:[],
-            		autoplay: $.parseJSON(autoPlay),
+            		autoplay: autoPlay?$.parseJSON(autoPlay):true,
                     autoHeight : false,
                     autoplayTimeout: autoplayTimeout,
                     slideBy: slideBy,
@@ -584,7 +585,7 @@ ACC.carousel = {
             		nav:false,
             		dots:false,
             		navText:[],
-            		autoplay: $.parseJSON(autoPlay),
+            		autoplay: autoPlay?$.parseJSON(autoPlay):true,
                     autoHeight : false,
                     autoplayTimeout: autoplayTimeout,
                     slideBy: slideBy,
