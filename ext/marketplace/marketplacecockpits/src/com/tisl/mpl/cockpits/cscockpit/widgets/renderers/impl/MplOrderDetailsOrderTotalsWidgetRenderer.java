@@ -114,15 +114,14 @@ public class MplOrderDetailsOrderTotalsWidgetRenderer extends
 					container);
 
 			Double deliveryCosts = abstractOrderModel.getDeliveryCost();
-			/*Double deliveryCosts = 0D;
-			
+			if(deliveryCosts==0.0){
 			for (AbstractOrderEntryModel orderEntry : abstractOrderModel
 					.getEntries()) {
 				if (null != orderEntry.getMplDeliveryMode()) {
-					deliveryCosts = deliveryCosts
-							+ ( orderEntry.getCurrDelCharge());
+					deliveryCosts =  (orderEntry.getMplDeliveryMode().getValue()-orderEntry.getCurrDelCharge().doubleValue())*orderEntry.getQuantity();
 				}
-			}*/
+			}
+			}
 			
 			
 			renderRow(
@@ -165,7 +164,7 @@ public class MplOrderDetailsOrderTotalsWidgetRenderer extends
 					"convenienceCharges", new Object[0]), currencyInstance,
 					container);
 
-			Double totalPrice = abstractOrderModel.getTotalPriceWithConv();
+			Double totalPrice = subtotal+deliveryCosts+convenienceCharges-cartPromo-couponPromo-promotion;
 			renderRow(totalPrice,
 					LabelUtils.getLabel(widget, "totalPrice", new Object[0]),
 					currencyInstance, container);

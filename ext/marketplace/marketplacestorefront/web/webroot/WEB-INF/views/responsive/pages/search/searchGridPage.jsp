@@ -20,33 +20,21 @@
 <input type="hidden" id="searchCategory" value="${searchCategory}">
 <input type="hidden" id="search_results" value="${currentPageEnd}">
 <input type="hidden" id="page_name" value="${page_name}">
-<input type="hidden" id="search_type" value="${searchType}"><!-- For TPR-666 -->
-<%-- <input type="hidden" id="product_category" value="${product_category}"> <!-- For TPR-430 -->
-<input type="hidden" id="page_subcategory_name" value="${page_subcategory_name}">
-<input type="hidden" id="page_subcategory_name_l3" value="${page_subcategory_name_l3}"> --%>
-	<!-- For TPR-666 -->
-<!-- End -->
+<input type="hidden" id="search_type" value="${searchType}">
 <template:page pageTitle="${pageTitle}">
 	<div id="facetSearchAjaxData"> <!-- Div to be overridden by AJAX response : TPR-198 -->
-		<nav:searchFacetFilterData/>
+		 <nav:searchFacetFilterData/> 
 	</div>
 
 	<div class="feedBack-block">
-		<%-- <cms:pageSlot position="FeedBackSlot" var="feature">
-			<cms:component component="${feature}" />
-		</cms:pageSlot> --%>
+		
 		<product:feedBack/>
 	</div>
 	<product:productCompare/> 
 	
 	<!-- For Infinite Analytics Start -->
 	<div class="trending"  id="ia_products_recent"></div>
-	<!-- For Infinite Analytics End -->
 	
-	<%-- <div class="recentlyViewed-Wrapper">
-			<div class="recentlyViewed img-responsive"><img src='${commonResourcePath}/images/recently-viewed-items.png'/>
-	</div>
-</div> --%>
 
 	
 	

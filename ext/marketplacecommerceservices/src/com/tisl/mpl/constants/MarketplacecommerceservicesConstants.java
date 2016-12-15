@@ -23,6 +23,9 @@ import de.hybris.platform.returns.model.ReturnOrderModel;
 
 import java.util.Date;
 
+import com.tisl.mpl.core.model.FreebieDetailModel;
+import com.tisl.mpl.core.model.ProductFreebieDetailModel;
+
 
 /**
  * Global class for all Marketplacecommerceservices constants. You can add global constants for your extension into this
@@ -107,7 +110,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PRODUCT_PRICE_COLUMN = "price".intern();
 	public static final String PRESENT_CATEGORY = "Present Category :".intern();
 
-	public static final String PROMO_ERROR_MESSAGE = "Title cannot exceed 25 characters.".intern();
+
+	public static final String PROMO_ERROR_MESSAGE = "Cannot exceed 25 characters.".intern();
+	//public static final String PROMO_ERROR_MESSAGE = "Title cannot exceed 25 characters.".intern();
+
+
 
 
 	//For Bulk Orders Return Initiation
@@ -1771,6 +1778,26 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String LUXURY_CARTICON = "luxuryCartIcon";
 
+
+	//TPR-1285
+	//	public static final String L4CATEGORYQUERY = "SELECT distinct {cat.pk} FROM {Category AS cat},{CatalogVersion AS cv} WHERE NOT EXISTS ({{ SELECT * FROM {CategoryCategoryRelation} WHERE {source}={cat:pk} }} ) and {cat.code} like 'MPH%'"
+	//			.intern();
+
+	public static final String L4CATEGORYQUERY = "SELECT distinct {cat.pk} FROM {Category AS cat},{CatalogVersion AS cv} WHERE  EXISTS ({{ SELECT * FROM {CategoryProductRelation} WHERE {source}={cat:pk} }} ) and {cat.code} like 'MSH%'"
+			.intern();
+	public static final String SITEMAP_FILE_LOCATION_CUSTOM = "mpl.sitemap.customFileLocation".intern();
+	public static final String SITEMAP_FILE_LOCATION_PRODUCT = "mpl.sitemap.productFileLocation".intern();
+
+	//update the message for Freebie product TPR-1754
+	//	public static final String PRODUCTFREEBIEDETMSGQUERY = "SELECT {prodOffrDet.ussId},{offerDet.freebieMsg},{prodOffrDet.startDate},{prodOffrDet.endDate}  FROM {FreebieDetail as offerDet}, {ProductFreebieDetail as  prodOffrDet} WHERE {prodOffrDet.ussId}= ?ussId AND {prodOffrDet.offer} = {offerDet.pk} AND {prodOffrDet.startDate} <=sysdate AND {prodOffrDet.endDate} >=sysdate"
+	//			.intern();
+	public static final String PRODUCTFREEBEEDETMSGQUERY = "select {prodOffrDet.pk},{offerDet.pk} from {"
+			+ ProductFreebieDetailModel._TYPECODE + " as prodOffrDet JOIN " + FreebieDetailModel._TYPECODE
+			+ " as offerDet ON {prodOffrDet.offer} = {offerDet.pk} }"
+			+ " where {prodOffrDet.ussId}= ?ussId AND sysdate between {prodOffrDet.startDate} AND {prodOffrDet.endDate}".intern();
+	public static final String FREEBIEMSG = "freebieMsg".intern();
+	public static final String FREEBIEUSSID = "ussId".intern();
+
 	//Luxury Changes
 	public static final String MARKETPLACE = "marketplace";
 	public static final String LUXURY = "luxury";
@@ -1817,6 +1844,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String BULK_RETURN_SUCCESS_DESC = "Return Success";
 	public static final String BULK_RETURN_FAILURE_DESC = "Return Failure";
+
+
 
 	public final static String RETURN_ENABLE = "order.return.enabled".intern();
 	public final static String CANCEL_ENABLE = "order.cancel.enabled".intern();

@@ -1508,6 +1508,26 @@ public class GenericUtilityMethods
 	}
 
 
+	//TPR-1285
+	/**
+	 * Return the Prefix
+	 * 
+	 * @param prefix
+	 * @return prefix
+	 */
+	public static String changePrefix(String prefix)
+	{
+		prefix = prefix.replaceAll("[^\\w/-]", "-");
+		//TISSTRT-1297
+		if (prefix.contains("--"))
+		{
+			prefix = prefix.replaceAll("--", "-");
+		}
+		return prefix;
+	}
+
+
+
 	/**
 	 * @Description : Return Channel Data
 	 * @param channel
