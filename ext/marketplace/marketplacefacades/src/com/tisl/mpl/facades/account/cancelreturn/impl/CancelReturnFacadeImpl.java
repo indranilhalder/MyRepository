@@ -2190,7 +2190,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						if (null != orderLine.getIsReturnLogisticsAvailable())
 						{
 
-							if (orderLine.getTransactionId().trim().equalsIgnoreCase(returningTransactionId.trim()))
+							if (StringUtils.isNotBlank(returningTransactionId) && orderLine.getTransactionId().equalsIgnoreCase(returningTransactionId))
 							{
 
 								returnLogRespData.setIsReturnLogisticsAvailable(orderLine.getIsReturnLogisticsAvailable());

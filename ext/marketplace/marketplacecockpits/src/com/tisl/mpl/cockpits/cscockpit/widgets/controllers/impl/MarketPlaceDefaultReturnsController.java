@@ -291,16 +291,18 @@ public class MarketPlaceDefaultReturnsController extends
 					pincode = addressData.getPostalCode();
 				}
 			}
-			
-			if (!isOMSBypass) {
+
+			if (!isOMSBypass && null != returnType && !returnType.equalsIgnoreCase(TypeofReturn.QUICK_DROP.getCode())) {
 				returnCalltoOMS(refundRequest, this.refundDetailsList,pincode,returnType);
 			}
 			if(null != returnType && returnType.equalsIgnoreCase(TypeofReturn.SCHEDULE_PICKUP.getCode())){
-				
+
 				List<RescheduleData> scheduleDeliveryDates = (List<RescheduleData>) session.getAttribute("scheduleDeliveryDates");
 				saveReturnPickUpDates(refundRequest,scheduleDeliveryDates);
 				AddressModel addressModel = new AddressModel();
 				addressRevercePopulator.populate(addressData, addressModel);
+				addressModel.setOwner(orderModel);
+				modelService.save(addressModel);
 				refundRequest.setReturnAddress(addressModel);
 			}
 			String rmaString = getReturnService().createRMA(refundRequest);
@@ -316,20 +318,18 @@ public class MarketPlaceDefaultReturnsController extends
 			}else {
 				refundRequest.setTypeofreturn(TypeofReturn.QUICK_DROP);
 			}
-				refundRequest.setReturnRaisedFrom(SalesApplication.CALLCENTER);
-				modelService.save(refundRequest);
-				this.refundDetailsList.clear();
-				this.refundDetailsList = null;
-				deleteRefundOrderPreview();
+			refundRequest.setReturnRaisedFrom(SalesApplication.CALLCENTER);
+			modelService.save(refundRequest);
+			modelService.refresh(refundRequest);
+			if(!returnType.equalsIgnoreCase(TypeofReturn.QUICK_DROP.getCode())) {
 				try {
 					LOG.debug("Creating crm ticket for return for the order id :"+orderModel.getCode());
-					OrderData subOrderData = new OrderData(); ;
+					OrderData subOrderData = new OrderData();
 					orderPopulator.populate(orderModel, subOrderData);
 					OrderEntryData subOrderEntry = new OrderEntryData();
 					CustomerData customerData = null;
-					ReturnItemAddressData returnItemAddressData = null;
+					ReturnItemAddressData returnItemAddressData = new ReturnItemAddressData();
 					ReturnInfoData returnInfoData = null;
-					modelService.refresh(refundRequest);
 					for (ReturnEntryModel returnEntry : refundRequest.getReturnEntries()) {
 						orderEntryPopulator.populate(returnEntry.getOrderEntry(), subOrderEntry);										
 						returnInfoData = populateReturnInfoData(returnEntry);
@@ -337,15 +337,42 @@ public class MarketPlaceDefaultReturnsController extends
 							returnItemAddressDatapopulator.populate(addressData, returnItemAddressData);
 						}
 						LOG.debug("Creating crm ticket for transaction id :"+subOrderEntry.getTransactionId());
-						cancelReturnFacade.createTicketInCRM(subOrderData, subOrderEntry, "R", ((ReplacementEntryModel) returnEntry).getReason().getCode(), 
+						String reason = StringUtils.EMPTY;
+						if(null!= refundDetailsList && null !=refundDetailsList.entrySet()) {
+							for (Map.Entry<Long, RefundDetails> refundDetail : refundDetailsList
+									.entrySet()) {
+								if(null != refundRequest.getOrder()) {
+									AbstractOrderEntryModel orderEntryModel = getOrderEntryByEntryNumber(
+											refundRequest.getOrder(),refundDetail.getKey());
+									if(null != orderEntryModel && null != orderEntryModel.getTransactionID() && null !=returnEntry.getOrderEntry() && null !=returnEntry.getOrderEntry().getTransactionID()){
+										if(orderEntryModel.getTransactionID().equalsIgnoreCase(returnEntry.getOrderEntry().getTransactionID())) {
+											reason = CodeMasterUtility
+													.getglobalCode(refundDetail.getValue()
+															.getReason().getCode());
+											break;
+										}
+									}
+								}
+							}
+						}
+						cancelReturnFacade.createTicketInCRM(subOrderData, subOrderEntry, "R", reason, 
 								returnType, returnEntry.getOrderEntry().getSelectedUSSID(), customerData, (OrderModel) returnEntry.getOrderEntry().getOrder(), 
 								returnItemAddressData, returnInfoData);
 					}
+
 				}catch(Exception e) {
 					LOG.error("Exception while creating crm ticket for the order ID :"+orderModel.getCode());
 				}
-				return refundRequestObject;
-			
+			}
+			try {
+				this.refundDetailsList.clear();
+				this.refundDetailsList = null;
+				deleteRefundOrderPreview();
+			}catch(Exception e) {
+				LOG.error("Exception while deleting RefundOrderPreview"+e.getMessage());
+			}
+			return refundRequestObject;
+
 		}catch (Exception e) {
 			LOG.error("Failed to create refund request", e);
 		}
