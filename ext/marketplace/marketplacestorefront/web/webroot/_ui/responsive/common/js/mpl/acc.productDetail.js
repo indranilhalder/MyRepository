@@ -1383,7 +1383,7 @@ function isOOS(){
 	//totalOptions = totalOptions -1; // UI got changed from select option to li strike off 
 	var disabledOption = $("#variant li.strike").length;
 	
-	if(availibility){
+	if(availibility!=undefined && availibility.length > 0){
 		$.each(availibility,function(k,v){
 			if(window.location.pathname.endsWith(k.toLowerCase()) && v == 0){
 				skuOOS = true;
@@ -1391,7 +1391,7 @@ function isOOS(){
 		});
 	}
 	
-	if(totalOptions == disabledOption){
+	if(totalOptions == disabledOption && totalOptions!=0){
 		return true;
 	}else if(skuOOS){
 		return true;
