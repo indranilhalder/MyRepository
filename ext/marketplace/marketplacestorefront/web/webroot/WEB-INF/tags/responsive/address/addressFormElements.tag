@@ -275,17 +275,22 @@
 				<div class="help-block has-error" id="stateError"
 					style="display: none;"></div>
 				</div>
-					
+				
+					<div class="dupDisplay">
+					<label>State *</label>
+					<div class="stateInput"></div>
+						<div class="help-block has-error" id="stateError"
+					style="display: none;"></div>
+					</div>
 
-			<div class="dupDisplay">
-				<label><spring:theme code="text.addressBook.State"
-						text="State *" /></label>
+			<%-- <div class="dupDisplay">
+				
 					<form:input path="state" id="address.statesReadOnly"
 						class="address_states addressDup" maxlength="30" readonly="readonly"/>
 					<div class="errorMessage">
 							<div id="erraddressCity"></div>
 					</div>
-			</div>
+			</div> --%>
 			</div>
 				   		
 		<div class="half country-select">
@@ -337,6 +342,28 @@
 
 	</c:otherwise>
 </c:choose>
-
+<script>
+$(document).ready(function(){
+	 var value = $(".address_landmarkOtherDiv").attr("data-value");
+	  
+	  setTimeout(function(){
+	  if($(".address_landmarks option[value='"+value+"']").length > "0") {
+		  
+		  //alert(value+ " 2 in if x"+$(".address_landmarks option[value='"+value+"']").val());
+			  $(".address_landmarks").val("");
+			$(".address_landmarks option[value='"+value+"']").prop("selected",true);
+			
+			} else {
+			//alert(value+ " 3 in else");
+			  $(".address_landmarks").val("Other"); 
+				changeFuncLandMark("Other"); 
+			$(".address_landmarkOther").val(value);
+			
+		}
+	  
+	  });
+	
+});
+</script>
 
 

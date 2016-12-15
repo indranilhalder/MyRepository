@@ -15,6 +15,7 @@ import de.hybris.platform.returns.model.ReplacementOrderModel;
 import de.hybris.platform.returns.model.ReturnRequestModel;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -22,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplCustomerBankAccountDetailsModel;
+import com.tisl.mpl.core.model.MplReturnPickUpAddressInfoModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.marketplacecommerceservices.service.MPLReturnService;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -215,5 +217,12 @@ public class MPLDefaultReturnService extends DefaultReturnService implements MPL
 
 		}
 		return eligibleForRTS;
+	}
+	
+	@Override
+	public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReport(Date fromDate, Date toDate, String orderID,
+			String customerId, String pincode){
+		return mplReturnsDao.getPickUpReturnReport(fromDate, toDate, orderID, customerId, pincode);
+		
 	}
 }

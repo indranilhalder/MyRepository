@@ -18,6 +18,7 @@ import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 
 import java.io.BufferedOutputStream;
@@ -29,7 +30,6 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +55,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.MplReturnPickUpAddressInfoModel;
 import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.CODSelfShipData;
 import com.tisl.mpl.data.CODSelfShipResponseData;
@@ -137,6 +138,9 @@ public class ReturnPageController extends AbstractMplSearchPageController
 	
 	@Autowired
 	private ConfigurationService configurationService;
+	
+	@Autowired
+	ModelService modelService;
 
 	private static final String RETURN_SUCCESS = "returnSuccess";
 	private static final String RETURN_SUBMIT = "returnSubmit";
@@ -286,6 +290,31 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		String returnFulfillmentType =null;
 		final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade.checkReturnLogistics(subOrderDetails,
 				pinCode);
+		if (CollectionUtils.isNotEmpty(returnLogisticsRespList))
+		{
+			 //CustomerData customerData=customerFacade.getCurrentCustomer();
+			for (ReturnLogisticsResponseData responeData : returnLogisticsRespList)
+			{
+				MplReturnPickUpAddressInfoModel mplReturnReport = modelService.create(MplReturnPickUpAddressInfoModel.class);
+				mplReturnReport.setOrderId(responeData.getOrderId());
+				mplReturnReport.setPincode(pinCode);
+				mplReturnReport.setTransactionId(responeData.getTransactionId());
+				mplReturnReport.setCustomerId(customerData.getUid());
+				if (StringUtils.isNotEmpty(responeData.getIsReturnLogisticsAvailable())
+						&& responeData.getIsReturnLogisticsAvailable().equalsIgnoreCase("Y"))
+				{
+					mplReturnReport.setStatus("Sucess");
+				}
+				else
+				{
+					mplReturnReport.setStatus("Fail");
+				}
+				
+				modelService.save(mplReturnReport);
+			}
+		}
+		
+		
 		for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
 		{
 			model.addAttribute(ModelAttributetConstants.PINCODE_NOT_SERVICEABLE, response.getResponseMessage());
@@ -678,6 +707,30 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			boolean returnLogisticsCheck = true;
 			final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade.checkReturnLogistics(subOrderDetails,
 					addressForm.getPostcode());
+			
+			if (CollectionUtils.isNotEmpty(returnLogisticsRespList))
+			{
+				 CustomerData customerData=customerFacade.getCurrentCustomer();
+				for (ReturnLogisticsResponseData responeData : returnLogisticsRespList)
+				{
+					MplReturnPickUpAddressInfoModel mplReturnReport = modelService.create(MplReturnPickUpAddressInfoModel.class);
+					mplReturnReport.setOrderId(responeData.getOrderId());
+					mplReturnReport.setPincode(addressForm.getPostcode());
+					mplReturnReport.setTransactionId(responeData.getTransactionId());
+					mplReturnReport.setCustomerId(customerData.getUid());
+					if (StringUtils.isNotEmpty(responeData.getIsReturnLogisticsAvailable())
+							&& responeData.getIsReturnLogisticsAvailable().equalsIgnoreCase("Y"))
+					{
+						mplReturnReport.setStatus("Sucess");
+					}
+					else
+					{
+						mplReturnReport.setStatus("Fail");
+					}
+					
+					modelService.save(mplReturnReport);
+				}
+			}
 			for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
 			{
 				model.addAttribute(ModelAttributetConstants.PINCODE_NOT_SERVICEABLE, response.getResponseMessage());

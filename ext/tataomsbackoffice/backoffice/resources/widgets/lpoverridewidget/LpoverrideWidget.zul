@@ -44,7 +44,7 @@
 					</template>
 				</grid>
 				<button style="width;100px;float:center" label="OK"
-					onClick="@command('lpSearch')" />
+					onClick="displayPopup.setVisible(false)" />
 			</div>
 		</div>
 	</div>
@@ -194,16 +194,7 @@
 				<button id="searchLpovverrideButton"
 					onClick="@command('lpOverrideSave',lpOverride=true)"
 					label="Forcefit LP" />
-			</hbox>
-			<separator spacing="20px"/>
-			<hbox>
-				<label sclass="heading" value="Lp Awb Bulk Upload" />
-				<textbox id="LpBulkUploadTextBox" disabled="true" value="@bind(vm.lpawbBulkUploadTextBox)" />
-				<button sclass="uploadTxtbox" label="upload"
-					upload="true,maxsize=302400,accept=.csv"
-					onUpload="@command('onUploadLPAwbCSV',upEvent=event)">
-				</button>
-			</hbox>
+			</hbox>			
 			</div>
 	</vlayout>
 </widget>

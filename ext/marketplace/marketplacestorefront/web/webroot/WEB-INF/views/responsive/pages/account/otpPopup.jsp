@@ -26,7 +26,7 @@ ${stringMessage}
 										code="text.accountOrderDetails.otp.lable" />*</label> <input
 									type="text" class="form-control textOTP" id="OTP"
 									placeholder="******">
-								<div class="error_text otpError"></div>
+								<div class="error_text otpError" style="padding: 7px 0px;"></div>
 								<div class="error_text"></div>
 							</div>
 							<div class="col-md-6 col-sm-6 otpMessage">

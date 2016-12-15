@@ -576,7 +576,11 @@
 														text="Return Item" />
 												</a>
 											 </c:if>  --%>
-											 
+											 <%-- <a
+																	href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${sellerOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}">
+																	<spring:theme code="text.account.returnReplace"
+																		text="Return Item" />
+																</a>  --%>
 											 	<c:choose>
 												 	 <c:when test="${entry.itemReturnStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
 															 <a
@@ -1710,9 +1714,39 @@ $(function() {
 			  var height = $(window).height();
 			  $(".wrapBG").css("height",height);
 			  $("#changeAddressPopup").css("z-index","999999");
-			  setTimeout(function() { console.log($("#deliveryAddressForm #firstName").attr("value")); $("#deliveryAddressForm #firstName").val($("#deliveryAddressForm #firstName").attr("value")); $("#deliveryAddressForm #lastName").val($("#deliveryAddressForm #lastName").attr("value")) }, 100);
+			  setTimeout(function() {
+			      console.log($("#deliveryAddressForm #firstName").attr("value")); 
+			      $("#deliveryAddressForm #firstName").val($("#deliveryAddressForm #firstName").attr("value"));
+			      $("#deliveryAddressForm #lastName").val($("#deliveryAddressForm #lastName").attr("value"));
+			      $("#deliveryAddressForm #pincode").val($("#deliveryAddressForm #pincode").attr("value"));
+			      $("#deliveryAddressForm #addressLine1").val($("#deliveryAddressForm #addressLine1").attr("value"));
+			      $("#deliveryAddressForm #addressLine2").val($("#deliveryAddressForm #addressLine2").attr("value")); 
+			      $("#deliveryAddressForm #addressLine3").val($("#deliveryAddressForm #addressLine3").attr("value")); 
+			      $("#deliveryAddressForm #landmark").val($("#deliveryAddressForm #landmark").attr("value")); 
+			      $("#deliveryAddressForm #otherLandmark").val($("#deliveryAddressForm #otherLandmark").attr("value"));
+			      $("#deliveryAddressForm #city").val($("#deliveryAddressForm #city").attr("value")); 
+			      $("#deliveryAddressForm #state").val($("#deliveryAddressForm #state").attr("value")); 
+			      $("#deliveryAddressForm #mobileNo").val($("#deliveryAddressForm #mobileNo").attr("value")); 
+			     }, 100);
 			  loadPincodeData();
-			  $('.radio1').prop("checked", true);
+				 var value = $(".address_landmarkOtherDiv").attr("data-value");
+			  
+			  setTimeout(function(){
+    		  if($(".address_landmarks option[value='"+value+"']").length > "0") {
+    			  
+    			  //alert(value+ " 2 in if x"+$(".address_landmarks option[value='"+value+"']").val());
+  				  $(".address_landmarks").val("");
+  				$(".address_landmarks option[value='"+value+"']").prop("selected",true);
+  				
+  				} else {
+  				//alert(value+ " 3 in else");
+  				  $(".address_landmarks").val("Other"); 
+  					changeFuncLandMark("Other"); 
+  	  			$(".address_landmarkOther").val(value);
+  				
+  			}
+			  
+			  }); 
 		});
 		
 		
@@ -1734,15 +1768,7 @@ $(function() {
 			 
 		 });
 		 
-		 $("#changeAddressLink").click(function(){
-			  $("#changeAddressPopup").show();
-			  $(".wrapBG").show();
-			  var height = $(window).height();
-			  $(".wrapBG").css("height",height);
-			  $("#changeAddressPopup").css("z-index","999999");
-		});
-		 
-	 	$("#saveBlockData").click(function(){
+		$("#saveBlockData").click(function(){
 				$("#changeAddressPopup").hide();
 				$("#showOrderDetails").show();
 				$("#showOrderDetails").css("z-index","999999");

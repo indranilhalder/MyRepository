@@ -119,9 +119,9 @@
 						</label> 
 					</c:if>
 					<c:if test="${refundType eq 'R'}">
-					<label>Refund Method:</label>
+					<!-- <label>Refund Method:</label> -->
 					 <label for="return-method-1">
-							<h3>Return and Refund</h3> <span>Estimated refund timing:
+							<!-- <h3>Return and Refund</h3>  --><span>Estimated refund timing:
 								2-3 days after we have received the item. This product was paid
 								for via ${subOrder.mplPaymentInfo.paymentOption} 
 								<c:choose>

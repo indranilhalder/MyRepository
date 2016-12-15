@@ -11,9 +11,11 @@ import de.hybris.platform.returns.model.ReplacementEntryModel;
 import de.hybris.platform.returns.model.ReplacementOrderModel;
 import de.hybris.platform.returns.model.ReturnRequestModel;
 
+import java.util.Date;
 import java.util.List;
 
 import com.tisl.mpl.core.model.MplCustomerBankAccountDetailsModel;
+import com.tisl.mpl.core.model.MplReturnPickUpAddressInfoModel;
 
 
 public interface MPLReturnService extends ReturnService
@@ -47,4 +49,7 @@ public interface MPLReturnService extends ReturnService
 	public OrderModel getOrder(final String orderId);
 
 	public boolean checkProductEligibilityForRTS(List<AbstractOrderEntryModel> entries);
+	
+	public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReport(Date fromDate, Date toDate, String orderID,
+			String customerId, String pincode);
 }

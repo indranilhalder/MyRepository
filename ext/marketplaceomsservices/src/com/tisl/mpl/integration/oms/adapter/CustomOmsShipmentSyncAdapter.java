@@ -30,6 +30,7 @@ import de.hybris.platform.returns.model.ReturnRequestModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.event.EventService;
+import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.time.TimeService;
@@ -53,10 +54,12 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplaceomsservicesConstants;
 import com.tisl.mpl.core.model.ImeiDetailModel;
 import com.tisl.mpl.core.model.InvoiceDetailModel;
+import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.globalcodes.utilities.MplCodeMasterUtility;
 //import com.tisl.mpl.fulfilmentprocess.events.OrderRefundEvent;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCheckInvoice;
 import com.tisl.mpl.marketplacecommerceservices.event.OrderCollectedByPersonEvent;
+import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplaceomsservices.event.SendNotificationEvent;
 import com.tisl.mpl.marketplaceomsservices.event.SendNotificationSecondaryStatusEvent;
 import com.tisl.mpl.marketplaceomsservices.event.SendUnCollectedOrderToCRMEvent;
@@ -107,6 +110,8 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	@Autowired
 	private CustomOmsCollectedAdapter customOmsCollectedAdapter;
 
+	@Autowired
+	private MplDeliveryCostService mplDeliveryCostService;
 
 	@Override
 	public ConsignmentModel update(final OrderWrapper wrapper, final ItemModel parent)
@@ -815,6 +820,21 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
          			  consignmentModel.setIsEDtoHD(Boolean.TRUE);
          			  consignmentModel.setIsEDtoHDCheck(Boolean.TRUE);
          			  modelService.save(consignmentModel);
+         			  
+         			  AbstractOrderEntryModel entry= consignmentModel.getConsignmentEntries().iterator().next().getOrderEntry();
+         					
+         						if (MarketplacecommerceservicesConstants.EXPRESS_DELIVERY.equalsIgnoreCase(entry.getMplDeliveryMode().getDeliveryMode().getCode()))
+         						{
+         							if(entry.getTransactionID().equalsIgnoreCase(shipment.getShipmentId())){
+         								MplZoneDeliveryModeValueModel deliveryModel = mplDeliveryCostService.getDeliveryCost(
+         										MarketplacecommerceservicesConstants.HOME_DELIVERY, MarketplacecommerceservicesConstants.INR,
+         										entry.getSelectedUSSID());
+         								      entry.setMplDeliveryMode(deliveryModel);
+         								modelService.saveAll(entry);
+         							}
+         							
+         						}
+         			  
          			  isEDtoHDCheck=Boolean.FALSE;
          		}
 		     }
