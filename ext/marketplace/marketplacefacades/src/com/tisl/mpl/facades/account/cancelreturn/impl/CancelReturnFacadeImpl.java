@@ -70,6 +70,7 @@ import com.tisl.mpl.core.model.BankDetailsInfoToFICOHistoryModel;
 import com.tisl.mpl.core.model.CancellationReasonModel;
 import com.tisl.mpl.core.model.MplCustomerBankAccountDetailsModel;
 import com.tisl.mpl.core.model.MplLPHolidaysModel;
+import com.tisl.mpl.core.model.MplReturnPickUpAddressInfoModel;
 import com.tisl.mpl.core.model.RefundTransactionMappingModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.util.DateUtilHelper;
@@ -3600,6 +3601,10 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		}
 	}
 	
-	
+	@Override
+	public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReport(Date fromDate, Date toDate, String orderID,
+			String customerId, String pincode){
+		return mplReturnService.getPickUpReturnReport(fromDate, toDate, orderID, customerId, pincode);
+	}
 
 }

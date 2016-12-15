@@ -1712,7 +1712,24 @@ $(function() {
 			  $("#changeAddressPopup").css("z-index","999999");
 			  setTimeout(function() { console.log($("#deliveryAddressForm #firstName").attr("value")); $("#deliveryAddressForm #firstName").val($("#deliveryAddressForm #firstName").attr("value")); $("#deliveryAddressForm #lastName").val($("#deliveryAddressForm #lastName").attr("value")) }, 100);
 			  loadPincodeData();
-			  $('.radio1').prop("checked", true);
+				 var value = $(".address_landmarkOtherDiv").attr("data-value");
+			  
+			  setTimeout(function(){
+    		  if($(".address_landmarks option[value='"+value+"']").length > "0") {
+    			  
+    			  //alert(value+ " 2 in if x"+$(".address_landmarks option[value='"+value+"']").val());
+  				  $(".address_landmarks").val("");
+  				$(".address_landmarks option[value='"+value+"']").prop("selected",true);
+  				
+  				} else {
+  				//alert(value+ " 3 in else");
+  				  $(".address_landmarks").val("Other"); 
+  					changeFuncLandMark("Other"); 
+  	  			$(".address_landmarkOther").val(value);
+  				
+  			}
+			  
+			  }); 
 		});
 		
 		
