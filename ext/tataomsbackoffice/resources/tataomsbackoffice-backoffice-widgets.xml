@@ -228,7 +228,7 @@
 				<widget id="lpoverride" widgetDefinitionId="com.techouts.widgets.lpoverride"
 					slotId="perspectives" template="true">
 				</widget>
-
+			
 				<!-- Add for Configurable Parameters -->
 
 				<widget id="configarable_params" widgetDefinitionId="com.hybris.oms.widgets.configurableParamWidget"
@@ -327,87 +327,7 @@
 					<setting key="allowLockingTopPanel" type="Boolean">true</setting>
 					<virtual-sockets />
 				</widget>
-
-				<!-- Scheduled Delivery Tracking Report -->
-				<widget id="schdeuled_delivery_tracking_collapseble"
-					title="Scheduled Delivery tracking Collapsible Container"
-					widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
-					slotId="perspectives" template="true">
-
-					<widget id="schdeuled_delivery_tracking_datepic" title="Scheduled Delivery tracking date pic"
-						widgetDefinitionId="com.hybris.oms.tata.pincodelogistics.datepicwidget"
-						slotId="center" template="false">
-					</widget>
-					<widget id="schdeuled_delivery_tracking_widget_report"
-						widgetDefinitionId="com.techouts.widgets.scheduleddeliverytrackingreport"
-						slotId="bottom" title="Scheduled Delivery tracking Report"
-						template="false">
-						<virtual-sockets />
-
-					</widget>
-					<setting key="widgetStyleAttribute" type="String"></setting>
-					<setting key="allowLockingCenterPanel" type="Boolean">true</setting>
-					<setting key="bottomPanelCollapsed" type="Boolean">false</setting>
-					<setting key="topHeight" type="String">14%</setting>
-					<setting key="centerCaption" type="String">Editor</setting>
-					<setting key="bottomPanelInitiallyLocked" type="Boolean">false
-					</setting>
-					<setting key="centerHeight" type="String">14%</setting>
-					<setting key="topPanelInitiallyLocked" type="Boolean">false</setting>
-					<setting key="thirdSectionDisabled" type="Boolean">true</setting>
-					<setting key="allowLockingBottomPanel" type="Boolean">true</setting>
-					<setting key="bottomCaption" type="String"></setting>
-					<setting key="centerPanelCollapsed" type="Boolean">false</setting>
-					<setting key="widgetStyleClass" type="String"></setting>
-					<setting key="topCaption" type="String">Scheduled Delivery Tracking
-						Report
-					</setting>
-					<setting key="centerPanelInitiallyLocked" type="Boolean">false
-					</setting>
-					<setting key="topPanelCollapsed" type="Boolean">true</setting>
-					<setting key="allowLockingTopPanel" type="Boolean">true</setting>
-					<virtual-sockets />
-				</widget>
-				<!-- Express Delivery Tracking Report -->
-				<widget id="express_delivery_tracking_collapseble" title="Express Delivery tracking Collapseble Container"
-					widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
-					slotId="perspectives" template="true">
-
-					<widget id="express_delivery_tracking_datepic" title="Express Delivery tracking date pic"
-						widgetDefinitionId="com.hybris.oms.tata.pincodelogistics.datepicwidget"
-						slotId="center" template="false">
-					</widget>
-					<widget id="express_delivery_tracking_widget_report"
-						widgetDefinitionId="com.techouts.widgets.edtrackingreport" slotId="bottom"
-						title="Express Delivery tracking Report" template="false">
-						<virtual-sockets />
-
-					</widget>
-					<setting key="widgetStyleAttribute" type="String"></setting>
-					<setting key="allowLockingCenterPanel" type="Boolean">true</setting>
-					<setting key="bottomPanelCollapsed" type="Boolean">false</setting>
-					<setting key="topHeight" type="String">14%</setting>
-					<setting key="centerCaption" type="String">Editor</setting>
-					<setting key="bottomPanelInitiallyLocked" type="Boolean">false
-					</setting>
-					<setting key="centerHeight" type="String">14%</setting>
-					<setting key="topPanelInitiallyLocked" type="Boolean">false</setting>
-					<setting key="thirdSectionDisabled" type="Boolean">true</setting>
-					<setting key="allowLockingBottomPanel" type="Boolean">true</setting>
-					<setting key="bottomCaption" type="String"></setting>
-					<setting key="centerPanelCollapsed" type="Boolean">false</setting>
-					<setting key="widgetStyleClass" type="String"></setting>
-					<setting key="topCaption" type="String">Express Delivery Tracking
-						Report
-					</setting>
-					<setting key="centerPanelInitiallyLocked" type="Boolean">false
-					</setting>
-					<setting key="topPanelCollapsed" type="Boolean">true</setting>
-					<setting key="allowLockingTopPanel" type="Boolean">true</setting>
-					<virtual-sockets />
-				</widget>
-
-				<!-- add for SShip Delivery Breach -->
+        		<!-- add for SShip Delivery Breach -->
 				<widget id="sship_delivery_breach_collapseble"
 					widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
 					title="sship breach collapsible contatiner" slotId="perspectives"
@@ -535,6 +455,10 @@
 					slotId="perspectives" title="reverse Logistics Failure report"
 					template="false">
 				</widget>	
+				<!-- lp awb bulk upload-->
+				<widget id="lpawb_bulkupload" widgetDefinitionId="com.techouts.lpawbbulkupload"
+					slotId="perspectives" template="true" title="LP and awb bulk upload">
+				</widget>			
 			</widget>
 			<setting key="eastClosed" type="Boolean">true</setting>
 			<setting key="perspectiveImageUrl" value="cng/images/TUL_OMS_icon.png"

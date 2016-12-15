@@ -3,7 +3,6 @@
  */
 package com.techouts.backoffice.widget.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +12,6 @@ import java.util.Set;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.zkoss.bind.BindContext;
 import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
@@ -22,7 +20,6 @@ import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.event.UploadEvent;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
@@ -45,6 +42,7 @@ import com.hybris.oms.domain.lpawb.dto.OrderLineInfo;
 import com.hybris.oms.domain.lpawb.dto.OrderLineResponse;
 import com.hybris.oms.domain.lpawb.dto.TransactionInfo;
 import com.hybris.oms.tata.constants.TataomsbackofficeConstants;
+import com.hybris.oms.tata.services.FilePathProviderService;
 import com.hybris.oms.tata.services.LpAwbDataUploadService;
 
 
@@ -93,7 +91,8 @@ public class LpoverrideWidgetController extends DefaultWidgetController
 	private Listbox listBoxData;
 	@WireVariable("lpAwbDataUploadService")
 	private LpAwbDataUploadService lpAwbDataUploadService;
-	private String lpawbBulkUploadTextBox = "Please select File";
+	@WireVariable("filePathProviderService")
+	private FilePathProviderService filePathProviderService;
 
 	@Init
 	@NotifyChange(
@@ -638,44 +637,5 @@ public class LpoverrideWidgetController extends DefaultWidgetController
 	public List<String> getDropDownSearchLpList()
 	{
 		return dropDownSearchLpList;
-	}
-
-	@Command
-	@NotifyChange("lpawbBulkUploadTextBox")
-	public void onUploadLPAwbCSV(@ContextParam(ContextType.BIND_CONTEXT) final BindContext ctx)
-			throws IOException, InterruptedException
-	{
-		UploadEvent upEvent = null;
-		final Object objUploadEvent = ctx.getTriggerEvent();
-		if (objUploadEvent != null && (objUploadEvent instanceof UploadEvent))
-		{
-			upEvent = (UploadEvent) objUploadEvent;
-			final String userId = cockpitUserService.getCurrentUser();
-			String roleId = "none";
-			activeUserRole = authorityGroupService.getActiveAuthorityGroupForUser(userId);
-			if (activeUserRole != null)
-			{
-				roleId = activeUserRole.getCode();
-			}
-			lpAwbDataUploadService.lpAwbBulkUploadCommon(upEvent, "LP", userId, roleId);
-			lpawbBulkUploadTextBox = upEvent.getMedia().getName();
-		}
-	}//end uplaod method
-
-	/**
-	 * @return the lpawbBulkUploadTextBox
-	 */
-	public String getLpawbBulkUploadTextBox()
-	{
-		return lpawbBulkUploadTextBox;
-	}
-
-	/**
-	 * @param lpawbBulkUploadTextBox
-	 *           the lpawbBulkUploadTextBox to set
-	 */
-	public void setLpawbBulkUploadTextBox(final String lpawbBulkUploadTextBox)
-	{
-		this.lpawbBulkUploadTextBox = lpawbBulkUploadTextBox;
 	}
 }

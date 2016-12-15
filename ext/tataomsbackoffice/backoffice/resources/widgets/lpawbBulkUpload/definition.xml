@@ -1,0 +1,13 @@
+<widget-definition id="com.techouts.lpawbbulkupload" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:noNamespaceSchemaLocation="http://hybris.com/cockpitng/widget-definition">
+     
+  <name>lp awb bulk upload</name>
+ 
+   <view src="lpandawbbulkupload.zul" /> 
+    <keywords>
+        <!-- keyword tag is used to define a category under which the widget is visible, when adding it to your application in application orchestrator  -->
+        <keyword>Upload</keyword>
+    </keywords>
+    <controller class="com.techouts.backoffice.widget.controller.LpAwbBulkDataUploadController"/>
+</widget-definition>
