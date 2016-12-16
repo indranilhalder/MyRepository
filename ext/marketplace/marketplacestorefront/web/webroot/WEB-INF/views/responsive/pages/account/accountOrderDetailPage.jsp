@@ -582,7 +582,7 @@
 																		text="Return Item" />
 																</a>  --%>
 											 	<c:choose>
-												 	 <c:when test="${entry.itemReturnStatus eq 'false' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
+												 	 <c:when test="${entry.itemReturnStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
 															 <a
 																	href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${sellerOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}">
 																	<spring:theme code="text.account.returnReplace"
