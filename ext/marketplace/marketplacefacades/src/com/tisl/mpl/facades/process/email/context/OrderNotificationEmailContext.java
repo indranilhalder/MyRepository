@@ -71,6 +71,7 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	private static final String CUSTOMER = "Customer";
 	private static final String SPACE = " ";
 	private static final String NUMBERTOOL = "numberTool";
+	private static final String WEBSITE_URL = "websiteUrl";
 	@Autowired
 	private AccountAddressFacade accountAddressFacade;
 	private static final Logger LOG = Logger.getLogger(OrderNotificationEmailContext.class);
@@ -180,7 +181,13 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 
 			put(DELIVERYADDRESS, deliveryAddr);
 		}
-
+		String websiteUrl = null;
+		websiteUrl = getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.SMS_SERVICE_WEBSITE_URL);
+		if (null != websiteUrl)
+		{
+			put(WEBSITE_URL, websiteUrl);
+		}
 
 		put(COD_CHARGES, orderProcessModel.getOrder().getConvenienceCharges());
 

@@ -44,8 +44,13 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_price-spring.xml" />
 	<!-- <import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_product-spring.xml" /> -->
+
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_association-spring.xml" />
+		<!-- Jewellery hot-folder for jewellery price -->
+		
+	<import
+		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_jewelleryprice-spring.xml" />
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_stock-spring.xml" />
 	<!-- <import
@@ -294,6 +299,15 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="mediaContainerService" ref="mediaContainerService" />
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 		<property name="mediaFormat" value="437Wx649H" />
+	</bean>
+	
+	<!--TPR-796  -->
+	<bean id="mplLuxurySearchImageValueProvider"
+		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MPLCustomLuxurySearchImageValueProvider">
+		<property name="mediaService" ref="mediaService" />
+		<property name="mediaContainerService" ref="mediaContainerService" />
+		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+		<property name="mediaFormat" value="320Wx357H" />
 	</bean>
 	
 	
@@ -1737,7 +1751,12 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />		
 	</bean>	
-
-		
 	
+	<!-- for promotion price row updater job -->
+ 	<bean id="promotionPriceUpdaterJob"
+ 		class="com.tisl.mpl.core.promotion.job.PromotionPriceUpdaterJob"
+ 		autowire="byName" >
+ 	</bean>
+
+			
 </beans>

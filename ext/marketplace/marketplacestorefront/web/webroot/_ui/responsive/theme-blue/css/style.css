@@ -13212,6 +13212,7 @@ div.pdp .reviews .toolbar select.white {
 		color: #A9143C;
 		text-align: center;
 		background-color: #fafafa;
+		margin-top:10px;
 	}
 @media ( max-width : 790px) {
 	.customer-service .side-nav {
@@ -13333,6 +13334,9 @@ font-size:14px;
 }	
 }
 @media ( min-width : 791px) {
+	.customer-service {
+	padding-top: 50px;
+	}
 	.customer-service .side-nav {
 		padding: 50px 60px;
 	}
@@ -13368,7 +13372,8 @@ font-size:14px;
 	    text-align: center;
    		 background-color: rgb(250,250,250);
    		 width:100%;
-   		 top:-25px;
+   		 top:20px;
+   		 margin-top:0px;
 	}
 	 
 	.customer-service .side-nav+.content+.content {
@@ -27471,8 +27476,8 @@ header .content nav > ul > li > ul > li > ul > li.images > a .multibrand-logo{
 }
 
 .short-info .color-swatch > li img.multicolor-serp{
-	height:12px;
-	width:12px;
+	height:15px;
+	width:16px;
 }
 /* It is afftecting IA UI
 .no-results ul li a {
@@ -32463,7 +32468,7 @@ background-color: transparent;
     font-size: 12px;
     text-align: center;
     font-weight: bold;
-    margin: 3px 0 50px;
+    margin: 3px 0 40px;
 }
 p.showcase-para {
     width: 70%;
@@ -35004,7 +35009,7 @@ cursor: auto;
     transition: all .2s;
     opacity: 1;
 }
-.product-facet .filter-colour.selected-multi-colour input[type="submit"] {
+.product-facet .filter-colour.selected-multi-colour input[type="button"] {
     background-image: url(../images/multi-color-tick.png) !important;
     transition: all .2s;
     opacity: 1;
@@ -44641,6 +44646,9 @@ bottom:35px;
     font-weight: 100;
     padding: 1px;
 }
+h3.customPriceRange:after{
+	display: none;
+}
 @media (min-width: 651px){
 	.facet-name.js-facet-name h3.tree-dept{
 		padding-bottom: 10px;
@@ -44747,8 +44755,8 @@ body.page-homepage .showcase .desc-section h2{
     letter-spacing: 1px;
     line-height: 15px;
     text-align: center;
-    margin-bottom: 40px;
-    padding: 50px 0 50px;
+    margin-bottom: 0px;
+    padding: 0px;
 }
 
 @media (max-width: 767px){
@@ -45105,12 +45113,16 @@ body .account .right-account .order-history .product-block li.item .cancellation
     padding: 20px 15px 15px;
     text-align: center;
     background-color: transparent;
+    height: auto;
 }
 body .right-account .order-history .cancellation-request-block.success>div>h2>#resultTitle{
 	font-size: 28px;
     margin-top: 0;
     /* display: block; */
-  /*   line-height: 1.5; */
+    /* line-height: 1.5; */
+}
+body .right-account .order-history .cancellation-request-block.success>div>h2.trackOrderLnHt>#resultTitle{
+	line-height: 1.5;
 }
 body .account .right-account .order-history.order-details li.header div.delivery-address h2{
 	font-size: 14px;
@@ -45503,6 +45515,7 @@ body.page-homepage .trending h2 > span{
 }
 .click2chat-container.send-email-container h2 {
     margin-bottom: 5px;
+    font-size: 16px;
 }
 .chat h3, .call h3 {
     height: 29px;
@@ -45553,6 +45566,12 @@ body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo h2.prod
     margin: 0 !important;
 }
 /* Product related ends */
+body .right-account .order-history .cancellation-request-block>h2{
+	font-size: 28px !important;
+    font-weight: 500 !important;
+    height: auto !important;
+    margin-bottom: 20px !important;
+}
 @media only screen and (max-width: 1450px){
 	body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo h2.product-brand-name, body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo h2.product-name{
     font-size: 11px !important;
@@ -46654,10 +46673,11 @@ float: right;
 	/*Products Right Share*/
 	.color-swatch {
 		float: left;
-		width: 50%;
+		width: 100%; /* TISQAEE-94 */
 	}
 	.product-info .product-content .wish-share.desktop {
-		display: none;
+		/* display: none; */
+		padding: 0 8%; /* TISQAEE-94 */
 
 	}
 	.product-info .product-detail .wish-share.mobile {
@@ -49400,6 +49420,9 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header{
 .top.checkout-top .content{
 	  margin: 98px 0 0;
 }
+.checkout-content.checkout-payment.cart.checkout.wrapper{
+	margin-top: -12px;
+}
 .checkout-header.login .checkout-container {
     max-width: 1200px;
     padding: 0;
@@ -49737,7 +49760,7 @@ body:not(.page-checkout-login) .checkout-header.login{
 .progress-barcheck .step-1.step-done span,.progress-barcheck .step-2.step-done span,.progress-barcheck .step-3.step-done span{ border: 1px solid #a7183e; position:absolute; display:inline-block; background:#ffffff; left:7.2%; }
 .progress-barcheck .step-2.step-done span{ left:49%;}
 .progress-barcheck .step-1.step-done span:after,.progress-barcheck .step-2.step-done span:after,.progress-barcheck .step-3.step-done span:after{	content: "";    width: 19px;    height: 19px;    background: #a7183e;    border-radius: 25px;    position: relative;    display: inline-block;  top: 6px; }
-
+.progress-barcheck.paymentPage .step-1.step-done span:after, .progress-barcheck.paymentPage .step-2.step-done span:after, .progress-barcheck.paymentPage .step-3.step-done span:after{ top: 5px;}
 
 .progress-barcheck .step-1.finalstep span,.progress-barcheck .step-2.finalstep span,.progress-barcheck .step-3.finalstep span{ border: 1px solid #efefef; right:8.5%; width:25px; height:25px; top:24px; }
 .progress-barcheck .step-2.finalstep span{ left:49%; }
@@ -49790,6 +49813,7 @@ width:25px; height:25px;
 .progress-barcheck .step-1.finalstep span, .progress-barcheck .step-2.finalstep span, .progress-barcheck .step-3.finalstep span,
 .progress-barcheck .step-1 span, .progress-barcheck .step-2 span, .progress-barcheck .step-3 span{ width:18px; height:18px;}
 .progress-barcheck .step-1.step-done span:after, .progress-barcheck .step-2.step-done span:after, .progress-barcheck .step-3.step-done span:after{ width:10px; height:10px; top:3px;}
+.progress-barcheck.paymentPage .step-1.step-done span:after, .progress-barcheck.paymentPage .step-2.step-done span:after, .progress-barcheck.paymentPage .step-3.step-done span:after{ top:-7px;}
 .progress-barcheck .step-1.step-done span.paymentStepDone:after, .progress-barcheck .step-2.step-done span.paymentStepDone:after, .progress-barcheck .step-3.step-done span.paymentStepDone:after{ top:3px;}
 .progress-barcheck .step-1.active span, .progress-barcheck .step-2.active span, .progress-barcheck .step-3.active span{ border:3px solid #a7183e;}
 .progress-barcheck .step1, .progress-barcheck .step2, .progress-barcheck .step3{ height:7px; margin:0; }
@@ -53222,11 +53246,11 @@ body .lookbook_wrapper .listing.wrapper .left-block{
 }
 
 
-.edit {
+.address-list .edit {
     float: left;
 }
 
-.edit>a:before {
+.address-list .edit>a:before {
     content: "\f040";
     font-family: 'FontAwesome';
     -webkit-font-smoothing: antialiased;
@@ -55248,7 +55272,9 @@ a#cvvHelp{display:none;}
     padding: 15px;
 }
 .cart.wrapper .product-block.emi #EMITermTable td{
-    display: list-item;
+    display: block;
+    float:left;
+    width:100%;
     text-transform: none;}
 .cart.wrapper .product-block.emi #EMITermTable td:nth-last-child(3),.cart.wrapper .product-block.emi #EMITermTable td:nth-last-child(2){
     background:#f8f8f8;}
@@ -57543,16 +57569,22 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 }
 .Manufacturer.Temp03 ul li{
 	margin-bottom: 1px;
-    background: #f5f5f5;
+    background: #fff;	/* TISQAUAT-694 */
     float: left;
 }
 .Manufacturer.Temp03 .media-content{
 	width: 66.85%;
     float: left;
+    /* padding: 5.8% 7% 0 2.2%; */
+}
+.Manufacturer.Temp03 .media-content > div{
     padding: 5.8% 7% 0 2.2%;
 }
 .Manufacturer.Temp03 .Padd ul li:nth-child(2n+0) .media-content {
     text-align: right;
+   /*  padding: 5.8% 2.2% 0 7%; */
+}
+.Manufacturer.Temp03 .Padd ul li:nth-child(2n+0) .media-content > div {
     padding: 5.8% 2.2% 0 7%;
 }
 .Manufacturer h3{
@@ -57590,6 +57622,9 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 }
 .Manufacturer.Temp03 .padd ul li:nth-child(2n+0) .media-content{
 	text-align: right;
+    /* padding: 5.8% 2.2% 0 7%; */
+}
+.Manufacturer.Temp03 .padd ul li:nth-child(2n+0) .media-content > div{
     padding: 5.8% 2.2% 0 7%;
 }
 #showMore, #showLess{
@@ -57835,6 +57870,9 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 }
 
 /* Carousel Portion Starts */
+.Manufacturer.Temp07 .video-container{
+	padding-bottom:0px;
+}
 .Manufacturer.Temp07 .owl-item.cloned{
 	width: 423px;
 	float: left;
@@ -58194,7 +58232,9 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 /* pdp-v4-temp template5 ends */
 
 /* pdp-v4-temp template6 starts */
-
+.temp-six .Padd{
+	overflow:hidden;
+}
 .temp-six .Padd h2 {
     text-transform: uppercase;
 }
@@ -58225,7 +58265,7 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 }
 .temp-six .Padd .first-content {
     margin: 0 0 40px 0;
-    background: #f5f5f5;
+    background: #fff;	/* TISQAUAT-695 */
     overflow: hidden;
     width: 100%;
 }
@@ -58235,11 +58275,15 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 }
 .temp-six .Padd .first-content .media-content {
     float: left;
-    padding: 13% 3% 30px;
+   /*  padding: 13% 3% 30px; */
     font-size: 16px;
     vertical-align: middle;
     width: 35%;
 }
+.temp-six .Padd .first-content .media-content > div{
+    padding: 13% 3% 30px;
+}
+
 .temp-six .Padd h2 {
     text-transform: uppercase;
 }
@@ -58250,7 +58294,7 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
     margin-bottom: 20px;
 }
 .temp-six .Padd ul {
-    margin: 0 0 67px 0;
+    margin: 0px;
     width: 100%;
     float: left;
 }
@@ -58266,11 +58310,14 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 }
 .temp-six .Padd ul li .media-content {
     float: right;
-    padding: 2% 9% 0 3%;
+   /*  padding: 2% 9% 0 3%; */
     font-size: 16px;
     line-height: 22px;
     color: #000;
     width: 50%;
+}
+.temp-six .Padd ul li .media-content > div {
+    padding: 2% 9% 0 3%;
 }
 .temp-six .Padd ul li .media-content h2 {
     text-align: left;
@@ -58283,20 +58330,28 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 }
 .temp-six .Padd ul li:nth-child(2n+0) .media-content {
     float: left;
-    padding: 2% 3% 0 8%;
+  /*   padding: 2% 3% 0 8%; */
     text-align: right;
+}
+.temp-six .Padd ul li:nth-child(2n+0) .media-content > div {
+    padding: 2% 3% 0 8%;
 }
 .temp-six .Padd ul li:nth-child(2n+0) .media-content h2 {
     text-align: right;
 }
-.temp-six .Padd .show-more {
+.temp-six .Padd .show-more, .Manufacturer.Temp03 .show-more {
     text-align: center;
     display: block;
     color: #a9143c;
     font-size: 12px;
     font-weight: bold;
     text-transform: uppercase;
+    clear:both;
+    padding-top:67px;
 }
+.Manufacturer.Temp03 .show-more{
+    padding: 20px 0 40px;
+} 
 
 /* pdp-v4-temp template6 ends */
 
@@ -58356,10 +58411,10 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 
 /* pdp-v4-temp template2 tablet starts */
 
-.Manufacturer.Temp03 .media-content {
+.Manufacturer.Temp03 .media-content > div {
     padding-bottom: 2%;
 }
-.Manufacturer.Temp03 .media-content, .Manufacturer.Temp03 .padd ul li:nth-child(2n) .media-content {
+.Manufacturer.Temp03 .media-content > div, .Manufacturer.Temp03 .padd ul li:nth-child(2n) .media-content > div {
     padding-bottom: 2%;
 }
 .Manufacturer.Temp03 h3 {
@@ -58368,7 +58423,7 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 .Manufacturer.Temp03 p {
     font-size: 12px;
 }
-.Manufacturer.Temp03 .media-content, .Manufacturer.Temp03 .padd ul li:nth-child(2n) .media-content {
+.Manufacturer.Temp03 .media-content > div, .Manufacturer.Temp03 .padd ul li:nth-child(2n) .media-content > div {
     padding-bottom: 2%;
 }
 /* pdp-v4-temp template2 tablet ends */
@@ -58383,10 +58438,10 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 /* pdp-v4-temp template5 tablet ends */
 
 /* pdp-v4-temp template6 tablet starts */
-.temp-six .Padd ul li .media-content {
+.temp-six .Padd ul li .media-content > div {
     padding: 2% 2% 0;
 }
-.temp-six .Padd ul li:nth-child(2n) .media-content {
+.temp-six .Padd ul li:nth-child(2n) .media-content > div {
     padding: 2% 3% 0;
 }
 /* pdp-v4-temp template6 tablet ends */
@@ -58527,8 +58582,11 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 	}
 	.Manufacturer.Temp03 .media-content {
     width: 100%;
-    padding: 3% 2%;
+    /* padding: 3% 2%; */
     text-align: left;
+	}
+	.Manufacturer.Temp03 .media-content > div {
+    padding: 3% 2%;
 	}
 	.Manufacturer.Temp03 h3 {
     font-size: 14px;
@@ -58544,14 +58602,19 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 	}
 	.Manufacturer.Temp03 .media-content {
     width: 100%;
-    padding: 3% 2%;
+    /* padding: 3% 2%; */
     text-align: left;
+	}
+	.Manufacturer.Temp03 .media-content > div {
+    padding: 3% 2%;
 	}
 	.Manufacturer.Temp03 .Padd ul li:nth-child(2n) .media-content {
     text-align: left;
+    /* padding: 2%; */
+	}
+	.Manufacturer.Temp03 .Padd ul li:nth-child(2n) .media-content > div {
     padding: 2%;
 	}
-	
 	
 	/* pdp-v4-temp template2 mobile ends */
 	
@@ -58713,9 +58776,12 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
     font-size: 18px;
 	}
 	.temp-six .Padd ul li .media-content, .temp-six .Padd ul li:nth-child(2n+0) .media-content {
-    padding: 2% 0;
+   /*  padding: 2% 0; */
     text-align: left;
     font-size: 12px;
+	}
+	.temp-six .Padd ul li .media-content > div, .temp-six .Padd ul li:nth-child(2n+0) .media-content > div {
+    padding: 2% 0;
 	}
 	.temp-six .Padd ul li:nth-child(2n+0) .media-content h2 {
     text-align: left;
@@ -59031,4 +59097,32 @@ z-index:11;}
 /* TISQAEE-24 */
 body.page-multiStepCheckoutSummaryPage #flip-tabs, body.page-checkout-login header .content .top, body.page-checkout-login #flip-tabs, body.page-multiStepCheckoutSummaryPage header .content .top{
 display: none;
+}
+
+/*Checkout delivery page price column hide*/
+   @media (min-width: 1025px) {
+   .cart.wrapper .checkout-table.product-block.mybag-items.checkout-items#deliveryradioul li.header .mybag-item-head .Price{
+   display:none;
+   }
+   .cart.wrapper .checkout-table.product-block.mybag-items.checkout-items#deliveryradioul li.header .mybag-item-head .qty{
+   	width: 30%;
+    text-align: center;
+   }
+   
+   .checkout-table.product-block.mybag-items.checkout-items#deliveryradioul .price{
+   display:none;
+   }
+   .checkout-table.product-block.mybag-items.checkout-items#deliveryradioul .quantity{
+   	width: 30%;
+    padding-left: 0;
+   }
+   }
+   @media (max-width: 1024px) {
+   .checkout.wrapper .checkout-table.product-block.mybag-items.checkout-items#deliveryradioul li.item>ul li:first-child .delivery-price.delivery-price-mobile{
+   display:none;
+   }
+   }
+/*Checkout delivery page price column hide ends*/
+.page-productDetails .trending{
+	clear:both;
 }

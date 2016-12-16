@@ -139,11 +139,11 @@ function registerUserGigya(eventObject)
     		
     		if(categoryId  != "Electronics" )
     			{
-    			var fit= response.ratings.fit;
+    			var fit= response.ratings.Fit;
     			
-    			var quality= response.ratings.quality;
+    			var quality= response.ratings.Quality;
     			
-    			var value_for_money= response.ratings.value_for_money;
+    			var value_for_money= response.ratings['Value for Money'];
     			 
     			}
     	
