@@ -582,7 +582,7 @@
 																		text="Return Item" />
 																</a>  --%>
 											 	<c:choose>
-												 	 <c:when test="${entry.itemReturnStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
+												 	 <c:when test="${entry.itemReturnStatus eq 'false' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
 															 <a
 																	href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${sellerOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}">
 																	<spring:theme code="text.account.returnReplace"
@@ -625,9 +625,11 @@
 											</div>
 											<div class="col-md-5">
 												<c:if test="${fn:containsIgnoreCase(entry.returnMethodType , 'SELF_COURIER')}">
+												<c:if test="${entry.isRefundable eq false }">
 													<div class="awsInnerClass">
 															Please provide AWB number, Logistics partner and upload POD <a href="#" id="awbNumberLink">here</a>
-													</div>	
+													</div>
+												</c:if>	
 												</c:if>
 											</div>
 											
@@ -1366,9 +1368,9 @@
 
                                    </c:if>
                                   
-									 <c:if test="${entry.isRefundable eq false }">
+									 
 										<return:lpDetailsUploadPopup entry="${entry}" />
-								    </c:if>
+								    
 								</c:forEach>
 								</c:forEach>
 							</c:forEach>

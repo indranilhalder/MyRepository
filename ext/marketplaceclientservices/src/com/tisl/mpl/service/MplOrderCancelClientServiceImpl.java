@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.wsdto.TicketUpdateRequestXML;
 import com.tisl.mpl.wsdto.TicketUpdateResponseXML;
@@ -277,6 +278,12 @@ public class MplOrderCancelClientServiceImpl implements MplOrderCancelClientServ
 			}
 			if (null != response)
 			{
+				if (response.getStatus() == 200 || response.getStatus() == 201)
+				{
+					responsefromFICO = new CODSelfShipmentResponse();
+					responsefromFICO.setSuccess(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+					return responsefromFICO;
+				}
 				final String output = response.getEntity(String.class);
 				LOG.debug("xml response<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" + output);
 				final JAXBContext jaxbContext = JAXBContext.newInstance(MplOrderIsCancellableResponse.class);
