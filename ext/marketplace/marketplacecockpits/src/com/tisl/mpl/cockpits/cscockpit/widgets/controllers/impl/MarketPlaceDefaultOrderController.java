@@ -403,23 +403,6 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 								.setRefundAmount(totalRefundScheduleDeliveryCharges);//TISPRO-216 : Refund amount Set in RTM
 						getModelService().save(refundTransactionMappingModel);
 					}
-					for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
-							.entrySet()) {
-						mplJusPayRefundService.makeRefundOMSCall(refundEntry
-								.getKey(), paymentTransactionModel, refundEntry
-								.getKey().getRefundedScheduleDeliveryChargeAmt(), null);// Sending
-																				// null
-																				// as
-																				// for
-																				// refund
-																				// delivery
-																				// charge
-																				// no
-																				// status
-																				// update
-																				// is
-																				// required.
-					}
 				} else {
 					LOG.error("Refund Schedule Delivery Charges Failed");
 				}
