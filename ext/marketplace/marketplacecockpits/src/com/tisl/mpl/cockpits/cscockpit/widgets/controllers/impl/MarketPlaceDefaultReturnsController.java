@@ -54,6 +54,7 @@ import de.hybris.platform.cockpit.model.meta.TypedObject;
 import de.hybris.platform.cockpit.services.values.ObjectValueContainer;
 import de.hybris.platform.cockpit.widgets.InputWidget;
 import de.hybris.platform.cockpit.widgets.models.impl.DefaultListWidgetModel;
+import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.order.converters.populator.AbstractOrderPopulator;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
@@ -128,6 +129,12 @@ public class MarketPlaceDefaultReturnsController extends
 	private DateUtilHelper dateUtilHelper;
 	@Autowired
 	private MPLReturnService mPLReturnService;
+	
+	@Autowired
+	private MPLReturnService mplReturnService;
+	
+	@Autowired
+	CustomerFacade customerFacade;
 
 	private static final String OMS_BYPASS_KEY = "cscockpit.oms.serviceability.check.bypass";
 
@@ -136,7 +143,13 @@ public class MarketPlaceDefaultReturnsController extends
 
 	public Map<Boolean, List<OrderLineDataResponse>> validateReverseLogistics(
 			List<ReturnLogistics> returnLogisticsList) {
-
+		String customerId = StringUtils.EMPTY;
+		final OrderModel orderModel = mplReturnService.getOrder(returnLogisticsList.get(0).getOrderId());
+		if(orderModel != null && orderModel.getUser() != null)
+		{
+			customerId = orderModel.getUser().getUid();
+		}
+		orderModel.getUser().getUid();
 		final Map<Boolean, List<OrderLineDataResponse>> responseMap = new HashMap();
 		ReturnLogisticsResponse returnLogisticsResponse = returnLogisticsService
 				.returnLogisticsCheck(returnLogisticsList);
@@ -153,6 +166,7 @@ public class MarketPlaceDefaultReturnsController extends
 					mplReturnReport.setPincode(pincode);
 					mplReturnReport.setTransactionId(orderLineDataResponse
 							.getTransactionId());
+					mplReturnReport.setCustomerId(customerId);
 					if (StringUtils.isNotEmpty(orderLineDataResponse
 							.getIsReturnLogisticsAvailable())
 							&& orderLineDataResponse
@@ -386,9 +400,6 @@ public class MarketPlaceDefaultReturnsController extends
 								}
 							}
 						}
-						cancelReturnFacade.createTicketInCRM(subOrderData, subOrderEntry, "R", reason, 
-								returnType, returnEntry.getOrderEntry().getSelectedUSSID(), customerData, (OrderModel) returnEntry.getOrderEntry().getOrder(), 
-								returnItemAddressData, returnInfoData);
 					}
 
 				}catch(Exception e) {
