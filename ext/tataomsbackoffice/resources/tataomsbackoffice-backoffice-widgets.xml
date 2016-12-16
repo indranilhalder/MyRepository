@@ -228,7 +228,7 @@
 				<widget id="lpoverride" widgetDefinitionId="com.techouts.widgets.lpoverride"
 					slotId="perspectives" template="true">
 				</widget>
-			
+
 				<!-- Add for Configurable Parameters -->
 
 				<widget id="configarable_params" widgetDefinitionId="com.hybris.oms.widgets.configurableParamWidget"
@@ -327,7 +327,7 @@
 					<setting key="allowLockingTopPanel" type="Boolean">true</setting>
 					<virtual-sockets />
 				</widget>
-        		<!-- add for SShip Delivery Breach -->
+				<!-- add for SShip Delivery Breach -->
 				<widget id="sship_delivery_breach_collapseble"
 					widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
 					title="sship breach collapsible contatiner" slotId="perspectives"
@@ -449,16 +449,20 @@
 					slotId="perspectives" title="pickup Address Request report"
 					template="false">
 				</widget>
-				<!-- Reverse Logistics Failure info  report -->
+				<!-- Reverse Logistics Failure info report -->
 				<widget id="reverse_logistics_failure_info"
 					widgetDefinitionId="com.techouts.widgets.reverselogistics.failureinfo"
 					slotId="perspectives" title="reverse Logistics Failure report"
 					template="false">
-				</widget>	
-				<!-- lp awb bulk upload-->
+				</widget>
+				<!-- lp awb bulk upload -->
 				<widget id="lpawb_bulkupload" widgetDefinitionId="com.techouts.lpawbbulkupload"
 					slotId="perspectives" template="true" title="LP and awb bulk upload">
-				</widget>			
+				</widget>
+				<!-- R2.3 Logistics Delivery Report -->
+				<widget id="logistcs_delivery_report" widgetDefinitionId="com.techouts.widgets.logisticsdeliveryreport"
+					slotId="perspectives" template="true" title="Logistics Delivery Report">
+				</widget>
 			</widget>
 			<setting key="eastClosed" type="Boolean">true</setting>
 			<setting key="perspectiveImageUrl" value="cng/images/TUL_OMS_icon.png"

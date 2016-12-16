@@ -80,9 +80,9 @@
 									hflex="1" />
 							</vlayout>
 							<vlayout width="200px">
-								<intbox hflex="1" id="intPincode"
-									maxlength="6" style="width:200px;height:10px">
-								</intbox>
+								<textbox hflex="1" id="intPincode"
+									style="width:200px;height:10px">
+								</textbox>
 							</vlayout>
 							<vlayout
 								style="width:100px;margin-left:10px">
