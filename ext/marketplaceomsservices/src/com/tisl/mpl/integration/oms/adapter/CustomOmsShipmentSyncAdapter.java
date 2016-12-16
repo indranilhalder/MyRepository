@@ -849,6 +849,35 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
          			  isSDBCheck=Boolean.FALSE;
          		}
 		     }
+		     if(null!= shipment && null!=shipment.getSdb()){
+		   	  
+		   	  if(shipment.getSsb().booleanValue() &&  ( CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))  &&  (consignmentModel.getSsbCheck()==null || consignmentModel.getSsbCheck() ==Boolean.FALSE)){
+		   		  if(newStatus.equals(ConsignmentStatus.CANCELLATION_INITIATED)){
+		   			  LOG.debug("Calling cancel Initiation process started");
+							final SendUnCollectedOrderToCRMEvent sendUnCollectedOrderToCRMEvent = new SendUnCollectedOrderToCRMEvent(shipment,consignmentModel,orderModel,newStatus);
+							final UnCollectedOrderToInitiateRefundEvent unCollectedOrderToInitiateRefundEvent= new UnCollectedOrderToInitiateRefundEvent(shipment,consignmentModel,orderModel,newStatus,eventService,configurationService);
+							try
+							{
+								LOG.debug("Create CRM Ticket for SSB Order Cancel Initiated ");
+								eventService.publishEvent(sendUnCollectedOrderToCRMEvent);
+							}
+							catch(final Exception e)
+							{
+								LOG.error("Exception during Create CRM Ticket for SSB Order Cancel Initiated Id  >> " + orderModel.getCode()+" ::" + e.getMessage());	
+							}
+							try
+							{
+								LOG.debug("Refund Initiation  for SSB Order Cancel Initiated");
+								eventService.publishEvent(unCollectedOrderToInitiateRefundEvent);
+							}
+							catch(final Exception e)
+							{
+								LOG.error("Exception during Refund Initiation  SSB Order Cancel Initiated  >> "+ orderModel.getCode()+" ::" + e.getMessage());	
+							}
+		   		  }
+		   		  
+		   	  }
+		     }
       		if ((ConsignmentStatus.RETURN_INITIATED.equals(newStatus) 
       				|| ConsignmentStatus.LOST_IN_TRANSIT.equals(newStatus) 
       				|| ConsignmentStatus.RETURN_TO_ORIGIN.equals(newStatus))
