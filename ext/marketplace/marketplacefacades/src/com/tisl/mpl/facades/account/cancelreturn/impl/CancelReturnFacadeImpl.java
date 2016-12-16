@@ -37,6 +37,7 @@ import de.hybris.platform.returns.model.RefundEntryModel;
 import de.hybris.platform.returns.model.ReturnRequestModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.event.EventService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
@@ -65,6 +66,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.enums.JuspayRefundType;
 import com.tisl.mpl.core.enums.TypeofReturn;
+import com.tisl.mpl.core.event.OrderReturnToStoreEvent;
 import com.tisl.mpl.core.keygenerator.MplPrefixablePersistentKeyGenerator;
 import com.tisl.mpl.core.model.BankDetailsInfoToFICOHistoryModel;
 import com.tisl.mpl.core.model.CancellationReasonModel;
@@ -72,6 +74,7 @@ import com.tisl.mpl.core.model.MplCustomerBankAccountDetailsModel;
 import com.tisl.mpl.core.model.MplLPHolidaysModel;
 import com.tisl.mpl.core.model.MplReturnPickUpAddressInfoModel;
 import com.tisl.mpl.core.model.RefundTransactionMappingModel;
+import com.tisl.mpl.core.model.ReturnQuickDropProcessModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.CODSelfShipData;
@@ -95,6 +98,7 @@ import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
 import com.tisl.mpl.facades.product.data.ReturnReasonData;
+import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MPLRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MPLReturnService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
@@ -108,6 +112,7 @@ import com.tisl.mpl.ordercancel.MplOrderCancelRequest;
 import com.tisl.mpl.service.MplOrderCancelClientService;
 import com.tisl.mpl.service.ReturnLogisticsService;
 import com.tisl.mpl.service.TicketCreationCRMservice;
+import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.sns.push.service.impl.MplSNSMobilePushServiceImpl;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
@@ -197,6 +202,12 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	
 	@Autowired
 	private DateUtilHelper dateUtilHelper;
+	@Autowired
+	private EventService eventService;
+	@Autowired
+	private OrderModelDao orderModelDao;
+	@Autowired
+	private SendSMSFacade sendSMSFacade;
 	
 	protected static final Logger LOG = Logger.getLogger(CancelReturnFacadeImpl.class);
 
@@ -2368,6 +2379,32 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		
 			final RTSAndRSSReturnInfoResponse response = mplOrderCancelClientService.orderReturnInfoOMS(returnInfoRequest);
 
+			try
+			{
+				OrderModel orderModel = orderModelDao.getOrderModel(returnInfoRequestData.getOrderId());
+				CustomerModel customerModel=(CustomerModel) orderModel.getUser();
+				String mobilenumber=null;
+				if(orderModel.getDeliveryAddress() != null){
+					if(orderModel.getDeliveryAddress().getCellphone() != null){
+						mobilenumber=orderModel.getDeliveryAddress().getCellphone();
+					}else{
+						mobilenumber=orderModel.getDeliveryAddress().getPhone2();
+					}
+					
+				}
+				//Send notification sms
+				sendPushNotificationForReturnToStore(customerModel, returnInfoRequestData.getRTSStore(),mobilenumber,returnInfoRequestData.getOrderId());
+				ReturnQuickDropProcessModel qickdropProcess = new ReturnQuickDropProcessModel();
+				qickdropProcess.setOrder(orderModel);
+				qickdropProcess.setStoreIds(returnInfoRequestData.getRTSStore());
+				OrderReturnToStoreEvent event = new OrderReturnToStoreEvent(qickdropProcess);
+				eventService.publishEvent(event);
+			}
+			catch(Exception e)
+			{
+				LOG.info(" Return QuickDrop Mail Sending Mail ::::::  "+ e.getMessage());
+			}
+			
 			// below portion of code valid for cancel only
 			if (null != response)
 			{
@@ -3614,4 +3651,40 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		return mplReturnService.getPickUpReturnReportByParams(orderID, customerId, pincode);
 	}
 
+	/***
+	 * Send Notification For CDA
+	 *
+	 * @param customerId
+	 * @param OTPNumber
+	 */
+	
+	private void sendPushNotificationForReturnToStore(final CustomerModel customerModel,List<String> storeNameList, final String mobileNumber,String ordernumber)
+	{
+		final String mplCustomerName = customerModel.getFirstName();
+		String storeName = null;
+		if (null != storeNameList)
+		{
+			if (CollectionUtils.isNotEmpty(storeNameList))
+			{
+				for (String store : storeNameList)
+					if (storeName == null)
+					{
+						storeName = store;
+					}
+					else
+					{
+						storeName.concat("," + store);
+					}
+			}
+		}
+
+		sendSMSFacade.sendSms(
+				MarketplacecommerceservicesConstants.SMS_SENDER_ID,
+				MarketplacecommerceservicesConstants.SMS_MESSAGE_RETURN_TO_STORE
+						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO,
+								mplCustomerName != null ? mplCustomerName : "There")
+						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE,ordernumber)
+						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO,storeName), mobileNumber);
+
+	}
 }

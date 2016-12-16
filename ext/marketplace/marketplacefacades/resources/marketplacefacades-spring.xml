@@ -1729,6 +1729,10 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<alias name="defaultShortUrlFacade" alias="shortUrlFacade" />
 	<bean id="defaultShortUrlFacade" class="com.tis.mpl.facade.shorturl.DefaultShortUrlTrackFacade"></bean>
 	
-
+    <bean id="orderReturnToStoreEmailContext"
+		class="com.tisl.mpl.facades.process.email.context.OrderReturnToStoreEmailContext"
+		parent="abstractEmailContext" scope="prototype">
+		<property name="orderConverter" ref="orderConverter" />
+	</bean>
 	<!-- close R2.3 Changes -->
 </beans>

@@ -110,6 +110,12 @@
 			
 			<collectiontype elementtype="Address" code="addressList"
 			autocreate="true" generate="true" type="list" />
+			<!-- For Return QuickDrop Email Process -->
+			<collectiontype elementtype="java.lang.String" code="quickDropStores"
+			autocreate="true" generate="true" type="list" />
+			
+			<collectiontype elementtype="java.lang.String" code="quickDropStoreNames"
+			autocreate="true" generate="true" type="list" />
 	</collectiontypes>
 
 
@@ -9336,6 +9342,30 @@
 			</itemtype>
 
 		</typegroup>
+		
+		<!-- Added Model for Return Store Selections Details to User -->
+		
+		<typegroup name="ReturnToStoreEmailProcesses">
+			<itemtype code="ReturnQuickDropProcess" extends="OrderProcess"
+				autocreate="true" generate="true">
+				<description>Return Quick Drop Selected Store Details Email</description>
+				<attributes>
+					<attribute qualifier="transactionId" type="java.lang.String">
+						<persistence type="property" />
+						<description>Attribute contains Selected Item Return Transaction Id.</description>
+					</attribute>
+					<attribute qualifier="storeIds" type="quickDropStores">
+						<persistence type="property" />
+						<description>Attribute contains Return QuickDrop Store Ids.</description>
+					</attribute>
+					<attribute qualifier="storeNames" type="quickDropStoreNames">
+						<persistence type="property" />
+						<description>Attribute contains Return QuickDrop Store Names.</description>
+					</attribute>
+				</attributes>	
+			</itemtype>
+		</typegroup>
+		
 	</itemtypes>
 	
 </items>

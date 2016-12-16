@@ -442,6 +442,12 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 		<property name="modelService" ref="modelService" />
 		<property name="businessProcessService" ref="businessProcessService" />
 	</bean>
+
+	<bean id="orderReturnToStoreEventListener" class="com.tisl.mpl.core.event.OrderReturnToStoreEventListener"
+		parent="abstractSiteEventListener">
+		<property name="modelService" ref="modelService" />
+		<property name="businessProcessService" ref="businessProcessService" />
+	</bean>
 	<!-- Shipping Confirmation Email -->
 
 	<bean id="shippingConfirmationEventListener" class="com.tisl.mpl.core.event.ShippingConfirmationEventListener"
@@ -622,6 +628,12 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 			value="classpath:/marketplacecore/processes/orderUnDeliveredEmailProcess.xml" />
 	</bean>
 	
+	<bean id="orderReturnToStoreEmailProcessDefinitionResource"
+		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
+		<property name="resource"
+			value="classpath:/marketplacecore/processes/returnToStoreEmailProcess.xml" />
+	</bean>
+	
 
 	<!-- Shipping Confirmation Email and sms-->
 	<bean id="shippingConfirmationEmailProcessDefinitionResource"
@@ -782,6 +794,11 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 	<bean id="generateOrderOutForDeliveryEmail" parent="abstractGenerateEmailAction">
 		<property name="frontendTemplateName" value="OrderOutForDeliveryEmailTemplate" />
 	</bean>
+	      <!-- Bug ID TATA_664-->
+	<bean id="generateReturnToStoreEmail" parent="abstractGenerateEmailAction">
+		<property name="frontendTemplateName" value="OrderReturnToStoreEmailTemplate" />
+	</bean>
+	
 	
 
 	<bean id="removeSentEmail"
