@@ -277,6 +277,12 @@ public class MplOrderCancelClientServiceImpl implements MplOrderCancelClientServ
 			}
 			if (null != response)
 			{
+				if (response.getStatus() == 200 || response.getStatus() == 201)
+				{
+					responsefromFICO = new CODSelfShipmentResponse();
+					responsefromFICO.setSuccess("Success");
+					return responsefromFICO;
+				}
 				final String output = response.getEntity(String.class);
 				LOG.debug("xml response<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" + output);
 				final JAXBContext jaxbContext = JAXBContext.newInstance(MplOrderIsCancellableResponse.class);

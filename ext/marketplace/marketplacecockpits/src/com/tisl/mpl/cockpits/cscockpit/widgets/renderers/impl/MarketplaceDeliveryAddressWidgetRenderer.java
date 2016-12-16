@@ -4,6 +4,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,7 @@ import de.hybris.platform.core.model.c2l.CountryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.cscockpit.utils.LabelUtils;
 import de.hybris.platform.cscockpit.widgets.controllers.CallContextController;
 import de.hybris.platform.cscockpit.widgets.controllers.CustomerController;
@@ -1089,8 +1091,26 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 			deliveryAddress.setShippingAddress(Boolean.TRUE);
 			deliveryAddress.setBillingAddress(Boolean.TRUE);
 			deliveryAddress.setVisibleInAddressBook(Boolean.TRUE);
-			deliveryAddress.setCountry(orderModel.getDeliveryAddress()
-					.getCountry());
+			try {
+				if(null != orderModel && null != orderModel.getDeliveryAddress() && null != orderModel.getDeliveryAddress().getCountry()){
+					deliveryAddress.setCountry(orderModel.getDeliveryAddress().getCountry());
+				}else if(null !=orderModel && null != orderModel.getUser() && null != orderModel.getUser().getAddresses()) {
+					Collection<AddressModel> addresses = orderModel.getUser().getAddresses();
+					if(null != addresses && null != addresses.iterator() && null != addresses.iterator().next()) {
+						AddressModel address = addresses.iterator().next();
+						if(null !=address && null != address.getCountry() ) {
+							deliveryAddress.setCountry(address.getCountry());
+						}
+					}
+				}else {
+					CountryModel countryModel = new CountryModel();
+					countryModel.setName(country);
+					deliveryAddress.setCountry(countryModel);
+				}
+			}catch(Exception e) {
+				LOG.error("Exception while saving country "+e.getMessage());
+			}
+			
 			try {
 				if (isChangeDeliveryAddress) {
 					// Storing Delivery Address in a session

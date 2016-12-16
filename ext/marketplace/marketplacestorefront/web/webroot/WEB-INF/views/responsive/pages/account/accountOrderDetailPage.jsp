@@ -625,9 +625,11 @@
 											</div>
 											<div class="col-md-5">
 												<c:if test="${fn:containsIgnoreCase(entry.returnMethodType , 'SELF_COURIER')}">
+												<c:if test="${entry.isRefundable eq false }">
 													<div class="awsInnerClass">
 															Please provide AWB number, Logistics partner and upload POD <a href="#" id="awbNumberLink">here</a>
-													</div>	
+													</div>
+												</c:if>	
 												</c:if>
 											</div>
 											
@@ -1366,9 +1368,9 @@
 
                                    </c:if>
                                   
-									 <c:if test="${entry.isRefundable eq false }">
+									 
 										<return:lpDetailsUploadPopup entry="${entry}" />
-								    </c:if>
+								    
 								</c:forEach>
 								</c:forEach>
 							</c:forEach>
