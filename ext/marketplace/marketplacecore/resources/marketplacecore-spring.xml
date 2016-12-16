@@ -44,8 +44,13 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_price-spring.xml" />
 	<!-- <import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_product-spring.xml" /> -->
+
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_association-spring.xml" />
+		<!-- Jewellery hot-folder for jewellery price -->
+		
+	<import
+		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_jewelleryprice-spring.xml" />
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_stock-spring.xml" />
 	<!-- <import
