@@ -366,46 +366,7 @@ public class MarketPlaceDefaultReturnsController extends
 			refundRequest.setReturnRaisedFrom(SalesApplication.CALLCENTER);
 			modelService.save(refundRequest);
 			modelService.refresh(refundRequest);
-			if(!returnType.equalsIgnoreCase(TypeofReturn.QUICK_DROP.getCode())) {
-				try {
-					LOG.debug("Creating crm ticket for return for the order id :"+orderModel.getCode());
-					OrderData subOrderData = new OrderData();
-					orderPopulator.populate(orderModel, subOrderData);
-					OrderEntryData subOrderEntry = new OrderEntryData();
-					CustomerData customerData = null;
-					ReturnItemAddressData returnItemAddressData = new ReturnItemAddressData();
-					ReturnInfoData returnInfoData = null;
-					for (ReturnEntryModel returnEntry : refundRequest.getReturnEntries()) {
-						orderEntryPopulator.populate(returnEntry.getOrderEntry(), subOrderEntry);										
-						returnInfoData = populateReturnInfoData(returnEntry);
-						if(null != addressData && returnType.equalsIgnoreCase(TypeofReturn.SCHEDULE_PICKUP.getCode())) {
-							returnItemAddressDatapopulator.populate(addressData, returnItemAddressData);
-						}
-						LOG.debug("Creating crm ticket for transaction id :"+subOrderEntry.getTransactionId());
-						String reason = StringUtils.EMPTY;
-						if(null!= refundDetailsList && null !=refundDetailsList.entrySet()) {
-							for (Map.Entry<Long, RefundDetails> refundDetail : refundDetailsList
-									.entrySet()) {
-								if(null != refundRequest.getOrder()) {
-									AbstractOrderEntryModel orderEntryModel = getOrderEntryByEntryNumber(
-											refundRequest.getOrder(),refundDetail.getKey());
-									if(null != orderEntryModel && null != orderEntryModel.getTransactionID() && null !=returnEntry.getOrderEntry() && null !=returnEntry.getOrderEntry().getTransactionID()){
-										if(orderEntryModel.getTransactionID().equalsIgnoreCase(returnEntry.getOrderEntry().getTransactionID())) {
-											reason = CodeMasterUtility
-													.getglobalCode(refundDetail.getValue()
-															.getReason().getCode());
-											break;
-										}
-									}
-								}
-							}
-						}
-					}
-
-				}catch(Exception e) {
-					LOG.error("Exception while creating crm ticket for the order ID :"+orderModel.getCode());
-				}
-			}
+			// Removing CRM Ticket for Return Request
 			try {
 				this.refundDetailsList.clear();
 				this.refundDetailsList = null;
