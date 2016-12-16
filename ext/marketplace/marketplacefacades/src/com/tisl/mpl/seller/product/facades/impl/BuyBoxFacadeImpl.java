@@ -740,6 +740,11 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 						{
 							richData.setFulfillment(rich.getDeliveryFulfillModes().getCode());
 						}
+                      /*Bug ID TATA-815 */
+						if (null != rich.getDeliveryFulfillModeByP1())
+						{
+							richData.setFulfillmentType1(rich.getDeliveryFulfillModeByP1().getCode());
+						}
 						if (HomeDeliveryEnum.YES.equals(rich.getHomeDelivery()))
 						{
 							deliveryModes.append(HD).append(','); // SONAR Fixes

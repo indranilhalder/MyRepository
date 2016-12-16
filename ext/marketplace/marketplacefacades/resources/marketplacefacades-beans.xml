@@ -110,6 +110,8 @@
 		<property name="onlineExclusive" type="boolean" /> 
 		<property name="leadTimeForHomeDelivery" type="Integer"/>
 		<property name="returnWindow" type="String"/>
+		<!-- Bug ID TATA-815  -->
+		<property name="fulfillmentType1" type="String"/>
        </bean>
 
 	<bean
