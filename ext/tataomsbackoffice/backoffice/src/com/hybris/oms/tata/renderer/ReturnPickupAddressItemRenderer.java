@@ -28,8 +28,8 @@ public class ReturnPickupAddressItemRenderer implements ListitemRenderer
 		addListcell(listitem, returnPickUp.getOrderId());
 		addListcell(listitem, returnPickUp.getTransactionId());
 		addListcell(listitem, returnPickUp.getPincode());
-		addListcell(listitem, returnPickUp.getStatus());
 		addListcell(listitem, returnPickUp.getCreationtime().toString());
+		addListcell(listitem, returnPickUp.getStatus());
 	}
 
 	private void addListcell(final Listitem listitem, final String value)

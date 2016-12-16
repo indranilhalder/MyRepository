@@ -5,6 +5,7 @@ package com.techouts.backoffice.widget.controller;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -14,12 +15,15 @@ import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zul.Datebox;
+import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Textbox;
 
 import com.hybris.cockpitng.annotations.ViewEvent;
 import com.hybris.cockpitng.util.DefaultWidgetController;
+import com.hybris.oms.tata.renderer.ReturnPickupAddressItemRenderer;
+import com.tisl.mpl.core.model.MplReturnPickUpAddressInfoModel;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
 
 
@@ -140,21 +144,21 @@ public class PickUpAddressChangeRequestWidgetController extends DefaultWidgetCon
 
 	private void getPickUpReturnReportByParams(final String orderId, final String custimerId, final String pincode)
 	{
-		/*
-		 * final List<MplReturnPickUpAddressInfoModel> returnPickUpAddressData = cancelReturnFacade
-		 * .getPickUpReturnReportByParams(orderId, custimerId, pincode); listBoxData.setModel(new
-		 * ListModelList<MplReturnPickUpAddressInfoModel>(returnPickUpAddressData)); listBoxData.setItemRenderer(new
-		 * ReturnPickupAddressItemRenderer());
-		 */
+
+		final List<MplReturnPickUpAddressInfoModel> returnPickUpAddressData = cancelReturnFacade
+				.getPickUpReturnReportByParams(orderId, custimerId, pincode);
+		listBoxData.setModel(new ListModelList<MplReturnPickUpAddressInfoModel>(returnPickUpAddressData));
+		listBoxData.setItemRenderer(new ReturnPickupAddressItemRenderer());
+
 	}
 
 	private void getReturnPickUpAddressByDate(final Date fromDate, final Date toDate)
 	{
-		/*
-		 * final List<MplReturnPickUpAddressInfoModel> returnPickUpAddressData = cancelReturnFacade
-		 * .getPickUpReturnReportByDates(fromDate, toDate); listBoxData.setModel(new
-		 * ListModelList<MplReturnPickUpAddressInfoModel>(returnPickUpAddressData)); listBoxData.setItemRenderer(new
-		 * ReturnPickupAddressItemRenderer());
-		 */
+
+		final List<MplReturnPickUpAddressInfoModel> returnPickUpAddressData = cancelReturnFacade
+				.getPickUpReturnReportByDates(fromDate, toDate);
+		listBoxData.setModel(new ListModelList<MplReturnPickUpAddressInfoModel>(returnPickUpAddressData));
+		listBoxData.setItemRenderer(new ReturnPickupAddressItemRenderer());
+
 	}
 }

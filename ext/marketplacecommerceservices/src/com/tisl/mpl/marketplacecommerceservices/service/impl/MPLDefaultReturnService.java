@@ -220,9 +220,17 @@ public class MPLDefaultReturnService extends DefaultReturnService implements MPL
 	}
 	
 	@Override
-	public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReport(Date fromDate, Date toDate, String orderID,
-			String customerId, String pincode){
-		return mplReturnsDao.getPickUpReturnReport(fromDate, toDate, orderID, customerId, pincode);
-		
+	public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReportByDates(final Date fromDate, final Date toDate)
+	{
+		return mplReturnsDao.getPickUpReturnReportByDates(fromDate, toDate);
+
+	}
+
+	@Override
+	public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReportByParams(final String orderID, final String customerId,
+			final String pincode)
+	{
+		return mplReturnsDao.getPickUpReturnReportByParams(orderID, customerId, pincode);
+
 	}
 }

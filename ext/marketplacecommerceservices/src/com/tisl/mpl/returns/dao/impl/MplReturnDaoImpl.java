@@ -40,7 +40,10 @@ public class MplReturnDaoImpl implements MplReturnsDao
 
 	public static final String RETURN_REQUEST_QUERY = "select {rr:pk} from {ReturnRequest as rr join Order as o on {o:pk}={rr:order} } where {o:code}=?orderid";
 	public static final String RETURN_REQUEST_KEY ="orderid";
-
+	
+	private static final String RETURN_REPORT_QUERY_BETWEEN_TWO_DATES = "SELECT {srm:" + MplReturnPickUpAddressInfoModel.PK + "}"
+			+ " FROM {" + MplReturnPickUpAddressInfoModel._TYPECODE + " AS srm} " + "WHERE " + "{srm:"
+			+ MplReturnPickUpAddressInfoModel.CREATIONTIME + "} between ?fromDate and ?toDate ";
 
 
 
@@ -162,68 +165,67 @@ public class MplReturnDaoImpl implements MplReturnsDao
 		}
 	}
 
-
 	@Override
-	public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReport(Date fromDate, Date toDate, String orderID,
-			String customerId, String pincode)
+	public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReportByDates(final Date fromDate, final Date toDate)
 	{
-		final String MPL_RETURN_ADDRESS_INFO_REPORT_QUERY_BETWEEN_TWO_DATES_ORDERID = "SELECT {srm:" + MplReturnPickUpAddressInfoModel.PK + "}" + " FROM {"
-				+ MplReturnPickUpAddressInfoModel._TYPECODE + " AS srm} " + "WHERE ";
-
-		StringBuilder query=new StringBuilder(MPL_RETURN_ADDRESS_INFO_REPORT_QUERY_BETWEEN_TWO_DATES_ORDERID);
-		
-		if(orderID!=null)
-		{
-			query.append("{srm:" + MplReturnPickUpAddressInfoModel.ORDERID + "}=?queryPram");
-		}else if(customerId!=null)
-		{
-			query.append("{srm:" + MplReturnPickUpAddressInfoModel.CUSTOMERID + "}=?queryPram");
-		}
-		else
-		{
-			query.append("{srm:" + MplReturnPickUpAddressInfoModel.PINCODE + "}=?queryPram");
-		}
-	
 		try
 		{
 			if (LOG.isDebugEnabled())
 			{
-				LOG.debug("In getPickUpReturnReport - fromDate: =" + fromDate + "todate :=" + toDate);
+				LOG.debug("In getPickUpAddressReturn - fromDate: =" + fromDate + "todate :=" + toDate);
 			}
-		
-			String queryPram = null;
-			if (StringUtils.isNotEmpty(orderID))
-			{
-				queryPram = orderID;		
-			}
-			else if (StringUtils.isNotEmpty(customerId))
-			{
-				queryPram = customerId;		
-			}
-			else 
-			{
-				queryPram = pincode;
-			
-			}
-		
-			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(query.toString());
-			fQuery.addQueryParameter("queryPram", queryPram);
-			final List<MplReturnPickUpAddressInfoModel> listOfData = flexibleSearchService.<MplReturnPickUpAddressInfoModel> search(
-					fQuery).getResult();
-			
-			if (LOG.isDebugEnabled())
-			{
-				LOG.debug("In getPickUpReturnReport - fromDate: =" + fromDate + "todate :=" + toDate);
-			}
-			
-			return !listOfData.isEmpty() ? listOfData : null;
+			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(RETURN_REPORT_QUERY_BETWEEN_TWO_DATES);
+			fQuery.addQueryParameter("fromDate", fromDate);
+			fQuery.addQueryParameter("toDate", toDate);
+			return flexibleSearchService.<MplReturnPickUpAddressInfoModel> search(fQuery).getResult();
 		}
 		catch (final Exception e)
 		{
-			LOG.error("ï¿½rror while searching for PickUpReturn Report models between From Date:" + fromDate + "toDate:" + toDate);
+			LOG.error("Ërror while Sending ReturnPickUpAddressReturn models between From Date:" + fromDate + "toDate:" + toDate);
 		}
 		return null;
 	}
 
+	@Override
+	public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReportByParams(final String orderID, final String customerId,
+			final String pincode)
+	{
+
+
+		String queryString = null;
+		String queryPram = null;
+		if (orderID != null)
+		{
+			queryString = "SELECT {srm:" + MplReturnPickUpAddressInfoModel.PK + "}" + " FROM {"
+					+ MplReturnPickUpAddressInfoModel._TYPECODE + " AS srm} " + "WHERE " + "{srm:"
+					+ MplReturnPickUpAddressInfoModel.ORDERID + "}=?code ";
+			queryPram = orderID;
+		}
+		else if (customerId != null)
+		{
+			queryString = "SELECT {srm:" + MplReturnPickUpAddressInfoModel.PK + "}" + " FROM {"
+					+ MplReturnPickUpAddressInfoModel._TYPECODE + " AS srm} " + "WHERE " + "{srm:"
+					+ MplReturnPickUpAddressInfoModel.CUSTOMERID + "}=?code ";
+			queryPram = customerId;
+		}
+		else
+		{
+			queryString = "SELECT {srm:" + MplReturnPickUpAddressInfoModel.PK + "}" + " FROM {"
+					+ MplReturnPickUpAddressInfoModel._TYPECODE + " AS srm} " + "WHERE " + "{srm:"
+					+ MplReturnPickUpAddressInfoModel.PINCODE + "}=?code ";
+			queryPram = pincode;
+		}
+		try
+		{
+			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(queryString.toString());
+			fQuery.addQueryParameter("code", queryPram);
+			return flexibleSearchService.<MplReturnPickUpAddressInfoModel> search(fQuery).getResult();
+		}
+		catch (final Exception e)
+		{
+			LOG.error("" + e.getMessage());
+		}
+		return null;
+	}
 
 }

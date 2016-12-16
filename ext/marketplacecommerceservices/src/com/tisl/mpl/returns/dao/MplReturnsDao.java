@@ -34,6 +34,7 @@ public interface MplReturnsDao
    */
   public List<OrderModel> getOrder(final String orderId);
   
-  public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReport(Date fromDate, Date toDate, String orderID,
-			String customerId, String pincode);
+  public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReportByDates(Date fromDate, Date toDate);
+
+	public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReportByParams(String orderID, String customerId, String pincode);
 }

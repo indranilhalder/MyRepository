@@ -49,7 +49,7 @@ public interface MPLReturnService extends ReturnService
 	public OrderModel getOrder(final String orderId);
 
 	public boolean checkProductEligibilityForRTS(List<AbstractOrderEntryModel> entries);
-	
-	public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReport(Date fromDate, Date toDate, String orderID,
-			String customerId, String pincode);
+	public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReportByDates(Date fromDate, Date toDate);
+
+	public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReportByParams(String orderID, String customerId, String pincode);
 }

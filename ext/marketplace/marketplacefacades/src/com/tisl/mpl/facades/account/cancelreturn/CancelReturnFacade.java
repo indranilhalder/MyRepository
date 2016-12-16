@@ -121,55 +121,55 @@ public interface CancelReturnFacade
 	 * @return RTSAndRSSReturnInfoRequestData
 	 */
 	public RTSAndRSSReturnInfoResponseData retrunInfoCallToOMS(final RTSAndRSSReturnInfoRequestData returnRequestData);
-	
+
 	/**
 	 * 
 	 * @param codSelfShipData
 	 * @return RTSAndRSSReturnInfoRequestData
 	 */
 	public CODSelfShipResponseData codPaymentInfoToFICO(final CODSelfShipData codSelfShipData);
-	
+
 	/**
 	 * 
 	 * @param updateTicketData
 	 * @return CRMTicketUpdateResponseData
 	 */
 	public CRMTicketUpdateResponseData UpdateCRMTicket(final CRMTicketUpdateData updateTicketData);
-	
-	
-	
+
+
+
 	/**
 	 * @param orderEntryStatus
 	 * @return String
 	 */
 	String getOrderStatusStage(String orderEntryStatus);
-	
-	
+
+
 	/**
 	 * 
 	 * @param ussid
 	 * @return List<String>
 	 */
 	List<String> getReturnableDates(OrderEntryData ussid);
-	
+
 	/**
 	 * @param codSelfShipData
 	 */
 	public void saveCODReturnsBankDetails(CODSelfShipData codSelfShipData);
-	
+
 	/**
 	 * @param codSelfShipData
 	 */
 	public void insertUpdateCustomerBankDetails(CODSelfShipData codSelfShipData);
-	
+
 	/**
 	 * @param customerId
 	 */
 	public CODSelfShipData getCustomerBankDetailsByCustomerId(String customerId);
-	
-	
+
+
 	public List<ReturnRequestModel> getListOfReturnRequest(String orderId);
-	
+
 	/**
 	 * @author Techouts
 	 * @param subOrderDetails
@@ -212,18 +212,19 @@ public interface CancelReturnFacade
 	 */
 	boolean createTicketInCRM(OrderData subOrderDetails, OrderEntryData subOrderEntry, String ticketTypeCode, String reasonCode,
 			String refundType, String ussid, CustomerData customerData, OrderModel subOrderModel, ReturnItemAddressData returnAddress);
-	
+
 	/**
 	 *
 	 * @param orerLines
 	 * @return List of Order Lines
 	 */
 	public List<OrderLineData> returnInitiationForRTS(List<OrderLineData> orerLines);
-	
+
 	public void saveRTSAndRSSFInfoflag(String transactionId);
 	
-	public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReport(Date fromDate, Date toDate, String orderID,
-			String customerId, String pincode);
+	public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReportByDates(Date fromDate, Date toDate);
+
+	public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReportByParams(String orderID, String customerId, String pincode);
 
 
 }
