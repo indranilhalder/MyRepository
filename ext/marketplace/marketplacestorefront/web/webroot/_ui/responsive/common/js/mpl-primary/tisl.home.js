@@ -630,9 +630,9 @@ var bulIndex = 0;
     getBrandsYouLoveContentAjaxCall($(this).attr("id"));
 });*/
 $(document).on("click", ".home-brands-you-love-carousel .owl-item", function() {
-	var activePos = $(".home-brands-you-love-carousel .owl-item.center").index(),carLoop,count=0;
+		/*var activePos = $(".home-brands-you-love-carousel .owl-item.center").index(),carLoop,count=0;
 		bulIndex = $(this).index();
-	 	/*if (bulIndex > activePos) {
+	 	if (bulIndex > activePos) {
 	    	count = bulIndex - activePos;
 	    	carLoop = setInterval(function(){
 	    		if(count != 0) {
@@ -653,8 +653,10 @@ $(document).on("click", ".home-brands-you-love-carousel .owl-item", function() {
 	    		}
 	    	},80)
 	    }*/
-		//console.log(bulIndex);
-        $('.home-brands-you-love-carousel').trigger("to.owl.carousel", [bulIndex, 500, true]);
+		var brandCarousel = $(".home-brands-you-love-carousel").data('owlCarousel');
+		//console.log(carousel.relative($(this).index()));
+		var relIndex = brandCarousel.relative($(this).index());
+        $('.home-brands-you-love-carousel').trigger("to.owl.carousel", [relIndex, 500, true]);
 });
 /*$(document).on("click", ".bulprev", function() {
     $('.home-brands-you-love-desc').remove();
