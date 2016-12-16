@@ -78,7 +78,7 @@ function loadPincodeData() {
     			$(".mainDrop").hide();
 				$(".dupDisplay").show();
 				$(".mainDrop select").prop("disabled","disabled");
-				$(".stateInput").html("<input id='address.statesReadOnly' name='state'/>");
+				$(".stateInput").html("<input id='statesReadOnly' name='state'/>");
 				$(".stateInput input").prop("disabled",false).val(response.state.name).attr("readonly", "true");
     			$(".address_landmarkOther").attr("value", "");
     			$(".address_landmarkOther").val("");
@@ -184,7 +184,11 @@ function checkPopupDataOrderHistory() {
 				      var al1=$("#addressLine1").val();
 				      var al2=$("#addressLine2").val();
 				      var al3=$("#addressLine3").val();
-				      var state=$("#state").val();
+				     if(!$("#state").prop("disabled")){
+				    	 var state=$("#state").val();
+				     }else{
+				    	 var state=$("#statesReadOnly").val();
+				     }
 				      var mobile=$("#mobileNo").val();
 				      var pincode=$("#pincode").val();
 				      var isString = isNaN(mobile);
@@ -283,7 +287,6 @@ function checkPopupDataOrderHistory() {
 				    	  $('.saveBlockData').prop('disabled', 'disabled');
 							var data = $("#deliveryAddressForm").serialize();
 						
-							alert(data);
 							var orderCode = $('#deliveryAddorderCode').val();
 							$.ajax({
 								url : ACC.config.encodedContextPath
