@@ -17,9 +17,11 @@ import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.marketplacecommerceservices.service.ExtCommerceStockService;
+import com.tisl.mpl.shorturl.service.ShortUrlServiceGoogleImpl;
 
 
 /**
@@ -28,6 +30,8 @@ import com.tisl.mpl.marketplacecommerceservices.service.ExtCommerceStockService;
  */
 public class ExtDefaultCartValidationStrategy extends DefaultCartValidationStrategy
 {
+	private static final Logger LOG = Logger.getLogger(ShortUrlServiceGoogleImpl.class);
+
 	private ModelService modelService;
 	@Resource
 	private CartService cartService;
@@ -174,6 +178,8 @@ public class ExtDefaultCartValidationStrategy extends DefaultCartValidationStrat
 		final PointOfServiceModel pointOfService = cartEntryModel.getDeliveryPointOfService();
 		if (null != cartEntryModel.getDeliveryPointOfService())
 		{
+			LOG.debug("Removing Point of service " + pointOfService.getDisplayName() + "Cart Info " + cartEntryModel.getInfo());
+			LOG.debug("Removing Point of service " + pointOfService.getDisplayName() + "Cart Info " + cartEntryModel.getInfo());
 			modelService.remove(cartEntryModel.getDeliveryPointOfService());
 			modelService.save(cartEntryModel);
 		}
