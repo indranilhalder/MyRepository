@@ -10,7 +10,6 @@ import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.ordercancel.model.OrderCancelRecordEntryModel;
 import de.hybris.platform.ordermodify.model.OrderEntryModificationRecordEntryModel;
-import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.payment.enums.PaymentTransactionType;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
@@ -123,7 +122,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#doRefund(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -590,7 +589,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#attachPaymentTransactionModel(de.hybris
 	 * .platform.core.model.order.OrderModel, de.hybris.platform.payment.model.PaymentTransactionModel)
@@ -646,7 +645,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#createPaymentTransactionModel(de.hybris
 	 * .platform.core.model.order.OrderModel, java.lang.String, java.math.BigDecimal,
@@ -689,7 +688,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#makeRefundOMSCall(de.hybris.platform.core
 	 * .model.order.OrderEntryModel, java.lang.Double)
@@ -728,37 +727,41 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 			final List<RefundInfo> refundInfos = new ArrayList<RefundInfo>(2);
 			refundInfos.add(refundInfo);
 			String statusCode = null;
-			if (newOrderLineStatus == null)
-			{
-				if (CollectionUtils.isNotEmpty(orderEntry.getConsignmentEntries()))
-				{
-					final ConsignmentEntryModel entry = orderEntry.getConsignmentEntries().iterator().next();
-					statusCode = entry.getConsignment() != null ? entry.getConsignment().getStatus().getCode() : StringUtils.EMPTY;
-				}
-				else
-				{
-					statusCode = orderEntry.getOrder().getStatus().getCode();
-				}
+			if(null != newOrderLineStatus && null != newOrderLineStatus.getCode()) {
+				 statusCode = newOrderLineStatus.getCode();
 			}
-			else
+			try
 			{
-				statusCode = newOrderLineStatus.getCode();
-			}
-			try {
-				final GlobalCodeMasterModel globalCode = globalCodeService.getGlobalMasterCode(statusCode);
-				if(LOG.isDebugEnabled()) {
-					LOG.debug("status code+"+statusCode+ " in GlobalCodeMaster :"+globalCode);
+				GlobalCodeMasterModel globalCode = null;
+				if (null != statusCode)
+				{
+					globalCode = globalCodeService.getGlobalMasterCode(statusCode);
 				}
-				statusCode = globalCode != null ? globalCode.getGlobalCode() : statusCode;
+
+				if (LOG.isDebugEnabled())
+				{
+					LOG.debug("status code+" + statusCode + " in GlobalCodeMaster :" + globalCode);
+				}
+				if (null != globalCode && null != globalCode.getGlobalCode())
+				{
+					statusCode = globalCode.getGlobalCode();
+				}
 				final String referenceNumber = ((OrderModel) orderEntry.getOrder()).getParentReference().getCode();
-				final RefundInfoResponse resp = mplRefundStatusService.refundStatusDatatoWsdto(refundInfos, referenceNumber,
-						orderEntry.getTransactionID(), statusCode);
-				if (resp != null && "true".equalsIgnoreCase(resp.getReceived()))
-				{
-					return true;
+				try {
+					final RefundInfoResponse resp = mplRefundStatusService.refundStatusDatatoWsdto(refundInfos, referenceNumber,
+							orderEntry.getTransactionID(), statusCode);
+					if (resp != null && "true".equalsIgnoreCase(resp.getReceived()))
+					{
+						return true;
+					}
+				}catch(Exception e) {
+					LOG.error("Exception while calling to oms "+e.getMessage());
 				}
-			}catch(Exception e) {
-				LOG.error("Exception in makeRefundOMSCall "+e.getMessage() );
+
+			}
+			catch (final Exception e)
+			{
+				LOG.error("Exception in makeRefundOMSCall " + e.getMessage());
 			}
 		}
 
@@ -767,7 +770,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#makeOMSStatusUpdate(de.hybris.platform
 	 * .core.model.order.AbstractOrderEntryModel)
@@ -799,7 +802,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#validateRefundAmount(double,
 	 * de.hybris.platform.core.model.order.OrderModel)
 	 */
@@ -867,15 +870,15 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * @Desc used in web and cscockpit for handling network exception while cancellation TISSIT-1801 TISPRO-94
-	 *
+	 * 
 	 * @param orderRequestRecord
-	 *
+	 * 
 	 * @param paymentTransactionType
-	 *
+	 * 
 	 * @param juspayRefundType
-	 *
+	 * 
 	 * @param uniqueRequestId
-	 *
+	 * 
 	 * @return void
 	 */
 
