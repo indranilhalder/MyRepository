@@ -11049,6 +11049,7 @@ button.otherSellersFont {
     height: auto;
     padding: 0;
     line-height: normal;
+    text-align: left;
 }
 @media (max-width: 790px) {
     .product-info .product-detail .other-sellers {
