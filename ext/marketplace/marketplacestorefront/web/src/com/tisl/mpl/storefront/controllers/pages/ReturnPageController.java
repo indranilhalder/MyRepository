@@ -579,10 +579,9 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		returnInfoRequestData.setReturnType(RequestMappingUrlConstants.RSS);
 		
 
-		RTSAndRSSReturnInfoResponseData returnInfoResponse=cancelReturnFacade.retrunInfoCallToOMS(returnInfoRequestData);
-		if(MarketplacecommerceservicesConstants.SUCCESS_FLAG.equalsIgnoreCase(returnInfoResponse.getSuccess())){
-			cancelReturnFacade.saveRTSAndRSSFInfoflag(mplReturnInfoForm.getTransactionId());
-		}
+	    cancelReturnFacade.retrunInfoCallToOMS(returnInfoRequestData);
+		 cancelReturnFacade.saveRTSAndRSSFInfoflag(mplReturnInfoForm.getTransactionId());
+		
 		
 		
 		final CustomerData customerData = customerFacade.getCurrentCustomer();
