@@ -413,6 +413,7 @@ public class LpoverrideWidgetController extends DefaultWidgetController
 				{
 					if (ordreLineResponseRecord.getLogisticId() != null)
 					{
+						transaction.setLogisticName(ordreLineResponseRecord.getLogisticId());
 						refreshListTransactions.add(transaction);
 					}
 				}
