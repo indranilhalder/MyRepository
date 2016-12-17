@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tisl.mpl.facades.process.email.context;
 
@@ -25,11 +25,13 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.model.ReturnQuickDropProcessModel;
 
+
 /**
  * @author TO-OW101
  *
  */
-public class OrderReturnToStoreEmailContext  extends AbstractEmailContext<ReturnQuickDropProcessModel>{
+public class OrderReturnToStoreEmailContext extends AbstractEmailContext<ReturnQuickDropProcessModel>
+{
 
 	private Converter<OrderModel, OrderData> orderConverter;
 	private OrderData orderData;
@@ -47,7 +49,7 @@ public class OrderReturnToStoreEmailContext  extends AbstractEmailContext<Return
 	private static final String CUSTOMER = "Customer";
 	private static final String CONTACT_US_LINK = "contactUsLink";
 	private static final String NUMBERTOOL = "numberTool";
-	private static final String STORE_LIST="storeList";
+	private static final String STORE_LIST = "storeList";
 
 	private static final String CUSTOMER_CARE_NUMBER = "customerCareNumber";
 	private static final String CUSTOMER_CARE_EMAIL = "customerCareEmail";
@@ -56,36 +58,36 @@ public class OrderReturnToStoreEmailContext  extends AbstractEmailContext<Return
 	@Autowired
 	private ConfigurationService configurationService;
 
-	private static final Logger LOG = Logger.getLogger(OrderRefundEmailContext.class);
+	private static final Logger LOG = Logger.getLogger(OrderReturnToStoreEmailContext.class);
 
 	@Override
-	public void init(final ReturnQuickDropProcessModel orderRefundProcessModel, final EmailPageModel emailPageModel)
+	public void init(final ReturnQuickDropProcessModel returnQuickDropProcessModel, final EmailPageModel emailPageModel)
 	{
 		LOG.info("In return refund email context");
-		super.init(orderRefundProcessModel, emailPageModel);
-		orderData = getOrderConverter().convert(orderRefundProcessModel.getOrder());
-		final OrderModel orderModel = orderRefundProcessModel.getOrder();
-		orderCode = orderRefundProcessModel.getOrder().getCode();
-		orderGuid = orderRefundProcessModel.getOrder().getGuid();
-		guest = CustomerType.GUEST.equals(getCustomer(orderRefundProcessModel).getType());
-		orderData = getOrderConverter().convert(orderRefundProcessModel.getOrder());
+		super.init(returnQuickDropProcessModel, emailPageModel);
+		orderData = getOrderConverter().convert(returnQuickDropProcessModel.getOrder());
+		final OrderModel orderModel = returnQuickDropProcessModel.getOrder();
+		orderCode = returnQuickDropProcessModel.getOrder().getCode();
+		orderGuid = returnQuickDropProcessModel.getOrder().getGuid();
+		guest = CustomerType.GUEST.equals(getCustomer(returnQuickDropProcessModel).getType());
+		orderData = getOrderConverter().convert(returnQuickDropProcessModel.getOrder());
 		refundAmount = orderData.getTotalPrice();
 		final String contactUsLink = configurationService.getConfiguration().getString("marketplace.contactus.link");
 		put(CONTACT_US_LINK, contactUsLink);
 		put(ORDER_REFERENCE_NUMBER, orderCode);
-		final CustomerModel customer = (CustomerModel) orderRefundProcessModel.getOrder().getUser();
+		final CustomerModel customer = (CustomerModel) returnQuickDropProcessModel.getOrder().getUser();
 		put(EMAIL, customer.getOriginalUid());
-		
 
-		BigDecimal refundAmount = BigDecimal.ZERO;
+
+		final BigDecimal refundAmount = BigDecimal.ZERO;
 		AbstractOrderEntryModel orderEntry = null;
-		double deliveryCharge = 0.0;
-		boolean isTrue = false;
-		for (OrderModel childOrder : orderModel.getChildOrders())
+		final double deliveryCharge = 0.0;
+		final boolean isTrue = false;
+		for (final OrderModel childOrder : orderModel.getChildOrders())
 		{
-			for (AbstractOrderEntryModel entry : childOrder.getEntries())
+			for (final AbstractOrderEntryModel entry : childOrder.getEntries())
 			{
-				if (orderRefundProcessModel.getTransactionId().equalsIgnoreCase(entry.getTransactionID()))
+				if (returnQuickDropProcessModel.getTransactionId().equalsIgnoreCase(entry.getTransactionID()))
 				{
 					orderEntry = new AbstractOrderEntryModel();
 					orderEntry = entry;
@@ -99,11 +101,11 @@ public class OrderReturnToStoreEmailContext  extends AbstractEmailContext<Return
 			}
 
 		}
-		put(STORE_LIST, orderRefundProcessModel.getStoreIds());
+		put(STORE_LIST, returnQuickDropProcessModel.getStoreIds());
 		put(TRANSACTION_ID, orderEntry.getTransactionID());
 		put(NAME_OF_PRODUCT, orderEntry.getProduct().getName());
 		put(DELIVERY_CHARGE, Double.valueOf(deliveryCharge));
-	
+
 		put(NUMBERTOOL, new NumberTool());
 
 
@@ -118,15 +120,15 @@ public class OrderReturnToStoreEmailContext  extends AbstractEmailContext<Return
 
 
 	@Override
-	protected BaseSiteModel getSite(final ReturnQuickDropProcessModel orderRefundProcessModel)
+	protected BaseSiteModel getSite(final ReturnQuickDropProcessModel returnQuickDropProcessModel)
 	{
-		return orderRefundProcessModel.getOrder().getSite();
+		return returnQuickDropProcessModel.getOrder().getSite();
 	}
 
 	@Override
-	protected CustomerModel getCustomer(final ReturnQuickDropProcessModel orderRefundProcessModel)
+	protected CustomerModel getCustomer(final ReturnQuickDropProcessModel returnQuickDropProcessModel)
 	{
-		return (CustomerModel) orderRefundProcessModel.getOrder().getUser();
+		return (CustomerModel) returnQuickDropProcessModel.getOrder().getUser();
 	}
 
 	protected Converter<OrderModel, OrderData> getOrderConverter()
@@ -146,9 +148,9 @@ public class OrderReturnToStoreEmailContext  extends AbstractEmailContext<Return
 	}
 
 	@Override
-	protected LanguageModel getEmailLanguage(final ReturnQuickDropProcessModel orderRefundProcessModel)
+	protected LanguageModel getEmailLanguage(final ReturnQuickDropProcessModel returnQuickDropProcessModel)
 	{
-		return orderRefundProcessModel.getOrder().getLanguage();
+		return returnQuickDropProcessModel.getOrder().getLanguage();
 	}
 
 	public OrderData getOrderData()
