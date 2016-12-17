@@ -799,10 +799,10 @@
 		<property name="widgetController" ref="csOrderController"/>
 		<property name="widgetClass" value="de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget"/>
 		<property name="widgetModel">
-			<bean class="com.tisl.mpl.cockpits.cscockpit.widgets.models.impl.AddressHistoryListWidgetModel"/>
+			<bean class="de.hybris.platform.cscockpit.widgets.models.impl.OrderHistoryListWidgetModel"/>
 		</property>
 		<property name="widgetAdapter">
-			<bean class="com.tisl.mpl.cockpits.cscockpit.widgets.adapter.impl.MplOrderDeliveryAddressHistoryWidgetAdapter">
+			<bean class="de.hybris.platform.cscockpit.widgets.adapters.OrderHistoryWidgetAdapter">
 				<property name="cockpitTypeService" ref="cockpitTypeService"/>
 				<property name="orderHistoryService" ref="orderHistoryService"/>
 			</bean>

@@ -78,57 +78,48 @@ public class MplDeliveryAddressHistoryWidgetRenderer
 			HtmlBasedComponent rootContainer) {
 		TypedObject order = getOrder();
 		OrderModel orderModel = (OrderModel) order.getObject();
-		orderModel.getDeliveryAddresses();
-		List<TypedObject> addressHistory = UISessionUtils
-				.getCurrentSession()
-				.getTypeService()
-				.wrapItems(
-						new ArrayList(addressHistoryService
-								.getHistoryEntries(orderModel)));
-		
-		if (!((AddressHistoryListWidgetModel) widget.getWidgetModel())
-				.getItems().isEmpty()) {
 			Listhead header = new Listhead();
 			header.setParent(listBox);
 			List<ColumnConfiguration> columns = getColumnConfigurations();
 			populateHeaderRow(widget, header, columns);
-			
-			for (TypedObject orderHistory : (widget.getWidgetModel())
-					.getItems()) {
-				renderOrderHistory(widget, orderHistory, listBox, columns);
-			}
-			AddressModel bollingAddress = orderModel.getPaymentAddress();
-			try {
-				MplDeliveryAddressInfoModel  mplDeliveryAddressInfoModel = null;
-				if(null != orderModel.getType() && orderModel.getType().equalsIgnoreCase("PARENT")) {
-					mplDeliveryAddressInfoModel = mplDeliveryAddressDao
-							.getMplDeliveryAddressReportModelByOrderId(orderModel.getCode());
-				}else {
-					mplDeliveryAddressInfoModel = mplDeliveryAddressDao
-							.getMplDeliveryAddressReportModelByOrderId(orderModel.getParentReference().getCode());
-				}
-				if(null !=bollingAddress && null != mplDeliveryAddressInfoModel) {
-					int rejectsCount = mplDeliveryAddressInfoModel.getChangeDeliveryRejectsCount();
-					int totalRequests = mplDeliveryAddressInfoModel.getChangeDeliveryTotalRequests();
-					if(totalRequests != 0 && totalRequests != rejectsCount) {
-						TypedObject address = UISessionUtils.getCurrentSession().getTypeService().wrapItem(bollingAddress);
-						if(null !=address ) {
-							renderOrderHistory(widget, address, listBox, columns);
-						}
+			if(null != orderModel && null != orderModel.getDeliveryAddresses()) {
+				for (AddressModel addressModel : orderModel.getDeliveryAddresses()) {
+					TypedObject addressHistory = UISessionUtils.getCurrentSession().getTypeService().wrapItem(addressModel);
+					if(null != addressHistory) {
+						renderOrderHistory(widget, addressHistory, listBox, columns);
 					}
 				}
-			}catch(Exception e) {
-				e.printStackTrace();
-			}
-			
-		} else {
-			Listitem row = new Listitem();
-			row.setParent(listBox);
-			Listcell cell = new Listcell(LabelUtils.getLabel(widget,
-					"noEntries", new Object[0]));
-			cell.setParent(row);
-		}
-	}
+				AddressModel bollingAddress = orderModel.getPaymentAddress();
+				try {
+					MplDeliveryAddressInfoModel  mplDeliveryAddressInfoModel = null;
+					if(null != orderModel.getType() && orderModel.getType().equalsIgnoreCase("PARENT")) {
+						mplDeliveryAddressInfoModel = mplDeliveryAddressDao
+								.getMplDeliveryAddressReportModelByOrderId(orderModel.getCode());
+					}else {
+						mplDeliveryAddressInfoModel = mplDeliveryAddressDao
+								.getMplDeliveryAddressReportModelByOrderId(orderModel.getParentReference().getCode());
+					}
+					if(null !=bollingAddress && null != mplDeliveryAddressInfoModel) {
+						int rejectsCount = mplDeliveryAddressInfoModel.getChangeDeliveryRejectsCount();
+						int totalRequests = mplDeliveryAddressInfoModel.getChangeDeliveryTotalRequests();
+						if(totalRequests != 0 && totalRequests != rejectsCount) {
+							TypedObject address = UISessionUtils.getCurrentSession().getTypeService().wrapItem(bollingAddress);
+							if(null !=address ) {
+								renderOrderHistory(widget, address, listBox, columns);
+							}
+						}
+					}
+				}catch(Exception e) {
+					e.printStackTrace();
+				}
+			}else {
+					Listitem row = new Listitem();
+					row.setParent(listBox);
+					Listcell cell = new Listcell(LabelUtils.getLabel(widget,
+							"noEntries", new Object[0]));
+					cell.setParent(row);
+				}
+      	}	
 
 	protected void renderOrderHistory(
 			DefaultListboxWidget<AddressHistoryListWidgetModel, OrderManagementActionsWidgetController> widget,

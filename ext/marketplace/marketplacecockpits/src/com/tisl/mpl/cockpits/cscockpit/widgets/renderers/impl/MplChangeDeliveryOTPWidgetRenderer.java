@@ -45,6 +45,7 @@ import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.hybris.oms.tata.model.MplTimeSlotsModel;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
+import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceOrderController;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceCallContextController;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MplDeliveryAddressController;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -111,6 +112,8 @@ public class MplChangeDeliveryOTPWidgetRenderer
 	@Autowired
 	private CustomAddressReversePopulator addressReversePopulator;
 	private WidgetDetailRenderer<TypedObject, Widget> detailRenderer;
+	@Autowired
+	private MarketPlaceOrderController controller;
 
 	protected WidgetDetailRenderer<TypedObject, Widget> getDetailRenderer() {
 		return detailRenderer;
@@ -762,7 +765,7 @@ public class MplChangeDeliveryOTPWidgetRenderer
 								}
 							}
 							mplDeliveryAddressController
-									.saveDeliveryAddress(orderModel.getParentReference(),changeDeliveryAddress);
+							.saveDeliveryAddress(orderModel.getParentReference(),changeDeliveryAddress);
 							// Saving no_of Total requests and rejects 
 							mplDeliveryAddressController.saveChangeDeliveryRequests(orderModel.getParentReference());
 							LOG.debug("Delivery Address Changed Successfully");
@@ -785,20 +788,35 @@ public class MplChangeDeliveryOTPWidgetRenderer
 						Messagebox.show(LabelUtils.getLabel(widget,
 								CUSTOMER_DETAILS_UPDATED, new Object[0]), INFO,
 								Messagebox.OK, Messagebox.INFORMATION);
-						closePopUp();
+						try {
+							closePopUp();
+						}catch(Exception e) {
+							e.printStackTrace();
+						}
+						try {
+							controller.getContextController().dispatchEvent(null, null, null);
+						}catch(Exception e) {
+							e.printStackTrace();
+						}
 
 					} else if (omsStatus.equalsIgnoreCase(MarketplaceCockpitsConstants.FAILED)) {
 						try {
-							
+
 							// Saving no_of Total requests and rejects 
 							mplDeliveryAddressController.saveChangeDeliveryRequests(orderModel.getParentReference());
 							Messagebox.show(LabelUtils.getLabel(widget,
 									FAILED_AT_OMS, new Object[0]), INFO,
 									Messagebox.OK, Messagebox.ERROR);
-							closePopUp();
-							Map data = Collections.singletonMap("refresh", Boolean.TRUE);
-							((OrderController) widget.getWidgetController()).dispatchEvent(null,
-									null, data);
+							try {
+								closePopUp();
+							}catch(Exception e) {
+								e.printStackTrace();
+							}
+							try {
+								controller.getContextController().dispatchEvent(null, null, null);
+							}catch(Exception e) {
+								e.printStackTrace();
+							}
 						} catch (ModelRemovalException e) {
 							LOG.error("ModelRemovalException  while removing temprory Address"
 									+ e.getMessage());
