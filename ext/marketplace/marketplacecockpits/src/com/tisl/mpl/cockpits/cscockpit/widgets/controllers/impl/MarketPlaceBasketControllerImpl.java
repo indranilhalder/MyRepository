@@ -23,18 +23,16 @@ import com.tisl.mpl.cockpits.cscockpit.services.MarketplaceCsCheckoutService;
 import com.tisl.mpl.cockpits.cscockpit.strategies.MplFindDeliveryFulfillModeStrategy;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceBasketController;
 import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceabilityCheckHelper;
-import com.tisl.mpl.constants.MplGlobalCodeConstants;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
-import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
-import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
-import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
+import com.tisl.mpl.model.UnregisteredUserRestrictionModel;
 import com.tisl.mpl.mplcommerceservices.service.data.CartSoftReservationData;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.InventoryReservationService;
@@ -77,6 +75,7 @@ import de.hybris.platform.util.WeakArrayList;
 import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.VoucherService;
 import de.hybris.platform.voucher.model.DateRestrictionModel;
+import de.hybris.platform.voucher.model.NewCustomerRestrictionModel;
 import de.hybris.platform.voucher.model.RestrictionModel;
 import de.hybris.platform.voucher.model.UserRestrictionModel;
 import de.hybris.platform.voucher.model.VoucherModel;
@@ -124,20 +123,18 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 
 	@Autowired
 	private BuyBoxFacade buyBoxFacade;
-
+	
 	@Autowired
 	private MplFindDeliveryFulfillModeStrategy mplFindDeliveryFulfillModeStrategy;
-
+	
 	@Resource(name = "voucherService")
 	private VoucherService voucherService;
-
+	
 	@Resource(name = "voucherModelService")
 	private VoucherModelService voucherModelService;
-
+		
 	@Resource(name = "mplVoucherService")
 	private MplVoucherService mplVoucherService;	
-	@Autowired
-	private MplCommerceCartCalculationStrategy calculationStrategy;
 
 	/**
 	 * Adds the to market place cart.
@@ -160,8 +157,8 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		final CartModel cart = getCartModel();
 		ImpersonationContext context = createImpersonationContext(cart);
 		getImpersonationService()
-		.executeInContext(
-				context,
+				.executeInContext(
+						context,
 						new ImpersonationService.Executor<CartModel, ImpersonationService.Nothing>() {
 							@Override
 							public CartModel execute() {
@@ -269,7 +266,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 			throws EtailNonBusinessExceptions, ClientEtailNonBusinessExceptions {
 
 		List<PinCodeResponseData> responseData = marketplaceServiceabilityCheckHelper
-				.getResponseForPinCode(null,product, pin, isDeliveryDateRequired, ussid);
+				.getResponseForPinCode(product, pin, isDeliveryDateRequired, ussid);
 		LOG.info("responseData size:" + responseData);
 
 		return responseData;
@@ -306,12 +303,12 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	        errorMessages.add(new ResourceMessage("placeOrder.validation.noPaymentAddress"));
 	      }
 	      
-//			for(AbstractOrderEntryModel entry : cart.getEntries()){
-//				if(!mplFindDeliveryFulfillModeStrategy.isTShip(entry.getSelectedUSSID())){						
-//					errorMessages.add(new ResourceMessage("placeOrder.validation.sship",Arrays.asList(entry.getInfo())));
-//					break;
-//				} 
-//			}
+			for(AbstractOrderEntryModel entry : cart.getEntries()){
+				if(!mplFindDeliveryFulfillModeStrategy.isTShip(entry.getSelectedUSSID())){						
+					errorMessages.add(new ResourceMessage("placeOrder.validation.sship",Arrays.asList(entry.getInfo())));
+					break;
+				} 
+			}
 	      
 			for(AbstractOrderEntryModel entry : cart.getEntries()){
 					if(entry.getMplDeliveryMode()==null){						
@@ -370,107 +367,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 						// refer TIS-276 for details
 						
 						cartSoftReservationRequestData.setFulfillmentType(mplFindDeliveryFulfillModeStrategy.findDeliveryFulfillMode(cartEntry.getSelectedUSSID()));
-						//cartSoftReservationRequestData.setServiceableSlaves(cartEntry.getv\);
-						//	final List<PinCodeResponseData> pincoderesponseDataList = getSessionService().getAttribute(
-						//		MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION);
-						List<PinCodeResponseData> pincoderesponseDataList = marketplaceServiceabilityCheckHelper
-								.getResponseForPinCode(null,cartEntry.getProduct(),String.valueOf(cartEntry.getOrder().getDeliveryAddress().getPostalcode()),
-										"Y",cartEntry.getSelectedUSSID());
-						try {
-							if(LOG.isDebugEnabled()) {
-								LOG.info("Checking COD Eligibility of entries");
-							}
-							boolean codEligible = true;
-							if(null != pincoderesponseDataList && pincoderesponseDataList.size()>0)
-							{
-								for (final PinCodeResponseData responseData : pincoderesponseDataList)
-								{
-									if (cartEntry.getSelectedUSSID().equals(responseData.getUssid()) && responseData.getValidDeliveryModes().size()>0)
-									{
-										for (final DeliveryDetailsData DeliveryData : responseData.getValidDeliveryModes())
-										{
-											if(DeliveryData.getIsPincodeServiceable()) {
-												if(MarketplaceCockpitsConstants.delCodeMap
-														.get(DeliveryData.getType()).equalsIgnoreCase(cartEntry.getMplDeliveryMode().getDeliveryMode().getCode())) {
-													if(null != DeliveryData.getFulfilmentType()) {
-														if(DeliveryFulfillModesEnum.SSHIP.getCode().equalsIgnoreCase(DeliveryData.getFulfilmentType().trim())){
-															codEligible =mplFindDeliveryFulfillModeStrategy.getIsShipCODEligible(cartEntry.getSelectedUSSID());
-															if(LOG.isDebugEnabled()) {
-																LOG.debug("COD Eligibility for product "+cartEntry.getSelectedUSSID()+" "+codEligible);
-															}
-															if(!codEligible) {
-																errorMessages.add(new ResourceMessage("placeOrder.validation.sship",Arrays.asList(cartEntry.getInfo())));
-																break;
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-							if(LOG.isDebugEnabled()) {
-								LOG.info("cart is eligible for COD "+codEligible);
-							}
-						}catch(Exception e) {
-							LOG.error("Exception while checking codEligibility of products "+e.getMessage());
-						}
-						if(null != pincoderesponseDataList && pincoderesponseDataList.size()>0)
-						{
-							for (final PinCodeResponseData responseData : pincoderesponseDataList)
-							{
-								if (cartEntry.getSelectedUSSID().equals(responseData.getUssid()) && responseData.getValidDeliveryModes().size()>0)
-								{
-									for (final DeliveryDetailsData DeliveryData : responseData.getValidDeliveryModes())
-									{
-										if(DeliveryData.getIsPincodeServiceable()) {
-											if(MarketplaceCockpitsConstants.delCodeMap
-													.get(DeliveryData.getType()).equalsIgnoreCase(cartEntry.getMplDeliveryMode().getDeliveryMode().getCode())) {
-												if(!DeliveryData.getType().equalsIgnoreCase(MarketplacecclientservicesConstants.CNC)) {
-													if (null != DeliveryData.getServiceableSlaves() && DeliveryData.getServiceableSlaves().size() > 0)
-													{
-														cartSoftReservationRequestData.setServiceableSlaves(DeliveryData.getServiceableSlaves());
-													}
-												}
-												else if (null != DeliveryData.getCNCServiceableSlavesData()
-														&& DeliveryData.getCNCServiceableSlavesData().size() > 0)
-												{
-													cartSoftReservationRequestData.setCncServiceableSlaves(DeliveryData.getCNCServiceableSlavesData());
-												}
-												if (null != DeliveryData.getFulfilmentType())
-												{
-													cartSoftReservationRequestData.setFulfillmentType(DeliveryData.getFulfilmentType());
-											}
-										}
-										Collection<RichAttributeModel> rich=cartEntry.getProduct().getRichAttribute();
-										rich.iterator().next().getShippingModes().toString();
-										if(null !=rich && null != rich.iterator().next().getShippingModes()) {
-											String transportMode = rich.iterator().next().getShippingModes().getCode();
-										cartSoftReservationRequestData.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(transportMode.toUpperCase()));
-										}
-										if(null != DeliveryData.getFulfilmentType()) {
-											cartEntry.setFulfillmentMode(DeliveryData.getFulfilmentType());
-											cartEntry.setFulfillmentType(DeliveryData.getFulfilmentType());
-										}
-										if(null !=rich && null != rich.iterator().next().getDeliveryFulfillModeByP1()) {
-										  cartEntry.setFulfillmentTypeP1(rich.iterator().next().getDeliveryFulfillModeByP1().getCode());
-										}
-										cartdatalist.add(cartSoftReservationRequestData);
-										}
-										
-									}
-								}
-							}
-						}
-						modelService.save(cartEntry);
-//						Collection<RichAttributeModel> rich=cartEntry.getProduct().getRichAttribute();
-//						rich.iterator().next().getShippingModes().toString();
-//						
-//						cartSoftReservationRequestData.setTransportMode(rich.iterator().next().getShippingModes().getCode());
-//						cartdatalist.add(cartSoftReservationRequestData);
-//						cartEntry.setFulfillmentTypeP1(DeliveryData.get);
-//						cartEntry.setFulfillmentType(rich.iterator().next().getDeliveryFulfillModes().getCode());
+						cartdatalist.add(cartSoftReservationRequestData);
 					}
 					
 					// 	Added inventory request type to set the duration type for cart only
@@ -506,7 +403,6 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 										Arrays.asList(entry.getUSSID(), entry.getAvailableQuantity()==null?entry.getReservationStatus():entry.getAvailableQuantity())));
 							} else{
 								cart.setCartReservationDate(new Date());
-								cart.setIsInventoryChanged(Boolean.TRUE);
 								modelService.save(cart);
 								modelService.refresh(cart);
 							}
@@ -516,7 +412,17 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 					{
 						throw new Exception("Error in Inventory Reservation in CSCockpit");
 					}
-		
+					/*for(InventoryReservResponse entry: response.getItem()){
+						if(!"success".equalsIgnoreCase(entry.getReservationStatus()) ){
+							errorMessages.add(new ResourceMessage("placeOrder.validation.cartItemNotReserved",
+									Arrays.asList(entry.getUSSID(), entry.getAvailableQuantity()==null?entry.getReservationStatus():entry.getAvailableQuantity())));
+						} else{
+							// cart.setAddressConfirmationFlag(true);
+							cart.setCartReservationDate(new Date());
+							modelService.save(cart);
+							modelService.refresh(cart);
+						}
+					}*/
 				} catch (Exception ex) {
 					isCartReserved = Boolean.FALSE;
 					cart.setCartReservationDate(null);
@@ -538,7 +444,6 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 
 	}
 	
-
 /**
 	 * Gets the cart data.
 	 *
@@ -790,7 +695,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		        throw new ValidationException(errorMessages);
 		      }
 			List<PinCodeResponseData> pinCodeResponses = marketplaceServiceabilityCheckHelper
-					.getResponseForPinCode(entry.getOrder().getGuid(),
+					.getResponseForPinCode(
 							entry.getProduct(),
 							String.valueOf(entry.getOrder()
 									.getDeliveryAddress().getPostalcode()),
@@ -948,6 +853,12 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 			{
 				return "user_not_valid";
 			}
+			/* TPR-1075 Changes Start */
+			else if( error.equalsIgnoreCase("NewCustomer"))
+			{
+				return "newCustomer_not_valid";
+			}
+			/* TPR-1075 Changes end */
 			else
 			{
 				return "voucher_inapplicable";
@@ -973,12 +884,12 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 				//((EziBuyCommerceCartService) getCommerceCartService()).setAppliedVoucherCode(cartModel, voucherCode);
 				//getCommerceCartService().recalculateCart(cartModel);
 				
-				getMplVoucherService().recalculateCartForCoupon(cartModel);
+				getMplVoucherService().recalculateCartForCoupon(cartModel, null);	//Handled changed method for TPR-629
 				
 				final List<AbstractOrderEntryModel> applicableOrderEntryList = getMplVoucherService().getOrderEntryModelFromVouEntries(voucher,
 						cartModel);
 				
-				final VoucherDiscountData data=getMplVoucherService().checkCartAfterApply(voucher, cartModel, applicableOrderEntryList);
+				final VoucherDiscountData data=getMplVoucherService().checkCartAfterApply(voucher, cartModel, null, applicableOrderEntryList);	//Handled changed method for TPR-629
 				if (null != data && StringUtils.isNotEmpty(data.getRedeemErrorMsg()))
 				{
 					if (data.getRedeemErrorMsg().equalsIgnoreCase("freebie"))
@@ -1077,7 +988,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 			}
 			try {
 				//getCommerceCartService().recalculateCart(cartModel);
-				getMplVoucherService().recalculateCartForCoupon(cartModel);
+				getMplVoucherService().recalculateCartForCoupon(cartModel, null);
 				message="release_voucher";
 			} catch (EtailNonBusinessExceptions e) {
 				LOG.error("Recalculation of Cart Failed ");
@@ -1117,12 +1028,21 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 				error = "Date";
 				break;
 			}
-			else if (restriction instanceof UserRestrictionModel)
+			//TPR-1076
+			else if (restriction instanceof UserRestrictionModel || restriction instanceof UnregisteredUserRestrictionModel)
 			{
 				LOG.error("user restriction is violated");
 				error = "User";
 				break;
 			}
+			/* TPR-1075 Changes Start */
+			else if (restriction instanceof NewCustomerRestrictionModel)
+			{
+				LOG.error("Voucher for New Customer is violated");
+				error = "NewCustomer";
+				break;
+			}
+			/* TPR-1075 Changes End */
 		}
 		return error;
 	}
@@ -1144,6 +1064,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		try
 		{
 			CartModel cartModel = getCartModel();
+				
 			calculateCartInContext(cartModel);
 			validateBasketReadyForCheckout(cartModel);
 			setDeliveryAddressIfAvailable(cartModel);
@@ -1174,33 +1095,6 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	
 	
 	
-	private void resetDeliveryCostifNeeded(CartModel cartModel) {
-		Double deliveryCost = 0.0D;
-		for (AbstractOrderEntryModel cartEntry : cartModel.getEntries()) {
-			if(null != cartEntry.getScheduledDeliveryCharge() && cartEntry.getScheduledDeliveryCharge() >0.0D) {
-				deliveryCost += cartEntry.getScheduledDeliveryCharge();
-			}
-		} 
-		if(deliveryCost > 0.0D) {
-			cartModel.setDeliveryCost(deliveryCost);
-		}else {
-			cartModel.setDeliveryCost(0.0D);
-		}
-		modelService.save(cartModel);
-	}
-
-	private void addScheduleChargesIfAny(CartModel cartModel) {
-		for (AbstractOrderEntryModel cartEntry : cartModel.getEntries()) {
-			if(null != cartEntry.getScheduledDeliveryCharge() && cartEntry.getScheduledDeliveryCharge() >0.0D) {
-				cartEntry.setTotalPrice(cartEntry.getTotalPrice()+cartEntry.getScheduledDeliveryCharge());
-				modelService.save(cartEntry);
-			}
-		}
-		modelService.save(cartModel);
-	}
-
-
-
 	/**
 	 * @return the mplVoucherService
 	 */

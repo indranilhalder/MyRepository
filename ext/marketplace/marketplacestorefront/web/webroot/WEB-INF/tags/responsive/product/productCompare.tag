@@ -227,11 +227,17 @@
 		
 		var screenwidth=$(window).width();
 		var items=4;
-		if(screenwidth < 650){
+		if($(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("right") == "0px"){
 			var items=2;
 		}
 		$('#number-items').html(items);
-
+		$(window).resize(function(){
+			var items=4;
+			if($(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("right") == "0px"){
+				var items=2;
+			}
+			$('#number-items').html(items);
+			});
 	});
 </script>
 <div id="compareSection" class="compareSection">

@@ -13,11 +13,11 @@
  */
 package com.tisl.mpl.v2.controller;
 
+import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
-import de.hybris.platform.commercefacades.i18n.I18NFacade;
 import de.hybris.platform.commercefacades.order.CheckoutFacade;
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
@@ -32,7 +32,6 @@ import de.hybris.platform.commercefacades.search.data.SearchQueryData;
 import de.hybris.platform.commercefacades.search.data.SearchStateData;
 import de.hybris.platform.commercefacades.storesession.StoreSessionFacade;
 import de.hybris.platform.commercefacades.user.UserFacade;
-import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commercefacades.user.data.CountryData;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commerceservices.customer.CustomerAccountService;
@@ -51,21 +50,19 @@ import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestPa
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
 import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
-import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.product.PincodeModel;
-import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.enumeration.EnumerationService;
-import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.event.EventService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
 import de.hybris.platform.util.localization.Localization;
-import de.hybris.platform.wishlist2.Wishlist2Service;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -85,6 +82,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletContext;
@@ -119,21 +118,17 @@ import com.tisl.mpl.core.enums.FeedbackCategory;
 import com.tisl.mpl.core.model.MplEnhancedSearchBoxComponentModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.facade.checkout.MplCartFacade;
+import com.tisl.mpl.facade.brand.BrandFacade;
 import com.tisl.mpl.facade.netbank.MplNetBankingFacade;
-import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
-import com.tisl.mpl.facades.account.register.ForgetPasswordFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
-import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.product.data.StateData;
+import com.tisl.mpl.marketplacecommerceservices.event.LuxuryPdpQuestionEvent;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
-import com.tisl.mpl.marketplacecommerceservices.service.MplCategoryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
-import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtendedUserServiceImpl;
-import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
 import com.tisl.mpl.model.SellerMasterModel;
+import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
 import com.tisl.mpl.order.data.CardTypeDataList;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
@@ -156,14 +151,17 @@ import com.tisl.mpl.utility.SearchSuggestUtilityMethods;
 import com.tisl.mpl.wsdto.AboutUsResultWsData;
 import com.tisl.mpl.wsdto.AutoCompleteResultWsData;
 import com.tisl.mpl.wsdto.BannerWsDTO;
+import com.tisl.mpl.wsdto.CategoryBrandDTO;
 import com.tisl.mpl.wsdto.CategorySNSWsData;
 import com.tisl.mpl.wsdto.CorporateAddressWsDTO;
 import com.tisl.mpl.wsdto.HelpAndServicestWsData;
 import com.tisl.mpl.wsdto.HomescreenListData;
 import com.tisl.mpl.wsdto.ListPinCodeServiceData;
 import com.tisl.mpl.wsdto.MplAutoCompleteResultWsData;
+import com.tisl.mpl.wsdto.NewsletterWsDTO;
 import com.tisl.mpl.wsdto.PaymentInfoWsDTO;
 import com.tisl.mpl.wsdto.PinWsDto;
+import com.tisl.mpl.wsdto.ProductSearchPageWsDto;
 import com.tisl.mpl.wsdto.RestrictionPins;
 import com.tisl.mpl.wsdto.SearchDropdownWsDTO;
 import com.tisl.mpl.wsdto.SellerMasterWsDTO;
@@ -186,51 +184,43 @@ import com.tisl.mpl.wsdto.WthhldTAXWsDTO;
 @CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 1800)
 public class MiscsController extends BaseController
 {
-
-
+	@Resource(name = "brandFacade")
+	private BrandFacade brandFacade;
 	@Resource(name = "userFacade")
 	private UserFacade userFacade;
 	@Resource(name = "storeSessionFacade")
 	private StoreSessionFacade storeSessionFacade;
 	@Resource(name = "checkoutFacade")
 	private CheckoutFacade checkoutFacade;
-	@Autowired
-	private ConfigurationService configurationService;
 	@Resource(name = "httpRequestCustomerUpdatePopulator")
 	private HttpRequestCustomerUpdatePopulator httpRequestCustomerUpdatePopulator;
 	@Resource(name = "customerFacade")
 	private CustomerFacade customerFacade;
-	@Resource
-	private ModelService modelService;
-
-	@Autowired
-	private ForgetPasswordFacade forgetPasswordFacade;
-
-	@Autowired
-	private ExtendedUserServiceImpl userexService;
-	@Autowired
-	private WishlistFacade wishlistFacade;
-
-	@Autowired
-	private MplSellerMasterService mplSellerInformationService;
-
+	/*
+	 * @Resource private ModelService modelService;
+	 * 
+	 * @Autowired private ForgetPasswordFacade forgetPasswordFacade;
+	 * 
+	 * @Autowired private ExtendedUserServiceImpl userexService;
+	 * 
+	 * @Autowired private WishlistFacade wishlistFacade;
+	 * 
+	 * @Autowired private MplSellerMasterService mplSellerInformationService;
+	 */
 	@Autowired
 	private UserService userService;
-
 	@Autowired
 	private MplCustomerProfileService mplCustomerProfileService;
-
-	@Autowired
-	private Wishlist2Service wishlistService;
-
+	/*
+	 * @Autowired private Wishlist2Service wishlistService;
+	 */
 	@Resource(name = "passwordStrengthValidator")
 	private Validator passwordStrengthValidator;
-
-	@Autowired
-	private MplCartFacade mplCartFacade;
+	/*
+	 * @Autowired private MplCartFacade mplCartFacade;
+	 */
 	@Autowired
 	private ExtendedUserService extUserService;
-
 	@Autowired
 	private CustomerAccountService customerAccountService;
 	@Autowired
@@ -239,317 +229,77 @@ public class MiscsController extends BaseController
 	private HomescreenService homescreenservice;
 	@Resource(name = "fieldSetBuilder")
 	private FieldSetBuilder fieldSetBuilder;
-	@Resource(name = "i18NFacade")
-	private I18NFacade i18NFacade;
-
-	@Autowired
-	private MplCommerceCartServiceImpl mplCommerceCartService;
-
+	/*
+	 * @Resource(name = "i18NFacade") private I18NFacade i18NFacade;
+	 * 
+	 * @Autowired private MplCommerceCartServiceImpl mplCommerceCartService;
+	 */
 	@Autowired
 	private MplRestrictionServiceImpl restrictionserviceimpl;
-
 	@Autowired
 	private MplValidateAgainstXSDService mplValidateAgainstXSDService;
-
 	@Autowired
 	private MplSellerMasterService mplSellerMasterService;
-
 	@Resource(name = "mplCustomCategoryService")
 	private MplCustomCategoryService mplCustomCategoryService;
 	@Autowired
 	private UpdateFeedbackFacade updateFeedbackFacade;
 	@Autowired
 	private MplNetBankingFacade mplNetBankingFacade;
-
 	@Autowired
 	private MplSlaveMasterService mplSlaveMasterService;
-
 	@Resource(name = "pincodeServiceFacade")
 	private PincodeServiceFacade pincodeServiceFacade;
-
-	/**
+	@Resource(name = "categoryService")
+	private CategoryService categoryService;
+	/*
+	 * @Resource(name = "mplPaymentFacade") private MplPaymentFacade mplPaymentFacade; private static final String
+	 * APPLICATION_TYPE = "application/json"; public static final String EMAIL_REGEX =
+	 * "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
+	 *
+	 * /**
+	 *
 	 * @return the configurationService
 	 */
-	public ConfigurationService getConfigurationService()
-	{
-		return configurationService;
-	}
-
-	/**
-	 * @param configurationService
-	 *           the configurationService to set
-	 */
-	public void setConfigurationService(final ConfigurationService configurationService)
-	{
-		this.configurationService = configurationService;
-	}
-
-	/**
-	 * @return the modelService
-	 */
-	public ModelService getModelService()
-	{
-		return modelService;
-	}
-
-	/**
-	 * @param modelService
-	 *           the modelService to set
-	 */
-	public void setModelService(final ModelService modelService)
-	{
-		this.modelService = modelService;
-	}
-
-	/**
-	 * @return the forgetPasswordFacade
-	 */
-	public ForgetPasswordFacade getForgetPasswordFacade()
-	{
-		return forgetPasswordFacade;
-	}
-
-	/**
-	 * @param forgetPasswordFacade
-	 *           the forgetPasswordFacade to set
-	 */
-	public void setForgetPasswordFacade(final ForgetPasswordFacade forgetPasswordFacade)
-	{
-		this.forgetPasswordFacade = forgetPasswordFacade;
-	}
-
-	/**
-	 * @return the userexService
-	 */
-	public ExtendedUserServiceImpl getUserexService()
-	{
-		return userexService;
-	}
-
-	/**
-	 * @param userexService
-	 *           the userexService to set
-	 */
-	public void setUserexService(final ExtendedUserServiceImpl userexService)
-	{
-		this.userexService = userexService;
-	}
-
-	/**
-	 * @return the wishlistFacade
-	 */
-	public WishlistFacade getWishlistFacade()
-	{
-		return wishlistFacade;
-	}
-
-	/**
-	 * @param wishlistFacade
-	 *           the wishlistFacade to set
-	 */
-	public void setWishlistFacade(final WishlistFacade wishlistFacade)
-	{
-		this.wishlistFacade = wishlistFacade;
-	}
-
-	/**
-	 * @return the mplSellerInformationService
-	 */
-	public MplSellerMasterService getMplSellerInformationService()
-	{
-		return mplSellerInformationService;
-	}
-
-	/**
-	 * @param mplSellerInformationService
-	 *           the mplSellerInformationService to set
-	 */
-	public void setMplSellerInformationService(final MplSellerMasterService mplSellerInformationService)
-	{
-		this.mplSellerInformationService = mplSellerInformationService;
-	}
-
-	/**
-	 * @return the wishlistService
-	 */
-	public Wishlist2Service getWishlistService()
-	{
-		return wishlistService;
-	}
-
-	/**
-	 * @param wishlistService
-	 *           the wishlistService to set
-	 */
-	public void setWishlistService(final Wishlist2Service wishlistService)
-	{
-		this.wishlistService = wishlistService;
-	}
-
-	/**
-	 * @return the mplCartFacade
-	 */
-	public MplCartFacade getMplCartFacade()
-	{
-		return mplCartFacade;
-	}
-
-	/**
-	 * @param mplCartFacade
-	 *           the mplCartFacade to set
-	 */
-	public void setMplCartFacade(final MplCartFacade mplCartFacade)
-	{
-		this.mplCartFacade = mplCartFacade;
-	}
-
-	/**
-	 * @return the mplCommerceCartService
-	 */
-	public MplCommerceCartServiceImpl getMplCommerceCartService()
-	{
-		return mplCommerceCartService;
-	}
-
-	/**
-	 * @param mplCommerceCartService
-	 *           the mplCommerceCartService to set
-	 */
-	public void setMplCommerceCartService(final MplCommerceCartServiceImpl mplCommerceCartService)
-	{
-		this.mplCommerceCartService = mplCommerceCartService;
-	}
-
-	/**
-	 * @return the mplSellerMasterService
-	 */
-	public MplSellerMasterService getMplSellerMasterService()
-	{
-		return mplSellerMasterService;
-	}
-
-	/**
-	 * @param mplSellerMasterService
-	 *           the mplSellerMasterService to set
-	 */
-	public void setMplSellerMasterService(final MplSellerMasterService mplSellerMasterService)
-	{
-		this.mplSellerMasterService = mplSellerMasterService;
-	}
-
-	/**
-	 * @return the addressReversePopulator
-	 */
-	public Populator<AddressData, AddressModel> getAddressReversePopulator()
-	{
-		return addressReversePopulator;
-	}
-
-	/**
-	 * @param addressReversePopulator
-	 *           the addressReversePopulator to set
-	 */
-	public void setAddressReversePopulator(final Populator<AddressData, AddressModel> addressReversePopulator)
-	{
-		this.addressReversePopulator = addressReversePopulator;
-	}
-
-	/**
-	 * @return the mplCategoryService
-	 */
-	public MplCategoryService getMplCategoryService()
-	{
-		return mplCategoryService;
-	}
-
-	/**
-	 * @param mplCategoryService
-	 *           the mplCategoryService to set
-	 */
-	public void setMplCategoryService(final MplCategoryService mplCategoryService)
-	{
-		this.mplCategoryService = mplCategoryService;
-	}
-
-	/**
-	 * @return the mplCustomCategoryService
-	 */
-	public MplCustomCategoryService getMplCustomCategoryService()
-	{
-		return mplCustomCategoryService;
-	}
-
-	/**
-	 * @param mplCustomCategoryService
-	 *           the mplCustomCategoryService to set
-	 */
-	public void setMplCustomCategoryService(final MplCustomCategoryService mplCustomCategoryService)
-	{
-		this.mplCustomCategoryService = mplCustomCategoryService;
-	}
-
-	protected I18NFacade getI18NFacade()
-	{
-		return i18NFacade;
-	}
-
-	@Resource(name = "mplPaymentFacade")
-	private MplPaymentFacade mplPaymentFacade;
-
-	public MplPaymentFacade getMplPaymentFacade()
-	{
-		return mplPaymentFacade;
-	}
-
-	/**
-	 * @param mplPaymentFacade
-	 *           the mplPaymentFacade to set
-	 */
-	public void setMplPaymentFacade(final MplPaymentFacade mplPaymentFacade)
-	{
-		this.mplPaymentFacade = mplPaymentFacade;
-	}
-
-	@Autowired
-	private Populator<AddressData, AddressModel> addressReversePopulator;
 	@Autowired
 	private MplVersionService mplVersionService;
-
-	private static final Logger LOG = Logger.getLogger(MiscsController.class);
-
 	//Priority
-
 	//Added for SNS
 	@Resource(name = "cmsComponentService")
 	private CMSComponentService cmsComponentService;
-
 	@Resource(name = "productSearchFacade")
 	private ProductSearchFacade<ProductData> productSearchFacade;
-
 	@Resource(name = "enumerationService")
 	private EnumerationService enumerationService;
-
 	@Resource(name = "defaultMplProductSearchFacade")
 	private DefaultMplProductSearchFacade searchFacade;
-
-	@Resource(name = "mplCategoryServiceImpl")
-	private MplCategoryService mplCategoryService;
-
+	/*
+	 * @Resource(name = "mplCategoryServiceImpl") private MplCategoryService mplCategoryService;
+	 */
 	@Autowired
 	private SearchSuggestUtilityMethods searchSuggestUtilityMethods;
-
+	@Autowired
+	private EventService eventservice;
 	//End of Declaration for SNS
-
 	@Resource(name = "pinCodeFacade")
 	private PinCodeServiceAvilabilityFacade pinCodeFacade;
-
 	@Autowired
 	private PriceDataFactory priceDataFactory;
 
+	@Autowired
+	private BaseSiteService baseSiteService;
+	@Autowired
+	private ModelService modelService;
+	private static final String APPLICATION_TYPE = "application/json";
+	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
+
+	/*
+	 * private static final String DROPDOWN_BRAND = "MBH"; private static final String DROPDOWN_CATEGORY = "MSH";
+	 */
 	/*
 	 * @Autowired private MplCheckoutFacade mplCheckoutFacade;
 	 */
-
+	private static final Logger LOG = Logger.getLogger(MiscsController.class);
 
 	/**
 	 * Lists all available languages (all languages used for a particular store). If the list of languages for a base
@@ -774,6 +524,7 @@ public class MiscsController extends BaseController
 				return userResult;
 
 			}
+			userResult.setStatus(MarketplacecommerceservicesConstants.SUCCESSS_RESP);
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -791,13 +542,12 @@ public class MiscsController extends BaseController
 		}
 		catch (final Exception e)
 		{
-			userResult.setError(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG);
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			userResult.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			userResult.setErrorCode(MarketplacecommerceservicesConstants.E0000);
 			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-			LOG.error(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG + ":" + e);
-			return userResult;
 		}
-		LOG.debug(MarketplacecommerceservicesConstants.DATA_SAVED_MSG);
-		userResult.setStatus(MarketplacecommerceservicesConstants.SUCCESSS_RESP);
+
 
 		return userResult;
 	}
@@ -898,13 +648,11 @@ public class MiscsController extends BaseController
 		}
 		catch (final Exception e)
 		{
-			userResult.setError(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG);
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			userResult.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			userResult.setErrorCode(MarketplacecommerceservicesConstants.E0000);
 			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-			LOG.error(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG + ":" + e);
-			return userResult;
 		}
-		LOG.debug(MarketplacecommerceservicesConstants.DATA_SAVED_MSG);
-		userResult.setStatus(MarketplacecommerceservicesConstants.SUCCESSS_RESP);
 		return userResult;
 	} //End of sellerInformation
 
@@ -913,9 +661,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * restriction set up interface to save the data comming from seller portal
-	 * 
+	 *
 	 * @param restrictionXML
-	 * 
+	 *
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/restrictionServer", method = RequestMethod.POST)
@@ -1078,7 +826,8 @@ public class MiscsController extends BaseController
 	@RequestMapping(value = "/{baseSiteId}/searchAndSuggest", method = RequestMethod.POST)
 	@ResponseBody
 	public MplAutoCompleteResultWsData getAutoCompleteSuggestions(@RequestParam final String searchString, final String category,
-			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields,
+			@RequestParam(required = false) final boolean isFromLuxuryWeb)
 	{
 		MplAutoCompleteResultWsData resultData = new MplAutoCompleteResultWsData();
 		final AutoCompleteResultWsData wsData = new AutoCompleteResultWsData();
@@ -1087,6 +836,7 @@ public class MiscsController extends BaseController
 		final SearchStateData searchState = new SearchStateData();
 		final SearchQueryData searchQueryData = new SearchQueryData();
 		final List<String> suggestion = new ArrayList<String>();
+		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
 		try
 		{
 			LOG.debug("searchAndSuggest---------" + searchString);
@@ -1138,8 +888,16 @@ public class MiscsController extends BaseController
 			//searchQueryData.setValue(resultData.getSuggestions().size() > 0 ? resultData.getSuggestions().get(0).getTerm() : term);
 			searchState.setQuery(searchQueryData);
 			searchState.setSns(true);
+			if (isFromLuxuryWeb)
+			{
+				searchState.setLuxurySiteFrom(MarketplacecommerceservicesConstants.CHANNEL_WEB);
+			}
+			//			else
+			//			{
+			//				searchState.setLuxurySiteFrom(MarketplacecommerceservicesConstants.CHANNEL_APP);
+			//			}
 
-			ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
+
 			if (CollectionUtils.isNotEmpty(wsData.getSuggestions()))
 			{
 				if (category.startsWith(MarketplaceCoreConstants.ALL_CATEGORY))
@@ -1220,6 +978,140 @@ public class MiscsController extends BaseController
 			resultData = setErrorStatus();
 		}
 		return resultData;
+	}
+
+
+	/**
+	 * @Description : For PDP widgets, search on offer ,color size etc
+	 * @param type
+	 * @param typeValue
+	 * @param page
+	 * @param fields
+	 * @return resultData
+	 */
+	@RequestMapping(value = "/{baseSiteId}/getPDPWidgets", method =
+	{ RequestMethod.POST, RequestMethod.GET }, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ProductSearchPageWsDto searchProductDto(@RequestParam(required = true) final String type,
+			@RequestParam(required = true) final String typeValue, @RequestParam(required = true) final int page,
+			@RequestParam(required = true) final int pageSize, @RequestParam(required = false) final String categoryCode,
+			@RequestParam(required = false) final String sortCode,
+			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+	{
+		String searchText = "";
+		ProductSearchPageWsDto productSearchPage = new ProductSearchPageWsDto();
+		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
+		try
+		{
+			final PageableData pageableData = createPageableData(page, pageSize, sortCode, ShowMode.Page);
+			final SearchStateData searchState = new SearchStateData();
+			final SearchQueryData searchQueryData = new SearchQueryData();
+
+			if (StringUtils.isNotEmpty(typeValue) && StringUtils.isNotEmpty(type))
+			{
+				if (type.equalsIgnoreCase(MarketplacecommerceservicesConstants.OFFER))
+				{
+					if (StringUtils.isNotEmpty(categoryCode))
+					{
+						searchText = MarketplacecommerceservicesConstants.RELEVANCE_CATEGORY + categoryCode
+								+ MarketplacecommerceservicesConstants.OFFER_COLON + typeValue;
+					}
+					else
+					{
+						searchText = MarketplacecommerceservicesConstants.RELEVANCE_OFFER + typeValue;
+					}
+				}
+				else if (type.equalsIgnoreCase(MarketplacecommerceservicesConstants.COLOUR))
+				{
+					if (StringUtils.isNotEmpty(categoryCode))
+					{
+						searchText = MarketplacecommerceservicesConstants.RELEVANCE_CATEGORY + categoryCode
+								+ MarketplacecommerceservicesConstants.COLOUR_COLON + typeValue;
+					}
+					else
+					{
+						searchText = MarketplacecommerceservicesConstants.RELEVANCE_COLOR + typeValue;
+					}
+				}
+				else
+				{
+					if (StringUtils.isNotEmpty(categoryCode))
+					{
+						searchText = MarketplacecommerceservicesConstants.RELEVANCE_CATEGORY + categoryCode
+								+ MarketplacecommerceservicesConstants.SIZE_COLON + typeValue.toUpperCase();
+					}
+					else
+					{
+						searchText = MarketplacecommerceservicesConstants.RELEVANCE_SIZE + typeValue.toUpperCase();
+					}
+				}
+
+				searchQueryData.setValue(searchText);
+				searchState.setQuery(searchQueryData);
+				searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
+						.textSearch(searchState, pageableData);
+
+				if (searchPageData != null)
+				{
+					productSearchPage = searchSuggestUtilityMethods.setPDPSearchPageData(searchPageData);
+				}
+				//setting category
+				if (StringUtils.isNotEmpty(categoryCode))
+				{
+					productSearchPage.setCategoryCode(categoryCode);
+				}
+
+				final ProductSearchPageWsDto sortingvalues = dataMapper.map(searchPageData, ProductSearchPageWsDto.class, fields);
+				if (null != sortingvalues)
+				{
+					if (null != sortingvalues.getPagination())
+					{
+						productSearchPage.setPagination(sortingvalues.getPagination());
+					}
+					if (null != sortingvalues.getSorts())
+					{
+						productSearchPage.setSorts(sortingvalues.getSorts());
+					}
+					if (null != sortingvalues.getCurrentQuery())
+					{
+						productSearchPage.setCurrentQuery(sortingvalues.getCurrentQuery());
+					}
+					if (null != searchPageData.getSpellingSuggestion()
+							&& null != searchPageData.getSpellingSuggestion().getSuggestion())
+					{
+						productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion());
+					}
+				}
+			}
+			else
+			{
+				productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+				productSearchPage.setError(MarketplacecommerceservicesConstants.INVALIDSEARCHKEY);
+			}
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
+			//e.printStackTrace();
+			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			productSearchPage.setError(MarketplacecommerceservicesConstants.EXCEPTION_IS + e);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
+			//e.printStackTrace();
+			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			productSearchPage.setError(MarketplacecommerceservicesConstants.EXCEPTION_IS + ":" + e);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			productSearchPage.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			productSearchPage.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return productSearchPage;
 	}
 
 	/**
@@ -1327,7 +1219,7 @@ public class MiscsController extends BaseController
 	 * @param productCode
 	 * @return List<PinCodeResponseData> from OMS
 	 */
-	@RequestMapping(value = MarketplacewebservicesConstants.URL, method = RequestMethod.POST, produces = MarketplacewebservicesConstants.APPORJSON)
+	@RequestMapping(value = MarketplacewebservicesConstants.CHECK_PINCODE, method = RequestMethod.POST, produces = MarketplacewebservicesConstants.APPORJSON)
 	@ResponseBody
 	public PinWsDto getPin(@RequestParam(value = "pin") final String pin,
 			@RequestParam(value = "productCode") final List<String> productCode) throws CMSItemNotFoundException
@@ -1342,32 +1234,6 @@ public class MiscsController extends BaseController
 				final ListPinCodeServiceData dataList = new ListPinCodeServiceData();
 				if (null != productCodeStr && StringUtils.isNotEmpty(productCodeStr))
 				{
-					/*
-					 * productModel = productService.getProductForCode(productCodeStr); ProductData productData = null; if
-					 * (null != productModel) { productData = productFacade.getProductForOptions(productModel,
-					 * Arrays.asList(ProductOption.BASIC, ProductOption.PRICE)); } else { throw new
-					 * EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9037); } PincodeServiceData data = null;
-					 * MarketplaceDeliveryModeData deliveryModeData = null; List<PinCodeResponseData> response = null;
-					 * 
-					 * if (null != productData && null != productData.getSeller()) { for (final SellerInformationData seller
-					 * : productData.getSeller()) { final List<MarketplaceDeliveryModeData> deliveryModeList = new
-					 * ArrayList<MarketplaceDeliveryModeData>(); data = new PincodeServiceData(); if
-					 * (!(seller.getDeliveryModes().isEmpty())) { for (final MarketplaceDeliveryModeData deliveryMode :
-					 * seller.getDeliveryModes()) { if (null != deliveryMode && null != deliveryMode.getCode() && null !=
-					 * seller.getUssid()) { deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(),
-					 * seller.getUssid()); } deliveryModeList.add(deliveryModeData); }
-					 * data.setDeliveryModes(deliveryModeList); }
-					 * 
-					 * if (StringUtils.isNotEmpty(seller.getFullfillment())) {
-					 * data.setFullFillmentType(seller.getFullfillment()); } if
-					 * (StringUtils.isNotEmpty(seller.getShippingMode())) { data.setTransportMode(seller.getShippingMode());
-					 * } if (null != seller.getMopPrice() && null != seller.getMopPrice().getValue()) { data.setPrice(new
-					 * Double(seller.getMopPrice().getValue().doubleValue())); } if
-					 * (StringUtils.isNotEmpty(seller.getIsCod())) { data.setIsCOD(seller.getIsCod()); } if
-					 * (StringUtils.isNotEmpty(seller.getSellerID())) { data.setSellerId(seller.getSellerID()); } if
-					 * (StringUtils.isNotEmpty(seller.getUssid())) { data.setUssid(seller.getUssid()); }
-					 * data.setIsDeliveryDateRequired(MarketplacewebservicesConstants.NA); requestData.add(data); } }
-					 */
 					List<PinCodeResponseData> response = null;
 					final PincodeModel pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(pin);
 					if (null != pinCodeModelObj)
@@ -1433,16 +1299,9 @@ public class MiscsController extends BaseController
 		}
 		catch (final Exception e)
 		{
-			final EtailNonBusinessExceptions ex = new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
-			ExceptionUtil.etailNonBusinessExceptionHandler(ex);
-			if (null != ex.getErrorMessage())
-			{
-				pinWsDto.setError(ex.getErrorMessage());
-			}
-			if (null != ex.getErrorCode())
-			{
-				pinWsDto.setErrorCode(ex.getErrorCode());
-			}
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			pinWsDto.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9004));
+			pinWsDto.setErrorCode(MarketplacecommerceservicesConstants.B9004);
 			pinWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		return pinWsDto;
@@ -1485,37 +1344,90 @@ public class MiscsController extends BaseController
 		}
 		catch (final Exception e)
 		{
+
 			dataList.setError(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		return dataMapper.map(dataList, StateListWsDto.class, fields);
 	}
 
+	// check brand or category TPR-816
 	/**
-	 * @param deliveryMode
-	 * @param ussid
-	 * @return MarketplaceDeliveryModeData
+	 * @param code
+	 * @return
 	 */
-	/*
-	 * private MarketplaceDeliveryModeData fetchDeliveryModeDataForUSSID(final String deliveryMode, final String ussid) {
-	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
-	 * MplZoneDeliveryModeValueModel MplZoneDeliveryModeValueModel = mplCheckoutFacade
-	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 * 
-	 * if (null != MplZoneDeliveryModeValueModel) { if (null != MplZoneDeliveryModeValueModel.getValue()) { final
-	 * PriceData priceData = formPriceData(MplZoneDeliveryModeValueModel.getValue()); if (null != priceData) {
-	 * deliveryModeData.setDeliveryCost(priceData); } } if (null != MplZoneDeliveryModeValueModel.getDeliveryMode() &&
-	 * null != MplZoneDeliveryModeValueModel.getDeliveryMode().getCode()) {
-	 * deliveryModeData.setCode(MplZoneDeliveryModeValueModel.getDeliveryMode().getCode()); } if (null !=
-	 * MplZoneDeliveryModeValueModel.getDeliveryMode() && null !=
-	 * MplZoneDeliveryModeValueModel.getDeliveryMode().getDescription()) {
-	 * deliveryModeData.setDescription(MplZoneDeliveryModeValueModel.getDeliveryMode().getDescription()); } if (null !=
-	 * MplZoneDeliveryModeValueModel.getDeliveryMode() && null !=
-	 * MplZoneDeliveryModeValueModel.getDeliveryMode().getName()) {
-	 * deliveryModeData.setName(MplZoneDeliveryModeValueModel.getDeliveryMode().getName()); } if (null != ussid) {
-	 * deliveryModeData.setSellerArticleSKU(ussid); }
-	 * 
-	 * } return deliveryModeData; }
-	 */
+	@RequestMapping(value = "/{baseSiteId}/checkBrandOrCategory", method = RequestMethod.GET)
+	@ResponseBody
+	public CategoryBrandDTO checkBrandOrCategory(@RequestParam final String code)
+	{
+		final CategoryBrandDTO result = new CategoryBrandDTO();
+		CategoryModel selectedCategory = null;
+		try
+		{
+			if (StringUtils.isNotEmpty(code))
+			{
+				selectedCategory = categoryService.getCategoryForCode(code);
+				//EQA comments
+				if (selectedCategory != null && StringUtils.isNotEmpty(selectedCategory.getCode()))
+				{
+					result.setCode(code);
+					result.setName(selectedCategory.getName());
+					if (selectedCategory.getCode().contains(MarketplacewebservicesConstants.DROPDOWN_BRAND))
+					{
+						result.setType(MarketplacecommerceservicesConstants.BRAND);
+					}
+					else
+					{
+						result.setType(MarketplacecommerceservicesConstants.CATEGORY);
+					}
+					result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+				}
+			}
+
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			result.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9421));
+			result.setErrorCode(MarketplacecommerceservicesConstants.B9421);
+			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				result.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				result.setErrorCode(e.getErrorCode());
+			}
+			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				result.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				result.setErrorCode(e.getErrorCode());
+			}
+			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			result.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			result.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return result;
+	}
+
+
 	/**
 	 * Converting datatype of price
 	 *
@@ -1548,7 +1460,7 @@ public class MiscsController extends BaseController
 	public AboutUsResultWsData getAboutUs(@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
 			throws CMSItemNotFoundException
 	{
-		final AboutUsResultWsData aboutUsBannerData = getMplCustomCategoryService().getAboutus();
+		final AboutUsResultWsData aboutUsBannerData = mplCustomCategoryService.getAboutus();
 
 		return aboutUsBannerData;
 	}
@@ -1565,7 +1477,7 @@ public class MiscsController extends BaseController
 	public HelpAndServicestWsData getHelpNServices(@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
 			throws CMSItemNotFoundException
 	{
-		final HelpAndServicestWsData helpNservicesData = getMplCustomCategoryService().getHelpnServices();
+		final HelpAndServicestWsData helpNservicesData = mplCustomCategoryService.getHelpnServices();
 
 		return helpNservicesData;
 
@@ -1626,16 +1538,13 @@ public class MiscsController extends BaseController
 		{
 			dataList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 			dataList.setError(MarketplacecommerceservicesConstants.SEARCH_NOT_FOUND);
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + e);
-			return dataList;
 		}
 		catch (final Exception e)
 		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			dataList.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			dataList.setErrorCode(MarketplacecommerceservicesConstants.E0000);
 			dataList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-			dataList.setError(MarketplacecommerceservicesConstants.SEARCH_NOT_FOUND);
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + e);
-			return dataList;
-
 		}
 
 		return dataList;
@@ -1649,7 +1558,7 @@ public class MiscsController extends BaseController
 	/*
 	 * @Secured( { "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
 	 */
-	@RequestMapping(value = "/{baseSiteId}/feedbackno", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/{baseSiteId}/feedbackno", method = RequestMethod.GET, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public UserResultWsDto captureFeedbackNo(@RequestParam final String emailId, @RequestParam final String searchCategory,
 			@RequestParam final String searchText, @RequestParam final String comment, @RequestParam final String category)
@@ -1686,7 +1595,7 @@ public class MiscsController extends BaseController
 	/*
 	 * @Secured( { "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
 	 */
-	@RequestMapping(value = "/{baseSiteId}/getFeedbackCategory", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/{baseSiteId}/getFeedbackCategory", method = RequestMethod.GET, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public UserResultWsDto getFeedbackCategory()
 	{
@@ -1721,4 +1630,93 @@ public class MiscsController extends BaseController
 		return userResultWsDto;
 	}
 
+	@RequestMapping(value = "/{baseSiteId}/askAQuestion", method = RequestMethod.GET, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public UserResultWsDto askquestion(@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields,
+			@RequestParam final String emailId, @RequestParam final String question, @RequestParam final String productCode)
+	{
+		final UserResultWsDto userResultWsDto = new UserResultWsDto();
+		try
+		{
+			final LuxuryPdpQuestionEvent eventObj = new LuxuryPdpQuestionEvent();
+			eventObj.setCustomerEmailId(emailId);
+			eventObj.setEmailTo("customerservices@tataunistore.com");
+			eventObj.setMessage(question);
+			eventObj.setSite(baseSiteService.getCurrentBaseSite());
+			eventObj.setProductCode(productCode);
+			eventservice.publishEvent(eventObj);
+			userResultWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+		}
+		catch (final Exception ex)
+		{
+			userResultWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			LOG.error("Exception occured while submitting question::::" + ex.getMessage());
+		}
+
+		return userResultWsDto;
+	}
+
+	//LW-176 starts
+	@RequestMapping(value = "/{baseSiteId}/{emailId}/newsletter", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public NewsletterWsDTO getNewsletter(@PathVariable String emailId)
+	{
+		final NewsletterWsDTO news = new NewsletterWsDTO();
+		final MplNewsLetterSubscriptionModel newsLetter = modelService.create(MplNewsLetterSubscriptionModel.class);
+		List<MplNewsLetterSubscriptionModel> newsLetterSubscriptionList = new ArrayList<MplNewsLetterSubscriptionModel>();
+
+		emailId = emailId.toLowerCase();
+
+		if (!validateEmailAddress(emailId))
+		{
+			news.setSuccess("mailFormatError");
+		}
+
+		else
+		{
+
+			final boolean result = brandFacade.checkEmailId(emailId);
+
+			if (result)
+			{
+				newsLetter.setEmailId(emailId);
+				newsLetter.setIsLuxury(Boolean.TRUE);
+				modelService.save(newsLetter);
+				news.setSuccess("success");
+			}
+
+			else
+			{
+				newsLetterSubscriptionList = brandFacade.checkEmailIdForluxury(emailId);
+
+				if (null != newsLetterSubscriptionList && !newsLetterSubscriptionList.isEmpty())
+				{
+					for (final MplNewsLetterSubscriptionModel mplNewsLetterSubscriptionModel : newsLetterSubscriptionList)
+					{
+						if ((mplNewsLetterSubscriptionModel.getEmailId().equalsIgnoreCase(emailId))
+								&& (!(mplNewsLetterSubscriptionModel.getIsLuxury().booleanValue()) || mplNewsLetterSubscriptionModel
+										.getIsLuxury() == null))
+						{
+							mplNewsLetterSubscriptionModel.setIsLuxury(Boolean.TRUE);
+							modelService.save(mplNewsLetterSubscriptionModel);
+							news.setSuccess("success");
+						}
+					}
+
+				}
+				else
+				{
+					news.setSuccess("subscribed");
+				}
+			}
+		}
+		return news;
+	}
+
+	public boolean validateEmailAddress(final String email)
+	{
+		final Pattern pattern = Pattern.compile(EMAIL_REGEX);
+		final Matcher matcher = pattern.matcher(email);
+		return matcher.matches();
+	}//LW-176 ends
 }

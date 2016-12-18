@@ -13,6 +13,7 @@ import java.util.Map;
 
 import com.tisl.mpl.facades.data.AWBResponseData;
 import com.tisl.mpl.wsdto.OrderDataWsDTO;
+import com.tisl.mpl.wsdto.OrderTrackingWsDTO;
 
 
 /**
@@ -21,15 +22,38 @@ import com.tisl.mpl.wsdto.OrderDataWsDTO;
  */
 public interface GetOrderDetailsFacade
 {
-	public OrderDataWsDTO getOrderdetails(String orderCode);
+	/**
+	 * @param orderDetails
+	 * @return
+	 */
+	public OrderDataWsDTO getOrderdetails(final OrderData orderDetails);
 
+	/**
+	 * @param orderCode
+	 * @return
+	 */
+	public OrderTrackingWsDTO getOrderDetailsWithTracking(String orderCode);
+
+	/**
+	 * @param orderEntryDetail
+	 * @param subOrder
+	 * @param subOrderModel
+	 * @return
+	 */
 	public Map<String, List<AWBResponseData>> getOrderStatusTrack(OrderEntryData orderEntryDetail, OrderData subOrder,
 			OrderModel subOrderModel);
 	Map<String, List<AWBResponseData>> getOrderStatusTrack(final OrderEntryData orderEntryDetail, final OrderData subOrder,
 			final OrderData parentOrder);
 
+	/**
+	 * @param parentOrder
+	 * @return
+	 */
 	public boolean isPickUpButtonEditable(OrderData parentOrder);
 
+	/**
+	 * @return
+	 */
 	public List<ConsignmentStatus> getPickUpButtonDisableOptions();
 
 }

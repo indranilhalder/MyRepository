@@ -725,7 +725,9 @@ if (searchCategory_id){
 
 				  html += '</ul>';
 				  html += '<p class="company" >'+obj.brand+'</p>';
-				  html += '<span class="product-name" style="text-overflow: ellipsis;word-break: break-word;">'+obj.name+'</span>';
+
+				  html += '<h2 class="product-name" style="text-overflow: ellipsis;word-break: break-word;">'+obj.name+'</h2>';
+
 				  html += '<div class="price">';
 				  
 					 
@@ -954,16 +956,16 @@ if (searchCategory_id){
 			    
 			    if(slider) {
 			    	if(site_page_type === 'search' && widgetElement === 'ia_products_search'){
-			    		html += '<h1><span style="color: black !important;">Best Sellers</span>';
+			    		html += '<h2><span style="color: black !important;">Best Sellers</span>';
 			    	}else if(site_page_type === 'viewSellers' && widgetElement === 'ia_products'){
-			    		html += '<h1><span style="color: black !important;">You May Also Need</span>';
+			    		html += '<h2><span style="color: black !important;">You May Also Need</span>';
 			    	}else{
 			    		//for release 2 changes in pdp-page 
 			    		if(site_page_type === 'productpage' && widgetElement ==='ia_products_complements'){
-			    			html += '<h1><span style="color: black !important;">Things That Go With This</span>';
+			    			html += '<h2><span style="color: black !important;">Things That Go With This</span>';
 			    		}else{
 						
-			    		html += '<h1><span style="color: black !important;">'+productWidgetTitle[jQuery.inArray(widgetMode, productWidget)]+'</span>';
+			    		html += '<h2><span style="color: black !important;">'+productWidgetTitle[jQuery.inArray(widgetMode, productWidget)]+'</span>';
 			    	}
 			    		}
 			      
@@ -971,7 +973,7 @@ if (searchCategory_id){
 			      if(site_page_type === "homepage" || site_page_type ==="viewAllTrending" && widgetMode != "recent") {
 			        html += catHtml;
 			      }
-			      html += '</h1>';
+			      html += '</h2>';
 			      html += '<div class="spacer" style="padding: 0 25px;"><div class="slider product ready"><div class="frame"><ul id="' + widgetElement + '_list" class="overflow owl-carousel" style="width: 0.953empx; left: 0px;">';
 			    } else {
 			      if(site_page_type === "homepage" || site_page_type ==="viewAllTrending") {
@@ -1518,4 +1520,5 @@ if (searchCategory_id){
     //console.log("widget mode we don't account for: " + widgetMode);
   }
 }
+
 			$(document).on('click',".IAQuickView,.iaAddToCartButton",function(e){e.preventDefault();})

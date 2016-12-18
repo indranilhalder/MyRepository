@@ -9,34 +9,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 
-<!-- Move it to style.css before committing -->
-
-<style>
-	.address_landmarks, .address_landmarkOther, .address_landmarkOtherDiv {
-		width: 100% !important;
-		display: inline-block;
-	}
-	
-	.address_landmarkOther, .address_landmarkOtherDiv label, .address_landmarkOtherDiv {
-		display: inherit;
-	}
-	
-	.address_landmarkOtherDiv {
-		display: none;
-	}
-	
-	.address_landmarkOtherDiv {
-		margin: inherit;
-	}
-	
-	.address_landmarkOtherDiv {
-		margin: 0px !important;
-	}
-	
-	
-</style>
-
-
 <c:choose>
 	<c:when test="${country == 'US'}">
 		<formElement:formSelectBox idKey="address.title"
@@ -189,114 +161,93 @@
 		<div class='half'>
 		
 		<formElement:formInputBox idKey="address.firstName"
-			labelKey="address.firstName" path="firstName" 
-			mandatory="true" maxLength="40"/>
+			 path="firstName" 
+			mandatory="true" maxLength="40" placeholder="FirstName*"/>
 			<div class="help-block has-error" id="firstnameError" style="display: none;">		
 			</div>	
 			</div>
 			<div class='half'>
 		<formElement:formInputBox idKey="address.surname"
-			labelKey="address.surname" path="lastName" 
-			mandatory="true" maxLength="40"/>
+			 path="lastName" 
+			mandatory="true" maxLength="40" placeholder="Lastname*"/>
 			<div class="help-block has-error" id="lastnameError" style="display: none;">		
 			</div>
 			</div>
-			<div class='full'>
-		<formElement:formInputBox idKey="address.postcode" inputCSS="address_postcode"
-			labelKey="address.postcode" path="postcode"
-			mandatory="true" maxLength="6" />
+			<!-- <div class='half'> -->
+         <div class='full'>
+          <%-- <label for="myselect"><spring:theme code="text.addressBook.PhoneNumber" text="Mobile Number" /></label>	 --%>	
+      <div class="showPhone">
+		<select name="myselect" disabled="disabled">
+       <option value="myselectedvalue" selected="selected">+91</option>
+     </select>
+        <input type="hidden" name="myselect" value="myselectedvalue" /> 
+	 	<form:input type="text" idKey="address.mobile" id="mobileNonewForm"
+			 path="MobileNo" inputCSS="form-control"
+			mandatory="true" maxLength="10" placeholder="Phone Number*"/> 
+			<div class="help-block has-error" id="mobileError" style="display: none;">		
+			</div>	 
+		</div>	
+		
+		<div class='full'>
+		<formElement:formInputBox idKey="address.postcode"
+			path="postcode"
+			mandatory="true" maxLength="6" placeholder="Pincode*" />
 		<div class="help-block has-error" id="addressPincodeServicableDiv"
 			style="display: none;"></div>
 			<div class="help-block has-error" id="pincodeError" style="display: none;">
 			</div>
 			</div>
+		
+		</div>
 			<div class='full'>
 			<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.line1"
-			labelKey="address.line1" path="line1"
-			mandatory="true" maxLength="40"/>
+			 path="line1"
+			mandatory="true" maxLength="40"  placeholder="Address Line 1*"/>
 			 <div class="help-block has-error" id="address1Error" style="display: none;">
 			</div>
 			</div>
 			<div class='full'>
 			<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.line2"
-			labelKey="address.line2" path="line2" 
-			mandatory="true" maxLength="40"/>
+			 path="line2" 
+			mandatory="true" maxLength="40" placeholder="Address Line 2"/>
 			 <div class="help-block has-error" id="address2Error" style="display: none;">
 			</div>
 			</div>
 			<div class='full'>
 			<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.line3"
-			labelKey="address.line3" path="line3" 
-			mandatory="true" maxLength="40" />
+			 path="line3" 
+			mandatory="true" maxLength="40" placeholder="Address Line 3"/>
 			 <div class="help-block has-error" id="address3Error" style="display: none;">
 			</div>
 			</div>
-			
-			<div class='half'>
-				<div class="optionsLandmark">
-					<formElement:formSelectBox  idKey="address.landmarks" selectCSSClass="address_landmarks"
-						labelKey="Landmarks" path="landmark" mandatory="true"
-						skipBlank="false" selectedValue="${addressForm.landmark}" skipBlankMessageKey="address.state.pleaseSelect"
-						items="${abc}"
-						itemValue="name"  />
-				</div>
-			</div>
-			<div class='half'>
-			
-				<div class='half address_landmarkOtherDiv' data-value="${addressForm.landmark}">
-						<formElement:formInputBox inputCSS="address_landmarkOther" idKey="otherLandmark"
-							labelKey="Enter Nearest Landmark" path="otherLandmark"
-							maxLength="30" />
-							<div class="error_text otherLandMarkError"></div>
-				</div>
-			</div>
-			
-			
 		<%-- <formElement:formInputBox idKey="address.locality" labelKey="address.locality" path="locality" inputCSS="form-control" mandatory="true"/> --%>
-		<div class='half'>
+		<div class='full'>
 		<!-- TISUAT-4696  /TPR-215-->
-		<formElement:formInputBox idKey="address.townCity" inputCSS="address_townCity"
-			labelKey="address.townCity" path="townCity" 
-			mandatory="true" maxLength="40"/>
+		<formElement:formInputBox idKey="address.townCity"
+			 path="townCity" 
+			mandatory="true" maxLength="40" placeholder="City*"/>
 			<div class="help-block has-error" id="cityError" style="display: none;">
 			</div>
 			</div>
-			<div class="half address-select">
-				<div class="mainDrop">
-				<formElement:formSelectBox idKey="address.states"
-					selectCSSClass="address_states addressRead" labelKey="address.states"
-					path="state" mandatory="true" skipBlank="false"
-					skipBlankMessageKey="address.state.pleaseSelect"
-					items="${stateDataList}" selectedValue="${addressForm.state}"
-					itemValue="name" />
-				<div class="help-block has-error" id="stateError"
-					style="display: none;"></div>
-				</div>
-				
-					<div class="dupDisplay">
-					<label>State *</label>
-					<div class="stateInput"></div>
-						<div class="help-block has-error" id="stateError"
-					style="display: none;"></div>
-					</div>
-
-			<%-- <div class="dupDisplay">
-				
-					<form:input path="state" id="address.statesReadOnly"
-						class="address_states addressDup" maxlength="30" readonly="readonly"/>
-					<div class="errorMessage">
-							<div id="erraddressCity"></div>
-					</div>
-			</div> --%>
+			<!-- <div class="half address-select"> -->
+			<div class="full address-select">
+		<formElement:formSelectBox idKey="address.states" 
+			 path="state" mandatory="true"
+			skipBlank="false" skipBlankMessageKey="address.state.pleaseSelectState"
+			items="${stateDataList}" selectedValue="${addressForm.state}"
+			itemValue="name"  />
+			<div class="help-block has-error" id="stateError" style="display: none;">		
+			</div>
 			</div>
 				   		
-		<div class="half country-select">
+		<!-- <div class="half country-select"> -->
+		<div class="full country-select">
 		<c:set var='count'  value='1' />
 		<div class="country">
-		<label><spring:theme code="address.selectCountry"/></label>
+		<%-- <label><spring:theme code="address.selectCountry"/></label> --%>
 		
 		    	<c:forEach items="${supportedCountries}" var="country">
 					<c:if test="${country.isocode eq 'IN' and count==1}">
@@ -310,8 +261,19 @@
 		</div>
 				
 		<%-- <formElement:formInputBox idKey="address.states" labelKey="address.states" path="state" inputCSS="form-control" mandatory="true"/> --%>
-
-         <div class='half'>
+		<!-- <div class='half'> -->
+		<%-- <div class='full'>
+		<formElement:formInputBox idKey="address.postcode"
+			path="postcode"
+			mandatory="true" maxLength="6" placeholder="Post code*" />
+		<div class="help-block has-error" id="addressPincodeServicableDiv"
+			style="display: none;"></div>
+			<div class="help-block has-error" id="pincodeError" style="display: none;">
+			</div>
+			</div> --%>
+				
+         <%-- <!-- <div class='half'> -->
+         <div class='full'>
           <label for="myselect"><spring:theme code="text.addressBook.PhoneNumber" text="Mobile Number" /></label>		
       <div class="showPhone">
 		<select name="myselect" disabled="disabled">
@@ -319,12 +281,12 @@
      </select>
         <input type="hidden" name="myselect" value="myselectedvalue" /> 
 	 	<form:input type="text" idKey="address.mobile" id="mobileNonewForm"
-			labelKey="address.mobile" path="MobileNo" inputCSS="form-control"
-			mandatory="true" maxLength="10"/> 
+			 path="MobileNo" inputCSS="form-control"
+			mandatory="true" maxLength="10" placeholder="Mobile Number*"/> 
 			<div class="help-block has-error" id="mobileError" style="display: none;">		
 			</div>	 
 		</div>	
-		</div>
+		</div> --%>
 			</fieldset>						
 			
 
@@ -342,28 +304,6 @@
 
 	</c:otherwise>
 </c:choose>
-<script>
-$(document).ready(function(){
-	 var value = $(".address_landmarkOtherDiv").attr("data-value");
-	  
-	  setTimeout(function(){
-	  if($(".address_landmarks option[value='"+value+"']").length > "0") {
-		  
-		  //alert(value+ " 2 in if x"+$(".address_landmarks option[value='"+value+"']").val());
-			  $(".address_landmarks").val("");
-			$(".address_landmarks option[value='"+value+"']").prop("selected",true);
-			
-			} else {
-			//alert(value+ " 3 in else");
-			  $(".address_landmarks").val("Other"); 
-				changeFuncLandMark("Other"); 
-			$(".address_landmarkOther").val(value);
-			
-		}
-	  
-	  });
-	
-});
-</script>
+
 
 

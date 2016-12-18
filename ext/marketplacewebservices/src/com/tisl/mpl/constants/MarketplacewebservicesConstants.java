@@ -301,7 +301,7 @@ public class MarketplacewebservicesConstants
 
 
 	// Pincode Servicibility
-	public static final String URL = "/{baseSiteId}/users/{userId}/checkPincode";
+	public static final String CHECK_PINCODE = "/{baseSiteId}/users/{userId}/checkPincode";
 	public static final String CREATEENTRYINAUDITURL = "/createEntryInAudit";
 	public static final String SAVEDCARDS = "/savedCards";
 	public static final String REMOVESAVEDCARDS = "/removeSavedCards";
@@ -311,8 +311,8 @@ public class MarketplacewebservicesConstants
 	public static final String EMPTY = " ";
 	public static final String EXCEPTION_IS = "Exception is : ".intern();
 
-	public static String CLOTHING = "Clothing".intern();
-	public static String ELECTRONICS = "Electronics".intern();
+	public static final String CLOTHING = "Clothing".intern();
+	public static final String ELECTRONICS = "Electronics".intern();
 
 	public final static String PAYMENTMODEFORPROMOTION = "paymentModeForPromotion".intern();
 	public static final String BANKFROMBIN = "bank".intern();
@@ -405,7 +405,7 @@ public class MarketplacewebservicesConstants
 		}
 	};
 
-	public static final String CART_PINCODE_ERROR_OMS_CHECK = "Delivery mode check from OMS issue ".intern();
+	public static final String CART_PINCODE_ERROR_OMS_CHECK = "Delivery mode check from OMS issue ---Pincode: ".intern();
 	public static final String CART_PINCODE_ERROR = "Delivery mode check issue ".intern();
 	public static final String WISHLIST_NON_EXISTENT = "rename.wishlist.no.exist".intern();
 
@@ -465,8 +465,8 @@ public class MarketplacewebservicesConstants
 	public static final String ENDFORHOME = "endForHome";
 	public static final String STARTFOREXPRESS = "startForExpress";
 	public static final String ENDFOREXPRESS = "endForExpress";
-	public static final String DELISTED_MESSAGE_CART = "Sorry! Some of the items in your Cart are no longer available";
-	public static final String DELISTED_MESSAGE_WISHLIST = "Sorry! Some of the items in your wishlist are no longer available";
+	public static final String DELISTED_MESSAGE_CART = "B9325";
+	public static final String DELISTED_MESSAGE_WISHLIST = "B9326";
 	public static final String JUSPAY_CONN_ERROR = "Sorry! The system is down, please try again";
 
 	public static final String LINK_LOGIN = "/login";
@@ -516,10 +516,21 @@ public class MarketplacewebservicesConstants
 	public static final String SEARCH_FACET_CONFIG = "search.facet.config";
 	public static final String GENERIC = "Generic".intern();
 	public static final String CATEGORY = "category".intern();
+	public static final String JUSPAYRETURNMETHOD = "payment.juspay.returnMethod.mobile";
+	public static final String CHARGED = "CHARGED";
+	public final static double WALLETAMOUNT = 0.00D;
 
 	//TPR_622, 627
 	public static final String YES = "yes";
 	public static final String NO_SSHIP = "no";
+
+	public static final String FOOTWEAR = "Footwear".intern();
+	//Added by SAP for Watches & FashionAccessories  :::  START
+	public static final String FASHION_ACCESSORIES = "Accessories";
+	public static final String WATCHES = "Watches";
+	//Added by SAP for Watches & FashionAccessories  :::  END
+	public static final String WARRANTY = "Warranty";
+	public static final String PDP_DESC_TAB = "pdp.desc.tab.".intern();
 
 
 }

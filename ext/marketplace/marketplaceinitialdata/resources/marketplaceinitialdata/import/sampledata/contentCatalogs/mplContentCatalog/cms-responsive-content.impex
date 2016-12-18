@@ -11,6 +11,7 @@ $picture=media(code, $contentCV) ;
 $siteResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/contentCatalogs/$contentCatalog
 $jarResourceCms=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/cockpits/cmscockpit
 
+
 INSERT_UPDATE SearchBoxComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
 ;;SearchBox;Search Box;SearchBox
 
@@ -112,6 +113,7 @@ INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=d
 # changes for help and service page
 ;;callus-getintouch.png;$siteResource/images/banners/homepage/callus-getintouch.png;callus-getintouch.png;"Call us";
 ;;chatwidus-getintouch.png;$siteResource/images/banners/homepage/chatwidus-getintouch.png;chatwidus-getintouch.png;"Chat With Us";
+;;CatBanner.png;$siteResource/images/banners/category_banners/CatBanner.png;CatBanner.png;"Category Banner";
 
 
 #Component Attached with the Authentic And Exclusive Page
@@ -1040,7 +1042,10 @@ INSERT_UPDATE MplShopByLookProductCarouselComponent;$contentCV[unique=true];uid[
 ;;ShopTheLookCarousel2;Shop the look carousel;987654321,987654322,987654323;;ShopTheLookCarousel2
 
 INSERT_UPDATE MplShopByLookProductCarouselComponent;$contentCV[unique=true];uid[unique=true];name;products(code,$productCV);title;&componentRef;
-;;ShopTheLookCarousel3;Shop the look carousel;987654321,987654322;;ShopTheLookCarousel3
+;;ShopTheLookCarousel3;Shop the look carousel;987654321,98765437;;ShopTheLookCarousel3
+
+INSERT_UPDATE MplShopByLookProductCarouselComponent;$contentCV[unique=true];uid[unique=true];name;products(code,$productCV);title;&componentRef;
+;;ShopTheLookCarousel4;Shop the look carousel;MPF220006002,MPF220006003,987654321;;ShopTheLookCarousel4
 
 INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
 ;;ShopTheLookParagraphComponent1;Shop the look paragraph 1;ShopTheLookParagraphComponent1
@@ -1116,3 +1121,90 @@ INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true
 #BestPicksCarouselComponent
 INSERT_UPDATE ImageCarouselComponent;$contentCV[unique=true];uid[unique=true];name;title;&componentRef;collectionItems(&componentRef)
 ;;TMPBestPicksConciergeComponent;Best Picks Concierge Component;Best Picks Concierge;TMPBestPicksConciergeComponent;BestPicksConcierge1Component,BestPicksConcierge2Component,BestPicksConcierge3Component,BestPicksConcierge4Component,BestPicksConcierge5Component
+
+#############SHOP THE STYLE################
+INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;category(code, $productCV);target(code)[default='sameWindow'];&componentRef
+;;ShopTheStyleLink1Comp;WISELY WHITE;/shopTheStyle;;;ShopTheStyleLink1Comp
+;;ShopTheStyleLink2Comp;THROW IT LIKE A PRO;/shopTheStyle;;;ShopTheStyleLink2Comp
+;;ShopTheStyleLink3Comp;DATE NIGHT;/shopTheStyle;;;ShopTheStyleLink3Comp
+;;ShopTheStyleLink4Comp;THE DESI DAPPER LOOK;/shopTheStyle;;;ShopTheStyleLink4Comp
+
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
+;;ShopTheStyleParagraphComponent1;Shop the Style paragraph 1;ShopTheStyleParagraphComponent1
+;;ShopTheStyleParagraphComponent2;Shop the Style paragraph 2;ShopTheStyleParagraphComponent2
+;;ShopTheStyleParagraphComponent3;Shop the Style paragraph 3;ShopTheStyleParagraphComponent3
+;;ShopTheStyleParagraphComponent4;Shop the Style paragraph 4;ShopTheStyleParagraphComponent4
+
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/png'];$contentCV[unique=true];folder(qualifier)[default=images];
+;;WiselyWhite.png;$siteResource/images/banners/homepage/responsive/WiselyWhite.png;WiselyWhite.png;"WiselyWhite";
+;;ThrowLikeAboss.png;$siteResource/images/banners/homepage/responsive/ThrowLikeAboss.png;ThrowLikeAboss.png;"ThrowLikeAboss";
+;;DateNight.png;$siteResource/images/banners/homepage/responsive/DateNight.png;DateNight.png;"DateNight";
+;;DesiDapperLook.png;$siteResource/images/banners/homepage/responsive/DesiDapperLook.png;DesiDapperLook.png;"DesiDapperLook";
+;;nikkon.png;$siteResource/images/banners/homepage/responsive/nikkon.png;nikkon.png;"Nikkon";
+;;lovbrandbanner.png;$siteResource/images/banners/homepage/responsive/lovbrandbanner.png;lovbrandbanner.png;"LookBook";
+;;ShopTheStyleBanner1.jpg;$siteResource/images/banners/homepage/responsive/ShopTheStyleBanner1.jpg;ShopTheStyleBanner1.jpg;"Tata Style";
+;;ShoeBanner.jpeg;$siteResource/images/banners/homepage/responsive/ShoeBanner.jpeg;ShoeBanner.jpeg;"Tata Look";
+
+
+
+INSERT_UPDATE BannerComponent;$contentCV[unique=true];uid[unique=true];$picture;&componentRef;urlLink;bannerView(code)
+;;ShopTheStyleBanner1;ShopTheStyleBanner1.jpg;ShopTheStyleBanner1;#wisely-white;desktopView
+;;ShopTheStyleBanner2;nikkon.png;ShopTheStyleBanner2;#throw-like-apro;desktopView
+;;ShopTheStyleBanner3;lovbrandbanner.png;ShopTheStyleBanner3;#date-night;desktopView
+;;ShopTheStyleBanner4;ShoeBanner.jpeg;ShopTheStyleBanner4;#desi-dapper-look;desktopView
+;;ShopTheStyleBanner5;ShopTheStyleBanner1.jpg;ShopTheStyleBanner5;#wisely-white;mobileView
+;;ShopTheStyleBanner6;nikkon.png;ShopTheStyleBanner6;#throw-like-apro;mobileView
+;;ShopTheStyleBanner7;lovbrandbanner.png;ShopTheStyleBanner7;#date-night;mobileView
+;;ShopTheStyleBanner8;ShoeBanner.jpeg;ShopTheStyleBanner8;#desi-dapper-look;mobileView
+
+INSERT_UPDATE RotatingImagesComponent;$contentCV[unique=true];uid[unique=true];name;banners(&componentRef);&componentRef;timeout
+;;TataStylesRotatingBannerComponent;Tata Style Rotating Banner Component;ShopTheStyleBanner1,ShopTheStyleBanner2,ShopTheStyleBanner3,ShopTheStyleBanner4,ShopTheStyleBanner5,ShopTheStyleBanner6,ShopTheStyleBanner7,ShopTheStyleBanner8;TataStylesRotatingBannerComponent;5
+
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];$picture;&componentRef
+;;3BBannerComponent;WiselyWhite.png;3BBannerComponent
+;;4CBannerComponent;ThrowLikeAboss.png;4CBannerComponent
+;;5BBannerComponent;DateNight.png;5BBannerComponent
+;;6CBannerComponent;DesiDapperLook.png;6CBannerComponent
+
+INSERT_UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];name;products(code,$productCV);&componentRef
+;;ShopTheStyleProductCarouselComponent1; Shop The Style Product Carousal Component;987654321,987654322,987654323,MPF220006003;ShopTheStyleProductCarouselComponent1
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+;;Section1-shopTheStyle;Section1C slot for Shop The Style Page;true;TataStylesRotatingBannerComponent;;;
+;;Section2A-shopTheStyle;Section2A slot for Shop The Style Page;true;ShopTheStyleLink1Comp;;;
+;;Section2B-shopTheStyle;Section2B slot for Shop The Style Page;true;ShopTheStyleLink2Comp;;;
+;;Section2C-shopTheStyle;Section2C slot for Shop The Style Page;true;ShopTheStyleLink3Comp;;;
+;;Section2D-shopTheStyle;Section2D slot for Shop The Style Page;true;ShopTheStyleLink4Comp;;;
+;;Section3A-shopTheStyle;Section3A slot for Shop The Style Page;true;ShopTheStyleParagraphComponent1;;;
+;;Section3B-shopTheStyle;Section3B slot for Shop The Style Page;true;3BBannerComponent;;;
+;;Section3C-shopTheStyle;Section3C slot for Shop The Style Page;true;ShopTheLookCarousel1;;;
+;;Section4A-shopTheStyle;Section4A slot for Shop The Style Page;true;ShopTheStyleParagraphComponent2;;;
+;;Section4B-shopTheStyle;Section4B slot for Shop The Style Page;true;ShopTheLookCarousel2;;;
+;;Section4C-shopTheStyle;Section4C slot for Shop The Style Page;true;4CBannerComponent;;;
+;;Section5A-shopTheStyle;Section5A slot for Shop The Style Page;true;ShopTheStyleParagraphComponent3;;;
+;;Section5B-shopTheStyle;Section5B slot for Shop The Style Page;true;5BBannerComponent;;;
+;;Section5C-shopTheStyle;Section5C slot for Shop The Style Page;true;ShopTheLookCarousel3;;;
+;;Section6A-shopTheStyle;Section6A slot for Shop The Style Page;true;ShopTheStyleParagraphComponent4;;;
+;;Section6B-shopTheStyle;Section6B slot for Shop The Style Page;true;ShopTheLookCarousel4;;;
+;;Section6C-shopTheStyle;Section6C slot for Shop The Style Page;true;6CBannerComponent;;;
+
+#ContentSlotforPage for Shop The Page
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='shopTheStyle'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section1-shopTheStyle;Section1;;Section1-shopTheStyle;;;
+;;Section2A-shopTheStyle;Section2A;;Section2A-shopTheStyle;;;
+;;Section2B-shopTheStyle;Section2B;;Section2B-shopTheStyle;;;
+;;Section2C-shopTheStyle;Section2C;;Section2C-shopTheStyle;;;
+;;Section2D-shopTheStyle;Section2D;;Section2D-shopTheStyle;;;
+;;Section3A-shopTheStyle;Section3A;;Section3A-shopTheStyle;;;
+;;Section3B-shopTheStyle;Section3B;;Section3B-shopTheStyle;;;
+;;Section3C-shopTheStyle;Section3C;;Section3C-shopTheStyle;;;
+;;Section4A-shopTheStyle;Section4A;;Section4A-shopTheStyle;;;
+;;Section4B-shopTheStyle;Section4B;;Section4B-shopTheStyle;;;
+;;Section4C-shopTheStyle;Section4C;;Section4C-shopTheStyle;;;
+;;Section5A-shopTheStyle;Section5A;;Section5A-shopTheStyle;;;
+;;Section5B-shopTheStyle;Section5B;;Section5B-shopTheStyle;;;
+;;Section5C-shopTheStyle;Section5C;;Section5C-shopTheStyle;;;
+;;Section6A-shopTheStyle;Section6A;;Section6A-shopTheStyle;;;
+;;Section6B-shopTheStyle;Section6B;;Section6B-shopTheStyle;;;
+;;Section6C-shopTheStyle;Section6C;;Section6C-shopTheStyle;;;
+

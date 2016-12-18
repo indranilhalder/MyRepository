@@ -11,6 +11,9 @@ INSERT_UPDATE CronJob; code[unique=true];job(code);singleExecutable;sessionLangu
 #;blacklistReportCreationJob;blacklistReportJob;false;de
 #New BuyBox Implementation
 ;BuyBoxDataImportJob;buyBoxDataImportJob;false;en
+;BrandProductLuxuryExportJob;brandProductLuxuryExportJob;false;en
+;CategoryProductLuxuryExtractJob;catProdLuxuryExportJob;false;en
+;PriceInventoryLuxuryExportJob;priceInventoryLuxuryExportJob;false;en
 
 
 INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression

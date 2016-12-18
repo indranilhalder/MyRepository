@@ -11,6 +11,10 @@
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user"%>
  <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+ <!-- LW-230 -->
+<input type="hidden" id="isLuxury" value="${isLuxury}"/>
+
  <script>
 	sessionStorage.setItem("confirmationPageVisited", "True");
 </script>
@@ -30,6 +34,33 @@
 	</c:if> 
 </c:if>
 <!--- END:MSD --->
+<!--  for tealium  -->
+<input type="hidden" id="product_category" value='${productCategoryList}'/>
+<input type="hidden" id="page_subcategory_name" value='${pageSubCategories}'/>
+<input type="hidden" id="page_subcategory_name_l3" value='${page_subcategory_name_L3}'/>
+	
+<input type="hidden" id="orderIDString" value="${orderData.code}">
+<input type="hidden" id="orderSubTotal" value="${orderData.subTotal.value}">
+<%-- <input type="hidden" id="orderTotal" value="${order.subTotal}"> --%>
+<input type="hidden" id="orderDate" value="${orderData.created}">	
+<input type="hidden" id="checkoutSellerIDs" value="${checkout_seller_ids}">
+<input type="hidden" id="product_id" value="${productIdListTealium}">
+<input type="hidden" id="order_shipping_charges" value="${orderShippingCharges}">
+
+<input type="hidden" id="product_quantity" value="${productQuantityListTealium}">
+<input type="hidden" id="product_sku" value="${productSkuListTealium}">
+<input type="hidden" id="product_brand" value="${productBrandListTealium}">
+<input type="hidden" id="order_payment_type" value="${order_payment_type}">
+<input type="hidden" id="transaction_id" value="${transaction_id}">
+
+<input type="hidden" id="order_tax" value="${orderData.totalTax.value}">
+<input type="hidden" id="order_total" value="${orderData.totalPrice.value}">
+<input type="hidden" id="order_discount" value="${orderData.totalDiscounts.value}">
+<input type="hidden" id="order_currency" value="${order_currency}">
+<input type="hidden" id="product_unit_price" value="${productUnitPriceListTealium}">
+<input type="hidden" id="product_list_price" value="${productListPriceListTealium}">
+<input type="hidden" id="product_name" value="${productNameListTealium}">
+<input type="hidden" id="order_shipping_modes" value="${order_shipping_modes}">
 
 	<c:url value="${continueUrl}" var="continueShoppingUrl" scope="session" />
 

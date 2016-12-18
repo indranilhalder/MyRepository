@@ -105,6 +105,7 @@
 		</div>
 
 		<spring:theme code="search.placeholder" var="searchPlaceholder" />
+		<%-- <spring:theme code="search.placeholder.marketplace" var="searchPlaceholder" /> --%>
 
 		<ycommerce:testId code="header_search_input">
 			<input type="text" id="js-site-search-input" tabindex="1"

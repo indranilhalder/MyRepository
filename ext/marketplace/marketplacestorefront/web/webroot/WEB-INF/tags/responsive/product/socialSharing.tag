@@ -26,21 +26,33 @@
 			var popUpHeight=450;
 				 var PopUpLeftPosition = screen.width/2 - popUpWidth/2;
 				    var PopUpTopPosition= screen.height/2 - popUpHeight/2;
-			function openPopup(url) {
+			function openPopup(url,buttontype) {
+				//alert(buttontype);
+				//TPR-674
+				utag.link({link_obj: this, link_text: buttontype , event_type : 'share_button_click' });
 				    window.open(url, 'popup_id','scrollbars,resizable,height='+popUpHeight+',width='+ popUpWidth +',left='+ PopUpLeftPosition +',top='+ PopUpTopPosition);
 			      return false;
 			    }
+			$(document).on('click','.mail.mailproduct',function(){
+			//	alert("yeaaaahhhhh")
+				utag.link({link_obj: this, link_text: 'share_email' , event_type : 'share_button_click' });
+			})
+			$(document).on('click','.g-interactivepost',function(){
+		//alert("g+...")
+		utag.link({link_obj: this, link_text: 'share_googleplus' , event_type : 'share_button_click' });
+			})
 </script>
 
 
 <div class="share">
 <span><spring:theme code="text.share.friends"/></span>
 	<ul>
+
 		<li>
-			<a class="tw" onclick="return openPopup('https://twitter.com/intent/tweet?text='+ $('#sharepretext').text() + ' ' +window.location.host+ $('#productUrl').text() + ' ' + $('#shareposttext').text())"></a>
+			<a class="tw" onclick="return openPopup('https://twitter.com/intent/tweet?text='+ $('#sharepretext').text() + ' ' +window.location.host+ $('#productUrl').text() + ' ' + $('#shareposttext').text(),'share_twitter')"></a>
 		</li>
 		<li>
-			<a class="fb" onclick="return openPopup('https://www.facebook.com/dialog/feed?link=' + window.location.host+ $('#productUrl').text() + '&amp;app_id=' + $('#facebookAppid').text() + '&amp;description='+$('#sharepretext').text()+' '+$('#shareposttext').text()+' &amp;redirect_uri=http://www.facebook.com/')"></a> 
+			<a class="fb" onclick="return openPopup('https://www.facebook.com/dialog/feed?link=' + window.location.host+ $('#productUrl').text() + '&amp;app_id=' + $('#facebookAppid').text() + '&amp;description='+$('#sharepretext').text()+' '+$('#shareposttext').text()+' &amp;redirect_uri=http://www.facebook.com/','share_facebook')"></a> 
 			<!-- <a class="fb" onclick="return openPopup('https://www.facebook.com/dialog/feed?link=' + window.location + '&amp;app_id=145634995501895&amp;description='+$('#sharepretext').text()+' '+$('#shareposttext').text()+' &amp;redirect_uri=https://developers.facebook.com/tools/explorer')"></a>  -->				
 		</li>
 		<li>
@@ -66,7 +78,7 @@
 <div id="emailSend" class="emailSend">
 	
 				<div class="click2chat-container send-email-container" id="myModalLabel">
-					<h1><spring:theme code="email.mail"/></h1>
+					<h2><spring:theme code="email.mail"/></h2>
 					
 					<form>
 				
@@ -91,5 +103,4 @@
 				</div>
 				</form>
 				</div>
-	
 </div>

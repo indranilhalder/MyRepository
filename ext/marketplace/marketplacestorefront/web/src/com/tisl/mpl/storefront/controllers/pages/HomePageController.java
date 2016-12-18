@@ -288,6 +288,7 @@ public class HomePageController extends AbstractPageController
 		{
 
 			String brandLogoUrl = EMPTY_STRING;
+			String brandLogoAltText = EMPTY_STRING;
 			for (final MplShowcaseItemComponentModel showcaseItem : showCaseComponent.getShowcaseItems())
 			{
 				final JSONObject showCaseItemJson = new JSONObject();
@@ -295,11 +296,19 @@ public class HomePageController extends AbstractPageController
 				showCaseItemJson.put("showByDefault", showcaseItem.getShowByDefault());
 				if (null != showCaseComponent.getLayout() && showCaseComponent.getLayout().equals(ShowCaseLayout.BRANDSHOWCASE))
 				{
-					if (null != showcaseItem.getLogo() && StringUtils.isNotEmpty(showcaseItem.getLogo().getURL()))
+					if (null != showcaseItem.getLogo())
 					{
-						brandLogoUrl = showcaseItem.getLogo().getURL();
+						if (StringUtils.isNotEmpty(showcaseItem.getLogo().getURL()))
+						{
+							brandLogoUrl = showcaseItem.getLogo().getURL();
+						}
+						showCaseItemJson.put("brandLogoUrl", brandLogoUrl);
+						if (StringUtils.isNotEmpty(showcaseItem.getLogo().getAltText()))
+						{
+							brandLogoAltText = showcaseItem.getLogo().getAltText();
+						}
+						showCaseItemJson.put("brandLogoAltText", brandLogoAltText);
 					}
-					showCaseItemJson.put("brandLogoUrl", brandLogoUrl);
 				}
 				else
 				{
@@ -931,23 +940,41 @@ public class HomePageController extends AbstractPageController
 		}
 		else
 		{
-			newsLetter.setEmailId(emailId);
+			//newsLetter.setEmailId(emailId);
 			final boolean result = brandFacade.checkEmailId(emailId);
 
 			//newsLetter.setIsSaved(Boolean.TRUE);
 
 			if (result)
 			{
+				newsLetter.setEmailId(emailId);
+				newsLetter.setIsMarketplace(Boolean.TRUE);
 				modelService.save(newsLetter);
 				return "success";
 			}
 			else
 			{
+				final List<MplNewsLetterSubscriptionModel> newsLetterSubscriptionList = brandFacade
+						.checkEmailIdForMarketplace(emailId);
+
+				if (null != newsLetterSubscriptionList && !newsLetterSubscriptionList.isEmpty())
+				{
+					for (final MplNewsLetterSubscriptionModel mplNewsLetterSubscriptionModel : newsLetterSubscriptionList)
+					{
+						if ((mplNewsLetterSubscriptionModel.getEmailId().equalsIgnoreCase(emailId))
+								&& (!(mplNewsLetterSubscriptionModel.getIsMarketplace().booleanValue()) || mplNewsLetterSubscriptionModel
+										.getIsMarketplace() == null))
+						{
+							mplNewsLetterSubscriptionModel.setIsMarketplace(Boolean.TRUE);
+							modelService.save(mplNewsLetterSubscriptionModel);
+						}
+
+					}
+					return "success";
+				}
 				return "fail";
 			}
-
 		}
-
 	}
 
 	public boolean validateEmailAddress(final String email)

@@ -11,7 +11,7 @@
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format" %>
-
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="hasShippedItems" value="${cartData.deliveryItemsQuantity > 0}" />
 <c:set var="deliveryAddress" value="${cartData.deliveryAddress}"/>
 <c:set var="firstShippedItem" value="true"></c:set>
@@ -24,23 +24,25 @@
 	});
 </script>
 	<div class="checkout-shipping-items">
-		<h1>
-			
+		<div class="checkout-headers">
+		<h1 class="title-name">
 			<spring:theme code="checkout.multi.deliveryMethod.chooseDeliveryOption"></spring:theme></br>
-			
-			 
 		</h1>
-		<p><spring:theme code="checkout.multi.deliveryMethod.chooseDeliveryOption.showPincode" text="Showing delivery options for pincode "></spring:theme>&nbsp;<span>${defaultPinCode}</span></p>
+		<p class="desk-view"><spring:theme code="checkout.multi.deliveryMethod.chooseDeliveryOption.showPincode" text="Showing delivery options for pincode"></spring:theme><span>${defaultPinCode}</span></p>
+		</div>
 		<%-- <span><spring:theme code="checkout.multi.deliveryMethod.chooseDeliveryOption.forPincode" text="for PINCODE "></spring:theme>&nbsp;${defaultPinCode}</span> TISUAT-4587--%>
-		<span></span>
+		<span style="display:none"></span>
 		<%-- <div class="checkout-shipping-items-header">	
 			<h3> <a href="${request.contextPath}/cart"><spring:theme code="checkout.multi.deliveryMethod.backToBag" text="Back to My Bag"></spring:theme> </a> </h3>
 		</div> --%>
-		<ul id="deliveryradioul" class="checkout-table product-block">
+		<ul id="deliveryradioul" class="checkout-table product-block mybag-items checkout-items">
 				<li class="header">
-					<ul class="headline">
-						<li id="header2"><spring:theme code="text.product.information"/></li>
-						<li class="delivery" id="header4"><spring:theme code="text.delivery.modes"/></li>
+					<ul class="headline mybag-item-head">
+					
+						<li id="header2" class="Product"><spring:theme code="text.product.delivery.product"/></li>
+						<li id="header2" class="Price"><spring:theme code="text.product.delivery.price"/></li>
+						<li id="header2" class="qty"><spring:theme code="text.product.delivery.quantity"/></li>
+						<li class="delivery dev" id="header4"><spring:theme code="text.product.delivery.deliveryoption"/></li>
 					</ul>
 				</li>
 				
@@ -52,8 +54,17 @@
 									<li>
 										<div >
 											<div class="thumb product-img">
-												<a href="${productUrl}"><product:productPrimaryImage
-														product="${entry.product}" format="thumbnail" /></a>
+												<c:choose>
+													<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
+															<a href="${productUrl}"><product:productPrimaryImage
+																	product="${entry.product}" format="luxuryCartIcon" /></a>
+													</c:when>
+													<c:otherwise>
+															<a href="${productUrl}"><product:productPrimaryImage
+																	product="${entry.product}" format="thumbnail" /></a>
+															
+													</c:otherwise>
+												</c:choose>
 											</div>
 													   
 													   
@@ -70,14 +81,29 @@
 												 	<ycommerce:testId code="cart_product_size">
 														<div class="size"><spring:theme code="text.size"/>${entry.product.size}</div>
 													</ycommerce:testId>
+													  <div class="item-price delivery-price delivery-price-mobile">
+											<ycommerce:testId code="cart_totalProductPrice_label">
+											<c:choose>
+											<c:when test="${not empty entry.totalSalePrice}">
+												<format:price priceData="${entry.totalSalePrice}"
+													displayFreeForZero="true" />
+													</c:when>
+													<c:otherwise>
+													<format:price priceData="${entry.totalPrice}"
+													displayFreeForZero="true" />
+													</c:otherwise>
+													</c:choose>
+											</ycommerce:testId>
+											
+										</div>
 													<ycommerce:testId code="cart_product_colour">
-																<div class="colour"><spring:theme code="text.colour"/>${entry.product.colour}</div>
+																<%-- <div class="colour"><spring:theme code="text.colour"/>${entry.product.colour}</div> --%>
 													</ycommerce:testId>
 												 </c:if>
 												<!-- end TISEE-4631 TISUAT-4229 -->
 												
 												<ycommerce:testId code="cart_product_colour">
-													<div class="colour"><spring:theme code="text.seller.name"/>	${entry.selectedSellerInformation.sellername}</div>
+													<%-- <div class="colour"><spring:theme code="text.seller.name"/>	${entry.selectedSellerInformation.sellername}</div> --%>
 												</ycommerce:testId>
 												
 												<c:forEach items="${fullfillmentData}" var="fullfillmentData">
@@ -85,22 +111,22 @@
 														<c:set var="fulfilmentValue" value="${fn:toLowerCase(fullfillmentData.value)}"> </c:set>
 														<c:choose>
 															<c:when test="${fulfilmentValue eq 'tship'}">
-																	<div class="colour">
+																	<%-- <div class="colour">
 																		Fulfilled By : <spring:theme code="product.default.fulfillmentType"></spring:theme>
-																	</div>
+																	</div> --%>
 															</c:when>
 															<c:otherwise>
-																	<div class="colour">
+																	<%-- <div class="colour">
 																		Fulfilled By : ${entry.selectedSellerInformation.sellername} 
-																	</div>	
+																	</div> --%>	
 															</c:otherwise>
 														</c:choose>
 													</c:if>
 												</c:forEach>
 												
-												<ycommerce:testId code="cart_product_colour">
+												<%-- <ycommerce:testId code="cart_product_colour">
 												<div class="colour"><spring:theme code="text.qty"/>${entry.quantity}</div>
-												</ycommerce:testId>
+												</ycommerce:testId> --%>
 															
 												<c:if
 													test="${ycommerce:doesPotentialPromotionExistForOrderEntry(cartData, entry.entryNumber)}">
@@ -180,7 +206,7 @@
 													</c:if>
 												</c:forEach>
 											</c:if>
-											<div class="item-price delivery-price">
+											<%-- <div class="item-price delivery-price">
 											<ycommerce:testId code="cart_totalProductPrice_label">
 											<c:choose>
 											<c:when test="${not empty entry.totalSalePrice}">
@@ -194,7 +220,7 @@
 													</c:choose>
 											</ycommerce:testId>
 											
-										</div> 
+										</div>  --%>
 
 											</div>
 											
@@ -208,7 +234,46 @@
 											
 										</div>  --%>
 									</li>
-								
+								    <li class="price">
+								    
+								    <div class="item-price delivery-price">
+											<ycommerce:testId code="cart_totalProductPrice_label">
+											<c:choose>
+											<c:when test="${not empty entry.netSellingPrice}">
+												<format:price priceData="${entry.netSellingPrice}"
+													displayFreeForZero="true" />
+													</c:when>
+													<c:otherwise>
+													<format:price priceData="${entry.totalPrice}"
+													displayFreeForZero="true" />
+													</c:otherwise>
+													</c:choose>
+											</ycommerce:testId>
+											
+										</div>
+								    
+								    
+								    </li>
+								    
+								    <li class="quantity">
+								      <div>
+								     <ycommerce:testId code="cart_product_colour">
+												<div class="colour"> <spring:theme code="text.qty"/>${entry.quantity}</div>
+									</ycommerce:testId>
+								     </div>
+								     
+								     
+								      
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
 									<li class="delivery">
 										<ul>
 										<c:if test="${not empty deliveryModeData}">
@@ -233,7 +298,7 @@
 																			<input type="radio"  name="${entry.entryNumber}" value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code}" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"   checked="checked"/>
 																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label>
 																			
-																		<span>	${delMode.description }</span></li>
+																		<span>	${delMode.description }.</span></li>
 																					
 																	</c:when>
 																	<c:otherwise>
@@ -241,7 +306,7 @@
 																			<input type="radio"   name="${entry.entryNumber}"  value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code }" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"  />
 																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label>
 																			
-																		<span>${delMode.description }</span> </li>
+																		<span>${delMode.description }.</span> </li>
 																			
 																	</c:otherwise>
 															</c:choose>
@@ -332,5 +397,4 @@
 		
 	</div>
 	</c:if>
-
 

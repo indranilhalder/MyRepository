@@ -20,6 +20,11 @@
 			xsi:noNamespaceSchemaLocation="items.xsd">
 
 	<!-- Restriction : Commented as functionality out of scope of R2.1   Uncomment when in scope -->
+	 <collectiontypes>
+	   
+		<collectiontype code="SellerDataCollection" elementtype="SellerMaster" 
+			autocreate="true" generate="false" />
+	</collectiontypes>	
 	<!-- <collectiontypes>
 	    <collectiontype code="DeliveryModeDataCollection" elementtype="DeliveryMode"
 			autocreate="true" generate="false" type="list" /> 
@@ -49,6 +54,34 @@
 	<itemtypes>
 
 <!-- Tata Etail change - Coupon starts -->
+		<!-- TPR-715 Seller Restriction for Voucher -->
+		 <itemtype generate="true" code="SellerRestriction"
+			jaloclass="com.tisl.mpl.jalo.SellerRestriction" extends="Restriction"
+			autocreate="true">
+			<attributes>
+				<attribute qualifier="seller" autocreate="true" type="SellerDataCollection">
+					<description>List of Seller</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						optional="false" initial="false" />
+				</attribute>
+				<attribute autocreate="true" generate="true" qualifier="sellerCodeList" type="java.lang.String">
+					<description>the sellers for which the given voucher is valid for.</description>
+					<persistence type="property"/>
+					<modifiers read="true" write="true" search="true" optional="true"/>
+				</attribute>
+				<!-- <attribute qualifier="positive" type="java.lang.Boolean" autocreate="false">
+					<defaultvalue>Boolean.TRUE</defaultvalue>
+					<description>
+						Specifies if this restriction is a positive (true) or negative 
+						(false) one.
+					</description>
+					<persistence type="property"/>
+					<modifiers search="false" optional="false"/>
+				</attribute> -->
+			</attributes>
+		</itemtype>
+		<!-- TPR-715 Seller Restriction for Voucher ends -->
 		
 		<!-- Restriction : Commented as functionality out of scope of R2.1   Uncomment when in scope -->
 		<!-- Tata Etail-DeliveryModeRestriction -->
@@ -294,6 +327,36 @@
 				</attribute>
 			</attributes>
 		</itemtype>
+		<!-- added for TPR-1076 -->
+		<itemtype code="UnregisteredUserRestriction"
+		 	extends="Restriction"
+		 	generate="true" 
+			jaloclass="com.tisl.mpl.jalo.UnregisteredUserRestriction"
+		 	autocreate="true">
+		 	<attributes>
+		 		<attribute type="java.lang.String" qualifier="emailList">
+		 			<persistence type="property">
+		                <columntype database="oracle">
+							<value>CLOB</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+		 			</persistence>
+		 			<description>List of  unregistered email IDs in the website</description>
+		 			<modifiers read="true"  write="true"  search="true" optional="false"/>
+				 </attribute>
+		 	</attributes>
+		 </itemtype>
 		
 	</itemtypes>
 </items>

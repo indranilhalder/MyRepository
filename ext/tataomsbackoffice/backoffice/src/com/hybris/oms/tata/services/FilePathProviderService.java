@@ -20,100 +20,7 @@ public class FilePathProviderService
 	private String validationErrFilePath;
 	private String statesPropFilePath;
 	private String pincodesUploadPath;
-	private String landmarkUploadPath;
-	private String returnOrderFileUploadPath;
-	private String fragileOrderFileUploadPath;
-	private String forwardFileHeaderProperty;
-	private String returnFileHeaderProperty;
-
-
-	/**
-	 * @return the forwardFileHeaderProperty
-	 */
-	public String getForwardFileHeaderProperty()
-	{
-		return forwardFileHeaderProperty;
-	}
-
-	/**
-	 * @param forwardFileHeaderProperty
-	 *           the forwardFileHeaderProperty to set
-	 */
-	public void setForwardFileHeaderProperty(final String forwardFileHeaderProperty)
-	{
-		this.forwardFileHeaderProperty = forwardFileHeaderProperty;
-	}
-
-	/**
-	 * @return the returnFileHeaderProperty
-	 */
-	public String getReturnFileHeaderProperty()
-	{
-		return returnFileHeaderProperty;
-	}
-
-	/**
-	 * @param returnFileHeaderProperty
-	 *           the returnFileHeaderProperty to set
-	 */
-	public void setReturnFileHeaderProperty(final String returnFileHeaderProperty)
-	{
-		this.returnFileHeaderProperty = returnFileHeaderProperty;
-	}
-
-	/**
-	 * @author prabhakar
-	 * @return the returnOrderFileUploadPath
-	 */
-	public String getReturnOrderFileUploadPath()
-	{
-		return returnOrderFileUploadPath;
-	}
-
-	/**
-	 * @param returnOrderFileUploadPath
-	 *           the returnOrderFileUploadPath to set
-	 */
-	public void setReturnOrderFileUploadPath(final String returnOrderFileUploadPath)
-	{
-		this.returnOrderFileUploadPath = returnOrderFileUploadPath;
-	}
-
-	/**
-	 * @author prabhakar
-	 * @return the fragileOrderFileUploadPath
-	 */
-	public String getFragileOrderFileUploadPath()
-	{
-		return fragileOrderFileUploadPath;
-	}
-
-	/**
-	 * @param fragileOrderFileUploadPath
-	 *           the fragileOrderFileUploadPath to set
-	 */
-	public void setFragileOrderFileUploadPath(final String fragileOrderFileUploadPath)
-	{
-		this.fragileOrderFileUploadPath = fragileOrderFileUploadPath;
-	}
-
-	/**
-	 * @author prabhakar
-	 * @return the landmarkUploadPath
-	 */
-	public String getLandmarkUploadPath()
-	{
-		return landmarkUploadPath;
-	}
-
-	/**
-	 * @param landmarkUploadPath
-	 *           the landmarkUploadPath to set
-	 */
-	public void setLandmarkUploadPath(final String landmarkUploadPath)
-	{
-		this.landmarkUploadPath = landmarkUploadPath;
-	}
+	private String shipmentStatusUpload;
 
 	/**
 	 *
@@ -255,5 +162,25 @@ public class FilePathProviderService
 	{
 		this.validationErrFilePath = validationErrFilePath;
 	}
+
+	/**
+	 * @return the shipmentStatusUpload
+	 */
+	public String getShipmentStatusUpload()
+	{
+		return shipmentStatusUpload;
+	}
+
+	/**
+	 * @param shipmentStatusUpload
+	 *           the shipmentStatusUpload to set
+	 */
+	public void setShipmentStatusUpload(final String shipmentStatusUpload)
+	{
+		this.shipmentStatusUpload = shipmentStatusUpload;
+	}
+
+
+
 
 }

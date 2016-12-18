@@ -23,11 +23,11 @@ INSERT_UPDATE Language;isocode[unique=true];fallbackLanguages(isocode);active[de
 
 # Currencies
 INSERT_UPDATE Currency;isocode[unique=true];conversion;digits;symbol
-;GBP;1;2;Ãƒâ€šÃ‚Â£
-;EUR;1;2;ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬
+;GBP;1;2;ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£
+;EUR;1;2;ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬
 ;USD;1,4;2;$
-;JPY;120;0;Ãƒâ€šÃ‚Â¥
-;INR;1;2;₹
+;JPY;120;0;ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¥
+;INR;1;2;â‚¹
 
 # SiteMap Language Currencies
 INSERT_UPDATE SiteMapLanguageCurrency;&siteMapLanguageCurrency;language(isoCode)[unique=true];currency(isocode)[unique=true];
@@ -117,6 +117,7 @@ INSERT_UPDATE MediaFormat;qualifier[unique=true];name
 ;97Wx144H;97Wx144H
 ;40Wx40H;40Wx40H
 ;160Wx46H;160Wx46H
+;450Wx545H;450Wx545H
 
 
 # Media formats
@@ -246,8 +247,14 @@ INSERT_UPDATE CronJob;code[unique=true];job(code);singleExecutable;sessionLangua
 #For Payment Job (Web Hook Integration)
 ;juspayWebHookCronJob;juspayWebHookJob;false;en
 ;juspayEBSCronJob;juspayEBSJob;false;en
+;initiateCancelForOrderCronJob;initiateCancelForOrderJob;false;en
 ;campaignPromoDataCronJob;campaignPromoDataJob;false;en
 ;mplBankCSVPrepareCronJob;mplBankCSVPrepareJob;false;en
+
+#New Job To Process Order from Payment Pending to Payment Successful
+;mplProcessOrderCronJob;mplProcessOrderJob;false;en
+
+;promotionPriceUpdaterCronJob;promotionPriceUpdaterJob;false;en
 
 INSERT_UPDATE DelistingJobHelper;code[unique=true];job(code);sessionLanguage(isocode);fileNamePrefix;fileExtension
 								;DelistingHelperJob;delistingJob;en;seller;csv;
@@ -259,6 +266,7 @@ INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
 ; juspayEBSCronJob; 0 0/15 * 1/1 * ? *
 ; juspayWebHookCronJob; 0 0/15 * 1/1 * ? *
 ;sellerPriorityCronJob;0 0/15 * 1/1 * ? *
+#; promotionPriceUpdaterCronJob; 0 0/5 * 1/1 * ? *
 
 
 # Validation constraints - Customer
@@ -506,6 +514,11 @@ INSERT_UPDATE OrderStatusCodeMaster;id[unique=true];statusCode;responseStatus;st
 ;100040;ORDER_CANCELLED;Order Cancelled;Your order has been cancelled;CANCEL;true;true;ff1c47;D11; 
 
 
+;100041;PAYMENT_PENDING;Payment Pending;Payment In-Process;PAYMENT;true;true;ff0000;D12;
+;100042;PAYMENT_TIMEOUT;Payment Timeout;Order Failed;PAYMENT;true;true;ff0000;D12;
+;100043;PAYMENT_FAILED;Payment Failed;Payment Declined;PAYMENT;true;true;ff0000;D12;
+
+
 ###Payment Related
 UPDATE BaseStore;uid[unique=true];CodUpperLimit;CodLowerLimit;juspayWebHookTAT;juspayEBSTAT;ebsTatExpiryAlertTime;prepaidUpperLimit;prepaidLowerLimit
 ;mpl;50000;2000;10;6;15;100000;0
@@ -624,5 +637,9 @@ INSERT_UPDATE MplConfiguration;mplConfigCode[unique=true];mplConfigVal;mplConfig
 
 INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
 ;campaignPromoDataCronJob;0 0 18 * * ?
+
+INSERT_UPDATE luxIndicatorEnum;code[unique=true];name[lang=en]
+;marketplace;Marketplace
+;luxury;Luxury;
 
 

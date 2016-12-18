@@ -14,7 +14,7 @@
 
 
 
-	function selectProductSize() {
+	function selectProductSize() { 
 		var requiredUrl = $("#sizevariant option:selected").val();
 		if (requiredUrl == "#") {
 			return false;
@@ -37,11 +37,18 @@
 		var currentColour = '${product.colour}';
 		var currentCapacity = $("#variantForm input#cpcty").attr("value");
 		$(".color-swatch li span").each(function(){
-			var title = $(this).attr("title");
-			if(currentColour == title){
+			var title = $(this).attr("title").toLowerCase();
+			if(currentColour.toLowerCase() == title){
 				$(this).parent().parent().addClass("active");
 			}			
 		});
+		//Added for TPR-210
+		 $(".color-swatch li img").each(function(){
+			var title = $(this).attr("title").toLowerCase();
+			if(currentColour.toLowerCase() == title){
+				$(this).parent().parent().addClass("active");
+			}
+		});	 
 		$("#variantForm span.capacity-box a").each(function(){
 			var title = $(this).attr("title");
 			if(currentCapacity == title){
@@ -88,14 +95,19 @@
 				</c:forEach> --%>
 				<!-- TISPRO-467 -->
 				<c:forEach items="${variantOption.colourCode}" var="color">
-					<c:choose>
-						<c:when test="${fn:startsWith(color, 'multi')}">
-							<img src="${commonResourcePath}/images/multi.jpg" height="36" width="36" title="${variantOption.colour}" />
-						</c:when>
-						<c:otherwise>
-							<span  style="background-color: ${color};border: 1px solid rgb(204, 211, 217);"  title="${variantOption.colour}"></span>
-						</c:otherwise>
-					</c:choose>
+				<c:choose>
+							    <c:when test="${fn:startsWith(color, 'multi') && empty variantOption.image}">
+						     	<img src="${commonResourcePath}/images/multi.jpg" height="36" width="36" title="${variantOption.colour}" />
+								</c:when>
+								<c:when test="${empty variantOption.image}">
+						     	<span style="background-color: ${color};border: 1px solid rgb(204, 211, 217); width:50px; height:73px" title="${variantOption.colour}"></span>
+								</c:when>							
+								<c:otherwise>
+								<c:set var="imageData" value="${variantOption.image}" />
+								<img src="${imageData.url}" title="${variantOption.colour}" alt="${styleValue}" style="display: inline-block;width: 50px;"/>								
+                               </c:otherwise>
+                </c:choose>
+					
 					<c:if test="${variantOption.code eq product.code}">
 						<c:set var="currentColor" value="${color}" />
 						<!--  set current selected color -->
@@ -177,12 +189,19 @@
 </c:choose>
 	<!-- Size guide Pop-up -->
 	<input type="hidden" value="${selectedSize}" name="isSizeSelectedQV" id="isSizeSelectedQV">
-	<a class="size-guide" href="${sizeGuideUrl}" role="button" data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}">
+	<%-- <a class="size-guide" href="${sizeGuideUrl}" role="button" data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}">
 		<spring:theme code="product.variants.quickview.size.guide"/>
-	</a>
+	</a> --%>
+
 	<!-- End Size guide Pop-up -->
 	<form:form action="/" method="get" id="variantForm"  class="sizeVariantForm" >
-    <p style="margin-top:15px;"><spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if></p>
+
+    <p class="sizetext"><spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if></p>
+		
+		<a class="size-guide" href="${sizeGuideUrl}" role="button" data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}">
+		<spring:theme code="product.variants.quickview.size.guide"/>
+		</a>
+
 		<div class="select-size">
 		 <c:choose>
 		    <c:when test="${selectedSize!=null}"> 
@@ -193,12 +212,12 @@
 							code="text.select.size" /></span>
 			</c:otherwise>
 			</c:choose> 
-				<ul label="sizes">
+				<ul label="sizes" id="quickViewVariant">
 				 <li style="display:none;"><a href="#" class="js-reference-item cboxElement">select size</a></li>
 				 <%-- <li><spring:theme
 							code="text.select.size" /></li> --%>
 				<c:forEach items="${product.variantOptions}" var="variantOption">
-
+					
 					<c:url value="${variantOption.url}/quickView" var="variantUrl" />
 					<c:forEach items="${variantOption.colourCode}" var="color">
 						<c:choose>
@@ -207,12 +226,12 @@
 									<c:set var="currentColor" value="${color}" />
 									<c:forEach var="entry" items="${variantOption.sizeLink}">
 										<c:url value="${entry.key}" var="link" />
-							            
-										<c:choose>
-											<c:when test="${(product.code eq variantOption.code && selectedSize !=null)}">
+							            	
+										<c:choose>									
+											<c:when test="${(product.code eq variantOption.code && selectedSize != null)}">
 											<li class="selected"><a href="${variantUrl}?selectedSize=true" class="js-reference-item cboxElement">${entry.value}</a></li>
 											</c:when>
-											<c:otherwise>   
+											<c:otherwise>  
 												<li><a href="${variantUrl}?selectedSize=true" class="js-reference-item cboxElement">${entry.value}</a></li>
 											</c:otherwise>
 										</c:choose>
@@ -237,20 +256,18 @@
 													value="${variantOption.url}/quickView"
 													var="variantUrl" />
 												<c:forEach var="entry" items="${variantOption.sizeLink}">
-													<c:url value="${entry.key}" var="link" />
-                                                    
+													<c:url value="${entry.key}" var="link" />                                                
 													<c:choose>
-														<c:when test="${(product.code eq variantOption.code)}">
-                                                         
+														<c:when test="${(product.code eq variantOption.code && selectedSize != null )}">                                                    
 															<c:url
 																value="${variantOption.url}/quickView" 
 																var="variantUrl" />
-															    
-																<li><a href="${variantUrl}" class="js-reference-item cboxElement">${entry.value}</a></li>
+															   <li class="selected"><a href="${variantUrl}?selectedSize=true" class="js-reference-item cboxElement">${entry.value}</a></li> 
+															   <!--<li class="selected"><a href="${variantUrl}" class="js-reference-item cboxElement">${entry.value}</a></li>-->	
 														</c:when>
 														<c:otherwise>
-															
-															<li><a href="${variantUrl}" class="js-reference-item cboxElement">${entry.value}</a></li>
+															<li><a href="${variantUrl}?selectedSize=true" class="js-reference-item cboxElement">${entry.value}</a></li>
+															<!--<li><a href="${variantUrl}" class="js-reference-item cboxElement">${entry.value}</a></li>--> 
 														</c:otherwise>
 													</c:choose>
 												</c:forEach>

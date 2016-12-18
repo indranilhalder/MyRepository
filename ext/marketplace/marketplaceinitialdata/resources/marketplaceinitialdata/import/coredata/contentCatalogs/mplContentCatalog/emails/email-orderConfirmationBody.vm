@@ -1,291 +1,358 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
-		<title>Order Delivery</title>
-		<style>
- 		img.spacer-img {
- 			opacity:0;
- 			}
-		</style> 
-	</head>
-<body>
+   <head>
+      <title>Order Confirmation</title>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	  <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+      <style type="text/css">
+         body,td,th {
+         font-family: Arial, Helvetica, sans-serif;
+         }
+	table{
+		border-spacing: inherit;
+	}
+		 .order-detail-row td{
+			border-bottom: 1px solid #e2e2e2;
+			padding: 0;
+			margin: 0;
+			line-height: 0;
+		 }
+		 .heading_shopping td{
+			border-top: 1px solid #000;
+			border-bottom: 1px solid #000;
+			margin-bottom: 15px;
+			margin-top: 15px;
+		 }
+		 .order-prodDetail-row p{
+			margin-top: 10px;
+			margin-bottom: 10px;
+		 }
+		 .order-detail-heading td{
+			padding-top: 10px;
+			padding-bottom: 10px;
+		 }
+		 .tip-icon img{
+			float: left;
+		 }
+		 .logo-img img, .downloadapp-icon img{
+			width: 100%;
+		 }
+		 .btn-track-order img{
+			margin-top: -10px;
+		 }
+      </style>
+   </head>
+   <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+      <!-- Save for Web Slices (Order Confirmation.psd) -->
+      <table id="Table_01" border="0" cellpadding="0" cellspacing="0" width="600" style="margin: 0 auto; border-bottom: 1px solid #e2e2e2;">
+         <tr>
+			#if($ctx.cmsSlotContents.SiteLogo)
+            <td colspan="5"><a href="https://www.tatacliq.com/" target="_blank" class="logo-img">${ctx.cmsSlotContents.SiteLogo}</a></td>
+			#end
+         </tr>
+         <tr>
+            <td colspan="5" style="padding-left:16px;" align="left" bgcolor="#fbfbfb"><font size="4" color="#000000" ><br/><strong style="padding-top: 7px; display: block"> Hi ${ctx.customerName}, </strong></font></td>
+         </tr>
+         <tr>
+            <td colspan="5" style="padding-left:16px;" align="left" bgcolor="#fbfbfb">
+               <p style="margin-top: 6px; margin-bottom: 24px;"><font size="3" color="#000000" ><br/>
+                  We’ve got it! We’d like to confirm your order, the details of which
+                  are below:<br/>
+                  </font>
+               </p>
+            </td>
+         </tr>
+         <tr>
+            <td colspan="5" style="padding-left:16px;" align="left" bgcolor="#f5f5f5">
+               <p style="margin-bottom: 0px; padding-top: 10px; padding-bottom: 10px;"><font size="4" color="#000000" ><strong>
+                  Order Reference Number: ${ctx.orderReferenceNumber}
+                  </strong></font>
+               </p>
+            </td>
+         </tr>
+        
+		 <tr>
+			<td colspan="5">
+		 
+		 <table style="border-bottom: 1px solid #e2e2e2; width: 100%;">
+          <tr class="order-detail-heading">
+            <td align="center" bgcolor="#fbfbfb" style="margin-top: 0px; width: 19%; padding-left: 0%; padding-right: 1%;">
+               <p align="center"><font size="2" color="#000000" ><strong>
+                  Transaction<br/>
+                  ID<br/>
+                  </strong> </font>
+               </p>
+            </td>
+            <td align="center" bgcolor="#fbfbfb" style="width: 20%; margin-top: 0; padding-top: 0; padding-right: 1%;">
+               <p align="center"><font size="2" color="#000000" ><strong>
+                  Product
+                  </strong> </font>
+               </p>
+            </td>
+            <td align="center" bgcolor="#fbfbfb" style="width: 6%; padding-right: 1%;">
+               <p align="center"><font size="2" color="#000000" ><strong>
+                  Qty
+                  </strong> </font>
+               </p>
+            </td>
+            <td align="center" bgcolor="#fbfbfb" style=" padding-right: 1%; width: 6%;">
+               <p align="center"><font size="2" color="#000000" ><strong>
+                  Price
+                  </strong> </font>
+               </p>
+            </td>
+            <td align="center" bgcolor="#fbfbfb" style="width: 23%; padding-right: 1%;">
+               <p align="center"><font size="2" color="#000000" ><strong>
+                  Shipping Charges<br/>
+                  (if any)<br/>
+                  </strong> </font>
+               </p>
+            </td>
+            <td align="center" bgcolor="#fbfbfb" style="width: 20%; padding-right: 1%;">
+               <p align="center"><font size="2" color="#000000" ><strong>
+                  COD Charges<br/>
+                  (if any)<br/>
+                  </strong> </font>
+               </p>
+            </td>
+			<!--<td align="center" bgcolor="#fbfbfb" style="width: 3%;">
+               <p align="center"><font size="2" color="#000000" ><strong>
+                  Delivery<br/>
+				  Mode<br/>
+                  </strong> </font>
+               </p>
+            </td>-->
+         </tr>
+		 		 
+		 #set ($shippingCharge=0)
+		 #foreach( $childorder in ${ctx.childOrders} )
+				 
+				 
+		 #set ($srNo=1)
+         #foreach($entry in ${childorder.entries})
+         <tr class="order-detail-row">
+            <td colspan="7">
+                &nbsp;
+            </td>
+         </tr>
+         <tr class="order-prodDetail-row">
+            <td align="left" bgcolor="#fbfbfb">
+               <p align="center"><font size="2" color="#000000" >
+                  $entry.orderLineId</font>
+               </p>
+            </td>
+            <td align="left" bgcolor="#fbfbfb">
+               <p align="center"><font size="2" color="#000000" >
+                  $entry.product.name</font>
+               </p>
+            </td>
+            <td align="left" bgcolor="#fbfbfb">
+               <p align="center"><font size="2" color="#000000" >
+                  $entry.quantity </font>
+               </p>
+            </td>
+			<td align="left" bgcolor="#fbfbfb">
+               <p align="center"><font size="2" color="#000000" >
+                  $entry.netAmountAfterAllDisc </font>
+               </p>
+            </td>
+			
+			
+			
+            
+            
+            <td align="left" bgcolor="#fbfbfb">
+               <p align="center"><font size="2" color="#000000" >
+                  $entry.currDelCharge </font>
+               </p>
+            </td>
+			
+			<td align="left" bgcolor="#fbfbfb">
+               <p align="center"><font size="2" color="#000000" >
+                  $entry.convenienceChargeApportion</font>
+               </p>
+            </td>
+			<!--<td align="left" bgcolor="#fbfbfb">
+               <p align="center"><font size="2" color="#000000" >
+                  $entry.mplDeliveryMode.deliveryMode.name </font>
+               </p>
+            </td>-->
+         </tr>	 
+		 
+		 
+		 
+		 #set ($srNo=$srNo+1)
+         #set($shippingCharge=$shippingCharge+$entry.currDelCharge)
+         #end	
+		 
+		 
+		 #end
+		 
+		 </table>
+		 
+		 
+		 
+		 </td>
+		 
+		 </tr>
+		 
+		 
+		 
+		 
+		
+         <tr class="total-amt-row" bgcolor="#fbfbfb">
+            <td colspan="3" style="padding-left:16px; padding-top: 16px;" align="left" bgcolor="#fbfbfb"><font size="4" color="#000000" ><strong> Total: ${ctx.totalPrice}</strong></font></td>
+            <td colspan="2" rowspan="2" style="padding-top: 0; text-align: right">			
+               <a href="${ctx.trackOrderUrl}" class="btn-track-order">${ctx.cmsSlotContents.TrackOrder1}</a>			   
+            </td>
+         </tr>
+         <tr>
+            <td colspan="5" style="padding: 15px 15px 10px;" align="left" bgcolor="#fbfbfb">
+               <p><font size="3" color="#000000" ><strong>
+                  Delivery Details
+                  </strong></font>
+               </p>
+            </td>
+         </tr>
+         <tr class="order-detail-row">
+            <td colspan="5">
+			
+			
+               &nbsp;
+			   
+			   
+            </td>
+         </tr>
+		 
+		 <tr bgcolor="#f5f5f5">
+		 <td colspan="2" style="padding-left:15px; padding-top: 10px; width: 50%; vertical-align: top" align="left" bgcolor="#f5f5f5">
+               <p style="float: left; margin-top: 0;"><font size="2" color="#000000" >
+                  As you’ve requested, we’ll be
+                  sending SMS alerts about your order
+                  status on your registered mobile number.
+                  <br/></font>
+               </p>
+         </td>
+		 <td colspan="1">&nbsp;</td>
+		 
+		 
+		 <td colspan="2" style="vertical-align: top; padding-top: 10px;">
+		 <table>
+         <tr>
+			#if($ctx.deliveryAddress)
+            <td colspan="5" style="padding-left:15px;" align="left" bgcolor="#f5f5f5">
+               <p style="margin: 0;"><font size="3" color="#000000" >
+			    Your Delivery Address: <br/><br/>
+                  ${ctx.deliveryAddress}
+                  </font>
+               </p>
+            </td>
+			#end
+         </tr>
+		 <tr>
+			 #if($ctx.storeAddress)
+			 <td colspan="5" style="padding-left:15px;" align="left" bgcolor="#f5f5f5">
+				<p><font size="3" color="#000000" >Store Address for PiQ up:</font>
+               </p>
+			 </td>
+			 #end 
+		  </tr>
+         <tr>
+			#if($ctx.storeAddress)
+            #foreach( $store in ${ctx.storeAddress} )
+            <td colspan="5" style="padding-left:15px;" align="left" bgcolor="#f5f5f5">
+               <p><font size="3" color="#000000" >
+					#if($store.displayName)Store Name : ${store.displayName}#end<br/>
+					#if($store.address.line1)$store.address.line1,#end
+					#if($store.address.line2)$store.address.line2,#end
+					#if($store.address.addressLine3)$store.address.addressLine3,#end
+					#if($store.address.appartment)$store.address.appartment,#end
+					#if($store.address.landmark)$store.address.landmark,#end
+					#if($store.address.city)$store.address.city,#end
+					#if($store.address.district)$store.address.district,#end
+					#if($store.address.state)$store.address.state,#end
+					#if($store.address.country.name)$store.address.country.name,#end
+					#if($store.address.postalcode)$store.address.postalcode,#end
+					#if($store.address.phone1)$store.address.phone1#end
+                  </font>
+               </p>
+            </td>
+			#end
+			 #end
+         </tr>
+		 </table>
+		 </td>
+		 </tr>
+		 
+		 
+         
+         <tr bgcolor="#fbfbfb">
+            <td colspan="5" height="18">
+               &nbsp;
+            </td>
+         </tr>
+		 
+		 
+		 
+         <tr bgcolor="#fbfbfb">
+			#if($ctx.cmsSlotContents.Tip)
+            <td colspan="5" class="tip-icon">
+               ${ctx.cmsSlotContents.Tip} <font size="4" color="#000000" style="display: block; padding-left: 5px; text-align: left; margin-top: 8px; margin-left: 58px;"><strong> HERE'S A TIP </strong></font>
+            </td>
+			 #end
+         </tr>
+         <tr>
+            <td colspan="5" style="padding-left:16px;" align="left" bgcolor="#fbfbfb">
+               <p style="margin-bottom: 10px;"><font size="2" color="#000000">
+                  Please quote your <strong>order reference number</strong> to get information about
+                  your whole order. If you want to know more about an individual product,
+                  quote its <strong>transaction ID</strong>. </font>
+               </p>
+            </td>
+         </tr>
+		 #if($ctx.cmsSlotContents.app)
+         <tr bgcolor="#fbfbfb">
+            <td colspan="5">
+               <a href="https://www.tatacliq.com/apps" target="_blank" style="display: block; margin-bottom: 25px;" class="downloadapp-icon">
+					${ctx.cmsSlotContents.app}
+				</a>	
+            </td>
+         </tr>
+		 #end
+         <tr class="heading_shopping">
+            <td colspan="5" style="padding-left:16px;" align="left" bgcolor="#fbfbfb">
+               <p style="margin-bottom: 10px; margin-top: 10px;"><font size="4" color="#000000" ><strong>Happy Shopping! </strong></font>
+               </p>
+            </td>
+         </tr>
+         
+         <tr>
+            <td colspan="5" style="padding-left:16px; padding-top: 26px; padding-bottom: 10px;" align="left" bgcolor="#fbfbfb"><font size="2" color="#000000" >This email can't receive replies. Get in touch with us by contacting Tata CLiQ Care <a href="tel:18002088282">1800 208 8282</a>. You can also write to us at <a href="mailto:hello@tatacliq.com">hello@tatacliq.com</a>. For help with our luxury products,
+               write to <a href="mailto:luxury@tatacliq.com">luxury@tatacliq.com</a>. <br/></font>
+            </td>
+         </tr>
+        <tr bgcolor="#fbfbfb">		
+		
+			<td colspan="5">
+				<font size="2" color="#000000" style="margin-left: 15px; float: left; padding-top: 11px;"> © 2016 Tata CLiQ | All Rights Reserved<br/>
+					   </font>
+				<table style="float: right;">
+			
+				<tr>
+					<td style="text-align: right;"><a href="https://www.facebook.com/TataCLiQ/" target="_blank">${ctx.cmsSlotContents.fb}</a></td>
+					<td><a href="https://twitter.com/tatacliq" target="_blank">${ctx.cmsSlotContents.tweet}</a></td>
+					<td><a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" target="_blank">${ctx.cmsSlotContents.youtube}</a></td>
+					<td><a href="https://www.instagram.com/tatacliq/" target="_blank">${ctx.cmsSlotContents.insta}</a></td>
+			
+				</tr>
+				</table>
 
-	<table width="598" border="0" align="center" cellpadding="0" cellspacing="0" style=" border:1px solid #000;" >
+			</td>
 
-	<tr>
-    			<td>
-
-    	<table width="598" border="0" cellspacing="0" cellpadding="0">
-      		<tr>
-        		#if($ctx.cmsSlotContents.SiteLogo)<td align="left" valign="top" bgcolor="#ffffff">${ctx.cmsSlotContents.SiteLogo}</td>#end
-
-      		</tr>
- 
-      	<tr>
-        		<td bgcolor="#FBFBFB">
-
-        <table width="598" border="0" cellspacing="0" cellpadding="0">
-         ` <tr>
-            	<td width="13">&nbsp;</td>
-
-            	<td><font style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#4a4a4b; font-weight:bold;">Hey  ${ctx.customerName},</font>
-                <br>
-                <br>
-
-
-                <font style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#AA133D;">Your Tata CLiQ Order is
-Confirmed!<br>
-                <br>
-                </font></td>
-
-
-            <td width="13">&nbsp;</td>
-			</tr>
-
-        </table></td>
-      </tr>
-      
-     	<tr>
-        	<td bgcolor="#FBFBFB">
-        	<table width="598" border="0" cellspacing="0" cellpadding="0">
-        	</table>
-        	</td>
-    	</tr>
-      	<tr>
-        	<td bgcolor="#fbfbfb">
-        	<table width="598" border="0" cellspacing="0" cellpadding="0">
-          		<tr>
-            		<td width="13">&nbsp;</td>
-            			<td>
-            			<table width="572" border="0" cellspacing="0" cellpadding="0">
-              				<tr>
-                			<td>
-				<table width="572" border="0" cellspacing="0" cellpadding="0">
-                  				<tr>
-                    				<td height="10"></td>
-                    				
-                  				</tr>
-                  				<span  align="center" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#4a4a4a; font-weight:bold; padding:0 10px; width:100px;background-color: #ddd"><span style="font-size: 22px;color: #A52A2A;">OrderDetails:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Order  No : ${ctx.orderReferenceNumber}</span>
-     				#set ($shippingCharge=0)
-					#foreach( $childorder in ${ctx.childOrders} )
-							<tr>
-
-							  	<td height="5" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-							  	<td height="5" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-							  	<td height="5" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-
-							</tr>
-
-
-							<tr>
-							  	<td height="5" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-							  	<td height="5" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-							  	<td height="5" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-							</tr>
-								
-							<tr>
-                    				<td style="border-bottom:solid 1px #f4f4f4;">
-                    				
-
-                    				<table width="572" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#aa133d; font-weight:bold;">
-                      				<tr>
-                      				
-                      				</tr>
-                      				<tr>
-                      					<td>&nbsp;</td>
-                      					<td>&nbsp;</td>
-                      					<td>&nbsp;</td>
-                      				</tr>
-                      				<tr>
-                        			<td   style="width: 177px;padding-left: 0px;text-align: center;height:65px;">Transaction <br>
-                          				ID</td>
-                        			<td style="width: 115px;padding-left: 27px;">Name of<br>
-                          			Product</td>
-                        			<td style="padding-left: 22px;width: 50px;">Qty</td>
-									<td style="padding-left: 18px;">Price</td>
-                        			<td style="padding-left: 23px;text-align: center;">COD Charges<br>
-                          			(if any) </td>
-                          			<td style="padding-left: 23px;text-align: center;">Delivery Charges<br>
-                          			</td>
-                        			<td style="padding-left: 20px;text-align: center;width: 120px;"> Delivery<br>
-                          			Mode</td>
-                          			<td style="padding-left: 20px;text-align: center;width: 120px;"> ScheduleDeliveryDate<br>
-                          			</td>
-                      				</tr>
-                      				#set ($srNo=1)
-                      				#foreach($entry in ${childorder.entries})
-                      			<tr height="50">
-
-		                			<td style="padding-left: 12px;color: #504B49;" >$entry.orderLineId</td>
-		                			<td style="color: #504B49;text-align:center">$entry.product.name</td>
-		                			<td align="center" style="padding-left: 10px;color: #504B49;" >$entry.quantity</td>
-		                			<td width="80" align="center"style="color: #504B49;">$entry.netAmountAfterAllDisc</td>
-		                			<td width="120" align="center" style="padding-left: 20px;color: #504B49;">$entry.convenienceChargeApportion</td>
-		                			<td width="120" align="center" style="padding-left: 20px;color: #504B49;">$entry.currDelCharge</td>
-		                  			<td style="color: #504B49;padding-left: 24px;text-align: center;">$entry.mplDeliveryMode.deliveryMode.name</td>
-		                  			<td width="120" align="center" style="padding-left: 20px;color: #504B49;">
-		                  			#if($entry.edScheduledDate)
-		                  			 $entry.edScheduledDate <br>
-		                  			 $entry.timeSlotFrom To
-		                  			 $entry.timeSlotTo
-		                  			#else
-		                  			NA
-		                  			#end
-		                  			</td>
-		              			</tr>
-
-                      			#set ($srNo=$srNo+1)
-								#set($shippingCharge=$shippingCharge+$entry.currDelCharge)
-								#end	
-
-                      			</table></td>
-                      			<td align="left" valign="top">&nbsp;</td>
-                  				</tr>
-                  				#end
-                  			</table>
-                  			</td>
-                  		</tr>
-                  		 <tr>
-                <td><table width="572" border="0" cellspacing="0" cellpadding="0">
-                  <tr>
-
-                    <td width="280" height="70" align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#aa133d; font-weight:bold;">Total Amount: ${ctx.totalPrice} </td>
-
-					 <td>&nbsp;</td>
-                    <td width="157" align="right"><a href="${ctx.trackOrderUrl}">${ctx.cmsSlotContents.TrackOrder1}</a></td>
-                  </tr>
-                </table></td>
-              </tr>
-              <tr>
-                <td bgcolor="#f3f3f3"><table width="572" border="0" cellspacing="0" cellpadding="0" >
-                  <tr>
-                    <td width="10" >&nbsp;</td>
-                    <td width="265" align="left" valign="top"><table width="265" border="0" cellspacing="0" cellpadding="0">
-                      <tr>
-                      #if($ctx.deliveryAddress)
-
-                        <td width="244" height="35" align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:15px; color:#202020;">Shipping Address:</td>
-                      #end
-                      </tr>
-                      <tr>
-                        <td height="1" bgcolor="#ececec"></td>
-                      </tr>
-                      <tr>
-                      #if($ctx.deliveryAddress)
-
-
-                        <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:13px; color:#202020; padding:5px 0;">${ctx.deliveryAddress}</td>
-                      #end
-                      </tr>
-                      <tr>
-                        <td height="15"></td>
-                      </tr>
-
-                    </table></td>
-                    <td>&nbsp;</td>
-
-                    <td width="265" align="left" valign="top"><table width="265" border="0" cellspacing="0" cellpadding="0">
-                      <tr>
-                      #if($ctx.storeAddress)
-
-                        <td height="35" align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:15px; color:#202020;">Store Address for PiQ up:</td>
-                      #end 
-                      </tr>
-                      <tr>
-                        <td height="1" bgcolor="#ececec"></td>
-                      </tr>
-                      <tr>
-                      #if($ctx.storeAddress)
-                      #foreach( $store in ${ctx.storeAddress} )
-
-
-                        <td align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:13px; color:#202020; padding:5px 0;">
-                        #if($store.displayName)Store Name : ${store.displayName}#end<br/>
-                        #if($store.address.line1)$store.address.line1,#end
-                        #if($store.address.line2)$store.address.line2,#end
-                        #if($store.address.addressLine3)$store.address.addressLine3,#end
-                        #if($store.address.appartment)$store.address.appartment,#end
-                        #if($store.address.landmark)$store.address.landmark,#end
-                        #if($store.address.city)$store.address.city,#end
-                        #if($store.address.district)$store.address.district,#end
-                        #if($store.address.state)$store.address.state,#end
-                        #if($store.address.country.name)$store.address.country.name,#end
-                        #if($store.address.postalcode)$store.address.postalcode,#end
-                        #if($store.address.phone1)$store.address.phone1#end
-                        </td><br/>
-                      #end
-                      #end
-                      </tr>
-                      <tr>
-                        <td height="15"></td>
-                      </tr>
-
-
-                    </table></td>
-                    <td width="10">&nbsp;</td>
-                  </tr>
-
-                </table></td>
-              </tr>
-              <tr>
-
-                <td>&nbsp;</td>
-              </tr>
-              <tr>
-
-                #if($ctx.cmsSlotContents.Tip)<td height="60" align="left" valign="top">${ctx.cmsSlotContents.Tip}</td>#end
-              </tr>
-              <tr>
-                <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;">If you want to know more about the goods you've bought, quote your order number when you call us. </span></td>
-              </tr>
-              #if($ctx.cmsSlotContents.app)
-              <tr>
-                <td height="70" align="center"><a href="https://www.tatacliq.com/apps" target="_blank">${ctx.cmsSlotContents.app}</a></td>
-              </tr>
-              #end
-              <tr>
-                #if($ctx.cmsSlotContents.smileyimg)<td>${ctx.cmsSlotContents.smileyimg}</td>#end
-              </tr>
-              <tr>
-
-                <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;"><p>This email cant receive replies. Get in touch by calling  us at 1800 208 8282 or email us at <a href="mailto:hello@tatacliq.com">hello@tatacliq.com</a></p></td>
-              </tr>
-              <tr>
-
-                <td>&nbsp;</td>
-              </tr>
-              <tr>
-
-
-                <td><table width="572" border="0" cellspacing="0" cellpadding="0">
-                  <tr>
-
-                    <td width="200" align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;">&#169; 2016 Tata CLiQ | All Rights Reserved</td>
-                    <td>&nbsp;</td>
-                    #if($ctx.cmsSlotContents.fb)<td width="27" align="right"><a href="https://www.facebook.com/TataCLiQ/">${ctx.cmsSlotContents.fb}</a></td>#end
-                    #if($ctx.cmsSlotContents.twitter)<td width="27" align="right"><a href="https://twitter.com/tatacliq/">${ctx.cmsSlotContents.twitter}</a></td>#end
-                    #if($ctx.cmsSlotContents.youtube)<td width="27" align="right"><a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA/">${ctx.cmsSlotContents.youtube}</a></td>#end
-                    #if($ctx.cmsSlotContents.gplus)<td width="27" align="right"><a href="https://www.instagram.com/tatacliq/">${ctx.cmsSlotContents.gplus}</a></td>#end
-                  </tr>
-
-                </table></td>
-              </tr>
-              </table></td>
-
-            <td width="13">&nbsp;</td>
-          </tr>
-
-        </table></td>
-      </tr>
-      <tr>
-        <td bgcolor="#fbfbfb">&nbsp;</td>
-      </tr>
-    </table></td>
-
-  </tr>
-</table>
-</body>
+			
+         </tr>
+         
+      </table>
+      <!-- End Save for Web Slices -->
+   </body>
 </html>

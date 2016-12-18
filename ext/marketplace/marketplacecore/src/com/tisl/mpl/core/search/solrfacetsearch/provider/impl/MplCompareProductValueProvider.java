@@ -48,31 +48,48 @@ public class MplCompareProductValueProvider extends AbstractPropertyFieldValuePr
 	public Collection<FieldValue> getFieldValues(final IndexConfig indexConfig, final IndexedProperty indexedProperty,
 			final Object model) throws FieldValueProviderException
 	{
-		if (model instanceof ProductModel)
+		try
 		{
-			//Model should be instance of PcmProductVariantModel
-			final ProductModel productModel = (ProductModel) model;
-			String categoryCode = null;
-			//Get size for a product
-			final Collection<CategoryModel> categories = productModel.getSupercategories();
-			//If size is not empty
-			if (categories != null && !categories.isEmpty())
+			if (model instanceof ProductModel)
 			{
-
-				final Collection<FieldValue> fieldValues = new ArrayList<FieldValue>();
-				for (final CategoryModel category : categories)
+				//Model should be instance of PcmProductVariantModel
+				final ProductModel productModel = (ProductModel) model;
+				String categoryCode = null;
+				//Get size for a product
+				final Collection<CategoryModel> categories = productModel.getSupercategories();
+				//If size is not empty
+				if (categories != null && !categories.isEmpty())
 				{
-					if (category.getCode().startsWith("MSH"))
+
+					final Collection<FieldValue> fieldValues = new ArrayList<FieldValue>();
+					for (final CategoryModel category : categories)
 					{
-						categoryCode = category.getCode();
-						break;
-					}
+						if (null != productModel.getLuxIndicator()
+								&& productModel.getLuxIndicator().getCode().equalsIgnoreCase("luxury")
+								&& category.getCode().startsWith("LSH"))
+						{
 
-				}
-				if (categoryCode != null)
-				{
-					fieldValues.addAll(createFieldValue(categoryCode, indexedProperty));
-					return fieldValues;
+							categoryCode = category.getCode();
+							break;
+
+						}
+						else if (category.getCode().startsWith("MSH"))
+						{
+
+							categoryCode = category.getCode();
+							break;
+						}
+
+					}
+					if (categoryCode != null)
+					{
+						fieldValues.addAll(createFieldValue(categoryCode, indexedProperty));
+						return fieldValues;
+					}
+					else
+					{
+						return Collections.emptyList();
+					}
 				}
 				else
 				{
@@ -84,9 +101,10 @@ public class MplCompareProductValueProvider extends AbstractPropertyFieldValuePr
 				return Collections.emptyList();
 			}
 		}
-		else
+		catch (final Exception e) /* added part of value provider go through */
 		{
-			return Collections.emptyList();
+			throw new FieldValueProviderException(
+					"Cannot evaluate " + indexedProperty.getName() + " using " + super.getClass().getName() + "exception" + e, e);
 		}
 	}
 

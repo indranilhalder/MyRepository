@@ -21,7 +21,15 @@
 <html lang="${currentLanguage.isocode}">
 <head>
 	<title>
-	${not empty pageTitle ? pageTitle : not empty cmsPage.title ? cmsPage.title : 'Tata'}
+			<c:choose>
+		<c:when test="${isCategoryPage}">
+		
+		 ${not empty metaPageTitle ?metaPageTitle:not empty pageTitle ? pageTitle : 'Tata'}
+		</c:when>
+		<c:otherwise>
+			 ${not empty pageTitle ? pageTitle : not empty cmsPage.title ? cmsPage.title : 'Tata'}
+		</c:otherwise>
+	</c:choose>	
 	</title>
 	<%-- Meta Content --%>
 	<meta name="apple-itunes-app" content="app-id=1101619385">
@@ -85,7 +93,16 @@
 		</c:when>
 		<c:otherwise>
 			<!-- Canonical Tag -->
-			<c:set var="canonical" value="${baseURL}${reqURI}"></c:set>
+			<!-- TPR-743 Start-->
+			<c:choose>
+				<c:when test="${not empty canonicalUrl}">
+					<c:set var="canonical" value="${baseURL}${canonicalUrl}"></c:set>
+				</c:when>
+				<c:otherwise>
+					<c:set var="canonical" value="${baseURL}${reqURI}"></c:set>
+				</c:otherwise>
+			</c:choose>
+			<!-- TPR-743 END-->
 <%-- 			<c:choose>
 				<c:when test="${regex:regExMatchAndRemove(reqURI,'[/]$') }">
 					<c:set var="canonical" value="${baseURL}${reqURI}"></c:set>

@@ -11,8 +11,8 @@
 		<spring:theme
 			code="checkout.multi.paymentMethod.netbankingIssue.Error" />
 	</div> <c:if test="${not empty popularBankNames}">
-		<label class="popular-netbanks"><spring:theme
-				code="checkout.multi.paymentMethod.addPaymentDetails.paymentNetbanking.popularBanks" /></label>
+		<p class="popular-netbanks"><spring:theme
+				code="checkout.multi.paymentMethod.addPaymentDetails.paymentNetbanking.popularBanks" /></p>
 		<ul>
 			<c:forEach var="bank" items="${popularBankNames}" varStatus="status">
 
@@ -42,7 +42,7 @@
 			</select>
 
 		</div>
-	</c:if> <br>
+	</c:if>
 	<div id="netbankingError">
 		<spring:theme code="checkout.multi.paymentMethod.netbanking.Error" />
 	</div>

@@ -13,6 +13,7 @@
  */
 package com.tisl.mpl.storefront.controllers.pages;
 
+import de.hybris.platform.acceleratorcms.model.components.SimpleBannerComponentModel;
 import de.hybris.platform.acceleratorservices.controllers.page.PageType;
 import de.hybris.platform.acceleratorservices.storefront.data.MetaElementData;
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
@@ -29,7 +30,12 @@ import de.hybris.platform.acceleratorstorefrontcommons.variants.VariantSortStrat
 import de.hybris.platform.catalog.model.ProductFeatureModel;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
+import de.hybris.platform.cms2.model.contents.components.CMSImageComponentModel;
+import de.hybris.platform.cms2.model.contents.components.CMSParagraphComponentModel;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
+import de.hybris.platform.cms2.model.pages.ContentPageModel;
+import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSPageService;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
@@ -41,9 +47,12 @@ import de.hybris.platform.commercefacades.product.data.FeatureValueData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commercefacades.product.data.ProductContentData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
+import de.hybris.platform.commercefacades.product.data.PromotionData;
 import de.hybris.platform.commercefacades.product.data.ReviewData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
+import de.hybris.platform.commercefacades.product.data.VariantOptionData;
 import de.hybris.platform.commerceservices.url.UrlResolver;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -75,6 +84,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.lang.StringUtils;
@@ -101,6 +111,7 @@ import com.granule.json.JSONObject;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants.USER;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
+import com.tisl.mpl.core.model.VideoComponentModel;
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.WishlistData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -113,10 +124,12 @@ import com.tisl.mpl.facades.product.RichAttributeData;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.facades.product.data.SizeGuideData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
+import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.marketplacecommerceservices.service.PDPEmailNotificationService;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
+import com.tisl.mpl.seller.product.facades.ProductOfferDetailFacade;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
@@ -135,7 +148,7 @@ import com.tisl.mpl.util.ExceptionUtil;
 @Controller
 @Scope("tenant")
 //@RequestMapping(value = "/**/p")
-public class ProductPageController extends AbstractPageController
+public class ProductPageController extends MidPageController
 {
 	private static final String PRODUCT_SIZE_TYPE = "productSizeType";
 	/**
@@ -197,6 +210,7 @@ public class ProductPageController extends AbstractPageController
 	private static final String CUSTOMER_CARE_EMAIL = "hello@tatacliq.com";
 	private static final String PRODUCT_OLD_URL_PATTERN = "/**/p";
 	private static final String BOXING = "boxing";
+	private static final String USSID = "ussid";
 
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(ProductPageController.class);
@@ -260,6 +274,12 @@ public class ProductPageController extends AbstractPageController
 	@Resource(name = "pincodeServiceFacade")
 	private PincodeServiceFacade pincodeServiceFacade;
 
+	@Resource(name = "prodOfferDetFacade")
+	private ProductOfferDetailFacade prodOfferDetFacade;
+
+	//TPR-978
+	@Resource(name = "cmsPageService")
+	private MplCmsPageService mplCmsPageService;
 
 	/**
 	 * @param buyBoxFacade
@@ -318,6 +338,16 @@ public class ProductPageController extends AbstractPageController
 			LOG.debug("**************************************opening pdp for*************" + productCode);
 			final ProductModel productModel = productService.getProductForCode(productCode);
 
+			if (productModel.getLuxIndicator() != null
+					&& productModel.getLuxIndicator().getCode().equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
+			{
+				LOG.debug("**********The product is a luxury product.Hence redirecting to luxury website***********" + productCode);
+				final String luxuryHost = configurationService.getConfiguration().getString("luxury.resource.host");
+				final String luxuryProductUrl = luxuryHost + "/p-" + productCode;
+				LOG.debug("Redirecting to ::::::" + luxuryProductUrl);
+				response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+				response.setHeader("Location", luxuryProductUrl);
+			}
 			final String redirection = checkRequestUrl(request, response, productModelUrlResolver.resolve(productModel));
 
 			if (StringUtils.isNotEmpty(redirection))
@@ -470,21 +500,17 @@ public class ProductPageController extends AbstractPageController
 				//productCategory = (String) productCategoryStrings[0];
 				categoryId = productCategoryIdList.get(0);
 			}
-
 			if (productCategoryStrings.length >= 2)
 			{
 				//productSubCategoryName =(String) productCategoryStrings[1];
 				productSubCategoryName = ((String) productCategoryStrings[1]).replaceAll(" ", "_").toLowerCase();
 			}
-
 			if (productData != null)
 			{
 				if (productData.getCode() != null)
 				{
 					productSku = productData.getCode();
 
-					//if (buyBoxFacade != null)
-					//{
 					final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productSku);
 					if (buyboxdata != null)
 					{
@@ -558,6 +584,37 @@ public class ProductPageController extends AbstractPageController
 			//model.addAttribute("product_category", productCategory);
 			model.addAttribute("product_category", breadcrumbs.get(0).getName());
 			model.addAttribute("page_subcategory_name_L3", productSubCategoryName);
+
+			//TPR-430 Start
+			if (breadcrumbs.size() > 0)
+			{
+				model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY, breadcrumbs.get(0).getName()
+						.replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
+			}
+			if (breadcrumbs.size() > 1)
+			{
+				model.addAttribute(ModelAttributetConstants.PAGE_SUBCATEGORY_NAME,
+						breadcrumbs.get(1).getName().replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
+			}
+			if (breadcrumbs.size() > 2)
+			{
+				model.addAttribute(ModelAttributetConstants.PAGE_SUBCATEGORY_NAME_L3,
+						breadcrumbs.get(2).getName().replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
+			}
+			//TPR-430 End
+			//TPR-672 START
+			if (CollectionUtils.isNotEmpty(productData.getPotentialPromotions()))
+			{
+				for (final PromotionData promodata : productData.getPotentialPromotions())
+				{
+
+					model.addAttribute("product_applied_promotion_title", promodata.getTitle().toLowerCase());
+					model.addAttribute("product_applied_promotion_code", promodata.getCode().toLowerCase());
+
+				}
+
+			}
+			//TPR-672 END
 		}
 		catch (final Exception ex)
 		{
@@ -986,7 +1043,7 @@ public class ProductPageController extends AbstractPageController
 					}
 					catch (final Exception e)
 					{
-						LOG.error("configurableRadius values is empty please add radius property in properties file ");
+						LOG.debug("configurableRadius values is empty please add radius property in properties file ");
 					}
 				}
 
@@ -1095,7 +1152,7 @@ public class ProductPageController extends AbstractPageController
 				{
 					final PinCodeResponseData data = new PinCodeResponseData();
 					final JSONObject rec = recs.getJSONObject(i);
-					final String ussid = rec.getString("ussid");
+					final String ussid = rec.getString(USSID);
 					final String stock = rec.getString("stock");
 					data.setUssid(ussid);
 					data.setStockCount(Integer.valueOf(stock));
@@ -1169,6 +1226,7 @@ public class ProductPageController extends AbstractPageController
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
+			LOG.error("EtailNonBusinessExceptions::viewSellers::ProductPageController");
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			returnStatement = frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_PDP_ERROR_PAGE_NON_BUSINESS);
 
@@ -1625,6 +1683,13 @@ public class ProductPageController extends AbstractPageController
 					model.addAttribute(MarketplacecommerceservicesConstants.ALLVARIANTSSTRING, allVariantsString);
 				}
 			}
+
+			// TPR-743
+			if (!ELECTRONICS.equalsIgnoreCase(productModel.getProductCategoryType()))
+			{
+				findCanonicalProduct(productData, model);
+			}
+
 		}
 		//populateVariantSizes(productData);
 		catch (final EtailBusinessExceptions e)
@@ -1638,8 +1703,22 @@ public class ProductPageController extends AbstractPageController
 
 	}
 
+	/**
+	 * @param productData
+	 * @param model
+	 */
+	private void findCanonicalProduct(final ProductData productData, final Model model)
+	{
+		if (CollectionUtils.isNotEmpty(productData.getVariantOptions()))
+		{
+			final List<VariantOptionData> variants = productData.getVariantOptions();
+			final String canonicalUrl = variants.get(0).getUrl();
+			model.addAttribute(ModelAttributetConstants.CANONICAL_URL, canonicalUrl);
+		}
+	}
 
 	//TODO
+
 
 	protected void setUpMetaData(final Model model, final String metaDescription, final String metaTitle,
 			final String productCode, final String metaKeywords)
@@ -1804,6 +1883,14 @@ public class ProductPageController extends AbstractPageController
 	{
 		model.addAttribute(ModelAttributetConstants.GALLERY_IMAGES, productDetailsHelper.getGalleryImages(productData));
 		model.addAttribute(ModelAttributetConstants.PRODUCT, productData);
+		// For TPR-429
+		final List<SellerInformationData> sellerInfoList = productData.getSeller();
+		final List<String> sellerList = new ArrayList<String>();
+		for (final SellerInformationData seller : sellerInfoList)
+		{
+			sellerList.add(seller.getSellerID());
+		}
+		model.addAttribute(ModelAttributetConstants.PDP_SELLER_IDS, sellerList);
 	}
 
 	protected void sortVariantOptionData(final ProductData productData)
@@ -1856,7 +1943,7 @@ public class ProductPageController extends AbstractPageController
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + RequestMappingUrlConstants.ADD_WISHLIST_IN_POPUP, method = RequestMethod.GET)
 	//@RequireHardLogIn
 	public boolean addWishListsForPDP(@RequestParam(ModelAttributetConstants.PRODUCT) final String productCode,
-			@RequestParam("ussid") final String ussid, @RequestParam("wish") final String wishName,
+			@RequestParam(USSID) final String ussid, @RequestParam("wish") final String wishName,
 			@RequestParam("sizeSelected") final String sizeSelected, final Model model, final HttpServletRequest request,
 			final HttpServletResponse response) throws CMSItemNotFoundException
 	{
@@ -1938,7 +2025,7 @@ public class ProductPageController extends AbstractPageController
 			@RequestParam("variantCode") String variantCode) throws JSONException, CMSItemNotFoundException,
 			UnsupportedEncodingException, com.granule.json.JSONException
 	{
-		final JSONObject buyboxJson = new JSONObject();
+		JSONObject buyboxJson = new JSONObject();
 		buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.EMPTY);
 		try
 		{
@@ -1953,55 +2040,13 @@ public class ProductPageController extends AbstractPageController
 				productCode = productCode.toUpperCase();
 			}
 			final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(productCode);
+			//changes for tpr-1375,getting entire list of buybox data
 			if (buydata != null)
 
 			{
-				final BuyBoxData buyboxdata = (BuyBoxData) buydata.get("pdp_buy_box");
-				if (buyboxdata.getSpecialPrice() != null && buyboxdata.getSpecialPrice().getValue().doubleValue() > 0)
-				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, buyboxdata.getSpecialPrice());
-				}
-				// populate json with price,ussid,sellername and other details
-				buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, buyboxdata.getPrice());
-				buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP, buyboxdata.getMrp());
-				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_NAME, buyboxdata.getSellerName());
-				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ARTICLE_SKU, buyboxdata.getSellerArticleSKU());
-				buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, buyboxdata.getAvailable());
-				buyboxJson.put(ControllerConstants.Views.Fragments.Product.OTHERS_SELLERS_COUNT, buyboxdata.getNumberofsellers());
-				buyboxJson.put(ControllerConstants.Views.Fragments.Product.MIN_PRICE, buyboxdata.getMinPrice());
-				buyboxJson.put(ControllerConstants.Views.Fragments.Product.ALL_OF_STOCK, buyboxdata.getAllOOStock());
-				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
-				final Map<String, Integer> stockAvailibilty = new TreeMap<String, Integer>();
-				final List<String> noStockPCodes = (List<String>) buydata.get("no_stock_p_codes");
-				for (final String pCode : noStockPCodes)
-				{
-					stockAvailibilty.put(pCode, Integer.valueOf(0));
-				}
-				buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABILITY, stockAvailibilty);
-				//TISPRM-33
-				if (null != buyboxdata.getMrp())
-				{
-					if (buyboxdata.getSpecialPrice() != null && buyboxdata.getSpecialPrice().getValue().doubleValue() > 0)
-					{
-						final double savingPriceCal = buyboxdata.getMrp().getDoubleValue()
-								- buyboxdata.getSpecialPrice().getDoubleValue();
-						final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue()) * 100;
-						//Critical Sonar Fix
-						final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
-						final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
-
-						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
-					}
-					else if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getValue().doubleValue() > 0)
-					{
-						final double savingPriceCal = buyboxdata.getMrp().getDoubleValue() - buyboxdata.getPrice().getDoubleValue();
-						final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue()) * 100;
-						//Critical Sonar Fix
-						final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
-						final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
-						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
-					}
-				}
+				final List<BuyBoxData> buyboxdata = (List<BuyBoxData>) buydata.get("buyboxList");
+				buyboxJson = getPopulatedBuyBoxJson(buydata, buyboxJson);
+				buyboxJson.put("buyboxList", buyboxdata);
 			}
 			else
 			{
@@ -2397,7 +2442,7 @@ public class ProductPageController extends AbstractPageController
 	 * @return Wishlist2Model
 	 */
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-getLastModifiedWishlistByUssid", method = RequestMethod.GET)
-	public @ResponseBody boolean getLastModifiedWishlist(@RequestParam("ussid") final String ussid)
+	public @ResponseBody boolean getLastModifiedWishlist(@RequestParam(USSID) final String ussid)
 	{
 		boolean existUssid = false;
 
@@ -2418,7 +2463,260 @@ public class ProductPageController extends AbstractPageController
 
 	}
 	/**
+	 * @Description Added for displaying offer messages other than promotion, TPR-589: Displaying offer message from
+	 *              offer models
+	 * @param productCode
+	 * @return buyboxJson
+	 * @throws com.granule.json.JSONException
+	 */
+	@ResponseBody
+	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN + "/getOfferMessage", method = RequestMethod.GET)
+	public JSONObject populateOfferMessage(
+			@RequestParam(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode)
+			throws com.granule.json.JSONException
+	{
+		final JSONObject buyboxJson = new JSONObject();
+		buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.EMPTY);
+		try
+		{
+			if (StringUtils.isNotEmpty(productCode))
+			{
+				final Map<String, Map<String, String>> offerMessageMap = prodOfferDetFacade.showOfferMessage(productCode);
+
+
+				// populate json with offer message
+				if (MapUtils.isNotEmpty(offerMessageMap))
+				{
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.OFFERMESSAGEMAP, offerMessageMap);
+				}
+			}
+
+		}
+		catch (final EtailBusinessExceptions e)
+
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.ERROR_OCCURED);
+		}
+		catch (
+
+		final EtailNonBusinessExceptions e)
+
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.ERROR_OCCURED);
+		}
+		return buyboxJson;
+	}
+
+	/**
+	 * changes for TPR-1375 populating buybox details in json format
+	 *
+	 * @param buydata
+	 * @param buyboxJson
+	 * @throws com.granule.json.JSONException
+	 */
+	private JSONObject getPopulatedBuyBoxJson(final Map<String, Object> buydata, final JSONObject buyboxJson)
+			throws com.granule.json.JSONException
+	{
+		// YTODO Auto-generated method stub
+		final BuyBoxData buyboxdata = (BuyBoxData) buydata.get("pdp_buy_box");
+		if (buyboxdata.getSpecialPrice() != null && buyboxdata.getSpecialPrice().getValue().doubleValue() > 0)
+		{
+			buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, buyboxdata.getSpecialPrice());
+		}
+		// populate json with price,ussid,sellername and other details
+		buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, buyboxdata.getPrice());
+		buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP, buyboxdata.getMrp());
+		buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_NAME, buyboxdata.getSellerName());
+		buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ARTICLE_SKU, buyboxdata.getSellerArticleSKU());
+		buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, buyboxdata.getAvailable());
+		buyboxJson.put(ControllerConstants.Views.Fragments.Product.OTHERS_SELLERS_COUNT, buyboxdata.getNumberofsellers());
+		buyboxJson.put(ControllerConstants.Views.Fragments.Product.MIN_PRICE, buyboxdata.getMinPrice());
+		buyboxJson.put(ControllerConstants.Views.Fragments.Product.ALL_OF_STOCK, buyboxdata.getAllOOStock());
+		buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
+		final Map<String, Integer> stockAvailibilty = new TreeMap<String, Integer>();
+		final List<String> noStockPCodes = (List<String>) buydata.get("no_stock_p_codes");
+		for (final String pCode : noStockPCodes)
+		{
+			stockAvailibilty.put(pCode, Integer.valueOf(0));
+		}
+		buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABILITY, stockAvailibilty);
+		//TISPRM-33
+		if (null != buyboxdata.getMrp())
+		{
+			if (buyboxdata.getSpecialPrice() != null && buyboxdata.getSpecialPrice().getValue().doubleValue() > 0)
+			{
+				final double savingPriceCal = buyboxdata.getMrp().getDoubleValue().doubleValue()
+						- buyboxdata.getSpecialPrice().getDoubleValue().doubleValue();
+				final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue().doubleValue()) * 100;
+				//Critical Sonar Fix
+				final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+				final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
+
+				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
+			}
+			else if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getValue().doubleValue() > 0)
+			{
+				final double savingPriceCal = buyboxdata.getMrp().getDoubleValue().doubleValue()
+						- buyboxdata.getPrice().getDoubleValue().doubleValue();
+				final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue().doubleValue()) * 100;
+				//Critical Sonar Fix
+				final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+				final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
+				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
+			}
+		}
+		return buyboxJson;
+	}
+
+	//TPR-978
+	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-fetchPageContents", method = RequestMethod.GET)
+	public String fetchPageContents(@RequestParam(value = "productCode") String productCode, final Model model)
+			throws com.granule.json.JSONException
+	{
+
+		if (null != productCode)
+		{
+			productCode = productCode.toUpperCase();
+		}
+		System.out.println("**************************************fetchPageContents*************" + productCode);
+		final ProductModel productModel = productService.getProductForCode(productCode);
+		ContentPageModel contentPage = null;
+		List<String> contentList = null;
+		List<String> imageList = null;
+		List<String> videoList = null;
+		final Map<String, ProductContentData> productContentDataMap = new HashMap<String, ProductContentData>();
+		try
+		{
+			contentPage = getContentPageForProduct(productModel);
+			if (null != contentPage)
+			{
+
+				for (final ContentSlotForPageModel contentSlotForPageModel : contentPage.getContentSlots())
+				{
+					final ProductContentData productContentData = new ProductContentData();
+					productContentData.setSection(contentSlotForPageModel.getPosition());
+
+					contentList = new ArrayList<String>();
+					imageList = new ArrayList<String>();
+					videoList = new ArrayList<String>();
+
+					for (final AbstractCMSComponentModel abstractCMSComponentModel : contentSlotForPageModel.getContentSlot()
+							.getCmsComponents())
+					{
+
+						if (abstractCMSComponentModel instanceof CMSParagraphComponentModel)
+						{
+							final CMSParagraphComponentModel paragraphComponent = (CMSParagraphComponentModel) abstractCMSComponentModel;
+							contentList.add(paragraphComponent.getContent());
+						}
+
+						if (abstractCMSComponentModel instanceof CMSImageComponentModel)
+						{
+							final CMSImageComponentModel cmsImageComponent = (CMSImageComponentModel) abstractCMSComponentModel;
+							imageList.add(cmsImageComponent.getMedia().getUrl2());
+						}
+
+						if (abstractCMSComponentModel instanceof SimpleBannerComponentModel)
+						{
+							final SimpleBannerComponentModel bannerComponent = (SimpleBannerComponentModel) abstractCMSComponentModel;
+							if (bannerComponent.getMedia() != null && StringUtils.isNotEmpty(bannerComponent.getMedia().getUrl2()))
+							{
+								imageList.add(bannerComponent.getMedia().getUrl2());
+							}
+							else if (StringUtils.isNotEmpty(bannerComponent.getUrlLink()))
+							{
+								imageList.add(bannerComponent.getUrlLink());
+
+							}
+						}
+
+						if (abstractCMSComponentModel instanceof VideoComponentModel)
+						{
+							final VideoComponentModel bannerComponent = (VideoComponentModel) abstractCMSComponentModel;
+							videoList.add(bannerComponent.getVideoUrl());
+						}
+
+					}
+
+					productContentData.setTextList(contentList);
+					productContentData.setImageList(imageList);
+					productContentData.setVideoList(videoList);
+					productContentDataMap.put(contentSlotForPageModel.getPosition(), productContentData);
+
+				}
+
+				model.addAttribute("productContentDataMap", productContentDataMap);
+
+			}//final end of if
+			storeCmsPageInModel(model, getContentPageForLabelOrId(contentPage.getUid()));
+		}
+		catch (final CMSItemNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+
+		return "/pages/" + contentPage.getMasterTemplate().getFrontendTemplateName();
+
+	}
+
+	private ContentPageModel getContentPageForProduct(final ProductModel product) throws CMSItemNotFoundException
+	{
+
+		final ContentPageModel productContentPage = mplCmsPageService.getContentPageForProduct(product);
+
+		if (productContentPage == null)
+		{
+			throw new CMSItemNotFoundException("Could not find a product content for the product" + product.getName());
+		}
+
+		return productContentPage;
+	}
+
+	/**
+	 * @description method is to remove products in wishlist in in pdp
+	 * @param productCode
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @throws CMSItemNotFoundException
+	 */
+	@ResponseBody
+	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-removeFromWl", method = RequestMethod.GET)
+	//@RequireHardLogIn
+	public boolean removeFromWl(@RequestParam(ModelAttributetConstants.PRODUCT) final String productCode,
+			@RequestParam(USSID) final String ussid, @RequestParam("wish") final String wishName, final Model model)
+			throws CMSItemNotFoundException
+	{
+		model.addAttribute(ModelAttributetConstants.MY_ACCOUNT_FLAG, ModelAttributetConstants.N_CAPS_VAL);
+
+		boolean remove = false;
+		try
+		{
+			remove = productDetailsHelper.removeFromWishList(productCode, ussid);
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+
+		return remove;
+
+
+	}
+
+
+	/**
 	 * This is used to verify the configured MPH category product can get SizeGuide & choose size
+
+	 *
 	 * @param productModel
 	 */
 	

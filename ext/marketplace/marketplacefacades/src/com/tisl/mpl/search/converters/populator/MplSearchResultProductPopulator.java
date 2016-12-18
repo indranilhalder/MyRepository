@@ -38,6 +38,8 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 
 	@Autowired
 	private SizeAttributeComparator sizeAttributeComparator;
+	private static final String DELIMETER = ":";
+	private static final String STOCK = "STOCK";
 
 	@Override
 	public void populate(final SearchResultValueData source, final ProductData target)
@@ -248,7 +250,7 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 		if (getValue(source, "stockLevelStatus") != null)
 		{
 
-			final boolean stockLevelStatus = Boolean.valueOf(getValue(source, "stockLevelStatus").toString()).booleanValue();
+			final boolean stockLevelStatus = Boolean.parseBoolean(getValue(source, "stockLevelStatus").toString());
 
 			try
 			{
@@ -279,8 +281,9 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 	{
 		final List<ImageData> result = new ArrayList<ImageData>();
 
-
 		addImageData(source, "searchPage", result);
+		//TPR-796
+		addImageData(source, "product", result);
 
 
 		return result;
@@ -313,5 +316,7 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 	{
 		this.categoryManager = categoryManager;
 	}
+
+
 
 }

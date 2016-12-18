@@ -71,6 +71,14 @@
 		<property name="interceptor" ref="CouponProdRestSaveInterceptor" />
 		<property name="typeCode" value="ProductRestriction" />
 	</bean>
+	<!-- CHANGES FOR TPR-715 -->
+	<bean id="couponSellerIdSaveInterceptor" class="com.tisl.mpl.interceptor.CouponSellerRestSaveInterceptor" />
+	<bean id="couponSellerSaveInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="couponSellerIdSaveInterceptor" />
+		<property name="typeCode" value="SellerRestriction" />
+	</bean>
+	
 	<!-- CouponSaveInterceptor ends -->			
 
 </beans>

@@ -20,53 +20,71 @@
 	<c:set var="hideSecureTransaction" value="true"></c:set>
 	<c:set var="hideLogo" value="true"></c:set>
 </c:if>
+<!-- TPR-844 -->
+			<div class="wishAddLoginPlp">
+			<span><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
+			</div>
+			<div class="wishAddSucessPlp">
+			<span><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
+			</div>
+			<div class="wishAlreadyAddedPlp">
+			<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
+			</div>
+	<!-- TPR-844 -->
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticHost"/>
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.resource.host')" var="luxuryHost"/>
 <header>	
 	<!-- For Infinite Analytics Start -->
-	<input type="hidden" id="ia_site_id" value="${cmsSite.uid}"> 
-	<input type="hidden" id="ia_site_page_id" value="${cmsPage.uid}"> 
+	<input type="hidden" id="ia_site_id" name="ia_site_id" value="${cmsSite.uid}"> 
+	<input type="hidden" id="ia_site_page_id" name="ia_site_page_id" value="${cmsPage.uid}"> 
 	<!-- changes for url structure change for pdp-->
-	<input type="hidden" id="ia_category_code" value="${fn:toUpperCase(categoryCode)}">
-	<input type="hidden" id="ia_product_code" value="${fn:toUpperCase(productCode)}">
+	<input type="hidden" id="ia_category_code" name="ia_category_code" value="${fn:toUpperCase(categoryCode)}">
+	<input type="hidden" id="ia_product_code" name="ia_product_code" value="${fn:toUpperCase(productCode)}">
 	<!-- changes end -->
-	<input type="hidden" id="ia_product_rootCategory_type" value="${product.rootCategory}">
-	<input type="hidden" id="mSellerID" value="${mSellerID}">
-	<input type="hidden" id="rootEPForHttp" value="${rootEPForHttp}">
-	<input type="hidden" id="rootEPForHttps" value="${rootEPForHttps}">
-	<input type="hidden" id="ecompanyForIA" value="${ecompanyForIA}">
-	<input type="hidden" id="DamMediaHost" value="${DamMediaHost}">
-	<input type="hidden" id="mplStaticResourceHost" value="${mplStaticResourceHost}">
-	<input type="hidden" id="previewVersion" value="${cmsPageRequestContextData.preview}">
-	<input type="hidden" id="pageTemplateId" value="${cmsPage.masterTemplate.uid}">
+	<input type="hidden" id="ia_product_rootCategory_type" name="ia_product_rootCategory_type" value="${product.rootCategory}">
+	<input type="hidden" id="mSellerID" name="mSellerID" value="${mSellerID}">
+	<input type="hidden" id="rootEPForHttp" name="rootEPForHttp" value="${rootEPForHttp}">
+	<input type="hidden" id="rootEPForHttps" name="rootEPForHttps" value="${rootEPForHttps}">
+	<input type="hidden" id="ecompanyForIA" name="ecompanyForIA" value="${ecompanyForIA}">
+	<input type="hidden" id="DamMediaHost" name="DamMediaHost" value="${DamMediaHost}">
+	<input type="hidden" id="mplStaticResourceHost" name="mplStaticResourceHost" value="${mplStaticResourceHost}">
+	<input type="hidden" id="previewVersion" name="previewVersion" value="${cmsPageRequestContextData.preview}">
+	<input type="hidden" id="pageTemplateId" name="pageTemplateId"  value="${cmsPage.masterTemplate.uid}">
+	<input type="hidden" id="userLoginType" name="userLoginType" value="${userLoginType}">		<!-- TPR-668 -->
 	<!-- For Infinite Analytics End -->
-	<input type="hidden" id="pageName" value="${cmsPage.name}">
+	<input type="hidden" id="pageName" name="pageName" value="${cmsPage.name}">
 	<!-- Static resource host -->
-	<input type="hidden" id="staticHost" value="//${staticHost}">
+	<input type="hidden" id="staticHost" name="staticHost" value="//${staticHost}">
 	<!-- End -->
 	<div class="row header-row"></div>
 	<c:choose>
 		<c:when test="${empty showOnlySiteLogo }">
-			<div class="banner">
-			<div class="content" id="latestOffersContent"></div>
+			<%--<div class="banner">
+			 <div class="content" id="latestOffersContent"></div>
 				<span class="toggle desktop helpmeshopbanner latestOffersBanner"><p>${headerConciergeTitle}</p></span> 
 				
-				<%-- <cms:pageSlot position="HeaderLinks" var="link">
-					<cms:component component="${link}" element="" />
-				</cms:pageSlot> --%>
-			</div>
+				<!-- <cms:pageSlot position="HeaderLinks" var="link"> -->
+					<!--	<cms:component component="${link}" element="" />-->
+				<!--	</cms:pageSlot> -->
+			</div> --%>
 		</c:when>
 		<c:otherwise>
 			<c:if test="${empty hideSecureTransaction}">
-				<span class="secure secureTransaction"> <spring:theme
-						code="text.secure.transaction" /></span>
-						<span class="secure secureTransaction secMobile"></span>
+						<!-- <span class="secure secureTransaction secMobile"></span> -->
 			</c:if>
 		</c:otherwise>
 	</c:choose>
 
 
 	<div class="content">
-
+	<!-- Luxury tab	 starts-->
+						<div id="flip-tabs" >				
+							<ul id="flip-navigation" >  
+					            <li class="selected"><a href="/" id="tab-1" >MARKETPLACE</a></li>
+					            <li><a href="${luxuryHost}" id="tab-2" target="_blank">LUXURY</a></li>  
+					        </ul> 
+					    </div>
+	 <!-- Luxury tab	 ends-->
 		<div class="top">
 			<c:if test="${empty showOnlySiteLogo }">
 				<div class="toggle">
@@ -76,12 +94,21 @@
 			<div class="container">
 				<c:if test="${empty showOnlySiteLogo }">
 					<div class="left">
+						<!-- Luxury tab	 starts-->
+						<%-- <div id="flip-tabs" >				
+							<ul id="flip-navigation" >  
+					            <li class="selected"><a href="/" id="tab-1" >MARKETPLACE</a></li>
+					            <li><a href="${luxuryHost}" id="tab-2" >LUXURY</a></li>  
+					        </ul> 
+					    </div> --%>
+				        <!-- Luxury tab	 ends-->
 						<ul>
 							<%-- <li><a href="<c:url value="/helpservices"/>"><spring:theme
 										code="header.help&Services" /></a></li> --%>
-
 						</ul>
-					</div>
+						
+				   </div>      
+					
 				</c:if>
 
 				<div class="marketplace compact">
@@ -89,6 +116,7 @@
 						<cms:pageSlot position="TopHeaderSlot" var="logo" limit="1">
 							<cms:component component="${logo}" />
 						</cms:pageSlot>
+					
 					</c:if>
 				</div>
 				<div class="right">
@@ -158,9 +186,26 @@
 				<c:otherwise>
 					<div class="marketplace-checkout">
 						<c:if test="${empty hideLogo}">
-							<cms:pageSlot position="TopHeaderSlot" var="logo" limit="1">
+							<%-- <cms:pageSlot position="TopHeaderSlot" var="logo" limit="1">
 								<cms:component component="${logo}" />
-							</cms:pageSlot>
+							</cms:pageSlot> --%>
+							<div class="logo">
+							<div class="desktop-logo" data-logo="marketplace">
+						<cms:pageSlot position="SiteLogo" var="logo" limit="1">
+							<cms:component component="${logo}"/>
+						</cms:pageSlot>
+					</div>
+					<div class="tab-logo">
+						<cms:pageSlot position="TopHeaderSlot" var="logo" limit="1">
+							<cms:component component="${logo}"/>
+						</cms:pageSlot>
+					</div>
+					</div>
+					
+					<span>CHECKOUT</span>
+					
+					
+					<button id="deliveryAddressSubmitUp" type="submit" class="button checkout-next" style="display:none;">Proceed to Payment</button>
 						</c:if>
 					</div>
 				</c:otherwise>
@@ -173,14 +218,16 @@
 					<c:if test="${empty showOnlySiteLogo }">
 
 						<cms:pageSlot position="NavigationBar" var="component">
-							<li><cms:component component="${component}" /></li>
+							<c:set var="componentName" value="${component.name}"/>
+							<li class="${fn:replace(componentName,' ', '')}"><cms:component component="${component}" /></li>
 						</cms:pageSlot>
 
 					</c:if>
 
 
 				</ul>
-			</nav>
+			</nav> 
+			
 			<div class="search">
 				<c:if test="${empty showOnlySiteLogo }">
 					<!-- <button class="btn btn-default js-toggle-sm-navigation header-burgerMenu"
@@ -216,7 +263,11 @@
 		</div>
 		<div class="compact-toggle mobile"></div>
 	</div>
-
+<c:if test="${param.blpLogo ne null}">
+<div class="blp-serp-banner" style="background-color:#000;height:80px;">
+<img class="image" alt="" src="${param.blpLogo}">
+</div>
+</c:if>
 	<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
 		<trackOrder:trackOrder />
 	</sec:authorize>
@@ -247,8 +298,52 @@
 #feedBackFormModal.modal .content > .close {
 	right: 20px !important;
 }
+
+/*--------------Added for luxury site starts-----------*/
+/* #flip-tabs{  
+    width:300px;  
+    margin:20px auto; position:relative;  
+}  
+#flip-navigation{  
+    margin:0 0 10px; padding:0;   
+    list-style:none;  
+}  
+#flip-navigation li{   
+    display:inline;   
+}  
+#flip-navigation li a{  
+    text-decoration:none; padding:10px;   
+    margin-right:0px;  
+    background:#f9f9f9;  
+    color:#333; outline:none;  
+    font-family:Arial; font-size:12px; text-transform:uppercase;  
+}  
+#flip-navigation li a:hover{  
+    background:#999;   
+    color:#f0f0f0;  
+}  
+#flip-navigation li.selected a{  
+    background:#999;  
+    color:#f0f0f0;  
+}  
+/* #flip-container{    
+    width:300px;  
+    font-family:Arial; font-size:13px;  
+}  
+#flip-container div{   
+    background:#fff;  
+}  */  */
+/*--------------Added for luxury site ends-----------*/
 </style>
 
+<script>
+var pathname = window.location.pathname;
+if(pathname =='/checkout/multi/delivery-method/select'){
+	$('#deliveryAddressSubmitUp').show();
+	
+	
+}
+</script>
 <!--  Commented for TISPRD-1440  -->
 <!-- <script>
 /*$(document).ready(function(){
@@ -258,3 +353,12 @@
 });*/
 
 </script>  -->
+<div class="wishAddSucessQV">
+	<span><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
+</div>
+<div class="wishAddLoginQV">
+	<span><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
+</div>
+<div class="wishAlreadyAddedQV">
+	<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
+</div>

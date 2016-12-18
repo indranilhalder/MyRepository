@@ -3,6 +3,7 @@
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="compressible" tagdir="/WEB-INF/tags/responsive/template/compressible" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <template:javaScriptVariables />
 
@@ -13,18 +14,19 @@ $(document).on("click", ".header-myAccountSignOut", function() {
 	window.localStorage.removeItem("eventFired");
 });
 
-$(document).on("click","form .pagination_a_link",function(e){
-	event.preventDefault();
+//TPR-565
+/* $(document).on("click","form .pagination_a_link",function(e){
+	e.preventDefault();
 	var hrefurl = $(this).attr('href');
 	$("#paginationForm").attr("action", hrefurl);
 	$(this).closest('form').submit();
  });  
  $(document).on("click","form .pagination_a_link",function(e){
-		event.preventDefault();
+		e.preventDefault();
 		var hrefurl = $(this).attr('href');
 		$("#paginationFormBottom").attr("action", hrefurl);
 		$(this).closest('form').submit();
-	 }); 
+	 });  */
 
 //TISPRO-183 -- Firing Tealium event only after successful user login
 if(loginStatus){
@@ -61,6 +63,28 @@ if(loginStatus){
 	<script type="text/javascript" src="${commonResourcePath}/js/addresslandmark.js"></script>
 </c:if>
 
+<!-- LW-230 Start -->
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.resource.host')" var="luxuryHost"/>
+<c:set var="headerWidgetJsSource" value="${luxuryHost}/header-widget.js"/>
+<c:choose>
+<c:when test="${(param.isLux ne null and param.isLux eq true) and ((not empty isLuxury and isLuxury != 'false') or (empty isLuxury))}">
+<script type="text/javascript" src="${headerWidgetJsSource}"></script>
+</c:when>
+<c:otherwise>
+<c:if test="${not empty isLuxury and isLuxury == 'true'}">
+<script type="text/javascript" src="${headerWidgetJsSource}"></script>
+</c:if>
+</c:otherwise>
+</c:choose> 
+ <%-- <c:set var="headerWidgetJsSource" value="${luxuryHost}/header-widget.js"/> 
+ <c:if test="${(param.isLux ne null and param.isLux eq true) and ((not empty isLuxury and isLuxury != 'false') or (empty isLuxury))}">
+	<script type="text/javascript" src="${headerWidgetJsSource}"></script>
+</c:if>
+<c:if test="${not empty isLuxury and isLuxury == 'true'}">
+	<script type="text/javascript" src="${headerWidgetJsSource}"></script>
+</c:if>  --%>
+
+<!-- LW-230 End -->
 <c:choose>
 	<c:when test="${isMinificationEnabled}">
 		<compressible:mplminjs/>

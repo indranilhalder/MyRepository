@@ -17,7 +17,6 @@ import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.Messagebox;
 
-import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.services.MarketplaceCsCheckoutService;
 import com.tisl.mpl.cockpits.cscockpit.strategies.MplFindDeliveryFulfillModeStrategy;
@@ -25,18 +24,13 @@ import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceBasketCont
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceCheckoutController;
 import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceabilityCheckHelper;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
-import com.tisl.mpl.core.mplconfig.service.impl.MplConfigServiceImpl;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.facade.checkout.MplCartFacade;
-import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.CODPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeRestrictionService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
-import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRequestData;
-import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData;
 import com.tisl.mpl.service.PinCodeDeliveryModeService;
 
 import de.hybris.platform.catalog.impl.DefaultCatalogVersionService;
@@ -118,13 +112,10 @@ public class MarketplaceCheckoutControllerImpl extends
 	
 	@Autowired
 	private MplPaymentService mplPaymentService;
-	@Autowired
-	private MplConfigFacade mplConfigFacade;
 	
 	@Autowired
-	private MplFindDeliveryFulfillModeStrategy mplFindDeliveryFulfillModeStrategy;
-	@Autowired
-	private MplCartFacade mplCartFacade;
+	private MplFindDeliveryFulfillModeStrategy mplFindDeliveryFulfillModeStrategy;	
+	
 	@Resource(name = "mplVoucherService")
 	private MplVoucherService mplVoucherService;	
 	
@@ -168,7 +159,7 @@ public class MarketplaceCheckoutControllerImpl extends
 			throws EtailNonBusinessExceptions, ClientEtailNonBusinessExceptions {
 
 		List<PinCodeResponseData> responseData = marketplaceServiceabilityCheckHelper
-				.getResponseForPinCode(null,product, pin, isDeliveryDateRequired,
+				.getResponseForPinCode(product, pin, isDeliveryDateRequired,
 						ussid);
 
 		return responseData;
@@ -368,33 +359,41 @@ public class MarketplaceCheckoutControllerImpl extends
 		try {
 			final CartModel cart = (CartModel) getBasketController().getCart()
 					.getObject();
-			final String pincode = cart.getDeliveryAddress().getPostalcode();
+			String pincode=null;
+			
+			if(null!=cart.getDeliveryAddress())
+			{
+				pincode = cart.getDeliveryAddress().getPostalcode();
+			}
 
-			for (final AbstractOrderEntryModel cartEntry : cart.getEntries()) {
-				List<PinCodeResponseData> responseData = marketplaceServiceabilityCheckHelper
-						.getResponseForPinCode(cart.getGuid(),cartEntry.getProduct(), pincode,
-								MarketplaceCockpitsConstants.NO,
-								cartEntry.getSelectedUSSID());
-				if (responseData == null) {
-					return false;
-				}
-				LOG.info("Response size for pin code serviceability call:"
-						+ responseData.size());
-				for (PinCodeResponseData response : responseData) {
-					LOG.info("COD eligibility status for "
-							+ cartEntry.getProduct().getCode() + " is "
-							+ response.getCod());
-
-					if (StringUtils.equalsIgnoreCase(response.getCod(),
-							MarketplaceCockpitsConstants.NO)) {
-						isEntryCODEligible = false;
-						errorMessages.add(new ResourceMessage(
-								"placeOrder.validation.nocod", Arrays
-										.asList(response.getUssid())));
-						break;
+			if(null!=pincode)
+			{
+				for (final AbstractOrderEntryModel cartEntry : cart.getEntries()) {
+					List<PinCodeResponseData> responseData = marketplaceServiceabilityCheckHelper
+							.getResponseForPinCode(cartEntry.getProduct(), pincode,
+									MarketplaceCockpitsConstants.NO,
+									cartEntry.getSelectedUSSID());
+					if (responseData == null) {
+						return false;
 					}
+					LOG.info("Response size for pin code serviceability call:"
+							+ responseData.size());
+					for (PinCodeResponseData response : responseData) {
+						LOG.info("COD eligibility status for "
+								+ cartEntry.getProduct().getCode() + " is "
+								+ response.getCod());
+	
+						if (StringUtils.equalsIgnoreCase(response.getCod(),
+								MarketplaceCockpitsConstants.NO)) {
+							isEntryCODEligible = false;
+							errorMessages.add(new ResourceMessage(
+									"placeOrder.validation.nocod", Arrays
+											.asList(response.getUssid())));
+							break;
+						}
+					}
+					break;
 				}
-				break;
 			}
 		} catch (Exception ex) {
 			isEntryCODEligible = false;
@@ -647,7 +646,7 @@ public class MarketplaceCheckoutControllerImpl extends
 												getCommerceCartService()
 														.recalculateCart(
 																cartParameter);
-												addScheduleCharges(getCartModel());
+												
 											} catch (CalculationException e) {
 												LOG.error("Exception calculating cart ["
 														+ getCartModel() + "]", e);
@@ -678,8 +677,7 @@ public class MarketplaceCheckoutControllerImpl extends
 										cartParameter.setCart(getCartModel());
 										getCommerceCartService()
 												.recalculateCart(
-														cartParameter);
-										addScheduleCharges(getCartModel());
+														cartParameter);		
 										//getMplVoucherService().checkCartWithVoucher(getCartModel());
 									} catch (CalculationException e) {
 										LOG.error("Exception calculating cart ["
@@ -691,15 +689,6 @@ public class MarketplaceCheckoutControllerImpl extends
 							});
 		/* 382 */return (true);
 		/*     */}
-
-	protected void addScheduleCharges(CartModel cartModel) {
-		for (AbstractOrderEntryModel cartEntry : cartModel.getEntries()) {
-			if(null != cartEntry.getScheduledDeliveryCharge() && cartEntry.getScheduledDeliveryCharge() > 0.0D) {
-				cartEntry.setTotalPrice(cartEntry.getTotalPrice()+cartEntry.getScheduledDeliveryCharge());
-				modelService.save(cartEntry);
-			}
-		}
-    }
 
 	@Override
 	/*     */public void checkCustomerStatus()
@@ -737,35 +726,22 @@ public class MarketplaceCheckoutControllerImpl extends
 
 	public void setMplVoucherService(MplVoucherService mplVoucherService) {
 		this.mplVoucherService = mplVoucherService;
-	}
-
-	@Override
-	public InvReserForDeliverySlotsResponseData deliverySlotsRequestDataCallToOms(
-			InvReserForDeliverySlotsRequestData deliverySlotsRequestData) {
-		InvReserForDeliverySlotsResponseData omsResponceData = null;
-		try {
-			omsResponceData = mplCartFacade.convertDeliverySlotsDatatoWsdto(deliverySlotsRequestData);
-		}catch(Exception e) {
-			LOG.error("Exception while getting the delivery Slots from OMS "+e.getMessage());
-		}
-
-		return omsResponceData;
-	}
-
-	@Override
-	public Double getScheduleDeliveryCharges() {
-		LOG.info("Inside  getDeliveryCharges Method");
-		Double scheduleDeliveryCharge = 0.0D;
-		try {
-			MplBUCConfigurationsModel configModel = mplConfigFacade.getDeliveryCharges();
-			if(null != configModel) {
-				scheduleDeliveryCharge = configModel.getSdCharge();
-			}
-		}catch(Exception e) {
-			LOG.error("Exception while Getting SChedule Delivery Charges from DB :"+e.getMessage());
-		}
-		return scheduleDeliveryCharge;
 	}	
+	
+	
+	
+	
+	/**
+	 * Setting mode of payment against cart TPR-3471
+	 * @param cartModel
+	 * 
+	 */
+	@Override
+	public void setCODPaymentMode(final CartModel cartModel)
+	{
+		cartModel.setModeOfPayment("COD");
+		getModelService().save(cartModel);
+	}
 	
 	
 	

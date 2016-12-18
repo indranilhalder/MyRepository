@@ -17,6 +17,7 @@
 			<typeref type="Bin" description="payment.Bin.description" />
 			<typeref type="MplPaymentAudit" description="payment.PaymentAudit.description" />
 			<typeref type="JuspayWebhook" description="payment.PaymentWebhook.description" />
+			<typeref type="BinError" description="payment.BinError.description" />
 		</group>
 		<group name="user" expand="false" description="group.user.description">
 			<typeref type="OTP" description="typeref.otp.description" />
@@ -135,9 +136,15 @@
 				<tab name="tab.common" position="0" mode="replace">
 					<section name="properties" mode="replace">
 						<listlayout>
-						<attribute name="mobileNo" />
-						<attribute name="OTPNumber" />
-						<attribute name="OTPType" />
+							<attribute name="mobileNo" />
+							<attribute name="OTPNumber" />
+							<attribute name="OTPType" />
+							<attribute name="CustomerId" />
+							<attribute name="emailId" />
+							<attribute name="isValidated">
+								<advancedbooleaneditor truename="true"
+										falsename="false" />
+							</attribute>
 						</listlayout>
 					</section>
 				</tab>

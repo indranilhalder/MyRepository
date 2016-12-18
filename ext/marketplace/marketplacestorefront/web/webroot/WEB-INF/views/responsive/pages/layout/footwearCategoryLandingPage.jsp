@@ -4,6 +4,9 @@
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
+<!-- TPR-430 -->
+<input type="hidden" id="product_category" value="${product_category}"/>
+
 <template:page pageTitle="${pageTitle}">
 
 	<cms:pageSlot position="Section1" var="feature">

@@ -46,8 +46,7 @@ import com.tisl.mpl.model.SellerMasterModel;
  * @author 361234
  *
  */
-public class MplOffersExistingValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider,
-		Serializable
+public class MplOffersExistingValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider, Serializable
 {
 	private FieldNameProvider fieldNameProvider;
 	private PromotionsService promotionService;
@@ -78,21 +77,28 @@ public class MplOffersExistingValueProvider extends AbstractPropertyFieldValuePr
 	public Collection<FieldValue> getFieldValues(final IndexConfig indexConfig, final IndexedProperty indexedProperty,
 			final Object model) throws FieldValueProviderException
 	{
-
-		if (model instanceof PcmProductVariantModel)
+		try
 		{
-			final PcmProductVariantModel product = (PcmProductVariantModel) model;
+			if (model instanceof PcmProductVariantModel)
+			{
+				final PcmProductVariantModel product = (PcmProductVariantModel) model;
 
-			final Collection fieldValues = new ArrayList();
+				final Collection fieldValues = new ArrayList();
 
-			fieldValues.addAll(createFieldValue(product, indexConfig, indexedProperty));
+				fieldValues.addAll(createFieldValue(product, indexConfig, indexedProperty));
 
-			return fieldValues;
+				return fieldValues;
+			}
+			else
+			{
+				return Collections.emptyList();
+
+			}
 		}
-		else
+		catch (final Exception e) /* added part of value provider go through */
 		{
-			return Collections.emptyList();
-
+			throw new FieldValueProviderException(
+					"Cannot evaluate " + indexedProperty.getName() + " using " + super.getClass().getName() + "exception" + e, e);
 		}
 
 	}

@@ -24,6 +24,7 @@ import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.util.DiscountValue;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -67,6 +68,29 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 				addDeliveryAddress(source, target);
 				addPaymentInformation(source, target);
 				addMplDeliveryMethod(source, target);
+				/* TPR-928 */
+				final DecimalFormat formatter = new DecimalFormat("0.00");
+				//Defect-Fix ProductLevelDiscounts were Not Considered
+				if (target != null
+						&& (target.getOrderDiscounts().getDoubleValue().doubleValue() > 0.0 || (target.getProductDiscounts() != null && target
+								.getProductDiscounts().getDoubleValue().doubleValue() > 0.0)))
+				{
+
+					final String formate = formatter.format(100 * ((target.getOrderDiscounts().getDoubleValue().doubleValue() + target
+							.getProductDiscounts().getDoubleValue().doubleValue()) / (target.getSubTotal().getDoubleValue()
+							.doubleValue())));
+
+					target.setDiscountPercentage(formate);
+
+				}
+				/*
+				 * else if (target != null) {
+				 * 
+				 * final String formate = formatter.format(100 * (target.getTotalDiscounts().getDoubleValue().doubleValue()
+				 * / (target .getSubTotal().getDoubleValue().doubleValue()))); target.setDiscountPercentage(formate); }
+				 */
+
+				/* TPR-928 */
 				if (deliveryCost != null)
 				{
 					target.setDeliveryCost(createPrice(source, deliveryCost));
@@ -110,6 +134,11 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 				else
 				{
 					target.setTotalPriceWithConvCharge(createPrice(source, Double.valueOf(0.0d)));
+				}
+				//TPR-174
+				if (null != source.getMerged())
+				{
+					target.setGotMerged(source.getMerged().booleanValue());
 				}
 			}
 			else
@@ -183,6 +212,7 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 				cartPromoList.add(result);
 			}
 		}
+
 
 		if (CollectionUtils.isNotEmpty(productPromoList))
 		{

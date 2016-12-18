@@ -3,7 +3,7 @@
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template"%>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="product" tagdir="/WEB-INF/tags/desktop/product"%>
+<%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
 <%@ taglib prefix="cart" tagdir="/WEB-INF/tags/desktop/cart"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
@@ -21,24 +21,12 @@
 <spring:url value="/my-account/orders" var="ordersUrl" />
 <spring:url value="/my-account/default/wishList" var="wishlistUrl" />
 <spring:url value="/my-account/friendsInvite" var="friendsInviteUrl" />
-<script>
-	//jquery added to prevent stored Cross Site Scripting /TISSIT-1704/added for creating wishlist and renaming wishlist
 
-	$(document).ready(function() {
 
-		$('#newWishlistName').keyup(function() {
-			validateEnteredName("newWishlistName","errorCreate");
-		});
-		$('#newWishlistName').blur(function() {
-			validateEnteredName("newWishlistName","errorCreate");
-		});
-	});
-	
-	</script>
-
- 
 <template:page pageTitle="${pageTitle}">
-
+	<!-- LW-230 -->
+	<input type="hidden" id="isLuxury" value="${isLuxury}"/>
+	
 	<body class="wishlist" onload="readyFunction();">
 
 		<!-- START OF WRAPPER DIV SECTION -->
@@ -47,7 +35,7 @@
 			<!-- START OF LEFT SECTION -->
 			<div class="wishlist-nav">
 				<!-- START OF SEARCH LIST ITEM STATIC COMPONENT -->
-				<h3><spring:theme code="header.link.myWishList" /></h3>
+				<h1><spring:theme code="header.link.myWishList" /></h1>
 				<%-- <form action="">
 					<button type="submit"></button>
 					<input type="text" placeholder="Find an item in your list">
@@ -252,11 +240,16 @@
 								<c:url value="${product.url}" var="productUrl" />
 								<li>
 									<div class="product-info">
-
+                                          
+										 <c:if test="${fn:toLowerCase(product.luxIndicator)=='marketplace' or empty product.luxIndicator}">
 										<a href="${productUrl}"> <product:productPrimaryImage
-												product="${product}" format="thumbnail" />
-										</a>
-
+														product="${product}" format="thumbnail" /></a>
+														</c:if>
+										<c:if test="${fn:toLowerCase(product.luxIndicator)=='luxury' and not empty product.luxIndicator}">
+										<a href="${productUrl}"> <product:productPrimaryImage
+														product="${product}" format="luxuryCartPage" /></a>
+														</c:if>
+										
 										<div>
 											<ul>
 												<!-- COMPANY OR BRAND NAME STATIC COMPONENT -->
@@ -544,9 +537,9 @@
 					<!-- Dynamically Insert Content Here -->
 					<div class="manage-wishlist-container">
 
-						<h1>
+						<h2>
 							<spring:theme code="wishlist.manage" />
-						</h1>
+						</h2>
 
 
 
@@ -626,9 +619,9 @@
 			<div class="modal-content">
 				<!-- Dynamically Insert Content Here -->
 				<div class="modal-header">
-				<h4 class="modal-title">
+				<h2 class="modal-title">
 					<b><spring:theme code="text.deleteMessage.wishlist" /></b>
-				</h4>
+				</h2>
 				<div class="wishlist-deletion-confirmation-block">
 				<label class="wishlist-deletion-confirmation"><spring:theme
 							code="wishlist.deleteConfirmation.message" /><label class="particular-wishlist-name"></label><spring:theme
@@ -653,9 +646,9 @@
 			<button type="button" class="close pull-right" aria-hidden="true" data-dismiss="modal"></button>
 				<!-- Dynamically Insert Content Here -->
 				<div class="modal-header">
-				<h4 class="modal-title">
+				<h2 class="modal-title">
 					<b><spring:theme code="text.wishlist.pdp" /></b>
-				</h4>
+				</h2>
 				<div class="wishlist-redirects-to-pdp-block">
 				<label class="wishlist-redirects-to-pdp"><spring:theme
 							code="wishlist.redirectsToPdp.message" /></label>
@@ -673,9 +666,9 @@
 			<div class="modal-content">
 				<!-- Dynamically Insert Content Here -->
 				<div class="modal-header">
-				<h4 class="modal-title">
+				<h2 class="modal-title">
 					<b><spring:theme code="text.removeProductMessage.wishlist" /></b>
-				</h4>
+				</h2>
 				<div class="product-deletion-confirmation-block">
 				<label class="product-deletion-confirmation"><spring:theme
 							code="wishlist.removeProductConfirmation.message" /></label>
@@ -701,9 +694,9 @@
 				
 				<div class="click2chat-container" id="myModalLabel">
 				
-				<h1 class="modal-title">
+				<h2 class="modal-title">
 					<spring:theme code="wishlist.create.otherWishlist" />
-				</h1>
+				</h2>
 				<!-- Dynamically Insert Content Here -->
 				<%-- <form:form
 					action="${request.contextPath}/my-account/createNewWishlistWP"
@@ -944,3 +937,17 @@
 	
 </script>
 
+<script>
+	//jquery added to prevent stored Cross Site Scripting /TISSIT-1704/added for creating wishlist and renaming wishlist
+ 
+	$(document).ready(function() {
+
+		$('#newWishlistName').keyup(function() {
+			validateEnteredName("newWishlistName","errorCreate");
+		});
+		$('#newWishlistName').blur(function() {
+			validateEnteredName("newWishlistName","errorCreate");
+		});
+	});
+	
+	</script>

@@ -38,6 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
+import com.tisl.mpl.core.enums.LuxIndicatorEnum;
 import com.tisl.mpl.facades.product.data.ProductTagDto;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.service.MplProductWebService;
@@ -78,16 +79,19 @@ public class SearchSuggestUtilityMethods
 	private MplProductWebService mplProductWebService;
 	//	@Resource(name = "productService")
 	//	private ProductService productService;
-	//	@Resource(name = "cwsProductFacade")
-	//	private ProductFacade productFacade;
+	@Resource(name = "productFacade")
+	private ProductFacade productFacade;
 	//@Resource(name = "productService")
 	//private ProductService productService;
 
 	//@Resource(name = "defaultPromotionManager")
 	//private DefaultPromotionManager defaultPromotionManager;
 
-	@Resource(name = "accProductFacade")
-	private ProductFacade productFacade;
+	/*
+	 * @Resource(name = "accProductFacade") private ProductFacade productFacade;
+	 */
+	//@Resource(name = "accProductFacade")
+	//private ProductFacade productFacade;
 	//@Resource(name = "defaultMplProductSearchFacade")
 	//private DefaultMplProductSearchFacade searchFacade;
 	@Resource(name = "productDetailsHelper")
@@ -390,6 +394,12 @@ public class SearchSuggestUtilityMethods
 		return secondrootname;
 	}
 
+	/**
+	 * @desc setting Facets (Filter) in the Search
+	 * @param productSearchPage
+	 * @param searchPageData
+	 * @return
+	 */
 	public ProductSearchPageWsDto setSearchPageData(final ProductSearchPageWsDto productSearchPage,
 			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData)
 	{
@@ -443,7 +453,7 @@ public class SearchSuggestUtilityMethods
 					facetWsDTO.setMultiSelect(Boolean.valueOf((facate.isCategory())));
 					if (null != facate.getName())
 					{
-						facetWsDTO.setName(facate.getName());
+						facetWsDTO.setName(StringUtils.capitalize(facate.getName()));
 					}
 					facetWsDTO.setCategory(Boolean.valueOf((facate.isCategory())));
 					facetWsDTO.setPriority(Integer.valueOf((facate.getPriority())));
@@ -488,13 +498,14 @@ public class SearchSuggestUtilityMethods
 								currentFacet = values.getQuery().getQuery().getValue().toString();
 								facetValueWsDTO.setQuery(currentFacet);
 								//facetValueWsDTO.setValue(currentFacet.substring((currentFacet.lastIndexOf(":") + 1)));
-
 								facetValueWsDTO.setValue(values.getCode());
 							}
 							if (null != values.getQuery().getUrl())
 							{
 								facetValueWsDTO.setUrl(values.getQuery().getUrl().toString());
 							}
+							// added count
+							facetValueWsDTO.setCount(Long.valueOf(values.getCount()));
 							// To skip Include out of stock
 							if (!(null != values.getCode() && values.getCode().equalsIgnoreCase("false")))
 							{
@@ -522,7 +533,7 @@ public class SearchSuggestUtilityMethods
 					categoryHierarchy.setMultiSelect(Boolean.valueOf((facate.isCategory())));
 					if (null != facate.getName())
 					{
-						categoryHierarchy.setName(facate.getName());
+						categoryHierarchy.setName(StringUtils.capitalize(facate.getName()));
 					}
 					categoryHierarchy.setCategory(Boolean.valueOf((facate.isCategory())));
 					categoryHierarchy.setPriority(Integer.valueOf((facate.getPriority())));
@@ -549,7 +560,39 @@ public class SearchSuggestUtilityMethods
 				}
 			}
 			productSearchPage.setFacetdata(searchfacetDTOList);
+		}
+		else
+		{
+			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			productSearchPage.setError(MarketplacecommerceservicesConstants.SEARCHNOTFOUND);
+		}
 
+		return productSearchPage;
+	}
+
+	/**
+	 * @desc setting Products in the Search --TPR-817
+	 * @param searchPageData
+	 * @return
+	 */
+	public ProductSearchPageWsDto setPDPSearchPageData(
+			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData)
+	{
+		final ProductSearchPageWsDto productSearchPage = new ProductSearchPageWsDto();
+		if (null != searchPageData.getResults())
+		{
+			// serp product results comes here
+			final List<SellingItemDetailWsDto> searchProductDTOList = getProductResults(searchPageData);
+			if (searchProductDTOList != null)
+			{
+				productSearchPage.setSearchresult(searchProductDTOList);
+				productSearchPage.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+			else
+			{
+				productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+				productSearchPage.setError(MarketplacecommerceservicesConstants.SEARCHNOTFOUND);
+			}
 		}
 		else
 		{
@@ -562,24 +605,12 @@ public class SearchSuggestUtilityMethods
 
 
 
-
-	//	private final List<GalleryImageData> getGalleryImagesList(final List<Map<String, String>> galleryImages)
-	//	{
-	//		final List<GalleryImageData> galleryImageList = new ArrayList<GalleryImageData>();
-	//		GalleryImageData galleryImage = null;
-	//		for (final Map<String, String> map : galleryImages)
-	//		{
-	//			galleryImage = new GalleryImageData();
-	//			galleryImage.setGalleryImages(map);
-	//			galleryImageList.add(galleryImage);
-	//		}
-	//
-	//		return galleryImageList;
-	//	}
-
-
-
 	// Check if Keyword exists
+	/**
+	 * @desc Setting keyword redirect in search
+	 * @param searchText
+	 * @return
+	 */
 	public Map<String, List<String>> getKeywordSearch(String searchText)
 	{
 		//TODO parse the URL and remove any extra sort query within it
@@ -608,6 +639,11 @@ public class SearchSuggestUtilityMethods
 		return params;
 	}
 
+	/**
+	 * @desc Setting Products in the search response
+	 * @param searchPageData
+	 * @return
+	 */
 	private List<SellingItemDetailWsDto> getProductResults(
 			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData)
 	{
@@ -624,23 +660,11 @@ public class SearchSuggestUtilityMethods
 
 			if (null != productData && null != productData.getCode())
 			{
-
-				/*
-				 * final ProductModel productModel = productService.getProductForCode(defaultPromotionManager.catalogData(),
-				 * productData.getCode());
-				 * 
-				 * ProductData productData1 = null; if (null != productModel) { productData1 =
-				 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.GALLERY)); } else { throw
-				 * new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9037); }
-				 * 
-				 * 
-				 * if (null != productData1) { final List<GalleryImageData> gallaryImages =
-				 * mplProductWebService.getGalleryImages(productData1);
-				 * 
-				 * if (!gallaryImages.isEmpty()) { sellingItemDetail.setGalleryImagesList(gallaryImages); }
-				 * 
-				 * }
-				 */
+				if (null != productData.getUssID())
+				{
+					sellingItemDetail.setUssid(productData.getUssID());
+				}
+				//Revert of TPR-796
 				try
 				{
 					productDataImage = productFacade.getProductForCodeAndOptions(productData.getCode(),
@@ -649,12 +673,24 @@ public class SearchSuggestUtilityMethods
 				}
 				catch (final Exception e)
 				{
-					LOG.error("SERPSEARCH ProductError:" + productData.getCode());
+					LOG.error("SERPSEARCH Product Image Error:" + productData.getCode());
 					continue;
 				}
+
+				//TPR-796
+				/*
+				 * try { galleryImages = productDetailsHelper.getPrimaryGalleryImagesMobile(productData); } catch (final
+				 * Exception e) { LOG.error("SERPSEARCH ProductError:" + productData.getCode());
+				 * ExceptionUtil.getCustomizedExceptionTrace(e); continue; }
+				 */
+
 				if (CollectionUtils.isNotEmpty(galleryImages))
 				{
 					sellingItemDetail.setGalleryImagesList(galleryImages);
+				}
+				if (null != productData.getSavingsOnProduct() && null != productData.getSavingsOnProduct().getValue())
+				{
+					sellingItemDetail.setDiscountPercent(String.valueOf(productData.getSavingsOnProduct().getValue().intValue()));
 				}
 				if (null != productData.getName())
 				{
@@ -703,12 +739,24 @@ public class SearchSuggestUtilityMethods
 				}
 
 				final ImageData imgData = getPrimaryImageForProductAndFormat(productData, "searchPage");
+				final ImageData imgDataLuxury = getPrimaryImageForProductAndFormat(productData, "luxurySearchPage");
 
-				if (imgData != null && imgData.getUrl() != null)
+				if (productData.getLuxIndicator() != null
+						&& productData.getLuxIndicator().equalsIgnoreCase(LuxIndicatorEnum.LUXURY.getCode()))
 				{
-
-					sellingItemDetail.setImageURL(imgData.getUrl());
+					if (imgDataLuxury != null && imgDataLuxury.getUrl() != null)
+					{
+						sellingItemDetail.setImageURL(imgDataLuxury.getUrl());
+					}
 				}
+				else
+				{
+					if (imgData != null && imgData.getUrl() != null)
+					{
+						sellingItemDetail.setImageURL(imgData.getUrl());
+					}
+				}
+
 				if (null != productData.getDescription())
 				{
 					sellingItemDetail.setDetails(productData.getDescription());
@@ -886,6 +934,12 @@ public class SearchSuggestUtilityMethods
 		return searchProductDTOList;
 	}
 
+	/**
+	 * @desc Setting Images data
+	 * @param product
+	 * @param format
+	 * @return
+	 */
 	private ImageData getPrimaryImageForProductAndFormat(final ProductData product, final String format)
 	{
 		if (product != null && format != null)
@@ -905,55 +959,12 @@ public class SearchSuggestUtilityMethods
 		return null;
 	}
 
-	//	private List<Map<String, String>> getGalleryImages(final ProductData productData)
-	//	{
-	//
-	//		final List<Map<String, String>> galleryImages = new ArrayList<>();
-	//		if (CollectionUtils.isNotEmpty(productData.getImages()))
-	//		{
-	//			final List<ImageData> images = new ArrayList<>();
-	//			for (final ImageData image : productData.getImages())
-	//			{
-	//				if (ImageDataType.GALLERY.equals(image.getImageType()))
-	//				{
-	//					images.add(image);
-	//				}
-	//			}
-	//			Collections.sort(images, new Comparator<ImageData>()
-	//			{
-	//				@Override
-	//				public int compare(final ImageData image1, final ImageData image2)
-	//				{
-	//					return image1.getGalleryIndex().compareTo(image2.getGalleryIndex());
-	//				}
-	//			});
-	//
-	//			if (CollectionUtils.isNotEmpty(images))
-	//			{
-	//				int currentIndex = images.get(0).getGalleryIndex().intValue();
-	//				Map<String, String> formats = new HashMap<String, String>();
-	//				for (final ImageData image : images)
-	//				{
-	//					if (currentIndex != image.getGalleryIndex().intValue())
-	//					{
-	//						galleryImages.add(formats);
-	//						formats = new HashMap<>();
-	//						currentIndex = image.getGalleryIndex().intValue();
-	//					}
-	//					if (null != image.getFormat() && null != image.getUrl())
-	//					{
-	//						formats.put(image.getFormat(), image.getUrl());
-	//					}
-	//				}
-	//				if (!formats.isEmpty() && formats.equals(MarketplacecommerceservicesConstants.THUMBNAIL))
-	//				{
-	//					galleryImages.add(formats);
-	//				}
-	//			}
-	//		}
-	//		return galleryImages;
-	//	}
 
+	/**
+	 * @desc Setting department hierarchy in the filter
+	 * @param departmentFilters
+	 * @return
+	 */
 	public DepartmentHierarchyWs getDepartmentHierarchy(final List<String> departmentFilters)
 	{
 		final Set<String> traversedDepartments = new HashSet<String>();
@@ -1317,11 +1328,18 @@ public class SearchSuggestUtilityMethods
 		return newDepartment;
 	}
 
+	/**
+	 * @desc Setting Filters in the DTO
+	 * @param productSearchPage
+	 * @param searchPageData
+	 * @return
+	 */
 	public ProductSearchPageWsDto setFilterData(final ProductSearchPageWsDto productSearchPage,
 			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData)
 	{
 		final List<FacetDataWsDTO> searchfacetDTOList = new ArrayList<>();
 		DepartmentHierarchyWs categoryHierarchy = new DepartmentHierarchyWs();
+		List<FacetValueDataWsDTO> facetValueWsDTOList = null;
 		if (CollectionUtils.isNotEmpty(searchPageData.getFacets()))
 		{
 			for (final FacetData<SearchStateData> facate : searchPageData.getFacets())
@@ -1331,14 +1349,17 @@ public class SearchSuggestUtilityMethods
 						&& !facate.getCode().equalsIgnoreCase(MarketplacewebservicesConstants.CATEGORY)
 						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
 						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory"))
+
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
+					facetValueWsDTOList = new ArrayList<>();
+
 
 					//	facetWsDTO.setCategory(facate.getCode());
 					facetWsDTO.setMultiSelect(Boolean.valueOf((facate.isCategory())));
 					if (StringUtils.isNotEmpty(facate.getName()))
 					{
-						facetWsDTO.setName(facate.getName());
+						facetWsDTO.setName(StringUtils.capitalize(facate.getName()));
 					}
 					facetWsDTO.setCategory(Boolean.valueOf((facate.isCategory())));
 					facetWsDTO.setPriority(Integer.valueOf((facate.getPriority())));
@@ -1347,7 +1368,6 @@ public class SearchSuggestUtilityMethods
 					//Generic filter condition
 					if (searchPageData.getDeptType().equalsIgnoreCase(MarketplacewebservicesConstants.GENERIC))
 					{
-
 						if (facate.isGenericFilter())
 						{
 							facetWsDTO.setVisible(Boolean.TRUE);
@@ -1362,9 +1382,7 @@ public class SearchSuggestUtilityMethods
 						facetWsDTO.setVisible(Boolean.valueOf((facate.isVisible())));
 					}
 
-					final List<FacetValueDataWsDTO> facetValueWsDTOList = new ArrayList<>();
-
-					if (null != facate.getValues())
+					if (CollectionUtils.isNotEmpty(facate.getValues()))
 					{
 						String currentFacet = "";
 						for (final FacetValueData<SearchStateData> values : facate.getValues())
@@ -1392,6 +1410,9 @@ public class SearchSuggestUtilityMethods
 							{
 								facetValueWsDTO.setUrl(values.getQuery().getUrl().toString());
 							}
+							// added count
+							facetValueWsDTO.setCount(Long.valueOf(values.getCount()));
+
 							//If facet name is "Include out of stock"  value will be false
 							if (!(null != values.getCode() && StringUtils.isNotEmpty(values.getCode()) && values.getCode()
 									.equalsIgnoreCase("false")))
@@ -1421,7 +1442,7 @@ public class SearchSuggestUtilityMethods
 					categoryHierarchy.setMultiSelect(Boolean.valueOf((facate.isCategory())));
 					if (StringUtils.isNotEmpty(facate.getName()))
 					{
-						categoryHierarchy.setName(facate.getName());
+						categoryHierarchy.setName(StringUtils.capitalize(facate.getName()));
 					}
 					categoryHierarchy.setCategory(Boolean.valueOf((facate.isCategory())));
 					categoryHierarchy.setPriority(Integer.valueOf((facate.getPriority())));
@@ -1460,6 +1481,12 @@ public class SearchSuggestUtilityMethods
 		return productSearchPage;
 	}
 
+	/**
+	 * @desc Setting department hierarchy with facet count
+	 * @param departmentFilters
+	 * @param facetValues
+	 * @return
+	 */
 	public DepartmentHierarchyWs getDepartmentHierarchy(final List<String> departmentFilters,
 			final List<FacetValueData<SearchStateData>> facetValues)
 	{
@@ -1526,8 +1553,11 @@ public class SearchSuggestUtilityMethods
 				}
 
 			}
+		}
 
-			//re-attaching L1 filter
+		//re-attaching Facet selection into filter
+		if (CollectionUtils.isNotEmpty(facetValues))
+		{
 			for (final DepartmentFilterWsDto l1Depart : l1Map.values())
 			{
 
@@ -1547,6 +1577,8 @@ public class SearchSuggestUtilityMethods
 										&& value.getCode().equalsIgnoreCase(l4Depart.getCategoryCode()))
 								{
 									l4Depart.setSelected(Boolean.valueOf(value.isSelected()));
+									//TPR-796
+									l4Depart.setQuantity((int) (value.getCount()));
 									if (value.isSelected())
 									{
 										flag = true;
@@ -1579,6 +1611,8 @@ public class SearchSuggestUtilityMethods
 									&& value.getCode().equalsIgnoreCase(l3Depart.getCategoryCode()))
 							{
 								l3Depart.setSelected(Boolean.valueOf(value.isSelected()));
+								//TPR-796
+								l3Depart.setQuantity((int) (value.getCount()));
 								if (value.isSelected())
 								{
 									flag = true;
@@ -1603,9 +1637,6 @@ public class SearchSuggestUtilityMethods
 							}
 
 						}
-
-
-
 					}
 					//Setting L2
 					//FOr select if facet is selected
@@ -1615,6 +1646,8 @@ public class SearchSuggestUtilityMethods
 								&& value.getCode().equalsIgnoreCase(l2Depart.getCategoryCode()))
 						{
 							l2Depart.setSelected(Boolean.valueOf(value.isSelected()));
+							//TPR-796
+							l2Depart.setQuantity((int) (value.getCount()));
 							if (value.isSelected())
 							{
 								flag = true;
@@ -1646,6 +1679,8 @@ public class SearchSuggestUtilityMethods
 							&& value.getCode().equalsIgnoreCase(l1Depart.getCategoryCode()))
 					{
 						l1Depart.setSelected(Boolean.valueOf(value.isSelected()));
+						//TPR-796
+						l1Depart.setQuantity((int) (value.getCount()));
 						if (value.isSelected())
 						{
 							flag = true;

@@ -53,11 +53,12 @@
 			
 			<div class="right-account">
 				<div class="info">
-					<h1><spring:theme code="profile.heading.text" text="Personal Information"/></h1>
+					<h2><spring:theme code="profile.heading.text" text="Personal Information"/></h2>
 					<p><spring:theme code="profile.heading.deatils" text="Change your name, email, phone number here. "/></p>
 					<%-- <form> --%>
 					<fieldset>
 						<form:form action="update-parsonal-detail" method="post" commandName="mplCustomerProfileForm" name="mplCustomerProfileForm" onSubmit="return validateForm();">
+							 <input type="hidden" name="isLux" value="${param.isLux}"/>
 							 <div class="half">
 									<label><spring:theme code="text.mplCustomerProfileForm.firstName" text="First Name" /></label>
 										<form:input path="firstName" id="profilefirstName"
@@ -246,7 +247,7 @@
 				<!-- Update Password -->
 				
 				<div class="password">
-					<h1><spring:theme code="profile.Password" text="Password"/></h1>	
+					<h2><spring:theme code="profile.Password" text="Password"/></h2>	
 					<p><spring:theme code="profile.Password.details" text="If you aren't a bot, you can change your password here."/></p>
 					
 					<div >
@@ -293,9 +294,8 @@
 				<!-- End of Update Password -->
 			
 				<!-- Update NickName -->
-			
 				<div class="nickname">
-					<h1><spring:theme code="profile.Nickname" text="Nickname"/></h1>
+					<h2><spring:theme code="profile.Nickname" text="Nickname"/></h2>
 					<p><spring:theme code="profile.Nickname.details" text="What's your alter ego called?"/></p>
 						<form:form action="update-nickName" method="post" commandName="mplCustomerProfileForm">
 						<fieldset>

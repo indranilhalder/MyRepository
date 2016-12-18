@@ -21,14 +21,14 @@
 		<div id="h">
 			<span class="cclose-ico"></span>
 			<div class="chat">
-				<h5>
+				<h3>
 					<span class="cicon icon-comment"></span>
 					<a href="${request.contextPath}/clickto/chat" id="chatMe"
 					data-title="">
 					<spring:theme code="needhelp.chatwithus" />
 					<!-- &nbsp;<span class="bubble">1</span> -->
 					</a>
-				</h5>
+				</h3>
 					<!-- Commented as part of the chairman demo feedback -->
 			<%-- 	<a href="${request.contextPath}/clickto/chat" id="chatMe"
 					data-title="">
@@ -37,13 +37,13 @@
 
 			</div>
 			<div class="call">
-				<h5>
+				<h3>
 					<span class="cicon icon-earphone"></span>
 					<a href="${request.contextPath}/clickto/call" id="callMe"
 					data-title="">${contactNumber}
 					<%-- <spring:theme code="needhelp.callus" /> --%>
 					</a>
-				</h5>
+				</h3>
 				
 				<!--  Post chairman demo Changes -->
 				<%-- <a href="${request.contextPath}/clickto/call" id="callMe">${contactNumber}</a> --%>

@@ -11,6 +11,7 @@ import de.hybris.platform.catalog.model.classification.ClassificationClassModel;
 import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commerceservices.search.solrfacetsearch.provider.CategorySource;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.solrfacetsearch.config.IndexConfig;
 import de.hybris.platform.solrfacetsearch.config.IndexedProperty;
 import de.hybris.platform.solrfacetsearch.config.exceptions.FieldValueProviderException;
@@ -26,7 +27,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MplConstants;
@@ -34,6 +34,10 @@ import com.tisl.mpl.constants.MplConstants;
 
 public class MplDepartmentsValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider, Serializable
 {
+	/**
+	 *
+	 */
+	private static final String LSH1 = "LSH1";
 	private CategorySource categorySource;
 	private FieldNameProvider fieldNameProvider;
 	private CategoryService categoryService;
@@ -74,14 +78,35 @@ public class MplDepartmentsValueProvider extends AbstractPropertyFieldValueProvi
 	public Collection<FieldValue> getFieldValues(final IndexConfig indexConfig, final IndexedProperty indexedProperty,
 			final Object model) throws FieldValueProviderException
 	{
-		final Collection categories = getCategorySource().getCategoriesForConfigAndProperty(indexConfig, indexedProperty, model);
-		final Collection fieldValues = new ArrayList();
-		if ((categories != null) && (!(categories.isEmpty())))
+		try
 		{
-			final Set categoryPaths = getCategoryPaths(categories);
-			fieldValues.addAll(createFieldValue(categoryPaths, indexedProperty));
+			boolean isLuxury = false;
+			if (model instanceof ProductModel)
+			{
+				final ProductModel productmodel = (ProductModel) model;
+				if (null != productmodel.getLuxIndicator() && productmodel.getLuxIndicator().getCode().equalsIgnoreCase("luxury"))
+				{
+					isLuxury = true;
+				}
+			}
+			else /* added part of value provider go through */
+			{
+				throw new FieldValueProviderException("Cannot evaluate Luxury flag of non-product item");
+			}
+			final Collection categories = getCategorySource().getCategoriesForConfigAndProperty(indexConfig, indexedProperty, model);
+			final Collection fieldValues = new ArrayList();
+			if ((categories != null) && (!(categories.isEmpty())))
+			{
+				final Set categoryPaths = getCategoryPaths(categories, isLuxury);
+				fieldValues.addAll(createFieldValue(categoryPaths, indexedProperty));
+			}
+			return fieldValues;
 		}
-		return fieldValues;
+		catch (final Exception e) /* added part of value provider go through */
+		{
+			throw new FieldValueProviderException(
+					"Cannot evaluate " + indexedProperty.getName() + " using " + super.getClass().getName() + "exception" + e, e);
+		}
 	}
 
 	protected List<FieldValue> createFieldValue(final Collection<String> categoryPaths, final IndexedProperty indexedProperty)
@@ -100,7 +125,7 @@ public class MplDepartmentsValueProvider extends AbstractPropertyFieldValueProvi
 		return fieldValues;
 	}
 
-	protected Set<String> getCategoryPaths(final Collection<CategoryModel> categories)
+	protected Set<String> getCategoryPaths(final Collection<CategoryModel> categories, final boolean isLuxury)
 	{
 		final Set allPaths = new HashSet();
 
@@ -117,8 +142,12 @@ public class MplDepartmentsValueProvider extends AbstractPropertyFieldValueProvi
 			}
 			for (final List categoryPath : pathsForCategory)
 			{
-				//if (categoryPath != null && categoryPath.size() > 0 && ((CategoryModel) categoryPath.get(0)).getCode().contains(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE))
-				if (CollectionUtils.isNotEmpty(categoryPath)
+				if (categoryPath != null && categoryPath.size() > 0 && isLuxury
+						&& ((CategoryModel) categoryPath.get(0)).getCode().contains(LSH1))
+				{
+					accumulateCategoryPaths(categoryPath, allPaths);
+				}
+				else if (categoryPath != null && categoryPath.size() > 0 && !isLuxury
 						&& ((CategoryModel) categoryPath.get(0)).getCode().contains(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE))
 				{
 					accumulateCategoryPaths(categoryPath, allPaths);

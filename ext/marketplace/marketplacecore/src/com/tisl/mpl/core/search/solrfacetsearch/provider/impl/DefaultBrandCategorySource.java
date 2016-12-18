@@ -102,8 +102,10 @@ public class DefaultBrandCategorySource implements CategorySource
 				for (final CategoryModel categoryModel : getAllCategories(category, rootCategories))
 				{
 
-					if (categoryModel != null && ((categoryModel.getCode().startsWith("MBH1") && categoryModel.getCode().length() <= 5)
-							|| categoryModel.getCode().equalsIgnoreCase("MSH1")))
+					if (categoryModel != null
+							&& ((categoryModel.getCode().startsWith("MBH1") && categoryModel.getCode().length() <= 5)
+									|| categoryModel.getCode().equalsIgnoreCase("MSH1") || categoryModel.getCode()
+									.equalsIgnoreCase("LSH1")))
 					{
 						continue;
 					}
@@ -262,7 +264,7 @@ public class DefaultBrandCategorySource implements CategorySource
 					}
 					catch (final UnknownIdentifierException localUnknownIdentifierException)
 					{
-						LOG.warn("Failed to load category [" + categoryCode + "] from catalog version ["
+						LOG.debug("Failed to load category [" + categoryCode + "] from catalog version ["
 								+ catalogVersionToString(catalogVersion) + "]");
 					}
 				}
@@ -270,7 +272,7 @@ public class DefaultBrandCategorySource implements CategorySource
 
 			if (result.isEmpty())
 			{
-				LOG.error("Failed to find Category with code [" + categoryCode + "] in catalog versions ["
+				LOG.debug("Failed to find Category with code [" + categoryCode + "] in catalog versions ["
 						+ catalogVersionsToString(catalogVersions) + "]");
 			}
 			else

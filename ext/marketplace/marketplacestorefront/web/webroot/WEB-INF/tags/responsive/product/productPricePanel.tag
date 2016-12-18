@@ -10,8 +10,8 @@
 
 <!-- Displaying different prices and seller name -->
 
-<h2 class="company author">
-          </h2>
+<h3 class="company author">
+          </h3>
 <div class="price">
 	<p class="old" id="mrpPriceId" style="display:none">
 		<%-- <spring:theme code="product.currency"></spring:theme> --%>

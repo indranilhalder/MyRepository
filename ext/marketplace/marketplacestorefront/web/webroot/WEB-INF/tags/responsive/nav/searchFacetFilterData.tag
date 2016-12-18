@@ -23,25 +23,22 @@
 						<c:choose>
 							<c:when test="${fn:length(suggestionAry) > 1}">							  
 								<c:forEach begin="0" end="${fn:length(suggestionAry)}" var="current">
-									<c:choose>
-										<c:when test="${suggestionAry[current] ne searchTextAry[current]}">
-											<strike>${searchTextAry[current]}</strike>&nbsp; 
+									<c:choose>										
+										<c:when test="${suggestionAry[current] ne searchTextAry[current]}"><!-- Changes done for TPR-1156 -->
+											${searchTextAry[current]}&nbsp;
 										</c:when>
 										<c:otherwise>
-											<c:out value="${searchTextAry[current]}"/>&nbsp;
+											<c:out value="${searchTextAry[current]}"/>
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>
 							</c:when>
 							<c:otherwise>
 								<spring:theme code="search.page.searchTextValue"
-							arguments="${searchPageData.freeTextSearch}" />
+							arguments="${searchPageData.freeTextSearch}"/>
 							</c:otherwise>
 						</c:choose>
-						
-							
-							
-							</i>&nbsp;"</span>
+						</i>"</span>
 					</c:when>
 					<c:otherwise>
 					 <spring:theme code="search.page.searchText"/>	
@@ -61,4 +58,9 @@
 		</c:if>
 
 		<product:searchresultsgridcomponent/>
+		<!--  TPR-656 -->
+		<c:if test="${not empty lookId}">
+		<input type="hidden" name="customSku" value="true"/>
+	    <input type="hidden" name="customSkuCollectionId" value="${lookId}"/>
+	    </c:if>
 </div>

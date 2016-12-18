@@ -450,6 +450,10 @@ function editAddress(addressId) {
 
     
     function changeUrl(url){
+    	// For TISLUX-2829
+    	if(sessionStorage.getItem("luxuryLoginPage") != null && sessionStorage.getItem("luxuryLoginPage") == "true"){
+    		url = url+"?isLux=true";
+		}
     	if (typeof (history.pushState) != "undefined") {
 			var obj = {
 					Url : url

@@ -177,8 +177,8 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 				//Setting values
 				paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidFinalMap);
 				paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProductFinalList);
-				paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS,
-						productAssociatedItemsFinalMap);
+				paramSessionContext
+						.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, productAssociatedItemsFinalMap);
 
 			}
 		}
@@ -190,14 +190,14 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 		catch (final EtailNonBusinessExceptions e) //Added for TISPT-195
 		{
 			LOG.error(e.getMessage());
-			ExceptionUtil
-					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
 		}
 		catch (final Exception e)
 		{
 			LOG.error(e.getMessage());
-			ExceptionUtil
-					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
 		}
 
 		return promotionResults;
@@ -232,10 +232,9 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 				boolean isPercentageDisc = false;
 				final double maxDiscount = getMaxDiscountVal() == null ? 0.0D : getMaxDiscountVal().doubleValue(); //Adding the Promotion set Max  Discount Value to a variable
 				final Double discountPrice = getPriceForOrder(paramSessionContext, getDiscountPrices(paramSessionContext), order,
-						MarketplacecommerceservicesConstants.DISCOUNT_PRICES) != null
-								? (Double) getPriceForOrder(paramSessionContext, getDiscountPrices(paramSessionContext), order,
-										MarketplacecommerceservicesConstants.DISCOUNT_PRICES)
-								: new Double(0.0);
+						MarketplacecommerceservicesConstants.DISCOUNT_PRICES) != null ? (Double) getPriceForOrder(paramSessionContext,
+						getDiscountPrices(paramSessionContext), order, MarketplacecommerceservicesConstants.DISCOUNT_PRICES)
+						: new Double(0.0);
 
 				//getting eligible Product List
 				final List<Product> eligibleProductList = new ArrayList<Product>();
@@ -278,19 +277,20 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 
 					if (!isPercentageOrAmount().booleanValue())
 					{
-						flagForCouldFireMessage = getDefaultPromotionsManager().getValidProductListForAmtDiscount(paramSessionContext,
-								order, promotionProductList, promotionCategoryList, eligibleQuantity, discountPrice,
-								validProductUssidMap);
+						flagForCouldFireMessage = getDefaultPromotionsManager()
+								.getValidProductListForAmtDiscount(paramSessionContext, order, promotionProductList,
+										promotionCategoryList, eligibleQuantity, discountPrice, validProductUssidMap);
 					}
 
 					//for delivery mode restriction check
 					flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForAPromo(restrictionList,
-							validProductUssidMap);
+							validProductUssidMap, order);
 					//for payment mode restriction check
 					flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList,
 							paramSessionContext);
-
-					if (flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval) // If Total no of valid Products exceeds Qualifying Count
+					final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(
+							restrictionList, order);
+					if (flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval && flagForPincodeRestriction) // If Total no of valid Products exceeds Qualifying Count
 					{
 						int totalValidProdCount = 0;
 						for (final String key : validProductList.keySet())
@@ -331,8 +331,8 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 						paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.TOTALVALIDPRODUCTSPRICEVALUE,
 								Double.valueOf(totalPricevalue));
 
-						paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.PROMOCODE,
-								String.valueOf(this.getCode()));
+						paramSessionContext
+								.setAttribute(MarketplacecommerceservicesConstants.PROMOCODE, String.valueOf(this.getCode()));
 						paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.ISPERCENTAGEDISC,
 								Boolean.valueOf(isPercentageDisc));
 
@@ -356,9 +356,11 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 								final BigDecimal adjustedEntryPrice = Helper.roundCurrencyValue(paramSessionContext, currency,
 										originalEntryPrice - (originalEntryPrice * percentageDiscountvalue));
 
-								final BigDecimal adjustedUnitPrice = Helper.roundCurrencyValue(paramSessionContext, currency,
-										(adjustedEntryPrice.equals(BigDecimal.ZERO)) ? BigDecimal.ZERO
-												: adjustedEntryPrice.divide(BigDecimal.valueOf(eligibleCount), RoundingMode.HALF_EVEN));
+								final BigDecimal adjustedUnitPrice = Helper.roundCurrencyValue(
+										paramSessionContext,
+										currency,
+										(adjustedEntryPrice.equals(BigDecimal.ZERO)) ? BigDecimal.ZERO : adjustedEntryPrice.divide(
+												BigDecimal.valueOf(eligibleCount), RoundingMode.HALF_EVEN));
 
 								final List<PromotionOrderEntryConsumed> consumed = new ArrayList<PromotionOrderEntryConsumed>();
 								consumed.add(getDefaultPromotionsManager().consume(paramSessionContext, this, eligibleCount,
@@ -514,8 +516,8 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 			{
 				final Long qualifyingCount = getQuantity(ctx);
 
-				final double minimumCategoryValue = getProperty(ctx, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT) != null
-						? ((Double) getProperty(ctx, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)).doubleValue() : 0.00D;
+				final double minimumCategoryValue = getProperty(ctx, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT) != null ? ((Double) getProperty(
+						ctx, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)).doubleValue() : 0.00D;
 				final int qCount = qualifyingCount.intValue();
 
 				if (qCount > noOfProducts)

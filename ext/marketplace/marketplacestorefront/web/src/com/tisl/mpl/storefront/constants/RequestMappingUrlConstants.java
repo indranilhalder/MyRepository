@@ -153,6 +153,7 @@ public final class RequestMappingUrlConstants
 	public static final String SITEMAP = "/site-map";
 
 	public static final String SHOP_BY_BRAND_AJAX = "/shopbybrand";
+	public static final String ADD_WISHLIST_IN_POPUP_PLP = "/addToWishListInPLP";
 
 	//order tracking page start
 	public static final String ANONYMOUS_ORDER_TRACKING_URL = "/trackOrder";

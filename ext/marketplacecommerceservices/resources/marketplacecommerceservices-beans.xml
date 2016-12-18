@@ -197,6 +197,10 @@
 		<property name="convenienceChargeForCOD" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
 		<property name="totalPriceWithConvCharge" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
 		<property name="deliverySlotCharge" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<!-- TPR-928 -->
+		<property name="discountPercentage" type="java.lang.String"/>
+		<!-- TPR-174 - Welcome back status message -->
+		<property name="gotMerged" type="boolean"/>
 	</bean>
 	<bean class="de.hybris.platform.commercefacades.order.data.OrderData">
 		<property name="convenienceChargeForCOD" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
@@ -204,6 +208,10 @@
 		<property name="type" type="String"/>
 		<property name="customerData" type="de.hybris.platform.commercefacades.user.data.CustomerData"/>
 		<property name="couponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<!-- TPR-774 -->
+		<property name="subTotalDisplay" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<property name="discountDisplay" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<!-- TPR-774 -->
 	</bean>
 		
 	
@@ -232,6 +240,11 @@
 	<property name="ussid" type="String">
 			<description>The Selected Entries USSID</description>
 	</property>
+	<!-- TPR-774 -->
+	<property name="entryMrp" type="java.lang.Double">
+		<description>Entry respective MRP</description>
+	</property>
+	<!-- TPR-774 -->
 	</bean>
 		
 	<!--End: Added for Order Data XML -->
@@ -596,6 +609,7 @@
     	<property name="convCharge" type="de.hybris.platform.commercefacades.product.data.PriceData" />
     	<property name="deliveryCost" type="de.hybris.platform.commercefacades.product.data.PriceData" />
     	<property name="voucherDiscount" type="com.tisl.mpl.data.VoucherDiscountData" />
+    	<property name="promoExpiryMsg" type="String" />		<!-- TPR-629 -->
     </bean> 
 	
 	<!-- Data class for Payment Specific Promotions Ends-->
@@ -683,6 +697,12 @@
 	
 	<bean class="de.hybris.platform.solrfacetsearch.config.IndexedType">
 		<property name="pageTypeFacets" type="java.util.Set&lt;String>" />
+	</bean>
+	
+	<bean class="de.hybris.platform.commerceservices.service.data.CommerceCartParameter">
+		<property name="order" type="de.hybris.platform.core.model.order.OrderModel">	<!-- TPR-629 -->
+			<description>The OrderModel</description>
+		</property>
 	</bean>
 	
 	<bean class="com.tisl.mpl.data.CODSelfShipData">

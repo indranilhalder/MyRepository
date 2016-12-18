@@ -85,6 +85,7 @@ import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 /**
@@ -273,6 +274,7 @@ public class CheckoutController extends AbstractCheckoutController
 		return REDIRECT_PREFIX + "/cart";
 	}
 
+	@SuppressWarnings("boxing")
 	@RequestMapping(value = "/orderConfirmation/" + ORDER_CODE_PATH_VARIABLE_PATTERN, method = RequestMethod.GET)
 	@RequireHardLogIn
 	public String orderConfirmation(@PathVariable("orderCode") final String orderCode, final HttpServletRequest request,
@@ -287,12 +289,33 @@ public class CheckoutController extends AbstractCheckoutController
 			//wishlistFacade.removeProductFromWL(orderCode);
 			wishlistFacade.remProdFromWLForConf(orderDetails, orderModel.getUser()); //TISPT-175 --- removing products from wishlist : passing order data as it was fetching order data based on code again inside the method
 			SessionOverrideCheckoutFlowFacade.resetSessionOverrides();
+			GenericUtilityMethods.populateTealiumDataForCartCheckout(model, orderModel);
+			GenericUtilityMethods.populateCheckoutSellersOrderConfirmation(model, orderModel, orderDetails);
 			// for MSD
 			final String msdjsURL = configurationService.getConfiguration().getString("msd.js.url");
 			final Boolean isMSDEnabled = Boolean.valueOf(configurationService.getConfiguration().getString("msd.enabled"));
 			model.addAttribute(ModelAttributetConstants.MSD_JS_URL, msdjsURL);
 			model.addAttribute(ModelAttributetConstants.IS_MSD_ENABLED, isMSDEnabled);
 			//End MSD
+			//LW-225,230 start
+			boolean luxFlag = false;
+			if (null != orderDetails && null != orderDetails.getEntries() && !orderDetails.getEntries().isEmpty())
+			{
+				for (final OrderEntryData entry : orderDetails.getEntries())
+				{
+					if (null != entry.getProduct())
+					{
+						if (null != entry.getProduct().getLuxIndicator()
+								&& entry.getProduct().getLuxIndicator()
+										.equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
+						{
+							luxFlag = true;
+						}
+					}
+				}
+				model.addAttribute(ModelAttributetConstants.IS_LUXURY, luxFlag);
+			}
+			// LW-225,230 end
 		}
 		catch (final UnknownIdentifierException e)
 		{
@@ -319,7 +342,6 @@ public class CheckoutController extends AbstractCheckoutController
 		return processOrderCode(orderCode, orderModel, orderDetails, model, request); //TISPT-175 : Changing method parameters
 	}
 
-
 	//TISPT-175 ---- Not used
 	//	@RequestMapping(value = "/orderConfirmation/" + ORDER_CODE_PATH_VARIABLE_PATTERN, method = RequestMethod.POST)
 	//	public String orderConfirmation(final GuestRegisterForm form, final BindingResult bindingResult, final Model model,
@@ -337,11 +359,33 @@ public class CheckoutController extends AbstractCheckoutController
 	 */
 	protected String getCheckoutRedirectUrl()
 	{
+		//TPR-174
+
+		if (checkoutFacade.getCheckoutCart() != null && checkoutFacade.getCheckoutCart().isGotMerged())
+		{
+			return REDIRECT_PREFIX + "/cart";
+		}
 		// Default to the multi-step checkout
 		return REDIRECT_PREFIX + "/checkout/multi";
 	}
 
+	//	/**
+	//	 * Checks if there are any items in the cart.
+	//	 *
+	//	 * @return returns true if items found in cart.
+	//	 */
+	//	@SuppressWarnings("boxing")
+	//	protected boolean hasItemsInCart()
+	//	{
+	//
+	//		if (checkoutFacade.getCheckoutCart() != null && checkoutFacade.getCheckoutCart().isGotMerged())
+	//		{
+	//			return true;
+	//		}
+	//		return false;
+	//	}
 
+	//TPR-174 ends
 
 	//TISPT-175 ---- Not used
 	//	protected String processRegisterGuestUserRequest(final GuestRegisterForm form, final BindingResult bindingResult,
@@ -392,11 +436,11 @@ public class CheckoutController extends AbstractCheckoutController
 	 * private void callNonBusinessError(final Model model, final String messageKey) throws CMSItemNotFoundException {
 	 * storeCmsPageInModel(model, getContentPageForLabelOrId(NBZ_ERROR_CMS_PAGE)); setUpMetaDataForContentPage(model,
 	 * getContentPageForLabelOrId(NBZ_ERROR_CMS_PAGE));
-	 *
+	 * 
 	 * model.addAttribute(WebConstants.MODEL_KEY_ADDITIONAL_BREADCRUMB,
 	 * resourceBreadcrumbBuilder.getBreadcrumbs(MessageConstants.BREADCRUMB_NOT_FOUND));
 	 * GlobalMessages.addErrorMessage(model, messageKey);
-	 *
+	 * 
 	 * storeContentPageTitleInModel(model, MessageConstants.NON_BUSINESS_ERROR); }
 	 */
 
@@ -421,8 +465,9 @@ public class CheckoutController extends AbstractCheckoutController
 			if (orderDetails != null)
 			{
 				//final List<OrderEntryData> orderEntryList = orderDetails.getEntries();	//TISPT-175 : check it below return
-				if (orderDetails.isGuestCustomer() && !StringUtils.substringBefore(orderDetails.getUser().getUid(), "|")
-						.equals(getSessionService().getAttribute(WebConstants.ANONYMOUS_CHECKOUT_GUID)))
+				if (orderDetails.isGuestCustomer()
+						&& !StringUtils.substringBefore(orderDetails.getUser().getUid(), "|").equals(
+								getSessionService().getAttribute(WebConstants.ANONYMOUS_CHECKOUT_GUID)))
 				{
 					return getCheckoutRedirectUrl();
 				}
@@ -526,13 +571,13 @@ public class CheckoutController extends AbstractCheckoutController
 				{
 					if (orderModel.getStatus().equals(OrderStatus.RMS_VERIFICATION_PENDING))
 					{
-						model.addAttribute(ModelAttributetConstants.ORDER_STATUS_MSG,
-								getConfigurationService().getConfiguration().getString(ModelAttributetConstants.ORDER_CONF_HELD));
+						model.addAttribute(ModelAttributetConstants.ORDER_STATUS_MSG, getConfigurationService().getConfiguration()
+								.getString(ModelAttributetConstants.ORDER_CONF_HELD));
 					}
 					else if (orderModel.getStatus().equals(OrderStatus.PAYMENT_SUCCESSFUL))
 					{
-						model.addAttribute(ModelAttributetConstants.ORDER_STATUS_MSG,
-								getConfigurationService().getConfiguration().getString(ModelAttributetConstants.ORDER_CONF_SUCCESS));
+						model.addAttribute(ModelAttributetConstants.ORDER_STATUS_MSG, getConfigurationService().getConfiguration()
+								.getString(ModelAttributetConstants.ORDER_CONF_SUCCESS));
 					}
 				}
 
@@ -615,8 +660,8 @@ public class CheckoutController extends AbstractCheckoutController
 			final String selectedDeliveryMode = entry.getMplDeliveryMode().getDeliveryMode().getCode();
 			final MplZoneDeliveryModeValueModel deliveryModel = mplDeliveryCostService.getDeliveryCost(selectedDeliveryMode,
 					MarketplacecommerceservicesConstants.INR, selectedUSSID);
-			String startValue = deliveryModel.getDeliveryMode().getStart() != null
-					? deliveryModel.getDeliveryMode().getStart().toString() : MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
+			String startValue = deliveryModel.getDeliveryMode().getStart() != null ? deliveryModel.getDeliveryMode().getStart()
+					.toString() : MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
 			String endValue = deliveryModel.getDeliveryMode().getEnd() != null ? deliveryModel.getDeliveryMode().getEnd().toString()
 					: MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
 			List<RichAttributeModel> richAttributeModel = new ArrayList<RichAttributeModel>();
@@ -627,8 +672,8 @@ public class CheckoutController extends AbstractCheckoutController
 				richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
 				if (CollectionUtils.isNotEmpty(richAttributeModel))
 				{
-					leadTime = richAttributeModel.get(0).getLeadTimeForHomeDelivery() != null
-							? richAttributeModel.get(0).getLeadTimeForHomeDelivery() : Integer.valueOf(0);
+					leadTime = richAttributeModel.get(0).getLeadTimeForHomeDelivery() != null ? richAttributeModel.get(0)
+							.getLeadTimeForHomeDelivery() : Integer.valueOf(0);
 				}
 				LOG.debug(" >> Lead time for Home delivery  " + leadTime);
 			}

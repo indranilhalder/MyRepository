@@ -9,7 +9,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%@ taglib prefix="product" tagdir="/WEB-INF/tags/desktop/product"%>
+<%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
 <%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme"%>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 <%@ taglib prefix="order" tagdir="/WEB-INF/tags/responsive/order"%>
@@ -36,9 +36,19 @@
 		<ul class="desktop">
 			<li>
 				<div class="product-img">
-					<a href="${productUrl}"> <product:productPrimaryImage
-							product="${entry.product}" format="thumbnail" />
-					</a>
+					<c:choose>
+						<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
+												<a href="${productUrl}"> <product:productPrimaryImage
+														product="${entry.product}" format="luxuryCartIcon" />
+												</a>
+																	</c:when>
+																	<c:otherwise>
+																			<a href="${productUrl}"> <product:productPrimaryImage
+														product="${entry.product}" format="thumbnail" />
+												</a>
+												
+						</c:otherwise>
+					</c:choose>
 				</div>
 				<div class="product">
 

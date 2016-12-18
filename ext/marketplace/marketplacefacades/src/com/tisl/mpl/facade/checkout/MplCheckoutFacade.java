@@ -14,6 +14,8 @@ import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.order.InvalidCartException;
+import de.hybris.platform.order.exceptions.CalculationException;
 
 import java.util.Collection;
 import java.util.List;
@@ -148,13 +150,13 @@ public interface MplCheckoutFacade extends CheckoutFacade
 	/*
 	 * @ to check promotion expired or not for Pay now : TIS 414
 	 *
-	 * @param cartData
+	 * @param abstractOrderModel
 	 *
 	 * @return boolean
 	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
-	boolean isPromotionValid(final CartModel cart) throws EtailNonBusinessExceptions;
+	boolean isPromotionValid(final AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @ Override TSHIP : TIS 397
@@ -179,8 +181,7 @@ public interface MplCheckoutFacade extends CheckoutFacade
 	 * @return OrderData
 	 * @throws EtailNonBusinessExceptions
 	 */
-
-	OrderData placeOrderByCartId(String cartID, String userId) throws EtailNonBusinessExceptions;
+	public OrderData placeOrderByCartId(final String cartID) throws EtailNonBusinessExceptions;
 
 	/**
 	 * @description: It is used for converting date into ordinal date
@@ -213,8 +214,9 @@ public interface MplCheckoutFacade extends CheckoutFacade
 	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
-	void saveDeliveryMethForFreebie(CartModel cartModel, Map<String, MplZoneDeliveryModeValueModel> freebieModelMap,
-			Map<String, Long> freebieParentQtyMap) throws EtailNonBusinessExceptions;
+	void saveDeliveryMethForFreebie(AbstractOrderModel abstractOrderModel,
+			Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, Map<String, Long> freebieParentQtyMap)
+			throws EtailNonBusinessExceptions;
 
 	public PriceData createPrice(final AbstractOrderModel source, final Double val);
 
@@ -227,7 +229,7 @@ public interface MplCheckoutFacade extends CheckoutFacade
 	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
-	boolean isCouponValid(final CartModel cart) throws EtailNonBusinessExceptions;
+	boolean isCouponValid(final AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
 
 	/**
 	 * TISPT-175
@@ -259,4 +261,16 @@ public interface MplCheckoutFacade extends CheckoutFacade
 	
 	
 	public void constructDeliverySlotsForEDAndHD(InvReserForDeliverySlotsItemEDDInfoData deliverySlotsResponse,OrderEntryData cartEntryData,MplLPHolidaysModel mplLPHolidaysModel);
+
+	/**
+	 * @param orderModel
+	 * @throws InvalidCartException
+	 * @throws CalculationException
+	 */
+	void beforeSubmitOrder(OrderModel orderModel) throws InvalidCartException, CalculationException;
+
+	/**
+	 * @param orderModel
+	 */
+	void submitOrder(OrderModel orderModel);
 }

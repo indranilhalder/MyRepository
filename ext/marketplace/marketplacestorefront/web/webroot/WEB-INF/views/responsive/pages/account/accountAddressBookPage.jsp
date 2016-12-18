@@ -60,7 +60,7 @@
 				<div id="address_item" class="info card-list">
 					<!-- Heading for saved Cards -->
 
-					<h1>
+					<h2>
 						<c:if test="${fn:length(addressData)>10}">
 						<ul class="pagination address_pagination">
 						 <li id="prev"></li></ul>
@@ -69,7 +69,7 @@
 							text="My Address" />
 							<span><spring:theme code="text.account.addressBook.savedAddress.details"
 							text="Where in the world are you located? Edit, delete or change your address here." /></span>
-					</h1>
+					</h2>
 					
 					
 					
@@ -102,16 +102,16 @@
 														<ul>
 															<li>
 																<c:if test="${address.addressType eq 'Home' || address.addressType eq 'HOME'}">
-																	<h3>
+																	<h2>
 																		<spring:theme code="text.addressBook.residential" text="Residential" />
 																		<c:if test="${address.defaultAddress}">&nbsp;-&nbsp;Default Address</c:if>
-																	</h3>
+																	</h2>
 																</c:if>
 																<c:if test="${address.addressType eq 'Work' || address.addressType eq 'WORK'}">
-																	<h3>
+																	<h2>
 																		<spring:theme code="text.addressBook.commercial" text="Commercial" />
 																		<c:if test="${address.defaultAddress}">&nbsp;-&nbsp;Default Address</c:if>
-																	</h3>
+																	</h2>
 																</c:if>	
 																<c:set var="myline2" value="${fn:trim(address.line2)}"/>
 																<c:set var="myline3" value="${fn:trim(address.line3)}"/>

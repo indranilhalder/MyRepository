@@ -13,34 +13,15 @@
  */
 package com.tisl.mpl.facades.process.email.context;
 
-import de.hybris.platform.acceleratorservices.model.cms2.pages.EmailPageModel;
-import de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext;
-import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
-import de.hybris.platform.commercefacades.order.data.OrderData;
-import de.hybris.platform.core.model.c2l.LanguageModel;
-import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
-import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.core.model.user.AddressModel;
-import de.hybris.platform.core.model.user.CustomerModel;
-import de.hybris.platform.orderprocessing.model.OrderProcessModel;
-import de.hybris.platform.servicelayer.dto.converter.Converter;
-import de.hybris.platform.storelocator.model.PointOfServiceModel;
-
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.velocity.tools.generic.MathTool;
-import org.apache.velocity.tools.generic.NumberTool;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
-
+import com.sun.xml.internal.ws.util.StringUtils;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
-import com.tisl.mpl.facades.product.data.StateData;
 
 
 /**
@@ -48,11 +29,12 @@ import com.tisl.mpl.facades.product.data.StateData;
  */
 public class OrderNotificationEmailContext extends AbstractEmailContext<OrderProcessModel>
 {
+	final List<AbstractOrderEntryModel> childEntries = new ArrayList<AbstractOrderEntryModel>();
 	private OrderData orderData;
 	private Converter<OrderModel, OrderData> orderConverter;
 	private static final String ORDER_CODE = "orderReferenceNumber";
 	private static final String CHILDORDERS = "childOrders";
-	//private static final String CHILDENTRIES = "childEntries";
+	private static final String CHILDENTRIES = "childEntries";
 	private static final String TOTALPRICE = "totalPrice";
 	private static final String SHIPPINGCHARGE = "shippingCharge";
 	private static final String DELIVERYADDRESS = "deliveryAddress";
@@ -69,6 +51,7 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	private static final String CUSTOMER = "Customer";
 	private static final String SPACE = " ";
 	private static final String NUMBERTOOL = "numberTool";
+	private static final String WEBSITE_URL = "websiteUrl";
 	@Autowired
 	private AccountAddressFacade accountAddressFacade;
 	private static final Logger LOG = Logger.getLogger(OrderNotificationEmailContext.class);
@@ -83,7 +66,7 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 				.getTotalPrice().doubleValue();
 		final double convenienceCharges = orderProcessModel.getOrder().getConvenienceCharges() == null ? 0D : orderProcessModel
 				.getOrder().getConvenienceCharges().doubleValue();
-
+		//final List<AbstractOrderEntryModel> childEntries = orderProcessModel.getOrder().getEntries();
 		final Double totalPrice = Double.valueOf(orderTotalPrice + convenienceCharges);
 
 
@@ -117,6 +100,12 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 		for (final AbstractOrderEntryModel entryModel : orderProcessModel.getOrder().getEntries())
 
 		{
+			LOG.debug("convienence apportion " + entryModel.getConvenienceChargeApportion());
+			LOG.debug("total mrp" + entryModel.getTotalMrp());
+			LOG.debug("total price" + entryModel.getTotalPrice());
+			LOG.debug("total sale price" + entryModel.getTotalSalePrice());
+			childEntries.add(entryModel);
+
 			if (entryModel.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
 			{
 				final PointOfServiceModel model = entryModel.getDeliveryPointOfService();
@@ -135,6 +124,7 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 				put(CUSTOMER_NAME, CUSTOMER);
 			}
 		}
+		put(CHILDENTRIES, childEntries);
 
 		final AddressModel deliveryAddress = orderProcessModel.getOrder().getDeliveryAddress();
 		if (deliveryAddress != null)
@@ -165,17 +155,19 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 			{
 				deliveryAddr.append(COMMA).append(deliveryAddress.getAddressLine3());
 			}
-			if (!StringUtils.isEmpty(deliveryAddress.getLandmark()))
-			{
-				deliveryAddr.append(COMMA).append(deliveryAddress.getLandmark());
-			}
 
 			deliveryAddr.append(COMMA).append(deliveryAddress.getTown()).append(COMMA).append(deliveryAddress.getDistrict())
 					.append(COMMA).append(deliveryAddress.getPostalcode());
 
 			put(DELIVERYADDRESS, deliveryAddr);
 		}
-
+		String websiteUrl = null;
+		websiteUrl = getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.SMS_SERVICE_WEBSITE_URL);
+		if (null != websiteUrl)
+		{
+			put(WEBSITE_URL, websiteUrl);
+		}
 
 		put(COD_CHARGES, orderProcessModel.getOrder().getConvenienceCharges());
 
