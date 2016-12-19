@@ -9,6 +9,33 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 
+<!-- R2.3 START: 2016-12-19: Code Merged -->
+<!-- Move it to style.css before committing -->
+<style>
+	.address_landmarks, .address_landmarkOther, .address_landmarkOtherDiv {
+		width: 100% !important;
+		display: inline-block;
+	}
+	
+	.address_landmarkOther, .address_landmarkOtherDiv label, .address_landmarkOtherDiv {
+		display: inherit;
+	}
+	
+	.address_landmarkOtherDiv {
+		display: none;
+	}
+	
+	.address_landmarkOtherDiv {
+		margin: inherit;
+	}
+	
+	.address_landmarkOtherDiv {
+		margin: 0px !important;
+	}
+	
+	
+</style>
+<!-- R2.3 END: 2016-12-19: Code Merged -->
 <c:choose>
 	<c:when test="${country == 'US'}">
 		<formElement:formSelectBox idKey="address.title"
@@ -223,16 +250,37 @@
 			 <div class="help-block has-error" id="address3Error" style="display: none;">
 			</div>
 			</div>
+			<!-- R2.3: START -->
+			<div class='half'>
+				<div class="optionsLandmark">
+					<formElement:formSelectBox  idKey="address.landmarks" selectCSSClass="address_landmarks"
+						labelKey="Landmarks" path="landmark" mandatory="true"
+						skipBlank="false" selectedValue="${addressForm.landmark}" skipBlankMessageKey="address.state.pleaseSelect"
+						items="${abc}"
+						itemValue="name"  />
+				</div>
+			</div>
+			<div class='half'>
+			
+				<div class='half address_landmarkOtherDiv' data-value="${addressForm.landmark}">
+						<formElement:formInputBox inputCSS="address_landmarkOther" idKey="otherLandmark"
+							labelKey="Enter Nearest Landmark" path="otherLandmark"
+							maxLength="30" />
+							<div class="error_text otherLandMarkError"></div>
+				</div>
+			</div>
+			<!-- R2.3: END -->
 		<%-- <formElement:formInputBox idKey="address.locality" labelKey="address.locality" path="locality" inputCSS="form-control" mandatory="true"/> --%>
 		<div class='full'>
-		<!-- TISUAT-4696  /TPR-215-->
-		<formElement:formInputBox idKey="address.townCity"
-			 path="townCity" 
+		<!-- TISUAT-4696  /TPR-215 / R2.3 --> 
+		<formElement:formInputBox idKey="address.townCity" inputCSS="address_townCity"
+			labelKey="address.townCity" path="townCity" 
 			mandatory="true" maxLength="40" placeholder="City*"/>
 			<div class="help-block has-error" id="cityError" style="display: none;">
 			</div>
 			</div>
 			<!-- <div class="half address-select"> -->
+			<!-- R2.3: START: Commeted --><!--
 			<div class="full address-select">
 		<formElement:formSelectBox idKey="address.states" 
 			 path="state" mandatory="true"
@@ -240,8 +288,38 @@
 			items="${stateDataList}" selectedValue="${addressForm.state}"
 			itemValue="name"  />
 			<div class="help-block has-error" id="stateError" style="display: none;">		
+			</div> 
+			</div> --><!-- R2.3: END: Commented -->
+			<!-- R2.3: START -->
+			<div class="full address-select">
+				<div class="mainDrop">
+				<formElement:formSelectBox idKey="address.states"
+					selectCSSClass="address_states addressRead" labelKey="address.states"
+					path="state" mandatory="true" skipBlank="false"
+					skipBlankMessageKey="address.state.pleaseSelect"
+					items="${stateDataList}" selectedValue="${addressForm.state}"
+					itemValue="name" />
+				<div class="help-block has-error" id="stateError"
+					style="display: none;"></div>
+				</div>
+				
+					<div class="dupDisplay">
+					<label>State *</label>
+					<div class="stateInput"></div>
+						<div class="help-block has-error" id="stateError"
+					style="display: none;"></div>
+					</div>
+
+			<%-- <div class="dupDisplay">
+				
+					<form:input path="state" id="address.statesReadOnly"
+						class="address_states addressDup" maxlength="30" readonly="readonly"/>
+					<div class="errorMessage">
+							<div id="erraddressCity"></div>
+					</div>
+			</div> --%>
 			</div>
-			</div>
+			<!-- R2.3: END -->	   		
 				   		
 		<!-- <div class="half country-select"> -->
 		<div class="full country-select">
@@ -304,6 +382,30 @@
 
 	</c:otherwise>
 </c:choose>
-
+<!-- R2.3: START -->
+<script>
+$(document).ready(function(){
+	 var value = $(".address_landmarkOtherDiv").attr("data-value");
+	  
+	  setTimeout(function(){
+	  if($(".address_landmarks option[value='"+value+"']").length > "0") {
+		  
+		  //alert(value+ " 2 in if x"+$(".address_landmarks option[value='"+value+"']").val());
+			  $(".address_landmarks").val("");
+			$(".address_landmarks option[value='"+value+"']").prop("selected",true);
+			
+			} else {
+			//alert(value+ " 3 in else");
+			  $(".address_landmarks").val("Other"); 
+				changeFuncLandMark("Other"); 
+			$(".address_landmarkOther").val(value);
+			
+		}
+	  
+	  });
+	
+});
+</script>
+<!-- R2.3: END -->
 
 

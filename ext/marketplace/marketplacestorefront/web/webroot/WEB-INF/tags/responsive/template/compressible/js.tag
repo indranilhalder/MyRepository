@@ -55,14 +55,14 @@ if(loginStatus){
 <script type="text/javascript"
 	src="${commonResourcePath}/bootstrap/dist/js/bootstrap.min.js"></script>
 
-	<!-- R2.3 FL04 -->
+<!-- R2.3: START FL04 -->
 <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/address-book') or
 		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/new-address') or
 		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/edit-address') or
 		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/my-account')}">
-	<script type="text/javascript" src="${commonResourcePath}/js/addresslandmark.js"></script>
+	<script type="text/javascript" src="${commonResourcePath}/js/addresslandmark.js"></script><!-- R2.3: One line -->
 </c:if>
-
+<!-- R2.3: END FL04 -->
 <!-- LW-230 Start -->
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.resource.host')" var="luxuryHost"/>
 <c:set var="headerWidgetJsSource" value="${luxuryHost}/header-widget.js"/>
@@ -80,6 +80,7 @@ if(loginStatus){
  <c:if test="${(param.isLux ne null and param.isLux eq true) and ((not empty isLuxury and isLuxury != 'false') or (empty isLuxury))}">
 	<script type="text/javascript" src="${headerWidgetJsSource}"></script>
 </c:if>
+
 <c:if test="${not empty isLuxury and isLuxury == 'true'}">
 	<script type="text/javascript" src="${headerWidgetJsSource}"></script>
 </c:if>  --%>

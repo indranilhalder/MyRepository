@@ -1418,16 +1418,6 @@ function isNumber(evt) {
 	return true;
 }
 
-function ValidateAlpha(evt)
-{
- evt = (evt) ? evt : window.event;
-    var keyCode = (evt.which) ? evt.which : evt.keyCode
-    if ((keyCode < 65 || keyCode > 90) && (keyCode < 97 || keyCode > 123) && keyCode != 32){
-      return false;
-    }
-        return true;
-}
-
 $(document).on("change",'.facet_desktop .filter-price',function(){
 			var prices = splitPrice($(this).find('form').find(
 					'input[name=facetValue]').val());			
@@ -1441,11 +1431,11 @@ $(document).on("change",'.facet_desktop .filter-price',function(){
 //Splits priceValue:Rsxxx-Rsyyy to [xxx, yyy]
 function splitPrice(value) {
 	var priceRange = null;	
-	if(value.includes("-"))
-	{
+	if(value.indexOf('-') > -1)  // Fix for TISPRD-8267
+	{   
 		priceRange = value.split("-");		
 	}
-	else if(value.includes("and Above"))
+	else if(value.indexOf("and Above") > -1)  // Fix for TISPRD-8267
 	{
 		priceRange = value.split("and Above");		
 	}	

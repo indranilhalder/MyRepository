@@ -1703,6 +1703,7 @@ function displayDeliveryDetails(sellerName) {
 				var posttext=$("#deliveryPosttext").text();
 				var fulFillment = data['fulfillment'];
 				var deliveryModes = data['deliveryModes'];
+				var fulFillmentType1 = data['fulfillmentType1'];
 				
 				var leadTime=0;
 				if(null!=data['leadTimeForHomeDelivery']){
@@ -1716,12 +1717,21 @@ function displayDeliveryDetails(sellerName) {
 				if (data['onlineExclusive']) {
 					$('.online-exclusive').show();
 				}
-				if (null != fulFillment && fulFillment.toLowerCase() == 'tship') {
-					$('#fulFilledByTship').show();
-				} else {
-					$('#fulFilledBySship').show();
-					$('#fulFilledBySship').html(sellerName);
-				}
+                     /*	Bug ID TATA-815 */
+				if (null != fulFillment && fulFillment.toLowerCase() == 'both') {
+					
+					if (null != fulFillmentType1 && fulFillmentType1.toLowerCase() == 'tship') {
+						$('#fulFilledByTship').show();
+					} else {
+						$('#fulFilledBySship').show();
+						$('#fulFilledBySship').html(sellerName);
+					}
+				}else if (null != fulFillment && fulFillment.toLowerCase() == 'tship') {
+					   $('#fulFilledByTship').show();
+				 }else {
+				   $('#fulFilledBySship').show();
+				   $('#fulFilledBySship').html(sellerName);
+				  }
 				if (null != deliveryModes && deliveryModes.indexOf("HD") == -1) {
 					$("#home").hide();
 					$("#homeli").hide();

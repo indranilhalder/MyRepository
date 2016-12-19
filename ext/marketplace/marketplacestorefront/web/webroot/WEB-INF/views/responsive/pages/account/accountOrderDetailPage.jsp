@@ -15,6 +15,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user" %>
+<%@ taglib prefix="return" tagdir="/WEB-INF/tags/responsive/returns"%> 
+<!-- R2.3: Added above one line. responsive/returns -->
 
 <spring:url value="/my-account/profile" var="profileUrl" />
 <spring:url value="/my-account/update-profile" var="updateProfileUrl" />
@@ -247,6 +249,12 @@
 														${fn:escapeXml(creditCardBillingAddress.line3)},
 													</c:if>
 										<br>
+										<!-- R2.3: START -->
+										<c:if test="${not empty creditCardBillingAddress.landmark}">
+														${fn:escapeXml(creditCardBillingAddress.landmark)},
+										</c:if>
+										<br><%-- ${fn:escapeXml(creditCardBillingAddress.landmark)} --%>
+										<!-- R2.3: END -->
 										${fn:escapeXml(creditCardBillingAddress.town)},&nbsp;
 										<c:if test="${not empty creditCardBillingAddress.state}">
 														${fn:escapeXml(creditCardBillingAddress.state)},&nbsp;
@@ -321,6 +329,9 @@
 									<c:if test="${not empty subOrderLine3}">
 												&nbsp;${fn:escapeXml(subOrder.deliveryAddress.line3)},
 											</c:if>
+									 <c:if test="${not empty subOrder.deliveryAddress.landmark}">
+									    ${fn:escapeXml(subOrder.deliveryAddress.landmark)},
+									</c:if>
 									<br> ${fn:escapeXml(subOrder.deliveryAddress.town)},&nbsp;
 									<c:if test="${not empty subOrder.deliveryAddress.state}">
 												${fn:escapeXml(subOrder.deliveryAddress.state)},&nbsp;
@@ -330,6 +341,19 @@
 									91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)} <br>
 								</address>
 							</div>
+									<!-- R2.3: START -->
+									<div class="col-md-4 col-sm-6">
+										<div class="editIconCSS">
+										<c:if test="${addressChangeEligible eq true}">
+									       <a href="#" id="changeAddressLink">Edit / Change Address </a>
+									   </c:if>
+										</div>
+									</div>
+								</div>
+							</div>
+							<p style="clear:both"></p>
+							<div class="itemBorder">&nbsp;</div> 
+							<!-- R2.3: END -->
 							</c:if>
 							<c:forEach items="${filterDeliveryMode}" var="deliveryType">
 							
@@ -564,6 +588,7 @@
 
 										</div>
 										<div class="actions">
+											<div class="col-md-6"> <!-- R2.3: START >
 											<c:if
 												test="${entry.itemCancellationStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false and cancelFlag}">
 												<c:set var="bogoCheck"
@@ -577,14 +602,34 @@
 												<spring:theme code="trackOrder.cancellableBefore.msg" />
 												
 											</c:if>
-											<c:if
-												test="${entry.itemReturnStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false and returnFlag}">
-												<a
+											 <%-- R2.3: START:Commented: <c:if
+												test="${entry.itemReturnStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
+											 	<a
 													href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${sellerOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}">
 													<spring:theme code="text.account.returnReplace"
 														text="Return Item" />
 												</a>
-											</c:if>
+											 </c:if>  --%> <!-- R2.3: START: -->
+											 <%-- <a
+																	href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${sellerOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}">
+																	<spring:theme code="text.account.returnReplace"
+																		text="Return Item" />
+																</a>  --%>
+											 	<c:choose>
+												 	 <c:when test="${entry.itemReturnStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
+															 <a
+																	href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${sellerOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}">
+																	<spring:theme code="text.account.returnReplace"
+																		text="Return Item" />
+																</a> 	 
+												  	</c:when>
+												  	<c:otherwise>
+												  			 <c:if test="${cancellationMsg eq 'true'}">
+																<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
+															</c:if> 
+												  	</c:otherwise>
+												</c:choose>
+												<!-- R2.3: END: -->
 
 											<c:if test="${entry.showInvoiceStatus eq 'true'}">
 												<a
@@ -593,12 +638,39 @@
 														code="text.account.RequestInvoice" text="Request Invoice" /></a>
 											</c:if>
 											<!-- TISCR-410 -->
-											<c:if test="${cancellationMsg eq 'true'}">
+											<!-- R2.3: START -->
+											<%--  <c:if test="${cancellationMsg eq 'true'}">
 												<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
-											</c:if>
+											</c:if>  --%>
+											
+											<%--  <c:choose>
+														 	 <c:when test="${entry.itemReturnStatus eq 'true'  and entry.giveAway eq false and entry.isBOGOapplied eq false}">
+																	<a href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${subOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}" onClick="openReturnPage('${bogoCheck}',${entry.transactionId})">
+																						<spring:theme code="text.account.returnReplace"
+																							text="Return Item"/> 
+																	</a>		 
+														  	</c:when>
+														  	<c:otherwise>
+														  		<c:if test="${entry.isCancellationMissed eq 'true'}">
+																						<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
+																</c:if>
+														  	</c:otherwise>
+														</c:choose> --%>
 											<!-- TISCR-410 ends -->
+											
+											</div>
+											<div class="col-md-5">
+												<c:if test="${fn:containsIgnoreCase(entry.returnMethodType , 'SELF_COURIER')}">
+												<c:if test="${entry.isRefundable eq false }">
+													<div class="awsInnerClass">
+															Please provide AWB number, Logistics partner and upload POD <a href="#" id="awbNumberLink">here</a>
+													</div>
+												</c:if>	
+												</c:if>
+											</div>
+											
 										</div>
-
+										<!-- R2.3 : END -->
 										<div class="modal cancellation-request fade"
 											id="cancelOrder${sellerOrder.code}${entry.mplDeliveryMode.sellerArticleSKU}${entryStatus.index}">
 
@@ -1420,7 +1492,7 @@
 
                                   
                                    </c:if>
-                                 
+									<return:lpDetailsUploadPopup entry="${entry}" /> <!-- R2.3: One line -->
 								</c:forEach>
 															
 							</c:if> 
@@ -2462,6 +2534,17 @@
 		</div>
 		
 	</div>
+	<!-- R2.3: START -->
+			<div class="removeModalAfterLoad" id="changeAddressPopup">
+			  <order:changeDeliveryAddress orderDetails="${subOrder}" />
+            </div>
+            <div class="removeModalAfterLoad" id="otpPopup">
+            </div>
+             </div><!-- /.modal -->
+	    
+ 
+        <div class="wrapBG" style="background-color: rgba(0, 0, 0, 0.5); width: 100%; height: 600px; position: fixed; top: 0px; left: 0px; z-index: 99999; display: none;"></div>
+	<!-- R2.3: END -->
 </template:page>
 <%-- <script type="text/javascript"
 	src="${commonResourcePath}/js/jquery-2.1.1.min.js"></script>
@@ -2471,6 +2554,19 @@
 <script>
 
 /*--------- Start of track order UI -------*/
+<!-- R2.3: START --> 
+ <!--   AWB Jquery codes PopUp  -->
+	$(document).ready(function(){
+		$("#uploadFile").change(function(){
+			var url = $(this).val();
+			var res = url.split('\\');
+			var filename = res[res.length - 1];
+			$('.textFile').text(filename);
+		});
+		});
+	
+	<!--  End of AWB Jquery codes PopUp  -->
+<!-- R2.3: END -->	
 
 $(function(){
 	$('body .right-account .order-details .deliveryTrack ul.nav').each(function(){
@@ -2768,6 +2864,49 @@ $(function() {
 	}	 
 	$(document).ready(function(){
 		console.log($('.item-fulfillment').length);
+		<!-- R2.3: START -->
+		 $("#changeAddressLink").click(function(){
+			  $("#changeAddressPopup").show();
+			  $(".wrapBG").show();
+			  var height = $(window).height();
+			  $(".wrapBG").css("height",height);
+			  $("#changeAddressPopup").css("z-index","999999");
+			  setTimeout(function() {
+			      console.log($("#deliveryAddressForm #firstName").attr("value")); 
+			      $("#deliveryAddressForm #firstName").val($("#deliveryAddressForm #firstName").attr("value"));
+			      $("#deliveryAddressForm #lastName").val($("#deliveryAddressForm #lastName").attr("value"));
+			      $("#deliveryAddressForm #pincode").val($("#deliveryAddressForm #pincode").attr("value"));
+			      $("#deliveryAddressForm #addressLine1").val($("#deliveryAddressForm #addressLine1").attr("value"));
+			      $("#deliveryAddressForm #addressLine2").val($("#deliveryAddressForm #addressLine2").attr("value")); 
+			      $("#deliveryAddressForm #addressLine3").val($("#deliveryAddressForm #addressLine3").attr("value")); 
+			      $("#deliveryAddressForm #landmark").val($("#deliveryAddressForm #landmark").attr("value")); 
+			      $("#deliveryAddressForm #otherLandmark").val($("#deliveryAddressForm #otherLandmark").attr("value"));
+			      $("#deliveryAddressForm #city").val($("#deliveryAddressForm #city").attr("value")); 
+			      $("#deliveryAddressForm #state").val($("#deliveryAddressForm #state").attr("value")); 
+			      $("#deliveryAddressForm #mobileNo").val($("#deliveryAddressForm #mobileNo").attr("value")); 
+			     }, 100);
+			  loadPincodeData();
+				 var value = $(".address_landmarkOtherDiv").attr("data-value");
+			  
+			  setTimeout(function(){
+    		  if($(".address_landmarks option[value='"+value+"']").length > "0") {
+    			  
+    			  //alert(value+ " 2 in if x"+$(".address_landmarks option[value='"+value+"']").val());
+  				  $(".address_landmarks").val("");
+  				$(".address_landmarks option[value='"+value+"']").prop("selected",true);
+  				
+  				} else {
+  				//alert(value+ " 3 in else");
+  				  $(".address_landmarks").val("Other"); 
+  					changeFuncLandMark("Other"); 
+  	  			$(".address_landmarkOther").val(value);
+  				
+  			}
+			  
+			  }); 
+		});
+		
+		
 		    var length = $(".returnStatus .dot").length;
 		    if(length >=3) {
 			    var percent = 100/parseInt(length);
@@ -2785,7 +2924,279 @@ $(function() {
 			// $(".pickupeditbtn").css("display","block");
 			 
 		 });
+		 
+		$("#saveBlockData").click(function(){
+				$("#changeAddressPopup").hide();
+				$("#showOrderDetails").show();
+				$("#showOrderDetails").css("z-index","999999");
+		});
+		
+ 	$(".submitSchedule").click(function(){
+			$("#changeAddressPopup, #showOrderDetails").hide();
+			$("#showOTP").show();
+			$("#showOTP").css("z-index","999999");
+		});
+		 
+		 $(".close").click(function(){
+			 $("#changeAddressPopup,#otpPopup").hide();
+			 $(".wrapBG, #showOrderDetails").hide();
+			 $("#showOTP").hide();
+		 });
 		 //$(".pickupeditbtn").hide(); 
-	 });	 
+		 
+		 
+		 <!--   AWB Jquery codes PopUp  -->
+		   
+		   $("#awbNumberLink").click(function(){
+			   $(".awsNumError").hide();
+			    $(".logisticPartnerError").hide();
+			    $(".uploadError").hide(); 
+			    $(".amountError").hide();
+		     $("#awbNumberPopup").show();
+		     $(".wrapBG").show();
+		     var height = $(window).height();
+		     $(".wrapBG").css("height",height);
+		     $("#awbNumberPopup").css("z-index","999999");
+		  });
+		  $(".submitButton").click(function(event){
+		   if(awbValidations()){
+		  $("#awbNumberPopup").hide(); 
+		  $(".wrapBG").hide();
+		  $('#awbNumberPopup form').unbind('submit').submit();
+
+		   }else{
+		    //alert('elsepanchayati');
+		    event.preventDefault();
+		    $("#awbNumberPopup").show();
+		    $(".wrapBG").show();
+		   }
+		  });
+
+		  $(".closeAWSNum").click(function(){
+		   $("#awbNumberPopup").hide();
+		   $(".wrapBG").hide();
+		  });
+		  
+		function awbValidations(){
+		 var validate = true;
+		 $(".awsNumError").hide();
+		 $(".logisticPartnerError").hide();
+		 $(".uploadError").hide(); 
+		 $(".amountError").hide();
+		 
+		 var awsNumber=$("#awsNum").val();
+		 var logPart=$("#logisticPartner").val();
+		 var fileName=$("#uploadFile").val();
+		 var amount = $('#amount').val();
+		 
+		 if(awsNumber != null && awsNumber == '' && awsNumber < 2 && awsNumber.trim() == ''){
+		       $(".awsNumError").show();
+		     $(".awsNumError").text("AWB Number cannot be Blank");
+		     validate = false;
+		     } if(/[^[a-zA-Z0-9]]*$/.test(awsNumber)){
+		      $(".awsNumError").show();
+		       $(".awsNumError").text("AWB Number cannot allow special characters");
+		      validate = false;
+		     }
+
+		     if(logPart != null && logPart == '' && logPart < 2 && logPart.trim() == ''){
+		        $(".logisticPartnerError").show();
+		      $(".logisticPartnerError").text("Logistic partner cannot be Blank");
+		      validate = false;
+		      } if(/[^[a-zA-Z]]*$/.test(logPart)){
+		       $(".logisticPartnerError").show();
+		        $(".logisticPartnerError").text("Logistic partner cannot allow special characters and numbers");
+		       validate = false;
+		 }
+		 if(amount != null && amount == '' && amount < 2 && amount.trim() == ''){
+		    
+		        $(".amountError").show();
+		      $(".amountError").text("Amount cannot be Blank");
+		      validate = false;
+		      }if(isNaN(amount)){
+		       
+		       $(".amountError").show();
+		        $(".amountError").text("Amount cannot allow special characters or letters");
+		       validate = false;
+		      }
+		     
+		 
+		  if(fileName == null || fileName.trim() == '' ){
+		    var ext = fileName.substring(fileName.lastIndexOf('.') + 1);
+		   if(ext != "gif" || ext != "GIF" || ext != "JPEG" || ext != "jpeg" || ext != "jpg" || ext != "JPG" || ext != "pdf" || ext != "PDF" || ext != 'png' || ext != "PNG")
+		    {
+		     $(".uploadError").show();
+		       $(".uploadError").text("Upload images and pdf file only");
+		       validate = false;
+		    } 
+		  }
+		 return validate;
+		 
+		}
+		   
+		  <!-- End of  AWB Jquery codes PopUp  -->
+		  });  
+		</script>
+
+		<!--   AWB CSS for PopUp -->
+		<style>
+		@media (max-width: 1365px){
+		.changeAdddd {
+		    height: initial !important;
+		}
+		}
+
+@media (max-width: 1366px) {
+	.awsNumberModal .changeAWS {
+		height: 390px;
+		width: 700px;
+	}
+}
+
+.awsNumberModal .changeAWS {
+    height: 390px;
+    width: 700px;
+}
+
+@media (max-width: 720px) {
+	.awsNumberModal .changeAWS{
+		height: 400px;
+		overflow-y: scroll;
+		width: auto;
+	}
+	#awbNumberPopup{
+		left:0 !important;
+	}
 	
-</script>
+	.submitButton {
+		margin: 60px auto;
+	}
+}
+#awbNumberPopup {
+	display: none;
+	position: fixed;
+	top: 50px;
+	left:25%;
+	
+}
+
+#awbNumberPopup .space{
+	margin: 20px 10px;
+	line-height: 20px;
+	color: #8c8c8c;
+}
+#awbNumberPopup label{
+	padding: 10px 0px;
+	color: #8c8c8c;
+	font-size: 14px;
+}
+#awbNumberPopup .control-label {
+    font-weight: inherit;
+}
+#awbNumberPopup .awsUpload, #awbNumberPopup .awsUpload:focus {
+	border: none;
+} 
+#awbNumberPopup .form-group {
+    margin-bottom: 0px;
+}
+.closeAWSNum{
+	border-radius: 50%;
+	border: 1px solid #ccc !important;
+	width: 40px;
+	height: 40px;
+    position: absolute;
+    right: 17px;
+    top: -6px;
+    font-size: 35px;
+    font-weight: 100;
+    color: #ccc;
+    padding: 9px 9px;
+}
+#awbNumberPopup h4{
+    font-size: 22px !important;
+    font-weight: 100 !important;
+    margin-bottom: 25px !important;
+}
+#awbNumberPopup .awsTextinput{
+	width: 100%;
+}
+.submitButton{
+	background: #ff9900;
+	color: #fff;
+	width: 100px;
+	margin: 16px;
+	height: 46px;
+    font-size: 20px !important;
+}
+.submitButton:focus, .submitButton:hover{
+	border: none;
+	background: #ff9900;
+	color: #fff;
+	width: 100px;
+	margin: 16px;
+	height: 46px;
+    font-size: 20px;
+}
+#awbNumberLink{
+	color: #00cfe6;
+	display: inline-block;
+}
+
+.awsInnerClass {
+	display: inline-block;
+	position: relative;
+	background: #fafafa;
+	padding: 9px 12px 2px 12px;
+	border: 2px solid #edad24;
+	font-size: 13px;
+}
+.awsInnerClass:after {
+	content: '';
+	display: block;  
+	position: absolute;
+	right: 100%;
+	top: 50%;
+	margin-top: -18px;
+	width: 0;
+	height: 0;
+	border-top: 10px solid transparent;
+	border-right: 12px solid #edad24;
+	border-bottom: 10px solid transparent;
+	border-left: 10px solid transparent;
+}
+.errorText{
+	color: red;
+}
+.awsNumError{
+	padding: 3px 0;
+}
+.textFile{
+	display: inline-block;
+ 	padding: 0px 10px;
+ 	color: #8c8c8c;
+ 	height: 32px;
+ 	line-height: 32px;
+ 	overflow: hidden;
+ 	text-overflow: ellipsis;
+    white-space: nowrap
+}
+.uploadButton{
+	background: #00cfe6;
+	color: #fff;
+	display: inline-block;
+    padding: 0px 11px;
+    font-size: 14px;
+    height: 34px;
+	line-height: 34px;
+}
+.uploadDiv{
+    border: 1px solid #dfd1d5;
+    width: 100%;
+    height:35px;
+}
+input[type="radio"]:checked {
+	background: #000;
+}
+</style>
+
+<!-- R2.3: END: End of  AWB CSS for PopUp -->

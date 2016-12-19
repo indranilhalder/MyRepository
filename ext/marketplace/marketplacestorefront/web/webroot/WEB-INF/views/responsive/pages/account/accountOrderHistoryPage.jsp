@@ -378,13 +378,13 @@
 
 														<!--Chairman Demo Changes: New Static Content Sheet: Checkout> Order Cancellation -->
 														<!-- TISCR-410 -->  
-															<%-- <c:if test="${entry.isCancellationMissed eq 'true'}">
+															<%-- R2.3: Commented <c:if test="${entry.isCancellationMissed eq 'true'}">
 																<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
 															</c:if> --%>
 														<!-- TISCR-410 ends -->
 														<!--Chairman Demo Changes end-->
 														<!-- changes for TISSTRT-1173 -->
-														<c:if test="${entry.itemReturnStatus eq 'true'  and entry.giveAway eq false and entry.isBOGOapplied eq false and returnFlag}">
+														<%-- R2.3: Commented --><!-- <c:if test="${entry.itemReturnStatus eq 'true'  and entry.giveAway eq false and entry.isBOGOapplied eq false}">
 															<a href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${subOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}" onClick="openReturnPage('${bogoCheck}',${entry.transactionId})">
 																<spring:theme code="text.account.returnReplace"
 																	text="Return Item"/> 
@@ -549,9 +549,9 @@
 															<h2>Request Cancellation</h2>
 
 															<div>
-																<h3>
+																<h2 class="trackOrderLnHt">
 																	<span id="resultTitle"></span>
-																</h3>
+																</h2>
 																<div>
 																	<span id="resultDesc"></span>
 																</div>
