@@ -4,9 +4,12 @@ import java.util.List;
 
 import org.zkoss.zul.Listbox;
 
+import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRequestData;
+import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData;
 
 import de.hybris.platform.cockpit.model.meta.TypedObject;
 import de.hybris.platform.cockpit.widgets.ListboxWidget;
@@ -134,4 +137,6 @@ public interface MarketplaceCheckoutController extends
 			MplZoneDeliveryModeValueModel deliveryMode);
 
 	void setCODPaymentMode(final CartModel cartModel);	//TPR-3471
+	InvReserForDeliverySlotsResponseData deliverySlotsRequestDataCallToOms(InvReserForDeliverySlotsRequestData deliverySlotsRequestData);
+	public Double getScheduleDeliveryCharges();
 }

@@ -17,6 +17,7 @@ import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.Messagebox;
 
+import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.services.MarketplaceCsCheckoutService;
 import com.tisl.mpl.cockpits.cscockpit.strategies.MplFindDeliveryFulfillModeStrategy;
@@ -24,13 +25,18 @@ import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceBasketCont
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceCheckoutController;
 import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceabilityCheckHelper;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
+import com.tisl.mpl.core.mplconfig.service.impl.MplConfigServiceImpl;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facade.checkout.MplCartFacade;
+import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.CODPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeRestrictionService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
+import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRequestData;
+import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData;
 import com.tisl.mpl.service.PinCodeDeliveryModeService;
 
 import de.hybris.platform.catalog.impl.DefaultCatalogVersionService;
@@ -112,6 +118,8 @@ public class MarketplaceCheckoutControllerImpl extends
 	
 	@Autowired
 	private MplPaymentService mplPaymentService;
+	@Autowired
+	private MplConfigFacade mplConfigFacade;
 	
 	@Autowired
 	private MplFindDeliveryFulfillModeStrategy mplFindDeliveryFulfillModeStrategy;	
@@ -119,6 +127,8 @@ public class MarketplaceCheckoutControllerImpl extends
 	@Resource(name = "mplVoucherService")
 	private MplVoucherService mplVoucherService;	
 	
+	@Autowired
+	private MplCartFacade mplCartFacade;
 	/**
 	 * Gets the product value.
 	 *
@@ -159,7 +169,7 @@ public class MarketplaceCheckoutControllerImpl extends
 			throws EtailNonBusinessExceptions, ClientEtailNonBusinessExceptions {
 
 		List<PinCodeResponseData> responseData = marketplaceServiceabilityCheckHelper
-				.getResponseForPinCode(product, pin, isDeliveryDateRequired,
+				.getResponseForPinCode(null,product, pin, isDeliveryDateRequired,
 						ussid);
 
 		return responseData;
@@ -741,6 +751,34 @@ public class MarketplaceCheckoutControllerImpl extends
 	{
 		cartModel.setModeOfPayment("COD");
 		getModelService().save(cartModel);
+	}
+
+	@Override
+	public InvReserForDeliverySlotsResponseData deliverySlotsRequestDataCallToOms(
+			InvReserForDeliverySlotsRequestData deliverySlotsRequestData) {
+		InvReserForDeliverySlotsResponseData omsResponceData = null;
+		try {
+			omsResponceData = mplCartFacade.convertDeliverySlotsDatatoWsdto(deliverySlotsRequestData);
+		}catch(Exception e) {
+			LOG.error("Exception while getting the delivery Slots from OMS "+e.getMessage());
+		}
+
+		return omsResponceData;
+	}
+
+	@Override
+	public Double getScheduleDeliveryCharges() {
+		LOG.info("Inside  getDeliveryCharges Method");
+		Double scheduleDeliveryCharge = 0.0D;
+		try {
+			MplBUCConfigurationsModel configModel = mplConfigFacade.getDeliveryCharges();
+			if(null != configModel) {
+				scheduleDeliveryCharge = configModel.getSdCharge();
+			}
+		}catch(Exception e) {
+			LOG.error("Exception while Getting SChedule Delivery Charges from DB :"+e.getMessage());
+		}
+		return scheduleDeliveryCharge;
 	}
 	
 	

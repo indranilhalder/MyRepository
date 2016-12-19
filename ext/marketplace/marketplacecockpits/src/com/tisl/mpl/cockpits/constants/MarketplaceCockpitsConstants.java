@@ -101,6 +101,7 @@ public final class MarketplaceCockpitsConstants extends
 	public static final String CSCOCKPIT_USER_GROUP_REPLACECSAGENTGROUP = "cscockpit.user.group.replacecsagentgroup";
 
 
+	//added for new User Group
 	/** The Constant CSCOCKPIT_USER_GROUP_ALTERNATECONTACTCSAGENTGROUP. */
 	public static final String CSCOCKPIT_USER_GROUP_ALTERNATECONTACTCSAGENTGROUP="cscockpit.user.group.alternatecontactcsagentgroup";
 	
@@ -172,6 +173,8 @@ public final class MarketplaceCockpitsConstants extends
 			);	
 	
 	public static final String COUPON_REDEEM = "coupon_redeem";
+	/* TPR-1075  */
+	public static final String FIRST_PURCHASE_ERROR= "newCustomer_not_valid";
 	
 	public static final String SOURCE="CSCockpit";
 	public static final String PAYMENT_MODE_COD="COD";
@@ -197,70 +200,6 @@ public final class MarketplaceCockpitsConstants extends
 	public static final String SD = "SD";
 	public static final String CA = "CA";
 	public static final String RETURN_TYPE="02";
-	
-	/** The Constant NO_SELLER_COD. */
-	public static final String NO_SELLER_COD = "noSellerCOD";
 
-	/** The Constant NO_DELIVERY_ADDRESS. */
-	public static final String NO_DELIVERY_ADDRESS = "noDeliveryAddress";
-
-	/** The Constant NO_PHONE_NUMBER. */
-	public static final String NO_PHONE_NUMBER = "noPhoneNumber";
-
-	/** The Constant PRICING_FROM_BUY_BOX. */
-	public static final String PRICING_FROM_BUY_BOX = "cscockpit.show.buybox.price";
-
-	/** The Constant ADD_TO_BASKET. */
-	public static final String ADD_TO_BASKET = "addToBasketBtn";
-
-	/** The Constant NO_RESPONSE_FROM_SERVER. */
-	public static final String NO_RESPONSE_FROM_SERVER = "noResponseFromServer";
-	
-	/** The Constant INR. */
-	public static final String INR = "INR";
-
-	/** The Constant HOME_DELIVERY. */
-	public static final String HOME_DELIVERY = "home-delivery";
-	
-	/** The Constant EXPRESS_DELIVERY. */
-	public static final String EXPRESS_DELIVERY="express-delivery";
-
-	/** The Constant CLICK_AND_COLLECT. */
-	public static final String CLICK_AND_COLLECT = "click-and-collect";
-	
-	/** The Constant ERROR. */
-	public static final String ERROR = "Error";
-	
-	public static Map<String, String> delCodeMap = ImmutableMap.of(
-		    "HD", "home-delivery",
-		    "ED", "express-delivery",
-		    "CnC", "click-and-collect"
-		);
-	
-	public static Map<String, String> delNameMap = ImmutableMap.of(
-		    "HD", "Home Delivery",
-		    "ED", "Express Delivery",
-		    "CnC", "Click and Collect"
-		);
-	
-	public static Map<String, String> delOmsCodeMap = ImmutableMap.of(
-		    "home-delivery","HD",
-		    "express-delivery","ED",
-		   "click-and-collect","CnC"
-		);
-	
-	public static final String FAILURE = "FAILURE";
-	
-	
-	public static final List<ConsignmentStatus> validInvoiceStatus = Arrays.asList(ConsignmentStatus.HOTC,
-			ConsignmentStatus.OUT_FOR_DELIVERY,ConsignmentStatus.REACHED_NEAREST_HUB,ConsignmentStatus.DELIVERED
-			);	
-	
-	public static final String COUPON_REDEEM = "coupon_redeem";
-	/* TPR-1075  */
-	public static final String FIRST_PURCHASE_ERROR= "newCustomer_not_valid";
-	
-	public static final String SOURCE="CSCockpit";
-	
 	public static final String BOTH = "BOTH";
 }
