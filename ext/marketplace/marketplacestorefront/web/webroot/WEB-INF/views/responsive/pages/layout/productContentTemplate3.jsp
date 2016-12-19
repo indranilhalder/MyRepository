@@ -10,14 +10,26 @@ $(window).resize(function(){
 	iframe_resize();
 });
 function iframe_resize(){
-	$('.bkg-img').show();
+	$('.Manufacturer.Temp07 .bkg-img').show();
 	var iframeHeight = $('.bkg-img').height();
 	var iframeWidth = $('.bkg-img').width();
-	$('.bkg-img').hide();
-	$('.video-container').css('width', iframeWidth);
-	$('.video-container').css('height', iframeHeight);	
+	$('.Manufacturer.Temp07 .bkg-img').hide();
+	if ($('.Manufacturer.Temp07 .video-container').length) {
+		$('.Manufacturer.Temp07 .video-container').css('width', iframeWidth);
+		$('.Manufacturer.Temp07 .video-container').css('height', iframeHeight);		
+	}
 }
-iframe_resize();
+$('.Manufacturer.Temp07 .bkg-img').on("load", function() {
+	iframe_resize();
+});	
+$(document).ready(function(){
+	if($(".Temp07 .Padd .twocolumn .onecolumn img").length == 0){
+		$(".Temp07 .Padd .twocolumn").css ("display","none");
+	}
+	if (($(".Temp07 .Padd .every-scene li .media").children().length == 0) && ($(".Temp07 .Padd .every-scene li .media-content").children().length == 0)){
+		$(".Temp07 .Padd .every-scene").css("display","none");
+	}
+});
 
 </script>
 <div class="Manufacturer Temp07">

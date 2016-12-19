@@ -326,6 +326,10 @@ $("li.logIn-hi").on("mouseleave", function(e) {
 function getBrandsYouLoveAjaxCall() {
         var env = $("#previewVersion").val();
         var count= 0;
+        var autoplayTimeout=5000;
+        var slideBy=1;
+        var autoPlay=true;
+        
         if (env == "true") {
             var dataString = 'version=Staged';
         } else {
@@ -337,6 +341,34 @@ function getBrandsYouLoveAjaxCall() {
             url: ACC.config.encodedContextPath + "/getBrandsYouLove",
             data: dataString,
             success: function(response) {
+
+               //console.log(response.subComponents);
+            	//changes for TPR-1121
+            	autoplayTimeout = response.autoplayTimeout;
+            	slideBy = response.slideBy; 
+            	autoPlay= response.autoPlay;
+            	
+            	if(autoplayTimeout){
+            		
+            		autoplayTimeout = autoplayTimeout;
+                	
+            	}else{
+            		
+            		 autoplayTimeout=5000;
+            	
+            	}
+            	
+               if(slideBy){
+            		
+            	   slideBy = slideBy;
+                	
+            	}else{
+            		
+            		slideBy=1;
+            	
+            	}
+               
+          
                 //console.log(response.subComponents);
             	//TPR-559 Show/Hide Components and Sub-components
 	            if (response.hasOwnProperty("title") && response.hasOwnProperty("subComponents") && response.subComponents.length) {
@@ -364,12 +396,14 @@ function getBrandsYouLoveAjaxCall() {
 	                $('#brandsYouLove').html(renderHtml);
 	                getBrandsYouLoveContentAjaxCall(defaultComponentId);
 	            }    
+
             },
             error: function() {
                 // globalErrorPopup('Failure!!!');
                 console.log("Error while getting brands you love");
             },
             complete: function() {
+
             	//TPR-559 Show/Hide Components and Sub-components
             	if ($(".home-brands-you-love-carousel").length) {
 	                $(".home-brands-you-love-carousel").owlCarousel({
@@ -379,6 +413,10 @@ function getBrandsYouLoveAjaxCall() {
 	            		center:true,
 	            		dots:false,
 	            		navText:[],
+	            		autoplay: autoPlay?$.parseJSON(autoPlay):true,
+			            autoHeight : false,
+	            		autoplayTimeout: autoplayTimeout,
+	  	               slideBy: slideBy,
 	            		responsive : {
 	            			// breakpoint from 0 up
 	            			0 : {
@@ -445,6 +483,7 @@ function getBrandsYouLoveAjaxCall() {
 	                    }
 	                }*/
             	} 
+
             }
         });
     }
@@ -591,7 +630,7 @@ var bulIndex = 0;
     getBrandsYouLoveContentAjaxCall($(this).attr("id"));
 });*/
 $(document).on("click", ".home-brands-you-love-carousel .owl-item", function() {
-	var activePos = $(".home-brands-you-love-carousel .owl-item.center").index(),carLoop,count=0;
+		/*var activePos = $(".home-brands-you-love-carousel .owl-item.center").index(),carLoop,count=0;
 		bulIndex = $(this).index();
 	 	if (bulIndex > activePos) {
 	    	count = bulIndex - activePos;
@@ -613,7 +652,11 @@ $(document).on("click", ".home-brands-you-love-carousel .owl-item", function() {
 	    			clearInterval(carLoop);
 	    		}
 	    	},80)
-	    }
+	    }*/
+		var brandCarousel = $(".home-brands-you-love-carousel").data('owlCarousel');
+		//console.log(carousel.relative($(this).index()));
+		var relIndex = brandCarousel.relative($(this).index());
+        $('.home-brands-you-love-carousel').trigger("to.owl.carousel", [relIndex, 500, true]);
 });
 /*$(document).on("click", ".bulprev", function() {
     $('.home-brands-you-love-desc').remove();
@@ -688,12 +731,43 @@ function getBestPicksAjaxCall() {
         } else {
             var dataString = 'version=Online';
         }
+        var autoplayTimeout = 5000;
+        var slideBy = 1;
+        var autoPlay=true;
         $.ajax({
             type: "GET",
             dataType: "json",
             url: ACC.config.encodedContextPath + "/getBestPicks",
             data: dataString,
             success: function(response) {
+
+            	//changes for TPR-1121
+                autoplayTimeout = response.autoplayTimeout;
+                slideBy = response.slideBy;
+                autoPlay= response.autoPlay;
+            	
+                
+               if(autoplayTimeout){
+            		
+            		autoplayTimeout = autoplayTimeout;
+                	
+            	}else{
+            		
+            		 autoplayTimeout=5000;
+            	
+            	}
+            	
+               if(slideBy){
+            		
+            	   slideBy = slideBy;
+                	
+            	}else{
+            		
+            		slideBy=1;
+            	
+            	}
+               
+             
             	//TPR-559 Show/Hide Components and Sub-components
             	if (response.hasOwnProperty("title") && response.hasOwnProperty("subItems")) {
 	                renderHtml = "<h2>" + response.title + "</h2>" +
@@ -740,11 +814,13 @@ function getBestPicksAjaxCall() {
 	                $("#bestPicks").html(renderHtml);
 	                // console.log()
             	}
+
             },
             error: function() {
                 console.log("Error while getting best picks");
             },
             complete: function() {
+
             	//TPR-559 Show/Hide Components and Sub-components
             	if ($(".home-best-pick-carousel").length) {
 	                $(".home-best-pick-carousel").owlCarousel({
@@ -754,6 +830,10 @@ function getBestPicksAjaxCall() {
 	            		dots:false,
 	            		navText:[],
 	            		lazyLoad: false,
+	            		autoplay: autoPlay?$.parseJSON(autoPlay):true,
+			            autoHeight : false,
+	            		autoplayTimeout: autoplayTimeout,
+	  	               slideBy: slideBy,
 	            		responsive : {
 	            			// breakpoint from 0 up
 	            			0 : {
@@ -786,6 +866,7 @@ function getBestPicksAjaxCall() {
 	                    scrollPerPage: true*/
 	                });
             	}    
+
             }
         });
        
@@ -801,12 +882,44 @@ function getProductsYouCareAjaxCall() {
         } else {
             var dataString = 'version=Online';
         }
+        
+        var slideBy=1;
+        var autoplayTimeout=5000;
+        var autoPlay=true;
         $.ajax({
             type: "GET",
             dataType: "json",
             url: ACC.config.encodedContextPath + "/getProductsYouCare",
             data: dataString,
             success: function(response) {
+
+            	//changes for TPR-1121
+            	autoplayTimeout = response.autoplayTimeout;
+            	slideBy = response.slideBy;
+            	autoPlay= response.autoPlay;
+            	
+            	
+                if(autoplayTimeout){
+            		
+            		autoplayTimeout = autoplayTimeout;
+                	
+            	}else{
+            		
+            		 autoplayTimeout=5000;
+            	
+            	}
+            	
+               if(slideBy){
+            		
+            	   slideBy = slideBy;
+                	
+            	}else{
+            		
+            		slideBy=1;
+            	
+            	}
+               
+              
             	//console.log(response);
             	//TPR-559 Show/Hide Components and Sub-components
                 if (response.hasOwnProperty("title") && response.hasOwnProperty("categories") && response.title && response.categories.length) {
@@ -839,11 +952,13 @@ function getProductsYouCareAjaxCall() {
 	                renderHtml += "</div>";
 	                $("#productYouCare").html(renderHtml);
                 }    
+
             },
             error: function() {
                 console.log(
                     'Error while getting getProductsYouCare');
             },
+
             complete : function() {
             	//TPR-559 Show/Hide Components and Sub-components
             	if ($(".home-product-you-care-carousel").length) {
@@ -854,6 +969,10 @@ function getProductsYouCareAjaxCall() {
 							dots : false,
 							navText : [],
 							lazyLoad : false,
+							autoplay: autoPlay?$.parseJSON(autoPlay):true,
+				            autoHeight : false,
+							autoplayTimeout: autoplayTimeout,
+				            slideBy: slideBy,
 							responsive : {
 								// breakpoint from 0 up
 								0 : {
@@ -872,6 +991,7 @@ function getProductsYouCareAjaxCall() {
 								1280 : {
 									items : 4,
 								}
+
 							}
 						/*
 						 * navigation: true, navigationText: [], pagination: false,
@@ -893,6 +1013,10 @@ function getNewAndExclusiveAjaxCall() {
     } else {
         var dataString = 'version=Online';
     }
+     var slideBy=1;
+     var autoplayTimeout=5000;
+     var autoPlay=true;
+    
     $.ajax({
         type: "GET",
         dataType: "json",
@@ -900,6 +1024,35 @@ function getNewAndExclusiveAjaxCall() {
         data: dataString,
         success: function(response) {
             //console.log(response.newAndExclusiveProducts);
+        	//changes for TPR-1121
+        	
+        	autoplayTimeout = response.autoplayTimeout;
+        	slideBy = response.slideBy;
+        	autoPlay= response.autoPlay;
+        	
+        	 
+        	if(autoplayTimeout){
+        		
+        		autoplayTimeout = autoplayTimeout;
+            	
+        	}else{
+        		
+        		 autoplayTimeout=5000;
+        	
+        	}
+        	
+           if(slideBy){
+        		
+        	   slideBy = slideBy;
+            	
+        	}else{
+        		
+        		slideBy=1;
+        	
+        	}
+           
+          
+        	
         	//TPR-559 Show/Hide Components and Sub-components
             if (response.hasOwnProperty("title") && response.hasOwnProperty("newAndExclusiveProducts") && response.newAndExclusiveProducts.length) {
 	        	var staticHost=$('#staticHost').val();
@@ -929,11 +1082,13 @@ function getNewAndExclusiveAjaxCall() {
 	                "/search/viewOnlineProducts' class='new_exclusive_viewAll'>View All</a>";
 	            $('#newAndExclusive').html(renderHtml);
             }   
+
         },
         error: function() {
             console.log("Error while getting new and exclusive");
         },
         complete: function() {
+
         	//TPR-559 Show/Hide Components and Sub-components
         	if ($("#new_exclusive").length) {
 	            $("#new_exclusive").owlCarousel({
@@ -943,6 +1098,10 @@ function getNewAndExclusiveAjaxCall() {
 	        		dots:false,
 	        		navText:[],
 	        		lazyLoad: false,
+	        		autoplay: autoPlay?$.parseJSON(autoPlay):true,
+		            autoHeight : false,
+		            autoplayTimeout: autoplayTimeout,
+		            slideBy: slideBy,
 	        		responsive : {
 	        			// breakpoint from 0 up
 	        			0 : {
@@ -997,6 +1156,7 @@ function getNewAndExclusiveAjaxCall() {
 	        		},80);
 	            });
         	}     
+
         }
     });
 }
@@ -1315,7 +1475,8 @@ getFooterOnLoad();
 $(document).on("click", ".showcaseItem", function() {
 	$('.selectmenu').text($(this).children().text());
 	/*TPR-650 Start*/
-	var name=$(this).parents('#showcase').children('h1').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	//TISQAEE-59
+	var name=$(this).parents('#showcase').children('h2').text().trim().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
 	var value = $(this).find('a').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
 	utag.link({
 		link_obj: this,

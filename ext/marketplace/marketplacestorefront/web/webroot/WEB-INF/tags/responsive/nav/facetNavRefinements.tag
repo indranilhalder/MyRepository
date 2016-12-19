@@ -61,7 +61,7 @@
 <div class="facet_desktop">
 <li class="facet js-facet AvailabilitySize" style="display: none">
 		
-		<h4 class="true">Availability</h4>
+		<h3 class="true">Availability</h3>
         
 		<div class="facet-values js-facet-values js-facet-form ">
 		<p class="filter-name facet_mobile">Availability</p>

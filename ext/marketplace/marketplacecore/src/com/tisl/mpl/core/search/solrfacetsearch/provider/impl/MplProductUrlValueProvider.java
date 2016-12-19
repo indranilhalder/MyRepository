@@ -74,50 +74,61 @@ public class MplProductUrlValueProvider extends AbstractPropertyFieldValueProvid
 	public Collection<FieldValue> getFieldValues(final IndexConfig indexConfig, final IndexedProperty indexedProperty,
 			final Object model) throws FieldValueProviderException
 	{
-		if (model instanceof ProductModel)
+		try
 		{
-			final ProductModel product = (ProductModel) model;
-			final String leastSizeProduct = mplBuyBoxUtility.getLeastSizeProduct(product);
-			final Collection fieldValues = new ArrayList();
-			if (leastSizeProduct != null && !leastSizeProduct.isEmpty())
+			if (model instanceof ProductModel)
 			{
-
-				final ProductModel leastSizeProductModel = productService.getProductForCode(product.getCatalogVersion(),
-						leastSizeProduct);
-
-				if (indexedProperty.isLocalized())
+				final ProductModel product = (ProductModel) model;
+				final String leastSizeProduct = mplBuyBoxUtility.getLeastSizeProduct(product);
+				final Collection fieldValues = new ArrayList();
+				if (leastSizeProduct != null && !leastSizeProduct.isEmpty())
 				{
-					final Collection<LanguageModel> languages = indexConfig.getLanguages();
-					for (final LanguageModel language : languages)
+
+					final ProductModel leastSizeProductModel = productService.getProductForCode(product.getCatalogVersion(),
+							leastSizeProduct);
+
+					if (indexedProperty.isLocalized())
 					{
-						fieldValues.addAll(createFieldValue(leastSizeProductModel, language, indexedProperty));
+						final Collection<LanguageModel> languages = indexConfig.getLanguages();
+						for (final LanguageModel language : languages)
+						{
+							fieldValues.addAll(createFieldValue(leastSizeProductModel, language, indexedProperty));
+						}
 					}
+					else
+					{
+						fieldValues.addAll(createFieldValue(leastSizeProductModel, null, indexedProperty));
+					}
+					return fieldValues;
 				}
 				else
 				{
-					fieldValues.addAll(createFieldValue(leastSizeProductModel, null, indexedProperty));
-				}
-				return fieldValues;
-			}
-			else
-			{
-				if (indexedProperty.isLocalized())
-				{
-					final Collection<LanguageModel> languages = indexConfig.getLanguages();
-					for (final LanguageModel language : languages)
+					if (indexedProperty.isLocalized())
 					{
-						fieldValues.addAll(createFieldValue(product, language, indexedProperty));
+						final Collection<LanguageModel> languages = indexConfig.getLanguages();
+						for (final LanguageModel language : languages)
+						{
+							fieldValues.addAll(createFieldValue(product, language, indexedProperty));
+						}
+					}
+					else
+					{
+						fieldValues.addAll(createFieldValue(product, null, indexedProperty));
 					}
 				}
-				else
-				{
-					fieldValues.addAll(createFieldValue(product, null, indexedProperty));
-				}
+				return Collections.emptyList();
 			}
-			return Collections.emptyList();
+			else /* added part of value provider go through */
+			{
+				throw new FieldValueProviderException("Cannot evaluate URL of non-product item");
+			}
 		}
-
-		throw new FieldValueProviderException("Cannot evaluate rating of non-product item");
+		catch (final Exception e) /* added part of value provider go through */
+		{
+			throw new FieldValueProviderException(
+					"Cannot evaluate " + indexedProperty.getName() + " using " + super.getClass().getName() + "exception" + e, e);
+		}
+		//throw new FieldValueProviderException("Cannot evaluate rating of non-product item");
 	}
 
 	protected List<FieldValue> createFieldValue(final ProductModel product, final LanguageModel language,

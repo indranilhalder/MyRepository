@@ -20,6 +20,7 @@ public class FilePathProviderService
 	private String validationErrFilePath;
 	private String statesPropFilePath;
 	private String pincodesUploadPath;
+	private String shipmentStatusUpload;
 
 	/**
 	 *
@@ -160,6 +161,23 @@ public class FilePathProviderService
 	public void setValidationErrFilePath(final String validationErrFilePath)
 	{
 		this.validationErrFilePath = validationErrFilePath;
+	}
+
+	/**
+	 * @return the shipmentStatusUpload
+	 */
+	public String getShipmentStatusUpload()
+	{
+		return shipmentStatusUpload;
+	}
+
+	/**
+	 * @param shipmentStatusUpload
+	 *           the shipmentStatusUpload to set
+	 */
+	public void setShipmentStatusUpload(final String shipmentStatusUpload)
+	{
+		this.shipmentStatusUpload = shipmentStatusUpload;
 	}
 
 

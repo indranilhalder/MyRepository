@@ -197,12 +197,12 @@ function focusOnElement() {
 		skuPriceArray[++indx]=skuPriceMap;
 		if(originalPriceValue > 0 && originalPriceValue!=sellerPriceValue){
 		tbodycontent+='<span class="sale strike" id="mrpPriceId">';	
-		tbodycontent+=originalPrice.formattedValue;
+		tbodycontent+=originalPrice.formattedValueNoDecimal;
 		tbodycontent+="</span>";
 		tbodycontent+=" ";
 		}
 		tbodycontent+='<span class="sale" id="mopPriceId">'
-		tbodycontent+=sellerPrice.formattedValue;
+		tbodycontent+=sellerPrice.formattedValueNoDecimal;
 		tbodycontent+="</span>"
 		if(promorestrictedSellers!=undefined){
 			   if(promorestrictedSellers.indexOf(sellersArray[i]['sellerID'])!=-1){
@@ -405,6 +405,9 @@ function focusOnElement() {
 		
 		//$(document).on('click','#addToCartFormId'+index+' .js-add-to-cart',function(){ //Changed for TPR-887
 		 $(document).on('click','#addToCartFormId'+index+' #addToCartButton'+index,function(){
+			 
+			 
+			 
 			
         if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches'&& $("#showSize").val()=='true'){
 		  		
@@ -412,6 +415,16 @@ function focusOnElement() {
 				$("#addToCartFormIdOthersel"+index).show();
 				 return false;
 		   	 }
+        //TISQAEE-64
+        var productCode= $('#productCode').val();
+	        
+	        utag.link({
+				link_obj: this,
+				link_text: 'addtobag' ,
+				event_type : 'addtobag_other_seller' ,
+				product_sku : productCode
+			});
+        
 			ACC.product.sendAddToBag("addToCartFormId"+index);
 		});
 		 
@@ -429,6 +442,7 @@ function focusOnElement() {
 	}
 	 function sendAddToBag(formId){
 			var dataString=$('#'+formId).serialize();	
+			
 			
 			
 			$.ajax({
@@ -577,6 +591,7 @@ function focusOnElement() {
 				contentType : "application/json; charset=utf-8",
 				url : requiredUrl,
 				async: false,
+				cache : false,
 				data : dataString,
 				dataType : "json",
 				success : function(data) {		
@@ -624,7 +639,8 @@ function focusOnElement() {
 								 {						
 									if(divId != null)
 									{
-										var offerMessageDiv="<div class='offerMessage-block' id='offerMessageId'>"+message+"</div>";
+										//var offerMessageDiv="<div class='offerMessage-block' id='offerMessageId'>"+message+"</div>";
+										var offerMessageDiv="<div class='offerMessage-block' id='offerMessageId'>"+messageDet+"</div>";
 										var divSpecificId ='#'+divId;
 										$(divSpecificId).html(offerMessageDiv);
 									}
@@ -632,10 +648,16 @@ function focusOnElement() {
 									{
 										$(".pdp-offer").html(message);						
 									}
-									$("#message").html(message);	
-									$("#offerDetailId").html(messageDet);
+//									$("#message").html(message);	
+//									$("#offerDetailId").html(messageDet);
+//									
+//									$("#messageDet").html(messageDet);
 									
-									$("#messageDet").html(messageDet);
+									$("#message").html(messageDet);	
+									$("#offerDetailId").html(message);
+									
+									$("#messageDet").html(message);
+									
 									var dateSplit = messageStartDate.split(" ");
 				                   var firstpart = dateSplit[0];
 				                   var secondpart = dateSplit[1];

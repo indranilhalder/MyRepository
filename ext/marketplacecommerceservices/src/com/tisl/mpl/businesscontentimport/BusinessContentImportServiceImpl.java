@@ -152,8 +152,16 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 	{
 		LOG.debug("Generationg Contents..");
 		LOG.debug("Error Checking Contents..");
+		int lineNo = 0;
 		while (reader.readNextLine())
 		{
+			lineNo++;
+			//To skip header section defined in CSV
+			if (lineNo == 1)
+			{
+				continue;
+			}
+
 			final Map<Integer, String> line = reader.getLine();
 			final StringBuilder invalidColumns = new StringBuilder();
 
@@ -185,7 +193,7 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 					for (final String attribute : attributeList)
 					{
 						contentMap.put(attribute, line.get(Integer.valueOf(countAfter)));
-						addInvalidColumnName(invalidColumns, attribute, line.get(Integer.valueOf(countAfter)));
+						//addInvalidColumnName(invalidColumns, attribute, line.get(Integer.valueOf(countAfter)));
 						countAfter++;
 					}
 
@@ -198,7 +206,7 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 					{
 						try
 						{
-							writeErrorData(writer, invalidColumns.toString(), line, "MISSING_VALUES");
+							writeErrorData(writer, invalidColumns.toString(), line, "MISSING_VALUES", lineNo);
 						}
 						catch (final IOException e)
 						{
@@ -212,7 +220,7 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 			{
 				try
 				{
-					writeErrorData(writer, invalidColumns.toString(), line, "MISSING_VALUES");
+					writeErrorData(writer, invalidColumns.toString(), line, "MISSING_VALUES", lineNo);
 				}
 				catch (final IOException e)
 				{
@@ -236,8 +244,10 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 			final Map<Integer, String> map, final Integer errorPosition, final boolean headerRowIncluded)
 	{
 		LOG.debug("Mapping to product starts");
+		int lineNo = 0;
 		while (reader.readNextLine())
 		{
+			lineNo++;
 			final Map<Integer, String> line = reader.getLine();
 			final StringBuilder invalidColumns = new StringBuilder();
 
@@ -296,7 +306,7 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 			{
 				try
 				{
-					writeErrorData(writer, invalidColumns.toString(), line, "MISSING_VALUES");
+					writeErrorData(writer, invalidColumns.toString(), line, "MISSING_VALUES", lineNo);
 				}
 				catch (final IOException e)
 				{
@@ -459,22 +469,43 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		//Making Components
 		for (final Map.Entry<String, String> entry : contentMap.entrySet())
 		{
+			/*
+			 * if (entry.getKey().startsWith("Image") && StringUtils.isNotEmpty(entry.getValue())) { final
+			 * SimpleBannerComponentModel sm = makeBannerComponent(entry.getValue(), entry.getKey(), line, writer,
+			 * isUpdatefeed); componentlist.add(sm); } else if (entry.getKey().startsWith("Video") &&
+			 * StringUtils.isNotEmpty(entry.getValue())) { final VideoComponentModel vm =
+			 * makeVideoComponent(entry.getValue(), entry.getKey(), line, writer, isUpdatefeed); componentlist.add(vm);
+			 * 
+			 * } else if (entry.getKey().startsWith("Text") && StringUtils.isNotEmpty(entry.getValue())) { final
+			 * CMSParagraphComponentModel cmspara = makeTextComponent(entry.getValue(), entry.getKey(), line, writer,
+			 * isUpdatefeed); componentlist.add(cmspara); }
+			 */
 			if (entry.getKey().startsWith("Image"))
 			{
-				final SimpleBannerComponentModel sm = makeBannerComponent(entry.getValue(), entry.getKey(), line, writer,
-						isUpdatefeed);
+				SimpleBannerComponentModel sm = null;
+				if (StringUtils.isNotEmpty(entry.getValue()))
+				{
+					sm = makeBannerComponent(entry.getValue(), entry.getKey(), line, writer, isUpdatefeed);
+				}
 				componentlist.add(sm);
 			}
 			else if (entry.getKey().startsWith("Video"))
 			{
-				final VideoComponentModel vm = makeVideoComponent(entry.getValue(), entry.getKey(), line, writer, isUpdatefeed);
+				VideoComponentModel vm = null;
+				if (StringUtils.isNotEmpty(entry.getValue()))
+				{
+					vm = makeVideoComponent(entry.getValue(), entry.getKey(), line, writer, isUpdatefeed);
+				}
 				componentlist.add(vm);
 
 			}
 			else if (entry.getKey().startsWith("Text"))
 			{
-				final CMSParagraphComponentModel cmspara = makeTextComponent(entry.getValue(), entry.getKey(), line, writer,
-						isUpdatefeed);
+				CMSParagraphComponentModel cmspara = null;
+				if (StringUtils.isNotEmpty(entry.getValue()))
+				{
+					cmspara = makeTextComponent(entry.getValue(), entry.getKey(), line, writer, isUpdatefeed);
+				}
 				componentlist.add(cmspara);
 			}
 		}
@@ -500,12 +531,21 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		{
 			if (!isUpdatefeed)
 			{
-				sm = new SimpleBannerComponentModel();
-				sm.setUid(uid);
-				sm.setName(uid);
-				sm.setUrlLink(imageUrl);
-				sm.setCatalogVersion(getCatalogVersion());
-				modelService.save(sm);
+				try
+				{
+					sm = businessContentImportDao.getSimpleBannerComponentforUid(uid);
+					sm.setUrlLink(imageUrl);
+					modelService.save(sm);
+				}
+				catch (final ModelSavingException | ModelNotFoundException exception)
+				{
+					sm = new SimpleBannerComponentModel();
+					sm.setUid(uid);
+					sm.setName(uid);
+					sm.setUrlLink(imageUrl);
+					sm.setCatalogVersion(getCatalogVersion());
+					modelService.save(sm);
+				}
 			}
 			else
 			{
@@ -543,12 +583,21 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		{
 			if (!isUpdatefeed)
 			{
-				vm = new VideoComponentModel();
-				vm.setUid(uid);
-				vm.setName(uid);
-				vm.setVideoUrl(videoUrl);
-				vm.setCatalogVersion(getCatalogVersion());
-				modelService.save(vm);
+				try
+				{
+					vm = businessContentImportDao.getVideoComponentforUid(uid);
+					vm.setVideoUrl(videoUrl);
+					modelService.save(vm);
+				}
+				catch (final ModelSavingException | ModelNotFoundException exception)
+				{
+					vm = new VideoComponentModel();
+					vm.setUid(uid);
+					vm.setName(uid);
+					vm.setVideoUrl(videoUrl);
+					vm.setCatalogVersion(getCatalogVersion());
+					modelService.save(vm);
+				}
 			}
 			else
 			{
@@ -589,14 +638,22 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		{
 			if (!isUpdatefeed)
 			{
-				cmsPara = new CMSParagraphComponentModel();
-				cmsPara.setUid(uid);
-				cmsPara.setName(uid);
-				cmsPara.setContent(content, loc);
-				cmsPara.setCatalogVersion(getCatalogVersion());
-
-				//Saving the Model
-				modelService.save(cmsPara);
+				try
+				{
+					cmsPara = businessContentImportDao.getCMSParagraphComponentforUid(uid);
+					cmsPara.setContent(content, loc);
+					modelService.save(cmsPara);
+				}
+				catch (final ModelSavingException | ModelNotFoundException exception)
+				{
+					cmsPara = new CMSParagraphComponentModel();
+					cmsPara.setUid(uid);
+					cmsPara.setName(uid);
+					cmsPara.setContent(content, loc);
+					cmsPara.setCatalogVersion(getCatalogVersion());
+					//Saving the Model
+					modelService.save(cmsPara);
+				}
 			}
 			else
 			{
@@ -628,22 +685,40 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		LOG.debug("Making Content Slot ...");
 		final List<Integer> errorColumnList = errorListData(false);
 		final List<ContentSlotModel> cSlotList = new ArrayList<>();
+		final List<ContentSlotModel> cSlotListReturn = new ArrayList<>();
 		ContentSlotModel cSlot = null;
 		try
 		{
 			final String productCode = line.get(Integer.valueOf(PRODUCTCODE));
 			final String template = line.get(Integer.valueOf(TEMPLATE));
+			int index = 0;
 			for (final AbstractCMSComponentModel component : componentlist)
 			{
-				final List<AbstractCMSComponentModel> tempcomponentlist = new ArrayList<>();
-				cSlot = new ContentSlotModel();
-				cSlot.setUid(productCode + "_" + template + "_" + component.getUid());
-				cSlot.setName(productCode + "_" + template + "_" + component.getUid());
-				tempcomponentlist.add(component);
-				cSlot.setActive(Boolean.TRUE);
-				cSlot.setCmsComponents(tempcomponentlist);
-				cSlot.setCatalogVersion(getCatalogVersion());
-				cSlotList.add(cSlot);
+				/*
+				 * final List<AbstractCMSComponentModel> tempcomponentlist = new ArrayList<>(); cSlot = new
+				 * ContentSlotModel(); cSlot.setUid(productCode + "_" + template + "_" + component.getUid());
+				 * cSlot.setName(productCode + "_" + template + "_" + component.getUid()); tempcomponentlist.add(component);
+				 * cSlot.setActive(Boolean.TRUE); cSlot.setCmsComponents(tempcomponentlist);
+				 * cSlot.setCatalogVersion(getCatalogVersion()); cSlotList.add(cSlot);
+				 */
+				if (component != null)
+				{
+					final List<AbstractCMSComponentModel> tempcomponentlist = new ArrayList<>();
+					cSlot = new ContentSlotModel();
+					cSlot.setUid(productCode + "_" + template + "_" + component.getUid());
+					cSlot.setName(productCode + "_" + template + "_" + component.getUid());
+					tempcomponentlist.add(component);
+					cSlot.setActive(Boolean.TRUE);
+					cSlot.setCmsComponents(tempcomponentlist);
+					cSlot.setCatalogVersion(getCatalogVersion());
+					cSlotList.add(cSlot);
+					cSlotListReturn.add(index, cSlot);
+				}
+				else
+				{
+					cSlotListReturn.add(index, null);
+				}
+				index++;
 
 			}
 			modelService.saveAll(cSlotList);
@@ -653,7 +728,8 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 			LOG.error("Problem while Making Content Slot" + exception.getMessage());
 			populateErrorEntry(line, writer, errorColumnList);
 		}
-		return cSlotList;
+		//return cSlotList;
+		return cSlotListReturn;
 	}
 
 	/**
@@ -681,14 +757,16 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 			int sectionCounter = 0;
 			for (final ContentSlotModel contentSlot : cSlotList)
 			{
-
-				cSlotPage = new ContentSlotForPageModel();
-				cSlotPage.setUid(sectionList[sectionCounter] + contentSlot.getUid());
-				cSlotPage.setPosition(sectionList[sectionCounter]);
-				cSlotPage.setPage(cm);
-				cSlotPage.setContentSlot(contentSlot);
-				cSlotPage.setCatalogVersion(getCatalogVersion());
-				cSlotPageList.add(cSlotPage);
+				if (contentSlot != null)
+				{
+					cSlotPage = new ContentSlotForPageModel();
+					cSlotPage.setUid(sectionList[sectionCounter] + contentSlot.getUid());
+					cSlotPage.setPosition(sectionList[sectionCounter]);
+					cSlotPage.setPage(cm);
+					cSlotPage.setContentSlot(contentSlot);
+					cSlotPage.setCatalogVersion(getCatalogVersion());
+					cSlotPageList.add(cSlotPage);
+				}
 				sectionCounter++;
 			}
 
@@ -784,6 +862,25 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		line.put(Integer.valueOf(0), errorColumn);
 		line.put(Integer.valueOf(1), errorMessage);
 		writer.writeComment("columnName," + "errorMessage ," + "Line");
+		writer.write(line);
+	}
+
+	/**
+	 * @Description : Prints Error Message to file
+	 * @param writer
+	 * @param line
+	 * @param errorMessage
+	 * @throws IOException
+	 */
+	public void writeErrorData(final CSVWriter writer, final String errorColumn, final Map<Integer, String> line,
+			final String errorMessage, final int lineNo) throws IOException
+	{
+		final Integer lineNoCsv = Integer.valueOf(lineNo);
+		line.put(Integer.valueOf(0), errorColumn);
+		line.put(Integer.valueOf(1), errorMessage);
+		line.put(Integer.valueOf(2), lineNoCsv.toString());
+
+		writer.writeComment("columnName," + "errorMessage ," + "Line No." + ",Line");
 		writer.write(line);
 	}
 

@@ -133,3 +133,14 @@
 		</ul>
 	</div>
 </div>
+<script>
+$(document).ready(function(){
+	if($(".Manufacturer.Temp02 ul.pdpFeatures li img").length == 0 && $(".Manufacturer.Temp02 ul.pdpFeatures li .yCmsComponent ").length == 0) {
+		$(".Manufacturer.Temp02 ul.pdpFeatures").css("display","none");
+	}
+	if($(".Manufacturer.Temp02 ul.contVideo .temp2-center").children().length == 0 && $(".Manufacturer.Temp02 ul.contVideo .yCmsComponent").length == 0) {
+		$(".Manufacturer.Temp02 ul.contVideo").css("display","none");
+	}
+});
+
+</script>

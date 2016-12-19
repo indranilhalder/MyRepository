@@ -9,6 +9,7 @@
 <!-- This is used for displaying text in footer -->
 <div class="footer-text">
 	<%-- ${footerText} --%>
+	<!-- For TPR-1282 -->
 	<c:choose>
 		<c:when test="${not empty categoryFooterTxt}">
 			${categoryFooterTxt}

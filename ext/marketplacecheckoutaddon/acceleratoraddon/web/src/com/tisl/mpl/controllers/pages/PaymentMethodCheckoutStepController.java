@@ -264,13 +264,15 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
 			Map<String, Boolean> paymentModeMap = null;
 			OrderData orderData = null;
+			final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 			if (null == orderModel)
 			{
 				//Existing code
 				final CartModel cartModel = getCartService().getSessionCart();
 
 				// TPR-429 START
-				final String checkoutSellerID = GenericUtilityMethods.populateCheckoutSellers(cartModel);
+				
+				final String checkoutSellerID = populateCheckoutSellers(cartData);
 				model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, checkoutSellerID);
 				// TPR-429 END
 
@@ -328,7 +330,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderModel);
 				// TPR-429 START
-				final String checkoutSellerID = GenericUtilityMethods.populateCheckoutSellers(orderModel);
+				final String checkoutSellerID = populateCheckoutSellers(cartData);
 				model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, checkoutSellerID);
 				// TPR-429 END
 				//Getting Payment modes
@@ -2178,9 +2180,19 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			if (CollectionUtils.isNotEmpty(savedCardForCustomer)) // Code added for TISPT-204 Point no  5
 			{
 				listCardsResponse = getMplPaymentFacade().getJuspayCardResponse(customer);
+				LOG.debug("*********************************************************************");
+				LOG.debug("The Juspay Responce for Saved Card : " + listCardsResponse);
 				final Tuple2<?, ?> storedSavedCards = getMplPaymentFacade().listStoredCards(customer, listCardsResponse);
+				LOG.debug("*********************************************************************");
+
+				LOG.debug("Stored Card" + storedSavedCards);
+
 				savedCreditCards = (Map<Date, SavedCardData>) storedSavedCards.getFirst();
 				savedDebitCards = (Map<Date, SavedCardData>) storedSavedCards.getSecond();
+
+				LOG.debug("Credit Card" + savedCreditCards);
+				LOG.debug("Debit Card" + savedDebitCards);
+				LOG.debug("*********************************************************************");
 			}
 		}
 		catch (final EtailBusinessExceptions e)
@@ -4159,7 +4171,25 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		return null;
 	}
 
-
+	//TPR-429 change
+		public static String populateCheckoutSellers(final CartData cartData)
+		{
+			String cartLevelSellerID = null;
+			final List<OrderEntryData> sellerList = cartData.getEntries();
+			for (final OrderEntryData seller : sellerList)
+			{
+				final String sellerID = seller.getSelectedSellerInformation().getSellerID();
+				if (cartLevelSellerID != null)
+				{
+					cartLevelSellerID += "_" + sellerID;
+				}
+				else
+				{
+					cartLevelSellerID = sellerID;
+				}
+			}
+			return cartLevelSellerID;
+		}
 
 
 

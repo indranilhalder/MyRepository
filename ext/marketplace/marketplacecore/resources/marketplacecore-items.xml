@@ -125,8 +125,9 @@
 			<value code="mobileView" />
 			<value code="desktopView" />
 		</enumtype>
-
-		<enumtype code="sizeEnum" autocreate="true" generate="true"
+		
+		
+       <enumtype code="sizeEnum" autocreate="true" generate="true"
 			dynamic="false">
 			<value code="thumbnail"></value>
 			<value code="large"></value>
@@ -827,10 +828,19 @@
  			<value code="no" />
  		</enumtype>
  		<!-- added by i324321 end -->
+ 		
+ 		
+ 		<!-- TPR-1285 ENUM added  --> 
+ 		<enumtype code="siteMapUpdateModeEnum" autocreate="true" generate="true"
+ 			dynamic="true">
+ 			<value code="PRODUCT" />
+ 			<value code="CUSTOM" />
+ 			<value code="ALL" />
+ 		</enumtype>
 	</enumtypes>
 		<!-- Product Feature Enum Ends -->
 
-
+	
 
 
 	<relations>
@@ -1171,6 +1181,16 @@
 	<!-- relation of category to cross-sell banners -->
 		
 		<!-- End -->
+		
+		<!-- update the message for Freebie product TPR-1754 -->
+		
+		<relation code="FreebieProductDetailRelation"
+			localized="false" autocreate="true">
+			<sourceElement qualifier="offer" type="FreebieDetail" cardinality="one">
+			</sourceElement>
+			<targetElement qualifier="productsWithFreebieoffer" type="ProductFreebieDetail" cardinality="many">
+			</targetElement>
+		</relation>
 		
 	</relations>
 
@@ -1631,8 +1651,6 @@
 				</indexes> 
 				
 			</itemtype>
-			
-			
 			<itemtype code="SeoContent" autocreate="true" generate="true"
 				jaloclass="com.tisl.mpl.core.jalo.SeoContent">
 				<deployment table="MplSeoContent" typecode="13002" />
@@ -1772,6 +1790,7 @@
 							optional="true"/>
 						<persistence type="property" />
 					</attribute>
+					<!-- For TPR-1282 -->
 					<attribute qualifier="categoryFooterText" type="java.lang.String">
 						<description>Footer Content for category</description>
 						<modifiers read="true" write="true" search="true"
@@ -3581,6 +3600,29 @@
 						<persistence type='property' />
 
 					</attribute>
+					
+					<!-- Changes implemented for TPR-1121 -->
+					<attribute type="java.lang.Integer" qualifier="autoplayTimeout"
+						autocreate="true" generate="true">
+						<description>Auto play time for CategoryCarouselComponent</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+
+					</attribute>
+					<attribute type="java.lang.Integer" qualifier="slideBy"
+						autocreate="true" generate="true">
+						<description>Slideby for CategoryCarouselComponent</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+
+					</attribute>
+					<attribute type="java.lang.Boolean" qualifier="autoPlay"
+						autocreate="true" generate="true">
+						<description>Autoplay for CategoryCarouselComponent</description>
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
 				</attributes>
 			</itemtype>
 			<!-- PRoduct Carousel Component TPR-1316-->
@@ -3590,6 +3632,36 @@
 				jaloclass="com.tisl.mpl.core.jalo.MplProductCollectionComponent">
 				<description>This component is made to show the Products in a carousel</description>
 				
+			</itemtype>
+			
+			<itemtype code="ProductCarouselComponent" autocreate="false" generate="false" extends="SimpleCMSComponent"
+			jaloclass="com.tisl.mpl.jalo.cms.components.ProductCarouselComponent">
+			
+			<attributes>
+			<!-- Changes implemented for TPR-1121 -->
+			<attribute type="java.lang.Integer" qualifier="autoplayTimeoutNewIn"
+						autocreate="true" generate="true">
+						<description>Auto play time for ProductCarouselComponent</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+
+					</attribute>
+					<attribute type="java.lang.Integer" qualifier="slideByNewIn"
+						autocreate="true" generate="true">
+						<description>Slideby for ProductCarouselComponent</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+
+					</attribute>
+			<attribute type="java.lang.Boolean" qualifier="autoPlayNewIn"
+						autocreate="true" generate="true">
+						<description>Autoplay for ProductCarouselComponent</description>
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+			</attribute>		
+			
+			</attributes>
 			</itemtype>
 			
 			<!-- Now Trending Carousel Component -->
@@ -3993,6 +4065,26 @@
 						<description>Button Link if required</description>
 						<persistence type="property" />
 					</attribute>
+					<!-- Changes implemented for TPR-1121 -->
+					<attribute qualifier="slideBy" type="java.lang.Integer"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>Slide By if required</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="autoplayTimeout" type="java.lang.Integer"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>Auto play timeout if required</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute type="java.lang.Boolean" qualifier="autoPlay"
+						autocreate="true" generate="true">
+						<description>Autoplay if required</description>
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
 				</attributes>
 			</itemtype>
 
@@ -4385,7 +4477,33 @@
 						<modifiers read="true" write="true" search="true" />
 						<persistence type='property' />
 					</attribute>
+
+					<!-- Changes implemented for TPR-1121 -->
+					<attribute type="java.lang.Integer" qualifier="slideBy"
+                      autocreate="true" generate="true">
+ 					<description>SlideBy for AdvancedCategoryCarouselComponent</description>
+ 					<modifiers read="true" write="true" search="true" />
+ 					<persistence type='property' />
+ 				   </attribute>
+ 				
+ 				   <attribute type="java.lang.Integer" qualifier="autoplayTimeout"
+ 					autocreate="true" generate="true">
+ 						<description>AutoplayTimeout for AdvancedCategoryCarouselComponent</description>
+ 						<modifiers read="true" write="true" search="true" />
+ 						<persistence type='property' />
+ 				  </attribute>
+			
+					<attribute type="java.lang.Boolean" qualifier="autoPlay"
+						autocreate="true" generate="true">
+						<description>Autoplay for AdvancedCategoryCarouselComponent</description>
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+
 				
+
+
 				</attributes>
 			</itemtype>
 
@@ -4405,6 +4523,13 @@
 		          <attribute type="java.lang.String" qualifier="imageTitle"
 						autocreate="true" generate="true">
 						<description>This attribute is required to provide name of the image</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+					
+					 <attribute type="java.lang.String" qualifier="imageURL"
+						autocreate="true" generate="true">
+						<description>This attribute is required to provide URL of the image</description>
 						<modifiers read="true" write="true" search="true" />
 						<persistence type='property' />
 					</attribute>
@@ -4490,6 +4615,31 @@
 						<modifiers read="true" write="true" search="true" />
 						<persistence type='property' />
 					</attribute>
+					
+					<!-- Changes implemented for TPR-1121 -->
+ 
+                    <attribute type="java.lang.Integer" qualifier="slideBy"
+						autocreate="true" generate="true">
+						<description>SlideBy for showcasecomponent</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+					
+					 <attribute type="java.lang.Integer" qualifier="autoplayTimeout"
+						autocreate="true" generate="true">
+						<description>AutoplayTimeout for showcasecomponent</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+					
+					<attribute type="java.lang.Boolean" qualifier="autoPlay"
+						autocreate="true" generate="true">
+						<description>Autoplay for showcasecomponent</description>
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+				
 
 				</attributes>
 			</itemtype>
@@ -4686,6 +4836,24 @@
 					</attributes>
 			</itemtype>
 			
+		<!-- TPR-1285 Changes -->
+			<itemtype code="CMSSite" autocreate="false" generate="false">
+				
+				<attributes>
+					
+					<attribute qualifier="siteMaps" type="MediaCollection" autocreate="false">
+						<persistence type="property" >
+						<columntype database="oracle">
+							<value>CLOB</value>
+						</columntype>
+						<columntype>							
+							<value>HYBRIS.LONG_STRING</value>
+						</columntype>
+						</persistence>
+						</attribute>
+					</attributes>
+			</itemtype>
+		<!-- TPR-1285 Changes -->
 			
 			<!--  Luxury Site -->
 			
@@ -9093,6 +9261,30 @@
 					</index>
 				</indexes>
 			</itemtype>
+			<!--  Added for testing for deployment streamline -->
+			<itemtype code="UserRecommendation" autocreate="true" generate="true">
+				<deployment table="UserRecommendation" typecode="18012" />
+				<attributes>
+					<attribute autocreate="true" qualifier="UserId" type="java.lang.String" generate="true">
+					    <description>Product Id for promotion</description>
+						<persistence type="property" />
+						<modifiers unique="true" optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="recommendationId" type="java.lang.String" generate="true">
+					    <description>Seller Id for promotion</description>
+						<persistence type="property" />
+						<modifiers unique="true" optional="false" />
+					</attribute>
+					
+					<attribute autocreate="true" qualifier="UserType" type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" unique="false" optional="true" />
+					</attribute>
+					
+				</attributes>
+				
+			</itemtype>
+			
 			</typegroup>
 			
 			
@@ -9191,6 +9383,80 @@
 						</indexes>
 					</itemtype>
 				</typegroup>
+			
+		<!-- TPR-1285 Dynamic Sitemap -->
+		<typegroup name="Seo">
+			<itemtype code="SiteMapMediaCronJob" autocreate="false"
+				generate="false" extends="CronJob">
+				<description>Cronjob to generate the sitemap media per site</description>
+				<attributes>
+					<attribute qualifier="updateType" type="siteMapUpdateModeEnum">
+						<modifiers optional="false" />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+		</typegroup>
+		
+		
+		<!-- update the message for Freebie product TPR-1754 -->
+		
+		<typegroup name="FreebieEngine">
+			<itemtype code="FreebieDetail" autocreate="true" generate="true">
+				<deployment table="FreebieDetail" typecode="17020" />
+				<attributes>
+					<attribute autocreate="true" qualifier="freebieId" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers unique="true" optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="freebieMsg" type="java.lang.String" generate="true">
+					<persistence type="property" />
+					<modifiers read="true" write="true" unique="false" optional="true" />
+					</attribute>										
+				</attributes>
+				<indexes>
+					<index name="freebieId_Index">
+						<key attribute="freebieId" />
+					</index>
+				</indexes>
+			</itemtype>
+			<itemtype code="ProductFreebieDetail" autocreate="true" generate="true">
+				<deployment table="ProductFreebieDetail" typecode="17021" />
+				<attributes>
+					<attribute autocreate="true" qualifier="ussId" type="java.lang.String" generate="true">
+					    <description>UssId for freebie</description>
+						<persistence type="property" />
+						<modifiers unique="true" optional="false" />
+					</attribute>
+					<!-- <attribute autocreate="true" qualifier="sellerId" type="java.lang.String" generate="true">
+					    <description>Seller Id for freebie</description>
+						<persistence type="property" />
+						<modifiers unique="true" optional="false" />
+					</attribute> -->
+					<attribute qualifier='startDate' type="java.util.Date"  generate="true">
+						<description>Date on which the product promotion would start</description>
+						<modifiers read="true" write="true" optional="false"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier='endDate' type="java.util.Date"  generate="true">
+						<description>Date on which the product promotion would start</description>
+						<modifiers read="true" write="true" optional="false"/>
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+				<indexes>
+					<index name="freebieProductId_Index">
+						<key attribute="ussId" />
+					</index>
+					<!-- <index name="freebieSellerId_Index">
+						<key attribute="sellerId" />
+					</index> -->
+				</indexes>
+			</itemtype>
+			</typegroup>
+				
+
      
      	<typegroup name="BulkCancelProcessForOrder">
 			<itemtype code="BulkCancellationProcess" extends="GenericItem" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.BulkCancellationProcess">
@@ -9223,5 +9489,6 @@
 				</attributes>
 			</itemtype>
 		</typegroup>
+
 	</itemtypes>
 </items>

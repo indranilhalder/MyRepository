@@ -244,8 +244,8 @@ public class HomePageController extends AbstractPageController
 
 				if (component instanceof MplShowcaseComponentModel)
 				{
-					//TPR-559 Show/Hide Components and Sub-components
-					if (component.getVisible().booleanValue())
+					//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+					if (component.getVisible().booleanValue() && homepageComponentService.showOnTimeRestriction(component))
 					{
 						final MplShowcaseComponentModel brandsYouLoveComponent = (MplShowcaseComponentModel) component;
 						brandsYouLoveJson = getJSONForShowcaseComponent(brandsYouLoveComponent);
@@ -290,6 +290,7 @@ public class HomePageController extends AbstractPageController
 			title = showCaseComponent.getTitle();
 		}
 		showCaseComponentJson.put(TITLE, title);
+
 		final JSONArray subComponentJsonArray = new JSONArray();
 
 		if (CollectionUtils.isNotEmpty(showCaseComponent.getShowcaseItems()))
@@ -299,8 +300,8 @@ public class HomePageController extends AbstractPageController
 			String brandLogoAltText = EMPTY_STRING;
 			for (final MplShowcaseItemComponentModel showcaseItem : showCaseComponent.getShowcaseItems())
 			{
-				//TPR-559 Show/Hide Components and Sub-components
-				if (showcaseItem.getVisible().booleanValue())
+				//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+				if (showcaseItem.getVisible().booleanValue() && homepageComponentService.showOnTimeRestriction(showcaseItem))
 				{
 					final JSONObject showCaseItemJson = new JSONObject();
 					showCaseItemJson.put("compId", showcaseItem.getUid());
@@ -338,7 +339,10 @@ public class HomePageController extends AbstractPageController
 				}
 			}
 		}
-
+		// Changes implemented for TPR-1121
+		showCaseComponentJson.put("autoPlay", showCaseComponent.getAutoPlay());
+		showCaseComponentJson.put("slideBy", showCaseComponent.getSlideBy());
+		showCaseComponentJson.put("autoplayTimeout", showCaseComponent.getAutoplayTimeout());
 		showCaseComponentJson.put("subComponents", subComponentJsonArray);
 
 		return showCaseComponentJson;
@@ -583,17 +587,24 @@ public class HomePageController extends AbstractPageController
 
 				if (component instanceof ProductCarouselComponentModel)
 				{
-					//TPR-559 Show/Hide Components and Sub-components
-					if (component.getVisible().booleanValue())
+					//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+					if (component.getVisible().booleanValue() && homepageComponentService.showOnTimeRestriction(component))
 					{
 						final ProductCarouselComponentModel newAndExclusiveComponent = (ProductCarouselComponentModel) component;
-
 						String title = EMPTY_STRING;
+
 						if (StringUtils.isNotEmpty(newAndExclusiveComponent.getTitle()))
 						{
 							title = newAndExclusiveComponent.getTitle();
 						}
+
 						newAndExclusiveJson.put(TITLE, title);
+
+						// Changes implemented for TPR-1121
+						newAndExclusiveJson.put("autoPlay", newAndExclusiveComponent.getAutoPlayNewIn());
+						newAndExclusiveJson.put("slideBy", newAndExclusiveComponent.getSlideByNewIn());
+						newAndExclusiveJson.put("autoplayTimeout", newAndExclusiveComponent.getAutoplayTimeoutNewIn());
+
 						final JSONArray newAndExclusiveJsonArray = new JSONArray();
 
 						if (CollectionUtils.isNotEmpty(newAndExclusiveComponent.getProducts()))
@@ -664,8 +675,10 @@ public class HomePageController extends AbstractPageController
 					else
 					{
 						LOG.info("Component visiblity set to false");
+
 					}
 				}
+
 			}
 		}
 		catch (final EtailBusinessExceptions e)
@@ -730,15 +743,21 @@ public class HomePageController extends AbstractPageController
 			{
 				if (buyBoxData.getSpecialPrice() != null)
 				{
-					productPrice = buyBoxData.getSpecialPrice().getFormattedValue();
+					//productPrice = buyBoxData.getSpecialPrice().getFormattedValue();
+					/* TPR-182 */
+					productPrice = buyBoxData.getSpecialPrice().getFormattedValueNoDecimal();
 				}
 				else if (buyBoxData.getPrice() != null)
 				{
-					productPrice = buyBoxData.getPrice().getFormattedValue();
+					//productPrice = buyBoxData.getPrice().getFormattedValue();
+					/* TPR-182 */
+					productPrice = buyBoxData.getPrice().getFormattedValueNoDecimal();
 				}
 				else
 				{
-					productPrice = buyBoxData.getMrp().getFormattedValue();
+					//productPrice = buyBoxData.getMrp().getFormattedValue();
+					/* TPR-182 */
+					productPrice = buyBoxData.getMrp().getFormattedValueNoDecimal();
 				}
 			}
 			LOG.info("ProductPrice>>>>>>>" + productPrice);
@@ -854,8 +873,8 @@ public class HomePageController extends AbstractPageController
 
 				if (component instanceof MplShowcaseComponentModel)
 				{
-					//TPR-559 Show/Hide Components and Sub-components
-					if (component.getVisible().booleanValue())
+					//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+					if (component.getVisible().booleanValue() && homepageComponentService.showOnTimeRestriction(component))
 					{
 						final MplShowcaseComponentModel collectionShowcaseComponent = (MplShowcaseComponentModel) component;
 						collectionShowcase = getJSONForShowcaseComponent(collectionShowcaseComponent);

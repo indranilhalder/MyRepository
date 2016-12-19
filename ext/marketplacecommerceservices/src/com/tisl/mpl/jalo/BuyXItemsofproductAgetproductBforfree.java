@@ -155,7 +155,7 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 					if (realQuantity >= qualifyingCount && flagForDeliveryModeRestrEval)
 					{
 						final Map<String, Integer> validProductList = getDefaultPromotionsManager().getSortedValidProdUssidMap(
-								validProductUssidMap, realQuantity, qualifyingCount, ctx, restrictionList);
+								validProductUssidMap, realQuantity, qualifyingCount, ctx, restrictionList, getCode());
 
 						//Gift Products Could be multiple
 						final List<Product> productList = (List<Product>) this.getGiftProducts(ctx);

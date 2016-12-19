@@ -239,8 +239,8 @@
 								    <div class="item-price delivery-price">
 											<ycommerce:testId code="cart_totalProductPrice_label">
 											<c:choose>
-											<c:when test="${not empty entry.totalSalePrice}">
-												<format:price priceData="${entry.totalSalePrice}"
+											<c:when test="${not empty entry.netSellingPrice}">
+												<format:price priceData="${entry.netSellingPrice}"
 													displayFreeForZero="true" />
 													</c:when>
 													<c:otherwise>

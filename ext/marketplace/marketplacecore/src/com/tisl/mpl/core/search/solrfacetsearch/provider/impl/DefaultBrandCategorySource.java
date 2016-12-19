@@ -264,7 +264,7 @@ public class DefaultBrandCategorySource implements CategorySource
 					}
 					catch (final UnknownIdentifierException localUnknownIdentifierException)
 					{
-						LOG.warn("Failed to load category [" + categoryCode + "] from catalog version ["
+						LOG.debug("Failed to load category [" + categoryCode + "] from catalog version ["
 								+ catalogVersionToString(catalogVersion) + "]");
 					}
 				}
@@ -272,7 +272,7 @@ public class DefaultBrandCategorySource implements CategorySource
 
 			if (result.isEmpty())
 			{
-				LOG.error("Failed to find Category with code [" + categoryCode + "] in catalog versions ["
+				LOG.debug("Failed to find Category with code [" + categoryCode + "] in catalog versions ["
 						+ catalogVersionsToString(catalogVersions) + "]");
 			}
 			else

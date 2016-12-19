@@ -488,15 +488,37 @@ ACC.carousel = {
 		});
 	},
 	blpTopDealsCarousel: function(){
+		
+		//changes for tpr-599(BLP and CLP changes)
+		
+		var slideBy= $('#slideBy').val();
+		var autoplayTimeout= $('#autoplayTimeout').val();
+		var autoPlay= $('#autoPlay').val();
+		
+		if(slideBy){
+		   	slideBy= $('#slideBy').val();
+			}else{
+				
+				slideBy=1;	
+			}
+		
+		if(autoplayTimeout){
+			autoplayTimeout= $('#autoplayTimeout').val();
+			}else{
+				
+				autoplayTimeout=5000;	
+			}
+		
 		$(".top_deal_blp #mplAdvancedCategoryCarousel").owlCarousel({
 					items:5,
             		loop: true,
             		nav:true,
             		dots:false,
             		navText:[],
-            		autoplay: true,
-                    autoHeight : true,
-                    autoplayTimeout: 5000,
+            		autoplay: autoPlay?$.parseJSON(autoPlay):true,
+                    autoHeight : false,
+                    autoplayTimeout: autoplayTimeout,
+                    slideBy: slideBy,
             		responsive : {
             			// breakpoint from 0 up
             			0 : {
@@ -536,15 +558,37 @@ ACC.carousel = {
 	
 
 	ClpTopDealsCarousel: function(){
+		
+		//changes for tpr-599(BLP and CLP changes)
+		
+		var slideBy= $('#slideByOffer').val();
+		var autoPlay= $('#autoPlayOffer').val();
+		var autoplayTimeout= $('#autoplayTimeoutOffer').val();
+		
+		if(slideBy){
+			slideBy= $('#slideByOffer').val();
+			}else{
+				
+				slideBy=1;	
+			}
+		
+		if(autoplayTimeout){
+			autoplayTimeout= $('#autoplayTimeoutOffer').val();
+			}else{
+				
+				autoplayTimeout=5000;	
+			}
+		
 		$(".top_deal .offersCarousel").owlCarousel({
 					items:5,
             		loop: true,
             		nav:false,
             		dots:false,
             		navText:[],
-            		autoplay: true,
-                    autoHeight : true,
-                    autoplayTimeout: 5000,
+            		autoplay: autoPlay?$.parseJSON(autoPlay):true,
+                    autoHeight : false,
+                    autoplayTimeout: autoplayTimeout,
+                    slideBy: slideBy,
             		responsive : {
             			// breakpoint from 0 up
             			0 : {

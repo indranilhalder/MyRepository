@@ -184,8 +184,9 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 
 				//Promotion Value Calculations
 				final int totalFactorCount = totalCount / eligibleQuantity.intValue();
-				final Map<String, Integer> validProductList = getDefaultPromotionsManager().getSortedValidProdUssidMap(
-						validProductUssidMap, totalCount, eligibleQuantity.longValue(), paramSessionContext, restrictionList);
+				final Map<String, Integer> validProductList = getDefaultPromotionsManager()
+						.getSortedValidProdUssidMap(validProductUssidMap, totalCount, eligibleQuantity.longValue(),
+								paramSessionContext, restrictionList, getCode());
 
 				int totalValidProdCount = 0;
 				for (final String key : validProductList.keySet())

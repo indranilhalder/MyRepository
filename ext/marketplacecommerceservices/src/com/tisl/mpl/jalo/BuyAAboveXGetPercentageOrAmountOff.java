@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -116,7 +117,12 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 			{
 				LOG.debug("Promotion Restriction and Channel Satisfied");
 				final Map<String, AbstractOrderEntry> validProductUssidMap = getValidProductList(cart, ctx);
-
+				final Set<String> validSetAfterStockCheck = getDefaultPromotionsManager().getValidMapAfterStockLevelRestriction(
+						validProductUssidMap, getCode(), restrictionList);
+				if (null != validProductUssidMap)
+				{
+					validProductUssidMap.keySet().retainAll(validSetAfterStockCheck);
+				}
 				if (!getDefaultPromotionsManager().promotionAlreadyFired(ctx, validProductUssidMap))
 				{
 					isMultipleSeller = getMplPromotionHelper().checkMultipleSeller(restrictionList);
@@ -125,6 +131,8 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 						Map<String, Map<String, AbstractOrderEntry>> multiSellerValidUSSIDMap = new HashMap<String, Map<String, AbstractOrderEntry>>();
 						multiSellerValidUSSIDMap = getMplPromotionHelper().populateMultiSellerData(validProductUssidMap,
 								productSellerDetails, ctx);
+
+
 						for (final Map.Entry<String, Map<String, AbstractOrderEntry>> multiSellerData : multiSellerValidUSSIDMap
 								.entrySet())
 						{
@@ -161,6 +169,19 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
 		}
 		return promotionResults;
+	}
+
+	/**
+	 * @param multiSellerValidUSSIDMap
+	 * @param restrictionList
+	 * @return
+	 */
+	private Map<String, Map<String, AbstractOrderEntry>> getValidMapAfterStockLevelRestriction(
+			final Map<String, Map<String, AbstractOrderEntry>> multiSellerValidUSSIDMap,
+			final List<AbstractPromotionRestriction> restrictionList)
+	{
+		// YTODO Auto-generated method stub
+		return null;
 	}
 
 	/**

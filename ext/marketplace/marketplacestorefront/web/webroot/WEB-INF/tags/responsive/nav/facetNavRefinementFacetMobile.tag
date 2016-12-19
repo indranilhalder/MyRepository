@@ -90,7 +90,7 @@ function navigateToPage(queryString,textString)
 							<c:set var="colorAry" value="${fn:split(facetValue.code, '_')}" />
 							<c:choose>
 								<c:when test="${colorAry[0]=='Multi' || colorAry[0]=='multi'}">
-								<form action="${url}" method="get"> 
+								<form action="${url}" method="get" style="background:url('${commonResourcePath}/images/multi.jpg'); border:1px solid rgb(204, 211, 217); height:26px; width: 26px; background-size:100%;"> 
 								<input type="hidden" name="offer" value="${offer}"/>
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
@@ -98,7 +98,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 								<input type="hidden" name="isFacet" value="true"/>
 								<input type="hidden" name="facetValue" value="${facetValue.code}"/>
-								<input type="submit" value="" style="background:url('${commonResourcePath}/images/multi.jpg');border:1px solid rgb(204, 211, 217);height:36px;padding: 13px 17px; width:36px;background-size:100%;">
+								<input type="button" class="js-facet-colourbutton" value="" style="background-color: transparent; border:none; height:36px; padding: 13px 17px; width:36px;">
 								<span><span>All Color</span></span>
 								</form>
 								<%-- <a   onclick="navigateToPage('${facetValue.query.query.value}','${searchPageData.freeTextSearch}')" >
@@ -109,7 +109,7 @@ function navigateToPage(queryString,textString)
 								</c:when> 
 								<c:otherwise>
 								<c:set var="colorHexCode" value="#${colorAry[1]}" />
-								<form action="${url}" method="get"> 
+								<form action="${url}" method="get"  style="background-color:${colorHexCode}; border:1px solid rgb(204, 211, 217); height: 26px; width: 26px;" > 
 								<input type="hidden" name="offer" value="${offer}"/>
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
@@ -117,7 +117,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>							
 								<input type="hidden" name="isFacet" value="true"/>
 								<input type="hidden" name="facetValue" value="${facetValue.code}"/>
-								<input type="button" class="js-facet-colourbutton" style="background-color:${colorHexCode}; border:1px solid rgb(204, 211, 217); height: 36px;    padding: 13px 17px;"  />
+								<input type="button" class="js-facet-colourbutton" style="background-color:transparent; border:none; height: 36px; padding: 13px 17px;" />
 								<%-- <input type="submit" value="" style="background-color:${colorHexCode}; border:1px solid rgb(204, 211, 217); height: 36px;    padding: 13px 17px;"  /> --%>
 								<span><span>${facetValue.name}</span></span>
 								</form>
@@ -193,7 +193,7 @@ function navigateToPage(queryString,textString)
 							<c:set var="colorAry" value="${fn:split(facetValue.code, '_')}" />
 							<c:choose>
 								<c:when test="${colorAry[0]=='Multi' || colorAry[0]=='multi'}">
-							<form action="${url}" method="get"> 
+							<form action="${url}" method="get" style="background:url('${commonResourcePath}/images/multi.jpg'); border:1px solid rgb(204, 211, 217); height:26px; width:26px; background-size:100%;"> 
 								<input type="hidden" name="offer" value="${offer}"/>
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
@@ -201,7 +201,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 								<input type="hidden" name="isFacet" value="true"/>
 								<input type="hidden" name="facetValue" value="${facetValue.code}"/>
-								<input type="submit" value="" style="background:url('${commonResourcePath}/images/multi.jpg'); border:1px solid rgb(204, 211, 217);height:36px;padding: 13px 17px; width:36px;background-size:100%;">
+								<input type="button" class="js-facet-colourbutton" value="" style="background-color: transparent; border:none; height:36px; padding: 13px 17px; width:36px;">
 								<span><span>All Color</span></span>
 								</form>
 								<%-- <a href="#">
@@ -213,7 +213,7 @@ function navigateToPage(queryString,textString)
 								<c:otherwise>
 								<c:set var="colorHexCode" value="#${colorAry[1]}" />
 								<!-- <a href="#" ></a> --> 
-							    <form action="${url}" method="get"> 
+							    <form action="${url}" method="get" style="background-color:${colorHexCode}; border:1px solid rgb(204, 211, 217); height: 26px; width: 26px;"> 
 								<input type="hidden" name="offer" value="${offer}"/>
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
@@ -222,7 +222,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="facetValue" value="${facetValue.code}"/>
 								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 								<!-- <input type="submit" value="" style="background-color:${colorHexCode}; border:1px solid rgb(204, 211, 217); height: 36px;    padding: 13px 17px;"  />-->
-								<input type="button" class="js-facet-colourbutton" style="background-color:${colorHexCode}; border:1px solid rgb(204, 211, 217); height: 36px;    padding: 13px 17px;">
+								<input type="button" class="js-facet-colourbutton" style="background-color: transparent; border: none; height: 36px; padding: 13px 17px;">
 								<span><span>${facetValue.name}</span></span>
 									<%-- <c:if test="${facetData.code == 'inStockFlag'}">
 									<c:if test="${facetValue.code == 'true' && facetStockSize=='2'}">
@@ -468,12 +468,12 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="isFacet" value="true"/>							
 								<input type="hidden" id="facetValue" name="facetValue" value="${facetValue.code}"/>						
 								<spring:theme code="text.minPriceSearch.placeholder" var="minPriceSearchPlaceholder" />
-							    <input class="minPriceSearchTxt" type="text" id="customMinPrice" name="customMinPrice" width="30" height="20" placeholder="${minPriceSearchPlaceholder}" onkeypress="return isNumber(event)">							
+							    <input class="minPriceSearchTxt" type="text" id="customMinPriceMob" name="customMinPrice" width="30" height="20" placeholder="${minPriceSearchPlaceholder}" onkeypress="return isNumber(event)">							
 							    <spring:theme code="text.maxPriceSearch.placeholder" var="maxPriceSearchPlaceholder" />
 							    <span>-</span>
-							    <input class="maxPriceSearchTxt" type="text" id="customMaxPrice" name="customMaxPrice" width="30" height="20" placeholder="${maxPriceSearchPlaceholder}" onkeypress="return isNumber(event)">
+							    <input class="maxPriceSearchTxt" type="text" id="customMaxPriceMob" name="customMaxPrice" width="30" height="20" placeholder="${maxPriceSearchPlaceholder}" onkeypress="return isNumber(event)">
 							   
-								<input type="button" name ="submitPriceFilter" id ="applyCustomPriceFilter"	value="GO"/>
+								<input type="button" name ="submitPriceFilter" id ="applyCustomPriceFilterMob"	value="GO"/>
 						</form>							
 		</c:if>
 		</div>

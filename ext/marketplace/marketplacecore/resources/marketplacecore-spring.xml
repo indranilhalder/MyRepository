@@ -63,6 +63,10 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 			<!-- Added for offer Engine, TPR-589 -->	
 <import resource="classpath:/marketplacecore/integration/hot-folder-marketplace-offer-product-details.xml"/>
 
+	
+	<!-- update the message for Freebie product TPR-1754 -->
+
+<import resource="classpath:/marketplacecore/integration/hot-folder-marketplace-freebie-product-details.xml"/>
 		
 <!-- TPR-1316 -->	
 	<import
@@ -293,6 +297,15 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="mediaContainerService" ref="mediaContainerService" />
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 		<property name="mediaFormat" value="437Wx649H" />
+	</bean>
+	
+	<!--TPR-796  -->
+	<bean id="mplLuxurySearchImageValueProvider"
+		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MPLCustomLuxurySearchImageValueProvider">
+		<property name="mediaService" ref="mediaService" />
+		<property name="mediaContainerService" ref="mediaContainerService" />
+		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+		<property name="mediaFormat" value="320Wx357H" />
 	</bean>
 	
 	
@@ -1737,6 +1750,20 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />		
 	</bean>	
 
-		
+		<!-- TPR-1285 Dynamic Sitemap Start -->
+	<bean id="customSiteMapMediaJob"
+ 	      class="com.tisl.mpl.core.sitemap.jobs.CustomSiteMapMediaJob"
+ 	      parent="siteMapMediaJob">
+ 		<property name="mplCategoryDao" ref="mplCategoryDao"/>
+ 		<property name="mplCustomPageSiteMapGenerator" ref="mplCustomPageSiteMapGenerator"/>
+ 	</bean>	
+	<!-- TPR-1285 Dynamic Sitemap Stop -->
 	
+	<!-- for promotion price row updater job -->
+ 	<bean id="promotionPriceUpdaterJob"
+ 		class="com.tisl.mpl.core.promotion.job.PromotionPriceUpdaterJob"
+ 		autowire="byName" >
+ 	</bean>
+
+			
 </beans>

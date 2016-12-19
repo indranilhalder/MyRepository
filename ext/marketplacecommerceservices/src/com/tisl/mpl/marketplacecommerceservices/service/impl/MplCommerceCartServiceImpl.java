@@ -581,6 +581,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 									deliveryModeData.setName(checkDataValue(deliveryModel.getDeliveryMode().getName()));
 									deliveryModeData.setSellerArticleSKU(checkDataValue(pincodeRes.getUssid()));
 									deliveryModeData.setDeliveryCost(priceData);
+
+									//New Code Added for TPR-579 : TSHIP Shipping Charges
+									if (null != deliveryModel.getDeliveryFulfillModes()
+											&& StringUtils.isNotEmpty(deliveryModel.getDeliveryFulfillModes().getCode()))
+									{
+										deliveryModeData.setFulfillmentType(deliveryModel.getDeliveryFulfillModes().getCode());
+									}
 								}
 								deliveryModeDataList.add(deliveryModeData);
 							}
