@@ -490,24 +490,9 @@ ACC.carousel = {
 	blpTopDealsCarousel: function(){
 		
 		//changes for tpr-599(BLP and CLP changes)
-		
-		var slideBy= $('#slideBy').val();
-		var autoplayTimeout= $('#autoplayTimeout').val();
-		var autoPlay= $('#autoPlay').val();
-		
-		if(slideBy){
-		   	slideBy= $('#slideBy').val();
-			}else{
-				
-				slideBy=1;	
-			}
-		
-		if(autoplayTimeout){
-			autoplayTimeout= $('#autoplayTimeout').val();
-			}else{
-				
-				autoplayTimeout=5000;	
-			}
+		var slideBy= $('#slideBy').val()?$('#slideBy').val():1;
+		var autoplayTimeout= $('#autoplayTimeout').val()?$('#autoplayTimeout').val():5000;
+		var autoPlay= $('#autoPlay').val()?$.parseJSON($('#autoPlay').val()):true;
 		
 		$(".top_deal_blp #mplAdvancedCategoryCarousel").owlCarousel({
 					items:5,
@@ -515,7 +500,7 @@ ACC.carousel = {
             		nav:true,
             		dots:false,
             		navText:[],
-            		autoplay: autoPlay?$.parseJSON(autoPlay):true,
+            		autoplay: autoPlay,
                     autoHeight : false,
                     autoplayTimeout: autoplayTimeout,
                     slideBy: slideBy,
@@ -560,24 +545,9 @@ ACC.carousel = {
 	ClpTopDealsCarousel: function(){
 		
 		//changes for tpr-599(BLP and CLP changes)
-		
-		var slideBy= $('#slideByOffer').val();
-		var autoPlay= $('#autoPlayOffer').val();
-		var autoplayTimeout= $('#autoplayTimeoutOffer').val();
-		
-		if(slideBy){
-			slideBy= $('#slideByOffer').val();
-			}else{
-				
-				slideBy=1;	
-			}
-		
-		if(autoplayTimeout){
-			autoplayTimeout= $('#autoplayTimeoutOffer').val();
-			}else{
-				
-				autoplayTimeout=5000;	
-			}
+		var slideBy= $('#slideByOffer').val()?$('#slideByOffer').val():1;
+		var autoPlay= $('#autoPlayOffer').val()?$.parseJSON($('#autoPlayOffer').val()):true;
+		var autoplayTimeout= $('#autoplayTimeoutOffer').val()?$('#autoplayTimeoutOffer').val():5000;
 		
 		$(".top_deal .offersCarousel").owlCarousel({
 					items:5,
@@ -585,7 +555,7 @@ ACC.carousel = {
             		nav:false,
             		dots:false,
             		navText:[],
-            		autoplay: autoPlay?$.parseJSON(autoPlay):true,
+            		autoplay: autoPlay,
                     autoHeight : false,
                     autoplayTimeout: autoplayTimeout,
                     slideBy: slideBy,
