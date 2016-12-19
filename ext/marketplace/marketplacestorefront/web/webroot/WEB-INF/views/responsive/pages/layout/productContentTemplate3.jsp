@@ -10,14 +10,18 @@ $(window).resize(function(){
 	iframe_resize();
 });
 function iframe_resize(){
-	$('.bkg-img').show();
+	$('.Manufacturer.Temp07 .bkg-img').show();
 	var iframeHeight = $('.bkg-img').height();
 	var iframeWidth = $('.bkg-img').width();
-	$('.bkg-img').hide();
-	$('.video-container').css('width', iframeWidth);
-	$('.video-container').css('height', iframeHeight);	
+	$('.Manufacturer.Temp07 .bkg-img').hide();
+	if ($('.Manufacturer.Temp07 .video-container').length) {
+		$('.Manufacturer.Temp07 .video-container').css('width', iframeWidth);
+		$('.Manufacturer.Temp07 .video-container').css('height', iframeHeight);		
+	}
 }
-iframe_resize();
+$('.Manufacturer.Temp07 .bkg-img').on("load", function() {
+	iframe_resize();
+});	
 
 </script>
 <div class="Manufacturer Temp07">
