@@ -32,6 +32,7 @@ import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
+import de.hybris.platform.commerceservices.customer.CustomerAccountService;
 import de.hybris.platform.commerceservices.customer.DuplicateUidException;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartMergingException;
@@ -41,6 +42,7 @@ import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.commerceservices.promotion.CommercePromotionRestrictionException;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.PaginationData;
+import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControl;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControlDirective;
 import de.hybris.platform.commercewebservicescommons.dto.order.CartModificationWsDTO;
@@ -66,6 +68,8 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.user.AddressModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
@@ -74,7 +78,9 @@ import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
@@ -93,8 +99,10 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.validator.EmailValidator;
+import org.apache.http.ParseException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -114,6 +122,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.granule.json.JSON;
+import com.tisl.mpl.bin.service.BinService;
+import com.tisl.mpl.binDb.model.BinModel;
 import com.tisl.mpl.cart.impl.CommerceWebServicesCartFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
@@ -137,9 +147,12 @@ import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
+import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
+import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRequestData;
+import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData;
 import com.tisl.mpl.order.data.CartDataList;
 import com.tisl.mpl.order.data.OrderEntryDataList;
 import com.tisl.mpl.product.data.PromotionResultDataList;
@@ -151,10 +164,14 @@ import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.voucher.data.VoucherDataList;
 import com.tisl.mpl.wsdto.ApplyCouponsDTO;
+import com.tisl.mpl.wsdto.BillingAddressWsDTO;
 import com.tisl.mpl.wsdto.CartDataDetailsWsDTO;
 import com.tisl.mpl.wsdto.GetWishListProductWsDTO;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
+import com.tisl.mpl.wsdto.InventoryReservListRequestWsDTO;
 import com.tisl.mpl.wsdto.MplCartPinCodeResponseWsDTO;
+import com.tisl.mpl.wsdto.MplEDDInfoWsDTO;
+import com.tisl.mpl.wsdto.MplSelectedEDDInfoWsDTO;
 import com.tisl.mpl.wsdto.ReleaseCouponsDTO;
 import com.tisl.mpl.wsdto.ReservationListWsDTO;
 import com.tisl.mpl.wsdto.ValidateOtpWsDto;
@@ -222,6 +239,8 @@ public class CartsController extends BaseCommerceController
 	private AccountAddressFacade accountAddressFacade;
 	@Resource
 	private UserService userService;
+	@Autowired
+	private CustomerAccountService customerAccountService;
 	@Resource(name = "mplCheckoutFacade")
 	private MplCheckoutFacade mplCheckoutFacade;
 	@Resource
@@ -236,6 +255,12 @@ public class CartsController extends BaseCommerceController
 	private WishlistFacade wishlistFacade;
 	@Resource
 	private SiteConfigService siteConfigService;
+	@Resource(name = "sessionService")
+	private SessionService sessionService;
+
+	@Resource(name = "binService")
+	private BinService binService;
+
 	@Resource(name = "mplStoreLocatorFacade")
 	private MplStoreLocatorFacade mplStoreLocatorFacade;
 	@Resource
@@ -252,6 +277,8 @@ public class CartsController extends BaseCommerceController
 	//private CommerceCartService commerceCartService;
 	@Autowired
 	private Converter<CartModel, CartData> mplExtendedCartConverter;
+	@Autowired
+	private MplCommerceCartCalculationStrategy calculationStrategy;
 
 	//private static final String DEPRECATION = "deprecation";
 	private static final String APPLICATION_TYPE = "application/json";
@@ -2522,6 +2549,95 @@ public class CartsController extends BaseCommerceController
 	}
 
 	/**
+	 * shipping address
+	 *
+	 * @param address
+	 * @return BillingAddressWsDTO
+	 */
+	private BillingAddressWsDTO getShippingAddress(final AddressModel address)
+	{
+		final BillingAddressWsDTO shippingAddress = new BillingAddressWsDTO();
+		if (null != address.getLine1())
+		{
+			shippingAddress.setAddressLine1(address.getLine1());
+		}
+		if (null != address.getLine2())
+		{
+			shippingAddress.setAddressLine2(address.getLine2());
+		}
+		if (null != address.getAddressLine3())
+		{
+			shippingAddress.setAddressLine3(address.getAddressLine3());
+		}
+		if (null != address.getLandmark())
+		{
+			shippingAddress.setLandmark(address.getLandmark());
+		}
+		if (null != address.getCountry() && null != address.getCountry().getName())
+		{
+			shippingAddress.setCountry(address.getCountry().getName());
+		}
+		if (null != address.getTown())
+		{
+			shippingAddress.setTown(address.getTown());
+		}
+		if (null != address.getDistrict())
+		{
+
+			shippingAddress.setState(address.getDistrict());
+		}
+		if (null != address.getFirstname())
+		{
+			shippingAddress.setFirstName(address.getFirstname());
+		}
+		if (null != address.getLastname())
+		{
+			shippingAddress.setLastName(address.getLastname());
+		}
+		if (null != address.getPostalcode())
+		{
+			shippingAddress.setPostalcode(address.getPostalcode());
+		}
+		if (null != address.getShippingAddress())
+		{
+			shippingAddress.setShippingFlag(address.getShippingAddress());
+		}
+		if (null != address.getPhone1())
+		{
+			shippingAddress.setPhone(address.getPhone1());
+		}
+		if (null != address.getAddressType())
+		{
+			shippingAddress.setAddressType(address.getAddressType());
+		}
+		if (null != address.getPk())
+		{
+			shippingAddress.setId(address.getPk().toString());
+		}
+		//shippingAddress.setDefaultAddress(new Boolean(checkDefaultAddress(address))); Avoid instantiating Boolean objects; reference Boolean.TRUE or Boolean.FALSE or call Boolean.valueOf() instead.
+		shippingAddress.setDefaultAddress(Boolean.valueOf(checkDefaultAddress(address)));
+		return shippingAddress;
+	}
+
+	/**
+	 * check default address
+	 *
+	 * @param address
+	 * @return boolean
+	 */
+	private boolean checkDefaultAddress(final AddressModel address)
+	{
+		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+		final AddressModel defaultAddress = customerAccountService.getDefaultAddress(currentCustomer);
+		if (null != defaultAddress && null != defaultAddress.getPk() && null != address.getPk()
+				&& address.getPk().equals(defaultAddress.getPk()))
+		{
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Cart Reservation.
 	 *
 	 * @queryparam fields Response configuration (list of fields, which should be returned in response)
@@ -2532,18 +2648,20 @@ public class CartsController extends BaseCommerceController
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
 	@RequestMapping(value = "/{cartId}/softReservation", method = RequestMethod.POST)
 	@ResponseBody
-	public ReservationListWsDTO getCartReservation(@PathVariable final String cartId, @RequestParam final String pincode,
+	public ReservationListWsDTO getCartReservation(@PathVariable final String cartId, @RequestParam final String pincode,@RequestBody final InventoryReservListRequestWsDTO item,
 			@RequestParam final String type)
 	{
 		ReservationListWsDTO reservationList = new ReservationListWsDTO();
+		CartData cartData = null;
 		CartModel cart = null;
 		try
 		{
 			LOG.debug("******************* Soft reservation Mobile web service ******************" + cartId + pincode);
 			cart = mplPaymentWebFacade.findCartValues(cartId);
-			if (setFreebieDeliverMode(cart))
+			if (setFreebieDeliverMode(cartId))
 			{
-				reservationList = mplCommerceCartService.getReservation(cart, pincode, type);
+				cartData = getMplExtendedCartConverter().convert(cart);
+				reservationList = mplCommerceCartService.getReservation(cartId, cartData, pincode, type,item,SalesApplication.MOBILE);
 				LOG.debug("******************* Soft reservation Mobile web service response received from OMS ******************"
 						+ cartId);
 			}
@@ -3751,6 +3869,148 @@ public class CartsController extends BaseCommerceController
 		modelService.save(cartModel);
 	}
 
+	
+	
+	//R2.3 FL06 new API getEDD
+	@Secured(
+	{ "ROLE_CUSTOMERGROUP", "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
+	@RequestMapping(value = "/{cartId}/getEDD", method = RequestMethod.POST, consumes =
+	{ MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+	@ResponseBody
+	public MplEDDInfoWsDTO getAvailableDeliverySlots(@PathVariable final String cartId)throws WebserviceValidationException
+	{
+		MplEDDInfoWsDTO mplEDDInfoWsDTO = new MplEDDInfoWsDTO();
+		try
+		{
+			if (StringUtils.isEmpty(cartId))
+			{
+				mplEDDInfoWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+				return mplEDDInfoWsDTO;
+			}
+			CartModel cartModel = null;
+			cartModel = mplPaymentWebFacade.findCartValues(cartId);
+			InvReserForDeliverySlotsRequestData deliverySlotsRequestData = new InvReserForDeliverySlotsRequestData();
+			deliverySlotsRequestData.setCartId(cartModel.getGuid());
+			InvReserForDeliverySlotsResponseData deliverySlotsResponseData = mplCartFacade
+					.convertDeliverySlotsDatatoWsdto(deliverySlotsRequestData);
+
+			if (CollectionUtils.isNotEmpty(deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData()))
+			{
+				try
+				{
+					mplEDDInfoWsDTO = mplCartFacade.getEDDInfo(cartModel,
+							deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData());
+				}
+				catch (ParseException parseException)
+				{
+					LOG.error("CartsController WEB Extension" + parseException.getMessage());
+				}
+			}
+			else
+			{
+				mplEDDInfoWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				mplEDDInfoWsDTO.setError(e.getErrorMessage());
+			}
+			mplEDDInfoWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorCode() && e.getErrorCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.B9038))
+			{
+				mplEDDInfoWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+			else
+			{
+				mplEDDInfoWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+			if (null != e.getErrorMessage())
+			{
+				mplEDDInfoWsDTO.setError(e.getErrorMessage());
+			}
+		}
+		catch (final Exception e)
+		{
+			if (null != e.getMessage())
+			{
+				mplEDDInfoWsDTO.setError(e.getMessage());
+			}
+			mplEDDInfoWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return mplEDDInfoWsDTO;
+	}
+
+	@Secured(
+	{ "ROLE_CUSTOMERGROUP", "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
+	@RequestMapping(value = "/{cartId}/selectedEDD", method = RequestMethod.POST, consumes =
+	{ MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+	@ResponseBody
+	public WebSerResponseWsDTO setSelectedDeliverySlots(@PathVariable final String cartId,@RequestBody MplSelectedEDDInfoWsDTO mplSelectedEDDInfoWsDTO)throws WebserviceValidationException
+	{
+		WebSerResponseWsDTO webSerResponseWsDTO=new WebSerResponseWsDTO();
+		if(CollectionUtils.isEmpty(mplSelectedEDDInfoWsDTO.getSelectedEDDInfo()) || StringUtils.isEmpty(cartId)){
+			webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			return webSerResponseWsDTO;
+		}
+	
+		try
+		{
+			 CartModel cartModel = null;
+			 cartModel = mplPaymentWebFacade.findCartValues(cartId);
+			 boolean isSaved=mplCartFacade.addSelectedEDD(cartModel, mplSelectedEDDInfoWsDTO.getSelectedEDDInfo());
+			 if(isSaved){
+				 webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			 }else{
+				 webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			 }
+			
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				webSerResponseWsDTO.setError(e.getErrorMessage());
+			}
+			webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorCode() && e.getErrorCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.B9038))
+			{
+				webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+			else
+			{
+				webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+			if (null != e.getErrorMessage())
+			{
+				webSerResponseWsDTO.setError(e.getErrorMessage());
+			}
+		}
+		catch (final Exception e)
+		{
+			if (null != e.getMessage())
+			{
+				webSerResponseWsDTO.setError(e.getMessage());
+			}
+			webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		
+		return webSerResponseWsDTO;
+	}
+	
+	
 	/**
 	 * @return the baseSiteService
 	 */

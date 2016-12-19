@@ -99,6 +99,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
+import com.tisl.mpl.facades.populators.CustomAddressReversePopulator;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
@@ -167,15 +168,14 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	private Converter<CartModel, CartData> mplExtendedCartConverter;
 	@Resource
 	private MplDiscountUtil mplDiscountUtil;
-	@Resource(name = "addressReversePopulator")
-	private Populator<AddressData, AddressModel> addressReversePopulator;
 	@Resource
 	private UserService userService;
 	@Autowired
 	private CustomerAccountService customerAccountService;
 	@Autowired
 	private PriceDataFactory priceDataFactory;
-
+	@Autowired
+	private CustomAddressReversePopulator addressReversePopulator;
 	private static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
 
 	private final static Logger LOG = Logger.getLogger(MplCartWebServiceImpl.class);
@@ -2167,7 +2167,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		final AddressModel addressModel = getModelService().create(AddressModel.class);
 		try
 		{
-			getAddressReversePopulator().populate(addressData, addressModel);
+			addressReversePopulator.populate(addressData, addressModel);
 			if (null != addressData.getState())
 			{
 				addressModel.setDistrict(addressData.getState());
@@ -2643,23 +2643,6 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	public void setModelService(final ModelService modelService)
 	{
 		this.modelService = modelService;
-	}
-
-	/**
-	 * @return the addressReversePopulator
-	 */
-	public Populator<AddressData, AddressModel> getAddressReversePopulator()
-	{
-		return addressReversePopulator;
-	}
-
-	/**
-	 * @param addressReversePopulator
-	 *           the addressReversePopulator to set
-	 */
-	public void setAddressReversePopulator(final Populator<AddressData, AddressModel> addressReversePopulator)
-	{
-		this.addressReversePopulator = addressReversePopulator;
 	}
 
 }
