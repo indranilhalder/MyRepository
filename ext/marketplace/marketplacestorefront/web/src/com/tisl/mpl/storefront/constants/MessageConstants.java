@@ -192,12 +192,6 @@ public final class MessageConstants
 	public static final String ORDER_CAROUSEL_SIZE = "mpl.account.review.orderCarousel.size";
 	//feebback survey
 	public static final String FEEDBACK_SURVEY_URL = "mpl.feedback.survey";
-	public static final String SUCCESS = "success";
-	public static final String PINCODE_NOT_SERVICEABLE = "Pincode not Serviceable";
-	public static final String   UPDATED="Updated";
-	
-	//track order
-	public static final String ORDERID_EMAILID_MISMATCH_MESSAGE_KEY = "trackorder.orderid.email.mismatch.message";
 	// TPR-174
 	public static final String WELCOME_BACK_MESSAGE = "Your previous products have been added to cart . Do you want to retain them ??";
 	// Tealium
@@ -207,4 +201,11 @@ public final class MessageConstants
 	public static final String GOOGLE_LOGIN = "GOOGLE_LOGIN";
 	public static final String GOOGLEUSER = "google";
 	public static final String USER_LOGIN_TYPE = "userLoginType";
+	public static final String SUCCESS = "success";
+	public static final String PINCODE_NOT_SERVICEABLE = "Pincode not Serviceable";
+	public static final String   UPDATED="Updated";
+	
+	//track order
+	public static final String ORDERID_EMAILID_MISMATCH_MESSAGE_KEY = "trackorder.orderid.email.mismatch.message";
 }
+
