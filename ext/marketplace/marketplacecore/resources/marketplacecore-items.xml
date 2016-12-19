@@ -9303,7 +9303,7 @@
                                               
                                               	
 		<typegroup name="JewelleryModel">
-		   <itemtype code="JewelleryInformaion" extends="GenericItem" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.JewelleryInfoModel">
+		   <itemtype code="JewelleryInformation" extends="GenericItem" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.JewelleryInfoModel">
 				<deployment table="MPLJewelleryInfo" typecode="15809" />
 			    <attributes>
 			    <attribute qualifier="PCMUSSID" autocreate="true" type="java.lang.String" generate="true">
@@ -9314,7 +9314,7 @@
 			    
 			    <attribute qualifier="USSID" autocreate="true" type="java.lang.String" generate="true">
 			        <description>Weight Variant USSID</description>
-			        <modifiers optional="false" read="true" write="true" unique="true"/>
+			        <modifiers optional="false" read="true" write="true"/>
 			        <persistence type="property"/>
 			    </attribute>
 			   			    
