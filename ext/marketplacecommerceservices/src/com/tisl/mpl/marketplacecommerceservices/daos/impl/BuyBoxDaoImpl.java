@@ -74,15 +74,8 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 	@Override
 	public List<BuyBoxModel> buyBoxPrice(final String productCode)
 	{
-<<<<<<< HEAD
-
-		//final String COMMA_SEPARATED = ",";
-
-		final String SEMICOLON = "'";
-=======
 		final StringBuilder productCodes = new StringBuilder(100);
 		final Map<String, String> queryParamMap = new HashMap<String, String>();
->>>>>>> refs/remotes/origin/GOLDEN_MASTER
 		try
 		{
 			//TISPRM-56
