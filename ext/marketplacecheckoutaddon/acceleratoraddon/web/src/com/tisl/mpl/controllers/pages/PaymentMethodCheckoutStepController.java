@@ -24,6 +24,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.forms.PaymentDetailsForm;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
+import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
@@ -1358,11 +1359,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 */
 	private void setupMplPaymentPage(final Model model, final OrderData orderData) throws Exception
 	{
+		final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 		if (null == orderData)
 		{
 			//Existing code for cart
 			//getting cartdata
-			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+			
 
 			if (null != cartData && cartData.getAppliedOrderPromotions() != null)
 			{
@@ -1436,7 +1438,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 			final Double cartTotal = new Double(orderData.getTotalPrice().getValue().doubleValue());
             
-          for (final OrderEntryData cartEntryData : cartData.getEntries())
+          
+			for (final OrderEntryData cartEntryData : cartData.getEntries())
 		{	
 			final CartModel cartModel = getCartService().getSessionCart();
 			final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();

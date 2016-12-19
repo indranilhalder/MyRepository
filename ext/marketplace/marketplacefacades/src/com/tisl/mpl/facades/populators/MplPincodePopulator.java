@@ -50,7 +50,7 @@ public class MplPincodePopulator implements Populator<PincodeModel, PincodeData>
 
 		LOG.debug("Populating PincodeData from PincodeModel");
 		target.setPincode(source.getPincode());
-		target.setCityName(source.getCityName());
+		target.setCityName(source.getCity().getCityName());
 		if (null != source.getState())
 		{
 			target.setCountryCode(source.getState().getCountrykey());

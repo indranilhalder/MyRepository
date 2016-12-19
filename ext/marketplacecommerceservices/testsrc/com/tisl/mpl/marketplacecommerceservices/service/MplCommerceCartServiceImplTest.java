@@ -12,6 +12,7 @@ import de.hybris.platform.commercefacades.product.data.PincodeServiceData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
+import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartModification;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
@@ -49,6 +50,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServ
 import com.tisl.mpl.mplcommerceservices.service.data.CartSoftReservationData;
 import com.tisl.mpl.strategy.service.impl.MplDefaultCommerceAddToCartStrategyImpl;
 import com.tisl.mpl.wsdto.DeliveryModeResOMSWsDto;
+import com.tisl.mpl.wsdto.InventoryReservListRequestWsDTO;
 import com.tisl.mpl.wsdto.PinCodeDeliveryModeResponse;
 import com.tisl.mpl.wsdto.ReservationItemWsDTO;
 import com.tisl.mpl.wsdto.ReservationListWsDTO;
@@ -440,41 +442,41 @@ public class MplCommerceCartServiceImplTest
 
 	@Test
 	public void getReservation()
-	{
-		final ReservationItemWsDTO itemWsDto = Mockito.mock(ReservationItemWsDTO.class);
-		final CartSoftReservationData cartSoftReservationDataMock = Mockito.mock(CartSoftReservationData.class);
-		final CartData cartDataMock = Mockito.mock(CartData.class);
-		final CartModel cartModelMock = Mockito.mock(CartModel.class);//TODO :Please enter cart Model
-		final String pincode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter pincode
-		final ReservationListWsDTO wsDto = Mockito.mock(ReservationListWsDTO.class);
-		final List<ReservationItemWsDTO> reservationData = new ArrayList<ReservationItemWsDTO>();
-		final String reservationStatus = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter reservation status
-		final String USSID = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter ussid
-		final String availableQuantity = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter available quantity
-		itemWsDto.setAvailableQuantity(availableQuantity);
-		itemWsDto.setUSSID(USSID);
-		itemWsDto.setReservationStatus(reservationStatus);
-		reservationData.add(itemWsDto);
+	{final ReservationItemWsDTO itemWsDto = Mockito.mock(ReservationItemWsDTO.class);
+	  final CartSoftReservationData cartSoftReservationDataMock = Mockito.mock(CartSoftReservationData.class);
+	  final CartData cartDataMock = Mockito.mock(CartData.class);
+	  final String cartId = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter cart id
+	  final String pincode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter pincode
+	  final ReservationListWsDTO wsDto = Mockito.mock(ReservationListWsDTO.class);
+	  final List<ReservationItemWsDTO> reservationData = new ArrayList<ReservationItemWsDTO>();
+	  final String reservationStatus = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter reservation status
+	  final String USSID = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter ussid
+	  final String availableQuantity = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter available quantity
+	  itemWsDto.setAvailableQuantity(availableQuantity);
+	  itemWsDto.setUSSID(USSID);
+	  itemWsDto.setReservationStatus(reservationStatus);
+	  reservationData.add(itemWsDto);
 
-		final List<CartSoftReservationData> cartdatalistMock = new ArrayList<CartSoftReservationData>();
+	  final List<CartSoftReservationData> cartdatalistMock = new ArrayList<CartSoftReservationData>();
 
-		final String fulfillmentType = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter fulfillment type
-		final String deliveryMode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter delivery mode
-		final Integer quantity = Integer.valueOf(10);
-		final String isAFreebie = "Y";
-		final String type = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter type
+	  final String fulfillmentType = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter fulfillment type
+	  final String deliveryMode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter delivery mode
+	  final Integer quantity = Integer.valueOf(10);
+	  final String isAFreebie = "Y";
+	  final String type = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter type
 
-		cartSoftReservationDataMock.setFulfillmentType(fulfillmentType);
-		cartSoftReservationDataMock.setDeliveryMode(deliveryMode);
-		cartSoftReservationDataMock.setQuantity(quantity);
-		cartSoftReservationDataMock.setIsAFreebie(isAFreebie);
-		cartSoftReservationDataMock.setUSSID(USSID);
+	  cartSoftReservationDataMock.setFulfillmentType(fulfillmentType);
+	  cartSoftReservationDataMock.setDeliveryMode(deliveryMode);
+	  cartSoftReservationDataMock.setQuantity(quantity);
+	  cartSoftReservationDataMock.setIsAFreebie(isAFreebie);
+	  cartSoftReservationDataMock.setUSSID(USSID);
 
-		cartdatalistMock.add(cartSoftReservationDataMock);
+	  cartdatalistMock.add(cartSoftReservationDataMock);
+	  InventoryReservListRequestWsDTO inventoryRequest = null;
+	  SalesApplication salesApplication = null;
 
-		given(mplCommerceCartServiceImpl.populateDataForSoftReservation(cartDataMock)).willReturn(cartdatalistMock);
-		given(mplCommerceCartServiceImpl.getReservation(cartModelMock, pincode, type)).willReturn(wsDto);
-	}
+	  given(mplCommerceCartServiceImpl.populateDataForSoftReservation(cartDataMock)).willReturn(cartdatalistMock);
+	  given(mplCommerceCartServiceImpl.getReservation(cartId, cartDataMock, pincode, type,inventoryRequest,salesApplication)).willReturn(wsDto);}
 
 	@Test
 	public void populateDataForSoftReservation()
@@ -600,7 +602,7 @@ public class MplCommerceCartServiceImplTest
 		codEligible = Boolean.FALSE;
 
 
-		Mockito.when(Boolean.valueOf(mplCommerceCartServiceImpl.addCartCodEligible(deliveryModeMap, pinCodeEntry, cartModelMock)))
+		Mockito.when(Boolean.valueOf(mplCommerceCartServiceImpl.addCartCodEligible(deliveryModeMap, pinCodeEntry)))
 				.thenReturn(Boolean.valueOf((codEligible.booleanValue())));
 	}
 }

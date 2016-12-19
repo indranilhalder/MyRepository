@@ -35,6 +35,7 @@ import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.jalo.JaloSession;
@@ -123,6 +124,7 @@ import com.tisl.mpl.globalcodes.utilities.MplCodeMasterUtility;
 import com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCommerceCartDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplPincodeServiceDao;
+import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService;
@@ -272,6 +274,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	@Resource(name = "baseStoreService")
 	private BaseStoreService baseStoreService;
+	@Autowired
+	private MplCommerceCartCalculationStrategy calculationStrategy;
 
 
 	private static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
@@ -4888,7 +4892,37 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		return sellerInformation;
 	}
 
-
+	/*
+	 * @desc use to save freebie delivery mode
+	 *
+	 * @param cartModel
+	 *
+	 * @param freebieModelMap
+	 *
+	 * @param freebieParentQtyMap
+	 *
+	 * @return void
+	 *
+	 * @throws EtailNonBusinessExceptions
+	 */
+	@Override
+	public void saveDeliveryMethForFreebie(final AbstractOrderModel abstractOrderModel,
+			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, final Map<String, Long> freebieParentQtyMap)
+			throws EtailNonBusinessExceptions
+	{
+		if (abstractOrderModel != null && abstractOrderModel.getEntries() != null && freebieModelMap != null
+				&& !freebieModelMap.isEmpty())
+		{
+			for (final AbstractOrderEntryModel cartEntryModel : abstractOrderModel.getEntries())
+			{
+				if (cartEntryModel != null && cartEntryModel.getGiveAway().booleanValue()
+						&& cartEntryModel.getAssociatedItems() != null && cartEntryModel.getAssociatedItems().size() > 0)
+				{
+					saveDeliveryMethForFreebie(cartEntryModel, freebieModelMap, freebieParentQtyMap);
+				}
+			}
+		}
+	}
 
 	/*
 	 * @desc use to save freebie delivery mode
@@ -5233,7 +5267,140 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 		}
 	}
+	
+	/*
+	 * @DESC TISST-6994,TISST-6990 adding to cart COD eligible or not with Pincode serviceabilty and sship product
+	 *
+	 * @param deliveryModeMap
+	 *
+	 * @param pincodeResponseData
+	 *
+	 * @return boolean
+	 *
+	 * @throws EtailNonBusinessExceptions
+	 */
+	@Override
+	public boolean addCartCodEligible(final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap,
+			final List<PinCodeResponseData> pincodeResponseData, CartModel cartModel) throws EtailNonBusinessExceptions
+	{
 
+		boolean codEligible = true;
+		ServicesUtil.validateParameterNotNull(deliveryModeMap, "deliveryModeMap cannot be null");
+		ServicesUtil.validateParameterNotNull(pincodeResponseData, "pincodeResponseData cannot be null");
+		if (cartModel == null)
+		{
+			cartModel = getCartService().getSessionCart();
+		}
+
+		// Check pincode response , if any of the item is not cod eligible , cart will not be cod eligible
+
+		if (cartModel != null && cartModel.getEntries() != null && cartModel.getEntries().size() > 0)
+		{
+			for (final PinCodeResponseData pinCodeEntry : pincodeResponseData)
+			{
+				for (final AbstractOrderEntryModel cartEntry : cartModel.getEntries())
+				{
+					if (cartEntry != null && cartEntry.getSelectedUSSID() != null && cartEntry.getMplDeliveryMode() != null
+							&& cartEntry.getMplDeliveryMode().getDeliveryMode() != null
+							&& cartEntry.getMplDeliveryMode().getDeliveryMode().getCode() != null && pinCodeEntry != null
+							&& pinCodeEntry.getValidDeliveryModes() != null && codEligible
+							&& cartEntry.getSelectedUSSID().equalsIgnoreCase(pinCodeEntry.getUssid()))
+					{
+						final String selectedDeliveryMode = cartEntry.getMplDeliveryMode().getDeliveryMode().getCode();
+
+						for (final DeliveryDetailsData deliveryDetailsData : pinCodeEntry.getValidDeliveryModes())
+						{
+							// Checking only  for selected delivery mode in cart page with pincode serviceablity response
+							if (((selectedDeliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY) && deliveryDetailsData
+									.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.HD)) || (selectedDeliveryMode
+									.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY) && deliveryDetailsData
+									.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.ED)))
+									&& deliveryDetailsData.getIsCOD() != null && !deliveryDetailsData.getIsCOD().booleanValue())
+							{
+								codEligible = false;
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// check with buy box , for any ship product cart will not be COD eligible
+
+		if (codEligible)
+		{
+			final Iterator deliveryMapIterator = deliveryModeMap.entrySet().iterator();
+
+			while (deliveryMapIterator.hasNext() && codEligible)
+			{
+				final Map.Entry entry = (Map.Entry) deliveryMapIterator.next();
+
+				final List<MarketplaceDeliveryModeData> deliveryModeData = (List<MarketplaceDeliveryModeData>) entry.getValue();
+
+				if (deliveryModeData != null)
+				{
+					for (final MarketplaceDeliveryModeData marketplaceDeliveryModeData : deliveryModeData)
+					{
+						if (marketplaceDeliveryModeData.getCode() != null && marketplaceDeliveryModeData.getSellerArticleSKU() != null)
+						{
+							final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+									marketplaceDeliveryModeData.getSellerArticleSKU());
+
+							List<RichAttributeModel> richAttributeModel = null;
+							if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
+							{
+								richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+							}
+
+							if (richAttributeModel != null && richAttributeModel.get(0).getDeliveryFulfillModes() != null)
+							{
+								final String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
+								if (StringUtils.isNotEmpty(fulfillmentType)
+										&& fulfillmentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.SSHIP))
+								{
+									//Changes to TRUE & FALSE
+									final String isSshipCodEligble = (richAttributeModel.get(0).getIsSshipCodEligible() != null ? richAttributeModel
+											.get(0).getIsSshipCodEligible().getCode()
+											: MarketplacecommerceservicesConstants.FALSE);
+									if (StringUtils.isNotEmpty(isSshipCodEligble)
+											&& isSshipCodEligble.equalsIgnoreCase(MarketplacecommerceservicesConstants.FALSE))
+									{
+										codEligible = false;
+										break;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		//Saving cod status in cart
+		if (cartModel != null)
+		{
+
+			cartModel.setIsCODEligible(Boolean.valueOf(codEligible));
+			getModelService().save(cartModel);
+		}
+
+		return codEligible;
+	}
+
+	/**
+	 * This method recalculates order
+	 *
+	 * @param orderModel
+	 */
+	@Override
+	public void recalculateOrder(final OrderModel orderModel)
+	{
+		final CommerceCartParameter parameter = new CommerceCartParameter();
+		parameter.setEnableHooks(true);
+		parameter.setOrder(orderModel);
+		calculationStrategy.recalculateCart(parameter);
+	}
 	/**
 	 * @return the baseStoreService
 	 */
@@ -5272,4 +5439,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	{
 		this.sessionService = sessionService;
 	}
+
+
+	/* (non-Javadoc)
+	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService#recalculateOrder(de.hybris.platform.core.model.order.OrderModel)
+	 */
+	
+
 }

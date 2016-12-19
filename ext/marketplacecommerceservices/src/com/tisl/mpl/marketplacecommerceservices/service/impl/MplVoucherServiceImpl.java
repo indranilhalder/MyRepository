@@ -179,7 +179,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				//TPR-1702 : Changes for Shipping + Coupon
 				
 				// Freebie item changes
-				getMplCommerceCartService().saveDeliveryMethForFreebie(orderModel, freebieModelMap, freebieParentQtyMap);
+				getMplCommerceCartService().saveDeliveryMethForFreebie(cartModel, freebieModelMap, freebieParentQtyMap);
 
 				LOG.debug("Step 9:::Recalculation done successfully");
 

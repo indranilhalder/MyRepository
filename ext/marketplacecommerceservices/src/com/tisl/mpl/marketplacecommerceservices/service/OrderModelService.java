@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service;
 
+import de.hybris.platform.core.model.BulkCancellationProcessModel;
 import de.hybris.platform.core.model.BulkReturnProcessModel;
 import de.hybris.platform.core.model.order.OrderModel;
 
@@ -118,6 +119,12 @@ public interface OrderModelService
 	  * @return : List<BulkReturnProcessModel>
 	  */
 	 List<BulkReturnProcessModel> getBulkReturnData();
+
+
+	/**
+	 * @return
+	 */
+	List<BulkCancellationProcessModel> getBulkCancelData();
 
 
 }

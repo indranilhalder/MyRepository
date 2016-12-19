@@ -137,7 +137,7 @@
 			<!-- pincode ,latitude and longitude Model -->
 		
        <!-- TPR-970 starts -->
-		<!-- <itemtype code="State" autocreate="true"
+		 <itemtype code="State" autocreate="true"
 					 generate="true">
 					  <deployment table="MplState" typecode="25084" /> 
 			<attributes>
@@ -160,7 +160,7 @@
 							optional="false" />
 					</attribute>					
 			</attributes>
-	</itemtype> -->
+	</itemtype> 
 	<itemtype code="City" autocreate="true"
 					 generate="true">
 			<attributes>
@@ -2687,7 +2687,16 @@
 						<persistence type="property" />
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
-					</attribute>					
+					</attribute>
+					<attribute autocreate="true" qualifier="isCDAllowed"
+    					  type="java.lang.String">
+				      <persistence type="property" />
+				      <modifiers read="true" write="true" search="true" optional="true" />
+				     </attribute>
+				      <attribute autocreate="true" qualifier="isLPAWBEdit" type="java.lang.String">
+				       <persistence type="property" />
+				       <modifiers read="true" write="true" search="true" optional="true" />
+				      </attribute>					
 				</attributes>
 			</itemtype>	
 			
@@ -2772,7 +2781,7 @@
 		</itemtype>
 			<!-- TPR-1294 : Item Declaration ends -->
 		<!-- TPR-970 : changes starts -->
-			<!-- <typegroup name="Pincode">
+			 <typegroup name="Pincode">
 			<itemtype code="Pincode" extends="GenericItem"
 				jaloclass="de.hybris.platform.jalo.product.Pincode" autocreate="true"
 				generate="true">
@@ -2794,7 +2803,7 @@
 						<modifiers read="true" write="true" search="true"
 							optional="false" />
 					</attribute>
-					TPR-970 changes start
+					<!-- TPR-970 changes start -->
 					<attribute autocreate="true" qualifier="State" type="State">
 						<persistence type="property" />
 						<modifiers read="true" write="true" search="true"
@@ -2805,9 +2814,15 @@
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
 					</attribute>
+					<attribute autocreate="true" qualifier="active"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
 				</attributes>
 			</itemtype>
-		</typegroup> -->
+		</typegroup> 
 		<!-- TPR-970 changes end -->
 	</itemtypes>
 	

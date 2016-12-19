@@ -1329,7 +1329,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 		ServicesUtil.validateParameterNotNull(deliveryModeMap, "deliveryModeMap cannot be null");
 		ServicesUtil.validateParameterNotNull(pincodeResponseData, "pincodeResponseData cannot be null");
-		return mplCommerceCartService.addCartCodEligible(deliveryModeMap, pincodeResponseData, cartModel);
+		return mplCommerceCartService.addCartCodEligible(deliveryModeMap, pincodeResponseData);
 	}
 
 

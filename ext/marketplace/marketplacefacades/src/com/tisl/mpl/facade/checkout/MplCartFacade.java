@@ -480,4 +480,10 @@ public interface MplCartFacade extends CartFacade
 	 * @return boolean
 	 */
 	public boolean addSelectedEDD(CartModel cartModel, List<MplSelectedEDDForUssID> mplSelectedEDDInfo);
+
+	/**
+	 * @param cartdata
+	 * @return
+	 */
+	InvReserForDeliverySlotsResponseData convertDeliverySlotsDatatoWsdto(InvReserForDeliverySlotsRequestData cartdata);
 }

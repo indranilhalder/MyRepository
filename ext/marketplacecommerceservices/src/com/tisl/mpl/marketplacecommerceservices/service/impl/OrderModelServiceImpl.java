@@ -89,23 +89,6 @@ public class OrderModelServiceImpl implements OrderModelService
 		return getOrderModelDao().getOrder(code);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.tisl.mpl.marketplacecommerceservices.service.OrderModelService#getOrder(java.lang.String)
-	 */
-	@Override
-	public OrderModel getParentOrder(final String code)
-	{
-		return getOrderModelDao().getOrderModel(code);
-	}
-
-
-	@Override
-	public List<BulkReturnProcessModel> getBulkReturnData()
-	{
-		return getOrderModelDao().getAllBulkReturnData();
-	}
 
 	/*
 	 * @Override public void updateLoadStatus()

@@ -34,12 +34,6 @@ public interface GetOrderDetailsFacade
 	 */
 	public OrderTrackingWsDTO getOrderDetailsWithTracking(String orderCode);
 
-	/**
-	 * @param orderEntryDetail
-	 * @param subOrder
-	 * @param subOrderModel
-	 * @return
-	 */
 	public Map<String, List<AWBResponseData>> getOrderStatusTrack(OrderEntryData orderEntryDetail, OrderData subOrder,
 			OrderModel subOrderModel);
 	Map<String, List<AWBResponseData>> getOrderStatusTrack(final OrderEntryData orderEntryDetail, final OrderData subOrder,

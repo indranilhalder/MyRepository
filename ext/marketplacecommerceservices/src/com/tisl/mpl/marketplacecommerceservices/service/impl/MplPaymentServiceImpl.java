@@ -1965,7 +1965,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				discData = getMplVoucherService().checkCartAfterApply(voucher, null, orderModel, applicableOrderEntryList);
 				getMplVoucherService().setApportionedValueForVoucher(voucher, orderModel, voucher.getVoucherCode(),
 						applicableOrderEntryList);
-				getMplCommerceCartService().setTotalWithConvCharge(orderModel, orderData);
+				getMplCommerceCartService().setTotalWithConvCharge(cartModel, cartData);
 
 			}
 			//Removing the session if the session is not empty
@@ -2128,7 +2128,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				orderModel.setTotalPrice(totalPrice);
 
 				getModelService().save(orderModel);
-				getMplCommerceCartService().setTotalWithConvCharge(orderModel, orderData);
+				getMplCommerceCartService().setTotalWithConvCharge(cartModel, cartData);
 			}
 		}
 		catch (final ModelSavingException e)

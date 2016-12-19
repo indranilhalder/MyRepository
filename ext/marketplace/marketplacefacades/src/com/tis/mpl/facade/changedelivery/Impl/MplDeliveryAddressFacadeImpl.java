@@ -575,7 +575,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	@Override
 	public OTPResponseData validateOTP(final String customerID, final String enteredOTPNumber)
 	{
-		final OTPResponseData otpResponse = otpGenericService.validateOTP(customerID, null, enteredOTPNumber, OTPTypeEnum.CDA,
+		final OTPResponseData otpResponse = otpGenericService.validateLatestOTP(customerID, null, enteredOTPNumber, OTPTypeEnum.CDA,
 				Long.parseLong(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.TIMEFOROTP)));
 		return otpResponse;
 	}

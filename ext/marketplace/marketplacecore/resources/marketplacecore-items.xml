@@ -761,7 +761,8 @@
 			<value code="DoesNotFit" />
 			<value code="DamagedProduct" />
 			<value code="ReturnToOrigin" />
-
+			<value code="ISEDTOHD" />
+      		<value code="ISSDB" />
 		</enumtype>
 
 
@@ -2383,7 +2384,8 @@
 					</attribute>
 				</attributes>
 			</itemtype>
-
+			
+			
 			<itemtype code="EMIBank" autocreate="true" generate="true"
 				jaloclass="com.tisl.mpl.core.jalo.EMIBank">
 				<deployment table="MplEMIBank" typecode="18051" />
@@ -9052,7 +9054,7 @@
 
 		</typegroup>
 		<!-- pincode ,latitude and longitude Model -->
-		<typegroup name="Pincode">
+		<!-- <typegroup name="Pincode">
 			<itemtype code="Pincode" extends="GenericItem"
 				jaloclass="de.hybris.platform.jalo.product.Pincode" autocreate="true"
 				generate="true">
@@ -9075,7 +9077,7 @@
 							optional="false" />
 					</attribute>
 					
-					<!-- R2.3 FL04 Added Propertie -->
+					R2.3 FL04 Added Propertie
 					
 					<attribute autocreate="true" qualifier="cityName"
 						type="java.lang.String">
@@ -9090,12 +9092,12 @@
 						<modifiers read="true" write="true" search="true"
 							optional="false" />
 					</attribute>
-					<!-- close -->
+					close
 					
 				</attributes>
 			</itemtype>
 
-		</typegroup>
+		</typegroup> -->
 
 		<typegroup name="User">
 			<itemtype code="PrincipalGroup" generate="false" autocreate="false">

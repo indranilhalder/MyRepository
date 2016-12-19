@@ -3,7 +3,9 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
+import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
@@ -14,10 +16,12 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -25,6 +29,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.OTPModel;
 import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.enums.OTPTypeEnum;
+import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.OTPDao;
 import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
@@ -363,116 +368,116 @@ public class OTPGenericServiceImpl implements OTPGenericService
 		return otp;
 	}
 
-	//	/**
-	//	 * This method validates OTP
-	//	 *
-	//	 * @param userIdOrEmail
-	//	 * @param enteredOTPNumber
-	//	 * @param OTPType
-	//	 * @param expiryTime
-	//	 * @return boolean
-	//	 *
-	//	 */
-	//	@Override
-	//	public OTPResponseData validateOTP(final String userIdOrEmail, final String mobileNo, final String enteredOTPNumber,
-	//			final OTPTypeEnum OTPType, final long expiryTime)
-	//	{
-	//		List<OTPModel> otplist = null;
-	//		final OTPResponseData otpResponse = new OTPResponseData();
-	//
-	//		try
-	//		{
-	//			if (getConfigurationService().getConfiguration().getBoolean(OTP_ENABLED_STRING, true))
-	//			{
-	//				final UserModel user = userService.getUserForUID(userIdOrEmail);
-	//				otplist = otpDao.fetchOTP(user.getPk().toString(), OTPType);
-	//
-	//			}
-	//			else
-	//			{
-	//				otpResponse.setOTPValid(Boolean.TRUE);
-	//				otpResponse.setInvalidErrorMessage("VALID");
-	//				return otpResponse;
-	//			}
-	//		}
-	//		catch (final UnknownIdentifierException e)
-	//		{
-	//			otplist = otpDao.fetchOTP(userIdOrEmail, mobileNo, OTPType);
-	//		}
-	//		catch (final ModelSavingException ex)
-	//		{
-	//			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, ex);
-	//			throw new EtailBusinessExceptions("ModelSavingException", ex);
-	//		}
-	//		catch (final IllegalArgumentException ex)
-	//		{
-	//			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, ex);
-	//			throw new EtailNonBusinessExceptions(ex);
-	//		}
-	//		catch (final NullPointerException ex)
-	//		{
-	//			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, ex);
-	//			throw new EtailNonBusinessExceptions(ex);
-	//		}
-	//		catch (final Exception ex)
-	//		{
-	//			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, ex);
-	//			throw new EtailNonBusinessExceptions(ex);
-	//		}
-	//
-	//		//if (otplist.size() > 0)
-	//		if (CollectionUtils.isNotEmpty(otplist))
-	//		{
-	//			final OTPModel latestOTP = otplist.get(0);
-	//			LOG.debug("OTP" + latestOTP.getOTPNumber());
-	//
-	//			Date currentDate = null;
-	//			if (latestOTP.getOTPNumber().equals(enteredOTPNumber))
-	//			{
-	//				try
-	//				{
-	//					currentDate = dateFormat.parse(getCurrentDate());
-	//				}
-	//				catch (final ParseException e)
-	//				{
-	//					LOG.debug(e);
-	//				}
-	//				final long difference = currentDate.getTime() - latestOTP.getCreationtime().getTime();
-	//
-	//				LOG.debug("Time Difference is" + difference);
-	//				if (difference > expiryTime)
-	//				{
-	//					LOG.debug("Otp has expired");
-	//					otpResponse.setOTPValid(Boolean.FALSE);
-	//					otpResponse.setInvalidErrorMessage("EXPIRED");
-	//					return otpResponse;
-	//				}
-	//				else
-	//				{
-	//					//TIS-3168
-	//					LOG.error("Otp validation matched for OTP:::" + enteredOTPNumber);
-	//					//LOG.debug("Otp matched!!!!");
-	//					latestOTP.setIsValidated(Boolean.TRUE);
-	//					getModelservice().save(latestOTP);
-	//					otpResponse.setOTPValid(Boolean.TRUE);
-	//					otpResponse.setInvalidErrorMessage("VALID");
-	//					return otpResponse;
-	//				}
-	//			}
-	//			else
-	//			{
-	//				otpResponse.setOTPValid(Boolean.FALSE);
-	//				otpResponse.setInvalidErrorMessage("INVALID");
-	//				return otpResponse;
-	//			}
-	//		}
-	//		else
-	//		{
-	//			otpResponse.setOTPValid(Boolean.FALSE);
-	//			otpResponse.setInvalidErrorMessage("INVALID");
-	//			return otpResponse;
-	//		}
-	//	}
+		/**
+		 * This method validates OTP
+		 *
+		 * @param userIdOrEmail
+		 * @param enteredOTPNumber
+		 * @param OTPType
+		 * @param expiryTime
+		 * @return boolean
+		 *
+		 */
+		@Override
+		public OTPResponseData validateOTP(final String userIdOrEmail, final String mobileNo, final String enteredOTPNumber,
+				final OTPTypeEnum OTPType, final long expiryTime)
+		{
+			List<OTPModel> otplist = null;
+			final OTPResponseData otpResponse = new OTPResponseData();
+	
+			try
+			{
+				if (getConfigurationService().getConfiguration().getBoolean(OTP_ENABLED_STRING, true))
+				{
+					final UserModel user = userService.getUserForUID(userIdOrEmail);
+					otplist = otpDao.fetchOTP(user.getPk().toString(), OTPType);
+	
+				}
+				else
+				{
+					otpResponse.setOTPValid(Boolean.TRUE);
+					otpResponse.setInvalidErrorMessage("VALID");
+					return otpResponse;
+				}
+			}
+			catch (final UnknownIdentifierException e)
+			{
+				otplist = otpDao.fetchOTP(userIdOrEmail, mobileNo, OTPType);
+			}
+			catch (final ModelSavingException ex)
+			{
+				LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, ex);
+				throw new EtailBusinessExceptions("ModelSavingException", ex);
+			}
+			catch (final IllegalArgumentException ex)
+			{
+				LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, ex);
+				throw new EtailNonBusinessExceptions(ex);
+			}
+			catch (final NullPointerException ex)
+			{
+				LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, ex);
+				throw new EtailNonBusinessExceptions(ex);
+			}
+			catch (final Exception ex)
+			{
+				LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, ex);
+				throw new EtailNonBusinessExceptions(ex);
+			}
+	
+			//if (otplist.size() > 0)
+			if (CollectionUtils.isNotEmpty(otplist))
+			{
+				final OTPModel latestOTP = otplist.get(0);
+				LOG.debug("OTP" + latestOTP.getOTPNumber());
+	
+				Date currentDate = null;
+				if (latestOTP.getOTPNumber().equals(enteredOTPNumber))
+				{
+					try
+					{
+						currentDate = dateFormat.parse(getCurrentDate());
+					}
+					catch (final ParseException e)
+					{
+						LOG.debug(e);
+					}
+					final long difference = currentDate.getTime() - latestOTP.getCreationtime().getTime();
+	
+					LOG.debug("Time Difference is" + difference);
+					if (difference > expiryTime)
+					{
+						LOG.debug("Otp has expired");
+						otpResponse.setOTPValid(Boolean.FALSE);
+						otpResponse.setInvalidErrorMessage("EXPIRED");
+						return otpResponse;
+					}
+					else
+					{
+						//TIS-3168
+						LOG.error("Otp validation matched for OTP:::" + enteredOTPNumber);
+						//LOG.debug("Otp matched!!!!");
+						latestOTP.setIsValidated(Boolean.TRUE);
+						getModelservice().save(latestOTP);
+						otpResponse.setOTPValid(Boolean.TRUE);
+						otpResponse.setInvalidErrorMessage("VALID");
+						return otpResponse;
+					}
+				}
+				else
+				{
+					otpResponse.setOTPValid(Boolean.FALSE);
+					otpResponse.setInvalidErrorMessage("INVALID");
+					return otpResponse;
+				}
+			}
+			else
+			{
+				otpResponse.setOTPValid(Boolean.FALSE);
+				otpResponse.setInvalidErrorMessage("INVALID");
+				return otpResponse;
+			}
+		}
 
 
 	/**
@@ -839,6 +844,7 @@ public class OTPGenericServiceImpl implements OTPGenericService
 	{
 		this.configurationService = configurationService;
 	}
+
 
 
 }

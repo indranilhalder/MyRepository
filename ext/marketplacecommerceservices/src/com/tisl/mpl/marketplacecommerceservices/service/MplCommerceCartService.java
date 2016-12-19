@@ -17,6 +17,7 @@ import de.hybris.platform.commerceservices.order.CommerceCartModificationExcepti
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.InvalidCartException;
@@ -269,7 +270,7 @@ public interface MplCommerceCartService
 
 	public PriceData addConvCharge(final CartModel source, final CartData prototype);
 
-	public PriceData setTotalWithConvCharge(final CartModel source, final CartData prototype);
+	//public PriceData setTotalWithConvCharge(final CartModel source, final OrderData orderData);
 
 	/**
 	 * @Desc Update cart Entry
@@ -437,6 +438,18 @@ public interface MplCommerceCartService
 	 * @return
 	 */
 	List<StoreLocationResponseData> getStoreLocationsforCnC(List<StoreLocationRequestData> storeLocationRequestDataList);
+	/**
+	  * @param orderModel
+	  */
+	 void recalculateOrder(OrderModel orderModel);
+	 /**
+	  * @param deliveryModeMap
+	  * @param pincodeResponseData
+	  * @param cartModel
+	  * @return
+	  */
+	 boolean addCartCodEligible(Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap,
+	   List<PinCodeResponseData> pincodeResponseData, CartModel cartModel);
 
 	/**
 	 * @Desc Used as part of oms fallback for inventory soft reservation
@@ -461,5 +474,22 @@ public interface MplCommerceCartService
 	 * @return
 	 */
 	public InvReserForDeliverySlotsResponseData convertDeliverySlotsDatatoWsdto(InvReserForDeliverySlotsRequestData cartdata);
+
+	/**
+	 * @param source
+	 * @param prototype
+	 * @return
+	 */
+	PriceData setTotalWithConvCharge(CartModel source, CartData prototype);
+
+	/**
+	 * @param abstractOrderModel
+	 * @param freebieModelMap
+	 * @param freebieParentQtyMap
+	 * @throws EtailNonBusinessExceptions
+	 */
+	void saveDeliveryMethForFreebie(AbstractOrderModel abstractOrderModel,
+			Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, Map<String, Long> freebieParentQtyMap)
+			throws EtailNonBusinessExceptions;
 
 }

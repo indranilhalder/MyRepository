@@ -601,7 +601,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
      	<property name="mplPaymentService" ref="mplPaymentService" />
      	<property name="otpGenericService" ref="otpGenericService" />
      	<property name="blacklistService" ref="blacklistService" />
-     	<property name="businessProcessService" ref="businessProcessService" />
+     	<!-- <property name="businessProcessService" ref="businessProcessService" /> -->  <!-- Commented in R2.3  MERGE--> 
     </bean>
     <!-- Payment Ends -->
     

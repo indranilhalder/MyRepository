@@ -40,6 +40,7 @@ import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.exceptions.CalculationException;
+import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
@@ -108,6 +109,7 @@ import com.tisl.mpl.facades.MplSlaveMasterFacade;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.data.ATSResponseData;
 import com.tisl.mpl.facades.data.FreebieProduct;
+import com.tisl.mpl.facades.data.PincodeData;
 import com.tisl.mpl.facades.data.ProudctWithPointOfServicesData;
 import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
@@ -130,7 +132,7 @@ import com.tisl.mpl.storefront.web.forms.AccountAddressForm;
 import com.tisl.mpl.storefront.web.forms.validator.MplAddressValidator;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
-
+//import com.granule.json.JSONObject;
 
 @Controller
 @RequestMapping(value = "/checkout/multi/delivery-method")
@@ -176,8 +178,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	private ProductFacade productFacade;
 
 	//Unused --- commented
-	//@Resource(name = "productService")
-	//private ProductService productService;
+	@Resource(name = "productService")
+	private ProductService productService;
 
 	//@Autowired
 	//private Converter<CartModel, CartData> mplExtendedCartConverter;
@@ -2056,21 +2058,18 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLDELIVERYNEWADDRESSURL, method = RequestMethod.POST)
 	@RequireHardLogIn
-	public @ResponseBody JSONObject add(final AccountAddressForm addressForm, final BindingResult bindingResult,
-			final Model model, final HttpServletRequest request) throws CMSItemNotFoundException
+	public String add(final AccountAddressForm addressForm, final BindingResult bindingResult, final Model model)
+			throws CMSItemNotFoundException
 	{
-		//TPR-1214
-		// Save call has been changed to Ajax for saving a new address instead of HTTP request submission.
-		final JSONObject jsonObj = new JSONObject();
 		try
 		{
 			final String errorMsg = mplAddressValidator.validate(addressForm);
 			final List<StateData> stateDataList = accountAddressFacade.getStates();
 			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+
 			if ((!StringUtils.isEmpty(errorMsg) && !errorMsg.equalsIgnoreCase(ModelAttributetConstants.SUCCESS))
 					|| bindingResult.hasErrors())
 			{
-
 				this.prepareDataForPage(model);
 				model.addAttribute(MarketplacecheckoutaddonConstants.ADDRESSFORM, addressForm);
 				model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
@@ -2091,84 +2090,74 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				model.addAttribute(MarketplacecheckoutaddonConstants.SHOWEDITADDRESS, Boolean.FALSE);
 				model.addAttribute(MarketplacecheckoutaddonConstants.SHOWADDADDRESS, Boolean.TRUE);
 				timeOutSet(model);
-				//return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChooseAddNewAddressPage;
-				jsonObj.put("error", errorMsg);
+				return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChooseDeliveryMethodPage;
 			}
-			else
+
+			if (StringUtils.isNotBlank(addressForm.getCountryIso()))
 			{
-				if (StringUtils.isNotBlank(addressForm.getCountryIso()))
-				{
-					model.addAttribute(ModelAttributetConstants.REGIONS,
-							getI18NFacade().getRegionsForCountryIso(addressForm.getCountryIso()));
-					model.addAttribute(ModelAttributetConstants.COUNTRY, addressForm.getCountryIso());
-				}
+				model.addAttribute(ModelAttributetConstants.REGIONS,
+						getI18NFacade().getRegionsForCountryIso(addressForm.getCountryIso()));
+				model.addAttribute(ModelAttributetConstants.COUNTRY, addressForm.getCountryIso());
+			}
 
-				final AddressData newAddress = new AddressData();
-				newAddress.setTitleCode(addressForm.getTitleCode());
-				newAddress.setFirstName(addressForm.getFirstName());
-				newAddress.setLastName(addressForm.getLastName());
-				newAddress.setLine1(addressForm.getLine1());
-				newAddress.setLine2(addressForm.getLine2());
-				newAddress.setTown(addressForm.getTownCity());
-				newAddress.setPostalCode(addressForm.getPostcode());
-				newAddress.setBillingAddress(false);
-				newAddress.setShippingAddress(true);
-				newAddress.setAddressType(addressForm.getAddressType());
-				newAddress.setState(addressForm.getState());
-				newAddress.setPhone(addressForm.getMobileNo());
-				newAddress.setLine3(addressForm.getLine3());
-				newAddress.setLocality(addressForm.getLocality());
-				if (StringUtils.isNotBlank(addressForm.getLandmark().trim())
-						&& !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
-				{
-					newAddress.setLandmark(addressForm.getLandmark());
-				}
-				else if (null != addressForm.getOtherLandmark())
-				{
-					newAddress.setLandmark(addressForm.getOtherLandmark());
-				}
-
-				if (StringUtils.isNotEmpty(addressForm.getCountryIso()))
-				{
-					final CountryData countryData = getI18NFacade().getCountryForIsocode(addressForm.getCountryIso());
-					newAddress.setCountry(countryData);
-				}
-				if (StringUtils.isNotEmpty(addressForm.getRegionIso()))
-				{
-					final RegionData regionData = getI18NFacade().getRegion(addressForm.getCountryIso(), addressForm.getRegionIso());
-					newAddress.setRegion(regionData);
-				}
-				if (addressForm.getSaveInAddressBook() != null)
-				{
-					newAddress.setVisibleInAddressBook(addressForm.getSaveInAddressBook().booleanValue());
-					if (addressForm.getSaveInAddressBook().booleanValue() && getUserFacade().isAddressBookEmpty())
-					{
-						newAddress.setDefaultAddress(true);
-					}
-				}
-				else if (getCheckoutCustomerStrategy().isAnonymousCheckout())
+			final AddressData newAddress = new AddressData();
+			newAddress.setTitleCode(addressForm.getTitleCode());
+			newAddress.setFirstName(addressForm.getFirstName());
+			newAddress.setLastName(addressForm.getLastName());
+			newAddress.setLine1(addressForm.getLine1());
+			newAddress.setLine2(addressForm.getLine2());
+			newAddress.setTown(addressForm.getTownCity());
+			newAddress.setPostalCode(addressForm.getPostcode());
+			newAddress.setBillingAddress(false);
+			newAddress.setShippingAddress(true);
+			newAddress.setAddressType(addressForm.getAddressType());
+			newAddress.setState(addressForm.getState());
+			newAddress.setPhone(addressForm.getMobileNo());
+			newAddress.setLine3(addressForm.getLine3());
+			newAddress.setLocality(addressForm.getLocality());
+			if (StringUtils.isNotBlank(addressForm.getLandmark().trim()) && !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
+			{
+				newAddress.setLandmark(addressForm.getLandmark());
+			}
+			else if (null != addressForm.getOtherLandmark())
+			{
+				newAddress.setLandmark(addressForm.getOtherLandmark());
+			}
+			if (StringUtils.isNotEmpty(addressForm.getCountryIso()))
+			{
+				final CountryData countryData = getI18NFacade().getCountryForIsocode(addressForm.getCountryIso());
+				newAddress.setCountry(countryData);
+			}
+			if (StringUtils.isNotEmpty(addressForm.getRegionIso()))
+			{
+				final RegionData regionData = getI18NFacade().getRegion(addressForm.getCountryIso(), addressForm.getRegionIso());
+				newAddress.setRegion(regionData);
+			}
+			if (addressForm.getSaveInAddressBook() != null)
+			{
+				newAddress.setVisibleInAddressBook(addressForm.getSaveInAddressBook().booleanValue());
+				if (addressForm.getSaveInAddressBook().booleanValue() && getUserFacade().isAddressBookEmpty())
 				{
 					newAddress.setDefaultAddress(true);
-					newAddress.setVisibleInAddressBook(true);
 				}
-				accountAddressFacade.addaddress(newAddress);
-				getMplCustomAddressFacade().setDeliveryAddress(newAddress);
-				//TISUTO-12 , TISUTO-11
-				final String redirectURL = getMplCartFacade().checkPincodeAndInventory(addressForm.getPostcode());
-				if (redirectURL.trim().length() > 0)
-				{
-					jsonObj.put("redirect_url", redirectURL);
-					//return redirectURL;
-				}
-				else
-				{
-					jsonObj.put("redirect_url", getCheckoutStep().nextStep());
-				}
-
-				//Recalculating Cart Model
-				LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
-				getMplCheckoutFacade().reCalculateCart(cartData);
 			}
+			else if (getCheckoutCustomerStrategy().isAnonymousCheckout())
+			{
+				newAddress.setDefaultAddress(true);
+				newAddress.setVisibleInAddressBook(true);
+			}
+			accountAddressFacade.addaddress(newAddress);
+			getMplCustomAddressFacade().setDeliveryAddress(newAddress);
+			//TISUTO-12 , TISUTO-11
+			final String redirectURL = getMplCartFacade().checkPincodeAndInventory(addressForm.getPostcode());
+			if (redirectURL.trim().length() > 0)
+			{
+				return redirectURL;
+			}
+
+			//Recalculating Cart Model
+			LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
+			getMplCheckoutFacade().reCalculateCart(cartData);
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -3051,17 +3040,6 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			LOG.error("Exception in getting the pincode Details :: " + ex.getMessage());
 		}
 		return pincodeData;
-	}
-
-
-	private void setExpressCheckout(final CartModel serviceCart)
-	{
-		if (serviceCart.getDeliveryAddress() != null && serviceCart.getIsExpressCheckoutSelected().booleanValue())
-		{
-			serviceCart.setIsExpressCheckoutSelected(Boolean.valueOf(false));
-			serviceCart.setDeliveryAddress(null);
-			modelService.save(serviceCart);
-		}
 	}
 
 

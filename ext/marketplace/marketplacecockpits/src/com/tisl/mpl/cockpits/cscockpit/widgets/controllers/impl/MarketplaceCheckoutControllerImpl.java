@@ -380,7 +380,7 @@ public class MarketplaceCheckoutControllerImpl extends
 			{
 				for (final AbstractOrderEntryModel cartEntry : cart.getEntries()) {
 					List<PinCodeResponseData> responseData = marketplaceServiceabilityCheckHelper
-							.getResponseForPinCode(cartEntry.getProduct(), pincode,
+							.getResponseForPinCode(cart.getCode(),cartEntry.getProduct(), pincode,
 									MarketplaceCockpitsConstants.NO,
 									cartEntry.getSelectedUSSID());
 					if (responseData == null) {

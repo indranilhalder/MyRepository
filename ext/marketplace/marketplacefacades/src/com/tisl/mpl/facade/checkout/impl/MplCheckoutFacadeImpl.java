@@ -757,17 +757,14 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		catch (final NullPointerException ex)
 
 		{
-			LOG.error("Error while searching for order :" + orderNumber);
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
 		catch (final UnknownIdentifierException ex)
 		{
-			LOG.error("Error while searching for order :" + orderNumber);
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
 		catch (final Exception ex)
 		{
-			LOG.error("Error while searching for order :" + orderNumber);
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
@@ -1453,6 +1450,48 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		mplCommerceCheckoutService.beforeSubmitOrder(parameter, result);
 	}
 
+	/**
+	 * @description: It is used for fetching order details for code ,without user checking
+	 * @param orderNumber
+	 * @return OrderData
+	 * @throws EtailNonBusinessExceptions
+	 */
+	@Override
+	public OrderData getOrderDetailsForAnonymousUser(final String orderNumber)
+	{
+		try
+		{
+			LOG.debug("Searching for order number: " + orderNumber);
+			final BaseStoreModel baseStoreModel = getBaseStoreService().getCurrentBaseStore();
+			final OrderModel orderModel = getCustomerAccountService().getOrderForCode(orderNumber, baseStoreModel);
+			if (orderModel == null)
+			{
+				LOG.debug("Couldn't found order id DB for :" + orderNumber);
+				throw new UnknownIdentifierException("Order with orderGUID " + orderNumber + " not found in current BaseStore");
+			}
+			return prepareOrderAndSubOrderData(orderModel);
+		}
+		catch (final IllegalArgumentException ex)
+		{
+			LOG.error("Error while searching for order :" + orderNumber);
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+		catch (final NullPointerException ex)
+		{
+			LOG.error("Error while searching for order :" + orderNumber);
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+		catch (final UnknownIdentifierException ex)
+		{
+			LOG.error("Error while searching for order :" + orderNumber);
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+		catch (final Exception ex)
+		{
+			LOG.error("Error while searching for order :" + orderNumber);
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
 
 
 	/**
@@ -1862,6 +1901,103 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	public void setSellerBasedPromotionService(final SellerBasedPromotionService sellerBasedPromotionService)
 	{
 		this.sellerBasedPromotionService = sellerBasedPromotionService;
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see com.tisl.mpl.facade.checkout.MplCheckoutFacade#getDateAndTimeslotMapList(java.util.List, java.util.List, java.lang.String, java.lang.String, de.hybris.platform.commercefacades.order.data.OrderEntryData, com.tisl.mpl.core.model.MplLPHolidaysModel)
+	 */
+	@Override
+	public Map<String, List<String>> getDateAndTimeslotMapList(List<MplTimeSlotsModel> modelList, List<String> calculatedDateList,
+			String deteWithOutTime, String timeWithOutDate, OrderEntryData cartEntryData, MplLPHolidaysModel mplLPHolidaysModel)
+	{
+		// YTODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see com.tisl.mpl.facade.checkout.MplCheckoutFacade#constructDeliverySlotsForEDAndHD(com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData, de.hybris.platform.commercefacades.order.data.OrderEntryData, com.tisl.mpl.core.model.MplLPHolidaysModel)
+	 */
+	@Override
+	public void constructDeliverySlotsForEDAndHD(InvReserForDeliverySlotsItemEDDInfoData deliverySlotsResponse,
+			OrderEntryData cartEntryData, MplLPHolidaysModel mplLPHolidaysModel)
+	{
+		String estDeliveryDateAndTime =null;
+		if(deliverySlotsResponse.getEDD() != null && StringUtils.isNotEmpty(deliverySlotsResponse.getEDD())){
+			estDeliveryDateAndTime=deliverySlotsResponse.getEDD();
+		}else if(deliverySlotsResponse.getNextEDD() != null && StringUtils.isNotEmpty(deliverySlotsResponse.getNextEDD())){
+			estDeliveryDateAndTime=deliverySlotsResponse.getNextEDD();
+		}
+		final SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+		final String deteWithOutTime = dateUtilHelper.getDateFromat(estDeliveryDateAndTime, format);
+		final String timeWithOutDate = dateUtilHelper.getTimeFromat(estDeliveryDateAndTime);
+		List<String> calculatedDateList = null;
+		List<MplTimeSlotsModel> modelList = null;
+
+		if (cartEntryData.getMplDeliveryMode().getCode()
+				.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
+		{
+			cartEntryData
+					.setSelectedDeliveryModeForUssId(MarketplacecommerceservicesConstants.CART_HOME_DELIVERY);
+			modelList = mplConfigFacade
+					.getDeliveryTimeSlotByKey(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD);
+			
+			if(mplLPHolidaysModel.getWorkingDays().contains("0")){
+				calculatedDateList = dateUtilHelper.calculatedLpHolidays(deteWithOutTime,3);
+			}else{
+				calculatedDateList = dateUtilHelper.getDeteList(deteWithOutTime, format,3);
+			}
+			
+		}
+		else if (cartEntryData.getMplDeliveryMode().getCode()
+				.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
+		{
+			cartEntryData
+					.setSelectedDeliveryModeForUssId(MarketplacecommerceservicesConstants.CART_EXPRESS_DELIVERY);
+			modelList = mplConfigFacade.getDeliveryTimeSlotByKey(MarketplacecommerceservicesConstants.ED);
+			if(mplLPHolidaysModel.getWorkingDays().contains("0")){
+				calculatedDateList = dateUtilHelper.calculatedLpHolidays(deteWithOutTime,2);
+			}else{
+				calculatedDateList = dateUtilHelper.getDeteList(deteWithOutTime, format,2);
+			}
+		}
+		if (null != modelList)
+		{
+			final Map<String, List<String>> dateTimeslotMapList=mplCheckoutFacade.getDateAndTimeslotMapList(modelList,calculatedDateList,deteWithOutTime ,
+					timeWithOutDate, cartEntryData,mplLPHolidaysModel);
+			cartEntryData.setDeliverySlotsTime(dateTimeslotMapList);
+		}
+		final List<String> dateList = new ArrayList<String>();
+		if(null != cartEntryData.getDeliverySlotsTime() && cartEntryData.getDeliverySlotsTime().size()>0){
+			for (final Entry<String, List<String>> entry : cartEntryData.getDeliverySlotsTime().entrySet())
+			{
+				dateList.add(entry.getKey());
+			}
+			if (dateList.size() > 0)
+			{
+				final CartModel cartModel = getCartService().getSessionCart();
+				final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
+				for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
+				{
+					if (null != cartEntryModel && null != cartEntryModel.getMplDeliveryMode())
+					{
+						if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(cartEntryData.getSelectedUssid()))
+						{
+							cartEntryModel.setSddDateBetween(dateList.get(0) + MarketplacecommerceservicesConstants.AND
+									+ dateList.get(dateList.size() - 1));
+						}
+					}
+				}
+				modelService.saveAll(cartEntryList);
+				modelService.save(cartModel);
+				modelService.refresh(cartModel);
+				LOG.debug("Sdd Date Saved Successfully...");
+			}
+		}
+		
 	}
 
 

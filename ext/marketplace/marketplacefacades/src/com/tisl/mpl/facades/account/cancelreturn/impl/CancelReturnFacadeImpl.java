@@ -544,7 +544,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
 					{
 						final boolean returnReqSuccess = createRefund(subOrderModel, abstractOrderEntryModel, reasonCode,
-								salesApplication, returnAddress.getPincode(), subOrderDetails, transactionId);
+								salesApplication, returnAddress.getPincode(), subOrderDetails);
 
 						LOG.debug("**********************************Return request successful :" + returnReqSuccess);
 					}
@@ -731,7 +731,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	}
 
 	private boolean createRefund(final OrderModel subOrderModel, final AbstractOrderEntryModel abstractOrderEntryModel,
-			final String reasonCode, final SalesApplication salesApplication, final boolean returnLogisticsCheck)
+			final String reasonCode, final SalesApplication salesApplication, boolean returnLogisticsCheck)
 	{
 
 		boolean returnReqCreated = false;
@@ -2993,7 +2993,6 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		boolean omsCancellationStatus = false;
 		String pincode = null;
 
-		final String transactionId = subOrderEntry.getTransactionId();
 
 		final OrderModel subOrderModel = orderModelService.getOrder(subOrderDetails.getCode());
 		boolean bogoOrFreeBie = false;
@@ -3086,7 +3085,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
 					{
 						final boolean returnReqSuccess = createRefund(subOrderModel, abstractOrderEntryModel, reasonCode,
-								salesApplication, returnAddress.getPincode(), subOrderDetails, transactionId);
+								salesApplication, returnAddress.getPincode(), subOrderDetails);
 
 						LOG.debug("**********************************Return request successful :" + returnReqSuccess);
 					}
@@ -3151,8 +3150,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	 * @return boolean
 	 */
 	private boolean createRefund(final OrderModel subOrderModel, final AbstractOrderEntryModel abstractOrderEntryModel,
-			final String reasonCode, final SalesApplication salesApplication, final String pinCode, final OrderData subOrderDetails,
-			final String transactionId)
+			final String reasonCode, final SalesApplication salesApplication, final String pinCode, final OrderData subOrderDetails)
 	{
 
 		boolean returnReqCreated = false;
@@ -3164,8 +3162,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			returnRequestModel.setRMA(returnService.createRMA(returnRequestModel));
 			//TISEE-5471
 			//final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(subOrderModel.getCode()); //Changes for Bulk Return Initiation
-			final List<ReturnLogisticsResponseData> returnLogisticsRespList = checkReturnLogistics(subOrderDetails, pinCode,
-					transactionId);
+			final List<ReturnLogisticsResponseData> returnLogisticsRespList = checkReturnLogistics(subOrderDetails, pinCode);
 			if (CollectionUtils.isNotEmpty(returnLogisticsRespList))
 			{
 				for (final ReturnLogisticsResponseData response : returnLogisticsRespList)

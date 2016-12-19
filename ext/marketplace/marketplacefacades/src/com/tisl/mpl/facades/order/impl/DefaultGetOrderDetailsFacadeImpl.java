@@ -3,6 +3,29 @@
  */
 package com.tisl.mpl.facades.order.impl;
 
+import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
+import de.hybris.platform.commercefacades.order.data.ConsignmentData;
+import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.commercefacades.order.data.OrderEntryData;
+import de.hybris.platform.commercefacades.product.data.ImageData;
+import de.hybris.platform.commercefacades.product.data.ProductData;
+import de.hybris.platform.commerceservices.customer.CustomerAccountService;
+import de.hybris.platform.commerceservices.strategies.CheckoutCustomerStrategy;
+import de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO;
+import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
+import de.hybris.platform.ordersplitting.model.ConsignmentModel;
+import de.hybris.platform.product.ProductService;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.store.BaseStoreModel;
+import de.hybris.platform.store.services.BaseStoreService;
+import de.hybris.platform.variants.model.VariantProductModel;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,27 +37,44 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import com.sun.scenario.effect.ImageData;
-import com.sun.xml.internal.ws.util.StringUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.core.model.PcmProductVariantModel;
+import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.data.MplPaymentInfoData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
+import com.tisl.mpl.facades.data.AWBResponseData;
+import com.tisl.mpl.facades.data.StatusRecordData;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
+import com.tisl.mpl.model.OrderStatusCodeMasterModel;
+import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.order.facade.GetOrderDetailsFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
+import com.tisl.mpl.wsdto.OrderDataWsDTO;
+import com.tisl.mpl.wsdto.OrderProductWsDTO;
+import com.tisl.mpl.wsdto.OrderTrackingWsDTO;
+import com.tisl.mpl.wsdto.Ordershipmentdetailstdto;
+import com.tisl.mpl.wsdto.StatusResponseDTO;
+import com.tisl.mpl.wsdto.StatusResponseListDTO;
+import com.tisl.mpl.wsdto.StatusResponseMessageDTO;
 
 
 /**
  * @author TCS
- * 
+ *
  */
 @SuppressWarnings(
 { "PMD" })
@@ -290,14 +330,14 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 								/*
 								 * if (null != orderDetails.getSellerOrderList()) { for (final OrderData childOrder :
 								 * orderDetails.getSellerOrderList()) { if (null != childOrder.getCode()) {
-								 * 
+								 *
 								 * orderproductdto.setSellerorderno(childOrder.getCode()); } }
-								 * 
+								 *
 								 * if (null != orderproductdto.getUSSID()) {
-								 * 
+								 *
 								 * orderproductdto.setSerialno(orderproductdto.getUSSID()); } else {
 								 * orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA); }
-								 * 
+								 *
 								 * }
 								 */
 
@@ -411,7 +451,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 											/*
 											 * if (null != sellerEntry.getReplacement()) {
 											 * orderproductdto.setReplacement(sellerEntry.getReplacement());
-											 * 
+											 *
 											 * }
 											 */
 											//for return
@@ -703,14 +743,14 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 							/*
 							 * if (null != orderDetails.getSellerOrderList()) { for (final OrderData childOrder :
 							 * orderDetails.getSellerOrderList()) { if (null != childOrder.getCode()) {
-							 * 
+							 *
 							 * orderproductdto.setSellerorderno(childOrder.getCode()); } }
-							 * 
+							 *
 							 * if (null != orderproductdto.getUSSID()) {
-							 * 
+							 *
 							 * orderproductdto.setSerialno(orderproductdto.getUSSID()); } else {
 							 * orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA); }
-							 * 
+							 *
 							 * }
 							 */
 
@@ -823,7 +863,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 										/*
 										 * if (null != sellerEntry.getReplacement()) {
 										 * orderproductdto.setReplacement(sellerEntry.getReplacement());
-										 * 
+										 *
 										 * }
 										 */
 										//for return
@@ -1213,18 +1253,18 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	 * subOrder, final ConsignmentData consignment) { final AWBResponseData trackingData = new AWBResponseData();
 	 * List<StatusRecordData> statusRecords = new ArrayList<>(); StatusRecordData statusRecord = new StatusRecordData();
 	 * try {
-	 * 
+	 *
 	 * final SimpleDateFormat smdfDate = new SimpleDateFormat(MarketplacecclientservicesConstants.DATE_FORMAT_AWB); final
 	 * SimpleDateFormat smdfTime = new SimpleDateFormat(MarketplacecclientservicesConstants.TIME_FORMAT_AWB);
-	 * 
+	 *
 	 * trackingData.setIsEnabled(orderStatusCode.getEnable().booleanValue());
 	 * trackingData.setIsSelected(orderStatusCode.getDisplay().booleanValue());
-	 * 
+	 *
 	 * trackingData.setShipmentStatus(orderStatusCode.getResponseStatus());
 	 * trackingData.setResponseCode(orderStatusCode.getStatusCode());
 	 * trackingData.setIsEnabled(orderStatusCode.getEnable().booleanValue()); statusRecords = new ArrayList<>();
 	 * statusRecord = new StatusRecordData();
-	 * 
+	 *
 	 * if (null != consignment) { statusRecord.setDate(smdfDate.format(consignment.getStatusDate()));
 	 * statusRecord.setTime(smdfTime.format(consignment.getStatusDate())); } else {
 	 * statusRecord.setDate(smdfDate.format(subOrder.getCreated()));
@@ -1232,19 +1272,19 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	 * statusRecord.setStatusDescription(orderStatusCode.getStatusMessage()); statusRecords.add(statusRecord);
 	 * trackingData.setStatusRecords(statusRecords); } catch (final Exception e) { throw new
 	 * EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); }
-	 * 
+	 *
 	 * return trackingData; }
 	 */
 
 
 	/*
 	 * @param orderCode
-	 * 
+	 *
 	 * @return
 	 */
 	/*
 	 * @param orderCode
-	 * 
+	 *
 	 * @return
 	 */
 	@Override
@@ -1753,10 +1793,10 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 								//Delivery date is the final delivery date
 								/*
 								 * if (null != entry.getMplDeliveryMode()) {
-								 * 
+								 *
 								 * if (null != entry.getMplDeliveryMode().getDescription() &&
 								 * StringUtils.isNotEmpty(entry.getMplDeliveryMode().getDescription())) {
-								 * 
+								 *
 								 * orderproductdto.setDeliveryDate(entry.getMplDeliveryMode().getDescription()); } }
 								 */
 
@@ -1791,7 +1831,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 
 								/*
 								 * if (null != orderproductdto.getUSSID()) {
-								 * 
+								 *
 								 * orderproductdto.setSerialno(orderproductdto.getUSSID()); } else {
 								 * orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA); }
 								 */
@@ -1864,7 +1904,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 												 * MarketplacecommerceservicesConstants.CANCEL_ORDER_STATUS).booleanValue() &&
 												 * !entry.isGiveAway() && !entry.isIsBOGOapplied()) {
 												 * orderproductdto.setCancel(Boolean.TRUE);
-												 * 
+												 *
 												 * } else { orderproductdto.setCancel(Boolean.FALSE); } } else {
 												 * orderproductdto.setCancel(Boolean.FALSE); }
 												 */
@@ -1892,9 +1932,9 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 												 * actualCancelWindow && checkOrderStatus(consignmentStatus,
 												 * MarketplacecommerceservicesConstants.CANCEL_STATUS).booleanValue() &&
 												 * !entry.isGiveAway() && !entry.isIsBOGOapplied())
-												 * 
+												 *
 												 * { orderproductdto.setCancel(Boolean.TRUE);
-												 * 
+												 *
 												 * } else { orderproductdto.setCancel(Boolean.FALSE); } } else {
 												 * orderproductdto.setCancel(Boolean.FALSE); }
 												 */
@@ -1922,7 +1962,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 											/*
 											 * if (null != sellerEntry.getReplacement()) {
 											 * orderproductdto.setReplacement(sellerEntry.getReplacement());
-											 * 
+											 *
 											 * }
 											 */
 											//for return
@@ -2013,7 +2053,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 								 * orderproductdto.setLogisticName(consignmentModel.getCarrier()); } if (null !=
 								 * consignmentModel.getReturnCarrier()) {
 								 * orderproductdto.setReverseLogisticName(consignmentModel.getReturnCarrier()); }
-								 * 
+								 *
 								 * }
 								 */
 								//End
@@ -2391,6 +2431,159 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 		return orderTrackingWsDTO;
 	}
 
+	/*
+	 * @param orderCode
+	 *
+	 * @return
+	 */
+	/*
+	 * @param orderCode
+	 *
+	 * @return
+	 */
+	@Override
+	public Map<String, List<AWBResponseData>> getOrderStatusTrack(final OrderEntryData orderEntryDetail, final OrderData subOrder,
+			final OrderData parentOrder)
+	{
+
+		final Map<String, List<AWBResponseData>> returnMap = new HashMap<String, List<AWBResponseData>>();
+
+		List<AWBResponseData> approvalMapList = new ArrayList<AWBResponseData>();
+		List<AWBResponseData> processingMapList = new ArrayList<AWBResponseData>();
+		List<AWBResponseData> shippingMapList = new ArrayList<AWBResponseData>();
+		List<AWBResponseData> cancelMapList = new ArrayList<AWBResponseData>();
+		List<AWBResponseData> returnMapList = new ArrayList<AWBResponseData>();
+		OrderStatusCodeMasterModel trackModel = null;
+
+		final Map<String, AWBResponseData> awbApprovalMap = new LinkedHashMap<String, AWBResponseData>();
+		final Map<String, AWBResponseData> awbProcessingMap = new LinkedHashMap<String, AWBResponseData>();
+		final Map<String, AWBResponseData> awbShippingMap = new LinkedHashMap<String, AWBResponseData>();
+		final Map<String, AWBResponseData> awbCancelMap = new LinkedHashMap<String, AWBResponseData>();
+		final Map<String, AWBResponseData> awbReturnMap = new LinkedHashMap<String, AWBResponseData>();
+
+		try
+		{
+			final OrderModel orderMod = orderModelService.getOrder(subOrder.getCode());
+			final Map<String, OrderStatusCodeMasterModel> orderStatusCodeMap = orderModelService.getOrderStausCodeMasterList();
+
+			if (orderMod.getHistoryEntries().size() > 0)
+			{
+				for (final OrderHistoryEntryModel orderHistoryEntry : orderMod.getHistoryEntries())
+				{
+					if (orderEntryDetail.getOrderLineId().equalsIgnoreCase(orderHistoryEntry.getLineId()))
+					{
+						//****************************** Approval Block
+						trackModel = orderStatusCodeMap.get(MarketplaceFacadesConstants.APPROVED
+								+ MarketplacecommerceservicesConstants.STRINGSEPARATOR + orderHistoryEntry.getDescription());
+						if (null != trackModel && trackModel.getStage().equalsIgnoreCase(MarketplaceFacadesConstants.APPROVED)
+								&& !isStatusAlradyExists(awbApprovalMap, trackModel) && trackModel.getDisplay().booleanValue())
+						{
+							awbApprovalMap.put(trackModel.getDotId().trim().toUpperCase(),
+									orderTrackingDetails(trackModel, orderHistoryEntry, subOrder));
+						}
+
+						//****************************** PROCESSING Block
+						trackModel = orderStatusCodeMap.get(MarketplaceFacadesConstants.PROCESSING
+								+ MarketplacecommerceservicesConstants.STRINGSEPARATOR + orderHistoryEntry.getDescription());
+						if (null != trackModel && trackModel.getStage().equalsIgnoreCase(MarketplaceFacadesConstants.PROCESSING)
+								&& !isStatusAlradyExists(awbProcessingMap, trackModel) && trackModel.getDisplay().booleanValue())
+						{
+							awbProcessingMap.put(trackModel.getDotId().trim().toUpperCase(),
+									orderTrackingDetails(trackModel, orderHistoryEntry, subOrder));
+						}
+
+						//****************************** SHIPPING Block
+						trackModel = orderStatusCodeMap.get(MarketplaceFacadesConstants.SHIPPING
+								+ MarketplacecommerceservicesConstants.STRINGSEPARATOR + orderHistoryEntry.getDescription());
+						if (null != trackModel && trackModel.getStage().equalsIgnoreCase(MarketplaceFacadesConstants.SHIPPING)
+								&& !isStatusAlradyExists(awbShippingMap, trackModel) && trackModel.getDisplay().booleanValue())
+						{
+							awbShippingMap.put(trackModel.getDotId().trim().toUpperCase(),
+									orderTrackingDetails(trackModel, orderHistoryEntry, subOrder));
+						}
+
+
+						trackModel = orderStatusCodeMap.get(MarketplaceFacadesConstants.CANCEL
+								+ MarketplacecommerceservicesConstants.STRINGSEPARATOR + orderHistoryEntry.getDescription());
+
+						//****************************** CANCEL Block
+						if (null != trackModel && trackModel.getStage().equalsIgnoreCase(MarketplaceFacadesConstants.CANCEL)
+								&& !isStatusAlradyExists(awbCancelMap, trackModel) && trackModel.getDisplay().booleanValue())
+						{
+							if ((trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_INITIATED.getCode())
+									|| trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_IN_PROGRESS.getCode())))
+							{
+								if (awbCancelMap.size() >= 1)
+								{
+									awbCancelMap.put(trackModel.getDotId(), orderTrackingDetails(trackModel, orderHistoryEntry, subOrder));
+								}
+							}
+							else
+							{
+								awbCancelMap.put(trackModel.getDotId().trim().toUpperCase(),
+										orderTrackingDetails(trackModel, orderHistoryEntry, subOrder));
+							}
+						}
+
+						//****************************** RETURN Block
+						trackModel = orderStatusCodeMap.get(MarketplaceFacadesConstants.RETURN
+								+ MarketplacecommerceservicesConstants.STRINGSEPARATOR + orderHistoryEntry.getDescription());
+						if (null != trackModel && trackModel.getStage().equalsIgnoreCase(MarketplaceFacadesConstants.RETURN)
+								&& !isStatusAlradyExists(awbReturnMap, trackModel) && trackModel.getDisplay().booleanValue())
+						{
+							if ((trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_INITIATED.getCode())
+									|| trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_IN_PROGRESS.getCode())))
+							{
+								if (awbReturnMap.size() >= 1)
+								{
+									awbReturnMap.put(trackModel.getDotId(), orderTrackingDetails(trackModel, orderHistoryEntry, subOrder));
+								}
+							}
+							else
+							{
+								awbReturnMap.put(trackModel.getDotId().trim().toUpperCase(),
+										orderTrackingDetails(trackModel, orderHistoryEntry, subOrder));
+							}
+						}
+					}
+				}
+			}
+
+			approvalMapList = getTrackOrderList(awbApprovalMap);
+			processingMapList = getTrackOrderList(awbProcessingMap);
+			shippingMapList = getTrackOrderList(awbShippingMap);
+			cancelMapList = getTrackOrderList(awbCancelMap);
+			returnMapList = getTrackOrderList(awbReturnMap);
+
+			LOG.info("************************approvalMapList: " + approvalMapList.size());
+			LOG.info("************************processingMapList: " + processingMapList.size());
+			LOG.info("************************shippingMapList: " + shippingMapList.size());
+			LOG.info("************************cancelMapList: " + cancelMapList.size());
+			LOG.info("************************returnMapList: " + returnMapList.size());
+
+			returnMap.put(MarketplaceFacadesConstants.APPROVED, approvalMapList);
+			returnMap.put(MarketplaceFacadesConstants.PROCESSING, processingMapList);
+			returnMap.put(MarketplaceFacadesConstants.SHIPPING, shippingMapList);
+			returnMap.put(MarketplaceFacadesConstants.CANCEL, cancelMapList);
+			returnMap.put(MarketplaceFacadesConstants.RETURN, returnMapList);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
+			return returnMap;
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
+			return returnMap;
+		}
+		catch (final Exception e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
+			return returnMap;
+		}
+		return returnMap;
+	}
 	/**
 	 * @param statusResponse
 	 * @param consignment
