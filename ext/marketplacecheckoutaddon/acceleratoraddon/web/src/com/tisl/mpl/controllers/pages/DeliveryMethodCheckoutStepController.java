@@ -44,6 +44,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.storelocator.GPS;
 import de.hybris.platform.storelocator.location.Location;
@@ -107,18 +108,19 @@ import com.tisl.mpl.facades.MplSlaveMasterFacade;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.data.ATSResponseData;
 import com.tisl.mpl.facades.data.FreebieProduct;
-import com.tisl.mpl.facades.data.PincodeData;
 import com.tisl.mpl.facades.data.ProudctWithPointOfServicesData;
 import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.facades.product.data.StateData;
+import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.mplcommerceservices.service.data.CartSoftReservationData;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRequestData;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData;
+import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.sellerinfo.facades.MplSellerInformationFacade;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
@@ -128,7 +130,6 @@ import com.tisl.mpl.storefront.web.forms.AccountAddressForm;
 import com.tisl.mpl.storefront.web.forms.validator.MplAddressValidator;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
-import com.granule.json.JSONObject;
 
 
 @Controller
@@ -174,8 +175,9 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	@Resource(name = "accProductFacade")
 	private ProductFacade productFacade;
 
-	@Resource(name = "productService")
-	private ProductService productService;
+	//Unused --- commented
+	//@Resource(name = "productService")
+	//private ProductService productService;
 
 	//@Autowired
 	//private Converter<CartModel, CartData> mplExtendedCartConverter;
@@ -262,8 +264,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			getMplCouponFacade().releaseVoucherInCheckout(cartModel);
 			getMplCartFacade().removeDeliveryMode(cartModel); //TISPT-104 // Cart recalculation method invoked inside this method
 			//applyPromotions();
-			
-			
+
+
 			final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 			final String defaultPinCodeId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
 
@@ -412,11 +414,10 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			}
 			//TISPT-400 ends
 
-
+			//Double finalDeliveryCost = Double.valueOf(0.0);
 
 			//int count = 0;
-
-
+			//	Boolean selectPickupDetails = Boolean.FALSE;
 
 			if (deliveryMethodForm.getDeliveryMethodEntry() == null)
 			{
@@ -527,7 +528,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				if (cartData.getDeliveryAddress() != null)
 				{
 					LOG.debug("Express checkout selected for address id : " + cartData.getDeliveryAddress().getId());
-					
+
 					//Added the code for Delivery Method slots
 					final CartData cartDataSupport = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 					final List<String> deliveryModelList = new ArrayList<String>();
@@ -554,10 +555,12 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 								+ MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL);
 						return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL
 								+ MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL;
-					}else{
+					}
+					else
+					{
 						return getCheckoutStep().nextStep();
 					}
-					
+
 				}
 
 				deliveryAddress = (List<AddressData>) getMplCustomAddressFacade().getDeliveryAddresses(cartData.getDeliveryAddress());
@@ -693,7 +696,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		}
 
 
-
+		List<StoreLocationResponseData> response = null;
 		redirectAttributes.addFlashAttribute("deliveryMethodForm", deliveryMethodForm);
 		//create session object for deliveryMethodForm which will be used if cart contains both cnc and home delivery.
 		session.setAttribute("deliveryMethodForm", deliveryMethodForm);
@@ -702,6 +705,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
 		this.prepareDataForPage(model);
 
+		//		final CartModel cartModel = getCartService().getSessionCart();			//TISPT-400
 
 		//handle freebie
 		final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
@@ -919,13 +923,12 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				List<ProudctWithPointOfServicesData> productWithPOS = new ArrayList<ProudctWithPointOfServicesData>();
 				try
 				{
-					final List<StoreLocationResponseData> responseList = mplCartFacade
-							.getStoreLocationsforCnC(storeLocationRequestDataList);
-					//populates oms response to data object
-					if (null != responseList && responseList.size() > 0)
-					{
 
-						productWithPOS = getProductWdPos(responseList, model, freebieParentQtyMap);
+					response = mplCartFacade.getStoreLocationsforCnC(storeLocationRequestDataList);
+					if (null != response && response.size() > 0)
+					{
+						//populates oms response to data object
+						productWithPOS = getProductWdPos(response, model, freebieParentQtyMap);
 					}
 				}
 				catch (final ClientEtailNonBusinessExceptions e)
@@ -1571,7 +1574,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLDELIVERYSELECTADDRESSURL, method = RequestMethod.GET)
 	@RequireHardLogIn
-	public String selectAddress(@RequestParam("selectedAddressCode") final String selectedAddressCode, final Model model)
+	public String selectAddress(@RequestParam("selectedAddressCode") final String selectedAddressCode)
 			throws CMSItemNotFoundException
 	{
 		try
@@ -1754,7 +1757,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				String sellerScheduleDelivery = null;
 				String selectedUssId = null;
 				String fulfillmentType = null;
-				List<String> dateList ;
+				List<String> dateList;
 				final InvReserForDeliverySlotsRequestData deliverySlotsRequestData = new InvReserForDeliverySlotsRequestData();
 				deliverySlotsRequestData.setCartId(cartDataSupport.getGuid());
 				final InvReserForDeliverySlotsResponseData deliverySlotsResponseData = getMplCartFacade()
@@ -1763,8 +1766,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				final MplLPHolidaysModel mplLPHolidaysModel = mplConfigFacade
 						.getMplLPHolidays(MarketplacecommerceservicesConstants.CAMPAIGN_URL_ALL);
 				final Map<String, List<String>> dateTimeslotMapList = new HashMap<String, List<String>>();
-				
-				
+
+
 				final CartModel cartModel = getCartService().getSessionCart();
 				final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
 				for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
@@ -1776,12 +1779,12 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 							cartEntryModel.setEdScheduledDate("".trim());
 							cartEntryModel.setTimeSlotFrom("".trim());
 							cartEntryModel.setTimeSlotTo("".trim());
-							
+
 						}
 					}
-			  }
+				}
 				modelService.saveAll(cartEntryList);
-				
+
 				for (final String selectedDeliveryModes : deliveryModelList)
 				{
 					final String[] splitString = selectedDeliveryModes.split(MarketplacecommerceservicesConstants.COMMA);
@@ -1820,10 +1823,12 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 											mplCheckoutFacade.constructDeliverySlotsForEDAndHD(deliverySlotsResponse, cartEntryData,
 													mplLPHolidaysModel);
 											dateList = new ArrayList<String>();
-											if (null != cartEntryData.getDeliverySlotsTime() && cartEntryData.getDeliverySlotsTime().size() > 0)
+											if (null != cartEntryData.getDeliverySlotsTime()
+													&& cartEntryData.getDeliverySlotsTime().size() > 0)
 											{
-												
-												for (final Entry<String, List<String>> entry : cartEntryData.getDeliverySlotsTime().entrySet())
+
+												for (final Entry<String, List<String>> entry : cartEntryData.getDeliverySlotsTime()
+														.entrySet())
 												{
 													dateList.add(entry.getKey());
 												}
@@ -1833,22 +1838,25 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 											{
 												startAndEndDates = dateList.get(0) + MarketplacecommerceservicesConstants.AND
 														+ dateList.get(dateList.size() - 1);
-												
+
 												selectedDateBetWeen.put(cartEntryData.getSelectedUssid(), startAndEndDates);
 											}
 											if (deliverySlotsResponse.getIsScheduled().equalsIgnoreCase(
 													MarketplacecommerceservicesConstants.Y))
 											{
 												isScheduleServiceble = true;
-												
-											}else{
+
+											}
+											else
+											{
 												cartEntryData.setDeliverySlotsTime(dateTimeslotMapList);
 											}
 											//cartEntryData.isIsBOGOapplied() ||
-											if(cartEntryData.isGiveAway()){
+											if (cartEntryData.isGiveAway())
+											{
 												cartEntryData.setDeliverySlotsTime(dateTimeslotMapList);
 											}
-														
+
 										}
 										else if (cartEntryData.getSelectedUssid().equalsIgnoreCase(deliverySlotsResponse.getUssId())
 												&& fulfillmentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.SSHIP.toUpperCase()))
@@ -1856,11 +1864,13 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 											//isScheduleServiceble=true;
 											mplCheckoutFacade.constructDeliverySlotsForEDAndHD(deliverySlotsResponse, cartEntryData,
 													mplLPHolidaysModel);
-											
+
 											dateList = new ArrayList<String>();
-											if (null != cartEntryData.getDeliverySlotsTime() && cartEntryData.getDeliverySlotsTime().size() > 0)
+											if (null != cartEntryData.getDeliverySlotsTime()
+													&& cartEntryData.getDeliverySlotsTime().size() > 0)
 											{
-												for (final Entry<String, List<String>> entry : cartEntryData.getDeliverySlotsTime().entrySet())
+												for (final Entry<String, List<String>> entry : cartEntryData.getDeliverySlotsTime()
+														.entrySet())
 												{
 													dateList.add(entry.getKey());
 												}
@@ -2108,44 +2118,16 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				newAddress.setPhone(addressForm.getMobileNo());
 				newAddress.setLine3(addressForm.getLine3());
 				newAddress.setLocality(addressForm.getLocality());
+				if (StringUtils.isNotBlank(addressForm.getLandmark().trim())
+						&& !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
+				{
+					newAddress.setLandmark(addressForm.getLandmark());
+				}
+				else if (null != addressForm.getOtherLandmark())
+				{
+					newAddress.setLandmark(addressForm.getOtherLandmark());
+				}
 
-			final AddressData newAddress = new AddressData();
-			newAddress.setTitleCode(addressForm.getTitleCode());
-			newAddress.setFirstName(addressForm.getFirstName());
-			newAddress.setLastName(addressForm.getLastName());
-			newAddress.setLine1(addressForm.getLine1());
-			newAddress.setLine2(addressForm.getLine2());
-			newAddress.setTown(addressForm.getTownCity());
-			newAddress.setPostalCode(addressForm.getPostcode());
-			newAddress.setBillingAddress(false);
-			newAddress.setShippingAddress(true);
-			newAddress.setAddressType(addressForm.getAddressType());
-			newAddress.setState(addressForm.getState());
-			newAddress.setPhone(addressForm.getMobileNo());
-			newAddress.setLine3(addressForm.getLine3());
-			newAddress.setLocality(addressForm.getLocality());
-			if (StringUtils.isNotBlank(addressForm.getLandmark().trim()) && !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
-			{
-				newAddress.setLandmark(addressForm.getLandmark());
-			}
-			else if (null != addressForm.getOtherLandmark())
-			{
-				newAddress.setLandmark(addressForm.getOtherLandmark());
-			}
-			if (StringUtils.isNotEmpty(addressForm.getCountryIso()))
-			{
-				final CountryData countryData = getI18NFacade().getCountryForIsocode(addressForm.getCountryIso());
-				newAddress.setCountry(countryData);
-			}
-			if (StringUtils.isNotEmpty(addressForm.getRegionIso()))
-			{
-				final RegionData regionData = getI18NFacade().getRegion(addressForm.getCountryIso(), addressForm.getRegionIso());
-				newAddress.setRegion(regionData);
-			}
-			if (addressForm.getSaveInAddressBook() != null)
-			{
-				newAddress.setVisibleInAddressBook(addressForm.getSaveInAddressBook().booleanValue());
-				if (addressForm.getSaveInAddressBook().booleanValue() && getUserFacade().isAddressBookEmpty())
 				if (StringUtils.isNotEmpty(addressForm.getCountryIso()))
 				{
 					final CountryData countryData = getI18NFacade().getCountryForIsocode(addressForm.getCountryIso());
@@ -2233,8 +2215,6 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		{
 			return getCheckoutStep().nextStep();
 		}
-		//return getCheckoutStep().nextStep();
-		return jsonObj;
 	}
 
 	/**
@@ -2319,14 +2299,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			newAddress.setLine3(addressForm.getLine3());
 			newAddress.setLocality(addressForm.getLocality());
 			newAddress.setState(addressForm.getState());
-			if (StringUtils.isNotBlank(addressForm.getLandmark().trim()) && !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
-			{
-				newAddress.setLandmark(addressForm.getLandmark());
-			}
-			else if (null != addressForm.getOtherLandmark())
-			{
-				newAddress.setLandmark(addressForm.getOtherLandmark());
-			}
+
 			if (StringUtils.isNotEmpty(addressForm.getCountryIso()))
 			{
 				final CountryData countryData = getI18NFacade().getCountryForIsocode(addressForm.getCountryIso());
@@ -2784,19 +2757,19 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	/*
 	 * private List<PincodeServiceData> populatePinCodeServiceData(final String productCode, final GPS gps, final Double
 	 * configurableRadius) {
-	 *
+	 * 
 	 * final List<PincodeServiceData> requestData = new ArrayList<PincodeServiceData>(); PincodeServiceData data = null;
 	 * MarketplaceDeliveryModeData deliveryModeData = null; try { final ProductModel productModel =
 	 * productService.getProductForCode(productCode); final ProductData productData =
 	 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER,
 	 * ProductOption.PRICE));
-	 *
+	 * 
 	 * if (productData != null)
-	 *
+	 * 
 	 * { for (final SellerInformationData seller : productData.getSeller())
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * { final List<MarketplaceDeliveryModeData> deliveryModeList = new ArrayList<MarketplaceDeliveryModeData>(); data =
 	 * new PincodeServiceData(); if ((null != seller.getDeliveryModes()) && !(seller.getDeliveryModes().isEmpty())) { for
 	 * (final MarketplaceDeliveryModeData deliveryMode : seller.getDeliveryModes()) { deliveryModeData =
@@ -2814,10 +2787,10 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	 * Double(seller.getMrpPrice().getValue().doubleValue())); } else { LOG.debug("No price avaiable for seller :" +
 	 * seller.getSellerID()); continue; } if (null != seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod())) {
 	 * data.setIsCOD(seller.getIsCod()); }
-	 *
-	 *
+	 * 
+	 * 
 	 * LOG.debug("Current locations for Seller Id**********" + seller.getSellerID());
-	 *
+	 * 
 	 * @SuppressWarnings("boxing") final List<Location> storeList = pincodeServiceFacade.getSortedLocationsNearby(gps,
 	 * configurableRadius.doubleValue(), seller.getSellerID()); // Code optimized as part of performance fix TISPT-104
 	 * LOG.debug("StoreList size is :" + storeList.size()); if (CollectionUtils.isNotEmpty(storeList)) { final
@@ -2827,20 +2800,20 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	 * seller.getSellerID()); LOG.debug("seller.getUssid():" + seller.getUssid()); LOG.debug("seller.getUssid():" +
 	 * seller.getUssid()); data.setUssid(seller.getUssid());
 	 * data.setIsDeliveryDateRequired(ControllerConstants.Views.Fragments.Product.N); requestData.add(data);
-	 *
-	 *
+	 * 
+	 * 
 	 * }
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
 	 * } } catch (final EtailBusinessExceptions e) { ExceptionUtil.etailBusinessExceptionHandler(e, null); }
-	 *
+	 * 
 	 * catch (final Exception e) {
-	 *
+	 * 
 	 * throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } return requestData; }
 	 */
 
@@ -2854,7 +2827,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 *
+	 * 
 	 * final PriceData priceData = productDetailsHelper.formPriceData(mplZoneDeliveryModeValueModel.getValue());
 	 * deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
 	 * deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
@@ -2997,42 +2970,6 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method/choose";
 	}
 
-
-	/**
-	 * Getting Details about the given pincode city, state, country and list of landmarks
-	 *
-	 * @param pincode
-	 * @return PincodeData
-	 */
-
-	@RequestMapping(value = MarketplacecheckoutaddonConstants.LANDMARKS, method = RequestMethod.GET)
-	@ResponseBody
-	public PincodeData getPincodedata(@RequestParam(value = "pincode") final String pincode)
-	{
-		PincodeData pincodeData = null;
-		try
-		{
-			if (null != pincode && !StringUtils.isEmpty(pincode))
-			{
-				pincodeData = pincodeServiceFacade.getAutoPopulatePincodeData(pincode);
-			}
-		}
-		catch (final EtailNonBusinessExceptions ex)
-		{
-			LOG.error("EtailNonBusinessExceptions in getting the pincode Details :: " + ex.getErrorMessage());
-		}
-		catch (final EtailBusinessExceptions ex)
-		{
-			LOG.error("EtailBusinessExceptions in getting the pincode Details :: " + ex.getErrorMessage());
-		}
-		catch (final Exception ex)
-		{
-			LOG.error("Exception in getting the pincode Details :: " + ex.getMessage());
-		}
-		return pincodeData;
-	}
-
-
 	private void setExpressCheckout(final CartModel serviceCart)
 	{
 		if (serviceCart.getDeliveryAddress() != null && serviceCart.getIsExpressCheckoutSelected().booleanValue())
@@ -3081,6 +3018,53 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			return false;
 		}
 	}
+
+	/**
+	 * Getting Details about the given pincode city, state, country and list of landmarks
+	 *
+	 * @param pincode
+	 * @return PincodeData
+	 */
+
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.LANDMARKS, method = RequestMethod.GET)
+	@ResponseBody
+	public PincodeData getPincodedata(@RequestParam(value = "pincode") final String pincode)
+	{
+		PincodeData pincodeData = null;
+		try
+		{
+			if (null != pincode && !StringUtils.isEmpty(pincode))
+			{
+				pincodeData = pincodeServiceFacade.getAutoPopulatePincodeData(pincode);
+			}
+		}
+		catch (final EtailNonBusinessExceptions ex)
+		{
+			LOG.error("EtailNonBusinessExceptions in getting the pincode Details :: " + ex.getErrorMessage());
+		}
+		catch (final EtailBusinessExceptions ex)
+		{
+			LOG.error("EtailBusinessExceptions in getting the pincode Details :: " + ex.getErrorMessage());
+		}
+		catch (final Exception ex)
+		{
+			LOG.error("Exception in getting the pincode Details :: " + ex.getMessage());
+		}
+		return pincodeData;
+	}
+
+
+	private void setExpressCheckout(final CartModel serviceCart)
+	{
+		if (serviceCart.getDeliveryAddress() != null && serviceCart.getIsExpressCheckoutSelected().booleanValue())
+		{
+			serviceCart.setIsExpressCheckoutSelected(Boolean.valueOf(false));
+			serviceCart.setDeliveryAddress(null);
+			modelService.save(serviceCart);
+		}
+	}
+
+
 
 	/**
 	 * @return the mplCartFacade
@@ -3137,23 +3121,24 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	{
 		this.mplCouponFacade = mplCouponFacade;
 	}
+
 	//TPR-429 change
-		public static String populateCheckoutSellers(final CartData cartData)
+	public static String populateCheckoutSellers(final CartData cartData)
+	{
+		String cartLevelSellerID = null;
+		final List<OrderEntryData> sellerList = cartData.getEntries();
+		for (final OrderEntryData seller : sellerList)
 		{
-			String cartLevelSellerID = null;
-			final List<OrderEntryData> sellerList = cartData.getEntries();
-			for (final OrderEntryData seller : sellerList)
+			final String sellerID = seller.getSelectedSellerInformation().getSellerID();
+			if (cartLevelSellerID != null)
 			{
-				final String sellerID = seller.getSelectedSellerInformation().getSellerID();
-				if (cartLevelSellerID != null)
-				{
-					cartLevelSellerID += "_" + sellerID;
-				}
-				else
-				{
-					cartLevelSellerID = sellerID;
-				}
+				cartLevelSellerID += "_" + sellerID;
 			}
-			return cartLevelSellerID;
+			else
+			{
+				cartLevelSellerID = sellerID;
+			}
 		}
+		return cartLevelSellerID;
+	}
 }
