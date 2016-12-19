@@ -149,6 +149,7 @@
 
 
 <div class="SpecWrap">
+<c:if test="${not empty product.classifications}">
   <div class="Padd">
     <h2>Specifications</h2>
     <div class="tabs-block">
@@ -238,4 +239,5 @@
      
       </div>
   </div>
+  </c:if>
 </div>
