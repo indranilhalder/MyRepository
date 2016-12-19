@@ -30,6 +30,8 @@ searchCategory_id		= $('#selectedSearchCategoryId').val(); // For Normal search
 searchCategory_idFromMicrosite		= $('#selectedSearchCategoryIdMicrosite').val(); // For Microsite search
 var daysDif = '';
 var is_new_product = false;
+var filterNamePairing = {};
+
 
 var category_idString		= $('#categoryIdHotNow').val(); // For HotNow category for TPR 1313
 var category_idArray = new Array();//Variables added for TPR 1313
@@ -78,42 +80,27 @@ function codeLatLng(lat,lng) {
   geocoder.geocode({
       'latLng': latlng
   }, function(results, status) {
-  	
-if (status == google.maps.GeocoderStatus.OK) {
 
-  if (results[1]) {
-  var indice=0;
-  for (var j=0; j<results.length; j++)
-  {
-      if (results[j].types[0]=='locality')
-          {
-              indice=j;
-              break;
+	  if (status == google.maps.GeocoderStatus.OK) {
+		 
+          if (results[0]) {
+        	  
+              var add= results[0].formatted_address ;
+              var  value=add.split(",");
+              var count=value.length;
+              var country=value[count-1];
+              var state=value[count-2];
+              var city=value[count-3].toLowerCase();
+              $('#location').val(city);
+              
           }
-      }
- 
- 
-  for (var i=0; i<results[j].address_components.length; i++)
-      {
-          if (results[j].address_components[i].types[0] == "locality") {
-                  
-                  city = results[j].address_components[i];
-                  var cityName = city.long_name.toLowerCase();
-                  $('#location').val(cityName);
-                 
-              }
-          
-          
-      }
-
-     
-      } else {
-     // console.log("No results found");
-      }
-  //}
-} else {
-	  //console.log("Geocoder failed due to: " + status);
-}
+          else  {
+        	// console.log("No results found");
+          }
+  }
+   else {
+	   //console.log("Geocoder failed due to: " + status);
+  }
       
   });
 }
@@ -327,7 +314,7 @@ if (searchCategory_id){
 				  document.cookie='IAUSERTYPE='+user_type+'; path=/';
 				}
 
-			/*
+/*
 			Scan through the webpage and call the APIs for each element we detect
 			*/
 			function callForEachElement(params) {
@@ -337,8 +324,7 @@ if (searchCategory_id){
 			      var endpoint = '/SocialGenomix/recommendations/products';
 			      if(productWidget[i] !== "normal") {
 			        endpoint += '/' + productWidget[i];
-				  
-				  }
+			      }
 			      if (productWidget[i].indexOf("hot") === 0 && 
 			          site_page_type === "viewAllTrending") {
 			        params.count = '100';
@@ -352,11 +338,47 @@ if (searchCategory_id){
 			    	  params.count = '15';
 			      }
 			      params.htmlElement = productWidgetElement[i];
-			      callRecApi(params, rootEP + endpoint);
-			    }
-			  }
 
-			  /*Check against all brand widget elements*/
+			      if(site_page_type === "homepage") { //new requirement for homepage
+					if (document.getElementById('location')) {
+    					if(document.getElementById('location').value) {
+      						params.location = document.getElementById('location').value;
+      						//callRecApi(params, rootEP + endpoint);
+    					}
+  					}
+	  				/*Staticly-built list of filters*/
+				    var categoryFilters = [] ;
+				    /* Category code for Dropdown Filter in hot and search widgets 
+				    var categoryCodeForFilters = [] ;
+				    $.each($('input#for_ia_hot_dropdown_name'),function(i,val){  
+				    	categoryFilters.push(val.value);
+					});
+				    $.each($('input#for_ia_hot_dropdown_code'),function(i,val){  
+				    	categoryCodeForFilters.push(val.value);
+					});*/
+					params.location = undefined;
+					
+					for (var c=0; c < category_idArray.length; c++) {
+						//e.g. MSH10-Women
+						var filterCode = category_idArray[c].split('-')[0];
+						var filterName = category_idArray[c].split('-')[1];
+						filterNamePairing[filterCode] = filterName;
+
+			      		params.category_id = filterCode; //"MSH10"; //women's
+			      		callRecApi(params, rootEP + endpoint);
+
+			      		//params.category_id = "MSH11"; //men's
+			      		//callRecApi(params, rootEP + endpoint);
+
+			      		//params.category_id = "MSH12"; //electronics
+			      		//callRecApi(params, rootEP + endpoint);
+			      	}
+
+			      } else {
+			      	callRecApi(params, rootEP + endpoint);
+			  	  }
+			    }
+			  } /*Check against all brand widget elements*/
 			  for (var i=0; i<brandWidgetElement.length; i++) {
 			    if(document.getElementById(brandWidgetElement[i]) !== null) {
 			      var endpoint = '/SocialGenomix/recommendations/';
@@ -892,7 +914,13 @@ if (searchCategory_id){
 			    /*Initialize params object we'll be passing around*/
 			    var params = {};
 			    if (site_page_type === "product" || site_page_type === "productpage") {
-			    	 jQuery.ajax({
+			    	incParams = { 'site_product_id' : spid, 'ecompany': ecompany, 'session_id':ssid }
+			    	if (document.getElementById('location')) {
+    					if(document.getElementById('location').value) {
+      						incParams.location = document.getElementById('location').value;
+    					}
+  					}
+			    	jQuery.ajax({
 
 					      	type: "GET",
 
@@ -986,6 +1014,10 @@ if (searchCategory_id){
 			  if(jQuery.inArray(widgetMode, productWidget) > -1) {
 			    /*If it doesn't exist, we can stop*/
 			    widgetElement = productWidgetElement[jQuery.inArray(widgetMode, productWidget)];
+			    if(site_page_type === "homepage" && response.data.filter_value) {
+ 			    	//MSH10, MSH11, and MSH12 
+ 			    	widgetElement = widgetElement + '_' + response.data.filter_value;
+ 			    }
 			    if (!document.getElementById(widgetElement)) {
 			      return;
 			    }
@@ -1047,7 +1079,19 @@ if (searchCategory_id){
 			    		//for release 2 changes in pdp-page 
 			    		if(site_page_type === 'productpage' && widgetElement ==='ia_products_complements'){
 			    			html += '<h2><span style="color: black !important;">Things That Go With This</span>';
-			    		}else{
+			    		} else if (site_page_type === "homepage") {
+ 		    				var catFilter = filterNamePairing[response.data.filter_value];
+ 							/*var catFilter = "All";
+ 			    			if(response.data.filter_value === "MSH10") {
+ 			    				catFilter = "Women's";
+ 			    			} else if (response.data.filter_value === "MSH11") {
+ 			    				catFilter = "Men's";
+ 			    			} else if (response.data.filter_value === "MSH12") {
+ 			    				catFilter = "Electronics";
+ 			    			}*/
+ 			    			html += '<h1><span style="color: black !important;">Hot in '+catFilter+' </span>';	    		
+ 			    		}
+			    		else{
 						
 			    		html += '<h2><span style="color: black !important;">'+productWidgetTitle[jQuery.inArray(widgetMode, productWidget)]+'</span>';
 			    	}
