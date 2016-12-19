@@ -44,7 +44,7 @@
 	<!-- <div class="view-button">Check The Specs</div> -->
 </c:if>
 <!-- <div class="hide-button" style="display:none;">Hide Specifications</div> -->
-<div class="product-classifications wrapper">
+<%-- <div class="product-classifications wrapper">
 	<c:if test="${not empty product.classifications}">
 		<table class="stats-table">
 			<tbody>
@@ -144,12 +144,12 @@
 			</tbody>
 		</table>
 	</c:if>
-</div> 
+</div>  --%>
 
 
-
-<div class="SpecWrap">
+<!-- TPR-792 changes start -->
 <c:if test="${not empty product.classifications}">
+<div class="SpecWrap">
   <div class="Padd">
     <h2>Specifications</h2>
     <div class="tabs-block">
@@ -239,5 +239,7 @@
      
       </div>
   </div>
-  </c:if>
 </div>
+ </c:if>
+
+<!-- TPR-792 changes end -->
