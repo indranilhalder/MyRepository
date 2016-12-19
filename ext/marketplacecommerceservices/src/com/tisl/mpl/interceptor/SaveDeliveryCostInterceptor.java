@@ -3,19 +3,28 @@
  */
 package com.tisl.mpl.interceptor;
 
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.PincodeModel;
-
+import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.servicelayer.interceptor.InterceptorContext;
 import de.hybris.platform.servicelayer.interceptor.InterceptorException;
 import de.hybris.platform.servicelayer.interceptor.ValidateInterceptor;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
-
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
+import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
+import com.tisl.mpl.model.BuyAandBGetPromotionOnShippingChargesModel;
+import com.tisl.mpl.model.BuyAboveXGetPromotionOnShippingChargesModel;
 
 
 
@@ -30,7 +39,7 @@ public class SaveDeliveryCostInterceptor implements ValidateInterceptor
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.hybris.platform.servicelayer.interceptor.ValidateInterceptor#onValidate(java.lang.Object,
 	 * de.hybris.platform.servicelayer.interceptor.InterceptorContext)
 	 */
@@ -68,7 +77,41 @@ public class SaveDeliveryCostInterceptor implements ValidateInterceptor
 			//
 			//			}
 
-			//TPR-3571 : Fix for Pincode Specific Promotion
+
+			if (validateForShippingPromo(abstractOrder.getAllPromotionResults()) && validateForParent(abstractOrder))
+			{
+				double deliveryOffChrg = 0.0D;
+				double promoDiscount = 0.0D;
+				double couponDiscount = 0.0D;
+
+				Double totalPrice = Double.valueOf(0);
+				if (CollectionUtils.isNotEmpty(abstractOrder.getEntries()))
+				{
+					final List<AbstractOrderEntryModel> entries = abstractOrder.getEntries();
+					for (final AbstractOrderEntryModel oModel : entries)
+					{
+						deliveryOffChrg += (oModel.getCurrDelCharge().doubleValue() - oModel.getPrevDelCharge().doubleValue()) < 0 ? (-1)
+								* (oModel.getCurrDelCharge().doubleValue() - oModel.getPrevDelCharge().doubleValue())
+								: (oModel.getCurrDelCharge().doubleValue() - oModel.getPrevDelCharge().doubleValue());
+						couponDiscount += (null == oModel.getCouponValue() ? 0.0d : oModel.getCouponValue().doubleValue());
+						promoDiscount += (null == oModel.getTotalProductLevelDisc() ? 0.0d : oModel.getTotalProductLevelDisc()
+								.doubleValue()) + (null == oModel.getCartLevelDisc() ? 0.0d : oModel.getCartLevelDisc().doubleValue());
+					}
+
+					if (deliveryOffChrg > 0.0D)
+					{
+						totalPrice = Double.valueOf(abstractOrder.getSubtotal().doubleValue()
+								+ abstractOrder.getDeliveryCost().doubleValue() - (deliveryOffChrg + couponDiscount + promoDiscount));
+						if (totalPrice.doubleValue() > 0)
+						{
+							abstractOrder.setTotalPrice(totalPrice);
+						}
+					}
+
+				}
+			}
+
+
 			if (null != abstractOrder.getDeliveryAddress() && null != abstractOrder.getDeliveryAddress().getPostalcode())
 			{
 				LOG.debug("Setting data for Pincode related Information");
@@ -83,11 +126,32 @@ public class SaveDeliveryCostInterceptor implements ValidateInterceptor
 				}
 
 			}
-
-
 		}
 
+
 	}
+
+
+
+	/**
+	 * @param abstractOrder
+	 * @return
+	 */
+	private boolean validateForParent(final AbstractOrderModel abstractOrder)
+	{
+		boolean flag = false;
+		if (abstractOrder instanceof OrderModel)
+		{
+			final OrderModel order = (OrderModel) abstractOrder;
+			if (StringUtils.isNotEmpty(order.getType()) && order.getType().equals("Parent"))
+			{
+				flag = true;
+			}
+		}
+		return flag;
+	}
+
+
 
 	/**
 	 * Validate Cart for Shipping Promotion
@@ -95,7 +159,7 @@ public class SaveDeliveryCostInterceptor implements ValidateInterceptor
 	 * @param allPromotionResults
 	 * @return flag
 	 */
-/*	private boolean validateForShippingPromo(final Set<PromotionResultModel> allPromotionResults)
+	private boolean validateForShippingPromo(final Set<PromotionResultModel> allPromotionResults)
 	{
 		boolean flag = false;
 		if (CollectionUtils.isNotEmpty(allPromotionResults))
@@ -113,6 +177,6 @@ public class SaveDeliveryCostInterceptor implements ValidateInterceptor
 			}
 		}
 		return flag;
-	}*/
+	}
 
 }

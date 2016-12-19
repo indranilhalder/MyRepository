@@ -186,7 +186,7 @@
 
 
 							<%-- <li class="product-size-list"><span class="product-size">Size : ${fn:toUpperCase(product.displaySize)} </span></li> --%>
-							<li class="product-size-list"><span class="product-size">Size: <span class="size-col">${product.displaySizes}</span><%-- Price : ${product.displayPrice}### ${product.displayUrl} --%>
+							<li class="product-size-list"><span class="product-size">Size: <span class="size-col">${product.displaySize}</span><%-- Price : ${product.displayPrice}### ${product.displayUrl} --%>
 							</span></li>
 						</c:if>
 						<%-- <li>Color: ${product.swatchColor}</li> --%>

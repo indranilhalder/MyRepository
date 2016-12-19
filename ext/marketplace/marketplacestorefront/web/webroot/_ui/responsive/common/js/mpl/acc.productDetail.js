@@ -361,6 +361,9 @@
 	},
 };
 	
+	//update the message for Freebie product TPR-1754
+	var freebieMsg="";
+	
 /**
  * displaying thumb nails details
  */
@@ -624,6 +627,10 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
 			+ "-addToWishListInPDP";
     var sizeSelected=true;
+    
+    if(!$('#variant li').hasClass('selected')) {
+    	sizeSelected=false;
+    }
     if( $("#variant,#sizevariant option:selected").val()=="#"){
     	sizeSelected=false;
     }
@@ -807,7 +814,21 @@ function setValidPrice(sellersArray, index) {
 			 $("#mrpPriceId").hide();
 			 $("#savingsOnProductId").hide();
 			 //$("#dListedErrorMsg").show(); //Need to Change	
-			 $("#freebieProductMsgId").show();			 
+			// $("#freebieProductMsgId").show();
+			 var ussId=  $("#ussid").val();
+			 
+			//update the message for Freebie product TPR-1754
+			 var freebieproductMsg =populateFreebieMsg(ussId);
+			
+			 if($.isEmptyObject(freebieproductMsg)){
+				 
+				 $("#freebieProductMsgId").show();			 
+						}else{
+						
+						$("#freebieProductMsgId").html(freebieMsg);
+						$("#freebieProductMsgId").show();
+					}
+			 
 		}else {
 			$("#mrpPriceId").append(mrp);
 			$("#mopPriceId").html("");
@@ -1534,6 +1555,11 @@ $( document ).ready(function() {
 						 $("#pin").attr("disabled",true);
 						 $("#pdpPincodeCheckDList").show();
 						 $("#buyNowButton").attr("disabled",true);
+						 $("#variant li a").each(function(){
+								$(this).removeAttr("href");
+								$(this).parent().addClass('strike');
+								//$("#outOfStockId").hide();
+						});
 						
 					}
 					else if (allStockZero == 'Y' && data['othersSellersCount']==0 && $("#variant option").length == 0){
@@ -1542,7 +1568,11 @@ $( document ).ready(function() {
 							$("#buyNowButton").hide();
 							$("#outOfStockId").show();
 							$("#allVariantOutOfStock").show();
-							
+							$("#variant li a").each(function(){
+							$(this).removeAttr("href");
+							$(this).parent().addClass('strike');
+							//$("#outOfStockId").hide();
+							});
 						//}
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").hide();
@@ -1846,8 +1876,22 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 				 $(".seller").hide();
 				 $(".star-review").hide();
 				 //$("#dListedErrorMsg").show();	//Need to Change
-				 $("#freebieProductMsgId").show();
-				 			 
+				// $("#freebieProductMsgId").show();
+			var ussId=  $("#ussid").val();
+				
+			//	$("#ussid").val(data['sellerArticleSKU']);
+				 
+				//update the message for Freebie product TPR-1754
+				 var freebieproductMsg =populateFreebieMsg(ussId);			 
+				 if($.isEmptyObject(freebieproductMsg)){	
+					 
+					 $("#freebieProductMsgId").show();			 
+							}else{
+							
+							$("#freebieProductMsgId").html(freebieMsg);
+							$("#freebieProductMsgId").show();
+						}
+				 
 			}else{
 				$("#mrpPriceId").show();
 			 }
@@ -2724,11 +2768,19 @@ function loadDefaultWishListName_SizeGuide() {
 	$(document).on('click','#buyNow .js-add-to-cart',function(event){
 		//var cartReturn = ACC.product.sendAddToBag("addToCartForm");
 		var isShowSize= $("#showSize").val();
-		 if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches'&& $("#ia_product_rootCategory_type").val()!='TravelAndLuggage' && isShowSize=='true'){
+		var productCode=$("#product_id").val();
+		 if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches' && $("#ia_product_rootCategory_type").val()!='TravelAndLuggage' && isShowSize=='true'){
 			$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 			$("#addToCartFormTitle").show();
 	 	    return false;
 	 }
+		 //TISQAEE-64
+		 utag.link({
+				link_obj: this,
+				link_text: 'buynow' ,
+				event_type : 'buynow_winner_seller',
+				product_sku : productCode
+			});
 		ACC.product.sendAddToBag("addToCartForm",true);
 	});
 
@@ -2940,7 +2992,6 @@ function loadDefaultWishListName_SizeGuide() {
 	
 	
 	/*TPR-1375*/
-
 	 //TPR-1375 populating the buybox details after chceking servicable seller list
 	function repopulateBuyBoxDetails(data,buyBoxList){
 		var isproductPage = $("#isproductPage").val();
@@ -3087,4 +3138,39 @@ function getProductContents() {
 		lazyLoadProductContents();
 		});
 		
+	}
+
+	
+	//update the message for Freebie product TPR-1754
+	function  populateFreebieMsg(ussId){
+		var requiredUrl = ACC.config.encodedContextPath + "/p-" + ussId
+		                  + "/getFreebieMessage";		
+		var dataString = 'ussId=' + ussId;	
+		$.ajax({
+			contentType : "application/json; charset=utf-8",
+			url : requiredUrl,
+			async: false,
+			data : dataString,
+			cache : false,
+			dataType : "json",
+			success : function(data){
+				if (data != null) {			
+				    var freebieMessageMap = data['offerMessageMap'];
+				    if(!$.isEmptyObject(freebieMessageMap)){
+				    	
+				    	$.each( freebieMessageMap, function(key,value){		
+				    		
+						//	$.each(value, function(keyInternal,valueInternal){
+								// if(keyInternal == 'freebieMsg'){
+									 freebieMsg = value;		 
+									 
+								// }				 
+							// });
+				    	})
+				    	
+				    	}
+			}
+		}
+	});
+		 return freebieMsg;
 	}

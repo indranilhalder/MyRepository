@@ -202,7 +202,13 @@ ACC.refinements = {
 			if(updatedsearchQuery==''){
 				updatedsearchQuery=filterMobileQuery;
 			}else{
-				var newFilter=createSearchQuery(filterMobileQuery);	
+				//TISQAUATS-27 starts 
+				//var newFilter=createSearchQuery(filterMobileQuery);
+				var ownVal = $(this).parents("form").find('input[name="facetValue"]').val();
+				//var ownIdentifier = $(this).parents("li").attr('class').replace('filter-',"");
+				var ownIdentifier = $(this).parents("li").attr('class').replace(/^(\S*).*/, '$1').replace('filter-',"");
+				var newFilter = ':' + ownIdentifier + ':' + ownVal;
+				//TISQAUATS-27 ends 
 				//if(updatedsearchQuery.includes(newFilter))
 				if(updatedsearchQuery.indexOf(newFilter) > -1)
 				{
@@ -308,11 +314,11 @@ ACC.refinements = {
 				
 			}else{
 				//var newFilter=createSearchQuery(filterMobileQuery);
-				// Fixing error of facet starts
+				//TISQAUATS-27 starts 
 				var ownVal = $(this).parents("form").find('input[name="facetValue"]').val();
 				var ownIdentifier = $(this).parents("li").attr('class').replace(/^(\S*).*/, '$1').replace('filter-',"");
 				var newFilter = ':' + ownIdentifier + ':' + ownVal;
-				// Fixing error of facet ends
+				//TISQAUATS-27 ends 
 				//if(updatedsearchQuery.includes(newFilter))
 				if(updatedsearchQuery.indexOf(newFilter) > -1)
 				{
@@ -419,8 +425,16 @@ ACC.refinements = {
 			$(".facet_mobile .facet.js-facet").each(function(){
 				filterCount+=$(this).find(".facet-list.js-facet-list li").find("input[type=checkbox]:checked").length;
 				filterCount+=$(".facet_mobile .filter-colour.selected-colour").length;
+				//TISQAUATS-12 starts 
+				filterCount+=$(".facet_mobile .filter-colour.selected-multi-colour").length;
+				//TISQAUATS-12 ends
 				filterCount+=$(".facet_mobile .filter-size.selected-size").length;
-			})
+			});
+			//TISQAUATS-27 starts
+			if ($('#customMinPriceMob').val() && $('#customMaxPriceMob').val()) {
+				filterCount++;
+			}
+			//TISQAUATS-27 ends
 			if(filterCount<=0){
 				return false;
 			}
@@ -432,6 +446,26 @@ ACC.refinements = {
 				var browserURL = window.location.href.split('?');
 				var dataString = null;
 				var nonEmptyDataString= null;
+				
+				//TISQAUATS-27 starts 
+				if ($('#customMinPriceMob').val() && $('#customMaxPriceMob').val()) {
+					var minPriceSearchTxt = $('#customMinPriceMob').val();
+					var maxPriceSearchTxt = $('#customMaxPriceMob').val();
+					var price = "₹" + minPriceSearchTxt + "-" + "₹" + maxPriceSearchTxt;
+					//$('#facetValue').val(facetValue);
+					if (/:price:(.*)/.test(updatedsearchQuery)) {
+						if (/:price:(.*):/.test(updatedsearchQuery)) {
+							updatedsearchQuery = updatedsearchQuery.replace(/:price:(.*?):/,":price:" + price + ':');
+						}
+						else {
+							updatedsearchQuery = updatedsearchQuery.replace(/:price:(.*)/,":price:" + price);
+						}
+					}
+					else {
+						updatedsearchQuery = updatedsearchQuery + ":price:" + price;
+					}
+				}
+				//TISQAUATS-27 ends
 				
 				// generating datastring and postAjaxURL
 				dummyForm.find('input[type="hidden"]').each(function(){
@@ -446,14 +480,21 @@ ACC.refinements = {
 						}
 						
 					}
-					console.log("dataString : "+dataString);
+					//console.log("dataString : "+dataString);
 					
 					if($(this).val().length >0){
 						if(nonEmptyDataString == null){
 							nonEmptyDataString = $(this).attr('name')+"="+$(this).val();
 						}
 						else{
-							nonEmptyDataString = nonEmptyDataString + ("&"+$(this).attr('name')+"="+$(this).val());
+							//TISQAUATS-27 starts
+							//nonEmptyDataString = nonEmptyDataString + ("&"+$(this).attr('name')+"="+$(this).val());
+							if($(this).attr('name') == 'q'){
+								nonEmptyDataString = nonEmptyDataString + ("&"+$(this).attr('name')+"="+updatedsearchQuery);
+							}else{
+								nonEmptyDataString = nonEmptyDataString + ("&"+$(this).attr('name')+"="+$(this).val());
+							}
+							//TISQAUATS-27 ends
 						}
 					}
 				})
@@ -503,7 +544,8 @@ ACC.refinements = {
 		// TPR-845
 		$(document).on("click"," .filter-clear ",function(e){
 			// TPR-1536
-			var filterCount=0;
+			//TISQAUATS-12 starts
+			/*var filterCount=0;
 			$(".facet_mobile .facet.js-facet").each(function(){
 				filterCount+=$(this).find(".facet-list.js-facet-list li").find("input[type=checkbox]:checked").length;
 				filterCount+=$(".facet_mobile .filter-colour.selected-colour").length;
@@ -514,7 +556,8 @@ ACC.refinements = {
 			}
 			// TPR-1536 Ends
 			
-			else{
+			else{*/
+			//TISQAUATS-12 ends 
 				$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 				$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
 
@@ -530,16 +573,42 @@ ACC.refinements = {
 				// redirecting to pageURL on page reload
 				window.location.href =pageURL;
 				return false;
-			}
+			//TISQAUATS-12 starts 
+			//}
+			//TISQAUATS-12 ends
 			})
 
 		$(document).off('click', '.js-facet-colourbutton').on('click', '.js-facet-colourbutton', function() { 
-			$(this).parents(".filter-colour, .filter-colorfamilytrlg").toggleClass("selected-colour");
-		
-			// Fixing error of facet starts
-			var li_index = $('.facet_mobile .facet.js-facet.Colour .facet-list.js-facet-top-values.active li').index($(this).parents(".filter-colour"));
+			//TISQAUATS-12 starts
+			//$(this).parents(".filter-colour").toggleClass("selected-colour");
+			var colour_name = $(this).parent().find("input[name=facetValue]").val().split("_", 1);
+			if(colour_name == "Multi"){
+				$(this).parents(".filter-colour, .filter-colorfamilytrlg").toggleClass("selected-multi-colour");
+			}
+			else{
+				$(this).parents(".filter-colour, .filter-colorfamilytrlg").toggleClass("selected-colour");
+			}
+			//TISQAUATS-12 ends
+			//TISQAUATS-12 starts
+			/*var li_index = $('.facet_mobile .facet.js-facet.Colour .facet-list.js-facet-top-values.active li').index($(this).parents(".filter-colour"));
 			$(".facet_mobile .facet.js-facet.Colour .facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden li").eq(li_index).toggleClass("selected-colour");
-			var spanCountMoreColor = $('.facet_mobile .facet.js-facet.Colour ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden').find("li.selected-colour").length;
+			var spanCountMoreColor = $('.facet_mobile .facet.js-facet.Colour ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden').find("li.selected-colour").length;*/
+			if ($('.facet_mobile .facet.js-facet.Colour .facet-list.js-facet-top-values.active li').length) {
+				var colourName = $(this).parent().find("input[name=facetValue]").val();
+				if(colour_name == "Multi"){
+					$(this).closest('ul').next().find('li input[value="'+colourName+'"]').parents(".filter-colour, .filter-colorfamilytrlg").toggleClass("selected-multi-colour");
+				}
+				else{
+					$(this).closest('ul').next().find('li input[value="'+colourName+'"]').parents(".filter-colour, .filter-colorfamilytrlg").toggleClass("selected-colour");
+				}
+				var spanCountMoreColor = $('.facet_mobile .facet.js-facet.Colour ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden').find("li.selected-colour").length;
+				spanCountMoreColor = spanCountMoreColor + $('.facet_mobile .facet.js-facet.Colour ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden').find("li.selected-multi-colour").length;
+			}
+			else {
+				var spanCountMoreColor = $('.facet_mobile .facet.js-facet.Colour ul.facet-list.js-facet-list').find("li.selected-colour").length;
+				spanCountMoreColor = spanCountMoreColor + $('.facet_mobile .facet.js-facet.Colour ul.facet-list.js-facet-list').find("li.selected-multi-colour").length;
+			}
+			//TISQAUATS-12 ends
 			if(spanCountMoreColor){
 				if(spanCountMoreColor)
 				{
@@ -651,7 +720,10 @@ ACC.refinements = {
 			return false;
 		});
 
-		$(document).on("click","#applyCustomPriceFilter",function(e){
+		//TISQAUATS-27 starts 
+		//$(document).on("click","#applyCustomPriceFilter",function(e){
+		$(document).on("click","#applyCustomPriceFilterMob",function(e){
+		//TISQAUATS-27 ends
 			// generating postAjaxURL
 			$(".filter-apply").click();
 		});
@@ -833,6 +905,19 @@ function removeMobilePriceRange(){
 	$(".js-facet-checkbox-price").each(function(){
 		$(this).attr("checked",false);
 	});
+	
+	//TISQAUATS-27 starts
+	if (/:price:(.*):/.test(updatedsearchQuery)) {
+		updatedsearchQuery=updatedsearchQuery.replace(/:price:(.*?):/,":");
+	}
+	else {
+		updatedsearchQuery=updatedsearchQuery.replace(/:price:(.*)/,"");
+	}
+	$(".facet_mobile .facet.js-facet.Price .category-icons").addClass('blank');
+	$(".facet_mobile .facet.js-facet.Price .category-icons span").html('');
+	
+	//console.log("updatedsearchQuery removing mobile : "+updatedsearchQuery);
+	//TISQAUATS-27 ends
 	
 }
 

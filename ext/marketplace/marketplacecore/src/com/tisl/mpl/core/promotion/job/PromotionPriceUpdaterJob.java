@@ -14,9 +14,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.Resource;
-
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,8 +22,12 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.PromotionPriceUpdaterService;
 import com.tisl.mpl.model.BuyAPercentageDiscountModel;
 import com.tisl.mpl.model.MplConfigurationModel;
-import com.tisl.mpl.promotion.dao.impl.UpdatePromotionalPriceDaoImpl;
+//Removed as UNUSED IMPORTS
+//import com.tisl.mpl.promotion.dao.impl.UpdatePromotionalPriceDaoImpl;
 import com.tisl.mpl.util.ExceptionUtil;
+//Removed as UNUSED IMPORTS
+//import javax.annotation.Resource;
+import org.apache.commons.collections.CollectionUtils;
 
 
 /**

@@ -241,7 +241,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			{
 				for (final BuyBoxModel buyBoxModel : buyboxModelList)
 				{
-					buyBoxDataList.add(populateBuyBoxData(buyBoxModel, onlyBuyBoxHasStock, buyboxModelList));
+					buyBoxDataList
+							.add(populateBuyBoxData(buyBoxModel, onlyBuyBoxHasStock, buyboxModelList, buyboxData.getAllOOStock()));
 				}
 
 			}
@@ -249,7 +250,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			//TPR-1375 changes end
 			if (buyboxModelList.size() > 0)
 			{
-				buyboxData = populateBuyBoxData(buyBoxMod, onlyBuyBoxHasStock, buyboxModelList);
+				buyboxData = populateBuyBoxData(buyBoxMod, onlyBuyBoxHasStock, buyboxModelList, buyboxData.getAllOOStock());
 				//TPR-1375 changes starts
 				if (CollectionUtils.isEmpty(buyBoxDataList))
 				{
@@ -813,7 +814,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	 * @return buyboxData
 	 */
 	private BuyBoxData populateBuyBoxData(final BuyBoxModel buyBoxMod, final boolean onlyBuyBoxHasStock,
-			final List<BuyBoxModel> buyboxModelList)
+			final List<BuyBoxModel> buyboxModelList, final String outOfStockFlag)
 	{
 		final BuyBoxData buyboxData = new BuyBoxData();
 		if (null != buyBoxMod.getSpecialPrice() && buyBoxMod.getSpecialPrice().doubleValue() > 0)
@@ -895,6 +896,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		}
 		final double roundedMinPrice = Math.round(minPrice * 100) / 100;
 		buyboxData.setMinPrice(productDetailsHelper.formPriceData(new Double(roundedMinPrice)));
+		buyboxData.setAllOOStock(outOfStockFlag);
 		return buyboxData;
 
 	}
