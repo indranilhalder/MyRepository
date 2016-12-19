@@ -619,9 +619,11 @@
 
 	</bean>
 
-	<!-- <alias name="mplCommerceCheckoutService" alias="commerceCheckoutService" 
-		/> <bean id="mplCommerceCheckoutService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplDefaultCommerceCheckoutService" 
-		parent="defaultCommerceCheckoutService"> </bean> -->
+	<alias name="mplCommerceCheckoutService" alias="commerceCheckoutService" /> 
+	<bean id="mplCommerceCheckoutService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplDefaultCommerceCheckoutService" 
+		parent="defaultCommerceCheckoutService">
+	</bean>
+	
 	<bean id="userLoginService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.UserLoginServiceImpl">
 		<property name="userDetailsService" ref="extendedUserDetailsService" />
@@ -665,7 +667,7 @@
 	<bean id="CartSaveInterceptorMapping"
 		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
 		<property name="interceptor" ref="CartSaveInterceptor" />
-		<property name="typeCode" value="Cart" />
+		<property name="typeCode" value="AbstractOrder" />		<!-- Changed for TPR-629 -->
 	</bean>
 	<!-- CartModelSave Interceptor ends -->
 
@@ -1732,56 +1734,6 @@
 	<bean id="iaFeedUtil" class="com.tisl.mpl.integration.job.IAFeedUtility">
 	</bean>
 <!-- IA STAGED DATA SOURCE -->
-
- <!--<bean id="iaDataSource"
-		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="url" value="jdbc:oracle:thin:@10.10.64.34:1621/MPLDEVDB" />
-		<property name="username" value="mpldev2com" />
-		<property name="password" value="mpldev2com123" />
-	</bean>  -->
-	
-	<bean id="iaDataSource"
-		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="url" value="${jdbc.iastg.url}" />
-		<property name="username" value="${jdbc.iastg.user}" />
-		<property name="password" value="${jdbc.iastg.pass}" />
-	</bean>
-	<!-- New Buy Box Implementation Start -->
-<!-- 	<bean id="buyBoxDataSource" -->
-<!-- 		class="org.springframework.jdbc.datasource.DriverManagerDataSource"> -->
-<!-- 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" /> -->
-<!-- 		<property name="url" value="${buybox.jdbc.url}" /> -->
-<!-- 		<property name="username" value="${buybox.jdbc.user}" /> -->
-<!-- 		<property name="password" value="${buybox.jdbc.pass}" /> -->
-<!-- 	</bean> -->
-	
-
-	<bean id="buyBoxImportUtil" class="com.tisl.mpl.buyboxdataimport.BuyBoxImportUtility">
-	</bean>
-	
-	<bean id="buyBoxDataImportJob" class="com.tisl.mpl.buyboxdataimportjob.BuyBoxDataExtractJob"
-		parent="abstractJobPerformable">
-			<property name="modelService" ref="modelService" />
-			</bean>
-	<!-- New Buy Box Implementation End -->
-	<!-- New Keyword Redirection Implementation End -->
-	<bean id="mplKeywordRedirectDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplKeywordRedirectDaoImpl">
-	</bean>
-	
-	<!-- Bean for POC Search starts-->
-
-	<bean id="standardizationDao"
-		class="com.tisl.mpl.standardizationfactory.StandardizationDaoImpl">
-	</bean>
-	<bean id="standardizationService"
-		class="com.tisl.mpl.standardizationfactory.StandardizationServiceImpl">
-	</bean>
-	
-	<bean id="sizeStandardInterceptor"
-		class="com.tisl.mpl.interceptor.SizeStandardInterceptor">
-	</bean>
 <!-- <bean id="iaDataSource"
  -->
 
@@ -1813,10 +1765,30 @@
 <!-- 	</bean> -->
 	
 
-	<bean id="sizeStandardInterceptorMapping"
-		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
-		<property name="interceptor" ref="sizeStandardInterceptor" />
-		<property name="typeCode" value="Sizesystem" />
+	<bean id="buyBoxImportUtil" class="com.tisl.mpl.buyboxdataimport.BuyBoxImportUtility">
+	</bean>
+	
+	<bean id="buyBoxDataImportJob" class="com.tisl.mpl.buyboxdataimportjob.BuyBoxDataExtractJob"
+		parent="abstractJobPerformable">
+			<property name="modelService" ref="modelService" />
+			</bean>
+	<!-- New Buy Box Implementation End -->
+	
+	<bean id="juspayOrderResponseConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.tisl.mpl.juspay.response.GetOrderStatusResponse"/>
+        <property name="populators">
+            <list merge="true">
+				<ref bean="juspayOrderResponsePopulator"/>
+            </list>
+        </property>
+    </bean>
+    
+	<bean id="juspayOrderResponsePopulator"
+			class="com.tisl.mpl.converter.populator.JuspayOrderResponsePopulator" >
+	</bean>
+	
+	<!-- New Keyword Redirection Implementation End -->
+	<bean id="mplKeywordRedirectDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplKeywordRedirectDaoImpl">
 	</bean>
 
 	<!-- New Payment Solution Starts TPR-629-->	
@@ -1832,35 +1804,6 @@
 	<bean id="mplVoucherDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplVoucherDaoImpl" />
 	<!-- TPR-629 ends -->
-	<!-- Bean for POC Search ends-->
-
-	<!-- Old Cron Job Deletion Logic : Added as part of PT FIX-->
-	<alias name="mplcleanupCronJobsPerformable" alias="cleanupCronJobsPerformable" />
-	<bean id="mplcleanupCronJobsPerformable" parent="abstractGenericMaintenanceJobPerformable">
-        <property name="maintenanceCleanupStrategy">
-            <bean class="com.tisl.mpl.marketplacecommerceservices.strategy.MplCleanupCronJobStrategy">
-                <property name="modelService" ref="modelService"/>
-                <property name="typeService" ref="typeService"/>
-                <property name="status">
-                    <set>
-                        <value type="de.hybris.platform.cronjob.enums.CronJobStatus">FINISHED</value>
-                        <value type="de.hybris.platform.cronjob.enums.CronJobStatus">ABORTED</value>
-                    </set>
-                </property>
-                <property name="result">
-                    <set>
-                        <value type="de.hybris.platform.cronjob.enums.CronJobResult">SUCCESS</value>
-      				    <value type="de.hybris.platform.cronjob.enums.CronJobResult">FAILURE</value>
-                        <value type="de.hybris.platform.cronjob.enums.CronJobResult">ERROR</value>
-                    </set>
-                </property>
-                <property name="excludedCronJobCodes">
-                    <set/>
-                </property>
-                <property name="expiryDays" value="${cronjob.dayOld.count}"/>
-            </bean>
-        </property>
-    </bean>
 	
 	<!-- Bean for POC Search starts-->
 
@@ -2029,7 +1972,6 @@
         </property>
     </bean>
 	<!-- Old Cron Job Deletion Logic ends: -->
-	
 
 	
 		<alias name="defaultmplReturnDao" alias="mplReturnDao"/>
@@ -2042,4 +1984,3 @@
 		class="com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.impl.MplDeliveryAddressDaoImpl">
 </bean>
 </beans>
-

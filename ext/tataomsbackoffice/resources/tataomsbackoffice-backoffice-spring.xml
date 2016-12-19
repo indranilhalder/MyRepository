@@ -56,5 +56,81 @@
       <property name="shipmentStatusUpload"  value="${tata.oms.shipmentstatus.bulk.upload.path:#{null}}" />
     </bean>
     <bean id="csvFileToZipFileService" class="com.hybris.oms.tata.services.CsvFileToZipFileService"></bean>
- </beans>
+    <bean id="dataUploadService" class="com.hybris.oms.tata.util.DataUploadService"></bean>
 
+	<!-- add by prabhakar for configarable parameters -->
+	<alias name="defaultConfigarableParameterFacade" alias="configarableParameterFacade" />
+	<bean id="defaultConfigarableParameterFacade"
+		class="com.hybris.oms.tata.facade.impl.DefaultConfigarableParameterFacade"></bean>
+
+	<alias name="defaultConfigarableParameterService" alias="configrableParameterService" />
+	<bean id="defaultConfigarableParameterService"
+		class="com.hybris.oms.tata.services.impl.DefaultConfigarableParameterService"></bean>
+
+	<alias name="defaultConfigarableParameterDAO" alias="configarableParameterDAO" />
+	<bean id="defaultConfigarableParameterDAO"
+		class="com.hybris.oms.tata.daos.impl.DefaultConfigarableParameterDAO"></bean>
+
+	<bean id="mplTimeSlotsPopulator"
+		class="com.hybris.oms.tata.populator.MplTimeSlotsModelToDataPopulator" />
+
+	<alias name="defaultMplTimeSlotsConverter" alias="mplTimeSlotsConverter" />
+	<bean id="defaultMplTimeSlotsConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.hybris.oms.tata.data.MplTimeSlotsData" />
+		<property name="populators">
+			<list>
+				<ref bean="mplTimeSlotsPopulator" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="mplBUCConfigurationReversePopulator"
+		class="com.hybris.oms.tata.populator.MplBUCConfigurationsDataToModelReversePopulator" />
+
+	<alias name="defaultMplBUCReverseConverter" alias="mplBUCReverseConverter" />
+	<bean id="defaultMplBUCReverseConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass"
+			value="com.hybris.oms.tata.model.MplBUCConfigurationsModel" />
+		<property name="populators">
+			<list>
+				<ref bean="mplBUCConfigurationReversePopulator" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="mplTimeSlotsReversePopulator"
+		class="com.hybris.oms.tata.populator.MplTimeSlotsDataToModelReversePopulator" />
+
+	<alias name="defaultMplTimeSlotsReverseConverter" alias="mplTimeSlotsReverseConverter" />
+	<bean id="defaultMplTimeSlotsReverseConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.hybris.oms.tata.model.MplTimeSlotsModel" />
+		<property name="populators">
+			<list>
+				<ref bean="mplTimeSlotsReversePopulator" />
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="bucFileComparitor" class="com.techouts.dataonboarding.util.BUCFileComparitor"></bean>
+	<!-- bulk upload -->
+	<bean id="excelToCsvConverter"
+		class="com.hybris.oms.tata.tship.exceltocsv.converter.TShipExcelToCsvConverter">
+	</bean>
+	<bean id="tshipExcelToCsvService"
+		class="com.hybris.oms.tata.tship.exceltocsv.service.DefaultTshipExcelToCsvService">
+	</bean>
+	<bean id="logisticPartnerValidator"
+		class="com.hybris.oms.tata.tship.exceltocsv.validator.TshipLogisticPartnerValidator"></bean>
+	<bean id="priorityMasterValidator"
+		class="com.hybris.oms.tata.tship.exceltocsv.validator.TshipPriorityMasterValidator"></bean>
+
+	<bean id="priorityMaster" class="com.hybris.oms.tata.tship.exceltocsv.pojo.PriorityMaster">
+		<property name="airPriorityMaster" ref="airPriorityMaster"></property>
+		<property name="surfacePriorityMaster" ref="surfacePriorityMaster"></property>
+	</bean>
+	<bean id="airPriorityMaster"
+		class="com.hybris.oms.tata.tship.exceltocsv.pojo.AirPriorityMaster"></bean>
+	<bean id="surfacePriorityMaster"
+		class="com.hybris.oms.tata.tship.exceltocsv.pojo.SurfacePriorityMaster"></bean>
+		<bean id="lpAwbDataUploadService" class="com.hybris.oms.tata.services.DefaultLpAwbDataUploadService"></bean>
+ </beans>

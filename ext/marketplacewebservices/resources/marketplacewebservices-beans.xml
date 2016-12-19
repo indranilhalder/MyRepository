@@ -1255,6 +1255,7 @@
 		<property name="addressLine1" type="String" />
 		<property name="addressLine2" type="String" />
 		<property name="addressLine3" type="String" />
+		<property name="landmark" type="String" />
 		<property name="town" type="String" />
 		<property name="state" type="String" />
 		<property name="country" type="String" />
@@ -1271,6 +1272,7 @@
 		<property name="addressLine1" type="String" />
 		<property name="addressLine2" type="String" />
 		<property name="addressLine3" type="String" />
+		<property name="landmark" type="String" />
 		<property name="town" type="String" />
 		<property name="state" type="String" />
 		<property name="country" type="String" />
@@ -1441,6 +1443,8 @@
 		<property name="reverseLogisticName" type="String" />
 		<property name="storeDetails"
 			type="de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO" />
+		<property name="scheduleDeliveryDate" type="String" />
+		<property name="scheduleDeliveryTime" type="String" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.StatusResponseListDTO">
 		<property name="statusList"
@@ -2706,6 +2710,186 @@
 <bean class="com.tisl.mpl.wsdto.ProductAPlusWsData" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="temlateName" type="String" />
 		<property name="productContent" type="java.util.HashMap&lt;String, com.tisl.mpl.wsdto.ProductContentWsData>" />
+	</bean>
+
+	<!-- Added for  Inventory Reservation with Delivery Slots -->
+	<bean class="com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRequestData">
+		<property name="cartId" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData">
+		<property name="cartId" type="String"/>
+		<property name="invReserForDeliverySlotsItemEDDInfoData" type="java.util.List&lt;com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData>"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData">
+		<property name="ussId" type="String"/>
+		<property name="eDD" type="String"/>
+		<property name="nextEDD" type="String"/>
+		<property name="isScheduled" type="String"/>
+		<property name="codEligible" type="String"/>		
+	</bean>
+	<!--END: Added for Inventory Reservation with Delivery Slots  -->
+	
+	
+	 <bean class="com.tisl.mpl.wsdto.TrackOrderWsDTO">
+		<property name="orderCode" type="String" />
+		<property name="emailId" type="String" />
+		<property name="captchaCode" type="String" />		
+		<property name="errorCode" type="String" />		
+		<property name="error" type="String" />		
+		<property name="status" type="String" />	
+	</bean>
+	
+	<!-- FOr Auto Populating pincode data  --> 
+ 
+	<bean class="com.tisl.mpl.wsdto.LandMarksDataWsDTO">	
+		<property name="landmarksCode" type="String"/>
+		<property name="landmark" type="String"/>
+	</bean>
+    
+    <bean class="com.tisl.mpl.wsdto.StateDataWsDTO">	
+		<property name="countryKey" type="String"/>
+		<property name="code" type="String"/>
+		<property name="name" type="String"/>
+	</bean>
+    
+    <bean class="com.tisl.mpl.wsdto.PincodeDataWsDTO">	
+		<property name="pincode" type="String"/>
+		<property name="cityName" type="String"/>
+		<property name="state" type="com.tisl.mpl.wsdto.StateDataWsDTO"/>
+		<property name="country" type="String"/>
+		<property name="countryCode" type="String"/>
+		<property name="landMarks" type="java.util.List&lt;com.tisl.mpl.wsdto.LandMarksDataWsDTO>"/>
+		<property name="status" type="String"/>
+		<property name="error" type="String"/>
+		<property name="errorCode" type="String"/>
+	</bean>
+    
+            <!--FLO1 New Class Added By pankaj  -->
+	<bean class="com.tisl.mpl.wsdto.MplDeliveryAddressResponseWsDTO">
+	    <property name="isPincodeServiceable" type="boolean"/>
+		<property name="isScheduled" type="boolean"/>
+		<property name="error" type="String" />
+		<property name="status" type="String" />
+        <property name="errorCode" type="String" />
+		 <property name="estimateDeliveryDateInfo" type="java.util.List&lt;com.tisl.mpl.wsdto.MplSDInfoWsDTO>"/>
+    </bean>
+    
+     <bean class="com.tisl.mpl.wsdto.MplSDInfoWsDTO">
+        <property name="productCode" type="String"/>
+        <property name="estimateDeliveryDateList" type="java.util.List&lt;com.tisl.mpl.wsdto.MplEstimateDeliveryDateWsDTO>"/>
+    </bean>
+    
+    <bean class="com.tisl.mpl.wsdto.MplEstimateDeliveryDateWsDTO">
+        <property name="deliveryDate" type="String"/>
+        <property name="timeSlotList" type="java.util.List&lt;java.lang.String>"/>
+    </bean>
+    
+    <bean class="com.tisl.mpl.wsdto.MplDeliveryAddressRequestWsDTO">
+    <property name="otpNumber" type="String" />
+	<property name="changedAddress"
+		type="de.hybris.platform.commercefacades.user.data.AddressData" />
+	<property name="rescheduleData"
+		type="java.util.List&lt;com.tisl.mpl.facades.data.RescheduleData>" />
+</bean>
+
+    <!--R2.3 Added New DTO  For getEDDINFO  -->
+	<bean class="com.tisl.mpl.wsdto.MplEDDInfoWsDTO">
+		<property name="error" type="String" />
+		<property name="status" type="String" />
+        <property name="errorCode" type="String" />
+        <property name="sdDeliveryCharge" type="String" />
+        <property name="eDDInfoList"
+		type="java.util.List&lt;com.tisl.mpl.wsdto.MplEDDInfoForUssIDWsDTO>" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.MplEDDInfoForUssIDWsDTO" >
+		<property name="ussId" type="String" />
+		<property name="isScheduled" type="String" />
+		<property name="codEligible" type="String" />
+		<property name="estimateDeliveryDateList"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.MplEstimateDeliveryDateWsDTO>" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.MplSelectedEDDForUssID">
+	        <property name="ussId" type="String"/>
+		    <property name="deliveryDate" type="String"/>
+			<property name="timeSlot" type="String"/>
+	</bean>
+  <bean class="com.tisl.mpl.wsdto.MplSelectedEDDInfoWsDTO">
+   <property name="selectedEDDInfo"
+	type="java.util.List&lt;com.tisl.mpl.wsdto.MplSelectedEDDForUssID>" />
+  </bean>
+
+	<!-- For Return Web Services -->
+	<bean class="com.tisl.mpl.wsdto.ReturnDetailsWsDTO">
+		<property name="returnReasonDetailsList" type="java.util.List&lt;com.tisl.mpl.facades.product.data.ReturnReasonData>" />
+	 	<property name="returnStoreDetailsList" type="java.util.List&lt;de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData>"/>
+		<property name="returnTimeSlots" type="java.util.List&lt;java.lang.String>"/>
+		<property name="returnDates" type="java.util.List&lt;java.lang.String>"/>
+		<property name="codSelfShipData" type="com.tisl.mpl.data.CODSelfShipData"/>
+		<property name="productRichAttrOfQuickDrop" type="java.lang.String"/>
+		<property name="sellerRichAttrOfQuickDrop" type="java.lang.String"/>
+		<property name="returnLogisticsAvailability" type="boolean"/>
+		<property name="errorCode" type="String" />
+		<property name="deliveryAddressesList" type="java.util.List&lt;de.hybris.platform.commercefacades.user.data.AddressData>"/>
+		<property name="orderDetails" type="com.tisl.mpl.wsdto.OrderDataWsDTO"/>
+		<property name="deliveryAddress" type="de.hybris.platform.commercefacades.user.data.AddressData"/>
+		<property name="returnEntry" type="de.hybris.platform.commercewebservicescommons.dto.order.OrderEntryListWsDTO"/>	
+	</bean>
+	
+	<!-- Added for mobile inventory Reservation START   -->
+	
+	<bean class="com.tisl.mpl.wsdto.InventoryReservRequestWsDTO">
+		<property name="serviceableSlaves"
+			type="java.util.List&lt;de.hybris.platform.commercefacades.product.data.ServiceableSlavesData>" />
+		<property name="ussId" type="String" />
+		<property name="storeId" type="String" />
+		<property name="quantity" type="String" />
+		<property name="fulfillmentType" type="String" />
+		<property name="deliveryMode" type="String" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.InventoryReservListRequestWsDTO">
+		<property name="item"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.InventoryReservRequestWsDTO>" />
+	</bean>
+		<!-- Added for mobile inventory Reservation START  END  -->
+		
+	<bean class="com.tisl.mpl.wsdto.ReturnRequestDTO">
+		<property name="returnReasonCode" type="java.lang.String"/>
+		<property name="refundType" type="java.lang.String"/>
+		<property name="accountNumber" type="java.lang.String"/>
+		<property name="reEnterAccountNumber" type="java.lang.String"/>
+		<property name="refundMode" type="java.lang.String"/>
+		<property name="accountHolderName" type="java.lang.String"/>
+		<property name="bankName" type="java.lang.String"/>
+		<property name="iFSCCode" type="java.lang.String"/>
+		<property name="title" type="java.lang.String"/>
+		<property name="returnMethod" type="java.lang.String"/>
+		<property name="storeIds" type="java.util.List&lt;java.lang.String>"/>
+		<property name="addressType" type="java.lang.String"/>
+		<property name="firstName" type="java.lang.String"/>
+		<property name="lastName" type="java.lang.String"/>
+		<property name="addrLine1" type="java.lang.String"/>
+		<property name="addrLine2" type="java.lang.String"/>
+		<property name="addrLine3" type="java.lang.String"/>
+		<property name="landMark" type="java.lang.String"/>
+		<property name="pincode" type="java.lang.String"/>
+		<property name="phoneNumber" type="java.lang.String"/>
+		<property name="city" type="java.lang.String"/>
+		<property name="state" type="java.lang.String"/>
+		<property name="country" type="java.lang.String"/>
+		<property name="isDefault" type="java.lang.String"/>
+		<property name="scheduleReturnDate" type="java.lang.String"/>
+		<property name="scheduleReturnTime" type="java.lang.String"/>
+		<property name="isCODorder" type="java.lang.String"/>
+		<property name="orderCode" type="java.lang.String"/>
+		<property name="transactionId" type="java.lang.String"/>
+		<property name="ussid" type="java.lang.String"/>
+		<property name="transactionType" type="java.lang.String"/>
+		<property name="userId" type="java.lang.String"/>
 	</bean>
 
 </beans>

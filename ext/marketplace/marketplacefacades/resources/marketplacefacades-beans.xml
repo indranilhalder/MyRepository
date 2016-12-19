@@ -50,7 +50,30 @@
 		<property name="isPincodeServiceable" type="java.lang.Boolean" />
 		<property name="isCOD" type="java.lang.Boolean" />
 		<property name="deliveryDate" type="String" />
+		<property name="fulfilmentType" type="String" />
+		<property name="serviceableSlaves" type="java.util.List&lt;ServiceableSlavesData>" />
+		<property name="cNCServiceableSlavesData" type="java.util.List&lt;CNCServiceableSlavesData>" />
 	</bean>
+	
+	
+	<!-- placeholder for delivery related details -->
+	<bean
+		class="de.hybris.platform.commercefacades.product.data.ServiceableSlavesData">
+		<property name="slaveId" type="String" />
+		<property name="logisticsID" type="String" />
+		<property name="codEligible" type="String" />
+		<property name="priority" type="String" />
+		<property name="transactionType" type="String" />
+	</bean>
+	
+	
+		<bean
+		class="de.hybris.platform.commercefacades.product.data.CNCServiceableSlavesData">
+		<property name="storeId" type="String" />
+		<property name="qty" type="Integer" />
+		<property name="fulfillmentType" type="String" />
+		<property name="serviceableSlaves" type="java.util.List&lt;ServiceableSlavesData>" />
+		</bean>
 
 
 	<!-- buybox data -->
@@ -87,6 +110,8 @@
 		<property name="onlineExclusive" type="boolean" /> 
 		<property name="leadTimeForHomeDelivery" type="Integer"/>
 		<property name="returnWindow" type="String"/>
+		<!-- Bug ID TATA-815  -->
+		<property name="fulfillmentType1" type="String"/>
        </bean>
 
 	<bean
@@ -106,6 +131,12 @@
 		<property name="productCode" type="String"></property>
 		<property name="cartId" type="String"></property>
 		<property name="store" type="java.util.List&lt;java.lang.String>"></property>
+		<!-- Added new Rich Attributes  -->
+	    <property name="deliveryFulfillModeByP1" type="String" />
+		<property name="isFragile" type="String" />
+		<property name="isPrecious" type="String" />
+		<property name="sellerHandlingTime" type="Integer"/>
+		
 	</bean>
 
 
@@ -223,6 +254,11 @@
 		<property name="exchangePolicy" type="String" />
 		<property name="leadTimeForHomeDelivery" type="Integer"/>
 		<property name="sellerAssociationstatus" type="String" />
+		<property name="deliveryFulfillModebyP1" type="String" />
+		<property name="isFragile" type="String" />
+		<property name="isPrecious" type="String" />
+		<property name="sellerHandlingTime" type="Integer" />
+		
 	</bean>
 
 
@@ -376,7 +412,9 @@
 		<property name="sellerOrderList"
 			type="java.util.List&lt;de.hybris.platform.commercefacades.order.data.OrderData>" />
 			<property name="pickupName" type="String"/>
-			<property name="pickupPhoneNumber" type="String"/>		
+			<property name="pickupPhoneNumber" type="String"/>
+			<property name="deliveryAddressList"
+			type="java.util.List&lt;de.hybris.platform.commercefacades.user.data.AddressData>" />		
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.data.OrderDataTransactionForXML">
@@ -511,6 +549,24 @@
 			type="String"></property>
 		<!-- TISPT-385-->	
  		<property name="parentTransactionID" type="String"></property>	
+			<property name="edScheduledDate"
+			type="java.util.Date"></property>
+			<property name="timeSlotFrom" type="String"/>
+			<property name="timeSlotTo" type="String"/>
+			<property name="scheduledDeliveryCharge" type="Double"/>
+			<property name="returnStoreId" type="String"/>
+			
+			<!--Newly Added Fields for DeliverySlots  -->
+			<property name="deliverySlotsDates" type="java.util.List&lt;java.lang.String>"></property>
+			
+			<property name="deliverySlotsTime" type="java.util.Map&lt;String,java.util.List&lt;String>>"></property>
+			<property name="selectedDeliveryModeForUssId" type="String"></property>
+			<property name="selectedDeliverySlotDate" type="String"></property>
+			<property name="selectedDeliverySlotTimeFrom" type="String"></property>
+			<property name="selectedDeliverySlotTimeTo" type="String"></property>
+			
+			<property name="returnMethodType" type="String"></property>
+			<property name="isRefundable" type="boolean"></property>
 	</bean>
 	
 	<bean class="de.hybris.platform.commercefacades.order.data.ImeiDetailData">
@@ -952,5 +1008,51 @@
 	<bean class="com.tisl.mpl.facades.data.BulkReturnStatusData">
 		<property name="consignmentStatus" type="String"></property>
 		<property name="returnStatus" type="java.lang.Boolean"></property>
+	</bean>
+	<!-- R2.3 FL04 Changes -->
+	
+	<bean class="com.tisl.mpl.facade.data.LandMarksData">
+		<property name="landmarksCode" type="String"></property>
+		<property name="landmark" type="String"></property>
+		<property name="isActive" type="java.lang.String"></property>
+	</bean>
+
+	<bean class="com.tisl.mpl.facades.data.PincodeData">
+		<property name="pincode" type="String"></property>
+		<property name="cityName" type="String"></property>
+		<property name="state" type="com.tisl.mpl.facades.product.data.StateData"></property>
+		<property name="landMarks" type="java.util.List&lt;com.tisl.mpl.facade.data.LandMarksData>"></property>
+		<property name="country" type="String"></property>
+		<property name="countryCode" type="String"></property>
+	</bean>
+	<!-- FL04 Close -->
+
+	<bean class="com.tisl.mpl.facades.data.ScheduledDeliveryData">
+    	<property name="isActive" type="java.lang.Boolean"></property>
+		<property name="isPincodeServiceable" type="java.lang.Boolean"></property>	
+	    <property name="entries" type="java.lang.Object"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.facades.data.RescheduleData">
+		<property name="date" type="String"></property>
+		<property name="time" type="String"></property>
+		<property name="productCode" type="String"></property>
+	</bean>
+	
+	<bean class="com.tisl.mpl.facades.data.RescheduleDataList">
+			<property name="rescheduleDataList" type="java.util.List&lt;com.tisl.mpl.facades.data.RescheduleData>"></property>
+	</bean>
+    
+    <bean class="com.tisl.mpl.facades.data.MplDeliveryAddressReportData">
+	    <property name="orderId" type="String"></property>
+		<property name="totalRequestCount" type="int"></property>
+		<property name="failureRequsetCount" type="int"></property>
+	</bean>
+	<bean class="com.tis.mpl.facade.shorturl.ShortUrlReportData">
+		<property name="orderId" type="String"></property>
+		<property name="longUrl" type="String"></property>
+		<property name="shortUrl" type="String"></property>
+		<property name="cliks" type="int"></property>
+		<property name="logins" type="int"></property>
 	</bean>
 </beans>

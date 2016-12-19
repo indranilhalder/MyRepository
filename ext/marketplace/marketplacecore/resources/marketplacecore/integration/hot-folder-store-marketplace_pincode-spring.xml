@@ -82,15 +82,10 @@
             <value> 
             	# Pincode Latitude , Longitude , cityName , isActive and stateCode Relation 
 				INSERT_UPDATE Pincode;pincode[unique=true];latitude;longitude;cityName;active[default=Y];state(region)  
-            <value> ImpEx for Importing Prices into $CATALOG$
-                $catalog=$CATALOG$
-                $catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
-                #% impex.setLocale(Locale.ENGLISH);
-				INSERT_UPDATE Pincode;pincode[unique=true];latitude;longitude;State(region);City(cityName)  
        		</value>
         </property>
         <property name="impexRow">
-            <value>;{+0};{+1};{+2};{3};{4}</value>
+            <value>;{+0};{+1};{+2};{+3};{4};{+5}</value>
         </property>
         </bean>
         
