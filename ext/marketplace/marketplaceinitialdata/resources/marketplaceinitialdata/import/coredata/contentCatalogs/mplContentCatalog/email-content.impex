@@ -258,10 +258,6 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;OrderConfirmationBannerTwo;;$wideContent;
 ;smileyimg;;$wideContent;
 ;fb;;$wideContent;
-;twitter;;$wideContent;
-;youtube;;$wideContent;
-;gplus;;$wideContent;
-;app;;$wideContent;
 ;tweet;;$wideContent;
 ;youtube;;$wideContent;
 ;insta;;$wideContent;
@@ -917,10 +913,6 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;OrderConfirmationBannerTwo-OrderConfirmationEmail;OrderConfirmationBannerTwo;;EmailConfBanner2ConfSlot;true
 ;;smileyimg-OrderConfirmationEmail;smileyimg;;EmailsmileyimgConfSlot;true
 ;;fb-OrderConfirmationEmail;fb;;EmailfbConfSlot;true
-;;gplus-OrderConfirmationEmail;gplus;;EmailgplusConfSlot;true
-;;twitter-OrderConfirmationEmail;twitter;;EmailtwitterconfSlot;true
-;;youtube-OrderConfirmationEmail;youtube;;EmailyoutubeConfSlot;true
-;;app-OrderConfirmationEmail;app;;EmailappConfSlot;true
 ;;tweet-OrderConfirmationEmail;tweet;;EmailtweetSlot;true
 ;;youtube-OrderConfirmationEmail;youtube;;EmailYouTubeSlot;true
 ;;insta-OrderConfirmationEmail;insta;;EmailInstaSlot;true

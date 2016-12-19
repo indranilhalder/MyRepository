@@ -75,27 +75,14 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 
 
 INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
-;;/images/theme/OrderConfirmationBanner1.jpg;OrderConfirmationBanner1.jpg;$siteResource/images/theme/header4.jpg;;
 ;;/images/theme/Luxury_HeaderLogo.jpg;Luxury_HeaderLogo.jpg;$siteResource/images/theme/Luxury_HeaderLogo.jpg;;
 ;;/images/theme/OrderConfirmationBanner2.jpg;OrderConfirmationBanner2.jpg;$siteResource/images/theme/OrderConfirmationBanner2.jpg;;
 ;;/images/theme/DeliveryPerson.jpg;DeliveryPerson.jpg;$siteResource/images/theme/DeliveryPerson.jpg;;
-;;/images/theme/Track-btn.jpg;Track1.jpg;$siteResource/images/theme/track-btn.jpg;;
-;;/images/theme/Track2.jpg;Track2.jpg;$siteResource/images/theme/track-btn.jpg;;
 ;;/images/theme/Luxury_TrackOrder.jpg;Luxury_TrackOrder.jpg;$siteResource/images/theme/Luxury_TrackOrder.jpg;;
 ;;/images/theme/Track2.jpg;Track2.jpg;$siteResource/images/theme/track-btn.jpg;;
 ;;/images/theme/ConfDescription.jpg;ConfDescription.jpg;$siteResource/images/theme/ConfDescription.jpg;;
 ;;/images/theme/OrderReferenceNumberOne.jpg;OrderReferenceNumberOne.jpg;$siteResource/images/theme/OrderReferenceNumberOne.jpg;;
 ;;/images/theme/OrderReferenceNumberTwo.jpg;OrderReferenceNumberTwo.jpg;$siteResource/images/theme/OrderReferenceNumberTwo.jpg;;
-;;/images/theme/Happy-shopping.jpg;smileyimg.jpg;$siteResource/images/theme/happy-shopping.jpg;;
-;;/images/theme/App.jpg;app.jpg;$siteResource/images/theme/click-app.jpg;;
-;;/images/theme/Tips.jpg;Tip.jpg;$siteResource/images/theme/tip.jpg;;
-;;/images/theme/fb.jpg;fb.jpg;$siteResource/images/theme/facebook.jpg;;
-;;/images/theme/twitter.jpg;twitter.jpg;$siteResource/images/theme/twitter.jpg;;
-;;/images/theme/youtube.jpg;youtube.jpg;$siteResource/images/theme/youtube.jpg;;
-;;/images/theme/gplus.jpg;gplus.jpg;$siteResource/images/theme/socialnet.jpg;;
-
-
-
 ;;/images/theme/Luxury_Happy.png;Luxury_Happy.png;$siteResource/images/theme/Luxury_Happy.png;;
 ;;/images/theme/Luxury_App.jpg;Luxury_App.jpg;$siteResource/images/theme/Luxury_App.jpg;;
 ;;/images/theme/Luxury_Tip.jpg;Luxury_Tip.jpg;$siteResource/images/theme/Luxury_Tip.jpg;;
@@ -119,13 +106,6 @@ INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$pictur
 ;;OrderRefNumbOneConfImage;/images/theme/OrderReferenceNumberOne.jpg;
 ;;OrderRefNumbTwoConfImage;/images/theme/OrderReferenceNumberTwo.jpg;
 ;;TipImage;/images/theme/Tip.jpg;
-;;EmailFBImage;/images/theme/fb.jpg;
-;;EmailGplusImage;/images/theme/gplus.jpg;
-;;EmailsmileyImage;/images/theme/Happy-shopping.jpg;
-;;EmailTipsImage;/images/theme/Tips.jpg;
-;;EmailAppImage;/images/theme/App.jpg;
-;;Emailyoutube;/images/theme/youtube.jpg;
-;;Emailtwitter;/images/theme/twitter.jpg;
 ;;EmailFBImage;/images/theme/Luxury_Fb.jpg;
 ;;EmailsmileyImage;/images/theme/Luxury_Happy.png;
 ;;EmailTipsImage;/images/theme/Luxury_Tip.jpg;
@@ -156,15 +136,11 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 ;;EmailTipConfSlot;EmailTipsImage
 ;;EmailsmileyimgConfSlot;EmailsmileyImage
 ;;EmailfbConfSlot;EmailFBImage
-;;EmailgplusConfSlot;EmailGplusImage
-;;EmailtwitterConfSlot;Emailtwitter
-;;EmailyoutubeConfSlot;Emailyoutube
-;;EmailappConfSlot;EmailAppImage;
-
 ;;EmailtweetSlot;Emailtwitter
 ;;EmailYouTubeSlot;Emailyoutube
 ;;EmailappConfSlot;EmailAppImage;
 ;;EmailInstaSlot;EmailInstagramImage
+
 
 # Order Collected By PickUp Person Email Template
 # Media
