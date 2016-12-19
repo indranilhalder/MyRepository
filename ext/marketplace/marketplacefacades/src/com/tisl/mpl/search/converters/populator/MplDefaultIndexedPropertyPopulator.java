@@ -92,5 +92,18 @@ public class MplDefaultIndexedPropertyPopulator extends DefaultIndexedPropertyPo
 			target.setIsNumeric(source.getIsNumeric());
 		}
 		////Search POC end
+		// TPR-3548  Start
+		if (source.getIsNumericRange() == null)
+		{
+
+			source.setIsNumericRange(Boolean.FALSE);
+			target.setIsNumericRange(source.getIsNumericRange());
+
+		}
+		else
+		{
+			target.setIsNumericRange(source.getIsNumericRange());
+		}
+		// TPR-3548  End
 	}
 }

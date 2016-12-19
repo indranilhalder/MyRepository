@@ -205,3 +205,25 @@ UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=
  ;$solrIndexedType		   ;shoecaretype					           ;"Shoe Care Type"
  ;$solrIndexedType		   ;suitablefor						           ;"Suitable for"
  ;$solrIndexedType		   ;weightsportsfootwear					   ;"Weight of Product"
+
+ # Travel and Luggage Start
+ # Solr Indexed Property
+UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true]	;displayName[lang=$lang]
+ ;$solrIndexedType		;briefcasetypetrlg			  				;"Briefcase Type"
+ ;$solrIndexedType		;duffelbagtypetrlg			  				;"Duffel Bag Type"
+ ;$solrIndexedType		;gendertrlg					  				;"Gender"
+ ;$solrIndexedType		;handletypetrlg				  				;"Handle Type"
+ ;$solrIndexedType		;laptopbagtypetrlg			  				;"Laptop Bag Type"
+ ;$solrIndexedType		;luggagetypetrlg			  				;"Luggage Type"
+ ;$solrIndexedType		;messengerbagtypetrlg						;"Messenger Bag Type"
+ ;$solrIndexedType		;occasiontrlg								;"Occasion"
+ ;$solrIndexedType		;straptypetrlg								;"Strap Type"
+ ;$solrIndexedType		;strollywheeltypetrlg						;"Strolly Wheel Type"
+ ;$solrIndexedType		;uppermaterialtrlg							;"Upper Material"
+ ;$solrIndexedType		;weighttrlg									;"Weight"
+ ;$solrIndexedType		;height-classification						;"Height"
+ ;$solrIndexedType		;capacity-classification					;"Capacity"
+ ;$solrIndexedType		;compatiblelaptopsizet-classification		;"Compatible Laptop Size"
+ ;$solrIndexedType		;colorfamilytrlg							;"Colour Family"
+ ;$solrIndexedType		;leathertypetrlg							;"Leather type"
+ 
