@@ -1240,9 +1240,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 				model.addAttribute(ModelAttributetConstants.BREADCRUMBS, breadcrumbs);
 
-			}
-		}
-		catch (final IllegalArgumentException e)
+		}catch (final IllegalArgumentException e)
 		{
 
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
