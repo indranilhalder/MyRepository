@@ -3,6 +3,25 @@
  */
 package com.tisl.mpl.facade.checkout;
 
+import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.commercefacades.order.CartFacade;
+import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.order.data.CartModificationData;
+import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.commercefacades.order.data.OrderEntryData;
+import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
+import de.hybris.platform.commercefacades.user.data.AddressData;
+import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
+import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.user.UserModel;
+import de.hybris.platform.order.InvalidCartException;
+import de.hybris.platform.promotions.util.Tuple2;
+import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
+import de.hybris.platform.wishlist2.model.Wishlist2Model;
+
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,18 +29,27 @@ import java.util.List;
 import java.util.Map;
 
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facades.data.StoreLocationRequestData;
+import com.tisl.mpl.facades.data.StoreLocationResponseData;
+import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
+import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData;
+import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRequestData;
+import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData;
+import com.tisl.mpl.wsdto.GetWishListWsDTO;
+import com.tisl.mpl.wsdto.MplEDDInfoWsDTO;
+import com.tisl.mpl.wsdto.MplSelectedEDDForUssID;
 
 
 /**
  * @author TCS
- * 
+ *
  */
 public interface MplCartFacade extends CartFacade
 {
 
 	/**
 	 * Method for adding a product to cart.
-	 * 
+	 *
 	 * @param code
 	 *           code of product to add
 	 * @param quantity
@@ -95,7 +123,7 @@ public interface MplCartFacade extends CartFacade
 	/**
 	 * Method for fetching default pincode details It will return pincode if exists in session else will fetch from
 	 * Address
-	 * 
+	 *
 	 * @return default pin code
 	 * @throws CMSItemNotFoundException
 	 */
@@ -114,10 +142,10 @@ public interface MplCartFacade extends CartFacade
 
 	/**
 	 * Method for fetching cart details
-	 * 
+	 *
 	 * @param uid
 	 *           User unique identification no
-	 * 
+	 *
 	 * @return Collections of Cart Model associated with user id
 	 * @throws InvalidCartException
 	 */
@@ -125,12 +153,12 @@ public interface MplCartFacade extends CartFacade
 
 	/**
 	 * Method for creating empty cart if no cart is associated with user id for Mobile service
-	 * 
+	 *
 	 * User emailId , for anonymous user emailId : null
-	 ** 
+	 **
 	 * @param emailId
 	 * @param baseSiteId
-	 * 
+	 *
 	 * @return CartModel
 	 * @throws CommerceCartModificationException
 	 */
@@ -139,17 +167,17 @@ public interface MplCartFacade extends CartFacade
 
 	/**
 	 * Method for adding item to cart for Mobile service
-	 * 
+	 *
 	 * @param cartId
-	 * 
+	 *
 	 * @param productCode
-	 * 
+	 *
 	 * @param quantity
-	 * 
+	 *
 	 * @param ussid
-	 * 
+	 *
 	 * @return boolean , for success return true else false
-	 * 
+	 *
 	 * @throws CommerceCartModificationException
 	 *            if cartid , product code , quantity id null or empty if cart id , product id is invalid if quantity is
 	 *            less than or equals to 0
@@ -224,15 +252,15 @@ public interface MplCartFacade extends CartFacade
 
 	/*
 	 * @DESC TISST-6994,TISST-6990 adding to cart COD eligible or not with Pincode serviceabilty and sship product
-	 * 
+	 *
 	 * @param pincodeResponseData
-	 * 
+	 *
 	 * @param deliveryModeMap
-	 * 
+	 *
 	 * @param cartModel
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	boolean addCartCodEligible(final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap,
@@ -359,7 +387,7 @@ public interface MplCartFacade extends CartFacade
 
 	/**
 	 * The Method used to validate serviceability check for Gift Yourself Section in Cart
-	 * 
+	 *
 	 * @param defaultPinCodeId
 	 * @param entryModels
 	 * @return Map<String, List<String>>
@@ -393,7 +421,7 @@ public interface MplCartFacade extends CartFacade
 
 	/**
 	 * This Method is used to get Valid Delivery Modes by Inventory
-	 * 
+	 *
 	 * @param pinCodeResponseData
 	 * @return PinCodeResponseData
 	 * @throws EtailNonBusinessExceptions
@@ -403,7 +431,7 @@ public interface MplCartFacade extends CartFacade
 
 	/**
 	 * This Method is used to get Ordered Cart entry in Mobile
-	 * 
+	 *
 	 * @param recentlyAddedFirst
 	 * @return CartData
 	 * @throws EtailNonBusinessExceptions
@@ -416,7 +444,7 @@ public interface MplCartFacade extends CartFacade
 
 	/**
 	 * TPR-774
-	 * 
+	 *
 	 * @doc To calculate discount percentage amount for display purpose
 	 * @param cartModel
 	 */
@@ -434,4 +462,22 @@ public interface MplCartFacade extends CartFacade
 	 * @throws EtailNonBusinessExceptions
 	 */
 	boolean notifyEmailAndSmsOnInventoryFail(final OrderModel orderModel) throws EtailNonBusinessExceptions;
+
+/**
+	 * get EDD INFormation for Ussid
+	 * @param cartModel
+	 * @param invReserForDeliverySlotsItemEDDInfoData
+	 * @return MplEDDInfoWsDTO
+	 * @throws ParseException 
+	 */
+	public MplEDDInfoWsDTO getEDDInfo(CartModel cartModel,List<InvReserForDeliverySlotsItemEDDInfoData> invReserForDeliverySlotsItemEDDInfoData) throws ParseException;
+
+
+	/**
+	 * 
+	 * @param cartModel
+	 * @param mplSelectedEDDInfo
+	 * @return boolean
+	 */
+	public boolean addSelectedEDD(CartModel cartModel, List<MplSelectedEDDForUssID> mplSelectedEDDInfo);
 }

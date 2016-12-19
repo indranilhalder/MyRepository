@@ -1,5 +1,11 @@
 package com.tisl.mpl.seller.product.facades.impl;
 
+import de.hybris.platform.category.model.CategoryModel;
+import de.hybris.platform.commercefacades.product.PriceDataFactory;
+import de.hybris.platform.commercefacades.product.data.SellerInformationData;
+import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -9,20 +15,37 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import com.sun.xml.internal.ws.util.StringUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
+
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.enums.ClickAndCollectEnum;
+import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
+import com.tisl.mpl.core.enums.ExpressDeliveryEnum;
+import com.tisl.mpl.core.enums.HomeDeliveryEnum;
+import com.tisl.mpl.core.enums.PaymentModesEnum;
+import com.tisl.mpl.core.model.BuyBoxModel;
+import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.enums.OnlineExclusiveEnum;
+import com.tisl.mpl.enums.SellerAssociationStatusEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
+import com.tisl.mpl.facades.product.RichAttributeData;
+import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
+import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 
 
 /**
  * @author TCS
- * 
+ *
  */
 public class BuyBoxFacadeImpl implements BuyBoxFacade
 {
@@ -107,7 +130,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	/**
 	 * This method is responsible for get the winning buybox seller and other sellers count and minimum price information
 	 * for the given product code
-	 * 
+	 *
 	 * @param productCode
 	 * @return-buyboxData
 	 */
@@ -267,7 +290,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	/**
 	 * This method is responsible for get the winning buybox seller and other sellers count and minimum price information
 	 * for the given product code
-	 * 
+	 *
 	 * @param productCode
 	 * @return-buyboxData
 	 */
@@ -432,7 +455,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/**
 	 * This method is responsible to get the buybox data for the given product code and seller ID
-	 * 
+	 *
 	 * @param productCode
 	 * @param sellerId
 	 * @return-buyboxData
@@ -492,7 +515,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/**
 	 * This method is responsible for getting the list of the sellers for the given product code
-	 * 
+	 *
 	 * @param productCode
 	 * @return SellerInformationDataList
 	 */
@@ -558,7 +581,11 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					sellerData.setShippingMode(rich.getShippingModes().getCode());
 				}
 
+				if (null != rich.getDeliveryFulfillModeByP1())
+				{
 
+					sellerData.setDeliveryFulfillModebyP1(rich.getDeliveryFulfillModeByP1().getCode());
+				}
 				if (null != rich.getDeliveryFulfillModes() && rich.getDeliveryFulfillModes().equals(DeliveryFulfillModesEnum.TSHIP))
 				{
 
@@ -581,10 +608,18 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				{
 					sellerData.setIsCod(MarketplaceFacadesConstants.N);
 				}
+				if (null != rich.getIsFragile())
+				{
+					sellerData.setIsFragile(rich.getIsFragile().getCode());
+				}
+				if (null != rich.getIsPrecious())
+				{
+					sellerData.setIsPrecious(rich.getIsPrecious().getCode());
+				}
 
 				sellerData.setReturnPolicy(rich.getReturnWindow());
 				sellerData.setReplacement(rich.getReplacementWindow());
-
+				sellerData.setSellerHandlingTime(rich.getSellerHandlingTime());
 				SellerInformationDataList.add(sellerData);
 
 			}
@@ -596,7 +631,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/**
 	 * This method is responsible for getting the RICH ATTRIBUTE DETAILS
-	 * 
+	 *
 	 * @param productModel
 	 * @param buyboxid
 	 * @return richData
@@ -639,6 +674,11 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 						if (null != rich.getDeliveryFulfillModes())
 						{
 							richData.setFulfillment(rich.getDeliveryFulfillModes().getCode());
+						}
+                      /*Bug ID TATA-815 */
+						if (null != rich.getDeliveryFulfillModeByP1())
+						{
+							richData.setFulfillmentType1(rich.getDeliveryFulfillModeByP1().getCode());
 						}
 						if (HomeDeliveryEnum.YES.equals(rich.getHomeDelivery()))
 						{
@@ -784,7 +824,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/**
 	 * changes for TPR-1375 poulating buybox details from buybox models
-	 * 
+	 *
 	 * @param buyBoxMod
 	 * @param buyboxModelList
 	 * @param onlyBuyBoxHasStock

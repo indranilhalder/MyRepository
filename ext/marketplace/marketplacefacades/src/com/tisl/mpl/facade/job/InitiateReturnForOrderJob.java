@@ -1,5 +1,28 @@
 package com.tisl.mpl.facade.job;
 
+import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.commercefacades.order.data.OrderEntryData;
+import de.hybris.platform.commercefacades.product.PriceDataFactory;
+import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commercefacades.product.data.PriceDataType;
+import de.hybris.platform.commercefacades.user.data.CustomerData;
+import de.hybris.platform.commerceservices.enums.SalesApplication;
+import de.hybris.platform.core.model.BulkReturnProcessModel;
+import de.hybris.platform.core.model.c2l.CurrencyModel;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
+import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.user.AddressModel;
+import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.cronjob.enums.CronJobResult;
+import de.hybris.platform.cronjob.enums.CronJobStatus;
+import de.hybris.platform.cronjob.model.CronJobModel;
+import de.hybris.platform.servicelayer.cronjob.AbstractJobPerformable;
+import de.hybris.platform.servicelayer.cronjob.PerformResult;
+import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.session.SessionService;
+import de.hybris.platform.store.services.BaseStoreService;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,18 +31,26 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import com.sun.xml.internal.ws.util.StringUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
+import com.tisl.mpl.facades.data.BulkReturnStatusData;
+import com.tisl.mpl.facades.account.register.MplOrderFacade;
+import com.tisl.mpl.facades.data.ReturnItemAddressData;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.util.ExceptionUtil;
 
 
 /**
  * @author TCS
- * 
+ *
  */
 public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobModel>
 {
@@ -28,7 +59,11 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 	@Autowired
 	private CancelReturnFacade cancelReturnFacade;
 	@Autowired
+	private MplCheckoutFacade mplCheckoutFacade;
+	@Autowired
 	private OrderModelService orderModelService;
+	@Autowired
+	private MplOrderFacade mplOrderFacade;
 
 	@Resource(name = "sessionService")
 	private SessionService sessionService;
@@ -58,6 +93,12 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 		{
 			String orderCode = null; // TODO to fetch from given CSV66
 			String transactionId = null; // TODO to fetch from given CSV66
+			String ussid = null;
+			final String ticketTypeCode = MarketplacecommerceservicesConstants.TICKETTYPECODE;
+			final String refundType = MarketplacecommerceservicesConstants.REFUNDTYPE;
+			final String reasonCode = MarketplacecommerceservicesConstants.REASONCODE;
+			String orderStatus = null;
+			CustomerData customerData = null;
 			OrderData subOrderDetails = null;
 			ReturnItemAddressData returnAddrData = null;
 			Map<String, BulkReturnStatusData> returnResonseMap = null;

@@ -3,30 +3,96 @@
  */
 package com.tisl.mpl.facade.checkout.impl;
 
+import de.hybris.platform.acceleratorfacades.order.AcceleratorCheckoutFacade;
+import de.hybris.platform.acceleratorfacades.order.AcceleratorCheckoutFacade.ExpressCheckoutResult;
+import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.commercefacades.order.data.OrderEntryData;
+import de.hybris.platform.commercefacades.order.impl.DefaultCheckoutFacade;
+import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
+import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commercefacades.product.data.PriceDataType;
+import de.hybris.platform.commercefacades.user.data.AddressData;
+import de.hybris.platform.commerceservices.enums.SalesApplication;
+import de.hybris.platform.commerceservices.order.CommerceCartService;
+import de.hybris.platform.commerceservices.service.data.CommerceCheckoutParameter;
+import de.hybris.platform.commerceservices.service.data.CommerceOrderResult;
+import de.hybris.platform.core.Registry;
+import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.c2l.CurrencyModel;
+import de.hybris.platform.core.model.enumeration.EnumerationValueModel;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
+import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
+import de.hybris.platform.core.model.order.price.DiscountModel;
+import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.core.model.user.UserModel;
+import de.hybris.platform.jalo.user.User;
+import de.hybris.platform.order.CartService;
+import de.hybris.platform.order.InvalidCartException;
+import de.hybris.platform.order.OrderService;
+import de.hybris.platform.order.exceptions.CalculationException;
+import de.hybris.platform.orderprocessing.model.OrderProcessModel;
+import de.hybris.platform.promotions.model.PromotionResultModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.event.EventService;
+import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
+import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.session.SessionService;
+import de.hybris.platform.servicelayer.util.ServicesUtil;
+import de.hybris.platform.site.BaseSiteService;
+import de.hybris.platform.store.BaseStoreModel;
+import de.hybris.platform.voucher.VoucherModelService;
+import de.hybris.platform.voucher.jalo.PromotionVoucher;
+import de.hybris.platform.voucher.model.PromotionVoucherModel;
+
 import java.math.BigDecimal;
-import java.rmi.registry.Registry;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 
-import com.sun.xml.internal.ws.util.StringUtils;
+import net.sourceforge.pmd.util.StringUtil;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
+
+import com.hybris.oms.tata.model.MplTimeSlotsModel;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.enums.AddressType;
+import com.tisl.mpl.core.model.MplLPHolidaysModel;
+import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
+import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.core.util.DateUtilHelper;
+import com.tisl.mpl.data.AddressTypeData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
+import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
+import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 //import com.tisl.mpl.fulfilmentprocess.events.OrderPlacedEvent;
 import com.tisl.mpl.helper.MplEnumerationHelper;
 import com.tisl.mpl.marketplacecommerceservices.event.OrderPlacedEvent;
@@ -35,14 +101,17 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCheckoutService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
+import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.promotion.service.SellerBasedPromotionService;
+import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.sns.push.service.impl.MplSNSMobilePushServiceImpl;
+import com.tisl.mpl.wsdto.PushNotificationData;
 
 
 /**
  * @author TCS
- * 
+ *
  */
 public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplCheckoutFacade
 {
@@ -100,6 +169,15 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	@Resource(name = "modelService")
 	private ModelService modelService;
+	
+	@Autowired
+	private DateUtilHelper dateUtilHelper;
+	
+	@Autowired
+	private MplConfigFacade mplConfigFacade;
+	
+	@Resource
+	private MplCheckoutFacade mplCheckoutFacade;
 
 	private static final Logger LOG = Logger.getLogger(MplCheckoutFacadeImpl.class);
 
@@ -226,7 +304,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	 * @description: It is used for populating delivery mode and cost for sellerartickeSKU
 	 * @param currency
 	 * @param sellerartickeSKU
-	 * 
+	 *
 	 * @return List<MplZoneDeliveryModeValueModel>
 	 * @throws EtailNonBusinessExceptions
 	 */
@@ -241,15 +319,15 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 * 
+	 *
 	 * @param deliveryCode
-	 * 
+	 *
 	 * @param currencyIsoCode
-	 * 
+	 *
 	 * @param sellerArticleSKU
-	 * 
+	 *
 	 * @return MplZoneDeliveryModeValueModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -285,13 +363,13 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description modified from DefaultAcceleratorCheckoutFacade performExpressCheckout : TIS 391
-	 * 
+	 *
 	 * @ Selected Address set for express checkout
-	 * 
+	 *
 	 * @param addressId
-	 * 
+	 *
 	 * @return ExpressCheckoutResult
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions,Exception
 	 */
 	@Override
@@ -321,7 +399,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @Desc if express checkout is enabled for the store
-	 * 
+	 *
 	 * @return boolean
 	 */
 
@@ -339,11 +417,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description setting address for express checkout : TIS 391
-	 * 
+	 *
 	 * @param addressId
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions,Exception
 	 */
 	private boolean setDefaultDeliveryAddressForCheckout(final String addressId) throws EtailNonBusinessExceptions
@@ -374,11 +452,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description Re calculating cart delivery cost: TIS 400
-	 * 
+	 *
 	 * @param addressId
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -501,13 +579,13 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description Storing delivery cost while navigating from Delivery mode to address selection : TIS 400 TISEE-581
-	 * 
+	 *
 	 * @param finalDeliveryCost
-	 * 
+	 *
 	 * @param deliveryCostPromotionMap
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -631,6 +709,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 				}
 
 
+
 				//skip the order if product is missing in the order entries
 				for (final AbstractOrderEntryModel orderEntry : orderModel.getEntries())
 				{
@@ -678,23 +757,88 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		catch (final NullPointerException ex)
 
 		{
+			LOG.error("Error while searching for order :" + orderNumber);
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
 		catch (final UnknownIdentifierException ex)
 		{
+			LOG.error("Error while searching for order :" + orderNumber);
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
 		catch (final Exception ex)
 		{
+			LOG.error("Error while searching for order :" + orderNumber);
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
+	}
+	/**
+	 * @description: This method is common method to set data
+	 * @param orderModel
+	 * @return OrderData
+	 *
+	 */
+	private OrderData prepareOrderAndSubOrderData(final OrderModel orderModel)
+	{
+
+		final PriceData deliveryCost = createPrice(orderModel, orderModel.getDeliveryCost());
+		//TISBOX-1417 Displaying COD value in order confirmation page
+		PriceData convenienceCharge = null;
+		PriceData totalPriceWithConvenienceCharge = null;
+		if (orderModel.getConvenienceCharges() != null)
+		{
+			convenienceCharge = createPrice(orderModel, orderModel.getConvenienceCharges());
+		}
+
+		if (orderModel.getTotalPriceWithConv() != null)
+		{
+			totalPriceWithConvenienceCharge = createPrice(orderModel, orderModel.getTotalPriceWithConv());
+		}
+
+		//skip the order if product is missing in the order entries
+		for (final AbstractOrderEntryModel orderEntry : orderModel.getEntries())
+		{
+			if (null == orderEntry.getProduct()) // it means somehow product is deleted from the order entry.
+			{
+				LOG.info("************************Skipping order history for order :" + orderModel.getCode() + " and for user: "
+						+ orderModel.getUser().getName() + " **************************");
+				return null;
+			}
+		}
+
+		final OrderData orderData = getOrderConverter().convert(orderModel);
+		orderData.setDeliveryCost(deliveryCost);
+
+		if (convenienceCharge != null)
+		{
+			orderData.setConvenienceChargeForCOD(convenienceCharge);
+		}
+
+		if (totalPriceWithConvenienceCharge != null)
+		{
+			orderData.setTotalPriceWithConvCharge(totalPriceWithConvenienceCharge);
+		}
+
+		final List<OrderData> sellerOrderList = new ArrayList<OrderData>();
+		for (final OrderModel sellerOrder : orderModel.getChildOrders())
+		{
+			final PriceData childDeliveryCost = createPrice(sellerOrder, sellerOrder.getDeliveryCost());
+			final OrderData sellerOrderData = getOrderConverter().convert(sellerOrder);
+			//orderData.setDeliveryCost(childDeliveryCost);
+			sellerOrderData.setDeliveryCost(childDeliveryCost);
+			sellerOrderData.setPickupName(orderModel.getPickupPersonName());
+			sellerOrderData.setPickupPhoneNumber(orderModel.getPickupPersonMobile());
+			sellerOrderList.add(sellerOrderData);
+		}
+		orderData.setSellerOrderList(sellerOrderList);
+
+		return orderData;
 	}
 
 	/**
 	 * @description: It is creating price data for a price value
 	 * @param source
 	 * @param val
-	 * 
+	 *
 	 * @return PriceData
 	 */
 	@Override
@@ -719,11 +863,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @Desc to check pincode inventory for Pay now TIS 414
-	 * 
+	 *
 	 * @param cartData
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -792,11 +936,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @ Desc to check promotion expired or not for Pay now : TIS 414
-	 * 
+	 *
 	 * @param cartData
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -845,7 +989,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/**
 	 * @ Override TSHIP : TIS 397
-	 * 
+	 *
 	 * @param deliveryModeDataMap
 	 * @param cartData
 	 * @return Map<String, List<MarketplaceDeliveryModeData>>
@@ -907,7 +1051,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.checkout.MplCheckoutFacade#placeOrder(java.lang.String)
 	 */
 	@Override
@@ -1037,7 +1181,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/**
 	 * send mobile push notifications - Android and iOS
-	 * 
+	 *
 	 * @param orderDetails
 	 */
 	@Override
@@ -1090,7 +1234,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.facade.checkout.MplCheckoutFacade#triggerEmailAndSmsOnOrderConfirmation(de.hybris.platform.core.model
 	 * .order.OrderModel)
@@ -1143,15 +1287,15 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @desc use to save freebie delivery mode
-	 * 
+	 *
 	 * @param cartModel
-	 * 
+	 *
 	 * @param freebieModelMap
-	 * 
+	 *
 	 * @param freebieParentQtyMap
-	 * 
+	 *
 	 * @return void
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -1164,11 +1308,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @Description to check coupon expired or not for Pay now
-	 * 
+	 *
 	 * @param cartData
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -1201,7 +1345,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	 * This method returns orderData based on orderModel for TISPT-175. This method is replication of
 	 * getOrderDetailsForCode(orderCode) but the only difference is it takes order model as parameter to minimize another
 	 * db hit
-	 * 
+	 *
 	 * @param orderModel
 	 * @return OrderData
 	 */
@@ -1313,7 +1457,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/**
 	 * This method submits the order - ie. initiates the order fulfilment process TPR-629
-	 * 
+	 *
 	 * @param orderModel
 	 */
 	@Override
@@ -1636,7 +1780,48 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		this.mplCustomAddressFacade = mplCustomAddressFacade;
 	}
 
+/**
+	 * @param String
+	 * @param CustomerModel
+	 */
+	@Override
+	public OrderData getOrderDetailsForCockpitUser(String code, CustomerModel customerModel)
+	{
+		try
+		{
+			OrderData orderData = null;
+			if (code != null)
+			{
+				final BaseStoreModel baseStoreModel = getBaseStoreService().getCurrentBaseStore();
+				final OrderModel orderModel = getCheckoutCustomerStrategy().isAnonymousCheckout() ? getCustomerAccountService()
+						.getOrderDetailsForGUID(code, baseStoreModel) : getCustomerAccountService().getOrderForCode(
+								customerModel, code, baseStoreModel);
 
+				LOG.info("Step--1 ----- Order Codes For User " + orderModel.getCode());
+
+				orderData = prepareOrderAndSubOrderData(orderModel);
+			}
+			return orderData;
+		}
+		catch (final IllegalArgumentException ex)
+		{
+
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+		catch (final NullPointerException ex)
+
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+		catch (final UnknownIdentifierException ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
 
 	/**
 	 * @return the orderService

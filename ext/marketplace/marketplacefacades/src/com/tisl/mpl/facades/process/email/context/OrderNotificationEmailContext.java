@@ -14,6 +14,18 @@
 package com.tisl.mpl.facades.process.email.context;
 
 import java.util.ArrayList;
+import de.hybris.platform.acceleratorservices.model.cms2.pages.EmailPageModel;
+import de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext;
+import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
+import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.core.model.c2l.LanguageModel;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.user.AddressModel;
+import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.orderprocessing.model.OrderProcessModel;
+import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.storelocator.model.PointOfServiceModel;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,6 +34,12 @@ import com.sun.xml.internal.ws.util.StringUtils;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.velocity.tools.generic.MathTool;
+import org.apache.velocity.tools.generic.NumberTool;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 
 
 /**
@@ -154,6 +172,10 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 			if (!StringUtils.isEmpty(deliveryAddress.getAddressLine3()))
 			{
 				deliveryAddr.append(COMMA).append(deliveryAddress.getAddressLine3());
+			}
+			if (!StringUtils.isEmpty(deliveryAddress.getLandmark()))
+			{
+				deliveryAddr.append(COMMA).append(deliveryAddress.getLandmark());
 			}
 
 			deliveryAddr.append(COMMA).append(deliveryAddress.getTown()).append(COMMA).append(deliveryAddress.getDistrict())
