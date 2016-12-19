@@ -254,7 +254,7 @@
 			</attributes>
 	</itemtype>
 
-	<itemtype code="State" autocreate="true"
+	<!-- <itemtype code="State" autocreate="true"
 					 generate="true">
 			<attributes>
 					<attribute autocreate="true" qualifier="countrykey"
@@ -276,7 +276,7 @@
 							optional="false" />
 					</attribute>					
 			</attributes>
-	</itemtype>
+	</itemtype> -->
 
 	<itemtype code="MerchantMasterTable" autocreate="true"
 						 generate="true">
