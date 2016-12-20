@@ -6315,6 +6315,15 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- Search POC ends -->
+					<!-- TPR-3548  Start-->
+					<attribute qualifier="isNumericRange"
+						type="java.lang.Boolean">
+						<description>Set this to false for allowing Non Numeric text field Faceting</description>
+						<modifiers read="true" write="true" optional="true" />
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<persistence type="property" />
+					</attribute>
+					<!-- TPR-3548 End -->
 				</attributes>
 			</itemtype>
 

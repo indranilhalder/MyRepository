@@ -2099,7 +2099,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 							  //electronics
 
 							else if (MarketplacewebservicesConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productData.getRootCategory())
-									|| MarketplacewebservicesConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory()))
+									|| MarketplacewebservicesConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory())
+									|| MarketplacewebservicesConstants.TRAVELANDLUGGAGE.equalsIgnoreCase(productData.getRootCategory()))
 							{
 								final String[] propertiesValues = properitsValue.split(",");
 								String featureValues = "";
@@ -2163,7 +2164,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			}
 			//model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE, mapConfigurableAttribute);
 			if (MarketplacewebservicesConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory())
-					|| MarketplacewebservicesConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory()))
+					|| MarketplacewebservicesConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory())
+					|| MarketplacewebservicesConstants.TRAVELANDLUGGAGE.equalsIgnoreCase(productData.getRootCategory()))
 			{
 				productDetailMobile.setDetails(mapConfigurableAttribute);
 			}
