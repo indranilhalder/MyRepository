@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.tisl.mpl.facade.job;
 
 import de.hybris.platform.commercefacades.order.data.OrderData;
@@ -42,6 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.data.BulkCancelStoreData;
@@ -60,7 +58,8 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 	private final static Logger LOG = Logger.getLogger(InitiateCancelForOrderJob.class.getName());
 	@Autowired
 	private CancelReturnFacade cancelReturnFacade;
-
+	@Autowired
+	private MplCheckoutFacade mplCheckoutFacade;
 	@Autowired
 	private OrderModelService orderModelService;
 	@Autowired
@@ -72,8 +71,11 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 	private Converter<OrderModel, OrderData> orderConverter;
 	@Autowired
 	private PriceDataFactory priceDataFactory;
+
+
 	@Autowired
 	private ConfigurationService configurationService;
+
 
 	@SuppressWarnings(MarketplacecommerceservicesConstants.BOXING)
 	@Override
@@ -81,19 +83,21 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 	{
 		try
 		{
+
 			String orderCode = null;
 			String transactionId = null;
 			OrderData subOrderDetailsForMap = null;
-			int counter = 0;
+			OrderEntryData subOrderEntry = null;
+			//int counter = 0;
 			final Map<OrderEntryData, BulkCancelStoreData> cancellationDataMap = new HashMap<OrderEntryData, BulkCancelStoreData>();
-			List<BulkCancellationProcessModel> finalModelToSave = new ArrayList<BulkCancellationProcessModel>();
+			List<BulkCancellationProcessModel> finalModelToSaveList = new ArrayList<BulkCancellationProcessModel>();
 			//			final long startTime = System.currentTimeMillis();
 			//			LOG.info(MarketplacecommerceservicesConstants.START_TIME_C + startTime);
 			final List<BulkCancellationProcessModel> bulkList = orderModelService.getBulkCancelData();
 
 			if (CollectionUtils.isNotEmpty(bulkList))
 			{
-				LOG.info(MarketplacecommerceservicesConstants.BULK_CANCEL_LOG_STEP_1 + bulkList.size());
+
 				for (final BulkCancellationProcessModel bulkModel : bulkList)
 				{
 					if (null != bulkModel && null != bulkModel.getParentOrderNo() && null != bulkModel.getTransactionId())
@@ -119,11 +123,16 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 									{
 										final BulkCancelStoreData bulkCancelStoreData = new BulkCancelStoreData();
 										// SubOrderDetails are added into Map having the key as subOrderEntry
+										subOrderEntry = orderEntry;
 										bulkCancelStoreData.setSubOrderDetails(subOrderDetailsForMap);
 										bulkCancelStoreData.setBulkCancelModelData(bulkModel);
 										cancellationDataMap.put(orderEntry, bulkCancelStoreData);
 										break;
 									}
+								}
+								if (null != subOrderEntry)
+								{
+									break;
 								}
 							}
 							catch (final Exception e)
@@ -135,22 +144,24 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 					}
 					else
 					{
-						LOG.error(MarketplacecommerceservicesConstants.BULK_CANCEL_LOG_STEP_12);
+
 						bulkModel.setLoadStatus(MarketplacecommerceservicesConstants.FAILURE_LOAD_STATUS);
 						bulkModel.setStatusDescription(MarketplacecommerceservicesConstants.FAILURE);
-						finalModelToSave.add(bulkModel);
+						finalModelToSaveList.add(bulkModel);
 					}
-					counter++;
+					//counter++;
 				}
-				LOG.info(MarketplacecommerceservicesConstants.BULK_CANCEL_LOG_STEP_13 + counter);
-
 
 				// Iterate the HashMap to trigger the bulk cancellation process
 				if (!cancellationDataMap.isEmpty() && cancellationDataMap.size() > 0)
 				{
-					finalModelToSave = callOMStoCancelOrder(cancellationDataMap);
-					modelService.saveAll(finalModelToSave);
+
+					finalModelToSaveList = callOMStoCancelOrder(cancellationDataMap);
+
 				}
+
+				//save bulk cancel data
+				saveBulkCancelData(finalModelToSaveList);
 			}
 			else
 			{
@@ -180,6 +191,45 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 	}
 
 	/**
+	 * @param finalModelToSaveList
+	 *
+	 */
+	private void saveBulkCancelData(final List<BulkCancellationProcessModel> finalModelToSaveList)
+	{
+
+
+		final int maxAllowedSize = configurationService.getConfiguration().getInt(
+				MarketplacecommerceservicesConstants.initiate_cancel_job_cancellation_count, 1);
+
+		if (finalModelToSaveList.size() > maxAllowedSize)//save data in sub batches
+		{
+			int cnt = 0;
+			while (cnt <= finalModelToSaveList.size())
+			{
+
+				List<BulkCancellationProcessModel> subList = null;
+				if (maxAllowedSize < (finalModelToSaveList.size() - cnt))
+				{
+					subList = finalModelToSaveList.subList(cnt, (cnt + maxAllowedSize));
+				}
+				else
+				{
+					subList = finalModelToSaveList.subList(cnt, (finalModelToSaveList.size()));//get rest of the data
+				}
+
+				modelService.saveAll(subList);
+				cnt = cnt + maxAllowedSize;
+			}
+		}
+		else
+		{
+			modelService.saveAll(finalModelToSaveList); //save all data
+		}
+
+	}
+
+
+	/**
 	 * @param cancellationDataMap
 	 * @return List
 	 *
@@ -192,21 +242,22 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 		final String refundType = MarketplacecommerceservicesConstants.REFUNDTYPE;
 		final String reasonCode = MarketplacecommerceservicesConstants.REASONCODE;
 		String orderConsignmentStatus = null;
-		final CustomerData customerData = null;
+		CustomerData customerData = null;
 		boolean cancellationStatus = false;
 		boolean isCancellable = false;
-		OrderEntryData subOrderEntry = new OrderEntryData();
-		OrderData subOrderDetails = new OrderData();
-		final List<BulkCancellationProcessModel> finalModelToSave = new ArrayList<BulkCancellationProcessModel>();
+		OrderEntryData subOrderEntry = null;
+		OrderData subOrderDetails = null;
+		final List<BulkCancellationProcessModel> finalModelToSaveList = new ArrayList<BulkCancellationProcessModel>();
 
 		for (final OrderEntryData entryHashMap : cancellationDataMap.keySet())
 		{
-			BulkCancelStoreData mplCancelStoreData = new BulkCancelStoreData();
-			BulkCancellationProcessModel bulkCancelModel = new BulkCancellationProcessModel();
+			//BulkCancelStoreData mplCancelStoreData = new BulkCancelStoreData();
+			//BulkCancellationProcessModel bulkCancelModel = new BulkCancellationProcessModel();
 			subOrderEntry = entryHashMap;
-			mplCancelStoreData = cancellationDataMap.get(entryHashMap);
+			final BulkCancelStoreData mplCancelStoreData = cancellationDataMap.get(entryHashMap);
 			subOrderDetails = mplCancelStoreData.getSubOrderDetails();
-			bulkCancelModel = mplCancelStoreData.getBulkCancelModelData();
+			customerData = subOrderDetails.getCustomerData();
+			final BulkCancellationProcessModel bulkCancelModel = mplCancelStoreData.getBulkCancelModelData();
 			ussid = subOrderEntry.getSelectedUssid();
 
 
@@ -215,21 +266,18 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 			if (null == subOrderEntry.getConsignment() && subOrderEntry.getQuantity().intValue() != 0
 					&& null != subOrderDetails.getStatus())
 			{
-				LOG.info(MarketplacecommerceservicesConstants.BULK_CANCEL_LOG_STEP_4 + orderConsignmentStatus);
+
 				orderConsignmentStatus = subOrderDetails.getStatus().getCode();
 				isCancellable = mplOrderFacade.checkCancelStatus(orderConsignmentStatus,
 						MarketplacecommerceservicesConstants.CANCEL_ORDER_STATUS);
 			}
 			else if (null != subOrderEntry.getConsignment() && null != subOrderEntry.getConsignment().getStatus())
 			{
-				LOG.info(MarketplacecommerceservicesConstants.BULK_CANCEL_LOG_STEP_5 + orderConsignmentStatus);
+
 				orderConsignmentStatus = subOrderEntry.getConsignment().getStatus().getCode();
 				isCancellable = mplOrderFacade.checkCancelStatus(orderConsignmentStatus,
 						MarketplacecommerceservicesConstants.CANCEL_STATUS);
 			}
-			LOG.info(MarketplacecommerceservicesConstants.BULK_CANCEL_LOG_STEP_6 + isCancellable);
-
-
 
 			String message = MarketplacecommerceservicesConstants.EMPTY;
 			message = MarketplacecommerceservicesConstants.BLANK_SPACE + MarketplacecommerceservicesConstants.LEFT_PARENTHESIS
@@ -265,16 +313,16 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 					bulkCancelModel.setLoadStatus(MarketplacecommerceservicesConstants.FAILURE_LOAD_STATUS);
 					bulkCancelModel.setStatusDescription(MarketplacecommerceservicesConstants.BULK_CANCEL_FAILURE_DESC + message);
 				}
-				finalModelToSave.add(bulkCancelModel);
+				finalModelToSaveList.add(bulkCancelModel);
 			}
 			else
 			{
 				bulkCancelModel.setLoadStatus(MarketplacecommerceservicesConstants.FAILURE_LOAD_STATUS);
 				bulkCancelModel.setStatusDescription(MarketplacecommerceservicesConstants.BULK_CANCEL_FAILURE_DESC + message);
-				finalModelToSave.add(bulkCancelModel);
+				finalModelToSaveList.add(bulkCancelModel);
 			}
 		}
-		return finalModelToSave;
+		return finalModelToSaveList;
 	}
 
 	/**

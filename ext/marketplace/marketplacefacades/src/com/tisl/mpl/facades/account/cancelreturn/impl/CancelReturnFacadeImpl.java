@@ -19,6 +19,7 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.core.model.user.EmployeeModel;
 import de.hybris.platform.ordercancel.OrderCancelEntry;
 import de.hybris.platform.ordercancel.OrderCancelException;
 import de.hybris.platform.ordercancel.OrderCancelRecordsHandler;
@@ -1599,9 +1600,25 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	private void requestOrderCancel(final OrderData subOrderDetails, final OrderModel subOrderModel,
 			final MplOrderCancelRequest orderCancelRequest) throws OrderCancelException
 	{
+		/*
+		 * //cancel Order final OrderCancelRecordEntryModel orderRequestRecord =
+		 * orderCancelService.requestOrderCancel(orderCancelRequest, userService.getCurrentUser());
+		 */
+
+
+		OrderCancelRecordEntryModel orderRequestRecord = null;
+
 		//cancel Order
-		final OrderCancelRecordEntryModel orderRequestRecord = orderCancelService.requestOrderCancel(orderCancelRequest,
-				userService.getCurrentUser());
+		if ((userService.getCurrentUser()) instanceof EmployeeModel)
+		{
+			orderRequestRecord = orderCancelService.requestOrderCancel(orderCancelRequest, subOrderModel.getUser());
+		}
+
+		else
+		{
+
+			orderRequestRecord = orderCancelService.requestOrderCancel(orderCancelRequest, userService.getCurrentUser());
+		}
 
 		if (OrderCancelEntryStatus.DENIED.equals(orderRequestRecord.getCancelResult()))
 		{

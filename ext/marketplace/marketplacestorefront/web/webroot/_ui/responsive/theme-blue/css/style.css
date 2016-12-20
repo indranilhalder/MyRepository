@@ -38861,7 +38861,7 @@ main {
 }
 
 .carousel-component {
-	margin: 25px 0;
+	margin: -30px 0;
 }
 
 .carousel-component:before, .carousel-component:after {
