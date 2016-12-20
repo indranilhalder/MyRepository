@@ -39,13 +39,13 @@
     </bean>
  
     <!-- 1) Scan for files -->
-    <file:inbound-channel-adapter id="batchFilesMarketplacePrice" directory="#{baseDirectoryMarketplaceJewelleryPrice}"
+    <file:inbound-channel-adapter id="batchFilesMarketplaceJewelleryPrice" directory="#{baseDirectoryMarketplaceJewelleryPrice}"
         filename-regex="^(.*)-(\d+)\.csv" comparator="fileOrderComparator" auto-startup="#{configurationService.configuration.getProperty('etail.batch.import.hotfolder.enabled')}">
         <int:poller fixed-rate="1000" />
     </file:inbound-channel-adapter>
  
     <!-- 2) move the file to processing and setup header -->
-    <file:outbound-gateway request-channel="batchFilesMarketplacePrice" reply-channel="batchFilesMarketplacePriceProc"
+    <file:outbound-gateway request-channel="batchFilesMarketplaceJewelleryPrice" reply-channel="batchFilesMarketplaceJewelleryPriceProc"
         directory="#{baseDirectoryMarketplaceJewelleryPrice}/processing" delete-source-files="true" />
 
  
@@ -61,7 +61,7 @@
 		<property name="cleanupHelper" ref="cleanupHelper" />
 	</bean>
 	
- <int:service-activator input-channel="batchFilesMarketplacePriceProc" output-channel="batchFilesHeaderInit"
+ <int:service-activator input-channel="batchFilesMarketplaceJewelleryPriceProc" output-channel="batchFilesHeaderInit"
         ref="MarketplacePriceHeaderSetupTask" method="execute" />
  
  	<bean id="MarketplacePriceHeaderSetupTask" class="de.hybris.platform.acceleratorservices.dataimport.batch.task.HeaderSetupTask">
@@ -74,32 +74,32 @@
      <!-- Transformer converters mappings -->
     
      <!-- Transformer for Price Import -->
-    <bean id="batchMplpriceConverterMapping"
+    <bean id="batchMplpriceJewelleryConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="mpljewelleryprice"
-    p:converter-ref="batchMplpriceConverter"/>
+    p:converter-ref="batchMplpriceJewelleryConverter"/>
            
       <!-- Transformer for Product Approval when price is given Import -->      
-    <bean id="batchMplprice_product_approvalConverterMapping"
+    <bean id="batchMplprice_jewellery_product_approvalConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="mpljewelleryprice"
-    p:converter-ref="batchMplprice_product_approvalConverter"/>
+    p:converter-ref="batchMplprice_jewellery_product_approvalConverter"/>
     
      <!-- Transformer for Product Approval when price is given Import -->      
-    <bean id="batchHomedeliveryConverterMapping"
+    <bean id="batchJewelleryHomedeliveryConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="mpljewelleryprice"
-    p:converter-ref="batchHomedeliveryConverter"/>
+    p:converter-ref="batchJewelleryHomedeliveryConverter"/>
     
-     <bean id="batchExpressdeliveryConverterMapping"
+     <bean id="batchJewelleryExpressdeliveryConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="mpljewelleryprice"
-    p:converter-ref="batchExpressdeliveryConverter"/>
+    p:converter-ref="batchJewelleryExpressdeliveryConverter"/>
     
-     <bean id="batchCAndCdeliveryConverterMapping"
+     <bean id="batchJewelleryCAndCdeliveryConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="mpljewelleryprice"
-    p:converter-ref="batchCAndCdeliveryConverter"/>
+    p:converter-ref="batchJewelleryCAndCdeliveryConverter"/>
     
     <!-- Transformer for JewelleryPriceRow Import -->
      <bean id="batchJewelleryConverterMapping"
@@ -114,7 +114,7 @@
  	 <!-- Converters -->
  	
  	<!-- Converter for Price Import --> 
-       <bean id="batchMplpriceConverter" class="com.tisl.mpl.dataimport.batch.converter.impl.ExtDefaultImpexConverter">
+       <bean id="batchMplpriceJewelleryConverter" class="com.tisl.mpl.dataimport.batch.converter.impl.ExtDefaultImpexConverter">
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
@@ -136,7 +136,7 @@
         </bean>
         
         <!-- Converter for Product Approval when price is given Import --> 
-        <bean id="batchMplprice_product_approvalConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter" >
+        <bean id="batchMplprice_jewellery_product_approvalConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter" >
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
@@ -161,7 +161,7 @@
         </bean>
         
         <!-- Converter for Product Approval when price is given Import --> 
-        <bean id="batchHomedeliveryConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter" >
+        <bean id="batchJewelleryHomedeliveryConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter" >
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
@@ -192,7 +192,7 @@
 		</property> -->
          </bean>
          
-         <bean id="batchExpressdeliveryConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter" >
+         <bean id="batchJewelleryExpressdeliveryConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter" >
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
@@ -223,7 +223,7 @@
 		</property> -->
          </bean>
      
-      <bean id="batchCAndCdeliveryConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter" >
+      <bean id="batchJewelleryCAndCdeliveryConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter" >
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
@@ -273,7 +273,7 @@
 				$productCatalogName=Marketplace Product Catalog
 				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
 				$approved=approvalstatus(code)[default='approved']
-				INSERT_UPDATE JewelleryInformaion;ProductCode;PCMUSSID;USSID[unique=true];PIMAttributeId;Weight
+				INSERT_UPDATE JewelleryInformation;ProductCode;PCMUSSID;USSID[unique=true];PIMAttributeId[unique=true];Weight
 			</value>
 		</property>
 		<property name="impexRow">
