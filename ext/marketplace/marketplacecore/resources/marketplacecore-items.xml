@@ -9340,7 +9340,7 @@
 			    </attribute>
 			    
 			    <attribute qualifier="ProductCode" autocreate="true" type="java.lang.String" generate="true">
-			        <description>JewelleryWeight</description>
+			        <description>Product</description>
 			        <modifiers optional="false" read="true" write="true"/>
 			        <persistence type="property"/>
 			    </attribute>
@@ -9351,7 +9351,12 @@
 		  <itemtype code="JewelleryPriceRow" extends="GenericItem" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.JewelleryPriceRow">
 		  		<deployment table="MPLJewelleryPriceRow" typecode="15810" />
 		  <attributes>
-		 	 <attribute type="java.lang.String" qualifier="Ussid" autocreate="true" generate="true">
+		 	<attribute qualifier="ProductCode" autocreate="true" type="java.lang.String" generate="true">
+						<description>Product</description>
+						<modifiers optional="false" read="true" write="true"/>
+			        <persistence type="property"/>		
+			</attribute>
+		    <attribute type="java.lang.String" qualifier="Ussid" autocreate="true" generate="true">
 		 			 <persistence type="property">
 		 				 <columntype database="oracle">
 		 					 <value>VARCHAR2(40)</value>
