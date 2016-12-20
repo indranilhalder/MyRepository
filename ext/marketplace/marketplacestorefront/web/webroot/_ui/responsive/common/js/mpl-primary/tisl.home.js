@@ -879,6 +879,13 @@ function getProductsYouCareAjaxCall() {
 	                    renderHtml += "</a>";
 	                    
 	                   }
+	                   else {
+	                	   renderHtml +=
+	  	                     "<div class='short-info'><h3 class='product-name'><span>" +
+	  	                        v.categoryName +
+	  	                       "</span></h3></div>";
+	  	                    renderHtml += "</a>";
+	                   }
 	                   /*TPR-562 -ends   */
 	                });
 	                renderHtml += "</div>";
