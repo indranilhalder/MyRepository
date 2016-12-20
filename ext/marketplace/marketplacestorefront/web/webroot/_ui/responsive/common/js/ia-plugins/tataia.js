@@ -35,7 +35,10 @@ var filterNamePairing = {};
 
 var category_idString		= $('#categoryIdHotNow').val(); // For HotNow category for TPR 1313
 var category_idArray = new Array();//Variables added for TPR 1313
-category_idArray = category_idString.split(",");//Variables added for TPR 1313
+if(typeof(category_idString)!='undefined')
+{
+	category_idArray = category_idString.split(',');
+}//Variables added for TPR 1313
 
 //start for geolocations tpr-1304
 $(document).ready(function(){
