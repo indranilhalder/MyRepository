@@ -193,7 +193,7 @@
      </explorer-tree:navigation-node>
        <explorer-tree:navigation-node  id="awbedit">
      </explorer-tree:navigation-node>
-     <explorer-tree:navigation-node  id="lpoverride">
+     <explorer-tree:navigation-node  id="lpoverride">    </explorer-tree:navigation-node>
      <explorer-tree:navigation-node  id="configarable_params">
      </explorer-tree:navigation-node>
      <explorer-tree:navigation-node id="tshipdeliverytat"></explorer-tree:navigation-node>
@@ -214,7 +214,7 @@
      <explorer-tree:navigation-node id="pickup_address_request_widget_report"></explorer-tree:navigation-node>
      <explorer-tree:navigation-node id="reverse_logistics_failure_info"></explorer-tree:navigation-node>
       <explorer-tree:navigation-node id="logistcs_delivery_report"></explorer-tree:navigation-node>
-      </explorer-tree:navigation-node>
+  </explorer-tree:explorer-tree>
 </context>
 
 

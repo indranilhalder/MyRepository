@@ -410,8 +410,7 @@
 				</widget>
 
 
-				<virtual-sockets />
-			</widget>
+		
 			<!-- Added for delivery date against promised date -->
 				<widget id="delivery_date_against_promisddate_collapseble"
 					widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
