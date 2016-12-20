@@ -56,8 +56,16 @@ $(document).ready(function(){
 	    
 	  };
 
-	  function error() {
-	    output.innerHTML = "Unable to retrieve your location";
+	  function error(err) {
+		  if (err.code == 0) {
+			output.innerHTML = "The method failed to retrieve the location of the device due to an unknown error"; 
+		   }else if(err.code == 1){
+			output.innerHTML = "The method failed to retrieve the location of the device because the application does not have permission to use the Location Service";   
+		   }else if(err.code == 2){
+			output.innerHTML = "The location of the device could not be determined";  
+		   }else if(err.code == 3){
+			output.innerHTML = "The method was unable to retrieve the location information within the specified maximum timeout interval";   
+		   }
 	  };
 
 	  
@@ -90,8 +98,14 @@ function codeLatLng(lat,lng) {
               var count=value.length;
               var country=value[count-1];
               var state=value[count-2];
-              var city=value[count-3].toLowerCase();
-              $('#location').val(city);
+              var city=$.trim(value[count-3].toLowerCase());
+              var cityName= ["kolkata", "chennai", "mumbai", "hyderabad", "delhi","bangalore" ];
+              if($.inArray(city,cityName)!== -1)
+        	  {
+        	  
+        	  $('#location').val(city);
+        	  
+        	  }
               
           }
           else  {
