@@ -3144,10 +3144,19 @@ if($('#pageTemplateId').val() == 'ProductDetailsPageTemplate'){
 //PDP Specifications arrow
 $(document).ready(function(){
 var width=0;
+var windowWidth = $(".SpecWrap .Padd").innerWidth() - $(".SpecWrap .Padd").width();
+if (windowWidth > 60){
+$(".SpecWrap .Padd .tabs-block .nav > li").each(
+		function() {
+			width = width + $(this).width();
+		});
+}
+else{
 $(".SpecWrap .Padd .tabs-block .nav > li").each(
 		function() {
 			width = width + $(this).width() + 15;
 		});
+}
 //console.log(width);
 var winWidth = $(".SpecWrap .nav-wrapper").innerWidth();
 //console.log(winWidth);
@@ -3170,7 +3179,25 @@ if (width > winWidth){
         });	
 }
 
+});
 $(window).on("resize", function() {
+	var width=0;
+	var windowWidth = $(".SpecWrap .Padd").innerWidth() - $(".SpecWrap .Padd").width();
+	if (windowWidth > 60){
+	$(".SpecWrap .Padd .tabs-block .nav > li").each(
+			function() {
+				width = width + $(this).width();
+			});
+	}
+	else{
+	$(".SpecWrap .Padd .tabs-block .nav > li").each(
+			function() {
+				width = width + $(this).width() + 15;
+			});
+	}
+	//console.log(width);
+	var winWidth = $(".SpecWrap .nav-wrapper").innerWidth();
+	//console.log(winWidth);
 if (width <= winWidth){
 	$(".SpecWrap .Padd .tabs-block .nav-wrapper > span").css("display","none");
 }
@@ -3191,7 +3218,7 @@ if (width > winWidth){
 }
 });
 
-});
+
 
 	//update the message for Freebie product TPR-1754
 	function  populateFreebieMsg(ussId){
