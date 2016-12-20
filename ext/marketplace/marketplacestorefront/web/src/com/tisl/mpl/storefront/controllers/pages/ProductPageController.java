@@ -2624,6 +2624,9 @@ public class ProductPageController extends MidPageController
 		List<String> contentList = null;
 		List<String> imageList = null;
 		List<String> videoList = null;
+		//Added for status 500 errors
+		//Return this view when no Content Page is found for the Product
+		String returnString = "/pages/layout/productContentblank";
 		final Map<String, ProductContentData> productContentDataMap = new HashMap<String, ProductContentData>();
 		try
 		{
@@ -2686,31 +2689,31 @@ public class ProductPageController extends MidPageController
 				}
 
 				model.addAttribute("productContentDataMap", productContentDataMap);
-
+				storeCmsPageInModel(model, getContentPageForLabelOrId(contentPage.getUid()));
+				returnString = "/pages/" + contentPage.getMasterTemplate().getFrontendTemplateName();
 			}//final end of if
-			storeCmsPageInModel(model, getContentPageForLabelOrId(contentPage.getUid()));
+
 		}
 		catch (final CMSItemNotFoundException e)
 		{
-			e.printStackTrace();
+			LOG.error("CMS Item Not Found");
 		}
 
-		return "/pages/" + contentPage.getMasterTemplate().getFrontendTemplateName();
-
+		return returnString;
 	}
 
 	private ContentPageModel getContentPageForProduct(final ProductModel product) throws CMSItemNotFoundException
 	{
 
-		final ContentPageModel productContentPage = mplCmsPageService.getContentPageForProduct(product);
+		//Commented for status 500 errors
+		//		if (productContentPage == null)
+		//		{
+		//			throw new CMSItemNotFoundException("Could not find a product content for the product" + product.getName());
+		//		}
 
-		if (productContentPage == null)
-		{
-			throw new CMSItemNotFoundException("Could not find a product content for the product" + product.getName());
-		}
-
-		return productContentPage;
+		return mplCmsPageService.getContentPageForProduct(product);
 	}
+
 
 	/**
 	 * @description method is to remove products in wishlist in in pdp
