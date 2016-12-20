@@ -532,6 +532,9 @@
 		<property name="isNumeric" type="java.lang.Boolean" />
 		<property name="unitType" type="java.lang.String" />
 		<!-- Search POC End -->
+		<!-- TPR-3548  Start-->
+		<property name="isNumericRange" type="java.lang.Boolean" />
+		<!-- TPR-3548 End -->
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.product.data.AddressRadioTypeData">

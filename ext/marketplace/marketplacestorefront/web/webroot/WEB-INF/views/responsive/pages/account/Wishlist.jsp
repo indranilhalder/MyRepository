@@ -390,7 +390,7 @@
 														</span>
 													</c:if>
                                                     
-													<c:if test="${(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Electronics')||(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Watches')}">
+													<c:if test="${(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Electronics')||(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Watches')||(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'TravelAndLuggage')}">
 														<span>
 															<button id="addToCartButtonwl" type="${buttonType}"
 																class="blue button js-add-to-cart_wl">

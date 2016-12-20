@@ -273,7 +273,7 @@
 				$productCatalogName=Marketplace Product Catalog
 				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
 				$approved=approvalstatus(code)[default='approved']
-				INSERT_UPDATE JewelleryInformaion;ProductCode;PCMUSSID;USSID[unique=true];PIMAttributeId[unique=true];Weight
+				INSERT_UPDATE JewelleryInformation;ProductCode;PCMUSSID;USSID[unique=true];PIMAttributeId[unique=true];Weight
 			</value>
 		</property>
 		<property name="impexRow">

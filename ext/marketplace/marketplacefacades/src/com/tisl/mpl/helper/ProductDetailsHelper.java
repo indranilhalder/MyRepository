@@ -106,6 +106,10 @@ public class ProductDetailsHelper
 	/*
 	 * Added by I313024 for TATAUNISTORE-15 END :::
 	 */
+	private static final String CLASSIFICATION_ATTRIBUTES_TRAVELANDLUGGAGE_GROUPNAME = "classification.attributes.travelandluggage.groupname";
+	/*
+	 * Added for travel and Luggage
+	 */
 
 	/**
 	 *
@@ -116,14 +120,14 @@ public class ProductDetailsHelper
 	/*
 	 * private MplCheckoutFacade mplCheckoutFacade;
 	 *//**
-	 * @return the mplCheckoutFacade
-	 */
+	   * @return the mplCheckoutFacade
+	   */
 	/*
 	 * public MplCheckoutFacade getMplCheckoutFacade() { return mplCheckoutFacade; }
 	 *//**
-	 * @param mplCheckoutFacade
-	 *           the mplCheckoutFacade to set
-	 */
+	   * @param mplCheckoutFacade
+	   *           the mplCheckoutFacade to set
+	   */
 	/*
 	 * public void setMplCheckoutFacade(final MplCheckoutFacade mplCheckoutFacade) { this.mplCheckoutFacade =
 	 * mplCheckoutFacade; }
@@ -202,19 +206,19 @@ public class ProductDetailsHelper
 
 	/*
 	 * @Resource(name = "GigyaService") private GigyaService gigyaservice;
-	 * 
-	 * 
+	 *
+	 *
 	 * @Autowired private ExtendedUserServiceImpl userexService;
 	 *//**
-	 * @return the gigyaservice
-	 */
+	   * @return the gigyaservice
+	   */
 
 	/*
 	 * public GigyaService getGigyaservice() { return gigyaservice; }
 	 *//**
-	 * @param gigyaservice
-	 *           the gigyaservice to set
-	 */
+	   * @param gigyaservice
+	   *           the gigyaservice to set
+	   */
 	/*
 	 * public void setGigyaservice(final GigyaService gigyaservice) { this.gigyaservice = gigyaservice; }
 	 */
@@ -254,8 +258,8 @@ public class ProductDetailsHelper
 		if (null != rich.getHomeDelivery() && rich.getHomeDelivery().equals(HomeDeliveryEnum.YES))
 		{
 			final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData();
-			final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = getMplDeliveryCostService().getDeliveryCost(
-					MarketplaceFacadesConstants.HD, MarketplaceFacadesConstants.INR, skuid);
+			final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = getMplDeliveryCostService()
+					.getDeliveryCost(MarketplaceFacadesConstants.HD, MarketplaceFacadesConstants.INR, skuid);
 			//Populating Delivery Modes for each USSID
 			if (mplZoneDeliveryModeValueModel != null)
 			{
@@ -280,8 +284,8 @@ public class ProductDetailsHelper
 		if (null != rich.getClickAndCollect() && rich.getClickAndCollect().equals(ClickAndCollectEnum.YES))
 		{
 			final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData();
-			final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = getMplDeliveryCostService().getDeliveryCost(
-					MarketplaceFacadesConstants.C_C, MarketplaceFacadesConstants.INR, skuid);
+			final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = getMplDeliveryCostService()
+					.getDeliveryCost(MarketplaceFacadesConstants.C_C, MarketplaceFacadesConstants.INR, skuid);
 			if (mplZoneDeliveryModeValueModel != null)
 			{
 				final PriceData priceData = formPriceData(mplZoneDeliveryModeValueModel.getValue());
@@ -304,8 +308,8 @@ public class ProductDetailsHelper
 		if (null != rich.getExpressDelivery() && rich.getExpressDelivery().equals(ExpressDeliveryEnum.YES))
 		{
 			final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData();
-			final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = getMplDeliveryCostService().getDeliveryCost(
-					MarketplaceFacadesConstants.EXPRESS, MarketplaceFacadesConstants.INR, skuid);
+			final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = getMplDeliveryCostService()
+					.getDeliveryCost(MarketplaceFacadesConstants.EXPRESS, MarketplaceFacadesConstants.INR, skuid);
 			if (mplZoneDeliveryModeValueModel != null)
 			{
 				final PriceData priceData = formPriceData(mplZoneDeliveryModeValueModel.getValue());
@@ -337,11 +341,13 @@ public class ProductDetailsHelper
 		{
 			for (final ClassificationData classData : productData.getClassifications())
 			{
-				if (classicationDataList.isEmpty()
-						&& !(classData.getName().equalsIgnoreCase(N_A))
+				if (classicationDataList.isEmpty() && !(classData.getName().equalsIgnoreCase(N_A))
 						&& (configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_ELECTRONICS_GROUPNAME)
-								.contains(classData.getName()) || configurationService.getConfiguration()
-								.getString(CLASSIFICATION_ATTRIBUTES_WATCHES_GROUPNAME).contains(classData.getName())))
+								.contains(classData.getName())
+								|| configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_WATCHES_GROUPNAME)
+										.contains(classData.getName())
+								|| configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_TRAVELANDLUGGAGE_GROUPNAME)
+										.contains(classData.getName())))
 				{
 					classicationDataList.add(classData);
 				}
@@ -357,10 +363,12 @@ public class ProductDetailsHelper
 					}
 					else
 					{
-						if (!(classData.getName().equalsIgnoreCase(N_A))
-								&& (configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_ELECTRONICS_GROUPNAME)
-										.contains(classData.getName()) || configurationService.getConfiguration()
-										.getString(CLASSIFICATION_ATTRIBUTES_WATCHES_GROUPNAME).contains(classData.getName())))
+						if (!(classData.getName().equalsIgnoreCase(N_A)) && (configurationService.getConfiguration()
+								.getString(CLASSIFICATION_ATTRIBUTES_ELECTRONICS_GROUPNAME).contains(classData.getName())
+								|| configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_WATCHES_GROUPNAME)
+										.contains(classData.getName())
+								|| configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_TRAVELANDLUGGAGE_GROUPNAME)
+										.contains(classData.getName())))
 						{
 							classicationDataList.add(classData);
 						}
@@ -406,8 +414,8 @@ public class ProductDetailsHelper
 			final Wishlist2Model existingWishlist = wishlistFacade.getWishlistForName(wishName);
 			//  boolean add=
 			//checking whether the wishlist with given name exists or not
-			LOG.debug("addToWishListInPopup: *****productCode: " + productCode + " **** ussid: " + ussid + " *** wishName: "
-					+ wishName);
+			LOG.debug(
+					"addToWishListInPopup: *****productCode: " + productCode + " **** ussid: " + ussid + " *** wishName: " + wishName);
 			if (null != existingWishlist)
 			{
 				add = wishlistFacade.addProductToWishlist(existingWishlist, productCode, ussid, sizeSelected.booleanValue());
@@ -956,15 +964,15 @@ public class ProductDetailsHelper
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 * 
+	 *
 	 * @param deliveryCode
-	 * 
+	 *
 	 * @param currencyIsoCode
-	 * 
+	 *
 	 * @param sellerArticleSKU
-	 * 
+	 *
 	 * @return MplZoneDeliveryModeValueModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private MplZoneDeliveryModeValueModel populateDeliveryCostForUSSIDAndDeliveryMode(final String deliveryCode,
@@ -990,8 +998,8 @@ public class ProductDetailsHelper
 				if (cookiedat != null && !cookiedat.isEmpty())
 
 				{
-					ck = new Cookie(URLEncoder.encode(cookiedat.get(0), MarketplaceFacadesConstants.UTF), URLEncoder.encode(
-							cookiedat.get(1), MarketplaceFacadesConstants.UTF));
+					ck = new Cookie(URLEncoder.encode(cookiedat.get(0), MarketplaceFacadesConstants.UTF),
+							URLEncoder.encode(cookiedat.get(1), MarketplaceFacadesConstants.UTF));
 					ck.setPath("/");
 					//ck.setMaxAge(0);
 					//if (!cookieSwitch.equalsIgnoreCase("N"))
@@ -1071,12 +1079,11 @@ public class ProductDetailsHelper
 							//						sizeGuideCode = String.valueOf(((ClassificationAttributeValueModel) sizeGuidefeatureVal.getValue()).getCode()
 							//								.replaceAll("sizetype", ""));
 
-							if (StringUtils.isNotEmpty(String.valueOf(((ClassificationAttributeValueModel) sizeGuidefeatureVal
-									.getValue()).getCode())))
+							if (StringUtils.isNotEmpty(
+									String.valueOf(((ClassificationAttributeValueModel) sizeGuidefeatureVal.getValue()).getCode())))
 							{
-								sizeGuideCode = String.valueOf(
-										((ClassificationAttributeValueModel) sizeGuidefeatureVal.getValue()).getCode().replaceAll(
-												"sizetype", "")).toUpperCase();
+								sizeGuideCode = String.valueOf(((ClassificationAttributeValueModel) sizeGuidefeatureVal.getValue())
+										.getCode().replaceAll("sizetype", "")).toUpperCase();
 							}
 						}
 						break;
@@ -1185,9 +1192,9 @@ public class ProductDetailsHelper
 		return existUssid;
 	}
 
-	
 
-	/** 
+
+	/**
 	 * @param productCode
 	 * @param valueOf
 	 * @return
@@ -1258,11 +1265,11 @@ public class ProductDetailsHelper
 	public void setBuyBoxService(final BuyBoxService buyBoxService)
 	{
 		this.buyBoxService = buyBoxService;
-	}	
+	}
 
 	/**
 	 * @param productCode
-	 * @param ussid		 
+	 * @param ussid
 	 * @return
 	 */
 	public boolean removeFromWishList(final String productCode, final String ussid)
