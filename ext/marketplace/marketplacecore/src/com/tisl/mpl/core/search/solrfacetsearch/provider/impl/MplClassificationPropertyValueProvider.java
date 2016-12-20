@@ -285,18 +285,55 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 
 		else if (indexedProperty.isLocalized())
 		{
-			for (final LanguageModel language : indexConfig.getLanguages())
+
+			//TPR-3548 Start
+			if (indexedProperty.getIsNumericRange().equals(Boolean.TRUE))
 			{
-				final Locale locale = this.i18nService.getCurrentLocale();
-				try
+				for (final LanguageModel language : indexConfig.getLanguages())
 				{
-					this.i18nService.setCurrentLocale(this.localeService.getLocaleByString(language.getIsocode()));
-					result.addAll(extractFieldValues(indexedProperty, language,
-							(feature.isLocalized()) ? feature.getValues() : featureValues));
+					final Locale locale = this.i18nService.getCurrentLocale();
+					try
+					{
+						final List<FeatureValue> listFeatureValue = featureValues;
+
+						for (final FeatureValue singleFeatureValue : listFeatureValue)
+						{
+							Object value = singleFeatureValue.getValue();
+							if (null != value && value instanceof String)
+							{
+								final String vString = (String) value;
+								value = Double.valueOf(vString);
+							}
+							singleFeatureValue.setValue(value);
+							//clearing the existing value
+							listFeatureValue.clear();
+							//adding the standard value
+							listFeatureValue.add(singleFeatureValue);
+						}
+
+						result.addAll(extractFieldValues(indexedProperty, language, listFeatureValue));
+					}
+					finally
+					{
+						this.i18nService.setCurrentLocale(locale);
+					}
 				}
-				finally
+			} //TPR-3548 End
+			else
+			{
+				for (final LanguageModel language : indexConfig.getLanguages())
 				{
-					this.i18nService.setCurrentLocale(locale);
+					final Locale locale = this.i18nService.getCurrentLocale();
+					try
+					{
+						this.i18nService.setCurrentLocale(this.localeService.getLocaleByString(language.getIsocode()));
+						result.addAll(extractFieldValues(indexedProperty, language,
+								(feature.isLocalized()) ? feature.getValues() : featureValues));
+					}
+					finally
+					{
+						this.i18nService.setCurrentLocale(locale);
+					}
 				}
 			}
 
@@ -408,16 +445,12 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 									if (value instanceof ClassificationAttributeValue)
 									{
 										final String valueName = ((ClassificationAttributeValue) value).getName();
-										System.out.println("loggggggg========valueName=" + valueName);
 										if (valueName != null && StringUtils.isNotEmpty(valueName))
 										{
 											final String formattedValueName = valueName.replaceAll(" ", "").replaceAll("-", "")
 													.toLowerCase();
-											System.out.println("loggggggg========att=" + att);
 											if (att.equals(formattedValueName))
 											{
-												System.out.println("loggggggg========formattedValueName=" + formattedValueName);
-												System.out.println("loggggggg========groupName=" + groupName);
 												((ClassificationAttributeValue) value).setName(groupName);
 												featureValue.setValue(value);
 												flag = true;
