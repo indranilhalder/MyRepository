@@ -146,7 +146,6 @@
 	</c:if>
 </div>  --%>
 
-
 <!-- TPR-792 changes start -->
 <c:if test="${not empty product.classifications}">
 <div class="SpecWrap">
@@ -163,13 +162,13 @@
          </div>
          <ul class="tabs pdp">
          <c:if test="${not empty mapConfigurableAttributes }">
+             <li>
+			<div class="tab-details">
+			<ul>
          <c:forEach var="classification"	items="${mapConfigurableAttributes}">
-         <li>
-				<div class="tab-details">
-					<ul>
 					<li>
 					<span>
-						${outer.index} - ${inner.index}
+						<%-- ${outer.index} - ${inner.index} --%>
 						${classification.key}
 					</span>
 					<span>
@@ -185,10 +184,10 @@
 					</c:choose>
 					</span>
 					</li>
-					</ul>
-					</div>
-					</li>
          </c:forEach>
+         </ul>
+		</div>
+		</li>
          </c:if>
          </ul>
     </c:when>

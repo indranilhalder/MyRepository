@@ -3162,11 +3162,13 @@ var winWidth = $(".SpecWrap .nav-wrapper").innerWidth();
 //console.log(winWidth);
 if (width <= winWidth){
 	$(".SpecWrap .Padd .tabs-block .nav-wrapper > span").css("display","none");
+	$(".SpecWrap .Padd .tabs-block .nav-wrapper").css("padding-top","0px");
 }
 if (width > winWidth){
 	var l = 0;
 	var value = 200;
 	$(".SpecWrap .Padd .tabs-block .nav-wrapper > span").css("display","inline-block");
+	$(".SpecWrap .Padd .tabs-block .nav-wrapper").css("padding-top","15px");
 	$('.SpecWrap .Padd .tabs-block .nav').animate({'left':0});
 	$(".SpecWrap .Padd .tabs-block .nav-wrapper > span").unbind().click(function() {
 		l = l + value;
@@ -3200,11 +3202,13 @@ $(window).on("resize", function() {
 	//console.log(winWidth);
 if (width <= winWidth){
 	$(".SpecWrap .Padd .tabs-block .nav-wrapper > span").css("display","none");
+	$(".SpecWrap .Padd .tabs-block .nav-wrapper").css("padding-top","0px");
 }
 if (width > winWidth){
 	var l = 0;
 	var value = 200;
 	$(".SpecWrap .Padd .tabs-block .nav-wrapper > span").css("display","inline-block");
+	$(".SpecWrap .Padd .tabs-block .nav-wrapper").css("padding-top","15px");
 	$('.SpecWrap .Padd .tabs-block .nav').animate({'left':0});
 	$(".SpecWrap .Padd .tabs-block .nav-wrapper > span").unbind().click(function() {
 		l = l + value;

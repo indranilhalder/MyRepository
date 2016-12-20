@@ -58930,7 +58930,7 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
     color: #a9143c;
 }
 .SpecWrap .Padd .tabs-block .nav-wrapper > span	{ width:45px; height:45px; display:none;position: absolute; border:1px solid #ccc; background:#fff; right:0; bottom:5px; cursor: pointer; z-index: 1; color:#a9143c; text-align: center;font-size: 35px;padding: 3px 0 0;}
-.SpecWrap .Padd .tabs-block .nav-wrapper{ overflow:hidden; position:relative;    padding-top: 15px;}
+.SpecWrap .Padd .tabs-block .nav-wrapper{ overflow:hidden; position:relative;}
 .SpecWrap .Padd .tabs-block .nav{ /* width: 1200px; */}	
 
 
