@@ -447,23 +447,7 @@
 				<attribute qualifier="excludedProductCodeList" autocreate="true"
 					generate="true" type="java.lang.String">
 					<description>Promotion should not be applied for list of product codes separated by comma </description>
-					<persistence type="property">
-							<columntype database="oracle">
-								<value>CLOB</value>
-							</columntype>
-							<columntype database="mysql">
-								<value>text</value>
-							</columntype>
-							<columntype database="sqlserver">
-								<value>nvarchar(max)</value>
-							</columntype>
-							<columntype database="hsqldb">
-								<value>LONGVARCHAR</value>
-							</columntype>
-							<columntype>
-								<value>varchar</value>
-							</columntype>
-					</persistence>
+					<persistence type="property" />
 					<modifiers read="true" write="true" search="false"
 						optional="true" />
 				</attribute>
