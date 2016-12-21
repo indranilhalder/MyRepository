@@ -17,6 +17,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -313,54 +314,51 @@ public class OTPGenericServiceImpl implements OTPGenericService
 	public String generateOTP(final String userIdOrEmail, final String OTPType, final String mobileNumber)
 			throws InvalidKeyException, NoSuchAlgorithmException
 	{
-		//Pattern pattern;
-		//Pattern pattern = Pattern.compile(EMAILPATTERN);
-		//UserModel user = null;
+		Pattern pattern;
+		pattern = Pattern.compile(EMAILPATTERN);
+		UserModel user = null;
 		final byte a[] = new byte[100];
 		final long b = randomLongNumberGenerattion(userIdOrEmail);
 		final String otp = (otpOutput(a, b, 6, false, (int) Math.round(Math.random() * 100)));
 		LOG.info("Mobile Number====" + mobileNumber);
 
 		final OTPModel otpmodel = getModelservice().create(OTPModel.class);
-		//		try
-		//		{
-		//			//user = userService.getUserForUID(userIdOrEmail);
-		//			//otpmodel.setCustomerId(user.getPk().toString());
-		//			otpmodel.setEmailId(userIdOrEmail);
-		//			otpmodel.setMobileNo(mobileNumber);
-		//			//otpmodel.setEmailId("");
-		//		}
-		//		catch (final UnknownIdentifierException e)
-		//		{
-		//			//			if (pattern.matcher(userIdOrEmail).matches())
-		//			//			{
-		//			//				otpmodel.setEmailId(userIdOrEmail);
-		//			//				otpmodel.setCustomerId("");
-		//			//			}
-		//			//			else
-		//			//			{
-		//			//				throw new EtailBusinessExceptions("UnknownIdentifierException", e);
-		//			//			}
-		//			throw new EtailBusinessExceptions("UnknownIdentifierException", e);
-		//		}
-		//		catch (final ModelSavingException ex)
-		//		{
-		//			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, ex);
-		//			throw new EtailBusinessExceptions("ModelSavingException", ex);
-		//		}
-		//		catch (final IllegalArgumentException ex)
-		//		{
-		//			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, ex);
-		//			throw new EtailNonBusinessExceptions(ex);
-		//		}
-		//		catch (final Exception ex)
-		//		{
-		//			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, ex);
-		//			throw new EtailNonBusinessExceptions(ex);
-		//		}
-
+		/*R2.3 START */
+		try
+		{
+			user = userService.getUserForUID(userIdOrEmail);
+			otpmodel.setCustomerId(user.getPk().toString());
+			otpmodel.setEmailId("");
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			if (pattern.matcher(userIdOrEmail).matches())
+			{
+				otpmodel.setEmailId(userIdOrEmail);
+				otpmodel.setCustomerId("");
+			}
+			else
+			{
+				throw new EtailBusinessExceptions("UnknownIdentifierException", e);
+			}
+		}
+		catch (final ModelSavingException ex)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, ex);
+			throw new EtailBusinessExceptions("ModelSavingException", ex);
+		}
+		catch (final IllegalArgumentException ex)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, ex);
+			throw new EtailNonBusinessExceptions(ex);
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, ex);
+			throw new EtailNonBusinessExceptions(ex);
+		}
+		/*R2.3 END */
 		LOG.info(" OTP======  " + otp);
-		otpmodel.setEmailId(userIdOrEmail);
 		otpmodel.setOTPNumber(otp);
 		otpmodel.setOTPType(OTPType);
 		otpmodel.setMobileNo(mobileNumber);
