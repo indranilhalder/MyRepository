@@ -1437,9 +1437,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 
 			final Double cartTotal = new Double(orderData.getTotalPrice().getValue().doubleValue());
-            
-          
-			for (final OrderEntryData cartEntryData : cartData.getEntries())
+			setupMplCardForm(model, cartTotal);
+
+			//Adding all the details in model to be accessed from jsp
+			model.addAttribute(MarketplacecheckoutaddonConstants.ORDERDATA, orderData);
+			model.addAttribute("isCart", Boolean.FALSE);
+		}
+		
+		for (final OrderEntryData cartEntryData : cartData.getEntries())
 		{	
 			final CartModel cartModel = getCartService().getSessionCart();
 			final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
@@ -1461,12 +1466,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
          		   	 cartData.setDeliverySlotCharge(mplCheckoutFacade.createPrice(cartModel, Double.valueOf(configModel.getEdCharge())));
    		   	 }
 		    }
-		}
-			setupMplCardForm(model, cartTotal);
-
-			//Adding all the details in model to be accessed from jsp
-			model.addAttribute(MarketplacecheckoutaddonConstants.ORDERDATA, orderData);
-			model.addAttribute("isCart", Boolean.FALSE);
 		}
 
 		model.addAttribute(MarketplacecheckoutaddonConstants.JUSPAYJSNAME,
