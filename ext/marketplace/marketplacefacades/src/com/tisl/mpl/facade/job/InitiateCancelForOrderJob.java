@@ -39,7 +39,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.data.BulkCancelStoreData;
@@ -58,8 +57,7 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 	private final static Logger LOG = Logger.getLogger(InitiateCancelForOrderJob.class.getName());
 	@Autowired
 	private CancelReturnFacade cancelReturnFacade;
-	@Autowired
-	private MplCheckoutFacade mplCheckoutFacade;
+
 	@Autowired
 	private OrderModelService orderModelService;
 	@Autowired
@@ -88,11 +86,10 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 			String transactionId = null;
 			OrderData subOrderDetailsForMap = null;
 			OrderEntryData subOrderEntry = null;
-			//int counter = 0;
+
 			final Map<OrderEntryData, BulkCancelStoreData> cancellationDataMap = new HashMap<OrderEntryData, BulkCancelStoreData>();
 			List<BulkCancellationProcessModel> finalModelToSaveList = new ArrayList<BulkCancellationProcessModel>();
-			//			final long startTime = System.currentTimeMillis();
-			//			LOG.info(MarketplacecommerceservicesConstants.START_TIME_C + startTime);
+
 			final List<BulkCancellationProcessModel> bulkList = orderModelService.getBulkCancelData();
 
 			if (CollectionUtils.isNotEmpty(bulkList))
@@ -149,7 +146,7 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 						bulkModel.setStatusDescription(MarketplacecommerceservicesConstants.FAILURE);
 						finalModelToSaveList.add(bulkModel);
 					}
-					//counter++;
+
 				}
 
 				// Iterate the HashMap to trigger the bulk cancellation process
@@ -167,8 +164,7 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 			{
 				LOG.error(MarketplacecommerceservicesConstants.BULK_CANCEL_LOG_STEP_14);
 			}
-			//			final long endTime = System.currentTimeMillis();
-			//			LOG.info(MarketplacecommerceservicesConstants.END_TIME_C + endTime);
+
 		}
 		catch (final EtailBusinessExceptions exception)
 		{
@@ -251,8 +247,7 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 
 		for (final OrderEntryData entryHashMap : cancellationDataMap.keySet())
 		{
-			//BulkCancelStoreData mplCancelStoreData = new BulkCancelStoreData();
-			//BulkCancellationProcessModel bulkCancelModel = new BulkCancellationProcessModel();
+
 			subOrderEntry = entryHashMap;
 			final BulkCancelStoreData mplCancelStoreData = cancellationDataMap.get(entryHashMap);
 			subOrderDetails = mplCancelStoreData.getSubOrderDetails();
