@@ -67,8 +67,8 @@ import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.payment.CreditCardPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.DebitCardPaymentInfoModel;
 import de.hybris.platform.core.model.user.AddressModel;
-import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.cscockpit.utils.LabelUtils;
 import de.hybris.platform.cscockpit.utils.TypeUtils;
 import de.hybris.platform.cscockpit.widgets.controllers.ReturnsController;
@@ -391,6 +391,7 @@ ReturnRequestCreateWidgetRenderer {
 			Div bankDetailsArea, final List<AbstractOrderEntryModel> entry) {
 		final Div prepaidOrdeDetials = new Div();
 		CreditCardPaymentInfoModel cCard = null;
+		DebitCardPaymentInfoModel dCart = null;
 		PaymentTransactionModel payment=null;
 		if(null != orderModel.getPaymentTransactions() && null != orderModel.getPaymentTransactions().get(0)) {
 		 payment = orderModel.getPaymentTransactions()
@@ -469,6 +470,81 @@ ReturnRequestCreateWidgetRenderer {
 											entry,orderModel));
 						}
 					});
+		}else  if(orderModel.getPaymentInfo() instanceof DebitCardPaymentInfoModel){
+
+			cCard = (CreditCardPaymentInfoModel) orderModel.getPaymentInfo();
+			final Div retunDetails = new Div();
+			retunDetails.setParent(prepaidOrdeDetials);
+			retunDetails.setClass("detailsClasss");
+			final Label returnHead = new Label(LabelUtils.getLabel(widget,
+					"returnDetails"));
+			returnHead.setParent(retunDetails);
+			returnHead.setClass(BOLD_TEXT);
+			final Div Div1 = new Div();
+			Div1.setParent(retunDetails);
+			final Label returnDescription = new Label(LabelUtils.getLabel(widget,
+					"return_Description",
+					new Object[] {
+							payment.getEntries().get(0)
+							.getPaymentMode().getMode()}));
+
+			returnDescription.setParent(retunDetails);
+		   final Div cardDetailsldiv = new Div();
+			cardDetailsldiv.setParent(prepaidOrdeDetials);
+			cardDetailsldiv.setClass("cardDetailsClass");
+			final Label cardDetails = new Label(LabelUtils.getLabel(widget,
+					"card_Details",
+					new Object[] {
+					cCard.getType()  }));
+			
+			cardDetails.setParent(cardDetailsldiv);
+			cardDetails.setClass(BOLD_TEXT);
+			
+			final Div Div2 = new Div();
+			Div2.setParent(cardDetailsldiv);
+			final Label nameOnCart = new Label(LabelUtils.getLabel(widget,
+				"nameOnCart",
+				new Object[] {
+				cCard.getCcOwner() }));
+		    nameOnCart.setParent(cardDetailsldiv);
+		    
+			final Div Div3 = new Div();
+			Div3.setParent(cardDetailsldiv);
+			final Label cardNo = new Label(LabelUtils.getLabel(widget,
+					"cartNumber",
+					new Object[] {
+					cCard.getType(),cCard.getNumber()  }));
+			cardNo.setParent(cardDetailsldiv);
+			cardNo.setClass(BOLD_TEXT);
+			
+			final Div Div4 = new Div();
+			Div4.setParent(cardDetailsldiv);
+			final Label deliveyDetails = new Label(LabelUtils.getLabel(widget,
+					"expiresOn",
+					new Object[] {
+					cCard.getType(),cCard.getValidToMonth(),cCard.getValidToMonth(),cCard.getValidToYear() }));
+			deliveyDetails.setParent(cardDetailsldiv);
+			
+			final Div Div5 = new Div();
+			Div5.setParent(prepaidOrdeDetials);
+			
+			final Div prepaidButtonDiv = new Div();
+			prepaidButtonDiv.setParent(prepaidOrdeDetials);
+			prepaidButtonDiv.setClass(BOLD_TEXT);
+			final Button processButton = new Button(LabelUtils.getLabel(widget,
+					CONTINUE));
+			processButton.setParent(prepaidButtonDiv);
+			processButton.addEventListener(Events.ON_CLICK,
+					new EventListener() {
+						@Override
+						public void onEvent(Event arg0) throws Exception {
+							processButton.setDisabled(true);
+							prepaidOrdeDetials
+									.appendChild(getReturnModeDetails(widget,
+											entry,orderModel));
+						}
+					});
+		
 		}
 		return prepaidOrdeDetials;
 	}
