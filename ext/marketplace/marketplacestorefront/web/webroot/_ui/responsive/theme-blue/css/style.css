@@ -24642,13 +24642,13 @@ div#cartItems.products p{
    width:125%;
 }
 }*/
-@media(min-width:651px){
+/* @media(min-width:651px){
 
 	.totalResults h2{
    width:145%;
    margin-left:-45%;
 }
-}
+} */
 @media(min-width:791px){
 
 	.totalResults h2{
