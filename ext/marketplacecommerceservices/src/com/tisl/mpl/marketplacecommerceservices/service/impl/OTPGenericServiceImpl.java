@@ -328,7 +328,7 @@ public class OTPGenericServiceImpl implements OTPGenericService
 		{
 			user = userService.getUserForUID(userIdOrEmail);
 			otpmodel.setCustomerId(user.getPk().toString());
-			otpmodel.setEmailId("");
+			otpmodel.setEmailId(userIdOrEmail);
 		}
 		catch (final UnknownIdentifierException e)
 		{
