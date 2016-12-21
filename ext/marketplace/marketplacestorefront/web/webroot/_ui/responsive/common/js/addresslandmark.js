@@ -1,8 +1,19 @@
 var addressLandMark = "";
 
 $(document).ready(function(){
-	if($(".address_postcode").val().length >= "3") {
-		loadPincodeData();
+	
+	if($('div').hasClass('address_postcode')) {
+		if($(".address_postcode").val().length >= "3") {
+			loadPincodeData("edit");
+		}
+	}
+	
+	if($('#scriptAdded').length > 0) { } else {
+		$(".pincode-button").click(function(){
+			setTimeout(function() {
+				$('head').append("<script id='scriptAdded' type='text/javascript' src='/_ui/responsive/common/js/addresslandmark.js'></script>");
+			},200);
+		});
 	}
 	
 	$(".address_states").change(function(){
@@ -33,10 +44,10 @@ $(document).ready(function(){
 $(".address_landmarkOtherDiv").hide();
 $(".dupDisplay").hide();
 $(".address_postcode").blur(function() {
-	loadPincodeData();			
+	loadPincodeData("new");			
 });
 
-function loadPincodeData() {
+function loadPincodeData(parm) {
 	var Pincode=$(".address_postcode").val();
     $.ajax({
 		url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/landmarks",
@@ -61,7 +72,9 @@ function loadPincodeData() {
 				$(".addState").show();
 				$('.address_landmarks').html($("<option class=unableto></option>").text("Unable to find landmark").attr("selected","selected").attr("value",""));
 				$(".address_landmarkOther").val("");
-				$(".address_townCity").prop("readonly", false).val('');
+				if(parm != "edit") {
+					$(".address_townCity").prop("readonly", false).val('');
+			    }
 				$(".address_states").removeAttr("readonly").removeData("stateValue");
 				
 			} else {
@@ -77,7 +90,7 @@ function loadPincodeData() {
     			$(".addressDup").prop("disabled",false);
     			$(".mainDrop").hide();
 				$(".dupDisplay").show();
-				$(".mainDrop select").prop("disabled","disabled");
+				$(".mainDrop select").val(response.state.name).prop('disbaled','disabled');
 				$(".stateInput").html("<input id='statesReadOnly' name='state'/>");
 				$(".stateInput input").prop("disabled",false).val(response.state.name).attr("readonly", "true");
     			$(".address_landmarkOther").attr("value", "");
@@ -359,12 +372,12 @@ $(document).ready(function() {
 		  setTimeout(function(){
 		  if($(".address_landmarks option[value='"+value+"']").length > "0") {
 			  
-			  alert(value+ " 2 in if x"+$(".address_landmarks option[value='"+value+"']").val());
+			  //alert(value+ " 2 in if x"+$(".address_landmarks option[value='"+value+"']").val());
 			  $(".address_landmarks").val("");
 			$(".address_landmarks option[value='"+value+"']").prop("selected",true);
 			
 			} else {
-			alert(value+ " 3 in else");
+			//alert(value+ " 3 in else");
 			  $(".address_landmarks").val("Other"); 
 				changeFuncLandMark("Other"); 
 			$(".address_landmarkOther").val(value);
@@ -372,8 +385,14 @@ $(document).ready(function() {
 		}
 		  
 		  }); 
-		
-		$("#state").val($("."+className+" .state").text());
+		  if(!$("#state").prop("disabled")){
+	       // var state=$("#state").val();
+	        $("#state").val($("."+className+" .state").text());
+	       }else{
+	       // var state=$("#statesReadOnly").val();
+	        $("#statesReadOnly").val($("."+className+" .state").text());
+	       }
+		//$("#state").val($("."+className+" .state").text());
 		$("#pincode").val($("."+className+" .postalCode").text());
 		$("#mobileNo").val($("."+className+" .phone").text());
 	});

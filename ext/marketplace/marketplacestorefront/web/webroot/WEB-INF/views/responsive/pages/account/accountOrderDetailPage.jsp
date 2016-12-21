@@ -2886,7 +2886,7 @@ $(function() {
 			      $("#deliveryAddressForm #state").val($("#deliveryAddressForm #state").attr("value")); 
 			      $("#deliveryAddressForm #mobileNo").val($("#deliveryAddressForm #mobileNo").attr("value")); 
 			     }, 100);
-			  loadPincodeData();
+			  loadPincodeData('edit');
 				 var value = $(".address_landmarkOtherDiv").attr("data-value");
 			  
 			  setTimeout(function(){

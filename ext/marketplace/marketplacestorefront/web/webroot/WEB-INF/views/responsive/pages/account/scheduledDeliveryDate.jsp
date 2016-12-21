@@ -147,6 +147,14 @@ ${stringMessage}
 	</div>
 
 	<style>
+	.scheduleDate input[type="radio"]{
+	position: static;
+	overflow: auto;
+	border: 1px solid #CCC;
+	display: block !important;
+	cursor: pointer;
+	}
+	
 .display {
 	display: none;
 }

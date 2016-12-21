@@ -466,7 +466,7 @@
 				$("#saveAddress").attr("data-value","editAddress");
 				$("#addAddressForm h4.newAddress").hide();
 				$("#addAddressForm h4.editAddress").show();
-				loadPincodeData();	
+				loadPincodeData('edit');	
 			});
 
 			$(".close").click(function() {
@@ -493,7 +493,7 @@
 				$("#changeAddressPopup #country").val("India");
 				$("#addAddressForm h4.newAddress").show();
 				$("#addAddressForm h4.editAddress").hide();
-				loadPincodeData();	
+				loadPincodeData('new');	
 				$("#new-address-option-1").val("Residential");
 				$("#new-address-option-2").val("Commercial");
 			});

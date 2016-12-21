@@ -462,14 +462,11 @@
 
 										
 											<div class="dupDisplay">
-												<label><spring:theme code="text.addressBook.State"
-														text="State *" /></label>
-												<form:input path="state" id="stateListBoxReadOnly"
-													class="address_states" maxlength="30" readonly="readonly"/>
-												<div class="errorMessage">
-													<div id="erraddressCity"></div>
+												<label>State *</label>
+												<div class="stateInput"></div>
+													<div class="help-block has-error" id="stateError"
+												style="display: none;"></div>
 												</div>
-											</div>
 
 									</div>
 									 

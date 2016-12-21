@@ -59,6 +59,7 @@ if(loginStatus){
 <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/address-book') or
 		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/new-address') or
 		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/edit-address') or
+		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/delivery-method') or
 		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/my-account')}">
 	<script type="text/javascript" src="${commonResourcePath}/js/addresslandmark.js"></script><!-- R2.3: One line -->
 </c:if>

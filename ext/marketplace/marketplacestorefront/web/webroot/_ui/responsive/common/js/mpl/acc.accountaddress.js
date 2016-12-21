@@ -122,7 +122,7 @@ function editAddress(addressId) {
    				$('#postcode').val(data.postcode);
    				$('.address_landmarks').val(data.landmark);
    				$('.address_landmarkOther').val(data.otherLandmark);
-   				loadPincodeData();
+   				loadPincodeData("edit");
    				$('.address_landmarkOther').val(data.otherLandmark);
    				$('#townCity').val(data.townCity);
    				$('#mobileNo').val(data.mobileNo);
