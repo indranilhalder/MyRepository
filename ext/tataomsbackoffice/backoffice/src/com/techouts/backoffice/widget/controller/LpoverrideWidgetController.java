@@ -370,9 +370,9 @@ public class LpoverrideWidgetController extends DefaultWidgetController
 		for (final TransactionInfo transaction : selectedEntities)
 		{
 			if (transaction.getOrderStatus().equals(TataomsbackofficeConstants.ORDERSTATUS_SCANNED)
-					|| transaction.getOrderStatus().equals(TataomsbackofficeConstants.ORDERSTATUS_HOTCOURI))
+					|| transaction.getOrderStatus().equals(TataomsbackofficeConstants.ORDERSTATUS_HOTCOURI)  || transaction.getOrderStatus().equals(TataomsbackofficeConstants.REVERSE_ORDERSTATUS_REVERSEAWB))
 			{
-				Messagebox.show("Next Lp could not processed. Some of the order status is SCANNED/HOTC");
+				Messagebox.show("Next Lp could not processed. Some of the order status is SCANNED/HOTC/REVRSAWB");
 				selectedEntities.clear();
 				return;
 			}
