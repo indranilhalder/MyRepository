@@ -59180,3 +59180,16 @@ display: none;
 .page-productDetails .trending{
 	clear:both;
 }
+
+/*start changes for INC_11120*/
+body.page-multiStepCheckoutSummaryPage .smartbanner,
+body.page-checkout-login .smartbanner,
+body.page-cartPage .smartbanner{
+	display:none;
+}
+body.page-multiStepCheckoutSummaryPage,
+body.page-checkout-login,
+body.page-cartPage{
+	margin-top:-80px;
+} 
+/*end changes for INC_11120*/
