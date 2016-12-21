@@ -100,9 +100,6 @@
 								style="text-align:left" label="${labels.lbl.lbx.header3}">
 							</listheader>
 							<listheader width="260px"
-								style="text-align:left" label="${labels.lbl.lbx.header7}">
-							</listheader>
-							<listheader width="260px"
 								style="text-align:left" label="${labels.lbl.lbx.header4}">
 							</listheader>
 							<listheader width="260px"
@@ -113,6 +110,9 @@
 							</listheader>
 							<listheader width="260px"
 								style="text-align:left" label="${labels.lbl.lbx.header7}">
+							</listheader>
+							<listheader width="260px"
+								style="text-align:left" label="${labels.lbl.lbx.header8}">
 							</listheader>
 						</listhead>
 					</listbox>
