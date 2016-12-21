@@ -165,7 +165,7 @@ li.deliverySlotRadio .reset{margin: 0px auto !important;    height: 30px !import
 			if($(this).next().next().css("display") == "none") {
 				$(this).next().next().slideToggle().find("input").filter(':input:visible:first').prop("checked", true);
 			}
-			$(this).parent().parent().find("button").removeAttr("disabled");
+			$(this).parent().parent().parent().find("button").removeAttr("disabled");
 			
 			
 		});
@@ -189,7 +189,7 @@ li.deliverySlotRadio .reset{margin: 0px auto !important;    height: 30px !import
 				}
 				date = $(this).val();
 				time = $(this).next().next().find("input.timeSlots:first").val();
-				selectedUssId = $(this).parent().parent().parent().find("#selectedUssId").val();
+				selectedUssId = $(this).parent().parent().parent().parent().parent().parent().parent().parent().find("#selectedUssId").val();
 				
 			} else {
 				
@@ -197,7 +197,7 @@ li.deliverySlotRadio .reset{margin: 0px auto !important;    height: 30px !import
 				//alert(mplconfigModel);
 				date = $(this).parent().parent().parent().parent().parent().find(".radioClickDate").val();
 				time = $(this).val();
-				selectedUssId = $(this).parent().parent().parent().parent().parent().parent().parent().find("#selectedUssId").val();
+				selectedUssId = $(this).parent().parent().parent().parent().parent().parent().parent().parent().find("#selectedUssId").val();
 			}
 			var dataString = 'deliverySlotCost='+mplconfigModel+'&deliverySlotDate='+date+'&deliverySlotTime='+time+'&ussId='+selectedUssId;
     		//alert(dataString);
@@ -222,8 +222,8 @@ li.deliverySlotRadio .reset{margin: 0px auto !important;    height: 30px !import
     	
     	$(".reset").click(function(){
     		var currentReset = $(this);
-    		$(this).parent().find(".pardhuBlock input[type='radio']").prop('checked', false);
-    		$(this).parent().find(".pardhuBlock input[data-name='time']").prop('checked', false);
+    		$(this).parent().parent().find(".pardhuBlock input[type='radio']").prop('checked', false);
+    		$(this).parent().parent().find(".pardhuBlock input[data-name='time']").prop('checked', false);
     		var ussId=$(this).attr('data-ussid');
     		var mplconfigModel= $('#mplconfigModel').val();
     		$(this).parent().find(".displayClick").hide()
