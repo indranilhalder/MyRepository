@@ -28,7 +28,9 @@ public final class MarketplaceclientservicesConstants extends GeneratedMarketpla
 	public static final String TSHIP_CODE = "TSHIP";
 	public static final String SSHIP_CODE = "SSHIP";
 	public static final String FULFILLMENTTYPE_BOTH = "both";
-
+	public final static String PROXYENABLED = "proxy.enabled";
+	public final static String GENPROXY = "proxy.address";
+	public final static String GENPROXYPORT = "proxy.port";
 	// Pincode Serviceabilty constants
 	/*
 	 * public static final String URLFIRSTPHASE =

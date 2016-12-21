@@ -273,6 +273,7 @@ width: 17px;
 	border:1px solid #CCC;
 	position: static;
 	overflow: auto;
+	outline: none;
 }
 #deliveryAddressForm .addressSpace{
 	 margin-bottom: 15px;

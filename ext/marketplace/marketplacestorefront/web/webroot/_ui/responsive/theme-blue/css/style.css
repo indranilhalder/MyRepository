@@ -56770,8 +56770,10 @@ padding:0px;
  .cart.wrapper .checkout-shipping-items.left-block.left-block-width .delivery.deliveryWidth ul li span{
  padding-left:20px;}
  
+/* R2.3 START for store locator bubble issue  START*/ 
  .cart.wrapper .checkout-shipping-items.left-block.left-block-width .delivery.deliveryWidth ul li span.text_in{
- padding-left:0px;}
+ padding-left:0px;text-align: center;width: 25px;padding-top: 2px;}
+  /* R2.3 START for store locator bubble issue  END*/
  
  .cart.wrapper .product-block li.item > ul > li.mapConatinerParent{
      width: 27% !important;
@@ -60033,7 +60035,7 @@ h4 {
 	width:100%;
 }
 
-
+ 
 
 .page-returnSubmit .wrapper {
 	padding-bottom: 50px;
