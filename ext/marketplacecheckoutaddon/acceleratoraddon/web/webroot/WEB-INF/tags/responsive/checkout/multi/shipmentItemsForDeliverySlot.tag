@@ -61,6 +61,8 @@
 	padding: 0px;
 	cursor: pointer;
 	margin: 0 auto;
+	position: static;
+    overflow: auto; 
 }
 
 .deliverySlotOptions .deliverySlotRadio input:focus, .deliverySlotOptions .deliverySlotRadio input:active, .deliverySlotOptions .deliverySlotRadio input:checked {
@@ -145,10 +147,18 @@ div.displayClick {
 			    position: absolute;
 		}
 li.deliverySlotRadio .reset{margin: 0px auto !important;    height: 30px !important; line-height: 30px;} 
-
+.fixHeaderButton{top: 35px; right: 75px;}
+.w100 {height: 40px !important;
+    width: 175px !important;
+    font-size: 10px !important;font-weight: normal !important; line-height: 20px !important;}
 </style>
 <script>
 	$(document).ready(function(){
+		$(".step-1").addClass("step-done");
+		$(".step-2").addClass("active");
+		$(".step-3").addClass("in-active");
+		$(".progress-barg .step").addClass("step2");
+		$("#deliveryMethodSubmitUp").addClass("fixHeaderButton");
 		$(".click-and-collect").addClass("click-collect");
 		$(".radioClickDate").click(function(){
 			$(this).parent().parent().find("div.displayClick").hide();
@@ -420,6 +430,7 @@ li.deliverySlotRadio .reset{margin: 0px auto !important;    height: 30px !import
 										<c:choose>
 										<c:when test="${not empty entry.deliverySlotsTime}">
 										<label class="heading" for="date">Preferred Date of Delivery</label>
+										<div class="col-md-8">
 										<c:set var="dateTimeSlotId" value="0" scope="page"></c:set>
 											<c:forEach items="${entry.deliverySlotsTime}" var="dateSlots">
 												<c:set var="dateTimeSlotId" value="${dateTimeSlotId + 1}" scope="page"></c:set>
@@ -477,9 +488,12 @@ li.deliverySlotRadio .reset{margin: 0px auto !important;    height: 30px !import
 												</c:choose>
 												</div>
 											</c:forEach>
+											</div>
+											<div class="col-md-4">
 											<p class="clearfix"></p>
-											<button class="button reset pull-right" type="button" data-ussid="${entry.selectedUssid}" disabled="disabled">Reset</button>
+											<button class="button w100 reset pull-right" type="button" data-ussid="${entry.selectedUssid}" disabled="disabled">Reset</button>
 											<p class="clearfix"></p>
+											</div>
 										</c:when>
 										<c:otherwise>
 										<div class="">Not Applicable</div>

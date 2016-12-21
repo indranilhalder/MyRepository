@@ -83,7 +83,7 @@
 					
 						<div class="checkout-indent">
 									<multi-checkout:shipmentItemsForDeliverySlot cartData="${cartData}" defaultPincode="${defaultPincode}"  showDeliveryAddress="true" />
-								<button class="button" id="deliveryMethodSubmit" type="submit" class="checkout-next"><spring:theme code="checkout.pickup.continue.button" text="Next"/></button>
+								<%-- <button class="button" id="deliveryMethodSubmit" type="submit" class="checkout-next"><spring:theme code="checkout.pickup.continue.button" text="Next"/></button> --%>
 						</div>
 						
 						

@@ -269,7 +269,11 @@ width: 17px;
 #deliveryAddressForm input[type="text"]{
 	height: 35px;
 }
-
+#deliveryAddressForm input[type="radio"]{
+	border:1px solid #CCC;
+	position: static;
+	overflow: auto;
+}
 #deliveryAddressForm .addressSpace{
 	 margin-bottom: 15px;
 }

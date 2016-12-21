@@ -59612,6 +59612,8 @@ body .account .track{
  		margin-top: 5px;
  		border-radius: 50%;
  		z-index: 9999999999;
+		position: static;
+        overflow: auto;
  	}
  	
  	.accordtionTataCliq .accContents .radioButton:checked {

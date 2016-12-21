@@ -319,6 +319,7 @@
 								</c:if>
 								<c:set var="subOrderLine2" value="${fn:trim(subOrder.deliveryAddress.line2)}"/>
 								<c:set var="subOrderLine3" value="${fn:trim(subOrder.deliveryAddress.line3)}"/>
+								<div class="col-md-8 col-sm-6">
 								<address>
 									${fn:escapeXml(subOrder.deliveryAddress.firstName)}&nbsp;
 									${fn:escapeXml(subOrder.deliveryAddress.lastName)}<br>
@@ -340,7 +341,8 @@
 									<br>
 									91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)} <br>
 								</address>
-							</div>
+								</div>
+								</div>
 									<!-- R2.3: START -->
 									<div class="col-md-4 col-sm-6">
 										<div class="editIconCSS">
@@ -349,8 +351,7 @@
 									   </c:if>
 										</div>
 									</div>
-								</div>
-							</div>
+								
 							<p style="clear:both"></p>
 							<div class="itemBorder">&nbsp;</div> 
 							<!-- R2.3: END -->
