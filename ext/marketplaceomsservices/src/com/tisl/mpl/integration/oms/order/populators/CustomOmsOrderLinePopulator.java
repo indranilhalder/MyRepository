@@ -297,8 +297,8 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				target.setIsPrecious(MarketplaceomsservicesConstants.N);
 				LOG.debug("CustomOmsOrderLinePopulator : IsFragile  is null ");
 			}
-
-			if (source.getEdScheduledDate() != null)
+			//Added R2.3 Change 
+			if (StringUtils.isNotEmpty(source.getEdScheduledDate()))
 			{
 				target.setEdScheduledDate(String.valueOf(source.getEdScheduledDate()));
 			}
@@ -306,9 +306,10 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			if (StringUtils.isNotEmpty(source.getTimeSlotFrom()))
 			{
 				
-				 String timeSlotFrom= source.getTimeSlotFrom();
-				 SimpleDateFormat format1 = new SimpleDateFormat("hh:mm a");
-			    SimpleDateFormat format2 = new SimpleDateFormat("HH:mm:ss");
+				  
+			   final String timeSlotFrom= source.getEdScheduledDate().concat(" " + source.getTimeSlotFrom());
+		       final SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+		       final SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 			    
 				try
 				{
@@ -322,9 +323,9 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			
 			if (StringUtils.isNotEmpty(source.getTimeSlotTo()))
 			{
-				 String timeSlotTo= source.getTimeSlotTo();
-				 SimpleDateFormat format1 = new SimpleDateFormat("hh:mm a");
-			    SimpleDateFormat format2 = new SimpleDateFormat("HH:mm:ss");   
+			   final String timeSlotTo=source.getEdScheduledDate().concat(" " + source.getTimeSlotTo());
+		       final SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+		       final SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");  
 				try
 				{
 					target.setTimeSlotTo(String.valueOf(format2.format(format1.parse(timeSlotTo))));
@@ -334,6 +335,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 					LOG.error("unable to parse timeslots "+ e.getMessage());
 				}
 			}
+			//Added R2.3 Change 
 			if (source.getScheduledDeliveryCharge() != null)
 			{
 				target.setScheduledDeliveryCharge(source.getScheduledDeliveryCharge().doubleValue());
