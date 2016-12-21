@@ -472,7 +472,7 @@ ReturnRequestCreateWidgetRenderer {
 					});
 		}else  if(orderModel.getPaymentInfo() instanceof DebitCardPaymentInfoModel){
 
-			cCard = (CreditCardPaymentInfoModel) orderModel.getPaymentInfo();
+			dCart = (DebitCardPaymentInfoModel) orderModel.getPaymentInfo();
 			final Div retunDetails = new Div();
 			retunDetails.setParent(prepaidOrdeDetials);
 			retunDetails.setClass("detailsClasss");
