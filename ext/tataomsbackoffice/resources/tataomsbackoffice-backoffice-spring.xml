@@ -54,6 +54,8 @@
      <!-- for pincodes upload -->
      <property name="pincodesUploadPath"  value="${tata.oms.pincodes.upload.path:#{null}}" />
       <property name="shipmentStatusUpload"  value="${tata.oms.shipmentstatus.bulk.upload.path:#{null}}" />
+      <property name="landmarkUploadPath" value="${tata.oms.landmark.upload.path:#{null}}"></property>
+      
     </bean>
     <bean id="csvFileToZipFileService" class="com.hybris.oms.tata.services.CsvFileToZipFileService"></bean>
     <bean id="dataUploadService" class="com.hybris.oms.tata.util.DataUploadService"></bean>
