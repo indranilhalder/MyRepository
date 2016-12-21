@@ -194,14 +194,14 @@ public class MplReturnDaoImpl implements MplReturnsDao
 
 		String queryString = null;
 		String queryPram = null;
-		if (orderID != null)
+		if (orderID != null&&StringUtils.isNotBlank(orderID)&&StringUtils.isNotEmpty(orderID))
 		{
 			queryString = "SELECT {srm:" + MplReturnPickUpAddressInfoModel.PK + "}" + " FROM {"
 					+ MplReturnPickUpAddressInfoModel._TYPECODE + " AS srm} " + "WHERE " + "{srm:"
 					+ MplReturnPickUpAddressInfoModel.ORDERID + "}=?code ";
 			queryPram = orderID;
 		}
-		else if (customerId != null)
+		else if (customerId != null&&StringUtils.isNotBlank(customerId)&&StringUtils.isNotEmpty(customerId))
 		{
 			queryString = "SELECT {srm:" + MplReturnPickUpAddressInfoModel.PK + "}" + " FROM {"
 					+ MplReturnPickUpAddressInfoModel._TYPECODE + " AS srm} " + "WHERE " + "{srm:"

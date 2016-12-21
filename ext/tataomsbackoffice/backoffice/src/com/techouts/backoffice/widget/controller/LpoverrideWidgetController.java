@@ -299,7 +299,8 @@ public class LpoverrideWidgetController extends DefaultWidgetController
 		for (final TransactionInfo currentTransaction : modifiedTransactinTrack.values())
 		{
 			if (currentTransaction.getOrderStatus().equalsIgnoreCase(TataomsbackofficeConstants.ORDERSTATUS_HOTCOURI)
-					|| currentTransaction.getOrderStatus().equalsIgnoreCase(TataomsbackofficeConstants.ORDERSTATUS_SCANNED))
+					|| currentTransaction.getOrderStatus().equalsIgnoreCase(TataomsbackofficeConstants.ORDERSTATUS_SCANNED)
+					|| currentTransaction.getOrderStatus().equalsIgnoreCase(TataomsbackofficeConstants.REVERSE_ORDERSTATUS_REVERSEAWB))
 			{
 				//if changed transaction order status HOTC/SCANNED  then awb manditory to change
 				final TransactionInfo previousTransaction = previousLpAndAwbNumberForTrack.get(currentTransaction.getTransactionId());
@@ -312,7 +313,7 @@ public class LpoverrideWidgetController extends DefaultWidgetController
 						&& previousTransaction.getAwbNumber().equals(currentTransaction.getAwbNumber()))
 				{
 					Messagebox.show(
-							"Changes could not processed. AWB number should be changed along with LP name when order status is SCANNED/HOTC");
+							"Changes could not processed. AWB number should be changed along with LP name when order status is SCANNED/HOTC/REVRSAWB");
 					return;
 				}
 			}

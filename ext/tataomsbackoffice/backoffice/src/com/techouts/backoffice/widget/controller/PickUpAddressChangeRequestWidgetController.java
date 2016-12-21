@@ -111,18 +111,18 @@ public class PickUpAddressChangeRequestWidgetController extends DefaultWidgetCon
 	public void getPickUpAddressRequestData()
 	{
 		int count = 0;
-		final String pincode = intPincode.getValue();
-		final String orderId = txtOrderId.getValue();
-		final String customerId = txtCustomerID.getValue();
-		if (orderId != null && StringUtils.isNotBlank(orderId))
+		String pincode = intPincode.getValue();
+		String orderId = txtOrderId.getValue();
+		String customerId = txtCustomerID.getValue();
+		if (orderId != null && StringUtils.isNotBlank(orderId) && StringUtils.isNotEmpty(orderId))
 		{
 			++count;
 		}
-		if (customerId != null && StringUtils.isNotBlank(customerId))
+		if (customerId != null && StringUtils.isNotBlank(customerId) && StringUtils.isNotEmpty(customerId))
 		{
 			++count;
 		}
-		if (pincode != null && StringUtils.isNotBlank(pincode))
+		if (pincode != null && StringUtils.isNotBlank(pincode) && StringUtils.isNotEmpty(pincode))
 		{
 			if (!pincode.matches(PIN_REGEX))
 			{
@@ -134,6 +134,9 @@ public class PickUpAddressChangeRequestWidgetController extends DefaultWidgetCon
 		if (count > 0)
 		{
 			getPickUpReturnReportByParams(orderId, customerId, pincode);
+			pincode = null;
+			orderId = null;
+			customerId = null;
 		}
 		else
 		{

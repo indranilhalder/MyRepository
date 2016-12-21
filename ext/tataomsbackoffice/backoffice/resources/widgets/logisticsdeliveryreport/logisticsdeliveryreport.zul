@@ -58,7 +58,7 @@
 						<vlayout width="200px">
 							<datebox id="selectedDateValue" cols="10"
 								constraint="no empty, no future: NOT EMPTY or NO FUTURE"
-								format="MM/dd/yyyy HH:mm:ss" width="200px" />
+								format="MM/dd/yyyy" width="200px" />
 						</vlayout>
 						<vlayout width="50px">
 							<label></label>

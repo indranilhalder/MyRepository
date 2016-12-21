@@ -181,10 +181,6 @@
      </explorer-tree:navigation-node>
      <explorer-tree:navigation-node  id="ordersbyorderid">
      </explorer-tree:navigation-node>
-      <explorer-tree:navigation-node  id="container_pincode_report">
-     </explorer-tree:navigation-node>
-     <explorer-tree:navigation-node  id="container_pincode_logistics_report">
-     </explorer-tree:navigation-node>
      <explorer-tree:navigation-node  id="pincodes_upload">
      </explorer-tree:navigation-node>
      <explorer-tree:navigation-node  id="shipment_data_upload">
@@ -234,10 +230,6 @@
      <explorer-tree:navigation-node  id="inventorybyussid">
      </explorer-tree:navigation-node>
      <explorer-tree:navigation-node  id="ordersbyorderid">
-     </explorer-tree:navigation-node>
-      <explorer-tree:navigation-node  id="container_pincode_report">
-     </explorer-tree:navigation-node>
-     <explorer-tree:navigation-node  id="container_pincode_logistics_report">
      </explorer-tree:navigation-node>
      <explorer-tree:navigation-node  id="pincodes_upload">
      </explorer-tree:navigation-node>
