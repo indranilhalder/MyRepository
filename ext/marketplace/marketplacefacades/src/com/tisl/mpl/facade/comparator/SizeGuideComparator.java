@@ -115,8 +115,7 @@ public class SizeGuideComparator implements Comparator<SizeGuideData>
 			if (value2SizeSystemIndex == -1)
 			{
 				//values out of size-systems are placed as last thus so big number.
-				//INC_10644
-				return Integer.MAX_VALUE;
+				return Integer.MIN_VALUE;
 			}
 			else
 			{
