@@ -211,6 +211,11 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					arrayToProductList.removeAll(productsList);
 					productsWithNoStock = arrayToProductList;
 				}
+				//Added For Electronics : INC_11278
+				else if (buyBoxMod.getProduct().equalsIgnoreCase(pdpProduct))
+				{
+					productsWithNoStock.add(pdpProduct);
+				}
 			}
 
 			else if (buyboxModelList.size() == 1)
