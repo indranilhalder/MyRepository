@@ -218,7 +218,7 @@
 		<div class='full'>
 		<formElement:formInputBox idKey="address.postcode"
 			path="postcode"
-			mandatory="true" maxLength="6" placeholder="Pincode*" />
+			mandatory="true" maxLength="6" placeholder="Pincode*" inputCSS="address_postcode"/>
 		<div class="help-block has-error" id="addressPincodeServicableDiv"
 			style="display: none;"></div>
 			<div class="help-block has-error" id="pincodeError" style="display: none;">
@@ -385,26 +385,66 @@
 <!-- R2.3: START -->
 <script>
 $(document).ready(function(){
-	 var value = $(".address_landmarkOtherDiv").attr("data-value");
-	  
-	  setTimeout(function(){
-	  if($(".address_landmarks option[value='"+value+"']").length > "0") {
-		  
-		  //alert(value+ " 2 in if x"+$(".address_landmarks option[value='"+value+"']").val());
-			  $(".address_landmarks").val("");
-			$(".address_landmarks option[value='"+value+"']").prop("selected",true);
-			
-			} else {
-			//alert(value+ " 3 in else");
-			  $(".address_landmarks").val("Other"); 
-				changeFuncLandMark("Other"); 
-			$(".address_landmarkOther").val(value);
+	
+	$(".address_postcode").blur(function() {
+		
+
+
+		if($(".address_postcode").val().length >= "3") {
+			loadPincodeData("edit");
+			 var value = $(".address_landmarkOtherDiv").attr("data-value");
+			  
+			  setTimeout(function(){
+			  if($(".address_landmarks option[value='"+value+"']").length > "0") {
+				  
+				  //alert(value+ " 2 in if x"+$(".address_landmarks option[value='"+value+"']").val());
+					  $(".address_landmarks").val("");
+					$(".address_landmarks option[value='"+value+"']").prop("selected",true);
+					
+					} else {
+					//alert(value+ " 3 in else");
+					  $(".address_landmarks").val("Other"); 
+						changeFuncLandMark("Other"); 
+					$(".address_landmarkOther").val(value);
+					
+				}
+			  
+			  });
+		}else{
+			alert("in else");
+			loadPincodeData("new");
 			
 		}
-	  
-	  });
-	
+
+
+
 });
+	if($(".address_postcode").val().length >= "3") {
+		loadPincodeData("edit");
+		 var value = $(".address_landmarkOtherDiv").attr("data-value");
+		  
+		  setTimeout(function(){
+		  if($(".address_landmarks option[value='"+value+"']").length > "0") {
+			  
+			  //alert(value+ " 2 in if x"+$(".address_landmarks option[value='"+value+"']").val());
+				  $(".address_landmarks").val("");
+				$(".address_landmarks option[value='"+value+"']").prop("selected",true);
+				
+				} else {
+				//alert(value+ " 3 in else");
+				  $(".address_landmarks").val("Other"); 
+					changeFuncLandMark("Other"); 
+				$(".address_landmarkOther").val(value);
+				
+			}
+		  
+		  });
+	}else{
+		alert("in else");
+		loadPincodeData("new");
+		
+	}
+	});
 </script>
 <!-- R2.3: END -->
 

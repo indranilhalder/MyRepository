@@ -841,7 +841,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 		     }
 		     if(null!= shipment && null!=shipment.getSdb()){
          		if(shipment.getSdb().booleanValue() &&  ( CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))  &&  (consignmentModel.getSdbCheck()==null || consignmentModel.getSdbCheck() ==Boolean.FALSE)){
-         			  LOG.debug("************************In SDD Check .......");
+         			  LOG.debug("************************In SDB Check .......");
          			  isSDBCheck=Boolean.TRUE;
          			  createRefundEntryModel(newStatus,consignmentModel,orderModel,isEDtoHDCheck,isSDBCheck,isRetrunInitiatedCheck);
          			  consignmentModel.setSdb(Boolean.TRUE);
@@ -850,7 +850,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
          			  isSDBCheck=Boolean.FALSE;
          		}
 		     }
-		     if(null!= shipment && null!=shipment.getSdb()){
+		     if(null!= shipment && null!=shipment.getSsb()){
 		   	  
 		   	  if(shipment.getSsb().booleanValue() &&  ( CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))  &&  (consignmentModel.getSsbCheck()==null || consignmentModel.getSsbCheck() ==Boolean.FALSE)){
 		   		  if(newStatus.equals(ConsignmentStatus.CANCELLATION_INITIATED)){
