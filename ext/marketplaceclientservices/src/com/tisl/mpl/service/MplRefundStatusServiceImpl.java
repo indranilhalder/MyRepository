@@ -73,7 +73,7 @@ public class MplRefundStatusServiceImpl implements MplRefundStatusService
 
 	@Override
 	public RefundInfoResponse refundStatusDatatoWsdto(final List<RefundInfo> refundInfolist, final String orderRefNo,
-			final String transactionId, final String oMSStatusCode)
+			final String transactionId, final String oMSStatusCode, final String refundCategoryType)
 	{
 		RefundInfoResponse response = new RefundInfoResponse();
 		final RefundStatusXMLData reqdata = new RefundStatusXMLData();
@@ -110,6 +110,9 @@ public class MplRefundStatusServiceImpl implements MplRefundStatusService
 					if (null != refundObj.getRefundTriggeredDate())
 					{
 						reqObj.setRefundTriggeredDate(refundObj.getRefundTriggeredDate());
+					}
+					if(null != refundCategoryType) {
+						reqObj.setRefundCategory(refundCategoryType);
 					}
 					reqlist.add(reqObj);
 				}

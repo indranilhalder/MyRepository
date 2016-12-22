@@ -25,6 +25,8 @@ import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.data.RefundDeliveryData;
 import com.tisl.mpl.cockpits.cscockpit.services.MarketPlaceOrderSearchServices;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceOrderController;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Attributes.Consignment;
 import com.tisl.mpl.core.enums.JuspayRefundType;
 import com.tisl.mpl.core.model.InvoiceDetailModel;
 import com.tisl.mpl.core.model.RefundTransactionMappingModel;
@@ -216,10 +218,16 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 							newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
 						}
 						// getModelService().save(consignmentModel);
+						boolean isEdToHD = false;
+						if(null != orderEntry && orderEntry.getIsEDtoHD()) {
+							isEdToHD = true;
+						}
+						
+						
 						mplJusPayRefundService.makeRefundOMSCall(orderEntry,
 								paymentTransactionModel,
 								orderEntry.getNetAmountAfterAllDisc(),
-								newStatus);
+								newStatus, null);
 						
 						//Start TISPRD-871
 						if(newStatus.equals(ConsignmentStatus.RETURN_COMPLETED)){
@@ -233,7 +241,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 				//TISSIT-1801
 				LOG.error("Manual Refund Failed");
 				for (OrderEntryModel orderEntry : orderEntryModel) {
-					mplJusPayRefundService.makeRefundOMSCall(orderEntry,paymentTransactionModel,orderEntry.getNetAmountAfterAllDisc(),ConsignmentStatus.REFUND_IN_PROGRESS);
+					mplJusPayRefundService.makeRefundOMSCall(orderEntry,paymentTransactionModel,orderEntry.getNetAmountAfterAllDisc(),ConsignmentStatus.REFUND_IN_PROGRESS,null);
 				}
 				
 				paymentTransactionModel = mplJusPayRefundService
@@ -248,7 +256,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 			
 			// TISSIT-1784 Code addition started
 			for (OrderEntryModel orderEntry : orderEntryModel) {
-				mplJusPayRefundService.makeRefundOMSCall(orderEntry,paymentTransactionModel,orderEntry.getNetAmountAfterAllDisc(),ConsignmentStatus.REFUND_INITIATED);
+				mplJusPayRefundService.makeRefundOMSCall(orderEntry,paymentTransactionModel,orderEntry.getNetAmountAfterAllDisc(),ConsignmentStatus.REFUND_INITIATED,null);
 
 				// Making RTM entry to be picked up by webhook job	
 				RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(RefundTransactionMappingModel.class);
@@ -317,11 +325,21 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 								.setRefundAmount(totalRefundDeliveryCharges);//TISPRO-216 : Refund amount Set in RTM
 						getModelService().save(refundTransactionMappingModel);
 					}
-					/*for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
+					for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
 							.entrySet()) {
+						boolean isEDToHD = false;
+						if(null != refundEntry.getKey() && null != refundEntry.getKey().getIsEDtoHD() && refundEntry.getKey().getIsEDtoHD()) {
+							isEDToHD= true;
+						}
+						ConsignmentModel consignment = null;
+						ConsignmentStatus newStatus = null;
+						 if(null != refundEntry.getKey() && null != refundEntry.getKey().getConsignmentEntries()); {
+							 newStatus = refundEntry.getKey().getConsignmentEntries().iterator().next().getConsignment().getStatus();;
+						 }
+						
 						mplJusPayRefundService.makeRefundOMSCall(refundEntry
 								.getKey(), paymentTransactionModel, refundEntry
-								.getKey().getRefundedDeliveryChargeAmt(), null);// Sending
+								.getKey().getRefundedDeliveryChargeAmt(), newStatus,isEDToHD?MarketplacecommerceservicesConstants.REFUND_CATEGORY_E:null);// Sending
 																				// null
 																				// as
 																				// for
@@ -333,7 +351,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 																				// update
 																				// is
 																				// required.
-					}*/
+					}
 				} else {
 
 					LOG.error("Refund Delivery Charges Failed");
@@ -353,6 +371,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 		return getCockpitTypeService().wrapItem(paymentTransactionModel);
 	}
 	
+	/*R2.3 Refund schedule delivery charge call to oms */
 	/**
 	 * Refund Schedule delivery Charges  
 	 */
@@ -402,6 +421,18 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 						refundTransactionMappingModel
 								.setRefundAmount(totalRefundScheduleDeliveryCharges);//TISPRO-216 : Refund amount Set in RTM
 						getModelService().save(refundTransactionMappingModel);
+					}
+					for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
+							.entrySet()) {
+						ConsignmentModel consignment = null;
+						ConsignmentStatus newStatus = null;
+						 if(null != refundEntry.getKey() && null != refundEntry.getKey().getConsignmentEntries()); {
+							 newStatus = refundEntry.getKey().getConsignmentEntries().iterator().next().getConsignment().getStatus();;
+						 }
+						 
+						mplJusPayRefundService.makeRefundOMSCall(refundEntry
+								.getKey(), paymentTransactionModel, refundEntry
+								.getKey().getRefundedDeliveryChargeAmt(), newStatus,MarketplacecommerceservicesConstants.REFUND_CATEGORY_S); // sending null as no order update is required 
 					}
 				} else {
 					LOG.error("Refund Schedule Delivery Charges Failed");
@@ -526,7 +557,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 				if (paymentTransactionModel != null) {
 					mplJusPayRefundService.makeRefundOMSCall(orderEntry,
 							paymentTransactionModel,
-							orderEntry.getNetAmountAfterAllDisc(), newStatus);
+							orderEntry.getNetAmountAfterAllDisc(), newStatus,null);
 				}
 				mplJusPayRefundService.makeOMSStatusUpdate(orderEntry,
 						newStatus);

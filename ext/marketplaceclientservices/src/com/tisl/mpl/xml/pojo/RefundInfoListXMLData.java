@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlRootElement(name = "RefundedInfo")
 @XmlType(propOrder =
-{ "refundedBy", "refundedAmt", "refundedBankTrxId", "refundedType", "refundedBankTrxStatus", "refundTriggeredDate" })
+{ "refundedBy", "refundedAmt", "refundedBankTrxId", "refundedType", "refundedBankTrxStatus", "refundTriggeredDate" ,"refundCategory"})
 public class RefundInfoListXMLData
 {
 	private String refundedBy;
@@ -25,6 +25,24 @@ public class RefundInfoListXMLData
 	private String refundedType;
 	private String refundedBankTrxStatus;
 	private Date refundTriggeredDate;
+	private String refundCategory;
+	
+	/**
+	 * @return the refundCategory
+	 */
+	@XmlElement(name = "refundCategory")
+	public String getRefundCategory()
+	{
+		return refundCategory;
+	}
+
+	/**
+	 * @param refundCategory the refundCategory to set
+	 */
+	public void setRefundCategory(String refundCategory)
+	{
+		this.refundCategory = refundCategory;
+	}
 
 	/**
 	 * @return the refundedBy

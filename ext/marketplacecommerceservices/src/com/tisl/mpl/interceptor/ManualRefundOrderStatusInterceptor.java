@@ -133,7 +133,7 @@ public class ManualRefundOrderStatusInterceptor implements LoadInterceptor, Prep
 
 							final String referenceNumber = ((OrderModel) orderEntry.getOrder()).getParentReference().getCode();
 							mplRefundStatusService.refundStatusDatatoWsdto(refundInfos, referenceNumber, orderEntry.getTransactionID(),
-									globalCodeService.getGlobalMasterCode(consignmentStatusObject.toString()).getGlobalCode());
+									globalCodeService.getGlobalMasterCode(consignmentStatusObject.toString()).getGlobalCode(),null);
 							//Create Log History TISEE-5545
 							createHistoryLog("RETURN_COMPLETED", ((OrderModel) orderEntry.getOrder()), orderEntry.getTransactionID());
 						}

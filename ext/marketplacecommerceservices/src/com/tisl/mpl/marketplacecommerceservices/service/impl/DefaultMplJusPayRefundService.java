@@ -695,7 +695,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 	 */
 	@Override
 	public boolean makeRefundOMSCall(final AbstractOrderEntryModel orderEntry,
-			final PaymentTransactionModel paymentTransactionModel, final Double amount, final ConsignmentStatus newOrderLineStatus)
+			final PaymentTransactionModel paymentTransactionModel, final Double amount, final ConsignmentStatus newOrderLineStatus,String refundCategoryType)
 	{
 
 		if (orderEntry != null)
@@ -708,7 +708,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 						: StringUtils.EMPTY);
 				refundInfo.setRefundedBankTrxStatus(paymentTransactionModel.getStatus() != null ? paymentTransactionModel.getStatus()
 						: StringUtils.EMPTY);
-				refundInfo.setRefundedAmt(amount.floatValue());
+				refundInfo.setRefundedAmt(amount.floatValue());				
 			}
 			else
 			{
@@ -749,7 +749,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 				final String referenceNumber = ((OrderModel) orderEntry.getOrder()).getParentReference().getCode();
 				try {
 					final RefundInfoResponse resp = mplRefundStatusService.refundStatusDatatoWsdto(refundInfos, referenceNumber,
-							orderEntry.getTransactionID(), statusCode);
+							orderEntry.getTransactionID(), statusCode,refundCategoryType);
 					if (resp != null && "true".equalsIgnoreCase(resp.getReceived()))
 					{
 						return true;
@@ -787,7 +787,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 		//}
 
 		final RefundInfoResponse resp = mplRefundStatusService.refundStatusDatatoWsdto(new ArrayList<RefundInfo>(),
-				referenceNumber, orderEntry.getTransactionID(), statusCode);
+				referenceNumber, orderEntry.getTransactionID(), statusCode,null);
 
 		if (resp != null && "true".equalsIgnoreCase(resp.getReceived()))
 		{
@@ -903,7 +903,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 				orderEntry.setCurrDelCharge(NumberUtils.DOUBLE_ZERO);
 				getModelService().save(orderEntry);
 
-				makeRefundOMSCall(orderEntry, null, Double.valueOf(refundedAmount), ConsignmentStatus.REFUND_INITIATED);
+				makeRefundOMSCall(orderEntry, null, Double.valueOf(refundedAmount), ConsignmentStatus.REFUND_INITIATED,null);
 
 				// Making RTM entry to be picked up by webhook job
 				final RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(
@@ -961,7 +961,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 				orderEntry.setCurrDelCharge(NumberUtils.DOUBLE_ZERO);
 				getModelService().save(orderEntry);
 
-				makeRefundOMSCall(orderEntry, null, Double.valueOf(refundedAmount), ConsignmentStatus.REFUND_IN_PROGRESS);
+				makeRefundOMSCall(orderEntry, null, Double.valueOf(refundedAmount), ConsignmentStatus.REFUND_IN_PROGRESS,null);
 
 			}
 		}

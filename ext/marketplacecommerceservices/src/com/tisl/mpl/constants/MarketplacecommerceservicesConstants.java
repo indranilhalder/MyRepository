@@ -890,7 +890,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	// Added for TPR-1290
 	public static final String B9332 = "B9332";
 	public static final String B9328 = "B9328";
-	
+
 	// Auto populating pincode details Error Codes   Start
 	public static final String B9351 = "B9351";
 	public static final String B9352 = "B9352";
@@ -1766,6 +1766,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String TO = "TO".intern();
 	public static final String AND = " AND ";
 	public final static String RESERVATION_DATA_TO_SESSION = "reservationData";
+
 	private MarketplacecommerceservicesConstants()
 	{
 		//empty to avoid instantiating this constant class
@@ -1879,10 +1880,13 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String TICKETTYPECODE = "R";
 	public static final String REFUNDTYPE = "S";
 	public static final String REASONCODE = "03"; // Hard coded value -- I'm not happy with the product quality
-	
+
 	public static final String OTHER = "Other";
-	
-	public static final String OFD ="OUT FOR DELIVERY";
-	public static final String ADDRESS_ISSUE="Address Issue";
+
+	public static final String OFD = "OUT FOR DELIVERY";
+	public static final String ADDRESS_ISSUE = "Address Issue";
+	public static final String REFUND_CATEGORY_S = "S";
+	public static final String REFUND_CATEGORY_E = "E";
+
 
 }

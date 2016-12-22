@@ -587,7 +587,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 
 					LOG.info(" >> Calling OMS with  status :" + newStatus + " for refund amount " + refund.getAmount()
 							+ " for order line id : " + orderEntryModel.getOrderLineId());
-					mplJusPayRefundService.makeRefundOMSCall(orderEntryModel, paymentTransactionModel, refund.getAmount(), newStatus);
+					mplJusPayRefundService.makeRefundOMSCall(orderEntryModel, paymentTransactionModel, refund.getAmount(), newStatus,null);
 
 					//Update in Audit table with new status
 					updateInAudit(juspayOrderId, refund.getStatus(), getWebhookUniqueRequestId(rtmModel), paymentTransactionModel);
@@ -663,7 +663,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 					LOG.debug(" >> Calling OMS with  status :" + newStatus + " for refund amount " + refund.getAmount()
 							+ " for order line id : " + orderEntryModel.getOrderLineId());
 
-					mplJusPayRefundService.makeRefundOMSCall(orderEntryModel, paymentTransactionModel, refund.getAmount(), newStatus);
+					mplJusPayRefundService.makeRefundOMSCall(orderEntryModel, paymentTransactionModel, refund.getAmount(), newStatus,null);
 
 					//Update in Audit table with new status
 					updateInAudit(juspayOrderId, refund.getStatus(), getWebhookUniqueRequestId(rtmModel), paymentTransactionModel);

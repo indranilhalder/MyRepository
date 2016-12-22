@@ -21,6 +21,7 @@ import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
+import de.hybris.platform.payment.enums.PaymentTransactionType;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.returns.ReturnService;
@@ -30,7 +31,6 @@ import de.hybris.platform.returns.model.ReturnRequestModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.event.EventService;
-import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.time.TimeService;
@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ObjectUtils;
@@ -60,6 +61,7 @@ import com.tisl.mpl.globalcodes.utilities.MplCodeMasterUtility;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCheckInvoice;
 import com.tisl.mpl.marketplacecommerceservices.event.OrderCollectedByPersonEvent;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
 import com.tisl.mpl.marketplaceomsservices.event.SendNotificationEvent;
 import com.tisl.mpl.marketplaceomsservices.event.SendNotificationSecondaryStatusEvent;
 import com.tisl.mpl.marketplaceomsservices.event.SendUnCollectedOrderToCRMEvent;
@@ -112,7 +114,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 
 	@Autowired
 	private MplDeliveryCostService mplDeliveryCostService;
-
+@Autowired private MplJusPayRefundService mplJusPayRefundService;
 	@Override
 	public ConsignmentModel update(final OrderWrapper wrapper, final ItemModel parent)
 	{
@@ -805,7 +807,41 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 		}
 	}
 
-	private void createRefundEntry(final Shipment shipment,final ConsignmentStatus newStatus, final ConsignmentModel consignmentModel,
+	/**
+	 * @param entry 
+	 * 
+	 * R2.3 for refund info call to oms 
+	 * 
+	 */
+	private void refundInfoCallToOMS(AbstractOrderEntryModel orderEntry , String refundcategoryType)
+	{
+		PaymentTransactionModel paymentTransactionModel = null;
+
+		double totalRefundAmount = null !=orderEntry.getCurrDelCharge()?orderEntry.getCurrDelCharge().doubleValue():0.0D;
+		if (totalRefundAmount > 0D) {
+			paymentTransactionModel = mplJusPayRefundService
+					.createPaymentTransactionModel((OrderModel) orderEntry.getOrder(), "FAILURE",
+							Double.valueOf(totalRefundAmount),
+							PaymentTransactionType.RETURN, "FAILURE", UUID
+									.randomUUID().toString());
+			mplJusPayRefundService.attachPaymentTransactionModel((OrderModel) orderEntry.getOrder(),
+					paymentTransactionModel);
+		}
+	
+
+			if (paymentTransactionModel != null) {
+					ConsignmentStatus status = null;
+					 if(null != orderEntry.getConsignmentEntries()) {
+						 status = orderEntry.getConsignmentEntries().iterator().next().getConsignment().getStatus();
+					 }
+				mplJusPayRefundService.makeRefundOMSCall(orderEntry,
+						paymentTransactionModel,
+						orderEntry.getNetAmountAfterAllDisc(), status,refundcategoryType);
+			}
+		}
+		
+
+	private void createRefundEntry(final Shipment shipment, ConsignmentStatus newStatus, final ConsignmentModel consignmentModel,
 			final OrderModel orderModel)
 	{
 		try{
@@ -817,12 +853,20 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
          			 LOG.debug("************************In IsEDtoHD Check .......");
          			  isEDtoHDCheck=Boolean.TRUE;
          			  createRefundEntryModel(newStatus,consignmentModel,orderModel,isEDtoHDCheck,isSDBCheck,isRetrunInitiatedCheck);
+         			 
          			  consignmentModel.setIsEDtoHD(Boolean.TRUE);
          			  consignmentModel.setIsEDtoHDCheck(Boolean.TRUE);
          			  modelService.save(consignmentModel);
          			  
          			  AbstractOrderEntryModel entry= consignmentModel.getConsignmentEntries().iterator().next().getOrderEntry();
-         					
+         			/*  R2.3 REFUND INFO CALL TO OMS  START*/
+         			  try {
+         				 
+         				  refundInfoCallToOMS(entry,MarketplacecommerceservicesConstants.REFUND_CATEGORY_E);
+         			  }catch(Exception e) {
+         				  LOG.error("Exception occurred while  refund info call to oms "+e.getMessage());
+         			  }
+         			  /*  R2.3 REFUND INFO CALL TO OMS  END*/
          						if (MarketplacecommerceservicesConstants.EXPRESS_DELIVERY.equalsIgnoreCase(entry.getMplDeliveryMode().getDeliveryMode().getCode()))
          						{
          							if(entry.getTransactionID().equalsIgnoreCase(shipment.getShipmentId())){
@@ -840,10 +884,30 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
          		}
 		     }
 		     if(null!= shipment && null!=shipment.getSdb()){
+		   	  
          		if(shipment.getSdb().booleanValue() &&  ( CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))  &&  (consignmentModel.getSdbCheck()==null || consignmentModel.getSdbCheck() ==Boolean.FALSE)){
+         			
          			  LOG.debug("************************In SDB Check .......");
          			  isSDBCheck=Boolean.TRUE;
          			  createRefundEntryModel(newStatus,consignmentModel,orderModel,isEDtoHDCheck,isSDBCheck,isRetrunInitiatedCheck);
+         			  AbstractOrderEntryModel entry= consignmentModel.getConsignmentEntries().iterator().next().getOrderEntry();
+         			  /*  R2.3 REFUND INFO CALL TO OMS  START*/
+         			  try {
+         			  ConsignmentModel consignment = entry
+         						 .getConsignmentEntries().iterator().next()
+         						 .getConsignment();
+         						 
+         						if (consignment.getDeliveryDate() != null) {
+         							newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
+         						} else {
+         							newStatus = ConsignmentStatus.COD_CLOSED_WITHOUT_REFUND;
+         						}
+         			  
+         				  refundInfoCallToOMS(entry,MarketplacecommerceservicesConstants.REFUND_CATEGORY_S);
+         			  }catch(Exception e) {
+         				  LOG.error("Exception occurred while  refund info call to oms "+e.getMessage());
+         			  }
+         			  /*  R2.3 REFUND INFO CALL TO OMS  END*/
          			  consignmentModel.setSdb(Boolean.TRUE);
          			  consignmentModel.setSdbCheck(Boolean.TRUE);
          			  modelService.save(consignmentModel);
