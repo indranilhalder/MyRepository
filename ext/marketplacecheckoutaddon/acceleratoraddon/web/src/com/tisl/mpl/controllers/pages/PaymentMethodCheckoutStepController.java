@@ -3900,13 +3900,17 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								&& richAttributeModel.get(0).getDeliveryFulfillModes() != null)
 						{
 							final String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
-							if (DeliveryFulfillModesEnum.TSHIP.toString().equalsIgnoreCase(fulfillmentType))
+							  //R2.3 BUG-ID TATA-684
+							final String deliveryFulfillModeByP1=entry.getFulfillmentTypeP1()!=null?entry.getFulfillmentTypeP1():richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode();
+							if (DeliveryFulfillModesEnum.TSHIP.toString().equalsIgnoreCase(fulfillmentType) ||DeliveryFulfillModesEnum.BOTH.toString().equalsIgnoreCase(fulfillmentType) &&
+									DeliveryFulfillModesEnum.TSHIP.toString().equalsIgnoreCase(deliveryFulfillModeByP1))
 							{
 								LOG.debug("Entry is TSHIP");
 								//TPR-627, TPR-622 Separate method the check COD Eligibility to avoid redundant code
 								final boolean returnFlag = paymentModecheckForCOD(richAttributeModel, abstractOrder, model);
 								if (!returnFlag)
 								{
+									  
 									break;
 								}
 							}
