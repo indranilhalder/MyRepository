@@ -226,7 +226,7 @@ li.deliverySlotRadio .reset{margin: 0px auto !important;    height: 30px !import
     		$(this).parent().parent().find(".pardhuBlock input[data-name='time']").prop('checked', false);
     		var ussId=$(this).attr('data-ussid');
     		var mplconfigModel= $('#mplconfigModel').val();
-    		$(this).parent().find(".displayClick").hide()
+    		$(this).parent().parent().find(".displayClick").hide()
     		var dataString = 'deliverySlotCost='+mplconfigModel+'&ussId='+ussId;
     		//alert(dataString);
     		 $.ajax({                            

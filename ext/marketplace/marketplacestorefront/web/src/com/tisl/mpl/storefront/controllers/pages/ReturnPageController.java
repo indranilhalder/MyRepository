@@ -141,6 +141,8 @@ public class ReturnPageController extends AbstractMplSearchPageController
 	
 	@Autowired
 	ModelService modelService;
+	
+	public static final String RETURN_TYPE_COD="01";
 
 	private static final String RETURN_SUCCESS = "returnSuccess";
 	private static final String RETURN_SUBMIT = "returnSubmit";
@@ -460,7 +462,12 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		selfShipData.setOrderNo(returnForm.getOrderCode());
 		selfShipData.setTransactionID(returnForm.getTransactionId());
 		selfShipData.setPaymentMode(returnForm.getRefundMode());
-		
+		if(null!= subOrderDetails.getCreated()){
+			 SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+			 selfShipData.setOrderDate(dateUtilHelper.convertDateWithFormat(formatter.format(subOrderDetails.getCreated())));
+			 selfShipData.setTransactionDate(dateUtilHelper.convertDateWithFormat(formatter.format(subOrderDetails.getCreated())));
+		}
+		selfShipData.setTransactionType(RETURN_TYPE_COD);
 		if(null != returnForm.getIsCODorder() &&  returnForm.getIsCODorder().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y) )
 		{
 			//set ordertag POSTPAIDRRF for COD orders
