@@ -3403,7 +3403,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		orderLineRequest.setOrderLine(orderLineList);
 		return orderLineRequest;
 	}
-
+	/**
+	 * Added Code for Return Initiation From SellerPortel
+	 */
 	@Override
 	public List<OrderLineData> returnInitiationForRTS(List<OrderLineData> orerLines)
 	{
@@ -3412,35 +3414,31 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		final List<OrderLine> orderLineList = new ArrayList<MplCancelOrderRequest.OrderLine>();
 		try
 		{
+			final OrderModel subOrderModel = orderModelService.getOrder(orerLines.get(0).getOrderId());
 			for (final OrderLineData data : orerLines)
 			{		
-				final OrderModel orderModel = mplReturnService.getOrder(data.getOrderId());
-				List<OrderModel> suOrder = orderModel.getChildOrders();
-				for(final OrderModel subOrderModel : suOrder)
-				{
-	   			for (final AbstractOrderEntryModel entry : subOrderModel.getEntries())
-	   			{
-	   				if (entry.getTransactionID().equalsIgnoreCase(data.getTransactionId()))
-	   				{
-	   					final ProductModel product = entry.getProduct();
-	   					LOG.info("Product Deatails : "+ product.getCode() + "Product Name : " + product.getName());
-	   					final List<SellerInformationModel> sellersList = (List<SellerInformationModel>) product.getSellerInformationRelator();
-	   					for(final SellerInformationModel seller : sellersList)
-	   					{
-	   						if(seller.getSellerArticleSKU().equals(entry.getSelectedUSSID()))
-	   						{
-	   							OrderLineData orderData = getReturnEligibility(seller, entry, orderModel.getCode(),subOrderModel, data);
-	   							orderList.add(orderData);
-	   							if (orderData != null && orderData.getIsReturnInitiated().equalsIgnoreCase("Y"))
-									{
-										final OrderLine orderLines = populateOrderLineForRTS(data, entry, subOrderModel);
-										orderLineList.add(orderLines);
-									}
-	   						}
-	   					}
-	   				}
-	   			}
-	      	}
+   			for (final AbstractOrderEntryModel entry : subOrderModel.getEntries())
+   			{
+   				if (entry.getTransactionID().equalsIgnoreCase(data.getTransactionId()))
+   				{
+   					final ProductModel product = entry.getProduct();
+   					LOG.info("Product Deatails : "+ product.getCode() + "Product Name : " + product.getName());
+   					final List<SellerInformationModel> sellersList = (List<SellerInformationModel>) product.getSellerInformationRelator();
+   					for(final SellerInformationModel seller : sellersList)
+   					{
+   						if(seller.getSellerArticleSKU().equals(entry.getSelectedUSSID()))
+   						{
+   							OrderLineData orderData = getReturnEligibility(seller, entry, subOrderModel.getCode(),subOrderModel, data);
+   							orderList.add(orderData);
+   							if (orderData != null && orderData.getIsReturnInitiated().equalsIgnoreCase("Y"))
+								{
+									final OrderLine orderLines = populateOrderLineForRTS(data, entry, subOrderModel);
+									orderLineList.add(orderLines);
+								}
+   						}
+   					}
+   				}
+   			}
 			}
 			if (CollectionUtils.isNotEmpty(orderLineList))
 			{
