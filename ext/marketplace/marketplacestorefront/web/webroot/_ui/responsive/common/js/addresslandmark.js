@@ -7,14 +7,19 @@ $(document).ready(function(){
 			loadPincodeData("edit");
 		}
 	}
+
 	
-	if($('#scriptAdded').length > 0) { } else {
+	
+	
+	
 		$(".pincode-button").click(function(){
-			setTimeout(function() {
-				$('head').append("<script id='scriptAdded' type='text/javascript' src='/_ui/responsive/common/js/addresslandmark.js'></script>");
-			},200);
+			//alert(" in else ");
+			loadPincodeData('new');
+			//str1 = $("head script)").attr('src');
+			 
+				//$('head').append("<script id='scriptAdded' type='text/javascript' src='/_ui/responsive/common/js/addresslandmark.js'></script>");
+			
 		});
-	}
 	
 	$(".address_states").change(function(){
 		if($(this).attr("readonly") == "readonly"){
@@ -48,6 +53,7 @@ $(".address_postcode").blur(function() {
 });
 
 function loadPincodeData(parm) {
+	//alert(parm);
 	var Pincode=$(".address_postcode").val();
     $.ajax({
 		url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/landmarks",
@@ -117,6 +123,7 @@ function loadPincodeData(parm) {
 			}
 		},
 		error: function(jqXHR, textStatus, errorThrown) {
+			//alert("error");
 		}
     });
 }
@@ -362,11 +369,13 @@ $(document).ready(function() {
 	
 	$(".addAddressToForm").click(function(){
 		var className = $(this).attr("data-item");
+		//alert(className);
 		$("#firstName").val($("."+className+" .firstName").text());
 		$("#lastName").val($("."+className+" .lastName").text());
 		$("#addressLine1").val($("."+className+" .addressLine1").text());
 		$("#addressLine2").val($("."+className+" .addressLine2").text());
 		$("#addressLine3").val($("."+className+" .addressLine3").text());
+		$(".address_townCity").val($("."+className+" .town").text());
 		var value = $("."+className+" .landmark").text();
 		  
 		  setTimeout(function(){
@@ -378,7 +387,7 @@ $(document).ready(function() {
 			
 			} else {
 			//alert(value+ " 3 in else");
-			  $(".address_landmarks").val("Other"); 
+			 // $(".address_landmarks").val("Other"); 
 				changeFuncLandMark("Other"); 
 			$(".address_landmarkOther").val(value);
 			

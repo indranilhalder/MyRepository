@@ -319,6 +319,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		{
 			addressinfo.setShippingLastName(changeDeliveryAddress.getLastname());
 		}
+		if(MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_CDA.equalsIgnoreCase(ticketType)){
 		if (null != changeDeliveryAddress.getLine1())
 		{
 			addressinfo.setAddress1(changeDeliveryAddress.getLine1());
@@ -346,6 +347,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		if (null != changeDeliveryAddress.getPostalcode())
 		{
 			addressinfo.setPincode(changeDeliveryAddress.getPostalcode());
+		}
 		}
 		if (null != changeDeliveryAddress.getPhone1())
 		{

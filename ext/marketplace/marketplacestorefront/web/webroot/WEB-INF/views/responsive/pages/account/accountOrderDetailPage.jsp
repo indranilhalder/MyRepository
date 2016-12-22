@@ -1493,7 +1493,6 @@
 
                                   
                                    </c:if>
-									<return:lpDetailsUploadPopup entry="${entry}" /> <!-- R2.3: One line -->
 								</c:forEach>
 															
 							</c:if> 
@@ -1748,7 +1747,10 @@
 											</c:if>
 
 										</div>
+										
+											
 										<div class="actions">
+										<div class="col-md-6 col-sm-6">
 											<c:if
 												test="${entry.itemCancellationStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
 												<c:set var="bogoCheck"
@@ -1781,6 +1783,17 @@
 											<c:if test="${cancellationMsg eq 'true'}">
 												<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
 											</c:if>
+											</div>
+											<div class="col-md-6 col-sm-6 pull-right">
+											<c:if test="${fn:containsIgnoreCase(entry.returnMethodType , 'SELF_COURIER')}">
+												<c:if test="${entry.isRefundable eq false }">
+													<div class="awsInnerClass">
+															Please provide AWB number, 
+															<br/>Logistics partner and upload POD <a href="#" id="awbNumberLink">here</a>
+													</div>
+												</c:if>	
+												</c:if>
+											</div>
 											<!-- TISCR-410 ends -->
 										</div>
 
@@ -2516,6 +2529,7 @@
 
 
                                    </c:if>
+                                   	<return:lpDetailsUploadPopup entry="${entry}" /> <!-- R2.3: One line -->
 								</c:forEach>
 								 </c:forEach> 
 							
@@ -2684,7 +2698,6 @@ $(function() {
 });
 
 	function showCancelDiv(orderLineId) {
-		alert('Suman');
 		var divId='cancellation' + orderLineId;
 		showDiv(divId);
 
@@ -2872,7 +2885,9 @@ $(function() {
 			  var height = $(window).height();
 			  $(".wrapBG").css("height",height);
 			  $("#changeAddressPopup").css("z-index","999999");
+			  loadPincodeData('edit');
 			  setTimeout(function() {
+				  
 			      console.log($("#deliveryAddressForm #firstName").attr("value")); 
 			      $("#deliveryAddressForm #firstName").val($("#deliveryAddressForm #firstName").attr("value"));
 			      $("#deliveryAddressForm #lastName").val($("#deliveryAddressForm #lastName").attr("value"));
@@ -2880,31 +2895,32 @@ $(function() {
 			      $("#deliveryAddressForm #addressLine1").val($("#deliveryAddressForm #addressLine1").attr("value"));
 			      $("#deliveryAddressForm #addressLine2").val($("#deliveryAddressForm #addressLine2").attr("value")); 
 			      $("#deliveryAddressForm #addressLine3").val($("#deliveryAddressForm #addressLine3").attr("value")); 
-			      $("#deliveryAddressForm #landmark").val($("#deliveryAddressForm #landmark").attr("value")); 
-			      $("#deliveryAddressForm #otherLandmark").val($("#deliveryAddressForm #otherLandmark").attr("value"));
+			 	
+			      var value = $(".address_landmarkOtherDiv").attr("data-value");
+				  
+				  setTimeout(function(){
+	    		  if($(".address_landmarks option[value='"+value+"']").length > "0") {
+	    			  
+	    			// alert(value+ " 2 in if x"+$(".address_landmarks option[value='"+value+"']").val());
+	  				  $(".address_landmarks").val("");
+	  				$(".address_landmarks option[value='"+value+"']").prop("selected",true);
+	  				
+	  				} else {
+	  				//alert(value+ " 3 in else");
+	  				 // $(".address_landmarks").val("Other"); 
+	  					changeFuncLandMark("Other"); 
+	  	  			$(".address_landmarkOther").val(value);
+	  				
+	  			}
+				  
+				  });
 			      $("#deliveryAddressForm #city").val($("#deliveryAddressForm #city").attr("value")); 
 			      $("#deliveryAddressForm #state").val($("#deliveryAddressForm #state").attr("value")); 
 			      $("#deliveryAddressForm #mobileNo").val($("#deliveryAddressForm #mobileNo").attr("value")); 
 			     }, 100);
-			  loadPincodeData('edit');
-				 var value = $(".address_landmarkOtherDiv").attr("data-value");
-			  
-			  setTimeout(function(){
-    		  if($(".address_landmarks option[value='"+value+"']").length > "0") {
-    			  
-    			  //alert(value+ " 2 in if x"+$(".address_landmarks option[value='"+value+"']").val());
-  				  $(".address_landmarks").val("");
-  				$(".address_landmarks option[value='"+value+"']").prop("selected",true);
-  				
-  				} else {
-  				//alert(value+ " 3 in else");
-  				  $(".address_landmarks").val("Other"); 
-  					changeFuncLandMark("Other"); 
-  	  			$(".address_landmarkOther").val(value);
-  				
-  			}
-			  
-			  }); 
+			  	
+			  	//changeFuncLandMark("Other"); 
+			 
 		});
 		
 		
@@ -2949,6 +2965,7 @@ $(function() {
 		 <!--   AWB Jquery codes PopUp  -->
 		   
 		   $("#awbNumberLink").click(function(){
+			//   alert("awbNumberLink");
 			   $(".awsNumError").hide();
 			    $(".logisticPartnerError").hide();
 			    $(".uploadError").hide(); 
