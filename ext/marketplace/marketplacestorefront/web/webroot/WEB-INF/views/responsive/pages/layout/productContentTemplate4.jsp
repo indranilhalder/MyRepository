@@ -4,7 +4,7 @@
 
 <div class="Manufacturer Temp01">
   <div class="Padd">
-    <h2>From the Manufacturer</h2>
+    <h2>${cmsPage.title}</h2>
     <div class="DLeft TLeft"> 
     		<cms:pageSlot position="Section1A" var="feature">
 				<img src="${feature.urlLink }"/>

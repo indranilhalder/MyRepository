@@ -3,7 +3,7 @@
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <div class="Manufacturer Temp02">
 	<div class="Padd">
-		<h2>From the Manufacturer</h2>
+		<h2>${cmsPage.title}</h2>
 		<ul class="temp2-fst">
 			<li>
 				<div class="media">

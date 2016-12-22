@@ -137,6 +137,7 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 	//@Description: Variable Declaration for Promotions
 	private static final int PRODUCTCODE = 0;
 	private static final int TEMPLATE = 1;
+	private static final int TEMPLATE_HEADING = 2;
 
 	/**
 	 * @Description: For Creating Content in bulk,checks for the basic coloumns
@@ -185,7 +186,7 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 			{
 				if (StringUtils.isNotEmpty(searchForTemplateInConfig))
 				{
-					int countAfter = 2;
+					int countAfter = 3;// changed to 3 after inclusion of heading template TPR-4060
 					final String[] attributeList = searchForTemplateInConfig.split(",");
 					final Map<String, String> contentMap = new LinkedHashMap<>();
 
@@ -412,6 +413,8 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 			{
 				title = title.substring(0, 220);
 			}
+			final String templateHeading = line.get(Integer.valueOf(TEMPLATE_HEADING));//TPR- 4060
+
 			final String uid = makeUid(productCode, title, template);
 
 
@@ -424,6 +427,10 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 			if (templateModel != null && CollectionUtils.isNotEmpty(productList))
 			{
 				cm = new ContentPageModel();
+				if (StringUtils.isNotEmpty(templateHeading))
+				{
+					cm.setTitle(templateHeading, Locale.US);//TPR-4060
+				}
 				cm.setUid(uid);
 				cm.setName(uid);
 				cm.setMasterTemplate(templateModel);
@@ -434,7 +441,6 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 				cm.setAssociatedProducts(productList);
 				cm.setCatalogVersion(getCatalogVersion());
 				modelService.save(cm);
-
 			}
 
 
@@ -475,7 +481,7 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 			 * isUpdatefeed); componentlist.add(sm); } else if (entry.getKey().startsWith("Video") &&
 			 * StringUtils.isNotEmpty(entry.getValue())) { final VideoComponentModel vm =
 			 * makeVideoComponent(entry.getValue(), entry.getKey(), line, writer, isUpdatefeed); componentlist.add(vm);
-			 * 
+			 *
 			 * } else if (entry.getKey().startsWith("Text") && StringUtils.isNotEmpty(entry.getValue())) { final
 			 * CMSParagraphComponentModel cmspara = makeTextComponent(entry.getValue(), entry.getKey(), line, writer,
 			 * isUpdatefeed); componentlist.add(cmspara); }

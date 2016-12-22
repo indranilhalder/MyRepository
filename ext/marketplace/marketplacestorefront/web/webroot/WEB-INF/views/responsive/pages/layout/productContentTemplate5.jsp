@@ -4,7 +4,7 @@
 
 <div class="Manufacturer temp-five">
   <div class="Padd">
-   <h2><span>From the Manufacturer</span></h2>
+   <h2><span>${cmsPage.title}</span></h2>
    <div class="top-features">
 		<cms:pageSlot position="Section1A" var="feature">
 			<cms:component component="${feature}" element="div" class="" />							

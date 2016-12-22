@@ -34,7 +34,7 @@ $(document).ready(function(){
 </script>
 <div class="Manufacturer Temp07">
   <div class="Padd">
-   <h2><span>From the Manufacturer</span></h2>
+   <h2><span>${cmsPage.title}</span></h2>
    <div class="twocolumn">
       <div class="onecolumn">
          <div class="media">
