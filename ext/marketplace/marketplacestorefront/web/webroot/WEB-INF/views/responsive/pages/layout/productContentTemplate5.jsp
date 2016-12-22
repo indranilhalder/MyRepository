@@ -1,7 +1,23 @@
 <%@ page trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template"%>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
+<script>
+$(document).ready(function(){
+	if (!$(".Manufacturer.temp-five .Padd .top-features .yCmsComponent ").length && !$(".Manufacturer.temp-five .Padd .top-features ul li a img").length) {
+		$(".Manufacturer.temp-five .Padd .top-features").hide();
+	}
+	if (!$(".Manufacturer.temp-five .Padd .uncover .media img ").length && !$(".Manufacturer.temp-five .Padd .uncover .media .yCmsComponent").length) {
+		$(".Manufacturer.temp-five .Padd .uncover").hide();
+	}
+	if (!$(".Manufacturer.temp-five .Padd .every-scene ul li .media img ").length && !$(".Manufacturer.temp-five .Padd .every-scene .yCmsComponent").length) {
+		$(".Manufacturer.temp-five .Padd .every-scene").hide();
+	}
+	if (!$(".Manufacturer.temp-five .Padd .world-possibilities .media img ").length && !$(".Manufacturer.temp-five .Padd .world-possibilities .media-content .yCmsComponent").length) {
+		$(".Manufacturer.temp-five .Padd .world-possibilities").hide();
+	}
+});
 
+</script>
 <div class="Manufacturer temp-five">
   <div class="Padd">
    <h2><span>${cmsPage.title}</span></h2>

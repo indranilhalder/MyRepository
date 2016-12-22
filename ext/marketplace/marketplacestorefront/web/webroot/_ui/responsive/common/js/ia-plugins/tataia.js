@@ -35,7 +35,10 @@ var filterNamePairing = {};
 
 var category_idString		= $('#categoryIdHotNow').val(); // For HotNow category for TPR 1313
 var category_idArray = new Array();//Variables added for TPR 1313
-category_idArray = category_idString.split(",");//Variables added for TPR 1313
+if(typeof(category_idString)!='undefined')
+{
+	category_idArray = category_idString.split(',');
+}//Variables added for TPR 1313
 
 //start for geolocations tpr-1304
 $(document).ready(function(){
@@ -341,6 +344,16 @@ if (searchCategory_id){
 			      }
 			      if (productWidget[i].indexOf("hot") === 0 && 
 			          site_page_type === "viewAllTrending") {
+
+			      	  /*Newly added url parameters set by IA hot homepage widget*/
+			      	  if(getURLField('filter=')) {
+			      	  	var keyval = getURLField('filter=').split(',');
+			      	  	if(keyval[0] === "product_category") {
+			      	  		params.category_id = keyval[1];
+			      	  	} else if (keyval[0] === "brand") {
+			      	  		params.brand_id = keyval[1];
+			      	  	}
+			      	  }
 			        params.count = '100';
 			      } else {
 			        params.count = '15';
@@ -823,7 +836,7 @@ if (searchCategory_id){
 						  /* TISPRD-2119 Changes for Quick View position*/
 							 if((obj.colors != null && obj.colors.length < 2) && (obj.sizes != null && obj.sizes.length < 2)&& (obj.type == 'Electronics')){ 
 								 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView ia_both" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0;left: 0px; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block; width: 50%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height:70px;font-size:12px;"><span>Quick View</span></div><div onclick=submitAddToCart("'+obj.site_product_id+'","'+obj.site_uss_id+'") class="iaAddToCartButton ia_both" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block;right:0; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;width: 50%;font-size:12px;"><span>Add To Bag</span></div>';
-								
+							
 							 }else{
 								 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0; z-index: -1; visibility: hidden; color: #00cbe9;display: block; width: 100%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;font-size:12px;"><span>Quick View</span></div>';
 								 
@@ -944,7 +957,7 @@ if (searchCategory_id){
 
 					      	dataType: 'jsonp',
 
-					      	data: { 'site_product_id' : spid, 'ecompany': ecompany, 'session_id':ssid },
+					      	data: incParams,
 
 					      	contentType: 'application/javascript',
 
@@ -1151,8 +1164,12 @@ if (searchCategory_id){
 			      if(widgetMode === "hot" && site_page_type == "homepage"){
 			          html += '</ul></div>';
 			          /* IA Changes Start for store/mpl/en */
-			          html += '</div></div><a href="http://'+window.location.host+'/viewAllTrending" class="button hotShowHide" style="display: inline-block;font-size: 12px;height: 40px;line-height: 40px;">Shop the Hot List</a>';
-			          }
+			          if (response.data.filter_value) {
+			          	html += '</div></div><a href="http://'+window.location.host+'/viewAllTrending?filter='+response.data.filter_key+','+response.data.filter_value+'" class="button hotShowHide" style="display: inline-block;font-size: 12px;height: 40px;line-height: 40px;">Shop the Hot List</a>';
+			          } else {
+			          	html += '</div></div><a href="http://'+window.location.host+'/viewAllTrending" class="button hotShowHide" style="display: inline-block;font-size: 12px;height: 40px;line-height: 40px;">Shop the Hot List</a>';
+			      	  }
+			      }
 			      /* IA Changes End for store/mpl/en */
 			          else{
 			        	  html += '</ul></div>';
