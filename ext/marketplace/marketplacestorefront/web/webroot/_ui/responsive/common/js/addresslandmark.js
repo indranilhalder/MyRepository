@@ -96,7 +96,7 @@ function loadPincodeData(parm) {
     			$(".addressDup").prop("disabled",false);
     			$(".mainDrop").hide();
 				$(".dupDisplay").show();
-				$(".mainDrop select").val(response.state.name).prop('disbaled','disabled');
+				$(".mainDrop select").val(response.state.name).prop('disabled','disabled');
 				$(".stateInput").html("<input id='statesReadOnly' name='state'/>");
 				$(".stateInput input").prop("disabled",false).val(response.state.name).attr("readonly", "true");
     			$(".address_landmarkOther").attr("value", "");
