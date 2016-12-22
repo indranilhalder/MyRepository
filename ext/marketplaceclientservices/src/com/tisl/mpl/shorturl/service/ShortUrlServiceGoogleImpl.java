@@ -4,43 +4,26 @@
 package com.tisl.mpl.shorturl.service;
 
 import de.hybris.platform.servicelayer.config.ConfigurationService;
-import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.SocketAddress;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.net.ssl.HttpsURLConnection;
 
-
-
-
-import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.params.ConnRoutePNames;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 import com.tisl.mpl.constants.MarketplaceclientservicesConstants;
 import com.tisl.mpl.core.model.OrderShortUrlInfoModel;
@@ -58,13 +41,9 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 {
 
 	private static final Logger LOG = Logger.getLogger(ShortUrlServiceGoogleImpl.class);
-	private int connectionTimeout = 5 * 10000;
-	private int readTimeout = 5 * 1000;
-	private String baseUrl;
-	private String key;
-	private String merchantId;
-	private String environmentSet;
-
+	private static int connectionTimeout = 5 * 10000;
+	private static int readTimeout = 5 * 1000;
+	
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
 	@Resource(name = "modelService")
@@ -82,73 +61,100 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 	public String genearateShortURL(final String orderCode)
 	{
 		LOG.info("Generating short url for order id :" + orderCode);
-		final String proxyEnableStatus = getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.PROXYENABLED);
 		final String googleAPIUrl = getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.GOOGLE_API_SHORT_URL);
 		final String googleShortUrlApiKey = getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.GOOGLE_SHORT_URL_API_KEY);
 		final String longUrl = getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT);
 		
-		DefaultHttpClient httpClient = new DefaultHttpClient();
-		HttpPost postRequest = new HttpPost(googleAPIUrl+"?key="+googleShortUrlApiKey);
-
-		StringEntity input = new StringEntity(prepareLongUrlJSONString(longUrl+"/"+orderCode),"UTF-8");
-		input.setContentType("application/json; charset=UTF-8");
-		postRequest.setEntity(input);
+		StringBuilder sb = new StringBuilder(googleAPIUrl);
+		sb.append("?key=");
+		sb.append(googleShortUrlApiKey);
 		if(LOG.isDebugEnabled()) {
-			LOG.debug("short url google api key "+googleShortUrlApiKey+" and connecting url "+googleAPIUrl);
-			LOG.debug("input "+input);
+			LOG.debug("Google Api key :"+googleShortUrlApiKey+" and connecting url"+googleAPIUrl);
 		}
+		String url = String.valueOf(sb); 
 		
-		if(proxyEnableStatus.equalsIgnoreCase("true")){
-			LOG.debug("Proxy is enaled while calling google API for short url service");
-			HttpHost proxy =new HttpHost(getConfigurationService().getConfiguration().getString(
-					MarketplaceclientservicesConstants.GENPROXY), Integer.parseInt(getConfigurationService().getConfiguration().getString(
-							MarketplaceclientservicesConstants.GENPROXYPORT)));
-			httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,proxy);
-			
-		}else {
-			LOG.warn("Proxy is disabled while calling google API for short url service");
-		}
+		final LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
+		params.put("longUrl", String.valueOf(longUrl));
+		final String response = getShortUrl(url, jsonString(params));
+
+		final JSONObject jsonResponse = (JSONObject) JSONValue.parse(response);
+		LOG.debug("JSON responce "+jsonResponse);
+		return (String) jsonResponse.get("id");
 		
-		HttpResponse response=null;
-		final StringBuilder buffer = new StringBuilder();
-		try
-		{
-			response = httpClient.execute(postRequest);
-			if (response.getStatusLine().getStatusCode() != HttpURLConnection.HTTP_OK) {
-				LOG.error("unable to get short url from googleapi");
-			}
-
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					(response.getEntity().getContent())));
-			System.out.println("Output from Server .... \n");
-			
-			
-			String line;
-			while ((line = br.readLine()) != null) {
-				buffer.append(line);
-			}
-			if(LOG.isDebugEnabled()) {
-				LOG.debug("Output from Server .... \n"+buffer.toString());
-			}
-			final JSONObject jsonResponse = (JSONObject) JSONValue.parse(buffer.toString());
-
-			return (String) jsonResponse.get("id");
-
-		}
-		catch (IOException e)
-		{
-			LOG.error("Exception while getting the short url for order id "+orderCode);
-			e.printStackTrace();
-		}
-
-		return null;
 	}
 	
-	public static String prepareLongUrlJSONString(String longURL) {
-      JSONObject longUrlJSONObj = new JSONObject();
-      longUrlJSONObj.put("longUrl", longURL);
-      return longUrlJSONObj.toJSONString();
-  }
+	private  String getShortUrl(final String endPoint, String encodedParams)
+	{
+		final String proxyEnableStatus = getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.PROXYENABLED);
+		final String proxyAddress = getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.GENPROXY);
+		final String proxyPort = getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.GENPROXYPORT);
+		HttpsURLConnection connection = null;
+		final StringBuilder buffer = new StringBuilder();
+
+		try
+		{
+			if (proxyEnableStatus.equalsIgnoreCase("true"))
+			{
+		      LOG.debug("Proxy is enabled and connecting to proxy address "+proxyAddress);
+				final SocketAddress addr = new InetSocketAddress(proxyAddress, Integer.valueOf(proxyPort).intValue());
+				final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
+				final URL url = new URL(endPoint);
+				connection = (HttpsURLConnection) url.openConnection(proxy);
+			}
+			else
+			{
+				LOG.warn("Proxy is not enabled ");
+				final URL url = new URL(endPoint);
+				connection = (HttpsURLConnection) url.openConnection();
+			}
+
+			connection.setConnectTimeout(connectionTimeout);
+			connection.setReadTimeout(readTimeout);
+			connection.setRequestMethod("POST");
+			connection.setRequestProperty("Content-Type", "application/json");
+			connection.setRequestProperty("Content-Length", Integer.toString(encodedParams.getBytes().length));
+			connection.setRequestProperty("Content-Language", "en-US");
+			connection.setRequestProperty("charset", "utf-8");
+			connection.setUseCaches(false);
+			connection.setDoInput(true);
+			connection.setDoOutput(true);
+			final DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+			wr.writeBytes(encodedParams);
+			wr.flush();
+			wr.close();
+
+			// Read the response
+			final InputStream inputStream = connection.getInputStream();
+			final BufferedReader in = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+			String line;
+			while ((line = in.readLine()) != null)
+			{
+				buffer.append(line);
+			}
+			LOG.debug("output from server:"+buffer.toString());
+			return buffer.toString();
+			
+		}
+		catch (final Exception e)
+		{
+			System.out.println("ERROR"+e.getMessage());
+		}
+		return buffer.toString();
+	}
+	
+	public static String jsonString(LinkedHashMap<String, String> params) {
+        JSONObject longUrl = new JSONObject();
+        longUrl.put("longUrl", params.get("longUrl"));
+        return longUrl.toJSONString();
+    }
+	
+	public String prepareLongUrlJSONString(String longURL) {
+	      JSONObject longUrlJSONObj = new JSONObject();
+	      longUrlJSONObj.put("longUrl", longURL);
+	      return longUrlJSONObj.toJSONString();
+	  }
+	
+
 
 	/**
 	 * @Description This method will get the short url report model from db

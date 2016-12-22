@@ -33,12 +33,12 @@
 					</span>
 			</label>
 			<div class="controls">
-				<form:select id="${idKey}" path="${path}" cssClass="${selectCSSClass}" tabindex="${tabindex}" onchange="changeFuncLandMark(this.value)">
-					<c:if test="${skipBlank == null || skipBlank == false}">
+				<form:select id="${idKey}" path="${path}" value="${skipBlankMessageKey}" cssClass="${selectCSSClass}" tabindex="${tabindex}" onchange="changeFuncLandMark(this.value)">
+				<%--    <c:if test="${skipBlank == null || skipBlank == false}">
 						<option value="" disabled="disabled" ${empty selectedValue ? 'selected="selected"' : ''}>
 							<spring:theme code='${skipBlankMessageKey}'/>
 						</option>
-					</c:if>
+					</c:if> --%>
 					<form:options items="${items}" itemValue="${not empty itemValue ? itemValue :'code'}" itemLabel="${not empty itemLabel ? itemLabel :'name'}"/>
 				</form:select>
 			</div>
