@@ -38,7 +38,9 @@ public class UnCollectedOrderToInitiateRefundEventListener extends AbstractEvent
 	{
 	try{
 		LOG.debug("Inside onEvent method of UnCollectedOrderToInitiateRefundEventListener, param - "+ unCollectedOrderToInitiateRefundEvent);
-		if ((unCollectedOrderToInitiateRefundEvent.getConsignmentModel().getStatus().equals(ConsignmentStatus.READY_FOR_COLLECTION) || unCollectedOrderToInitiateRefundEvent.getConsignmentModel().getStatus().equals(ConsignmentStatus.ORDER_UNCOLLECTED))&& unCollectedOrderToInitiateRefundEvent.getShipmentNewStatus().equals(ConsignmentStatus.CANCELLATION_INITIATED))
+		
+		//(unCollectedOrderToInitiateRefundEvent.getConsignmentModel().getStatus().equals(ConsignmentStatus.READY_FOR_COLLECTION) || unCollectedOrderToInitiateRefundEvent.getConsignmentModel().getStatus().equals(ConsignmentStatus.ORDER_UNCOLLECTED))&& 
+		if (unCollectedOrderToInitiateRefundEvent.getShipmentNewStatus().equals(ConsignmentStatus.CANCELLATION_INITIATED))
 		{
       		 for (final AbstractOrderEntryModel orderEntryModel : unCollectedOrderToInitiateRefundEvent.getOrderModel().getEntries())
       		  {
