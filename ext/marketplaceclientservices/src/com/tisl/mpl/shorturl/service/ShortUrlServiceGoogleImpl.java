@@ -34,6 +34,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -80,6 +81,7 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 	@Override
 	public String genearateShortURL(final String orderCode)
 	{
+		LOG.info("Generating short url for order id :" + orderCode);
 		final String proxyEnableStatus = getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.PROXYENABLED);
 		final String googleAPIUrl = getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.GOOGLE_API_SHORT_URL);
 		final String googleShortUrlApiKey = getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.GOOGLE_SHORT_URL_API_KEY);
@@ -91,7 +93,10 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 		StringEntity input = new StringEntity(prepareLongUrlJSONString(longUrl+"/"+orderCode),"UTF-8");
 		input.setContentType("application/json; charset=UTF-8");
 		postRequest.setEntity(input);
-		
+		if(LOG.isDebugEnabled()) {
+			LOG.debug("short url google api key "+googleShortUrlApiKey+" and connecting url "+googleAPIUrl);
+			LOG.debug("input "+input);
+		}
 		
 		if(proxyEnableStatus.equalsIgnoreCase("true")){
 			LOG.debug("Proxy is enaled while calling google API for short url service");
@@ -100,24 +105,34 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 							MarketplaceclientservicesConstants.GENPROXYPORT)));
 			httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,proxy);
 			
+		}else {
+			LOG.warn("Proxy is disabled while calling google API for short url service");
 		}
 		
 		HttpResponse response=null;
-		String output = null;
+		final StringBuilder buffer = new StringBuilder();
 		try
 		{
 			response = httpClient.execute(postRequest);
 			if (response.getStatusLine().getStatusCode() != HttpURLConnection.HTTP_OK) {
-				throw new RuntimeException("Failed : HTTP error code : "
-						+ response.getStatusLine().getStatusCode());
+				LOG.error("unable to get short url from googleapi");
 			}
 
 			BufferedReader br = new BufferedReader(new InputStreamReader(
 					(response.getEntity().getContent())));
 			System.out.println("Output from Server .... \n");
-			while ((output = br.readLine()) != null) {
-				LOG.debug(output);
+			
+			
+			String line;
+			while ((line = br.readLine()) != null) {
+				buffer.append(line);
 			}
+			if(LOG.isDebugEnabled()) {
+				LOG.debug("Output from Server .... \n"+buffer.toString());
+			}
+			final JSONObject jsonResponse = (JSONObject) JSONValue.parse(buffer.toString());
+
+			return (String) jsonResponse.get("id");
 
 		}
 		catch (IOException e)
@@ -126,7 +141,7 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 			e.printStackTrace();
 		}
 
-		return output;
+		return null;
 	}
 	
 	public static String prepareLongUrlJSONString(String longURL) {

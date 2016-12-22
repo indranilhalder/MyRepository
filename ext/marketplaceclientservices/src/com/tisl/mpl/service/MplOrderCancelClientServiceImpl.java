@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.wsdto.TicketUpdateRequestXML;
 import com.tisl.mpl.wsdto.TicketUpdateResponseXML;
@@ -248,6 +249,13 @@ public class MplOrderCancelClientServiceImpl implements MplOrderCancelClientServ
 		final StringWriter stringWriter = new StringWriter();
 		if (null != client && null != configurationService)
 		{
+			
+			final String password = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.CUSTOMERMASTER_ENDPOINT_PASSWORD);
+			final String userId = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.CUSTOMERMASTER_ENDPOINT_USERID);
+			client.addFilter(new HTTPBasicAuthFilter(userId, password));
+			
 			webResource = client.resource(UriBuilder.fromUri(
 					configurationService.getConfiguration().getString("oms.returns.paymentInfo.endpoint.url")).build());
 		}

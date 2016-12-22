@@ -5,6 +5,27 @@ $(document).ready(function(){
 	if($('div').hasClass('address_postcode')) {
 		if($(".address_postcode").val().length >= "3") {
 			loadPincodeData("edit");
+			 var value = $(".address_landmarkOtherDiv").attr("data-value");
+			  
+			  setTimeout(function(){
+			  if($(".address_landmarks option[value='"+value+"']").length > "0") {
+				  
+				  //alert(value+ " 2 in if x"+$(".address_landmarks option[value='"+value+"']").val());
+					  $(".address_landmarks").val("");
+					$(".address_landmarks option[value='"+value+"']").prop("selected",true);
+					
+					} else {
+					//alert(value+ " 3 in else");
+					  $(".address_landmarks").val("Other"); 
+						changeFuncLandMark("Other"); 
+					$(".address_landmarkOther").val(value);
+					
+				}
+			  
+			  });
+		}else{
+			loadPincodeData("new");
+			 
 		}
 	}
 
@@ -12,14 +33,7 @@ $(document).ready(function(){
 	
 	
 	
-		$(".pincode-button").click(function(){
-			//alert(" in else ");
-			loadPincodeData('new');
-			//str1 = $("head script)").attr('src');
-			 
-				//$('head').append("<script id='scriptAdded' type='text/javascript' src='/_ui/responsive/common/js/addresslandmark.js'></script>");
-			
-		});
+	
 	
 	$(".address_states").change(function(){
 		if($(this).attr("readonly") == "readonly"){
@@ -48,12 +62,57 @@ $(document).ready(function(){
 
 $(".address_landmarkOtherDiv").hide();
 $(".dupDisplay").hide();
+
+
 $(".address_postcode").blur(function() {
-	loadPincodeData("new");			
+
+	if($(".address_postcode").val().length >= "3") {
+		loadPincodeData("edit");
+		 var value = $(".address_landmarkOtherDiv").attr("data-value");
+		  
+		  setTimeout(function(){
+		  if($(".address_landmarks option[value='"+value+"']").length > "0") {
+			  
+			  //alert(value+ " 2 in if x"+$(".address_landmarks option[value='"+value+"']").val());
+				  $(".address_landmarks").val("");
+				$(".address_landmarks option[value='"+value+"']").prop("selected",true);
+				
+				} else {
+				//alert(value+ " 3 in else");
+				  $(".address_landmarks").val("Other"); 
+					changeFuncLandMark("Other"); 
+				$(".address_landmarkOther").val(value);
+				
+			}
+		  
+		  });
+	}else{
+		loadPincodeData("new");
+		 var value = $(".address_landmarkOtherDiv").attr("data-value");
+		  
+		  setTimeout(function(){
+		  if($(".address_landmarks option[value='"+value+"']").length > "0") {
+			  
+			  //alert(value+ " 2 in if x"+$(".address_landmarks option[value='"+value+"']").val());
+				  $(".address_landmarks").val("");
+				$(".address_landmarks option[value='"+value+"']").prop("selected",true);
+				
+				} else {
+				//alert(value+ " 3 in else");
+				  $(".address_landmarks").val("Other"); 
+					changeFuncLandMark("Other"); 
+				$(".address_landmarkOther").val(value);
+				
+			}
+		  
+		  });
+	}
+
+
 });
 
 function loadPincodeData(parm) {
-	//alert(parm);
+	alert(parm);
 	var Pincode=$(".address_postcode").val();
     $.ajax({
 		url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/landmarks",
