@@ -107,10 +107,10 @@ public class CustomOmsCancelAdapter implements Serializable
 	private OrderCancelDao orderCancelDao;
 	private OrderHistoryService orderHistoryService;
 	private UserService userService;
-	
+	public static final String TICKET_SUB_TYPE_CODE_ARR="ARR";
 
 	public boolean createTicketInCRM(final String subOrderEntryTransactionId, final String ticketTypeCode,
-			final String reasonCode, final String refundType, final OrderModel subOrderModel,boolean isSsb)
+			final String reasonCode, final String refundType, final OrderModel subOrderModel,boolean isSsb,boolean isSdb,boolean isEdtoHd)
 	{
 		boolean ticketCreationStatus = false;
 		try
@@ -131,6 +131,9 @@ public class CustomOmsCancelAdapter implements Serializable
 					if(isSsb){
 						sendTicketRequestData.setTicketSubType(MarketplaceomsordersConstants.TICKET_SUB_TYPE_CODE_SSB);
 						sendTicketLineItemData.setCancelReasonCode(MarketplaceomsordersConstants.CRM_SSB_REASON_CODE);
+					}else if(isSdb || isEdtoHd){
+						sendTicketRequestData.setTicketSubType(TICKET_SUB_TYPE_CODE_ARR);
+						sendTicketLineItemData.setCancelReasonCode(reasonCode);
 					}else{
    					sendTicketRequestData.setTicketSubType(MarketplaceomsordersConstants.TICKET_SUB_TYPE_CODE);
    					sendTicketLineItemData.setCancelReasonCode(reasonCode);
