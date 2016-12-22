@@ -1493,7 +1493,6 @@
 
                                   
                                    </c:if>
-									<return:lpDetailsUploadPopup entry="${entry}" /> <!-- R2.3: One line -->
 								</c:forEach>
 															
 							</c:if> 
@@ -2530,6 +2529,7 @@
 
 
                                    </c:if>
+                                   	<return:lpDetailsUploadPopup entry="${entry}" /> <!-- R2.3: One line -->
 								</c:forEach>
 								 </c:forEach> 
 							
