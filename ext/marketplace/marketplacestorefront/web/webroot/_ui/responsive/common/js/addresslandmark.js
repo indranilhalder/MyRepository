@@ -112,7 +112,7 @@ $(".address_postcode").blur(function() {
 });
 
 function loadPincodeData(parm) {
-	alert(parm);
+	//alert(parm);
 	var Pincode=$(".address_postcode").val();
     $.ajax({
 		url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/landmarks",

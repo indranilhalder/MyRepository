@@ -231,7 +231,7 @@
 								return false;
 						} else {
 							$(".secondTataCliq .accContents .errorText").hide();
-							if(i=="4") {
+							
 								$(".thirdTataCliq").addClass("removeMargin");
 								$(".secondTataCliq").addClass("removeMargin");
 								$(".thirdTataCliq .returnMethod").show();
@@ -240,12 +240,17 @@
 								$(".thirdTataCliq .returnMethod .quick").addClass("blackColor").removeClass("greyColor");
 								$(".thirdTataCliq .returnMethod .scheduled").removeClass("blackColor").addClass("greyColor");
 								$(".thirdTataCliq .returnMethod .self").removeClass("blackColor").addClass("greyColor");
-								$(".thirdTataCliq .returnMethod .quickDrop").show();
-						        $(".thirdTataCliq .returnMethod .selfCourier, .thirdTataCliq .returnMethod .scheduledPickup").hide();
-						        getQuickDropData();
+								if($(".thirdTataCliq .returnMethod .quickDrop").length > 0){
+									$(".thirdTataCliq .returnMethod .quickDrop").show();
+									$(".thirdTataCliq .returnMethod .selfCourier, .thirdTataCliq .returnMethod .scheduledPickup").hide();
+								}else{
+									changeRadioColor('scheduled');//$(".thirdTataCliq .returnMethod .selfCourier, .thirdTataCliq .returnMethod .scheduledPickup").show();
+								}
+								
+								getQuickDropData();
 						       // getScheduledPikupData();
 								
-							}
+							
 						}
 					});
 					}
@@ -438,26 +443,28 @@
 				$("#popupFields #addressLine3").val($("."+className+" .addressline3").text());
 				$("#popupFields #pincode").val($("."+className+" .postalCode").text());
 				$("#popupFields #mobileNo").val($("."+className+" .phoneNumber").text());
-				$(".address_landmarks").val($("."+className+" .landmark").text());
-				   //$('.address_landmarkOther').val($("."+className+" .otherLandmark").text());
-				  setTimeout(function(){
-				             alert($('.address_landmarks option').length);
-				              
-				             var exists = $('.address_landmarks option').filter(function(){ return $(this).val() == $("."+className+" .landmark").text(); }).length;
-				              if(exists) {
-				               console.log("yes");
-				               $(".address_landmarks option").attr('selected','');
-				               $(".address_landmarks").val($("."+className+" .landmark").text());
-				              } else{
-				               console.log("No")
-				               $(".address_landmarkOtherDiv, .address_landmarkOtherDiv label, .address_landmarkOther").show(); 
-				               $(".address_landmarks").val("");
-				               $(".address_landmarks option[value='Other']").attr('selected','selected');
-				               $(".address_landmarkOther").val($("."+className+" .landmark").text());
-				               
-				               console.log("value"+ $(".address_landmarks").val());
-				              }  
-				  });
+				 loadPincodeData("edit");
+			        var value = $("." + className + " .landmark").text();
+					  
+					  setTimeout(function(){
+					  if($(".address_landmarks option[value='"+value+"']").length > "0") {
+						  
+						  //alert(value+ " 2 in if x"+$(".address_landmarks option[value='"+value+"']").val());
+							  $(".address_landmarks").val("");
+							$(".address_landmarks option[value='"+value+"']").prop("selected",true);
+							
+							} else {
+							//alert(value+ " 3 in else");
+							  //$(".address_landmarks").val("Other"); 
+								changeFuncLandMark("Other"); 
+							$(".address_landmarkOther").val(value);
+							
+						}
+					  
+					  });
+			        
+			        alert($("." + className + " .landmark").text());
+			       // $("#popupFields #landmark").val($("." + b + " .landmark").text());
 				$("#popupFields #city").val($("."+className+" .addressTown").text());
 				$("#popupFields #stateListBox").val($("."+className+" .state").text());
 				$("#popupFields #country").val($("."+className+" .country").text());
@@ -466,7 +473,7 @@
 				$("#saveAddress").attr("data-value","editAddress");
 				$("#addAddressForm h4.newAddress").hide();
 				$("#addAddressForm h4.editAddress").show();
-				loadPincodeData('edit');	
+				
 			});
 
 			$(".close").click(function() {
@@ -695,14 +702,14 @@
 		
 		
 		function showAddressPopup(addressId) {
-			alert('showAddressPopup');
+			//alert('showAddressPopup');
 			$("#addAddressForm .errorText").hide();
 			$("#changeAddressPopup, .wrapBG").fadeIn(300);
 			var height = $(window).height();
 			$(".wrapBG").css("height", height);
 			$("#changeAddressPopup").css("z-index", "999999");
 			var className = addressId;
-			alert(className);
+			//alert(className);
 			console.log("Test"+$(".update"+className+" .lastName").text());
 			$("#popupFields #firstName").val($("."+className+" .firstName").text());
 			$("#popupFields #lastName").val($("."+className+" .lastName").text());
@@ -713,9 +720,9 @@
 			$("#popupFields #mobileNo").val($("."+className+" .phoneNumber").text());
 			$("#popupFields #landmark").val($("."+className+" .landmark").text());
 			$("#landmark option").each(function() {
-			    alert(this.text + ' ' + this.value);
+			   // alert(this.text + ' ' + this.value);
 			});
-			alert($("#landmark option").length);
+			//alert($("#landmark option").length);
 			$("#popupFields #city").val($("."+className+" .addressTown").text());
 			$("#popupFields #stateListBox").val($("."+className+" .state").text());
 			$("#popupFields #country").val($("."+className+" .country").text());
@@ -787,7 +794,11 @@
 						    $("#hiddenFields #addressLine1").val($("#addAddressForm #addressLine1").val());
 							$("#hiddenFields #addressLine2").val($("#addAddressForm #addressLine2").val());
 							$("#hiddenFields #addressLine3").val($("#addAddressForm #addressLine3").val());
-							$("#hiddenFields #landmark").val($("#addAddressForm #landmark").val());
+							if(!$("#addAddressForm #landmark").prop('disabled')){
+								$("#hiddenFields #landmark").val($("#addAddressForm #landmark").val());
+							}else{
+								$("#hiddenFields #landmark").val($("#addAddressForm #otherLandmark").val());
+							}
 							$("#hiddenFields #pincode").val($("#addAddressForm #pincode").val());
 							$("#hiddenFields #city").val($("#addAddressForm #city").val());
 							$("#hiddenFields #stateListBox").val($("#addAddressForm #stateListBox").val());
@@ -802,9 +813,12 @@
 							$(".update"+temp+" li span.addressLine1").text($("#addAddressForm #addressLine1").val());
 							$(".update"+temp+" li span.addressLine2").text($("#addAddressForm #addressLine2").val());
 							$(".update"+temp+" li span.addressLine3").text($("#addAddressForm #addressLine3").val());
-							$(".update"+temp+" li span.otherLandmark").text($("#addAddressForm #otherLandmark").val());
 							$(".update"+temp+" li span.postalCode").text($("#addAddressForm #pincode").val());
-							$(".update"+temp+" li span.landmark").text($("#addAddressForm #landmark"));
+							if(!$("#addAddressForm #landmark").prop('disabled')){
+								$(".update"+temp+" li span.landmark").text($("#addAddressForm #landmark").val());
+							}else{
+								$(".update"+temp+" li span.landmark").text($("#addAddressForm #otherLandmark").val());
+							}
 							$(".update"+temp+" li span.city").text($("#addAddressForm #city").val());
 							$(".update"+temp+" li span.stateListBox").text($("#addAddressForm #stateListBox").val());
 							$(".update"+temp+" li span.country").text($("#addAddressForm #country").val());
@@ -841,7 +855,14 @@
 				    $("#hiddenFields #addressLine1").val($("#addAddressForm #addressLine1").val());
 					$("#hiddenFields #addressLine2").val($("#addAddressForm #addressLine2").val());
 					$("#hiddenFields #addressLine3").val($("#addAddressForm #addressLine3").val());
-					$("#hiddenFields #landmark").val($("#addAddressForm #landmark").val());
+					
+					if(!$("#addAddressForm #landmark").prop('disabled')){
+						$("#hiddenFields #landmark").val($("#addAddressForm #landmark").val());
+					}else{
+						$("#hiddenFields #landmark").val($("#addAddressForm #otherLandmark").val());
+					}
+					
+					
 					$("#hiddenFields #pincode").val($("#addAddressForm #pincode").val());
 					$("#hiddenFields #city").val($("#addAddressForm #city").val());
 					$("#hiddenFields #stateListBox").val($("#addAddressForm #stateListBox").val());
@@ -857,6 +878,12 @@
 					$(".update"+temp+" li span.addressLine2").text($("#addAddressForm #addressLine2").val());
 					$(".update"+temp+" li span.addressLine3").text($("#addAddressForm #addressLine3").val());
 					$(".update"+temp+" li span.otherLandmark").text($("#addAddressForm #otherLandmark").val());
+					if(!$("#addAddressForm #landmark").prop('disabled')){
+						$(".update"+temp+" li span.landmark").text($("#addAddressForm #landmark").val());
+					}else{
+						$(".update"+temp+" li span.landmark").text($("#addAddressForm #otherLandmark").val());
+					}
+					
 					$(".update"+temp+" li span.postalCode").text($("#addAddressForm #pincode").val());
 					$(".update"+temp+" li span.city").text($("#addAddressForm #city").val());
 					$(".update"+temp+" li span.stateListBox").text($("#addAddressForm #stateListBox").val());
@@ -864,6 +891,7 @@
 					$(".update"+temp+" li span.phoneNumber").text($("#addAddressForm #mobileNo").val());
 					
 					$(".update"+temp).prev().find("input").prop("checked", "checked");
+					//alert($(".update"+temp+" li span.landmark").text()+" li span.landmark");
 					showPickupTimeDate(temp);
 					
 					//$("#changeAddressPopup, .wrapBG").fadeOut(300);
