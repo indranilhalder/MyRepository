@@ -463,7 +463,7 @@
 					  
 					  });
 			        
-			        alert($("." + className + " .landmark").text());
+			       // alert($("." + className + " .landmark").text());
 			       // $("#popupFields #landmark").val($("." + b + " .landmark").text());
 				$("#popupFields #city").val($("."+className+" .addressTown").text());
 				$("#popupFields #stateListBox").val($("."+className+" .state").text());

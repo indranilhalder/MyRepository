@@ -411,7 +411,7 @@ $(document).ready(function(){
 			  
 			  });
 		}else{
-			alert("in else");
+			//alert("in else");
 			loadPincodeData("new");
 			
 		}
@@ -440,7 +440,7 @@ $(document).ready(function(){
 		  
 		  });
 	}else{
-		alert("in else");
+		//alert("in else");
 		loadPincodeData("new");
 		
 	}
