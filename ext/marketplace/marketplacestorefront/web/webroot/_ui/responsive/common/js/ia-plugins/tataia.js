@@ -122,6 +122,8 @@ function codeLatLng(lat,lng) {
   });
 }
 
+
+
 	});
 
 //end for geolocations tpr-1304
@@ -1116,7 +1118,7 @@ if (searchCategory_id){
  			    			} else if (response.data.filter_value === "MSH12") {
  			    				catFilter = "Electronics";
  			    			}*/
- 			    			html += '<h1><span style="color: black !important;">Hot in '+catFilter+' </span>';	    		
+ 			    			html += '<h1 style="height:28px;"><span style="color: black !important;line-height:normal;">Hot in '+catFilter+' </span>';	    		
  			    		}
 			    		else{
 						
@@ -1167,7 +1169,7 @@ if (searchCategory_id){
 			          if (response.data.filter_value) {
 			          	html += '</div></div><a href="http://'+window.location.host+'/viewAllTrending?filter='+response.data.filter_key+','+response.data.filter_value+'" class="button hotShowHide" style="display: inline-block;font-size: 12px;height: 40px;line-height: 40px;">Shop the Hot List</a>';
 			          } else {
-			          	html += '</div></div><a href="http://'+window.location.host+'/viewAllTrending" class="button hotShowHide" style="display: inline-block;font-size: 12px;height: 40px;line-height: 40px;">Shop the Hot List</a>';
+			          	html += '</div></div><a href="http://'+window.location.host+'/viewAllTrending" class="button hotShowHide">Shop the Hot List</a>';
 			      	  }
 			      }
 			      /* IA Changes End for store/mpl/en */

@@ -4784,7 +4784,9 @@ text-transform: uppercase;
     -moz-transform: translateX(-50%);
     -ms-transform: translateX(-50%);
     -o-transform: translateX(-50%);
-    transform: translateX(-50%); }
+    transform: translateX(-50%);
+    margin-top: 0px;
+     }
     .trending h1::after {
       clear: both;
       content: "";
@@ -59321,4 +59323,23 @@ text-decoration:underline;
 	min-width: 180px;
     border-top: 2px solid #a9143c;
     margin: 0 auto 40px;
+}
+
+.trending a.button.hotShowHide {
+    /* padding: 13px; */
+    font-size: 12px;
+    font-family: "Montserrat";
+    font-weight: bold;
+    text-transform: uppercase;
+    display: block;
+    width: 200px;
+    text-align: center;
+    letter-spacing: 1px;
+    background: #a9143c;
+    color: #fff;
+    border: 1px solid #a9143c;
+    margin: 10px auto 80px;
+    height: 40px;
+    line-height: 40px;
+    /* vertical-align: middle; */
 }
