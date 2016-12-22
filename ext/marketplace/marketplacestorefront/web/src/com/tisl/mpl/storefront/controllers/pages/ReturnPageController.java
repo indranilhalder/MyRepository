@@ -179,6 +179,10 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		final Map<String, List<OrderEntryData>> returnProductMap = new HashMap<>();
 		final List<OrderEntryData> subOrderEntries = subOrderDetails.getEntries();
 		final CustomerData customerData = customerFacade.getCurrentCustomer();
+		//TATA-823 Start
+		final List<StateData> stateDataList = getAccountAddressFacade().getStates();
+		final List<StateData> stateDataListNew = getFinalStateList(stateDataList);
+		//TATA-823 end  
 		for (final OrderEntryData entry : subOrderEntries)
 		{
 			if (entry.getTransactionId().equalsIgnoreCase(transactionId))
@@ -391,7 +395,19 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		returnAddrData.setFirstName(returnForm.getFirstName());
 		returnAddrData.setLastName(returnForm.getLastName());
 		returnAddrData.setMobileNo(returnForm.getPhoneNumber());
-		returnAddrData.setState(returnForm.getState());
+		//TATA-823 Start
+		if(!StringUtils.isEmpty(returnForm.getState()))
+		{
+			for(StateData state : stateDataListNew)
+			{
+				if(state.getName().equalsIgnoreCase(returnForm.getState()))
+				{
+					returnAddrData.setState(state.getCode());
+					break;
+				}
+			}
+		}
+		//	TATA-823 Close
 		returnAddrData.setPincode(returnForm.getPincode());
 	
 		if (returnForm.getRefundType().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_TYPE))

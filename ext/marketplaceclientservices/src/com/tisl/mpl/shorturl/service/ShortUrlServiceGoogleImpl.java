@@ -7,21 +7,44 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.SocketAddress;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
-import javax.ws.rs.core.MediaType;
 
+
+
+
+import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.log4j.Logger;
+import org.json.simple.JSONObject;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.params.ConnRoutePNames;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 
-import com.gigya.json.JSONObject;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
 import com.tisl.mpl.constants.MarketplaceclientservicesConstants;
 import com.tisl.mpl.core.model.OrderShortUrlInfoModel;
 import com.tisl.mpl.shorturl.report.dao.OrderShortUrlDao;
+
 
 
 /**
@@ -34,6 +57,12 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 {
 
 	private static final Logger LOG = Logger.getLogger(ShortUrlServiceGoogleImpl.class);
+	private int connectionTimeout = 5 * 10000;
+	private int readTimeout = 5 * 1000;
+	private String baseUrl;
+	private String key;
+	private String merchantId;
+	private String environmentSet;
 
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
@@ -42,84 +71,69 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 	@Resource(name = "shortUrlReportDaoImpl")
 	private OrderShortUrlDao orderShortUrlDaoImpl;
 	
+
 	/**
-	 * @Description Generates short URL for a given order code
-	 * @param orderCode
-	 * @return shortUrl
+	 * @param url
+	 * @param serializedParams
+	 * @return
 	 */
 	@Override
 	public String genearateShortURL(final String orderCode)
 	{
+		final String proxyEnableStatus = getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.PROXYENABLED);
+		final String googleAPIUrl = getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.GOOGLE_API_SHORT_URL);
+		final String googleShortUrlApiKey = getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.GOOGLE_SHORT_URL_API_KEY);
+		final String longUrl = getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT);
+		
+		DefaultHttpClient httpClient = new DefaultHttpClient();
+		HttpPost postRequest = new HttpPost(googleAPIUrl+"?key="+googleShortUrlApiKey);
+
+		StringEntity input = new StringEntity(prepareLongUrlJSONString(longUrl+"/"+orderCode),"UTF-8");
+		input.setContentType("application/json; charset=UTF-8");
+		postRequest.setEntity(input);
+		
+		
+		if(proxyEnableStatus.equalsIgnoreCase("true")){
+			LOG.debug("Proxy is enaled while calling google API for short url service");
+			HttpHost proxy =new HttpHost(getConfigurationService().getConfiguration().getString(
+					MarketplaceclientservicesConstants.GENPROXY), Integer.parseInt(getConfigurationService().getConfiguration().getString(
+							MarketplaceclientservicesConstants.GENPROXYPORT)));
+			httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,proxy);
+			
+		}
+		
+		HttpResponse response=null;
+		String output = null;
 		try
 		{
-			final String longUrl = this.genearateLongURL(orderCode);
-
-			LOG.info("--OrderCode-- " + orderCode + "---Long URL-- " + longUrl);
-
-			final String googleShortUrlApiKey = (String) getConfigurationService().getConfiguration().getProperty(
-					MarketplaceclientservicesConstants.GOOGLE_SHORT_URL_API_KEY);
-			final String googleShortUrlConnectUrl = (String) getConfigurationService().getConfiguration().getProperty(
-					MarketplaceclientservicesConstants.GOOGLE_API_SHORT_URL);
-		
-			final StringBuilder sb = new StringBuilder(googleShortUrlConnectUrl);
-			sb.append("?key");
-			sb.append("=" + googleShortUrlApiKey);
-
-			final String url = new String(sb);
-			
-			final Client client = Client.create();
-			//prepare input and send in body
-			final String input = "{\"longUrl\": \"" + longUrl + "\"}";
-		
-			if(LOG.isDebugEnabled()){
-				LOG.debug("API Key== " + googleShortUrlApiKey + "Connect URL=== " + googleShortUrlConnectUrl);
-				LOG.debug("Before Connecting to Google URL === " + sb);
-				LOG.debug("long url===" + longUrl);
+			response = httpClient.execute(postRequest);
+			if (response.getStatusLine().getStatusCode() != HttpURLConnection.HTTP_OK) {
+				throw new RuntimeException("Failed : HTTP error code : "
+						+ response.getStatusLine().getStatusCode());
 			}
 
-			final WebResource webResource = client.resource(url);
-
-			final ClientResponse response = webResource.accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON)
-					.post(ClientResponse.class, input);
-			//if the response status is not 200,then return null(statuses other than 200 indicates wrong response)
-			if (response.getStatus() != 200)
-			{
-				LOG.error("Status code =" + response.getStatus());
-				final String output = response.getEntity(String.class);
-				LOG.info(output);
-				return null;
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					(response.getEntity().getContent())));
+			System.out.println("Output from Server .... \n");
+			while ((output = br.readLine()) != null) {
+				LOG.debug(output);
 			}
 
-			final String output = response.getEntity(String.class);
-			if(LOG.isDebugEnabled()){
-				LOG.debug("Output from google Server .... \n" + output);
-			}
-			final JSONObject obj = new JSONObject(output);
-			final String shortUrl = (String) obj.get("id");
-			//create TULShortUrlReport model to generate report ,later use and update this model when user clicks on short url
-			try
-			{
-				final OrderShortUrlInfoModel shortUrlModel = getModelService().create(OrderShortUrlInfoModel.class);
-				shortUrlModel.setOrderId(orderCode);
-				shortUrlModel.setShortURL(shortUrl);
-				shortUrlModel.setLongURL(longUrl);
-				getModelService().save(shortUrlModel);
-			}
-			catch(final ModelSavingException mse){				
-				LOG.error("ModelSavingException while saving TULShortUrlReportModel " + orderCode);
-			}
-			catch (final Exception e){
-				LOG.error("Error while saving TULShortUrlReportModel " + orderCode);
-			}
-			return shortUrl;
 		}
-		catch (final Exception e)
+		catch (IOException e)
 		{
-			LOG.error("Error while connecting google short url" + e.getMessage());
+			LOG.error("Exception while getting the short url for order id "+orderCode);
 			e.printStackTrace();
 		}
-		return null;
+
+		return output;
 	}
+	
+	public static String prepareLongUrlJSONString(String longURL) {
+      JSONObject longUrlJSONObj = new JSONObject();
+      longUrlJSONObj.put("longUrl", longURL);
+      return longUrlJSONObj.toJSONString();
+  }
 
 	/**
 	 * @Description This method will get the short url report model from db
@@ -144,17 +158,6 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 		return longURLFormat + "/" + orderCode;
 	}
 	
-	/**
-	 * @Description This method will give the Short Url reports generated between two dates
-	 * @param fromDate
-	 *  @param toDate
-	 * @return List<TULShortUrlReportModel>
-	 */
-	@Override
-	public List<OrderShortUrlInfoModel> getShortUrlReportModels(Date fromDate,Date toDate)
-	{
-		return  getOrderShortUrlDaoImpl().getShortUrlReportModels(fromDate, toDate);
-	}
 
 	/**
 	 * @return the configurationService
@@ -206,5 +209,18 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 		this.orderShortUrlDaoImpl = orderShortUrlDaoImpl;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.tisl.mpl.shorturl.service.ShortUrlService#getShortUrlReportModels(java.util.Date, java.util.Date)
+	 */
+	@Override
+	public List<OrderShortUrlInfoModel> getShortUrlReportModels(Date fromDate, Date toDate)
+	{
+		// YTODO Auto-generated method stub
+		return null;
+	}
+
+	
+	
+	
 	
 }
