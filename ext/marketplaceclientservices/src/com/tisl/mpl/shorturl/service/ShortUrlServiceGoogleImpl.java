@@ -60,26 +60,34 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 	@Override
 	public String genearateShortURL(final String orderCode)
 	{
-		LOG.info("Generating short url for order id :" + orderCode);
-		final String googleAPIUrl = getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.GOOGLE_API_SHORT_URL);
-		final String googleShortUrlApiKey = getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.GOOGLE_SHORT_URL_API_KEY);
-		final String longUrl = getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT);
-		
-		StringBuilder sb = new StringBuilder(googleAPIUrl);
-		sb.append("?key=");
-		sb.append(googleShortUrlApiKey);
-		if(LOG.isDebugEnabled()) {
-			LOG.debug("Google Api key :"+googleShortUrlApiKey+" and connecting url"+googleAPIUrl);
-		}
-		String url = String.valueOf(sb); 
-		
-		final LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
-		params.put("longUrl", String.valueOf(longUrl));
-		final String response = getShortUrl(url, jsonString(params));
+		String shortUrl = null;
+		try {
+			LOG.info("Generating short url for order id :" + orderCode);
+			final String googleAPIUrl = getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.GOOGLE_API_SHORT_URL);
+			final String googleShortUrlApiKey = getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.GOOGLE_SHORT_URL_API_KEY);
+			final String longUrl = getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT);
+			
+			StringBuilder sb = new StringBuilder(googleAPIUrl);
+			sb.append("?key=");
+			sb.append(googleShortUrlApiKey);
+			if(LOG.isDebugEnabled()) {
+				LOG.debug("Google Api key :"+googleShortUrlApiKey+" and connecting url"+googleAPIUrl);
+			}
+			String url = String.valueOf(sb); 
+			
+			final LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
+			params.put("longUrl", String.valueOf(longUrl));
+			final String response = getShortUrl(url, jsonString(params));
 
-		final JSONObject jsonResponse = (JSONObject) JSONValue.parse(response);
-		LOG.debug("JSON responce "+jsonResponse);
-		return (String) jsonResponse.get("id");
+			final JSONObject jsonResponse = (JSONObject) JSONValue.parse(response);
+			LOG.debug("JSON responce "+jsonResponse);
+			if(null != jsonResponse) {
+				shortUrl = (String) jsonResponse.get("id");
+			}
+		}catch(Exception e) {
+			LOG.error("Exception while getting the short Url for order id :"+orderCode);
+		}
+		return shortUrl;
 		
 	}
 	
