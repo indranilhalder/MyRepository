@@ -1809,21 +1809,42 @@ function displayDeliveryDetails(sellerName) {
 
 function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 	//alert("mrp "+ mrp.formattedValue +"mop "+mop.formattedValue +"spPrice "+spPrice.formattedValue +"savingsOnProduct "+ savingsOnProduct.formattedValue);
+	
+/*Change for INC_11127*/
+	
+	$("#mrpPriceId").html("");
+	$("#mopPriceId").html("");
+	$("#spPriceId").html("");
+	$("#savingsOnProductId").html("");
+	if(typeof savingsOnProduct === 'undefined'){
+	
+		if(null!=mrp && null!=spPrice){
+			savingPriceCal=(mrp.doubleValue-spPrice.doubleValue);
+			savingPriceCalPer=(savingPriceCal/mrp.doubleValue)*100;
+			savingsOnProduct=Math.round(savingPriceCalPer*100)/100;
+		}
+		else if(null!=mrp && null!=mop){
+			savingPriceCal=(mrp.doubleValue-mop.doubleValue);
+			savingPriceCalPer=(savingPriceCal/mrp.doubleValue)*100;
+			savingsOnProduct=Math.round(savingPriceCalPer*100)/100;
+		}
+	}
+	
 	if(null!= mrp){
-		$("#mrpPriceId").html("");
+		//$("#mrpPriceId").html("");
 		$("#mrpPriceId").append(mrp.formattedValue);
 	}
 	if(null!= mop){
-		$("#mopPriceId").html("");
+		//$("#mopPriceId").html("");
 		$("#mopPriceId").append(mop.formattedValue);
 	}
 	if(null!= spPrice){
-		$("#spPriceId").html("");
+		//$("#spPriceId").html("");
 		$("#spPriceId").append(spPrice.formattedValue);
 	} 
 	////TISPRM-33 , TPR-140
 	if(null!= savingsOnProduct){
-		$("#savingsOnProductId").html("");
+		//$("#savingsOnProductId").html("");
 		$("#savingsOnProductId").append("(-"+savingsOnProduct+" %)");
 	} 
 
