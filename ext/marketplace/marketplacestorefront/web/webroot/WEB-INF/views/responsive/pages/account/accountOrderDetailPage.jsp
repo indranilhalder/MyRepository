@@ -2907,7 +2907,7 @@ $(function() {
 	  				
 	  				} else {
 	  				//alert(value+ " 3 in else");
-	  				 // $(".address_landmarks").val("Other"); 
+	  				  $(".address_landmarks").val("Other"); 
 	  					changeFuncLandMark("Other"); 
 	  	  			$(".address_landmarkOther").val(value);
 	  				

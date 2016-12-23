@@ -296,8 +296,8 @@
 				<formElement:formSelectBox idKey="address.states"
 					selectCSSClass="address_states addressRead" labelKey="address.states"
 					path="state" mandatory="true" skipBlank="false"
-					skipBlankMessageKey="address.state.pleaseSelect"
-					items="${stateDataList}" selectedValue="${addressForm.state}"
+					skipBlankMessageKey="${addressForm.state}"
+					items="${stateDataList}"
 					itemValue="name" />
 				<div class="help-block has-error" id="stateError"
 					style="display: none;"></div>
