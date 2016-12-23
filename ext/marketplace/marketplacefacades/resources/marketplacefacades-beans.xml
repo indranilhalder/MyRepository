@@ -17,6 +17,7 @@
 			type="java.util.Map&lt;String,java.util.List&lt;String>>" />
 		<property name="image"
 			type="de.hybris.platform.commercefacades.product.data.ImageData" />
+		<property name="ProductType" type="String"/>	
 	</bean>
 	<!-- placeholder for pincode responses -->
 	<bean
