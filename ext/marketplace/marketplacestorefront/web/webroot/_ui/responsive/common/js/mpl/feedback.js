@@ -172,6 +172,14 @@ $(document).ready(function(){
 			console.log("isLux"+ isLux);
 			var isLuxury = $("#isLuxury").val();
 			console.log("isLuxury"+ isLuxury);
+			if (isLuxury != "true" || isLuxury == "undefined"){
+				console.log("isLuxury"+ isLuxury);
+				isLuxury = false ;
+			}
+			if ( isLux == "false"){
+				console.log("isLux"+ isLux);
+				isLux = false ;
+			}
 			
 			var marketplaceHeader = (isLux || isLuxury) ? false : true ;
 			console.log("marketplaceHeader"+ marketplaceHeader);
