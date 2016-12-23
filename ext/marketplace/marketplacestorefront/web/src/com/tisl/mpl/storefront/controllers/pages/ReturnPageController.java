@@ -453,6 +453,11 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		if(returnForm.getIsCODorder().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
 		{
 		CODSelfShipData selfShipData=new CODSelfShipData();
+		final OrderModel orderModel = orderModelService.getParentOrder(orderCode);
+		LOG.debug("Order Referance Id is:" + orderModel.getParentReference().getCode());
+		if(null!=orderModel.getParentReference() && null!=orderModel.getParentReference().getCode()){
+			selfShipData.setOrderRefNo(orderModel.getParentReference().getCode());
+		}
 		selfShipData.setCustomerNumber(customerData.getUid());
 		selfShipData.setTitle(returnForm.getTitle());
 		selfShipData.setName(returnForm.getAccountHolderName());
@@ -462,6 +467,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		selfShipData.setOrderNo(returnForm.getOrderCode());
 		selfShipData.setTransactionID(returnForm.getTransactionId());
 		selfShipData.setPaymentMode(returnForm.getRefundMode());
+		selfShipData.setTransactionType("01");
 		if(null!= subOrderDetails.getCreated()){
 			 SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 			 selfShipData.setOrderDate(dateUtilHelper.convertDateWithFormat(formatter.format(subOrderDetails.getCreated())));
