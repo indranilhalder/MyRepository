@@ -13,6 +13,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -30,7 +31,7 @@ import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.OrderLineDTO;
 import com.tisl.mpl.wsdto.ReturnInitiateRequestDTO;
-import com.tisl.mpl.wsdto.ReturnInitiateResponseDTO;
+import com.tisl.mpl.wsdto.ReturnInitiateResponse;
 
 
 
@@ -49,14 +50,15 @@ public class ReturnInitiationController extends BaseController
 	private Validator returnRTSValidator;
 	
 	private static final String APPLICATION_TYPE = "application/xml";
+	private static final Logger LOG = Logger.getLogger(ReturnInitiationController.class);
 	
 	@RequestMapping(method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public ReturnInitiateResponseDTO initiationRequest(@RequestBody final ReturnInitiateRequestDTO returnRequest) 
+	public ReturnInitiateResponse initiationRequest(@RequestBody final ReturnInitiateRequestDTO returnRequest) 
 				throws WebserviceValidationException
 	{
 	final List<OrderLineData> listdata = new ArrayList<OrderLineData>();
-	final ReturnInitiateResponseDTO responseDTO = new ReturnInitiateResponseDTO();
+	final ReturnInitiateResponse responseDTO = new ReturnInitiateResponse();
 	
 		final Errors errors = new BeanPropertyBindingResult(returnRequest, "returnRequest");
 		returnRTSValidator.validate(returnRequest, errors);

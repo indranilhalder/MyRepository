@@ -13,7 +13,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  */
 @XmlRootElement(name = "ReturnInitiateResponse")
-public class ReturnInitiateResponseDTO
+public class ReturnInitiateResponse implements java.io.Serializable 
 {
 	private List<OrderLineDTO> orderLines;
 	private String errorCode;
