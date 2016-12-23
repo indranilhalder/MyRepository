@@ -7,9 +7,18 @@
 		<property qualifier="product.name" />
 		<property qualifier="product.catalogversion"  editor="shortListEditor"/>
 		<property qualifier="product.approvalStatus" />
-		<property qualifier="product.description" />
+		<property qualifier="product.onlineDate" />
+		<property qualifier="product.offlineDate" />
+		<property qualifier="product.unit" />
+		<property qualifier="product.ean" />
+		<property qualifier="product.description" editor="wysiwyg"/>
+		<property qualifier="product.summary" />
+		<property qualifier="product.deeplinkType" />
+        <property qualifier="product.deeplinkTypeId" />
+        <property qualifier="product.deeplinkTypeVal" />
 	</group>
-
+	
+	
 	<custom-group 
 		class="de.hybris.platform.cockpit.services.config.impl.ClassAttrEditorSectionConfiguration" 
 		qualifier="classification"
