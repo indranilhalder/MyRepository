@@ -59343,3 +59343,6 @@ text-decoration:underline;
     line-height: 40px;
     /* vertical-align: middle; */
 }
+.trending .owl-controls{
+	display: none;
+}

@@ -2849,4 +2849,5 @@ $(this).toggleClass("active");
 $(window).on("load",function(){
 	htVal=$(".trending .product-image").height();
 	$(".trending .owl-controls").css("top",(htVal/2)+"px");
+	$(".trending .owl-controls").css("display","block");
 });
