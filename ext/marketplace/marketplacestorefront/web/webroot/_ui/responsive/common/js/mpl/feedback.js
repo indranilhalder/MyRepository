@@ -548,8 +548,14 @@ $(document).ready(function(){
 				 $(this).siblings().removeClass('active');
 				 $(this).addClass('active');
 				 var count = $(this).index() + 1;
-				 $(this).parents().find("ul.tabs.pdp>li").removeClass('active');
-				 $(this).parents().find("ul.tabs.pdp>li:nth-child("+count+")").addClass("active");
+				 if ($(this).parent().hasClass('productNav')){
+					 $(this).parents().find("ul.tabs.pdp.productTabs>li").removeClass('active');
+					 $(this).parents().find("ul.tabs.pdp.productTabs>li:nth-child("+count+")").addClass("active");
+				 }
+				 else {
+					 $(this).parents().find("ul.tabs.pdp.specTabs>li").removeClass('active');
+					 $(this).parents().find("ul.tabs.pdp.specTabs>li:nth-child("+count+")").addClass("active");
+				 }
 				 //$("ul.tabs.pdp>li").removeClass('active'); 
 				// $("ul.tabs.pdp>li").eq(count).addClass("active");
 			    }); 
