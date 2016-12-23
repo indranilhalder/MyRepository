@@ -238,6 +238,7 @@ share mobile -->
 <!-- displaying sizes based on color selected -->
 <!-- currentcolor refers to the variable where the current color of the selected variant is stored -->
 <!-- currentcolor is populated on selecting color swatch -->
+<!-- Jewellery changes added for showing only size varint -->
 <c:if test="${noVariant!=true&&notApparel!=true}">
 <c:if test="${showSizeGuideForFA eq true}">
 <div class="size" style="font-size: 12px;">
@@ -266,9 +267,13 @@ share mobile -->
 				</c:otherwise>
 			</c:choose> --%>
 			<c:forEach items="${product.variantOptions}" var="variantOption">
-				<c:forEach items="${variantOption.colourCode}" var="color">
+				
+			<c:choose>                           
+			                     
+			    <c:when test="${product.rootCategory!='FineJewellery'}">
+			       <c:forEach items="${variantOption.colourCode}" var="color">
 
-					<c:choose>
+					 <c:choose>
 						<c:when test="${not empty currentColor}">
 							<c:if test="${currentColor eq color}">
 								<c:set var="currentColor" value="${color}" />
@@ -307,7 +312,7 @@ share mobile -->
 											<c:forEach var="entry" items="${variantOption.sizeLink}">
 												<c:url value="${entry.key}" var="link" />
 												<c:choose>
-												<c:when test="${(variantOption.code eq product.code)}">
+											<c:when test="${(variantOption.code eq product.code)}">
 												<c:choose>
 												
 												
@@ -315,14 +320,14 @@ share mobile -->
 														<li><a href="${link}?selectedSize=true">${entry.value}</a></li>
 													</c:when>
 													
-												<c:otherwise>
-														<li class="selected"><a href="${link}?selectedSize=true">${entry.value}</a></li>
-												</c:otherwise>
-												</c:choose>
+													<c:otherwise>
+																<li class="selected"><a href="${link}?selectedSize=true">${entry.value}</a></li>
+													</c:otherwise>
+											    </c:choose>
 											</c:when>	
-										<c:otherwise>
-											<li data-vcode="${link}"><a href="${link}?selectedSize=true">${entry.value}</a></li>
-										</c:otherwise>												
+											<c:otherwise>
+												<li data-vcode="${link}"><a href="${link}?selectedSize=true">${entry.value}</a></li>
+											</c:otherwise>												
 												</c:choose>
 											</c:forEach>
 										</c:if>
@@ -331,8 +336,32 @@ share mobile -->
 							</c:forEach>
 						</c:otherwise>
 					</c:choose>
-				</c:forEach>
-			</c:forEach>			
+				 </c:forEach>
+				</c:when>
+				                     
+				   <c:otherwise>
+								<c:forEach var="entry" items="${variantOption.sizeLink}">
+									<c:url value="${entry.key}" var="link" />
+									<%--  <a href="${link}?selectedSize=true">${entry.value}</a> --%>
+									<c:choose>
+										<c:when test="${(variantOption.code eq product.code)}">
+											<c:choose>
+												<c:when test="${selectedSize eq null}">
+													<li><a href="${link}?selectedSize=true">${entry.value}</a></li>
+												</c:when>
+												<c:otherwise>
+														<li class="selected"><a href="${link}?selectedSize=true">${entry.value}</a></li>
+												</c:otherwise>
+											</c:choose>
+										</c:when>
+										<c:otherwise>
+											<li data-vcode="${link}"><a href="${link}?selectedSize=true">${entry.value}</a></li>
+										</c:otherwise>
+									</c:choose>
+								</c:forEach>
+				 </c:otherwise>
+		  </c:choose>
+		 </c:forEach>			
 		
 		</ul>
 		<!-- Size guide Pop-up -->
@@ -340,6 +369,8 @@ share mobile -->
 		<!-- End Size guide Pop-up -->
 	</div></c:if> 
 	</c:if>
+<%-- //<c:if test="${noVariant!=true&&notApparel!=true}"> --%>
+
 
 <div id="allVariantOutOfStock" style="display: none;">
 	<spring:theme code="product.product.outOfStock" />
