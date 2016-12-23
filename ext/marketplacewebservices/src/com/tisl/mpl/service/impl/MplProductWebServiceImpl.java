@@ -2194,6 +2194,147 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	}
 
+
+	@Override
+	public ProductDetailMobileWsData getProductInfoForProductCode(final String productCode, final String baseUrl)
+	{
+		final ProductDetailMobileWsData productDetailMobile = new ProductDetailMobileWsData();
+		BuyBoxData buyBoxData = null;
+		String ussid = null;
+		ProductData productData = null;
+		ProductModel productModel = null;
+		final StringBuilder allVariants = new StringBuilder();
+		String variantCodes = "";
+		String variantsString = "";
+		final Map<String, Integer> stockAvailibilty = new TreeMap<String, Integer>();
+		try
+		{
+			String sharedText = Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_PRE);
+			productModel = productService.getProductForCode(defaultPromotionManager.catalogData(), productCode);
+			if (null != productModel)
+			{
+				productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
+						ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
+						ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL,
+						ProductOption.DELIVERY_MODE_AVAILABILITY, ProductOption.SELLER));
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9037);
+			}
+			if (null != productCode)
+			{
+				try
+				{
+					//get left over variants
+					if (productData.getAllVariantsId().size() > 1)
+					{
+						productData.getAllVariantsId().remove(productData.getCode());
+						for (final String variants : productData.getAllVariantsId())
+						{
+							allVariants.append(variants).append(',');
+						}
+						final int length = allVariants.length();
+						variantCodes = allVariants.substring(0, length - 1);
+					}
+					if (StringUtils.isNotEmpty(productData.getCode()))
+					{
+						variantsString = productData.getCode() + "," + variantCodes;
+					}
+					final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(variantsString);
+					if (MapUtils.isNotEmpty(buydata))
+					{
+						final List<String> noStockPCodes = (List<String>) buydata.get("no_stock_p_codes");
+						for (final String pCode : noStockPCodes)
+						{
+							stockAvailibilty.put(pCode, Integer.valueOf(0));
+						}
+						buyBoxData = (BuyBoxData) buydata.get("pdp_buy_box");
+					}
+				}
+				catch (final Exception e)
+				{
+					LOG.error("*************** Exception at PDP web service buybox fetching ******************* " + e);
+				}
+			}
+
+			if (null != buyBoxData && null != buyBoxData.getSellerArticleSKU())
+			{
+				ussid = buyBoxData.getSellerArticleSKU();
+				LOG.debug("*************** Mobile web service buyBox USSID ****************" + ussid);
+			}
+			if (null != productData)
+			{
+				if (null != productData.getListingId())
+				{
+					productDetailMobile.setProductListingId(productData.getListingId());
+				}
+				if (null != productData.getProductTitle())
+				{
+					productDetailMobile.setProductName(productData.getProductTitle());
+				}
+
+				if (null != buyBoxData && null != buyBoxData.getSpecialPrice()
+						&& null != buyBoxData.getSpecialPrice().getValue().toString()
+						&& null != buyBoxData.getSpecialPrice().getValue()
+						&& buyBoxData.getSpecialPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
+				{
+					productDetailMobile.setWinningSellerSpecialPrice(buyBoxData.getSpecialPrice().getFormattedValue());
+				}
+
+				if (null != buyBoxData && null != buyBoxData.getPrice() && null != buyBoxData.getPrice().getValue().toString()
+						&& null != buyBoxData.getPrice().getValue() && buyBoxData.getPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
+				{
+					productDetailMobile.setWinningSellerMOP(buyBoxData.getPrice().getFormattedValue());
+				}
+
+				if (null != buyBoxData && null != buyBoxData.getMrp() && null != buyBoxData.getMrp().getValue().toString())
+				{
+					productDetailMobile.setMrp(buyBoxData.getMrp().getFormattedValue());
+				}
+
+				if (null != buyBoxData && null != buyBoxData.getSellerArticleSKU())
+				{
+					productDetailMobile.setWinningUssID(buyBoxData.getSellerArticleSKU());
+				}
+
+				if (null != productData.getUrl()
+						&& (!(productData.getUrl().toLowerCase().contains(HTTP) || productData.getUrl().toLowerCase().contains(HTTPS))))
+				{
+					sharedText += MarketplacecommerceservicesConstants.SPACE + baseUrl + productData.getUrl();
+				}
+				else if (null != productData.getUrl())
+				{
+					sharedText += productData.getUrl();
+				}
+			}
+			sharedText += MarketplacecommerceservicesConstants.SPACE
+					+ Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_POST);
+			productDetailMobile.setSharedText(sharedText);
+			LOG.debug("******************** PDP mobile web service  fetching done *****************");
+
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9037);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
+		}
+		return productDetailMobile;
+
+	}
+
+
 	/**
 	 * @return the buyBoxFacade
 	 */

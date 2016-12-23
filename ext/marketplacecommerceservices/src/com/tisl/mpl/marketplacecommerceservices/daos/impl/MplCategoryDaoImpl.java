@@ -6,15 +6,21 @@ package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.category.daos.impl.DefaultCategoryDao;
 import de.hybris.platform.category.model.CategoryModel;
+import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
+import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.search.SearchResult;
+import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCategoryDao;
 
 
@@ -133,6 +139,46 @@ public class MplCategoryDaoImpl extends DefaultCategoryDao implements MplCategor
 	{
 		return this.flexibleSearchService;
 	}
+
+	/**
+	 *
+	 * This method returns distinct primary categories in our website for TPR-1285 Dynamic sitemap
+	 *
+	 * @return List<CategoryModel>
+	 */
+	@Override
+	public List<CategoryModel> getLowestPrimaryCategories()
+	{
+		try
+		{
+			final String queryString = MarketplacecommerceservicesConstants.L4CATEGORYQUERY;
+
+			//forming the flexible search query
+			final FlexibleSearchQuery bankListQuery = new FlexibleSearchQuery(queryString);
+
+			//fetching bank list from DB using flexible search query
+			final List<CategoryModel> bankList = flexibleSearchService.<CategoryModel> search(bankListQuery).getResult();
+
+			return bankList;
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final NullPointerException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
 
 
 }

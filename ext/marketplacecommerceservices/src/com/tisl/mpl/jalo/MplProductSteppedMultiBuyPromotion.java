@@ -352,7 +352,7 @@ public class MplProductSteppedMultiBuyPromotion extends GeneratedMplProductStepp
 
 
 					final Map<String, Integer> validProductList = getMplBundlePromotionHelper().getSortedValidProdUssidMap(
-							validProductUssidMap, stepQuantityList, paramSessionContext, (int) totalCount, restrictionList);
+							validProductUssidMap, stepQuantityList, paramSessionContext, (int) totalCount, restrictionList, getCode());
 
 					totalAdjustment = getMplBundlePromotionHelper().getTotalEligiblePrice(validProductUssidMap, validProductList)
 							- totalAdjustOffPrice;

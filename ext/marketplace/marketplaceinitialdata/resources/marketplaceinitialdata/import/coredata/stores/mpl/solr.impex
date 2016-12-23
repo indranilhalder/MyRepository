@@ -129,6 +129,7 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 #TISPT-142 Changes End
 #TPR-796
 ;$solrIndexedType; img-437Wx649H          ;string ;            ;    ;    ;    ;    ;    ;mplProductSearchImageValueProvider;
+;$solrIndexedType; img-320Wx357H          ;string ;            ;    ;    ;    ;    ;    ;mplLuxurySearchImageValueProvider;
 #TPR-796
 ;$solrIndexedType; immediateCategory      ;string ;            ;    ;    ;    ;    ;    ;mplCompareProductValueProvider;
 ;$solrIndexedType; onlineExclusive        ;boolean;            ;    ;    ;    ;	   ;	;mplOnlineExclusiveValueProvider;

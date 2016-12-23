@@ -186,7 +186,7 @@
 
 
 							<%-- <li class="product-size-list"><span class="product-size">Size : ${fn:toUpperCase(product.displaySize)} </span></li> --%>
-							<li class="product-size-list"><span class="product-size">Size: <span class="size-col">${product.displaySizes}</span><%-- Price : ${product.displayPrice}### ${product.displayUrl} --%>
+							<li class="product-size-list"><span class="product-size">Size: <span class="size-col">${product.displaySize}</span><%-- Price : ${product.displayPrice}### ${product.displayUrl} --%>
 							</span></li>
 						</c:if>
 						<%-- <li>Color: ${product.swatchColor}</li> --%>
@@ -295,7 +295,7 @@
 								 <c:choose>
 									<c:when test="${product.productMRP.value > 0}">
 										<span class="priceFormat">
-											<span id="mrpprice_${product.code}"> ${product.productMRP.formattedValue}</span></span>
+											<span id="mrpprice_${product.code}"> ${product.productMRP.formattedValueNoDecimal}</span></span>
 									</c:when>
 									<c:otherwise>
 										<c:if test="${displayFreeForZero}">
@@ -312,7 +312,7 @@
 								<c:choose>
 									<c:when test="${product.price.value > 0}">
 										<span class="priceFormat">
-											<span id="price_${product.code}"> ${product.price.formattedValue}</span></span>
+											<span id="price_${product.code}"> ${product.price.formattedValueNoDecimal}</span></span>
 									</c:when>
 									<c:otherwise>
 										<c:if test="${displayFreeForZero}">
@@ -341,7 +341,7 @@
 							<c:choose>
 									<c:when test="${product.productMRP.value > 0}">
 										<span class="priceFormat">
-										<span id="priceEqual_${product.code}">${product.productMRP.formattedValue}</span></span>
+										<span id="priceEqual_${product.code}">${product.productMRP.formattedValueNoDecimal}</span></span>
 									</c:when>
 									<c:otherwise>
 										<c:if test="${displayFreeForZero}">

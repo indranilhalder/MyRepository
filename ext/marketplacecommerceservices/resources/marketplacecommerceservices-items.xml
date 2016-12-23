@@ -383,7 +383,153 @@
 			</attributes>
 		</itemtype>
 		
+		<!-- TPR-965 Limited stock Promotion started -->
 		
+		<itemtype code="LimitedStockPromotion" extends="ProductPromotion"
+			jaloclass="com.tisl.mpl.jalo.LimitedStockPromotion" autocreate="true"
+			generate="true">
+			<attributes>
+				<attribute qualifier="percentageDiscount" autocreate="true"
+					type="java.lang.Double">
+					<defaultvalue>Double.valueOf(0D)</defaultvalue>
+					<description>Percentage discount.</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="messageFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion has fired.
+					</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="messageCouldHaveFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion could have
+						potentially fire.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="discountPrices" autocreate="true"
+					type="PromotionPriceRowCollectionType">
+					<description>Fixed price for discount in specific currencies.
+					</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						initial="false" optional="true" partof="true" />
+				</attribute>
+
+				<attribute qualifier="percentageOrAmount" autocreate="true"
+					type="java.lang.Boolean">
+					<description>Flag to indicate that the promotion is having amount
+						or percentage discount.</description>
+					<defaultvalue>Boolean.TRUE</defaultvalue>
+					<persistence type="property" />
+					<modifiers read="true" write="true" optional="false" />
+				</attribute>
+				<attribute qualifier="maxStockCount" autocreate="true"
+					type="java.lang.Integer">
+					<description>Max Stock for Promotion</description>
+					<defaultvalue>Integer.valueOf(1)</defaultvalue>
+					<persistence type="property" />
+				</attribute>
+				<attribute autocreate="true" qualifier="maxDiscountVal"
+					type="java.lang.Double">
+					<description>The Maximum Value to be deducted</description>
+					<defaultvalue>Double.valueOf(0.0D)</defaultvalue>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						initial="false" optional="true" />
+				</attribute>
+			</attributes>
+		</itemtype>		
+			
+			
+			<!-- TPR-965  Include Promotion Invalidation restriction for Limited Stock  -->
+			
+		<itemtype code="LimitedStockPromoInvalidation"  extends="GenericItem"
+				jaloclass="de.hybris.platform.jalo.LimitedStockPromoInvalidation" autocreate="true"
+				generate="true">
+				<deployment table="StockPromoInvalidation" typecode="13299" />
+			<attributes>				
+				<attribute autocreate="true" qualifier="ussid"
+					type="java.lang.String">
+					<description>Product USSID </description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="productCode"
+					autocreate="true" type="java.lang.String">
+					<description>Product Code</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="promoCode"
+					autocreate="true" type="java.lang.String">
+					<description>Promo Code of the product</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="usedUpCount"
+					autocreate="true" type="java.lang.Integer">
+					<description>Number of the products already used for placing order</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="order"
+					autocreate="true" type="AbstractOrder">
+					<description>to check the order for promotion</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="guid"
+					autocreate="true" type="java.lang.String">
+					<description>Guid of cart to check if the promotion of the product is already available or not</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+		
+			<!-- TPR-965 Limited stock Promotion finished -->
+			
 
 		<!-- Custom PromotionOrderEntryAdjustAction class for apportioned value 
 			for Product level promotions -->
@@ -458,6 +604,28 @@
 					<modifiers read="true" write="true" search="false"
 						optional="true" />
 				</attribute>
+				<!-- Added For TPR-996 -->
+ 				 <attribute qualifier="termsAndCondition" type="localized:java.lang.String">
+ 				<description>The message to show configurable text in Offer Section</description>
+ 				<modifiers read="true" write="true" optional="true" />
+ 					<persistence type="property">
+ 						<columntype database="oracle">
+ 							<value>varchar2(4000)</value>
+ 						</columntype>
+ 						<columntype database="mysql">
+ 							<value>text</value>
+ 						</columntype>
+ 						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+ 						</columntype>
+ 						<columntype database="hsqldb">
+ 							<value>LONGVARCHAR</value>
+ 						</columntype>
+ 					<columntype>
+ 							<value>varchar</value>
+ 						</columntype>
+ 					</persistence>
+ 			</attribute>
 			</attributes>
 		</itemtype>
 
@@ -1636,6 +1804,20 @@
 					<!-- For TPR-1620 : Bulk Load in Exclude Seller ends -->
 			</attributes>
 		</itemtype>
+		 <!-- TISUATNOV-100-->
+		 <itemtype code="EtailLimitedStockRestriction"
+			extends="AbstractPromotionRestriction" jaloclass="com.tisl.mpl.jalo.EtailLimitedStockRestriction"
+			autocreate="true" generate="true">
+			<attributes>
+			   <attribute autocreate="true" qualifier="maxStock"
+					type="java.lang.Integer">
+					<defaultvalue>Double.valueOf(0)</defaultvalue>
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+                          </attributes>
+             </itemtype> 
        <!-- TPR-970 changes starts -->
 		<itemtype code="EtailPincodeRestriction"
 			extends="AbstractPromotionRestriction" jaloclass="com.tisl.mpl.jalo.MplPincodeSpecificRestriction"
@@ -2807,6 +2989,7 @@
 				</attributes>
 			</itemtype>
 		</typegroup>
+		
 		<!-- TPR-970 changes end -->
 	</itemtypes>
 	

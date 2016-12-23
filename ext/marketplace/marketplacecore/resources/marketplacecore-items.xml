@@ -828,10 +828,19 @@
  			<value code="no" />
  		</enumtype>
  		<!-- added by i324321 end -->
+ 		
+ 		
+ 		<!-- TPR-1285 ENUM added  --> 
+ 		<enumtype code="siteMapUpdateModeEnum" autocreate="true" generate="true"
+ 			dynamic="true">
+ 			<value code="PRODUCT" />
+ 			<value code="CUSTOM" />
+ 			<value code="ALL" />
+ 		</enumtype>
 	</enumtypes>
 		<!-- Product Feature Enum Ends -->
 
-
+	
 
 
 	<relations>
@@ -1172,6 +1181,16 @@
 	<!-- relation of category to cross-sell banners -->
 		
 		<!-- End -->
+		
+		<!-- update the message for Freebie product TPR-1754 -->
+		
+		<relation code="FreebieProductDetailRelation"
+			localized="false" autocreate="true">
+			<sourceElement qualifier="offer" type="FreebieDetail" cardinality="one">
+			</sourceElement>
+			<targetElement qualifier="productsWithFreebieoffer" type="ProductFreebieDetail" cardinality="many">
+			</targetElement>
+		</relation>
 		
 	</relations>
 
@@ -4507,6 +4526,13 @@
 						<modifiers read="true" write="true" search="true" />
 						<persistence type='property' />
 					</attribute>
+					
+					 <attribute type="java.lang.String" qualifier="imageURL"
+						autocreate="true" generate="true">
+						<description>This attribute is required to provide URL of the image</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
 
 <!-- TPR-562 ends -->
 					<attribute type="java.lang.String" qualifier="filterByBrandName"
@@ -4810,6 +4836,24 @@
 					</attributes>
 			</itemtype>
 			
+		<!-- TPR-1285 Changes -->
+			<itemtype code="CMSSite" autocreate="false" generate="false">
+				
+				<attributes>
+					
+					<attribute qualifier="siteMaps" type="MediaCollection" autocreate="false">
+						<persistence type="property" >
+						<columntype database="oracle">
+							<value>CLOB</value>
+						</columntype>
+						<columntype>							
+							<value>HYBRIS.LONG_STRING</value>
+						</columntype>
+						</persistence>
+						</attribute>
+					</attributes>
+			</itemtype>
+		<!-- TPR-1285 Changes -->
 			
 			<!--  Luxury Site -->
 			
@@ -9339,6 +9383,80 @@
 						</indexes>
 					</itemtype>
 				</typegroup>
+			
+		<!-- TPR-1285 Dynamic Sitemap -->
+		<typegroup name="Seo">
+			<itemtype code="SiteMapMediaCronJob" autocreate="false"
+				generate="false" extends="CronJob">
+				<description>Cronjob to generate the sitemap media per site</description>
+				<attributes>
+					<attribute qualifier="updateType" type="siteMapUpdateModeEnum">
+						<modifiers optional="false" />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+		</typegroup>
+		
+		
+		<!-- update the message for Freebie product TPR-1754 -->
+		
+		<typegroup name="FreebieEngine">
+			<itemtype code="FreebieDetail" autocreate="true" generate="true">
+				<deployment table="FreebieDetail" typecode="17020" />
+				<attributes>
+					<attribute autocreate="true" qualifier="freebieId" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers unique="true" optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="freebieMsg" type="java.lang.String" generate="true">
+					<persistence type="property" />
+					<modifiers read="true" write="true" unique="false" optional="true" />
+					</attribute>										
+				</attributes>
+				<indexes>
+					<index name="freebieId_Index">
+						<key attribute="freebieId" />
+					</index>
+				</indexes>
+			</itemtype>
+			<itemtype code="ProductFreebieDetail" autocreate="true" generate="true">
+				<deployment table="ProductFreebieDetail" typecode="17021" />
+				<attributes>
+					<attribute autocreate="true" qualifier="ussId" type="java.lang.String" generate="true">
+					    <description>UssId for freebie</description>
+						<persistence type="property" />
+						<modifiers unique="true" optional="false" />
+					</attribute>
+					<!-- <attribute autocreate="true" qualifier="sellerId" type="java.lang.String" generate="true">
+					    <description>Seller Id for freebie</description>
+						<persistence type="property" />
+						<modifiers unique="true" optional="false" />
+					</attribute> -->
+					<attribute qualifier='startDate' type="java.util.Date"  generate="true">
+						<description>Date on which the product promotion would start</description>
+						<modifiers read="true" write="true" optional="false"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier='endDate' type="java.util.Date"  generate="true">
+						<description>Date on which the product promotion would start</description>
+						<modifiers read="true" write="true" optional="false"/>
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+				<indexes>
+					<index name="freebieProductId_Index">
+						<key attribute="ussId" />
+					</index>
+					<!-- <index name="freebieSellerId_Index">
+						<key attribute="sellerId" />
+					</index> -->
+				</indexes>
+			</itemtype>
+			</typegroup>
+				
+
      
      	<typegroup name="BulkCancelProcessForOrder">
 			<itemtype code="BulkCancellationProcess" extends="GenericItem" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.BulkCancellationProcess">
@@ -9371,5 +9489,6 @@
 				</attributes>
 			</itemtype>
 		</typegroup>
+
 	</itemtypes>
 </items>

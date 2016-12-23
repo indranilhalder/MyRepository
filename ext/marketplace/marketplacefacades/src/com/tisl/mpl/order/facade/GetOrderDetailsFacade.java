@@ -13,6 +13,7 @@ import java.util.Map;
 
 import com.tisl.mpl.facades.data.AWBResponseData;
 import com.tisl.mpl.wsdto.OrderDataWsDTO;
+import com.tisl.mpl.wsdto.OrderProductWsDTO;
 import com.tisl.mpl.wsdto.OrderTrackingWsDTO;
 
 
@@ -53,5 +54,7 @@ public interface GetOrderDetailsFacade
 	 * @return
 	 */
 	public List<ConsignmentStatus> getPickUpButtonDisableOptions();
+
+	public List<OrderProductWsDTO> getOrderdetailsForApp(final String orderCode);
 
 }

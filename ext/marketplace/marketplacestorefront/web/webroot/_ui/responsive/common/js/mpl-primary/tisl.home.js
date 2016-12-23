@@ -342,36 +342,12 @@ function getBrandsYouLoveAjaxCall() {
             data: dataString,
             success: function(response) {
 
-               //console.log(response.subComponents);
             	//changes for TPR-1121
-            	autoplayTimeout = response.autoplayTimeout;
-            	slideBy = response.slideBy; 
-            	autoPlay= response.autoPlay;
-            	
-            	if(autoplayTimeout){
-            		
-            		autoplayTimeout = autoplayTimeout;
-                	
-            	}else{
-            		
-            		 autoplayTimeout=5000;
-            	
-            	}
-            	
-               if(slideBy){
-            		
-            	   slideBy = slideBy;
-                	
-            	}else{
-            		
-            		slideBy=1;
-            	
-            	}
-            	
-               
+            	autoplayTimeout = response.autoplayTimeout?response.autoplayTimeout:autoplayTimeout;
+            	slideBy = response.slideBy?response.slideBy:slideBy; 
+                autoPlay= response.autoPlay != null ?response.autoPlay:autoPlay;
 
-                //console.log(response.subComponents);
-            	//TPR-559 Show/Hide Components and Sub-components
+                //TPR-559 Show/Hide Components and Sub-components
 	            if (response.hasOwnProperty("title") && response.hasOwnProperty("subComponents") && response.subComponents.length) {
 	                defaultComponentId = "";
 	                renderHtml = "<h2>" + response.title + "</h2>" +
@@ -415,7 +391,7 @@ function getBrandsYouLoveAjaxCall() {
 	            		dots:false,
 	            		navText:[],
 	            		autoplay: autoPlay,
-			            autoHeight : true,
+			            autoHeight : false,
 	            		autoplayTimeout: autoplayTimeout,
 	  	               slideBy: slideBy,
 	            		responsive : {
@@ -631,7 +607,7 @@ var bulIndex = 0;
     getBrandsYouLoveContentAjaxCall($(this).attr("id"));
 });*/
 $(document).on("click", ".home-brands-you-love-carousel .owl-item", function() {
-	var activePos = $(".home-brands-you-love-carousel .owl-item.center").index(),carLoop,count=0;
+		/*var activePos = $(".home-brands-you-love-carousel .owl-item.center").index(),carLoop,count=0;
 		bulIndex = $(this).index();
 	 	if (bulIndex > activePos) {
 	    	count = bulIndex - activePos;
@@ -653,7 +629,11 @@ $(document).on("click", ".home-brands-you-love-carousel .owl-item", function() {
 	    			clearInterval(carLoop);
 	    		}
 	    	},80)
-	    }
+	    }*/
+		var brandCarousel = $(".home-brands-you-love-carousel").data('owlCarousel');
+		//console.log(carousel.relative($(this).index()));
+		var relIndex = brandCarousel.relative($(this).index());
+        $('.home-brands-you-love-carousel').trigger("to.owl.carousel", [relIndex, 500, true]);
 });
 /*$(document).on("click", ".bulprev", function() {
     $('.home-brands-you-love-desc').remove();
@@ -739,33 +719,10 @@ function getBestPicksAjaxCall() {
             success: function(response) {
 
             	//changes for TPR-1121
-                autoplayTimeout = response.autoplayTimeout;
-                slideBy = response.slideBy;
-                autoPlay= response.autoPlay;
+            	autoplayTimeout = response.autoplayTimeout?response.autoplayTimeout:autoplayTimeout;
+            	slideBy = response.slideBy?response.slideBy:slideBy; 
+                autoPlay= response.autoPlay != null ?response.autoPlay:autoPlay;
             	
-                
-               if(autoplayTimeout){
-            		
-            		autoplayTimeout = autoplayTimeout;
-                	
-            	}else{
-            		
-            		 autoplayTimeout=5000;
-            	
-            	}
-            	
-               if(slideBy){
-            		
-            	   slideBy = slideBy;
-                	
-            	}else{
-            		
-            		slideBy=1;
-            	
-            	}
-               
-             
-               
             	//TPR-559 Show/Hide Components and Sub-components
             	if (response.hasOwnProperty("title") && response.hasOwnProperty("subItems")) {
 	                renderHtml = "<h2>" + response.title + "</h2>" +
@@ -829,7 +786,7 @@ function getBestPicksAjaxCall() {
 	            		navText:[],
 	            		lazyLoad: false,
 	            		autoplay: autoPlay,
-			            autoHeight : true,
+			            autoHeight : false,
 	            		autoplayTimeout: autoplayTimeout,
 	  	               slideBy: slideBy,
 	            		responsive : {
@@ -892,35 +849,10 @@ function getProductsYouCareAjaxCall() {
             success: function(response) {
 
             	//changes for TPR-1121
-            	autoplayTimeout = response.autoplayTimeout;
-            	slideBy = response.slideBy;
-            	autoPlay= response.autoPlay;
+            	autoplayTimeout = response.autoplayTimeout?response.autoplayTimeout:autoplayTimeout;
+            	slideBy = response.slideBy?response.slideBy:slideBy; 
+                autoPlay= response.autoPlay != null ?response.autoPlay:autoPlay;
             	
-            	
-                if(autoplayTimeout){
-            		
-            		autoplayTimeout = autoplayTimeout;
-                	
-            	}else{
-            		
-            		 autoplayTimeout=5000;
-            	
-            	}
-            	
-               if(slideBy){
-            		
-            	   slideBy = slideBy;
-                	
-            	}else{
-            		
-            		slideBy=1;
-            	
-            	}
-               
-               
-            	
-               
-            	//console.log(response);
             	//TPR-559 Show/Hide Components and Sub-components
                 if (response.hasOwnProperty("title") && response.hasOwnProperty("categories") && response.title && response.categories.length) {
 	                renderHtml = "<h2>" + response.title + "</h2>";
@@ -947,6 +879,13 @@ function getProductsYouCareAjaxCall() {
 	                    renderHtml += "</a>";
 	                    
 	                   }
+	                   else {
+	                	   renderHtml +=
+	  	                     "<div class='short-info'><h3 class='product-name'><span>" +
+	  	                        v.categoryName +
+	  	                       "</span></h3></div>";
+	  	                    renderHtml += "</a>";
+	                   }
 	                   /*TPR-562 -ends   */
 	                });
 	                renderHtml += "</div>";
@@ -970,7 +909,7 @@ function getProductsYouCareAjaxCall() {
 							navText : [],
 							lazyLoad : false,
 							autoplay: autoPlay,
-				            autoHeight : true,
+				            autoHeight : false,
 							autoplayTimeout: autoplayTimeout,
 				            slideBy: slideBy,
 							responsive : {
@@ -1023,34 +962,11 @@ function getNewAndExclusiveAjaxCall() {
         url: ACC.config.encodedContextPath + "/getNewAndExclusive",
         data: dataString,
         success: function(response) {
-            //console.log(response.newAndExclusiveProducts);
+
         	//changes for TPR-1121
-        	
-        	autoplayTimeout = response.autoplayTimeout;
-        	slideBy = response.slideBy;
-        	autoPlay= response.autoPlay;
-        	
-        	 
-        	if(autoplayTimeout){
-        		
-        		autoplayTimeout = autoplayTimeout;
-            	
-        	}else{
-        		
-        		 autoplayTimeout=5000;
-        	
-        	}
-        	
-           if(slideBy){
-        		
-        	   slideBy = slideBy;
-            	
-        	}else{
-        		
-        		slideBy=1;
-        	
-        	}
-        	
+        	autoplayTimeout = response.autoplayTimeout?response.autoplayTimeout:autoplayTimeout;
+        	slideBy = response.slideBy?response.slideBy:slideBy; 
+            autoPlay= response.autoPlay != null ?response.autoPlay:autoPlay;
         	
         	//TPR-559 Show/Hide Components and Sub-components
             if (response.hasOwnProperty("title") && response.hasOwnProperty("newAndExclusiveProducts") && response.newAndExclusiveProducts.length) {
@@ -1098,7 +1014,7 @@ function getNewAndExclusiveAjaxCall() {
 	        		navText:[],
 	        		lazyLoad: false,
 	        		autoplay: autoPlay,
-		            autoHeight : true,
+		            autoHeight : false,
 		            autoplayTimeout: autoplayTimeout,
 		            slideBy: slideBy,
 	        		responsive : {

@@ -7,12 +7,14 @@ import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationExc
 import de.hybris.platform.commerceservices.service.data.CommerceCheckoutParameter;
 import de.hybris.platform.commerceservices.service.data.CommerceOrderResult;
 import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.LimitedStockPromoInvalidationModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.exceptions.ModelRemovalException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +46,7 @@ import com.tisl.mpl.marketplacecommerceservices.daos.JuspayWebHookDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplProcessOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplVoucherDao;
+import com.tisl.mpl.marketplacecommerceservices.service.ExtStockLevelPromotionCheckService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCheckoutService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
@@ -87,6 +91,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	@Resource(name = "mplVoucherDao")
 	private MplVoucherDao mplVoucherDao;
 	private static final String ERROR_NOTIF = "Error while sending notifications>>>>>>";
+	@Resource(name = "stockPromoCheckService")
+	private ExtStockLevelPromotionCheckService stockPromoCheckService;
 
 	/**
 	 * This method processes pending orders
@@ -204,6 +210,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 									MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
 
 							getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
+							//TPR-965
+							removePromotionInvalidation(orderModel);
 							//Code to remove coupon for Payment_Timeout orders
 							if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()))
 							{
@@ -485,6 +493,39 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 
 	}
 
+
+	//TPR-965
+	/**
+	 * removing the released stocks
+	 *
+	 * @param orderModel
+	 * @throws EtailNonBusinessExceptions
+	 */
+	public void removePromotionInvalidation(final OrderModel orderModel) throws EtailNonBusinessExceptions
+	{
+		LOG.debug("removing promotion invalidation entries..............");
+		try
+		{
+			if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()))
+			{
+				final List<LimitedStockPromoInvalidationModel> invalidationList = new ArrayList<LimitedStockPromoInvalidationModel>(
+						stockPromoCheckService.getPromoInvalidationList(orderModel.getGuid()));
+
+				final Iterator<LimitedStockPromoInvalidationModel> iter = invalidationList.iterator();
+
+				//Remove the existing discount
+				while (iter.hasNext())
+				{
+					final LimitedStockPromoInvalidationModel model = iter.next();
+					getModelService().remove(model);
+				}
+			}
+		}
+		catch (final ModelRemovalException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0020);
+		}
+	}
 
 	//Not used
 	//	/**

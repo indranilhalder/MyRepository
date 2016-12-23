@@ -10,8 +10,10 @@ import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.core.Registry;
+import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.product.Product;
@@ -27,6 +29,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -1031,6 +1034,7 @@ public class GenericUtilityMethods
 		final List<String> productListPriceList = new ArrayList<String>();
 		final List<String> productNameList = new ArrayList<String>();
 		final List<String> productQuantityList = new ArrayList<String>();
+
 		final List<String> productSkuList = new ArrayList<String>();
 		final List<String> productUnitPriceList = new ArrayList<String>();
 		final List<String> pageSubCategories = new ArrayList<String>();
@@ -1039,12 +1043,17 @@ public class GenericUtilityMethods
 		String productCatL1 = null;
 		String productCatL2 = null;
 		String productCatL3 = null;
+		//for tealium
 
-
+		String order_shipping_charge = "";
+		final List<String> orderShippingCharges = new ArrayList<String>();
 		try
 		{
+
 			if (null != cartModel)
 			{
+				final CurrencyModel currency = cartModel.getCurrency();
+				final String currencySymbol = currency.getSymbol();
 				if (null != cartModel.getTotalPrice())
 				{
 					cartTotal = cartModel.getTotalPrice().toString();
@@ -1065,20 +1074,29 @@ public class GenericUtilityMethods
 							if (null != entry.getProduct() && StringUtils.isNotEmpty(entry.getProduct().getName()))
 							{
 								name = appendQuote(entry.getProduct().getName());
+
 							}
 							if (null != entry.getQuantity())
 							{
 								quantity = appendQuote(String.valueOf(entry.getQuantity()));
+
 							}
 
 							if (null != entry.getBasePrice())
 							{
 								basePrice = appendQuote(entry.getBasePrice().toString());//base price for a cart entry
+
 							}
 
 							if (null != entry.getTotalPrice())
 							{
 								totalEntryPrice = appendQuote(entry.getTotalPrice().toString());//total price for a cart entry
+
+							}
+							if (entry.getCurrDelCharge() != null)
+							{
+
+								order_shipping_charge = appendQuote(currencySymbol.concat(entry.getCurrDelCharge().toString()));
 							}
 						}
 
@@ -1086,6 +1104,7 @@ public class GenericUtilityMethods
 						{
 							final List<BrandModel> brandList = new ArrayList<BrandModel>(entry.getProduct().getBrands());
 							brand = appendQuote(brandList.get(0).getName());
+
 						}
 
 
@@ -1130,9 +1149,14 @@ public class GenericUtilityMethods
 						productListPriceList.add(totalEntryPrice);
 						productNameList.add(name);
 						productQuantityList.add(quantity);
+
 						productSkuList.add(sku);
 						productUnitPriceList.add(basePrice);
 						adobeProductSkuList.add(adobeSku);
+						//for tealium
+
+						orderShippingCharges.add(order_shipping_charge);
+
 					}
 				}
 
@@ -1167,6 +1191,11 @@ public class GenericUtilityMethods
 				model.addAttribute("productUnitPriceList", productUnitPriceList);
 				model.addAttribute("adobe_product", adobeProductSku);
 				model.addAttribute("cart_total", cartTotal);
+				//for tealium
+
+				model.addAttribute("orderShippingCharges", orderShippingCharges);
+
+
 				//TPR-430
 
 				if (CollectionUtils.isNotEmpty(pageSubCategories))
@@ -1187,11 +1216,11 @@ public class GenericUtilityMethods
 
 				}
 
+
 				model.addAttribute("pageSubCategories", productCatL1);
 				model.addAttribute("productCategoryList", productCatL2);
 				model.addAttribute("page_subcategory_name_L3", productCatL3);
-				//model.addAttribute("productCategoryList", productCategoryList);
-				//model.addAttribute("page_subcategory_name_L3", pageSubcategoryNameL3List);
+
 			}
 		}
 		catch (final Exception te)
@@ -1364,31 +1393,120 @@ public class GenericUtilityMethods
 	 * @param abstractOrderModel
 	 * @return checkoutSellerID
 	 */
-	public static String populateCheckoutSellers(final AbstractOrderModel abstractOrderModel)
+	public static void populateCheckoutSellersOrderConfirmation(final Model model, final OrderModel orderModel,
+			final OrderData orderData)
 	{
-		String checkoutSellerID = null;
-		final List<AbstractOrderEntryModel> entryList = abstractOrderModel.getEntries();
-		for (final AbstractOrderEntryModel entry : entryList)
+
+		String sellerId = null;
+		String sellerIds = null;
+		String transactionIds = null;
+		String orderCurrency = null;
+		String order_shipping = "";
+
+		final List<String> sellerIdList = new ArrayList<String>();
+		final List<String> transactionIdList = new ArrayList<String>();
+		final List<String> deliveryModes = new ArrayList<String>();
+		for (final AbstractOrderEntryModel entry : orderModel.getEntries())
 		{
-			final List<SellerInformationModel> sellerInformationModels = (List<SellerInformationModel>) entry.getProduct()
-					.getSellerInformationRelator();
-			if (CollectionUtils.isNotEmpty(sellerInformationModels))
+			//TPR-429
+			if (entry.getSelectedUSSID() != null)
 			{
-				final SellerInformationModel sellerInformationModel = sellerInformationModels.get(0);
-				final String sellerID = sellerInformationModel.getSellerID();
-				if (checkoutSellerID != null)
+				sellerId = entry.getSelectedUSSID().substring(0, 6);
+
+			}
+			sellerIdList.add(sellerId);
+			if (entry.getMplDeliveryMode() != null)
+			{
+				//order_shipping = entry.getDeliveryMode().getName();
+				//order_shipping = entry.getMplZoneDeliveryModeValue().getMplDeliveryMode().toString();
+				if (entry.getMplDeliveryMode().getDeliveryMode() != null)
 				{
-					checkoutSellerID += MarketplacecommerceservicesConstants.UNDER_SCORE + sellerID;
+					order_shipping = appendQuote(entry.getMplDeliveryMode().getDeliveryMode().getName());
 				}
-				else
+			}
+			deliveryModes.add(order_shipping);
+		}
+		if (CollectionUtils.isNotEmpty(sellerIdList))
+		{
+			Collections.reverse(sellerIdList);
+			sellerIds = StringUtils.join(sellerIdList, '_');
+		}
+		if (orderData.getMplPaymentInfo() != null)
+		{
+			String paymentType = "";
+			if (orderData.getMplPaymentInfo().getPaymentOption().equalsIgnoreCase("Credit Card")
+					|| orderData.getMplPaymentInfo().getPaymentOption().equalsIgnoreCase("Debit Card"))
+			{
+				paymentType = orderData.getMplPaymentInfo().getPaymentOption();
+				if (null != orderData.getMplPaymentInfo().getCardCardType())
 				{
-					checkoutSellerID = sellerID;
+					paymentType += '|' + orderData.getMplPaymentInfo().getCardCardType();
+				}
+
+
+			}
+			else if (orderData.getMplPaymentInfo().getPaymentOption().equalsIgnoreCase("Netbanking"))
+			{
+				paymentType = orderData.getMplPaymentInfo().getPaymentOption();
+				if (null != orderData.getMplPaymentInfo().getBank())
+				{
+					paymentType += '|' + orderData.getMplPaymentInfo().getBank();
+				}
+			}
+			else
+			{
+				paymentType = orderData.getMplPaymentInfo().getPaymentOption();
+			}
+			model.addAttribute("order_payment_type", paymentType);
+		}
+		if (CollectionUtils.isNotEmpty(orderModel.getChildOrders()))
+		{
+			for (final OrderModel childOrder : orderModel.getChildOrders())
+			{
+				for (final AbstractOrderEntryModel childOrderEntry : childOrder.getEntries())
+				{
+					if (StringUtils.isNotEmpty(childOrderEntry.getTransactionID()))
+					{
+						transactionIdList.add(childOrderEntry.getTransactionID());
+					}
 				}
 			}
 
 		}
-		return checkoutSellerID;
+		if (CollectionUtils.isNotEmpty(transactionIdList))
+		{
+			transactionIds = StringUtils.join(transactionIdList, ',');
+		}
+
+
+
+
+		orderCurrency = orderModel.getCurrency().getIsocode();
+		model.addAttribute("order_currency", orderCurrency);
+		model.addAttribute("transaction_id", transactionIds);
+		model.addAttribute("checkout_seller_ids", sellerIds);
+		model.addAttribute("order_shipping_modes", deliveryModes);
 	}
+
+
+	//TPR-1285
+	/**
+	 * Return the Prefix
+	 * 
+	 * @param prefix
+	 * @return prefix
+	 */
+	public static String changePrefix(String prefix)
+	{
+		prefix = prefix.replaceAll("[^\\w/-]", "-");
+		//TISSTRT-1297
+		if (prefix.contains("--"))
+		{
+			prefix = prefix.replaceAll("--", "-");
+		}
+		return prefix;
+	}
+
 
 
 	/**
