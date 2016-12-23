@@ -570,7 +570,7 @@ public class SearchPageController extends AbstractSearchPageController
 			throws CMSItemNotFoundException
 	{
 		final String uri = request.getRequestURI();
-		String pageTitle = "";
+		final String pageTitle = "";
 		if (uri.contains("page"))
 		{
 			final Pattern p = Pattern.compile(COMPILE_PATTERN);
@@ -638,18 +638,16 @@ public class SearchPageController extends AbstractSearchPageController
 
 		if (searchPageData.getPagination().getTotalNumberOfResults() == 0)
 		{
-			//Added For INC_10385
-			updatePageTitle(searchPageData.getFreeTextSearch(), model);
+			// Order of calling updatPageTitle changed for For INC_10385
 			storeCmsPageInModel(model, getContentPageForLabelOrId(NO_RESULTS_CMS_PAGE_ID));
-			pageTitle = "Search results - Tata CLiQ";
+			updatePageTitle(searchPageData.getFreeTextSearch(), model);
 		}
 		else
 		{
-			//Added For INC_10385
+			// Order of calling updatPageTitle changed for For INC_10385
 			storeContinueUrl(request);
-			updatePageTitle(searchPageData.getFreeTextSearch(), model);
 			storeCmsPageInModel(model, getContentPageForLabelOrId(SEARCH_CMS_PAGE_ID));
-			pageTitle = "Search results - Tata CLiQ";
+			updatePageTitle(searchPageData.getFreeTextSearch(), model);
 		}
 		final List<Breadcrumb> breadcrumbs = searchBreadcrumbBuilder.getBreadcrumbs(null, searchPageData);
 		model.addAttribute(WebConstants.BREADCRUMBS_KEY, breadcrumbs);
@@ -1295,9 +1293,9 @@ public class SearchPageController extends AbstractSearchPageController
 	/*
 	 * protected <E> List<E> subList(final List<E> list, final int maxElements) { if (CollectionUtils.isEmpty(list)) {
 	 * return Collections.emptyList(); }
-	 * 
+	 *
 	 * if (list.size() > maxElements) { return list.subList(0, maxElements); }
-	 * 
+	 *
 	 * return list; }
 	 */
 

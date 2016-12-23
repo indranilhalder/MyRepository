@@ -66,9 +66,12 @@ function navigateToPage(queryString,textString)
 				<h3 class="${facetData.genericFilter}">${facetData.name}</h3>
 			</c:if>		 
 			</c:when> 
+			
+			<%-- 
+			//Removed  strap color block for INC_11113
 			<c:when test="${facetData.code eq 'strapcolor'}">
 				<h4 class="true">Strap Colour</h4>
-			</c:when>
+			</c:when> --%>
 			<%-- <c:when test="${facetData.code == 'price'}">
 				<h4 class="true">${facetData.name}</h4>
 			</c:when> --%>
