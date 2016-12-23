@@ -156,11 +156,11 @@
     <c:when test="${product.rootCategory=='Watches'}">
       <div class="nav-wrapper">
 	  <span></span>
-        <ul class="nav pdp">
+        <ul class="nav pdp specNav">
            <li>Functions and Features</li>
          </ul>
          </div>
-         <ul class="tabs pdp">
+         <ul class="tabs pdp specTabs">
          <c:if test="${not empty mapConfigurableAttributes }">
              <li>
 			<div class="tab-details">
@@ -194,13 +194,13 @@
     <c:otherwise>
       <div class="nav-wrapper">
 	  <span></span>
-        <ul class="nav pdp">
+        <ul class="nav pdp specNav">
       <c:forEach items="${product.classifications}" var="classification" varStatus="outer">
       <li>${classification.name}</li>
       </c:forEach>
         </ul>
          </div>
-         <ul class="tabs pdp">
+         <ul class="tabs pdp specTabs">
         		<c:forEach items="${product.classifications}" var="classification" varStatus="outer">
 					
 					<li>

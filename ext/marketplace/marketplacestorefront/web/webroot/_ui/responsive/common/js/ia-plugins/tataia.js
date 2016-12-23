@@ -370,7 +370,7 @@ if (searchCategory_id){
 					if (document.getElementById('location')) {
     					if(document.getElementById('location').value) {
       						params.location = document.getElementById('location').value;
-      						//callRecApi(params, rootEP + endpoint);
+      						callRecApi(params, rootEP + endpoint);
     					}
   					}
 	  				/*Staticly-built list of filters*/
@@ -1108,6 +1108,10 @@ if (searchCategory_id){
 			    			html += '<h2><span style="color: black !important;">Things That Go With This</span>';
 			    		} else if (site_page_type === "homepage") {
  		    				var catFilter = filterNamePairing[response.data.filter_value];
+ 		    				if(typeof catFilter === "undefined") {
+ 		    					catFilter = document.getElementById('location').value;
+ 		    					catFilter = catFilter.charAt(0).toUpperCase() + catFilter.slice(1);
+ 		    				}
  							/*var catFilter = "All";
  			    			if(response.data.filter_value === "MSH10") {
  			    				catFilter = "Women's";
@@ -1167,7 +1171,7 @@ if (searchCategory_id){
 			          if (response.data.filter_value) {
 			          	html += '</div></div><a href="http://'+window.location.host+'/viewAllTrending?filter='+response.data.filter_key+','+response.data.filter_value+'" class="button hotShowHide" style="display: inline-block;font-size: 12px;height: 40px;line-height: 40px;">Shop the Hot List</a>';
 			          } else {
-			          	html += '</div></div><a href="http://'+window.location.host+'/viewAllTrending" class="button hotShowHide" style="display: inline-block;font-size: 12px;height: 40px;line-height: 40px;">Shop the Hot List</a>';
+			          	//html += '</div></div><a href="http://'+window.location.host+'/viewAllTrending" class="button hotShowHide" style="display: inline-block;font-size: 12px;height: 40px;line-height: 40px;">Shop the Hot List</a>';
 			      	  }
 			      }
 			      /* IA Changes End for store/mpl/en */

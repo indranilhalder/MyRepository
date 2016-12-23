@@ -4784,7 +4784,9 @@ text-transform: uppercase;
     -moz-transform: translateX(-50%);
     -ms-transform: translateX(-50%);
     -o-transform: translateX(-50%);
-    transform: translateX(-50%); }
+    transform: translateX(-50%);
+    /* margin-top: 0px; */
+     }
     .trending h1::after {
       clear: both;
       content: "";
@@ -58932,7 +58934,7 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 .SpecWrap .Padd .tabs-block .nav-wrapper > span	{ width:45px; height:45px; display:none;position: absolute; border:1px solid #ccc; background:#fff; right:0; bottom:5px; cursor: pointer; z-index: 1; color:#a9143c; text-align: center;font-size: 35px;padding: 3px 0 0;}
 .SpecWrap .Padd .tabs-block .nav-wrapper{ overflow:hidden; position:relative;}
 .SpecWrap .Padd .tabs-block .nav{ /* width: 1200px; */}	
-
+.SpecWrap .tabs-block .tabs>li.active{margin-top:-2px;}
 
 @media(min-width:1025px) and (max-width:1500px) {
 	.SpecWrap{ margin: 0 40px;}
@@ -59321,4 +59323,23 @@ text-decoration:underline;
 	min-width: 180px;
     border-top: 2px solid #a9143c;
     margin: 0 auto 40px;
+}
+
+.trending a.button.hotShowHide {
+    /* padding: 13px; */
+    font-size: 12px;
+    font-family: "Montserrat";
+    font-weight: bold;
+    text-transform: uppercase;
+    display: block;
+    width: 200px;
+    text-align: center;
+    letter-spacing: 1px;
+    background: #a9143c;
+    color: #fff;
+    border: 1px solid #a9143c;
+    margin: -10px auto 30px;
+    height: 40px;
+    line-height: 40px;
+    /* vertical-align: middle; */
 }

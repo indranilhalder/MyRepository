@@ -172,6 +172,14 @@ $(document).ready(function(){
 			console.log("isLux"+ isLux);
 			var isLuxury = $("#isLuxury").val();
 			console.log("isLuxury"+ isLuxury);
+			if (isLuxury != "true" || isLuxury == "undefined"){
+				console.log("isLuxury"+ isLuxury);
+				isLuxury = false ;
+			}
+			if ( isLux == "false"){
+				console.log("isLux"+ isLux);
+				isLux = false ;
+			}
 			
 			var marketplaceHeader = (isLux || isLuxury) ? false : true ;
 			console.log("marketplaceHeader"+ marketplaceHeader);
@@ -548,8 +556,14 @@ $(document).ready(function(){
 				 $(this).siblings().removeClass('active');
 				 $(this).addClass('active');
 				 var count = $(this).index() + 1;
-				 $(this).parents().find("ul.tabs.pdp>li").removeClass('active');
-				 $(this).parents().find("ul.tabs.pdp>li:nth-child("+count+")").addClass("active");
+				 if ($(this).parent().hasClass('productNav')){
+					 $(this).parents().find("ul.tabs.pdp.productTabs>li").removeClass('active');
+					 $(this).parents().find("ul.tabs.pdp.productTabs>li:nth-child("+count+")").addClass("active");
+				 }
+				 else {
+					 $(this).parents().find("ul.tabs.pdp.specTabs>li").removeClass('active');
+					 $(this).parents().find("ul.tabs.pdp.specTabs>li:nth-child("+count+")").addClass("active");
+				 }
 				 //$("ul.tabs.pdp>li").removeClass('active'); 
 				// $("ul.tabs.pdp>li").eq(count).addClass("active");
 			    }); 
@@ -2832,3 +2846,7 @@ $(".product-facet.js-product-facet.listing-leftmenu").slideToggle();
 $(this).toggleClass("active");
 });*/
 
+$(window).on("load",function(){
+	htVal=$(".trending .product-image").height();
+	$(".trending .owl-controls").css("top",(htVal/2)+"px");
+});
