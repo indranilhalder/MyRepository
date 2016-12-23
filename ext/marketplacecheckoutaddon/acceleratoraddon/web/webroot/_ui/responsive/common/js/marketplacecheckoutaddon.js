@@ -2180,13 +2180,13 @@ function validateCardNo() {
 					{
 						if(response.cardType=="" || response.cardType==null || response.cardType=="CREDIT" || response.cardType=="CC" || response.cardType=="Credit")
 						{
-							if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)!=-1){
+							if(selectedBank!="select" && responseBankVal.includes(selectedBankVal)){
 								binStatus=true;
 								//applyPromotion();
 								errorHandle.innerHTML = "";
 								return true;			
 							}
-							else if(selectedBank!="select" && !responseBankVal.indexOf(selectedBankVal)!=-1){
+							else if(selectedBank!="select" && !responseBankVal.includes(selectedBankVal)){
 								binStatus=false;
 								errorHandle.innerHTML = "Please enter a card same as the selected bank";
 								return false;	
