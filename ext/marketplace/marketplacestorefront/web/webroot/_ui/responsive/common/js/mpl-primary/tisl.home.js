@@ -1494,10 +1494,13 @@ function populateEnhancedSearch(enhancedSearchData)
 			                    window.localStorage.setItem(
 			                        "brandhtml-" + componentUid,
 			                        encodeURI(html));
-			                }			                
+
+			                }
+			                
 			            }
-			        });		    	
-		    }	 	    
+			        });
+		    	
+		    } 	    
 	});
 	//End
 	
@@ -1794,10 +1797,12 @@ $(document).ready(function()
 					                        "brandhtml-" + componentUid,
 					                        encodeURI(html));
 
-					                }				                
+					                }
+					                
 					            }
-					        });		    	
-				    }			       
+					        });
+				    	
+				    }		       
 				 ////////new brand
 			} else if($('header .content nav > ul > li.hovered > ul > li:first-child > div').hasClass('A-ZBrands')) {
 				
