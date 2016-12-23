@@ -2029,15 +2029,39 @@ $(document).ready(function() {
 		
 		//For blank cms container remove bottom border
 		
-		if($("body.template-pages-layout-apparelCategoryLandingPageV1 .body-Content").find(".style_edit").children().length==0){
-			$(".style_edit").css("border-bottom","none");
+		if($("body.template-pages-layout-apparelCategoryLandingPageV1 .body-Content").find(".style_edit").children().length==0){			
+			$(".style_edit").css({
+				'border-bottom' : 'none',
+				'padding' : '0px',
+				'margin' : '0px'		
+			});
+		}
+		if($("body.template-pages-layout-apparelCategoryLandingPageV1 .body-Content").find(".top_brands").children().length==0){
+			$(".top_brands").css({
+				'padding' : '0px',
+				'margin' : '0px'		
+			});
+		}
+		if($("body.template-pages-layout-apparelCategoryLandingPageV1 .body-Content").find(".winter_launch").children().length==0){
+			$(".winter_launch").css({
+				'padding' : '0px',
+				'margin' : '0px'		
+			});
 		}
 		if($("body.template-pages-layout-apparelCategoryLandingPageV1 .body-Content").find(".top_deal .blog_container").children().length==0){
 			$(".top_deal .blog_container").css("border-bottom","none");
 		}
 		if($("body.template-pages-layout-apparelCategoryLandingPageV1 .body-Content").find(".shop_for").children().length==0){
-			$(".shop_for").css("border-bottom","none");
+			$(".shop_for").css({
+				'border-bottom' : 'none',
+				'padding' : '0px'		
+			});
 		}
+		
+		//For CLP blank cms container remove extra space
+
+		
+		
 		
 		/*CLP section js ends*/
 });
@@ -2785,6 +2809,38 @@ if($(".body-Content").find(".top_deal_blp").children().length==0){
 }
 if($(".body-Content").find(".shop_for_blp").children().length==0){
 	$(".shop_for_blp").css("border-bottom","none");
+}
+
+
+if($("body.template-pages-layout-newBrandLandingPageTemplate .body-Content").find(".blp_top_brands").children().length==0){
+	$(".blp_top_brands").css({
+		'padding' : '0px',
+		'margin' : '0px'		
+	});
+}
+if($("body.template-pages-layout-newBrandLandingPageTemplate .body-Content").find(".featured_collection").children().length==0){
+	$(".featured_collection").css({
+		'padding' : '0px',
+		'margin' : '0px'		
+	});
+}
+if($("body.template-pages-layout-newBrandLandingPageTemplate .body-Content").find(".style_edit_blp").children().length==0){
+	$(".style_edit_blp").css({
+		'padding' : '0px',
+		'margin' : '0px'		
+	});
+}
+if($("body.template-pages-layout-newBrandLandingPageTemplate .body-Content").find(".shop_for_blp").children().length==0){
+	$(".shop_for_blp").css("padding","0px");
+} 
+/*if($("body.template-pages-layout-newBrandLandingPageTemplate .body-Content").find(".shop_the_look").children().length==0){	
+	$(".shop_the_look").css({
+		'padding' : '0px !important',
+		'margin' : '0px'		
+	});
+}*/
+if($("body.template-pages-layout-newBrandLandingPageTemplate .body-Content").find(".shop_the_look").children().length==0){	
+	$(".shop_the_look").prop("style","padding:0px !important;margin:0px");
 }
 
 //-----BLP------//
