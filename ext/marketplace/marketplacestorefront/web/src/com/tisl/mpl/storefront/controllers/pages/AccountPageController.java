@@ -1100,14 +1100,19 @@ public class AccountPageController extends AbstractMplSearchPageController
 									}
 									else
 									{
+										try{
+										if(null != consignmentModel && null != consignmentModel.getEstimatedDelivery()){
 										formattedProductDate = getFormattedDate(consignmentModel.getEstimatedDelivery());
 										formattedDeliveryDates.put(orderEntry.getOrderLineId(), formattedProductDate);
 										formattedActualProductDate = getFormattedDate(consignmentModel.getDeliveryDate());
 										formattedActualDeliveryDates.put(orderEntry.getOrderLineId(), formattedActualProductDate);
-
+										}
 										LOG.debug(" order : Consignment is null or empty :Setting Item Retrun status to false for  Order code :"
 												+ orderCode);
 										orderEntry.setItemReturnStatus(false);
+										}catch(Exception e){
+											LOG.error(" Consignment is null or empty :Setting Item Retrun status to false"+e.getMessage());
+										}
 									}
 								}
 							}

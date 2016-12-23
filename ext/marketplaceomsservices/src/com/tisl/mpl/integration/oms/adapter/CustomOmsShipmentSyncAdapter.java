@@ -907,6 +907,11 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
          			  }catch(Exception e) {
          				  LOG.error("Exception occurred while  refund info call to oms "+e.getMessage());
          			  }
+         			  if(entry.getTransactionID().equalsIgnoreCase(shipment.getShipmentId())){
+         				  entry.setIsSdb(Boolean.TRUE);
+  							  modelService.saveAll(entry);
+         			  }
+         			 
          			  /*  R2.3 REFUND INFO CALL TO OMS  END*/
          			  consignmentModel.setSdb(Boolean.TRUE);
          			  consignmentModel.setSdbCheck(Boolean.TRUE);
