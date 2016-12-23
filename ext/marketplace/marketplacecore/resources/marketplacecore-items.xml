@@ -3619,9 +3619,9 @@
 					<attribute type="java.lang.Boolean" qualifier="autoPlay"
 						autocreate="true" generate="true">
 						<description>Autoplay for CategoryCarouselComponent</description>
-						<defaultvalue>Boolean.FALSE</defaultvalue>
-						<modifiers read="true" write="true" search="true" />
-						<persistence type='property' />
+						<modifiers read="true" write="true" search="true" optional="false" />
+                        <persistence type='property' />
+                        <defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
 					</attribute>
 				</attributes>
 			</itemtype>
@@ -3656,9 +3656,9 @@
 			<attribute type="java.lang.Boolean" qualifier="autoPlayNewIn"
 						autocreate="true" generate="true">
 						<description>Autoplay for ProductCarouselComponent</description>
-						<defaultvalue>Boolean.FALSE</defaultvalue>
-						<modifiers read="true" write="true" search="true" />
-						<persistence type='property' />
+						<modifiers read="true" write="true" search="true" optional="false" />
+                        <persistence type='property' />
+                        <defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
 			</attribute>		
 			
 			</attributes>
@@ -4081,9 +4081,9 @@
 					<attribute type="java.lang.Boolean" qualifier="autoPlay"
 						autocreate="true" generate="true">
 						<description>Autoplay if required</description>
-						<defaultvalue>Boolean.FALSE</defaultvalue>
-						<modifiers read="true" write="true" search="true" />
-						<persistence type='property' />
+						<modifiers read="true" write="true" search="true" optional="false" />
+                        <persistence type='property' />
+                        <defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
 					</attribute>
 				</attributes>
 			</itemtype>
@@ -4496,9 +4496,9 @@
 					<attribute type="java.lang.Boolean" qualifier="autoPlay"
 						autocreate="true" generate="true">
 						<description>Autoplay for AdvancedCategoryCarouselComponent</description>
-						<defaultvalue>Boolean.FALSE</defaultvalue>
-						<modifiers read="true" write="true" search="true" />
-						<persistence type='property' />
+						<modifiers read="true" write="true" search="true" optional="false" />
+                        <persistence type='property' />
+                        <defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
 					</attribute>
 
 				
@@ -4635,9 +4635,9 @@
 					<attribute type="java.lang.Boolean" qualifier="autoPlay"
 						autocreate="true" generate="true">
 						<description>Autoplay for showcasecomponent</description>
-						<defaultvalue>Boolean.FALSE</defaultvalue>
-						<modifiers read="true" write="true" search="true" />
-						<persistence type='property' />
+						<modifiers read="true" write="true" search="true" optional="false" />
+                        <persistence type='property' />
+                        <defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
 					</attribute>
 				
 
