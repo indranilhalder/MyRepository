@@ -1386,7 +1386,15 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 									requiredUrl = '/CustomSkuCollection/'+collectionId+'/getFacetData';
 								}
 								else{
-									requiredUrl = action.concat("getFacetData");
+									//requiredUrl = action.concat("getFacetData");
+									// INC_11277 start
+									if ((/.*\/$/g).test(action)) {
+										requiredUrl = action.concat("getFacetData");
+									}
+									else{
+										requiredUrl = action.concat("/getFacetData");
+									} 
+									// INC_11277 end
 								}
 							}
 							else{
