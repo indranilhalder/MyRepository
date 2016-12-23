@@ -631,6 +631,7 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 		try
 		{
 			LOG.info("******Inside sendSMSHotc******");
+			trackingUrl = (getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_LONG_URL));
 			final SendSMSRequestData smsRequestDataHOTC = new SendSMSRequestData();
 
 			//call google short url service to generate short url for an order code
@@ -640,8 +641,8 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 
 			//print parent order number in the url
 			trackingUrl = orderModel.getParentReference() == null ? (getConfigurationService().getConfiguration().getString(
-					MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL) + orderModel.getCode()) : getConfigurationService()
-					.getConfiguration().getString(MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
+					MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_LONG_URL) + orderModel.getCode()) : getConfigurationService()
+					.getConfiguration().getString(MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_LONG_URL)
 					+ orderModel.getParentReference().getCode();
 
 			smsRequestDataHOTC.setSenderID(MarketplacecommerceservicesConstants.SMS_SENDER_ID);
@@ -650,8 +651,9 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, String.valueOf(childOrders.size()))
 					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderNumber)
 					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, logisticPartner)
-					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_THREE, null==shortTrackingUrl?trackingUrl:shortTrackingUrl);
-	
+					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_THREE,
+							null == shortTrackingUrl ? trackingUrl : shortTrackingUrl);
+
 			smsRequestDataHOTC.setSenderID(MarketplacecommerceservicesConstants.SMS_SENDER_ID);
 			smsRequestDataHOTC.setContent(smsContent);//Add Order tracking URL
 			smsRequestDataHOTC.setRecipientPhoneNumber(mobileNumber);
@@ -683,7 +685,8 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, String.valueOf(childOrders.size()))
 						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderNumber)
 						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, logisticPartner)
-						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_THREE, null==shortTrackingUrl?trackingUrl:shortTrackingUrl));
+						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_THREE,
+								null == shortTrackingUrl ? trackingUrl : shortTrackingUrl));
 				orderUpdateSmsProcessModel.setRecipientPhoneNumber(mobileNumber);
 				final List<String> entryNumber = new ArrayList<String>();
 				for (final AbstractOrderEntryModel child : childOrders)
