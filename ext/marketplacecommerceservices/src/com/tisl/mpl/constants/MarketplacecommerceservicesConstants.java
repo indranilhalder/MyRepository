@@ -545,6 +545,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SMS_SERVICE_CONTACTNO = "marketplace.sms.service.contactno";
 	public static final String SMS_ORDER_TRACK_URL = "marketplace.sms.order.track.url";
 	public static final String SMS_ORDER_TRACK_LONG_URL = "marketplace.sms.track.longUrl";
+	public static final String MPL_TRACK_ORDER_LONG_URL_FORMAT = "mpl.order.track.longurl.format".intern();
 	public static final String SMS_SHORT_ORDER_TRACK_URL = "marketplace.sms.shortOrder.track.url";
 
 	public static final String SMS_SERVICE_APP_DWLD_URL = "marketplace.sms.app.download.url";

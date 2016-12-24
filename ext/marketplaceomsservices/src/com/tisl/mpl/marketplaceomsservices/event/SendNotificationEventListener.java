@@ -631,7 +631,7 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 		try
 		{
 			LOG.info("******Inside sendSMSHotc******");
-			trackingUrl = (getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_LONG_URL));
+			trackingUrl = (getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT));
 			final SendSMSRequestData smsRequestDataHOTC = new SendSMSRequestData();
 
 			//call google short url service to generate short url for an order code
@@ -641,9 +641,9 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 
 			//print parent order number in the url
 			trackingUrl = orderModel.getParentReference() == null ? (getConfigurationService().getConfiguration().getString(
-					MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_LONG_URL) + orderModel.getCode()) : getConfigurationService()
-					.getConfiguration().getString(MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_LONG_URL)
-					+ orderModel.getParentReference().getCode();
+					MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)+"/"+orderModel.getCode()) : getConfigurationService()
+					.getConfiguration().getString(MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
+					+"/"+orderModel.getParentReference().getCode();
 
 			smsRequestDataHOTC.setSenderID(MarketplacecommerceservicesConstants.SMS_SENDER_ID);
 			

@@ -4,6 +4,7 @@
 package com.tisl.mpl.shorturl.service;
 
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.io.BufferedReader;
@@ -41,6 +42,9 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 {
 
 	private static final Logger LOG = Logger.getLogger(ShortUrlServiceGoogleImpl.class);
+	private static boolean FORCE_DEBUG_LOG = true; //Added temporarily for debugging. Can be removed later. 
+	//No harm in leaving it here. Just change the value to false for PROD, and other higher envs.
+	
 	private static int connectionTimeout = 5 * 10000;
 	private static int readTimeout = 5 * 1000;
 	
@@ -65,13 +69,15 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 			LOG.info("Generating short url for order id :" + orderCode);
 			final String googleAPIUrl = getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.GOOGLE_API_SHORT_URL);
 			final String googleShortUrlApiKey = getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.GOOGLE_SHORT_URL_API_KEY);
-			final String longUrl = getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT);
-			
+			//final String longUrl = getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT);
+			final String longUrl = genearateLongURL(orderCode);
 			StringBuilder sb = new StringBuilder(googleAPIUrl);
 			sb.append("?key=");
 			sb.append(googleShortUrlApiKey);
-			if(LOG.isDebugEnabled()) {
-				LOG.debug("Google Api key :"+googleShortUrlApiKey+" and connecting url"+googleAPIUrl);
+			if(LOG.isDebugEnabled() || FORCE_DEBUG_LOG) {
+				LOG.info("Google Api key :"+googleShortUrlApiKey+" and connecting url"+googleAPIUrl);
+				LOG.info("Google Api key FINAL URL " + sb.toString());
+				LOG.info("longUrl " + longUrl);
 			}
 			String url = String.valueOf(sb); 
 			
@@ -84,8 +90,32 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 			if(null != jsonResponse) {
 				shortUrl = (String) jsonResponse.get("id");
 			}
+			if(LOG.isDebugEnabled() || FORCE_DEBUG_LOG) {
+				LOG.info("Short URL " + shortUrl);
+			}
+			
+			if(null !=shortUrl){
+				//create TULShortUrlReport model to generate report ,later use and update this model when user clicks on short url
+				try
+				{
+					final OrderShortUrlInfoModel shortUrlModel = getModelService().create(OrderShortUrlInfoModel.class);
+					shortUrlModel.setOrderId(orderCode);
+					shortUrlModel.setShortURL(shortUrl);
+					shortUrlModel.setLongURL(longUrl);
+					getModelService().save(shortUrlModel);
+				}
+				catch(final ModelSavingException e){				
+					LOG.error("ModelSavingException while saving TULShortUrlReportModel " + orderCode,e);
+				}
+				catch (final Exception e){
+					LOG.error("Error while saving TULShortUrlReportModel " + orderCode);
+				}
+			}
 		}catch(Exception e) {
 			LOG.error("Exception while getting the short Url for order id :"+orderCode);
+			if (LOG.isDebugEnabled() || FORCE_DEBUG_LOG){
+				LOG.info("Exception during Fetching Short URL: ",e);
+			}
 		}
 		return shortUrl;
 		
@@ -99,11 +129,19 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 		HttpsURLConnection connection = null;
 		final StringBuilder buffer = new StringBuilder();
 
+		if (LOG.isDebugEnabled() || FORCE_DEBUG_LOG){
+			LOG.info("====>>> Proxy Details: " + proxyEnableStatus + " : " + proxyAddress + " : " + proxyPort);
+			LOG.info("====>>> endPoint = " + endPoint);
+			LOG.info("====>>> encodedParams = " + encodedParams);
+		}
+		
 		try
 		{
 			if (proxyEnableStatus.equalsIgnoreCase("true"))
 			{
-		      LOG.debug("Proxy is enabled and connecting to proxy address "+proxyAddress);
+				if (LOG.isDebugEnabled() || FORCE_DEBUG_LOG){
+					LOG.info("Proxy is enabled and connecting to proxy address "+proxyAddress);
+				}
 				final SocketAddress addr = new InetSocketAddress(proxyAddress, Integer.valueOf(proxyPort).intValue());
 				final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
 				final URL url = new URL(endPoint);
@@ -111,41 +149,71 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 			}
 			else
 			{
-				LOG.warn("Proxy is not enabled ");
+				if (LOG.isDebugEnabled() || FORCE_DEBUG_LOG){
+					LOG.info("Proxy is not enabled. connecting without proxy ");
+				}
 				final URL url = new URL(endPoint);
 				connection = (HttpsURLConnection) url.openConnection();
 			}
+
+			
+			byte[] encodedParamsByteArray = encodedParams.getBytes();
+			int contentLength = encodedParamsByteArray.length;
 
 			connection.setConnectTimeout(connectionTimeout);
 			connection.setReadTimeout(readTimeout);
 			connection.setRequestMethod("POST");
 			connection.setRequestProperty("Content-Type", "application/json");
-			connection.setRequestProperty("Content-Length", Integer.toString(encodedParams.getBytes().length));
+			connection.setRequestProperty("Content-Length", Integer.toString(contentLength));
 			connection.setRequestProperty("Content-Language", "en-US");
 			connection.setRequestProperty("charset", "utf-8");
 			connection.setUseCaches(false);
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
 			final DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-			wr.writeBytes(encodedParams);
+			wr.write(encodedParamsByteArray);
 			wr.flush();
 			wr.close();
 
+			// Check the HTTP response code from Google. Is response code is >= 400, then read from 
+			// Error stream, 400 represents HTTP error. Reading from Input Stream will throw IOException.
+			
 			// Read the response
-			final InputStream inputStream = connection.getInputStream();
+			InputStream inputStream = null;
+			int respCode = connection.getResponseCode();
+			if (LOG.isDebugEnabled() || FORCE_DEBUG_LOG){
+				LOG.info("====>>> response Code: " + respCode);
+			}
+			if (connection.getResponseCode() >= 400){
+				if (LOG.isDebugEnabled() || FORCE_DEBUG_LOG){
+					LOG.info("====>>> response Code: ERROR ------" );
+				}
+				inputStream = connection.getErrorStream();
+			}else {
+				if (LOG.isDebugEnabled() || FORCE_DEBUG_LOG){
+					LOG.info("====>>> response Code: SUCCESS ********");
+				}
+				inputStream = connection.getInputStream();
+			}
+
 			final BufferedReader in = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
 			String line;
 			while ((line = in.readLine()) != null)
 			{
+				if (LOG.isDebugEnabled() || FORCE_DEBUG_LOG){
+					LOG.info("====>>> Google Response Line: " + line);
+				}
 				buffer.append(line);
 			}
-			LOG.debug("output from server:"+buffer.toString());
+			if (LOG.isDebugEnabled() || FORCE_DEBUG_LOG){
+				LOG.info("====>>> Final complete Google Response : " + buffer.toString());
+			}
 			return buffer.toString();
-			
 		}
 		catch (final Exception e)
 		{
-			System.out.println("ERROR"+e.getMessage());
+			LOG.error("ERROR while getting Short URL: " + e);
+			LOG.info("Exception Stack During Short URL: " , e);
 		}
 		return buffer.toString();
 	}
@@ -184,7 +252,7 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 	{
 		final String longURLFormat = (String) getConfigurationService().getConfiguration().getProperty(
 				MarketplaceclientservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT);
-		return longURLFormat + "/" + orderCode;
+		return longURLFormat + "/"+orderCode;
 	}
 	
 
