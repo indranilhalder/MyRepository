@@ -7,12 +7,14 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import com.tisl.mpl.jaxb.bind.annotation.UseDeclaredXmlRootElement; 
 
 /**
  * @author Dileep
  *
  */
 @XmlRootElement(name = "ReturnInitiateResponse")
+@UseDeclaredXmlRootElement(enabled=true)
 public class ReturnInitiateResponse implements java.io.Serializable 
 {
 	private List<OrderLineDTO> orderLines;

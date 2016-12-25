@@ -32,7 +32,7 @@ import org.eclipse.persistence.jaxb.xmlmodel.XmlElementWrapper;
 import org.eclipse.persistence.jaxb.xmlmodel.XmlJavaTypeAdapter;
 import org.eclipse.persistence.jaxb.xmlmodel.XmlJavaTypeAdapters;
 import org.eclipse.persistence.jaxb.xmlmodel.XmlRootElement;
-
+import com.tisl.mpl.jaxb.bind.annotation.UseDeclaredXmlRootElement; //R2.3
 
 /**
  * WsDTOGenericMetadataSourceAdapter is responsible for creating JAXB metadata used by Moxy implementation of JAXB. It
@@ -112,6 +112,18 @@ public class WsDTOGenericMetadataSourceAdapter<T> extends MetadataSourceAdapter
 
 	protected String createNodeNameFromClass(final Class clazz)
 	{
+		//R2.3 - Added for a provision to use XMLRootElement tag in wsdto classes.
+		//This will not have any impact to existing interfaces.
+		UseDeclaredXmlRootElement udxre = (UseDeclaredXmlRootElement)clazz.getAnnotation(UseDeclaredXmlRootElement.class);
+		if (udxre != null && udxre.enabled()){
+			javax.xml.bind.annotation.XmlRootElement xre =
+						(javax.xml.bind.annotation.XmlRootElement)clazz.getAnnotation(
+							javax.xml.bind.annotation.XmlRootElement.class);
+			if (xre != null && xre.name() != null && xre.name().trim().length() > 0){
+					return xre.name();
+			}
+		}
+		//R2.3 End.
 		final String name = clazz.getSimpleName().replace(PREFIX_TO_FILTER, "");
 		return decapitalizeFirstLetter(name);
 	}
