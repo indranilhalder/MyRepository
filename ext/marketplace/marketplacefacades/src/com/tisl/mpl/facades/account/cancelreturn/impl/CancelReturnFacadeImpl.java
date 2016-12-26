@@ -3683,7 +3683,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				}
 				else
 				{
-					storeAddress.append("," + storeName);
+					storeName.append("," + storeName);
 					storeAddress = storeAddress(pointOfSerivce.getAddress(), pointOfSerivce.getDisplayName(), storeAddress);
 				}
 			}
