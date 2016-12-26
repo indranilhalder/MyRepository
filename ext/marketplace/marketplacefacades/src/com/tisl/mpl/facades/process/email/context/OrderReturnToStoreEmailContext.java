@@ -18,6 +18,7 @@ import de.hybris.platform.servicelayer.dto.converter.Converter;
 
 import java.math.BigDecimal;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.tools.generic.NumberTool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +77,8 @@ public class OrderReturnToStoreEmailContext extends AbstractEmailContext<ReturnQ
 		put(CONTACT_US_LINK, contactUsLink);
 		put(ORDER_REFERENCE_NUMBER, orderCode);
 		final CustomerModel customer = (CustomerModel) returnQuickDropProcessModel.getOrder().getUser();
+		String name=customer.getFirstName()!=null?customer.getFirstName():CUSTOMER;
+		put(CUSTOMER_NAME, name);
 		put(EMAIL, customer.getOriginalUid());
 
 
@@ -87,7 +90,8 @@ public class OrderReturnToStoreEmailContext extends AbstractEmailContext<ReturnQ
 		{
 			for (final AbstractOrderEntryModel entry : childOrder.getEntries())
 			{
-				if (returnQuickDropProcessModel.getTransactionId().equalsIgnoreCase(entry.getTransactionID()))
+				if (StringUtils.isNotEmpty(returnQuickDropProcessModel.getTransactionId()) && 
+						returnQuickDropProcessModel.getTransactionId().equalsIgnoreCase(entry.getTransactionID()))
 				{
 					orderEntry = new AbstractOrderEntryModel();
 					orderEntry = entry;

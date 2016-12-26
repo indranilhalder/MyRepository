@@ -2401,6 +2401,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				sendPushNotificationForReturnToStore(customerModel, returnInfoRequestData.getRTSStore(),mobilenumber,returnInfoRequestData.getOrderId());
 				ReturnQuickDropProcessModel qickdropProcess = new ReturnQuickDropProcessModel();
 				qickdropProcess.setOrder(orderModel);
+				qickdropProcess.setTransactionId(returnInfoRequestData.getTransactionId());
 				qickdropProcess.setStoreIds(returnInfoRequestData.getRTSStore());
 				OrderReturnToStoreEvent event = new OrderReturnToStoreEvent(qickdropProcess);
 				eventService.publishEvent(event);
@@ -3714,7 +3715,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	}
 
 	/***
-	 * Send Notification For CDA
+	 * Send Notification For Return TO Store
 	 *
 	 * @param customerId
 	 * @param OTPNumber
@@ -3723,7 +3724,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	private void sendPushNotificationForReturnToStore(final CustomerModel customerModel,List<String> storeNameList, final String mobileNumber,String ordernumber)
 	{
 		final String mplCustomerName = customerModel.getFirstName();
-		String storeName = null;
+		StringBuffer storeName=null;
 		if (null != storeNameList)
 		{
 			if (CollectionUtils.isNotEmpty(storeNameList))
@@ -3731,11 +3732,11 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				for (String store : storeNameList)
 					if (storeName == null)
 					{
-						storeName = store;
+						storeName=new StringBuffer(store);
 					}
 					else
 					{
-						storeName.concat("," + store);
+						storeName.append(","+store);
 					}
 			}
 		}

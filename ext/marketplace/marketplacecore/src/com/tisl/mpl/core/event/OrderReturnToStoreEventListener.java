@@ -31,14 +31,14 @@ public class OrderReturnToStoreEventListener extends AbstractSiteEventListener<O
 	@Override
 	protected void onSiteEvent(final OrderReturnToStoreEvent event)
 	{
+		ReturnQuickDropProcessModel eventModel = (ReturnQuickDropProcessModel) event.getProcess();
 		final OrderModel orderModel = event.getProcess().getOrder();
 		final ReturnQuickDropProcessModel returnToStoreProcessModel = (ReturnQuickDropProcessModel) getBusinessProcessService().createProcess(
 				"returnToStoreEmailProcess-" + orderModel.getCode() + "-" + System.currentTimeMillis(),
 				"returnToStoreEmailProcess");
-		List<String> storeIds = returnToStoreProcessModel.getStoreIds();
-		List<String> storeNames = returnToStoreProcessModel.getStoreNames();
-		String transactionId = returnToStoreProcessModel.getTransactionId();
-		returnToStoreProcessModel.setTransactionId(transactionId);
+		List<String> storeIds = eventModel.getStoreIds();
+		List<String> storeNames = eventModel.getStoreNames();
+		returnToStoreProcessModel.setTransactionId(eventModel.getTransactionId());
 		returnToStoreProcessModel.setStoreIds(storeIds);
 		returnToStoreProcessModel.setStoreNames(storeNames);
 		returnToStoreProcessModel.setOrder(orderModel);
