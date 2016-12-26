@@ -220,7 +220,7 @@ tr.d0 td {
 				</ycommerce:testId> --%>
 				<div class="seller">
 					<ycommerce:testId code="productDetails_productNamePrice_label_${product.code}">
-						<span class="seller-details"><span>Sold by <span id="sellerNameId"></span></span><product:sellerInfoDetailsSection /></span>
+						<span class="seller-details"><span>Sold by <span id="sellerNameId"></span><product:sellerInfoDetailsSection /></span></span>
 					</ycommerce:testId>
 					
 				</div>
