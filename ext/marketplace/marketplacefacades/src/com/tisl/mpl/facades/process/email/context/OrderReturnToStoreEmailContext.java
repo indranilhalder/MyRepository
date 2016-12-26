@@ -106,6 +106,7 @@ public class OrderReturnToStoreEmailContext extends AbstractEmailContext<ReturnQ
 
 		}
 		put(STORE_LIST, returnQuickDropProcessModel.getStoreIds());
+		put("stroreLocation", returnQuickDropProcessModel.getStoreNames());
 		put(TRANSACTION_ID, orderEntry.getTransactionID());
 		put(NAME_OF_PRODUCT, orderEntry.getProduct().getName());
 		put(DELIVERY_CHARGE, Double.valueOf(deliveryCharge));

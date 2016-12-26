@@ -6,6 +6,7 @@ package com.tisl.mpl.marketplacecommerceservices.service;
 import de.hybris.platform.core.model.BulkCancellationProcessModel;
 import de.hybris.platform.core.model.BulkReturnProcessModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import java.util.Date;
 import java.util.List;
@@ -126,5 +127,6 @@ public interface OrderModelService
 	 */
 	List<BulkCancellationProcessModel> getBulkCancelData();
 
+	public PointOfServiceModel getPointOfService(String storeId);
 
 }

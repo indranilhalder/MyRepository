@@ -118,6 +118,10 @@ width:100%;
                #foreach( $store in ${ctx.storeList} )
                $store ,
                #end
+               
+               #foreach( $storeAddress in ${ctx.stroreLocation} )
+               $storeAddress ,
+               #end
                </td>
                <td>
                </td>

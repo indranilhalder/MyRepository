@@ -19,6 +19,7 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.ordercancel.OrderCancelEntry;
 import de.hybris.platform.ordercancel.OrderCancelException;
@@ -43,6 +44,7 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.services.BaseStoreService;
+import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -2397,12 +2399,14 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					}
 					
 				}
+				
 				//Send notification sms
 				sendPushNotificationForReturnToStore(customerModel, returnInfoRequestData.getRTSStore(),mobilenumber,returnInfoRequestData.getOrderId());
 				ReturnQuickDropProcessModel qickdropProcess = new ReturnQuickDropProcessModel();
 				qickdropProcess.setOrder(orderModel);
 				qickdropProcess.setTransactionId(returnInfoRequestData.getTransactionId());
 				qickdropProcess.setStoreIds(returnInfoRequestData.getRTSStore());
+				qickdropProcess.setStoreNames(getStoreAddressList(returnInfoRequestData.getRTSStore()));
 				OrderReturnToStoreEvent event = new OrderReturnToStoreEvent(qickdropProcess);
 				eventService.publishEvent(event);
 			}
@@ -3664,22 +3668,27 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	private void sendPushNotificationForReturnToStore(final CustomerModel customerModel,List<String> storeNameList, final String mobileNumber,String ordernumber)
 	{
 		final String mplCustomerName = customerModel.getFirstName();
-		StringBuffer storeName=null;
+		StringBuilder storeAddress = null;
+		StringBuilder storeName = null;
 		if (null != storeNameList)
 		{
 			if (CollectionUtils.isNotEmpty(storeNameList))
 			{
-				for (String store : storeNameList)
-					if (storeName == null)
-					{
-						storeName=new StringBuffer(store);
-					}
-					else
-					{
-						storeName.append(","+store);
-					}
+				for (String store : storeNameList){
+					PointOfServiceModel pointOfSerivce = orderModelService.getPointOfService(store);
+				if (storeAddress == null)
+				{
+					storeName=new StringBuilder(pointOfSerivce.getDisplayName());
+					storeAddress = storeAddress(pointOfSerivce.getAddress(), pointOfSerivce.getDisplayName(), null);
+				}
+				else
+				{
+					storeAddress.append("," + storeName);
+					storeAddress = storeAddress(pointOfSerivce.getAddress(), pointOfSerivce.getDisplayName(), storeAddress);
+				}
 			}
 		}
+	}
 
 		sendSMSFacade.sendSms(
 				MarketplacecommerceservicesConstants.SMS_SENDER_ID,
@@ -3687,7 +3696,95 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO,
 								mplCustomerName != null ? mplCustomerName : "There")
 						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE,ordernumber)
-						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO,storeName), mobileNumber);
+						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO,storeName)
+						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_THREE, storeAddress.toString()), mobileNumber);
 
+	}
+	
+	private StringBuilder storeAddress(AddressModel address, String diaplayName, StringBuilder store)
+	{
+		if (address != null)
+		{
+			if (StringUtils.isNotEmpty(diaplayName))
+			{
+				if (store == null)
+				{
+					store = new StringBuilder(diaplayName);
+				}
+			}
+			if (StringUtils.isNotEmpty(address.getLine1()))
+			{
+				store.append(" " + address.getLine1());
+			}
+			if (StringUtils.isNotEmpty(address.getLine2()))
+			{
+				store.append(" " + address.getLine2());
+			}
+			if (StringUtils.isNotEmpty(address.getAddressLine3()))
+			{
+				store.append(" " + address.getAddressLine3());
+			}
+			if (StringUtils.isNotEmpty(address.getAppartment()))
+			{
+				store.append(" " + address.getAppartment());
+			}
+			if (StringUtils.isNotEmpty(address.getLandmark()))
+			{
+				store.append(" " + address.getLandmark());
+			}
+			if (StringUtils.isNotEmpty(address.getCity()))
+			{
+				store.append(" " + address.getCity());
+			}
+			if (StringUtils.isNotEmpty(address.getDistrict()))
+			{
+				store.append(" " + address.getDistrict());
+			}
+			if (StringUtils.isNotEmpty(address.getState()))
+			{
+				store.append(" " + address.getState());
+			}
+			if (StringUtils.isNotEmpty(address.getCountry().getName()))
+			{
+				store.append(" " + address.getCountry().getName());
+			}
+		}
+		if (StringUtils.isNotEmpty(address.getPostalcode()))
+		{
+			store.append(" " + address.getPostalcode());
+		}
+		if (StringUtils.isNotEmpty(address.getPhone1()))
+		{
+			store.append(" " + address.getPostalcode());
+		}
+		return store;
+	}
+	
+//get Entry Model 
+private AbstractOrderEntryModel getOrderEntryModel(OrderModel ordermodel,String transactionId){
+	for(OrderModel subOrder:ordermodel.getChildOrders()){
+		
+		for(AbstractOrderEntryModel entry:subOrder.getEntries()){
+			if(entry.getTransactionID().equalsIgnoreCase(transactionId)){
+				return entry;
+			}
+		}
+	}
+	return null;
+}
+
+	private List<String> getStoreAddressList(List<String> storeIdList)
+	{
+		List<String> storeAddresList = new ArrayList<String>();
+		StringBuilder storeAddress = null;
+		PointOfServiceModel pointOfSerivce = null;
+		for (String storeId : storeIdList)
+		{
+			pointOfSerivce = orderModelService.getPointOfService(storeId);
+			storeAddress = new StringBuilder();
+			storeAddress = storeAddress(pointOfSerivce.getAddress(), pointOfSerivce.getDisplayName(), null);
+			storeAddresList.add(storeAddress.toString());
+		}
+		return storeAddresList;
 	}
 }

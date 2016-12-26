@@ -3,6 +3,7 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 import de.hybris.platform.core.model.BulkCancellationProcessModel;
 import de.hybris.platform.core.model.BulkReturnProcessModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -206,6 +207,9 @@ public class OrderModelServiceImpl implements OrderModelService
 		return getOrderModelDao().getAllBulkReturnData();
 	}
 
-
+	@Override
+	public PointOfServiceModel getPointOfService(String storeId){
+		return getOrderModelDao().getPointOfService(storeId);
+	}
 
 }

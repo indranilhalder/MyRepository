@@ -10,6 +10,7 @@ import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
+import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.MplDeliveryAddressInfoModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
 
@@ -356,5 +358,26 @@ public class OrderModelDaoImpl implements OrderModelDao
 		}
 	}
 
+	@Override
+	public PointOfServiceModel getPointOfService(String storeId){
+	
+			try
+			{
+		      final String MPL_DELIVERY_ADDRESS_REPORT_QUERY_BY_ORDERID = "SELECT {srm:" + PointOfServiceModel.PK + "}" + " FROM {"
+						+ PointOfServiceModel._TYPECODE + " AS srm} " + "WHERE " + "{srm:" + PointOfServiceModel.SLAVEID + "}=?code ";
+				if(LOG.isDebugEnabled()){
+					LOG.debug("In getPointOfService - storeId ***"+storeId);
+				}
+				final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(MPL_DELIVERY_ADDRESS_REPORT_QUERY_BY_ORDERID);
+				fQuery.addQueryParameter("code", storeId);
+
+				final List<PointOfServiceModel> listOfData = flexibleSearchService.<PointOfServiceModel> search(fQuery).getResult();
+				return !listOfData.isEmpty() ? listOfData.get(0) : null;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e);
+		}
+	}
 
 }
