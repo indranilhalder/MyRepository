@@ -313,7 +313,7 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 	public List<OrderShortUrlInfoModel> getShortUrlReportModels(Date fromDate, Date toDate)
 	{
 		// YTODO Auto-generated method stub
-		return null;
+		return  getOrderShortUrlDaoImpl().getShortUrlReportModels(fromDate, toDate);
 	}
 
 	
