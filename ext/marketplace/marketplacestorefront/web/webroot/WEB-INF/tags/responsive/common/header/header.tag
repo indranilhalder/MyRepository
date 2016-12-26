@@ -122,11 +122,9 @@
 					
 					</c:if>
 				</div>
+				<c:set var="userLoggedIn" value="${true}"  />
 				<div class="right">
-
 					<ul>
-
-
 						<!--Using this tag for 'My Bag' Link in header navigation pane and it will navigate to cart Page  -->
 
 						<c:if test="${empty showOnlySiteLogo }">
@@ -136,10 +134,18 @@
 								</cms:pageSlot>
 								<!-- R2.3 for track order Start -->
 								 <sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
+						     	<c:set var="userLoggedIn" value="${false}"  />
 									<li class="track_order_header"><a href="#" onclick="openTrackOrder()">
 										<spring:theme code="trackorder.header.text" text="Track Order"/></a>
+										
 									</li>
 								</sec:authorize> 
+								<c:if test="${userLoggedIn eq 'true'}">
+						     <c:if test="${empty showOnlySiteLogo }">
+									<li class="track"><a href="<c:url value="/my-account/orders"/>"><spring:theme
+												code="header.trackorder" /></a></li>
+								</c:if> 
+					         </c:if>
 								<!-- R2.3 for track order END -->
 								<li class="store-locator-header"><a href="${request.contextPath}/store-finder">Our Stores</a></li>
 								<li class="download-app"><a href="${request.contextPath}/apps">Download App</a></li>
@@ -147,10 +153,7 @@
 						</c:if>
 						<!--Using this tag for Track Order Link in header navigation pane and it will navigate to 'My Order page'  -->
 					<!-- R2.3 for track order Start -->
-						 <c:if test="${empty showOnlySiteLogo }">
-									<li class="track"><a href="<c:url value="/my-account/orders"/>"><spring:theme
-												code="header.trackorder" /></a></li>
-								</c:if> 
+					
 				  <!-- R2.3 for track order END -->
 
 					</ul>

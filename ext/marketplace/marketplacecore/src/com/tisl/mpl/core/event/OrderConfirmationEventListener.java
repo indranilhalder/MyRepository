@@ -33,6 +33,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.data.SendSMSRequestData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.event.OrderPlacedEvent;
+import com.tisl.mpl.shorturl.service.ShortUrlService;
 import com.tisl.mpl.sms.MplSendSMSService;
 
 
@@ -47,6 +48,9 @@ public class OrderConfirmationEventListener extends AbstractSiteEventListener<Or
 
 	@Autowired
 	private MplSendSMSService sendSMSService;
+
+	@Autowired
+	private ShortUrlService googleShortUrlService;
 
 	private static final Logger LOG = Logger.getLogger(OrderConfirmationEventListener.class);
 
@@ -115,12 +119,16 @@ public class OrderConfirmationEventListener extends AbstractSiteEventListener<Or
 			
 			final String orderReferenceNumber = orderDetails.getCode();
 			final String trackingUrl = configurationService.getConfiguration().getString(
-					MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
+					MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
 					+ orderReferenceNumber;
+
+			final String shortTrackingUrl = googleShortUrlService
+					.genearateShortURL(orderModel.getParentReference() == null ? orderModel.getCode() : orderModel
+							.getParentReference().getCode());
 			final String content = MarketplacecommerceservicesConstants.SMS_MESSAGE_ORDER_PLACED
 					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, firstName)
 					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderReferenceNumber)
-					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, trackingUrl);
+					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, null !=shortTrackingUrl?shortTrackingUrl : trackingUrl);
 
 			final SendSMSRequestData smsRequestData = new SendSMSRequestData();
 			smsRequestData.setSenderID(MarketplacecommerceservicesConstants.SMS_SENDER_ID);

@@ -38,6 +38,7 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.OrderUpdateProcessModel;
+import com.tisl.mpl.shorturl.service.ShortUrlService;
 
 
 
@@ -75,6 +76,8 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 
 	@Autowired
 	private ConfigurationService configurationService;
+	@Autowired
+	private  ShortUrlService shortUrlService;
 
 	@Override
 	public void init(final OrderUpdateProcessModel orderUpdateProcessModel, final EmailPageModel emailPageModel)
@@ -116,10 +119,13 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 		}
 
 		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
+				MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
 				+ pOrderCode;
-		put(TRACK_ORDER_URL, trackOrderUrl);
-
+		/*Added in R2.3  for shortUrl START*/ 
+		String shortUrl = shortUrlService.genearateShortURL(pOrderCode);
+		put(TRACK_ORDER_URL, null != shortUrl ? shortUrl : trackOrderUrl);
+		
+		/*R2.3  shortUrl END*/
 		put(P_ORDER_CODE, pOrderCode);
 		put(ORDER_CODE, orderCode);
 		put(CHILDORDERS, childOrders);

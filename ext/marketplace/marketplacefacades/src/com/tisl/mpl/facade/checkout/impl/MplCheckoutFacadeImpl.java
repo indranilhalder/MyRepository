@@ -60,6 +60,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.Map.Entry;
@@ -102,12 +103,13 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCheckoutServi
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData;
 import com.tisl.mpl.promotion.service.SellerBasedPromotionService;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.sns.push.service.impl.MplSNSMobilePushServiceImpl;
 import com.tisl.mpl.wsdto.PushNotificationData;
-
+import com.tisl.mpl.shorturl.service.ShortUrlService;
 
 /**
  * @author TCS
@@ -195,6 +197,8 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	@Autowired
 	private BaseSiteService baseService;
 
+	@Autowired
+	private ShortUrlService googleShortUrlService;
 
 	//TISPT-400
 	@Autowired
@@ -1243,10 +1247,20 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		final String mobileNumber = orderDetails.getDeliveryAddress().getPhone();
 		final String firstName = orderDetails.getDeliveryAddress().getFirstName();
 		final String orderReferenceNumber = orderDetails.getCode();
-		final String trackingUrl = getConfigurationServiceDetails().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
-				+ orderReferenceNumber;
+//		String trackingUrl = getConfigurationServiceDetails().getConfiguration().getString(
+//				MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
+//				+ orderReferenceNumber;
+		String trackingUrl = getConfigurationServiceDetails().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT);
+		final String shortTrackingUrl = googleShortUrlService.genearateShortURL(order.getParentReference() == null ? order
+				.getCode() : order.getParentReference().getCode());
 
+		//print parent order number in the url
+		trackingUrl = order.getParentReference() == null ? (getConfigurationServiceDetails().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
+				+ "/" + order.getCode()) : getConfigurationServiceDetails().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
+				+ "/" + order.getParentReference().getCode();
 		if (order.getStatus().equals(OrderStatus.PAYMENT_SUCCESSFUL))
 		{
 			final OrderProcessModel orderProcessModel = new OrderProcessModel();
@@ -1271,7 +1285,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 						MarketplacecommerceservicesConstants.SMS_MESSAGE_ORDER_PLACED
 								.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, firstName)
 								.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderReferenceNumber)
-								.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, trackingUrl), mobileNumber);
+								.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, null == shortTrackingUrl ? trackingUrl : shortTrackingUrl), mobileNumber);
 
 			}
 			catch (final EtailNonBusinessExceptions ex)
