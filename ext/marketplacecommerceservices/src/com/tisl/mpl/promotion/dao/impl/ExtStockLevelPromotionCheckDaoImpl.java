@@ -103,7 +103,7 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.promotion.dao.ExtStockLevelPromotionCheckDao#getPromoInvalidationList(java.lang.String)
 	 */
 	@Override
@@ -136,7 +136,7 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
-	
+
 	//TPR-965 changes for price update
 	@Override
 	public List<String> getStockForPromotion(final String promoCode, final int stockCount)
@@ -188,5 +188,4 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 		}
 		return stockList;
 	}
-}
 }
