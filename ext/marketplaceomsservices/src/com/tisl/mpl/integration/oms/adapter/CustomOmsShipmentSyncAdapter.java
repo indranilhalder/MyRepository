@@ -686,6 +686,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 		{
 			final AbstractOrderEntryModel orderEntry = consignmentModel.getConsignmentEntries().iterator().next().getOrderEntry();
 			RefundEntryModel refundEntryModel = new RefundEntryModel();
+			boolean returnAndRefundStatus=false;
 			refundEntryModel.setOrderEntry(orderEntry);
 			//Create Multiple Refund Entry Models for SDB and IsEDTOHD
 			//if (CollectionUtils.isEmpty(flexibleSearchService.getModelsByExample(refundEntryModel)))
@@ -732,6 +733,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				}
 				else
 				{
+					returnAndRefundStatus=true;
 					refundEntryModel.setReason(RefundReason.SITEERROR);
 					refundEntryModel.setStatus(ReturnStatus.RETURN_INITIATED);
 				}
@@ -796,9 +798,10 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
  						}
 					 }
 				}
-
+           if(!returnAndRefundStatus){
 				modelService.save(refundEntryModel);
 				modelService.save(returnRequestModel);
+           }
 			}
 		}
 		catch (final Exception e)
@@ -852,7 +855,8 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
          		if(shipment.getIsEDtoHD().booleanValue() && ( CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries())) && (consignmentModel.getIsEDtoHDCheck()==null || consignmentModel.getIsEDtoHDCheck() ==Boolean.FALSE )){
          			 LOG.debug("************************In IsEDtoHD Check .......");
          			  isEDtoHDCheck=Boolean.TRUE;
-         			  createRefundEntryModel(newStatus,consignmentModel,orderModel,isEDtoHDCheck,isSDBCheck,isRetrunInitiatedCheck);
+         			  /*Duplicate Return Model is Creating in R2.3 */
+         			 // createRefundEntryModel(newStatus,consignmentModel,orderModel,isEDtoHDCheck,isSDBCheck,isRetrunInitiatedCheck);
          			 
          			  consignmentModel.setIsEDtoHD(Boolean.TRUE);
          			  consignmentModel.setIsEDtoHDCheck(Boolean.TRUE);
@@ -889,7 +893,8 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
          			
          			  LOG.debug("************************In SDB Check .......");
          			  isSDBCheck=Boolean.TRUE;
-         			  createRefundEntryModel(newStatus,consignmentModel,orderModel,isEDtoHDCheck,isSDBCheck,isRetrunInitiatedCheck);
+         			 /*Duplicate Return Model is Creating in R2.3 */
+         			  //createRefundEntryModel(newStatus,consignmentModel,orderModel,isEDtoHDCheck,isSDBCheck,isRetrunInitiatedCheck);
          			  AbstractOrderEntryModel entry= consignmentModel.getConsignmentEntries().iterator().next().getOrderEntry();
          			  /*  R2.3 REFUND INFO CALL TO OMS  START*/
          			  try {

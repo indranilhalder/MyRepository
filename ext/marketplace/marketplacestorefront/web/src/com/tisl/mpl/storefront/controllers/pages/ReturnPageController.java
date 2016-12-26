@@ -450,11 +450,10 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			model.addAttribute(MarketplacecommerceservicesConstants.RETURN_METHOD_QUICKDROP, quickdrop);
 		}
 		
-		if(returnForm.getIsCODorder().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
+		/*if(returnForm.getIsCODorder().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
 		{
 		CODSelfShipData selfShipData=new CODSelfShipData();
 		final OrderModel orderModel = orderModelService.getParentOrder(orderCode);
-		LOG.debug("Order Referance Id is:" + orderModel.getParentReference().getCode());
 		if(null!=orderModel.getParentReference() && null!=orderModel.getParentReference().getCode()){
 			selfShipData.setOrderRefNo(orderModel.getParentReference().getCode());
 		}
@@ -483,34 +482,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		{
 			//set ordertag POSTPAIDRRF for PREPAID orders
 			selfShipData.setOrderTag(MarketplacecommerceservicesConstants.ORDERTAG_TYPE_PREPAID);
-		}
-		
-				try
-				{
-					//inser or update Customer Bank Details
-					cancelReturnFacade.insertUpdateCustomerBankDetails(selfShipData);
-					cancelReturnFacade.codPaymentInfoToFICO(selfShipData);
-					/*
-					if(responseData.getSuccess() == null || !responseData.getSuccess().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS) )
-					{
-						//saving bank details failed payment details in commerce 
-						cancelReturnFacade.saveCODReturnsBankDetails(selfShipData);	
-						LOG.debug("Failed to post COD return paymnet details to FICO Order No:"+orderCode);
-					}*/
-				}
-				catch (EtailNonBusinessExceptions e)
-				{
-					LOG.error("Exception Occured during saving Customer BankDetails for COD order : " + orderCode
-							+ " Exception cause :" + e);
-				}
-				catch (Exception e)
-				{
-					LOG.error("Exception Occured during saving Customer BankDetails for COD order : " + orderCode
-							+ " Exception cause :" + e);
-				}
-		
-		
-		}
+		}*/
 		
 		//for self Courier
 				if(returnForm.getReturnMethod().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_SELF))
@@ -534,6 +506,25 @@ public class ReturnPageController extends AbstractMplSearchPageController
 					
 				}
 		
+				try
+				{
+					//inser or update Customer Bank Details
+					CODSelfShipData	selfShipData =sendBankInformationToFico(customerData,returnForm,orderCode,subOrderDetails);
+					cancelReturnFacade.insertUpdateCustomerBankDetails(selfShipData);
+					cancelReturnFacade.codPaymentInfoToFICO(selfShipData);	
+				}
+				catch (EtailNonBusinessExceptions e)
+				{
+					LOG.error("Exception Occured during saving Customer BankDetails for COD order : " + orderCode
+							+ " Exception cause :" + e);
+				}
+				catch (Exception e)
+				{
+					LOG.error("Exception Occured during saving Customer BankDetails for COD order : " + orderCode
+							+ " Exception cause :" + e);
+				}
+				
+				
 		storeCmsPageInModel(model, getContentPageForLabelOrId(RETURN_SUCCESS));
 		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(RETURN_SUCCESS));
 		return ControllerConstants.Views.Pages.Account.AccountReturnSuccessPage;
@@ -630,12 +621,20 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			 final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(mplReturnInfoForm.getOrderId());
 			 
 			 CODSelfShipData finalCODSelfShipData=new CODSelfShipData();
+			 if(null !=codSelfShipData){
+				 finalCODSelfShipData.setTitle(codSelfShipData.getTitle());
+				 finalCODSelfShipData.setName(codSelfShipData.getName());
+				 finalCODSelfShipData.setBankKey(codSelfShipData.getBankKey());
+				 finalCODSelfShipData.setBankName(codSelfShipData.getBankName());
+				 finalCODSelfShipData.setBankAccount(codSelfShipData.getBankAccount());
+			 }else{
+				 finalCODSelfShipData.setTitle(MarketplacecommerceservicesConstants.NA);
+				 finalCODSelfShipData.setName(MarketplacecommerceservicesConstants.NA);
+				 finalCODSelfShipData.setBankAccount(MarketplacecommerceservicesConstants.ZERO);
+				 finalCODSelfShipData.setBankName(MarketplacecommerceservicesConstants.NA);
+				 finalCODSelfShipData.setBankKey(MarketplacecommerceservicesConstants.NA);
+			 }
 			 
-			 finalCODSelfShipData.setTitle(codSelfShipData.getTitle());
-			 finalCODSelfShipData.setName(codSelfShipData.getName());
-			 finalCODSelfShipData.setBankKey(codSelfShipData.getBankKey());
-			 finalCODSelfShipData.setBankName(codSelfShipData.getBankName());
-			 finalCODSelfShipData.setBankAccount(codSelfShipData.getBankAccount());
 			 if(subOrderDetails.getMplPaymentInfo().getPaymentOption().equalsIgnoreCase(RequestMappingUrlConstants.COD)){
 				 finalCODSelfShipData.setOrderTag(MarketplacecommerceservicesConstants.ORDERTAG_TYPE_POSTPAID); 
 			 }else{
@@ -649,7 +648,11 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			 finalCODSelfShipData.setTransactionDate(dateUtilHelper.convertDateWithFormat(formatter.format(subOrderDetails.getCreated())));
 			 finalCODSelfShipData.setTransactionID(mplReturnInfoForm.getTransactionId());
 			 finalCODSelfShipData.setTransactionType(RequestMappingUrlConstants.RETURN_TYPE);
-			 finalCODSelfShipData.setOrderRefNo(mplReturnInfoForm.getTransactionId());
+			 //finalCODSelfShipData.setOrderRefNo(mplReturnInfoForm.getTransactionId());
+			 final OrderModel orderModel = orderModelService.getParentOrder(mplReturnInfoForm.getOrderId());
+				if(null!=orderModel.getParentReference() && null!=orderModel.getParentReference().getCode()){
+					finalCODSelfShipData.setOrderRefNo(orderModel.getParentReference().getCode());
+				}
 			 finalCODSelfShipData.setPaymentMode(codSelfShipData.getPaymentMode());
 			 finalCODSelfShipData.setCustomerNumber(codSelfShipData.getCustomerNumber());
 				CODSelfShipResponseData responseData=cancelReturnFacade.codPaymentInfoToFICO(finalCODSelfShipData);
@@ -1032,6 +1035,46 @@ public class ReturnPageController extends AbstractMplSearchPageController
 	      		out.close();
 	      	
 	    }	
+	}
+	
+	private CODSelfShipData  sendBankInformationToFico(final CustomerData customerData,final MplReturnsForm returnForm, String orderCode,final OrderData subOrderDetails){
+		
+		CODSelfShipData selfShipData=new CODSelfShipData();
+		final OrderModel orderModel = orderModelService.getParentOrder(orderCode);
+		if(null!=orderModel.getParentReference() && null!=orderModel.getParentReference().getCode()){
+			selfShipData.setOrderRefNo(orderModel.getParentReference().getCode());
+		}
+		selfShipData.setCustomerNumber(customerData.getUid());
+		selfShipData.setOrderNo(returnForm.getOrderCode());
+		selfShipData.setTransactionID(returnForm.getTransactionId());
+		selfShipData.setPaymentMode(returnForm.getRefundMode());
+		selfShipData.setTransactionType(RETURN_TYPE_COD);
+		selfShipData.setAmount(MarketplacecommerceservicesConstants.ZERO);
+		if(null!= subOrderDetails.getCreated()){
+			 SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+			 selfShipData.setOrderDate(dateUtilHelper.convertDateWithFormat(formatter.format(subOrderDetails.getCreated())));
+			 selfShipData.setTransactionDate(dateUtilHelper.convertDateWithFormat(formatter.format(subOrderDetails.getCreated())));
+		}
+		if(null != returnForm.getIsCODorder() &&  returnForm.getIsCODorder().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y) )
+		{
+			selfShipData.setTitle(returnForm.getTitle());
+			selfShipData.setName(returnForm.getAccountHolderName());
+			selfShipData.setBankAccount(returnForm.getAccountNumber());
+			selfShipData.setBankName(returnForm.getBankName());
+			selfShipData.setBankKey(returnForm.getiFSCCode());
+		   selfShipData.setOrderTag(MarketplacecommerceservicesConstants.ORDERTAG_TYPE_POSTPAID);
+		}
+		else 
+		{
+			selfShipData.setTitle(MarketplacecommerceservicesConstants.NA);
+			selfShipData.setName(MarketplacecommerceservicesConstants.NA);
+			selfShipData.setBankAccount(MarketplacecommerceservicesConstants.ZERO);
+			selfShipData.setBankName(MarketplacecommerceservicesConstants.NA);
+			selfShipData.setBankKey(MarketplacecommerceservicesConstants.NA);
+			selfShipData.setOrderTag(MarketplacecommerceservicesConstants.ORDERTAG_TYPE_PREPAID);
+		}
+		
+		return selfShipData;
 	}
 
 	/**
