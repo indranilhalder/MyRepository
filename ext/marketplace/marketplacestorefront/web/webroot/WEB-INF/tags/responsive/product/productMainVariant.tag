@@ -71,6 +71,20 @@ $("#variant").change(function() {
 	}
 });
 
+//Jewellery PDP Size DropDown Added 
+
+$("#jewelleryvariant").change(function() {
+	var url = "";
+	var selectedIndex = 0;
+	$("#jewelleryvariant option:selected").each(function() {
+		url = $(this).attr('value');
+		selectedIndex = $(this).attr("index");
+	});
+	if (selectedIndex != 0) {
+		window.location.href = url;
+	}
+});
+
 //AKAMAI Fix 
 
 var productSizeVar = '${productSize}';
@@ -85,9 +99,12 @@ var productSizeVar = '${productSize}';
 <ul class="color-swatch">
 	<c:choose>
 		<c:when test="${not empty product.variantOptions}">
+ <!-- Color heading will not come for FineJewellery -->
+		<c:if test="${product.rootCategory !='FineJewellery'}">
 			<p>
 				<spring:theme code="text.colour" />
 			</p>
+			</c:if>
 			<c:forEach items="${product.variantOptions}" var="variantOption">
 				<c:choose>
 					<c:when test="${not empty variantOption.defaultUrl}">
@@ -254,6 +271,9 @@ share mobile -->
 		</a>
 		
 		<!-- Added for PDP Size ChartChange -->
+		
+		<c:choose>                                              
+			    <c:when test="${product.rootCategory!='FineJewellery'}">
 		<ul id="variant" class="variant-select">
 			<%-- <c:choose>
 		<select id="variant" class="variant-select">
@@ -267,11 +287,8 @@ share mobile -->
 				</c:otherwise>
 			</c:choose> --%>
 			<c:forEach items="${product.variantOptions}" var="variantOption">
-				
-			<c:choose>                           
-			                     
-			    <c:when test="${product.rootCategory!='FineJewellery'}">
-			       <c:forEach items="${variantOption.colourCode}" var="color">
+							
+			      <c:forEach items="${variantOption.colourCode}" var="color">
 
 					 <c:choose>
 						<c:when test="${not empty currentColor}">
@@ -326,7 +343,7 @@ share mobile -->
 											    </c:choose>
 											</c:when>	
 											<c:otherwise>
-												<li data-vcode="${link}"><a href="${link}?selectedSize=true">${entry.value}</a></li>
+												     <li data-vcode="${link}"><a href="${link}?selectedSize=true">${entry.value}</a></li>
 											</c:otherwise>												
 												</c:choose>
 											</c:forEach>
@@ -337,17 +354,19 @@ share mobile -->
 						</c:otherwise>
 					</c:choose>
 				 </c:forEach>
+				 </c:forEach>
+				 </ul>
 				</c:when>
 				                     
-				   <c:otherwise>
+				  <%--  <c:otherwise>
 								<c:forEach var="entry" items="${variantOption.sizeLink}">
 									<c:url value="${entry.key}" var="link" />
-									<%--  <a href="${link}?selectedSize=true">${entry.value}</a> --%>
+									 <a href="${link}?selectedSize=true">${entry.value}</a>
 									<c:choose>
 										<c:when test="${(variantOption.code eq product.code)}">
 											<c:choose>
 												<c:when test="${selectedSize eq null}">
-													<li><a href="${link}?selectedSize=true">${entry.value}</a></li>
+												<li><a href="${link}?selectedSize=true">${entry.value}</a></li>
 												</c:when>
 												<c:otherwise>
 														<li class="selected"><a href="${link}?selectedSize=true">${entry.value}</a></li>
@@ -359,11 +378,34 @@ share mobile -->
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>
-				 </c:otherwise>
-		  </c:choose>
-		 </c:forEach>			
-		
-		</ul>
+                    </c:otherwise> --%>
+                    <%-- Jewellery Changes Added for size dropdown in PDP --%>
+		<c:otherwise>
+		     <select id="jewelleryvariant" class="jewellery-select">
+		     <c:forEach items="${product.variantOptions}" var="variantOption">
+					<c:forEach var="entry" items="${variantOption.sizeLink}">
+									<c:url value="${entry.key}" var="link" />
+							<%-- 		<a href="${link}?selectedSize=true">${entry.value}</a>
+ --%>									<c:choose>
+										<c:when test="${(variantOption.code eq product.code)}">
+											<c:choose>
+												<c:when test="${selectedSize eq null}">
+													<option value="${link}?selectedSize=true">${entry.value}</option>
+												</c:when>
+												<c:otherwise>
+													<option value="${link}?selectedSize=true" selected>${entry.value}</option>
+												</c:otherwise>
+											</c:choose>
+										</c:when>
+										<c:otherwise>
+											<option value="${link}?selectedSize=true">${entry.value}</option>
+										</c:otherwise>
+									</c:choose>
+								</c:forEach>
+								</c:forEach>
+								</select>
+								</c:otherwise>
+			</c:choose>
 		<!-- Size guide Pop-up -->
 		<!-- <span id="selectSizeId" style="display: none;color: red">Please select a size!</span> -->
 		<!-- End Size guide Pop-up -->
