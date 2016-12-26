@@ -40,6 +40,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.data.SendSMSRequestData;
 
 import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
+import de.hybris.platform.basecommerce.enums.RefundReason;
 import de.hybris.platform.basecommerce.enums.ReturnStatus;
 import de.hybris.platform.cockpit.model.meta.TypedObject;
 import de.hybris.platform.cockpit.services.config.ColumnConfiguration;
@@ -111,7 +112,7 @@ public class MarketplaceMakeManualRefundWidgetRenderer extends
 									.getReturnEntries())) {
 								for (ReturnEntryModel returnEntry : returnRequest
 										.getReturnEntries()) {
-									if (returnEntry instanceof RefundEntryModel) {
+									if (returnEntry instanceof RefundEntryModel && !((RefundEntryModel) returnEntry).getReason().equals(RefundReason.SITEERROR)) {
 										if (returnEntry.getOrderEntry() != null
 												&& CollectionUtils
 														.isNotEmpty(returnEntry
@@ -333,7 +334,7 @@ public class MarketplaceMakeManualRefundWidgetRenderer extends
 								.getReturnEntries())) {
 							for (ReturnEntryModel returnEntry : returnRequest
 									.getReturnEntries()) {
-								if (returnEntry instanceof RefundEntryModel) {
+								if (returnEntry instanceof RefundEntryModel && !((RefundEntryModel) returnEntry).getReason().equals(RefundReason.SITEERROR)) {
 									if (returnEntry.getOrderEntry() != null
 											&& CollectionUtils
 													.isNotEmpty(returnEntry
