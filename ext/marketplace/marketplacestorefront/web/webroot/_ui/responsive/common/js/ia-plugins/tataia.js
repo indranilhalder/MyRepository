@@ -1120,7 +1120,7 @@ if (searchCategory_id){
  			    			} else if (response.data.filter_value === "MSH12") {
  			    				catFilter = "Electronics";
  			    			}*/
- 			    			html += '<h1><span style="color: black !important;">Hot in '+catFilter+' </span>';	    		
+ 			    			html += '<h2><span style="color: black !important;">Hot in '+catFilter+' </span>';	    		
  			    		}
 			    		else{
 						
