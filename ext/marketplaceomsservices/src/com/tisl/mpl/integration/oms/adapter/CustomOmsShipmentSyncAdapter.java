@@ -851,6 +851,8 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 		Boolean isEDtoHDCheck=Boolean.FALSE;
 		Boolean isSDBCheck=Boolean.FALSE;
 		Boolean isRetrunInitiatedCheck=Boolean.FALSE;
+		final SendUnCollectedOrderToCRMEvent sendUnCollectedOrderToCRMEvent = new SendUnCollectedOrderToCRMEvent(shipment,consignmentModel,orderModel,newStatus);
+		final UnCollectedOrderToInitiateRefundEvent unCollectedOrderToInitiateRefundEvent= new UnCollectedOrderToInitiateRefundEvent(shipment,consignmentModel,orderModel,newStatus,eventService,configurationService);
 		     if(null!= shipment && null!=shipment.getIsEDtoHD()){
          		if(shipment.getIsEDtoHD().booleanValue() && ( CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries())) && (consignmentModel.getIsEDtoHDCheck()==null || consignmentModel.getIsEDtoHDCheck() ==Boolean.FALSE )){
          			 LOG.debug("************************In IsEDtoHD Check .......");
@@ -861,6 +863,15 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
          			  consignmentModel.setIsEDtoHD(Boolean.TRUE);
          			  consignmentModel.setIsEDtoHDCheck(Boolean.TRUE);
          			  modelService.save(consignmentModel);
+         			  try
+							{
+								LOG.debug("Create CRM Ticket for EDtoHD Order Cancel Initiated ");
+								eventService.publishEvent(sendUnCollectedOrderToCRMEvent);
+							}
+							catch(final Exception e)
+							{
+								LOG.error("Exception during Create CRM Ticket for EDtoHD Order Cancel Initiated Id  >> " + orderModel.getCode()+" ::" + e.getMessage());	
+							}
          			  
          			  AbstractOrderEntryModel entry= consignmentModel.getConsignmentEntries().iterator().next().getOrderEntry();
          			/*  R2.3 REFUND INFO CALL TO OMS  START*/
@@ -897,6 +908,15 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
          			  //createRefundEntryModel(newStatus,consignmentModel,orderModel,isEDtoHDCheck,isSDBCheck,isRetrunInitiatedCheck);
          			  AbstractOrderEntryModel entry= consignmentModel.getConsignmentEntries().iterator().next().getOrderEntry();
          			  /*  R2.3 REFUND INFO CALL TO OMS  START*/
+         			  try
+							{
+								LOG.debug("Create CRM Ticket for SDB Order Cancel Initiated ");
+								eventService.publishEvent(sendUnCollectedOrderToCRMEvent);
+							}
+							catch(final Exception e)
+							{
+								LOG.error("Exception during Create CRM Ticket for SDB Order Cancel Initiated Id  >> " + orderModel.getCode()+" ::" + e.getMessage());	
+							}
          			  try {
          			  ConsignmentModel consignment = entry
          						 .getConsignmentEntries().iterator().next()
@@ -929,8 +949,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 		   	  if(shipment.getSsb().booleanValue() &&  ( CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))  &&  (consignmentModel.getSsbCheck()==null || consignmentModel.getSsbCheck() ==Boolean.FALSE)){
 		   		  if(newStatus.equals(ConsignmentStatus.CANCELLATION_INITIATED)){
 		   			  LOG.debug("Calling cancel Initiation process started");
-							final SendUnCollectedOrderToCRMEvent sendUnCollectedOrderToCRMEvent = new SendUnCollectedOrderToCRMEvent(shipment,consignmentModel,orderModel,newStatus);
-							final UnCollectedOrderToInitiateRefundEvent unCollectedOrderToInitiateRefundEvent= new UnCollectedOrderToInitiateRefundEvent(shipment,consignmentModel,orderModel,newStatus,eventService,configurationService);
+							
 							try
 							{
 								LOG.debug("Create CRM Ticket for SSB Order Cancel Initiated ");
