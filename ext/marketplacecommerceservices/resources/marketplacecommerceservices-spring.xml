@@ -1967,6 +1967,56 @@
         </property>
     </bean>
 	<!-- Old Cron Job Deletion Logic ends: -->
-
+	
+	<!-- TPR-1285 Start -->
+	<alias name="mplProductPageSiteMapGenerator" alias="productPageSiteMapGenerator"/>
+	<bean id="mplProductPageSiteMapGenerator"
+	    class="com.tisl.mpl.sitemap.generator.impl.MplProductPageSiteMapGenerator"
+	    parent="defaultProductPageSiteMapGenerator">
+	</bean>
+	
+	<alias name="mplCustomPageSiteMapGenerator" alias="mplCustomPageSiteMapGenerator"/>
+	<bean id="mplCustomPageSiteMapGenerator"
+		class="com.tisl.mpl.sitemap.generator.impl.MplCustomPageSiteMapGenerator"
+	    parent="abstractSiteMapGenerator">
+		<property name="siteMapUrlDataConverter" ref="mplCustomPageToSiteMapUrlDataConverter"/>
+		<property name="siteMapPageEnum" value="CUSTOM"/>
+	    <property name="cmsPageService" ref="cmsPageService"/>
+	</bean> 
+	
+	
+	<alias name="mplCustomPageToSiteMapUrlDataConverter" alias="mplCustomPageToSiteMapUrlDataConverter"/>
+	<bean id="mplCustomPageToSiteMapUrlDataConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="de.hybris.platform.acceleratorservices.sitemap.data.SiteMapUrlData"/>
+		<property name="populators">
+			<list>
+				<ref bean="mplCustomPageToSiteMapUrlDataPopulator"/>
+			</list>
+		</property>
+	</bean>
+	
+	
+	<alias name="mplCustomPageToSiteMapUrlDataPopulator" alias="mplCustomPageToSiteMapUrlDataPopulator"/>
+	<bean id="mplCustomPageToSiteMapUrlDataPopulator"
+	      class="com.tisl.mpl.converter.populator.MplCustomPageToSiteMapUrlDataPopulator">
+	</bean>	
+	
+	<alias name="mplProductModelToSiteMapUrlDataPopulator" alias="productModelToSiteMapUrlDataPopulator"/>
+ 	<bean id="mplProductModelToSiteMapUrlDataPopulator"
+ 	      class="com.tisl.mpl.converter.populator.MplProductModelToSiteMapUrlDataPopulator"
+ 	      parent="defaultProductModelToSiteMapUrlDataPopulator">
+ 	</bean>
+ 	<!-- TPR-965 STARTS-->
+	 <bean id="stockPromoCheckService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.ExtStockLevelPromotionCheckServiceImpl">
+		<!-- <property name="stockPromoCheckDao" ref="stockPromoCheckDao" /> -->
+	</bean>
+	 <bean id="stockPromoCheckDao"
+		class="com.tisl.mpl.promotion.dao.impl.ExtStockLevelPromotionCheckDaoImpl">
+		<property name="flexibleSearchService" ref="flexibleSearchService" />
+		<property name="modelService" ref="modelService" />
+	</bean>
+	<!-- TPR-965 ENDS-->
+<!-- TPR-1285 End -->
 </beans>
 

@@ -720,11 +720,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 *
+	 * 
 	 * @param orderDetail
-	 *
+	 * 
 	 * @param type (1-Billing, 2-Shipping)
-	 *
+	 * 
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -1044,21 +1044,9 @@ public class GenericUtilityMethods
 		String productCatL2 = null;
 		String productCatL3 = null;
 		//for tealium
-		final List<String> productIdListTealium = new ArrayList<String>();
+
 		String order_shipping_charge = "";
 		final List<String> orderShippingCharges = new ArrayList<String>();
-		final List<String> productSkuListTealium = new ArrayList<String>();
-		final List<String> productQuantityListTealium = new ArrayList<String>();
-		final List<String> productBrandListTealium = new ArrayList<String>();
-		final List<String> productUnitPriceListTealium = new ArrayList<String>();
-		final List<String> productListPriceListTealium = new ArrayList<String>();
-		final List<String> productNameListTealium = new ArrayList<String>();
-		String skuTealium = null;
-		String quantityTealium = null;
-		String brandTealium = null;
-		String basePriceTealium = null;
-		String totalEntryPriceTealium = null;
-		String nameTealium = null;
 		try
 		{
 
@@ -1081,34 +1069,34 @@ public class GenericUtilityMethods
 							{
 								adobeSku = entry.getProduct().getCode();
 								sku = appendQuote(adobeSku);
-								skuTealium = entry.getProduct().getCode();
+
 							}
 							if (null != entry.getProduct() && StringUtils.isNotEmpty(entry.getProduct().getName()))
 							{
 								name = appendQuote(entry.getProduct().getName());
-								nameTealium = entry.getProduct().getName();
+
 							}
 							if (null != entry.getQuantity())
 							{
 								quantity = appendQuote(String.valueOf(entry.getQuantity()));
-								quantityTealium = String.valueOf(entry.getQuantity());
+
 							}
 
 							if (null != entry.getBasePrice())
 							{
 								basePrice = appendQuote(entry.getBasePrice().toString());//base price for a cart entry
-								basePriceTealium = entry.getBasePrice().toString();
+
 							}
 
 							if (null != entry.getTotalPrice())
 							{
 								totalEntryPrice = appendQuote(entry.getTotalPrice().toString());//total price for a cart entry
-								totalEntryPriceTealium = entry.getTotalPrice().toString();
+
 							}
 							if (entry.getCurrDelCharge() != null)
 							{
 
-								order_shipping_charge = currencySymbol.concat(entry.getCurrDelCharge().toString());
+								order_shipping_charge = appendQuote(currencySymbol.concat(entry.getCurrDelCharge().toString()));
 							}
 						}
 
@@ -1116,7 +1104,7 @@ public class GenericUtilityMethods
 						{
 							final List<BrandModel> brandList = new ArrayList<BrandModel>(entry.getProduct().getBrands());
 							brand = appendQuote(brandList.get(0).getName());
-							brandTealium = brandList.get(0).getName();
+
 						}
 
 
@@ -1166,14 +1154,9 @@ public class GenericUtilityMethods
 						productUnitPriceList.add(basePrice);
 						adobeProductSkuList.add(adobeSku);
 						//for tealium
-						productIdListTealium.add(skuTealium);
+
 						orderShippingCharges.add(order_shipping_charge);
-						productQuantityListTealium.add(quantityTealium);
-						productSkuListTealium.add(skuTealium);
-						productBrandListTealium.add(brandTealium);
-						productUnitPriceListTealium.add(basePriceTealium);
-						productListPriceListTealium.add(totalEntryPriceTealium);
-						productNameListTealium.add(nameTealium);
+
 					}
 				}
 
@@ -1209,14 +1192,9 @@ public class GenericUtilityMethods
 				model.addAttribute("adobe_product", adobeProductSku);
 				model.addAttribute("cart_total", cartTotal);
 				//for tealium
-				model.addAttribute("productIdListTealium", productIdListTealium);
+
 				model.addAttribute("orderShippingCharges", orderShippingCharges);
-				model.addAttribute("productQuantityListTealium", productQuantityListTealium);
-				model.addAttribute("productSkuListTealium", productSkuListTealium);
-				model.addAttribute("productBrandListTealium", productBrandListTealium);
-				model.addAttribute("productUnitPriceListTealium", productUnitPriceListTealium);
-				model.addAttribute("productListPriceListTealium", productListPriceListTealium);
-				model.addAttribute("productNameListTealium", productNameListTealium);
+
 
 				//TPR-430
 
@@ -1242,8 +1220,7 @@ public class GenericUtilityMethods
 				model.addAttribute("pageSubCategories", productCatL1);
 				model.addAttribute("productCategoryList", productCatL2);
 				model.addAttribute("page_subcategory_name_L3", productCatL3);
-				//model.addAttribute("productCategoryList", productCategoryList);
-				//model.addAttribute("page_subcategory_name_L3", pageSubcategoryNameL3List);
+
 			}
 		}
 		catch (final Exception te)
@@ -1438,10 +1415,14 @@ public class GenericUtilityMethods
 
 			}
 			sellerIdList.add(sellerId);
-			if (entry.getDeliveryMode() != null)
+			if (entry.getMplDeliveryMode() != null)
 			{
-				order_shipping = entry.getDeliveryMode().getName();
+				//order_shipping = entry.getDeliveryMode().getName();
 				//order_shipping = entry.getMplZoneDeliveryModeValue().getMplDeliveryMode().toString();
+				if (entry.getMplDeliveryMode().getDeliveryMode() != null)
+				{
+					order_shipping = appendQuote(entry.getMplDeliveryMode().getDeliveryMode().getName());
+				}
 			}
 			deliveryModes.add(order_shipping);
 		}
@@ -1506,6 +1487,26 @@ public class GenericUtilityMethods
 		model.addAttribute("checkout_seller_ids", sellerIds);
 		model.addAttribute("order_shipping_modes", deliveryModes);
 	}
+
+
+	//TPR-1285
+	/**
+	 * Return the Prefix
+	 * 
+	 * @param prefix
+	 * @return prefix
+	 */
+	public static String changePrefix(String prefix)
+	{
+		prefix = prefix.replaceAll("[^\\w/-]", "-");
+		//TISSTRT-1297
+		if (prefix.contains("--"))
+		{
+			prefix = prefix.replaceAll("--", "-");
+		}
+		return prefix;
+	}
+
 
 
 	/**

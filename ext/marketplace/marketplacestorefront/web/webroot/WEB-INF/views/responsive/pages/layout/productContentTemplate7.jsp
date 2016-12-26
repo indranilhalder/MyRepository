@@ -2,7 +2,7 @@
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template"%>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <script>
-//$(document).ready(function(){
+$(document).ready(function(){
 	$(".contOvrlay .media-content").hide();
 	$(".show_des").click(function(){	
 		var $ans = $(this).next(".contOvrlay .media-content");		
@@ -18,7 +18,28 @@
 			$(this).addClass("hide_des");
 		}
 	});	
-//});
+
+	if ($(".Manufacturer.Temp04 .Padd .row-brdr.contVideo .yCmsComponent").length == 0) {
+		$(".Manufacturer.Temp04 .Padd .row-brdr.contVideo").css("display","none");
+	}
+	
+	$(".Manufacturer.Temp04 .Padd .temp4-features li").each(function(){
+		if (!$(this).find("div.media img").length || !$(this).find("div.contOvrlay .media-content .yCmsComponent").length) {
+			$(this).find("div.contOvrlay .show_des").hide();
+		}
+		if (!$(this).find("div.media img").length && !$(this).find("div.contOvrlay .media-content .yCmsComponent").length){
+			$(this).hide();
+		}
+	});
+	
+	$(".Manufacturer.Temp04 .Padd .row-brdr.contVideo li").each(function(){
+		if (!$(this).find("div.media .yCmsComponent").length) {
+			$(this).hide();
+		}
+	});
+});
+
+
 </script>
 <div class="Manufacturer Temp04">
 

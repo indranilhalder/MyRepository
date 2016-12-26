@@ -29,7 +29,7 @@ var buyboxskuId='';
 
 <c:set var="validTabs" value="${VALID_TABS}" />
 <div class="nav-wrapper">
-<ul class="nav pdp">
+<ul class="nav pdp productNav">
 	<c:if test="${fn:contains(validTabs, 'stylenote')}">
 		<li id="tabs_styleNotes" class="active">
 			 <spring:theme code="product.product.styleNotes" />
@@ -57,7 +57,7 @@ var buyboxskuId='';
 	</c:if>
 </ul>
 </div>
-<ul class="tabs pdp">
+<ul class="tabs pdp productTabs">
 	<c:if test="${fn:contains(validTabs, 'stylenote')}">
 		<li class="active">
 			<product:productStyleNotesTab product="${product}" />

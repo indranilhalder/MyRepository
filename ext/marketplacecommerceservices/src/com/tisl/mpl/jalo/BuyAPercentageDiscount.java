@@ -270,7 +270,8 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 					final int totalFactorCount = totalCount / eligibleQuantity.intValue();
 
 					final Map<String, Integer> validProductList = getDefaultPromotionsManager().getSortedValidProdUssidMap(
-							validProductUssidMap, totalCount, eligibleQuantity.longValue(), paramSessionContext, restrictionList);
+							validProductUssidMap, totalCount, eligibleQuantity.longValue(), paramSessionContext, restrictionList,
+							getCode());
 
 					validProductFinalList.putAll(validProductList);
 					validProductUssidFinalMap.putAll(validProductUssidMap);

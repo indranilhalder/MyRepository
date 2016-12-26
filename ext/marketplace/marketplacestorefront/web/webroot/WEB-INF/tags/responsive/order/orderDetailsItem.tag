@@ -244,6 +244,30 @@
 				</p>
 				<ul class="${entry.mplDeliveryMode.name}">
 					<li class="deliver-type">${entry.mplDeliveryMode.name}</li>
+					<li class="deliver">
+					
+					<!--  Modified for TISQAUATS-11  Starts Here -->
+					
+					
+					    <c:choose>
+							<c:when test="${entry.currDelCharge.value=='0.0'}">
+								<%-- <spring:theme code="order.free"  /> --%>
+								<ycommerce:testId code="orderDetails_productTotalPrice_label">
+									<format:price priceData="${entry.currDelCharge}"
+										displayFreeForZero="true" />
+								</ycommerce:testId>
+							</c:when>
+							<c:otherwise>
+								<format:price priceData="${entry.currDelCharge}" />
+							</c:otherwise>
+						</c:choose>
+					
+					
+					
+					<!--  Modified for TISQAUATS-11  Ends Here -->
+					
+					
+					</li>
 					<li class="deliver">${entry.mplDeliveryMode.description}</li>
 				</ul>
 			</li>

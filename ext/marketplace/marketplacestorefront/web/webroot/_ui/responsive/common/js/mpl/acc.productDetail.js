@@ -815,10 +815,11 @@ function setValidPrice(sellersArray, index) {
 			 $("#savingsOnProductId").hide();
 			 //$("#dListedErrorMsg").show(); //Need to Change	
 			// $("#freebieProductMsgId").show();
+			 var prodCode=$("#productCodePost").val();
 			 var ussId=  $("#ussid").val();
 			 
 			//update the message for Freebie product TPR-1754
-			 var freebieproductMsg =populateFreebieMsg(ussId);
+			 var freebieproductMsg =populateFreebieMsg(prodCode);
 			
 			 if($.isEmptyObject(freebieproductMsg)){
 				 
@@ -1378,12 +1379,24 @@ $(function() {
 });
 
 function isOOS(){
-	var totalOptions = $("#variant option").length;
-	totalOptions = totalOptions -1;
-	var disabledOption = $("#variant option:disabled").length;
-	if(totalOptions == disabledOption){
+	var skuOOS = false;
+	var totalOptions = $("#variant li").length;
+	//totalOptions = totalOptions -1; // UI got changed from select option to li strike off 
+	var disabledOption = $("#variant li.strike").length;
+	
+	if(availibility!=undefined && availibility.length > 0){
+		$.each(availibility,function(k,v){
+			if(window.location.pathname.endsWith(k.toLowerCase()) && v == 0){
+				skuOOS = true;
+			}
+		});
+	}
+	
+	if(totalOptions == disabledOption && totalOptions!=0){
 		return true;
-	}else{
+	}else if(skuOOS){
+		return true;
+	} else{
 		return false;
 	}
 }
@@ -1516,7 +1529,7 @@ $( document ).ready(function() {
 						 $("#pin").attr("disabled",true);
 						 $("#pdpPincodeCheckDList").show();
 						 $("#buyNowButton").attr("disabled",true);
-						
+						 $("#allVariantOutOfStock").show();
 						
 					}
 					else if (isOOS() && data['othersSellersCount']==0){
@@ -1535,9 +1548,10 @@ $( document ).ready(function() {
 						 $("#pin").attr("disabled",true);
 						 $("#pdpPincodeCheckDList").show();
 						 $("#buyNowButton").attr("disabled",true);
+						 $("#allVariantOutOfStock").show();
+						 
 						
-						
-					}else if (allStockZero == 'Y' && data['othersSellersCount']>0 && $("#variant option").length == 0) {
+					}else if (allStockZero == 'Y' && data['othersSellersCount']>0 && ($("#variant li").length == $("#variant li.strike").length)) {
 						//if( $("#variant,#sizevariant option:selected").val()!="#") {  //TISPRD-1173 TPR-465
 						
 						$("#addToCartButton").hide();
@@ -1562,7 +1576,7 @@ $( document ).ready(function() {
 						});
 						
 					}
-					else if (allStockZero == 'Y' && data['othersSellersCount']==0 && $("#variant option").length == 0){
+					else if (allStockZero == 'Y' && data['othersSellersCount']==0 && ($("#variant li").length == $("#variant li.strike").length)){
 						//if($("#variant,#sizevariant option:selected").val()!="#"){	//TISPRD-1173 TPR-465
 							$("#addToCartButton").hide();
 							$("#buyNowButton").hide();
@@ -1599,7 +1613,7 @@ $( document ).ready(function() {
 					//	alert(data['othersSellersCount']);
 						$("#otherSellerInfoId").show();
 						$("#otherSellersId").html(data['othersSellersCount']);
-						$("#minPriceId").html(data['minPrice'].formattedValue);
+						$("#minPriceId").html(data['minPrice'].formattedValueNoDecimal);
 					}
 
 					$("#ussid").val(data['sellerArticleSKU']);
@@ -1624,7 +1638,7 @@ $( document ).ready(function() {
 					
 					if (isproductPage == 'false') {
 						fetchAllSellers();
-						$("#minPrice").html(data['minPrice'].formattedValue);
+						$("#minPrice").html(data['minPrice'].formattedValueNoDecimal);
 					}
 					//Added for displaying offer messages other than promotion, TPR-589	
 				//	ACC.productDetail.
@@ -1798,15 +1812,15 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 	//alert("mrp "+ mrp.formattedValue +"mop "+mop.formattedValue +"spPrice "+spPrice.formattedValue +"savingsOnProduct "+ savingsOnProduct.formattedValue);
 	if(null!= mrp){
 		$("#mrpPriceId").html("");
-		$("#mrpPriceId").append(mrp.formattedValue);
+		$("#mrpPriceId").append(mrp.formattedValueNoDecimal);
 	}
 	if(null!= mop){
 		$("#mopPriceId").html("");
-		$("#mopPriceId").append(mop.formattedValue);
+		$("#mopPriceId").append(mop.formattedValueNoDecimal);
 	}
 	if(null!= spPrice){
 		$("#spPriceId").html("");
-		$("#spPriceId").append(spPrice.formattedValue);
+		$("#spPriceId").append(spPrice.formattedValueNoDecimal);
 	} 
 	////TISPRM-33 , TPR-140
 	if(null!= savingsOnProduct){
@@ -1877,12 +1891,13 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 				 $(".star-review").hide();
 				 //$("#dListedErrorMsg").show();	//Need to Change
 				// $("#freebieProductMsgId").show();
-			var ussId=  $("#ussid").val();
+				 var prodCode=$("#productCodePost").val();
+			     var ussId=  $("#ussid").val();
 				
 			//	$("#ussid").val(data['sellerArticleSKU']);
 				 
 				//update the message for Freebie product TPR-1754
-				 var freebieproductMsg =populateFreebieMsg(ussId);			 
+				 var freebieproductMsg =populateFreebieMsg(prodCode);			 
 				 if($.isEmptyObject(freebieproductMsg)){	
 					 
 					 $("#freebieProductMsgId").show();			 
@@ -3142,21 +3157,71 @@ if($('#pageTemplateId').val() == 'ProductDetailsPageTemplate'){
 //PDP Specifications arrow
 $(document).ready(function(){
 var width=0;
+var windowWidth = $(".SpecWrap .Padd").innerWidth() - $(".SpecWrap .Padd").width();
+if (windowWidth > 60){
 $(".SpecWrap .Padd .tabs-block .nav > li").each(
 		function() {
 			width = width + $(this).width();
 		});
-console.log(width);
+}
+else{
+$(".SpecWrap .Padd .tabs-block .nav > li").each(
+		function() {
+			width = width + $(this).width() + 15;
+		});
+}
+//console.log(width);
 var winWidth = $(".SpecWrap .nav-wrapper").innerWidth();
-console.log(winWidth);
-$(window).on("load resize", function() {
+//console.log(winWidth);
 if (width <= winWidth){
 	$(".SpecWrap .Padd .tabs-block .nav-wrapper > span").css("display","none");
+	$(".SpecWrap .Padd .tabs-block .nav-wrapper").css("padding-top","0px");
 }
 if (width > winWidth){
 	var l = 0;
 	var value = 200;
 	$(".SpecWrap .Padd .tabs-block .nav-wrapper > span").css("display","inline-block");
+	$(".SpecWrap .Padd .tabs-block .nav-wrapper").css("padding-top","15px");
+	$('.SpecWrap .Padd .tabs-block .nav').animate({'left':0});
+	$(".SpecWrap .Padd .tabs-block .nav-wrapper > span").unbind().click(function() {
+		l = l + value;
+		if(!$('.SpecWrap .Padd .tabs-block .nav li:last-child').visible()){
+            $('.SpecWrap .Padd .tabs-block .nav').animate({'left':-l});			
+		}else{
+			l = 0;
+			$('.SpecWrap .Padd .tabs-block .nav').animate({'left':0});
+		}
+        });	
+}
+
+});
+$(window).on("resize", function() {
+	var width=0;
+	var windowWidth = $(".SpecWrap .Padd").innerWidth() - $(".SpecWrap .Padd").width();
+	if (windowWidth > 60){
+	$(".SpecWrap .Padd .tabs-block .nav > li").each(
+			function() {
+				width = width + $(this).width();
+			});
+	}
+	else{
+	$(".SpecWrap .Padd .tabs-block .nav > li").each(
+			function() {
+				width = width + $(this).width() + 15;
+			});
+	}
+	//console.log(width);
+	var winWidth = $(".SpecWrap .nav-wrapper").innerWidth();
+	//console.log(winWidth);
+if (width <= winWidth){
+	$(".SpecWrap .Padd .tabs-block .nav-wrapper > span").css("display","none");
+	$(".SpecWrap .Padd .tabs-block .nav-wrapper").css("padding-top","0px");
+}
+if (width > winWidth){
+	var l = 0;
+	var value = 200;
+	$(".SpecWrap .Padd .tabs-block .nav-wrapper > span").css("display","inline-block");
+	$(".SpecWrap .Padd .tabs-block .nav-wrapper").css("padding-top","15px");
 	$('.SpecWrap .Padd .tabs-block .nav').animate({'left':0});
 	$(".SpecWrap .Padd .tabs-block .nav-wrapper > span").unbind().click(function() {
 		l = l + value;
@@ -3170,7 +3235,7 @@ if (width > winWidth){
 }
 });
 
-});
+
 
 	//update the message for Freebie product TPR-1754
 	function  populateFreebieMsg(ussId){
