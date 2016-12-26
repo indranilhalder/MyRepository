@@ -51,5 +51,12 @@ public class ExtStockLevelPromotionCheckServiceImpl implements ExtStockLevelProm
 		// YTODO Auto-generated method stub
 		return stockPromoCheckDao.getPromoInvalidationList(guid);
 	}
+	@Override
+	public List<String> getStockForPromotion(final String promoCode, final int maxStockCount)
+	{
+		// YTODO Auto-generated method stub
+		final List<String> cumualativeStockMap = stockPromoCheckDao.getStockForPromotion(promoCode, maxStockCount);
+		return cumualativeStockMap;
+	}
 
 }
