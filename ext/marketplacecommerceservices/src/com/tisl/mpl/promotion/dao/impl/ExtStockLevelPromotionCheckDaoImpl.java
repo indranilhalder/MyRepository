@@ -135,4 +135,57 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
+	
+	//TPR-965 changes for price update
+	@Override
+	public List<String> getStockForPromotion(final String promoCode, final int stockCount)
+	{
+		// YTODO Auto-generated method stub
+		final List<String> stockList = new ArrayList<String>();
+		String queryString = "";
+		try
+		{
+
+			queryString = //
+			"select  {b.ussid}  from {" + LimitedStockPromoInvalidationModel._TYPECODE + " as b }"
+					+ " where {b.promoCode}=?promoCode " + "group by {b.promoCode},{b.ussid}  having SUM({b.usedUpCount})=?maxStock";
+
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter("promoCode", promoCode);
+			query.addQueryParameter("maxStock", Integer.valueOf(stockCount));
+			query.setResultClassList(Arrays.asList(String.class));
+			final SearchResult<List<Object>> result = search(query);
+			if (CollectionUtils.isNotEmpty(result.getResult()))
+			{
+
+				for (final Object row : result.getResult())
+				{
+					final String code = (String) row;
+					stockList.add(code);
+				}
+			}
+		}
+
+		catch (final FlexibleSearchException e)
+		{
+			LOG.error("error in search query" + e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			LOG.error(e);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			LOG.error("exception getching the quantity count details aginst product/ussid" + e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		return stockList;
+	}
+}
 }
