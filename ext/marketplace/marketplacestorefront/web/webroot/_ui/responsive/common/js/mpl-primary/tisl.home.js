@@ -862,10 +862,17 @@ function getProductsYouCareAjaxCall() {
 	                    var URL = ACC.config.encodedContextPath +
 	                    /*"/Categories/" + v.categoryName*/ v.categoryPath +   //TISPRD_2315
 	                    "/c-" + v.categoryCode.toLowerCase();
-	                    //for url
-	                    renderHtml += "<a href='" + appendIcid(
-	                            URL, v.icid) +
-	                        "' class='item'>";
+	                    	
+		                //for url
+		                if (!v.imageURL) {    
+		                renderHtml += "<a href='" + appendIcid(
+		                            URL, v.icid) +
+		                        "' class='item'>";
+		                }
+		                else {
+		                	renderHtml += "<a href='" + v.imageURL +
+		                        "' class='item'>";
+		                }
 	                    //for image
 	                    renderHtml +=
 	                        "<div class='home-product-you-care-carousel-img'> <img class='' src='" +
