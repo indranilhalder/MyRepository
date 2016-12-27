@@ -39,7 +39,45 @@ public class SellerMasterWsDTO implements java.io.Serializable
 	private String Language;
 	private String Customer;
 	private String isCDAllowed;
+	private String isRTSAllowed;
 	private String isLPAWBEdit;
+	private String ClicknCollect;
+
+
+	/**
+	 * @return the clicknCollect
+	 */
+	public String getClicknCollect()
+	{
+		return ClicknCollect;
+	}
+
+	/**
+	 * @param clicknCollect the clicknCollect to set
+	 */
+	public void setClicknCollect(String clicknCollect)
+	{
+		ClicknCollect = clicknCollect;
+	}
+
+	/**
+	 * @return the isRTSAllowed
+	 */
+	public String getIsRTSAllowed()
+	{
+		return isRTSAllowed;
+	}
+
+	/**
+	 * @param isRTSAllowed
+	 *           the isRTSAllowed to set
+	 */
+	public void setIsRTSAllowed(final String isRTSAllowed)
+	{
+		this.isRTSAllowed = isRTSAllowed;
+	}
+
+	
 
 
 	public String getisCDAllowed()

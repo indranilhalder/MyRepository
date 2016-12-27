@@ -15,12 +15,14 @@
         <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Search2"/>
         <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="Title"/>
         <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="Language"/>
+        <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="ClicknCollect"/>
         <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="collectionDays"/>
         <!-- Added for three images, For commerce, Sending delimited  with # -->
         <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="StoreImage"/> 
         <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="daysToExtend"/>
         <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="extensionTimes"/>
         <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="isCDAllowed"/>
+        <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="isRTSAllowed"/>
         <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="isLPAWBEdit"/>
         <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Customer"/>
         <xs:element name="corporateAddress" maxOccurs="unbounded" minOccurs="0">
