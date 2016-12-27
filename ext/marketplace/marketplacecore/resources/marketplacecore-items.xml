@@ -9953,6 +9953,10 @@
 						<persistence type="property" />
 						<description>Attribute contains Return QuickDrop Store Names.</description>
 					</attribute>
+					<attribute qualifier="dateReturnToStore" type="java.lang.String">
+						<persistence type="property" />
+						<description>Attribute contains Return QuickDrop Date .</description>
+					</attribute>
 				</attributes>	
 			</itemtype>
 		</typegroup>

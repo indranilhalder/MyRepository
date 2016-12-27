@@ -10,6 +10,7 @@ import de.hybris.platform.basecommerce.enums.OrderModificationEntryStatus;
 import de.hybris.platform.basecommerce.enums.RefundReason;
 import de.hybris.platform.basecommerce.enums.ReturnAction;
 import de.hybris.platform.basecommerce.enums.ReturnStatus;
+import de.hybris.platform.basecommerce.jalo.BasecommerceManager;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
@@ -21,6 +22,7 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.jalo.order.Order;
 import de.hybris.platform.ordercancel.OrderCancelEntry;
 import de.hybris.platform.ordercancel.OrderCancelException;
 import de.hybris.platform.ordercancel.OrderCancelRecordsHandler;
@@ -28,6 +30,7 @@ import de.hybris.platform.ordercancel.OrderCancelService;
 import de.hybris.platform.ordercancel.model.OrderCancelRecordEntryModel;
 import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
 import de.hybris.platform.ordermodify.model.OrderEntryModificationRecordEntryModel;
+import de.hybris.platform.ordersplitting.jalo.Consignment;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.payment.enums.PaymentTransactionType;
@@ -46,9 +49,14 @@ import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -59,6 +67,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -2401,10 +2410,14 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				}
 				
 				//Send notification sms
-				sendPushNotificationForReturnToStore(customerModel, returnInfoRequestData.getRTSStore(),mobilenumber,returnInfoRequestData.getOrderId());
+				AbstractOrderEntryModel entrymodel=getOrderEntryModel(orderModel, returnInfoRequestData.getTransactionId());
+				String date=getDateReturnToStore(entrymodel);
+				sendPushNotificationForReturnToStore(customerModel, returnInfoRequestData.getRTSStore(), mobilenumber,
+						returnInfoRequestData.getOrderId(), date);
 				ReturnQuickDropProcessModel qickdropProcess = new ReturnQuickDropProcessModel();
 				qickdropProcess.setOrder(orderModel);
 				qickdropProcess.setTransactionId(returnInfoRequestData.getTransactionId());
+				qickdropProcess.setDateReturnToStore(date);
 				qickdropProcess.setStoreIds(returnInfoRequestData.getRTSStore());
 				qickdropProcess.setStoreNames(getStoreAddressList(returnInfoRequestData.getRTSStore()));
 				OrderReturnToStoreEvent event = new OrderReturnToStoreEvent(qickdropProcess);
@@ -3665,7 +3678,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	 * @param OTPNumber
 	 */
 	
-	private void sendPushNotificationForReturnToStore(final CustomerModel customerModel,List<String> storeNameList, final String mobileNumber,String ordernumber)
+	private void sendPushNotificationForReturnToStore(final CustomerModel customerModel,List<String> storeNameList, final String mobileNumber,String ordernumber,String date)
 	{
 		final String mplCustomerName = customerModel.getFirstName();
 		StringBuilder storeAddress = null;
@@ -3675,16 +3688,20 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			if (CollectionUtils.isNotEmpty(storeNameList))
 			{
 				for (String store : storeNameList){
-					PointOfServiceModel pointOfSerivce = orderModelService.getPointOfService(store);
+				PointOfServiceModel pointOfSerivce = orderModelService.getPointOfService(store);
+				String geoCodeUrl = "http://maps.google.com/?q="+pointOfSerivce.getLatitude()+"," +pointOfSerivce.getLongitude();
 				if (storeAddress == null)
 				{
 					storeName=new StringBuilder(pointOfSerivce.getDisplayName());
 					storeAddress = storeAddress(pointOfSerivce.getAddress(), pointOfSerivce.getDisplayName(), null);
+					storeAddress.append(",");
 				}
 				else
 				{
 					storeName.append("," + storeName);
 					storeAddress = storeAddress(pointOfSerivce.getAddress(), pointOfSerivce.getDisplayName(), storeAddress);
+					storeAddress.append(",");
+					storeAddress.append(" MAP URL: "+geoCodeUrl);
 				}
 			}
 		}
@@ -3697,7 +3714,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 								mplCustomerName != null ? mplCustomerName : "There")
 						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE,ordernumber)
 						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO,storeName)
-						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_THREE, storeAddress.toString()), mobileNumber);
+						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_THREE,date)
+						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_FOUR,storeAddress.toString()), mobileNumber);
 
 	}
 	
@@ -3772,19 +3790,71 @@ private AbstractOrderEntryModel getOrderEntryModel(OrderModel ordermodel,String 
 	}
 	return null;
 }
-
+//get all store Address 
 	private List<String> getStoreAddressList(List<String> storeIdList)
 	{
 		List<String> storeAddresList = new ArrayList<String>();
 		StringBuilder storeAddress = null;
 		PointOfServiceModel pointOfSerivce = null;
+		String geoCodeUrl=null;
 		for (String storeId : storeIdList)
 		{
 			pointOfSerivce = orderModelService.getPointOfService(storeId);
+			
+			geoCodeUrl = "http://maps.google.com/?q="+pointOfSerivce.getLatitude()+"," +pointOfSerivce.getLongitude();
 			storeAddress = new StringBuilder();
 			storeAddress = storeAddress(pointOfSerivce.getAddress(), pointOfSerivce.getDisplayName(), null);
+			storeAddress.append(" ,MAP URL: "+geoCodeUrl);
 			storeAddresList.add(storeAddress.toString());
 		}
 		return storeAddresList;
 	}
+	
+	//getReturnToStoreDate
+	private String getDateReturnToStore(AbstractOrderEntryModel entryModel)
+	{
+		int refundWindow = 0;
+		int daysRemaining =0;
+		DateTime deliveryTime=null;
+		int totalDaysPassed = 0;
+		final SellerInformationModel sellerInfo = mplSellerInformationService.getSellerDetail(entryModel.getSelectedUSSID());
+
+		for (final RichAttributeModel richAttribute : sellerInfo.getRichAttribute())
+		{
+			if (richAttribute.getReturnWindow() != null && Integer.parseInt(richAttribute.getReturnWindow()) > 0)
+			{
+				refundWindow = Integer.parseInt(richAttribute.getReturnWindow());
+				break;
+			}
+		}
+		final DateTime currentTime = new DateTime(new Date().getTime());
+		final Set consignments = BasecommerceManager.getInstance().getConsignments(
+				(Order) modelService.toPersistenceLayer(entryModel.getOrder()));
+		if (!consignments.isEmpty())
+		{
+			for (final Iterator iterator = consignments.iterator(); iterator.hasNext();)
+			{
+				final Consignment consignment = (Consignment) iterator.next();
+				final ConsignmentModel consignmentModel = modelService.get(consignment);
+				if (consignment.getStatus().getCode().equals(ConsignmentStatus.DELIVERED.getCode())
+						|| consignment.getStatus().getCode().equals(ConsignmentStatus.ORDER_COLLECTED.getCode()))
+				{
+
+					if (null != consignmentModel.getDeliveryDate())
+					{
+						deliveryTime = new DateTime(consignmentModel.getDeliveryDate().getTime());
+					}
+					totalDaysPassed = Days.daysBetween(deliveryTime, currentTime).getDays();
+				}
+			}
+		}
+		daysRemaining = refundWindow - totalDaysPassed;
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DATE, daysRemaining);
+		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+		return dateFormat.format(calendar.getTime());
+	}
+
+	
+
 }

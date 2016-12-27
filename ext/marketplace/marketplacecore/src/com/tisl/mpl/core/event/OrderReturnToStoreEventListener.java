@@ -41,6 +41,7 @@ public class OrderReturnToStoreEventListener extends AbstractSiteEventListener<O
 		returnToStoreProcessModel.setTransactionId(eventModel.getTransactionId());
 		returnToStoreProcessModel.setStoreIds(storeIds);
 		returnToStoreProcessModel.setStoreNames(storeNames);
+		returnToStoreProcessModel.setDateReturnToStore(eventModel.getDateReturnToStore());
 		returnToStoreProcessModel.setOrder(orderModel);
 		getModelService().save(returnToStoreProcessModel);
 		getBusinessProcessService().startProcess(returnToStoreProcessModel);

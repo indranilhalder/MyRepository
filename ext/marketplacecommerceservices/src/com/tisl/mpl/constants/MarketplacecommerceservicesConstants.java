@@ -584,7 +584,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String EMAIL_BODY_MEDIA = "bodyMedia-";
 
 	public static final String SMS_MESSAGE_CD_OTP = "Peek-a-boo {0}! One-time password to Change delivery Address {1}. Please feel free to call us at {2} in case of any queries.";
-	public static final String SMS_MESSAGE_RETURN_TO_STORE = "Hey {0}. You can return Order {1} at {2}  at store location:{3} .";
+	public static final String SMS_MESSAGE_RETURN_TO_STORE = "Hey {0}. You can return Order {1} at {2},  by {3} at store location:{4} .";
 
 
 	//For Bulk Upload in Promotions

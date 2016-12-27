@@ -17,6 +17,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -24,6 +25,7 @@ import org.apache.velocity.tools.generic.NumberTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tis.mpl.facade.data.ReturnToStoreAddressData;
 import com.tisl.mpl.core.model.ReturnQuickDropProcessModel;
 
 
@@ -105,12 +107,21 @@ public class OrderReturnToStoreEmailContext extends AbstractEmailContext<ReturnQ
 			}
 
 		}
-		put(STORE_LIST, returnQuickDropProcessModel.getStoreIds());
-		put("stroreLocation", returnQuickDropProcessModel.getStoreNames());
+		ArrayList<ReturnToStoreAddressData> storeInfoList =new ArrayList<ReturnToStoreAddressData>();
+		int countName=0;
+		ReturnToStoreAddressData rtsData=null;
+		for(String storeAdd:returnQuickDropProcessModel.getStoreNames()){
+			rtsData=new ReturnToStoreAddressData();
+			rtsData.setDate(returnQuickDropProcessModel.getDateReturnToStore());
+			rtsData.setStoreAddress(storeAdd);
+			rtsData.setStoreName(returnQuickDropProcessModel.getStoreIds().get(countName));
+			storeInfoList.add(rtsData);
+			countName++;
+		}
+		put("storeInfoList",returnQuickDropProcessModel.getDateReturnToStore());
 		put(TRANSACTION_ID, orderEntry.getTransactionID());
 		put(NAME_OF_PRODUCT, orderEntry.getProduct().getName());
 		put(DELIVERY_CHARGE, Double.valueOf(deliveryCharge));
-
 		put(NUMBERTOOL, new NumberTool());
 
 

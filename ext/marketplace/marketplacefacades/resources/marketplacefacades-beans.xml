@@ -1055,4 +1055,10 @@
 		<property name="cliks" type="int"></property>
 		<property name="logins" type="int"></property>
 	</bean>
+	
+	<bean class="com.tis.mpl.facade.data.ReturnToStoreAddressData">
+		<property name="storeName" type="String"></property>
+		<property name="storeAddress" type="String"></property>
+		<property name="date" type="String"></property>
+	</bean>
 </beans>
