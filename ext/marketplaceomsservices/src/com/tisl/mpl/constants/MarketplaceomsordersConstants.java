@@ -92,6 +92,8 @@ public final class MarketplaceomsordersConstants extends GeneratedMarketplaceoms
 	public static final String SMS_VARIABLE_THREE_ORD_COLLECTED_CUSTOMER = "{3}";
 	public static final String SMS_VARIABLE_FOUR_ORD_COLLECTED_CUSTOMER = "{4}";
 	
+	public static final String TICKET_TYPE_CODE_EDTOHD_SDB = "A";
+	
 	private MarketplaceomsordersConstants()
 	{
 		//empty to avoid instantiating this constant class

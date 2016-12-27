@@ -52,6 +52,7 @@ import org.springframework.beans.factory.annotation.Required;
 import com.hybris.oms.domain.order.OrderLine;
 import com.hybris.oms.domain.shipping.Shipment;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.constants.MarketplaceomsordersConstants;
 import com.tisl.mpl.constants.MarketplaceomsservicesConstants;
 import com.tisl.mpl.core.model.ImeiDetailModel;
 import com.tisl.mpl.core.model.InvoiceDetailModel;
@@ -482,7 +483,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 			{
 
 				         LOG.debug("Calling cancel Initiation process started");
-								final SendUnCollectedOrderToCRMEvent sendUnCollectedOrderToCRMEvent = new SendUnCollectedOrderToCRMEvent(shipment,consignmentModel,orderModel,shipmentNewStatus);
+								final SendUnCollectedOrderToCRMEvent sendUnCollectedOrderToCRMEvent = new SendUnCollectedOrderToCRMEvent(shipment,consignmentModel,orderModel,shipmentNewStatus,MarketplaceomsordersConstants.TICKET_TYPE_CODE);
 								final UnCollectedOrderToInitiateRefundEvent unCollectedOrderToInitiateRefundEvent= new UnCollectedOrderToInitiateRefundEvent(shipment,consignmentModel,orderModel,shipmentNewStatus,eventService,configurationService);
 								try
 								{
@@ -851,7 +852,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 		Boolean isEDtoHDCheck=Boolean.FALSE;
 		Boolean isSDBCheck=Boolean.FALSE;
 		Boolean isRetrunInitiatedCheck=Boolean.FALSE;
-		final SendUnCollectedOrderToCRMEvent sendUnCollectedOrderToCRMEvent = new SendUnCollectedOrderToCRMEvent(shipment,consignmentModel,orderModel,newStatus);
+		SendUnCollectedOrderToCRMEvent sendUnCollectedOrderToCRMEvent =null;
 		final UnCollectedOrderToInitiateRefundEvent unCollectedOrderToInitiateRefundEvent= new UnCollectedOrderToInitiateRefundEvent(shipment,consignmentModel,orderModel,newStatus,eventService,configurationService);
 		     if(null!= shipment && null!=shipment.getIsEDtoHD()){
          		if(shipment.getIsEDtoHD().booleanValue() && ( CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries())) && (consignmentModel.getIsEDtoHDCheck()==null || consignmentModel.getIsEDtoHDCheck() ==Boolean.FALSE )){
@@ -865,6 +866,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
          			  modelService.save(consignmentModel);
          			  try
 							{
+         				  sendUnCollectedOrderToCRMEvent = new SendUnCollectedOrderToCRMEvent(shipment,consignmentModel,orderModel,newStatus,MarketplaceomsordersConstants.TICKET_TYPE_CODE_EDTOHD_SDB);
 								LOG.debug("Create CRM Ticket for EDtoHD Order Cancel Initiated ");
 								eventService.publishEvent(sendUnCollectedOrderToCRMEvent);
 							}
@@ -910,6 +912,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
          			  /*  R2.3 REFUND INFO CALL TO OMS  START*/
          			  try
 							{
+         				  sendUnCollectedOrderToCRMEvent = new SendUnCollectedOrderToCRMEvent(shipment,consignmentModel,orderModel,newStatus,MarketplaceomsordersConstants.TICKET_TYPE_CODE_EDTOHD_SDB);
 								LOG.debug("Create CRM Ticket for SDB Order Cancel Initiated ");
 								eventService.publishEvent(sendUnCollectedOrderToCRMEvent);
 							}
@@ -952,6 +955,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 							
 							try
 							{
+								 sendUnCollectedOrderToCRMEvent = new SendUnCollectedOrderToCRMEvent(shipment,consignmentModel,orderModel,newStatus,MarketplaceomsordersConstants.TICKET_TYPE_CODE);
 								LOG.debug("Create CRM Ticket for SSB Order Cancel Initiated ");
 								eventService.publishEvent(sendUnCollectedOrderToCRMEvent);
 							}

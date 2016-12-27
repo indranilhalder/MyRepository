@@ -33,8 +33,8 @@ public class SendUnCollectedOrderToCRMEventListener extends AbstractEventListene
 		try{
 		LOG.debug("Inside onEvent method of SendUnCollectedOrderToCRMEventListener");
 		//(sendUnColletedToCRMEvent.getConsignmentModel().getStatus().equals(ConsignmentStatus.READY_FOR_COLLECTION) || sendUnColletedToCRMEvent.getConsignmentModel().getStatus().equals(ConsignmentStatus.ORDER_UNCOLLECTED))&&
-		if ( sendUnColletedToCRMEvent.getShipmentNewStatus().equals(ConsignmentStatus.CANCELLATION_INITIATED))
-		{
+		/*if ( sendUnColletedToCRMEvent.getShipmentNewStatus().equals(ConsignmentStatus.CANCELLATION_INITIATED))
+		{*/
       		for (final AbstractOrderEntryModel orderEntryModel : sendUnColletedToCRMEvent.getOrderModel().getEntries())
       		{
 					if(sendUnColletedToCRMEvent.getShipment().getShipmentId().equals(orderEntryModel.getTransactionID()) && sendUnColletedToCRMEvent.getConsignmentModel().getCode().equals(orderEntryModel.getTransactionID())){
@@ -50,29 +50,29 @@ public class SendUnCollectedOrderToCRMEventListener extends AbstractEventListene
         			    modelService.save(sendUnColletedToCRMEvent.getConsignmentModel());
         			    
         			     customOmsCancelAdapter.createTicketInCRM(orderEntryModel.getTransactionID(),
-        					MarketplaceomsordersConstants.TICKET_TYPE_CODE, MarketplaceomsordersConstants.EMPTY,
+        			   		sendUnColletedToCRMEvent.getTicketType(), MarketplaceomsordersConstants.EMPTY,
         					MarketplaceomsordersConstants.REFUND_TYPE_CODE, sendUnColletedToCRMEvent.getOrderModel(),isSsb,isSdb,isEdtoHd);
         			  
 						}else if(null!=sendUnColletedToCRMEvent.getShipment().getSdb() && sendUnColletedToCRMEvent.getShipment().getSdb().booleanValue()){
 							isSdb=sendUnColletedToCRMEvent.getShipment().getSdb().booleanValue();  
 							customOmsCancelAdapter.createTicketInCRM(orderEntryModel.getTransactionID(),
-									MarketplaceomsordersConstants.TICKET_TYPE_CODE, MarketplaceomsordersConstants.EMPTY,
+									sendUnColletedToCRMEvent.getTicketType(), MarketplaceomsordersConstants.EMPTY,
 									MarketplaceomsordersConstants.REFUND_TYPE_CODE, sendUnColletedToCRMEvent.getOrderModel(),isSsb,isSdb,isEdtoHd);
 						}else if(null!=sendUnColletedToCRMEvent.getShipment().getIsEDtoHD() && sendUnColletedToCRMEvent.getShipment().getIsEDtoHD().booleanValue()){
 							isEdtoHd=sendUnColletedToCRMEvent.getShipment().getIsEDtoHD().booleanValue(); 
 							customOmsCancelAdapter.createTicketInCRM(orderEntryModel.getTransactionID(),
-									MarketplaceomsordersConstants.TICKET_TYPE_CODE, MarketplaceomsordersConstants.EMPTY,
+									sendUnColletedToCRMEvent.getTicketType(), MarketplaceomsordersConstants.EMPTY,
 									MarketplaceomsordersConstants.REFUND_TYPE_CODE, sendUnColletedToCRMEvent.getOrderModel(),isSsb,isSdb,isEdtoHd);
 						}else{
 							customOmsCancelAdapter.createTicketInCRM(orderEntryModel.getTransactionID(),
-									MarketplaceomsordersConstants.TICKET_TYPE_CODE, MarketplaceomsordersConstants.EMPTY,
+									sendUnColletedToCRMEvent.getTicketType(), MarketplaceomsordersConstants.EMPTY,
 									MarketplaceomsordersConstants.REFUND_TYPE_CODE, sendUnColletedToCRMEvent.getOrderModel(),isSsb,isSdb,isEdtoHd);
 						}
 						
 						
 					}
 				}
-	      }
+	     // }
 		}
 		catch(Exception e){
 			LOG.error("Exception Occer Create CRM Ticket"+sendUnColletedToCRMEvent.getConsignmentModel().getCode() +" -- " +e.getMessage());
