@@ -133,6 +133,19 @@
 			}
 		});
 
+// added for jewellery PDP size dropdown 		
+		$("#jewelleryvariant").change(function() {
+			var url = "";
+			var selectedIndex = 0;
+			$("#jewelleryvariant option:selected").each(function() {
+				url = $(this).attr('value');
+				selectedIndex = $(this).attr("index");
+			});
+			if (selectedIndex != 0) {
+				window.location.href = url;
+			}
+		});
+
 // added in merging.....
 	// Move to wish list msg
 		//alert(localStorage.getItem("movedToWishlist_msg"));
