@@ -19247,7 +19247,7 @@ header.brand-header .content .search form button, header.brand-header .content .
 	color: #fff
 }
 	header.brand-header .content .bottom.active {
-	position: fixed;
+	/* position: fixed;
 	top: 0;
 	left: 0;
 	z-index: 200;
@@ -19257,7 +19257,7 @@ header.brand-header .content .search form button, header.brand-header .content .
 	-moz-transition: position 0.3s;
 	transition: position 0.3s;
 	border-bottom: 0px
-}
+ */}
 header.brand-header .content .bottom {
 	 position: relative;
 	}
@@ -57540,7 +57540,7 @@ div.radio.creditDebitLabelRadio{
     header > .content .bottom {
     background-color: #fff;
 }
-    header .content .bottom.active{
+    header.marketplace-header .content .bottom.active{
     position: fixed;
     top: 0;
     left: 0;
