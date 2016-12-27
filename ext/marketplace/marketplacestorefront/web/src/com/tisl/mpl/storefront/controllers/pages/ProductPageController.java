@@ -2623,6 +2623,9 @@ public class ProductPageController extends MidPageController
 		List<String> contentList = null;
 		List<String> imageList = null;
 		List<String> videoList = null;
+		//Added for status 500 errors INC_11128
+		//Return this view when no Content Page is found for the Product
+		String returnString = "/pages/layout/productContentblank";
 		final Map<String, ProductContentData> productContentDataMap = new HashMap<String, ProductContentData>();
 		try
 		{
@@ -2684,17 +2687,25 @@ public class ProductPageController extends MidPageController
 
 				}
 
+				//INC_11128
 				model.addAttribute("productContentDataMap", productContentDataMap);
+				storeCmsPageInModel(model, getContentPageForLabelOrId(contentPage.getUid()));
+				returnString = "/pages/" + contentPage.getMasterTemplate().getFrontendTemplateName();
 
 			}//final end of if
-			storeCmsPageInModel(model, getContentPageForLabelOrId(contentPage.getUid()));
+			 //INC_11128
+			 //commented as returned inside the if block
+			 //storeCmsPageInModel(model, getContentPageForLabelOrId(contentPage.getUid()));
 		}
 		catch (final CMSItemNotFoundException e)
 		{
 			e.printStackTrace();
 		}
 
-		return "/pages/" + contentPage.getMasterTemplate().getFrontendTemplateName();
+		//INC_11128
+		//commented as returned inside the if block
+		//return "/pages/" + contentPage.getMasterTemplate().getFrontendTemplateName();
+		return returnString;
 
 	}
 
