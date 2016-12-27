@@ -1251,7 +1251,13 @@ function getShowCaseAjaxCall() {
 	                $('#showcase').html(renderHtml);
 	                getShowcaseContentAjaxCall(defaultComponentId);
 	                $('.selectmenu').text($(".showcaseItem .showcase-border").text());
-	            }     
+	            }  
+	            if($(".showcaseItem").length == 1){
+                	$(".showcaseItem").addClass("one_showcase");
+                }
+                if($(".showcaseItem").length == 2){
+                	$(".showcaseItem").addClass("two_showcase");
+                }
             },
             error: function() {
                 // globalErrorPopup('Failure!!!');

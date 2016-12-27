@@ -32471,6 +32471,14 @@ background-color: transparent;
 .showcase-heading > div:last-child {
     text-align: left;
 }
+.showcase-heading > div.two_showcase {
+   text-align: center;
+    width: 50%;
+}
+.showcase-heading > div.one_showcase {
+   text-align: center;
+    width: 100%;
+} 
 .showcase-section .desc-section {
     padding: 0;
 }
@@ -33252,6 +33260,13 @@ header .banner > span {
 	.showcase-section .desc-section{float:none; width: 100%;}
 	.showcase-section .desc-section:last-child{ display:none;}
 	.showcase-heading > div {    margin: 10px 0 0; text-align: left;  border-bottom: 1px solid #ccc;    display: inline-block;    float: left;    padding: 0 0 10px;    width: 100%; cursor:pointer;}
+	.showcase-heading > div.two_showcase {
+   text-align: left;
+    width: 100%;
+	}
+	.showcase-heading > div.one_showcase {
+   text-align: left;
+	} 
 	.showcaseItem > a{font-size: 12px;}
 	.showcaseItem > a.showcase-border {    border-bottom: 0 none;    font-weight: bold;    padding: 0;}
 	.about-one.showcase-section {    padding: 0 10% 30px; }
