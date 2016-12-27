@@ -3692,16 +3692,16 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				String geoCodeUrl = "http://maps.google.com/?q="+pointOfSerivce.getLatitude()+"," +pointOfSerivce.getLongitude();
 				if (storeAddress == null)
 				{
-					storeName=new StringBuilder(pointOfSerivce.getDisplayName());
+					storeName=new StringBuilder(store);
 					storeAddress = storeAddress(pointOfSerivce.getAddress(), pointOfSerivce.getDisplayName(), null);
 					storeAddress.append(",");
 				}
 				else
 				{
-					storeName.append("," + storeName);
+					storeName.append("," + store);
 					storeAddress = storeAddress(pointOfSerivce.getAddress(), pointOfSerivce.getDisplayName(), storeAddress);
 					storeAddress.append(",");
-					storeAddress.append(" MAP URL: "+geoCodeUrl);
+					storeAddress.append(" "+geoCodeUrl);
 				}
 			}
 		}
@@ -3804,7 +3804,7 @@ private AbstractOrderEntryModel getOrderEntryModel(OrderModel ordermodel,String 
 			geoCodeUrl = "http://maps.google.com/?q="+pointOfSerivce.getLatitude()+"," +pointOfSerivce.getLongitude();
 			storeAddress = new StringBuilder();
 			storeAddress = storeAddress(pointOfSerivce.getAddress(), pointOfSerivce.getDisplayName(), null);
-			storeAddress.append(" ,MAP URL: "+geoCodeUrl);
+			storeAddress.append(" ,"+geoCodeUrl);
 			storeAddresList.add(storeAddress.toString());
 		}
 		return storeAddresList;

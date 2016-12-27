@@ -11,7 +11,8 @@ width:100%;
 <body>
 <table width="598" border="0" align="center" cellpadding="0" cellspacing="0" style=" border:1px solid #000; font-family:Arial, Helvetica, sans-serif;">
   <tr>
-    <td><table width="598" border="0" cellspacing="0" cellpadding="0">
+    <td>
+	<table width="598" border="0" cellspacing="0" cellpadding="0">
       <tr>
         <td align="left" valign="top" bgcolor="#ffffff">
 <span>${ctx.cmsSlotContents.SiteLogo}</span></td>
@@ -57,42 +58,73 @@ width:100%;
 		</td>
       </tr>
       <tr>
-        <td bgcolor="#fbfbfb"><table width="598" border="0" cellspacing="0" cellpadding="0">
+        <td bgcolor="#fbfbfb">
+		<table width="598" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td width="13">&nbsp;</td>
             <td><table width="572" border="0" cellspacing="0" cellpadding="0">
+			
               <tr>
                 <td><table width="572" border="0" cellspacing="0" cellpadding="0">
                   <tr>
                     <td height="10"></td>
                   </tr>
                   <tr>
-                    <td style="border-bottom:solid 1px #f4f4f4;"><table width="572" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#aa133d; font-weight:bold;">
-                      <tr>
-                        <td width="120" height="55" align="center">Transaction <br>
-                          ID</td>
-                        <td width="155" align="center">Product</td>
-                        <td width="80" align="center">Qty</td>
-                      </tr>
+                    <td style=""><table width="572" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#aa133d; font-weight:bold;">
+                      
                     </table></td>
                   </tr>
 				 
 	
                   <tr>
                     <td style="border-bottom:solid 1px #f4f4f4;"><table width="572" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#424242;">
-                      <tr>
-                        <td width="130" align="center">${ctx.transactionId}</td>
-                        <td width="50" align="center" >${ctx.nameOfProduct}</td>
+<tr style=" color:#aa133d;border-bottom:solid 1px #f4f4f4; ">
+                        <td width="120" height="55" align="center">Transaction ID<br>
+                        </td>
+                        <td width="155" align="center">Product</td>
+                        <td width="80" align="center">Qty</td>
+                      </tr>                     
+ <tr>
+                        <td width="120" align="center">${ctx.transactionId}</td>
+                        <td width="155" align="center" >${ctx.nameOfProduct}</td>
 						<td width="80" align="center">1</td>
                       </tr>
                     </table></td>
                   </tr>
                 </table>
-				<br>
+				<table width="572" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td height="10"></td>
+                  </tr>
+                <tr>
+                    <td style="border-bottom:solid 1px #f4f4f4;"><table width="572" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#424242;">
+               <tr style=" color:#aa133d; border-bottom:solid 1px #f4f4f4;">
+                        <th width="120" height="55" align="center">Store Name <br>
+                         </th>
+                        <th width="155" align="center">Date</th>
+                        <th width="80" align="center">Store location</th>
+                      </tr>
+   <tr>
+                    <td height="10"></td>
+                  </tr>
+                      #foreach( $storeDetails in ${ctx.storeInfoList} )
+						 <tr style="border-bottom:solid 1px #f4f4f4;">
+						 <td width="120" align="center">$storeDetails.storeName</td>
+						 <td width="155" align="center">$storeDetails.date</td>
+						 <td width="80" align="center">$storeDetails.storeAddress</td>
+						 </tr>
+   <tr>
+                    <td height="8"></td>
+                  </tr>
+					#end 
+                    </table></td>
+                  </tr>
+                </table>
 				</td>
               </tr>
               <tr>
-              
+
+</tr>    
               </tr>
 				<td>&nbsp;</td>
               </tr>
@@ -109,25 +141,7 @@ width:100%;
 				
               </tr>
 			  
-			   <tr>
-			 <td><table border="0" cellpadding="0" cellspacing="0">
-			 <tr>
-			  <th width="30%">Store Name</th>
-			  <th  width="20%">Date</th>
-			  <th  width="50%">Store location</th>
-			 
-			 </tr>
-			 #foreach( $storeDetails in ${ctx.storeInfoList} )
-			 <tr>
-			 <td>$storeDetails.storeName</td>
-			 <td>$storeDetails.date</td>
-			 <td>$storeDetails.storeAddress</td>
-		 	 #end
-			 </tr>
-			 
-			 
-			 </table></td>
-			  </tr>
+			  
              
 			  <tr>
                 <td>&nbsp;</td>
@@ -136,7 +150,7 @@ width:100%;
                <td height="60" align="left" valign="top">${ctx.cmsSlotContents.Tip}</td>
               </tr>
               <tr>
-                <td height="70" align="center"><a href="https://www.tatacliq.com/apps" target="_blank">${ctx.cmsSlotContents.AppDownloadUrl}</a></td>
+                <td height="70" align="center"><a href="https://www.tatacliq.com/apps" target="_blank"></a></td>
               </tr>
               <tr>
                 <td><span>${ctx.cmsSlotContents.smileyimg}</span></td>
@@ -154,9 +168,7 @@ width:100%;
                     <td align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;">&#169; 2016 Tata CLiQ | All Rights Reserved</td>
                     <td>&nbsp;</td>
                     <td align="right"><a href="https://www.facebook.com" style="border:none;">${ctx.cmsSlotContents.fb}</a></td>
-                    <td align="right"><a href="https://twitter.com" style="border:none;">${ctx.cmsSlotContents.tweet}</a></td>
                     <td align="right"><a href="https://www.youtube.com" style="border:none;">${ctx.cmsSlotContents.youtube}</a></td>
-                    <td align="right"><a href="https://www.instagram.com" style="border:none;">${ctx.cmsSlotContents.insta}</a></td>
                   </tr>
                 </table></td>
               </tr>
@@ -165,7 +177,8 @@ width:100%;
           </tr>
         </table></td>
       </tr>
-      <tr>
+
+	<tr>
         <td bgcolor="#fbfbfb">&nbsp;</td>
       </tr>
     </table></td>
