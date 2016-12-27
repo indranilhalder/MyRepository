@@ -118,7 +118,7 @@ public class OrderReturnToStoreEmailContext extends AbstractEmailContext<ReturnQ
 			storeInfoList.add(rtsData);
 			countName++;
 		}
-		put("storeInfoList",returnQuickDropProcessModel.getDateReturnToStore());
+		put("storeInfoList",storeInfoList);
 		put(TRANSACTION_ID, orderEntry.getTransactionID());
 		put(NAME_OF_PRODUCT, orderEntry.getProduct().getName());
 		put(DELIVERY_CHARGE, Double.valueOf(deliveryCharge));
