@@ -207,21 +207,22 @@
 									
 								<c:if test="${flag}">
 								<li class="item delivered first" id="shipping-track-order">
-						    	<div class="item-header">
+						<!--  commented in R2.3 START -->
+						    	<%-- <div class="item-header">
 								<c:if test="${entryCount > 1}">
 
-								<h3>${HD_ED_Count} Product(s)-ShippingAddress:</h3>
+								<h3>${HD_ED_Count} Product(s)-ShippingAddress:</h3> 
 								</c:if>
 								<c:if test="${entryCount  <= 1 }">
-									<h3>
-										<%-- ${entryCount}&nbsp; --%>
+ 									<h3> 
+										${entryCount}&nbsp;
 										Shipping Address:
 									</h3>
 								</c:if>
 								<div class="row">
 									<div class="col-md-4 col-sm-6">
 										<address>
-											${fn:escapeXml(subOrder.deliveryAddress.firstName)}&nbsp;
+ 											${fn:escapeXml(subOrder.deliveryAddress.firstName)}&nbsp;
 											${fn:escapeXml(subOrder.deliveryAddress.lastName)}<br>
 											${fn:escapeXml(subOrder.deliveryAddress.line1)},&nbsp;
 											${fn:escapeXml(subOrder.deliveryAddress.line2)},
@@ -248,7 +249,8 @@
 										</div>
 									</div>
 								</div>
-							</div>
+							</div> --%>
+	<!--  commented in R2.3 END -->
 							<p style="clear:both"></p>
 							<div class="itemBorder">&nbsp;</div>
 							</c:if>
