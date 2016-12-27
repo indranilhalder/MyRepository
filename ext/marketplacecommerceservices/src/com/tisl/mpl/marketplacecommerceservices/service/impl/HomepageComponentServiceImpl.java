@@ -201,6 +201,8 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 		String title = MarketplacecommerceservicesConstants.EMPTY;
 		String mediaUrl = MarketplacecommerceservicesConstants.EMPTY;
 		String imageName = MarketplacecommerceservicesConstants.EMPTY;
+		String link = MarketplacecommerceservicesConstants.EMPTY;
+
 		Integer slideBy = null;
 		Integer autoplayTimeout = null;
 		Boolean autoPlay = null;
@@ -326,6 +328,17 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 										imageName = MarketplacecommerceservicesConstants.EMPTY;
 									}
 
+
+									if (null != imageCategoryComponent.getImageURL())
+									{
+										link = imageCategoryComponent.getImageURL();
+									}
+									else
+									{
+										link = MarketplacecommerceservicesConstants.EMPTY;
+									}
+
+									categoryJSON.put("imageURL", link);
 									categoryJSON.put("imageName", imageName);
 									categoryJSON.put("mediaURL", mediaUrl);
 									categoryJSON.put(ICID, imageCategoryComponent.getPk().getLongValueAsString());

@@ -873,9 +873,9 @@ function getProductsYouCareAjaxCall() {
 	                 /*TPR-562 -start   */
 	                   if(v.imageName) {
 	                   renderHtml +=
-	                     "<div class='short-info'><h3 class='product-name'><span>" +
+	                     "<div class='short-info'><h3 class='product-name'><span><a href='"+v.imageURL+"'>" +
 	                        v.imageName +
-	                       "</span></h3></div>";
+	                       "</a></span></h3></div>";
 	                    renderHtml += "</a>";
 	                    
 	                   }
