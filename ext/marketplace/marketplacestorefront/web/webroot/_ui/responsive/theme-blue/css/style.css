@@ -46662,7 +46662,7 @@ float: right;
 	.product-info .SoldWrap>div.fullfilled-by {
 		padding-right: 0;
 	}
-	.product-info .SoldWrap>div.fullfilled-by, .product-info .SoldWrap {
+	.product-info .SoldWrap>div.fullfilled-by, .product-info .SoldWrap, .product-info .product-detail .other-sellers, .other-sellers-link {
 		font-size: 10px;
 	}
 }
