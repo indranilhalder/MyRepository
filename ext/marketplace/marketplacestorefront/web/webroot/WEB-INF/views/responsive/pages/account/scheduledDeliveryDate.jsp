@@ -77,7 +77,7 @@ ${stringMessage}
 														<c:when test="${dateSlotId ==1}">
 														<input type="radio" data-name="dateRadio"
 														name="date${txnId}" class="timeTribhuvan"
-														value="${txnDateData.key}" checked > <span>${txnDateData.key}</span>
+														value="${txnDateData.key}"  > <span>${txnDateData.key}</span>
 															<div class="timeDelivery" data-timeBlock="${dateSlotId}">
 																<div class="sideheadsch"><spring:theme code="text.order.deliveryTime" /></div>
 																<c:set var="timeSlotId" value="0" scope="page"></c:set>
@@ -91,7 +91,7 @@ ${stringMessage}
 																		<div class="col-md-4 col-sm-4 col-xs-4">
 																			<input type="radio" data-name="timeRadio"
 																				class="timeTribhuvan" name="time${txnId}${dateSlotId}"
-																				checked="checked"
+																				
 																				data-date="${txnDateData.key}" 
 																				data-txnId="${txnScheduleData.key}"
 																				value="${txnTimeData}"> ${txnTimeData}
@@ -178,6 +178,16 @@ ${stringMessage}
 </style>
 <script>
 		$(document).ready(function() {
+			
+			$('.scheduleRadio').each(function(){
+				
+				 $(this).find(".scheduleDate:first > input").attr("data-picked","yes");
+				$(this).find(".scheduleDate:first > input").prop("checked",true);
+				$(this).find(".scheduleDate .timeDelivery input[data-name=timeRadio]:first").prop("checked",true);
+				$(this).find(".scheduleDate .timeDelivery input[data-name=timeRadio]:first").attr("data-picked","yes");
+				})
+			
+			 var date;	var time; var productid;
 							$(".close,.wrapBG").click(function() {
 								$("#changeAddressPopup").hide();
 								$("#showOrderDetails").hide();
@@ -188,31 +198,42 @@ ${stringMessage}
 
 												var selectedElement = $(this);
 												var selectedParent = selectedElement.closest(".scheduleDates");
+												var selectedGrandParent = selectedElement.closest(".scheduleRadio");
 												var elem = selectedElement.next().next();
-												 var date;	var time; var productid;
+												selectedGrandParent.find(".timeTribhuvan").attr('data-picked',"");	
 												if (selectedElement.attr('data-name') == 'dateRadio') {
+													
 													selectedParent.find(".scheduleDate .timeDelivery").addClass("display");
 													if (elem.attr('data-timeBlock') == 1) {
+														selectedElement.attr("data-picked","yes");
+														elem.find(".timeTribhuvan").first().attr("data-picked","yes");
 														elem.find(".timeTribhuvan").first().prop("checked","checked");
 														elem.css({'left' : '0%','position' : 'relative'});
 													}
 													if (elem.attr('data-timeBlock') == 2) {
+														elem.find(".timeTribhuvan").first().attr("data-picked","yes");
+														selectedElement.attr("data-picked","yes");
 														elem.find(".timeTribhuvan").first().prop("checked","checked");
 														elem.css({'left' : '-100%','position' : 'relative'});
 													} else if (elem.attr('data-timeBlock') == 3) {
+														elem.find(".timeTribhuvan").first().attr("data-picked","yes");
+														selectedElement.attr("data-picked","yes");
 														elem.find(".timeTribhuvan").first().prop("checked","checked");
 														elem.css({'left' : '-200%','position' : 'relative'});
 													}
-													 date = elem.find("input.timeTribhuvan[type=radio]:checked").attr("data-date");
+													 /* date = elem.find("input.timeTribhuvan[type=radio]:checked").attr("data-date");
 													 time = elem.find("input.timeTribhuvan[type=radio]:checked").val();
-													 productid = elem.find("input.timeTribhuvan[type=radio]:checked").attr("data-txnId");
+													 productid = elem.find("input.timeTribhuvan[type=radio]:checked").attr("data-txnId"); */
 													 
 												} else {
-													date = selectedElement.attr("data-date");
-													time = selectedElement.val();
-													productid = selectedElement.attr("data-txnId");
+													
+													selectedElement.attr("data-picked","yes");
+													/* time = selectedElement.val();
+													productid = selectedElement.attr("data-txnId"); */
 												}
+												
 												elem.removeClass("display");
+												
 
 											});
 
@@ -220,7 +241,7 @@ ${stringMessage}
 			             var rescheduleData = {};
 						 var json = '{"rescheduleDataList" : [';
 						 var jsonLeg = json.length;
-						 $("input.timeTribhuvan[data-name=timeRadio]:checked").each(function(index){
+						 $("input.timeTribhuvan[data-name='timeRadio'][data-picked='yes']").each(function(){
 							 
 								  var selectedDate = $(this).attr('data-date');
 								  var selectedTxnId = $(this).attr('data-txnId');
@@ -229,18 +250,16 @@ ${stringMessage}
 									rescheduleData['date'] = selectedDate;
 									rescheduleData['time'] = selectedTime;
 									json = json.concat(JSON.stringify(rescheduleData));
-									json = json.concat(',');
-									
-								
-							});
-																		
+									json = json.concat(',');	
+																
+							});								
 							if (json.length > jsonLeg) {
 								json = json.substring(0,json.length - 1);
 							}
 							json = json.concat(']}');
 							var orderCode = $('#scheduledDeliveryOrderCode').val();
 							var orderId = orderCode;
-							$.ajax({
+						$.ajax({
 								type : "GET",
 								url : ACC.config.encodedContextPath+ "/my-account/"
 								                + orderCode
@@ -254,7 +273,7 @@ ${stringMessage}
 										  },	
 										failure : function(data) {
 										}
-									});
+									}); 
 						});
 	});
 	</script>
