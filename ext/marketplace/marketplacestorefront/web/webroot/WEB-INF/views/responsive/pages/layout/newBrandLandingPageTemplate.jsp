@@ -83,7 +83,7 @@
 			<cms:component component="${feature}" element="div" class="shop_the_look_section"/>
 		</cms:pageSlot>
 			<cms:pageSlot position="ShopForLookRightColSlot" var="feature">
-				<cms:component component="${feature}" element="div" class="shop_the_look_section"/>
+				<cms:component component="${feature}" element="div" class="shop_the_look_section shop_the_look_right"/>
 			</cms:pageSlot>
 		<div class="shop_the_look_left">
 			<cms:pageSlot position="ShopForLookLeftColSlot" var="feature">

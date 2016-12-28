@@ -50523,10 +50523,10 @@ width: auto;
     font-weight: bold;
     word-break: break-word;
   }
-  .shop_the_look div.shop_the_look_section:nth-child(2){
+  .shop_the_look div.shop_the_look_section.shop_the_look_right{
       float: right;
   }
-  .shop_the_look .shop_the_look_left .shop_the_look_section:last-child{
+  .shop_the_look .shop_the_look_left .shop_the_look_section.shop_view_more_link{
   margin-top: -20px;
   }
   .shop_the_look .shop_the_look_left{
@@ -50538,7 +50538,7 @@ width: auto;
   .shop_the_look .shop_the_look_left .shop_the_look_section .carousel-component .owl-controls .owl-dots{
   display:none !important;
   }
-  .shop_the_look div.shop_the_look_section:nth-child(2){
+  .shop_the_look div.shop_the_look_section.shop_the_look_right{
   vertical-align: top;
     float: right;
     width: 29%;
@@ -50585,13 +50585,13 @@ width: auto;
  display:none;
  }
 
- .shop_the_look .shop_the_look_left .shop_the_look_section:last-child{
+ .shop_the_look .shop_the_look_left .shop_the_look_section.shop_view_more_link{
  text-align: center;
  width: 100% !important;
  }
 
   
-.shop_the_look .shop_the_look_left .shop_the_look_section:last-child a{
+.shop_the_look .shop_the_look_left .shop_the_look_section.shop_view_more_link a{
  margin: 40px auto 0;
     text-transform: uppercase;
     color: #fff;
@@ -50709,7 +50709,7 @@ text-align:left;
 }
 /* blog section end */
 /* @media (min-width: 1122px){
-.shop_the_look .shop_the_look_left .shop_the_look_section:last-child{
+.shop_the_look .shop_the_look_left .shop_the_look_section.shop_view_more_link{
 	margin-top: -150px;
 }
 } */
@@ -50818,7 +50818,7 @@ text-align:left;
 	width: 59%;
 	padding:0;
 }
-.shop_the_look .shop_the_look_section:nth-child(2){
+.shop_the_look .shop_the_look_section.shop_the_look_right{
 	width: 40% !important;
     margin-left: 1%;
 }
@@ -51114,7 +51114,7 @@ padding: 0 24px;
   font-size: 30px;
   transform: scale(0.8);
   }
-  .shop_the_look .shop_the_look_section:last-child{
+  .shop_the_look .shop_the_look_section.shop_view_more_link{
   width: 38%;
     margin-left: 2%;
   }
@@ -51133,7 +51133,7 @@ padding: 0 24px;
   .top_deal_blp .feature-categories{
   padding:0;
   }
-  .shop_the_look .shop_the_look_left .shop_the_look_section:last-child a{
+  .shop_the_look .shop_the_look_left .shop_the_look_section.shop_view_more_link a{
   min-width: 200px;
   margin: 75px auto 0;
   }
@@ -51250,12 +51250,12 @@ padding: 0 24px;
 	border-top: 1px solid #ccc;
 	font-size: 24px;
 }
-.shop_the_look div.shop_the_look_section:nth-child(2){
+.shop_the_look div.shop_the_look_section.shop_the_look_right{
 	    float: right;
     width: 38% !important;
     margin-left: 2%;
 }
-.shop_the_look .shop_the_look_left .shop_the_look_section:last-child {
+.shop_the_look .shop_the_look_left .shop_the_look_section.shop_view_more_link {
     margin-top: -68px;
 }
 .common_logo_slot_wrapper .blp_title_banner:last-child form {
@@ -51492,12 +51492,12 @@ padding: 0 24px;
     border-top: 1px solid #ccc;
     font-size: 20px;
 }
-.shop_the_look .shop_the_look_section:last-child{
+.shop_the_look .shop_the_look_section.shop_view_more_link{
 	    margin: 0 40px 20px;
     order: -1;
     width: 100%;
 }
-.shop_the_look .shop_the_look_left .shop_the_look_section:last-child a{
+.shop_the_look .shop_the_look_left .shop_the_look_section.shop_view_more_link a{
 	margin: 0;
     padding: 15px 0;
     min-width: 125px;
@@ -51658,7 +51658,7 @@ padding: 0 24px;
     font-size: 11px;
     margin: 5px 0;
 }
-.shop_the_look div.shop_the_look_section:nth-child(2){
+.shop_the_look div.shop_the_look_section.shop_the_look_right{
     float:none; 
     margin: 0 0px 0px;
     order: -1;
@@ -51678,7 +51678,7 @@ padding: 0 24px;
 	font-size: 12px;
     line-height: 16px;
 }
-.shop_the_look .shop_the_look_left .shop_the_look_section:last-child{
+.shop_the_look .shop_the_look_left .shop_the_look_section.shop_view_more_link{
 	margin-top:0px;
 }
 .top_deal_blp > a{
@@ -51733,12 +51733,12 @@ padding: 0 24px;
 } */
 }
 @media (max-width: 600px){
-	.shop_the_look div.shop_the_look_section:nth-child(2){
+	.shop_the_look div.shop_the_look_section.shop_the_look_right{
 	margin: 0 40px 20px 50px;
 	   width: calc(100% - 90px) !important;
     text-align: center;
 	}
-	.shop_the_look .shop_the_look_left  div.shop_the_look_section:nth-child(2){
+	.shop_the_look .shop_the_look_left  div.shop_the_look_section.shop_the_look_right{
 	margin:0;
 	}
 	/* .men_women_sec .top-promos li:first-child{
@@ -51767,7 +51767,7 @@ padding: 0 24px;
 	padding-left: 0;
 	    padding-right: 0;
 } */
-.shop_the_look div.shop_the_look_section:nth-child(2){
+.shop_the_look div.shop_the_look_section.shop_the_look_right{
 	margin: 0 40px 20px 0px;
 	width: 100% !important;
 }

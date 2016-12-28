@@ -1988,13 +1988,9 @@ $(".top_categories_wrapper").css("padding-top", "40px");
 		$(this).nextAll().slice(0, 2).wrapAll("<div class='top_categories_section sub_categories'>");
 		});*/
 	//TPR-559 Hide/Unhide Component UI fixes starts
-	if ($("div.top_categories div").first().children().hasClass('content')) {
-		
-	}
-	else
-		{
+	if ($("div.top_categories").find('.simple-banner-component').length || $("div.top_categories").find('.content').length) {
 		$("div.top_categories").css("padding-top","50px");
-		}
+	}
 	//TPR-559 Hide/Unhide Component UI fixes ends 
 	//Style Edit section
 		/*$(".style_edit > div").slice(0,2).wrapAll("<div class='style_edit_left'>");*/
@@ -2824,14 +2820,10 @@ $(document).ready(function(){
 /*$(".top_categories_blp").find(".top_categories_wrapper_blp>.top_categories_section_blp:nth-child(3n + 1)").each(function(){
 	$(this).nextAll().slice(0, 2).wrapAll("<div class='top_categories_section_blp sub_categories_blp'>");
 	});*/
-//TPR-559 Hide/Unhide Component UI fixes starts 
-if ($("div.top_categories_blp div").first().children().hasClass('content')) {
-	
-}
-else
-	{
-	$("div.top_categories_blp").css("padding-top","50px");
-	}
+	//TPR-559 Hide/Unhide Component UI fixes starts 
+	if ($("div.top_categories_blp").find('.simple-banner-component').length || $("div.top_categories_blp").find('.content').length) {
+		$("div.top_categories_blp").css("padding-top","50px");
+	}	
 //TPR-559 Hide/Unhide Component UI fixes ends 
 //--top category section end---//
 //--top brands section----//
@@ -2862,7 +2854,13 @@ $(".shop_for_blp > .shop_for_left_wrapper_blp").nextAll().slice(0,4).wrapAll("<d
 /*$(".shop_the_look > div").slice(2,4).wrapAll("<div class='shop_the_look_left'>");
 $(".shop_the_look").find(".yCmsComponent.shop_the_look_section > a").addClass('shop_view_more');
 $(".shop_the_look").find(".yCmsComponent.shop_the_look_section > a").parent().addClass('shop_view_more_wrapper');
-*///----shop the look section end-----//
+*/
+$(".shop_the_look .shop_the_look_left .shop_the_look_section").each(function(){
+	if($(this).find(".carousel-component").length == 0){
+		$(this).addClass("shop_view_more_link");
+	}
+});
+//----shop the look section end-----//
 //----blog section start------//
 /*$(".top_deal_blp  > a").nextAll().wrapAll("<div class='blog_container_blp'>");
 var blp_blog_count = $(".top_deal_blp  > .blog_container_blp").children().length;
