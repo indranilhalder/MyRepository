@@ -131,13 +131,14 @@ public class CustomOmsCancelAdapter implements Serializable
 					if(isSsb){
 						sendTicketRequestData.setTicketSubType(MarketplaceomsordersConstants.TICKET_SUB_TYPE_CODE_SSB);
 						sendTicketLineItemData.setCancelReasonCode(MarketplaceomsordersConstants.CRM_SSB_REASON_CODE);
-					}else if(isSdb || isEdtoHd){
-						sendTicketRequestData.setTicketSubType(TICKET_SUB_TYPE_CODE_ARR);
-						sendTicketLineItemData.setCancelReasonCode(reasonCode);
 					}else{
    					sendTicketRequestData.setTicketSubType(MarketplaceomsordersConstants.TICKET_SUB_TYPE_CODE);
    					sendTicketLineItemData.setCancelReasonCode(reasonCode);
 					}
+				}else if(ticketTypeCode.equalsIgnoreCase("A")){
+						sendTicketRequestData.setTicketSubType(TICKET_SUB_TYPE_CODE_ARR);
+						sendTicketLineItemData.setCancelReasonCode(reasonCode);
+						sendTicketRequestData.setRefundType(refundType);
 				}
 				lineItemDataList.add(sendTicketLineItemData);
 			}
