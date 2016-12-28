@@ -3727,6 +3727,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				if (store == null)
 				{
 					store = new StringBuilder(diaplayName);
+				}else{
+					store.append(", "+diaplayName);
 				}
 			}
 			if (StringUtils.isNotEmpty(address.getLine1()))
