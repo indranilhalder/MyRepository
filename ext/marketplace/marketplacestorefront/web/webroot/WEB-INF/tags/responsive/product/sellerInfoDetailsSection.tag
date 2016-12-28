@@ -35,11 +35,11 @@
 							<spring:theme code="product.available"></spring:theme>
 							&nbsp;<span id="minPriceId"></span> --%>
 						</p>
-						<div id="otherSellerLinkId" style="display: none">
+						<%-- <div id="otherSellerLinkId" style="display: none">
 							<span id="otherSellersId"></span>&nbsp;<span
 								class="other-sellers-info" style="color: #a9143c;"><spring:theme
 									code="product.othersellersForNoStock"></spring:theme></span>&nbsp;
-						</div>
+						</div> --%>
 					</button>
 				</form:form>
 				<div id="othersSellerDivId" style="display: none">

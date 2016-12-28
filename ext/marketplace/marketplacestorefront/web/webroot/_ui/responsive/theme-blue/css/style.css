@@ -47494,6 +47494,7 @@ body.page-productDetails .breadcrumbs.wrapper {
 .OtherSellers .Padd .Title > p:nth-child(4){width:25%;}
 .OtherSellers .Padd .InfoWrap > li{   border-bottom: 1px solid #eaeaea;    clear: both;    display: inline-block;    margin: 10px 0;    padding: 0 0 20px;    width: 100%;}
 .OtherSellers .Padd .InfoWrap > li:last-child{ margin:0; padding:0; border:0;}
+.OtherSellers .Padd .InfoWrap > li:first-child{ margin:15px 0;}
 .OtherSellers .Padd .InfoWrap .Content > div{ float:left;}
 .OtherSellers .Padd .InfoWrap .Content > div.Seller{width:20%;}
 .OtherSellers .Padd .InfoWrap .Content > div.Price{ width:20%;}
