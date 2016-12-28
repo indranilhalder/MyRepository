@@ -1987,6 +1987,15 @@ $(".top_categories_wrapper").css("padding-top", "40px");
 	$(".top_categories").find(".top_categories_wrapper>.top_categories_section:nth-child(3n + 1)").each(function(){
 		$(this).nextAll().slice(0, 2).wrapAll("<div class='top_categories_section sub_categories'>");
 		});*/
+	//TPR-559 Hide/Unhide Component UI fixes starts
+	if ($("div.top_categories div").first().children().hasClass('content')) {
+		
+	}
+	else
+		{
+		$("div.top_categories").css("padding-top","50px");
+		}
+	//TPR-559 Hide/Unhide Component UI fixes ends 
 	//Style Edit section
 		/*$(".style_edit > div").slice(0,2).wrapAll("<div class='style_edit_left'>");*/
 	//Top Brands section
@@ -2815,6 +2824,15 @@ $(document).ready(function(){
 /*$(".top_categories_blp").find(".top_categories_wrapper_blp>.top_categories_section_blp:nth-child(3n + 1)").each(function(){
 	$(this).nextAll().slice(0, 2).wrapAll("<div class='top_categories_section_blp sub_categories_blp'>");
 	});*/
+//TPR-559 Hide/Unhide Component UI fixes starts 
+if ($("div.top_categories_blp div").first().children().hasClass('content')) {
+	
+}
+else
+	{
+	$("div.top_categories_blp").css("padding-top","50px");
+	}
+//TPR-559 Hide/Unhide Component UI fixes ends 
 //--top category section end---//
 //--top brands section----//
 //TPR-559 Hide/Unhide Component UI fixes starts
