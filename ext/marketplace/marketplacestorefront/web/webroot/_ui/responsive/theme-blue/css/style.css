@@ -50584,11 +50584,14 @@ width: auto;
  .shop_the_look .shop_the_look_left .shop_the_look_section .carousel-component .owl-stage-outer .product-tile .short-info .color-swatch{
  display:none;
  }
+
  .shop_the_look .shop_the_look_left .shop_the_look_section:last-child{
  text-align: center;
  width: 100% !important;
  }
- .shop_the_look .shop_the_look_left .shop_the_look_section:last-child a{
+
+  
+.shop_the_look .shop_the_look_left .shop_the_look_section:last-child a{
  margin: 40px auto 0;
     text-transform: uppercase;
     color: #fff;
@@ -50599,7 +50602,9 @@ width: auto;
     display: inline-block;
     min-width: 250px;
  
- }
+ } 
+ 
+
  .shop_the_look .shop_the_look_left .shop_the_look_section .carousel-component .owl-stage-outer .product-tile .details.short-info .price{
  color: #000;
  text-align:center;
@@ -52004,7 +52009,7 @@ overflow: hidden;
 	margin: 0px auto;
 }
 
-.clp_top_brands  .top_brands_section:not(:last-child) {
+.clp_top_brands  .top_brands_section:not(.view_more_link) {
 	margin: 0 0.64% 1%;
 	width: 18.7%;
 	display: inline-block;
@@ -52295,7 +52300,7 @@ overflow: hidden;
 	bottom: -2px;
 }
 
-.best_seller .best_seller_section:first-child {
+.best_seller .best_seller_section.best_seller_heading {
 	font-size: 28px;
 	font-weight: bold;
 	margin: 50px 0 40px;
@@ -52347,13 +52352,13 @@ overflow: hidden;
 	position: relative;
 }
 
-.best_seller .best_seller_section:first-of-type, .best_seller .best_seller_section:last-of-type
+.best_seller .best_seller_section.best_seller_heading, .best_seller .best_seller_section.best_seller_link
 	{
 	opacity: 1 !important;
 	height: auto !important;
 	z-index: 0 !important;
 }
-.best_seller .best_seller_section:last-of-type {
+.best_seller .best_seller_section.best_seller_link {
 	text-align: center;
 }
 
@@ -52855,7 +52860,7 @@ word-break: break-word;
 		font-size: 12px;
 		padding: 15px;
 	}
-	.best_seller .best_seller_section:first-child {
+	.best_seller .best_seller_section.best_seller_heading {
 		font-size: 20px;
 		margin: 30px 0 20px;
 		padding: 0;
