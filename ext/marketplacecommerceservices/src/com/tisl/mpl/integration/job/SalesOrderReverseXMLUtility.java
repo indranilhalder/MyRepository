@@ -452,23 +452,25 @@ public class SalesOrderReverseXMLUtility
 	 */
 	private boolean getSDBOrEdToHdFlag(OrderModel childOrders)
 	{
+		LOG.info("Checking edToHd and sdb flag");
 		boolean edToHdFlag = false;
 		boolean sdbFlag = false;
 		try {
 			for (AbstractOrderEntryModel entry : childOrders.getEntries()) {
-				if(null != entry.getIsEDtoHD()) {
-					if(entry.getIsEDtoHD().booleanValue()) {
-						edToHdFlag = true;
-						return true;
-					}
+				if(null != entry.getIsEDtoHD() && entry.getIsEDtoHD().booleanValue()) {
+					edToHdFlag = true;
+					return true;
 				}
-				if(entry.getIsSdb().booleanValue()) {
+				if(null != entry.getIsSdb() && entry.getIsSdb().booleanValue()) {
 					sdbFlag = true;
 					return true;
 				}
 			}
 		}catch(Exception e) {
-			LOG.error("Exception while checking EDToHD Flag/SDB Flag for the order :"+childOrders.getCode());
+			LOG.error("Exception while checking EDToHD Flag/SDB Flag for the order :"+childOrders.getCode()+e);
+		}
+		if(LOG.isDebugEnabled()){
+			LOG.debug("edToHdFlag"+edToHdFlag+"  sdbFlag" +sdbFlag);
 		}
 		return edToHdFlag || sdbFlag  ;
 	}
@@ -492,10 +494,13 @@ public class SalesOrderReverseXMLUtility
 					boolean canOrRetflag = false; //flag for checking if order line is cancelled or returned. If flag is false the order line will not be set in the XML
 					boolean returnFlag = false;
 					boolean cancelFlag = false;
-					boolean sdbFlag    = false;
-					boolean edToHdFlag = false;
+					
+					/*Added in R2.3 START*/
+					boolean sdbFlag    = checkSdbFlag(entry);     
+					boolean edToHdFlag = checkEdToHdFlag(entry);
+					/*Added in R2.3 END*/
 					if (null != entry && null != entry.getProduct()
-							&& (null == entry.getIsSentToFico() || !(entry.getIsSentToFico().booleanValue()))) // null ==  entry.getIsSentToFico() is added for n/a scenarios for previous placed orders
+							&& ((null == entry.getIsSentToFico() || !(entry.getIsSentToFico().booleanValue())) || sdbFlag || edToHdFlag))  // null ==  entry.getIsSentToFico() is added for n/a scenarios for previous placed orders 
 					{
 						final ProductModel product = entry.getProduct();
 						LOG.debug("inside AbstractOrderEntryModel");
@@ -575,19 +580,30 @@ public class SalesOrderReverseXMLUtility
 						}
 
 						LOG.debug("total price call" + entry.getTotalPrice());
-						if (null != entry.getTotalPrice() && xmlToFico)
-						{
-							if (entry.getNetAmountAfterAllDisc().doubleValue() > 0)
+						/*Added in R2.3 Start*/
+						// Amount   will be '0' if refund is only for Express/Schedule delivery charges. 
+						if((sdbFlag || edToHdFlag)) {
+							xmlData.setAmount(0.0D);
+						}
+						/*Added in R2.3 END*/
+						
+						final String orderLineId = entry.getOrderLineId() != null ? entry.getOrderLineId() : entry.getTransactionID();
+						
+						if (checkReturnCancelMap.containsKey(orderLineId)) {
+							if (null != entry.getTotalPrice() && xmlToFico)
 							{
-								LOG.debug("*****total price with discount*****" + entry.getNetAmountAfterAllDisc());
-								xmlData.setAmount(entry.getNetAmountAfterAllDisc().doubleValue());
+								if (entry.getNetAmountAfterAllDisc().doubleValue() > 0)
+								{
+									LOG.debug("*****total price with discount*****" + entry.getNetAmountAfterAllDisc());
+									xmlData.setAmount(entry.getNetAmountAfterAllDisc().doubleValue());
+								}
+								else
+								{
+									LOG.debug("total price call" + entry.getTotalPrice());
+									xmlData.setAmount(entry.getTotalPrice().doubleValue());
+								}
+								LOG.debug("after price set");
 							}
-							else
-							{
-								LOG.debug("total price call" + entry.getTotalPrice());
-								xmlData.setAmount(entry.getTotalPrice().doubleValue());
-							}
-							LOG.debug("after price set");
 						}
 
 						/*
@@ -698,19 +714,7 @@ public class SalesOrderReverseXMLUtility
 							xmlToFico = false;
 						}
 
-						final String orderLineId = entry.getOrderLineId() != null ? entry.getOrderLineId() : entry.getTransactionID();
-
-						if(null != entry.getIsSdb()) {
-							if(entry.getIsSdb().booleanValue()) {
-								sdbFlag = true;
-							}
-						}
-						if(null != entry.getIsEDtoHD()) {
-							if( entry.getIsEDtoHD().booleanValue()) {
-								edToHdFlag = true;
-							}
-						}
-
+						//final String orderLineId = entry.getOrderLineId() != null ? entry.getOrderLineId() : entry.getTransactionID();
 
 						if (checkReturnCancelMap.containsKey(orderLineId))
 						{
@@ -733,6 +737,8 @@ public class SalesOrderReverseXMLUtility
 							}
 
 							canOrRetflag = true;
+						}else if(sdbFlag || edToHdFlag) {
+							xmlData.setOrderTag(RET);
 						}
 
 						if (StringUtils.isNotEmpty(entry.getJuspayRequestId()))
@@ -748,7 +754,7 @@ public class SalesOrderReverseXMLUtility
 							xmlData.setShipmentCharge(0.0);
 							xmlData.setExpressdeliveryCharge(0.0);
 						}
-						if(sdbFlag) {
+						if(sdbFlag || cancelFlag) {
 							if (null != entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() > 0)
 							{
 								xmlData.setScheduleDelCharge(entry.getScheduledDeliveryCharge().doubleValue());
@@ -812,10 +818,18 @@ public class SalesOrderReverseXMLUtility
 							}
 						}
 
-						if (canOrRetflag)
+						if (canOrRetflag || sdbFlag || edToHdFlag)
 						{
 							childOrderDataList.add(xmlData);
-							entry.setIsSentToFico(Boolean.TRUE);
+							if(canOrRetflag) {
+								entry.setIsSentToFico(Boolean.TRUE);
+							}
+							if(sdbFlag) {
+								entry.setIsSdbSendToFico(Boolean.TRUE);
+							}
+							if(edToHdFlag) {
+								entry.setIsEdToHdSendToFico(Boolean.TRUE);
+							}
 							modelService.save(entry);
 						}
 					}
@@ -837,6 +851,50 @@ public class SalesOrderReverseXMLUtility
 		}
 		return childOrderDataList;
 
+	}
+
+	/**
+	 * @param entry
+	 * @return
+	 */
+	private boolean checkEdToHdFlag(AbstractOrderEntryModel entry)
+	{
+		boolean isEdToHd = false;
+		if((null != entry && null != entry.getIsEDtoHD() && entry.getIsEDtoHD().booleanValue())
+				&& (null == entry.getIsEdToHdSendToFico() || !entry.getIsEdToHdSendToFico().booleanValue())
+				&& (null != entry.getRefundedDeliveryChargeAmt() && entry.getRefundedDeliveryChargeAmt().doubleValue()>=0.0D)) {
+			
+			isEdToHd = true;
+		}else {
+			isEdToHd = false ;
+			return false;
+		}
+		if(LOG.isDebugEnabled()) {
+			LOG.debug("EdToHd flag for transaction Id :"+isEdToHd);
+		}
+		return isEdToHd;
+
+	}
+
+	/**
+	 * @param entry
+	 * @return
+	 */
+	private boolean checkSdbFlag(AbstractOrderEntryModel entry)
+	{
+		boolean isSdb = false;
+		if((null != entry && null != entry.getIsSdb() && entry.getIsSdb().booleanValue())
+				&& (null == entry.getIsSdbSendToFico() || !entry.getIsSdbSendToFico().booleanValue())
+				&& (null != entry.getRefundedScheduleDeliveryChargeAmt() && entry.getRefundedScheduleDeliveryChargeAmt().doubleValue()>=0.0D)) {
+			isSdb = true;
+		}else {
+			isSdb = false ;
+			return false;
+		}
+		if(LOG.isDebugEnabled()) {
+			LOG.debug("SDB flag for transaction Id :"+isSdb);
+		}
+		return isSdb;
 	}
 
 	protected DefaultPromotionManager getDefaultPromotionsManager()
