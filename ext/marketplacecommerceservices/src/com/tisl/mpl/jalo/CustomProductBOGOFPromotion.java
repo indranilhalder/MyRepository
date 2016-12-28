@@ -510,7 +510,7 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 				if (totalQty >= qualifyingCount)
 				{
 					final Map<String, Integer> qCMapForCatLevelBOGO = getDefaultPromotionsManager().getSortedValidProdUssidMap(
-							validProductUssidMap, totalQty, qualifyingCount, paramSessionContext, restrictionList);
+							validProductUssidMap, totalQty, qualifyingCount, paramSessionContext, restrictionList, getCode());
 
 					flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForABPromo(restrictionList,
 							validProductUssidMap, order);
@@ -530,7 +530,7 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 
 
 						getDefaultPromotionsManager().populateSortedValidProdUssidMap(validProductUssidMap, validFreeCount,
-								paramSessionContext, restrictionList, QCMapForFreeItems);
+								paramSessionContext, restrictionList, QCMapForFreeItems, getCode());
 
 						final List<PromotionOrderEntryConsumed> freeItems = consumeFromHead(paramSessionContext, comparator,
 								validFreeCount, orderView.getAllEntries(paramSessionContext), QCMapForFreeItems, tcMapForValidEntries);

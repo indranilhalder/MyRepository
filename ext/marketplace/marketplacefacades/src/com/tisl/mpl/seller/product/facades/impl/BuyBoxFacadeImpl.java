@@ -142,6 +142,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		BuyBoxData buyboxData = new BuyBoxData();
 		boolean onlyBuyBoxHasStock = false;
 		BuyBoxModel buyBoxMod = null;
+		//OOS Error Changes PDP
+		int totalProductCount = 0;
 		final List<BuyBoxData> buyBoxDataList = new ArrayList<BuyBoxData>();
 		//TISPRM -56
 		String products[] = null;
@@ -158,10 +160,14 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			products = productCode.split(MarketplacecommerceservicesConstants.COMMA);
 			pdpProduct = products[0];
 			arrayToProductList = new ArrayList<String>(Arrays.asList(products));
+			//For Apparel
+			totalProductCount = arrayToProductList.size();
 		}
 		else
 		{
 			pdpProduct = productCode;
+			//For Electronics
+			totalProductCount = 1;//as there are no variants
 		}
 
 		//END
@@ -187,7 +193,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			if (buyboxModelList.isEmpty())
 			{
 				LOG.info("************* No Seller with inventory>0 inventory, Fetching buy box rows having price>0 *********");
-				buyboxData.setAllOOStock(MarketplaceFacadesConstants.Y);// its is valid for electronics product
+				// buyboxData.setAllOOStock(MarketplaceFacadesConstants.Y);// its is valid for electronics product
 				buyboxModelList = buyBoxService.buyBoxPriceNoStock(pdpProduct);
 				if (CollectionUtils.isNotEmpty(buyboxModelList))
 				{
@@ -236,12 +242,19 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					productsWithNoStock = arrayToProductList;
 				}
 			}
+			//OOS Error Changes PDP
+			if (totalProductCount == productsWithNoStock.size())
+			{
+				buyboxData.setAllOOStock(MarketplaceFacadesConstants.Y);// its is valid for electronics product
+			}
+
 			//TPR-1375 changes start
 			if (CollectionUtils.isNotEmpty(buyboxModelList) && buyboxModelList.size() > 1)
 			{
 				for (final BuyBoxModel buyBoxModel : buyboxModelList)
 				{
-					buyBoxDataList.add(populateBuyBoxData(buyBoxModel, onlyBuyBoxHasStock, buyboxModelList));
+					buyBoxDataList
+							.add(populateBuyBoxData(buyBoxModel, onlyBuyBoxHasStock, buyboxModelList, buyboxData.getAllOOStock()));
 				}
 
 			}
@@ -249,7 +262,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			//TPR-1375 changes end
 			if (buyboxModelList.size() > 0)
 			{
-				buyboxData = populateBuyBoxData(buyBoxMod, onlyBuyBoxHasStock, buyboxModelList);
+				buyboxData = populateBuyBoxData(buyBoxMod, onlyBuyBoxHasStock, buyboxModelList, buyboxData.getAllOOStock());
 				//TPR-1375 changes starts
 				if (CollectionUtils.isEmpty(buyBoxDataList))
 				{
@@ -813,7 +826,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	 * @return buyboxData
 	 */
 	private BuyBoxData populateBuyBoxData(final BuyBoxModel buyBoxMod, final boolean onlyBuyBoxHasStock,
-			final List<BuyBoxModel> buyboxModelList)
+			final List<BuyBoxModel> buyboxModelList, final String outOfStockFlag)
 	{
 		final BuyBoxData buyboxData = new BuyBoxData();
 		if (null != buyBoxMod.getSpecialPrice() && buyBoxMod.getSpecialPrice().doubleValue() > 0)
@@ -895,6 +908,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		}
 		final double roundedMinPrice = Math.round(minPrice * 100) / 100;
 		buyboxData.setMinPrice(productDetailsHelper.formPriceData(new Double(roundedMinPrice)));
+		buyboxData.setAllOOStock(outOfStockFlag);
 		return buyboxData;
 
 	}

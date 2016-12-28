@@ -339,6 +339,7 @@ public class HomePageController extends AbstractPageController
 				}
 			}
 		}
+		// Changes implemented for TPR-1121
 		showCaseComponentJson.put("autoPlay", showCaseComponent.getAutoPlay());
 		showCaseComponentJson.put("slideBy", showCaseComponent.getSlideBy());
 		showCaseComponentJson.put("autoplayTimeout", showCaseComponent.getAutoplayTimeout());
@@ -598,6 +599,8 @@ public class HomePageController extends AbstractPageController
 						}
 
 						newAndExclusiveJson.put(TITLE, title);
+
+						// Changes implemented for TPR-1121
 						newAndExclusiveJson.put("autoPlay", newAndExclusiveComponent.getAutoPlayNewIn());
 						newAndExclusiveJson.put("slideBy", newAndExclusiveComponent.getSlideByNewIn());
 						newAndExclusiveJson.put("autoplayTimeout", newAndExclusiveComponent.getAutoplayTimeoutNewIn());
@@ -740,15 +743,21 @@ public class HomePageController extends AbstractPageController
 			{
 				if (buyBoxData.getSpecialPrice() != null)
 				{
-					productPrice = buyBoxData.getSpecialPrice().getFormattedValue();
+					//productPrice = buyBoxData.getSpecialPrice().getFormattedValue();
+					/* TPR-182 */
+					productPrice = buyBoxData.getSpecialPrice().getFormattedValueNoDecimal();
 				}
 				else if (buyBoxData.getPrice() != null)
 				{
-					productPrice = buyBoxData.getPrice().getFormattedValue();
+					//productPrice = buyBoxData.getPrice().getFormattedValue();
+					/* TPR-182 */
+					productPrice = buyBoxData.getPrice().getFormattedValueNoDecimal();
 				}
 				else
 				{
-					productPrice = buyBoxData.getMrp().getFormattedValue();
+					//productPrice = buyBoxData.getMrp().getFormattedValue();
+					/* TPR-182 */
+					productPrice = buyBoxData.getMrp().getFormattedValueNoDecimal();
 				}
 			}
 			LOG.info("ProductPrice>>>>>>>" + productPrice);

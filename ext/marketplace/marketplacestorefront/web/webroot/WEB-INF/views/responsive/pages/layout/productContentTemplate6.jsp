@@ -1,10 +1,18 @@
 <%@ page trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template"%>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
-
+<script>
+$(document).ready(function(){
+	if ($('.Manufacturer.temp-six a.show-more').length) {
+		var showMoreLink = $('.Manufacturer.temp-six a.show-more').clone();
+		$('.Manufacturer.temp-six a.show-more').remove();
+		$('.Manufacturer.temp-six .Padd').append(showMoreLink);
+	}
+});
+</script>
 <div class="Manufacturer temp-six">
   <div class="Padd">
-    <h2><span>From the Manufacturer</span></h2>
+    <h2><span>${cmsPage.title}</span></h2>
       <div class="first-content">
          <div class="media">
             <cms:pageSlot position="Section1B" var="feature">

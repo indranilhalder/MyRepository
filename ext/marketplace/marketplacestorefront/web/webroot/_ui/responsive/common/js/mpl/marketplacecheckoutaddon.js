@@ -3348,13 +3348,13 @@ function validateCardNo(formSubmit) {
 					{
 						if(response.cardType=="" || response.cardType==null || response.cardType=="CREDIT" || response.cardType=="CC" || response.cardType=="Credit")
 						{
-							if(selectedBank!="select" && responseBankVal.includes(selectedBankVal)){
+							if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)){
 								binStatus=true;
 								//applyPromotion(selectedBankVal,binStatus,formSubmit);
 								errorHandle.innerHTML = "";
 								return true;			
 							}
-							else if(selectedBank!="select" && !responseBankVal.includes(selectedBankVal)){
+							else if(selectedBank!="select" && !responseBankVal.indexOf(selectedBankVal)){
 								binStatus=false;
 								errorHandle.innerHTML = "Please enter a card same as the selected bank";
 								return false;	
@@ -3805,7 +3805,7 @@ function validateEmiCardNo(formSubmit) {
 						{
 							if(response.cardType=="" || response.cardType==null || response.cardType=="CREDIT" || response.cardType=="CC" || response.cardType=="Credit")
 							{
-								if(selectedBank!="select" && responseBankVal.includes(selectedBankVal)){
+								if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)){
 									binStatus=true;
 									//TPR-629
 									if(formSubmit=="formSubmit")
@@ -3816,7 +3816,7 @@ function validateEmiCardNo(formSubmit) {
 									errorHandle.innerHTML = "";
 									return true;			
 								}
-								else if(selectedBank!="select" && !responseBankVal.includes(selectedBankVal)){
+								else if(selectedBank!="select" && !responseBankVal.indexOf(selectedBankVal)){
 									binStatus=false;
 									//TPR-629
 									if(formSubmit=="formSubmit")

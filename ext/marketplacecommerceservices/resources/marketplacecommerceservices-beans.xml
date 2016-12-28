@@ -48,6 +48,11 @@
 		<property name="doubleValue" type="Double"/>
 	</bean>
 
+<!-- TPR-182 -->
+	<bean class="de.hybris.platform.commercefacades.product.data.PriceData">
+		<property name="formattedValueNoDecimal" type="String"/>
+	</bean>
+
 	<!-- <bean class="com.tisl.mpl.data.SellerInfoDetailsData">
 		<property name="priceData" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
 		<property name="sellerDetail" type="de.hybris.platform.commerceservices.model.SellerModel"/>
@@ -684,5 +689,21 @@
 			<description>The OrderModel</description>
 		</property>
 	</bean>
+	
+			<!-- TPR-1285 Start -->
+ 	<bean class="com.tisl.mpl.data.CustomPageData">
+ 		<property name ="url" type="String"/>
+ 		<property name ="changeFrequency" type = "String" />
+ 		<property name ="priority" type = "String" />
+  	</bean>
+  	
+  
+ 	
+ 	<bean class="de.hybris.platform.acceleratorservices.sitemap.data.SiteMapUrlData">
+ 		<property name="changeFrequency" type="String" />
+ 		<property name="priority" type="String" />
+ 		<property name="lastMod" type="String" />
+ 	</bean>
+	<!-- TPR-1285 ends-->
 	
 </beans>

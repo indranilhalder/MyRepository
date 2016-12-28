@@ -30,9 +30,15 @@ searchCategory_id		= $('#selectedSearchCategoryId').val(); // For Normal search
 searchCategory_idFromMicrosite		= $('#selectedSearchCategoryIdMicrosite').val(); // For Microsite search
 var daysDif = '';
 var is_new_product = false;
-category_idString		= $('#categoryIdHotNow').val(); // For HotNow category
-var category_idArray = new Array();
-category_idArray = category_idString.split(",");
+var filterNamePairing = {};
+
+
+var category_idString		= $('#categoryIdHotNow').val(); // For HotNow category for TPR 1313
+var category_idArray = new Array();//Variables added for TPR 1313
+if(typeof(category_idString)!='undefined')
+{
+	category_idArray = category_idString.split(',');
+}//Variables added for TPR 1313
 
 //start for geolocations tpr-1304
 $(document).ready(function(){
@@ -53,8 +59,16 @@ $(document).ready(function(){
 	    
 	  };
 
-	  function error() {
-	    output.innerHTML = "Unable to retrieve your location";
+	  function error(err) {
+		  if (err.code == 0) {
+			output.innerHTML = "The method failed to retrieve the location of the device due to an unknown error"; 
+		   }else if(err.code == 1){
+			output.innerHTML = "The method failed to retrieve the location of the device because the application does not have permission to use the Location Service";   
+		   }else if(err.code == 2){
+			output.innerHTML = "The location of the device could not be determined";  
+		   }else if(err.code == 3){
+			output.innerHTML = "The method was unable to retrieve the location information within the specified maximum timeout interval";   
+		   }
 	  };
 
 	  
@@ -77,42 +91,33 @@ function codeLatLng(lat,lng) {
   geocoder.geocode({
       'latLng': latlng
   }, function(results, status) {
-  	
-if (status == google.maps.GeocoderStatus.OK) {
 
-  if (results[1]) {
-  var indice=0;
-  for (var j=0; j<results.length; j++)
-  {
-      if (results[j].types[0]=='locality')
-          {
-              indice=j;
-              break;
+	  if (status == google.maps.GeocoderStatus.OK) {
+		 
+          if (results[0]) {
+        	  
+              var add= results[0].formatted_address ;
+              var  value=add.split(",");
+              var count=value.length;
+              var country=value[count-1];
+              var state=value[count-2];
+              var city=$.trim(value[count-3].toLowerCase());
+              var cityName= ["kolkata", "chennai", "mumbai", "hyderabad", "delhi","bangalore" ];
+              if($.inArray(city,cityName)!== -1)
+        	  {
+        	  
+        	  $('#location').val(city);
+        	  
+        	  }
+              
           }
-      }
- 
- 
-  for (var i=0; i<results[j].address_components.length; i++)
-      {
-          if (results[j].address_components[i].types[0] == "locality") {
-                  
-                  city = results[j].address_components[i];
-                  var cityName = city.long_name.toLowerCase();
-                  $('#location').val(cityName);
-                 
-              }
-          
-          
-      }
-
-     
-      } else {
-     // console.log("No results found");
-      }
-  //}
-} else {
-	  //console.log("Geocoder failed due to: " + status);
-}
+          else  {
+        	// console.log("No results found");
+          }
+  }
+   else {
+	   //console.log("Geocoder failed due to: " + status);
+  }
       
   });
 }
@@ -326,7 +331,7 @@ if (searchCategory_id){
 				  document.cookie='IAUSERTYPE='+user_type+'; path=/';
 				}
 
-			/*
+/*
 			Scan through the webpage and call the APIs for each element we detect
 			*/
 			function callForEachElement(params) {
@@ -336,10 +341,22 @@ if (searchCategory_id){
 			      var endpoint = '/SocialGenomix/recommendations/products';
 			      if(productWidget[i] !== "normal") {
 			        endpoint += '/' + productWidget[i];
-				  
-				  }
+			      }
 			      if (productWidget[i].indexOf("hot") === 0 && 
 			          site_page_type === "viewAllTrending") {
+
+			      	  /*Newly added url parameters set by IA hot homepage widget*/
+			      	  if(getURLField('filter=')) {
+			      	  	var keyval = getURLField('filter=').split(',');
+			      	  	if(keyval[0] === "product_category") {
+			      	  		params.category_id = keyval[1];
+			      	  	} else if (keyval[0] === "brand") {
+			      	  		params.brand_id = keyval[1];
+			      	  	}
+			      	  }
+			      	  if(getURLField('location=')) {
+			      	  	params.location = getURLField('location=');
+			      	  }
 			        params.count = '100';
 			      } else {
 			        params.count = '15';
@@ -351,11 +368,47 @@ if (searchCategory_id){
 			    	  params.count = '15';
 			      }
 			      params.htmlElement = productWidgetElement[i];
-			      callRecApi(params, rootEP + endpoint);
-			    }
-			  }
 
-			  /*Check against all brand widget elements*/
+			      if(site_page_type === "homepage") { //new requirement for homepage
+					if (document.getElementById('location')) {
+    					if(document.getElementById('location').value) {
+      						params.location = document.getElementById('location').value;
+      						callRecApi(params, rootEP + endpoint);
+    					}
+  					}
+	  				/*Staticly-built list of filters*/
+				    var categoryFilters = [] ;
+				    /* Category code for Dropdown Filter in hot and search widgets 
+				    var categoryCodeForFilters = [] ;
+				    $.each($('input#for_ia_hot_dropdown_name'),function(i,val){  
+				    	categoryFilters.push(val.value);
+					});
+				    $.each($('input#for_ia_hot_dropdown_code'),function(i,val){  
+				    	categoryCodeForFilters.push(val.value);
+					});*/
+					params.location = undefined;
+					
+					for (var c=0; c < category_idArray.length; c++) {
+						//e.g. MSH10-Women
+						var filterCode = category_idArray[c].split('-')[0];
+						var filterName = category_idArray[c].split('-')[1];
+						filterNamePairing[filterCode] = filterName;
+
+			      		params.category_id = filterCode; //"MSH10"; //women's
+			      		callRecApi(params, rootEP + endpoint);
+
+			      		//params.category_id = "MSH11"; //men's
+			      		//callRecApi(params, rootEP + endpoint);
+
+			      		//params.category_id = "MSH12"; //electronics
+			      		//callRecApi(params, rootEP + endpoint);
+			      	}
+
+			      } else {
+			      	callRecApi(params, rootEP + endpoint);
+			  	  }
+			    }
+			  } /*Check against all brand widget elements*/
 			  for (var i=0; i<brandWidgetElement.length; i++) {
 			    if(document.getElementById(brandWidgetElement[i]) !== null) {
 			      var endpoint = '/SocialGenomix/recommendations/';
@@ -786,7 +839,7 @@ if (searchCategory_id){
 						  /* TISPRD-2119 Changes for Quick View position*/
 							 if((obj.colors != null && obj.colors.length < 2) && (obj.sizes != null && obj.sizes.length < 2)&& (obj.type == 'Electronics')){ 
 								 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView ia_both" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0;left: 0px; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block; width: 50%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height:70px;font-size:12px;"><span>Quick View</span></div><div onclick=submitAddToCart("'+obj.site_product_id+'","'+obj.site_uss_id+'") class="iaAddToCartButton ia_both" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block;right:0; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;width: 50%;font-size:12px;"><span>Add To Bag</span></div>';
-								
+							
 							 }else{
 								 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0; z-index: -1; visibility: hidden; color: #00cbe9;display: block; width: 100%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;font-size:12px;"><span>Quick View</span></div>';
 								 
@@ -891,7 +944,13 @@ if (searchCategory_id){
 			    /*Initialize params object we'll be passing around*/
 			    var params = {};
 			    if (site_page_type === "product" || site_page_type === "productpage") {
-			    	 jQuery.ajax({
+			    	incParams = { 'site_product_id' : spid, 'ecompany': ecompany, 'session_id':ssid }
+			    	if (document.getElementById('location')) {
+    					if(document.getElementById('location').value) {
+      						incParams.location = document.getElementById('location').value;
+    					}
+  					}
+			    	jQuery.ajax({
 
 					      	type: "GET",
 
@@ -901,7 +960,7 @@ if (searchCategory_id){
 
 					      	dataType: 'jsonp',
 
-					      	data: { 'site_product_id' : spid, 'ecompany': ecompany, 'session_id':ssid },
+					      	data: incParams,
 
 					      	contentType: 'application/javascript',
 
@@ -985,6 +1044,10 @@ if (searchCategory_id){
 			  if(jQuery.inArray(widgetMode, productWidget) > -1) {
 			    /*If it doesn't exist, we can stop*/
 			    widgetElement = productWidgetElement[jQuery.inArray(widgetMode, productWidget)];
+			    if(site_page_type === "homepage" && response.data.filter_value) {
+ 			    	//MSH10, MSH11, and MSH12 
+ 			    	widgetElement = widgetElement + '_' + response.data.filter_value;
+ 			    }
 			    if (!document.getElementById(widgetElement)) {
 			      return;
 			    }
@@ -1035,22 +1098,8 @@ if (searchCategory_id){
 			    	sortHtml += '<li class="sort_li" id="name-desc">Name: Z to A</li>';
 			    	sortHtml += '<li class="sort_li" id="price-asc">Price: Low to High</li>';
 			    	sortHtml += '<li class="sort_li" id="price-desc">Price: High to Low</li>';
-			    	sortHtml += '</ul></div></div>';
-			 
-			/* 
-			 * commented as HotNow category drop-down logic has been removed
-			 *  
-			 *   var catHtml = '<div class="select-view ">'; 
-			    //for release 2 changes in home-page headers-All Departments
-			    catHtml += '<div class="select-list"><span class="selected hotSelected">All Departments</span><ul id="ia_category_select" style="width: auto;">';
-			    for (var i=0; i<categoryFilters.length; i++) {
-			    	if(i==0){
-			    		 catHtml += '<li class="category_li" id="allCat">All Departments</li>';
-			    	}
-			      catHtml += '<li class="category_li" id="'+categoryCodeForFilters[i]+'">'+categoryFilters[i]+'</li>';
-			    } 
-			    catHtml += '</ul></div></div>'; */
-			    
+			    	sortHtml += '</ul></div></div>';			 
+						    
 			    if(slider) {
 			    	if(site_page_type === 'search' && widgetElement === 'ia_products_search'){
 			    		html += '<h2><span style="color: black !important;">Best Sellers</span>';
@@ -1060,17 +1109,22 @@ if (searchCategory_id){
 			    		//for release 2 changes in pdp-page 
 			    		if(site_page_type === 'productpage' && widgetElement ==='ia_products_complements'){
 			    			html += '<h2><span style="color: black !important;">Things That Go With This</span>';
-			    		}else{
+			    		} else if (site_page_type === "homepage") {
+ 		    				var catFilter = filterNamePairing[response.data.filter_value];
+ 		    				if(typeof catFilter === "undefined") {
+ 		    					var loc = document.getElementById('location').value;
+ 		    					var loc = loc.charAt(0).toUpperCase() + loc.slice(1);
+ 		    					html += '<h1><span style="color: black !important;">Trending in Your location '+loc+' </span>';	    		
+ 		    				} else {
+ 			    				html += '<h1><span style="color: black !important;">Hot in '+catFilter+' </span>';	    		
+ 			    			}
+ 			    		}
+			    		else{
 						
 			    		html += '<h2><span style="color: black !important;">'+productWidgetTitle[jQuery.inArray(widgetMode, productWidget)]+'</span>';
 			    	}
-			    		}
+			    		}			      
 			      
-			      /*For hot we need a scrolldown bar to select filters*/
-			      /*commented as HotNow category drop-down logic has been removed
-			       * if(site_page_type === "homepage" || site_page_type ==="viewAllTrending" && widgetMode != "recent") {
-			        html += catHtml;
-			      }*/
 			      html += '</h2>';
 			      html += '<div class="spacer" style="padding: 0 25px;"><div class="slider product ready"><div class="frame"><ul id="' + widgetElement + '_list" class="overflow owl-carousel" style="width: 0.953empx; left: 0px;">';
 			    } else {
@@ -1091,7 +1145,7 @@ if (searchCategory_id){
 			      	 html += sortHtml;
 			        }
 			        
-			      //  html += catHtml;//commented as HotNow category drop-down logic has been removed
+			      
 			        
 			      }
 			      html += '<ul id="'+widgetElement+'_list" class="product-list" style="width: 100%; float: left;margin-top: 55px; ">';
@@ -1111,8 +1165,14 @@ if (searchCategory_id){
 			      if(widgetMode === "hot" && site_page_type == "homepage"){
 			          html += '</ul></div>';
 			          /* IA Changes Start for store/mpl/en */
-			          html += '</div></div><a href="http://'+window.location.host+'/viewAllTrending" class="button hotShowHide" style="display: inline-block;font-size: 12px;height: 40px;line-height: 40px;">Shop the Hot List</a>';
-			          }
+			          if (response.data.filter_value) {
+			          	html += '</div></div><a href="http://'+window.location.host+'/viewAllTrending?filter='+response.data.filter_key+','+response.data.filter_value+'" class="button hotShowHide" style="display: inline-block;font-size: 12px;height: 40px;line-height: 40px;">Shop the Hot List</a>';
+			          } else if (response.data.location) {
+			          	html += '</div></div><a href="http://'+window.location.host+'/viewAllTrending?location='+response.data.location+'" class="button hotShowHide" style="display: inline-block;font-size: 12px;height: 40px;line-height: 40px;">Shop the Hot List</a>';
+			          } else {
+			          	html += '</div></div><a href="http://'+window.location.host+'/viewAllTrending" class="button hotShowHide" style="display: inline-block;font-size: 12px;height: 40px;line-height: 40px;">Shop the Hot List</a>';
+			      	  }
+			      }
 			      /* IA Changes End for store/mpl/en */
 			          else{
 			        	  html += '</ul></div>';

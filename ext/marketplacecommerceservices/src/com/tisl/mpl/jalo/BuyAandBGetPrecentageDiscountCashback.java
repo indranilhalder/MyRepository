@@ -595,10 +595,10 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 				totalFactorCount = validProductListA.size() < validProductListB.size() ? validProductListA.size() : validProductListB
 						.size();
 				final Set<String> validProdAUssidSet = getDefaultPromotionsManager().populateSortedValidProdUssidMap(
-						validProductAUssidMap, totalFactorCount, paramSessionContext, restrictionList, null);
+						validProductAUssidMap, totalFactorCount, paramSessionContext, restrictionList, null, getCode());
 
 				final Set<String> validProdBUssidSet = getDefaultPromotionsManager().populateSortedValidProdUssidMap(
-						validProductBUssidMap, totalFactorCount, paramSessionContext, restrictionList, null);
+						validProductBUssidMap, totalFactorCount, paramSessionContext, restrictionList, null, getCode());
 
 				validProductAUssidMap.keySet().retainAll(validProdAUssidSet);
 				validProductBUssidMap.keySet().retainAll(validProdBUssidSet);

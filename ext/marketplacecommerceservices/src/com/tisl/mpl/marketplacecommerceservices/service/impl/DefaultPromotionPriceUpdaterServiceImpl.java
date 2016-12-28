@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
+
 import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.catalog.model.classification.ClassificationClassModel;
@@ -40,11 +41,14 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.marketplacecommerceservices.daos.PromotionPriceUpdaterDao;
+import com.tisl.mpl.marketplacecommerceservices.service.ExtStockLevelPromotionCheckService;
 import com.tisl.mpl.marketplacecommerceservices.service.PromotionPriceUpdaterService;
 import com.tisl.mpl.model.BuyAPercentageDiscountModel;
 import com.tisl.mpl.model.EtailExcludeSellerSpecificRestrictionModel;
+import com.tisl.mpl.model.EtailLimitedStockRestrictionModel;
 import com.tisl.mpl.model.EtailSellerSpecificRestrictionModel;
 import com.tisl.mpl.model.ExcludeManufacturersRestrictionModel;
+import com.tisl.mpl.model.LimitedStockPromotionModel;
 import com.tisl.mpl.model.ManufacturersRestrictionModel;
 import com.tisl.mpl.model.MplConfigurationModel;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -67,7 +71,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(DefaultPromotionPriceUpdaterServiceImpl.class.getName());
 
-	//@Autowired
+	@Autowired
 	private PromotionPriceUpdaterDao promotionPriceUpdaterDao;
 
 
@@ -82,7 +86,6 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	private ConfigurationService configurationService;
 	//SONAR-FIX -UNUSED VARIABLE
 	//private UpdateSplPriceHelperService updateSplPriceHelperService;
-
 	@Autowired
 	private CategoryService categoryService;
 
@@ -90,6 +93,8 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	private final String CATLIST = " *** categoryList:";
 
 
+	@Resource(name = "stockPromoCheckService")
+	private ExtStockLevelPromotionCheckService stockPromoCheckService;
 
 	/**
 	 * @description getRequiredPromotion
@@ -102,6 +107,9 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 
 		return promotionPriceUpdaterDao.getRequiredPromotionList(mplConfigDate);
 	}
+
+
+
 
 	/**
 	 * @description poulatePriceRowData
@@ -131,7 +139,8 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 		final List<String> rejectSellerList = new ArrayList<String>();
 		final List<String> rejectBrandList = new ArrayList<String>();
 		List<ProductModel> exproductList = null;
-
+		boolean isStockRestriction = false;
+		int stockCount = 0;
 		try
 		{
 			if (null != buyAPercentageDiscount)
@@ -181,6 +190,14 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 							rejectBrandList.add(code.getCode());
 						}
 					}
+					//changes for stock restriction TPR-965
+					if (res instanceof EtailLimitedStockRestrictionModel)
+					{
+						isStockRestriction = true;
+						stockCount = ((EtailLimitedStockRestrictionModel) res).getMaxStock() == null ? 0
+								: ((EtailLimitedStockRestrictionModel) res).getMaxStock().intValue();
+						//if(nul!!)
+					}
 				}
 				//Bug Fix ends
 
@@ -228,8 +245,12 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 					exproductList = new ArrayList<ProductModel>(buyAPercentageDiscount.getExcludedProducts());
 				}
 
-
-
+				List<String> ussidList = new ArrayList<String>();
+				//tpr-965 CHANGES FOR PRICE UPDATEA
+				if (isStockRestriction && stockCount > 0)
+				{
+					ussidList = stockPromoCheckService.getStockForPromotion(promoCode, stockCount);
+				}
 				price = getDiscountPrice(isPercentage, buyAPercentageDiscount);
 
 				/*
@@ -245,12 +266,12 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 					if (isPercentage)
 					{
 						updatePromotionalPrice(productList, null, price, startDate, endDate, true, priority, sellerList, brandList,
-								promoCode, rejectSellerList, rejectBrandList, maxDiscount, exproductList);
+								promoCode, rejectSellerList, rejectBrandList, maxDiscount, exproductList, ussidList);
 					}
 					else
 					{
 						updatePromotionalPrice(productList, null, price, startDate, endDate, false, priority, sellerList, brandList,
-								promoCode, rejectSellerList, rejectBrandList, maxDiscount, exproductList);
+								promoCode, rejectSellerList, rejectBrandList, maxDiscount, exproductList, ussidList);
 					}
 
 				}
@@ -262,12 +283,12 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 					if (isPercentage)
 					{
 						updatePromotionalPrice(null, categoryList, price, startDate, endDate, true, priority, sellerList, brandList,
-								promoCode, rejectSellerList, rejectBrandList, maxDiscount, exproductList);
+								promoCode, rejectSellerList, rejectBrandList, maxDiscount, exproductList, ussidList);
 					}
 					else
 					{
 						updatePromotionalPrice(null, categoryList, price, startDate, endDate, false, priority, sellerList, brandList,
-								promoCode, rejectSellerList, rejectBrandList, maxDiscount, exproductList);
+								promoCode, rejectSellerList, rejectBrandList, maxDiscount, exproductList, ussidList);
 					}
 				}
 				else if ((null != categoryList && !categoryList.isEmpty()) || ((null != productList && !productList.isEmpty()))
@@ -313,6 +334,8 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 
 		return errorFlag;
 	}
+
+
 
 	/**
 	 * @Description : Save Cron Job Details
@@ -377,25 +400,37 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 		return price;
 	}
 
+
+
 	/**
 	 * @Description: To Set Discount Price
 	 * @param initialValues
 	 * @return price
 	 */
-	private Double setDiscountPrice(final BuyAPercentageDiscountModel buyAPercentageDiscount, final boolean flag)
+	private Double setDiscountPrice(final ProductPromotionModel promoDiscount, final boolean flag)
 	{
 		Double price = new Double(0.0);
 		try
 		{
-			if (flag)
+			if (promoDiscount instanceof BuyAPercentageDiscountModel && flag)
 			{
-				price = buyAPercentageDiscount.getPercentageDiscount();
+				final BuyAPercentageDiscountModel discountPromo = (BuyAPercentageDiscountModel) promoDiscount;
+				price = discountPromo.getPercentageDiscount();
 			}
-			else
-			{
-				final List<PromotionPriceRowModel> priceRowData = new ArrayList<PromotionPriceRowModel>(
-						buyAPercentageDiscount.getDiscountPrices());
 
+			if (!flag)
+			{
+				List<PromotionPriceRowModel> priceRowData = null;
+				if (promoDiscount instanceof BuyAPercentageDiscountModel)
+				{
+					final BuyAPercentageDiscountModel discountPromo = (BuyAPercentageDiscountModel) promoDiscount;
+					priceRowData = new ArrayList<PromotionPriceRowModel>(discountPromo.getDiscountPrices());
+				}
+				if (promoDiscount instanceof LimitedStockPromotionModel)
+				{
+					final LimitedStockPromotionModel discountPromo = (LimitedStockPromotionModel) promoDiscount;
+					priceRowData = new ArrayList<PromotionPriceRowModel>(discountPromo.getDiscountPrices());
+				}
 				for (final PromotionPriceRowModel priceRow : priceRowData)
 				{
 					if (null != priceRow.getPrice())
@@ -422,12 +457,11 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 		return price;
 	}
 
-
-
-	private void updatePromotionalPrice(final List<ProductModel> products, final List<CategoryModel> categories,
-			final Double value, final Date startDate, final Date endtDate, final boolean percent, final Integer priority,
-			final List<String> sellers, final List<String> brands, final String promoCode, final List<String> rejectSellerList,
-			final List<String> rejectBrandList, final Double maxDiscount, final List<ProductModel> exproductListdata)
+	private void updatePromotionalPrice(final List<ProductModel> products, final List<CategoryModel> categories, Double value,
+			final Date startDate, final Date endtDate, final boolean percent, final Integer priority, final List<String> sellers,
+			final List<String> brands, final String promoCode, final List<String> rejectSellerList,
+			final List<String> rejectBrandList, final Double maxDiscount, final List<ProductModel> exproductListdata,
+			final List<String> ussidList)
 	{
 
 		try
@@ -507,6 +541,11 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 
 					if (updateSpecialPrice)
 					{
+						//tpr-965 CHANGES FOR PRICE UPDATE
+						if (CollectionUtils.isNotEmpty(ussidList) && ussidList.contains(price.getSellerArticleSKU()))
+						{
+							value = Double.valueOf(0.0);
+						}
 						if (!percent)
 						{
 							price.setPromotionStartDate(startDate);

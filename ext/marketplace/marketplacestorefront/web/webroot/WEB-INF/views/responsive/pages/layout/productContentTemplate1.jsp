@@ -3,7 +3,7 @@
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <div class="Manufacturer Temp02">
 	<div class="Padd">
-		<h2>From the Manufacturer</h2>
+		<h2>${cmsPage.title}</h2>
 		<ul class="temp2-fst">
 			<li>
 				<div class="media">
@@ -133,3 +133,14 @@
 		</ul>
 	</div>
 </div>
+<script>
+$(document).ready(function(){
+	if($(".Manufacturer.Temp02 ul.pdpFeatures li img").length == 0 && $(".Manufacturer.Temp02 ul.pdpFeatures li .yCmsComponent ").length == 0) {
+		$(".Manufacturer.Temp02 ul.pdpFeatures").css("display","none");
+	}
+	if($(".Manufacturer.Temp02 ul.contVideo .temp2-center").children().length == 0 && $(".Manufacturer.Temp02 ul.contVideo .yCmsComponent").length == 0) {
+		$(".Manufacturer.Temp02 ul.contVideo").css("display","none");
+	}
+});
+
+</script>

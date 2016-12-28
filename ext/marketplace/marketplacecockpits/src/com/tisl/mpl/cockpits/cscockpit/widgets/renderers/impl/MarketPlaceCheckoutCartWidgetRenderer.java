@@ -531,7 +531,7 @@ public class MarketPlaceCheckoutCartWidgetRenderer extends
 						append( deliveryEntry.getDeliveryMode().getCode()).
 						append( ")").
 						append( " - ").
-						append( currencyInstance.format(mplFindDeliveryFulfillModeStrategy.isTShip(cartEntryModel.getSelectedUSSID()) ? new Double("0"): deliveryEntry
+						append( currencyInstance.format(deliveryEntry
 								.getValue())).
 						append( "  ").
 						append(mplFindDeliveryCostStrategy.getDeliveryModeDesc(deliveryEntry, cartEntryModel.getSelectedUSSID()) );

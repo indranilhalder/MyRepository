@@ -197,12 +197,12 @@ function focusOnElement() {
 		skuPriceArray[++indx]=skuPriceMap;
 		if(originalPriceValue > 0 && originalPriceValue!=sellerPriceValue){
 		tbodycontent+='<span class="sale strike" id="mrpPriceId">';	
-		tbodycontent+=originalPrice.formattedValue;
+		tbodycontent+=originalPrice.formattedValueNoDecimal;
 		tbodycontent+="</span>";
 		tbodycontent+=" ";
 		}
 		tbodycontent+='<span class="sale" id="mopPriceId">'
-		tbodycontent+=sellerPrice.formattedValue;
+		tbodycontent+=sellerPrice.formattedValueNoDecimal;
 		tbodycontent+="</span>"
 		if(promorestrictedSellers!=undefined){
 			   if(promorestrictedSellers.indexOf(sellersArray[i]['sellerID'])!=-1){
@@ -380,7 +380,12 @@ function focusOnElement() {
 	  	}	
 	    }
 	  	$("#sellerDetailTbdy").html(tbodycontent);
-	  	var noOfSellers= (sellerDetailsArray.length);
+	  	var noOfSellers= (sellerDetailsArray.length)-$('.oosOtherSeller').length;
+	  	if(noOfSellers ==0){
+	  	
+	  		$('#other-sellers-id .Padd h3').hide();
+	  		
+	  	}
 	  	if(noOfSellers > 1){
 	  		$('#sort').show();
 	  	}
@@ -405,6 +410,9 @@ function focusOnElement() {
 		
 		//$(document).on('click','#addToCartFormId'+index+' .js-add-to-cart',function(){ //Changed for TPR-887
 		 $(document).on('click','#addToCartFormId'+index+' #addToCartButton'+index,function(){
+			 
+			 
+			 
 			
         if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches'&& $("#showSize").val()=='true'){
 		  		
@@ -412,6 +420,16 @@ function focusOnElement() {
 				$("#addToCartFormIdOthersel"+index).show();
 				 return false;
 		   	 }
+        //TISQAEE-64
+        var productCode= $('#productCode').val();
+	        
+	        utag.link({
+				link_obj: this,
+				link_text: 'addtobag' ,
+				event_type : 'addtobag_other_seller' ,
+				product_sku : productCode
+			});
+        
 			ACC.product.sendAddToBag("addToCartFormId"+index);
 		});
 		 
@@ -429,6 +447,7 @@ function focusOnElement() {
 	}
 	 function sendAddToBag(formId){
 			var dataString=$('#'+formId).serialize();	
+			
 			
 			
 			$.ajax({

@@ -2,10 +2,18 @@
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template" %>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags" %>
 
-
+<script>
+$(document).ready(function(){
+	if ($('.Manufacturer.Temp03 a.show-more').length) {
+		var showMoreLink = $('.Manufacturer.Temp03 a.show-more').clone();
+		$('.Manufacturer.Temp03 a.show-more').remove();
+		$('.Manufacturer.Temp03 .Padd').after(showMoreLink);
+	}
+});
+</script>
 <div class="Manufacturer Temp03">
 	<div class="Padd">
-		<h2>From the Manufacturer</h2>
+		<h2>${cmsPage.title}</h2>
 		<ul>
 			<li>     
 		        <div class="media">
