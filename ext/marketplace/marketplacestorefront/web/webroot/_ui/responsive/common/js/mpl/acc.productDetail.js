@@ -1821,12 +1821,12 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 		if(null!=mrp && null!=spPrice){
 			savingPriceCal=(mrp.doubleValue-spPrice.doubleValue);
 			savingPriceCalPer=(savingPriceCal/mrp.doubleValue)*100;
-			savingsOnProduct=Math.round(savingPriceCalPer*100)/100;
+			savingsOnProduct=Math.round((savingPriceCalPer*100)/100);
 		}
 		else if(null!=mrp && null!=mop){
 			savingPriceCal=(mrp.doubleValue-mop.doubleValue);
 			savingPriceCalPer=(savingPriceCal/mrp.doubleValue)*100;
-			savingsOnProduct=Math.round(savingPriceCalPer*100)/100;
+			savingsOnProduct=Math.round((savingPriceCalPer*100)/100);
 		}
 	}
 	
