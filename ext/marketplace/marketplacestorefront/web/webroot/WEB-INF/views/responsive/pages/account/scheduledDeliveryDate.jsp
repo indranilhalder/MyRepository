@@ -48,12 +48,10 @@ ${stringMessage}
 								code="text.scheduledDeliveryDate.productName" /></b>
 									${entry.brandName}<br /> <b>Seller ID:</b> #
 									${entry.selectedSellerInformation.sellerID} <br />
-									<b> <spring:theme
-								code="text.order.quantity" />
+									<b>Quantity :
 									</b>
 									${entry.quantity}<br />
-									 <span><spring:theme
-								code="text.order.price" />
+									 <span><b> Price :</b>
 										&nbsp;</span>
 									<format:price priceData="${entry.totalPrice}"
 										displayFreeForZero="true" />
