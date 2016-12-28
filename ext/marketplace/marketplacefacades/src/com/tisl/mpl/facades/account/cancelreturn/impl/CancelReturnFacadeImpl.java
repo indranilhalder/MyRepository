@@ -3694,14 +3694,13 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				{
 					storeName=new StringBuilder(store);
 					storeAddress = storeAddress(pointOfSerivce.getAddress(), pointOfSerivce.getDisplayName(), null);
-					storeAddress.append(",");
+					storeAddress.append(", "+geoCodeUrl);
 				}
 				else
 				{
 					storeName.append("," + store);
 					storeAddress = storeAddress(pointOfSerivce.getAddress(), pointOfSerivce.getDisplayName(), storeAddress);
-					storeAddress.append(",");
-					storeAddress.append(" "+geoCodeUrl);
+					storeAddress.append(", "+geoCodeUrl);
 				}
 			}
 		}
