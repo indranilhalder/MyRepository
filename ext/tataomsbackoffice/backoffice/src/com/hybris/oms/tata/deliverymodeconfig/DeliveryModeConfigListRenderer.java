@@ -10,8 +10,8 @@ import com.hybris.oms.domain.deliverymode.dto.DeliveryModeConfig;
 
 /**
  * @author Saood
- * 
- * 
+ *
+ *
  */
 public class DeliveryModeConfigListRenderer implements ListitemRenderer
 {
@@ -32,6 +32,8 @@ public class DeliveryModeConfigListRenderer implements ListitemRenderer
 		addListcell(listitem, deliveryModeConfig.getCutofftime());
 		addListcell(listitem, customDateFormat(deliveryModeConfig.getDfmtat()));
 		addListcell(listitem, customDateFormat(deliveryModeConfig.getSellerresponsetat()));
+		addListcell(listitem, customDateFormat(deliveryModeConfig.getOrderprocessingtat()));
+		addListcell(listitem, deliveryModeConfig.getLphandovertime());
 		addListcell(listitem, customDateFormat(deliveryModeConfig.getHotctat()));
 		addListcell(listitem, customDateFormat(deliveryModeConfig.getShiptat()));
 

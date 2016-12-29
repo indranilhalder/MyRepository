@@ -28,7 +28,7 @@ import com.hybris.oms.domain.deliverymode.dto.DeliveryModeConfig;
 
 /**
  * @author nagarjuna
- * 
+ *
  */
 public class EditorWidgetController extends DefaultWidgetController
 {
@@ -43,8 +43,13 @@ public class EditorWidgetController extends DefaultWidgetController
 	private Label deliverymode;
 	private Timebox cutofftime;
 
-	private Spinner sellerresponsetathr;
-	private Spinner sellerresponsetatmin;
+	private Label sellerresponsetathr;
+	private Label sellerresponsetatmin;
+	//R2.3 new filed Order Processing Tat
+	private Spinner orderProcessingTatHr;
+	private Spinner orderProcessingTatMin;
+	//R2.3 new filed Lp Handover Time
+	private Timebox lpHandOverTime;
 
 	private Spinner hotctathr;
 	private Spinner hotctatmin;
@@ -68,7 +73,7 @@ public class EditorWidgetController extends DefaultWidgetController
 
 	/**
 	 * Get the editor object from listwidget using input socket id.
-	 * 
+	 *
 	 * @param editorObject
 	 *           editor object
 	 * @throws InterruptedException
@@ -78,7 +83,8 @@ public class EditorWidgetController extends DefaultWidgetController
 	public void editListView(final Object editorObject) throws InterruptedException
 	{
 
-		LOG.info("************************DeliveryMode Cofig Editor Object Input taking by Socket event...............................");
+		LOG.info(
+				"************************DeliveryMode Cofig Editor Object Input taking by Socket event...............................");
 
 		final DeliveryModeConfig deliveryModeConfig = (DeliveryModeConfig) editorObject;
 
@@ -102,8 +108,27 @@ public class EditorWidgetController extends DefaultWidgetController
 		}
 
 		Integer sellerResTatHM[] = getHourMinutes(deliveryModeConfig.getSellerresponsetat());
-		sellerresponsetathr.setValue(sellerResTatHM[0].intValue());
-		sellerresponsetatmin.setValue(sellerResTatHM[1].intValue());
+		sellerresponsetathr.setValue(String.valueOf(sellerResTatHM[0].intValue()));
+		sellerresponsetatmin.setValue(String.valueOf(sellerResTatHM[1].intValue()));
+		//R2.3 Added new Filed Order Processing TAT
+		sellerResTatHM = getHourMinutes(deliveryModeConfig.getOrderprocessingtat());
+		orderProcessingTatHr.setValue(sellerResTatHM[0].intValue());
+		orderProcessingTatMin.setValue(sellerResTatHM[1].intValue());
+		//R2.3 Added new Filed Lp Handover Time
+		try
+		{
+
+			final String date = deliveryModeConfig.getLphandovertime();
+			final Date date1 = formatter.parse(date);
+			final String formatedDate = formatter.format(date1);
+			final Date date2 = formatter.parse(formatedDate);
+			lpHandOverTime.setValue(date2);
+
+		}
+		catch (final ParseException e)
+		{
+			LOG.info("Error: " + e.getMessage());
+		}
 
 		sellerResTatHM = getHourMinutes(deliveryModeConfig.getHotctat());
 		hotctathr.setValue(sellerResTatHM[0].intValue());
@@ -123,7 +148,7 @@ public class EditorWidgetController extends DefaultWidgetController
 
 	/**
 	 * Function used to save the editor object from form and updated to DB.
-	 * 
+	 *
 	 * @throws InterruptedException
 	 */
 
@@ -139,7 +164,10 @@ public class EditorWidgetController extends DefaultWidgetController
 				|| hotctathr.getValue() == null || hotctathr.getValue().equals("") || dfmtatmin.getValue() == null
 				|| dfmtatmin.getValue().equals("") || dfmtathr.getValue() == null || dfmtathr.getValue().equals("")
 				|| shipmenttathr.getValue() == null || shipmenttathr.getValue().equals("") || shipmenttatmin.getValue() == null
-				|| shipmenttatmin.getValue().equals(""))
+				|| shipmenttatmin.getValue().equals("") || orderProcessingTatHr.getValue().equals("")
+				|| orderProcessingTatHr.getValue() == null || orderProcessingTatMin.getValue().equals("")
+				|| orderProcessingTatMin.getValue() == null || lpHandOverTime.getValue() == null
+				|| lpHandOverTime.getValue().equals(""))
 		{
 
 			Messagebox.show("Please filled, all the fields.");
@@ -152,7 +180,14 @@ public class EditorWidgetController extends DefaultWidgetController
 			config.setDeliverymode(deliverymode.getValue());
 			final String formatedDate = formatter.format(cutofftime.getValue());
 			config.setCutofftime(formatedDate);
-			config.setSellerresponsetat(getTimeInMinutes(sellerresponsetathr.getValue(), sellerresponsetatmin.getValue()));
+			config.setSellerresponsetat(getTimeInMinutes(Integer.parseInt(sellerresponsetathr.getValue()),
+					Integer.parseInt(sellerresponsetatmin.getValue())));
+			//R2.3 new code added
+			config.setOrderprocessingtat(getTimeInMinutes(orderProcessingTatHr.getValue(), orderProcessingTatMin.getValue()));
+			//R2.3 new code added
+			final String lpHandeOverTime = formatter.format(lpHandOverTime.getValue());
+			config.setLphandovertime(lpHandeOverTime);
+
 			config.setHotctat(getTimeInMinutes(hotctathr.getValue(), hotctatmin.getValue()));
 			config.setDfmtat(getTimeInMinutes(dfmtathr.getValue(), dfmtatmin.getValue()));
 			config.setShiptat(getTimeInMinutes(shipmenttathr.getValue(), shipmenttatmin.getValue()));
@@ -181,7 +216,7 @@ public class EditorWidgetController extends DefaultWidgetController
 
 	/**
 	 * Used to split the minutes into hours and minutes.
-	 * 
+	 *
 	 * @param time
 	 * @return
 	 */
@@ -199,7 +234,7 @@ public class EditorWidgetController extends DefaultWidgetController
 
 	/**
 	 * Used to change the hours and minutes in to total minutes wrap a string..
-	 * 
+	 *
 	 * @param hours
 	 * @param minutes
 	 * @return

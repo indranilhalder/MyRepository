@@ -42,21 +42,41 @@
 			<row>
 				Seller Response TAT
 				<hlayout>
-					<spinner id="sellerresponsetathr" maxlength="3"
+					<label id="sellerresponsetathr" />		<label value="Hr" />	
+					<label id="sellerresponsetatmin" /><label value="Min" />
+				
+				</hlayout>
+			</row>
+			
+			<row>
+				Order Processing TAT
+				<hlayout>
+					<spinner id="orderProcessingTatHr" maxlength="3"
 						cols="02" constraint="no negative,min 0 max 130" />
 					Hr
-					<spinner id="sellerresponsetatmin" maxlength="2"
+					<spinner id="orderProcessingTatMin" maxlength="2"
 						cols="02" constraint="no negative,min 0 max 59" />
 					Min
 				</hlayout>
 			</row>
+				<row>
+				LP HandoverTime
+				<timebox id="lpHandOverTime" cols="5" format="short"
+					constraint="no empty">
+				</timebox>
+				<label
+					style="margin-left:-120px; position:absolute;margin-top:-10px"
+					value="(hh:mm)">
+				</label>
+			</row>
+			
 			<row>
 				HOTC TAT
 				<hlayout>
-					<spinner id="hotctathr" cols="02" maxlength="3"
+					<spinner id="hotctathr" cols="02" maxlength="3" readonly="true"
 						constraint="no negative,min 0 max 130" />
 					Hr
-					<spinner id="hotctatmin" cols="02" maxlength="2"
+					<spinner id="hotctatmin" cols="02" maxlength="2" readonly="true"
 						constraint="no negative,min 0 max 59" />
 					Min
 				</hlayout>
