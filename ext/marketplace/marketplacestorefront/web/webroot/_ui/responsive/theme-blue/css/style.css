@@ -29447,10 +29447,6 @@ font-weight:bold;
  }
 }
 
-@media (min-width:651px) and (max-width: 790px){
-.shop-promos .promos li{
-   	border-top:1px solid #ccc;
-}}
 @media (max-width: 370px){
 .shop-promos .promos li span {
     font-size: 14px;
@@ -59395,3 +59391,7 @@ text-decoration:underline;
 .trending .owl-controls{
 	display: none;
 }
+@media (min-width:651px) and (max-width: 790px){
+.shop-promos .promos{
+   	border-top:1px solid #ccc;
+}}
