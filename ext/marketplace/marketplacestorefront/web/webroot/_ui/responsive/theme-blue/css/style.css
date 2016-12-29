@@ -50037,7 +50037,7 @@ overflow: hidden;
 .featured_collection .blp_featured_collection_wrapper .featured_collection_section:last-child {
     margin: 0;
 }
-.featured_collection > .featured_collection_section:first-child {
+.featured_collection > .featured_collection_section.feature_collection_heading {
 	font-size: 28px;
     font-weight: bold;
     margin: 0 0 50px;
@@ -50456,6 +50456,9 @@ width: auto;
    padding-top: 10px;
     max-height: 80px;
 }
+/* .common_logo_slot{
+	
+} */
 .common_logo_slot_wrapper .blp_title_banner .simple-banner-component{
 	margin-left: 25px;
 	height: 70px;
@@ -51050,7 +51053,7 @@ padding: 0 24px;
 	margin: 0 0 40px;
 	font-size: 24px;
 	}
-	.featured_collection > .featured_collection_section:first-child{
+	.featured_collection > .featured_collection_section.feature_collection_heading{
 	margin: 0 0 40px;
 	}
 	.featured_collection .blp_featured_collection_wrapper .featured_collection_section .major-promos,
@@ -51622,7 +51625,7 @@ margin-top:30px;
 	}
 
 
-.featured_collection > .featured_collection_section:first-child {
+.featured_collection > .featured_collection_section.feature_collection_heading {
     font-size: 20px;
     margin: 0 0 30px;
 }
@@ -52078,7 +52081,7 @@ overflow: hidden;
 	margin: 0;
 }
 
-.winter_launch>.winter_launch_section:first-child {
+.winter_launch>.winter_launch_section.winter_launch_heading {
 	font-size: 28px;
 	font-weight: bold;
 	margin: 0 auto 50px;
@@ -52485,7 +52488,7 @@ overflow: hidden;
 	margin-left: 3px;
 }
 .clp_title_banner span ,.top_categories>.top_categories_section:first-child,.top_categories .top_categories_wrapper h3, .top_brands>.top_brands_section.top_brands_heading,
-.best_seller .best_seller_section:first-of-type, .winter_launch>.winter_launch_section:first-child, .style_edit .style_edit_left>div>div:first-child >span:first-child,
+.best_seller .best_seller_section:first-of-type, .winter_launch>.winter_launch_section.winter_launch_heading, .style_edit .style_edit_left>div>div:first-child >span:first-child,
 .top_deal .carousel-component h2, body.template-pages-layout-apparelCategoryLandingPageV1 .style_edit_title, .blog_content span:first-child, .blog_content span:nth-child(2),
 .shop_for>.shop_for_component:first-child, .shop_for .shop_for_links a, .shop_for .shop_for_left_wrapper .shop_for_component h3, .top_categories .top_categories_wrapper h3 + a + span,
 .shop_for .shop_for_left_wrapper .shop_for_component span{
@@ -52579,7 +52582,7 @@ word-break: break-word;
 		min-width: 200px;
 	}
 	.top_categories > .top_categories_section:first-child, .top_brands>.top_brands_section.top_brands_heading,
-		.winter_launch>.winter_launch_section:first-child, .top_deal .carousel-component h2
+		.winter_launch>.winter_launch_section.winter_launch_heading, .top_deal .carousel-component h2
 		{
 		font-size: 24px;
 	}
@@ -52879,7 +52882,7 @@ word-break: break-word;
 		margin: 30px 0 20px;
 		padding: 0;
 	}
-	.winter_launch>.winter_launch_section:first-child {
+	.winter_launch>.winter_launch_section.winter_launch_heading {
 		font-size: 20px;
 		margin: 0 0 30px;
 		    padding: 0;
