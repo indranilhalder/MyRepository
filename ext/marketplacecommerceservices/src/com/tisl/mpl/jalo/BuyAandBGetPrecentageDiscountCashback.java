@@ -192,6 +192,12 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 						}
 					}
 
+					final Map<String, Integer> qCount = getDefaultPromotionsManager().getQualifyingCountForABPromotion(
+							eligibleProductList, totalCountFactor);
+					paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
+					paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, qCount);
+					paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.PROMOCODE, String.valueOf(this.getCode()));
+
 					totalCachback = 0.0D;
 					for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
 					{
