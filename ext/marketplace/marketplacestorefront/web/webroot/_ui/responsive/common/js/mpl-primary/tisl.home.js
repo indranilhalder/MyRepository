@@ -1056,9 +1056,14 @@ function getNewAndExclusiveAjaxCall() {
 						$('#newAndExclusive').css('min-height',$('#newAndExclusive').parent().height()+'px');
 					}*/
 	                //alert($('#newAndExclusive').height() +"|||"+$('#stayQued').height())
+	            	if($('#stayQued').children().length == 0){
+	            		$('#stayQued').css('min-height', 'auto');
+	            	}
+	            	else{
 	                        $('#stayQued').css('min-height',
 	                            $('#newAndExclusive').outerHeight() +
 	                            'px');
+	            	}
 	            }, 2500);
 	            $("#new_exclusive").on('changed.owl.carousel', function(event) {
 	        		setTimeout(function(){

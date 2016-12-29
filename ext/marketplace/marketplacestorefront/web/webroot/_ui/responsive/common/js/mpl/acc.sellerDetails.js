@@ -380,7 +380,12 @@ function focusOnElement() {
 	  	}	
 	    }
 	  	$("#sellerDetailTbdy").html(tbodycontent);
-	  	var noOfSellers= (sellerDetailsArray.length);
+	  	var noOfSellers= (sellerDetailsArray.length)-$('.oosOtherSeller').length;
+	  	if(noOfSellers ==0){
+	  	
+	  		$('#other-sellers-id .Padd h3').hide();
+	  		
+	  	}
 	  	if(noOfSellers > 1){
 	  		$('#sort').show();
 	  	}

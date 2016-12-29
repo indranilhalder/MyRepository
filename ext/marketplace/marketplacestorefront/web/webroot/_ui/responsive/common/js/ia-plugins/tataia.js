@@ -354,6 +354,9 @@ if (searchCategory_id){
 			      	  		params.brand_id = keyval[1];
 			      	  	}
 			      	  }
+			      	  if(getURLField('location=')) {
+			      	  	params.location = getURLField('location=');
+			      	  }
 			        params.count = '100';
 			      } else {
 			        params.count = '15';
@@ -1109,18 +1112,12 @@ if (searchCategory_id){
 			    		} else if (site_page_type === "homepage") {
  		    				var catFilter = filterNamePairing[response.data.filter_value];
  		    				if(typeof catFilter === "undefined") {
- 		    					catFilter = document.getElementById('location').value;
- 		    					catFilter = catFilter.charAt(0).toUpperCase() + catFilter.slice(1);
- 		    				}
- 							/*var catFilter = "All";
- 			    			if(response.data.filter_value === "MSH10") {
- 			    				catFilter = "Women's";
- 			    			} else if (response.data.filter_value === "MSH11") {
- 			    				catFilter = "Men's";
- 			    			} else if (response.data.filter_value === "MSH12") {
- 			    				catFilter = "Electronics";
- 			    			}*/
- 			    			html += '<h2><span style="color: black !important;">Hot in '+catFilter+' </span>';	    		
+ 		    					var loc = document.getElementById('location').value;
+ 		    					var loc = loc.charAt(0).toUpperCase() + loc.slice(1);
+ 		    					html += '<h1><span style="color: black !important;">Trending in Your location '+loc+' </span>';	    		
+ 		    				} else {
+ 			    				html += '<h1><span style="color: black !important;">Hot in '+catFilter+' </span>';	    		
+ 			    			}
  			    		}
 			    		else{
 						
@@ -1170,8 +1167,10 @@ if (searchCategory_id){
 			          /* IA Changes Start for store/mpl/en */
 			          if (response.data.filter_value) {
 			          	html += '</div></div><a href="http://'+window.location.host+'/viewAllTrending?filter='+response.data.filter_key+','+response.data.filter_value+'" class="button hotShowHide" style="display: inline-block;font-size: 12px;height: 40px;line-height: 40px;">Shop the Hot List</a>';
+			          } else if (response.data.location) {
+			          	html += '</div></div><a href="http://'+window.location.host+'/viewAllTrending?location='+response.data.location+'" class="button hotShowHide" style="display: inline-block;font-size: 12px;height: 40px;line-height: 40px;">Shop the Hot List</a>';
 			          } else {
-			          	//html += '</div></div><a href="http://'+window.location.host+'/viewAllTrending" class="button hotShowHide" style="display: inline-block;font-size: 12px;height: 40px;line-height: 40px;">Shop the Hot List</a>';
+			          	html += '</div></div><a href="http://'+window.location.host+'/viewAllTrending" class="button hotShowHide" style="display: inline-block;font-size: 12px;height: 40px;line-height: 40px;">Shop the Hot List</a>';
 			      	  }
 			      }
 			      /* IA Changes End for store/mpl/en */

@@ -17,10 +17,37 @@
 	<%-- <cms:pageSlot position="ForHimForHerSlot" var="feature">
 		<cms:component component="${feature}" element="div" class="" />
 	</cms:pageSlot> --%>
-	<div class="top_categories">
+	<%-- <div class="top_categories">
 	<cms:pageSlot position="Section2A" var="feature">
 		<cms:component component="${feature}" element="div" class="top_categories_section"/>
 	</cms:pageSlot>
+	</div> --%>
+	<div class="top_categories">
+	<cms:pageSlot position="TopCategoryHeadingSlot" var="feature">
+		<cms:component component="${feature}" element="div" class="top_categories_section"/>
+	</cms:pageSlot>
+	<div class="top_categories_wrapper">
+		<div class="top_categories_section">
+			<cms:pageSlot position="TopCategoryCol1Slot" var="feature">
+				<cms:component component="${feature}"/>
+			</cms:pageSlot>
+		</div>
+		<div class="top_categories_section sub_categories">
+			<cms:pageSlot position="TopCategoryCol2Slot" var="feature">
+				<cms:component component="${feature}" element="div" class="top_categories_section"/>
+			</cms:pageSlot>
+		</div>
+		<div class="top_categories_section">
+			<cms:pageSlot position="TopCategoryCol3Slot" var="feature">
+				<cms:component component="${feature}"/>
+			</cms:pageSlot>
+		</div>
+		<div class="top_categories_section sub_categories">
+			<cms:pageSlot position="TopCategoryCol4Slot" var="feature">
+				<cms:component component="${feature}" element="div" class="top_categories_section"/>
+			</cms:pageSlot>
+		</div>
+	</div>
 	</div>
 	<div class="top_brands">
 	<cms:pageSlot position="TopBrandSlot" var="feature">
@@ -38,20 +65,69 @@
 					<cms:component component="${feature}" element="div" class="winter_launch_section" />
 				</cms:pageSlot>
 				</div>
-				<div class="style_edit style-edit-video">
+				<%-- <div class="style_edit style-edit-video">
 				 <cms:pageSlot position="Section2C" var="feature">
 					<cms:component component="${feature}" element="div" class="" />
 				</cms:pageSlot>
-				</div>
+				</div> --%>
+				<div class="style_edit">
+					<div class="style_edit_left">
+						<cms:pageSlot position="StyleEditLeftColSlot" var="feature">
+							<cms:component component="${feature}" element="div" class=""/>
+						</cms:pageSlot>
+					</div>
+					<div class="style_edit_right">
+						<cms:pageSlot position="StyleEditRightColSlot" var="feature">
+							<cms:component component="${feature}" element="div" class=""/>
+						</cms:pageSlot>
+					</div>
+				</div>	
+				<%-- <div class="top_deal">
+					<cms:pageSlot position="Section3" var="feature">
+						<cms:component component="${feature}" />
+					</cms:pageSlot>
+				</div> --%>
 				<div class="top_deal">
-			<cms:pageSlot position="Section3" var="feature">
-				<cms:component component="${feature}" />
-			</cms:pageSlot>
-			</div>
+						<cms:pageSlot position="TopDealsSlot" var="feature">
+							<cms:component component="${feature}"  class="top_deal_carousel" />
+						</cms:pageSlot>
+						<div class="blog_container">
+							<div class='blog_feature'>
+								<cms:pageSlot position="TopDealsLeftColSlot" var="feature">
+									<cms:component component="${feature}" class="top_deal_left_col"  />
+								</cms:pageSlot>
+							</div>
+							<div class='blog_feature'>
+								<cms:pageSlot position="TopDealsRightColSlot" var="feature">
+									<cms:component component="${feature}"  class="top_deal_right_col" />
+								</cms:pageSlot>
+							</div>
+						</div>
+				</div>
+			<%-- <div class="shop_for">
+				<cms:pageSlot position="Section3A" var="feature">
+					<cms:component component="${feature}" element="div" class="shop_for_component"/>
+				</cms:pageSlot>
+			</div> --%>
 			<div class="shop_for">
-		<cms:pageSlot position="Section3A" var="feature">
-				<cms:component component="${feature}" element="div" class="shop_for_component"/>
-			</cms:pageSlot>
+				<cms:pageSlot position="ShopForHeading" var="feature">
+						<cms:component component="${feature}" element="div" class="shop_for_component"/>
+				</cms:pageSlot>
+				<div class="shop_for_wrapper">
+				<div class="shop_for_left_wrapper">
+					<cms:pageSlot position="ShopForLeftCol" var="feature">
+						<cms:component component="${feature}" element="div" class="shop_for_component"/>
+					</cms:pageSlot>
+				</div>
+				<div class="shop_for_links">
+					<cms:pageSlot position="ShopForRightCol" var="feature">
+						<cms:component component="${feature}" element="div" class="shop_for_component"/>
+					</cms:pageSlot>
+				</div>
+				</div>
+				<cms:pageSlot position="ShopForViewMore" var="feature">
+						<cms:component component="${feature}" element="div" class="shop_for_component"/>
+				</cms:pageSlot>
 			</div>
 	<div id="productGrid" class="listing wrapper"> <!-- Added for TPR-198 -->
 			<!-- <div class="left-block"> -->
