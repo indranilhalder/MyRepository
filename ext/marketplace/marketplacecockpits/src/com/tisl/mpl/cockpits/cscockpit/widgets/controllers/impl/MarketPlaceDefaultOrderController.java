@@ -217,12 +217,6 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 						} else {
 							newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
 						}
-						// getModelService().save(consignmentModel);
-						boolean isEdToHD = false;
-						if(null != orderEntry && orderEntry.getIsEDtoHD()) {
-							isEdToHD = true;
-						}
-						
 						
 						mplJusPayRefundService.makeRefundOMSCall(orderEntry,
 								paymentTransactionModel,
