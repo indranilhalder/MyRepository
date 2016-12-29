@@ -137,7 +137,7 @@ function loadPincodeData(parm) {
 				$(".addState").show();
 				$('.address_landmarks').html($("<option class=unableto></option>").text("Unable to find landmark").attr("selected","selected").attr("value",""));
 				$(".address_landmarkOther").val("");
-				if(parm != "edit") {
+				if(parm == "edit") {
 					$(".address_townCity").prop("readonly", false).val('');
 			    }
 				$(".address_states").removeAttr("readonly").removeData("stateValue");
