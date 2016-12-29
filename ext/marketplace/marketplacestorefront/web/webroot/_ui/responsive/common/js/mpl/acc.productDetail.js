@@ -2465,14 +2465,37 @@ function dispPriceForSizeGuide(mrp, mop, spPrice, savingsOnProduct) {
 
 }
 function isOOSSizeGuide(){
-	var totalOptions = $(".variant-select-sizeGuidePopUp option").length;
-	totalOptions = totalOptions -1;
-	var disabledOption = $(".variant-select-sizeGuidePopUp option:disabled").length;
-	if(totalOptions == disabledOption){
+	
+//	var totalOptions = $(".variant-select-sizeGuidePopUp option").length;
+//	totalOptions = totalOptions -1;
+//	var disabledOption = $(".variant-select-sizeGuidePopUp option:disabled").length;
+//	if(totalOptions == disabledOption){
+//		return true;
+//	}else{
+//		return false;
+//	}
+	
+	var skuOOS = false;
+	var totalOptions = $(".variant-select-sizeGuidePopUp li").length;
+	//totalOptions = totalOptions -1; // UI got changed from select option to li strike off 
+	var disabledOption = $(".variant-select-sizeGuidePopUp li.strike").length;
+	
+	if(availibility!=undefined && availibility.length > 0){
+		$.each(availibility,function(k,v){
+			if(window.location.pathname.endsWith(k.toLowerCase()) && v == 0){
+				skuOOS = true;
+			}
+		});
+	}
+	
+	if(totalOptions == disabledOption && totalOptions!=0){
 		return true;
-	}else{
+	}else if(skuOOS){
+		return true;
+	} else{
 		return false;
 	}
+	
 }
 function isOOSQuicks(){
 	var totalOptions = $("ul[label=sizes] li").length;
@@ -2564,7 +2587,8 @@ function buyboxDetailsForSizeGuide(productCode){
 				if(isOOSSizeGuide()){	//changes for TPR-465	
 				$("#outOfStockText").html("<font color='#ff1c47'>" + $('#outOfStockText').text() + "</font>");
 					$("#addToCartSizeGuideTitleoutOfStockId").show();
-					$("#addToCartSizeGuide #addToCartButton").attr("style", "display:none");
+					//$("#addToCartSizeGuide #addToCartButton").attr("style", "display:none");
+					$(".btn-block.js-add-to-cart").hide();
 				}
 				else{
 					$("#addToCartSizeGuide #addToCartButton").removeAttr('style');
