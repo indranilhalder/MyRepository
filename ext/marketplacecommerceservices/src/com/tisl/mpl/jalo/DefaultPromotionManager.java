@@ -64,6 +64,7 @@ import java.util.TreeMap;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -2154,37 +2155,43 @@ public class DefaultPromotionManager extends PromotionsManager
 			final int totalEligibleCount, final SessionContext ctx, final List<AbstractPromotionRestriction> restrictionList,
 			final Map<String, Integer> qCountMap, final String promoCode)
 	{
+		Set<String> validProdUssidSet = new HashSet<String>();
+
 		//Check whether Stock level restriction exists
-		final Set<String> validSetAfterStockCheck = getValidMapAfterStockLevelRestriction(validProductUssidTempMap, promoCode,
-				restrictionList);
-		if (null != validProductUssidTempMap)
+		final int stockCount = getStockRestrictionVal(restrictionList);
+
+		if (stockCount > 0 && null != validProductUssidTempMap)
 		{
+			final Set<String> validSetAfterStockCheck = getValidMapAfterStockLevelRestriction(validProductUssidTempMap, promoCode,
+					restrictionList);
 			validProductUssidTempMap.keySet().retainAll(validSetAfterStockCheck);
 		}
 
-
 		List<AbstractOrderEntry> validEntries = null;
-		if (validProductUssidTempMap != null)
+
+		if (MapUtils.isNotEmpty(validProductUssidTempMap))
 		{
 			validEntries = new ArrayList<AbstractOrderEntry>(validProductUssidTempMap.values());
-		}
-		Collections.sort(validEntries, new Comparator<AbstractOrderEntry>()
-		{
-			public int compare(final AbstractOrderEntry o1, final AbstractOrderEntry o2)
-			{
-				if (o1.getBasePriceAsPrimitive() > o2.getBasePriceAsPrimitive())
-				{
-					return 1;
-				}
-				else
-				{
-					return -1;
-				}
-			}
-		});
-		//}
 
-		return doConsumeEntries(validEntries, totalEligibleCount, ctx, qCountMap);
+			Collections.sort(validEntries, new Comparator<AbstractOrderEntry>()
+			{
+				public int compare(final AbstractOrderEntry o1, final AbstractOrderEntry o2)
+				{
+					if (o1.getBasePriceAsPrimitive() > o2.getBasePriceAsPrimitive())
+					{
+						return 1;
+					}
+					else
+					{
+						return -1;
+					}
+				}
+			});
+
+			validProdUssidSet = doConsumeEntries(validEntries, totalEligibleCount, ctx, qCountMap, stockCount, promoCode);
+		}
+
+		return validProdUssidSet;
 	}
 
 	/**
@@ -2314,7 +2321,7 @@ public class DefaultPromotionManager extends PromotionsManager
 	 */
 
 	public Set<String> doConsumeEntries(final List<AbstractOrderEntry> validEntries, int totalEligibleCount,
-			final SessionContext ctx, final Map<String, Integer> qCountMap)
+			final SessionContext ctx, final Map<String, Integer> qCountMap, final int stockCount, final String promoCode)
 	{
 
 		final Set<String> validProdUssidSet = new HashSet<String>();
@@ -2336,7 +2343,11 @@ public class DefaultPromotionManager extends PromotionsManager
 				}
 
 				validProdUssidSet.add(selectedUSSID);
-				final long consumeCount = (entryTotalQty <= totalEligibleCount) ? entryTotalQty : totalEligibleCount;
+				long consumeCount = (entryTotalQty <= totalEligibleCount) ? entryTotalQty : totalEligibleCount;
+				//Added for stock level restriction
+				consumeCount = (stockCount > 0) ? getConsumeCountForLimitedStock(stockCount, consumeCount, selectedUSSID, promoCode)
+						: consumeCount;
+
 				if (qCountMap != null)
 				{
 					qCountMap.put(selectedUSSID, Integer.valueOf((int) consumeCount));
@@ -2345,6 +2356,31 @@ public class DefaultPromotionManager extends PromotionsManager
 			}
 		}
 		return validProdUssidSet;
+	}
+
+	private long getConsumeCountForLimitedStock(final int stockCount, final long consumeCount, final String selectedUSSID,
+			final String promoCode)
+	{
+		long limitedStockConsumedCount = 0L;
+		final String ussid = MarketplacecommerceservicesConstants.INVERTED_COMMA + selectedUSSID
+				+ MarketplacecommerceservicesConstants.INVERTED_COMMA;
+		final Map<String, Integer> stockMap = stockPromoCheckService.getCumulativeStockMap(ussid, promoCode, true);
+
+		if (!stockMap.isEmpty() && null != stockMap.get(selectedUSSID))
+		{
+			if ((stockCount - stockMap.get(selectedUSSID).intValue()) > 0)
+			{
+				final int remainingStock = stockCount - stockMap.get(selectedUSSID).intValue();
+				limitedStockConsumedCount = (consumeCount <= remainingStock) ? consumeCount : remainingStock;
+			}
+
+		}
+		else if (stockMap.isEmpty())
+		{
+			limitedStockConsumedCount = (consumeCount <= stockCount) ? consumeCount : stockCount;
+		}
+
+		return limitedStockConsumedCount;
 	}
 
 	/**
@@ -3637,7 +3673,7 @@ public class DefaultPromotionManager extends PromotionsManager
 		if (!isStockPromo)
 
 		{
-			return doConsumeEntries(validEntries, totalEligibleCount, ctx, qCountMap);
+			return doConsumeEntries(validEntries, totalEligibleCount, ctx, qCountMap, 0, code);
 		}
 		else
 
@@ -3873,15 +3909,20 @@ public class DefaultPromotionManager extends PromotionsManager
 		final Set<String> ussidSet = new HashSet<String>();
 		Map<String, Integer> stockCountMap = new HashMap<String, Integer>();
 		final int stockCount = getStockRestrictionVal(restrictionList);
+		//final boolean isSellerRestrExists = isSellerRestrExists(restrictionList);
+
 		for (final Map.Entry<String, AbstractOrderEntry> entry : multiSellerValidUSSIDMap.entrySet())
 		{
 			ussidIds.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + entry.getKey()
 					+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
 			ussidIds.append(",");
-
 		}
+
+		//		stockCountMap = stockPromoCheckService.getCumulativeStockMap(ussidIds.toString().substring(0, ussidIds.lastIndexOf(",")),
+		//				code, isSellerRestrExists);
 		stockCountMap = stockPromoCheckService.getCumulativeStockMap(ussidIds.toString().substring(0, ussidIds.lastIndexOf(",")),
 				code, true);
+
 		for (final Map.Entry<String, AbstractOrderEntry> entry : multiSellerValidUSSIDMap.entrySet())
 		{
 			if (null != stockCountMap.get(entry.getKey()) && stockCount - stockCountMap.get(entry.getKey()).intValue() > 0)

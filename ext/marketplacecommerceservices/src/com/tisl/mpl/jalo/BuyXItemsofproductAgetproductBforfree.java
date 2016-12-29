@@ -157,55 +157,58 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 						final Map<String, Integer> validProductList = getDefaultPromotionsManager().getSortedValidProdUssidMap(
 								validProductUssidMap, realQuantity, qualifyingCount, ctx, restrictionList, getCode());
 
-						//Gift Products Could be multiple
-						final List<Product> productList = (List<Product>) this.getGiftProducts(ctx);
-						final int giftProductCount = realQuantity / qualifyingCount;
-						ctx.setAttribute(MarketplacecommerceservicesConstants.FREEGIFT_QUANTITY, String.valueOf(giftProductCount)); // Setting Free gift details in Session Context
-						ctx.setAttribute(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, String.valueOf(this.getCode()));
-						//promoContext.startLoggingConsumed(this);
-
-						final List<PromotionOrderEntryConsumed> consumed = getDefaultPromotionsManager().getConsumedEntriesForFreebie(
-								ctx, this, validProductUssidMap, validProductList, null, tcMapForValidEntries);
-
-						final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(ctx, this,
-								promoContext.getOrder(), 1.0F);
-						//final List consumed = promoContext.finishLoggingAndGetConsumed(this, true);
-						result.setConsumedEntries(ctx, consumed);
-
-						if (CollectionUtils.isNotEmpty(productList))
+						if (MapUtils.isNotEmpty(validProductUssidMap))
 						{
-							final Map<String, Product> giftProductDetails = getDefaultPromotionsManager().getGiftProductsUSSID(
-									productList, sellerIDData); // Validating for Scenario: Eligible Products and Free Gift must be from the same DC
-							if (MapUtils.isNotEmpty(giftProductDetails))
+							//Gift Products Could be multiple
+							final List<Product> productList = (List<Product>) this.getGiftProducts(ctx);
+							final int giftProductCount = realQuantity / qualifyingCount;
+							ctx.setAttribute(MarketplacecommerceservicesConstants.FREEGIFT_QUANTITY, String.valueOf(giftProductCount)); // Setting Free gift details in Session Context
+							ctx.setAttribute(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, String.valueOf(this.getCode()));
+							//promoContext.startLoggingConsumed(this);
+
+							final List<PromotionOrderEntryConsumed> consumed = getDefaultPromotionsManager()
+									.getConsumedEntriesForFreebie(ctx, this, validProductUssidMap, validProductList, null,
+											tcMapForValidEntries);
+
+							final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(ctx, this,
+									promoContext.getOrder(), 1.0F);
+							//final List consumed = promoContext.finishLoggingAndGetConsumed(this, true);
+							result.setConsumedEntries(ctx, consumed);
+
+							if (CollectionUtils.isNotEmpty(productList))
 							{
-								getPromotionUtilityPOJO().setPromoProductList(eligibleProductList); // Adding Eligible Products for Scenario : One Product Promotion per eligible Product
-								skuFreebieList = populateFreebieSKUIDs(giftProductDetails);
-								freegiftInfoMap = populateFreebieDetails(giftProductDetails);
-								int giftCount = 0;
-								for (final Map.Entry<String, Product> entry : giftProductDetails.entrySet())
+								final Map<String, Product> giftProductDetails = getDefaultPromotionsManager().getGiftProductsUSSID(
+										productList, sellerIDData); // Validating for Scenario: Eligible Products and Free Gift must be from the same DC
+								if (MapUtils.isNotEmpty(giftProductDetails))
 								{
-									giftCount = getDefaultPromotionsManager().getFreeGiftCount(entry.getKey(), eligibleProductMap,
-											qualifyingCount);
-								}
-								if (giftCount > 0)
-								{
-									ctx.setAttribute(MarketplacecommerceservicesConstants.FREEGIFT_QUANTITY, String.valueOf(giftCount));
-								}
+									getPromotionUtilityPOJO().setPromoProductList(eligibleProductList); // Adding Eligible Products for Scenario : One Product Promotion per eligible Product
+									skuFreebieList = populateFreebieSKUIDs(giftProductDetails);
+									freegiftInfoMap = populateFreebieDetails(giftProductDetails);
+									int giftCount = 0;
+									for (final Map.Entry<String, Product> entry : giftProductDetails.entrySet())
+									{
+										giftCount = getDefaultPromotionsManager().getFreeGiftCount(entry.getKey(), eligibleProductMap,
+												qualifyingCount);
+									}
+									if (giftCount > 0)
+									{
+										ctx.setAttribute(MarketplacecommerceservicesConstants.FREEGIFT_QUANTITY, String.valueOf(giftCount));
+									}
 
-								final Map<String, List<String>> productAssociatedItemsMap = getDefaultPromotionsManager()
-										.getAssociatedItemsForAFreebiePromotions(validProductUssidMap, skuFreebieList);
-								ctx.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, productAssociatedItemsMap);
-								ctx.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
-								ctx.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProductList);
-								result.addAction(
-										ctx,
-										getDefaultPromotionsManager().createCustomPromotionOrderAddFreeGiftAction(ctx, freegiftInfoMap,
-												result, Double.valueOf(giftCount)));
+									final Map<String, List<String>> productAssociatedItemsMap = getDefaultPromotionsManager()
+											.getAssociatedItemsForAFreebiePromotions(validProductUssidMap, skuFreebieList);
+									ctx.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, productAssociatedItemsMap);
+									ctx.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
+									ctx.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProductList);
+									result.addAction(
+											ctx,
+											getDefaultPromotionsManager().createCustomPromotionOrderAddFreeGiftAction(ctx, freegiftInfoMap,
+													result, Double.valueOf(giftCount)));
 
+								}
 							}
+							results.add(result);
 						}
-						results.add(result);
-
 					}
 
 					//Setting remaining items

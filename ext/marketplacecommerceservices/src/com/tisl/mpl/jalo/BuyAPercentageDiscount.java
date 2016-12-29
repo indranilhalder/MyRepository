@@ -273,124 +273,126 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 							validProductUssidMap, totalCount, eligibleQuantity.longValue(), paramSessionContext, restrictionList,
 							getCode());
 
-					validProductFinalList.putAll(validProductList);
-					validProductUssidFinalMap.putAll(validProductUssidMap);
-
-					if (!isPercentageOrAmount().booleanValue())
+					if (MapUtils.isNotEmpty(validProductUssidMap))
 					{
-						flagForCouldFireMessage = getDefaultPromotionsManager()
-								.getValidProductListForAmtDiscount(paramSessionContext, order, promotionProductList,
-										promotionCategoryList, eligibleQuantity, discountPrice, validProductUssidMap);
-					}
-
-					//for delivery mode restriction check
-					flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForAPromo(restrictionList,
-							validProductUssidMap, order);
-					//for payment mode restriction check
-					flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList,
-							paramSessionContext);
-					final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(
-							restrictionList, order);
-					if (flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval && flagForPincodeRestriction) // If Total no of valid Products exceeds Qualifying Count
-					{
-						int totalValidProdCount = 0;
-						for (final String key : validProductList.keySet())
-						{
-							totalValidProdCount += validProductList.get(key).intValue(); // Fetches total count of Valid Products
-						}
-
-						final double totalPricevalue = getDefaultPromotionsManager().getTotalValidProdPrice(validProductUssidMap,
-								validProductList);
+						validProductFinalList.putAll(validProductList);
+						validProductUssidFinalMap.putAll(validProductUssidMap);
 
 						if (!isPercentageOrAmount().booleanValue())
 						{
-							percentageDiscount = getDefaultPromotionsManager().getConvertedPercentageDiscount(totalValidProdCount,
-									discountPrice.doubleValue(), eligibleQuantity, totalPricevalue);
+							flagForCouldFireMessage = getDefaultPromotionsManager().getValidProductListForAmtDiscount(
+									paramSessionContext, order, promotionProductList, promotionCategoryList, eligibleQuantity,
+									discountPrice, validProductUssidMap);
 						}
-						else
+
+						//for delivery mode restriction check
+						flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForAPromo(restrictionList,
+								validProductUssidMap, order);
+						//for payment mode restriction check
+						flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList,
+								paramSessionContext);
+						final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(
+								restrictionList, order);
+						if (flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval && flagForPincodeRestriction) // If Total no of valid Products exceeds Qualifying Count
 						{
-							final double totalSavings = (totalPricevalue * percentageDiscount) / 100;
-							final double totalMaxDiscount = totalFactorCount * maxDiscount;
-							if (totalSavings > totalMaxDiscount && totalMaxDiscount != 0)
+							int totalValidProdCount = 0;
+							for (final String key : validProductList.keySet())
 							{
-								percentageDiscount = (totalMaxDiscount * 100) / totalPricevalue;
+								totalValidProdCount += validProductList.get(key).intValue(); // Fetches total count of Valid Products
+							}
+
+							final double totalPricevalue = getDefaultPromotionsManager().getTotalValidProdPrice(validProductUssidMap,
+									validProductList);
+
+							if (!isPercentageOrAmount().booleanValue())
+							{
+								percentageDiscount = getDefaultPromotionsManager().getConvertedPercentageDiscount(totalValidProdCount,
+										discountPrice.doubleValue(), eligibleQuantity, totalPricevalue);
 							}
 							else
 							{
-								isPercentageDisc = true;
-							}
-						}
-
-						final Map<String, List<String>> productAssociatedItemsMap = getDefaultPromotionsManager()
-								.getAssociatedItemsForAorBOGOorFreebiePromotions(validProductUssidMap, null);
-
-						productAssociatedItemsFinalMap.putAll(productAssociatedItemsMap);
-
-						// Apportioning Code Implementation
-						paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.PERCENTAGEDISCOUNT,
-								Double.valueOf(percentageDiscount));
-						paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.TOTALVALIDPRODUCTSPRICEVALUE,
-								Double.valueOf(totalPricevalue));
-
-						paramSessionContext
-								.setAttribute(MarketplacecommerceservicesConstants.PROMOCODE, String.valueOf(this.getCode()));
-						paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.ISPERCENTAGEDISC,
-								Boolean.valueOf(isPercentageDisc));
-
-						final Currency currency = paramPromotionEvaluationContext.getOrder().getCurrency(paramSessionContext);
-
-						for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
-						{
-							//paramPromotionEvaluationContext.startLoggingConsumed(this);
-							final AbstractOrderEntry entry = mapEntry.getValue();
-							final String validUssid = mapEntry.getKey();
-							final long quantityOfOrderEntry = entry.getQuantity(paramSessionContext).longValue();
-
-							final double percentageDiscountvalue = percentageDiscount / 100.0D;
-
-							if (percentageDiscount < 100)
-							{
-								final int eligibleCount = validProductList.get(validUssid).intValue();
-								final double originalUnitPrice = entry.getBasePrice(paramSessionContext).doubleValue();
-								final double originalEntryPrice = eligibleCount * originalUnitPrice;
-
-								final BigDecimal adjustedEntryPrice = Helper.roundCurrencyValue(paramSessionContext, currency,
-										originalEntryPrice - (originalEntryPrice * percentageDiscountvalue));
-
-								final BigDecimal adjustedUnitPrice = Helper.roundCurrencyValue(
-										paramSessionContext,
-										currency,
-										(adjustedEntryPrice.equals(BigDecimal.ZERO)) ? BigDecimal.ZERO : adjustedEntryPrice.divide(
-												BigDecimal.valueOf(eligibleCount), RoundingMode.HALF_EVEN));
-
-								final List<PromotionOrderEntryConsumed> consumed = new ArrayList<PromotionOrderEntryConsumed>();
-								consumed.add(getDefaultPromotionsManager().consume(paramSessionContext, this, eligibleCount,
-										eligibleCount, entry));
-
-								tcMapForValidEntries.put(validUssid, Integer.valueOf((int) quantityOfOrderEntry - eligibleCount));
-
-								for (final PromotionOrderEntryConsumed poec : consumed)
+								final double totalSavings = (totalPricevalue * percentageDiscount) / 100;
+								final double totalMaxDiscount = totalFactorCount * maxDiscount;
+								if (totalSavings > totalMaxDiscount && totalMaxDiscount != 0)
 								{
-									poec.setAdjustedUnitPrice(paramSessionContext, adjustedUnitPrice.doubleValue());
+									percentageDiscount = (totalMaxDiscount * 100) / totalPricevalue;
 								}
+								else
+								{
+									isPercentageDisc = true;
+								}
+							}
 
-								final BigDecimal adjustment = Helper.roundCurrencyValue(paramSessionContext, currency,
-										adjustedEntryPrice.subtract(BigDecimal.valueOf(originalEntryPrice)));
-								//final double adjustment = -(entry.getBasePrice().doubleValue() * percentageDiscountvalue * eligibleCount);
+							final Map<String, List<String>> productAssociatedItemsMap = getDefaultPromotionsManager()
+									.getAssociatedItemsForAorBOGOorFreebiePromotions(validProductUssidMap, null);
 
-								final PromotionResult result = promotionsManager.createPromotionResult(paramSessionContext, this,
-										paramPromotionEvaluationContext.getOrder(), 1.0F);
-								final CustomPromotionOrderEntryAdjustAction poeac = getDefaultPromotionsManager()
-										.createCustomPromotionOrderEntryAdjustAction(paramSessionContext, entry, quantityOfOrderEntry,
-												adjustment.doubleValue());
-								//final List consumed = paramPromotionEvaluationContext.finishLoggingAndGetConsumed(this, true);
-								result.setConsumedEntries(paramSessionContext, consumed);
-								result.addAction(paramSessionContext, poeac);
-								promotionResults.add(result);
+							productAssociatedItemsFinalMap.putAll(productAssociatedItemsMap);
+
+							// Apportioning Code Implementation
+							paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.PERCENTAGEDISCOUNT,
+									Double.valueOf(percentageDiscount));
+							paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.TOTALVALIDPRODUCTSPRICEVALUE,
+									Double.valueOf(totalPricevalue));
+
+							paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.PROMOCODE,
+									String.valueOf(this.getCode()));
+							paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.ISPERCENTAGEDISC,
+									Boolean.valueOf(isPercentageDisc));
+
+							final Currency currency = paramPromotionEvaluationContext.getOrder().getCurrency(paramSessionContext);
+
+							for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
+							{
+								//paramPromotionEvaluationContext.startLoggingConsumed(this);
+								final AbstractOrderEntry entry = mapEntry.getValue();
+								final String validUssid = mapEntry.getKey();
+								final long quantityOfOrderEntry = entry.getQuantity(paramSessionContext).longValue();
+
+								final double percentageDiscountvalue = percentageDiscount / 100.0D;
+
+								if (percentageDiscount < 100)
+								{
+									final int eligibleCount = validProductList.get(validUssid).intValue();
+									final double originalUnitPrice = entry.getBasePrice(paramSessionContext).doubleValue();
+									final double originalEntryPrice = eligibleCount * originalUnitPrice;
+
+									final BigDecimal adjustedEntryPrice = Helper.roundCurrencyValue(paramSessionContext, currency,
+											originalEntryPrice - (originalEntryPrice * percentageDiscountvalue));
+
+									final BigDecimal adjustedUnitPrice = Helper.roundCurrencyValue(
+											paramSessionContext,
+											currency,
+											(adjustedEntryPrice.equals(BigDecimal.ZERO)) ? BigDecimal.ZERO : adjustedEntryPrice.divide(
+													BigDecimal.valueOf(eligibleCount), RoundingMode.HALF_EVEN));
+
+									final List<PromotionOrderEntryConsumed> consumed = new ArrayList<PromotionOrderEntryConsumed>();
+									consumed.add(getDefaultPromotionsManager().consume(paramSessionContext, this, eligibleCount,
+											eligibleCount, entry));
+
+									tcMapForValidEntries.put(validUssid, Integer.valueOf((int) quantityOfOrderEntry - eligibleCount));
+
+									for (final PromotionOrderEntryConsumed poec : consumed)
+									{
+										poec.setAdjustedUnitPrice(paramSessionContext, adjustedUnitPrice.doubleValue());
+									}
+
+									final BigDecimal adjustment = Helper.roundCurrencyValue(paramSessionContext, currency,
+											adjustedEntryPrice.subtract(BigDecimal.valueOf(originalEntryPrice)));
+									//final double adjustment = -(entry.getBasePrice().doubleValue() * percentageDiscountvalue * eligibleCount);
+
+									final PromotionResult result = promotionsManager.createPromotionResult(paramSessionContext, this,
+											paramPromotionEvaluationContext.getOrder(), 1.0F);
+									final CustomPromotionOrderEntryAdjustAction poeac = getDefaultPromotionsManager()
+											.createCustomPromotionOrderEntryAdjustAction(paramSessionContext, entry, quantityOfOrderEntry,
+													adjustment.doubleValue());
+									//final List consumed = paramPromotionEvaluationContext.finishLoggingAndGetConsumed(this, true);
+									result.setConsumedEntries(paramSessionContext, consumed);
+									result.addAction(paramSessionContext, poeac);
+									promotionResults.add(result);
+								}
 							}
 						}
 					}
-
 				}
 
 				//Setting remaining items
