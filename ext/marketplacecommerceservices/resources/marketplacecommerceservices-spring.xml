@@ -1937,7 +1937,7 @@
 		<property name="modelService" ref="modelService" />
 	</bean>
 	
-	
+		
 	<!-- Old Cron Job Deletion Logic : Added as part of PT FIX-->
 	<alias name="mplcleanupCronJobsPerformable" alias="cleanupCronJobsPerformable" />
 	<bean id="mplcleanupCronJobsPerformable" parent="abstractGenericMaintenanceJobPerformable">
@@ -1966,6 +1966,20 @@
         </property>
     </bean>
 	<!-- Old Cron Job Deletion Logic ends: -->
+	
+	<!-- Jewellery Changes Start --> 
+	<alias name="mplJewelleryService" alias="mplJewelleryService" />
+	<bean id="mplJewelleryService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplJewelleryServiceImpl"
+			autowire="byName">
+	</bean>
+	
+	
+	<alias name="mplJewelleryDao" alias="mplJewelleryDao" />
+	<bean id="mplJewelleryDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplJewelleryDaoImpl"
+			autowire="byName">
+	</bean>
+	
+	<!-- Jewellery Changes End -->
 
 </beans>
 
