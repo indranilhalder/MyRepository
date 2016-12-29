@@ -16,6 +16,7 @@ import de.hybris.platform.commercefacades.user.UserFacade;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -584,7 +585,10 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		RTSAndRSSReturnInfoRequestData  returnInfoRequestData=new RTSAndRSSReturnInfoRequestData();
 		returnInfoRequestData.setAWBNum(mplReturnInfoForm.getAwbNumber());
 		returnInfoRequestData.setLPNameOther(mplReturnInfoForm.getLpname());
-		returnInfoRequestData.setOrderId(mplReturnInfoForm.getOrderId());
+		final OrderModel orderModel = orderModelService.getParentOrder(mplReturnInfoForm.getOrderId());
+		if(null!=orderModel.getParentReference() && null!=orderModel.getParentReference().getCode()){
+			returnInfoRequestData.setOrderId(orderModel.getParentReference().getCode());
+		}
 		returnInfoRequestData.setTransactionId(mplReturnInfoForm.getTransactionId());
 		if(mplReturnInfoForm.getAmount() != null && !mplReturnInfoForm.getAmount().isEmpty()){
 			Double enterdShppingCharge=Double.parseDouble(mplReturnInfoForm.getAmount());
@@ -649,7 +653,6 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			 finalCODSelfShipData.setTransactionID(mplReturnInfoForm.getTransactionId());
 			 finalCODSelfShipData.setTransactionType(RequestMappingUrlConstants.RETURN_TYPE);
 			 //finalCODSelfShipData.setOrderRefNo(mplReturnInfoForm.getTransactionId());
-			 final OrderModel orderModel = orderModelService.getParentOrder(mplReturnInfoForm.getOrderId());
 				if(null!=orderModel.getParentReference() && null!=orderModel.getParentReference().getCode()){
 					finalCODSelfShipData.setOrderRefNo(orderModel.getParentReference().getCode());
 				}
@@ -1049,7 +1052,12 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		selfShipData.setTransactionID(returnForm.getTransactionId());
 		selfShipData.setPaymentMode(returnForm.getRefundMode());
 		selfShipData.setTransactionType(RETURN_TYPE_COD);
-		selfShipData.setAmount(MarketplacecommerceservicesConstants.ZERO);
+		for (AbstractOrderEntryModel entry : orderModel.getEntries()) {
+			if(entry.getTransactionID().trim().equalsIgnoreCase(returnForm.getTransactionId().trim())){
+				selfShipData.setAmount(entry.getNetAmountAfterAllDisc().toString());
+			}
+		}
+		
 		if(null!= subOrderDetails.getCreated()){
 			 SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 			 selfShipData.setOrderDate(dateUtilHelper.convertDateWithFormat(formatter.format(subOrderDetails.getCreated())));
