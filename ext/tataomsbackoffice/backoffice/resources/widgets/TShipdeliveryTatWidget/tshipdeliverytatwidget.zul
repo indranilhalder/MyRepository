@@ -6,14 +6,11 @@
 	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
 	height="100%">
 	<style>
-		.uploadContainer{margin:5% auto 0;background:#fff;padding:15px;}
-		.uploadContainer .z-div {width:80%;text-algin:center;}
-		.uploadContainer .z-div input{width:280px;} .uploadContainer
 		.z-div button{margin:0px 130px 0 5px;} .heading
 		{font-weight:bold;display:block;font-size:16px;margin-bottom:5px;text-align:left;}
 		.error_class{ color:red;} .containerVlayout{margin-left:100px;}
 	</style>
-	<div class="uploadContainer">
+	<div class="uploadContainer" style="overflow-x:auto">
 		<vlayout class="containerVlayout">
 			<vlayout>
 				<label sclass="heading" value="BLUEDART"></label>
@@ -78,13 +75,12 @@
 					value="Returns Upload">
 				</label>
 				<div>
-					<textbox  disabled="true" />
+					<textbox id="returnText" disabled="true" />
 					<button sclass="uploadTxtbox" label="upload"
-						upload="true,maxsize=302400" id="returnOrderupload">
+						upload="true,maxsize=302400" id="return_upload">
 					</button>
 				</div>
-				<label id="returnOrderEmptyFileError" sclass="error_class"
-					value="">
+				<label id="returnError" sclass="error_class" value="Unable to Upload File Please try again..">
 				</label>
 			</vlayout>
 			<vlayout>
@@ -92,13 +88,13 @@
 					value="Precious Fragile Scheduled Upload">
 				</label>
 				<div>
-					<textbox  disabled="true" />
+					<textbox id="pfsdText" disabled="true" />
 					<button sclass="uploadTxtbox" label="upload"
-						upload="true,maxsize=302400" id="frigileOrderupload">
+						upload="true,maxsize=302400" id="preciousfragile-upload">
 					</button>
 				</div>
-				<label id="fragileOrderEmptyFileError" sclass="error_class"
-					value="">
+				<label id="pfsdError" sclass="error_class"
+					value="Unable to Upload File Please try again..">
 				</label>
 			</vlayout>
 	
