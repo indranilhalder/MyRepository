@@ -129,6 +129,7 @@
 		<cms:pageSlot position="ShopForHeading" var="feature">
 				<cms:component component="${feature}" element="div" class="shop_for_component_blp"/>
 		</cms:pageSlot>
+		<div class="shop_for_wrapper">
 		<div class="shop_for_left_wrapper_blp">
 			<cms:pageSlot position="ShopForLeftCol" var="feature">
 				<cms:component component="${feature}" element="div" class="shop_for_component_blp"/>
@@ -138,6 +139,7 @@
 			<cms:pageSlot position="ShopForRightCol" var="feature">
 				<cms:component component="${feature}" element="div" class="shop_for_component_blp"/>
 			</cms:pageSlot>
+		</div>
 		</div>
 		<cms:pageSlot position="ShopForViewMore" var="feature">
 				<cms:component component="${feature}" element="div" class="shop_for_component_blp"/>
