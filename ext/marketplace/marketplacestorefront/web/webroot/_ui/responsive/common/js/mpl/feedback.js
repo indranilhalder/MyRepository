@@ -2073,6 +2073,7 @@ $(".top_categories_wrapper").css("padding-top", "40px");
 				$(this).children().last().prevAll().wrapAll("<div class='blog_content'>");
 			}
 			else {
+				$(this).addClass("no-blog-image");
 				$(this).children().wrapAll("<div class='blog_content'>");
 			}
 		});
@@ -2871,7 +2872,8 @@ $(".top_deal_blp  > .blog_container_blp > .blog_feature_blp").each(function(){
 			$(this).children().last().prevAll().wrapAll("<div class='blog_content_blp'>");
 		}
 		else {
-		$(this).children().wrapAll("<div class='blog_content_blp'>");
+			$(this).addClass("no-blog-image");
+			$(this).children().wrapAll("<div class='blog_content_blp'>");
 		}
 });
 //-----blog section end------//
