@@ -253,8 +253,9 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			{
 				if (null != abstractOrderEntryModel.getSelectedUSSID() && !abstractOrderEntryModel.getSelectedUSSID().isEmpty())
 				{
-					final String ussid = abstractOrderEntryModel.getSelectedUSSID();
-					orderEntryToUssidMap.put(abstractOrderEntryModel.getEntryNumber().toString(), ussid);
+
+					orderEntryToUssidMap.put(abstractOrderEntryModel.getEntryNumber().toString(),
+							abstractOrderEntryModel.getSelectedUSSID());
 				}
 				else
 				{
@@ -304,7 +305,6 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 									final JewelleryInformationModel infoModel = jewelleryInfo.get(0);
 									if (infoModel.getPCMUSSID().equalsIgnoreCase(sellerInformationData.getUssid()))
 									{
-
 										LOG.debug("got seller information data for cart line Jewellery item :"
 												+ orderEntryData.getEntryNumber() + "seller name " + sellerInformationData.getSellername());
 										orderEntryData.setSelectedSellerInformation(sellerInformationData);
