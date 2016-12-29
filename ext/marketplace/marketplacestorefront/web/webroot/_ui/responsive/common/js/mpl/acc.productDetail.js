@@ -2489,14 +2489,27 @@ function isOOSSizeGuide(){
 	}
 	
 	if(totalOptions == disabledOption && totalOptions!=0){
+		hideAddToCartSizeGuide();
 		return true;
 	}else if(skuOOS){
+		hideAddToCartSizeGuide();
 		return true;
 	} else{
 		return false;
 	}
 	
 }
+
+function hideAddToCartSizeGuide()
+{
+	$("#outOfStockText").html("<font color='#ff1c47'>" + $('#outOfStockText').text() + "</font>");
+	$("#addToCartSizeGuideTitleoutOfStockId").show();
+	//$("#addToCartSizeGuide #addToCartButton").attr("style", "display:none");
+	$(".btn-block.js-add-to-cart").hide();
+	
+}
+
+
 function isOOSQuicks(){
 	var totalOptions = $("ul[label=sizes] li").length;
 	totalOptions = totalOptions -1;
