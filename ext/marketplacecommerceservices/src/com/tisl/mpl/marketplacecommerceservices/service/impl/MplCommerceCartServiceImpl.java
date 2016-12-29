@@ -3821,8 +3821,6 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 									}
 									LOG.debug("*****************Seller Level.....*****fulfillmentType.toUpperCase() :"+fulfillmentType.toUpperCase());
 									cartSoftReservationData.setFulfillmentType(fulfillmentType.toUpperCase());
-									LOG.debug("entryModel :"+entryModel);
-									LOG.debug("entryModel.getGiveAway() :"+entryModel.getGiveAway() + " entryModel.getGiveAway().booleanValue() :"+ entryModel.getGiveAway().booleanValue() );
 									if (entryModel.getGiveAway().booleanValue())
 									{
 										setFullFillmentTypeForFreebie(cartSoftReservationData, abstractOrderModel);
@@ -3833,8 +3831,6 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 									LOG.debug("populateDataForSoftReservation :  Fulfillment type not received for the "
 											+ entryModel.getSelectedUSSID());
 								}
-
-								LOG.debug("richAttributeModel.get(0).getShippingModes() :" +richAttributeModel.get(0).getShippingModes() +"richAttributeModel.get(0).getShippingModes().getCode() :"+richAttributeModel.get(0).getShippingModes().getCode());
 								if (richAttributeModel != null && richAttributeModel.get(0) != null
 										&& richAttributeModel.get(0).getShippingModes() != null
 										&& richAttributeModel.get(0).getShippingModes().getCode() != null)
@@ -3844,28 +3840,22 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 								}
 							}
 						}
-						LOG.debug("inventoryRequest : "	+ inventoryRequest + "salesApplication " + salesApplication);
 						if(null != inventoryRequest && null != salesApplication && salesApplication.equals(SalesApplication.MOBILE)) {
-							LOG.debug("inventoryRequest.getItem() : "	+ inventoryRequest.getItem());
 							for (InventoryReservRequestWsDTO  item: inventoryRequest.getItem()) {
 								if(item.getUssId().equalsIgnoreCase(entryModel.getSelectedUSSID())) {
-									LOG.debug("item.getUssId() : "	+ item.getUssId());
-									LOG.debug("item.getDeliveryMode() : "	+ item.getDeliveryMode());
-									LOG.debug("item.getFulfillmentType() : "	+ item.getFulfillmentType());
+									
 									cartSoftReservationData.setDeliveryMode(item.getDeliveryMode());
 									cartSoftReservationData.setFulfillmentType(item.getFulfillmentType());
 									if(null != item.getServiceableSlaves()) {
-										LOG.debug("item.getServiceableSlaves() : "	+ item.getServiceableSlaves());
 										cartSoftReservationData.setServiceableSlaves(item.getServiceableSlaves()); 
 									}else if(item.getDeliveryMode().equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC)){
-										LOG.debug("item.getStoreId() : "	+ item.getStoreId());
 										cartSoftReservationData.setStoreId(item.getStoreId());
 									}
 								}
 							}
 
 						}else {
-							LOG.debug("pincoderesponseDataList : "	+ pincoderesponseDataList);
+							if(null!=pincoderesponseDataList && pincoderesponseDataList.size()>0){
 							for (final PinCodeResponseData responseData : pincoderesponseDataList)
 							{
 								LOG.debug("entryModel.getSelectedUSSID() : "	+ entryModel.getSelectedUSSID() +":responseData.getUssid() "+responseData.getUssid());
@@ -3901,8 +3891,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 									}
 								}
 							}
+							
 						}
-						LOG.debug("cartSoftReservationData : "	+cartSoftReservationData);
+						}
 						cartSoftReservationDataList.add(cartSoftReservationData);
 					}
 				}
@@ -3911,7 +3902,6 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		catch (final Exception e)
 		{
 			LOG.error("Exception  : "	+e.getMessage());
-			e.printStackTrace();
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9047);
 		}
 

@@ -5,9 +5,14 @@ package com.tisl.mpl.marketplaceomsservices.event;
 
 import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
+import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.event.impl.AbstractEventListener;
 import de.hybris.platform.servicelayer.model.ModelService;
 
+import java.util.List;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -43,6 +48,20 @@ public class SendUnCollectedOrderToCRMEventListener extends AbstractEventListene
 						boolean isSsb=false;
 						boolean isSdb=false;
 						boolean isEdtoHd=false;
+					   String paymentRefundType=null;
+						final List<PaymentTransactionModel> tranactions = sendUnColletedToCRMEvent.getOrderModel().getPaymentTransactions();
+						if (CollectionUtils.isNotEmpty(tranactions))
+						{
+							final PaymentTransactionEntryModel entry = tranactions.iterator().next().getEntries().iterator().next();
+							if (entry.getPaymentMode() != null && entry.getPaymentMode().getMode() != null
+									&& "COD".equalsIgnoreCase(entry.getPaymentMode().getMode())){
+								paymentRefundType="N";
+							}else{
+								paymentRefundType=MarketplaceomsordersConstants.REFUND_TYPE_CODE;
+							}
+						}else{
+							paymentRefundType=MarketplaceomsordersConstants.REFUND_TYPE_CODE;
+						}
 						if(null!=sendUnColletedToCRMEvent.getShipment().getSsb() && sendUnColletedToCRMEvent.getShipment().getSsb().booleanValue()){
 						 isSsb=sendUnColletedToCRMEvent.getShipment().getSsb().booleanValue();
 						 sendUnColletedToCRMEvent.getConsignmentModel().setSsb(Boolean.TRUE);
@@ -51,22 +70,22 @@ public class SendUnCollectedOrderToCRMEventListener extends AbstractEventListene
         			    
         			     customOmsCancelAdapter.createTicketInCRM(orderEntryModel.getTransactionID(),
         			   		sendUnColletedToCRMEvent.getTicketType(), MarketplaceomsordersConstants.EMPTY,
-        					MarketplaceomsordersConstants.REFUND_TYPE_CODE, sendUnColletedToCRMEvent.getOrderModel(),isSsb,isSdb,isEdtoHd);
+        			   		paymentRefundType, sendUnColletedToCRMEvent.getOrderModel(),isSsb,isSdb,isEdtoHd);
         			  
 						}else if(null!=sendUnColletedToCRMEvent.getShipment().getSdb() && sendUnColletedToCRMEvent.getShipment().getSdb().booleanValue()){
 							isSdb=sendUnColletedToCRMEvent.getShipment().getSdb().booleanValue();  
 							customOmsCancelAdapter.createTicketInCRM(orderEntryModel.getTransactionID(),
 									sendUnColletedToCRMEvent.getTicketType(), MarketplaceomsordersConstants.EMPTY,
-									MarketplaceomsordersConstants.REFUND_TYPE_CODE, sendUnColletedToCRMEvent.getOrderModel(),isSsb,isSdb,isEdtoHd);
+									paymentRefundType, sendUnColletedToCRMEvent.getOrderModel(),isSsb,isSdb,isEdtoHd);
 						}else if(null!=sendUnColletedToCRMEvent.getShipment().getIsEDtoHD() && sendUnColletedToCRMEvent.getShipment().getIsEDtoHD().booleanValue()){
 							isEdtoHd=sendUnColletedToCRMEvent.getShipment().getIsEDtoHD().booleanValue(); 
 							customOmsCancelAdapter.createTicketInCRM(orderEntryModel.getTransactionID(),
 									sendUnColletedToCRMEvent.getTicketType(), MarketplaceomsordersConstants.EMPTY,
-									MarketplaceomsordersConstants.REFUND_TYPE_CODE, sendUnColletedToCRMEvent.getOrderModel(),isSsb,isSdb,isEdtoHd);
+									paymentRefundType, sendUnColletedToCRMEvent.getOrderModel(),isSsb,isSdb,isEdtoHd);
 						}else{
 							customOmsCancelAdapter.createTicketInCRM(orderEntryModel.getTransactionID(),
 									sendUnColletedToCRMEvent.getTicketType(), MarketplaceomsordersConstants.EMPTY,
-									MarketplaceomsordersConstants.REFUND_TYPE_CODE, sendUnColletedToCRMEvent.getOrderModel(),isSsb,isSdb,isEdtoHd);
+									paymentRefundType, sendUnColletedToCRMEvent.getOrderModel(),isSsb,isSdb,isEdtoHd);
 						}
 						
 						

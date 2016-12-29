@@ -126,8 +126,6 @@ public class CustomOmsCancelAdapter implements Serializable
 				sendTicketLineItemData.setLineItemId(abstractOrderEntryModel.getOrderLineId());
 				if (ticketTypeCode.equalsIgnoreCase("C"))
 				{
-					
-					sendTicketRequestData.setRefundType(refundType);
 					if(isSsb){
 						sendTicketRequestData.setTicketSubType(MarketplaceomsordersConstants.TICKET_SUB_TYPE_CODE_SSB);
 						sendTicketLineItemData.setCancelReasonCode(MarketplaceomsordersConstants.CRM_SSB_REASON_CODE);
@@ -136,13 +134,16 @@ public class CustomOmsCancelAdapter implements Serializable
    					sendTicketLineItemData.setCancelReasonCode(reasonCode);
 					}
 				}else if(ticketTypeCode.equalsIgnoreCase("A")){
+					
+					   if(isSdb || isEdtoHd){
 						sendTicketRequestData.setTicketSubType(TICKET_SUB_TYPE_CODE_ARR);
 						sendTicketLineItemData.setCancelReasonCode(reasonCode);
-						sendTicketRequestData.setRefundType(refundType);
+					   }
 				}
 				lineItemDataList.add(sendTicketLineItemData);
 			}
 			//sendTicketRequestData.setCustomerID(customerData.getUid());
+			sendTicketRequestData.setRefundType(refundType);
 			sendTicketRequestData.setCustomerID(subOrderModel.getUser().getUid());
 			sendTicketRequestData.setLineItemDataList(lineItemDataList);
 			sendTicketRequestData.setOrderId(subOrderModel.getParentReference().getCode());
