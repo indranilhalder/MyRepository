@@ -647,12 +647,23 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			 
 			 SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 			 finalCODSelfShipData.setAmount(returnInfoRequestData.getShipmentCharge());
-			 finalCODSelfShipData.setOrderNo(mplReturnInfoForm.getOrderId());
+			 finalCODSelfShipData.setOrderRefNo(mplReturnInfoForm.getOrderId());
 			 finalCODSelfShipData.setOrderDate(dateUtilHelper.convertDateWithFormat(formatter.format(subOrderDetails.getCreated())));
 			 finalCODSelfShipData.setTransactionDate(dateUtilHelper.convertDateWithFormat(formatter.format(subOrderDetails.getCreated())));
 			 finalCODSelfShipData.setTransactionID(mplReturnInfoForm.getTransactionId());
 			 finalCODSelfShipData.setTransactionType(RequestMappingUrlConstants.RETURN_TYPE);
 			 //finalCODSelfShipData.setOrderRefNo(mplReturnInfoForm.getTransactionId());
+			// finalCODSelfShipData.setOrderNo();
+			 if(orderModel.getChildOrders().size()>0){
+				 for(OrderModel chileOrders :orderModel.getChildOrders()){
+					 for (AbstractOrderEntryModel entry :chileOrders.getEntries()){
+						   if(entry.getTransactionID().equalsIgnoreCase(mplReturnInfoForm.getTransactionId())){
+						   	finalCODSelfShipData.setOrderNo(chileOrders.getCode());
+						   }
+					 }
+				 }
+				 
+			 }
 				if(null!=orderModel.getParentReference() && null!=orderModel.getParentReference().getCode()){
 					finalCODSelfShipData.setOrderRefNo(orderModel.getParentReference().getCode());
 				}

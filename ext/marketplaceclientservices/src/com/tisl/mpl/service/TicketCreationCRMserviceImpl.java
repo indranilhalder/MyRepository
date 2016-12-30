@@ -166,6 +166,8 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 					if (ticket.getTicketType().equalsIgnoreCase(MarketplacecclientservicesConstants.CANCEL))
 					{
 						ticketLineObj.setCancelReasonCode(sendTicketLineItemData.getCancelReasonCode());
+					}else if (ticket.getTicketType().equalsIgnoreCase("A")){
+						ticketLineObj.setCancelReasonCode(sendTicketLineItemData.getCancelReasonCode());
 					}
 					else
 					{
