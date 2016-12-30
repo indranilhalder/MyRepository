@@ -3906,46 +3906,53 @@ public class DefaultPromotionManager extends PromotionsManager
 			final String code, final List<AbstractPromotionRestriction> restrictionList)
 	{
 		final StringBuilder ussidIds = new StringBuilder();
+
+		final StringBuilder productCodes = new StringBuilder();
 		final Set<String> ussidSet = new HashSet<String>();
 		Map<String, Integer> stockCountMap = new HashMap<String, Integer>();
 		final int stockCount = getStockRestrictionVal(restrictionList);
-		//final boolean isSellerRestrExists = isSellerRestrExists(restrictionList);
-
+		final Map<String, Integer> mapQuantCount = new HashMap<String, Integer>();
 		for (final Map.Entry<String, AbstractOrderEntry> entry : multiSellerValidUSSIDMap.entrySet())
 		{
 			ussidIds.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + entry.getKey()
 					+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
 			ussidIds.append(",");
+			productCodes.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + entry.getValue().getProduct().getCode()
+					+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
+			productCodes.append(",");
+			mapQuantCount.put(entry.getKey(), Integer.valueOf(entry.getValue().getQuantity().intValue()));
 		}
-
-		//		stockCountMap = stockPromoCheckService.getCumulativeStockMap(ussidIds.toString().substring(0, ussidIds.lastIndexOf(",")),
-		//				code, isSellerRestrExists);
-		stockCountMap = stockPromoCheckService.getCumulativeStockMap(ussidIds.toString().substring(0, ussidIds.lastIndexOf(",")),
-				code, true);
-
+		final boolean sellerFlag = getSellerRestrictionVal(restrictionList);
+		if (sellerFlag)
+		{
+			stockCountMap = stockPromoCheckService.getCumulativeStockMap(
+					ussidIds.toString().substring(0, ussidIds.lastIndexOf(",")), code, true);
+		}
+		else
+		{
+			stockCountMap = stockPromoCheckService.getCumulativeStockMap(
+					productCodes.toString().substring(0, productCodes.lastIndexOf(",")), code, false);
+		}
 		for (final Map.Entry<String, AbstractOrderEntry> entry : multiSellerValidUSSIDMap.entrySet())
 		{
-			if (null != stockCountMap.get(entry.getKey()) && stockCount - stockCountMap.get(entry.getKey()).intValue() > 0)
+			if (null != stockCountMap.get(entry.getKey()) && sellerFlag && (stockCount - stockCountMap.get(entry.getKey()).intValue() > 0))
 			{
 				ussidSet.add(entry.getKey());
 			}
-			else if (null == stockCountMap.get(entry.getKey()))
+			else if (null != stockCountMap.get(entry.getKey()) && !sellerFlag && (stockCount - stockCountMap.get(entry.getValue().getProduct()).intValue() > 0))
 			{
 				ussidSet.add(entry.getKey());
 			}
-			else if (stockCountMap.isEmpty())
+			else if (stockCountMap.isEmpty() && stockCount > 0)
 			{
 				ussidSet.add(entry.getKey());
 			}
-			else if (stockCount == 0)
-			{
-				ussidSet.add(entry.getKey());
-			}
+
 		}
 		return ussidSet;
 	}
 
-	private int getStockRestrictionVal(final List<AbstractPromotionRestriction> restrictionList)
+	public int getStockRestrictionVal(final List<AbstractPromotionRestriction> restrictionList)
 	{
 		int stockVal = 0;
 		for (final AbstractPromotionRestriction restriction : restrictionList)
@@ -3961,4 +3968,20 @@ public class DefaultPromotionManager extends PromotionsManager
 		}
 		return stockVal;
 	}
+
+	public boolean getSellerRestrictionVal(final List<AbstractPromotionRestriction> restrictionList)
+	{
+		boolean isPrsent = false;
+		for (final AbstractPromotionRestriction restriction : restrictionList)
+		{
+			if (restriction instanceof EtailSellerSpecificRestriction)
+			{
+				isPrsent = true;
+				break;
+			}
+		}
+		return isPrsent;
+	}
+}
+
 }
