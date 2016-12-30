@@ -14,6 +14,7 @@ import java.util.List;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.EMIBankModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
+import com.tisl.mpl.core.model.ThirdPartyAuditModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.model.PaymentTypeModel;
@@ -147,18 +148,18 @@ public interface MplPaymentDao
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	BankModel getBankDetailsForBank(final String bankName) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
 	 */
 	List<BankforNetbankingModel> getNetBankingBanks();
@@ -176,5 +177,7 @@ public interface MplPaymentDao
 	 * @return OrderModel
 	 */
 	OrderModel fetchOrderOnGUID(String guid);
+
+	ThirdPartyAuditModel getWalletAuditEntries(String auditId);
 
 }

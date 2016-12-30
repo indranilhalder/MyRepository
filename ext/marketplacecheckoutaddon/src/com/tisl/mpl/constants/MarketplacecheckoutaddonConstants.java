@@ -305,4 +305,9 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	/* Gigya Social Login */
 	public final static String SOCIALLOGIN = "/socialLogin";
 	public static final String CHECKSESSIONACTIVE = "/checkSessionActive";
+
+	/* mRupee Changes */
+	public final static String MRUPEERETURNMETHOD = "payment.mRupee.returnMethod".intern();
+
+	public final static String THIRDPARTYWALLET = "ThirdPartyWallet";
 }

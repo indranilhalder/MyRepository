@@ -22,6 +22,7 @@ import de.hybris.platform.core.model.order.payment.CreditCardPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.DebitCardPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.EMIPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.NetbankingPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.ThirdPartyWalletInfoModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -64,6 +65,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -88,6 +90,8 @@ import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.PaymentModeApportionModel;
 import com.tisl.mpl.core.model.SavedCardModel;
+import com.tisl.mpl.core.model.ThirdPartyAuditEntryModel;
+import com.tisl.mpl.core.model.ThirdPartyAuditModel;
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.data.MplPromotionData;
@@ -147,6 +151,10 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	@Autowired
 	private PersistentKeyGenerator juspayOrderIdGenerator;
+
+	@Autowired
+	private PersistentKeyGenerator walletOrderIdGenerator;
+
 	@Autowired
 	private MplCommerceCartCalculationStrategy calculationStrategy;
 	@Autowired
@@ -2996,11 +3004,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 *
+	 * 
 	 * @param : bankName
-	 *
+	 * 
 	 * @return : BankModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3012,9 +3020,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3757,6 +3765,301 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	public void setMplFraudModelService(final MplFraudModelService mplFraudModelService)
 	{
 		this.mplFraudModelService = mplFraudModelService;
+	}
+
+	/**
+	 * @return the walletOrderIdGenerator
+	 */
+	public PersistentKeyGenerator getWalletOrderIdGenerator()
+	{
+		return walletOrderIdGenerator;
+	}
+
+
+	/**
+	 * @param walletOrderIdGenerator
+	 *           the walletOrderIdGenerator to set
+	 */
+	public void setWalletOrderIdGenerator(final PersistentKeyGenerator walletOrderIdGenerator)
+	{
+		this.walletOrderIdGenerator = walletOrderIdGenerator;
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#createWalletPaymentId()
+	 */
+	@Override
+	public String createWalletPaymentId()
+	{
+		return getWalletOrderIdGenerator().generate().toString();
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#entryInTPWaltAudit(javax.servlet.http.
+	 * HttpServletRequest, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void entryInTPWaltAudit(final HttpServletRequest request, final String channelWeb, final String guid, final String refNo)
+	{
+		try
+		{
+			Assert.notNull(refNo, "Parameter refNo cannot be null.");
+			final ThirdPartyAuditModel auditModel = getMplPaymentDao().getWalletAuditEntries(refNo);
+
+			if (null != auditModel)
+			{
+				List<ThirdPartyAuditEntryModel> collection = auditModel.getAuditEntries();
+				final List<ThirdPartyAuditEntryModel> auditEntryList = new ArrayList<ThirdPartyAuditEntryModel>();
+				if (null == collection || collection.isEmpty())
+				{
+					collection = new ArrayList<ThirdPartyAuditEntryModel>();
+				}
+
+				auditEntryList.addAll(collection);
+				final ThirdPartyAuditEntryModel auditEntry = getModelService().create(ThirdPartyAuditEntryModel.class);
+				auditEntry.setTwAuditId(refNo);
+				if (null != request.getParameter("STATUS") && !("S".equalsIgnoreCase(request.getParameter("STATUS"))))
+				{
+					auditEntry.setStatus(MplPaymentAuditStatusEnum.DECLINED);
+				}
+				else
+				{
+					auditEntry.setStatus(MplPaymentAuditStatusEnum.COMPLETED);
+				}
+				if (null != request.getParameter("MWREFNO"))
+				{
+					auditEntry.setMWRefNo(request.getParameter("MWREFNO"));
+				}
+				getModelService().save(auditEntry);
+
+				auditEntryList.add(auditEntry);
+
+				auditModel.setAuditEntries(auditEntryList);
+				auditModel.setIsExpired(Boolean.valueOf(true));
+				getModelService().save(auditModel);
+			}
+			else
+			{
+				final CartModel cartModel = getMplPaymentDao().getCart(guid);
+				final List<ThirdPartyAuditEntryModel> auditEntryList = new ArrayList<ThirdPartyAuditEntryModel>();
+				final ThirdPartyAuditEntryModel auditEntry = getModelService().create(ThirdPartyAuditEntryModel.class);
+				auditEntry.setTwAuditId(refNo);
+				auditEntry.setStatus(MplPaymentAuditStatusEnum.CREATED);
+				getModelService().save(auditEntry);
+
+				auditEntryList.add(auditEntry);
+
+				final ThirdPartyAuditModel newAuditModel = getModelService().create(ThirdPartyAuditModel.class);
+				newAuditModel.setChannel(GenericUtilityMethods.returnChannelData(channelWeb));
+				newAuditModel.setTwAuditId(refNo);
+				newAuditModel.setCartGUID(guid);
+				newAuditModel.setRequestDate(new Date());
+				newAuditModel.setAuditEntries(auditEntryList);
+				if (cartModel != null && cartModel.getTotalPrice() != null)
+				{
+					newAuditModel.setPaymentAmount(cartModel.getTotalPrice());
+				}
+
+				getModelService().save(newAuditModel);
+			}
+
+		}
+
+		catch (final ModelSavingException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+		}
+
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#saveTPWalletPaymentInfo(java.lang.String,
+	 * java.util.List, de.hybris.platform.core.model.order.AbstractOrderModel)
+	 */
+	@Override
+	public void saveTPWalletPaymentInfo(final String custName, final List<AbstractOrderEntryModel> entries,
+			final AbstractOrderModel cart, final HttpServletRequest request)
+	{
+		try
+		{
+			//creating tpWalletInfoModel
+			final ThirdPartyWalletInfoModel tpWalletInfoModel = getModelService().create(ThirdPartyWalletInfoModel.class);
+			tpWalletInfoModel.setCode(MarketplacecommerceservicesConstants.MRUPEE + "-" + request.getParameter("REFNO"));
+
+			tpWalletInfoModel.setWalletOwner(StringUtils.isNotEmpty(cart.getUser().getName()) ? cart.getUser().getName()
+					: ((CustomerModel) cart.getUser()).getOriginalUid());
+			tpWalletInfoModel.setProviderName(MarketplacecommerceservicesConstants.MRUPEE);
+			tpWalletInfoModel.setUser(getUserService().getCurrentUser());
+
+			//saving the tpWalletInfoModel
+			//try
+			//{
+			if (null == cart.getPaymentInfo())
+			{
+				getModelService().save(tpWalletInfoModel);
+				//setting paymentinfo in cart
+				cart.setPaymentInfo(tpWalletInfoModel);
+				cart.setPaymentAddress(cart.getDeliveryAddress());
+			}
+			else if (null != cart.getPaymentInfo())
+			{
+				LOG.error("Order already has payment info -- not saving tpWalletInfoModel>>>" + cart.getPaymentInfo().getCode());
+			}
+			else
+			{
+				LOG.error(ERROR_PAYMENT + cart.getCode());
+			}
+
+			//}
+			//catch (final ModelSavingException e)
+			//{
+			//	LOG.error("Exception while saving debit card payment info with " + e);
+			//}
+
+
+
+		}
+		catch (final ModelSavingException e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG + e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		//returning the cart
+		//return cart;
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#setTPWalletPaymentTransaction(java.util.Map,
+	 * de.hybris.platform.core.model.order.AbstractOrderModel)
+	 */
+	@Override
+	public void setTPWalletPaymentTransaction(final Map<String, Double> paymentMode, final AbstractOrderModel abstractOrderModel,
+			final HttpServletRequest request)
+	{
+
+		try
+		{
+			Collection<PaymentTransactionModel> collection = abstractOrderModel.getPaymentTransactions();
+			final List<PaymentTransactionModel> paymentTransactionList = new ArrayList<PaymentTransactionModel>();
+			if (CollectionUtils.isEmpty(collection))
+
+			{
+				collection = new ArrayList<PaymentTransactionModel>();
+			}
+
+			paymentTransactionList.addAll(collection);
+
+			final List<PaymentTransactionEntryModel> paymentTransactionEntryList = new ArrayList<PaymentTransactionEntryModel>();
+
+			final PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
+			final Date date = new Date();
+			final String refernceCode = request.getParameter("REFNO");
+
+			final PaymentTransactionEntryModel paymentTransactionEntry = getModelService()
+					.create(PaymentTransactionEntryModel.class);
+			paymentTransactionEntry.setCode(MarketplacecommerceservicesConstants.MRUPEE + refernceCode + "-"
+					+ System.currentTimeMillis());
+			paymentTransactionEntry.setAmount(BigDecimal.valueOf(abstractOrderModel.getTotalPrice().doubleValue()));
+			paymentTransactionEntry.setTime(date);
+			paymentTransactionEntry.setCurrency(abstractOrderModel.getCurrency());
+			//To Change this
+			paymentTransactionEntry.setType(PaymentTransactionType.CAPTURE);
+			paymentTransactionEntry.setTransactionStatus(MarketplacecommerceservicesConstants.SUCCESS);
+
+			PaymentTypeModel paymentTypeForTPWallet = modelService.create(PaymentTypeModel.class);
+			paymentTypeForTPWallet.setMode("TW");
+			paymentTypeForTPWallet = flexibleSearchService.getModelByExample(paymentTypeForTPWallet);
+			paymentTransactionEntry.setPaymentMode(paymentTypeForTPWallet);
+
+			if (null == abstractOrderModel.getPaymentInfo())
+			{
+				getModelService().save(paymentTransactionEntry);
+				paymentTransactionEntryList.add(paymentTransactionEntry);
+			}
+			else
+			{
+				LOG.error("PaymentInfo already available.....not saving any more paymentTransactionEntry model");
+			}
+
+			if (null != abstractOrderModel.getPaymentInfo())
+			{
+				paymentTransactionModel.setInfo(abstractOrderModel.getPaymentInfo());
+			}
+
+			paymentTransactionModel.setCode(MarketplacecommerceservicesConstants.MRUPEE + refernceCode + "-"
+					+ System.currentTimeMillis());
+
+			paymentTransactionModel.setCreationtime(date);
+			paymentTransactionModel.setCurrency(abstractOrderModel.getCurrency());
+			paymentTransactionModel.setEntries(paymentTransactionEntryList);
+			paymentTransactionModel.setPaymentProvider(MarketplacecommerceservicesConstants.MRUPEE);
+			paymentTransactionModel.setOrder(abstractOrderModel);
+			paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(abstractOrderModel.getTotalPrice().doubleValue()));
+			//the flag is used to identify whether all the entries in the PaymentTransactionModel are successful or not. If all are successful then flag is set as true and status against paymentTransactionModel is set as success
+
+			if (StringUtils.isNotEmpty(paymentTransactionEntryList.get(0).getTransactionStatus())
+					&& paymentTransactionEntryList.get(0).getTransactionStatus()
+							.equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+			{
+				paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+			}
+			else
+			{
+				paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.FAILURE);
+			}
+
+
+			if (null == abstractOrderModel.getPaymentInfo())
+			{
+				getModelService().save(paymentTransactionModel);
+				paymentTransactionList.add(paymentTransactionModel);
+				abstractOrderModel.setPaymentTransactions(paymentTransactionList);
+				getModelService().save(abstractOrderModel);
+			}
+			else if (null != abstractOrderModel.getPaymentInfo())
+			{
+				LOG.error("PaymentInfo already available.....not saving any more paymentTransactionModel and not setting against the abstractOrderModel>>>"
+						+ abstractOrderModel.getPaymentInfo().getCode());
+			}
+			else
+			{
+				LOG.error(ERROR_PAYMENT + abstractOrderModel.getCode());
+			}
+
+		}
+		catch (final ModelSavingException e)
+		{
+			LOG.error("Exception while saving cart with ", e);
+			throw new EtailNonBusinessExceptions(e, ": Exception while setPaymentTransactionFor Third Party Wallet");
+		}
+		catch (final Exception ex)
+		{
+			LOG.error("Exception while setPaymentTransactionFor Third Party Wallet", ex);
+			throw new EtailNonBusinessExceptions(ex);
+		}
+
+
 	}
 
 

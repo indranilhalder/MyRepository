@@ -1823,4 +1823,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public final static String RETURN_ENABLE = "order.return.enabled".intern();
 	public final static String CANCEL_ENABLE = "order.cancel.enabled".intern();
 
+	public static final String WALLETORDERID = "wallertOrderId";
+	public static final String CHECKSUMKEY = "checksumKey";
+	public static final String MRUPEE = "MRUPEE";
+	public static final String TPWALLETAUDITQUERY = "select {a:pk} from {ThirdPartyAudit As a} where {a.twAuditId}=?auditId"
+			.intern();
+
 }

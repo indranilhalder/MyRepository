@@ -436,4 +436,29 @@ public interface MplPaymentFacade
 	void populateDelvPOSForFreebie(AbstractOrderModel abstractOrderModel,
 			Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, Map<String, Long> freebieParentQtyMap);
 
+
+	/**
+	 * @param cart
+	 * @param walletName
+	 * @param channelWeb
+	 * @return
+	 */
+	List<String> createWalletorder(CartModel cart, String walletName, String channelWeb);
+
+
+	/**
+	 * @param request
+	 * @param channelWeb
+	 * @param walletOrderId
+	 * @param orderModel
+	 */
+	void entryInTPWaltAudit(HttpServletRequest request, String channelWeb, String guid, String walletOrderId);
+
+
+	/**
+	 * @param cart
+	 * @param request
+	 */
+	void saveTPWalletPaymentInfo(AbstractOrderModel cart, HttpServletRequest request);
+
 }

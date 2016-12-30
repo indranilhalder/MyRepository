@@ -92,7 +92,14 @@
         						$("#viewPaymentCOD").parent("li").addClass("active");
         						$(".checkout-paymentmethod").css("display","block");
         						setTimeout(function(){$('#viewPaymentCOD').click();},1000);
-        					}	
+        					}
+    						
+        					else if($("#MRUPEE").val()=="true")
+        					{
+        						$("#viewPaymentMrupee").parent("li").addClass("active");
+        						$(".checkout-paymentmethod").css("display","block");
+        						setTimeout(function(){$('#viewPaymentMrupee').click();},1000);
+        					}
     					}
     					});
 				</script>
@@ -172,6 +179,7 @@
 					<button type="button" class="button btn-block payment-button make_payment_top_savedCard proceed-button" id="make_emi_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 					<%-- <button type="button" class="positive right cod-otp-button_top" onclick="mobileBlacklist()" ><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sendOTP" text="Verify Number" /></button> --%>
 					<button type="button" class="button positive right cod_payment_button_top proceed-button" onclick="submitForm()" id="paymentButtonId_up"><spring:theme code="checkout.multi.paymentMethod.codContinue" /></button>
+					<button type="button" class="button btn-block payment-button make_payment_top_savedCard proceed-button" id="make_mrupee_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 					<h1 class="payment-options"><spring:theme code="text.payment.options"/></h1>
 						<p class="cart-items">You have an outstanding amount of &nbsp;&nbsp;<span class="prices"  id="outstanding-amount">
 					<ycommerce:testId code="cart_totalPrice_label">
@@ -1156,6 +1164,58 @@
 									</c:if>	
 								</c:forEach>	
 							</ul>
+							
+							<!-- Thrd Party Wallet Starts -->
+								<c:forEach var="map" items="${paymentModes}">
+									<c:if test="${map.value eq true}">
+										<c:choose>
+											<c:when test="${map.key eq 'TW'}">
+												<div class="accordion_in">
+												<div >
+													<span id="viewPaymentMRupee" >
+														<spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" />
+													</span>
+												</div>
+							
+							<div id="MRUPEE">
+							<ul class="product-block blocks">
+								<li id="tpWallet">
+												<div class="radio">
+													 <input type="radio" name="priority_wallet" id="radioButton_MRupee" value="mRupee"/>
+													 <label for="radioButton_MRupee" class="numbers creditLabel"><span><img src="${commonResourcePath}/images/mRupeeLogo.PNG" alt=""></span></label>
+									   			</div>
+									<form id="tpWallt_payment_form" autocomplete="off" action="https://14.140.248.13/Mwallet/startpaymentgateway.do">
+										<ycommerce:testId code="paymentDetailsWalletForm">
+										<input type="hidden" name="MCODE" value="TULA">
+										<input type="hidden" name="NARRATION" value="uat">
+										<input type="hidden" name="TXNTYPE" value="P">
+										<input type="hidden" name="AMT" id = "AMT">
+										<input type="hidden" name="RETURL" id = "RETURL">
+										<input type="hidden" name="REFNO" id = "REFNO">
+										<input type="hidden" name="CHECKSUM" id = "CHECKSUM">
+										
+											    <div class="pay newCardPaymentMR">
+												     <button type="button" class="make_payment button btn-block payment-button" id="make_mrupee_payment"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
+											    </div>
+									    </ycommerce:testId>
+									</form>
+		            			</li>
+							</ul>
+							<div class="terms">
+								<p class="redirect">You will be re-directed to secure payment gateway</p>
+								<!-- Tealium track not added now -->
+								<%-- <p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p> --%>
+								<p><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
+							</div>
+										
+					</div>
+				</div>
+		 									</c:when>
+										</c:choose>
+									</c:if>	
+								</c:forEach>
+								<!-- Thrd Party Wallet Ends -->
+							
 							<input type="hidden" id="paymentMode" name="paymentMode"/>
 							<ul class="tabs">
 							<!-- <li class="change-payment">Change Payment Method</li> -->

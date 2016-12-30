@@ -17,6 +17,8 @@ import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.EMIBankModel;
 import com.tisl.mpl.core.model.JuspayEBSResponseModel;
@@ -302,5 +304,35 @@ public interface MplPaymentService
 	 * @return OrderModel
 	 */
 	OrderModel fetchOrderOnGUID(String guid);
+
+	/**
+	 * @return
+	 */
+	String createWalletPaymentId();
+
+	/**
+	 * @param request
+	 * @param channelWeb
+	 * @param walletOrderId
+	 * @param order
+	 */
+	void entryInTPWaltAudit(HttpServletRequest request, String channelWeb, String guid, String walletOrderId);
+
+	/**
+	 * @param custName
+	 * @param entries
+	 * @param cart
+	 * @param request
+	 */
+	void saveTPWalletPaymentInfo(String custName, List<AbstractOrderEntryModel> entries, AbstractOrderModel cart,
+			HttpServletRequest request);
+
+	/**
+	 * @param paymentMode
+	 * @param cart
+	 * @param request
+	 */
+	void setTPWalletPaymentTransaction(Map<String, Double> paymentMode, AbstractOrderModel cart, HttpServletRequest request);
+
 
 }

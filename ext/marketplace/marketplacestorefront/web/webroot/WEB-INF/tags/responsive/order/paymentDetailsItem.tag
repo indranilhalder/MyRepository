@@ -46,5 +46,12 @@
     Monthly Installment&nbsp;-&nbsp; ${order.mplPaymentInfo.emiInfo.monthlyInstallment}<br>
     Total Interest Payable&nbsp;-&nbsp;  ${order.mplPaymentInfo.emiInfo.interestPayable}
     </c:if>
+    
+    <!-- Added for third party wallet -->
+    <c:if test="${not empty order.mplPaymentInfo.paymentOption && order.mplPaymentInfo.paymentOption eq 'MRUPEE'}">
+    
+   ${order.mplPaymentInfo.cardAccountHolderName}<br>
+   </c:if>
+    
    </address>   
    

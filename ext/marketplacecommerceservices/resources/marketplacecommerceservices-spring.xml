@@ -1256,6 +1256,17 @@
 		<property name="numeric" value="true" />
 	</bean>
 	<!-- Key generator for COD Payment Transaction Ends -->
+	
+	<!-- Key generator for Third Party Wallet -->
+	<bean id="walletOrderIdGenerator"
+		class="de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator"
+		init-method="init" scope="tenant">
+		<property name="key" value="walletOrderId" />
+		<property name="digits" value="9" />
+		<property name="start" value="#{configurationService.configuration.getProperty('wallet.orderId.startId')}" />
+		<property name="numeric" value="true" />
+	</bean>
+	<!-- Key generator for Third Party Wallet Ends --> 
 
 
 	<!-- For Payment Web Hook Integration -->

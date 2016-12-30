@@ -86,6 +86,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.wallet.service.MrupeePaymentService;
 
 
 /**
@@ -3080,6 +3081,100 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	public void setMplCommerceCartService(final MplCommerceCartService mplCommerceCartService)
 	{
 		this.mplCommerceCartService = mplCommerceCartService;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.facades.payment.MplPaymentFacade#createWalletorder(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public List<String> createWalletorder(final CartModel cart, final String walletName, final String channelWeb)
+	{
+		String walletOrderId = null;
+		final List<String> arryList = new ArrayList<String>();
+		walletOrderId = getMplPaymentService().createWalletPaymentId();
+		arryList.add(walletOrderId);
+		final Double cartTotal = cart.getTotalPrice();
+
+		final MrupeePaymentService mRupeeService = new MrupeePaymentService();
+		final String checksumKey = mRupeeService.generateCheckSum(walletOrderId, cartTotal.toString());
+
+		LOG.debug("Order Id created for Wallet by key generator is " + walletOrderId);
+		getSessionService().setAttribute(MarketplacecommerceservicesConstants.WALLETORDERID, walletOrderId);
+		getSessionService().setAttribute(MarketplacecommerceservicesConstants.CHECKSUMKEY, checksumKey);
+		arryList.add(checksumKey);
+		return arryList;
+
+	}
+
+
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.facades.payment.MplPaymentFacade#entryInTPWaltAudit(java.lang.String, java.lang.String,
+	 * java.lang.String)
+	 */
+	@Override
+	public void entryInTPWaltAudit(final HttpServletRequest request, final String channelWeb, final String guid,
+			final String walletOrderId)
+	{
+		getMplPaymentService().entryInTPWaltAudit(request, channelWeb, guid, walletOrderId);
+
+	}
+
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.tisl.mpl.facades.payment.MplPaymentFacade#saveTPWalletPaymentInfo(de.hybris.platform.core.model.order.CartModel
+	 * , javax.servlet.http.HttpServletRequest)
+	 */
+	@Override
+	public void saveTPWalletPaymentInfo(final AbstractOrderModel cart, final HttpServletRequest request)
+	{
+		//getting the current user
+		//final CustomerModel mplCustomer = (CustomerModel) getUserService().getCurrentUser();
+		CustomerModel mplCustomer = null;
+		final Map<String, Double> paymentMode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
+
+		if (null != cart)
+		{
+			mplCustomer = (CustomerModel) cart.getUser();
+			final List<AbstractOrderEntryModel> entries = cart.getEntries();
+
+			//setting payment transaction for
+			getMplPaymentService().setTPWalletPaymentTransaction(paymentMode, cart, request);
+
+			if (null != mplCustomer)
+			{
+				if (StringUtils.isNotEmpty(mplCustomer.getName()) && !mplCustomer.getName().equalsIgnoreCase(" "))
+				{
+					final String custName = mplCustomer.getName();
+
+					getMplPaymentService().saveTPWalletPaymentInfo(custName, entries, cart, request);
+				}
+				else
+				{
+					final String custEmail = mplCustomer.getOriginalUid();
+
+					getMplPaymentService().saveTPWalletPaymentInfo(custEmail, entries, cart, request);
+				}
+			}
+			getMplPaymentService().paymentModeApportion(cart);
+
+		}
+		else
+		{
+			LOG.debug("Unable to save Third Party Wallet PAyment Info");
+		}
+
+
+
+
 	}
 
 

@@ -94,6 +94,7 @@ import com.tisl.mpl.controllers.MarketplacecheckoutaddonControllerConstants;
 import com.tisl.mpl.core.enums.CodCheckMessage;
 import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
 import com.tisl.mpl.core.enums.PaymentModesEnum;
+import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
@@ -271,7 +272,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				final CartModel cartModel = getCartService().getSessionCart();
 
 				// TPR-429 START
-				
+
 				final String checkoutSellerID = populateCheckoutSellers(cartData);
 				model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, checkoutSellerID);
 				// TPR-429 END
@@ -2736,8 +2737,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						&& StringUtils.isNotEmpty(paymentMode)
 						&& (paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE)
 								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE)
-								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE) || paymentMode
-									.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE)))
+								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE)
+								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE) || paymentMode
+									.equalsIgnoreCase(MarketplacecheckoutaddonConstants.THIRDPARTYWALLET)))
 				{
 					//setting in cartmodel
 					cart.setConvenienceCharges(Double.valueOf(0));
@@ -2877,6 +2879,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						getModelService().save(cart);
 					}
 
+					//Added for third party wallet
+					else if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.THIRDPARTYWALLET))
+					{
+						cart.setModeOfPayment(MarketplacecheckoutaddonConstants.THIRDPARTYWALLET);
+						getModelService().save(cart);
+					}
+
 					//TISST-7955
 					final CartData promotedCartData = getMplCustomAddressFacade().getCheckoutCart();
 					final Map<String, String> ussidPricemap = new HashMap<String, String>();
@@ -2905,8 +2915,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				if (StringUtils.isNotEmpty(paymentMode)
 						&& (paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE)
 								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE)
-								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE) || paymentMode
-									.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE)))
+								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE)
+								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE) || paymentMode
+									.equalsIgnoreCase(MarketplacecheckoutaddonConstants.THIRDPARTYWALLET)))
 				{
 					//setting in orderModel
 					orderModel.setConvenienceCharges(Double.valueOf(0));
@@ -2976,6 +2987,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				else if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase("COD"))
 				{
 					orderModel.setModeOfOrderPayment("COD");
+					getModelService().save(orderModel);
+				}
+
+				//Added for third party wallet
+				else if (StringUtils.isNotEmpty(paymentMode)
+						&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.THIRDPARTYWALLET))
+				{
+					orderModel.setModeOfOrderPayment(MarketplacecheckoutaddonConstants.THIRDPARTYWALLET);
 					getModelService().save(orderModel);
 				}
 
@@ -4172,25 +4191,226 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	}
 
 	//TPR-429 change
-		public static String populateCheckoutSellers(final CartData cartData)
+	public static String populateCheckoutSellers(final CartData cartData)
+	{
+		String cartLevelSellerID = null;
+		final List<OrderEntryData> sellerList = cartData.getEntries();
+		for (final OrderEntryData seller : sellerList)
 		{
-			String cartLevelSellerID = null;
-			final List<OrderEntryData> sellerList = cartData.getEntries();
-			for (final OrderEntryData seller : sellerList)
+			final String sellerID = seller.getSelectedSellerInformation().getSellerID();
+			if (cartLevelSellerID != null)
 			{
-				final String sellerID = seller.getSelectedSellerInformation().getSellerID();
-				if (cartLevelSellerID != null)
+				cartLevelSellerID += "_" + sellerID;
+			}
+			else
+			{
+				cartLevelSellerID = sellerID;
+			}
+		}
+		return cartLevelSellerID;
+	}
+
+	@RequestMapping(value = "createWalletorder", method = RequestMethod.GET)
+	@RequireHardLogIn
+	public @ResponseBody String createWalletorder(final String walletName, final String cartGuid)
+			throws EtailNonBusinessExceptions
+	{
+		List<String> orderId = new ArrayList<String>();
+		String response = null;
+		String refNumber = null;
+		String checksum = null;
+		try
+		{
+			final StringBuilder returnUrlBuilder = new StringBuilder();
+			returnUrlBuilder
+					.append(request.getRequestURL().substring(0, request.getRequestURL().indexOf("/", 8)))
+					.append(request.getContextPath())
+					.append(
+							getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.MRUPEERETURNMETHOD));
+
+			/*
+			 * if (StringUtils.isNotEmpty(cartGuid)) { returnUrlBuilder.append("/").append(cartGuid); } final CustomerModel
+			 * customer = (CustomerModel) getUserService().getCurrentUser();
+			 * 
+			 * String uid = ""; if (null != customer) { uid = customer.getUid(); }
+			 */
+			final CartModel cart = getCartService().getSessionCart();
+			final Double cartTotal = cart.getTotalPrice();
+			final Double cartTotalWithConvCharge = cart.getTotalPriceWithConv();
+			boolean redirectFlag = false;
+			LOG.debug("Checking - onclick of pay now button pincode servicabilty and promotion");
+			if (!redirectFlag && !getMplCheckoutFacade().isPromotionValid(cart))
+			{
+				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED, "TRUE");
+				redirectFlag = true;
+				LOG.info("::setting redirect flag--1::");
+			}
+
+
+			if (!redirectFlag)
+			{
+				final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(cart);
+				if (cartItemDelistedStatus)
 				{
-					cartLevelSellerID += "_" + sellerID;
+					redirectFlag = true;
+					LOG.info("::setting redirect flag--2::");
+				}
+			}
+
+
+			//TISUTO-12 , TISUTO-11
+			if (!redirectFlag)
+			{
+				final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
+						MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
+				if (!inventoryReservationStatus)
+				{
+
+					getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
+					redirectFlag = true;
+					LOG.info("::setting redirect flag--3::");
+				}
+			}
+
+			if (!redirectFlag && !getMplCheckoutFacade().isCouponValid(cart))
+			{
+				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID, "TRUE");
+				redirectFlag = true;
+				LOG.info("::setting redirect flag--4::");
+			}
+
+			if (!redirectFlag)
+			{
+				LOG.info("::cartTotal**::" + cartTotal);
+				LOG.info("::cartTotalWithConvCharge**::" + cartTotalWithConvCharge);
+				if (cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0)
+				{
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CARTAMOUNTINVALID, "TRUE");
+					redirectFlag = true;
+					LOG.info("::setting redirect flag--5::");
+				}
+			}
+
+			if (!redirectFlag && !getMplPaymentFacade().isValidCart(cart))
+			{
+				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CART_DELIVERYMODE_ADDRESS_INVALID, "TRUE");
+				redirectFlag = true;
+				LOG.info("::setting redirect flag--6::");
+			}
+
+			if (redirectFlag)
+			{
+				LOG.info("::returning redirect String::");
+				return MarketplacecheckoutaddonConstants.REDIRECTSTRING; //IQA for TPR-629
+			}
+			else
+			{
+				LOG.info("::Going to Create Wallet OrderId::");
+
+				orderId = getMplPaymentFacade().createWalletorder(cart, walletName, MarketplacecheckoutaddonConstants.CHANNEL_WEB);
+				if (CollectionUtils.isNotEmpty(orderId))
+				{
+					refNumber = orderId.get(0);
+					checksum = orderId.get(1);
+				}
+				getMplPaymentFacade().entryInTPWaltAudit(request, MarketplacecheckoutaddonConstants.CHANNEL_WEB, cartGuid, refNumber);
+
+
+				LOG.info("::Created Wallet OrderId::" + orderId);
+
+			}
+
+			response = refNumber + "|" + checksum + "|" + cartGuid + "|" + cartTotal + "|" + returnUrlBuilder;
+		}
+
+		catch (final ModelSavingException e)
+		{
+			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
+		}
+
+		return response;
+
+
+	}
+
+
+	@RequestMapping(value = "walletPayment", method = RequestMethod.GET)
+	@RequireHardLogIn
+	public String walletPayment(final RedirectAttributes redirectAttributes, final HttpServletRequest request)
+			throws EtailNonBusinessExceptions
+	{
+		final CartModel cart = getCartService().getSessionCart();
+		final String refNo = request.getParameter("REFNO");
+
+		if (null != request.getParameter("STATUS") && "S".equalsIgnoreCase(request.getParameter("STATUS")))
+		{
+			//Mandatory checks agains cart
+			final boolean isValidCart = getMplPaymentFacade().checkCart(cart);
+			OrderModel orderModel = null;
+			try
+			{
+				if (isValidCart)
+				{
+					//saving TPWallet Payment related info
+					getMplPaymentFacade().saveTPWalletPaymentInfo(cart, request);
+
+					getMplCheckoutFacade().placeOrder();
+					if (StringUtils.isNotEmpty(cart.getGuid()))
+					{
+						orderModel = getMplPaymentFacade().getOrderByGuid(cart.getGuid());
+						if (null != orderModel)
+						{
+
+							getMplPaymentFacade().entryInTPWaltAudit(request, MarketplacecheckoutaddonConstants.CHANNEL_WEB,
+									orderModel.getGuid(), refNo);
+
+							orderModel.setIsWallet(WalletEnum.MRUPEE);
+
+							orderModel.setStatus(OrderStatus.PAYMENT_SUCCESSFUL);
+						}
+					}
+					return updateOrder(orderModel, redirectAttributes);
+
 				}
 				else
 				{
-					cartLevelSellerID = sellerID;
+					throw new InvalidCartException("************PaymentMethodCheckoutStepController : walletPayment : Invalid Cart!!!"
+							+ (StringUtils.isNotEmpty(cart.getGuid()) ? cart.getGuid() : MarketplacecommerceservicesConstants.EMPTY));
+
 				}
 			}
-			return cartLevelSellerID;
+			catch (final InvalidCartException e)
+			{
+				// YTODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			catch (final CalculationException e)
+			{
+				// YTODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
+		else
+		{
+			getMplPaymentFacade().entryInTPWaltAudit(request, MarketplacecheckoutaddonConstants.CHANNEL_WEB, cart.getGuid(), refNo);
 
+			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+					MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+			return getCheckoutStep().currentStep();
+		}
 
+		return null;
+
+	}
 }

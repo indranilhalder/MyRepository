@@ -158,8 +158,8 @@ $('#pincode').on('paste', function () {
 
 
 function refresh(){
-	$(".pay button, #make_cc_payment_up, #make_saved_cc_payment_up, .cod_payment_button_top").prop("disabled",false);
-	$(".pay button, #make_cc_payment_up, #make_saved_cc_payment_up, .cod_payment_button_top").css("opacity","1");
+	$(".pay button, #make_cc_payment_up, #make_saved_cc_payment_up, .cod_payment_button_top , .make_mrupee_payment_up").prop("disabled",false);
+	$(".pay button, #make_cc_payment_up, #make_saved_cc_payment_up, .cod_payment_button_top , .make_mrupee_payment_up").css("opacity","1");
 	$(".pay .spinner").remove();
 	$("#no-click,.spinner").remove();
 	// $(".checkout-content.checkout-payment
@@ -7375,4 +7375,100 @@ function teliumTrack(){
 	utag.link(
 	{"link_text": "pay_terms_conditions_click" , "event_type" : "terms_conditions_click"}
 	);
+}
+
+//Third Party Wallet mRupee
+$("#make_mrupee_payment , #make_mrupee_payment_up").click(function(){
+	 if(isSessionActive()==false){
+		 redirectToCheckoutLogin();
+		}
+		else{
+			var staticHost=$('#staticHost').val();
+			$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+			$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+			
+			$(".pay button, #make_mrupee_payment").prop("disabled",true);
+			$(".pay button, #make_mrupee_payment").css("opacity","0.5");
+			
+			var paymentMode=$("#paymentMode").val();
+			var guid=$("#guid").val();
+			var walletName = $("#radioButton_MRupee").val();
+			var dataString = 'walletName=' + walletName +'&cartGuid=' + guid ;
+			$.ajax({
+				url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createWalletorder",
+				type: "GET",
+				cache: false,
+				async:false,
+				data : dataString,
+				success: function(response){
+					if(response=='redirect'){
+						
+						$(location).attr('href',ACC.config.encodedContextPath+"/cart");
+						
+					}
+					else{	
+						window.sessionStorage.removeItem("header");
+						setTimeout(function(){ 			 
+							 var values=response.split("|"); 
+							 	// To do later
+								  $("#REFNO").val(values[0]);
+								  $("#CHECKSUM").val(values[1]);
+								  $("#AMT").val(values[3]);
+								  $("#RETURL").val(values[4]);
+								  submitWalletForm(values);	
+						 }, 1000);
+				
+					}
+					$(".pay button, #make_mrupee_payment_up").prop("disabled",false);
+					$(".pay button, #make_mrupee_payment_up").css("opacity","1");
+					$(".pay .spinner").remove();
+					$("#no-click,.spinner").remove();
+				},
+				error:function(response){
+					console.log("Error occured");
+					}
+				});
+		}
+})
+function displayThrdPrtyWlt(){
+	$("#make_mrupee_payment_up").show();
+	applyPromotion(null,"none","none");
+}
+$("#viewPaymentMRupee").click(function(){
+	refresh();
+	$("#paymentMode").val("ThirdPartyWallet");
+	$("#paymentModeValue").val("ThirdPartyWallet");
+	displayThrdPrtyWlt();
+})
+
+/*$("#make_mrupee_payment , #make_mrupee_payment_up").click(function(){
+	
+	var staticHost=$('#staticHost').val();
+	$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+	
+	$(".pay button, #make_mrupee_payment").prop("disabled",true);
+	$(".pay button, #make_mrupee_payment").css("opacity","0.5");
+	
+	$("#tpWallt_payment_form").submit() ;
+});*/
+
+function submitWalletForm(values) {
+	var checkNull = true;
+	if(values!=undefined){
+		for (i=0; i<values.length; i++){
+			alert("values ==== " + values[i]);
+			if(null == values[i] || values[i] == undefined || values[i] == ""){
+				checkNull = false;
+				break;
+			}
+		}
+	}
+	alert("checkNull" + checkNull);
+	if(checkNull){
+		$("#tpWallt_payment_form").submit() ;
+	}
+	else {
+		window.location.reload();
+	}
 }
