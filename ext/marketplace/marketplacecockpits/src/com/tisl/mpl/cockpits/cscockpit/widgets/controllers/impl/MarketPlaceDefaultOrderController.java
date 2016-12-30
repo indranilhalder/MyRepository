@@ -325,15 +325,15 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 						if(null != refundEntry.getKey() && null != refundEntry.getKey().getIsEDtoHD() && refundEntry.getKey().getIsEDtoHD()) {
 							isEDToHD= true;
 						}
-						ConsignmentModel consignment = null;
-						ConsignmentStatus newStatus = null;
-						 if(null != refundEntry.getKey() && null != refundEntry.getKey().getConsignmentEntries()); {
-							 newStatus = refundEntry.getKey().getConsignmentEntries().iterator().next().getConsignment().getStatus();;
+						 AbstractOrderEntryModel entry = refundEntry.getKey();
+						 if(null != entry) {
+							 entry.setDelChargesJuspayRequestId(uniqueRequestId);
+							 modelService.save(entry);
 						 }
 						
 						mplJusPayRefundService.makeRefundOMSCall(refundEntry
 								.getKey(), paymentTransactionModel, refundEntry
-								.getKey().getRefundedDeliveryChargeAmt(), newStatus,isEDToHD?MarketplacecommerceservicesConstants.REFUND_CATEGORY_E:null);// Sending
+								.getKey().getRefundedDeliveryChargeAmt(), null,isEDToHD?MarketplacecommerceservicesConstants.REFUND_CATEGORY_E:null);// Sending
 																				// null
 																				// as
 																				// for
@@ -418,15 +418,15 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 					}
 					for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
 							.entrySet()) {
-						ConsignmentModel consignment = null;
-						ConsignmentStatus newStatus = null;
-						 if(null != refundEntry.getKey() && null != refundEntry.getKey().getConsignmentEntries()); {
-							 newStatus = refundEntry.getKey().getConsignmentEntries().iterator().next().getConsignment().getStatus();;
+						 AbstractOrderEntryModel entry = refundEntry.getKey();
+						 if(null != entry) {
+							 entry.setScheduleChargesJuspayRequestId(uniqueRequestId);
+							 modelService.save(entry);
 						 }
 						 
 						mplJusPayRefundService.makeRefundOMSCall(refundEntry
 								.getKey(), paymentTransactionModel, refundEntry
-								.getKey().getRefundedDeliveryChargeAmt(), newStatus,MarketplacecommerceservicesConstants.REFUND_CATEGORY_S); // sending null as no order update is required 
+								.getKey().getRefundedScheduleDeliveryChargeAmt(), null,MarketplacecommerceservicesConstants.REFUND_CATEGORY_S); // sending null as no order update is required 
 					}
 				} else {
 					LOG.error("Refund Schedule Delivery Charges Failed");

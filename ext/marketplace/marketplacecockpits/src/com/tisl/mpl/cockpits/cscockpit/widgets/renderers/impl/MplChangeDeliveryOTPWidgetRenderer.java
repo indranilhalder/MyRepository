@@ -766,8 +766,6 @@ public class MplChangeDeliveryOTPWidgetRenderer
 							}
 							mplDeliveryAddressController
 							.saveDeliveryAddress(orderModel.getParentReference(),changeDeliveryAddress);
-							// Saving no_of Total requests and rejects 
-							mplDeliveryAddressController.saveChangeDeliveryRequests(orderModel.getParentReference());
 							LOG.debug("Delivery Address Changed Successfully");
 						} catch (ModelSavingException e) {
 							LOG.debug("Model saving Exception" + e.getMessage());

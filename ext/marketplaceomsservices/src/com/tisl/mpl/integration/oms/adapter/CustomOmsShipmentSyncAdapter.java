@@ -832,15 +832,10 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 					paymentTransactionModel);
 		}
 	
-
 			if (paymentTransactionModel != null) {
-					ConsignmentStatus status = null;
-					 if(null != orderEntry.getConsignmentEntries()) {
-						 status = orderEntry.getConsignmentEntries().iterator().next().getConsignment().getStatus();
-					 }
 				mplJusPayRefundService.makeRefundOMSCall(orderEntry,
 						paymentTransactionModel,
-						orderEntry.getNetAmountAfterAllDisc(), status,refundcategoryType);
+						orderEntry.getNetAmountAfterAllDisc(), null,refundcategoryType); // sending null as no status update needed
 			}
 		}
 		
