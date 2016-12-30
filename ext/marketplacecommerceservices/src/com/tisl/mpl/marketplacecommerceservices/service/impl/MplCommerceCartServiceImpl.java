@@ -3858,31 +3858,24 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 							if(null!=pincoderesponseDataList && pincoderesponseDataList.size()>0){
 							for (final PinCodeResponseData responseData : pincoderesponseDataList)
 							{
-								LOG.debug("entryModel.getSelectedUSSID() : "	+ entryModel.getSelectedUSSID() +":responseData.getUssid() "+responseData.getUssid());
 								if (entryModel.getSelectedUSSID().equals(responseData.getUssid()))
 								{
 									for (final DeliveryDetailsData detailsData : responseData.getValidDeliveryModes())
 									{
-										LOG.debug("deliveryModeGlobalCode : "	+ deliveryModeGlobalCode +":detailsData.getType() "+detailsData.getType());
 										if (deliveryModeGlobalCode.equalsIgnoreCase(detailsData.getType()))
 										{
-											LOG.debug("detailsData.getServiceableSlaves() : "	+ detailsData.getServiceableSlaves() +":detailsData.getServiceableSlaves().size() "+detailsData.getServiceableSlaves().size());
 											if (null != detailsData.getServiceableSlaves() && detailsData.getServiceableSlaves().size() > 0)
 											{
 												cartSoftReservationData.setServiceableSlaves(detailsData.getServiceableSlaves());
 											}
-											LOG.debug("detailsData.getCNCServiceableSlavesData() : "	+ detailsData.getCNCServiceableSlavesData());
 											if (null != detailsData.getCNCServiceableSlavesData()
 													&& detailsData.getCNCServiceableSlavesData().size() > 0)
 											{
-												LOG.debug("detailsData.getCNCServiceableSlavesData().get(0).getFulfillmentType() : "	+ detailsData.getCNCServiceableSlavesData().get(0)
-														.getFulfillmentType());
 												cartSoftReservationData.setCncServiceableSlaves(detailsData.getCNCServiceableSlavesData());
 												cartSoftReservationData.setFulfillmentType(detailsData.getCNCServiceableSlavesData().get(0)
 														.getFulfillmentType());
 
 											}
-											LOG.debug("detailsData.getFulfilmentType() : "	+detailsData.getFulfilmentType());
 											if (null != detailsData.getFulfilmentType())
 											{
 												cartSoftReservationData.setFulfillmentType(detailsData.getFulfilmentType());
