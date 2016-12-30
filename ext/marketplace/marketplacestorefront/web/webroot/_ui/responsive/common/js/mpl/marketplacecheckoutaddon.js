@@ -7457,14 +7457,12 @@ function submitWalletForm(values) {
 	var checkNull = true;
 	if(values!=undefined){
 		for (i=0; i<values.length; i++){
-			alert("values ==== " + values[i]);
 			if(null == values[i] || values[i] == undefined || values[i] == ""){
 				checkNull = false;
 				break;
 			}
 		}
 	}
-	alert("checkNull" + checkNull);
 	if(checkNull){
 		$("#tpWallt_payment_form").submit() ;
 	}
