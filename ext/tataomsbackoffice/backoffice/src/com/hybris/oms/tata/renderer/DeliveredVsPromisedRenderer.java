@@ -28,6 +28,7 @@ public class DeliveredVsPromisedRenderer implements ListitemRenderer
 		addListcell(listitem, deliveredVsPromised.getOrderId());
 		addListcell(listitem, deliveredVsPromised.getOrderLineId());
 		addListcell(listitem, String.valueOf(deliveredVsPromised.getPromisedDate()));
+		addListcell(listitem, String.valueOf(deliveredVsPromised.getDeliveryAttempt()));
 		addListcell(listitem, String.valueOf(deliveredVsPromised.getDeliveredDate()));
 		addListcell(listitem, deliveredVsPromised.getSlaveId());
 		addListcell(listitem, deliveredVsPromised.getSellerId());

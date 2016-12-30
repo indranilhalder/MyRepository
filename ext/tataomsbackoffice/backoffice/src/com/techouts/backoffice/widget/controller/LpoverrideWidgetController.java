@@ -246,13 +246,14 @@ public class LpoverrideWidgetController extends DefaultWidgetController
 					//create new Transaction Object  for track
 					final TransactionInfo newTransaction = new TransactionInfo();
 					newTransaction.setAwbNumber(transaction.getAwbNumber());
+					newTransaction.setOrderStatus(transaction.getOrderStatus());
 					newTransaction.setLogisticName(transaction.getLogisticName());
 					previousLpAndAwbNumberForTrack.put(transaction.getTransactionId(), newTransaction);
 				}
 				else
 				{
 					transaction.setAwbReadOnly(Boolean.TRUE); //this step is removed once awbEditable default value==true
-
+					previousLpAndAwbNumberForTrack.put(transaction.getTransactionId(), transaction);
 				}
 			}
 			this.listOfTransactions = transactionsList;
@@ -304,10 +305,11 @@ public class LpoverrideWidgetController extends DefaultWidgetController
 			{
 				//if changed transaction order status HOTC/SCANNED  then awb manditory to change
 				final TransactionInfo previousTransaction = previousLpAndAwbNumberForTrack.get(currentTransaction.getTransactionId());
-				LOG.info("Previous Transaction details" + previousTransaction.getLogisticName() + "\t"
-						+ previousTransaction.getAwbNumber());
-				LOG.info("Current Transasction details" + currentTransaction.getLogisticName() + "\t"
-						+ currentTransaction.getAwbNumber());
+				/*
+				 * if (previousTransaction == null) { Messagebox.show(
+				 * "Please Search Again for Second Time LpOverride/ForceFit LP Operation when order status is SCANNED/HOTC/REVRSAWB"
+				 * ); displayPopup = Boolean.FALSE; return; }
+				 */
 
 				if (!previousTransaction.getLogisticName().equals(currentTransaction.getLogisticName())
 						&& previousTransaction.getAwbNumber().equals(currentTransaction.getAwbNumber()))
@@ -349,8 +351,17 @@ public class LpoverrideWidgetController extends DefaultWidgetController
 		{
 			displayPopup = Boolean.TRUE;
 		}
+		for (final OrderLineResponse currentResponse : orderlineRespone) //this is added for LP override /force fit Lp operation at present oms not sending updated awb NUMBER
+		{
+			final TransactionInfo modifiedTransaction = modifiedTransactinTrack.get(currentResponse.getTransactionId());
+			final TransactionInfo previousTransaction = previousLpAndAwbNumberForTrack.get(currentResponse.getTransactionId());
+			if (currentResponse.getLogisticId() != null)
+			{
+				previousTransaction.setLogisticName(currentResponse.getLogisticId());
+				previousTransaction.setAwbNumber(modifiedTransaction.getAwbNumber());
+			}
+		}
 		modifiedTransactinTrack.clear();
-		previousLpAndAwbNumberForTrack.clear();
 	}
 
 	@Command("nextLpSave")
@@ -370,7 +381,8 @@ public class LpoverrideWidgetController extends DefaultWidgetController
 		for (final TransactionInfo transaction : selectedEntities)
 		{
 			if (transaction.getOrderStatus().equals(TataomsbackofficeConstants.ORDERSTATUS_SCANNED)
-					|| transaction.getOrderStatus().equals(TataomsbackofficeConstants.ORDERSTATUS_HOTCOURI)  || transaction.getOrderStatus().equals(TataomsbackofficeConstants.REVERSE_ORDERSTATUS_REVERSEAWB))
+					|| transaction.getOrderStatus().equals(TataomsbackofficeConstants.ORDERSTATUS_HOTCOURI)
+					|| transaction.getOrderStatus().equals(TataomsbackofficeConstants.REVERSE_ORDERSTATUS_REVERSEAWB))
 			{
 				Messagebox.show("Next Lp could not processed. Some of the order status is SCANNED/HOTC/REVRSAWB");
 				selectedEntities.clear();
