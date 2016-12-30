@@ -6377,6 +6377,22 @@
 					</attribute>
 					
 					<!-- End Added new Attributes  for Order Update -->
+					
+					<!-- Added in R2.3 START  -->
+					<attribute qualifier="delChargesJuspayRequestId" type="java.lang.String">
+						<description>JuspayRquestId for Refund Delivery/EDToHD Charges </description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="false" search="true" />
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="scheduleChargesJuspayRequestId" type="java.lang.String">
+						<description>JuspayRquestId for Refund Schedule Delivery  Charges</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="false" search="true" />
+						<persistence type="property" />
+					</attribute>
+					<!-- Added in R2.3 END  -->
 				</attributes>
 			</itemtype>
 

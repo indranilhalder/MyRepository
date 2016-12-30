@@ -75,6 +75,8 @@ public class SalesOrderReverseXMLUtility
 	private boolean xmlToFico = true;
 	private final String RET = MarketplacecommerceservicesConstants.RETURN_FLAG;
 	private final String CAN = MarketplacecommerceservicesConstants.CANCEL_FLAG;
+	private final String SDB = MarketplacecommerceservicesConstants.SDB_FLAG;
+	private final String EDTOHD = MarketplacecommerceservicesConstants.EDTOHD_FLAG;
 
 	//static final long MILLIS_IN_A_DAY = 1000 * 60 * 60 * 24;
 
@@ -580,12 +582,6 @@ public class SalesOrderReverseXMLUtility
 						}
 
 						LOG.debug("total price call" + entry.getTotalPrice());
-						/*Added in R2.3 Start*/
-						// Amount   will be '0' if refund is only for Express/Schedule delivery charges. 
-						if((sdbFlag || edToHdFlag)) {
-							xmlData.setAmount(0.0D);
-						}
-						/*Added in R2.3 END*/
 						
 						final String orderLineId = entry.getOrderLineId() != null ? entry.getOrderLineId() : entry.getTransactionID();
 						
@@ -737,10 +733,7 @@ public class SalesOrderReverseXMLUtility
 							}
 
 							canOrRetflag = true;
-						}else if(sdbFlag || edToHdFlag) {
-							xmlData.setOrderTag(RET);
 						}
-
 						if (StringUtils.isNotEmpty(entry.getJuspayRequestId()))
 						{
 							xmlData.setReversePaymentRefId(entry.getJuspayRequestId());
@@ -754,7 +747,7 @@ public class SalesOrderReverseXMLUtility
 							xmlData.setShipmentCharge(0.0);
 							xmlData.setExpressdeliveryCharge(0.0);
 						}
-						if(sdbFlag || cancelFlag) {
+						if(cancelFlag) {
 							if (null != entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() > 0)
 							{
 								xmlData.setScheduleDelCharge(entry.getScheduledDeliveryCharge().doubleValue());
@@ -764,17 +757,6 @@ public class SalesOrderReverseXMLUtility
 								xmlData.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue());
 							}
 						}
-						if(edToHdFlag) {
-							if (entry.getCurrDelCharge().doubleValue() > 0)
-							{
-								xmlData.setExpressdeliveryCharge(entry.getCurrDelCharge().doubleValue());
-							}
-							else
-							{
-								xmlData.setExpressdeliveryCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
-							}
-						}
-						
 						
 						if (null != entry.getMplDeliveryMode() && xmlToFico && cancelFlag)
 						{
@@ -818,18 +800,60 @@ public class SalesOrderReverseXMLUtility
 							}
 						}
 
-						if (canOrRetflag || sdbFlag || edToHdFlag)
-						{
-							childOrderDataList.add(xmlData);
-							if(canOrRetflag) {
-								entry.setIsSentToFico(Boolean.TRUE);
-							}
+						/*Added in R2.3 Start*/
+						try {
 							if(sdbFlag) {
+								 ChildOrderXMlData sdbXmlData = new ChildOrderXMlData();
+								sdbXmlData =xmlData;
+								sdbXmlData.setScheduleDelCharge(0.0D);
+								sdbXmlData.setExpressdeliveryCharge(0.0D);
+								sdbXmlData.setOrderTag(SDB);
+								if(null != entry.getRefundedScheduleDeliveryChargeAmt()) {
+									sdbXmlData.setAmount(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue());
+								}else if(null !=entry.getScheduledDeliveryCharge()){
+									sdbXmlData.setAmount(entry.getScheduledDeliveryCharge().doubleValue());
+								}else {
+									sdbXmlData.setAmount(0.0D);
+								}
+								
+								if(null != entry.getScheduleChargesJuspayRequestId()) {
+									sdbXmlData.setReversePaymentRefId(entry.getScheduleChargesJuspayRequestId());
+								}
+								
+								childOrderDataList.add(sdbXmlData);
 								entry.setIsSdbSendToFico(Boolean.TRUE);
+								modelService.save(entry);
 							}
 							if(edToHdFlag) {
+								 ChildOrderXMlData edToHdXmlData = new ChildOrderXMlData();
+								edToHdXmlData =xmlData;
+								edToHdXmlData.setScheduleDelCharge(0.0D);
+								edToHdXmlData.setExpressdeliveryCharge(0.0D);
+								edToHdXmlData.setOrderTag(EDTOHD);
+								if(null != entry.getRefundedDeliveryChargeAmt()) {
+									edToHdXmlData.setAmount(entry.getRefundedDeliveryChargeAmt().doubleValue());
+								}else if(null !=entry.getCurrDelCharge()){
+									edToHdXmlData.setAmount(entry.getCurrDelCharge().doubleValue());
+								}else {
+									edToHdXmlData.setAmount(0.0D);
+								}
+								
+								if(null != entry.getDelChargesJuspayRequestId()) {
+									edToHdXmlData.setReversePaymentRefId(entry.getDelChargesJuspayRequestId());
+								}
+								childOrderDataList.add(edToHdXmlData);
 								entry.setIsEdToHdSendToFico(Boolean.TRUE);
+								modelService.save(entry);
 							}
+							/*Added in R2.3 end*/ 
+						}catch(Exception e) {
+							LOG.error("Exception occcurred :"+e.getMessage());
+						}
+						 
+						if (canOrRetflag)
+						{
+							childOrderDataList.add(xmlData);
+							entry.setIsSentToFico(Boolean.TRUE);
 							modelService.save(entry);
 						}
 					}
@@ -892,7 +916,7 @@ public class SalesOrderReverseXMLUtility
 			return false;
 		}
 		if(LOG.isDebugEnabled()) {
-			LOG.debug("SDB flag for transaction Id :"+isSdb);
+			LOG.debug("SDB flag for transaction Id "+entry.getTransactionID()+" "+isSdb);
 		}
 		return isSdb;
 	}

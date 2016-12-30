@@ -1372,7 +1372,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String RETURN_FLAG = "RRF";
 	public static final String CANCEL_FLAG = "CAN";
-
+  /*	Added in R2.3 START */
+	public static final String SDB_FLAG = "RRS";
+	public static final String EDTOHD_FLAG = "RRE";
+	/*	Added in R2.3 END */
 	public static final String CASH_ON_DELIVERY = "COD";
 
 	// Added for delivery mode estimated description default time
