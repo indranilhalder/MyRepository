@@ -3935,11 +3935,13 @@ public class DefaultPromotionManager extends PromotionsManager
 		}
 		for (final Map.Entry<String, AbstractOrderEntry> entry : multiSellerValidUSSIDMap.entrySet())
 		{
-			if (null != stockCountMap.get(entry.getKey()) && sellerFlag && (stockCount - stockCountMap.get(entry.getKey()).intValue() > 0))
+			if (null != stockCountMap.get(entry.getKey()) && sellerFlag
+					&& (stockCount - stockCountMap.get(entry.getKey()).intValue() > 0))
 			{
 				ussidSet.add(entry.getKey());
 			}
-			else if (null != stockCountMap.get(entry.getKey()) && !sellerFlag && (stockCount - stockCountMap.get(entry.getValue().getProduct()).intValue() > 0))
+			else if (null != stockCountMap.get(entry.getKey()) && !sellerFlag
+					&& (stockCount - stockCountMap.get(entry.getValue().getProduct()).intValue() > 0))
 			{
 				ussidSet.add(entry.getKey());
 			}
@@ -3982,6 +3984,4 @@ public class DefaultPromotionManager extends PromotionsManager
 		}
 		return isPrsent;
 	}
-}
-
 }
