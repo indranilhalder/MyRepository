@@ -5,11 +5,13 @@
 
 <template:page pageTitle="${pageTitle}">
    <div class="common_logo_slot">
+   <div class='common_logo_slot_wrapper'>
    <c:set var="brandCode" value="${searchCode}" scope="session" /> 
-  <c:set var="categoryName" value="${dropDownText}" scope="session" />
+  	<c:set var="categoryName" value="${dropDownText}" scope="session" />
    <cms:pageSlot position="CommonLogoParaSlot" var="feature">
 		<cms:component component="${feature}" element="div" class="blp_title_banner" />
 	</cms:pageSlot>
+	</div>
 	</div>
 	<cms:pageSlot position="Section1" var="feature">
 		<cms:component component="${feature}" element="div" class="" />

@@ -33,6 +33,7 @@ import org.apache.log4j.Logger;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtStockLevelPromotionCheckServiceImpl;
 import com.tisl.mpl.promotion.helper.MplPromotionHelper;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
@@ -47,6 +48,7 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 	private boolean categoryFlag = false;
 	private int noOfProducts = 0;
 	private Map<AbstractOrderEntry, String> productSellerDetails = null;
+
 
 	/**
 	 * @Description : This method is for creating item type
@@ -117,12 +119,16 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 			{
 				LOG.debug("Promotion Restriction and Channel Satisfied");
 				final Map<String, AbstractOrderEntry> validProductUssidMap = getValidProductList(cart, ctx);
-				final Set<String> validSetAfterStockCheck = getDefaultPromotionsManager().getValidMapAfterStockLevelRestriction(
-						validProductUssidMap, getCode(), restrictionList);
-				if (null != validProductUssidMap)
+				if (isEnabled().booleanValue())
 				{
-					validProductUssidMap.keySet().retainAll(validSetAfterStockCheck);
+					final Set<String> validSetAfterStockCheck = getDefaultPromotionsManager().getValidMapAfterStockLevelRestriction(
+							validProductUssidMap, getCode(), restrictionList);
+					if (null != validProductUssidMap && !validProductUssidMap.isEmpty())
+					{
+						validProductUssidMap.keySet().retainAll(validSetAfterStockCheck);
+					}
 				}
+
 				if (!getDefaultPromotionsManager().promotionAlreadyFired(ctx, validProductUssidMap))
 				{
 					isMultipleSeller = getMplPromotionHelper().checkMultipleSeller(restrictionList);
@@ -254,9 +260,36 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 				eligibleProductList.add(orderEntry.getProduct());
 			}
 			final Map<String, Integer> qCount = new HashMap<String, Integer>();
+			final int stockCount = getDefaultPromotionsManager().getStockRestrictionVal(restrictionList);
 			for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
 			{
-				qCount.put(mapEntry.getKey(), Integer.valueOf(mapEntry.getValue().getQuantity().intValue()));
+				if (stockCount <= 0)
+				{
+					qCount.put(mapEntry.getKey(), Integer.valueOf(mapEntry.getValue().getQuantity().intValue()));
+				}
+				else
+				{
+					final String ussid = MarketplacecommerceservicesConstants.INVERTED_COMMA + mapEntry.getKey()
+							+ MarketplacecommerceservicesConstants.INVERTED_COMMA;
+					final Map<String, Integer> stockMap = getStockService().getCumulativeStockMap(ussid, getCode(), true);
+					if (!stockMap.isEmpty() && null != stockMap.get(mapEntry.getKey()))
+					{
+						if ((stockCount - stockMap.get(mapEntry.getKey()).intValue()) > 0)
+						{
+							final int quantVal = stockCount - stockMap.get(mapEntry.getKey()).intValue();
+							final int quant = mapEntry.getValue().getQuantity().intValue();
+							final int qVal = quantVal < quant ? quantVal : quant;
+							qCount.put(mapEntry.getKey(), Integer.valueOf(qVal));
+						}
+
+					}
+					else if (stockMap.isEmpty())
+					{
+						final int quant = mapEntry.getValue().getQuantity().intValue();
+						final int qVal = quant < stockCount ? quant : stockCount;
+						qCount.put(mapEntry.getKey(), Integer.valueOf(qVal));
+					}
+				}
 			}
 
 			final Map<String, List<String>> productAssociatedItemsMap = getDefaultPromotionsManager()
@@ -284,8 +317,20 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 
 				if (percentageDiscount < 100)
 				{
-					final double adjustment = -(entry.getBasePrice().doubleValue() * percentageDiscountvalue * entry.getQuantity()
-							.doubleValue());
+					double adjustment = 0.0d;
+					if (stockCount <= 0)
+					{
+						adjustment = -(entry.getBasePrice().doubleValue() * percentageDiscountvalue * entry.getQuantity().doubleValue());
+
+					}
+					else
+					{
+						final int quantity = qCount.get(mapEntry.getKey()).intValue();
+						final int quantValue = Integer.valueOf(entry.getQuantity().intValue()).intValue();
+						final int quant = quantValue < quantity ? quantValue : quantity;
+						adjustment = -(entry.getBasePrice().doubleValue() * percentageDiscountvalue * Integer.valueOf(quant)
+								.doubleValue());
+					}
 					LOG.debug("Adjustment" + adjustment);
 					final PromotionResult result = promotionsManager.createPromotionResult(ctx, this, evaluationContext.getOrder(),
 							1.0F);
@@ -462,6 +507,11 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 	protected DefaultPromotionManager getDefaultPromotionsManager()
 	{
 		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
+	}
+
+	protected ExtStockLevelPromotionCheckServiceImpl getStockService()
+	{
+		return Registry.getApplicationContext().getBean("stockPromoCheckService", ExtStockLevelPromotionCheckServiceImpl.class);
 	}
 
 	/**

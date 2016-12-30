@@ -512,115 +512,119 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 					final Map<String, Integer> qCMapForCatLevelBOGO = getDefaultPromotionsManager().getSortedValidProdUssidMap(
 							validProductUssidMap, totalQty, qualifyingCount, paramSessionContext, restrictionList, getCode());
 
-					flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForABPromo(restrictionList,
-							validProductUssidMap, order);
-					//for payment mode restriction check
-					flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList,
-							paramSessionContext);
-
-					if (flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval)
+					if (MapUtils.isNotEmpty(validProductUssidMap))
 					{
-						//paramPromotionEvaluationContext.startLoggingConsumed(this);
-						final Comparator comparator = PromotionEvaluationContext.createPriceComparator(paramSessionContext); // Comparing price
+						flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForABPromo(restrictionList,
+								validProductUssidMap, order);
+						//for payment mode restriction check
+						flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList,
+								paramSessionContext);
 
-						final int totalFactorCount = totalQty / qualifyingCount;
-						final int validFreeCount = totalFactorCount * freeCount;
-						final int validNonFreeCount = (totalFactorCount * qualifyingCount) - validFreeCount;
-						final Map<String, Integer> QCMapForFreeItems = new HashMap<String, Integer>();
-
-
-						getDefaultPromotionsManager().populateSortedValidProdUssidMap(validProductUssidMap, validFreeCount,
-								paramSessionContext, restrictionList, QCMapForFreeItems, getCode());
-
-						final List<PromotionOrderEntryConsumed> freeItems = consumeFromHead(paramSessionContext, comparator,
-								validFreeCount, orderView.getAllEntries(paramSessionContext), QCMapForFreeItems, tcMapForValidEntries);
-
-
-						for (final String freeItemUssid : QCMapForFreeItems.keySet())
+						if (flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval)
 						{
-							final int validItemQty = qCMapForCatLevelBOGO.get(freeItemUssid).intValue();
-							final int freeItemQty = QCMapForFreeItems.get(freeItemUssid).intValue();
-							qCMapForCatLevelBOGO.put(freeItemUssid, Integer.valueOf(validItemQty - freeItemQty));
+							//paramPromotionEvaluationContext.startLoggingConsumed(this);
+							final Comparator comparator = PromotionEvaluationContext.createPriceComparator(paramSessionContext); // Comparing price
 
-						}
+							final int totalFactorCount = totalQty / qualifyingCount;
+							final int validFreeCount = totalFactorCount * freeCount;
+							final int validNonFreeCount = (totalFactorCount * qualifyingCount) - validFreeCount;
+							final Map<String, Integer> QCMapForFreeItems = new HashMap<String, Integer>();
 
-						final List<PromotionOrderEntryConsumed> consumedItemsFromTail = consumeFromTail(paramSessionContext,
-								comparator, validNonFreeCount, orderView.getAllEntries(paramSessionContext), qCMapForCatLevelBOGO,
-								tcMapForValidEntries);//validNonFreeCount was totalFactorCount which was wrong
 
-						final List actions = new ArrayList();
-						Map<String, List<String>> productAssociatedItemsMap = null;
+							getDefaultPromotionsManager().populateSortedValidProdUssidMap(validProductUssidMap, validFreeCount,
+									paramSessionContext, restrictionList, QCMapForFreeItems, getCode());
 
-						if (qCMapForCatLevelBOGO.size() == 1)
-						{
-							productAssociatedItemsMap = new HashMap<String, List<String>>();
-							final String ussidForSingleLineEntryBOGO = qCMapForCatLevelBOGO.keySet().iterator().next();
-							productAssociatedItemsMap.put(ussidForSingleLineEntryBOGO,
-									new ArrayList<String>(qCMapForCatLevelBOGO.keySet()));
-						}
-						else
-						{
-							productAssociatedItemsMap = getDefaultPromotionsManager().getAssociatedItemsForAorBOGOorFreebiePromotions(
-									validProductUssidMap, null);
-						}
+							final List<PromotionOrderEntryConsumed> freeItems = consumeFromHead(paramSessionContext, comparator,
+									validFreeCount, orderView.getAllEntries(paramSessionContext), QCMapForFreeItems, tcMapForValidEntries);
 
-						paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
-						paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS,
-								productAssociatedItemsMap);
-						paramSessionContext
-								.setAttribute(MarketplacecommerceservicesConstants.PROMOCODE, String.valueOf(this.getCode()));
 
-						//For setting qualifying count
-						int qalifyingCount = 0;
-						final Map<String, Integer> qCount = new HashMap<String, Integer>();
-						for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
-						{
-							final AbstractOrderEntry entry = mapEntry.getValue();
-							final String selectedUssid = mapEntry.getKey();
-							final int totalQtyForEntry = entry.getQuantity().intValue();
-
-							if (QCMapForFreeItems.containsKey(selectedUssid))
+							for (final String freeItemUssid : QCMapForFreeItems.keySet())
 							{
-								final int freeItemQty = QCMapForFreeItems.get(selectedUssid).intValue();
+								final int validItemQty = qCMapForCatLevelBOGO.get(freeItemUssid).intValue();
+								final int freeItemQty = QCMapForFreeItems.get(freeItemUssid).intValue();
+								qCMapForCatLevelBOGO.put(freeItemUssid, Integer.valueOf(validItemQty - freeItemQty));
 
-								qalifyingCount = totalQtyForEntry - freeItemQty;
+							}
+
+							final List<PromotionOrderEntryConsumed> consumedItemsFromTail = consumeFromTail(paramSessionContext,
+									comparator, validNonFreeCount, orderView.getAllEntries(paramSessionContext), qCMapForCatLevelBOGO,
+									tcMapForValidEntries);//validNonFreeCount was totalFactorCount which was wrong
+
+							final List actions = new ArrayList();
+							Map<String, List<String>> productAssociatedItemsMap = null;
+
+							if (qCMapForCatLevelBOGO.size() == 1)
+							{
+								productAssociatedItemsMap = new HashMap<String, List<String>>();
+								final String ussidForSingleLineEntryBOGO = qCMapForCatLevelBOGO.keySet().iterator().next();
+								productAssociatedItemsMap.put(ussidForSingleLineEntryBOGO,
+										new ArrayList<String>(qCMapForCatLevelBOGO.keySet()));
 							}
 							else
 							{
-								qalifyingCount = totalQtyForEntry;
+								productAssociatedItemsMap = getDefaultPromotionsManager()
+										.getAssociatedItemsForAorBOGOorFreebiePromotions(validProductUssidMap, null);
 							}
-							qCount.put(selectedUssid, Integer.valueOf(qalifyingCount));
+
+							paramSessionContext
+									.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
+							paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS,
+									productAssociatedItemsMap);
+							paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.PROMOCODE,
+									String.valueOf(this.getCode()));
+
+							//For setting qualifying count
+							int qalifyingCount = 0;
+							final Map<String, Integer> qCount = new HashMap<String, Integer>();
+							for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
+							{
+								final AbstractOrderEntry entry = mapEntry.getValue();
+								final String selectedUssid = mapEntry.getKey();
+								final int totalQtyForEntry = entry.getQuantity().intValue();
+
+								if (QCMapForFreeItems.containsKey(selectedUssid))
+								{
+									final int freeItemQty = QCMapForFreeItems.get(selectedUssid).intValue();
+
+									qalifyingCount = totalQtyForEntry - freeItemQty;
+								}
+								else
+								{
+									qalifyingCount = totalQtyForEntry;
+								}
+								qCount.put(selectedUssid, Integer.valueOf(qalifyingCount));
+							}
+
+							paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, qCount);
+							paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.FREEITEMFORCATBOGO, QCMapForFreeItems);
+
+							for (final PromotionOrderEntryConsumed poec : freeItems)
+							{
+								poec.setAdjustedUnitPrice(paramSessionContext, 0.01D);
+								double adjustment = poec.getEntryPrice(paramSessionContext) * -1.0D; // Calculating the adjustment
+								adjustment += (0.01D * poec.getQuantity().intValue());
+								customBogoPromoDataMap.put(poec.getOrderEntry(paramSessionContext), Double.valueOf(adjustment));
+							}
+
+							//if (customBogoPromoDataMap.size() > 0)
+							if (MapUtils.isNotEmpty(customBogoPromoDataMap))
+							{
+								LOG.debug("Populating the BOGO Promotion Details ");
+								LOG.debug("Creating Action for BOGO Promotion");
+								actions.add(getDefaultPromotionsManager().createCustomBOGOPromoOrderEntryAdjustAction(
+										paramSessionContext, customBogoPromoDataMap, true));
+							}
+
+							final PromotionResult result = getDefaultPromotionsManager().createPromotionResult(paramSessionContext,
+									this, paramPromotionEvaluationContext.getOrder(), 1.0F);
+							final List<PromotionOrderEntryConsumed> totalConsumedItems = new ArrayList<PromotionOrderEntryConsumed>(
+									consumedItemsFromTail);
+							//totalConsumedItems = paramPromotionEvaluationContext.finishLoggingAndGetConsumed(this, true);
+							totalConsumedItems.addAll(freeItems);
+							result.setConsumedEntries(paramSessionContext, totalConsumedItems);
+							result.setActions(paramSessionContext, actions);
+							results.add(result);
 						}
-
-						paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, qCount);
-						paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.FREEITEMFORCATBOGO, QCMapForFreeItems);
-
-						for (final PromotionOrderEntryConsumed poec : freeItems)
-						{
-							poec.setAdjustedUnitPrice(paramSessionContext, 0.01D);
-							double adjustment = poec.getEntryPrice(paramSessionContext) * -1.0D; // Calculating the adjustment
-							adjustment += (0.01D * poec.getQuantity().intValue());
-							customBogoPromoDataMap.put(poec.getOrderEntry(paramSessionContext), Double.valueOf(adjustment));
-						}
-
-						//if (customBogoPromoDataMap.size() > 0)
-						if (MapUtils.isNotEmpty(customBogoPromoDataMap))
-						{
-							LOG.debug("Populating the BOGO Promotion Details ");
-							LOG.debug("Creating Action for BOGO Promotion");
-							actions.add(getDefaultPromotionsManager().createCustomBOGOPromoOrderEntryAdjustAction(paramSessionContext,
-									customBogoPromoDataMap, true));
-						}
-
-						final PromotionResult result = getDefaultPromotionsManager().createPromotionResult(paramSessionContext, this,
-								paramPromotionEvaluationContext.getOrder(), 1.0F);
-						final List<PromotionOrderEntryConsumed> totalConsumedItems = new ArrayList<PromotionOrderEntryConsumed>(
-								consumedItemsFromTail);
-						//totalConsumedItems = paramPromotionEvaluationContext.finishLoggingAndGetConsumed(this, true);
-						totalConsumedItems.addAll(freeItems);
-						result.setConsumedEntries(paramSessionContext, totalConsumedItems);
-						result.setActions(paramSessionContext, actions);
-						results.add(result);
 					}
 				}
 

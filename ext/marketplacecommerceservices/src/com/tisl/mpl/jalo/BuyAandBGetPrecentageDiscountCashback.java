@@ -13,7 +13,6 @@ import de.hybris.platform.jalo.product.Product;
 import de.hybris.platform.jalo.type.ComposedType;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.promotions.jalo.AbstractPromotionRestriction;
-import de.hybris.platform.promotions.jalo.PromotionOrderEntryAdjustAction;
 import de.hybris.platform.promotions.jalo.PromotionOrderEntryConsumed;
 import de.hybris.platform.promotions.jalo.PromotionResult;
 import de.hybris.platform.promotions.jalo.PromotionsManager;
@@ -192,6 +191,12 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 						}
 					}
 
+					final Map<String, Integer> qCount = getDefaultPromotionsManager().getQualifyingCountForABPromotion(
+							eligibleProductList, totalCountFactor);
+					paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
+					paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, qCount);
+					paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.PROMOCODE, String.valueOf(this.getCode()));
+
 					totalCachback = 0.0D;
 					for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
 					{
@@ -211,8 +216,10 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 
 							final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(paramSessionContext,
 									this, paramPromotionEvaluationContext.getOrder(), 1.0F);
-							final PromotionOrderEntryAdjustAction poeac = PromotionsManager.getInstance()
-									.createPromotionOrderEntryAdjustAction(paramSessionContext, entry, 0.0D);
+							final CustomPromotionOrderEntryAdjustAction poeac = getDefaultPromotionsManager()
+									.createCustomPromotionOrderEntryAdjustAction(paramSessionContext, entry, 0.0D);
+							//							final PromotionOrderEntryAdjustAction poeac = PromotionsManager.getInstance()
+							//									.createPromotionOrderEntryAdjustAction(paramSessionContext, entry, 0.0D);
 							//final List consumed = paramPromotionEvaluationContext.finishLoggingAndGetConsumed(this, true);
 
 							result.setConsumedEntries(paramSessionContext, consumed);

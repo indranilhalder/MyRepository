@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -160,118 +161,122 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 				final Map<String, Integer> validProductList = getDefaultPromotionsManager().getSortedValidProdUssidMap(
 						validProductUssidMap, totalCount, eligibleQuantity.longValue(), arg0, restrictionList, getCode());
 
-				if (!isPercentageOrAmount().booleanValue())
+				if (MapUtils.isNotEmpty(validProductUssidMap))
 				{
-					flagForCouldFireMessage = getDefaultPromotionsManager().getValidProductListForAmtDiscount(arg0, order,
-							promotionProductList, promotionCategoryList, eligibleQuantity, discountPrice, validProductUssidMap);
-				}
-
-				//for delivery mode restriction check
-				flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForAPromo(restrictionList,
-						validProductUssidMap, order);
-				final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(
-						restrictionList, order);
-				if (flagForDeliveryModeRestrEval && flagForPincodeRestriction)
-				{
-					double percentageDiscount = getPercentageDiscount().doubleValue();
-
-					//Promotion Value Calculations
-					final int totalFactorCount = totalCount / eligibleQuantity.intValue();
-					int totalValidProdCount = 0;
-					for (final String key : validProductList.keySet())
-					{
-						totalValidProdCount += validProductList.get(key).intValue(); // Fetches total count of Valid Products
-					}
-
-					//getting eligible Product List
-					final List<Product> eligibleProductList = new ArrayList<Product>();
-					for (final AbstractOrderEntry orderEntry : validProductUssidMap.values())
-					{
-						eligibleProductList.add(orderEntry.getProduct());
-					}
-					promotionalProductData.addAll(eligibleProductList);
-
-					final double totalPricevalue = getDefaultPromotionsManager().getTotalValidProdPrice(validProductUssidMap,
-							validProductList);
-					//					final double percentageDiscountForAmount = getDefaultPromotionsManager().getConvertedPercentageDiscount(
-					//							totalValidProdCount, discountPrice.doubleValue(), eligibleQuantity, totalPricevalue);
-
 					if (!isPercentageOrAmount().booleanValue())
 					{
-						percentageDiscount = getDefaultPromotionsManager().getConvertedPercentageDiscount(totalValidProdCount,
-								discountPrice.doubleValue(), eligibleQuantity, totalPricevalue);
-						//percentageDiscount = percentageDiscountForAmount;
+						flagForCouldFireMessage = getDefaultPromotionsManager().getValidProductListForAmtDiscount(arg0, order,
+								promotionProductList, promotionCategoryList, eligibleQuantity, discountPrice, validProductUssidMap);
 					}
-					else
+
+					//for delivery mode restriction check
+					flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForAPromo(restrictionList,
+							validProductUssidMap, order);
+					final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(
+							restrictionList, order);
+					if (flagForDeliveryModeRestrEval && flagForPincodeRestriction)
 					{
-						final double totalSavings = (totalPricevalue * percentageDiscount) / 100;
-						final double totalMaxDiscount = totalFactorCount * maxDiscount;
-						if (totalSavings > totalMaxDiscount && totalMaxDiscount != 0)
+						double percentageDiscount = getPercentageDiscount().doubleValue();
+
+						//Promotion Value Calculations
+						final int totalFactorCount = totalCount / eligibleQuantity.intValue();
+						int totalValidProdCount = 0;
+						for (final String key : validProductList.keySet())
 						{
-							percentageDiscount = (totalMaxDiscount * 100) / totalPricevalue;
+							totalValidProdCount += validProductList.get(key).intValue(); // Fetches total count of Valid Products
+						}
+
+						//getting eligible Product List
+						final List<Product> eligibleProductList = new ArrayList<Product>();
+						for (final AbstractOrderEntry orderEntry : validProductUssidMap.values())
+						{
+							eligibleProductList.add(orderEntry.getProduct());
+						}
+						promotionalProductData.addAll(eligibleProductList);
+
+						final double totalPricevalue = getDefaultPromotionsManager().getTotalValidProdPrice(validProductUssidMap,
+								validProductList);
+						//					final double percentageDiscountForAmount = getDefaultPromotionsManager().getConvertedPercentageDiscount(
+						//							totalValidProdCount, discountPrice.doubleValue(), eligibleQuantity, totalPricevalue);
+
+						if (!isPercentageOrAmount().booleanValue())
+						{
+							percentageDiscount = getDefaultPromotionsManager().getConvertedPercentageDiscount(totalValidProdCount,
+									discountPrice.doubleValue(), eligibleQuantity, totalPricevalue);
+							//percentageDiscount = percentageDiscountForAmount;
 						}
 						else
 						{
-							isPercentageDisc = true;
-						}
-					}
-
-					arg0.setAttribute(MarketplacecommerceservicesConstants.PERCENTAGEDISCOUNT, Double.valueOf(percentageDiscount));
-					arg0.setAttribute(MarketplacecommerceservicesConstants.TOTALVALIDPRODUCTSPRICEVALUE,
-							Double.valueOf(totalPricevalue));
-					arg0.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
-					arg0.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProductList);
-					arg0.setAttribute(MarketplacecommerceservicesConstants.PROMOCODE, String.valueOf(this.getCode()));
-					arg0.setAttribute(MarketplacecommerceservicesConstants.ISPERCENTAGEDISC, Boolean.valueOf(isPercentageDisc));
-
-					for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
-					{
-						arg1.startLoggingConsumed(this);
-						final AbstractOrderEntry entry = mapEntry.getValue();
-						final String validUssid = mapEntry.getKey();
-						final double percentageDiscountvalue = percentageDiscount / 100.0D;
-						if (percentageDiscount < 100)
-						{
-							final int eligibleCount = validProductList.get(validUssid).intValue();
-							final double adjustment = -(entry.getBasePrice().doubleValue() * percentageDiscountvalue * eligibleCount);
-							final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(arg0, this,
-									arg1.getOrder(), 1.0F);
-							final CustomPromotionOrderEntryAdjustAction poeac = getDefaultPromotionsManager()
-									.createCustomPromotionOrderEntryAdjustAction(arg0, entry, adjustment);
-							final List consumed = arg1.finishLoggingAndGetConsumed(this, true);
-							result.setConsumedEntries(arg0, consumed);
-							result.addAction(arg0, poeac);
-							promotionResults.add(result);
-						}
-					}
-					//final int giftProductCount = totalCount / eligibleQuantity.intValue();
-					//arg0.setAttribute(MarketplacecommerceservicesConstants.FREEGIFT_QUANTITY, String.valueOf(giftProductCount));
-					final List<Product> promotionGiftProductList = (List<Product>) this.getGiftProducts(arg0);
-					final PromotionResult freeResult = PromotionsManager.getInstance().createPromotionResult(arg0, this,
-							arg1.getOrder(), 1.0F);
-					if (null != promotionGiftProductList && !promotionGiftProductList.isEmpty())
-					{
-						final Map<String, Product> giftProductDetails = getDefaultPromotionsManager().getGiftProductsUSSID(
-								promotionGiftProductList, sellerIDData);
-						if (null != giftProductDetails && !giftProductDetails.isEmpty())
-						{
-							getPromotionUtilityPOJO().setPromoProductList(promotionalProductData);
-							for (final Map.Entry<String, Product> entry : giftProductDetails.entrySet())
+							final double totalSavings = (totalPricevalue * percentageDiscount) / 100;
+							final double totalMaxDiscount = totalFactorCount * maxDiscount;
+							if (totalSavings > totalMaxDiscount && totalMaxDiscount != 0)
 							{
-								final int giftCount = getDefaultPromotionsManager().getFreeGiftCount(entry.getKey(), eligibleProductMap,
-										eligibleQuantity.intValue());
-								final Map<String, List<String>> productAssociatedItemsMap = getDefaultPromotionsManager()
-										.getAssociatedItemsForAorBOGOorFreebiePromotions(validProductUssidMap, entry.getKey());
-								arg0.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, productAssociatedItemsMap);
-								arg0.setAttribute(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, String.valueOf(this.getCode()));
-								freeResult.addAction(
-										arg0,
-										getDefaultPromotionsManager().createCustomPromotionOrderAddFreeGiftAction(arg0, entry.getValue(),
-												entry.getKey(), freeResult, Double.valueOf(giftCount)));
+								percentageDiscount = (totalMaxDiscount * 100) / totalPricevalue;
+							}
+							else
+							{
+								isPercentageDisc = true;
 							}
 						}
+
+						arg0.setAttribute(MarketplacecommerceservicesConstants.PERCENTAGEDISCOUNT, Double.valueOf(percentageDiscount));
+						arg0.setAttribute(MarketplacecommerceservicesConstants.TOTALVALIDPRODUCTSPRICEVALUE,
+								Double.valueOf(totalPricevalue));
+						arg0.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
+						arg0.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProductList);
+						arg0.setAttribute(MarketplacecommerceservicesConstants.PROMOCODE, String.valueOf(this.getCode()));
+						arg0.setAttribute(MarketplacecommerceservicesConstants.ISPERCENTAGEDISC, Boolean.valueOf(isPercentageDisc));
+
+						for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
+						{
+							arg1.startLoggingConsumed(this);
+							final AbstractOrderEntry entry = mapEntry.getValue();
+							final String validUssid = mapEntry.getKey();
+							final double percentageDiscountvalue = percentageDiscount / 100.0D;
+							if (percentageDiscount < 100)
+							{
+								final int eligibleCount = validProductList.get(validUssid).intValue();
+								final double adjustment = -(entry.getBasePrice().doubleValue() * percentageDiscountvalue * eligibleCount);
+								final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(arg0, this,
+										arg1.getOrder(), 1.0F);
+								final CustomPromotionOrderEntryAdjustAction poeac = getDefaultPromotionsManager()
+										.createCustomPromotionOrderEntryAdjustAction(arg0, entry, adjustment);
+								final List consumed = arg1.finishLoggingAndGetConsumed(this, true);
+								result.setConsumedEntries(arg0, consumed);
+								result.addAction(arg0, poeac);
+								promotionResults.add(result);
+							}
+						}
+						//final int giftProductCount = totalCount / eligibleQuantity.intValue();
+						//arg0.setAttribute(MarketplacecommerceservicesConstants.FREEGIFT_QUANTITY, String.valueOf(giftProductCount));
+						final List<Product> promotionGiftProductList = (List<Product>) this.getGiftProducts(arg0);
+						final PromotionResult freeResult = PromotionsManager.getInstance().createPromotionResult(arg0, this,
+								arg1.getOrder(), 1.0F);
+						if (null != promotionGiftProductList && !promotionGiftProductList.isEmpty())
+						{
+							final Map<String, Product> giftProductDetails = getDefaultPromotionsManager().getGiftProductsUSSID(
+									promotionGiftProductList, sellerIDData);
+							if (null != giftProductDetails && !giftProductDetails.isEmpty())
+							{
+								getPromotionUtilityPOJO().setPromoProductList(promotionalProductData);
+								for (final Map.Entry<String, Product> entry : giftProductDetails.entrySet())
+								{
+									final int giftCount = getDefaultPromotionsManager().getFreeGiftCount(entry.getKey(),
+											eligibleProductMap, eligibleQuantity.intValue());
+									final Map<String, List<String>> productAssociatedItemsMap = getDefaultPromotionsManager()
+											.getAssociatedItemsForAorBOGOorFreebiePromotions(validProductUssidMap, entry.getKey());
+									arg0.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, productAssociatedItemsMap);
+									arg0.setAttribute(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE,
+											String.valueOf(this.getCode()));
+									freeResult.addAction(
+											arg0,
+											getDefaultPromotionsManager().createCustomPromotionOrderAddFreeGiftAction(arg0,
+													entry.getValue(), entry.getKey(), freeResult, Double.valueOf(giftCount)));
+								}
+							}
+						}
+						promotionResults.add(freeResult);
 					}
-					promotionResults.add(freeResult);
 				}
 			}
 
