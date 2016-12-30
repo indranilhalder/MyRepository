@@ -142,6 +142,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		BuyBoxData buyboxData = new BuyBoxData();
 		boolean onlyBuyBoxHasStock = false;
 		BuyBoxModel buyBoxMod = null;
+		//OOS Error Changes PDP
+		int totalProductCount = 0;
 		final List<BuyBoxData> buyBoxDataList = new ArrayList<BuyBoxData>();
 		//TISPRM -56
 		String products[] = null;
@@ -158,10 +160,14 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			products = productCode.split(MarketplacecommerceservicesConstants.COMMA);
 			pdpProduct = products[0];
 			arrayToProductList = new ArrayList<String>(Arrays.asList(products));
+			//For Apparel
+			totalProductCount = arrayToProductList.size();
 		}
 		else
 		{
 			pdpProduct = productCode;
+			//For Electronics
+			totalProductCount = 1;//as there are no variants
 		}
 
 		//END
@@ -187,7 +193,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			if (buyboxModelList.isEmpty())
 			{
 				LOG.info("************* No Seller with inventory>0 inventory, Fetching buy box rows having price>0 *********");
-				buyboxData.setAllOOStock(MarketplaceFacadesConstants.Y);// its is valid for electronics product
+				// buyboxData.setAllOOStock(MarketplaceFacadesConstants.Y);// its is valid for electronics product
 				buyboxModelList = buyBoxService.buyBoxPriceNoStock(pdpProduct);
 				if (CollectionUtils.isNotEmpty(buyboxModelList))
 				{
@@ -236,6 +242,12 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					productsWithNoStock = arrayToProductList;
 				}
 			}
+			//OOS Error Changes PDP
+			if (totalProductCount == productsWithNoStock.size())
+			{
+				buyboxData.setAllOOStock(MarketplaceFacadesConstants.Y);// its is valid for electronics product
+			}
+
 			//TPR-1375 changes start
 			if (CollectionUtils.isNotEmpty(buyboxModelList) && buyboxModelList.size() > 1)
 			{
@@ -899,5 +911,18 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		buyboxData.setAllOOStock(outOfStockFlag);
 		return buyboxData;
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getBuyBoxDataForUssids(java.util.List, java.lang.String)
+	 */
+	//TPR-3736
+	@Override
+	public Map<String, List<Double>> getBuyBoxDataForUssids(final String ussidList) throws EtailNonBusinessExceptions
+	{
+		// YTODO Auto-generated method stub
+		return buyBoxService.getBuyBoxDataForUssids(ussidList);
 	}
 }
