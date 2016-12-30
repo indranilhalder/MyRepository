@@ -63,12 +63,8 @@
 				</td>
 			</tr>
 			<tr>
-				<td colspan="2" width="33%" style="vertical-align:top;" class="structureViewSection">
+				<td colspan="4" width="33%" style="vertical-align:top;" class="structureViewSection">
 					<cockpit code="TopBrandSlot" />
-				</td>
-				<td colspan="2" width="33%"  style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="Section2B" />
-					
 				</td>
 			</tr>
 			<tr>
