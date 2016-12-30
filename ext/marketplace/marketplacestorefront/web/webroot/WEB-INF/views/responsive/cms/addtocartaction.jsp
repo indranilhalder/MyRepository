@@ -28,24 +28,41 @@ $(document).ready(function(){
 	var code='${product.code}';
 	if( $("#variant,#sizevariant option:selected").val()=="#"){
 		$("#selectedSizeVariant").val("");
-	}
-	else{
-		$("#selectedSizeVariant").val(code);
+	
 	}
 	
+	else {
+		$("#selectedSizeVariant").val(code);
+	
+	}
+	 
     $("#addToCartButton").click(function(){  	
      $("#selectSizeId").hide();
+     
    	 var stock=$("#stock").val();
    	 var quantity= $("#qty").val();
   	 var isShowSize= $("#showSize").val();
    	 //Changes for pdp CR
-   	if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='Watches' && $("#ia_product_rootCategory_type").val()!='TravelAndLuggage' && isShowSize=='true'){
-  		/* alert("please select size !"+isShowSize); */
+   	  
+   	  // Jewellery Add to cart changes added 
+   	 
+   	if( $("#jewelleryvariant option:selected").val() == "#"  && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='Watches' && $("#ia_product_rootCategory_type").val()!='TravelAndLuggage' &&  isShowSize=='true'      ){
+		// alert("please select size !"+isShowSize);	 
+ 		$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+		$("#addToCartFormTitle").show();
+	    return false;
+ 	 } 	 
+   	if($("#variant li").length > 0)
+   	{
+   	 if(!$("#variant li").hasClass("selected")  && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='Watches' && $("#ia_product_rootCategory_type").val()!='TravelAndLuggage' &&  isShowSize=='true'      ){
+  	//	 alert("please select size !"+isShowSize);   		 
    		$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 		$("#addToCartFormTitle").show();
  	    return false;
-   	 }
-   		utag.link({
+   	 }     	 
+   	} 	
+   		  	
+    	utag.link({
 			link_obj: this,
 			link_text: 'addtobag' ,
 			event_type : 'addtobag_winner_seller' ,
@@ -83,7 +100,9 @@ $(document).ready(function(){
        	 }
 
    	 } */
-   	   
+   	  		
+   		 
+   	  
    }); 
 }); 
 
@@ -140,6 +159,7 @@ $(document).ready(function(){
 		<input type="button" id="add_to_wishlist" onClick="addToWishlist();" id="wishlist" class="wishlist" data-toggle="popover" value="<spring:theme code="text.add.to.wishlist"/>"/>
 	</span>
 	<span id="selectSizeId" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectsize"/></span>
+	
 	<span id="addToCartButtonId">
 		<span id="addToCartFormTitleSuccess"></span>
 		<button style="display: none;"
