@@ -186,7 +186,14 @@ public class PincodeLogisticsListController extends DefaultWidgetController
 				cellLabel.append(saperator);
 			}
 			cellLabel.append(item.getCustomerId().concat(saperator));
-			cellLabel.append(item.getEmail().concat(saperator));
+			if (StringUtils.isEmpty(item.getEmail())) //R2.3 Email Id Null Check is Added
+			{
+				cellLabel.append("NA".concat(saperator));
+			}
+			else
+			{
+				cellLabel.append(item.getEmail().concat(saperator));
+			}
 			if (StringUtils.isEmpty(item.getMobileNo()))
 			{
 				cellLabel.append("NA".concat(saperator));
