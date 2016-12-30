@@ -237,18 +237,28 @@
 								<c:set value="${wpproduct.productData}" var="product" />
 								<c:set value="${wpproduct.sellerInfoData}" var="seller" />
 								<c:set value="${product.ussID}" var="entry_ussid" />
-								<c:url value="${product.url}" var="productUrl" />
+								
+
+								
 								<li>
 									<div class="product-info">
                                           
-										 <c:if test="${fn:toLowerCase(product.luxIndicator)=='marketplace' or empty product.luxIndicator}">
+										<c:if test="${fn:toLowerCase(product.luxIndicator)=='marketplace' or empty product.luxIndicator}">
 										<a href="${productUrl}"> <product:productPrimaryImage
 														product="${product}" format="thumbnail" /></a>
-														</c:if>
+										<!--  TISPRD-9318  -->
+										<c:set value="${ycommerce:productImage(product, 'cartIcon')}" var="cartImage"/>
+														
+										</c:if>
 										<c:if test="${fn:toLowerCase(product.luxIndicator)=='luxury' and not empty product.luxIndicator}">
 										<a href="${productUrl}"> <product:productPrimaryImage
 														product="${product}" format="luxuryCartPage" /></a>
-														</c:if>
+										<!--  TISPRD-9318  -->				
+										<c:set value="${ycommerce:productImage(product, 'luxuryCartIcon')}" var="cartImage"/>
+														
+										</c:if>
+										<!--  TISPRD-9318  -->
+										<input type="hidden" id="cart_icon_wishlist" name="cart_icon_wishlist" value="${cartImage}"/>
 										
 										<div>
 											<ul>
