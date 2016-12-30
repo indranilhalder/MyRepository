@@ -304,6 +304,12 @@ sendAddToBagWl: function(formId){
 				formId_splitdata = formId.split("_");
 				ACC.product.showTransientCart(formId_splitdata[2]);
 				ACC.product.addToBagFromWl(formId_splitdata[2],true);
+				// TISPRD-9318
+				var cartImageSrc=$("#cart_icon_wishlist").val();
+				console.log("cartImageSrc:"+cartImageSrc+" code:"+'${product.code}'+" name:"+'${product.name}');
+				
+				Header.showAddToBagPopOver('${product.code}', cartImageSrc, '${product.name}');
+				// End TISPRD-9318
 				//$("#"+formId+"Title").show().fadeOut(7000);
 				//ACC.product.displayAddToCart(data,formId,false);				
 				$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
