@@ -54,12 +54,31 @@
 		<cms:component component="${feature}" element="div" class="top_brands_section"/>
 	</cms:pageSlot>
 	</div>
-	<div class="best_seller">
-	<!-- <div class='Menu'><div class='mobile selectmenu'></div><ul></ul></div> -->
+	<%-- <div class="best_seller">
+	<!-- <div class='Menu'><div class='mobile selectmenu'></div><ul></ul></div>
 				<cms:pageSlot position="Section2B" var="feature">
 					<cms:component component="${feature}" element="div" class="best_seller_section"/>
 				</cms:pageSlot>
-	</div>		
+	</div>--%>	
+	<div class="best_seller">
+		<cms:pageSlot position="ShopForLookHeadingSlot" var="feature">
+			<cms:component component="${feature}" element="div" class="best_seller_section best_seller_heading"/>
+		</cms:pageSlot>
+		<!-- <div class='Menu'><div class='mobile selectmenu'></div><ul></ul></div> -->
+			
+		<div class="best_seller_carousel">
+			<div class='Menu'><div class='mobile selectmenu'></div><ul></ul></div>
+			<cms:pageSlot position="ShopForLookLeftColSlot" var="feature">
+				<cms:component component="${feature}" element="div" class="best_seller_section"/>
+			</cms:pageSlot>
+		</div>
+		<cms:pageSlot position="ShopForLookRightColSlot" var="feature">
+				<cms:component component="${feature}" element="div" class="best_seller_section best_seller_right best_seller_link"/>
+			</cms:pageSlot>
+		<!-- <div class="shop_the_look_right"> -->
+		
+		<!-- </div> -->
+	</div>	
 				<div class="winter_launch">
 				 <cms:pageSlot position="Section2D" var="feature">
 					<cms:component component="${feature}" element="div" class="winter_launch_section" />
