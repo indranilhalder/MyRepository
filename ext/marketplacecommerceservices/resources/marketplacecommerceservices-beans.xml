@@ -237,6 +237,7 @@
 	
 	<bean class="de.hybris.platform.commerceservices.service.data.CommerceCartParameter">
 	<property name="ussid" type="String">
+	
 			<description>The Selected Entries USSID</description>
 	</property>
 	<!-- TPR-774 -->
@@ -256,6 +257,9 @@
 		<property name="fulfillmentType" type="String"/>
 		<property name="deliveryMode" type="String"/>
 		<property name="quantity" type="Integer"/>
+		<property name="jewellery" type="boolean"/>
+		<property name="listingId" type="String"/>
+		
 	</bean>
 	<!--END: Added for Cart Soft Reservation -->
 	

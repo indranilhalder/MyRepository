@@ -5601,6 +5601,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 	for ( var key in deliveryModeJsonObj) {
 	var ussId= deliveryModeJsonObj[key].ussid;
 	$("#"+ussId+"_qtyul").remove();
+	console.log("USSID Coming" + ussId);
 	if(deliveryModeJsonObj[key].isServicable==='N'){
 		$("#"+ussId).remove();
 		var newUi = document.createElement("ul");
@@ -5626,6 +5627,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 		
 		var inventory=deliveryModeJsonObj[key].stockCount;
 		var quantityValue=$("#quantity_"+ussId).val();
+		console.log("quantity_ Coming" + quantityValue);
 		var stockAvailable =false;
 		
 		for ( var count in jsonObj) {
@@ -5645,6 +5647,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 			var text = document.createTextNode("Oops! We only have "+inventory+" in stock! For pincode : "+selectedPincode);
 			newLi.appendChild(text);
 			newUl.appendChild(newLi);
+			console.log("USSid Coming as ::"+ussId);
 			$("#"+ussId+"_qty").append(newUl);
 			isStockAvailable="N";
 		}
@@ -5653,6 +5656,8 @@ function populatePincodeDeliveryMode(response,buttonType){
 				var inventory=0;
 				var deliveryType=jsonObj[count].type;
 				inventory=jsonObj[count].inventory;
+				console.log("Inventory Coming" + inventory);
+				console.log("deliveryType Coming" + deliveryType);
 				if(deliveryType==='HD' /*
 										 * && parseFloat(inventory) >=
 										 * parseFloat(quantityValue)
@@ -5692,6 +5697,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 			 * document.createTextNode("Yes, it's available. Go ahead.");
 			 * cartMessage.appendChild(message); newUi.appendChild(cartMessage);
 			 */
+			console.log("USSid Coming as ::"+ussId);
 			$("#"+ussId+"_li").append(newUi);
 			//TPR-1341
 			$(".cartItemBlankPincode").hide();
@@ -5701,9 +5707,6 @@ function populatePincodeDeliveryMode(response,buttonType){
 	}
 	
 	$("#defaultPinCodeIds").val(selectedPincode);	
-	
-	
-	
 	if(isServicable==='Y' && isStockAvailable==='Y')
 	{
 		

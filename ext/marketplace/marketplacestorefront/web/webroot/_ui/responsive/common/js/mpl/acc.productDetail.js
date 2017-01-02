@@ -1463,10 +1463,10 @@ $( document ).ready(function() {
 					$(this).parent().addClass('strike');
 				//$(this).parent().css("border-color","gray");
 				$("#outOfStockId").hide();
-				
 					}
 				});
 						
+				
 				
 				/*		$(".capacity-box a").each(function(){
 							if($(this).attr("href").indexOf(key) != -1 && value == 0){
@@ -1485,6 +1485,20 @@ $( document ).ready(function() {
 								}
 						});
 					});
+			
+			
+			/* PRICE BREAKUP STARTS HERE */
+			
+			var priceBreakupForPDP = data['priceBreakup'];
+			$.each(priceBreakupForPDP,function(key,value) {	
+					var pricebreakuplist = "<li><span>"+ key +"</span><strong>"+ value.formattedValue +"</strong></li>";
+					$("#showPriceBreakup").append(pricebreakuplist);
+					
+				
+			});
+			
+			/* PRICE BREAKUP ENDS HERE */
+			
 			if (data['sellerArticleSKU'] != undefined) {
 				if (data['errMsg'] != "") {
 
@@ -2800,7 +2814,7 @@ function loadDefaultWishListName_SizeGuide() {
 			$("#addToCartFormTitle").show();
 		    return false;
 	 	 }
-	   	 
+		
 		 
 		 //TISQAEE-64
 		 utag.link({
@@ -2810,6 +2824,7 @@ function loadDefaultWishListName_SizeGuide() {
 				product_sku : productCode
 			});
 		ACC.product.sendAddToBag("addToCartForm",true);
+		 }
 	});
 
 	

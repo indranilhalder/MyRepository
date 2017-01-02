@@ -9715,6 +9715,24 @@
 							partof="false" />
 			</attribute>
 			
+			<attribute type="java.lang.Double" qualifier="diamondtotalprice"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			
+			<attribute type="java.lang.Double" qualifier="gemstonetotalprice"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			
 			<attribute type="java.lang.Double" qualifier="makingCharge"
 						autocreate="true" generate="true">
 						<persistence type='property' />

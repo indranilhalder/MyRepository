@@ -29,6 +29,7 @@ import com.sun.jersey.api.client.WebResource;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.mplcommerceservices.service.data.CartSoftReservationData;
+import com.tisl.mpl.wsdto.InventoryReservJewelleryRequest;
 import com.tisl.mpl.wsdto.InventoryReservListRequest;
 import com.tisl.mpl.wsdto.InventoryReservListResponse;
 import com.tisl.mpl.wsdto.InventoryReservRequest;
@@ -79,54 +80,126 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 		InventoryReservListResponse response = new InventoryReservListResponse();
 		final InventoryReservListRequest reqdata = new InventoryReservListRequest();
 		final List<InventoryReservRequest> reqlist = new ArrayList<InventoryReservRequest>();
+		final List<InventoryReservRequest> jewlleryReqItemlist = new ArrayList<InventoryReservRequest>();
 		final List<InventoryReservRequest> freebieItemslist = new ArrayList<InventoryReservRequest>();
-		InventoryReservRequest reqObj = null;
+		final List<InventoryReservJewelleryRequest> jewelleryReqList = new ArrayList<InventoryReservJewelleryRequest>();
 
+		InventoryReservRequest reqObj = null;
+		InventoryReservRequest reqJewelleryObj = null;
+		InventoryReservJewelleryRequest jewelleryReqObj = null;
+		String oldListing = "1";
 		try
 		{
 			for (final CartSoftReservationData cartObj : cartdatalist)
 			{
-				LOG.debug("inside cart soft reservation data list");
-				reqObj = new InventoryReservRequest();
-				if (StringUtils.isNotEmpty(cartObj.getUSSID()))
+				if (!cartObj.isJewellery())
 				{
-					reqObj.setUSSID(cartObj.getUSSID());
-				}
-				if (StringUtils.isNotEmpty(cartObj.getParentUSSID()))
-				{
-					reqObj.setParentUSSID(cartObj.getParentUSSID());
-				}
-				if (StringUtils.isNotEmpty(cartObj.getIsAFreebie()))
-				{
-					reqObj.setIsAFreebie(cartObj.getIsAFreebie().toUpperCase());
-				}
-				if (StringUtils.isNotEmpty(cartObj.getStoreId()))
-				{
-					reqObj.setStoreId(cartObj.getStoreId());
-				}
-				if (StringUtils.isNotEmpty(cartObj.getFulfillmentType()))
-				{
-					reqObj.setFulfillmentType(cartObj.getFulfillmentType().toUpperCase());
-				}
-				if (StringUtils.isNotEmpty(cartObj.getDeliveryMode()))
-				{
-					reqObj.setDeliveryMode(cartObj.getDeliveryMode().toUpperCase());
-				}
-				if (cartObj.getQuantity() != null)
-				{
-					reqObj.setQuantity(cartObj.getQuantity().toString());
-				}
+					LOG.debug("inside cart soft reservation data list");
+					reqObj = new InventoryReservRequest();
+					if (StringUtils.isNotEmpty(cartObj.getUSSID()))
+					{
+						reqObj.setUSSID(cartObj.getUSSID());
+					}
+					reqObj.setJewellery(cartObj.isJewellery());
+					if (StringUtils.isNotEmpty(cartObj.getParentUSSID()))
+					{
+						reqObj.setParentUSSID(cartObj.getParentUSSID());
+					}
+					if (StringUtils.isNotEmpty(cartObj.getIsAFreebie()))
+					{
+						reqObj.setIsAFreebie(cartObj.getIsAFreebie().toUpperCase());
+					}
+					if (StringUtils.isNotEmpty(cartObj.getStoreId()))
+					{
+						reqObj.setStoreId(cartObj.getStoreId());
+					}
+					if (StringUtils.isNotEmpty(cartObj.getFulfillmentType()))
+					{
+						reqObj.setFulfillmentType(cartObj.getFulfillmentType().toUpperCase());
+					}
+					if (StringUtils.isNotEmpty(cartObj.getDeliveryMode()))
+					{
+						reqObj.setDeliveryMode(cartObj.getDeliveryMode().toUpperCase());
+					}
+					if (cartObj.getQuantity() != null)
+					{
+						reqObj.setQuantity(cartObj.getQuantity().toString());
+					}
 
-				if (reqObj.getIsAFreebie() != null && reqObj.getIsAFreebie().equals("Y"))
-				{
-					freebieItemslist.add(reqObj);
+					if (reqObj.getIsAFreebie() != null && reqObj.getIsAFreebie().equals("Y"))
+					{
+						freebieItemslist.add(reqObj);
+					}
+					else
+					{
+						reqlist.add(reqObj);
+						LOG.debug("Added in Inventory reservation request list");
+					}
+
+
 				}
 				else
 				{
-					reqlist.add(reqObj);
-					LOG.debug("Added in Inventory reservation request list");
-				}
+					boolean set = false;
+					if (!oldListing.equalsIgnoreCase(cartObj.getListingId()))
+					{
+						jewelleryReqObj = new InventoryReservJewelleryRequest();
 
+						jewelleryReqObj.setListingID(cartObj.getListingId());
+						oldListing = cartObj.getListingId();
+						set = true;
+					}
+					LOG.debug("inside cart soft reservation data list");
+
+
+					reqJewelleryObj = new InventoryReservRequest();
+					if (StringUtils.isNotEmpty(cartObj.getUSSID()))
+					{
+						reqJewelleryObj.setUSSID(cartObj.getUSSID());
+					}
+					reqJewelleryObj.setJewellery(cartObj.isJewellery());
+					if (StringUtils.isNotEmpty(cartObj.getParentUSSID()))
+					{
+						reqJewelleryObj.setParentUSSID(cartObj.getParentUSSID());
+					}
+					if (StringUtils.isNotEmpty(cartObj.getIsAFreebie()))
+					{
+						reqJewelleryObj.setIsAFreebie(cartObj.getIsAFreebie().toUpperCase());
+					}
+					if (StringUtils.isNotEmpty(cartObj.getStoreId()))
+					{
+						reqJewelleryObj.setStoreId(cartObj.getStoreId());
+					}
+					if (StringUtils.isNotEmpty(cartObj.getFulfillmentType()))
+					{
+						reqJewelleryObj.setFulfillmentType(cartObj.getFulfillmentType().toUpperCase());
+					}
+					if (StringUtils.isNotEmpty(cartObj.getDeliveryMode()))
+					{
+						reqJewelleryObj.setDeliveryMode(cartObj.getDeliveryMode().toUpperCase());
+					}
+					if (cartObj.getQuantity() != null)
+					{
+						reqJewelleryObj.setQuantity(cartObj.getQuantity().toString());
+					}
+
+
+					if (reqJewelleryObj.getIsAFreebie() != null && reqJewelleryObj.getIsAFreebie().equals("Y"))
+					{
+						freebieItemslist.add(reqJewelleryObj);
+					}
+					else
+					{
+						jewlleryReqItemlist.add(reqJewelleryObj);
+						LOG.debug("Added in Inventory reservation request list");
+					}
+					jewelleryReqObj.setItem(jewlleryReqItemlist);
+					if (set)
+					{
+						jewelleryReqList.add(jewelleryReqObj);
+					}
+
+				}
 			}
 			reqlist.addAll(freebieItemslist);
 
@@ -143,6 +216,17 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 				reqdata.setDuration(getDuration(requestType));
 			}
 			reqdata.setItem(reqlist);
+			reqdata.setJewelleryItem(jewelleryReqList);
+
+
+			System.out.println(reqdata);
+
+
+			/******* Jewllery ***/
+
+
+			/******* Jewellery End ************/
+
 			response = reserveInventoryAtCheckout(reqdata);
 		}
 		catch (final ClientEtailNonBusinessExceptions e)
@@ -171,41 +255,40 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 	{
 		String duration = MarketplacecclientservicesConstants.EMPTY;
 
-		if (requestType.equalsIgnoreCase(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART)
-				&& configurationService.getConfiguration().getString(
-						MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_CART) != null)
+		if (requestType.equalsIgnoreCase(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART) && configurationService
+				.getConfiguration().getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_CART) != null)
 		{
-			duration = configurationService.getConfiguration().getString(
-					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_CART);
+			duration = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_CART);
 		}
 		else if (requestType.equalsIgnoreCase(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENT)
-				&& configurationService.getConfiguration().getString(
-						MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_PAYMENT) != null)
+				&& configurationService.getConfiguration()
+						.getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_PAYMENT) != null)
 		{
-			duration = configurationService.getConfiguration().getString(
-					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_PAYMENT);
+			duration = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_PAYMENT);
 		}
 		else if (requestType.equalsIgnoreCase(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERHELD)
-				&& configurationService.getConfiguration().getString(
-						MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_ORDERHELD) != null)
+				&& configurationService.getConfiguration()
+						.getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_ORDERHELD) != null)
 		{
-			duration = configurationService.getConfiguration().getString(
-					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_ORDERHELD);
+			duration = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_ORDERHELD);
 		}
 		else if (requestType.equalsIgnoreCase(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE)
-				&& configurationService.getConfiguration().getString(
-						MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_ORDERDEALLOCATE) != null)
+				&& configurationService.getConfiguration()
+						.getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_ORDERDEALLOCATE) != null)
 		{
-			duration = configurationService.getConfiguration().getString(
-					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_ORDERDEALLOCATE);
+			duration = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_ORDERDEALLOCATE);
 		}
 		//Added for TPR-629
 		else if (requestType.equalsIgnoreCase(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING)
-				&& configurationService.getConfiguration().getString(
-						MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_PAYMENTPENDING) != null)
+				&& configurationService.getConfiguration()
+						.getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_PAYMENTPENDING) != null)
 		{
-			duration = configurationService.getConfiguration().getString(
-					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_PAYMENTPENDING);
+			duration = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_PAYMENTPENDING);
 		}
 		else
 		{
@@ -224,8 +307,8 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 	public InventoryReservListResponse reserveInventoryAtCheckout(final InventoryReservListRequest request) throws JAXBException
 	{
 
-		final String realTimeCall = configurationService.getConfiguration().getString(
-				MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_REALTIMECALL);
+		final String realTimeCall = configurationService.getConfiguration()
+				.getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_REALTIMECALL);
 		InventoryReservListResponse responsefromOMS = new InventoryReservListResponse();
 
 		if (StringUtils.isNotEmpty(realTimeCall) && realTimeCall.equalsIgnoreCase(MarketplacecclientservicesConstants.Y))
@@ -249,14 +332,11 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 
 				WebResource webResource = null;
 
-				if (null != configurationService
-						&& null != configurationService.getConfiguration()
-						&& null != configurationService.getConfiguration().getString(
-								MarketplacecclientservicesConstants.OMS_INVENTORY_RESERV_URL))
+				if (null != configurationService && null != configurationService.getConfiguration() && null != configurationService
+						.getConfiguration().getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESERV_URL))
 				{
-					webResource = client.resource(UriBuilder.fromUri(
-							configurationService.getConfiguration().getString(
-									MarketplacecclientservicesConstants.OMS_INVENTORY_RESERV_URL)).build());
+					webResource = client.resource(UriBuilder.fromUri(configurationService.getConfiguration()
+							.getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESERV_URL)).build());
 				}
 				final JAXBContext context = JAXBContext.newInstance(InventoryReservListRequest.class);
 				final Marshaller marshaller = context.createMarshaller(); //for pretty-print XML in JAXB
@@ -319,8 +399,8 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 			catch (final Exception ex)
 			{
 				LOG.error(MarketplacecclientservicesConstants.EXCEPTION_IS, ex);
-				getPinCodeDeliveryModeService()
-						.validateOMSException(ex, MarketplacecclientservicesConstants.EXCEPTION_TYPE_INVENTORY);
+				getPinCodeDeliveryModeService().validateOMSException(ex,
+						MarketplacecclientservicesConstants.EXCEPTION_TYPE_INVENTORY);
 				throw new ClientEtailNonBusinessExceptions(ex);
 			}
 
@@ -328,12 +408,12 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 		else
 		{
 
-			final String mockXmlFirstPhase = configurationService.getConfiguration().getString(
-					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLFIRSTPHASE);
-			String mockXmlSecondPhase = configurationService.getConfiguration().getString(
-					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLSECONDPHASE);
-			final String mockXmlThirdPhase = configurationService.getConfiguration().getString(
-					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLTHIRDPHASE);
+			final String mockXmlFirstPhase = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLFIRSTPHASE);
+			String mockXmlSecondPhase = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLSECONDPHASE);
+			final String mockXmlThirdPhase = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLTHIRDPHASE);
 
 
 			if (StringUtils.isNotEmpty(mockXmlFirstPhase) && StringUtils.isNotEmpty(mockXmlSecondPhase)

@@ -801,6 +801,14 @@
 	<bean id="sizeGuideService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.SizeGuideServiceImpl">
 	</bean>
+	
+	<!-- for price breakup -->
+	<bean id="priceBreakupService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.PriceBreakupServiceImpl">
+		<property name="jewelleryAttrMapping" ref="jewelleryAttrMapping"></property>
+	</bean>
+	
+	
 	<!-- for merchant master -->
 	<bean id="merchantmaster" class="com.tisl.mpl.integration.job.MerchantMaster"
 		autowire="byName" />
@@ -1967,6 +1975,7 @@
     </bean>
 	<!-- Old Cron Job Deletion Logic ends: -->
 	
+
 	<!-- Jewellery Changes Start --> 
 	<alias name="mplJewelleryService" alias="mplJewelleryService" />
 	<bean id="mplJewelleryService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplJewelleryServiceImpl"
@@ -1980,6 +1989,22 @@
 	</bean>
 	
 	<!-- Jewellery Changes End -->
+
+	<!-- added for jewellery attribute mapping starts -->
+	
+	<alias name="defaultJewelleryAttrMapping" alias="jewelleryAttrMapping" />
+	<util:map id="defaultJewelleryAttrMapping" map-class="java.util.HashMap">
+		<entry key = "baseMetal1" 	value = "Gold" ></entry>
+		<entry key = "baseMetal2" 	value = "Silver" ></entry>
+		<entry key = "baseMetal3" 	value = "Platinum" ></entry>
+		<entry key = "baseMetal4" 	value = "Others" ></entry>
+		<entry key = "diamond"    	value = "Diamond" ></entry>
+		<entry key = "gemstone"   	value = "Gems Stone" ></entry>
+		<entry key = "makingcharge" value = "Making Charge" ></entry>
+		<entry key = "wastagetax" 	value = "Taxes And Duties" ></entry>				
+	</util:map>
+	
+	<!-- added for jewellery attribute mapping ends -->
 
 </beans>
 
