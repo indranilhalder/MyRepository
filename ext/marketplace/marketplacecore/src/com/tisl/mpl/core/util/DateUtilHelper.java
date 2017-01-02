@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.lang.time.DateFormatUtils;
+//import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -156,7 +156,6 @@ public class DateUtilHelper
 	           LOG.debug(mm.getFromTime() +" "+ mm.getToTime() );
 	           timeFormat =removeLeadingZeros(twelveHoursSDF.format(twentyFourHoursSDF.parse(mm.getFromTime()))) +" TO "+removeLeadingZeros(twelveHoursSDF.format(twentyFourHoursSDF.parse(mm.getToTime())));
 	           LOG.debug("^^^^^^TimeSlots Is :********:"+timeFormat);
-	           LOG.debug("^^^^^^TimeSlots Is :********:"+timeFormat.replaceAll(":00", ""));
 	           timeSlotsList.add(timeFormat);
 			} catch (Exception e) {
 				LOG.error("Time Formater ********:"+e.getMessage());
@@ -235,7 +234,7 @@ public class DateUtilHelper
             DateTime dt = formatter.parseDateTime(date);
         	if(dt.plusDays( i ).dayOfWeek().getAsText().equalsIgnoreCase("Sunday") ){
         		ischeck=true;
-        	}else if(ischeck==false){
+        	}else if(!ischeck){
         		finalDateSet.add(formatter.print( dt.plusDays( i)));
         	}
         	if(ischeck){

@@ -578,7 +578,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 			if (cartModel == null)
 			{
-				LOG.debug(MarketplacecommerceservicesConstants.INVALID_CART_ID + cartId);
+				//LOG.debug(MarketplacecommerceservicesConstants.INVALID_CART_ID + cartId); sonar issue
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9064);
 			}
 			else

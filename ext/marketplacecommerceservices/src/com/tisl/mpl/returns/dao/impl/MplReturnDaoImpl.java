@@ -217,13 +217,13 @@ public class MplReturnDaoImpl implements MplReturnsDao
 		}
 		try
 		{
-			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(queryString.toString());
+			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(queryString);
 			fQuery.addQueryParameter("code", queryPram);
 			return flexibleSearchService.<MplReturnPickUpAddressInfoModel> search(fQuery).getResult();
 		}
 		catch (final Exception e)
 		{
-			LOG.error("" + e.getMessage());
+			LOG.error("MplReturnDaoImpl::getPickUpReturnReportByParams" + e.getMessage());
 		}
 		return null;
 	}

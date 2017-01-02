@@ -3,7 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.impl;
 
-import de.hybris.platform.servicelayer.model.ModelService;
+//import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
@@ -38,8 +38,8 @@ public class MplDeliveryAddressDaoImpl implements MplDeliveryAddressDao
 
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
-	@Autowired
-	private ModelService modelService;
+	/*@Autowired
+	private ModelService modelService;*/
 
 	
 	

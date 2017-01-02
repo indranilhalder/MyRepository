@@ -28,7 +28,7 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.CustomerModel;
-import de.hybris.platform.core.model.user.UserModel;
+//import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.jalo.user.User;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.InvalidCartException;

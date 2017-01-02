@@ -126,6 +126,7 @@ public class ReturnInitiationController extends BaseController
 		catch (Exception e)
 		{
 			responseDTO.setErrorCode(e.getMessage());
+			LOG.error("ReturnInitiationController Error getting"+e.getMessage());
 		}
 		return responseDTO;	
 	}

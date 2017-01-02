@@ -61,7 +61,7 @@ import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.constants.GeneratedCoreConstants.Enumerations.Gender;
 import de.hybris.platform.core.model.enumeration.EnumerationValueModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
-import de.hybris.platform.core.model.order.OrderEntryModel;
+//import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -187,7 +187,7 @@ import com.tisl.mpl.facades.data.MplPreferencePopulationData;
 import com.tisl.mpl.facades.data.RescheduleDataList;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
 import com.tisl.mpl.facades.data.ScheduledDeliveryData;
-import com.tisl.mpl.facades.payment.MplPaymentFacade;
+//import com.tisl.mpl.facades.payment.MplPaymentFacade; sonar issue
 import com.tisl.mpl.facades.payment.impl.MplPaymentFacadeImpl;
 import com.tisl.mpl.facades.product.data.CategoryData;
 import com.tisl.mpl.facades.product.data.DayData;
@@ -436,11 +436,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@Autowired
         private MplConfigFacade mplConfigFacade;
 
-	/**
-	 *
-	 */
-	@Resource(name = "mplPaymentFacade")
-	private MplPaymentFacade mplPaymentFacade;
+	//sonar issue fixed 
+	/*@Resource(name = "mplPaymentFacade")
+	private MplPaymentFacade mplPaymentFacade;*/
 
 	/*
 	 * @Autowired private DiscountUtility discountUtility;
@@ -1023,9 +1021,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 									if (subOrder.getStatus() != null)
 									{
 										consignmentStatus = subOrder.getStatus().getCode();
-
-										LOG.debug(" order: Consignemnt is null or empty : Order code :" + orderCode
-												+ MarketplacecommerceservicesConstants.CONSIGNMENT_STATUS + consignmentStatus);
+                             //sonar issue
+									/*	LOG.debug(" order: Consignemnt is null or empty : Order code :" + orderCode
+												+ MarketplacecommerceservicesConstants.CONSIGNMENT_STATUS + consignmentStatus);*/
 
 										if (getMplOrderFacade().checkCancelStatus(subOrder.getStatus().getCode(),
 												MessageConstants.CANCEL_ORDER_STATUS))

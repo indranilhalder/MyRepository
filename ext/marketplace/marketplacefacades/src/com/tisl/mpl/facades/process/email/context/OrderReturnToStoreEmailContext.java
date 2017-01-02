@@ -7,8 +7,8 @@ import de.hybris.platform.acceleratorservices.model.cms2.pages.EmailPageModel;
 import de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext;
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.commercefacades.order.data.OrderData;
-import de.hybris.platform.commercefacades.product.data.PriceData;
-import de.hybris.platform.commerceservices.enums.CustomerType;
+/*import de.hybris.platform.commercefacades.product.data.PriceData;
+*/import de.hybris.platform.commerceservices.enums.CustomerType;
 import de.hybris.platform.core.model.c2l.LanguageModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -16,7 +16,7 @@ import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 
-import java.math.BigDecimal;
+/*import java.math.BigDecimal;*/
 import java.util.ArrayList;
 
 import org.apache.commons.lang.StringUtils;
@@ -42,17 +42,17 @@ public class OrderReturnToStoreEmailContext extends AbstractEmailContext<ReturnQ
 	private String orderGuid;
 	private boolean guest;
 	private String storeName;
-	private PriceData refundAmount;
+/*	private PriceData refundAmount;*/
 	private static final String ORDER_REFERENCE_NUMBER = "orderReferenceNumber";
 	private static final String CUSTOMER_NAME = "customerName";
 	private static final String TRANSACTION_ID = "transactionId";
 	private static final String NAME_OF_PRODUCT = "nameOfProduct";
-	private static final String AMOUNT_REFUNDED = "amountrefunded";
+	/*private static final String AMOUNT_REFUNDED = "amountrefunded";*/
 	private static final String DELIVERY_CHARGE = "deliveryCharge";
 	private static final String CUSTOMER = "Customer";
 	private static final String CONTACT_US_LINK = "contactUsLink";
 	private static final String NUMBERTOOL = "numberTool";
-	private static final String STORE_LIST = "storeList";
+	/*private static final String STORE_LIST = "storeList";*/
 
 	private static final String CUSTOMER_CARE_NUMBER = "customerCareNumber";
 	private static final String CUSTOMER_CARE_EMAIL = "customerCareEmail";
@@ -74,7 +74,7 @@ public class OrderReturnToStoreEmailContext extends AbstractEmailContext<ReturnQ
 		orderGuid = returnQuickDropProcessModel.getOrder().getGuid();
 		guest = CustomerType.GUEST.equals(getCustomer(returnQuickDropProcessModel).getType());
 		orderData = getOrderConverter().convert(returnQuickDropProcessModel.getOrder());
-		refundAmount = orderData.getTotalPrice();
+/*		refundAmount = orderData.getTotalPrice();*/
 		final String contactUsLink = configurationService.getConfiguration().getString("marketplace.contactus.link");
 		put(CONTACT_US_LINK, contactUsLink);
 		put(ORDER_REFERENCE_NUMBER, orderCode);
@@ -84,7 +84,7 @@ public class OrderReturnToStoreEmailContext extends AbstractEmailContext<ReturnQ
 		put(EMAIL, customer.getOriginalUid());
 
 
-		final BigDecimal refundAmount = BigDecimal.ZERO;
+	/*	final BigDecimal refundAmount = BigDecimal.ZERO;*/
 		AbstractOrderEntryModel orderEntry = null;
 		final double deliveryCharge = 0.0;
 		final boolean isTrue = false;
@@ -219,8 +219,8 @@ public class OrderReturnToStoreEmailContext extends AbstractEmailContext<ReturnQ
 		this.storeName = storeName;
 	}
 
-	public PriceData getRefundAmount()
+/*	public PriceData getRefundAmount()
 	{
 		return refundAmount;
-	}
+	}*/
 }

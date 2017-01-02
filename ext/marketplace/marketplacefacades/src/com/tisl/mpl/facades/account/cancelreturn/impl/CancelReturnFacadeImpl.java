@@ -3689,18 +3689,18 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			{
 				for (String store : storeNameList){
 				PointOfServiceModel pointOfSerivce = orderModelService.getPointOfService(store);
-				String geoCodeUrl = "http://maps.google.com/?q="+pointOfSerivce.getLatitude()+"," +pointOfSerivce.getLongitude();
+				String geoCodeUrl = ", http://maps.google.com/?q="+pointOfSerivce.getLatitude()+"," +pointOfSerivce.getLongitude();
 				if (storeAddress == null)
 				{
 					storeName=new StringBuilder(store);
 					storeAddress = storeAddress(pointOfSerivce.getAddress(), pointOfSerivce.getDisplayName(), null);
-					storeAddress.append(", "+geoCodeUrl);
+					storeAddress.append(geoCodeUrl);
 				}
 				else
 				{
-					storeName.append("," + store);
+					storeName.append(","+store);
 					storeAddress = storeAddress(pointOfSerivce.getAddress(), pointOfSerivce.getDisplayName(), storeAddress);
-					storeAddress.append(", "+geoCodeUrl);
+					storeAddress.append(geoCodeUrl);
 				}
 			}
 		}
@@ -3802,10 +3802,10 @@ private AbstractOrderEntryModel getOrderEntryModel(OrderModel ordermodel,String 
 		{
 			pointOfSerivce = orderModelService.getPointOfService(storeId);
 			
-			geoCodeUrl = "http://maps.google.com/?q="+pointOfSerivce.getLatitude()+"," +pointOfSerivce.getLongitude();
+			geoCodeUrl = " , http://maps.google.com/?q="+pointOfSerivce.getLatitude()+"," +pointOfSerivce.getLongitude();
 			storeAddress = new StringBuilder();
 			storeAddress = storeAddress(pointOfSerivce.getAddress(), pointOfSerivce.getDisplayName(), null);
-			storeAddress.append(" ,"+geoCodeUrl);
+			storeAddress.append(geoCodeUrl);
 			storeAddresList.add(storeAddress.toString());
 		}
 		return storeAddresList;

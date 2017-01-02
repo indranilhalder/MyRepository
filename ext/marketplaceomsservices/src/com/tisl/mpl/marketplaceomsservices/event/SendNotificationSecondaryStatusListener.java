@@ -29,9 +29,9 @@ import com.tisl.mpl.core.model.OrderUpdateProcessModel;
 import com.tisl.mpl.core.model.OrderUpdateSmsProcessModel;
 import com.tisl.mpl.data.SendSMSRequestData;
 import com.tisl.mpl.marketplaceomsservices.daos.EmailAndSmsNotification;
-import com.tisl.mpl.shorturl.service.ShortUrlService;
-import com.tisl.mpl.sms.MplSendSMSService;
-import com.tisl.mpl.sns.push.service.impl.MplSNSMobilePushServiceImpl;
+//import com.tisl.mpl.shorturl.service.ShortUrlService;
+//import com.tisl.mpl.sms.MplSendSMSService;
+//import com.tisl.mpl.sns.push.service.impl.MplSNSMobilePushServiceImpl;
 
 /**
  * @author pankajk
@@ -41,19 +41,19 @@ public class SendNotificationSecondaryStatusListener extends AbstractSiteEventLi
 	{
 		private ModelService modelService;
 
-		@Autowired
-		private MplSendSMSService sendSMSService;
+		/*@Autowired sonar Issue
+		private MplSendSMSService sendSMSService;*/
 
 		private ConfigurationService configurationService;
-		@Autowired
-		private MplSNSMobilePushServiceImpl mplSNSMobilePushService;
+		/*@Autowired
+		private MplSNSMobilePushServiceImpl mplSNSMobilePushService;*/
 
 		@Resource(name = "emailAndSmsNotification")
 		private EmailAndSmsNotification emailAndSmsNotification;
 
-		@Resource(name = "googleShortUrlService")
+	/*	@Resource(name = "googleShortUrlService")
 		private ShortUrlService googleShortUrlService;
-
+*/
 		/**
 		 * @return the configurationService
 		 */

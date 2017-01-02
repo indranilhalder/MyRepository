@@ -7,8 +7,8 @@ import de.hybris.platform.commercefacades.user.converters.populator.AddressRever
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
-import de.hybris.platform.servicelayer.i18n.CommonI18NService;
-import de.hybris.platform.servicelayer.search.FlexibleSearchService;
+//import de.hybris.platform.servicelayer.i18n.CommonI18NService;
+//import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
 import org.springframework.util.Assert;
 

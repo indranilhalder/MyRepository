@@ -12,7 +12,7 @@ import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.storefront.businessvalidator.CommonAsciiValidator;
 import com.tisl.mpl.storefront.web.forms.MplReturnsForm;
-import com.tisl.mpl.storefront.web.forms.ReturnPincodeCheckForm;
+/*import com.tisl.mpl.storefront.web.forms.ReturnPincodeCheckForm;*/
 
 /**
  * @author Techouts
@@ -50,9 +50,9 @@ public class MplReturnFormValidator
 		 String bankName=returnsForm.getBankName();
 		 String iFSCCode=returnsForm.getiFSCCode();
 		 String title=returnsForm.getTitle();
-		 String returnMethod=returnsForm.getReturnMethod();
+/*		 String returnMethod=returnsForm.getReturnMethod();*/
 		 String firstName=returnsForm.getFirstName();
-		 String [] storeIds=returnsForm.getStoreIds();
+		 /*String [] storeIds=returnsForm.getStoreIds();*/
 		 String addressType=returnsForm.getAddressType();
 		 String lastName=returnsForm.getLastName();
 		 String addrLine1=returnsForm.getAddrLine1();
@@ -64,7 +64,7 @@ public class MplReturnFormValidator
 		 String city=returnsForm.getCity();
 		 String state=returnsForm.getState();
 		 String country=returnsForm.getCountry();
-		 String isDefault=returnsForm.getIsDefault();
+	/*	 String isDefault=returnsForm.getIsDefault();*/
 		 String scheduleReturnDate=returnsForm.getScheduleReturnDate();
 		 String scheduleReturnTime=returnsForm.getScheduleReturnTime();
 		 String orderCode=returnsForm.getOrderCode();

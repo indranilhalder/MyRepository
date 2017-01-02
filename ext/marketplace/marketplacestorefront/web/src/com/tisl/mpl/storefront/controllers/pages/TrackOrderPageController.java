@@ -54,7 +54,7 @@ import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.data.AWBResponseData;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
-import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
+//import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.order.facade.GetOrderDetailsFacade;
 import com.tisl.mpl.shorturl.service.ShortUrlService;
@@ -94,8 +94,8 @@ public class TrackOrderPageController extends AbstractPageController
 	private GetOrderDetailsFacade getOrderDetailsFacade;
 	@Resource(name = "frontEndErrorHelper")
 	private FrontEndErrorHelper frontEndErrorHelper;
-	@Resource(name = "orderModelService")
-	private OrderModelService orderModelService;
+	/*@Resource(name = "orderModelService")
+	private OrderModelService orderModelService;*/
 	@Autowired
 	private ModelService modelService;
 	@Autowired

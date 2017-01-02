@@ -38,8 +38,8 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 
 	@Autowired
 	private SizeAttributeComparator sizeAttributeComparator;
-	private static final String DELIMETER = ":";
-	private static final String STOCK = "STOCK";
+/*	private static final String DELIMETER = ":";
+	private static final String STOCK = "STOCK";*/ //sonar Issue Fixed 
 
 	@Override
 	public void populate(final SearchResultValueData source, final ProductData target)

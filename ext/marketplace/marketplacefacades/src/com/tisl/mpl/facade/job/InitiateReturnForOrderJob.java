@@ -39,10 +39,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
+//import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
 import com.tisl.mpl.facades.data.BulkReturnStatusData;
-import com.tisl.mpl.facades.account.register.MplOrderFacade;
+//import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -58,12 +58,12 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 	private final static Logger LOG = Logger.getLogger(InitiateReturnForOrderJob.class.getName());
 	@Autowired
 	private CancelReturnFacade cancelReturnFacade;
-	@Autowired
-	private MplCheckoutFacade mplCheckoutFacade;
+/*	@Autowired
+	private MplCheckoutFacade mplCheckoutFacade;*/
 	@Autowired
 	private OrderModelService orderModelService;
-	@Autowired
-	private MplOrderFacade mplOrderFacade;
+	/*@Autowired
+	private MplOrderFacade mplOrderFacade;*/
 
 	@Resource(name = "sessionService")
 	private SessionService sessionService;
@@ -93,12 +93,13 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 		{
 			String orderCode = null; // TODO to fetch from given CSV66
 			String transactionId = null; // TODO to fetch from given CSV66
-			String ussid = null;
+			//sonar Issue
+			/*String ussid = null;
 			final String ticketTypeCode = MarketplacecommerceservicesConstants.TICKETTYPECODE;
 			final String refundType = MarketplacecommerceservicesConstants.REFUNDTYPE;
 			final String reasonCode = MarketplacecommerceservicesConstants.REASONCODE;
 			String orderStatus = null;
-			CustomerData customerData = null;
+			CustomerData customerData = null;*/
 			OrderData subOrderDetails = null;
 			ReturnItemAddressData returnAddrData = null;
 			Map<String, BulkReturnStatusData> returnResonseMap = null;
