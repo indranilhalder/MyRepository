@@ -2824,7 +2824,7 @@ function loadDefaultWishListName_SizeGuide() {
 				product_sku : productCode
 			});
 		ACC.product.sendAddToBag("addToCartForm",true);
-		 }
+		 
 	});
 
 	
