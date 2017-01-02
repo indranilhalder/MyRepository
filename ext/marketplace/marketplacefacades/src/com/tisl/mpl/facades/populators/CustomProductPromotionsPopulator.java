@@ -17,6 +17,10 @@ import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.promotions.model.PromotionGroupModel;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
+import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
+import de.hybris.platform.servicelayer.search.FlexibleSearchService;
+import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 import de.hybris.platform.servicelayer.time.TimeService;
 import de.hybris.platform.site.BaseSiteService;
 
@@ -31,16 +35,18 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtStockLevelPromotionCheckService;
 import com.tisl.mpl.model.BuyXItemsofproductAgetproductBforfreeModel;
+import com.tisl.mpl.model.EtailLimitedStockRestrictionModel;
 import com.tisl.mpl.model.EtailSellerSpecificRestrictionModel;
 import com.tisl.mpl.model.ExcludeManufacturersRestrictionModel;
-import com.tisl.mpl.model.LimitedStockPromotionModel;
 import com.tisl.mpl.model.ManufacturersRestrictionModel;
 
 
@@ -63,9 +69,15 @@ public class CustomProductPromotionsPopulator<SOURCE extends ProductModel, TARGE
 	private BaseSiteService baseSiteService;
 	@Resource(name = "productDetailsHelper")
 	private ProductDetailsHelper productDetailsHelper;
+	private static final String AS_CLASS = " AS bb}";
+
+	private static final String WHERE_CLASS = " WHERE {bb:";
 	protected static final Logger LOG = Logger.getLogger(CustomImagePopulator.class);
 	@Resource(name = "stockPromoCheckService")
 	private ExtStockLevelPromotionCheckService stockPromoCheckService;
+	private static final String SELECT_CLASS = "SELECT {bb.PK} FROM {";
+	@Autowired
+	private FlexibleSearchService flexibleSearchService;
 
 	protected PromotionsService getPromotionsService()
 	{
@@ -247,7 +259,6 @@ public class CustomProductPromotionsPopulator<SOURCE extends ProductModel, TARGE
 										toRemovePromotionList.add(productPromotion);
 									}
 								}
-
 							}
 
 							if (!isSellerRestrPresent && isFreeBee)
@@ -255,24 +266,31 @@ public class CustomProductPromotionsPopulator<SOURCE extends ProductModel, TARGE
 								toRemovePromotionList.add(productPromotion);
 								excludePromotion = true;
 							}
-							//TPR-965 changes starts
-							if (isLimitedStockPromoExists(productPromotion))
+							/* TPR-4107 */
+							for (final AbstractPromotionRestrictionModel restriction : productPromotion.getRestrictions())
 							{
-								final LimitedStockPromotionModel limitedStock = (LimitedStockPromotionModel) productPromotion;
-								final String productCode = MarketplacecommerceservicesConstants.INVERTED_COMMA + productModel.getCode()
-										+ MarketplacecommerceservicesConstants.INVERTED_COMMA;
-								final Map<String, Integer> stockMap = stockPromoCheckService.getCumulativeStockMap(productCode,
-										limitedStock.getCode(), false);
-								if (!stockMap.isEmpty())
+								if (restriction instanceof EtailLimitedStockRestrictionModel)
 								{
-									final Integer stockQuantity = stockMap.get(productModel.getCode());
-									final int stockValue = stockQuantity == null ? 0 : stockQuantity.intValue();
-									if ((limitedStock.getMaxStockCount().intValue() - stockValue) == 0)
+									final EtailLimitedStockRestrictionModel stockRestrictrion = (EtailLimitedStockRestrictionModel) restriction;
+									final String productCode = MarketplacecommerceservicesConstants.INVERTED_COMMA
+											+ productModel.getCode() + MarketplacecommerceservicesConstants.INVERTED_COMMA;
+									final Map<String, Integer> stockMap = stockPromoCheckService.getCumulativeStockMap(productCode,
+											productPromotion.getCode(), false);
+									if (!stockMap.isEmpty())
 									{
-										toRemovePromotionList.add(productPromotion);
+										final Integer stockQuantity = stockMap.get(productModel.getCode());
+										final int stockValue = stockQuantity == null ? 0 : stockQuantity.intValue();
+										if ((stockRestrictrion.getMaxStock().intValue() - stockValue) == 0)
+										{
+											toRemovePromotionList.add(productPromotion);
+										}
 									}
 								}
 							}
+
+
+							//TPR-965 changes starts
+
 							//TPR-965 changes ends
 						}//end
 					}//end promotion for loop
@@ -295,6 +313,24 @@ public class CustomProductPromotionsPopulator<SOURCE extends ProductModel, TARGE
 
 
 	/**
+	 * @param restrictions
+	 * @return
+	 */
+	//	private boolean isLimitedStockRestrictionExists(final Collection<AbstractPromotionRestrictionModel> restrictions)
+	//	{
+	//		boolean isExists = false;
+	//		for (final AbstractPromotionRestrictionModel restriction : restrictions)
+	//		{
+	//			if (restriction instanceof EtailLimitedStockRestrictionModel)
+	//			{
+	//				isExists = true;
+	//				break;
+	//			}
+	//		}
+	//		return isExists;
+	//	}
+
+	/**
 	 * checks for a BOGO promotion present in the product
 	 *
 	 * @param productPromotion
@@ -310,14 +346,33 @@ public class CustomProductPromotionsPopulator<SOURCE extends ProductModel, TARGE
 		return isFreeBree;
 	}
 
-	private boolean isLimitedStockPromoExists(final ProductPromotionModel productPromotion)
+
+
+	public List<BuyBoxModel> buyBoxModelForSeller(final String sellerID)
 	{
-		boolean isPresent = false;
-		if (productPromotion instanceof LimitedStockPromotionModel)
+		try
 		{
-			isPresent = true;
+
+			final String queryStringForStock = SELECT_CLASS + BuyBoxModel._TYPECODE + AS_CLASS + WHERE_CLASS + BuyBoxModel.SELLERID
+					+ "}=?sellerid";
+
+			final FlexibleSearchQuery flexQuery = new FlexibleSearchQuery(queryStringForStock);
+			flexQuery.addQueryParameter("sellerid", sellerID);
+			return flexibleSearchService.<BuyBoxModel> search(flexQuery).getResult();
 		}
-		return isPresent;
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
 	}
+
 
 }
