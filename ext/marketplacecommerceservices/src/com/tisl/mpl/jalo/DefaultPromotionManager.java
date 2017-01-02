@@ -2156,14 +2156,18 @@ public class DefaultPromotionManager extends PromotionsManager
 			final Map<String, Integer> qCountMap, final String promoCode)
 	{
 		Set<String> validProdUssidSet = new HashSet<String>();
+		Map<String, Integer> stockCountMap = null;
 
 		//Check whether Stock level restriction exists
 		final int stockCount = getStockRestrictionVal(restrictionList);
+		boolean sellerFlag = false;
 
 		if (stockCount > 0 && null != validProductUssidTempMap)
 		{
+			stockCountMap = new HashMap<String, Integer>();
+			sellerFlag = getSellerRestrictionVal(restrictionList);
 			final Set<String> validSetAfterStockCheck = getValidMapAfterStockLevelRestriction(validProductUssidTempMap, promoCode,
-					restrictionList);
+					stockCount, stockCountMap, sellerFlag);
 			validProductUssidTempMap.keySet().retainAll(validSetAfterStockCheck);
 		}
 
@@ -2188,7 +2192,8 @@ public class DefaultPromotionManager extends PromotionsManager
 				}
 			});
 
-			validProdUssidSet = doConsumeEntries(validEntries, totalEligibleCount, ctx, qCountMap, stockCount, promoCode);
+			validProdUssidSet = doConsumeEntries(validEntries, totalEligibleCount, ctx, qCountMap, stockCount, promoCode,
+					stockCountMap, sellerFlag);
 		}
 
 		return validProdUssidSet;
@@ -2321,7 +2326,8 @@ public class DefaultPromotionManager extends PromotionsManager
 	 */
 
 	public Set<String> doConsumeEntries(final List<AbstractOrderEntry> validEntries, int totalEligibleCount,
-			final SessionContext ctx, final Map<String, Integer> qCountMap, final int stockCount, final String promoCode)
+			final SessionContext ctx, final Map<String, Integer> qCountMap, final int stockCount, final String promoCode,
+			final Map<String, Integer> stockCountMap, final boolean sellerFlag)
 	{
 
 		final Set<String> validProdUssidSet = new HashSet<String>();
@@ -2345,42 +2351,122 @@ public class DefaultPromotionManager extends PromotionsManager
 				validProdUssidSet.add(selectedUSSID);
 				long consumeCount = (entryTotalQty <= totalEligibleCount) ? entryTotalQty : totalEligibleCount;
 				//Added for stock level restriction
-				consumeCount = (stockCount > 0) ? getConsumeCountForLimitedStock(stockCount, consumeCount, selectedUSSID, promoCode)
-						: consumeCount;
+				consumeCount = (stockCount > 0) ? getCountForStock(stockCount, stockCountMap, (int) consumeCount, sortedEntry,
+						sellerFlag, ctx) : consumeCount;
+				totalEligibleCount = (stockCount > 0) ? getCountForStock(stockCount, stockCountMap, totalEligibleCount, sortedEntry,
+						sellerFlag, ctx) : totalEligibleCount;
 
 				if (qCountMap != null)
 				{
 					qCountMap.put(selectedUSSID, Integer.valueOf((int) consumeCount));
 				}
+
 				totalEligibleCount -= consumeCount;
 			}
 		}
 		return validProdUssidSet;
 	}
 
-	private long getConsumeCountForLimitedStock(final int stockCount, final long consumeCount, final String selectedUSSID,
-			final String promoCode)
-	{
-		long limitedStockConsumedCount = 0L;
-		final String ussid = MarketplacecommerceservicesConstants.INVERTED_COMMA + selectedUSSID
-				+ MarketplacecommerceservicesConstants.INVERTED_COMMA;
-		final Map<String, Integer> stockMap = stockPromoCheckService.getCumulativeStockMap(ussid, promoCode, true);
+	/**
+	 * @Description: This method is for getting consumed entries for limited stock restriction
+	 * @param
+	 * @param
+	 * @return
+	 */
+	//	private long getConsumeCountForLimitedStock(final int stockCount, final long consumeCount, final String selectedUSSID,
+	//			final Map<String, Integer> stockMap)
+	//	{
+	//		long limitedStockConsumedCount = 0L;
+	//
+	//		if (MapUtils.isNotEmpty(stockMap) && null != stockMap.get(selectedUSSID))
+	//		{
+	//			if ((stockCount - stockMap.get(selectedUSSID).intValue()) > 0)
+	//			{
+	//				final int remainingStock = stockCount - stockMap.get(selectedUSSID).intValue();
+	//				limitedStockConsumedCount = (consumeCount <= remainingStock) ? consumeCount : remainingStock;
+	//			}
+	//
+	//		}
+	//		else if (MapUtils.isEmpty(stockMap))
+	//		{
+	//			limitedStockConsumedCount = (consumeCount <= stockCount) ? consumeCount : stockCount;
+	//		}
+	//
+	//		return limitedStockConsumedCount;
+	//	}
 
-		if (!stockMap.isEmpty() && null != stockMap.get(selectedUSSID))
+	/**
+	 * @Description: This method is for getting Eligible Count for limited stock restriction
+	 * @param
+	 * @param
+	 * @return
+	 */
+	//	private int getTotalEligibleCountForStock(final int stockCount, final Map<String, Integer> stockMap,
+	//			final int totalEligibleCount, final String selectedUSSID)
+	//	{
+	//		int totalEligibleCountForStock = 0;
+	//		if (MapUtils.isNotEmpty(stockMap) && null != stockMap.get(selectedUSSID))
+	//		{
+	//			if ((stockCount - stockMap.get(selectedUSSID).intValue()) > 0)
+	//			{
+	//				final int remainingStock = stockCount - stockMap.get(selectedUSSID).intValue();
+	//				totalEligibleCountForStock = (totalEligibleCount <= remainingStock) ? totalEligibleCount : remainingStock;
+	//			}
+	//
+	//		}
+	//		else if (MapUtils.isEmpty(stockMap))
+	//		{
+	//			totalEligibleCountForStock = (totalEligibleCount <= stockCount) ? totalEligibleCount : stockCount;
+	//		}
+	//
+	//		return totalEligibleCountForStock;
+	//	}
+
+	/**
+	 * @Description: This method is for getting Eligible Count for limited stock restriction
+	 * @param
+	 * @param
+	 * @return
+	 */
+	private int getCountForStock(final int stockCount, final Map<String, Integer> stockMap, final int totalCount,
+			final AbstractOrderEntry entry, final boolean sellerFlag, final SessionContext ctx)
+	{
+		int totalEligibleCountForStock = 0;
+		String toCheckWith = null;
+
+		if (sellerFlag)
 		{
-			if ((stockCount - stockMap.get(selectedUSSID).intValue()) > 0)
+			String selectedUSSID = null;
+			try
 			{
-				final int remainingStock = stockCount - stockMap.get(selectedUSSID).intValue();
-				limitedStockConsumedCount = (consumeCount <= remainingStock) ? consumeCount : remainingStock;
+				selectedUSSID = (String) entry.getAttribute(ctx, MarketplacecommerceservicesConstants.SELECTEDUSSID);
+			}
+			catch (JaloInvalidParameterException | JaloSecurityException e)
+			{
+				LOG.error(e);
+			}
+			toCheckWith = selectedUSSID;
+		}
+		else
+		{
+			toCheckWith = entry.getProduct().getCode();
+		}
+
+		if (MapUtils.isNotEmpty(stockMap) && null != stockMap.get(toCheckWith))
+		{
+			if ((stockCount - stockMap.get(toCheckWith).intValue()) > 0)
+			{
+				final int remainingStock = stockCount - stockMap.get(toCheckWith).intValue();
+				totalEligibleCountForStock = (totalCount <= remainingStock) ? totalCount : remainingStock;
 			}
 
 		}
-		else if (stockMap.isEmpty())
+		else if (MapUtils.isEmpty(stockMap))
 		{
-			limitedStockConsumedCount = (consumeCount <= stockCount) ? consumeCount : stockCount;
+			totalEligibleCountForStock = (totalCount <= stockCount) ? totalCount : stockCount;
 		}
 
-		return limitedStockConsumedCount;
+		return totalEligibleCountForStock;
 	}
 
 	/**
@@ -2625,7 +2711,8 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param count
 	 * @return giftCount
 	 */
-	public int getFreeGiftCount(final String key, final Map<AbstractOrderEntry, String> eligibleProductMap, final int count)
+	public int getFreeGiftCount(final String key, final Map<AbstractOrderEntry, String> eligibleProductMap, final int count,
+			final Map<String, Integer> validProductList)
 	{
 		int giftCount = 0;
 		int quantity = 0;
@@ -2645,7 +2732,8 @@ public class DefaultPromotionManager extends PromotionsManager
 						{
 							if (sellerData.getSellerID().equalsIgnoreCase(entry.getValue()))
 							{
-								quantity = quantity + (entry.getKey().getQuantity().intValue());
+								quantity = quantity + validProductList.get(entry.getValue()).intValue();
+								//quantity = quantity + (entry.getKey().getQuantity().intValue());
 								//giftCount = giftCount + (entry.getKey().getQuantity().intValue() / count);
 							}
 						}
@@ -3673,7 +3761,9 @@ public class DefaultPromotionManager extends PromotionsManager
 		if (!isStockPromo)
 
 		{
-			return doConsumeEntries(validEntries, totalEligibleCount, ctx, qCountMap, 0, code);
+			//return doConsumeEntries(validEntries, totalEligibleCount, ctx, qCountMap, 0, code);
+			//return doConsumeEntries(validEntries, totalEligibleCount, ctx, qCountMap, 0, code, null);
+			return doConsumeEntries(validEntries, totalEligibleCount, ctx, qCountMap, 0, code, null, false);
 		}
 		else
 
@@ -3902,16 +3992,21 @@ public class DefaultPromotionManager extends PromotionsManager
 	}
 
 
+	/*
+	 * public Set<String> getValidMapAfterStockLevelRestriction(final Map<String, AbstractOrderEntry>
+	 * multiSellerValidUSSIDMap, final String code, final List<AbstractPromotionRestriction> restrictionList)
+	 */
 	public Set<String> getValidMapAfterStockLevelRestriction(final Map<String, AbstractOrderEntry> multiSellerValidUSSIDMap,
-			final String code, final List<AbstractPromotionRestriction> restrictionList)
+			final String code, final int stockCount, final Map<String, Integer> stockCountMap, final boolean sellerFlag)
 	{
 		final StringBuilder ussidIds = new StringBuilder();
 
 		final StringBuilder productCodes = new StringBuilder();
 		final Set<String> ussidSet = new HashSet<String>();
-		Map<String, Integer> stockCountMap = new HashMap<String, Integer>();
-		final int stockCount = getStockRestrictionVal(restrictionList);
-		final Map<String, Integer> mapQuantCount = new HashMap<String, Integer>();
+		//Map<String, Integer> stockCountMap = new HashMap<String, Integer>();
+		//final int stockCount = getStockRestrictionVal(restrictionList);
+		//final Map<String, Integer> mapQuantCount = new HashMap<String, Integer>();
+
 		for (final Map.Entry<String, AbstractOrderEntry> entry : multiSellerValidUSSIDMap.entrySet())
 		{
 			ussidIds.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + entry.getKey()
@@ -3920,26 +4015,37 @@ public class DefaultPromotionManager extends PromotionsManager
 			productCodes.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + entry.getValue().getProduct().getCode()
 					+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
 			productCodes.append(",");
-			mapQuantCount.put(entry.getKey(), Integer.valueOf(entry.getValue().getQuantity().intValue()));
+			//mapQuantCount.put(entry.getKey(), Integer.valueOf(entry.getValue().getQuantity().intValue()));
 		}
-		final boolean sellerFlag = getSellerRestrictionVal(restrictionList);
+
+		//		final boolean sellerFlag = getSellerRestrictionVal(restrictionList);
+		StringBuilder idsToCheck = null;
+
 		if (sellerFlag)
 		{
-			stockCountMap = stockPromoCheckService.getCumulativeStockMap(
-					ussidIds.toString().substring(0, ussidIds.lastIndexOf(",")), code, true);
+			//			stockCountMap = stockPromoCheckService.getCumulativeStockMap(
+			//					ussidIds.toString().substring(0, ussidIds.lastIndexOf(",")), code, true);
+			idsToCheck = ussidIds;
 		}
 		else
 		{
-			stockCountMap = stockPromoCheckService.getCumulativeStockMap(
-					productCodes.toString().substring(0, productCodes.lastIndexOf(",")), code, false);
+			//			stockCountMap = stockPromoCheckService.getCumulativeStockMap(
+			//					productCodes.toString().substring(0, productCodes.lastIndexOf(",")), code, false);
+			idsToCheck = productCodes;
 		}
+
+		stockCountMap.putAll(stockPromoCheckService.getCumulativeStockMap(
+				idsToCheck.toString().substring(0, idsToCheck.lastIndexOf(",")), code, sellerFlag));
+
 		for (final Map.Entry<String, AbstractOrderEntry> entry : multiSellerValidUSSIDMap.entrySet())
 		{
-			if (null != stockCountMap.get(entry.getKey()) && sellerFlag && (stockCount - stockCountMap.get(entry.getKey()).intValue() > 0))
+			if (null != stockCountMap.get(entry.getKey()) && sellerFlag
+					&& (stockCount - stockCountMap.get(entry.getKey()).intValue() > 0))
 			{
 				ussidSet.add(entry.getKey());
 			}
-			else if (null != stockCountMap.get(entry.getKey()) && !sellerFlag && (stockCount - stockCountMap.get(entry.getValue().getProduct()).intValue() > 0))
+			else if (null != stockCountMap.get(entry.getValue().getProduct().getCode()) && !sellerFlag
+					&& (stockCount - stockCountMap.get(entry.getValue().getProduct().getCode()).intValue() > 0))
 			{
 				ussidSet.add(entry.getKey());
 			}
@@ -3984,4 +4090,4 @@ public class DefaultPromotionManager extends PromotionsManager
 	}
 }
 
-}
+//}
