@@ -2088,6 +2088,7 @@ public class ProductPageController extends MidPageController
 
 			{
 				final List<BuyBoxData> buyboxdata = (List<BuyBoxData>) buydata.get("buyboxList");
+
 				buyboxJson = getPopulatedBuyBoxJson(buydata, buyboxJson);
 				buyboxJson.put("buyboxList", buyboxdata);
 			}
@@ -2565,6 +2566,14 @@ public class ProductPageController extends MidPageController
 	{
 		// YTODO Auto-generated method stub
 		final BuyBoxData buyboxdata = (BuyBoxData) buydata.get("pdp_buy_box");
+
+		//PRICE BREAKUP STARTS:TPR-3752
+		final LinkedHashMap<String, PriceData> PriceMap = priceBreakupFacade.getPricebreakup(buyboxdata.getProductCode(),
+				buyboxdata.getSellerArticleSKU());
+
+		buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE_BREAKUP, PriceMap);
+		//PRICE BREAKUP ENDS:TPR-3752
+
 		if (buyboxdata.getSpecialPrice() != null && buyboxdata.getSpecialPrice().getValue().doubleValue() > 0)
 		{
 			buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, buyboxdata.getSpecialPrice());
