@@ -808,6 +808,10 @@
 		<property name="jewelleryAttrMapping" ref="jewelleryAttrMapping"></property>
 	</bean>
 	
+	<bean id="priceBreakupDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.PriceBreakupDaoImpl">
+	</bean>
+	<!-- for price breakup -->
 	
 	<!-- for merchant master -->
 	<bean id="merchantmaster" class="com.tisl.mpl.integration.job.MerchantMaster"
