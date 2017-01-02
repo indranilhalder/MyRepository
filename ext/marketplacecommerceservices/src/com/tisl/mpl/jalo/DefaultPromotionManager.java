@@ -4077,15 +4077,15 @@ public class DefaultPromotionManager extends PromotionsManager
 
 	public boolean getSellerRestrictionVal(final List<AbstractPromotionRestriction> restrictionList)
 	{
-		boolean isPrsent = false;
+		boolean isPresent = false;
 		for (final AbstractPromotionRestriction restriction : restrictionList)
 		{
 			if (restriction instanceof EtailSellerSpecificRestriction)
 			{
-				isPrsent = true;
+				isPresent = true;
 				break;
 			}
 		}
-		return isPrsent;
+		return isPresent;
 	}
 }
