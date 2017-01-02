@@ -800,11 +800,20 @@ public class SalesOrderReverseXMLUtility
 							}
 						}
 
-						/*Added in R2.3 Start*/
+						/*Added in R2.3 for sending EDTOHD / SDB charges to FICO START  */
 						try {
 							if(sdbFlag) {
-								 ChildOrderXMlData sdbXmlData = new ChildOrderXMlData();
-								sdbXmlData =xmlData;
+								ChildOrderXMlData sdbXmlData = new ChildOrderXMlData();
+
+								sdbXmlData.setDeliveryMode(xmlData.getDeliveryMode());
+								sdbXmlData.setFulfillmentType(xmlData.getFulfillmentType());
+								sdbXmlData.setItemNumber(xmlData.getItemNumber());
+								sdbXmlData.setPaymentRefID(xmlData.getPaymentRefID());
+								sdbXmlData.setPrimaryCategory(xmlData.getPrimaryCategory());
+								sdbXmlData.setSecondaryCategory(xmlData.getSecondaryCategory());
+								sdbXmlData.setSellerCode(xmlData.getSellerCode());
+								sdbXmlData.setUSSID(xmlData.getUSSID());
+								sdbXmlData.setTransactionId(xmlData.getTransactionId());
 								sdbXmlData.setScheduleDelCharge(0.0D);
 								sdbXmlData.setExpressdeliveryCharge(0.0D);
 								sdbXmlData.setOrderTag(SDB);
@@ -825,8 +834,17 @@ public class SalesOrderReverseXMLUtility
 								modelService.save(entry);
 							}
 							if(edToHdFlag) {
-								 ChildOrderXMlData edToHdXmlData = new ChildOrderXMlData();
-								edToHdXmlData =xmlData;
+								ChildOrderXMlData edToHdXmlData = new ChildOrderXMlData();
+								
+								edToHdXmlData.setDeliveryMode(xmlData.getDeliveryMode());
+								edToHdXmlData.setFulfillmentType(xmlData.getFulfillmentType());
+								edToHdXmlData.setItemNumber(xmlData.getItemNumber());
+								edToHdXmlData.setPaymentRefID(xmlData.getPaymentRefID());
+								edToHdXmlData.setPrimaryCategory(xmlData.getPrimaryCategory());
+								edToHdXmlData.setSecondaryCategory(xmlData.getSecondaryCategory());
+								edToHdXmlData.setSellerCode(xmlData.getSellerCode());
+								edToHdXmlData.setUSSID(xmlData.getUSSID());
+								edToHdXmlData.setTransactionId(xmlData.getTransactionId());
 								edToHdXmlData.setScheduleDelCharge(0.0D);
 								edToHdXmlData.setExpressdeliveryCharge(0.0D);
 								edToHdXmlData.setOrderTag(EDTOHD);
@@ -845,11 +863,10 @@ public class SalesOrderReverseXMLUtility
 								entry.setIsEdToHdSendToFico(Boolean.TRUE);
 								modelService.save(entry);
 							}
-							/*Added in R2.3 end*/ 
 						}catch(Exception e) {
 							LOG.error("Exception occcurred :"+e.getMessage());
 						}
-						 
+						/*Added in R2.3 for sending EDTOHD / SDB charges to FICO END  */
 						if (canOrRetflag)
 						{
 							childOrderDataList.add(xmlData);
