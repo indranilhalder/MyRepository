@@ -1761,7 +1761,36 @@ INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;fronten
 
 
 UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
-;;ApparelCategoryLandingPageTemplateV1      ;$jarResourceCms/structure-view/structure_ApparelCategoryLandingPageTemplateV1.vm
+;;ApparelCategoryLandingPageTemplateV1      ;$jarResourceCms/structure-view/structure_BrandCategoryLandingPageTemplate.vm
+
+# New Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;CommonLogoParaSlot;Common Logo Para Slot;true
+;;ForHimForHerSlot;For Him For Her Slot;true
+;;TopBrandSlot;Top Brand Slot;true
+;;Section2D;Section2D;true
+
+;;TopCategoryHeadingSlot;Top Category Heading Slot;true
+;;TopCategoryCol1Slot;Top Category Col1 Slot;true
+;;TopCategoryCol2Slot;Top Category Col2 Slot;true
+;;TopCategoryCol3Slot;Top Category Col3 Slot;true
+;;TopCategoryCol4Slot;Top Category Col4 Slot;true
+
+;;ShopForHeading;Shop For Heading;true
+;;ShopForLeftCol;Shop For Left Column;true
+;;ShopForRightCol;Shop For Right Column;true
+;;ShopForViewMore;Shop For View More;true
+
+;;TopDealsSlot;Top Deals Slot;true
+;;TopDealsLeftColSlot;Top Deals Left Col Slot;true
+;;TopDealsRightColSlot;Top Deals Right Col Slot;true
+
+;;StyleEditLeftColSlot;Style Edit Left Col Slot;true
+;;StyleEditRightColSlot;Style Edit Right Col Slot;true
+
+;;ShopForLookHeadingSlot;Shop For Look Heading Slot;true
+;;ShopForLookLeftColSlot;Shop For Look Left Col Slot;true
+;;ShopForLookRightColSlot;Shop For Look Right Col Slot;true
 
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ApparelCategoryLandingPageTemplateV1'];validComponentTypes(code);compTypeGroup(code)
 ;SiteLogo;;;logo
@@ -1769,13 +1798,42 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;SearchBox;;;searchbox
 ;MiniCart;;CMSLinkComponent,TrackOrderHeaderComponent,MyWishListInHeaderComponent,SignInFlyOutComponent;minicart
 ;NavigationBar;;;navigation
+;CommonLogoParaSlot;;SimpleBannerComponent,CMSParagraphComponent,SimpleResponsiveBannerComponent;
 ;Section1;;SimpleResponsiveBannerComponent,MplBigPromoBannerComponent,MplBigFourPromoBannerComponent,SimpleBannerComponent,CMSParagraphComponent;
-;Section2A;;SimpleBannerComponent,CMSParagraphComponent,MplAdvancedCategoryCarouselComponent,CMSLinkComponent;
-;Section2B;;CMSParagraphComponent,CMSLinkComponent,SimpleBannerComponent;
-;Section2C;;RotatingImagesComponent,CMSParagraphComponent,VideoComponent
-;Section3;;SimpleBannerComponent,CMSParagraphComponent,CMSLinkComponent;
-;Section3A;;CMSLinkComponent,MplAdvancedCategoryCarouselComponent;
-;Section4A;;ProductRefinementComponent;
+;ForHimForHerSlot;;SimpleResponsiveBannerComponent,SimpleBannerComponent,CMSParagraphComponent;
+
+#;Section2A;;SimpleBannerComponent,CMSParagraphComponent,MplAdvancedCategoryCarouselComponent,CMSLinkComponent;
+;TopCategoryHeadingSlot;;CMSParagraphComponent;
+;TopCategoryCol1Slot;;SimpleBannerComponent,MplAdvancedCategoryCarouselComponent,CMSLinkComponent;
+;TopCategoryCol2Slot;;SimpleBannerComponent,MplAdvancedCategoryCarouselComponent,CMSLinkComponent;
+;TopCategoryCol3Slot;;SimpleBannerComponent,MplAdvancedCategoryCarouselComponent,CMSLinkComponent;
+;TopCategoryCol4Slot;;SimpleBannerComponent,MplAdvancedCategoryCarouselComponent,CMSLinkComponent;
+
+;TopBrandSlot;;CMSParagraphComponent,CMSLinkComponent,SimpleBannerComponent,SimpleResponsiveBannerComponent;
+
+#;Section2B;;CMSParagraphComponent,CMSLinkComponent,MplShopByLookProductCarouselComponent,SimpleResponsiveBannerComponent,SimpleBannerComponent,ProductCarouselComponent;
+;ShopForLookHeadingSlot;;CMSParagraphComponent;
+;ShopForLookLeftColSlot;;CMSLinkComponent,MplShopByLookProductCarouselComponent,ProductCarouselComponent;
+;ShopForLookRightColSlot;;SimpleResponsiveBannerComponent,SimpleBannerComponent,CMSLinkComponent;
+
+#;Section2C;;RotatingImagesComponent,CMSParagraphComponent,VideoComponent;
+;StyleEditLeftColSlot;;RotatingImagesComponent,CMSParagraphComponent;
+;StyleEditRightColSlot;;VideoComponent;
+
+;Section2D;;SimpleBannerComponent,MplAdvancedCategoryCarouselComponent,SimpleResponsiveBannerComponent,CMSParagraphComponent;
+
+#;Section3;;SimpleBannerComponent,CMSParagraphComponent,CMSLinkComponent,MplOfferImageCarouselComponent,SimpleResponsiveBannerComponent;
+;TopDealsSlot;;MplOfferImageCarouselComponent,MplAdvancedCategoryCarouselComponent,CMSLinkComponent;
+;TopDealsLeftColSlot;;SimpleResponsiveBannerComponent,SimpleBannerComponent,CMSParagraphComponent,CMSLinkComponent;
+;TopDealsRightColSlot;;SimpleResponsiveBannerComponent,SimpleBannerComponent,CMSParagraphComponent,CMSLinkComponent;
+
+#;Section3A;;CMSLinkComponent,MplAdvancedCategoryCarouselComponent;
+;ShopForHeading;;CMSParagraphComponent;
+;ShopForLeftCol;;SimpleBannerComponent,MplAdvancedCategoryCarouselComponent;
+;ShopForRightCol;;CMSLinkComponent;
+;ShopForViewMore;;CMSLinkComponent;
+
+;Section4A;;ProductRefinementComponent,CustomSkuComponent;
 ;Section4B;;ProductGridComponent;
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide
@@ -1795,8 +1853,122 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;BottomHeaderSlot-ApparelCategoryLandingPageV1;BottomHeaderSlot;;BottomHeaderSlot;true
 ;;PlaceholderContentSlot-ApparelCategoryLandingPageV1;PlaceholderContentSlot;;PlaceholderContentSlot;true
 
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+;;ShopForLookHeadingSlot-WomenV1;true;Best Seller Heading slot;
+;;ShopForLookLeftColSlot-WomenV1;true;Best Seller Carousel slot;
+;;ShopForLookRightColSlot-WomenV1;true;Best Seller View More slot;
 
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;categoryAssociated(code,$productCV);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
 ;;WomenV1;Women's Category Landing Page;ApparelCategoryLandingPageTemplateV1;WomenV1;MSH10
+
 ### Category Landing Page V1#########
 
+### New Brand Landing Page V1#########
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
+;;NewBrandLandingPageTemplate;New Brand Landing Page Template;layout/newBrandLandingPageTemplate;CategoryPage,ContentPage
+
+
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;NewBrandLandingPageTemplate      ;$jarResourceCms/structure-view/structure_BrandCategoryLandingPageTemplate.vm
+
+# New Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;CommonLogoParaSlot;Common Logo Para Slot;true
+;;ForHimForHerSlot;For Him For Her Slot;true
+;;TopBrandSlot;Top Brand Slot;true
+;;Section2D;Section2D;true
+
+;;TopCategoryHeadingSlot;Top Category Heading Slot;true
+;;TopCategoryCol1Slot;Top Category Col1 Slot;true
+;;TopCategoryCol2Slot;Top Category Col2 Slot;true
+;;TopCategoryCol3Slot;Top Category Col3 Slot;true
+;;TopCategoryCol4Slot;Top Category Col4 Slot;true
+
+;;ShopForHeading;Shop For Heading;true
+;;ShopForLeftCol;Shop For Left Col;true
+;;ShopForRightCol;Shop For Right Col;true
+;;ShopForViewMore;Shop For View More;true
+
+;;TopDealsSlot;Top Deals Slot;true
+;;TopDealsLeftColSlot;Top Deals Left Col Slot;true
+;;TopDealsRightColSlot;Top Deals Right Col Slot;true
+
+;;StyleEditLeftColSlot;Style Edit Left Col Slot;true
+;;StyleEditRightColSlot;Style Edit Right Col Slot;true
+
+;;ShopForLookHeadingSlot;Shop For Look Heading Slot;true
+;;ShopForLookLeftColSlot;Shop For Look Left Col Slot;true
+;;ShopForLookRightColSlot;Shop For Look Right Col Slot;true
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='NewBrandLandingPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;SiteLogo;;;logo
+;HeaderLinks;;;headerlinks
+;SearchBox;;;searchbox
+;MiniCart;;CMSLinkComponent,TrackOrderHeaderComponent,MyWishListInHeaderComponent,SignInFlyOutComponent;minicart
+;NavigationBar;;;navigation
+;CommonLogoParaSlot;;SimpleBannerComponent,CMSParagraphComponent,SimpleResponsiveBannerComponent,MplBrandSearchBoxComponent,MicrositeSelectBrandCollectionComponent,MplEnhancedSearchBoxComponent,MplMicrositeEnhancedSearchBoxComponent;
+;Section1;;SimpleResponsiveBannerComponent,MplBigPromoBannerComponent,MplBigFourPromoBannerComponent,SimpleBannerComponent,CMSParagraphComponent;
+;ForHimForHerSlot;;SimpleResponsiveBannerComponent,SimpleBannerComponent,CMSParagraphComponent,MplBigPromoBannerComponent,MplBigFourPromoBannerComponent;
+
+#;Section2A;;SimpleBannerComponent,CMSParagraphComponent,MplAdvancedCategoryCarouselComponent,CMSLinkComponent;
+;TopCategoryHeadingSlot;;CMSParagraphComponent;
+;TopCategoryCol1Slot;;SimpleBannerComponent,MplAdvancedCategoryCarouselComponent,CMSLinkComponent;
+;TopCategoryCol2Slot;;SimpleBannerComponent,MplAdvancedCategoryCarouselComponent,CMSLinkComponent;
+;TopCategoryCol3Slot;;SimpleBannerComponent,MplAdvancedCategoryCarouselComponent,CMSLinkComponent;
+;TopCategoryCol4Slot;;SimpleBannerComponent,MplAdvancedCategoryCarouselComponent,CMSLinkComponent;
+
+;TopBrandSlot;;CMSParagraphComponent,CMSLinkComponent,SimpleBannerComponent,SimpleResponsiveBannerComponent;
+
+#;Section2B;;CMSParagraphComponent,CMSLinkComponent,MplShopByLookProductCarouselComponent,SimpleResponsiveBannerComponent,SimpleBannerComponent,ProductCarouselComponent;
+;ShopForLookHeadingSlot;;CMSParagraphComponent;
+;ShopForLookLeftColSlot;;CMSLinkComponent,MplShopByLookProductCarouselComponent,ProductCarouselComponent;
+;ShopForLookRightColSlot;;SimpleResponsiveBannerComponent,SimpleBannerComponent;
+
+#;Section2C;;RotatingImagesComponent,CMSParagraphComponent,VideoComponent;
+;StyleEditLeftColSlot;;RotatingImagesComponent,CMSParagraphComponent;
+;StyleEditRightColSlot;;VideoComponent;
+
+;Section2D;;SimpleBannerComponent,MplAdvancedCategoryCarouselComponent,SimpleResponsiveBannerComponent,CMSParagraphComponent,MplBigFourPromoBannerComponent;
+
+#;Section3;;SimpleBannerComponent,CMSParagraphComponent,CMSLinkComponent,MplOfferImageCarouselComponent,SimpleResponsiveBannerComponent,MplAdvancedCategoryCarouselComponent;
+;TopDealsSlot;;MplOfferImageCarouselComponent,MplAdvancedCategoryCarouselComponent,CMSLinkComponent;
+;TopDealsLeftColSlot;;SimpleResponsiveBannerComponent,SimpleBannerComponent,CMSParagraphComponent,CMSLinkComponent;
+;TopDealsRightColSlot;;SimpleResponsiveBannerComponent,SimpleBannerComponent,CMSParagraphComponent,CMSLinkComponent;
+
+#;Section3A;;CMSLinkComponent,MplAdvancedCategoryCarouselComponent,CMSParagraphComponent,SimpleBannerComponent;
+;ShopForHeading;;CMSParagraphComponent;
+;ShopForLeftCol;;SimpleBannerComponent,MplAdvancedCategoryCarouselComponent;
+;ShopForRightCol;;CMSLinkComponent;
+;ShopForViewMore;;CMSLinkComponent;
+
+
+
+;Section4A;;ProductRefinementComponent,CustomSkuComponent;
+;Section4B;;ProductGridComponent;
+;Footer;;;footer
+;TopHeaderSlot;;;wide
+;BottomHeaderSlot;;BreadcrumbComponent
+;PlaceholderContentSlot;;;
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='NewBrandLandingPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-NewBrandLandingPageTemplate;SiteLogo;;SiteLogoSlot;true
+;;HomepageLink-NewBrandLandingPageTemplate;HomepageNavLink;;HomepageNavLinkSlot;true
+;;NavigationBar-NewBrandLandingPageTemplate;NavigationBar;;NavigationBarSlot;true
+;;MiniCart-NewBrandLandingPageTemplate;MiniCart;;MiniCartSlot;true
+;;Footer-NewBrandLandingPageTemplate;Footer;;FooterSlot;true
+;;HeaderLinks-NewBrandLandingPageTemplate;HeaderLinks;;HeaderLinksSlot;true
+;;SearchBox-NewBrandLandingPageTemplate;SearchBox;;SearchBoxSlot;true
+;;TopHeaderSlot-NewBrandLandingPageTemplate;TopHeaderSlot;;TopHeaderSlot;true
+;;BottomHeaderSlot-NewBrandLandingPageTemplate;BottomHeaderSlot;;BottomHeaderSlot;true
+;;PlaceholderContentSlot-NewBrandLandingPageTemplate;PlaceholderContentSlot;;PlaceholderContentSlot;true
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+;;ShopForLookHeadingSlot-Brand1;true;Shop The Look Heading Slot;
+;;ShopForLookLeftColSlot-Brand1;true;Shop The Look Left Column Slot;
+;;ShopForLookRightColSlot-Brand1;true;Shop The Look Right Column Slot;
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;categoryAssociated(code,$productCV);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;Brand1;New Brand Landing Page;NewBrandLandingPageTemplate;Brand1;MBH12E00005;
+
+### New Brand Landing Page V1#########

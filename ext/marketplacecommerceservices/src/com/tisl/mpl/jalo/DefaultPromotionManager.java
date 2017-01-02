@@ -4089,5 +4089,3 @@ public class DefaultPromotionManager extends PromotionsManager
 		return isPrsent;
 	}
 }
-
-//}

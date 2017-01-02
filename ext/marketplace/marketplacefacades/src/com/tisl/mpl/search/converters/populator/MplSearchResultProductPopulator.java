@@ -23,6 +23,8 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+
 
 /**
  * This class populates data into product data from solr search results
@@ -280,11 +282,17 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 	protected List<ImageData> createImageData(final SearchResultValueData source)
 	{
 		final List<ImageData> result = new ArrayList<ImageData>();
-
-		addImageData(source, "searchPage", result);
+		if (getValue(source, "isLuxuryProduct") != null
+				&& getValue(source, "isLuxuryProduct").toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.LUXURY))
+		{
+			addImageData(source, "luxurySearchPage", result);
+		}
+		else
+		{
+			addImageData(source, "searchPage", result);
+		}
 		//TPR-796
 		addImageData(source, "product", result);
-
 
 		return result;
 	}
