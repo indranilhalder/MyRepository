@@ -18,6 +18,7 @@ import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
 import de.hybris.platform.order.strategies.ordercloning.CloneAbstractOrderStrategy;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
+import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
 import de.hybris.platform.promotions.model.OrderPromotionModel;
 import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.promotions.model.PromotionOrderEntryConsumedModel;
@@ -73,6 +74,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationServ
 import com.tisl.mpl.marketplacecommerceservices.service.NotifyPaymentGroupMailService;
 import com.tisl.mpl.marketplacecommerceservices.service.RMSVerificationNotificationService;
 import com.tisl.mpl.model.CustomProductBOGOFPromotionModel;
+import com.tisl.mpl.model.EtailLimitedStockRestrictionModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.util.OrderStatusSpecifier;
 
@@ -163,20 +165,24 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			//
 			//			}
 			//TPR -965 starts
-			if (null != orderModel && CollectionUtils.isNotEmpty(orderModel.getAllPromotionResults()))
+			if (null != orderModel && CollectionUtils.isNotEmpty(orderModel.getAllPromotionResults())
+					&& isLimitedStockPromoExists(orderModel.getAllPromotionResults()))
 			{
 				final List<LimitedStockPromoInvalidationModel> orderInvalidationList = new ArrayList<LimitedStockPromoInvalidationModel>();
 				for (final AbstractOrderEntryModel orderEntry : orderModel.getEntries())
 				{
-					final LimitedStockPromoInvalidationModel promoInvalidationModel = (LimitedStockPromoInvalidationModel) getModelService()
-							.create(LimitedStockPromoInvalidationModel.class);
-					promoInvalidationModel.setProductCode(orderEntry.getProduct().getCode());
-					promoInvalidationModel.setUssid(orderEntry.getSelectedUSSID());
-					promoInvalidationModel.setPromoCode(orderEntry.getProductPromoCode());
-					promoInvalidationModel.setGuid(orderModel.getGuid());
-					promoInvalidationModel.setUsedUpCount(Integer.valueOf(orderEntry.getQualifyingCount().intValue()));
-					promoInvalidationModel.setOrder(orderModel);
-					orderInvalidationList.add(promoInvalidationModel);
+					if (orderEntry.getQualifyingCount().intValue() > 0)
+					{
+						final LimitedStockPromoInvalidationModel promoInvalidationModel = (LimitedStockPromoInvalidationModel) getModelService()
+								.create(LimitedStockPromoInvalidationModel.class);
+						promoInvalidationModel.setProductCode(orderEntry.getProduct().getCode());
+						promoInvalidationModel.setUssid(orderEntry.getSelectedUSSID());
+						promoInvalidationModel.setPromoCode(orderEntry.getProductPromoCode());
+						promoInvalidationModel.setGuid(orderModel.getGuid());
+						promoInvalidationModel.setUsedUpCount(Integer.valueOf(orderEntry.getQualifyingCount().intValue()));
+						promoInvalidationModel.setOrder(orderModel);
+						orderInvalidationList.add(promoInvalidationModel);
+					}
 				}
 				getModelService().saveAll(orderInvalidationList);
 			}
@@ -2040,6 +2046,37 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		this.rMSVerificationNotificationService = rMSVerificationNotificationService;
 	}
 
+	/**
+	 * cheking or stock level restriction
+	 *
+	 * @param allPromotionResults
+	 * @return
+	 */
+	private boolean isLimitedStockPromoExists(final Set<PromotionResultModel> allPromotionResults)
+	{
+		boolean isPresent = false;
+		for (final PromotionResultModel promo : allPromotionResults)
+		{
+			for (final AbstractPromotionRestrictionModel restriction : promo.getPromotion().getRestrictions())
+			{
+				if (restriction instanceof EtailLimitedStockRestrictionModel
+						&& null != ((EtailLimitedStockRestrictionModel) restriction).getMaxStock())
+				{
+					final int maxStock = ((EtailLimitedStockRestrictionModel) restriction).getMaxStock().intValue();
+					if (maxStock > 0)
+					{
+						isPresent = true;
+						break;
+					}
+				}
+			}
+
+
+			//		return isPresent;
+		}
+		return isPresent;
+
+	}
 
 
 
