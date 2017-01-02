@@ -2814,7 +2814,7 @@ function loadDefaultWishListName_SizeGuide() {
 			$("#addToCartFormTitle").show();
 		    return false;
 	 	 }
-	   	 
+		
 		 
 		 //TISQAEE-64
 		 utag.link({
@@ -2824,6 +2824,7 @@ function loadDefaultWishListName_SizeGuide() {
 				product_sku : productCode
 			});
 		ACC.product.sendAddToBag("addToCartForm",true);
+		 }
 	});
 
 	

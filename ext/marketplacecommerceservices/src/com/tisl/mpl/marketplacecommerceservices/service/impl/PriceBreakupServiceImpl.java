@@ -12,7 +12,6 @@ import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +34,7 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.PriceBreakupService#getPricebreakup(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -69,9 +68,9 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 	public LinkedHashMap<String, PriceData> getPricebreakup(final String productCode, final String ussid)
 	{
 
-		List<JewelleryPriceRowModel> jewelleryPriceRowList = new ArrayList<JewelleryPriceRowModel>();
+		//List<JewelleryPriceRowModel> jewelleryPriceRowList = new ArrayList<JewelleryPriceRowModel>();
 
-		jewelleryPriceRowList = priceBreakupDao.getPricebreakup(productCode, ussid);
+		final List<JewelleryPriceRowModel> jewelleryPriceRowList = priceBreakupDao.getPricebreakup(productCode, ussid);
 
 		final LinkedHashMap<String, PriceData> PriceMap = new LinkedHashMap<String, PriceData>();
 
