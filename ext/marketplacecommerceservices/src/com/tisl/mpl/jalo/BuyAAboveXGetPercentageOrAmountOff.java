@@ -121,7 +121,7 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 				final Map<String, AbstractOrderEntry> validProductUssidMap = getValidProductList(cart, ctx);
 				if (isEnabled().booleanValue())
 				{
-					final Set<String> validSetAfterStockCheck = getDefaultPromotionsManager().getValidMapAfterStockLevelRestriction(
+					final Set<String> validSetAfterStockCheck = getDefaultPromotionsManager().getStockLevelRestriction(
 							validProductUssidMap, getCode(), restrictionList);
 					if (null != validProductUssidMap && !validProductUssidMap.isEmpty())
 					{

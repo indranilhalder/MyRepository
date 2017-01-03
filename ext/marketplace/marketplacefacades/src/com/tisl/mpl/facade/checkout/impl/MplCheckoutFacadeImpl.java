@@ -34,8 +34,6 @@ import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
-import de.hybris.platform.promotions.model.AbstractPromotionModel;
-import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
@@ -56,7 +54,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -96,10 +93,6 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCheckoutService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
-import com.tisl.mpl.model.EtailExcludeSellerSpecificRestrictionModel;
-import com.tisl.mpl.model.EtailSellerSpecificRestrictionModel;
-import com.tisl.mpl.model.LimitedStockPromotionModel;
-import com.tisl.mpl.model.PaymentModeSpecificPromotionRestrictionModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.promotion.service.SellerBasedPromotionService;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
@@ -872,7 +865,6 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	public boolean isPromotionValid(final AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions //Parameter changed to abstractOrderModel for TPR-629
 	{
 		boolean result = true;
-		boolean isStockPromo = true;
 		if (abstractOrderModel != null)
 		{
 
@@ -905,32 +897,21 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 						}
 					}
 					//TPR-965 starts
-					if (result && promo.getPromotion() instanceof LimitedStockPromotionModel)
-					{
-						final boolean payRestrictionsPresent = checkIfPaymentRestrictions(promo.getPromotion());
-						int numRestrictions = 0;
-						if (payRestrictionsPresent)
-						{
-							numRestrictions = promo.getPromotion().getRestrictions().size();
-						}
-						if (payRestrictionsPresent && numRestrictions == 1)
-						{
-							//do nothing
-						}
-						else
-						{
-							isStockPromo = checkIsStockPromoValid(promo.getPromotion(), abstractOrderModel);
-							if (isStockPromo && result)
-							{
-								result = true;
-							}
-							else if (!isStockPromo && result)
-							{
-								result = false;
-							}
-						}
-						//	result = checkIsStockPromoValid(promo.getPromotion(), abstractOrderModel, promo.getConsumedEntries());
-					}
+					//					if (result && promo.getPromotion() instanceof LimitedStockPromotionModel)
+					//					{
+					//						final boolean payRestrictionsPresent = checkIfPaymentRestrictions(promo.getPromotion());
+					//						int numRestrictions = 0;
+					//						if (payRestrictionsPresent)
+					//						{
+					//							numRestrictions = promo.getPromotion().getRestrictions().size();
+					//						}
+					//						if (payRestrictionsPresent && numRestrictions == 1)
+					//						{
+					//							//do nothing
+					//						}
+					//
+					//						//	result = checkIsStockPromoValid(promo.getPromotion(), abstractOrderModel, promo.getConsumedEntries());
+					//					}
 					//TPR-965 ends
 				}
 			}
@@ -945,24 +926,24 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	}
 
 
-	/**
-	 * @param promotion
-	 * @return
-	 */
-	private boolean checkIfPaymentRestrictions(final AbstractPromotionModel promotion)
-	{
-		boolean isPresent = false;
-		for (final AbstractPromotionRestrictionModel restriction : promotion.getRestrictions())
-		{
-			if (restriction instanceof PaymentModeSpecificPromotionRestrictionModel)
-			{
-				isPresent = true;
-				break;
-			}
-
-		}
-		return isPresent;
-	}
+	//	/**
+	//	 * @param promotion
+	//	 * @return
+	//	 */
+	//	private boolean checkIfPaymentRestrictions(final AbstractPromotionModel promotion)
+	//	{
+	//		boolean isPresent = false;
+	//		for (final AbstractPromotionRestrictionModel restriction : promotion.getRestrictions())
+	//		{
+	//			if (restriction instanceof PaymentModeSpecificPromotionRestrictionModel)
+	//			{
+	//				isPresent = true;
+	//				break;
+	//			}
+	//
+	//		}
+	//		return isPresent;
+	//	}
 
 
 
@@ -1831,126 +1812,6 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		this.sellerBasedPromotionService = sellerBasedPromotionService;
 	}
 
-
-	//TPR-965//checking promotion is valid or not for payment page
-	/**
-	 *
-	 * @param promoModel
-	 * @param cartModel
-	 * @param collection
-	 * @return isStockPromoValid
-	 */
-	public boolean checkIsStockPromoValid(final AbstractPromotionModel promoModel, final AbstractOrderModel cartModel)
-	{
-		boolean isStockPromoValid = true;
-		final LimitedStockPromotionModel stockPromo = (LimitedStockPromotionModel) promoModel;
-		final int stockCount = stockPromo.getMaxStockCount().intValue();
-		Map<String, Integer> stockCountMap = new HashMap<String, Integer>();
-		final StringBuilder ussidIds = new StringBuilder();
-		final StringBuilder productCodes = new StringBuilder();
-		boolean isSellerRestricPresent = false;
-		final Collection<AbstractPromotionRestrictionModel> restrictionList = promoModel.getRestrictions();
-		if (cartModel != null)
-		{
-			for (final AbstractOrderEntryModel entry : cartModel.getEntries())
-			{
-				productCodes.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + entry.getProduct().getCode()
-						+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
-				productCodes.append(",");
-				ussidIds.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + entry.getSelectedUSSID()
-						+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
-				ussidIds.append(",");
-			}
-		}
-		if (CollectionUtils.isNotEmpty(restrictionList))
-		{
-
-			for (final AbstractPromotionRestrictionModel restriction : restrictionList)
-			{
-				if (restriction instanceof EtailSellerSpecificRestrictionModel)
-				{
-					isSellerRestricPresent = true;
-					stockCountMap = stockPromoCheckService.getCumulativeStockMap(
-							ussidIds.toString().substring(0, ussidIds.lastIndexOf(",")), stockPromo.getCode(), true);
-				}
-				if (restriction instanceof EtailExcludeSellerSpecificRestrictionModel)
-				{
-					isSellerRestricPresent = true;
-					stockCountMap = stockPromoCheckService.getCumulativeStockMap(
-							ussidIds.toString().substring(0, ussidIds.lastIndexOf(",")), stockPromo.getCode(), true);
-				}
-			}
-			if (!isSellerRestricPresent && CollectionUtils.isNotEmpty(restrictionList))
-			{
-				stockCountMap = stockPromoCheckService.getCumulativeStockMap(
-						productCodes.toString().substring(0, productCodes.lastIndexOf(",")), stockPromo.getCode(), false);
-			}
-
-		}
-		else
-		{
-			stockCountMap = stockPromoCheckService.getCumulativeStockMap(
-					productCodes.toString().substring(0, productCodes.lastIndexOf(",")), stockPromo.getCode(), false);
-		}
-
-		for (final AbstractOrderEntryModel entry : cartModel.getEntries())
-		{
-			final String productCode = entry.getProduct().getCode();
-			final String selectedUssid = entry.getSelectedUSSID();
-			int existingStockCount = 0;
-			if (isSellerRestricPresent && null != stockCountMap.get(selectedUssid))
-			{
-				existingStockCount = stockCountMap.get(selectedUssid).intValue();
-			}
-			else if (!isSellerRestricPresent && null != stockCountMap.get(productCode))
-			{
-				existingStockCount = stockCountMap.get(productCode).intValue();
-			}
-			isStockPromoValid = isStockPromoApplicable(existingStockCount, stockCount, entry.getQuantity().intValue(),
-					entry.getQualifyingCount());
-			if (isStockPromoValid == false)
-			{
-				break;
-			}
-		}
-
-
-		return isStockPromoValid;
-
-
-	}
-
-	/**
-	 * TPR-965
-	 *
-	 * @param existingStockCount
-	 * @param stockCount
-	 * @param quantity
-	 * @param qualifyingCount
-	 */
-	private boolean isStockPromoApplicable(final int existingStockCount, final int stockCount, final int quantity,
-			final Integer qualifyingCount)
-	{
-		final int qc = (qualifyingCount == null) ? 0 : qualifyingCount.intValue();
-		boolean isStockPromoValid = true;
-		if (stockCount > existingStockCount)
-		{
-			if (existingStockCount != 0 && qc > stockCount - existingStockCount)
-			{
-				isStockPromoValid = false;
-			}
-			if (existingStockCount != 0 && qc < stockCount - existingStockCount && qc < quantity)
-			{
-				isStockPromoValid = false;
-			}
-			else if (existingStockCount == 0)
-			{
-				isStockPromoValid = true;
-			}
-		}
-		return isStockPromoValid;
-
-	}
 
 
 

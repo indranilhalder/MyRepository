@@ -262,7 +262,7 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 								for (final Map.Entry<String, Product> entry : giftProductDetails.entrySet())
 								{
 									final int giftCount = getDefaultPromotionsManager().getFreeGiftCount(entry.getKey(),
-											eligibleProductMap, eligibleQuantity.intValue());
+											eligibleProductMap, eligibleQuantity.intValue(), validProductList);
 									final Map<String, List<String>> productAssociatedItemsMap = getDefaultPromotionsManager()
 											.getAssociatedItemsForAorBOGOorFreebiePromotions(validProductUssidMap, entry.getKey());
 									arg0.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, productAssociatedItemsMap);

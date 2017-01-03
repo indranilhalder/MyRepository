@@ -35,7 +35,6 @@ import com.tisl.mpl.model.BuyAandBGetPrecentageDiscountCashbackModel;
 import com.tisl.mpl.model.BuyAandBPrecentageDiscountModel;
 import com.tisl.mpl.model.CartOrderThresholdDiscountPromotionModel;
 import com.tisl.mpl.model.CustomProductBOGOFPromotionModel;
-import com.tisl.mpl.model.LimitedStockPromotionModel;
 
 
 /**
@@ -86,10 +85,7 @@ public class DiscountUtility
 			promoData = getBuyAAboveXData(productPromotion, abstractOrderModel);
 		}
 		//TPR-970 starts
-		else if (productPromotion instanceof LimitedStockPromotionModel)
-		{
-			promoData = getLimitedStockDiscountData(productPromotion, abstractOrderModel);
-		}
+
 		//TPR-970 ends
 		final long endTime = System.currentTimeMillis();
 		LOG.debug("Exiting service populateData====== " + (endTime - startTime));
@@ -599,54 +595,6 @@ public class DiscountUtility
 		return promoData;
 	}
 
-	/**
-	 * //TPR-970 starts
-	 *
-	 * @param productPromotion
-	 * @param abstractOrderModel
-	 * @return promoData
-	 */
-
-	private MplPromotionData getLimitedStockDiscountData(final ProductPromotionModel productPromotion,
-			final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
-	{
-		final MplPromotionData promoData = new MplPromotionData();
-
-		final LimitedStockPromotionModel stockPromoModel = (LimitedStockPromotionModel) productPromotion;
-		if (null != stockPromoModel)
-		{
-			promoData.setPromoTypeIdentifier(MarketplacecommerceservicesConstants.PRODUCT_PROMO);
-			promoData.setIsPercentage(stockPromoModel.getPercentageOrAmount().toString());
-			final PriceData discountPrice = createPrice(abstractOrderModel, calculateDiscount(abstractOrderModel));
-			promoData.setDiscountPrice(discountPrice);
-
-			if (null != stockPromoModel.getPercentageDiscount())
-			{
-				promoData.setPercentagePromotion(stockPromoModel.getPercentageDiscount().toString());
-			}
-
-			if (null != stockPromoModel.getMessageFired())
-			{
-				final PotentialPromoData potentialPromo = new PotentialPromoData();
-				potentialPromo.setPromoMessage(stockPromoModel.getMessageFired());
-				if (StringUtils.isNotEmpty(potentialPromo.getPromoMessage()))
-				{
-					promoData.setPotentialPromotion(potentialPromo);
-				}
-			}
-
-			if (null != stockPromoModel.getMessageCouldHaveFired())
-			{
-				final FiredPromoData firedPromo = new FiredPromoData();
-				firedPromo.setPromoMessage(stockPromoModel.getMessageFired());
-				if (StringUtils.isNotEmpty(firedPromo.getPromoMessage()))
-				{
-					promoData.setFiredPromotion(firedPromo);
-				}
-			}
-		}
-		return promoData;
-	}
 
 	/**
 	 * @Description : To Calculate Discount value

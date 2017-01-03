@@ -161,8 +161,8 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 						{
 							//Gift Products Could be multiple
 							final List<Product> productList = (List<Product>) this.getGiftProducts(ctx);
-							final int giftProductCount = realQuantity / qualifyingCount;
-							ctx.setAttribute(MarketplacecommerceservicesConstants.FREEGIFT_QUANTITY, String.valueOf(giftProductCount)); // Setting Free gift details in Session Context
+							//final int giftProductCount = realQuantity / qualifyingCount;
+							//ctx.setAttribute(MarketplacecommerceservicesConstants.FREEGIFT_QUANTITY, String.valueOf(giftProductCount)); // Setting Free gift details in Session Context
 							ctx.setAttribute(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, String.valueOf(this.getCode()));
 							//promoContext.startLoggingConsumed(this);
 
@@ -188,7 +188,7 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 									for (final Map.Entry<String, Product> entry : giftProductDetails.entrySet())
 									{
 										giftCount = getDefaultPromotionsManager().getFreeGiftCount(entry.getKey(), eligibleProductMap,
-												qualifyingCount);
+												qualifyingCount, validProductList);
 									}
 									if (giftCount > 0)
 									{
