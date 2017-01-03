@@ -1126,24 +1126,6 @@ ReturnRequestCreateWidgetRenderer {
 			public void onEvent(final Event event) throws InterruptedException,
 			ParseException, InvalidKeyException,
 			NoSuchAlgorithmException {
-				AddressModel deliveryAddress = subOrder.getDeliveryAddress();
-				List<AddressModel> addrssModel = (List<AddressModel>) subOrder.getUser().getAddresses();
-			       TypedObject currentAddressObject = getCockpitTypeService().wrapItem(deliveryAddress);
-			       Listitem item = new Listitem(" ");
-					item.setParent(deliveryAddressList);
-				for (AddressModel add : addrssModel) {
-					try {
-						TypedObject address = cockpitTypeService.wrapItem(add);
-						String text = TypeTools.getValueAsString(getLabelService(),
-								address);
-						item = new Listitem(text, address);
-						item.setParent(deliveryAddressList);
-						address.equals(currentAddressObject);
-						item.setSelected(address.getObject().equals(currentAddressObject.getObject()));
-					} catch (Exception e1) {
-						e1.getStackTrace();
-					}
-				}
 				createselectDeliveryAddressCreateEventListener(widget,deliveryAddressList);
 			}
 		});
