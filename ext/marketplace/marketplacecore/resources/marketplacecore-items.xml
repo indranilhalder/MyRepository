@@ -107,8 +107,8 @@
 
 		<collectiontype elementtype="java.lang.String" code="mplImageUrl"
 			autocreate="true" generate="true" type="list" />
-		
-		<!-- Luxury SignatureCollection-->	
+
+		<!-- Luxury SignatureCollection -->
 		<collectiontype code="signColItemsCollection"
 			elementtype="SignColItemComponent" autocreate="true" generate="true"
 			type="list" />
@@ -118,16 +118,16 @@
 
 
 	<enumtypes>
-	
-		<!-- 	TPR-628-Make changes to Banners rendering in MObile Viewports -->
-		
+
+		<!-- TPR-628-Make changes to Banners rendering in MObile Viewports -->
+
 		<enumtype generate="true" code="BannerViewType" autocreate="true">
 			<value code="mobileView" />
 			<value code="desktopView" />
 		</enumtype>
-		
-		
-       <enumtype code="sizeEnum" autocreate="true" generate="true"
+
+
+		<enumtype code="sizeEnum" autocreate="true" generate="true"
 			dynamic="false">
 			<value code="thumbnail"></value>
 			<value code="large"></value>
@@ -394,8 +394,8 @@
 			<value code="tship" />
 			<value code="sship" />
 			<!-- us-10: added by i324321 start -->
- 			<value code="both" />
- 			<!-- added by i324321 end -->
+			<value code="both" />
+			<!-- added by i324321 end -->
 		</enumtype>
 
 		<enumtype generate="true" code="SwatchColorEnum" autocreate="true"
@@ -756,91 +756,91 @@
 
 		<!-- Product Feature Enum Ends -->
 
-		<!-- TPR-627 , TPR-622 ENUM added --> 
-		<enumtype code="isSshipCodEligibleEnum" autocreate="true" generate="true"
-			dynamic="true">
+		<!-- TPR-627 , TPR-622 ENUM added -->
+		<enumtype code="isSshipCodEligibleEnum" autocreate="true"
+			generate="true" dynamic="true">
 			<value code="yes" />
 			<value code="no" />
 			<value code="true" />
 			<value code="false" />
 		</enumtype>
 
-		<!-- TPR-1035 ENUM added For BinDB   -->
-		<enumtype code="TypeOfError" autocreate="true"
-			generate="true" dynamic="true">
+		<!-- TPR-1035 ENUM added For BinDB -->
+		<enumtype code="TypeOfError" autocreate="true" generate="true"
+			dynamic="true">
 			<value code="BINNOTFOUND" />
 			<value code="CARDMISMATCH" />
 		</enumtype>
 
-				
 		<!-- For Luxury Products -->
-        <enumtype code="luxIndicatorEnum" autocreate="true" generate="true" dynamic="true">
-            <value code="marketplace" />
+		<enumtype code="luxIndicatorEnum" autocreate="true" generate="true"
+			dynamic="true">
+			<value code="marketplace" />
 			<value code="luxury" />
 		</enumtype>
-		
-		
-<!-- us-10: added by i324321 start -->
- 		<enumtype code="deliveryFulfillModeByP1Enum" autocreate="true" generate="true" 
- 			dynamic="true">
- 			<value code="tship" />
- 			<value code="sship" />
- 		</enumtype>
- 		<enumtype code="returnFulfillModeEnum"       autocreate="true" generate="true" 
- 			dynamic="true">
- 			<value code="tship" />
- 			<value code="sship" />
- 			<value code="both" />
- 		</enumtype>
- 		<enumtype code="returnFulfillModeByP1Enum"   autocreate="true" generate="true" 
- 			dynamic="true">
- 			<value code="tship" />
- 			<value code="sship" />
- 		</enumtype>
- 		<enumtype code="giftWrappableEnum"           autocreate="true" generate="true" 
- 			dynamic="true">
- 			<value code="yes" />
- 			<value code="no" />
- 		</enumtype>
- 		<enumtype code="returnAtStoreEligibleEnum"   autocreate="true" generate="true" 
- 			dynamic="true">
- 			<value code="yes" />
- 			<value code="no" />
- 		</enumtype>
- 		<enumtype code="isFragileEnum"               autocreate="true" generate="true" 
- 			dynamic="true">
- 			<value code="yes" />
- 			<value code="no" />
- 		</enumtype>
- 		<enumtype code="isPreciousEnum"              autocreate="true" generate="true" 
- 			dynamic="true">
- 			<value code="yes" />
- 			<value code="no" />
- 		</enumtype>
- 		<enumtype code="mediationRequiredEnum"       autocreate="true" generate="true" 
- 			dynamic="true">
- 			<value code="yes" />
- 			<value code="no" />
- 		</enumtype>
- 		<enumtype code="scheduledDeliveryEnum"       autocreate="true" generate="true" 
- 			dynamic="true">
- 			<value code="yes" />
- 			<value code="no" />
- 		</enumtype>
- 		<!-- added by i324321 end -->
- 		
- 		
- 		<!-- TPR-1285 ENUM added  --> 
- 		<enumtype code="siteMapUpdateModeEnum" autocreate="true" generate="true"
- 			dynamic="true">
- 			<value code="PRODUCT" />
- 			<value code="CUSTOM" />
- 			<value code="ALL" />
- 		</enumtype>
-	</enumtypes>
-		<!-- Product Feature Enum Ends -->
 
-	
+
+		<!-- us-10: added by i324321 start -->
+		<enumtype code="deliveryFulfillModeByP1Enum" autocreate="true"
+			generate="true" dynamic="true">
+			<value code="tship" />
+			<value code="sship" />
+		</enumtype>
+		<enumtype code="returnFulfillModeEnum" autocreate="true"
+			generate="true" dynamic="true">
+			<value code="tship" />
+			<value code="sship" />
+			<value code="both" />
+		</enumtype>
+		<enumtype code="returnFulfillModeByP1Enum" autocreate="true"
+			generate="true" dynamic="true">
+			<value code="tship" />
+			<value code="sship" />
+		</enumtype>
+		<enumtype code="giftWrappableEnum" autocreate="true"
+			generate="true" dynamic="true">
+			<value code="yes" />
+			<value code="no" />
+		</enumtype>
+		<enumtype code="returnAtStoreEligibleEnum" autocreate="true"
+			generate="true" dynamic="true">
+			<value code="yes" />
+			<value code="no" />
+		</enumtype>
+		<enumtype code="isFragileEnum" autocreate="true" generate="true"
+			dynamic="true">
+			<value code="yes" />
+			<value code="no" />
+		</enumtype>
+		<enumtype code="isPreciousEnum" autocreate="true" generate="true"
+			dynamic="true">
+			<value code="yes" />
+			<value code="no" />
+		</enumtype>
+		<enumtype code="mediationRequiredEnum" autocreate="true"
+			generate="true" dynamic="true">
+			<value code="yes" />
+			<value code="no" />
+		</enumtype>
+		<enumtype code="scheduledDeliveryEnum" autocreate="true"
+			generate="true" dynamic="true">
+			<value code="yes" />
+			<value code="no" />
+		</enumtype>
+		<!-- added by i324321 end -->
+
+
+		<!-- TPR-1285 ENUM added -->
+		<enumtype code="siteMapUpdateModeEnum" autocreate="true"
+			generate="true" dynamic="true">
+			<value code="PRODUCT" />
+			<value code="CUSTOM" />
+			<value code="ALL" />
+		</enumtype>
+	</enumtypes>
+	<!-- Product Feature Enum Ends -->
+
+
 
 
 	<relations>
@@ -883,17 +883,17 @@
 			<targetElement type="SeoContent" cardinality="many"
 				qualifier="seoContents"></targetElement>
 		</relation>
-		
+
 		<!-- for category -->
-		
-		
-			<relation localized="false" code="SeoContentCategoryRelation">
+
+
+		<relation localized="false" code="SeoContentCategoryRelation">
 			<sourceElement type="Category" cardinality="one"
-			qualifier="categorySource"></sourceElement>
+				qualifier="categorySource"></sourceElement>
 			<targetElement type="SeoContent" cardinality="many"
-			qualifier="seoContents"></targetElement>
-		    </relation>
-		
+				qualifier="seoContents"></targetElement>
+		</relation>
+
 		<relation localized="false" code="BrandRelation">
 			<sourceElement type="Product" cardinality="one"
 				qualifier="productSource"></sourceElement>
@@ -1150,70 +1150,83 @@
 			<targetElement type="Product" cardinality="many"
 				qualifier="collectionProducts"></targetElement>
 		</relation>
-		
 
-		<!-- Added for offer Engine  TPR-589-->
-		<!-- Relationship between Offer && ProductOfferDetail-->
-		<relation code="OfferProductDetailRelation"
+
+		<!-- Added for offer Engine TPR-589 -->
+		<!-- Relationship between Offer && ProductOfferDetail -->
+		<relation code="OfferProductDetailRelation" localized="false"
+			autocreate="true">
+			<sourceElement qualifier="offer" type="OfferDetail"
+				cardinality="one">
+			</sourceElement>
+			<targetElement qualifier="productsWithOffer" type="ProductOfferDetail"
+				cardinality="many">
+			</targetElement>
+		</relation>
+
+		<relation code="CategoryCrosssellBannerRelation" generate="true"
 			localized="false" autocreate="true">
-			<sourceElement qualifier="offer" type="OfferDetail" cardinality="one">
+			<sourceElement qualifier="associatedCategory" type="Category"
+				cardinality="one">
+				<modifiers read="true" write="true" search="true"
+					optional="true" />
 			</sourceElement>
-			<targetElement qualifier="productsWithOffer" type="ProductOfferDetail" cardinality="many">
+			<targetElement qualifier="crosssellBanners" type="SimpleBannerComponent"
+				cardinality="many" collectiontype="list">
+				<modifiers read="true" write="true" search="true"
+					optional="true" />
 			</targetElement>
 		</relation>
-		
-		<relation code="CategoryCrosssellBannerRelation" generate="true" localized="false" autocreate="true">
-			<sourceElement qualifier="associatedCategory" type="Category" cardinality="one">
-				<modifiers read="true" write="true" search="true" optional="true" />
+		<relation code="CategoryDynamicBannerRelation" generate="true"
+			localized="false" autocreate="true">
+			<sourceElement qualifier="bannerForCategory" type="Category"
+				cardinality="one">
+				<modifiers read="true" write="true" search="true"
+					optional="true" />
 			</sourceElement>
-			<targetElement qualifier="crosssellBanners" type="SimpleBannerComponent" cardinality="many" collectiontype="list">
-				<modifiers read="true" write="true" search="true" optional="true" />
+			<targetElement qualifier="dynamicBanners" type="SimpleBannerComponent"
+				cardinality="many" collectiontype="list">
+				<modifiers read="true" write="true" search="true"
+					optional="true" />
 			</targetElement>
 		</relation>
-		<relation code="CategoryDynamicBannerRelation" generate="true" localized="false" autocreate="true">
-			<sourceElement qualifier="bannerForCategory" type="Category" cardinality="one">
-				<modifiers read="true" write="true" search="true" optional="true" />
-			</sourceElement>
-			<targetElement qualifier="dynamicBanners" type="SimpleBannerComponent" cardinality="many" collectiontype="list">
-				<modifiers read="true" write="true" search="true" optional="true" />
-			</targetElement>
-		</relation>
-	<!-- relation of category to cross-sell banners -->
-		
+		<!-- relation of category to cross-sell banners -->
+
 		<!-- End -->
-		
+
 		<!-- update the message for Freebie product TPR-1754 -->
-		
-		<relation code="FreebieProductDetailRelation"
-			localized="false" autocreate="true">
-			<sourceElement qualifier="offer" type="FreebieDetail" cardinality="one">
+
+		<relation code="FreebieProductDetailRelation" localized="false"
+			autocreate="true">
+			<sourceElement qualifier="offer" type="FreebieDetail"
+				cardinality="one">
 			</sourceElement>
-			<targetElement qualifier="productsWithFreebieoffer" type="ProductFreebieDetail" cardinality="many">
+			<targetElement qualifier="productsWithFreebieoffer"
+				type="ProductFreebieDetail" cardinality="many">
 			</targetElement>
 		</relation>
-		
+
 	</relations>
 
-		
+
 	<itemtypes>
-	<!-- TPR-628 : Make changes to Banners rendering in MObile Viewports		 -->
-	
-			<itemtype code="BannerComponent" autocreate="false"
-				generate="false"
-				jaloclass="com.tisl.mpl.jalo.cms.components.BannerComponent">
-				<description>This component is made to show random banner</description>
-				<attributes>
-					<attribute qualifier="bannerView" type="BannerViewType"
-						generate="true" autocreate="true">
-						<persistence type="property" />
-						<modifiers optional="true" />
-						<description>It stores list of banners that are to be randomly shown</description>
-							<defaultvalue>
+		<!-- TPR-628 : Make changes to Banners rendering in MObile Viewports -->
+
+		<itemtype code="BannerComponent" autocreate="false" generate="false"
+			jaloclass="com.tisl.mpl.jalo.cms.components.BannerComponent">
+			<description>This component is made to show random banner</description>
+			<attributes>
+				<attribute qualifier="bannerView" type="BannerViewType"
+					generate="true" autocreate="true">
+					<persistence type="property" />
+					<modifiers optional="true" />
+					<description>It stores list of banners that are to be randomly shown</description>
+					<defaultvalue>
 						em().getEnumerationValue("bannerView","desktopView")
 					</defaultvalue>
-					</attribute>
-				</attributes>
-			</itemtype>			
+				</attribute>
+			</attributes>
+		</itemtype>
 
 		<!-- Add your item definitions here -->
 		<!-- Order OrderRefundConfig -->
@@ -1306,8 +1319,8 @@
 				</attributes>
 
 			</itemtype>
-			
-			
+
+
 
 			<itemtype code="ApparelSizeVariantProduct" extends="ApparelStyleVariantProduct"
 				autocreate="true" generate="true"
@@ -1642,14 +1655,14 @@
 						<persistence type="property"></persistence>
 					</attribute>
 				</attributes>
-				
+
 				<!-- new indexes added for performace improvement -->
 				<indexes>
 					<index name="MPLBRAND_IDX_CVER">
 						<key attribute="catalogVersion" />
 					</index>
-				</indexes> 
-				
+				</indexes>
+
 			</itemtype>
 			<itemtype code="SeoContent" autocreate="true" generate="true"
 				jaloclass="com.tisl.mpl.core.jalo.SeoContent">
@@ -1706,12 +1719,12 @@
 							</columntype>
 						</persistence>
 					</attribute>
-							<attribute qualifier='categoryId' type="java.lang.String">
+					<attribute qualifier='categoryId' type="java.lang.String">
 						<description>Seo Content unique Id</description>
 						<modifiers read="true" write="true" optional="true"
 							unique="false" />
 						<persistence type="property">
-									</persistence>
+						</persistence>
 					</attribute>
 					<attribute type="CatalogVersion" qualifier="catalogVersion">
 						<description></description>
@@ -1787,14 +1800,14 @@
 					<attribute qualifier="seoContent" type="SeoContent">
 						<description>Seo Content for category</description>
 						<modifiers read="true" write="true" search="true"
-							optional="true"/>
+							optional="true" />
 						<persistence type="property" />
 					</attribute>
 					<!-- For TPR-1282 -->
 					<attribute qualifier="categoryFooterText" type="java.lang.String">
 						<description>Footer Content for category</description>
 						<modifiers read="true" write="true" search="true"
-							optional="true"/>
+							optional="true" />
 						<persistence type="property">
 							<columntype database="oracle">
 								<value>CLOB</value>
@@ -2112,57 +2125,67 @@
 						<persistence type='property' />
 					</attribute>
 					<!-- added by i324321 start -->
- 					<attribute type="deliveryFulfillModeByP1Enum" qualifier="deliveryFulfillModeByP1">
- 						<description>Rich Attribute:- deliveryModes/FulfilledBy Priority 1</description>
- 						<modifiers read="true" write="true" optional="true" unique="false" />
- 						<persistence type="property"/>
- 					</attribute>
- 					<attribute type="returnFulfillModeEnum" qualifier="returnFulfillMode">
- 						<description>Rich Attribute:- return Modes/ Fulfilled by</description>
- 						<modifiers read="true" write="true" optional="true" unique="false" />
- 						<persistence type="property"/>
- 					</attribute>
- 					<attribute type="returnFulfillModeByP1Enum" qualifier="returnFulfillModeByP1">
- 						<description>Rich Attribute:- return Modes/FulfilledBy Priority 1</description>
- 						<modifiers read="true" write="true" optional="true" unique="false" />
- 						<persistence type="property" />
- 					</attribute>
- 					<attribute type="java.lang.Integer" qualifier="sellerHandlingTime">
- 						<description>Rich Attribute:- Seller Handling Time</description>
- 						<modifiers read="true" write="true" optional="true" unique="false" />
- 						<persistence type="property" />
- 					</attribute>
- 					<attribute type="giftWrappableEnum" qualifier="giftWrappable">
- 						<description>Rich Attribute:- Gift Wrappable</description>
- 						<modifiers read="true" write="true" optional="true" unique="false" />
- 						<persistence type='property' />
- 					</attribute>
- 					<attribute type="returnAtStoreEligibleEnum" qualifier="returnAtStoreEligible">
- 						<description>Rich Attribute:- Return at Store Eligible</description>
- 						<modifiers read="true" write="true" optional="true" unique="false" />
- 						<persistence type='property' />
- 					</attribute>
- 					<attribute type="isFragileEnum" qualifier="isFragile">
- 						<description>Rich Attribute:- Fragile</description>
- 						<modifiers read="true" write="true" optional="true" unique="false" />
- 						<persistence type='property' />
- 					</attribute>
- 					<attribute type="isPreciousEnum" qualifier="isPrecious">
- 						<description>Rich Attribute:- Precious</description>
- 						<modifiers read="true" write="true" optional="true" unique="false" />
- 						<persistence type='property' />
- 					</attribute>
- 					<attribute type="mediationRequiredEnum" qualifier="mediationRequired">
- 						<description>Rich Attribute:- Mediation Required</description>
- 						<modifiers read="true" write="true" optional="true" unique="false" />
- 						<persistence type='property' />
- 					</attribute>
- 					<attribute type="scheduledDeliveryEnum" qualifier="scheduledDelivery">
- 						<description>Rich Attribute:- is scheduled delivery eligible</description>
- 						<modifiers read="true" write="true" optional="true" unique="false" />
- 						<persistence type='property' />
- 					</attribute>			
- 					<!-- added by i324321 end -->	
+					<attribute type="deliveryFulfillModeByP1Enum" qualifier="deliveryFulfillModeByP1">
+						<description>Rich Attribute:- deliveryModes/FulfilledBy Priority 1</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute type="returnFulfillModeEnum" qualifier="returnFulfillMode">
+						<description>Rich Attribute:- return Modes/ Fulfilled by</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute type="returnFulfillModeByP1Enum" qualifier="returnFulfillModeByP1">
+						<description>Rich Attribute:- return Modes/FulfilledBy Priority 1</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute type="java.lang.Integer" qualifier="sellerHandlingTime">
+						<description>Rich Attribute:- Seller Handling Time</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute type="giftWrappableEnum" qualifier="giftWrappable">
+						<description>Rich Attribute:- Gift Wrappable</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="returnAtStoreEligibleEnum" qualifier="returnAtStoreEligible">
+						<description>Rich Attribute:- Return at Store Eligible</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="isFragileEnum" qualifier="isFragile">
+						<description>Rich Attribute:- Fragile</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="isPreciousEnum" qualifier="isPrecious">
+						<description>Rich Attribute:- Precious</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="mediationRequiredEnum" qualifier="mediationRequired">
+						<description>Rich Attribute:- Mediation Required</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="scheduledDeliveryEnum" qualifier="scheduledDelivery">
+						<description>Rich Attribute:- is scheduled delivery eligible</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type='property' />
+					</attribute>
+					<!-- added by i324321 end -->
 					<attribute type="typeOfItem1Enum" qualifier="typeOfItem1">
 						<description>Rich Attribute:- typeOfItem1</description>
 						<modifiers read="true" write="true" optional="true"
@@ -2271,7 +2294,7 @@
 							unique="false" />
 						<persistence type="property"></persistence>
 					</attribute>
-					
+
 					<!-- TPR-627 ,TPR-622 -->
 					<attribute type="isSshipCodEligibleEnum" qualifier="isSshipCodEligible">
 						<description>COD Eligibility check for SSHIP Poducts: isSshipCodEligible</description>
@@ -2550,7 +2573,7 @@
 							optional="true" />
 						<defaultvalue>false</defaultvalue>
 					</attribute>
-					
+
 					<!-- TPR-970 changes -->
 					<attribute qualifier="stateForPincode" type="java.lang.String">
 						<modifiers optional="true" read="true" write="true" />
@@ -2996,7 +3019,7 @@
 						<key attribute="catalogVersion" />
 						<key attribute="approvalStatus" />
 						<key attribute="itemtype" />
-					</index> 
+					</index>
 				</indexes>
 			</itemtype>
 			<itemtype code="Customer" generate="false" autocreate="false">
@@ -3021,8 +3044,8 @@
 					</attribute>
 					<attribute qualifier="mobileNumber" type="java.lang.String">
 						<persistence type="property" />
-						<modifiers read="true" write="true" optional="true" search="true"
-							unique="false" />
+						<modifiers read="true" write="true" optional="true"
+							search="true" unique="false" />
 					</attribute>
 					<attribute qualifier="dateOfAnniversary" autocreate="true"
 						type="java.util.Date" generate="true">
@@ -3600,7 +3623,7 @@
 						<persistence type='property' />
 
 					</attribute>
-					
+
 					<!-- Changes implemented for TPR-1121 -->
 					<attribute type="java.lang.Integer" qualifier="autoplayTimeout"
 						autocreate="true" generate="true">
@@ -3619,27 +3642,29 @@
 					<attribute type="java.lang.Boolean" qualifier="autoPlay"
 						autocreate="true" generate="true">
 						<description>Autoplay for CategoryCarouselComponent</description>
-						<modifiers read="true" write="true" search="true" optional="false" />
-                        <persistence type='property' />
-                        <defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+						<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
 					</attribute>
 				</attributes>
 			</itemtype>
-			<!-- PRoduct Carousel Component TPR-1316-->
+			<!-- PRoduct Carousel Component TPR-1316 -->
 
 			<itemtype code="MplProductCollectionComponent" autocreate="true"
 				generate="true" extends="ProductCarouselComponent"
 				jaloclass="com.tisl.mpl.core.jalo.MplProductCollectionComponent">
 				<description>This component is made to show the Products in a carousel</description>
-				
+
 			</itemtype>
-			
-			<itemtype code="ProductCarouselComponent" autocreate="false" generate="false" extends="SimpleCMSComponent"
-			jaloclass="com.tisl.mpl.jalo.cms.components.ProductCarouselComponent">
-			
-			<attributes>
-			<!-- Changes implemented for TPR-1121 -->
-			<attribute type="java.lang.Integer" qualifier="autoplayTimeoutNewIn"
+
+			<itemtype code="ProductCarouselComponent" autocreate="false"
+				generate="false" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.ProductCarouselComponent">
+
+				<attributes>
+					<!-- Changes implemented for TPR-1121 -->
+					<attribute type="java.lang.Integer" qualifier="autoplayTimeoutNewIn"
 						autocreate="true" generate="true">
 						<description>Auto play time for ProductCarouselComponent</description>
 						<modifiers read="true" write="true" search="true" />
@@ -3653,17 +3678,18 @@
 						<persistence type='property' />
 
 					</attribute>
-			<attribute type="java.lang.Boolean" qualifier="autoPlayNewIn"
+					<attribute type="java.lang.Boolean" qualifier="autoPlayNewIn"
 						autocreate="true" generate="true">
 						<description>Autoplay for ProductCarouselComponent</description>
-						<modifiers read="true" write="true" search="true" optional="false" />
-                        <persistence type='property' />
-                        <defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
-			</attribute>		
-			
-			</attributes>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+						<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
+					</attribute>
+
+				</attributes>
 			</itemtype>
-			
+
 			<!-- Now Trending Carousel Component -->
 			<itemtype code="MplNowTrendingProductCarouselComponent"
 				autocreate="true" generate="true" extends="ProductCarouselComponent"
@@ -3897,7 +3923,7 @@
 						<persistence type="property"></persistence>
 						<modifiers optional="true" />
 					</attribute>
-					<!--  TPR-565  -->
+					<!-- TPR-565 -->
 					<attribute type="java.lang.String" qualifier="customSku">
 						<modifiers read="true" write="true" search="true"
 							optional="false" />
@@ -3924,9 +3950,10 @@
 			</itemtype>
 			<!-- Shop the look -->
 			<!-- Custom SKU TPR-565 -->
-			
-			<itemtype code="CustomSkuComponent" generate="true" autocreate="true"
-				jaloclass="com.tisl.mpl.core.jalo.CustomSkuComponent" extends="SimpleCMSComponent">
+
+			<itemtype code="CustomSkuComponent" generate="true"
+				autocreate="true" jaloclass="com.tisl.mpl.core.jalo.CustomSkuComponent"
+				extends="SimpleCMSComponent">
 				<attributes>
 					<attribute type="java.lang.String" qualifier="labelOrId"
 						autocreate="true" generate="true">
@@ -4004,7 +4031,7 @@
 					</attribute>
 				</attributes>
 			</itemtype>
-			
+
 			<!-- CMS Media Paragraph Component -->
 			<itemtype code="CMSMediaParagraphComponent" generate="true"
 				jaloclass="com.tisl.mpl.jalo.cms.components.CMSMediaParagraphComponent"
@@ -4081,9 +4108,10 @@
 					<attribute type="java.lang.Boolean" qualifier="autoPlay"
 						autocreate="true" generate="true">
 						<description>Autoplay if required</description>
-						<modifiers read="true" write="true" search="true" optional="false" />
-                        <persistence type='property' />
-                        <defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+						<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
 					</attribute>
 				</attributes>
 			</itemtype>
@@ -4351,26 +4379,26 @@
 							unique="true" optional="true" />
 						<description>Video Description</description>
 						<persistence type="property" />
-					</attribute>					               
-					              <!--Attributed added for luxuary page--> 
-					
+					</attribute>
+					<!--Attributed added for luxuary page -->
+
 					<attribute type="java.lang.String" qualifier="previewUrl">
 						<modifiers read="true" write="true" search="true"
 							unique="true" optional="true" />
 						<description>Preview URL of the video</description>
 						<persistence type="property" />
 					</attribute>
-					
+
 					<attribute type="java.lang.String" qualifier="videoSectionHeading">
 						<modifiers read="true" write="true" search="true"
 							unique="true" optional="true" />
 						<description>Section heading of the video to be shown on Luxury Homepage</description>
 						<persistence type="property" />
 					</attribute>
-					
+
 				</attributes>
 			</itemtype>
-			
+
 
 			<!-- New attributes added to SimpleBanner Component -->
 
@@ -4441,7 +4469,7 @@
 						<defaultvalue>em().getEnumerationValue("CMSChannel","Desktop")</defaultvalue>
 						<description>Page Frontend</description>
 					</attribute>
-					
+
 					<!-- TPR-978 -->
 					<attribute qualifier="associatedProducts" type="ProductCollectionType">
 						<persistence type="property" />
@@ -4480,28 +4508,29 @@
 
 					<!-- Changes implemented for TPR-1121 -->
 					<attribute type="java.lang.Integer" qualifier="slideBy"
-                      autocreate="true" generate="true">
- 					<description>SlideBy for AdvancedCategoryCarouselComponent</description>
- 					<modifiers read="true" write="true" search="true" />
- 					<persistence type='property' />
- 				   </attribute>
- 				
- 				   <attribute type="java.lang.Integer" qualifier="autoplayTimeout"
- 					autocreate="true" generate="true">
- 						<description>AutoplayTimeout for AdvancedCategoryCarouselComponent</description>
- 						<modifiers read="true" write="true" search="true" />
- 						<persistence type='property' />
- 				  </attribute>
-			
+						autocreate="true" generate="true">
+						<description>SlideBy for AdvancedCategoryCarouselComponent</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+
+					<attribute type="java.lang.Integer" qualifier="autoplayTimeout"
+						autocreate="true" generate="true">
+						<description>AutoplayTimeout for AdvancedCategoryCarouselComponent</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+
 					<attribute type="java.lang.Boolean" qualifier="autoPlay"
 						autocreate="true" generate="true">
 						<description>Autoplay for AdvancedCategoryCarouselComponent</description>
-						<modifiers read="true" write="true" search="true" optional="false" />
-                        <persistence type='property' />
-                        <defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+						<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
 					</attribute>
 
-				
+
 
 
 				</attributes>
@@ -4519,22 +4548,22 @@
 						<modifiers read="true" write="true" search="true" />
 						<persistence type='property' />
 					</attribute>
-<!-- TPR-562 starts-->
-		          <attribute type="java.lang.String" qualifier="imageTitle"
+					<!-- TPR-562 starts -->
+					<attribute type="java.lang.String" qualifier="imageTitle"
 						autocreate="true" generate="true">
 						<description>This attribute is required to provide name of the image</description>
 						<modifiers read="true" write="true" search="true" />
 						<persistence type='property' />
 					</attribute>
-					
-					 <attribute type="java.lang.String" qualifier="imageURL"
+
+					<attribute type="java.lang.String" qualifier="imageURL"
 						autocreate="true" generate="true">
 						<description>This attribute is required to provide URL of the image</description>
 						<modifiers read="true" write="true" search="true" />
 						<persistence type='property' />
 					</attribute>
 
-<!-- TPR-562 ends -->
+					<!-- TPR-562 ends -->
 					<attribute type="java.lang.String" qualifier="filterByBrandName"
 						autocreate="true" generate="true">
 						<description>This attribute is required to filter the PLP of the category with the brand name</description>
@@ -4551,9 +4580,9 @@
 						<persistence type='property' />
 
 					</attribute>
-					
-					<attribute type="Media" qualifier="mobileImage" autocreate="true"
-						generate="true">
+
+					<attribute type="Media" qualifier="mobileImage"
+						autocreate="true" generate="true">
 						<description>This attribute is render a manually uploaded image for the category</description>
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
@@ -4615,31 +4644,32 @@
 						<modifiers read="true" write="true" search="true" />
 						<persistence type='property' />
 					</attribute>
-					
+
 					<!-- Changes implemented for TPR-1121 -->
- 
-                    <attribute type="java.lang.Integer" qualifier="slideBy"
+
+					<attribute type="java.lang.Integer" qualifier="slideBy"
 						autocreate="true" generate="true">
 						<description>SlideBy for showcasecomponent</description>
 						<modifiers read="true" write="true" search="true" />
 						<persistence type='property' />
 					</attribute>
-					
-					 <attribute type="java.lang.Integer" qualifier="autoplayTimeout"
+
+					<attribute type="java.lang.Integer" qualifier="autoplayTimeout"
 						autocreate="true" generate="true">
 						<description>AutoplayTimeout for showcasecomponent</description>
 						<modifiers read="true" write="true" search="true" />
 						<persistence type='property' />
 					</attribute>
-					
+
 					<attribute type="java.lang.Boolean" qualifier="autoPlay"
 						autocreate="true" generate="true">
 						<description>Autoplay for showcasecomponent</description>
-						<modifiers read="true" write="true" search="true" optional="false" />
-                        <persistence type='property' />
-                        <defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+						<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
 					</attribute>
-				
+
 
 				</attributes>
 			</itemtype>
@@ -4756,12 +4786,11 @@
 				</attributes>
 			</itemtype>
 			<!-- End -->
-			
-			
-<!-- Component created for Luxury Signature Collection Starts -->
+
+
+			<!-- Component created for Luxury Signature Collection Starts -->
 			<itemtype code="SignColComponent" autocreate="true"
-				generate="true" extends="SimpleCMSComponent"
-				jaloclass="com.tisl.mpl.core.jalo.SignColComponent">
+				generate="true" extends="SimpleCMSComponent" jaloclass="com.tisl.mpl.core.jalo.SignColComponent">
 				<description>This component is created for signature collection section</description>
 				<attributes>
 
@@ -4780,16 +4809,12 @@
 						<modifiers read="true" write="true" search="true" />
 						<persistence type='property' />
 					</attribute>
-					
-					<!--
-						<attribute type="signatureCollectionLayout" qualifier="layout"
-							autocreate="true" generate="true">
-							<description>This attribute is for determining the layout structure of the component</description>
-							<defaultvalue>em().getEnumerationValue("showCaseLayout","BrandShowCase")</defaultvalue>
-							<modifiers read="true" write="true" search="true" />
-							<persistence type='property' />
-						</attribute>
-					-->
+
+					<!-- <attribute type="signatureCollectionLayout" qualifier="layout" 
+						autocreate="true" generate="true"> <description>This attribute is for determining 
+						the layout structure of the component</description> <defaultvalue>em().getEnumerationValue("showCaseLayout","BrandShowCase")</defaultvalue> 
+						<modifiers read="true" write="true" search="true" /> <persistence type='property' 
+						/> </attribute> -->
 				</attributes>
 			</itemtype>
 
@@ -4807,7 +4832,7 @@
 						<modifiers read="true" write="true" search="true" />
 						<persistence type='property' />
 					</attribute>
-					
+
 					<attribute type="Product" qualifier="product4"
 						autocreate="true" generate="true">
 						<description>This attribute is for storing 4th product</description>
@@ -4818,7 +4843,7 @@
 				</attributes>
 			</itemtype>
 			<!-- Component created for Luxury Signature Collection Ends -->
-			
+
 			<!-- for offer Image carousel component -->
 			<itemtype code="MplOfferImageCarouselComponent" extends="ImageCarouselComponent"
 				generate="true" autocreate="true"
@@ -4826,40 +4851,40 @@
 				<description>It represents an offer Image Carousel component with extending  attributes from
  				ImageCarouselComponent .</description>
 			</itemtype>
-			
+
 			<itemtype code="CMSSite" autocreate="false" generate="false">
 				<description>Attribute Build Number for maintaing the build version</description>
 				<attributes>
 					<attribute qualifier="buildNumber" type="java.lang.String">
 						<persistence type="property" />
 					</attribute>
-					</attributes>
+				</attributes>
 			</itemtype>
-			
-		<!-- TPR-1285 Changes -->
+
+			<!-- TPR-1285 Changes -->
 			<itemtype code="CMSSite" autocreate="false" generate="false">
-				
+
 				<attributes>
-					
-					<attribute qualifier="siteMaps" type="MediaCollection" autocreate="false">
-						<persistence type="property" >
-						<columntype database="oracle">
-							<value>CLOB</value>
-						</columntype>
-						<columntype>							
-							<value>HYBRIS.LONG_STRING</value>
-						</columntype>
+
+					<attribute qualifier="siteMaps" type="MediaCollection"
+						autocreate="false">
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype>
+								<value>HYBRIS.LONG_STRING</value>
+							</columntype>
 						</persistence>
-						</attribute>
-					</attributes>
+					</attribute>
+				</attributes>
 			</itemtype>
-		<!-- TPR-1285 Changes -->
-			
-			<!--  Luxury Site -->
-			
+			<!-- TPR-1285 Changes -->
+
+			<!-- Luxury Site -->
+
 			<itemtype code="OurJourneyComponent" autocreate="true"
-				generate="true" extends="SimpleCMSComponent"
-				jaloclass="com.tisl.mpl.core.jalo.OurJourneyComponent">
+				generate="true" extends="SimpleCMSComponent" jaloclass="com.tisl.mpl.core.jalo.OurJourneyComponent">
 				<description>This component is created for see our journey section</description>
 				<attributes>
 
@@ -4882,16 +4907,12 @@
 						<persistence type="property" />
 						<description>This attribute represents the list of footer images</description>
 					</attribute>
-					
-					<!--
-						<attribute type="signatureCollectionLayout" qualifier="layout"
-							autocreate="true" generate="true">
-							<description>This attribute is for determining the layout structure of the component</description>
-							<defaultvalue>em().getEnumerationValue("showCaseLayout","BrandShowCase")</defaultvalue>
-							<modifiers read="true" write="true" search="true" />
-							<persistence type='property' />
-						</attribute>
-					-->
+
+					<!-- <attribute type="signatureCollectionLayout" qualifier="layout" 
+						autocreate="true" generate="true"> <description>This attribute is for determining 
+						the layout structure of the component</description> <defaultvalue>em().getEnumerationValue("showCaseLayout","BrandShowCase")</defaultvalue> 
+						<modifiers read="true" write="true" search="true" /> <persistence type='property' 
+						/> </attribute> -->
 				</attributes>
 			</itemtype>
 
@@ -5028,9 +5049,9 @@
 
 
 			</itemtype>
-			
+
 			<!--luxury pdp question -->
-                  <itemtype code="LuxuryPdpQuestionProcess" extends="StoreFrontCustomerProcess"
+			<itemtype code="LuxuryPdpQuestionProcess" extends="StoreFrontCustomerProcess"
 				autocreate="true" generate="true"
 				jaloclass="com.tisl.mpl.core.jalo.LuxuryPdpQuestionProcess">
 				<description>Represents process that is used for "Question about this item in luxury PDP page" in the contact us page</description>
@@ -5043,7 +5064,7 @@
 						<persistence type="property" />
 						<description>product code given by the customer</description>
 					</attribute>
-		
+
 					<attribute qualifier="attachedFileName" type="java.lang.String">
 						<persistence type="property" />
 						<description>Email attachment name</description>
@@ -5152,9 +5173,9 @@
 				</attributes>
 				<indexes>
 					<index name="IDEX_PROCESSES_AST">
-							<key attribute="awbNumber" />
-							<key attribute="shipmentStatus" />
-							<key attribute="itemtype" />	
+						<key attribute="awbNumber" />
+						<key attribute="shipmentStatus" />
+						<key attribute="itemtype" />
 					</index>
 				</indexes>
 			</itemtype>
@@ -6035,7 +6056,7 @@
 						<key attribute="sellerStartDate" />
 						<key attribute="price" />
 						<key attribute="itemtype" />
-					</index>  
+					</index>
 				</indexes>
 			</itemtype>
 
@@ -6071,10 +6092,10 @@
 				</attributes>
 			</itemtype>
 			<!-- New BuyBoxCommerce Table For Procedure -->
-			<itemtype code="BuyBoxProcTable" extends="GenericItem" generate="true"
-				autocreate="true" jaloclass="com.tisl.mpl.core.jalo.BuyBoxProcTable">
+			<itemtype code="BuyBoxProcTable" extends="GenericItem"
+				generate="true" autocreate="true" jaloclass="com.tisl.mpl.core.jalo.BuyBoxProcTable">
 				<deployment table="MplBuyBoxProcTable" typecode="16000" />
-				
+
 				<attributes>
 					<attribute qualifier="product" type="java.lang.String">
 						<description>Product</description>
@@ -6141,7 +6162,7 @@
 						<description>for seller end date</description>
 						<persistence type="property" />
 					</attribute>
-											
+
 				</attributes>
 				<indexes>
 					<index name="BuyBoxCommerce_IDX">
@@ -6149,7 +6170,7 @@
 					</index>
 				</indexes>
 			</itemtype>
-		
+
 			<itemtype code="ContactUsTabComponent" generate="true"
 				autocreate="true" extends="SimpleCMSComponent"
 				jaloclass="com.tisl.mpl.jalo.cms.components.ContactUsTabComponent">
@@ -6352,32 +6373,31 @@
 					<attribute qualifier="isSentToFico" autocreate="true"
 						type="java.lang.Boolean">
 						<description>Sent to FICO attribute</description>
-						<defaultvalue>Boolean.FALSE</defaultvalue>						
+						<defaultvalue>Boolean.FALSE</defaultvalue>
 						<modifiers read="true" write="true" removable="true"
 							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
 					</attribute>
-					<!-- TPR-774 -->		
-					<attribute qualifier="mrp" autocreate="true"		
-						type="java.lang.Double">		
-						<description>Product Mrp</description>		
-						<modifiers read="true" write="true" removable="true"		
-							optional="true" initial="true" unique="true" />		
-						<persistence type="property" />		
-					</attribute>		
-					<attribute qualifier="totalMrp" autocreate="true"		
-						type="java.lang.Double">		
-						<description>Total Mrp</description>		
-						<modifiers read="true" write="true" removable="true"		
-							optional="true" initial="true" unique="true" />		
-						<persistence type="property" />		
-					</attribute>		
-					<attribute qualifier="productPerDiscDisplay" autocreate="true"		
-						type="java.lang.Double">		
-						<description>Product Percentage Discount Display</description>		
-						<modifiers read="true" write="true" removable="true"		
-							optional="true" initial="true" unique="true" />		
-						<persistence type="property" />		
+					<!-- TPR-774 -->
+					<attribute qualifier="mrp" autocreate="true" type="java.lang.Double">
+						<description>Product Mrp</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="totalMrp" autocreate="true"
+						type="java.lang.Double">
+						<description>Total Mrp</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="productPerDiscDisplay" autocreate="true"
+						type="java.lang.Double">
+						<description>Product Percentage Discount Display</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
 					</attribute>
 					<!-- TPR-774 -->
 				</attributes>
@@ -6387,13 +6407,13 @@
 
 			<itemtype code="SolrIndexedProperty" autocreate="false"
 				generate="true">
-				<attributes>				
-				   <attribute qualifier="boostDouble" type="java.lang.Double">
+				<attributes>
+					<attribute qualifier="boostDouble" type="java.lang.Double">
 						<description>Relevance of the property in search</description>
 						<persistence type="property" />
 						<modifiers initial="true" read="true" write="true"
 							search="true" optional="true" />
-					</attribute>				
+					</attribute>
 					<attribute qualifier="boost" type="java.lang.Integer">
 						<description>Relevance of the property in search</description>
 						<persistence type="property" />
@@ -6413,23 +6433,20 @@
 						<modifiers read="true" write="true" optional="true" />
 						<persistence type="property" />
 					</attribute>
-					<!-- Search POC start-->
-					<attribute qualifier="isRangeFaceted"
-						type="java.lang.Boolean">
+					<!-- Search POC start -->
+					<attribute qualifier="isRangeFaceted" type="java.lang.Boolean">
 						<description>Set this to true for Standardizing the Value</description>
 						<modifiers read="true" write="true" optional="true" />
 						<defaultvalue>false</defaultvalue>
 						<persistence type="property" />
 					</attribute>
-					<attribute qualifier="isNumeric"
-						type="java.lang.Boolean">
+					<attribute qualifier="isNumeric" type="java.lang.Boolean">
 						<description>Set this to false for allowing Non Numeric Faceting</description>
 						<modifiers read="true" write="true" optional="true" />
 						<defaultvalue>true</defaultvalue>
 						<persistence type="property" />
 					</attribute>
-					<attribute qualifier="unitType"
-						type="java.lang.String">
+					<attribute qualifier="unitType" type="java.lang.String">
 						<description>Help in determining the unit system</description>
 						<modifiers read="true" write="true" optional="true" />
 						<persistence type="property" />
@@ -6478,10 +6495,11 @@
 					<!-- End TISPRO-326 -->
 				</attributes>
 			</itemtype>
-			
-			<itemtype code="SolrIndexedProperty" autocreate="false" generate="true">
+
+			<itemtype code="SolrIndexedProperty" autocreate="false"
+				generate="true">
 				<description>Extending the SolrIndexedType type from core with additional attribute for top values.</description>
-				<attributes>					
+				<attributes>
 					<attribute qualifier="facetTopValue" type="java.lang.Integer">
 						<description>Facet Top Value Count</description>
 						<defaultvalue>Integer.valueOf(0)</defaultvalue>
@@ -6490,8 +6508,8 @@
 							search="true" optional="true" />
 					</attribute>
 				</attributes>
-	      </itemtype>
-	      
+			</itemtype>
+
 		</typegroup>
 
 		<typegroup name="AccountManagement">
@@ -6669,7 +6687,7 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
-				
+
 				<!-- new indexes added for performace improvement -->
 				<indexes>
 					<index name="CARTS_IDX_MSS">
@@ -6678,11 +6696,11 @@
 						<key attribute="saveTime" />
 					</index>
 				</indexes>
-				
+
 			</itemtype>
 		</typegroup>
 
-        <!-- Store localtor start here -->
+		<!-- Store localtor start here -->
 		<typegroup name="storeLocatorCmsGrp">
 			<itemtype code="HomeStoreLocatorComponent" extends="SimpleCMSComponent"
 				autocreate="true" generate="true"
@@ -6735,8 +6753,8 @@
 				generate="true" autocreate="true" extends="BrandCollectionComponent"
 				jaloclass="com.tisl.mpl.core.jalo.MicrositeSelectBrandCollectionComponent">
 			</itemtype>
-			<itemtype code="MplBrandSearchBoxComponent"
-				autocreate="true" generate="true" extends="MplEnhancedSearchBoxComponent"
+			<itemtype code="MplBrandSearchBoxComponent" autocreate="true"
+				generate="true" extends="MplEnhancedSearchBoxComponent"
 				jaloclass="com.tisl.mpl.core.jalo.MplBrandSearchBoxComponent">
 				<description>Represents Microsite Enhanced Search Box component that displays a list of categories, brands and seller as a dropdown.</description>
 			</itemtype>
@@ -6833,7 +6851,8 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
-				<indexes><index name="IDX_ORDERHISTORY_LINEID">
+				<indexes>
+					<index name="IDX_ORDERHISTORY_LINEID">
 						<key attribute="lineId" />
 					</index>
 				</indexes>
@@ -7700,16 +7719,16 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- TISPRO-675 -->
- 					<attribute qualifier="emiBank" type="java.lang.String"
- 						autocreate="true" generate="true">
- 						<modifiers read="true" write="true" search="true" />
- 						<persistence type="property" />
- 					</attribute>
- 					<attribute qualifier="emiTenure" type="java.lang.String"
- 						autocreate="true" generate="true">
- 						<modifiers read="true" write="true" search="true" />
- 						<persistence type="property" />
- 					</attribute>
+					<attribute qualifier="emiBank" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="emiTenure" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 			<itemtype code="JuspayCardResponse" autocreate="true"
@@ -8608,7 +8627,7 @@
 							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
 					</attribute>
-					
+
 				</attributes>
 			</itemtype>
 
@@ -8940,7 +8959,7 @@
 			</itemtype>
 
 		</typegroup>
-		
+
 
 		<typegroup name="User">
 			<itemtype code="PrincipalGroup" generate="false" autocreate="false">
@@ -9061,7 +9080,7 @@
 						<key attribute="fulfillmentType" />
 						<key attribute="transportMode" />
 					</index>
-				</indexes> 
+				</indexes>
 			</itemtype>
 
 
@@ -9120,22 +9139,23 @@
 				</attributes>
 			</itemtype>
 		</typegroup>
-				
-		
+
+
 		<typegroup name="SolrFacetKeywordRedirect">
 			<itemtype code="SolrFacetSearchKeywordRedirect" autocreate="false"
 				generate="false">
 				<description>Extending the SolrFacetSearchKeywordRedirect type from core with additional attributes.</description>
-			<attributes>
-				<attribute type="SolrAbstractKeywordRedirect" qualifier="redirectMobile">
-						<modifiers read="true" write="true" optional="true" search="true" />
+				<attributes>
+					<attribute type="SolrAbstractKeywordRedirect" qualifier="redirectMobile">
+						<modifiers read="true" write="true" optional="true"
+							search="true" />
 						<persistence type="property" />
 					</attribute>
 				</attributes>
 			</itemtype>
 		</typegroup>
-		
-		<!-- Search POC start-->
+
+		<!-- Search POC start -->
 		<typegroup name="DataConversion">
 			<itemtype code="Sizesystem" autocreate="true" generate="true">
 				<deployment table="mplDataConversion" typecode="16010" />
@@ -9150,17 +9170,17 @@
 						<persistence type="property" />
 						<modifiers optional="false" />
 					</attribute>
-					<attribute autocreate="true" qualifier="To"
-						type="java.lang.String" generate="true">
+					<attribute autocreate="true" qualifier="To" type="java.lang.String"
+						generate="true">
 						<persistence type="property" />
 						<modifiers optional="false" />
 					</attribute>
-				<attribute autocreate="true" qualifier="conversionUnit" 
+					<attribute autocreate="true" qualifier="conversionUnit"
 						type="java.lang.Double" generate="true">
 						<persistence type="property" />
 						<modifiers optional="true" />
-							</attribute>
-				<attribute autocreate="true" qualifier="propertyName" 
+					</attribute>
+					<attribute autocreate="true" qualifier="propertyName"
 						type="java.lang.String" generate="true">
 						<persistence type="property" />
 						<modifiers optional="true" />
@@ -9168,12 +9188,11 @@
 				</attributes>
 			</itemtype>
 		</typegroup>
-		<!-- Search POC ends-->
-		
+		<!-- Search POC ends -->
 
-		
+
 		<!-- Added for offer Engine, TPR-589 -->
-		
+
 		<typegroup name="OfferEngine">
 			<itemtype code="OfferDetail" autocreate="true" generate="true">
 				<deployment table="OfferDetail" typecode="16998" />
@@ -9183,28 +9202,38 @@
 						<persistence type="property" />
 						<modifiers unique="true" optional="false" />
 					</attribute>
-					<attribute autocreate="true" qualifier="message" type="java.lang.String" generate="true">
-					<persistence type="property" />
-					</attribute>
-					<attribute autocreate="true" qualifier="messageDet" type="java.lang.String" generate="true">
-					<persistence type="property" />
-					</attribute>
-					<attribute autocreate="true" qualifier="column1" type="java.lang.String" generate="true">
+					<attribute autocreate="true" qualifier="message" type="java.lang.String"
+						generate="true">
 						<persistence type="property" />
-						<modifiers read="true" write="true" unique="false" optional="true" />
 					</attribute>
-					<attribute autocreate="true" qualifier="column2" type="java.lang.String" generate="true">
+					<attribute autocreate="true" qualifier="messageDet" type="java.lang.String"
+						generate="true">
 						<persistence type="property" />
-						<modifiers read="true" write="true" unique="false" optional="true" />
 					</attribute>
-					<attribute autocreate="true" qualifier="column3" type="java.lang.String" generate="true">
+					<attribute autocreate="true" qualifier="column1" type="java.lang.String"
+						generate="true">
 						<persistence type="property" />
-						<modifiers read="true" write="true" unique="false" optional="true" />
+						<modifiers read="true" write="true" unique="false"
+							optional="true" />
 					</attribute>
-					<attribute autocreate="true" qualifier="column4" type="java.lang.String" generate="true">
+					<attribute autocreate="true" qualifier="column2" type="java.lang.String"
+						generate="true">
 						<persistence type="property" />
-						<modifiers read="true" write="true" unique="false" optional="true" />
-					</attribute>					
+						<modifiers read="true" write="true" unique="false"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="column3" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" unique="false"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="column4" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" unique="false"
+							optional="true" />
+					</attribute>
 				</attributes>
 				<indexes>
 					<index name="offerId_Index">
@@ -9212,44 +9241,57 @@
 					</index>
 				</indexes>
 			</itemtype>
-			<itemtype code="ProductOfferDetail" autocreate="true" generate="true">
+			<itemtype code="ProductOfferDetail" autocreate="true"
+				generate="true">
 				<deployment table="ProductOfferDetail" typecode="16999" />
 				<attributes>
-					<attribute autocreate="true" qualifier="productId" type="java.lang.String" generate="true">
-					    <description>Product Id for promotion</description>
+					<attribute autocreate="true" qualifier="productId" type="java.lang.String"
+						generate="true">
+						<description>Product Id for promotion</description>
 						<persistence type="property" />
 						<modifiers unique="true" optional="false" />
 					</attribute>
-					<attribute autocreate="true" qualifier="sellerId" type="java.lang.String" generate="true">
-					    <description>Seller Id for promotion</description>
+					<attribute autocreate="true" qualifier="sellerId" type="java.lang.String"
+						generate="true">
+						<description>Seller Id for promotion</description>
 						<persistence type="property" />
 						<modifiers unique="true" optional="false" />
 					</attribute>
-					<attribute qualifier='startDate' type="java.util.Date"  generate="true">
+					<attribute qualifier='startDate' type="java.util.Date"
+						generate="true">
 						<description>Date on which the product promotion would start</description>
-						<modifiers read="true" write="true" optional="false"/>
+						<modifiers read="true" write="true" optional="false" />
 						<persistence type="property" />
 					</attribute>
-					<attribute qualifier='endDate' type="java.util.Date"  generate="true">
+					<attribute qualifier='endDate' type="java.util.Date"
+						generate="true">
 						<description>Date on which the product promotion would start</description>
-						<modifiers read="true" write="true" optional="false"/>
+						<modifiers read="true" write="true" optional="false" />
 						<persistence type="property" />
 					</attribute>
-					<attribute autocreate="true" qualifier="column1" type="java.lang.String" generate="true">
+					<attribute autocreate="true" qualifier="column1" type="java.lang.String"
+						generate="true">
 						<persistence type="property" />
-						<modifiers read="true" write="true" unique="false" optional="true" />
+						<modifiers read="true" write="true" unique="false"
+							optional="true" />
 					</attribute>
-					<attribute autocreate="true" qualifier="column2" type="java.lang.String" generate="true">
+					<attribute autocreate="true" qualifier="column2" type="java.lang.String"
+						generate="true">
 						<persistence type="property" />
-						<modifiers read="true" write="true" unique="false" optional="true" />
+						<modifiers read="true" write="true" unique="false"
+							optional="true" />
 					</attribute>
-					<attribute autocreate="true" qualifier="column3" type="java.lang.String" generate="true">
+					<attribute autocreate="true" qualifier="column3" type="java.lang.String"
+						generate="true">
 						<persistence type="property" />
-						<modifiers read="true" write="true" unique="false" optional="true" />
+						<modifiers read="true" write="true" unique="false"
+							optional="true" />
 					</attribute>
-					<attribute autocreate="true" qualifier="column4" type="java.lang.String" generate="true">
+					<attribute autocreate="true" qualifier="column4" type="java.lang.String"
+						generate="true">
 						<persistence type="property" />
-						<modifiers read="true" write="true" unique="false" optional="true" />
+						<modifiers read="true" write="true" unique="false"
+							optional="true" />
 					</attribute>
 				</attributes>
 				<indexes>
@@ -9261,34 +9303,39 @@
 					</index>
 				</indexes>
 			</itemtype>
-			<!--  Added for testing for deployment streamline -->
-			<itemtype code="UserRecommendation" autocreate="true" generate="true">
+			<!-- Added for testing for deployment streamline -->
+			<itemtype code="UserRecommendation" autocreate="true"
+				generate="true">
 				<deployment table="UserRecommendation" typecode="18012" />
 				<attributes>
-					<attribute autocreate="true" qualifier="UserId" type="java.lang.String" generate="true">
-					    <description>Product Id for promotion</description>
+					<attribute autocreate="true" qualifier="UserId" type="java.lang.String"
+						generate="true">
+						<description>Product Id for promotion</description>
 						<persistence type="property" />
 						<modifiers unique="true" optional="false" />
 					</attribute>
-					<attribute autocreate="true" qualifier="recommendationId" type="java.lang.String" generate="true">
-					    <description>Seller Id for promotion</description>
+					<attribute autocreate="true" qualifier="recommendationId"
+						type="java.lang.String" generate="true">
+						<description>Seller Id for promotion</description>
 						<persistence type="property" />
 						<modifiers unique="true" optional="false" />
 					</attribute>
-					
-					<attribute autocreate="true" qualifier="UserType" type="java.lang.String" generate="true">
+
+					<attribute autocreate="true" qualifier="UserType" type="java.lang.String"
+						generate="true">
 						<persistence type="property" />
-						<modifiers read="true" write="true" unique="false" optional="true" />
+						<modifiers read="true" write="true" unique="false"
+							optional="true" />
 					</attribute>
-					
+
 				</attributes>
-				
+
 			</itemtype>
-			
-			</typegroup>
-			
-			
-			<!-- TPR-1035 : Item Creation for Bin Error  -->
+
+		</typegroup>
+
+
+		<!-- TPR-1035 : Item Creation for Bin Error -->
 		<typegroup name="BinErrorGroup">
 			<itemtype code="BinError" autocreate="true" generate="true"
 				jaloclass="com.tisl.mpl.core.jalo.BinError">
@@ -9303,7 +9350,7 @@
 						generate="true">
 						<persistence type="property" />
 						<modifiers unique="false" optional="false" />
-					</attribute>					
+					</attribute>
 					<attribute autocreate="true" qualifier="paymentMode"
 						type="java.lang.String" generate="true">
 						<persistence type="property" />
@@ -9316,74 +9363,74 @@
 				</attributes>
 			</itemtype>
 		</typegroup>
-	<!-- TPR-1035 : Item Creation for Bin Error ends  -->
+		<!-- TPR-1035 : Item Creation for Bin Error ends -->
 
 		<!-- Added for Luxury -->
 		<typegroup name="Luxury">
 			<itemtype code="Product" autocreate="false" generate="false">
 				<attributes>
-				    <attribute type="luxIndicatorEnum" qualifier="luxIndicator">
+					<attribute type="luxIndicatorEnum" qualifier="luxIndicator">
 						<description>The flag for the luxury Indicator</description>
 						<modifiers read="true" write="true" optional="true"
 							unique="false" />
-						<persistence type='property' />					
-				    </attribute>	
-			        <!-- <attribute qualifier="isLuxuryProduct" type="java.lang.Boolean" autocreate="true" generate="true">
-						<description>It is a flag for Luxury Products.</description>
-						<modifiers optional="true" />
-						<persistence type="property" />
-					</attribute> -->
-			    </attributes>
-			</itemtype>		
-       </typegroup>
-       
- 
+						<persistence type='property' />
+					</attribute>
+					<!-- <attribute qualifier="isLuxuryProduct" type="java.lang.Boolean" 
+						autocreate="true" generate="true"> <description>It is a flag for Luxury Products.</description> 
+						<modifiers optional="true" /> <persistence type="property" /> </attribute> -->
+				</attributes>
+			</itemtype>
+		</typegroup>
+
+
 		<typegroup name="BulkReturnProcessForOrder">
-			<itemtype code="BulkReturnProcess" extends="GenericItem" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.BulkReturnProcess">
+			<itemtype code="BulkReturnProcess" extends="GenericItem"
+				autocreate="true" generate="true"
+				jaloclass="de.hybris.platform.jalo.BulkReturnProcess">
 				<deployment table="MplBulkReturnProcess" typecode="15804" />
 				<attributes>
-					<attribute qualifier="parentOrderNo"  autocreate="true" type="java.lang.String"
-						generate="true">
+					<attribute qualifier="parentOrderNo" autocreate="true"
+						type="java.lang.String" generate="true">
 						<description>Parent Order Number</description>
-						<modifiers optional="false" read="true" write="true"/>
+						<modifiers optional="false" read="true" write="true" />
 						<persistence type="property" />
 					</attribute>
-					<attribute qualifier="transactionId"  autocreate="true" type="java.lang.String"
-						generate="true">
+					<attribute qualifier="transactionId" autocreate="true"
+						type="java.lang.String" generate="true">
 						<description>Transaction Id</description>
-						<modifiers optional="false" read="true" write="true"/>
+						<modifiers optional="false" read="true" write="true" />
 						<persistence type="property" />
 					</attribute>
-					<attribute qualifier="loadStatus"  autocreate="true" type="java.lang.String"
-						generate="true">
+					<attribute qualifier="loadStatus" autocreate="true"
+						type="java.lang.String" generate="true">
 						<description>Load Status</description>
-						<modifiers optional="false" read="true" write="true"/>
+						<modifiers optional="false" read="true" write="true" />
 						<persistence type="property" />
 					</attribute>
-					<attribute qualifier="errorDescription"  autocreate="true" type="java.lang.String"
-						generate="true">
+					<attribute qualifier="errorDescription" autocreate="true"
+						type="java.lang.String" generate="true">
 						<description>Error Description</description>
-						<modifiers optional="true" read="true" write="true"/>
+						<modifiers optional="true" read="true" write="true" />
 						<persistence type="property" />
 					</attribute>
 				</attributes>
 			</itemtype>
-			</typegroup>
-		
-		    <typegroup name="ItemSyncTimestampGroup">
-					<itemtype code="ItemSyncTimestamp" autocreate="false"
-						generate="false">
-						<indexes>
-							<index name="IDX_ITEMSYNCTIMESTAMPS_CPKC">
-								<key attribute="syncJob" />
-								<key attribute="targetVersion" />
-								<key attribute="sourceItem" />
-								<key attribute="itemtype" />
-							</index>
-						</indexes>
-					</itemtype>
-				</typegroup>
-			
+		</typegroup>
+
+		<typegroup name="ItemSyncTimestampGroup">
+			<itemtype code="ItemSyncTimestamp" autocreate="false"
+				generate="false">
+				<indexes>
+					<index name="IDX_ITEMSYNCTIMESTAMPS_CPKC">
+						<key attribute="syncJob" />
+						<key attribute="targetVersion" />
+						<key attribute="sourceItem" />
+						<key attribute="itemtype" />
+					</index>
+				</indexes>
+			</itemtype>
+		</typegroup>
+
 		<!-- TPR-1285 Dynamic Sitemap -->
 		<typegroup name="Seo">
 			<itemtype code="SiteMapMediaCronJob" autocreate="false"
@@ -9397,10 +9444,10 @@
 				</attributes>
 			</itemtype>
 		</typegroup>
-		
-		
+
+
 		<!-- update the message for Freebie product TPR-1754 -->
-		
+
 		<typegroup name="FreebieEngine">
 			<itemtype code="FreebieDetail" autocreate="true" generate="true">
 				<deployment table="FreebieDetail" typecode="17020" />
@@ -9410,10 +9457,12 @@
 						<persistence type="property" />
 						<modifiers unique="true" optional="false" />
 					</attribute>
-					<attribute autocreate="true" qualifier="freebieMsg" type="java.lang.String" generate="true">
-					<persistence type="property" />
-					<modifiers read="true" write="true" unique="false" optional="true" />
-					</attribute>										
+					<attribute autocreate="true" qualifier="freebieMsg" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" unique="false"
+							optional="true" />
+					</attribute>
 				</attributes>
 				<indexes>
 					<index name="freebieId_Index">
@@ -9421,27 +9470,29 @@
 					</index>
 				</indexes>
 			</itemtype>
-			<itemtype code="ProductFreebieDetail" autocreate="true" generate="true">
+			<itemtype code="ProductFreebieDetail" autocreate="true"
+				generate="true">
 				<deployment table="ProductFreebieDetail" typecode="17021" />
 				<attributes>
-					<attribute autocreate="true" qualifier="ussId" type="java.lang.String" generate="true">
-					    <description>UssId for freebie</description>
+					<attribute autocreate="true" qualifier="ussId" type="java.lang.String"
+						generate="true">
+						<description>UssId for freebie</description>
 						<persistence type="property" />
 						<modifiers unique="true" optional="false" />
 					</attribute>
-					<!-- <attribute autocreate="true" qualifier="sellerId" type="java.lang.String" generate="true">
-					    <description>Seller Id for freebie</description>
-						<persistence type="property" />
-						<modifiers unique="true" optional="false" />
-					</attribute> -->
-					<attribute qualifier='startDate' type="java.util.Date"  generate="true">
+					<!-- <attribute autocreate="true" qualifier="sellerId" type="java.lang.String" 
+						generate="true"> <description>Seller Id for freebie</description> <persistence 
+						type="property" /> <modifiers unique="true" optional="false" /> </attribute> -->
+					<attribute qualifier='startDate' type="java.util.Date"
+						generate="true">
 						<description>Date on which the product promotion would start</description>
-						<modifiers read="true" write="true" optional="false"/>
+						<modifiers read="true" write="true" optional="false" />
 						<persistence type="property" />
 					</attribute>
-					<attribute qualifier='endDate' type="java.util.Date"  generate="true">
+					<attribute qualifier='endDate' type="java.util.Date"
+						generate="true">
 						<description>Date on which the product promotion would start</description>
-						<modifiers read="true" write="true" optional="false"/>
+						<modifiers read="true" write="true" optional="false" />
 						<persistence type="property" />
 					</attribute>
 				</attributes>
@@ -9449,45 +9500,68 @@
 					<index name="freebieProductId_Index">
 						<key attribute="ussId" />
 					</index>
-					<!-- <index name="freebieSellerId_Index">
-						<key attribute="sellerId" />
-					</index> -->
+					<!-- <index name="freebieSellerId_Index"> <key attribute="sellerId" 
+						/> </index> -->
 				</indexes>
 			</itemtype>
-			</typegroup>
-				
+		</typegroup>
 
-     
-     	<typegroup name="BulkCancelProcessForOrder">
-			<itemtype code="BulkCancellationProcess" extends="GenericItem" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.BulkCancellationProcess">
+		<typegroup name="BulkCancelProcessForOrder">
+			<itemtype code="BulkCancellationProcess" extends="GenericItem"
+				autocreate="true" generate="true"
+				jaloclass="de.hybris.platform.jalo.BulkCancellationProcess">
 				<deployment table="MplBulkCancellation" typecode="15808" />
 				<attributes>
-					<attribute qualifier="parentOrderNo"  autocreate="true" type="java.lang.String"
-						generate="true">
+					<attribute qualifier="parentOrderNo" autocreate="true"
+						type="java.lang.String" generate="true">
 						<description>Parent Order Number</description>
-						<modifiers optional="false" read="true" write="true"/>
+						<modifiers optional="false" read="true" write="true" />
 						<persistence type="property" />
 					</attribute>
-					<attribute qualifier="transactionId"  autocreate="true" type="java.lang.String"
-						generate="true">
+					<attribute qualifier="transactionId" autocreate="true"
+						type="java.lang.String" generate="true">
 						<description>Transaction Id</description>
-						<modifiers optional="false" read="true" write="true"/>
+						<modifiers optional="false" read="true" write="true" />
 						<persistence type="property" />
 					</attribute>
-					<attribute qualifier="loadStatus"  autocreate="true" type="java.lang.String"
-						generate="true">
+					<attribute qualifier="loadStatus" autocreate="true"
+						type="java.lang.String" generate="true">
 						<description>Load Status</description>
-						<modifiers optional="false" read="true" write="true"/>
+						<modifiers optional="false" read="true" write="true" />
 						<persistence type="property" />
 					</attribute>
-					<attribute qualifier="statusDescription"  autocreate="true" type="java.lang.String"
-						generate="true">
+					<attribute qualifier="statusDescription" autocreate="true"
+						type="java.lang.String" generate="true">
 						<description>Status Description</description>
-						<modifiers optional="true" read="true" write="true"/>
+						<modifiers optional="true" read="true" write="true" />
 						<persistence type="property" />
 					</attribute>
 				</attributes>
 			</itemtype>
+		</typegroup>
+		
+		<!-- A+ Content TPR-978 -->
+		<typegroup name="APlusContentGroup">
+		<itemtype code="APlusContent" generate="true"
+			extends="GenericItem" autocreate="true"
+			jaloclass="com.tisl.mpl.core.jalo.APlusContentGroup">
+			<description>A plus content HMC approach.</description>
+			<attributes>
+				<attribute qualifier="csvFile" type="Media"
+					autocreate="true" generate="true">
+					<modifiers read="true" write="true" search="true" />
+					<description>CSV file</description>
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="csvFileError" type="java.lang.String"
+					autocreate="true" generate="true">
+					<modifiers read="true" write="true" search="true" />
+					<description>CSV file Errors</description>
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
 		</typegroup>
 
 	</itemtypes>
