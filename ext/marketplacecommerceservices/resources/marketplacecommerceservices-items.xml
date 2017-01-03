@@ -385,7 +385,7 @@
 		
 		<!-- TPR-965 Limited stock Promotion started -->
 		
-		<itemtype code="LimitedStockPromotion" extends="ProductPromotion"
+		<!-- <itemtype code="LimitedStockPromotion" extends="ProductPromotion"
 			jaloclass="com.tisl.mpl.jalo.LimitedStockPromotion" autocreate="true"
 			generate="true">
 			<attributes>
@@ -473,7 +473,7 @@
 						initial="false" optional="true" />
 				</attribute>
 			</attributes>
-		</itemtype>		
+		</itemtype>		 -->
 			
 			
 			<!-- TPR-965  Include Promotion Invalidation restriction for Limited Stock  -->
