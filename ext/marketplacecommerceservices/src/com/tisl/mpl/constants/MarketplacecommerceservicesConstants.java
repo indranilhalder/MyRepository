@@ -60,6 +60,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CART_DELISTED_STATUS = "Cart Delisted Status :";
 	public static final String IS_BOGO_APPLIED = "isBOGOapplied";
 	public static final String BOGO_ITEM_COUNT = "bogoFreeItmCount";
+	public static final String FINEJEWELLERY = "FineJewellery";
 
 	//SONAR FIX
 	public static final String CONSIGNMENT_STATUS = " Consignment status :";
