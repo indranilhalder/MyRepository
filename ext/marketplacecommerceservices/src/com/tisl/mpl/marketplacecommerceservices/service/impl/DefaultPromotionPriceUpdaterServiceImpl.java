@@ -48,7 +48,6 @@ import com.tisl.mpl.model.EtailExcludeSellerSpecificRestrictionModel;
 import com.tisl.mpl.model.EtailLimitedStockRestrictionModel;
 import com.tisl.mpl.model.EtailSellerSpecificRestrictionModel;
 import com.tisl.mpl.model.ExcludeManufacturersRestrictionModel;
-import com.tisl.mpl.model.LimitedStockPromotionModel;
 import com.tisl.mpl.model.ManufacturersRestrictionModel;
 import com.tisl.mpl.model.MplConfigurationModel;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -426,11 +425,11 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 					final BuyAPercentageDiscountModel discountPromo = (BuyAPercentageDiscountModel) promoDiscount;
 					priceRowData = new ArrayList<PromotionPriceRowModel>(discountPromo.getDiscountPrices());
 				}
-				if (promoDiscount instanceof LimitedStockPromotionModel)
-				{
-					final LimitedStockPromotionModel discountPromo = (LimitedStockPromotionModel) promoDiscount;
-					priceRowData = new ArrayList<PromotionPriceRowModel>(discountPromo.getDiscountPrices());
-				}
+				//				if (promoDiscount instanceof LimitedStockPromotionModel)
+				//				{
+				//					final LimitedStockPromotionModel discountPromo = (LimitedStockPromotionModel) promoDiscount;
+				//					priceRowData = new ArrayList<PromotionPriceRowModel>(discountPromo.getDiscountPrices());
+				//				}
 				for (final PromotionPriceRowModel priceRow : priceRowData)
 				{
 					if (null != priceRow.getPrice())
