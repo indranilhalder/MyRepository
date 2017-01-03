@@ -37,7 +37,7 @@ $(document).ready(function(){
 	
 	$(".address_states").change(function(){
 		if($(this).attr("readonly") == "readonly"){
-			$(".address_states").val($(this).data("stateValue"))
+			$(".address_states").val($(this).data("stateValue"));
 		}
 	});
 	
@@ -112,6 +112,15 @@ $(".address_postcode").blur(function() {
 });
 
 function loadPincodeData(parm) {
+	/*added by sneha R2.3*/
+	if(parm == "address-form") {
+		$("#address-form .optionsLandmark select").prop("disabled", "disabled").html("<option class='unableto' selected='selected' value=''>Unable to find landmark</option>");
+		$("#address-form .address_landmarkOtherDiv").show();
+		$("#address-form .address_townCity").removeAttr("readonly").val("");
+		$("#address-form .address_states").prop("disabled", false);
+		
+	}
+	/*end of sneha R2.3*/
 	//alert(parm);
 	var Pincode=$(".address_postcode").val();
     $.ajax({
@@ -137,6 +146,9 @@ function loadPincodeData(parm) {
 				$(".addState").show();
 				$('.address_landmarks').html($("<option class=unableto></option>").text("Unable to find landmark").attr("selected","selected").attr("value",""));
 				$(".address_landmarkOther").val("");
+				/*added by sneha R2.3*/
+				$(".address_states").prop("value","");
+				/*end of sneha R2.3*/
 				if(parm == "edit") {
 					$(".address_townCity").prop("readonly", false).val('');
 			    }
@@ -170,6 +182,9 @@ function loadPincodeData(parm) {
         		       $('.address_landmarks').append($("<option></option>").attr("value",value.landmark)
         		         .text(value.landmark));
         		    });
+        		  /*added by sneha R2.3*/
+        		  $('.address_landmarks').attr("onchange","changeFuncLandMark(this.value)");
+        		  /*end of sneha R2.3*/
         		}
         		else {
         			$(".address_landmarkOtherDiv, .address_landmarkOtherDiv label, .address_landmarkOther").show();
