@@ -8,6 +8,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="header"
 	tagdir="/WEB-INF/tags/responsive/common/header"%>
+<%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%> <!-- CODE ADDED FOR JEWELLERY TO DISPLAY PRODUCT DETAILS IN TAB  -->
 <%@ taglib prefix="footer"
 	tagdir="/WEB-INF/tags/responsive/common/footer"%>
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/responsive/common"%>
@@ -47,11 +48,24 @@
 	
 			<a id="skip-to-content"></a>
 		
-			<div class="container">
-			
+			<div class="container">			
 				<common:globalMessages />
 				<div class="body-Content"><jsp:doBody /></div>
-			</div>
+				
+				
+			<!-- CODE ADDED FOR JEWELLERY TO DISPLAY DETAILS IN TAB STARTS HERE -->
+				<c:set var="finejewellery"><spring:theme code='product.finejewellery'/></c:set>
+				<c:choose>		
+				    <c:when test ="${product.rootCategory==finejewellery}"> 
+							<div class="tabs-block">
+								 <product:productPageTabs /> 
+							</div>
+					</c:when> 
+				</c:choose>
+			<!-- CODE ADDED FOR JEWELLERY TO DISPLAY DETAILS IN TAB ENDS HERE -->
+				
+			</div>	
+			
 			<c:choose>
             <c:when test="${empty showOnlySiteLogo }">
 				<footer:footer />
@@ -73,6 +87,12 @@
  		</c:if>
 			</c:otherwise>
 			</c:choose>
+			
+			
+			
+			
+			
+			
 			</div>
 		</main> 
 

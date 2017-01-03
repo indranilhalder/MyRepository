@@ -110,7 +110,10 @@ public class ProductDetailsHelper
 	/*
 	 * Added for travel and Luggage
 	 */
-
+	private static final String CLASSIFICATION_ATTRIBUTES_FINEJEWELLERY_GROUPNAME = "classification.attributes.finejewellery.groupname";
+	/*
+	 * Added for Fine Jewellery
+	 */
 	/**
 	 *
 	 */
@@ -347,6 +350,8 @@ public class ProductDetailsHelper
 								|| configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_WATCHES_GROUPNAME)
 										.contains(classData.getName())
 								|| configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_TRAVELANDLUGGAGE_GROUPNAME)
+										.contains(classData.getName())
+								|| configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_FINEJEWELLERY_GROUPNAME)
 										.contains(classData.getName())))
 				{
 					classicationDataList.add(classData);
@@ -363,12 +368,16 @@ public class ProductDetailsHelper
 					}
 					else
 					{
-						if (!(classData.getName().equalsIgnoreCase(N_A)) && (configurationService.getConfiguration()
-								.getString(CLASSIFICATION_ATTRIBUTES_ELECTRONICS_GROUPNAME).contains(classData.getName())
-								|| configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_WATCHES_GROUPNAME)
+						if (!(classData.getName().equalsIgnoreCase(N_A))
+								&& (configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_ELECTRONICS_GROUPNAME)
 										.contains(classData.getName())
-								|| configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_TRAVELANDLUGGAGE_GROUPNAME)
-										.contains(classData.getName())))
+										|| configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_WATCHES_GROUPNAME)
+												.contains(classData.getName())
+										|| configurationService.getConfiguration()
+												.getString(CLASSIFICATION_ATTRIBUTES_TRAVELANDLUGGAGE_GROUPNAME)
+												.contains(classData.getName()))
+								|| configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_FINEJEWELLERY_GROUPNAME)
+										.contains(classData.getName()))
 						{
 							classicationDataList.add(classData);
 						}
