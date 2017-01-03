@@ -1597,7 +1597,7 @@ public class ProductPageController extends MidPageController
 	 * @throws CMSItemNotFoundException
 	 */
 
-
+	// Jewellery changes Added
 	protected void populateProductDetailForDisplay(final ProductModel productModel, final Model model,
 			final HttpServletRequest request) throws CMSItemNotFoundException
 	{
@@ -1791,6 +1791,8 @@ public class ProductPageController extends MidPageController
 	 * @param productData
 	 * @param model
 	 */
+	// Jewellery changes added 
+
 	private void displayConfigurableAttribute(final ProductData productData, final Model model)
 	{
 		final Map<String, String> mapConfigurableAttribute = new HashMap<String, String>();
