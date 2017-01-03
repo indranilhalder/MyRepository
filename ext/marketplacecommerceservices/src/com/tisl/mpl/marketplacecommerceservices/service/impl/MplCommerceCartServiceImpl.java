@@ -438,9 +438,20 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes()
 									.getCode())
 					{
-						final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
+						 String fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
 								.getDeliveryFulfillModes().getCode();
-						fullfillmentDataMap.put(entry.getEntryNumber().toString(), fulfillmentType.toLowerCase());
+					   //BUG-ID TISRLEE-1561 03-01-2017
+						if (fulfillmentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.FULFILMENT_TYPE_BOTH))
+						{
+							fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
+									.getDeliveryFulfillModeByP1().getCode();
+							fullfillmentDataMap.put(entry.getEntryNumber().toString(), fulfillmentType.toLowerCase());
+						}
+						else
+						{
+							fullfillmentDataMap.put(entry.getEntryNumber().toString(), fulfillmentType.toLowerCase());
+						}
+
 					}
 				}
 			}
