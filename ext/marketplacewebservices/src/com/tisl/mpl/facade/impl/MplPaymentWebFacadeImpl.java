@@ -9,6 +9,7 @@ import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
+import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -22,9 +23,11 @@ import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.store.services.BaseStoreService;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -44,6 +47,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
+import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.juspay.PaymentService;
 import com.tisl.mpl.juspay.request.DeleteCardRequest;
@@ -51,6 +55,7 @@ import com.tisl.mpl.juspay.request.GetOrderStatusRequest;
 import com.tisl.mpl.juspay.response.DeleteCardResponse;
 import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.service.MplCartWebService;
 import com.tisl.mpl.service.MplPaymentWebService;
 import com.tisl.mpl.util.DiscountUtility;
@@ -98,8 +103,14 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 	private Converter<AddressModel, AddressData> customAddressConverter;
 	private Converter<CreditCardPaymentInfoModel, CCPaymentInfoData> creditCardPaymentInfoConverter;
 
-	//	@Resource(name = "sessionService")
-	//	private SessionService sessionService;
+	@Resource(name = "sessionService")
+	private SessionService sessionService;
+
+	@Resource
+	private MplPaymentService mplPaymentService;
+
+	@Resource(name = "notificationFacade")
+	private NotificationFacade notificationFacade;
 
 	/**
 	 * To Check COD Eligibility for Cart Items
@@ -796,11 +807,18 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 		{
 			mplCheckoutFacade.beforeSubmitOrder(order);
 			mplCheckoutFacade.submitOrder(order);
+			//order confirmation email and sms
+			getNotificationFacade().sendOrderConfirmationNotification(order);
+
 			orderData = mplCheckoutFacade.getOrderDetailsForCode(order);
 		}
 		else if (null != order.getPaymentInfo() && CollectionUtils.isNotEmpty(order.getChildOrders()))
 		{
 			orderData = mplCheckoutFacade.getOrderDetailsForCode(order);
+		}
+		else if (null == order.getPaymentInfo() && OrderStatus.PAYMENT_TIMEOUT.equals(order.getStatus()))
+		{
+			LOG.error("Issue with update order...redirecting to payment page only");
 		}
 		if (orderData != null)
 		{
@@ -1015,4 +1033,87 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 		this.creditCardPaymentInfoConverter = creditCardPaymentInfoConverter;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.facades.MplPaymentWebFacade#entryInTPWaltAuditMobile(java.lang.String, java.lang.String,
+	 * java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void entryInTPWaltAuditMobile(final String status, final String mWRefCode, final String channelWeb, final String guid,
+			final String walletOrderId)
+	{
+		// YTODO Auto-generated method stub
+		mplPaymentService.entryInTPWaltAudit(status, mWRefCode, channelWeb, guid, walletOrderId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.facades.MplPaymentWebFacade#saveTPWalletPaymentInfoMobile(de.hybris.platform.core.model.order.
+	 * AbstractOrderModel, java.lang.String)
+	 */
+	@Override
+	public void saveTPWalletPaymentInfoMobile(final AbstractOrderModel cart, final String refernceCode,
+			final Map<String, Double> paymentMode)
+	{
+		// YTODO Auto-generated method stub
+		//getting the current user
+		//final CustomerModel mplCustomer = (CustomerModel) getUserService().getCurrentUser();
+		CustomerModel mplCustomer = null;
+		if (null != cart)
+		{
+			mplCustomer = (CustomerModel) cart.getUser();
+			final List<AbstractOrderEntryModel> entries = cart.getEntries();
+
+			//setting payment transaction for
+			//Commented for Mobile use
+			//	getMplPaymentService().setTPWalletPaymentTransaction(paymentMode, cart, request);
+			//final String refernceCode = request.getParameter("REFNO");
+			mplPaymentService.setTPWalletPaymentTransaction(paymentMode, cart, refernceCode);
+
+			if (null != mplCustomer)
+			{
+				if (StringUtils.isNotEmpty(mplCustomer.getName()) && !mplCustomer.getName().equalsIgnoreCase(" "))
+				{
+					final String custName = mplCustomer.getName();
+					//Commented for Mobile use
+					//					getMplPaymentService().saveTPWalletPaymentInfo(custName, entries, cart, request);
+					mplPaymentService.saveTPWalletPaymentInfo(custName, entries, cart, refernceCode);
+				}
+				else
+				{
+					final String custEmail = mplCustomer.getOriginalUid();
+					//Commented for Mobile use
+					//					getMplPaymentService().saveTPWalletPaymentInfo(custEmail, entries, cart, request);
+					mplPaymentService.saveTPWalletPaymentInfo(custEmail, entries, cart, refernceCode);
+				}
+			}
+			mplPaymentService.paymentModeApportion(cart);
+
+		}
+		else
+		{
+			LOG.debug("Unable to save Third Party Wallet PAyment Info");
+		}
+
+	}
+
+
+	/**
+	 * @return the notificationFacade
+	 */
+	public NotificationFacade getNotificationFacade()
+	{
+		return notificationFacade;
+	}
+
+	/**
+	 * @param notificationFacade
+	 *           the notificationFacade to set
+	 */
+	public void setNotificationFacade(final NotificationFacade notificationFacade)
+	{
+		this.notificationFacade = notificationFacade;
+	}
 }

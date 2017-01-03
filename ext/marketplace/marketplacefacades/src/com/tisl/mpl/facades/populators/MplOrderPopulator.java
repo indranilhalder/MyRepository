@@ -82,7 +82,8 @@ public class MplOrderPopulator extends AbstractOrderPopulator<OrderModel, OrderD
 
 					if (promotionResultModel.getCertainty().floatValue() == 1.0F
 							&& (promotion instanceof BuyAGetPromotionOnShippingChargesModel
-									|| promotion instanceof BuyAandBGetPromotionOnShippingChargesModel || promotion instanceof BuyAboveXGetPromotionOnShippingChargesModel))
+									|| promotion instanceof BuyAandBGetPromotionOnShippingChargesModel
+									|| promotion instanceof BuyAboveXGetPromotionOnShippingChargesModel))
 					{
 						isShippingPromoApplied = true;
 						break;
@@ -231,7 +232,7 @@ public class MplOrderPopulator extends AbstractOrderPopulator<OrderModel, OrderD
 
 			//To change the name of payment option later
 			mplPaymentInfo.setPaymentOption(tpWalletPaymentInfoModel.getProviderName());
-			mplPaymentInfo.setBillingAddress(getAddressConverter().convert(tpWalletPaymentInfoModel.getBillingAddress()));
+			//mplPaymentInfo.setBillingAddress(getAddressConverter().convert(tpWalletPaymentInfoModel.getBillingAddress()));
 			target.setMplPaymentInfo(mplPaymentInfo);
 		}
 		//Ended here for third party wallet
@@ -289,7 +290,7 @@ public class MplOrderPopulator extends AbstractOrderPopulator<OrderModel, OrderD
 				//if (CollectionUtils.isNotEmpty(voucherList) && !discount.getCode().equalsIgnoreCase(voucherList.get(0).getCode()))
 				//Changed for TISSTRT-194
 				if (CollectionUtils.isEmpty(voucherList) || CollectionUtils.isNotEmpty(voucherList)
-						&& !discount.getCode().equalsIgnoreCase(voucherList.get(0).getCode()))//if no voucher is applied
+						&& !discount.getCode().equalsIgnoreCase(voucherList.get(0).getCode())) //if no voucher is applied
 				{
 					final double value = discount.getAppliedValue();
 					if (value > 0.0d)

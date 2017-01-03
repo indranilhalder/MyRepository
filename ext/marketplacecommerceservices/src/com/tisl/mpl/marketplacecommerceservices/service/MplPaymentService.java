@@ -17,8 +17,6 @@ import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.EMIBankModel;
 import com.tisl.mpl.core.model.JuspayEBSResponseModel;
@@ -122,7 +120,8 @@ public interface MplPaymentService
 	 * @param cart
 	 *
 	 */
-	void setPaymentTransaction(GetOrderStatusResponse orderStatusResponse, Map<String, Double> paymentMode, AbstractOrderModel cart);
+	void setPaymentTransaction(GetOrderStatusResponse orderStatusResponse, Map<String, Double> paymentMode,
+			AbstractOrderModel cart);
 
 
 	/**
@@ -179,9 +178,9 @@ public interface MplPaymentService
 	 * @throws EtailNonBusinessExceptions
 	 */
 	MplPromoPriceData applyPromotions(final CartData cartData, final OrderData orderData, final CartModel cartModel,
-			final OrderModel orderModel, final MplPromoPriceData promoPriceData) throws ModelSavingException, NumberFormatException,
-			JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException,
-			JaloPriceFactoryException, EtailNonBusinessExceptions;
+			final OrderModel orderModel, final MplPromoPriceData promoPriceData)
+					throws ModelSavingException, NumberFormatException, JaloInvalidParameterException, VoucherOperationException,
+					CalculationException, JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions;
 
 
 	/**
@@ -261,20 +260,20 @@ public interface MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	BankModel getBankDetailsForBank(final String bankName) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions;
@@ -316,7 +315,11 @@ public interface MplPaymentService
 	 * @param walletOrderId
 	 * @param order
 	 */
-	void entryInTPWaltAudit(HttpServletRequest request, String channelWeb, String guid, String walletOrderId);
+	//Commented for Mobile use
+
+	//	void entryInTPWaltAudit(HttpServletRequest request, String channelWeb, String guid, String walletOrderId);
+
+	void entryInTPWaltAudit(String status, String mWRefCode, String channelWeb, String guid, String walletOrderId);
 
 	/**
 	 * @param custName
@@ -324,15 +327,20 @@ public interface MplPaymentService
 	 * @param cart
 	 * @param request
 	 */
+
+	//Commented for Mobile use
+	//	void saveTPWalletPaymentInfo(String custName, List<AbstractOrderEntryModel> entries, AbstractOrderModel cart,
+	//			HttpServletRequest request);
 	void saveTPWalletPaymentInfo(String custName, List<AbstractOrderEntryModel> entries, AbstractOrderModel cart,
-			HttpServletRequest request);
+			String refernceCode);
 
 	/**
 	 * @param paymentMode
 	 * @param cart
 	 * @param request
 	 */
-	void setTPWalletPaymentTransaction(Map<String, Double> paymentMode, AbstractOrderModel cart, HttpServletRequest request);
-
+	//Commented for Mobile use
+	//	void setTPWalletPaymentTransaction(Map<String, Double> paymentMode, AbstractOrderModel cart, HttpServletRequest request);
+	void setTPWalletPaymentTransaction(Map<String, Double> paymentMode, AbstractOrderModel cart, final String refernceCode);
 
 }

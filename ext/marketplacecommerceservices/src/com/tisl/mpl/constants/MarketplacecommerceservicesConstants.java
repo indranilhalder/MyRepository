@@ -1828,5 +1828,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String MRUPEE = "MRUPEE";
 	public static final String TPWALLETAUDITQUERY = "select {a:pk} from {ThirdPartyAudit As a} where {a.twAuditId}=?auditId"
 			.intern();
+	public final static String MRUPEERETURNMETHOD = "payment.mRupee.returnMethod".intern();
 
 }

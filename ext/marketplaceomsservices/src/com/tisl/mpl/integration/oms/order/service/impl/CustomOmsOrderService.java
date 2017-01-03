@@ -113,6 +113,9 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 			order = getOrderConverter().convert(orderModel);
 			//Order request xml and response xml changes made for Audit purpose
 			final String requestXml = getOrderAuditXml(order);
+
+			LOG.info("**requestXML**" + requestXml + " for Order Id " + order.getId());
+
 			if (StringUtils.isNotEmpty(requestXml))
 			{
 				orderModel.setRequestXML(requestXml);
@@ -159,9 +162,8 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 					break;
 				}
 			}
-			if ((ex.getResponse() != null && ex.getResponse().getStatus() != null && (httpErrorCode.contains(String.valueOf(ex
-					.getResponse().getStatus().getStatusCode()))))
-					|| errorFlag)
+			if ((ex.getResponse() != null && ex.getResponse().getStatus() != null
+					&& (httpErrorCode.contains(String.valueOf(ex.getResponse().getStatus().getStatusCode())))) || errorFlag)
 			{
 				result = new OrderPlacementResult(OrderPlacementResult.Status.ERROR, ex);
 			}
@@ -310,9 +312,9 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 
 	/*
 	 * @Desc Used for generating xml
-	 * 
+	 *
 	 * @param order
-	 * 
+	 *
 	 * @return String
 	 */
 	protected String getOrderAuditXml(final Order order)
@@ -462,10 +464,10 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 
 	private String[] getOmsException()
 	{
-		final String connectTimeoutException = getConfigurationService().getConfiguration().getString(
-				MarketplacecclientservicesConstants.OMS_FALLBACK_CONNECT_TIMEOUT_EXCEP);
-		final String readTimeoutException = getConfigurationService().getConfiguration().getString(
-				MarketplacecclientservicesConstants.OMS_FALLBACK_READ_TIMEOUT_EXCEP);
+		final String connectTimeoutException = getConfigurationService().getConfiguration()
+				.getString(MarketplacecclientservicesConstants.OMS_FALLBACK_CONNECT_TIMEOUT_EXCEP);
+		final String readTimeoutException = getConfigurationService().getConfiguration()
+				.getString(MarketplacecclientservicesConstants.OMS_FALLBACK_READ_TIMEOUT_EXCEP);
 
 		final StringBuffer stb = new StringBuffer(300);
 

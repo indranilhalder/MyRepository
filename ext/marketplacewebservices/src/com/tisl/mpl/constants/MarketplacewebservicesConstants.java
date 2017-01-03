@@ -532,5 +532,9 @@ public class MarketplacewebservicesConstants
 	public static final String WARRANTY = "Warranty";
 	public static final String PDP_DESC_TAB = "pdp.desc.tab.".intern();
 
+	//Third party wallet
+
+	public static final String THIRDPARTYWALLETORDER = "/{userId}/createThirdPartyWalletOrder";
+	public static final String WALLETPAYMENT = "/{userId}/walletPayment";
 
 }
