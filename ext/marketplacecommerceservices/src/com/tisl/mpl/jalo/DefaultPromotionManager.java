@@ -4088,4 +4088,62 @@ public class DefaultPromotionManager extends PromotionsManager
 		}
 		return isPresent;
 	}
+
+	/**
+	 * @param validProductUssidMap
+	 * @param code
+	 * @param restrictionList
+	 * @return
+	 */
+	public Set<String> getStockLevelRestriction(final Map<String, AbstractOrderEntry> validProductUssidMap, final String code,
+			final List<AbstractPromotionRestriction> restrictionList)
+	{
+		final StringBuilder ussidIds = new StringBuilder();
+
+		final StringBuilder productCodes = new StringBuilder();
+		final Set<String> ussidSet = new HashSet<String>();
+		Map<String, Integer> stockCountMap = new HashMap<String, Integer>();
+		final int stockCount = getStockRestrictionVal(restrictionList);
+		final Map<String, Integer> mapQuantCount = new HashMap<String, Integer>();
+		for (final Map.Entry<String, AbstractOrderEntry> entry : validProductUssidMap.entrySet())
+		{
+			ussidIds.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + entry.getKey()
+					+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
+			ussidIds.append(",");
+			productCodes.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + entry.getValue().getProduct().getCode()
+					+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
+			productCodes.append(",");
+			mapQuantCount.put(entry.getKey(), Integer.valueOf(entry.getValue().getQuantity().intValue()));
+		}
+		final boolean sellerFlag = getSellerRestrictionVal(restrictionList);
+		if (sellerFlag)
+		{
+			stockCountMap = stockPromoCheckService.getCumulativeStockMap(
+					ussidIds.toString().substring(0, ussidIds.lastIndexOf(",")), code, true);
+		}
+		else
+		{
+			stockCountMap = stockPromoCheckService.getCumulativeStockMap(
+					productCodes.toString().substring(0, productCodes.lastIndexOf(",")), code, false);
+		}
+		for (final Map.Entry<String, AbstractOrderEntry> entry : validProductUssidMap.entrySet())
+		{
+			if (null != stockCountMap.get(entry.getKey()) && sellerFlag
+					&& (stockCount - stockCountMap.get(entry.getKey()).intValue() > 0))
+			{
+				ussidSet.add(entry.getKey());
+			}
+			else if (null != stockCountMap.get(entry.getKey()) && !sellerFlag
+					&& (stockCount - stockCountMap.get(entry.getValue().getProduct()).intValue() > 0))
+			{
+				ussidSet.add(entry.getKey());
+			}
+			else if (stockCountMap.isEmpty() && stockCount > 0)
+			{
+				ussidSet.add(entry.getKey());
+			}
+
+		}
+		return ussidSet;
+	}
 }

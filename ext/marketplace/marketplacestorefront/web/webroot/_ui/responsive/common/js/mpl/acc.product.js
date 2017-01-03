@@ -305,10 +305,12 @@ sendAddToBagWl: function(formId){
 				ACC.product.showTransientCart(formId_splitdata[2]);
 				ACC.product.addToBagFromWl(formId_splitdata[2],true);
 				// TISPRD-9318
-				var cartImageSrc=$("#cart_icon_wishlist").val();
-				console.log("cartImageSrc:"+cartImageSrc+" code:"+'${product.code}'+" name:"+'${product.name}');
+				var cartImageSrc=$("#"+formId+" input[name=cartIconWishlist]").val();
+				var productCodePost=$("#"+formId+" input[name=productCodePost]").val();
+				var productName=$("#"+formId+" input[name=productName]").val();
+				console.log("cartImageSrc:"+cartImageSrc+" code:"+productCodePost+" name:"+productName);
 				
-				Header.showAddToBagPopOver('${product.code}', cartImageSrc, '${product.name}');
+				Header.showAddToBagPopOver(productCodePost, cartImageSrc, productName);
 				// End TISPRD-9318
 				//$("#"+formId+"Title").show().fadeOut(7000);
 				//ACC.product.displayAddToCart(data,formId,false);				

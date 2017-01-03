@@ -34,8 +34,6 @@ import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
-import de.hybris.platform.promotions.model.AbstractPromotionModel;
-import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
@@ -95,8 +93,6 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCheckoutService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
-import com.tisl.mpl.model.LimitedStockPromotionModel;
-import com.tisl.mpl.model.PaymentModeSpecificPromotionRestrictionModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.promotion.service.SellerBasedPromotionService;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
@@ -901,21 +897,21 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 						}
 					}
 					//TPR-965 starts
-					if (result && promo.getPromotion() instanceof LimitedStockPromotionModel)
-					{
-						final boolean payRestrictionsPresent = checkIfPaymentRestrictions(promo.getPromotion());
-						int numRestrictions = 0;
-						if (payRestrictionsPresent)
-						{
-							numRestrictions = promo.getPromotion().getRestrictions().size();
-						}
-						if (payRestrictionsPresent && numRestrictions == 1)
-						{
-							//do nothing
-						}
-
-						//	result = checkIsStockPromoValid(promo.getPromotion(), abstractOrderModel, promo.getConsumedEntries());
-					}
+					//					if (result && promo.getPromotion() instanceof LimitedStockPromotionModel)
+					//					{
+					//						final boolean payRestrictionsPresent = checkIfPaymentRestrictions(promo.getPromotion());
+					//						int numRestrictions = 0;
+					//						if (payRestrictionsPresent)
+					//						{
+					//							numRestrictions = promo.getPromotion().getRestrictions().size();
+					//						}
+					//						if (payRestrictionsPresent && numRestrictions == 1)
+					//						{
+					//							//do nothing
+					//						}
+					//
+					//						//	result = checkIsStockPromoValid(promo.getPromotion(), abstractOrderModel, promo.getConsumedEntries());
+					//					}
 					//TPR-965 ends
 				}
 			}
@@ -930,24 +926,24 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	}
 
 
-	/**
-	 * @param promotion
-	 * @return
-	 */
-	private boolean checkIfPaymentRestrictions(final AbstractPromotionModel promotion)
-	{
-		boolean isPresent = false;
-		for (final AbstractPromotionRestrictionModel restriction : promotion.getRestrictions())
-		{
-			if (restriction instanceof PaymentModeSpecificPromotionRestrictionModel)
-			{
-				isPresent = true;
-				break;
-			}
-
-		}
-		return isPresent;
-	}
+	//	/**
+	//	 * @param promotion
+	//	 * @return
+	//	 */
+	//	private boolean checkIfPaymentRestrictions(final AbstractPromotionModel promotion)
+	//	{
+	//		boolean isPresent = false;
+	//		for (final AbstractPromotionRestrictionModel restriction : promotion.getRestrictions())
+	//		{
+	//			if (restriction instanceof PaymentModeSpecificPromotionRestrictionModel)
+	//			{
+	//				isPresent = true;
+	//				break;
+	//			}
+	//
+	//		}
+	//		return isPresent;
+	//	}
 
 
 
