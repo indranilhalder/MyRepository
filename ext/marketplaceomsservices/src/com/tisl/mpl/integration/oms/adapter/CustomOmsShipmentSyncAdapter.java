@@ -887,7 +887,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
          										entry.getSelectedUSSID());
          								      entry.setMplDeliveryMode(deliveryModel);
          								      entry.setIsEDtoHD(Boolean.TRUE);
-         								modelService.saveAll(entry);
+         								modelService.save(entry);
          							}
          							
          						}
@@ -903,8 +903,35 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
          			  isSDBCheck=Boolean.TRUE;
          			 /*Duplicate Return Model is Creating in R2.3 */
          			  //createRefundEntryModel(newStatus,consignmentModel,orderModel,isEDtoHDCheck,isSDBCheck,isRetrunInitiatedCheck);
-         			  AbstractOrderEntryModel entry= consignmentModel.getConsignmentEntries().iterator().next().getOrderEntry();
+         			  consignmentModel.setSdb(Boolean.TRUE);
+         			  consignmentModel.setSdbCheck(Boolean.TRUE);
+         			  modelService.save(consignmentModel);
          			  /*  R2.3 REFUND INFO CALL TO OMS  START*/
+         			  AbstractOrderEntryModel entry= consignmentModel.getConsignmentEntries().iterator().next().getOrderEntry();
+         			  try {
+            			  ConsignmentModel consignment = entry
+            						 .getConsignmentEntries().iterator().next()
+            						 .getConsignment();
+            						 
+            						if (consignment.getDeliveryDate() != null) {
+            							newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
+            						} else {
+            							newStatus = ConsignmentStatus.COD_CLOSED_WITHOUT_REFUND;
+            						}
+            			  
+            				  refundInfoCallToOMS(entry,MarketplacecommerceservicesConstants.REFUND_CATEGORY_S);
+            			  }catch(Exception e) {
+            				  LOG.error("Exception occurred while  refund info call to oms "+e.getMessage());
+            			  }
+            			  if(entry.getTransactionID().equalsIgnoreCase(shipment.getShipmentId())){
+            				  Boolean sdb = Boolean.TRUE;
+            				  entry.setIsSdb(sdb);
+            				  entry.setSdb(sdb);
+     							  modelService.save(entry);
+     							  
+     							//  modelService.refresh(entry.getIsSdb());
+            			  }
+            			  /*  R2.3 REFUND INFO CALL TO OMS  END*/
          			  try
 							{
          				  sendUnCollectedOrderToCRMEvent = new SendUnCollectedOrderToCRMEvent(shipment,consignmentModel,orderModel,newStatus,MarketplaceomsordersConstants.TICKET_TYPE_CODE_EDTOHD_SDB);
@@ -915,30 +942,6 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 							{
 								LOG.error("Exception during Create CRM Ticket for SDB Order Cancel Initiated Id  >> " + orderModel.getCode()+" ::" + e.getMessage());	
 							}
-         			  try {
-         			  ConsignmentModel consignment = entry
-         						 .getConsignmentEntries().iterator().next()
-         						 .getConsignment();
-         						 
-         						if (consignment.getDeliveryDate() != null) {
-         							newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
-         						} else {
-         							newStatus = ConsignmentStatus.COD_CLOSED_WITHOUT_REFUND;
-         						}
-         			  
-         				  refundInfoCallToOMS(entry,MarketplacecommerceservicesConstants.REFUND_CATEGORY_S);
-         			  }catch(Exception e) {
-         				  LOG.error("Exception occurred while  refund info call to oms "+e.getMessage());
-         			  }
-         			  if(entry.getTransactionID().equalsIgnoreCase(shipment.getShipmentId())){
-         				  entry.setIsSdb(Boolean.TRUE);
-  							  modelService.saveAll(entry);
-         			  }
-         			 
-         			  /*  R2.3 REFUND INFO CALL TO OMS  END*/
-         			  consignmentModel.setSdb(Boolean.TRUE);
-         			  consignmentModel.setSdbCheck(Boolean.TRUE);
-         			  modelService.save(consignmentModel);
          			  isSDBCheck=Boolean.FALSE;
          		}
 		     }
