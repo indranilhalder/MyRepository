@@ -305,7 +305,7 @@ sendAddToBagWl: function(formId){
 				ACC.product.showTransientCart(formId_splitdata[2]);
 				ACC.product.addToBagFromWl(formId_splitdata[2],true);
 				// TISPRD-9318
-				var cartImageSrc=$("#"+formId+" input[name=cart_icon_wishlist]").val();
+				var cartImageSrc=$("#"+formId+" input[name=cartIconWishlist]").val();
 				var productCodePost=$("#"+formId+" input[name=productCodePost]").val();
 				var productName=$("#"+formId+" input[name=productName]").val();
 				console.log("cartImageSrc:"+cartImageSrc+" code:"+productCodePost+" name:"+productName);

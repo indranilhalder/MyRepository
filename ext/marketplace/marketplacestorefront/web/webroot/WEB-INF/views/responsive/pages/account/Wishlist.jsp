@@ -380,7 +380,7 @@
 													
 												<!--  TISPRD-9318  -->
 												<c:if test="${not empty cartImage  && not empty cartImage.url }" >
-												<input type="hidden" id="cart_icon_wishlist_${product.ussID}" name="cart_icon_wishlist" value="${cartImage.url}"/>
+												<input type="hidden" id="cart_icon_wishlist_${product.ussID}" name="cartIconWishlist" value="${cartImage.url}"/>
 												</c:if>
 												<input type="hidden" name="productName" value="${product.name}" />	
 												<!--  End TISPRD-9318  -->
