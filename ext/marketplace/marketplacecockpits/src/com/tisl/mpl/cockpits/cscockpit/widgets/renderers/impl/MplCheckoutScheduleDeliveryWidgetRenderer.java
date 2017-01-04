@@ -145,10 +145,10 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 		}else {
 			 deliverySlotsResponseData= sessionService.getAttribute(MarketplacecommerceservicesConstants.SCHEDULE_DELIVRY_DATA);
 		}
-		if(null != deliverySlotsResponseData && null != deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData()) {
+	 	if(null != deliverySlotsResponseData && null != deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData()) {
 			populateScheduledDeliveryHeaders(widget, listHead);
 			for(AbstractOrderEntryModel orderEntry: cart.getEntries()) {
-				if(!orderEntry.getGiveAway()) {
+				if(!orderEntry.getGiveAway() && !orderEntry.getFulfillmentType().equalsIgnoreCase(MarketplaceCockpitsConstants.SSHIP) ) {
 					Listitem row = new Listitem();
 					row.setSclass("listbox-row-item");
 					row.setParent(listBox);
@@ -285,9 +285,8 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 			}
 			String selectedTime = null;
 			
-			if(null != orderEntry.getEddFrom() && null != orderEntry.getEddTo()) {
-				 selectedTime = orderEntry.getEddFrom().toString();
-
+			if(null != orderEntry.getTimeSlotFrom() && null != orderEntry.getTimeSlotTo()){
+				 selectedTime = orderEntry.getTimeSlotFrom().toString();
 			}
 			final Radiogroup dateGroup = new Radiogroup();
 			
@@ -305,10 +304,7 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 					Radio.setSelected(true);
 				}
 			}
-//			if(null == dateGroup.getSelectedItem() || null == dateGroup.getSelectedItem().getLabel()) {
-//				dateGroup.setse
-//			}
-		//	dateGroup.setSelectedIndex(0);
+
 			// Time cell
 			final Listcell timeCell = new Listcell();
 			Div div1 = new Div();

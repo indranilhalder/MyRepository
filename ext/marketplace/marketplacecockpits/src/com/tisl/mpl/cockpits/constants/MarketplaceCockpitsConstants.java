@@ -202,4 +202,6 @@ public final class MarketplaceCockpitsConstants extends
 	public static final String RETURN_TYPE="02";
 
 	public static final String BOTH = "BOTH";
+	public static final String TSHIP = "TSHIP";
+	public static final String SSHIP = "SSHIP";
 }
