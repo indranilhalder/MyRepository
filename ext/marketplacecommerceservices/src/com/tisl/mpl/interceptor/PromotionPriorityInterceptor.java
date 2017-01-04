@@ -1,6 +1,5 @@
 package com.tisl.mpl.interceptor;
 
-import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.ProductService;
@@ -134,7 +133,7 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 			//throw new InterceptorException(errorMsg);
 
 			throw new InterceptorException(Localization.getLocalizedString("promotion.title.length.count")
-					+ MarketplacecommerceservicesConstants.SINGLE_SPACE + String.valueOf(getPromotionTitleLength()));
+					+ MarketplacecommerceservicesConstants.SINGLE_SPACE + getPromotionTitleLength());
 		}
 
 
