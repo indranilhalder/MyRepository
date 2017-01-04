@@ -12,7 +12,7 @@ $supercategories=source(code, $classCatalogVersion)[unique=true]
 $categories=target(code, $catalogVersion)[unique=true]
 $attribute=classificationAttribute(code,$classSystemVersion)[unique=true]
 $unit=unit(code,$classSystemVersion)
-
+ 
 INSERT_UPDATE classificationAttribute;code[unique=true];name[lang=en];systemVersion(catalog(id),version);;;;;
 ;ageband;Age Band;pcmClassification:1;;;;;
 ;apparelsports;Sports;pcmClassification:1;;;;;

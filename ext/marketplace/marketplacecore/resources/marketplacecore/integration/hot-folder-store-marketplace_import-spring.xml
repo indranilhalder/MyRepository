@@ -23,7 +23,7 @@
        http://www.springframework.org/schema/integration/file
        http://www.springframework.org/schema/integration/file/spring-integration-file.xsd">
  
- 
+  
  		<!-- General setup -->
  		
  		 <bean id="fileOrderComparator" class="de.hybris.platform.acceleratorservices.dataimport.batch.FileOrderComparator">

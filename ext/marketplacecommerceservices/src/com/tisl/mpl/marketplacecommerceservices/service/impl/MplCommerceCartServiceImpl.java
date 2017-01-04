@@ -2619,7 +2619,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					String capacity = null;
 
 					getWishListProductWsObj = setWSWishlistEligibleDeliveryMode(wishlist2EntryModel, getWishListProductWsObj, pincode);
-					// Changes for get the richAttribute from Seller Information for TISTNL-4
+
+					// Changes in the richAttribute from Seller Information for TISTNL-4
+
 					final Collection<SellerInformationModel> sellerInfo = productModel.getSellerInformationRelator();
 
 					Collection<RichAttributeModel> richAttributeCollection = new ArrayList<>();

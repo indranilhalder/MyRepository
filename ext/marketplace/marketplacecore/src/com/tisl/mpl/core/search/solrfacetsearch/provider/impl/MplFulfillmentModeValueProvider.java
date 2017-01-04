@@ -60,7 +60,7 @@ public class MplFulfillmentModeValueProvider extends AbstractPropertyFieldValueP
 			return Collections.emptyList();
 		}
 
-		// Changes for get the richAttribute from Seller Information for TISTNL-4
+		// Changes in the richAttribute from Seller Information for TISTNL-4
 		final Collection<SellerInformationModel> sellerInfo = productModel.getSellerInformationRelator();
 
 		Collection<RichAttributeModel> richAttributeCollection = new ArrayList<>();
