@@ -261,8 +261,20 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 								getPromotionUtilityPOJO().setPromoProductList(promotionalProductData);
 								for (final Map.Entry<String, Product> entry : giftProductDetails.entrySet())
 								{
-									final int giftCount = getDefaultPromotionsManager().getFreeGiftCount(entry.getKey(),
-											eligibleProductMap, eligibleQuantity.intValue(), validProductList);
+									int giftCount = 0;
+									if (!getMplPromotionHelper().validateForStockRestriction(restrictionList))
+									{
+										giftCount = getDefaultPromotionsManager().getFreeGiftCount(entry.getKey(), eligibleProductMap,
+												eligibleQuantity.intValue(), validProductList);
+									}
+									else
+									{
+										giftCount = getMplPromotionHelper().getFreeGiftCount(entry.getKey(), eligibleQuantity.intValue(),
+												validProductList);
+									}
+
+
+
 									final Map<String, List<String>> productAssociatedItemsMap = getDefaultPromotionsManager()
 											.getAssociatedItemsForAorBOGOorFreebiePromotions(validProductUssidMap, entry.getKey());
 									arg0.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, productAssociatedItemsMap);
