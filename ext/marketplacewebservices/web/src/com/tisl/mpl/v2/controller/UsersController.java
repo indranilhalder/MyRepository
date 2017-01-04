@@ -149,7 +149,6 @@ import com.tisl.mpl.constants.YcommercewebservicesConstants;
 import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.Frequency;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.BuyBoxModel;
-import com.tisl.mpl.core.model.EMIBankModel;
 import com.tisl.mpl.data.EditWishlistNameData;
 import com.tisl.mpl.data.FriendsInviteData;
 import com.tisl.mpl.data.NotificationData;
@@ -207,7 +206,6 @@ import com.tisl.mpl.validation.data.AddressValidationData;
 import com.tisl.mpl.webservice.businessvalidator.DefaultCommonAsciiValidator;
 import com.tisl.mpl.wsdto.CommonCouponsDTO;
 import com.tisl.mpl.wsdto.EMIBankListWsDTO;
-import com.tisl.mpl.wsdto.EMIBankWsDTO;
 import com.tisl.mpl.wsdto.EMITermRateDataForMobile;
 import com.tisl.mpl.wsdto.FetchNewsLetterSubscriptionWsDTO;
 import com.tisl.mpl.wsdto.GetCustomerDetailDto;
@@ -4492,92 +4490,101 @@ public class UsersController extends BaseCommerceController
 	@ResponseBody
 	public EMIBankListWsDTO bankdetailsforEMI(@RequestParam final Double cartValue, final String fields)
 	{
-		final EMIBankListWsDTO emiBankListWsDTO = new EMIBankListWsDTO();
-		final List<EMIBankWsDTO> emiBankWsListDTO = new ArrayList<EMIBankWsDTO>();
-		List<EMIBankModel> emiBankList = new ArrayList<>();
-		CustomerData customerData = null;
+		EMIBankListWsDTO emiBankListWsDTO = new EMIBankListWsDTO();
+		//final List<EMIBankWsDTO> emiBankWsListDTO = new ArrayList<EMIBankWsDTO>();
+		//final List<EMIBankModel> emiBankList = new ArrayList<>();
+		//final CustomerData customerData = null;
 		try
 		{
-			emiBankList = mplNetBankingFacade.getEMIBanks(cartValue);
-			customerData = customerFacade.getCurrentCustomer();
-			if (null == customerData)
-			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
-			}
-			else
-			{
-				final String uid = customerData.getUid();
-				if (null == uid && StringUtils.isNotEmpty(uid))
-				{
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
-				}
-				else
-				{
-					try
-					{
-						if (emiBankList.isEmpty())
-						{
-							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9029);
-						}
-						else
-						{
-
-							for (final EMIBankModel emibanking : emiBankList)
-							{
-								final EMIBankWsDTO eMIBankWsDTO = new EMIBankWsDTO();
-
-								if (StringUtils.isNotEmpty(emibanking.getName().getBankName()))
-								{
-									eMIBankWsDTO.setEmiBank(emibanking.getName().getBankName());
-								}
-								if (StringUtils.isNotEmpty(emibanking.getCode()))
-								{
-									eMIBankWsDTO.setCode(emibanking.getCode());
-								}
-								if (StringUtils.isNotEmpty(emibanking.getEmiLowerLimit().toString()))
-								{
-									eMIBankWsDTO.setEmiLowerLimit(emibanking.getEmiLowerLimit().toString());
-								}
-								if (StringUtils.isNotEmpty(emibanking.getEmiUpperLimit().toString()))
-								{
-									eMIBankWsDTO.setEmiUpperLimit(emibanking.getEmiUpperLimit().toString());
-								}
-								emiBankWsListDTO.add(eMIBankWsDTO);
-							}
-							//TISEE-929
-							final Comparator<EMIBankWsDTO> byName = (final EMIBankWsDTO o1, final EMIBankWsDTO o2) -> o1.getEmiBank()
-									.compareTo(o2.getEmiBank());
-
-							Collections.sort(emiBankWsListDTO, byName);
-							emiBankListWsDTO.setBankList(emiBankWsListDTO);
-							emiBankListWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-
-						}
-					}
-					catch (final EtailNonBusinessExceptions e)
-					{
-						ExceptionUtil.etailNonBusinessExceptionHandler(e);
-						if (null != e.getErrorMessage())
-						{
-							emiBankListWsDTO.setError(e.getErrorMessage());
-						}
-						emiBankListWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-					}
-					catch (final EtailBusinessExceptions e)
-					{
-						ExceptionUtil.etailBusinessExceptionHandler(e, null);
-						if (null != e.getErrorMessage())
-						{
-							emiBankListWsDTO.setError(e.getErrorMessage());
-						}
-						emiBankListWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-					}
-				}
-			}
+			emiBankListWsDTO = mplNetBankingFacade.getEMIBanks(cartValue);
+			//			customerData = customerFacade.getCurrentCustomer();
+			//			if (null == customerData)
+			//			{
+			//				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
+			//			}
+			//			else
+			//			{
+			//				final String uid = customerData.getUid();
+			//				if (null == uid && StringUtils.isNotEmpty(uid))
+			//				{
+			//					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
+			//				}
+			//				else
+			//				{
+			//					try
+			//					{
+			//						if (emiBankList.isEmpty())
+			//						{
+			//							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9029);
+			//						}
+			//						else
+			//						{
+			//
+			//							for (final EMIBankModel emibanking : emiBankList)
+			//							{
+			//								final EMIBankWsDTO eMIBankWsDTO = new EMIBankWsDTO();
+			//
+			//								if (StringUtils.isNotEmpty(emibanking.getName().getBankName()))
+			//								{
+			//									eMIBankWsDTO.setEmiBank(emibanking.getName().getBankName());
+			//								}
+			//								if (StringUtils.isNotEmpty(emibanking.getCode()))
+			//								{
+			//									eMIBankWsDTO.setCode(emibanking.getCode());
+			//								}
+			//								if (StringUtils.isNotEmpty(emibanking.getEmiLowerLimit().toString()))
+			//								{
+			//									eMIBankWsDTO.setEmiLowerLimit(emibanking.getEmiLowerLimit().toString());
+			//								}
+			//								if (StringUtils.isNotEmpty(emibanking.getEmiUpperLimit().toString()))
+			//								{
+			//									eMIBankWsDTO.setEmiUpperLimit(emibanking.getEmiUpperLimit().toString());
+			//								}
+			//								emiBankWsListDTO.add(eMIBankWsDTO);
+			//							}
+			//							//TISEE-929
+			//							final Comparator<EMIBankWsDTO> byName = (final EMIBankWsDTO o1, final EMIBankWsDTO o2) -> o1.getEmiBank()
+			//									.compareTo(o2.getEmiBank());
+			//
+			//							Collections.sort(emiBankWsListDTO, byName);
+			//							emiBankListWsDTO.setBankList(emiBankWsListDTO);
+			//							emiBankListWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			//
+			//						}
+			//					}
+			//					catch (final EtailNonBusinessExceptions e)
+			//					{
+			//						ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			//						if (null != e.getErrorMessage())
+			//						{
+			//							emiBankListWsDTO.setError(e.getErrorMessage());
+			//						}
+			//						emiBankListWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			//					}
+			//					catch (final EtailBusinessExceptions e)
+			//					{
+			//						ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			//						if (null != e.getErrorMessage())
+			//						{
+			//							emiBankListWsDTO.setError(e.getErrorMessage());
+			//						}
+			//						emiBankListWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			//					}
+			//				}
+			//			}
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				emiBankListWsDTO.setError(e.getErrorMessage());
+			}
+			emiBankListWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			if (null != e.getErrorMessage())
 			{
 				emiBankListWsDTO.setError(e.getErrorMessage());

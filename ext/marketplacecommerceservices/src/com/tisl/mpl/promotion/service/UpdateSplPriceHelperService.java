@@ -26,6 +26,21 @@ public interface UpdateSplPriceHelperService
 	 * @param rejectBrandList
 	 * @param priority
 	 * @param categories
+	 * @param exProductList
+	 * @return ConcurrentHashMap<List<String>, List<String>>
+	 */
+	ConcurrentHashMap<List<String>, List<String>> getEligibleProductList(List<String> brands, List<String> rejectBrandList,
+			Integer priority, List<Category> categories, List<String> exProductList);
+
+	/**
+	 * Populates the Eligible Product List
+	 *
+	 * TISPRO-352 : Fix
+	 *
+	 * @param brands
+	 * @param rejectBrandList
+	 * @param priority
+	 * @param categories
 	 * @return ConcurrentHashMap<List<String>, List<String>>
 	 */
 	ConcurrentHashMap<List<String>, List<String>> getEligibleProductList(List<String> brands, List<String> rejectBrandList,

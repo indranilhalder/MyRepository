@@ -1887,6 +1887,8 @@
 		<property name="leastSizeProduct" type="String" />
 		<property name="isOfferExisting" type="Boolean" />
 		<property name="discountPercent" type="String" />
+		<!-- cumulativeStockLevel -->
+		<property name="cumulativeStockLevel" type="Boolean" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.VariantOptionsWsDto">
 		<property name="code" type="String" />
