@@ -473,7 +473,7 @@ function navigateToPage(queryString,textString)
 							    <span>-</span>
 							    <input class="maxPriceSearchTxt" type="text" id="customMaxPriceMob" name="customMaxPrice" width="30" height="20" placeholder="${maxPriceSearchPlaceholder}" onkeypress="return isNumber(event)">
 							   
-								<input type="button" name ="submitPriceFilter" id ="applyCustomPriceFilter"	value="GO"/>
+								<input type="button" name ="submitPriceFilter" id ="applyCustomPriceFilterMob"	value="GO"/>
 						</form>							
 		</c:if>
 		</div>

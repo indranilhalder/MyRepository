@@ -45,6 +45,12 @@ $(document).ready(function(){
 		$("#addToCartFormTitle").show();
  	    return false;
    	 }
+   		utag.link({
+			link_obj: this,
+			link_text: 'addtobag' ,
+			event_type : 'addtobag_winner_seller' ,
+			product_sku : code
+		});
    	/* if( $("#variant,#sizevariant option:selected").val()=="#")
  	  {
  		$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");

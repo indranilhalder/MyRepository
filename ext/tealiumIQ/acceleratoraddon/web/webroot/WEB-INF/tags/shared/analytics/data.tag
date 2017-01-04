@@ -59,9 +59,9 @@
 		<%=HybrisDataConverter.getWishlistScript()%>
 	</c:when>
 
-	<c:when test="${currentPageType == 'orderconfirmation'}">
+	<%-- <c:when test="${currentPageType == 'orderconfirmation'}">
 		<%=HybrisDataConverter.getOrderConfirmationScript()%>
-	</c:when>
+	</c:when> --%>
 
 	<c:when
 		test="${(currentPageType == 'notfound') || (currentPageType == 'businesserrorfound') || (currentPageType == 'nonbusinesserrorfound')}">
