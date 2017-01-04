@@ -462,7 +462,7 @@
 					slotId="perspectives" title="reverse Logistics Failure report"
 					template="false">
 				</widget>
-				<!-- lp awb bulk upload -->
+					<!-- lp awb bulk upload -->
 				<widget id="lpawb_bulkupload" widgetDefinitionId="com.techouts.lpawbbulkupload"
 					slotId="perspectives" template="true" title="LP and awb bulk upload">
 				</widget>
@@ -470,6 +470,10 @@
 				<widget id="logistcs_delivery_report" widgetDefinitionId="com.techouts.widgets.logisticsdeliveryreport"
 					slotId="perspectives" template="true" title="Logistics Delivery Report">
 				</widget>
+					<!-- R2.3 Added for unmapped Pincode report -->
+				<widget id="unmapped_pincodes_report" widgetDefinitionId="com.hybris.oms.tata.unmappedpincodes.Pincodeswidget"
+					slotId="perspectives" template="true"></widget>
+		
 			</widget>
 
 			<setting key="eastClosed" type="Boolean">true</setting>

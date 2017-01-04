@@ -55,9 +55,13 @@
 		<property name="shipmentStatusUpload"
 			value="${tata.oms.shipmentstatus.bulk.upload.path:#{null}}" />
 		<property name="landmarkUploadPath" value="${tata.oms.landmark.upload.path:#{null}}"></property>
-		<property name="fragileOrderFileUploadPath" value="${com.techouts.order.pfsd.logistics.upload.path:#{null}}"></property>
-		<property name="returnOrderFileUploadPath" value="${com.techouts.order.return.logistics.upload.path:#{null}}"></property>
-
+		<property name="fragileOrderFileUploadPath"
+			value="${com.techouts.order.pfsd.logistics.upload.path:#{null}}"></property>
+		<property name="returnOrderFileUploadPath"
+			value="${com.techouts.order.return.logistics.upload.path:#{null}}"></property>
+		<!-- r2.3 unmapped pincode -->
+		<property name="unmappedpincodesDwnldPath"
+			value="${tata.oms.unmappedpincodes.report.download.path:#{null}}" />
 	</bean>
 	<bean id="csvFileToZipFileService" class="com.hybris.oms.tata.services.CsvFileToZipFileService"></bean>
 	<bean id="dataUploadService" class="com.hybris.oms.tata.util.DataUploadService"></bean>
@@ -139,4 +143,9 @@
 		class="com.hybris.oms.tata.tship.exceltocsv.pojo.SurfacePriorityMaster"></bean>
 	<bean id="lpAwbDataUploadService"
 		class="com.hybris.oms.tata.services.DefaultLpAwbDataUploadService"></bean>
+		<!-- R2.3 unmapped seller pincodes -->
+		<bean id="sellersInfoFacade"  class="com.hybris.oms.tata.facade.DefaultSellersInfoFacade"></bean>
+		<bean id="sellerInfoService" class="com.hybris.oms.tata.services.DefaultSellerInfoService"></bean>
+		<bean id="sellerMasterModelDao" class="com.hybris.oms.tata.daos.DefaultSellerMasterModelDao"></bean>
+		
 </beans>

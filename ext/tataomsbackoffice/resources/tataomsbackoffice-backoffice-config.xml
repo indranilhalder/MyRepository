@@ -210,6 +210,8 @@
      <explorer-tree:navigation-node id="pickup_address_request_widget_report"></explorer-tree:navigation-node>
      <explorer-tree:navigation-node id="reverse_logistics_failure_info"></explorer-tree:navigation-node>
       <explorer-tree:navigation-node id="logistcs_delivery_report"></explorer-tree:navigation-node>
+        <explorer-tree:navigation-node  id="unmapped_pincodes_report">
+     </explorer-tree:navigation-node>
   </explorer-tree:explorer-tree>
 </context>
 
@@ -259,7 +261,8 @@
      <explorer-tree:navigation-node id="pickup_address_request_widget_report"></explorer-tree:navigation-node>
      <explorer-tree:navigation-node id="reverse_logistics_failure_info"></explorer-tree:navigation-node>
       <explorer-tree:navigation-node id="logistcs_delivery_report"></explorer-tree:navigation-node>
-	
+	  <explorer-tree:navigation-node  id="unmapped_pincodes_report">
+     </explorer-tree:navigation-node>
 	</explorer-tree:explorer-tree>
 </context>
 

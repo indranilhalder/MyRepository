@@ -1,0 +1,31 @@
+<widget xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://www.zkoss.org/2005/zul">
+	<style>
+		.headlabel_hl{ text-align:center; padding:10px 0px 10px 0px;
+		background-color:#4D82A6; color:white;
+
+		} .label_css{ font-size:15px; }
+	</style>
+
+	<hlayout style="height:60px" sclass="headlabel_hl">
+		<label sclass="label_css"
+			value="Seller Unmapped Pincodes Report" />
+	</hlayout>
+	<div  style="height:60px">
+	<separator/>
+	<separator/>
+	<separator/>
+		<label /><label style="font-size: 14px;" value="${labels.seller.sellerid}" />
+		<textbox id="sellerId"></textbox>
+		<button id="search" label="${labels.seller.searchbtn}"/>
+	</div>
+	
+	<grid id="rendergrid" sclass="narrow">
+		<columns>
+			<column hflex="4">Seller Id</column>
+			<column hflex="5">Generated On</column>
+			<column hflex="2">Download</column>
+			<column width="130px">Generate New</column>
+		</columns>
+	</grid>
+</widget>
