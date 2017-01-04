@@ -35892,6 +35892,45 @@ code, kbd, pre, samp {
 	.container {
 		width: 1024px;
 	}
+	
+	/* PRICE BREAKUP LIST */
+	.price-breakuplist{
+		margin-top: 10px;
+	}
+	
+	.price-breakuplist li{
+		margin-bottom: 10px;
+	    margin-right: 14px;
+	    color: #7d7d7d;
+	    float: left;
+	    list-style-type: none;
+	    font-size: 11px;
+	    width: 25.5%;
+	    line-height: 1;
+	    padding: 6px;
+	    border: 1px solid #ccc;
+	    text-align: center;
+	    position: relative;
+	    min-height: 52px;
+	}
+	.price-breakuplist li:after{	
+		font-family: 'FontAwesome';
+		content: "\f067";
+		position: absolute;
+		top: 42%;
+		right: -12px;
+	}
+	.price-breakuplist li:last-child:after{
+		content: none;
+	}
+	.price-breakuplist li span{
+		display: block;
+	}
+	.price-breakuplist li strong{
+		color: #000;
+	    margin-top: 4px;
+	    display: block;
+	}
 }
 
 @media ( min-width : 1400px) {
@@ -46211,6 +46250,7 @@ float: right;
 	border-bottom: 3px solid transparent;
 }
 .tab-details li{ width:50%; float:left;padding: 0 5% 0 0;}
+.tab-details .rating-list li{ width:100%; float: none; padding: 0;}
 .tab-details li.stylenote{ width:100%;}
 /*More Stuff Like This slider*/
 .page-productDetails .trending h1 {
@@ -47315,11 +47355,12 @@ body.page-productDetails .breadcrumbs.wrapper {
 .Star .overall .Bottom > ul > li.active:after{font-family: "FontAwesome";}
  
 .product-detail .Emi {
+	float: left;
 	position: relative;
 	margin: -15px 0 0;
 }
 
-.product-detail .Emi p {
+.product-detail .Emi p, .pricebreakup-link {
 	font-size: 14px;
 	letter-spacing: 1px;
 	left: -10px;
@@ -47331,7 +47372,7 @@ body.page-productDetails .breadcrumbs.wrapper {
 	padding: 12px 25px 12px 12px;
 }
 
-.product-detail .Emi p:before {
+.product-detail .Emi p:before, .pricebreakup-link:before {
 	background: #fff;
 	bottom: 0;
 	content: "";
@@ -47348,7 +47389,7 @@ body.page-productDetails .breadcrumbs.wrapper {
 	box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
 }
 
-.product-detail .Emi p:after {
+.product-detail .Emi p:after, .pricebreakup-link:after {
 	color: #a9183c;
 	content: "\f107";
 	display: inline-block;
@@ -47356,6 +47397,7 @@ body.page-productDetails .breadcrumbs.wrapper {
 	position: absolute;
 	right: 8px;
 	top: 10px;
+	font-family: "FontAwesome";
 }
 
 .product-detail .Emi p+.modal-content {

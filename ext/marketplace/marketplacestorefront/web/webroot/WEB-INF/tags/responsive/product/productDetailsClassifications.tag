@@ -39,9 +39,13 @@
 	 });
 	 */
 </script>
-
 <c:if test="${not empty product.classifications}">
+<c:choose>
+<c:when test="${product.rootCategory!='FineJewellery'}">
+ 
 	<div class="view-button">Check The Specs</div>
+</c:when>
+</c:choose> 	
 </c:if>
 <!-- <div class="hide-button" style="display:none;">Hide Specifications</div> -->
 <div class="product-classifications wrapper">
