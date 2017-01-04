@@ -3185,7 +3185,7 @@ if (width > winWidth){
 	$('.SpecWrap .Padd .tabs-block .nav').animate({'left':0});
 	$(".SpecWrap .Padd .tabs-block .nav-wrapper > span").unbind().click(function() {
 		l = l + value;
-		if(!$('.SpecWrap .Padd .tabs-block .nav li:last-child').visible()){
+		if(!$('.SpecWrap .Padd .tabs-block .nav li:last-child').visible() && l <= width ){
             $('.SpecWrap .Padd .tabs-block .nav').animate({'left':-l});			
 		}else{
 			l = 0;
@@ -3225,7 +3225,7 @@ if (width > winWidth){
 	$('.SpecWrap .Padd .tabs-block .nav').animate({'left':0});
 	$(".SpecWrap .Padd .tabs-block .nav-wrapper > span").unbind().click(function() {
 		l = l + value;
-		if(!$('.SpecWrap .Padd .tabs-block .nav li:last-child').visible()){
+		if(!$('.SpecWrap .Padd .tabs-block .nav li:last-child').visible() && l <= width ){
             $('.SpecWrap .Padd .tabs-block .nav').animate({'left':-l});			
 		}else{
 			l = 0;

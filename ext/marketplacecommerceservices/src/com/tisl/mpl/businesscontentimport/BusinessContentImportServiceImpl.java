@@ -53,6 +53,7 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 
 	@Autowired
 	private MplCmsPageService cmsPageService;
+	StringBuilder sbError = new StringBuilder();
 
 
 	/**
@@ -148,7 +149,7 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 	 * @param headerRowIncluded
 	 */
 	@Override
-	public void processUpdateForContentImport(final CSVReader reader, final CSVWriter writer, final Map<Integer, String> map,
+	public String processUpdateForContentImport(final CSVReader reader, final CSVWriter writer, final Map<Integer, String> map,
 			final Integer errorPosition, final boolean headerRowIncluded)
 	{
 		LOG.debug("Generationg Contents..");
@@ -229,7 +230,8 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 				}
 			}
 			//add else to write the error for the file
-		}
+		}//added for error population HMC
+		return sbError.toString();
 	}
 
 	/**
@@ -326,7 +328,6 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 	private void processData(final Map<Integer, String> line, final CSVWriter writer, final Map<String, String> contentMap)
 	{
 		LOG.debug("Processing Content Data");
-		final boolean isIncorrectCode = false;
 		try
 		{
 			//Check If Already Present
@@ -364,7 +365,7 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		}
 		catch (final ModelSavingException | ModelNotFoundException | NumberFormatException exception)
 		{
-			final List<Integer> errorColumnList = errorListData(isIncorrectCode);
+			final List<Integer> errorColumnList = errorListData(true);
 			LOG.error("Exception in processing processData" + exception.getMessage());
 			populateErrorEntry(line, writer, errorColumnList);
 		}
@@ -851,8 +852,12 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		{
 			line.put(errorColumnList.get(i), errorMessage);
 		}
+		writer.writeComment("columnName," + "errorMessage ," + "Line");
 		writer.write(line);
-
+		sbError.append("columnName,").append("errorMessage ,").append("Line");
+		sbError.append("\n");
+		sbError.append(errorColumnList.toString()).append(",").append(errorMessage).append(",").append(line);
+		sbError.append("\n");
 	}
 
 	/**
@@ -869,6 +874,10 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		line.put(Integer.valueOf(1), errorMessage);
 		writer.writeComment("columnName," + "errorMessage ," + "Line");
 		writer.write(line);
+		sbError.append("columnName,").append("errorMessage ,").append("Line");
+		sbError.append("\n");
+		sbError.append(errorColumn).append(",").append(errorMessage).append(",").append(line);
+		sbError.append("\n");
 	}
 
 	/**
@@ -885,9 +894,12 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		line.put(Integer.valueOf(0), errorColumn);
 		line.put(Integer.valueOf(1), errorMessage);
 		line.put(Integer.valueOf(2), lineNoCsv.toString());
-
 		writer.writeComment("columnName," + "errorMessage ," + "Line No." + ",Line");
 		writer.write(line);
+		sbError.append("columnName,").append("errorMessage ,").append("Line");
+		sbError.append("\n");
+		sbError.append(errorColumn).append(",").append(errorMessage).append(",").append(lineNo);
+		sbError.append("\n");
 	}
 
 
