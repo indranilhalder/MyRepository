@@ -257,6 +257,9 @@
 		<property name="fulfillmentType" type="String"/>
 		<property name="deliveryMode" type="String"/>
 		<property name="quantity" type="Integer"/>
+		<property name="jewellery" type="boolean"/>
+		<property name="listingId" type="String"/>
+		
 	</bean>
 	<!--END: Added for Cart Soft Reservation -->
 	

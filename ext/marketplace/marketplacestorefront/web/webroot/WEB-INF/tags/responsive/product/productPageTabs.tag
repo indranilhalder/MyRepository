@@ -26,13 +26,28 @@ var buyboxskuId='';
 </script>
 
 <!-- Displaying different tabs in PDP page -->
-
+<!-- About Product, reviewsAndRatings and returnsAndRefunds Tab added for jewellery change  -->
 <c:set var="validTabs" value="${VALID_TABS}" />
 <div class="nav-wrapper">
 <ul class="nav pdp">
+    <c:if test="${fn:contains(validTabs, 'aboutproduct')}">
+		<li id="tabs_aboutProduct" class="active">
+			<spring:theme code="product.product.aboutProduct" />
+		</li>
+	</c:if>
 	<c:if test="${fn:contains(validTabs, 'stylenote')}">
 		<li id="tabs_styleNotes" class="active">
 			 <spring:theme code="product.product.styleNotes" />
+		</li>
+	</c:if>
+	<c:if test="${fn:contains(validTabs, 'reviewsAndRatings')}">
+		<li id="tabs_styleNotes" class="active">
+			 <spring:theme code="product.product.reviewsAndRatings" />
+		</li>
+	</c:if>
+	<c:if test="${fn:contains(validTabs, 'returnsAndRefunds')}">
+		<li id="tabs_styleNotes" class="active">
+			 <spring:theme code="product.product.returnsAndRefunds" />
 		</li>
 	</c:if>
 	<c:if test="${fn:contains(validTabs, 'details')}">
@@ -58,9 +73,24 @@ var buyboxskuId='';
 </ul>
 </div>
 <ul class="tabs pdp">
+	<c:if test="${fn:contains(validTabs, 'aboutproduct')}">
+		<li class="active">
+			<product:productAboutProductTab product="${product}" />
+		</li>
+	</c:if>
 	<c:if test="${fn:contains(validTabs, 'stylenote')}">
 		<li class="active">
 			<product:productStyleNotesTab product="${product}" />
+		</li>
+	</c:if>
+	<c:if test="${fn:contains(validTabs, 'reviewsAndRatings')}">
+		<li>
+			<product:productReveiwsAndRatings product="${product}" />
+		</li>
+	</c:if>
+	<c:if test="${fn:contains(validTabs, 'returnsAndRefunds')}">
+		<li>
+			<product:productReturnsAndRefunds product="${product}" />
 		</li>
 	</c:if>
 	<c:if test="${fn:contains(validTabs, 'details')}">
@@ -82,7 +112,7 @@ var buyboxskuId='';
 		<li >
 			<product:productTataPromiseTab product="${product}" />
 		</li>
-	</c:if>
+	</c:if>	
 </ul>
 
  <div id="servicableUssid"></div>
