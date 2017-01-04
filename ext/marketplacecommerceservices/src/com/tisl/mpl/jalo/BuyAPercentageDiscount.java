@@ -220,10 +220,19 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 		final List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
 		final PromotionsManager promotionsManager = PromotionsManager.getInstance();
 		final Long eligibleQuantity = getQuantity();
+		boolean isExhausted = false;
 		int totalCount = 0;
 		try
 		{
 			noOfProducts = populateTotalProductCount(validProductUssidMap);
+
+			if (noOfProducts > 0 && getMplPromotionHelper().validateForStockRestriction(restrictionList))
+			{
+				isExhausted = getMplPromotionHelper().isPromoStockExhausted(validProductUssidMap, restrictionList, getCode());
+			}
+
+
+
 			if (GenericUtilityMethods.checkBrandAndCategoryMinimumAmt(validProductUssidMap, paramSessionContext,
 					paramPromotionEvaluationContext, this, restrictionList)) // If exceeds set Category Amount and Restriction set Brand Value
 			{
@@ -405,7 +414,7 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 							+ ">" + eligibleQuantity.intValue() + Localization.getLocalizedString("promotion.freeGiftAction"));
 				}
 
-				if (noOfProducts > 0 && remainingItemsFromTail != null && remainingItemsFromTail.size() > 0L) // For Localization: To check for Excluded Products
+				if (noOfProducts > 0 && remainingItemsFromTail != null && remainingItemsFromTail.size() > 0L && !isExhausted) // For Localization: To check for Excluded Products
 				{
 					final float certainty = (float) remainingItemsFromTail.size() / eligibleQuantity.intValue();
 

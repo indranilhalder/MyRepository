@@ -2465,6 +2465,10 @@ public class DefaultPromotionManager extends PromotionsManager
 		{
 			totalEligibleCountForStock = (totalCount <= stockCount) ? totalCount : stockCount;
 		}
+		else if (MapUtils.isNotEmpty(stockMap) && !stockMap.containsKey(toCheckWith))
+		{
+			totalEligibleCountForStock = (totalCount <= stockCount) ? totalCount : stockCount;
+		}
 
 		return totalEligibleCountForStock;
 	}
@@ -4051,6 +4055,15 @@ public class DefaultPromotionManager extends PromotionsManager
 				ussidSet.add(entry.getKey());
 			}
 			else if (stockCountMap.isEmpty() && stockCount > 0)
+			{
+				ussidSet.add(entry.getKey());
+			}
+			else if (!stockCountMap.isEmpty() && !(stockCountMap.containsKey(entry.getKey())) && sellerFlag && stockCount > 0)
+			{
+				ussidSet.add(entry.getKey());
+			}
+			else if (!stockCountMap.isEmpty() && !(stockCountMap.containsKey(entry.getValue().getProduct().getCode()))
+					&& !sellerFlag && stockCount > 0)
 			{
 				ussidSet.add(entry.getKey());
 			}

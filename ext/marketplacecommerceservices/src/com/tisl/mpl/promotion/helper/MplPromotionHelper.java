@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -43,6 +44,7 @@ import com.tisl.mpl.jalo.EtailLimitedStockRestriction;
 import com.tisl.mpl.jalo.EtailSellerSpecificRestriction;
 import com.tisl.mpl.jalo.SellerMaster;
 import com.tisl.mpl.marketplacecommerceservices.daos.BulkPromotionCreationDao;
+import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtStockLevelPromotionCheckServiceImpl;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.promotion.service.SellerBasedPromotionService;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -851,6 +853,128 @@ public class MplPromotionHelper
 
 		return giftCount;
 
+	}
+
+	/**
+	 * For Limited Stock Restriction
+	 *
+	 * @param validProductUssidMap
+	 * @param restrictionList
+	 * @param promoCode
+	 * @return isExhausted
+	 */
+	public boolean isPromoStockExhausted(final Map<String, AbstractOrderEntry> validProductUssidMap,
+			final List<AbstractPromotionRestriction> restrictionList, final String promoCode)
+	{
+		boolean isExhausted = false;
+		boolean sellerFlag = false;
+
+		sellerFlag = getDefaultPromotionsManager().isSellerRestrExists(restrictionList);
+
+		if (sellerFlag)
+		{
+			isExhausted = checkStockData(validProductUssidMap, true, promoCode, restrictionList);
+		}
+		else
+		{
+			isExhausted = checkStockData(validProductUssidMap, false, promoCode, restrictionList);
+		}
+
+		return isExhausted;
+	}
+
+	/**
+	 * For Limited Stock Restriction
+	 *
+	 * @param validProductUssidMap
+	 * @param flag
+	 * @param promoCode
+	 * @param restrictionList
+	 * @return isExhausted
+	 */
+	private boolean checkStockData(final Map<String, AbstractOrderEntry> validProductUssidMap, final boolean flag,
+			final String promoCode, final List<AbstractPromotionRestriction> restrictionList)
+	{
+		boolean isExhausted = true;
+		final StringBuilder ussidIds = new StringBuilder();
+		final StringBuilder productCodes = new StringBuilder();
+		Map<String, Integer> stockCountMap = new HashMap<String, Integer>();
+		//boolean stockFlag = true;
+
+		final Map<String, Boolean> dataMap = new HashMap<String, Boolean>();
+
+		final int restrictedCount = getDefaultPromotionsManager().getStockRestrictionVal(restrictionList);
+
+		for (final Map.Entry<String, AbstractOrderEntry> entry : validProductUssidMap.entrySet())
+		{
+			ussidIds.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + entry.getKey()
+					+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
+			ussidIds.append(",");
+			productCodes.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + entry.getValue().getProduct().getCode()
+					+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
+			productCodes.append(",");
+		}
+
+		if (flag)
+		{
+			stockCountMap = getStockService().getCumulativeStockMap(ussidIds.toString().substring(0, ussidIds.lastIndexOf(",")),
+					promoCode, true);
+			for (final Map.Entry<String, AbstractOrderEntry> entry : validProductUssidMap.entrySet())
+			{
+				if (MapUtils.isNotEmpty(stockCountMap) && null != stockCountMap.get(entry.getKey())
+						&& stockCountMap.get(entry.getKey()).intValue() >= restrictedCount)
+				{
+					dataMap.put(entry.getKey(), Boolean.FALSE);
+				}
+				else
+				{
+					dataMap.put(entry.getKey(), Boolean.TRUE);
+				}
+			}
+		}
+		else
+		{
+			stockCountMap = getStockService().getCumulativeStockMap(
+					productCodes.toString().substring(0, productCodes.lastIndexOf(",")), promoCode, false);
+			for (final Map.Entry<String, AbstractOrderEntry> entry : validProductUssidMap.entrySet())
+			{
+				if (MapUtils.isNotEmpty(stockCountMap) && null != entry.getValue()
+						&& StringUtils.isNotEmpty(entry.getValue().getProduct().getCode())
+						&& null != stockCountMap.get(entry.getValue().getProduct().getCode())
+						&& stockCountMap.get(entry.getValue().getProduct().getCode()).intValue() >= restrictedCount)
+				{
+					dataMap.put(entry.getKey(), Boolean.FALSE);
+				}
+				else
+				{
+					dataMap.put(entry.getKey(), Boolean.TRUE);
+				}
+			}
+		}
+
+
+
+		if (MapUtils.isEmpty(dataMap))
+		{
+			isExhausted = false;
+		}
+		else
+		{
+			for (final Entry<String, Boolean> data : dataMap.entrySet())
+			{
+				if (data.getValue().booleanValue())
+				{
+					isExhausted = false;
+				}
+			}
+		}
+
+		return isExhausted;
+	}
+
+	protected ExtStockLevelPromotionCheckServiceImpl getStockService()
+	{
+		return Registry.getApplicationContext().getBean("stockPromoCheckService", ExtStockLevelPromotionCheckServiceImpl.class);
 	}
 
 }
