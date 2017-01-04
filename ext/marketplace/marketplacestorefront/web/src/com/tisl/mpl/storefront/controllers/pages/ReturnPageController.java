@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1027,26 +1028,30 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		String returnDownloadFileName=null;
 		
 			// fileDownloadLocation=configurationService.getConfiguration().getString(RequestMappingUrlConstants.FILE_DOWNLOAD_PATH);
-			 fileDownloadLocation=request.getServletContext().getRealPath("/")+ File.separator +ModelAttributetConstants.RETURN_FILE_UPLOAD_FILE_PATH_WEB_INF
+			 fileDownloadLocation=request.getServletContext().getRealPath("/")+ModelAttributetConstants.RETURN_FILE_UPLOAD_FILE_PATH_WEB_INF
 					 +File.separator+ModelAttributetConstants.RETURN_FILE_UPLOAD_FILE_PATH_DOC+File.separator;
 			 returnDownloadFileName=ModelAttributetConstants.RETURN_FILE_UPLOAD_FILE_NAME;
 
 			 LOG.debug("Return And Refund Upload File Path:"+fileDownloadLocation);
 			 LOG.debug("Return And Refund Upload File Name:"+returnDownloadFileName);
 	      	if( !fileDownloadLocation.isEmpty()){
-	      		response.setContentType("text/html");
-	      		PrintWriter out = response.getWriter();
-	      		response.setContentType("APPLICATION/OCTET-STREAM");
+	      		response.setContentType("application/pdf");
+	      	//	PrintWriter out = response.getWriter();
 	      		if(null !=returnDownloadFileName && !returnDownloadFileName.isEmpty()){
-	      		response.setHeader("Content-Disposition", "attachment; filename=\" " + returnDownloadFileName + "\"");
+	      			response.addHeader("Content-Disposition", "attachment; filename=" + returnDownloadFileName);
 	      		}
-	      		FileInputStream fileInputStream = new FileInputStream(fileDownloadLocation + returnDownloadFileName);
-	      		int i;
-	      		while ((i = fileInputStream.read()) != -1) {
-	      			out.write(i);
+	      		File pdfFile = new File(fileDownloadLocation + returnDownloadFileName);
+	      		response.setContentLength((int) pdfFile.length());
+	      		FileInputStream fileInputStream = new FileInputStream(pdfFile);
+	      		OutputStream responseOutputStream = response.getOutputStream();
+	      		int bytes;
+	      		while ((bytes = fileInputStream.read()) != -1) {
+	      			responseOutputStream.write(bytes);
 	      		}
 	      		fileInputStream.close();
-	      		out.close();
+	      		responseOutputStream.flush();
+	      		responseOutputStream.close();
+	      	//	out.close();
 	      	
 	    }	
 	}
