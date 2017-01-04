@@ -673,8 +673,9 @@
 				<label class="product-deletion-confirmation"><spring:theme
 							code="wishlist.removeProductConfirmation.message" /></label>
 				</div>
+				<!-- changed for TISRLEE-1544 -->
 				<button class="removeProductConfirmation" type="submit"><spring:theme code="text.wishlist.yes" /></button>
-					<a class="close removeProductConfirmationNo" href="" data-dismiss="modal"><spring:theme code="text.wishlist.no" /></a>
+					<a class="removeProductConfirmationNo" href="" data-dismiss="modal"><spring:theme code="text.wishlist.no" /></a>
 				</div>
 				<!-- <button class="close " data-dismiss="modal"></button> -->
 			</div>
