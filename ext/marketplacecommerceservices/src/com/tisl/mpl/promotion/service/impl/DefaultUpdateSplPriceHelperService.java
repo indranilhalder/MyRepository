@@ -317,5 +317,75 @@ public class DefaultUpdateSplPriceHelperService implements UpdateSplPriceHelperS
 		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
 	}
 
+	/**
+	 * Populates the Product Data for Categories
+	 *
+	 * * TISPRO-352 : Fix
+	 *
+	 * @param brands
+	 * @param rejectBrandList
+	 * @param priority
+	 * @return dataMap
+	 */
+	@Override
+	public ConcurrentHashMap<List<String>, List<String>> getEligibleProductList(final List<String> brands,
+			final List<String> rejectBrandList, final Integer priority, final List<Category> categories,
+			final List<String> exProductList)
+	{
+
+		final List<CategoryModel> categoryList = getAllCategories(categories);
+		List<String> productPKList = null;
+		List<String> productCodeList = null;
+		ConcurrentHashMap<List<String>, List<String>> dataMap = null;
+
+		if (CollectionUtils.isNotEmpty(categoryList))
+		{
+			productPKList = new ArrayList<String>();
+			productCodeList = new ArrayList<String>();
+			dataMap = new ConcurrentHashMap<List<String>, List<String>>();
+			LOG.debug("Populating eligible products in List" + "Category List:" + categoryList);
+			for (final CategoryModel oModel : categoryList)
+			{
+				if (CollectionUtils.isNotEmpty(oModel.getProducts()))
+				{
+					for (final ProductModel product : oModel.getProducts())
+					{
+						if (getBrandsForProduct(product, rejectBrandList, brands) && validateCategoryProductData(product, priority)
+								&& validateExclusion(exProductList, product))
+						{
+							productPKList.add(product.getPk().toString());
+							productCodeList.add(product.getCode());
+						}
+					}
+				}
+			}
+
+
+			if (CollectionUtils.isNotEmpty(productPKList) && CollectionUtils.isNotEmpty(productCodeList))
+			{
+				dataMap.put(productPKList, productCodeList);
+			}
+		}
+		return dataMap;
+
+	}
+
+	/**
+	 * @param exProductList
+	 * @param product
+	 * @return flag
+	 */
+	private boolean validateExclusion(final List<String> exProductList, final ProductModel product)
+	{
+		boolean flag = true;
+
+		if (CollectionUtils.isNotEmpty(exProductList) && exProductList.contains(product.getCode()))
+		{
+			flag = false;
+		}
+
+		return flag;
+	}
+
 
 }

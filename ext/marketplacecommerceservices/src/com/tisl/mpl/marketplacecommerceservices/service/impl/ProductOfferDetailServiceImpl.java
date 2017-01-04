@@ -74,8 +74,10 @@ public class ProductOfferDetailServiceImpl implements ProductOfferDetailService
 					{
 						offerDetMap.put(MarketplacecommerceservicesConstants.MESSAGE, offerMessage);
 					}
+
 					// validateOffer method call for messageDet removed for INC_11105
 					if (StringUtils.isNotEmpty(offerMessageDet) && offerMessageDet.length() <= MIN_OFFER_LENGTH)
+
 					{
 						offerDetMap.put(MarketplacecommerceservicesConstants.MESSAGEDET, offerMessageDet);
 					}

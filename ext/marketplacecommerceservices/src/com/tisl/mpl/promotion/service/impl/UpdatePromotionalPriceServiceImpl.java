@@ -93,7 +93,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 	public void updatePromotionalPrice(final List<Product> products, final List<Category> categories, final Double value,
 			final Date startDate, final Date endtDate, final boolean percent, final Integer priority, final List<String> sellers,
 			final List<String> brands, final String promoCode, final List<String> rejectSellerList,
-			final List<String> rejectBrandList, final Double maxDiscount)
+			final List<String> rejectBrandList, final Double maxDiscount, final List<Product> exproductList)
 	{
 
 		try
@@ -103,6 +103,13 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 			//final List<String> stagedProductList = new ArrayList<String>();
 			final List<String> promoproductList = new ArrayList<String>();
 			final List<PriceRowModel> priceList = new ArrayList<PriceRowModel>();
+			List<String> exProductList = new ArrayList<String>();
+
+			//Added for TISPRD-8074
+			if (CollectionUtils.isNotEmpty(exproductList))
+			{
+				exProductList = getExcludedProductData(exproductList);
+			}
 
 			if (CollectionUtils.isNotEmpty(products))
 			{
@@ -120,7 +127,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 			{
 				//TISPRO-352 : Fix
 				final ConcurrentHashMap<List<String>, List<String>> categoryDetailsMap = updateSplPriceHelperService
-						.getEligibleProductList(brands, rejectBrandList, priority, categories);
+						.getEligibleProductList(brands, rejectBrandList, priority, categories, exProductList);
 				if (MapUtils.isNotEmpty(categoryDetailsMap))
 				{
 					for (final ConcurrentHashMap.Entry<List<String>, List<String>> entry : categoryDetailsMap.entrySet())
@@ -213,6 +220,28 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
+	}
+
+
+	/**
+	 * //Added for TISPRD-8074
+	 *
+	 * @param exproductList
+	 * @return exProductList
+	 */
+	private List<String> getExcludedProductData(final List<Product> exproductList)
+	{
+		final List<String> exProductList = new ArrayList<String>();
+
+		for (final Product product : exproductList)
+		{
+			if (StringUtils.isNotEmpty(product.getCode()))
+			{
+				exProductList.add(product.getCode());
+			}
+		}
+
+		return exProductList;
 	}
 
 	/**

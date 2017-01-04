@@ -174,7 +174,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 * 
+	 *
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)

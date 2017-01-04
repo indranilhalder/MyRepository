@@ -17,7 +17,9 @@ import com.tisl.mpl.wsdto.EMITermRateDataForMobile;
  */
 public interface MplNetBankingFacade
 {
+	//TISPRD-7276
 	//public List<EMIBankModel> getEMIBanks(final Double cartValue);
+
 	public EMIBankListWsDTO getEMIBanks(final Double cartValue);
 
 	public List<EMITermRateDataForMobile> getBankTerms(final String bank, final Double totalAmount);

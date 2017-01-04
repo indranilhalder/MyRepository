@@ -129,10 +129,12 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 
 		if (!errorflag)
 		{
-			final String errorMsg = Localization.getLocalizedString(MarketplacecommerceservicesConstants.PROMO_ERROR_MESSAGE);
+			//final String errorMsg = Localization.getLocalizedString(MarketplacecommerceservicesConstants.PROMO_ERROR_MESSAGE);
 			//interceptor exeption is thrown(Message : Cannot exceed 25 characters).
-			throw new InterceptorException(errorMsg);
+			//throw new InterceptorException(errorMsg);
 
+			throw new InterceptorException(Localization.getLocalizedString("promotion.title.length.count")
+					+ MarketplacecommerceservicesConstants.SINGLE_SPACE + String.valueOf(getPromotionTitleLength()));
 		}
 
 
@@ -294,8 +296,8 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 								throw new InterceptorException(errorMsg + MarketplacecommerceservicesConstants.SINGLE_SPACE
 										+ MarketplacecommerceservicesConstants.PROMOCODE + categoryPromotion.getCode()
 										+ MarketplacecommerceservicesConstants.SINGLE_SPACE
-										+ MarketplacecommerceservicesConstants.PROMOCATEGORY + category.getCode() + "(" + category.getName()
-										+ ")" + MarketplacecommerceservicesConstants.SINGLE_SPACE
+										+ MarketplacecommerceservicesConstants.PROMOCATEGORY + category.getCode() + "("
+										+ category.getName() + ")" + MarketplacecommerceservicesConstants.SINGLE_SPACE
 										+ MarketplacecommerceservicesConstants.PROMOPRIORITY + categoryPromotion.getPriority());
 								//}
 							}
@@ -375,27 +377,50 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 			{
 				final String errorMsg = Localization.getLocalizedString(PRODUCT_ERROR_MESSAGE);
 				throw new InterceptorException(errorMsg + MarketplacecommerceservicesConstants.SINGLE_SPACE
-						+ MarketplacecommerceservicesConstants.PROMOCODE + promoCode + MarketplacecommerceservicesConstants.SINGLE_SPACE
-						+ MarketplacecommerceservicesConstants.PROMOPRIORITY + promotion.getPriority());
+						+ MarketplacecommerceservicesConstants.PROMOCODE + promoCode
+						+ MarketplacecommerceservicesConstants.SINGLE_SPACE + MarketplacecommerceservicesConstants.PROMOPRIORITY
+						+ promotion.getPriority());
 			}
 		}
 	}
 
 	/**
 	 * @param object
-	 * @return
+	 * @return boolean
 	 */
 	private boolean checkDescriptionData(final Object object)
 	{
 		if (object instanceof AbstractPromotionModel)
 		{
+			final Integer titleLength = getPromotionTitleLength();
 			final AbstractPromotionModel promo = (AbstractPromotionModel) object;
-			if (StringUtils.isNotEmpty(promo.getTitle()) && promo.getTitle().trim().length() > 25)
+
+			if (StringUtils.isNotEmpty(promo.getTitle()) && promo.getTitle().trim().length() > titleLength.intValue())
 			{
 				return false;
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * The Method Returns the Max Possible Promotion Title Length
+	 *
+	 * @return titleLength
+	 */
+	private Integer getPromotionTitleLength()
+	{
+		Integer titleLength = Integer.valueOf(0);
+		final String length = configurationService.getConfiguration().getString("promotion.title.length", "76");
+		try
+		{
+			titleLength = Integer.valueOf(length);
+		}
+		catch (final NumberFormatException exception)
+		{
+			titleLength = Integer.valueOf(76);
+		}
+		return titleLength;
 	}
 
 
@@ -480,8 +505,8 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 	{
 		if (null != promotion && null == promotion.getPromotionGroup())
 		{
-			promotion.setPromotionGroup(mplPromotionHelper.fetchPromotionGroupDetails(
-					configurationService.getConfiguration().getString("promotion.default.promotionGroup.identifier")));
+			promotion.setPromotionGroup(mplPromotionHelper.fetchPromotionGroupDetails(configurationService.getConfiguration()
+					.getString("promotion.default.promotionGroup.identifier")));
 		}
 	}
 

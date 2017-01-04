@@ -17,7 +17,8 @@
         <property qualifier="product.deeplinkTypeId" />
         <property qualifier="product.deeplinkTypeVal" />
 	</group>
-
+	
+	
 	<custom-group 
 		class="de.hybris.platform.cockpit.services.config.impl.ClassAttrEditorSectionConfiguration" 
 		qualifier="classification"

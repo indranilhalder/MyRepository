@@ -5,10 +5,13 @@ package com.tisl.mpl.facade.netbank.impl;
 
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.user.data.CountryData;
+import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Comparator;
 import java.util.Collections;
@@ -37,10 +40,10 @@ public class MplNetBankingFacadeImpl implements MplNetBankingFacade
 {
 	@Resource(name = "mplNetBankingService")
 	private MplNetBankingService mplNetBankingService;
-	@Resource(name = "mplPaymentService")
-	private MplPaymentService mplPaymentService;
 	@Resource(name = "customerFacade")
 	private CustomerFacade customerFacade;
+	@Resource(name = "mplPaymentService")
+	private MplPaymentService mplPaymentService;
 
 	/**
 	 * @return the mplNetBankingService

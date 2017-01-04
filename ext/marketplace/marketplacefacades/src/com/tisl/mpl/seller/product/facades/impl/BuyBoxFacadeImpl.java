@@ -211,7 +211,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					arrayToProductList.removeAll(productsList);
 					productsWithNoStock = arrayToProductList;
 				}
-				//Added For Electronics : INC_11278
+
+				//Added For Electronics INC_11278
 				else if (buyBoxMod.getProduct().equalsIgnoreCase(pdpProduct))
 				{
 					productsWithNoStock.add(pdpProduct);
@@ -812,7 +813,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/*
 	 * This method is used to get the price of a product by giving the ussid
-	 *
+	 * 
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getpriceForUssid(java.lang.String)
 	 */
 
