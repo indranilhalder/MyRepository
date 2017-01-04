@@ -9539,29 +9539,44 @@
 				</attributes>
 			</itemtype>
 		</typegroup>
-		
+
 		<!-- A+ Content TPR-978 -->
 		<typegroup name="APlusContentGroup">
-		<itemtype code="APlusContent" generate="true"
-			extends="GenericItem" autocreate="true"
-			jaloclass="com.tisl.mpl.core.jalo.APlusContentGroup">
-			<description>A plus content HMC approach.</description>
-			<attributes>
-				<attribute qualifier="csvFile" type="Media"
-					autocreate="true" generate="true">
-					<modifiers read="true" write="true" search="true" />
-					<description>CSV file</description>
-					<persistence type="property" />
-				</attribute>
-				
-				<attribute qualifier="csvFileError" type="java.lang.String"
-					autocreate="true" generate="true">
-					<modifiers read="true" write="true" search="true" />
-					<description>CSV file Errors</description>
-					<persistence type="property" />
-				</attribute>
-			</attributes>
-		</itemtype>
+			<itemtype code="APlusContent" generate="true" extends="GenericItem"
+				autocreate="true" jaloclass="com.tisl.mpl.core.jalo.APlusContentGroup">
+				<description>A plus content HMC approach.</description>
+				<attributes>
+					<attribute qualifier="csvFile" type="Media" autocreate="true"
+						generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>CSV file</description>
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="csvFileError" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>CSV file Errors</description>
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+					</attribute>
+				</attributes>
+			</itemtype>
 		</typegroup>
 
 	</itemtypes>

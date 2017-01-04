@@ -482,7 +482,7 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 			 * isUpdatefeed); componentlist.add(sm); } else if (entry.getKey().startsWith("Video") &&
 			 * StringUtils.isNotEmpty(entry.getValue())) { final VideoComponentModel vm =
 			 * makeVideoComponent(entry.getValue(), entry.getKey(), line, writer, isUpdatefeed); componentlist.add(vm);
-			 * 
+			 *
 			 * } else if (entry.getKey().startsWith("Text") && StringUtils.isNotEmpty(entry.getValue())) { final
 			 * CMSParagraphComponentModel cmspara = makeTextComponent(entry.getValue(), entry.getKey(), line, writer,
 			 * isUpdatefeed); componentlist.add(cmspara); }
@@ -855,7 +855,8 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		writer.writeComment("columnName," + "errorMessage ," + "Line");
 		writer.write(line);
 		sbError.append("columnName,").append("errorMessage ,").append("Line");
-		sbError.append(line.toString());
+		sbError.append("\n");
+		sbError.append(errorColumnList.toString()).append(",").append(errorMessage).append(",").append(line);
 		sbError.append("\n");
 	}
 
@@ -874,7 +875,8 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		writer.writeComment("columnName," + "errorMessage ," + "Line");
 		writer.write(line);
 		sbError.append("columnName,").append("errorMessage ,").append("Line");
-		sbError.append(line.toString());
+		sbError.append("\n");
+		sbError.append(errorColumn).append(",").append(errorMessage).append(",").append(line);
 		sbError.append("\n");
 	}
 
@@ -895,7 +897,8 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		writer.writeComment("columnName," + "errorMessage ," + "Line No." + ",Line");
 		writer.write(line);
 		sbError.append("columnName,").append("errorMessage ,").append("Line");
-		sbError.append(line.toString());
+		sbError.append("\n");
+		sbError.append(errorColumn).append(",").append(errorMessage).append(",").append(lineNo);
 		sbError.append("\n");
 	}
 
