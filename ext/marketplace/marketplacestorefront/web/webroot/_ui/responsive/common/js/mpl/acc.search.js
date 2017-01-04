@@ -707,10 +707,14 @@ $(document).on("click",".plp-wishlist",function(e){
 			var requiredUrl = ACC.config.encodedContextPath + "/search/"
 					+ "addToWishListInPLP";	
 		    var sizeSelected=true;
+		    
+		    if(!$('#variant li').hasClass('selected')) {
+		    	sizeSelected=false;
+		    }
 		    if( $("#variant,#sizevariant option:selected").val()=="#"){
 		    	sizeSelected=false;
 		    }
-			var dataString = 'wish=' + wishName + '&product=' + productCode
+		    var dataString = 'wish=' + wishName + '&product=' + productCode
 					+ '&sizeSelected=' + sizeSelected;
 			
 			if(loggedIn == 'false') {
