@@ -146,7 +146,7 @@ div.displayClick {
 			    width: 300%;
 			    position: absolute;
 		}
-li.deliverySlotRadio .reset{margin: 0px auto !important;    height: 30px !important; line-height: 30px;} 
+li.deliverySlotRadio .reset{margin: 3px 0px !important;    height: 30px !important; line-height: 30px;} 
 .fixHeaderButton{top: 35px; right: 75px;}
 .w100 {height: 40px !important;
     width: 175px !important;
@@ -189,7 +189,7 @@ li.deliverySlotRadio .reset{margin: 0px auto !important;    height: 30px !import
 				}
 				date = $(this).val();
 				time = $(this).next().next().find("input.timeSlots:first").val();
-				selectedUssId = $(this).parent().parent().parent().parent().parent().parent().parent().parent().find("#selectedUssId").val();
+				selectedUssId = $(this).attr('data-ussid');
 				
 			} else {
 				
@@ -197,7 +197,7 @@ li.deliverySlotRadio .reset{margin: 0px auto !important;    height: 30px !import
 				//alert(mplconfigModel);
 				date = $(this).parent().parent().parent().parent().parent().find(".radioClickDate").val();
 				time = $(this).val();
-				selectedUssId = $(this).parent().parent().parent().parent().parent().parent().parent().parent().find("#selectedUssId").val();
+				selectedUssId = $(this).attr('data-ussid');
 			}
 			var dataString = 'deliverySlotCost='+mplconfigModel+'&deliverySlotDate='+date+'&deliverySlotTime='+time+'&ussId='+selectedUssId;
     		//alert(dataString);
@@ -436,7 +436,7 @@ li.deliverySlotRadio .reset{margin: 0px auto !important;    height: 30px !import
 												<c:set var="dateTimeSlotId" value="${dateTimeSlotId + 1}" scope="page"></c:set>
 												<fmt:parseDate value="${dateSlots.key}" var="parseddeliveryDate" pattern="dd-MM-yyyy" />
 												<div class="col-md-12 NOP pardhuBlock">
-													<input type="radio" class="radioPardhu radioClickDate" data-name="date" name="date${scheduleIndex}" value="${dateSlots.key}"> <span class="dateTime"><fmt:formatDate value="${parseddeliveryDate}" pattern="'ON' d  MMMM, yyyy"/></span>
+													<input type="radio" class="radioPardhu radioClickDate" data-name="date" name="date${scheduleIndex}" data-ussid="${entry.selectedUssid}" value="${dateSlots.key}"> <span class="dateTime"><fmt:formatDate value="${parseddeliveryDate}" pattern="'ON' d  MMMM, yyyy"/></span>
 													<c:choose>
 		      										<c:when test="${dateTimeSlotId ==1}">
 														<div class="displayClick" id="${dateTimeSlotId}">
@@ -456,7 +456,7 @@ li.deliverySlotRadio .reset{margin: 0px auto !important;    height: 30px !import
 																	<c:set var="timeSlotId" value="0" scope="page"></c:set>
 					      										 	<c:forEach items="${dateSlots.value}" var="timeSlots">
 					      										  	<c:set var="timeSlotId" value="${timeSlotId + 1}" scope="page"></c:set>
-																		<li id="${dateTimeSlotId}${timeSlotId}"><input type="radio" class="radioPardhu timeSlots" data-Date='${dateSlots.key}' data-name="time"  name="time${scheduleIndex}${dateTimeSlotId}" value="${timeSlots}"> <span class="dateTime1">${timeSlots}</span></li>
+																		<li id="${dateTimeSlotId}${timeSlotId}"><input type="radio" class="radioPardhu timeSlots" data-ussid="${entry.selectedUssid}" data-Date='${dateSlots.key}' data-name="time"  name="time${scheduleIndex}${dateTimeSlotId}" value="${timeSlots}"> <span class="dateTime1">${timeSlots}</span></li>
 																	</c:forEach>
 																</ul>
 															</div>
@@ -479,7 +479,7 @@ li.deliverySlotRadio .reset{margin: 0px auto !important;    height: 30px !import
 																	<c:set var="timeSlotId" value="0" scope="page"></c:set>
 					      										 	<c:forEach items="${dateSlots.value}" var="timeSlots">
 					      										  	<c:set var="timeSlotId" value="${timeSlotId + 1}" scope="page"></c:set>
-																		<li id="${dateTimeSlotId}${timeSlotId}"><input type="radio" class="radioPardhu timeSlots" data-Date='${dateSlots.key}' data-name="time"  name="time${scheduleIndex}${dateTimeSlotId}" value="${timeSlots}"> <span class="dateTime1">${timeSlots}</span></li>
+																		<li id="${dateTimeSlotId}${timeSlotId}"><input type="radio" class="radioPardhu timeSlots" data-ussid="${entry.selectedUssid}" data-Date='${dateSlots.key}' data-name="time"  name="time${scheduleIndex}${dateTimeSlotId}" value="${timeSlots}"> <span class="dateTime1">${timeSlots}</span></li>
 																	</c:forEach>
 																</ul>
 															</div>
@@ -488,12 +488,12 @@ li.deliverySlotRadio .reset{margin: 0px auto !important;    height: 30px !import
 												</c:choose>
 												</div>
 											</c:forEach>
+										<div class="col-md-12 NOP pardhuBlock" align="left">
+											<button class="button w100 reset" type="button" data-ussid="${entry.selectedUssid}" disabled="disabled">Reset</button>
+											 
 											</div>
-											<div class="col-md-4">
-											<p class="clearfix"></p>
-											<button class="button w100 reset pull-right" type="button" data-ussid="${entry.selectedUssid}" disabled="disabled">Reset</button>
-											<p class="clearfix"></p>
 											</div>
+											
 										</c:when>
 										<c:otherwise>
 										<div class="">Not Applicable</div>
