@@ -20,6 +20,7 @@ import de.hybris.platform.promotions.jalo.AbstractPromotionRestriction;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.promotions.model.OrderPromotionModel;
 import de.hybris.platform.promotions.model.PromotionGroupModel;
+import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
+import com.tisl.mpl.jalo.EtailLimitedStockRestriction;
 import com.tisl.mpl.jalo.EtailSellerSpecificRestriction;
 import com.tisl.mpl.jalo.SellerMaster;
 import com.tisl.mpl.marketplacecommerceservices.daos.BulkPromotionCreationDao;
@@ -768,6 +771,86 @@ public class MplPromotionHelper
 		}
 
 		return deliveryChargeForEntry;
+	}
+
+	/**
+	 *
+	 * @param restrictionList
+	 * @return boolean
+	 */
+	public boolean validateForStockRestriction(final List<AbstractPromotionRestriction> restrictionList)
+	{
+		for (final AbstractPromotionRestriction restriction : restrictionList)
+		{
+			if (restriction instanceof EtailLimitedStockRestriction)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @param key
+	 * @param count
+	 * @param validProductList
+	 * @return int
+	 */
+	public int getFreeGiftCount(final String key, final int count, final Map<String, Integer> validProductList)
+	{
+
+		LOG.debug("ValidProductList" + validProductList);
+		int giftCount = 0;
+		int quantity = 0;
+		List<SellerInformationModel> productSellerData = null;
+		List<SellerInformationModel> validSellerData = null;
+		try
+		{
+			if (null != key && MapUtils.isNotEmpty(validProductList) && count > 0)
+			{
+				final CatalogVersionModel oModel = getDefaultPromotionsManager().catalogData();
+				productSellerData = getSellerBasedPromotionService().fetchSellerInformation(key, oModel);
+
+				if (null != productSellerData && !productSellerData.isEmpty())
+				{
+					for (final SellerInformationModel sellerData : productSellerData)
+					{
+						for (final Map.Entry<String, Integer> entry : validProductList.entrySet())
+						{
+							validSellerData = getSellerBasedPromotionService().fetchSellerInformation(entry.getKey(), oModel);
+							for (final SellerInformationModel data : validSellerData)
+							{
+								if (sellerData.getSellerID().equalsIgnoreCase(data.getSellerID()))
+								{
+									quantity = quantity + (entry.getValue().intValue());
+								}
+							}
+
+						}
+					}
+				}
+
+				//Newly Added Code
+				if (quantity > 0)
+				{
+					giftCount = quantity / count;
+				}
+			}
+
+		}
+		catch (final ModelNotFoundException exception)
+		{
+			giftCount = 0;
+			LOG.error(exception.getMessage());
+		}
+		catch (final Exception exception)
+		{
+			giftCount = 0;
+			LOG.error(exception.getMessage());
+		}
+
+		return giftCount;
+
 	}
 
 }
