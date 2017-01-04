@@ -22,7 +22,6 @@
        http://www.springframework.org/schema/integration/spring-integration.xsd
        http://www.springframework.org/schema/integration/file
        http://www.springframework.org/schema/integration/file/spring-integration-file.xsd">
- 
   
  		<!-- General setup -->
  		

@@ -46,7 +46,7 @@ public class MPLDefaultConsignmentBasedReturnableCheck extends DefaultConsignmen
 		{
 			return false;
 		}
-		// Changes in the richAttribute from Seller Information for TISTNL-4
+		// Changes for richAttribute from Seller Information for TISTNL-4
 		final Collection<SellerInformationModel> sellerInfo = orderentry.getProduct().getSellerInformationRelator();
 
 		Collection<RichAttributeModel> richAttributeList = new ArrayList<>();

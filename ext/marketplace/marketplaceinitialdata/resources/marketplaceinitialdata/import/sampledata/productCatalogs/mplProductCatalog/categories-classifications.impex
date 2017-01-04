@@ -1,5 +1,4 @@
 # ImpEx for Importing Category Classifications
-
 # Macros / Replacement Parameter definitions
 $productCatalog=mplProductCatalog
 $productCatalogName=Marketplace Product Catalog
