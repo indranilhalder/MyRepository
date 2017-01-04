@@ -39,7 +39,8 @@
 				<entry key="variant_product" value="13" />
 				<entry key="seller" value="12" />
 				<entry key="richattribute_seller" value="11" />
-				<entry key="richattribute_product" value="10" />
+			    <!--   Changes for TISTNL-4  -->
+			    <!-- <entry key="richattribute_product" value="10" /> --> 
 				<entry key="brand" value="9" />
 				<entry key="seocontent" value="8" />
 				<entry key="global_identifier" value="7" />
@@ -158,11 +159,11 @@
 	 p:converter-ref="batchCategoryMediaConverter" />
     
      <!-- Transformer for Rich attributes Import -->
-    
-    <bean id="batchProductRichAttributesMapping"
+     <!-- Changes for TISTNL-4  -->
+    <!-- <bean id="batchProductRichAttributesMapping"
      class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
      p:mapping="richattribute_product"
-     p:converter-ref="batchProductRichAttributesConverter"/>
+     p:converter-ref="batchProductRichAttributesConverter"/> -->
     
     <!-- Transformer for Global Identifier Import -->
     
@@ -666,7 +667,8 @@ $language=language(isocode)[default='en'][unique=true];
         </bean> -->
         
       <!-- Converter for Rich Attributes For Product Import --> 
-     <bean id="batchProductRichAttributesConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+      <!-- Changes made for TISTNL-4  -->
+    <!--  <bean id="batchProductRichAttributesConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
@@ -684,7 +686,7 @@ $language=language(isocode)[default='en'][unique=true];
         <property name="impexRow">
             <value>;{0};{1};{2};{+3};{+4};{5};{6};{7};{8};{9};{10};{11};{12};{13};{14};{15};{+16};{17};{18};{+19};{+20};{+21};{+22};{+23};{+24};{+25}</value>
         </property>
-        </bean>
+        </bean> -->
          <!-- Converter for SizeGuide For Product Import --> 
      <bean id="batchProdSizeguideConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
