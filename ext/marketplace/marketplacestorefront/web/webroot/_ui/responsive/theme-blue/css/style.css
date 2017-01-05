@@ -59363,7 +59363,7 @@ text-decoration:underline;
 	clear:both;
 }
 
-.Manufacturer .Padd > h2 {
+/* .Manufacturer .Padd > h2 {
     text-indent: 100%;
     white-space: nowrap;
     overflow: hidden;
@@ -59371,7 +59371,7 @@ text-decoration:underline;
 	min-width: 180px;
     border-top: 2px solid #a9143c;
     margin: 0 auto 40px;
-}
+} */
 
 .trending a.button.hotShowHide {
     /* padding: 13px; */
