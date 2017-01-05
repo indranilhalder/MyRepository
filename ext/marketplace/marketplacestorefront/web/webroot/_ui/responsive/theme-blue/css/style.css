@@ -38807,7 +38807,7 @@ main {
 }
 
 .carousel-component {
-	margin: 25px 0;
+	margin: -30px 0;
 }
 
 .carousel-component:before, .carousel-component:after {
@@ -43775,7 +43775,6 @@ ul.jqtree-tree .jqtree-moving > .jqtree-element .jqtree-title {
 }
 
 /* piczoomer css end */
-
 .smartbanner-show {
 	margin-top: 80px;
 }
