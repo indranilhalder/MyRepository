@@ -58961,7 +58961,7 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 .SpecWrap{ border:1px solid #ebebeb;}
 .SpecWrap .Padd{ padding:50px 50px 25px;}
 .SpecWrap .Padd h2{ font-size:28px; text-align:center; font-weight:bold;}
-.SpecWrap .Padd .tabs-block .nav > li{  font-weight: normal;width:auto; text-align:center;} 
+.SpecWrap .Padd .tabs-block .nav > li{  font-weight: normal;width:auto; text-align:center; max-width:none;} 
 .SpecWrap .Padd .tabs-block .tabs > li ul{ list-style:none; padding:0;}
 .SpecWrap .Padd .tabs-block{ margin:50px 0 0;}
 .SpecWrap .Padd .tabs-block .tabs{ margin:0;}
