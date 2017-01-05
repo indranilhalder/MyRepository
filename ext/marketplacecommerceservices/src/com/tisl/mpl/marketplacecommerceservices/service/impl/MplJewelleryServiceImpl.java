@@ -25,7 +25,7 @@ public class MplJewelleryServiceImpl implements MplJewelleryService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService#getJewelleryUssid(java.lang.String)
 	 */
 	@Override
@@ -38,7 +38,7 @@ public class MplJewelleryServiceImpl implements MplJewelleryService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService#getJewelleryInfoByUssid(java.lang.String)
 	 */
@@ -47,6 +47,18 @@ public class MplJewelleryServiceImpl implements MplJewelleryService
 	{
 		// YTODO Auto-generated method stub
 		return mplJewelleryDao.getJewelleryInfoByUssid(ussid);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService#getWeightVarientUssid(java.lang.String)
+	 */
+	@Override
+	public List<String> getWeightVarientUssid(final String ussid)
+	{
+		// YTODO Auto-generated method stub
+		return mplJewelleryDao.getWeightVarientUssid(ussid);
 	}
 
 }

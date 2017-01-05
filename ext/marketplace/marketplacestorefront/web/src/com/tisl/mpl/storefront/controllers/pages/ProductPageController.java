@@ -1791,7 +1791,7 @@ public class ProductPageController extends MidPageController
 	 * @param productData
 	 * @param model
 	 */
-	// Jewellery changes added 
+	// Jewellery changes added
 
 	private void displayConfigurableAttribute(final ProductData productData, final Model model)
 	{
@@ -2602,8 +2602,7 @@ public class ProductPageController extends MidPageController
 		final BuyBoxData buyboxdata = (BuyBoxData) buydata.get("pdp_buy_box");
 
 		//PRICE BREAKUP STARTS:TPR-3752
-		final LinkedHashMap<String, PriceData> PriceMap = priceBreakupFacade.getPricebreakup(buyboxdata.getProductCode(),
-				buyboxdata.getSellerArticleSKU());
+		final LinkedHashMap<String, PriceData> PriceMap = priceBreakupFacade.getPricebreakup(buyboxdata.getSellerArticleSKU());
 
 		buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE_BREAKUP, PriceMap);
 		//PRICE BREAKUP ENDS:TPR-3752
