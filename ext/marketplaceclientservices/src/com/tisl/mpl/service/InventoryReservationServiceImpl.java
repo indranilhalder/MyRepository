@@ -411,9 +411,12 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLFIRSTPHASE);
 			String mockXmlSecondPhase = configurationService.getConfiguration().getString(
 					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLSECONDPHASE);
+			String mockXmlJewelPhase = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLJEWELPHASE);
 			final String mockXmlThirdPhase = configurationService.getConfiguration().getString(
 					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLTHIRDPHASE);
-
+			final String resevedUssid = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_REALTIMECALL_MOCK_JEWLUSSID);
 
 			if (StringUtils.isNotEmpty(mockXmlFirstPhase) && StringUtils.isNotEmpty(mockXmlSecondPhase)
 					&& StringUtils.isNotEmpty(mockXmlThirdPhase))
@@ -421,12 +424,26 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 				String outputXml = mockXmlFirstPhase;
 				for (final InventoryReservRequest entry : request.getItem())
 				{
-					if (null != entry.getUSSID() && !entry.getUSSID().isEmpty())
+					if (null != entry.getUSSID() && !entry.getUSSID().isEmpty() && entry.isJewellery() == false)
 					{
 						mockXmlSecondPhase = mockXmlSecondPhase.replaceAll("<replaceussid>", entry.getUSSID());
 						outputXml += mockXmlSecondPhase;
 					}
 				}
+				/* mock service for Jewellery added */
+				for (final InventoryReservJewelleryRequest jewelentry : request.getJewelleryItem())
+				{
+					for (final InventoryReservRequest entry1 : jewelentry.getItem())
+					{
+						if (null != entry1.getUSSID() && entry1.getUSSID().equalsIgnoreCase(resevedUssid))
+						{
+							mockXmlJewelPhase = mockXmlJewelPhase.replaceAll("<jewlussid>", entry1.getUSSID());
+							outputXml += mockXmlJewelPhase;
+						}
+					}
+
+				}
+
 				final JAXBContext jaxbContext = JAXBContext.newInstance(InventoryReservListResponse.class);
 				final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 				final String output = outputXml + mockXmlThirdPhase;
@@ -442,7 +459,6 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 		}
 		return responsefromOMS;
 	}
-
 
 	/**
 	 * @return the pinCodeDeliveryModeService
