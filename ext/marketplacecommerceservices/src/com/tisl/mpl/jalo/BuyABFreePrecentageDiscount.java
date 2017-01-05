@@ -92,7 +92,8 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 
 			//changes end for omni cart fix @atmaram
 
-			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag && sellerFlag)
+			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag && sellerFlag
+					&& getMplPromotionHelper().checkOrderCount(restrictionList, getCode(), cart))
 			{
 				promotionResults = promotionEvaluation(arg0, arg1, excludedProductList, excludeManufactureList, restrictionList);
 			}

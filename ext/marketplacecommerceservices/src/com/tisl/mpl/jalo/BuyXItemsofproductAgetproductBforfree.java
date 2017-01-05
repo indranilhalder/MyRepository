@@ -134,7 +134,8 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 			}
 
 			//if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag && sellerFlag) //***Blocked for TISPT-154**
-			if (checkChannelFlag && sellerFlag && flagForPincodeRestriction)
+			if (checkChannelFlag && sellerFlag && flagForPincodeRestriction
+					&& getMplPromotionHelper().checkOrderCount(restrictionList, getCode(), cart))
 			{
 				if (GenericUtilityMethods.checkBrandAndCategoryMinimumAmt(validProductUssidMap, ctx, promoContext, this,
 						restrictionList) && !getDefaultPromotionsManager().promotionAlreadyFired(ctx, validProductUssidMap))
