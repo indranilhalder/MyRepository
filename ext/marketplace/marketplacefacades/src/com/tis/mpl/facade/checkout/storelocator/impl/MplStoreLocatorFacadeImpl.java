@@ -15,6 +15,7 @@ import de.hybris.platform.order.CartService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
+import com.tisl.mpl.core.model.RichAttributeModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -176,9 +177,18 @@ public class MplStoreLocatorFacadeImpl implements MplStoreLocatorFacade
 			}
 			//get stores from commerce from ats response
 			posDataList = getStoresDataFromCommerce(posModelList);
-			
-			final String sellerName = sellerInfoModel.getSellerName();
-			
+			//BUG-ID: TISRLEE-1561 04-01-2017 
+			String sellerName = null;
+			 List<RichAttributeModel> richAttributeModelList = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute(); 
+			if (richAttributeModelList.get(0).getDeliveryFulfillModes().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.FULFILMENT_TYPE_BOTH)
+					&& richAttributeModelList.get(0).getDeliveryFulfillModeByP1().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIPCODE)
+					|| richAttributeModelList.get(0).getDeliveryFulfillModes().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIPCODE))
+			{
+				sellerName = MarketplaceFacadesConstants.TATA_CLIQ;
+			}else
+			{
+				sellerName=sellerInfoModel.getSellerName();
+			}
 			//get qty for a product from cart
 			final Long productQty = getQtyForProduct(ussid);
 			

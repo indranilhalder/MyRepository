@@ -39,6 +39,7 @@ import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 
@@ -76,6 +77,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	private MplDeliveryCostService mplDeliveryCostService;
 	@Resource(name = "productDetailsHelper")
 	private ProductDetailsHelper productDetailsHelper;
+	@Autowired
+	private MplSellerInformationService mplSellerInformationService;
 
 	private static final String BUYBOX_LIST = "buyboxList";
 
@@ -847,6 +850,34 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		buyboxData.setSellerId(buyBoxMod.getSellerId());
 		buyboxData.setSellerArticleSKU(buyBoxMod.getSellerArticleSKU());
 		buyboxData.setAvailable(buyBoxMod.getAvailable());
+		// TISRLEE-1586 03-01-2017
+		SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(buyBoxMod.getSellerArticleSKU());
+		if (CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute()))
+		{
+			List<RichAttributeModel> richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+			int sellerEDTime = 0;
+			try
+			{
+				if (richAttributeModel.get(0).getSellerHandlingTime() != null)
+				{
+					Integer sellertime = richAttributeModel.get(0).getSellerHandlingTime();
+					sellerEDTime = Integer.parseInt(sellertime.toString());
+				}
+				if (sellerEDTime <= 24)
+				{
+					buyboxData.setIsSellerHandlingTime(true);
+				}
+				else
+				{
+					buyboxData.setIsSellerHandlingTime(false);
+				}
+			}
+			catch (NullPointerException exception)
+			{
+				LOG.error("Null Point Exception : BuyBoxFacadeImpl" + exception.getMessage());
+			}
+		}
+
 		if (null != buyBoxMod.getMrp())
 		{
 			buyboxData.setMrp(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));

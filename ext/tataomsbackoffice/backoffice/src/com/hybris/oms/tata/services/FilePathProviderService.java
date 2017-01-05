@@ -26,7 +26,7 @@ public class FilePathProviderService
 	private String fragileOrderFileUploadPath;
 	private String forwardFileHeaderProperty;
 	private String returnFileHeaderProperty;
-
+	private String unmappedpincodesDwnldPath;
 
 	/**
 	 * @return the forwardFileHeaderProperty
@@ -272,6 +272,23 @@ public class FilePathProviderService
 	public void setShipmentStatusUpload(final String shipmentStatusUpload)
 	{
 		this.shipmentStatusUpload = shipmentStatusUpload;
+	}
+
+	/**
+	 * @return the unmappedpincodesDwnldPath
+	 */
+	public String getUnmappedpincodesDwnldPath()
+	{
+		return unmappedpincodesDwnldPath;
+	}
+
+	/**
+	 * @param unmappedpincodesDwnldPath
+	 *           the unmappedpincodesDwnldPath to set
+	 */
+	public void setUnmappedpincodesDwnldPath(final String unmappedpincodesDwnldPath)
+	{
+		this.unmappedpincodesDwnldPath = unmappedpincodesDwnldPath;
 	}
 
 

@@ -100,7 +100,8 @@
 		<!-- <property name="deliveryModes" type="String" />
 		<property name="isCod" type="String" />
 		 -->
-		
+		<!--  TISRLEE-1586 03-01-2017-->
+		<property name="isSellerHandlingTime" type="boolean" />
 	</bean>
       <bean class="com.tisl.mpl.facades.product.RichAttributeData">
         <property name="deliveryModes" type="String" />

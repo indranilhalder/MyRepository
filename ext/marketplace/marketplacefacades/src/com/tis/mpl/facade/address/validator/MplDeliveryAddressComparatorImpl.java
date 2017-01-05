@@ -155,14 +155,9 @@ public class MplDeliveryAddressComparatorImpl implements MplDeliveryAddressCompa
 		if (StringUtils.isNotEmpty(oldAddress.getStreetname()) && StringUtils.isNotEmpty(newDeliveryAddress.getStreetname()))
 		{
 
-			if (oldAddress.getStreetname().trim().equalsIgnoreCase(newDeliveryAddress.getStreetname().trim()))
-			{
-				isChanged = false;
-			}
-			else
-			{
-				isChanged = true;
-				return isChanged;
+			if (!oldAddress.getStreetname().trim().equalsIgnoreCase(newDeliveryAddress.getStreetname().trim()))
+			{	
+				return true;
 			}
 
 		}
@@ -170,95 +165,70 @@ public class MplDeliveryAddressComparatorImpl implements MplDeliveryAddressCompa
 				&& StringUtils.isNotEmpty(newDeliveryAddress.getStreetnumber()))
 		{
 
-			if (oldAddress.getStreetnumber().trim().equalsIgnoreCase(newDeliveryAddress.getStreetnumber().trim()))
+			if (!oldAddress.getStreetnumber().trim().equalsIgnoreCase(newDeliveryAddress.getStreetnumber().trim()))
 			{
-				isChanged = false;
-			}
-			else
-			{
-				isChanged = true;
-				return isChanged;
+				return true;
 			}
 
 		}
 		if (StringUtils.isNotEmpty(oldAddress.getAddressLine3())
 				&& StringUtils.isNotEmpty(newDeliveryAddress.getAddressLine3()))
 		{
-
-			if (oldAddress.getAddressLine3().trim().equalsIgnoreCase(newDeliveryAddress.getAddressLine3().trim()))
+			if (!oldAddress.getAddressLine3().trim().equalsIgnoreCase(newDeliveryAddress.getAddressLine3().trim()))
 			{
-				isChanged = false;
-			}
-			else
-			{
-				isChanged = true;
-				return isChanged;
-			}
+				return true;
+			}	
 
 		}
 		if (StringUtils.isNotEmpty(oldAddress.getLandmark()) && StringUtils.isNotEmpty(newDeliveryAddress.getLandmark()))
 		{
 
-			if (oldAddress.getLandmark().trim().equalsIgnoreCase(newDeliveryAddress.getLandmark().trim()))
+			if (!oldAddress.getLandmark().trim().equalsIgnoreCase(newDeliveryAddress.getLandmark().trim()))
 			{
-				isChanged = false;
-			}
-			else
-			{
-				isChanged = true;
-				return isChanged;
+				return true;
 			}
 		}
+		else if (StringUtils.isNotEmpty(newDeliveryAddress.getLandmark()))
+		{
+			return true;
+		}else if(StringUtils.isNotEmpty(oldAddress.getLandmark())){
+			return true;
+		}
+		
+		
 		if (StringUtils.isNotEmpty(oldAddress.getDistrict()) && StringUtils.isNotEmpty(newDeliveryAddress.getDistrict()))
 		{
-
-			if (oldAddress.getDistrict().trim().equalsIgnoreCase(newDeliveryAddress.getDistrict().trim()))
+			if (!oldAddress.getDistrict().trim().equalsIgnoreCase(newDeliveryAddress.getDistrict().trim()))
 			{
-				isChanged = false;
+				return true;
 			}
-			else
-			{
-				isChanged = true;
-				return isChanged;
-			}
+		
 		}
 		if (StringUtils.isNotEmpty(oldAddress.getCity()) && StringUtils.isNotEmpty(newDeliveryAddress.getCity()))
 		{
-			if (oldAddress.getCity().trim().equalsIgnoreCase(newDeliveryAddress.getCity().trim()))
+			if (!oldAddress.getCity().trim().equalsIgnoreCase(newDeliveryAddress.getCity().trim()))
 			{
-				isChanged = false;
+				return true;
 			}
-			else
-			{
-				isChanged = true;
-				return isChanged;
-			}
+			
 		}
 
 		if (StringUtils.isNotEmpty(oldAddress.getTown()) && StringUtils.isNotEmpty(newDeliveryAddress.getTown()))
 		{
-			if (oldAddress.getTown().trim().equalsIgnoreCase(newDeliveryAddress.getTown().trim()))
+			if (!oldAddress.getTown().trim().equalsIgnoreCase(newDeliveryAddress.getTown().trim()))
 			{
-				isChanged = false;
+				return true;
 			}
-			else
-			{
-				isChanged = true;
-				return isChanged;
-			}
+			
 		}
 		
 		if (StringUtils.isNotEmpty(oldAddress.getPostalcode()) && StringUtils.isNotEmpty(newDeliveryAddress.getPostalcode()))
 		{
-			if (oldAddress.getPostalcode().trim().equalsIgnoreCase(newDeliveryAddress.getPostalcode().trim()))
+			if (!oldAddress.getPostalcode().trim().equalsIgnoreCase(newDeliveryAddress.getPostalcode().trim()))
 			{
-				isChanged = false;
+				return true;
 			}
-			else
-			{
-				isChanged = true;
-				return isChanged;
-			}
+			
 		}
 		return isChanged;
 	}

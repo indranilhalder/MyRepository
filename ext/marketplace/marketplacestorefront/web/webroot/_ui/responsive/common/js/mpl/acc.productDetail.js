@@ -1495,8 +1495,11 @@ $( document ).ready(function() {
 					// var codEnabled = data['isCod'];
 					var sellerName = data['sellerName'];
 					var sellerID = data['sellerId'];
+					var isEDSeller = data['isEDSeller'];
 					
-					
+					 if (!isEDSeller){
+						 setTimeout(function(){ $("#expressli").hide() }, 300)
+				      }
 					$("#sellerNameId").html(sellerName);
 					$("#sellerSelId").val(sellerID);
 				//	alert(data['othersSellersCount']);
