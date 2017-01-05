@@ -201,7 +201,9 @@
 		<a class="size-guide" href="${sizeGuideUrl}" role="button" data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}">
 		<spring:theme code="product.variants.quickview.size.guide"/>
 		</a>
-
+		  <!-- FineJewellery restriction added -->                                            
+       <c:choose>  
+	    <c:when test="${product.rootCategory!='FineJewellery'}">
 		<div class="select-size">
 		 <c:choose>
 		    <c:when test="${selectedSize!=null}"> 
@@ -212,6 +214,7 @@
 							code="text.select.size" /></span>
 			</c:otherwise>
 			</c:choose> 
+			
 				<ul label="sizes" id="quickViewVariant">
 				 <li style="display:none;"><a href="#" class="js-reference-item cboxElement">select size</a></li>
 				 <%-- <li><spring:theme
@@ -279,10 +282,47 @@
 						</c:choose>
 					</c:forEach>
 				</c:forEach>
-			</ul>		
-			<!-- </select> -->
-			
+			</ul>	
+					<!-- </select> -->		
 		</div>
+		</c:when>
+			<c:otherwise>
+				<!-- dropdown in quickview for jewellery added --> 
+			    <select id="quickViewjewelleryvariant" class="jewellery-select">   
+			    	<c:choose>
+					<c:when test="${selectedSize eq null}">
+						<option value="#" selected="selected">
+						<spring:theme code="text.select.size" />
+						</option>
+					</c:when>
+					<c:otherwise>
+						<option value="#"><spring:theme code="text.select.size" /></option>
+					</c:otherwise>
+				</c:choose>          		     
+		     <c:forEach items="${product.variantOptions}" var="variantOption">
+		     
+					<c:forEach var="entry" items="${variantOption.sizeLink}">
+									<c:url value="${entry.key}/quickView" var="link" />							
+									<c:choose>
+										<c:when test="${(variantOption.code eq product.code)}">
+											<c:choose>
+												<c:when test="${selectedSize eq null}">
+													<option value="${link}?selectedSize=true">${entry.value}</option>
+												</c:when>
+												<c:otherwise>
+													<option value="${link}?selectedSize=true" selected >${entry.value}</option>													
+												</c:otherwise>
+											</c:choose>
+										</c:when>
+										<c:otherwise>
+											<option value="${link}?selectedSize=true">${entry.value}</option>
+										</c:otherwise>
+									</c:choose>
+					</c:forEach>
+				</c:forEach>
+			   </select>
+			</c:otherwise>	
+	</c:choose>
 	</form:form>
 	</c:if>
 	
