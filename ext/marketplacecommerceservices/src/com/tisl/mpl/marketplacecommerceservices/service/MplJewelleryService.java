@@ -27,5 +27,11 @@ public interface MplJewelleryService
 	 */
 	public List<JewelleryInformationModel> getJewelleryInfoByUssid(String ussid);
 
+	/**
+	 * @param ussid
+	 * @return
+	 */
+	public List<String> getWeightVarientUssid(String ussid);
+
 
 }

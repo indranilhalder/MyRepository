@@ -28,4 +28,11 @@ public interface MplJewelleryDao
 	 */
 	List<JewelleryInformationModel> getJewelleryInfoByUssid(String ussid);
 
+
+	/**
+	 * @param ussid
+	 * @return
+	 */
+	List<String> getWeightVarientUssid(String ussid);
+
 }

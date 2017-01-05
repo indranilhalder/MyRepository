@@ -9,11 +9,11 @@ import java.util.LinkedHashMap;
 
 
 /**
- * @author 970506
+ * @author Tcs
  *
  */
 public interface PriceBreakupFacade
 {
 	//
-	public LinkedHashMap<String, PriceData> getPricebreakup(final String productCode, final String ussid);
+	public LinkedHashMap<String, PriceData> getPricebreakup(final String ussid);
 }
