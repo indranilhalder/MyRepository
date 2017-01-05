@@ -1275,7 +1275,7 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 	
 
 					// construct custom price query params	
-	                var minPriceSearchTxt ="";
+					/* var minPriceSearchTxt ="";
 	                var maxPriceSearchTxt ="";
 	                if(isNaN($("#customMinPriceMob").val()) && isNaN($("#customMaxPriceMob").val())){
 					minPriceSearchTxt = ($('.minPriceSearchTxt').val() == null || $('.minPriceSearchTxt').val() == "") ? 0 : $('.minPriceSearchTxt').val() ;
@@ -1284,8 +1284,11 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 	                else{
 	                	minPriceSearchTxt = ($('#customMinPriceMob').val() == null || $('#customMinPriceMob').val() == "") ? 0 : $('#customMinPriceMob').val() ;
 					    maxPriceSearchTxt = ($('#customMaxPriceMob').val() == null || $('#customMaxPriceMob').val() == "") ? 99999999 : $('#customMaxPriceMob').val() ;	
-	                }
-				    
+	                }*/
+	 				//TISQAUATS-52 starts
+	                var minPriceSearchTxt = ($('#customMinPrice').val() == null || $('#customMinPrice').val() == "") ? 0 : $('#customMinPrice').val() ;
+	                var maxPriceSearchTxt = ($('#customMaxPrice').val() == null || $('#customMaxPrice').val() == "") ? 99999999 : $('#customMaxPrice').val() ;
+	                //TISQAUATS-52 ends
 					var currentQryParam = $('.currentPriceQueryParams').val();
 					var facetValue = $('.facetValue').val();
 
@@ -1383,7 +1386,15 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 									requiredUrl = '/CustomSkuCollection/'+collectionId+'/getFacetData';
 								}
 								else{
-									requiredUrl = action.concat("getFacetData");
+									//requiredUrl = action.concat("getFacetData");
+									// INC_11277 start
+									if ((/.*\/$/g).test(action)) {
+										requiredUrl = action.concat("getFacetData");
+									}
+									else{
+										requiredUrl = action.concat("/getFacetData");
+									} 
+									// INC_11277 end
 								}
 							}
 							else{
