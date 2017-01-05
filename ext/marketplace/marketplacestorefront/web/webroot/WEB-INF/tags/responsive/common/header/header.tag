@@ -59,12 +59,12 @@
 	<input type="hidden" id="staticHost" name="staticHost" value="//${staticHost}">
 	
 	<!-- End -->
-	<!-- geolocation start-->
+	<%--<!-- geolocation start-->
 	
 	<input type="hidden" id="latlng" value="">
     <input type="hidden" id="location" value="">
     
-    <!-- geolocation End-->
+    <!-- geolocation End--> --%>
 
 	
 	
