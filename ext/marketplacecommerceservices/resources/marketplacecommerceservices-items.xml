@@ -525,6 +525,13 @@
 						optional="true" />
 					<persistence type="property" />
 				</attribute>
+				<attribute qualifier="customerID"
+					autocreate="true" type="java.lang.String">
+					<description>Store Customer ID</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
 			</attributes>
 		</itemtype>
 		
@@ -1816,7 +1823,14 @@
 						optional="true" />
 					<persistence type="property" />
 				</attribute>
-                          </attributes>
+				<attribute autocreate="true" qualifier="cusRedeemCount"
+					type="java.lang.Integer">
+					<defaultvalue>Double.valueOf(0)</defaultvalue>
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+             </attributes>
              </itemtype> 
        <!-- TPR-970 changes starts -->
 		<itemtype code="EtailPincodeRestriction"
