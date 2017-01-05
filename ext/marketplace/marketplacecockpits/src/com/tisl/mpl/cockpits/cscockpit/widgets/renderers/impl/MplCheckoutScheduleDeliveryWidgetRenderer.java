@@ -145,25 +145,38 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 		}else {
 			 deliverySlotsResponseData= sessionService.getAttribute(MarketplacecommerceservicesConstants.SCHEDULE_DELIVRY_DATA);
 		}
+		boolean eligigleForScheduleSlots = Boolean.FALSE;
 	 	if(null != deliverySlotsResponseData && null != deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData()) {
-			populateScheduledDeliveryHeaders(widget, listHead);
-			for(AbstractOrderEntryModel orderEntry: cart.getEntries()) {
-				if(!orderEntry.getGiveAway() && !orderEntry.getFulfillmentType().equalsIgnoreCase(MarketplaceCockpitsConstants.SSHIP) ) {
-					Listitem row = new Listitem();
-					row.setSclass("listbox-row-item");
-					row.setParent(listBox);
-					for( InvReserForDeliverySlotsItemEDDInfoData deliverySlotsItemEDDInfo :deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData() ) {
-						if(deliverySlotsItemEDDInfo.getUssId().trim().equalsIgnoreCase(orderEntry.getSelectedUSSID().trim())) {
-								renderDeliverySlots(widget,orderEntry,deliverySlotsItemEDDInfo, row);
-							break;
-						}
-					}
-				}
-				
-			}
-		}
-		
-		else {
+	 		for(AbstractOrderEntryModel orderEntry: cart.getEntries()) {
+	 			if(!orderEntry.getGiveAway() && !orderEntry.getFulfillmentType().equalsIgnoreCase(MarketplaceCockpitsConstants.SSHIP) ) {
+	 				populateScheduledDeliveryHeaders(widget, listHead);
+	 				eligigleForScheduleSlots = true;
+	 				break;
+	 			}
+	 		}
+	 		
+	 		if(eligigleForScheduleSlots) {
+	 			for(AbstractOrderEntryModel orderEntry: cart.getEntries()) {
+	 				if(!orderEntry.getGiveAway() && !orderEntry.getFulfillmentType().equalsIgnoreCase(MarketplaceCockpitsConstants.SSHIP) ) {
+	 					Listitem row = new Listitem();
+	 					row.setSclass("listbox-row-item");
+	 					row.setParent(listBox);
+	 					for( InvReserForDeliverySlotsItemEDDInfoData deliverySlotsItemEDDInfo :deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData() ) {
+	 						if(deliverySlotsItemEDDInfo.getUssId().trim().equalsIgnoreCase(orderEntry.getSelectedUSSID().trim())) {
+	 							renderDeliverySlots(widget,orderEntry,deliverySlotsItemEDDInfo, row);
+	 							break;
+	 						}
+	 					}
+	 				}
+
+	 			}
+	 		}else {
+				String label = LabelUtils.getLabel(
+						widget, "noEntries", new Object[0]);
+				Label noEntriesLable = new Label(label);
+				content.appendChild(noEntriesLable);
+	 		}
+		}else {
 			String label = LabelUtils.getLabel(
 					widget, "noEntries", new Object[0]);
 			Label noEntriesLable = new Label(label);

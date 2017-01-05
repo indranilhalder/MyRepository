@@ -1069,8 +1069,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 					.create(AddressModel.class);
 			LOG.debug(" Address : "+firstName+" "+lastName+" "+addressLine1+" "+addressLine2+" "+
 					addressLine3+" "+LandMark+" "+city+" "+postalCode+" "+state+" "+mobileNumber+" "+addressType+" "+country+" ");
-			TypedObject order = getOrder();
-			OrderModel orderModel = (OrderModel) order.getObject();
+			
 			deliveryAddress.setOwner(customerModel);
 			deliveryAddress.setFirstname(firstName);
 			deliveryAddress.setLastname(lastName);
@@ -1091,28 +1090,21 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 			deliveryAddress.setShippingAddress(Boolean.TRUE);
 			deliveryAddress.setBillingAddress(Boolean.TRUE);
 			deliveryAddress.setVisibleInAddressBook(Boolean.TRUE);
-			try {
-				if(null != orderModel && null != orderModel.getDeliveryAddress() && null != orderModel.getDeliveryAddress().getCountry()){
-					deliveryAddress.setCountry(orderModel.getDeliveryAddress().getCountry());
-				}else if(null !=orderModel && null != orderModel.getUser() && null != orderModel.getUser().getAddresses()) {
-					Collection<AddressModel> addresses = orderModel.getUser().getAddresses();
-					if(null != addresses && null != addresses.iterator() && null != addresses.iterator().next()) {
-						AddressModel address = addresses.iterator().next();
-						if(null !=address && null != address.getCountry() ) {
-							deliveryAddress.setCountry(address.getCountry());
-						}
+			
+			if (countryListbox.getSelectedItem() != null) {
+				for (final CountryModel countryModel : commonI18NService
+						.getAllCountries()) {
+					if (countryListbox.getSelectedItem().getLabel()
+							.equalsIgnoreCase(countryModel.getName())) {
+						deliveryAddress.setCountry(countryModel);
 					}
-				}else {
-					CountryModel countryModel = new CountryModel();
-					countryModel.setName(country);
-					deliveryAddress.setCountry(countryModel);
 				}
-			}catch(Exception e) {
-				LOG.error("Exception while saving country "+e.getMessage());
 			}
 			
 			try {
 				if (isChangeDeliveryAddress) {
+					TypedObject order = getOrder();
+					OrderModel orderModel = (OrderModel) order.getObject();
 					// Storing Delivery Address in a session
 					AddressData changeDeliveryAddressData = new AddressData();
 					customAddressPopulator.populate(deliveryAddress, changeDeliveryAddressData);

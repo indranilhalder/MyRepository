@@ -375,7 +375,7 @@ ReturnRequestCreateWidgetRenderer {
 					ifscTextbox.setFocus(true);
 					return;
 				}
-					codUpadatesToFico(widget, entries, accNoTextbox,re_accNoTextBox,
+				saveCODReturnsBankDetails(widget, entries, accNoTextbox,re_accNoTextBox,
 							accHolderNameTextbox, refundModeListbox, titleListBox,
 							bankNameTextbox, ifscTextbox);
 					codButton.setDisabled(true);
@@ -704,6 +704,29 @@ ReturnRequestCreateWidgetRenderer {
 		createRefundConfirmationPopupWindow(widget, getPopupWidgetHelper()
 				.getCurrentPopup().getParent());
 		
+	}
+	
+	@Override
+	protected Window createRefundConfirmationPopupWindow(
+			InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> parentWidget,
+			Component parentWindow) {
+		WidgetContainer widgetContainer = new DefaultWidgetContainer(
+				new DefaultWidgetFactory());
+		Widget popupWidget = createPopupWidget(widgetContainer,
+				"csRefundConfirmationWidgetConfig",
+				"csRefundConfirmationWidget-Popup");
+
+		Window popup = new Window();
+		popup.setSclass("csRefundConfirmationWidget");
+		popup.appendChild(popupWidget);
+		popup.setTitle(LabelUtils.getLabel(popupWidget,
+				"popup.refundConfirmationTitle", new Object[0]));
+		popup.setParent(parentWindow);
+		popup.doHighlighted();
+		popup.setClosable(true);
+		popup.setWidth("900px");
+
+		return popup;
 	}
 
 	private Div getQuickDropDetails(
@@ -1401,7 +1424,7 @@ ReturnRequestCreateWidgetRenderer {
 		}
 	}
 
-	private void codUpadatesToFico(   
+	private void saveCODReturnsBankDetails(   
 			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
 			List<AbstractOrderEntryModel> returnEntry, final Textbox accNoTextbox,final Textbox reEnteAaccNoTextbox,
 			Textbox accHolderNameTextbox, Listbox refundModeListbox,

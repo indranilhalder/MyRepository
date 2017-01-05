@@ -29,6 +29,7 @@ import com.tisl.mpl.data.CODSelfShipData;
 import com.tisl.mpl.data.CODSelfShipResponseData;
 import com.tisl.mpl.data.RTSAndRSSReturnInfoRequestData;
 import com.tisl.mpl.data.ReturnInfoData;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
@@ -366,7 +367,24 @@ public class MarketPlaceDefaultReturnsController extends
 			refundRequest.setReturnRaisedFrom(SalesApplication.CALLCENTER);
 			modelService.save(refundRequest);
 			modelService.refresh(refundRequest);
-			// Removing CRM Ticket for Return Request
+			
+			//  COD SELF SHIPMENT CALL TO FICO 
+			try{
+				CODSelfShipData codSelfShipData = null;
+				if(null!=orderModel.getUser()){
+					codSelfShipData = getCustomerBankDetailsByCustomerId(orderModel.getUser().getUid());
+				}
+				List<AbstractOrderEntryModel> entries = new ArrayList<AbstractOrderEntryModel>();refundRequest.getReturnEntries();
+				for(ReturnEntryModel entry : refundRequest.getReturnEntries()) {
+					entries.add(entry.getOrderEntry());
+				}
+				getCodPaymentInfoToFICO(codSelfShipData,entries);
+			}
+			catch(EtailNonBusinessExceptions e)
+			{
+				LOG.error("Exception occured in fico call for cod self shipment for order id  :"+orderModel.getCode()+" Actual Stack trace "+e);
+			}
+			
 			try {
 				this.refundDetailsList.clear();
 				this.refundDetailsList = null;
@@ -836,6 +854,8 @@ public class MarketPlaceDefaultReturnsController extends
 		OrderModel subOrder = (OrderModel) returnEntry.get(0).getOrder();
 		String orderCode = subOrder.getParentReference().getCode();
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+		codSelfShipData.setOrderNo(subOrder.getCode());
+		codSelfShipData.setOrderRefNo(orderCode);
 		codSelfShipData.setTransactionType(MarketplaceCockpitsConstants.RETURN_TYPE);
 		codSelfShipData.setTransactionDate(dateUtilHelper.convertDateWithFormat(formatter.format(subOrder.getCreationtime())));
 		codSelfShipData.setOrderDate(dateUtilHelper.convertDateWithFormat(formatter.format(subOrder.getCreationtime())));
@@ -848,8 +868,10 @@ public class MarketPlaceDefaultReturnsController extends
 		}
 		codSelfShipData.setCustomerNumber(subOrder.getUser().getUid());
 		for (AbstractOrderEntryModel entry : returnEntry) {
-			codSelfShipData.setOrderNo(orderCode);
 			codSelfShipData.setTransactionID(entry.getTransactionID());
+			if(null != entry.getTotalPrice()) {
+				codSelfShipData.setAmount(entry.getTotalPrice().toString());
+			}
 			if(null != entry.getNetAmountAfterAllDisc()) {
 				codSelfShipData.setAmount(entry.getNetAmountAfterAllDisc().toString());
 			}
