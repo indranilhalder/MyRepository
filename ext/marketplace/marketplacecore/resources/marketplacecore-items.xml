@@ -9544,7 +9544,7 @@
 		<typegroup name="APlusContentGroup">
 			<itemtype code="APlusContent" generate="true" extends="GenericItem"
 				autocreate="true" jaloclass="com.tisl.mpl.core.jalo.APlusContentGroup">
-				<description>A plus content HMC approach.</description>
+				<deployment table="mplAPlusContent" typecode="14568" />
 				<attributes>
 					<attribute qualifier="csvFile" type="Media" autocreate="true"
 						generate="true">
