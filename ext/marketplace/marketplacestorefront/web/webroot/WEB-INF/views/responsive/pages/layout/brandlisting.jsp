@@ -9,7 +9,7 @@
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <!-- <link rel="stylesheet" type="text/css" href="style.css"> -->
-<c:url value="/brandlist" var="authenticAndExclusiveUrl" />
+<c:url value="/brands" var="authenticAndExclusiveUrl" />
 <form method="get" action="${authenticAndExclusiveUrl}">
 
 <div class="brands-page">
@@ -48,7 +48,7 @@ ${brandCollection.masterBrandName}
 				
 				<li>
 
-				<a data-id="${brandCode}" id="${brandCode}" class="brandCategory">${subCategoryList.name}</a>
+				<a data-id="${brandCode}"  id="${fn:toLowerCase(brandCode)}"  class="brandCategory">${subCategoryList.name}</a>
 			
 				</li>
                
@@ -56,7 +56,7 @@ ${brandCollection.masterBrandName}
 			
 			<c:forEach items="${brandComponentCollection}" var="brandCollection">
 			<c:set var="uid" value="${ brandCollection.uid}" />
-						<li><a  data-id="${uid}" id="${uid}"  class="cmsManagedBrands">${brandCollection.masterBrandName}</a></li>
+						<li><a  data-id="${uid}" id="${fn:toLowerCase(uid)}"   class="cmsManagedBrands">${brandCollection.masterBrandName}</a></li>
 			</c:forEach>
 			</ul>
 			</div>
@@ -238,18 +238,25 @@ ${brandCollection.masterBrandName}
 <script>
 
 $(document).ready(function(){
-	var cat = '${param.cat}';
+	//var cat = '${param.cat}';
+	
+	//TPR-1287 Start
+	var cat = (window.location.pathname).split("-");
+	cat = cat[cat.length-1];
+	cat = cat.toLowerCase();
+	
+	//TPR-1287 end
+	
 	//alert(cat);
 	if(null!= cat ){
 		 window.setTimeout(function(){
 			//alert("Fire");
 			$("#"+cat).click();
-			$("a[data-id="+cat+"]").parent().addClass("active")
+			$("a[data-id="+cat+"]").parent().addClass("active");
 		},1000); 
 		
 	}
 });
-
 </script>
 
 
