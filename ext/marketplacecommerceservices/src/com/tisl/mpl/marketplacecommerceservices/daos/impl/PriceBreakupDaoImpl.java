@@ -19,6 +19,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.PriceBreakupDao;
 
 
+
 /**
  * @author TCS
  *
@@ -35,7 +36,7 @@ public class PriceBreakupDaoImpl implements PriceBreakupDao
 	 * java.lang.String)
 	 */
 	@Override
-	public List<JewelleryPriceRowModel> getPricebreakup(final String productCode, final String ussid)
+	public List<JewelleryPriceRowModel> getPricebreakup(final String ussid)
 	{
 		// YTODO Auto-generated method stub
 

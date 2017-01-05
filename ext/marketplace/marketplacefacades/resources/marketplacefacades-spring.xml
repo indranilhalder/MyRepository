@@ -841,7 +841,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<!-- Jewellery Changes Added -->
 	 
 	    <bean id="priceBreakupFacade"
-		class="com.tisl.mpl.facade.product.impl.DefaultPriceBreakupFacade">
+		class="com.tisl.mpl.facade.product.impl.MplPriceBreakupFacadeImpl">
 	</bean> 
 	   
 		<!-- for mobility change starts -->
