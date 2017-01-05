@@ -25,8 +25,9 @@ import com.tisl.mpl.marketplacecommerceservices.daos.PriceBreakupDao;
 import com.tisl.mpl.marketplacecommerceservices.service.PriceBreakupService;
 
 
+
 /**
- * @author 970506
+ * @author Tcs
  *
  */
 public class PriceBreakupServiceImpl implements PriceBreakupService
@@ -34,7 +35,7 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.PriceBreakupService#getPricebreakup(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -65,12 +66,12 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 	@Override
 	//public List<JewelleryPriceRowModel> getPricebreakup(final String productCode, final String ussid)
-	public LinkedHashMap<String, PriceData> getPricebreakup(final String productCode, final String ussid)
+	public LinkedHashMap<String, PriceData> getPricebreakup(final String ussid)
 	{
 
 		//List<JewelleryPriceRowModel> jewelleryPriceRowList = new ArrayList<JewelleryPriceRowModel>();
 
-		final List<JewelleryPriceRowModel> jewelleryPriceRowList = priceBreakupDao.getPricebreakup(productCode, ussid);
+		final List<JewelleryPriceRowModel> jewelleryPriceRowList = priceBreakupDao.getPricebreakup(ussid);
 
 		final LinkedHashMap<String, PriceData> PriceMap = new LinkedHashMap<String, PriceData>();
 
@@ -85,8 +86,8 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 					key = getJewelleryAttrMapping().get(BASEMETAL1);
 				}
 
-				final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jewellery.getBaseMetalPrice1()
-						.doubleValue()), commonI18NService.getCurrency(INR));
+				final PriceData price = createPriceSign(PriceDataType.BUY,
+						new BigDecimal(jewellery.getBaseMetalPrice1().doubleValue()), commonI18NService.getCurrency(INR));
 
 				PriceMap.put(key, price);
 			}
@@ -97,8 +98,8 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 					key = getJewelleryAttrMapping().get(BASEMETAL2);
 				}
 
-				final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jewellery.getBaseMetalPrice2()
-						.doubleValue()), commonI18NService.getCurrency(INR));
+				final PriceData price = createPriceSign(PriceDataType.BUY,
+						new BigDecimal(jewellery.getBaseMetalPrice2().doubleValue()), commonI18NService.getCurrency(INR));
 
 				PriceMap.put(key, price);
 			}
@@ -110,8 +111,8 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 				}
 
 
-				final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jewellery.getBaseMetalPrice3()
-						.doubleValue()), commonI18NService.getCurrency(INR));
+				final PriceData price = createPriceSign(PriceDataType.BUY,
+						new BigDecimal(jewellery.getBaseMetalPrice3().doubleValue()), commonI18NService.getCurrency(INR));
 
 				PriceMap.put(key, price);
 			}
@@ -123,8 +124,8 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 				}
 
 
-				final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jewellery.getBaseMetalPrice4()
-						.doubleValue()), commonI18NService.getCurrency(INR));
+				final PriceData price = createPriceSign(PriceDataType.BUY,
+						new BigDecimal(jewellery.getBaseMetalPrice4().doubleValue()), commonI18NService.getCurrency(INR));
 
 				PriceMap.put(key, price);
 			}
@@ -137,8 +138,8 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 				}
 
 
-				final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jewellery.getDiamondtotalprice()
-						.doubleValue()), commonI18NService.getCurrency(INR));
+				final PriceData price = createPriceSign(PriceDataType.BUY,
+						new BigDecimal(jewellery.getDiamondtotalprice().doubleValue()), commonI18NService.getCurrency(INR));
 
 				PriceMap.put(key, price);
 			}
@@ -151,8 +152,8 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 				}
 
 
-				final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jewellery.getGemstonetotalprice()
-						.doubleValue()), commonI18NService.getCurrency(INR));
+				final PriceData price = createPriceSign(PriceDataType.BUY,
+						new BigDecimal(jewellery.getGemstonetotalprice().doubleValue()), commonI18NService.getCurrency(INR));
 
 				PriceMap.put(key, price);
 			}
