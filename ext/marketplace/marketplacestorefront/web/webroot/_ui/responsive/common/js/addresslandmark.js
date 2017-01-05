@@ -290,13 +290,12 @@ function checkPopupDataOrderHistory() {
 				      var city=$("#city").val();
 				      var letters = new RegExp(/^[A-z]*$/);
 				      var otherLandMark=$(".otherLandMark").val();
-				      
 				      if(otherLandMark != null && ! otherLandMark == ''){
 				    	  if(otherLandMark.trim() == ''){
 				    	    $(".otherLandMarkError").show();
 					  		$(".otherLandMarkError").text("Other LandMark cannot be allow  space");
 					  		validate = false;
-				    	  }else if(/[^a-zA-Z0-9]/.test(otherLandMark)){
+				    	  }else if(!/[a-zA-Z0-9]/.test(otherLandMark)){
 				    		  $(".otherLandMarkError").show();
 						  	  $(".otherLandMarkError").text("Other LandMark cannot be allow special characters");
 						  	 validate = false;

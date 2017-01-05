@@ -2274,7 +2274,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			newAddress.setState(addressForm.getState());
 			if(StringUtils.isNotBlank(addressForm.getLandmark()) && !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
 			{
-				newAddress.setLandmark(newAddress.getLandmark());
+				newAddress.setLandmark(addressForm.getLandmark());
 			}
 			else if(StringUtils.isNotBlank(addressForm.getOtherLandmark()))
 			{

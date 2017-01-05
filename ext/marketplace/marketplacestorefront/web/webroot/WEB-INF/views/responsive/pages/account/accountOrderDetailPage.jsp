@@ -2880,6 +2880,7 @@ $(function() {
 		console.log($('.item-fulfillment').length);
 		<!-- R2.3: START -->
 		 $("#changeAddressLink").click(function(){
+			  $(".error_text").hide();
 			  $("#changeAddressPopup").show();
 			  $(".wrapBG").show();
 			  var height = $(window).height();
