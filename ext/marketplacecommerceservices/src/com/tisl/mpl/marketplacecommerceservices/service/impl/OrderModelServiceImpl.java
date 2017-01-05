@@ -211,5 +211,10 @@ public class OrderModelServiceImpl implements OrderModelService
 	public PointOfServiceModel getPointOfService(String storeId){
 		return getOrderModelDao().getPointOfService(storeId);
 	}
+		@Override
+	public OrderModel getOrderModel(final String code)
+	{
+		return getOrderModelDao().getOrderModel(code);
+	}
 
 }

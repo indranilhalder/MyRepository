@@ -107,6 +107,14 @@ public interface OrderModelService
 	OrderModel updatePickUpDetailService(final String orderId, final String name, final String mobile);
 
 
+	
+	/**
+	 * @param code
+	 * 
+	 * @return OrderModel
+	 */
+	OrderModel getOrderModel(String code);
+	
 	/**
 	  * @param code
 	  *
