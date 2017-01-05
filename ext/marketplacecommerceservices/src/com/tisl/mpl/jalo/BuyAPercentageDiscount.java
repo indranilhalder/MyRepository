@@ -253,6 +253,18 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 					totalCount += entry.getQuantity().intValue(); // Fetches total count of Valid Products
 					eligibleProductList.add(entry.getProduct());
 				}
+
+				//Added for TPR-4354
+				if (getMplPromotionHelper().validateForStockRestriction(restrictionList))
+				{
+					final int stockQuantity = getDefaultPromotionsManager().getStockRestrictionVal(restrictionList);
+
+					if (totalCount >= stockQuantity)
+					{
+						totalCount = stockQuantity;
+					}
+				}
+
 				noOfProducts = totalCount;
 
 				List<PromotionOrderEntryConsumed> remainingItemsFromTail = null;
