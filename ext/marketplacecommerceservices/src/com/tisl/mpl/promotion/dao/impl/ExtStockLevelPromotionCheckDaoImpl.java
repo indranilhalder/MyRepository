@@ -103,7 +103,7 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.promotion.dao.ExtStockLevelPromotionCheckDao#getPromoInvalidationList(java.lang.String)
 	 */
 	@Override
@@ -187,5 +187,53 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
 		}
 		return stockList;
+	}
+
+
+	/**
+	 * @param promoCode
+	 * @param orginalUid
+	 */
+	@Override
+	public int getCummulativeOrderCount(final String promoCode, final String orginalUid)
+	{
+		// YTODO Auto-generated method stub
+		int count = 0;
+		String queryString = "";
+		try
+		{
+			queryString = "select {pK} from {LimitedStockPromoInvalidation} where {promoCode}=?promoCodeData and {customerID}=?orginalUid";
+
+			final Map<String, Object> params = new HashMap<String, Object>(1);
+			params.put("promoCodeData", promoCode);
+			params.put("orginalUid", orginalUid);
+
+			final SearchResult<LimitedStockPromoInvalidationModel> searchList = flexibleSearchService.search(queryString, params);
+			if (null != searchList && searchList.getCount() > 0)
+			{
+				count = searchList.getCount();
+			}
+		}
+
+		catch (final FlexibleSearchException e)
+		{
+			LOG.error("error in search query" + e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			LOG.error(e);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			LOG.error("exception getching the quantity count details aginst product/ussid" + e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		return count;
 	}
 }

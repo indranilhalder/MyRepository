@@ -20,10 +20,14 @@ public interface ExtStockLevelPromotionCheckService
 	public Map<String, Integer> getCumulativeStockMap(final String codes, String promoCode, boolean sellerFlag);
 
 	public List<LimitedStockPromoInvalidationModel> getPromoInvalidationList(final String guid);
+
 	/**
 	 * @param codes
 	 * @param promoCode
 	 * @return List<String> getStockForPromotion
 	 */
 	public List<String> getStockForPromotion(final String promoCode, final int maxStockCount);
+
+	public int getCummulativeOrderCount(String promoCode, String orginalUid);
+
 }

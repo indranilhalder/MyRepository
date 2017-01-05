@@ -13,6 +13,7 @@ import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.AbstractOrderEntryTypeService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
@@ -181,6 +182,15 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						promoInvalidationModel.setGuid(orderModel.getGuid());
 						promoInvalidationModel.setUsedUpCount(Integer.valueOf(orderEntry.getQualifyingCount().intValue()));
 						promoInvalidationModel.setOrder(orderModel);
+
+						if (null != orderModel.getUser()) // Added for TPR-4331: Customer Count Configuration
+						{
+							final CustomerModel customer = (CustomerModel) orderModel.getUser();
+							if (null != customer && null != customer.getOriginalUid())
+							{
+								promoInvalidationModel.setCustomerID(customer.getOriginalUid());
+							}
+						}
 						orderInvalidationList.add(promoInvalidationModel);
 					}
 				}

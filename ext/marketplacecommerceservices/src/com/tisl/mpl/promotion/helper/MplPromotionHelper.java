@@ -6,7 +6,9 @@ package com.tisl.mpl.promotion.helper;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.enumeration.EnumerationValue;
@@ -975,6 +977,74 @@ public class MplPromotionHelper
 	protected ExtStockLevelPromotionCheckServiceImpl getStockService()
 	{
 		return Registry.getApplicationContext().getBean("stockPromoCheckService", ExtStockLevelPromotionCheckServiceImpl.class);
+	}
+
+	/**
+	 * @param restrictionList
+	 * @param promoCode
+	 * @param order
+	 * @return boolean
+	 */
+	public boolean checkOrderCount(final List<AbstractPromotionRestriction> restrictionList, final String promoCode,
+			final AbstractOrder order)
+	{
+		int count = 0;
+		int orderCount = 0;
+		String orginalUid = MarketplacecommerceservicesConstants.EMPTY;
+
+		final AbstractOrderModel abstractOrderModel = (AbstractOrderModel) modelService.get(order);
+		if (null != abstractOrderModel && null != abstractOrderModel.getUser())
+		{
+			final CustomerModel customer = (CustomerModel) abstractOrderModel.getUser();
+			if (null != customer && null != customer.getOriginalUid())
+			{
+				orginalUid = customer.getOriginalUid();
+			}
+		}
+
+		if (CollectionUtils.isNotEmpty(restrictionList) && validateForStockRestriction(restrictionList))
+		{
+			count = getStockCustomerRedeemCount(restrictionList);
+			if (count == 0)
+			{
+				return true;
+			}
+			else if (StringUtils.isNotEmpty(orginalUid) && count > 0)
+			{
+				orderCount = getStockService().getCummulativeOrderCount(promoCode, orginalUid);
+				if (orderCount >= count)
+				{
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	public int getStockCustomerRedeemCount(final List<AbstractPromotionRestriction> restrictionList)
+	{
+		int count = 0;
+		for (final AbstractPromotionRestriction restriction : restrictionList)
+		{
+			if (restriction instanceof EtailLimitedStockRestriction)
+			{
+				final EtailLimitedStockRestriction data = (EtailLimitedStockRestriction) restriction;
+				if (null != data.getCusRedeemCount() && data.getCusRedeemCount().intValue() > 0)
+				{
+					try
+					{
+						count = data.getCusRedeemCount().intValue();
+					}
+					catch (final NumberFormatException exception)
+					{
+						count = 0;
+					}
+
+				}
+
+			}
+		}
+		return count;
 	}
 
 }

@@ -131,7 +131,8 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 						.getValidProdListForBuyXofAPromo(order, paramSessionContext, promotionProductList, promotionCategoryList,
 								restrictionList, excludedProductList, excludeManufactureList, null, null); // Adding Eligible Products to List
 
-				if (!getDefaultPromotionsManager().promotionAlreadyFired(paramSessionContext, validProductUssidMap))
+				if (!getDefaultPromotionsManager().promotionAlreadyFired(paramSessionContext, validProductUssidMap)
+						&& getMplPromotionHelper().checkOrderCount(restrictionList, getCode(), order))
 				{
 					isMultipleSeller = getMplPromotionHelper().checkMultipleSeller(restrictionList);
 
