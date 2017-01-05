@@ -170,7 +170,8 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 						final Map<String, Integer> validProductList = getDefaultPromotionsManager().getSortedValidProdUssidMap(
 								validProductUssidMap, realQuantity, qualifyingCount, ctx, restrictionList, getCode());
 
-						if (MapUtils.isNotEmpty(validProductUssidMap))
+						if (MapUtils.isNotEmpty(validProductUssidMap)
+								&& getMplPromotionHelper().validateCount(validProductList, qualifyingCount, restrictionList))
 						{
 							//Gift Products Could be multiple
 							final List<Product> productList = (List<Product>) this.getGiftProducts(ctx);
