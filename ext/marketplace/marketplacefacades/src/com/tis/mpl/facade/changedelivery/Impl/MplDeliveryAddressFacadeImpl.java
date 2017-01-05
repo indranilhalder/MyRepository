@@ -328,6 +328,12 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		{
 			addressinfo.setAddress2(changeDeliveryAddress.getLine2());
 		}
+		//BUG ID 1623
+		if (null != changeDeliveryAddress.getAddressLine3())
+		{
+			addressinfo.setAddress3(changeDeliveryAddress.getAddressLine3());
+		}
+		
 		if (null != changeDeliveryAddress.getState())
 		{
 			addressinfo.setState(getStateCode(changeDeliveryAddress.getState()));
