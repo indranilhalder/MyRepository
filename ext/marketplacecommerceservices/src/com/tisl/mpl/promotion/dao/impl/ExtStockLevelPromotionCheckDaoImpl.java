@@ -103,7 +103,7 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.promotion.dao.ExtStockLevelPromotionCheckDao#getPromoInvalidationList(java.lang.String)
 	 */
 	@Override
@@ -113,7 +113,7 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 		String priceQueryString = "";
 		try
 		{
-			priceQueryString = "SELECT {promoInvalid.PK} FROM {PromotionInvalidation AS promoInvalid} where {promoInvalid.guid} =?guid";
+			priceQueryString = "SELECT {promoInvalid.PK} FROM {LimitedStockPromoInvalidation AS promoInvalid} where {promoInvalid.guid} =?guid";
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(priceQueryString);
 			query.addQueryParameter("guid", guid);
 
