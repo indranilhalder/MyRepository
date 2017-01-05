@@ -1378,12 +1378,24 @@ $(function() {
 });
 
 function isOOS(){
-	var totalOptions = $("#variant option").length;
-	totalOptions = totalOptions -1;
-	var disabledOption = $("#variant option:disabled").length;
-	if(totalOptions == disabledOption){
+	var skuOOS = false;
+	var totalOptions = $("#variant li").length;
+	//totalOptions = totalOptions -1; // UI got changed from select option to li strike off 
+	var disabledOption = $("#variant li.strike").length;
+	
+	if(availibility!=undefined && availibility.length > 0){
+		$.each(availibility,function(k,v){
+			if(window.location.pathname.endsWith(k.toLowerCase()) && v == 0){
+				skuOOS = true;
+			}
+		});
+	}
+	
+	if(totalOptions == disabledOption && totalOptions!=0){
 		return true;
-	}else{
+	}else if(skuOOS){
+		return true;
+	} else{
 		return false;
 	}
 }
@@ -1519,7 +1531,7 @@ $( document ).ready(function() {
 						 $("#pin").attr("disabled",true);
 						 $("#pdpPincodeCheckDList").show();
 						 $("#buyNowButton").attr("disabled",true);
-						
+						 $("#allVariantOutOfStock").show();
 						
 					}
 					else if (isOOS() && data['othersSellersCount']==0){
@@ -1538,9 +1550,10 @@ $( document ).ready(function() {
 						 $("#pin").attr("disabled",true);
 						 $("#pdpPincodeCheckDList").show();
 						 $("#buyNowButton").attr("disabled",true);
+						 $("#allVariantOutOfStock").show();
+						 
 						
-						
-					}else if (allStockZero == 'Y' && data['othersSellersCount']>0 && $("#variant option").length == 0) {
+					}else if (allStockZero == 'Y' && data['othersSellersCount']>0 && ($("#variant li").length == $("#variant li.strike").length)) {
 						//if( $("#variant,#sizevariant option:selected").val()!="#") {  //TISPRD-1173 TPR-465
 						
 						$("#addToCartButton").hide();
@@ -1565,7 +1578,7 @@ $( document ).ready(function() {
 						});
 						
 					}
-					else if (allStockZero == 'Y' && data['othersSellersCount']==0 && $("#variant option").length == 0){
+					else if (allStockZero == 'Y' && data['othersSellersCount']==0 && ($("#variant li").length == $("#variant li.strike").length)){
 						//if($("#variant,#sizevariant option:selected").val()!="#"){	//TISPRD-1173 TPR-465
 							$("#addToCartButton").hide();
 							$("#buyNowButton").hide();
@@ -1678,6 +1691,14 @@ $( document ).ready(function() {
 				});
 			});	
 			},2000);
+			
+			setTimeout(function(){
+				if(isOOS()){
+					$("#outOfStockText").html("<font color='#ff1c47'>" + $('#outOfStockText').text() + "</font>");
+					$("#addToCartSizeGuideTitleoutOfStockId").show();
+					$("#addToCartSizeGuide #addToCartButton").hide();
+				}
+			},3000);
 		}
 	});
 }); 
@@ -1809,21 +1830,42 @@ function displayDeliveryDetails(sellerName) {
 
 function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 	//alert("mrp "+ mrp.formattedValue +"mop "+mop.formattedValue +"spPrice "+spPrice.formattedValue +"savingsOnProduct "+ savingsOnProduct.formattedValue);
+	
+/*Change for INC_11127*/
+	
+	$("#mrpPriceId").html("");
+	$("#mopPriceId").html("");
+	$("#spPriceId").html("");
+	$("#savingsOnProductId").html("");
+	if(typeof savingsOnProduct === 'undefined'){
+	
+		if(null!=mrp && null!=spPrice){
+			savingPriceCal=(mrp.doubleValue-spPrice.doubleValue);
+			savingPriceCalPer=(savingPriceCal/mrp.doubleValue)*100;
+			savingsOnProduct=Math.round((savingPriceCalPer*100)/100);
+		}
+		else if(null!=mrp && null!=mop){
+			savingPriceCal=(mrp.doubleValue-mop.doubleValue);
+			savingPriceCalPer=(savingPriceCal/mrp.doubleValue)*100;
+			savingsOnProduct=Math.round((savingPriceCalPer*100)/100);
+		}
+	}
+	
 	if(null!= mrp){
-		$("#mrpPriceId").html("");
+		//$("#mrpPriceId").html("");
 		$("#mrpPriceId").append(mrp.formattedValue);
 	}
 	if(null!= mop){
-		$("#mopPriceId").html("");
+		//$("#mopPriceId").html("");
 		$("#mopPriceId").append(mop.formattedValue);
 	}
 	if(null!= spPrice){
-		$("#spPriceId").html("");
+		//$("#spPriceId").html("");
 		$("#spPriceId").append(spPrice.formattedValue);
 	} 
 	////TISPRM-33 , TPR-140
 	if(null!= savingsOnProduct){
-		$("#savingsOnProductId").html("");
+		//$("#savingsOnProductId").html("");
 		$("#savingsOnProductId").append("(-"+savingsOnProduct+" %)");
 	} 
 
@@ -2444,15 +2486,32 @@ function dispPriceForSizeGuide(mrp, mop, spPrice, savingsOnProduct) {
 
 }
 function isOOSSizeGuide(){
-	var totalOptions = $(".variant-select-sizeGuidePopUp option").length;
-	totalOptions = totalOptions -1;
-	var disabledOption = $(".variant-select-sizeGuidePopUp option:disabled").length;
-	if(totalOptions == disabledOption){
+		
+	var skuOOS = false;
+	var totalOptions = $(".variant-select-sizeGuidePopUp li").length;
+	//totalOptions = totalOptions -1; // UI got changed from select option to li strike off 
+	var disabledOption = $(".variant-select-sizeGuidePopUp li.strike").length;
+	
+	if(availibility!=undefined && availibility.length > 0){
+		$.each(availibility,function(k,v){
+			if(window.location.pathname.endsWith(k.toLowerCase()) && v == 0){
+				skuOOS = true;
+			}
+		});
+	}
+	
+	if(totalOptions == disabledOption && totalOptions!=0){
 		return true;
-	}else{
+	}else if(skuOOS){
+		return true;
+	} else{
 		return false;
 	}
+	
 }
+
+
+
 function isOOSQuicks(){
 	var totalOptions = $("ul[label=sizes] li").length;
 	totalOptions = totalOptions -1;
@@ -2543,7 +2602,8 @@ function buyboxDetailsForSizeGuide(productCode){
 				if(isOOSSizeGuide()){	//changes for TPR-465	
 				$("#outOfStockText").html("<font color='#ff1c47'>" + $('#outOfStockText').text() + "</font>");
 					$("#addToCartSizeGuideTitleoutOfStockId").show();
-					$("#addToCartSizeGuide #addToCartButton").attr("style", "display:none");
+					//$("#addToCartSizeGuide #addToCartButton").attr("style", "display:none");
+					$(".btn-block.js-add-to-cart").hide();
 				}
 				else{
 					$("#addToCartSizeGuide #addToCartButton").removeAttr('style');

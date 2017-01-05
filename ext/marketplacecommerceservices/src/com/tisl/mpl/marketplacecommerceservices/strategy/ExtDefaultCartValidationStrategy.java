@@ -30,7 +30,8 @@ import com.tisl.mpl.shorturl.service.ShortUrlServiceGoogleImpl;
  */
 public class ExtDefaultCartValidationStrategy extends DefaultCartValidationStrategy
 {
-	private static final Logger LOG = Logger.getLogger(ShortUrlServiceGoogleImpl.class);
+	@SuppressWarnings("unused")
+	private static final Logger LOG = Logger.getLogger(ExtDefaultCartValidationStrategy.class);
 
 	private ModelService modelService;
 	@Resource
@@ -175,13 +176,20 @@ public class ExtDefaultCartValidationStrategy extends DefaultCartValidationStrat
 	@Override
 	public Long getStockLevel(final CartEntryModel cartEntryModel)
 	{
+		//LOG.debug("getStockLevel............ ORDER ID" + cartEntryModel.getOrder().getCode());
 		final PointOfServiceModel pointOfService = cartEntryModel.getDeliveryPointOfService();
+
 		if (null != cartEntryModel.getDeliveryPointOfService())
 		{
-			LOG.debug("Removing Point of service " + pointOfService.getDisplayName() + "Cart Info " + cartEntryModel.getInfo());
-			LOG.debug("Removing Point of service " + pointOfService.getDisplayName() + "Cart Info " + cartEntryModel.getInfo());
-			modelService.remove(cartEntryModel.getDeliveryPointOfService());
+			//LOG.debug("getStockLevel............Before Delete:-  Delivery Point Of Service"
+			//	+ cartEntryModel.getDeliveryPointOfService());
+			modelService.remove(cartEntryModel.getDeliveryPointOfService().getDisplayName());
+
+			//LOG.debug("getStockLevel............After Delete:-  Delivery Point Of Service");
 			modelService.save(cartEntryModel);
+
+			//LOG.debug("getStockLevel............After Save:-  PointOfServiceModel");
+
 		}
 
 		if (hasPointOfService(cartEntryModel))
