@@ -5,13 +5,19 @@ package com.tisl.mpl.wsdto;
 
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 
 
 /**
  * @author TCS
  *
  */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(propOrder =
+{ "ListingID", "Item" })
 public class InventoryReservJewelleryRequest
 {
 	@XmlElement(name = "ListingID")
@@ -41,7 +47,6 @@ public class InventoryReservJewelleryRequest
 	/**
 	 * @return the item
 	 */
-
 	public List<InventoryReservRequest> getItem()
 	{
 		return Item;
@@ -55,4 +60,6 @@ public class InventoryReservJewelleryRequest
 	{
 		Item = item;
 	}
+
+
 }
