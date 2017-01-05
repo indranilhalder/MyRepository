@@ -87,6 +87,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -961,6 +962,22 @@ public class AccountPageController extends AbstractMplSearchPageController
 				{
 					for (final OrderEntryData orderEntry : orderList)
 					{
+						//TISRLEE-1615- Start 
+						if (StringUtils.isNotEmpty(orderEntry.getSelectedDeliverySlotDate()))
+						{
+
+							if (StringUtils.isNotEmpty(orderEntry.getTimeSlotFrom()))
+							{
+								String[] time = orderEntry.getTimeSlotFrom().split(":");
+								String changeTime = time[0];
+								changeTime=changeTime.concat("-");
+								changeTime=changeTime.concat(orderEntry.getTimeSlotTo());
+								orderEntry.setSelectedDeliverySlotTimeFrom(changeTime);
+							}
+							orderEntry.setSelectedDeliverySlotDate(getSelectedDate(orderEntry.getSelectedDeliverySlotDate()));
+						}
+					//TISRLEE-1615- END 
+						
 						//statusTrackMap = getOrderDetailsFacade.getOrderPaymentStatus(orderEntry, orderDetail, orderModel);
 						statusTrackMap = getOrderDetailsFacade.getOrderStatusTrack(orderEntry, orderDetail, orderModel);
 						if (null == orderEntry.getConsignment() && orderEntry.getQuantity() != 0)
@@ -7646,6 +7663,26 @@ public class AccountPageController extends AbstractMplSearchPageController
 			LOG.error("parseException raising converrting time" + parseException.getMessage());
 		}
 		return ControllerConstants.Views.Pages.Account.OTPPopup;
+	}
+	
+	  //Date Converting  Method BUG ID TISRLEE-1615- Start 
+		private String getSelectedDate(String date)
+		{
+			String finalString=null;
+			try
+			{
+				DateFormat formatter = new SimpleDateFormat("dd-mm-yyyy");
+				Date convertDate = formatter.parse(date);
+				SimpleDateFormat newFormat = new SimpleDateFormat("dd-MMMM");
+				finalString = newFormat.format(convertDate);
+			}
+			catch (ParseException parseException)
+			{
+				LOG.error("AccountPageController:parseException raising converrting time"+parseException.getMessage());
+				return null;
+			}
+			return finalString;
+		
 	}
 	
 
