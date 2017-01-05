@@ -156,6 +156,21 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 			{
 				totalCount += entry.getQuantity().intValue(); // Fetches total count of Valid Products
 			}
+
+
+			//Added for TPR-4360
+			if (getMplPromotionHelper().validateForStockRestriction(restrictionList))
+			{
+				final int stockQuantity = getDefaultPromotionsManager().getStockRestrictionVal(restrictionList);
+
+				if (totalCount >= stockQuantity)
+				{
+					totalCount = stockQuantity;
+				}
+			}
+
+
+
 			noOfProducts = totalCount;
 			if (totalCount >= eligibleQuantity.intValue())
 			{
