@@ -225,7 +225,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 							.getMplDeliveryAddressReportModelByOrderId(orderModel.getCode());
 					if (mplDeliveryAddressInfoModel != null)
 					{
-						mplDeliveryAddressInfoModel.setChangeDeliveryTotalRequests(new Integer(
+						mplDeliveryAddressInfoModel.setChangeDeliveryTotalRequests(Integer.valueOf(
 								mplDeliveryAddressInfoModel.getChangeDeliveryTotalRequests().intValue() + 1));
 						modelService.save(mplDeliveryAddressInfoModel);
 					}
@@ -269,12 +269,12 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 					.getMplDeliveryAddressReportModelByOrderId(orderModel.getCode());
 			if (mplDeliveryAddressInfoModel != null)
 			{
-				mplDeliveryAddressInfoModel.setChangeDeliveryTotalRequests(new Integer(mplDeliveryAddressInfoModel
+				mplDeliveryAddressInfoModel.setChangeDeliveryTotalRequests(Integer.valueOf(mplDeliveryAddressInfoModel
 						.getChangeDeliveryTotalRequests().intValue() + 1));
 
 				if (mplDeliveryAddressInfoModel.getChangeDeliveryRejectsCount() != null)
 				{
-					mplDeliveryAddressInfoModel.setChangeDeliveryRejectsCount(new Integer(mplDeliveryAddressInfoModel
+					mplDeliveryAddressInfoModel.setChangeDeliveryRejectsCount(Integer.valueOf(mplDeliveryAddressInfoModel
 							.getChangeDeliveryRejectsCount().intValue() + 1));
 				}
 				else

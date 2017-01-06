@@ -5,7 +5,6 @@ package com.tisl.mpl.core.mplconfig.service;
 
 import java.util.List;
 
-//import com.hybris.oms.tata.data.MplTimeSlotsData; sonar issue
 import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
 import com.hybris.oms.tata.model.MplTimeSlotsModel;
 import com.tisl.mpl.core.model.MplLPHolidaysModel;
