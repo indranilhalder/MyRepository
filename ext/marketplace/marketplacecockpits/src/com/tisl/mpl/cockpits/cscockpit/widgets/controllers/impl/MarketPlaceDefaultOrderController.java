@@ -319,6 +319,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 								.setRefundAmount(totalRefundDeliveryCharges);//TISPRO-216 : Refund amount Set in RTM
 						getModelService().save(refundTransactionMappingModel);
 					}
+					/*made changes in r2.3 start  */
 					for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
 							.entrySet()) {
 						boolean isEDToHD = false;
@@ -330,22 +331,18 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 							 entry.setDelChargesJuspayRequestId(uniqueRequestId);
 							 modelService.save(entry);
 						 }
-						
+							ConsignmentStatus newStatus = null;
+							 if(null != refundEntry.getKey() && null != refundEntry.getKey().getConsignmentEntries()); {
+								 newStatus = refundEntry.getKey().getConsignmentEntries().iterator().next().getConsignment().getStatus();;
+							 }
+							
+							 
+							 // sending current order status, as oms is not accepting null value and no status update is required
 						mplJusPayRefundService.makeRefundOMSCall(refundEntry
 								.getKey(), paymentTransactionModel, refundEntry
-								.getKey().getRefundedDeliveryChargeAmt(), null,isEDToHD?MarketplacecommerceservicesConstants.REFUND_CATEGORY_E:null);// Sending
-																				// null
-																				// as
-																				// for
-																				// refund
-																				// delivery
-																				// charge
-																				// no
-																				// status
-																				// update
-																				// is
-																				// required.
+								.getKey().getRefundedDeliveryChargeAmt(), newStatus,isEDToHD?MarketplacecommerceservicesConstants.REFUND_CATEGORY_E:null);
 					}
+					/*made changes in r2.3 end  */
 				} else {
 
 					LOG.error("Refund Delivery Charges Failed");
@@ -416,6 +413,8 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 								.setRefundAmount(totalRefundScheduleDeliveryCharges);//TISPRO-216 : Refund amount Set in RTM
 						getModelService().save(refundTransactionMappingModel);
 					}
+					
+					/*made changes in r2.3 start */
 					for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
 							.entrySet()) {
 						 AbstractOrderEntryModel entry = refundEntry.getKey();
@@ -423,11 +422,16 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 							 entry.setScheduleChargesJuspayRequestId(uniqueRequestId);
 							 modelService.save(entry);
 						 }
-						 
+							ConsignmentStatus newStatus = null;
+							 if(null != refundEntry.getKey() && null != refundEntry.getKey().getConsignmentEntries()); {
+								 newStatus = refundEntry.getKey().getConsignmentEntries().iterator().next().getConsignment().getStatus();;
+							 }
+							// sending current order status, as oms is not accepting null value and no status update is required
 						mplJusPayRefundService.makeRefundOMSCall(refundEntry
 								.getKey(), paymentTransactionModel, refundEntry
-								.getKey().getRefundedScheduleDeliveryChargeAmt(), null,MarketplacecommerceservicesConstants.REFUND_CATEGORY_S); // sending null as no order update is required 
+								.getKey().getRefundedScheduleDeliveryChargeAmt(), newStatus,MarketplacecommerceservicesConstants.REFUND_CATEGORY_S);  
 					}
+					/*made changes in r2.3 end */
 				} else {
 					LOG.error("Refund Schedule Delivery Charges Failed");
 				}
