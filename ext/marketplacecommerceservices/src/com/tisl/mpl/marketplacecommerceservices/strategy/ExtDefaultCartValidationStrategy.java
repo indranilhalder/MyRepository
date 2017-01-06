@@ -21,7 +21,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.marketplacecommerceservices.service.ExtCommerceStockService;
-import com.tisl.mpl.shorturl.service.ShortUrlServiceGoogleImpl;
 
 
 /**

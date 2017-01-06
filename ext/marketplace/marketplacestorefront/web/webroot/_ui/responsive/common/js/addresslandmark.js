@@ -324,15 +324,29 @@ function checkPopupDataOrderHistory() {
 			  			$(".address1Error").show();
 			  			$(".address1Error").text("Address Line 1 cannot be blank");
 			  			validate = false;
-				  	} if(al2 == null || al2.trim() == '' ){
-			  			$(".address2Error").show();
-			  			$(".address2Error").text("Address Line 2 cannot be blank");
-			  			validate = false;
-				  	} if(al3 == null || al3.trim() == '' ){
-			  			$(".address3Error").show();
-			  			$(".address3Error").text("Address Line 3 cannot be blank");
-			  			validate = false;
-				  	} if(state == null || state=="Select" ){
+				  	} if(al2 != null && ! al2 == ''){
+				    	  if(al2.trim() == ''){
+				    		  $(".address2Error").show();
+					  		  $(".address2Error").text("Address Line 2 cannot be blank");
+					  		validate = false;
+				    	  }else if(!/[a-zA-Z0-9]/.test(al2)){
+				    		  $(".address2Error").show();
+					  		  $(".address2Error").text("Address Line 2 cannot be blank");
+						  	 validate = false;
+				    	  }
+				      }
+				     if(al3 != null && ! al3 == ''){
+				    	  if(al3.trim() == ''){
+				    			$(".address3Error").show();
+					  			$(".address3Error").text("Address Line 3 cannot be blank");
+					  		validate = false;
+				    	  }else if(!/[a-zA-Z0-9]/.test(al3)){
+				    			$(".address3Error").show();
+					  			$(".address3Error").text("Address Line 3 cannot be blank");
+						  	 validate = false;
+				    	  }
+				     }
+				    	  if(state == null || state=="Select" ){
 			  			$(".stateError").show();
 			  			$(".stateError").text("State cannot be Blank");
 			  			validate = false;

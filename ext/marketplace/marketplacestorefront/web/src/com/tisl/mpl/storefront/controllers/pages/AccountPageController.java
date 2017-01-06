@@ -961,21 +961,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				{
 					for (final OrderEntryData orderEntry : orderList)
 					{
-						//TISRLEE-1615- Start 
-						if (StringUtils.isNotEmpty(orderEntry.getSelectedDeliverySlotDate()))
-						{
-
-							if (StringUtils.isNotEmpty(orderEntry.getTimeSlotFrom()))
-							{
-								String[] time = orderEntry.getTimeSlotFrom().split(":");
-								String changeTime = time[0];
-								changeTime=changeTime.concat("-");
-								changeTime=changeTime.concat(orderEntry.getTimeSlotTo());
-								orderEntry.setSelectedDeliverySlotTimeFrom(changeTime);
-							}
-							orderEntry.setSelectedDeliverySlotDate(getSelectedDate(orderEntry.getSelectedDeliverySlotDate()));
-						}
-					//TISRLEE-1615- END 
+						getEDDeliveryDate(orderEntry);
 						
 						//statusTrackMap = getOrderDetailsFacade.getOrderPaymentStatus(orderEntry, orderDetail, orderModel);
 						statusTrackMap = getOrderDetailsFacade.getOrderStatusTrack(orderEntry, orderDetail, orderModel);
@@ -1017,6 +1003,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 						subOrderModel = orderModelService.getOrder(subOrder.getCode());
 						for (final OrderEntryData orderEntry : subOrder.getEntries())
 						{
+							getEDDeliveryDate(orderEntry);
+						//TISRLEE-1615- END 
+							
 							//getting the product code
 							final ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntry.getProduct().getCode());
 							if (CollectionUtils.isNotEmpty(productModel.getBrands()))
@@ -1350,6 +1339,27 @@ public class AccountPageController extends AbstractMplSearchPageController
 		}
 		return getViewForPage(model);
 
+	}
+
+	/**
+	 * @param orderEntry
+	 */
+	private void getEDDeliveryDate(final OrderEntryData orderEntry)
+	{
+		//TISRLEE-1615- Start 
+		if (StringUtils.isNotEmpty(orderEntry.getSelectedDeliverySlotDate()))
+		{
+
+			if (StringUtils.isNotEmpty(orderEntry.getTimeSlotFrom()))
+			{
+				String[] time = orderEntry.getTimeSlotFrom().split(":");
+				String changeTime = time[0];
+				changeTime=changeTime.concat("-");
+				changeTime=changeTime.concat(orderEntry.getTimeSlotTo());
+				orderEntry.setSelectedDeliverySlotTimeFrom(changeTime);
+			}
+			orderEntry.setSelectedDeliverySlotDate(getSelectedDate(orderEntry.getSelectedDeliverySlotDate()));
+		}
 	}
 
 	@RequestMapping(value = RequestMappingUrlConstants.UPDATE_PICKUP_DETAILS, method = RequestMethod.POST)

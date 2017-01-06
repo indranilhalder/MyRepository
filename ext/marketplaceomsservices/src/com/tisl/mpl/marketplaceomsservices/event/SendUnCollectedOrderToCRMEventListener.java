@@ -3,7 +3,6 @@
  */
 package com.tisl.mpl.marketplaceomsservices.event;
 
-import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;

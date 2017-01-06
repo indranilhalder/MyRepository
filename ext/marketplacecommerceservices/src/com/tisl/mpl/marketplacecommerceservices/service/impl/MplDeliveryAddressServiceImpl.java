@@ -7,7 +7,6 @@ import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;

@@ -39,7 +39,6 @@ import com.hybris.oms.domain.changedeliveryaddress.TransactionEddDto;
 import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.hybris.oms.domain.exception.RestClientException;
 import com.hybris.oms.domain.order.Order;
-import com.hybris.oms.domain.order.OrderLine;
 import com.hybris.oms.domain.order.UpdatedSinceList;
 import com.hybris.oms.domain.pickupinfo.PickupInfo;
 import com.hybris.oms.picupinfo.facade.PickupInfoFacade;

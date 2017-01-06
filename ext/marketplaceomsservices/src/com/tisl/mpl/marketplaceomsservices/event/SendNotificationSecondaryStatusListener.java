@@ -21,7 +21,6 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -29,9 +28,6 @@ import com.tisl.mpl.core.model.OrderUpdateProcessModel;
 import com.tisl.mpl.core.model.OrderUpdateSmsProcessModel;
 import com.tisl.mpl.data.SendSMSRequestData;
 import com.tisl.mpl.marketplaceomsservices.daos.EmailAndSmsNotification;
-//import com.tisl.mpl.shorturl.service.ShortUrlService;
-//import com.tisl.mpl.sms.MplSendSMSService;
-//import com.tisl.mpl.sns.push.service.impl.MplSNSMobilePushServiceImpl;
 
 /**
  * @author pankajk
