@@ -7,7 +7,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
-//import org.apache.commons.validator.routines.DomainValidator; sonar issue
 import org.springframework.stereotype.Component;
 
 import com.tisl.mpl.storefront.web.forms.TrackOrderForm;

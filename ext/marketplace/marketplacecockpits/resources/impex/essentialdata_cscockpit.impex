@@ -127,7 +127,48 @@ INSERT_UPDATE GLOBALCODEMASTER;enumCode[unique=true];globalCode[unique=true];des
 ;ORDER_CANCELLED;CNLREFND;
 ;RETURN_INITIATED;RETUINIT;
 ;RETURN_COMPLETED;REFCLOSE;
-;RETURN_REJECTED;RETREJEC
+;RETURN_REJECTED;RETREJEC;
+# Added in R2.3 start 
+;PENDING_SELLER_ASSIGNMENT;ORDPNASG;
+;ORDER_ALLOCATED;ORDALLOC;
+;ORDER_ACCEPTED;ORDACCEP;
+;ORDER_REJECTED;ORDREJEC;
+;PICK_IN_PROGRESS;PICKINPR;
+;PICK_LIST_GENERATED;PILIGENE;
+;PICK_HOLD;PICKHOLD;
+;PICK_CONFIRMED;PICKCONF;
+;PACKED;SCANNED;
+;AWB_ASSIGNED;AWBASSIG;
+;PRINT_SHIPPING_LABEL;PRISHLAB;
+;INVOICE_GENERATED;INVOGENE;
+;PRINT_INVOICE;PRIINVOI;
+;MANIFESTO_PENDING;MANIPEND;
+;READY_TO_SHIP;RETOSHIP;
+;LOGISTIC_PARTNER_SWITCH;LPSWITCH;
+;HOTC;HOTCOURI;
+;REACHED_NEAREST_HUB;RENEARHB;
+;DELIVERED;DELIVERD;
+;UNDELIVERED;UNDLVERD;
+;RETURN_TO_ORIGIN;RETTOORG;
+;LOST_IN_TRANSIT;LOSTINTT;
+;REVERSE_AWB_ASSIGNED;REVRSAWB;
+;RETURN_RECEIVED;SRECTORI;
+;RETURN_CLOSED;RETUCLOS;
+;RETURN_CANCELLED;RETUCANC;
+;REDISPATCH_INITIATED;REDIINIT;
+;CLOSED_ON_RETURN_TO_ORIGIN;CLRETORI;
+;QC_FAILED;QCFAILED;
+;CANCELLATION_INITIATED;ORDCANCL;
+;OUT_FOR_DELIVERY;OTFRDLVY;
+;COD_CLOSED_WITHOUT_REFUND;CODCWRND;
+;ORDER_REALLOCATED;ODREALOC;
+;CNC_INITIATED;CNCINTED;
+;READY_FOR_COLLECTION;RDYCOLTN;
+;ORDER_COLLECTED;ORDCOLTD;
+;ORDER_UNCOLLECTED;ORDUNCTD;
+;RETURNINITIATED_BY_RTO;RETUIRTO;					
+
+# Added in R2.3 end
 
 
 #REJECTION REASON WITH PREFIX
@@ -146,5 +187,5 @@ INSERT_UPDATE GLOBALCODEMASTER;enumCode[unique=true];globalCode[unique=true];des
 INSERT_UPDATE SearchRestriction;code[unique=true];query;principal(UID);restrictedType(code);active;generate[default=FALSE]
 #;CancelReason_Restriction;({code} NOT IN ('OutOfStock','LateDelivery','Warehouse', 'CustomerRequest','Other','NA'));employeegroup;CancelReason;true;
 #;RefundReason_Restriction;({code} NOT IN ('PriceMatch','LostInTransit','ManufacturingFault', 'WrongDescription','MissedLinkDeal','MispickWrongItemDelivered','MispickItemMissing','SiteError','GoodWill'));employeegroup;RefundReason;true;
-;CancelReason_Restriction;({code} NOT IN ('OutOfStock','LateDelivery','Warehouse','CustomerRequest','Other','NA','04','02','01','05','03','Booked a duplicate order','Estimated shipping time is taking too long','Do not want the product - change of mind','Found the product cheaper on another website','Product specifications are incorrect','Lower price at other place','I changed my mind','I found a better deal on another website	','I placed my order twice by mistake','The product specifications are wrong','Partner seller request','My delivery is taking too long','Security risk with the Order','Can’t meet the committed delivery time','Order lost in transit','Inventory not available / Quality Fails','Due to unavoidable logistical issues'));employeegroup;CancelReason;true;
+;CancelReason_Restriction;({code} NOT IN ('OutOfStock','LateDelivery','Warehouse','CustomerRequest','Other','NA','04','02','01','05','03','Booked a duplicate order','Estimated shipping time is taking too long','Do not want the product - change of mind','Found the product cheaper on another website','Product specifications are incorrect','Lower price at other place','I changed my mind','I found a better deal on another website	','I placed my order twice by mistake','The product specifications are wrong','Partner seller request','My delivery is taking too long','Security risk with the Order','Canï¿½t meet the committed delivery time','Order lost in transit','Inventory not available / Quality Fails','Due to unavoidable logistical issues'));employeegroup;CancelReason;true;
 ;RefundReason_Restriction;({code} NOT IN ('DamagedInTransit','PriceMatch','LostInTransit','ManufacturingFault','WrongDescription','MissedLinkDeal','MispickWrongItemDelivered','MispickItemMissing','SiteError','GoodWill','Faulty Product','Does not fit (Too Small / Too Large)','Missing part of the product','Received wrong item','Looks different to image on site (Doesn''t like it)','Product arrived Damaged','Quality unsatisfactory','Missed agreed delivery date (Arrived too late)','Lower price at other place'));employeegroup;RefundReason;true;

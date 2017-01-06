@@ -33,7 +33,6 @@ import com.hybris.oms.domain.order.Promotion;
 import com.hybris.oms.domain.types.Amount;
 import com.hybris.oms.domain.types.Quantity;
 import com.tisl.mpl.constants.MarketplaceomsservicesConstants;
-import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.core.model.RichAttributeModel;

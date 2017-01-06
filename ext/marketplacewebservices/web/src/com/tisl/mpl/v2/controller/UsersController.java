@@ -75,7 +75,6 @@ import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.CartService;
-import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.payment.AdapterException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
@@ -151,7 +150,6 @@ import com.tisl.mpl.core.enums.FeedbackArea;
 import com.tisl.mpl.core.enums.Frequency;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.BuyBoxModel;
-import com.tisl.mpl.core.model.EMIBankModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.CODSelfShipData;
@@ -188,7 +186,6 @@ import com.tisl.mpl.facades.data.MplFavBrandCategoryWsDTO;
 import com.tisl.mpl.facades.data.MplPreferenceData;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
-import com.tisl.mpl.facades.populators.CustomAddressReversePopulator;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.facades.product.data.ReturnReasonDetails;
@@ -205,7 +202,6 @@ import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtendedUserService
 import com.tisl.mpl.model.OrderStatusCodeMasterModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.order.data.OrderEntryDataList;
-import com.tisl.mpl.order.facade.GetOrderDetailsFacade;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.populator.HttpRequestCustomerDataPopulator;
 import com.tisl.mpl.populator.options.PaymentInfoOption;
@@ -221,7 +217,6 @@ import com.tisl.mpl.validation.data.AddressValidationData;
 import com.tisl.mpl.webservice.businessvalidator.DefaultCommonAsciiValidator;
 import com.tisl.mpl.wsdto.CommonCouponsDTO;
 import com.tisl.mpl.wsdto.EMIBankListWsDTO;
-import com.tisl.mpl.wsdto.EMIBankWsDTO;
 import com.tisl.mpl.wsdto.EMITermRateDataForMobile;
 import com.tisl.mpl.wsdto.FetchNewsLetterSubscriptionWsDTO;
 import com.tisl.mpl.wsdto.GetCustomerDetailDto;
@@ -419,8 +414,6 @@ public class UsersController extends BaseCommerceController
 	@Autowired
 	private MplOrderService mplOrderService;
 	
-	@Resource(name = "getOrderDetailsFacade")
-	private GetOrderDetailsFacade getOrderDetailsFacade;
 	
 	@Autowired
 	private DateUtilHelper dateUtilHelper;

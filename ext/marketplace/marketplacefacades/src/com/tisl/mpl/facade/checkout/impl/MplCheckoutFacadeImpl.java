@@ -28,7 +28,6 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.CustomerModel;
-//import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.jalo.user.User;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.InvalidCartException;
@@ -63,7 +62,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 
@@ -94,7 +92,6 @@ import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
-//import com.tisl.mpl.fulfilmentprocess.events.OrderPlacedEvent;
 import com.tisl.mpl.helper.MplEnumerationHelper;
 import com.tisl.mpl.marketplacecommerceservices.event.OrderPlacedEvent;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
@@ -105,11 +102,10 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationServ
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData;
 import com.tisl.mpl.promotion.service.SellerBasedPromotionService;
-import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData;
+import com.tisl.mpl.shorturl.service.ShortUrlService;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.sns.push.service.impl.MplSNSMobilePushServiceImpl;
 import com.tisl.mpl.wsdto.PushNotificationData;
-import com.tisl.mpl.shorturl.service.ShortUrlService;
 
 /**
  * @author TCS
