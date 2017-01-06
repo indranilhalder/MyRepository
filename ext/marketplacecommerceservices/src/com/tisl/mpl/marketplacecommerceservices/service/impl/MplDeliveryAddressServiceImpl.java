@@ -435,6 +435,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 								MarketplacecommerceservicesConstants.HOME_DELIVERY, MarketplacecommerceservicesConstants.INR,
 								entry.getSelectedUSSID());
 						      entry.setMplDeliveryMode(deliveryModel);
+						      entry.setIsEDtoHD(Boolean.TRUE);
 						modelService.saveAll(entry);
 					}
 
