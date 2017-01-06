@@ -911,6 +911,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 		List<OrderEntryData> cancelProduct = new ArrayList<>();
 		OrderModel subOrderModel = null;
 		OrderModel orderModel = null;
+		boolean luxFlag = false;
 		try
 		{
 
@@ -952,7 +953,16 @@ public class AccountPageController extends AbstractMplSearchPageController
 								break;
 							}
 						}
-
+						//LW-225,230 start
+						if (null != orderEntry.getProduct())
+						{
+							if (orderEntry.getProduct().getLuxIndicator() != null
+									&& orderEntry.getProduct().getLuxIndicator()
+											.equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
+							{
+								luxFlag = true; //Setting true if at least one luxury product found
+							}
+						}
 						trackStatusMap.put(orderDetail.getCode() + orderEntry.getEntryNumber(), statusTrackMap);
 						currentStatusMap.put(orderDetail.getCode() + orderEntry.getEntryNumber(), consignmentStatus);
 					}
@@ -1154,10 +1164,22 @@ public class AccountPageController extends AbstractMplSearchPageController
 							cancelProduct = cancelReturnFacade.associatedEntriesData(orderModelService.getOrder(subOrder.getCode()),
 									orderEntry.getOrderLineId());
 							currentProductMap.put(orderEntry.getOrderLineId(), cancelProduct);
-
+							//LW-225,230 start
+							if (null != orderEntry.getProduct())
+							{
+								if (orderEntry.getProduct().getLuxIndicator() != null
+										&& orderEntry.getProduct().getLuxIndicator()
+												.equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
+								{
+									luxFlag = true; //Setting true if at least one luxury product found
+								}
+							}
 						}
 					}
 				}
+
+				// LW-225,230
+				model.addAttribute(ModelAttributetConstants.IS_LUXURY, luxFlag);
 
 				////TISEE-6290
 				fullfillmentDataMap = mplCartFacade.getOrderEntryFullfillmentMode(orderDetail);
