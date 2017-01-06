@@ -58958,7 +58958,7 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 
 
 /*Specifications*/
-.SpecWrap{ border:1px solid #ebebeb;}
+.SpecWrap{ border:1px solid #ebebeb; margin-top:45px;}
 .SpecWrap .Padd{ padding:50px 50px 25px;}
 .SpecWrap .Padd h2{ font-size:28px; text-align:center; font-weight:bold;}
 .SpecWrap .Padd .tabs-block .nav > li{  font-weight: normal;width:auto; text-align:center; max-width:none;} 
@@ -58985,7 +58985,7 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 .SpecWrap .tabs-block .tabs>li.active{margin-top:-2px;}
 
 @media(min-width:1025px) and (max-width:1500px) {
-	.SpecWrap{ margin: 0 40px;}
+	.SpecWrap{ margin: 45px 40px 0;}
 }
 @media(max-width:1200px) {
 /*Specifications*/
@@ -58998,7 +58998,7 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 
 @media(max-width:1024px){
 /*Specifications*/
-.SpecWrap{  margin: 0 25px 35px;}
+.SpecWrap{  margin: 45px 25px 35px;}
 .SpecWrap .Padd{  padding: 30px 30px 25px;}
 .SpecWrap .Padd .tabs-block{ margin:0;}
 .SpecWrap .Padd .tabs-block .nav-wrapper{ overflow:hidden; display: block; position:relative;}
@@ -59011,7 +59011,7 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 	}
  @media(max-width:767px){
 	/* Specifications */
-	.SpecWrap{  margin: 0 15px 10px;}
+	.SpecWrap{  margin: 30px 15px 10px;}
 	.SpecWrap .Padd{  padding: 15px;}
 	.SpecWrap .Padd h2 {    font-size: 20px;}
 	.SpecWrap .Padd .tab-details li{  line-height: inherit;    margin: 0 0 10px;    padding: 0 0 10px;}
