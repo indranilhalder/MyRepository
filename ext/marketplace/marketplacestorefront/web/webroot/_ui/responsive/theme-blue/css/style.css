@@ -54484,7 +54484,7 @@ body .lookbook_wrapper .listing.wrapper .left-block{
   #countrySelector.clearfix{
   display:none;
   }
-  .checkout.wrapper .formaddress .product-block.addresses.new-form li.item input{
+  .checkout.wrapper .formaddress .product-block.addresses.new-form li.item input, .checkout.wrapper .formaddress .product-block.addresses.new-form li.item select{
   margin-bottom: 20px;
     font-size: 14px;
     border: 1px solid #dbdbdb;
@@ -54501,7 +54501,7 @@ body .lookbook_wrapper .listing.wrapper .left-block{
   /* .checkout.wrapper .formaddress .product-block.addresses.new-form li.item .half{
       width: 47.7%;
   } */
-  .checkout.wrapper .formaddress  select[name="state"] {
+  .checkout.wrapper .formaddress  select[name="state"],.checkout.wrapper .formaddress select[name="landmark"] {
     width: 100%;
   margin-bottom: 20px;
     font-size: 14px;
@@ -60030,9 +60030,12 @@ h4 {
 .thirdTataCliq .body-Content{
 	padding-bottom: 395px;
 }
-#addAddressForm #new-address-option-1 + label, #new-address-option-2 + label{
+/*
+
+TISRLUAT-11
+ #addAddressForm #new-address-option-1 + label, #new-address-option-2 + label{
 	width:100%;
-}
+}TISRLUAT-11 */
 
  
 

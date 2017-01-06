@@ -1056,7 +1056,8 @@ function editAddress(addressId) {
         	document.getElementById("erraddressline1").innerHTML = "<font color='#ff1c47' size='2'>Please enter address line 1</font>";
         	flagAd1 = false;
         }
-        if (addressForm.line2.value == null || addressForm.line2.value == "") {
+        /*TISRLEE-1655*/
+       /* if (addressForm.line2.value == null || addressForm.line2.value == "") {
         	$("#errddressline2").css({"display":"block"});
         	document.getElementById("erraddressline2").innerHTML = "<font color='#ff1c47' size='2'>Please enter address line 2</font>";
         	flagAd2 = false;
@@ -1065,7 +1066,8 @@ function editAddress(addressId) {
         	$("#errddressline3").css({"display":"block"});
         	document.getElementById("erraddressline3").innerHTML = "<font color='#ff1c47' size='2'>Please enter address line 3</font>";
         	flagAd3 = false;
-        }
+        }*/
+        /*TISRLEE-1655*/
         if (addressForm.postcode.value == null || addressForm.postcode.value == "") {
         	$("#errddressPost").css({"display":"block"});
         	document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Please enter post code</font>";
@@ -1107,17 +1109,17 @@ function editAddress(addressId) {
         }
         else if (addressForm.mobileNo.value.length > 10 || addressForm.mobileNo.value.length < 10 || isNaN(addressForm.mobileNo.value)) {
         	$("#errddressMob").css({"display":"block"});
-        	document.getElementById("erraddressMob").innerHTML = "<font color='#ff1c47' size='2'>Mobile number should contain 10 digit numbers only</font>";
+        	document.getElementById("erraddressMob").innerHTML = "<font color='#ff1c47' size='2'>Please Enter Valid Mobile Number</font>";
         	flagMob = false;
         }
         else if (regexSpace.test(addressForm.mobileNo.value)) {
         	$("#errddressMob").css({"display":"block"});
-        	document.getElementById("erraddressMob").innerHTML = "<font color='#ff1c47' size='2'>Mobile number should contain 10 digit numbers only</font>";
+        	document.getElementById("erraddressMob").innerHTML = "<font color='#ff1c47' size='2'>Please Enter Valid Mobile Number</font>";
         	flagMob = false;
         }
         else if(equalNoCheck.test(addressForm.mobileNo.value)){
         	$("#errddressMob").css({"display":"block"});
-        	document.getElementById("erraddressMob").innerHTML = "<font color='#ff1c47' size='2'>Mobile number should contain 10 digit numbers only</font>";
+        	document.getElementById("erraddressMob").innerHTML = "<font color='#ff1c47' size='2'>Please Enter Valid Mobile Number</font>";
         	flagMob = false;
         }
         

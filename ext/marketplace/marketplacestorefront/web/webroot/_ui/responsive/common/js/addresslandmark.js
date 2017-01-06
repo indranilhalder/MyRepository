@@ -209,9 +209,9 @@ $(".optionsLandmark .errorMessage").css("padding-bottom", "5px");
 $('.address_landmarks').attr("onchange","changeFuncLandMark(this.value)");
 $(".address_landmarkOther, .address_landmarkOtherDiv label").hide();
 
-$("#addNewAddress").click(function(e){
-	optionsLandmark(e);
-});
+/*$("#addNewAddress").click(function(e){
+	//optionsLandmark(e);
+});*/
 
 
 function changeFuncLandMark(value) {
@@ -240,7 +240,7 @@ function changeFunction(value) {
 	}
 }
 
-function optionsLandmark(e) {
+/*function optionsLandmark(e) {
 	$(".errland1").hide();
 	if($(".address_landmarks").val().length <= "3" && $(".address_landmarks").val().length >= "1") {
 		$(".errland1").show().css("color", "#ff1c47").text("Please Select Landmark");
@@ -256,7 +256,7 @@ function optionsLandmark1(e) {
 		$(".errland2").show().css("color", "#ff1c47").text("Please Enter Landmark");
 		e.preventDefault();
 	}	
-}
+}*/
 
 function checkPopupDataOrderHistory() {
 					var validate = true;

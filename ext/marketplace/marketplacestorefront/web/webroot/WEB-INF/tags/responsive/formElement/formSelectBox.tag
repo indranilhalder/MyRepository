@@ -33,7 +33,7 @@
 					</span>
 			</label>
 			<div class="controls">
-				<form:select id="${idKey}" path="${path}" value="${skipBlankMessageKey}" cssClass="${selectCSSClass}" tabindex="${tabindex}" onchange="changeFuncLandMark(this.value)">
+				<form:select id="${idKey}" path="${path}" value="${skipBlankMessageKey}" cssClass="${selectCSSClass}" tabindex="${tabindex}">
 				<%--    <c:if test="${skipBlank == null || skipBlank == false}">
 						<option value="" disabled="disabled" ${empty selectedValue ? 'selected="selected"' : ''}>
 							<spring:theme code='${skipBlankMessageKey}'/>

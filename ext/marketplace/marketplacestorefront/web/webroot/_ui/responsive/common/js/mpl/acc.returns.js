@@ -658,13 +658,17 @@
 			}else if($("#addAddressForm #addressLine1").val().length < 2) {
 				$("#addAddressForm .errorText").show().text("Please enter Address Line 1");
 				return false;
-			}else if($("#addAddressForm #addressLine2").val().length < 2) {
+			}/* 
+			TISRLEE-1655
+			else if($("#addAddressForm #addressLine2").val().length < 2) {
 				$("#addAddressForm .errorText").show().text("Please enter Address Line 2");
 				return false;
 			}else if($("#addAddressForm #addressLine3").val().length < 2) {
 				$("#addAddressForm .errorText").show().text("Please enter Address Line 3");
 				return false;
-			}else if($("#addAddressForm #pincode").val().length < 6) {
+			}
+			TISRLEE-1655
+			*/else if($("#addAddressForm #pincode").val().length < 6) {
 				$("#addAddressForm .errorText").show().text("Please enter valid pincode");
 				return false;
 			}else if($("#addAddressForm #mobileNo").val().length < 10) {
