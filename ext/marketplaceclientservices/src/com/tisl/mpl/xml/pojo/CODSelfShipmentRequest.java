@@ -3,7 +3,7 @@
  */
 package com.tisl.mpl.xml.pojo;
 
-//import java.util.Date; sonar issue fixed 
+
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;

@@ -441,9 +441,14 @@
 											<span>${sellerOrder.code}</span>
 										</p>
 										</c:if>
-										
-											
-											
+								  <!--R2.3 TISRLEE-1615- Start   -->
+									<c:if test="${not empty entry.selectedDeliverySlotDate}">
+										<p>
+										    <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>
+											<span>${entry.selectedDeliverySlotDate} ${entry.selectedDeliverySlotTimeFrom}</span>
+										</p>
+									</c:if>
+									<!--R2.3 TISRLEE-1615- END   -->
 											<!--  Edit button and input box for  pickup Person details -->
 											
 														<div id="pickNo" style="font-size: 12px;padding-top: 5px;"> ${sellerOrder.pickupPhoneNumber}<br> </div> 
@@ -1611,9 +1616,14 @@
 											<spring:message code="text.orderHistory.seller.order.number"></spring:message>
 											<span>${sellerOrder.code}</span>
 										</p>
-										
-											
-											
+								   <!--R2.3 TISRLEE-1615- Start   -->
+									<c:if test="${not empty entry.selectedDeliverySlotDate}">
+									   <p>
+										    <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>
+											<span>${entry.selectedDeliverySlotDate} &nbsp;, ${entry.selectedDeliverySlotTimeFrom}</span>
+										</p>
+									</c:if> 
+								 <!--R2.3 TISRLEE-1615- END   -->
 											<!--  Edit button and input box for  pickup Person details -->
 											
 														<div id="pickNo" style="font-size: 12px;padding-top: 5px;"> ${sellerOrder.pickupPhoneNumber}<br> </div> 

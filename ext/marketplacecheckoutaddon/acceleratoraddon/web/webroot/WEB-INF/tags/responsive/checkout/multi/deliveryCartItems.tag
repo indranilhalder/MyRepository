@@ -294,11 +294,11 @@
 		
 		</li>
 		<li>
-		    <div class="method item-mthd">
+		   <%--  <div class="method item-mthd">
                    <h3> <spring:theme code="checkout.multi.shipmentMethod"/></h3>
                    <p class="delivery-method-description"><c:out value="${entry.mplDeliveryMode.name}"></c:out>&nbsp;-&nbsp;<c:if test="${entry.currDelCharge.value.unscaledValue() == 0}"><c:out value="FREE"></c:out></c:if><c:if test="${entry.currDelCharge.value.unscaledValue() != 0}"><c:out value="${entry.currDelCharge.formattedValue}"></c:out></c:if></p>
                   <p class="delivery-method-description delivery-method-description-time"><c:out value="${entry.mplDeliveryMode.description}"></c:out></p>
-                  </div>
+                  </div> --%>
 		</li>
 	</c:if>
 </c:forEach>

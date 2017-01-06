@@ -215,7 +215,7 @@
 										</c:if>
 										<br>
 										<c:if test="${not empty orderDeliveryAddressList.town}">
-											<span class="town addressFont">${orderDeliveryAddresssList.town}</span>&nbsp;
+											<span class="town addressFont">${orderDeliveryAddressList.town}</span>&nbsp;
 									    </c:if>
 
 										<c:if test="${not empty orderDeliveryAddressList.state}">

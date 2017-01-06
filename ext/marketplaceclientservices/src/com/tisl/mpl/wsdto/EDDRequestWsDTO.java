@@ -3,7 +3,6 @@
  */
 package com.tisl.mpl.wsdto;
 
-//import java.util.List; sonar issue
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

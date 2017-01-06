@@ -46,6 +46,15 @@ public class MplDeliveryAddressComparatorImpl implements MplDeliveryAddressCompa
 			}
 
 		}
+		else if (StringUtils.isNotEmpty(oldAddress.getLine2()))
+		{
+			return true;
+		}
+		else if (StringUtils.isNotEmpty(newAddress.getLine2()))
+		{
+			return true;
+		}
+
 		if (StringUtils.isNotEmpty(oldAddress.getLine3())
 				&& StringUtils.isNotEmpty(newAddress.getLine3()))
 		{
@@ -56,6 +65,16 @@ public class MplDeliveryAddressComparatorImpl implements MplDeliveryAddressCompa
 			}
 
 		}
+		else if (StringUtils.isNotEmpty(oldAddress.getLine3()))
+		{
+			return true;
+		}
+		else if (StringUtils.isNotEmpty(newAddress.getLine3()))
+		{
+			return true;
+		}
+		
+		
 		if (StringUtils.isNotEmpty(newAddress.getLandmark()))
 		{
 			if (StringUtils.isNotEmpty(oldAddress.getLandmark()))
@@ -145,7 +164,6 @@ public class MplDeliveryAddressComparatorImpl implements MplDeliveryAddressCompa
 	/***
 	 * compare old address to new address
 	 * @param oldAddress
-	 * @param newDelivery
 	 * @return boolean
 	 */
 	@Override
@@ -171,6 +189,15 @@ public class MplDeliveryAddressComparatorImpl implements MplDeliveryAddressCompa
 			}
 
 		}
+		else if (StringUtils.isNotEmpty(oldAddress.getStreetnumber()))
+		{
+			return true;
+		}
+		else if (StringUtils.isNotEmpty(newDeliveryAddress.getStreetnumber()))
+		{
+			return true;
+		}
+		
 		if (StringUtils.isNotEmpty(oldAddress.getAddressLine3())
 				&& StringUtils.isNotEmpty(newDeliveryAddress.getAddressLine3()))
 		{
@@ -180,6 +207,16 @@ public class MplDeliveryAddressComparatorImpl implements MplDeliveryAddressCompa
 			}	
 
 		}
+		else if (StringUtils.isNotEmpty(oldAddress.getAddressLine3()))
+		{
+			return true;
+		}
+		else if (StringUtils.isNotEmpty(newDeliveryAddress.getAddressLine3()))
+		{
+			return true;
+		}
+		
+		
 		if (StringUtils.isNotEmpty(oldAddress.getLandmark()) && StringUtils.isNotEmpty(newDeliveryAddress.getLandmark()))
 		{
 
