@@ -39,6 +39,7 @@ import de.hybris.platform.promotions.jalo.PromotionResult;
 import de.hybris.platform.promotions.jalo.PromotionsManager;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
+import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.promotions.model.PromotionOrderEntryConsumedModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.promotions.result.PromotionEvaluationContext;
@@ -47,6 +48,7 @@ import de.hybris.platform.promotions.result.PromotionOrderEntry;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.util.localization.Localization;
 
@@ -115,6 +117,10 @@ public class DefaultPromotionManager extends PromotionsManager
 
 	@Resource(name = "stockPromoCheckService")
 	private ExtStockLevelPromotionCheckService stockPromoCheckService;
+
+	@Autowired
+	private FlexibleSearchService flexibleSearchService;
+
 
 	/**
 	 * @return the categoryService
@@ -4008,6 +4014,8 @@ public class DefaultPromotionManager extends PromotionsManager
 
 		final StringBuilder productCodes = new StringBuilder();
 		final Set<String> ussidSet = new HashSet<String>();
+		final StringBuilder categoryCodes = new StringBuilder();
+
 		//Map<String, Integer> stockCountMap = new HashMap<String, Integer>();
 		//final int stockCount = getStockRestrictionVal(restrictionList);
 		//final Map<String, Integer> mapQuantCount = new HashMap<String, Integer>();
@@ -4039,8 +4047,40 @@ public class DefaultPromotionManager extends PromotionsManager
 			idsToCheck = productCodes;
 		}
 
-		stockCountMap.putAll(stockPromoCheckService.getCumulativeStockMap(
-				idsToCheck.toString().substring(0, idsToCheck.lastIndexOf(",")), code, sellerFlag));
+		final boolean isCategory = checkForCategoryPromotion(code);
+		if (!isCategory)
+		{
+			stockCountMap.putAll(stockPromoCheckService.getCumulativeStockMap(
+					idsToCheck.toString().substring(0, idsToCheck.lastIndexOf(",")), code, sellerFlag));
+		}
+		else
+		{
+			Map<String, String> dataMap = new HashMap<String, String>();
+			dataMap = splitCategoryDetails(multiSellerValidUSSIDMap, code, sellerFlag);
+			if (MapUtils.isNotEmpty(dataMap))
+			{
+				for (final Map.Entry<String, String> entry : dataMap.entrySet())
+				{
+					categoryCodes.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + entry.getValue()
+							+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
+					categoryCodes.append(",");
+				}
+
+				stockCountMap.putAll(stockPromoCheckService.getCumulativeCatLevelStockMap(
+						categoryCodes.toString().substring(0, categoryCodes.lastIndexOf(",")), code, dataMap));
+				if (MapUtils.isEmpty(stockCountMap))
+				{
+					stockCountMap.putAll(stockPromoCheckService.getCumulativeStockMap(
+							idsToCheck.toString().substring(0, idsToCheck.lastIndexOf(",")), code, sellerFlag));
+				}
+			}
+			else
+			{
+				stockCountMap.putAll(stockPromoCheckService.getCumulativeStockMap(
+						idsToCheck.toString().substring(0, idsToCheck.lastIndexOf(",")), code, sellerFlag));
+			}
+		}
+
 
 		for (final Map.Entry<String, AbstractOrderEntry> entry : multiSellerValidUSSIDMap.entrySet())
 		{
@@ -4070,6 +4110,85 @@ public class DefaultPromotionManager extends PromotionsManager
 
 		}
 		return ussidSet;
+	}
+
+	/**
+	 * @param multiSellerValidUSSIDMap
+	 * @param code
+	 * @param sellerFlag
+	 * @return
+	 */
+	private Map<String, String> splitCategoryDetails(final Map<String, AbstractOrderEntry> multiSellerValidUSSIDMap,
+			final String code, final boolean sellerFlag)
+	{
+		final Map<String, String> dataMap = new HashMap<String, String>();
+		final ProductPromotionModel oModel = getPromoDetails(code);
+
+		for (final Map.Entry<String, AbstractOrderEntry> data : multiSellerValidUSSIDMap.entrySet())
+		{
+			if (null != data.getValue() && null != data.getValue().getProduct() && null != data.getValue().getProduct().getCode())
+			{
+				final ProductModel product = productService.getProduct(data.getValue().getProduct().getCode());
+				if (null != product && CollectionUtils.isNotEmpty(product.getSupercategories()) && null != oModel)
+				{
+					for (final CategoryModel category : product.getSupercategories())
+					{
+						for (final CategoryModel promocategory : oModel.getCategories())
+						{
+							if (StringUtils.equalsIgnoreCase(category.getCode(), promocategory.getCode()))
+							{
+								if (sellerFlag)
+								{
+									dataMap.put(data.getKey(), promocategory.getCode());
+								}
+								else
+								{
+									dataMap.put(data.getValue().getProduct().getCode(), promocategory.getCode());
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return dataMap;
+	}
+
+
+	/**
+	 * @param code
+	 * @return flag
+	 */
+	private boolean checkForCategoryPromotion(final String code)
+	{
+		boolean flag = false;
+		try
+		{
+			final ProductPromotionModel promotion = getPromoDetails(code);
+			if (CollectionUtils.isNotEmpty(promotion.getCategories()))
+			{
+				flag = true;
+			}
+		}
+		catch (final Exception exception)
+		{
+			flag = false;
+		}
+
+		return flag;
+	}
+
+	/**
+	 * @param code
+	 * @return
+	 */
+	private ProductPromotionModel getPromoDetails(final String code)
+	{
+		final ProductPromotionModel oModel = modelService.create(ProductPromotionModel.class);
+		oModel.setCode(code);
+		oModel.setEnabled(Boolean.TRUE);
+
+		return flexibleSearchService.getModelByExample(oModel);
 	}
 
 	public int getStockRestrictionVal(final List<AbstractPromotionRestriction> restrictionList)

@@ -30,4 +30,12 @@ public interface ExtStockLevelPromotionCheckService
 
 	public int getCummulativeOrderCount(String promoCode, String orginalUid);
 
+	/**
+	 * @param substring
+	 * @param code
+	 * @param dataMap
+	 * @return Map<String, Integer>
+	 */
+	public Map<String, Integer> getCumulativeCatLevelStockMap(String substring, String code, Map<String, String> dataMap);
+
 }
