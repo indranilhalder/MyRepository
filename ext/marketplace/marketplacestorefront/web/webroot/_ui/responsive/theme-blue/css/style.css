@@ -44711,7 +44711,8 @@ body.page-homepage .feature-collections h2{
 }
 
 #brandsYouLove h2 {
-    padding: 50px 0;
+    padding-bottom: 50px;
+    padding-top:0px;
 }
 #productYouCare h2 {
     border-top: 1px solid #e5e5e5;
@@ -44833,7 +44834,8 @@ body.page-homepage .showcase .desc-section h2{
 	font-size: 21px;
 	}
 	#brandsYouLove h2{
-	padding: 30px 0;
+	padding-bottom: 30px;
+	padding-top: 0px;
 	font-size: 20px;
 	}
 	#bestPicks>h2{
@@ -50207,11 +50209,11 @@ overflow: hidden;
 	padding:0;
 }
 .top_deal_blp .owl-prev:after {
-    top: -40px;
+    top: -22px;
     left: 20px;
 }
 .top_deal_blp .owl-next:after {
-    top: -40px;
+    top: -22px;
     right: 20px;
 }
 .top_deal_blp .short-info{
@@ -52114,12 +52116,12 @@ overflow: hidden;
 }
 
 .top_deal .owl-prev:after {
-	top: -40px;
+	top: -12px;
 	left: 20px;
 }
 
 .top_deal .owl-next:after {
-	top: -40px;
+	top: -12px;
 	right: 20px;
 }
 
