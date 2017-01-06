@@ -26,7 +26,7 @@ public class CustomAddressReversePopulator extends AddressReversePopulator
 		Assert.notNull(source, "Parameter addressModel cannot be null.");
 		super.populate(source, target);
 		target.setState(source.getState());
-
+		target.setDistrict(source.getState());
 		target.setAddressType(source.getAddressType());
 		target.setAddressLine3(source.getLine3());
 		target.setLocality(source.getLocality());

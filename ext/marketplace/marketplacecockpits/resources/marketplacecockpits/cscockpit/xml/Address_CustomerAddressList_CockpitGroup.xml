@@ -6,6 +6,7 @@
 		<property qualifier="Address.line1" visible="true"/>
 		<property qualifier="Address.line2" visible="true"/>
 		<property qualifier="Address.addressLine3" visible="true"/>
+		<property qualifier="Address.landmark" visible="true"/>
 		<property qualifier="Address.postalcode" visible="true"/>
 		<property qualifier="Address.phone1" visible="true"/>
 		<property qualifier="Address.addressType" visible="true"/>
