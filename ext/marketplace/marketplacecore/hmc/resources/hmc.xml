@@ -25,6 +25,7 @@
 		</group>
 		<group name="catalog" mode="append" description="group.catalog.description">
 			<typeref type="MplShopByLook" description="group.MplShopByLook.description" />
+			<typeref type="APlusContent" description="group.apluscontent.description" />
 		</group>
 		<group name="group.basecommerce" description="group.basecommerce.description"
 			mode="append">
@@ -2557,6 +2558,55 @@
 		</organizer>
 	</type>
 	
+		<!-- A Plus content TPR-978 -->
+	<type name="APlusContent" mode="append">
+		<organizer>
+			<search mode="append">
+				<condition attribute="csvFile" />
+			</search>
+			<result defaultview="list">
+				<listview>
+					<itemlayout mode="replace">
+						<attribute name="csvFile" width="300"></attribute>
+						<attribute name="csvFileError" width="600"></attribute>
+					</itemlayout>
+				</listview>
+				<treeview mode="replace">
+					<itemlayout>
+						<attribute name="csvFile" />
+						<attribute name="csvFileError" />
+					</itemlayout>
+				</treeview>
+			</result>
+			<editor>
+				<essentials>
+					<columnlayout>
+						<row>
+							<attribute name="csvFile" />
+							<attribute name="csvFileError" />
+						</row>
+					</columnlayout>
+				</essentials>
+				<tab name="category.apluscontent.tab" position="0">
+					<section name="category.apluscontent.section">
+						<listlayout>
+						<attribute name="csvFile" width="300"></attribute>
+						<attribute name="csvFileError" width="600"></attribute>
+						</listlayout>
+					</section>
+				</tab>
+				<tab name="administration" position="1">
+					<section name="section.metadata">
+						<listlayout>
+							<attribute name="csvFile" mode="delete" />
+							<attribute name="csvFileError" mode="delete" />
+						</listlayout>
+					</section>
+				</tab>
+			</editor>
+		</organizer>
+	</type>
+	
 	<!-- Tata Unistore- Promotion HMC Modification -->
 	<type name="BuyAAboveXGetPercentageOrAmountOff" mode="append">
 		<organizer>
@@ -4139,6 +4189,23 @@
 						</itemlayout>
 					</listview>
 				</result>
+		</organizer>
+	</type>
+	
+	<!-- Tata Etail change - DeliveryModeRestriction For Promotions -->
+	<type name="EtailLimitedStockRestriction" mode="append">
+		<organizer>
+			<editor mode="append">
+				<tab name="tab.restriction.properties" mode="append">
+					<section name="section.restriction.users" mode="append"
+						position="2">
+						<listlayout>
+							<attribute name="maxStock" />
+							<attribute name="cusRedeemCount" />
+						</listlayout>
+					</section>
+				</tab>
+			</editor>
 		</organizer>
 	</type>
  

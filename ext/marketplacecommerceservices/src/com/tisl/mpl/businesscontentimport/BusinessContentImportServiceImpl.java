@@ -53,6 +53,7 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 
 	@Autowired
 	private MplCmsPageService cmsPageService;
+	StringBuilder sbError = new StringBuilder();
 
 
 	/**
@@ -148,7 +149,7 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 	 * @param headerRowIncluded
 	 */
 	@Override
-	public void processUpdateForContentImport(final CSVReader reader, final CSVWriter writer, final Map<Integer, String> map,
+	public String processUpdateForContentImport(final CSVReader reader, final CSVWriter writer, final Map<Integer, String> map,
 			final Integer errorPosition, final boolean headerRowIncluded)
 	{
 		LOG.debug("Generationg Contents..");
@@ -205,31 +206,20 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 					}
 					else
 					{
-						try
-						{
-							writeErrorData(writer, invalidColumns.toString(), line, "MISSING_VALUES", lineNo);
-						}
-						catch (final IOException e)
-						{
-							LOG.error("IOException Occured " + e.getMessage());
-						}
+						//writeErrorData(writer, invalidColumns.toString(), line, "MISSING_VALUES", lineNo);
+						errorLogger(invalidColumns.toString(), "MISSING_VALUES", productCode);
 					}
 				}
 				continue;
 			}
 			else
 			{
-				try
-				{
-					writeErrorData(writer, invalidColumns.toString(), line, "MISSING_VALUES", lineNo);
-				}
-				catch (final IOException e)
-				{
-					LOG.error("IOException Occured " + e.getMessage());
-				}
+				//writeErrorData(writer, invalidColumns.toString(), line, "MISSING_VALUES", lineNo);
+				errorLogger(invalidColumns.toString(), "MISSING_VALUES", productCode);
 			}
 			//add else to write the error for the file
-		}
+		}//added for error population HMC
+		return sbError.toString();
 	}
 
 	/**
@@ -305,14 +295,8 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 			}
 			else
 			{
-				try
-				{
-					writeErrorData(writer, invalidColumns.toString(), line, "MISSING_VALUES", lineNo);
-				}
-				catch (final IOException e)
-				{
-					LOG.error("IOException Occured " + e.getMessage());
-				}
+				//writeErrorData(writer, invalidColumns.toString(), line, "MISSING_VALUES", lineNo);
+				errorLogger(invalidColumns.toString(), "MISSING_VALUES", productCode);
 			}
 		}
 	}
@@ -326,7 +310,6 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 	private void processData(final Map<Integer, String> line, final CSVWriter writer, final Map<String, String> contentMap)
 	{
 		LOG.debug("Processing Content Data");
-		final boolean isIncorrectCode = false;
 		try
 		{
 			//Check If Already Present
@@ -364,9 +347,11 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		}
 		catch (final ModelSavingException | ModelNotFoundException | NumberFormatException exception)
 		{
-			final List<Integer> errorColumnList = errorListData(isIncorrectCode);
+			final List<Integer> errorColumnList = errorListData(true);
 			LOG.error("Exception in processing processData" + exception.getMessage());
-			populateErrorEntry(line, writer, errorColumnList);
+			//populateErrorEntry(line, writer, errorColumnList);
+			errorLogger(errorColumnList.toString(), "PRODUCT_CODE_NOT_FOUND", line.get(Integer.valueOf(PRODUCTCODE)));
+
 		}
 	}
 
@@ -449,11 +434,14 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		{
 			LOG.error("Problem while Making ContentPage in makeContentPageforProduct " + exception.getMessage());
 			populateErrorEntry(line, writer, errorColumnList);
+			errorLogger(errorColumnList.toString(), "ERROR_MAKING_CONTENT_PAGE", line.get(Integer.valueOf(PRODUCTCODE)));
+
 		}
 		catch (final Exception e)
 		{
 			LOG.error("Problem while Making ContentPage in makeContentPageforProduct " + e.getMessage());
-			populateErrorEntry(line, writer, errorColumnList);
+			//populateErrorEntry(line, writer, errorColumnList);
+			errorLogger(errorColumnList.toString(), "ERROR_MAKING_CONTENT_PAGE", line.get(Integer.valueOf(PRODUCTCODE)));
 		}
 
 		return cm;
@@ -563,7 +551,8 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		catch (final ModelSavingException | ModelNotFoundException exception)
 		{
 			LOG.error("Problem while Making SimpleBannerComponent" + exception.getMessage());
-			populateErrorEntry(line, writer, errorColumnList);
+			//populateErrorEntry(line, writer, errorColumnList);
+			errorLogger(errorColumnList.toString(), "ERROR_MAKING_BANNER", line.get(Integer.valueOf(PRODUCTCODE)));
 		}
 		return sm;
 
@@ -617,7 +606,8 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		catch (final ModelSavingException | ModelNotFoundException exception)
 		{
 			LOG.error("Problem while Making VideoComponent" + exception.getMessage());
-			populateErrorEntry(line, writer, errorColumnList);
+			//populateErrorEntry(line, writer, errorColumnList);
+			errorLogger(errorColumnList.toString(), "ERROR_MAKING_VIDEO", line.get(Integer.valueOf(PRODUCTCODE)));
 		}
 		return vm;
 
@@ -672,7 +662,8 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		catch (final ModelSavingException | ModelNotFoundException exception)
 		{
 			LOG.error("Problem while Making CMSParagraphComponentModel" + exception.getMessage());
-			populateErrorEntry(line, writer, errorColumnList);
+			//populateErrorEntry(line, writer, errorColumnList);
+			errorLogger(errorColumnList.toString(), "ERROR_MAKING_PARAGRAPH", line.get(Integer.valueOf(PRODUCTCODE)));
 		}
 		return cmsPara;
 
@@ -732,7 +723,8 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		catch (final ModelSavingException | ModelNotFoundException exception)
 		{
 			LOG.error("Problem while Making Content Slot" + exception.getMessage());
-			populateErrorEntry(line, writer, errorColumnList);
+			//populateErrorEntry(line, writer, errorColumnList);
+			errorLogger(errorColumnList.toString(), "ERROR_MAKING_SLOT", line.get(Integer.valueOf(PRODUCTCODE)));
 		}
 		//return cSlotList;
 		return cSlotListReturn;
@@ -781,7 +773,8 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		catch (final ModelSavingException | ModelNotFoundException exception)
 		{
 			LOG.error("Problem while Making Content Slot for Page" + exception.getMessage());
-			populateErrorEntry(line, writer, errorColumnList);
+			//populateErrorEntry(line, writer, errorColumnList);
+			errorLogger(errorColumnList.toString(), "ERROR_MAKING_SLOT_FOR_PAGE", line.get(Integer.valueOf(PRODUCTCODE)));
 		}
 
 	}
@@ -851,8 +844,8 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		{
 			line.put(errorColumnList.get(i), errorMessage);
 		}
+		writer.writeComment("columnName," + "errorMessage ," + "Line");
 		writer.write(line);
-
 	}
 
 	/**
@@ -885,9 +878,22 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		line.put(Integer.valueOf(0), errorColumn);
 		line.put(Integer.valueOf(1), errorMessage);
 		line.put(Integer.valueOf(2), lineNoCsv.toString());
-
 		writer.writeComment("columnName," + "errorMessage ," + "Line No." + ",Line");
 		writer.write(line);
+	}
+
+	/**
+	 * @desc errorLogger added for getting the exact error in HMC
+	 * @param errorColumn
+	 * @param errorMessage
+	 * @param productCode
+	 */
+	public void errorLogger(final String errorColumn, final String errorMessage, final String productCode)
+	{
+		sbError.append("COLUMN_NAME,").append("ERROR_MESSAGE ,").append("PRODUCT_ID");
+		sbError.append("\n");
+		sbError.append(errorColumn).append(",").append(errorMessage).append(",").append(productCode);
+		sbError.append("\n");
 	}
 
 

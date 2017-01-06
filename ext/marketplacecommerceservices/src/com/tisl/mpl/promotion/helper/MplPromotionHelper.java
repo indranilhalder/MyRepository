@@ -6,7 +6,9 @@ package com.tisl.mpl.promotion.helper;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.enumeration.EnumerationValue;
@@ -20,15 +22,18 @@ import de.hybris.platform.promotions.jalo.AbstractPromotionRestriction;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.promotions.model.OrderPromotionModel;
 import de.hybris.platform.promotions.model.PromotionGroupModel;
+import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +42,11 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
+import com.tisl.mpl.jalo.EtailLimitedStockRestriction;
 import com.tisl.mpl.jalo.EtailSellerSpecificRestriction;
 import com.tisl.mpl.jalo.SellerMaster;
 import com.tisl.mpl.marketplacecommerceservices.daos.BulkPromotionCreationDao;
+import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtStockLevelPromotionCheckServiceImpl;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.promotion.service.SellerBasedPromotionService;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -768,6 +775,305 @@ public class MplPromotionHelper
 		}
 
 		return deliveryChargeForEntry;
+	}
+
+	/**
+	 *
+	 * @param restrictionList
+	 * @return boolean
+	 */
+	public boolean validateForStockRestriction(final List<AbstractPromotionRestriction> restrictionList)
+	{
+		for (final AbstractPromotionRestriction restriction : restrictionList)
+		{
+			if (restriction instanceof EtailLimitedStockRestriction)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @param key
+	 * @param count
+	 * @param validProductList
+	 * @return int
+	 */
+	public int getFreeGiftCount(final String key, final int count, final Map<String, Integer> validProductList)
+	{
+
+		LOG.debug("ValidProductList" + validProductList);
+		int giftCount = 0;
+		int quantity = 0;
+		List<SellerInformationModel> productSellerData = null;
+		List<SellerInformationModel> validSellerData = null;
+		try
+		{
+			if (null != key && MapUtils.isNotEmpty(validProductList) && count > 0)
+			{
+				final CatalogVersionModel oModel = getDefaultPromotionsManager().catalogData();
+				productSellerData = getSellerBasedPromotionService().fetchSellerInformation(key, oModel);
+
+				if (null != productSellerData && !productSellerData.isEmpty())
+				{
+					for (final SellerInformationModel sellerData : productSellerData)
+					{
+						for (final Map.Entry<String, Integer> entry : validProductList.entrySet())
+						{
+							validSellerData = getSellerBasedPromotionService().fetchSellerInformation(entry.getKey(), oModel);
+							for (final SellerInformationModel data : validSellerData)
+							{
+								if (sellerData.getSellerID().equalsIgnoreCase(data.getSellerID()))
+								{
+									quantity = quantity + (entry.getValue().intValue());
+								}
+							}
+
+						}
+					}
+				}
+
+				//Newly Added Code
+				if (quantity > 0)
+				{
+					giftCount = quantity / count;
+				}
+			}
+
+		}
+		catch (final ModelNotFoundException exception)
+		{
+			giftCount = 0;
+			LOG.error(exception.getMessage());
+		}
+		catch (final Exception exception)
+		{
+			giftCount = 0;
+			LOG.error(exception.getMessage());
+		}
+
+		return giftCount;
+
+	}
+
+	/**
+	 * For Limited Stock Restriction
+	 *
+	 * @param validProductUssidMap
+	 * @param restrictionList
+	 * @param promoCode
+	 * @return isExhausted
+	 */
+	public boolean isPromoStockExhausted(final Map<String, AbstractOrderEntry> validProductUssidMap,
+			final List<AbstractPromotionRestriction> restrictionList, final String promoCode)
+	{
+		boolean isExhausted = false;
+		boolean sellerFlag = false;
+
+		sellerFlag = getDefaultPromotionsManager().isSellerRestrExists(restrictionList);
+
+		if (sellerFlag)
+		{
+			isExhausted = checkStockData(validProductUssidMap, true, promoCode, restrictionList);
+		}
+		else
+		{
+			isExhausted = checkStockData(validProductUssidMap, false, promoCode, restrictionList);
+		}
+
+		return isExhausted;
+	}
+
+	/**
+	 * For Limited Stock Restriction
+	 *
+	 * @param validProductUssidMap
+	 * @param flag
+	 * @param promoCode
+	 * @param restrictionList
+	 * @return isExhausted
+	 */
+	private boolean checkStockData(final Map<String, AbstractOrderEntry> validProductUssidMap, final boolean flag,
+			final String promoCode, final List<AbstractPromotionRestriction> restrictionList)
+	{
+		boolean isExhausted = true;
+		final StringBuilder ussidIds = new StringBuilder();
+		final StringBuilder productCodes = new StringBuilder();
+		Map<String, Integer> stockCountMap = new HashMap<String, Integer>();
+		//boolean stockFlag = true;
+
+		final Map<String, Boolean> dataMap = new HashMap<String, Boolean>();
+
+		final int restrictedCount = getDefaultPromotionsManager().getStockRestrictionVal(restrictionList);
+
+		for (final Map.Entry<String, AbstractOrderEntry> entry : validProductUssidMap.entrySet())
+		{
+			ussidIds.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + entry.getKey()
+					+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
+			ussidIds.append(",");
+			productCodes.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + entry.getValue().getProduct().getCode()
+					+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
+			productCodes.append(",");
+		}
+
+		if (flag)
+		{
+			stockCountMap = getStockService().getCumulativeStockMap(ussidIds.toString().substring(0, ussidIds.lastIndexOf(",")),
+					promoCode, true);
+			for (final Map.Entry<String, AbstractOrderEntry> entry : validProductUssidMap.entrySet())
+			{
+				if (MapUtils.isNotEmpty(stockCountMap) && null != stockCountMap.get(entry.getKey())
+						&& stockCountMap.get(entry.getKey()).intValue() >= restrictedCount)
+				{
+					dataMap.put(entry.getKey(), Boolean.FALSE);
+				}
+				else
+				{
+					dataMap.put(entry.getKey(), Boolean.TRUE);
+				}
+			}
+		}
+		else
+		{
+			stockCountMap = getStockService().getCumulativeStockMap(
+					productCodes.toString().substring(0, productCodes.lastIndexOf(",")), promoCode, false);
+			for (final Map.Entry<String, AbstractOrderEntry> entry : validProductUssidMap.entrySet())
+			{
+				if (MapUtils.isNotEmpty(stockCountMap) && null != entry.getValue()
+						&& StringUtils.isNotEmpty(entry.getValue().getProduct().getCode())
+						&& null != stockCountMap.get(entry.getValue().getProduct().getCode())
+						&& stockCountMap.get(entry.getValue().getProduct().getCode()).intValue() >= restrictedCount)
+				{
+					dataMap.put(entry.getKey(), Boolean.FALSE);
+				}
+				else
+				{
+					dataMap.put(entry.getKey(), Boolean.TRUE);
+				}
+			}
+		}
+
+
+
+		if (MapUtils.isEmpty(dataMap))
+		{
+			isExhausted = false;
+		}
+		else
+		{
+			for (final Entry<String, Boolean> data : dataMap.entrySet())
+			{
+				if (data.getValue().booleanValue())
+				{
+					isExhausted = false;
+				}
+			}
+		}
+
+		return isExhausted;
+	}
+
+	protected ExtStockLevelPromotionCheckServiceImpl getStockService()
+	{
+		return Registry.getApplicationContext().getBean("stockPromoCheckService", ExtStockLevelPromotionCheckServiceImpl.class);
+	}
+
+	/**
+	 * @param restrictionList
+	 * @param promoCode
+	 * @param order
+	 * @return boolean
+	 */
+	public boolean checkOrderCount(final List<AbstractPromotionRestriction> restrictionList, final String promoCode,
+			final AbstractOrder order)
+	{
+		int count = 0;
+		int orderCount = 0;
+		String orginalUid = MarketplacecommerceservicesConstants.EMPTY;
+
+		final AbstractOrderModel abstractOrderModel = (AbstractOrderModel) modelService.get(order);
+		if (null != abstractOrderModel && null != abstractOrderModel.getUser())
+		{
+			final CustomerModel customer = (CustomerModel) abstractOrderModel.getUser();
+			if (null != customer && null != customer.getOriginalUid())
+			{
+				orginalUid = customer.getOriginalUid();
+			}
+		}
+
+		if (CollectionUtils.isNotEmpty(restrictionList) && validateForStockRestriction(restrictionList))
+		{
+			count = getStockCustomerRedeemCount(restrictionList);
+			if (count == 0)
+			{
+				return true;
+			}
+			else if (StringUtils.isNotEmpty(orginalUid) && count > 0)
+			{
+				orderCount = getStockService().getCummulativeOrderCount(promoCode, orginalUid);
+				if (orderCount >= count)
+				{
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	public int getStockCustomerRedeemCount(final List<AbstractPromotionRestriction> restrictionList)
+	{
+		int count = 0;
+		for (final AbstractPromotionRestriction restriction : restrictionList)
+		{
+			if (restriction instanceof EtailLimitedStockRestriction)
+			{
+				final EtailLimitedStockRestriction data = (EtailLimitedStockRestriction) restriction;
+				if (null != data.getCusRedeemCount() && data.getCusRedeemCount().intValue() > 0)
+				{
+					try
+					{
+						count = data.getCusRedeemCount().intValue();
+					}
+					catch (final NumberFormatException exception)
+					{
+						count = 0;
+					}
+
+				}
+
+			}
+		}
+		return count;
+	}
+
+	/**
+	 * @param validProductList
+	 * @param qualifyingCount
+	 * @param restrictionList
+	 * @return boolean
+	 */
+	public boolean validateCount(final Map<String, Integer> validProductList, final int qualifyingCount,
+			final List<AbstractPromotionRestriction> restrictionList)
+	{
+		int count = 0;
+		if (MapUtils.isNotEmpty(validProductList) && qualifyingCount > 0 && validateForStockRestriction(restrictionList))
+		{
+			for (final Entry<String, Integer> data : validProductList.entrySet())
+			{
+				if (null != data.getValue())
+				{
+					count += data.getValue().intValue();
+				}
+
+			}
+
+			if (!(count % qualifyingCount == 0))
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 
 }

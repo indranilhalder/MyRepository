@@ -56,8 +56,9 @@ public class BusinessContentImportUtility
 	 * @param : flag
 	 */
 
-	public void processFile(final InputStream input, final OutputStream output, final boolean flag) throws IOException
+	public String processFile(final InputStream input, final OutputStream output, final boolean flag) throws IOException
 	{
+		String error = null;
 		final CSVWriter writer = getCSVWriter(output);
 		final CSVReader reader = new CSVReader(input, "UTF-8");
 		reader.setFieldSeparator(new char[]
@@ -69,7 +70,8 @@ public class BusinessContentImportUtility
 		if (flag)
 		{
 			//@Description : To create Contents in Bulk
-			businessContentImportService.processUpdateForContentImport(reader, writer, map, errorPosition, headerRowIncluded);
+			error = businessContentImportService
+					.processUpdateForContentImport(reader, writer, map, errorPosition, headerRowIncluded);
 		}
 		else
 		{
@@ -77,8 +79,8 @@ public class BusinessContentImportUtility
 			//Create Product Upload
 			businessContentImportService.processUpdateForProductMappingImport(reader, writer, map, errorPosition, headerRowIncluded);
 		}
-
 		writer.close();
+		return error;
 	}
 
 	/**

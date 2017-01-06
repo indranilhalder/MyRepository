@@ -92,7 +92,8 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 
 			//changes end for omni cart fix @atmaram
 
-			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag && sellerFlag)
+			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag && sellerFlag
+					&& getMplPromotionHelper().checkOrderCount(restrictionList, getCode(), cart))
 			{
 				promotionResults = promotionEvaluation(arg0, arg1, excludedProductList, excludeManufactureList, restrictionList);
 			}
@@ -155,6 +156,21 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 			{
 				totalCount += entry.getQuantity().intValue(); // Fetches total count of Valid Products
 			}
+
+
+			//Added for TPR-4360
+			if (getMplPromotionHelper().validateForStockRestriction(restrictionList))
+			{
+				final int stockQuantity = getDefaultPromotionsManager().getStockRestrictionVal(restrictionList);
+
+				if (totalCount >= stockQuantity)
+				{
+					totalCount = stockQuantity;
+				}
+			}
+
+
+
 			noOfProducts = totalCount;
 			if (totalCount >= eligibleQuantity.intValue())
 			{
@@ -261,8 +277,20 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 								getPromotionUtilityPOJO().setPromoProductList(promotionalProductData);
 								for (final Map.Entry<String, Product> entry : giftProductDetails.entrySet())
 								{
-									final int giftCount = getDefaultPromotionsManager().getFreeGiftCount(entry.getKey(),
-											eligibleProductMap, eligibleQuantity.intValue(), validProductList);
+									int giftCount = 0;
+									if (!getMplPromotionHelper().validateForStockRestriction(restrictionList))
+									{
+										giftCount = getDefaultPromotionsManager().getFreeGiftCount(entry.getKey(), eligibleProductMap,
+												eligibleQuantity.intValue(), validProductList);
+									}
+									else
+									{
+										giftCount = getMplPromotionHelper().getFreeGiftCount(entry.getKey(), eligibleQuantity.intValue(),
+												validProductList);
+									}
+
+
+
 									final Map<String, List<String>> productAssociatedItemsMap = getDefaultPromotionsManager()
 											.getAssociatedItemsForAorBOGOorFreebiePromotions(validProductUssidMap, entry.getKey());
 									arg0.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, productAssociatedItemsMap);

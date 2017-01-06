@@ -2018,5 +2018,19 @@
 	</bean>
 	<!-- TPR-965 ENDS-->
 <!-- TPR-1285 End -->
+
+<!-- TPR-978 -->
+<bean id="aPlusContentPrepareInterceptor" class="com.tisl.mpl.interceptor.APlusContentPrepareInterceptor" autowire="byName"></bean>
+<bean id="AplusContentPrepareInterceptor" class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+<property name="interceptor" ref="aPlusContentPrepareInterceptor"></property>
+<property name="typeCode" value="APlusContent"></property>
+</bean>
+
+<bean id="aPlusContentValidateInterceptor" class="com.tisl.mpl.interceptor.APlusContentValidateInterceptor" autowire="byName"></bean>
+<bean id="AplusContentValidateInterceptor" class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+<property name="interceptor" ref="aPlusContentValidateInterceptor"></property>
+<property name="typeCode" value="APlusContent"></property>
+</bean>
+
 </beans>
 

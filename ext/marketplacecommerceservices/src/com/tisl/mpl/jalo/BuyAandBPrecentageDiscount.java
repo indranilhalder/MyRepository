@@ -105,7 +105,8 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 			{
 				final List<String> eligibleProductList = eligibleForPromotion(cart, arg0); // Gets the Eligible Product List
 
-				if (!getDefaultPromotionsManager().promotionAlreadyFired(arg0, validProductUssidMap))
+				if (!getDefaultPromotionsManager().promotionAlreadyFired(arg0, validProductUssidMap)
+						&& getMplPromotionHelper().checkOrderCount(restrictionList, getCode(), cart))
 				{
 					promotionResults = promotionEvaluation(arg0, arg1, validProductUssidMap, restrictionList, cart,
 							eligibleProductList);

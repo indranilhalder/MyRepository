@@ -115,7 +115,8 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 			checkChannelFlag = getDefaultPromotionsManager().checkChannelData(listOfChannel,
 					cartChennal == null ? null : (EnumerationValue) cartChennal);
 
-			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag) // if Restrictions return valid && Channel is valid
+			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag
+					&& getMplPromotionHelper().checkOrderCount(restrictionList, getCode(), cart)) // if Restrictions return valid && Channel is valid
 			{
 				LOG.debug("Promotion Restriction and Channel Satisfied");
 				final Map<String, AbstractOrderEntry> validProductUssidMap = getValidProductList(cart, ctx);

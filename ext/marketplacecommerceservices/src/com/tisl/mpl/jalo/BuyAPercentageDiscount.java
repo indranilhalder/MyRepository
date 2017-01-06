@@ -131,7 +131,8 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 						.getValidProdListForBuyXofAPromo(order, paramSessionContext, promotionProductList, promotionCategoryList,
 								restrictionList, excludedProductList, excludeManufactureList, null, null); // Adding Eligible Products to List
 
-				if (!getDefaultPromotionsManager().promotionAlreadyFired(paramSessionContext, validProductUssidMap))
+				if (!getDefaultPromotionsManager().promotionAlreadyFired(paramSessionContext, validProductUssidMap)
+						&& getMplPromotionHelper().checkOrderCount(restrictionList, getCode(), order))
 				{
 					isMultipleSeller = getMplPromotionHelper().checkMultipleSeller(restrictionList);
 
@@ -220,10 +221,19 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 		final List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
 		final PromotionsManager promotionsManager = PromotionsManager.getInstance();
 		final Long eligibleQuantity = getQuantity();
+		boolean isExhausted = false;
 		int totalCount = 0;
 		try
 		{
 			noOfProducts = populateTotalProductCount(validProductUssidMap);
+
+			if (noOfProducts > 0 && getMplPromotionHelper().validateForStockRestriction(restrictionList))
+			{
+				isExhausted = getMplPromotionHelper().isPromoStockExhausted(validProductUssidMap, restrictionList, getCode());
+			}
+
+
+
 			if (GenericUtilityMethods.checkBrandAndCategoryMinimumAmt(validProductUssidMap, paramSessionContext,
 					paramPromotionEvaluationContext, this, restrictionList)) // If exceeds set Category Amount and Restriction set Brand Value
 			{
@@ -243,6 +253,18 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 					totalCount += entry.getQuantity().intValue(); // Fetches total count of Valid Products
 					eligibleProductList.add(entry.getProduct());
 				}
+
+				//Added for TPR-4354
+				if (getMplPromotionHelper().validateForStockRestriction(restrictionList))
+				{
+					final int stockQuantity = getDefaultPromotionsManager().getStockRestrictionVal(restrictionList);
+
+					if (totalCount >= stockQuantity)
+					{
+						totalCount = stockQuantity;
+					}
+				}
+
 				noOfProducts = totalCount;
 
 				List<PromotionOrderEntryConsumed> remainingItemsFromTail = null;
@@ -405,7 +427,7 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 							+ ">" + eligibleQuantity.intValue() + Localization.getLocalizedString("promotion.freeGiftAction"));
 				}
 
-				if (noOfProducts > 0 && remainingItemsFromTail != null && remainingItemsFromTail.size() > 0L) // For Localization: To check for Excluded Products
+				if (noOfProducts > 0 && remainingItemsFromTail != null && remainingItemsFromTail.size() > 0L && !isExhausted) // For Localization: To check for Excluded Products
 				{
 					final float certainty = (float) remainingItemsFromTail.size() / eligibleQuantity.intValue();
 

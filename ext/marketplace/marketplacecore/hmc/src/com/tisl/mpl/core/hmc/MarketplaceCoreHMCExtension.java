@@ -382,6 +382,7 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 		String promoCode = MarketplacecommerceservicesConstants.EMPTYSPACE;
 		final List<String> rejectSellerList = new ArrayList<String>();
 		final List<String> rejectBrandList = new ArrayList<String>();
+		List<Product> exproductList = null;
 		try
 		{
 			if (null != item)
@@ -471,6 +472,12 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 				{
 					maxDiscount = (Double) item.getAttribute("maxDiscountVal");
 				}
+				//Added for TISPRD-8074
+				if (null != item.getAttribute("excludedProducts"))
+				{
+					exproductList = new ArrayList<Product>((Collection<Product>) (item.getAttribute("excludedProducts")));
+				}
+
 
 
 
@@ -484,13 +491,15 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 
 					if (isPercentage)
 					{
-						getUpdatePromotionalPriceService().updatePromotionalPrice(productList, null, price, startDate, endDate, true,
-								priority, sellerList, brandList, promoCode, rejectSellerList, rejectBrandList, maxDiscount);
+						getUpdatePromotionalPriceService()
+								.updatePromotionalPrice(productList, null, price, startDate, endDate, true, priority, sellerList,
+										brandList, promoCode, rejectSellerList, rejectBrandList, maxDiscount, exproductList);
 					}
 					else
 					{
-						getUpdatePromotionalPriceService().updatePromotionalPrice(productList, null, price, startDate, endDate, false,
-								priority, sellerList, brandList, promoCode, rejectSellerList, rejectBrandList, maxDiscount);
+						getUpdatePromotionalPriceService()
+								.updatePromotionalPrice(productList, null, price, startDate, endDate, false, priority, sellerList,
+										brandList, promoCode, rejectSellerList, rejectBrandList, maxDiscount, exproductList);
 					}
 
 				}
@@ -501,13 +510,15 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 							+ isPercentage);
 					if (isPercentage)
 					{
-						getUpdatePromotionalPriceService().updatePromotionalPrice(null, categoryList, price, startDate, endDate, true,
-								priority, sellerList, brandList, promoCode, rejectSellerList, rejectBrandList, maxDiscount);
+						getUpdatePromotionalPriceService()
+								.updatePromotionalPrice(null, categoryList, price, startDate, endDate, true, priority, sellerList,
+										brandList, promoCode, rejectSellerList, rejectBrandList, maxDiscount, exproductList);
 					}
 					else
 					{
-						getUpdatePromotionalPriceService().updatePromotionalPrice(null, categoryList, price, startDate, endDate, false,
-								priority, sellerList, brandList, promoCode, rejectSellerList, rejectBrandList, maxDiscount);
+						getUpdatePromotionalPriceService()
+								.updatePromotionalPrice(null, categoryList, price, startDate, endDate, false, priority, sellerList,
+										brandList, promoCode, rejectSellerList, rejectBrandList, maxDiscount, exproductList);
 					}
 				}
 				else if ((null != categoryList && !categoryList.isEmpty()) || ((null != productList && !productList.isEmpty()))
