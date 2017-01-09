@@ -1183,10 +1183,13 @@
 												<div class="radio">
 													 <input type="radio" name="priority_wallet" id="radioButton_MRupee" value="mRupee"/>
 													 <label for="radioButton_MRupee" class="numbers creditLabel"><span><img src="${commonResourcePath}/images/mRupeeLogo.PNG" alt=""></span></label>
+									   			<span id="mRupeeInfo" >
+														<spring:theme code="checkout.multi.paymentMethod.eWallet.Info" />
+													</span>
 									   			</div>
-									<form id="tpWallt_payment_form" autocomplete="off" action="https://14.140.248.13/Mwallet/startpaymentgateway.do">
+									<form id="tpWallt_payment_form" autocomplete="off" action="${mRupeeUrl}">
 										<ycommerce:testId code="paymentDetailsWalletForm">
-										<input type="hidden" name="MCODE" value="TULA">
+										<input type="hidden" name="MCODE" value="${mCode}">
 										<input type="hidden" name="NARRATION" value="uat">
 										<input type="hidden" name="TXNTYPE" value="P">
 										<input type="hidden" name="AMT" id = "AMT">

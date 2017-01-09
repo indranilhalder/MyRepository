@@ -443,7 +443,7 @@ public interface MplPaymentFacade
 	 * @param channelWeb
 	 * @return
 	 */
-	List<String> createWalletorder(CartModel cart, String walletName, String channelWeb);
+	List<String> createWalletorder(AbstractOrderModel cart, String walletName, String channelWeb);
 
 
 	/**
@@ -459,6 +459,12 @@ public interface MplPaymentFacade
 	 * @param cart
 	 * @param request
 	 */
-	void saveTPWalletPaymentInfo(AbstractOrderModel cart, HttpServletRequest request);
+	void saveTPWalletPaymentInfo(AbstractOrderModel order, HttpServletRequest request);
+
+
+	/**
+	 * @param refNo
+	 */
+	String getWalletAuditEntries(String refNo);
 
 }

@@ -59126,3 +59126,18 @@ display: none;
 .page-productDetails .trending{
 	clear:both;
 }
+
+/*Added for mRupee Changes*/
+.smk_accordion .accordion_in .acc_content#MRUPEE .numbers.creditLabel, .smk_accordion .accordion_in .acc_content#MRUPEE #mRupeeInfo{
+  width: 49%;
+  float:left;
+}
+.smk_accordion .accordion_in .acc_content#MRUPEE #mRupeeInfo{
+  text-transform: initial;
+  color: red;
+  font-weight: normal;
+  font-size: 13px;
+  width: 39%;
+}
+/*mRupee Changes ends*/
+

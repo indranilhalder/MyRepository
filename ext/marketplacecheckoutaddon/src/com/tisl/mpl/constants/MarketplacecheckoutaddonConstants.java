@@ -309,5 +309,13 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	/* mRupee Changes */
 	public final static String MRUPEERETURNMETHOD = "payment.mRupee.returnMethod".intern();
 
+	public final static String MRUPEEURL = "payment.mRupee.baseUrl".intern();
+
+	public final static String MRUPEE_MERCHANT_CODE = "payment.mRupee.merchantID".intern();
+
 	public final static String THIRDPARTYWALLET = "ThirdPartyWallet";
+
+	public static final String MRUPEE_CODE = "mCode";
+
+	public static final String MRUPEE_MERCHANT_URL = "mRupeeUrl";
 }

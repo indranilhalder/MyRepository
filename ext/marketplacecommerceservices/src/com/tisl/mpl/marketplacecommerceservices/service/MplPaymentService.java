@@ -20,6 +20,7 @@ import java.util.Map;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.EMIBankModel;
 import com.tisl.mpl.core.model.JuspayEBSResponseModel;
+import com.tisl.mpl.core.model.ThirdPartyAuditModel;
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -120,8 +121,7 @@ public interface MplPaymentService
 	 * @param cart
 	 *
 	 */
-	void setPaymentTransaction(GetOrderStatusResponse orderStatusResponse, Map<String, Double> paymentMode,
-			AbstractOrderModel cart);
+	void setPaymentTransaction(GetOrderStatusResponse orderStatusResponse, Map<String, Double> paymentMode, AbstractOrderModel cart);
 
 
 	/**
@@ -178,9 +178,9 @@ public interface MplPaymentService
 	 * @throws EtailNonBusinessExceptions
 	 */
 	MplPromoPriceData applyPromotions(final CartData cartData, final OrderData orderData, final CartModel cartModel,
-			final OrderModel orderModel, final MplPromoPriceData promoPriceData)
-					throws ModelSavingException, NumberFormatException, JaloInvalidParameterException, VoucherOperationException,
-					CalculationException, JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions;
+			final OrderModel orderModel, final MplPromoPriceData promoPriceData) throws ModelSavingException, NumberFormatException,
+			JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException,
+			JaloPriceFactoryException, EtailNonBusinessExceptions;
 
 
 	/**
@@ -331,7 +331,7 @@ public interface MplPaymentService
 	//Commented for Mobile use
 	//	void saveTPWalletPaymentInfo(String custName, List<AbstractOrderEntryModel> entries, AbstractOrderModel cart,
 	//			HttpServletRequest request);
-	void saveTPWalletPaymentInfo(String custName, List<AbstractOrderEntryModel> entries, AbstractOrderModel cart,
+	AbstractOrderModel saveTPWalletPaymentInfo(String custName, List<AbstractOrderEntryModel> entries, AbstractOrderModel cart,
 			String refernceCode);
 
 	/**
@@ -342,5 +342,11 @@ public interface MplPaymentService
 	//Commented for Mobile use
 	//	void setTPWalletPaymentTransaction(Map<String, Double> paymentMode, AbstractOrderModel cart, HttpServletRequest request);
 	void setTPWalletPaymentTransaction(Map<String, Double> paymentMode, AbstractOrderModel cart, final String refernceCode);
+
+	/**
+	 * @param refNo
+	 * @return
+	 */
+	ThirdPartyAuditModel getWalletAuditEntries(String refNo);
 
 }

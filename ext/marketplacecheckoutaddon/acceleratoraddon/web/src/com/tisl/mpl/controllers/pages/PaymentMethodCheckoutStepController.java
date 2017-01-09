@@ -94,7 +94,6 @@ import com.tisl.mpl.controllers.MarketplacecheckoutaddonControllerConstants;
 import com.tisl.mpl.core.enums.CodCheckMessage;
 import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
 import com.tisl.mpl.core.enums.PaymentModesEnum;
-import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
@@ -331,8 +330,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderModel);
 				// TPR-429 START
-				final String checkoutSellerID = populateCheckoutSellers(cartData);
-				model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, checkoutSellerID);
+				//final String checkoutSellerID = populateCheckoutSellers(orderData);
+				//model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, checkoutSellerID);
 				// TPR-429 END
 				//Getting Payment modes
 				paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, orderData);
@@ -1424,6 +1423,18 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			model.addAttribute(MarketplacecheckoutaddonConstants.ORDERDATA, orderData);
 			model.addAttribute("isCart", Boolean.FALSE);
 		}
+
+		//Added for mRupee
+
+		//getting merchant for mRupee
+		model.addAttribute(MarketplacecheckoutaddonConstants.MRUPEE_MERCHANT_URL, getConfigurationService().getConfiguration()
+				.getString(MarketplacecheckoutaddonConstants.MRUPEEURL));
+
+		//getting redirect url mRupee
+		model.addAttribute(MarketplacecheckoutaddonConstants.MRUPEE_CODE,
+				getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.MRUPEE_MERCHANT_CODE));
+
+		//mRupee configuration ends
 
 		model.addAttribute(MarketplacecheckoutaddonConstants.JUSPAYJSNAME,
 				getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.JUSPAYJSNAMEVALUE));
@@ -4227,100 +4238,162 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					.append(request.getContextPath())
 					.append(
 							getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.MRUPEERETURNMETHOD));
-
-			/*
-			 * if (StringUtils.isNotEmpty(cartGuid)) { returnUrlBuilder.append("/").append(cartGuid); } final CustomerModel
-			 * customer = (CustomerModel) getUserService().getCurrentUser();
-			 * 
-			 * String uid = ""; if (null != customer) { uid = customer.getUid(); }
-			 */
-			final CartModel cart = getCartService().getSessionCart();
-			final Double cartTotal = cart.getTotalPrice();
-			final Double cartTotalWithConvCharge = cart.getTotalPriceWithConv();
-			boolean redirectFlag = false;
-			LOG.debug("Checking - onclick of pay now button pincode servicabilty and promotion");
-			if (!redirectFlag && !getMplCheckoutFacade().isPromotionValid(cart))
+			OrderModel orderModel = null;
+			if (StringUtils.isNotEmpty(cartGuid))
 			{
-				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED, "TRUE");
-				redirectFlag = true;
-				LOG.info("::setting redirect flag--1::");
+				orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
 			}
 
-
-			if (!redirectFlag)
+			if (orderModel == null)
 			{
-				final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(cart);
-				if (cartItemDelistedStatus)
+				final CartModel cart = getCartService().getSessionCart();
+				final Double cartTotal = cart.getTotalPrice();
+				final Double cartTotalWithConvCharge = cart.getTotalPriceWithConv();
+				boolean redirectFlag = false;
+
+
+				LOG.debug("Checking - onclick of pay now button pincode servicabilty and promotion");
+				if (!redirectFlag && !getMplCheckoutFacade().isPromotionValid(cart))
 				{
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED, "TRUE");
 					redirectFlag = true;
-					LOG.info("::setting redirect flag--2::");
+					LOG.info("::setting redirect flag--1::");
 				}
-			}
 
 
-			//TISUTO-12 , TISUTO-11
-			if (!redirectFlag)
-			{
-				final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
-						MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
-				if (!inventoryReservationStatus)
+				if (!redirectFlag)
+				{
+					final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(cart);
+					if (cartItemDelistedStatus)
+					{
+						redirectFlag = true;
+						LOG.info("::setting redirect flag--2::");
+					}
+				}
+
+				if (!redirectFlag)
+				{
+					final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
+							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
+					if (!inventoryReservationStatus)
+					{
+
+						getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
+						redirectFlag = true;
+						LOG.info("::setting redirect flag--3::");
+					}
+				}
+
+				if (!redirectFlag && !getMplCheckoutFacade().isCouponValid(cart))
+				{
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID, "TRUE");
+					redirectFlag = true;
+					LOG.info("::setting redirect flag--4::");
+				}
+
+				if (!redirectFlag)
+				{
+					if (cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0)
+					{
+						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CARTAMOUNTINVALID, "TRUE");
+						redirectFlag = true;
+						LOG.info("::setting redirect flag--5::");
+					}
+				}
+
+				if (!redirectFlag && !getMplPaymentFacade().isValidCart(cart))
+				{
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CART_DELIVERYMODE_ADDRESS_INVALID, "TRUE");
+					redirectFlag = true;
+					LOG.info("::setting redirect flag--6::");
+				}
+
+				if (redirectFlag)
+				{
+					LOG.info("::returning redirect String::");
+					return MarketplacecheckoutaddonConstants.REDIRECTSTRING;
+				}
+				else
 				{
 
-					getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
-					redirectFlag = true;
-					LOG.info("::setting redirect flag--3::");
+					//getCommerceCartService().recalculateCart(cart);
+					LOG.info("::Going to Create Wallet OrderId::");
+
+					orderId = getMplPaymentFacade().createWalletorder(cart, walletName, MarketplacecheckoutaddonConstants.CHANNEL_WEB);
+
+					final boolean isValidCart = getMplPaymentFacade().checkCart(cart);
+
+					if (isValidCart)
+					{
+						getMplCheckoutFacade().placeOrder();
+					}
+					else
+					{
+						throw new InvalidCartException("************PaymentMethodCheckoutStepController : placeOrder : Invalid Cart!!!"
+								+ (StringUtils.isNotEmpty(cart.getGuid()) ? cart.getGuid() : MarketplacecommerceservicesConstants.EMPTY));
+					}
+
+					if (CollectionUtils.isNotEmpty(orderId))
+					{
+						refNumber = orderId.get(0);
+						checksum = orderId.get(1);
+					}
+					getMplPaymentFacade().entryInTPWaltAudit(request, MarketplacecheckoutaddonConstants.CHANNEL_WEB, cartGuid,
+							refNumber);
+					LOG.info("::Created Wallet OrderId::" + orderId);
+
 				}
+
+				response = refNumber + "|" + checksum + "|" + cartGuid + "|" + cartTotal + "|" + returnUrlBuilder;
+
 			}
 
-			if (!redirectFlag && !getMplCheckoutFacade().isCouponValid(cart))
-			{
-				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID, "TRUE");
-				redirectFlag = true;
-				LOG.info("::setting redirect flag--4::");
-			}
-
-			if (!redirectFlag)
-			{
-				LOG.info("::cartTotal**::" + cartTotal);
-				LOG.info("::cartTotalWithConvCharge**::" + cartTotalWithConvCharge);
-				if (cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0)
-				{
-					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CARTAMOUNTINVALID, "TRUE");
-					redirectFlag = true;
-					LOG.info("::setting redirect flag--5::");
-				}
-			}
-
-			if (!redirectFlag && !getMplPaymentFacade().isValidCart(cart))
-			{
-				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CART_DELIVERYMODE_ADDRESS_INVALID, "TRUE");
-				redirectFlag = true;
-				LOG.info("::setting redirect flag--6::");
-			}
-
-			if (redirectFlag)
-			{
-				LOG.info("::returning redirect String::");
-				return MarketplacecheckoutaddonConstants.REDIRECTSTRING; //IQA for TPR-629
-			}
 			else
 			{
-				LOG.info("::Going to Create Wallet OrderId::");
-
-				orderId = getMplPaymentFacade().createWalletorder(cart, walletName, MarketplacecheckoutaddonConstants.CHANNEL_WEB);
-				if (CollectionUtils.isNotEmpty(orderId))
+				if (null == orderModel.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(orderModel.getStatus()))
 				{
-					refNumber = orderId.get(0);
-					checksum = orderId.get(1);
+					boolean redirectFlag = false;
+					if (!getMplCheckoutFacade().isPromotionValid(orderModel))
+					{
+						getMplCartFacade().recalculateOrder(orderModel);
+						redirectFlag = true;
+					}
+
+					if (!redirectFlag)
+					{
+						final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
+								MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel);
+						if (!inventoryReservationStatus)
+						{
+							getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_ORDER_INVENTORY_RESV_SESSION_ID,
+									"TRUE");
+							getMplCartFacade().recalculateOrder(orderModel);
+							redirectFlag = true;
+							mplCartFacade.notifyEmailAndSmsOnInventoryFail(orderModel);
+						}
+					}
+					if (redirectFlag)
+					{
+						return MarketplacecheckoutaddonConstants.REDIRECTTOPAYMENT;
+					}
+					else
+					{
+						orderId = getMplPaymentFacade().createWalletorder(orderModel, walletName,
+								MarketplacecheckoutaddonConstants.CHANNEL_WEB);
+					}
 				}
-				getMplPaymentFacade().entryInTPWaltAudit(request, MarketplacecheckoutaddonConstants.CHANNEL_WEB, cartGuid, refNumber);
-
-
-				LOG.info("::Created Wallet OrderId::" + orderId);
-
+				else if (null != orderModel.getPaymentInfo())
+				{
+					LOG.error("Order already has payment info >>>" + orderModel.getPaymentInfo().getCode());
+					return "redirect_with_details";
+				}
+				else
+				{
+					LOG.error("Order status is Payment_Pending for orderCode>>>" + orderModel.getCode());
+					return "redirect_with_details";
+				}
 			}
 
-			response = refNumber + "|" + checksum + "|" + cartGuid + "|" + cartTotal + "|" + returnUrlBuilder;
 		}
 
 		catch (final ModelSavingException e)
@@ -4342,72 +4415,71 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	}
 
-
 	@RequestMapping(value = "walletPayment", method = RequestMethod.GET)
 	@RequireHardLogIn
 	public String walletPayment(final RedirectAttributes redirectAttributes, final HttpServletRequest request)
 			throws EtailNonBusinessExceptions
 	{
-		final CartModel cart = getCartService().getSessionCart();
-		final String refNo = request.getParameter("REFNO");
-
-		if (null != request.getParameter("STATUS") && "S".equalsIgnoreCase(request.getParameter("STATUS")))
+		try
 		{
-			//Mandatory checks agains cart
-			final boolean isValidCart = getMplPaymentFacade().checkCart(cart);
+			final String refNo = request.getParameter("REFNO");
+
+			String guid = null;
+
 			OrderModel orderModel = null;
-			try
+
+			if (StringUtils.isNotEmpty(refNo))
 			{
-				if (isValidCart)
+				guid = getMplPaymentFacade().getWalletAuditEntries(refNo);
+
+			}
+
+			if (StringUtils.isNotEmpty(guid))
+			{
+				orderModel = getMplPaymentFacade().getOrderByGuid(guid);
+
+			}
+
+			if (null != request.getParameter("STATUS") && "S".equalsIgnoreCase(request.getParameter("STATUS")))
+			{
+				if (null != orderModel)
 				{
+					getMplPaymentFacade().entryInTPWaltAudit(request, MarketplacecheckoutaddonConstants.CHANNEL_WEB,
+							orderModel.getGuid(), refNo);
+
 					//saving TPWallet Payment related info
-					getMplPaymentFacade().saveTPWalletPaymentInfo(cart, request);
-
-					getMplCheckoutFacade().placeOrder();
-					if (StringUtils.isNotEmpty(cart.getGuid()))
-					{
-						orderModel = getMplPaymentFacade().getOrderByGuid(cart.getGuid());
-						if (null != orderModel)
-						{
-
-							getMplPaymentFacade().entryInTPWaltAudit(request, MarketplacecheckoutaddonConstants.CHANNEL_WEB,
-									orderModel.getGuid(), refNo);
-
-							orderModel.setIsWallet(WalletEnum.MRUPEE);
-
-							orderModel.setStatus(OrderStatus.PAYMENT_SUCCESSFUL);
-						}
-					}
-					return updateOrder(orderModel, redirectAttributes);
-
+					getMplPaymentFacade().saveTPWalletPaymentInfo(orderModel, request);
 				}
-				else
-				{
-					throw new InvalidCartException("************PaymentMethodCheckoutStepController : walletPayment : Invalid Cart!!!"
-							+ (StringUtils.isNotEmpty(cart.getGuid()) ? cart.getGuid() : MarketplacecommerceservicesConstants.EMPTY));
 
-				}
-			}
-			catch (final InvalidCartException e)
-			{
-				// YTODO Auto-generated catch block
-				e.printStackTrace();
+				return updateOrder(orderModel, redirectAttributes);
+
+
 			}
 
-			catch (final CalculationException e)
+			else
 			{
-				// YTODO Auto-generated catch block
-				e.printStackTrace();
+				getMplPaymentFacade().entryInTPWaltAudit(request, MarketplacecheckoutaddonConstants.CHANNEL_WEB, guid, refNo);
+
+				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+						MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+						+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
 			}
+
+		}
+		catch (final InvalidCartException e)
+		{
+			e.printStackTrace();
 		}
 
-		else
+		catch (final CalculationException e)
 		{
-			getMplPaymentFacade().entryInTPWaltAudit(request, MarketplacecheckoutaddonConstants.CHANNEL_WEB, cart.getGuid(), refNo);
+			e.printStackTrace();
+		}
 
-			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
-					MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
-			return getCheckoutStep().currentStep();
+		catch (final Exception e)
+		{
+			e.printStackTrace();
 		}
 
 		return null;
