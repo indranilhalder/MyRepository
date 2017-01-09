@@ -6318,18 +6318,6 @@
 							optional="true" />
 						<persistence type="property" />
 					</attribute>
-					<!-- need to remove --> 
-					<!-- <attribute qualifier="eddFrom" type="java.util.Date">
-						<modifiers optional="true" read="true" write="true" />
-						<description>for eddFrom</description>
-						<persistence type="property" />
-					</attribute>
-					
-					<attribute qualifier="eddTo" type="java.util.Date">
-						<modifiers optional="true" read="true" write="true" />
-						<description>for eddTo</description>
-						<persistence type="property" />
-					</attribute> -->
 					<!-- End Added new Attributes  for Order Create -->
 					
 					<!--Start  Added new Attributes for Order Update  -->
@@ -6369,13 +6357,6 @@
 							<description>for ssb</description>
 							<persistence type="property" />
 					</attribute>
-					<!-- need to remove  -->
-					<!-- <attribute qualifier="sdb" type="java.lang.Boolean">
-							<modifiers optional="true" read="true" write="true" />
-							<description>for sdb</description>
-							<persistence type="property" />
-					</attribute> -->
-					
 					<!-- End Added new Attributes  for Order Update -->
 					
 					<!-- Added in R2.3 START  -->
