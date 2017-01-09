@@ -1832,7 +1832,7 @@
 				</attribute>
 				<attribute autocreate="true" qualifier="cusRedeemCount"
 					type="java.lang.Integer">
-					<defaultvalue>Double.valueOf(0)</defaultvalue>
+					<defaultvalue>Integer.valueOf(0)</defaultvalue>
 					<modifiers read="true" write="true" search="false"
 						optional="true" />
 					<persistence type="property" />

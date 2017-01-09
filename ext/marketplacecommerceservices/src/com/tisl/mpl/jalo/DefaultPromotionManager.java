@@ -4068,11 +4068,6 @@ public class DefaultPromotionManager extends PromotionsManager
 
 				stockCountMap.putAll(stockPromoCheckService.getCumulativeCatLevelStockMap(
 						categoryCodes.toString().substring(0, categoryCodes.lastIndexOf(",")), code, dataMap));
-				if (MapUtils.isEmpty(stockCountMap))
-				{
-					stockCountMap.putAll(stockPromoCheckService.getCumulativeStockMap(
-							idsToCheck.toString().substring(0, idsToCheck.lastIndexOf(",")), code, sellerFlag));
-				}
 			}
 			else
 			{
