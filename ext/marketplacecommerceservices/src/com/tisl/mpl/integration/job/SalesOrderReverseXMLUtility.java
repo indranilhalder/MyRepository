@@ -459,11 +459,19 @@ public class SalesOrderReverseXMLUtility
 		boolean sdbFlag = false;
 		try {
 			for (AbstractOrderEntryModel entry : childOrders.getEntries()) {
+				if(LOG.isDebugEnabled()) {
+					LOG.debug("Checking EDToHd for transaction ID "+entry.getTransactionID());
+					LOG.debug("Is EdToHd"+entry.getIsEDtoHD()+"IsSdbSendToFico"+entry.getIsEdToHdSendToFico()+" and getRefundedScheduleDeliveryChargeAmt"+entry.getRefundedDeliveryChargeAmt());
+				}
 				if(null != entry.getIsEDtoHD() && entry.getIsEDtoHD().booleanValue()) {
 					edToHdFlag = true;
 					return true;
 				}
-				if(null != entry.getIsSdb() && entry.getIsSdb().booleanValue()) {
+				if(LOG.isDebugEnabled()) {
+					LOG.debug("Checking SDB for transaction ID "+entry.getTransactionID());
+					LOG.debug("Is SDb"+entry.getIsSdb()+"IsSdbSendToFico"+entry.getIsSdbSendToFico()+" and getRefundedScheduleDeliveryChargeAmt"+entry.getRefundedScheduleDeliveryChargeAmt());
+				}
+				if(null != entry.getIsSdbSendToFico() && !entry.getIsSdbSendToFico().booleanValue() && null !=entry.getScheduleChargesJuspayRequestId()) {
 					sdbFlag = true;
 					return true;
 				}
@@ -502,7 +510,7 @@ public class SalesOrderReverseXMLUtility
 					boolean edToHdFlag = checkEdToHdFlag(entry);
 					/*Added in R2.3 END*/
 					if (null != entry && null != entry.getProduct()
-							&& ((null == entry.getIsSentToFico() || !(entry.getIsSentToFico().booleanValue())) || sdbFlag || edToHdFlag))  // null ==  entry.getIsSentToFico() is added for n/a scenarios for previous placed orders 
+							&& ((null == entry.getIsSentToFico() || !entry.getIsSentToFico().booleanValue()) || sdbFlag || edToHdFlag))  // null ==  entry.getIsSentToFico() is added for n/a scenarios for previous placed orders 
 					{
 						final ProductModel product = entry.getProduct();
 						LOG.debug("inside AbstractOrderEntryModel");
@@ -828,7 +836,7 @@ public class SalesOrderReverseXMLUtility
 								if(null != entry.getScheduleChargesJuspayRequestId()) {
 									sdbXmlData.setReversePaymentRefId(entry.getScheduleChargesJuspayRequestId());
 								}
-								
+								LOG.debug("Adding SDB data for transaction Id "+entry.getTransactionID());
 								childOrderDataList.add(sdbXmlData);
 								entry.setIsSdbSendToFico(Boolean.TRUE);
 								modelService.save(entry);
@@ -859,6 +867,7 @@ public class SalesOrderReverseXMLUtility
 								if(null != entry.getDelChargesJuspayRequestId()) {
 									edToHdXmlData.setReversePaymentRefId(entry.getDelChargesJuspayRequestId());
 								}
+								LOG.debug("Adding EdToHd data for transaction Id "+entry.getTransactionID());
 								childOrderDataList.add(edToHdXmlData);
 								entry.setIsEdToHdSendToFico(Boolean.TRUE);
 								modelService.save(entry);
@@ -869,6 +878,7 @@ public class SalesOrderReverseXMLUtility
 						/*Added in R2.3 for sending EDTOHD / SDB charges to FICO END  */
 						if (canOrRetflag)
 						{
+							LOG.debug("Adding canOrRet data for transaction Id "+entry.getTransactionID());
 							childOrderDataList.add(xmlData);
 							entry.setIsSentToFico(Boolean.TRUE);
 							modelService.save(entry);
@@ -901,9 +911,13 @@ public class SalesOrderReverseXMLUtility
 	private boolean checkEdToHdFlag(AbstractOrderEntryModel entry)
 	{
 		boolean isEdToHd = false;
+		if(LOG.isDebugEnabled()) {
+			LOG.debug("Checking SDB for transaction ID "+entry.getTransactionID());
+			LOG.debug("IsEdToHdSendToFico"+entry.getIsEdToHdSendToFico()+" and getRefundedScheduleDeliveryChargeAmt"+entry.getRefundedDeliveryChargeAmt());
+		}
 		if((null != entry && null != entry.getIsEDtoHD() && entry.getIsEDtoHD().booleanValue())
 				&& (null == entry.getIsEdToHdSendToFico() || !entry.getIsEdToHdSendToFico().booleanValue())
-				&& (null != entry.getRefundedDeliveryChargeAmt() && entry.getRefundedDeliveryChargeAmt().doubleValue()>=0.0D)) {
+				&& (null != entry.getRefundedDeliveryChargeAmt() && entry.getRefundedDeliveryChargeAmt().doubleValue()!=0.0D)) {
 			
 			isEdToHd = true;
 		}else {
@@ -924,16 +938,18 @@ public class SalesOrderReverseXMLUtility
 	private boolean checkSdbFlag(AbstractOrderEntryModel entry)
 	{
 		boolean isSdb = false;
-		if((null != entry && null != entry.getIsSdb() && entry.getIsSdb().booleanValue())
-				&& (null == entry.getIsSdbSendToFico() || !entry.getIsSdbSendToFico().booleanValue())
-				&& (null != entry.getRefundedScheduleDeliveryChargeAmt() && entry.getRefundedScheduleDeliveryChargeAmt().doubleValue()>=0.0D)) {
+		if(LOG.isDebugEnabled()) {
+			LOG.debug("Checking SDB for transaction ID "+entry.getTransactionID());
+			LOG.debug("IsSdb"+entry.getIsSdb()+"IsSdbSendToFico"+entry.getIsSdbSendToFico()+" and getRefundedScheduleDeliveryChargeAmt"+entry.getRefundedScheduleDeliveryChargeAmt());
+		}
+		if((null == entry.getIsSdbSendToFico() || !entry.getIsSdbSendToFico().booleanValue())
+				&& (null != entry.getRefundedScheduleDeliveryChargeAmt() && entry.getRefundedScheduleDeliveryChargeAmt().doubleValue()!=0.0D)) {
 			isSdb = true;
+			LOG.debug("SDB is true for transaction ID :"+entry.getTransactionID());
 		}else {
 			isSdb = false ;
+			LOG.debug("SDB is false for transaction ID :"+entry.getTransactionID());
 			return false;
-		}
-		if(LOG.isDebugEnabled()) {
-			LOG.debug("SDB flag for transaction Id "+entry.getTransactionID()+" "+isSdb);
 		}
 		return isSdb;
 	}

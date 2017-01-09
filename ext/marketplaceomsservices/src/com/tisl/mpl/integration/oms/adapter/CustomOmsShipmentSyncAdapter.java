@@ -877,7 +877,13 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
          			/*  R2.3 REFUND INFO CALL TO OMS  START*/
          			  try {
          				 
-         				  refundInfoCallToOMS(entry,MarketplacecommerceservicesConstants.REFUND_CATEGORY_E);
+         				  List<PaymentTransactionModel> tranactions = new ArrayList<PaymentTransactionModel>(
+         						  entry.getOrder().getPaymentTransactions());
+         					boolean flag = false;
+         					flag = checkIsOrderCod(tranactions);
+         					if(flag) {
+         						refundInfoCallToOMS(entry,MarketplacecommerceservicesConstants.REFUND_CATEGORY_E);
+         					}
          			  }catch(Exception e) {
          				  LOG.error("Exception occurred while  refund info call to oms "+e.getMessage());
          			  }
@@ -921,8 +927,13 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
             						} else {
             							newStatus = ConsignmentStatus.COD_CLOSED_WITHOUT_REFUND;
             						}
-            			  
-            				  refundInfoCallToOMS(entry,MarketplacecommerceservicesConstants.REFUND_CATEGORY_S);
+            						List<PaymentTransactionModel> tranactions = new ArrayList<PaymentTransactionModel>(
+                						  entry.getOrder().getPaymentTransactions());
+                					boolean flag = false;
+                					flag = checkIsOrderCod(tranactions);
+                					if(flag) {
+                						refundInfoCallToOMS(entry,MarketplacecommerceservicesConstants.REFUND_CATEGORY_S);
+                					}
             			  }catch(Exception e) {
             				  LOG.error("Exception occurred while  refund info call to oms "+e.getMessage());
             			  }
@@ -1002,6 +1013,35 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	}
 
 	
+	/**
+	 * @param tranactions
+	 * @return
+	 */
+	private boolean checkIsOrderCod(List<PaymentTransactionModel> tranactions)
+	{
+		boolean flag = false;
+		if (CollectionUtils.isNotEmpty(tranactions)) {
+			for (PaymentTransactionModel transaction : tranactions) {
+				if (CollectionUtils.isNotEmpty(transaction.getEntries())) {
+					for (PaymentTransactionEntryModel entry : transaction
+							.getEntries()) {
+						if (entry.getPaymentMode() != null
+								&& entry.getPaymentMode().getMode() != null
+								&& entry.getPaymentMode().getMode()
+										.equalsIgnoreCase("COD")) {
+							flag = true;
+							break;
+						}
+					}
+				}
+				if (flag) {
+					break;
+				}
+			}
+		}
+		return flag;
+	}
+
 	// R2.3 SendNotification for SecondaryStatus 
 	private void sendNotification(String newAwbSecondaryStatus, String oldAwbSecondaryStatus, String ordeLine,
 			OrderModel orderModel)
