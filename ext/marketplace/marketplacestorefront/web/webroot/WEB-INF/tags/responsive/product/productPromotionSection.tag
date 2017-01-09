@@ -146,13 +146,14 @@
 											</div>
 										</div>
 										<br>
-											<c:if test="${not empty product.potentialPromotions[0].termsAndConditions}">
+										
+									</div>
+										<c:if test="${not empty product.potentialPromotions[0].termsAndConditions}">
 											<div class="show-termsConditions">
 											<span class="from">Terms and Conditions:</span>
 											<span class="terms-text"><p>${product.potentialPromotions[0].termsAndConditions}</p></span>
 											</div>											
 										</c:if>	
-									</div>
 									</div>
 									</li>
 								</c:if>
