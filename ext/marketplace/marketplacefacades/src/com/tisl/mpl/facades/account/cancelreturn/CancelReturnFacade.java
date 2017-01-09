@@ -227,4 +227,13 @@ public interface CancelReturnFacade
 	public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReportByParams(String orderID, String customerId, String pincode);
 
 
+	/**
+	 * @param orderCode
+	 * @param transactionId
+	 * @return
+	 * @throws Exception
+	 */
+	boolean orderCancellationFromBackoffice(String orderCode, String transactionId) throws Exception;
+
+
 }

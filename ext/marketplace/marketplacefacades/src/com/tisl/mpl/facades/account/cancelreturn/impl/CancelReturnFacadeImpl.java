@@ -11,11 +11,13 @@ import de.hybris.platform.basecommerce.enums.RefundReason;
 import de.hybris.platform.basecommerce.enums.ReturnAction;
 import de.hybris.platform.basecommerce.enums.ReturnStatus;
 import de.hybris.platform.basecommerce.jalo.BasecommerceManager;
+import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commerceservices.customer.CustomerAccountService;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
+import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -219,6 +221,12 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	private OrderModelDao orderModelDao;
 	@Autowired
 	private SendSMSFacade sendSMSFacade;
+	
+	@Resource(name = "customerFacade")
+	private CustomerFacade customerFacade;
+	
+	@Autowired
+	private Populator customerPopulator;
 	
 	protected static final Logger LOG = Logger.getLogger(CancelReturnFacadeImpl.class);
 
@@ -3854,6 +3862,61 @@ private AbstractOrderEntryModel getOrderEntryModel(OrderModel ordermodel,String 
 		calendar.add(Calendar.DATE, daysRemaining);
 		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 		return dateFormat.format(calendar.getTime());
+	}
+	
+	/**
+	 * S-SHIP breach Order Cancellation from BackOffice
+	 * @param orderCode
+	 * @param transactionId
+	 * @return boolen
+	 */
+	@Override
+	public boolean orderCancellationFromBackoffice(final String orderCode, final String transactionId) throws Exception
+	{
+		String ussid = StringUtils.EMPTY;
+		OrderEntryData subOrderEntry = null;
+		boolean cancellationStatus = false;
+		try
+		{
+			final String refundType = "S";
+			CustomerData customerData = new CustomerData();
+			final OrderModel orderModel = orderModelService.getParentOrder(orderCode);
+			final CustomerModel customerModel = (CustomerModel) orderModel.getUser();
+			customerPopulator.populate(customerModel, customerData);
+			List<OrderModel> subOrderList = orderModel.getChildOrders();
+			OrderModel subOrderModel = new OrderModel();
+			for(OrderModel subOrder : subOrderList)
+			{
+				for(AbstractOrderEntryModel subOrderEntry1 : subOrder.getEntries())
+				{
+					if(subOrderEntry1.getTransactionID().equalsIgnoreCase(transactionId))
+					{
+						subOrderModel = subOrder;
+						break;
+					}
+				}
+			}
+			
+			final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(subOrderModel.getCode());
+			
+			for (final OrderEntryData orderEntry : subOrderDetails.getEntries())
+			{
+				if (transactionId.equalsIgnoreCase(orderEntry.getTransactionId()))
+				{
+					subOrderEntry = orderEntry;
+					ussid = subOrderEntry.getProduct().getUssID();
+					break;
+				}
+			}
+			cancellationStatus = implementCancelOrReturn(subOrderDetails, subOrderEntry, "05", ussid,
+					"C", customerData, refundType, false, SalesApplication.WEB);
+		}
+		catch (Exception e)
+		{
+			LOG.info(" Exception while canceling the order from cs cockpit  "+ e.getMessage());
+		}
+		return cancellationStatus;
+		
 	}
 
 	
