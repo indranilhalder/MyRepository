@@ -371,6 +371,12 @@ public interface ControllerConstants
 				public static final String USSID_CODE_PATH_NEW_PATTERN = "/**/p-{ussId:.*}";
 				public static final String USSID = "ussId";
 			}
+
+			interface NPS_Emailer
+			{
+				String NPSFeedback = "fragments/NPS_Emailer/npsFeedbackPage";
+				String SubmitSuccess = "fragments/NPS_Emailer/submitSuccess";
+			}
 		}
 	}
 
