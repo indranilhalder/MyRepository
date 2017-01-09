@@ -53,6 +53,7 @@ import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.util.localization.Localization;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -4126,19 +4127,24 @@ public class DefaultPromotionManager extends PromotionsManager
 				final ProductModel product = productService.getProduct(data.getValue().getProduct().getCode());
 				if (null != product && CollectionUtils.isNotEmpty(product.getSupercategories()) && null != oModel)
 				{
-					for (final CategoryModel category : product.getSupercategories())
+					final List<CategoryModel> getCategoryDataList = getSuperCategoryData(product.getSupercategories());
+
+					if (CollectionUtils.isNotEmpty(getCategoryDataList))
 					{
-						for (final CategoryModel promocategory : oModel.getCategories())
+						for (final CategoryModel category : getCategoryDataList /* product.getSupercategories() */)
 						{
-							if (StringUtils.equalsIgnoreCase(category.getCode(), promocategory.getCode()))
+							for (final CategoryModel promocategory : oModel.getCategories())
 							{
-								if (sellerFlag)
+								if (StringUtils.equalsIgnoreCase(category.getCode(), promocategory.getCode()))
 								{
-									dataMap.put(data.getKey(), promocategory.getCode());
-								}
-								else
-								{
-									dataMap.put(data.getValue().getProduct().getCode(), promocategory.getCode());
+									if (sellerFlag)
+									{
+										dataMap.put(data.getKey(), promocategory.getCode());
+									}
+									else
+									{
+										dataMap.put(data.getValue().getProduct().getCode(), promocategory.getCode());
+									}
 								}
 							}
 						}
@@ -4149,6 +4155,28 @@ public class DefaultPromotionManager extends PromotionsManager
 		return dataMap;
 	}
 
+
+	/**
+	 * Tree Traversal for Category Promotions
+	 *
+	 * @param supercategories
+	 * @return categoryList
+	 */
+	private List<CategoryModel> getSuperCategoryData(final Collection<CategoryModel> supercategories)
+	{
+		final List<CategoryModel> categoryList = new ArrayList<CategoryModel>();
+		List<CategoryModel> subList = null;
+
+		for (final CategoryModel category : supercategories)
+		{
+			subList = new ArrayList<CategoryModel>(categoryService.getAllSupercategoriesForCategory(category));
+			categoryList.addAll(subList);
+		}
+
+		categoryList.addAll(supercategories);
+
+		return categoryList;
+	}
 
 	/**
 	 * @param code
