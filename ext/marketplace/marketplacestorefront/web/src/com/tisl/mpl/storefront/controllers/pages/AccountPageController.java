@@ -7591,7 +7591,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				return ControllerConstants.Views.Pages.Account.ScheduledDeliveryDate;
 			}
 		}
-		model.addAttribute(ModelAttributetConstants.STRINGMEAASGE, errorMsg);
+		model.addAttribute(ModelAttributetConstants.STRINGMEAASGE,MessageConstants.VALIDATE_ERROR);
 		return ControllerConstants.Views.Pages.Account.ScheduledDeliveryDate;
 	}
 

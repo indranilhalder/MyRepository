@@ -382,14 +382,14 @@ function checkPopupDataOrderHistory() {
 				          $(".pincodeNoError").text("Enter correct pincode");
 				          validate = false;
 				      }if(city == null || city.trim() == '' ){
-			  			$(".cityError").show();
-			  			$(".cityError").text("City cannot be blank");
-			  			validate = false;
-				  	}else if(letters.test(city) == false){
-				  		$(".cityError").show();
-			  			$(".cityError").text("City should contain only alphabets");
-			  			validate = false;
-				  	}
+				  			$(".cityError").show();
+				  			$(".cityError").text("City cannot be blank");
+				  			validate = false;
+					  	}else if(!/[a-zA-Z]/.test(city)){
+					  		$(".cityError").show();
+				  			$(".cityError").text("City should contain only alphabets");
+				  			validate = false;
+					  	}
 				      if(validate == true){
 				    	  $('.saveBlockData').prop('disabled', 'disabled');
 							var data = $("#deliveryAddressForm").serialize();
@@ -416,7 +416,17 @@ function checkPopupDataOrderHistory() {
 										 $('.saveBlockData').prop('disabled', false);
 									}else if(result =='Updated'){
 										window.location.href=ACC.config.encodedContextPath+"/my-account/order/?orderCode="+orderCode;
-									}else{
+									} else if(result == 'Validation Error')
+									{
+										$("#changeAddressPopup").show();
+										$(".wrapBG").show();
+										var height = $(window).height();
+										$(".wrapBG").css("height", height);
+										$(".main_error").show();
+										$(".main_error").text("Please Enter Valid Address Information ");
+										$('.saveBlockData').prop('disabled', false);
+									}
+									else{
 										$("#changeAddressPopup").hide();
 										$("#otpPopup").css({"z-index": "999999", "display":"block", "position":"absolute", "top":"2px", "left":"30%"});
 										$("#otpPopup").html(result).show();

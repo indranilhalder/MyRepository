@@ -131,10 +131,11 @@ public class MplAddressValidator
 		{
 			returnStatement = "address.townCity.invalid";
 		}
-		else if (!CommonAsciiValidator.validateAlphaWithoutSpaceNoSpCh(townCity))
+		//Bug TISRLEE-1648
+		/*else if (!CommonAsciiValidator.validateAlphaWithoutSpaceNoSpCh(townCity))
 		{
 			returnStatement = "address.townCity.invalid.alphaAndSpace";
-		}
+		}*/
 		else if (StringUtils.isEmpty(state))
 		{
 			returnStatement = "address.state.invalid";
