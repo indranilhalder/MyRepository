@@ -433,6 +433,11 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 				/* mock service for Jewellery added */
 				for (final InventoryReservJewelleryRequest jewelentry : request.getJewelleryItem())
 				{
+					if (StringUtils.isEmpty(resevedUssid) && null != jewelentry.getItem() && null != jewelentry.getItem().get(0))
+					{
+						mockXmlJewelPhase = mockXmlJewelPhase.replaceAll("<jewlussid>", jewelentry.getItem().get(0).getUSSID());
+						outputXml += mockXmlJewelPhase;
+					}
 					for (final InventoryReservRequest entry1 : jewelentry.getItem())
 					{
 						if (null != entry1.getUSSID() && entry1.getUSSID().equalsIgnoreCase(resevedUssid))
