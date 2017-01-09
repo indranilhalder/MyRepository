@@ -208,10 +208,10 @@
 											<span class="addressLine2 addressFont">${orderDeliveryAddressList.line2}</span>,
 										</c:if>
 										<c:if test="${not empty orderDeliveryAddressList.line3}">
-											<span class="addressLine3 addressFont">${orderDeliveryAddressList.line3}</span>
+											<span class="addressLine3 addressFont">${orderDeliveryAddressList.line3}</span>,
 										</c:if>
 										<c:if test="${not empty orderDeliveryAddressList.landmark}">
-												&nbsp;  <span class="landmark addressFont">${orderDeliveryAddressList.landmark}</span>,
+												&nbsp;<span class="landmark addressFont">${orderDeliveryAddressList.landmark}</span>,
 										</c:if>
 										<br>
 										<c:if test="${not empty orderDeliveryAddressList.town}">
