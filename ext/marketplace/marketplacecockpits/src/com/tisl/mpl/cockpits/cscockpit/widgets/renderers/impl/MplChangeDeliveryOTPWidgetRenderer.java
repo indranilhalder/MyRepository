@@ -885,6 +885,19 @@ public class MplChangeDeliveryOTPWidgetRenderer
 				for (AbstractOrderEntryModel entry :orderModel.getEntries() ) {
 					if (entry.getTransactionID().equalsIgnoreCase(dto.getTransactionID())) {
 						entry.setEdScheduledDate(dto.getPickupDate());
+						entry.setTimeSlotFrom(dto.getTimeSlotFrom());
+						entry.setTimeSlotTo(dto.getTimeSlotTo());
+						modelService.save(entry);
+						if(null != orderModel.getParentReference() && null != orderModel.getParentReference().getEntries()) {
+							for(AbstractOrderEntryModel parentOrderEntry : orderModel.getParentReference().getEntries()) {
+								if(null != parentOrderEntry.getProduct() && null !=entry.getProduct() && parentOrderEntry.getProduct().getCode().equalsIgnoreCase(entry.getProduct().getCode())) {
+									parentOrderEntry.setEdScheduledDate(dto.getPickupDate());
+									parentOrderEntry.setTimeSlotFrom(dto.getTimeSlotFrom());
+									parentOrderEntry.setTimeSlotTo(dto.getTimeSlotTo());
+									modelService.save(parentOrderEntry);
+								}
+							}
+						}
 					}
 				}
 			}

@@ -122,7 +122,7 @@
 								<div class="row">
 									<div class="col-md-12 optionsLandmark">
 										<label><spring:theme
-												code="text.order.returns.landmark" />*</label>
+												code="text.order.returns.landmark" /></label>
 										<form:select style="height: 40px;" path="landmark"
 											id="landmark" value="${addressForm.landmark}"
 											class="address_landmarks" maxlength="30"></form:select>

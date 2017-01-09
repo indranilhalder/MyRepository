@@ -929,7 +929,6 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
             			  if(entry.getTransactionID().equalsIgnoreCase(shipment.getShipmentId())){
             				  Boolean sdb = Boolean.TRUE;
             				  entry.setIsSdb(sdb);
-            				  entry.setSdb(sdb);
      							  modelService.save(entry);
      							  
      							//  modelService.refresh(entry.getIsSdb());
