@@ -11,20 +11,22 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Messagebox;
 
+import com.hybris.cockpitng.annotations.ViewEvent;
 import com.hybris.cockpitng.util.DefaultWidgetController;
 import com.hybris.oms.tata.services.FilePathProviderService;
 
 
 /**
  * @author Nagarjuna
- * 
+ *
  *         This class is for showing the Pincode Serviceability Report
- * 
+ *
  */
 public class PincodeServiceReportController extends DefaultWidgetController
 {
@@ -34,6 +36,7 @@ public class PincodeServiceReportController extends DefaultWidgetController
 
 	@WireVariable("filePathProviderService")
 	private FilePathProviderService filePathProviderService;
+	String saveFilePath = "";
 
 	@Override
 	public void initialize(final Component comp)
@@ -45,7 +48,7 @@ public class PincodeServiceReportController extends DefaultWidgetController
 			LOG.error("saveFilePath genearating error..");
 			return;
 		}
-		final String saveFilePath = filePathProviderService.getPinSvcReptDwnldPath();
+		saveFilePath = filePathProviderService.getPinSvcReptDwnldPath();
 		if ("null".equals(saveFilePath) || "".equals(saveFilePath))
 		{
 
@@ -63,7 +66,7 @@ public class PincodeServiceReportController extends DefaultWidgetController
 
 	/**
 	 * This method is to return list of files inside a folders recursively
-	 * 
+	 *
 	 * @param folder
 	 * @param recursivity
 	 * @param patternFileFilter
@@ -136,4 +139,12 @@ public class PincodeServiceReportController extends DefaultWidgetController
 		}
 	};
 
+	@ViewEvent(componentID = "reloadButton", eventName = Events.ON_CLICK)
+	public void reloadAllData()
+	{
+		final List<File> fileList = (List<File>) listFilesForFolder(new File(saveFilePath.trim()), true, "");
+		fileList.sort(PincodeServiceReportController.listFilesForFolderComparator);
+		listview.setModel(new ListModelList(fileList));
+		listview.setItemRenderer(new PincodeServiceListItemRenderer());
+	}
 }

@@ -13,10 +13,12 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Messagebox;
 
+import com.hybris.cockpitng.annotations.ViewEvent;
 import com.hybris.cockpitng.util.DefaultWidgetController;
 import com.hybris.oms.tata.pincodeservice.PincodeServiceListItemRenderer;
 import com.hybris.oms.tata.pincodeservice.PincodeServiceReportController;
@@ -121,4 +123,12 @@ public class ReverseLogisticsServiceReportController extends DefaultWidgetContro
 		}
 	};
 
+	@ViewEvent(componentID = "reloadButton", eventName = Events.ON_CLICK)
+	public void reloadAllData()
+	{
+		final List<File> fileList = (List<File>) listFilesForFolder(new File(reverseLogisticsFailurePath.trim()), true, "");
+		fileList.sort(PincodeServiceReportController.listFilesForFolderComparator);
+		listview.setModel(new ListModelList(fileList));
+		listview.setItemRenderer(new PincodeServiceListItemRenderer());
+	}
 }

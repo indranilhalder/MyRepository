@@ -3,7 +3,7 @@
 <style>
 .headlabel_hl{
 text-align:center;
-padding:10px 0px 10px 0px;
+padding:10px 196px 10px 0px;
 background-color:#4D82A6;
 color:white;
 
@@ -12,10 +12,11 @@ color:white;
 font-size:15px;
 }
 </style>
-   <hlayout style="height:80px" sclass="headlabel_hl" >
+   <hlayout sclass="headlabel_hl" >
 	 <label sclass="label_css"  value="Reverse Logistics Failure Information Report"/>   
+	  <button label="Reload" id="reloadButton" />
 	</hlayout>
-	<div style="position:fixed;top:80px;bottom:0px;overflow:auto">
+	<div style="overflow:auto">
 	<listbox id="listview" 
 		emptyMessage="No result found in the result">
 	</listbox>
