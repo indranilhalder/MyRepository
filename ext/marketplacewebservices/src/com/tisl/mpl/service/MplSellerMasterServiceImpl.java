@@ -1138,11 +1138,11 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 			}
 			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getClicknCollect()))
 			{
-				masterModel.setClicknCollect(sellerMasterWsDTO.getClicknCollect());
+				masterModelUpdate.setClicknCollect(sellerMasterWsDTO.getClicknCollect());
 			}
 			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getIsRTSAllowed()))
 			{
-				masterModel.setIsRTSAllowed(sellerMasterWsDTO.getIsRTSAllowed());
+				masterModelUpdate.setIsRTSAllowed(sellerMasterWsDTO.getIsRTSAllowed());
 			}
 
 			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getisCDAllowed()))
