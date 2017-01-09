@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.commerceservices.order.hook;
 
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook;
 import de.hybris.platform.commerceservices.service.data.CommerceCheckoutParameter;
 import de.hybris.platform.commerceservices.service.data.CommerceOrderResult;
@@ -13,6 +14,7 @@ import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.AbstractOrderEntryTypeService;
 import de.hybris.platform.order.InvalidCartException;
@@ -170,28 +172,62 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					&& isLimitedStockPromoExists(orderModel.getAllPromotionResults()))
 			{
 				final List<LimitedStockPromoInvalidationModel> orderInvalidationList = new ArrayList<LimitedStockPromoInvalidationModel>();
+				boolean isCategoryLevelPromo = false;
 				for (final AbstractOrderEntryModel orderEntry : orderModel.getEntries())
 				{
 					if (orderEntry.getQualifyingCount().intValue() > 0)
 					{
+						isCategoryLevelPromo = validateCategorySetPromo(orderModel.getAllPromotionResults(),
+								orderEntry.getProductPromoCode());
+
 						final LimitedStockPromoInvalidationModel promoInvalidationModel = (LimitedStockPromoInvalidationModel) getModelService()
 								.create(LimitedStockPromoInvalidationModel.class);
-						promoInvalidationModel.setProductCode(orderEntry.getProduct().getCode());
-						promoInvalidationModel.setUssid(orderEntry.getSelectedUSSID());
-						promoInvalidationModel.setPromoCode(orderEntry.getProductPromoCode());
-						promoInvalidationModel.setGuid(orderModel.getGuid());
-						promoInvalidationModel.setUsedUpCount(Integer.valueOf(orderEntry.getQualifyingCount().intValue()));
-						promoInvalidationModel.setOrder(orderModel);
 
-						if (null != orderModel.getUser()) // Added for TPR-4331: Customer Count Configuration
+						if (isCategoryLevelPromo)
 						{
-							final CustomerModel customer = (CustomerModel) orderModel.getUser();
-							if (null != customer && null != customer.getOriginalUid())
+							final String categoryCode = getCatgoryCode(orderModel.getAllPromotionResults(),
+									orderEntry.getProductPromoCode(), orderEntry.getProduct());
+
+							promoInvalidationModel.setProductCode(orderEntry.getProduct().getCode());
+							promoInvalidationModel.setUssid(orderEntry.getSelectedUSSID());
+							promoInvalidationModel.setPromoCode(orderEntry.getProductPromoCode());
+							promoInvalidationModel.setGuid(orderModel.getGuid());
+							promoInvalidationModel.setUsedUpCount(Integer.valueOf(orderEntry.getQualifyingCount().intValue()));
+							promoInvalidationModel.setOrder(orderModel);
+							if (StringUtils.isNotEmpty(categoryCode))
 							{
-								promoInvalidationModel.setCustomerID(customer.getOriginalUid());
+								promoInvalidationModel.setCategoryCode(categoryCode);
 							}
+
+							if (null != orderModel.getUser()) // Added for TPR-4331: Customer Count Configuration
+							{
+								final CustomerModel customer = (CustomerModel) orderModel.getUser();
+								if (null != customer && null != customer.getOriginalUid())
+								{
+									promoInvalidationModel.setCustomerID(customer.getOriginalUid());
+								}
+							}
+							orderInvalidationList.add(promoInvalidationModel);
 						}
-						orderInvalidationList.add(promoInvalidationModel);
+						else
+						{
+							promoInvalidationModel.setProductCode(orderEntry.getProduct().getCode());
+							promoInvalidationModel.setUssid(orderEntry.getSelectedUSSID());
+							promoInvalidationModel.setPromoCode(orderEntry.getProductPromoCode());
+							promoInvalidationModel.setGuid(orderModel.getGuid());
+							promoInvalidationModel.setUsedUpCount(Integer.valueOf(orderEntry.getQualifyingCount().intValue()));
+							promoInvalidationModel.setOrder(orderModel);
+
+							if (null != orderModel.getUser()) // Added for TPR-4331: Customer Count Configuration
+							{
+								final CustomerModel customer = (CustomerModel) orderModel.getUser();
+								if (null != customer && null != customer.getOriginalUid())
+								{
+									promoInvalidationModel.setCustomerID(customer.getOriginalUid());
+								}
+							}
+							orderInvalidationList.add(promoInvalidationModel);
+						}
 					}
 				}
 				getModelService().saveAll(orderInvalidationList);
@@ -282,6 +318,106 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	//		}
 	//	}
 
+
+	/**
+	 * @param allPromotionResults
+	 * @param productPromoCode
+	 * @param product
+	 * @return String
+	 */
+	private String getCatgoryCode(final Set<PromotionResultModel> allPromotionResults, final String productPromoCode,
+			final ProductModel product)
+	{
+		String categoryCode = MarketplacecommerceservicesConstants.EMPTY;
+
+		if (CollectionUtils.isNotEmpty(allPromotionResults) && StringUtils.isNotEmpty(productPromoCode))
+		{
+			for (final PromotionResultModel oModel : allPromotionResults)
+			{
+				if (null != oModel.getCertainty() && oModel.getCertainty().floatValue() == 1.00F && null != oModel.getPromotion()
+						&& null != oModel.getPromotion().getCode()
+						&& StringUtils.equalsIgnoreCase(oModel.getPromotion().getCode(), productPromoCode))
+				{
+					if (oModel.getPromotion() instanceof ProductPromotionModel
+							&& CollectionUtils.isNotEmpty(((ProductPromotionModel) oModel.getPromotion()).getCategories()))
+					{
+						categoryCode = getCategoryCode(((ProductPromotionModel) oModel.getPromotion()).getCategories(), product);
+					}
+				}
+			}
+		}
+
+		return categoryCode;
+	}
+
+	/**
+	 * @param categories
+	 * @param product
+	 * @return categoryCode
+	 */
+	private String getCategoryCode(final Collection<CategoryModel> categories, final ProductModel product)
+	{
+		String categoryCode = MarketplacecommerceservicesConstants.EMPTY;
+
+		if (CollectionUtils.isNotEmpty(product.getSupercategories()))
+		{
+			for (final CategoryModel productCategory : product.getSupercategories())
+			{
+				for (final CategoryModel promoCategory : categories)
+				{
+					if (StringUtils.equalsIgnoreCase(productCategory.getCode(), promoCategory.getCode()))
+					{
+						categoryCode = productCategory.getCode();
+						break;
+					}
+				}
+			}
+		}
+
+		return categoryCode;
+	}
+
+	/**
+	 * @param allPromotionResults
+	 * @param productPromoCode
+	 * @return boolean
+	 */
+	private boolean validateCategorySetPromo(final Set<PromotionResultModel> allPromotionResults, final String productPromoCode)
+	{
+		boolean flag = false;
+
+		if (CollectionUtils.isNotEmpty(allPromotionResults) && StringUtils.isNotEmpty(productPromoCode))
+		{
+			for (final PromotionResultModel oModel : allPromotionResults)
+			{
+				if (null != oModel.getCertainty() && oModel.getCertainty().floatValue() == 1.00F && null != oModel.getPromotion()
+						&& null != oModel.getPromotion().getCode()
+						&& StringUtils.equalsIgnoreCase(oModel.getPromotion().getCode(), productPromoCode))
+				{
+					flag = checkPromoData(oModel.getPromotion());
+				}
+			}
+		}
+
+		return flag;
+	}
+
+	/**
+	 * @param promotion
+	 * @return boolean
+	 */
+	private boolean checkPromoData(final AbstractPromotionModel promotion)
+	{
+		boolean flag = false;
+
+		if (promotion instanceof ProductPromotionModel
+				&& CollectionUtils.isNotEmpty(((ProductPromotionModel) promotion).getCategories()))
+		{
+			flag = true;
+		}
+
+		return flag;
+	}
 
 	/*
 	 * (non-Javadoc)
