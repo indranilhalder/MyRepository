@@ -3913,7 +3913,7 @@ private AbstractOrderEntryModel getOrderEntryModel(OrderModel ordermodel,String 
 		}
 		catch (Exception e)
 		{
-			LOG.info(" Exception while canceling the order from cs cockpit  "+ e.getMessage());
+			LOG.info(" Exception while canceling the order from backOffice  "+ e.getMessage());
 		}
 		return cancellationStatus;
 		
