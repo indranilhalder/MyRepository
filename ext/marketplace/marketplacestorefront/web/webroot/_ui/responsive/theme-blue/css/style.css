@@ -59319,6 +59319,9 @@ z-index:11;}
 	/* ADDED TISQAUATS-8 ENDS HERE */ 
 	#offerPopup{
 	z-index:10003;}
+	.offer-outer-wrapper .show-termsConditions{
+      width: 90%;
+      }
 }
 /*TISLUX-2855 Ends*/
 
