@@ -1512,6 +1512,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			{
 				orderEntryModel.setReturnStoreId(abstractOrderEntryModel.getReturnStoreId());
 			}
+			if (abstractOrderEntryModel.getExpectedDeliveryDate() != null)
+			{
+				orderEntryModel.setExpectedDeliveryDate(abstractOrderEntryModel.getExpectedDeliveryDate());
+			}
 			
 		  // End Order line  Code for OrderLine 
 			orderEntryModel = setAdditionalDetails(orderEntryModel);

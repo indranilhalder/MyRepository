@@ -376,7 +376,15 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			final Set<LocationRole> locationRoles = new HashSet<LocationRole>();
 			locationRoles.add(locationRole);
 			target.setLocationRoles(locationRoles);
-			target.setEstimatedDelivery(source.getOrder().getModifiedtime()); // need to be changed
+			//target.setEstimatedDelivery(source.getOrder().getModifiedtime()); // need to be changed
+			if (source.getExpectedDeliveryDate() !=null)
+		   {
+		    target.setEstimatedDelivery(source.getExpectedDeliveryDate());
+		   }
+		   else
+		   {
+		    target.setEstimatedDelivery(source.getOrder().getModifiedtime()); // need to be changed
+		   }
 
 			if (deliveryModeCode != null && source.getDeliveryPointOfService() != null
 					&& MplCodeMasterUtility.getglobalCode(deliveryModeCode).equalsIgnoreCase(MarketplaceomsservicesConstants.CNC))
