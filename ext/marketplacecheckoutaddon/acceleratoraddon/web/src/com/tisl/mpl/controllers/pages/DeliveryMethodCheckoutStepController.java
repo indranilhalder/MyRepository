@@ -55,8 +55,10 @@ import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -1782,6 +1784,34 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 							cartEntryModel.setTimeSlotFrom("".trim());
 							cartEntryModel.setTimeSlotTo("".trim());
 
+						}
+					}
+				}
+				modelService.saveAll(cartEntryList);
+				
+				for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
+				{
+					if (null != cartEntryModel && null != cartEntryModel.getMplDeliveryMode())
+					{
+						if(null != deliverySlotsResponseData){
+							for(InvReserForDeliverySlotsItemEDDInfoData responseData:deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData()){
+								if(responseData.getUssId().equalsIgnoreCase(cartEntryModel.getSelectedUSSID())){
+									String estDeliveryDateAndTime = null;
+									if (responseData.getEDD() != null && StringUtils.isNotEmpty(responseData.getEDD()))
+									{
+										estDeliveryDateAndTime = responseData.getEDD();
+									}
+									else if (responseData.getNextEDD() != null && StringUtils.isNotEmpty(responseData.getNextEDD()))
+									{
+										estDeliveryDateAndTime = responseData.getNextEDD();
+									}
+									if(null != estDeliveryDateAndTime && StringUtils.isNotEmpty(estDeliveryDateAndTime)){
+										SimpleDateFormat parseFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+										Date dateForEDD = parseFormat.parse(estDeliveryDateAndTime);
+										cartEntryModel.setExpectedDeliveryDate(dateForEDD);
+									}
+								}
+							}
 						}
 					}
 				}
