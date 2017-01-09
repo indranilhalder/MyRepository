@@ -9578,6 +9578,203 @@
 				</attributes>
 			</itemtype>
 		</typegroup>
+		
+		
+		<!-- -TPR-1984 start-->
+		<typegroup name="NPSEmail">
+		<itemtype code="NPSEmailer" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.NPSEmailer">
+		<deployment table="MplNPSEmailerTable" typecode="15900" />
+		<attributes>
+		<attribute qualifier="transactionId"  autocreate="true" type="java.lang.String"
+			generate="true">
+			<description>Transaction Id</description>
+			<modifiers optional="false" read="true" write="true"/>
+			<persistence type="property" />
+		</attribute>
+		<attribute qualifier="parentOrderNo"  autocreate="true" type="Order"
+			generate="true">
+			<description>Parent Order Number</description>
+			<modifiers optional="false" read="true" write="true" />
+			<persistence type="property" />
+		</attribute>
+		<attribute qualifier="isEmailSent"  autocreate="true" type="java.lang.Boolean"
+			generate="true">
+			<description>Email sent</description>
+			<modifiers optional="false" read="true" write="true"/>
+			<persistence type="property" />
+		</attribute>
+		<attribute qualifier="timeSent"  autocreate="true" type="java.util.Date"
+			generate="true">
+			<description>Time sent</description>
+			<modifiers optional="true" read="true" write="true"/>
+			<persistence type="property" />
+		</attribute>
+		<attribute qualifier="customer"  autocreate="true" type="Customer"
+			generate="true">
+			<description>Customer</description>
+			<modifiers optional="false" read="true" write="true"/>
+			<persistence type="property" />
+		</attribute>
+		<attribute qualifier="AllEmailSent"  autocreate="true" type="java.lang.Boolean"
+			generate="true">
+			<description>All Email Sent</description>
+			<defaultvalue>Boolean.FALSE</defaultvalue>
+			<modifiers optional="false" read="true" write="true"/>
+			<persistence type="property" />
+		</attribute>
+		</attributes>
+		</itemtype>
+		</typegroup>
+		
+		<typegroup name="NPSFeedbackGroup">
+		<itemtype code="NPSFeedback" generate="true"
+				autocreate="true" 
+				jaloclass="de.hybris.platform.jalo.NPSFeedback">
+				<deployment table="MplNPSFeedback" typecode="15809" />
+				
+				<attributes>
+
+					<attribute qualifier="responseId" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>Response Id</description>
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="originalSurveyDate" type="java.util.Date"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>Survey Date</description>
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="responseTime" type="java.lang.Integer" autocreate="true"
+						generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>Response Time</description>
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="emailId" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>Email Id</description>
+						<persistence type="property" />
+					</attribute>
+				
+				
+				<attribute qualifier="firstName" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>First Name</description>
+						<persistence type="property" />
+					</attribute>
+			
+				<attribute qualifier="lastName" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>Last Name</description>
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="transactionId" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"  />
+						<description>Transaction Id</description>
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="npsId" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>NPS Id</description>
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="npsRating" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>NPS Rating</description>
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="rating1" type="java.lang.String" 
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>Rating 1</description>
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="rating2" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>Rating 2</description>
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="rating3" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>Rating 3</description>
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="rating4" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>Rating 4</description>
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="rating5" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>Rating 5</description>
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="questionCode" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>Question Code</description>
+						<persistence type="property" />
+					</attribute>
+ 				
+				</attributes>
+					
+			</itemtype>
+			
+			 <itemtype code="NPSFeedbackQuestion" generate="true"
+				autocreate="true" 
+				jaloclass="de.hybris.platform.jalo.NPSFeedbackQuestion">
+				<deployment table="MplNPSFeedbackQuestion" typecode="15810" />
+				
+				<attributes>
+
+					<attribute qualifier="questionCode" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>Question Code</description>
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="Question" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>Question</description>
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="Enable" type="boolean" autocreate="true"
+						generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>Enable</description>
+						<persistence type="property" />
+					</attribute>
+					</attributes>
+					</itemtype>
+			</typegroup>	
+		<!-- -TPR-1984 end-->
 
 	</itemtypes>
 </items>

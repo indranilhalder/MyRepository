@@ -3,22 +3,31 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
+import de.hybris.platform.core.model.NPSEmailerModel;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
+import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
+import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.search.SearchResult;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.marketplacecommerceservices.daos.FetchSalesOrderDao;
 import com.tisl.mpl.model.MplConfigurationModel;
 
@@ -206,6 +215,281 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 		}
 		return orderlist;
 	}
+
+
+	@Override
+	public Map<OrderModel, List<String>> fetchOrderDetailsforDeliveryMail()
+	{
+		final Map<OrderModel, List<String>> orderMap = new HashMap<OrderModel, List<String>>();
+		//final OrderModel orderlist = new ArrayList<OrderModel>();
+		LOG.debug("********inside dao for fetchOrderDetailsforDeliveryMail**********");
+
+		final String queryString = "select {po.pk},{oe.orderlineid} from {" + ConsignmentModel._TYPECODE + " as c JOIN "
+				+ ConsignmentEntryModel._TYPECODE + " as ce ON {ce.consignment} = {c.PK}" + " JOIN "
+				+ AbstractOrderEntryModel._TYPECODE + " as oe ON {ce.orderentry}= {oe.PK}" + " JOIN " + OrderModel._TYPECODE
+				+ " as co  ON {c.order}={co.PK}" + " JOIN " + OrderModel._TYPECODE + " as po  ON {co.parentreference} = {po.PK}} ";
+
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.setResultClassList(Arrays.asList(OrderModel.class, String.class));
+
+		final SearchResult<List<Object>> result = flexibleSearchService.search(query);
+		if (result.getResult().isEmpty())
+		{
+			//throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B3000);
+		}
+		else
+		{
+
+			for (final List<Object> obj : result.getResult())
+			{
+				final OrderModel orderModel = (OrderModel) obj.get(0);
+				final String transactionId = (String) obj.get(1);
+
+				if (orderMap.get(orderModel) == null)
+				{
+					final List<String> transIds = new ArrayList<String>();
+					transIds.add(transactionId);
+					orderMap.put(orderModel, transIds);
+				}
+				else
+				{
+					orderMap.get(orderModel).add(transactionId);
+				}
+
+
+			}
+
+			LOG.debug("********** specified data query" + queryString);
+
+		}
+
+		return orderMap;
+
+
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.daos.FetchSalesOrderDao#getTransactionIdCount(de.hybris.platform.core
+	 * .model.order.OrderModel)
+	 */
+	@Override
+	public Map<String, Integer> getTransactionIdCount()
+	{
+		// YTODO Auto-generated method stub
+		LOG.debug("********inside dao for getTransactionIdCount**********");
+		final Map<String, Integer> npsTableMap = new HashMap<String, Integer>();
+		final String queryString = "select {nps.parentOrderNo},COUNT({nps.transactionId}) from {" + NPSEmailerModel._TYPECODE
+				+ " as nps }  WHERE {nps.AllEmailSent}=false group by {nps.parentOrderNo} ";
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.setResultClassList(Arrays.asList(OrderModel.class, Integer.class));
+		final SearchResult<List<Object>> result = flexibleSearchService.search(query);
+		if (result.getResult().isEmpty())
+		{
+			//throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B3000);
+		}
+		else
+		{
+
+			for (final List<Object> obj : result.getResult())
+			{
+
+
+				final String parentOrdeNo = ((OrderModel) obj.get(0)).getCode();
+				final Integer transactionIdCount = (Integer) obj.get(1);
+
+
+
+				npsTableMap.put(parentOrdeNo, transactionIdCount);
+
+			}
+
+
+		}
+		return npsTableMap;
+
+	}
+
+	@Override
+	public Map<String, NPSEmailerModel> getTransactionIdList()
+	{
+		LOG.debug("********inside dao for getTransactionIdList**********");
+		final Map<String, NPSEmailerModel> npsEmailerTransactionIdList = new HashMap<String, NPSEmailerModel>();
+		final String queryString = "select {nps.transactionId},{nps.pk} from {" + NPSEmailerModel._TYPECODE
+				+ " as nps} WHERE {nps.AllEmailSent}=false";
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.setResultClassList(Arrays.asList(String.class, NPSEmailerModel.class));
+		final SearchResult<List<Object>> result = flexibleSearchService.search(query);
+		if (result.getResult().isEmpty())
+		{
+			//throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B3000);
+		}
+		else
+		{
+			for (final List<Object> obj : result.getResult())
+			{
+
+
+				final String transactionIdList = (String) obj.get(0);
+				final NPSEmailerModel npsEmailerModel = (NPSEmailerModel) obj.get(1);
+
+
+
+				npsEmailerTransactionIdList.put(transactionIdList, npsEmailerModel);
+
+			}
+
+		}
+		return npsEmailerTransactionIdList;
+	}
+
+	@Override
+	public Map<String, Integer> getorderModelTransactionCount(final Set<String> parentOrderSet)
+	{
+		LOG.debug("********inside dao for getorderModelTransactionCount**********");
+		final Map<String, Integer> transactionIdCountMap = new HashMap<String, Integer>();
+
+
+		String orderIdsStr;
+
+		final StringBuilder orderIds = new StringBuilder();
+
+		final Iterator<String> iter = parentOrderSet.iterator();
+		while (iter.hasNext())
+		{
+
+
+			orderIds.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + iter.next()
+					+ MarketplacecommerceservicesConstants.INVERTED_COMMA + MarketplacecommerceservicesConstants.COMMA_DELIMITER);
+
+		}
+		orderIdsStr = orderIds.toString();
+		orderIdsStr = orderIdsStr.substring(0, orderIdsStr.length() - 1);
+
+		final String queryString = "select {po.code},count(*) from {Order as po JOIN Order as co ON {po.PK} = {co.parentReference} JOIN OrderEntry as oe ON {co.PK} = {oe.order}  JOIN ConsignmentEntry as ce  ON {oe.PK}={ce.orderEntry} JOIN Consignment as c   ON {c.PK}={ce.consignment} JOIN"
+				+ " ConsignmentStatus as cs  ON  {c.status} ={cs.PK} } where {cs.code} !=  'ORDER_CANCELLED' and {po.code} in ("
+				+ orderIdsStr + ") group by {po.code}";
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.setResultClassList(Arrays.asList(String.class, Integer.class));
+		final SearchResult<List<Object>> result = flexibleSearchService.search(query);
+		if (result.getResult().isEmpty())
+		{
+			//throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B3000);
+		}
+		else
+		{
+			for (final List<Object> obj : result.getResult())
+			{
+
+				final String parentOrderId = (String) obj.get(0);
+				final Integer transactionIdCount = (Integer) obj.get(1);
+
+
+
+
+				transactionIdCountMap.put(parentOrderId, transactionIdCount);
+
+			}
+		}
+		return transactionIdCountMap;
+	}
+
+	@Override
+	public List<Map> getOrderModelTransactionId(final Set<String> parentOrderIds)
+	{
+
+		LOG.debug("********inside dao for getOrderModelTransactionId**********");
+
+		final List<Map> transIdList = new ArrayList<Map>();
+		if (CollectionUtils.isEmpty(parentOrderIds))
+		{
+			return transIdList;
+		}
+
+		final Map<String, OrderModel> orderModelMap = new HashMap<String, OrderModel>();
+		final Map<String, List<String>> transactionIdMap = new HashMap<String, List<String>>();
+		final StringBuilder orderIds = new StringBuilder();
+		String orderIdsStr;
+		final Iterator<String> iter = parentOrderIds.iterator();
+		while (iter.hasNext())
+		{
+
+			orderIds.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + iter.next()
+					+ MarketplacecommerceservicesConstants.INVERTED_COMMA + MarketplacecommerceservicesConstants.COMMA_DELIMITER);
+
+		}
+		orderIdsStr = orderIds.toString();
+		orderIdsStr = orderIdsStr.substring(0, orderIdsStr.length() - 1);
+		final String queryString = "select {po.pk},{oe.orderlineid} from {Order as po JOIN Order as co ON {po.PK} = {co.parentReference} JOIN OrderEntry as oe ON {co.PK} = {oe.order}  JOIN ConsignmentEntry as ce  ON {oe.PK}={ce.orderEntry} JOIN Consignment as c   ON {c.PK}={ce.consignment} JOIN"
+				+ " ConsignmentStatus as cs  ON  {c.status} ={cs.PK} } where {cs.code} =  'DELIVERED' and {po.code} in ("
+				+ orderIdsStr + ")";
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.setResultClassList(Arrays.asList(OrderModel.class, String.class));
+		final SearchResult<List<Object>> result = flexibleSearchService.search(query);
+		if (result.getResult().isEmpty())
+		{
+			//throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B3000);
+		}
+		else
+		{
+			for (final List<Object> obj : result.getResult())
+			{
+				final OrderModel order = (OrderModel) obj.get(0);
+				final String orderId = order.getCode();
+				final String transactionId = (String) obj.get(1);
+
+				if (transactionIdMap.get(orderId) == null)
+				{
+					final List<String> transIds = new ArrayList<String>();
+					transIds.add(transactionId);
+					transactionIdMap.put(orderId, transIds);
+					orderModelMap.put(orderId, order);
+				}
+				else
+				{
+					transactionIdMap.get(orderId).add(transactionId);
+					orderModelMap.put(orderId, order);
+				}
+
+
+			}
+			transIdList.add(transactionIdMap);
+			transIdList.add(orderModelMap);
+		}
+
+
+
+		return transIdList;
+	}
+
+	@Override
+	public Map<String, String> fetchOrderIdsToday()
+	{
+		//code here
+		LOG.debug("********inside dao for fetchOrderIdsToday**********");
+		final Map<String, String> ordersEmailSntTodayMap = new HashMap<String, String>();
+
+		//final int date1 = date.getDate();
+		final String queryString = "select {po.code} from {Order as po JOIN NPSEmailer as nps ON {po.PK}={nps.parentOrderNo}} where {nps.timeSent}= to_date('05-JAN-17','DD-MON-YY')";
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		System.out.println("queryString" + queryString);
+
+		query.setResultClassList(Arrays.asList(String.class));
+		final List<String> orderIdList = flexibleSearchService.<String> search(query).getResult();
+		if (orderIdList != null)
+		{
+			for (final String str : orderIdList)
+			{
+				ordersEmailSntTodayMap.put(str, null);
+			}
+		}
+		return ordersEmailSntTodayMap;
+
+	}
+
 
 
 }

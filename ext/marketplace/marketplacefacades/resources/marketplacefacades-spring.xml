@@ -1668,4 +1668,14 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		class="com.tisl.mpl.facade.job.InitiateCancelForOrderJob"
 		autowire="byName" >
 	</bean>
+	
+	<!-- TPR-1984  -->
+  	<bean id="npsEmailEmailContext"
+  		class="com.tisl.mpl.facades.process.email.context.NPSEmailEmailContext"
+  		parent="abstractEmailContext" scope="prototype" />
+  		
+  	<bean id="npsFeedbackQuestionFacade" autowire="byName"
+ 		class="com.tisl.mpl.facade.NPS.NPSFeedbackQuestionFacadeImpl">
+ 	</bean>	
+  	<!-- END TPR-1984  -->	
 </beans>

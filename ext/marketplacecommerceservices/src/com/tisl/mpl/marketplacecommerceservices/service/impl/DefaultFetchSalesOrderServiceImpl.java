@@ -3,11 +3,14 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
+import de.hybris.platform.core.model.NPSEmailerModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -122,5 +125,45 @@ public class DefaultFetchSalesOrderServiceImpl implements FetchSalesOrderService
 		return fetchSalesOrderDao.fetchSpecifiedCancelData(startTime, endTime);
 	}
 
+	//TPR-1984 Start
+
+	@Override
+	public Map<OrderModel, List<String>> fetchOrderDetailsforDeliveryMail()
+	{
+		return fetchSalesOrderDao.fetchOrderDetailsforDeliveryMail();
+	}
+
+	@Override
+	public Map<String, Integer> getTransactionIdCount()
+	{
+
+		return fetchSalesOrderDao.getTransactionIdCount();
+	}
+
+	@Override
+	public Map<String, NPSEmailerModel> getTransactionIdList()
+	{
+		return fetchSalesOrderDao.getTransactionIdList();
+	}
+
+	@Override
+	public Map<String, Integer> getorderModelTransactionCount(final Set<String> parentOrderIds)
+	{
+		return fetchSalesOrderDao.getorderModelTransactionCount(parentOrderIds);
+	}
+
+	@Override
+	public List<Map> getOrderModelTransactionId(final Set<String> parentOrderIds)
+
+	{
+		return fetchSalesOrderDao.getOrderModelTransactionId(parentOrderIds);
+	}
+
+	@Override
+	public Map<String, String> fetchOrderIdsToday()
+
+	{
+		return fetchSalesOrderDao.fetchOrderIdsToday();
+	}
 
 }

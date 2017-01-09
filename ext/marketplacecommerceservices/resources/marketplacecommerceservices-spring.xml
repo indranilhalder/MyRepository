@@ -2031,6 +2031,13 @@
 <property name="interceptor" ref="aPlusContentValidateInterceptor"></property>
 <property name="typeCode" value="APlusContent"></property>
 </bean>
+<!-- TPR-1984 START -->
+<bean id="npsFeedbackQuestionService" autowire="byName"
+ 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.NPSFeedbackQuestionServiceImpl">
+ 	</bean>
+ 	
+ <bean id="npsFeedbackQuestionDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.NPSFeedbackQuestionDaoImpl" />
 
+<!-- TPR-1984 END -->
 </beans>
 
