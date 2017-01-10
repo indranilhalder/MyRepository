@@ -53,6 +53,7 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 	//private final List<Product> excludedProductList = null;
 	//private final List<String> excludeManufactureList = null;
 	private int noOfProducts = 0;
+	private int stockCount = 0;
 
 	//private Map<String, Integer> qCMapForCatLevelBOGO = null;
 
@@ -155,7 +156,6 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 	 * @param comparator
 	 * @param quantity
 	 * @param orderEntries
-	 * @param freeItemsUssidList
 	 * @return list of PromotionOrderEntryConsumed objects
 	 */
 	private List<PromotionOrderEntryConsumed> consumeFromTail(final SessionContext ctx,
@@ -498,6 +498,20 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 				{
 					totalQty += entry.getQuantityAsPrimitive();
 				}
+
+
+				//Added for TPR-4354
+				if (getMplPromotionHelper().validateForStockRestriction(restrictionList))
+				{
+					final int stockQuantity = getDefaultPromotionsManager().getStockRestrictionVal(restrictionList);
+					setStockCount(stockQuantity);
+					if (totalQty >= stockQuantity)
+					{
+						totalQty = stockQuantity;
+					}
+				}
+
+
 				noOfProducts = totalQty;
 				List<PromotionOrderEntryConsumed> remainingItemsFromTail = null;
 
@@ -632,16 +646,41 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 				remainingItemsFromTail = getDefaultPromotionsManager().findRemainingEntries(paramSessionContext,
 						orderView.getAllEntries(paramSessionContext), tcMapForValidEntries);
 
-				if (noOfProducts > 0 && remainingItemsFromTail != null && remainingItemsFromTail.size() > 0L) // For Localization: To check for Excluded Products
+				if (noOfProducts > 0 && remainingItemsFromTail != null && remainingItemsFromTail.size() > 0L
+						&& !getMplPromotionHelper().validateForStockRestriction(restrictionList)) // For Localization: To check for Excluded Products
 				{
-
 					final float certainty = (float) remainingItemsFromTail.size() / qualifyingCount;
-
 					final PromotionResult result = getDefaultPromotionsManager().createPromotionResult(paramSessionContext, this,
 							paramPromotionEvaluationContext.getOrder(), certainty);
 					result.setConsumedEntries(remainingItemsFromTail);
 					results.add(result);
 				}
+				else if (getMplPromotionHelper().validateForStockRestriction(restrictionList))
+				{
+					if (noOfProducts >= getStockCount())
+					{
+						final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(paramSessionContext, this,
+								paramPromotionEvaluationContext.getOrder(), 1.00F);
+						results.add(result);
+					}
+					else if (noOfProducts < getStockCount() && (noOfProducts % qualifyingCount == 0))
+					{
+						//TPR-4282
+						final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(paramSessionContext, this,
+								paramPromotionEvaluationContext.getOrder(), 1.00F);
+						results.add(result);
+					}
+					else if (noOfProducts < getStockCount() && !(noOfProducts % qualifyingCount == 0))
+					{
+						//TPR-4282
+						final float certainty = (float) remainingItemsFromTail.size() / qualifyingCount;
+						final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(paramSessionContext, this,
+								paramPromotionEvaluationContext.getOrder(), certainty);
+						result.setConsumedEntries(remainingItemsFromTail);
+						results.add(result);
+					}
+				}
+
 			}
 			else
 			{
@@ -687,4 +726,22 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 	{
 		return Registry.getApplicationContext().getBean("mplPromotionHelper", MplPromotionHelper.class);
 	}
+
+	/**
+	 * @return the stockCount
+	 */
+	public int getStockCount()
+	{
+		return stockCount;
+	}
+
+	/**
+	 * @param stockCount
+	 *           the stockCount to set
+	 */
+	public void setStockCount(final int stockCount)
+	{
+		this.stockCount = stockCount;
+	}
+
 }
