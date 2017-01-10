@@ -4,6 +4,7 @@
 package com.tisl.mpl.facade.product.impl;
 
 import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 
 import java.util.LinkedHashMap;
 
@@ -40,7 +41,15 @@ public class MplPriceBreakupFacadeImpl implements PriceBreakupFacade
 		return PriceMap;
 	}
 
-	//
+	//ADDED FOR 3782
+	@Override
+	public boolean createPricebreakupOrder(final AbstractOrderEntryModel entry)
+	{
+
+
+		return priceBreakupService.createPricebreakupOrder(entry);
+	}
+
 
 	/**
 	 * @return the priceBreakupService
@@ -58,6 +67,14 @@ public class MplPriceBreakupFacadeImpl implements PriceBreakupFacade
 	{
 		this.priceBreakupService = priceBreakupService;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.facade.product.PriceBreakupFacade#createPricebreakupOrder(java.lang.String, java.lang.String)
+	 */
+
+
 
 
 }
