@@ -686,6 +686,15 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String QUANTITY_INVALID_BINDING_MESSAGE_KEY = "basket.error.quantity.invalid.binding";
 	public static final String MINIMUM_CONFIGURED_QUANTIY = "mpl.cart.minimumConfiguredQuantity.lineItem";
 	public static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
+
+
+	//added for jewellery
+
+	public static final String MINIMUM_CONFIGURED_QUANTIY_JEWELLERY = "mpl.cart.minimumConfiguredQuantityForJewellery.lineItem";
+	public static final String MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY = "mpl.cart.maximumConfiguredQuantityForJewellery.lineItem";
+
+	//end
+
 	public static final String CROSSED_MAX_LIMIT = "crossedMaxLimit";
 	public static final String REACHED_MAX_LIMIT = "reachedMaxLimit";
 	public static final String WISHLIST_DISPLAY_QUANTITY = "mpl.cart.wishlist.display.quantity";
