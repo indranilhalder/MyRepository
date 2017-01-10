@@ -146,11 +146,13 @@ function loadPincodeData(parm) {
 				$(".addState").show();
 				$('.address_landmarks').html($("<option class=unableto></option>").text("Unable to find landmark").attr("selected","selected").attr("value",""));
 				$(".address_landmarkOther").val("");
-				/*added by sneha R2.3*/
-				$(".address_states").prop("value","");
-				/*end of sneha R2.3*/
-				if(parm == "edit") {
-					$(".address_townCity").prop("readonly", false).val('');
+
+				$(".address_townCity").prop("readonly", false);
+				if(parm != "edit") {
+					$(".address_townCity").val('');
+					/*added by sneha R2.3*/
+					$(".address_states").prop("value","");
+					/*end of sneha R2.3*/
 			    }
 				$(".address_states").removeAttr("readonly").removeData("stateValue");
 				

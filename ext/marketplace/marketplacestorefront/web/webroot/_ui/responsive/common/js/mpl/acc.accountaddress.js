@@ -22,7 +22,7 @@ $(document).ready(function(){
        		$("#lnOverView a").addClass("active"); 		
        	}
        	else if(pageName=="mplPref"){
-       		$("#lnMplPref a").addClass("active"); 		
+       		$("#lnMplPref a").addClass("active");
        	}
        	else if(pageName=="addressBook"){
        		$("#lnAddress a").addClass("active"); 		
@@ -1010,6 +1010,9 @@ function editAddress(addressId) {
         var selectedValueState = document.getElementById('stateListBox').selectedIndex;
 //        var regexCharSpace = /^[a-zA-Z ]*$/;
         var regexCharSpace = /^[a-zA-Z]+$/;
+       /*3bu1 added code, TISRLEE-1648*/
+        var regexCharWithSpace = /^([a-zA-Z]+\s)*[a-zA-Z]+$/;
+        /* TISRLEE-1648*/
 //        var regexCharSpace = /^[a-zA-Z]+(\s[a-zA-Z]+)?$/;
         var regexSpace = /\s/;
         var equalNoCheck = /^\D*(\d)(?:\D*|\1)*$/;
@@ -1092,11 +1095,13 @@ function editAddress(addressId) {
         	document.getElementById("erraddressCity").innerHTML = "<font color='#ff1c47' size='2'>Please enter city</font>";
         	flagCity = false;
         }
-        else if (!regexCharSpace.test(document.getElementById("townCity").value)) { 
+        /*added code, TISRLEE-1648*/
+        else if (!regexCharWithSpace.test(document.getElementById("townCity").value)) { 
         	$("#errddressCity").css({"display":"block"});
         	document.getElementById("erraddressCity").innerHTML = "<font color='#ff1c47' size='2'>City should contain alphabets only</font>";
         	flagCity = false;
         }
+        /*added code, TISRLEE-1648*/
         if (selectedValueState == 0) {
         	$("#errddressState").css({"display":"block"});
         	document.getElementById("erraddressState").innerHTML = "<font color='#ff1c47' size='2'>Please select state</font>";

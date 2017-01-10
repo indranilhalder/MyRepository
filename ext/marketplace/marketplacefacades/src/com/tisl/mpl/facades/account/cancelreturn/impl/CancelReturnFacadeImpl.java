@@ -3879,6 +3879,7 @@ private AbstractOrderEntryModel getOrderEntryModel(OrderModel ordermodel,String 
 		try
 		{
 			final String refundType = "S";
+			LOG.info("Cancelled Order Id " + orderCode + " Transacsaction Id " + transactionId );
 			CustomerData customerData = new CustomerData();
 			final OrderModel orderModel = orderModelService.getParentOrder(orderCode);
 			final CustomerModel customerModel = (CustomerModel) orderModel.getUser();
@@ -3914,6 +3915,7 @@ private AbstractOrderEntryModel getOrderEntryModel(OrderModel ordermodel,String 
 		catch (Exception e)
 		{
 			LOG.info(" Exception while canceling the order from backOffice  "+ e.getMessage());
+			e.printStackTrace();
 		}
 		return cancellationStatus;
 		
