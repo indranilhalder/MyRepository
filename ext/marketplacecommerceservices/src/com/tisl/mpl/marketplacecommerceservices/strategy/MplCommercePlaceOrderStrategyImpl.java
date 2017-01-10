@@ -42,6 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
 import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
@@ -179,6 +180,16 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 				orderModel.setModeOfOrderPayment(modeOfPayment);
 
+				if ("ThirdPartyWallet".equalsIgnoreCase(modeOfPayment))
+				{
+					orderModel.setIsWallet(WalletEnum.MRUPEE);
+				}
+
+				else
+				{
+					orderModel.setIsWallet(WalletEnum.NONWALLET);
+				}
+
 				getModelService().save(orderModel);
 
 				result.setOrder(orderModel);
@@ -307,9 +318,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 	/*
 	 * @Desc To identify if already a order model exists with same cart guid //TISPRD-181
-	 *
+	 * 
 	 * @param cartModel
-	 *
+	 * 
 	 * @return boolean
 	 */
 	private OrderModel isOrderAlreadyExists(final CartModel cartModel)
