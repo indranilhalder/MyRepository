@@ -124,7 +124,7 @@ public class LPOverrideAndAwbEditReportWidgetController extends DefaultWidgetCon
 	{
 
 		exportToCsv(listBoxData, lpawbAuditReport,
-				"SnL_Perf_Report_" + startDate.replace("-", "") + "_" + endDate.replace("-", ""));
+				"LpAndAwbEditReport_" + startDate.replace("-", "") + "_" + endDate.replace("-", ""));
 
 	}
 
@@ -205,6 +205,22 @@ public class LPOverrideAndAwbEditReportWidgetController extends DefaultWidgetCon
 			else
 			{
 				cellLabel.append("".concat(saperator));
+			}
+			if (item.getUserId() != null)
+			{
+				cellLabel.append(item.getUserId().concat(saperator));
+			}
+			else
+			{
+				cellLabel.append("NA".concat(saperator));
+			}
+			if (item.getRoleId() != null)
+			{
+				cellLabel.append(item.getRoleId().concat(saperator));
+			}
+			else
+			{
+				cellLabel.append("NA".concat(saperator));
 			}
 			stringBuff.append(cellLabel.toString().concat("\n"));
 		}
