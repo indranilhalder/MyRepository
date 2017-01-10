@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.core.model.JuspayOrderStatusModel;
 import com.tisl.mpl.core.model.JuspayWebhookModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
@@ -123,7 +124,10 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 						auditModel = getMplOrderDao().getAuditList(cartGuid);
 					}
 
-					if (null != auditModel && StringUtils.isNotEmpty(auditModel.getAuditId()))
+					if (null != auditModel
+							&& StringUtils.isNotEmpty(auditModel.getAuditId())
+							&& ((WalletEnum.NONWALLET.toString().equals(orderModel.getIsWallet().getCode())) || orderModel.getIsWallet()
+									.getCode() == null))
 					{
 						//to check webhook entry status at Juspay corresponding to Payment Pending orders
 						final List<JuspayWebhookModel> hooks = checkstatusAtJuspay(auditModel.getAuditId());
