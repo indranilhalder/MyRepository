@@ -532,6 +532,13 @@
 						optional="true" />
 					<persistence type="property" />
 				</attribute>
+				<attribute qualifier="categoryCode"
+					autocreate="true" type="java.lang.String">
+					<description>Category Code</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
 			</attributes>
 		</itemtype>
 		
@@ -1825,7 +1832,7 @@
 				</attribute>
 				<attribute autocreate="true" qualifier="cusRedeemCount"
 					type="java.lang.Integer">
-					<defaultvalue>Double.valueOf(0)</defaultvalue>
+					<defaultvalue>Integer.valueOf(0)</defaultvalue>
 					<modifiers read="true" write="true" search="false"
 						optional="true" />
 					<persistence type="property" />

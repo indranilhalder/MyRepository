@@ -5,10 +5,13 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.core.model.LimitedStockPromoInvalidationModel;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+
+import org.apache.commons.lang.StringUtils;
 
 import com.tisl.mpl.marketplacecommerceservices.service.ExtStockLevelPromotionCheckService;
 import com.tisl.mpl.promotion.dao.ExtStockLevelPromotionCheckDao;
@@ -40,7 +43,7 @@ public class ExtStockLevelPromotionCheckServiceImpl implements ExtStockLevelProm
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExtStockLevelPromotionCheckService#getPromoInvalidationList(java
 	 * .lang.String)
@@ -72,4 +75,24 @@ public class ExtStockLevelPromotionCheckServiceImpl implements ExtStockLevelProm
 		return stockPromoCheckDao.getCummulativeOrderCount(promoCode, orginalUid);
 	}
 
+
+
+	@Override
+	public Map<String, Integer> getCumulativeCatLevelStockMap(final String substring, final String code,
+			final Map<String, String> dataMap)
+	{
+		final Map<String, Integer> stockMap = new HashMap<String, Integer>();
+		final Map<String, Integer> detailsMap = stockPromoCheckDao.getCumulativeCatLevelStockMap(substring, code);
+		for (final Map.Entry<String, String> stockkData : dataMap.entrySet())
+		{
+			for (final Map.Entry<String, Integer> data : detailsMap.entrySet())
+			{
+				if (StringUtils.equalsIgnoreCase(data.getKey(), stockkData.getValue()))
+				{
+					stockMap.put(stockkData.getKey(), data.getValue());
+				}
+			}
+		}
+		return stockMap;
+	}
 }

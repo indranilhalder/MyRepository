@@ -59287,13 +59287,14 @@ z-index:11;}
 
 /* Added For TPR-996 */
 
-.pdp-promoDesc .show-termsConditions{
+.offer-outer-wrapper .show-termsConditions{
   	padding-top: 10px;
       line-height: 16px;
       overflow: auto;
       max-height: 500px;
       width: 100%;
-      max-width: 300px;
+      margin:0 auto;
+    max-width: 300px;
 }
 /* .page-checkout-login .body-Content{
 	padding-top: 50px;
@@ -59316,6 +59317,11 @@ z-index:11;}
 		width: 84%;
 	}
 	/* ADDED TISQAUATS-8 ENDS HERE */ 
+	#offerPopup{
+	z-index:10003;}
+	.offer-outer-wrapper .show-termsConditions{
+      width: 90%;
+      }
 }
 /*TISLUX-2855 Ends*/
 

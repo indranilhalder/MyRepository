@@ -103,7 +103,7 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.promotion.dao.ExtStockLevelPromotionCheckDao#getPromoInvalidationList(java.lang.String)
 	 */
 	@Override
@@ -235,5 +235,61 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
 		}
 		return count;
+	}
+
+
+
+	@Override
+	public Map<String, Integer> getCumulativeCatLevelStockMap(final String substring, final String code)
+	{
+
+		// YTODO Auto-generated method stub
+		final Map<String, Integer> catCodeMap = new HashMap<String, Integer>();
+		String queryString = "";
+		try
+		{
+
+			queryString = //
+			"select {b.categoryCode},SUM({b.usedUpCount}) from {" + LimitedStockPromoInvalidationModel._TYPECODE + " as b } "
+					+ " where {b.promoCode}=?promoCode " + " AND {b.categoryCode} in (" + substring + ") group by {b.categoryCode}";
+
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter("promoCode", code);
+			query.setResultClassList(Arrays.asList(String.class, Integer.class));
+
+			final SearchResult<List<Object>> result = search(query);
+			if (CollectionUtils.isNotEmpty(result.getResult()))
+			{
+
+				for (final List<Object> row : result.getResult())
+				{
+					final String catCode = (String) row.get(0);
+					final Integer catCount = (Integer) row.get(1);
+					catCodeMap.put(catCode, catCount);
+				}
+			}
+		}
+
+		catch (final FlexibleSearchException e)
+		{
+			LOG.error("error in search query" + e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			LOG.error(e);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			LOG.error("exception getching the quantity count details aginst product/ussid" + e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		return catCodeMap;
+
 	}
 }
