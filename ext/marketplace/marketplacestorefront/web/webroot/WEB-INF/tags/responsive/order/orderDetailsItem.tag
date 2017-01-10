@@ -142,7 +142,7 @@
 					  <c:choose>
                        <c:when test="${not empty entry.timeSlotFrom  && entry.timeSlotFrom !=null }">
                          
-                        <li class="deliver deliver-desc">Your Order Will Be Delivered on ${entry.selectedDeliverySlotDate}   ${entry.timeSlotFrom} TO ${entry.timeSlotTo}</li>
+                        <li class="deliver deliver-desc">Your Order Will Be Delivered on ${entry.selectedDeliverySlotDate} -  ${entry.timeSlotFrom} TO ${entry.timeSlotTo}</li>
                         
                        </c:when>
                        <c:otherwise>
