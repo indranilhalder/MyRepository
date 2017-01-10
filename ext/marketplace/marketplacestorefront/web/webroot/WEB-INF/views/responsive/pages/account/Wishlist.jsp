@@ -25,7 +25,7 @@
 
 <template:page pageTitle="${pageTitle}">
 	<!-- LW-230 -->
-	<input type="hidden" id="isLuxury" value="${isLuxury}"/>
+	<input type="hidden" id="isLuxury" name="isLuxury" value="${isLuxury}"/>
 	
 	<body class="wishlist" onload="readyFunction();">
 
@@ -237,7 +237,7 @@
 								<c:set value="${wpproduct.productData}" var="product" />
 								<c:set value="${wpproduct.sellerInfoData}" var="seller" />
 								<c:set value="${product.ussID}" var="entry_ussid" />
-								
+								<c:url value="${product.url}" var="productUrl" />
 
 								
 								<li>

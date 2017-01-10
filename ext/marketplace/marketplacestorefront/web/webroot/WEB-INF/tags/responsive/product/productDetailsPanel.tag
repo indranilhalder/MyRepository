@@ -331,6 +331,8 @@ tr.d0 td {
 			</div>
 	</div>
 	
+	
+	
 	<c:set var="electronics"><spring:theme code='product.electronics'/></c:set>
 	<c:set var="clothing"><spring:theme code='product.clothing'/></c:set>
 	<!-- TISPRO-271 Changes -->
@@ -339,6 +341,16 @@ tr.d0 td {
 	<!-- Added for TATAUNISTORE-15 Start -->
 	<c:set var="watches"><spring:theme code='product.watches'/></c:set>
 	<c:set var="accessories"><spring:theme code='product.fashionAccessories'/></c:set>
+	
+		
+<c:choose>
+<c:when test="${product.rootCategory==electronics  || product.rootCategory==watches}">
+<product:productDetailsClassifications product="${product}"/>
+</c:when>
+<c:otherwise>
+</c:otherwise> 
+</c:choose>
+	
 	<!-- For Infinite Analytics Start -->
 	<input type="hidden" value="${productCategoryType}" id="categoryType"/>
 	<div id="productContentDivId"></div>
@@ -366,13 +378,7 @@ tr.d0 td {
 </c:choose>	
 <!--- END:MSD ---> 
 	
-<c:choose>
-<c:when test="${product.rootCategory==electronics  || product.rootCategory==watches}">
-<product:productDetailsClassifications product="${product}"/>
-</c:when>
-<c:otherwise>
-</c:otherwise> 
-</c:choose>	
+
 	
 	
 	<!-- Made For Living Section Starts -->

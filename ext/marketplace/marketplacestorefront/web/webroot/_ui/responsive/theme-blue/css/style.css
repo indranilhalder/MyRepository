@@ -44711,7 +44711,8 @@ body.page-homepage .feature-collections h2{
 }
 
 #brandsYouLove h2 {
-    padding: 50px 0;
+    padding-bottom: 50px;
+    padding-top:0px;
 }
 #productYouCare h2 {
     border-top: 1px solid #e5e5e5;
@@ -44833,7 +44834,8 @@ body.page-homepage .showcase .desc-section h2{
 	font-size: 21px;
 	}
 	#brandsYouLove h2{
-	padding: 30px 0;
+	padding-bottom: 30px;
+	padding-top: 0px;
 	font-size: 20px;
 	}
 	#bestPicks>h2{
@@ -50207,11 +50209,11 @@ overflow: hidden;
 	padding:0;
 }
 .top_deal_blp .owl-prev:after {
-    top: -40px;
+    top: -22px;
     left: 20px;
 }
 .top_deal_blp .owl-next:after {
-    top: -40px;
+    top: -22px;
     right: 20px;
 }
 .top_deal_blp .short-info{
@@ -52114,12 +52116,12 @@ overflow: hidden;
 }
 
 .top_deal .owl-prev:after {
-	top: -40px;
+	top: -12px;
 	left: 20px;
 }
 
 .top_deal .owl-next:after {
-	top: -40px;
+	top: -12px;
 	right: 20px;
 }
 
@@ -58958,7 +58960,7 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 
 
 /*Specifications*/
-.SpecWrap{ border:1px solid #ebebeb;}
+.SpecWrap{ border:1px solid #ebebeb; margin-top:45px;}
 .SpecWrap .Padd{ padding:50px 50px 25px;}
 .SpecWrap .Padd h2{ font-size:28px; text-align:center; font-weight:bold;}
 .SpecWrap .Padd .tabs-block .nav > li{  font-weight: normal;width:auto; text-align:center; max-width:none;} 
@@ -58985,7 +58987,7 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 .SpecWrap .tabs-block .tabs>li.active{margin-top:-2px;}
 
 @media(min-width:1025px) and (max-width:1500px) {
-	.SpecWrap{ margin: 0 40px;}
+	.SpecWrap{ margin: 45px 40px 0;}
 }
 @media(max-width:1200px) {
 /*Specifications*/
@@ -58998,7 +59000,7 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 
 @media(max-width:1024px){
 /*Specifications*/
-.SpecWrap{  margin: 0 25px 35px;}
+.SpecWrap{  margin: 45px 25px 35px;}
 .SpecWrap .Padd{  padding: 30px 30px 25px;}
 .SpecWrap .Padd .tabs-block{ margin:0;}
 .SpecWrap .Padd .tabs-block .nav-wrapper{ overflow:hidden; display: block; position:relative;}
@@ -59011,7 +59013,7 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 	}
  @media(max-width:767px){
 	/* Specifications */
-	.SpecWrap{  margin: 0 15px 10px;}
+	.SpecWrap{  margin: 30px 15px 10px;}
 	.SpecWrap .Padd{  padding: 15px;}
 	.SpecWrap .Padd h2 {    font-size: 20px;}
 	.SpecWrap .Padd .tab-details li{  line-height: inherit;    margin: 0 0 10px;    padding: 0 0 10px;}
@@ -59285,13 +59287,14 @@ z-index:11;}
 
 /* Added For TPR-996 */
 
-.pdp-promoDesc .show-termsConditions{
+.offer-outer-wrapper .show-termsConditions{
   	padding-top: 10px;
       line-height: 16px;
       overflow: auto;
       max-height: 500px;
       width: 100%;
-      max-width: 300px;
+      margin:0 auto;
+    max-width: 300px;
 }
 /* .page-checkout-login .body-Content{
 	padding-top: 50px;
@@ -59314,6 +59317,11 @@ z-index:11;}
 		width: 84%;
 	}
 	/* ADDED TISQAUATS-8 ENDS HERE */ 
+	#offerPopup{
+	z-index:10003;}
+	.offer-outer-wrapper .show-termsConditions{
+      width: 90%;
+      }
 }
 /*TISLUX-2855 Ends*/
 
