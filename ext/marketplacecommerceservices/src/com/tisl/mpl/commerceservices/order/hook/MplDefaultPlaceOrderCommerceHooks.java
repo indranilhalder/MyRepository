@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.commerceservices.order.hook;
 
+import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook;
 import de.hybris.platform.commerceservices.service.data.CommerceCheckoutParameter;
@@ -121,6 +122,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	private static final String middleDigits = "000";
 	private static final String middlecharacters = "-";
 
+	@Autowired
+	private CategoryService categoryService;
+
 
 
 	@Autowired
@@ -145,7 +149,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#afterPlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -361,20 +365,48 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 		if (CollectionUtils.isNotEmpty(product.getSupercategories()))
 		{
-			for (final CategoryModel productCategory : product.getSupercategories())
+			final List<CategoryModel> getCategoryDataList = getSuperCategoryData(product.getSupercategories());
+
+			if (CollectionUtils.isNotEmpty(getCategoryDataList))
 			{
-				for (final CategoryModel promoCategory : categories)
+				for (final CategoryModel productCategory : getCategoryDataList)
 				{
-					if (StringUtils.equalsIgnoreCase(productCategory.getCode(), promoCategory.getCode()))
+					for (final CategoryModel promoCategory : categories)
 					{
-						categoryCode = productCategory.getCode();
-						break;
+						if (StringUtils.equalsIgnoreCase(productCategory.getCode(), promoCategory.getCode()))
+						{
+							categoryCode = productCategory.getCode();
+							break;
+						}
 					}
 				}
 			}
 		}
 
 		return categoryCode;
+	}
+
+
+	/**
+	 * Tree Traversal for Category Promotions
+	 *
+	 * @param supercategories
+	 * @return categoryList
+	 */
+	private List<CategoryModel> getSuperCategoryData(final Collection<CategoryModel> supercategories)
+	{
+		final List<CategoryModel> categoryList = new ArrayList<CategoryModel>();
+		List<CategoryModel> subList = null;
+
+		for (final CategoryModel category : supercategories)
+		{
+			subList = new ArrayList<CategoryModel>(categoryService.getAllSupercategoriesForCategory(category));
+			categoryList.addAll(subList);
+		}
+
+		categoryList.addAll(supercategories);
+
+		return categoryList;
 	}
 
 	/**
@@ -421,7 +453,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforePlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter)
@@ -435,7 +467,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforeSubmitOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -513,9 +545,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to set parent transaction id and transaction id mapping Buy A B Get C TISPRO-249
-	 * 
+	 *
 	 * @param subOrderList
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	private void setParentTransBuyABGetC(final List<OrderModel> subOrderList) throws InvalidCartException
@@ -572,9 +604,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to populate parent freebie map for BUY A B GET C promotion TISPRO-249
-	 * 
+	 *
 	 * @param subOrderList
-	 * 
+	 *
 	 * @throws Exception
 	 */
 
@@ -972,9 +1004,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : this method is used to set freebie items parent transactionid TISUTO-128
-	 * 
+	 *
 	 * @param orderList
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private void setFreebieParentTransactionId(final List<OrderModel> subOrderList) throws EtailNonBusinessExceptions
