@@ -1826,7 +1826,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String WALLETORDERID = "wallertOrderId";
 	public static final String CHECKSUMKEY = "checksumKey";
 	public static final String MRUPEE = "MRUPEE";
-	public static final String TPWALLETAUDITQUERY = "select {a:pk} from {ThirdPartyAudit As a} where {a.twAuditId}=?auditId"
+	public static final String TPWALLETAUDITQUERY = "select {a:pk} from {MplPaymentAudit As a} where {a.auditId}=?auditId"
 			.intern();
 	public final static String MRUPEERETURNMETHOD = "payment.mRupee.returnMethod".intern();
 

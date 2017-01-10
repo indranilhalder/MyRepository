@@ -89,8 +89,6 @@ import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.PaymentModeApportionModel;
 import com.tisl.mpl.core.model.SavedCardModel;
-import com.tisl.mpl.core.model.ThirdPartyAuditEntryModel;
-import com.tisl.mpl.core.model.ThirdPartyAuditModel;
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.data.MplPromotionData;
@@ -3003,11 +3001,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3019,9 +3017,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3787,7 +3785,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#createWalletPaymentId()
 	 */
 	@Override
@@ -3799,7 +3797,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#entryInTPWaltAudit(javax.servlet.http.
 	 * HttpServletRequest, java.lang.String, java.lang.String)
 	 */
@@ -3817,20 +3815,21 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		try
 		{
 			Assert.notNull(refNo, "Parameter refNo cannot be null.");
-			final ThirdPartyAuditModel auditModel = getMplPaymentDao().getWalletAuditEntries(refNo);
+
+			final MplPaymentAuditModel auditModel = getMplPaymentDao().getWalletAuditEntries(refNo);
 
 			if (null != auditModel)
 			{
-				List<ThirdPartyAuditEntryModel> collection = auditModel.getAuditEntries();
-				final List<ThirdPartyAuditEntryModel> auditEntryList = new ArrayList<ThirdPartyAuditEntryModel>();
+				//	List<ThirdPartyAuditEntryModel> collection = auditModel.getAuditEntries();
+				List<MplPaymentAuditEntryModel> collection = auditModel.getAuditEntries();
+				final List<MplPaymentAuditEntryModel> auditEntryList = new ArrayList<MplPaymentAuditEntryModel>();
 				if (null == collection || collection.isEmpty())
 				{
-					collection = new ArrayList<ThirdPartyAuditEntryModel>();
+					collection = new ArrayList<MplPaymentAuditEntryModel>();
 				}
-
 				auditEntryList.addAll(collection);
-				final ThirdPartyAuditEntryModel auditEntry = getModelService().create(ThirdPartyAuditEntryModel.class);
-				auditEntry.setTwAuditId(refNo);
+				final MplPaymentAuditEntryModel auditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
+				auditEntry.setAuditId(refNo);
 
 				//Commented for Mobile use
 
@@ -3855,14 +3854,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				{
 					auditEntry.setStatus(MplPaymentAuditStatusEnum.COMPLETED);
 				}
-				if (null != mWRefCode)
-				{
-					auditEntry.setMWRefNo(mWRefCode);
-				}
 				getModelService().save(auditEntry);
-
 				auditEntryList.add(auditEntry);
-
 				auditModel.setAuditEntries(auditEntryList);
 				auditModel.setIsExpired(Boolean.valueOf(true));
 				getModelService().save(auditModel);
@@ -3870,17 +3863,17 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			else
 			{
 				final CartModel cartModel = getMplPaymentDao().getCart(guid);
-				final List<ThirdPartyAuditEntryModel> auditEntryList = new ArrayList<ThirdPartyAuditEntryModel>();
-				final ThirdPartyAuditEntryModel auditEntry = getModelService().create(ThirdPartyAuditEntryModel.class);
-				auditEntry.setTwAuditId(refNo);
+				//	final List<ThirdPartyAuditEntryModel> auditEntryList = new ArrayList<ThirdPartyAuditEntryModel>();
+				final List<MplPaymentAuditEntryModel> auditEntryList = new ArrayList<MplPaymentAuditEntryModel>();
+				final MplPaymentAuditEntryModel auditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
+				auditEntry.setAuditId(refNo);
+				//auditEntry.setTwAuditId(refNo);
 				auditEntry.setStatus(MplPaymentAuditStatusEnum.CREATED);
 				getModelService().save(auditEntry);
-
 				auditEntryList.add(auditEntry);
-
-				final ThirdPartyAuditModel newAuditModel = getModelService().create(ThirdPartyAuditModel.class);
+				final MplPaymentAuditModel newAuditModel = getModelService().create(MplPaymentAuditModel.class);
 				newAuditModel.setChannel(GenericUtilityMethods.returnChannelData(channelWeb));
-				newAuditModel.setTwAuditId(refNo);
+				newAuditModel.setAuditId(refNo);
 				newAuditModel.setCartGUID(guid);
 				newAuditModel.setRequestDate(new Date());
 				newAuditModel.setAuditEntries(auditEntryList);
@@ -3908,7 +3901,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#saveTPWalletPaymentInfo(java.lang.String,
 	 * java.util.List, de.hybris.platform.core.model.order.AbstractOrderModel)
 	 */
@@ -3980,7 +3973,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#setTPWalletPaymentTransaction(java.util.Map,
 	 * de.hybris.platform.core.model.order.AbstractOrderModel)
@@ -4107,13 +4100,13 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#getWalletAuditEntries()
 	 */
 	@Override
-	public ThirdPartyAuditModel getWalletAuditEntries(final String refNo)
+	public MplPaymentAuditModel getWalletAuditEntries(final String refNo)
 	{
-		ThirdPartyAuditModel auditModel = new ThirdPartyAuditModel();
+		MplPaymentAuditModel auditModel = new MplPaymentAuditModel();
 		auditModel = getMplPaymentDao().getWalletAuditEntries(refNo);
 		return auditModel;
 	}

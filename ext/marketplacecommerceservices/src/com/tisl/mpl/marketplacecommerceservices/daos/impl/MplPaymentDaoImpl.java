@@ -24,7 +24,6 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.EMIBankModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
-import com.tisl.mpl.core.model.ThirdPartyAuditModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplPaymentDao;
 import com.tisl.mpl.model.BankModel;
@@ -767,12 +766,12 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplPaymentDao#getWalletAuditEntries(java.lang.String)
 	 */
 	@Override
-	public ThirdPartyAuditModel getWalletAuditEntries(final String auditId)
+	public MplPaymentAuditModel getWalletAuditEntries(final String auditId)
 	{
 
 		try
 		{
-			ThirdPartyAuditModel audit = new ThirdPartyAuditModel();
+			MplPaymentAuditModel audit = new MplPaymentAuditModel();
 			final String queryString = MarketplacecommerceservicesConstants.TPWALLETAUDITQUERY;
 
 			//forming the flexible search query
@@ -780,7 +779,7 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 			auditQuery.addQueryParameter("auditId", auditId);
 
 			//fetching audit entries from DB using flexible search query
-			final List<ThirdPartyAuditModel> auditList = flexibleSearchService.<ThirdPartyAuditModel> search(auditQuery).getResult();
+			final List<MplPaymentAuditModel> auditList = flexibleSearchService.<MplPaymentAuditModel> search(auditQuery).getResult();
 			if (null != auditList && !auditList.isEmpty())
 			{
 				//fetching the audit entries
