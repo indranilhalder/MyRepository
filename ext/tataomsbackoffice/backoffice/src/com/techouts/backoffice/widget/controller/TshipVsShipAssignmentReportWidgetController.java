@@ -143,14 +143,10 @@ public class TshipVsShipAssignmentReportWidgetController extends DefaultWidgetCo
 					- Integer.parseInt(report.getAssignmentsForSSHIP().trim());
 			lblTshipFailure.setValue("" + tshipFailure);
 			lblSshipFailure.setValue("" + sshipFailure);
-
-
-
-
 			try
 			{
-				final double tshipAssignmentPercent = (Integer.parseInt(report.getAssignmentsForTSHIP())
-						/ Integer.parseInt(report.getRequestsForTSHIP())) * 100;
+				final int tshipAssignmentPercent = (int) ((Double.parseDouble(report.getAssignmentsForTSHIP())
+						/ Double.parseDouble(report.getRequestsForTSHIP())) * 100);
 				lblTshipAssignmentPercent.setValue("" + tshipAssignmentPercent + "%");
 			}
 			catch (final ArithmeticException exception)
@@ -160,8 +156,8 @@ public class TshipVsShipAssignmentReportWidgetController extends DefaultWidgetCo
 			}
 			try
 			{
-				final double sshipAssignmentPercent = (Integer.parseInt(report.getAssignmentsForSSHIP().trim())
-						/ Integer.parseInt(report.getRequestsForSSHIP().trim())) * 100;
+				final int sshipAssignmentPercent = (int) ((Double.parseDouble(report.getAssignmentsForSSHIP().trim())
+						/ Double.parseDouble(report.getRequestsForSSHIP().trim())) * 100);
 				lblSshipAssignmentPercent.setValue("" + sshipAssignmentPercent + "%");
 			}
 			catch (final ArithmeticException exception)
@@ -171,7 +167,8 @@ public class TshipVsShipAssignmentReportWidgetController extends DefaultWidgetCo
 			}
 			try
 			{
-				final double tshipFailurePercent = (tshipFailure / Integer.parseInt(report.getRequestsForTSHIP().trim())) * 100;
+				final int tshipFailurePercent = (int) ((tshipFailure / Double.parseDouble(report.getRequestsForTSHIP().trim()))
+						* 100);
 
 				LOG.info("tship Failure percentage" + tshipFailurePercent);
 				lblTshipFailurePercent.setValue("" + tshipFailurePercent + "%");
@@ -185,7 +182,8 @@ public class TshipVsShipAssignmentReportWidgetController extends DefaultWidgetCo
 
 			try
 			{
-				final double sshipFailurePercent = (sshipFailure / Integer.parseInt(report.getRequestsForSSHIP().trim())) * 100;
+				final int sshipFailurePercent = (int) ((sshipFailure / Double.parseDouble(report.getRequestsForSSHIP().trim()))
+						* 100);
 				LOG.info("sship Failure percentage" + sshipFailurePercent);
 				lblSshipFailurePercent.setValue("" + sshipFailurePercent + "%");
 
