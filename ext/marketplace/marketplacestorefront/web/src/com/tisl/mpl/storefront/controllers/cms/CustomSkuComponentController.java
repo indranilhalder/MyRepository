@@ -189,7 +189,8 @@ public class CustomSkuComponentController extends AbstractCMSComponentController
 		}
 		//this.lookId = component.getLabelOrId(); // Blocked for SONAR
 		this.customSku(searchQuery, sortCode, ShowMode.Page, page, component, model);
-
+		//changes shopbylook
+		model.addAttribute("lookId", component.getLabelOrId());
 	}
 
 	/**
@@ -389,7 +390,6 @@ public class CustomSkuComponentController extends AbstractCMSComponentController
 			}
 
 		}
-		model.addAttribute("shopbylook", "shopbylook");
 		model.addAttribute("lookId", lookId);
 		populateModel(model, searchPageData, showMode);
 		model.addAttribute(MarketplaceCoreConstants.USER_LOCATION, customerLocationService.getUserLocation());
