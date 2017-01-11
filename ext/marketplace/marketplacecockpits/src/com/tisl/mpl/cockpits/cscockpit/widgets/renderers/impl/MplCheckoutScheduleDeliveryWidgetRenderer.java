@@ -4,7 +4,6 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -45,7 +44,6 @@ import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRes
 import de.hybris.platform.cockpit.widgets.ListboxWidget;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
-import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.cscockpit.utils.CssUtils;
 import de.hybris.platform.cscockpit.utils.LabelUtils;
 import de.hybris.platform.cscockpit.widgets.controllers.BasketController;
@@ -148,14 +146,24 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 		boolean eligigleForScheduleSlots = Boolean.FALSE;
 	 	if(null != deliverySlotsResponseData && null != deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData()) {
 	 		for(AbstractOrderEntryModel orderEntry: cart.getEntries()) {
-	 			if(!orderEntry.getGiveAway() && !orderEntry.getFulfillmentType().equalsIgnoreCase(MarketplaceCockpitsConstants.SSHIP) ) {
-	 				populateScheduledDeliveryHeaders(widget, listHead);
-	 				eligigleForScheduleSlots = true;
-	 				break;
-	 			}
-	 		}
+ 				if(!orderEntry.getGiveAway() && !orderEntry.getFulfillmentType().equalsIgnoreCase(MarketplaceCockpitsConstants.SSHIP) ) {
+ 					Listitem row = new Listitem();
+ 					row.setSclass("listbox-row-item");
+ 					row.setParent(listBox);
+ 					for( InvReserForDeliverySlotsItemEDDInfoData deliverySlotsItemEDDInfo :deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData() ) {
+ 						if(deliverySlotsItemEDDInfo.getUssId().trim().equalsIgnoreCase(orderEntry.getSelectedUSSID().trim())) {
+ 							if(null != deliverySlotsItemEDDInfo.getIsScheduled() && deliverySlotsItemEDDInfo.getIsScheduled().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
+ 							{
+ 								eligigleForScheduleSlots = true;
+ 								break;
+ 							}
+ 						}
+ 					}
+ 				}
+ 			}
 	 		
 	 		if(eligigleForScheduleSlots) {
+	 			populateScheduledDeliveryHeaders(widget, listHead);
 	 			for(AbstractOrderEntryModel orderEntry: cart.getEntries()) {
 	 				if(!orderEntry.getGiveAway() && !orderEntry.getFulfillmentType().equalsIgnoreCase(MarketplaceCockpitsConstants.SSHIP) ) {
 	 					Listitem row = new Listitem();
@@ -163,8 +171,10 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 	 					row.setParent(listBox);
 	 					for( InvReserForDeliverySlotsItemEDDInfoData deliverySlotsItemEDDInfo :deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData() ) {
 	 						if(deliverySlotsItemEDDInfo.getUssId().trim().equalsIgnoreCase(orderEntry.getSelectedUSSID().trim())) {
-	 							renderDeliverySlots(widget,orderEntry,deliverySlotsItemEDDInfo, row);
-	 							break;
+	 							if(null != deliverySlotsItemEDDInfo.getIsScheduled() && deliverySlotsItemEDDInfo.getIsScheduled().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y)) {
+	 								renderDeliverySlots(widget,orderEntry,deliverySlotsItemEDDInfo, row);
+		 							break;
+	 							}
 	 						}
 	 					}
 	 				}
@@ -436,20 +446,13 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 				}
 				
 				CartModel cartModel = (CartModel) orderEntry.getOrder();
-//				if(null != cartModel.getEntries() && orderEntry.getScheduledDeliveryCharge() != 0.0D ) { 
-//					cartModel.setTotalPrice(cartModel.getTotalPrice() - orderEntry.getScheduledDeliveryCharge());
-//					cartModel.setScheduleDelCharge(cartModel.getScheduleDelCharge() - orderEntry.getScheduledDeliveryCharge());
-//				} 
-//				if(null != orderEntry && orderEntry.getScheduledDeliveryCharge() != 0.0D) {
-//					orderEntry.setTotalPrice(orderEntry.getTotalPrice() - orderEntry.getScheduledDeliveryCharge());
-//					orderEntry.setScheduledDeliveryCharge(0.0D);
-//				} 
-//
+				orderEntry.setScheduledDeliveryCharge(0.0D);
+
 				try {
 					modelService.save(orderEntry);
 					modelService.save(cartModel);
-				//	modelService.refresh(cartModel);
-				//	((BasketController)widget.getWidgetController().getBasketController()).dispatchEvent(null, widget, null);
+					modelService.refresh(cartModel);
+					((BasketController)widget.getWidgetController().getBasketController()).dispatchEvent(null, widget, null);
 				}catch(Exception e) {
 					e.printStackTrace();
 				}
@@ -526,32 +529,17 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 		orderEntry.setTimeSlotTo(toTime);
 		CartModel cartModel = (CartModel) orderEntry.getOrder();
 		try {
-//			Double ScheduleDeliveryCharges = 0.0D;
-//			Double orderScheduleCharges  = 0.0D;
-//			Double totalDeliveryCharges  = 0.0D;
-//			ScheduleDeliveryCharges = ((MarketplaceCheckoutController) widget.getWidgetController()).getScheduleDeliveryCharges();
-//			CartModel cartModel = (CartModel) orderEntry.getOrder();
-//			if(ScheduleDeliveryCharges != 0.0D && orderEntry.getScheduledDeliveryCharge() == 0.0D) {
-//				orderEntry.setScheduledDeliveryCharge(ScheduleDeliveryCharges);
-//				Double totalOrderPrice = cartModel.getTotalPrice()+ScheduleDeliveryCharges;
-//				Double orderEntryTotal = orderEntry.getTotalPrice()+ScheduleDeliveryCharges;
-//				if(null != cartModel.getDeliveryCost() && cartModel.getDeliveryCost() >0.0D) {
-//					totalDeliveryCharges = cartModel.getDeliveryCost() + ScheduleDeliveryCharges;
-//				}else {
-//					totalDeliveryCharges = ScheduleDeliveryCharges;
-//				}
-//				cartModel.setDeliveryCost(totalDeliveryCharges);
-//				orderEntry.setTotalPrice(orderEntryTotal);
-//				cartModel.setTotalPrice(totalOrderPrice);
-//			}
+			Double ScheduleDeliveryCharges = 0.0D;
+			ScheduleDeliveryCharges = ((MarketplaceCheckoutController) widget.getWidgetController()).getScheduleDeliveryCharges();
+			orderEntry.setScheduledDeliveryCharge(ScheduleDeliveryCharges);
 			modelService.save(orderEntry);
 			modelService.save(cartModel);
 			modelService.refresh(cartModel);
-//			try {
-//				((BasketController)widget.getWidgetController().getBasketController()).dispatchEvent(null, widget, null);
-//			}catch(Exception e) {
-//				e.printStackTrace();
-//			}
+			try {
+				((BasketController)widget.getWidgetController().getBasketController()).dispatchEvent(null, widget, null);
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
 
 		}catch(Exception e) {
 			LOG.error("Exception occurred While Saving Order Entry"+e.getMessage());

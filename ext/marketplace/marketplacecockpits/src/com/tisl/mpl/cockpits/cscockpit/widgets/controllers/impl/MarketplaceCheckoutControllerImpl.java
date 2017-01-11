@@ -25,7 +25,6 @@ import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceBasketCont
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceCheckoutController;
 import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceabilityCheckHelper;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
-import com.tisl.mpl.core.mplconfig.service.impl.MplConfigServiceImpl;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
@@ -618,7 +617,11 @@ public class MarketplaceCheckoutControllerImpl extends
 
 		unTotal = cart.getConvenienceCharges() == null ? unTotal : unTotal+cart
 				.getConvenienceCharges();
-
+        for (AbstractOrderEntryModel cartEnty : cart.getEntries()) {
+        	if(cartEnty.getScheduledDeliveryCharge()>0.0D) {
+        		unTotal+=cartEnty.getScheduledDeliveryCharge();
+        	}
+        }
 		String cusName= null;
 		cODPaymentService.getTransactionModel(cart, unTotal);
 		if (StringUtils.isNotEmpty(cart.getUser().getName()) && !cart.getUser().getName().equalsIgnoreCase(" "))

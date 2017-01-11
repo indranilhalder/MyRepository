@@ -827,6 +827,7 @@
 		<property name="widgetModel">
 			<bean class="de.hybris.platform.cockpit.widgets.models.impl.DefaultListWidgetModel"/>
 		</property>
+		<property name="widgetAdapter" ref="csOrderDetailsWidgetAdapter"/>
 	</bean>
 
 	<alias alias="csOrderScheduleDeliverySlotWidgetRenderer" name="defaultCsOrderScheduleDeliverySlotWidgetRenderer"/>

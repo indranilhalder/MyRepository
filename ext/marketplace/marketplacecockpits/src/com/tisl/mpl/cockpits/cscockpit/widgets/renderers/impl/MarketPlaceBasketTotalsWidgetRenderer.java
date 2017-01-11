@@ -89,7 +89,19 @@ public class MarketPlaceBasketTotalsWidgetRenderer extends
 		    	
 		        renderRow(promotion, LabelUtils.getLabel(widget, "promotion", new Object[0]), currencyInstance, container);
 		        
+		        Double scheduleDeliveryCosts = 0.0D;
+		        if(null==abstractOrderModel.getDeliveryAddress() || null!=((CartModel)abstractOrderModel).getCartReservationDate()) {
+		        	for(AbstractOrderEntryModel entry : abstractOrderModel.getEntries()){
+			    		if(entry.getScheduledDeliveryCharge()!=null && entry.getScheduledDeliveryCharge() !=0.0D)
+			    			scheduleDeliveryCosts+= (entry.getScheduledDeliveryCharge()) ;
+					}
+		        }
+		        
+		        
 		        Double deliveryCosts = abstractOrderModel.getDeliveryCost();
+		        if(scheduleDeliveryCosts>=0.0D) {
+		        	deliveryCosts+=scheduleDeliveryCosts;
+		        }
 		       /* 
 				Double deliveryCosts = 0D;
 				
@@ -152,8 +164,11 @@ public class MarketPlaceBasketTotalsWidgetRenderer extends
 		        Double convenienceCharges = abstractOrderModel.getConvenienceCharges();
 		        renderRow(convenienceCharges, LabelUtils.getLabel(widget, "convenienceCharges", new Object[0]), currencyInstance, container);
 		  
-		      //  Double totalPrice = abstractOrderModel.getTotalPriceWithConv();
-		        renderRow(abstractOrderModel.getTotalPriceWithConv(), LabelUtils.getLabel(widget, "totalPrice", new Object[0]), currencyInstance, container);
+		         Double totalPrice = abstractOrderModel.getTotalPriceWithConv();
+		         if(scheduleDeliveryCosts>0.0D) {
+		        	 totalPrice+=scheduleDeliveryCosts;
+		         }
+		        renderRow(totalPrice, LabelUtils.getLabel(widget, "totalPrice", new Object[0]), currencyInstance, container);
 		      }
 		  
 		      container.setParent(parent);

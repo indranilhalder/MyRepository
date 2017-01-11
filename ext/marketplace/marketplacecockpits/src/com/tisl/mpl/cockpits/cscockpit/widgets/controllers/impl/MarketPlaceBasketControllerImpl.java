@@ -708,6 +708,21 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		cartParameter.setAddress(TypeUtils.unwrapItem(address, AddressModel.class));
 		cartParameter.setIsDeliveryAddress(true);
 		getCommerceCheckoutService().setDeliveryAddress(cartParameter);
+		setDeliveryCost(cartModel);
+	}
+
+	private void setDeliveryCost(CartModel cartModel) {
+		Double scheduleDelCharges = 0.0D;
+		for (AbstractOrderEntryModel cartEntry : cartModel.getEntries()) {
+			if(null != cartEntry.getScheduledDeliveryCharge() && cartEntry.getScheduledDeliveryCharge()>0.0D) {
+				scheduleDelCharges+=cartEntry.getScheduledDeliveryCharge();
+				cartEntry.setScheduledDeliveryCharge(0.0D);
+				cartEntry.setEdScheduledDate(null);
+				cartEntry.setTimeSlotFrom(null);
+				cartEntry.setTimeSlotTo(null);
+				getModelService().save(cartEntry);
+			}
+		}
 	}
 
 	@Override
@@ -736,7 +751,8 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	        getModelService().refresh(entry.getOrder());	        
 	        changed = true;
 	        CommerceCartParameter cartParameter = new CommerceCartParameter();
-			cartParameter.setCart((CartModel)entry.getOrder());			
+			cartParameter.setCart((CartModel)entry.getOrder());	
+			setDeliveryCost((CartModel)entry.getOrder());
 			getCommerceCartService().recalculateCart(cartParameter);
 			
 			getMplVoucherService().checkCartWithVoucher(cart);
