@@ -3919,7 +3919,7 @@ private AbstractOrderEntryModel getOrderEntryModel(OrderModel ordermodel,String 
 				}
 			}
 			
-			final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(subOrderModel.getCode());
+			final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCockpitUser(subOrderModel.getCode(), customerModel);
 			
 			for (final OrderEntryData orderEntry : subOrderDetails.getEntries())
 			{
