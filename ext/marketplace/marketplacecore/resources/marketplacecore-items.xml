@@ -5229,9 +5229,7 @@
 					</attribute>
 				</attributes>
 			</itemtype>
-
-
-
+			
 		</typegroup>
 		<!-- Blacklist Model -->
 		<typegroup name="Marketplace">
@@ -9582,12 +9580,18 @@
 		
 		<!-- -TPR-1984 start-->
 		<typegroup name="NPSEmail">
-		<itemtype code="NPSEmailer" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.NPSEmailer">
+		<itemtype code="NPSEmailer" extends="OrderProcess" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.NPSEmailer">
 		<deployment table="MplNPSEmailerTable" typecode="15900" />
 		<attributes>
 		<attribute qualifier="transactionId"  autocreate="true" type="java.lang.String"
 			generate="true">
 			<description>Transaction Id</description>
+			<modifiers optional="false" read="true" write="true"/>
+			<persistence type="property" />
+		</attribute>
+		<attribute qualifier="abstractOrderEntry"  autocreate="true" type="AbstractOrderEntry"
+			generate="true">
+			<description>Abstract Order Entry</description>
 			<modifiers optional="false" read="true" write="true"/>
 			<persistence type="property" />
 		</attribute>
