@@ -2316,8 +2316,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			{
 				try
 				{
-
-
+					//added for jewellery
 					final InventoryReservListRequest reqestData = getInventoryReservationService().convertDatatoWsdto(
 							cartSoftReservationDatalist, abstractOrderModel, pincode, requestType);
 					inventoryReservListResponse = getInventoryReservationService().reserveInventoryAtCheckout(reqestData);
@@ -2325,6 +2324,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					{
 						updateCart(reqestData, inventoryReservListResponse, abstractOrderModel);
 					}
+					//end
 				}
 				catch (final ClientEtailNonBusinessExceptions e)
 				{
@@ -5123,7 +5123,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	}
 
 
-
+	//added for jewellery
 	/**
 	 * @param reqdata
 	 * @param response
@@ -5171,6 +5171,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	}
 
+	//added for jewellery
+
 	/**
 	 * @param cart
 	 * @param ussid
@@ -5205,8 +5207,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		}
 		catch (final CommerceCartModificationException e)
 		{
-			// YTODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error("CommerceCartModificationException" + " " + e);
 		}
 
 
