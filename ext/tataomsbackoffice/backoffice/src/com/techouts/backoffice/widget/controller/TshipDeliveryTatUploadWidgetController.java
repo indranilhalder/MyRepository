@@ -35,7 +35,7 @@ public class TshipDeliveryTatUploadWidgetController extends DefaultWidgetControl
 
 	@WireVariable("filePathProviderService")
 	private FilePathProviderService filePathProviderService;
-	private static final String PRECIOUS_FRAZILE_FiLE_PREFIX = "PFSDLogisticsServicebility_";
+	private static final String PRECIOUS_FRAZILE_FiLE_PREFIX = "PFSDLogisticsServiceability_";
 	private static final String RETURN_FiLE_PREFIX = "ReturnLogisticsServiceability_";
 	private static final String DATE_FORMAT = "ddMMyyyyHHss";
 	private Label pfsdError;
