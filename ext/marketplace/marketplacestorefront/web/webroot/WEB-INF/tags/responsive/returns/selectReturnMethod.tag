@@ -62,13 +62,13 @@
 				<div class="selectquickDrop quickDropRadio${i.index} col-md-12">
 						<div class="selectRadio col-md-2 col-sm-2 col-xs-2">
 							<form:checkbox path="storeIds" 
-								onclick="updatePointersNew('quickDropRadio${i.index}', '${returnableStore.geoPoint.latitude}', '${returnableStore.geoPoint.longitude}', '${returnableStore.displayName}, ${returnableStore.address.town},${returnableStore.address.postalCode}')"
+								onclick="updatePointersNew('quickDropRadio${i.index}', '${returnableStore.geoPoint.latitude}', '${returnableStore.geoPoint.longitude}', '${returnableStore.displayName}, ${returnableStore.address.state},${returnableStore.address.postalCode}')"
 								class="checkButton" value="${returnableStore.slaveId}"
 								/>
 						</div>
 						<div class="col-md-10 col-sm-10 col-xs-10">
-							<b>${returnableStore.displayName}</b> <br /> <span>${returnableStore.address.line1 }, ${returnableStore.address.line2},${returnableStore.address.line3},
-								 ${returnableStore.address.town},${returnableStore.address.postalCode}</span>
+							<b>${returnableStore.displayName}</b> <br /> <span>${returnableStore.address.line1 }, ${returnableStore.address.line2},${returnableStore.address.state},
+								 ${returnableStore.address.postalCode}</span>
 								 <span>Opening Time :${returnableStore.mplOpeningTime},</br> Closing Time :${returnableStore.mplClosingTime}</span>
 						</div>
 					</div>
@@ -336,19 +336,19 @@ $(document).ready(function(){
 							  if(i == 0){
 								  tempHtml = "<div class='error_text'></div><div class='selectquickDrop quickDropRadio"+i+" col-md-12'>"
 								  +"<div class='selectRadio col-md-2 col-sm-2 col-xs-2'>"	
-								  +"<input id='storeIds"+i+"' name='storeIds'  onclick=updatePointersNew('quickDropRadio"+i+"','"+ data[i].geoPoint.latitude+"','"+ data[i].geoPoint.longitude+"','"+ data[i].displayName+","+data[i].address.town+","+ data[i].address.postalCode+"') class='checkButton' type='checkbox' value = '"+data[i].slaveId+"' /></div>"
+								  +"<input id='storeIds"+i+"' name='storeIds'  onclick=updatePointersNew('quickDropRadio"+i+"','"+ data[i].geoPoint.latitude+"','"+ data[i].geoPoint.longitude+"','"+ data[i].displayName+","+data[i].address.state+","+ data[i].address.postalCode+"') class='checkButton' type='checkbox' value = '"+data[i].slaveId+"' /></div>"
 										+"<div class='col-md-10 col-sm-10 col-xs-10'>"
-									+"<b>"+data[i].displayName+"</b> <br /> <span>"+data[i].address.line1+","+ data[i].address.line2+","+ data[i].address.line3+"," 
-										 +data[i].address.town+","+data[i].address.postalCode+",  Opening Time :"+data[i].mplOpeningTime +",  Closing Time : "+data[i].mplClosingTime + "</span></div></div>";
+									+"<b>"+isEmpty(data[i].displayName)+"</b> <br /> <span>"+isEmpty(data[i].address.line1)+ isEmpty(data[i].address.line2)+ isEmpty(data[i].address.state)
+										 +data[i].address.postalCode+",  Opening Time :"+data[i].mplOpeningTime +",  Closing Time : "+data[i].mplClosingTime + "</span></div></div>";
 							  }else{
 							  
 							  tempHtml += "<div class='selectquickDrop quickDropRadio"+i+" col-md-12'>"
 							  +"<div class='selectRadio col-md-2 col-sm-2 col-xs-2'>"	
-							  +"<input id='storeIds"+i+"' name='storeIds' onclick=updatePointersNew('quickDropRadio"+i+"','"+ data[i].geoPoint.latitude+"','"+ data[i].geoPoint.longitude+"','"+ data[i].displayName+","+data[i].address.town+","+ data[i].address.postalCode+"') class='checkButton' type='checkbox' value = '"+data[i].slaveId+"' /></div>"
-									+"<div class='col-md-10 col-sm-10 col-xs-10'>"
-								+"<b>"+data[i].displayName+"</b> <br /> <span>"+data[i].address.line1+","+ data[i].address.line2+","+ data[i].address.line3+"," 
-									 +data[i].address.town+","+data[i].address.postalCode+", Opening Time :"+data[i].mplOpeningTime +", Closing Time :"+data[i].mplClosingTime +"</span></div></div>";
-			
+							  +"<input id='storeIds"+i+"' name='storeIds'  onclick=updatePointersNew('quickDropRadio"+i+"','"+ data[i].geoPoint.latitude+"','"+ data[i].geoPoint.longitude+"','"+ data[i].displayName+","+data[i].address.state+","+ data[i].address.postalCode+"') class='checkButton' type='checkbox' value = '"+data[i].slaveId+"' /></div>"
+								+"<div class='col-md-10 col-sm-10 col-xs-10'>"
+							+"<b>"+isEmpty(data[i].displayName)+"</b> <br /> <span>"+isEmpty(data[i].address.line1)+ isEmpty(data[i].address.line2)+ isEmpty(data[i].address.state)
+								 +data[i].address.postalCode+",  Opening Time :"+data[i].mplOpeningTime +",  Closing Time : "+data[i].mplClosingTime + "</span></div></div>";
+					
 							  
 							  }	// console.log(tempHtml);
 							 
@@ -383,7 +383,15 @@ $(document).on('click', ' .checkButton', function (event) {
 		}
 	
 });
-
+function isEmpty(val){
+	if(val === undefined || val == null || val.length <= 0){
+		return "";
+	}else{
+		return val+",";
+	}
+	
+  
+}
 </script>
 <style>
 .pincodeSubmit, .pincodeSubmit:hover, .pincodeSubmit:active, .pincodeSubmit:visited, .pincodeSubmit:focus {

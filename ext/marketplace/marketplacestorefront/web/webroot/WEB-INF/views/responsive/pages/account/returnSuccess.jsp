@@ -118,13 +118,13 @@
 					<div class="method">
 					
 					<label>Refund Method:</label>
-					<h3>Return and Replace</h3> 
+					<h3>Return and Refund</h3> 
 					<c:if test="${quickdrop ne 'true'}">
 					
 					<c:if test="${refundType eq 'E'}">
 					
 					<label for="return-method-0">
-							<span>Estimated replaced
+							<span>Estimated refund
 								timing: item will be shipped 1 day after we have received the
 								item.</span>
 						</label> 
