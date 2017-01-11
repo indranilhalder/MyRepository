@@ -15,5 +15,5 @@ import java.util.List;
  */
 public interface PriceBreakupDao
 {
-	public List<JewelleryPriceRowModel> getPricebreakup(final String productCode, final String ussid);
+	public List<JewelleryPriceRowModel> getPricebreakup(final String ussid);
 }

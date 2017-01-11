@@ -46250,6 +46250,7 @@ float: right;
 	border-bottom: 3px solid transparent;
 }
 .tab-details li{ width:50%; float:left;padding: 0 5% 0 0;}
+.tab-details .rating-list li{ width:100%; float: none; padding: 0;}
 .tab-details li.stylenote{ width:100%;}
 /*More Stuff Like This slider*/
 .page-productDetails .trending h1 {

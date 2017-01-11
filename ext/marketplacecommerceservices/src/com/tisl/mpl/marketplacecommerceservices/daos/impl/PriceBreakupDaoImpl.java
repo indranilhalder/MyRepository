@@ -9,7 +9,6 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.PriceBreakupDao;
+
 
 
 /**
@@ -35,12 +35,9 @@ public class PriceBreakupDaoImpl implements PriceBreakupDao
 	 * java.lang.String)
 	 */
 	@Override
-	public List<JewelleryPriceRowModel> getPricebreakup(final String productCode, final String ussid)
+	public List<JewelleryPriceRowModel> getPricebreakup(final String ussid)
 	{
 		// YTODO Auto-generated method stub
-
-		List<JewelleryPriceRowModel> jewelleryPriceRowList = new ArrayList<JewelleryPriceRowModel>();
-
 		try
 		{
 			final String queryString = "select {jp." + JewelleryPriceRowModel.PK + "} from {" + JewelleryPriceRowModel._TYPECODE
@@ -50,9 +47,7 @@ public class PriceBreakupDaoImpl implements PriceBreakupDao
 
 			query.addQueryParameter("ussid", ussid);
 
-			jewelleryPriceRowList = flexibleSearchService.<JewelleryPriceRowModel> search(query).getResult();
-
-			return jewelleryPriceRowList;
+			return flexibleSearchService.<JewelleryPriceRowModel> search(query).getResult();
 
 		}
 		catch (final FlexibleSearchException e)

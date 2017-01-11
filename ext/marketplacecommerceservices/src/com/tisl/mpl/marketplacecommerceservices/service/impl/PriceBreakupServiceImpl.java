@@ -6,9 +6,12 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.core.model.JewelleryPriceRowModel;
+import de.hybris.platform.core.model.OrderJewelEntryModel;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.i18n.CommonI18NService;
+import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -25,8 +28,9 @@ import com.tisl.mpl.marketplacecommerceservices.daos.PriceBreakupDao;
 import com.tisl.mpl.marketplacecommerceservices.service.PriceBreakupService;
 
 
+
 /**
- * @author 970506
+ * @author Tcs
  *
  */
 public class PriceBreakupServiceImpl implements PriceBreakupService
@@ -34,7 +38,7 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.PriceBreakupService#getPricebreakup(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -62,15 +66,18 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 	@Autowired
 	private CommonI18NService commonI18NService;
 
+	@Autowired
+	private ModelService modelService;
+
 
 	@Override
 	//public List<JewelleryPriceRowModel> getPricebreakup(final String productCode, final String ussid)
-	public LinkedHashMap<String, PriceData> getPricebreakup(final String productCode, final String ussid)
+	public LinkedHashMap<String, PriceData> getPricebreakup(final String ussid)
 	{
 
 		//List<JewelleryPriceRowModel> jewelleryPriceRowList = new ArrayList<JewelleryPriceRowModel>();
 
-		final List<JewelleryPriceRowModel> jewelleryPriceRowList = priceBreakupDao.getPricebreakup(productCode, ussid);
+		final List<JewelleryPriceRowModel> jewelleryPriceRowList = priceBreakupDao.getPricebreakup(ussid);
 
 		final LinkedHashMap<String, PriceData> PriceMap = new LinkedHashMap<String, PriceData>();
 
@@ -213,6 +220,59 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 		return priceData;
 	}
 
+	//Added for 3782
+	@Override
+	public boolean createPricebreakupOrder(final AbstractOrderEntryModel entry)
+	{
+		boolean returnFlag = false;
+		try
+		{
+			final List<JewelleryPriceRowModel> jewelleryPriceRow = priceBreakupDao.getPricebreakup(entry.getSelectedUSSID());
+			final JewelleryPriceRowModel jewelleryModel = jewelleryPriceRow.get(0);
+			final OrderJewelEntryModel orderJewelEntryModel = modelService.create(OrderJewelEntryModel.class);
+			orderJewelEntryModel.setBaseMetalPrice1(jewelleryModel.getBaseMetalPrice1());
+			orderJewelEntryModel.setBaseMetalPrice2(jewelleryModel.getBaseMetalPrice2());
+			orderJewelEntryModel.setBaseMetalPrice3(jewelleryModel.getBaseMetalPrice3());
+			orderJewelEntryModel.setBaseMetalPrice4(jewelleryModel.getBaseMetalPrice4());
+			orderJewelEntryModel.setBaseMetalRate1(jewelleryModel.getBaseMetalPrice1());
+			orderJewelEntryModel.setBaseMetalRate2(jewelleryModel.getBaseMetalRate2());
+			orderJewelEntryModel.setBaseMetalRate3(jewelleryModel.getBaseMetalRate3());
+			orderJewelEntryModel.setBaseMetalRate4(jewelleryModel.getBaseMetalRate4());
+			orderJewelEntryModel.setDiamondPrice1(jewelleryModel.getDiamondPrice1());
+			orderJewelEntryModel.setDiamondPrice2(jewelleryModel.getDiamondPrice2());
+			orderJewelEntryModel.setDiamondPrice3(jewelleryModel.getDiamondPrice3());
+			orderJewelEntryModel.setDiamondPrice4(jewelleryModel.getDiamondPrice4());
+			orderJewelEntryModel.setDiamondPrice5(jewelleryModel.getDiamondPrice5());
+			orderJewelEntryModel.setDiamondPrice6(jewelleryModel.getDiamondPrice6());
+			orderJewelEntryModel.setDiamondPrice7(jewelleryModel.getDiamondPrice7());
+			orderJewelEntryModel.setDiamondtotalprice(jewelleryModel.getDiamondtotalprice());
+			orderJewelEntryModel.setGemStonePrice1(jewelleryModel.getGemStonePrice1());
+			orderJewelEntryModel.setGemStonePrice2(jewelleryModel.getGemStonePrice2());
+			orderJewelEntryModel.setGemStonePrice3(jewelleryModel.getGemStonePrice3());
+			orderJewelEntryModel.setGemStonePrice4(jewelleryModel.getGemStonePrice4());
+			orderJewelEntryModel.setGemStonePrice5(jewelleryModel.getGemStonePrice5());
+			orderJewelEntryModel.setGemStonePrice6(jewelleryModel.getGemStonePrice6());
+			orderJewelEntryModel.setGemStonePrice7(jewelleryModel.getGemStonePrice7());
+			orderJewelEntryModel.setGemStonePrice8(jewelleryModel.getGemStonePrice8());
+			orderJewelEntryModel.setGemStonePrice9(jewelleryModel.getGemStonePrice9());
+			orderJewelEntryModel.setGemStonePrice10(jewelleryModel.getGemStonePrice10());
+			orderJewelEntryModel.setGemstonetotalprice(jewelleryModel.getGemstonetotalprice());
+			orderJewelEntryModel.setMakingCharge(jewelleryModel.getMakingCharge());
+			orderJewelEntryModel.setWastageTax(jewelleryModel.getWastageTax());
+			//abstractOrderEntryModel.getOrderJewelEntry();
+			orderJewelEntryModel.setAbstractOrderEntryjewel(entry);
+			entry.setOrderJewelEntry(orderJewelEntryModel);
+			modelService.saveAll(orderJewelEntryModel, entry);
+			returnFlag = true;
+		}
+		catch (final Exception e)
+		{
+			LOG.debug("Exception while Price Breakup Create" + e.getMessage());
+			returnFlag = false;
+		}
+		return returnFlag;
+
+	}
 
 	/**
 	 * @return the priceBreakupDao

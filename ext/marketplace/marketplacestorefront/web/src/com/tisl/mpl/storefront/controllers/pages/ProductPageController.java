@@ -1597,7 +1597,7 @@ public class ProductPageController extends MidPageController
 	 * @throws CMSItemNotFoundException
 	 */
 
-
+	// Jewellery changes Added
 	protected void populateProductDetailForDisplay(final ProductModel productModel, final Model model,
 			final HttpServletRequest request) throws CMSItemNotFoundException
 	{
@@ -1791,6 +1791,8 @@ public class ProductPageController extends MidPageController
 	 * @param productData
 	 * @param model
 	 */
+	// Jewellery changes added
+
 	private void displayConfigurableAttribute(final ProductData productData, final Model model)
 	{
 		final Map<String, String> mapConfigurableAttribute = new HashMap<String, String>();
@@ -2600,8 +2602,7 @@ public class ProductPageController extends MidPageController
 		final BuyBoxData buyboxdata = (BuyBoxData) buydata.get("pdp_buy_box");
 
 		//PRICE BREAKUP STARTS:TPR-3752
-		final LinkedHashMap<String, PriceData> PriceMap = priceBreakupFacade.getPricebreakup(buyboxdata.getProductCode(),
-				buyboxdata.getSellerArticleSKU());
+		final LinkedHashMap<String, PriceData> PriceMap = priceBreakupFacade.getPricebreakup(buyboxdata.getSellerArticleSKU());
 
 		buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE_BREAKUP, PriceMap);
 		//PRICE BREAKUP ENDS:TPR-3752
