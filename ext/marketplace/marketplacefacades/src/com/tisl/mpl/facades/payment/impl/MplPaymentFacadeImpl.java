@@ -57,9 +57,9 @@ import com.tisl.mpl.binDb.model.BinModel;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.EMIBankModel;
+import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.SavedCardModel;
-import com.tisl.mpl.core.model.ThirdPartyAuditModel;
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.MplNetbankingData;
 import com.tisl.mpl.data.MplPromoPriceData;
@@ -1644,11 +1644,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 *
+	 * 
 	 * @param bankName
-	 *
+	 * 
 	 * @return Boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1699,9 +1699,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Override
@@ -3086,7 +3086,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.payment.MplPaymentFacade#createWalletorder(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -3113,7 +3113,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.payment.MplPaymentFacade#entryInTPWaltAudit(java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
@@ -3134,7 +3134,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.payment.MplPaymentFacade#saveTPWalletPaymentInfo(de.hybris.platform.core.model.order.
 	 * CartModel , javax.servlet.http.HttpServletRequest)
 	 */
@@ -3156,6 +3156,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			//	getMplPaymentService().setTPWalletPaymentTransaction(paymentMode, cart, request);
 			final String refernceCode = request.getParameter("REFNO");
 			getMplPaymentService().setTPWalletPaymentTransaction(paymentMode, order, refernceCode);
+
 
 			if (null != mplCustomer)
 			{
@@ -3192,13 +3193,13 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.payment.MplPaymentFacade#getWalletAuditEntries(java.lang.String)
 	 */
 	@Override
 	public String getWalletAuditEntries(final String refNo)
 	{
-		ThirdPartyAuditModel auditModel = new ThirdPartyAuditModel();
+		MplPaymentAuditModel auditModel = new MplPaymentAuditModel();
 		String guid = null;
 
 		auditModel = getMplPaymentService().getWalletAuditEntries(refNo);
