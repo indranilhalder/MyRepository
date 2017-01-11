@@ -80,6 +80,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.granule.json.JSONObject;
 import com.tisl.mpl.checkout.form.DeliveryMethodEntry;
 import com.tisl.mpl.checkout.form.DeliveryMethodForm;
 import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
@@ -117,7 +118,7 @@ import com.tisl.mpl.storefront.web.forms.AccountAddressForm;
 import com.tisl.mpl.storefront.web.forms.validator.MplAddressValidator;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
-import com.granule.json.JSONObject;
+
 
 
 @Controller
@@ -248,8 +249,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			getMplCouponFacade().releaseVoucherInCheckout(cartModel);
 			getMplCartFacade().removeDeliveryMode(cartModel); //TISPT-104 // Cart recalculation method invoked inside this method
 			//applyPromotions();
-			
-			
+
+
 			final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 			final String defaultPinCodeId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
 
@@ -284,7 +285,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					}
 				}
 				//  TISPRD-1951  END //
-				deliveryModeDataMap = getMplCartFacade().getDeliveryMode(cartData, responseData);
+				deliveryModeDataMap = getMplCartFacade().getDeliveryMode(cartData, responseData, cartModel);
 				fullfillmentDataMap = getMplCartFacade().getFullfillmentMode(cartData);
 
 				//TIS-397
@@ -481,7 +482,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					&& (cartUssidData != null && cartUssidData.getEntries() != null && !cartUssidData.getEntries().isEmpty()))
 			{
 				responseData = getMplCartFacade().getOMSPincodeResponseData(defaultPinCodeId, cartUssidData);
-				deliveryModeDataMap = getMplCartFacade().getDeliveryMode(cartUssidData, responseData);
+				deliveryModeDataMap = getMplCartFacade().getDeliveryMode(cartUssidData, responseData, cartModel);
 
 				getMplCartFacade().setDeliveryDate(cartUssidData, responseData);
 				//TISUTO-72 TISST-6994,TISST-6990 set cart COD eligible
@@ -2553,23 +2554,24 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	{
 		this.mplCouponFacade = mplCouponFacade;
 	}
+
 	//TPR-429 change
-		public static String populateCheckoutSellers(final CartData cartData)
+	public static String populateCheckoutSellers(final CartData cartData)
+	{
+		String cartLevelSellerID = null;
+		final List<OrderEntryData> sellerList = cartData.getEntries();
+		for (final OrderEntryData seller : sellerList)
 		{
-			String cartLevelSellerID = null;
-			final List<OrderEntryData> sellerList = cartData.getEntries();
-			for (final OrderEntryData seller : sellerList)
+			final String sellerID = seller.getSelectedSellerInformation().getSellerID();
+			if (cartLevelSellerID != null)
 			{
-				final String sellerID = seller.getSelectedSellerInformation().getSellerID();
-				if (cartLevelSellerID != null)
-				{
-					cartLevelSellerID += "_" + sellerID;
-				}
-				else
-				{
-					cartLevelSellerID = sellerID;
-				}
+				cartLevelSellerID += "_" + sellerID;
 			}
-			return cartLevelSellerID;
+			else
+			{
+				cartLevelSellerID = sellerID;
+			}
 		}
+		return cartLevelSellerID;
+	}
 }

@@ -185,11 +185,13 @@ public interface MplCommerceCartService
 	 * @description: It is responsible to find possible delivery mode
 	 * @param cartData
 	 * @param omsDeliveryResponse
+	 * @param cartModel
 	 * @return Map<String, List<String>>
 	 * @throws CMSItemNotFoundException
 	 */
+	// Changes for Duplicate Cart fix
 	public Map<String, List<MarketplaceDeliveryModeData>> getDeliveryMode(final CartData cartData,
-			final List<PinCodeResponseData> omsDeliveryResponse) throws CMSItemNotFoundException;
+			final List<PinCodeResponseData> omsDeliveryResponse, CartModel cartModel) throws CMSItemNotFoundException;
 
 	/**
 	 * @Desc fetching oms pincode response data
@@ -364,7 +366,7 @@ public interface MplCommerceCartService
 	 * @throws CMSItemNotFoundException
 	 */
 	Map<String, List<MarketplaceDeliveryModeData>> getDeliveryMode(final CartData cartData, final OrderEntryData entry,
-			final List<PinCodeResponseData> omsDeliveryResponse) throws CMSItemNotFoundException;
+			final List<PinCodeResponseData> omsDeliveryResponse, final CartModel cartModel) throws CMSItemNotFoundException;
 
 	/*
 	 * @Desc : used to fetch delivery mode description details TISEE-950
