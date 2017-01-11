@@ -34,6 +34,12 @@ public class MplDefaultFacetSearchService extends DefaultFacetSearchService
 			{
 				valueRangesList.addAll(valueRangeSet.getValueRanges());
 			}
+			// TPR-1886 | For jewellery price range
+			valueRangeSet = property.getValueRangeSets().get("INR-FINEJEWELLERY");
+			if (valueRangeSet != null)
+			{
+				valueRangesList.addAll(valueRangeSet.getValueRanges());
+			}
 
 			// JEWELLERY CHANGES START
 			valueRangeSet = property.getValueRangeSets().get("INR-FASHIONJEWELLERY");

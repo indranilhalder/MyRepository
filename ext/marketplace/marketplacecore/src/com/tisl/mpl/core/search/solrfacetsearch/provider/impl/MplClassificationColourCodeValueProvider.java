@@ -40,6 +40,10 @@ public class MplClassificationColourCodeValueProvider extends ClassificationProp
 	public static final String COLORFAMILYTRLG = "colorfamilytrlg";
 	public static final String COLORFAMILY_BLANK = "";
 
+	// For TPR-1886 | Fine jewellery
+	public static final String COLOR_FINE_JEWELLERY = "colorfinejwlry";
+	public static final String COMMA = ",";
+
 	@Autowired
 	private ConfigurationService configurationService;
 
@@ -152,6 +156,21 @@ public class MplClassificationColourCodeValueProvider extends ClassificationProp
 				else if (value.toString().startsWith(COLORFAMILYTRLG))
 				{
 					value = value.toString().replaceAll(COLORFAMILYTRLG, COLORFAMILY_BLANK);
+				}
+				// For TPR-1886 | Fine jewellery
+				else if (value.toString().contains(COLOR_FINE_JEWELLERY))
+				{
+					final String jewelleryColourFeatures = configurationService.getConfiguration()
+							.getString("jewelleryColourFeatures");
+					final String[] jewelleryColourFeatureList = jewelleryColourFeatures.split(COMMA);
+					for (final String colorFeature : jewelleryColourFeatureList)
+					{
+						if (value.toString().startsWith(colorFeature))
+						{
+							value = value.toString().replaceAll(colorFeature.toString(), COLORFAMILY_BLANK);
+							break;
+						}
+					}
 				}
 
 			}
