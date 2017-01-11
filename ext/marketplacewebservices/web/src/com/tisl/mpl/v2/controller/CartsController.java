@@ -815,12 +815,12 @@ public class CartsController extends BaseCommerceController
 			//was 'pickup in store', now switch to 'shipping mode'
 			validateForAmbiguousPositions(cart, orderEntry, pickupStore);
 			validateIfProductIsInStockOnline(baseSiteId, productCode, Long.valueOf(entryNumber));
-			cartModificationData1 = cartFacade.updateCartEntry(entryNumber, pickupStore);
+			cartModificationData1 = mplCartFacade.updateCartEntryMobile(entryNumber, pickupStore, cartModel);
 		}
 
 		if (qty != null)
 		{
-			cartModificationData2 = cartFacade.updateCartEntry(entryNumber, qty.longValue());
+			cartModificationData2 = mplCartFacade.updateCartEntryMobile(entryNumber, qty.longValue(), cartModel);
 		}
 
 		return dataMapper.map(mergeCartModificationData(cartModificationData1, cartModificationData2), CartModificationWsDTO.class,
