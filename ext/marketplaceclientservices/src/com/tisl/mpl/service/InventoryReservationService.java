@@ -3,6 +3,8 @@
  */
 package com.tisl.mpl.service;
 
+import de.hybris.platform.core.model.order.AbstractOrderModel;
+
 import java.util.List;
 
 import javax.xml.bind.JAXBException;
@@ -19,16 +21,6 @@ import com.tisl.mpl.wsdto.InventoryReservListResponse;
 public interface InventoryReservationService
 {
 
-	/**
-	 * @description convert cart soft reservation data to InventoryReservListResponse object
-	 * @param cartdatalist
-	 * @param cartId
-	 * @param pincode
-	 * @param requestType
-	 * @return InventoryReservListResponse
-	 */
-	public InventoryReservListResponse convertDatatoWsdto(List<CartSoftReservationData> cartdatalist, final String cartId,
-			final String pincode, final String requestType);
 
 	/**
 	 * @description send inventory reservation data to oms and receive response
@@ -37,4 +29,14 @@ public interface InventoryReservationService
 	 * @throws JAXBException
 	 */
 	public InventoryReservListResponse reserveInventoryAtCheckout(final InventoryReservListRequest request) throws JAXBException;
+
+	/**
+	 * @param cartSoftReservationDatalist
+	 * @param abstractOrderModel
+	 * @param defaultPinCodeId
+	 * @param requestType
+	 * @return
+	 */
+	public InventoryReservListRequest convertDatatoWsdto(List<CartSoftReservationData> cartSoftReservationDatalist,
+			AbstractOrderModel abstractOrderModel, String defaultPinCodeId, String requestType);
 }
