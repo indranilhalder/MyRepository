@@ -320,31 +320,6 @@ public class MplOrderCancelClientServiceImpl implements MplOrderCancelClientServ
 	public TicketUpdateResponseXML updateCRMTicket(TicketUpdateRequestXML ticketUpdateData)
 	{
 	
-		
-		if(LOG.isDebugEnabled())
-		{
-			
-			JAXBContext context;
-			try
-			{
-				context = JAXBContext.newInstance(TicketUpdateRequestXML.class);
-			
-	        Marshaller m = context.createMarshaller();
-
-	        m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // To format XML
-
-	        StringWriter sw = new StringWriter();
-	        m.marshal(ticketUpdateData, sw);
-	        
-	        LOG.debug(sw.toString());
-			}
-			catch (JAXBException e)
-			{
-				// YTODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	
 		final Client client = Client.create();
 		WebResource webResource = null;
 		Marshaller marshaller = null;
@@ -352,17 +327,27 @@ public class MplOrderCancelClientServiceImpl implements MplOrderCancelClientServ
 		ClientResponse response = null;
 		TicketUpdateResponseXML responsefromCRM = null;
 		final StringWriter stringWriter = new StringWriter();
-		if (null != client && null != configurationService)
+		
+		LOG.debug("********************Ticket create CRM called********************************** ");
+		if (null != configurationService && null != configurationService.getConfiguration()
+				&& null != configurationService.getConfiguration().getString(MarketplacecclientservicesConstants.TICKET_CREATE_URL))
 		{
-			webResource = client.resource(UriBuilder.fromUri(
-					configurationService.getConfiguration().getString("oms.returns.paymentInfo.endpoint.url")).build());
+			final String password = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.CUSTOMERMASTER_ENDPOINT_PASSWORD);
+			final String userId = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.CUSTOMERMASTER_ENDPOINT_USERID);
+			client.addFilter(new HTTPBasicAuthFilter(userId, password));
+			webResource = client.resource(UriBuilder
+					.fromUri(configurationService.getConfiguration().getString(MarketplacecclientservicesConstants.CUSTOMERMASTER_TICKETUPDATE))
+					.build());
+			LOG.debug("::::::::::::::::::::::::::::::::::::webResource:::" + webResource);
 		}
-
+		
 		try
 		{
 			if (null != webResource)
 			{
-				final JAXBContext context = JAXBContext.newInstance(CODSelfShipmentRequest.class);
+				final JAXBContext context = JAXBContext.newInstance(TicketUpdateRequestXML.class);
 				if (null != context)
 				{
 					marshaller = context.createMarshaller();
@@ -385,7 +370,7 @@ public class MplOrderCancelClientServiceImpl implements MplOrderCancelClientServ
 			{
 				final String output = response.getEntity(String.class);
 				LOG.debug("xml response<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" + output);
-				final JAXBContext jaxbContext = JAXBContext.newInstance(MplOrderIsCancellableResponse.class);
+				final JAXBContext jaxbContext = JAXBContext.newInstance(TicketUpdateResponseXML.class);
 				Unmarshaller unmarshaller = null;
 				if (null != jaxbContext)
 				{
@@ -401,7 +386,6 @@ public class MplOrderCancelClientServiceImpl implements MplOrderCancelClientServ
 			LOG.error(MarketplacecclientservicesConstants.EXCEPTION_IS + ex);
 		}
 		return responsefromCRM;
-		
 	}
 
 

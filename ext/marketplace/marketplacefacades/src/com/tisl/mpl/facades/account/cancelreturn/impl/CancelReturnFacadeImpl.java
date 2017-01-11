@@ -143,6 +143,7 @@ import com.tisl.mpl.xml.pojo.OrderLineDataResponse;
 import com.tisl.mpl.xml.pojo.RTSAndRSSReturnInfoRequest;
 import com.tisl.mpl.xml.pojo.RTSAndRSSReturnInfoResponse;
 import com.tisl.mpl.xml.pojo.ReturnLogisticsResponse;
+import com.tisl.mpl.wsdto.ReturnRequestDTO;
 
 
 
@@ -2392,6 +2393,24 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		returnInfoRequest.setTransactionId(returnInfoRequestData.getTransactionId());
 		returnInfoRequest.setShipmentProofURL(returnInfoRequestData.getShipmentProofURL());
 
+		if (MarketplacecommerceservicesConstants.RETURN_TYPE_RSS.equalsIgnoreCase(returnInfoRequest.getReturnType()))
+		{
+			LOG.info("CancelReturnFacadeImp:::CRM Ticket RSS Update");
+			CRMTicketDetailModel ticketDetailModel = mplReturnService.getCRMTicketDetail(returnInfoRequestData.getTransactionId());
+			if(ticketDetailModel!=null){
+			CRMTicketUpdateData ticketUpdateData = new CRMTicketUpdateData();
+			ticketUpdateData.setEcomRequestId(ticketDetailModel.getEcomRequestId());
+			ticketUpdateData.setTicketId(ticketDetailModel.getTicketId());
+			ticketUpdateData.setTransactionId(returnInfoRequestData.getTransactionId());
+			ticketUpdateData.setRssLPName(returnInfoRequestData.getLPNameOther());
+			ticketUpdateData.setRssAWBNumber(returnInfoRequestData.getAWBNum());
+			ticketUpdateData.setRssCharge(returnInfoRequestData.getShipmentCharge());
+			ticketUpdateData.setRssDispathProofURL(returnInfoRequestData.getShipmentProofURL());
+			UpdateCRMTicket(ticketUpdateData);
+			}
+		}
+		
+
 		try
 		{
 
@@ -3919,6 +3938,11 @@ private AbstractOrderEntryModel getOrderEntryModel(OrderModel ordermodel,String 
 		}
 		return cancellationStatus;
 		
+	}
+
+	@Override
+	public void returnRssCRMRequest(ReturnRequestDTO returnRequestDTO){
+		mplReturnService.returnRssCRMRequest(returnRequestDTO);
 	}
 
 	

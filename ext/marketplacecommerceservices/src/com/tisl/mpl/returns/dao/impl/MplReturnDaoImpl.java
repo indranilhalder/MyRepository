@@ -25,6 +25,7 @@ import com.tisl.mpl.core.model.MplCustomerBankAccountDetailsModel;
 import com.tisl.mpl.core.model.MplReturnPickUpAddressInfoModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.returns.dao.MplReturnsDao;
+import com.tisl.mpl.model.CRMTicketDetailModel;
 
 
 /**
@@ -44,6 +45,11 @@ public class MplReturnDaoImpl implements MplReturnsDao
 	private static final String RETURN_REPORT_QUERY_BETWEEN_TWO_DATES = "SELECT {srm:" + MplReturnPickUpAddressInfoModel.PK + "}"
 			+ " FROM {" + MplReturnPickUpAddressInfoModel._TYPECODE + " AS srm} " + "WHERE " + "{srm:"
 			+ MplReturnPickUpAddressInfoModel.CREATIONTIME + "} between ?fromDate and ?toDate ";
+
+	private static final String CRM_TICKET_MODEL_QUERY_BY_TRANSACTIONID = "SELECT {srm:" + CRMTicketDetailModel.PK + "}"
+			+ " FROM {" + CRMTicketDetailModel._TYPECODE + " AS srm} " + "WHERE " + "{srm:" + CRMTicketDetailModel.TRANSACTIONID
+			+ "}=?code " + " AND ({srm:" + CRMTicketDetailModel.TICKETID + "}) IS NOT NULL" + " ORDER BY {srm:"
+			+ CRMTicketDetailModel.CREATIONTIME + "} DESC";
 
 
 
@@ -227,5 +233,31 @@ public class MplReturnDaoImpl implements MplReturnsDao
 		}
 		return null;
 	}
+	
+	
+	//get CRM Ticket Details
+	@Override
+	public CRMTicketDetailModel getCRMTicketDetail(String transactionId)
+	{
+		try
+		{
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("In getCRMTicketDetail - orderCode ***" + transactionId);
+			}
+			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(CRM_TICKET_MODEL_QUERY_BY_TRANSACTIONID);
+			fQuery.addQueryParameter("code", transactionId);
+
+			final List<CRMTicketDetailModel> listOfData = flexibleSearchService.<CRMTicketDetailModel> search(fQuery).getResult();
+			return !listOfData.isEmpty() ? listOfData.get(0) : null;
+		}
+		catch (final Exception e)
+		{
+			LOG.error("�rror while searching for  CRMTicketDetail   model for order  id" + transactionId);
+		}
+		return null;
+
+
+ }
 
 }

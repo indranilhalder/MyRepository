@@ -2892,6 +2892,14 @@
 		<property name="ussid" type="java.lang.String"/>
 		<property name="transactionType" type="java.lang.String"/>
 		<property name="userId" type="java.lang.String"/>
+		<!--  R2.3 CRM to Commerce Start-->
+		<property name="ecomRequestId" type="java.lang.String"/>
+		<property name="ticketId" type="java.lang.String"/>
+		<property name="ticketType" type="java.lang.String"/>
+		<property name="ticketSubType" type="java.lang.String"/>
+		<property name="flag" type="java.lang.String"/>
+		<property name="storeCreditNo" type="java.lang.String"/>
+		<!--  R2.3 CRM to Commerce end-->
 	</bean>
 
 </beans>

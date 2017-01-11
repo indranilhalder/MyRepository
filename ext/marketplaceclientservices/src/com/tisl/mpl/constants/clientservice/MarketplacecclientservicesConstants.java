@@ -83,6 +83,7 @@ public class MarketplacecclientservicesConstants
 	public static final String CRM_CUSTOMER_CREATEUPDATE_URL = "crm.customer.createupdate.url";
 	public static final String CUSTOMERMASTER_ENDPOINT_USERID = "customerMaster.endpoint.userId";
 	public static final String CUSTOMERMASTER_ENDPOINT_PASSWORD = "customerMaster.endpoint.password";
+	public static final String CUSTOMERMASTER_TICKETUPDATE="crm.return.rssticketupdate.url";
 
 	public static final String RATING_SECRETKEY = "gigya.secretkey".intern();
 	public static final String RATING_PROXY_SET = "proxy.enabled".intern();

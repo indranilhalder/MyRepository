@@ -28,6 +28,11 @@ import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.marketplacecommerceservices.service.MPLReturnService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.returns.dao.MplReturnsDao;
+import com.tisl.mpl.wsdto.ReturnRequestDTO;
+import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
+import org.apache.log4j.Logger;
+import com.tisl.mpl.model.CRMTicketDetailModel;
+
 
 
 public class MPLDefaultReturnService extends DefaultReturnService implements MPLReturnService
@@ -35,6 +40,8 @@ public class MPLDefaultReturnService extends DefaultReturnService implements MPL
 
 	@Autowired
 	private MplReturnsDao mplReturnsDao;
+	
+	protected static final Logger LOG = Logger.getLogger(MPLDefaultReturnService.class);
 	
 	@Override
 	public ReplacementEntryModel createReplacement(final ReturnRequestModel request, final AbstractOrderEntryModel entry,
@@ -231,6 +238,38 @@ public class MPLDefaultReturnService extends DefaultReturnService implements MPL
 			final String pincode)
 	{
 		return mplReturnsDao.getPickUpReturnReportByParams(orderID, customerId, pincode);
+
+	}
+	
+	@Override
+	public CRMTicketDetailModel getCRMTicketDetail(String transactionId){
+		return mplReturnsDao.getCRMTicketDetail(transactionId);
+	}
+
+	
+	//Save CRM Retrun Rss Ticket information In DB
+	@Override
+	public void returnRssCRMRequest(ReturnRequestDTO returnRequestDTO)
+	{
+		try
+		{
+			CRMTicketDetailModel crmTicketDetailModel = getModelService().create(CRMTicketDetailModel.class);
+			crmTicketDetailModel.setCustomerID(returnRequestDTO.getUserId());
+			crmTicketDetailModel.setEcomRequestId(returnRequestDTO.getEcomRequestId());
+			crmTicketDetailModel.setTicketId(returnRequestDTO.getTicketId());
+			crmTicketDetailModel.setOrderId(returnRequestDTO.getOrderCode());
+			crmTicketDetailModel.setTransactionId(returnRequestDTO.getTransactionId());
+			crmTicketDetailModel.setTicketType(returnRequestDTO.getTicketType());
+			crmTicketDetailModel.setTicketSubType(returnRequestDTO.getTicketSubType());
+			crmTicketDetailModel.setResturnReasonCode(returnRequestDTO.getReturnReasonCode());
+			crmTicketDetailModel.setRefundType(returnRequestDTO.getRefundType());
+						crmTicketDetailModel.setIsTicketCreatedInCRM(Boolean.TRUE);
+			getModelService().save(crmTicketDetailModel);
+		}
+		catch (ModelSavingException modelSavingException)
+		{
+			LOG.error("Exception while model object saving" + modelSavingException.getMessage());
+		}
 
 	}
 }

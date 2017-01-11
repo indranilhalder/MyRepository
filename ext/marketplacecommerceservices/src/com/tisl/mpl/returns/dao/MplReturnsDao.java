@@ -11,6 +11,7 @@ import java.util.List;
 
 import com.tisl.mpl.core.model.MplCustomerBankAccountDetailsModel;
 import com.tisl.mpl.core.model.MplReturnPickUpAddressInfoModel;
+import com.tisl.mpl.model.CRMTicketDetailModel;
 
 /**
  * @author TECHOUTS
@@ -37,4 +38,6 @@ public interface MplReturnsDao
   public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReportByDates(Date fromDate, Date toDate);
 
 	public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReportByParams(String orderID, String customerId, String pincode);
+	
+	public CRMTicketDetailModel getCRMTicketDetail(String transactionId);
 }

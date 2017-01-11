@@ -24,6 +24,7 @@ import com.tisl.mpl.data.RTSAndRSSReturnInfoResponseData;
 import com.tisl.mpl.data.ReturnInfoData;
 import com.tisl.mpl.data.ReturnLogisticsResponseData;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
+import com.tisl.mpl.wsdto.ReturnRequestDTO;
 
 
 /**
@@ -235,5 +236,6 @@ public interface CancelReturnFacade
 	 */
 	boolean orderCancellationFromBackoffice(String orderCode, String transactionId) throws Exception;
 
-
+	public void returnRssCRMRequest(ReturnRequestDTO returnRequestDTO);
+ 
 }

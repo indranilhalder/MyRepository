@@ -16,6 +16,8 @@ import java.util.List;
 
 import com.tisl.mpl.core.model.MplCustomerBankAccountDetailsModel;
 import com.tisl.mpl.core.model.MplReturnPickUpAddressInfoModel;
+import com.tisl.mpl.model.CRMTicketDetailModel;
+import com.tisl.mpl.wsdto.ReturnRequestDTO;
 
 
 public interface MPLReturnService extends ReturnService
@@ -52,4 +54,8 @@ public interface MPLReturnService extends ReturnService
 	public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReportByDates(Date fromDate, Date toDate);
 
 	public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReportByParams(String orderID, String customerId, String pincode);
+
+	public void returnRssCRMRequest(ReturnRequestDTO returnRequestDTO);
+	
+	public CRMTicketDetailModel getCRMTicketDetail(String transactionId);
 }
