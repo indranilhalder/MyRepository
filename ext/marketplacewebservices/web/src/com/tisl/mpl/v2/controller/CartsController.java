@@ -2567,7 +2567,7 @@ public class CartsController extends BaseCommerceController
 	 * @param address
 	 * @return boolean
 	 */
-	private boolean checkDefaultAddress(final AddressModel address)
+/*	private boolean checkDefaultAddress(final AddressModel address)
 	{
 		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 		final AddressModel defaultAddress = customerAccountService.getDefaultAddress(currentCustomer);
@@ -2577,7 +2577,7 @@ public class CartsController extends BaseCommerceController
 			return true;
 		}
 		return false;
-	}
+	}*/ //sonar issue
 
 	/**
 	 * Cart Reservation.
