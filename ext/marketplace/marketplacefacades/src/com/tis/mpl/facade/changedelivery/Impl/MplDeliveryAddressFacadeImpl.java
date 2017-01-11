@@ -4,6 +4,7 @@
  */
 package com.tis.mpl.facade.changedelivery.Impl;
 
+import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
@@ -13,8 +14,10 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.event.EventService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
@@ -44,6 +47,7 @@ import com.hybris.oms.domain.changedeliveryaddress.ChangeDeliveryAddressDto;
 import com.hybris.oms.domain.changedeliveryaddress.ChangeDeliveryAddressResponseDto;
 import com.hybris.oms.domain.changedeliveryaddress.TransactionEddDto;
 import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
+import com.hybris.oms.domain.shipping.Shipment;
 import com.hybris.oms.tata.model.MplTimeSlotsModel;
 import com.tis.mpl.facade.address.validator.MplDeliveryAddressComparator;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
@@ -70,6 +74,7 @@ import com.tisl.mpl.integration.oms.order.service.impl.CustomOmsOrderService;
 import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryAddressService;
 import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
+import com.tisl.mpl.marketplaceomsservices.event.SendNotificationEvent;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.service.TicketCreationCRMservice;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
@@ -118,6 +123,9 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	
 	@Autowired
 	private AccountAddressFacade  accountAddressFacade;
+	
+	@Autowired
+	private EventService eventService;
 
 	private static final Logger LOG = Logger.getLogger(MplDeliveryAddressFacadeImpl.class);
 
@@ -419,7 +427,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			throw new EtailNonBusinessExceptions(e.getRootCause());
+			LOG.error("Exception occurred " + e.getMessage());
 		}
 		catch (final Exception e)
 		{
@@ -443,6 +451,15 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		try
 		{
 			final OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
+			Shipment shipment =new  Shipment();
+			ConsignmentModel consignmentModel=new ConsignmentModel();
+			
+			SendNotificationEvent mail= new SendNotificationEvent(shipment, consignmentModel, orderModel, ConsignmentStatus.UNDELIVERED);
+			
+			
+			eventService.publishEvent(mail);
+			
+			
 			final CustomerModel customer = (CustomerModel) orderModel.getUser();
 			final AddressModel newDeliveryAddress = tempAddressReverseConverter.convert(addressData);
 			if (newDeliveryAddress != null)

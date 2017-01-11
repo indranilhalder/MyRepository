@@ -3496,11 +3496,12 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			throw new EtailNonBusinessExceptions(e);
+			LOG.error("CancelReturnFacadeImpl::::returnInitiationForRTS", e);
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 		}
-		catch (final EtailBusinessExceptions e) 
+		catch (final EtailBusinessExceptions e)
 		{
-			throw new EtailBusinessExceptions();
+			LOG.error("CancelReturnFacadeImpl:::returnInitiationForRTS");
 		}
 		
 		return orderList;
