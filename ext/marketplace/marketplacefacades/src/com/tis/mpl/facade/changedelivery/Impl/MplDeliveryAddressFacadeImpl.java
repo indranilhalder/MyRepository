@@ -399,7 +399,6 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 * returns false
 	 *
 	 * @param orderId
-	 * @return
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -559,7 +558,6 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	/**
 	 * This method is used to generate the OTP
 	 *
-	 * @param customerId
 	 * @param mobileNumber
 	 * @return String
 	 * @throws InvalidKeyException
@@ -1282,8 +1280,6 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	/***
 	 * Send Notification For CDA
 	 *
-	 * @param customerId
-	 * @param OTPNumber
 	 */
 	@Override
 	public void sendPushNotificationForCDA(final CustomerModel customerModel, final String otPNumber, final String mobileNumber)
