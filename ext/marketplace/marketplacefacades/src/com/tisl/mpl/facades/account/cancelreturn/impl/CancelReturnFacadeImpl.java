@@ -2425,6 +2425,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 			try
 			{
+				if (MarketplacecommerceservicesConstants.RETURN_TYPE_RTS.equalsIgnoreCase(returnInfoRequest.getReturnType()))
+				{
 				OrderModel orderModel = orderModelDao.getOrderModel(returnInfoRequestData.getOrderId());
 				CustomerModel customerModel=(CustomerModel) orderModel.getUser();
 				String mobilenumber=null;
@@ -2450,6 +2452,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				qickdropProcess.setStoreNames(getStoreAddressList(returnInfoRequestData.getRTSStore()));
 				OrderReturnToStoreEvent event = new OrderReturnToStoreEvent(qickdropProcess);
 				eventService.publishEvent(event);
+			}
 			}
 			catch(Exception e)
 			{
