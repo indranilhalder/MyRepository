@@ -231,7 +231,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	
 	protected static final Logger LOG = Logger.getLogger(CancelReturnFacadeImpl.class);
 
-
+	private static final String SPACE=" ";
+	
 	@Override
 	public boolean implementCancelOrReturn(final OrderData subOrderDetails, final OrderEntryData subOrderEntry,
 			final String reasonCode, final String ussid, final String ticketTypeCode, final CustomerData customerData,
@@ -3725,7 +3726,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				}
 				else
 				{
-					storeName.append(","+store);
+					storeName.append(MarketplacecommerceservicesConstants.COMMA+store);
 					storeAddress = storeAddress(pointOfSerivce.getAddress(), pointOfSerivce.getDisplayName(), storeAddress);
 					storeAddress.append(geoCodeUrl);
 				}
@@ -3755,53 +3756,53 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				{
 					store = new StringBuilder(diaplayName);
 				}else{
-					store.append(", "+diaplayName);
+					store.append(MarketplacecommerceservicesConstants.COMMA+SPACE+diaplayName);
 				}
 			}
 			if (StringUtils.isNotEmpty(address.getLine1()))
 			{
-				store.append(" " + address.getLine1());
+				store.append(SPACE + address.getLine1());
 			}
 			if (StringUtils.isNotEmpty(address.getLine2()))
 			{
-				store.append(" " + address.getLine2());
+				store.append(SPACE + address.getLine2());
 			}
 			if (StringUtils.isNotEmpty(address.getAddressLine3()))
 			{
-				store.append(" " + address.getAddressLine3());
+				store.append(SPACE+ address.getAddressLine3());
 			}
 			if (StringUtils.isNotEmpty(address.getAppartment()))
 			{
-				store.append(" " + address.getAppartment());
+				store.append(SPACE+ address.getAppartment());
 			}
 			if (StringUtils.isNotEmpty(address.getLandmark()))
 			{
-				store.append(" " + address.getLandmark());
+				store.append(SPACE + address.getLandmark());
 			}
 			if (StringUtils.isNotEmpty(address.getCity()))
 			{
-				store.append(" " + address.getCity());
+				store.append(SPACE + address.getCity());
 			}
 			if (StringUtils.isNotEmpty(address.getDistrict()))
 			{
-				store.append(" " + address.getDistrict());
+				store.append(SPACE + address.getDistrict());
 			}
 			if (StringUtils.isNotEmpty(address.getState()))
 			{
-				store.append(" " + address.getState());
+				store.append(SPACE+ address.getState());
 			}
 			if (StringUtils.isNotEmpty(address.getCountry().getName()))
 			{
-				store.append(" " + address.getCountry().getName());
+				store.append(SPACE + address.getCountry().getName());
 			}
 		}
 		if (StringUtils.isNotEmpty(address.getPostalcode()))
 		{
-			store.append(" " + address.getPostalcode());
+			store.append(SPACE+ address.getPostalcode());
 		}
 		if (StringUtils.isNotEmpty(address.getPhone1()))
 		{
-			store.append(" " + address.getPostalcode());
+			store.append(SPACE+ address.getPostalcode());
 		}
 		return store;
 	}
