@@ -10,7 +10,6 @@ import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commerceservices.search.resultdata.SearchResultValueData;
-import de.hybris.platform.commerceservices.search.solrfacetsearch.provider.impl.SolrFirstVariantCategoryManager;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 
@@ -21,7 +20,6 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 
 
 /**
@@ -33,8 +31,7 @@ import org.springframework.beans.factory.annotation.Required;
 public class MplSearchResultProductPopulator extends MplSearchResultVariantProductPopulator
 {
 
-	@SuppressWarnings("unused")
-	private SolrFirstVariantCategoryManager categoryManager;
+
 
 	@Autowired
 	private SizeAttributeComparator sizeAttributeComparator;
@@ -310,12 +307,6 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 	 * } }
 	 */
 
-	@Override
-	@Required
-	public void setCategoryManager(final SolrFirstVariantCategoryManager categoryManager)
-	{
-		this.categoryManager = categoryManager;
-	}
 
 
 
