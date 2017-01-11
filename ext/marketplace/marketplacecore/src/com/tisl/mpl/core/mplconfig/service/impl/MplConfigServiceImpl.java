@@ -14,9 +14,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
-import com.hybris.oms.tata.model.MplTimeSlotsModel;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplConfigModel;
-import com.tisl.mpl.core.model.MplLPHolidaysModel;
 import com.tisl.mpl.core.mplconfig.dao.MplConfigDao;
 import com.tisl.mpl.core.mplconfig.service.MplConfigService;
 import com.tisl.mpl.util.MplTimeconverUtility;
@@ -186,7 +185,7 @@ public class MplConfigServiceImpl implements MplConfigService
 			{
 				
 				StringBuffer sb=new StringBuffer(MplTimeconverUtility.convert24hoursTo12hours(timeslot.getFromTime()));
-				sb.append("-");
+				sb.append(MarketplacecommerceservicesConstants.HYPHEN);
 				sb.append(MplTimeconverUtility.convert24hoursTo12hours(timeslot.getToTime()));
 				deliverySlots.add(new String(sb));
 			}
