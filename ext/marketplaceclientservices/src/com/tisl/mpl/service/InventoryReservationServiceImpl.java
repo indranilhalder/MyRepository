@@ -155,7 +155,7 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 
 					LOG.debug("inside cart soft reservation data list for Jewellery");
 
-					if (StringUtils.endsWithIgnoreCase(requestType, OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING))
+					if (StringUtils.equalsIgnoreCase(requestType, OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING))
 					{
 						if (set1)
 						{
