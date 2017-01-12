@@ -3,16 +3,14 @@
  */
 package com.tisl.mpl.wsdto;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 
 /**
  * @author TECHOUTS
  *
  */
-@XmlRootElement(name="TicketUpdateResponse")
-@XmlType(propOrder =
-{ "ecomRequestId","ticketId","transactionId","rssLPName","rssOtherLPName","rssAWBNumber","rssCharge","rssDispathProofURL" })
+@XmlRootElement(name = "TicketUpdate")
 public class TicketUpdateRequestXML
 {
 	
@@ -32,6 +30,7 @@ public class TicketUpdateRequestXML
 	/**
 	 * @return the ecomRequestId
 	 */
+	@XmlElement(name = "EcomRequestId")
 	public String getEcomRequestId()
 	{
 		return ecomRequestId;
@@ -48,6 +47,7 @@ public class TicketUpdateRequestXML
 	/**
 	 * @return the ticketId
 	 */
+	@XmlElement(name = "TicketId")
 	public String getTicketId()
 	{
 		return ticketId;
@@ -64,6 +64,7 @@ public class TicketUpdateRequestXML
 	/**
 	 * @return the transactionId
 	 */
+	@XmlElement(name = "TransactionId")
 	public String getTransactionId()
 	{
 		return transactionId;
@@ -80,6 +81,7 @@ public class TicketUpdateRequestXML
 	/**
 	 * @return the rssLPName
 	 */
+	@XmlElement(name = "RSSLPName")
 	public String getRssLPName()
 	{
 		return rssLPName;
@@ -96,6 +98,7 @@ public class TicketUpdateRequestXML
 	/**
 	 * @return the rssOtherLPName
 	 */
+	@XmlElement(name = "RSSOtherLPName")
 	public String getRssOtherLPName()
 	{
 		return rssOtherLPName;
@@ -112,6 +115,7 @@ public class TicketUpdateRequestXML
 	/**
 	 * @return the rssAWBNumber
 	 */
+	@XmlElement(name = "RSSAWBNumber")
 	public String getRssAWBNumber()
 	{
 		return rssAWBNumber;
@@ -128,6 +132,7 @@ public class TicketUpdateRequestXML
 	/**
 	 * @return the rssCharge
 	 */
+	@XmlElement(name = "RSSCharge")
 	public String getRssCharge()
 	{
 		return rssCharge;
@@ -144,6 +149,7 @@ public class TicketUpdateRequestXML
 	/**
 	 * @return the rssDispathProofURL
 	 */
+	@XmlElement(name = "RSSDispathProofURL")
 	public String getRssDispathProofURL()
 	{
 		return rssDispathProofURL;
