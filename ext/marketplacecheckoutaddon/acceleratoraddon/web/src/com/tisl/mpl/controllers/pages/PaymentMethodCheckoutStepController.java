@@ -4338,8 +4338,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						refNumber = orderId.get(0);
 						checksum = orderId.get(1);
 					}
-					getMplPaymentFacade().entryInTPWaltAudit(request, MarketplacecheckoutaddonConstants.CHANNEL_WEB, cartGuid,
-							refNumber);
+					getMplPaymentFacade().entryInTPWaltAudit(null, MarketplacecheckoutaddonConstants.CHANNEL_WEB, cartGuid, refNumber);
 					LOG.info("::Created Wallet OrderId::" + orderId);
 
 				}
@@ -4386,7 +4385,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							refNumber = orderId.get(0);
 							checksum = orderId.get(1);
 						}
-						getMplPaymentFacade().entryInTPWaltAudit(request, MarketplacecheckoutaddonConstants.CHANNEL_WEB, cartGuid,
+						getMplPaymentFacade().entryInTPWaltAudit(null, MarketplacecheckoutaddonConstants.CHANNEL_WEB, cartGuid,
 								refNumber);
 						LOG.info("::Created Wallet OrderId::" + orderId);
 
@@ -4441,6 +4440,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 			OrderModel orderModel = null;
 
+			String status = null;
+
 			final Double transactionAmount = Double.valueOf(request.getParameter("AMT"));
 
 			if (StringUtils.isNotEmpty(refNo))
@@ -4463,7 +4464,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 					if (orderAmount.compareTo(transactionAmount) == 0)
 					{
-						getMplPaymentFacade().entryInTPWaltAudit(request, MarketplacecheckoutaddonConstants.CHANNEL_WEB,
+						status = MarketplacecheckoutaddonConstants.SUCCESS;
+						getMplPaymentFacade().entryInTPWaltAudit(status, MarketplacecheckoutaddonConstants.CHANNEL_WEB,
 								orderModel.getGuid(), refNo);
 
 						//saving TPWallet Payment related info
@@ -4473,6 +4475,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					}
 					else
 					{
+						status = MarketplacecheckoutaddonConstants.FAIL;
+						//setting the audit table to DECLINED if order amount is not equal
+						getMplPaymentFacade().entryInTPWaltAudit(status, MarketplacecheckoutaddonConstants.CHANNEL_WEB,
+								orderModel.getGuid(), refNo);
 						GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 								MarketplacecheckoutaddonConstants.TRANERRORMSG);
 						return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
@@ -4482,7 +4488,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 				else
 				{
-					getMplPaymentFacade().entryInTPWaltAudit(request, MarketplacecheckoutaddonConstants.CHANNEL_WEB, guid, refNo);
+					status = MarketplacecheckoutaddonConstants.FAIL;
+					getMplPaymentFacade().entryInTPWaltAudit(status, MarketplacecheckoutaddonConstants.CHANNEL_WEB, guid, refNo);
 
 					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 							MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);

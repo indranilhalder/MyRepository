@@ -3001,11 +3001,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3017,9 +3017,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3785,7 +3785,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#createWalletPaymentId()
 	 */
 	@Override
@@ -3797,7 +3797,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#entryInTPWaltAudit(javax.servlet.http.
 	 * HttpServletRequest, java.lang.String, java.lang.String)
 	 */
@@ -3808,8 +3808,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	//	public void entryInTPWaltAudit(final HttpServletRequest request, final String channelWeb, final String guid,
 	//			final String refNo)
 	@Override
-	public void entryInTPWaltAudit(final String status, final String mWRefCode, final String channelWeb, final String guid,
-			final String refNo)
+	public void entryInTPWaltAudit(final String status, final String channelWeb, final String guid, final String refNo)
 
 	{
 		try
@@ -3846,7 +3845,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				//					auditEntry.setMWRefNo(request.getParameter("MWREFNO"));
 				//				}
 
-				if (null != status && !("S".equalsIgnoreCase(status)))
+				if (null != status && !(MarketplacecommerceservicesConstants.SUCCESS.equalsIgnoreCase(status)))
 				{
 					auditEntry.setStatus(MplPaymentAuditStatusEnum.DECLINED);
 				}
@@ -3901,7 +3900,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#saveTPWalletPaymentInfo(java.lang.String,
 	 * java.util.List, de.hybris.platform.core.model.order.AbstractOrderModel)
 	 */
@@ -3975,7 +3974,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#setTPWalletPaymentTransaction(java.util.Map,
 	 * de.hybris.platform.core.model.order.AbstractOrderModel)
@@ -4102,7 +4101,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#getWalletAuditEntries()
 	 */
 	@Override

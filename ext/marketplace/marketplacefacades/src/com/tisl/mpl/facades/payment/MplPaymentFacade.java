@@ -300,11 +300,11 @@ public interface MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -312,9 +312,9 @@ public interface MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return Map<String, List<MplNetbankingData>>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions, Exception;
@@ -452,7 +452,7 @@ public interface MplPaymentFacade
 	 * @param walletOrderId
 	 * @param orderModel
 	 */
-	void entryInTPWaltAudit(HttpServletRequest request, String channelWeb, String guid, String walletOrderId);
+	void entryInTPWaltAudit(String status, String channelWeb, String guid, String walletOrderId);
 
 
 	/**

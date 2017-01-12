@@ -1830,4 +1830,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 			.intern();
 	public final static String MRUPEERETURNMETHOD = "payment.mRupee.returnMethod".intern();
 
+	public final static String THIRDPARTYWALLET = "ThirdPartyWallet";
+
 }
