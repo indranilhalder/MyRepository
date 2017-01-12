@@ -2528,11 +2528,11 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 */
 	@Override
 	public List<StoreLocationResponseData> getStoreLocationsforCnC(
-			final List<StoreLocationRequestData> storeLocationRequestDataList)
+			final List<StoreLocationRequestData> storeLocationRequestDataList, final CartModel cartModel)
 	{
 
 		LOG.debug("from getStoreLocationforCnC");
-		return mplCommerceCartService.getStoreLocationsforCnC(storeLocationRequestDataList);
+		return mplCommerceCartService.getStoreLocationsforCnC(storeLocationRequestDataList, cartModel);
 	}
 
 	@Override

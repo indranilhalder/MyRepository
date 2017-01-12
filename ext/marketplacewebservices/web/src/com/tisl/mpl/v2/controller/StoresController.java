@@ -16,6 +16,7 @@ package com.tisl.mpl.v2.controller;
 
 import de.hybris.platform.commercefacades.dto.storeats.StoreLocationResponseDataWsDTO;
 import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
+import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.commerceservices.storefinder.data.StoreFinderSearchPageData;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControl;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControlDirective;
@@ -23,6 +24,9 @@ import de.hybris.platform.commercewebservicescommons.dto.store.ListOfPointOfServ
 import de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.store.StoreFinderSearchPageWsDTO;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestParameterException;
+import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.user.UserModel;
+import de.hybris.platform.site.BaseSiteService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -35,6 +39,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.v2.helper.StoresHelper;
 
 
@@ -52,6 +57,12 @@ public class StoresController extends BaseController
 	private static final String DEFAULT_ACCURACY = "0.0";
 	@Resource(name = "storesHelper")
 	private StoresHelper storesHelper;
+	@Resource
+	private ExtendedUserService extendedUserService;
+	@Resource
+	private BaseSiteService baseSiteService;
+	@Resource
+	private CommerceCartService commerceCartService;
 
 	/**
 	 * Lists all store locations that are near the location specified in a query or based on latitude and longitude.
@@ -162,15 +173,16 @@ public class StoresController extends BaseController
 	@RequestMapping(value = "/{baseSiteId}/users/{userId}/storesAts", method = RequestMethod.GET)
 	@ResponseBody
 	public StoreLocationResponseDataWsDTO storesAtCart(@RequestParam(value = "pincode") final String pincode,
-			@RequestParam(value = "ussId") final String ussId,
+			@RequestParam(value = "ussId") final String ussId, @PathVariable final String userId,
 			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
 		if (LOG.isDebugEnabled())
 		{
 			LOG.debug("from storesAtCart method");
 		}
-		return storesHelper.storesAtCart(pincode, ussId, fields);
+		final UserModel user = extendedUserService.getUserForOriginalUid(userId);
+		final CartModel cartModel = commerceCartService.getCartForGuidAndSiteAndUser(null, baseSiteService.getCurrentBaseSite(),
+				user);
+		return storesHelper.storesAtCart(pincode, ussId, fields, cartModel);
 	}
-
-
 }
