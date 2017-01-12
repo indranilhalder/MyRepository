@@ -190,7 +190,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 		if (null != hook.getOrderStatus())
 		{
 			final OrderModel order = getMplPaymentService().fetchOrderOnGUID(hook.getOrderStatus().getOrderId());
-			if (order.getIsWallet().getCode().equals(WalletEnum.NONWALLET.toString()))
+			if ((WalletEnum.NONWALLET.toString().equals(order.getIsWallet().getCode())) || order.getIsWallet().getCode() == null)
 			{
 				if (CollectionUtils.isEmpty(hook.getOrderStatus().getRefunds()))
 				{
