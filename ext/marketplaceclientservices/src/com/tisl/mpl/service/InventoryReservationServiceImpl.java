@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.service;
 
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.io.StringReader;
@@ -35,6 +36,8 @@ import com.tisl.mpl.wsdto.InventoryReservListResponse;
 import com.tisl.mpl.wsdto.InventoryReservRequest;
 
 
+
+
 /**
  * @author TCS
  *
@@ -47,6 +50,7 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 
 	@Resource(name = "pinCodeDeliveryModeService")
 	private PinCodeDeliveryModeService pinCodeDeliveryModeService;
+
 
 	/**
 	 * @return the configurationService
@@ -74,20 +78,22 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 	 * @return: InventoryReservListResponse
 	 */
 	@Override
-	public InventoryReservListResponse convertDatatoWsdto(final List<CartSoftReservationData> cartdatalist, final String cartId,
-			final String pincode, final String requestType)
+	public InventoryReservListRequest convertDatatoWsdto(final List<CartSoftReservationData> cartdatalist,
+			final AbstractOrderModel cart, final String pincode, final String requestType)
 	{
-		InventoryReservListResponse response = new InventoryReservListResponse();
 		final InventoryReservListRequest reqdata = new InventoryReservListRequest();
 		final List<InventoryReservRequest> reqlist = new ArrayList<InventoryReservRequest>();
-		final List<InventoryReservRequest> jewlleryReqItemlist = new ArrayList<InventoryReservRequest>();
+		List<InventoryReservRequest> jewlleryReqItemlist = null;
 		final List<InventoryReservRequest> freebieItemslist = new ArrayList<InventoryReservRequest>();
+		final List<InventoryReservRequest> freebieItemsJewellerylist = new ArrayList<InventoryReservRequest>();
 		final List<InventoryReservJewelleryRequest> jewelleryReqList = new ArrayList<InventoryReservJewelleryRequest>();
 
 		InventoryReservRequest reqObj = null;
 		InventoryReservRequest reqJewelleryObj = null;
 		InventoryReservJewelleryRequest jewelleryReqObj = null;
 		String oldListing = "1";
+
+
 		try
 		{
 			for (final CartSoftReservationData cartObj : cartdatalist)
@@ -140,19 +146,18 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 				}
 				else
 				{
+					LOG.debug("inside cart soft reservation data list for Jewellery");
 					boolean set = false;
 					if (!oldListing.equalsIgnoreCase(cartObj.getListingId()))
 					{
 						jewelleryReqObj = new InventoryReservJewelleryRequest();
-
+						jewlleryReqItemlist = new ArrayList<InventoryReservRequest>();
 						jewelleryReqObj.setListingID(cartObj.getListingId());
 						oldListing = cartObj.getListingId();
 						set = true;
 					}
-					LOG.debug("inside cart soft reservation data list");
-
-
 					reqJewelleryObj = new InventoryReservRequest();
+
 					if (StringUtils.isNotEmpty(cartObj.getUSSID()))
 					{
 						reqJewelleryObj.setUSSID(cartObj.getUSSID());
@@ -186,16 +191,16 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 
 					if (reqJewelleryObj.getIsAFreebie() != null && reqJewelleryObj.getIsAFreebie().equals("Y"))
 					{
-						freebieItemslist.add(reqJewelleryObj);
+						freebieItemsJewellerylist.add(reqJewelleryObj);
 					}
 					else
 					{
 						jewlleryReqItemlist.add(reqJewelleryObj);
 						LOG.debug("Added in Inventory reservation request list");
 					}
-					jewelleryReqObj.setItem(jewlleryReqItemlist);
 					if (set)
 					{
+						jewelleryReqObj.setItem(jewlleryReqItemlist);
 						jewelleryReqList.add(jewelleryReqObj);
 					}
 
@@ -203,9 +208,9 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 			}
 			reqlist.addAll(freebieItemslist);
 
-			if (StringUtils.isNotEmpty(cartId))
+			if (StringUtils.isNotEmpty(cart.getGuid()))
 			{
-				reqdata.setCartId(cartId);
+				reqdata.setCartId(cart.getGuid());
 			}
 			if (StringUtils.isNotEmpty(pincode))
 			{
@@ -215,36 +220,27 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 			{
 				reqdata.setDuration(getDuration(requestType));
 			}
+			/******* Jewllery ***/
 			reqdata.setItem(reqlist);
 			reqdata.setJewelleryItem(jewelleryReqList);
 
-
-			System.out.println(reqdata);
-
-
-			/******* Jewllery ***/
-
-
 			/******* Jewellery End ************/
 
-			response = reserveInventoryAtCheckout(reqdata);
 		}
 		catch (final ClientEtailNonBusinessExceptions e)
 		{
 			throw e;
-		}
-		catch (final JAXBException e)
-		{
-			LOG.error(MarketplacecclientservicesConstants.JAXB_EXCEPTION);
-
 		}
 		catch (final Exception e)
 		{
 			LOG.error(e.getMessage());
 
 		}
-		return response;
+		return reqdata;
+
 	}
+
+
 
 	/**
 	 * @Description : Populate Duration
@@ -255,40 +251,41 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 	{
 		String duration = MarketplacecclientservicesConstants.EMPTY;
 
-		if (requestType.equalsIgnoreCase(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART) && configurationService
-				.getConfiguration().getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_CART) != null)
+		if (requestType.equalsIgnoreCase(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART)
+				&& configurationService.getConfiguration().getString(
+						MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_CART) != null)
 		{
-			duration = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_CART);
+			duration = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_CART);
 		}
 		else if (requestType.equalsIgnoreCase(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENT)
-				&& configurationService.getConfiguration()
-						.getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_PAYMENT) != null)
+				&& configurationService.getConfiguration().getString(
+						MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_PAYMENT) != null)
 		{
-			duration = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_PAYMENT);
+			duration = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_PAYMENT);
 		}
 		else if (requestType.equalsIgnoreCase(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERHELD)
-				&& configurationService.getConfiguration()
-						.getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_ORDERHELD) != null)
+				&& configurationService.getConfiguration().getString(
+						MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_ORDERHELD) != null)
 		{
-			duration = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_ORDERHELD);
+			duration = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_ORDERHELD);
 		}
 		else if (requestType.equalsIgnoreCase(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE)
-				&& configurationService.getConfiguration()
-						.getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_ORDERDEALLOCATE) != null)
+				&& configurationService.getConfiguration().getString(
+						MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_ORDERDEALLOCATE) != null)
 		{
-			duration = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_ORDERDEALLOCATE);
+			duration = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_ORDERDEALLOCATE);
 		}
 		//Added for TPR-629
 		else if (requestType.equalsIgnoreCase(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING)
-				&& configurationService.getConfiguration()
-						.getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_PAYMENTPENDING) != null)
+				&& configurationService.getConfiguration().getString(
+						MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_PAYMENTPENDING) != null)
 		{
-			duration = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_PAYMENTPENDING);
+			duration = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_PAYMENTPENDING);
 		}
 		else
 		{
@@ -307,8 +304,8 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 	public InventoryReservListResponse reserveInventoryAtCheckout(final InventoryReservListRequest request) throws JAXBException
 	{
 
-		final String realTimeCall = configurationService.getConfiguration()
-				.getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_REALTIMECALL);
+		final String realTimeCall = configurationService.getConfiguration().getString(
+				MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_REALTIMECALL);
 		InventoryReservListResponse responsefromOMS = new InventoryReservListResponse();
 
 		if (StringUtils.isNotEmpty(realTimeCall) && realTimeCall.equalsIgnoreCase(MarketplacecclientservicesConstants.Y))
@@ -332,11 +329,14 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 
 				WebResource webResource = null;
 
-				if (null != configurationService && null != configurationService.getConfiguration() && null != configurationService
-						.getConfiguration().getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESERV_URL))
+				if (null != configurationService
+						&& null != configurationService.getConfiguration()
+						&& null != configurationService.getConfiguration().getString(
+								MarketplacecclientservicesConstants.OMS_INVENTORY_RESERV_URL))
 				{
-					webResource = client.resource(UriBuilder.fromUri(configurationService.getConfiguration()
-							.getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESERV_URL)).build());
+					webResource = client.resource(UriBuilder.fromUri(
+							configurationService.getConfiguration().getString(
+									MarketplacecclientservicesConstants.OMS_INVENTORY_RESERV_URL)).build());
 				}
 				final JAXBContext context = JAXBContext.newInstance(InventoryReservListRequest.class);
 				final Marshaller marshaller = context.createMarshaller(); //for pretty-print XML in JAXB
@@ -399,8 +399,8 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 			catch (final Exception ex)
 			{
 				LOG.error(MarketplacecclientservicesConstants.EXCEPTION_IS, ex);
-				getPinCodeDeliveryModeService().validateOMSException(ex,
-						MarketplacecclientservicesConstants.EXCEPTION_TYPE_INVENTORY);
+				getPinCodeDeliveryModeService()
+						.validateOMSException(ex, MarketplacecclientservicesConstants.EXCEPTION_TYPE_INVENTORY);
 				throw new ClientEtailNonBusinessExceptions(ex);
 			}
 
@@ -408,13 +408,16 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 		else
 		{
 
-			final String mockXmlFirstPhase = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLFIRSTPHASE);
-			String mockXmlSecondPhase = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLSECONDPHASE);
-			final String mockXmlThirdPhase = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLTHIRDPHASE);
-
+			final String mockXmlFirstPhase = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLFIRSTPHASE);
+			String mockXmlSecondPhase = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLSECONDPHASE);
+			String mockXmlJewelPhase = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLJEWELPHASE);
+			final String mockXmlThirdPhase = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLTHIRDPHASE);
+			final String resevedUssid = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_REALTIMECALL_MOCK_JEWLUSSID);
 
 			if (StringUtils.isNotEmpty(mockXmlFirstPhase) && StringUtils.isNotEmpty(mockXmlSecondPhase)
 					&& StringUtils.isNotEmpty(mockXmlThirdPhase))
@@ -422,12 +425,31 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 				String outputXml = mockXmlFirstPhase;
 				for (final InventoryReservRequest entry : request.getItem())
 				{
-					if (null != entry.getUSSID() && !entry.getUSSID().isEmpty())
+					if (null != entry.getUSSID() && !entry.getUSSID().isEmpty() && entry.isJewellery() == false)
 					{
 						mockXmlSecondPhase = mockXmlSecondPhase.replaceAll("<replaceussid>", entry.getUSSID());
 						outputXml += mockXmlSecondPhase;
 					}
 				}
+				/* mock service for Jewellery added */
+				for (final InventoryReservJewelleryRequest jewelentry : request.getJewelleryItem())
+				{
+					if (StringUtils.isEmpty(resevedUssid) && null != jewelentry.getItem() && null != jewelentry.getItem().get(0))
+					{
+						mockXmlJewelPhase = mockXmlJewelPhase.replaceAll("<jewlussid>", jewelentry.getItem().get(0).getUSSID());
+						outputXml += mockXmlJewelPhase;
+					}
+					for (final InventoryReservRequest entry1 : jewelentry.getItem())
+					{
+						if (null != entry1.getUSSID() && entry1.getUSSID().equalsIgnoreCase(resevedUssid))
+						{
+							mockXmlJewelPhase = mockXmlJewelPhase.replaceAll("<jewlussid>", entry1.getUSSID());
+							outputXml += mockXmlJewelPhase;
+						}
+					}
+
+				}
+
 				final JAXBContext jaxbContext = JAXBContext.newInstance(InventoryReservListResponse.class);
 				final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 				final String output = outputXml + mockXmlThirdPhase;
@@ -443,7 +465,6 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 		}
 		return responsefromOMS;
 	}
-
 
 	/**
 	 * @return the pinCodeDeliveryModeService

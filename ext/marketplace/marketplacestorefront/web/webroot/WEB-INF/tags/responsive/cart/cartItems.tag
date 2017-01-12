@@ -446,6 +446,14 @@ tr.d0 td {
 									</c:forEach>
 								</form:select>
 							</c:when>
+							<c:when test="${'FineJewellery' eq entry.product.rootCategory}">
+							<form:select path="quantity" id="quantity_${entry.selectedUssid}"	cssClass="update-entry-quantity-input"  onchange="updateCart(this.id);">
+									<c:forEach items="${configuredQuantityForJewellery}"
+										var="quantity">
+										<form:option value="${quantity}"></form:option>
+									</c:forEach>
+								</form:select>
+							</c:when>
 							<c:otherwise>
 								<form:select path="quantity" id="quantity_${entry.selectedUssid}"	cssClass="update-entry-quantity-input" onchange="updateCart(this.id);">
 									<c:forEach items="${configuredQuantityList}"

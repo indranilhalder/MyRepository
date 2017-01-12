@@ -712,5 +712,36 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao#getBuyboxSellerPricesForSearch(java.util.List)
+	 */
+	//JEWELLERY
+	//getBuyboxSellerPricesForSearch
+
+	@Override
+	public List<BuyBoxModel> getBuyboxSellerPricesForSearch(final List<String> sellerArticleSKUList)
+			throws EtailNonBusinessExceptions
+	{
+
+		String sellerV = "";
+		for (final String sellerSKUVariable : sellerArticleSKUList)
+		{
+			sellerV = sellerV + "'" + sellerSKUVariable + "'" + ",";
+		}
+
+		log.debug(Integer.valueOf(sellerV.length()));
+
+		final String sellerVarb = sellerV.substring(0, sellerV.length() - 1);
+
+		String priceQueryString = "";
+		priceQueryString = "SELECT  {bb.PK} FROM {BuyBox AS bb} where {bb.SELLERARTICLESKU} IN (" + sellerVarb + ")";
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(priceQueryString);
+
+		return flexibleSearchService.<BuyBoxModel> search(query).getResult();
+	}
+
+
 
 }

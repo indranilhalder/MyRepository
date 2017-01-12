@@ -26,6 +26,34 @@
 		  <span></span>
 	</p>	
 	<br>
+
+	
+	<%--for price breakup(TPR-3752) --%>
+	
+	<c:if test="${product.rootCategory=='FineJewellery' }">
+	<!-- <input type="button" id = "show" name="answer" value="Price Breakup" /> -->
+	
+	<p id = "show" class="pricebreakup-link">Price Breakup</p>
+	
+
+	<script type="text/javascript">
+	$(document).ready(function() {
+		$("#show").click(function() {
+			$("#showPriceBreakup").slideToggle("fast");
+		});
+	});
+	</script>
+
+
+	
+	
+	
+	<ul id="showPriceBreakup" class="price-breakuplist clearfix" style="display:none"></ul>
+
+	</c:if>
+	<%--for price breakup(TPR-3752) --%>
+	
+	
 	<!--- START: INSERTED for MSD --->
 	<input type="hidden" id="price-for-mad" value=""/>		
 	<input type="hidden" id="currency-for-mad" value="${product.productMRP.currencyIso}"/>

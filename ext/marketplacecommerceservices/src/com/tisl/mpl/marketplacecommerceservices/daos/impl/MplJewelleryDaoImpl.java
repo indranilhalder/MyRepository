@@ -9,6 +9,7 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -31,7 +32,7 @@ public class MplJewelleryDaoImpl implements MplJewelleryDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplJewelleryDao#getJewelleryUssid(java.lang.String)
 	 */
 	@Override
@@ -39,8 +40,8 @@ public class MplJewelleryDaoImpl implements MplJewelleryDao
 	{
 		try
 		{
-			final String classAttrquery = "select {pk} from {JewelleryInformation} " + "where {productCode} " + "		IN ('"
-					+ productCode + "')}})";
+			final String classAttrquery = "select {pk} from {JewelleryInformation} " + "where {productCode}" + "	IN ('"
+					+ productCode + "')";
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(classAttrquery);
 			return flexibleSearchService.<JewelleryInformationModel> search(query).getResult();
 		}
@@ -64,7 +65,7 @@ public class MplJewelleryDaoImpl implements MplJewelleryDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplJewelleryDao#getJewelleryInfoByUssid(java.lang.String)
 	 */
 	@Override
@@ -92,6 +93,45 @@ public class MplJewelleryDaoImpl implements MplJewelleryDao
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplJewelleryDao#getWeightVarientUssid(java.lang.String)
+	 */
+	@Override
+	public List<String> getWeightVarientUssid(final String ussid)
+	{
+		// YTODO Auto-generated method stub
+		try
+		{
+			final String classAttrquery = "select distinct{ussid} from {JewelleryInformation} where {pcmussid} IN({{select distinct{pcmussid} from {JewelleryInformation} where {ussid} = ?mainUssid}})";
+			final FlexibleSearchQuery weightVariantQuery = new FlexibleSearchQuery(classAttrquery.toString());
+			final List resultClassList = new ArrayList();
+			resultClassList.add(String.class);
+			weightVariantQuery.setResultClassList(resultClassList);
+			weightVariantQuery.addQueryParameter("mainUssid", ussid);
+
+			return flexibleSearchService.<String> search(weightVariantQuery).getResult();
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
 	}
 
 }

@@ -110,6 +110,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
+import com.tisl.mpl.facade.product.PriceBreakupFacade;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.juspay.response.ListCardsResponse;
@@ -181,6 +182,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	@Resource(name = "frontEndErrorHelper")
 	private FrontEndErrorHelper frontEndErrorHelper;
+
+	//Added for tpr-3782
+	@Resource(name = "priceBreakupFacade")
+	private PriceBreakupFacade priceBreakupFacade;
 
 	//@Autowired
 	//private MplCouponFacade mplCouponFacade;
@@ -271,7 +276,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				final CartModel cartModel = getCartService().getSessionCart();
 
 				// TPR-429 START
-				
+
 				final String checkoutSellerID = populateCheckoutSellers(cartData);
 				model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, checkoutSellerID);
 				// TPR-429 END
@@ -301,6 +306,15 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 									.put(abstractOrderEntryModel.getSelectedUSSID(), abstractOrderEntryModel.getMplDeliveryMode());
 							freebieParentQtyMap.put(abstractOrderEntryModel.getSelectedUSSID(), abstractOrderEntryModel.getQuantity());
 						}
+						//Added for 3782
+						if (null != abstractOrderEntryModel.getProduct()
+								&& MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(abstractOrderEntryModel
+										.getProduct().getProductCategoryType()))
+						{
+							final boolean breakupLoad = priceBreakupFacade.createPricebreakupOrder(abstractOrderEntryModel);
+
+						}
+						//End of changes for TPR-3782
 					}
 				}
 
@@ -4172,25 +4186,43 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	}
 
 	//TPR-429 change
-		public static String populateCheckoutSellers(final CartData cartData)
+	public static String populateCheckoutSellers(final CartData cartData)
+	{
+		String cartLevelSellerID = null;
+		final List<OrderEntryData> sellerList = cartData.getEntries();
+		for (final OrderEntryData seller : sellerList)
 		{
-			String cartLevelSellerID = null;
-			final List<OrderEntryData> sellerList = cartData.getEntries();
-			for (final OrderEntryData seller : sellerList)
+			final String sellerID = seller.getSelectedSellerInformation().getSellerID();
+			if (cartLevelSellerID != null)
 			{
-				final String sellerID = seller.getSelectedSellerInformation().getSellerID();
-				if (cartLevelSellerID != null)
-				{
-					cartLevelSellerID += "_" + sellerID;
-				}
-				else
-				{
-					cartLevelSellerID = sellerID;
-				}
+				cartLevelSellerID += "_" + sellerID;
 			}
-			return cartLevelSellerID;
+			else
+			{
+				cartLevelSellerID = sellerID;
+			}
 		}
+		return cartLevelSellerID;
+	}
 
+	//added for 3782
+
+	/**
+	 * @return the priceBreakupFacade
+	 */
+	public PriceBreakupFacade getPriceBreakupFacade()
+	{
+		return priceBreakupFacade;
+	}
+
+	/**
+	 * @param priceBreakupFacade
+	 *           the priceBreakupFacade to set
+	 */
+	public void setPriceBreakupFacade(final PriceBreakupFacade priceBreakupFacade)
+	{
+		this.priceBreakupFacade = priceBreakupFacade;
+	}
 
 
 }

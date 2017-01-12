@@ -180,4 +180,16 @@ public class BuyBoxServiceImpl implements BuyBoxService
 		return buyBoxDao.getClassAttrAssignmentsForCode(code);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService#getBuyboxSellerPricesForSearch(java.util.List)
+	 */
+	//JEWELLERY
+	@Override
+	public List<BuyBoxModel> getBuyboxSellerPricesForSearch(final List<String> SellerArticleSKUList)
+			throws EtailNonBusinessExceptions
+	{
+		return buyBoxDao.getBuyboxSellerPricesForSearch(SellerArticleSKUList);
+	}
 }
