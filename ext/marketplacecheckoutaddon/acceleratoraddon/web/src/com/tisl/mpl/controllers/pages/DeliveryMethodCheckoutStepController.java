@@ -430,7 +430,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				finalDeliveryCost = populateMplZoneDeliveryMode(deliveryMethodForm, cartModel);
 				final Map<String, Map<String, Double>> deliveryChargePromotionMap = null;
 				//final boolean calculationStatus =
-				getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap); //TIS 400
+				getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap, cartModel); //TIS 400
 
 			}
 			//TISPT-400
@@ -810,7 +810,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					finalDeliveryCost = populateMplZoneDeliveryMode(deliveryMethodForm, cartModel);
 					final Map<String, Map<String, Double>> deliveryChargePromotionMap = null;
 					//final boolean calculationStatus = getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost,deliveryChargePromotionMap); //TIS 400
-					getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap);
+					getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap, cartModel);
 				}
 				catch (final EtailBusinessExceptions e)
 				{

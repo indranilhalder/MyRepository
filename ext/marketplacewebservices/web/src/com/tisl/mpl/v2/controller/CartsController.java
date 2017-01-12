@@ -2829,7 +2829,7 @@ public class CartsController extends BaseCommerceController
 				LOG.debug("CartsController : selectDeliveryMode  : Step 3 Freebie delivery mode set done");
 				//applyPromotions();
 				final Map<String, Map<String, Double>> deliveryChargePromotionMap = null;
-				getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap);
+				getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap, cart);
 				response.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			}
 			else
