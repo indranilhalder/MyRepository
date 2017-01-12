@@ -691,7 +691,8 @@
 				$("#addAddressForm #city + .errorText").show().text("Please enter City");
 				validate =  false;
 			}
-			//alert($("#addAddressForm #stateListBox").val()); if($("#addAddressForm #stateListBox").val() == null || $("#addAddressForm #stateListBox").val().length < 2) {
+			//alert($("#addAddressForm #stateListBox").val()); 
+			if($("#addAddressForm #stateListBox").val() == null || $("#addAddressForm #stateListBox").val().length < 2) {
 
 				$("#addAddressForm #stateListBox + .errorText").show().text("Please enter State");
 				validate =  false;
