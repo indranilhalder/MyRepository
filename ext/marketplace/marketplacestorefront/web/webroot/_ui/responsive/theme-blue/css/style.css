@@ -44716,7 +44716,7 @@ body.page-homepage .feature-collections h2{
 }
 #productYouCare h2 {
     border-top: 1px solid #e5e5e5;
-    margin: 0 4%;
+    margin: 50px 4% 0;
 }
 #newAndExclusive h2{
     padding: 0 0 40px;
@@ -44806,6 +44806,7 @@ body.page-homepage .showcase .desc-section h2{
 	body.page-homepage #productYouCare h2{
 	padding: 30px 0 10px;
     font-size: 20px;
+    margin: 30px 4% 0;
 	}
 	body.page-homepage #newAndExclusive h2{
 	font-size: 20px;
@@ -44851,6 +44852,11 @@ body.page-homepage .showcase .desc-section h2{
 }
 @media (min-width: 651px){
 	
+}
+@media (max-width: 478px){
+body.page-homepage #productYouCare h2{
+	margin: 80px 4% 0;
+}
 }
 /* Home Page Ends */
 
