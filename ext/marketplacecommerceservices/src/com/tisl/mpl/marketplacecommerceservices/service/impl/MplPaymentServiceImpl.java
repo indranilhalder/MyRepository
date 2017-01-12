@@ -3001,11 +3001,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 *
+	 * 
 	 * @param : bankName
-	 *
+	 * 
 	 * @return : BankModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3017,9 +3017,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3785,7 +3785,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#createWalletPaymentId()
 	 */
 	@Override
@@ -3797,7 +3797,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#entryInTPWaltAudit(javax.servlet.http.
 	 * HttpServletRequest, java.lang.String, java.lang.String)
 	 */
@@ -3901,7 +3901,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#saveTPWalletPaymentInfo(java.lang.String,
 	 * java.util.List, de.hybris.platform.core.model.order.AbstractOrderModel)
 	 */
@@ -3932,7 +3932,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			//saving the tpWalletInfoModel
 			//try
 			//{
-			if (null == cart.getPaymentInfo())
+			if (null == cart.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(cart.getStatus()))
 			{
 				getModelService().save(tpWalletInfoModel);
 				//setting paymentinfo in cart
@@ -3947,6 +3947,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			{
 				LOG.error(ERROR_PAYMENT + cart.getCode());
 			}
+
+
 
 			//}
 			//catch (final ModelSavingException e)
@@ -3973,7 +3975,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#setTPWalletPaymentTransaction(java.util.Map,
 	 * de.hybris.platform.core.model.order.AbstractOrderModel)
@@ -4100,7 +4102,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#getWalletAuditEntries()
 	 */
 	@Override
