@@ -385,42 +385,12 @@
 <!-- R2.3: START -->
 <script>
 $(document).ready(function(){
-	
-	$(".address_postcode").blur(function() {
+	var tmpValue= -1;
+	 if($(".address_postcode").val().length >= "3") {
 		
-
-
-		if($(".address_postcode").val().length >= "3") {
-			loadPincodeData("edit");
-			 var value = $(".address_landmarkOtherDiv").attr("data-value");
-			  
-			  setTimeout(function(){
-			  if($(".address_landmarks option[value='"+value+"']").length > "0") {
-				  
-				  //alert(value+ " 2 in if x"+$(".address_landmarks option[value='"+value+"']").val());
-					  $(".address_landmarks").val("");
-					$(".address_landmarks option[value='"+value+"']").prop("selected",true);
-					
-					} else {
-					//alert(value+ " 3 in else");
-					  $(".address_landmarks").val("Other"); 
-						changeFuncLandMark("Other"); 
-					$(".address_landmarkOther").val(value);
-					
-				}
-			  
-			  });
-		}else{
-			//alert("in else");
-			loadPincodeData("new");
-			
-		}
-
-
-
-});
-	if($(".address_postcode").val().length >= "3") {
-		loadPincodeData("edit");
+		
+			//loadPincodeData("edit");
+			checkOutAdress(tmpValue,"edit");
 		 var value = $(".address_landmarkOtherDiv").attr("data-value");
 		  
 		  setTimeout(function(){
@@ -432,7 +402,11 @@ $(document).ready(function(){
 				
 				} else {
 				//alert(value+ " 3 in else");
-				  $(".address_landmarks").val("Other"); 
+				  if($(".address_landmarks option[value='Other']").length > "0") {
+					  $(".address_landmarks").val("Other"); 
+					 }else{
+						 $(".address_landmarks").val("");  
+					 }
 					changeFuncLandMark("Other"); 
 				$(".address_landmarkOther").val(value);
 				
@@ -443,7 +417,48 @@ $(document).ready(function(){
 		//alert("in else");
 		loadPincodeData("new");
 		
-	}
+	} 
+	
+	$(".address_postcode").blur(function() {
+		
+		
+			//alert("form element");
+		if($(".address_postcode").val().length >= "3") {
+			tmpValue++;
+			//loadPincodeData("edit");
+			checkOutAdress(tmpValue,"edit");
+			 var value = $(".address_landmarkOtherDiv").attr("data-value");
+			  
+			  setTimeout(function(){
+			  if($(".address_landmarks option[value='"+value+"']").length > "0") {
+				  
+				  //alert(value+ " 2 in if x"+$(".address_landmarks option[value='"+value+"']").val());
+					  $(".address_landmarks").val("");
+					$(".address_landmarks option[value='"+value+"']").prop("selected",true);
+					
+					} else {
+					//alert(value+ " 3 in else");
+					 if($(".address_landmarks option[value='Other']").length > "0") {
+					  $(".address_landmarks").val("Other"); 
+					 }else{
+						 $(".address_landmarks").val("");  
+					 }
+						changeFuncLandMark("Other"); 
+					$(".address_landmarkOther").val(value);
+					
+				}
+			  
+			  });
+		}else{
+			//alert("in else");
+			checkOutAdress(tmpValue,"new");
+			
+		}
+
+
+
+});
+  
 	});
 </script>
 <!-- R2.3: END -->

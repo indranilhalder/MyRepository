@@ -20,7 +20,7 @@
 						<form:input type="hidden" path="addressId" id="addressId" />
 						<div class="row">
 							<div class="col-md-12 col-sm-12 NOP">
-								<div class="row">
+								
 									<input type="hidden" id="temp" />
 									<h4 class="editAddress">
 										<spring:theme code="text.order.returns.editshippingaddress" />
@@ -48,6 +48,7 @@
 									<div class="errorMessage">
 										<div id="errtype"></div>
 									</div>
+									<div class="row">
 									<div class="col-md-6 form-group">
 										<label for="firstName"><spring:theme
 												code="text.order.returns.firstname" /></label>
@@ -56,6 +57,7 @@
 											class="form-control textInputChangeAddress" id="firstName"
 											placeholder="First Name"
 											onkeyup="this.value=this.value.replace(/\s\s+/g,'');" />
+											<div class="errorText"></div>
 									</div>
 									<div class="col-md-6 form-group">
 										<label for="lastName"><spring:theme
@@ -64,8 +66,10 @@
 											class="form-control textInputChangeAddress" id="lastName"
 											placeholder="Last Name"
 											onkeyup="this.value=this.value.replace(/\s\s+/g,'');" />
+											<div class="errorText"></div>
 									</div>
-								</div>
+									</div>
+								<div class="clearfix"></div>
 
 								<div class="row">
 									<div class="col-md-6">
@@ -75,6 +79,7 @@
 											<form:input path="postcode"
 												class="form-control textInputChangeAddress address_postcode"
 												id="pincode" placeholder="Pincode" maxlength="6" />
+												<div class="errorText"></div>
 										</div>
 									</div>
 									<div class="col-md-6 form-group">
@@ -83,10 +88,11 @@
 										<form:input path="mobileNo"
 											class="form-control textInputChangeAddress" id="mobileNo"
 											placeholder="9876543210" maxlength="10" />
+											<div class="errorText"></div>
 									</div>
 								</div>
 
-
+<div class="clearfix"></div>
 								<div class="row">
 									<div class="col-md-12 form-group">
 										<label for="addressLine1"><spring:theme
@@ -95,8 +101,10 @@
 											class="form-control textInputChangeAddress" id="addressLine1"
 											placeholder="Address Line 1"
 											onkeyup="this.value=this.value.replace(/\s\s+/g,'');" />
+											<div class="errorText"></div>
 									</div>
 								</div>
+								<div class="clearfix"></div>
 								<div class="row">
 									<div class="col-md-12 form-group">
 										<label for="addressLine2"><spring:theme
@@ -105,8 +113,10 @@
 											class="form-control textInputChangeAddress" id="addressLine2"
 											placeholder="Address Line 2"
 											onkeyup="this.value=this.value.replace(/\s\s+/g,'');" />
+											<div class="errorText"></div>
 									</div>
 								</div>
+								<div class="clearfix"></div>
 								<div class="row">
 									<div class="col-md-12 form-group">
 										<label for="addressLine3"><spring:theme
@@ -115,10 +125,11 @@
 											class="form-control textInputChangeAddress" id="addressLine3"
 											placeholder="Address Line 3"
 											onkeyup="this.value=this.value.replace(/\s\s+/g,'');" />
+											<div class="errorText"></div>
 									</div>
 								</div>
 
-
+	<div class="clearfix"></div>
 								<div class="row">
 									<div class="col-md-12 optionsLandmark">
 										<label><spring:theme
@@ -126,19 +137,20 @@
 										<form:select style="height: 40px;" path="landmark"
 											id="landmark" value="${addressForm.landmark}"
 											class="address_landmarks" maxlength="30"></form:select>
+											<div class="errorText"></div>
 									</div>
 									<div class="col-md-12 address_landmarkOtherDiv">
 										<label for="landmark"> <spring:theme
 												code="text.order.returns.landmarkother" /></label>
-										<!-- <div class="input-group-addon">
-										<span class="glyphicon glyphicon-search" aria-hidden="true"> </span>
-									</div> -->
+										
 										<form:input path="otherLandmark"
 											class="form-control textInputChangeAddress address_landmarkOther"
 											id="otherLandmark" placeholder="Enter your nearest landmark"
 											onkeyup="this.value=this.value.replace(/\s\s+/g,'');" />
+											<div class="errorText"></div>
 									</div>
 								</div>
+									<div class="clearfix"></div>
 								<div class="row">
 									<div class="col-md-12" style="margin-top: 10px;">
 										<div class="form-group">
@@ -148,9 +160,11 @@
 												class="form-control textInputChangeAddress address_townCity"
 												id="city" placeholder="City"
 												onkeyup="this.value=this.value.replace(/\s\s+/g,'');" />
+												<div class="errorText"></div>
 										</div>
 									</div>
 								</div>
+									<div class="clearfix"></div>
 								<div class="row">
 									<div class="col-md-6 form-group">
 									
@@ -167,6 +181,7 @@
 												<option value="${state.name}">${state.name}</option>
 											</c:forEach>
 										</form:select>
+										<div class="errorText"></div>
 									</div>
 									
 									<div class="dupDisplay">
@@ -179,6 +194,7 @@
 										
 										
 									</div>
+										<div class="clearfix"></div>
 									<div class="col-md-6 form-group">
 										<label for="country"> <spring:theme
 												code="text.order.returns.country" /></label> <input
@@ -188,6 +204,7 @@
 											onkeyup="this.value=this.value.replace(/\s\s+/g,'');" />
 									</div>
 								</div>
+								<div class="clearfix"></div>
 								<div class="row">
 									<div class="col-md-12 defaultAddCheck">
 										<div id="checkBox">
@@ -200,11 +217,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="row">
-									<div class="col-md-12">
-										<div class="errorText">This is sample error text</div>
-									</div>
-								</div>
+								
 
 							</div>
 						</fieldset>
@@ -246,4 +259,5 @@
 	max-height: calc(100vh - 210px);
 	overflow-y: auto;
 }
+.errorText {line-height: 20px;height: 20px;}
 </style>

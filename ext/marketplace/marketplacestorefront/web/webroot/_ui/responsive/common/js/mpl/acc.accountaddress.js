@@ -113,6 +113,7 @@ function editAddress(addressId) {
     	   cache: false,
     	   contentType : "application/json; charset=utf-8",
     	   success : function(data) {
+    		   $(".errorMessage > div").hide();
    				$('#addressId').val(addressId);
    				$('#firstName').val(data.firstName);
    				$('#lastName').val(data.lastName);
@@ -150,12 +151,12 @@ function editAddress(addressId) {
    		            	} else {
    	            			console.log(data.landmark); 
    	            			if($(".address_landmarks option[value='Other']").length > "0") {
-   	            				$(".address_landmarks").val("Other"); 
-   	            				changeFuncLandMark("Other"); 
-   	                			$(".address_landmarkOther").val(data.landmark);
-   	            			} else {
-   	            				$(".address_landmarkOther").val(data.landmark);
-   	            			}	            	
+   	   					  $(".address_landmarks").val("Other"); 
+   	   					 }else{
+   	   						 $(".address_landmarks").val("");  
+   	   					 }
+   	            			changeFuncLandMark("Other"); 
+							$(".address_landmarkOther").val(value);
    		            	}
    	            	}, 200);
    	            }
@@ -1040,7 +1041,7 @@ function editAddress(addressId) {
         else if (!regexCharSpace.test(document.getElementById("firstName").value)) { 
         	$("#errddressfn").css({"display":"block"});
 
-            document.getElementById("erraddressfn").innerHTML = "<font color='red' size='2'>First name should not contain any special characters or space</font>";
+            document.getElementById("erraddressfn").innerHTML = "<font color='red' size='2'>First name should not contain any special characters, numbers and spaces</font>";
             flagFn = false;
         }
         if (addressForm.lastName.value == null || addressForm.lastName.value == "") {
@@ -1051,7 +1052,7 @@ function editAddress(addressId) {
         else if (!regexCharSpace.test(document.getElementById("lastName").value)) { 
         	$("#errddressln").css({"display":"block"});
 
-            document.getElementById("erraddressln").innerHTML = "<font color='red' size='2'>Last name should not contain any special characters or space</font>";
+            document.getElementById("erraddressln").innerHTML = "<font color='red' size='2'>Last name should not contain any special characters, numbers and space</font>";
             flagLn = false;
         }
         if (addressForm.line1.value == null || addressForm.line1.value.trim() == "") {

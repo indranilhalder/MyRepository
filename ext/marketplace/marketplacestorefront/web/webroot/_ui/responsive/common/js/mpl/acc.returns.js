@@ -455,7 +455,11 @@
 							
 							} else {
 							//alert(value+ " 3 in else");
-							  //$(".address_landmarks").val("Other"); 
+								if($(".address_landmarks option[value='Other']").length > "0") {
+									  $(".address_landmarks").val("Other"); 
+									 }else{
+										 $(".address_landmarks").val("");  
+									 }
 								changeFuncLandMark("Other"); 
 							$(".address_landmarkOther").val(value);
 							
@@ -642,23 +646,37 @@
 			var letters = new RegExp(/^[A-z]*$/);
 			var isString = isNaN($("#addAddressForm #mobileNo").val());
 			//alert($("#addAddressForm #landmark").prop('disabled'));
+			var validate = true;
 			$("#addAddressForm .errorText").hide();
 			if($("#addAddressForm #firstName").val().length < 2) {
-				$("#addAddressForm .errorText").show().text("Please enter First name");
-				return false;
+				$("#addAddressForm #firstName + .errorText").show().text("Please enter First name");
+				validate = false;
 			}else if(letters.test($("#addAddressForm #firstName").val()) == false ){
-				$("#addAddressForm .errorText").show().text("First Name should contain only alphabets");
-				return false;
-			}else if($("#addAddressForm #lastName").val().length < 2) {
-				$("#addAddressForm .errorText").show().text("Please enter Last name");
-				return false;
+				$("#addAddressForm #firstName + .errorText").show().text("First Name should contain only alphabets");
+				validate=  false;
+			}if($("#addAddressForm #lastName").val().length < 2) {
+				$("#addAddressForm #lastName + .errorText").show().text("Please enter Last name");
+				validate = false;
 			}else if(letters.test($("#addAddressForm #lastName").val()) == false){
-				$("#addAddressForm .errorText").show().text("Last Name should contain only alphabets");
-				return false;
-			}else if($("#addAddressForm #addressLine1").val().length < 2) {
-				$("#addAddressForm .errorText").show().text("Please enter Address Line 1");
-				return false;
-			}/* 
+				$("#addAddressForm #lastName + .errorText").show().text("Last Name should contain only alphabets");
+				validate =  false;
+			}if($("#addAddressForm #addressLine1").val().length < 2) {
+				$("#addAddressForm #addressLine1 + .errorText").show().text("Please enter Address Line 1");
+				validate =  false;
+			}
+			if($("#addAddressForm #pincode").val().length < 6) {
+//alert($("#addAddressForm #pincode").val());
+				$("#addAddressForm #pincode + .errorText").show().text("Please enter valid pincode");
+				validate =  false;
+			}if($("#addAddressForm #mobileNo").val().length < 10) {
+				$("#addAddressForm #mobileNo + .errorText").show().text("Please enter valid Mobile number");
+				validate =  false;
+			}else if(isString==true || $("#addAddressForm #mobileNo").val().trim()==''){
+				$("#addAddressForm #mobileNo + .errorText").show().text("Enter only Numbers");
+				validate =  false;
+			}
+			
+			/* 
 			TISRLEE-1655
 			else if($("#addAddressForm #addressLine2").val().length < 2) {
 				$("#addAddressForm .errorText").show().text("Please enter Address Line 2");
@@ -668,40 +686,21 @@
 				return false;
 			}
 			TISRLEE-1655
-			*/else if($("#addAddressForm #pincode").val().length < 6) {
-				$("#addAddressForm .errorText").show().text("Please enter valid pincode");
-				return false;
-			}else if($("#addAddressForm #mobileNo").val().length < 10) {
-				$("#addAddressForm .errorText").show().text("Please enter valid Mobile number");
-				return false;
-			}else if(isString==true || $("#addAddressForm #mobileNo").val().trim()==''){
-				$("#addAddressForm .errorText").show().text("Enter only Numbers");
-				return false;
+			*/ 
+			if($("#addAddressForm #city").val().length < 2) {
+				$("#addAddressForm #city + .errorText").show().text("Please enter City");
+				validate =  false;
 			}
-			else if($("#addAddressForm #city").val().length < 2) {
-				$("#addAddressForm .errorText").show().text("Please enter City");
-				return false;
-			}else if($("#addAddressForm #stateListBox").val().length < 2) {
-				$("#addAddressForm .errorText").show().text("Please enter State");
-				return false;
+			//alert($("#addAddressForm #stateListBox").val()); if($("#addAddressForm #stateListBox").val() == null || $("#addAddressForm #stateListBox").val().length < 2) {
+
+				$("#addAddressForm #stateListBox + .errorText").show().text("Please enter State");
+				validate =  false;
 			}
-			else if($("#addAddressForm #country").val().length < 2) {
-				$("#addAddressForm .errorText").show().text("Please enter Country");
-				return false;
-			}else if(!$("#addAddressForm #landmark").prop('disabled') && $("#addAddressForm #landmark").val().length <= 2){
-				
-				$("#addAddressForm .errorText").show().text("Please enter Landmark");
-				return false;
-			}else if($("#addAddressForm #landmark").prop('disabled') && $("#addAddressForm #otherLandmark").val().length <= 2) 
-			{
-				$("#addAddressForm .errorText").show().text("PinCode not serviceable, Please enter other Landmark");
-				return false;
-				
+			 if($("#addAddressForm #country").val().length < 2) {
+				$("#addAddressForm #country + .errorText").show().text("Please enter Country");
+				validate =  false;
 			}
-			else {
-				console.log("true");
-				return true;
-			}
+			return validate;
 		}
 		
 		
@@ -747,20 +746,21 @@
 			  count = parseInt(count) + 1;
 			 // alert(count);
 			  //alert( ACC.config.encodedContextPath+"/my-account/returns/addNewReturnAddress");
-			  $.ajax({
-				  url: ACC.config.encodedContextPath+"/my-account/returns/addNewReturnAddress",
-				  type: "GET",
-				  data : $("#addAddressForm").serialize(),
-				  success: function(data) {
-					console.log("New Address Saved Successfully");
-				  
-				  },
-				  error:function(data){
-					  console.log("Error in NewAddress");
-				  }
-			  });
+			
 			  
 			  if(checkPopupValidations()) {
+				  $.ajax({
+					  url: ACC.config.encodedContextPath+"/my-account/returns/addNewReturnAddress",
+					  type: "GET",
+					  data : $("#addAddressForm").serialize(),
+					  success: function(data) {
+						console.log("New Address Saved Successfully");
+					  
+					  },
+					  error:function(data){
+						  console.log("Error in NewAddress");
+					  }
+				  });
 							  $(".scheduledPickupArea").html("<div class='address"
 									  + count+ " col-md-12 col-sm-12 col-xs-12 greyColor selectScheduledPickup blackColor'><div class='col-md-2 col-sm-2 col-xs-2 selectRadio'><input class=radioButton name=selectScheduledPickup onclick='showPickupTimeDate(\"address"
 									  + count+ "\")' type='radio' value='schedule'></div><div class='col-md-6 col-sm-6 col-xs-6 updateaddress"
@@ -779,77 +779,77 @@
 			  }
 		  }else {
 			  console.log(ACC.config.encodedContextPath+"/my-account/returns/editReturnAddress");
-			  $.ajax({
-				  type: "POST",
-				  data : $("#addAddressForm").serialize(), 
-				  url: ACC.config.encodedContextPath+"/my-account/returns/editReturnAddress",
-				  success: function(data) {
-					//  alert("New Address");
-					  
-					 // alert("saving Address");
-					 // console.log($("#addAddressForm #firstName").val());
-					 // console.log($("#addAddressForm #lastName").val());
-					  
-					    if(data.title == null )
-						{
-					        $("#changeAddressPopup, .wrapBG").fadeOut(300);
-					        $("#hiddenFields #firstName").val($("#addAddressForm #firstName").val());
-							$("#hiddenFields #lastName").val($("#addAddressForm #lastName").val());
-						    $("#hiddenFields #addressLine1").val($("#addAddressForm #addressLine1").val());
-							$("#hiddenFields #addressLine2").val($("#addAddressForm #addressLine2").val());
-							$("#hiddenFields #addressLine3").val($("#addAddressForm #addressLine3").val());
-							if(!$("#addAddressForm #landmark").prop('disabled') || !$("#addAddressForm #landmark").val()=="Other"){
-								$("#hiddenFields #landmark").val($("#addAddressForm #landmark").val());
-							}else{
-								$("#hiddenFields #landmark").val($("#addAddressForm #otherLandmark").val());
-							}
-							$("#hiddenFields #pincode").val($("#addAddressForm #pincode").val());
-							$("#hiddenFields #city").val($("#addAddressForm #city").val());
-							$("#hiddenFields #stateListBox").val($("#addAddressForm #stateListBox").val());
-							$("#hiddenFields #country").val($("#addAddressForm #country").val());
-							$("#hiddenFields #phoneNumber").val($("#addAddressForm #mobileNo").val());
-							$("#hiddenFields #addressType").val($("#addAddressForm input[name='addressRadioType']:checked").val());
-							
-							temp = $("#temp").val();
-							
-							$(".update"+temp+" li span.firstName").text($("#addAddressForm #firstName").val());
-							$(".update"+temp+" li span.lastName").text($("#addAddressForm #lastName").val());
-							$(".update"+temp+" li span.addressLine1").text($("#addAddressForm #addressLine1").val());
-							$(".update"+temp+" li span.addressLine2").text($("#addAddressForm #addressLine2").val());
-							$(".update"+temp+" li span.addressLine3").text($("#addAddressForm #addressLine3").val());
-							$(".update"+temp+" li span.postalCode").text($("#addAddressForm #pincode").val());
-							if(!$("#addAddressForm #landmark").prop('disabled')|| !$("#addAddressForm #landmark").val()=="Other"){
-								$(".update"+temp+" li span.landmark").text($("#addAddressForm #landmark").val());
-							}else{
-								$(".update"+temp+" li span.landmark").text($("#addAddressForm #otherLandmark").val());
-							}
-							$(".update"+temp+" li span.city").text($("#addAddressForm #city").val());
-							$(".update"+temp+" li span.stateListBox").text($("#addAddressForm #stateListBox").val());
-							$(".update"+temp+" li span.country").text($("#addAddressForm #country").val());
-							$(".update"+temp+" li span.phoneNumber").text($("#addAddressForm #mobileNo").val());
-							
-							$(".update"+temp).prev().find("input").prop("checked", "checked");
-							showPickupTimeDate(temp);
-						}
-					  else
-						{
-						$('.errorCodemessage').show(); 
-						$(".errorCodemessage").text(data.title);
-						 
-						}
-						
-						//$("#changeAddressPopup, .wrapBG").fadeOut(300);
-				  
-				  },
-				  error:function(data){
-					  
-					  console.log("Error in ajax of Editing Address");
-					  
-				  }
-			  });
+
 			  
 			  if(checkPopupValidations()) {
-			      
+				  $.ajax({
+					  type: "POST",
+					  data : $("#addAddressForm").serialize(), 
+					  url: ACC.config.encodedContextPath+"/my-account/returns/editReturnAddress",
+					  success: function(data) {
+						//  alert("New Address");
+						  
+						 // alert("saving Address");
+						 // console.log($("#addAddressForm #firstName").val());
+						 // console.log($("#addAddressForm #lastName").val());
+						  
+						    if(data.title == null )
+							{
+						        $("#changeAddressPopup, .wrapBG").fadeOut(300);
+						        $("#hiddenFields #firstName").val($("#addAddressForm #firstName").val());
+								$("#hiddenFields #lastName").val($("#addAddressForm #lastName").val());
+							    $("#hiddenFields #addressLine1").val($("#addAddressForm #addressLine1").val());
+								$("#hiddenFields #addressLine2").val($("#addAddressForm #addressLine2").val());
+								$("#hiddenFields #addressLine3").val($("#addAddressForm #addressLine3").val());
+								if(!$("#addAddressForm #landmark").prop('disabled') || !$("#addAddressForm #landmark").val()=="Other"){
+									$("#hiddenFields #landmark").val($("#addAddressForm #landmark").val());
+								}else{
+									$("#hiddenFields #landmark").val($("#addAddressForm #otherLandmark").val());
+								}
+								$("#hiddenFields #pincode").val($("#addAddressForm #pincode").val());
+								$("#hiddenFields #city").val($("#addAddressForm #city").val());
+								$("#hiddenFields #stateListBox").val($("#addAddressForm #stateListBox").val());
+								$("#hiddenFields #country").val($("#addAddressForm #country").val());
+								$("#hiddenFields #phoneNumber").val($("#addAddressForm #mobileNo").val());
+								$("#hiddenFields #addressType").val($("#addAddressForm input[name='addressRadioType']:checked").val());
+								
+								temp = $("#temp").val();
+								
+								$(".update"+temp+" li span.firstName").text($("#addAddressForm #firstName").val());
+								$(".update"+temp+" li span.lastName").text($("#addAddressForm #lastName").val());
+								$(".update"+temp+" li span.addressLine1").text($("#addAddressForm #addressLine1").val());
+								$(".update"+temp+" li span.addressLine2").text($("#addAddressForm #addressLine2").val());
+								$(".update"+temp+" li span.addressLine3").text($("#addAddressForm #addressLine3").val());
+								$(".update"+temp+" li span.postalCode").text($("#addAddressForm #pincode").val());
+								if(!$("#addAddressForm #landmark").prop('disabled')|| !$("#addAddressForm #landmark").val()=="Other"){
+									$(".update"+temp+" li span.landmark").text($("#addAddressForm #landmark").val());
+								}else{
+									$(".update"+temp+" li span.landmark").text($("#addAddressForm #otherLandmark").val());
+								}
+								$(".update"+temp+" li span.city").text($("#addAddressForm #city").val());
+								$(".update"+temp+" li span.stateListBox").text($("#addAddressForm #stateListBox").val());
+								$(".update"+temp+" li span.country").text($("#addAddressForm #country").val());
+								$(".update"+temp+" li span.phoneNumber").text($("#addAddressForm #mobileNo").val());
+								
+								$(".update"+temp).prev().find("input").prop("checked", "checked");
+								showPickupTimeDate(temp);
+							}
+						  else
+							{
+							$('.errorCodemessage').show(); 
+							$(".errorCodemessage").text(data.title);
+							 
+							}
+							
+							//$("#changeAddressPopup, .wrapBG").fadeOut(300);
+					  
+					  },
+					  error:function(data){
+						  
+						  console.log("Error in ajax of Editing Address");
+						  
+					  }
+				  });
 				  //alert("saving Address");
 				  console.log($("#addAddressForm #firstName").val());
 				  console.log($("#addAddressForm #lastName").val());

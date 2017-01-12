@@ -667,7 +667,7 @@
 											</div>
 											<div class="col-md-5">
 												<c:if test="${fn:containsIgnoreCase(entry.returnMethodType , 'SELF_COURIER')}">
-												<c:if test="${entry.isRefundable eq false }">
+												<c:if test="${entry.isRefundable eq false and entry.consignment.status.code eq 'RETURN_INITIATED'}">
 													<div class="awsInnerClass">
 															Please provide AWB number, Logistics partner and upload POD <a href="#" id="awbNumberLink">here</a>
 													</div>
@@ -1796,7 +1796,7 @@
 											</div>
 											<div class="col-md-6 col-sm-6 pull-right">
 											<c:if test="${fn:containsIgnoreCase(entry.returnMethodType , 'SELF_COURIER')}">
-												<c:if test="${entry.isRefundable eq false }">
+												<c:if test="${entry.isRefundable eq false and entry.consignment.status.code eq 'RETURN_INITIATED' }">
 													<div class="awsInnerClass">
 															Please provide AWB number, 
 															<br/>Logistics partner and upload POD <a href="#" id="awbNumberLink">here</a>
@@ -2918,9 +2918,13 @@ $(function() {
 	  				
 	  				} else {
 	  				//alert(value+ " 3 in else");
-	  				  $(".address_landmarks").val("Other"); 
+	  					 if($(".address_landmarks option[value='Other']").length > "0") {
+	  						  $(".address_landmarks").val("Other"); 
+	  						 }else{
+	  							 $(".address_landmarks").val("");  
+	  						 }
 	  					changeFuncLandMark("Other"); 
-	  	  			$(".address_landmarkOther").val(value);
+	  				$(".address_landmarkOther").val(value);
 	  				
 	  			}
 				  

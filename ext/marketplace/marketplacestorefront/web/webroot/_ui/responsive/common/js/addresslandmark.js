@@ -2,7 +2,7 @@ var addressLandMark = "";
 
 $(document).ready(function(){
 	
-	if($('div').hasClass('address_postcode')) {
+/*	if($('div').hasClass('address_postcode')) {
 		if($(".address_postcode").val().length >= "3") {
 			loadPincodeData("edit");
 			 var value = $(".address_landmarkOtherDiv").attr("data-value");
@@ -27,7 +27,7 @@ $(document).ready(function(){
 			loadPincodeData("new");
 			 
 		}
-	}
+	}*/
 
 	
 	
@@ -57,15 +57,16 @@ $(document).ready(function(){
 	    $("#deliveryAddressForm #city").prop('value','');
 	    $("#deliveryAddressForm #pincode").prop('value','');
 	    $("#deliveryAddressForm #mobileNo").prop('value','');
+	    $(".error_text").hide();
 	   });
 });
 
 $(".address_landmarkOtherDiv").hide();
 $(".dupDisplay").hide();
 
-
+var tmpValue= -1;
 $(".address_postcode").blur(function() {
-
+	tmpValue++;
 	if($(".address_postcode").val().length >= "3") {
 		loadPincodeData("edit");
 		 var value = $(".address_landmarkOtherDiv").attr("data-value");
@@ -79,7 +80,11 @@ $(".address_postcode").blur(function() {
 				
 				} else {
 				//alert(value+ " 3 in else");
-				  $(".address_landmarks").val("Other"); 
+					if($(".address_landmarks option[value='Other']").length > "0") {
+						  $(".address_landmarks").val("Other"); 
+						 }else{
+							 $(".address_landmarks").val("");  
+						 }
 					changeFuncLandMark("Other"); 
 				$(".address_landmarkOther").val(value);
 				
@@ -99,7 +104,11 @@ $(".address_postcode").blur(function() {
 				
 				} else {
 				//alert(value+ " 3 in else");
-				  $(".address_landmarks").val("Other"); 
+					if($(".address_landmarks option[value='Other']").length > "0") {
+						  $(".address_landmarks").val("Other"); 
+						 }else{
+							 $(".address_landmarks").val("");  
+						 }
 					changeFuncLandMark("Other"); 
 				$(".address_landmarkOther").val(value);
 				
@@ -110,7 +119,10 @@ $(".address_postcode").blur(function() {
 
 
 });
-
+function checkOutAdress(arg1, arg2){
+	tmpValue = arg1;
+	loadPincodeData(arg2)
+}
 function loadPincodeData(parm) {
 	/*added by sneha R2.3*/
 	if(parm == "address-form") {
@@ -129,6 +141,7 @@ function loadPincodeData(parm) {
 		type: "GET",	
 		success : function(response) {
 			if(response == "" || response == " " || response == "NULL") {
+				//alert("in if");
 				$(".address_landmarks").attr("disabled","disabled").css("padding-left","5px");
 				$(".half .address_landmarkOtherDiv").css("margin-left","10px");
 				$(".row .address_landmarkOtherDiv label").css("margin-top","15px");
@@ -148,15 +161,19 @@ function loadPincodeData(parm) {
 				$(".address_landmarkOther").val("");
 
 				$(".address_townCity").prop("readonly", false);
-				if(parm != "edit") {
+				//alert("tmpValue is "+ tmpValue);
+				if(parm != "edit" || tmpValue >= 0) {
+					
 					$(".address_townCity").val('');
 					/*added by sneha R2.3*/
 					$(".address_states").prop("value","");
 					/*end of sneha R2.3*/
+					tmpValue = -1;
 			    }
 				$(".address_states").removeAttr("readonly").removeData("stateValue");
 				
 			} else {
+				//alert("in else");
 				$('.address_landmarks .unableto').remove();
 				$(".address_landmarks").removeAttr("disabled").css("padding-left","5px");
 				$(".half .address_landmarkOtherDiv").css("margin-left","10px");
@@ -180,6 +197,7 @@ function loadPincodeData(parm) {
         		 $('.address_landmarks').html($("<option></option>").attr("selected","selected").text("Select a Landmark").attr("value", "NA"));
         		//then fill it with data from json post
         		if(response.landMarks != null) {
+        			//alert("in landmark if");
         		  $.each(response.landMarks, function(key, value) {
         		       $('.address_landmarks').append($("<option></option>").attr("value",value.landmark)
         		         .text(value.landmark));
@@ -189,6 +207,7 @@ function loadPincodeData(parm) {
         		  /*end of sneha R2.3*/
         		}
         		else {
+        			//alert("in landmark else");
         			$(".address_landmarkOtherDiv, .address_landmarkOtherDiv label, .address_landmarkOther").show();
  					$(".address_landmarks").attr("disabled","disabled").css("padding-left","5px");
  					$('.address_landmarks').append($("<option class=unableto></option>").text("Unable to find landmark").attr("selected","selected").attr("value",""));
@@ -375,11 +394,11 @@ function checkPopupDataOrderHistory() {
 				          $(".mobileNumberError").text("Enter only Numbers");
 				          validate = false;
 			        }
-				  	if(mobile.length < 9 || mobile.length > 11){
+				  	if(mobile.length > 0 && mobile.length < 9 ){
 				    	  $(".mobileNumberError").show();
 				          $(".mobileNumberError").text("Enter correct mobile number");
 				          validate = false;
-				  	} if(pincode.length < 6 ){
+				  	}if(pincode.length > 0 && pincode.length < 6 ){
 				    	  $(".pincodeNoError").show();
 				          $(".pincodeNoError").text("Enter correct pincode");
 				          validate = false;
@@ -486,7 +505,11 @@ $(document).ready(function() {
 			
 			} else {
 			//alert(value+ " 3 in else");
-			 // $(".address_landmarks").val("Other"); 
+				 if($(".address_landmarks option[value='Other']").length > "0") {
+					  $(".address_landmarks").val("Other"); 
+					 }else{
+						 $(".address_landmarks").val("");  
+					 }
 				changeFuncLandMark("Other"); 
 			$(".address_landmarkOther").val(value);
 			
