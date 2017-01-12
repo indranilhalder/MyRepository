@@ -10153,7 +10153,7 @@
 			<!-- relation between OrderJewelEntry and AbstractOredrEntry -->
 					<attribute qualifier="abstractOrderEntryjewel" type="AbstractOrderEntry">
 						<modifiers read="true" write="true" optional="true"
-							unique="true" />
+							unique="false" />
 						<persistence type="property" />
 					</attribute>
 		  </attributes>

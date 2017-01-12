@@ -1981,6 +1981,7 @@
 	
 
 	<!-- Jewellery Changes Start --> 
+	
 	<alias name="mplJewelleryService" alias="mplJewelleryService" />
 	<bean id="mplJewelleryService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplJewelleryServiceImpl"
 			autowire="byName">
@@ -1990,6 +1991,10 @@
 	<alias name="mplJewelleryDao" alias="mplJewelleryDao" />
 	<bean id="mplJewelleryDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplJewelleryDaoImpl"
 			autowire="byName">
+	</bean>
+	
+	<bean id="mplJewelleryUtility" class="com.tisl.mpl.util.MplJewelleryUtility">
+		<property name="mplJewelleryService" ref="mplJewelleryService" />
 	</bean>
 	
 	<!-- Jewellery Changes End -->

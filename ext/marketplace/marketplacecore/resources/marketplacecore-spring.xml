@@ -45,10 +45,7 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 	<!-- <import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_product-spring.xml" /> -->
 
-	<import
-		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_association-spring.xml" />
-		<!-- Jewellery hot-folder for jewellery price -->
-		
+		<!-- Jewellery hot-folder for jewellery price -->	
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_jewelleryprice-spring.xml" />
 	<import
@@ -943,6 +940,16 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="priceService" ref="priceService" />
 		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
 	</bean>
+
+	<!-- TPR-1886 | JEWELLERY START-->
+     <bean id="mplPriceValueRangeProviderJewellery"
+ 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplPriceValueRangeProviderJewellery"
+ 		parent="abstractPropertyFieldValueProvider">
+ 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+ 		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
+ 		<property name="mplJewelleryUtility" ref="mplJewelleryUtility" />
+ 	</bean>
+ 	<!--  JEWELLERY  END-->
 
 	<bean id="mplMrpPriceValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplMrpPriceValueProvider"
