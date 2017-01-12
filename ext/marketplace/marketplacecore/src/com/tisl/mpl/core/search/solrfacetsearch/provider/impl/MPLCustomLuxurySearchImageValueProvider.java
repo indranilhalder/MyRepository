@@ -27,6 +27,7 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.util.MediaHelper;
 
 
@@ -98,26 +99,34 @@ public class MPLCustomLuxurySearchImageValueProvider extends AbstractPropertyFie
 	{
 		if ((model instanceof ProductModel))
 		{
-			final MediaFormatModel mediaFormatModel = getMediaService().getFormat(getMediaFormat());
-			if (mediaFormatModel != null)
+			final ProductModel pmodel = (ProductModel) model;
+			if (checkIfLuxury(pmodel))
 			{
-				final MediaModel media = mediaHelper.findMedia((ProductModel) model, mediaFormatModel);
-				if (media != null)
+				final MediaFormatModel mediaFormatModel = getMediaService().getFormat(getMediaFormat());
+				if (mediaFormatModel != null)
 				{
-					return createFieldValues(indexedProperty, media);
-				}
+					final MediaModel media = mediaHelper.findMedia(pmodel, mediaFormatModel);
+					if (media != null)
+					{
+						return createFieldValues(indexedProperty, media);
+					}
 
-				//if (LOG.isDebugEnabled()) Deeply nested if..then statements are hard to read
-				//{
-				LOG.debug("No [" + mediaFormatModel.getQualifier() + "] image found for product [" + ((ProductModel) model).getCode()
-						+ "]");
-				//}
+					//if (LOG.isDebugEnabled()) Deeply nested if..then statements are hard to read
+					//{
+					LOG.debug("No [" + mediaFormatModel.getQualifier() + "] image found for product ["
+							+ ((ProductModel) model).getCode() + "]");
+					//}
+				}
 			}
 		}
 		return Collections.emptyList();
 	}
 
-
+	private boolean checkIfLuxury(final ProductModel product)
+	{
+		return (product.getLuxIndicator() != null && product.getLuxIndicator().getCode() != null && product.getLuxIndicator()
+				.getCode().equalsIgnoreCase(MarketplaceCoreConstants.LUXURY));
+	}
 
 	/*
 	 * protected Collection<FieldValue> createFieldValues(final IndexedProperty indexedProperty, final List<MediaModel>
