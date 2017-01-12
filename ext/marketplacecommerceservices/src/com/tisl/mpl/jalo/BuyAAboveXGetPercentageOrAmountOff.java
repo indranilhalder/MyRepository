@@ -28,6 +28,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -124,7 +126,7 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 				{
 					final Set<String> validSetAfterStockCheck = getDefaultPromotionsManager().getStockLevelRestriction(
 							validProductUssidMap, getCode(), restrictionList);
-					if (null != validProductUssidMap && !validProductUssidMap.isEmpty())
+					if (MapUtils.isNotEmpty(validProductUssidMap) && CollectionUtils.isNotEmpty(validSetAfterStockCheck)) // For TPR-4408
 					{
 						validProductUssidMap.keySet().retainAll(validSetAfterStockCheck);
 					}
