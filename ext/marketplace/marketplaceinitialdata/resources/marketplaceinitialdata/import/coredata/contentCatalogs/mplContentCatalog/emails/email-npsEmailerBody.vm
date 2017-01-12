@@ -1,0 +1,272 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Tata Nps Emailer</title>
+</head>
+
+<body>
+<table width="600" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <td align="left" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        #if($ctx.cmsSlotContents.SiteLogo)
+            <td align="left" valign="top" height="138"><a href="https://www.tatacliq.com/" target="_blank" class="logo-img">${ctx.cmsSlotContents.SiteLogo}</a></td>
+			#end
+      </tr>
+      <tr>
+        <td align="left" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td align="left" valign="top"  width="17" height="20" ><img style="display:block;" src="images/spacer.gif" width="17" height="20" alt="" /></td>
+            <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td height="30" align="left" valign="bottom" style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#313131; line-height:20px;">Hi ${ctx.customerName},</td>
+              </tr>
+              <tr>
+                <td height="40" align="left" valign="middle" style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#313131; line-height:20px;">Your Tata CLiQ order for the following product has been delivered. </td>
+              </tr>
+              <tr>
+                <td height="25" align="left" valign="bottom" style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#313131; line-height:20px;">Order Number: ${ctx.orderCode}</td>
+              </tr>
+              <tr>
+                <td align="left" valign="top" height="15" style="list-style:15px;"><img style="display:block;" src="images/spacer.gif" width="17" height="15" alt="" /></td>
+              </tr>
+              <tr>
+                <td align="left" valign="top" style="font-family:Arial, Helvetica, sans-serif;color:#313131; background: #FBFBFB;">
+                    <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                      <tr valign="top">
+                        <td width="288"><img src="images/img.png" alt="" style="display: block; border:1px solid #aaaaaa;">
+                        <td style="width: 20px;" width="20px">&nbsp;</td>
+                      	<td>
+                      	 <p style="font-size:15px; color: #a5164c;"><strong>${ctx.productName}</strong></p>
+                      	 <div style="color: #6f6f6f;font-size:14px;">Size: ${ctx.productSize}<br><br>
+                      	 Qty: 1<br><br>
+                      	 Sold By: ${ctx.sellerName}</div>
+                      	  <p style="color:#a5164c;font-size:18px;">
+                      	    ${ctx.totalPrice}/-*<br/>
+                      	    
+                      	  </p>
+                      	</td>
+                      </tr>
+                    </table>
+                </td>
+              </tr>
+               <tr>
+                <td align="left" valign="top"><img src="images/spacer.gif" height="20px" width="20px" style="height: 20px; width: 20px; display: block;"></td>
+              </tr>
+              <tr>
+                <td style="background:#efefef;color:#212021; font-family:Arial, Helvetica, sans-serif;font-size:14px;">
+                  <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="left" valign="top" width="15">&nbsp;</td>
+                        <td>
+	                        <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+	                           <tr>
+			                      	<td style="line-height:35px; border-bottom: 2px solid #cccccc;color:#212021; font-family:Arial, Helvetica, sans-serif;font-size:13px;padding: 0 5px;font-weight: bold;">DESCRIPTION</td>
+			                      	<td align="left" style="width:25%;border-bottom: 2px solid #cccccc;color:#212021; font-family:Arial, Helvetica, sans-serif;font-size:13px;padding: 0 5px;font-weight: bold;">INR</td>
+	                           </tr>
+	                           
+	                           <tr>
+			                      	<td style="line-height:35px;border-bottom: 1px solid #cccccc;color:#212021; font-family:Arial, Helvetica, sans-serif;font-size:14px;padding: 0 5px;">Total Net Amount</td>
+			                      	<td align="left" style="width:25%;border-bottom: 1px solid #cccccc;color:#212021; font-family:Arial, Helvetica, sans-serif;font-size:14px;padding: 0 5px;">&#8377; ${ctx.totalNetAmount}</td>
+	                           </tr>
+	                           
+	                           
+	                         
+	                           <tr>
+			                      	<td style="line-height:35px;border-bottom: 1px solid #cccccc;color:#212021; font-family:Arial, Helvetica, sans-serif;font-size:14px;padding: 0 5px;">Shipping charge</td>
+			                      	<td align="left" style="width:25%;border-bottom: 1px solid #cccccc;color:#212021; font-family:Arial, Helvetica, sans-serif;font-size:14px;padding: 0 5px;">${ctx.shippingCharge}</td>
+	                           </tr>
+	                            
+	                           <tr>
+			                      	<td style="line-height:35px;border-bottom: 1px solid #cccccc;color:#212021; font-family:Arial, Helvetica, sans-serif;font-size:14px;padding: 0 5px;">Coupon discount</td>
+			                      	<td align="left" style="width:25%;border-bottom: 1px solid #cccccc;color:#212021; font-family:Arial, Helvetica, sans-serif;font-size:14px;padding: 0 5px;">&#8377; ${ctx.couponDiscount}</td>
+	                           </tr>
+	                            
+	                           <tr>
+			                      	<td style="line-height:40px; color:#a5164c;font-size:18px;border-bottom: 2px solid #cccccc; font-family:Arial, Helvetica, sans-serif; padding: 0 5px;font-weight: bold;">TOTAL</td>
+			                      	<td align="left" style="width:25% line-height:40px; color:#a5164c;font-size:18px;border-bottom: 2px solid #cccccc;font-family:Arial, Helvetica, sans-serif; padding: 0 5px;font-weight: bold;">&#8377; ${ctx.totalPrice}</td>
+	                           </tr>
+	                           
+	                           <tr>
+                              <td><img src="images/spacer.gif" height="20px" width="20px" style="height: 20px; width: 20px; display: block;"></td>
+                            </tr>
+	                       </table>
+                           
+                       </td>
+                       <td align="left" valign="top" width="6">&nbsp;</td>
+                      </tr>
+                    </table>
+                  </td>
+              </tr>
+              <tr>
+                <td><img src="images/spacer.gif" height="20px" width="20px" style="height: 20px; width: 20px; display: block;"></td>
+              </tr>
+              <tr>
+                      
+                      <td><div  style="  color:#a5164c;font-size:17px; font-family:Arial, Helvetica, sans-serif; padding: 0 5px;font-weight: bold; text-align: center;">Help us improve. Rate your experience.</div> </td>
+                    </tr>
+
+                     <tr>
+                <td><img src="images/spacer.gif" height="20px" width="20px" style="height: 20px; width: 20px; display: block;"></td>
+              </tr>
+              <tr>
+                <td>
+                  <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" style="border:1px solid #ccc;">
+                  <tr>
+                <td><img src="images/spacer.gif" height="20px" width="20px" style="height: 20px; width: 20px; display: block;"></td>
+              </tr>
+              <tr>
+                      
+                      <td><div style="line-height: 22px; color:#333;font-size:14px; font-family:Arial, Helvetica, sans-serif; padding: 0 5px;font-weight: bold; text-align: center;">
+
+
+ Based on your TATA CLiQ purchase experience how likely are you to<br> recommend TATA CLiQ to  your friends and family?
+                      </div> </td>
+                    </tr>
+<tr>
+                <td><img src="images/spacer.gif" height="20px" width="20px" style="height: 20px; width: 20px; display: block;"></td>
+              </tr>
+
+                <tr>
+                  
+                  <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tbody><tr>
+                     <td><img src="images/spacer.gif" height="20px" width="25px" style="height: 20px; width: 25px; display: block;"></td>
+                    <td align="center" valign="middle"><a href="http://www.tatacliq.com" target="_blank">${ctx.cmsSlotContents.Rank0}</a></td>
+                    <td align="center" valign="middle" width="17" style="width:17px;"><img style="display:block;" src="images/spacer.gif" width="17" height="10" alt=""></td>
+                    <td align="center" valign="middle"><a href="http://www.tatacliq.com" target="_blank">${ctx.cmsSlotContents.Rank1}</a></td>
+                    <td align="center" valign="middle" width="17" style="width:17px;"><img style="display:block;" src="images/spacer.gif" width="17" height="10" alt=""></td>
+                    <td align="center" valign="middle"><a href="http://www.tatacliq.com" target="_blank">${ctx.cmsSlotContents.Rank2}</a></td>
+                    <td align="center" valign="middle" width="17" style="width:17px;"><img style="display:block;" src="images/spacer.gif" width="17" height="10" alt=""></td>
+                    <td align="center" valign="middle"><a href="http://www.tatacliq.com" target="_blank">${ctx.cmsSlotContents.Rank3}</a></td>
+                    <td align="center" valign="middle" width="17" style="width:17px;"><img style="display:block;" src="images/spacer.gif" width="17" height="10" alt=""></td>
+                    <td align="center" valign="middle"><a href="http://www.tatacliq.com" target="_blank">${ctx.cmsSlotContents.Rank4}</a></td>
+                    <td align="center" valign="middle" width="17" style="width:17px;"><img style="display:block;" src="images/spacer.gif" width="17" height="10" alt=""></td>
+                    <td align="center" valign="middle"><a href="http://www.tatacliq.com" target="_blank">${ctx.cmsSlotContents.Rank5}</a></td>
+                    <td align="center" valign="middle" width="17" style="width:17px;"><img style="display:block;" src="images/spacer.gif" width="17" height="10" alt=""></td>
+                    <td align="center" valign="middle"><a href="http://www.tatacliq.com" target="_blank">${ctx.cmsSlotContents.Rank6}</a></td>
+                    <td align="center" valign="middle" width="17" style="width:17px;"><img style="display:block;" src="images/spacer.gif" width="17" height="10" alt=""></td>
+                    <td align="center" valign="middle"><a href="http://www.tatacliq.com" target="_blank">${ctx.cmsSlotContents.Rank7}</a></td>
+                    <td align="center" valign="middle" width="17" style="width:17px;"><img style="display:block;" src="images/spacer.gif" width="17" height="10" alt=""></td>
+                    <td align="center" valign="middle"><a href="http://www.tatacliq.com" target="_blank">${ctx.cmsSlotContents.Rank8}</a></td>
+                    <td align="center" valign="middle" width="18" style="width:18px;"><img style="display:block;" src="images/spacer.gif" width="18" height="10" alt=""></td>
+                    <td align="center" valign="middle"><a href="http://www.tatacliq.com" target="_blank">${ctx.cmsSlotContents.Rank9}</a></td>
+                    <td align="center" valign="middle" width="18" style="width:18px;"><img style="display:block;" src="images/spacer.gif" width="18" height="10" alt=""></td>
+                    <td align="center" valign="middle"><a href="http://www.tatacliq.com" target="_blank">${ctx.cmsSlotContents.Rank10}</a></td>
+                     <td><img src="images/spacer.gif" height="20px" width="25px" style="height: 20px; width: 25px; display: block;"></td>
+                  </tr>
+                </tbody></table></td>
+                </tr>
+<tr>
+                  
+                  <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tbody><tr>
+                     <td width="25"><img src="images/spacer.gif" height="20px" width="25px" style="height: 20px; width: 25px; display: block;"></td>
+                    <td align="left" valign="middle"><div style="  color:#6f6f6f;font-size:12px; font-family:Arial, Helvetica, sans-serif; padding: 0 5px;font-weight: normal; text-align: left;">Not at all likely</div></td>
+                     
+                   <td align="right" valign="middle"><div style="  color:#6f6f6f;font-size:12px; font-family:Arial, Helvetica, sans-serif; padding: 0 5px;font-weight: normal; text-align: right;">Highly likely</div></td>
+                     <td width="25"><img src="images/spacer.gif" height="20px" width="25px" style="height: 20px; width: 25px; display: block;"></td>
+                  </tr>
+                </tbody></table></td>
+                </tr>
+<tr>
+                <td><img src="images/spacer.gif" height="20px" width="20px" style="height: 20px; width: 20px; display: block;"></td>
+              </tr>
+
+                  </table>
+                </td>
+              </tr>
+
+
+            
+             
+            </table></td>
+            <td align="left" valign="top"  width="17" height="20" ><img style="display:block;" src="images/spacer.gif" width="17" height="20" alt="" /></td>
+          </tr>
+        </table></td>
+      </tr>
+
+              <tr>
+                <td><img src="images/spacer.gif" height="20px" width="20px" style="height: 20px; width: 20px; display: block;"></td>
+              </tr>
+
+
+
+
+
+
+
+
+              <tr>
+                <td>
+                  <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" style="background: #4a4a4c;">
+                  <tr>
+                    <td><img src="images/spacer.gif" height="15px" width="20px" style="height: 15px; width: 20px; display: block;"></td>
+                  </tr>
+
+
+                  <tr>
+                    <td><div style="color:#fff;font-size:15px; font-family:Arial, Helvetica, sans-serif; font-weight: normal;  letter-spacing: 1px; text-align: center;">Your online superstore for authentic and exclusive brands.</div></td>
+                  </tr>
+                   <tr>
+                    <td><img src="images/spacer.gif" height="10px" width="20px" style="height: 10px; width: 20px; display: block;"></td>
+                  </tr>
+                  <tr>
+                      <td>
+                        
+                        <table align="center">
+                            <tr>
+                              
+                              <td><a href="#" style="color:#fff;font-size:14px; font-family:Arial, Helvetica, sans-serif; font-weight: normal;text-decoration: none;"><span style="color:#fff;font-size:14px; font-family:Arial, Helvetica, sans-serif; font-weight: bold;text-decoration: none;">mens apparel</span></a></td>
+                              <td style="color:#fff;font-size:16px; font-family:Arial, Helvetica, sans-serif; font-weight: bold; text-align: center;" width="20" align="center">|</td>
+                              <td><a href="#" style="color:#fff;font-size:14px; font-family:Arial, Helvetica, sans-serif; font-weight: normal;text-decoration: none;"><span style="color:#fff;font-size:14px; font-family:Arial, Helvetica, sans-serif; font-weight: bold;text-decoration: none;">womens apparel</span></a></td>
+ <td style="color:#fff;font-size:16px; font-family:Arial, Helvetica, sans-serif; font-weight: bold; text-align: center;" width="20" align="center">|</td>
+                              <td><a href="#" style="color:#fff;font-size:14px; font-family:Arial, Helvetica, sans-serif; font-weight: normal;text-decoration: none;"><span style="color:#fff;font-size:14px; font-family:Arial, Helvetica, sans-serif; font-weight: bold;text-decoration: none;">Electronics</span></a></td>
+ <td style="color:#fff;font-size:16px; font-family:Arial, Helvetica, sans-serif; font-weight: bold; text-align: center;" width="20" align="center">|</td>
+                              <td><a href="#" style="color:#fff;font-size:14px; font-family:Arial, Helvetica, sans-serif; font-weight: normal;text-decoration: none;"><span style="color:#fff;font-size:14px; font-family:Arial, Helvetica, sans-serif; font-weight: bold;text-decoration: none;">Footwear</span></a></td>
+                            </tr>
+
+                        </table>
+                      </td>
+                  </tr>
+ <tr>
+                    <td><img src="images/spacer.gif" height="15px" width="20px" style="height: 15px; width: 20px; display: block;"></td>
+                  </tr>
+
+                  </table>
+                 </td>
+                </tr>  
+
+<tr>
+                    <td><img src="images/spacer.gif" height="20px" width="20px" style="height: 20px; width: 20px; display: block;"></td>
+                  </tr>
+      
+       
+      <tr>
+        <td align="left" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td align="left" valign="top"  width="25" height="20" ><img style="display:block;" src="images/spacer.gif" width="25" height="20" alt="" /></td>
+            <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td align="left" valign="bottom" style="font-family:Arial, Helvetica, sans-serif; font-size:13px; color:#313131; line-height:18px;">This is an exclusive preview just for you. Tata CLiQ is not open to all. Please do not share this email with anyone.</td>
+              </tr>
+              <tr>
+                <td align="left" valign="bottom" style="font-family:Arial, Helvetica, sans-serif; font-size:13px; color:#313131; line-height:18px;">Your feedback is very important to us. If you spot any errors or problems please tell us about them, email us at <a href="mailto: hello@tatacliq.com" title="hello@tatacliq.com" target="_blank" style="color:#313131; text-decoration:none;"><strong>hello@tatacliq.com</strong></a> or call us on <strong>1800 208 8282</strong></td>
+              </tr>
+              <tr>
+                <td align="left" valign="bottom" style="font-family:Arial, Helvetica, sans-serif; font-size:13px; color:#313131; line-height:18px;">You are receiving this email because you are part of a select group. If you would like to unsubscribe please <a href="http://www.tatacliq.com" title="Click Here" target="_blank" style="color:#313131; text-decoration:none;"><strong>click here</strong></a>.</td>
+              </tr>
+            </table></td>
+            <td align="left" valign="top"  width="25" height="20" ><img style="display:block;" src="images/spacer.gif" width="25" height="20" alt="" /></td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td align="left" valign="top"><img style="display:block;" src="images/008.jpg" width="600" height="46" alt="Terms and Conditions Apply" /></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+</body>
+</html>

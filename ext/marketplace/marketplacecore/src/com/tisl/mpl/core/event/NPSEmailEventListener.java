@@ -6,8 +6,8 @@ package com.tisl.mpl.core.event;
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.commerceservices.enums.SiteChannel;
 import de.hybris.platform.commerceservices.event.AbstractSiteEventListener;
+import de.hybris.platform.core.model.NPSEmailerModel;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.processengine.BusinessProcessService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
@@ -28,11 +28,12 @@ public class NPSEmailEventListener extends AbstractSiteEventListener<NpsEmailEve
 	protected void onSiteEvent(final NpsEmailEvent npsEmailEvent)
 	{
 		final OrderModel orderModel = npsEmailEvent.getProcess().getOrder();
-		final OrderProcessModel orderProcessModel = (OrderProcessModel) getBusinessProcessService().createProcess(
+		final NPSEmailerModel npsEmailProcessModel = (NPSEmailerModel) getBusinessProcessService().createProcess(
 				"npsEmailProcess-" + orderModel.getCode() + "-" + System.currentTimeMillis(), "npsEmailProcess");
-		orderProcessModel.setOrder(orderModel);
-		getModelService().save(orderProcessModel);
-		getBusinessProcessService().startProcess(orderProcessModel);
+
+		getModelService().save(npsEmailProcessModel);
+		getBusinessProcessService().startProcess(npsEmailProcessModel);
+
 
 	}
 
