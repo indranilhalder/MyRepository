@@ -9,7 +9,8 @@
 		<property qualifier="product.approvalStatus" />
 		<property qualifier="product.description" />
 	</group>
-
+	
+	
 	<custom-group 
 		class="de.hybris.platform.cockpit.services.config.impl.ClassAttrEditorSectionConfiguration" 
 		qualifier="classification"

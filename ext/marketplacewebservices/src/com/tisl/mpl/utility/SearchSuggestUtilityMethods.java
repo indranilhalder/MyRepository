@@ -174,7 +174,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 * 
+	 *
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -804,6 +804,8 @@ public class SearchSuggestUtilityMethods
 				{
 					sellingItemDetail.setInStockFlag(productData.getInStockFlag());
 				}
+				//CumulativeStock
+				sellingItemDetail.setCumulativeStockLevel(Boolean.valueOf(productData.isStockValue()));
 				if (null == productData.getIsOfferExisting())
 				{
 					sellingItemDetail.setIsOfferExisting(Boolean.FALSE);
