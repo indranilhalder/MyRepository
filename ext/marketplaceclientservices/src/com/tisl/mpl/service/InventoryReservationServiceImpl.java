@@ -69,6 +69,8 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 		this.configurationService = configurationService;
 	}
 
+	private static final String OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING = "paymentPending";
+
 	/**
 	 * @Description : For storing soft reservation details to InventoryReservListResponse object
 	 * @param: cartdatalist
@@ -94,12 +96,16 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 		String oldListing = "1";
 
 
+		boolean set1 = true;
+
 		try
 		{
+
 			for (final CartSoftReservationData cartObj : cartdatalist)
 			{
 				if (!cartObj.isJewellery())
 				{
+
 					LOG.debug("inside cart soft reservation data list");
 					reqObj = new InventoryReservRequest();
 					if (StringUtils.isNotEmpty(cartObj.getUSSID()))
@@ -146,7 +152,58 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 				}
 				else
 				{
+
 					LOG.debug("inside cart soft reservation data list for Jewellery");
+
+					if (StringUtils.equalsIgnoreCase(requestType, OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING))
+					{
+						if (set1)
+						{
+							set1 = false;
+							reqObj = new InventoryReservRequest();
+							if (StringUtils.isNotEmpty(cartObj.getUSSID()))
+							{
+								reqObj.setUSSID(cartObj.getUSSID());
+							}
+							reqObj.setJewellery(cartObj.isJewellery());
+							if (StringUtils.isNotEmpty(cartObj.getParentUSSID()))
+							{
+								reqObj.setParentUSSID(cartObj.getParentUSSID());
+							}
+							if (StringUtils.isNotEmpty(cartObj.getIsAFreebie()))
+							{
+								reqObj.setIsAFreebie(cartObj.getIsAFreebie().toUpperCase());
+							}
+							if (StringUtils.isNotEmpty(cartObj.getStoreId()))
+							{
+								reqObj.setStoreId(cartObj.getStoreId());
+							}
+							if (StringUtils.isNotEmpty(cartObj.getFulfillmentType()))
+							{
+								reqObj.setFulfillmentType(cartObj.getFulfillmentType().toUpperCase());
+							}
+							if (StringUtils.isNotEmpty(cartObj.getDeliveryMode()))
+							{
+								reqObj.setDeliveryMode(cartObj.getDeliveryMode().toUpperCase());
+							}
+							if (cartObj.getQuantity() != null)
+							{
+								reqObj.setQuantity(cartObj.getQuantity().toString());
+							}
+
+							if (reqObj.getIsAFreebie() != null && reqObj.getIsAFreebie().equals("Y"))
+							{
+								freebieItemslist.add(reqObj);
+							}
+							else
+							{
+								reqlist.add(reqObj);
+								LOG.debug("Added in Inventory reservation request list");
+							}
+						}
+
+					}
+
 					boolean set = false;
 					if (!oldListing.equalsIgnoreCase(cartObj.getListingId()))
 					{
@@ -157,6 +214,7 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 						set = true;
 					}
 					reqJewelleryObj = new InventoryReservRequest();
+
 
 					if (StringUtils.isNotEmpty(cartObj.getUSSID()))
 					{
@@ -239,7 +297,6 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 		return reqdata;
 
 	}
-
 
 
 	/**
