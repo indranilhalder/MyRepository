@@ -40,8 +40,8 @@ public class MplJewelleryDaoImpl implements MplJewelleryDao
 	{
 		try
 		{
-			final String classAttrquery = "select {pk} from {JewelleryInformation} " + "where {productCode} " + "		IN ('"
-					+ productCode + "')}})";
+			final String classAttrquery = "select {pk} from {JewelleryInformation} " + "where {productCode}" + "	IN ('"
+					+ productCode + "')";
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(classAttrquery);
 			return flexibleSearchService.<JewelleryInformationModel> search(query).getResult();
 		}
