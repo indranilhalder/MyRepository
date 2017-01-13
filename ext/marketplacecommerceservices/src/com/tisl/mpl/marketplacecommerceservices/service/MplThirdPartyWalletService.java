@@ -3,9 +3,6 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service;
 
-import java.util.Date;
-
-import com.tisl.mpl.model.MplConfigurationModel;
 
 
 /**
@@ -14,19 +11,9 @@ import com.tisl.mpl.model.MplConfigurationModel;
  */
 public interface MplThirdPartyWalletService
 {
-	MplConfigurationModel getCronDetails(String code);
 
 
-	void fetchThirdPartyAuditTableData();
+	public void fetchThirdPartyAuditTableData();//getting audit table data
 
-	/**
-	 * @param startTime
-	 * @param code
-	 */
-	void saveCronDetails(Date startTime, String code);
-
-	/**
-	 * @return
-	 */
-	Double getmRupeeJobTAT();
+	public Double getmRupeeJobTAT();//getting tat time data
 }

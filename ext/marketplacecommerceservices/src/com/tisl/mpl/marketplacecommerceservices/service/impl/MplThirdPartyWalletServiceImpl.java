@@ -71,7 +71,6 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplProcessOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplThirdPartyWalletService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
-import com.tisl.mpl.model.MplConfigurationModel;
 import com.tisl.mpl.util.OrderStatusSpecifier;
 import com.tisl.mpl.wallet.service.MrupeePaymentService;
 
@@ -172,17 +171,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 		this.orderService = orderService;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplThirdPartyWalletService#getCronDetails(java.lang.String)
-	 */
-	@Override
-	public MplConfigurationModel getCronDetails(final String code)
-	{
-		// YTODO Auto-generated method stub
-		return mplThirdPartyWalletDao.getCronDetails(code);
-	}
+
 
 	/**
 	 * return tat time from mrupee
@@ -332,7 +321,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 	}
 
 	/**
-	 * send notification
+	 * send notification on payment timeout
 	 *
 	 * @param order
 	 *
@@ -404,7 +393,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 	}
 
 	/**
-	 * updtae audit details on successful mrupee response
+	 * update audit details on successful mrupee response
 	 *
 	 * @param auditModelData
 	 * @param entryList
@@ -414,7 +403,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 	private void updateAuditInfoForPayment(final MplPaymentAuditModel auditModelData,
 			final List<MplPaymentAuditEntryModel> entryList, final CustomerModel mplCustomer, final OrderModel order)
 	{
-		// YTODO Auto-generated method stub
+
 		final MplPaymentAuditEntryModel auditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
 		auditEntry.setAuditId(auditModelData.getAuditId());
 		auditEntry.setStatus(MplPaymentAuditStatusEnum.COMPLETED);
@@ -429,14 +418,12 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 			if (StringUtils.isNotEmpty(mplCustomer.getName()) && !mplCustomer.getName().equalsIgnoreCase(" "))
 			{
 				final String custName = mplCustomer.getName();
-				//Commented for Mobile use
 				mplPaymentService.saveTPWalletPaymentInfo(custName, entries, order, order.getCode());
 			}
 			else
 			{
 				final String custEmail = mplCustomer.getOriginalUid();
 				mplPaymentService.saveTPWalletPaymentInfo(custEmail, entries, order, order.getCode());
-
 			}
 		}
 
@@ -451,13 +438,13 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 		}
 		catch (final InvalidCartException e)
 		{
-			LOG.error("exception##### : INAVLID CART>>>>>>", e);
+			LOG.error("******************exception##### : INAVLID CART>>>>>>", e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 
 		}
 		catch (final CalculationException e)
 		{
-			LOG.error("exception##### ERROR IN ORDER TOTAL CALCULATION>>>>>>", e);
+			LOG.error("*****************8*exception##### ERROR IN ORDER TOTAL CALCULATION>>>>>>", e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 		getOrderService().submitOrder(order);
@@ -473,7 +460,6 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 	 */
 	private String getMrupeeResponse(final MplPaymentAuditModel auditModelData)
 	{
-		// YTODO Auto-generated method stub
 		final MrupeePaymentService mRupeeService = new MrupeePaymentService();
 		final String checksumKey = mRupeeService.generateCheckSumForVerification(auditModelData.getAuditId());
 		final String mId = configurationService.getConfiguration().getString(PAYMENT_M_RUPEE_MERCHANT_ID);
@@ -506,25 +492,8 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 		return orderTATForTimeout;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplThirdPartyWalletService#saveCronDetails(java.util.Date,
-	 * java.lang.String)
-	 */
-	@Override
-	public void saveCronDetails(final Date startTime, final String code)
-	{
-		final MplConfigurationModel oModel = mplThirdPartyWalletDao.getCronDetails(code);
-		if (null != oModel && null != oModel.getMplConfigCode())
-		{
-			LOG.debug("Saving CronJob Run Time :" + startTime);
-			oModel.setMplConfigDate(startTime);
-			getModelService().save(oModel);
-			LOG.debug("Cron Job Details Saved for Code :" + code);
-		}
 
-	}
+
 
 	/**
 	 * @return the mplThirdPartyWalletDao
