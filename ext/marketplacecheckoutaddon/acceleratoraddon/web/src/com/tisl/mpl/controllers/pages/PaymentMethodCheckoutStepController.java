@@ -4291,14 +4291,15 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					LOG.info("::setting redirect flag--4::");
 				}
 
-				if (!redirectFlag)
+				//Merged nested if statement as for PMD
+				if (!redirectFlag && (cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0))
 				{
-					if (cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0)
-					{
-						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CARTAMOUNTINVALID, "TRUE");
-						redirectFlag = true;
-						LOG.info("::setting redirect flag--5::");
-					}
+					//if (cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0)
+					//{
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CARTAMOUNTINVALID, "TRUE");
+					redirectFlag = true;
+					LOG.info("::setting redirect flag--5::");
+					//}
 				}
 
 				if (!redirectFlag && !getMplPaymentFacade().isValidCart(cart))
@@ -4321,10 +4322,18 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 					orderId = getMplPaymentFacade().createWalletorder(cart, walletName, MarketplacecheckoutaddonConstants.CHANNEL_WEB);
 
+					if (CollectionUtils.isNotEmpty(orderId))
+					{
+						refNumber = orderId.get(0);
+						checksum = orderId.get(1);
+					}
+
 					final boolean isValidCart = getMplPaymentFacade().checkCart(cart);
 
 					if (isValidCart)
 					{
+						getMplPaymentFacade().entryInTPWaltAudit(null, MarketplacecheckoutaddonConstants.CHANNEL_WEB, cartGuid,
+								refNumber);
 						getMplCheckoutFacade().placeOrder();
 					}
 					else
@@ -4333,12 +4342,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								+ (StringUtils.isNotEmpty(cart.getGuid()) ? cart.getGuid() : MarketplacecommerceservicesConstants.EMPTY));
 					}
 
-					if (CollectionUtils.isNotEmpty(orderId))
-					{
-						refNumber = orderId.get(0);
-						checksum = orderId.get(1);
-					}
-					getMplPaymentFacade().entryInTPWaltAudit(null, MarketplacecheckoutaddonConstants.CHANNEL_WEB, cartGuid, refNumber);
 					LOG.info("::Created Wallet OrderId::" + orderId);
 
 				}
@@ -4432,15 +4435,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	public String walletPayment(final RedirectAttributes redirectAttributes, final HttpServletRequest request)
 			throws EtailNonBusinessExceptions
 	{
+		String guid = null;
+
+		OrderModel orderModel = null;
+
+		String status = null;
 		try
 		{
 			final String refNo = request.getParameter("REFNO");
-
-			String guid = null;
-
-			OrderModel orderModel = null;
-
-			String status = null;
 
 			final Double transactionAmount = Double.valueOf(request.getParameter("AMT"));
 
@@ -4499,19 +4501,32 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 
 		}
-		catch (final InvalidCartException e)
+		catch (final EtailBusinessExceptions e)
 		{
-			e.printStackTrace();
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			LOG.error("Exception in walletPayment", e);
+			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+					MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+			return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+					+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
 		}
-
-		catch (final CalculationException e)
+		catch (final EtailNonBusinessExceptions e)
 		{
-			e.printStackTrace();
+			//ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			LOG.error("Exception in walletPayment", e);
+			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+					MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+			return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+					+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
 		}
-
 		catch (final Exception e)
 		{
-			e.printStackTrace();
+			LOG.error("Exception in walletPayment", e);
+			//Redirection when transaction is failed
+			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+					MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+			return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+					+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
 		}
 
 		return null;
