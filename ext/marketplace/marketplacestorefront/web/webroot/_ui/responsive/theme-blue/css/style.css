@@ -29802,6 +29802,11 @@ padding:20px;
     margin: 10px auto 50px;
 }
 #bestOffers.best-offers.feature-collections a.view-best-offers,.best-offers a.view-best-offers,.best-offers_blp a.view-best-offers{
+	width: 250px;
+  	letter-spacing: normal;
+  	font-weight: normal;
+}
+#bestOffers.best-offers.feature-collections a.view-best-offers,.best-offers a.view-best-offers,.best-offers_blp a.view-best-offers{
 	/* margin-top: 25px; */
 }
 #bestPicks .view-cliq-offers:hover,#bestOffers.best-offers.feature-collections a.view-best-offers:hover {
