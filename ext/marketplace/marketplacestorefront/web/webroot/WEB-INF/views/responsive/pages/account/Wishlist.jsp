@@ -284,7 +284,7 @@
 															displayFreeForZero="true" />
 															</c:otherwise></c:choose>
 													</c:if></li> --%>
-												<li class="price"><format:price priceData="${wpproduct.price}"
+												<li class="price"><format:wishlist priceData="${wpproduct.price}"
 															displayFreeForZero="true" /></li>
 												<li><c:forEach items="${product.baseOptions}"
 														var="option">

@@ -10,14 +10,14 @@
 --%>
 <c:choose>
 	<c:when test="${priceData.value > 0}">
-		<span class="priceFormat">${priceData.formattedValue}</span>
+		<span class="priceFormat">${priceData.formattedValueNoDecimal}</span>
 	</c:when>
 	<c:otherwise>
 		<c:if test="${displayFreeForZero}">
 			<spring:theme code="text.free" text="FREE"/>
 		</c:if>
 		<c:if test="${not displayFreeForZero}">
-			<span  class="priceFormat">${priceData.formattedValue}</span>
+			<span  class="priceFormat">${priceData.formattedValueNoDecimal}</span>
 		</c:if>
 	</c:otherwise>
 </c:choose>
