@@ -25,6 +25,7 @@ import de.hybris.platform.voucher.model.PromotionVoucherModel;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
@@ -81,6 +82,16 @@ import com.tisl.mpl.wallet.service.MrupeePaymentService;
  */
 public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletService
 {
+	/**
+	 *
+	 */
+	private static final String SSL = "SSL";
+
+	/**
+	 *
+	 */
+	private static final String _14_140_248_13 = "14.140.248.13";
+
 	/**
 	 *
 	 */
@@ -545,6 +556,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 		final StringBuilder buffer = new StringBuilder();
 		final int connectionTimeout = 5 * 10000;
 		final int readTimeout = 5 * 1000;
+		DataOutputStream wr = null;
 		try
 		{
 
@@ -600,7 +612,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 			connection.setUseCaches(false);
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
-			final DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+			wr = new DataOutputStream(connection.getOutputStream());
 			wr.writeBytes(encodedParams);
 			wr.flush();
 			wr.close();
@@ -615,6 +627,20 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 		catch (final Exception e)
 		{
 			LOG.error("******************Exception in connectivity in  mrupeee verification======================", e);
+		}
+		finally
+		{
+			try
+			{
+				if (wr != null)
+				{
+					wr.close();
+				}
+			}
+			catch (final IOException e)
+			{
+				LOG.error(e.getMessage(), e);
+			}
 		}
 		return buffer.toString();
 	}
@@ -645,7 +671,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 			} };
 
 			// Install the all-trusting trust manager
-			final SSLContext sc = SSLContext.getInstance("SSL");
+			final SSLContext sc = SSLContext.getInstance(SSL);
 			sc.init(null, trustAllCerts, new java.security.SecureRandom());
 			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
 
@@ -654,7 +680,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 			{
 				public boolean verify(final String hostname, final SSLSession session)
 				{
-					if (hostname.equals("14.140.248.13"))
+					if (hostname.equals(_14_140_248_13))
 					{
 						return true;
 					}

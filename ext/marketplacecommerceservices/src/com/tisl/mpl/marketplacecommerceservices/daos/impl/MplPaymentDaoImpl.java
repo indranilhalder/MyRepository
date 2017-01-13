@@ -306,11 +306,11 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179
-	 *
+	 * 
 	 * @param : bankName
-	 *
+	 * 
 	 * @return : BankModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -606,7 +606,7 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169 --- Exception fixed for PMD and TPR-629
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
 	 */
 	@Override
@@ -762,7 +762,7 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplPaymentDao#getWalletAuditEntries(java.lang.String)
 	 */
 	@Override
@@ -771,7 +771,6 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 
 		try
 		{
-			MplPaymentAuditModel audit = new MplPaymentAuditModel();
 			final String queryString = MarketplacecommerceservicesConstants.TPWALLETAUDITQUERY;
 
 			//forming the flexible search query
@@ -783,7 +782,7 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 			if (null != auditList && !auditList.isEmpty())
 			{
 				//fetching the audit entries
-				audit = auditList.get(0);
+				final MplPaymentAuditModel audit = auditList.get(0);
 				return audit;
 			}
 			else

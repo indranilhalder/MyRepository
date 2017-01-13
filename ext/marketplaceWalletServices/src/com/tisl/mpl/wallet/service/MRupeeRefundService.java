@@ -7,6 +7,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -55,6 +56,7 @@ public class MRupeeRefundService
 	private String environmentSet;
 	@Autowired
 	private ConfigurationService configurationService;
+
 	//	@Autowired
 	//	private MrupeePaymentService mRupeePaymentService;
 
@@ -275,7 +277,7 @@ public class MRupeeRefundService
 		final String proxyEnableStatus = "true";
 		HttpsURLConnection connection = null;
 		final StringBuilder buffer = new StringBuilder();
-
+		DataOutputStream wr = null;
 		try
 		{
 
@@ -332,17 +334,13 @@ public class MRupeeRefundService
 			connection.setRequestProperty("Content-Length", Integer.toString(encodedParams.getBytes().length));
 			connection.setRequestProperty("Content-Language", "en-US");
 			connection.setRequestProperty("charset", "utf-8");
-			/*
-			 * connection.setRequestProperty("version",
-			 * getConfigurationService().getConfiguration().getString(MarketplaceJuspayServicesConstants.VERSION));
-			 */
 			connection.setUseCaches(false);
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
-			final DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+			wr = new DataOutputStream(connection.getOutputStream());
 			wr.writeBytes(encodedParams);
 			wr.flush();
-			wr.close();
+			//wr.close();
 
 			// Read the response
 			final InputStream inputStream = connection.getInputStream();
@@ -358,6 +356,20 @@ public class MRupeeRefundService
 		{
 			//throw new AdapterException("Error with connection", e);
 			LOG.error(e.getMessage(), e);
+		}
+		finally
+		{
+			try
+			{
+				if (wr != null)
+				{
+					wr.close();
+				}
+			}
+			catch (final IOException e)
+			{
+				LOG.error(e.getMessage(), e);
+			}
 		}
 		return buffer.toString();
 

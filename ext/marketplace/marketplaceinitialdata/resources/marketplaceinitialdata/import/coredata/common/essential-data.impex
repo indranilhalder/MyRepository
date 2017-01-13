@@ -272,7 +272,7 @@ INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
 #; initiateReturnForOrderCronJob; 0 0/15 * 1/1 * ? *
 ;sellerPriorityCronJob;0 0/15 * 1/1 * ? *
 #; promotionPriceUpdaterCronJob; 0 0/5 * 1/1 * ? *
-
+; mplmRupeeCronJob; 0 0/10 * 1/1 * ? *
 
 # Validation constraints - Customer
 INSERT_UPDATE AttributeConstraint;id[unique=true];annotation[allownull=true];descriptor(enclosingType(code),qualifier);qualifier;severity(code,itemtype(code));target;type(code);active
