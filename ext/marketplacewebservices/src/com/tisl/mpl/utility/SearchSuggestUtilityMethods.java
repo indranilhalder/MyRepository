@@ -652,7 +652,7 @@ public class SearchSuggestUtilityMethods
 		final List<SellingItemDetailWsDto> searchProductDTOList = new ArrayList<>();
 		final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
 		List<GalleryImageData> galleryImages = null;
-		ProductData productDataImage = null;
+		//ProductData productDataImage = null;
 		for (final ProductData productData : searchPageData.getResults())
 		{
 
@@ -667,7 +667,7 @@ public class SearchSuggestUtilityMethods
 				}
 
 				//Revert of TPR-796
-				try
+				/*try
 				{
 					productDataImage = productFacade.getProductForCodeAndOptions(productData.getCode(),
 							Arrays.asList(ProductOption.GALLERY));
@@ -677,11 +677,11 @@ public class SearchSuggestUtilityMethods
 				{
 					LOG.error("SERPSEARCH Product Image Error:" + productData.getCode());
 					continue;
-				}
+				}*/
 
 
 				//TPR-796
-				/*try
+				try
 				{
 					galleryImages = productDetailsHelper.getPrimaryGalleryImagesMobile(productData);
 				}
@@ -691,7 +691,7 @@ public class SearchSuggestUtilityMethods
 					ExceptionUtil.getCustomizedExceptionTrace(e);
 					continue;
 				}
-*/
+
 
 				if (CollectionUtils.isNotEmpty(galleryImages))
 				{

@@ -180,9 +180,12 @@ public class StoresController extends BaseController
 		{
 			LOG.debug("from storesAtCart method");
 		}
-		final UserModel user = extendedUserService.getUserForOriginalUid(userId);
-		final CartModel cartModel = commerceCartService.getCartForGuidAndSiteAndUser(null, baseSiteService.getCurrentBaseSite(),
-				user);
+		CartModel cartModel = null;
+		if (!userId.equalsIgnoreCase("anonymous"))
+		{
+			final UserModel user = extendedUserService.getUserForOriginalUid(userId);
+			cartModel = commerceCartService.getCartForGuidAndSiteAndUser(null, baseSiteService.getCurrentBaseSite(), user);
+		}
 		return storesHelper.storesAtCart(pincode, ussId, fields, cartModel);
 	}
 }
